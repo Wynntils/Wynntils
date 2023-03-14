@@ -12,7 +12,7 @@ import com.wynntils.core.config.Config;
 import com.wynntils.core.config.ConfigCategory;
 import com.wynntils.core.config.ConfigHolder;
 import com.wynntils.core.config.RegisterConfig;
-import com.wynntils.core.features.UserFeature;
+import com.wynntils.core.features.Feature;
 import com.wynntils.core.features.overlays.Overlay;
 import com.wynntils.core.features.overlays.OverlayPosition;
 import com.wynntils.core.features.overlays.annotations.OverlayInfo;
@@ -32,7 +32,7 @@ import com.wynntils.utils.wynn.InventoryUtils;
 import net.minecraft.client.renderer.MultiBufferSource;
 
 @ConfigCategory(Category.OVERLAYS)
-public class PowderSpecialBarOverlayFeature extends UserFeature {
+public class PowderSpecialBarOverlayFeature extends Feature {
     @OverlayInfo(renderType = RenderEvent.ElementType.GUI)
     private final Overlay powderSpecialBarOverlay = new PowderSpecialBarOverlay();
 

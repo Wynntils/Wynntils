@@ -18,7 +18,7 @@ import com.wynntils.core.config.Category;
 import com.wynntils.core.config.Config;
 import com.wynntils.core.config.ConfigCategory;
 import com.wynntils.core.config.RegisterConfig;
-import com.wynntils.core.features.UserFeature;
+import com.wynntils.core.features.Feature;
 import com.wynntils.mc.event.CommandsAddedEvent;
 import com.wynntils.utils.mc.McUtils;
 import net.minecraft.commands.CommandSourceStack;
@@ -34,7 +34,7 @@ import net.minecraftforge.eventbus.api.SubscribeEvent;
  * list of server commands provided by HeyZeer0.
  */
 @ConfigCategory(Category.COMMANDS)
-public class AddCommandExpansionFeature extends UserFeature {
+public class AddCommandExpansionFeature extends Feature {
     private static final SuggestionProvider<CommandSourceStack> PLAYER_NAME_SUGGESTION_PROVIDER =
             (context, builder) -> SharedSuggestionProvider.suggest(Models.Player.getAllPlayerNames(), builder);
 

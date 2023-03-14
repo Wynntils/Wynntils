@@ -10,7 +10,7 @@ import com.wynntils.core.config.Category;
 import com.wynntils.core.config.Config;
 import com.wynntils.core.config.ConfigCategory;
 import com.wynntils.core.config.RegisterConfig;
-import com.wynntils.core.features.UserFeature;
+import com.wynntils.core.features.Feature;
 import com.wynntils.core.net.ApiResponse;
 import com.wynntils.core.net.UrlId;
 import com.wynntils.mc.event.ScreenOpenedEvent;
@@ -22,7 +22,7 @@ import net.minecraftforge.eventbus.api.EventPriority;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 
 @ConfigCategory(Category.WYNNTILS)
-public class ChangelogFeature extends UserFeature {
+public class ChangelogFeature extends Feature {
     // "v0.0.2-alpha.2" is the first version with a changelog on GitHub
     @RegisterConfig(visible = false)
     public final Config<String> lastShownVersion = new Config<>("v0.0.2-alpha.2");

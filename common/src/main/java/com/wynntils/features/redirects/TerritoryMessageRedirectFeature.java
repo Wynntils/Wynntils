@@ -7,7 +7,7 @@ package com.wynntils.features.redirects;
 import com.wynntils.core.components.Managers;
 import com.wynntils.core.config.Category;
 import com.wynntils.core.config.ConfigCategory;
-import com.wynntils.core.features.UserFeature;
+import com.wynntils.core.features.Feature;
 import com.wynntils.handlers.chat.event.ChatMessageReceivedEvent;
 import com.wynntils.mc.event.SubtitleSetTextEvent;
 import com.wynntils.utils.mc.ComponentUtils;
@@ -17,7 +17,7 @@ import net.minecraftforge.eventbus.api.SubscribeEvent;
 import org.apache.commons.lang3.StringUtils;
 
 @ConfigCategory(Category.REDIRECTS)
-public class TerritoryMessageRedirectFeature extends UserFeature {
+public class TerritoryMessageRedirectFeature extends Feature {
     private static final Pattern TERRITORY_MESSAGE_PATTERN = Pattern.compile("§7\\[You are now (\\S+) (.+)\\]");
 
     // Handles the subtitle text event.

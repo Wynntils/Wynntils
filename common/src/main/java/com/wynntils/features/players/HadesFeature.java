@@ -10,11 +10,11 @@ import com.wynntils.core.config.Config;
 import com.wynntils.core.config.ConfigCategory;
 import com.wynntils.core.config.ConfigHolder;
 import com.wynntils.core.config.RegisterConfig;
-import com.wynntils.core.features.UserFeature;
+import com.wynntils.core.features.Feature;
 import com.wynntils.hades.protocol.enums.SocialType;
 
 @ConfigCategory(Category.PLAYERS)
-public class HadesFeature extends UserFeature {
+public class HadesFeature extends Feature {
     public static HadesFeature INSTANCE;
 
     @RegisterConfig

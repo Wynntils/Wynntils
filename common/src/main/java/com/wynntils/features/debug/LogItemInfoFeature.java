@@ -5,8 +5,11 @@
 package com.wynntils.features.debug;
 
 import com.wynntils.core.WynntilsMod;
-import com.wynntils.core.features.DebugFeature;
+import com.wynntils.core.config.Category;
+import com.wynntils.core.config.ConfigCategory;
+import com.wynntils.core.features.Feature;
 import com.wynntils.core.features.properties.RegisterKeyBind;
+import com.wynntils.core.features.properties.StartDisabled;
 import com.wynntils.core.keybinds.KeyBind;
 import com.wynntils.utils.mc.LoreUtils;
 import com.wynntils.utils.mc.McUtils;
@@ -15,7 +18,9 @@ import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.ItemStack;
 import org.lwjgl.glfw.GLFW;
 
-public class LogItemInfoFeature extends DebugFeature {
+@StartDisabled
+@ConfigCategory(Category.DEBUG)
+public class LogItemInfoFeature extends Feature {
     @RegisterKeyBind
     private final KeyBind logItemInfoKeyBind = new KeyBind(
             "Log Item Info", GLFW.GLFW_KEY_INSERT, true, this::onLogItemInfoPress, this::onLogItemInfoInventoryPress);

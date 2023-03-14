@@ -11,7 +11,7 @@ import com.wynntils.core.config.Category;
 import com.wynntils.core.config.Config;
 import com.wynntils.core.config.ConfigCategory;
 import com.wynntils.core.config.RegisterConfig;
-import com.wynntils.core.features.UserFeature;
+import com.wynntils.core.features.Feature;
 import com.wynntils.mc.event.HotbarSlotRenderEvent;
 import com.wynntils.mc.event.SlotRenderEvent;
 import com.wynntils.models.elements.type.Skill;
@@ -39,7 +39,7 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 
 @ConfigCategory(Category.INVENTORY)
-public class ItemTextOverlayFeature extends UserFeature {
+public class ItemTextOverlayFeature extends Feature {
     @RegisterConfig
     public final Config<Boolean> amplifierTierEnabled = new Config<>(true);
 

@@ -8,7 +8,7 @@ import com.wynntils.core.components.Managers;
 import com.wynntils.core.components.Models;
 import com.wynntils.core.config.Category;
 import com.wynntils.core.config.ConfigCategory;
-import com.wynntils.core.features.UserFeature;
+import com.wynntils.core.features.Feature;
 import com.wynntils.core.features.properties.RegisterKeyBind;
 import com.wynntils.core.keybinds.KeyBind;
 import com.wynntils.models.items.items.game.EmeraldPouchItem;
@@ -25,7 +25,7 @@ import net.minecraft.world.item.ItemStack;
 import org.lwjgl.glfw.GLFW;
 
 @ConfigCategory(Category.INVENTORY)
-public class EmeraldPouchHotkeyFeature extends UserFeature {
+public class EmeraldPouchHotkeyFeature extends Feature {
     private static final int NO_POUCHES = -1;
     private static final int MULTIPLE_POUCHES = -2;
 

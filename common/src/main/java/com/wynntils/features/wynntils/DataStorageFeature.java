@@ -6,11 +6,11 @@ package com.wynntils.features.wynntils;
 
 import com.wynntils.core.config.Config;
 import com.wynntils.core.config.RegisterConfig;
-import com.wynntils.core.features.StateManagedFeature;
+import com.wynntils.core.features.Feature;
 
 // FIXME: This feature is only needed because we do not have a way to save any data persistently.
 //        Remove this when we add persistent data storage other than configs.
-public class DataStorageFeature extends StateManagedFeature {
+public class DataStorageFeature extends Feature {
     public static DataStorageFeature INSTANCE;
 
     @RegisterConfig(visible = false)

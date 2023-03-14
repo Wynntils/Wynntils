@@ -9,7 +9,7 @@ import com.wynntils.core.config.Config;
 import com.wynntils.core.config.ConfigCategory;
 import com.wynntils.core.config.ConfigHolder;
 import com.wynntils.core.config.RegisterConfig;
-import com.wynntils.core.features.UserFeature;
+import com.wynntils.core.features.Feature;
 import com.wynntils.core.features.properties.StartDisabled;
 import com.wynntils.handlers.chat.event.ChatMessageReceivedEvent;
 import com.wynntils.utils.mc.McUtils;
@@ -24,7 +24,7 @@ import net.minecraftforge.eventbus.api.SubscribeEvent;
 
 @StartDisabled
 @ConfigCategory(Category.CHAT)
-public class ChatTimestampFeature extends UserFeature {
+public class ChatTimestampFeature extends Feature {
     @RegisterConfig
     public final Config<String> formatPattern = new Config<>("HH:mm:ss");
 

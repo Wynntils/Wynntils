@@ -8,7 +8,7 @@ import com.wynntils.core.config.Category;
 import com.wynntils.core.config.Config;
 import com.wynntils.core.config.ConfigCategory;
 import com.wynntils.core.config.RegisterConfig;
-import com.wynntils.core.features.UserFeature;
+import com.wynntils.core.features.Feature;
 import com.wynntils.core.features.overlays.OverlayPosition;
 import com.wynntils.core.features.overlays.TextOverlay;
 import com.wynntils.core.features.overlays.annotations.OverlayInfo;
@@ -20,7 +20,7 @@ import com.wynntils.utils.render.type.HorizontalAlignment;
 import com.wynntils.utils.render.type.VerticalAlignment;
 
 @ConfigCategory(Category.OVERLAYS)
-public class ArrowShieldTrackingFeature extends UserFeature {
+public class ArrowShieldTrackingFeature extends Feature {
     @OverlayInfo(renderType = RenderEvent.ElementType.GUI)
     private final ArrowShieldTrackerOverlay arrowShieldTrackerOverlay = new ArrowShieldTrackerOverlay();
 

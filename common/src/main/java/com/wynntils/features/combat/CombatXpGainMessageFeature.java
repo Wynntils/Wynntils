@@ -10,13 +10,13 @@ import com.wynntils.core.config.Category;
 import com.wynntils.core.config.Config;
 import com.wynntils.core.config.ConfigCategory;
 import com.wynntils.core.config.RegisterConfig;
-import com.wynntils.core.features.UserFeature;
+import com.wynntils.core.features.Feature;
 import com.wynntils.models.characterstats.event.CombatXpGainEvent;
 import com.wynntils.models.worlds.event.WorldStateEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 
 @ConfigCategory(Category.COMBAT)
-public class CombatXpGainMessageFeature extends UserFeature {
+public class CombatXpGainMessageFeature extends Feature {
     @RegisterConfig
     public final Config<Float> secondDelay = new Config<>(0.5f);
 

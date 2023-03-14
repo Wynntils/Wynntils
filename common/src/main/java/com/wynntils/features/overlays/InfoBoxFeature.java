@@ -8,7 +8,7 @@ import com.wynntils.core.config.Category;
 import com.wynntils.core.config.Config;
 import com.wynntils.core.config.ConfigCategory;
 import com.wynntils.core.config.RegisterConfig;
-import com.wynntils.core.features.UserFeature;
+import com.wynntils.core.features.Feature;
 import com.wynntils.core.features.overlays.RenderState;
 import com.wynntils.core.features.overlays.TextOverlay;
 import com.wynntils.core.features.overlays.annotations.OverlayGroup;
@@ -17,7 +17,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @ConfigCategory(Category.OVERLAYS)
-public class InfoBoxFeature extends UserFeature {
+public class InfoBoxFeature extends Feature {
     @OverlayGroup(instances = 7, renderType = RenderEvent.ElementType.GUI, renderAt = RenderState.Pre)
     private final List<InfoBoxOverlay> infoBoxOverlays = new ArrayList<>();
 

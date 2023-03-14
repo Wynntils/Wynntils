@@ -8,7 +8,7 @@ import com.mojang.brigadier.tree.CommandNode;
 import com.mojang.brigadier.tree.RootCommandNode;
 import com.wynntils.core.config.Category;
 import com.wynntils.core.config.ConfigCategory;
-import com.wynntils.core.features.UserFeature;
+import com.wynntils.core.features.Feature;
 import com.wynntils.mc.event.CommandsAddedEvent;
 import java.util.Set;
 import net.minecraft.commands.SharedSuggestionProvider;
@@ -16,7 +16,7 @@ import net.minecraftforge.eventbus.api.EventPriority;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 
 @ConfigCategory(Category.COMMANDS)
-public class FilterAdminCommandsFeature extends UserFeature {
+public class FilterAdminCommandsFeature extends Feature {
     private static final Set<String> FILTERED_COMMANDS = Set.of(
             "bungee",
             "change",

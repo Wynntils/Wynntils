@@ -8,7 +8,7 @@ import com.wynntils.core.config.Category;
 import com.wynntils.core.config.Config;
 import com.wynntils.core.config.ConfigCategory;
 import com.wynntils.core.config.RegisterConfig;
-import com.wynntils.core.features.UserFeature;
+import com.wynntils.core.features.Feature;
 import com.wynntils.handlers.chat.event.ChatMessageReceivedEvent;
 import com.wynntils.handlers.chat.type.MessageType;
 import com.wynntils.handlers.chat.type.RecipientType;
@@ -16,7 +16,7 @@ import java.util.regex.Pattern;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 
 @ConfigCategory(Category.CHAT)
-public class InfoMessageFilterFeature extends UserFeature {
+public class InfoMessageFilterFeature extends Feature {
     private static final Pattern PRE_WELCOME_1 = Pattern.compile("^§7Loading Resource Pack...$");
     private static final Pattern PRE_WELCOME_2 =
             Pattern.compile("^§6Thank you for using the WynnPack. Enjoy the game!$");
