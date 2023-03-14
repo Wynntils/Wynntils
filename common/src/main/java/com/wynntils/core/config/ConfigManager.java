@@ -231,6 +231,16 @@ public final class ConfigManager extends Manager {
         List<ConfigHolder> options = new ArrayList<>();
 
         Field[] annotatedConfigs = FieldUtils.getFieldsWithAnnotation(parent.getClass(), ConfigInfo.class);
+        for (Field field : annotatedConfigs) {
+            try {
+                Object fieldValue = FieldUtils.readField(field, parent, true);
+                if (!(fieldValue instanceof Config)) {
+                    throw new RuntimeException("A non-Config class was marked with @ConfigInfo annotation.");
+                }
+            } catch (IllegalAccessException e) {
+                throw new RuntimeException("Failed to read @ConfigInfo annotated field");
+            }
+        }
 
         List<Field> fields = FieldUtils.getAllFieldsList(parent.getClass());
         List<Field> configFields =
