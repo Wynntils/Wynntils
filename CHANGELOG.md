@@ -1,9 +1,21 @@
+## [0.0.2-alpha.342](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.341...v0.0.2-alpha.342) (2023-03-14)
+
+
+### Code Refactoring
+
+* Split CharacterModel into three parts ([#1327](https://github.com/Wynntils/Artemis/issues/1327)) ([5577c32](https://github.com/Wynntils/Artemis/commit/5577c326faae2a7d759b8084f740f6313b0adf02))
+
 ## [0.0.2-alpha.341](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.340...v0.0.2-alpha.341) (2023-03-14)
 
 
 ### Bug Fixes
 
 * Report crash of features during initialization ([#1328](https://github.com/Wynntils/Artemis/issues/1328)) ([869fd0f](https://github.com/Wynntils/Artemis/commit/869fd0fae3b219603f5f0937784dfb207f8d3cd1))
+
+
+### Miscellaneous Chores
+
+* **release:** v0.0.2-alpha.341 [skip ci] ([21c07d1](https://github.com/Wynntils/Artemis/commit/21c07d17c3e13c3427598320098043fef0c5ac9c))
 
 ## [0.0.2-alpha.340](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.339...v0.0.2-alpha.340) (2023-03-14)
 
@@ -40,16 +52,4 @@
 ### Miscellaneous Chores
 
 * **release:** v0.0.2-alpha.338 [skip ci] ([b04b94a](https://github.com/Wynntils/Artemis/commit/b04b94aa2f7106e3ef19b0259d31858f3406648b))
-
-## [0.0.2-alpha.337](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.336...v0.0.2-alpha.337) (2023-03-13)
-
-
-### Bug Fixes
-
-* Actually fix race in chat tabs ([#1329](https://github.com/Wynntils/Artemis/issues/1329)) ([0f08cf9](https://github.com/Wynntils/Artemis/commit/0f08cf9868891c469f8d422c62c3df312c81f179))
-
-
-### Miscellaneous Chores
-
-* **release:** v0.0.2-alpha.337 [skip ci] ([973a8ef](https://github.com/Wynntils/Artemis/commit/973a8efc55dcc83c09233a71e29c3f4b6f960d34))
 
