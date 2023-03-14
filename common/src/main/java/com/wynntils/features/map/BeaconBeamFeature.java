@@ -20,7 +20,7 @@ import com.wynntils.utils.mc.type.Location;
 import com.wynntils.utils.render.CustomBeaconRenderer;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.blockentity.BeaconRenderer;
-import net.minecraft.world.phys.Vec3;
+import net.minecraft.core.Position;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 
 @ConfigCategory(Category.MAP)
@@ -36,12 +36,12 @@ public class BeaconBeamFeature extends UserFeature {
         MultiBufferSource.BufferSource bufferSource =
                 MultiBufferSource.immediate(Tesselator.getInstance().getBuilder());
 
-        Vec3 camera = event.getCamera().getPosition();
+        Position camera = event.getCamera().getPosition();
         Location location = Models.Compass.getCompassLocation().get();
 
-        double dx = location.x - camera.x;
-        double dy = location.y - camera.y;
-        double dz = location.z - camera.z;
+        double dx = location.x - camera.x();
+        double dy = location.y - camera.y();
+        double dz = location.z - camera.z();
 
         double distance = MathUtils.magnitude(dx, dz);
         int maxDistance = McUtils.mc().options.renderDistance().get() * 16;

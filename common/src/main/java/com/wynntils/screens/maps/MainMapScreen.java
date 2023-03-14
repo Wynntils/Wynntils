@@ -143,7 +143,7 @@ public final class MainMapScreen extends AbstractMapScreen {
 
                     if (Models.Compass.getCompassLocation().isPresent()) {
                         Location location = Models.Compass.getCompassLocation().get();
-                        updateMapCenter((float) location.x, (float) location.z);
+                        updateMapCenter(location.x, location.z);
                     }
                 },
                 List.of(
@@ -254,7 +254,7 @@ public final class MainMapScreen extends AbstractMapScreen {
             if (McUtils.mc().player.isShiftKeyDown()
                     && Models.Compass.getCompassLocation().isPresent()) {
                 Location location = Models.Compass.getCompassLocation().get();
-                updateMapCenter((float) location.x, (float) location.z);
+                updateMapCenter(location.x, location.z);
                 return true;
             }
 
@@ -311,7 +311,7 @@ public final class MainMapScreen extends AbstractMapScreen {
     private void setCompassToMouseCoords(double mouseX, double mouseY) {
         double gameX = (mouseX - centerX) / currentZoom + mapCenterX;
         double gameZ = (mouseY - centerZ) / currentZoom + mapCenterZ;
-        Location compassLocation = new Location(gameX, 0, gameZ);
+        Location compassLocation = Location.containing(gameX, 0, gameZ);
         Models.Compass.setCompassLocation(compassLocation);
 
         McUtils.playSound(SoundEvents.EXPERIENCE_ORB_PICKUP);
