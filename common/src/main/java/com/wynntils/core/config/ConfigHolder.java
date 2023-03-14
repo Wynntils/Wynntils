@@ -65,7 +65,7 @@ public class ConfigHolder implements Comparable<ConfigHolder> {
             return value.getClass();
         }
 
-        return field.getType();
+        throw new RuntimeException("Config must either have a non-null default value or a @TypeOverride: " + field);
     }
 
     public Type getType() {

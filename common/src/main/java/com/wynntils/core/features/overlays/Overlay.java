@@ -6,6 +6,7 @@ package com.wynntils.core.features.overlays;
 
 import com.google.common.base.CaseFormat;
 import com.google.common.collect.ComparisonChain;
+import com.google.common.reflect.TypeToken;
 import com.mojang.blaze3d.platform.Window;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.wynntils.core.components.Managers;
@@ -16,8 +17,10 @@ import com.wynntils.core.features.AbstractConfigurable;
 import com.wynntils.core.features.Translatable;
 import com.wynntils.core.features.overlays.sizes.GuiScaledOverlaySize;
 import com.wynntils.core.features.overlays.sizes.OverlaySize;
+import com.wynntils.core.json.TypeOverride;
 import com.wynntils.utils.render.type.HorizontalAlignment;
 import com.wynntils.utils.render.type.VerticalAlignment;
+import java.lang.reflect.Type;
 import java.util.List;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.resources.language.I18n;
@@ -44,10 +47,16 @@ public abstract class Overlay extends AbstractConfigurable implements Translatab
     // Example use case: Overlay is aligned to the left in the TopRight section,
     //                   but the user wants to use right text alignment
     @ConfigInfo(key = "overlay.wynntils.overlay.horizontalAlignmentOverride", visible = false)
-    public final Config<HorizontalAlignment> horizontalAlignmentOverride = new Config<>(HorizontalAlignment.Center);
+    public final Config<HorizontalAlignment> horizontalAlignmentOverride = new Config<>(null);
+
+    @TypeOverride
+    private final Type horizontalAlignmentOverrideType = new TypeToken<HorizontalAlignment>() {}.getType();
 
     @ConfigInfo(key = "overlay.wynntils.overlay.verticalAlignmentOverride", visible = false)
-    public final Config<VerticalAlignment> verticalAlignmentOverride = new Config<>(VerticalAlignment.Middle);
+    public final Config<VerticalAlignment> verticalAlignmentOverride = new Config<>(null);
+
+    @TypeOverride
+    private final Type verticalAlignmentOverrideType = new TypeToken<VerticalAlignment>() {}.getType();
 
     protected Overlay(OverlayPosition position, float width, float height) {
         this.position.updateConfig(position);
@@ -191,13 +200,13 @@ public abstract class Overlay extends AbstractConfigurable implements Translatab
     }
 
     public HorizontalAlignment getRenderHorizontalAlignment() {
-        return horizontalAlignmentOverride == null
+        return horizontalAlignmentOverride.get() == null
                 ? position.get().getHorizontalAlignment()
                 : horizontalAlignmentOverride.get();
     }
 
     public VerticalAlignment getRenderVerticalAlignment() {
-        return verticalAlignmentOverride == null
+        return verticalAlignmentOverride.get() == null
                 ? position.get().getVerticalAlignment()
                 : verticalAlignmentOverride.get();
     }

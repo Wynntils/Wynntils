@@ -8,8 +8,6 @@ public class Config<T> {
     private T value;
 
     public Config(T value) {
-        assert value != null; // null value means we can't use type deduction
-
         this.value = value;
     }
 
