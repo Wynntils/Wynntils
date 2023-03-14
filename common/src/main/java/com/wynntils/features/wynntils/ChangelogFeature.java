@@ -35,7 +35,7 @@ public class ChangelogFeature extends UserFeature {
     @SubscribeEvent
     public void onWorldStateChange(WorldStateEvent event) {
         if (!event.isFirstJoinWorld()) return;
-        if (WynntilsMod.getVersion().equals(lastShownVersion)) return;
+        if (WynntilsMod.getVersion().equals(lastShownVersion.get())) return;
 
         ApiResponse response = Managers.Net.callApi(
                 UrlId.API_ATHENA_UPDATE_CHANGELOG,

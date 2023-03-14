@@ -58,9 +58,9 @@ public class BulkBuyFeature extends UserFeature {
 
         List<Component> tooltips = List.of(
                 Component.literal(""), // Empty line
-                Component.translatable("feature.wynntils.bulkBuy.bulkBuyNormal", bulkBuyAmount)
+                Component.translatable("feature.wynntils.bulkBuy.bulkBuyNormal", bulkBuyAmount.get())
                         .withStyle(BULK_BUY_ACTIVE_COLOR),
-                Component.translatable("feature.wynntils.bulkBuy.bulkBuyActive", bulkBuyAmount)
+                Component.translatable("feature.wynntils.bulkBuy.bulkBuyActive", bulkBuyAmount.get())
                         .withStyle(BULK_BUY_ACTIVE_COLOR));
 
         event.setTooltips(LoreUtils.appendTooltip(event.getItemStack(), replacePrices(event.getTooltips()), tooltips));

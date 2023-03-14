@@ -97,7 +97,7 @@ public class ChatMentionFeature extends UserFeature {
             curr = Component.literal(text.substring(0, match.start())).withStyle(style);
 
             // do the name of the first mention
-            curr.append(Component.literal(mentionColor + match.group(0)));
+            curr.append(Component.literal(mentionColor.get() + match.group(0)));
 
             // Store the point at which this match ended
             int lastEnd = match.end();
@@ -109,7 +109,7 @@ public class ChatMentionFeature extends UserFeature {
                         .withStyle(style);
 
                 // get the name and recolor it
-                curr.append(Component.literal(mentionColor + match.group(0)));
+                curr.append(Component.literal(mentionColor.get() + match.group(0)));
 
                 // set the starting point for the next mentions before variable
                 lastEnd = match.end();
