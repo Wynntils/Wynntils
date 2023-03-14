@@ -67,7 +67,17 @@ public class ChatTabsFeature extends UserFeature {
         // We've already sent this message to every matching tab, so we can cancel it.
         event.setCanceled(true);
 
-        Managers.ChatTab.matchMessage(event);
+        boolean isRenderThread = McUtils.mc().isSameThread();
+        if (isRenderThread) {
+            Managers.ChatTab.matchMessage(event);
+        } else {
+            // It can happen that client-side messages are sent from some other thread
+            // That will cause race conditions with vanilla ChatComponent code, so
+            // schedule this update by the renderer thread instead
+            Managers.TickScheduler.scheduleNextTick(() -> {
+                Managers.ChatTab.matchMessage(event);
+            });
+        }
     }
 
     @SubscribeEvent
