@@ -6,7 +6,7 @@ package com.wynntils.features.combat;
 
 import com.wynntils.core.config.Category;
 import com.wynntils.core.config.ConfigCategory;
-import com.wynntils.core.features.UserFeature;
+import com.wynntils.core.features.Feature;
 import com.wynntils.mc.event.BossHealthUpdateEvent;
 import com.wynntils.mc.mixin.accessors.ClientboundBossEventPacketAccessor;
 import com.wynntils.utils.StringUtils;
@@ -21,7 +21,7 @@ import net.minecraft.network.protocol.game.ClientboundBossEventPacket.UpdateName
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 
 @ConfigCategory(Category.COMBAT)
-public class AbbreviateMobHealthFeature extends UserFeature {
+public class AbbreviateMobHealthFeature extends Feature {
     private static final Pattern MOB_HEALTH_PATTERN = Pattern.compile("(.*§c)(\\d+)(§4❤.*)");
 
     @SubscribeEvent

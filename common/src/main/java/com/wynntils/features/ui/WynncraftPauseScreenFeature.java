@@ -6,7 +6,7 @@ package com.wynntils.features.ui;
 
 import com.wynntils.core.config.Category;
 import com.wynntils.core.config.ConfigCategory;
-import com.wynntils.core.features.UserFeature;
+import com.wynntils.core.features.Feature;
 import com.wynntils.mc.event.PauseMenuInitEvent;
 import com.wynntils.screens.maps.GuildMapScreen;
 import com.wynntils.screens.wynntilsmenu.WynntilsMenuScreen;
@@ -26,7 +26,7 @@ import net.minecraft.network.chat.Component;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 
 @ConfigCategory(Category.UI)
-public class WynncraftPauseScreenFeature extends UserFeature {
+public class WynncraftPauseScreenFeature extends Feature {
     @SubscribeEvent
     public void onPauseScreenInitEvent(PauseMenuInitEvent event) {
         PauseScreen pauseScreen = event.getPauseScreen();

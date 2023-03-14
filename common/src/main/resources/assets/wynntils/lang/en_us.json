@@ -10,6 +10,7 @@
   "core.wynntils.category.chat": "Chat",
   "core.wynntils.category.combat": "Combat",
   "core.wynntils.category.commands": "Commands",
+  "core.wynntils.category.debug": "Debug",
   "core.wynntils.category.inventory": "Inventory",
   "core.wynntils.category.map": "Map",
   "core.wynntils.category.overlays": "Overlays",

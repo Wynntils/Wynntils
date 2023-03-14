@@ -5,7 +5,9 @@
 package com.wynntils.features.debug;
 
 import com.wynntils.core.WynntilsMod;
-import com.wynntils.core.features.DebugFeature;
+import com.wynntils.core.config.Category;
+import com.wynntils.core.config.ConfigCategory;
+import com.wynntils.core.features.Feature;
 import com.wynntils.core.features.properties.StartDisabled;
 import com.wynntils.mc.event.PacketEvent.PacketReceivedEvent;
 import com.wynntils.mc.event.PacketEvent.PacketSentEvent;
@@ -36,7 +38,8 @@ import org.apache.commons.lang3.builder.ReflectionToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
 @StartDisabled
-public class PacketDebuggerFeature extends DebugFeature {
+@ConfigCategory(Category.DEBUG)
+public class PacketDebuggerFeature extends Feature {
     /* These packets just spam the log; ignore them. */
     private static final List<Class<? extends Packet<?>>> IGNORE_LIST = Arrays.asList(
             // General

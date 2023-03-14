@@ -12,7 +12,7 @@ import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.config.Category;
 import com.wynntils.core.config.Config;
 import com.wynntils.core.config.ConfigCategory;
-import com.wynntils.core.features.UserFeature;
+import com.wynntils.core.features.Feature;
 import com.wynntils.mc.event.TitleScreenInitEvent;
 import com.wynntils.utils.StringUtils;
 import com.wynntils.utils.render.Texture;
@@ -34,7 +34,7 @@ import net.minecraftforge.eventbus.api.SubscribeEvent;
 import org.apache.commons.lang3.Validate;
 
 @ConfigCategory(Category.UI)
-public class WynncraftButtonFeature extends UserFeature {
+public class WynncraftButtonFeature extends Feature {
     private static final String GAME_SERVER = "play.wynncraft.com";
     private static final String LOBBY_SERVER = "lobby.wynncraft.com";
 

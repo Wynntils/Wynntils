@@ -11,7 +11,7 @@ import com.wynntils.core.config.Category;
 import com.wynntils.core.config.Config;
 import com.wynntils.core.config.ConfigCategory;
 import com.wynntils.core.config.ConfigHolder;
-import com.wynntils.core.features.UserFeature;
+import com.wynntils.core.features.Feature;
 import com.wynntils.core.features.overlays.Overlay;
 import com.wynntils.core.features.overlays.OverlayPosition;
 import com.wynntils.core.features.overlays.annotations.OverlayInfo;
@@ -32,7 +32,7 @@ import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 
 @ConfigCategory(Category.OVERLAYS)
-public class SpellCastRenderFeature extends UserFeature {
+public class SpellCastRenderFeature extends Feature {
     private static final int SHOW_TICKS = 40;
 
     @OverlayInfo(renderType = RenderEvent.ElementType.GUI)

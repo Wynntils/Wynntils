@@ -7,13 +7,11 @@ package com.wynntils.features;
 import com.wynntils.core.components.Models;
 import com.wynntils.core.config.Config;
 import com.wynntils.core.config.ConfigHolder;
-import com.wynntils.core.features.StateManagedFeature;
-import com.wynntils.core.features.properties.StartDisabled;
+import com.wynntils.core.features.Feature;
 import com.wynntils.utils.colors.CommonColors;
 import com.wynntils.utils.colors.CustomColor;
 
-@StartDisabled
-public class LootrunFeature extends StateManagedFeature {
+public class LootrunFeature extends Feature {
     public static LootrunFeature INSTANCE;
 
     @Config

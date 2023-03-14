@@ -10,7 +10,7 @@ import com.wynntils.core.components.Models;
 import com.wynntils.core.config.Category;
 import com.wynntils.core.config.Config;
 import com.wynntils.core.config.ConfigCategory;
-import com.wynntils.core.features.UserFeature;
+import com.wynntils.core.features.Feature;
 import com.wynntils.mc.event.RenderTileLevelLastEvent;
 import com.wynntils.utils.MathUtils;
 import com.wynntils.utils.colors.CommonColors;
@@ -24,7 +24,7 @@ import net.minecraft.core.Position;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 
 @ConfigCategory(Category.MAP)
-public class BeaconBeamFeature extends UserFeature {
+public class BeaconBeamFeature extends Feature {
     @Config
     public CustomColor waypointBeamColor = CommonColors.RED;
 
