@@ -10,6 +10,7 @@ import com.wynntils.core.components.Models;
 import com.wynntils.core.config.Category;
 import com.wynntils.core.config.Config;
 import com.wynntils.core.config.ConfigCategory;
+import com.wynntils.core.config.HiddenConfig;
 import com.wynntils.core.config.RegisterConfig;
 import com.wynntils.core.features.Feature;
 import com.wynntils.core.features.properties.RegisterKeyBind;
@@ -46,8 +47,8 @@ import org.lwjgl.glfw.GLFW;
 public class MapFeature extends Feature {
     public static MapFeature INSTANCE;
 
-    @RegisterConfig(visible = false)
-    public final Config<List<CustomPoi>> customPois = new Config<>(new ArrayList<>());
+    @RegisterConfig
+    public final HiddenConfig<List<CustomPoi>> customPois = new HiddenConfig<>(new ArrayList<>());
 
     @TypeOverride
     private final Type customPoisType = new TypeToken<ArrayList<CustomPoi>>() {}.getType();

@@ -9,8 +9,8 @@ import com.mojang.brigadier.builder.LiteralArgumentBuilder;
 import com.mojang.brigadier.tree.RootCommandNode;
 import com.wynntils.core.components.Managers;
 import com.wynntils.core.config.Category;
-import com.wynntils.core.config.Config;
 import com.wynntils.core.config.ConfigCategory;
+import com.wynntils.core.config.HiddenConfig;
 import com.wynntils.core.config.RegisterConfig;
 import com.wynntils.core.features.Feature;
 import com.wynntils.core.json.TypeOverride;
@@ -29,8 +29,8 @@ import net.minecraftforge.eventbus.api.SubscribeEvent;
 
 @ConfigCategory(Category.COMMANDS)
 public class CommandAliasesFeature extends Feature {
-    @RegisterConfig(visible = false)
-    public final Config<List<CommandAlias>> aliases = new Config<>(new ArrayList<>(List.of(
+    @RegisterConfig
+    public final HiddenConfig<List<CommandAlias>> aliases = new HiddenConfig<>(new ArrayList<>(List.of(
             new CommandAlias("guild attack", List.of("gu a", "guild a")),
             new CommandAlias("guild manage", List.of("gu m", "gu man", "guild m", "guild man")),
             new CommandAlias("guild territory", List.of("gu t", "gu terr", "guild t", "guild terr")))));

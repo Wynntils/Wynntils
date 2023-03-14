@@ -9,6 +9,7 @@ import com.wynntils.core.components.Managers;
 import com.wynntils.core.config.Category;
 import com.wynntils.core.config.Config;
 import com.wynntils.core.config.ConfigCategory;
+import com.wynntils.core.config.HiddenConfig;
 import com.wynntils.core.config.RegisterConfig;
 import com.wynntils.core.features.Feature;
 import com.wynntils.core.net.ApiResponse;
@@ -24,8 +25,8 @@ import net.minecraftforge.eventbus.api.SubscribeEvent;
 @ConfigCategory(Category.WYNNTILS)
 public class ChangelogFeature extends Feature {
     // "v0.0.2-alpha.2" is the first version with a changelog on GitHub
-    @RegisterConfig(visible = false)
-    public final Config<String> lastShownVersion = new Config<>("v0.0.2-alpha.2");
+    @RegisterConfig
+    public final HiddenConfig<String> lastShownVersion = new HiddenConfig<>("v0.0.2-alpha.2");
 
     @RegisterConfig
     public final Config<Boolean> autoClassMenu = new Config<>(false);
