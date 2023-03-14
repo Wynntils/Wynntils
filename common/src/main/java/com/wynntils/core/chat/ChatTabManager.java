@@ -11,6 +11,7 @@ import com.wynntils.handlers.chat.type.RecipientType;
 import com.wynntils.mc.event.ChatPacketReceivedEvent;
 import com.wynntils.mc.event.ClientsideMessageEvent;
 import com.wynntils.mc.event.ScreenOpenedEvent;
+import com.wynntils.mc.event.TickEvent;
 import com.wynntils.mc.mixin.invokers.ChatScreenInvoker;
 import com.wynntils.models.worlds.event.WorldStateEvent;
 import com.wynntils.models.worlds.type.WorldState;
@@ -18,7 +19,9 @@ import com.wynntils.utils.mc.McUtils;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
+import java.util.Optional;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.regex.Pattern;
 import java.util.stream.Stream;
 import net.minecraft.client.gui.components.ChatComponent;
 import net.minecraft.client.gui.screens.ChatScreen;
@@ -95,6 +98,11 @@ public final class ChatTabManager extends Manager {
                 || focusedTab.getAutoCommand().isEmpty()) return;
 
         replaceChatText(chatScreen, focusedTab.getAutoCommand());
+    }
+
+    @SubscribeEvent
+    public void onTick(TickEvent event) {
+        chatTabData.values().forEach(c -> c.tick());
     }
 
     private void replaceChatText(ChatScreen chatScreen, String autoCommand) {
@@ -209,11 +217,9 @@ public final class ChatTabManager extends Manager {
             return false;
         }
 
-        return chatTab.getCustomRegexString() == null
-                || chatTab.getCustomRegexString().isBlank()
-                || chatTab.getCustomRegex()
-                        .matcher(event.getOriginalCodedMessage())
-                        .matches();
+        Optional<Pattern> regex = chatTab.getCustomRegex();
+        return regex.isEmpty()
+                || regex.get().matcher(event.getOriginalCodedMessage()).matches();
     }
 
     private boolean matchMessageFromEvent(ChatTab chatTab, ClientsideMessageEvent event) {
@@ -223,10 +229,9 @@ public final class ChatTabManager extends Manager {
             return false;
         }
 
-        if (chatTab.getCustomRegexString() == null) {
-            return true;
-        }
+        Optional<Pattern> regex = chatTab.getCustomRegex();
+        if (regex.isEmpty()) return true;
 
-        return chatTab.getCustomRegex().matcher(event.getOriginalCodedMessage()).matches();
+        return regex.get().matcher(event.getOriginalCodedMessage()).matches();
     }
 }

@@ -34,6 +34,9 @@ public class TelemetryFeature extends UserFeature {
     @SubscribeEvent
     public void onCrash(WynntilsCrashEvent event) {
         if (crashReports != ConfirmedBoolean.TRUE) return;
+        // Only send telemetry for released versions
+        if (WynntilsMod.isDevelopmentEnvironment()) return;
+        if (WynntilsMod.getVersion().contains("SNAPSHOT")) return;
 
         String title = "Crashed " + event.getType().toString().toLowerCase(Locale.ROOT) + ": " + event.getName() + "\n";
         String trace = ExceptionUtils.getStackTrace(event.getThrowable());
@@ -67,7 +70,7 @@ public class TelemetryFeature extends UserFeature {
                 .withStyle(ChatFormatting.GREEN)
                 .withStyle(ChatFormatting.UNDERLINE)
                 .withStyle(style -> style.withClickEvent(new ClickEvent(
-                        ClickEvent.Action.RUN_COMMAND, "/config set TelemetryFeature crashReports true"))));
+                        ClickEvent.Action.RUN_COMMAND, "/wynntils config set TelemetryFeature crashReports true"))));
         component.append(
                 Component.literal(" to accept crash report telemetry\n").withStyle(ChatFormatting.GREEN));
 
@@ -75,7 +78,7 @@ public class TelemetryFeature extends UserFeature {
                 .withStyle(ChatFormatting.RED)
                 .withStyle(ChatFormatting.UNDERLINE)
                 .withStyle(style -> style.withClickEvent(new ClickEvent(
-                        ClickEvent.Action.RUN_COMMAND, "/config set TelemetryFeature crashReports false"))));
+                        ClickEvent.Action.RUN_COMMAND, "/wynntils config set TelemetryFeature crashReports false"))));
         component.append(
                 Component.literal(" to opt out of crash report telemetry\n").withStyle(ChatFormatting.RED));
 
