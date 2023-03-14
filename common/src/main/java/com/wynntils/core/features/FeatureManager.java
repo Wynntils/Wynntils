@@ -263,7 +263,7 @@ public final class FeatureManager extends Manager {
             }
         } catch (Throwable exception) {
             // Log and handle gracefully, just disable this feature
-            feature.crash();
+            crashFeature(feature);
             WynntilsMod.reportCrash(feature.getClass().getName() + ":initialize", feature.getClass().getSimpleName() + " during init", CrashType.FEATURE, exception, false, true);
         }
     }
@@ -391,7 +391,7 @@ public final class FeatureManager extends Manager {
 
         Feature feature = featureOptional.get();
 
-        Managers.Feature.crashFeature(feature);
+        crashFeature(feature);
 
         // If a crash happens in a client-side message event, and we send a new message about disabling X feature,
         // we will cause a new exception and an endless recursion.
