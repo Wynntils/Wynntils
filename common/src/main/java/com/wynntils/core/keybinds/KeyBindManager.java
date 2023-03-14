@@ -32,7 +32,7 @@ import org.apache.commons.lang3.reflect.FieldUtils;
 
 /** Registers and handles keybinds */
 public final class KeyBindManager extends Manager {
-    private final Set<KeyBind> enbaledKeyBinds = ConcurrentHashMap.newKeySet();
+    private final Set<KeyBind> enabledKeyBinds = ConcurrentHashMap.newKeySet();
     private final Map<Feature, List<Pair<KeyBind, String>>> keyBinds = new ConcurrentHashMap<>();
 
     public KeyBindManager() {
@@ -104,7 +104,7 @@ public final class KeyBindManager extends Manager {
         KeyMapping keyMapping = toAdd.getKeyMapping();
 
         synchronized (McUtils.options()) {
-            enbaledKeyBinds.add(toAdd);
+            enabledKeyBinds.add(toAdd);
 
             Options options = McUtils.options();
             KeyMapping[] keyMappings = options.keyMappings;
@@ -121,7 +121,7 @@ public final class KeyBindManager extends Manager {
     }
 
     private void unregisterKeybind(Feature parent, KeyBind toRemove) {
-        if (!enbaledKeyBinds.remove(toRemove)) return;
+        if (!enabledKeyBinds.remove(toRemove)) return;
 
         KeyMapping keyMapping = toRemove.getKeyMapping();
 
@@ -178,7 +178,7 @@ public final class KeyBindManager extends Manager {
     }
 
     private boolean hasName(String name) {
-        return enbaledKeyBinds.stream().anyMatch(k -> k.getName().equals(name));
+        return enabledKeyBinds.stream().anyMatch(k -> k.getName().equals(name));
     }
 
     /**
