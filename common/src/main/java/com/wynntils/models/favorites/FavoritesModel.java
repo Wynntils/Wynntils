@@ -96,6 +96,6 @@ public final class FavoritesModel extends Model {
 
     private Set<String> getFavoriteItems() {
         // This is a hack to allow saving of favorites in the config
-        return ItemFavoriteFeature.INSTANCE.favoriteItems;
+        return ItemFavoriteFeature.INSTANCE.favoriteItems.get();
     }
 }

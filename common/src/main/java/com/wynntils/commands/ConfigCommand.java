@@ -456,12 +456,7 @@ public class ConfigCommand extends Command {
             return 0;
         }
 
-        if (!config.setValue(parsedValue)) {
-            context.getSource()
-                    .sendFailure(
-                            Component.literal("Failed to set config field!").withStyle(ChatFormatting.RED));
-            return 0;
-        }
+        config.setValue(parsedValue);
 
         Managers.Config.saveConfig();
 
@@ -581,12 +576,7 @@ public class ConfigCommand extends Command {
             return 0;
         }
 
-        if (!config.setValue(parsedValue)) {
-            context.getSource()
-                    .sendFailure(
-                            Component.literal("Failed to set config field!").withStyle(ChatFormatting.RED));
-            return 0;
-        }
+        config.setValue(parsedValue);
 
         Managers.Config.saveConfig();
 
@@ -793,7 +783,7 @@ public class ConfigCommand extends Command {
                 .append("\n");
         response.append(Component.literal("Subcategory: ")
                         .withStyle(ChatFormatting.WHITE)
-                        .append(Component.literal(config.getMetadata().subcategory())))
+                        .append(Component.literal(config.getSubcategory())))
                 .append("\n");
         response.append(Component.literal("Description: ")
                         .withStyle(ChatFormatting.WHITE)

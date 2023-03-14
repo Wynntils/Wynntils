@@ -9,6 +9,7 @@ import com.wynntils.core.components.Models;
 import com.wynntils.core.config.Category;
 import com.wynntils.core.config.Config;
 import com.wynntils.core.config.ConfigCategory;
+import com.wynntils.core.config.RegisterConfig;
 import com.wynntils.core.features.Feature;
 import com.wynntils.mc.event.ContainerClickEvent;
 import com.wynntils.mc.event.ItemTooltipRenderEvent;
@@ -31,8 +32,8 @@ import net.minecraftforge.eventbus.api.SubscribeEvent;
 
 @ConfigCategory(Category.INVENTORY)
 public class BulkBuyFeature extends Feature {
-    @Config
-    public int bulkBuyAmount = 4;
+    @RegisterConfig
+    public final Config<Integer> bulkBuyAmount = new Config<>(4);
 
     // Test suite: https://regexr.com/7998g
     private static final Pattern PRICE_PATTERN = Pattern.compile("§6 - §r§(?:c✖|a✔) §r§f(\\d+)§r§7²");
@@ -47,7 +48,7 @@ public class BulkBuyFeature extends Feature {
         if (!isBulkBuyable(container, e.getItemStack())) return;
 
         if (e.getClickType() == ClickType.QUICK_MOVE) { // Shift + Left Click
-            for (int i = 1; i < bulkBuyAmount; i++) {
+            for (int i = 1; i < bulkBuyAmount.get(); i++) {
                 ContainerUtils.clickOnSlot(e.getSlotNum(), container.containerId, 10, container.getItems());
             }
         }
@@ -60,9 +61,9 @@ public class BulkBuyFeature extends Feature {
 
         List<Component> tooltips = List.of(
                 Component.literal(""), // Empty line
-                Component.translatable("feature.wynntils.bulkBuy.bulkBuyNormal", bulkBuyAmount)
+                Component.translatable("feature.wynntils.bulkBuy.bulkBuyNormal", bulkBuyAmount.get())
                         .withStyle(BULK_BUY_ACTIVE_COLOR),
-                Component.translatable("feature.wynntils.bulkBuy.bulkBuyActive", bulkBuyAmount)
+                Component.translatable("feature.wynntils.bulkBuy.bulkBuyActive", bulkBuyAmount.get())
                         .withStyle(BULK_BUY_ACTIVE_COLOR));
 
         event.setTooltips(LoreUtils.appendTooltip(event.getItemStack(), replacePrices(event.getTooltips()), tooltips));
@@ -84,7 +85,7 @@ public class BulkBuyFeature extends Feature {
             WynntilsMod.warn("Could not find price for " + oldLore.get(0).getString() + " in " + priceLine);
             return oldLore;
         }
-        int newPrice = Integer.parseInt(priceMatcher.group(1)) * bulkBuyAmount;
+        int newPrice = Integer.parseInt(priceMatcher.group(1)) * bulkBuyAmount.get();
 
         String newLine = priceLine.replace(priceMatcher.group(1), BULK_BUY_ACTIVE_COLOR + Integer.toString(newPrice));
 

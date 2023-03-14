@@ -7,6 +7,7 @@ package com.wynntils.features.ui;
 import com.wynntils.core.config.Category;
 import com.wynntils.core.config.Config;
 import com.wynntils.core.config.ConfigCategory;
+import com.wynntils.core.config.RegisterConfig;
 import com.wynntils.core.features.Feature;
 import com.wynntils.core.features.properties.RegisterKeyBind;
 import com.wynntils.core.keybinds.KeyBind;
@@ -35,29 +36,29 @@ public class WynntilsQuestBookFeature extends Feature {
             new KeyBind("Open Wynntils Menu", GLFW.GLFW_KEY_UNKNOWN, true, () -> McUtils.mc()
                     .setScreen(WynntilsMenuScreen.create()));
 
-    @Config
-    public boolean replaceWynncraftQuestBook = true;
+    @RegisterConfig
+    public final Config<Boolean> replaceWynncraftQuestBook = new Config<>(true);
 
-    @Config
-    public boolean questBookShouldOpenWynntilsMenu = false;
+    @RegisterConfig
+    public final Config<Boolean> questBookShouldOpenWynntilsMenu = new Config<>(false);
 
     @SubscribeEvent
     public void onUseItem(UseItemEvent event) {
-        if (McUtils.player().isShiftKeyDown() || !replaceWynncraftQuestBook) return;
+        if (McUtils.player().isShiftKeyDown() || !replaceWynncraftQuestBook.get()) return;
 
         tryCancelQuestBookOpen(event);
     }
 
     @SubscribeEvent
     public void onUseItemOn(PlayerInteractEvent.RightClickBlock event) {
-        if (McUtils.player().isShiftKeyDown() || !replaceWynncraftQuestBook) return;
+        if (McUtils.player().isShiftKeyDown() || !replaceWynncraftQuestBook.get()) return;
 
         tryCancelQuestBookOpen(event);
     }
 
     @SubscribeEvent
     public void onInteract(PlayerInteractEvent.Interact event) {
-        if (McUtils.player().isShiftKeyDown() || !replaceWynncraftQuestBook) return;
+        if (McUtils.player().isShiftKeyDown() || !replaceWynncraftQuestBook.get()) return;
 
         tryCancelQuestBookOpen(event);
     }
@@ -70,7 +71,7 @@ public class WynntilsQuestBookFeature extends Feature {
             event.setCanceled(true);
             McUtils.mc()
                     .setScreen(
-                            questBookShouldOpenWynntilsMenu
+                            questBookShouldOpenWynntilsMenu.get()
                                     ? WynntilsMenuScreen.create()
                                     : WynntilsQuestBookScreen.create());
         }

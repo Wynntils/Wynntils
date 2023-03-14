@@ -10,6 +10,7 @@ import com.wynntils.core.components.Managers;
 import com.wynntils.core.config.Category;
 import com.wynntils.core.config.Config;
 import com.wynntils.core.config.ConfigCategory;
+import com.wynntils.core.config.RegisterConfig;
 import com.wynntils.core.features.Feature;
 import com.wynntils.mc.event.ResourcePackClearEvent;
 import com.wynntils.mc.event.ResourcePackEvent;
@@ -29,8 +30,8 @@ import net.minecraftforge.eventbus.api.SubscribeEvent;
 public class AutoApplyResourcePackFeature extends Feature {
     private static final File SERVER_RESOURCE_PACK_DIR = new File(McUtils.mc().gameDirectory, "server-resource-packs");
 
-    @Config(visible = false)
-    private String packHash = "";
+    @RegisterConfig(visible = false)
+    public final Config<String> packHash = new Config<>("");
 
     private String appliedHash = "";
 
@@ -41,7 +42,7 @@ public class AutoApplyResourcePackFeature extends Feature {
             return;
         }
 
-        packHash = event.getHash();
+        packHash.updateConfig(event.getHash());
         Managers.Config.saveConfig();
     }
 
@@ -69,16 +70,16 @@ public class AutoApplyResourcePackFeature extends Feature {
 
     @SubscribeEvent(priority = EventPriority.HIGHEST)
     public void onTitleScreenInit(TitleScreenInitEvent.Pre event) {
-        if (packHash == null || packHash.isEmpty() || Objects.equals(appliedHash, packHash)) return;
+        if (packHash.get() == null || packHash.get().isEmpty() || Objects.equals(appliedHash, packHash.get())) return;
 
         DownloadedPackSource downloadedPackSource = McUtils.mc().getDownloadedPackSource();
 
         File[] files = SERVER_RESOURCE_PACK_DIR.listFiles();
 
         for (File file : files != null ? files : new File[0]) {
-            if (downloadedPackSource.checkHash(packHash, file)) {
+            if (downloadedPackSource.checkHash(packHash.get(), file)) {
                 downloadedPackSource.setServerPack(file, PackSource.DEFAULT);
-                appliedHash = packHash;
+                appliedHash = packHash.get();
                 break;
             }
         }

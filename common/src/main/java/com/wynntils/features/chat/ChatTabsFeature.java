@@ -12,6 +12,7 @@ import com.wynntils.core.config.Category;
 import com.wynntils.core.config.Config;
 import com.wynntils.core.config.ConfigCategory;
 import com.wynntils.core.config.ConfigHolder;
+import com.wynntils.core.config.RegisterConfig;
 import com.wynntils.core.features.Feature;
 import com.wynntils.core.json.TypeOverride;
 import com.wynntils.handlers.chat.event.ChatMessageReceivedEvent;
@@ -39,15 +40,15 @@ public class ChatTabsFeature extends Feature {
     public static ChatTabsFeature INSTANCE;
 
     // These should move to ChatTabManager, as Storage
-    @Config(visible = false)
-    public List<ChatTab> chatTabs = new ArrayList<>(List.of(
+    @RegisterConfig(visible = false)
+    public final Config<List<ChatTab>> chatTabs = new Config<>(new ArrayList<>(List.of(
             new ChatTab("All", false, null, null, null),
             new ChatTab("Global", false, null, Sets.newHashSet(RecipientType.GLOBAL), null),
             new ChatTab("Local", false, null, Sets.newHashSet(RecipientType.LOCAL), null),
             new ChatTab("Guild", false, "/g  ", Sets.newHashSet(RecipientType.GUILD), null),
             new ChatTab("Party", false, "/p  ", Sets.newHashSet(RecipientType.PARTY), null),
             new ChatTab("Private", false, "/r  ", Sets.newHashSet(RecipientType.PRIVATE), null),
-            new ChatTab("Shout", false, null, Sets.newHashSet(RecipientType.SHOUT), null)));
+            new ChatTab("Shout", false, null, Sets.newHashSet(RecipientType.SHOUT), null))));
 
     @TypeOverride
     private final Type chatTabsType = new TypeToken<ArrayList<ChatTab>>() {}.getType();

@@ -9,6 +9,7 @@ import com.wynntils.core.components.Managers;
 import com.wynntils.core.config.Category;
 import com.wynntils.core.config.Config;
 import com.wynntils.core.config.ConfigCategory;
+import com.wynntils.core.config.RegisterConfig;
 import com.wynntils.core.features.Feature;
 import com.wynntils.core.mod.event.WynntilsCrashEvent;
 import com.wynntils.core.net.ApiResponse;
@@ -28,12 +29,12 @@ import org.apache.commons.lang3.exception.ExceptionUtils;
 
 @ConfigCategory(Category.WYNNTILS)
 public class TelemetryFeature extends Feature {
-    @Config
-    public ConfirmedBoolean crashReports = ConfirmedBoolean.UNCONFIRMED;
+    @RegisterConfig
+    public final Config<ConfirmedBoolean> crashReports = new Config<>(ConfirmedBoolean.UNCONFIRMED);
 
     @SubscribeEvent
     public void onCrash(WynntilsCrashEvent event) {
-        if (crashReports != ConfirmedBoolean.TRUE) return;
+        if (crashReports.get() != ConfirmedBoolean.TRUE) return;
         // Only send telemetry for released versions
         if (WynntilsMod.isDevelopmentEnvironment()) return;
         if (WynntilsMod.getVersion().contains("SNAPSHOT")) return;
@@ -58,7 +59,7 @@ public class TelemetryFeature extends Feature {
     @SubscribeEvent
     public void onWorldChange(WorldStateEvent event) {
         if (event.getNewState() != WorldState.WORLD) return;
-        if (crashReports != ConfirmedBoolean.UNCONFIRMED) return;
+        if (crashReports.get() != ConfirmedBoolean.UNCONFIRMED) return;
 
         MutableComponent component = Component.literal("Wynntils Telemetry\n").withStyle(ChatFormatting.AQUA);
         component.append(Component.literal("Wynntils can send telemetry data when a component fails.\n"

@@ -9,6 +9,7 @@ import com.wynntils.core.components.Models;
 import com.wynntils.core.config.Category;
 import com.wynntils.core.config.Config;
 import com.wynntils.core.config.ConfigCategory;
+import com.wynntils.core.config.RegisterConfig;
 import com.wynntils.core.features.Feature;
 import com.wynntils.mc.event.HotbarSlotRenderEvent;
 import com.wynntils.mc.event.SlotRenderEvent;
@@ -23,21 +24,21 @@ import net.minecraftforge.eventbus.api.SubscribeEvent;
 
 @ConfigCategory(Category.INVENTORY)
 public class DurabilityArcFeature extends Feature {
-    @Config
-    public boolean renderDurabilityArcInventories = true;
+    @RegisterConfig
+    public final Config<Boolean> renderDurabilityArcInventories = new Config<>(true);
 
-    @Config
-    public boolean renderDurabilityArcHotbar = true;
+    @RegisterConfig
+    public final Config<Boolean> renderDurabilityArcHotbar = new Config<>(true);
 
     @SubscribeEvent
     public void onRenderHotbarSlot(HotbarSlotRenderEvent.Pre e) {
-        if (!renderDurabilityArcHotbar) return;
+        if (!renderDurabilityArcHotbar.get()) return;
         drawDurabilityArc(e.getPoseStack(), e.getItemStack(), e.getX(), e.getY(), true);
     }
 
     @SubscribeEvent
     public void onRenderSlot(SlotRenderEvent.Pre e) {
-        if (!renderDurabilityArcInventories) return;
+        if (!renderDurabilityArcInventories.get()) return;
         drawDurabilityArc(e.getPoseStack(), e.getSlot().getItem(), e.getSlot().x, e.getSlot().y, false);
     }
 

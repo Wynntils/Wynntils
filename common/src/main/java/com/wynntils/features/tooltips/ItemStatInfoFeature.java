@@ -9,6 +9,7 @@ import com.wynntils.core.components.Models;
 import com.wynntils.core.config.Category;
 import com.wynntils.core.config.Config;
 import com.wynntils.core.config.ConfigCategory;
+import com.wynntils.core.config.RegisterConfig;
 import com.wynntils.core.features.Feature;
 import com.wynntils.mc.event.ItemTooltipRenderEvent;
 import com.wynntils.models.gear.tooltip.GearTooltipBuilder;
@@ -42,41 +43,41 @@ import org.lwjgl.glfw.GLFW;
 public class ItemStatInfoFeature extends Feature {
     private final Set<GearItem> brokenItems = new HashSet<>();
 
-    @Config
-    public boolean showStars = true;
+    @RegisterConfig
+    public final Config<Boolean> showStars = new Config<>(true);
 
-    @Config
-    public boolean colorLerp = true;
+    @RegisterConfig
+    public final Config<Boolean> colorLerp = new Config<>(true);
 
-    @Config
-    public int decimalPlaces = 1;
+    @RegisterConfig
+    public final Config<Integer> decimalPlaces = new Config<>(1);
 
-    @Config
-    public boolean perfect = true;
+    @RegisterConfig
+    public final Config<Boolean> perfect = new Config<>(true);
 
-    @Config
-    public boolean defective = true;
+    @RegisterConfig
+    public final Config<Boolean> defective = new Config<>(true);
 
-    @Config
-    public float obfuscationChanceStart = 0.08f;
+    @RegisterConfig
+    public final Config<Float> obfuscationChanceStart = new Config<>(0.08f);
 
-    @Config
-    public float obfuscationChanceEnd = 0.04f;
+    @RegisterConfig
+    public final Config<Float> obfuscationChanceEnd = new Config<>(0.04f);
 
-    @Config
-    public StatListOrdering identificationsOrdering = StatListOrdering.DEFAULT;
+    @RegisterConfig
+    public final Config<StatListOrdering> identificationsOrdering = new Config<>(StatListOrdering.DEFAULT);
 
-    @Config
-    public boolean groupIdentifications = true;
+    @RegisterConfig
+    public final Config<Boolean> groupIdentifications = new Config<>(true);
 
-    @Config
-    public boolean identificationDecorations = true;
+    @RegisterConfig
+    public final Config<Boolean> identificationDecorations = new Config<>(true);
 
-    @Config
-    public boolean overallPercentageInName = true;
+    @RegisterConfig
+    public final Config<Boolean> overallPercentageInName = new Config<>(true);
 
-    @Config
-    public boolean showBestValueLastAlways = true;
+    @RegisterConfig
+    public final Config<Boolean> showBestValueLastAlways = new Config<>(true);
 
     @SubscribeEvent
     public void onTooltipPre(ItemTooltipRenderEvent.Pre event) {
@@ -97,9 +98,12 @@ public class ItemStatInfoFeature extends Feature {
                             () -> Models.GearTooltip.fromParsedItemStack(event.getItemStack(), gearItem));
             if (builder == null) return;
 
-            IdentificationDecorator decorator = identificationDecorations ? new IdentificationDecorator() : null;
+            IdentificationDecorator decorator = identificationDecorations.get() ? new IdentificationDecorator() : null;
             GearTooltipStyle currentIdentificationStyle = new GearTooltipStyle(
-                    identificationsOrdering, groupIdentifications, showBestValueLastAlways, showStars);
+                    identificationsOrdering.get(),
+                    groupIdentifications.get(),
+                    showBestValueLastAlways.get(),
+                    showStars.get());
             LinkedList<Component> tooltips = new LinkedList<>(
                     builder.getTooltipLines(Models.Character.getClassType(), currentIdentificationStyle, decorator));
 
@@ -109,7 +113,7 @@ public class ItemStatInfoFeature extends Feature {
 
                 // Update name depending on overall percentage; this needs to be done every rendering
                 // for rainbow/defective effects
-                if (overallPercentageInName && gearInstance.hasOverallValue()) {
+                if (overallPercentageInName.get() && gearInstance.hasOverallValue()) {
                     updateItemName(gearInfo, gearInstance, tooltips);
                 }
             }
@@ -132,15 +136,15 @@ public class ItemStatInfoFeature extends Feature {
 
     private void updateItemName(GearInfo gearInfo, GearInstance gearInstance, LinkedList<Component> tooltips) {
         MutableComponent name;
-        if (perfect && gearInstance.isPerfect()) {
+        if (perfect.get() && gearInstance.isPerfect()) {
             name = ComponentUtils.makeRainbowStyle("Perfect " + gearInfo.name());
-        } else if (defective && gearInstance.isDefective()) {
+        } else if (defective.get() && gearInstance.isDefective()) {
             name = ComponentUtils.makeObfuscated(
-                    "Defective " + gearInfo.name(), obfuscationChanceStart, obfuscationChanceEnd);
+                    "Defective " + gearInfo.name(), obfuscationChanceStart.get(), obfuscationChanceEnd.get());
         } else {
             name = tooltips.getFirst().copy();
             name.append(ColorScaleUtils.getPercentageTextComponent(
-                    gearInstance.getOverallPercentage(), colorLerp, decimalPlaces));
+                    gearInstance.getOverallPercentage(), colorLerp.get(), decimalPlaces.get()));
         }
         tooltips.removeFirst();
         tooltips.addFirst(name);
@@ -218,7 +222,7 @@ public class ItemStatInfoFeature extends Feature {
                 GearTooltipStyle style, StatActualValue actualValue, StatPossibleValues possibleValues) {
             float percentage = StatCalculator.getPercentage(actualValue, possibleValues);
             MutableComponent percentageTextComponent =
-                    ColorScaleUtils.getPercentageTextComponent(percentage, colorLerp, decimalPlaces);
+                    ColorScaleUtils.getPercentageTextComponent(percentage, colorLerp.get(), decimalPlaces.get());
 
             return percentageTextComponent;
         }

@@ -39,7 +39,9 @@ public abstract class IconPoi implements Poi {
         if (minZoom <= -1) return 1f;
 
         return MathUtils.clamp(
-                MathUtils.map(zoom, minZoom * (1 - MapFeature.INSTANCE.poiFadeAdjustment), minZoom, 0f, 1f), 0f, 1f);
+                MathUtils.map(zoom, minZoom * (1 - MapFeature.INSTANCE.poiFadeAdjustment.get()), minZoom, 0f, 1f),
+                0f,
+                1f);
     }
 
     public CustomColor getIconColor() {

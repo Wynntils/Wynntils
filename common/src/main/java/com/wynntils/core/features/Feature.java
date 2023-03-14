@@ -10,6 +10,7 @@ import com.wynntils.core.components.Managers;
 import com.wynntils.core.config.Category;
 import com.wynntils.core.config.Config;
 import com.wynntils.core.config.ConfigHolder;
+import com.wynntils.core.config.RegisterConfig;
 import com.wynntils.core.storage.Storageable;
 import net.minecraft.client.resources.language.I18n;
 
@@ -20,8 +21,8 @@ import net.minecraft.client.resources.language.I18n;
 public abstract class Feature extends AbstractConfigurable implements Storageable, Translatable, Comparable<Feature> {
     private Category category = Category.UNCATEGORIZED;
 
-    @Config(key = "feature.wynntils.userFeature.userEnabled")
-    public boolean userEnabled = true;
+    @RegisterConfig(key = "feature.wynntils.userFeature.userEnabled")
+    public final Config<Boolean> userEnabled = new Config<>(true);
 
     public Category getCategory() {
         return category;
@@ -69,7 +70,7 @@ public abstract class Feature extends AbstractConfigurable implements Storageabl
     }
 
     public void setUserEnabled(boolean newState) {
-        this.userEnabled = newState;
+        this.userEnabled.updateConfig(newState);
         tryUserToggle();
     }
 
@@ -88,7 +89,7 @@ public abstract class Feature extends AbstractConfigurable implements Storageabl
 
     /** Updates the feature's enabled/disabled state to match the user's setting, if necessary */
     private void tryUserToggle() {
-        if (userEnabled) {
+        if (userEnabled.get()) {
             Managers.Feature.enableFeature(this);
         } else {
             Managers.Feature.disableFeature(this);

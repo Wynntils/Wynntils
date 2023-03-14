@@ -127,8 +127,8 @@ public final class LootrunCompiler {
         for (int i = 0; i < positions.size(); i++) {
             Vec3 position = positions.get(i);
 
-            if (LootrunFeature.INSTANCE.rainbowLootRun && !recording) {
-                int cycleDistance = LootrunFeature.INSTANCE.cycleDistance;
+            if (LootrunFeature.INSTANCE.rainbowLootRun.get() && !recording) {
+                int cycleDistance = LootrunFeature.INSTANCE.cycleDistance.get();
                 int cycle = 10 * cycleDistance;
                 int parts = i % cycle;
                 float done = (float) parts / (float) cycle;
@@ -159,8 +159,14 @@ public final class LootrunCompiler {
                         .add(new ColoredPosition(
                                 position,
                                 recording
-                                        ? LootrunFeature.INSTANCE.recordingPathColor.asInt()
-                                        : LootrunFeature.INSTANCE.activePathColor.asInt()));
+                                        ? LootrunFeature.INSTANCE
+                                                .recordingPathColor
+                                                .get()
+                                                .asInt()
+                                        : LootrunFeature.INSTANCE
+                                                .activePathColor
+                                                .get()
+                                                .asInt()));
             }
         }
 

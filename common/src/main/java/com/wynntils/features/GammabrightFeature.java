@@ -9,6 +9,7 @@ import com.wynntils.core.config.Category;
 import com.wynntils.core.config.Config;
 import com.wynntils.core.config.ConfigCategory;
 import com.wynntils.core.config.ConfigHolder;
+import com.wynntils.core.config.RegisterConfig;
 import com.wynntils.core.features.Feature;
 import com.wynntils.core.features.properties.RegisterKeyBind;
 import com.wynntils.core.keybinds.KeyBind;
@@ -21,11 +22,11 @@ import org.lwjgl.glfw.GLFW;
 
 @ConfigCategory(Category.UNCATEGORIZED)
 public class GammabrightFeature extends Feature {
-    @Config
-    private boolean gammabrightEnabled = false;
+    @RegisterConfig
+    public final Config<Boolean> gammabrightEnabled = new Config<>(false);
 
-    @Config(visible = false)
-    private double lastGamma = 1f;
+    @RegisterConfig(visible = false)
+    public final Config<Double> lastGamma = new Config<>(1.0);
 
     @RegisterKeyBind
     private final KeyBind gammabrightKeyBind =
@@ -40,7 +41,7 @@ public class GammabrightFeature extends Feature {
 
     @SubscribeEvent
     public void onDisconnect(WynncraftConnectionEvent.Disconnected event) {
-        if (gammabrightEnabled) {
+        if (gammabrightEnabled.get()) {
             resetGamma();
         }
     }
@@ -54,7 +55,7 @@ public class GammabrightFeature extends Feature {
 
     @Override
     public void onEnable() {
-        if (gammabrightEnabled && McUtils.options().gamma().get() != 1000d) {
+        if (gammabrightEnabled.get() && McUtils.options().gamma().get() != 1000d) {
             enableGammabright();
         }
     }
@@ -66,9 +67,9 @@ public class GammabrightFeature extends Feature {
 
     private void applyGammabright() {
         if (!isEnabled()) return;
-        if (gammabrightEnabled && McUtils.options().gamma().get() == 1000d) return;
+        if (gammabrightEnabled.get() && McUtils.options().gamma().get() == 1000d) return;
 
-        if (gammabrightEnabled) {
+        if (gammabrightEnabled.get()) {
             enableGammabright();
         } else {
             resetGamma();
@@ -76,18 +77,18 @@ public class GammabrightFeature extends Feature {
     }
 
     private void toggleGammaBright() {
-        gammabrightEnabled = !gammabrightEnabled;
+        gammabrightEnabled.updateConfig(!gammabrightEnabled.get());
         applyGammabright();
 
         Managers.Config.saveConfig();
     }
 
     private void resetGamma() {
-        McUtils.options().gamma().value = lastGamma;
+        McUtils.options().gamma().value = lastGamma.get();
     }
 
     private void enableGammabright() {
-        lastGamma = McUtils.options().gamma().get();
+        lastGamma.updateConfig(McUtils.options().gamma().get());
         McUtils.options().gamma().value = 1000d;
     }
 }

@@ -9,6 +9,7 @@ import com.wynntils.core.components.Models;
 import com.wynntils.core.config.Category;
 import com.wynntils.core.config.Config;
 import com.wynntils.core.config.ConfigCategory;
+import com.wynntils.core.config.RegisterConfig;
 import com.wynntils.core.features.Feature;
 import com.wynntils.core.features.properties.RegisterKeyBind;
 import com.wynntils.core.keybinds.KeyBind;
@@ -41,12 +42,12 @@ public class HorseMountFeature extends Feature {
     @RegisterKeyBind
     private final KeyBind mountHorseKeyBind = new KeyBind("Mount Horse", GLFW.GLFW_KEY_R, true, this::mountHorse);
 
-    @Config
-    public boolean guaranteedMount = true;
+    @RegisterConfig
+    public final Config<Boolean> guaranteedMount = new Config<>(true);
 
     @SubscribeEvent
     public void onUseItem(UseItemEvent event) {
-        if (!guaranteedMount) return;
+        if (!guaranteedMount.get()) return;
 
         ItemStack itemStack = McUtils.player().getMainHandItem();
         Optional<HorseItem> horseItemOpt = Models.Item.asWynnItem(itemStack, HorseItem.class);

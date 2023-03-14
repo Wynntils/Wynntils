@@ -9,6 +9,7 @@ import com.wynntils.core.components.Models;
 import com.wynntils.core.config.Category;
 import com.wynntils.core.config.Config;
 import com.wynntils.core.config.ConfigCategory;
+import com.wynntils.core.config.RegisterConfig;
 import com.wynntils.core.features.Feature;
 import com.wynntils.mc.event.ContainerRenderEvent;
 import com.wynntils.models.emeralds.type.EmeraldUnits;
@@ -34,20 +35,20 @@ import org.lwjgl.glfw.GLFW;
 public class InventoryEmeraldCountFeature extends Feature {
     private static final int TEXTURE_SIZE = 28;
 
-    @Config
-    public EmeraldCountType emeraldCountType = EmeraldCountType.Texture;
+    @RegisterConfig
+    public final Config<EmeraldCountType> emeraldCountType = new Config<>(EmeraldCountType.Texture);
 
-    @Config
-    public boolean showInventoryEmeraldCount = true;
+    @RegisterConfig
+    public final Config<Boolean> showInventoryEmeraldCount = new Config<>(true);
 
-    @Config
-    public boolean showContainerEmeraldCount = true;
+    @RegisterConfig
+    public final Config<Boolean> showContainerEmeraldCount = new Config<>(true);
 
-    @Config
-    public boolean showZerosInEmeraldCount = false;
+    @RegisterConfig
+    public final Config<Boolean> showZerosInEmeraldCount = new Config<>(false);
 
-    @Config
-    public boolean combineInventoryAndContainer = false;
+    @RegisterConfig
+    public final Config<Boolean> combineInventoryAndContainer = new Config<>(false);
 
     @SubscribeEvent
     public void onContainerRender(ContainerRenderEvent event) {
@@ -62,12 +63,12 @@ public class InventoryEmeraldCountFeature extends Feature {
         boolean isInventory = (event.getScreen().getMenu().containerId == 0);
         int topEmeralds;
         if (isInventory) {
-            if (!showInventoryEmeraldCount) return;
+            if (!showInventoryEmeraldCount.get()) return;
             topEmeralds = Models.Emerald.getAmountInInventory();
         } else {
             topEmeralds = 0;
-            if (showContainerEmeraldCount) topEmeralds += Models.Emerald.getAmountInContainer();
-            if (combineInventoryAndContainer && showInventoryEmeraldCount) {
+            if (showContainerEmeraldCount.get()) topEmeralds += Models.Emerald.getAmountInContainer();
+            if (combineInventoryAndContainer.get() && showInventoryEmeraldCount.get()) {
                 topEmeralds += Models.Emerald.getAmountInInventory();
             }
         }
@@ -75,20 +76,21 @@ public class InventoryEmeraldCountFeature extends Feature {
         int x = containerScreen.leftPos;
         if (topEmeralds != 0) {
             int y = containerScreen.topPos;
-            switch (emeraldCountType) {
+            switch (emeraldCountType.get()) {
                 case Text -> renderTextCount(event.getPoseStack(), x + 2, y, topEmeralds);
-                case Texture -> renderTexturedCount(event.getPoseStack(), x, y, topEmeralds, showZerosInEmeraldCount);
+                case Texture -> renderTexturedCount(
+                        event.getPoseStack(), x, y, topEmeralds, showZerosInEmeraldCount.get());
             }
         }
 
-        if (!isInventory && !combineInventoryAndContainer && showInventoryEmeraldCount) {
+        if (!isInventory && !combineInventoryAndContainer.get() && showInventoryEmeraldCount.get()) {
             int bottomEmeralds = Models.Emerald.getAmountInInventory();
             if (bottomEmeralds != 0) {
                 int y = containerScreen.topPos + containerScreen.imageHeight;
-                switch (emeraldCountType) {
+                switch (emeraldCountType.get()) {
                     case Text -> renderTextCount(event.getPoseStack(), x + 2, y + 11, bottomEmeralds);
                     case Texture -> renderTexturedCount(
-                            event.getPoseStack(), x, y - 28 * 3 - 2, bottomEmeralds, showZerosInEmeraldCount);
+                            event.getPoseStack(), x, y - 28 * 3 - 2, bottomEmeralds, showZerosInEmeraldCount.get());
                 }
             }
         }
@@ -102,7 +104,7 @@ public class InventoryEmeraldCountFeature extends Feature {
         if (KeyboardUtils.isKeyDown(GLFW.GLFW_KEY_LEFT_SHIFT)) {
             emeraldText = emeralds + EmeraldUnits.EMERALD.getSymbol();
         } else {
-            emeraldText = Models.Emerald.getFormattedString(emeralds, showZerosInEmeraldCount);
+            emeraldText = Models.Emerald.getFormattedString(emeralds, showZerosInEmeraldCount.get());
         }
 
         FontRenderer.getInstance()

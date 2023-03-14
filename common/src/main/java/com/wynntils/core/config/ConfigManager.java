@@ -24,6 +24,7 @@ import java.io.File;
 import java.lang.reflect.Field;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Set;
 import java.util.TreeSet;
@@ -221,14 +222,42 @@ public final class ConfigManager extends Manager {
     private List<ConfigHolder> getConfigOptions(Configurable parent) {
         List<ConfigHolder> options = new ArrayList<>();
 
-        for (Field configField : FieldUtils.getFieldsWithAnnotation(parent.getClass(), Config.class)) {
-            Config metadata = configField.getAnnotation(Config.class);
+        Field[] annotatedConfigs = FieldUtils.getFieldsWithAnnotation(parent.getClass(), RegisterConfig.class);
+        for (Field field : annotatedConfigs) {
+            try {
+                Object fieldValue = FieldUtils.readField(field, parent, true);
+                if (!(fieldValue instanceof Config)) {
+                    throw new RuntimeException(
+                            "A non-Config class was marked with @RegisterConfig annotation: " + field);
+                }
+            } catch (IllegalAccessException e) {
+                throw new RuntimeException("Failed to read @RegisterConfig annotated field: " + field);
+            }
+        }
+
+        List<Field> fields = FieldUtils.getAllFieldsList(parent.getClass());
+        List<Field> configFields =
+                fields.stream().filter(f -> f.getType().equals(Config.class)).toList();
+
+        for (Field configField : configFields) {
+            RegisterConfig configInfo = Arrays.stream(annotatedConfigs)
+                    .filter(f -> f.equals(configField))
+                    .findFirst()
+                    .map(f -> f.getAnnotation(RegisterConfig.class))
+                    .orElse(null);
+            if (configInfo == null) {
+                throw new RuntimeException("A Config is missing @RegisterConfig annotation:" + configField);
+            }
+            String subcategory = configInfo.subcategory();
+            String i18nKey = configInfo.key();
+            boolean visible = configInfo.visible();
 
             Type typeOverride = Managers.Json.findFieldTypeOverride(parent, configField);
 
-            ConfigHolder configHolder = new ConfigHolder(parent, configField, metadata, typeOverride);
+            ConfigHolder configHolder =
+                    new ConfigHolder(parent, configField, subcategory, i18nKey, visible, typeOverride);
             if (WynntilsMod.isDevelopmentEnvironment()) {
-                if (metadata.visible()) {
+                if (visible) {
                     if (configHolder.getDisplayName().startsWith("feature.wynntils.")) {
                         WynntilsMod.error("Config displayName i18n is missing for " + configHolder.getDisplayName());
                         throw new AssertionError("Missing i18n for " + configHolder.getDisplayName());

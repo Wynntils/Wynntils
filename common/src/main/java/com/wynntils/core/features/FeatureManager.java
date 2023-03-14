@@ -296,7 +296,7 @@ public final class FeatureManager extends Manager {
 
         // Determine if feature should be enabled & set default enabled value for user features
         boolean startDisabled = featureClass.isAnnotationPresent(StartDisabled.class);
-        feature.userEnabled = !startDisabled;
+        feature.userEnabled.updateConfig(!startDisabled);
 
         Managers.Overlay.discoverOverlays(feature);
         Managers.Overlay.discoverOverlayGroups(feature);
@@ -304,7 +304,7 @@ public final class FeatureManager extends Manager {
         // Assert that the feature name is properly translated
         assert !feature.getTranslatedName().startsWith("feature.wynntils.");
 
-        if (!feature.userEnabled) return; // not enabled by user
+        if (!feature.userEnabled.get()) return; // not enabled by user
 
         enableFeature(feature);
     }

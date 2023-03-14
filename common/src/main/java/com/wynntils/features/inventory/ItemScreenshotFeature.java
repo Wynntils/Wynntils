@@ -12,6 +12,7 @@ import com.wynntils.core.components.Models;
 import com.wynntils.core.config.Category;
 import com.wynntils.core.config.Config;
 import com.wynntils.core.config.ConfigCategory;
+import com.wynntils.core.config.RegisterConfig;
 import com.wynntils.core.features.Feature;
 import com.wynntils.core.features.properties.RegisterKeyBind;
 import com.wynntils.core.keybinds.KeyBind;
@@ -52,8 +53,8 @@ public class ItemScreenshotFeature extends Feature {
     private final KeyBind itemScreenshotKeyBind =
             new KeyBind("Screenshot Item", GLFW.GLFW_KEY_F4, true, null, this::onInventoryPress);
 
-    @Config
-    public boolean saveToDisk = false;
+    @RegisterConfig
+    public final Config<Boolean> saveToDisk = new Config<>(false);
 
     private Slot screenshotSlot = null;
 
@@ -121,7 +122,7 @@ public class ItemScreenshotFeature extends Feature {
 
         BufferedImage bi = SystemUtils.createScreenshot(fb);
 
-        if (saveToDisk) {
+        if (saveToDisk.get()) {
             // First try to save it to disk
             String itemNameForFile = WynnUtils.normalizeBadString(ComponentUtils.stripFormatting(
                             itemStack.getHoverName().getString()))

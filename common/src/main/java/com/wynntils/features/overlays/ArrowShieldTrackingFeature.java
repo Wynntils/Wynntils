@@ -7,6 +7,7 @@ package com.wynntils.features.overlays;
 import com.wynntils.core.config.Category;
 import com.wynntils.core.config.Config;
 import com.wynntils.core.config.ConfigCategory;
+import com.wynntils.core.config.RegisterConfig;
 import com.wynntils.core.features.Feature;
 import com.wynntils.core.features.overlays.OverlayPosition;
 import com.wynntils.core.features.overlays.TextOverlay;
@@ -30,8 +31,8 @@ public class ArrowShieldTrackingFeature extends Feature {
                 "{IF_STRING(GT(ARROW_SHIELD_COUNT; 0); CONCAT(\"Arrow Shield: \"; REPEAT(\"%s\"; ARROW_SHIELD_COUNT)); \"\")}"
                         .formatted(ARROW_SYMBOL);
 
-        @Config
-        public CustomColor textColor = CommonColors.LIGHT_BLUE;
+        @RegisterConfig
+        public final Config<CustomColor> textColor = new Config<>(CommonColors.LIGHT_BLUE);
 
         protected ArrowShieldTrackerOverlay() {
             super(
@@ -46,7 +47,7 @@ public class ArrowShieldTrackingFeature extends Feature {
 
         @Override
         public CustomColor getRenderColor() {
-            return textColor;
+            return textColor.get();
         }
 
         @Override

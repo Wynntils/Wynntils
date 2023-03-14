@@ -264,8 +264,14 @@ public final class LootrunModel extends Model {
     public void onRenderLastLevel(RenderLevelEvent.Post event) {
         PoseStack poseStack = event.getPoseStack();
 
-        LootrunRenderer.renderLootrun(poseStack, lootrun, LootrunFeature.INSTANCE.activePathColor.asInt());
-        LootrunRenderer.renderLootrun(poseStack, recordingCompiled, LootrunFeature.INSTANCE.recordingPathColor.asInt());
+        LootrunRenderer.renderLootrun(
+                poseStack,
+                lootrun,
+                LootrunFeature.INSTANCE.activePathColor.get().asInt());
+        LootrunRenderer.renderLootrun(
+                poseStack,
+                recordingCompiled,
+                LootrunFeature.INSTANCE.recordingPathColor.get().asInt());
     }
 
     @SubscribeEvent

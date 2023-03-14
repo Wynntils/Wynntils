@@ -40,7 +40,7 @@ public final class ChatTabManager extends Manager {
     }
 
     private List<ChatTab> getChatTabs() {
-        return ChatTabsFeature.INSTANCE.chatTabs;
+        return ChatTabsFeature.INSTANCE.chatTabs.get();
     }
 
     public Stream<ChatTab> getTabs() {
