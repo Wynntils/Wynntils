@@ -79,7 +79,9 @@ public final class ConfigManager extends Manager {
         registerConfigOptions(feature);
 
         for (Overlay overlay : Managers.Overlay.getFeatureOverlays(feature).stream()
-                .filter(overlay -> !overlay.isDynamic())
+                .filter(overlay -> Managers.Overlay.getFeatureOverlayGroups(feature).stream()
+                        .noneMatch(overlayGroupHolder ->
+                                overlayGroupHolder.getOverlays().contains(overlay)))
                 .toList()) {
             registerConfigOptions(overlay);
         }
