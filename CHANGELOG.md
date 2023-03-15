@@ -1,9 +1,21 @@
+## [0.0.2-alpha.344](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.343...v0.0.2-alpha.344) (2023-03-15)
+
+
+### Code Refactoring
+
+* Clean up RegisterConfig etc ([#1335](https://github.com/Wynntils/Artemis/issues/1335)) ([702836e](https://github.com/Wynntils/Artemis/commit/702836efa3039d4a8746f7b786c87fbeed09744d))
+
 ## [0.0.2-alpha.343](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.342...v0.0.2-alpha.343) (2023-03-14)
 
 
 ### Code Refactoring
 
 * Remove UserFeature and StateManagedFeature ([#1333](https://github.com/Wynntils/Artemis/issues/1333)) ([a1f0486](https://github.com/Wynntils/Artemis/commit/a1f0486cc8dafcf47bbfa7c736c0c2892fcb89a8))
+
+
+### Miscellaneous Chores
+
+* **release:** v0.0.2-alpha.343 [skip ci] ([20bb746](https://github.com/Wynntils/Artemis/commit/20bb7465d7f5dca9e6a92e9325faab9a5cd68a83))
 
 ## [0.0.2-alpha.342](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.341...v0.0.2-alpha.342) (2023-03-14)
 
@@ -40,16 +52,4 @@
 ### Miscellaneous Chores
 
 * **release:** v0.0.2-alpha.340 [skip ci] ([e4e43c4](https://github.com/Wynntils/Artemis/commit/e4e43c4767146cffd674cc2e7a3843121dd752e3))
-
-## [0.0.2-alpha.339](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.338...v0.0.2-alpha.339) (2023-03-14)
-
-
-### Code Refactoring
-
-* Clean up Feature, FeatureManager, related managers and overlay groups ([#1314](https://github.com/Wynntils/Artemis/issues/1314)) ([eb81e0d](https://github.com/Wynntils/Artemis/commit/eb81e0d014e1b504396cf9759ec6b70677c0236f))
-
-
-### Miscellaneous Chores
-
-* **release:** v0.0.2-alpha.339 [skip ci] ([f94aed4](https://github.com/Wynntils/Artemis/commit/f94aed48edda5342c610bdfa69d801ebd1011d5a))
 
