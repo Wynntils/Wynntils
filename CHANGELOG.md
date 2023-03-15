@@ -1,9 +1,21 @@
+## [0.0.2-alpha.345](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.344...v0.0.2-alpha.345) (2023-03-15)
+
+
+### Bug Fixes
+
+* Fix faulty dynamic logic causing some overlay configs to be not collected ([#1337](https://github.com/Wynntils/Artemis/issues/1337)) ([ef7ab3f](https://github.com/Wynntils/Artemis/commit/ef7ab3fee347fce180a4f2d3d620b662b24a8a62))
+
 ## [0.0.2-alpha.344](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.343...v0.0.2-alpha.344) (2023-03-15)
 
 
 ### Code Refactoring
 
 * Clean up RegisterConfig etc ([#1335](https://github.com/Wynntils/Artemis/issues/1335)) ([702836e](https://github.com/Wynntils/Artemis/commit/702836efa3039d4a8746f7b786c87fbeed09744d))
+
+
+### Miscellaneous Chores
+
+* **release:** v0.0.2-alpha.344 [skip ci] ([bc728c7](https://github.com/Wynntils/Artemis/commit/bc728c7e49337c6ea126d42f1ad2d1a027611aec))
 
 ## [0.0.2-alpha.343](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.342...v0.0.2-alpha.343) (2023-03-14)
 
@@ -40,16 +52,4 @@
 ### Miscellaneous Chores
 
 * **release:** v0.0.2-alpha.341 [skip ci] ([21c07d1](https://github.com/Wynntils/Artemis/commit/21c07d17c3e13c3427598320098043fef0c5ac9c))
-
-## [0.0.2-alpha.340](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.339...v0.0.2-alpha.340) (2023-03-14)
-
-
-### Code Refactoring
-
-* Sort out position <-> location ([#1332](https://github.com/Wynntils/Artemis/issues/1332)) ([1487894](https://github.com/Wynntils/Artemis/commit/14878946b1d9ed306a315da23d4558d19f2d20e1))
-
-
-### Miscellaneous Chores
-
-* **release:** v0.0.2-alpha.340 [skip ci] ([e4e43c4](https://github.com/Wynntils/Artemis/commit/e4e43c4767146cffd674cc2e7a3843121dd752e3))
 
