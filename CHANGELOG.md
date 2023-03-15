@@ -1,3 +1,10 @@
+## [0.0.2-alpha.348](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.347...v0.0.2-alpha.348) (2023-03-15)
+
+
+### New Features
+
+* Add CombatExperienceOverlay ([#1339](https://github.com/Wynntils/Artemis/issues/1339)) ([04bd241](https://github.com/Wynntils/Artemis/commit/04bd241373bd7073261d41df4176bd53144f0e67))
+
 ## [0.0.2-alpha.347](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.346...v0.0.2-alpha.347) (2023-03-15)
 
 
@@ -9,6 +16,11 @@
 ### New Features
 
 * Replace config with storage ([#1307](https://github.com/Wynntils/Artemis/issues/1307)) ([b7777ee](https://github.com/Wynntils/Artemis/commit/b7777ee1eac49025d64903fe924b7869481141c6))
+
+
+### Miscellaneous Chores
+
+* **release:** v0.0.2-alpha.347 [skip ci] ([8265567](https://github.com/Wynntils/Artemis/commit/8265567d2f59c012ef959c21fd429077a89a0d2d))
 
 ## [0.0.2-alpha.346](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.345...v0.0.2-alpha.346) (2023-03-15)
 
@@ -45,16 +57,4 @@
 ### Miscellaneous Chores
 
 * **release:** v0.0.2-alpha.344 [skip ci] ([bc728c7](https://github.com/Wynntils/Artemis/commit/bc728c7e49337c6ea126d42f1ad2d1a027611aec))
-
-## [0.0.2-alpha.343](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.342...v0.0.2-alpha.343) (2023-03-14)
-
-
-### Code Refactoring
-
-* Remove UserFeature and StateManagedFeature ([#1333](https://github.com/Wynntils/Artemis/issues/1333)) ([a1f0486](https://github.com/Wynntils/Artemis/commit/a1f0486cc8dafcf47bbfa7c736c0c2892fcb89a8))
-
-
-### Miscellaneous Chores
-
-* **release:** v0.0.2-alpha.343 [skip ci] ([20bb746](https://github.com/Wynntils/Artemis/commit/20bb7465d7f5dca9e6a92e9325faab9a5cd68a83))
 
