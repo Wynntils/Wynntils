@@ -9,7 +9,8 @@ import com.wynntils.core.components.Models;
 import com.wynntils.core.config.Category;
 import com.wynntils.core.config.Config;
 import com.wynntils.core.config.ConfigCategory;
-import com.wynntils.core.features.UserFeature;
+import com.wynntils.core.config.RegisterConfig;
+import com.wynntils.core.features.Feature;
 import com.wynntils.core.features.properties.RegisterKeyBind;
 import com.wynntils.core.keybinds.KeyBind;
 import com.wynntils.mc.event.UseItemEvent;
@@ -18,6 +19,7 @@ import com.wynntils.utils.mc.McUtils;
 import com.wynntils.utils.wynn.InventoryUtils;
 import java.util.Optional;
 import net.minecraft.ChatFormatting;
+import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.protocol.game.ServerboundInteractPacket;
 import net.minecraft.network.protocol.game.ServerboundSetCarriedItemPacket;
@@ -30,7 +32,7 @@ import net.minecraftforge.eventbus.api.SubscribeEvent;
 import org.lwjgl.glfw.GLFW;
 
 @ConfigCategory(Category.COMBAT)
-public class HorseMountFeature extends UserFeature {
+public class HorseMountFeature extends Feature {
     private static final int SEARCH_RADIUS = 6; // Furthest blocks away from which we can interact with a horse
     private static final int SUMMON_ATTEMPTS = 8;
     private static final int SUMMON_DELAY_TICKS = 6;
@@ -41,12 +43,12 @@ public class HorseMountFeature extends UserFeature {
     @RegisterKeyBind
     private final KeyBind mountHorseKeyBind = new KeyBind("Mount Horse", GLFW.GLFW_KEY_R, true, this::mountHorse);
 
-    @Config
-    public boolean guaranteedMount = true;
+    @RegisterConfig
+    public final Config<Boolean> guaranteedMount = new Config<>(true);
 
     @SubscribeEvent
     public void onUseItem(UseItemEvent event) {
-        if (!guaranteedMount) return;
+        if (!guaranteedMount.get()) return;
 
         ItemStack itemStack = McUtils.player().getMainHandItem();
         Optional<HorseItem> horseItemOpt = Models.Item.asWynnItem(itemStack, HorseItem.class);
@@ -59,12 +61,13 @@ public class HorseMountFeature extends UserFeature {
     private void mountHorse() {
         if (!Models.WorldState.onWorld()) return;
 
-        if (McUtils.player().getVehicle() != null) {
+        LocalPlayer player = McUtils.player();
+        if (player.getVehicle() != null) {
             postHorseErrorMessage(MountHorseStatus.ALREADY_RIDING);
             return;
         }
 
-        AbstractHorse horse = Models.Horse.searchForHorseNearby(SEARCH_RADIUS);
+        AbstractHorse horse = Models.Horse.searchForHorseNearby(player, SEARCH_RADIUS);
         if (horse == null) { // Horse has not spawned, we should do that
             int horseInventorySlot = Models.Horse.findHorseSlotNum();
             if (horseInventorySlot > 8 || horseInventorySlot == -1) {
@@ -99,7 +102,10 @@ public class HorseMountFeature extends UserFeature {
 
         Managers.TickScheduler.scheduleLater(
                 () -> {
-                    AbstractHorse horse = Models.Horse.searchForHorseNearby(SEARCH_RADIUS);
+                    LocalPlayer player = McUtils.player();
+                    if (player == null) return;
+
+                    AbstractHorse horse = Models.Horse.searchForHorseNearby(player, SEARCH_RADIUS);
                     if (horse != null) { // Horse successfully summoned
                         McUtils.sendPacket(new ServerboundSetCarriedItemPacket(prevItem));
                         alreadySetPrevItem = false;

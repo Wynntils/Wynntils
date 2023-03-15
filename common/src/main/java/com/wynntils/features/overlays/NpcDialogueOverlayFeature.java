@@ -13,7 +13,8 @@ import com.wynntils.core.config.Category;
 import com.wynntils.core.config.Config;
 import com.wynntils.core.config.ConfigCategory;
 import com.wynntils.core.config.ConfigHolder;
-import com.wynntils.core.features.UserFeature;
+import com.wynntils.core.config.RegisterConfig;
+import com.wynntils.core.features.Feature;
 import com.wynntils.core.features.overlays.Overlay;
 import com.wynntils.core.features.overlays.OverlayPosition;
 import com.wynntils.core.features.overlays.annotations.OverlayInfo;
@@ -55,7 +56,7 @@ import net.minecraftforge.eventbus.api.SubscribeEvent;
 import org.lwjgl.glfw.GLFW;
 
 @ConfigCategory(Category.OVERLAYS)
-public class NpcDialogueOverlayFeature extends UserFeature {
+public class NpcDialogueOverlayFeature extends Feature {
     private static final Pattern NEW_QUEST_STARTED = Pattern.compile("^§r§6§lNew Quest Started: §r§e§l(.*)§r$");
 
     private final ScheduledExecutorService autoProgressExecutor = Executors.newSingleThreadScheduledExecutor();
@@ -66,14 +67,14 @@ public class NpcDialogueOverlayFeature extends UserFeature {
     private NpcDialogueType dialogueType;
     private boolean isProtected;
 
-    @Config
-    public boolean autoProgress = false;
+    @RegisterConfig
+    public final Config<Boolean> autoProgress = new Config<>(false);
 
-    @Config
-    public int dialogAutoProgressDefaultTime = 1600; // Milliseconds
+    @RegisterConfig
+    public final Config<Integer> dialogAutoProgressDefaultTime = new Config<>(1600); // Milliseconds
 
-    @Config
-    public int dialogAutoProgressAdditionalTimePerWord = 300; // Milliseconds
+    @RegisterConfig
+    public final Config<Integer> dialogAutoProgressAdditionalTimePerWord = new Config<>(300); // Milliseconds
 
     @RegisterKeyBind
     public final KeyBind cancelAutoProgressKeybind =
@@ -137,7 +138,7 @@ public class NpcDialogueOverlayFeature extends UserFeature {
             scheduledAutoProgressKeyPress = null;
         }
 
-        if (autoProgress && dialogueType == NpcDialogueType.NORMAL) {
+        if (autoProgress.get() && dialogueType == NpcDialogueType.NORMAL) {
             // Schedule a new sneak key press if this is not the end of the dialogue
             if (!msg.isEmpty()) {
                 scheduledAutoProgressKeyPress = scheduledSneakPress(msg);
@@ -163,7 +164,8 @@ public class NpcDialogueOverlayFeature extends UserFeature {
 
     private long calculateMessageReadTime(List<String> msg) {
         int words = String.join(" ", msg).split(" ").length;
-        long delay = dialogAutoProgressDefaultTime + ((long) words * dialogAutoProgressAdditionalTimePerWord);
+        long delay =
+                dialogAutoProgressDefaultTime.get() + ((long) words * dialogAutoProgressAdditionalTimePerWord.get());
         return delay;
     }
 
@@ -178,17 +180,17 @@ public class NpcDialogueOverlayFeature extends UserFeature {
     private final Overlay npcDialogueOverlay = new NpcDialogueOverlay();
 
     public class NpcDialogueOverlay extends Overlay {
-        @Config
-        public TextShadow textShadow = TextShadow.NORMAL;
+        @RegisterConfig
+        public final Config<TextShadow> textShadow = new Config<>(TextShadow.NORMAL);
 
-        @Config
-        public float backgroundOpacity = 0.2f;
+        @RegisterConfig
+        public final Config<Float> backgroundOpacity = new Config<>(0.2f);
 
-        @Config
-        public boolean stripColors = false;
+        @RegisterConfig
+        public final Config<Boolean> stripColors = new Config<>(false);
 
-        @Config
-        public boolean showHelperTexts = true;
+        @RegisterConfig
+        public final Config<Boolean> showHelperTexts = new Config<>(true);
 
         private TextRenderSetting renderSetting;
 
@@ -210,7 +212,7 @@ public class NpcDialogueOverlayFeature extends UserFeature {
             renderSetting = TextRenderSetting.DEFAULT
                     .withMaxWidth(this.getWidth() - 5)
                     .withHorizontalAlignment(this.getRenderHorizontalAlignment())
-                    .withTextShadow(textShadow);
+                    .withTextShadow(textShadow.get());
         }
 
         @Override
@@ -220,7 +222,7 @@ public class NpcDialogueOverlayFeature extends UserFeature {
         }
 
         private void updateDialogExtractionSettings() {
-            if (isEnabled()) {
+            if (shouldBeEnabled()) {
                 Handlers.Chat.addNpcDialogExtractionDependent(NpcDialogueOverlayFeature.this);
             } else {
                 Handlers.Chat.removeNpcDialogExtractionDependent(NpcDialogueOverlayFeature.this);
@@ -238,7 +240,7 @@ public class NpcDialogueOverlayFeature extends UserFeature {
                     .map(s -> new TextRenderTask(s, renderSetting))
                     .toList();
 
-            if (stripColors) {
+            if (stripColors.get()) {
                 dialogueRenderTasks.forEach(dialogueRenderTask ->
                         dialogueRenderTask.setText(ComponentUtils.stripColorFormatting(dialogueRenderTask.getText())));
             }
@@ -259,7 +261,7 @@ public class NpcDialogueOverlayFeature extends UserFeature {
                         case Middle -> this.getRenderY() + (this.getHeight() - rectHeight) / 2f;
                         case Bottom -> this.getRenderY() + this.getHeight() - rectHeight;
                     };
-            int colorAlphaRect = Math.round(MathUtils.clamp(255 * backgroundOpacity, 0, 255));
+            int colorAlphaRect = Math.round(MathUtils.clamp(255 * backgroundOpacity.get(), 0, 255));
             BufferedRenderUtils.drawRect(
                     poseStack,
                     bufferSource,
@@ -283,7 +285,7 @@ public class NpcDialogueOverlayFeature extends UserFeature {
                             this.getRenderHorizontalAlignment(),
                             this.getRenderVerticalAlignment());
 
-            if (showHelperTexts) {
+            if (showHelperTexts.get()) {
                 // Render "To continue" message
                 List<TextRenderTask> renderTaskList = new LinkedList<>();
                 String protection = isProtected ? "§f<protected> §r" : "";

@@ -8,7 +8,8 @@ import com.wynntils.core.components.Models;
 import com.wynntils.core.config.Category;
 import com.wynntils.core.config.Config;
 import com.wynntils.core.config.ConfigCategory;
-import com.wynntils.core.features.UserFeature;
+import com.wynntils.core.config.RegisterConfig;
+import com.wynntils.core.features.Feature;
 import com.wynntils.mc.event.MouseScrollEvent;
 import com.wynntils.utils.mc.McUtils;
 import com.wynntils.utils.wynn.ContainerUtils;
@@ -18,12 +19,12 @@ import net.minecraftforge.eventbus.api.SubscribeEvent;
 import org.lwjgl.glfw.GLFW;
 
 @ConfigCategory(Category.UI)
-public class AbilityTreeScrollFeature extends UserFeature {
+public class AbilityTreeScrollFeature extends Feature {
     private static final int abilityTreePreviousSlot = 57;
     private static final int abilityTreeNextSlot = 59;
 
-    @Config
-    public boolean invertScroll = false;
+    @RegisterConfig
+    public final Config<Boolean> invertScroll = new Config<>(false);
 
     @SubscribeEvent
     public void onInteract(MouseScrollEvent event) {
@@ -32,7 +33,7 @@ public class AbilityTreeScrollFeature extends UserFeature {
         if (!(screen instanceof AbstractContainerScreen<?> gui)) return;
         if (!Models.Container.isAbilityTreeScreen(gui)) return;
 
-        boolean up = event.isScrollingUp() ^ invertScroll;
+        boolean up = event.isScrollingUp() ^ invertScroll.get();
         int slot = up ? abilityTreePreviousSlot : abilityTreeNextSlot;
 
         ContainerUtils.clickOnSlot(

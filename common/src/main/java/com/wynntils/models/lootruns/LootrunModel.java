@@ -33,6 +33,7 @@ import java.util.HashSet;
 import java.util.List;
 import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.Position;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.level.block.Blocks;
@@ -106,7 +107,6 @@ public final class LootrunModel extends Model {
     }
 
     public void clearCurrentLootrun() {
-        LootrunFeature.INSTANCE.disable();
         state = LootrunState.DISABLED;
         lootrun = null;
         uncompiled = null;
@@ -129,7 +129,6 @@ public final class LootrunModel extends Model {
         state = LootrunState.RECORDING;
         recording = new LootrunUncompiled(new LootrunPath(new ArrayList<>()), new HashSet<>(), new ArrayList<>(), null);
         recordingInformation = new RecordingInformation();
-        LootrunFeature.INSTANCE.enable();
     }
 
     public List<LootrunInstance> getLootruns() {
@@ -167,7 +166,6 @@ public final class LootrunModel extends Model {
                 uncompiled = LootrunFileParser.readJson(lootrunFile, json);
                 lootrun = LootrunCompiler.compile(uncompiled, false);
                 state = LootrunState.LOADED;
-                LootrunFeature.INSTANCE.enable();
                 file.close();
                 return true;
             } catch (Exception e) {
@@ -243,7 +241,7 @@ public final class LootrunModel extends Model {
         return activeLootrun.notes();
     }
 
-    public Vec3 getStartingPoint() {
+    public Position getStartingPoint() {
         LootrunUncompiled activeLootrun = getActiveLootrun();
         if (activeLootrun == null) return null;
 
@@ -266,8 +264,14 @@ public final class LootrunModel extends Model {
     public void onRenderLastLevel(RenderLevelEvent.Post event) {
         PoseStack poseStack = event.getPoseStack();
 
-        LootrunRenderer.renderLootrun(poseStack, lootrun, LootrunFeature.INSTANCE.activePathColor.asInt());
-        LootrunRenderer.renderLootrun(poseStack, recordingCompiled, LootrunFeature.INSTANCE.recordingPathColor.asInt());
+        LootrunRenderer.renderLootrun(
+                poseStack,
+                lootrun,
+                LootrunFeature.INSTANCE.activePathColor.get().asInt());
+        LootrunRenderer.renderLootrun(
+                poseStack,
+                recordingCompiled,
+                LootrunFeature.INSTANCE.recordingPathColor.get().asInt());
     }
 
     @SubscribeEvent

@@ -8,7 +8,8 @@ import com.wynntils.core.components.Models;
 import com.wynntils.core.config.Category;
 import com.wynntils.core.config.Config;
 import com.wynntils.core.config.ConfigCategory;
-import com.wynntils.core.features.UserFeature;
+import com.wynntils.core.config.RegisterConfig;
+import com.wynntils.core.features.Feature;
 import com.wynntils.mc.event.RenderEvent;
 import com.wynntils.mc.event.TickEvent;
 import com.wynntils.utils.MathUtils;
@@ -18,20 +19,20 @@ import net.minecraftforge.eventbus.api.EventPriority;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 
 @ConfigCategory(Category.COMBAT)
-public class LowHealthVignetteFeature extends UserFeature {
+public class LowHealthVignetteFeature extends Feature {
     private static final float INTENSITY = 0.3f;
 
-    @Config
-    public int lowHealthPercentage = 25;
+    @RegisterConfig
+    public final Config<Integer> lowHealthPercentage = new Config<>(25);
 
-    @Config
-    public float animationSpeed = 0.6f;
+    @RegisterConfig
+    public final Config<Float> animationSpeed = new Config<>(0.6f);
 
-    @Config
-    public HealthVignetteEffect healthVignetteEffect = HealthVignetteEffect.Pulse;
+    @RegisterConfig
+    public final Config<HealthVignetteEffect> healthVignetteEffect = new Config<>(HealthVignetteEffect.Pulse);
 
-    @Config
-    public CustomColor color = new CustomColor(255, 0, 0);
+    @RegisterConfig
+    public final Config<CustomColor> color = new Config<>(new CustomColor(255, 0, 0));
 
     private float animation = 10f;
     private float value = INTENSITY;
@@ -42,21 +43,21 @@ public class LowHealthVignetteFeature extends UserFeature {
         if (!shouldRender || event.getType() != RenderEvent.ElementType.GUI) return;
         if (!Models.WorldState.onWorld()) return;
 
-        RenderUtils.renderVignetteOverlay(event.getPoseStack(), color, value);
+        RenderUtils.renderVignetteOverlay(event.getPoseStack(), color.get(), value);
     }
 
     @SubscribeEvent
     public void onTick(TickEvent event) {
-        float healthProgress = (float) Models.Character.getHealth().getProgress();
-        float threshold = lowHealthPercentage / 100f;
+        float healthProgress = (float) Models.CharacterStats.getHealth().getProgress();
+        float threshold = lowHealthPercentage.get() / 100f;
         shouldRender = false;
 
         if (healthProgress > threshold) return;
         shouldRender = true;
 
-        switch (healthVignetteEffect) {
+        switch (healthVignetteEffect.get()) {
             case Pulse -> {
-                animation = (animation + animationSpeed) % 40;
+                animation = (animation + animationSpeed.get()) % 40;
                 value = threshold - healthProgress * INTENSITY + 0.01f * Math.abs(20 - animation);
             }
             case Growing -> value = MathUtils.map(healthProgress, 0, threshold, INTENSITY, 0.1f);

@@ -4,14 +4,19 @@
  */
 package com.wynntils.features.chat;
 
+import com.google.common.collect.Sets;
+import com.google.common.reflect.TypeToken;
 import com.wynntils.core.chat.ChatTab;
 import com.wynntils.core.components.Managers;
 import com.wynntils.core.config.Category;
 import com.wynntils.core.config.ConfigCategory;
 import com.wynntils.core.config.ConfigHolder;
-import com.wynntils.core.features.UserFeature;
+import com.wynntils.core.config.HiddenConfig;
+import com.wynntils.core.config.RegisterConfig;
+import com.wynntils.core.features.Feature;
 import com.wynntils.core.json.TypeOverride;
 import com.wynntils.handlers.chat.event.ChatMessageReceivedEvent;
+import com.wynntils.handlers.chat.type.RecipientType;
 import com.wynntils.mc.event.ChatScreenKeyTypedEvent;
 import com.wynntils.mc.event.ClientsideMessageEvent;
 import com.wynntils.mc.event.ScreenInitEvent;
@@ -22,13 +27,32 @@ import com.wynntils.screens.chattabs.widgets.ChatTabAddButton;
 import com.wynntils.screens.chattabs.widgets.ChatTabButton;
 import com.wynntils.utils.mc.KeyboardUtils;
 import com.wynntils.utils.mc.McUtils;
+import java.lang.reflect.Type;
+import java.util.ArrayList;
+import java.util.List;
 import net.minecraft.client.gui.screens.ChatScreen;
 import net.minecraftforge.eventbus.api.EventPriority;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import org.lwjgl.glfw.GLFW;
 
 @ConfigCategory(Category.CHAT)
-public class ChatTabsFeature extends UserFeature {
+public class ChatTabsFeature extends Feature {
+    public static ChatTabsFeature INSTANCE;
+
+    // These should move to ChatTabManager, as Storage
+    @RegisterConfig
+    public final HiddenConfig<List<ChatTab>> chatTabs = new HiddenConfig<>(new ArrayList<>(List.of(
+            new ChatTab("All", false, null, null, null),
+            new ChatTab("Global", false, null, Sets.newHashSet(RecipientType.GLOBAL), null),
+            new ChatTab("Local", false, null, Sets.newHashSet(RecipientType.LOCAL), null),
+            new ChatTab("Guild", false, "/g  ", Sets.newHashSet(RecipientType.GUILD), null),
+            new ChatTab("Party", false, "/p  ", Sets.newHashSet(RecipientType.PARTY), null),
+            new ChatTab("Private", false, "/r  ", Sets.newHashSet(RecipientType.PRIVATE), null),
+            new ChatTab("Shout", false, null, Sets.newHashSet(RecipientType.SHOUT), null))));
+
+    @TypeOverride
+    private final Type chatTabsType = new TypeToken<ArrayList<ChatTab>>() {}.getType();
+
     // We do this here, and not in Models.ChatTab to not introduce a feature-model dependency.
     @SubscribeEvent(priority = EventPriority.LOWEST)
     public void onChatReceived(ChatMessageReceivedEvent event) {
@@ -43,7 +67,17 @@ public class ChatTabsFeature extends UserFeature {
         // We've already sent this message to every matching tab, so we can cancel it.
         event.setCanceled(true);
 
-        Managers.ChatTab.matchMessage(event);
+        boolean isRenderThread = McUtils.mc().isSameThread();
+        if (isRenderThread) {
+            Managers.ChatTab.matchMessage(event);
+        } else {
+            // It can happen that client-side messages are sent from some other thread
+            // That will cause race conditions with vanilla ChatComponent code, so
+            // schedule this update by the renderer thread instead
+            Managers.TickScheduler.scheduleNextTick(() -> {
+                Managers.ChatTab.matchMessage(event);
+            });
+        }
     }
 
     @SubscribeEvent
@@ -90,7 +124,7 @@ public class ChatTabsFeature extends UserFeature {
     }
 
     @Override
-    protected void postEnable() {
+    public void onEnable() {
         Managers.ChatTab.resetFocusedTab();
     }
 

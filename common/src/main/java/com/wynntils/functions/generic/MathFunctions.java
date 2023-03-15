@@ -12,7 +12,8 @@ public final class MathFunctions {
     public static class AddFunction extends GenericFunction<Double> {
         @Override
         public Double getValue(FunctionArguments arguments) {
-            List<Number> values = arguments.getArgument("values").asList().getValues();
+            List<Number> values =
+                    arguments.<Number>getArgument("values").asList().getValues();
 
             return values.stream().mapToDouble(Number::doubleValue).sum();
         }
@@ -20,7 +21,7 @@ public final class MathFunctions {
         @Override
         public FunctionArguments.RequiredArgumentBuilder getRequiredArgumentsBuilder() {
             return new FunctionArguments.RequiredArgumentBuilder(
-                    List.of(new FunctionArguments.ListArgument("values", Number.class)));
+                    List.of(new FunctionArguments.ListArgument<>("values", Number.class)));
         }
     }
 
@@ -47,7 +48,8 @@ public final class MathFunctions {
     public static class MultiplyFunction extends GenericFunction<Double> {
         @Override
         public Double getValue(FunctionArguments arguments) {
-            List<Number> values = arguments.getArgument("values").asList().getValues();
+            List<Number> values =
+                    arguments.<Number>getArgument("values").asList().getValues();
 
             return values.stream().mapToDouble(Number::doubleValue).reduce(1, (a, b) -> a * b);
         }
@@ -55,7 +57,7 @@ public final class MathFunctions {
         @Override
         public FunctionArguments.RequiredArgumentBuilder getRequiredArgumentsBuilder() {
             return new FunctionArguments.RequiredArgumentBuilder(
-                    List.of(new FunctionArguments.ListArgument("values", Number.class)));
+                    List.of(new FunctionArguments.ListArgument<>("values", Number.class)));
         }
 
         @Override
@@ -206,6 +208,27 @@ public final class MathFunctions {
         @Override
         public List<String> getAliases() {
             return List.of("int");
+        }
+    }
+
+    public static class RandomFunction extends GenericFunction<Double> {
+        @Override
+        public Double getValue(FunctionArguments arguments) {
+            double min = arguments.getArgument("min").getIntegerValue();
+            double max = arguments.getArgument("max").getIntegerValue();
+            return (Math.random() * (max - min)) + min;
+        }
+
+        @Override
+        public FunctionArguments.RequiredArgumentBuilder getRequiredArgumentsBuilder() {
+            return new FunctionArguments.RequiredArgumentBuilder(List.of(
+                    new FunctionArguments.Argument<>("min", Number.class, null),
+                    new FunctionArguments.Argument<>("max", Number.class, null)));
+        }
+
+        @Override
+        public List<String> getAliases() {
+            return List.of("rand");
         }
     }
 }

@@ -11,7 +11,8 @@ import com.wynntils.core.config.Category;
 import com.wynntils.core.config.Config;
 import com.wynntils.core.config.ConfigCategory;
 import com.wynntils.core.config.ConfigHolder;
-import com.wynntils.core.features.UserFeature;
+import com.wynntils.core.config.RegisterConfig;
+import com.wynntils.core.features.Feature;
 import com.wynntils.core.features.overlays.Overlay;
 import com.wynntils.core.features.overlays.OverlayPosition;
 import com.wynntils.core.features.overlays.annotations.OverlayInfo;
@@ -36,21 +37,21 @@ import net.minecraftforge.eventbus.api.EventPriority;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 
 @ConfigCategory(Category.OVERLAYS)
-public class ObjectivesOverlayFeature extends UserFeature {
+public class ObjectivesOverlayFeature extends Feature {
     private static final float SPACE_BETWEEN = 10;
 
-    @Config
-    public boolean disableObjectiveTrackingOnScoreboard = true;
+    @RegisterConfig
+    public final Config<Boolean> disableObjectiveTrackingOnScoreboard = new Config<>(true);
 
     @SubscribeEvent(priority = EventPriority.HIGHEST)
     public void onScoreboardSegmentChange(ScoreboardSegmentAdditionEvent event) {
-        if (disableObjectiveTrackingOnScoreboard) {
+        if (disableObjectiveTrackingOnScoreboard.get()) {
             ScoreboardSegment segment = event.getSegment();
-            if (Models.Objectives.isGuildObjectiveSegment(segment) && guildObjectiveOverlay.isEnabled()) {
+            if (Models.Objectives.isGuildObjectiveSegment(segment) && guildObjectiveOverlay.shouldBeEnabled()) {
                 event.setCanceled(true);
                 return;
             }
-            if (Models.Objectives.isObjectiveSegment(segment) && dailyObjectiveOverlay.isEnabled()) {
+            if (Models.Objectives.isObjectiveSegment(segment) && dailyObjectiveOverlay.shouldBeEnabled()) {
                 event.setCanceled(true);
                 return;
             }
@@ -64,8 +65,8 @@ public class ObjectivesOverlayFeature extends UserFeature {
     public final Overlay dailyObjectiveOverlay = new DailyObjectiveOverlay();
 
     public static class GuildObjectiveOverlay extends ObjectiveOverlayBase {
-        @Config(key = "feature.wynntils.objectivesOverlay.overlay.objectiveOverlayBase.textColor")
-        public CustomColor textColor = CommonColors.LIGHT_BLUE;
+        @RegisterConfig("feature.wynntils.objectivesOverlay.overlay.objectiveOverlayBase.textColor")
+        public final Config<CustomColor> textColor = new Config<>(CommonColors.LIGHT_BLUE);
 
         protected GuildObjectiveOverlay() {
             super(
@@ -89,14 +90,14 @@ public class ObjectivesOverlayFeature extends UserFeature {
                 return;
             }
 
-            if (this.hideOnInactivity) {
+            if (this.hideOnInactivity.get()) {
                 final int maxInactivityMs = 3000;
                 if (guildObjective.getUpdatedAt() + maxInactivityMs < System.currentTimeMillis()) {
                     return;
                 }
             }
 
-            final int barHeight = this.enableProgressBar ? 5 : 0;
+            final int barHeight = this.enableProgressBar.get() ? 5 : 0;
             final int barWidth = 182;
             final float actualBarHeight = barHeight * (this.getWidth() / barWidth);
             final float renderedHeight = FontRenderer.getInstance()
@@ -120,9 +121,9 @@ public class ObjectivesOverlayFeature extends UserFeature {
                             this.getRenderX() + this.getWidth(),
                             renderY,
                             this.getWidth(),
-                            this.textColor,
+                            this.textColor.get(),
                             this.getRenderHorizontalAlignment(),
-                            this.textShadow);
+                            this.textShadow.get());
 
             float height = FontRenderer.getInstance().calculateRenderHeight(text, this.getWidth());
 
@@ -130,7 +131,7 @@ public class ObjectivesOverlayFeature extends UserFeature {
                 renderY += height - 9;
             }
 
-            if (this.enableProgressBar) {
+            if (this.enableProgressBar.get()) {
                 BufferedRenderUtils.drawProgressBar(
                         poseStack,
                         bufferSource,
@@ -140,9 +141,9 @@ public class ObjectivesOverlayFeature extends UserFeature {
                         this.getRenderX() + this.getWidth(),
                         renderY + SPACE_BETWEEN + actualBarHeight,
                         0,
-                        objectivesTexture.yOffset,
+                        objectivesTexture.get().yOffset,
                         barWidth,
-                        objectivesTexture.yOffset + 10,
+                        objectivesTexture.get().yOffset + 10,
                         guildObjective.getProgress());
             }
         }
@@ -152,8 +153,8 @@ public class ObjectivesOverlayFeature extends UserFeature {
     }
 
     public static class DailyObjectiveOverlay extends ObjectiveOverlayBase {
-        @Config(key = "feature.wynntils.objectivesOverlay.overlay.objectiveOverlayBase.textColor")
-        public CustomColor textColor = CommonColors.GREEN;
+        @RegisterConfig("feature.wynntils.objectivesOverlay.overlay.objectiveOverlayBase.textColor")
+        public final Config<CustomColor> textColor = new Config<>(CommonColors.GREEN);
 
         protected DailyObjectiveOverlay() {
             super(
@@ -173,7 +174,7 @@ public class ObjectivesOverlayFeature extends UserFeature {
                 PoseStack poseStack, MultiBufferSource.BufferSource bufferSource, float partialTicks, Window window) {
             List<WynnObjective> objectives = Models.Objectives.getPersonalObjectives();
 
-            final int barHeight = this.enableProgressBar ? 5 : 0;
+            final int barHeight = this.enableProgressBar.get() ? 5 : 0;
             final int barWidth = 182;
             final float actualBarHeight = barHeight * (this.getWidth() / barWidth);
             final float renderedHeightWithoutTextHeight = SPACE_BETWEEN + actualBarHeight;
@@ -194,7 +195,7 @@ public class ObjectivesOverlayFeature extends UserFeature {
                     };
 
             for (WynnObjective objective : objectives) {
-                if (this.hideOnInactivity) {
+                if (this.hideOnInactivity.get()) {
                     final int maxInactivityMs = 3000;
                     if (objective.getUpdatedAt() + maxInactivityMs < System.currentTimeMillis()) {
                         continue;
@@ -213,9 +214,9 @@ public class ObjectivesOverlayFeature extends UserFeature {
                                 this.getRenderX() + this.getWidth(),
                                 renderY,
                                 this.getWidth(),
-                                this.textColor,
+                                this.textColor.get(),
                                 this.getRenderHorizontalAlignment(),
-                                this.textShadow);
+                                this.textShadow.get());
 
                 final float textHeight = FontRenderer.getInstance().calculateRenderHeight(text, (int) this.getWidth());
 
@@ -223,7 +224,7 @@ public class ObjectivesOverlayFeature extends UserFeature {
                     renderY += textHeight - 9;
                 }
 
-                if (this.enableProgressBar) {
+                if (this.enableProgressBar.get()) {
                     BufferedRenderUtils.drawProgressBar(
                             poseStack,
                             bufferSource,
@@ -233,9 +234,9 @@ public class ObjectivesOverlayFeature extends UserFeature {
                             this.getRenderX() + this.getWidth(),
                             renderY + SPACE_BETWEEN + actualBarHeight,
                             0,
-                            objectivesTexture.yOffset,
+                            objectivesTexture.get().yOffset,
                             barWidth,
-                            objectivesTexture.yOffset + 10,
+                            objectivesTexture.get().yOffset + 10,
                             objective.getProgress());
                 }
 
@@ -248,17 +249,17 @@ public class ObjectivesOverlayFeature extends UserFeature {
     }
 
     protected abstract static class ObjectiveOverlayBase extends Overlay {
-        @Config(key = "feature.wynntils.objectivesOverlay.overlay.objectiveOverlayBase.hideOnInactivity")
-        public boolean hideOnInactivity = false;
+        @RegisterConfig("feature.wynntils.objectivesOverlay.overlay.objectiveOverlayBase.hideOnInactivity")
+        public final Config<Boolean> hideOnInactivity = new Config<>(false);
 
-        @Config(key = "feature.wynntils.objectivesOverlay.overlay.objectiveOverlayBase.enableProgressBar")
-        public boolean enableProgressBar = true;
+        @RegisterConfig("feature.wynntils.objectivesOverlay.overlay.objectiveOverlayBase.enableProgressBar")
+        public final Config<Boolean> enableProgressBar = new Config<>(true);
 
-        @Config(key = "feature.wynntils.objectivesOverlay.overlay.objectiveOverlayBase.objectivesTexture")
-        public ObjectivesTextures objectivesTexture = ObjectivesTextures.a;
+        @RegisterConfig("feature.wynntils.objectivesOverlay.overlay.objectiveOverlayBase.objectivesTexture")
+        public final Config<ObjectivesTextures> objectivesTexture = new Config<>(ObjectivesTextures.a);
 
-        @Config(key = "feature.wynntils.objectivesOverlay.overlay.objectiveOverlayBase.textShadow")
-        public TextShadow textShadow = TextShadow.OUTLINE;
+        @RegisterConfig("feature.wynntils.objectivesOverlay.overlay.objectiveOverlayBase.textShadow")
+        public final Config<TextShadow> textShadow = new Config<>(TextShadow.OUTLINE);
 
         protected ObjectiveOverlayBase(
                 OverlayPosition position,

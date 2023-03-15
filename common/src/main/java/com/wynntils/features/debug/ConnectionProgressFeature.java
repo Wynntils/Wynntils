@@ -5,13 +5,18 @@
 package com.wynntils.features.debug;
 
 import com.wynntils.core.WynntilsMod;
-import com.wynntils.core.features.DebugFeature;
+import com.wynntils.core.config.Category;
+import com.wynntils.core.config.ConfigCategory;
+import com.wynntils.core.features.Feature;
+import com.wynntils.core.features.properties.StartDisabled;
 import com.wynntils.mc.event.ResourcePackEvent;
 import com.wynntils.models.worlds.event.WorldStateEvent;
 import com.wynntils.models.worlds.type.WorldState;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 
-public class ConnectionProgressFeature extends DebugFeature {
+@StartDisabled
+@ConfigCategory(Category.DEBUG)
+public class ConnectionProgressFeature extends Feature {
     @SubscribeEvent
     public void onResourcePack(ResourcePackEvent e) {
         WynntilsMod.info("Connection confirmed");

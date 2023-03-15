@@ -34,9 +34,11 @@ import com.wynntils.utils.render.type.HorizontalAlignment;
 import com.wynntils.utils.render.type.TextShadow;
 import com.wynntils.utils.render.type.VerticalAlignment;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Objects;
+import java.util.stream.Stream;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.gui.components.Renderable;
 import net.minecraft.client.gui.components.events.GuiEventListener;
@@ -74,7 +76,7 @@ public final class WynntilsBookSettingsScreen extends WynntilsScreen implements 
 
     @Override
     protected void doInit() {
-        reloadConfigButtons();
+        reloadConfigurableButtons();
 
         this.addRenderableWidget(searchWidget);
 
@@ -129,7 +131,7 @@ public final class WynntilsBookSettingsScreen extends WynntilsScreen implements 
         String name = "";
         boolean enabled = false;
         if (selected instanceof Overlay selectedOverlay) {
-            enabled = selectedOverlay.isEnabled();
+            enabled = selectedOverlay.shouldBeEnabled();
             name = selectedOverlay.getTranslatedName();
         } else if (selected instanceof Feature selectedFeature) {
             enabled = selectedFeature.isEnabled();
@@ -337,7 +339,7 @@ public final class WynntilsBookSettingsScreen extends WynntilsScreen implements 
         List<Feature> featureList = Managers.Feature.getFeatures().stream()
                 .filter(feature -> searchMatches(feature)
                         || feature.getVisibleConfigOptions().stream().anyMatch(this::configOptionContains)
-                        || feature.getOverlays().stream()
+                        || Managers.Overlay.getFeatureOverlays(feature).stream()
                                 .anyMatch(overlay -> searchMatches(feature)
                                         || overlay.getVisibleConfigOptions().stream()
                                                 .anyMatch(this::configOptionContains)))
@@ -359,7 +361,7 @@ public final class WynntilsBookSettingsScreen extends WynntilsScreen implements 
 
             configurables.add(new ConfigurableButton(37, 21 + renderIndex * 12, 140, 10, feature));
 
-            for (Overlay overlay : feature.getOverlays()) {
+            for (Overlay overlay : Managers.Overlay.getFeatureOverlays(feature)) {
                 offset++;
                 renderIndex = (i + offset) % CONFIGURABLES_PER_PAGE;
                 configurables.add(new ConfigurableButton(37, 21 + renderIndex * 12, 140, 10, overlay));
@@ -384,6 +386,22 @@ public final class WynntilsBookSettingsScreen extends WynntilsScreen implements 
                 1,
                 this::scrollConfigurableList,
                 CustomColor.NONE);
+
+        if (selected != null) {
+            Stream<Configurable> configurablesList = Stream.concat(
+                    Managers.Feature.getFeatures().stream(),
+                    Managers.Feature.getFeatures().stream()
+                            .map(Managers.Overlay::getFeatureOverlays)
+                            .flatMap(Collection::stream)
+                            .map(overlay -> (Configurable) overlay));
+
+            Configurable newSelected = configurablesList
+                    .filter(configurable -> configurable.getConfigJsonName().equals(selected.getConfigJsonName()))
+                    .findFirst()
+                    .orElse(null);
+
+            setSelected(newSelected);
+        }
     }
 
     public boolean configOptionContains(ConfigHolder configHolder) {

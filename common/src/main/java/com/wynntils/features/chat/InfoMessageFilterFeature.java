@@ -7,7 +7,8 @@ package com.wynntils.features.chat;
 import com.wynntils.core.config.Category;
 import com.wynntils.core.config.Config;
 import com.wynntils.core.config.ConfigCategory;
-import com.wynntils.core.features.UserFeature;
+import com.wynntils.core.config.RegisterConfig;
+import com.wynntils.core.features.Feature;
 import com.wynntils.handlers.chat.event.ChatMessageReceivedEvent;
 import com.wynntils.handlers.chat.type.MessageType;
 import com.wynntils.handlers.chat.type.RecipientType;
@@ -15,7 +16,7 @@ import java.util.regex.Pattern;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 
 @ConfigCategory(Category.CHAT)
-public class InfoMessageFilterFeature extends UserFeature {
+public class InfoMessageFilterFeature extends Feature {
     private static final Pattern PRE_WELCOME_1 = Pattern.compile("^§7Loading Resource Pack...$");
     private static final Pattern PRE_WELCOME_2 =
             Pattern.compile("^§6Thank you for using the WynnPack. Enjoy the game!$");
@@ -42,14 +43,14 @@ public class InfoMessageFilterFeature extends UserFeature {
     private static final Pattern BACKGROUND_LEVEL_UP_2 =
             Pattern.compile("^(§r§8)?\\[!\\] Congratulations to §r.* for reaching (combat )?§r§7level .*!$");
 
-    @Config
-    private boolean hideWelcome = true;
+    @RegisterConfig
+    public final Config<Boolean> hideWelcome = new Config<>(true);
 
-    @Config
-    private boolean hideSystemInfo = true;
+    @RegisterConfig
+    public final Config<Boolean> hideSystemInfo = new Config<>(true);
 
-    @Config
-    private boolean hideLevelUp = false;
+    @RegisterConfig
+    public final Config<Boolean> hideLevelUp = new Config<>(false);
 
     @SubscribeEvent
     public void onInfoMessage(ChatMessageReceivedEvent e) {
@@ -59,27 +60,27 @@ public class InfoMessageFilterFeature extends UserFeature {
         MessageType messageType = e.getMessageType();
 
         if (messageType == MessageType.FOREGROUND) {
-            if (hideSystemInfo) {
+            if (hideSystemInfo.get()) {
                 if (SYSTEM_INFO.matcher(msg).find()) {
                     e.setCanceled(true);
                     return;
                 }
             }
 
-            if (hideWelcome) {
+            if (hideWelcome.get()) {
                 if (WELCOME_1.matcher(msg).find() || WELCOME_2.matcher(msg).find()) {
                     e.setCanceled(true);
                     return;
                 }
             }
-            if (hideLevelUp) {
+            if (hideLevelUp.get()) {
                 if (LEVEL_UP_1.matcher(msg).find() || LEVEL_UP_2.matcher(msg).find()) {
                     e.setCanceled(true);
                     return;
                 }
             }
 
-            if (hideWelcome) {
+            if (hideWelcome.get()) {
                 if (PRE_WELCOME_1.matcher(msg).find()
                         || PRE_WELCOME_2.matcher(msg).find()
                         || PRE_WELCOME_3.matcher(msg).find()) {
@@ -88,14 +89,14 @@ public class InfoMessageFilterFeature extends UserFeature {
                 }
             }
         } else if (messageType == MessageType.BACKGROUND) {
-            if (hideSystemInfo) {
+            if (hideSystemInfo.get()) {
                 if (BACKGROUND_SYSTEM_INFO.matcher(msg).find()) {
                     e.setCanceled(true);
                     return;
                 }
             }
 
-            if (hideLevelUp) {
+            if (hideLevelUp.get()) {
                 if (BACKGROUND_LEVEL_UP_1.matcher(msg).find()
                         || BACKGROUND_LEVEL_UP_2.matcher(msg).find()) {
                     e.setCanceled(true);
@@ -103,7 +104,7 @@ public class InfoMessageFilterFeature extends UserFeature {
                 }
             }
 
-            if (hideWelcome) {
+            if (hideWelcome.get()) {
                 if (BACKGROUND_WELCOME_1.matcher(msg).find()
                         || BACKGROUND_WELCOME_2.matcher(msg).find()) {
                     e.setCanceled(true);

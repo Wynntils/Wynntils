@@ -7,7 +7,8 @@ package com.wynntils.features.players;
 import com.wynntils.core.config.Category;
 import com.wynntils.core.config.Config;
 import com.wynntils.core.config.ConfigCategory;
-import com.wynntils.core.features.UserFeature;
+import com.wynntils.core.config.RegisterConfig;
+import com.wynntils.core.features.Feature;
 import com.wynntils.core.features.properties.StartDisabled;
 import com.wynntils.mc.event.PlayerRenderLayerEvent;
 import net.minecraft.world.item.ItemStack;
@@ -16,28 +17,28 @@ import net.minecraftforge.eventbus.api.SubscribeEvent;
 
 @StartDisabled
 @ConfigCategory(Category.PLAYERS)
-public class PlayerArmorHidingFeature extends UserFeature {
-    @Config
-    public boolean hideHelmets = true;
+public class PlayerArmorHidingFeature extends Feature {
+    @RegisterConfig
+    public final Config<Boolean> hideHelmets = new Config<>(true);
 
-    @Config
-    public boolean hideChestplates = true;
+    @RegisterConfig
+    public final Config<Boolean> hideChestplates = new Config<>(true);
 
-    @Config
-    public boolean hideLeggings = true;
+    @RegisterConfig
+    public final Config<Boolean> hideLeggings = new Config<>(true);
 
-    @Config
-    public boolean hideBoots = true;
+    @RegisterConfig
+    public final Config<Boolean> hideBoots = new Config<>(true);
 
-    @Config
-    public boolean showCosmetics = true;
+    @RegisterConfig
+    public final Config<Boolean> showCosmetics = new Config<>(true);
 
     @SubscribeEvent
     public void onPlayerArmorRender(PlayerRenderLayerEvent.Armor event) {
         switch (event.getSlot()) {
             case HEAD -> {
-                if (!hideHelmets) return;
-                if (!showCosmetics) { // helmet is hidden regardless, no extra logic needed
+                if (!hideHelmets.get()) return;
+                if (!showCosmetics.get()) { // helmet is hidden regardless, no extra logic needed
                     event.setCanceled(true);
                     return;
                 }
@@ -48,15 +49,15 @@ public class PlayerArmorHidingFeature extends UserFeature {
                 return;
             }
             case CHEST -> {
-                if (hideChestplates) event.setCanceled(true);
+                if (hideChestplates.get()) event.setCanceled(true);
                 return;
             }
             case LEGS -> {
-                if (hideLeggings) event.setCanceled(true);
+                if (hideLeggings.get()) event.setCanceled(true);
                 return;
             }
             case FEET -> {
-                if (hideBoots) event.setCanceled(true);
+                if (hideBoots.get()) event.setCanceled(true);
                 return;
             }
         }

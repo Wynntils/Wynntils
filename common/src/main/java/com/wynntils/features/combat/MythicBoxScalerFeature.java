@@ -8,15 +8,16 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import com.wynntils.core.config.Category;
 import com.wynntils.core.config.Config;
 import com.wynntils.core.config.ConfigCategory;
-import com.wynntils.core.features.UserFeature;
+import com.wynntils.core.config.RegisterConfig;
+import com.wynntils.core.features.Feature;
 import com.wynntils.mc.event.GroundItemEntityTransformEvent;
 import com.wynntils.utils.wynn.WynnItemMatchers;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 
 @ConfigCategory(Category.COMBAT)
-public class MythicBoxScalerFeature extends UserFeature {
-    @Config
-    private float scale = 1.5f;
+public class MythicBoxScalerFeature extends Feature {
+    @RegisterConfig
+    public final Config<Float> scale = new Config<>(1.5f);
 
     @SubscribeEvent
     public void onItemRendering(GroundItemEntityTransformEvent e) {
@@ -31,7 +32,7 @@ public class MythicBoxScalerFeature extends UserFeature {
         // reapplying the transformation
         stack.translate(0f, -0.25f, 0f);
 
-        stack.scale(scale, scale, scale);
+        stack.scale(scale.get(), scale.get(), scale.get());
 
         stack.translate(0f, 0.25f, 0f);
     }

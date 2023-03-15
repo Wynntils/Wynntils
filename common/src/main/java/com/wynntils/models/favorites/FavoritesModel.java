@@ -9,6 +9,7 @@ import com.wynntils.core.components.Model;
 import com.wynntils.core.components.Models;
 import com.wynntils.core.json.TypeOverride;
 import com.wynntils.core.storage.Storage;
+import com.wynntils.features.inventory.ItemFavoriteFeature;
 import com.wynntils.models.gear.type.GearInfo;
 import com.wynntils.models.ingredients.type.IngredientInfo;
 import com.wynntils.models.items.WynnItem;
@@ -103,5 +104,10 @@ public final class FavoritesModel extends Model {
     // Used to track changes in the set of favorites
     public int getRevision() {
         return revision;
+    }
+
+    private Set<String> getFavoriteItems() {
+        // This is a hack to allow saving of favorites in the config
+        return ItemFavoriteFeature.INSTANCE.favoriteItems.get();
     }
 }

@@ -9,11 +9,11 @@ import com.wynntils.core.components.Manager;
 import com.wynntils.core.components.Managers;
 import com.wynntils.core.config.Category;
 import com.wynntils.core.config.ConfigCategory;
-import com.wynntils.core.config.ConfigManager;
-import com.wynntils.core.features.properties.RegisterKeyBind;
+import com.wynntils.core.features.overlays.OverlayManager;
 import com.wynntils.core.features.properties.StartDisabled;
-import com.wynntils.core.keybinds.KeyBind;
+import com.wynntils.core.keybinds.KeyBindManager;
 import com.wynntils.core.mod.CrashReportManager;
+import com.wynntils.core.mod.type.CrashType;
 import com.wynntils.features.GammabrightFeature;
 import com.wynntils.features.LootrunFeature;
 import com.wynntils.features.TerritoryDefenseMessageFeature;
@@ -110,22 +110,28 @@ import com.wynntils.features.ui.WynntilsQuestBookFeature;
 import com.wynntils.features.wynntils.ChangelogFeature;
 import com.wynntils.features.wynntils.CommandsFeature;
 import com.wynntils.features.wynntils.FixPacketBugsFeature;
+import com.wynntils.features.wynntils.TelemetryFeature;
 import com.wynntils.features.wynntils.UpdatesFeature;
+import com.wynntils.mc.event.ClientsideMessageEvent;
 import com.wynntils.utils.mc.McUtils;
 import java.lang.reflect.Field;
-import java.util.ArrayList;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
+import net.minecraft.ChatFormatting;
+import net.minecraft.network.chat.ClickEvent;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.MutableComponent;
+import net.minecraftforge.eventbus.api.Event;
 import org.apache.commons.lang3.reflect.FieldUtils;
-import org.apache.commons.lang3.reflect.MethodUtils;
 
 /** Loads {@link Feature}s */
 public final class FeatureManager extends Manager {
-    private static final List<Feature> FEATURES = new ArrayList<>();
+    private static final Map<Feature, FeatureState> FEATURES = new LinkedHashMap<>();
 
-    public FeatureManager(ConfigManager configManager, CrashReportManager crashReportManager) {
-        super(List.of(configManager, crashReportManager));
+    public FeatureManager(CrashReportManager crashReport, KeyBindManager keyBind, OverlayManager overlay) {
+        super(List.of(crashReport, keyBind, overlay));
     }
 
     public void init() {
@@ -181,6 +187,7 @@ public final class FeatureManager extends Manager {
         registerFeature(new HadesFeature());
         registerFeature(new HealthPotionBlockerFeature());
         registerFeature(new HidePotionGlintFeature());
+        registerFeature(new HorseMountFeature());
         registerFeature(new InfoBoxFeature());
         registerFeature(new InfoMessageFilterFeature());
         registerFeature(new IngredientPouchHotkeyFeature());
@@ -192,7 +199,6 @@ public final class FeatureManager extends Manager {
         registerFeature(new ItemHighlightFeature());
         registerFeature(new ItemLockFeature());
         registerFeature(new ItemScreenshotFeature());
-        registerFeature(new HorseMountFeature());
         registerFeature(new ItemStatInfoFeature());
         registerFeature(new ItemTextOverlayFeature());
         registerFeature(new LobbyUptimeFeature());
@@ -217,6 +223,7 @@ public final class FeatureManager extends Manager {
         registerFeature(new SoulPointTimerFeature());
         registerFeature(new SpellCastRenderFeature());
         registerFeature(new StatusOverlayFeature());
+        registerFeature(new TelemetryFeature());
         registerFeature(new TerritoryDefenseMessageFeature());
         registerFeature(new TerritoryMessageRedirectFeature());
         registerFeature(new TooltipFittingFeature());
@@ -232,12 +239,6 @@ public final class FeatureManager extends Manager {
         registerFeature(new WynntilsCosmeticsFeature());
         registerFeature(new WynntilsQuestBookFeature());
 
-        // save/create config file after loading all features' options
-        Managers.Config.saveConfig();
-
-        // save/create default config file containing all config holders
-        Managers.Config.saveDefaultConfig();
-
         // Reload Minecraft's config files so our own keybinds get loaded
         // This is needed because we are late to register the keybinds,
         // but we cannot move it earlier to the init process because of I18n
@@ -249,7 +250,7 @@ public final class FeatureManager extends Manager {
     }
 
     private void registerFeature(Feature feature) {
-        FEATURES.add(feature);
+        FEATURES.put(feature, FeatureState.DISABLED);
 
         try {
             initializeFeature(feature);
@@ -259,16 +260,22 @@ public final class FeatureManager extends Manager {
                 System.exit(1);
             }
         } catch (Throwable exception) {
-            // Log and fail gracefully, don't make other features fail to init
-            WynntilsMod.error(
-                    "Failed to initialize feature " + feature.getClass().getSimpleName(), exception);
+            // Log and handle gracefully, just disable this feature
+            crashFeature(feature);
+            WynntilsMod.reportCrash(
+                    feature.getClass().getName() + ":initialize",
+                    feature.getClass().getSimpleName() + " during init",
+                    CrashType.FEATURE,
+                    exception,
+                    false,
+                    true);
         }
     }
 
     private void initializeFeature(Feature feature) {
         Class<? extends Feature> featureClass = feature.getClass();
 
-        // instance field
+        // Instance field
         try {
             Field instanceField = FieldUtils.getDeclaredField(featureClass, "INSTANCE", true);
             if (instanceField != null) instanceField.set(null, feature);
@@ -277,56 +284,92 @@ public final class FeatureManager extends Manager {
             return;
         }
 
-        // flag as event listener
-        if (MethodUtils.getMethodsWithAnnotation(featureClass, SubscribeEvent.class).length > 0) {
-            feature.setupEventListener();
-        }
-
-        // set feature category
+        // Set feature category
         ConfigCategory configCategory = feature.getClass().getAnnotation(ConfigCategory.class);
         Category category = configCategory != null ? configCategory.value() : Category.UNCATEGORIZED;
         feature.setCategory(category);
 
-        // register key binds
-        for (Field f : FieldUtils.getFieldsWithAnnotation(featureClass, RegisterKeyBind.class)) {
-            if (!f.getType().equals(KeyBind.class)) continue;
+        // Register key binds
+        Managers.KeyBind.discoverKeyBinds(feature);
 
-            try {
-                KeyBind keyBind = (KeyBind) FieldUtils.readField(f, feature, true);
-                feature.setupKeyHolder(keyBind);
-            } catch (Exception e) {
-                WynntilsMod.error("Failed to register KeyBind " + f.getName() + " in " + featureClass.getName(), e);
-            }
-        }
-
-        // determine if feature should be enabled & set default enabled value for user features
+        // Determine if feature should be enabled & set default enabled value for user features
         boolean startDisabled = featureClass.isAnnotationPresent(StartDisabled.class);
-        if (feature instanceof UserFeature userFeature) {
-            userFeature.userEnabled = !startDisabled;
+        feature.userEnabled.updateConfig(!startDisabled);
+
+        Managers.Overlay.discoverOverlays(feature);
+        Managers.Overlay.discoverOverlayGroups(feature);
+
+        // Assert that the feature name is properly translated
+        assert !feature.getTranslatedName().startsWith("feature.wynntils.");
+
+        if (!feature.userEnabled.get()) return; // not enabled by user
+
+        enableFeature(feature);
+    }
+
+    public void enableFeature(Feature feature) {
+        if (!FEATURES.containsKey(feature)) {
+            throw new IllegalArgumentException("Tried to enable an unregistered feature: " + feature);
         }
 
-        // init overlays before ConfigManager
-        feature.initOverlays();
+        FeatureState state = FEATURES.get(feature);
 
-        // register & load configs
-        // this has to be done after the userEnabled handling above, so the default value registers properly
-        Managers.Config.registerFeature(feature);
-        Managers.Storage.registerStorageable(feature);
+        if (state != FeatureState.DISABLED && state != FeatureState.CRASHED) return;
 
-        // initialize & enable
-        feature.init();
+        feature.onEnable();
 
-        if (feature instanceof UserFeature userFeature) {
-            if (!userFeature.userEnabled) return; // not enabled by user
+        FEATURES.put(feature, FeatureState.ENABLED);
 
-            userFeature.enable();
-        } else if (!startDisabled) {
-            feature.enable();
+        WynntilsMod.registerEventListener(feature);
+
+        Managers.Overlay.enableOverlays(feature);
+
+        Managers.KeyBind.enableFeatureKeyBinds(feature);
+    }
+
+    public void disableFeature(Feature feature) {
+        if (!FEATURES.containsKey(feature)) {
+            throw new IllegalArgumentException("Tried to disable an unregistered feature: " + feature);
         }
+
+        FeatureState state = FEATURES.get(feature);
+
+        if (state != FeatureState.ENABLED) return;
+
+        feature.onDisable();
+
+        FEATURES.put(feature, FeatureState.DISABLED);
+
+        WynntilsMod.unregisterEventListener(feature);
+
+        Managers.KeyBind.disableFeatureKeyBinds(feature);
+    }
+
+    public void crashFeature(Feature feature) {
+        if (!FEATURES.containsKey(feature)) {
+            throw new IllegalArgumentException("Tried to crash an unregistered feature: " + feature);
+        }
+
+        disableFeature(feature);
+
+        FEATURES.put(feature, FeatureState.CRASHED);
+    }
+
+    public FeatureState getFeatureState(Feature feature) {
+        if (!FEATURES.containsKey(feature)) {
+            throw new IllegalArgumentException(
+                    "Feature " + feature + " is not registered, but was was queried for its state");
+        }
+
+        return FEATURES.get(feature);
+    }
+
+    public boolean isEnabled(Feature feature) {
+        return getFeatureState(feature) == FeatureState.ENABLED;
     }
 
     public List<Feature> getFeatures() {
-        return FEATURES;
+        return FEATURES.keySet().stream().toList();
     }
 
     public Optional<Feature> getFeatureFromString(String featureName) {
@@ -335,11 +378,42 @@ public final class FeatureManager extends Manager {
                 .findFirst();
     }
 
+    public void handleExceptionInEventListener(Event event, String featureClassName, Throwable t) {
+        String featureName = featureClassName.substring(featureClassName.lastIndexOf('.') + 1);
+
+        Optional<Feature> featureOptional = getFeatureFromString(featureName);
+        if (featureOptional.isEmpty()) {
+            WynntilsMod.error("Exception in event listener in feature that cannot be located: " + featureClassName, t);
+            return;
+        }
+
+        Feature feature = featureOptional.get();
+
+        crashFeature(feature);
+
+        // If a crash happens in a client-side message event, and we send a new message about disabling X feature,
+        // we will cause a new exception and an endless recursion.
+        boolean shouldSendChat = !(event instanceof ClientsideMessageEvent);
+
+        WynntilsMod.reportCrash(
+                feature.getClass().getName(), feature.getTranslatedName(), CrashType.FEATURE, t, shouldSendChat, true);
+
+        if (shouldSendChat) {
+            MutableComponent enableMessage = Component.literal("Click here to enable it again.")
+                    .withStyle(ChatFormatting.UNDERLINE)
+                    .withStyle(ChatFormatting.RED)
+                    .withStyle(style -> style.withClickEvent(new ClickEvent(
+                            ClickEvent.Action.RUN_COMMAND, "/feature enable " + feature.getShortName())));
+
+            McUtils.sendMessageToClient(enableMessage);
+        }
+    }
+
     private void addCrashCallbacks() {
         Managers.CrashReport.registerCrashContext("Loaded Features", () -> {
             StringBuilder result = new StringBuilder();
 
-            for (Feature feature : FEATURES) {
+            for (Feature feature : FEATURES.keySet()) {
                 if (feature.isEnabled()) {
                     result.append("\n\t\t").append(feature.getTranslatedName());
                 }

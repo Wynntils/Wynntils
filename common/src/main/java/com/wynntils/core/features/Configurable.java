@@ -14,6 +14,9 @@ public interface Configurable {
     /** Registers the configurable's config options. Called by ConfigManager when loaded */
     void addConfigOptions(List<ConfigHolder> options);
 
+    /** Removes a configurable's config options. Used by ConfigManager with Overlay groups */
+    void removeConfigOptions(List<ConfigHolder> options);
+
     /** Returns all configurable options registered that should be visible to the user */
     List<ConfigHolder> getVisibleConfigOptions();
 

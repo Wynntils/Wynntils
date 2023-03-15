@@ -9,6 +9,7 @@ import com.google.gson.JsonObject;
 import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.components.Manager;
 import com.wynntils.core.components.Managers;
+import com.wynntils.core.features.FeatureManager;
 import com.wynntils.core.json.JsonManager;
 import com.wynntils.core.mod.event.WynncraftConnectionEvent;
 import com.wynntils.utils.mc.McUtils;
@@ -33,15 +34,22 @@ public final class StorageManager extends Manager {
     private final File userStorageFile;
 
     private final ScheduledExecutorService executor = Executors.newScheduledThreadPool(1);
-    private final Map<String, Storage> storages = new TreeMap<>();
-    private final Map<Storage, Type> storageTypes = new HashMap<>();
+    private final Map<String, Storage<?>> storages = new TreeMap<>();
+    private final Map<Storage<?>, Type> storageTypes = new HashMap<>();
 
     private long lastPersisted;
     private boolean scheduledPersist;
 
-    public StorageManager(JsonManager jsonManager) {
-        super(List.of(jsonManager));
+    public StorageManager(JsonManager jsonManager, FeatureManager feature) {
+        super(List.of(jsonManager, feature));
         userStorageFile = new File(STORAGE_DIR, McUtils.mc().getUser().getUuid() + FILE_SUFFIX);
+    }
+
+    public void init() {
+        // Register all storageables
+        Managers.Feature.getFeatures().forEach(this::registerStorageable);
+
+        readFromJson();
     }
 
     public void registerStorageable(Storageable storageable) {
@@ -53,7 +61,7 @@ public final class StorageManager extends Manager {
 
         for (Field storageField : storageFields) {
             try {
-                Storage storage = (Storage) FieldUtils.readField(storageField, storageable, true);
+                Storage<?> storage = (Storage<?>) FieldUtils.readField(storageField, storageable, true);
                 String jsonName = baseName + "." + storageField.getName();
                 storages.put(jsonName, storage);
 
@@ -67,17 +75,13 @@ public final class StorageManager extends Manager {
         }
     }
 
-    public void restorePersisted() {
-        readFromJson();
-    }
-
     @SubscribeEvent
     public void onWynncraftDisconnect(WynncraftConnectionEvent.Disconnected event) {
         // Always save when disconnecting
         writeToJson();
     }
 
-    void persist(Storage<?> storage) {
+    void persist() {
         if (scheduledPersist) return;
 
         long now = System.currentTimeMillis();

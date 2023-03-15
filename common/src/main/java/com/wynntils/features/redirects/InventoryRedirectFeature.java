@@ -8,7 +8,8 @@ import com.wynntils.core.components.Managers;
 import com.wynntils.core.config.Category;
 import com.wynntils.core.config.Config;
 import com.wynntils.core.config.ConfigCategory;
-import com.wynntils.core.features.UserFeature;
+import com.wynntils.core.config.RegisterConfig;
+import com.wynntils.core.features.Feature;
 import com.wynntils.core.notifications.MessageContainer;
 import com.wynntils.mc.event.SubtitleSetTextEvent;
 import com.wynntils.models.worlds.event.WorldStateEvent;
@@ -19,7 +20,7 @@ import net.minecraft.network.chat.Component;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 
 @ConfigCategory(Category.REDIRECTS)
-public class InventoryRedirectFeature extends UserFeature {
+public class InventoryRedirectFeature extends Feature {
     private static final Pattern INGREDIENT_POUCH_PICKUP_PATTERN = Pattern.compile("^§a\\+\\d+ §7.+§a to pouch$");
     private static final Pattern EMERALD_POUCH_PICKUP_PATTERN = Pattern.compile("§a\\+(\\d+)§7 Emeralds? §ato pouch");
     private static final Pattern POTION_STACK_PATTERN = Pattern.compile("§a\\+(\\d+)§7 potion §acharges?");
@@ -27,14 +28,14 @@ public class InventoryRedirectFeature extends UserFeature {
     private long lastEmeraldPouchPickup = 0;
     private MessageContainer emeraldPouchMessage = null;
 
-    @Config
-    public boolean redirectIngredientPouch = true;
+    @RegisterConfig
+    public final Config<Boolean> redirectIngredientPouch = new Config<>(true);
 
-    @Config
-    public boolean redirectEmeraldPouch = true;
+    @RegisterConfig
+    public final Config<Boolean> redirectEmeraldPouch = new Config<>(true);
 
-    @Config
-    public boolean redirectPotionStack = true;
+    @RegisterConfig
+    public final Config<Boolean> redirectPotionStack = new Config<>(true);
 
     @SubscribeEvent
     public void onWorldStateChange(WorldStateEvent event) {
@@ -44,14 +45,14 @@ public class InventoryRedirectFeature extends UserFeature {
 
     @SubscribeEvent
     public void onSubtitleSetText(SubtitleSetTextEvent event) {
-        if (!redirectEmeraldPouch && !redirectIngredientPouch && !redirectPotionStack) {
+        if (!redirectEmeraldPouch.get() && !redirectIngredientPouch.get() && !redirectPotionStack.get()) {
             return;
         }
 
         Component component = event.getComponent();
         String codedString = ComponentUtils.getCoded(component);
 
-        if (redirectIngredientPouch) {
+        if (redirectIngredientPouch.get()) {
             if (INGREDIENT_POUCH_PICKUP_PATTERN.matcher(codedString).matches()) {
                 event.setCanceled(true);
                 Managers.Notification.queueMessage(codedString);
@@ -59,7 +60,7 @@ public class InventoryRedirectFeature extends UserFeature {
             }
         }
 
-        if (redirectEmeraldPouch) {
+        if (redirectEmeraldPouch.get()) {
             Matcher matcher = EMERALD_POUCH_PICKUP_PATTERN.matcher(codedString);
             if (matcher.matches()) {
                 event.setCanceled(true);
@@ -80,7 +81,7 @@ public class InventoryRedirectFeature extends UserFeature {
             }
         }
 
-        if (redirectPotionStack) {
+        if (redirectPotionStack.get()) {
             Matcher matcher = POTION_STACK_PATTERN.matcher(codedString);
             if (matcher.matches()) {
                 event.setCanceled(true);

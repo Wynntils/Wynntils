@@ -11,13 +11,14 @@ import com.wynntils.core.config.Category;
 import com.wynntils.core.config.Config;
 import com.wynntils.core.config.ConfigCategory;
 import com.wynntils.core.config.ConfigHolder;
-import com.wynntils.core.features.UserFeature;
+import com.wynntils.core.config.RegisterConfig;
+import com.wynntils.core.features.Feature;
 import com.wynntils.core.features.overlays.Overlay;
 import com.wynntils.core.features.overlays.OverlayPosition;
 import com.wynntils.core.features.overlays.annotations.OverlayInfo;
 import com.wynntils.core.features.overlays.sizes.GuiScaledOverlaySize;
 import com.wynntils.mc.event.RenderEvent;
-import com.wynntils.models.character.event.StatusEffectsChangedEvent;
+import com.wynntils.models.statuseffects.event.StatusEffectsChangedEvent;
 import com.wynntils.utils.render.TextRenderSetting;
 import com.wynntils.utils.render.TextRenderTask;
 import com.wynntils.utils.render.buffered.BufferedFontRenderer;
@@ -29,7 +30,7 @@ import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 
 @ConfigCategory(Category.OVERLAYS)
-public class StatusOverlayFeature extends UserFeature {
+public class StatusOverlayFeature extends Feature {
     private List<TextRenderTask> renderCache = List.of();
 
     @OverlayInfo(renderType = RenderEvent.ElementType.GUI)
@@ -41,14 +42,14 @@ public class StatusOverlayFeature extends UserFeature {
     }
 
     private void recalculateRenderCache() {
-        renderCache = Models.Character.getStatusEffects().stream()
+        renderCache = Models.StatusEffect.getStatusEffects().stream()
                 .map(statusTimer -> new TextRenderTask(statusTimer.asString(), statusOverlay.getTextRenderSetting()))
                 .toList();
     }
 
     public class StatusOverlay extends Overlay {
-        @Config
-        public TextShadow textShadow = TextShadow.OUTLINE;
+        @RegisterConfig
+        public final Config<TextShadow> textShadow = new Config<>(TextShadow.OUTLINE);
 
         private TextRenderSetting textRenderSetting;
 
@@ -107,7 +108,7 @@ public class StatusOverlayFeature extends UserFeature {
             textRenderSetting = TextRenderSetting.DEFAULT
                     .withMaxWidth(this.getWidth())
                     .withHorizontalAlignment(this.getRenderHorizontalAlignment())
-                    .withTextShadow(textShadow);
+                    .withTextShadow(textShadow.get());
         }
 
         public TextRenderSetting getTextRenderSetting() {

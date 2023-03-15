@@ -24,8 +24,8 @@ import com.wynntils.utils.render.type.VerticalAlignment;
 import java.io.File;
 import java.util.Objects;
 import net.minecraft.Util;
+import net.minecraft.core.Position;
 import net.minecraft.network.chat.Component;
-import net.minecraft.world.phys.Vec3;
 import org.lwjgl.glfw.GLFW;
 
 public class LootrunButton extends WynntilsButton {
@@ -98,9 +98,9 @@ public class LootrunButton extends WynntilsButton {
             }
 
             LootrunPath path = lootrun.path();
-            Vec3 start = path.points().get(0);
+            Position start = path.points().get(0);
 
-            McUtils.mc().setScreen(MainMapScreen.create((float) start.x, (float) start.z));
+            McUtils.mc().setScreen(MainMapScreen.create((float) start.x(), (float) start.z()));
             return true;
         }
 

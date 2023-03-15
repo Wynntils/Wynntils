@@ -7,7 +7,7 @@ package com.wynntils.features.ui;
 import com.wynntils.core.components.Models;
 import com.wynntils.core.config.Category;
 import com.wynntils.core.config.ConfigCategory;
-import com.wynntils.core.features.UserFeature;
+import com.wynntils.core.features.Feature;
 import com.wynntils.mc.event.ItemTooltipRenderEvent;
 import com.wynntils.models.items.items.gui.ServerItem;
 import com.wynntils.models.worlds.profile.ServerProfile;
@@ -20,7 +20,7 @@ import net.minecraft.network.chat.Component;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 
 @ConfigCategory(Category.UI)
-public class LobbyUptimeFeature extends UserFeature {
+public class LobbyUptimeFeature extends Feature {
     @SubscribeEvent
     public void onTooltipPre(ItemTooltipRenderEvent.Pre event) {
         Optional<ServerItem> serverItemOpt = Models.Item.asWynnItem(event.getItemStack(), ServerItem.class);

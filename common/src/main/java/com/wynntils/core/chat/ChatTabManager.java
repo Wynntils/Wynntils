@@ -4,26 +4,24 @@
  */
 package com.wynntils.core.chat;
 
-import com.google.common.collect.Sets;
-import com.google.gson.reflect.TypeToken;
 import com.wynntils.core.components.Manager;
-import com.wynntils.core.json.TypeOverride;
-import com.wynntils.core.storage.Storage;
+import com.wynntils.features.chat.ChatTabsFeature;
 import com.wynntils.handlers.chat.event.ChatMessageReceivedEvent;
 import com.wynntils.handlers.chat.type.RecipientType;
 import com.wynntils.mc.event.ChatPacketReceivedEvent;
 import com.wynntils.mc.event.ClientsideMessageEvent;
 import com.wynntils.mc.event.ScreenOpenedEvent;
+import com.wynntils.mc.event.TickEvent;
 import com.wynntils.mc.mixin.invokers.ChatScreenInvoker;
 import com.wynntils.models.worlds.event.WorldStateEvent;
 import com.wynntils.models.worlds.type.WorldState;
 import com.wynntils.utils.mc.McUtils;
-import java.lang.reflect.Type;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
+import java.util.Optional;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.regex.Pattern;
 import java.util.stream.Stream;
 import net.minecraft.client.gui.components.ChatComponent;
 import net.minecraft.client.gui.screens.ChatScreen;
@@ -34,18 +32,6 @@ import net.minecraftforge.eventbus.api.SubscribeEvent;
 public final class ChatTabManager extends Manager {
     private ChatTab focusedTab = null;
 
-    private Storage<List<ChatTab>> chatTabs = new Storage(new ArrayList<>(List.of(
-            new ChatTab("All", false, null, null, null),
-            new ChatTab("Global", false, null, Sets.newHashSet(RecipientType.GLOBAL), null),
-            new ChatTab("Local", false, null, Sets.newHashSet(RecipientType.LOCAL), null),
-            new ChatTab("Guild", false, "/g  ", Sets.newHashSet(RecipientType.GUILD), null),
-            new ChatTab("Party", false, "/p  ", Sets.newHashSet(RecipientType.PARTY), null),
-            new ChatTab("Private", false, "/r  ", Sets.newHashSet(RecipientType.PRIVATE), null),
-            new ChatTab("Shout", false, null, Sets.newHashSet(RecipientType.SHOUT), null))));
-
-    @TypeOverride
-    private final Type chatTabsType = new TypeToken<ArrayList<ChatTab>>() {}.getType();
-
     private final Map<ChatTab, ChatComponent> chatTabData = new ConcurrentHashMap<>();
     private final Map<ChatTab, Boolean> unreadMessages = new ConcurrentHashMap<>();
 
@@ -53,16 +39,20 @@ public final class ChatTabManager extends Manager {
         super(List.of());
     }
 
+    private List<ChatTab> getChatTabs() {
+        return ChatTabsFeature.INSTANCE.chatTabs.get();
+    }
+
     public Stream<ChatTab> getTabs() {
-        return chatTabs.get().stream();
+        return getChatTabs().stream();
     }
 
     public ChatTab getTab(int index) {
-        return chatTabs.get().get(index);
+        return getChatTabs().get(index);
     }
 
     public int getTabCount() {
-        return chatTabs.get().size();
+        return getChatTabs().size();
     }
 
     public boolean isTabListEmpty() {
@@ -70,17 +60,15 @@ public final class ChatTabManager extends Manager {
     }
 
     public void addTab(int insertIndex, ChatTab chatTab) {
-        chatTabs.get().add(insertIndex, chatTab);
-        chatTabs.touched();
+        getChatTabs().add(insertIndex, chatTab);
     }
 
     public void removeTab(ChatTab chatTab) {
-        chatTabs.get().remove(chatTab);
-        chatTabs.touched();
+        getChatTabs().remove(chatTab);
     }
 
     public int getTabIndex(ChatTab edited) {
-        return chatTabs.get().indexOf(edited);
+        return getChatTabs().indexOf(edited);
     }
 
     public int getNextFocusedTab() {
@@ -110,6 +98,11 @@ public final class ChatTabManager extends Manager {
                 || focusedTab.getAutoCommand().isEmpty()) return;
 
         replaceChatText(chatScreen, focusedTab.getAutoCommand());
+    }
+
+    @SubscribeEvent
+    public void onTick(TickEvent event) {
+        chatTabData.values().forEach(c -> c.tick());
     }
 
     private void replaceChatText(ChatScreen chatScreen, String autoCommand) {
@@ -167,7 +160,7 @@ public final class ChatTabManager extends Manager {
 
     public void matchMessage(ClientsideMessageEvent event) {
         // Firstly, find the FIRST matching tab with high priority
-        for (ChatTab chatTab : chatTabs.get()) {
+        for (ChatTab chatTab : getChatTabs()) {
             if (!chatTab.isConsuming()) continue;
 
             if (matchMessageFromEvent(chatTab, event)) {
@@ -177,7 +170,7 @@ public final class ChatTabManager extends Manager {
         }
 
         // Secondly, match ALL tabs with low priority
-        for (ChatTab chatTab : chatTabs.get()) {
+        for (ChatTab chatTab : getChatTabs()) {
             if (chatTab.isConsuming()) continue;
 
             if (matchMessageFromEvent(chatTab, event)) {
@@ -188,7 +181,7 @@ public final class ChatTabManager extends Manager {
 
     public void matchMessage(ChatMessageReceivedEvent event) {
         // Firstly, find the FIRST matching tab with high priority
-        for (ChatTab chatTab : chatTabs.get()) {
+        for (ChatTab chatTab : getChatTabs()) {
             if (!chatTab.isConsuming()) continue;
 
             if (matchMessageFromEvent(chatTab, event)) {
@@ -198,7 +191,7 @@ public final class ChatTabManager extends Manager {
         }
 
         // Secondly, match ALL tabs with low priority
-        for (ChatTab chatTab : chatTabs.get()) {
+        for (ChatTab chatTab : getChatTabs()) {
             if (chatTab.isConsuming()) continue;
 
             if (matchMessageFromEvent(chatTab, event)) {
@@ -224,11 +217,9 @@ public final class ChatTabManager extends Manager {
             return false;
         }
 
-        return chatTab.getCustomRegexString() == null
-                || chatTab.getCustomRegexString().isBlank()
-                || chatTab.getCustomRegex()
-                        .matcher(event.getOriginalCodedMessage())
-                        .matches();
+        Optional<Pattern> regex = chatTab.getCustomRegex();
+        return regex.isEmpty()
+                || regex.get().matcher(event.getOriginalCodedMessage()).matches();
     }
 
     private boolean matchMessageFromEvent(ChatTab chatTab, ClientsideMessageEvent event) {
@@ -238,10 +229,9 @@ public final class ChatTabManager extends Manager {
             return false;
         }
 
-        if (chatTab.getCustomRegexString() == null) {
-            return true;
-        }
+        Optional<Pattern> regex = chatTab.getCustomRegex();
+        if (regex.isEmpty()) return true;
 
-        return chatTab.getCustomRegex().matcher(event.getOriginalCodedMessage()).matches();
+        return regex.get().matcher(event.getOriginalCodedMessage()).matches();
     }
 }

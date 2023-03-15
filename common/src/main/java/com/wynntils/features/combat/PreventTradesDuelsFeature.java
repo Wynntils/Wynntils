@@ -9,7 +9,8 @@ import com.wynntils.core.components.Models;
 import com.wynntils.core.config.Category;
 import com.wynntils.core.config.Config;
 import com.wynntils.core.config.ConfigCategory;
-import com.wynntils.core.features.UserFeature;
+import com.wynntils.core.config.RegisterConfig;
+import com.wynntils.core.features.Feature;
 import com.wynntils.mc.event.PlayerAttackEvent;
 import com.wynntils.mc.event.PlayerInteractEvent;
 import com.wynntils.utils.wynn.WynnItemMatchers;
@@ -20,12 +21,12 @@ import net.minecraftforge.eventbus.api.Event;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 
 @ConfigCategory(Category.COMBAT)
-public class PreventTradesDuelsFeature extends UserFeature {
-    @Config
-    public boolean onlyWhileFighting = true;
+public class PreventTradesDuelsFeature extends Feature {
+    @RegisterConfig
+    public final Config<Boolean> onlyWhileFighting = new Config<>(true);
 
-    @Config
-    public int fightingTimeCutoff = 10; // seconds
+    @RegisterConfig
+    public final Config<Integer> fightingTimeCutoff = new Config<>(10); // seconds
 
     @SubscribeEvent
     public void onPlayerRightClick(PlayerInteractEvent.Interact event) {
@@ -40,16 +41,16 @@ public class PreventTradesDuelsFeature extends UserFeature {
     private void handlePlayerClick(Event event, Player player, ItemStack itemStack, Entity target) {
         int timeSinceLastFight =
                 (int) ((System.currentTimeMillis() - Models.Damage.getLastDamageDealtTimestamp()) / 1000);
-        if (onlyWhileFighting && timeSinceLastFight >= fightingTimeCutoff) return;
+        if (onlyWhileFighting.get() && timeSinceLastFight >= fightingTimeCutoff.get()) return;
 
         if (!shouldBlockClick(player, itemStack, target)) return;
 
         // stops interact packet from going out
         event.setCanceled(true);
 
-        if (onlyWhileFighting) {
+        if (onlyWhileFighting.get()) {
             Managers.Notification.queueMessage(
-                    "Trade/Duel blocked for " + (fightingTimeCutoff - timeSinceLastFight) + " s");
+                    "Trade/Duel blocked for " + (fightingTimeCutoff.get() - timeSinceLastFight) + " s");
         }
     }
 

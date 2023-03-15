@@ -13,7 +13,8 @@ import com.wynntils.core.config.Category;
 import com.wynntils.core.config.Config;
 import com.wynntils.core.config.ConfigCategory;
 import com.wynntils.core.config.ConfigHolder;
-import com.wynntils.core.features.UserFeature;
+import com.wynntils.core.config.RegisterConfig;
+import com.wynntils.core.features.Feature;
 import com.wynntils.mc.event.RenderEvent;
 import com.wynntils.mc.event.RenderLevelEvent;
 import com.wynntils.models.map.pois.WaypointPoi;
@@ -30,6 +31,7 @@ import com.wynntils.utils.render.type.VerticalAlignment;
 import java.util.Optional;
 import net.minecraft.client.Camera;
 import net.minecraft.client.renderer.MultiBufferSource;
+import net.minecraft.core.Position;
 import net.minecraft.world.phys.Vec2;
 import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
@@ -40,27 +42,27 @@ import org.joml.Vector3f;
 import org.joml.Vector4f;
 
 @ConfigCategory(Category.MAP)
-public class WorldWaypointDistanceFeature extends UserFeature {
-    @Config
-    public CustomColor textColor = CommonColors.WHITE;
+public class WorldWaypointDistanceFeature extends Feature {
+    @RegisterConfig
+    public final Config<CustomColor> textColor = new Config<>(CommonColors.WHITE);
 
-    @Config
-    public float backgroundOpacity = 0.2f;
+    @RegisterConfig
+    public final Config<Float> backgroundOpacity = new Config<>(0.2f);
 
-    @Config
-    public TextShadow textShadow = TextShadow.NONE;
+    @RegisterConfig
+    public final Config<TextShadow> textShadow = new Config<>(TextShadow.NONE);
 
-    @Config
-    public float bottomBoundingDistance = 100f;
+    @RegisterConfig
+    public final Config<Float> bottomBoundingDistance = new Config<>(100f);
 
-    @Config
-    public float topBoundingDistance = 40f;
+    @RegisterConfig
+    public final Config<Float> topBoundingDistance = new Config<>(40f);
 
-    @Config
-    public float horizontalBoundingDistance = 30f;
+    @RegisterConfig
+    public final Config<Float> horizontalBoundingDistance = new Config<>(30f);
 
-    @Config
-    public int maxWaypointTextDistance = 5000;
+    @RegisterConfig
+    public final Config<Integer> maxWaypointTextDistance = new Config<>(5000);
 
     private double distance;
 
@@ -74,7 +76,7 @@ public class WorldWaypointDistanceFeature extends UserFeature {
         Location location = Models.Compass.getCompassLocation().get();
         Matrix4f projection = new Matrix4f(event.getProjectionMatrix());
         Camera camera = event.getCamera();
-        Vec3 cameraPos = camera.getPosition();
+        Position cameraPos = camera.getPosition();
 
         // apply camera rotation
         Vector3f xp = new Vector3f(1, 0, 0);
@@ -85,9 +87,9 @@ public class WorldWaypointDistanceFeature extends UserFeature {
         projection.mul(new Matrix4f().rotation(yRotation));
 
         // offset to put text to the center of the block
-        float dx = (float) (location.x + 0.5 - cameraPos.x);
-        float dy = (float) (location.y + 0.5 - cameraPos.y);
-        float dz = (float) (location.z + 0.5 - cameraPos.z);
+        float dx = (float) (location.x + 0.5 - cameraPos.x());
+        float dy = (float) (location.y + 0.5 - cameraPos.y());
+        float dz = (float) (location.z + 0.5 - cameraPos.z());
 
         if (location.y <= 0 || location.y > 255) {
             dy = 0;
@@ -116,7 +118,7 @@ public class WorldWaypointDistanceFeature extends UserFeature {
         if (compassLocationOpt.isEmpty()
                 || compassWaypointOpt.isEmpty()
                 || screenCoord == null
-                || (maxWaypointTextDistance != 0 && maxWaypointTextDistance < distance)) return;
+                || (maxWaypointTextDistance.get() != 0 && maxWaypointTextDistance.get() < distance)) return;
 
         WaypointPoi waypointPoi = compassWaypointOpt.get();
 
@@ -149,7 +151,7 @@ public class WorldWaypointDistanceFeature extends UserFeature {
             RenderSystem.setShaderColor(1, 1, 1, 1);
             RenderUtils.drawRect(
                     event.getPoseStack(),
-                    CommonColors.BLACK.withAlpha(backgroundOpacity),
+                    CommonColors.BLACK.withAlpha(backgroundOpacity.get()),
                     displayPositionX - (backgroundWidth / 2) - 2,
                     displayPositionY - (backgroundHeight / 2) - 2,
                     0,
@@ -164,10 +166,10 @@ public class WorldWaypointDistanceFeature extends UserFeature {
                             displayPositionY - backgroundHeight,
                             displayPositionY + backgroundHeight,
                             0,
-                            textColor,
+                            textColor.get(),
                             HorizontalAlignment.Center,
                             VerticalAlignment.Middle,
-                            textShadow);
+                            textShadow.get());
         } else {
             displayPositionX = intersectPoint.x;
             displayPositionY = intersectPoint.y;
@@ -236,10 +238,10 @@ public class WorldWaypointDistanceFeature extends UserFeature {
 
         // minecraft's origin point is top left corner
         // so positive Y is at the screen bottom
-        float minX = (float) -(centerPoint.x - horizontalBoundingDistance);
-        float maxX = (float) centerPoint.x - horizontalBoundingDistance;
-        float minY = (float) -(centerPoint.y - topBoundingDistance);
-        float maxY = (float) centerPoint.y - bottomBoundingDistance;
+        float minX = (float) -(centerPoint.x - horizontalBoundingDistance.get());
+        float maxX = (float) centerPoint.x - horizontalBoundingDistance.get();
+        float minY = (float) -(centerPoint.y - topBoundingDistance.get());
+        float maxY = (float) centerPoint.y - bottomBoundingDistance.get();
 
         // drag the origin point to center since indicator's screenspace position / rotation is in relation to it
         Vec3 centerRelativePosition = screenCoord.subtract(centerPoint);
@@ -278,12 +280,12 @@ public class WorldWaypointDistanceFeature extends UserFeature {
                 (float) (centerRelativePosition.x + centerPoint.x), (float) (centerRelativePosition.y + centerPoint.y));
     }
 
-    private boolean isInBound(Vec3 position, Window window) {
-        return position.x > 0
-                && position.x < window.getGuiScaledWidth()
-                && position.y > 0
-                && position.y < window.getGuiScaledHeight()
-                && position.z < 1;
+    private boolean isInBound(Position position, Window window) {
+        return position.x() > 0
+                && position.x() < window.getGuiScaledWidth()
+                && position.y() > 0
+                && position.y() < window.getGuiScaledHeight()
+                && position.z() < 1;
     }
 
     // limit the bounding distance to prevent divided by zero in getBoundingIntersectPoint

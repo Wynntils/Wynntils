@@ -7,7 +7,8 @@ package com.wynntils.features.map;
 import com.wynntils.core.config.Category;
 import com.wynntils.core.config.Config;
 import com.wynntils.core.config.ConfigCategory;
-import com.wynntils.core.features.UserFeature;
+import com.wynntils.core.config.RegisterConfig;
+import com.wynntils.core.features.Feature;
 import com.wynntils.core.features.properties.RegisterKeyBind;
 import com.wynntils.core.keybinds.KeyBind;
 import com.wynntils.screens.maps.GuildMapScreen;
@@ -17,17 +18,17 @@ import com.wynntils.utils.render.type.PointerType;
 import org.lwjgl.glfw.GLFW;
 
 @ConfigCategory(Category.MAP)
-public class GuildMapFeature extends UserFeature {
+public class GuildMapFeature extends Feature {
     public static GuildMapFeature INSTANCE;
 
-    @Config
-    public boolean renderUsingLinear = true;
+    @RegisterConfig
+    public final Config<Boolean> renderUsingLinear = new Config<>(true);
 
-    @Config
-    public PointerType pointerType = PointerType.Arrow;
+    @RegisterConfig
+    public final Config<PointerType> pointerType = new Config<>(PointerType.Arrow);
 
-    @Config
-    public CustomColor pointerColor = new CustomColor(1f, 1f, 1f, 1f);
+    @RegisterConfig
+    public final Config<CustomColor> pointerColor = new Config<>(new CustomColor(1f, 1f, 1f, 1f));
 
     @RegisterKeyBind
     public final KeyBind openGuildMapKeybind =

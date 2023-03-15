@@ -11,7 +11,8 @@ import com.wynntils.core.config.Category;
 import com.wynntils.core.config.Config;
 import com.wynntils.core.config.ConfigCategory;
 import com.wynntils.core.config.ConfigHolder;
-import com.wynntils.core.features.UserFeature;
+import com.wynntils.core.config.RegisterConfig;
+import com.wynntils.core.features.Feature;
 import com.wynntils.core.features.overlays.Overlay;
 import com.wynntils.core.features.overlays.OverlayPosition;
 import com.wynntils.core.features.overlays.annotations.OverlayInfo;
@@ -36,17 +37,17 @@ import net.minecraftforge.eventbus.api.EventPriority;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 
 @ConfigCategory(Category.OVERLAYS)
-public class QuestInfoOverlayFeature extends UserFeature {
-    @Config
-    public boolean disableQuestTrackingOnScoreboard = true;
+public class QuestInfoOverlayFeature extends Feature {
+    @RegisterConfig
+    public final Config<Boolean> disableQuestTrackingOnScoreboard = new Config<>(true);
 
-    @Config
-    public boolean autoTrackQuestCoordinates = true;
+    @RegisterConfig
+    public final Config<Boolean> autoTrackQuestCoordinates = new Config<>(true);
 
     @SubscribeEvent(priority = EventPriority.HIGHEST)
     public void onScoreboardSegmentChange(ScoreboardSegmentAdditionEvent event) {
-        if (questInfoOverlay.isEnabled()
-                && disableQuestTrackingOnScoreboard
+        if (questInfoOverlay.shouldBeEnabled()
+                && disableQuestTrackingOnScoreboard.get()
                 && Models.Quest.isQuestSegment(event.getSegment())) {
             event.setCanceled(true);
         }
@@ -54,7 +55,7 @@ public class QuestInfoOverlayFeature extends UserFeature {
 
     @SubscribeEvent
     public void onTrackedQuestUpdate(TrackedQuestUpdateEvent event) {
-        if (!autoTrackQuestCoordinates) return;
+        if (!autoTrackQuestCoordinates.get()) return;
         if (event.getQuestInfo() == null) return;
 
         // set if valid
@@ -65,8 +66,8 @@ public class QuestInfoOverlayFeature extends UserFeature {
     private final Overlay questInfoOverlay = new QuestInfoOverlay();
 
     public static class QuestInfoOverlay extends Overlay {
-        @Config
-        public TextShadow textShadow = TextShadow.OUTLINE;
+        @RegisterConfig
+        public final Config<TextShadow> textShadow = new Config<>(TextShadow.OUTLINE);
 
         private static final List<CustomColor> TEXT_COLORS =
                 List.of(CommonColors.GREEN, CommonColors.ORANGE, CommonColors.WHITE);
@@ -111,7 +112,7 @@ public class QuestInfoOverlayFeature extends UserFeature {
                                 .withMaxWidth(this.getWidth())
                                 .withCustomColor(TEXT_COLORS.get(i))
                                 .withHorizontalAlignment(this.getRenderHorizontalAlignment())
-                                .withTextShadow(this.textShadow)));
+                                .withTextShadow(this.textShadow.get())));
             }
             return renderTaskList;
         }
@@ -124,7 +125,7 @@ public class QuestInfoOverlayFeature extends UserFeature {
                                 .withMaxWidth(this.getWidth())
                                 .withCustomColor(TEXT_COLORS.get(i))
                                 .withHorizontalAlignment(this.getRenderHorizontalAlignment())
-                                .withTextShadow(this.textShadow));
+                                .withTextShadow(this.textShadow.get()));
             }
         }
 

@@ -8,7 +8,8 @@ import com.wynntils.core.components.Models;
 import com.wynntils.core.config.Category;
 import com.wynntils.core.config.Config;
 import com.wynntils.core.config.ConfigCategory;
-import com.wynntils.core.features.UserFeature;
+import com.wynntils.core.config.RegisterConfig;
+import com.wynntils.core.features.Feature;
 import com.wynntils.mc.event.NametagRenderEvent;
 import com.wynntils.mc.event.RenderLevelEvent;
 import com.wynntils.models.gear.type.GearInfo;
@@ -32,25 +33,25 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 
 @ConfigCategory(Category.PLAYERS)
-public class CustomNametagRendererFeature extends UserFeature {
+public class CustomNametagRendererFeature extends Feature {
     // how much larger account tags should be relative to gear lines
     private static final float ACCOUNT_TYPE_MULTIPLIER = 1.5f;
     private static final float NAMETAG_HEIGHT = 0.25875f;
 
-    @Config
-    public boolean hideAllNametags = false;
+    @RegisterConfig
+    public final Config<Boolean> hideAllNametags = new Config<>(false);
 
-    @Config
-    public boolean showGearOnHover = true;
+    @RegisterConfig
+    public final Config<Boolean> showGearOnHover = new Config<>(true);
 
-    @Config
-    public float customNametagScale = 0.5f;
+    @RegisterConfig
+    public final Config<Float> customNametagScale = new Config<>(0.5f);
 
     private Player hitPlayerCache = null;
 
     @SubscribeEvent
     public void onNameTagRender(NametagRenderEvent event) {
-        if (hideAllNametags) {
+        if (hideAllNametags.get()) {
             event.setCanceled(true);
             return;
         }
@@ -63,7 +64,7 @@ public class CustomNametagRendererFeature extends UserFeature {
 
         List<CustomNametag> nametags = new ArrayList<>();
 
-        if (showGearOnHover) {
+        if (showGearOnHover.get()) {
             addGearNametags(event, nametags);
         }
 
@@ -91,11 +92,11 @@ public class CustomNametagRendererFeature extends UserFeature {
 
         ItemStack heldItem = hitPlayerCache.getMainHandItem();
         MutableComponent handComp = getItemComponent(heldItem);
-        if (handComp != null) nametags.add(new CustomNametag(handComp, customNametagScale));
+        if (handComp != null) nametags.add(new CustomNametag(handComp, customNametagScale.get()));
 
         for (ItemStack armorStack : hitPlayerCache.getArmorSlots()) {
             MutableComponent armorComp = getItemComponent(armorStack);
-            if (armorComp != null) nametags.add(new CustomNametag(armorComp, customNametagScale));
+            if (armorComp != null) nametags.add(new CustomNametag(armorComp, customNametagScale.get()));
         }
     }
 
@@ -119,7 +120,7 @@ public class CustomNametagRendererFeature extends UserFeature {
         AccountType accountType = user.accountType();
         if (accountType.getComponent() == null) return;
 
-        nametags.add(new CustomNametag(accountType.getComponent(), customNametagScale * ACCOUNT_TYPE_MULTIPLIER));
+        nametags.add(new CustomNametag(accountType.getComponent(), customNametagScale.get() * ACCOUNT_TYPE_MULTIPLIER));
     }
 
     private void drawNametags(NametagRenderEvent event, List<CustomNametag> nametags) {

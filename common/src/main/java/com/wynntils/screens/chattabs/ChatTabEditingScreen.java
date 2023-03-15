@@ -11,6 +11,7 @@ import com.wynntils.handlers.chat.type.RecipientType;
 import com.wynntils.screens.base.TextboxScreen;
 import com.wynntils.screens.base.WynntilsScreen;
 import com.wynntils.screens.base.widgets.TextInputBoxWidget;
+import com.wynntils.screens.base.widgets.TextWidget;
 import com.wynntils.utils.colors.CommonColors;
 import com.wynntils.utils.mc.McUtils;
 import com.wynntils.utils.render.FontRenderer;
@@ -20,6 +21,8 @@ import com.wynntils.utils.render.type.VerticalAlignment;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
+import java.util.regex.Pattern;
+import java.util.regex.PatternSyntaxException;
 import java.util.stream.Collectors;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.gui.components.Button;
@@ -28,6 +31,7 @@ import net.minecraft.client.gui.screens.ChatScreen;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.resources.language.I18n;
 import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.MutableComponent;
 import org.lwjgl.glfw.GLFW;
 
 public final class ChatTabEditingScreen extends WynntilsScreen implements TextboxScreen {
@@ -38,6 +42,7 @@ public final class ChatTabEditingScreen extends WynntilsScreen implements Textbo
     private TextInputBoxWidget orderInput;
     private final List<Checkbox> recipientTypeBoxes = new ArrayList<>();
     private TextInputBoxWidget filterRegexInput;
+    private TextWidget regexErrorMsg;
     private Checkbox consumingCheckbox;
 
     private Button saveButton;
@@ -149,10 +154,20 @@ public final class ChatTabEditingScreen extends WynntilsScreen implements Textbo
         // region Filter Regex
         this.addRenderableWidget(
                 filterRegexInput = new TextInputBoxWidget(
-                        this.width / 2 - 160, this.height / 2 + 45, 300, 20, null, this, filterRegexInput));
+                        this.width / 2 - 160,
+                        this.height / 2 + 45,
+                        300,
+                        20,
+                        (s) -> updateSaveStatus(),
+                        this,
+                        filterRegexInput));
         if (firstSetup && edited != null && edited.getCustomRegexString() != null) {
             filterRegexInput.setTextBoxInput(edited.getCustomRegexString());
         }
+
+        this.addRenderableWidget(
+                regexErrorMsg = new TextWidget(
+                        this.width / 2 - 160 + 100, this.height / 2 + 75 + 7, 200, 20, Component.empty()));
         // endregion
 
         // region Consuming
@@ -372,7 +387,22 @@ public final class ChatTabEditingScreen extends WynntilsScreen implements Textbo
         if (saveButton == null) return;
 
         saveButton.active = !nameInput.getTextBoxInput().isEmpty()
+                && validatePattern()
                 && recipientTypeBoxes.stream().anyMatch(Checkbox::selected);
+    }
+
+    private boolean validatePattern() {
+        try {
+            Pattern.compile(filterRegexInput.getTextBoxInput());
+            regexErrorMsg.setMessage(Component.empty());
+        } catch (PatternSyntaxException e) {
+            MutableComponent errorMessage = Component.literal(e.getDescription())
+                    .withStyle(ChatFormatting.RED)
+                    .append(Component.literal(" (at pos " + e.getIndex() + ")").withStyle(ChatFormatting.DARK_RED));
+            regexErrorMsg.setMessage(errorMessage);
+            return false;
+        }
+        return true;
     }
 
     @Override

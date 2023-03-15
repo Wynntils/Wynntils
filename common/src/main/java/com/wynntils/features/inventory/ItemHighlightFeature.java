@@ -8,7 +8,8 @@ import com.wynntils.core.components.Models;
 import com.wynntils.core.config.Category;
 import com.wynntils.core.config.Config;
 import com.wynntils.core.config.ConfigCategory;
-import com.wynntils.core.features.UserFeature;
+import com.wynntils.core.config.RegisterConfig;
+import com.wynntils.core.features.Feature;
 import com.wynntils.mc.event.HotbarSlotRenderEvent;
 import com.wynntils.mc.event.SlotRenderEvent;
 import com.wynntils.models.items.WynnItem;
@@ -29,121 +30,121 @@ import net.minecraftforge.eventbus.api.EventPriority;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 
 @ConfigCategory(Category.INVENTORY)
-public class ItemHighlightFeature extends UserFeature {
-    @Config
-    public boolean normalHighlightEnabled = true;
+public class ItemHighlightFeature extends Feature {
+    @RegisterConfig
+    public final Config<Boolean> normalHighlightEnabled = new Config<>(true);
 
-    @Config
-    public CustomColor normalHighlightColor = new CustomColor(255, 255, 255);
+    @RegisterConfig
+    public final Config<CustomColor> normalHighlightColor = new Config<>(new CustomColor(255, 255, 255));
 
-    @Config
-    public boolean uniqueHighlightEnabled = true;
+    @RegisterConfig
+    public final Config<Boolean> uniqueHighlightEnabled = new Config<>(true);
 
-    @Config
-    public CustomColor uniqueHighlightColor = new CustomColor(255, 255, 0);
+    @RegisterConfig
+    public final Config<CustomColor> uniqueHighlightColor = new Config<>(new CustomColor(255, 255, 0));
 
-    @Config
-    public boolean rareHighlightEnabled = true;
+    @RegisterConfig
+    public final Config<Boolean> rareHighlightEnabled = new Config<>(true);
 
-    @Config
-    public CustomColor rareHighlightColor = new CustomColor(255, 0, 255);
+    @RegisterConfig
+    public final Config<CustomColor> rareHighlightColor = new Config<>(new CustomColor(255, 0, 255));
 
-    @Config
-    public boolean setHighlightEnabled = true;
+    @RegisterConfig
+    public final Config<Boolean> setHighlightEnabled = new Config<>(true);
 
-    @Config
-    public CustomColor setHighlightColor = new CustomColor(0, 255, 0);
+    @RegisterConfig
+    public final Config<CustomColor> setHighlightColor = new Config<>(new CustomColor(0, 255, 0));
 
-    @Config
-    public boolean legendaryHighlightEnabled = true;
+    @RegisterConfig
+    public final Config<Boolean> legendaryHighlightEnabled = new Config<>(true);
 
-    @Config
-    public CustomColor legendaryHighlightColor = new CustomColor(0, 255, 255);
+    @RegisterConfig
+    public final Config<CustomColor> legendaryHighlightColor = new Config<>(new CustomColor(0, 255, 255));
 
-    @Config
-    public boolean fabledHighlightEnabled = true;
+    @RegisterConfig
+    public final Config<Boolean> fabledHighlightEnabled = new Config<>(true);
 
-    @Config
-    public CustomColor fabledHighlightColor = new CustomColor(255, 85, 85);
+    @RegisterConfig
+    public final Config<CustomColor> fabledHighlightColor = new Config<>(new CustomColor(255, 85, 85));
 
-    @Config
-    public boolean mythicHighlightEnabled = true;
+    @RegisterConfig
+    public final Config<Boolean> mythicHighlightEnabled = new Config<>(true);
 
-    @Config
-    public CustomColor mythicHighlightColor = new CustomColor(76, 0, 76);
+    @RegisterConfig
+    public final Config<CustomColor> mythicHighlightColor = new Config<>(new CustomColor(76, 0, 76));
 
-    @Config
-    public boolean craftedHighlightEnabled = true;
+    @RegisterConfig
+    public final Config<Boolean> craftedHighlightEnabled = new Config<>(true);
 
-    @Config
-    public CustomColor craftedHighlightColor = new CustomColor(0, 138, 138);
+    @RegisterConfig
+    public final Config<CustomColor> craftedHighlightColor = new Config<>(new CustomColor(0, 138, 138));
 
-    @Config
-    public boolean zeroStarIngredientHighlightEnabled = true;
+    @RegisterConfig
+    public final Config<Boolean> zeroStarIngredientHighlightEnabled = new Config<>(true);
 
-    @Config
-    public CustomColor zeroStarIngredientHighlightColor = new CustomColor(102, 102, 102);
+    @RegisterConfig
+    public final Config<CustomColor> zeroStarIngredientHighlightColor = new Config<>(new CustomColor(102, 102, 102));
 
-    @Config
-    public boolean oneStarIngredientHighlightEnabled = true;
+    @RegisterConfig
+    public final Config<Boolean> oneStarIngredientHighlightEnabled = new Config<>(true);
 
-    @Config
-    public CustomColor oneStarIngredientHighlightColor = new CustomColor(255, 247, 153);
+    @RegisterConfig
+    public final Config<CustomColor> oneStarIngredientHighlightColor = new Config<>(new CustomColor(255, 247, 153));
 
-    @Config
-    public boolean twoStarIngredientHighlightEnabled = true;
+    @RegisterConfig
+    public final Config<Boolean> twoStarIngredientHighlightEnabled = new Config<>(true);
 
-    @Config
-    public CustomColor twoStarIngredientHighlightColor = new CustomColor(255, 255, 0);
+    @RegisterConfig
+    public final Config<CustomColor> twoStarIngredientHighlightColor = new Config<>(new CustomColor(255, 255, 0));
 
-    @Config
-    public boolean threeStarIngredientHighlightEnabled = true;
+    @RegisterConfig
+    public final Config<Boolean> threeStarIngredientHighlightEnabled = new Config<>(true);
 
-    @Config
-    public CustomColor threeStarIngredientHighlightColor = new CustomColor(230, 77, 0);
+    @RegisterConfig
+    public final Config<CustomColor> threeStarIngredientHighlightColor = new Config<>(new CustomColor(230, 77, 0));
 
-    @Config
-    public boolean oneStarMaterialHighlightEnabled = true;
+    @RegisterConfig
+    public final Config<Boolean> oneStarMaterialHighlightEnabled = new Config<>(true);
 
-    @Config
-    public CustomColor oneStarMaterialHighlightColor = new CustomColor(255, 247, 153);
+    @RegisterConfig
+    public final Config<CustomColor> oneStarMaterialHighlightColor = new Config<>(new CustomColor(255, 247, 153));
 
-    @Config
-    public boolean twoStarMaterialHighlightEnabled = true;
+    @RegisterConfig
+    public final Config<Boolean> twoStarMaterialHighlightEnabled = new Config<>(true);
 
-    @Config
-    public CustomColor twoStarMaterialHighlightColor = new CustomColor(255, 255, 0);
+    @RegisterConfig
+    public final Config<CustomColor> twoStarMaterialHighlightColor = new Config<>(new CustomColor(255, 255, 0));
 
-    @Config
-    public boolean threeStarMaterialHighlightEnabled = true;
+    @RegisterConfig
+    public final Config<Boolean> threeStarMaterialHighlightEnabled = new Config<>(true);
 
-    @Config
-    public CustomColor threeStarMaterialHighlightColor = new CustomColor(230, 77, 0);
+    @RegisterConfig
+    public final Config<CustomColor> threeStarMaterialHighlightColor = new Config<>(new CustomColor(230, 77, 0));
 
-    @Config
-    public boolean cosmeticHighlightEnabled = true;
+    @RegisterConfig
+    public final Config<Boolean> cosmeticHighlightEnabled = new Config<>(true);
 
-    @Config
-    public boolean powderHighlightEnabled = true;
+    @RegisterConfig
+    public final Config<Boolean> powderHighlightEnabled = new Config<>(true);
 
-    @Config
-    public boolean emeraldPouchHighlightEnabled = true;
+    @RegisterConfig
+    public final Config<Boolean> emeraldPouchHighlightEnabled = new Config<>(true);
 
-    @Config
-    public boolean inventoryHighlightEnabled = true;
+    @RegisterConfig
+    public final Config<Boolean> inventoryHighlightEnabled = new Config<>(true);
 
-    @Config
-    public float inventoryOpacity = 1f;
+    @RegisterConfig
+    public final Config<Float> inventoryOpacity = new Config<>(1f);
 
-    @Config
-    public boolean hotbarHighlightEnabled = true;
+    @RegisterConfig
+    public final Config<Boolean> hotbarHighlightEnabled = new Config<>(true);
 
-    @Config
-    public float hotbarOpacity = .5f;
+    @RegisterConfig
+    public final Config<Float> hotbarOpacity = new Config<>(.5f);
 
     @SubscribeEvent(priority = EventPriority.HIGHEST)
     public void onRenderSlot(SlotRenderEvent.Pre e) {
-        if (!inventoryHighlightEnabled) return;
+        if (!inventoryHighlightEnabled.get()) return;
 
         CustomColor color = getHighlightColor(e.getSlot().getItem(), false);
         if (color == CustomColor.NONE) return;
@@ -151,7 +152,7 @@ public class ItemHighlightFeature extends UserFeature {
         RenderUtils.drawTexturedRectWithColor(
                 e.getPoseStack(),
                 Texture.HIGHLIGHT.resource(),
-                color.withAlpha(inventoryOpacity),
+                color.withAlpha(inventoryOpacity.get()),
                 e.getSlot().x - 1,
                 e.getSlot().y - 1,
                 200,
@@ -163,12 +164,12 @@ public class ItemHighlightFeature extends UserFeature {
 
     @SubscribeEvent
     public void onRenderHotbarSlot(HotbarSlotRenderEvent.Pre e) {
-        if (!hotbarHighlightEnabled) return;
+        if (!hotbarHighlightEnabled.get()) return;
 
         CustomColor color = getHighlightColor(e.getItemStack(), true);
         if (color == CustomColor.NONE) return;
 
-        RenderUtils.drawRect(e.getPoseStack(), color.withAlpha(hotbarOpacity), e.getX(), e.getY(), 0, 16, 16);
+        RenderUtils.drawRect(e.getPoseStack(), color.withAlpha(hotbarOpacity.get()), e.getX(), e.getY(), 0, 16, 16);
     }
 
     private CustomColor getHighlightColor(ItemStack itemStack, boolean hotbarHighlight) {
@@ -223,7 +224,7 @@ public class ItemHighlightFeature extends UserFeature {
 
         @Override
         public boolean isHighlightEnabled() {
-            return cosmeticHighlightEnabled;
+            return cosmeticHighlightEnabled.get();
         }
 
         @Override
@@ -242,28 +243,28 @@ public class ItemHighlightFeature extends UserFeature {
         @Override
         public boolean isHighlightEnabled() {
             return switch (item.getGearTier()) {
-                case NORMAL -> normalHighlightEnabled;
-                case UNIQUE -> uniqueHighlightEnabled;
-                case RARE -> rareHighlightEnabled;
-                case SET -> setHighlightEnabled;
-                case LEGENDARY -> legendaryHighlightEnabled;
-                case FABLED -> fabledHighlightEnabled;
-                case MYTHIC -> mythicHighlightEnabled;
-                case CRAFTED -> craftedHighlightEnabled;
+                case NORMAL -> normalHighlightEnabled.get();
+                case UNIQUE -> uniqueHighlightEnabled.get();
+                case RARE -> rareHighlightEnabled.get();
+                case SET -> setHighlightEnabled.get();
+                case LEGENDARY -> legendaryHighlightEnabled.get();
+                case FABLED -> fabledHighlightEnabled.get();
+                case MYTHIC -> mythicHighlightEnabled.get();
+                case CRAFTED -> craftedHighlightEnabled.get();
             };
         }
 
         @Override
         public CustomColor getHighlightColor() {
             return switch (item.getGearTier()) {
-                case NORMAL -> normalHighlightColor;
-                case UNIQUE -> uniqueHighlightColor;
-                case RARE -> rareHighlightColor;
-                case SET -> setHighlightColor;
-                case LEGENDARY -> legendaryHighlightColor;
-                case FABLED -> fabledHighlightColor;
-                case MYTHIC -> mythicHighlightColor;
-                case CRAFTED -> craftedHighlightColor;
+                case NORMAL -> normalHighlightColor.get();
+                case UNIQUE -> uniqueHighlightColor.get();
+                case RARE -> rareHighlightColor.get();
+                case SET -> setHighlightColor.get();
+                case LEGENDARY -> legendaryHighlightColor.get();
+                case FABLED -> fabledHighlightColor.get();
+                case MYTHIC -> mythicHighlightColor.get();
+                case CRAFTED -> craftedHighlightColor.get();
             };
         }
     }
@@ -278,10 +279,10 @@ public class ItemHighlightFeature extends UserFeature {
         @Override
         public CustomColor getHighlightColor() {
             return switch (item.getQualityTier()) {
-                case 0 -> zeroStarIngredientHighlightColor;
-                case 1 -> oneStarIngredientHighlightColor;
-                case 2 -> twoStarIngredientHighlightColor;
-                case 3 -> threeStarIngredientHighlightColor;
+                case 0 -> zeroStarIngredientHighlightColor.get();
+                case 1 -> oneStarIngredientHighlightColor.get();
+                case 2 -> twoStarIngredientHighlightColor.get();
+                case 3 -> threeStarIngredientHighlightColor.get();
                 default -> CustomColor.NONE;
             };
         }
@@ -289,10 +290,10 @@ public class ItemHighlightFeature extends UserFeature {
         @Override
         public boolean isHighlightEnabled() {
             return switch (item.getQualityTier()) {
-                case 0 -> zeroStarIngredientHighlightEnabled;
-                case 1 -> oneStarIngredientHighlightEnabled;
-                case 2 -> twoStarIngredientHighlightEnabled;
-                case 3 -> threeStarIngredientHighlightEnabled;
+                case 0 -> zeroStarIngredientHighlightEnabled.get();
+                case 1 -> oneStarIngredientHighlightEnabled.get();
+                case 2 -> twoStarIngredientHighlightEnabled.get();
+                case 3 -> threeStarIngredientHighlightEnabled.get();
                 default -> false;
             };
         }
@@ -308,9 +309,9 @@ public class ItemHighlightFeature extends UserFeature {
         @Override
         public CustomColor getHighlightColor() {
             return switch (item.getQualityTier()) {
-                case 1 -> oneStarMaterialHighlightColor;
-                case 2 -> twoStarMaterialHighlightColor;
-                case 3 -> threeStarMaterialHighlightColor;
+                case 1 -> oneStarMaterialHighlightColor.get();
+                case 2 -> twoStarMaterialHighlightColor.get();
+                case 3 -> threeStarMaterialHighlightColor.get();
                 default -> CustomColor.NONE;
             };
         }
@@ -318,9 +319,9 @@ public class ItemHighlightFeature extends UserFeature {
         @Override
         public boolean isHighlightEnabled() {
             return switch (item.getQualityTier()) {
-                case 1 -> oneStarMaterialHighlightEnabled;
-                case 2 -> twoStarMaterialHighlightEnabled;
-                case 3 -> threeStarMaterialHighlightEnabled;
+                case 1 -> oneStarMaterialHighlightEnabled.get();
+                case 2 -> twoStarMaterialHighlightEnabled.get();
+                case 3 -> threeStarMaterialHighlightEnabled.get();
                 default -> false; // should not happen
             };
         }
@@ -335,7 +336,7 @@ public class ItemHighlightFeature extends UserFeature {
 
         @Override
         public boolean isHighlightEnabled() {
-            return powderHighlightEnabled;
+            return powderHighlightEnabled.get();
         }
 
         @Override
@@ -353,7 +354,7 @@ public class ItemHighlightFeature extends UserFeature {
 
         @Override
         public boolean isHighlightEnabled() {
-            return emeraldPouchHighlightEnabled;
+            return emeraldPouchHighlightEnabled.get();
         }
 
         @Override

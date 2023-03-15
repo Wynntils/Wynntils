@@ -123,7 +123,7 @@ public final class HadesModel extends Model {
     @SubscribeEvent
     public void onFriendListUpdate(HadesRelationsUpdateEvent.FriendList event) {
         if (!isConnected()) return;
-        if (!HadesFeature.INSTANCE.shareWithFriends) return;
+        if (!HadesFeature.INSTANCE.shareWithFriends.get()) return;
 
         hadesConnection.sendPacket(new HCPacketSocialUpdate(
                 event.getChangedPlayers().stream().toList(),
@@ -134,7 +134,7 @@ public final class HadesModel extends Model {
     @SubscribeEvent
     public void onPartyListUpdate(HadesRelationsUpdateEvent.PartyList event) {
         if (!isConnected()) return;
-        if (!HadesFeature.INSTANCE.shareWithParty) return;
+        if (!HadesFeature.INSTANCE.shareWithParty.get()) return;
 
         hadesConnection.sendPacket(new HCPacketSocialUpdate(
                 event.getChangedPlayers().stream().toList(),
@@ -188,9 +188,9 @@ public final class HadesModel extends Model {
     public void onTick(TickEvent event) {
         if (!isConnected()) return;
         if (!Models.WorldState.onWorld() || McUtils.player().hasEffect(MobEffects.NIGHT_VISION)) return;
-        if (!HadesFeature.INSTANCE.shareWithParty
-                && !HadesFeature.INSTANCE.shareWithGuild
-                && !HadesFeature.INSTANCE.shareWithFriends) return;
+        if (!HadesFeature.INSTANCE.shareWithParty.get()
+                && !HadesFeature.INSTANCE.shareWithGuild.get()
+                && !HadesFeature.INSTANCE.shareWithFriends.get()) return;
 
         tickCountUntilUpdate--;
 
@@ -202,7 +202,7 @@ public final class HadesModel extends Model {
             float pZ = (float) player.getZ();
 
             PlayerStatus newStatus =
-                    new PlayerStatus(pX, pY, pZ, Models.Character.getHealth(), Models.Character.getMana());
+                    new PlayerStatus(pX, pY, pZ, Models.CharacterStats.getHealth(), Models.CharacterStats.getMana());
 
             if (newStatus.equals(lastSentStatus)) {
                 tickCountUntilUpdate = 1;

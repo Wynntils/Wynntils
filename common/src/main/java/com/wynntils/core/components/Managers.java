@@ -43,12 +43,13 @@ public final class Managers {
     public static final TranslationManager Translation = new TranslationManager();
 
     // Managers with dependencies, ordered alphabetically as far as possible
-    public static final ConfigManager Config = new ConfigManager(ConfigUpfixer, Json);
-    public static final FeatureManager Feature = new FeatureManager(Config, CrashReport);
-    public static final NetManager Net = new NetManager(Url);
     public static final OverlayManager Overlay = new OverlayManager(CrashReport);
+    public static final FeatureManager Feature = new FeatureManager(CrashReport, KeyBind, Overlay);
+    public static final ConfigManager Config = new ConfigManager(ConfigUpfixer, Json, Feature, Overlay);
+    public static final StorageManager Storage = new StorageManager(Json, Feature);
+
+    public static final NetManager Net = new NetManager(Url);
     public static final SplashManager Splash = new SplashManager(Net);
-    public static final StorageManager Storage = new StorageManager(Json);
     public static final UpdateManager Update = new UpdateManager(Net);
     public static final WynntilsAccountManager WynntilsAccount = new WynntilsAccountManager(Net);
 }

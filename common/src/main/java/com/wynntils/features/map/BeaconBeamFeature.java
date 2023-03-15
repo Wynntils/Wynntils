@@ -10,7 +10,8 @@ import com.wynntils.core.components.Models;
 import com.wynntils.core.config.Category;
 import com.wynntils.core.config.Config;
 import com.wynntils.core.config.ConfigCategory;
-import com.wynntils.core.features.UserFeature;
+import com.wynntils.core.config.RegisterConfig;
+import com.wynntils.core.features.Feature;
 import com.wynntils.mc.event.RenderTileLevelLastEvent;
 import com.wynntils.utils.MathUtils;
 import com.wynntils.utils.colors.CommonColors;
@@ -20,13 +21,13 @@ import com.wynntils.utils.mc.type.Location;
 import com.wynntils.utils.render.CustomBeaconRenderer;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.blockentity.BeaconRenderer;
-import net.minecraft.world.phys.Vec3;
+import net.minecraft.core.Position;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 
 @ConfigCategory(Category.MAP)
-public class BeaconBeamFeature extends UserFeature {
-    @Config
-    public CustomColor waypointBeamColor = CommonColors.RED;
+public class BeaconBeamFeature extends Feature {
+    @RegisterConfig
+    public final Config<CustomColor> waypointBeamColor = new Config<>(CommonColors.RED);
 
     @SubscribeEvent
     public void onRenderLevelLast(RenderTileLevelLastEvent event) {
@@ -36,12 +37,12 @@ public class BeaconBeamFeature extends UserFeature {
         MultiBufferSource.BufferSource bufferSource =
                 MultiBufferSource.immediate(Tesselator.getInstance().getBuilder());
 
-        Vec3 camera = event.getCamera().getPosition();
+        Position camera = event.getCamera().getPosition();
         Location location = Models.Compass.getCompassLocation().get();
 
-        double dx = location.x - camera.x;
-        double dy = location.y - camera.y;
-        double dz = location.z - camera.z;
+        double dx = location.x - camera.x();
+        double dy = location.y - camera.y();
+        double dz = location.z - camera.z();
 
         double distance = MathUtils.magnitude(dx, dz);
         int maxDistance = McUtils.mc().options.renderDistance().get() * 16;
@@ -71,7 +72,7 @@ public class BeaconBeamFeature extends UserFeature {
                 McUtils.player().level.getGameTime(),
                 0,
                 1024,
-                waypointBeamColor.asFloatArray(),
+                waypointBeamColor.get().asFloatArray(),
                 alpha,
                 0.166f,
                 0.33f);

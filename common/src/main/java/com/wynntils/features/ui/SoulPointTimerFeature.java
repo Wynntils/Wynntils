@@ -7,7 +7,7 @@ package com.wynntils.features.ui;
 import com.wynntils.core.components.Models;
 import com.wynntils.core.config.Category;
 import com.wynntils.core.config.ConfigCategory;
-import com.wynntils.core.features.UserFeature;
+import com.wynntils.core.features.Feature;
 import com.wynntils.mc.event.ItemTooltipRenderEvent;
 import com.wynntils.models.items.items.gui.SoulPointItem;
 import com.wynntils.utils.mc.LoreUtils;
@@ -19,7 +19,7 @@ import net.minecraft.network.chat.Component;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 
 @ConfigCategory(Category.UI)
-public class SoulPointTimerFeature extends UserFeature {
+public class SoulPointTimerFeature extends Feature {
     @SubscribeEvent
     public void onTooltipPre(ItemTooltipRenderEvent.Pre event) {
         Optional<SoulPointItem> soulPointItemOpt = Models.Item.asWynnItem(event.getItemStack(), SoulPointItem.class);
@@ -35,7 +35,7 @@ public class SoulPointTimerFeature extends UserFeature {
 
         addon.add(Component.literal(" "));
 
-        int rawSecondsUntilSoulPoint = Models.Character.getTicksToNextSoulPoint() / 20;
+        int rawSecondsUntilSoulPoint = Models.CharacterStats.getTicksToNextSoulPoint() / 20;
         int minutesUntilSoulPoint = rawSecondsUntilSoulPoint / 60;
         int secondsUntilSoulPoint = rawSecondsUntilSoulPoint % 60;
 

@@ -8,7 +8,8 @@ import com.wynntils.core.config.Category;
 import com.wynntils.core.config.Config;
 import com.wynntils.core.config.ConfigCategory;
 import com.wynntils.core.config.ConfigHolder;
-import com.wynntils.core.features.UserFeature;
+import com.wynntils.core.config.RegisterConfig;
+import com.wynntils.core.features.Feature;
 import com.wynntils.core.features.properties.StartDisabled;
 import com.wynntils.handlers.chat.event.ChatMessageReceivedEvent;
 import com.wynntils.utils.mc.ComponentUtils;
@@ -24,18 +25,18 @@ import net.minecraftforge.eventbus.api.SubscribeEvent;
 
 @StartDisabled
 @ConfigCategory(Category.CHAT)
-public class ChatMentionFeature extends UserFeature {
-    @Config
-    public boolean markMention = true;
+public class ChatMentionFeature extends Feature {
+    @RegisterConfig
+    public final Config<Boolean> markMention = new Config<>(true);
 
-    @Config
-    public boolean dingMention = true;
+    @RegisterConfig
+    public final Config<Boolean> dingMention = new Config<>(true);
 
-    @Config
-    public ChatFormatting mentionColor = ChatFormatting.YELLOW;
+    @RegisterConfig
+    public final Config<ChatFormatting> mentionColor = new Config<>(ChatFormatting.YELLOW);
 
-    @Config
-    public String aliases = "";
+    @RegisterConfig
+    public final Config<String> aliases = new Config<>("");
 
     private Pattern mentionPattern;
 
@@ -52,7 +53,7 @@ public class ChatMentionFeature extends UserFeature {
     private Pattern buildPattern() {
         return Pattern.compile(
                 "(?<!\\[)\\b(" + McUtils.mc().getUser().getName()
-                        + (!aliases.isEmpty() ? "|" + aliases.replace(",", "|") : "") + ")\\b(?!:|])",
+                        + (!aliases.get().isEmpty() ? "|" + aliases.get().replace(",", "|") : "") + ")\\b(?!:|])",
                 Pattern.CASE_INSENSITIVE);
     }
 
@@ -63,10 +64,10 @@ public class ChatMentionFeature extends UserFeature {
         Matcher looseMatcher = mentionPattern.matcher(ComponentUtils.getUnformatted(message));
 
         if (looseMatcher.find()) {
-            if (markMention) {
+            if (markMention.get()) {
                 e.setMessage(rewriteComponentTree(message));
             }
-            if (dingMention) {
+            if (dingMention.get()) {
                 McUtils.playSound(SoundEvents.NOTE_BLOCK_PLING.value());
             }
         }
@@ -101,7 +102,7 @@ public class ChatMentionFeature extends UserFeature {
             curr = Component.literal(text.substring(0, match.start())).withStyle(style);
 
             // do the name of the first mention
-            curr.append(Component.literal(mentionColor + match.group(0)));
+            curr.append(Component.literal(mentionColor.get() + match.group(0)));
 
             // Store the point at which this match ended
             int lastEnd = match.end();
@@ -113,7 +114,7 @@ public class ChatMentionFeature extends UserFeature {
                         .withStyle(style);
 
                 // get the name and recolor it
-                curr.append(Component.literal(mentionColor + match.group(0)));
+                curr.append(Component.literal(mentionColor.get() + match.group(0)));
 
                 // set the starting point for the next mentions before variable
                 lastEnd = match.end();

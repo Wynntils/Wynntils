@@ -194,7 +194,7 @@ public final class BufferedRenderUtils {
     }
 
     public static void drawTexturedRect(
-            PoseStack poseStack, MultiBufferSource.BufferSource bufferSource, Texture texture, float x, float y) {
+            PoseStack poseStack, MultiBufferSource bufferSource, Texture texture, float x, float y) {
         drawTexturedRect(
                 poseStack,
                 bufferSource,

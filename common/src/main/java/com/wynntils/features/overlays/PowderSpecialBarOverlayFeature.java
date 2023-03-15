@@ -11,7 +11,8 @@ import com.wynntils.core.config.Category;
 import com.wynntils.core.config.Config;
 import com.wynntils.core.config.ConfigCategory;
 import com.wynntils.core.config.ConfigHolder;
-import com.wynntils.core.features.UserFeature;
+import com.wynntils.core.config.RegisterConfig;
+import com.wynntils.core.features.Feature;
 import com.wynntils.core.features.overlays.Overlay;
 import com.wynntils.core.features.overlays.OverlayPosition;
 import com.wynntils.core.features.overlays.annotations.OverlayInfo;
@@ -31,22 +32,22 @@ import com.wynntils.utils.wynn.InventoryUtils;
 import net.minecraft.client.renderer.MultiBufferSource;
 
 @ConfigCategory(Category.OVERLAYS)
-public class PowderSpecialBarOverlayFeature extends UserFeature {
+public class PowderSpecialBarOverlayFeature extends Feature {
     @OverlayInfo(renderType = RenderEvent.ElementType.GUI)
     private final Overlay powderSpecialBarOverlay = new PowderSpecialBarOverlay();
 
     public static class PowderSpecialBarOverlay extends Overlay {
-        @Config
-        public TextShadow textShadow = TextShadow.OUTLINE;
+        @RegisterConfig
+        public final Config<TextShadow> textShadow = new Config<>(TextShadow.OUTLINE);
 
-        @Config
-        public boolean flip = false;
+        @RegisterConfig
+        public final Config<Boolean> flip = new Config<>(false);
 
-        @Config
-        public boolean onlyIfWeaponHeld = true;
+        @RegisterConfig
+        public final Config<Boolean> onlyIfWeaponHeld = new Config<>(true);
 
-        @Config
-        public boolean hideIfNoCharge = true;
+        @RegisterConfig
+        public final Config<Boolean> hideIfNoCharge = new Config<>(true);
 
         protected PowderSpecialBarOverlay() {
             super(
@@ -62,11 +63,11 @@ public class PowderSpecialBarOverlayFeature extends UserFeature {
         @Override
         public void render(
                 PoseStack poseStack, MultiBufferSource.BufferSource bufferSource, float partialTicks, Window window) {
-            float powderSpecialCharge = Models.Character.getPowderSpecialCharge();
-            Powder powderSpecialType = Models.Character.getPowderSpecialType();
-            if (this.onlyIfWeaponHeld
+            float powderSpecialCharge = Models.CharacterStats.getPowderSpecialCharge();
+            Powder powderSpecialType = Models.CharacterStats.getPowderSpecialType();
+            if (this.onlyIfWeaponHeld.get()
                     && !InventoryUtils.isWeapon(McUtils.inventory().getSelected())) return;
-            if (this.hideIfNoCharge && (powderSpecialCharge == 0 || powderSpecialType == null)) return;
+            if (this.hideIfNoCharge.get() && (powderSpecialCharge == 0 || powderSpecialType == null)) return;
 
             renderWithSpecificSpecial(poseStack, bufferSource, powderSpecialCharge, powderSpecialType);
         }
@@ -117,7 +118,7 @@ public class PowderSpecialBarOverlayFeature extends UserFeature {
                             0,
                             color,
                             this.getRenderHorizontalAlignment(),
-                            this.textShadow);
+                            this.textShadow.get());
 
             BufferedRenderUtils.drawColoredProgressBar(
                     poseStack,
@@ -132,7 +133,7 @@ public class PowderSpecialBarOverlayFeature extends UserFeature {
                     0,
                     universalBarTexture.width(),
                     universalBarTexture.height(),
-                    (this.flip ? -1f : 1f) * powderSpecialCharge / 100f);
+                    (this.flip.get() ? -1f : 1f) * powderSpecialCharge / 100f);
         }
     }
 }

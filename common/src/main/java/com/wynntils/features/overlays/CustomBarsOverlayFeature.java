@@ -11,9 +11,11 @@ import com.wynntils.core.config.Category;
 import com.wynntils.core.config.Config;
 import com.wynntils.core.config.ConfigCategory;
 import com.wynntils.core.config.ConfigHolder;
-import com.wynntils.core.features.UserFeature;
+import com.wynntils.core.config.RegisterConfig;
+import com.wynntils.core.features.Feature;
 import com.wynntils.core.features.overlays.Overlay;
 import com.wynntils.core.features.overlays.OverlayPosition;
+import com.wynntils.core.features.overlays.RenderState;
 import com.wynntils.core.features.overlays.annotations.OverlayInfo;
 import com.wynntils.core.features.overlays.sizes.GuiScaledOverlaySize;
 import com.wynntils.core.features.overlays.sizes.OverlaySize;
@@ -40,13 +42,13 @@ import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 
 @ConfigCategory(Category.OVERLAYS)
-public class CustomBarsOverlayFeature extends UserFeature {
+public class CustomBarsOverlayFeature extends Feature {
     @SubscribeEvent
     public void onBossBarAdd(BossBarAddedEvent event) {
         BaseBarOverlay overlay = getOverlayFromTrackedBar(event.getTrackedBar());
         if (overlay == null) return;
 
-        if (overlay.isEnabled() && !overlay.shouldDisplayOriginal) {
+        if (overlay.shouldBeEnabled() && !overlay.shouldDisplayOriginal.get()) {
             event.setCanceled(true);
         }
     }
@@ -55,13 +57,13 @@ public class CustomBarsOverlayFeature extends UserFeature {
         return barToOverlayMap.get(trackedBar.getClass());
     }
 
-    @OverlayInfo(renderType = RenderEvent.ElementType.HealthBar, renderAt = OverlayInfo.RenderState.Replace)
+    @OverlayInfo(renderType = RenderEvent.ElementType.HealthBar, renderAt = RenderState.Replace)
     private final HealthBarOverlay healthBarOverlay = new HealthBarOverlay();
 
     @OverlayInfo(renderType = RenderEvent.ElementType.GUI)
     private final BloodPoolBarOverlay bloodPoolBarOverlay = new BloodPoolBarOverlay();
 
-    @OverlayInfo(renderType = RenderEvent.ElementType.FoodBar, renderAt = OverlayInfo.RenderState.Replace)
+    @OverlayInfo(renderType = RenderEvent.ElementType.FoodBar, renderAt = RenderState.Replace)
     private final ManaBarOverlay manaBarOverlay = new ManaBarOverlay();
 
     @OverlayInfo(renderType = RenderEvent.ElementType.GUI)
@@ -89,22 +91,22 @@ public class CustomBarsOverlayFeature extends UserFeature {
             corruptedBarOverlay);
 
     public abstract static class BaseBarOverlay extends Overlay {
-        @Config(key = "feature.wynntils.customBarsOverlay.overlay.baseBar.textShadow")
-        public TextShadow textShadow = TextShadow.OUTLINE;
+        @RegisterConfig("feature.wynntils.customBarsOverlay.overlay.baseBar.textShadow")
+        public final Config<TextShadow> textShadow = new Config<>(TextShadow.OUTLINE);
 
-        @Config(key = "feature.wynntils.customBarsOverlay.overlay.baseBar.flip")
-        public boolean flip = false;
+        @RegisterConfig("feature.wynntils.customBarsOverlay.overlay.baseBar.flip")
+        public final Config<Boolean> flip = new Config<>(false);
 
-        @Config(key = "feature.wynntils.customBarsOverlay.overlay.baseBar.shouldDisplayOriginal")
-        public boolean shouldDisplayOriginal = false;
+        @RegisterConfig("feature.wynntils.customBarsOverlay.overlay.baseBar.shouldDisplayOriginal")
+        public final Config<Boolean> shouldDisplayOriginal = new Config<>(false);
 
         // hacky override of custom color
-        @Config(key = "feature.wynntils.customBarsOverlay.overlay.baseBar.textColor")
-        public CustomColor textColor;
+        @RegisterConfig("feature.wynntils.customBarsOverlay.overlay.baseBar.textColor")
+        public final Config<CustomColor> textColor = new Config<>(CommonColors.WHITE);
 
         protected BaseBarOverlay(OverlayPosition position, OverlaySize size, CustomColor textColor) {
             super(position, size);
-            this.textColor = textColor;
+            this.textColor.updateConfig(textColor);
         }
 
         protected float textureHeight() {
@@ -132,7 +134,7 @@ public class CustomBarsOverlayFeature extends UserFeature {
                     barProgress.value().current(), icon(), barProgress.value().max());
             renderText(poseStack, bufferSource, renderY, text);
 
-            float progress = (flip ? -1 : 1) * barProgress.progress();
+            float progress = (flip.get() ? -1 : 1) * barProgress.progress();
             renderBar(poseStack, bufferSource, renderY + 10, barHeight, progress);
         }
 
@@ -159,7 +161,7 @@ public class CustomBarsOverlayFeature extends UserFeature {
                     poseStack,
                     bufferSource,
                     universalBarTexture,
-                    this.textColor,
+                    this.textColor.get(),
                     this.getRenderX(),
                     renderY,
                     this.getRenderX() + this.getWidth(),
@@ -182,15 +184,15 @@ public class CustomBarsOverlayFeature extends UserFeature {
                             this.getRenderX() + this.getWidth(),
                             renderY,
                             0,
-                            this.textColor,
+                            this.textColor.get(),
                             this.getRenderHorizontalAlignment(),
-                            this.textShadow);
+                            this.textShadow.get());
         }
     }
 
     protected static class HealthBarOverlay extends BaseBarOverlay {
-        @Config(key = "feature.wynntils.customBarsOverlay.overlay.healthBar.healthTexture")
-        public HealthTexture healthTexture = HealthTexture.a;
+        @RegisterConfig("feature.wynntils.customBarsOverlay.overlay.healthBar.healthTexture")
+        public final Config<HealthTexture> healthTexture = new Config<>(HealthTexture.a);
 
         protected HealthBarOverlay() {
             this(
@@ -209,7 +211,7 @@ public class CustomBarsOverlayFeature extends UserFeature {
 
         @Override
         public float textureHeight() {
-            return healthTexture.getHeight();
+            return healthTexture.get().getHeight();
         }
 
         @Override
@@ -224,12 +226,12 @@ public class CustomBarsOverlayFeature extends UserFeature {
 
         @Override
         protected void onConfigUpdate(ConfigHolder configHolder) {
-            Models.Character.hideHealth(this.isEnabled() && !this.shouldDisplayOriginal);
+            Models.CharacterStats.hideHealth(this.shouldBeEnabled() && !this.shouldDisplayOriginal.get());
         }
 
         @Override
         public BossBarProgress progress() {
-            CappedValue health = Models.Character.getHealth();
+            CappedValue health = Models.CharacterStats.getHealth();
             return new BossBarProgress(health, (float) health.getProgress());
         }
 
@@ -243,8 +245,8 @@ public class CustomBarsOverlayFeature extends UserFeature {
             if (progress > 1) { // overflowing health
                 float x1 = this.getRenderX();
                 float x2 = this.getRenderX() + this.getWidth();
-                int textureY1 = healthTexture.getTextureY1();
-                int textureY2 = healthTexture.getTextureY2();
+                int textureY1 = healthTexture.get().getTextureY1();
+                int textureY2 = healthTexture.get().getTextureY2();
 
                 int half = (textureY1 + textureY2) / 2 + (textureY2 - textureY1) % 2;
                 BufferedRenderUtils.drawProgressBarBackground(
@@ -298,9 +300,9 @@ public class CustomBarsOverlayFeature extends UserFeature {
                     this.getRenderX() + this.getWidth(),
                     renderY + renderHeight,
                     0,
-                    healthTexture.getTextureY1(),
+                    healthTexture.get().getTextureY1(),
                     81,
-                    healthTexture.getTextureY2(),
+                    healthTexture.get().getTextureY2(),
                     progress);
         }
     }
@@ -339,8 +341,8 @@ public class CustomBarsOverlayFeature extends UserFeature {
     }
 
     protected static class ManaBarOverlay extends BaseBarOverlay {
-        @Config(key = "feature.wynntils.customBarsOverlay.overlay.manaBar.manaTexture")
-        public ManaTexture manaTexture = ManaTexture.a;
+        @RegisterConfig("feature.wynntils.customBarsOverlay.overlay.manaBar.manaTexture")
+        public final Config<ManaTexture> manaTexture = new Config<>(ManaTexture.a);
 
         protected ManaBarOverlay() {
             this(
@@ -359,12 +361,12 @@ public class CustomBarsOverlayFeature extends UserFeature {
 
         @Override
         public float textureHeight() {
-            return manaTexture.getHeight();
+            return manaTexture.get().getHeight();
         }
 
         @Override
         public BossBarProgress progress() {
-            CappedValue mana = Models.Character.getMana();
+            CappedValue mana = Models.CharacterStats.getMana();
             return new BossBarProgress(mana, (float) mana.getProgress());
         }
 
@@ -380,7 +382,7 @@ public class CustomBarsOverlayFeature extends UserFeature {
 
         @Override
         protected void onConfigUpdate(ConfigHolder configHolder) {
-            Models.Character.hideMana(this.isEnabled() && !this.shouldDisplayOriginal);
+            Models.CharacterStats.hideMana(this.shouldBeEnabled() && !this.shouldDisplayOriginal.get());
         }
 
         @Override
@@ -393,8 +395,8 @@ public class CustomBarsOverlayFeature extends UserFeature {
             if (progress > 1) { // overflowing mana
                 float x1 = this.getRenderX();
                 float x2 = this.getRenderX() + this.getWidth();
-                int textureY1 = manaTexture.getTextureY1();
-                int textureY2 = manaTexture.getTextureY2();
+                int textureY1 = manaTexture.get().getTextureY1();
+                int textureY2 = manaTexture.get().getTextureY2();
 
                 int half = (textureY1 + textureY2) / 2 + (textureY2 - textureY1) % 2;
                 BufferedRenderUtils.drawProgressBarBackground(
@@ -448,9 +450,9 @@ public class CustomBarsOverlayFeature extends UserFeature {
                     this.getRenderX() + this.getWidth(),
                     renderY + renderHeight,
                     0,
-                    manaTexture.getTextureY1(),
+                    manaTexture.get().getTextureY1(),
                     81,
-                    manaTexture.getTextureY2(),
+                    manaTexture.get().getTextureY2(),
                     progress);
         }
     }

@@ -8,7 +8,8 @@ import com.wynntils.core.components.Models;
 import com.wynntils.core.config.Category;
 import com.wynntils.core.config.Config;
 import com.wynntils.core.config.ConfigCategory;
-import com.wynntils.core.features.UserFeature;
+import com.wynntils.core.config.RegisterConfig;
+import com.wynntils.core.features.Feature;
 import com.wynntils.mc.event.HotbarSlotRenderEvent;
 import com.wynntils.mc.event.ItemCountOverlayRenderEvent;
 import com.wynntils.mc.event.SlotRenderEvent;
@@ -22,12 +23,12 @@ import net.minecraftforge.eventbus.api.SubscribeEvent;
 import org.lwjgl.glfw.GLFW;
 
 @ConfigCategory(Category.INVENTORY)
-public class ExtendedItemCountFeature extends UserFeature {
-    @Config
-    public boolean inventoryTextOverlayEnabled = true;
+public class ExtendedItemCountFeature extends Feature {
+    @RegisterConfig
+    public final Config<Boolean> inventoryTextOverlayEnabled = new Config<>(true);
 
-    @Config
-    public boolean hotbarTextOverlayEnabled = true;
+    @RegisterConfig
+    public final Config<Boolean> hotbarTextOverlayEnabled = new Config<>(true);
 
     private boolean isInventory;
 
@@ -43,8 +44,8 @@ public class ExtendedItemCountFeature extends UserFeature {
 
     @SubscribeEvent
     public void onItemCountOverlay(ItemCountOverlayRenderEvent event) {
-        if (isInventory && !inventoryTextOverlayEnabled) return;
-        if (!isInventory && !hotbarTextOverlayEnabled) return;
+        if (isInventory && !inventoryTextOverlayEnabled.get()) return;
+        if (!isInventory && !hotbarTextOverlayEnabled.get()) return;
 
         Optional<WynnItem> wynnItemOpt = Models.Item.getWynnItem(event.getItemStack());
         if (wynnItemOpt.isEmpty()) return;

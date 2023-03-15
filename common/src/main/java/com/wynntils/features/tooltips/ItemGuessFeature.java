@@ -8,7 +8,8 @@ import com.wynntils.core.components.Models;
 import com.wynntils.core.config.Category;
 import com.wynntils.core.config.Config;
 import com.wynntils.core.config.ConfigCategory;
-import com.wynntils.core.features.UserFeature;
+import com.wynntils.core.config.RegisterConfig;
+import com.wynntils.core.features.Feature;
 import com.wynntils.mc.event.ItemTooltipRenderEvent;
 import com.wynntils.models.emeralds.type.EmeraldUnits;
 import com.wynntils.models.gear.type.GearInfo;
@@ -26,9 +27,9 @@ import net.minecraft.network.chat.MutableComponent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 
 @ConfigCategory(Category.TOOLTIPS)
-public class ItemGuessFeature extends UserFeature {
-    @Config
-    public boolean showGuessesPrice = true;
+public class ItemGuessFeature extends Feature {
+    @RegisterConfig
+    public final Config<Boolean> showGuessesPrice = new Config<>(true);
 
     @SubscribeEvent
     public void onTooltipPre(ItemTooltipRenderEvent.Pre event) {
@@ -77,7 +78,7 @@ public class ItemGuessFeature extends UserFeature {
                     .append(Component.translatable("feature.wynntils.itemGuess.levelLine", level == -1 ? "?" : level)
                             .withStyle(ChatFormatting.GRAY)));
 
-            if (showGuessesPrice && level != -1) {
+            if (showGuessesPrice.get() && level != -1) {
                 guesses.append(Component.literal(" [")
                         .append(Component.literal((gearTier.getGearIdentificationCost(level) + " "
                                         + EmeraldUnits.EMERALD.getSymbol()))

@@ -8,7 +8,8 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import com.wynntils.core.config.Category;
 import com.wynntils.core.config.Config;
 import com.wynntils.core.config.ConfigCategory;
-import com.wynntils.core.features.UserFeature;
+import com.wynntils.core.config.RegisterConfig;
+import com.wynntils.core.features.Feature;
 import com.wynntils.mc.event.ItemTooltipRenderEvent;
 import com.wynntils.utils.mc.ComponentUtils;
 import com.wynntils.utils.mc.McUtils;
@@ -20,15 +21,15 @@ import net.minecraftforge.eventbus.api.EventPriority;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 
 @ConfigCategory(Category.TOOLTIPS)
-public class TooltipFittingFeature extends UserFeature {
-    @Config
-    public float universalScale = 1f;
+public class TooltipFittingFeature extends Feature {
+    @RegisterConfig
+    public final Config<Float> universalScale = new Config<>(1f);
 
-    @Config
-    public boolean fitToScreen = true;
+    @RegisterConfig
+    public final Config<Boolean> fitToScreen = new Config<>(true);
 
-    @Config
-    public boolean wrapText = true;
+    @RegisterConfig
+    public final Config<Boolean> wrapText = new Config<>(true);
 
     private boolean scaledLast = false;
     private Screen currentScreen = null;
@@ -41,24 +42,24 @@ public class TooltipFittingFeature extends UserFeature {
         currentScreen = McUtils.mc().screen;
         if (currentScreen == null) return; // shouldn't be possible
 
-        if (wrapText) {
+        if (wrapText.get()) {
             // calculate optimal wrapping for scaled up tooltips
             int tooltipWidth = ComponentUtils.getOptimalTooltipWidth(
-                    e.getTooltips(), (int) (currentScreen.width / universalScale), (int)
-                            (e.getMouseX() / universalScale));
+                    e.getTooltips(), (int) (currentScreen.width / universalScale.get()), (int)
+                            (e.getMouseX() / universalScale.get()));
             List<Component> wrappedTooltips = ComponentUtils.wrapTooltips(e.getTooltips(), tooltipWidth);
             e.setTooltips(Collections.unmodifiableList(wrappedTooltips));
         }
 
         // calculate scale factor
-        float scaleFactor = universalScale;
+        float scaleFactor = universalScale.get();
 
-        if (fitToScreen) {
+        if (fitToScreen.get()) {
             int lines = e.getTooltips().size();
             // this is technically slightly larger than the actual height, but due to the tooltip offset/border, it
             // works to create a nice buffer at the top/bottom of the screen
             float tooltipHeight = 22 + (lines - 1) * 10;
-            tooltipHeight *= universalScale;
+            tooltipHeight *= universalScale.get();
 
             if (tooltipHeight > currentScreen.height) scaleFactor *= (currentScreen.height / tooltipHeight);
         }

@@ -9,7 +9,8 @@ import com.wynntils.core.components.Managers;
 import com.wynntils.core.config.Category;
 import com.wynntils.core.config.Config;
 import com.wynntils.core.config.ConfigCategory;
-import com.wynntils.core.features.UserFeature;
+import com.wynntils.core.config.RegisterConfig;
+import com.wynntils.core.features.Feature;
 import com.wynntils.core.net.athena.UpdateManager;
 import com.wynntils.models.worlds.event.WorldStateEvent;
 import com.wynntils.utils.mc.McUtils;
@@ -22,12 +23,12 @@ import net.minecraft.network.chat.MutableComponent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 
 @ConfigCategory(Category.WYNNTILS)
-public class UpdatesFeature extends UserFeature {
-    @Config
-    public boolean updateReminder = true;
+public class UpdatesFeature extends Feature {
+    @RegisterConfig
+    public final Config<Boolean> updateReminder = new Config<>(true);
 
-    @Config
-    public boolean autoUpdate = false;
+    @RegisterConfig
+    public final Config<Boolean> autoUpdate = new Config<>(false);
 
     @SubscribeEvent
     public void onWorldStateChange(WorldStateEvent event) {
@@ -46,11 +47,11 @@ public class UpdatesFeature extends UserFeature {
                         return;
                     }
 
-                    if (updateReminder) {
+                    if (updateReminder.get()) {
                         remindToUpdateIfExists(version);
                     }
 
-                    if (autoUpdate) {
+                    if (autoUpdate.get()) {
                         if (WynntilsMod.isDevelopmentEnvironment()) {
                             WynntilsMod.info("Tried to auto-update, but we are in development environment.");
                             return;
@@ -63,22 +64,8 @@ public class UpdatesFeature extends UserFeature {
 
                         CompletableFuture<UpdateManager.UpdateResult> completableFuture = Managers.Update.tryUpdate();
 
-                        completableFuture.whenCompleteAsync((result, t) -> {
-                            switch (result) {
-                                case SUCCESSFUL -> McUtils.sendMessageToClient(
-                                        Component.translatable("feature.wynntils.updates.result.successful")
-                                                .withStyle(ChatFormatting.DARK_GREEN));
-                                case ERROR -> McUtils.sendMessageToClient(
-                                        Component.translatable("feature.wynntils.updates.result.error")
-                                                .withStyle(ChatFormatting.DARK_RED));
-                                case ALREADY_ON_LATEST -> McUtils.sendMessageToClient(
-                                        Component.translatable("feature.wynntils.updates.result.latest")
-                                                .withStyle(ChatFormatting.YELLOW));
-                                case UPDATE_PENDING -> McUtils.sendMessageToClient(
-                                        Component.translatable("feature.wynntils.updates.result.pending")
-                                                .withStyle(ChatFormatting.YELLOW));
-                            }
-                        });
+                        completableFuture.whenCompleteAsync(
+                                (result, t) -> McUtils.sendMessageToClient(result.getMessage()));
                     }
                 })));
     }

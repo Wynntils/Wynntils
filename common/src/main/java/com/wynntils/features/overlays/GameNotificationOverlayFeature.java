@@ -10,7 +10,8 @@ import com.wynntils.core.config.Category;
 import com.wynntils.core.config.Config;
 import com.wynntils.core.config.ConfigCategory;
 import com.wynntils.core.config.ConfigHolder;
-import com.wynntils.core.features.UserFeature;
+import com.wynntils.core.config.RegisterConfig;
+import com.wynntils.core.features.Feature;
 import com.wynntils.core.features.overlays.Overlay;
 import com.wynntils.core.features.overlays.OverlayPosition;
 import com.wynntils.core.features.overlays.annotations.OverlayInfo;
@@ -35,7 +36,7 @@ import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 
 @ConfigCategory(Category.OVERLAYS)
-public class GameNotificationOverlayFeature extends UserFeature {
+public class GameNotificationOverlayFeature extends Feature {
     public static GameNotificationOverlayFeature INSTANCE;
 
     private static final List<TimedMessageContainer> messageQueue = new LinkedList<>();
@@ -52,7 +53,8 @@ public class GameNotificationOverlayFeature extends UserFeature {
     public void onGameNotification(NotificationEvent.Queue event) {
         messageQueue.add(new TimedMessageContainer(event.getMessageContainer(), getMessageDisplayLength()));
 
-        if (gameNotificationOverlay.overrideNewMessages && messageQueue.size() > gameNotificationOverlay.messageLimit) {
+        if (gameNotificationOverlay.overrideNewMessages.get()
+                && messageQueue.size() > gameNotificationOverlay.messageLimit.get()) {
             messageQueue.remove(0);
         }
     }
@@ -71,27 +73,27 @@ public class GameNotificationOverlayFeature extends UserFeature {
     }
 
     private long getMessageDisplayLength() {
-        return (long) gameNotificationOverlay.messageTimeLimit * 1000;
+        return (long) (gameNotificationOverlay.messageTimeLimit.get() * 1000);
     }
 
     public static class GameNotificationOverlay extends Overlay {
-        @Config
-        public float messageTimeLimit = 10f;
+        @RegisterConfig
+        public final Config<Float> messageTimeLimit = new Config<>(10f);
 
-        @Config
-        public int messageLimit = 5;
+        @RegisterConfig
+        public final Config<Integer> messageLimit = new Config<>(5);
 
-        @Config
-        public boolean invertGrowth = true;
+        @RegisterConfig
+        public final Config<Boolean> invertGrowth = new Config<>(true);
 
-        @Config
-        public int messageMaxLength = 0;
+        @RegisterConfig
+        public final Config<Integer> messageMaxLength = new Config<>(0);
 
-        @Config
-        public TextShadow textShadow = TextShadow.OUTLINE;
+        @RegisterConfig
+        public final Config<TextShadow> textShadow = new Config<>(TextShadow.OUTLINE);
 
-        @Config
-        public boolean overrideNewMessages = true;
+        @RegisterConfig
+        public final Config<Boolean> overrideNewMessages = new Config<>(true);
 
         private TextRenderSetting textRenderSetting;
 
@@ -124,16 +126,16 @@ public class GameNotificationOverlayFeature extends UserFeature {
 
                 TextRenderTask messageTask = message.getRenderTask();
 
-                if (messageMaxLength == 0 || messageTask.getText().length() < messageMaxLength) {
+                if (messageMaxLength.get() == 0 || messageTask.getText().length() < messageMaxLength.get()) {
                     toRender.add(message);
                 } else {
                     TimedMessageContainer first = new TimedMessageContainer(
-                            new MessageContainer(messageTask.getText().substring(0, messageMaxLength)),
+                            new MessageContainer(messageTask.getText().substring(0, messageMaxLength.get())),
                             message.getEndTime());
                     TimedMessageContainer second = new TimedMessageContainer(
-                            new MessageContainer(messageTask.getText().substring(messageMaxLength)),
+                            new MessageContainer(messageTask.getText().substring(messageMaxLength.get())),
                             message.getEndTime());
-                    if (this.invertGrowth) {
+                    if (this.invertGrowth.get()) {
                         toRender.add(first);
                         toRender.add(second);
                     } else {
@@ -145,16 +147,16 @@ public class GameNotificationOverlayFeature extends UserFeature {
 
             if (toRender.isEmpty()) return;
 
-            List<TimedMessageContainer> renderedValues = this.overrideNewMessages
-                    ? toRender.subList(0, Math.min(toRender.size(), this.messageLimit))
-                    : toRender.subList(Math.max(toRender.size() - this.messageLimit, 0), toRender.size());
+            List<TimedMessageContainer> renderedValues = this.overrideNewMessages.get()
+                    ? toRender.subList(0, Math.min(toRender.size(), this.messageLimit.get()))
+                    : toRender.subList(Math.max(toRender.size() - this.messageLimit.get(), 0), toRender.size());
 
             Collections.reverse(renderedValues);
 
-            if (this.invertGrowth) {
-                while (renderedValues.size() < messageLimit) {
+            if (this.invertGrowth.get()) {
+                while (renderedValues.size() < messageLimit.get()) {
                     renderedValues.add(0, new TimedMessageContainer(new MessageContainer(""), (long)
-                            (this.messageTimeLimit * 1000)));
+                            (this.messageTimeLimit.get() * 1000)));
                 }
             }
 
@@ -205,7 +207,7 @@ public class GameNotificationOverlayFeature extends UserFeature {
                     .withMaxWidth(this.getWidth())
                     .withHorizontalAlignment(this.getRenderHorizontalAlignment())
                     .withVerticalAlignment(this.getRenderVerticalAlignment())
-                    .withTextShadow(textShadow);
+                    .withTextShadow(textShadow.get());
         }
     }
 }

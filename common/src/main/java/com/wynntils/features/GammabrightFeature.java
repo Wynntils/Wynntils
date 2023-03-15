@@ -9,7 +9,8 @@ import com.wynntils.core.config.Category;
 import com.wynntils.core.config.Config;
 import com.wynntils.core.config.ConfigCategory;
 import com.wynntils.core.config.ConfigHolder;
-import com.wynntils.core.features.UserFeature;
+import com.wynntils.core.config.RegisterConfig;
+import com.wynntils.core.features.Feature;
 import com.wynntils.core.features.properties.RegisterKeyBind;
 import com.wynntils.core.keybinds.KeyBind;
 import com.wynntils.core.mod.event.WynncraftConnectionEvent;
@@ -21,9 +22,9 @@ import net.minecraftforge.eventbus.api.SubscribeEvent;
 import org.lwjgl.glfw.GLFW;
 
 @ConfigCategory(Category.UNCATEGORIZED)
-public class GammabrightFeature extends UserFeature {
-    @Config
-    private boolean gammabrightEnabled = false;
+public class GammabrightFeature extends Feature {
+    @RegisterConfig
+    public final Config<Boolean> gammabrightEnabled = new Config<>(false);
 
     private Storage<Double> lastGamma = new Storage<>(1.0);
 
@@ -40,7 +41,7 @@ public class GammabrightFeature extends UserFeature {
 
     @SubscribeEvent
     public void onDisconnect(WynncraftConnectionEvent.Disconnected event) {
-        if (gammabrightEnabled) {
+        if (gammabrightEnabled.get()) {
             resetGamma();
         }
     }
@@ -53,22 +54,22 @@ public class GammabrightFeature extends UserFeature {
     }
 
     @Override
-    protected void onDisable() {
-        resetGamma();
-    }
-
-    @Override
-    protected void onEnable() {
-        if (gammabrightEnabled && McUtils.options().gamma().get() != 1000d) {
+    public void onEnable() {
+        if (gammabrightEnabled.get() && McUtils.options().gamma().get() != 1000d) {
             enableGammabright();
         }
     }
 
+    @Override
+    public void onDisable() {
+        resetGamma();
+    }
+
     private void applyGammabright() {
         if (!isEnabled()) return;
-        if (gammabrightEnabled && McUtils.options().gamma().get() == 1000d) return;
+        if (gammabrightEnabled.get() && McUtils.options().gamma().get() == 1000d) return;
 
-        if (gammabrightEnabled) {
+        if (gammabrightEnabled.get()) {
             enableGammabright();
         } else {
             resetGamma();
@@ -76,7 +77,7 @@ public class GammabrightFeature extends UserFeature {
     }
 
     private void toggleGammaBright() {
-        gammabrightEnabled = !gammabrightEnabled;
+        gammabrightEnabled.updateConfig(!gammabrightEnabled.get());
         applyGammabright();
 
         Managers.Config.saveConfig();
