@@ -1,9 +1,21 @@
+## [0.0.2-alpha.346](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.345...v0.0.2-alpha.346) (2023-03-15)
+
+
+### Bug Fixes
+
+* Try to avoid NPE in mount horse if user logs out ([#1336](https://github.com/Wynntils/Artemis/issues/1336)) ([448eb85](https://github.com/Wynntils/Artemis/commit/448eb85b873e283fe6e9a05956b4dea143c3b41f))
+
 ## [0.0.2-alpha.345](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.344...v0.0.2-alpha.345) (2023-03-15)
 
 
 ### Bug Fixes
 
 * Fix faulty dynamic logic causing some overlay configs to be not collected ([#1337](https://github.com/Wynntils/Artemis/issues/1337)) ([ef7ab3f](https://github.com/Wynntils/Artemis/commit/ef7ab3fee347fce180a4f2d3d620b662b24a8a62))
+
+
+### Miscellaneous Chores
+
+* **release:** v0.0.2-alpha.345 [skip ci] ([c19d50f](https://github.com/Wynntils/Artemis/commit/c19d50f0c304f0f1d58c801e6ff0884dd90330c8))
 
 ## [0.0.2-alpha.344](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.343...v0.0.2-alpha.344) (2023-03-15)
 
@@ -40,16 +52,4 @@
 ### Miscellaneous Chores
 
 * **release:** v0.0.2-alpha.342 [skip ci] ([45841d6](https://github.com/Wynntils/Artemis/commit/45841d6f5d2a19fd240586f9ad7c2e96974236ab))
-
-## [0.0.2-alpha.341](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.340...v0.0.2-alpha.341) (2023-03-14)
-
-
-### Bug Fixes
-
-* Report crash of features during initialization ([#1328](https://github.com/Wynntils/Artemis/issues/1328)) ([869fd0f](https://github.com/Wynntils/Artemis/commit/869fd0fae3b219603f5f0937784dfb207f8d3cd1))
-
-
-### Miscellaneous Chores
-
-* **release:** v0.0.2-alpha.341 [skip ci] ([21c07d1](https://github.com/Wynntils/Artemis/commit/21c07d17c3e13c3427598320098043fef0c5ac9c))
 
