@@ -104,7 +104,7 @@ public class SpellCastRenderFeature extends Feature {
         protected SpellCastOverlay() {
             super(
                     new OverlayPosition(
-                            -83,
+                            -100,
                             0,
                             VerticalAlignment.Bottom,
                             HorizontalAlignment.Center,

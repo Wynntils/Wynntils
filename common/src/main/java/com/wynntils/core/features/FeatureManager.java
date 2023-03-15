@@ -67,6 +67,7 @@ import com.wynntils.features.map.MinimapFeature;
 import com.wynntils.features.map.WorldWaypointDistanceFeature;
 import com.wynntils.features.overlays.ArrowShieldTrackingFeature;
 import com.wynntils.features.overlays.AuraTimerOverlayFeature;
+import com.wynntils.features.overlays.CombatExperienceOverlayFeature;
 import com.wynntils.features.overlays.CustomBarsOverlayFeature;
 import com.wynntils.features.overlays.GameNotificationOverlayFeature;
 import com.wynntils.features.overlays.GuildAttackTimerOverlayFeature;
@@ -163,6 +164,7 @@ public final class FeatureManager extends Manager {
         registerFeature(new ChatRedirectFeature());
         registerFeature(new ChatTabsFeature());
         registerFeature(new ChatTimestampFeature());
+        registerFeature(new CombatExperienceOverlayFeature());
         registerFeature(new CombatXpGainMessageFeature());
         registerFeature(new CommandAliasesFeature());
         registerFeature(new CommandsFeature());

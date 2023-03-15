@@ -114,6 +114,8 @@
   "feature.wynntils.chatTimestamp.formatPattern.name": "Timestamp Format",
   "feature.wynntils.chatTimestamp.invalidFormatMsg": "Invalid timestamp format specified in config! Timestamps will be disabled until a valid format is set.",
   "feature.wynntils.chatTimestamp.name": "Chat Timestamps",
+  "feature.wynntils.combatExperienceOverlay.name": "Combat Experience Overlays",
+  "feature.wynntils.combatExperienceOverlay.overlay.combatExperience.name": "Combat Experience",
   "feature.wynntils.combatXpGainMessage.description": "Do you want to see updates to your XP as overlay messages?",
   "feature.wynntils.combatXpGainMessage.name": "Combat XP Gain Messages",
   "feature.wynntils.combatXpGainMessage.secondDelay.description": "How long (in seconds) should a combat XP gain message remain on the screen?",
