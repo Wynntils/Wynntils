@@ -9,6 +9,7 @@ import com.wynntils.core.config.Category;
 import com.wynntils.core.config.Config;
 import com.wynntils.core.config.ConfigCategory;
 import com.wynntils.core.config.ConfigHolder;
+import com.wynntils.core.config.HiddenConfig;
 import com.wynntils.core.config.RegisterConfig;
 import com.wynntils.core.features.Feature;
 import com.wynntils.core.features.properties.RegisterKeyBind;
@@ -25,8 +26,8 @@ public class GammabrightFeature extends Feature {
     @RegisterConfig
     public final Config<Boolean> gammabrightEnabled = new Config<>(false);
 
-    @RegisterConfig(visible = false)
-    public final Config<Double> lastGamma = new Config<>(1.0);
+    @RegisterConfig
+    public final HiddenConfig<Double> lastGamma = new HiddenConfig<>(1.0);
 
     @RegisterKeyBind
     private final KeyBind gammabrightKeyBind =

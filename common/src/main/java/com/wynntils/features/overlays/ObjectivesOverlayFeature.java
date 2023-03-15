@@ -65,7 +65,7 @@ public class ObjectivesOverlayFeature extends Feature {
     public final Overlay dailyObjectiveOverlay = new DailyObjectiveOverlay();
 
     public static class GuildObjectiveOverlay extends ObjectiveOverlayBase {
-        @RegisterConfig(key = "feature.wynntils.objectivesOverlay.overlay.objectiveOverlayBase.textColor")
+        @RegisterConfig("feature.wynntils.objectivesOverlay.overlay.objectiveOverlayBase.textColor")
         public final Config<CustomColor> textColor = new Config<>(CommonColors.LIGHT_BLUE);
 
         protected GuildObjectiveOverlay() {
@@ -153,7 +153,7 @@ public class ObjectivesOverlayFeature extends Feature {
     }
 
     public static class DailyObjectiveOverlay extends ObjectiveOverlayBase {
-        @RegisterConfig(key = "feature.wynntils.objectivesOverlay.overlay.objectiveOverlayBase.textColor")
+        @RegisterConfig("feature.wynntils.objectivesOverlay.overlay.objectiveOverlayBase.textColor")
         public final Config<CustomColor> textColor = new Config<>(CommonColors.GREEN);
 
         protected DailyObjectiveOverlay() {
@@ -249,16 +249,16 @@ public class ObjectivesOverlayFeature extends Feature {
     }
 
     protected abstract static class ObjectiveOverlayBase extends Overlay {
-        @RegisterConfig(key = "feature.wynntils.objectivesOverlay.overlay.objectiveOverlayBase.hideOnInactivity")
+        @RegisterConfig("feature.wynntils.objectivesOverlay.overlay.objectiveOverlayBase.hideOnInactivity")
         public final Config<Boolean> hideOnInactivity = new Config<>(false);
 
-        @RegisterConfig(key = "feature.wynntils.objectivesOverlay.overlay.objectiveOverlayBase.enableProgressBar")
+        @RegisterConfig("feature.wynntils.objectivesOverlay.overlay.objectiveOverlayBase.enableProgressBar")
         public final Config<Boolean> enableProgressBar = new Config<>(true);
 
-        @RegisterConfig(key = "feature.wynntils.objectivesOverlay.overlay.objectiveOverlayBase.objectivesTexture")
+        @RegisterConfig("feature.wynntils.objectivesOverlay.overlay.objectiveOverlayBase.objectivesTexture")
         public final Config<ObjectivesTextures> objectivesTexture = new Config<>(ObjectivesTextures.a);
 
-        @RegisterConfig(key = "feature.wynntils.objectivesOverlay.overlay.objectiveOverlayBase.textShadow")
+        @RegisterConfig("feature.wynntils.objectivesOverlay.overlay.objectiveOverlayBase.textShadow")
         public final Config<TextShadow> textShadow = new Config<>(TextShadow.OUTLINE);
 
         protected ObjectiveOverlayBase(

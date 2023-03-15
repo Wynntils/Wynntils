@@ -8,8 +8,8 @@ import com.google.common.hash.Hashing;
 import com.google.common.io.Files;
 import com.wynntils.core.components.Managers;
 import com.wynntils.core.config.Category;
-import com.wynntils.core.config.Config;
 import com.wynntils.core.config.ConfigCategory;
+import com.wynntils.core.config.HiddenConfig;
 import com.wynntils.core.config.RegisterConfig;
 import com.wynntils.core.features.Feature;
 import com.wynntils.mc.event.ResourcePackClearEvent;
@@ -30,8 +30,8 @@ import net.minecraftforge.eventbus.api.SubscribeEvent;
 public class AutoApplyResourcePackFeature extends Feature {
     private static final File SERVER_RESOURCE_PACK_DIR = new File(McUtils.mc().gameDirectory, "server-resource-packs");
 
-    @RegisterConfig(visible = false)
-    public final Config<String> packHash = new Config<>("");
+    @RegisterConfig
+    public final HiddenConfig<String> packHash = new HiddenConfig<>("");
 
     private String appliedHash = "";
 

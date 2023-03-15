@@ -11,6 +11,7 @@ import com.wynntils.core.components.Models;
 import com.wynntils.core.config.Category;
 import com.wynntils.core.config.Config;
 import com.wynntils.core.config.ConfigCategory;
+import com.wynntils.core.config.HiddenConfig;
 import com.wynntils.core.config.RegisterConfig;
 import com.wynntils.core.features.Feature;
 import com.wynntils.core.features.properties.RegisterKeyBind;
@@ -43,8 +44,8 @@ public class ItemLockFeature extends Feature {
     private final KeyBind lockSlotKeyBind =
             new KeyBind("Lock Slot", GLFW.GLFW_KEY_H, true, null, this::tryChangeLockStateOnHoveredSlot);
 
-    @RegisterConfig(visible = false)
-    public final Config<Map<String, Set<Integer>>> classSlotLockMap = new Config<>(new TreeMap<>());
+    @RegisterConfig
+    public final HiddenConfig<Map<String, Set<Integer>>> classSlotLockMap = new HiddenConfig<>(new TreeMap<>());
 
     @TypeOverride
     private final Type classSlotLockMapType = new TypeToken<TreeMap<String, TreeSet<Integer>>>() {}.getType();

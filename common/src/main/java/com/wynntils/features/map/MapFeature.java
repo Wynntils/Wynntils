@@ -10,6 +10,7 @@ import com.wynntils.core.components.Models;
 import com.wynntils.core.config.Category;
 import com.wynntils.core.config.Config;
 import com.wynntils.core.config.ConfigCategory;
+import com.wynntils.core.config.HiddenConfig;
 import com.wynntils.core.config.RegisterConfig;
 import com.wynntils.core.features.Feature;
 import com.wynntils.core.features.properties.RegisterKeyBind;
@@ -46,8 +47,8 @@ import org.lwjgl.glfw.GLFW;
 public class MapFeature extends Feature {
     public static MapFeature INSTANCE;
 
-    @RegisterConfig(visible = false)
-    public final Config<List<CustomPoi>> customPois = new Config<>(new ArrayList<>());
+    @RegisterConfig
+    public final HiddenConfig<List<CustomPoi>> customPois = new HiddenConfig<>(new ArrayList<>());
 
     @TypeOverride
     private final Type customPoisType = new TypeToken<ArrayList<CustomPoi>>() {}.getType();
@@ -103,20 +104,17 @@ public class MapFeature extends Feature {
     @RegisterConfig
     public final Config<ChestTier> minTierForAutoWaypoint = new Config<>(ChestTier.TIER_3);
 
-    @RegisterConfig(subcategory = "Remote Players")
+    @RegisterConfig
     public final Config<Boolean> renderRemoteFriendPlayers = new Config<>(true);
 
-    @RegisterConfig(subcategory = "Remote Players")
+    @RegisterConfig
     public final Config<Boolean> renderRemotePartyPlayers = new Config<>(true);
 
-    //    @Config(subcategory = "Remote Players")
-    //    public boolean renderRemoteGuildPlayers = true;
-
-    @RegisterConfig(subcategory = "Remote Players")
+    @RegisterConfig
     public final Config<CustomBarsOverlayFeature.HealthTexture> remotePlayerHealthTexture =
             new Config<>(CustomBarsOverlayFeature.HealthTexture.a);
 
-    @RegisterConfig(subcategory = "Remote Players")
+    @RegisterConfig
     public final Config<TextShadow> remotePlayerNameShadow = new Config<>(TextShadow.OUTLINE);
 
     private BlockPos lastChestPos;
