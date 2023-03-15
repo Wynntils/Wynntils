@@ -1,9 +1,26 @@
+## [0.0.2-alpha.347](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.346...v0.0.2-alpha.347) (2023-03-15)
+
+
+### Bug Fixes
+
+* HiddenConfigs were not discovered by the mod ([#1338](https://github.com/Wynntils/Artemis/issues/1338)) ([24377b0](https://github.com/Wynntils/Artemis/commit/24377b0094296057b9e57d30bda3f00194f405bc))
+
+
+### New Features
+
+* Replace config with storage ([#1307](https://github.com/Wynntils/Artemis/issues/1307)) ([b7777ee](https://github.com/Wynntils/Artemis/commit/b7777ee1eac49025d64903fe924b7869481141c6))
+
 ## [0.0.2-alpha.346](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.345...v0.0.2-alpha.346) (2023-03-15)
 
 
 ### Bug Fixes
 
 * Try to avoid NPE in mount horse if user logs out ([#1336](https://github.com/Wynntils/Artemis/issues/1336)) ([448eb85](https://github.com/Wynntils/Artemis/commit/448eb85b873e283fe6e9a05956b4dea143c3b41f))
+
+
+### Miscellaneous Chores
+
+* **release:** v0.0.2-alpha.346 [skip ci] ([b6ab928](https://github.com/Wynntils/Artemis/commit/b6ab92890df6077a621c2de3b163ec8b51a5d084))
 
 ## [0.0.2-alpha.345](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.344...v0.0.2-alpha.345) (2023-03-15)
 
@@ -40,16 +57,4 @@
 ### Miscellaneous Chores
 
 * **release:** v0.0.2-alpha.343 [skip ci] ([20bb746](https://github.com/Wynntils/Artemis/commit/20bb7465d7f5dca9e6a92e9325faab9a5cd68a83))
-
-## [0.0.2-alpha.342](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.341...v0.0.2-alpha.342) (2023-03-14)
-
-
-### Code Refactoring
-
-* Split CharacterModel into three parts ([#1327](https://github.com/Wynntils/Artemis/issues/1327)) ([5577c32](https://github.com/Wynntils/Artemis/commit/5577c326faae2a7d759b8084f740f6313b0adf02))
-
-
-### Miscellaneous Chores
-
-* **release:** v0.0.2-alpha.342 [skip ci] ([45841d6](https://github.com/Wynntils/Artemis/commit/45841d6f5d2a19fd240586f9ad7c2e96974236ab))
 
