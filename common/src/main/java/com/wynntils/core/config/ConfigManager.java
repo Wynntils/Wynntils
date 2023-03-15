@@ -238,8 +238,9 @@ public final class ConfigManager extends Manager {
         }
 
         List<Field> fields = FieldUtils.getAllFieldsList(parent.getClass());
-        List<Field> configFields =
-                fields.stream().filter(f -> f.getType().equals(Config.class)).toList();
+        List<Field> configFields = fields.stream()
+                .filter(f -> f.getType().equals(Config.class) || f.getType().equals(HiddenConfig.class))
+                .toList();
 
         for (Field configField : configFields) {
             RegisterConfig configInfo = Arrays.stream(annotatedConfigs)

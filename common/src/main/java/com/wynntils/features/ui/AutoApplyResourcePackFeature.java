@@ -9,9 +9,8 @@ import com.google.common.io.Files;
 import com.wynntils.core.components.Managers;
 import com.wynntils.core.config.Category;
 import com.wynntils.core.config.ConfigCategory;
-import com.wynntils.core.config.HiddenConfig;
-import com.wynntils.core.config.RegisterConfig;
 import com.wynntils.core.features.Feature;
+import com.wynntils.core.storage.Storage;
 import com.wynntils.mc.event.ResourcePackClearEvent;
 import com.wynntils.mc.event.ResourcePackEvent;
 import com.wynntils.mc.event.TitleScreenInitEvent;
@@ -30,8 +29,7 @@ import net.minecraftforge.eventbus.api.SubscribeEvent;
 public class AutoApplyResourcePackFeature extends Feature {
     private static final File SERVER_RESOURCE_PACK_DIR = new File(McUtils.mc().gameDirectory, "server-resource-packs");
 
-    @RegisterConfig
-    public final HiddenConfig<String> packHash = new HiddenConfig<>("");
+    private Storage<String> packHash = new Storage<>("");
 
     private String appliedHash = "";
 
@@ -42,7 +40,7 @@ public class AutoApplyResourcePackFeature extends Feature {
             return;
         }
 
-        packHash.updateConfig(event.getHash());
+        packHash.store(event.getHash());
         Managers.Config.saveConfig();
     }
 
@@ -70,7 +68,7 @@ public class AutoApplyResourcePackFeature extends Feature {
 
     @SubscribeEvent(priority = EventPriority.HIGHEST)
     public void onTitleScreenInit(TitleScreenInitEvent.Pre event) {
-        if (packHash.get() == null || packHash.get().isEmpty() || Objects.equals(appliedHash, packHash.get())) return;
+        if (packHash.get().isEmpty() || Objects.equals(appliedHash, packHash.get())) return;
 
         DownloadedPackSource downloadedPackSource = McUtils.mc().getDownloadedPackSource();
 
