@@ -9,12 +9,12 @@ import com.wynntils.core.config.Category;
 import com.wynntils.core.config.Config;
 import com.wynntils.core.config.ConfigCategory;
 import com.wynntils.core.config.ConfigHolder;
-import com.wynntils.core.config.HiddenConfig;
 import com.wynntils.core.config.RegisterConfig;
 import com.wynntils.core.features.Feature;
 import com.wynntils.core.features.properties.RegisterKeyBind;
 import com.wynntils.core.keybinds.KeyBind;
 import com.wynntils.core.mod.event.WynncraftConnectionEvent;
+import com.wynntils.core.storage.Storage;
 import com.wynntils.models.worlds.event.WorldStateEvent;
 import com.wynntils.models.worlds.type.WorldState;
 import com.wynntils.utils.mc.McUtils;
@@ -26,8 +26,7 @@ public class GammabrightFeature extends Feature {
     @RegisterConfig
     public final Config<Boolean> gammabrightEnabled = new Config<>(false);
 
-    @RegisterConfig
-    public final HiddenConfig<Double> lastGamma = new HiddenConfig<>(1.0);
+    private Storage<Double> lastGamma = new Storage<>(1.0);
 
     @RegisterKeyBind
     private final KeyBind gammabrightKeyBind =
@@ -89,7 +88,7 @@ public class GammabrightFeature extends Feature {
     }
 
     private void enableGammabright() {
-        lastGamma.updateConfig(McUtils.options().gamma().get());
+        lastGamma.store(McUtils.options().gamma().get());
         McUtils.options().gamma().value = 1000d;
     }
 }

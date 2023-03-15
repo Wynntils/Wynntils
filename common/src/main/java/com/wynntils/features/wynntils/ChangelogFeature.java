@@ -9,11 +9,11 @@ import com.wynntils.core.components.Managers;
 import com.wynntils.core.config.Category;
 import com.wynntils.core.config.Config;
 import com.wynntils.core.config.ConfigCategory;
-import com.wynntils.core.config.HiddenConfig;
 import com.wynntils.core.config.RegisterConfig;
 import com.wynntils.core.features.Feature;
 import com.wynntils.core.net.ApiResponse;
 import com.wynntils.core.net.UrlId;
+import com.wynntils.core.storage.Storage;
 import com.wynntils.mc.event.ScreenOpenedEvent;
 import com.wynntils.models.worlds.event.WorldStateEvent;
 import com.wynntils.screens.changelog.ChangelogScreen;
@@ -25,8 +25,7 @@ import net.minecraftforge.eventbus.api.SubscribeEvent;
 @ConfigCategory(Category.WYNNTILS)
 public class ChangelogFeature extends Feature {
     // "v0.0.2-alpha.2" is the first version with a changelog on GitHub
-    @RegisterConfig
-    public final HiddenConfig<String> lastShownVersion = new HiddenConfig<>("v0.0.2-alpha.2");
+    public Storage<String> lastShownVersion = new Storage<>("v0.0.2-alpha.2");
 
     @RegisterConfig
     public final Config<Boolean> autoClassMenu = new Config<>(false);
@@ -49,7 +48,7 @@ public class ChangelogFeature extends Feature {
 
                     String changelog = jsonObject.get("changelog").getAsString();
 
-                    lastShownVersion.updateConfig(WynntilsMod.getVersion());
+                    lastShownVersion.store(WynntilsMod.getVersion());
                     Managers.Config.saveConfig();
 
                     if (autoClassMenu.get()) {
