@@ -125,10 +125,6 @@ public abstract class Overlay extends AbstractConfigurable implements Translatab
         return CaseFormat.UPPER_CAMEL.to(CaseFormat.LOWER_CAMEL, name);
     }
 
-    public boolean isDynamic() {
-        return false;
-    }
-
     public Boolean isUserEnabled() {
         return userEnabled.get();
     }
