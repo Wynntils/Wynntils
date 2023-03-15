@@ -19,6 +19,7 @@ import com.wynntils.utils.mc.McUtils;
 import com.wynntils.utils.wynn.InventoryUtils;
 import java.util.Optional;
 import net.minecraft.ChatFormatting;
+import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.protocol.game.ServerboundInteractPacket;
 import net.minecraft.network.protocol.game.ServerboundSetCarriedItemPacket;
@@ -60,12 +61,13 @@ public class HorseMountFeature extends Feature {
     private void mountHorse() {
         if (!Models.WorldState.onWorld()) return;
 
-        if (McUtils.player().getVehicle() != null) {
+        LocalPlayer player = McUtils.player();
+        if (player.getVehicle() != null) {
             postHorseErrorMessage(MountHorseStatus.ALREADY_RIDING);
             return;
         }
 
-        AbstractHorse horse = Models.Horse.searchForHorseNearby(SEARCH_RADIUS);
+        AbstractHorse horse = Models.Horse.searchForHorseNearby(player, SEARCH_RADIUS);
         if (horse == null) { // Horse has not spawned, we should do that
             int horseInventorySlot = Models.Horse.findHorseSlotNum();
             if (horseInventorySlot > 8 || horseInventorySlot == -1) {
@@ -100,7 +102,10 @@ public class HorseMountFeature extends Feature {
 
         Managers.TickScheduler.scheduleLater(
                 () -> {
-                    AbstractHorse horse = Models.Horse.searchForHorseNearby(SEARCH_RADIUS);
+                    LocalPlayer player = McUtils.player();
+                    if (player == null) return;
+
+                    AbstractHorse horse = Models.Horse.searchForHorseNearby(player, SEARCH_RADIUS);
                     if (horse != null) { // Horse successfully summoned
                         McUtils.sendPacket(new ServerboundSetCarriedItemPacket(prevItem));
                         alreadySetPrevItem = false;
