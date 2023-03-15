@@ -21,7 +21,7 @@ import net.minecraft.client.resources.language.I18n;
 public abstract class Feature extends AbstractConfigurable implements Storageable, Translatable, Comparable<Feature> {
     private Category category = Category.UNCATEGORIZED;
 
-    @RegisterConfig(key = "feature.wynntils.userFeature.userEnabled")
+    @RegisterConfig("feature.wynntils.userFeature.userEnabled")
     public final Config<Boolean> userEnabled = new Config<>(true);
 
     public Category getCategory() {

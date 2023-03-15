@@ -4,7 +4,7 @@
  */
 package com.wynntils.features.wynntils;
 
-import com.wynntils.core.config.Config;
+import com.wynntils.core.config.HiddenConfig;
 import com.wynntils.core.config.RegisterConfig;
 import com.wynntils.core.features.Feature;
 
@@ -13,9 +13,9 @@ import com.wynntils.core.features.Feature;
 public class DataStorageFeature extends Feature {
     public static DataStorageFeature INSTANCE;
 
-    @RegisterConfig(visible = false)
-    public final Config<Integer> dryCount = new Config<>(0);
+    @RegisterConfig
+    public final HiddenConfig<Integer> dryCount = new HiddenConfig<>(0);
 
-    @RegisterConfig(visible = false)
-    public final Config<Integer> dryBoxes = new Config<>(0);
+    @RegisterConfig
+    public final HiddenConfig<Integer> dryBoxes = new HiddenConfig<>(0);
 }

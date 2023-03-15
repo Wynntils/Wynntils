@@ -13,11 +13,5 @@ import java.lang.annotation.Target;
 @Target(ElementType.FIELD)
 public @interface RegisterConfig {
     /** The base part of the translation key to use for this option */
-    String key() default "";
-
-    /** The subcategory this option belongs in within its container */
-    String subcategory() default "";
-
-    /** Whether this option should be visible to users */
-    boolean visible() default true;
+    String value() default "";
 }

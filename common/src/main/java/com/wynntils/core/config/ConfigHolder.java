@@ -6,57 +6,59 @@ package com.wynntils.core.config;
 
 import com.google.common.base.CaseFormat;
 import com.google.gson.reflect.TypeToken;
-import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.components.Managers;
 import com.wynntils.core.features.Configurable;
 import com.wynntils.core.features.Translatable;
 import com.wynntils.core.features.overlays.Overlay;
-import java.lang.reflect.Field;
 import java.lang.reflect.Type;
 import java.util.Objects;
 import net.minecraft.client.resources.language.I18n;
 import org.apache.commons.lang3.ClassUtils;
 import org.apache.commons.lang3.EnumUtils;
 import org.apache.commons.lang3.builder.EqualsBuilder;
-import org.apache.commons.lang3.reflect.FieldUtils;
 
 public class ConfigHolder implements Comparable<ConfigHolder> {
     private final Configurable parent;
-    private final Field field;
-    private final Type fieldType;
-
-    private final Object defaultValue;
-    private final String subcategory;
+    private final Config configObj;
+    private final String fieldName;
     private final String i18nKey;
     private final boolean visible;
+
+    private final Type fieldType;
+    private final Object defaultValue;
 
     private boolean userEdited = false;
 
     public ConfigHolder(
-            Configurable parent, Field field, String subcategory, String i18nKey, boolean visible, Type typeOverride) {
+            Configurable parent,
+            Config configObj,
+            String fieldName,
+            String i18nKey,
+            boolean visible,
+            Type typeOverride) {
+        this.parent = parent;
+        this.configObj = configObj;
+        this.fieldName = fieldName;
+        this.i18nKey = i18nKey;
+        this.visible = visible;
+
         if (!(parent instanceof Translatable)) {
             throw new RuntimeException("Parent must implement Translatable interface.");
         }
-
-        this.parent = parent;
-        this.field = field;
-        this.subcategory = subcategory;
-        this.i18nKey = i18nKey;
-        this.visible = visible;
 
         // This is done so the last subclass gets saved (so tryParseStringValue) works
         // TODO: This is still not perfect. If the config field is an abstract class,
         //       and is not instantiated by default, we cannot get it's actual class easily,
         //       making tryParseStringValue fail.
         //       Use TypeOverride to fix this
-        this.fieldType = calculateType(typeOverride, getValue(), field);
+        this.fieldType = calculateType(typeOverride, getValue());
 
         // save default value to enable easy resetting
         // We have to deep copy the value, so it is guaranteed that we detect changes
         this.defaultValue = Managers.Json.deepCopy(getValue(), this.fieldType);
     }
 
-    private Type calculateType(Type typeOverride, Object value, Field field) {
+    private Type calculateType(Type typeOverride, Object value) {
         if (typeOverride != null) {
             return typeOverride;
         }
@@ -65,7 +67,8 @@ public class ConfigHolder implements Comparable<ConfigHolder> {
             return value.getClass();
         }
 
-        throw new RuntimeException("Config must either have a non-null default value or a @TypeOverride: " + field);
+        throw new RuntimeException("Config must either have a non-null default value or a @TypeOverride: "
+                + parent.getClass().getName() + "." + fieldName);
     }
 
     public Type getType() {
@@ -77,7 +80,7 @@ public class ConfigHolder implements Comparable<ConfigHolder> {
     }
 
     public String getFieldName() {
-        return field.getName();
+        return fieldName;
     }
 
     public Configurable getParent() {
@@ -103,10 +106,6 @@ public class ConfigHolder implements Comparable<ConfigHolder> {
         return CaseFormat.UPPER_CAMEL.to(CaseFormat.LOWER_CAMEL, name);
     }
 
-    public String getSubcategory() {
-        return subcategory;
-    }
-
     public String getI18nKey() {
         return i18nKey;
     }
@@ -130,16 +129,7 @@ public class ConfigHolder implements Comparable<ConfigHolder> {
     }
 
     public Object getValue() {
-        return getConfig().get();
-    }
-
-    private Config getConfig() {
-        try {
-            return (Config) FieldUtils.readField(field, parent, true);
-        } catch (IllegalAccessException e) {
-            WynntilsMod.error("Unable to get field " + getJsonName(), e);
-            return null;
-        }
+        return configObj.get();
     }
 
     public Object getDefaultValue() {
@@ -147,7 +137,7 @@ public class ConfigHolder implements Comparable<ConfigHolder> {
     }
 
     public void setValue(Object value) {
-        getConfig().updateConfig(value);
+        configObj.updateConfig(value);
         parent.updateConfigOption(this);
         userEdited = true;
     }
