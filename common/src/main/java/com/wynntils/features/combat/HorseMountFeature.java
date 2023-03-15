@@ -74,7 +74,7 @@ public class HorseMountFeature extends Feature {
                 postHorseErrorMessage(MountHorseStatus.NO_HORSE);
                 return;
             }
-            trySummonAndMountHorse(horseInventorySlot, SUMMON_ATTEMPTS, player);
+            trySummonAndMountHorse(horseInventorySlot, SUMMON_ATTEMPTS);
         } else { // Horse already exists, mount it
             mountHorse(horse);
         }
@@ -89,7 +89,7 @@ public class HorseMountFeature extends Feature {
         McUtils.sendPacket(new ServerboundSetCarriedItemPacket(prevItem));
     }
 
-    private void trySummonAndMountHorse(int horseInventorySlot, int attempts, LocalPlayer player) {
+    private void trySummonAndMountHorse(int horseInventorySlot, int attempts) {
         if (attempts <= 0) {
             postHorseErrorMessage(MountHorseStatus.NO_HORSE);
             return;
@@ -102,6 +102,9 @@ public class HorseMountFeature extends Feature {
 
         Managers.TickScheduler.scheduleLater(
                 () -> {
+                    LocalPlayer player = McUtils.player();
+                    if (player == null) return;
+
                     AbstractHorse horse = Models.Horse.searchForHorseNearby(player, SEARCH_RADIUS);
                     if (horse != null) { // Horse successfully summoned
                         McUtils.sendPacket(new ServerboundSetCarriedItemPacket(prevItem));
@@ -112,7 +115,7 @@ public class HorseMountFeature extends Feature {
                     McUtils.sendPacket(new ServerboundSetCarriedItemPacket(horseInventorySlot));
                     McUtils.sendSequencedPacket(id -> new ServerboundUseItemPacket(InteractionHand.MAIN_HAND, id));
 
-                    trySummonAndMountHorse(horseInventorySlot, attempts - 1, player);
+                    trySummonAndMountHorse(horseInventorySlot, attempts - 1);
                 },
                 SUMMON_DELAY_TICKS);
     }
