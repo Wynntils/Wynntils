@@ -4,6 +4,7 @@
  */
 package com.wynntils.models.map.pois;
 
+import com.wynntils.core.components.Managers;
 import com.wynntils.features.map.MapFeature;
 import com.wynntils.models.map.PoiLocation;
 import com.wynntils.models.map.type.DisplayPriority;
@@ -26,9 +27,13 @@ public class ServicePoi extends StaticIconPoi {
     @Override
     public float getMinZoomForRender() {
         if (kind == ServiceKind.FAST_TRAVEL) {
-            return MapFeature.INSTANCE.fastTravelPoiMinZoom.get();
+            return Managers.Feature.getFeatureInstance(MapFeature.class)
+                    .fastTravelPoiMinZoom
+                    .get();
         } else {
-            return MapFeature.INSTANCE.servicePoiMinZoom.get();
+            return Managers.Feature.getFeatureInstance(MapFeature.class)
+                    .servicePoiMinZoom
+                    .get();
         }
     }
 

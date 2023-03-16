@@ -7,6 +7,7 @@ package com.wynntils.features.map;
 import com.mojang.blaze3d.platform.Window;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
+import com.wynntils.core.components.Managers;
 import com.wynntils.core.components.Models;
 import com.wynntils.core.config.Category;
 import com.wynntils.core.config.Config;
@@ -50,8 +51,6 @@ import net.minecraft.client.renderer.MultiBufferSource;
 
 @ConfigCategory(Category.MAP)
 public class MinimapFeature extends Feature {
-    public static MinimapFeature INSTANCE;
-
     @OverlayInfo(renderType = RenderEvent.ElementType.GUI, renderAt = RenderState.Pre)
     public final MinimapOverlay minimapOverlay = new MinimapOverlay();
 
@@ -246,7 +245,8 @@ public class MinimapFeature extends Feature {
                             .map(PlayerMiniMapPoi::new));
 
             poisToRender = Stream.concat(poisToRender, Models.Map.getCombatPois().stream());
-            poisToRender = Stream.concat(poisToRender, MapFeature.INSTANCE.customPois.get().stream());
+            poisToRender = Stream.concat(
+                    poisToRender, Managers.Feature.getFeatureInstance(MapFeature.class).customPois.get().stream());
 
             MultiBufferSource.BufferSource bufferSource =
                     McUtils.mc().renderBuffers().bufferSource();

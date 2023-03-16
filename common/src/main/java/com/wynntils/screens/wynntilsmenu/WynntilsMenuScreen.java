@@ -119,7 +119,7 @@ public final class WynntilsMenuScreen extends WynntilsMenuScreenBase {
                         Component.literal(""),
                         Component.translatable("screens.wynntils.wynntilsMenu.leftClickToSelect")
                                 .withStyle(ChatFormatting.GREEN))));
-        if (MapFeature.INSTANCE.isEnabled()) {
+        if (Managers.Feature.getFeatureInstance(MapFeature.class).isEnabled()) {
             buttons.add(new WynntilsMenuButton(
                     Texture.MAP_ICON,
                     true,

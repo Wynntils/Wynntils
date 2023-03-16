@@ -32,8 +32,6 @@ import net.minecraftforge.eventbus.api.SubscribeEvent;
 
 @ConfigCategory(Category.INVENTORY)
 public class ItemFavoriteFeature extends Feature {
-    public static ItemFavoriteFeature INSTANCE;
-
     // This should really move to FavoritesModel, but for now, models cannot have configs
     @RegisterConfig
     public final HiddenConfig<Set<String>> favoriteItems = new HiddenConfig<>(new TreeSet<>());

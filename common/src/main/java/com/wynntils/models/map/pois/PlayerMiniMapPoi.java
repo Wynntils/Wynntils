@@ -5,6 +5,7 @@
 package com.wynntils.models.map.pois;
 
 import com.mojang.blaze3d.vertex.PoseStack;
+import com.wynntils.core.components.Managers;
 import com.wynntils.features.map.MinimapFeature;
 import com.wynntils.models.players.hades.objects.HadesUser;
 import com.wynntils.utils.mc.SkinUtils;
@@ -14,7 +15,12 @@ import net.minecraft.resources.ResourceLocation;
 
 public class PlayerMiniMapPoi extends PlayerPoiBase {
     public PlayerMiniMapPoi(HadesUser user) {
-        super(user, MinimapFeature.INSTANCE.minimapOverlay.remotePlayersHeadScale.get());
+        super(
+                user,
+                Managers.Feature.getFeatureInstance(MinimapFeature.class)
+                        .minimapOverlay
+                        .remotePlayersHeadScale
+                        .get());
     }
 
     @Override
