@@ -37,8 +37,6 @@ import net.minecraftforge.eventbus.api.SubscribeEvent;
 
 @ConfigCategory(Category.OVERLAYS)
 public class GameNotificationOverlayFeature extends Feature {
-    public static GameNotificationOverlayFeature INSTANCE;
-
     private static final List<TimedMessageContainer> messageQueue = new LinkedList<>();
 
     @OverlayInfo(renderType = RenderEvent.ElementType.GUI)

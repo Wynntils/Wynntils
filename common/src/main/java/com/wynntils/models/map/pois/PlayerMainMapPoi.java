@@ -5,6 +5,7 @@
 package com.wynntils.models.map.pois;
 
 import com.mojang.blaze3d.vertex.PoseStack;
+import com.wynntils.core.components.Managers;
 import com.wynntils.features.map.MapFeature;
 import com.wynntils.features.overlays.CustomBarsOverlayFeature;
 import com.wynntils.models.players.hades.objects.HadesUser;
@@ -73,7 +74,9 @@ public class PlayerMainMapPoi extends PlayerPoiBase {
                 64);
 
         // health
-        CustomBarsOverlayFeature.HealthTexture healthTexture = MapFeature.INSTANCE.remotePlayerHealthTexture.get();
+        CustomBarsOverlayFeature.HealthTexture healthTexture = Managers.Feature.getFeatureInstance(MapFeature.class)
+                .remotePlayerHealthTexture
+                .get();
         BufferedRenderUtils.drawProgressBar(
                 poseStack,
                 bufferSource,
@@ -101,7 +104,9 @@ public class PlayerMainMapPoi extends PlayerPoiBase {
                         user.getRelationColor(),
                         HorizontalAlignment.Left,
                         VerticalAlignment.Top,
-                        MapFeature.INSTANCE.remotePlayerNameShadow.get(),
+                        Managers.Feature.getFeatureInstance(MapFeature.class)
+                                .remotePlayerNameShadow
+                                .get(),
                         1f);
 
         poseStack.popPose();

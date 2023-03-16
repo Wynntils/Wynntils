@@ -45,8 +45,6 @@ import org.lwjgl.glfw.GLFW;
 
 @ConfigCategory(Category.MAP)
 public class MapFeature extends Feature {
-    public static MapFeature INSTANCE;
-
     @RegisterConfig
     public final HiddenConfig<List<CustomPoi>> customPois = new HiddenConfig<>(new ArrayList<>());
 

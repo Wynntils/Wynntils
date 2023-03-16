@@ -104,7 +104,9 @@ public class HadesClientHandler implements IHadesClientAdapter {
 
     @Override
     public void handleUpdateMutual(HSPacketUpdateMutual packet) {
-        if (!HadesFeature.INSTANCE.getOtherPlayerInfo.get()) return;
+        if (!Managers.Feature.getFeatureInstance(HadesFeature.class)
+                .getOtherPlayerInfo
+                .get()) return;
 
         Optional<HadesUser> userOptional = userRegistry.getUser(packet.getUser());
         if (userOptional.isPresent()) {

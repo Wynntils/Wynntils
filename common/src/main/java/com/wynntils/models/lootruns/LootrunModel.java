@@ -8,6 +8,7 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.wynntils.core.WynntilsMod;
+import com.wynntils.core.components.Managers;
 import com.wynntils.core.components.Model;
 import com.wynntils.core.components.Models;
 import com.wynntils.features.LootrunFeature;
@@ -267,11 +268,17 @@ public final class LootrunModel extends Model {
         LootrunRenderer.renderLootrun(
                 poseStack,
                 lootrun,
-                LootrunFeature.INSTANCE.activePathColor.get().asInt());
+                Managers.Feature.getFeatureInstance(LootrunFeature.class)
+                        .activePathColor
+                        .get()
+                        .asInt());
         LootrunRenderer.renderLootrun(
                 poseStack,
                 recordingCompiled,
-                LootrunFeature.INSTANCE.recordingPathColor.get().asInt());
+                Managers.Feature.getFeatureInstance(LootrunFeature.class)
+                        .recordingPathColor
+                        .get()
+                        .asInt());
     }
 
     @SubscribeEvent

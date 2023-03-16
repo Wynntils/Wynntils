@@ -19,8 +19,6 @@ import org.lwjgl.glfw.GLFW;
 
 @ConfigCategory(Category.MAP)
 public class GuildMapFeature extends Feature {
-    public static GuildMapFeature INSTANCE;
-
     @RegisterConfig
     public final Config<Boolean> renderUsingLinear = new Config<>(true);
 

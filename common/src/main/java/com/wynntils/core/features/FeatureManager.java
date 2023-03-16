@@ -115,7 +115,6 @@ import com.wynntils.features.wynntils.TelemetryFeature;
 import com.wynntils.features.wynntils.UpdatesFeature;
 import com.wynntils.mc.event.ClientsideMessageEvent;
 import com.wynntils.utils.mc.McUtils;
-import java.lang.reflect.Field;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -125,11 +124,11 @@ import net.minecraft.network.chat.ClickEvent;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraftforge.eventbus.api.Event;
-import org.apache.commons.lang3.reflect.FieldUtils;
 
 /** Loads {@link Feature}s */
 public final class FeatureManager extends Manager {
     private static final Map<Feature, FeatureState> FEATURES = new LinkedHashMap<>();
+    private static final Map<Class<? extends Feature>, Feature> FEATURE_INSTANCES = new LinkedHashMap<>();
 
     public FeatureManager(CrashReportManager crashReport, KeyBindManager keyBind, OverlayManager overlay) {
         super(List.of(crashReport, keyBind, overlay));
@@ -253,6 +252,7 @@ public final class FeatureManager extends Manager {
 
     private void registerFeature(Feature feature) {
         FEATURES.put(feature, FeatureState.DISABLED);
+        FEATURE_INSTANCES.put(feature.getClass(), feature);
 
         try {
             initializeFeature(feature);
@@ -276,15 +276,6 @@ public final class FeatureManager extends Manager {
 
     private void initializeFeature(Feature feature) {
         Class<? extends Feature> featureClass = feature.getClass();
-
-        // Instance field
-        try {
-            Field instanceField = FieldUtils.getDeclaredField(featureClass, "INSTANCE", true);
-            if (instanceField != null) instanceField.set(null, feature);
-        } catch (Exception e) {
-            WynntilsMod.error("Failed to create instance object in " + featureClass.getName(), e);
-            return;
-        }
 
         // Set feature category
         ConfigCategory configCategory = feature.getClass().getAnnotation(ConfigCategory.class);
@@ -372,6 +363,11 @@ public final class FeatureManager extends Manager {
 
     public List<Feature> getFeatures() {
         return FEATURES.keySet().stream().toList();
+    }
+
+    @SuppressWarnings("unchecked")
+    public <T extends Feature> T getFeatureInstance(Class<T> featureClass) {
+        return (T) FEATURE_INSTANCES.get(featureClass);
     }
 
     public Optional<Feature> getFeatureFromString(String featureName) {
