@@ -12,7 +12,7 @@ import com.wynntils.core.features.overlays.OverlayPosition;
 import com.wynntils.core.features.overlays.RenderState;
 import com.wynntils.core.features.overlays.TextOverlay;
 import com.wynntils.core.features.overlays.annotations.OverlayInfo;
-import com.wynntils.core.features.overlays.sizes.GuiScaledOverlaySize;
+import com.wynntils.core.features.overlays.sizes.OverlaySize;
 import com.wynntils.mc.event.RenderEvent;
 import com.wynntils.utils.render.type.HorizontalAlignment;
 import com.wynntils.utils.render.type.VerticalAlignment;
@@ -31,7 +31,7 @@ public class CombatExperienceOverlayFeature extends Feature {
                             VerticalAlignment.Bottom,
                             HorizontalAlignment.Center,
                             OverlayPosition.AnchorSection.BottomMiddle),
-                    new GuiScaledOverlaySize(200, 20),
+                    new OverlaySize(200, 20),
                     HorizontalAlignment.Center,
                     VerticalAlignment.Middle);
         }

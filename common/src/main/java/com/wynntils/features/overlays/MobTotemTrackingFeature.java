@@ -11,7 +11,7 @@ import com.wynntils.core.features.Feature;
 import com.wynntils.core.features.overlays.OverlayPosition;
 import com.wynntils.core.features.overlays.TextOverlay;
 import com.wynntils.core.features.overlays.annotations.OverlayInfo;
-import com.wynntils.core.features.overlays.sizes.GuiScaledOverlaySize;
+import com.wynntils.core.features.overlays.sizes.OverlaySize;
 import com.wynntils.mc.event.RenderEvent;
 import com.wynntils.utils.mc.RenderedStringUtils;
 import com.wynntils.utils.render.type.HorizontalAlignment;
@@ -37,7 +37,7 @@ public class MobTotemTrackingFeature extends Feature {
                             VerticalAlignment.Top,
                             HorizontalAlignment.Right,
                             OverlayPosition.AnchorSection.TopRight),
-                    new GuiScaledOverlaySize(120, 35));
+                    new OverlaySize(120, 35));
         }
 
         @Override

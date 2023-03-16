@@ -19,7 +19,7 @@ import com.wynntils.core.features.overlays.OverlayPosition;
 import com.wynntils.core.features.overlays.RenderState;
 import com.wynntils.core.features.overlays.TextOverlay;
 import com.wynntils.core.features.overlays.annotations.OverlayInfo;
-import com.wynntils.core.features.overlays.sizes.GuiScaledOverlaySize;
+import com.wynntils.core.features.overlays.sizes.OverlaySize;
 import com.wynntils.mc.event.RenderEvent;
 import com.wynntils.models.map.MapTexture;
 import com.wynntils.models.map.PoiLocation;
@@ -108,7 +108,7 @@ public class MinimapFeature extends Feature {
                             VerticalAlignment.Top,
                             HorizontalAlignment.Left,
                             OverlayPosition.AnchorSection.TopLeft),
-                    new GuiScaledOverlaySize(DEFAULT_SIZE, DEFAULT_SIZE));
+                    new OverlaySize(DEFAULT_SIZE, DEFAULT_SIZE));
         }
 
         // FIXME: This is the only overlay not to use buffer sources for rendering. This is due to `createMask`
@@ -511,7 +511,7 @@ public class MinimapFeature extends Feature {
                             VerticalAlignment.Top,
                             HorizontalAlignment.Left,
                             OverlayPosition.AnchorSection.TopLeft),
-                    new GuiScaledOverlaySize(120, 20),
+                    new OverlaySize(120, 20),
                     HorizontalAlignment.Center,
                     VerticalAlignment.Middle);
         }

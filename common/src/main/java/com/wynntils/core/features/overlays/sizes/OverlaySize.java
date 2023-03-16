@@ -7,7 +7,12 @@ package com.wynntils.core.features.overlays.sizes;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-public abstract class OverlaySize {
+/**
+ * Represents the size of an overlay.
+ * <p>
+ * The size is represented by a width and a height and scales with GUI scale.
+ */
+public class OverlaySize {
     private static final Pattern SIZE_REGEX = Pattern.compile("OverlaySize\\{width=(.+),height=(.+)}");
     private static final float MINIMUM_HEIGHT = 3f;
     private static final float MINIMUM_WIDTH = 3f;
@@ -16,14 +21,14 @@ public abstract class OverlaySize {
     protected float height;
 
     // For GSON
-    protected OverlaySize() {}
+    public OverlaySize() {}
 
-    protected OverlaySize(float width, float height) {
+    public OverlaySize(float width, float height) {
         this.width = width;
         this.height = height;
     }
 
-    protected OverlaySize(String string) {
+    public OverlaySize(String string) {
         Matcher matcher = SIZE_REGEX.matcher(string.replace(" ", ""));
 
         if (!matcher.matches()) {
@@ -38,9 +43,13 @@ public abstract class OverlaySize {
         }
     }
 
-    public abstract float getWidth();
+    public float getWidth() {
+        return this.width;
+    }
 
-    public abstract float getHeight();
+    public float getHeight() {
+        return this.height;
+    }
 
     public void setWidth(float newWidth) {
         this.width = Math.max(newWidth, MINIMUM_WIDTH);

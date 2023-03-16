@@ -16,7 +16,6 @@ import com.wynntils.core.config.HiddenConfig;
 import com.wynntils.core.config.RegisterConfig;
 import com.wynntils.core.features.AbstractConfigurable;
 import com.wynntils.core.features.Translatable;
-import com.wynntils.core.features.overlays.sizes.GuiScaledOverlaySize;
 import com.wynntils.core.features.overlays.sizes.OverlaySize;
 import com.wynntils.core.json.TypeOverride;
 import com.wynntils.utils.render.type.HorizontalAlignment;
@@ -55,7 +54,7 @@ public abstract class Overlay extends AbstractConfigurable implements Translatab
 
     protected Overlay(OverlayPosition position, float width, float height) {
         this.position.updateConfig(position);
-        this.size.updateConfig(new GuiScaledOverlaySize(width, height));
+        this.size.updateConfig(new OverlaySize(width, height));
     }
 
     protected Overlay(OverlayPosition position, OverlaySize size) {

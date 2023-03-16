@@ -16,7 +16,7 @@ import com.wynntils.core.features.Feature;
 import com.wynntils.core.features.overlays.Overlay;
 import com.wynntils.core.features.overlays.OverlayPosition;
 import com.wynntils.core.features.overlays.annotations.OverlayInfo;
-import com.wynntils.core.features.overlays.sizes.GuiScaledOverlaySize;
+import com.wynntils.core.features.overlays.sizes.OverlaySize;
 import com.wynntils.handlers.scoreboard.event.ScoreboardSegmentAdditionEvent;
 import com.wynntils.mc.event.RenderEvent;
 import com.wynntils.models.quests.QuestInfo;
@@ -83,7 +83,7 @@ public class QuestInfoOverlayFeature extends Feature {
                             VerticalAlignment.Top,
                             HorizontalAlignment.Right,
                             OverlayPosition.AnchorSection.TopRight),
-                    new GuiScaledOverlaySize(300, 50),
+                    new OverlaySize(300, 50),
                     HorizontalAlignment.Left,
                     VerticalAlignment.Middle);
 
