@@ -60,7 +60,10 @@ public abstract class ItemRendererMixin {
             argsOnly = true)
     private String renderGuiItemDecorations(
             String text, Font font, ItemStack itemStack, int xPosition, int yPosition, String ignored) {
-        if (!MixinHelper.onWynncraft()) return text;
+        if (!MixinHelper.onWynncraft()) {
+            wynntilsCountOverlayColor = 0xFFFFFF;
+            return text;
+        }
 
         String count = (itemStack.getCount() == 1) ? "" : String.valueOf(itemStack.getCount());
         String countString = (text == null) ? count : text;
