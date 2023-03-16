@@ -13,8 +13,6 @@ import com.wynntils.utils.colors.CommonColors;
 import com.wynntils.utils.colors.CustomColor;
 
 public class LootrunFeature extends Feature {
-    public static LootrunFeature INSTANCE;
-
     @RegisterConfig
     public final Config<PathType> pathType = new Config<>(PathType.TEXTURED);
 

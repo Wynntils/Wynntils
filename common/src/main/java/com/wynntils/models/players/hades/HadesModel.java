@@ -123,7 +123,9 @@ public final class HadesModel extends Model {
     @SubscribeEvent
     public void onFriendListUpdate(HadesRelationsUpdateEvent.FriendList event) {
         if (!isConnected()) return;
-        if (!HadesFeature.INSTANCE.shareWithFriends.get()) return;
+        if (!Managers.Feature.getFeatureInstance(HadesFeature.class)
+                .shareWithFriends
+                .get()) return;
 
         hadesConnection.sendPacket(new HCPacketSocialUpdate(
                 event.getChangedPlayers().stream().toList(),
@@ -134,7 +136,9 @@ public final class HadesModel extends Model {
     @SubscribeEvent
     public void onPartyListUpdate(HadesRelationsUpdateEvent.PartyList event) {
         if (!isConnected()) return;
-        if (!HadesFeature.INSTANCE.shareWithParty.get()) return;
+        if (!Managers.Feature.getFeatureInstance(HadesFeature.class)
+                .shareWithParty
+                .get()) return;
 
         hadesConnection.sendPacket(new HCPacketSocialUpdate(
                 event.getChangedPlayers().stream().toList(),
@@ -188,9 +192,15 @@ public final class HadesModel extends Model {
     public void onTick(TickEvent event) {
         if (!isConnected()) return;
         if (!Models.WorldState.onWorld() || McUtils.player().hasEffect(MobEffects.NIGHT_VISION)) return;
-        if (!HadesFeature.INSTANCE.shareWithParty.get()
-                && !HadesFeature.INSTANCE.shareWithGuild.get()
-                && !HadesFeature.INSTANCE.shareWithFriends.get()) return;
+        if (!Managers.Feature.getFeatureInstance(HadesFeature.class)
+                        .shareWithParty
+                        .get()
+                && !Managers.Feature.getFeatureInstance(HadesFeature.class)
+                        .shareWithGuild
+                        .get()
+                && !Managers.Feature.getFeatureInstance(HadesFeature.class)
+                        .shareWithFriends
+                        .get()) return;
 
         tickCountUntilUpdate--;
 

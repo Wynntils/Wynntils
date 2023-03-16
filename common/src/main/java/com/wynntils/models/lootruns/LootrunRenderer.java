@@ -8,6 +8,7 @@ import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.BufferBuilder;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
+import com.wynntils.core.components.Managers;
 import com.wynntils.features.LootrunFeature;
 import com.wynntils.models.lootruns.type.BlockValidness;
 import com.wynntils.models.lootruns.type.ColoredPath;
@@ -83,7 +84,10 @@ public final class LootrunRenderer {
                     renderChests(poseStack, lootrun, color, chunkLong);
                 }
 
-                if (LootrunFeature.INSTANCE.showNotes.get() && lootrun.notes().containsKey(chunkLong)) {
+                if (Managers.Feature.getFeatureInstance(LootrunFeature.class)
+                                .showNotes
+                                .get()
+                        && lootrun.notes().containsKey(chunkLong)) {
                     renderNotes(poseStack, lootrun, color, chunkLong);
                 }
             }
@@ -137,7 +141,9 @@ public final class LootrunRenderer {
         Level level = McUtils.mc().level;
         if (level == null) return;
 
-        switch (LootrunFeature.INSTANCE.pathType.get()) {
+        switch (Managers.Feature.getFeatureInstance(LootrunFeature.class)
+                .pathType
+                .get()) {
             case TEXTURED -> renderTexturedLootrunPoints(poseStack, locations, level, CustomRenderType.LOOTRUN_QUAD);
             case LINE -> renderNonTexturedLootrunPoints(poseStack, locations, level, CustomRenderType.LOOTRUN_LINE);
         }

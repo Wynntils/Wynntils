@@ -4,6 +4,7 @@
  */
 package com.wynntils.models.lootruns;
 
+import com.wynntils.core.components.Managers;
 import com.wynntils.features.LootrunFeature;
 import com.wynntils.models.lootruns.type.ColoredPath;
 import com.wynntils.models.lootruns.type.ColoredPosition;
@@ -127,8 +128,13 @@ public final class LootrunCompiler {
         for (int i = 0; i < positions.size(); i++) {
             Vec3 position = positions.get(i);
 
-            if (LootrunFeature.INSTANCE.rainbowLootRun.get() && !recording) {
-                int cycleDistance = LootrunFeature.INSTANCE.cycleDistance.get();
+            if (Managers.Feature.getFeatureInstance(LootrunFeature.class)
+                            .rainbowLootRun
+                            .get()
+                    && !recording) {
+                int cycleDistance = Managers.Feature.getFeatureInstance(LootrunFeature.class)
+                        .cycleDistance
+                        .get();
                 int cycle = 10 * cycleDistance;
                 int parts = i % cycle;
                 float done = (float) parts / (float) cycle;
@@ -159,11 +165,11 @@ public final class LootrunCompiler {
                         .add(new ColoredPosition(
                                 position,
                                 recording
-                                        ? LootrunFeature.INSTANCE
+                                        ? Managers.Feature.getFeatureInstance(LootrunFeature.class)
                                                 .recordingPathColor
                                                 .get()
                                                 .asInt()
-                                        : LootrunFeature.INSTANCE
+                                        : Managers.Feature.getFeatureInstance(LootrunFeature.class)
                                                 .activePathColor
                                                 .get()
                                                 .asInt()));

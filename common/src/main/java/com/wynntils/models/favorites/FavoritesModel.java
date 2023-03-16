@@ -4,6 +4,7 @@
  */
 package com.wynntils.models.favorites;
 
+import com.wynntils.core.components.Managers;
 import com.wynntils.core.components.Model;
 import com.wynntils.core.components.Models;
 import com.wynntils.features.inventory.ItemFavoriteFeature;
@@ -96,6 +97,8 @@ public final class FavoritesModel extends Model {
 
     private Set<String> getFavoriteItems() {
         // This is a hack to allow saving of favorites in the config
-        return ItemFavoriteFeature.INSTANCE.favoriteItems.get();
+        return Managers.Feature.getFeatureInstance(ItemFavoriteFeature.class)
+                .favoriteItems
+                .get();
     }
 }

@@ -37,8 +37,6 @@ import org.lwjgl.glfw.GLFW;
 
 @ConfigCategory(Category.CHAT)
 public class ChatTabsFeature extends Feature {
-    public static ChatTabsFeature INSTANCE;
-
     // These should move to ChatTabManager, as Storage
     @RegisterConfig
     public final HiddenConfig<List<ChatTab>> chatTabs = new HiddenConfig<>(new ArrayList<>(List.of(

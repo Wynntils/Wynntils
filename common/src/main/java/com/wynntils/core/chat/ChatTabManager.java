@@ -5,6 +5,7 @@
 package com.wynntils.core.chat;
 
 import com.wynntils.core.components.Manager;
+import com.wynntils.core.components.Managers;
 import com.wynntils.features.chat.ChatTabsFeature;
 import com.wynntils.handlers.chat.event.ChatMessageReceivedEvent;
 import com.wynntils.handlers.chat.type.RecipientType;
@@ -40,7 +41,9 @@ public final class ChatTabManager extends Manager {
     }
 
     private List<ChatTab> getChatTabs() {
-        return ChatTabsFeature.INSTANCE.chatTabs.get();
+        return Managers.Feature.getFeatureInstance(ChatTabsFeature.class)
+                .chatTabs
+                .get();
     }
 
     public Stream<ChatTab> getTabs() {

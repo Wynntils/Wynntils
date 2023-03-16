@@ -6,6 +6,7 @@ package com.wynntils.screens.maps;
 
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
+import com.wynntils.core.components.Managers;
 import com.wynntils.core.components.Models;
 import com.wynntils.features.map.GuildMapFeature;
 import com.wynntils.models.map.pois.Poi;
@@ -135,7 +136,10 @@ public final class GuildMapScreen extends AbstractMapScreen {
     @Override
     public void doRender(PoseStack poseStack, int mouseX, int mouseY, float partialTick) {
         if (holdingMapKey
-                && !GuildMapFeature.INSTANCE.openGuildMapKeybind.getKeyMapping().isDown()) {
+                && !Managers.Feature.getFeatureInstance(GuildMapFeature.class)
+                        .openGuildMapKeybind
+                        .getKeyMapping()
+                        .isDown()) {
             this.onClose();
             return;
         }
@@ -146,7 +150,11 @@ public final class GuildMapScreen extends AbstractMapScreen {
 
         RenderSystem.enableDepthTest();
 
-        renderMap(poseStack, GuildMapFeature.INSTANCE.renderUsingLinear.get());
+        renderMap(
+                poseStack,
+                Managers.Feature.getFeatureInstance(GuildMapFeature.class)
+                        .renderUsingLinear
+                        .get());
 
         RenderUtils.enableScissor(
                 (int) (renderX + renderedBorderXOffset), (int) (renderY + renderedBorderYOffset), (int) mapWidth, (int)
@@ -157,8 +165,12 @@ public final class GuildMapScreen extends AbstractMapScreen {
         renderCursor(
                 poseStack,
                 1.5f,
-                GuildMapFeature.INSTANCE.pointerColor.get(),
-                GuildMapFeature.INSTANCE.pointerType.get());
+                Managers.Feature.getFeatureInstance(GuildMapFeature.class)
+                        .pointerColor
+                        .get(),
+                Managers.Feature.getFeatureInstance(GuildMapFeature.class)
+                        .pointerType
+                        .get());
 
         RenderSystem.disableScissor();
 

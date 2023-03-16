@@ -15,8 +15,6 @@ import com.wynntils.hades.protocol.enums.SocialType;
 
 @ConfigCategory(Category.PLAYERS)
 public class HadesFeature extends Feature {
-    public static HadesFeature INSTANCE;
-
     @RegisterConfig
     public final Config<Boolean> getOtherPlayerInfo = new Config<>(true);
 
