@@ -31,6 +31,7 @@ import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
+import net.minecraft.ChatFormatting;
 import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Position;
@@ -156,7 +157,7 @@ public final class LootrunModel extends Model {
         WynntilsMod.postEvent(new LootrunCacheRefreshEvent());
     }
 
-    public boolean loadFile(String fileName) {
+    private boolean loadFile(String fileName) {
         String lootrunFileName = fileName + ".json";
         File lootrunFile = new File(LOOTRUNS, lootrunFileName);
         if (lootrunFile.exists()) {
@@ -174,6 +175,20 @@ public final class LootrunModel extends Model {
             }
         }
         return false;
+    }
+
+    public void tryLoadLootrun(String fileName) {
+        if (loadFile(fileName)) {
+            Position startingPoint = Models.Lootrun.getStartingPoint();
+
+            BlockPos start = PosUtils.newBlockPos(startingPoint);
+            McUtils.sendMessageToClient(Component.translatable(
+                            "feature.wynntils.lootrunUtils.lootrunStart", start.getX(), start.getY(), start.getZ())
+                    .withStyle(ChatFormatting.GREEN));
+        } else {
+            McUtils.sendMessageToClient(
+                    Component.translatable("feature.wynntils.lootrunUtils.lootrunCouldNotBeLoaded"));
+        }
     }
 
     public LootrunUndoResult tryUndo() {

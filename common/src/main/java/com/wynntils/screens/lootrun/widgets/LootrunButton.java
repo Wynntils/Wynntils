@@ -79,7 +79,7 @@ public class LootrunButton extends WynntilsButton {
             if (isLoaded()) {
                 Models.Lootrun.clearCurrentLootrun();
             } else {
-                Models.Lootrun.loadFile(lootrun.name());
+                Models.Lootrun.tryLoadLootrun(lootrun.name());
             }
             return true;
         }
