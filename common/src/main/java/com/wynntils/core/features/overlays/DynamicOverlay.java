@@ -5,7 +5,6 @@
 package com.wynntils.core.features.overlays;
 
 import com.google.common.collect.ComparisonChain;
-import com.wynntils.core.features.overlays.sizes.OverlaySize;
 import com.wynntils.utils.render.type.HorizontalAlignment;
 import com.wynntils.utils.render.type.VerticalAlignment;
 import net.minecraft.client.resources.language.I18n;

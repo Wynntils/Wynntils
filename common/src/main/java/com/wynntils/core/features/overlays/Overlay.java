@@ -16,7 +16,6 @@ import com.wynntils.core.config.HiddenConfig;
 import com.wynntils.core.config.RegisterConfig;
 import com.wynntils.core.features.AbstractConfigurable;
 import com.wynntils.core.features.Translatable;
-import com.wynntils.core.features.overlays.sizes.OverlaySize;
 import com.wynntils.core.json.TypeOverride;
 import com.wynntils.utils.render.type.HorizontalAlignment;
 import com.wynntils.utils.render.type.VerticalAlignment;
