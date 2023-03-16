@@ -1,8 +1,16 @@
+## [0.0.2-alpha.351](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.350...v0.0.2-alpha.351) (2023-03-16)
+
+
+### Bug Fixes
+
+* HorseNameFunction crash if horse is not named ([#1350](https://github.com/Wynntils/Artemis/issues/1350)) ([ee79a37](https://github.com/Wynntils/Artemis/commit/ee79a37fda0ed00beacd830a7b7bd63cf8ca52bc))
+
 ## [0.0.2-alpha.350](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.349...v0.0.2-alpha.350) (2023-03-16)
 
 
 ### Miscellaneous Chores
 
+* **release:** v0.0.2-alpha.350 [skip ci] ([f4e6a6f](https://github.com/Wynntils/Artemis/commit/f4e6a6f310705af06aa5f6ebde294f34af5ed85d))
 * Remove useless overlay size differentiation and BasicOverlay ([#1341](https://github.com/Wynntils/Artemis/issues/1341)) ([a99cc6d](https://github.com/Wynntils/Artemis/commit/a99cc6d2c520921670c74e24f0f00af490570286))
 
 ## [0.0.2-alpha.349](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.348...v0.0.2-alpha.349) (2023-03-16)
@@ -45,16 +53,4 @@
 ### Miscellaneous Chores
 
 * **release:** v0.0.2-alpha.347 [skip ci] ([8265567](https://github.com/Wynntils/Artemis/commit/8265567d2f59c012ef959c21fd429077a89a0d2d))
-
-## [0.0.2-alpha.346](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.345...v0.0.2-alpha.346) (2023-03-15)
-
-
-### Bug Fixes
-
-* Try to avoid NPE in mount horse if user logs out ([#1336](https://github.com/Wynntils/Artemis/issues/1336)) ([448eb85](https://github.com/Wynntils/Artemis/commit/448eb85b873e283fe6e9a05956b4dea143c3b41f))
-
-
-### Miscellaneous Chores
-
-* **release:** v0.0.2-alpha.346 [skip ci] ([b6ab928](https://github.com/Wynntils/Artemis/commit/b6ab92890df6077a621c2de3b163ec8b51a5d084))
 
