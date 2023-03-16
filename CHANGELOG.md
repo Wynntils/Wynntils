@@ -1,9 +1,21 @@
+## [0.0.2-alpha.353](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.352...v0.0.2-alpha.353) (2023-03-16)
+
+
+### Bug Fixes
+
+* Fix item size in CharacterSelectorScreen ([#1349](https://github.com/Wynntils/Artemis/issues/1349)) ([81bc25c](https://github.com/Wynntils/Artemis/commit/81bc25cdff20333dc24bfbc04edcf7c85729d34c))
+
 ## [0.0.2-alpha.352](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.351...v0.0.2-alpha.352) (2023-03-16)
 
 
 ### Bug Fixes
 
 * Don't crash on broken translation cache ([#1344](https://github.com/Wynntils/Artemis/issues/1344)) ([a91762c](https://github.com/Wynntils/Artemis/commit/a91762c54075dbffb427011f2fe4986cf17853b3))
+
+
+### Miscellaneous Chores
+
+* **release:** v0.0.2-alpha.352 [skip ci] ([3590a30](https://github.com/Wynntils/Artemis/commit/3590a3073fb566f6a88ede45074653459d205d0a))
 
 ## [0.0.2-alpha.351](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.350...v0.0.2-alpha.351) (2023-03-16)
 
@@ -36,16 +48,4 @@
 ### Miscellaneous Chores
 
 * **release:** v0.0.2-alpha.349 [skip ci] ([e5b0525](https://github.com/Wynntils/Artemis/commit/e5b0525f1020afa1e0bed5fd450c34976d459070))
-
-## [0.0.2-alpha.348](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.347...v0.0.2-alpha.348) (2023-03-15)
-
-
-### New Features
-
-* Add CombatExperienceOverlay ([#1339](https://github.com/Wynntils/Artemis/issues/1339)) ([04bd241](https://github.com/Wynntils/Artemis/commit/04bd241373bd7073261d41df4176bd53144f0e67))
-
-
-### Miscellaneous Chores
-
-* **release:** v0.0.2-alpha.348 [skip ci] ([bf410de](https://github.com/Wynntils/Artemis/commit/bf410de3f58de29ac1d89b53cba34b3ee12e094b))
 
