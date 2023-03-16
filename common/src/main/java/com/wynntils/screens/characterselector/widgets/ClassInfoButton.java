@@ -51,7 +51,7 @@ public class ClassInfoButton extends WynntilsButton {
         float itemScale = this.height * 0.03f;
         int x = (int) (this.getX() + this.width * 0.038f * itemScale);
         int y = (int) (this.getY() + this.height * 0.12f * itemScale);
-        RenderUtils.renderItem(0, 0, classInfo.itemStack(), x, y);
+        RenderUtils.renderItem(0, 0, classInfo.itemStack(), x, y, itemScale);
 
         poseStack.pushPose();
         poseStack.translate(this.getX() + this.width * 0.25f, this.getY() + this.height * 0.16f, 0f);
