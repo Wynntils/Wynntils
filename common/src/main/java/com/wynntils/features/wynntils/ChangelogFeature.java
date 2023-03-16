@@ -49,7 +49,6 @@ public class ChangelogFeature extends Feature {
                     String changelog = jsonObject.get("changelog").getAsString();
 
                     lastShownVersion.store(WynntilsMod.getVersion());
-                    Managers.Config.saveConfig();
 
                     if (autoClassMenu.get()) {
                         McUtils.sendCommand("class");
