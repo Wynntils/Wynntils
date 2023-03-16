@@ -1,9 +1,21 @@
+## [0.0.2-alpha.356](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.355...v0.0.2-alpha.356) (2023-03-16)
+
+
+### Bug Fixes
+
+* Storage persist should not happen before init, or we wipe our storage ([#1342](https://github.com/Wynntils/Artemis/issues/1342)) ([698570f](https://github.com/Wynntils/Artemis/commit/698570f0a613609d7efd27c803d4c6a024de82e3))
+
 ## [0.0.2-alpha.355](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.354...v0.0.2-alpha.355) (2023-03-16)
 
 
 ### New Features
 
 * Consistently display lootrun load/fail messages in commands and screens ([#1346](https://github.com/Wynntils/Artemis/issues/1346)) ([46ee396](https://github.com/Wynntils/Artemis/commit/46ee396353c67385df473ef2d4d2fb0fee82d209))
+
+
+### Miscellaneous Chores
+
+* **release:** v0.0.2-alpha.355 [skip ci] ([c12acd0](https://github.com/Wynntils/Artemis/commit/c12acd0575f14a96d7fdd41b2d8beea78e55e007))
 
 ## [0.0.2-alpha.354](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.353...v0.0.2-alpha.354) (2023-03-16)
 
@@ -40,16 +52,4 @@
 ### Miscellaneous Chores
 
 * **release:** v0.0.2-alpha.352 [skip ci] ([3590a30](https://github.com/Wynntils/Artemis/commit/3590a3073fb566f6a88ede45074653459d205d0a))
-
-## [0.0.2-alpha.351](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.350...v0.0.2-alpha.351) (2023-03-16)
-
-
-### Bug Fixes
-
-* HorseNameFunction crash if horse is not named ([#1350](https://github.com/Wynntils/Artemis/issues/1350)) ([ee79a37](https://github.com/Wynntils/Artemis/commit/ee79a37fda0ed00beacd830a7b7bd63cf8ca52bc))
-
-
-### Miscellaneous Chores
-
-* **release:** v0.0.2-alpha.351 [skip ci] ([46dda8d](https://github.com/Wynntils/Artemis/commit/46dda8dbd5be28f8249ca29d995f941287993b4c))
 
