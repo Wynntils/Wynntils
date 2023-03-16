@@ -1,9 +1,21 @@
+## [0.0.2-alpha.350](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.349...v0.0.2-alpha.350) (2023-03-16)
+
+
+### Miscellaneous Chores
+
+* Remove useless overlay size differentiation and BasicOverlay ([#1341](https://github.com/Wynntils/Artemis/issues/1341)) ([a99cc6d](https://github.com/Wynntils/Artemis/commit/a99cc6d2c520921670c74e24f0f00af490570286))
+
 ## [0.0.2-alpha.349](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.348...v0.0.2-alpha.349) (2023-03-16)
 
 
 ### New Features
 
 * Suppress update messages in dev env ([#1340](https://github.com/Wynntils/Artemis/issues/1340)) ([32d4c17](https://github.com/Wynntils/Artemis/commit/32d4c177f887f6c82e3873c082d3a52fb52bf938))
+
+
+### Miscellaneous Chores
+
+* **release:** v0.0.2-alpha.349 [skip ci] ([e5b0525](https://github.com/Wynntils/Artemis/commit/e5b0525f1020afa1e0bed5fd450c34976d459070))
 
 ## [0.0.2-alpha.348](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.347...v0.0.2-alpha.348) (2023-03-15)
 
@@ -45,16 +57,4 @@
 ### Miscellaneous Chores
 
 * **release:** v0.0.2-alpha.346 [skip ci] ([b6ab928](https://github.com/Wynntils/Artemis/commit/b6ab92890df6077a621c2de3b163ec8b51a5d084))
-
-## [0.0.2-alpha.345](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.344...v0.0.2-alpha.345) (2023-03-15)
-
-
-### Bug Fixes
-
-* Fix faulty dynamic logic causing some overlay configs to be not collected ([#1337](https://github.com/Wynntils/Artemis/issues/1337)) ([ef7ab3f](https://github.com/Wynntils/Artemis/commit/ef7ab3fee347fce180a4f2d3d620b662b24a8a62))
-
-
-### Miscellaneous Chores
-
-* **release:** v0.0.2-alpha.345 [skip ci] ([c19d50f](https://github.com/Wynntils/Artemis/commit/c19d50f0c304f0f1d58c801e6ff0884dd90330c8))
 
