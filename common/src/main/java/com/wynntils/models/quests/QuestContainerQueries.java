@@ -163,18 +163,18 @@ public class QuestContainerQueries {
             }
         }
         queryBuilder
-                .processContainer(c -> findQuestForTracking(c, questInfo))
+                .processContainer(c -> findQuestForTracking(c, questInfo, questInfo.isMiniQuest()))
                 .build()
                 .executeQuery();
     }
 
-    private void findQuestForTracking(ContainerContent container, QuestInfo questInfo) {
+    private void findQuestForTracking(ContainerContent container, QuestInfo questInfo, boolean isMiniQuest) {
         for (int row = 0; row < 6; row++) {
             for (int col = 0; col < 7; col++) {
                 int slot = row * 9 + col;
 
-                // Very first slot is chat history
-                if (slot == 0) continue;
+                // Very first slot is chat history, but only in the main quests page
+                if (!isMiniQuest && slot == 0) continue;
 
                 ItemStack itemStack = container.items().get(slot);
 
