@@ -94,7 +94,7 @@ public class TranslationFeature extends Feature {
                         List<Component> translatedComponents = unwrapped.stream()
                                 .map(s -> (Component) Component.literal(ComponentUtils.stripFormatting(s)))
                                 .toList();
-                        McUtils.mc().doRunTask(() -> {
+                        Managers.TickScheduler.scheduleNextTick(() -> {
                             NpcDialogEvent translatedEvent =
                                     new TranslatedNpcDialogEvent(translatedComponents, e.getType(), e.isProtected());
                             WynntilsMod.postEvent(translatedEvent);
