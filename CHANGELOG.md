@@ -1,9 +1,21 @@
+## [0.0.2-alpha.354](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.353...v0.0.2-alpha.354) (2023-03-16)
+
+
+### Bug Fixes
+
+* Fix not being able to track first mini-quest ([#1347](https://github.com/Wynntils/Artemis/issues/1347)) ([aae1c88](https://github.com/Wynntils/Artemis/commit/aae1c88c0f98b7312b926c8008b9f88e32d0809f))
+
 ## [0.0.2-alpha.353](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.352...v0.0.2-alpha.353) (2023-03-16)
 
 
 ### Bug Fixes
 
 * Fix item size in CharacterSelectorScreen ([#1349](https://github.com/Wynntils/Artemis/issues/1349)) ([81bc25c](https://github.com/Wynntils/Artemis/commit/81bc25cdff20333dc24bfbc04edcf7c85729d34c))
+
+
+### Miscellaneous Chores
+
+* **release:** v0.0.2-alpha.353 [skip ci] ([c65dde0](https://github.com/Wynntils/Artemis/commit/c65dde065ea6640fa919d733fdd591511b438467))
 
 ## [0.0.2-alpha.352](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.351...v0.0.2-alpha.352) (2023-03-16)
 
@@ -36,16 +48,4 @@
 
 * **release:** v0.0.2-alpha.350 [skip ci] ([f4e6a6f](https://github.com/Wynntils/Artemis/commit/f4e6a6f310705af06aa5f6ebde294f34af5ed85d))
 * Remove useless overlay size differentiation and BasicOverlay ([#1341](https://github.com/Wynntils/Artemis/issues/1341)) ([a99cc6d](https://github.com/Wynntils/Artemis/commit/a99cc6d2c520921670c74e24f0f00af490570286))
-
-## [0.0.2-alpha.349](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.348...v0.0.2-alpha.349) (2023-03-16)
-
-
-### New Features
-
-* Suppress update messages in dev env ([#1340](https://github.com/Wynntils/Artemis/issues/1340)) ([32d4c17](https://github.com/Wynntils/Artemis/commit/32d4c177f887f6c82e3873c082d3a52fb52bf938))
-
-
-### Miscellaneous Chores
-
-* **release:** v0.0.2-alpha.349 [skip ci] ([e5b0525](https://github.com/Wynntils/Artemis/commit/e5b0525f1020afa1e0bed5fd450c34976d459070))
 
