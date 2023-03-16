@@ -1,9 +1,21 @@
+## [0.0.2-alpha.352](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.351...v0.0.2-alpha.352) (2023-03-16)
+
+
+### Bug Fixes
+
+* Don't crash on broken translation cache ([#1344](https://github.com/Wynntils/Artemis/issues/1344)) ([a91762c](https://github.com/Wynntils/Artemis/commit/a91762c54075dbffb427011f2fe4986cf17853b3))
+
 ## [0.0.2-alpha.351](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.350...v0.0.2-alpha.351) (2023-03-16)
 
 
 ### Bug Fixes
 
 * HorseNameFunction crash if horse is not named ([#1350](https://github.com/Wynntils/Artemis/issues/1350)) ([ee79a37](https://github.com/Wynntils/Artemis/commit/ee79a37fda0ed00beacd830a7b7bd63cf8ca52bc))
+
+
+### Miscellaneous Chores
+
+* **release:** v0.0.2-alpha.351 [skip ci] ([46dda8d](https://github.com/Wynntils/Artemis/commit/46dda8dbd5be28f8249ca29d995f941287993b4c))
 
 ## [0.0.2-alpha.350](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.349...v0.0.2-alpha.350) (2023-03-16)
 
@@ -36,21 +48,4 @@
 ### Miscellaneous Chores
 
 * **release:** v0.0.2-alpha.348 [skip ci] ([bf410de](https://github.com/Wynntils/Artemis/commit/bf410de3f58de29ac1d89b53cba34b3ee12e094b))
-
-## [0.0.2-alpha.347](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.346...v0.0.2-alpha.347) (2023-03-15)
-
-
-### Bug Fixes
-
-* HiddenConfigs were not discovered by the mod ([#1338](https://github.com/Wynntils/Artemis/issues/1338)) ([24377b0](https://github.com/Wynntils/Artemis/commit/24377b0094296057b9e57d30bda3f00194f405bc))
-
-
-### New Features
-
-* Replace config with storage ([#1307](https://github.com/Wynntils/Artemis/issues/1307)) ([b7777ee](https://github.com/Wynntils/Artemis/commit/b7777ee1eac49025d64903fe924b7869481141c6))
-
-
-### Miscellaneous Chores
-
-* **release:** v0.0.2-alpha.347 [skip ci] ([8265567](https://github.com/Wynntils/Artemis/commit/8265567d2f59c012ef959c21fd429077a89a0d2d))
 
