@@ -48,6 +48,11 @@ public class UpdatesFeature extends Feature {
                     }
 
                     if (updateReminder.get()) {
+                        if (WynntilsMod.isDevelopmentEnvironment()) {
+                            WynntilsMod.info("Tried to show update reminder, but we are in development environment.");
+                            return;
+                        }
+
                         remindToUpdateIfExists(version);
                     }
 
