@@ -1,9 +1,21 @@
+## [0.0.2-alpha.355](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.354...v0.0.2-alpha.355) (2023-03-16)
+
+
+### New Features
+
+* Consistently display lootrun load/fail messages in commands and screens ([#1346](https://github.com/Wynntils/Artemis/issues/1346)) ([46ee396](https://github.com/Wynntils/Artemis/commit/46ee396353c67385df473ef2d4d2fb0fee82d209))
+
 ## [0.0.2-alpha.354](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.353...v0.0.2-alpha.354) (2023-03-16)
 
 
 ### Bug Fixes
 
 * Fix not being able to track first mini-quest ([#1347](https://github.com/Wynntils/Artemis/issues/1347)) ([aae1c88](https://github.com/Wynntils/Artemis/commit/aae1c88c0f98b7312b926c8008b9f88e32d0809f))
+
+
+### Miscellaneous Chores
+
+* **release:** v0.0.2-alpha.354 [skip ci] ([b7c30ba](https://github.com/Wynntils/Artemis/commit/b7c30ba15b613d970f7393c751057a81a657a7f7))
 
 ## [0.0.2-alpha.353](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.352...v0.0.2-alpha.353) (2023-03-16)
 
@@ -40,12 +52,4 @@
 ### Miscellaneous Chores
 
 * **release:** v0.0.2-alpha.351 [skip ci] ([46dda8d](https://github.com/Wynntils/Artemis/commit/46dda8dbd5be28f8249ca29d995f941287993b4c))
-
-## [0.0.2-alpha.350](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.349...v0.0.2-alpha.350) (2023-03-16)
-
-
-### Miscellaneous Chores
-
-* **release:** v0.0.2-alpha.350 [skip ci] ([f4e6a6f](https://github.com/Wynntils/Artemis/commit/f4e6a6f310705af06aa5f6ebde294f34af5ed85d))
-* Remove useless overlay size differentiation and BasicOverlay ([#1341](https://github.com/Wynntils/Artemis/issues/1341)) ([a99cc6d](https://github.com/Wynntils/Artemis/commit/a99cc6d2c520921670c74e24f0f00af490570286))
 
