@@ -1007,7 +1007,12 @@ public final class RenderUtils {
     }
 
     public static void renderItem(float translationX, float translationY, ItemStack itemStack, int x, int y) {
-        renderGuiItem(itemStack, x + (int) translationX, y + (int) translationY, 1.0f);
+        renderItem(translationX, translationY, itemStack, x, y, 1.0f);
+    }
+
+    public static void renderItem(
+            float translationX, float translationY, ItemStack itemStack, int x, int y, float itemScale) {
+        renderGuiItem(itemStack, x + (int) translationX, y + (int) translationY, itemScale);
     }
 
     public static void renderVignetteOverlay(PoseStack poseStack, CustomColor color, float alpha) {
