@@ -12,9 +12,9 @@ import com.wynntils.core.config.RegisterConfig;
 import com.wynntils.core.features.Feature;
 import com.wynntils.core.features.overlays.Overlay;
 import com.wynntils.core.features.overlays.OverlayPosition;
+import com.wynntils.core.features.overlays.OverlaySize;
 import com.wynntils.core.features.overlays.TextOverlay;
 import com.wynntils.core.features.overlays.annotations.OverlayInfo;
-import com.wynntils.core.features.overlays.sizes.GuiScaledOverlaySize;
 import com.wynntils.mc.event.RenderEvent;
 import com.wynntils.utils.MathUtils;
 import com.wynntils.utils.colors.CommonColors;
@@ -65,7 +65,7 @@ public class AuraTimerOverlayFeature extends Feature {
                             VerticalAlignment.Top,
                             HorizontalAlignment.Center,
                             OverlayPosition.AnchorSection.Middle),
-                    new GuiScaledOverlaySize(150, 30),
+                    new OverlaySize(150, 30),
                     HorizontalAlignment.Center,
                     VerticalAlignment.Middle);
         }
