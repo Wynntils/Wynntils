@@ -4,6 +4,7 @@
  */
 package com.wynntils.core.net.translation;
 
+import com.google.gson.JsonSyntaxException;
 import com.google.gson.reflect.TypeToken;
 import com.wynntils.core.WynntilsMod;
 import com.wynntils.utils.TaskUtils;
@@ -81,7 +82,7 @@ public abstract class CachingTranslationService implements TranslationService {
             translationCaches = WynntilsMod.GSON.fromJson(json, type);
         } catch (IOException e) {
             WynntilsMod.error("Error when trying to load translation cache.", e);
-        } catch (IllegalStateException e) {
+        } catch (IllegalStateException | JsonSyntaxException e) {
             WynntilsMod.error("Translation cache was corrupt when parsing it. Trying to delete it.", e);
 
             try {
