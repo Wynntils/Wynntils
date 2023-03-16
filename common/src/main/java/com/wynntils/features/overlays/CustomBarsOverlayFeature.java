@@ -15,10 +15,9 @@ import com.wynntils.core.config.RegisterConfig;
 import com.wynntils.core.features.Feature;
 import com.wynntils.core.features.overlays.Overlay;
 import com.wynntils.core.features.overlays.OverlayPosition;
+import com.wynntils.core.features.overlays.OverlaySize;
 import com.wynntils.core.features.overlays.RenderState;
 import com.wynntils.core.features.overlays.annotations.OverlayInfo;
-import com.wynntils.core.features.overlays.sizes.GuiScaledOverlaySize;
-import com.wynntils.core.features.overlays.sizes.OverlaySize;
 import com.wynntils.handlers.bossbar.TrackedBar;
 import com.wynntils.handlers.bossbar.event.BossBarAddedEvent;
 import com.wynntils.handlers.bossbar.type.BossBarProgress;
@@ -202,11 +201,11 @@ public class CustomBarsOverlayFeature extends Feature {
                             VerticalAlignment.Bottom,
                             HorizontalAlignment.Center,
                             OverlayPosition.AnchorSection.BottomMiddle),
-                    new GuiScaledOverlaySize(81, 21));
+                    new OverlaySize(81, 21));
         }
 
-        protected HealthBarOverlay(OverlayPosition overlayPosition, GuiScaledOverlaySize guiScaledOverlaySize) {
-            super(overlayPosition, guiScaledOverlaySize, CommonColors.RED);
+        protected HealthBarOverlay(OverlayPosition overlayPosition, OverlaySize OverlaySize) {
+            super(overlayPosition, OverlaySize, CommonColors.RED);
         }
 
         @Override
@@ -316,7 +315,7 @@ public class CustomBarsOverlayFeature extends Feature {
                             VerticalAlignment.Bottom,
                             HorizontalAlignment.Center,
                             OverlayPosition.AnchorSection.BottomMiddle),
-                    new GuiScaledOverlaySize(81, 21));
+                    new OverlaySize(81, 21));
         }
 
         @Override
@@ -352,11 +351,11 @@ public class CustomBarsOverlayFeature extends Feature {
                             VerticalAlignment.Bottom,
                             HorizontalAlignment.Center,
                             OverlayPosition.AnchorSection.BottomMiddle),
-                    new GuiScaledOverlaySize(81, 21));
+                    new OverlaySize(81, 21));
         }
 
-        protected ManaBarOverlay(OverlayPosition overlayPosition, GuiScaledOverlaySize guiScaledOverlaySize) {
-            super(overlayPosition, guiScaledOverlaySize, CommonColors.LIGHT_BLUE);
+        protected ManaBarOverlay(OverlayPosition overlayPosition, OverlaySize OverlaySize) {
+            super(overlayPosition, OverlaySize, CommonColors.LIGHT_BLUE);
         }
 
         @Override
@@ -466,7 +465,7 @@ public class CustomBarsOverlayFeature extends Feature {
                             VerticalAlignment.Bottom,
                             HorizontalAlignment.Center,
                             OverlayPosition.AnchorSection.BottomMiddle),
-                    new GuiScaledOverlaySize(81, 21));
+                    new OverlaySize(81, 21));
         }
 
         @Override
@@ -499,7 +498,7 @@ public class CustomBarsOverlayFeature extends Feature {
                             VerticalAlignment.Bottom,
                             HorizontalAlignment.Center,
                             OverlayPosition.AnchorSection.BottomMiddle),
-                    new GuiScaledOverlaySize(81, 21),
+                    new OverlaySize(81, 21),
                     CommonColors.WHITE);
         }
 
@@ -528,7 +527,7 @@ public class CustomBarsOverlayFeature extends Feature {
                             VerticalAlignment.Bottom,
                             HorizontalAlignment.Center,
                             OverlayPosition.AnchorSection.BottomMiddle),
-                    new GuiScaledOverlaySize(81, 21),
+                    new OverlaySize(81, 21),
                     CommonColors.YELLOW);
         }
 
@@ -557,7 +556,7 @@ public class CustomBarsOverlayFeature extends Feature {
                             VerticalAlignment.Bottom,
                             HorizontalAlignment.Center,
                             OverlayPosition.AnchorSection.BottomMiddle),
-                    new GuiScaledOverlaySize(81, 21),
+                    new OverlaySize(81, 21),
                     CommonColors.PURPLE);
         }
 

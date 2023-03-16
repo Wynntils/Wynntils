@@ -5,8 +5,6 @@
 package com.wynntils.core.features.overlays;
 
 import com.google.common.collect.ComparisonChain;
-import com.wynntils.core.features.overlays.sizes.GuiScaledOverlaySize;
-import com.wynntils.core.features.overlays.sizes.OverlaySize;
 import com.wynntils.utils.render.type.HorizontalAlignment;
 import com.wynntils.utils.render.type.VerticalAlignment;
 import net.minecraft.client.resources.language.I18n;
@@ -43,7 +41,7 @@ public abstract class DynamicOverlay extends Overlay {
                         VerticalAlignment.Middle,
                         HorizontalAlignment.Center,
                         OverlayPosition.AnchorSection.Middle),
-                new GuiScaledOverlaySize(100f, 20f),
+                new OverlaySize(100f, 20f),
                 HorizontalAlignment.Center,
                 VerticalAlignment.Middle);
         this.id = id;

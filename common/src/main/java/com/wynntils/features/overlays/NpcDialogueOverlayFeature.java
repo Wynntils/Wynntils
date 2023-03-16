@@ -17,8 +17,8 @@ import com.wynntils.core.config.RegisterConfig;
 import com.wynntils.core.features.Feature;
 import com.wynntils.core.features.overlays.Overlay;
 import com.wynntils.core.features.overlays.OverlayPosition;
+import com.wynntils.core.features.overlays.OverlaySize;
 import com.wynntils.core.features.overlays.annotations.OverlayInfo;
-import com.wynntils.core.features.overlays.sizes.GuiScaledOverlaySize;
 import com.wynntils.core.features.properties.RegisterKeyBind;
 import com.wynntils.core.keybinds.KeyBind;
 import com.wynntils.handlers.chat.event.NpcDialogEvent;
@@ -202,7 +202,7 @@ public class NpcDialogueOverlayFeature extends Feature {
                             VerticalAlignment.Top,
                             HorizontalAlignment.Center,
                             OverlayPosition.AnchorSection.BottomMiddle),
-                    new GuiScaledOverlaySize(400, 50),
+                    new OverlaySize(400, 50),
                     HorizontalAlignment.Center,
                     VerticalAlignment.Middle);
             updateTextRenderSettings();
