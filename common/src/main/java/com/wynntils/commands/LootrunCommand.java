@@ -30,7 +30,6 @@ import net.minecraft.commands.SharedSuggestionProvider;
 import net.minecraft.commands.arguments.ComponentArgument;
 import net.minecraft.commands.arguments.coordinates.BlockPosArgument;
 import net.minecraft.core.BlockPos;
-import net.minecraft.core.Position;
 import net.minecraft.network.chat.ClickEvent;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.HoverEvent;
@@ -104,26 +103,8 @@ public class LootrunCommand extends Command {
     private int loadLootrun(CommandContext<CommandSourceStack> context) {
         String fileName = StringArgumentType.getString(context, "lootrun");
 
-        boolean successful = Models.Lootrun.loadFile(fileName);
-        Position startingPoint = Models.Lootrun.getStartingPoint();
+        Models.Lootrun.tryLoadLootrun(fileName);
 
-        if (!successful || startingPoint == null) {
-            context.getSource()
-                    .sendFailure(Component.translatable("feature.wynntils.lootrunUtils.lootrunCouldNotBeLoaded")
-                            .withStyle(ChatFormatting.RED));
-            return 0;
-        }
-
-        BlockPos start = PosUtils.newBlockPos(startingPoint);
-        context.getSource()
-                .sendSuccess(
-                        Component.translatable(
-                                        "feature.wynntils.lootrunUtils.lootrunStart",
-                                        start.getX(),
-                                        start.getY(),
-                                        start.getZ())
-                                .withStyle(ChatFormatting.GREEN),
-                        false);
         return 1;
     }
 
