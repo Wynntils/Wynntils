@@ -1,9 +1,21 @@
+## [0.0.2-alpha.357](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.356...v0.0.2-alpha.357) (2023-03-16)
+
+
+### Code Refactoring
+
+* Feature instances are now accessed through FeatureManager ([#1345](https://github.com/Wynntils/Artemis/issues/1345)) ([439e646](https://github.com/Wynntils/Artemis/commit/439e6466c5ad3d42e4f9efb7e21d096953436353))
+
 ## [0.0.2-alpha.356](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.355...v0.0.2-alpha.356) (2023-03-16)
 
 
 ### Bug Fixes
 
 * Storage persist should not happen before init, or we wipe our storage ([#1342](https://github.com/Wynntils/Artemis/issues/1342)) ([698570f](https://github.com/Wynntils/Artemis/commit/698570f0a613609d7efd27c803d4c6a024de82e3))
+
+
+### Miscellaneous Chores
+
+* **release:** v0.0.2-alpha.356 [skip ci] ([75b0a20](https://github.com/Wynntils/Artemis/commit/75b0a203a14fd0526f4e3b171764ac38fff74071))
 
 ## [0.0.2-alpha.355](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.354...v0.0.2-alpha.355) (2023-03-16)
 
@@ -40,16 +52,4 @@
 ### Miscellaneous Chores
 
 * **release:** v0.0.2-alpha.353 [skip ci] ([c65dde0](https://github.com/Wynntils/Artemis/commit/c65dde065ea6640fa919d733fdd591511b438467))
-
-## [0.0.2-alpha.352](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.351...v0.0.2-alpha.352) (2023-03-16)
-
-
-### Bug Fixes
-
-* Don't crash on broken translation cache ([#1344](https://github.com/Wynntils/Artemis/issues/1344)) ([a91762c](https://github.com/Wynntils/Artemis/commit/a91762c54075dbffb427011f2fe4986cf17853b3))
-
-
-### Miscellaneous Chores
-
-* **release:** v0.0.2-alpha.352 [skip ci] ([3590a30](https://github.com/Wynntils/Artemis/commit/3590a3073fb566f6a88ede45074653459d205d0a))
 
