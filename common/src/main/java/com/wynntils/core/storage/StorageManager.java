@@ -40,6 +40,8 @@ public final class StorageManager extends Manager {
     private long lastPersisted;
     private boolean scheduledPersist;
 
+    private boolean storageInitialized = false;
+
     public StorageManager(JsonManager jsonManager, FeatureManager feature) {
         super(List.of(jsonManager, feature));
         userStorageFile = new File(STORAGE_DIR, McUtils.mc().getUser().getUuid() + FILE_SUFFIX);
@@ -50,6 +52,11 @@ public final class StorageManager extends Manager {
         Managers.Feature.getFeatures().forEach(this::registerStorageable);
 
         readFromJson();
+
+        storageInitialized = true;
+
+        // We might have missed a persist call in between feature init and storage manager init
+        persist();
     }
 
     public void registerStorageable(Storageable storageable) {
@@ -82,7 +89,8 @@ public final class StorageManager extends Manager {
     }
 
     void persist() {
-        if (scheduledPersist) return;
+        // We cannot persist before the storage is initialized, or we will overwrite our storage
+        if (!storageInitialized || scheduledPersist) return;
 
         long now = System.currentTimeMillis();
         long delay = Math.max((lastPersisted + SAVE_INTERVAL) - now, 0);
