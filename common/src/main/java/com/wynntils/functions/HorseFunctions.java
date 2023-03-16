@@ -99,8 +99,8 @@ public class HorseFunctions {
             Optional<HorseItem> horse = Models.Horse.getHorse();
             if (horse.isEmpty()) return "";
 
-            String name = horse.get().getName();
-            return (name.isEmpty()) ? "" : name;
+            Optional<String> name = horse.get().getName();
+            return name.isPresent() ? name.get() : "";
         }
 
         @Override

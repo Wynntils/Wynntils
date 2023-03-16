@@ -5,6 +5,7 @@
 package com.wynntils.models.items.items.game;
 
 import com.wynntils.utils.type.CappedValue;
+import java.util.Optional;
 
 public class HorseItem extends GameItem {
     private final int tier;
@@ -31,8 +32,9 @@ public class HorseItem extends GameItem {
         return xp;
     }
 
-    public String getName() {
-        return name;
+    public Optional<String> getName() {
+        // Name is only set if the horse is named
+        return Optional.ofNullable(name);
     }
 
     @Override
