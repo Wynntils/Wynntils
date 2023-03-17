@@ -1,9 +1,21 @@
+## [0.0.2-alpha.359](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.358...v0.0.2-alpha.359) (2023-03-17)
+
+
+### Bug Fixes
+
+* Translation must send TranslatedNpcDialogEvent on render thread ([#1353](https://github.com/Wynntils/Artemis/issues/1353)) ([da9f998](https://github.com/Wynntils/Artemis/commit/da9f998742eb7248d9b83cd079a85fa4b8d1ceaa))
+
 ## [0.0.2-alpha.358](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.357...v0.0.2-alpha.358) (2023-03-17)
 
 
 ### Bug Fixes
 
 * Do not set item colors to black on non-Wynncraft worlds ([#1352](https://github.com/Wynntils/Artemis/issues/1352)) ([4d11adf](https://github.com/Wynntils/Artemis/commit/4d11adf05602f81afa905c97bbf8955e1fe132d7))
+
+
+### Miscellaneous Chores
+
+* **release:** v0.0.2-alpha.358 [skip ci] ([cbb0757](https://github.com/Wynntils/Artemis/commit/cbb0757aa25e486b4be8bc666f3533c3d9c57c5b))
 
 ## [0.0.2-alpha.357](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.356...v0.0.2-alpha.357) (2023-03-16)
 
@@ -40,16 +52,4 @@
 ### Miscellaneous Chores
 
 * **release:** v0.0.2-alpha.355 [skip ci] ([c12acd0](https://github.com/Wynntils/Artemis/commit/c12acd0575f14a96d7fdd41b2d8beea78e55e007))
-
-## [0.0.2-alpha.354](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.353...v0.0.2-alpha.354) (2023-03-16)
-
-
-### Bug Fixes
-
-* Fix not being able to track first mini-quest ([#1347](https://github.com/Wynntils/Artemis/issues/1347)) ([aae1c88](https://github.com/Wynntils/Artemis/commit/aae1c88c0f98b7312b926c8008b9f88e32d0809f))
-
-
-### Miscellaneous Chores
-
-* **release:** v0.0.2-alpha.354 [skip ci] ([b7c30ba](https://github.com/Wynntils/Artemis/commit/b7c30ba15b613d970f7393c751057a81a657a7f7))
 
