@@ -1,9 +1,21 @@
+## [0.0.2-alpha.358](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.357...v0.0.2-alpha.358) (2023-03-17)
+
+
+### Bug Fixes
+
+* Do not set item colors to black on non-Wynncraft worlds ([#1352](https://github.com/Wynntils/Artemis/issues/1352)) ([4d11adf](https://github.com/Wynntils/Artemis/commit/4d11adf05602f81afa905c97bbf8955e1fe132d7))
+
 ## [0.0.2-alpha.357](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.356...v0.0.2-alpha.357) (2023-03-16)
 
 
 ### Code Refactoring
 
 * Feature instances are now accessed through FeatureManager ([#1345](https://github.com/Wynntils/Artemis/issues/1345)) ([439e646](https://github.com/Wynntils/Artemis/commit/439e6466c5ad3d42e4f9efb7e21d096953436353))
+
+
+### Miscellaneous Chores
+
+* **release:** v0.0.2-alpha.357 [skip ci] ([f501335](https://github.com/Wynntils/Artemis/commit/f501335b9ab3265396e2f5f2c6e8b1b5b139ffc6))
 
 ## [0.0.2-alpha.356](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.355...v0.0.2-alpha.356) (2023-03-16)
 
@@ -40,16 +52,4 @@
 ### Miscellaneous Chores
 
 * **release:** v0.0.2-alpha.354 [skip ci] ([b7c30ba](https://github.com/Wynntils/Artemis/commit/b7c30ba15b613d970f7393c751057a81a657a7f7))
-
-## [0.0.2-alpha.353](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.352...v0.0.2-alpha.353) (2023-03-16)
-
-
-### Bug Fixes
-
-* Fix item size in CharacterSelectorScreen ([#1349](https://github.com/Wynntils/Artemis/issues/1349)) ([81bc25c](https://github.com/Wynntils/Artemis/commit/81bc25cdff20333dc24bfbc04edcf7c85729d34c))
-
-
-### Miscellaneous Chores
-
-* **release:** v0.0.2-alpha.353 [skip ci] ([c65dde0](https://github.com/Wynntils/Artemis/commit/c65dde065ea6640fa919d733fdd591511b438467))
 
