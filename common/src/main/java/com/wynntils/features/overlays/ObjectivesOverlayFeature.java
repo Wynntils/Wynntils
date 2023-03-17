@@ -28,6 +28,7 @@ import com.wynntils.utils.render.Texture;
 import com.wynntils.utils.render.buffered.BufferedFontRenderer;
 import com.wynntils.utils.render.buffered.BufferedRenderUtils;
 import com.wynntils.utils.render.type.HorizontalAlignment;
+import com.wynntils.utils.render.type.ObjectivesTextures;
 import com.wynntils.utils.render.type.TextShadow;
 import com.wynntils.utils.render.type.VerticalAlignment;
 import java.util.List;
@@ -140,9 +141,9 @@ public class ObjectivesOverlayFeature extends Feature {
                         this.getRenderX() + this.getWidth(),
                         renderY + SPACE_BETWEEN + actualBarHeight,
                         0,
-                        objectivesTexture.get().yOffset,
+                        objectivesTexture.get().getTextureYOffset(),
                         barWidth,
-                        objectivesTexture.get().yOffset + 10,
+                        objectivesTexture.get().getTextureYOffset() + 10,
                         guildObjective.getProgress());
             }
         }
@@ -233,9 +234,9 @@ public class ObjectivesOverlayFeature extends Feature {
                             this.getRenderX() + this.getWidth(),
                             renderY + SPACE_BETWEEN + actualBarHeight,
                             0,
-                            objectivesTexture.get().yOffset,
+                            objectivesTexture.get().getTextureYOffset(),
                             barWidth,
-                            objectivesTexture.get().yOffset + 10,
+                            objectivesTexture.get().getTextureYOffset() + 10,
                             objective.getProgress());
                 }
 
@@ -254,7 +255,7 @@ public class ObjectivesOverlayFeature extends Feature {
         @RegisterConfig("feature.wynntils.objectivesOverlay.overlay.objectiveOverlayBase.enableProgressBar")
         public final Config<Boolean> enableProgressBar = new Config<>(true);
 
-        @RegisterConfig("feature.wynntils.objectivesOverlay.overlay.objectiveOverlayBase.objectivesTexture")
+        @RegisterConfig("overlay.wynntils.objectivesTexture")
         public final Config<ObjectivesTextures> objectivesTexture = new Config<>(ObjectivesTextures.a);
 
         @RegisterConfig("feature.wynntils.objectivesOverlay.overlay.objectiveOverlayBase.textShadow")
@@ -266,25 +267,6 @@ public class ObjectivesOverlayFeature extends Feature {
                 HorizontalAlignment horizontalAlignmentOverride,
                 VerticalAlignment verticalAlignmentOverride) {
             super(position, size, horizontalAlignmentOverride, verticalAlignmentOverride);
-        }
-    }
-
-    public enum ObjectivesTextures {
-        Wynn(0),
-        Liquid(40),
-        Emerald(50),
-        a(10),
-        b(20),
-        c(30);
-
-        private final int yOffset;
-
-        ObjectivesTextures(int yOffset) {
-            this.yOffset = yOffset;
-        }
-
-        public int getTextureYOffset() {
-            return yOffset;
         }
     }
 }

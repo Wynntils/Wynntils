@@ -8,6 +8,8 @@ import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.components.Manager;
 import com.wynntils.core.functions.arguments.FunctionArguments;
 import com.wynntils.core.functions.arguments.parser.ArgumentParser;
+import com.wynntils.core.functions.expressions.Expression;
+import com.wynntils.core.functions.expressions.parser.ExpressionParser;
 import com.wynntils.core.functions.templates.parser.TemplateParser;
 import com.wynntils.core.mod.type.CrashType;
 import com.wynntils.functions.CharacterFunctions;
@@ -172,6 +174,28 @@ public final class FunctionManager extends Manager {
         Optional<Object> value = getFunctionValueSafely(function, arguments);
         return value.map(ErrorOr::of)
                 .orElseGet(() -> ErrorOr.error("Failed to get value of function: " + function.getName()));
+    }
+
+    public <T> ErrorOr<T> tryGetRawValueOfType(String valueTemplate, Class<T> clazz) {
+        ErrorOr<Expression> valueExpression = ExpressionParser.tryParse(valueTemplate);
+
+        if (valueExpression.hasError()) {
+            return ErrorOr.error(valueExpression.getError());
+        }
+
+        Expression expression = valueExpression.getValue();
+
+        ErrorOr<Object> calculatedExpression = expression.calculate();
+
+        if (calculatedExpression.hasError()) {
+            return ErrorOr.error(calculatedExpression.getError());
+        }
+
+        try {
+            return ErrorOr.of(clazz.cast(calculatedExpression.getValue()));
+        } catch (Exception e) {
+            return ErrorOr.error("The provided expression does not return a " + clazz.getSimpleName());
+        }
     }
 
     // endregion
