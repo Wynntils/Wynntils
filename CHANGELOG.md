@@ -1,9 +1,21 @@
+## [0.0.2-alpha.360](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.359...v0.0.2-alpha.360) (2023-03-19)
+
+
+### Bug Fixes
+
+* Fix chat items merging hover event ([#1356](https://github.com/Wynntils/Artemis/issues/1356)) ([de9d824](https://github.com/Wynntils/Artemis/commit/de9d824c566987e05324d710ad25a232b2560738))
+
 ## [0.0.2-alpha.359](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.358...v0.0.2-alpha.359) (2023-03-17)
 
 
 ### Bug Fixes
 
 * Translation must send TranslatedNpcDialogEvent on render thread ([#1353](https://github.com/Wynntils/Artemis/issues/1353)) ([da9f998](https://github.com/Wynntils/Artemis/commit/da9f998742eb7248d9b83cd079a85fa4b8d1ceaa))
+
+
+### Miscellaneous Chores
+
+* **release:** v0.0.2-alpha.359 [skip ci] ([d9fcafd](https://github.com/Wynntils/Artemis/commit/d9fcafdf4c888bcef608a941d896f4d58551a992))
 
 ## [0.0.2-alpha.358](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.357...v0.0.2-alpha.358) (2023-03-17)
 
@@ -40,16 +52,4 @@
 ### Miscellaneous Chores
 
 * **release:** v0.0.2-alpha.356 [skip ci] ([75b0a20](https://github.com/Wynntils/Artemis/commit/75b0a203a14fd0526f4e3b171764ac38fff74071))
-
-## [0.0.2-alpha.355](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.354...v0.0.2-alpha.355) (2023-03-16)
-
-
-### New Features
-
-* Consistently display lootrun load/fail messages in commands and screens ([#1346](https://github.com/Wynntils/Artemis/issues/1346)) ([46ee396](https://github.com/Wynntils/Artemis/commit/46ee396353c67385df473ef2d4d2fb0fee82d209))
-
-
-### Miscellaneous Chores
-
-* **release:** v0.0.2-alpha.355 [skip ci] ([c12acd0](https://github.com/Wynntils/Artemis/commit/c12acd0575f14a96d7fdd41b2d8beea78e55e007))
 
