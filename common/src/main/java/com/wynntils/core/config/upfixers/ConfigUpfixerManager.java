@@ -11,6 +11,7 @@ import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.components.Manager;
 import com.wynntils.core.config.upfixers.impl.CustomCommandKeybindSlashStartUpfixer;
 import com.wynntils.core.config.upfixers.impl.CustomPoiVisbilityUpfixer;
+import com.wynntils.core.config.upfixers.impl.GameBarOverlayMoveUpfixer;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -25,6 +26,7 @@ public class ConfigUpfixerManager extends Manager {
         // Register upfixers here, in order of run priority
         registerUpfixer(new CustomPoiVisbilityUpfixer());
         registerUpfixer(new CustomCommandKeybindSlashStartUpfixer());
+        registerUpfixer(new GameBarOverlayMoveUpfixer());
     }
 
     private void registerUpfixer(ConfigUpfixer upfixer) {
