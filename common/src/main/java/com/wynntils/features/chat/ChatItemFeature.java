@@ -95,6 +95,8 @@ public class ChatItemFeature extends Feature {
                 continue;
             }
 
+            boolean lastComponentIsItem = false;
+
             do {
                 String text = ComponentUtils.getCoded(comp);
                 Style style = comp.getStyle();
@@ -102,12 +104,19 @@ public class ChatItemFeature extends Feature {
                 GearItem item = Models.Gear.fromEncodedString(m.group());
                 if (item == null) { // couldn't decode, skip
                     comp = comp.copy();
+                    lastComponentIsItem = false;
                     continue;
                 }
 
                 MutableComponent preText = Component.literal(text.substring(0, m.start()));
                 preText.withStyle(style);
                 temp.append(preText);
+
+                // If the component is a chat item too, add a space
+                // to prevent the hover event from "merging" with this one
+                if (lastComponentIsItem) {
+                    temp.append(" ");
+                }
 
                 // create hover-able text component for the item
                 Component itemComponent = createItemComponent(item);
@@ -118,6 +127,7 @@ public class ChatItemFeature extends Feature {
                         .withStyle(style);
                 m = Models.Gear.gearChatEncodingMatcher(
                         ComponentUtils.getCoded(comp)); // recreate matcher for new substring
+                lastComponentIsItem = true;
             } while (m.find()); // search for multiple items in the same message
 
             temp.append(comp); // leftover text after item(s)
