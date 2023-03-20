@@ -16,7 +16,6 @@ import com.wynntils.core.features.Feature;
 import com.wynntils.core.features.properties.RegisterKeyBind;
 import com.wynntils.core.json.TypeOverride;
 import com.wynntils.core.keybinds.KeyBind;
-import com.wynntils.features.overlays.CustomBarsOverlayFeature;
 import com.wynntils.mc.event.PlayerInteractEvent;
 import com.wynntils.mc.event.ScreenOpenedEvent;
 import com.wynntils.models.map.PoiLocation;
@@ -28,6 +27,7 @@ import com.wynntils.utils.colors.CommonColors;
 import com.wynntils.utils.colors.CustomColor;
 import com.wynntils.utils.mc.McUtils;
 import com.wynntils.utils.render.Texture;
+import com.wynntils.utils.render.type.HealthTexture;
 import com.wynntils.utils.render.type.PointerType;
 import com.wynntils.utils.render.type.TextShadow;
 import java.lang.reflect.Type;
@@ -109,8 +109,7 @@ public class MapFeature extends Feature {
     public final Config<Boolean> renderRemotePartyPlayers = new Config<>(true);
 
     @RegisterConfig
-    public final Config<CustomBarsOverlayFeature.HealthTexture> remotePlayerHealthTexture =
-            new Config<>(CustomBarsOverlayFeature.HealthTexture.a);
+    public final Config<HealthTexture> remotePlayerHealthTexture = new Config<>(HealthTexture.a);
 
     @RegisterConfig
     public final Config<TextShadow> remotePlayerNameShadow = new Config<>(TextShadow.OUTLINE);

@@ -69,6 +69,7 @@ import com.wynntils.features.overlays.ArrowShieldTrackingFeature;
 import com.wynntils.features.overlays.AuraTimerOverlayFeature;
 import com.wynntils.features.overlays.CombatExperienceOverlayFeature;
 import com.wynntils.features.overlays.CustomBarsOverlayFeature;
+import com.wynntils.features.overlays.GameBarsOverlayFeature;
 import com.wynntils.features.overlays.GameNotificationOverlayFeature;
 import com.wynntils.features.overlays.GuildAttackTimerOverlayFeature;
 import com.wynntils.features.overlays.InfoBoxFeature;
@@ -174,6 +175,7 @@ public final class FeatureManager extends Manager {
         registerFeature(new CustomCommandKeybindsFeature());
         registerFeature(new CustomNametagRendererFeature());
         registerFeature(new DialogueOptionOverrideFeature());
+        registerFeature(new GameBarsOverlayFeature());
         registerFeature(new DurabilityArcFeature());
         registerFeature(new EmeraldPouchHotkeyFeature());
         registerFeature(new ExtendedItemCountFeature());

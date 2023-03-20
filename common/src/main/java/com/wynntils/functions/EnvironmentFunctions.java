@@ -20,6 +20,12 @@ public class EnvironmentFunctions {
         public CappedValue getValue(FunctionArguments arguments) {
             return new CappedValue(SystemUtils.getMemUsed(), SystemUtils.getMemMax());
         }
+
+        @Override
+        public List<String> getAliases() {
+            // FIXME: These aliases are a bit backwards, let's clean it up in the future
+            return List.of("capped_memory");
+        }
     }
 
     public static class ClockFunction extends Function<String> {
