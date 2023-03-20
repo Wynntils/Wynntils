@@ -1,302 +1,111 @@
 /*
- * Copyright © Wynntils 2022.
+ * Copyright © Wynntils 2023.
  * This file is released under AGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.features.overlays;
 
-import com.mojang.blaze3d.platform.Window;
 import com.mojang.blaze3d.vertex.PoseStack;
-import com.wynntils.core.components.Models;
+import com.wynntils.core.components.Managers;
 import com.wynntils.core.config.Category;
 import com.wynntils.core.config.Config;
 import com.wynntils.core.config.ConfigCategory;
-import com.wynntils.core.config.ConfigHolder;
 import com.wynntils.core.config.RegisterConfig;
 import com.wynntils.core.features.Feature;
-import com.wynntils.core.features.overlays.Overlay;
-import com.wynntils.core.features.overlays.OverlayPosition;
+import com.wynntils.core.features.overlays.BarOverlay;
 import com.wynntils.core.features.overlays.OverlaySize;
 import com.wynntils.core.features.overlays.RenderState;
-import com.wynntils.core.features.overlays.annotations.OverlayInfo;
-import com.wynntils.handlers.bossbar.TrackedBar;
-import com.wynntils.handlers.bossbar.event.BossBarAddedEvent;
-import com.wynntils.handlers.bossbar.type.BossBarProgress;
+import com.wynntils.core.features.overlays.annotations.OverlayGroup;
 import com.wynntils.mc.event.RenderEvent;
-import com.wynntils.models.abilities.bossbars.AwakenedBar;
-import com.wynntils.models.abilities.bossbars.BloodPoolBar;
-import com.wynntils.models.abilities.bossbars.CorruptedBar;
-import com.wynntils.models.abilities.bossbars.FocusBar;
-import com.wynntils.models.abilities.bossbars.ManaBankBar;
 import com.wynntils.utils.colors.CommonColors;
 import com.wynntils.utils.colors.CustomColor;
 import com.wynntils.utils.render.Texture;
-import com.wynntils.utils.render.buffered.BufferedFontRenderer;
 import com.wynntils.utils.render.buffered.BufferedRenderUtils;
-import com.wynntils.utils.render.type.HorizontalAlignment;
-import com.wynntils.utils.render.type.TextShadow;
-import com.wynntils.utils.render.type.VerticalAlignment;
-import com.wynntils.utils.type.CappedValue;
-import java.util.Map;
+import com.wynntils.utils.render.type.HealthTexture;
+import com.wynntils.utils.render.type.ManaTexture;
+import com.wynntils.utils.render.type.ObjectivesTextures;
+import com.wynntils.utils.type.ErrorOr;
+import java.util.ArrayList;
+import java.util.List;
 import net.minecraft.client.renderer.MultiBufferSource;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
 
 @ConfigCategory(Category.OVERLAYS)
 public class CustomBarsOverlayFeature extends Feature {
-    @SubscribeEvent
-    public void onBossBarAdd(BossBarAddedEvent event) {
-        BaseBarOverlay overlay = getOverlayFromTrackedBar(event.getTrackedBar());
-        if (overlay == null) return;
+    @OverlayGroup(instances = 0, renderType = RenderEvent.ElementType.GUI, renderAt = RenderState.Pre)
+    private final List<UniveralTexturedCustomBarOverlay> customUniversalBarOverlays = new ArrayList<>();
 
-        if (overlay.shouldBeEnabled() && !overlay.shouldDisplayOriginal.get()) {
-            event.setCanceled(true);
-        }
-    }
+    @OverlayGroup(instances = 0, renderType = RenderEvent.ElementType.GUI, renderAt = RenderState.Pre)
+    private final List<HealthTexturedCustomBarOverlay> customHealthBarOverlays = new ArrayList<>();
 
-    private BaseBarOverlay getOverlayFromTrackedBar(TrackedBar trackedBar) {
-        return barToOverlayMap.get(trackedBar.getClass());
-    }
+    @OverlayGroup(instances = 0, renderType = RenderEvent.ElementType.GUI, renderAt = RenderState.Pre)
+    private final List<ManaTexturedCustomBarOverlay> customManaBarOverlays = new ArrayList<>();
 
-    @OverlayInfo(renderType = RenderEvent.ElementType.HealthBar, renderAt = RenderState.Replace)
-    private final HealthBarOverlay healthBarOverlay = new HealthBarOverlay();
+    @OverlayGroup(instances = 0, renderType = RenderEvent.ElementType.GUI, renderAt = RenderState.Pre)
+    private final List<ExperienceTexturedCustomBarOverlay> customExperienceBarOverlays = new ArrayList<>();
 
-    @OverlayInfo(renderType = RenderEvent.ElementType.GUI)
-    private final BloodPoolBarOverlay bloodPoolBarOverlay = new BloodPoolBarOverlay();
+    @OverlayGroup(instances = 0, renderType = RenderEvent.ElementType.GUI, renderAt = RenderState.Pre)
+    private final List<BubbleTexturedCustomBarOverlay> customBubbleBarOverlays = new ArrayList<>();
 
-    @OverlayInfo(renderType = RenderEvent.ElementType.FoodBar, renderAt = RenderState.Replace)
-    private final ManaBarOverlay manaBarOverlay = new ManaBarOverlay();
+    protected static class UniveralTexturedCustomBarOverlay extends CustomBarOverlayBase {
+        @RegisterConfig
+        public final Config<CustomColor> color = new Config<>(CommonColors.WHITE);
 
-    @OverlayInfo(renderType = RenderEvent.ElementType.GUI)
-    private final ManaBankBarOverlay manaBankBarOverlay = new ManaBankBarOverlay();
-
-    @OverlayInfo(renderType = RenderEvent.ElementType.GUI)
-    private final FocusBarOverlay focusBarOverlay = new FocusBarOverlay();
-
-    @OverlayInfo(renderType = RenderEvent.ElementType.GUI)
-    private final AwakenedProgressBarOverlay awakenedProgressBarOverlay = new AwakenedProgressBarOverlay();
-
-    @OverlayInfo(renderType = RenderEvent.ElementType.GUI)
-    private final CorruptedBarOverlay corruptedBarOverlay = new CorruptedBarOverlay();
-
-    private final Map<Class<? extends TrackedBar>, BaseBarOverlay> barToOverlayMap = Map.of(
-            BloodPoolBar.class,
-            bloodPoolBarOverlay,
-            ManaBankBar.class,
-            manaBankBarOverlay,
-            AwakenedBar.class,
-            awakenedProgressBarOverlay,
-            FocusBar.class,
-            focusBarOverlay,
-            CorruptedBar.class,
-            corruptedBarOverlay);
-
-    public abstract static class BaseBarOverlay extends Overlay {
-        @RegisterConfig("feature.wynntils.customBarsOverlay.overlay.baseBar.textShadow")
-        public final Config<TextShadow> textShadow = new Config<>(TextShadow.OUTLINE);
-
-        @RegisterConfig("feature.wynntils.customBarsOverlay.overlay.baseBar.flip")
-        public final Config<Boolean> flip = new Config<>(false);
-
-        @RegisterConfig("feature.wynntils.customBarsOverlay.overlay.baseBar.shouldDisplayOriginal")
-        public final Config<Boolean> shouldDisplayOriginal = new Config<>(false);
-
-        // hacky override of custom color
-        @RegisterConfig("feature.wynntils.customBarsOverlay.overlay.baseBar.textColor")
-        public final Config<CustomColor> textColor = new Config<>(CommonColors.WHITE);
-
-        protected BaseBarOverlay(OverlayPosition position, OverlaySize size, CustomColor textColor) {
-            super(position, size);
-            this.textColor.updateConfig(textColor);
+        public UniveralTexturedCustomBarOverlay(int id) {
+            super(id, new OverlaySize(81, 21));
         }
 
-        protected float textureHeight() {
+        @Override
+        public CustomColor getRenderColor() {
+            return color.get();
+        }
+
+        @Override
+        public Texture getTexture() {
+            return Texture.UNIVERSAL_BAR;
+        }
+
+        @Override
+        protected float getTextureHeight() {
             return Texture.UNIVERSAL_BAR.height() / 2f;
         }
 
-        protected abstract BossBarProgress progress();
-
-        protected abstract String icon();
-
-        protected abstract boolean isActive();
-
         @Override
-        public void render(
-                PoseStack poseStack, MultiBufferSource.BufferSource bufferSource, float partialTicks, Window window) {
-            if (!Models.WorldState.onWorld() || !isActive()) return;
-
-            float barHeight = textureHeight() * (this.getWidth() / 81);
-            float renderY = getModifiedRenderY(barHeight + 10);
-
-            BossBarProgress barProgress = progress();
-
-            String text = String.format(
-                    "%s %s %s",
-                    barProgress.value().current(), icon(), barProgress.value().max());
-            renderText(poseStack, bufferSource, renderY, text);
-
-            float progress = (flip.get() ? -1 : 1) * barProgress.progress();
-            renderBar(poseStack, bufferSource, renderY + 10, barHeight, progress);
-        }
-
-        protected float getModifiedRenderY(float renderedHeight) {
-            return switch (this.getRenderVerticalAlignment()) {
-                case Top -> this.getRenderY();
-                case Middle -> this.getRenderY() + (this.getHeight() - renderedHeight) / 2;
-                case Bottom -> this.getRenderY() + this.getHeight() - renderedHeight;
-            };
-        }
-
-        @Override
-        protected void onConfigUpdate(ConfigHolder configHolder) {}
-
-        protected void renderBar(
-                PoseStack poseStack,
-                MultiBufferSource.BufferSource bufferSource,
-                float renderY,
-                float renderHeight,
-                float progress) {
-            Texture universalBarTexture = Texture.UNIVERSAL_BAR;
-
-            BufferedRenderUtils.drawColoredProgressBar(
-                    poseStack,
-                    bufferSource,
-                    universalBarTexture,
-                    this.textColor.get(),
-                    this.getRenderX(),
-                    renderY,
-                    this.getRenderX() + this.getWidth(),
-                    renderY + renderHeight,
-                    0,
-                    0,
-                    universalBarTexture.width(),
-                    universalBarTexture.height(),
-                    progress);
-        }
-
-        protected void renderText(
-                PoseStack poseStack, MultiBufferSource.BufferSource bufferSource, float renderY, String text) {
-            BufferedFontRenderer.getInstance()
-                    .renderAlignedTextInBox(
-                            poseStack,
-                            bufferSource,
-                            text,
-                            this.getRenderX(),
-                            this.getRenderX() + this.getWidth(),
-                            renderY,
-                            0,
-                            this.textColor.get(),
-                            this.getRenderHorizontalAlignment(),
-                            this.textShadow.get());
+        protected BarOverlayTemplatePair getActualPreviewTemplate() {
+            return new BarOverlayTemplatePair("3/10", "capped(3; 10)");
         }
     }
 
-    protected static class HealthBarOverlay extends BaseBarOverlay {
-        @RegisterConfig("feature.wynntils.customBarsOverlay.overlay.healthBar.healthTexture")
+    protected static class HealthTexturedCustomBarOverlay extends CustomBarOverlayBase {
+        @RegisterConfig("overlay.healthBar.healthTexture")
         public final Config<HealthTexture> healthTexture = new Config<>(HealthTexture.a);
 
-        protected HealthBarOverlay() {
-            this(
-                    new OverlayPosition(
-                            -30,
-                            -52,
-                            VerticalAlignment.Bottom,
-                            HorizontalAlignment.Center,
-                            OverlayPosition.AnchorSection.BottomMiddle),
-                    new OverlaySize(81, 21));
-        }
-
-        protected HealthBarOverlay(OverlayPosition overlayPosition, OverlaySize OverlaySize) {
-            super(overlayPosition, OverlaySize, CommonColors.RED);
+        public HealthTexturedCustomBarOverlay(int id) {
+            super(id, new OverlaySize(81, 21));
         }
 
         @Override
-        public float textureHeight() {
+        public Texture getTexture() {
+            return Texture.HEALTH_BAR;
+        }
+
+        @Override
+        public float getTextureHeight() {
             return healthTexture.get().getHeight();
         }
 
         @Override
-        public String icon() {
-            return "❤";
-        }
-
-        @Override
-        public boolean isActive() {
-            return true;
-        }
-
-        @Override
-        protected void onConfigUpdate(ConfigHolder configHolder) {
-            Models.CharacterStats.hideHealth(this.shouldBeEnabled() && !this.shouldDisplayOriginal.get());
-        }
-
-        @Override
-        public BossBarProgress progress() {
-            CappedValue health = Models.CharacterStats.getHealth();
-            return new BossBarProgress(health, (float) health.getProgress());
-        }
-
-        @Override
         protected void renderBar(
                 PoseStack poseStack,
                 MultiBufferSource.BufferSource bufferSource,
                 float renderY,
                 float renderHeight,
                 float progress) {
-            if (progress > 1) { // overflowing health
-                float x1 = this.getRenderX();
-                float x2 = this.getRenderX() + this.getWidth();
-                int textureY1 = healthTexture.get().getTextureY1();
-                int textureY2 = healthTexture.get().getTextureY2();
-
-                int half = (textureY1 + textureY2) / 2 + (textureY2 - textureY1) % 2;
-                BufferedRenderUtils.drawProgressBarBackground(
-                        poseStack,
-                        bufferSource,
-                        Texture.HEALTH_BAR,
-                        x1,
-                        renderY,
-                        x2,
-                        renderY + renderHeight,
-                        0,
-                        textureY1,
-                        81,
-                        half);
-                BufferedRenderUtils.drawProgressBarForeground(
-                        poseStack,
-                        bufferSource,
-                        Texture.HEALTH_BAR,
-                        x1,
-                        renderY,
-                        x2,
-                        renderY + renderHeight,
-                        0,
-                        half,
-                        81,
-                        textureY2 + (textureY2 - textureY1) % 2,
-                        1f / progress);
-                BufferedRenderUtils.drawProgressBarForeground(
-                        poseStack,
-                        bufferSource,
-                        Texture.HEALTH_BAR_OVERFLOW,
-                        x1,
-                        renderY,
-                        x2,
-                        renderY + renderHeight,
-                        0,
-                        half,
-                        81,
-                        textureY2 + (textureY2 - textureY1) % 2,
-                        1f / progress - 1);
-
-                return;
-            }
-
             BufferedRenderUtils.drawProgressBar(
                     poseStack,
                     bufferSource,
                     Texture.HEALTH_BAR,
-                    this.getRenderX(),
+                    getRenderX(),
                     renderY,
-                    this.getRenderX() + this.getWidth(),
+                    getRenderX() + getWidth(),
                     renderY + renderHeight,
                     0,
                     healthTexture.get().getTextureY1(),
@@ -304,84 +113,29 @@ public class CustomBarsOverlayFeature extends Feature {
                     healthTexture.get().getTextureY2(),
                     progress);
         }
-    }
-
-    public static class BloodPoolBarOverlay extends HealthBarOverlay {
-        protected BloodPoolBarOverlay() {
-            super(
-                    new OverlayPosition(
-                            -30,
-                            -150,
-                            VerticalAlignment.Bottom,
-                            HorizontalAlignment.Center,
-                            OverlayPosition.AnchorSection.BottomMiddle),
-                    new OverlaySize(81, 21));
-        }
 
         @Override
-        public String icon() {
-            return "⚕";
-        }
-
-        @Override
-        public BossBarProgress progress() {
-            return Models.BossBar.bloodPoolBar.getBarProgress();
-        }
-
-        @Override
-        public boolean isActive() {
-            return Models.BossBar.bloodPoolBar.isActive();
-        }
-
-        @Override
-        protected void onConfigUpdate(ConfigHolder configHolder) {
-            // Do not call super
+        protected BarOverlayTemplatePair getActualPreviewTemplate() {
+            return new BarOverlayTemplatePair("432/1500", "capped(432; 1500)");
         }
     }
 
-    protected static class ManaBarOverlay extends BaseBarOverlay {
-        @RegisterConfig("feature.wynntils.customBarsOverlay.overlay.manaBar.manaTexture")
+    protected static class ManaTexturedCustomBarOverlay extends CustomBarOverlayBase {
+        @RegisterConfig("overlay.wynntils.manaBar.manaTexture")
         public final Config<ManaTexture> manaTexture = new Config<>(ManaTexture.a);
 
-        protected ManaBarOverlay() {
-            this(
-                    new OverlayPosition(
-                            -30,
-                            52,
-                            VerticalAlignment.Bottom,
-                            HorizontalAlignment.Center,
-                            OverlayPosition.AnchorSection.BottomMiddle),
-                    new OverlaySize(81, 21));
-        }
-
-        protected ManaBarOverlay(OverlayPosition overlayPosition, OverlaySize OverlaySize) {
-            super(overlayPosition, OverlaySize, CommonColors.LIGHT_BLUE);
+        public ManaTexturedCustomBarOverlay(int id) {
+            super(id, new OverlaySize(81, 21));
         }
 
         @Override
-        public float textureHeight() {
+        public Texture getTexture() {
+            return Texture.MANA_BAR;
+        }
+
+        @Override
+        protected float getTextureHeight() {
             return manaTexture.get().getHeight();
-        }
-
-        @Override
-        public BossBarProgress progress() {
-            CappedValue mana = Models.CharacterStats.getMana();
-            return new BossBarProgress(mana, (float) mana.getProgress());
-        }
-
-        @Override
-        public String icon() {
-            return "✺";
-        }
-
-        @Override
-        public boolean isActive() {
-            return true;
-        }
-
-        @Override
-        protected void onConfigUpdate(ConfigHolder configHolder) {
-            Models.CharacterStats.hideMana(this.shouldBeEnabled() && !this.shouldDisplayOriginal.get());
         }
 
         @Override
@@ -391,62 +145,13 @@ public class CustomBarsOverlayFeature extends Feature {
                 float renderY,
                 float renderHeight,
                 float progress) {
-            if (progress > 1) { // overflowing mana
-                float x1 = this.getRenderX();
-                float x2 = this.getRenderX() + this.getWidth();
-                int textureY1 = manaTexture.get().getTextureY1();
-                int textureY2 = manaTexture.get().getTextureY2();
-
-                int half = (textureY1 + textureY2) / 2 + (textureY2 - textureY1) % 2;
-                BufferedRenderUtils.drawProgressBarBackground(
-                        poseStack,
-                        bufferSource,
-                        Texture.MANA_BAR,
-                        x1,
-                        renderY,
-                        x2,
-                        renderY + renderHeight,
-                        0,
-                        textureY1,
-                        81,
-                        half);
-                BufferedRenderUtils.drawProgressBarForeground(
-                        poseStack,
-                        bufferSource,
-                        Texture.MANA_BAR,
-                        x1,
-                        renderY,
-                        x2,
-                        renderY + renderHeight,
-                        0,
-                        half,
-                        81,
-                        textureY2 + (textureY2 - textureY1) % 2,
-                        1f / progress);
-                BufferedRenderUtils.drawProgressBarForeground(
-                        poseStack,
-                        bufferSource,
-                        Texture.MANA_BAR_OVERFLOW,
-                        x1,
-                        renderY,
-                        x2,
-                        renderY + renderHeight,
-                        0,
-                        half,
-                        81,
-                        textureY2 + (textureY2 - textureY1) % 2,
-                        1f / progress - 1);
-
-                return;
-            }
-
             BufferedRenderUtils.drawProgressBar(
                     poseStack,
                     bufferSource,
                     Texture.MANA_BAR,
-                    this.getRenderX(),
+                    getRenderX(),
                     renderY,
-                    this.getRenderX() + this.getWidth(),
+                    getRenderX() + getWidth(),
                     renderY + renderHeight,
                     0,
                     manaTexture.get().getTextureY1(),
@@ -454,190 +159,142 @@ public class CustomBarsOverlayFeature extends Feature {
                     manaTexture.get().getTextureY2(),
                     progress);
         }
-    }
-
-    public static class ManaBankBarOverlay extends ManaBarOverlay {
-        protected ManaBankBarOverlay() {
-            super(
-                    new OverlayPosition(
-                            -30,
-                            -150,
-                            VerticalAlignment.Bottom,
-                            HorizontalAlignment.Center,
-                            OverlayPosition.AnchorSection.BottomMiddle),
-                    new OverlaySize(81, 21));
-        }
 
         @Override
-        public String icon() {
-            return "☄";
-        }
-
-        @Override
-        public BossBarProgress progress() {
-            return Models.BossBar.manaBankBar.getBarProgress();
-        }
-
-        @Override
-        public boolean isActive() {
-            return Models.BossBar.manaBankBar.isActive();
-        }
-
-        @Override
-        protected void onConfigUpdate(ConfigHolder configHolder) {
-            // Do not call super
+        protected BarOverlayTemplatePair getActualPreviewTemplate() {
+            return new BarOverlayTemplatePair("12/100", "capped(12; 100)");
         }
     }
 
-    protected static class AwakenedProgressBarOverlay extends BaseBarOverlay {
-        protected AwakenedProgressBarOverlay() {
-            super(
-                    new OverlayPosition(
-                            -70,
-                            -150,
-                            VerticalAlignment.Bottom,
-                            HorizontalAlignment.Center,
-                            OverlayPosition.AnchorSection.BottomMiddle),
-                    new OverlaySize(81, 21),
-                    CommonColors.WHITE);
+    protected static class ExperienceTexturedCustomBarOverlay extends CustomBarOverlayBase {
+        @RegisterConfig("overlay.wynntils.objectivesTexture")
+        public final Config<ObjectivesTextures> objectivesTexture = new Config<>(ObjectivesTextures.a);
+
+        public ExperienceTexturedCustomBarOverlay(int id) {
+            super(id, new OverlaySize(150, 30));
         }
 
         @Override
-        public BossBarProgress progress() {
-            return Models.BossBar.awakenedBar.getBarProgress();
+        public Texture getTexture() {
+            return Texture.EXPERIENCE_BAR;
         }
 
         @Override
-        public String icon() {
-            return "۞";
+        protected float getTextureHeight() {
+            return 5;
         }
 
         @Override
-        public boolean isActive() {
-            return Models.BossBar.awakenedBar.isActive();
+        protected void renderBar(
+                PoseStack poseStack,
+                MultiBufferSource.BufferSource bufferSource,
+                float renderY,
+                float barHeight,
+                float progress) {
+            BufferedRenderUtils.drawProgressBar(
+                    poseStack,
+                    bufferSource,
+                    getTexture(),
+                    getRenderX(),
+                    renderY,
+                    getRenderX() + getWidth(),
+                    renderY + barHeight,
+                    0,
+                    objectivesTexture.get().getTextureYOffset(),
+                    182,
+                    objectivesTexture.get().getTextureYOffset() + 10,
+                    progress);
+        }
+
+        @Override
+        protected BarOverlayTemplatePair getActualPreviewTemplate() {
+            return new BarOverlayTemplatePair("{capped_xp}", "capped_xp");
         }
     }
 
-    protected static class FocusBarOverlay extends BaseBarOverlay {
-        protected FocusBarOverlay() {
-            super(
-                    new OverlayPosition(
-                            -30,
-                            -150,
-                            VerticalAlignment.Bottom,
-                            HorizontalAlignment.Center,
-                            OverlayPosition.AnchorSection.BottomMiddle),
-                    new OverlaySize(81, 21),
-                    CommonColors.YELLOW);
+    protected static class BubbleTexturedCustomBarOverlay extends CustomBarOverlayBase {
+        @RegisterConfig("overlay.wynntils.objectivesTexture")
+        public final Config<ObjectivesTextures> objectivesTexture = new Config<>(ObjectivesTextures.a);
+
+        public BubbleTexturedCustomBarOverlay(int id) {
+            super(id, new OverlaySize(150, 30));
         }
 
         @Override
-        public BossBarProgress progress() {
-            return Models.BossBar.focusBar.getBarProgress();
+        public Texture getTexture() {
+            return Texture.BUBBLE_BAR;
         }
 
         @Override
-        public String icon() {
-            return "➶";
+        protected float getTextureHeight() {
+            return 5;
         }
 
         @Override
-        public boolean isActive() {
-            return Models.BossBar.focusBar.isActive();
+        protected void renderBar(
+                PoseStack poseStack,
+                MultiBufferSource.BufferSource bufferSource,
+                float renderY,
+                float barHeight,
+                float progress) {
+            BufferedRenderUtils.drawProgressBar(
+                    poseStack,
+                    bufferSource,
+                    getTexture(),
+                    getRenderX(),
+                    renderY,
+                    getRenderX() + getWidth(),
+                    renderY + barHeight,
+                    0,
+                    objectivesTexture.get().getTextureYOffset(),
+                    182,
+                    objectivesTexture.get().getTextureYOffset() + 10,
+                    progress);
+        }
+
+        @Override
+        protected BarOverlayTemplatePair getActualPreviewTemplate() {
+            return new BarOverlayTemplatePair("{capped_ingredient_pouch_slots}", "capped_ingredient_pouch_slots");
         }
     }
 
-    protected static class CorruptedBarOverlay extends BaseBarOverlay {
-        protected CorruptedBarOverlay() {
-            super(
-                    new OverlayPosition(
-                            -70,
-                            -150,
-                            VerticalAlignment.Bottom,
-                            HorizontalAlignment.Center,
-                            OverlayPosition.AnchorSection.BottomMiddle),
-                    new OverlaySize(81, 21),
-                    CommonColors.PURPLE);
+    protected abstract static class CustomBarOverlayBase extends BarOverlay {
+        @RegisterConfig("feature.wynntils.customBarsOverlay.overlay.customBarBase.textTemplate")
+        public final Config<String> textTemplate = new Config<>("");
+
+        @RegisterConfig("feature.wynntils.customBarsOverlay.overlay.customBarBase.valueTemplate")
+        public final Config<String> valueTemplate = new Config<>("");
+
+        @RegisterConfig("feature.wynntils.customBarsOverlay.overlay.customBarBase.enabledTemplate")
+        public final Config<String> enabledTemplate = new Config<>("true");
+
+        protected CustomBarOverlayBase(int id, OverlaySize overlaySize) {
+            super(id, overlaySize);
         }
 
         @Override
-        public BossBarProgress progress() {
-            return Models.BossBar.corruptedBar.getBarProgress();
+        public BarOverlayTemplatePair getTemplate() {
+            return new BarOverlayTemplatePair(textTemplate.get(), valueTemplate.get());
         }
 
         @Override
-        public String icon() {
-            return "☠";
+        public BarOverlayTemplatePair getPreviewTemplate() {
+            if (!valueTemplate.get().isEmpty()) {
+                return getTemplate();
+            }
+
+            return getActualPreviewTemplate();
         }
 
         @Override
-        public boolean isActive() {
-            return Models.BossBar.corruptedBar.isActive();
-        }
-    }
+        public boolean isRendered() {
+            if (valueTemplate.get().isEmpty()) return false;
 
-    public enum ManaTexture {
-        Wynn(0, 17, 8),
-        Brune(83, 100, 8),
-        Aether(116, 131, 7),
-        Skull(143, 147, 8),
-        Inverse(100, 115, 7),
-        Skyrim(148, 163, 8),
-        Rune(164, 179, 8),
-        a(18, 33, 7),
-        b(34, 51, 8),
-        c(52, 67, 7),
-        d(83, 100, 8);
-        private final int textureY1, textureY2, height;
-
-        ManaTexture(int textureY1, int textureY2, int height) {
-            this.textureY1 = textureY1;
-            this.textureY2 = textureY2;
-            this.height = height;
+            ErrorOr<Boolean> enabledOrError =
+                    Managers.Function.tryGetRawValueOfType(enabledTemplate.get(), Boolean.class);
+            return !enabledOrError.hasError() && enabledOrError.getValue();
         }
 
-        public int getTextureY1() {
-            return textureY1;
-        }
-
-        public int getTextureY2() {
-            return textureY2;
-        }
-
-        public int getHeight() {
-            return height;
-        }
-    }
-
-    public enum HealthTexture {
-        Wynn(0, 17, 8),
-        Grune(84, 99, 7),
-        Aether(100, 115, 7),
-        Skull(116, 131, 8),
-        Skyrim(132, 147, 8),
-        Rune(148, 163, 8),
-        a(18, 33, 7),
-        b(34, 51, 8),
-        c(52, 67, 7),
-        d(68, 83, 7);
-        private final int textureY1, textureY2, height;
-
-        HealthTexture(int textureY1, int textureY2, int height) {
-            this.textureY1 = textureY1;
-            this.textureY2 = textureY2;
-            this.height = height;
-        }
-
-        public int getTextureY1() {
-            return textureY1;
-        }
-
-        public int getTextureY2() {
-            return textureY2;
-        }
-
-        public int getHeight() {
-            return height;
-        }
+        protected abstract BarOverlayTemplatePair getActualPreviewTemplate();
     }
 }
