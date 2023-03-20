@@ -1,9 +1,21 @@
+## [0.0.2-alpha.361](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.360...v0.0.2-alpha.361) (2023-03-20)
+
+
+### New Features
+
+* Introduce Custom Bar Overlays ([#1355](https://github.com/Wynntils/Artemis/issues/1355)) ([cc6da32](https://github.com/Wynntils/Artemis/commit/cc6da32c7ff622bebef4ab40e2a6c3d006cb2167))
+
 ## [0.0.2-alpha.360](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.359...v0.0.2-alpha.360) (2023-03-19)
 
 
 ### Bug Fixes
 
 * Fix chat items merging hover event ([#1356](https://github.com/Wynntils/Artemis/issues/1356)) ([de9d824](https://github.com/Wynntils/Artemis/commit/de9d824c566987e05324d710ad25a232b2560738))
+
+
+### Miscellaneous Chores
+
+* **release:** v0.0.2-alpha.360 [skip ci] ([ec96585](https://github.com/Wynntils/Artemis/commit/ec9658508e8e95eedffab6454ef0c5211c658ca7))
 
 ## [0.0.2-alpha.359](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.358...v0.0.2-alpha.359) (2023-03-17)
 
@@ -40,16 +52,4 @@
 ### Miscellaneous Chores
 
 * **release:** v0.0.2-alpha.357 [skip ci] ([f501335](https://github.com/Wynntils/Artemis/commit/f501335b9ab3265396e2f5f2c6e8b1b5b139ffc6))
-
-## [0.0.2-alpha.356](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.355...v0.0.2-alpha.356) (2023-03-16)
-
-
-### Bug Fixes
-
-* Storage persist should not happen before init, or we wipe our storage ([#1342](https://github.com/Wynntils/Artemis/issues/1342)) ([698570f](https://github.com/Wynntils/Artemis/commit/698570f0a613609d7efd27c803d4c6a024de82e3))
-
-
-### Miscellaneous Chores
-
-* **release:** v0.0.2-alpha.356 [skip ci] ([75b0a20](https://github.com/Wynntils/Artemis/commit/75b0a203a14fd0526f4e3b171764ac38fff74071))
 
