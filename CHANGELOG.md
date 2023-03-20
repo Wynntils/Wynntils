@@ -1,9 +1,21 @@
+## [0.0.2-alpha.362](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.361...v0.0.2-alpha.362) (2023-03-20)
+
+
+### Bug Fixes
+
+* Fix typo in CustomBarsOverlayFeature ([d9429aa](https://github.com/Wynntils/Artemis/commit/d9429aa834f47fcf5256409489f5c429ddcab457))
+
 ## [0.0.2-alpha.361](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.360...v0.0.2-alpha.361) (2023-03-20)
 
 
 ### New Features
 
 * Introduce Custom Bar Overlays ([#1355](https://github.com/Wynntils/Artemis/issues/1355)) ([cc6da32](https://github.com/Wynntils/Artemis/commit/cc6da32c7ff622bebef4ab40e2a6c3d006cb2167))
+
+
+### Miscellaneous Chores
+
+* **release:** v0.0.2-alpha.361 [skip ci] ([2b98519](https://github.com/Wynntils/Artemis/commit/2b985193f52c1078dd7b11defe5055b37910c6a4))
 
 ## [0.0.2-alpha.360](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.359...v0.0.2-alpha.360) (2023-03-19)
 
@@ -40,16 +52,4 @@
 ### Miscellaneous Chores
 
 * **release:** v0.0.2-alpha.358 [skip ci] ([cbb0757](https://github.com/Wynntils/Artemis/commit/cbb0757aa25e486b4be8bc666f3533c3d9c57c5b))
-
-## [0.0.2-alpha.357](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.356...v0.0.2-alpha.357) (2023-03-16)
-
-
-### Code Refactoring
-
-* Feature instances are now accessed through FeatureManager ([#1345](https://github.com/Wynntils/Artemis/issues/1345)) ([439e646](https://github.com/Wynntils/Artemis/commit/439e6466c5ad3d42e4f9efb7e21d096953436353))
-
-
-### Miscellaneous Chores
-
-* **release:** v0.0.2-alpha.357 [skip ci] ([f501335](https://github.com/Wynntils/Artemis/commit/f501335b9ab3265396e2f5f2c6e8b1b5b139ffc6))
 
