@@ -31,7 +31,7 @@ import net.minecraft.client.renderer.MultiBufferSource;
 @ConfigCategory(Category.OVERLAYS)
 public class CustomBarsOverlayFeature extends Feature {
     @OverlayGroup(instances = 0, renderType = RenderEvent.ElementType.GUI, renderAt = RenderState.Pre)
-    private final List<UniveralTexturedCustomBarOverlay> customUniversalBarOverlays = new ArrayList<>();
+    private final List<UniversalTexturedCustomBarOverlay> customUniversalBarOverlays = new ArrayList<>();
 
     @OverlayGroup(instances = 0, renderType = RenderEvent.ElementType.GUI, renderAt = RenderState.Pre)
     private final List<HealthTexturedCustomBarOverlay> customHealthBarOverlays = new ArrayList<>();
@@ -45,11 +45,11 @@ public class CustomBarsOverlayFeature extends Feature {
     @OverlayGroup(instances = 0, renderType = RenderEvent.ElementType.GUI, renderAt = RenderState.Pre)
     private final List<BubbleTexturedCustomBarOverlay> customBubbleBarOverlays = new ArrayList<>();
 
-    protected static class UniveralTexturedCustomBarOverlay extends CustomBarOverlayBase {
+    protected static class UniversalTexturedCustomBarOverlay extends CustomBarOverlayBase {
         @RegisterConfig
         public final Config<CustomColor> color = new Config<>(CommonColors.WHITE);
 
-        public UniveralTexturedCustomBarOverlay(int id) {
+        public UniversalTexturedCustomBarOverlay(int id) {
             super(id, new OverlaySize(81, 21));
         }
 
