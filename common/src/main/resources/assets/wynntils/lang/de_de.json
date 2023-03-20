@@ -60,9 +60,9 @@
   "feature.wynntils.chatRedirect.notEnoughMana.description": "Wie sollen Mitteilungen über zu wenig Mana zum Ausführen eines Zaubers aussehen?",
   "feature.wynntils.chatRedirect.notEnoughMana.name": "Mana Mitteilungsfilterung",
   "feature.wynntils.chatRedirect.potion.description": "Wie sollen Mitteilungen über deine Heiltränke aussehen?",
-  "feature.wynntils.customBarsOverlay.overlay.baseBar.textColor.name": "Textfarbe",
-  "feature.wynntils.customBarsOverlay.overlay.baseBar.textShadow.description": "Wie soll der Textschatten aussehen?",
-  "feature.wynntils.customBarsOverlay.overlay.baseBar.textShadow.name": "Textschatten",
+  "feature.wynntils.gameBarsOverlay.overlay.baseBar.textColor.name": "Textfarbe",
+  "feature.wynntils.gameBarsOverlay.overlay.baseBar.textShadow.description": "Wie soll der Textschatten aussehen?",
+  "feature.wynntils.gameBarsOverlay.overlay.baseBar.textShadow.name": "Textschatten",
   "feature.wynntils.gameNotificationOverlay.overlay.gameNotification.textShadow.description": "Wie soll der Textschatten aussehen?",
   "feature.wynntils.gameNotificationOverlay.overlay.gameNotification.textShadow.name": "Textschatten",
   "feature.wynntils.guildAttackTimerOverlay.overlay.territoryAttackTimer.textShadow.description": "Wie soll der Textschatten aussehen?",
@@ -89,6 +89,8 @@
   "feature.wynntils.worldWaypointDistance.textShadow.description": "Wie soll der Textschatten aussehen?",
   "feature.wynntils.worldWaypointDistance.textShadow.name": "Textschatten",
   "function.wynntils.auraTimer.name": "Aura Timers",
+  "overlay.wynntils.barOverlay.textShadow.description": "Wie soll der Textschatten aussehen?",
+  "overlay.wynntils.barOverlay.textShadow.name": "Textschatten",
   "overlay.wynntils.textOverlay.textShadow.name": "Textschatten",
   "screens.wynntils.overlaySelection.overlays": "Overlays"
 }
