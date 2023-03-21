@@ -43,6 +43,10 @@ public abstract class BarOverlay extends DynamicOverlay {
         this.size.updateConfig(overlaySize);
     }
 
+    protected BarOverlay(OverlayPosition position, OverlaySize size) {
+        super(position, size, 1);
+    }
+
     @Override
     public void render(
             PoseStack poseStack, MultiBufferSource.BufferSource bufferSource, float partialTicks, Window window) {
@@ -78,6 +82,8 @@ public abstract class BarOverlay extends DynamicOverlay {
 
         String textValue = templateCache.a();
         CappedValue value = valueOrError.getValue();
+        if (value.equals(CappedValue.EMPTY)) return;
+
         renderText(poseStack, bufferSource, renderY, textValue);
 
         float progress = (float) ((flip.get() ? -1 : 1) * value.getProgress());

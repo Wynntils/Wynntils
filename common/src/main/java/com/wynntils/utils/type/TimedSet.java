@@ -91,6 +91,11 @@ public class TimedSet<T> implements Iterable<T> {
         public T next() {
             return original.next().getEntry();
         }
+
+        @Override
+        public void remove() {
+            original.remove();
+        }
     }
 
     public final class TimedEntry {

@@ -25,6 +25,7 @@ import com.wynntils.models.items.annotators.game.GearBoxAnnotator;
 import com.wynntils.models.items.annotators.game.HorseAnnotator;
 import com.wynntils.models.items.annotators.game.IngredientAnnotator;
 import com.wynntils.models.items.annotators.game.MaterialAnnotator;
+import com.wynntils.models.items.annotators.game.MiscAnnotator;
 import com.wynntils.models.items.annotators.game.MultiHealthPotionAnnotator;
 import com.wynntils.models.items.annotators.game.PotionAnnotator;
 import com.wynntils.models.items.annotators.game.PowderAnnotator;
@@ -88,6 +89,7 @@ public class ItemModel extends Model {
         Handlers.Item.registerAnnotator(new SoulPointAnnotator());
 
         // This must be done last
+        Handlers.Item.registerAnnotator(new MiscAnnotator());
         Handlers.Item.registerAnnotator(new FallbackAnnotator());
     }
 

@@ -292,14 +292,13 @@ public final class FunctionManager extends Manager {
         functions.add(function);
 
         assert !function.getTranslatedName().startsWith("function.wynntils.")
-                : "Fix i18n name for function " + function.getClass().getSimpleName();
+                : "Fix i18n name for " + function.getTranslatedName();
         assert !function.getDescription().startsWith("function.wynntils.")
-                : "Fix i18n description for function " + function.getClass().getSimpleName();
+                : "Fix i18n description for " + function.getDescription();
         for (FunctionArguments.Argument<?> argument :
                 function.getArgumentsBuilder().getArguments()) {
             assert !function.getArgumentDescription(argument.getName()).startsWith("function.wynntils.")
-                    : "Fix i18n argument description for function "
-                            + function.getClass().getSimpleName();
+                    : "Fix i18n argument description for " + function.getArgumentDescription(argument.getName());
         }
     }
 
