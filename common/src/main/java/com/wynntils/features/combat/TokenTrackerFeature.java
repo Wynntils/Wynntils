@@ -13,7 +13,7 @@ import com.wynntils.core.features.Feature;
 import com.wynntils.core.features.overlays.BarOverlay;
 import com.wynntils.core.features.overlays.OverlayPosition;
 import com.wynntils.core.features.overlays.OverlaySize;
-import com.wynntils.core.features.overlays.annotations.OverlayInfo;
+import com.wynntils.core.features.overlays.annotations.OverlayGroup;
 import com.wynntils.mc.event.RenderEvent;
 import com.wynntils.models.token.event.TokenGatekeeperEvent;
 import com.wynntils.utils.colors.CustomColor;
@@ -21,6 +21,8 @@ import com.wynntils.utils.mc.McUtils;
 import com.wynntils.utils.render.Texture;
 import com.wynntils.utils.render.type.HorizontalAlignment;
 import com.wynntils.utils.render.type.VerticalAlignment;
+import java.util.ArrayList;
+import java.util.List;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.resources.sounds.SimpleSoundInstance;
 import net.minecraft.sounds.SoundEvents;
@@ -31,8 +33,8 @@ public class TokenTrackerFeature extends Feature {
     @RegisterConfig
     public final Config<Boolean> playSound = new Config<>(true);
 
-    @OverlayInfo(renderType = RenderEvent.ElementType.GUI)
-    private final TokenBarOverlay tokenBarOverlay = new TokenBarOverlay();
+    @OverlayGroup(instances = 1, renderType = RenderEvent.ElementType.GUI)
+    private final List<TokenBarOverlay> tokenBarOverlays = new ArrayList<>();
 
     @SubscribeEvent
     public void onInventoryUpdated(TokenGatekeeperEvent.InventoryUpdated event) {
@@ -46,9 +48,13 @@ public class TokenTrackerFeature extends Feature {
         }
     }
 
-    private static final class TokenBarOverlay extends BarOverlay {
+    protected static final class TokenBarOverlay extends BarOverlay {
         @RegisterConfig
         public final Config<ChatFormatting> color = new Config<>(ChatFormatting.GOLD);
+
+        public TokenBarOverlay(int id) {
+            super(id, new OverlaySize(81, 21));
+        }
 
         private TokenBarOverlay() {
             super(
@@ -63,7 +69,9 @@ public class TokenTrackerFeature extends Feature {
 
         @Override
         public BarOverlayTemplatePair getTemplate() {
-            return new BarOverlayTemplatePair(color.get().toString() + "{token_type}: {token}", "token");
+            return new BarOverlayTemplatePair(
+                    color.get().toString() + "{tokens_type(" + getId() + ")}: {tokens(" + getId() + ")}",
+                    "tokens(" + getId() + ")");
         }
 
         @Override
