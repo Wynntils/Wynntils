@@ -226,7 +226,7 @@ public class TokenModel extends Model {
             this.position = position;
         }
 
-        protected TokenGatekeeper toGatekeeper() {
+        private TokenGatekeeper toGatekeeper() {
             Location location = Location.containing(position).offset(0, 3, 0);
             if (typeMax == 1) {
                 // If only a single item is requested, the normal value is not present
@@ -237,15 +237,15 @@ public class TokenModel extends Model {
         }
     }
 
-    protected static class TokenInventoryWatcher extends InventoryWatcher {
+    private static final class TokenInventoryWatcher extends InventoryWatcher {
         private final TokenGatekeeper gatekeeper;
 
-        protected TokenInventoryWatcher(TokenGatekeeper gatekeeper, String type) {
+        private TokenInventoryWatcher(TokenGatekeeper gatekeeper, String type) {
             super(itemStack -> isToken(type, itemStack));
             this.gatekeeper = gatekeeper;
         }
 
-        protected TokenInventoryWatcher(TokenGatekeeper gatekeeper) {
+        private TokenInventoryWatcher(TokenGatekeeper gatekeeper) {
             // Remove the trailing plural 's'
             this(gatekeeper, gatekeeper.getType().replaceAll("s$", ""));
         }
