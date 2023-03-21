@@ -34,7 +34,7 @@ import net.minecraftforge.eventbus.api.SubscribeEvent;
 
 public class TokenModel extends Model {
     private static final Pattern TOKEN_PATTERN = Pattern.compile("^§a(\\d+)§2/(\\d+)$");
-    private static final Pattern TYPE_PATTERN = Pattern.compile("^§7Get §e\\[\\d+ (.*)\\]$");
+    private static final Pattern TYPE_PATTERN = Pattern.compile("^§7Get §[e6]\\[(?:(\\d+) )?(.*)\\]$");
     private static final String VERIFICATION_STRING = "§7Right-click to add";
 
     private final Map<Integer, TokenGatekeeper> activeGatekeepers = new HashMap<>();
@@ -68,10 +68,18 @@ public class TokenModel extends Model {
 
         Matcher typeMatcher = TYPE_PATTERN.matcher(name);
         if (typeMatcher.matches()) {
-            String type = typeMatcher.group(1);
+            String countString = typeMatcher.group(1);
+            int max = countString != null ? Integer.parseInt(countString) : 1;
+            String type = typeMatcher.group(2);
 
             BakingTokenGatekeeper baking = getBaking(event.getEntity().position());
             baking.type = type;
+            // If the gatekeeper requires only a single item, the token line might be
+            // missing. If so, use the type line as entity instead
+            baking.typeMax = max;
+            if (baking.valueEntityId == 0) {
+                baking.valueEntityId = event.getEntity().getId();
+            }
             checkAndPromoteBaking();
             return;
         }
@@ -195,7 +203,12 @@ public class TokenModel extends Model {
         Iterator<BakingTokenGatekeeper> iter = bakingGatekeepers.iterator();
         while (iter.hasNext()) {
             BakingTokenGatekeeper baking = iter.next();
-            if (baking.confirmed && baking.type != null && baking.value != null) {
+
+            if (baking.valueEntityId == 0 || baking.type == null) continue;
+
+            // If just a single item is requested, we might not have the
+            // "right click to add" nor the token count line
+            if ((baking.confirmed && baking.value != null) || (baking.typeMax == 1)) {
                 iter.remove();
 
                 addGatekeeper(baking.valueEntityId, baking.toGatekeeper());
@@ -206,6 +219,7 @@ public class TokenModel extends Model {
     private static final class BakingTokenGatekeeper {
         private final Position position;
         private String type;
+        private int typeMax;
         private CappedValue value;
         private int valueEntityId;
         private boolean confirmed;
@@ -216,7 +230,12 @@ public class TokenModel extends Model {
 
         protected TokenGatekeeper toGatekeeper() {
             Location location = Location.containing(position).offset(0, 3, 0);
-            return new TokenGatekeeper(type, location, value);
+            if (typeMax == 1) {
+                // If only a single item is requested, the normal value is not present
+                return new TokenGatekeeper(type, location, new CappedValue(0, 1));
+            } else {
+                return new TokenGatekeeper(type, location, value);
+            }
         }
     }
 
