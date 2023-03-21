@@ -113,7 +113,8 @@ public final class OverlayManager extends Manager {
                 Managers.Overlay.registerOverlay(
                         overlay, feature, annotation.renderType(), annotation.renderAt(), annotation.enabled());
 
-                assert !overlay.getTranslatedName().startsWith("feature.wynntils.");
+                assert !overlay.getTranslatedName().startsWith("feature.wynntils.")
+                        : "Fix i18n for " + overlay.getTranslatedName();
             } catch (IllegalAccessException e) {
                 WynntilsMod.error("Unable to get field " + overlayField, e);
             }

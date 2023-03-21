@@ -295,7 +295,8 @@ public final class FeatureManager extends Manager {
         Managers.Overlay.discoverOverlayGroups(feature);
 
         // Assert that the feature name is properly translated
-        assert !feature.getTranslatedName().startsWith("feature.wynntils.");
+        assert !feature.getTranslatedName().startsWith("feature.wynntils.")
+                : "Fix i18n for " + feature.getTranslatedName();
 
         if (!feature.userEnabled.get()) return; // not enabled by user
 

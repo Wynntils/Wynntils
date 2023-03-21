@@ -40,6 +40,10 @@ public class Location {
         return new Location(MathUtils.floor(x), MathUtils.floor(y), MathUtils.floor(z));
     }
 
+    public Location offset(int dx, int dy, int dz) {
+        return new Location(this.x() + dx, this.y() + dy, this.z() + dz);
+    }
+
     public BlockPos toBlockPos() {
         return PosUtils.newBlockPos(x, y, z);
     }
