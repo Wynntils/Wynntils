@@ -47,7 +47,7 @@ public class TokenModel extends Model {
     }
 
     public Stream<TokenGatekeeper> getGatekeepers() {
-        return activeGatekeepers.values().stream();
+        return activeGatekeepers.values().stream().sorted();
     }
 
     public CappedValue getCollected(TokenGatekeeper gatekeeper) {

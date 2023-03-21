@@ -8,7 +8,7 @@ import com.wynntils.utils.mc.type.Location;
 import com.wynntils.utils.type.CappedValue;
 import java.util.Objects;
 
-public final class TokenGatekeeper {
+public final class TokenGatekeeper implements Comparable<TokenGatekeeper> {
     private final String type;
     private final Location location;
     private CappedValue deposited;
@@ -54,5 +54,11 @@ public final class TokenGatekeeper {
                 + type + '\'' + ", location="
                 + location + ", deposited="
                 + deposited + '}';
+    }
+
+    @Override
+    public int compareTo(TokenGatekeeper that) {
+        // Only the location determines the sorting order
+        return getLocation().compareTo(that.getLocation());
     }
 }
