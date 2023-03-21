@@ -12,7 +12,6 @@ import it.unimi.dsi.fastutil.ints.Int2ObjectMap;
 import it.unimi.dsi.fastutil.ints.Int2ObjectOpenHashMap;
 import java.util.Optional;
 import net.minecraft.network.protocol.game.ServerboundContainerClickPacket;
-import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.inventory.ClickType;
 import net.minecraft.world.item.ItemStack;
 
@@ -35,15 +34,6 @@ public final class InventoryUtils {
                 ClickType.PICKUP,
                 ItemStack.EMPTY,
                 changedSlots));
-    }
-
-    public static int getEmptySlots(Inventory inventory) {
-        if (inventory == null) return 0;
-        int slots = 0;
-        for (ItemStack itemStack : inventory.items) {
-            if (itemStack.isEmpty()) slots++;
-        }
-        return slots;
     }
 
     public static boolean isWeapon(ItemStack itemStack) {
