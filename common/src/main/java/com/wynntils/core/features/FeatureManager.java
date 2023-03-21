@@ -106,6 +106,7 @@ import com.wynntils.features.ui.CosmeticsPreviewFeature;
 import com.wynntils.features.ui.CustomCharacterSelectionScreenFeature;
 import com.wynntils.features.ui.LobbyUptimeFeature;
 import com.wynntils.features.ui.SoulPointTimerFeature;
+import com.wynntils.features.ui.TradeMarketBulkSellFeature;
 import com.wynntils.features.ui.WynncraftButtonFeature;
 import com.wynntils.features.ui.WynncraftPauseScreenFeature;
 import com.wynntils.features.ui.WynntilsQuestBookFeature;
@@ -232,6 +233,7 @@ public final class FeatureManager extends Manager {
         registerFeature(new TooltipFittingFeature());
         registerFeature(new TooltipVanillaHideFeature());
         registerFeature(new TradeMarketAutoOpenChatFeature());
+        registerFeature(new TradeMarketBulkSellFeature());
         registerFeature(new TradeMarketPriceConversionFeature());
         registerFeature(new TranslationFeature());
         registerFeature(new UnidentifiedItemIconFeature());
