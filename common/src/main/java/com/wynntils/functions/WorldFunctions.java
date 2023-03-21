@@ -63,7 +63,7 @@ public class WorldFunctions {
     public static class TokenGatekeeperCountFunction extends Function<Integer> {
         @Override
         public Integer getValue(FunctionArguments arguments) {
-            return (int) Models.Token.getGatekeepers().count();
+            return Models.Token.getGatekeepers().size();
         }
 
         @Override
@@ -75,10 +75,10 @@ public class WorldFunctions {
     public static class TokenGatekeeperDepositedFunction extends Function<CappedValue> {
         @Override
         public CappedValue getValue(FunctionArguments arguments) {
-            return Models.Token.getGatekeepers()
-                    .findFirst()
-                    .map(TokenGatekeeper::getDeposited)
-                    .orElse(CappedValue.EMPTY);
+            List<TokenGatekeeper> gatekeepers = Models.Token.getGatekeepers();
+            if (gatekeepers.isEmpty()) return CappedValue.EMPTY;
+
+            return gatekeepers.get(0).getDeposited();
         }
 
         @Override
@@ -90,10 +90,10 @@ public class WorldFunctions {
     public static class TokenGatekeeperFunction extends Function<CappedValue> {
         @Override
         public CappedValue getValue(FunctionArguments arguments) {
-            return Models.Token.getGatekeepers()
-                    .findFirst()
-                    .map(Models.Token::getCollected)
-                    .orElse(CappedValue.EMPTY);
+            List<TokenGatekeeper> gatekeepers = Models.Token.getGatekeepers();
+            if (gatekeepers.isEmpty()) return CappedValue.EMPTY;
+
+            return Models.Token.getCollected(gatekeepers.get(0));
         }
 
         @Override
@@ -105,10 +105,10 @@ public class WorldFunctions {
     public static class TokenGatekeeperTypeFunction extends Function<String> {
         @Override
         public String getValue(FunctionArguments arguments) {
-            return Models.Token.getGatekeepers()
-                    .findFirst()
-                    .map(TokenGatekeeper::getType)
-                    .orElse("");
+            List<TokenGatekeeper> gatekeepers = Models.Token.getGatekeepers();
+            if (gatekeepers.isEmpty()) return "";
+
+            return gatekeepers.get(0).getType();
         }
 
         @Override
@@ -121,7 +121,7 @@ public class WorldFunctions {
         @Override
         public CappedValue getValue(FunctionArguments arguments) {
             int index = arguments.getArgument("gatekeeperNumber").getIntegerValue() - 1;
-            List<TokenGatekeeper> gatekeeperList = Models.Token.getGatekeepers().toList();
+            List<TokenGatekeeper> gatekeeperList = Models.Token.getGatekeepers();
             if (index >= gatekeeperList.size()) return CappedValue.EMPTY;
 
             return gatekeeperList.get(index).getDeposited();
@@ -143,7 +143,7 @@ public class WorldFunctions {
         @Override
         public CappedValue getValue(FunctionArguments arguments) {
             int index = arguments.getArgument("gatekeeperNumber").getIntegerValue() - 1;
-            List<TokenGatekeeper> gatekeeperList = Models.Token.getGatekeepers().toList();
+            List<TokenGatekeeper> gatekeeperList = Models.Token.getGatekeepers();
             if (index >= gatekeeperList.size()) return CappedValue.EMPTY;
 
             return Models.Token.getCollected(gatekeeperList.get(index));
@@ -165,7 +165,7 @@ public class WorldFunctions {
         @Override
         public String getValue(FunctionArguments arguments) {
             int index = arguments.getArgument("gatekeeperNumber").getIntegerValue() - 1;
-            List<TokenGatekeeper> gatekeeperList = Models.Token.getGatekeepers().toList();
+            List<TokenGatekeeper> gatekeeperList = Models.Token.getGatekeepers();
             if (index >= gatekeeperList.size()) return "";
 
             return gatekeeperList.get(index).getType();

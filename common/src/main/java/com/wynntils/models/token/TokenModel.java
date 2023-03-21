@@ -26,7 +26,6 @@ import java.util.Optional;
 import java.util.concurrent.TimeUnit;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-import java.util.stream.Stream;
 import net.minecraft.core.Position;
 import net.minecraft.world.entity.decoration.ArmorStand;
 import net.minecraft.world.item.ItemStack;
@@ -46,8 +45,8 @@ public class TokenModel extends Model {
         super(List.of());
     }
 
-    public Stream<TokenGatekeeper> getGatekeepers() {
-        return activeGatekeepers.values().stream().sorted();
+    public List<TokenGatekeeper> getGatekeepers() {
+        return activeGatekeepers.values().stream().sorted().toList();
     }
 
     public CappedValue getCollected(TokenGatekeeper gatekeeper) {

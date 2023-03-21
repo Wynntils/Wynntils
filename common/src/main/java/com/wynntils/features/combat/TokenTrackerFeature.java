@@ -67,7 +67,7 @@ public class TokenTrackerFeature extends Feature {
 
         @Override
         public boolean isRendered() {
-            return Models.Token.getGatekeepers().findFirst().isPresent();
+            return Models.Token.getGatekeepers().size() >= getId();
         }
 
         @Override
