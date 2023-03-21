@@ -99,7 +99,7 @@ public final class PlayerInventoryModel extends Model {
             int totalCount = 0;
 
             for (ItemStack itemStack : inventory.items) {
-                if (watcher.include(itemStack)) {
+                if (watcher.shouldInclude(itemStack)) {
                     slots++;
                     totalCount += itemStack.getCount();
                 }
