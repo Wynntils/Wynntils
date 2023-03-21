@@ -56,17 +56,6 @@ public class TokenTrackerFeature extends Feature {
             super(id, new OverlaySize(81, 21));
         }
 
-        private TokenBarOverlay() {
-            super(
-                    new OverlayPosition(
-                            120,
-                            -5,
-                            VerticalAlignment.Top,
-                            HorizontalAlignment.Right,
-                            OverlayPosition.AnchorSection.TopRight),
-                    new OverlaySize(81, 21));
-        }
-
         @Override
         public BarOverlayTemplatePair getTemplate() {
             return new BarOverlayTemplatePair(
