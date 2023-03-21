@@ -1,9 +1,21 @@
+## [0.0.2-alpha.363](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.362...v0.0.2-alpha.363) (2023-03-21)
+
+
+### New Features
+
+* Inventory watcher, MiscItem, label visibility etc ([#1357](https://github.com/Wynntils/Artemis/issues/1357)) ([a2ebe9d](https://github.com/Wynntils/Artemis/commit/a2ebe9d4dcc08b84b750fc11d71d576016a93a41))
+
 ## [0.0.2-alpha.362](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.361...v0.0.2-alpha.362) (2023-03-20)
 
 
 ### Bug Fixes
 
 * Fix typo in CustomBarsOverlayFeature ([d9429aa](https://github.com/Wynntils/Artemis/commit/d9429aa834f47fcf5256409489f5c429ddcab457))
+
+
+### Miscellaneous Chores
+
+* **release:** v0.0.2-alpha.362 [skip ci] ([055aee4](https://github.com/Wynntils/Artemis/commit/055aee49135691c5a0a125fcea4302db83847254))
 
 ## [0.0.2-alpha.361](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.360...v0.0.2-alpha.361) (2023-03-20)
 
@@ -40,16 +52,4 @@
 ### Miscellaneous Chores
 
 * **release:** v0.0.2-alpha.359 [skip ci] ([d9fcafd](https://github.com/Wynntils/Artemis/commit/d9fcafdf4c888bcef608a941d896f4d58551a992))
-
-## [0.0.2-alpha.358](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.357...v0.0.2-alpha.358) (2023-03-17)
-
-
-### Bug Fixes
-
-* Do not set item colors to black on non-Wynncraft worlds ([#1352](https://github.com/Wynntils/Artemis/issues/1352)) ([4d11adf](https://github.com/Wynntils/Artemis/commit/4d11adf05602f81afa905c97bbf8955e1fe132d7))
-
-
-### Miscellaneous Chores
-
-* **release:** v0.0.2-alpha.358 [skip ci] ([cbb0757](https://github.com/Wynntils/Artemis/commit/cbb0757aa25e486b4be8bc666f3533c3d9c57c5b))
 
