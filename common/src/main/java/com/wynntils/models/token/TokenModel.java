@@ -150,9 +150,7 @@ public class TokenModel extends Model {
             if (activeGatekeepers.containsKey(id)) {
                 removeGatekeeper(id, activeGatekeepers.get(id));
             }
-            if (invisibleGatekeepers.containsKey(id)) {
-                invisibleGatekeepers.remove(id);
-            }
+            invisibleGatekeepers.remove(id);
         }
     }
 
