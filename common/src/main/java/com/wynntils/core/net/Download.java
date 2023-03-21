@@ -56,6 +56,14 @@ public class Download extends NetResult {
     }
 
     @Override
+    protected void onHandlingFailed() {
+        // If handling of the file failed, our cache might be bad. Remove it so we
+        // try to re-download the file next time
+        WynntilsMod.warn("Deleting cached file due to handling error: " + localFile);
+        FileUtils.deleteQuietly(localFile);
+    }
+
+    @Override
     protected CompletableFuture<InputStream> getInputStreamFuture() {
         if (request == null) {
             // File is already in downloaded, just read from the cache
