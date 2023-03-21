@@ -29,7 +29,7 @@ public class InventoryWatcher {
     }
 
     // This should only be called by the model
-    public boolean include(ItemStack itemStack) {
+    public boolean shouldInclude(ItemStack itemStack) {
         return checker.test(itemStack);
     }
 
