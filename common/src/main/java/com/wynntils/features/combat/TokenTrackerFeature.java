@@ -33,7 +33,7 @@ public class TokenTrackerFeature extends Feature {
     @RegisterConfig
     public final Config<Boolean> playSound = new Config<>(true);
 
-    @OverlayGroup(instances = 1, renderType = RenderEvent.ElementType.GUI)
+    @OverlayGroup(renderType = RenderEvent.ElementType.GUI)
     private final List<TokenBarOverlay> tokenBarOverlays = new ArrayList<>();
 
     @SubscribeEvent
