@@ -7,7 +7,9 @@ package com.wynntils.functions;
 import com.wynntils.core.components.Models;
 import com.wynntils.core.functions.Function;
 import com.wynntils.core.functions.arguments.FunctionArguments;
+import com.wynntils.models.token.type.TokenGatekeeper;
 import com.wynntils.models.worlds.profile.ServerProfile;
+import com.wynntils.utils.type.CappedValue;
 import java.util.List;
 
 public class WorldFunctions {
@@ -55,6 +57,51 @@ public class WorldFunctions {
         @Override
         public List<String> getAliases() {
             return List.of("world_uptime", "uptime");
+        }
+    }
+
+    public static class TokenGatekeeperFunction extends Function<CappedValue> {
+        @Override
+        public CappedValue getValue(FunctionArguments arguments) {
+            return Models.Token.getGatekeepers()
+                    .findFirst()
+                    .map(Models.Token::getCollected)
+                    .orElse(CappedValue.EMPTY);
+        }
+
+        @Override
+        public List<String> getAliases() {
+            return List.of("tokens");
+        }
+    }
+
+    public static class TokenGatekeeperDepositedFunction extends Function<CappedValue> {
+        @Override
+        public CappedValue getValue(FunctionArguments arguments) {
+            return Models.Token.getGatekeepers()
+                    .findFirst()
+                    .map(TokenGatekeeper::getDeposited)
+                    .orElse(CappedValue.EMPTY);
+        }
+
+        @Override
+        public List<String> getAliases() {
+            return List.of("tokens_dep");
+        }
+    }
+
+    public static class TokenGatekeeperTypeFunction extends Function<String> {
+        @Override
+        public String getValue(FunctionArguments arguments) {
+            return Models.Token.getGatekeepers()
+                    .findFirst()
+                    .map(TokenGatekeeper::getType)
+                    .orElse("");
+        }
+
+        @Override
+        public List<String> getAliases() {
+            return List.of("token_type");
         }
     }
 
