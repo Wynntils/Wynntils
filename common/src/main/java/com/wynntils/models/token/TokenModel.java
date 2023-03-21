@@ -257,7 +257,7 @@ public class TokenModel extends Model {
             MiscItem miscItem = miscItemOpt.get();
             if (!miscItem.isUntradable()) return false;
 
-            return (miscItem.getName().contains(type));
+            return miscItem.getName().contains(type);
         }
 
         @Override
