@@ -83,6 +83,7 @@ import com.wynntils.features.overlays.ShamanMasksOverlayFeature;
 import com.wynntils.features.overlays.ShamanTotemTrackingFeature;
 import com.wynntils.features.overlays.SpellCastRenderFeature;
 import com.wynntils.features.overlays.StatusOverlayFeature;
+import com.wynntils.features.overlays.TradeMarketBulkSellFeature;
 import com.wynntils.features.players.AutoJoinPartyFeature;
 import com.wynntils.features.players.CustomNametagRendererFeature;
 import com.wynntils.features.players.GearViewerFeature;
@@ -234,6 +235,7 @@ public final class FeatureManager extends Manager {
         registerFeature(new TooltipFittingFeature());
         registerFeature(new TooltipVanillaHideFeature());
         registerFeature(new TradeMarketAutoOpenChatFeature());
+        registerFeature(new TradeMarketBulkSellFeature());
         registerFeature(new TradeMarketPriceConversionFeature());
         registerFeature(new TranslationFeature());
         registerFeature(new UnidentifiedItemIconFeature());
