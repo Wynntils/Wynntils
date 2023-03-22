@@ -26,6 +26,7 @@ import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import net.minecraft.ChatFormatting;
+import net.minecraft.core.Position;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.phys.Vec3;
@@ -45,7 +46,7 @@ public final class CharacterModel extends Model {
     // we need a .* in front because the message may have a custom timestamp prefix (or some other mod could do
     // something weird)
     private static final Pattern WYNN_DEATH_MESSAGE = Pattern.compile(".*§r §4§lYou have died\\.\\.\\.");
-    private Vec3 lastLocationBeforeTeleport;
+    private Position lastLocationBeforeTeleport;
     private Location lastDeathLocation;
 
     private boolean inCharacterSelection;
