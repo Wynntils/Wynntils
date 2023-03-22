@@ -782,6 +782,8 @@
   "feature.wynntils.tradeMarketBulkSell.bulkSell2Amount.description": "How many items should be sold when the bulk sell 2 button is pressed?",
   "feature.wynntils.tradeMarketBulkSell.bulkSell3Amount.name": "Bulk Sell 3 Amount",
   "feature.wynntils.tradeMarketBulkSell.bulkSell3Amount.description": "How many items should be sold when the bulk sell 3 button is pressed?",
+  "feature.wynntils.tradeMarketBulkSell.sellAll": "Sell All",
+  "feature.wynntils.tradeMarketBulkSell.sell": "Sell %d",
   "feature.wynntils.translation.keepOriginal.description": "Should the original message be displayed alongside the translation?",
   "feature.wynntils.translation.keepOriginal.name": "Display Original",
   "feature.wynntils.translation.languageName.description": "What is the ISO two letter language code of the target language? (You can find a list of ISO codes by searching for `List of ISO 639-1 codes` on Wikipedia.)",
