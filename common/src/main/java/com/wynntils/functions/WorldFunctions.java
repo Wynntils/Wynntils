@@ -7,7 +7,9 @@ package com.wynntils.functions;
 import com.wynntils.core.components.Models;
 import com.wynntils.core.functions.Function;
 import com.wynntils.core.functions.arguments.FunctionArguments;
+import com.wynntils.models.token.type.TokenGatekeeper;
 import com.wynntils.models.worlds.profile.ServerProfile;
+import com.wynntils.utils.type.CappedValue;
 import java.util.List;
 
 public class WorldFunctions {
@@ -55,6 +57,84 @@ public class WorldFunctions {
         @Override
         public List<String> getAliases() {
             return List.of("world_uptime", "uptime");
+        }
+    }
+
+    public static class TokenGatekeeperCountFunction extends Function<Integer> {
+        @Override
+        public Integer getValue(FunctionArguments arguments) {
+            return Models.Token.getGatekeepers().size();
+        }
+
+        @Override
+        public List<String> getAliases() {
+            return List.of("token_count");
+        }
+    }
+
+    public static class TokenGatekeeperDepositedFunction extends Function<CappedValue> {
+        @Override
+        public CappedValue getValue(FunctionArguments arguments) {
+            int index = arguments.getArgument("gatekeeperNumber").getIntegerValue() - 1;
+            List<TokenGatekeeper> gatekeeperList = Models.Token.getGatekeepers();
+            if (index >= gatekeeperList.size()) return CappedValue.EMPTY;
+
+            return gatekeeperList.get(index).getDeposited();
+        }
+
+        @Override
+        public FunctionArguments.Builder getArgumentsBuilder() {
+            return new FunctionArguments.OptionalArgumentBuilder(
+                    List.of(new FunctionArguments.Argument<>("gatekeeperNumber", Integer.class, 0)));
+        }
+
+        @Override
+        public List<String> getAliases() {
+            return List.of("token_dep");
+        }
+    }
+
+    public static class TokenGatekeeperFunction extends Function<CappedValue> {
+        @Override
+        public CappedValue getValue(FunctionArguments arguments) {
+            int index = arguments.getArgument("gatekeeperNumber").getIntegerValue() - 1;
+            List<TokenGatekeeper> gatekeeperList = Models.Token.getGatekeepers();
+            if (index >= gatekeeperList.size()) return CappedValue.EMPTY;
+
+            return Models.Token.getCollected(gatekeeperList.get(index));
+        }
+
+        @Override
+        public FunctionArguments.Builder getArgumentsBuilder() {
+            return new FunctionArguments.OptionalArgumentBuilder(
+                    List.of(new FunctionArguments.Argument<>("gatekeeperNumber", Integer.class, 0)));
+        }
+
+        @Override
+        public List<String> getAliases() {
+            return List.of("token");
+        }
+    }
+
+    public static class TokenGatekeeperTypeFunction extends Function<String> {
+        @Override
+        public String getValue(FunctionArguments arguments) {
+            int index = arguments.getArgument("gatekeeperNumber").getIntegerValue() - 1;
+            List<TokenGatekeeper> gatekeeperList = Models.Token.getGatekeepers();
+            if (index >= gatekeeperList.size()) return "";
+
+            return gatekeeperList.get(index).getType();
+        }
+
+        @Override
+        public FunctionArguments.Builder getArgumentsBuilder() {
+            return new FunctionArguments.OptionalArgumentBuilder(
+                    List.of(new FunctionArguments.Argument<>("gatekeeperNumber", Integer.class, 0)));
+        }
+
+        @Override
+        public List<String> getAliases() {
+            return List.of("token_type");
         }
     }
 

@@ -37,6 +37,7 @@ import com.wynntils.features.combat.MythicBlockerFeature;
 import com.wynntils.features.combat.MythicBoxScalerFeature;
 import com.wynntils.features.combat.PreventTradesDuelsFeature;
 import com.wynntils.features.combat.QuickCastFeature;
+import com.wynntils.features.combat.TokenTrackerFeature;
 import com.wynntils.features.commands.AddCommandExpansionFeature;
 import com.wynntils.features.commands.CommandAliasesFeature;
 import com.wynntils.features.commands.CustomCommandKeybindsFeature;
@@ -230,6 +231,7 @@ public final class FeatureManager extends Manager {
         registerFeature(new TelemetryFeature());
         registerFeature(new TerritoryDefenseMessageFeature());
         registerFeature(new TerritoryMessageRedirectFeature());
+        registerFeature(new TokenTrackerFeature());
         registerFeature(new TooltipFittingFeature());
         registerFeature(new TooltipVanillaHideFeature());
         registerFeature(new TradeMarketAutoOpenChatFeature());

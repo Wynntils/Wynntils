@@ -7,12 +7,19 @@ package com.wynntils.utils.mc.type;
 import com.wynntils.models.map.PoiLocation;
 import com.wynntils.utils.MathUtils;
 import com.wynntils.utils.mc.PosUtils;
+import java.util.Comparator;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Position;
 import net.minecraft.world.phys.Vec3;
 import org.joml.Vector3d;
 
-public class Location {
+public class Location implements Comparable<Location> {
+    // Compare first x, then z, and finally y
+    private static final Comparator<Location> LOCATION_COMPARATOR = Comparator.comparing(
+                    Location::x, Integer::compareTo)
+            .thenComparing(Location::z, Integer::compareTo)
+            .thenComparing(Location::y, Integer::compareTo);
+
     public final int x;
     public final int y;
     public final int z;
@@ -76,5 +83,10 @@ public class Location {
 
     public int z() {
         return z;
+    }
+
+    @Override
+    public int compareTo(Location that) {
+        return LOCATION_COMPARATOR.compare(this, that);
     }
 }

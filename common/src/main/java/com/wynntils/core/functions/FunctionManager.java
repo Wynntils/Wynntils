@@ -353,6 +353,10 @@ public final class FunctionManager extends Manager {
         registerFunction(new WorldFunctions.MobTotemDistanceFunction());
         registerFunction(new WorldFunctions.MobTotemOwnerFunction());
         registerFunction(new WorldFunctions.MobTotemTimeLeftFunction());
+        registerFunction(new WorldFunctions.TokenGatekeeperCountFunction());
+        registerFunction(new WorldFunctions.TokenGatekeeperDepositedFunction());
+        registerFunction(new WorldFunctions.TokenGatekeeperFunction());
+        registerFunction(new WorldFunctions.TokenGatekeeperTypeFunction());
 
         registerFunction(new CharacterFunctions.BpsFunction());
         registerFunction(new CharacterFunctions.BpsXzFunction());
