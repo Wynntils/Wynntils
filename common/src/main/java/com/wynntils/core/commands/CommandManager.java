@@ -7,6 +7,7 @@ package com.wynntils.core.commands;
 import com.mojang.brigadier.CommandDispatcher;
 import com.mojang.brigadier.ParseResults;
 import com.mojang.brigadier.StringReader;
+import com.mojang.brigadier.builder.LiteralArgumentBuilder;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import com.mojang.brigadier.suggestion.Suggestions;
 import com.mojang.brigadier.tree.CommandNode;
@@ -59,6 +60,10 @@ public final class CommandManager extends Manager {
     public void addNode(
             RootCommandNode<SharedSuggestionProvider> root, CommandNode<? extends SharedSuggestionProvider> node) {
         root.addChild((LiteralCommandNode<SharedSuggestionProvider>) node);
+    }
+
+    public LiteralCommandNode<CommandSourceStack> registerCommand(LiteralArgumentBuilder<CommandSourceStack> command) {
+        return clientDispatcher.register(command);
     }
 
     private void registerCommand(Command command) {
