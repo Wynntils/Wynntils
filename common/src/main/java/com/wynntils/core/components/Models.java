@@ -43,6 +43,7 @@ import com.wynntils.models.statuseffects.StatusEffectModel;
 import com.wynntils.models.territories.GuildAttackTimerModel;
 import com.wynntils.models.territories.TerritoryModel;
 import com.wynntils.models.territories.TowerAuraTimerModel;
+import com.wynntils.models.token.TokenModel;
 import com.wynntils.models.worlds.BombBellModel;
 import com.wynntils.models.worlds.ServerListModel;
 import com.wynntils.models.worlds.WorldStateModel;
@@ -69,6 +70,7 @@ public final class Models {
     public static final StatModel Stat = new StatModel();
     public static final StatusEffectModel StatusEffect = new StatusEffectModel();
     public static final TerritoryModel Territory = new TerritoryModel();
+    public static final TokenModel Token = new TokenModel();
     public static final WorldStateModel WorldState = new WorldStateModel();
     public static final WynnItemModel WynnItem = new WynnItemModel();
 
