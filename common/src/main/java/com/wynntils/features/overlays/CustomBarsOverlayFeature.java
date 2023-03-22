@@ -95,7 +95,7 @@ public class CustomBarsOverlayFeature extends Feature {
         @Override
         protected void renderBar(
                 PoseStack poseStack,
-                MultiBufferSource.BufferSource bufferSource,
+                MultiBufferSource bufferSource,
                 float renderY,
                 float renderHeight,
                 float progress) {
@@ -141,7 +141,7 @@ public class CustomBarsOverlayFeature extends Feature {
         @Override
         protected void renderBar(
                 PoseStack poseStack,
-                MultiBufferSource.BufferSource bufferSource,
+                MultiBufferSource bufferSource,
                 float renderY,
                 float renderHeight,
                 float progress) {
@@ -186,11 +186,7 @@ public class CustomBarsOverlayFeature extends Feature {
 
         @Override
         protected void renderBar(
-                PoseStack poseStack,
-                MultiBufferSource.BufferSource bufferSource,
-                float renderY,
-                float barHeight,
-                float progress) {
+                PoseStack poseStack, MultiBufferSource bufferSource, float renderY, float barHeight, float progress) {
             BufferedRenderUtils.drawProgressBar(
                     poseStack,
                     bufferSource,
@@ -232,11 +228,7 @@ public class CustomBarsOverlayFeature extends Feature {
 
         @Override
         protected void renderBar(
-                PoseStack poseStack,
-                MultiBufferSource.BufferSource bufferSource,
-                float renderY,
-                float barHeight,
-                float progress) {
+                PoseStack poseStack, MultiBufferSource bufferSource, float renderY, float barHeight, float progress) {
             BufferedRenderUtils.drawProgressBar(
                     poseStack,
                     bufferSource,

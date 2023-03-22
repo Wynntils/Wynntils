@@ -70,8 +70,7 @@ public class GuildAttackTimerOverlayFeature extends Feature {
         }
 
         @Override
-        public void render(
-                PoseStack poseStack, MultiBufferSource.BufferSource bufferSource, float partialTicks, Window window) {
+        public void render(PoseStack poseStack, MultiBufferSource bufferSource, float partialTicks, Window window) {
             BufferedFontRenderer.getInstance()
                     .renderTextsWithAlignment(
                             poseStack,
@@ -91,7 +90,7 @@ public class GuildAttackTimerOverlayFeature extends Feature {
 
         @Override
         public void renderPreview(
-                PoseStack poseStack, MultiBufferSource.BufferSource bufferSource, float partialTicks, Window window) {
+                PoseStack poseStack, MultiBufferSource bufferSource, float partialTicks, Window window) {
             BufferedFontRenderer.getInstance()
                     .renderTextWithAlignment(
                             poseStack,

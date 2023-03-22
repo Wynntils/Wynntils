@@ -82,8 +82,7 @@ public class ObjectivesOverlayFeature extends Feature {
         }
 
         @Override
-        public void render(
-                PoseStack poseStack, MultiBufferSource.BufferSource bufferSource, float partialTicks, Window window) {
+        public void render(PoseStack poseStack, MultiBufferSource bufferSource, float partialTicks, Window window) {
             WynnObjective guildObjective = Models.Objectives.getGuildObjective();
 
             if (guildObjective == null) {
@@ -170,8 +169,7 @@ public class ObjectivesOverlayFeature extends Feature {
         }
 
         @Override
-        public void render(
-                PoseStack poseStack, MultiBufferSource.BufferSource bufferSource, float partialTicks, Window window) {
+        public void render(PoseStack poseStack, MultiBufferSource bufferSource, float partialTicks, Window window) {
             List<WynnObjective> objectives = Models.Objectives.getPersonalObjectives();
 
             final int barHeight = this.enableProgressBar.get() ? 5 : 0;

@@ -345,6 +345,8 @@ public final class FeatureManager extends Manager {
 
         WynntilsMod.unregisterEventListener(feature);
 
+        Managers.Overlay.disableOverlays(feature);
+
         Managers.KeyBind.disableFeatureKeyBinds(feature);
     }
 

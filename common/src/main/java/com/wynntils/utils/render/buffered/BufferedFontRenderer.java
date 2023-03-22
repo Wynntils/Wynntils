@@ -170,7 +170,7 @@ public final class BufferedFontRenderer {
 
     public void renderAlignedTextInBox(
             PoseStack poseStack,
-            MultiBufferSource.BufferSource bufferSource,
+            MultiBufferSource bufferSource,
             String text,
             float x1,
             float x2,
@@ -212,7 +212,7 @@ public final class BufferedFontRenderer {
 
     public void renderAlignedTextInBox(
             PoseStack poseStack,
-            MultiBufferSource.BufferSource bufferSource,
+            MultiBufferSource bufferSource,
             String text,
             float x1,
             float x2,
@@ -241,7 +241,7 @@ public final class BufferedFontRenderer {
 
     public void renderAlignedTextInBox(
             PoseStack poseStack,
-            MultiBufferSource.BufferSource bufferSource,
+            MultiBufferSource bufferSource,
             String text,
             float x1,
             float x2,
@@ -268,7 +268,7 @@ public final class BufferedFontRenderer {
 
     public void renderAlignedTextInBox(
             PoseStack poseStack,
-            MultiBufferSource.BufferSource bufferSource,
+            MultiBufferSource bufferSource,
             String text,
             float x,
             float y1,
@@ -359,7 +359,7 @@ public final class BufferedFontRenderer {
 
     public void renderTextsWithAlignment(
             PoseStack poseStack,
-            MultiBufferSource.BufferSource bufferSource,
+            MultiBufferSource bufferSource,
             float x,
             float y,
             List<TextRenderTask> toRender,
@@ -385,11 +385,7 @@ public final class BufferedFontRenderer {
     }
 
     public void renderTexts(
-            PoseStack poseStack,
-            MultiBufferSource.BufferSource bufferSource,
-            float x,
-            float y,
-            List<TextRenderTask> lines) {
+            PoseStack poseStack, MultiBufferSource bufferSource, float x, float y, List<TextRenderTask> lines) {
         float currentY = y;
         for (TextRenderTask line : lines) {
             renderText(poseStack, bufferSource, x, currentY, line);
@@ -401,8 +397,7 @@ public final class BufferedFontRenderer {
         }
     }
 
-    public void renderText(
-            PoseStack poseStack, MultiBufferSource.BufferSource bufferSource, float x, float y, TextRenderTask line) {
+    public void renderText(PoseStack poseStack, MultiBufferSource bufferSource, float x, float y, TextRenderTask line) {
         renderText(
                 poseStack,
                 bufferSource,
@@ -418,7 +413,7 @@ public final class BufferedFontRenderer {
 
     public void renderText(
             PoseStack poseStack,
-            MultiBufferSource.BufferSource bufferSource,
+            MultiBufferSource bufferSource,
             String text,
             float x,
             float y,
@@ -443,7 +438,7 @@ public final class BufferedFontRenderer {
 
     public void renderTextWithAlignment(
             PoseStack poseStack,
-            MultiBufferSource.BufferSource bufferSource,
+            MultiBufferSource bufferSource,
             float renderX,
             float renderY,
             TextRenderTask toRender,

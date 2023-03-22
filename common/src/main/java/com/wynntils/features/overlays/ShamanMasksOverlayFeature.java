@@ -60,8 +60,7 @@ public class ShamanMasksOverlayFeature extends Feature {
         }
 
         @Override
-        public void render(
-                PoseStack poseStack, MultiBufferSource.BufferSource bufferSource, float partialTicks, Window window) {
+        public void render(PoseStack poseStack, MultiBufferSource bufferSource, float partialTicks, Window window) {
             ShamanMaskType currentMaskType = Models.ShamanMask.getCurrentMaskType();
 
             if (currentMaskType == ShamanMaskType.NONE && !displayNone.get()) return;
