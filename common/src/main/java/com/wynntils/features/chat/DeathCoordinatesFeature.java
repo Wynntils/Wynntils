@@ -29,12 +29,21 @@ public class DeathCoordinatesFeature extends Feature {
         if (!Models.WorldState.onWorld() || lastLocation == null) return;
         if (!e.getCodedMessage().contains("§r §4§lYou have died...")) return;
 
-        MutableComponent deathMessage = Component.translatable("feature.wynntils.deathCoordinates.diedAt").withStyle(ChatFormatting.DARK_RED);
-        MutableComponent coordMessage = Component.translatable("feature.wynntils.deathCoordinates.coordinates", lastLocation.getX(), lastLocation.getY(), lastLocation.getZ())
+        MutableComponent deathMessage = Component.translatable("feature.wynntils.deathCoordinates.diedAt")
+                .withStyle(ChatFormatting.DARK_RED);
+        MutableComponent coordMessage = Component.translatable(
+                        "feature.wynntils.deathCoordinates.coordinates",
+                        lastLocation.getX(),
+                        lastLocation.getY(),
+                        lastLocation.getZ())
                 .withStyle(ChatFormatting.DARK_RED)
                 .withStyle(ChatFormatting.UNDERLINE)
-                .withStyle(s -> s.withClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/compass at " + lastLocation.getX() + " " + lastLocation.getY() + " " + lastLocation.getZ())))
-                .withStyle(s -> s.withHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, Component.translatable("feature.wynntils.deathCoordindates.clickToCompass"))));
+                .withStyle(s -> s.withClickEvent(new ClickEvent(
+                        ClickEvent.Action.RUN_COMMAND,
+                        "/compass at " + lastLocation.getX() + " " + lastLocation.getY() + " " + lastLocation.getZ())))
+                .withStyle(s -> s.withHoverEvent(new HoverEvent(
+                        HoverEvent.Action.SHOW_TEXT,
+                        Component.translatable("feature.wynntils.deathCoordindates.clickToCompass"))));
 
         e.setCanceled(true);
         McUtils.player().sendSystemMessage(deathMessage.append(coordMessage));
@@ -44,6 +53,9 @@ public class DeathCoordinatesFeature extends Feature {
     public void onTick(TickEvent e) {
         if (!Models.WorldState.onWorld()) return;
 
-        lastLocation = new Vec3i(McUtils.player().getX(), McUtils.player().getY(), McUtils.player().getZ());
+        lastLocation = new Vec3i(
+                McUtils.player().getX(),
+                McUtils.player().getY(),
+                McUtils.player().getZ());
     }
 }
