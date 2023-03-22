@@ -4,29 +4,21 @@
  */
 package com.wynntils.models.characterstats;
 
-import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.components.Handlers;
 import com.wynntils.core.components.Model;
 import com.wynntils.core.components.Models;
-import com.wynntils.handlers.chat.event.ChatMessageReceivedEvent;
-import com.wynntils.mc.event.PlayerTeleportEvent;
 import com.wynntils.models.characterstats.actionbar.CoordinatesSegment;
 import com.wynntils.models.characterstats.actionbar.HealthSegment;
 import com.wynntils.models.characterstats.actionbar.ManaSegment;
 import com.wynntils.models.characterstats.actionbar.PowderSpecialSegment;
 import com.wynntils.models.characterstats.actionbar.SprintSegment;
-import com.wynntils.models.characterstats.event.CharacterDeathEvent;
 import com.wynntils.models.elements.type.Powder;
 import com.wynntils.utils.MathUtils;
 import com.wynntils.utils.mc.McUtils;
-import com.wynntils.utils.mc.type.Location;
 import com.wynntils.utils.type.CappedValue;
 import java.util.List;
-import java.util.regex.Pattern;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
-import net.minecraft.world.phys.Vec3;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
 
 public final class CharacterStatsModel extends Model {
     private final CoordinatesSegment coordinatesSegment = new CoordinatesSegment(this::centerSegmentCleared);
@@ -34,12 +26,6 @@ public final class CharacterStatsModel extends Model {
     private final ManaSegment manaSegment = new ManaSegment();
     private final PowderSpecialSegment powderSpecialSegment = new PowderSpecialSegment();
     private final SprintSegment sprintSegment = new SprintSegment();
-
-    // we need a .* in front because the message may have a custom timestamp prefix (or some other mod could do
-    // something weird)
-    private static final Pattern WYNN_DEATH_MESSAGE = Pattern.compile(".*§r §4§lYou have died\\.\\.\\.");
-    private Vec3 lastLocationBeforeTeleport;
-    private Location lastDeathLocation;
 
     public CharacterStatsModel(CombatXpModel combatXpModel) {
         super(List.of(combatXpModel));
@@ -118,18 +104,5 @@ public final class CharacterStatsModel extends Model {
 
     private void centerSegmentCleared() {
         powderSpecialSegment.replaced();
-    }
-
-    @SubscribeEvent
-    public void onChatReceived(ChatMessageReceivedEvent e) {
-        if (!WYNN_DEATH_MESSAGE.matcher(e.getCodedMessage()).matches()) return;
-        lastDeathLocation = Location.containing(lastLocationBeforeTeleport);
-        WynntilsMod.postEvent(new CharacterDeathEvent(lastDeathLocation));
-    }
-
-    @SubscribeEvent
-    public void beforePlayerTeleport(PlayerTeleportEvent e) {
-        if (McUtils.player() == null) return;
-        lastLocationBeforeTeleport = McUtils.player().position();
     }
 }
