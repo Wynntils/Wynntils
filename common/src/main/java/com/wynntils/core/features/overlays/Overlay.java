@@ -72,11 +72,9 @@ public abstract class Overlay extends AbstractConfigurable implements Translatab
         this.verticalAlignmentOverride.updateConfig(verticalAlignmentOverride);
     }
 
-    public abstract void render(
-            PoseStack poseStack, MultiBufferSource.BufferSource bufferSource, float partialTicks, Window window);
+    public abstract void render(PoseStack poseStack, MultiBufferSource bufferSource, float partialTicks, Window window);
 
-    public void renderPreview(
-            PoseStack poseStack, MultiBufferSource.BufferSource bufferSource, float partialTicks, Window window) {
+    public void renderPreview(PoseStack poseStack, MultiBufferSource bufferSource, float partialTicks, Window window) {
         this.render(poseStack, bufferSource, partialTicks, window);
     }
 

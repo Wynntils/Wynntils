@@ -47,7 +47,7 @@ public class TerritoryPoi implements Poi {
     @Override
     public void renderAt(
             PoseStack poseStack,
-            MultiBufferSource.BufferSource bufferSource,
+            MultiBufferSource bufferSource,
             float renderX,
             float renderY,
             boolean hovered,

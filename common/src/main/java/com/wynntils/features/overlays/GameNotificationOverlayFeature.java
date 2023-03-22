@@ -109,8 +109,7 @@ public class GameNotificationOverlayFeature extends Feature {
         }
 
         @Override
-        public void render(
-                PoseStack poseStack, MultiBufferSource.BufferSource bufferSource, float partialTicks, Window window) {
+        public void render(PoseStack poseStack, MultiBufferSource bufferSource, float partialTicks, Window window) {
             List<TimedMessageContainer> toRender = new ArrayList<>();
 
             ListIterator<TimedMessageContainer> messages = messageQueue.listIterator(messageQueue.size());
@@ -181,7 +180,7 @@ public class GameNotificationOverlayFeature extends Feature {
 
         @Override
         public void renderPreview(
-                PoseStack poseStack, MultiBufferSource.BufferSource bufferSource, float partialTicks, Window window) {
+                PoseStack poseStack, MultiBufferSource bufferSource, float partialTicks, Window window) {
             BufferedFontRenderer.getInstance()
                     .renderTextWithAlignment(
                             poseStack,
