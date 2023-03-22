@@ -11,9 +11,8 @@ import com.wynntils.models.character.CharacterModel;
 import com.wynntils.models.profession.type.ProfessionProgress;
 import com.wynntils.models.profession.type.ProfessionType;
 import com.wynntils.utils.mc.LoreUtils;
-
+import com.wynntils.utils.type.TimedSet;
 import java.util.Collections;
-import java.util.EnumMap;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -21,8 +20,6 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.TimeUnit;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-
-import com.wynntils.utils.type.TimedSet;
 import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 
@@ -52,7 +49,10 @@ public class ProfessionModel extends Model {
         Matcher matcher = PROFESSION_NODE_HARVERSTED_PATTERN.matcher(event.getName());
 
         if (matcher.matches()) {
-            updateValue(ProfessionType.fromString(matcher.group("name")), Float.parseFloat(matcher.group("current")), Float.parseFloat(matcher.group("gain")));
+            updateValue(
+                    ProfessionType.fromString(matcher.group("name")),
+                    Float.parseFloat(matcher.group("current")),
+                    Float.parseFloat(matcher.group("gain")));
         }
     }
 
@@ -63,7 +63,10 @@ public class ProfessionModel extends Model {
         Matcher matcher = PROFESSION_CRAFT_PATTERN.matcher(codedMessage);
 
         if (matcher.matches()) {
-            updateValue(ProfessionType.fromString(matcher.group("name")), Float.parseFloat(matcher.group("current")), Float.parseFloat(matcher.group("gain")));
+            updateValue(
+                    ProfessionType.fromString(matcher.group("name")),
+                    Float.parseFloat(matcher.group("current")),
+                    Float.parseFloat(matcher.group("gain")));
         }
     }
 
