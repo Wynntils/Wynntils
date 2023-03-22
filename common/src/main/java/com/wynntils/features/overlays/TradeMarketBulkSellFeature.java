@@ -1,3 +1,7 @@
+/*
+ * Copyright © Wynntils 2023.
+ * This file is released under AGPLv3. See LICENSE for full license details.
+ */
 package com.wynntils.features.overlays;
 
 import com.wynntils.core.WynntilsMod;
@@ -13,17 +17,16 @@ import com.wynntils.screens.base.widgets.WynntilsButton;
 import com.wynntils.utils.mc.ComponentUtils;
 import com.wynntils.utils.mc.McUtils;
 import com.wynntils.utils.wynn.ContainerUtils;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import net.minecraft.client.gui.screens.inventory.ContainerScreen;
 import net.minecraft.client.gui.screens.inventory.MenuAccess;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.inventory.ChestMenu;
 import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
-
-import java.util.ArrayList;
-import java.util.List;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 @ConfigCategory(Category.OVERLAYS)
 public class TradeMarketBulkSellFeature extends Feature {
@@ -37,7 +40,8 @@ public class TradeMarketBulkSellFeature extends Feature {
     @RegisterConfig
     public Config<Integer> bulkSell3Amount = new Config<>(6399);
 
-    private static final Pattern ITEM_NAME_PATTERN = Pattern.compile("§6Selling §f(\\d+|\\d+,\\d+) ([^À]*)À*§6 for §f[\\d,]*§7² Each");
+    private static final Pattern ITEM_NAME_PATTERN =
+            Pattern.compile("§6Selling §f(\\d+|\\d+,\\d+) ([^À]*)À*§6 for §f[\\d,]*§7² Each");
     private static final String SELL_DIALOGUE_TITLE = "What would you like to sell?";
     private static final int SELLABLE_ITEM_SLOT = 10;
     private static final int AMOUNT_ITEM_SLOT = 11;
@@ -79,7 +83,8 @@ public class TradeMarketBulkSellFeature extends Feature {
     @SubscribeEvent
     public void onChatMessage(ChatMessageReceivedEvent e) {
         if (!shouldSend) return;
-        if (!ComponentUtils.getUnformatted(e.getMessage()).contains("Type the amount you wish to sell or type 'cancel' to cancel:")) return;
+        if (!ComponentUtils.getUnformatted(e.getMessage())
+                .contains("Type the amount you wish to sell or type 'cancel' to cancel:")) return;
 
         WynntilsMod.info("Trying to bulk sell " + amountToSend + " items");
         McUtils.mc().getConnection().sendChat(String.valueOf(amountToSend));
@@ -111,7 +116,14 @@ public class TradeMarketBulkSellFeature extends Feature {
         private int amount;
 
         private SellButton(int x, int y, int amount, boolean isAll) {
-            super(x, y, BUTTON_WIDTH, 20, isAll ? Component.translatable("feature.wynntils.tradeMarketBulkSell.sellAll") : Component.translatable("feature.wynntils.tradeMarketBulkSell.sell", amount));
+            super(
+                    x,
+                    y,
+                    BUTTON_WIDTH,
+                    20,
+                    isAll
+                            ? Component.translatable("feature.wynntils.tradeMarketBulkSell.sellAll")
+                            : Component.translatable("feature.wynntils.tradeMarketBulkSell.sell", amount));
             this.amount = amount;
         }
 
@@ -119,7 +131,11 @@ public class TradeMarketBulkSellFeature extends Feature {
         public void onPress() {
             shouldSend = true;
             amountToSend = amount;
-            ContainerUtils.clickOnSlot(AMOUNT_ITEM_SLOT, McUtils.containerMenu().containerId, 0, McUtils.containerMenu().getItems());
+            ContainerUtils.clickOnSlot(
+                    AMOUNT_ITEM_SLOT,
+                    McUtils.containerMenu().containerId,
+                    0,
+                    McUtils.containerMenu().getItems());
         }
 
         private void setAmount(int amount) {
