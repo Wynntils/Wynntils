@@ -10,8 +10,8 @@ import com.wynntils.models.abilities.ShamanMaskModel;
 import com.wynntils.models.abilities.ShamanTotemModel;
 import com.wynntils.models.character.CharacterModel;
 import com.wynntils.models.character.CharacterSelectionModel;
-import com.wynntils.models.characterstats.CharacterStatsModel;
-import com.wynntils.models.characterstats.CombatXpModel;
+import com.wynntils.models.characterstate.CharacterStateModel;
+import com.wynntils.models.characterstate.CombatXpModel;
 import com.wynntils.models.containers.ContainerModel;
 import com.wynntils.models.containers.LootChestModel;
 import com.wynntils.models.containers.PlayerInventoryModel;
@@ -76,7 +76,7 @@ public final class Models {
 
     // Models with dependencies, ordered alphabetically as far as possible
     public static final CombatXpModel CombatXp = new CombatXpModel(WorldState);
-    public static final CharacterStatsModel CharacterStats = new CharacterStatsModel(CombatXp);
+    public static final CharacterStateModel CharacterState = new CharacterStateModel(CombatXp);
     public static final FriendsModel Friends = new FriendsModel(WorldState);
     public static final GearModel Gear = new GearModel(Element, Stat, WynnItem);
     public static final HadesModel Hades = new HadesModel(Character, WorldState);
