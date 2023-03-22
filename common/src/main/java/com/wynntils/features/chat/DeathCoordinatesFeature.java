@@ -8,11 +8,10 @@ import com.wynntils.core.config.Category;
 import com.wynntils.core.config.ConfigCategory;
 import com.wynntils.core.features.Feature;
 import com.wynntils.models.characterstate.event.CharacterDeathEvent;
+import com.wynntils.utils.mc.ComponentUtils;
 import com.wynntils.utils.mc.McUtils;
 import net.minecraft.ChatFormatting;
-import net.minecraft.network.chat.ClickEvent;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.HoverEvent;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 
@@ -20,20 +19,11 @@ import net.minecraftforge.eventbus.api.SubscribeEvent;
 public class DeathCoordinatesFeature extends Feature {
 
     @SubscribeEvent
-    public void onChatReceived(CharacterDeathEvent e) {
+    public void onCharacterDeath(CharacterDeathEvent e) {
 
         MutableComponent deathMessage = Component.translatable("feature.wynntils.deathCoordinates.diedAt")
                 .withStyle(ChatFormatting.DARK_RED);
-        MutableComponent coordMessage = Component.translatable(
-                        "feature.wynntils.deathCoordinates.coordinates", e.getDeathX(), e.getDeathY(), e.getDeathZ())
-                .withStyle(ChatFormatting.DARK_RED)
-                .withStyle(ChatFormatting.UNDERLINE)
-                .withStyle(s -> s.withClickEvent(new ClickEvent(
-                        ClickEvent.Action.RUN_COMMAND,
-                        "/compass at " + e.getDeathX() + " " + e.getDeathY() + " " + e.getDeathZ())))
-                .withStyle(s -> s.withHoverEvent(new HoverEvent(
-                        HoverEvent.Action.SHOW_TEXT,
-                        Component.translatable("feature.wynntils.deathCoordindates.clickToCompass"))));
+        Component coordMessage = ComponentUtils.createLocationComponent(e.getLocation());
 
         McUtils.player().sendSystemMessage(deathMessage.append(coordMessage));
     }

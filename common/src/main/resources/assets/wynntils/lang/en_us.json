@@ -189,11 +189,9 @@
   "feature.wynntils.dataStorage.dryCount.description": "Dry Count for Function variable",
   "feature.wynntils.dataStorage.dryCount.name": "Dry Count",
   "feature.wynntils.dataStorage.name": "Data Storage",
-  "feature.wynntils.deathCoordinates.coordinates": "X: %d, Y: %d, Z: %d...",
   "feature.wynntils.deathCoordinates.diedAt": "You have died at ",
   "feature.wynntils.deathCoordinates.name": "Death Coordinates",
   "feature.wynntils.deathCoordinates.showDeathCoordinates.description": "Should the coordinates of your last death be shown in chat?",
-  "feature.wynntils.deathCoordindates.clickToCompass": "Click to set compass to this location",
   "feature.wynntils.dialogueOptionOverride.name": "Dialogue Button Override",
   "feature.wynntils.durabilityArc.name": "Durability Arc",
   "feature.wynntils.durabilityArc.renderDurabilityArcHotbar.description": "Should a durability arc be added to breakable items in your hotbar?",
@@ -1417,5 +1415,6 @@
   "screens.wynntils.wynntilsQuestBook.sort.distance.name": "Sort by Distance",
   "screens.wynntils.wynntilsQuestBook.sort.level.description": "Quests are sorted by level, lowest first",
   "screens.wynntils.wynntilsQuestBook.sort.level.name": "Sort by Level",
-  "screens.wynntils.wynntilsQuestBook.tryReload": "No quests found! Try reloading quests by pressing the button in the top right corner."
+  "screens.wynntils.wynntilsQuestBook.tryReload": "No quests found! Try reloading quests by pressing the button in the top right corner.",
+  "utils.wynntils.component.clickToSetCompass": "Click here to set your compass to this location"
 }

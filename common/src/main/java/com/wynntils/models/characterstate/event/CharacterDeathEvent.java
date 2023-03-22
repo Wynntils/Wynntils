@@ -4,30 +4,18 @@
  */
 package com.wynntils.models.characterstate.event;
 
-import net.minecraft.world.phys.Vec3;
+import com.wynntils.utils.mc.type.Location;
 import net.minecraftforge.eventbus.api.Event;
 
 public class CharacterDeathEvent extends Event {
 
-    private final Vec3 deathLocation;
+    private final Location location;
 
-    public CharacterDeathEvent(Vec3 deathLocation) {
-        this.deathLocation = deathLocation;
+    public CharacterDeathEvent(Location location) {
+        this.location = location;
     }
 
-    public Vec3 getDeathLocation() {
-        return deathLocation;
-    }
-
-    public int getDeathX() {
-        return (int) deathLocation.x;
-    }
-
-    public int getDeathY() {
-        return (int) deathLocation.y;
-    }
-
-    public int getDeathZ() {
-        return (int) deathLocation.z;
+    public Location getLocation() {
+        return location;
     }
 }

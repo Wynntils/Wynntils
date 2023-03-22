@@ -213,7 +213,7 @@ public abstract class ClientPacketListenerMixin {
 
     @Inject(
             method = "handleMovePlayer(Lnet/minecraft/network/protocol/game/ClientboundPlayerPositionPacket;)V",
-            at = @At("RETURN"))
+            at = @At("HEAD"))
     private void handleMovePlayerPost(ClientboundPlayerPositionPacket packet, CallbackInfo ci) {
         if (!isRenderThread()) return;
         if (!packet.getRelativeArguments().isEmpty()) return;
