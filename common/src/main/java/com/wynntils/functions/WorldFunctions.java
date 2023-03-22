@@ -75,10 +75,17 @@ public class WorldFunctions {
     public static class TokenGatekeeperDepositedFunction extends Function<CappedValue> {
         @Override
         public CappedValue getValue(FunctionArguments arguments) {
-            List<TokenGatekeeper> gatekeepers = Models.Token.getGatekeepers();
-            if (gatekeepers.isEmpty()) return CappedValue.EMPTY;
+            int index = arguments.getArgument("gatekeeperNumber").getIntegerValue() - 1;
+            List<TokenGatekeeper> gatekeeperList = Models.Token.getGatekeepers();
+            if (index >= gatekeeperList.size()) return CappedValue.EMPTY;
 
-            return gatekeepers.get(0).getDeposited();
+            return gatekeeperList.get(index).getDeposited();
+        }
+
+        @Override
+        public FunctionArguments.Builder getArgumentsBuilder() {
+            return new FunctionArguments.OptionalArgumentBuilder(
+                    List.of(new FunctionArguments.Argument<>("gatekeeperNumber", Integer.class, 0)));
         }
 
         @Override
@@ -90,10 +97,17 @@ public class WorldFunctions {
     public static class TokenGatekeeperFunction extends Function<CappedValue> {
         @Override
         public CappedValue getValue(FunctionArguments arguments) {
-            List<TokenGatekeeper> gatekeepers = Models.Token.getGatekeepers();
-            if (gatekeepers.isEmpty()) return CappedValue.EMPTY;
+            int index = arguments.getArgument("gatekeeperNumber").getIntegerValue() - 1;
+            List<TokenGatekeeper> gatekeeperList = Models.Token.getGatekeepers();
+            if (index >= gatekeeperList.size()) return CappedValue.EMPTY;
 
-            return Models.Token.getCollected(gatekeepers.get(0));
+            return Models.Token.getCollected(gatekeeperList.get(index));
+        }
+
+        @Override
+        public FunctionArguments.Builder getArgumentsBuilder() {
+            return new FunctionArguments.OptionalArgumentBuilder(
+                    List.of(new FunctionArguments.Argument<>("gatekeeperNumber", Integer.class, 0)));
         }
 
         @Override
@@ -105,65 +119,6 @@ public class WorldFunctions {
     public static class TokenGatekeeperTypeFunction extends Function<String> {
         @Override
         public String getValue(FunctionArguments arguments) {
-            List<TokenGatekeeper> gatekeepers = Models.Token.getGatekeepers();
-            if (gatekeepers.isEmpty()) return "";
-
-            return gatekeepers.get(0).getType();
-        }
-
-        @Override
-        public List<String> getAliases() {
-            return List.of("token_type");
-        }
-    }
-
-    public static class TokenGatekeepersDepositedFunction extends Function<CappedValue> {
-        @Override
-        public CappedValue getValue(FunctionArguments arguments) {
-            int index = arguments.getArgument("gatekeeperNumber").getIntegerValue() - 1;
-            List<TokenGatekeeper> gatekeeperList = Models.Token.getGatekeepers();
-            if (index >= gatekeeperList.size()) return CappedValue.EMPTY;
-
-            return gatekeeperList.get(index).getDeposited();
-        }
-
-        @Override
-        public FunctionArguments.Builder getArgumentsBuilder() {
-            return new FunctionArguments.RequiredArgumentBuilder(
-                    List.of(new FunctionArguments.Argument<>("gatekeeperNumber", Integer.class, null)));
-        }
-
-        @Override
-        public List<String> getAliases() {
-            return List.of("tokens_dep");
-        }
-    }
-
-    public static class TokenGatekeepersFunction extends Function<CappedValue> {
-        @Override
-        public CappedValue getValue(FunctionArguments arguments) {
-            int index = arguments.getArgument("gatekeeperNumber").getIntegerValue() - 1;
-            List<TokenGatekeeper> gatekeeperList = Models.Token.getGatekeepers();
-            if (index >= gatekeeperList.size()) return CappedValue.EMPTY;
-
-            return Models.Token.getCollected(gatekeeperList.get(index));
-        }
-
-        @Override
-        public FunctionArguments.Builder getArgumentsBuilder() {
-            return new FunctionArguments.RequiredArgumentBuilder(
-                    List.of(new FunctionArguments.Argument<>("gatekeeperNumber", Integer.class, null)));
-        }
-
-        @Override
-        public List<String> getAliases() {
-            return List.of("tokens");
-        }
-    }
-
-    public static class TokenGatekeepersTypeFunction extends Function<String> {
-        @Override
-        public String getValue(FunctionArguments arguments) {
             int index = arguments.getArgument("gatekeeperNumber").getIntegerValue() - 1;
             List<TokenGatekeeper> gatekeeperList = Models.Token.getGatekeepers();
             if (index >= gatekeeperList.size()) return "";
@@ -173,13 +128,13 @@ public class WorldFunctions {
 
         @Override
         public FunctionArguments.Builder getArgumentsBuilder() {
-            return new FunctionArguments.RequiredArgumentBuilder(
-                    List.of(new FunctionArguments.Argument<>("gatekeeperNumber", Integer.class, null)));
+            return new FunctionArguments.OptionalArgumentBuilder(
+                    List.of(new FunctionArguments.Argument<>("gatekeeperNumber", Integer.class, 0)));
         }
 
         @Override
         public List<String> getAliases() {
-            return List.of("tokens_type");
+            return List.of("token_type");
         }
     }
 

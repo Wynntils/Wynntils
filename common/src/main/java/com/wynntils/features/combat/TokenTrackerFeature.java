@@ -56,8 +56,8 @@ public class TokenTrackerFeature extends Feature {
         @Override
         public BarOverlayTemplatePair getTemplate() {
             return new BarOverlayTemplatePair(
-                    color.get().toString() + "{tokens_type(" + getId() + ")}: {tokens(" + getId() + ")}",
-                    "tokens(" + getId() + ")");
+                    color.get().toString() + "{token_type(" + getId() + ")}: {token(" + getId() + ")}",
+                    "token(" + getId() + ")");
         }
 
         @Override
