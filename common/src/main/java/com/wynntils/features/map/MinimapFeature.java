@@ -113,8 +113,7 @@ public class MinimapFeature extends Feature {
         // FIXME: This is the only overlay not to use buffer sources for rendering. This is due to `createMask`
         // currently not working with buffer sources.
         @Override
-        public void render(
-                PoseStack poseStack, MultiBufferSource.BufferSource bufferSource, float partialTicks, Window window) {
+        public void render(PoseStack poseStack, MultiBufferSource bufferSource, float partialTicks, Window window) {
             if (!Models.WorldState.onWorld()) return;
 
             RenderSystem.setShaderColor(1f, 1f, 1f, 1f);

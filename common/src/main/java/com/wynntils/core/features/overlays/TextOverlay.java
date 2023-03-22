@@ -63,23 +63,21 @@ public abstract class TextOverlay extends DynamicOverlay {
     }
 
     @Override
-    public void render(
-            PoseStack poseStack, MultiBufferSource.BufferSource bufferSource, float partialTicks, Window window) {
+    public void render(PoseStack poseStack, MultiBufferSource bufferSource, float partialTicks, Window window) {
         if (!Models.WorldState.onWorld()) return;
 
         renderTemplate(poseStack, bufferSource, getTemplate(), getTextScale());
     }
 
     @Override
-    public void renderPreview(
-            PoseStack poseStack, MultiBufferSource.BufferSource bufferSource, float partialTicks, Window window) {
+    public void renderPreview(PoseStack poseStack, MultiBufferSource bufferSource, float partialTicks, Window window) {
         if (!Models.WorldState.onWorld()) return;
 
         renderTemplate(poseStack, bufferSource, getPreviewTemplate(), getTextScale());
     }
 
     protected void renderTemplate(
-            PoseStack poseStack, MultiBufferSource.BufferSource bufferSource, String template, float textScale) {
+            PoseStack poseStack, MultiBufferSource bufferSource, String template, float textScale) {
         updateCachedLines(template);
 
         float renderX = this.getRenderX();
