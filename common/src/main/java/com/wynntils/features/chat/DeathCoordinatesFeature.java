@@ -12,7 +12,6 @@ import com.wynntils.handlers.chat.event.ChatMessageReceivedEvent;
 import com.wynntils.mc.event.TickEvent;
 import com.wynntils.utils.mc.McUtils;
 import net.minecraft.ChatFormatting;
-import net.minecraft.core.Vec3i;
 import net.minecraft.network.chat.ClickEvent;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.HoverEvent;
@@ -34,14 +33,15 @@ public class DeathCoordinatesFeature extends Feature {
                 .withStyle(ChatFormatting.DARK_RED);
         MutableComponent coordMessage = Component.translatable(
                         "feature.wynntils.deathCoordinates.coordinates",
-                        lastLocation.x(),
-                        lastLocation.y(),
-                        lastLocation.z())
+                        (int) lastLocation.x(),
+                        (int) lastLocation.y(),
+                        (int) lastLocation.z())
                 .withStyle(ChatFormatting.DARK_RED)
                 .withStyle(ChatFormatting.UNDERLINE)
                 .withStyle(s -> s.withClickEvent(new ClickEvent(
                         ClickEvent.Action.RUN_COMMAND,
-                        "/compass at " + lastLocation.x() + " " + lastLocation.y() + " " + lastLocation.z())))
+                        "/compass at " + (int) lastLocation.x() + " " + (int) lastLocation.y() + " "
+                                + (int) lastLocation.z())))
                 .withStyle(s -> s.withHoverEvent(new HoverEvent(
                         HoverEvent.Action.SHOW_TEXT,
                         Component.translatable("feature.wynntils.deathCoordindates.clickToCompass"))));
@@ -52,6 +52,7 @@ public class DeathCoordinatesFeature extends Feature {
 
     @SubscribeEvent
     public void onTick(TickEvent e) {
+        if (McUtils.player() == null) return;
         lastLocation = McUtils.player().position();
     }
 }
