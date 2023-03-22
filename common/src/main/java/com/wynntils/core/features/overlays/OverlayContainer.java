@@ -41,23 +41,26 @@ public class OverlayContainer extends Overlay {
 
     public void addChild(Overlay overlay) {
         inherentSize.put(overlay, overlay.getSize().copy());
-        int currentHeight = children.stream()
+
+        int accumulatedHeight = children.stream()
                 .mapToInt(o -> (int) o.size.get().getHeight() + spacing.get())
                 .sum();
-        int currentWidth = children.stream()
+        int accumulatedWidth = children.stream()
                 .mapToInt(o -> (int) o.size.get().getWidth() + spacing.get())
                 .sum();
 
         GrowDirection direction = growDirection.get();
-        overlay.setPosition(direction.getChildPosition(
-                getRenderX(), getRenderY(), getSize(), overlay.getSize(), currentHeight, currentWidth));
-        direction.updateSize(overlay, this.getSize(), inherentSize.get(overlay));
+        updateChildLayout(overlay, direction, accumulatedWidth, accumulatedHeight);
 
         children.add(overlay);
     }
 
     public void clearChildren() {
         children.clear();
+    }
+
+    public int size() {
+        return children.size();
     }
 
     @Override
@@ -68,50 +71,51 @@ public class OverlayContainer extends Overlay {
 
     @Override
     protected void onConfigUpdate(ConfigHolder configHolder) {
-        updateChildrenLayout();
-
-        children.forEach(o -> o.onConfigUpdate(configHolder));
-    }
-
-    public int size() {
-        return children.size();
+        updateAllChildrenLayout();
     }
 
     @Override
     public void setPosition(OverlayPosition position) {
         super.setPosition(position);
 
-        updateChildrenLayout();
-    }
-
-    private void updateChildrenLayout() {
-        // Update position for all children
-        int currentHeight = 0;
-        int currentWidth = 0;
-        GrowDirection direction = growDirection.get();
-
-        for (Overlay overlay : children) {
-            overlay.setPosition(direction.getChildPosition(
-                    getRenderX(), getRenderY(), getSize(), overlay.getSize(), currentHeight, currentWidth));
-            direction.updateSize(overlay, this.getSize(), inherentSize.get(overlay));
-
-            currentHeight += overlay.getSize().getHeight() + spacing.get();
-            currentWidth += overlay.getSize().getWidth() + spacing.get();
-        }
+        updateAllChildrenLayout();
     }
 
     @Override
     public void setHeight(float height) {
         super.setHeight(height);
 
-        updateChildrenLayout();
+        updateAllChildrenLayout();
     }
 
     @Override
     public void setWidth(float width) {
         super.setWidth(width);
 
-        updateChildrenLayout();
+        updateAllChildrenLayout();
+    }
+
+    private void updateAllChildrenLayout() {
+        // Update position for all children
+        int currentHeight = 0;
+        int currentWidth = 0;
+        GrowDirection direction = growDirection.get();
+
+        for (Overlay overlay : children) {
+            updateChildLayout(overlay, direction, currentWidth, currentHeight);
+
+            currentHeight += overlay.getSize().getHeight() + spacing.get();
+            currentWidth += overlay.getSize().getWidth() + spacing.get();
+        }
+    }
+
+    private void updateChildLayout(
+            Overlay overlay, GrowDirection direction, int accumulatedWidth, int accumulatedHeight) {
+        overlay.setPosition(direction.getChildPosition(
+                getRenderX(), getRenderY(), getSize(), overlay.getSize(), accumulatedWidth, accumulatedHeight));
+        direction.updateSize(overlay, this.getSize(), inherentSize.get(overlay));
+        overlay.horizontalAlignmentOverride.updateConfig(horizontalAlignmentOverride.get());
+        overlay.verticalAlignmentOverride.updateConfig(verticalAlignmentOverride.get());
     }
 
     public enum GrowDirection {
@@ -129,7 +133,8 @@ public class OverlayContainer extends Overlay {
         }
 
         public void updateSize(Overlay overlay, OverlaySize containerSize, OverlaySize inherentSize) {
-            var size = overlay.getSize();
+            OverlaySize size = overlay.getSize();
+
             if (verticalMultiplier != 0) {
                 size.setWidth(containerSize.getWidth());
                 size.setHeight(inherentSize.getHeight());
@@ -145,8 +150,8 @@ public class OverlayContainer extends Overlay {
                 float containerY,
                 OverlaySize containerSize,
                 OverlaySize childSize,
-                int currentHeight,
-                int currentWidth) {
+                int accumulatedWidth,
+                int accumulatedHeight) {
 
             // If the multiplier is negative, we must add the corresponding size to the base
             // position. If it is zero or positive, use the original position
@@ -154,8 +159,8 @@ public class OverlayContainer extends Overlay {
             float widthOffset = horizontalMultiplier < 0 ? containerSize.getWidth() - childSize.getWidth() : 0;
 
             return new OverlayPosition(
-                    containerY + heightOffset + currentHeight * verticalMultiplier,
-                    containerX + widthOffset + currentWidth * horizontalMultiplier,
+                    containerY + heightOffset + accumulatedHeight * verticalMultiplier,
+                    containerX + widthOffset + accumulatedWidth * horizontalMultiplier,
                     VerticalAlignment.Top,
                     HorizontalAlignment.Left,
                     OverlayPosition.AnchorSection.TopLeft);
