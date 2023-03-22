@@ -35,10 +35,10 @@ public class TradeMarketBulkSellFeature extends Feature {
     public Config<Integer> bulkSell1Amount = new Config<>(64);
 
     @RegisterConfig
-    public Config<Integer> bulkSell2Amount = new Config<>(1728);
+    public Config<Integer> bulkSell2Amount = new Config<>(0);
 
     @RegisterConfig
-    public Config<Integer> bulkSell3Amount = new Config<>(6399);
+    public Config<Integer> bulkSell3Amount = new Config<>(0);
 
     private static final Pattern ITEM_NAME_PATTERN =
             Pattern.compile("§6Selling §f(\\d+|\\d+,\\d+) ([^À]*)À*§6 for §f[\\d,]*§7² Each");
@@ -58,9 +58,15 @@ public class TradeMarketBulkSellFeature extends Feature {
 
         sellButtons.clear();
         sellButtons.add(new SellButton(cs.leftPos - BUTTON_WIDTH, cs.topPos, 0, true));
-        sellButtons.add(new SellButton(cs.leftPos - BUTTON_WIDTH, cs.topPos + 21, bulkSell1Amount.get(), false));
-        sellButtons.add(new SellButton(cs.leftPos - BUTTON_WIDTH, cs.topPos + 42, bulkSell2Amount.get(), false));
-        sellButtons.add(new SellButton(cs.leftPos - BUTTON_WIDTH, cs.topPos + 63, bulkSell3Amount.get(), false));
+        if (bulkSell1Amount.get() > 0) {
+            sellButtons.add(new SellButton(cs.leftPos - BUTTON_WIDTH, cs.topPos + 21, bulkSell1Amount.get(), false));
+        }
+        if (bulkSell2Amount.get() > 0) {
+            sellButtons.add(new SellButton(cs.leftPos - BUTTON_WIDTH, cs.topPos + 42, bulkSell2Amount.get(), false));
+        }
+        if (bulkSell3Amount.get() > 0) {
+            sellButtons.add(new SellButton(cs.leftPos - BUTTON_WIDTH, cs.topPos + 63, bulkSell3Amount.get(), false));
+        }
         sellButtons.forEach(b -> b.active = false);
         sellButtons.forEach(cs::addRenderableWidget);
     }
