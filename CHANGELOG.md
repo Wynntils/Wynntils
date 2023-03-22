@@ -1,9 +1,21 @@
+## [0.0.2-alpha.367](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.366...v0.0.2-alpha.367) (2023-03-22)
+
+
+### Code Refactoring
+
+* Just use MultiBufferSource interface ([#1363](https://github.com/Wynntils/Artemis/issues/1363)) ([7ed44a3](https://github.com/Wynntils/Artemis/commit/7ed44a37017b1bb0d28336500d75bde205e3495a))
+
 ## [0.0.2-alpha.366](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.365...v0.0.2-alpha.366) (2023-03-22)
 
 
 ### Bug Fixes
 
 * Fix i18n for token functions ([#1362](https://github.com/Wynntils/Artemis/issues/1362)) ([c90b6d5](https://github.com/Wynntils/Artemis/commit/c90b6d5839eba373dd849bdac02bf8ada6d11d0e))
+
+
+### Miscellaneous Chores
+
+* **release:** v0.0.2-alpha.366 [skip ci] ([d98fd9f](https://github.com/Wynntils/Artemis/commit/d98fd9f458e49475e94af5713f1f2f9c7834c480))
 
 ## [0.0.2-alpha.365](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.364...v0.0.2-alpha.365) (2023-03-22)
 
@@ -40,16 +52,4 @@
 ### Miscellaneous Chores
 
 * **release:** v0.0.2-alpha.363 [skip ci] ([f67cdac](https://github.com/Wynntils/Artemis/commit/f67cdac4341aac113c965573a3ac31178a845f71))
-
-## [0.0.2-alpha.362](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.361...v0.0.2-alpha.362) (2023-03-20)
-
-
-### Bug Fixes
-
-* Fix typo in CustomBarsOverlayFeature ([d9429aa](https://github.com/Wynntils/Artemis/commit/d9429aa834f47fcf5256409489f5c429ddcab457))
-
-
-### Miscellaneous Chores
-
-* **release:** v0.0.2-alpha.362 [skip ci] ([055aee4](https://github.com/Wynntils/Artemis/commit/055aee49135691c5a0a125fcea4302db83847254))
 
