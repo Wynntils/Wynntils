@@ -1,9 +1,21 @@
+## [0.0.2-alpha.368](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.367...v0.0.2-alpha.368) (2023-03-22)
+
+
+### Bug Fixes
+
+* Disable overlay if parent is disabled ([#1367](https://github.com/Wynntils/Artemis/issues/1367)) ([35c52a1](https://github.com/Wynntils/Artemis/commit/35c52a1362bbf767b996dd127952b8612392f6cf))
+
 ## [0.0.2-alpha.367](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.366...v0.0.2-alpha.367) (2023-03-22)
 
 
 ### Code Refactoring
 
 * Just use MultiBufferSource interface ([#1363](https://github.com/Wynntils/Artemis/issues/1363)) ([7ed44a3](https://github.com/Wynntils/Artemis/commit/7ed44a37017b1bb0d28336500d75bde205e3495a))
+
+
+### Miscellaneous Chores
+
+* **release:** v0.0.2-alpha.367 [skip ci] ([7164005](https://github.com/Wynntils/Artemis/commit/7164005636dd5ac0c3964314d28f70b57da52840))
 
 ## [0.0.2-alpha.366](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.365...v0.0.2-alpha.366) (2023-03-22)
 
@@ -40,16 +52,4 @@
 ### Miscellaneous Chores
 
 * **release:** v0.0.2-alpha.364 [skip ci] ([2535baa](https://github.com/Wynntils/Artemis/commit/2535baa2088f53414c0ea4847c5d2ad6cc706d51))
-
-## [0.0.2-alpha.363](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.362...v0.0.2-alpha.363) (2023-03-21)
-
-
-### New Features
-
-* Inventory watcher, MiscItem, label visibility etc ([#1357](https://github.com/Wynntils/Artemis/issues/1357)) ([a2ebe9d](https://github.com/Wynntils/Artemis/commit/a2ebe9d4dcc08b84b750fc11d71d576016a93a41))
-
-
-### Miscellaneous Chores
-
-* **release:** v0.0.2-alpha.363 [skip ci] ([f67cdac](https://github.com/Wynntils/Artemis/commit/f67cdac4341aac113c965573a3ac31178a845f71))
 
