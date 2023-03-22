@@ -225,12 +225,12 @@ public class GameBarsOverlayFeature extends Feature {
 
         @Override
         protected void onConfigUpdate(ConfigHolder configHolder) {
-            Models.CharacterState.hideHealth(this.shouldBeEnabled() && !this.shouldDisplayOriginal.get());
+            Models.CharacterStats.hideHealth(this.shouldBeEnabled() && !this.shouldDisplayOriginal.get());
         }
 
         @Override
         public BossBarProgress progress() {
-            CappedValue health = Models.CharacterState.getHealth();
+            CappedValue health = Models.CharacterStats.getHealth();
             return new BossBarProgress(health, (float) health.getProgress());
         }
 
@@ -365,7 +365,7 @@ public class GameBarsOverlayFeature extends Feature {
 
         @Override
         public BossBarProgress progress() {
-            CappedValue mana = Models.CharacterState.getMana();
+            CappedValue mana = Models.CharacterStats.getMana();
             return new BossBarProgress(mana, (float) mana.getProgress());
         }
 
@@ -381,7 +381,7 @@ public class GameBarsOverlayFeature extends Feature {
 
         @Override
         protected void onConfigUpdate(ConfigHolder configHolder) {
-            Models.CharacterState.hideMana(this.shouldBeEnabled() && !this.shouldDisplayOriginal.get());
+            Models.CharacterStats.hideMana(this.shouldBeEnabled() && !this.shouldDisplayOriginal.get());
         }
 
         @Override

@@ -212,7 +212,7 @@ public final class HadesModel extends Model {
             float pZ = (float) player.getZ();
 
             PlayerStatus newStatus =
-                    new PlayerStatus(pX, pY, pZ, Models.CharacterState.getHealth(), Models.CharacterState.getMana());
+                    new PlayerStatus(pX, pY, pZ, Models.CharacterStats.getHealth(), Models.CharacterStats.getMana());
 
             if (newStatus.equals(lastSentStatus)) {
                 tickCountUntilUpdate = 1;

@@ -7,7 +7,7 @@ package com.wynntils.features.chat;
 import com.wynntils.core.config.Category;
 import com.wynntils.core.config.ConfigCategory;
 import com.wynntils.core.features.Feature;
-import com.wynntils.models.characterstate.event.CharacterDeathEvent;
+import com.wynntils.models.characterstats.event.CharacterDeathEvent;
 import com.wynntils.utils.mc.ComponentUtils;
 import com.wynntils.utils.mc.McUtils;
 import net.minecraft.ChatFormatting;

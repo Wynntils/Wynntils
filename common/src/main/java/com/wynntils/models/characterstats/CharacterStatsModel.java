@@ -2,7 +2,7 @@
  * Copyright © Wynntils 2022.
  * This file is released under AGPLv3. See LICENSE for full license details.
  */
-package com.wynntils.models.characterstate;
+package com.wynntils.models.characterstats;
 
 import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.components.Handlers;
@@ -10,12 +10,12 @@ import com.wynntils.core.components.Model;
 import com.wynntils.core.components.Models;
 import com.wynntils.handlers.chat.event.ChatMessageReceivedEvent;
 import com.wynntils.mc.event.PlayerTeleportEvent;
-import com.wynntils.models.characterstate.actionbar.CoordinatesSegment;
-import com.wynntils.models.characterstate.actionbar.HealthSegment;
-import com.wynntils.models.characterstate.actionbar.ManaSegment;
-import com.wynntils.models.characterstate.actionbar.PowderSpecialSegment;
-import com.wynntils.models.characterstate.actionbar.SprintSegment;
-import com.wynntils.models.characterstate.event.CharacterDeathEvent;
+import com.wynntils.models.characterstats.actionbar.CoordinatesSegment;
+import com.wynntils.models.characterstats.actionbar.HealthSegment;
+import com.wynntils.models.characterstats.actionbar.ManaSegment;
+import com.wynntils.models.characterstats.actionbar.PowderSpecialSegment;
+import com.wynntils.models.characterstats.actionbar.SprintSegment;
+import com.wynntils.models.characterstats.event.CharacterDeathEvent;
 import com.wynntils.models.elements.type.Powder;
 import com.wynntils.utils.MathUtils;
 import com.wynntils.utils.mc.McUtils;
@@ -28,7 +28,7 @@ import net.minecraft.world.item.Items;
 import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 
-public final class CharacterStateModel extends Model {
+public final class CharacterStatsModel extends Model {
     private final CoordinatesSegment coordinatesSegment = new CoordinatesSegment(this::centerSegmentCleared);
     private final HealthSegment healthSegment = new HealthSegment();
     private final ManaSegment manaSegment = new ManaSegment();
@@ -41,7 +41,7 @@ public final class CharacterStateModel extends Model {
     private Vec3 lastLocationBeforeTeleport;
     private Location lastDeathLocation;
 
-    public CharacterStateModel(CombatXpModel combatXpModel) {
+    public CharacterStatsModel(CombatXpModel combatXpModel) {
         super(List.of(combatXpModel));
 
         Handlers.ActionBar.registerSegment(coordinatesSegment);

@@ -11,7 +11,7 @@ import com.wynntils.core.config.Config;
 import com.wynntils.core.config.ConfigCategory;
 import com.wynntils.core.config.RegisterConfig;
 import com.wynntils.core.features.Feature;
-import com.wynntils.models.characterstate.event.CombatXpGainEvent;
+import com.wynntils.models.characterstats.event.CombatXpGainEvent;
 import com.wynntils.models.worlds.event.WorldStateEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 

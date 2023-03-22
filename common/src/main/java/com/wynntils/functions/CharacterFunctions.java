@@ -17,28 +17,28 @@ public class CharacterFunctions {
     public static class CappedManaFunction extends Function<CappedValue> {
         @Override
         public CappedValue getValue(FunctionArguments arguments) {
-            return Models.CharacterState.getMana();
+            return Models.CharacterStats.getMana();
         }
     }
 
     public static class CappedHealthFunction extends Function<CappedValue> {
         @Override
         public CappedValue getValue(FunctionArguments arguments) {
-            return Models.CharacterState.getHealth();
+            return Models.CharacterStats.getHealth();
         }
     }
 
     public static class CappedSoulPointsFunction extends Function<CappedValue> {
         @Override
         public CappedValue getValue(FunctionArguments arguments) {
-            return Models.CharacterState.getSoulPoints();
+            return Models.CharacterStats.getSoulPoints();
         }
     }
 
     public static class SoulpointFunction extends Function<Integer> {
         @Override
         public Integer getValue(FunctionArguments arguments) {
-            return Models.CharacterState.getSoulPoints().current();
+            return Models.CharacterStats.getSoulPoints().current();
         }
 
         @Override
@@ -50,7 +50,7 @@ public class CharacterFunctions {
     public static class SoulpointMaxFunction extends Function<Integer> {
         @Override
         public Integer getValue(FunctionArguments arguments) {
-            return Models.CharacterState.getSoulPoints().max();
+            return Models.CharacterStats.getSoulPoints().max();
         }
 
         @Override
@@ -83,7 +83,7 @@ public class CharacterFunctions {
     public static class SoulpointTimerFunction extends Function<String> {
         @Override
         public String getValue(FunctionArguments arguments) {
-            int totalSeconds = Models.CharacterState.getTicksToNextSoulPoint() / 20;
+            int totalSeconds = Models.CharacterStats.getTicksToNextSoulPoint() / 20;
 
             int seconds = totalSeconds % 60;
             int minutes = totalSeconds / 60;
@@ -99,7 +99,7 @@ public class CharacterFunctions {
     public static class SoulpointTimerMFunction extends Function<Integer> {
         @Override
         public Integer getValue(FunctionArguments arguments) {
-            int totalSeconds = Models.CharacterState.getTicksToNextSoulPoint() / 20;
+            int totalSeconds = Models.CharacterStats.getTicksToNextSoulPoint() / 20;
 
             return totalSeconds / 60;
         }
@@ -113,7 +113,7 @@ public class CharacterFunctions {
     public static class SoulpointTimerSFunction extends Function<Integer> {
         @Override
         public Integer getValue(FunctionArguments arguments) {
-            int totalSeconds = Models.CharacterState.getTicksToNextSoulPoint() / 20;
+            int totalSeconds = Models.CharacterStats.getTicksToNextSoulPoint() / 20;
 
             return totalSeconds % 60;
         }
@@ -152,42 +152,42 @@ public class CharacterFunctions {
     public static class ManaFunction extends Function<Integer> {
         @Override
         public Integer getValue(FunctionArguments arguments) {
-            return Models.CharacterState.getMana().current();
+            return Models.CharacterStats.getMana().current();
         }
     }
 
     public static class ManaMaxFunction extends Function<Integer> {
         @Override
         public Integer getValue(FunctionArguments arguments) {
-            return Models.CharacterState.getMana().max();
+            return Models.CharacterStats.getMana().max();
         }
     }
 
     public static class HealthFunction extends Function<Integer> {
         @Override
         public Integer getValue(FunctionArguments arguments) {
-            return Models.CharacterState.getHealth().current();
+            return Models.CharacterStats.getHealth().current();
         }
     }
 
     public static class HealthMaxFunction extends Function<Integer> {
         @Override
         public Integer getValue(FunctionArguments arguments) {
-            return Models.CharacterState.getHealth().max();
+            return Models.CharacterStats.getHealth().max();
         }
     }
 
     public static class HealthPctFunction extends Function<Double> {
         @Override
         public Double getValue(FunctionArguments arguments) {
-            return Models.CharacterState.getHealth().getPercentage();
+            return Models.CharacterStats.getHealth().getPercentage();
         }
     }
 
     public static class ManaPctFunction extends Function<Double> {
         @Override
         public Double getValue(FunctionArguments arguments) {
-            return Models.CharacterState.getMana().getPercentage();
+            return Models.CharacterStats.getMana().getPercentage();
         }
     }
 
