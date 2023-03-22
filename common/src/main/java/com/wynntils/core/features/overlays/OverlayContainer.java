@@ -6,7 +6,9 @@ package com.wynntils.core.features.overlays;
 
 import com.mojang.blaze3d.platform.Window;
 import com.mojang.blaze3d.vertex.PoseStack;
+import com.wynntils.core.config.Config;
 import com.wynntils.core.config.ConfigHolder;
+import com.wynntils.core.config.RegisterConfig;
 import com.wynntils.utils.render.type.HorizontalAlignment;
 import com.wynntils.utils.render.type.VerticalAlignment;
 import java.util.ArrayList;
@@ -16,14 +18,18 @@ import net.minecraft.client.renderer.MultiBufferSource;
 public class OverlayContainer extends Overlay {
     public static final int DEFAULT_SPACING = 3;
 
+    @RegisterConfig("overlay.wynntils.overlay.growDirection")
+    protected final Config<GrowDirection> growDirection = new Config<>(GrowDirection.DOWN);
+
+    @RegisterConfig("overlay.wynntils.overlay.spacing")
+    protected final Config<Integer> spacing = new Config<>(DEFAULT_SPACING);
+
     private final List<Overlay> children = new ArrayList<>();
-    private final GrowDirection growDirection;
-    private final int spacing;
 
     public OverlayContainer(OverlayPosition position, OverlaySize size, GrowDirection growDirection, int spacing) {
         super(position, size);
-        this.growDirection = growDirection;
-        this.spacing = spacing;
+        this.growDirection.updateConfig(growDirection);
+        this.spacing.updateConfig(spacing);
     }
 
     public OverlayContainer(OverlayPosition position, OverlaySize size, GrowDirection growDirection) {
@@ -32,14 +38,16 @@ public class OverlayContainer extends Overlay {
 
     public void addChild(Overlay overlay) {
         int currentHeight = children.stream()
-                .mapToInt(o -> (int) o.size.get().getHeight() + spacing)
+                .mapToInt(o -> (int) o.size.get().getHeight() + spacing.get())
                 .sum();
         int currentWidth = children.stream()
-                .mapToInt(o -> (int) o.size.get().getWidth() + spacing)
+                .mapToInt(o -> (int) o.size.get().getWidth() + spacing.get())
                 .sum();
 
-        OverlayPosition newPosition =
-                growDirection.getChildPosition(getRenderX(), getRenderY(), getSize(), overlay.getSize(), currentHeight, currentWidth);
+        OverlayPosition newPosition = growDirection
+                .get()
+                .getChildPosition(
+                        getRenderX(), getRenderY(), getSize(), overlay.getSize(), currentHeight, currentWidth);
         overlay.setPosition(newPosition);
         children.add(overlay);
     }
@@ -56,6 +64,8 @@ public class OverlayContainer extends Overlay {
 
     @Override
     protected void onConfigUpdate(ConfigHolder configHolder) {
+        recalculateChildrenPosition();
+
         children.forEach(o -> o.onConfigUpdate(configHolder));
     }
 
@@ -67,16 +77,22 @@ public class OverlayContainer extends Overlay {
     public void setPosition(OverlayPosition position) {
         super.setPosition(position);
 
+        recalculateChildrenPosition();
+    }
+
+    private void recalculateChildrenPosition() {
         // Update position for all children
         int currentHeight = 0;
         int currentWidth = 0;
 
         for (Overlay overlay : children) {
-            OverlayPosition newPosition = growDirection.getChildPosition(getRenderX(), getRenderY(),
-                    getSize(), overlay.getSize(), currentHeight, currentWidth);
+            OverlayPosition newPosition = growDirection
+                    .get()
+                    .getChildPosition(
+                            getRenderX(), getRenderY(), getSize(), overlay.getSize(), currentHeight, currentWidth);
             overlay.setPosition(newPosition);
-            currentHeight += overlay.getSize().getHeight()+ spacing;
-            currentWidth += overlay.getSize().getWidth()+ spacing;
+            currentHeight += overlay.getSize().getHeight() + spacing.get();
+            currentWidth += overlay.getSize().getWidth() + spacing.get();
         }
     }
 
@@ -95,7 +111,8 @@ public class OverlayContainer extends Overlay {
         }
 
         public OverlayPosition getChildPosition(
-                float containerX, float containerY,
+                float containerX,
+                float containerY,
                 OverlaySize containerSize,
                 OverlaySize childSize,
                 int currentHeight,
