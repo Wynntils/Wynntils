@@ -45,7 +45,7 @@ public final class CharacterModel extends Model {
     // we need a .* in front because the message may have a custom timestamp prefix (or some other mod could do
     // something weird)
     private static final Pattern WYNN_DEATH_MESSAGE = Pattern.compile(".*§r §4§lYou have died\\.\\.\\.");
-    private Position lastLocationBeforeTeleport;
+    private Position lastPositionBeforeTeleport;
     private Location lastDeathLocation;
 
     private boolean inCharacterSelection;
@@ -233,13 +233,13 @@ public final class CharacterModel extends Model {
     @SubscribeEvent
     public void onChatReceived(ChatMessageReceivedEvent e) {
         if (!WYNN_DEATH_MESSAGE.matcher(e.getCodedMessage()).matches()) return;
-        lastDeathLocation = Location.containing(lastLocationBeforeTeleport);
+        lastDeathLocation = Location.containing(lastPositionBeforeTeleport);
         WynntilsMod.postEvent(new CharacterDeathEvent(lastDeathLocation));
     }
 
     @SubscribeEvent
     public void beforePlayerTeleport(PlayerTeleportEvent e) {
         if (McUtils.player() == null) return;
-        lastLocationBeforeTeleport = McUtils.player().position();
+        lastPositionBeforeTeleport = McUtils.player().position();
     }
 }
