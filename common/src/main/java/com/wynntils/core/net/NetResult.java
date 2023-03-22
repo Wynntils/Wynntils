@@ -109,6 +109,7 @@ public abstract class NetResult {
                 // Something went wrong in our handlers, perhaps an NPE?
                 WynntilsMod.warn("Failure in net manager [wrappingHandler], processing " + desc, t);
                 onError.accept(t);
+                onHandlingFailed();
             } finally {
                 try {
                     // We must always close the input stream
@@ -118,6 +119,8 @@ public abstract class NetResult {
             }
         };
     }
+
+    protected void onHandlingFailed() {}
 
     protected abstract CompletableFuture<InputStream> getInputStreamFuture();
 }
