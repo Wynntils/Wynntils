@@ -36,7 +36,7 @@ public class LogItemInfoFeature extends Feature {
             "Log Item Info", GLFW.GLFW_KEY_INSERT, true, this::onLogItemInfoPress, this::onLogItemInfoInventoryPress);
 
     @RegisterCommand
-    LiteralCommandNode<CommandSourceStack> commandNode =
+    private final LiteralCommandNode<CommandSourceStack> commandNode =
             Commands.literal("show").executes(this::showCommand).build();
 
     private void onLogItemInfoPress() {
