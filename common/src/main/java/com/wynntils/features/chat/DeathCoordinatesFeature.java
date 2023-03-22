@@ -17,12 +17,13 @@ import net.minecraft.network.chat.ClickEvent;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.HoverEvent;
 import net.minecraft.network.chat.MutableComponent;
+import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 
 @ConfigCategory(Category.CHAT)
 public class DeathCoordinatesFeature extends Feature {
     private static final String WYNN_DEATH_MESSAGE = "§r §4§lYou have died...";
-    private Vec3i lastLocation;
+    private Vec3 lastLocation;
 
     @SubscribeEvent
     public void onChatReceived(ChatMessageReceivedEvent e) {
@@ -33,14 +34,14 @@ public class DeathCoordinatesFeature extends Feature {
                 .withStyle(ChatFormatting.DARK_RED);
         MutableComponent coordMessage = Component.translatable(
                         "feature.wynntils.deathCoordinates.coordinates",
-                        lastLocation.getX(),
-                        lastLocation.getY(),
-                        lastLocation.getZ())
+                        lastLocation.x(),
+                        lastLocation.y(),
+                        lastLocation.z())
                 .withStyle(ChatFormatting.DARK_RED)
                 .withStyle(ChatFormatting.UNDERLINE)
                 .withStyle(s -> s.withClickEvent(new ClickEvent(
                         ClickEvent.Action.RUN_COMMAND,
-                        "/compass at " + lastLocation.getX() + " " + lastLocation.getY() + " " + lastLocation.getZ())))
+                        "/compass at " + lastLocation.x() + " " + lastLocation.y() + " " + lastLocation.z())))
                 .withStyle(s -> s.withHoverEvent(new HoverEvent(
                         HoverEvent.Action.SHOW_TEXT,
                         Component.translatable("feature.wynntils.deathCoordindates.clickToCompass"))));
@@ -51,9 +52,6 @@ public class DeathCoordinatesFeature extends Feature {
 
     @SubscribeEvent
     public void onTick(TickEvent e) {
-        lastLocation = new Vec3i(
-                McUtils.player().getX(),
-                McUtils.player().getY(),
-                McUtils.player().getZ());
+        lastLocation = McUtils.player().position();
     }
 }
