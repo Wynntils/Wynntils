@@ -457,6 +457,9 @@ public final class FunctionManager extends Manager {
         registerFunction(new ProfessionFunctions.WoodworkingLevelFunction());
         registerFunction(new ProfessionFunctions.WoodworkingPercentageFunction());
 
+        registerFunction(new ProfessionFunctions.ProfessionXpPerMinuteFunction());
+        registerFunction(new ProfessionFunctions.ProfessionXpPerMinuteRawFunction());
+
         registerFunction(new SpellFunctions.ArrowShieldCountFunction());
         registerFunction(new SpellFunctions.ShamanMaskFunction());
         registerFunction(new SpellFunctions.ShamanTotemDistanceFunction());

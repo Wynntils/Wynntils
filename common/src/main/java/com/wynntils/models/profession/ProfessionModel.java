@@ -11,11 +11,18 @@ import com.wynntils.models.character.CharacterModel;
 import com.wynntils.models.profession.type.ProfessionProgress;
 import com.wynntils.models.profession.type.ProfessionType;
 import com.wynntils.utils.mc.LoreUtils;
+
+import java.util.Collections;
+import java.util.EnumMap;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.TimeUnit;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+
+import com.wynntils.utils.type.TimedSet;
 import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 
@@ -31,9 +38,13 @@ public class ProfessionModel extends Model {
             Pattern.compile("§6- §r§7[ⓀⒸⒷⒿⒺⒹⓁⒶⒼⒻⒾⒽ] Lv. (\\d+) (.+)§r§8 \\[([\\d.]+)%\\]");
 
     private Map<ProfessionType, ProfessionProgress> professionProgressMap = new ConcurrentHashMap<>();
+    private final Map<ProfessionType, TimedSet<Float>> rawXpGainInLastMinute = new HashMap<>();
 
     public ProfessionModel(CharacterModel characterModel) {
         super(List.of(characterModel));
+        for (ProfessionType pt : ProfessionType.values()) {
+            rawXpGainInLastMinute.put(pt, new TimedSet<>(1, TimeUnit.MINUTES, true));
+        }
     }
 
     @SubscribeEvent
@@ -41,7 +52,7 @@ public class ProfessionModel extends Model {
         Matcher matcher = PROFESSION_NODE_HARVERSTED_PATTERN.matcher(event.getName());
 
         if (matcher.matches()) {
-            updateValue(ProfessionType.fromString(matcher.group("name")), Float.parseFloat(matcher.group("current")));
+            updateValue(ProfessionType.fromString(matcher.group("name")), Float.parseFloat(matcher.group("current")), Float.parseFloat(matcher.group("gain")));
         }
     }
 
@@ -52,7 +63,7 @@ public class ProfessionModel extends Model {
         Matcher matcher = PROFESSION_CRAFT_PATTERN.matcher(codedMessage);
 
         if (matcher.matches()) {
-            updateValue(ProfessionType.fromString(matcher.group("name")), Float.parseFloat(matcher.group("current")));
+            updateValue(ProfessionType.fromString(matcher.group("name")), Float.parseFloat(matcher.group("current")), Float.parseFloat(matcher.group("gain")));
         }
     }
 
@@ -78,7 +89,7 @@ public class ProfessionModel extends Model {
         professionProgressMap = levels;
     }
 
-    public void updateValue(ProfessionType type, float newPercentage) {
+    public void updateValue(ProfessionType type, float newPercentage, float xpGain) {
         ProfessionProgress oldValue = professionProgressMap.getOrDefault(type, ProfessionProgress.NO_PROGRESS);
 
         // Assume a level up if the progress is less than the previous value.
@@ -87,6 +98,7 @@ public class ProfessionModel extends Model {
         } else {
             professionProgressMap.put(type, new ProfessionProgress(oldValue.level(), newPercentage));
         }
+        rawXpGainInLastMinute.get(type).put(xpGain);
     }
 
     public int getLevel(ProfessionType type) {
@@ -99,5 +111,9 @@ public class ProfessionModel extends Model {
         return professionProgressMap
                 .getOrDefault(type, ProfessionProgress.NO_PROGRESS)
                 .progress();
+    }
+
+    public Map<ProfessionType, TimedSet<Float>> getRawXpGainInLastMinute() {
+        return Collections.unmodifiableMap(rawXpGainInLastMinute);
     }
 }
