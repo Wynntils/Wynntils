@@ -135,8 +135,7 @@ public class QuestInfoOverlayFeature extends Feature {
         }
 
         @Override
-        public void render(
-                PoseStack poseStack, MultiBufferSource.BufferSource bufferSource, float partialTicks, Window window) {
+        public void render(PoseStack poseStack, MultiBufferSource bufferSource, float partialTicks, Window window) {
             QuestInfo trackedQuest = Models.Quest.getTrackedQuest();
 
             if (trackedQuest == null) {
@@ -161,7 +160,7 @@ public class QuestInfoOverlayFeature extends Feature {
 
         @Override
         public void renderPreview(
-                PoseStack poseStack, MultiBufferSource.BufferSource bufferSource, float partialTicks, Window window) {
+                PoseStack poseStack, MultiBufferSource bufferSource, float partialTicks, Window window) {
             updateTextRenderSettings(toRenderPreview); // we have to force update every time
 
             BufferedFontRenderer.getInstance()

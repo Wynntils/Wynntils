@@ -48,8 +48,7 @@ public abstract class BarOverlay extends DynamicOverlay {
     }
 
     @Override
-    public void render(
-            PoseStack poseStack, MultiBufferSource.BufferSource bufferSource, float partialTicks, Window window) {
+    public void render(PoseStack poseStack, MultiBufferSource bufferSource, float partialTicks, Window window) {
         if (!isRendered()) return;
 
         BarOverlayTemplatePair template = getTemplate();
@@ -57,17 +56,13 @@ public abstract class BarOverlay extends DynamicOverlay {
     }
 
     @Override
-    public void renderPreview(
-            PoseStack poseStack, MultiBufferSource.BufferSource bufferSource, float partialTicks, Window window) {
+    public void renderPreview(PoseStack poseStack, MultiBufferSource bufferSource, float partialTicks, Window window) {
         BarOverlayTemplatePair template = getPreviewTemplate();
         render(poseStack, bufferSource, template.textTemplate, template.valueTemplate);
     }
 
     protected void render(
-            PoseStack poseStack,
-            MultiBufferSource.BufferSource bufferSource,
-            String textTemplate,
-            String valueTemplate) {
+            PoseStack poseStack, MultiBufferSource bufferSource, String textTemplate, String valueTemplate) {
         updateCachedLines(textTemplate, valueTemplate);
 
         ErrorOr<CappedValue> valueOrError = templateCache.b();
@@ -102,11 +97,7 @@ public abstract class BarOverlay extends DynamicOverlay {
     protected abstract float getTextureHeight();
 
     protected void renderBar(
-            PoseStack poseStack,
-            MultiBufferSource.BufferSource bufferSource,
-            float renderY,
-            float renderHeight,
-            float progress) {
+            PoseStack poseStack, MultiBufferSource bufferSource, float renderY, float renderHeight, float progress) {
         Texture texture = getTexture();
 
         if (getRenderColor() == CommonColors.WHITE) {
@@ -141,8 +132,7 @@ public abstract class BarOverlay extends DynamicOverlay {
         }
     }
 
-    protected void renderText(
-            PoseStack poseStack, MultiBufferSource.BufferSource bufferSource, float renderY, String text) {
+    protected void renderText(PoseStack poseStack, MultiBufferSource bufferSource, float renderY, String text) {
         BufferedFontRenderer.getInstance()
                 .renderAlignedTextInBox(
                         poseStack,
