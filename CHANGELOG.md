@@ -1,9 +1,21 @@
+## [0.0.2-alpha.365](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.364...v0.0.2-alpha.365) (2023-03-22)
+
+
+### New Features
+
+* Token Gatekeeper Tracker ([#1358](https://github.com/Wynntils/Artemis/issues/1358)) ([d9e44f1](https://github.com/Wynntils/Artemis/commit/d9e44f1b238957cde15694188b9dbf7629e6a8e0))
+
 ## [0.0.2-alpha.364](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.363...v0.0.2-alpha.364) (2023-03-22)
 
 
 ### Bug Fixes
 
 * If we encounter an error when processing a cached file, delete it from the cache ([#1359](https://github.com/Wynntils/Artemis/issues/1359)) ([8806bd0](https://github.com/Wynntils/Artemis/commit/8806bd06786ae2e44f7f92f68ffaa3cac5d6b84d))
+
+
+### Miscellaneous Chores
+
+* **release:** v0.0.2-alpha.364 [skip ci] ([2535baa](https://github.com/Wynntils/Artemis/commit/2535baa2088f53414c0ea4847c5d2ad6cc706d51))
 
 ## [0.0.2-alpha.363](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.362...v0.0.2-alpha.363) (2023-03-21)
 
@@ -40,16 +52,4 @@
 ### Miscellaneous Chores
 
 * **release:** v0.0.2-alpha.361 [skip ci] ([2b98519](https://github.com/Wynntils/Artemis/commit/2b985193f52c1078dd7b11defe5055b37910c6a4))
-
-## [0.0.2-alpha.360](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.359...v0.0.2-alpha.360) (2023-03-19)
-
-
-### Bug Fixes
-
-* Fix chat items merging hover event ([#1356](https://github.com/Wynntils/Artemis/issues/1356)) ([de9d824](https://github.com/Wynntils/Artemis/commit/de9d824c566987e05324d710ad25a232b2560738))
-
-
-### Miscellaneous Chores
-
-* **release:** v0.0.2-alpha.360 [skip ci] ([ec96585](https://github.com/Wynntils/Artemis/commit/ec9658508e8e95eedffab6454ef0c5211c658ca7))
 
