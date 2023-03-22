@@ -4,7 +4,6 @@
  */
 package com.wynntils.core.features;
 
-import com.mojang.brigadier.builder.LiteralArgumentBuilder;
 import com.mojang.brigadier.tree.LiteralCommandNode;
 import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.components.Managers;
