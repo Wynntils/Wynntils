@@ -588,6 +588,7 @@
   "feature.wynntils.statusOverlay.overlay.status.textShadow.name": "文本陰影",
   "feature.wynntils.territoryDefenseMessage.name": "送領土保衛信息訊息",
   "feature.wynntils.territoryMessageRedirect.name": "重新導向領土訊息",
+  "feature.wynntils.tokenTracker.overlay.tokenBar.color.name": "顏色",
   "feature.wynntils.tooltipFitting.fitToScreen.description": "要是否把物品提示縮放以適合您的屏嗎？",
   "feature.wynntils.tooltipFitting.fitToScreen.name": "適合到屏幕",
   "feature.wynntils.tooltipFitting.name": "提示縮放",
