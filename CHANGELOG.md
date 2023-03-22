@@ -1,3 +1,10 @@
+## [0.0.2-alpha.370](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.369...v0.0.2-alpha.370) (2023-03-22)
+
+
+### New Features
+
+* death coordinates ([#1365](https://github.com/Wynntils/Artemis/issues/1365)) ([67e42ac](https://github.com/Wynntils/Artemis/commit/67e42ac47a0c03c5e4b0eac9e7f14837ee882b76))
+
 ## [0.0.2-alpha.369](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.368...v0.0.2-alpha.369) (2023-03-22)
 
 
@@ -5,6 +12,11 @@
 
 * profession function improvements ([#1366](https://github.com/Wynntils/Artemis/issues/1366)) ([580330d](https://github.com/Wynntils/Artemis/commit/580330db7aeb91f31ea9ba4eb5fa0bf9c22cb971))
 * Trade market bulk sell ([#1360](https://github.com/Wynntils/Artemis/issues/1360)) ([0ed8c53](https://github.com/Wynntils/Artemis/commit/0ed8c53065e923b049021400dd0e5aa833c24f46))
+
+
+### Miscellaneous Chores
+
+* **release:** v0.0.2-alpha.369 [skip ci] ([c9f7be1](https://github.com/Wynntils/Artemis/commit/c9f7be1e80504a25768e02071bc55de6e8e14da5))
 
 ## [0.0.2-alpha.368](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.367...v0.0.2-alpha.368) (2023-03-22)
 
@@ -41,16 +53,4 @@
 ### Miscellaneous Chores
 
 * **release:** v0.0.2-alpha.366 [skip ci] ([d98fd9f](https://github.com/Wynntils/Artemis/commit/d98fd9f458e49475e94af5713f1f2f9c7834c480))
-
-## [0.0.2-alpha.365](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.364...v0.0.2-alpha.365) (2023-03-22)
-
-
-### New Features
-
-* Token Gatekeeper Tracker ([#1358](https://github.com/Wynntils/Artemis/issues/1358)) ([d9e44f1](https://github.com/Wynntils/Artemis/commit/d9e44f1b238957cde15694188b9dbf7629e6a8e0))
-
-
-### Miscellaneous Chores
-
-* **release:** v0.0.2-alpha.365 [skip ci] ([20db0e8](https://github.com/Wynntils/Artemis/commit/20db0e872ee7cb6f41bd42cd918ef882027f1e9c))
 
