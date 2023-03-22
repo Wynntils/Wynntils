@@ -43,6 +43,10 @@ public class OverlaySize {
         }
     }
 
+    public OverlaySize copy() {
+        return new OverlaySize(getWidth(), getHeight());
+    }
+
     public float getWidth() {
         return this.width;
     }

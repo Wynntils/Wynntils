@@ -12,7 +12,9 @@ import com.wynntils.core.config.RegisterConfig;
 import com.wynntils.utils.render.type.HorizontalAlignment;
 import com.wynntils.utils.render.type.VerticalAlignment;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import net.minecraft.client.renderer.MultiBufferSource;
 
 public class OverlayContainer extends Overlay {
@@ -25,6 +27,7 @@ public class OverlayContainer extends Overlay {
     protected final Config<Integer> spacing = new Config<>(DEFAULT_SPACING);
 
     private final List<Overlay> children = new ArrayList<>();
+    private final Map<Overlay, OverlaySize> inherentSize = new HashMap<>();
 
     public OverlayContainer(OverlayPosition position, OverlaySize size, GrowDirection growDirection, int spacing) {
         super(position, size);
@@ -37,6 +40,7 @@ public class OverlayContainer extends Overlay {
     }
 
     public void addChild(Overlay overlay) {
+        inherentSize.put(overlay, overlay.getSize().copy());
         int currentHeight = children.stream()
                 .mapToInt(o -> (int) o.size.get().getHeight() + spacing.get())
                 .sum();
@@ -94,6 +98,20 @@ public class OverlayContainer extends Overlay {
             currentHeight += overlay.getSize().getHeight() + spacing.get();
             currentWidth += overlay.getSize().getWidth() + spacing.get();
         }
+    }
+
+    @Override
+    public void setHeight(float height) {
+        super.setHeight(height);
+
+        recalculateChildrenPosition();
+    }
+
+    @Override
+    public void setWidth(float width) {
+        super.setWidth(width);
+
+        recalculateChildrenPosition();
     }
 
     public enum GrowDirection {

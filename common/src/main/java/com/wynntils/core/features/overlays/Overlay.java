@@ -221,4 +221,12 @@ public abstract class Overlay extends AbstractConfigurable implements Translatab
                 .compare(this.getTranslatedName(), other.getTranslatedName())
                 .result();
     }
+
+    public void setHeight(float height) {
+        getSize().setHeight(height);
+    }
+
+    public void setWidth(float width) {
+        getSize().setWidth(width);
+    }
 }
