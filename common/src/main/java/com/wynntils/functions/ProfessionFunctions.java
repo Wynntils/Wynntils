@@ -8,294 +8,102 @@ import com.wynntils.core.components.Models;
 import com.wynntils.core.functions.Function;
 import com.wynntils.core.functions.arguments.FunctionArguments;
 import com.wynntils.models.profession.type.ProfessionType;
+import com.wynntils.utils.StringUtils;
 import java.util.List;
 
 public class ProfessionFunctions {
-    public static class WoodcuttingLevelFunction extends Function<Integer> {
+
+    public static class ProfessionLevelFunction extends Function<Integer> {
         @Override
         public Integer getValue(FunctionArguments arguments) {
-            return Models.Profession.getLevel(ProfessionType.WOODCUTTING);
+            ProfessionType pt = ProfessionType.fromString(
+                    arguments.getArgument("profession").getStringValue());
+            if (pt == null) return -1;
+
+            return Models.Profession.getLevel(pt);
+        }
+
+        @Override
+        public FunctionArguments.Builder getArgumentsBuilder() {
+            return new FunctionArguments.RequiredArgumentBuilder(
+                    List.of(new FunctionArguments.Argument<>("profession", String.class, null)));
         }
 
         @Override
         public List<String> getAliases() {
-            return List.of("woodcutting");
+            return List.of("prof_lvl");
         }
     }
 
-    public static class MiningLevelFunction extends Function<Integer> {
+    public static class ProfessionPercentageFunction extends Function<Double> {
+        @Override
+        public Double getValue(FunctionArguments arguments) {
+            ProfessionType pt = ProfessionType.fromString(
+                    arguments.getArgument("profession").getStringValue());
+            if (pt == null) return -1.0;
+
+            return Models.Profession.getProgress(pt);
+        }
+
+        @Override
+        public FunctionArguments.Builder getArgumentsBuilder() {
+            return new FunctionArguments.RequiredArgumentBuilder(
+                    List.of(new FunctionArguments.Argument<>("profession", String.class, null)));
+        }
+
+        @Override
+        public List<String> getAliases() {
+            return List.of("prof_pct");
+        }
+    }
+
+    public static class ProfessionXpPerMinuteRawFunction extends Function<Integer> {
         @Override
         public Integer getValue(FunctionArguments arguments) {
-            return Models.Profession.getLevel(ProfessionType.MINING);
+
+            ProfessionType pt = ProfessionType.fromString(
+                    arguments.getArgument("profession").getStringValue());
+            if (pt == null) return -1;
+
+            return (int) Models.Profession.getRawXpGainInLastMinute().get(pt).stream()
+                    .mapToDouble(Float::doubleValue)
+                    .sum();
+        }
+
+        @Override
+        public FunctionArguments.Builder getArgumentsBuilder() {
+            return new FunctionArguments.RequiredArgumentBuilder(
+                    List.of(new FunctionArguments.Argument<>("profession", String.class, null)));
         }
 
         @Override
         public List<String> getAliases() {
-            return List.of("mining");
+            return List.of("prof_xpm_raw");
         }
     }
 
-    public static class FishingLevelFunction extends Function<Integer> {
+    public static class ProfessionXpPerMinuteFunction extends Function<String> {
         @Override
-        public Integer getValue(FunctionArguments arguments) {
-            return Models.Profession.getLevel(ProfessionType.FISHING);
+        public String getValue(FunctionArguments arguments) {
+
+            ProfessionType pt = ProfessionType.fromString(
+                    arguments.getArgument("profession").getStringValue());
+            if (pt == null) return "Invalid profession";
+
+            return StringUtils.integerToShortString((int) Models.Profession.getRawXpGainInLastMinute().get(pt).stream()
+                    .mapToDouble(Float::doubleValue)
+                    .sum());
+        }
+
+        @Override
+        public FunctionArguments.Builder getArgumentsBuilder() {
+            return new FunctionArguments.RequiredArgumentBuilder(
+                    List.of(new FunctionArguments.Argument<>("profession", String.class, null)));
         }
 
         @Override
         public List<String> getAliases() {
-            return List.of("fishing");
-        }
-    }
-
-    public static class FarmingLevelFunction extends Function<Integer> {
-        @Override
-        public Integer getValue(FunctionArguments arguments) {
-            return Models.Profession.getLevel(ProfessionType.FARMING);
-        }
-
-        @Override
-        public List<String> getAliases() {
-            return List.of("farming");
-        }
-    }
-
-    public static class AlchemismLevelFunction extends Function<Integer> {
-        @Override
-        public Integer getValue(FunctionArguments arguments) {
-            return Models.Profession.getLevel(ProfessionType.ALCHEMISM);
-        }
-
-        @Override
-        public List<String> getAliases() {
-            return List.of("alchemism");
-        }
-    }
-
-    public static class ArmouringLevelFunction extends Function<Integer> {
-        @Override
-        public Integer getValue(FunctionArguments arguments) {
-            return Models.Profession.getLevel(ProfessionType.ARMOURING);
-        }
-
-        @Override
-        public List<String> getAliases() {
-            return List.of("armouring");
-        }
-    }
-
-    public static class CookingLevelFunction extends Function<Integer> {
-        @Override
-        public Integer getValue(FunctionArguments arguments) {
-            return Models.Profession.getLevel(ProfessionType.COOKING);
-        }
-
-        @Override
-        public List<String> getAliases() {
-            return List.of("cooking");
-        }
-    }
-
-    public static class JewelingLevelFunction extends Function<Integer> {
-        @Override
-        public Integer getValue(FunctionArguments arguments) {
-            return Models.Profession.getLevel(ProfessionType.JEWELING);
-        }
-
-        @Override
-        public List<String> getAliases() {
-            return List.of("jeweling");
-        }
-    }
-
-    public static class ScribingLevelFunction extends Function<Integer> {
-        @Override
-        public Integer getValue(FunctionArguments arguments) {
-            return Models.Profession.getLevel(ProfessionType.SCRIBING);
-        }
-
-        @Override
-        public List<String> getAliases() {
-            return List.of("scribing");
-        }
-    }
-
-    public static class TailoringLevelFunction extends Function<Integer> {
-        @Override
-        public Integer getValue(FunctionArguments arguments) {
-            return Models.Profession.getLevel(ProfessionType.TAILORING);
-        }
-
-        @Override
-        public List<String> getAliases() {
-            return List.of("tailoring");
-        }
-    }
-
-    public static class WeaponsmithingLevelFunction extends Function<Integer> {
-        @Override
-        public Integer getValue(FunctionArguments arguments) {
-            return Models.Profession.getLevel(ProfessionType.WEAPONSMITHING);
-        }
-
-        @Override
-        public List<String> getAliases() {
-            return List.of("weaponsmithing");
-        }
-    }
-
-    public static class WoodworkingLevelFunction extends Function<Integer> {
-        @Override
-        public Integer getValue(FunctionArguments arguments) {
-            return Models.Profession.getLevel(ProfessionType.WOODWORKING);
-        }
-
-        @Override
-        public List<String> getAliases() {
-            return List.of("woodworking");
-        }
-    }
-
-    public static class WoodcuttingPercentageFunction extends Function<Double> {
-        @Override
-        public Double getValue(FunctionArguments arguments) {
-            return Models.Profession.getProgress(ProfessionType.WOODCUTTING);
-        }
-
-        @Override
-        public List<String> getAliases() {
-            return List.of("woodcutting_pct");
-        }
-    }
-
-    public static class MiningPercentageFunction extends Function<Double> {
-        @Override
-        public Double getValue(FunctionArguments arguments) {
-            return Models.Profession.getProgress(ProfessionType.MINING);
-        }
-
-        @Override
-        public List<String> getAliases() {
-            return List.of("mining_pct");
-        }
-    }
-
-    public static class FishingPercentageFunction extends Function<Double> {
-        @Override
-        public Double getValue(FunctionArguments arguments) {
-            return Models.Profession.getProgress(ProfessionType.FISHING);
-        }
-
-        @Override
-        public List<String> getAliases() {
-            return List.of("fishing_pct");
-        }
-    }
-
-    public static class FarmingPercentageFunction extends Function<Double> {
-        @Override
-        public Double getValue(FunctionArguments arguments) {
-            return Models.Profession.getProgress(ProfessionType.FARMING);
-        }
-
-        @Override
-        public List<String> getAliases() {
-            return List.of("farming_pct");
-        }
-    }
-
-    public static class AlchemismPercentageFunction extends Function<Double> {
-        @Override
-        public Double getValue(FunctionArguments arguments) {
-            return Models.Profession.getProgress(ProfessionType.ALCHEMISM);
-        }
-
-        @Override
-        public List<String> getAliases() {
-            return List.of("alchemism_pct");
-        }
-    }
-
-    public static class ArmouringPercentageFunction extends Function<Double> {
-        @Override
-        public Double getValue(FunctionArguments arguments) {
-            return Models.Profession.getProgress(ProfessionType.ARMOURING);
-        }
-
-        @Override
-        public List<String> getAliases() {
-            return List.of("armouring_pct");
-        }
-    }
-
-    public static class CookingPercentageFunction extends Function<Double> {
-        @Override
-        public Double getValue(FunctionArguments arguments) {
-            return Models.Profession.getProgress(ProfessionType.COOKING);
-        }
-
-        @Override
-        public List<String> getAliases() {
-            return List.of("cooking_pct");
-        }
-    }
-
-    public static class JewelingPercentageFunction extends Function<Double> {
-        @Override
-        public Double getValue(FunctionArguments arguments) {
-            return Models.Profession.getProgress(ProfessionType.JEWELING);
-        }
-
-        @Override
-        public List<String> getAliases() {
-            return List.of("jeweling_pct");
-        }
-    }
-
-    public static class ScribingPercentageFunction extends Function<Double> {
-        @Override
-        public Double getValue(FunctionArguments arguments) {
-            return Models.Profession.getProgress(ProfessionType.SCRIBING);
-        }
-
-        @Override
-        public List<String> getAliases() {
-            return List.of("scribing_pct");
-        }
-    }
-
-    public static class TailoringPercentageFunction extends Function<Double> {
-        @Override
-        public Double getValue(FunctionArguments arguments) {
-            return Models.Profession.getProgress(ProfessionType.TAILORING);
-        }
-
-        @Override
-        public List<String> getAliases() {
-            return List.of("tailoring_pct");
-        }
-    }
-
-    public static class WeaponsmithingPercentageFunction extends Function<Double> {
-        @Override
-        public Double getValue(FunctionArguments arguments) {
-            return Models.Profession.getProgress(ProfessionType.WEAPONSMITHING);
-        }
-
-        @Override
-        public List<String> getAliases() {
-            return List.of("weaponsmithing_pct");
-        }
-    }
-
-    public static class WoodworkingPercentageFunction extends Function<Double> {
-        @Override
-        public Double getValue(FunctionArguments arguments) {
-            return Models.Profession.getProgress(ProfessionType.WOODWORKING);
-        }
-
-        @Override
-        public List<String> getAliases() {
-            return List.of("woodworking_pct");
+            return List.of("prof_xpm");
         }
     }
 }
