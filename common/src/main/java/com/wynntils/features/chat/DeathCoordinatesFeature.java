@@ -21,12 +21,13 @@ import net.minecraftforge.eventbus.api.SubscribeEvent;
 
 @ConfigCategory(Category.CHAT)
 public class DeathCoordinatesFeature extends Feature {
+    private static final String WYNN_DEATH_MESSAGE = "§r §4§lYou have died...";
     private Vec3i lastLocation;
 
     @SubscribeEvent
     public void onChatReceived(ChatMessageReceivedEvent e) {
         if (!Models.WorldState.onWorld() || lastLocation == null) return;
-        if (!e.getCodedMessage().contains("§r §4§lYou have died...")) return;
+        if (!e.getCodedMessage().contains(WYNN_DEATH_MESSAGE)) return;
 
         MutableComponent deathMessage = Component.translatable("feature.wynntils.deathCoordinates.diedAt")
                 .withStyle(ChatFormatting.DARK_RED);
@@ -50,8 +51,6 @@ public class DeathCoordinatesFeature extends Feature {
 
     @SubscribeEvent
     public void onTick(TickEvent e) {
-        if (!Models.WorldState.onWorld()) return;
-
         lastLocation = new Vec3i(
                 McUtils.player().getX(),
                 McUtils.player().getY(),
