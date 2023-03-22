@@ -17,10 +17,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.regex.Matcher;
 import java.util.stream.Collectors;
-import net.minecraft.ChatFormatting;
-import net.minecraft.network.chat.ClickEvent;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.HoverEvent;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.network.chat.Style;
 import net.minecraftforge.eventbus.api.EventPriority;
@@ -80,7 +77,7 @@ public class ChatCoordinatesFeature extends Feature {
                 temp.append(preText);
 
                 // create hover-able text component for the item
-                Component compassComponent = createLocationComponent(location.get());
+                Component compassComponent = ComponentUtils.createLocationComponent(location.get());
                 temp.append(compassComponent);
 
                 comp = Component.literal(ComponentUtils.getLastPartCodes(ComponentUtils.getCoded(preText))
@@ -94,19 +91,5 @@ public class ChatCoordinatesFeature extends Feature {
         }
 
         return temp;
-    }
-
-    private static Component createLocationComponent(Location location) {
-        MutableComponent component = Component.literal(
-                        "[%d, %d, %d]".formatted((int) location.x, (int) location.y, (int) location.z))
-                .withStyle(ChatFormatting.DARK_AQUA)
-                .withStyle(ChatFormatting.UNDERLINE);
-
-        component.withStyle(style -> style.withClickEvent(new ClickEvent(
-                ClickEvent.Action.RUN_COMMAND, "/compass at " + location.x + " " + location.y + " " + location.z)));
-        component.withStyle(style -> style.withHoverEvent(new HoverEvent(
-                HoverEvent.Action.SHOW_TEXT, Component.literal("Click here to set your compass to this location"))));
-
-        return component;
     }
 }

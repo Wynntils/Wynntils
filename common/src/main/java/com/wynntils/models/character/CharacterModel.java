@@ -7,9 +7,12 @@ package com.wynntils.models.character;
 import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.components.Model;
 import com.wynntils.core.components.Models;
+import com.wynntils.handlers.chat.event.ChatMessageReceivedEvent;
 import com.wynntils.handlers.container.ScriptedContainerQuery;
 import com.wynntils.mc.event.ContainerClickEvent;
 import com.wynntils.mc.event.MenuEvent.MenuClosedEvent;
+import com.wynntils.mc.event.PlayerTeleportEvent;
+import com.wynntils.models.character.event.CharacterDeathEvent;
 import com.wynntils.models.character.event.CharacterUpdateEvent;
 import com.wynntils.models.character.type.ClassType;
 import com.wynntils.models.worlds.event.WorldStateEvent;
@@ -17,11 +20,13 @@ import com.wynntils.models.worlds.type.WorldState;
 import com.wynntils.utils.mc.ComponentUtils;
 import com.wynntils.utils.mc.LoreUtils;
 import com.wynntils.utils.mc.McUtils;
+import com.wynntils.utils.mc.type.Location;
 import com.wynntils.utils.wynn.InventoryUtils;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import net.minecraft.ChatFormatting;
+import net.minecraft.core.Position;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraftforge.eventbus.api.EventPriority;
@@ -36,6 +41,12 @@ public final class CharacterModel extends Model {
     private static final int CHARACTER_INFO_SLOT = 7;
     private static final int SOUL_POINT_SLOT = 8;
     private static final int PROFESSION_INFO_SLOT = 17;
+
+    // we need a .* in front because the message may have a custom timestamp prefix (or some other mod could do
+    // something weird)
+    private static final Pattern WYNN_DEATH_MESSAGE = Pattern.compile(".*§r §4§lYou have died\\.\\.\\.");
+    private Position lastPositionBeforeTeleport;
+    private Location lastDeathLocation;
 
     private boolean inCharacterSelection;
     private boolean hasCharacter;
@@ -217,5 +228,18 @@ public final class CharacterModel extends Model {
         this.classType = classType;
         this.reskinned = reskinned;
         this.level = level;
+    }
+
+    @SubscribeEvent
+    public void onChatReceived(ChatMessageReceivedEvent e) {
+        if (!WYNN_DEATH_MESSAGE.matcher(e.getCodedMessage()).matches()) return;
+        lastDeathLocation = Location.containing(lastPositionBeforeTeleport);
+        WynntilsMod.postEvent(new CharacterDeathEvent(lastDeathLocation));
+    }
+
+    @SubscribeEvent
+    public void beforePlayerTeleport(PlayerTeleportEvent e) {
+        if (McUtils.player() == null) return;
+        lastPositionBeforeTeleport = McUtils.player().position();
     }
 }

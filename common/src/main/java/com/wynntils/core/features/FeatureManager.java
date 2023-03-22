@@ -23,6 +23,7 @@ import com.wynntils.features.chat.ChatItemFeature;
 import com.wynntils.features.chat.ChatMentionFeature;
 import com.wynntils.features.chat.ChatTabsFeature;
 import com.wynntils.features.chat.ChatTimestampFeature;
+import com.wynntils.features.chat.DeathCoordinatesFeature;
 import com.wynntils.features.chat.DialogueOptionOverrideFeature;
 import com.wynntils.features.chat.InfoMessageFilterFeature;
 import com.wynntils.features.chat.TradeMarketAutoOpenChatFeature;
@@ -176,6 +177,7 @@ public final class FeatureManager extends Manager {
         registerFeature(new CustomCharacterSelectionScreenFeature());
         registerFeature(new CustomCommandKeybindsFeature());
         registerFeature(new CustomNametagRendererFeature());
+        registerFeature(new DeathCoordinatesFeature());
         registerFeature(new DialogueOptionOverrideFeature());
         registerFeature(new GameBarsOverlayFeature());
         registerFeature(new DurabilityArcFeature());
