@@ -1162,6 +1162,7 @@
   "function.wynntils.tokenGatekeeperCount.name": "Gatekeeper Count",
   "function.wynntils.tokenGatekeeperDeposited.description": "The number of tokens deposited to the first gatekeeper",
   "function.wynntils.tokenGatekeeperDeposited.name": "First Gatekeeper Tokens Deposited",
+  "function.wynntils.tokenGatekeeperDeposited.argument.gatekeeperNumber": "The Gatekeeper Number",
   "function.wynntils.tokenGatekeeperType.description": "The type of tokens needed to get past the first gatekeeper",
   "function.wynntils.tokenGatekeeperType.name": "First Gatekeeper Token Type",
   "function.wynntils.tokenGatekeepers.argument.gatekeeperNumber": "The Gatekeeper Number",
