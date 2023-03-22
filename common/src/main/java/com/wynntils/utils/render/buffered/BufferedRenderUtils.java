@@ -546,13 +546,7 @@ public final class BufferedRenderUtils {
     }
 
     public static void createMask(
-            PoseStack poseStack,
-            MultiBufferSource.BufferSource bufferSource,
-            Texture texture,
-            int x1,
-            int y1,
-            int x2,
-            int y2) {
+            PoseStack poseStack, MultiBufferSource bufferSource, Texture texture, int x1, int y1, int x2, int y2) {
         createMask(poseStack, bufferSource, texture, x1, y1, x2, y2, 0, 0, texture.width(), texture.height());
     }
 
