@@ -1,9 +1,21 @@
+## [0.0.2-alpha.364](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.363...v0.0.2-alpha.364) (2023-03-22)
+
+
+### Bug Fixes
+
+* If we encounter an error when processing a cached file, delete it from the cache ([#1359](https://github.com/Wynntils/Artemis/issues/1359)) ([8806bd0](https://github.com/Wynntils/Artemis/commit/8806bd06786ae2e44f7f92f68ffaa3cac5d6b84d))
+
 ## [0.0.2-alpha.363](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.362...v0.0.2-alpha.363) (2023-03-21)
 
 
 ### New Features
 
 * Inventory watcher, MiscItem, label visibility etc ([#1357](https://github.com/Wynntils/Artemis/issues/1357)) ([a2ebe9d](https://github.com/Wynntils/Artemis/commit/a2ebe9d4dcc08b84b750fc11d71d576016a93a41))
+
+
+### Miscellaneous Chores
+
+* **release:** v0.0.2-alpha.363 [skip ci] ([f67cdac](https://github.com/Wynntils/Artemis/commit/f67cdac4341aac113c965573a3ac31178a845f71))
 
 ## [0.0.2-alpha.362](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.361...v0.0.2-alpha.362) (2023-03-20)
 
@@ -40,16 +52,4 @@
 ### Miscellaneous Chores
 
 * **release:** v0.0.2-alpha.360 [skip ci] ([ec96585](https://github.com/Wynntils/Artemis/commit/ec9658508e8e95eedffab6454ef0c5211c658ca7))
-
-## [0.0.2-alpha.359](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.358...v0.0.2-alpha.359) (2023-03-17)
-
-
-### Bug Fixes
-
-* Translation must send TranslatedNpcDialogEvent on render thread ([#1353](https://github.com/Wynntils/Artemis/issues/1353)) ([da9f998](https://github.com/Wynntils/Artemis/commit/da9f998742eb7248d9b83cd079a85fa4b8d1ceaa))
-
-
-### Miscellaneous Chores
-
-* **release:** v0.0.2-alpha.359 [skip ci] ([d9fcafd](https://github.com/Wynntils/Artemis/commit/d9fcafdf4c888bcef608a941d896f4d58551a992))
 
