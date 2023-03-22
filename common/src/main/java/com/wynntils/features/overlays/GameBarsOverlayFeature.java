@@ -121,8 +121,7 @@ public class GameBarsOverlayFeature extends Feature {
         protected abstract boolean isActive();
 
         @Override
-        public void render(
-                PoseStack poseStack, MultiBufferSource.BufferSource bufferSource, float partialTicks, Window window) {
+        public void render(PoseStack poseStack, MultiBufferSource bufferSource, float partialTicks, Window window) {
             if (!Models.WorldState.onWorld() || !isActive()) return;
 
             float barHeight = textureHeight() * (this.getWidth() / 81);
@@ -152,7 +151,7 @@ public class GameBarsOverlayFeature extends Feature {
 
         protected void renderBar(
                 PoseStack poseStack,
-                MultiBufferSource.BufferSource bufferSource,
+                MultiBufferSource bufferSource,
                 float renderY,
                 float renderHeight,
                 float progress) {
@@ -174,8 +173,7 @@ public class GameBarsOverlayFeature extends Feature {
                     progress);
         }
 
-        protected void renderText(
-                PoseStack poseStack, MultiBufferSource.BufferSource bufferSource, float renderY, String text) {
+        protected void renderText(PoseStack poseStack, MultiBufferSource bufferSource, float renderY, String text) {
             BufferedFontRenderer.getInstance()
                     .renderAlignedTextInBox(
                             poseStack,
@@ -239,7 +237,7 @@ public class GameBarsOverlayFeature extends Feature {
         @Override
         protected void renderBar(
                 PoseStack poseStack,
-                MultiBufferSource.BufferSource bufferSource,
+                MultiBufferSource bufferSource,
                 float renderY,
                 float renderHeight,
                 float progress) {
@@ -389,7 +387,7 @@ public class GameBarsOverlayFeature extends Feature {
         @Override
         protected void renderBar(
                 PoseStack poseStack,
-                MultiBufferSource.BufferSource bufferSource,
+                MultiBufferSource bufferSource,
                 float renderY,
                 float renderHeight,
                 float progress) {
