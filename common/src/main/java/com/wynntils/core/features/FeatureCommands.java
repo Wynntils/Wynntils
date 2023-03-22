@@ -9,14 +9,11 @@ import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.components.Managers;
 import com.wynntils.core.features.properties.RegisterCommand;
 import java.lang.reflect.Field;
-import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.commands.Commands;
 import org.apache.commons.lang3.reflect.FieldUtils;
 
 public class FeatureCommands {
-    private final Map<Feature, LiteralCommandNode<CommandSourceStack>> commandMappings = new ConcurrentHashMap<>();
     private final LiteralCommandNode<CommandSourceStack> commandNode;
 
     public FeatureCommands() {
@@ -31,12 +28,6 @@ public class FeatureCommands {
                 return;
             }
 
-            if (commandMappings.containsKey(feature)) {
-                WynntilsMod.error("More than one @RegisterCommand for " + f.getName() + " in "
-                        + feature.getClass().getName());
-                return;
-            }
-
             try {
                 LiteralCommandNode node = (LiteralCommandNode) FieldUtils.readField(f, feature, true);
 
@@ -44,7 +35,6 @@ public class FeatureCommands {
                         Commands.literal(feature.getShortName()).build();
                 featureNode.addChild(node);
                 commandNode.addChild(featureNode);
-                commandMappings.put(feature, node);
             } catch (IllegalAccessException e) {
                 WynntilsMod.error(
                         "Failed reading field of @RegisterCommand " + f.getName() + " in "
