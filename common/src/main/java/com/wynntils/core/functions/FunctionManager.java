@@ -432,30 +432,10 @@ public final class FunctionManager extends Manager {
         registerFunction(new MinecraftFunctions.YFunction());
         registerFunction(new MinecraftFunctions.ZFunction());
 
-        registerFunction(new ProfessionFunctions.AlchemismLevelFunction());
-        registerFunction(new ProfessionFunctions.AlchemismPercentageFunction());
-        registerFunction(new ProfessionFunctions.ArmouringLevelFunction());
-        registerFunction(new ProfessionFunctions.ArmouringPercentageFunction());
-        registerFunction(new ProfessionFunctions.CookingLevelFunction());
-        registerFunction(new ProfessionFunctions.CookingPercentageFunction());
-        registerFunction(new ProfessionFunctions.FarmingLevelFunction());
-        registerFunction(new ProfessionFunctions.FarmingPercentageFunction());
-        registerFunction(new ProfessionFunctions.FishingLevelFunction());
-        registerFunction(new ProfessionFunctions.FishingPercentageFunction());
-        registerFunction(new ProfessionFunctions.JewelingLevelFunction());
-        registerFunction(new ProfessionFunctions.JewelingPercentageFunction());
-        registerFunction(new ProfessionFunctions.MiningLevelFunction());
-        registerFunction(new ProfessionFunctions.MiningPercentageFunction());
-        registerFunction(new ProfessionFunctions.ScribingLevelFunction());
-        registerFunction(new ProfessionFunctions.ScribingPercentageFunction());
-        registerFunction(new ProfessionFunctions.TailoringLevelFunction());
-        registerFunction(new ProfessionFunctions.TailoringPercentageFunction());
-        registerFunction(new ProfessionFunctions.WeaponsmithingLevelFunction());
-        registerFunction(new ProfessionFunctions.WeaponsmithingPercentageFunction());
-        registerFunction(new ProfessionFunctions.WoodcuttingLevelFunction());
-        registerFunction(new ProfessionFunctions.WoodcuttingPercentageFunction());
-        registerFunction(new ProfessionFunctions.WoodworkingLevelFunction());
-        registerFunction(new ProfessionFunctions.WoodworkingPercentageFunction());
+        registerFunction(new ProfessionFunctions.ProfessionLevelFunction());
+        registerFunction(new ProfessionFunctions.ProfessionPercentageFunction());
+        registerFunction(new ProfessionFunctions.ProfessionXpPerMinuteFunction());
+        registerFunction(new ProfessionFunctions.ProfessionXpPerMinuteRawFunction());
 
         registerFunction(new SpellFunctions.ArrowShieldCountFunction());
         registerFunction(new SpellFunctions.ShamanMaskFunction());
