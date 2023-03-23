@@ -312,6 +312,7 @@ public final class FunctionManager extends Manager {
         registerFunction(new CappedFunctions.PercentageFunction());
         registerFunction(new CappedFunctions.RemainingFunction());
 
+        registerFunction(new ConditionalFunctions.IfCappedValueFunction());
         registerFunction(new ConditionalFunctions.IfNumberFunction());
         registerFunction(new ConditionalFunctions.IfStringFunction());
 

@@ -6,6 +6,7 @@ package com.wynntils.functions.generic;
 
 import com.wynntils.core.functions.GenericFunction;
 import com.wynntils.core.functions.arguments.FunctionArguments;
+import com.wynntils.utils.type.CappedValue;
 import java.util.List;
 
 public class ConditionalFunctions {
@@ -48,6 +49,21 @@ public class ConditionalFunctions {
         @Override
         public List<String> getAliases() {
             return List.of("if_num");
+        }
+    }
+
+    public static class IfCappedValueFunction extends IfFunctionBase<CappedValue> {
+        @Override
+        public FunctionArguments.RequiredArgumentBuilder getRequiredArgumentsBuilder() {
+            return new FunctionArguments.RequiredArgumentBuilder(List.of(
+                    new FunctionArguments.Argument<>("condition", Boolean.class, null),
+                    new FunctionArguments.Argument<>("ifTrue", CappedValue.class, null),
+                    new FunctionArguments.Argument<>("ifFalse", CappedValue.class, null)));
+        }
+
+        @Override
+        public List<String> getAliases() {
+            return List.of("if_capped", "if_cap");
         }
     }
 }
