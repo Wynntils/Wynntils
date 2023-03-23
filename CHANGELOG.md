@@ -1,9 +1,21 @@
+## [0.0.2-alpha.372](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.371...v0.0.2-alpha.372) (2023-03-23)
+
+
+### New Features
+
+* if_capped function ([#1368](https://github.com/Wynntils/Artemis/issues/1368)) ([348ba67](https://github.com/Wynntils/Artemis/commit/348ba67d68e08fb5ca028580f27e1c7d3f30ce66))
+
 ## [0.0.2-alpha.371](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.370...v0.0.2-alpha.371) (2023-03-23)
 
 
 ### New Features
 
 * Allow features to register commands ([#1364](https://github.com/Wynntils/Artemis/issues/1364)) ([a0bc265](https://github.com/Wynntils/Artemis/commit/a0bc265ca38bf8d8d3be67387bf284d8c030c200))
+
+
+### Miscellaneous Chores
+
+* **release:** v0.0.2-alpha.371 [skip ci] ([a77b5c4](https://github.com/Wynntils/Artemis/commit/a77b5c4d718cdf7cb68600fb58d9bec85aa4564d))
 
 ## [0.0.2-alpha.370](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.369...v0.0.2-alpha.370) (2023-03-22)
 
@@ -41,16 +53,4 @@
 ### Miscellaneous Chores
 
 * **release:** v0.0.2-alpha.368 [skip ci] ([275cf47](https://github.com/Wynntils/Artemis/commit/275cf47a71f7c86b0c8307dd7326672cb389fe11))
-
-## [0.0.2-alpha.367](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.366...v0.0.2-alpha.367) (2023-03-22)
-
-
-### Code Refactoring
-
-* Just use MultiBufferSource interface ([#1363](https://github.com/Wynntils/Artemis/issues/1363)) ([7ed44a3](https://github.com/Wynntils/Artemis/commit/7ed44a37017b1bb0d28336500d75bde205e3495a))
-
-
-### Miscellaneous Chores
-
-* **release:** v0.0.2-alpha.367 [skip ci] ([7164005](https://github.com/Wynntils/Artemis/commit/7164005636dd5ac0c3964314d28f70b57da52840))
 
