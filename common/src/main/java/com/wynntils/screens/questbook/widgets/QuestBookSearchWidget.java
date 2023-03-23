@@ -37,7 +37,7 @@ public class QuestBookSearchWidget extends SearchWidget {
 
         boolean defaultText = Objects.equals(textBoxInput, "") && !isFocused();
 
-        String renderedText = getRenderedText(this.width - 18);
+        String renderedText = getRenderedText(this.width - 18).a();
 
         FontRenderer.getInstance()
                 .renderAlignedTextInBox(

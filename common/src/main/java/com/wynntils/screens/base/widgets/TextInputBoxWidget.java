@@ -4,7 +4,13 @@
  */
 package com.wynntils.screens.base.widgets;
 
+import com.mojang.blaze3d.platform.GlStateManager;
+import com.mojang.blaze3d.systems.RenderSystem;
+import com.mojang.blaze3d.vertex.BufferBuilder;
+import com.mojang.blaze3d.vertex.DefaultVertexFormat;
 import com.mojang.blaze3d.vertex.PoseStack;
+import com.mojang.blaze3d.vertex.Tesselator;
+import com.mojang.blaze3d.vertex.VertexFormat;
 import com.wynntils.screens.base.TextboxScreen;
 import com.wynntils.utils.MathUtils;
 import com.wynntils.utils.colors.CommonColors;
@@ -16,13 +22,17 @@ import com.wynntils.utils.render.type.HorizontalAlignment;
 import com.wynntils.utils.render.type.TextShadow;
 import com.wynntils.utils.render.type.VerticalAlignment;
 import java.util.function.Consumer;
+
+import com.wynntils.utils.type.Pair;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.components.AbstractWidget;
 import net.minecraft.client.gui.narration.NarrationElementOutput;
 import net.minecraft.client.gui.screens.Screen;
+import net.minecraft.client.renderer.GameRenderer;
 import net.minecraft.network.chat.Component;
 import net.minecraft.sounds.SoundEvents;
+import net.minecraft.util.Mth;
 import org.lwjgl.glfw.GLFW;
 
 // FIXME: Add selection support to this class to be a fully working text box
@@ -31,6 +41,7 @@ public class TextInputBoxWidget extends AbstractWidget {
     private final Consumer<String> onUpdateConsumer;
     protected String textBoxInput = "";
     private int cursorPosition = 0;
+    private int highlightPosition = 0;
     private long lastCursorSwitch = 0;
     private boolean renderCursor = true;
     private CustomColor renderColor = CommonColors.WHITE;
@@ -85,8 +96,8 @@ public class TextInputBoxWidget extends AbstractWidget {
         RenderUtils.drawRect(poseStack, CommonColors.BLACK, 0, 0, 0, this.width, this.height);
         RenderUtils.drawRectBorders(poseStack, CommonColors.GRAY, 0, 0, this.width, this.height, 0, 2);
 
-        String renderedText = getRenderedText(this.width - 8);
-
+        Pair<String, Pair<Integer, Integer>> renderedTextDetails = getRenderedText(this.width - 8);
+        String renderedText = renderedTextDetails.a();
         FontRenderer.getInstance()
                 .renderAlignedTextInBox(
                         poseStack,
@@ -101,48 +112,101 @@ public class TextInputBoxWidget extends AbstractWidget {
                         VerticalAlignment.Middle,
                         TextShadow.NORMAL);
 
+        if (this.hasHighlighted()) {
+            renderHighlight(renderedTextDetails.b().a(), 2, renderedTextDetails.b().b(), this.height - 2);
+        }
+
         poseStack.popPose();
     }
 
-    protected String getRenderedText(float maxTextWidth) {
+    protected Pair<String, Pair<Integer, Integer>> getRenderedText(float maxTextWidth) {
         Font font = FontRenderer.getInstance().getFont();
 
         String cursorChar = getRenderCursorChar();
+        final int cursorWidth = font.width(cursorChar);
 
-        final float cursorWidth = font.width(String.valueOf(this.getCursorChar()));
-
-        String renderedText;
-        if (font.width(textBoxInput + this.getCursorChar()) < maxTextWidth) {
-            renderedText =
-                    (textBoxInput.substring(0, cursorPosition) + cursorChar + textBoxInput.substring(cursorPosition));
-        } else {
-            // This case, the input is too long, only render text that fits, and is closest to cursor
-            StringBuilder builder = new StringBuilder();
-
-            int stringPosition = cursorPosition - 1;
-
-            while (font.width(builder.toString()) < maxTextWidth - cursorWidth && stringPosition >= 0) {
-                builder.append(textBoxInput.charAt(stringPosition));
-
-                stringPosition--;
+        String entireText = textBoxInput.substring(0, cursorPosition) + cursorChar + textBoxInput.substring(cursorPosition);
+        if (font.width(entireText) < maxTextWidth) {
+            if (this.hasHighlighted()) {
+                int highlightStart = font.width(textBoxInput.substring(0, Math.min(cursorPosition, highlightPosition)));
+                int highlightWidth = font.width(textBoxInput.substring(Math.min(cursorPosition, highlightPosition), Math.max(cursorPosition, highlightPosition)));
+                return new Pair<>(entireText, new Pair<>(highlightStart, highlightWidth));
+            } else {
+                return new Pair<>(entireText, new Pair<>(0, 0));
             }
-
-            builder.reverse();
-            builder.append(cursorChar);
-
-            stringPosition = cursorPosition;
-
-            while (font.width(builder.toString()) < maxTextWidth - cursorWidth
-                    && stringPosition < this.textBoxInput.length()) {
-                builder.append(textBoxInput.charAt(stringPosition));
-
-                stringPosition++;
-            }
-
-            renderedText = builder.toString();
         }
 
-        return renderedText;
+        StringBuilder builder = new StringBuilder();
+        int highlightStart;
+        int highlightWidth;
+
+        // First append to the left of the cursor
+        int stringPosition = cursorPosition - 1;
+        while (font.width(builder.toString()) < maxTextWidth - cursorWidth && stringPosition >= 0) {
+            builder.append(textBoxInput.charAt(stringPosition));
+
+            stringPosition--;
+        }
+
+        if (Math.min(cursorPosition, highlightPosition) < stringPosition) {
+            highlightStart = 0;
+        } else {
+            highlightStart = font.width(textBoxInput.substring(stringPosition + 1, Math.min(cursorPosition, highlightPosition)));
+        }
+
+        // Now reverse so it's actually to the left
+        builder.reverse();
+        builder.append(cursorChar);
+
+        // Now append to the right of the cursor
+        stringPosition = cursorPosition;
+        while (font.width(builder.toString()) < maxTextWidth - cursorWidth
+                && stringPosition < this.textBoxInput.length()) {
+            builder.append(textBoxInput.charAt(stringPosition));
+
+            stringPosition++;
+        }
+
+        return new Pair<>(builder.toString(), new Pair<>(highlightStart, (int) Math.min(font.width(textBoxInput.substring(Math.min(cursorPosition, highlightPosition), Math.max(cursorPosition, highlightPosition))), maxTextWidth - cursorWidth - highlightStart)));
+    }
+
+    private void renderHighlight(int startX, int startY, int endX, int endY) {
+        if (startX < endX) {
+            int i = startX;
+            startX = endX;
+            endX = i;
+        }
+
+        if (startY < endY) {
+            int i = startY;
+            startY = endY;
+            endY = i;
+        }
+
+        if (endX > this.getX() + this.width) {
+            endX = this.getX() + this.width;
+        }
+
+        if (startX > this.getX() + this.width) {
+            startX = this.getX() + this.width;
+        }
+
+        Tesselator tesselator = Tesselator.getInstance();
+        BufferBuilder bufferBuilder = tesselator.getBuilder();
+        RenderSystem.setShader(GameRenderer::getPositionShader);
+        RenderSystem.setShaderColor(0.0F, 0.0F, 1.0F, 1.0F);
+        RenderSystem.disableTexture();
+        RenderSystem.enableColorLogicOp();
+        RenderSystem.logicOp(GlStateManager.LogicOp.OR_REVERSE);
+        bufferBuilder.begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.POSITION);
+        bufferBuilder.vertex(startX, endY, 0.0).endVertex();
+        bufferBuilder.vertex(endX, endY, 0.0).endVertex();
+        bufferBuilder.vertex(endX, startY, 0.0).endVertex();
+        bufferBuilder.vertex(startX, startY, 0.0).endVertex();
+        tesselator.end();
+        RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
+        RenderSystem.disableColorLogicOp();
+        RenderSystem.enableTexture();
     }
 
     @Override
@@ -150,6 +214,7 @@ public class TextInputBoxWidget extends AbstractWidget {
         McUtils.playSound(SoundEvents.UI_BUTTON_CLICK.value());
 
         if (this.isHovered) {
+            //setCursorAndHighlightPositions(getIndexAtPosition(mouseX, mouseY));
             textboxScreen.setFocusedTextInput(this);
             return true;
         } else {
@@ -160,13 +225,23 @@ public class TextInputBoxWidget extends AbstractWidget {
     }
 
     @Override
+    public boolean mouseDragged(double mouseX, double mouseY, int button, double dragX, double dragY) {
+        return super.mouseDragged(mouseX, mouseY, button, dragX, dragY);
+    }
+
+    @Override
     public boolean charTyped(char codePoint, int modifiers) {
         if (textBoxInput == null) {
             textBoxInput = "";
         }
 
-        textBoxInput = textBoxInput.substring(0, cursorPosition) + codePoint + textBoxInput.substring(cursorPosition);
-        setCursorPosition(cursorPosition + 1);
+        if (hasHighlighted()) {
+            replaceHighlighted(String.valueOf(codePoint));
+        } else {
+            textBoxInput = textBoxInput.substring(0, cursorPosition) + codePoint + textBoxInput.substring(cursorPosition);
+            setCursorPosition(cursorPosition + 1);
+            setHighlightPosition(cursorPosition);
+        }
         this.onUpdateConsumer.accept(this.getTextBoxInput());
         return true;
     }
@@ -191,10 +266,19 @@ public class TextInputBoxWidget extends AbstractWidget {
             setTextBoxInput("");
 
             return true;
+        } else if (Screen.isSelectAll(keyCode)) {
+            setCursorPosition(textBoxInput.length());
+            setHighlightPosition(0);
+            return true;
         }
 
         if (keyCode == GLFW.GLFW_KEY_BACKSPACE) {
             if (textBoxInput.isEmpty()) {
+                return true;
+            }
+
+            if (this.hasHighlighted()) {
+                replaceHighlighted("");
                 return true;
             }
 
@@ -215,6 +299,11 @@ public class TextInputBoxWidget extends AbstractWidget {
                 return true;
             }
 
+            if (this.hasHighlighted()) {
+                replaceHighlighted("");
+                return true;
+            }
+
             if (Screen.hasControlDown()) {
                 setTextBoxInput(textBoxInput.substring(0, cursorPosition));
                 return true;
@@ -227,24 +316,24 @@ public class TextInputBoxWidget extends AbstractWidget {
         }
 
         if (keyCode == GLFW.GLFW_KEY_LEFT) {
-            if (Screen.hasControlDown()) {
-                setCursorPosition(0);
-                return true;
-            }
-
-            setCursorPosition(cursorPosition - 1);
+            setCursorAndHighlightPositions(Screen.hasControlDown() ? 0 : cursorPosition - 1);
             this.onUpdateConsumer.accept(this.getTextBoxInput());
             return true;
         }
 
         if (keyCode == GLFW.GLFW_KEY_RIGHT) {
-            if (Screen.hasControlDown()) {
-                setCursorPosition(textBoxInput.length());
-                return true;
-            }
-
-            setCursorPosition(cursorPosition + 1);
+            setCursorAndHighlightPositions(Screen.hasControlDown() ? textBoxInput.length() : cursorPosition + 1);
             this.onUpdateConsumer.accept(this.getTextBoxInput());
+            return true;
+        }
+
+        if (keyCode == GLFW.GLFW_KEY_HOME) {
+            setCursorAndHighlightPositions(0);
+            return true;
+        }
+
+        if (keyCode == GLFW.GLFW_KEY_END) {
+            setCursorAndHighlightPositions(textBoxInput.length());
             return true;
         }
 
@@ -285,6 +374,11 @@ public class TextInputBoxWidget extends AbstractWidget {
         this.cursorPosition = MathUtils.clamp(cursorPosition, 0, textBoxInput.length());
     }
 
+    public void setCursorAndHighlightPositions(int pos) {
+        this.cursorPosition = MathUtils.clamp(pos, 0, textBoxInput.length());
+        this.highlightPosition = this.cursorPosition;
+    }
+
     private char getCursorChar() {
         return this.DEFAULT_CURSOR_CHAR;
     }
@@ -299,5 +393,36 @@ public class TextInputBoxWidget extends AbstractWidget {
 
     public CustomColor getRenderColor() {
         return renderColor;
+    }
+
+    public String getHighlighted() {
+        int start = Math.min(this.cursorPosition, this.highlightPosition);
+        int end = Math.max(this.cursorPosition, this.highlightPosition);
+        return this.textBoxInput.substring(start, end);
+    }
+
+    public boolean hasHighlighted() {
+        return this.cursorPosition != this.highlightPosition;
+    }
+
+    public void setHighlightPosition(int position) {
+        int length = this.textBoxInput.length();
+        this.highlightPosition = Mth.clamp(position, 0, length);
+    }
+
+    public void replaceHighlighted(String text) {
+        int start = Math.min(this.cursorPosition, this.highlightPosition);
+        int end = Math.max(this.cursorPosition, this.highlightPosition);
+        int length = this.textBoxInput.length() - (start - end);
+        int insertLength = text.length();
+        if (length < insertLength) {
+            text = text.substring(0, length);
+            insertLength = length;
+        }
+
+        this.textBoxInput = new StringBuilder(this.textBoxInput).replace(start, end, text).toString();
+        this.setCursorPosition(start + insertLength);
+        this.setHighlightPosition(this.cursorPosition);
+        this.onUpdateConsumer.accept(this.textBoxInput);
     }
 }
