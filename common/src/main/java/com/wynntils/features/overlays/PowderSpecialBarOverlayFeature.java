@@ -61,8 +61,7 @@ public class PowderSpecialBarOverlayFeature extends Feature {
         }
 
         @Override
-        public void render(
-                PoseStack poseStack, MultiBufferSource.BufferSource bufferSource, float partialTicks, Window window) {
+        public void render(PoseStack poseStack, MultiBufferSource bufferSource, float partialTicks, Window window) {
             float powderSpecialCharge = Models.CharacterStats.getPowderSpecialCharge();
             Powder powderSpecialType = Models.CharacterStats.getPowderSpecialType();
             if (this.onlyIfWeaponHeld.get()
@@ -74,7 +73,7 @@ public class PowderSpecialBarOverlayFeature extends Feature {
 
         @Override
         public void renderPreview(
-                PoseStack poseStack, MultiBufferSource.BufferSource bufferSource, float partialTicks, Window window) {
+                PoseStack poseStack, MultiBufferSource bufferSource, float partialTicks, Window window) {
             renderWithSpecificSpecial(poseStack, bufferSource, 40, Powder.THUNDER);
         }
 
@@ -83,7 +82,7 @@ public class PowderSpecialBarOverlayFeature extends Feature {
 
         private void renderWithSpecificSpecial(
                 PoseStack poseStack,
-                MultiBufferSource.BufferSource bufferSource,
+                MultiBufferSource bufferSource,
                 float powderSpecialCharge,
                 Powder powderSpecialType) {
             Texture universalBarTexture = Texture.UNIVERSAL_BAR;

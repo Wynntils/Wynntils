@@ -115,8 +115,7 @@ public class SpellCastRenderFeature extends Feature {
         }
 
         @Override
-        public void render(
-                PoseStack poseStack, MultiBufferSource.BufferSource bufferSource, float partialTicks, Window window) {
+        public void render(PoseStack poseStack, MultiBufferSource bufferSource, float partialTicks, Window window) {
             if (spellTimer <= 0) return;
 
             // Render it the same way vanilla renders item changes

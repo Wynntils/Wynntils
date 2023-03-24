@@ -233,7 +233,7 @@ public class NpcDialogueOverlayFeature extends Feature {
 
         private void renderDialogue(
                 PoseStack poseStack,
-                MultiBufferSource.BufferSource bufferSource,
+                MultiBufferSource bufferSource,
                 List<String> currentDialogue,
                 NpcDialogueType dialogueType) {
             List<TextRenderTask> dialogueRenderTasks = currentDialogue.stream()
@@ -334,8 +334,7 @@ public class NpcDialogueOverlayFeature extends Feature {
         }
 
         @Override
-        public void render(
-                PoseStack poseStack, MultiBufferSource.BufferSource bufferSource, float partialTicks, Window window) {
+        public void render(PoseStack poseStack, MultiBufferSource bufferSource, float partialTicks, Window window) {
             if (currentDialogue.isEmpty() && confirmationlessDialogues.isEmpty()) return;
 
             LinkedList<String> allDialogues = new LinkedList<>(currentDialogue);
@@ -353,7 +352,7 @@ public class NpcDialogueOverlayFeature extends Feature {
 
         @Override
         public void renderPreview(
-                PoseStack poseStack, MultiBufferSource.BufferSource bufferSource, float partialTicks, Window window) {
+                PoseStack poseStack, MultiBufferSource bufferSource, float partialTicks, Window window) {
             List<String> fakeDialogue = List.of(
                     "§7[1/1] §r§2Random Citizen: §r§aDid you know that Wynntils is the best Wynncraft mod you'll probably find?§r");
             // we have to force update every time

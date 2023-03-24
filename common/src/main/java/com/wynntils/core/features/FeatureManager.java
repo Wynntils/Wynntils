@@ -5,6 +5,7 @@
 package com.wynntils.core.features;
 
 import com.wynntils.core.WynntilsMod;
+import com.wynntils.core.commands.CommandManager;
 import com.wynntils.core.components.Manager;
 import com.wynntils.core.components.Managers;
 import com.wynntils.core.config.Category;
@@ -23,6 +24,7 @@ import com.wynntils.features.chat.ChatItemFeature;
 import com.wynntils.features.chat.ChatMentionFeature;
 import com.wynntils.features.chat.ChatTabsFeature;
 import com.wynntils.features.chat.ChatTimestampFeature;
+import com.wynntils.features.chat.DeathCoordinatesFeature;
 import com.wynntils.features.chat.DialogueOptionOverrideFeature;
 import com.wynntils.features.chat.InfoMessageFilterFeature;
 import com.wynntils.features.chat.TradeMarketAutoOpenChatFeature;
@@ -83,6 +85,7 @@ import com.wynntils.features.overlays.ShamanMasksOverlayFeature;
 import com.wynntils.features.overlays.ShamanTotemTrackingFeature;
 import com.wynntils.features.overlays.SpellCastRenderFeature;
 import com.wynntils.features.overlays.StatusOverlayFeature;
+import com.wynntils.features.overlays.TradeMarketBulkSellFeature;
 import com.wynntils.features.players.AutoJoinPartyFeature;
 import com.wynntils.features.players.CustomNametagRendererFeature;
 import com.wynntils.features.players.GearViewerFeature;
@@ -132,8 +135,11 @@ public final class FeatureManager extends Manager {
     private static final Map<Feature, FeatureState> FEATURES = new LinkedHashMap<>();
     private static final Map<Class<? extends Feature>, Feature> FEATURE_INSTANCES = new LinkedHashMap<>();
 
-    public FeatureManager(CrashReportManager crashReport, KeyBindManager keyBind, OverlayManager overlay) {
-        super(List.of(crashReport, keyBind, overlay));
+    private final FeatureCommands commands = new FeatureCommands();
+
+    public FeatureManager(
+            CommandManager command, CrashReportManager crashReport, KeyBindManager keyBind, OverlayManager overlay) {
+        super(List.of(command, crashReport, keyBind, overlay));
     }
 
     public void init() {
@@ -175,6 +181,7 @@ public final class FeatureManager extends Manager {
         registerFeature(new CustomCharacterSelectionScreenFeature());
         registerFeature(new CustomCommandKeybindsFeature());
         registerFeature(new CustomNametagRendererFeature());
+        registerFeature(new DeathCoordinatesFeature());
         registerFeature(new DialogueOptionOverrideFeature());
         registerFeature(new GameBarsOverlayFeature());
         registerFeature(new DurabilityArcFeature());
@@ -234,6 +241,7 @@ public final class FeatureManager extends Manager {
         registerFeature(new TooltipFittingFeature());
         registerFeature(new TooltipVanillaHideFeature());
         registerFeature(new TradeMarketAutoOpenChatFeature());
+        registerFeature(new TradeMarketBulkSellFeature());
         registerFeature(new TradeMarketPriceConversionFeature());
         registerFeature(new TranslationFeature());
         registerFeature(new UnidentifiedItemIconFeature());
@@ -286,7 +294,8 @@ public final class FeatureManager extends Manager {
         Category category = configCategory != null ? configCategory.value() : Category.UNCATEGORIZED;
         feature.setCategory(category);
 
-        // Register key binds
+        // Register commands and key binds
+        commands.discoverCommands(feature);
         Managers.KeyBind.discoverKeyBinds(feature);
 
         // Determine if feature should be enabled & set default enabled value for user features
@@ -339,6 +348,8 @@ public final class FeatureManager extends Manager {
         FEATURES.put(feature, FeatureState.DISABLED);
 
         WynntilsMod.unregisterEventListener(feature);
+
+        Managers.Overlay.disableOverlays(feature);
 
         Managers.KeyBind.disableFeatureKeyBinds(feature);
     }

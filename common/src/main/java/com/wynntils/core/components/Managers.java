@@ -44,7 +44,7 @@ public final class Managers {
 
     // Managers with dependencies, ordered alphabetically as far as possible
     public static final OverlayManager Overlay = new OverlayManager(CrashReport);
-    public static final FeatureManager Feature = new FeatureManager(CrashReport, KeyBind, Overlay);
+    public static final FeatureManager Feature = new FeatureManager(Command, CrashReport, KeyBind, Overlay);
     public static final ConfigManager Config = new ConfigManager(ConfigUpfixer, Json, Feature, Overlay);
     public static final StorageManager Storage = new StorageManager(Json, Feature);
 
