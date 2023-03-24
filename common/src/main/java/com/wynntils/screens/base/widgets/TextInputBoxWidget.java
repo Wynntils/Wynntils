@@ -390,15 +390,41 @@ public class TextInputBoxWidget extends AbstractWidget {
         }
 
         if (keyCode == GLFW.GLFW_KEY_LEFT) {
-            setCursorAndHighlightPositions(Screen.hasControlDown() ? 0 : cursorPosition - 1);
-            this.onUpdateConsumer.accept(this.getTextBoxInput());
-            return true;
+            if (Screen.hasControlDown() && Screen.hasShiftDown()) {
+                // this should move the cursor all the way left and highlight everything
+                setCursorPosition(0);
+                return true;
+            } else if (Screen.hasControlDown()) {
+                // this should move cursor all the way left and not highlight anything
+                setCursorAndHighlightPositions(0);
+                return true;
+            } else if (Screen.hasShiftDown()) {
+                // this should move the cursor left and highlight the text
+                setCursorPosition(cursorPosition - 1);
+                return true;
+            }
+            // this should move the cursor left and not highlight anything
+            setCursorAndHighlightPositions(cursorPosition - 1);
+            return true; // no need to call onUpdateConsumer here because we aren't changing the text
         }
 
         if (keyCode == GLFW.GLFW_KEY_RIGHT) {
-            setCursorAndHighlightPositions(Screen.hasControlDown() ? textBoxInput.length() : cursorPosition + 1);
-            this.onUpdateConsumer.accept(this.getTextBoxInput());
-            return true;
+            if (Screen.hasControlDown() && Screen.hasShiftDown()) {
+                // this should move the cursor all the way right and highlight everything
+                setCursorPosition(textBoxInput.length());
+                return true;
+            } else if (Screen.hasControlDown()) {
+                // this should move cursor all the way right and not highlight anything
+                setCursorAndHighlightPositions(textBoxInput.length());
+                return true;
+            } else if (Screen.hasShiftDown()) {
+                // this should move the cursor right and highlight the text
+                setCursorPosition(cursorPosition + 1);
+                return true;
+            }
+            // this should move the cursor right and not highlight anything
+            setCursorAndHighlightPositions(cursorPosition + 1);
+            return true; // no need to call onUpdateConsumer here because we aren't changing the text
         }
 
         if (keyCode == GLFW.GLFW_KEY_HOME) {
@@ -446,10 +472,20 @@ public class TextInputBoxWidget extends AbstractWidget {
         this.onUpdateConsumer.accept(this.textBoxInput);
     }
 
+    /**
+     * Sets the cursor position to the given value.
+     * Accepts values outside the bounds of the text box, it will clamp them.
+     * @param cursorPosition
+     */
     public void setCursorPosition(int cursorPosition) {
         this.cursorPosition = MathUtils.clamp(cursorPosition, 0, textBoxInput.length());
     }
 
+    /**
+     * Sets the cursor position and the highlight position to the given value.
+     * This means there will be no highlight.
+     * Accepts values outside the bounds of the text box, it will clamp them.
+     */
     public void setCursorAndHighlightPositions(int pos) {
         this.cursorPosition = MathUtils.clamp(pos, 0, textBoxInput.length());
         this.highlightPosition = this.cursorPosition;
