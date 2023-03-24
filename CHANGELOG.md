@@ -1,9 +1,21 @@
+## [0.0.2-alpha.373](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.372...v0.0.2-alpha.373) (2023-03-24)
+
+
+### Bug Fixes
+
+* Fix token pattern ([#1371](https://github.com/Wynntils/Artemis/issues/1371)) ([cb6b1d9](https://github.com/Wynntils/Artemis/commit/cb6b1d9233abecc075df8764f58d6bffcc154da7))
+
 ## [0.0.2-alpha.372](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.371...v0.0.2-alpha.372) (2023-03-23)
 
 
 ### New Features
 
 * if_capped function ([#1368](https://github.com/Wynntils/Artemis/issues/1368)) ([348ba67](https://github.com/Wynntils/Artemis/commit/348ba67d68e08fb5ca028580f27e1c7d3f30ce66))
+
+
+### Miscellaneous Chores
+
+* **release:** v0.0.2-alpha.372 [skip ci] ([268bb9e](https://github.com/Wynntils/Artemis/commit/268bb9e851e0fd7e4798799ed37b609a921eea39))
 
 ## [0.0.2-alpha.371](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.370...v0.0.2-alpha.371) (2023-03-23)
 
@@ -41,16 +53,4 @@
 ### Miscellaneous Chores
 
 * **release:** v0.0.2-alpha.369 [skip ci] ([c9f7be1](https://github.com/Wynntils/Artemis/commit/c9f7be1e80504a25768e02071bc55de6e8e14da5))
-
-## [0.0.2-alpha.368](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.367...v0.0.2-alpha.368) (2023-03-22)
-
-
-### Bug Fixes
-
-* Disable overlay if parent is disabled ([#1367](https://github.com/Wynntils/Artemis/issues/1367)) ([35c52a1](https://github.com/Wynntils/Artemis/commit/35c52a1362bbf767b996dd127952b8612392f6cf))
-
-
-### Miscellaneous Chores
-
-* **release:** v0.0.2-alpha.368 [skip ci] ([275cf47](https://github.com/Wynntils/Artemis/commit/275cf47a71f7c86b0c8307dd7326672cb389fe11))
 
