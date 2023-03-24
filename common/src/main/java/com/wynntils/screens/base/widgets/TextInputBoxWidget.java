@@ -199,6 +199,10 @@ public class TextInputBoxWidget extends AbstractWidget {
     }
 
     protected Pair<Integer, Integer> getRenderedHighlighedInterval(String renderedText, int shift) {
+        if (renderedText.isEmpty()) {
+            return Pair.of(0, 0);
+        }
+
         int length = renderedText.length();
 
         int highlightedStart = Math.min(cursorPosition, highlightPosition);
@@ -358,7 +362,8 @@ public class TextInputBoxWidget extends AbstractWidget {
             }
 
             if (Screen.hasControlDown()) {
-                setTextBoxInput("");
+                setTextBoxInput(textBoxInput.substring(cursorPosition));
+                setCursorAndHighlightPositions(0);
                 return true;
             }
 
