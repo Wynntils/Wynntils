@@ -4,8 +4,13 @@
  */
 package com.wynntils.utils.render;
 
+import com.mojang.blaze3d.platform.GlStateManager;
+import com.mojang.blaze3d.systems.RenderSystem;
+import com.mojang.blaze3d.vertex.BufferBuilder;
+import com.mojang.blaze3d.vertex.DefaultVertexFormat;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.Tesselator;
+import com.mojang.blaze3d.vertex.VertexFormat;
 import com.wynntils.mc.mixin.accessors.MinecraftAccessor;
 import com.wynntils.utils.colors.CustomColor;
 import com.wynntils.utils.mc.ComponentUtils;
@@ -16,6 +21,7 @@ import com.wynntils.utils.render.type.TextShadow;
 import com.wynntils.utils.render.type.VerticalAlignment;
 import java.util.List;
 import net.minecraft.client.gui.Font;
+import net.minecraft.client.renderer.GameRenderer;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.network.chat.FormattedText;
 import net.minecraft.network.chat.Style;
@@ -143,6 +149,55 @@ public final class FontRenderer {
                 horizontalAlignment,
                 verticalAlignment,
                 textShadow,
+                1f);
+    }
+
+    public void renderAlignedHighlightedTextInBox(
+            PoseStack poseStack,
+            String text,
+            float x1,
+            float x2,
+            float y1,
+            float y2,
+            float maxWidth,
+            CustomColor textColor,
+            CustomColor backgroundColor,
+            HorizontalAlignment horizontalAlignment,
+            VerticalAlignment verticalAlignment) {
+        float renderX =
+                switch (horizontalAlignment) {
+                    case Left -> x1;
+                    case Center -> (x1 + x2) / 2f;
+                    case Right -> x2;
+                };
+
+        float renderY =
+                switch (verticalAlignment) {
+                    case Top -> y1;
+                    case Middle -> (y1 + y2) / 2f;
+                    case Bottom -> y2;
+                };
+        RenderUtils.drawRect(
+                poseStack,
+                backgroundColor,
+                renderX,
+                renderY - (getFont().lineHeight / 2f) - 1,
+                0,
+                getFont().width(text),
+                getFont().lineHeight + 2
+        );
+        renderAlignedTextInBox(
+                poseStack,
+                text,
+                x1,
+                x2,
+                y1,
+                y2,
+                maxWidth,
+                textColor,
+                horizontalAlignment,
+                verticalAlignment,
+                TextShadow.NONE,
                 1f);
     }
 

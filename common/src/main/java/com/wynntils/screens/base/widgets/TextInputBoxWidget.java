@@ -4,13 +4,7 @@
  */
 package com.wynntils.screens.base.widgets;
 
-import com.mojang.blaze3d.platform.GlStateManager;
-import com.mojang.blaze3d.systems.RenderSystem;
-import com.mojang.blaze3d.vertex.BufferBuilder;
-import com.mojang.blaze3d.vertex.DefaultVertexFormat;
 import com.mojang.blaze3d.vertex.PoseStack;
-import com.mojang.blaze3d.vertex.Tesselator;
-import com.mojang.blaze3d.vertex.VertexFormat;
 import com.wynntils.screens.base.TextboxScreen;
 import com.wynntils.utils.MathUtils;
 import com.wynntils.utils.colors.CommonColors;
@@ -21,6 +15,9 @@ import com.wynntils.utils.render.RenderUtils;
 import com.wynntils.utils.render.type.HorizontalAlignment;
 import com.wynntils.utils.render.type.TextShadow;
 import com.wynntils.utils.render.type.VerticalAlignment;
+
+import java.util.HashMap;
+import java.util.Map;
 import java.util.function.Consumer;
 
 import com.wynntils.utils.type.Pair;
@@ -29,7 +26,6 @@ import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.components.AbstractWidget;
 import net.minecraft.client.gui.narration.NarrationElementOutput;
 import net.minecraft.client.gui.screens.Screen;
-import net.minecraft.client.renderer.GameRenderer;
 import net.minecraft.network.chat.Component;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.util.Mth;
@@ -45,8 +41,10 @@ public class TextInputBoxWidget extends AbstractWidget {
     private long lastCursorSwitch = 0;
     private boolean renderCursor = true;
     private CustomColor renderColor = CommonColors.WHITE;
+    private boolean isDragging = false;
 
     protected final TextboxScreen textboxScreen;
+    private final int maxTextWidth = this.width - 8;
 
     protected TextInputBoxWidget(
             int x,
@@ -96,13 +94,67 @@ public class TextInputBoxWidget extends AbstractWidget {
         RenderUtils.drawRect(poseStack, CommonColors.BLACK, 0, 0, 0, this.width, this.height);
         RenderUtils.drawRectBorders(poseStack, CommonColors.GRAY, 0, 0, this.width, this.height, 0, 2);
 
-        Pair<String, Pair<Integer, Integer>> renderedTextDetails = getRenderedText(this.width - 8);
+        Pair<String, Integer> renderedTextDetails = getRenderedText(maxTextWidth);
         String renderedText = renderedTextDetails.a();
+
+        int highlightedStart = Math.min(cursorPosition, highlightPosition);
+        int highlightedEnd = Math.max(cursorPosition, highlightPosition);
+
+        if (highlightedStart >= renderedTextDetails.b() && highlightedEnd <= renderedTextDetails.b() + renderedText.length()) {
+            // Entirety of the highlighted text is within the rendered text
+            highlightedStart -= renderedTextDetails.b();
+            highlightedEnd -= renderedTextDetails.b();
+        } else if (highlightedStart >= renderedTextDetails.b() && highlightedEnd > renderedTextDetails.b() + renderedText.length()) {
+            // The highlighted text starts within the rendered text, but ends outside of it
+            highlightedStart -= renderedTextDetails.b();
+            highlightedEnd = renderedText.length();
+        } else if (highlightedStart < renderedTextDetails.b() && highlightedEnd <= renderedTextDetails.b() + renderedText.length()) {
+            // The highlighted text starts outside of the rendered text, but ends within it
+            highlightedStart = 0;
+            highlightedEnd -= renderedTextDetails.b();
+        } else {
+            // The highlighted text is not within the rendered text
+            highlightedStart = 0;
+            highlightedEnd = 0;
+        }
+
+        String firstNormalPortion = renderedText.substring(0, highlightedStart);
+        String highlightedPortion = renderedText.substring(highlightedStart, highlightedEnd);
+        String lastNormalPortion = renderedText.substring(highlightedEnd);
+
+        FontRenderer.getInstance()
+                        .renderAlignedTextInBox(
+                                poseStack,
+                                firstNormalPortion,
+                                2,
+                                this.width - FontRenderer.getInstance().getFont().width(lastNormalPortion) - FontRenderer.getInstance().getFont().width(highlightedPortion),
+                                2,
+                                this.height - 2,
+                                0,
+                                renderColor,
+                                HorizontalAlignment.Left,
+                                VerticalAlignment.Middle,
+                                TextShadow.NORMAL);
+
+        FontRenderer.getInstance()
+                .renderAlignedHighlightedTextInBox(
+                        poseStack,
+                        highlightedPortion,
+                        2 + FontRenderer.getInstance().getFont().width(firstNormalPortion),
+                        this.width - FontRenderer.getInstance().getFont().width(lastNormalPortion),
+                        2,
+                        this.height - 2,
+                        0,
+                        CommonColors.BLUE,
+                        CommonColors.WHITE,
+                        HorizontalAlignment.Left,
+                        VerticalAlignment.Middle);
+
         FontRenderer.getInstance()
                 .renderAlignedTextInBox(
                         poseStack,
-                        renderedText,
-                        2,
+                        lastNormalPortion,
+                        2 + FontRenderer.getInstance().getFont().width(firstNormalPortion) + FontRenderer.getInstance().getFont().width(highlightedPortion),
                         this.width,
                         2,
                         this.height - 2,
@@ -112,14 +164,15 @@ public class TextInputBoxWidget extends AbstractWidget {
                         VerticalAlignment.Middle,
                         TextShadow.NORMAL);
 
-        if (this.hasHighlighted()) {
-            renderHighlight(renderedTextDetails.b().a(), 2, renderedTextDetails.b().b(), this.height - 2);
-        }
 
         poseStack.popPose();
     }
 
-    protected Pair<String, Pair<Integer, Integer>> getRenderedText(float maxTextWidth) {
+    /**
+     * Determines the text to render based on cursor position and maxTextWidth
+     * @return The text to render, and the starting position of the text within the entire text
+     */
+    protected Pair<String, Integer> getRenderedText(float maxTextWidth) {
         Font font = FontRenderer.getInstance().getFont();
 
         String cursorChar = getRenderCursorChar();
@@ -127,18 +180,10 @@ public class TextInputBoxWidget extends AbstractWidget {
 
         String entireText = textBoxInput.substring(0, cursorPosition) + cursorChar + textBoxInput.substring(cursorPosition);
         if (font.width(entireText) < maxTextWidth) {
-            if (this.hasHighlighted()) {
-                int highlightStart = font.width(textBoxInput.substring(0, Math.min(cursorPosition, highlightPosition)));
-                int highlightWidth = font.width(textBoxInput.substring(Math.min(cursorPosition, highlightPosition), Math.max(cursorPosition, highlightPosition)));
-                return new Pair<>(entireText, new Pair<>(highlightStart, highlightWidth));
-            } else {
-                return new Pair<>(entireText, new Pair<>(0, 0));
-            }
+            return new Pair<>(entireText, 0);
         }
 
         StringBuilder builder = new StringBuilder();
-        int highlightStart;
-        int highlightWidth;
 
         // First append to the left of the cursor
         int stringPosition = cursorPosition - 1;
@@ -147,12 +192,7 @@ public class TextInputBoxWidget extends AbstractWidget {
 
             stringPosition--;
         }
-
-        if (Math.min(cursorPosition, highlightPosition) < stringPosition) {
-            highlightStart = 0;
-        } else {
-            highlightStart = font.width(textBoxInput.substring(stringPosition + 1, Math.min(cursorPosition, highlightPosition)));
-        }
+        int startingAt = stringPosition;
 
         // Now reverse so it's actually to the left
         builder.reverse();
@@ -167,46 +207,7 @@ public class TextInputBoxWidget extends AbstractWidget {
             stringPosition++;
         }
 
-        return new Pair<>(builder.toString(), new Pair<>(highlightStart, (int) Math.min(font.width(textBoxInput.substring(Math.min(cursorPosition, highlightPosition), Math.max(cursorPosition, highlightPosition))), maxTextWidth - cursorWidth - highlightStart)));
-    }
-
-    private void renderHighlight(int startX, int startY, int endX, int endY) {
-        if (startX < endX) {
-            int i = startX;
-            startX = endX;
-            endX = i;
-        }
-
-        if (startY < endY) {
-            int i = startY;
-            startY = endY;
-            endY = i;
-        }
-
-        if (endX > this.getX() + this.width) {
-            endX = this.getX() + this.width;
-        }
-
-        if (startX > this.getX() + this.width) {
-            startX = this.getX() + this.width;
-        }
-
-        Tesselator tesselator = Tesselator.getInstance();
-        BufferBuilder bufferBuilder = tesselator.getBuilder();
-        RenderSystem.setShader(GameRenderer::getPositionShader);
-        RenderSystem.setShaderColor(0.0F, 0.0F, 1.0F, 1.0F);
-        RenderSystem.disableTexture();
-        RenderSystem.enableColorLogicOp();
-        RenderSystem.logicOp(GlStateManager.LogicOp.OR_REVERSE);
-        bufferBuilder.begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.POSITION);
-        bufferBuilder.vertex(startX, endY, 0.0).endVertex();
-        bufferBuilder.vertex(endX, endY, 0.0).endVertex();
-        bufferBuilder.vertex(endX, startY, 0.0).endVertex();
-        bufferBuilder.vertex(startX, startY, 0.0).endVertex();
-        tesselator.end();
-        RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
-        RenderSystem.disableColorLogicOp();
-        RenderSystem.enableTexture();
+        return new Pair<>(builder.toString(), startingAt);
     }
 
     @Override
@@ -214,10 +215,12 @@ public class TextInputBoxWidget extends AbstractWidget {
         McUtils.playSound(SoundEvents.UI_BUTTON_CLICK.value());
 
         if (this.isHovered) {
-            //setCursorAndHighlightPositions(getIndexAtPosition(mouseX, mouseY));
+            setCursorAndHighlightPositions(getIndexAtPosition(mouseX));
+            isDragging = true;
             textboxScreen.setFocusedTextInput(this);
             return true;
         } else {
+            setCursorAndHighlightPositions(cursorPosition); // remove highlights when clicking off
             textboxScreen.setFocusedTextInput(null);
         }
 
@@ -225,8 +228,48 @@ public class TextInputBoxWidget extends AbstractWidget {
     }
 
     @Override
+    public boolean mouseReleased(double mouseX, double mouseY, int button) {
+        if (isDragging) {
+            isDragging = false;
+            setCursorPosition(getIndexAtPosition(mouseX));
+        }
+        return super.mouseReleased(mouseX, mouseY, button);
+    }
+
+    @Override
     public boolean mouseDragged(double mouseX, double mouseY, int button, double dragX, double dragY) {
+        if (isDragging) {
+            setCursorPosition(getIndexAtPosition(mouseX));
+        }
         return super.mouseDragged(mouseX, mouseY, button, dragX, dragY);
+    }
+
+    private int getIndexAtPosition(double mouseX) {
+        mouseX -= this.getX(); // mouseX is actually just the x position of the mouse relative to the screen, not the textbox
+        Font f = FontRenderer.getInstance().getFont();
+        Pair<String, Integer> renderedTextDetails = getRenderedText(maxTextWidth);
+        String renderedText = renderedTextDetails.a();
+
+        // <Width so far, Character index>
+        Map<Integer, Integer> widths = new HashMap<>();
+
+        for (int i = 0; i < renderedText.length(); i++) {
+            widths.put(f.width(renderedText.substring(0, i)), i);
+        }
+
+        // get nearest width that's in the map
+        // FIXME: this is probably really slow and bad, but I am just a first year cs student and I have not taken
+        // data structures & algorithms yet so I don't know how to do this better
+        mouseX -= 2; // Account for padding in the text box
+        int closestWidthCharIndex = 0;
+        double closestWidth = 999999; // Arbitrary large number, there is no way the text will be this wide
+        for (int stringWidthSoFar : widths.keySet()) {
+            if (Math.abs(stringWidthSoFar - mouseX) < closestWidth) {
+                closestWidth = Math.abs(stringWidthSoFar - mouseX);
+                closestWidthCharIndex = widths.get(stringWidthSoFar);
+            }
+        }
+        return closestWidthCharIndex + renderedTextDetails.b();
     }
 
     @Override
@@ -349,6 +392,8 @@ public class TextInputBoxWidget extends AbstractWidget {
     public void updateWidgetNarration(NarrationElementOutput narrationElementOutput) {}
 
     private String getRenderCursorChar() {
+        if (isDragging) return ""; // Don't render the cursor if we're dragging
+
         String cursorChar;
         if (System.currentTimeMillis() - lastCursorSwitch > 350) {
             renderCursor = !renderCursor;
