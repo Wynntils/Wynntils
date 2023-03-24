@@ -97,11 +97,6 @@ shadowJar {
 
     configurations = [project.configurations.shadowCommon, project.configurations.shadowImplementation]
 
-    relocate("com.llamalad7.mixinextras", "com.wynntils.mixinextras.shadow")
-    // If we do not exclude this file, we get a module conflict with a mod that does not relocate MixinExtras
-    // I couldn't confirm this, but Forge Discord warned me about it. I will leave this here just in case.
-    exclude 'META-INF/services/javax.*'
-
     classifier "dev-shadow"
 }
 
