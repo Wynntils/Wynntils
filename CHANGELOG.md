@@ -1,9 +1,21 @@
+## [0.0.2-alpha.374](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.373...v0.0.2-alpha.374) (2023-03-24)
+
+
+### Miscellaneous Chores
+
+* Use MixinExtras 0.2.0-beta.5 ([#1369](https://github.com/Wynntils/Artemis/issues/1369)) ([a1413b3](https://github.com/Wynntils/Artemis/commit/a1413b3b17d2d06c4fa40f7b4d36f1f1781a2944))
+
 ## [0.0.2-alpha.373](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.372...v0.0.2-alpha.373) (2023-03-24)
 
 
 ### Bug Fixes
 
 * Fix token pattern ([#1371](https://github.com/Wynntils/Artemis/issues/1371)) ([cb6b1d9](https://github.com/Wynntils/Artemis/commit/cb6b1d9233abecc075df8764f58d6bffcc154da7))
+
+
+### Miscellaneous Chores
+
+* **release:** v0.0.2-alpha.373 [skip ci] ([6b594e0](https://github.com/Wynntils/Artemis/commit/6b594e05ed58a8663ca2db6757745ea84b61680e))
 
 ## [0.0.2-alpha.372](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.371...v0.0.2-alpha.372) (2023-03-23)
 
@@ -40,17 +52,4 @@
 ### Miscellaneous Chores
 
 * **release:** v0.0.2-alpha.370 [skip ci] ([0367e3f](https://github.com/Wynntils/Artemis/commit/0367e3f216bde27d9a7d16f06f28f2e27112e40f))
-
-## [0.0.2-alpha.369](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.368...v0.0.2-alpha.369) (2023-03-22)
-
-
-### New Features
-
-* profession function improvements ([#1366](https://github.com/Wynntils/Artemis/issues/1366)) ([580330d](https://github.com/Wynntils/Artemis/commit/580330db7aeb91f31ea9ba4eb5fa0bf9c22cb971))
-* Trade market bulk sell ([#1360](https://github.com/Wynntils/Artemis/issues/1360)) ([0ed8c53](https://github.com/Wynntils/Artemis/commit/0ed8c53065e923b049021400dd0e5aa833c24f46))
-
-
-### Miscellaneous Chores
-
-* **release:** v0.0.2-alpha.369 [skip ci] ([c9f7be1](https://github.com/Wynntils/Artemis/commit/c9f7be1e80504a25768e02071bc55de6e8e14da5))
 
