@@ -32,7 +32,7 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 
 public class TokenModel extends Model {
-    private static final Pattern TOKEN_PATTERN = Pattern.compile("^§a(\\d+)§2/(\\d+)$");
+    private static final Pattern TOKEN_PATTERN = Pattern.compile("^§a(\\d+)§2/(\\d+)(?:§r)?$");
     private static final Pattern TYPE_PATTERN = Pattern.compile("^§7Get §[e6]\\[(?:(\\d+) )?(.*)\\]$");
     private static final String VERIFICATION_STRING = "§7Right-click to add";
 
