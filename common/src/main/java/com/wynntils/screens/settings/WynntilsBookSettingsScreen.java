@@ -260,6 +260,13 @@ public final class WynntilsBookSettingsScreen extends WynntilsScreen implements 
     public boolean mouseReleased(double mouseX, double mouseY, int button) {
         double adjustedMouseX = mouseX - getTranslationX();
         double adjustedMouseY = mouseY - getTranslationY();
+
+        for (GuiEventListener child : children()) {
+            if (child.isMouseOver(adjustedMouseX, adjustedMouseY)) {
+                child.mouseReleased(adjustedMouseX, adjustedMouseY, button);
+            }
+        }
+
         configurableListScrollButton.mouseReleased(adjustedMouseX, adjustedMouseY, button);
 
         if (configListScrollButton != null) {
@@ -273,6 +280,12 @@ public final class WynntilsBookSettingsScreen extends WynntilsScreen implements 
     public boolean mouseDragged(double mouseX, double mouseY, int button, double dragX, double dragY) {
         double adjustedMouseX = mouseX - getTranslationX();
         double adjustedMouseY = mouseY - getTranslationY();
+
+        for (GuiEventListener child : children()) {
+            if (child.isMouseOver(adjustedMouseX, adjustedMouseY)) {
+                child.mouseDragged(adjustedMouseX, adjustedMouseY, button, dragX, dragY);
+            }
+        }
 
         configurableListScrollButton.mouseDragged(adjustedMouseX, adjustedMouseY, button, dragX, dragY);
         if (configListScrollButton != null) {

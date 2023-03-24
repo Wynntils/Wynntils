@@ -14,6 +14,9 @@ import com.wynntils.utils.render.type.HorizontalAlignment;
 import com.wynntils.utils.render.type.TextShadow;
 import java.util.Objects;
 import java.util.function.Consumer;
+
+import com.wynntils.utils.render.type.VerticalAlignment;
+import com.wynntils.utils.type.Pair;
 import net.minecraft.network.chat.Component;
 import net.minecraft.sounds.SoundEvents;
 
@@ -41,19 +44,72 @@ public class SearchWidget extends TextInputBoxWidget {
 
         boolean defaultText = Objects.equals(textBoxInput, "") && !isFocused();
 
-        String renderedText = getRenderedText(this.width - 18).a();
+        Pair<String, Integer> renderedTextDetails = getRenderedText(this.width - 18, true);
+        String renderedText = renderedTextDetails.a();
+
+        int highlightedStart = Math.min(cursorPosition, highlightPosition);
+        int highlightedEnd = Math.max(cursorPosition, highlightPosition);
+
+        if (highlightedStart >= renderedTextDetails.b() && highlightedEnd <= renderedTextDetails.b() + renderedText.length()) {
+            // Entirety of the highlighted text is within the rendered text
+            highlightedStart -= renderedTextDetails.b();
+            highlightedEnd -= renderedTextDetails.b();
+        } else if (highlightedStart >= renderedTextDetails.b() && highlightedEnd > renderedTextDetails.b() + renderedText.length()) {
+            // The highlighted text starts within the rendered text, but ends outside of it
+            highlightedStart -= renderedTextDetails.b();
+            highlightedEnd = renderedText.length();
+        } else if (highlightedStart < renderedTextDetails.b() && highlightedEnd <= renderedTextDetails.b() + renderedText.length()) {
+            // The highlighted text starts outside of the rendered text, but ends within it
+            highlightedStart = 0;
+            highlightedEnd -= renderedTextDetails.b();
+        } else {
+            // The highlighted text is not within the rendered text
+            highlightedStart = 0;
+            highlightedEnd = 0;
+        }
+
+        String firstNormalPortion = renderedText.substring(0, highlightedStart);
+        String highlightedPortion = renderedText.substring(highlightedStart, highlightedEnd);
+        String lastNormalPortion = renderedText.substring(highlightedEnd);
 
         FontRenderer.getInstance()
                 .renderAlignedTextInBox(
                         poseStack,
-                        defaultText ? DEFAULT_TEXT.getString() : renderedText,
+                        defaultText ? DEFAULT_TEXT.getString() : firstNormalPortion,
                         this.getX() + 5,
-                        this.getX() + this.width - 5,
+                        this.getX() + this.width - 5 - FontRenderer.getInstance().getFont().width(lastNormalPortion) - FontRenderer.getInstance().getFont().width(highlightedPortion),
                         this.getY() + 6.5f,
-                        this.width,
+                        0,
                         defaultText ? CommonColors.LIGHT_GRAY : CommonColors.WHITE,
                         HorizontalAlignment.Left,
                         TextShadow.NORMAL);
+
+        FontRenderer.getInstance()
+                .renderAlignedHighlightedTextInBox(
+                        poseStack,
+                        highlightedPortion,
+                        this.getX() + 5 + FontRenderer.getInstance().getFont().width(firstNormalPortion),
+                        this.getX() + this.width - 5 - FontRenderer.getInstance().getFont().width(lastNormalPortion),
+                        this.getY() + 6.5f,
+                        this.getY() + 6.5f,
+                        0,
+                        CommonColors.BLUE,
+                        CommonColors.WHITE,
+                        HorizontalAlignment.Left,
+                        VerticalAlignment.Top);
+
+        FontRenderer.getInstance()
+                .renderAlignedTextInBox(
+                        poseStack,
+                        defaultText ? DEFAULT_TEXT.getString() : lastNormalPortion,
+                        this.getX() + 5 + FontRenderer.getInstance().getFont().width(firstNormalPortion) + FontRenderer.getInstance().getFont().width(highlightedPortion),
+                        this.getX() + this.width - 5,
+                        this.getY() + 6.5f,
+                        0,
+                        defaultText ? CommonColors.LIGHT_GRAY : CommonColors.WHITE,
+                        HorizontalAlignment.Left,
+                        TextShadow.NORMAL);
+        //System.out.println(isDragging);
     }
 
     @Override
@@ -63,14 +119,32 @@ public class SearchWidget extends TextInputBoxWidget {
                 && mouseY >= this.getY()
                 && mouseY <= this.getY() + this.height) {
             McUtils.playSound(SoundEvents.UI_BUTTON_CLICK.value());
+            setCursorAndHighlightPositions(getIndexAtPosition(mouseX));
+            isDragging = true;
             textboxScreen.setFocusedTextInput(this);
-
             return true;
         } else {
             textboxScreen.setFocusedTextInput(null);
         }
 
         return false;
+    }
+
+    @Override
+    public boolean mouseReleased(double mouseX, double mouseY, int button) {
+        if (isDragging) {
+            isDragging = false;
+            setCursorPosition(getIndexAtPosition(mouseX));
+        }
+        return super.mouseReleased(mouseX, mouseY, button);
+    }
+
+    @Override
+    public boolean mouseDragged(double mouseX, double mouseY, int button, double dragX, double dragY) {
+        if (isDragging) {
+            setCursorPosition(getIndexAtPosition(mouseX));
+        }
+        return super.mouseDragged(mouseX, mouseY, button, dragX, dragY);
     }
 
     @Override

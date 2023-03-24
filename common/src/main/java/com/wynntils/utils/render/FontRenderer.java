@@ -181,7 +181,11 @@ public final class FontRenderer {
                 poseStack,
                 backgroundColor,
                 renderX,
-                renderY - (getFont().lineHeight / 2f) - 1,
+                switch(verticalAlignment) {
+                    case Top -> renderY - 2;
+                    case Middle -> renderY - (getFont().lineHeight / 2f) - 2;
+                    case Bottom -> renderY - getFont().lineHeight + 2;
+                },
                 0,
                 getFont().width(text),
                 getFont().lineHeight + 2
