@@ -183,7 +183,7 @@ public class TextInputBoxWidget extends AbstractWidget {
                         renderColor,
                         HorizontalAlignment.Left,
                         VerticalAlignment.Middle,
-                        TexsetShadow.NORMAL);
+                        TextShadow.NORMAL);
 
 
         poseStack.popPose();
