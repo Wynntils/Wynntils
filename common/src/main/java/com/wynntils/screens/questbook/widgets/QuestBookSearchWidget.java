@@ -51,6 +51,5 @@ public class QuestBookSearchWidget extends SearchWidget {
                         defaultText ? CommonColors.LIGHT_GRAY : CommonColors.WHITE,
                         HorizontalAlignment.Left,
                         TextShadow.NORMAL);
-
     }
 }
