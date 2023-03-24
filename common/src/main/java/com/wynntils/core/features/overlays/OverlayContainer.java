@@ -16,10 +16,12 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.function.Function;
+import java.util.stream.Collectors;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 
-public class OverlayContainer<T extends Overlay> extends Overlay {
+public abstract class OverlayContainer<T extends Overlay> extends Overlay {
     public static final int DEFAULT_SPACING = 3;
 
     @RegisterConfig("overlay.wynntils.overlay.growDirection")
@@ -29,41 +31,35 @@ public class OverlayContainer<T extends Overlay> extends Overlay {
     protected final Config<Integer> spacing = new Config<>(DEFAULT_SPACING);
 
     private final List<T> children = new ArrayList<>();
-    private final Map<Overlay, OverlaySize> inherentSize = new HashMap<>();
+    private final Map<T, OverlaySize> inherentSize = new HashMap<>();
 
-    public OverlayContainer(OverlayPosition position, OverlaySize size, GrowDirection growDirection, int spacing) {
+    protected OverlayContainer(OverlayPosition position, OverlaySize size, GrowDirection growDirection, int spacing) {
         super(position, size);
         this.growDirection.updateConfig(growDirection);
         this.spacing.updateConfig(spacing);
     }
 
-    public OverlayContainer(OverlayPosition position, OverlaySize size, GrowDirection growDirection) {
+    protected OverlayContainer(OverlayPosition position, OverlaySize size, GrowDirection growDirection) {
         this(position, size, growDirection, DEFAULT_SPACING);
     }
 
     public void addChild(T overlay) {
         inherentSize.put(overlay, overlay.getSize().copy());
-
-        int accumulatedHeight = children.stream()
-                .mapToInt(o -> (int) o.size.get().getHeight() + spacing.get())
-                .sum();
-        int accumulatedWidth = children.stream()
-                .mapToInt(o -> (int) o.size.get().getWidth() + spacing.get())
-                .sum();
-
-        GrowDirection direction = growDirection.get();
-        updateChildLayout(overlay, direction, accumulatedWidth, accumulatedHeight);
-
         children.add(overlay);
+
+        updateAllChildren();
     }
 
     public void clearChildren() {
         children.clear();
+        inherentSize.clear();
     }
 
     public int size() {
         return children.size();
     }
+
+    protected abstract List<T> getPreviewChildren();
 
     @Override
     public void render(PoseStack poseStack, MultiBufferSource bufferSource, float partialTicks, Window window) {
@@ -71,57 +67,65 @@ public class OverlayContainer<T extends Overlay> extends Overlay {
     }
 
     @Override
+    public void renderPreview(PoseStack poseStack, MultiBufferSource bufferSource, float partialTicks, Window window) {
+        List<T> previewChildren = getPreviewChildren();
+        Map<T, OverlaySize> previewSize = previewChildren.stream().collect(Collectors.toMap(Function.identity(), Overlay::getSize));
+
+        updateLayout(previewChildren, previewSize);
+        previewChildren.forEach(o -> o.renderPreview(poseStack, bufferSource, partialTicks, window));
+    }
+
+    @Override
     protected void onConfigUpdate(ConfigHolder configHolder) {
-        updateAllChildrenLayout();
+        updateAllChildren();
     }
 
     @Override
     public void setPosition(OverlayPosition position) {
         super.setPosition(position);
 
-        updateAllChildrenLayout();
+        updateAllChildren();
     }
 
     @Override
     public void setHeight(float height) {
         super.setHeight(height);
 
-        updateAllChildrenLayout();
+        updateAllChildren();
     }
 
     @Override
     public void setWidth(float width) {
         super.setWidth(width);
 
-        updateAllChildrenLayout();
+        updateAllChildren();
     }
 
     @SubscribeEvent
     public void onResizeEvent(DisplayResizeEvent event) {
-        updateAllChildrenLayout();
+        updateAllChildren();
     }
 
-    private void updateAllChildrenLayout() {
+    private void updateAllChildren() {
+        updateLayout(children, inherentSize);
+    }
+
+    private void updateLayout(List<T> children, Map<T, OverlaySize> inherentSize) {
         // Update position for all children
         int currentHeight = 0;
         int currentWidth = 0;
         GrowDirection direction = growDirection.get();
 
         for (Overlay overlay : children) {
-            updateChildLayout(overlay, direction, currentWidth, currentHeight);
+            overlay.setPosition(direction.getChildPosition(
+                    getRenderX(), getRenderY(), getSize(), overlay.getSize(), currentWidth, currentHeight));
+            direction.updateSize(overlay, this.getSize(), inherentSize.get(overlay));
+            overlay.horizontalAlignmentOverride.updateConfig(horizontalAlignmentOverride.get());
+            overlay.verticalAlignmentOverride.updateConfig(verticalAlignmentOverride.get());
 
             currentHeight += overlay.getSize().getHeight() + spacing.get();
             currentWidth += overlay.getSize().getWidth() + spacing.get();
         }
-    }
-
-    private void updateChildLayout(
-            Overlay overlay, GrowDirection direction, int accumulatedWidth, int accumulatedHeight) {
-        overlay.setPosition(direction.getChildPosition(
-                getRenderX(), getRenderY(), getSize(), overlay.getSize(), accumulatedWidth, accumulatedHeight));
-        direction.updateSize(overlay, this.getSize(), inherentSize.get(overlay));
-        overlay.horizontalAlignmentOverride.updateConfig(horizontalAlignmentOverride.get());
-        overlay.verticalAlignmentOverride.updateConfig(verticalAlignmentOverride.get());
     }
 
     public enum GrowDirection {
