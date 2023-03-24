@@ -52,7 +52,6 @@ public class ArrowShieldTrackingFeature extends Feature {
 
         @Override
         public String getTemplate() {
-            System.out.println("shield " + getRenderX() + ", " + getRenderY());
             return TEMPLATE;
         }
 
