@@ -11,7 +11,7 @@ import com.wynntils.core.config.ConfigCategory;
 import com.wynntils.core.config.RegisterConfig;
 import com.wynntils.core.features.Feature;
 import com.wynntils.core.features.overlays.BarOverlay;
-import com.wynntils.core.features.overlays.OverlayContainer;
+import com.wynntils.core.features.overlays.ContainerOverlay;
 import com.wynntils.core.features.overlays.OverlayPosition;
 import com.wynntils.core.features.overlays.OverlaySize;
 import com.wynntils.core.features.overlays.annotations.OverlayInfo;
@@ -38,7 +38,7 @@ public class TokenTrackerFeature extends Feature {
             new OverlayPosition(
                     70, -5, VerticalAlignment.Top, HorizontalAlignment.Right, OverlayPosition.AnchorSection.TopRight),
             new OverlaySize(81, 84),
-            OverlayContainer.GrowDirection.DOWN);
+            ContainerOverlay.GrowDirection.DOWN);
 
     @SubscribeEvent
     public void onInventoryUpdated(TokenGatekeeperEvent.InventoryUpdated event) {
@@ -108,7 +108,7 @@ public class TokenTrackerFeature extends Feature {
         }
     }
 
-    public static class TokenBarsOverlay extends OverlayContainer<TokenBarOverlay> {
+    public static class TokenBarsOverlay extends ContainerOverlay<TokenBarOverlay> {
         public TokenBarsOverlay(OverlayPosition position, OverlaySize size, GrowDirection growDirection) {
             super(position, size, growDirection);
         }
