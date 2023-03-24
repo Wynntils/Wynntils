@@ -17,7 +17,7 @@ description = "The best Wynncraft mod you'll probably find!"
 [[dependencies.wynntils]]
 modId = "forge"
 mandatory = true
-versionRange = "[44,)"
+versionRange = "[44.1.2,)"
 ordering = "NONE"
 side = "BOTH"
 
