@@ -5,6 +5,9 @@
 package com.wynntils.screens.base.widgets;
 
 import com.mojang.blaze3d.vertex.PoseStack;
+import com.wynntils.core.WynntilsMod;
+import com.wynntils.mc.event.InventoryMouseDraggedEvent;
+import com.wynntils.mc.event.InventoryMouseReleasedEvent;
 import com.wynntils.screens.base.TextboxScreen;
 import com.wynntils.utils.colors.CommonColors;
 import com.wynntils.utils.mc.McUtils;
@@ -19,6 +22,7 @@ import com.wynntils.utils.render.type.VerticalAlignment;
 import com.wynntils.utils.type.Pair;
 import net.minecraft.network.chat.Component;
 import net.minecraft.sounds.SoundEvents;
+import net.minecraftforge.eventbus.api.SubscribeEvent;
 
 public class SearchWidget extends TextInputBoxWidget {
     protected static final Component DEFAULT_TEXT =
@@ -28,6 +32,7 @@ public class SearchWidget extends TextInputBoxWidget {
             int x, int y, int width, int height, Consumer<String> onUpdateConsumer, TextboxScreen textboxScreen) {
         super(x, y, width, height, Component.literal("Search Box"), onUpdateConsumer, textboxScreen);
         textPadding = 5;
+        WynntilsMod.registerEventListener(this);
     }
 
     @Override
@@ -76,9 +81,18 @@ public class SearchWidget extends TextInputBoxWidget {
             highlightedEnd = renderCursor ? highlightedEnd + 1 : highlightedEnd;
         }
 
-        String firstNormalPortion = renderedText.substring(0, highlightedStart);
-        String highlightedPortion = renderedText.substring(highlightedStart, highlightedEnd);
-        String lastNormalPortion = renderedText.substring(highlightedEnd);
+        String firstNormalPortion;
+        String highlightedPortion;
+        String lastNormalPortion;
+        try { // There is a rare race condition where if the user spams drag, the highlighted portion can be out of bounds
+            firstNormalPortion = renderedText.substring(0, highlightedStart);
+            highlightedPortion = renderedText.substring(highlightedStart, highlightedEnd);
+            lastNormalPortion = renderedText.substring(highlightedEnd);
+        } catch (StringIndexOutOfBoundsException ignored) {
+            firstNormalPortion = renderedText.substring(0, highlightedStart-1);
+            highlightedPortion = renderedText.substring(highlightedStart-1, highlightedEnd-1);
+            lastNormalPortion = renderedText.substring(highlightedEnd-1);
+        }
 
         FontRenderer.getInstance()
                 .renderAlignedTextInBox(
@@ -136,6 +150,25 @@ public class SearchWidget extends TextInputBoxWidget {
         }
 
         return false;
+    }
+
+    @SubscribeEvent
+    public void mouseReleased(InventoryMouseReleasedEvent e) {
+        // For some reason, mouseReleased is not called in inventories like chests
+        // This is a workaround for that
+        if (isDragging) {
+            isDragging = false;
+            setCursorPosition(getIndexAtPosition(e.getMouseX()));
+        }
+    }
+
+    @SubscribeEvent
+    public void mouseDragged(InventoryMouseDraggedEvent e) {
+        // For some reason, mouseDragged is not called in inventories like chests
+        // This is a workaround for that
+        if (isDragging) {
+            setCursorPosition(getIndexAtPosition(e.getMouseX()));
+        }
     }
 
     @Override

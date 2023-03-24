@@ -129,9 +129,18 @@ public class TextInputBoxWidget extends AbstractWidget {
             highlightedEnd = renderCursor ? highlightedEnd + 1 : highlightedEnd;
         }
 
-        String firstNormalPortion = renderedText.substring(0, highlightedStart);
-        String highlightedPortion = renderedText.substring(highlightedStart, highlightedEnd);
-        String lastNormalPortion = renderedText.substring(highlightedEnd);
+        String firstNormalPortion;
+        String highlightedPortion;
+        String lastNormalPortion;
+        try { // There is a rare race condition where if the user spams drag, the highlighted portion can be out of bounds
+            firstNormalPortion = renderedText.substring(0, highlightedStart);
+            highlightedPortion = renderedText.substring(highlightedStart, highlightedEnd);
+            lastNormalPortion = renderedText.substring(highlightedEnd);
+        } catch (StringIndexOutOfBoundsException ignored) {
+            firstNormalPortion = renderedText.substring(0, highlightedStart-1);
+            highlightedPortion = renderedText.substring(highlightedStart-1, highlightedEnd-1);
+            lastNormalPortion = renderedText.substring(highlightedEnd-1);
+        }
 
         FontRenderer.getInstance()
                         .renderAlignedTextInBox(

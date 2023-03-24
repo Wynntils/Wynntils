@@ -10,7 +10,10 @@ import com.wynntils.mc.event.ContainerCloseEvent;
 import com.wynntils.mc.event.ContainerRenderEvent;
 import com.wynntils.mc.event.InventoryKeyPressEvent;
 import com.wynntils.mc.event.InventoryMouseClickedEvent;
+import com.wynntils.mc.event.InventoryMouseDraggedEvent;
+import com.wynntils.mc.event.InventoryMouseReleasedEvent;
 import com.wynntils.mc.event.SlotRenderEvent;
+import net.minecraft.client.gui.components.events.GuiEventListener;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
 import net.minecraft.world.inventory.Slot;
@@ -70,6 +73,26 @@ public abstract class AbstractContainerScreenMixin {
     @Inject(method = "mouseClicked(DDI)Z", at = @At("HEAD"), cancellable = true)
     private void mousePressedPre(double mouseX, double mouseY, int button, CallbackInfoReturnable<Boolean> cir) {
         InventoryMouseClickedEvent event = new InventoryMouseClickedEvent(mouseX, mouseY, button, this.hoveredSlot);
+        MixinHelper.post(event);
+        if (event.isCanceled()) {
+            cir.setReturnValue(true);
+            cir.cancel();
+        }
+    }
+
+    @Inject(method = "mouseDragged(DDIDD)Z", at = @At("HEAD"), cancellable = true)
+    private void mouseDraggedPre(double mouseX, double mouseY, int button, double deltaX, double deltaY, CallbackInfoReturnable<Boolean> cir) {
+        InventoryMouseDraggedEvent event = new InventoryMouseDraggedEvent(mouseX, mouseY, button, deltaX, deltaY);
+        MixinHelper.post(event);
+        if (event.isCanceled()) {
+            cir.setReturnValue(true);
+            cir.cancel();
+        }
+    }
+
+    @Inject(method = "mouseReleased(DDD)Z", at = @At("HEAD"), cancellable = true)
+    private void mouseReleasedPre(double mouseX, double mouseY, int button, CallbackInfoReturnable<Boolean> cir) {
+        InventoryMouseReleasedEvent event = new InventoryMouseReleasedEvent(mouseX, mouseY, button);
         MixinHelper.post(event);
         if (event.isCanceled()) {
             cir.setReturnValue(true);
