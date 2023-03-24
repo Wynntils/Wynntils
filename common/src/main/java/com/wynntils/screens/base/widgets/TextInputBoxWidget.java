@@ -391,6 +391,11 @@ public class TextInputBoxWidget extends AbstractWidget {
         }
 
         if (keyCode == GLFW.GLFW_KEY_LEFT) {
+            if (hasHighlighted()) {
+                setCursorAndHighlightPositions(Math.min(cursorPosition, highlightPosition));
+                return true;
+            }
+
             if (Screen.hasControlDown() && Screen.hasShiftDown()) {
                 // this should move the cursor all the way left and highlight everything
                 setCursorPosition(0);
@@ -410,6 +415,11 @@ public class TextInputBoxWidget extends AbstractWidget {
         }
 
         if (keyCode == GLFW.GLFW_KEY_RIGHT) {
+            if (hasHighlighted()) {
+                setCursorAndHighlightPositions(Math.max(cursorPosition, highlightPosition));
+                return true;
+            }
+
             if (Screen.hasControlDown() && Screen.hasShiftDown()) {
                 // this should move the cursor all the way right and highlight everything
                 setCursorPosition(textBoxInput.length());
@@ -450,7 +460,7 @@ public class TextInputBoxWidget extends AbstractWidget {
     public void updateWidgetNarration(NarrationElementOutput narrationElementOutput) {}
 
     private String getRenderCursorChar(boolean forceUnfocusedCursor) {
-        if (isDragging) return ""; // Don't render the cursor if we're dragging
+        if (isDragging || hasHighlighted()) return "";
 
         String cursorChar;
         if (System.currentTimeMillis() - lastCursorSwitch > 350) {

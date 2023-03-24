@@ -88,7 +88,7 @@ public abstract class AbstractContainerScreenMixin {
         }
     }
 
-    @Inject(method = "mouseReleased(DDD)Z", at = @At("RETURN"))
+    @Inject(method = "mouseReleased(DDI)Z", at = @At("RETURN"))
     private void mouseReleasedPre(double mouseX, double mouseY, int button, CallbackInfoReturnable<Boolean> cir) {
         TextInputBoxWidget focusedTextInput = ((TextboxScreen) this).getFocusedTextInput();
 
