@@ -24,6 +24,7 @@ import java.util.function.Consumer;
 
 import com.wynntils.utils.type.Pair;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.StringSplitter;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.components.AbstractWidget;
 import net.minecraft.client.gui.narration.NarrationElementOutput;
@@ -47,6 +48,7 @@ public class TextInputBoxWidget extends AbstractWidget {
 
     protected final TextboxScreen textboxScreen;
     private final int maxTextWidth = this.width - 8;
+    protected int textPadding = 2;
 
     protected TextInputBoxWidget(
             int x,
@@ -128,10 +130,10 @@ public class TextInputBoxWidget extends AbstractWidget {
                         .renderAlignedTextInBox(
                                 poseStack,
                                 firstNormalPortion,
-                                2,
+                                textPadding,
                                 this.width - FontRenderer.getInstance().getFont().width(lastNormalPortion) - FontRenderer.getInstance().getFont().width(highlightedPortion),
-                                2,
-                                this.height - 2,
+                                textPadding,
+                                this.height - textPadding,
                                 0,
                                 renderColor,
                                 HorizontalAlignment.Left,
@@ -142,10 +144,10 @@ public class TextInputBoxWidget extends AbstractWidget {
                 .renderAlignedHighlightedTextInBox(
                         poseStack,
                         highlightedPortion,
-                        2 + FontRenderer.getInstance().getFont().width(firstNormalPortion),
+                        textPadding + FontRenderer.getInstance().getFont().width(firstNormalPortion),
                         this.width - FontRenderer.getInstance().getFont().width(lastNormalPortion),
-                        2,
-                        this.height - 2,
+                        textPadding,
+                        this.height - textPadding,
                         0,
                         CommonColors.BLUE,
                         CommonColors.WHITE,
@@ -156,10 +158,10 @@ public class TextInputBoxWidget extends AbstractWidget {
                 .renderAlignedTextInBox(
                         poseStack,
                         lastNormalPortion,
-                        2 + FontRenderer.getInstance().getFont().width(firstNormalPortion) + FontRenderer.getInstance().getFont().width(highlightedPortion),
+                        textPadding + FontRenderer.getInstance().getFont().width(firstNormalPortion) + FontRenderer.getInstance().getFont().width(highlightedPortion),
                         this.width,
-                        2,
-                        this.height - 2,
+                        textPadding,
+                        this.height - textPadding,
                         0,
                         renderColor,
                         HorizontalAlignment.Left,
@@ -253,19 +255,28 @@ public class TextInputBoxWidget extends AbstractWidget {
         String renderedText = renderedTextDetails.a();
 
         // Width so far at index i
-        List<Integer> widths = new ArrayList<>();
-
+        List<Float> widths = new ArrayList<>();
         for (int i = 0; i < renderedText.length(); i++) {
-            widths.add(f.width(renderedText.substring(0, i)));
+            // we are using stringWidth here because we need precision; if we use width, it will round to the nearest
+            // integer, which will cause strange behaviour when clicking on letters
+            widths.add(f.getSplitter().stringWidth(renderedText.substring(0, i)));
         }
 
         // get nearest width that's in the map
         // FIXME: this is probably really slow and bad, but I am just a first year cs student and I have not taken
         // data structures & algorithms yet so I don't know how to do this better
-        mouseX -= 2; // Account for padding in the text box
+        mouseX -= textPadding; // Account for padding
+        System.out.println(textPadding);
+        if (mouseX > f.getSplitter().stringWidth(renderedText)) { // Mouse is past the end of the text, return the end of the text
+            return renderedTextDetails.b() + renderedText.length();
+        } else if (mouseX < 0) { // Mouse is before the start of the text, return the start of the text
+            return renderedTextDetails.b();
+        }
+
         int closestWidthCharIndex = 0;
         double closestWidth = 999999; // Arbitrary large number, there is no way the text will be this wide
-        for (int stringWidthSoFar : widths) {
+        for (float stringWidthSoFar : widths) {
+            System.out.println("stringWidthSoFar: " + stringWidthSoFar + ", mouseX: " + mouseX);
             double widthDiff = Math.abs(stringWidthSoFar - mouseX);
             if (widthDiff < closestWidth) {
                 closestWidth = widthDiff;

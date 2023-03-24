@@ -27,6 +27,7 @@ public class SearchWidget extends TextInputBoxWidget {
     public SearchWidget(
             int x, int y, int width, int height, Consumer<String> onUpdateConsumer, TextboxScreen textboxScreen) {
         super(x, y, width, height, Component.literal("Search Box"), onUpdateConsumer, textboxScreen);
+        textPadding = 5;
     }
 
     @Override
@@ -76,8 +77,8 @@ public class SearchWidget extends TextInputBoxWidget {
                 .renderAlignedTextInBox(
                         poseStack,
                         defaultText ? DEFAULT_TEXT.getString() : firstNormalPortion,
-                        this.getX() + 5,
-                        this.getX() + this.width - 5 - FontRenderer.getInstance().getFont().width(lastNormalPortion) - FontRenderer.getInstance().getFont().width(highlightedPortion),
+                        this.getX() + textPadding,
+                        this.getX() + this.width - textPadding - FontRenderer.getInstance().getFont().width(lastNormalPortion) - FontRenderer.getInstance().getFont().width(highlightedPortion),
                         this.getY() + 6.5f,
                         0,
                         defaultText ? CommonColors.LIGHT_GRAY : CommonColors.WHITE,
@@ -88,8 +89,8 @@ public class SearchWidget extends TextInputBoxWidget {
                 .renderAlignedHighlightedTextInBox(
                         poseStack,
                         highlightedPortion,
-                        this.getX() + 5 + FontRenderer.getInstance().getFont().width(firstNormalPortion),
-                        this.getX() + this.width - 5 - FontRenderer.getInstance().getFont().width(lastNormalPortion),
+                        this.getX() + textPadding + FontRenderer.getInstance().getFont().width(firstNormalPortion),
+                        this.getX() + this.width - textPadding - FontRenderer.getInstance().getFont().width(lastNormalPortion),
                         this.getY() + 6.5f,
                         this.getY() + 6.5f,
                         0,
@@ -102,8 +103,8 @@ public class SearchWidget extends TextInputBoxWidget {
                 .renderAlignedTextInBox(
                         poseStack,
                         defaultText ? DEFAULT_TEXT.getString() : lastNormalPortion,
-                        this.getX() + 5 + FontRenderer.getInstance().getFont().width(firstNormalPortion) + FontRenderer.getInstance().getFont().width(highlightedPortion),
-                        this.getX() + this.width - 5,
+                        this.getX() + textPadding + FontRenderer.getInstance().getFont().width(firstNormalPortion) + FontRenderer.getInstance().getFont().width(highlightedPortion),
+                        this.getX() + this.width - textPadding,
                         this.getY() + 6.5f,
                         0,
                         defaultText ? CommonColors.LIGHT_GRAY : CommonColors.WHITE,
