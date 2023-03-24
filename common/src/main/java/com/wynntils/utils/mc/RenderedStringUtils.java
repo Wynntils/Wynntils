@@ -34,15 +34,16 @@ public final class RenderedStringUtils {
         return result.toString().split("\n");
     }
 
-    public static String getMaxFittingText(String text, float maxTextWidth, Font font) {
+    public static String getMaxFittingText(String text, float maxTextWidth, Font font, boolean includeEllipsis) {
         String renderedText;
         if (font.width(text) < maxTextWidth) {
             return text;
         } else {
             // This case, the input is too long, only render text that fits, and is closest to cursor
             StringBuilder builder = new StringBuilder();
+            String ellipsis = includeEllipsis ? "..." : "";
 
-            int suffixWidth = font.width("...");
+            int suffixWidth = font.width(ellipsis);
             int stringPosition = 0;
 
             while (font.width(builder.toString()) < maxTextWidth - suffixWidth && stringPosition < text.length()) {
@@ -51,7 +52,7 @@ public final class RenderedStringUtils {
                 stringPosition++;
             }
 
-            builder.append("...");
+            builder.append(ellipsis);
             renderedText = builder.toString();
         }
         return renderedText;
@@ -59,7 +60,7 @@ public final class RenderedStringUtils {
 
     public static String trySplitOptimally(String line, float maxWidth) {
         String maxFitting = RenderedStringUtils.getMaxFittingText(
-                line, maxWidth, FontRenderer.getInstance().getFont());
+                line, maxWidth, FontRenderer.getInstance().getFont(), true);
 
         if (maxFitting.contains("[") && !maxFitting.contains("]")) { // Detail line did not appear to fit, force break
             String color = "";

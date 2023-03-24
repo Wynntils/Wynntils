@@ -55,7 +55,7 @@ public class QuestButton extends WynntilsButton {
                         RenderedStringUtils.getMaxFittingText(
                                 questInfo.getName(),
                                 maxTextWidth,
-                                FontRenderer.getInstance().getFont()),
+                                FontRenderer.getInstance().getFont(), true),
                         this.getX() + 14,
                         this.getY() + 1,
                         0,
