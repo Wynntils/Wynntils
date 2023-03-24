@@ -100,48 +100,41 @@ public class TextInputBoxWidget extends AbstractWidget {
 
         Pair<String, Integer> renderedTextDetails = getRenderedText(maxTextWidth, false);
         String renderedText = renderedTextDetails.a();
-        int startingIndex = renderedTextDetails.b();
+        int shift = renderedTextDetails.b();
+        int length = renderedText.length();
 
         int highlightedStart = Math.min(cursorPosition, highlightPosition);
         int highlightedEnd = Math.max(cursorPosition, highlightPosition);
 
-        if (highlightedStart >= startingIndex && highlightedEnd <= startingIndex + renderedText.length()) {
-            // Entirety of the highlighted text is within the rendered text
-            highlightedStart -= startingIndex;
-            highlightedEnd -= startingIndex;
-        } else if (highlightedStart >= startingIndex && highlightedEnd > startingIndex + renderedText.length()) {
-            // The highlighted text starts within the rendered text, but ends outside of it
-            highlightedStart -= startingIndex;
-            highlightedEnd = renderedText.length();
-        } else if (highlightedStart < startingIndex && highlightedEnd <= startingIndex + renderedText.length()) {
-            // The highlighted text starts outside of the rendered text, but ends within it
-            highlightedStart = 0;
-            highlightedEnd -= startingIndex;
+        Pair<Integer, Integer> renderedInterval = Pair.of(0, length);
+        Pair<Integer, Integer> highlightedInterval = Pair.of(highlightedStart, highlightedEnd);
+        Pair<Integer, Integer> highlightedOutputInterval;
+
+        // get intersection of renderedInterval and highlightedInterval
+        if (highlightedInterval.a() > renderedInterval.b() || renderedInterval.a() > highlightedInterval.b()) {
+            highlightedOutputInterval = Pair.of(0, 0);
         } else {
-            // The highlighted text is not within the rendered text
-            highlightedStart = 0;
-            highlightedEnd = 0;
+            highlightedOutputInterval = Pair.of(Math.max(renderedInterval.a(), highlightedInterval.a()) + shift,
+                    Math.min(renderedInterval.b(), highlightedInterval.b()) + shift);
         }
 
-        if (cursorPosition < highlightPosition) {
+        if (cursorPosition < highlightPosition && renderCursor) {
             // when dragging from right to left, the cursor ends up in the highlight
             // avoid this by moving highlight right
-            highlightedStart = renderCursor ? highlightedStart + 1 : highlightedStart;
-            highlightedEnd = renderCursor ? highlightedEnd + 1 : highlightedEnd;
+            highlightedOutputInterval = Pair.of(highlightedOutputInterval.a() + 1, highlightedOutputInterval.b() + 1);
         }
 
-        String firstNormalPortion;
-        String highlightedPortion;
-        String lastNormalPortion;
-        try { // There is a rare race condition where if the user spams drag, the highlighted portion can be out of bounds
-            firstNormalPortion = renderedText.substring(0, highlightedStart);
-            highlightedPortion = renderedText.substring(highlightedStart, highlightedEnd);
-            lastNormalPortion = renderedText.substring(highlightedEnd);
-        } catch (StringIndexOutOfBoundsException ignored) {
-            firstNormalPortion = renderedText.substring(0, highlightedStart-1);
-            highlightedPortion = renderedText.substring(highlightedStart-1, highlightedEnd-1);
-            lastNormalPortion = renderedText.substring(highlightedEnd-1);
+        if (highlightedOutputInterval.a() < 0) {
+            highlightedOutputInterval = Pair.of(0, highlightedOutputInterval.b());
         }
+        if (highlightedOutputInterval.b() > renderedText.length()) {
+            highlightedOutputInterval = Pair.of(highlightedOutputInterval.a(), renderedText.length());
+        }
+
+        String firstNormalPortion = renderedText.substring(0, highlightedOutputInterval.a());
+        String highlightedPortion = renderedText.substring(highlightedOutputInterval.a(), highlightedOutputInterval.b());
+        String lastNormalPortion = renderedText.substring(highlightedOutputInterval.b());
+
 
         FontRenderer.getInstance()
                         .renderAlignedTextInBox(
