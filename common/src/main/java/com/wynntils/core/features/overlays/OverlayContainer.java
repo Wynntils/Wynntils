@@ -9,6 +9,7 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import com.wynntils.core.config.Config;
 import com.wynntils.core.config.ConfigHolder;
 import com.wynntils.core.config.RegisterConfig;
+import com.wynntils.mc.event.DisplayResizeEvent;
 import com.wynntils.utils.render.type.HorizontalAlignment;
 import com.wynntils.utils.render.type.VerticalAlignment;
 import java.util.ArrayList;
@@ -16,6 +17,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import net.minecraft.client.renderer.MultiBufferSource;
+import net.minecraftforge.eventbus.api.SubscribeEvent;
 
 public class OverlayContainer<T extends Overlay> extends Overlay {
     public static final int DEFAULT_SPACING = 3;
@@ -91,6 +93,11 @@ public class OverlayContainer<T extends Overlay> extends Overlay {
     public void setWidth(float width) {
         super.setWidth(width);
 
+        updateAllChildrenLayout();
+    }
+
+    @SubscribeEvent
+    public void onResizeEvent(DisplayResizeEvent event) {
         updateAllChildrenLayout();
     }
 
