@@ -100,41 +100,12 @@ public class TextInputBoxWidget extends AbstractWidget {
 
         Pair<String, Integer> renderedTextDetails = getRenderedText(maxTextWidth, false);
         String renderedText = renderedTextDetails.a();
-        int shift = renderedTextDetails.b();
-        int length = renderedText.length();
 
-        int highlightedStart = Math.min(cursorPosition, highlightPosition);
-        int highlightedEnd = Math.max(cursorPosition, highlightPosition);
-
-        Pair<Integer, Integer> renderedInterval = Pair.of(0, length);
-        Pair<Integer, Integer> highlightedInterval = Pair.of(highlightedStart, highlightedEnd);
-        Pair<Integer, Integer> highlightedOutputInterval;
-
-        // get intersection of renderedInterval and highlightedInterval
-        if (highlightedInterval.a() > renderedInterval.b() || renderedInterval.a() > highlightedInterval.b()) {
-            highlightedOutputInterval = Pair.of(0, 0);
-        } else {
-            highlightedOutputInterval = Pair.of(Math.max(renderedInterval.a(), highlightedInterval.a()) + shift,
-                    Math.min(renderedInterval.b(), highlightedInterval.b()) + shift);
-        }
-
-        if (cursorPosition < highlightPosition && renderCursor) {
-            // when dragging from right to left, the cursor ends up in the highlight
-            // avoid this by moving highlight right
-            highlightedOutputInterval = Pair.of(highlightedOutputInterval.a() + 1, highlightedOutputInterval.b() + 1);
-        }
-
-        if (highlightedOutputInterval.a() < 0) {
-            highlightedOutputInterval = Pair.of(0, highlightedOutputInterval.b());
-        }
-        if (highlightedOutputInterval.b() > renderedText.length()) {
-            highlightedOutputInterval = Pair.of(highlightedOutputInterval.a(), renderedText.length());
-        }
+        Pair<Integer, Integer> highlightedOutputInterval = getRenderedHighlighedInterval(renderedText, renderedTextDetails.b());
 
         String firstNormalPortion = renderedText.substring(0, highlightedOutputInterval.a());
         String highlightedPortion = renderedText.substring(highlightedOutputInterval.a(), highlightedOutputInterval.b());
         String lastNormalPortion = renderedText.substring(highlightedOutputInterval.b());
-
 
         FontRenderer.getInstance()
                         .renderAlignedTextInBox(
@@ -221,6 +192,39 @@ public class TextInputBoxWidget extends AbstractWidget {
             stringPosition++;
         }
         return Pair.of(builder.toString(), startingAt);
+    }
+
+    protected Pair<Integer, Integer> getRenderedHighlighedInterval(String renderedText, int shift) {
+        int length = renderedText.length();
+
+        int highlightedStart = Math.min(cursorPosition, highlightPosition);
+        int highlightedEnd = Math.max(cursorPosition, highlightPosition);
+
+        Pair<Integer, Integer> renderedInterval = Pair.of(0, length);
+        Pair<Integer, Integer> highlightedInterval = Pair.of(highlightedStart, highlightedEnd);
+        Pair<Integer, Integer> highlightedOutputInterval;
+
+        // get intersection of renderedInterval and highlightedInterval
+        if (highlightedInterval.a() > renderedInterval.b() || renderedInterval.a() > highlightedInterval.b()) {
+            highlightedOutputInterval = Pair.of(0, 0);
+        } else {
+            highlightedOutputInterval = Pair.of(Math.max(renderedInterval.a(), highlightedInterval.a()) + shift,
+                    Math.min(renderedInterval.b(), highlightedInterval.b()) + shift);
+        }
+
+        if (cursorPosition < highlightPosition && renderCursor) {
+            // when dragging from right to left, the cursor ends up in the highlight
+            // avoid this by moving highlight right
+            highlightedOutputInterval = Pair.of(highlightedOutputInterval.a() + 1, highlightedOutputInterval.b() + 1);
+        }
+
+        if (highlightedOutputInterval.a() < 0) {
+            highlightedOutputInterval = Pair.of(0, highlightedOutputInterval.b());
+        }
+        if (highlightedOutputInterval.b() > length) {
+            highlightedOutputInterval = Pair.of(highlightedOutputInterval.a(), length);
+        }
+        return highlightedOutputInterval;
     }
 
     @Override
