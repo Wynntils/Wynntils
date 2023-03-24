@@ -268,7 +268,7 @@ public class TextInputBoxWidget extends AbstractWidget {
 
     protected int getIndexAtPosition(double mouseX) {
         mouseX -= this.getX(); // mouseX is actually just the x position of the mouse relative to the screen, not the textbox
-        Font f = FontRenderer.getInstance().getFont();
+        Font font = FontRenderer.getInstance().getFont();
         Pair<String, Integer> renderedTextDetails = getRenderedText(maxTextWidth, false);
         String renderedText = renderedTextDetails.a();
 
@@ -277,14 +277,14 @@ public class TextInputBoxWidget extends AbstractWidget {
         for (int i = 0; i < renderedText.length(); i++) {
             // we are using stringWidth here because we need precision; if we use width, it will round to the nearest
             // integer, which will cause strange behaviour when clicking on letters
-            widths.add(f.getSplitter().stringWidth(renderedText.substring(0, i)));
+            widths.add(font.getSplitter().stringWidth(renderedText.substring(0, i)));
         }
 
         // get nearest width that's in the map
         // FIXME: this is probably really slow and bad, but I am just a first year cs student and I have not taken
         // data structures & algorithms yet so I don't know how to do this better
         mouseX -= textPadding; // Account for padding
-        if (mouseX > f.getSplitter().stringWidth(renderedText)) { // Mouse is past the end of the text, return the end of the text
+        if (mouseX > font.getSplitter().stringWidth(renderedText)) { // Mouse is past the end of the text, return the end of the text
             return renderedTextDetails.b() + renderedText.length();
         } else if (mouseX < 0) { // Mouse is before the start of the text, return the start of the text
             return renderedTextDetails.b();
