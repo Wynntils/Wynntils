@@ -69,7 +69,8 @@ public abstract class OverlayContainer<T extends Overlay> extends Overlay {
     @Override
     public void renderPreview(PoseStack poseStack, MultiBufferSource bufferSource, float partialTicks, Window window) {
         List<T> previewChildren = getPreviewChildren();
-        Map<T, OverlaySize> previewSize = previewChildren.stream().collect(Collectors.toMap(Function.identity(), Overlay::getSize));
+        Map<T, OverlaySize> previewSize =
+                previewChildren.stream().collect(Collectors.toMap(Function.identity(), Overlay::getSize));
 
         updateLayout(previewChildren, previewSize);
         previewChildren.forEach(o -> o.renderPreview(poseStack, bufferSource, partialTicks, window));
