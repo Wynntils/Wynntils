@@ -391,7 +391,7 @@ public class TextInputBoxWidget extends AbstractWidget {
         }
 
         if (keyCode == GLFW.GLFW_KEY_LEFT) {
-            if (hasHighlighted()) {
+            if (hasHighlighted() && !Screen.hasShiftDown() && !Screen.hasControlDown()) {
                 setCursorAndHighlightPositions(Math.min(cursorPosition, highlightPosition));
                 return true;
             }
@@ -408,6 +408,9 @@ public class TextInputBoxWidget extends AbstractWidget {
                 // this should move the cursor left and highlight the text
                 setCursorPosition(cursorPosition - 1);
                 return true;
+            } else if (hasHighlighted()) {
+                setCursorAndHighlightPositions(Math.min(cursorPosition, highlightPosition));
+                return true;
             }
             // this should move the cursor left and not highlight anything
             setCursorAndHighlightPositions(cursorPosition - 1);
@@ -415,11 +418,6 @@ public class TextInputBoxWidget extends AbstractWidget {
         }
 
         if (keyCode == GLFW.GLFW_KEY_RIGHT) {
-            if (hasHighlighted()) {
-                setCursorAndHighlightPositions(Math.max(cursorPosition, highlightPosition));
-                return true;
-            }
-
             if (Screen.hasControlDown() && Screen.hasShiftDown()) {
                 // this should move the cursor all the way right and highlight everything
                 setCursorPosition(textBoxInput.length());
@@ -431,6 +429,9 @@ public class TextInputBoxWidget extends AbstractWidget {
             } else if (Screen.hasShiftDown()) {
                 // this should move the cursor right and highlight the text
                 setCursorPosition(cursorPosition + 1);
+                return true;
+            } else if (hasHighlighted()) {
+                setCursorAndHighlightPositions(Math.max(cursorPosition, highlightPosition));
                 return true;
             }
             // this should move the cursor right and not highlight anything
