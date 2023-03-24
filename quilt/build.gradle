@@ -74,7 +74,7 @@ dependencies {
     // Hades Protocol
     shadowImplementation("com.wynntils.hades:hades:${rootProject.hades_version}") { transitive false }
 
-    shadowImplementation(annotationProcessor("com.github.llamalad7.mixinextras:mixinextras-fabric:${rootProject.mixinextras_version}")) { transitive false }
+    include(implementation(annotationProcessor("com.github.llamalad7.mixinextras:mixinextras-fabric:${rootProject.mixinextras_version}"))) { transitive false }
 
     // EventBusTransform needs to only be available for the dev env at runtime and
     // does not need to be shadowed
