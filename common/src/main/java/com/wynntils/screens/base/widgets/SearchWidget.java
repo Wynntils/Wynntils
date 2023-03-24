@@ -66,6 +66,8 @@ public class SearchWidget extends TextInputBoxWidget {
                         HorizontalAlignment.Left,
                         TextShadow.NORMAL);
 
+        if (defaultText) return;
+
         FontRenderer.getInstance()
                 .renderAlignedHighlightedTextInBox(
                         poseStack,
@@ -83,7 +85,7 @@ public class SearchWidget extends TextInputBoxWidget {
         FontRenderer.getInstance()
                 .renderAlignedTextInBox(
                         poseStack,
-                        defaultText ? DEFAULT_TEXT.getString() : lastNormalPortion,
+                        lastNormalPortion,
                         this.getX() + textPadding + FontRenderer.getInstance().getFont().width(firstNormalPortion) + FontRenderer.getInstance().getFont().width(highlightedPortion),
                         this.getX() + this.width - textPadding,
                         this.getY() + 6.5f,
@@ -91,7 +93,6 @@ public class SearchWidget extends TextInputBoxWidget {
                         defaultText ? CommonColors.LIGHT_GRAY : CommonColors.WHITE,
                         HorizontalAlignment.Left,
                         TextShadow.NORMAL);
-        //System.out.println(isDragging);
     }
 
     @Override
