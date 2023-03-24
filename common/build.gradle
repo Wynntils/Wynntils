@@ -8,8 +8,7 @@ dependencies {
 
     implementation("com.wynntils.hades:hades:${rootProject.hades_version}")
 
-    implementation("com.github.LlamaLad7:MixinExtras:${rootProject.mixinextras_version}")
-    annotationProcessor("com.github.LlamaLad7:MixinExtras:${rootProject.mixinextras_version}")
+    implementation(annotationProcessor("com.github.llamalad7.mixinextras:mixinextras-common:${rootProject.mixinextras_version}"))
 }
 
 architectury {
