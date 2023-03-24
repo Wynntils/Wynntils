@@ -200,7 +200,7 @@ public class TextInputBoxWidget extends AbstractWidget {
 
         String entireText = textBoxInput.substring(0, cursorPosition) + cursorChar + textBoxInput.substring(cursorPosition);
         if (font.width(entireText) < maxTextWidth) {
-            return new Pair<>(entireText, 0);
+            return Pair.of(entireText, 0);
         }
 
         StringBuilder builder = new StringBuilder();
@@ -226,8 +226,7 @@ public class TextInputBoxWidget extends AbstractWidget {
 
             stringPosition++;
         }
-
-        return new Pair<>(builder.toString(), startingAt);
+        return Pair.of(builder.toString(), startingAt);
     }
 
     @Override
