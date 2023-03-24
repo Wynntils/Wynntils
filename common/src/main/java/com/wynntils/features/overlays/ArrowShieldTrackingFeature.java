@@ -37,12 +37,12 @@ public class ArrowShieldTrackingFeature extends Feature {
         protected ArrowShieldTrackerOverlay() {
             super(
                     new OverlayPosition(
-                            140,
+                            120,
                             -5,
                             VerticalAlignment.Top,
                             HorizontalAlignment.Right,
                             OverlayPosition.AnchorSection.TopRight),
-                    new OverlaySize(120, 35));
+                    new OverlaySize(120, 14));
         }
 
         @Override
@@ -52,6 +52,7 @@ public class ArrowShieldTrackingFeature extends Feature {
 
         @Override
         public String getTemplate() {
+            System.out.println("shield " + getRenderX() + ", " + getRenderY());
             return TEMPLATE;
         }
 
