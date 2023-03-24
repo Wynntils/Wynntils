@@ -183,12 +183,12 @@ public final class FontRenderer {
                 renderX,
                 switch(verticalAlignment) {
                     case Top -> renderY - 2;
-                    case Middle -> renderY - (getFont().lineHeight / 2f) - 2;
-                    case Bottom -> renderY - getFont().lineHeight + 2;
+                    case Middle -> renderY - (font.lineHeight / 2f) - 2;
+                    case Bottom -> renderY - font.lineHeight + 2;
                 },
                 0,
-                getFont().width(text),
-                getFont().lineHeight + 2
+                font.width(text),
+                font.lineHeight + 2
         );
         renderAlignedTextInBox(
                 poseStack,
