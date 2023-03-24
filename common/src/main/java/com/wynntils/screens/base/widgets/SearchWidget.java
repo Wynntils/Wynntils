@@ -69,6 +69,13 @@ public class SearchWidget extends TextInputBoxWidget {
             highlightedEnd = 0;
         }
 
+        if (cursorPosition < highlightPosition) {
+            // when dragging from right to left, the cursor ends up in the highlight
+            // avoid this by moving highlight right
+            highlightedStart = renderCursor ? highlightedStart + 1 : highlightedStart;
+            highlightedEnd = renderCursor ? highlightedEnd + 1 : highlightedEnd;
+        }
+
         String firstNormalPortion = renderedText.substring(0, highlightedStart);
         String highlightedPortion = renderedText.substring(highlightedStart, highlightedEnd);
         String lastNormalPortion = renderedText.substring(highlightedEnd);

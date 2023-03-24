@@ -42,7 +42,7 @@ public class TextInputBoxWidget extends AbstractWidget {
     protected int cursorPosition = 0;
     protected int highlightPosition = 0;
     private long lastCursorSwitch = 0;
-    private boolean renderCursor = true;
+    protected boolean renderCursor = true;
     private CustomColor renderColor = CommonColors.WHITE;
     protected boolean isDragging = false;
 
@@ -120,6 +120,13 @@ public class TextInputBoxWidget extends AbstractWidget {
             // The highlighted text is not within the rendered text
             highlightedStart = 0;
             highlightedEnd = 0;
+        }
+
+        if (cursorPosition < highlightPosition) {
+            // when dragging from right to left, the cursor ends up in the highlight
+            // avoid this by moving highlight right
+            highlightedStart = renderCursor ? highlightedStart + 1 : highlightedStart;
+            highlightedEnd = renderCursor ? highlightedEnd + 1 : highlightedEnd;
         }
 
         String firstNormalPortion = renderedText.substring(0, highlightedStart);
@@ -266,7 +273,6 @@ public class TextInputBoxWidget extends AbstractWidget {
         // FIXME: this is probably really slow and bad, but I am just a first year cs student and I have not taken
         // data structures & algorithms yet so I don't know how to do this better
         mouseX -= textPadding; // Account for padding
-        System.out.println(textPadding);
         if (mouseX > f.getSplitter().stringWidth(renderedText)) { // Mouse is past the end of the text, return the end of the text
             return renderedTextDetails.b() + renderedText.length();
         } else if (mouseX < 0) { // Mouse is before the start of the text, return the start of the text
@@ -276,7 +282,6 @@ public class TextInputBoxWidget extends AbstractWidget {
         int closestWidthCharIndex = 0;
         double closestWidth = 999999; // Arbitrary large number, there is no way the text will be this wide
         for (float stringWidthSoFar : widths) {
-            System.out.println("stringWidthSoFar: " + stringWidthSoFar + ", mouseX: " + mouseX);
             double widthDiff = Math.abs(stringWidthSoFar - mouseX);
             if (widthDiff < closestWidth) {
                 closestWidth = widthDiff;
