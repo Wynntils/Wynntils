@@ -103,16 +103,20 @@ public class TextInputBoxWidget extends AbstractWidget {
 
         Pair<Integer, Integer> highlightedOutputInterval = getRenderedHighlighedInterval(renderedText, renderedTextDetails.b());
 
-        String firstNormalPortion = renderedText.substring(0, highlightedOutputInterval.a());
+        String firstPortion = renderedText.substring(0, highlightedOutputInterval.a());
         String highlightedPortion = renderedText.substring(highlightedOutputInterval.a(), highlightedOutputInterval.b());
-        String lastNormalPortion = renderedText.substring(highlightedOutputInterval.b());
+        String lastPortion = renderedText.substring(highlightedOutputInterval.b());
+
+        int firstWidth = FontRenderer.getInstance().getFont().width(firstPortion);
+        int highlightedWidth = FontRenderer.getInstance().getFont().width(highlightedPortion);
+        int lastWidth = FontRenderer.getInstance().getFont().width(lastPortion);
 
         FontRenderer.getInstance()
                         .renderAlignedTextInBox(
                                 poseStack,
-                                firstNormalPortion,
+                                firstPortion,
                                 textPadding,
-                                this.width - FontRenderer.getInstance().getFont().width(lastNormalPortion) - FontRenderer.getInstance().getFont().width(highlightedPortion),
+                                this.width - lastWidth - highlightedWidth,
                                 textPadding,
                                 this.height - textPadding,
                                 0,
@@ -125,8 +129,8 @@ public class TextInputBoxWidget extends AbstractWidget {
                 .renderAlignedHighlightedTextInBox(
                         poseStack,
                         highlightedPortion,
-                        textPadding + FontRenderer.getInstance().getFont().width(firstNormalPortion),
-                        this.width - FontRenderer.getInstance().getFont().width(lastNormalPortion),
+                        textPadding + firstWidth,
+                        this.width - lastWidth,
                         textPadding,
                         this.height - textPadding,
                         0,
@@ -138,8 +142,8 @@ public class TextInputBoxWidget extends AbstractWidget {
         FontRenderer.getInstance()
                 .renderAlignedTextInBox(
                         poseStack,
-                        lastNormalPortion,
-                        textPadding + FontRenderer.getInstance().getFont().width(firstNormalPortion) + FontRenderer.getInstance().getFont().width(highlightedPortion),
+                        lastPortion,
+                        textPadding + firstWidth + highlightedWidth,
                         this.width,
                         textPadding,
                         this.height - textPadding,
