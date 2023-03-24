@@ -47,22 +47,23 @@ public class SearchWidget extends TextInputBoxWidget {
 
         Pair<String, Integer> renderedTextDetails = getRenderedText(this.width - 18, true);
         String renderedText = renderedTextDetails.a();
+        int startingIndex = renderedTextDetails.b();
 
         int highlightedStart = Math.min(cursorPosition, highlightPosition);
         int highlightedEnd = Math.max(cursorPosition, highlightPosition);
 
-        if (highlightedStart >= renderedTextDetails.b() && highlightedEnd <= renderedTextDetails.b() + renderedText.length()) {
+        if (highlightedStart >= startingIndex && highlightedEnd <= startingIndex + renderedText.length()) {
             // Entirety of the highlighted text is within the rendered text
-            highlightedStart -= renderedTextDetails.b();
-            highlightedEnd -= renderedTextDetails.b();
-        } else if (highlightedStart >= renderedTextDetails.b() && highlightedEnd > renderedTextDetails.b() + renderedText.length()) {
+            highlightedStart -= startingIndex;
+            highlightedEnd -= startingIndex;
+        } else if (highlightedStart >= startingIndex && highlightedEnd > startingIndex + renderedText.length()) {
             // The highlighted text starts within the rendered text, but ends outside of it
-            highlightedStart -= renderedTextDetails.b();
+            highlightedStart -= startingIndex;
             highlightedEnd = renderedText.length();
-        } else if (highlightedStart < renderedTextDetails.b() && highlightedEnd <= renderedTextDetails.b() + renderedText.length()) {
+        } else if (highlightedStart < startingIndex && highlightedEnd <= startingIndex + renderedText.length()) {
             // The highlighted text starts outside of the rendered text, but ends within it
             highlightedStart = 0;
-            highlightedEnd -= renderedTextDetails.b();
+            highlightedEnd -= startingIndex;
         } else {
             // The highlighted text is not within the rendered text
             highlightedStart = 0;
