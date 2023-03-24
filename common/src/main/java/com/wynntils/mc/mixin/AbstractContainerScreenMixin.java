@@ -10,10 +10,9 @@ import com.wynntils.mc.event.ContainerCloseEvent;
 import com.wynntils.mc.event.ContainerRenderEvent;
 import com.wynntils.mc.event.InventoryKeyPressEvent;
 import com.wynntils.mc.event.InventoryMouseClickedEvent;
-import com.wynntils.mc.event.InventoryMouseDraggedEvent;
-import com.wynntils.mc.event.InventoryMouseReleasedEvent;
 import com.wynntils.mc.event.SlotRenderEvent;
-import net.minecraft.client.gui.components.events.GuiEventListener;
+import com.wynntils.screens.base.TextboxScreen;
+import com.wynntils.screens.base.widgets.TextInputBoxWidget;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
 import net.minecraft.world.inventory.Slot;
@@ -80,23 +79,21 @@ public abstract class AbstractContainerScreenMixin {
         }
     }
 
-    @Inject(method = "mouseDragged(DDIDD)Z", at = @At("HEAD"), cancellable = true)
+    @Inject(method = "mouseDragged(DDIDD)Z", at = @At("RETURN"))
     private void mouseDraggedPre(double mouseX, double mouseY, int button, double deltaX, double deltaY, CallbackInfoReturnable<Boolean> cir) {
-        InventoryMouseDraggedEvent event = new InventoryMouseDraggedEvent(mouseX, mouseY, button, deltaX, deltaY);
-        MixinHelper.post(event);
-        if (event.isCanceled()) {
-            cir.setReturnValue(true);
-            cir.cancel();
+        TextInputBoxWidget focusedTextInput = ((TextboxScreen) this).getFocusedTextInput();
+
+        if (focusedTextInput != null) {
+            focusedTextInput.mouseDragged(mouseX, mouseY, button, deltaX, deltaY);
         }
     }
 
-    @Inject(method = "mouseReleased(DDD)Z", at = @At("HEAD"), cancellable = true)
+    @Inject(method = "mouseReleased(DDD)Z", at = @At("RETURN"))
     private void mouseReleasedPre(double mouseX, double mouseY, int button, CallbackInfoReturnable<Boolean> cir) {
-        InventoryMouseReleasedEvent event = new InventoryMouseReleasedEvent(mouseX, mouseY, button);
-        MixinHelper.post(event);
-        if (event.isCanceled()) {
-            cir.setReturnValue(true);
-            cir.cancel();
+        TextInputBoxWidget focusedTextInput = ((TextboxScreen) this).getFocusedTextInput();
+
+        if (focusedTextInput != null) {
+            focusedTextInput.mouseReleased(mouseX, mouseY, button);
         }
     }
 

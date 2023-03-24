@@ -253,7 +253,8 @@ public class TextInputBoxWidget extends AbstractWidget {
             isDragging = false;
             setCursorPosition(getIndexAtPosition(mouseX));
         }
-        return super.mouseReleased(mouseX, mouseY, button);
+
+        return true;
     }
 
     @Override
@@ -261,7 +262,8 @@ public class TextInputBoxWidget extends AbstractWidget {
         if (isDragging) {
             setCursorPosition(getIndexAtPosition(mouseX));
         }
-        return super.mouseDragged(mouseX, mouseY, button, dragX, dragY);
+
+        return true;
     }
 
     protected int getIndexAtPosition(double mouseX) {
