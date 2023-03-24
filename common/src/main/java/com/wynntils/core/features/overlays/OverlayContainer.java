@@ -17,7 +17,7 @@ import java.util.List;
 import java.util.Map;
 import net.minecraft.client.renderer.MultiBufferSource;
 
-public class OverlayContainer extends Overlay {
+public class OverlayContainer<T extends Overlay> extends Overlay {
     public static final int DEFAULT_SPACING = 3;
 
     @RegisterConfig("overlay.wynntils.overlay.growDirection")
@@ -26,7 +26,7 @@ public class OverlayContainer extends Overlay {
     @RegisterConfig("overlay.wynntils.overlay.spacing")
     protected final Config<Integer> spacing = new Config<>(DEFAULT_SPACING);
 
-    private final List<Overlay> children = new ArrayList<>();
+    private final List<T> children = new ArrayList<>();
     private final Map<Overlay, OverlaySize> inherentSize = new HashMap<>();
 
     public OverlayContainer(OverlayPosition position, OverlaySize size, GrowDirection growDirection, int spacing) {
@@ -39,7 +39,7 @@ public class OverlayContainer extends Overlay {
         this(position, size, growDirection, DEFAULT_SPACING);
     }
 
-    public void addChild(Overlay overlay) {
+    public void addChild(T overlay) {
         inherentSize.put(overlay, overlay.getSize().copy());
 
         int accumulatedHeight = children.stream()
@@ -64,8 +64,7 @@ public class OverlayContainer extends Overlay {
     }
 
     @Override
-    public void render(
-            PoseStack poseStack, MultiBufferSource.BufferSource bufferSource, float partialTicks, Window window) {
+    public void render(PoseStack poseStack, MultiBufferSource bufferSource, float partialTicks, Window window) {
         children.forEach(o -> o.render(poseStack, bufferSource, partialTicks, window));
     }
 
