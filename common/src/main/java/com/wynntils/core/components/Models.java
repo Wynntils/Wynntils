@@ -40,6 +40,7 @@ import com.wynntils.models.rewards.RewardsModel;
 import com.wynntils.models.spells.SpellModel;
 import com.wynntils.models.stats.StatModel;
 import com.wynntils.models.statuseffects.StatusEffectModel;
+import com.wynntils.models.stopwatch.StopwatchModel;
 import com.wynntils.models.territories.GuildAttackTimerModel;
 import com.wynntils.models.territories.TerritoryModel;
 import com.wynntils.models.territories.TowerAuraTimerModel;
@@ -69,6 +70,7 @@ public final class Models {
     public static final ServerListModel ServerList = new ServerListModel();
     public static final StatModel Stat = new StatModel();
     public static final StatusEffectModel StatusEffect = new StatusEffectModel();
+    public static final StopwatchModel Stopwatch = new StopwatchModel();
     public static final TerritoryModel Territory = new TerritoryModel();
     public static final TokenModel Token = new TokenModel();
     public static final WorldStateModel WorldState = new WorldStateModel();
