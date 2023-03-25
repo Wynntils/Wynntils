@@ -71,7 +71,7 @@ public class TextInputBoxWidget extends AbstractWidget {
 
         if (oldWidget != null) {
             this.textBoxInput = oldWidget.textBoxInput;
-            setCursorPosition(oldWidget.cursorPosition);
+            setCursorAndHighlightPositions(oldWidget.cursorPosition);
             this.renderColor = oldWidget.renderColor;
         }
     }
@@ -91,8 +91,8 @@ public class TextInputBoxWidget extends AbstractWidget {
 
         poseStack.translate(this.getX(), this.getY(), 0);
 
-        RenderUtils.drawRect(poseStack, CommonColors.BLACK, 0, 0, 0, this.width, this.height);
-        RenderUtils.drawRectBorders(poseStack, CommonColors.GRAY, 0, 0, this.width, this.height, 0, 2);
+        RenderUtils.drawRect(poseStack, CommonColors.BLACK, 0, 0, 1, this.width, this.height);
+        RenderUtils.drawRectBorders(poseStack, CommonColors.GRAY, 0, 0, this.width, this.height, 1, 2);
 
         Pair<String, Integer> renderedTextDetails = getRenderedText(maxTextWidth);
         String renderedText = renderedTextDetails.a();
@@ -154,7 +154,7 @@ public class TextInputBoxWidget extends AbstractWidget {
 
         drawCursor(
                 poseStack,
-                font.width(renderedText.substring(0, cursorPosition)),
+                font.width(renderedText.substring(0, Math.min(cursorPosition, renderedText.length()))),
                 (textPadding + this.height - textPadding) / 2,
                 VerticalAlignment.Middle,
                 false);
@@ -481,7 +481,7 @@ public class TextInputBoxWidget extends AbstractWidget {
                                 - (CURSOR_PADDING
                                         - 1); // FIXME: this is untested! no existing text box uses bottom alignment
                     },
-                    10,
+                    0,
                     1,
                     font.lineHeight + 3);
         }
@@ -493,7 +493,7 @@ public class TextInputBoxWidget extends AbstractWidget {
 
     public void setTextBoxInput(String textBoxInput) {
         this.textBoxInput = textBoxInput;
-        setCursorPosition(textBoxInput.length());
+        setCursorAndHighlightPositions(textBoxInput.length());
 
         this.onUpdateConsumer.accept(this.textBoxInput);
     }

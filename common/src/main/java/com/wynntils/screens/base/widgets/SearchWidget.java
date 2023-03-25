@@ -104,10 +104,10 @@ public class SearchWidget extends TextInputBoxWidget {
 
         drawCursor(
                 poseStack,
-                this.getX() + font.width(renderedText.substring(0, cursorPosition)) + textPadding - 2,
+                this.getX() + font.width(renderedText.substring(0, Math.min(cursorPosition, renderedText.length()))) + textPadding - 2,
                 this.getY() + VERTICAL_OFFSET,
                 VerticalAlignment.Top,
-                true);
+                false);
     }
 
     @Override
