@@ -15,6 +15,7 @@ import com.wynntils.models.items.items.game.MiscItem;
 import com.wynntils.models.token.event.TokenGatekeeperEvent;
 import com.wynntils.models.token.type.TokenGatekeeper;
 import com.wynntils.models.worlds.event.WorldStateEvent;
+import com.wynntils.utils.MathUtils;
 import com.wynntils.utils.mc.type.Location;
 import com.wynntils.utils.type.CappedValue;
 import com.wynntils.utils.type.TimedSet;
@@ -32,6 +33,10 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 
 public class TokenModel extends Model {
+    private static final Pattern TOA_GATEKEEPER_NAME_PATTERN =
+            Pattern.compile("^§2Floormaster \\[Floor (\\d+), Level (\\d+)\\]$");
+    private static final Pattern HIVE_GATEKEEPER_NAME_PATTERN = Pattern.compile("^§2(.*) Catalyst Collector (\\d+)$");
+
     private static final Pattern TOKEN_PATTERN = Pattern.compile("^§a(\\d+)§2/(\\d+)(?:§r)?$");
     private static final Pattern TYPE_PATTERN = Pattern.compile("^§7Get §[e6]\\[(?:(\\d+) )?(.*)\\]$");
     private static final String VERIFICATION_STRING = "§7Right-click to add";
@@ -125,6 +130,35 @@ public class TokenModel extends Model {
             BakingTokenGatekeeper baking = getBaking(event.getEntity().position());
             baking.confirmed = true;
             checkAndPromoteBaking();
+            return;
+        }
+
+        Matcher toaMatcher = TOA_GATEKEEPER_NAME_PATTERN.matcher(name);
+        if (toaMatcher.matches()) {
+            int floor = Integer.parseInt(toaMatcher.group(1));
+            int level = Integer.parseInt(toaMatcher.group(2));
+            int maxTokens = level == 10 ? 1 : 5;
+            Location location =
+                    Location.containing(event.getEntity().position()).offset(0, 3, 0);
+
+            String gatekeeperTokenName = "Shard [Floor " + floor + " - Level " + level + "]";
+            String itemName = "§d[Floor " + floor + " - Lv. " + level + "]";
+            addGatekeeper(
+                    event.getEntity().getId(),
+                    new TokenGatekeeper(gatekeeperTokenName, itemName, location, new CappedValue(0, maxTokens)));
+        }
+
+        Matcher hiveMatcher = HIVE_GATEKEEPER_NAME_PATTERN.matcher(name);
+        if (hiveMatcher.matches()) {
+            String division = hiveMatcher.group(1);
+            int level = Integer.parseInt(hiveMatcher.group(2));
+            int maxTokens = level == 10 ? 1 : 5;
+            Location location =
+                    Location.containing(event.getEntity().position()).offset(0, 3, 0);
+
+            String tokenName = division + " Catalyst " + MathUtils.toRoman(level);
+            addGatekeeper(
+                    event.getEntity().getId(), new TokenGatekeeper(tokenName, location, new CappedValue(0, maxTokens)));
         }
     }
 
@@ -246,24 +280,23 @@ public class TokenModel extends Model {
     private static final class TokenInventoryWatcher extends InventoryWatcher {
         private final TokenGatekeeper gatekeeper;
 
-        private TokenInventoryWatcher(TokenGatekeeper gatekeeper, String type) {
-            super(itemStack -> isToken(type, itemStack));
+        private TokenInventoryWatcher(TokenGatekeeper gatekeeper, String tokenItemName) {
+            super(itemStack -> isToken(tokenItemName, itemStack));
             this.gatekeeper = gatekeeper;
         }
 
         private TokenInventoryWatcher(TokenGatekeeper gatekeeper) {
-            // Remove the trailing plural 's'
-            this(gatekeeper, gatekeeper.getType().replaceAll("s$", ""));
+            this(gatekeeper, gatekeeper.getItemTokenName());
         }
 
-        private static boolean isToken(String type, ItemStack itemStack) {
+        private static boolean isToken(String tokenItemName, ItemStack itemStack) {
             Optional<MiscItem> miscItemOpt = Models.Item.asWynnItem(itemStack, MiscItem.class);
             if (miscItemOpt.isEmpty()) return false;
 
             MiscItem miscItem = miscItemOpt.get();
             if (!miscItem.isUntradable()) return false;
 
-            return miscItem.getName().contains(type);
+            return miscItem.getName().contains(tokenItemName);
         }
 
         @Override
