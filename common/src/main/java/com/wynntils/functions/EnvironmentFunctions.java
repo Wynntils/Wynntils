@@ -50,7 +50,10 @@ public class EnvironmentFunctions {
     public static class StopwatchZero extends Function<Boolean> {
         @Override
         public Boolean getValue(FunctionArguments arguments) {
-            return Models.Stopwatch.getHours() == 0 && Models.Stopwatch.getMinutes() == 0 && Models.Stopwatch.getSeconds() == 0 && Models.Stopwatch.getMilliseconds() == 0;
+            return Models.Stopwatch.getHours() == 0
+                    && Models.Stopwatch.getMinutes() == 0
+                    && Models.Stopwatch.getSeconds() == 0
+                    && Models.Stopwatch.getMilliseconds() == 0;
         }
 
         @Override

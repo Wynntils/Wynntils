@@ -1,3 +1,7 @@
+/*
+ * Copyright © Wynntils 2023.
+ * This file is released under AGPLv3. See LICENSE for full license details.
+ */
 package com.wynntils.features.overlays;
 
 import com.mojang.brigadier.tree.LiteralCommandNode;
@@ -31,33 +35,30 @@ public class StopwatchFeature extends Feature {
             new KeyBind("Reset Stopwatch", GLFW.GLFW_KEY_KP_DECIMAL, true, Models.Stopwatch::reset);
 
     @RegisterCommand
-    private final LiteralCommandNode<CommandSourceStack> startCommand =
-            Commands.literal("start")
-                    .executes(ctx -> {
-                        Models.Stopwatch.start();
-                        return 0;
-                    })
-                    .build();
+    private final LiteralCommandNode<CommandSourceStack> startCommand = Commands.literal("start")
+            .executes(ctx -> {
+                Models.Stopwatch.start();
+                return 0;
+            })
+            .build();
 
     @RegisterCommand
-    private final LiteralCommandNode<CommandSourceStack> stopCommand =
-            Commands.literal("stop")
-                    .executes(ctx -> {
-                        if (Models.Stopwatch.isRunning()) {
-                            Models.Stopwatch.stop();
-                        }
-                        return 0;
-                    })
-                    .build();
+    private final LiteralCommandNode<CommandSourceStack> stopCommand = Commands.literal("stop")
+            .executes(ctx -> {
+                if (Models.Stopwatch.isRunning()) {
+                    Models.Stopwatch.stop();
+                }
+                return 0;
+            })
+            .build();
 
     @RegisterCommand
-    private final LiteralCommandNode<CommandSourceStack> resetCommand =
-            Commands.literal("reset")
-                    .executes(ctx -> {
-                        Models.Stopwatch.reset();
-                        return 0;
-                    })
-                    .build();
+    private final LiteralCommandNode<CommandSourceStack> resetCommand = Commands.literal("reset")
+            .executes(ctx -> {
+                Models.Stopwatch.reset();
+                return 0;
+            })
+            .build();
 
     @OverlayInfo(renderType = RenderEvent.ElementType.GUI)
     private final Overlay stopwatchOverlay = new StopwatchOverlay();
