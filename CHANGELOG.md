@@ -1,8 +1,16 @@
+## [0.0.2-alpha.375](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.374...v0.0.2-alpha.375) (2023-03-25)
+
+
+### Bug Fixes
+
+* item counts hiding stacked items ([#1373](https://github.com/Wynntils/Artemis/issues/1373)) ([1d9894e](https://github.com/Wynntils/Artemis/commit/1d9894e12c3395ea284bbc96ecbd33e7ac5fb71a))
+
 ## [0.0.2-alpha.374](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.373...v0.0.2-alpha.374) (2023-03-24)
 
 
 ### Miscellaneous Chores
 
+* **release:** v0.0.2-alpha.374 [skip ci] ([43b4d4a](https://github.com/Wynntils/Artemis/commit/43b4d4ad75c22030d0ce695ebf281fb9d1e85140))
 * Use MixinExtras 0.2.0-beta.5 ([#1369](https://github.com/Wynntils/Artemis/issues/1369)) ([a1413b3](https://github.com/Wynntils/Artemis/commit/a1413b3b17d2d06c4fa40f7b4d36f1f1781a2944))
 
 ## [0.0.2-alpha.373](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.372...v0.0.2-alpha.373) (2023-03-24)
@@ -40,16 +48,4 @@
 ### Miscellaneous Chores
 
 * **release:** v0.0.2-alpha.371 [skip ci] ([a77b5c4](https://github.com/Wynntils/Artemis/commit/a77b5c4d718cdf7cb68600fb58d9bec85aa4564d))
-
-## [0.0.2-alpha.370](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.369...v0.0.2-alpha.370) (2023-03-22)
-
-
-### New Features
-
-* death coordinates ([#1365](https://github.com/Wynntils/Artemis/issues/1365)) ([67e42ac](https://github.com/Wynntils/Artemis/commit/67e42ac47a0c03c5e4b0eac9e7f14837ee882b76))
-
-
-### Miscellaneous Chores
-
-* **release:** v0.0.2-alpha.370 [skip ci] ([0367e3f](https://github.com/Wynntils/Artemis/commit/0367e3f216bde27d9a7d16f06f28f2e27112e40f))
 
