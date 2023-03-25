@@ -54,6 +54,13 @@ public class TokenModel extends Model {
         return activeGatekeepers.values().stream().sorted().toList();
     }
 
+    public int inInventory(TokenGatekeeper gatekeeper) {
+        TokenInventoryWatcher watcher = inventoryWatchers.get(gatekeeper);
+        // The null case should not happen, but just to be safe
+        int inventoryCount = watcher != null ? watcher.getTotalCount() : 0;
+        return inventoryCount;
+    }
+
     public CappedValue getCollected(TokenGatekeeper gatekeeper) {
         TokenInventoryWatcher watcher = inventoryWatchers.get(gatekeeper);
         // The null case should not happen, but just to be safe
