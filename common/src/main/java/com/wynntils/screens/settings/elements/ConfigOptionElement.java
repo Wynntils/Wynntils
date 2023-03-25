@@ -22,4 +22,12 @@ public abstract class ConfigOptionElement {
             PoseStack poseStack, float width, float height, int mouseX, int mouseY, float partialTicks);
 
     public abstract boolean mouseClicked(double mouseX, double mouseY, int button);
+
+    public boolean mouseDragged(double mouseX, double mouseY, int button, double deltaX, double deltaY) {
+        return false;
+    }
+
+    public boolean mouseReleased(double mouseX, double mouseY, int button) {
+        return false;
+    }
 }

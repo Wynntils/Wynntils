@@ -17,6 +17,7 @@ public class TextConfigOptionElement extends ConfigOptionElement {
     private boolean lastParseSuccessful = false;
 
     protected final float renderHeight;
+    public static final int X_OFFSET = -213;
 
     protected TextConfigOptionElement(ConfigHolder configHolder, WynntilsBookSettingsScreen screen, int renderWidth) {
         super(configHolder);
@@ -45,6 +46,16 @@ public class TextConfigOptionElement extends ConfigOptionElement {
     @Override
     public boolean mouseClicked(double mouseX, double mouseY, int button) {
         return textInputBoxWidget.mouseClicked(mouseX, mouseY, button);
+    }
+
+    @Override
+    public boolean mouseDragged(double mouseX, double mouseY, int button, double deltaX, double deltaY) {
+        return textInputBoxWidget.mouseDragged(mouseX, mouseY, button, deltaX, deltaY);
+    }
+
+    @Override
+    public boolean mouseReleased(double mouseX, double mouseY, int button) {
+        return textInputBoxWidget.mouseReleased(mouseX, mouseY, button);
     }
 
     private void onTextInputUpdate(String textInput) {

@@ -119,6 +119,18 @@ public class ConfigButton extends WynntilsButton {
     }
 
     @Override
+    public boolean mouseDragged(double mouseX, double mouseY, int button, double deltaX, double deltaY) {
+        return configOptionElement.mouseDragged(mouseX, mouseY, button, deltaX, deltaY)
+                || super.mouseDragged(mouseX, mouseY, button, deltaX, deltaY);
+    }
+
+    @Override
+    public boolean mouseReleased(double mouseX, double mouseY, int button) {
+        return configOptionElement.mouseReleased(mouseX, mouseY, button)
+                || super.mouseReleased(mouseX, mouseY, button);
+    }
+
+    @Override
     public void onPress() {
         // noop
     }
