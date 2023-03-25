@@ -362,7 +362,7 @@ public class TextInputBoxWidget extends AbstractWidget {
 
             textBoxInput =
                     textBoxInput.substring(0, Math.max(0, cursorPosition - 1)) + textBoxInput.substring(cursorPosition);
-            setCursorPosition(cursorPosition - 1);
+            setCursorAndHighlightPositions(cursorPosition - 1);
             this.onUpdateConsumer.accept(this.getTextBoxInput());
             return true;
         }
