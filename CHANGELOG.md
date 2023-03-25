@@ -1,9 +1,21 @@
+## [0.0.2-alpha.379](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.378...v0.0.2-alpha.379) (2023-03-25)
+
+
+### New Features
+
+* Add stopwatch ([#1374](https://github.com/Wynntils/Artemis/issues/1374)) ([edd9359](https://github.com/Wynntils/Artemis/commit/edd9359e42d856ab6beba832e5a934f6151fe86e))
+
 ## [0.0.2-alpha.378](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.377...v0.0.2-alpha.378) (2023-03-25)
 
 
 ### New Features
 
 * Stop playing token bell sound after a while ([#1376](https://github.com/Wynntils/Artemis/issues/1376)) ([e417a02](https://github.com/Wynntils/Artemis/commit/e417a027e3d63c4ee58fd269b0430fa8bc23dfd3))
+
+
+### Miscellaneous Chores
+
+* **release:** v0.0.2-alpha.378 [skip ci] ([3de809a](https://github.com/Wynntils/Artemis/commit/3de809a7132fc3a5de0be504bdb5a4e70a67a659))
 
 ## [0.0.2-alpha.377](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.376...v0.0.2-alpha.377) (2023-03-25)
 
@@ -40,12 +52,4 @@
 ### Miscellaneous Chores
 
 * **release:** v0.0.2-alpha.375 [skip ci] ([17b990c](https://github.com/Wynntils/Artemis/commit/17b990c25dbc4b74f897733d0b58fcc72f6d7a69))
-
-## [0.0.2-alpha.374](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.373...v0.0.2-alpha.374) (2023-03-24)
-
-
-### Miscellaneous Chores
-
-* **release:** v0.0.2-alpha.374 [skip ci] ([43b4d4a](https://github.com/Wynntils/Artemis/commit/43b4d4ad75c22030d0ce695ebf281fb9d1e85140))
-* Use MixinExtras 0.2.0-beta.5 ([#1369](https://github.com/Wynntils/Artemis/issues/1369)) ([a1413b3](https://github.com/Wynntils/Artemis/commit/a1413b3b17d2d06c4fa40f7b4d36f1f1781a2944))
 
