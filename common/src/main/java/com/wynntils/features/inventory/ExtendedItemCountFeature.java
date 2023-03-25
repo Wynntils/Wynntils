@@ -16,7 +16,6 @@ import com.wynntils.mc.event.SlotRenderEvent;
 import com.wynntils.models.items.WynnItem;
 import com.wynntils.models.items.properties.CountedItemProperty;
 import com.wynntils.models.items.properties.LeveledItemProperty;
-import com.wynntils.utils.colors.CustomColor;
 import com.wynntils.utils.mc.KeyboardUtils;
 import java.util.Optional;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
@@ -52,14 +51,13 @@ public class ExtendedItemCountFeature extends Feature {
 
         WynnItem wynnItem = wynnItemOpt.get();
 
-        int count;
-        CustomColor countColor;
         if (wynnItem instanceof LeveledItemProperty leveledItem
                 && KeyboardUtils.isKeyDown(GLFW.GLFW_KEY_LEFT_CONTROL)
                 && isInventory) {
             event.setCountString(String.valueOf(leveledItem.getLevel()));
         } else if (wynnItem instanceof CountedItemProperty countedItem && countedItem.hasCount()) {
-            event.setCountString(String.valueOf(countedItem.getCount()));
+            event.setCountString(
+                    String.valueOf(countedItem.getCount() * event.getItemStack().getCount()));
             event.setCountColor(countedItem.getCountColor().asInt());
         }
     }
