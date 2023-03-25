@@ -1,9 +1,21 @@
+## [0.0.2-alpha.378](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.377...v0.0.2-alpha.378) (2023-03-25)
+
+
+### New Features
+
+* Stop playing token bell sound after a while ([#1376](https://github.com/Wynntils/Artemis/issues/1376)) ([e417a02](https://github.com/Wynntils/Artemis/commit/e417a027e3d63c4ee58fd269b0430fa8bc23dfd3))
+
 ## [0.0.2-alpha.377](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.376...v0.0.2-alpha.377) (2023-03-25)
 
 
 ### Bug Fixes
 
 * Fix regression where soul points, skill points etc were way off ([#1378](https://github.com/Wynntils/Artemis/issues/1378)) ([9b9a386](https://github.com/Wynntils/Artemis/commit/9b9a386edd4c3d9ff78d4885dbf0e7ddfc48e6c7))
+
+
+### Miscellaneous Chores
+
+* **release:** v0.0.2-alpha.377 [skip ci] ([2dd154e](https://github.com/Wynntils/Artemis/commit/2dd154ed5005ee72f2002c0ec3695ab2471b8847))
 
 ## [0.0.2-alpha.376](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.375...v0.0.2-alpha.376) (2023-03-25)
 
@@ -36,16 +48,4 @@
 
 * **release:** v0.0.2-alpha.374 [skip ci] ([43b4d4a](https://github.com/Wynntils/Artemis/commit/43b4d4ad75c22030d0ce695ebf281fb9d1e85140))
 * Use MixinExtras 0.2.0-beta.5 ([#1369](https://github.com/Wynntils/Artemis/issues/1369)) ([a1413b3](https://github.com/Wynntils/Artemis/commit/a1413b3b17d2d06c4fa40f7b4d36f1f1781a2944))
-
-## [0.0.2-alpha.373](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.372...v0.0.2-alpha.373) (2023-03-24)
-
-
-### Bug Fixes
-
-* Fix token pattern ([#1371](https://github.com/Wynntils/Artemis/issues/1371)) ([cb6b1d9](https://github.com/Wynntils/Artemis/commit/cb6b1d9233abecc075df8764f58d6bffcc154da7))
-
-
-### Miscellaneous Chores
-
-* **release:** v0.0.2-alpha.373 [skip ci] ([6b594e0](https://github.com/Wynntils/Artemis/commit/6b594e05ed58a8663ca2db6757745ea84b61680e))
 
