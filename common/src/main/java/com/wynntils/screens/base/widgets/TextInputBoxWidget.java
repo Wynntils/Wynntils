@@ -151,7 +151,7 @@ public class TextInputBoxWidget extends AbstractWidget {
                         VerticalAlignment.Middle,
                         TextShadow.NORMAL);
 
-        drawCursor(poseStack, font.width(renderedText.substring(0, cursorPosition)), (2*this.height + textPadding) / 2, false);
+        drawCursor(poseStack, font.width(renderedText.substring(0, cursorPosition)), (2*this.height + textPadding) / 2, VerticalAlignment.Middle, false);
 
         poseStack.popPose();
     }
@@ -448,7 +448,7 @@ public class TextInputBoxWidget extends AbstractWidget {
     @Override
     public void updateWidgetNarration(NarrationElementOutput narrationElementOutput) {}
 
-    protected void drawCursor(PoseStack poseStack, int x, int y, boolean forceUnfocusedCursor) {
+    protected void drawCursor(PoseStack poseStack, float x, float y, VerticalAlignment verticalAlignment, boolean forceUnfocusedCursor) {
         if (isDragging || hasHighlighted()) return;
 
         if (System.currentTimeMillis() - lastCursorSwitch > 350) {
@@ -458,7 +458,11 @@ public class TextInputBoxWidget extends AbstractWidget {
 
         if ((isFocused() || forceUnfocusedCursor) && renderCursor) {
             Font font = FontRenderer.getInstance().getFont();
-            RenderUtils.drawRect(poseStack, CommonColors.WHITE, x + 1, (float) (y - (font.lineHeight + textPadding + (0.5 * font.lineHeight + textPadding))), 10, 1, font.lineHeight + 3);
+            RenderUtils.drawRect(poseStack, CommonColors.WHITE, x + 1, switch (verticalAlignment) {
+                case Top -> y - 2;
+                case Middle -> y + (font.lineHeight - 8) / 2;
+                case Bottom -> y + font.lineHeight - 9;
+            }, 10, 1, font.lineHeight + 3);
         }
     }
 
