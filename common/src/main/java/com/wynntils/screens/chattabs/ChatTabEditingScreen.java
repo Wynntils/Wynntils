@@ -292,16 +292,6 @@ public final class ChatTabEditingScreen extends WynntilsScreen implements Textbo
     public boolean mouseClicked(double mouseX, double mouseY, int button) {
         super.mouseClicked(mouseX, mouseY, button);
 
-        //        for (GuiEventListener widget : children()) {
-        //            if (widget instanceof TextInputBoxWidget textInputBoxWidget) {
-        //                if (textInputBoxWidget.isMouseOver(mouseX, mouseY)) {
-        //                    setFocusedTextInput(textInputBoxWidget);
-        //                    textInputBoxWidget.changeFocus(true);
-        //                    return true;
-        //                }
-        //            }
-        //        }
-
         updateSaveStatus();
 
         return true;
