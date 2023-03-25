@@ -52,7 +52,7 @@ public class AuraTimerOverlayFeature extends Feature {
 
     public static class AuraTimerOverlay extends TextOverlay {
         private static final String TEMPLATE =
-                "{IF_STRING(GTE(AURA_TIMER; 0); CONCAT(\"Aura: : \"; STRING(AURA_TIMER:1); \"s\"); \"\")}";
+                "{if_string(gte(aura_timer; 0); concat(\"Aura: : \"; string(aura_timer:1); \"s\"); \"\")}";
 
         @RegisterConfig
         public final Config<CustomColor> textColor = new Config<>(CommonColors.ORANGE);
