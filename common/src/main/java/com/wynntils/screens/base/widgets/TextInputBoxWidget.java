@@ -47,6 +47,8 @@ public class TextInputBoxWidget extends AbstractWidget {
     private final int maxTextWidth = this.width - 8;
     protected int textPadding = 2;
 
+    private static final int CURSOR_PADDING = 3;
+
     protected TextInputBoxWidget(
             int x,
             int y,
@@ -151,7 +153,7 @@ public class TextInputBoxWidget extends AbstractWidget {
                         VerticalAlignment.Middle,
                         TextShadow.NORMAL);
 
-        drawCursor(poseStack, font.width(renderedText.substring(0, cursorPosition)), (2*this.height + textPadding) / 2, VerticalAlignment.Middle, false);
+        drawCursor(poseStack, font.width(renderedText.substring(0, cursorPosition)), (textPadding + this.height - textPadding) / 2, VerticalAlignment.Middle, false);
 
         poseStack.popPose();
     }
@@ -459,9 +461,9 @@ public class TextInputBoxWidget extends AbstractWidget {
         if ((isFocused() || forceUnfocusedCursor) && renderCursor) {
             Font font = FontRenderer.getInstance().getFont();
             RenderUtils.drawRect(poseStack, CommonColors.WHITE, x + 1, switch (verticalAlignment) {
-                case Top -> y - 2;
-                case Middle -> y + (font.lineHeight - 8) / 2;
-                case Bottom -> y + font.lineHeight - 9;
+                case Top -> y - (CURSOR_PADDING - 1);
+                case Middle -> y - font.lineHeight + (CURSOR_PADDING - 1);
+                case Bottom -> y - font.lineHeight - (CURSOR_PADDING - 1); // FIXME: this is untested! no existing text box uses bottom alignment
             }, 10, 1, font.lineHeight + 3);
         }
     }
