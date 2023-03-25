@@ -255,11 +255,7 @@ public class TextInputBoxWidget extends AbstractWidget {
 
     @Override
     public boolean mouseReleased(double mouseX, double mouseY, int button) {
-        if (isDragging) {
-            isDragging = false;
-            setCursorPosition(getIndexAtPosition(mouseX));
-        }
-
+        isDragging = false;
         return true;
     }
 
@@ -276,41 +272,18 @@ public class TextInputBoxWidget extends AbstractWidget {
         mouseX -= this.getX(); // mouseX is actually just the x position of the mouse relative to the screen, not the textbox
         Font font = FontRenderer.getInstance().getFont();
         Pair<String, Integer> renderedTextDetails = getRenderedText(maxTextWidth, false);
-        String renderedText = renderedTextDetails.a();
+        String renderedText = renderedTextDetails.a().replace(String.valueOf(getCursorChar()), ""); // do not include cursor in width calculations
         int startingIndex = renderedTextDetails.b();
 
-        // Width so far at index i
-        List<Float> widths = new ArrayList<>();
-        for (int i = 0; i < renderedText.length(); i++) {
-            // we are using stringWidth here because we need precision; if we use width, it will round to the nearest
-            // integer, which will cause strange behaviour when clicking on letters
-            widths.add(font.getSplitter().stringWidth(renderedText.substring(0, i)));
-        }
-
-        // get nearest width that's in the map
-        // FIXME: this is probably really slow and bad, but I am just a first year cs student and I have not taken
-        // data structures & algorithms yet so I don't know how to do this better
         mouseX -= textPadding; // Account for padding
+        if (mouseX > font.getSplitter().stringWidth(renderedText)) { // Mouse is past the end of the text, return the end of the text
+            return startingIndex + renderedText.length();
+        } else if (mouseX < 0) { // Mouse is before the start of the text, return the start of the text
+            return startingIndex;
+        }
         System.out.println(mouseX);
         System.out.println(RenderedStringUtils.getMaxFittingText(renderedText, (float) mouseX, font, false));
         return RenderedStringUtils.getMaxFittingText(renderedText, (float) mouseX, font, false).length() - 1 + startingIndex;
-
-//        if (mouseX > font.getSplitter().stringWidth(renderedText)) { // Mouse is past the end of the text, return the end of the text
-//            return startingIndex + renderedText.length();
-//        } else if (mouseX < 0) { // Mouse is before the start of the text, return the start of the text
-//            return startingIndex;
-//        }
-//
-//        int closestWidthCharIndex = 0;
-//        double closestWidth = 999999; // Arbitrary large number, there is no way the text will be this wide
-//        for (float stringWidthSoFar : widths) {
-//            double widthDiff = Math.abs(stringWidthSoFar - mouseX);
-//            if (widthDiff < closestWidth) {
-//                closestWidth = widthDiff;
-//                closestWidthCharIndex = widths.indexOf(stringWidthSoFar);
-//            }
-//        }
-//        return closestWidthCharIndex + startingIndex;
     }
 
     @Override
