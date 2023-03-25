@@ -95,7 +95,7 @@ public class TextInputBoxWidget extends AbstractWidget {
         RenderUtils.drawRect(poseStack, CommonColors.BLACK, 0, 0, 0, this.width, this.height);
         RenderUtils.drawRectBorders(poseStack, CommonColors.GRAY, 0, 0, this.width, this.height, 0, 2);
 
-        Pair<String, Integer> renderedTextDetails = getRenderedText(maxTextWidth, false);
+        Pair<String, Integer> renderedTextDetails = getRenderedText(maxTextWidth);
         String renderedText = renderedTextDetails.a();
 
         Pair<Integer, Integer> highlightedOutputInterval = getRenderedHighlighedInterval(renderedText, renderedTextDetails.b());
@@ -160,7 +160,7 @@ public class TextInputBoxWidget extends AbstractWidget {
      * Determines the text to render based on cursor position and maxTextWidth
      * @return The text to render, and the starting position of the text within the entire text
      */
-    protected Pair<String, Integer> getRenderedText(float maxTextWidth, boolean forceUnfocusedCursor) {
+    protected Pair<String, Integer> getRenderedText(float maxTextWidth) {
         Font font = FontRenderer.getInstance().getFont();
 
         if (font.width(textBoxInput) < maxTextWidth) {
@@ -214,12 +214,6 @@ public class TextInputBoxWidget extends AbstractWidget {
                     Math.min(renderedInterval.b(), highlightedInterval.b()) + shift);
         }
 
-        if (cursorPosition < highlightPosition && renderCursor) {
-            // when dragging from right to left, the cursor ends up in the highlight
-            // avoid this by moving highlight right
-            highlightedOutputInterval = Pair.of(highlightedOutputInterval.a() + 1, highlightedOutputInterval.b() + 1);
-        }
-
         if (highlightedOutputInterval.a() < 0) {
             highlightedOutputInterval = Pair.of(0, highlightedOutputInterval.b());
         }
@@ -264,7 +258,7 @@ public class TextInputBoxWidget extends AbstractWidget {
     protected int getIndexAtPosition(double mouseX) {
         mouseX -= this.getX(); // mouseX is actually just the x position of the mouse relative to the screen, not the textbox
         Font font = FontRenderer.getInstance().getFont();
-        Pair<String, Integer> renderedTextDetails = getRenderedText(maxTextWidth, false);
+        Pair<String, Integer> renderedTextDetails = getRenderedText(maxTextWidth);
         String renderedText = renderedTextDetails.a();
         int startingIndex = renderedTextDetails.b();
 

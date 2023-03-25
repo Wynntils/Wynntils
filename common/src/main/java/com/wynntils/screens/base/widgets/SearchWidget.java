@@ -45,7 +45,7 @@ public class SearchWidget extends TextInputBoxWidget {
 
         boolean defaultText = Objects.equals(textBoxInput, "") && !isFocused();
 
-        Pair<String, Integer> renderedTextDetails = getRenderedText(this.width - 18, true);
+        Pair<String, Integer> renderedTextDetails = getRenderedText(this.width - 18);
         String renderedText = renderedTextDetails.a();
 
         Pair<Integer, Integer> highlightedOutputInterval = getRenderedHighlighedInterval(renderedText, renderedTextDetails.b());
