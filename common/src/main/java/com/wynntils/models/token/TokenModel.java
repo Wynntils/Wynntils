@@ -15,6 +15,7 @@ import com.wynntils.models.items.items.game.MiscItem;
 import com.wynntils.models.token.event.TokenGatekeeperEvent;
 import com.wynntils.models.token.type.TokenGatekeeper;
 import com.wynntils.models.worlds.event.WorldStateEvent;
+import com.wynntils.utils.MathUtils;
 import com.wynntils.utils.mc.type.Location;
 import com.wynntils.utils.type.CappedValue;
 import com.wynntils.utils.type.TimedSet;
@@ -34,6 +35,9 @@ import net.minecraftforge.eventbus.api.SubscribeEvent;
 public class TokenModel extends Model {
     private static final Pattern TOA_GATEKEEPER_NAME_PATTERN =
             Pattern.compile("^§2Floormaster \\[Floor (\\d+), Level (\\d+)\\]$");
+    private static final Pattern HIVE_GATEKEEPER_NAME_PATTERN =
+            Pattern.compile("^§2(.*) Catalyst Collector (\\d+)$");
+
     private static final Pattern TOKEN_PATTERN = Pattern.compile("^§a(\\d+)§2/(\\d+)(?:§r)?$");
     private static final Pattern TYPE_PATTERN = Pattern.compile("^§7Get §[e6]\\[(?:(\\d+) )?(.*)\\]$");
     private static final String VERIFICATION_STRING = "§7Right-click to add";
@@ -136,6 +140,20 @@ public class TokenModel extends Model {
             addGatekeeper(
                     event.getEntity().getId(),
                     new TokenGatekeeper(gatekeeperTokenName, itemName, location, new CappedValue(0, maxTokens)));
+        }
+
+        Matcher hiveMatcher = HIVE_GATEKEEPER_NAME_PATTERN.matcher(name);
+        if (hiveMatcher.matches()) {
+            String division = hiveMatcher.group(1);
+            int level = Integer.parseInt(hiveMatcher.group(2));
+            int maxTokens = level == 10 ? 1 : 5;
+            Location location =
+                    Location.containing(event.getEntity().position()).offset(0, 3, 0);
+
+            String tokenName = division + " Catalyst " + MathUtils.toRoman(level);
+            addGatekeeper(
+                    event.getEntity().getId(),
+                    new TokenGatekeeper(tokenName, location, new CappedValue(0, maxTokens)));
         }
     }
 
