@@ -4,6 +4,7 @@
  */
 package com.wynntils.functions;
 
+import com.wynntils.core.components.Models;
 import com.wynntils.core.functions.Function;
 import com.wynntils.core.functions.arguments.FunctionArguments;
 import com.wynntils.utils.SystemUtils;
@@ -43,6 +44,56 @@ public class EnvironmentFunctions {
             LocalDateTime date = LocalDateTime.now();
             DateTimeFormatter formatter = DateTimeFormatter.ofPattern("HH:mm:ss", Locale.ROOT);
             return date.format(formatter);
+        }
+    }
+
+    public static class StopwatchZero extends Function<Boolean> {
+        @Override
+        public Boolean getValue(FunctionArguments arguments) {
+            return Models.Stopwatch.getHours() == 0
+                    && Models.Stopwatch.getMinutes() == 0
+                    && Models.Stopwatch.getSeconds() == 0
+                    && Models.Stopwatch.getMilliseconds() == 0;
+        }
+
+        @Override
+        public List<String> getAliases() {
+            return List.of("stopwatch_is_zero");
+        }
+    }
+
+    public static class StopwatchRunningFunction extends Function<Boolean> {
+        @Override
+        public Boolean getValue(FunctionArguments arguments) {
+            return Models.Stopwatch.isRunning();
+        }
+    }
+
+    public static class StopwatchHoursFunction extends Function<String> {
+        @Override
+        public String getValue(FunctionArguments arguments) {
+            return String.format("%02d", Models.Stopwatch.getHours());
+        }
+    }
+
+    public static class StopwatchMinutesFunction extends Function<String> {
+        @Override
+        public String getValue(FunctionArguments arguments) {
+            return String.format("%02d", Models.Stopwatch.getMinutes());
+        }
+    }
+
+    public static class StopwatchSecondsFunction extends Function<String> {
+        @Override
+        public String getValue(FunctionArguments arguments) {
+            return String.format("%02d", Models.Stopwatch.getSeconds());
+        }
+    }
+
+    public static class StopwatchMillisecondsFunction extends Function<String> {
+        @Override
+        public String getValue(FunctionArguments arguments) {
+            return String.format("%03d", Models.Stopwatch.getMilliseconds());
         }
     }
 
