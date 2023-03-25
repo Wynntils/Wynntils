@@ -268,8 +268,8 @@ public final class WynntilsBookSettingsScreen extends WynntilsScreen implements 
         }
 
         for (int i = configurableScrollOffset * CONFIGURABLES_PER_PAGE;
-             i < Math.min(configurables.size(), (configurableScrollOffset + 1) * CONFIGURABLES_PER_PAGE);
-             i++) {
+                i < Math.min(configurables.size(), (configurableScrollOffset + 1) * CONFIGURABLES_PER_PAGE);
+                i++) {
             WynntilsButton featureButton = configurables.get(i);
             featureButton.mouseReleased(adjustedMouseX, adjustedMouseY, button);
         }
@@ -300,8 +300,8 @@ public final class WynntilsBookSettingsScreen extends WynntilsScreen implements 
         }
 
         for (int i = configurableScrollOffset * CONFIGURABLES_PER_PAGE;
-             i < Math.min(configurables.size(), (configurableScrollOffset + 1) * CONFIGURABLES_PER_PAGE);
-             i++) {
+                i < Math.min(configurables.size(), (configurableScrollOffset + 1) * CONFIGURABLES_PER_PAGE);
+                i++) {
             WynntilsButton featureButton = configurables.get(i);
             featureButton.mouseDragged(adjustedMouseX, adjustedMouseY, button, dragX, dragY);
         }

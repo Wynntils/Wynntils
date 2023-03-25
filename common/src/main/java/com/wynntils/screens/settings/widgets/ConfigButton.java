@@ -126,8 +126,7 @@ public class ConfigButton extends WynntilsButton {
 
     @Override
     public boolean mouseReleased(double mouseX, double mouseY, int button) {
-        return configOptionElement.mouseReleased(mouseX, mouseY, button)
-                || super.mouseReleased(mouseX, mouseY, button);
+        return configOptionElement.mouseReleased(mouseX, mouseY, button) || super.mouseReleased(mouseX, mouseY, button);
     }
 
     @Override

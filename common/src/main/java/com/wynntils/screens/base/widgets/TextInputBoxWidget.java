@@ -235,7 +235,8 @@ public class TextInputBoxWidget extends AbstractWidget {
         McUtils.playSound(SoundEvents.UI_BUTTON_CLICK.value());
 
         if (this.isHovered) {
-            setCursorAndHighlightPositions(getIndexAtPosition(mouseX, (this.getX() == 0) ? TextConfigOptionElement.X_OFFSET : 0));
+            setCursorAndHighlightPositions(
+                    getIndexAtPosition(mouseX, (this.getX() == 0) ? TextConfigOptionElement.X_OFFSET : 0));
             isDragging = true;
             textboxScreen.setFocusedTextInput(this);
             this.setFocused(true);
@@ -270,7 +271,8 @@ public class TextInputBoxWidget extends AbstractWidget {
      * their own x position (rendering this.getX() useless).
      */
     protected int getIndexAtPosition(double mouseX, int offset) {
-        mouseX -= this.getX(); // mouseX is actually just the x position of the mouse relative to the screen, not the textbox
+        mouseX -= this.getX(); // mouseX is actually just the x position of the mouse relative to the screen, not the
+        // textbox
         mouseX += offset;
 
         Font font = FontRenderer.getInstance().getFont();
