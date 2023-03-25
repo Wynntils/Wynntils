@@ -27,7 +27,6 @@ import java.util.stream.Collectors;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.components.Checkbox;
-import net.minecraft.client.gui.components.events.GuiEventListener;
 import net.minecraft.client.gui.screens.ChatScreen;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.resources.language.I18n;
@@ -293,15 +292,15 @@ public final class ChatTabEditingScreen extends WynntilsScreen implements Textbo
     public boolean mouseClicked(double mouseX, double mouseY, int button) {
         super.mouseClicked(mouseX, mouseY, button);
 
-//        for (GuiEventListener widget : children()) {
-//            if (widget instanceof TextInputBoxWidget textInputBoxWidget) {
-//                if (textInputBoxWidget.isMouseOver(mouseX, mouseY)) {
-//                    setFocusedTextInput(textInputBoxWidget);
-//                    textInputBoxWidget.changeFocus(true);
-//                    return true;
-//                }
-//            }
-//        }
+        //        for (GuiEventListener widget : children()) {
+        //            if (widget instanceof TextInputBoxWidget textInputBoxWidget) {
+        //                if (textInputBoxWidget.isMouseOver(mouseX, mouseY)) {
+        //                    setFocusedTextInput(textInputBoxWidget);
+        //                    textInputBoxWidget.changeFocus(true);
+        //                    return true;
+        //                }
+        //            }
+        //        }
 
         updateSaveStatus();
 
