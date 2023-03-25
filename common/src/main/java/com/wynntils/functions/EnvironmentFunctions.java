@@ -47,6 +47,18 @@ public class EnvironmentFunctions {
         }
     }
 
+    public static class StopwatchZero extends Function<Boolean> {
+        @Override
+        public Boolean getValue(FunctionArguments arguments) {
+            return Models.Stopwatch.getHours() == 0 && Models.Stopwatch.getMinutes() == 0 && Models.Stopwatch.getSeconds() == 0 && Models.Stopwatch.getMilliseconds() == 0;
+        }
+
+        @Override
+        public List<String> getAliases() {
+            return List.of("stopwatch_is_zero");
+        }
+    }
+
     public static class StopwatchRunningFunction extends Function<Boolean> {
         @Override
         public Boolean getValue(FunctionArguments arguments) {

@@ -1152,6 +1152,8 @@
   "function.wynntils.soulpointTimerM.name": "SP[m]",
   "function.wynntils.soulpointTimerS.description": "Time until next soul point (seconds)",
   "function.wynntils.soulpointTimerS.name": "SP[s]",
+  "function.wynntils.stopwatchZero.name": "Stopwatch Zero",
+    "function.wynntils.stopwatchZero.description": "Whether the stopwatch is currently at zero",
   "function.wynntils.stopwatchHours.name": "Stopwatch Hours",
     "function.wynntils.stopwatchMinutes.name": "Stopwatch Minutes",
     "function.wynntils.stopwatchSeconds.name": "Stopwatch Seconds",
