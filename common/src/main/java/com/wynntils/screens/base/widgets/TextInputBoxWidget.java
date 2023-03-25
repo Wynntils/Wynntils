@@ -18,14 +18,11 @@ import com.wynntils.utils.render.type.TextShadow;
 import com.wynntils.utils.render.type.VerticalAlignment;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.function.Consumer;
 
 import com.wynntils.utils.type.Pair;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.StringSplitter;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.components.AbstractWidget;
 import net.minecraft.client.gui.narration.NarrationElementOutput;
@@ -37,7 +34,6 @@ import org.lwjgl.glfw.GLFW;
 
 // FIXME: Add selection support to this class to be a fully working text box
 public class TextInputBoxWidget extends AbstractWidget {
-    private static final char DEFAULT_CURSOR_CHAR = '|';
     private final Consumer<String> onUpdateConsumer;
     protected String textBoxInput = "";
     protected int cursorPosition = 0;
@@ -108,9 +104,10 @@ public class TextInputBoxWidget extends AbstractWidget {
         String highlightedPortion = renderedText.substring(highlightedOutputInterval.a(), highlightedOutputInterval.b());
         String lastPortion = renderedText.substring(highlightedOutputInterval.b());
 
-        int firstWidth = FontRenderer.getInstance().getFont().width(firstPortion);
-        int highlightedWidth = FontRenderer.getInstance().getFont().width(highlightedPortion);
-        int lastWidth = FontRenderer.getInstance().getFont().width(lastPortion);
+        Font font = FontRenderer.getInstance().getFont();
+        int firstWidth = font.width(firstPortion);
+        int highlightedWidth = font.width(highlightedPortion);
+        int lastWidth = font.width(lastPortion);
 
         FontRenderer.getInstance()
                         .renderAlignedTextInBox(
@@ -154,6 +151,7 @@ public class TextInputBoxWidget extends AbstractWidget {
                         VerticalAlignment.Middle,
                         TextShadow.NORMAL);
 
+        drawCursor(poseStack, font.width(renderedText.substring(0, cursorPosition)), (2*this.height + textPadding) / 2, false);
 
         poseStack.popPose();
     }
@@ -165,19 +163,15 @@ public class TextInputBoxWidget extends AbstractWidget {
     protected Pair<String, Integer> getRenderedText(float maxTextWidth, boolean forceUnfocusedCursor) {
         Font font = FontRenderer.getInstance().getFont();
 
-        String cursorChar = getRenderCursorChar(forceUnfocusedCursor);
-        final int cursorWidth = font.width(cursorChar);
-
-        String entireText = textBoxInput.substring(0, cursorPosition) + cursorChar + textBoxInput.substring(cursorPosition);
-        if (font.width(entireText) < maxTextWidth) {
-            return Pair.of(entireText, 0);
+        if (font.width(textBoxInput) < maxTextWidth) {
+            return Pair.of(textBoxInput, 0);
         }
 
         StringBuilder builder = new StringBuilder();
 
         // First append to the left of the cursor
         int stringPosition = cursorPosition - 1;
-        while (font.width(builder.toString()) < maxTextWidth - cursorWidth && stringPosition >= 0) {
+        while (font.width(builder.toString()) < maxTextWidth && stringPosition >= 0) {
             builder.append(textBoxInput.charAt(stringPosition));
 
             stringPosition--;
@@ -186,11 +180,10 @@ public class TextInputBoxWidget extends AbstractWidget {
 
         // Now reverse so it's actually to the left
         builder.reverse();
-        builder.append(cursorChar);
 
         // Now append to the right of the cursor
         stringPosition = cursorPosition;
-        while (font.width(builder.toString()) < maxTextWidth - cursorWidth
+        while (font.width(builder.toString()) < maxTextWidth
                 && stringPosition < this.textBoxInput.length()) {
             builder.append(textBoxInput.charAt(stringPosition));
 
@@ -272,18 +265,36 @@ public class TextInputBoxWidget extends AbstractWidget {
         mouseX -= this.getX(); // mouseX is actually just the x position of the mouse relative to the screen, not the textbox
         Font font = FontRenderer.getInstance().getFont();
         Pair<String, Integer> renderedTextDetails = getRenderedText(maxTextWidth, false);
-        String renderedText = renderedTextDetails.a().replace(String.valueOf(getCursorChar()), ""); // do not include cursor in width calculations
+        String renderedText = renderedTextDetails.a();
         int startingIndex = renderedTextDetails.b();
 
+        List<Float> widths = new ArrayList<>();
+        for (int i = 0; i < renderedText.length(); i++) {
+            // we are using stringWidth here because we need precision; if we use width, it will round to the nearest
+            // integer, which will cause strange behaviour when clicking on letters
+            widths.add(font.getSplitter().stringWidth(renderedText.substring(0, i)));
+        }
+
+        // get nearest width index to mouseX
+        // FIXME: this is probably really slow and bad, but I am just a first year cs student and I have not taken
+        // data structures & algorithms yet so I don't know how to do this better
         mouseX -= textPadding; // Account for padding
         if (mouseX > font.getSplitter().stringWidth(renderedText)) { // Mouse is past the end of the text, return the end of the text
             return startingIndex + renderedText.length();
         } else if (mouseX < 0) { // Mouse is before the start of the text, return the start of the text
             return startingIndex;
         }
-        System.out.println(mouseX);
-        System.out.println(RenderedStringUtils.getMaxFittingText(renderedText, (float) mouseX, font, false));
-        return RenderedStringUtils.getMaxFittingText(renderedText, (float) mouseX, font, false).length() - 1 + startingIndex;
+
+        int closestWidthCharIndex = 0;
+        double closestWidth = 999999; // Arbirarily large number, there is no way the text will be this wide
+        for (float stringWidthSoFar : widths) {
+            double widthDiff = Math.abs(stringWidthSoFar - mouseX);
+            if (widthDiff < closestWidth) {
+                closestWidth = widthDiff;
+                closestWidthCharIndex = widths.indexOf(stringWidthSoFar);
+            }
+        }
+        return closestWidthCharIndex + startingIndex;
     }
 
     @Override
@@ -443,17 +454,18 @@ public class TextInputBoxWidget extends AbstractWidget {
     @Override
     public void updateWidgetNarration(NarrationElementOutput narrationElementOutput) {}
 
-    private String getRenderCursorChar(boolean forceUnfocusedCursor) {
-        if (isDragging || hasHighlighted()) return "";
+    protected void drawCursor(PoseStack poseStack, int x, int y, boolean forceUnfocusedCursor) {
+        if (isDragging || hasHighlighted()) return;
 
-        String cursorChar;
         if (System.currentTimeMillis() - lastCursorSwitch > 350) {
             renderCursor = !renderCursor;
             lastCursorSwitch = System.currentTimeMillis();
         }
 
-        cursorChar = (isFocused() || forceUnfocusedCursor) && renderCursor ? String.valueOf(this.getCursorChar()) : "";
-        return cursorChar;
+        if ((isFocused() || forceUnfocusedCursor) && renderCursor) {
+            Font font = FontRenderer.getInstance().getFont();
+            RenderUtils.drawRect(poseStack, CommonColors.WHITE, x + 1, (float) (y - (font.lineHeight + textPadding + (0.5 * font.lineHeight + textPadding))), 10, 1, font.lineHeight + 3);
+        }
     }
 
     protected void removeFocus() {
@@ -484,10 +496,6 @@ public class TextInputBoxWidget extends AbstractWidget {
     public void setCursorAndHighlightPositions(int pos) {
         this.cursorPosition = MathUtils.clamp(pos, 0, textBoxInput.length());
         this.highlightPosition = this.cursorPosition;
-    }
-
-    private char getCursorChar() {
-        return this.DEFAULT_CURSOR_CHAR;
     }
 
     public String getTextBoxInput() {
