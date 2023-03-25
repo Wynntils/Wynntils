@@ -12,11 +12,10 @@ import com.wynntils.utils.render.FontRenderer;
 import com.wynntils.utils.render.RenderUtils;
 import com.wynntils.utils.render.type.HorizontalAlignment;
 import com.wynntils.utils.render.type.TextShadow;
-import java.util.Objects;
-import java.util.function.Consumer;
-
 import com.wynntils.utils.render.type.VerticalAlignment;
 import com.wynntils.utils.type.Pair;
+import java.util.Objects;
+import java.util.function.Consumer;
 import net.minecraft.client.gui.Font;
 import net.minecraft.network.chat.Component;
 import net.minecraft.sounds.SoundEvents;
@@ -50,10 +49,12 @@ public class SearchWidget extends TextInputBoxWidget {
         Pair<String, Integer> renderedTextDetails = getRenderedText(this.width - 18);
         String renderedText = renderedTextDetails.a();
 
-        Pair<Integer, Integer> highlightedOutputInterval = getRenderedHighlighedInterval(renderedText, renderedTextDetails.b());
+        Pair<Integer, Integer> highlightedOutputInterval =
+                getRenderedHighlighedInterval(renderedText, renderedTextDetails.b());
 
         String firstPortion = renderedText.substring(0, highlightedOutputInterval.a());
-        String highlightedPortion = renderedText.substring(highlightedOutputInterval.a(), highlightedOutputInterval.b());
+        String highlightedPortion =
+                renderedText.substring(highlightedOutputInterval.a(), highlightedOutputInterval.b());
         String lastPortion = renderedText.substring(highlightedOutputInterval.b());
 
         Font font = FontRenderer.getInstance().getFont();
@@ -101,7 +102,12 @@ public class SearchWidget extends TextInputBoxWidget {
                         HorizontalAlignment.Left,
                         TextShadow.NORMAL);
 
-        drawCursor(poseStack, this.getX() + font.width(renderedText.substring(0, cursorPosition)) + textPadding - 2, this.getY() + VERTICAL_OFFSET, VerticalAlignment.Top, true);
+        drawCursor(
+                poseStack,
+                this.getX() + font.width(renderedText.substring(0, cursorPosition)) + textPadding - 2,
+                this.getY() + VERTICAL_OFFSET,
+                VerticalAlignment.Top,
+                true);
     }
 
     @Override

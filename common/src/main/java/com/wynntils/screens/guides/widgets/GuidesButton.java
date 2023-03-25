@@ -42,7 +42,8 @@ public class GuidesButton extends WynntilsButton {
                         RenderedStringUtils.getMaxFittingText(
                                 ComponentUtils.getUnformatted(guideScreen.getTitle()),
                                 maxTextWidth,
-                                FontRenderer.getInstance().getFont(), true),
+                                FontRenderer.getInstance().getFont(),
+                                true),
                         this.getX() + 14,
                         this.getY() + 1,
                         0,

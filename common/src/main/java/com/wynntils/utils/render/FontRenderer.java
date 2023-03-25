@@ -4,13 +4,8 @@
  */
 package com.wynntils.utils.render;
 
-import com.mojang.blaze3d.platform.GlStateManager;
-import com.mojang.blaze3d.systems.RenderSystem;
-import com.mojang.blaze3d.vertex.BufferBuilder;
-import com.mojang.blaze3d.vertex.DefaultVertexFormat;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.Tesselator;
-import com.mojang.blaze3d.vertex.VertexFormat;
 import com.wynntils.mc.mixin.accessors.MinecraftAccessor;
 import com.wynntils.utils.colors.CustomColor;
 import com.wynntils.utils.mc.ComponentUtils;
@@ -21,7 +16,6 @@ import com.wynntils.utils.render.type.TextShadow;
 import com.wynntils.utils.render.type.VerticalAlignment;
 import java.util.List;
 import net.minecraft.client.gui.Font;
-import net.minecraft.client.renderer.GameRenderer;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.network.chat.FormattedText;
 import net.minecraft.network.chat.Style;
@@ -181,15 +175,14 @@ public final class FontRenderer {
                 poseStack,
                 backgroundColor,
                 renderX,
-                switch(verticalAlignment) {
+                switch (verticalAlignment) {
                     case Top -> renderY - 2;
                     case Middle -> renderY - (font.lineHeight / 2f) - 2;
                     case Bottom -> renderY - font.lineHeight + 2;
                 },
                 0,
                 font.width(text),
-                font.lineHeight + 2
-        );
+                font.lineHeight + 2);
         renderAlignedTextInBox(
                 poseStack,
                 text,
