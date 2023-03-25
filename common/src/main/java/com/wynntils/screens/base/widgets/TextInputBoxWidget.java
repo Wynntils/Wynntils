@@ -237,9 +237,11 @@ public class TextInputBoxWidget extends AbstractWidget {
             setCursorAndHighlightPositions(getIndexAtPosition(mouseX));
             isDragging = true;
             textboxScreen.setFocusedTextInput(this);
+            this.setFocused(true);
             return true;
         } else {
             setCursorAndHighlightPositions(cursorPosition); // remove highlights when clicking off
+            this.setFocused(false);
             textboxScreen.setFocusedTextInput(null);
         }
 
