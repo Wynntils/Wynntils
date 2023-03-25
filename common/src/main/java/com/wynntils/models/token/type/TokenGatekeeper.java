@@ -28,6 +28,7 @@ public final class TokenGatekeeper implements Comparable<TokenGatekeeper> {
         this.location = location;
         this.deposited = deposited;
     }
+
     public String getGatekeeperTokenName() {
         return gatekeeperTokenName;
     }

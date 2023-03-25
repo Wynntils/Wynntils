@@ -35,8 +35,7 @@ import net.minecraftforge.eventbus.api.SubscribeEvent;
 public class TokenModel extends Model {
     private static final Pattern TOA_GATEKEEPER_NAME_PATTERN =
             Pattern.compile("^§2Floormaster \\[Floor (\\d+), Level (\\d+)\\]$");
-    private static final Pattern HIVE_GATEKEEPER_NAME_PATTERN =
-            Pattern.compile("^§2(.*) Catalyst Collector (\\d+)$");
+    private static final Pattern HIVE_GATEKEEPER_NAME_PATTERN = Pattern.compile("^§2(.*) Catalyst Collector (\\d+)$");
 
     private static final Pattern TOKEN_PATTERN = Pattern.compile("^§a(\\d+)§2/(\\d+)(?:§r)?$");
     private static final Pattern TYPE_PATTERN = Pattern.compile("^§7Get §[e6]\\[(?:(\\d+) )?(.*)\\]$");
@@ -152,8 +151,7 @@ public class TokenModel extends Model {
 
             String tokenName = division + " Catalyst " + MathUtils.toRoman(level);
             addGatekeeper(
-                    event.getEntity().getId(),
-                    new TokenGatekeeper(tokenName, location, new CappedValue(0, maxTokens)));
+                    event.getEntity().getId(), new TokenGatekeeper(tokenName, location, new CappedValue(0, maxTokens)));
         }
     }
 
