@@ -358,6 +358,7 @@ public final class FunctionManager extends Manager {
         registerFunction(new WorldFunctions.TokenGatekeeperDepositedFunction());
         registerFunction(new WorldFunctions.TokenGatekeeperFunction());
         registerFunction(new WorldFunctions.TokenGatekeeperTypeFunction());
+        registerFunction(new WorldFunctions.WorldStateFunction());
 
         registerFunction(new CharacterFunctions.BpsFunction());
         registerFunction(new CharacterFunctions.BpsXzFunction());

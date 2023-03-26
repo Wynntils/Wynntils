@@ -258,7 +258,7 @@ public class CustomBarsOverlayFeature extends Feature {
         public final Config<String> valueTemplate = new Config<>("");
 
         @RegisterConfig("feature.wynntils.customBarsOverlay.overlay.customBarBase.enabledTemplate")
-        public final Config<String> enabledTemplate = new Config<>("true");
+        public final Config<String> enabledTemplate = new Config<>("string_equals(world_state;\"WORLD\")");
 
         protected CustomBarOverlayBase(int id, OverlaySize overlaySize) {
             super(id, overlaySize);

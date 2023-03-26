@@ -11,6 +11,7 @@ import com.wynntils.models.token.type.TokenGatekeeper;
 import com.wynntils.models.worlds.profile.ServerProfile;
 import com.wynntils.utils.type.CappedValue;
 import java.util.List;
+import java.util.Locale;
 
 public class WorldFunctions {
     public static class CurrentWorldFunction extends Function<String> {
@@ -57,6 +58,13 @@ public class WorldFunctions {
         @Override
         public List<String> getAliases() {
             return List.of("world_uptime", "uptime");
+        }
+    }
+
+    public static class WorldStateFunction extends Function<String> {
+        @Override
+        public String getValue(FunctionArguments arguments) {
+            return Models.WorldState.getCurrentState().toString().toUpperCase(Locale.ROOT);
         }
     }
 
