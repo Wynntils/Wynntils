@@ -6,7 +6,6 @@ package com.wynntils.screens.base.widgets;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.wynntils.screens.base.TextboxScreen;
-import com.wynntils.screens.settings.elements.TextConfigOptionElement;
 import com.wynntils.utils.MathUtils;
 import com.wynntils.utils.colors.CommonColors;
 import com.wynntils.utils.colors.CustomColor;
@@ -237,8 +236,7 @@ public class TextInputBoxWidget extends AbstractWidget {
         McUtils.playSound(SoundEvents.UI_BUTTON_CLICK.value());
 
         if (this.isHovered) {
-            setCursorAndHighlightPositions(
-                    getIndexAtPosition(mouseX, (this.getX() == 0) ? TextConfigOptionElement.X_OFFSET : 0));
+            setCursorAndHighlightPositions(getIndexAtPosition(mouseX));
             isDragging = true;
             textboxScreen.setFocusedTextInput(this);
             this.setFocused(true);
@@ -261,21 +259,15 @@ public class TextInputBoxWidget extends AbstractWidget {
     @Override
     public boolean mouseDragged(double mouseX, double mouseY, int button, double dragX, double dragY) {
         if (isDragging) {
-            setCursorPosition(getIndexAtPosition(mouseX, (this.getX() == 0) ? TextConfigOptionElement.X_OFFSET : 0));
+            setCursorPosition(getIndexAtPosition(mouseX));
         }
 
         return true;
     }
 
-    /**
-     * Under normal circumstances, offset should be 0. The one current exception is for TextConfigOptionElements in
-     * the config book, which needs an offset of TextConfigOptionElement.X_OFFSET because they have some identity crisis and can't figure out
-     * their own x position (rendering this.getX() useless).
-     */
-    protected int getIndexAtPosition(double mouseX, int offset) {
-        mouseX -= this.getX(); // mouseX is actually just the x position of the mouse relative to the screen, not the
-        // textbox
-        mouseX += offset;
+    protected int getIndexAtPosition(double mouseX) {
+        // mouseX is actually just the x position of the mouse relative to the screen, not the textbox
+        mouseX -= this.getX();
 
         Font font = FontRenderer.getInstance().getFont();
         Pair<String, Integer> renderedTextDetails = getRenderedText(maxTextWidth);

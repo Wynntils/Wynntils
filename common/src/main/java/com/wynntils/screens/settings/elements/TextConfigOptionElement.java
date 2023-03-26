@@ -17,7 +17,6 @@ public class TextConfigOptionElement extends ConfigOptionElement {
     private boolean lastParseSuccessful = false;
 
     protected final float renderHeight;
-    public static final int X_OFFSET = -213;
 
     protected TextConfigOptionElement(ConfigHolder configHolder, WynntilsBookSettingsScreen screen, int renderWidth) {
         super(configHolder);
