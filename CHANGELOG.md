@@ -1,9 +1,21 @@
+## [0.0.2-alpha.384](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.383...v0.0.2-alpha.384) (2023-03-26)
+
+
+### Bug Fixes
+
+* Hide custom overlay bars if not on world by default & allow disabling wynn bars even if the default overlay is not enabled ([#1381](https://github.com/Wynntils/Artemis/issues/1381)) ([87a45f7](https://github.com/Wynntils/Artemis/commit/87a45f7d3598c18b8b6dbdd452636b304d61387b))
+
 ## [0.0.2-alpha.383](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.382...v0.0.2-alpha.383) (2023-03-26)
 
 
 ### Bug Fixes
 
 * hide timer when 0 by default ([#1380](https://github.com/Wynntils/Artemis/issues/1380)) ([3284926](https://github.com/Wynntils/Artemis/commit/3284926b4b3bb3bb5924829b872ae8dfcd14c64a))
+
+
+### Miscellaneous Chores
+
+* **release:** v0.0.2-alpha.383 [skip ci] ([ff1dccb](https://github.com/Wynntils/Artemis/commit/ff1dccb8294e2fb2bdf73ba61bc7af092f89e48d))
 
 ## [0.0.2-alpha.382](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.381...v0.0.2-alpha.382) (2023-03-26)
 
@@ -40,16 +52,4 @@
 ### Miscellaneous Chores
 
 * **release:** v0.0.2-alpha.380 [skip ci] ([9a88d50](https://github.com/Wynntils/Artemis/commit/9a88d50366a81e5d44417743d74ccc5bc4d9ca54))
-
-## [0.0.2-alpha.379](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.378...v0.0.2-alpha.379) (2023-03-25)
-
-
-### New Features
-
-* Add stopwatch ([#1374](https://github.com/Wynntils/Artemis/issues/1374)) ([edd9359](https://github.com/Wynntils/Artemis/commit/edd9359e42d856ab6beba832e5a934f6151fe86e))
-
-
-### Miscellaneous Chores
-
-* **release:** v0.0.2-alpha.379 [skip ci] ([ce3fdcb](https://github.com/Wynntils/Artemis/commit/ce3fdcb5ee9dab849c72c933565d83485e946a6e))
 
