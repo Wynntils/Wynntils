@@ -113,12 +113,12 @@ public final class MainMapScreen extends AbstractMapScreen {
                         Component.literal("[>] ")
                                 .withStyle(ChatFormatting.RED)
                                 .append(Component.translatable("screens.wynntils.map.manager.name")),
-                        Component.translatable("screens.wynntils.map.manager.description1_1")
+                        Component.translatable("screens.wynntils.map.manager.description1")
                                 .withStyle(ChatFormatting.GRAY)
-                                .append(Component.translatable("screens.wynntils.map.manager.description1_2")
+                                .append(Component.translatable("screens.wynntils.map.manager.description2")
                                         .withStyle(ChatFormatting.GRAY))
                                 .withStyle(ChatFormatting.GRAY)
-                                .append(Component.translatable("screens.wynntils.map.manager.description1_3")
+                                .append(Component.translatable("screens.wynntils.map.manager.description3")
                                         .withStyle(ChatFormatting.GRAY)))));
 
         this.addRenderableWidget(new BasicTexturedButton(

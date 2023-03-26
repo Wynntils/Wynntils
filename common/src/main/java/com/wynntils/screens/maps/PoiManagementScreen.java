@@ -6,7 +6,9 @@ package com.wynntils.screens.maps;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.wynntils.core.components.Managers;
+import com.wynntils.core.components.Models;
 import com.wynntils.features.map.MapFeature;
+import com.wynntils.mc.event.MouseScrollEvent;
 import com.wynntils.models.map.pois.CustomPoi;
 import com.wynntils.screens.base.WynntilsScreen;
 import com.wynntils.screens.maps.widgets.PoiManagerWidget;
@@ -20,8 +22,10 @@ import net.minecraft.ChatFormatting;
 import net.minecraft.client.gui.components.AbstractWidget;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.screens.Screen;
+import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
 import net.minecraft.client.resources.language.I18n;
 import net.minecraft.network.chat.Component;
+import net.minecraftforge.eventbus.api.SubscribeEvent;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -33,7 +37,7 @@ public class PoiManagementScreen extends WynntilsScreen {
     private List<CustomPoi> waypoints;
     private int pageHeight;
     private int page;
-    private int spacingMultiplier = 20; //Small 14, medium 20, large 25. Make customisable
+    private int spacingMultiplier = 20;
     private final List<AbstractWidget> poiManagerWidgets = new ArrayList<>();
     private PoiManagementScreen(MainMapScreen oldMapScreen) {
         super(Component.literal("Poi Management Screen"));
@@ -52,19 +56,17 @@ public class PoiManagementScreen extends WynntilsScreen {
 
     @Override
     protected void doInit() {
-        super.doInit();
-
         pageHeight = (this.height - 100) / spacingMultiplier;
 
         this.addRenderableWidget(new Button.Builder(
-                Component.translatable("screens.wynntils.poiManagementGui.close").withStyle(ChatFormatting.RED), (button) -> this.onClose())
+                Component.literal("X").withStyle(ChatFormatting.RED), (button) -> this.onClose())
                 .pos(this.width - 40, 20)
                 .size(20, 20)
                 .build());
 
         this.addRenderableWidget(
                 nextButton = new Button.Builder(
-                                Component.translatable("screens.wynntils.poiManagementGui.next"), (button) -> {
+                                Component.literal(">"), (button) -> {
                                     nextPage();
                                 })
                         .pos(this.width/2 + 2, this.height - 45)
@@ -73,14 +75,24 @@ public class PoiManagementScreen extends WynntilsScreen {
 
         this.addRenderableWidget(
                 previousButton = new Button.Builder(
-                                Component.translatable("screens.wynntils.poiManagementGui.previous"), (button) -> {
+                                Component.literal("<"), (button) -> {
                                     previousPage();
                                 })
                         .pos(this.width/2 - 22, this.height - 45)
                         .size(20, 20)
                         .build());
 
-        onWaypointChange();
+        waypoints = Managers.Feature.getFeatureInstance(MapFeature.class)
+                .customPois
+                .get();
+
+        if (!waypoints.isEmpty() && page * pageHeight > waypoints.size() - 1) {
+            page = (waypoints.size() - 1) / pageHeight;
+        }
+
+        checkAvailablePages();
+
+        populatePois();
     }
 
     @Override
@@ -113,7 +125,7 @@ public class PoiManagementScreen extends WynntilsScreen {
         FontRenderer.getInstance()
                 .renderText(
                         poseStack,
-                        I18n.get("screens.wynntils.poiManagementGui.x"),
+                        "X",
                         this.width / 2f - 15,
                         43,
                         CommonColors.WHITE,
@@ -124,7 +136,7 @@ public class PoiManagementScreen extends WynntilsScreen {
         FontRenderer.getInstance()
                 .renderText(
                         poseStack,
-                        I18n.get("screens.wynntils.poiManagementGui.y"),
+                       "Y",
                         this.width / 2f + 40,
                         43,
                         CommonColors.WHITE,
@@ -135,7 +147,7 @@ public class PoiManagementScreen extends WynntilsScreen {
         FontRenderer.getInstance()
                 .renderText(
                         poseStack,
-                        I18n.get("screens.wynntils.poiManagementGui.z"),
+                        "Z",
                         this.width / 2f + 80,
                         43,
                         CommonColors.WHITE,
@@ -143,11 +155,21 @@ public class PoiManagementScreen extends WynntilsScreen {
                         VerticalAlignment.Top,
                         TextShadow.NORMAL);
 
-        waypoints = Managers.Feature.getFeatureInstance(MapFeature.class)
-                .customPois
-                .get();
+        poiManagerWidgets.forEach(widget -> widget.render(poseStack, mouseX, mouseY, partialTick));
+    }
 
-        poiManagerWidgets.clear();
+    @Override
+    public boolean mouseScrolled(double mouseX, double mouseY, double delta) {
+
+        return true;
+    }
+
+    public void populatePois() {
+        for (AbstractWidget widget : poiManagerWidgets) {
+            this.removeWidget(widget);
+        }
+
+        this.poiManagerWidgets.clear();
 
         for (int i = 0, lim = Math.min(pageHeight, waypoints.size() - pageHeight * page); i < lim; i++) {
             CustomPoi poi = waypoints.get(page * pageHeight + i);
@@ -156,40 +178,32 @@ public class PoiManagementScreen extends WynntilsScreen {
                 continue;
             }
 
-            //Needs values changing. Possibly the source of the edit/delete buttons not registering interactions.
-            poiManagerWidgets.add(new PoiManagerWidget(
+            //Needs values changing
+            PoiManagerWidget newWidget = new PoiManagerWidget(
                     0,
                     0,
                     this.width,
                     this.height,
                     poi,
                     i,
-                    this));
+                    this);
+
+            poiManagerWidgets.add(newWidget);
+
+            this.addRenderableWidget(newWidget);
         }
-
-        poiManagerWidgets.forEach(widget -> widget.render(poseStack, mouseX, mouseY, partialTick));
-    }
-
-    private void onWaypointChange() {
-        waypoints = Managers.Feature.getFeatureInstance(MapFeature.class)
-                .customPois
-                .get();
-
-        if (!waypoints.isEmpty() && page * pageHeight > waypoints.size() - 1) {
-            page = (waypoints.size() - 1) / pageHeight;
-        }
-
-        checkAvailablePages();
     }
 
     private void nextPage() {
         page++;
         checkAvailablePages();
+        populatePois();
     }
 
     private void previousPage() {
         page--;
         checkAvailablePages();
+        populatePois();
     }
 
     private void checkAvailablePages() {

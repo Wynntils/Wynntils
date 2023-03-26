@@ -14,46 +14,37 @@ import com.wynntils.screens.maps.PoiCreationScreen;
 import com.wynntils.screens.maps.PoiManagementScreen;
 import com.wynntils.utils.colors.CustomColor;
 import com.wynntils.utils.mc.McUtils;
+import com.wynntils.utils.mc.RenderedStringUtils;
+import com.wynntils.utils.render.FontRenderer;
 import com.wynntils.utils.render.RenderUtils;
-import com.wynntils.utils.render.Texture;
+import com.wynntils.utils.render.type.HorizontalAlignment;
+import com.wynntils.utils.render.type.TextShadow;
+import com.wynntils.utils.render.type.VerticalAlignment;
 import net.minecraft.client.gui.components.AbstractWidget;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.narration.NarrationElementOutput;
+import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.network.chat.Component;
-import org.apache.commons.lang3.StringUtils;
 
 import java.util.List;
 import java.util.Optional;
 
 public class PoiManagerWidget extends AbstractWidget {
-    private static final List<Texture> POI_ICONS = List.of(
-            Texture.FLAG,
-            Texture.DIAMOND,
-            Texture.FIREBALL,
-            Texture.SIGN,
-            Texture.STAR,
-            Texture.WALL,
-            Texture.CHEST_T1,
-            Texture.CHEST_T2,
-            Texture.CHEST_T3,
-            Texture.CHEST_T4,
-            Texture.FARMING,
-            Texture.FISHING,
-            Texture.MINING,
-            Texture.WOODCUTTING);
-
     private CustomPoi poi;
     private Button editButton;
     private Button deleteButton;
+    private Button upButton;
+    private Button downButton;
     private int row;
-    private int colour;
-    private int spacingMultiplier = 20; //Small 14, medium 20, large 25
+    private CustomColor color;
+    private int spacingMultiplier = 20;
     private static final int ungroupedIndex = Managers.Feature.getFeatureInstance(MapFeature.class)
             .customPois
             .get().size();
     private int group = ungroupedIndex;
     private boolean decreasedSize = (spacingMultiplier == 14);
     private PoiManagementScreen managementScreen;
+    private List<CustomPoi> pois;
 
     public PoiManagerWidget(
             float x, float y, int width, int height, CustomPoi poi, int row, PoiManagementScreen managementScreen) {
@@ -62,69 +53,140 @@ public class PoiManagerWidget extends AbstractWidget {
         this.row = row;
         this.managementScreen = managementScreen;
 
-        colour = 0xFFFFFF;
+        pois = Managers.Feature.getFeatureInstance(MapFeature.class).customPois.get();
+
+        color = CustomColor.fromInt(0xFFFFFF);
 
         if (poi.getVisibility() == CustomPoi.Visibility.HIDDEN) {
-            colour = 0x636363;
+            color = CustomColor.fromInt(0x636363);
         }
 
         int groupShift = group == ungroupedIndex ? 20 : 0;
 
         this.editButton = new Button.Builder(
                 Component.translatable("screens.wynntils.poiManagementGui.edit"),
-                (button) -> PoiCreationScreen.create(managementScreen, poi))
+                (button) -> McUtils.mc().setScreen(PoiCreationScreen.create(managementScreen, poi)))
                 .pos(this.width/2 + 85 + groupShift, 54 + spacingMultiplier * row)
                 .size((int) Math.round(40.0 * (decreasedSize ? 0.7 : 1.0)), (int) Math.round(20.0 * (decreasedSize ? 0.6 : 1.0)))
                 .build();
+
         this.deleteButton = new Button.Builder(
                 Component.translatable("screens.wynntils.poiManagementGui.delete"),
-                (button) -> Managers.Feature.getFeatureInstance(MapFeature.class)
-                        .customPois
-                        .get()
-                        .remove(poi))
+                (button) -> {
+                    Managers.Feature.getFeatureInstance(MapFeature.class)
+                            .customPois
+                            .get()
+                            .remove(poi);
+                    Managers.Config.saveConfig();
+                    managementScreen.populatePois();
+                })
                 .pos(this.width/2 + 130 + groupShift, 54 + spacingMultiplier * row)
                 .size((int) Math.round(40.0 * (decreasedSize ? 0.9 : 1.0)), (int) Math.round(20.0 * (decreasedSize ? 0.6 : 1.0)))
                 .build();
+
+        this.upButton = new Button.Builder(
+                Component.literal("\u2303"),
+                (button) -> {
+                    updateIndex(-1);
+                })
+                .pos(this.width/2 + 172 + groupShift, 54 + spacingMultiplier * row)
+                .size((int)Math.round(9 * (decreasedSize ? 0.75 : 1.0)), (int)Math.round(9 * (decreasedSize ? 0.75 : 1.0)))
+                .build();
+
+        this.downButton = new Button.Builder(
+                Component.literal("\u2304"),
+                (button) -> {
+                    updateIndex(1);
+                })
+                .pos(this.width/2 + 172 + groupShift, 54 + spacingMultiplier * row + (int)Math.round(9 * (decreasedSize ? 0.75 : 1.0)))
+                .size((int)Math.round(9 * (decreasedSize ? 0.75 : 1.0)), (int)Math.round(9 * (decreasedSize ? 0.75 : 1.0)))
+                .build();
+
+        if (pois.indexOf(poi) == 0) {
+            upButton.active = false;
+        } else if (pois.indexOf(poi) == (pois.size() - 1)) {
+            downButton.active = false;
+        }
     }
 
     @Override
     public void renderButton(PoseStack poseStack, int mouseX, int mouseY, float partialTick) {
-        renderIcon(poseStack, poi, row);
-
-        drawString(poseStack, McUtils.mc().font, StringUtils.abbreviate(poi.getName(), 19), this.width/2 - 130, 60 + spacingMultiplier * row, colour);
-        drawCenteredString(poseStack, McUtils.mc().font, String.valueOf(poi.getLocation().getX()), this.width/2 - 15, 60 + spacingMultiplier * row, colour);
-        Optional<Integer> y = poi.getLocation().getY();
-        drawCenteredString(poseStack, McUtils.mc().font, y.isPresent() ? String.valueOf(y.get()) : "", this.width/2 + 40, 60 + spacingMultiplier * row, colour);
-        drawCenteredString(poseStack, McUtils.mc().font, String.valueOf(poi.getLocation().getZ()), this.width/2 + 80, 60 + spacingMultiplier * row, colour);
-
-        editButton.render(poseStack, mouseX, mouseY, partialTick);
-        deleteButton.render(poseStack, mouseX, mouseY, partialTick);
-
-        System.out.println("X: " + this.getX() + "\nY: " + this.getY() + "\nWidth: " + this.width + "\nHeight: " + this.height);
-    }
-
-    private void renderIcon(PoseStack poseStack, CustomPoi poi, int row) {
-        float[] color = CustomColor.fromInt(poi.getColor().asInt()).asFloatArray();
-        RenderSystem.enableBlend();
-        RenderSystem.blendFunc(GlStateManager.SourceFactor.SRC_ALPHA, GlStateManager.DestFactor.ONE_MINUS_SRC_ALPHA);
-        RenderSystem.setShaderColor(color[0], color[1], color[2], 1);
+        MultiBufferSource.BufferSource bufferSource =
+                McUtils.mc().renderBuffers().bufferSource();
 
         float centreZ = 64 + spacingMultiplier * row;
 
-        RenderUtils.drawTexturedRect(
-                poseStack, POI_ICONS.get(POI_ICONS.indexOf(poi.getIcon())), this.width / 2f - 151 - (poi.getIcon().width() / 2f), centreZ - (poi.getIcon().height() / 2f));
+        poi.renderAt(poseStack, bufferSource, this.width / 2f - 151, centreZ, false, 1f, 1f);
 
-        RenderSystem.disableBlend();
-        RenderSystem.defaultBlendFunc();
-        RenderSystem.setShaderColor(1, 1, 1, 1);
+        int maxTextWidth = 90;
+        String poiName = RenderedStringUtils.getMaxFittingText(poi.getName(), maxTextWidth, McUtils.mc().font);
+
+        FontRenderer.getInstance()
+                .renderText(
+                        poseStack,
+                        poiName,
+                        this.width/2f - 130,
+                        60 + spacingMultiplier * row,
+                        color,
+                        HorizontalAlignment.Left,
+                        VerticalAlignment.Top,
+                        TextShadow.NORMAL);
+
+        FontRenderer.getInstance()
+                .renderText(
+                        poseStack,
+                        String.valueOf(poi.getLocation().getX()),
+                        this.width/2f - 15,
+                        60 + spacingMultiplier * row,
+                        color,
+                        HorizontalAlignment.Center,
+                        VerticalAlignment.Top,
+                        TextShadow.NORMAL);
+
+        Optional<Integer> y = poi.getLocation().getY();
+
+        FontRenderer.getInstance()
+                .renderText(
+                        poseStack,
+                        y.isPresent() ? String.valueOf(y.get()) : "",
+                        this.width/2f + 40,
+                        60 + spacingMultiplier * row,
+                        color,
+                        HorizontalAlignment.Center,
+                        VerticalAlignment.Top,
+                        TextShadow.NORMAL);
+
+        FontRenderer.getInstance()
+                .renderText(
+                        poseStack,
+                        String.valueOf(poi.getLocation().getZ()),
+                        this.width/2f + 80,
+                        60 + spacingMultiplier * row,
+                        color,
+                        HorizontalAlignment.Center,
+                        VerticalAlignment.Top,
+                        TextShadow.NORMAL);
+
+        editButton.render(poseStack, mouseX, mouseY, partialTick);
+        deleteButton.render(poseStack, mouseX, mouseY, partialTick);
+        upButton.render(poseStack, mouseX, mouseY, partialTick);
+        downButton.render(poseStack, mouseX, mouseY, partialTick);
+    }
+
+    private void updateIndex(int direction) {
+        int indexToSet = pois.indexOf(poi) + direction;
+        pois.remove(poi);
+        pois.add(indexToSet, poi);
+        managementScreen.populatePois();
+        Managers.Config.saveConfig();
     }
 
     @Override
     public boolean mouseClicked(double mouseX, double mouseY, int button) {
-        System.out.println("Mouse clicked at: " + mouseX + ", " + mouseY);
-        System.out.println("Edit button at: " + editButton.getX() + ", " + editButton.getY());
         return editButton.mouseClicked(mouseX, mouseY, button)
-                || deleteButton.mouseClicked(mouseX, mouseY, button);
+                || deleteButton.mouseClicked(mouseX, mouseY, button)
+                || upButton.mouseClicked(mouseX, mouseY, button)
+                || downButton.mouseClicked(mouseX, mouseY, button);
     }
 
     @Override
