@@ -523,22 +523,22 @@ public final class OverlayManagementScreen extends WynntilsScreen {
 
         switch (edge) {
             case Top -> {
-                overlaySize.setHeight((float) (overlaySize.getHeight() - dragY));
+                overlay.setHeight((float) (overlaySize.getHeight() - dragY));
                 overlay.setPosition(
                         OverlayPosition.getBestPositionFor(overlay, renderX, renderY, (float) 0, (float) dragY));
             }
             case Left -> {
-                overlaySize.setWidth((float) (overlaySize.getWidth() - dragX));
+                overlay.setWidth((float) (overlaySize.getWidth() - dragX));
                 overlay.setPosition(
                         OverlayPosition.getBestPositionFor(overlay, renderX, renderY, (float) dragX, (float) 0));
             }
             case Right -> {
-                overlaySize.setWidth((float) (overlaySize.getWidth() + dragX));
+                overlay.setWidth((float) (overlaySize.getWidth() + dragX));
                 overlay.setPosition(
                         OverlayPosition.getBestPositionFor(overlay, renderX, renderY, (float) 0, (float) 0));
             }
             case Bottom -> {
-                overlaySize.setHeight((float) (overlaySize.getHeight() + dragY));
+                overlay.setHeight((float) (overlaySize.getHeight() + dragY));
                 overlay.setPosition(
                         OverlayPosition.getBestPositionFor(overlay, renderX, renderY, (float) 0, (float) 0));
             }
@@ -579,26 +579,26 @@ public final class OverlayManagementScreen extends WynntilsScreen {
 
         switch (corner) {
             case TopLeft -> {
-                overlaySize.setWidth((float) (overlaySize.getWidth() - dragX));
-                overlaySize.setHeight((float) (overlaySize.getHeight() - dragY));
+                overlay.setWidth((float) (overlaySize.getWidth() - dragX));
+                overlay.setHeight((float) (overlaySize.getHeight() - dragY));
                 overlay.setPosition(
                         OverlayPosition.getBestPositionFor(overlay, renderX, renderY, (float) dragX, (float) dragY));
             }
             case TopRight -> {
-                overlaySize.setWidth((float) (overlaySize.getWidth() + dragX));
-                overlaySize.setHeight((float) (overlaySize.getHeight() - dragY));
+                overlay.setWidth((float) (overlaySize.getWidth() + dragX));
+                overlay.setHeight((float) (overlaySize.getHeight() - dragY));
                 overlay.setPosition(
                         OverlayPosition.getBestPositionFor(overlay, renderX, renderY, (float) 0, (float) dragY));
             }
             case BottomLeft -> {
-                overlaySize.setWidth((float) (overlaySize.getWidth() - dragX));
-                overlaySize.setHeight((float) (overlaySize.getHeight() + dragY));
+                overlay.setWidth((float) (overlaySize.getWidth() - dragX));
+                overlay.setHeight((float) (overlaySize.getHeight() + dragY));
                 overlay.setPosition(
                         OverlayPosition.getBestPositionFor(overlay, renderX, renderY, (float) dragX, (float) 0));
             }
             case BottomRight -> {
-                overlaySize.setWidth((float) (overlaySize.getWidth() + dragX));
-                overlaySize.setHeight((float) (overlaySize.getHeight() + dragY));
+                overlay.setWidth((float) (overlaySize.getWidth() + dragX));
+                overlay.setHeight((float) (overlaySize.getHeight() + dragY));
                 overlay.setPosition(
                         OverlayPosition.getBestPositionFor(overlay, renderX, renderY, (float) 0, (float) 0));
             }
