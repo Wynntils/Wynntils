@@ -1,9 +1,21 @@
+## [0.0.2-alpha.381](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.380...v0.0.2-alpha.381) (2023-03-26)
+
+
+### Bug Fixes
+
+* Stopwatch pause runs in background ([#1379](https://github.com/Wynntils/Artemis/issues/1379)) ([8078cc4](https://github.com/Wynntils/Artemis/commit/8078cc464695dbd3c4808619843d6ebec04c70df))
+
 ## [0.0.2-alpha.380](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.379...v0.0.2-alpha.380) (2023-03-26)
 
 
 ### New Features
 
 * /wynntils status now prints status in chat ([#1377](https://github.com/Wynntils/Artemis/issues/1377)) ([840629f](https://github.com/Wynntils/Artemis/commit/840629f8c2c7f28fc29caac350e7728bf9e5ffd2))
+
+
+### Miscellaneous Chores
+
+* **release:** v0.0.2-alpha.380 [skip ci] ([9a88d50](https://github.com/Wynntils/Artemis/commit/9a88d50366a81e5d44417743d74ccc5bc4d9ca54))
 
 ## [0.0.2-alpha.379](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.378...v0.0.2-alpha.379) (2023-03-25)
 
@@ -40,16 +52,4 @@
 ### Miscellaneous Chores
 
 * **release:** v0.0.2-alpha.377 [skip ci] ([2dd154e](https://github.com/Wynntils/Artemis/commit/2dd154ed5005ee72f2002c0ec3695ab2471b8847))
-
-## [0.0.2-alpha.376](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.375...v0.0.2-alpha.376) (2023-03-25)
-
-
-### New Features
-
-* Add token support for Qira Hive and Tower of Ascenscion ([#1375](https://github.com/Wynntils/Artemis/issues/1375)) ([05a2a07](https://github.com/Wynntils/Artemis/commit/05a2a073eada8716f0fe6e7ebca487bb217a2525))
-
-
-### Miscellaneous Chores
-
-* **release:** v0.0.2-alpha.376 [skip ci] ([9528433](https://github.com/Wynntils/Artemis/commit/952843380e5341c04b06566178c3cd0aa6d35618))
 
