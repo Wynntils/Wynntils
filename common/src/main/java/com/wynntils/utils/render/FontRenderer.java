@@ -171,18 +171,17 @@ public final class FontRenderer {
                     case Middle -> (y1 + y2) / 2f;
                     case Bottom -> y2;
                 };
-        RenderUtils.drawRect(
-                poseStack,
-                backgroundColor,
-                renderX,
+
+        float cursorRenderY =
                 switch (verticalAlignment) {
                     case Top -> renderY - 2;
                     case Middle -> renderY - (font.lineHeight / 2f) - 2;
                     case Bottom -> renderY - font.lineHeight + 2;
-                },
-                0,
-                font.width(text),
-                font.lineHeight + 2);
+                };
+
+        RenderUtils.drawRect(
+                poseStack, backgroundColor, renderX, cursorRenderY, 0, font.width(text), font.lineHeight + 2);
+
         renderAlignedTextInBox(
                 poseStack,
                 text,
