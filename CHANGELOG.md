@@ -1,9 +1,21 @@
+## [0.0.2-alpha.383](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.382...v0.0.2-alpha.383) (2023-03-26)
+
+
+### Bug Fixes
+
+* hide timer when 0 by default ([#1380](https://github.com/Wynntils/Artemis/issues/1380)) ([3284926](https://github.com/Wynntils/Artemis/commit/3284926b4b3bb3bb5924829b872ae8dfcd14c64a))
+
 ## [0.0.2-alpha.382](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.381...v0.0.2-alpha.382) (2023-03-26)
 
 
 ### New Features
 
 * Introduce Overlay container, and start using it for Token overlay ([#1372](https://github.com/Wynntils/Artemis/issues/1372)) ([704f390](https://github.com/Wynntils/Artemis/commit/704f3906fad0d9242021f6d86a2749a10d3e17ef))
+
+
+### Miscellaneous Chores
+
+* **release:** v0.0.2-alpha.382 [skip ci] ([7fe52df](https://github.com/Wynntils/Artemis/commit/7fe52dff29185b1329c237a0e03f038850cfb32f))
 
 ## [0.0.2-alpha.381](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.380...v0.0.2-alpha.381) (2023-03-26)
 
@@ -40,16 +52,4 @@
 ### Miscellaneous Chores
 
 * **release:** v0.0.2-alpha.379 [skip ci] ([ce3fdcb](https://github.com/Wynntils/Artemis/commit/ce3fdcb5ee9dab849c72c933565d83485e946a6e))
-
-## [0.0.2-alpha.378](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.377...v0.0.2-alpha.378) (2023-03-25)
-
-
-### New Features
-
-* Stop playing token bell sound after a while ([#1376](https://github.com/Wynntils/Artemis/issues/1376)) ([e417a02](https://github.com/Wynntils/Artemis/commit/e417a027e3d63c4ee58fd269b0430fa8bc23dfd3))
-
-
-### Miscellaneous Chores
-
-* **release:** v0.0.2-alpha.378 [skip ci] ([3de809a](https://github.com/Wynntils/Artemis/commit/3de809a7132fc3a5de0be504bdb5a4e70a67a659))
 
