@@ -43,7 +43,7 @@ public class StopwatchFeature extends Feature {
             .build();
 
     @RegisterCommand
-    private final LiteralCommandNode<CommandSourceStack> stopCommand = Commands.literal("stop")
+    private final LiteralCommandNode<CommandSourceStack> pauseCommand = Commands.literal("pause")
             .executes(ctx -> {
                 if (Models.Stopwatch.isRunning()) {
                     Models.Stopwatch.pause();
