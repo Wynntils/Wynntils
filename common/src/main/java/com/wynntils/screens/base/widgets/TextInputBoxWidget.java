@@ -38,6 +38,7 @@ public class TextInputBoxWidget extends AbstractWidget {
     private long lastCursorSwitch = 0;
     protected boolean renderCursor = true;
     private CustomColor renderColor = CommonColors.WHITE;
+
     protected boolean isDragging = false;
 
     protected final TextboxScreen textboxScreen;
@@ -506,18 +507,15 @@ public class TextInputBoxWidget extends AbstractWidget {
 
         if (isFocused() || forceUnfocusedCursor) {
             Font font = FontRenderer.getInstance().getFont();
-            RenderUtils.drawRect(
-                    poseStack,
-                    CommonColors.WHITE,
-                    x + 1,
+
+            float cursorRenderY =
                     switch (verticalAlignment) {
                         case Top -> y - (CURSOR_PADDING - 1);
                         case Middle -> y - font.lineHeight + (CURSOR_PADDING - 1);
                         case Bottom -> y - font.lineHeight - (CURSOR_PADDING - 1);
-                    },
-                    0,
-                    1,
-                    font.lineHeight + 3);
+                    };
+
+            RenderUtils.drawRect(poseStack, CommonColors.WHITE, x + 1, cursorRenderY, 0, 1, font.lineHeight + 3);
         }
     }
 
