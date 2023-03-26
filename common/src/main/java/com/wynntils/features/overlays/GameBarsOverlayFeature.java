@@ -82,7 +82,7 @@ public class GameBarsOverlayFeature extends Feature {
         BaseBarOverlay overlay = getOverlayFromTrackedBar(event.getTrackedBar());
         if (overlay == null) return;
 
-        if (overlay.shouldBeEnabled() && !overlay.shouldDisplayOriginal.get()) {
+        if (!overlay.shouldDisplayOriginal.get()) {
             event.setCanceled(true);
         }
     }
@@ -225,7 +225,7 @@ public class GameBarsOverlayFeature extends Feature {
 
         @Override
         protected void onConfigUpdate(ConfigHolder configHolder) {
-            Models.CharacterStats.hideHealth(this.shouldBeEnabled() && !this.shouldDisplayOriginal.get());
+            Models.CharacterStats.hideHealth(!this.shouldDisplayOriginal.get());
         }
 
         @Override
@@ -381,7 +381,7 @@ public class GameBarsOverlayFeature extends Feature {
 
         @Override
         protected void onConfigUpdate(ConfigHolder configHolder) {
-            Models.CharacterStats.hideMana(this.shouldBeEnabled() && !this.shouldDisplayOriginal.get());
+            Models.CharacterStats.hideMana(!this.shouldDisplayOriginal.get());
         }
 
         @Override
