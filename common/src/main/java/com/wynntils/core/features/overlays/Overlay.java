@@ -108,8 +108,8 @@ public abstract class Overlay extends AbstractConfigurable implements Translatab
         return this.getClass().getSimpleName();
     }
 
-    protected Class<?> getDeclaringClass() {
-        return this.getClass().getDeclaringClass();
+    protected String getDeclaringClassName() {
+        return this.getClass().getDeclaringClass().getSimpleName();
     }
 
     protected String getNameCamelCase() {
@@ -118,7 +118,7 @@ public abstract class Overlay extends AbstractConfigurable implements Translatab
     }
 
     protected String getDeclaringFeatureNameCamelCase() {
-        String name = this.getClass().getDeclaringClass().getSimpleName().replace("Feature", "");
+        String name = getDeclaringClassName().replace("Feature", "");
         return CaseFormat.UPPER_CAMEL.to(CaseFormat.LOWER_CAMEL, name);
     }
 
@@ -215,10 +215,16 @@ public abstract class Overlay extends AbstractConfigurable implements Translatab
     public int compareTo(Overlay other) {
         return ComparisonChain.start()
                 .compareTrueFirst(this.isParentEnabled(), other.isParentEnabled())
-                .compare(
-                        this.getDeclaringClass().getSimpleName(),
-                        other.getDeclaringClass().getSimpleName())
+                .compare(this.getDeclaringClassName(), other.getDeclaringClassName())
                 .compare(this.getTranslatedName(), other.getTranslatedName())
                 .result();
+    }
+
+    public void setHeight(float height) {
+        getSize().setHeight(height);
+    }
+
+    public void setWidth(float width) {
+        getSize().setWidth(width);
     }
 }
