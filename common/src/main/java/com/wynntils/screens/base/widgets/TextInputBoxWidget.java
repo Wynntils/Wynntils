@@ -29,7 +29,6 @@ import net.minecraft.sounds.SoundEvents;
 import net.minecraft.util.Mth;
 import org.lwjgl.glfw.GLFW;
 
-// FIXME: Add selection support to this class to be a fully working text box
 public class TextInputBoxWidget extends AbstractWidget {
     private static final int CURSOR_PADDING = 3;
     private static final int CURSOR_TICK = 350;
