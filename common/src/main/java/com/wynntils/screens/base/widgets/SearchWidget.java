@@ -49,13 +49,12 @@ public class SearchWidget extends TextInputBoxWidget {
         Pair<String, Integer> renderedTextDetails = getRenderedText(this.width - 18);
         String renderedText = renderedTextDetails.a();
 
-        Pair<Integer, Integer> highlightedOutputInterval =
-                getRenderedHighlighedInterval(renderedText, renderedTextDetails.b());
+        Pair<Integer, Integer> highlightedVisibleInterval = getRenderedHighlighedInterval(renderedText);
 
-        String firstPortion = renderedText.substring(0, highlightedOutputInterval.a());
+        String firstPortion = renderedText.substring(0, highlightedVisibleInterval.a());
         String highlightedPortion =
-                renderedText.substring(highlightedOutputInterval.a(), highlightedOutputInterval.b());
-        String lastPortion = renderedText.substring(highlightedOutputInterval.b());
+                renderedText.substring(highlightedVisibleInterval.a(), highlightedVisibleInterval.b());
+        String lastPortion = renderedText.substring(highlightedVisibleInterval.b());
 
         Font font = FontRenderer.getInstance().getFont();
         int firstWidth = font.width(firstPortion);

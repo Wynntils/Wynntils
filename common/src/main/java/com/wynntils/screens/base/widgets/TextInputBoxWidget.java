@@ -98,13 +98,12 @@ public class TextInputBoxWidget extends AbstractWidget {
         Pair<String, Integer> renderedTextDetails = getRenderedText(maxTextWidth);
         String renderedText = renderedTextDetails.a();
 
-        Pair<Integer, Integer> highlightedOutputInterval =
-                getRenderedHighlighedInterval(renderedText, renderedTextDetails.b());
+        Pair<Integer, Integer> highlightedVisibleInterval = getRenderedHighlighedInterval(renderedText);
 
-        String firstPortion = renderedText.substring(0, highlightedOutputInterval.a());
+        String firstPortion = renderedText.substring(0, highlightedVisibleInterval.a());
         String highlightedPortion =
-                renderedText.substring(highlightedOutputInterval.a(), highlightedOutputInterval.b());
-        String lastPortion = renderedText.substring(highlightedOutputInterval.b());
+                renderedText.substring(highlightedVisibleInterval.a(), highlightedVisibleInterval.b());
+        String lastPortion = renderedText.substring(highlightedVisibleInterval.b());
 
         Font font = FontRenderer.getInstance().getFont();
         int firstWidth = font.width(firstPortion);
@@ -183,7 +182,7 @@ public class TextInputBoxWidget extends AbstractWidget {
 
             stringPosition--;
         }
-        int startingAt = stringPosition;
+        int startingAt = Math.max(stringPosition, 0); // If we went too far, start at the beginning
 
         // Now reverse so it's actually to the left
         builder.reverse();
@@ -198,7 +197,12 @@ public class TextInputBoxWidget extends AbstractWidget {
         return Pair.of(builder.toString(), startingAt);
     }
 
-    protected Pair<Integer, Integer> getRenderedHighlighedInterval(String renderedText, int shift) {
+    /**
+     * @return A Pair of numbers representing the start and end of the highlight, relative to the rendered text.
+     * This interval is zero indexed.
+     * This does NOT represent the *entire* highlighted portion, just the VISIBLE part!
+     */
+    protected Pair<Integer, Integer> getRenderedHighlighedInterval(String renderedText) {
         if (renderedText.isEmpty()) {
             return Pair.of(0, 0);
         }
@@ -210,24 +214,22 @@ public class TextInputBoxWidget extends AbstractWidget {
 
         Pair<Integer, Integer> renderedInterval = Pair.of(0, length);
         Pair<Integer, Integer> highlightedInterval = Pair.of(highlightedStart, highlightedEnd);
-        Pair<Integer, Integer> highlightedOutputInterval;
+        int a;
+        int b;
 
         // get intersection of renderedInterval and highlightedInterval
         if (highlightedInterval.a() > renderedInterval.b() || renderedInterval.a() > highlightedInterval.b()) {
-            highlightedOutputInterval = Pair.of(0, 0);
+            a = 0;
+            b = 0;
         } else {
-            highlightedOutputInterval = Pair.of(
-                    Math.max(renderedInterval.a(), highlightedInterval.a()) + shift,
-                    Math.min(renderedInterval.b(), highlightedInterval.b()) + shift);
+            a = Math.max(renderedInterval.a(), highlightedInterval.a());
+            b = Math.min(renderedInterval.b(), highlightedInterval.b());
         }
 
-        if (highlightedOutputInterval.a() < 0) {
-            highlightedOutputInterval = Pair.of(0, highlightedOutputInterval.b());
-        }
-        if (highlightedOutputInterval.b() > length) {
-            highlightedOutputInterval = Pair.of(highlightedOutputInterval.a(), length);
-        }
-        return highlightedOutputInterval;
+        a = Mth.clamp(a, 0, length);
+        b = Mth.clamp(b, 0, length);
+
+        return Pair.of(a, b);
     }
 
     @Override
