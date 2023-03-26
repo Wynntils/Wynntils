@@ -1,9 +1,21 @@
+## [0.0.2-alpha.382](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.381...v0.0.2-alpha.382) (2023-03-26)
+
+
+### New Features
+
+* Introduce Overlay container, and start using it for Token overlay ([#1372](https://github.com/Wynntils/Artemis/issues/1372)) ([704f390](https://github.com/Wynntils/Artemis/commit/704f3906fad0d9242021f6d86a2749a10d3e17ef))
+
 ## [0.0.2-alpha.381](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.380...v0.0.2-alpha.381) (2023-03-26)
 
 
 ### Bug Fixes
 
 * Stopwatch pause runs in background ([#1379](https://github.com/Wynntils/Artemis/issues/1379)) ([8078cc4](https://github.com/Wynntils/Artemis/commit/8078cc464695dbd3c4808619843d6ebec04c70df))
+
+
+### Miscellaneous Chores
+
+* **release:** v0.0.2-alpha.381 [skip ci] ([b02a4c8](https://github.com/Wynntils/Artemis/commit/b02a4c83322f86b24fd03fffed5646b0a3c371a8))
 
 ## [0.0.2-alpha.380](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.379...v0.0.2-alpha.380) (2023-03-26)
 
@@ -40,16 +52,4 @@
 ### Miscellaneous Chores
 
 * **release:** v0.0.2-alpha.378 [skip ci] ([3de809a](https://github.com/Wynntils/Artemis/commit/3de809a7132fc3a5de0be504bdb5a4e70a67a659))
-
-## [0.0.2-alpha.377](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.376...v0.0.2-alpha.377) (2023-03-25)
-
-
-### Bug Fixes
-
-* Fix regression where soul points, skill points etc were way off ([#1378](https://github.com/Wynntils/Artemis/issues/1378)) ([9b9a386](https://github.com/Wynntils/Artemis/commit/9b9a386edd4c3d9ff78d4885dbf0e7ddfc48e6c7))
-
-
-### Miscellaneous Chores
-
-* **release:** v0.0.2-alpha.377 [skip ci] ([2dd154e](https://github.com/Wynntils/Artemis/commit/2dd154ed5005ee72f2002c0ec3695ab2471b8847))
 
