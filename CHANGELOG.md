@@ -1,9 +1,21 @@
+## [0.0.2-alpha.385](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.384...v0.0.2-alpha.385) (2023-03-26)
+
+
+### New Features
+
+* Introduce UnknownGearAnnotator ([#1383](https://github.com/Wynntils/Artemis/issues/1383)) ([322efcf](https://github.com/Wynntils/Artemis/commit/322efcf1421251f4a53b9682978f38454a6005a1))
+
 ## [0.0.2-alpha.384](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.383...v0.0.2-alpha.384) (2023-03-26)
 
 
 ### Bug Fixes
 
 * Hide custom overlay bars if not on world by default & allow disabling wynn bars even if the default overlay is not enabled ([#1381](https://github.com/Wynntils/Artemis/issues/1381)) ([87a45f7](https://github.com/Wynntils/Artemis/commit/87a45f7d3598c18b8b6dbdd452636b304d61387b))
+
+
+### Miscellaneous Chores
+
+* **release:** v0.0.2-alpha.384 [skip ci] ([7727546](https://github.com/Wynntils/Artemis/commit/77275461668d52f9a4bb90ac1ed00d89b1d82690))
 
 ## [0.0.2-alpha.383](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.382...v0.0.2-alpha.383) (2023-03-26)
 
@@ -40,16 +52,4 @@
 ### Miscellaneous Chores
 
 * **release:** v0.0.2-alpha.381 [skip ci] ([b02a4c8](https://github.com/Wynntils/Artemis/commit/b02a4c83322f86b24fd03fffed5646b0a3c371a8))
-
-## [0.0.2-alpha.380](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.379...v0.0.2-alpha.380) (2023-03-26)
-
-
-### New Features
-
-* /wynntils status now prints status in chat ([#1377](https://github.com/Wynntils/Artemis/issues/1377)) ([840629f](https://github.com/Wynntils/Artemis/commit/840629f8c2c7f28fc29caac350e7728bf9e5ffd2))
-
-
-### Miscellaneous Chores
-
-* **release:** v0.0.2-alpha.380 [skip ci] ([9a88d50](https://github.com/Wynntils/Artemis/commit/9a88d50366a81e5d44417743d74ccc5bc4d9ca54))
 
