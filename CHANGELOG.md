@@ -1,9 +1,21 @@
+## [0.0.2-alpha.380](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.379...v0.0.2-alpha.380) (2023-03-26)
+
+
+### New Features
+
+* /wynntils status now prints status in chat ([#1377](https://github.com/Wynntils/Artemis/issues/1377)) ([840629f](https://github.com/Wynntils/Artemis/commit/840629f8c2c7f28fc29caac350e7728bf9e5ffd2))
+
 ## [0.0.2-alpha.379](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.378...v0.0.2-alpha.379) (2023-03-25)
 
 
 ### New Features
 
 * Add stopwatch ([#1374](https://github.com/Wynntils/Artemis/issues/1374)) ([edd9359](https://github.com/Wynntils/Artemis/commit/edd9359e42d856ab6beba832e5a934f6151fe86e))
+
+
+### Miscellaneous Chores
+
+* **release:** v0.0.2-alpha.379 [skip ci] ([ce3fdcb](https://github.com/Wynntils/Artemis/commit/ce3fdcb5ee9dab849c72c933565d83485e946a6e))
 
 ## [0.0.2-alpha.378](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.377...v0.0.2-alpha.378) (2023-03-25)
 
@@ -40,16 +52,4 @@
 ### Miscellaneous Chores
 
 * **release:** v0.0.2-alpha.376 [skip ci] ([9528433](https://github.com/Wynntils/Artemis/commit/952843380e5341c04b06566178c3cd0aa6d35618))
-
-## [0.0.2-alpha.375](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.374...v0.0.2-alpha.375) (2023-03-25)
-
-
-### Bug Fixes
-
-* item counts hiding stacked items ([#1373](https://github.com/Wynntils/Artemis/issues/1373)) ([1d9894e](https://github.com/Wynntils/Artemis/commit/1d9894e12c3395ea284bbc96ecbd33e7ac5fb71a))
-
-
-### Miscellaneous Chores
-
-* **release:** v0.0.2-alpha.375 [skip ci] ([17b990c](https://github.com/Wynntils/Artemis/commit/17b990c25dbc4b74f897733d0b58fcc72f6d7a69))
 
