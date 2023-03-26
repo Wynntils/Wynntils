@@ -65,7 +65,8 @@ public final class PoiCreationScreen extends WynntilsScreen implements TextboxSc
     private CustomPoi.Visibility selectedVisiblity = CustomPoi.Visibility.DEFAULT;
     private CustomColor colorCache = CommonColors.WHITE;
 
-    private final MainMapScreen oldMapScreen;
+    private MainMapScreen oldMapScreen;
+    private PoiManagementScreen managementScreen;
     private CustomPoi oldPoi;
     private PoiLocation setupLocation;
     private boolean firstSetup;
@@ -91,6 +92,13 @@ public final class PoiCreationScreen extends WynntilsScreen implements TextboxSc
         this.firstSetup = true;
     }
 
+    public PoiCreationScreen(PoiManagementScreen managementScreen, CustomPoi poi) {
+        super(Component.literal("Poi Edit Screen"));
+        this.managementScreen = managementScreen;
+
+        this.oldPoi = poi;
+    }
+
     public static Screen create(MainMapScreen oldMapScreen) {
         return new PoiCreationScreen(oldMapScreen);
     }
@@ -101,6 +109,10 @@ public final class PoiCreationScreen extends WynntilsScreen implements TextboxSc
 
     public static Screen create(MainMapScreen oldMapScreen, CustomPoi poi) {
         return new PoiCreationScreen(oldMapScreen, poi);
+    }
+
+    public static Screen create(PoiManagementScreen managementScreen, CustomPoi poi) {
+        return new PoiCreationScreen(managementScreen, poi);
     }
 
     @Override
@@ -450,7 +462,11 @@ public final class PoiCreationScreen extends WynntilsScreen implements TextboxSc
 
     @Override
     public void onClose() {
-        McUtils.mc().setScreen(oldMapScreen);
+        if (oldMapScreen != null) {
+            McUtils.mc().setScreen(oldMapScreen);
+        } else if (managementScreen != null) {
+            McUtils.mc().setScreen(managementScreen);
+        }
     }
 
     private void updateSaveStatus() {
