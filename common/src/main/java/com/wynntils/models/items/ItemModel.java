@@ -32,6 +32,7 @@ import com.wynntils.models.items.annotators.game.PowderAnnotator;
 import com.wynntils.models.items.annotators.game.TeleportScrollAnnotator;
 import com.wynntils.models.items.annotators.game.TomeAnnotator;
 import com.wynntils.models.items.annotators.game.TrinketAnnotator;
+import com.wynntils.models.items.annotators.game.UnknownGearAnnotator;
 import com.wynntils.models.items.annotators.gui.AbilityTreeAnnotator;
 import com.wynntils.models.items.annotators.gui.CosmeticTierAnnotator;
 import com.wynntils.models.items.annotators.gui.DailyRewardMultiplierAnnotator;
@@ -89,6 +90,7 @@ public class ItemModel extends Model {
         Handlers.Item.registerAnnotator(new SoulPointAnnotator());
 
         // This must be done last
+        Handlers.Item.registerAnnotator(new UnknownGearAnnotator());
         Handlers.Item.registerAnnotator(new MiscAnnotator());
         Handlers.Item.registerAnnotator(new FallbackAnnotator());
     }
