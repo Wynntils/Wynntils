@@ -214,7 +214,7 @@
   "feature.wynntils.gameBarsOverlay.overlay.awakenedProgressBar.name": "Awakened Bar",
   "feature.wynntils.gameBarsOverlay.overlay.baseBar.flip.description": "Should the filling of the bar be flipped?",
   "feature.wynntils.gameBarsOverlay.overlay.baseBar.flip.name": "Flip",
-  "feature.wynntils.gameBarsOverlay.overlay.baseBar.shouldDisplayOriginal.description": "Should the original form of the data (action bar/boss bar) still be displayed? This setting applies only if the appropriate custom bar is enabled.",
+  "feature.wynntils.gameBarsOverlay.overlay.baseBar.shouldDisplayOriginal.description": "Should the original form of the data (action bar/boss bar) still be displayed? This setting applies even if the appropriate custom bar is disabled.",
   "feature.wynntils.gameBarsOverlay.overlay.baseBar.shouldDisplayOriginal.name": "Display Original Bar Data",
   "feature.wynntils.gameBarsOverlay.overlay.baseBar.textColor.description": "What should the color of the text be?",
   "feature.wynntils.gameBarsOverlay.overlay.baseBar.textColor.name": "Text Color",
