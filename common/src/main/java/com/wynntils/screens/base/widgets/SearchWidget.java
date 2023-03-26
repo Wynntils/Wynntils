@@ -43,17 +43,32 @@ public class SearchWidget extends TextInputBoxWidget {
             int lastWidth) {
         boolean defaultText = Objects.equals(textBoxInput, "") && !isFocused();
 
-        RenderUtils.drawRect(poseStack, CommonColors.BLACK, this.getX(), this.getY(), 0, this.width, this.height);
-        RenderUtils.drawRectBorders(
-                poseStack,
-                CommonColors.GRAY,
-                this.getX(),
-                this.getY(),
-                this.getX() + this.width,
-                this.getY() + this.height,
-                0,
-                1f);
+        renderBackground(poseStack);
 
+        renderText(
+                poseStack,
+                renderedText,
+                firstPortion,
+                highlightedPortion,
+                lastPortion,
+                font,
+                firstWidth,
+                highlightedWidth,
+                lastWidth,
+                defaultText);
+    }
+
+    protected void renderText(
+            PoseStack poseStack,
+            String renderedText,
+            String firstPortion,
+            String highlightedPortion,
+            String lastPortion,
+            Font font,
+            int firstWidth,
+            int highlightedWidth,
+            int lastWidth,
+            boolean defaultText) {
         FontRenderer.getInstance()
                 .renderAlignedTextInBox(
                         poseStack,
@@ -103,6 +118,19 @@ public class SearchWidget extends TextInputBoxWidget {
                 this.getY() + VERTICAL_OFFSET,
                 VerticalAlignment.Top,
                 false);
+    }
+
+    protected void renderBackground(PoseStack poseStack) {
+        RenderUtils.drawRect(poseStack, CommonColors.BLACK, this.getX(), this.getY(), 0, this.width, this.height);
+        RenderUtils.drawRectBorders(
+                poseStack,
+                CommonColors.GRAY,
+                this.getX(),
+                this.getY(),
+                this.getX() + this.width,
+                this.getY() + this.height,
+                0,
+                1f);
     }
 
     @Override
