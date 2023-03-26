@@ -16,8 +16,6 @@ import com.wynntils.utils.render.type.HorizontalAlignment;
 import com.wynntils.utils.render.type.TextShadow;
 import com.wynntils.utils.render.type.VerticalAlignment;
 import com.wynntils.utils.type.Pair;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.function.Consumer;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
@@ -295,41 +293,32 @@ public class TextInputBoxWidget extends AbstractWidget {
     protected int getIndexAtPosition(double mouseX) {
         // mouseX is actually just the x position of the mouse relative to the screen, not the textbox
         mouseX -= this.getX();
+        mouseX -= textPadding; // Account for padding
 
-        Font font = FontRenderer.getInstance().getFont();
         Pair<String, Integer> renderedTextDetails = getRenderedText(getMaxTextWidth());
         String renderedText = renderedTextDetails.a();
-        int startingIndex = renderedTextDetails.b();
+        int shift = renderedTextDetails.b();
 
-        List<Float> widths = new ArrayList<>();
-        for (int i = 0; i < renderedText.length(); i++) {
-            // we are using stringWidth here because we need precision; if we use width, it will round to the nearest
-            // integer, which will cause strange behaviour when clicking on letters
-            widths.add(font.getSplitter().stringWidth(renderedText.substring(0, i)));
-        }
+        Font font = FontRenderer.getInstance().getFont();
 
-        // get nearest width index to mouseX
-        // FIXME: this is probably really slow and bad, but I am just a first year cs student and I have not taken
-        // data structures & algorithms yet so I don't know how to do this better
-        mouseX -= textPadding; // Account for padding
-        if (mouseX
-                > font.getSplitter()
-                        .stringWidth(renderedText)) { // Mouse is past the end of the text, return the end of the text
-            return startingIndex + renderedText.length();
-        } else if (mouseX < 0) { // Mouse is before the start of the text, return the start of the text
-            return startingIndex;
+        if (font.width(renderedText) < mouseX) {
+            return renderedText.length() + shift;
         }
 
         int closestWidthCharIndex = 0;
-        double closestWidth = 999999; // Arbirarily large number, there is no way the text will be this wide
-        for (float stringWidthSoFar : widths) {
-            double widthDiff = Math.abs(stringWidthSoFar - mouseX);
-            if (widthDiff < closestWidth) {
-                closestWidth = widthDiff;
-                closestWidthCharIndex = widths.indexOf(stringWidthSoFar);
-            }
+        double closestDistance = Double.MAX_VALUE;
+        for (int i = 0; i < renderedText.length(); i++) {
+            float width = font.width(renderedText.substring(0, i));
+            double distance = Math.abs(mouseX - width);
+
+            // If distance starts increasing, we've gone too far
+            if (distance > closestDistance) break;
+
+            closestDistance = distance;
+            closestWidthCharIndex = i;
         }
-        return closestWidthCharIndex + startingIndex;
+
+        return closestWidthCharIndex + shift;
     }
 
     @Override
