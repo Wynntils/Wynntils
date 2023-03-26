@@ -360,16 +360,28 @@ public class TextInputBoxWidget extends AbstractWidget {
         }
 
         if (Screen.isCopy(keyCode)) {
-            Minecraft.getInstance().keyboardHandler.setClipboard(getTextBoxInput());
+            Minecraft.getInstance()
+                    .keyboardHandler
+                    .setClipboard(hasHighlighted() ? getHighlightedText() : getTextBoxInput());
             return true;
         } else if (Screen.isPaste(keyCode)) {
-            this.setTextBoxInput((textBoxInput.substring(0, cursorPosition)
-                    + Minecraft.getInstance().keyboardHandler.getClipboard()
-                    + textBoxInput.substring(cursorPosition)));
+            if (hasHighlighted()) {
+                replaceHighlighted(Minecraft.getInstance().keyboardHandler.getClipboard());
+            } else {
+                this.setTextBoxInput((textBoxInput.substring(0, cursorPosition)
+                        + Minecraft.getInstance().keyboardHandler.getClipboard()
+                        + textBoxInput.substring(cursorPosition)));
+            }
+
             return true;
         } else if (Screen.isCut(keyCode)) {
-            Minecraft.getInstance().keyboardHandler.setClipboard(getTextBoxInput());
-            setTextBoxInput("");
+            if (hasHighlighted()) {
+                Minecraft.getInstance().keyboardHandler.setClipboard(getHighlightedText());
+                replaceHighlighted("");
+            } else {
+                Minecraft.getInstance().keyboardHandler.setClipboard(getTextBoxInput());
+                setTextBoxInput("");
+            }
 
             return true;
         } else if (Screen.isSelectAll(keyCode)) {
@@ -552,6 +564,13 @@ public class TextInputBoxWidget extends AbstractWidget {
 
     public String getTextBoxInput() {
         return textBoxInput;
+    }
+
+    public String getHighlightedText() {
+        int startIndex = Math.min(this.cursorPosition, this.highlightPosition);
+        int endIndex = Math.max(this.cursorPosition, this.highlightPosition);
+
+        return this.textBoxInput.substring(startIndex, endIndex);
     }
 
     public void setRenderColor(CustomColor renderColor) {
