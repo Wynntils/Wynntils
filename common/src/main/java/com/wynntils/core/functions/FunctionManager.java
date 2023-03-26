@@ -358,6 +358,7 @@ public final class FunctionManager extends Manager {
         registerFunction(new WorldFunctions.TokenGatekeeperDepositedFunction());
         registerFunction(new WorldFunctions.TokenGatekeeperFunction());
         registerFunction(new WorldFunctions.TokenGatekeeperTypeFunction());
+        registerFunction(new WorldFunctions.WorldStateFunction());
 
         registerFunction(new CharacterFunctions.BpsFunction());
         registerFunction(new CharacterFunctions.BpsXzFunction());
@@ -396,6 +397,12 @@ public final class FunctionManager extends Manager {
         registerFunction(new EnvironmentFunctions.CappedMemFunction());
         registerFunction(new EnvironmentFunctions.ClockFunction());
         registerFunction(new EnvironmentFunctions.ClockmFunction());
+        registerFunction(new EnvironmentFunctions.StopwatchZero());
+        registerFunction(new EnvironmentFunctions.StopwatchRunningFunction());
+        registerFunction(new EnvironmentFunctions.StopwatchHoursFunction());
+        registerFunction(new EnvironmentFunctions.StopwatchMinutesFunction());
+        registerFunction(new EnvironmentFunctions.StopwatchSecondsFunction());
+        registerFunction(new EnvironmentFunctions.StopwatchMillisecondsFunction());
         registerFunction(new EnvironmentFunctions.MemMaxFunction());
         registerFunction(new EnvironmentFunctions.MemPctFunction());
         registerFunction(new EnvironmentFunctions.MemUsedFunction());

@@ -11,6 +11,7 @@ import com.wynntils.models.token.type.TokenGatekeeper;
 import com.wynntils.models.worlds.profile.ServerProfile;
 import com.wynntils.utils.type.CappedValue;
 import java.util.List;
+import java.util.Locale;
 
 public class WorldFunctions {
     public static class CurrentWorldFunction extends Function<String> {
@@ -60,6 +61,13 @@ public class WorldFunctions {
         }
     }
 
+    public static class WorldStateFunction extends Function<String> {
+        @Override
+        public String getValue(FunctionArguments arguments) {
+            return Models.WorldState.getCurrentState().toString().toUpperCase(Locale.ROOT);
+        }
+    }
+
     public static class TokenGatekeeperCountFunction extends Function<Integer> {
         @Override
         public Integer getValue(FunctionArguments arguments) {
@@ -77,7 +85,7 @@ public class WorldFunctions {
         public CappedValue getValue(FunctionArguments arguments) {
             int index = arguments.getArgument("gatekeeperNumber").getIntegerValue() - 1;
             List<TokenGatekeeper> gatekeeperList = Models.Token.getGatekeepers();
-            if (index >= gatekeeperList.size()) return CappedValue.EMPTY;
+            if (index >= gatekeeperList.size() || index < 0) return CappedValue.EMPTY;
 
             return gatekeeperList.get(index).getDeposited();
         }
@@ -99,7 +107,7 @@ public class WorldFunctions {
         public CappedValue getValue(FunctionArguments arguments) {
             int index = arguments.getArgument("gatekeeperNumber").getIntegerValue() - 1;
             List<TokenGatekeeper> gatekeeperList = Models.Token.getGatekeepers();
-            if (index >= gatekeeperList.size()) return CappedValue.EMPTY;
+            if (index >= gatekeeperList.size() || index < 0) return CappedValue.EMPTY;
 
             return Models.Token.getCollected(gatekeeperList.get(index));
         }
@@ -121,7 +129,7 @@ public class WorldFunctions {
         public String getValue(FunctionArguments arguments) {
             int index = arguments.getArgument("gatekeeperNumber").getIntegerValue() - 1;
             List<TokenGatekeeper> gatekeeperList = Models.Token.getGatekeepers();
-            if (index >= gatekeeperList.size()) return "";
+            if (index >= gatekeeperList.size() || index < 0) return "";
 
             return gatekeeperList.get(index).getGatekeeperTokenName();
         }

@@ -37,12 +37,12 @@ public class ArrowShieldTrackingFeature extends Feature {
         protected ArrowShieldTrackerOverlay() {
             super(
                     new OverlayPosition(
-                            140,
+                            120,
                             -5,
                             VerticalAlignment.Top,
                             HorizontalAlignment.Right,
                             OverlayPosition.AnchorSection.TopRight),
-                    new OverlaySize(120, 35));
+                    new OverlaySize(120, 14));
         }
 
         @Override

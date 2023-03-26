@@ -85,6 +85,7 @@ import com.wynntils.features.overlays.ShamanMasksOverlayFeature;
 import com.wynntils.features.overlays.ShamanTotemTrackingFeature;
 import com.wynntils.features.overlays.SpellCastRenderFeature;
 import com.wynntils.features.overlays.StatusOverlayFeature;
+import com.wynntils.features.overlays.StopwatchFeature;
 import com.wynntils.features.overlays.TradeMarketBulkSellFeature;
 import com.wynntils.features.players.AutoJoinPartyFeature;
 import com.wynntils.features.players.CustomNametagRendererFeature;
@@ -234,6 +235,7 @@ public final class FeatureManager extends Manager {
         registerFeature(new SoulPointTimerFeature());
         registerFeature(new SpellCastRenderFeature());
         registerFeature(new StatusOverlayFeature());
+        registerFeature(new StopwatchFeature());
         registerFeature(new TelemetryFeature());
         registerFeature(new TerritoryDefenseMessageFeature());
         registerFeature(new TerritoryMessageRedirectFeature());

@@ -11,14 +11,18 @@ import com.wynntils.core.config.ConfigCategory;
 import com.wynntils.core.config.RegisterConfig;
 import com.wynntils.core.features.Feature;
 import com.wynntils.core.features.overlays.BarOverlay;
+import com.wynntils.core.features.overlays.ContainerOverlay;
+import com.wynntils.core.features.overlays.OverlayPosition;
 import com.wynntils.core.features.overlays.OverlaySize;
-import com.wynntils.core.features.overlays.annotations.OverlayGroup;
+import com.wynntils.core.features.overlays.annotations.OverlayInfo;
 import com.wynntils.mc.event.RenderEvent;
 import com.wynntils.models.token.event.TokenGatekeeperEvent;
 import com.wynntils.utils.colors.CustomColor;
 import com.wynntils.utils.mc.McUtils;
 import com.wynntils.utils.render.Texture;
-import java.util.ArrayList;
+import com.wynntils.utils.render.type.HorizontalAlignment;
+import com.wynntils.utils.render.type.VerticalAlignment;
+import com.wynntils.utils.type.CappedValue;
 import java.util.List;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.resources.sounds.SimpleSoundInstance;
@@ -30,8 +34,12 @@ public class TokenTrackerFeature extends Feature {
     @RegisterConfig
     public final Config<Boolean> playSound = new Config<>(true);
 
-    @OverlayGroup(renderType = RenderEvent.ElementType.GUI)
-    private final List<TokenBarOverlay> tokenBarOverlays = new ArrayList<>();
+    @OverlayInfo(renderType = RenderEvent.ElementType.GUI)
+    private final TokenBarsOverlay tokenBarsOverlay = new TokenBarsOverlay(
+            new OverlayPosition(
+                    70, -5, VerticalAlignment.Top, HorizontalAlignment.Right, OverlayPosition.AnchorSection.TopRight),
+            new OverlaySize(81, 84),
+            ContainerOverlay.GrowDirection.DOWN);
 
     @SubscribeEvent
     public void onInventoryUpdated(TokenGatekeeperEvent.InventoryUpdated event) {
@@ -40,8 +48,26 @@ public class TokenTrackerFeature extends Feature {
         // Do not play sound when depositing from the inventory
         if (event.getCount() < event.getOldCount()) return;
 
-        if (Models.Token.getCollected(event.getGatekeeper()).isAtCap()) {
-            McUtils.mc().getSoundManager().play(SimpleSoundInstance.forUI(SoundEvents.BELL_BLOCK, 0.7f, 0.75f));
+        CappedValue deposited = event.getGatekeeper().getDeposited();
+        int collected = Models.Token.inInventory(event.getGatekeeper()) + deposited.current();
+
+        if (collected < deposited.max()) return;
+        // Do not keep playing the sound if we go too far over the needed amount
+        if (collected > deposited.max() + 5) return;
+
+        McUtils.mc().getSoundManager().play(SimpleSoundInstance.forUI(SoundEvents.BELL_BLOCK, 0.7f, 0.75f));
+    }
+
+    @SubscribeEvent
+    public void onGatekeeperAdded(TokenGatekeeperEvent.Added event) {
+        tokenBarsOverlay.addChild(new TokenBarOverlay(tokenBarsOverlay.size() + 1));
+    }
+
+    @SubscribeEvent
+    public void onGatekeeperRemoved(TokenGatekeeperEvent.Removed event) {
+        tokenBarsOverlay.clearChildren();
+        for (int i = 1; i <= Models.Token.getGatekeepers().size(); i++) {
+            tokenBarsOverlay.addChild(new TokenBarOverlay(i));
         }
     }
 
@@ -51,6 +77,8 @@ public class TokenTrackerFeature extends Feature {
 
         public TokenBarOverlay(int id) {
             super(id, new OverlaySize(81, 21));
+            horizontalAlignmentOverride.updateConfig(HorizontalAlignment.Left);
+            verticalAlignmentOverride.updateConfig(VerticalAlignment.Top);
         }
 
         @Override
@@ -67,7 +95,7 @@ public class TokenTrackerFeature extends Feature {
 
         @Override
         public boolean isRendered() {
-            return Models.Token.getGatekeepers().size() >= getId();
+            return true;
         }
 
         @Override
@@ -83,6 +111,17 @@ public class TokenTrackerFeature extends Feature {
         @Override
         protected float getTextureHeight() {
             return Texture.UNIVERSAL_BAR.height() / 2f;
+        }
+    }
+
+    public static class TokenBarsOverlay extends ContainerOverlay<TokenBarOverlay> {
+        public TokenBarsOverlay(OverlayPosition position, OverlaySize size, GrowDirection growDirection) {
+            super(position, size, growDirection);
+        }
+
+        @Override
+        protected List<TokenBarOverlay> getPreviewChildren() {
+            return List.of(new TokenBarOverlay(0), new TokenBarOverlay(1));
         }
     }
 }
