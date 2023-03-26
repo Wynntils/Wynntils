@@ -81,9 +81,7 @@ public abstract class DynamicOverlay extends Overlay {
     public int compareTo(Overlay other) {
         return ComparisonChain.start()
                 .compareTrueFirst(this.isParentEnabled(), other.isParentEnabled())
-                .compare(
-                        this.getDeclaringClass().getSimpleName(),
-                        other.getDeclaringClass().getSimpleName())
+                .compare(this.getDeclaringClassName(), other.getDeclaringClassName())
                 .compare(
                         this.getId(),
                         (other instanceof DynamicOverlay dynamicOverlay) ? dynamicOverlay.getId() : 0,
