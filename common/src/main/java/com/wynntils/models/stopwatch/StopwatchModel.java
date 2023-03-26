@@ -18,17 +18,14 @@ public class StopwatchModel extends Model {
     }
 
     public int getHours() {
-        getElapsedMillis();
         return (int) (getElapsedMillis() / 3600000) % 24;
     }
 
     public int getMinutes() {
-        getElapsedMillis();
         return (int) (getElapsedMillis() / 60000) % 60;
     }
 
     public int getSeconds() {
-        getElapsedMillis();
         return (int) (getElapsedMillis() / 1000) % 60;
     }
 
