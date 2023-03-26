@@ -46,7 +46,7 @@ public class StopwatchFeature extends Feature {
     private final LiteralCommandNode<CommandSourceStack> stopCommand = Commands.literal("stop")
             .executes(ctx -> {
                 if (Models.Stopwatch.isRunning()) {
-                    Models.Stopwatch.stop();
+                    Models.Stopwatch.pause();
                 }
                 return 0;
             })
@@ -65,7 +65,7 @@ public class StopwatchFeature extends Feature {
 
     private void toggleStopwatch() {
         if (Models.Stopwatch.isRunning()) {
-            Models.Stopwatch.stop();
+            Models.Stopwatch.pause();
         } else {
             Models.Stopwatch.start();
         }
