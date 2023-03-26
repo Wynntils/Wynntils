@@ -569,7 +569,6 @@
   "feature.wynntils.quickCast.levelRequirementNotReached": "您的等级比这武器需要的少。",
   "feature.wynntils.quickCast.name": "快施法",
   "feature.wynntils.quickCast.notAWeapon": "您只能用武器做快施法！",
-  "feature.wynntils.shamanMasksOverlay.hideMaskTitles.description": "要是否隐藏关於面具的标题吗？",
   "feature.wynntils.shamanMasksOverlay.hideMaskTitles.name": "藏面具标题",
   "feature.wynntils.shamanMasksOverlay.name": "满面具",
   "feature.wynntils.shamanMasksOverlay.overlay.shamanMask.displayNone.description": "如果您现在没穿面具，还要显示叠加层吗？",
