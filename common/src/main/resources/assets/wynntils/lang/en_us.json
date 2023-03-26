@@ -706,7 +706,7 @@
   "feature.wynntils.quickCast.name": "Quick Spell Cast",
   "feature.wynntils.quickCast.notAWeapon": "You can only quick-cast with a weapon!",
   "feature.wynntils.replaceRecipeBook.name": "Replace Recipe Book",
-  "feature.wynntils.shamanMasksOverlay.hideMaskTitles.description": "Should titles be hidden about masks? Only works if the Shaman Mask Overlay is enabled.",
+  "feature.wynntils.shamanMasksOverlay.hideMaskTitles.description": "Should titles be hidden about masks?",
   "feature.wynntils.shamanMasksOverlay.hideMaskTitles.name": "Hide Mask Titles",
   "feature.wynntils.shamanMasksOverlay.name": "Shaman Masks",
   "feature.wynntils.shamanMasksOverlay.overlay.shamanMask.displayNone.description": "Should the overlay be shown if your current mask is None?",
