@@ -9,8 +9,8 @@ import java.util.List;
 
 public class StopwatchModel extends Model {
 
-    private long startTimeMillis = -1;
-    private long pausedAtMillis = -1;
+    private long startTimeMillis = 0;
+    private long elapsedBeforePause = 0;
     private boolean running = false;
 
     public StopwatchModel() {
@@ -18,19 +18,23 @@ public class StopwatchModel extends Model {
     }
 
     public int getHours() {
-        return (int) (((running ? System.currentTimeMillis() : pausedAtMillis) - startTimeMillis) / 3600000) % 24;
+        return (int) (getElapsedMillis() / 3600000) % 24;
     }
 
     public int getMinutes() {
-        return (int) (((running ? System.currentTimeMillis() : pausedAtMillis) - startTimeMillis) / 60000) % 60;
+        return (int) (getElapsedMillis() / 60000) % 60;
     }
 
     public int getSeconds() {
-        return (int) (((running ? System.currentTimeMillis() : pausedAtMillis) - startTimeMillis) / 1000) % 60;
+        return (int) (getElapsedMillis() / 1000) % 60;
     }
 
     public int getMilliseconds() {
-        return (int) ((running ? System.currentTimeMillis() : pausedAtMillis) - startTimeMillis) % 1000;
+        return (int) getElapsedMillis() % 1000;
+    }
+
+    private long getElapsedMillis() {
+        return running ? System.currentTimeMillis() - startTimeMillis : elapsedBeforePause;
     }
 
     public boolean isRunning() {
@@ -38,20 +42,27 @@ public class StopwatchModel extends Model {
     }
 
     public void start() {
-        if (startTimeMillis == -1) {
+        if (running) return;
+
+        if (elapsedBeforePause != 0) { // paused -> resumed
+            startTimeMillis = System.currentTimeMillis() - elapsedBeforePause;
+            elapsedBeforePause = 0;
+        } else { // stopped -> started
             startTimeMillis = System.currentTimeMillis();
         }
         running = true;
     }
 
-    public void stop() {
-        pausedAtMillis = System.currentTimeMillis();
+    public void pause() {
+        if (!running) return;
+
+        elapsedBeforePause = System.currentTimeMillis() - startTimeMillis;
         running = false;
     }
 
     public void reset() {
         running = false;
-        startTimeMillis = -1;
-        pausedAtMillis = -1;
+        startTimeMillis = 0;
+        elapsedBeforePause = 0;
     }
 }

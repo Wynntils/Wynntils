@@ -43,10 +43,10 @@ public class StopwatchFeature extends Feature {
             .build();
 
     @RegisterCommand
-    private final LiteralCommandNode<CommandSourceStack> stopCommand = Commands.literal("stop")
+    private final LiteralCommandNode<CommandSourceStack> pauseCommand = Commands.literal("pause")
             .executes(ctx -> {
                 if (Models.Stopwatch.isRunning()) {
-                    Models.Stopwatch.stop();
+                    Models.Stopwatch.pause();
                 }
                 return 0;
             })
@@ -65,7 +65,7 @@ public class StopwatchFeature extends Feature {
 
     private void toggleStopwatch() {
         if (Models.Stopwatch.isRunning()) {
-            Models.Stopwatch.stop();
+            Models.Stopwatch.pause();
         } else {
             Models.Stopwatch.start();
         }
@@ -73,7 +73,7 @@ public class StopwatchFeature extends Feature {
 
     public static class StopwatchOverlay extends TextOverlay {
         private static final String TEMPLATE =
-                "{if_str(stopwatch_running;\"\";if_str(stopwatch_zero;\"&7\";\"&e\"))}{stopwatch_hours}:{stopwatch_minutes}:{stopwatch_seconds}.{stopwatch_milliseconds}";
+                "{if_str(stopwatch_zero;\"\";concat(if_str(stopwatch_running;\"\";\"&e\");stopwatch_hours;\":\";stopwatch_minutes;\":\";stopwatch_seconds;\".\";stopwatch_milliseconds))}";
 
         protected StopwatchOverlay() {
             super(
