@@ -86,6 +86,7 @@ public enum Texture {
     MAP_HELP_BUTTON("map/map_help_button.png", 10, 16),
     MAP_POINTERS("map/map_pointers.png", 256, 256),
     MAP_SHARE_BUTTON("map/map_share_button.png", 16, 14),
+    MAP_MANAGER_BUTTON("map/map_manager_button.png", 12, 16),
     MAP_WAYPOINT_FOCUS_BUTTON("map/map_waypoint_focus_button.png", 12, 16),
     PAPER_MAP_TEXTURES("map/map_border/paper_map_textures.png", 256, 512),
     WYNN_MAP_TEXTURES("map/map_border/wynn_map_textures.png", 126, 256),
