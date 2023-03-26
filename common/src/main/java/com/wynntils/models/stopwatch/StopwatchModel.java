@@ -10,7 +10,7 @@ import java.util.List;
 public class StopwatchModel extends Model {
 
     private long startTimeMillis = -1;
-    private long pausedAtMillis = -1;
+    private long currentTimeMillis = -1;
     private boolean running = false;
 
     public StopwatchModel() {
@@ -18,19 +18,29 @@ public class StopwatchModel extends Model {
     }
 
     public int getHours() {
-        return (int) (((running ? System.currentTimeMillis() : pausedAtMillis) - startTimeMillis) / 3600000) % 24;
+        update();
+        return (int) ((currentTimeMillis - startTimeMillis) / 3600000) % 24;
     }
 
     public int getMinutes() {
-        return (int) (((running ? System.currentTimeMillis() : pausedAtMillis) - startTimeMillis) / 60000) % 60;
+        update();
+        return (int) ((currentTimeMillis - startTimeMillis) / 60000) % 60;
     }
 
     public int getSeconds() {
-        return (int) (((running ? System.currentTimeMillis() : pausedAtMillis) - startTimeMillis) / 1000) % 60;
+        update();
+        return (int) ((currentTimeMillis - startTimeMillis) / 1000) % 60;
     }
 
     public int getMilliseconds() {
-        return (int) ((running ? System.currentTimeMillis() : pausedAtMillis) - startTimeMillis) % 1000;
+        update();
+        return (int) (currentTimeMillis - startTimeMillis) % 1000;
+    }
+
+    private void update() {
+        if (running) {
+            currentTimeMillis = System.currentTimeMillis();
+        }
     }
 
     public boolean isRunning() {
@@ -45,13 +55,13 @@ public class StopwatchModel extends Model {
     }
 
     public void stop() {
-        pausedAtMillis = System.currentTimeMillis();
+        currentTimeMillis = System.currentTimeMillis();
         running = false;
     }
 
     public void reset() {
         running = false;
         startTimeMillis = -1;
-        pausedAtMillis = -1;
+        currentTimeMillis = -1;
     }
 }
