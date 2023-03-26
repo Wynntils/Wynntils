@@ -10,9 +10,12 @@ import com.wynntils.core.components.Model;
 import com.wynntils.models.elements.ElementModel;
 import com.wynntils.models.gear.type.GearInfo;
 import com.wynntils.models.gear.type.GearInstance;
+import com.wynntils.models.gear.type.GearTier;
+import com.wynntils.models.gear.type.GearType;
 import com.wynntils.models.items.items.game.CraftedGearItem;
 import com.wynntils.models.items.items.game.GearBoxItem;
 import com.wynntils.models.items.items.game.GearItem;
+import com.wynntils.models.items.items.game.UnknownGearItem;
 import com.wynntils.models.stats.StatModel;
 import com.wynntils.models.wynnitem.WynnItemModel;
 import com.wynntils.models.wynnitem.parsing.WynnItemParseResult;
@@ -96,15 +99,27 @@ public final class GearModel extends Model {
     public CraftedGearItem parseCraftedGearItem(ItemStack itemStack) {
         WynnItemParseResult result = WynnItemParser.parseItemStack(itemStack, null);
         CappedValue durability = new CappedValue(result.durabilityCurrent(), result.durabilityMax());
+        GearType gearType = GearType.fromItemStack(itemStack);
         // FIXME: Damages and requirements are not yet parsed
         return new CraftedGearItem(
-                result.gearType(),
+                gearType, result.level(), List.of(), List.of(), result.identifications(), result.powders(), durability);
+    }
+
+    public UnknownGearItem parseUnknownGearItem(
+            String name, GearType gearType, GearTier gearTier, ItemStack itemStack) {
+        WynnItemParseResult result = WynnItemParser.parseItemStack(itemStack, null);
+
+        // FIXME: Damages and requirements are not yet parsed
+        return new UnknownGearItem(
+                name,
+                gearType,
+                gearTier,
                 result.level(),
                 List.of(),
                 List.of(),
                 result.identifications(),
                 result.powders(),
-                durability);
+                result.rerolls());
     }
 
     public GearItem fromEncodedString(String encoded) {
