@@ -22,6 +22,8 @@ import com.wynntils.utils.mc.McUtils;
 import com.wynntils.utils.render.Texture;
 import com.wynntils.utils.render.type.HorizontalAlignment;
 import com.wynntils.utils.render.type.VerticalAlignment;
+import com.wynntils.utils.type.CappedValue;
+import java.util.ArrayList;
 import java.util.List;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.resources.sounds.SimpleSoundInstance;
@@ -47,9 +49,14 @@ public class TokenTrackerFeature extends Feature {
         // Do not play sound when depositing from the inventory
         if (event.getCount() < event.getOldCount()) return;
 
-        if (Models.Token.getCollected(event.getGatekeeper()).isAtCap()) {
-            McUtils.mc().getSoundManager().play(SimpleSoundInstance.forUI(SoundEvents.BELL_BLOCK, 0.7f, 0.75f));
-        }
+        CappedValue deposited = event.getGatekeeper().getDeposited();
+        int collected = Models.Token.inInventory(event.getGatekeeper()) + deposited.current();
+
+        if (collected < deposited.max()) return;
+        // Do not keep playing the sound if we go too far over the needed amount
+        if (collected > deposited.max() + 5) return;
+
+        McUtils.mc().getSoundManager().play(SimpleSoundInstance.forUI(SoundEvents.BELL_BLOCK, 0.7f, 0.75f));
     }
 
     @SubscribeEvent
