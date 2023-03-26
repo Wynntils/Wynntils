@@ -38,7 +38,7 @@ public final class InventoryUtils {
     public static boolean isWeapon(ItemStack itemStack) {
         Optional<GearTypeItemProperty> gearItemOpt =
                 Models.Item.asWynnItemPropery(itemStack, GearTypeItemProperty.class);
-        if (!gearItemOpt.isPresent()) return false;
+        if (gearItemOpt.isEmpty()) return false;
 
         return gearItemOpt.get().getGearType().isWeapon();
     }
