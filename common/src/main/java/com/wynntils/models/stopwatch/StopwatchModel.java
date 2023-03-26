@@ -10,7 +10,7 @@ import java.util.List;
 public class StopwatchModel extends Model {
 
     private long startTimeMillis = 0;
-    private long pauseTimeMillis = 0;
+    private long elapsedBeforePause = 0;
     private boolean running = false;
 
     public StopwatchModel() {
@@ -34,7 +34,7 @@ public class StopwatchModel extends Model {
     }
 
     private long getElapsedMillis() {
-        return running ? System.currentTimeMillis() - startTimeMillis : pauseTimeMillis - startTimeMillis;
+        return running ? System.currentTimeMillis() - startTimeMillis : elapsedBeforePause;
     }
 
     public boolean isRunning() {
@@ -44,9 +44,9 @@ public class StopwatchModel extends Model {
     public void start() {
         if (running) return;
 
-        if (pauseTimeMillis != 0) { // paused -> resumed
-            startTimeMillis += System.currentTimeMillis() - pauseTimeMillis;
-            pauseTimeMillis = 0;
+        if (elapsedBeforePause != 0) { // paused -> resumed
+            startTimeMillis = System.currentTimeMillis() - elapsedBeforePause;
+            elapsedBeforePause = 0;
         } else { // stopped -> started
             startTimeMillis = System.currentTimeMillis();
         }
@@ -56,13 +56,13 @@ public class StopwatchModel extends Model {
     public void pause() {
         if (!running) return;
 
-        pauseTimeMillis = System.currentTimeMillis();
+        elapsedBeforePause = System.currentTimeMillis() - startTimeMillis;
         running = false;
     }
 
     public void reset() {
         running = false;
         startTimeMillis = 0;
-        pauseTimeMillis = 0;
+        elapsedBeforePause = 0;
     }
 }
