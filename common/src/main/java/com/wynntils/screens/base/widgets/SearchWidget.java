@@ -13,7 +13,6 @@ import com.wynntils.utils.render.RenderUtils;
 import com.wynntils.utils.render.type.HorizontalAlignment;
 import com.wynntils.utils.render.type.TextShadow;
 import com.wynntils.utils.render.type.VerticalAlignment;
-import com.wynntils.utils.type.Pair;
 import java.util.Objects;
 import java.util.function.Consumer;
 import net.minecraft.client.gui.Font;
@@ -32,7 +31,18 @@ public class SearchWidget extends TextInputBoxWidget {
     }
 
     @Override
-    public void renderWidget(PoseStack poseStack, int mouseX, int mouseY, float partialTick) {
+    protected void doRenderWidget(
+            PoseStack poseStack,
+            String renderedText,
+            String firstPortion,
+            String highlightedPortion,
+            String lastPortion,
+            Font font,
+            int firstWidth,
+            int highlightedWidth,
+            int lastWidth) {
+        boolean defaultText = Objects.equals(textBoxInput, "") && !isFocused();
+
         RenderUtils.drawRect(poseStack, CommonColors.BLACK, this.getX(), this.getY(), 0, this.width, this.height);
         RenderUtils.drawRectBorders(
                 poseStack,
@@ -43,23 +53,6 @@ public class SearchWidget extends TextInputBoxWidget {
                 this.getY() + this.height,
                 0,
                 1f);
-
-        boolean defaultText = Objects.equals(textBoxInput, "") && !isFocused();
-
-        Pair<String, Integer> renderedTextDetails = getRenderedText(this.width - 18);
-        String renderedText = renderedTextDetails.a();
-
-        Pair<Integer, Integer> highlightedVisibleInterval = getRenderedHighlighedInterval(renderedText);
-
-        String firstPortion = renderedText.substring(0, highlightedVisibleInterval.a());
-        String highlightedPortion =
-                renderedText.substring(highlightedVisibleInterval.a(), highlightedVisibleInterval.b());
-        String lastPortion = renderedText.substring(highlightedVisibleInterval.b());
-
-        Font font = FontRenderer.getInstance().getFont();
-        int firstWidth = font.width(firstPortion);
-        int highlightedWidth = font.width(highlightedPortion);
-        int lastWidth = font.width(lastPortion);
 
         FontRenderer.getInstance()
                 .renderAlignedTextInBox(
@@ -110,6 +103,11 @@ public class SearchWidget extends TextInputBoxWidget {
                 this.getY() + VERTICAL_OFFSET,
                 VerticalAlignment.Top,
                 false);
+    }
+
+    @Override
+    protected int getMaxTextWidth() {
+        return this.width - 18;
     }
 
     @Override
