@@ -30,6 +30,8 @@ public class PoiManagementScreen extends WynntilsScreen {
     private final MainMapScreen oldMapScreen;
     private Button nextButton;
     private Button previousButton;
+    private Button deleteAllButton;
+    private int deleteCount = 3;
     private List<CustomPoi> waypoints;
     private int pageHeight;
     private int page;
@@ -77,6 +79,20 @@ public class PoiManagementScreen extends WynntilsScreen {
                         .pos(this.width/2 - 22, this.height - 45)
                         .size(20, 20)
                         .build());
+
+        this.addRenderableWidget(
+                deleteAllButton = new Button.Builder(
+                        Component.literal("DELETE ALL (Press " + deleteCount + " times)"), (button) -> {
+                    clearAllButton();
+                })
+                        .pos(25, this.height - 45)
+                        .size(font.width("DELETE ALL (Press " + deleteCount + " times)") + 15, 20)
+                        .build());
+
+        // In case doInit called again, won't say press 0 times
+        if (deleteCount == 0) {
+            deleteAllButton.setMessage(Component.literal("DELETED!"));
+        }
 
         waypoints = Managers.Feature.getFeatureInstance(MapFeature.class)
                 .customPois
@@ -210,5 +226,18 @@ public class PoiManagementScreen extends WynntilsScreen {
     private void checkAvailablePages() {
         nextButton.active = waypoints.size() - page * pageHeight > pageHeight;
         previousButton.active = page > 0;
+    }
+
+    private void clearAllButton() {
+        if (deleteCount == 0) {
+            Managers.Feature.getFeatureInstance(MapFeature.class).customPois.get().clear();
+
+            Managers.Config.saveConfig();
+            deleteAllButton.setMessage(Component.literal("DELETED!"));
+            populatePois();
+        } else if (deleteCount > 0){
+            deleteCount--;
+            deleteAllButton.setMessage(Component.literal("DELETE ALL (Press " + deleteCount + " times)"));
+        }
     }
 }
