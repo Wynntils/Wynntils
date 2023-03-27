@@ -7,6 +7,7 @@ package com.wynntils.functions.generic;
 import com.wynntils.core.functions.GenericFunction;
 import com.wynntils.core.functions.arguments.FunctionArguments;
 import com.wynntils.utils.StringUtils;
+import com.wynntils.utils.type.CappedValue;
 import java.util.List;
 
 public class StringFunctions {
@@ -21,6 +22,21 @@ public class StringFunctions {
         public FunctionArguments.RequiredArgumentBuilder getRequiredArgumentsBuilder() {
             return new FunctionArguments.RequiredArgumentBuilder(
                     List.of(new FunctionArguments.Argument<>("value", Number.class, null)));
+        }
+    }
+
+    public static class FormatCappedFunction extends GenericFunction<String> {
+        @Override
+        public String getValue(FunctionArguments arguments) {
+            CappedValue value = arguments.getArgument("value").getCappedValue();
+            return StringUtils.integerToShortString(value.current()) + "/"
+                    + StringUtils.integerToShortString(value.max());
+        }
+
+        @Override
+        public FunctionArguments.RequiredArgumentBuilder getRequiredArgumentsBuilder() {
+            return new FunctionArguments.RequiredArgumentBuilder(
+                    List.of(new FunctionArguments.Argument<>("value", CappedValue.class, null)));
         }
     }
 

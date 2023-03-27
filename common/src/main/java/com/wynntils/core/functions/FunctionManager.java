@@ -340,6 +340,7 @@ public final class FunctionManager extends Manager {
         registerFunction(new MathFunctions.SubtractFunction());
 
         registerFunction(new StringFunctions.ConcatFunction());
+        registerFunction(new StringFunctions.FormatCappedFunction());
         registerFunction(new StringFunctions.FormatFunction());
         registerFunction(new StringFunctions.ParseDoubleFunction());
         registerFunction(new StringFunctions.ParseIntegerFunction());
