@@ -33,6 +33,7 @@
     "PlayerMixin",
     "PlayerRendererMixin",
     "PotionItemMixin",
+    "ProgressScreenMixin",
     "ResourceLoadStateTrackerMixin",
     "ScoreboardMixin",
     "ScreenMixin",
