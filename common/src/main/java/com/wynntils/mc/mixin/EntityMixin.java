@@ -33,7 +33,7 @@ public abstract class EntityMixin implements EntityExtension {
 
     @Inject(method = "playSound(Lnet/minecraft/sounds/SoundEvent;FF)V", at = @At("HEAD"), cancellable = true)
     private void playSoundPre(SoundEvent sound, float volume, float pitch, CallbackInfo ci) {
-        LocalSoundEvent.Player event = new LocalSoundEvent.Player(sound);
+        LocalSoundEvent.LocalEntity event = new LocalSoundEvent.LocalEntity(sound, (Entity) (Object) this);
         MixinHelper.post(event);
         if (event.isCanceled()) {
             ci.cancel();

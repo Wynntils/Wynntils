@@ -5,6 +5,7 @@
 package com.wynntils.mc.event;
 
 import net.minecraft.sounds.SoundEvent;
+import net.minecraft.world.entity.Entity;
 import net.minecraftforge.eventbus.api.Cancelable;
 import net.minecraftforge.eventbus.api.Event;
 
@@ -26,10 +27,10 @@ public abstract class LocalSoundEvent extends Event {
         }
     }
 
-    public static final class Entity extends LocalSoundEvent {
+    public static final class LocalEntity extends LocalSoundEvent {
         private final Entity entity;
 
-        public Entity(SoundEvent sound, Entity entity) {
+        public LocalEntity(SoundEvent sound, Entity entity) {
             super(sound);
             this.entity = entity;
         }

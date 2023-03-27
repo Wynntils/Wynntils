@@ -17,6 +17,6 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 public abstract class ProgressScreenMixin {
     @Inject(method = "progressStart(Lnet/minecraft/network/chat/Component;)V", at = @At("RETURN"))
     private void progressStartPost(Component header, CallbackInfo info) {
-        MixinHelper.postAlways(new LoadingProgressEvent(header.getString()));
+        MixinHelper.post(new LoadingProgressEvent(header.getString()));
     }
 }
