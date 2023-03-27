@@ -1,9 +1,21 @@
+## [0.0.2-alpha.387](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.386...v0.0.2-alpha.387) (2023-03-27)
+
+
+### Bug Fixes
+
+* We failed to properly detect INTERIM world state ([#1385](https://github.com/Wynntils/Artemis/issues/1385)) ([97ec505](https://github.com/Wynntils/Artemis/commit/97ec505d2ef5e7a0a051a60208fbfddf659c04f1))
+
 ## [0.0.2-alpha.386](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.385...v0.0.2-alpha.386) (2023-03-27)
 
 
 ### New Features
 
 * Text box enhancements ([#1370](https://github.com/Wynntils/Artemis/issues/1370)) ([9760e51](https://github.com/Wynntils/Artemis/commit/9760e51fc26e2a9b2497eaeb64bcda9cb9fce55f))
+
+
+### Miscellaneous Chores
+
+* **release:** v0.0.2-alpha.386 [skip ci] ([688ecb7](https://github.com/Wynntils/Artemis/commit/688ecb75285c167cbfe288ecc34fcfb2699d3a45))
 
 ## [0.0.2-alpha.385](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.384...v0.0.2-alpha.385) (2023-03-26)
 
@@ -40,16 +52,4 @@
 ### Miscellaneous Chores
 
 * **release:** v0.0.2-alpha.383 [skip ci] ([ff1dccb](https://github.com/Wynntils/Artemis/commit/ff1dccb8294e2fb2bdf73ba61bc7af092f89e48d))
-
-## [0.0.2-alpha.382](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.381...v0.0.2-alpha.382) (2023-03-26)
-
-
-### New Features
-
-* Introduce Overlay container, and start using it for Token overlay ([#1372](https://github.com/Wynntils/Artemis/issues/1372)) ([704f390](https://github.com/Wynntils/Artemis/commit/704f3906fad0d9242021f6d86a2749a10d3e17ef))
-
-
-### Miscellaneous Chores
-
-* **release:** v0.0.2-alpha.382 [skip ci] ([7fe52df](https://github.com/Wynntils/Artemis/commit/7fe52dff29185b1329c237a0e03f038850cfb32f))
 
