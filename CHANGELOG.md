@@ -1,9 +1,21 @@
+## [0.0.2-alpha.386](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.385...v0.0.2-alpha.386) (2023-03-27)
+
+
+### New Features
+
+* Text box enhancements ([#1370](https://github.com/Wynntils/Artemis/issues/1370)) ([9760e51](https://github.com/Wynntils/Artemis/commit/9760e51fc26e2a9b2497eaeb64bcda9cb9fce55f))
+
 ## [0.0.2-alpha.385](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.384...v0.0.2-alpha.385) (2023-03-26)
 
 
 ### New Features
 
 * Introduce UnknownGearAnnotator ([#1383](https://github.com/Wynntils/Artemis/issues/1383)) ([322efcf](https://github.com/Wynntils/Artemis/commit/322efcf1421251f4a53b9682978f38454a6005a1))
+
+
+### Miscellaneous Chores
+
+* **release:** v0.0.2-alpha.385 [skip ci] ([0832f35](https://github.com/Wynntils/Artemis/commit/0832f35f27692976573e52c7cf201a3edab0c6e7))
 
 ## [0.0.2-alpha.384](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.383...v0.0.2-alpha.384) (2023-03-26)
 
@@ -40,16 +52,4 @@
 ### Miscellaneous Chores
 
 * **release:** v0.0.2-alpha.382 [skip ci] ([7fe52df](https://github.com/Wynntils/Artemis/commit/7fe52dff29185b1329c237a0e03f038850cfb32f))
-
-## [0.0.2-alpha.381](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.380...v0.0.2-alpha.381) (2023-03-26)
-
-
-### Bug Fixes
-
-* Stopwatch pause runs in background ([#1379](https://github.com/Wynntils/Artemis/issues/1379)) ([8078cc4](https://github.com/Wynntils/Artemis/commit/8078cc464695dbd3c4808619843d6ebec04c70df))
-
-
-### Miscellaneous Chores
-
-* **release:** v0.0.2-alpha.381 [skip ci] ([b02a4c8](https://github.com/Wynntils/Artemis/commit/b02a4c83322f86b24fd03fffed5646b0a3c371a8))
 
