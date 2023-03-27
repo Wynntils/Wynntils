@@ -11,6 +11,8 @@ import com.wynntils.mc.event.ContainerRenderEvent;
 import com.wynntils.mc.event.InventoryKeyPressEvent;
 import com.wynntils.mc.event.InventoryMouseClickedEvent;
 import com.wynntils.mc.event.SlotRenderEvent;
+import com.wynntils.screens.base.TextboxScreen;
+import com.wynntils.screens.base.widgets.TextInputBoxWidget;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
 import net.minecraft.world.inventory.Slot;
@@ -74,6 +76,30 @@ public abstract class AbstractContainerScreenMixin {
         if (event.isCanceled()) {
             cir.setReturnValue(true);
             cir.cancel();
+        }
+    }
+
+    @Inject(method = "mouseDragged(DDIDD)Z", at = @At("RETURN"))
+    private void mouseDraggedPre(
+            double mouseX,
+            double mouseY,
+            int button,
+            double deltaX,
+            double deltaY,
+            CallbackInfoReturnable<Boolean> cir) {
+        TextInputBoxWidget focusedTextInput = ((TextboxScreen) this).getFocusedTextInput();
+
+        if (focusedTextInput != null) {
+            focusedTextInput.mouseDragged(mouseX, mouseY, button, deltaX, deltaY);
+        }
+    }
+
+    @Inject(method = "mouseReleased(DDI)Z", at = @At("RETURN"))
+    private void mouseReleasedPre(double mouseX, double mouseY, int button, CallbackInfoReturnable<Boolean> cir) {
+        TextInputBoxWidget focusedTextInput = ((TextboxScreen) this).getFocusedTextInput();
+
+        if (focusedTextInput != null) {
+            focusedTextInput.mouseReleased(mouseX, mouseY, button);
         }
     }
 

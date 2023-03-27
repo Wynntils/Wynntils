@@ -12,22 +12,115 @@ import com.wynntils.utils.render.FontRenderer;
 import com.wynntils.utils.render.RenderUtils;
 import com.wynntils.utils.render.type.HorizontalAlignment;
 import com.wynntils.utils.render.type.TextShadow;
+import com.wynntils.utils.render.type.VerticalAlignment;
 import java.util.Objects;
 import java.util.function.Consumer;
+import net.minecraft.client.gui.Font;
 import net.minecraft.network.chat.Component;
 import net.minecraft.sounds.SoundEvents;
 
 public class SearchWidget extends TextInputBoxWidget {
     protected static final Component DEFAULT_TEXT =
             Component.translatable("screens.wynntils.searchWidget.defaultSearchText");
+    private static final float VERTICAL_OFFSET = 6.5f;
 
     public SearchWidget(
             int x, int y, int width, int height, Consumer<String> onUpdateConsumer, TextboxScreen textboxScreen) {
         super(x, y, width, height, Component.literal("Search Box"), onUpdateConsumer, textboxScreen);
+        textPadding = 5;
     }
 
     @Override
-    public void renderWidget(PoseStack poseStack, int mouseX, int mouseY, float partialTick) {
+    protected void doRenderWidget(
+            PoseStack poseStack,
+            String renderedText,
+            String firstPortion,
+            String highlightedPortion,
+            String lastPortion,
+            Font font,
+            int firstWidth,
+            int highlightedWidth,
+            int lastWidth) {
+        boolean defaultText = Objects.equals(textBoxInput, "") && !isFocused();
+
+        renderBackground(poseStack);
+
+        renderText(
+                poseStack,
+                renderedText,
+                firstPortion,
+                highlightedPortion,
+                lastPortion,
+                font,
+                firstWidth,
+                highlightedWidth,
+                lastWidth,
+                defaultText);
+    }
+
+    protected void renderText(
+            PoseStack poseStack,
+            String renderedText,
+            String firstPortion,
+            String highlightedPortion,
+            String lastPortion,
+            Font font,
+            int firstWidth,
+            int highlightedWidth,
+            int lastWidth,
+            boolean defaultText) {
+        FontRenderer.getInstance()
+                .renderAlignedTextInBox(
+                        poseStack,
+                        defaultText ? DEFAULT_TEXT.getString() : firstPortion,
+                        this.getX() + textPadding,
+                        this.getX() + this.width - textPadding - lastWidth - highlightedWidth,
+                        this.getY() + VERTICAL_OFFSET,
+                        0,
+                        defaultText ? CommonColors.LIGHT_GRAY : CommonColors.WHITE,
+                        HorizontalAlignment.Left,
+                        TextShadow.NORMAL);
+
+        if (defaultText) return;
+
+        FontRenderer.getInstance()
+                .renderAlignedHighlightedTextInBox(
+                        poseStack,
+                        highlightedPortion,
+                        this.getX() + textPadding + firstWidth,
+                        this.getX() + this.width - textPadding - lastWidth,
+                        this.getY() + VERTICAL_OFFSET,
+                        this.getY() + VERTICAL_OFFSET,
+                        0,
+                        CommonColors.BLUE,
+                        CommonColors.WHITE,
+                        HorizontalAlignment.Left,
+                        VerticalAlignment.Top);
+
+        FontRenderer.getInstance()
+                .renderAlignedTextInBox(
+                        poseStack,
+                        lastPortion,
+                        this.getX() + textPadding + firstWidth + highlightedWidth,
+                        this.getX() + this.width - textPadding,
+                        this.getY() + VERTICAL_OFFSET,
+                        0,
+                        defaultText ? CommonColors.LIGHT_GRAY : CommonColors.WHITE,
+                        HorizontalAlignment.Left,
+                        TextShadow.NORMAL);
+
+        drawCursor(
+                poseStack,
+                this.getX()
+                        + font.width(renderedText.substring(0, Math.min(cursorPosition, renderedText.length())))
+                        + textPadding
+                        - 2,
+                this.getY() + VERTICAL_OFFSET,
+                VerticalAlignment.Top,
+                false);
+    }
+
+    protected void renderBackground(PoseStack poseStack) {
         RenderUtils.drawRect(poseStack, CommonColors.BLACK, this.getX(), this.getY(), 0, this.width, this.height);
         RenderUtils.drawRectBorders(
                 poseStack,
@@ -38,22 +131,11 @@ public class SearchWidget extends TextInputBoxWidget {
                 this.getY() + this.height,
                 0,
                 1f);
+    }
 
-        boolean defaultText = Objects.equals(textBoxInput, "") && !isFocused();
-
-        String renderedText = getRenderedText(this.width - 18);
-
-        FontRenderer.getInstance()
-                .renderAlignedTextInBox(
-                        poseStack,
-                        defaultText ? DEFAULT_TEXT.getString() : renderedText,
-                        this.getX() + 5,
-                        this.getX() + this.width - 5,
-                        this.getY() + 6.5f,
-                        this.width,
-                        defaultText ? CommonColors.LIGHT_GRAY : CommonColors.WHITE,
-                        HorizontalAlignment.Left,
-                        TextShadow.NORMAL);
+    @Override
+    protected int getMaxTextWidth() {
+        return this.width - 18;
     }
 
     @Override
@@ -63,8 +145,9 @@ public class SearchWidget extends TextInputBoxWidget {
                 && mouseY >= this.getY()
                 && mouseY <= this.getY() + this.height) {
             McUtils.playSound(SoundEvents.UI_BUTTON_CLICK.value());
+            setCursorAndHighlightPositions(getIndexAtPosition(mouseX));
+            isDragging = true;
             textboxScreen.setFocusedTextInput(this);
-
             return true;
         } else {
             textboxScreen.setFocusedTextInput(null);

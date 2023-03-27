@@ -146,6 +146,57 @@ public final class FontRenderer {
                 1f);
     }
 
+    public void renderAlignedHighlightedTextInBox(
+            PoseStack poseStack,
+            String text,
+            float x1,
+            float x2,
+            float y1,
+            float y2,
+            float maxWidth,
+            CustomColor textColor,
+            CustomColor backgroundColor,
+            HorizontalAlignment horizontalAlignment,
+            VerticalAlignment verticalAlignment) {
+        float renderX =
+                switch (horizontalAlignment) {
+                    case Left -> x1;
+                    case Center -> (x1 + x2) / 2f;
+                    case Right -> x2;
+                };
+
+        float renderY =
+                switch (verticalAlignment) {
+                    case Top -> y1;
+                    case Middle -> (y1 + y2) / 2f;
+                    case Bottom -> y2;
+                };
+
+        float cursorRenderY =
+                switch (verticalAlignment) {
+                    case Top -> renderY - 2;
+                    case Middle -> renderY - (font.lineHeight / 2f) - 2;
+                    case Bottom -> renderY - font.lineHeight + 2;
+                };
+
+        RenderUtils.drawRect(
+                poseStack, backgroundColor, renderX, cursorRenderY, 0, font.width(text), font.lineHeight + 2);
+
+        renderAlignedTextInBox(
+                poseStack,
+                text,
+                x1,
+                x2,
+                y1,
+                y2,
+                maxWidth,
+                textColor,
+                horizontalAlignment,
+                verticalAlignment,
+                TextShadow.NONE,
+                1f);
+    }
+
     public void renderAlignedTextInBox(
             PoseStack poseStack,
             String text,
