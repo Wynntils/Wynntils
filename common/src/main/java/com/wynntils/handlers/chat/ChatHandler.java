@@ -319,6 +319,8 @@ public final class ChatHandler extends Handler {
             lastRealChat = plainText;
         }
 
+        // Normally § codes are stripped from the log; need this to be able to debug chat formatting
+        WynntilsMod.info("[CHAT] " + codedMessage.replace("§", "&"));
         RecipientType recipientType = getRecipientType(codedMessage, messageType);
 
         if (recipientType == RecipientType.NPC) {
