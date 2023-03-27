@@ -90,7 +90,7 @@ public class PoiManagementScreen extends WynntilsScreen {
                         .build());
 
         // In case doInit called again, won't say press 0 times
-        if (deleteCount == 0) {
+        if (deleteCount <= 0) {
             deleteAllButton.setMessage(Component.literal("DELETED!"));
         }
 
@@ -229,6 +229,8 @@ public class PoiManagementScreen extends WynntilsScreen {
     }
 
     private void clearAllButton() {
+        deleteCount--;
+
         if (deleteCount == 0) {
             Managers.Feature.getFeatureInstance(MapFeature.class).customPois.get().clear();
 
@@ -236,7 +238,6 @@ public class PoiManagementScreen extends WynntilsScreen {
             deleteAllButton.setMessage(Component.literal("DELETED!"));
             populatePois();
         } else if (deleteCount > 0){
-            deleteCount--;
             deleteAllButton.setMessage(Component.literal("DELETE ALL (Press " + deleteCount + " times)"));
         }
     }
