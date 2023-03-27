@@ -16,6 +16,7 @@ import com.wynntils.models.token.event.TokenGatekeeperEvent;
 import com.wynntils.models.token.type.TokenGatekeeper;
 import com.wynntils.models.worlds.event.WorldStateEvent;
 import com.wynntils.utils.MathUtils;
+import com.wynntils.utils.mc.PosUtils;
 import com.wynntils.utils.mc.type.Location;
 import com.wynntils.utils.type.CappedValue;
 import com.wynntils.utils.type.TimedSet;
@@ -226,9 +227,7 @@ public class TokenModel extends Model {
 
     private BakingTokenGatekeeper getBaking(Position position) {
         for (BakingTokenGatekeeper baking : bakingGatekeepers) {
-            if (baking.position.x() == position.x()
-                    && baking.position.z() == position.z()
-                    && Math.abs(baking.position.y() - position.y()) < 1.5) {
+            if (PosUtils.isSame(position, baking.position)) {
                 return baking;
             }
         }
