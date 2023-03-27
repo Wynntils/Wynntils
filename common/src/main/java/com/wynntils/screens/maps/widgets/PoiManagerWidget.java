@@ -35,11 +35,6 @@ public class PoiManagerWidget extends AbstractWidget {
     private int row;
     private CustomColor color;
     private int spacingMultiplier = 20;
-    private static final int ungroupedIndex = Managers.Feature.getFeatureInstance(MapFeature.class)
-            .customPois
-            .get().size();
-    private int group = ungroupedIndex;
-    private boolean decreasedSize = (spacingMultiplier == 14);
     private PoiManagementScreen managementScreen;
     private List<CustomPoi> pois;
 
@@ -58,13 +53,11 @@ public class PoiManagerWidget extends AbstractWidget {
             color = CustomColor.fromInt(0x636363);
         }
 
-        int groupShift = group == ungroupedIndex ? 20 : 0;
-
         this.editButton = new Button.Builder(
                 Component.translatable("screens.wynntils.poiManagementGui.edit"),
                 (button) -> McUtils.mc().setScreen(PoiCreationScreen.create(managementScreen, poi)))
-                .pos(this.width/2 + 85 + groupShift, 54 + spacingMultiplier * row)
-                .size((int) Math.round(40.0 * (decreasedSize ? 0.7 : 1.0)), (int) Math.round(20.0 * (decreasedSize ? 0.6 : 1.0)))
+                .pos(this.width/2 + 85 + 20, 54 + spacingMultiplier * row)
+                .size(40, 20)
                 .build();
 
         this.deleteButton = new Button.Builder(
@@ -77,26 +70,22 @@ public class PoiManagerWidget extends AbstractWidget {
                     Managers.Config.saveConfig();
                     managementScreen.populatePois();
                 })
-                .pos(this.width/2 + 130 + groupShift, 54 + spacingMultiplier * row)
-                .size((int) Math.round(40.0 * (decreasedSize ? 0.9 : 1.0)), (int) Math.round(20.0 * (decreasedSize ? 0.6 : 1.0)))
+                .pos(this.width/2 + 130 + 20, 54 + spacingMultiplier * row)
+                .size(40, 20)
                 .build();
 
         this.upButton = new Button.Builder(
                 Component.literal("\u2303"),
-                (button) -> {
-                    updateIndex(-1);
-                })
-                .pos(this.width/2 + 172 + groupShift, 54 + spacingMultiplier * row)
-                .size((int)Math.round(9 * (decreasedSize ? 0.75 : 1.0)), (int)Math.round(9 * (decreasedSize ? 0.75 : 1.0)))
+                (button) -> updateIndex(-1))
+                .pos(this.width/2 + 172 + 20, 54 + spacingMultiplier * row)
+                .size(9, 9)
                 .build();
 
         this.downButton = new Button.Builder(
                 Component.literal("\u2304"),
-                (button) -> {
-                    updateIndex(1);
-                })
-                .pos(this.width/2 + 172 + groupShift, 54 + spacingMultiplier * row + (int)Math.round(9 * (decreasedSize ? 0.75 : 1.0)))
-                .size((int)Math.round(9 * (decreasedSize ? 0.75 : 1.0)), (int)Math.round(9 * (decreasedSize ? 0.75 : 1.0)))
+                (button) -> updateIndex(1))
+                .pos(this.width/2 + 172 + 20, 54 + spacingMultiplier * row + 9)
+                .size(9, 9)
                 .build();
 
         if (pois.indexOf(poi) == 0) {
