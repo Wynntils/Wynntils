@@ -6,9 +6,7 @@ package com.wynntils.screens.maps;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.wynntils.core.components.Managers;
-import com.wynntils.core.components.Models;
 import com.wynntils.features.map.MapFeature;
-import com.wynntils.mc.event.MouseScrollEvent;
 import com.wynntils.models.map.pois.CustomPoi;
 import com.wynntils.screens.base.WynntilsScreen;
 import com.wynntils.screens.maps.widgets.PoiManagerWidget;
@@ -22,10 +20,8 @@ import net.minecraft.ChatFormatting;
 import net.minecraft.client.gui.components.AbstractWidget;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.screens.Screen;
-import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
 import net.minecraft.client.resources.language.I18n;
 import net.minecraft.network.chat.Component;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -160,6 +156,11 @@ public class PoiManagementScreen extends WynntilsScreen {
 
     @Override
     public boolean mouseScrolled(double mouseX, double mouseY, double delta) {
+        if (delta < 0.0 && nextButton.active) {
+            nextPage();
+        } else if (delta > 0.0 && previousButton.active) {
+            previousPage();
+        }
 
         return true;
     }
