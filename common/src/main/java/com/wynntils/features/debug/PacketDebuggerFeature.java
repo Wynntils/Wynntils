@@ -15,6 +15,7 @@ import java.util.Arrays;
 import java.util.List;
 import net.minecraft.network.protocol.Packet;
 import net.minecraft.network.protocol.game.ClientboundAddEntityPacket;
+import net.minecraft.network.protocol.game.ClientboundBlockUpdatePacket;
 import net.minecraft.network.protocol.game.ClientboundForgetLevelChunkPacket;
 import net.minecraft.network.protocol.game.ClientboundKeepAlivePacket;
 import net.minecraft.network.protocol.game.ClientboundLevelChunkWithLightPacket;
@@ -23,6 +24,7 @@ import net.minecraft.network.protocol.game.ClientboundLightUpdatePacket;
 import net.minecraft.network.protocol.game.ClientboundMoveEntityPacket;
 import net.minecraft.network.protocol.game.ClientboundPlayerInfoUpdatePacket;
 import net.minecraft.network.protocol.game.ClientboundRotateHeadPacket;
+import net.minecraft.network.protocol.game.ClientboundSectionBlocksUpdatePacket;
 import net.minecraft.network.protocol.game.ClientboundSetChunkCacheCenterPacket;
 import net.minecraft.network.protocol.game.ClientboundSetEntityDataPacket;
 import net.minecraft.network.protocol.game.ClientboundSetEntityMotionPacket;
@@ -56,6 +58,8 @@ public class PacketDebuggerFeature extends Feature {
             ClientboundLightUpdatePacket.class,
             ClientboundSetChunkCacheCenterPacket.class,
             ClientboundLevelChunkWithLightPacket.class,
+            ClientboundSectionBlocksUpdatePacket.class,
+            ClientboundBlockUpdatePacket.class,
             // Entities
             ClientboundAddEntityPacket.class,
             ClientboundMoveEntityPacket.Pos.class,
