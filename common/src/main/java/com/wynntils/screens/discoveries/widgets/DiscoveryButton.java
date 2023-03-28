@@ -54,8 +54,8 @@ public class DiscoveryButton extends WynntilsButton implements TooltipProvider {
                         this.getY() + 1,
                         0,
                         CommonColors.BLACK,
-                        HorizontalAlignment.Left,
-                        VerticalAlignment.Top,
+                        HorizontalAlignment.LEFT,
+                        VerticalAlignment.TOP,
                         TextShadow.NONE);
 
         Texture stateTexture = discoveryInfo.isDiscovered()

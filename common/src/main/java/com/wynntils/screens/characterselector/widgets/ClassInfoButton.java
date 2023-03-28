@@ -65,8 +65,8 @@ public class ClassInfoButton extends WynntilsButton {
                         0,
                         0,
                         CommonColors.BLACK,
-                        HorizontalAlignment.Left,
-                        VerticalAlignment.Top,
+                        HorizontalAlignment.LEFT,
+                        VerticalAlignment.TOP,
                         TextShadow.NONE);
         FontRenderer.getInstance()
                 .renderText(
@@ -75,8 +75,8 @@ public class ClassInfoButton extends WynntilsButton {
                         0,
                         10f,
                         CommonColors.BLACK,
-                        HorizontalAlignment.Left,
-                        VerticalAlignment.Top,
+                        HorizontalAlignment.LEFT,
+                        VerticalAlignment.TOP,
                         TextShadow.NONE);
 
         poseStack.popPose();

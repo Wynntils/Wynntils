@@ -80,12 +80,12 @@ public class StopwatchFeature extends Feature {
                     new OverlayPosition(
                             0,
                             0,
-                            VerticalAlignment.Bottom,
-                            HorizontalAlignment.Left,
-                            OverlayPosition.AnchorSection.BottomLeft),
+                            VerticalAlignment.BOTTOM,
+                            HorizontalAlignment.LEFT,
+                            OverlayPosition.AnchorSection.BOTTOM_LEFT),
                     new OverlaySize(100, 20),
-                    HorizontalAlignment.Center,
-                    VerticalAlignment.Middle);
+                    HorizontalAlignment.CENTER,
+                    VerticalAlignment.MIDDLE);
         }
 
         @Override

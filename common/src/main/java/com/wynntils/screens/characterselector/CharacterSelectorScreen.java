@@ -270,8 +270,8 @@ public final class CharacterSelectorScreen extends WynntilsScreen {
                         0,
                         0,
                         CommonColors.BLACK,
-                        HorizontalAlignment.Left,
-                        VerticalAlignment.Top,
+                        HorizontalAlignment.LEFT,
+                        VerticalAlignment.TOP,
                         TextShadow.NONE);
         poseStack.popPose();
 
@@ -297,8 +297,8 @@ public final class CharacterSelectorScreen extends WynntilsScreen {
                         0,
                         0,
                         CommonColors.BLACK,
-                        HorizontalAlignment.Left,
-                        VerticalAlignment.Top,
+                        HorizontalAlignment.LEFT,
+                        VerticalAlignment.TOP,
                         TextShadow.NONE);
         poseStack.popPose();
 

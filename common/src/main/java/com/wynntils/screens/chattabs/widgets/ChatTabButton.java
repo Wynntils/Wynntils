@@ -46,8 +46,8 @@ public class ChatTabButton extends WynntilsButton {
                         getY() + height,
                         0,
                         color,
-                        HorizontalAlignment.Center,
-                        VerticalAlignment.Middle,
+                        HorizontalAlignment.CENTER,
+                        VerticalAlignment.MIDDLE,
                         TextShadow.OUTLINE);
     }
 

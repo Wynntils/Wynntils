@@ -36,8 +36,8 @@ public class ChatTabAddButton extends WynntilsButton {
                         getY() + height,
                         0,
                         CommonColors.ORANGE,
-                        HorizontalAlignment.Center,
-                        VerticalAlignment.Middle,
+                        HorizontalAlignment.CENTER,
+                        VerticalAlignment.MIDDLE,
                         TextShadow.OUTLINE);
     }
 

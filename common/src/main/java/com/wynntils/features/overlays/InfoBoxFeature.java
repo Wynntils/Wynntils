@@ -18,7 +18,7 @@ import java.util.List;
 
 @ConfigCategory(Category.OVERLAYS)
 public class InfoBoxFeature extends Feature {
-    @OverlayGroup(instances = 7, renderType = RenderEvent.ElementType.GUI, renderAt = RenderState.Pre)
+    @OverlayGroup(instances = 7, renderType = RenderEvent.ElementType.GUI, renderAt = RenderState.PRE)
     private final List<InfoBoxOverlay> infoBoxOverlays = new ArrayList<>();
 
     public static class InfoBoxOverlay extends TextOverlay {

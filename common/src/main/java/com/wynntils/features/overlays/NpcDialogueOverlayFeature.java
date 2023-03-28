@@ -199,12 +199,12 @@ public class NpcDialogueOverlayFeature extends Feature {
                     new OverlayPosition(
                             0,
                             0,
-                            VerticalAlignment.Top,
-                            HorizontalAlignment.Center,
-                            OverlayPosition.AnchorSection.BottomMiddle),
+                            VerticalAlignment.TOP,
+                            HorizontalAlignment.CENTER,
+                            OverlayPosition.AnchorSection.BOTTOM_MIDDLE),
                     new OverlaySize(400, 50),
-                    HorizontalAlignment.Center,
-                    VerticalAlignment.Middle);
+                    HorizontalAlignment.CENTER,
+                    VerticalAlignment.MIDDLE);
             updateTextRenderSettings();
         }
 
@@ -257,9 +257,9 @@ public class NpcDialogueOverlayFeature extends Feature {
             float rectHeight = textHeight + 10;
             float rectRenderY =
                     switch (this.getRenderVerticalAlignment()) {
-                        case Top -> this.getRenderY();
-                        case Middle -> this.getRenderY() + (this.getHeight() - rectHeight) / 2f;
-                        case Bottom -> this.getRenderY() + this.getHeight() - rectHeight;
+                        case TOP -> this.getRenderY();
+                        case MIDDLE -> this.getRenderY() + (this.getHeight() - rectHeight) / 2f;
+                        case BOTTOM -> this.getRenderY() + this.getHeight() - rectHeight;
                     };
             int colorAlphaRect = Math.round(MathUtils.clamp(255 * backgroundOpacity.get(), 0, 255));
             BufferedRenderUtils.drawRect(

@@ -92,8 +92,8 @@ public final class OverlaySelectionScreen extends WynntilsScreen {
                         5,
                         4,
                         CommonColors.WHITE,
-                        HorizontalAlignment.Left,
-                        VerticalAlignment.Top,
+                        HorizontalAlignment.LEFT,
+                        VerticalAlignment.TOP,
                         TextShadow.NORMAL);
 
         poseStack.popPose();

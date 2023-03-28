@@ -54,9 +54,9 @@ public class PowderSpecialBarOverlayFeature extends Feature {
                     new OverlayPosition(
                             -30,
                             150,
-                            VerticalAlignment.Bottom,
-                            HorizontalAlignment.Center,
-                            OverlayPosition.AnchorSection.BottomMiddle),
+                            VerticalAlignment.BOTTOM,
+                            HorizontalAlignment.CENTER,
+                            OverlayPosition.AnchorSection.BOTTOM_MIDDLE),
                     new OverlaySize(81, 21));
         }
 
@@ -91,9 +91,9 @@ public class PowderSpecialBarOverlayFeature extends Feature {
 
             float renderY =
                     switch (this.getRenderVerticalAlignment()) {
-                        case Top -> this.getRenderY();
-                        case Middle -> this.getRenderY() + (this.getHeight() - renderedHeight) / 2;
-                        case Bottom -> this.getRenderY() + this.getHeight() - renderedHeight;
+                        case TOP -> this.getRenderY();
+                        case MIDDLE -> this.getRenderY() + (this.getHeight() - renderedHeight) / 2;
+                        case BOTTOM -> this.getRenderY() + this.getHeight() - renderedHeight;
                     };
 
             CustomColor color;

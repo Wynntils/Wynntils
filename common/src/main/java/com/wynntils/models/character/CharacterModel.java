@@ -65,7 +65,7 @@ public final class CharacterModel extends Model {
     }
 
     public ClassType getClassType() {
-        if (!hasCharacter) return ClassType.None;
+        if (!hasCharacter) return ClassType.NONE;
 
         return classType;
     }

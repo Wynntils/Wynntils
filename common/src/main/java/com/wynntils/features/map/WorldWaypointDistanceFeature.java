@@ -167,8 +167,8 @@ public class WorldWaypointDistanceFeature extends Feature {
                             displayPositionY + backgroundHeight,
                             0,
                             textColor.get(),
-                            HorizontalAlignment.Center,
-                            VerticalAlignment.Middle,
+                            HorizontalAlignment.CENTER,
+                            VerticalAlignment.MIDDLE,
                             textShadow.get());
         } else {
             displayPositionX = intersectPoint.x;

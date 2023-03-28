@@ -44,13 +44,13 @@ import net.minecraftforge.eventbus.api.SubscribeEvent;
 
 @ConfigCategory(Category.OVERLAYS)
 public class GameBarsOverlayFeature extends Feature {
-    @OverlayInfo(renderType = RenderEvent.ElementType.HealthBar, renderAt = RenderState.Replace)
+    @OverlayInfo(renderType = RenderEvent.ElementType.HEALTH_BAR, renderAt = RenderState.REPLACE)
     private final HealthBarOverlay healthBarOverlay = new HealthBarOverlay();
 
     @OverlayInfo(renderType = RenderEvent.ElementType.GUI)
     private final BloodPoolBarOverlay bloodPoolBarOverlay = new BloodPoolBarOverlay();
 
-    @OverlayInfo(renderType = RenderEvent.ElementType.FoodBar, renderAt = RenderState.Replace)
+    @OverlayInfo(renderType = RenderEvent.ElementType.FOOD_BAR, renderAt = RenderState.REPLACE)
     private final ManaBarOverlay manaBarOverlay = new ManaBarOverlay();
 
     @OverlayInfo(renderType = RenderEvent.ElementType.GUI)
@@ -140,9 +140,9 @@ public class GameBarsOverlayFeature extends Feature {
 
         protected float getModifiedRenderY(float renderedHeight) {
             return switch (this.getRenderVerticalAlignment()) {
-                case Top -> this.getRenderY();
-                case Middle -> this.getRenderY() + (this.getHeight() - renderedHeight) / 2;
-                case Bottom -> this.getRenderY() + this.getHeight() - renderedHeight;
+                case TOP -> this.getRenderY();
+                case MIDDLE -> this.getRenderY() + (this.getHeight() - renderedHeight) / 2;
+                case BOTTOM -> this.getRenderY() + this.getHeight() - renderedHeight;
             };
         }
 
@@ -191,16 +191,16 @@ public class GameBarsOverlayFeature extends Feature {
 
     protected static class HealthBarOverlay extends BaseBarOverlay {
         @RegisterConfig("overlay.wynntils.healthBar.healthTexture")
-        public final Config<HealthTexture> healthTexture = new Config<>(HealthTexture.a);
+        public final Config<HealthTexture> healthTexture = new Config<>(HealthTexture.A);
 
         protected HealthBarOverlay() {
             this(
                     new OverlayPosition(
                             -30,
                             -52,
-                            VerticalAlignment.Bottom,
-                            HorizontalAlignment.Center,
-                            OverlayPosition.AnchorSection.BottomMiddle),
+                            VerticalAlignment.BOTTOM,
+                            HorizontalAlignment.CENTER,
+                            OverlayPosition.AnchorSection.BOTTOM_MIDDLE),
                     new OverlaySize(81, 21));
         }
 
@@ -312,9 +312,9 @@ public class GameBarsOverlayFeature extends Feature {
                     new OverlayPosition(
                             -30,
                             -150,
-                            VerticalAlignment.Bottom,
-                            HorizontalAlignment.Center,
-                            OverlayPosition.AnchorSection.BottomMiddle),
+                            VerticalAlignment.BOTTOM,
+                            HorizontalAlignment.CENTER,
+                            OverlayPosition.AnchorSection.BOTTOM_MIDDLE),
                     new OverlaySize(81, 21));
         }
 
@@ -341,16 +341,16 @@ public class GameBarsOverlayFeature extends Feature {
 
     protected static class ManaBarOverlay extends BaseBarOverlay {
         @RegisterConfig("overlay.wynntils.manaBar.manaTexture")
-        public final Config<ManaTexture> manaTexture = new Config<>(ManaTexture.a);
+        public final Config<ManaTexture> manaTexture = new Config<>(ManaTexture.A);
 
         protected ManaBarOverlay() {
             this(
                     new OverlayPosition(
                             -30,
                             52,
-                            VerticalAlignment.Bottom,
-                            HorizontalAlignment.Center,
-                            OverlayPosition.AnchorSection.BottomMiddle),
+                            VerticalAlignment.BOTTOM,
+                            HorizontalAlignment.CENTER,
+                            OverlayPosition.AnchorSection.BOTTOM_MIDDLE),
                     new OverlaySize(81, 21));
         }
 
@@ -462,9 +462,9 @@ public class GameBarsOverlayFeature extends Feature {
                     new OverlayPosition(
                             -30,
                             -150,
-                            VerticalAlignment.Bottom,
-                            HorizontalAlignment.Center,
-                            OverlayPosition.AnchorSection.BottomMiddle),
+                            VerticalAlignment.BOTTOM,
+                            HorizontalAlignment.CENTER,
+                            OverlayPosition.AnchorSection.BOTTOM_MIDDLE),
                     new OverlaySize(81, 21));
         }
 
@@ -495,9 +495,9 @@ public class GameBarsOverlayFeature extends Feature {
                     new OverlayPosition(
                             -70,
                             -150,
-                            VerticalAlignment.Bottom,
-                            HorizontalAlignment.Center,
-                            OverlayPosition.AnchorSection.BottomMiddle),
+                            VerticalAlignment.BOTTOM,
+                            HorizontalAlignment.CENTER,
+                            OverlayPosition.AnchorSection.BOTTOM_MIDDLE),
                     new OverlaySize(81, 21),
                     CommonColors.WHITE);
         }
@@ -524,9 +524,9 @@ public class GameBarsOverlayFeature extends Feature {
                     new OverlayPosition(
                             -30,
                             -150,
-                            VerticalAlignment.Bottom,
-                            HorizontalAlignment.Center,
-                            OverlayPosition.AnchorSection.BottomMiddle),
+                            VerticalAlignment.BOTTOM,
+                            HorizontalAlignment.CENTER,
+                            OverlayPosition.AnchorSection.BOTTOM_MIDDLE),
                     new OverlaySize(81, 21),
                     CommonColors.YELLOW);
         }
@@ -553,9 +553,9 @@ public class GameBarsOverlayFeature extends Feature {
                     new OverlayPosition(
                             -70,
                             -150,
-                            VerticalAlignment.Bottom,
-                            HorizontalAlignment.Center,
-                            OverlayPosition.AnchorSection.BottomMiddle),
+                            VerticalAlignment.BOTTOM,
+                            HorizontalAlignment.CENTER,
+                            OverlayPosition.AnchorSection.BOTTOM_MIDDLE),
                     new OverlaySize(81, 21),
                     CommonColors.PURPLE);
         }

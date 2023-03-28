@@ -9,36 +9,36 @@ import com.wynntils.models.character.type.ClassType;
 import java.util.Arrays;
 
 public enum SpellType {
-    ARROW_STORM(ClassType.Archer, 1, "Arrow Storm", 6, 0),
-    ESCAPE(ClassType.Archer, 2, "Escape", 3, 0),
-    BOMB(ClassType.Archer, 3, "Arrow Bomb", 8, 0),
-    ARROW_SHIELD(ClassType.Archer, 4, "Arrow Shield", 8, 1),
+    ARROW_STORM(ClassType.ARCHER, 1, "Arrow Storm", 6, 0),
+    ESCAPE(ClassType.ARCHER, 2, "Escape", 3, 0),
+    BOMB(ClassType.ARCHER, 3, "Arrow Bomb", 8, 0),
+    ARROW_SHIELD(ClassType.ARCHER, 4, "Arrow Shield", 8, 1),
 
-    SPIN_ATTACK(ClassType.Assassin, 1, "Spin Attack", 6, 0),
-    DASH(ClassType.Assassin, 2, "Dash", 2, 0),
-    MULTI_HIT(ClassType.Assassin, 3, "Multi Hit", 8, 0),
-    SMOKE_BOMB(ClassType.Assassin, 4, "Smoke Bomb", 8, 0),
+    SPIN_ATTACK(ClassType.ASSASSIN, 1, "Spin Attack", 6, 0),
+    DASH(ClassType.ASSASSIN, 2, "Dash", 2, 0),
+    MULTI_HIT(ClassType.ASSASSIN, 3, "Multi Hit", 8, 0),
+    SMOKE_BOMB(ClassType.ASSASSIN, 4, "Smoke Bomb", 8, 0),
 
-    BASH(ClassType.Warrior, 1, "Bash", 6, 0),
-    CHARGE(ClassType.Warrior, 2, "Charge", 4, 0),
-    UPPERCUT(ClassType.Warrior, 3, "Uppercut", 9, 0),
-    WAR_SCREAM(ClassType.Warrior, 4, "War Scream", 7, -1),
+    BASH(ClassType.WARRIOR, 1, "Bash", 6, 0),
+    CHARGE(ClassType.WARRIOR, 2, "Charge", 4, 0),
+    UPPERCUT(ClassType.WARRIOR, 3, "Uppercut", 9, 0),
+    WAR_SCREAM(ClassType.WARRIOR, 4, "War Scream", 7, -1),
 
-    HEAL(ClassType.Mage, 1, "Heal", 8, -1),
-    TELEPORT(ClassType.Mage, 2, "Teleport", 4, 0),
-    METEOR(ClassType.Mage, 3, "Meteor", 8, 0),
-    ICE_SNAKE(ClassType.Mage, 4, "Ice Snake", 6, -1),
+    HEAL(ClassType.MAGE, 1, "Heal", 8, -1),
+    TELEPORT(ClassType.MAGE, 2, "Teleport", 4, 0),
+    METEOR(ClassType.MAGE, 3, "Meteor", 8, 0),
+    ICE_SNAKE(ClassType.MAGE, 4, "Ice Snake", 6, -1),
 
-    TOTEM(ClassType.Shaman, 1, "Totem", 4, 0),
-    HAUL(ClassType.Shaman, 2, "Haul", 3, -1),
-    AURA(ClassType.Shaman, 3, "Aura", 8, 0),
-    UPROOT(ClassType.Shaman, 4, "Uproot", 6, 0),
+    TOTEM(ClassType.SHAMAN, 1, "Totem", 4, 0),
+    HAUL(ClassType.SHAMAN, 2, "Haul", 3, -1),
+    AURA(ClassType.SHAMAN, 3, "Aura", 8, 0),
+    UPROOT(ClassType.SHAMAN, 4, "Uproot", 6, 0),
 
     // Unspecified spells
-    FIRST_SPELL(ClassType.None, 1, "1st Spell", 0, 0),
-    SECOND_SPELL(ClassType.None, 2, "2nd Spell", 0, 0),
-    THIRD_SPELL(ClassType.None, 3, "3rd Spell", 0, 0),
-    FOURTH_SPELL(ClassType.None, 4, "4th Spell", 0, 0);
+    FIRST_SPELL(ClassType.NONE, 1, "1st Spell", 0, 0),
+    SECOND_SPELL(ClassType.NONE, 2, "2nd Spell", 0, 0),
+    THIRD_SPELL(ClassType.NONE, 3, "3rd Spell", 0, 0),
+    FOURTH_SPELL(ClassType.NONE, 4, "4th Spell", 0, 0);
 
     public static final int MAX_SPELL = 4;
 
@@ -106,7 +106,7 @@ public enum SpellType {
     }
 
     public String getGenericName() {
-        return forClass(ClassType.None, getSpellNumber()).getName();
+        return forClass(ClassType.NONE, getSpellNumber()).getName();
     }
 
     public String getGenericAndSpecificName() {

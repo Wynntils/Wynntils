@@ -5,7 +5,7 @@
 package com.wynntils.utils.render.type;
 
 public enum HorizontalAlignment {
-    Left,
-    Center,
-    Right
+    LEFT,
+    CENTER,
+    RIGHT
 }

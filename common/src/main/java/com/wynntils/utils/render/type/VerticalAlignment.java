@@ -5,7 +5,7 @@
 package com.wynntils.utils.render.type;
 
 public enum VerticalAlignment {
-    Top,
-    Middle,
-    Bottom
+    TOP,
+    MIDDLE,
+    BOTTOM
 }

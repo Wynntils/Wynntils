@@ -235,8 +235,8 @@ public final class ChatTabEditingScreen extends WynntilsScreen implements Textbo
                         this.width / 2f - 160,
                         this.height / 2f - 85,
                         CommonColors.WHITE,
-                        HorizontalAlignment.Left,
-                        VerticalAlignment.Top,
+                        HorizontalAlignment.LEFT,
+                        VerticalAlignment.TOP,
                         TextShadow.NORMAL);
 
         // Auto Command
@@ -247,8 +247,8 @@ public final class ChatTabEditingScreen extends WynntilsScreen implements Textbo
                         this.width / 2f - 30,
                         this.height / 2f - 85,
                         CommonColors.WHITE,
-                        HorizontalAlignment.Left,
-                        VerticalAlignment.Top,
+                        HorizontalAlignment.LEFT,
+                        VerticalAlignment.TOP,
                         TextShadow.NORMAL);
 
         // Order
@@ -259,8 +259,8 @@ public final class ChatTabEditingScreen extends WynntilsScreen implements Textbo
                         this.width / 2f + 100,
                         this.height / 2f - 85,
                         CommonColors.WHITE,
-                        HorizontalAlignment.Left,
-                        VerticalAlignment.Top,
+                        HorizontalAlignment.LEFT,
+                        VerticalAlignment.TOP,
                         TextShadow.NORMAL);
 
         // Recipient Types
@@ -271,8 +271,8 @@ public final class ChatTabEditingScreen extends WynntilsScreen implements Textbo
                         this.width / 2f - 160,
                         this.height / 2f - 40,
                         CommonColors.WHITE,
-                        HorizontalAlignment.Left,
-                        VerticalAlignment.Top,
+                        HorizontalAlignment.LEFT,
+                        VerticalAlignment.TOP,
                         TextShadow.NORMAL);
 
         // Filter Pattern
@@ -283,8 +283,8 @@ public final class ChatTabEditingScreen extends WynntilsScreen implements Textbo
                         this.width / 2f - 160,
                         this.height / 2f + 30,
                         CommonColors.WHITE,
-                        HorizontalAlignment.Left,
-                        VerticalAlignment.Top,
+                        HorizontalAlignment.LEFT,
+                        VerticalAlignment.TOP,
                         TextShadow.NORMAL);
     }
 

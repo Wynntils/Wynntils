@@ -5,7 +5,7 @@
 package com.wynntils.core.features.overlays;
 
 public enum RenderState {
-    Pre,
-    Post,
-    Replace // This is Pre, but the event is cancelled
+    PRE,
+    POST,
+    REPLACE // This is Pre, but the event is cancelled
 }

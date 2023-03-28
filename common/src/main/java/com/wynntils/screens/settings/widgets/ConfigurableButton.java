@@ -46,8 +46,8 @@ public class ConfigurableButton extends WynntilsButton {
                         this.getX(),
                         this.getY(),
                         color,
-                        HorizontalAlignment.Left,
-                        VerticalAlignment.Top,
+                        HorizontalAlignment.LEFT,
+                        VerticalAlignment.TOP,
                         TextShadow.NORMAL);
     }
 

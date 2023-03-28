@@ -4,22 +4,15 @@
  */
 package com.wynntils.models.character.type;
 
-import com.google.gson.annotations.SerializedName;
-
 public enum ClassType {
-    @SerializedName("MAGE")
-    Mage("Mage", "Dark Wizard"),
-    @SerializedName("ARCHER")
-    Archer("Archer", "Hunter"),
-    @SerializedName("WARRIOR")
-    Warrior("Warrior", "Knight"),
-    @SerializedName("ASSASSIN")
-    Assassin("Assassin", "Ninja"),
-    @SerializedName("SHAMAN")
-    Shaman("Shaman", "Skyseer"),
+    MAGE("Mage", "Dark Wizard"),
+    ARCHER("Archer", "Hunter"),
+    WARRIOR("Warrior", "Knight"),
+    ASSASSIN("Assassin", "Ninja"),
+    SHAMAN("Shaman", "Skyseer"),
 
     // This represents the class selection menu, or the generic spell
-    None("none", "none");
+    NONE("none", "none");
 
     private final String name;
     private final String reskinnedName;
@@ -35,7 +28,7 @@ public enum ClassType {
                 return type;
             }
         }
-        return ClassType.None;
+        return ClassType.NONE;
     }
 
     public static boolean isReskinned(String className) {

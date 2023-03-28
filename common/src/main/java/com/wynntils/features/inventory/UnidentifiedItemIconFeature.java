@@ -42,7 +42,7 @@ public class UnidentifiedItemIconFeature extends Feature {
             Map.entry(GearType.CHARM, Pair.of(16 * 1, 16 * 3)));
 
     @RegisterConfig
-    public final Config<UnidentifiedItemTextures> texture = new Config<>(UnidentifiedItemTextures.Wynn);
+    public final Config<UnidentifiedItemTextures> texture = new Config<>(UnidentifiedItemTextures.WYNN);
 
     @SubscribeEvent
     public void onSlotRender(SlotRenderEvent.CountPre e) {
@@ -79,8 +79,8 @@ public class UnidentifiedItemIconFeature extends Feature {
     }
 
     public enum UnidentifiedItemTextures {
-        Wynn(0),
-        Outline(64);
+        WYNN(0),
+        OUTLINE(64);
 
         private final int yOffset;
 

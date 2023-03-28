@@ -108,8 +108,8 @@ public final class WynntilsIngredientGuideScreen
                         0,
                         0,
                         CommonColors.YELLOW,
-                        HorizontalAlignment.Left,
-                        VerticalAlignment.Top,
+                        HorizontalAlignment.LEFT,
+                        VerticalAlignment.TOP,
                         TextShadow.NORMAL);
         poseStack.popPose();
     }
@@ -128,8 +128,8 @@ public final class WynntilsIngredientGuideScreen
                         Texture.QUEST_BOOK_BACKGROUND.width() * 0.75f,
                         30,
                         CommonColors.BLACK,
-                        HorizontalAlignment.Center,
-                        VerticalAlignment.Top,
+                        HorizontalAlignment.CENTER,
+                        VerticalAlignment.TOP,
                         TextShadow.NONE);
     }
 

@@ -82,7 +82,7 @@ public class MapFeature extends Feature {
     public final Config<Float> lootChestTier4PoiMinZoom = new Config<>(0.28f);
 
     @RegisterConfig
-    public final Config<PointerType> pointerType = new Config<>(PointerType.Arrow);
+    public final Config<PointerType> pointerType = new Config<>(PointerType.ARROW);
 
     @RegisterConfig
     public final Config<CustomColor> pointerColor = new Config<>(new CustomColor(1f, 1f, 1f, 1f));
@@ -109,7 +109,7 @@ public class MapFeature extends Feature {
     public final Config<Boolean> renderRemotePartyPlayers = new Config<>(true);
 
     @RegisterConfig
-    public final Config<HealthTexture> remotePlayerHealthTexture = new Config<>(HealthTexture.a);
+    public final Config<HealthTexture> remotePlayerHealthTexture = new Config<>(HealthTexture.A);
 
     @RegisterConfig
     public final Config<TextShadow> remotePlayerNameShadow = new Config<>(TextShadow.OUTLINE);

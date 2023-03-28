@@ -34,9 +34,9 @@ public class MobTotemTrackingFeature extends Feature {
                     new OverlayPosition(
                             330,
                             -5,
-                            VerticalAlignment.Top,
-                            HorizontalAlignment.Right,
-                            OverlayPosition.AnchorSection.TopRight),
+                            VerticalAlignment.TOP,
+                            HorizontalAlignment.RIGHT,
+                            OverlayPosition.AnchorSection.TOP_RIGHT),
                     new OverlaySize(120, 35));
         }
 

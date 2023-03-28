@@ -78,7 +78,7 @@ public class SearchWidget extends TextInputBoxWidget {
                         this.getY() + VERTICAL_OFFSET,
                         0,
                         defaultText ? CommonColors.LIGHT_GRAY : CommonColors.WHITE,
-                        HorizontalAlignment.Left,
+                        HorizontalAlignment.LEFT,
                         TextShadow.NORMAL);
 
         if (defaultText) return;
@@ -94,8 +94,8 @@ public class SearchWidget extends TextInputBoxWidget {
                         0,
                         CommonColors.BLUE,
                         CommonColors.WHITE,
-                        HorizontalAlignment.Left,
-                        VerticalAlignment.Top);
+                        HorizontalAlignment.LEFT,
+                        VerticalAlignment.TOP);
 
         FontRenderer.getInstance()
                 .renderAlignedTextInBox(
@@ -106,7 +106,7 @@ public class SearchWidget extends TextInputBoxWidget {
                         this.getY() + VERTICAL_OFFSET,
                         0,
                         defaultText ? CommonColors.LIGHT_GRAY : CommonColors.WHITE,
-                        HorizontalAlignment.Left,
+                        HorizontalAlignment.LEFT,
                         TextShadow.NORMAL);
 
         drawCursor(
@@ -116,7 +116,7 @@ public class SearchWidget extends TextInputBoxWidget {
                         + textPadding
                         - 2,
                 this.getY() + VERTICAL_OFFSET,
-                VerticalAlignment.Top,
+                VerticalAlignment.TOP,
                 false);
     }
 

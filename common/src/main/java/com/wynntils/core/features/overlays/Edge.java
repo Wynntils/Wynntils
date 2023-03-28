@@ -8,10 +8,10 @@ import com.wynntils.utils.type.Pair;
 import net.minecraft.world.phys.Vec2;
 
 public enum Edge {
-    Top(Corner.TopLeft, Corner.TopRight),
-    Left(Corner.TopLeft, Corner.BottomLeft),
-    Right(Corner.TopRight, Corner.BottomRight),
-    Bottom(Corner.BottomLeft, Corner.BottomRight);
+    TOP(Corner.TOP_LEFT, Corner.TOP_RIGHT),
+    LEFT(Corner.TOP_LEFT, Corner.BOTTOM_LEFT),
+    RIGHT(Corner.TOP_RIGHT, Corner.BOTTOM_RIGHT),
+    BOTTOM(Corner.BOTTOM_LEFT, Corner.BOTTOM_RIGHT);
 
     private final Corner cornerA;
     private final Corner cornerB;
@@ -30,7 +30,7 @@ public enum Edge {
     }
 
     public boolean isVerticalLine() {
-        return this == Left || this == Right;
+        return this == LEFT || this == RIGHT;
     }
 
     public Pair<Vec2, Vec2> getEdgePos(Overlay overlay) {

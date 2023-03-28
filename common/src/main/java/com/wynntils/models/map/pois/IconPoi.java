@@ -102,8 +102,8 @@ public abstract class IconPoi implements Poi {
                             renderX,
                             15 + renderY,
                             CommonColors.GREEN,
-                            HorizontalAlignment.Center,
-                            VerticalAlignment.Middle,
+                            HorizontalAlignment.CENTER,
+                            VerticalAlignment.MIDDLE,
                             TextShadow.OUTLINE);
 
             poseStack.popPose();

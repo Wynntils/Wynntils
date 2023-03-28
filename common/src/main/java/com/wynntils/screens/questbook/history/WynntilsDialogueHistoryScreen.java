@@ -158,8 +158,8 @@ public final class WynntilsDialogueHistoryScreen extends WynntilsMenuScreenBase 
                     new TextRenderSetting(
                             maxWidth,
                             CommonColors.BLACK,
-                            HorizontalAlignment.Left,
-                            VerticalAlignment.Top,
+                            HorizontalAlignment.LEFT,
+                            VerticalAlignment.TOP,
                             TextShadow.NORMAL)));
         }
 
@@ -171,8 +171,8 @@ public final class WynntilsDialogueHistoryScreen extends WynntilsMenuScreenBase 
                         textRenderTaskList,
                         maxWidth,
                         Texture.QUEST_BOOK_BACKGROUND.height() - 50,
-                        HorizontalAlignment.Left,
-                        VerticalAlignment.Middle);
+                        HorizontalAlignment.LEFT,
+                        VerticalAlignment.MIDDLE);
     }
 
     private void renderPageInfo(PoseStack poseStack, int currentPage, int maxPage) {
@@ -185,7 +185,7 @@ public final class WynntilsDialogueHistoryScreen extends WynntilsMenuScreenBase 
                         Texture.QUEST_BOOK_BACKGROUND.height() - 25,
                         0,
                         CommonColors.BLACK,
-                        HorizontalAlignment.Center,
+                        HorizontalAlignment.CENTER,
                         TextShadow.NONE);
     }
 
@@ -267,8 +267,8 @@ public final class WynntilsDialogueHistoryScreen extends WynntilsMenuScreenBase 
                         Texture.QUEST_BOOK_BACKGROUND.height(),
                         Texture.QUEST_BOOK_BACKGROUND.width() / 2f - 30f,
                         CommonColors.BLACK,
-                        HorizontalAlignment.Center,
-                        VerticalAlignment.Middle,
+                        HorizontalAlignment.CENTER,
+                        VerticalAlignment.MIDDLE,
                         TextShadow.NONE);
     }
 

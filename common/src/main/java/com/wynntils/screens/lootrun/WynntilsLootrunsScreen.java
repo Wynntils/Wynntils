@@ -176,8 +176,8 @@ public final class WynntilsLootrunsScreen extends WynntilsListScreen<LootrunInst
                             0,
                             0,
                             CommonColors.BLACK,
-                            HorizontalAlignment.Left,
-                            VerticalAlignment.Top,
+                            HorizontalAlignment.LEFT,
+                            VerticalAlignment.TOP,
                             TextShadow.NONE);
             poseStack.popPose();
 
@@ -189,8 +189,8 @@ public final class WynntilsLootrunsScreen extends WynntilsListScreen<LootrunInst
                             0,
                             19,
                             CommonColors.BLACK,
-                            HorizontalAlignment.Left,
-                            VerticalAlignment.Top,
+                            HorizontalAlignment.LEFT,
+                            VerticalAlignment.TOP,
                             TextShadow.NONE);
 
             FontRenderer.getInstance()
@@ -201,8 +201,8 @@ public final class WynntilsLootrunsScreen extends WynntilsListScreen<LootrunInst
                             0,
                             29,
                             CommonColors.BLACK,
-                            HorizontalAlignment.Left,
-                            VerticalAlignment.Top,
+                            HorizontalAlignment.LEFT,
+                            VerticalAlignment.TOP,
                             TextShadow.NONE);
 
             Position start = currentLootrun.path().points().get(0);
@@ -214,8 +214,8 @@ public final class WynntilsLootrunsScreen extends WynntilsListScreen<LootrunInst
                             0,
                             39,
                             CommonColors.BLACK,
-                            HorizontalAlignment.Left,
-                            VerticalAlignment.Top,
+                            HorizontalAlignment.LEFT,
+                            VerticalAlignment.TOP,
                             TextShadow.NONE);
 
             Position end = currentLootrun
@@ -230,8 +230,8 @@ public final class WynntilsLootrunsScreen extends WynntilsListScreen<LootrunInst
                             0,
                             49,
                             CommonColors.BLACK,
-                            HorizontalAlignment.Left,
-                            VerticalAlignment.Top,
+                            HorizontalAlignment.LEFT,
+                            VerticalAlignment.TOP,
                             TextShadow.NONE);
 
             poseStack.popPose();
@@ -245,7 +245,7 @@ public final class WynntilsLootrunsScreen extends WynntilsListScreen<LootrunInst
                             80,
                             Texture.QUEST_BOOK_BACKGROUND.width() / 2f - 30,
                             CommonColors.BLACK,
-                            HorizontalAlignment.Left,
+                            HorizontalAlignment.LEFT,
                             TextShadow.NONE);
 
             FontRenderer.getInstance()
@@ -257,7 +257,7 @@ public final class WynntilsLootrunsScreen extends WynntilsListScreen<LootrunInst
                             155,
                             Texture.QUEST_BOOK_BACKGROUND.width() / 2f - 30,
                             CommonColors.BLACK,
-                            HorizontalAlignment.Left,
+                            HorizontalAlignment.LEFT,
                             TextShadow.NONE);
         }
     }

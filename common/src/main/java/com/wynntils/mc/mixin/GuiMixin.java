@@ -87,7 +87,7 @@ public abstract class GuiMixin {
         if (!MixinHelper.onWynncraft()) return original.call(instance, entity);
 
         RenderEvent.Pre event =
-                new RenderEvent.Pre(new PoseStack(), 0, this.minecraft.getWindow(), RenderEvent.ElementType.FoodBar);
+                new RenderEvent.Pre(new PoseStack(), 0, this.minecraft.getWindow(), RenderEvent.ElementType.FOOD_BAR);
         MixinHelper.post(event);
 
         // we have to reset shader texture
@@ -114,7 +114,7 @@ public abstract class GuiMixin {
     @Inject(method = "renderCrosshair(Lcom/mojang/blaze3d/vertex/PoseStack;)V", at = @At("HEAD"), cancellable = true)
     private void onRenderGuiPre(PoseStack poseStack, CallbackInfo ci) {
         RenderEvent.Pre event =
-                new RenderEvent.Pre(poseStack, 0, this.minecraft.getWindow(), RenderEvent.ElementType.Crosshair);
+                new RenderEvent.Pre(poseStack, 0, this.minecraft.getWindow(), RenderEvent.ElementType.CROSSHAIR);
         MixinHelper.post(event);
         if (event.isCanceled()) {
             ci.cancel();
@@ -142,7 +142,7 @@ public abstract class GuiMixin {
         if (!MixinHelper.onWynncraft()) return;
 
         RenderEvent.Pre event =
-                new RenderEvent.Pre(poseStack, 0, this.minecraft.getWindow(), RenderEvent.ElementType.HealthBar);
+                new RenderEvent.Pre(poseStack, 0, this.minecraft.getWindow(), RenderEvent.ElementType.HEALTH_BAR);
         MixinHelper.post(event);
 
         // we have to reset shader texture

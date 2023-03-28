@@ -80,12 +80,12 @@ public class QuestInfoOverlayFeature extends Feature {
                     new OverlayPosition(
                             5,
                             -5,
-                            VerticalAlignment.Top,
-                            HorizontalAlignment.Right,
-                            OverlayPosition.AnchorSection.TopRight),
+                            VerticalAlignment.TOP,
+                            HorizontalAlignment.RIGHT,
+                            OverlayPosition.AnchorSection.TOP_RIGHT),
                     new OverlaySize(300, 50),
-                    HorizontalAlignment.Left,
-                    VerticalAlignment.Middle);
+                    HorizontalAlignment.LEFT,
+                    VerticalAlignment.MIDDLE);
 
             toRender.get(0).setText(I18n.get("feature.wynntils.questInfoOverlay.overlay.questInfo.title") + ":");
 

@@ -227,7 +227,7 @@ public final class WynntilsMenuScreen extends WynntilsMenuScreenBase {
                         60,
                         0,
                         CommonColors.BLACK,
-                        HorizontalAlignment.Center,
+                        HorizontalAlignment.CENTER,
                         TextShadow.NONE);
         FontRenderer.getInstance()
                 .renderAlignedTextInBox(
@@ -239,7 +239,7 @@ public final class WynntilsMenuScreen extends WynntilsMenuScreenBase {
                         145,
                         0,
                         CommonColors.PURPLE,
-                        HorizontalAlignment.Center,
+                        HorizontalAlignment.CENTER,
                         TextShadow.NONE);
 
         String currentSplash = Managers.Splash.getCurrentSplash();
@@ -253,7 +253,7 @@ public final class WynntilsMenuScreen extends WynntilsMenuScreenBase {
                         Texture.QUEST_BOOK_BACKGROUND.height() - 45,
                         0,
                         CommonColors.MAGENTA,
-                        HorizontalAlignment.Center,
+                        HorizontalAlignment.CENTER,
                         TextShadow.NONE);
     }
 

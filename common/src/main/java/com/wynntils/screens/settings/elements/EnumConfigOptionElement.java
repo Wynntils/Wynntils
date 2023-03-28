@@ -69,7 +69,7 @@ public class EnumConfigOptionElement extends ConfigOptionElement {
                         renderY + FontRenderer.getInstance().getFont().lineHeight / 2f,
                         0,
                         CommonColors.WHITE,
-                        HorizontalAlignment.Center,
+                        HorizontalAlignment.CENTER,
                         TextShadow.OUTLINE);
     }
 

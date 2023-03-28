@@ -33,7 +33,7 @@ public class CategoryButton extends WynntilsButton {
                         this.getY(),
                         0,
                         CommonColors.CYAN,
-                        HorizontalAlignment.Center,
+                        HorizontalAlignment.CENTER,
                         TextShadow.NORMAL);
     }
 

@@ -71,8 +71,8 @@ public class ConfigButton extends WynntilsButton {
                         getRenderX() / 0.8f,
                         (this.getY() + 3) / 0.8f,
                         CommonColors.BLACK,
-                        HorizontalAlignment.Left,
-                        VerticalAlignment.Top,
+                        HorizontalAlignment.LEFT,
+                        VerticalAlignment.TOP,
                         TextShadow.NONE);
         poseStack.popPose();
 

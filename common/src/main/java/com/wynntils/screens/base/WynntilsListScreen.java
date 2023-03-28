@@ -82,7 +82,7 @@ public abstract class WynntilsListScreen<E, B extends WynntilsButton> extends Wy
                         Texture.QUEST_BOOK_BACKGROUND.height() - 25,
                         0,
                         CommonColors.BLACK,
-                        HorizontalAlignment.Center,
+                        HorizontalAlignment.CENTER,
                         TextShadow.NONE);
     }
 
@@ -97,8 +97,8 @@ public abstract class WynntilsListScreen<E, B extends WynntilsButton> extends Wy
                         Texture.QUEST_BOOK_BACKGROUND.height(),
                         Texture.QUEST_BOOK_BACKGROUND.width() / 2f - 30f,
                         CommonColors.BLACK,
-                        HorizontalAlignment.Center,
-                        VerticalAlignment.Middle,
+                        HorizontalAlignment.CENTER,
+                        VerticalAlignment.MIDDLE,
                         TextShadow.NONE);
     }
 

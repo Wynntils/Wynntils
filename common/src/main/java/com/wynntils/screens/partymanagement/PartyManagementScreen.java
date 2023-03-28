@@ -167,8 +167,8 @@ public final class PartyManagementScreen extends WynntilsScreen implements Textb
                         dividedWidth * 36,
                         dividedHeight * PARTY_LIST_DIV_HEIGHT, // should be lined up with the party list header
                         CommonColors.WHITE,
-                        HorizontalAlignment.Left,
-                        VerticalAlignment.Bottom,
+                        HorizontalAlignment.LEFT,
+                        VerticalAlignment.BOTTOM,
                         TextShadow.NORMAL);
         // endregion
 
@@ -190,8 +190,8 @@ public final class PartyManagementScreen extends WynntilsScreen implements Textb
                         dividedWidth * 5,
                         dividedHeight * PARTY_LIST_DIV_HEIGHT,
                         CommonColors.WHITE,
-                        HorizontalAlignment.Center,
-                        VerticalAlignment.Bottom,
+                        HorizontalAlignment.CENTER,
+                        VerticalAlignment.BOTTOM,
                         TextShadow.NORMAL);
         FontRenderer.getInstance()
                 .renderText(
@@ -200,8 +200,8 @@ public final class PartyManagementScreen extends WynntilsScreen implements Textb
                         dividedWidth * 7,
                         dividedHeight * PARTY_LIST_DIV_HEIGHT,
                         CommonColors.WHITE,
-                        HorizontalAlignment.Left,
-                        VerticalAlignment.Bottom,
+                        HorizontalAlignment.LEFT,
+                        VerticalAlignment.BOTTOM,
                         TextShadow.NORMAL);
         FontRenderer.getInstance()
                 .renderText(
@@ -210,8 +210,8 @@ public final class PartyManagementScreen extends WynntilsScreen implements Textb
                         dividedWidth * 22,
                         dividedHeight * PARTY_LIST_DIV_HEIGHT,
                         CommonColors.WHITE,
-                        HorizontalAlignment.Center, // (!) center as the button spans 2 columns
-                        VerticalAlignment.Bottom,
+                        HorizontalAlignment.CENTER, // (!) center as the button spans 2 columns
+                        VerticalAlignment.BOTTOM,
                         TextShadow.NORMAL);
         FontRenderer.getInstance()
                 .renderText(
@@ -220,8 +220,8 @@ public final class PartyManagementScreen extends WynntilsScreen implements Textb
                         dividedWidth * 26,
                         dividedHeight * PARTY_LIST_DIV_HEIGHT,
                         CommonColors.WHITE,
-                        HorizontalAlignment.Center, // (!) center as the button spans 2 columns
-                        VerticalAlignment.Bottom,
+                        HorizontalAlignment.CENTER, // (!) center as the button spans 2 columns
+                        VerticalAlignment.BOTTOM,
                         TextShadow.NORMAL);
 
         partyMembersWidgets.forEach(widget -> widget.render(poseStack, mouseX, mouseY, partialTick));
@@ -243,8 +243,8 @@ public final class PartyManagementScreen extends WynntilsScreen implements Textb
                         dividedWidth * 37,
                         dividedHeight * SUGGESTION_LIST_DIV_HEIGHT,
                         CommonColors.WHITE,
-                        HorizontalAlignment.Center,
-                        VerticalAlignment.Bottom,
+                        HorizontalAlignment.CENTER,
+                        VerticalAlignment.BOTTOM,
                         TextShadow.NORMAL);
         FontRenderer.getInstance()
                 .renderText(
@@ -253,8 +253,8 @@ public final class PartyManagementScreen extends WynntilsScreen implements Textb
                         dividedWidth * 39,
                         dividedHeight * SUGGESTION_LIST_DIV_HEIGHT,
                         CommonColors.WHITE,
-                        HorizontalAlignment.Left,
-                        VerticalAlignment.Bottom,
+                        HorizontalAlignment.LEFT,
+                        VerticalAlignment.BOTTOM,
                         TextShadow.NORMAL);
         FontRenderer.getInstance()
                 .renderText(
@@ -263,8 +263,8 @@ public final class PartyManagementScreen extends WynntilsScreen implements Textb
                         dividedWidth * 58,
                         dividedHeight * SUGGESTION_LIST_DIV_HEIGHT,
                         CommonColors.WHITE,
-                        HorizontalAlignment.Center, // (!) center as the button spans 2 columns
-                        VerticalAlignment.Bottom,
+                        HorizontalAlignment.CENTER, // (!) center as the button spans 2 columns
+                        VerticalAlignment.BOTTOM,
                         TextShadow.NORMAL);
 
         suggestedPlayersWidgets.forEach(widget -> widget.render(poseStack, mouseX, mouseY, partialTick));
@@ -416,8 +416,8 @@ public final class PartyManagementScreen extends WynntilsScreen implements Textb
                             (float) x,
                             this.height / 2,
                             CommonColors.RED,
-                            HorizontalAlignment.Center,
-                            VerticalAlignment.Middle,
+                            HorizontalAlignment.CENTER,
+                            VerticalAlignment.MIDDLE,
                             TextShadow.NORMAL);
             FontRenderer.getInstance()
                     .renderText(
@@ -426,8 +426,8 @@ public final class PartyManagementScreen extends WynntilsScreen implements Textb
                             this.width / 2,
                             (float) y,
                             CommonColors.CYAN,
-                            HorizontalAlignment.Center,
-                            VerticalAlignment.Middle,
+                            HorizontalAlignment.CENTER,
+                            VerticalAlignment.MIDDLE,
                             TextShadow.NORMAL);
         }
     }
