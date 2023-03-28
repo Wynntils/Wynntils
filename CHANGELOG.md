@@ -1,9 +1,21 @@
+## [0.0.2-alpha.389](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.388...v0.0.2-alpha.389) (2023-03-28)
+
+
+### Bug Fixes
+
+* Tentative fix for isWeapon crash on reskinned crafted weapons ([#1388](https://github.com/Wynntils/Artemis/issues/1388)) ([9ebddfc](https://github.com/Wynntils/Artemis/commit/9ebddfc1d2089c4cec3213c6932646c16b58842a))
+
 ## [0.0.2-alpha.388](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.387...v0.0.2-alpha.388) (2023-03-28)
 
 
 ### Bug Fixes
 
 * The config UI reset button has stopped working ([#1389](https://github.com/Wynntils/Artemis/issues/1389)) ([3275dc3](https://github.com/Wynntils/Artemis/commit/3275dc35b64fd575894ab310fa77de5d692d5ec6))
+
+
+### Miscellaneous Chores
+
+* **release:** v0.0.2-alpha.388 [skip ci] ([05e8c8f](https://github.com/Wynntils/Artemis/commit/05e8c8fdffab4e117040bd81de74cda21558defb))
 
 ## [0.0.2-alpha.387](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.386...v0.0.2-alpha.387) (2023-03-27)
 
@@ -40,16 +52,4 @@
 ### Miscellaneous Chores
 
 * **release:** v0.0.2-alpha.385 [skip ci] ([0832f35](https://github.com/Wynntils/Artemis/commit/0832f35f27692976573e52c7cf201a3edab0c6e7))
-
-## [0.0.2-alpha.384](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.383...v0.0.2-alpha.384) (2023-03-26)
-
-
-### Bug Fixes
-
-* Hide custom overlay bars if not on world by default & allow disabling wynn bars even if the default overlay is not enabled ([#1381](https://github.com/Wynntils/Artemis/issues/1381)) ([87a45f7](https://github.com/Wynntils/Artemis/commit/87a45f7d3598c18b8b6dbdd452636b304d61387b))
-
-
-### Miscellaneous Chores
-
-* **release:** v0.0.2-alpha.384 [skip ci] ([7727546](https://github.com/Wynntils/Artemis/commit/77275461668d52f9a4bb90ac1ed00d89b1d82690))
 
