@@ -117,7 +117,7 @@ public class ConfigButton extends WynntilsButton {
         double actualMouseX = mouseX - getRenderX();
         double actualMouseY = mouseY - getRenderY();
 
-        return resetButton.mouseClicked(actualMouseX, actualMouseY, button)
+        return resetButton.mouseClicked(mouseX, mouseY, button)
                 || configOptionElement.mouseClicked(actualMouseX, actualMouseY, button);
     }
 
