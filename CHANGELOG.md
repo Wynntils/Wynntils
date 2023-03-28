@@ -1,9 +1,21 @@
+## [0.0.2-alpha.388](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.387...v0.0.2-alpha.388) (2023-03-28)
+
+
+### Bug Fixes
+
+* The config UI reset button has stopped working ([#1389](https://github.com/Wynntils/Artemis/issues/1389)) ([3275dc3](https://github.com/Wynntils/Artemis/commit/3275dc35b64fd575894ab310fa77de5d692d5ec6))
+
 ## [0.0.2-alpha.387](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.386...v0.0.2-alpha.387) (2023-03-27)
 
 
 ### Bug Fixes
 
 * We failed to properly detect INTERIM world state ([#1385](https://github.com/Wynntils/Artemis/issues/1385)) ([97ec505](https://github.com/Wynntils/Artemis/commit/97ec505d2ef5e7a0a051a60208fbfddf659c04f1))
+
+
+### Miscellaneous Chores
+
+* **release:** v0.0.2-alpha.387 [skip ci] ([fff795c](https://github.com/Wynntils/Artemis/commit/fff795c169418a9ec34ccb67644faf65e186b9ff))
 
 ## [0.0.2-alpha.386](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.385...v0.0.2-alpha.386) (2023-03-27)
 
@@ -40,16 +52,4 @@
 ### Miscellaneous Chores
 
 * **release:** v0.0.2-alpha.384 [skip ci] ([7727546](https://github.com/Wynntils/Artemis/commit/77275461668d52f9a4bb90ac1ed00d89b1d82690))
-
-## [0.0.2-alpha.383](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.382...v0.0.2-alpha.383) (2023-03-26)
-
-
-### Bug Fixes
-
-* hide timer when 0 by default ([#1380](https://github.com/Wynntils/Artemis/issues/1380)) ([3284926](https://github.com/Wynntils/Artemis/commit/3284926b4b3bb3bb5924829b872ae8dfcd14c64a))
-
-
-### Miscellaneous Chores
-
-* **release:** v0.0.2-alpha.383 [skip ci] ([ff1dccb](https://github.com/Wynntils/Artemis/commit/ff1dccb8294e2fb2bdf73ba61bc7af092f89e48d))
 
