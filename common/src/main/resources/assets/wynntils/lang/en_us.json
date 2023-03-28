@@ -1005,7 +1005,7 @@
   "function.wynntils.generic.notEquals.description": "Checks if two values are not equal",
   "function.wynntils.generic.notEquals.name": "Not Equals",
   "function.wynntils.generic.or.argument.values": "Booleans to or together",
-  "function.wynntils.generic.or.description": "Checks if any of conditions is true",
+  "function.wynntils.generic.or.description": "Checks if any condition is true",
   "function.wynntils.generic.or.name": "Or",
   "function.wynntils.generic.parseDouble.argument.value": "String to parse",
   "function.wynntils.generic.parseDouble.description": "Parses a string to a double",
