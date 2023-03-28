@@ -1,9 +1,21 @@
+## [0.0.2-alpha.390](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.389...v0.0.2-alpha.390) (2023-03-28)
+
+
+### Bug Fixes
+
+* Function descriptions didn't reflect addition of infinite arguments ([#1392](https://github.com/Wynntils/Artemis/issues/1392)) ([5e5330c](https://github.com/Wynntils/Artemis/commit/5e5330c2bbbf60a5a575126d14f8499d330d5b20))
+
 ## [0.0.2-alpha.389](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.388...v0.0.2-alpha.389) (2023-03-28)
 
 
 ### Bug Fixes
 
 * Tentative fix for isWeapon crash on reskinned crafted weapons ([#1388](https://github.com/Wynntils/Artemis/issues/1388)) ([9ebddfc](https://github.com/Wynntils/Artemis/commit/9ebddfc1d2089c4cec3213c6932646c16b58842a))
+
+
+### Miscellaneous Chores
+
+* **release:** v0.0.2-alpha.389 [skip ci] ([8d77bf1](https://github.com/Wynntils/Artemis/commit/8d77bf1999a08e7438be65d925295883454e23ee))
 
 ## [0.0.2-alpha.388](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.387...v0.0.2-alpha.388) (2023-03-28)
 
@@ -40,16 +52,4 @@
 ### Miscellaneous Chores
 
 * **release:** v0.0.2-alpha.386 [skip ci] ([688ecb7](https://github.com/Wynntils/Artemis/commit/688ecb75285c167cbfe288ecc34fcfb2699d3a45))
-
-## [0.0.2-alpha.385](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.384...v0.0.2-alpha.385) (2023-03-26)
-
-
-### New Features
-
-* Introduce UnknownGearAnnotator ([#1383](https://github.com/Wynntils/Artemis/issues/1383)) ([322efcf](https://github.com/Wynntils/Artemis/commit/322efcf1421251f4a53b9682978f38454a6005a1))
-
-
-### Miscellaneous Chores
-
-* **release:** v0.0.2-alpha.385 [skip ci] ([0832f35](https://github.com/Wynntils/Artemis/commit/0832f35f27692976573e52c7cf201a3edab0c6e7))
 
