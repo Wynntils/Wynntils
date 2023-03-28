@@ -14,6 +14,8 @@ public interface ConfigUpfixer {
     boolean apply(JsonObject configObject, Set<ConfigHolder> configHolders);
 
     default String getUpfixerName() {
-        return CaseFormat.UPPER_CAMEL.to(CaseFormat.LOWER_CAMEL, this.getClass().getSimpleName()).replace("Upfixer", "");
+        return CaseFormat.UPPER_CAMEL
+                .to(CaseFormat.LOWER_CAMEL, this.getClass().getSimpleName())
+                .replace("Upfixer", "");
     }
 }

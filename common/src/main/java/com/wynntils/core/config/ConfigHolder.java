@@ -10,11 +10,12 @@ import com.wynntils.core.components.Managers;
 import com.wynntils.core.features.Configurable;
 import com.wynntils.core.features.Translatable;
 import com.wynntils.core.features.overlays.Overlay;
+import com.wynntils.utils.EnumUtils;
 import java.lang.reflect.Type;
 import java.util.Objects;
+import java.util.stream.Stream;
 import net.minecraft.client.resources.language.I18n;
 import org.apache.commons.lang3.ClassUtils;
-import org.apache.commons.lang3.EnumUtils;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 
 public class ConfigHolder implements Comparable<ConfigHolder> {
@@ -56,6 +57,16 @@ public class ConfigHolder implements Comparable<ConfigHolder> {
         // save default value to enable easy resetting
         // We have to deep copy the value, so it is guaranteed that we detect changes
         this.defaultValue = Managers.Json.deepCopy(getValue(), this.fieldType);
+    }
+
+    public Stream<String> getValidLiterals() {
+        if (fieldType instanceof Class clazz && clazz.isEnum()) {
+            return EnumUtils.getEnumConstants(clazz).stream().map(e -> EnumUtils.toJsonFormat(e));
+        }
+        if (fieldType.equals(Boolean.class)) {
+            return Stream.of("true", "false");
+        }
+        return Stream.of();
     }
 
     private Type calculateType(Type typeOverride, Object value) {
@@ -132,6 +143,20 @@ public class ConfigHolder implements Comparable<ConfigHolder> {
         return configObj.get();
     }
 
+    public String getValueString() {
+        if (configObj.get() == null) return "(null)";
+
+        if (isEnum()) {
+            return EnumUtils.toNiceString((Enum) this.getValue());
+        }
+
+        return configObj.get().toString();
+    }
+
+    public boolean isEnum() {
+        return fieldType instanceof Class clazz && clazz.isEnum();
+    }
+
     public Object getDefaultValue() {
         return defaultValue;
     }
@@ -171,11 +196,12 @@ public class ConfigHolder implements Comparable<ConfigHolder> {
     }
 
     public Object tryParseStringValue(String value) {
+        if (isEnum()) {
+            return EnumUtils.fromJsonFormat((Class<? extends Enum<?>>) getType(), value);
+        }
+
         try {
             Class<?> wrapped = ClassUtils.primitiveToWrapper(((Class<?>) fieldType));
-            if (wrapped.isEnum()) {
-                return EnumUtils.getEnumIgnoreCase((Class<? extends Enum>) wrapped, value);
-            }
             return wrapped.getConstructor(String.class).newInstance(value);
         } catch (Exception ignored) {
         }

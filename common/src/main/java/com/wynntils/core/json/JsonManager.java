@@ -150,22 +150,23 @@ public final class JsonManager extends Manager {
         @Override
         public Enum<?> deserialize(JsonElement json, Type type, JsonDeserializationContext context)
                 throws JsonParseException {
-            if (!(type instanceof Class) || !((Class<?>) type).isEnum()) {
+            if (!(type instanceof Class<?> clazz) || !clazz.isEnum()) {
                 WynntilsMod.error("Type is not enum as expected: " + type.getTypeName());
                 throw new RuntimeException("GSON failure");
             }
+            Class<? extends Enum<?>> enumClazz = (Class<? extends Enum<?>>) clazz;
 
-            String value = EnumUtils.fromJsonFormat(json.getAsString());
-            try {
-                return Enum.valueOf((Class<Enum>) type, value);
-            } catch (IllegalArgumentException e) {
-                WynntilsMod.warn("Illegal enum value: " + value + " for type " + ((Class<?>) type).getName()
-                        + " (given as " + json.getAsString() + ")");
+            Enum<?> value = EnumUtils.fromJsonFormat(enumClazz, json.getAsString());
+            if (value == null) {
+                WynntilsMod.warn("Illegal enum value: " + value + " for type " + enumClazz.getName() + " (given as "
+                        + json.getAsString() + ")");
 
-                Enum<? extends Enum<?>> firstValue = ((Class<? extends Enum<?>>) type).getEnumConstants()[0];
+                Enum<?> firstValue = enumClazz.getEnumConstants()[0];
                 WynntilsMod.warn("Will replace with first enum value: " + firstValue.name());
                 return firstValue;
             }
+
+            return value;
         }
     }
 }

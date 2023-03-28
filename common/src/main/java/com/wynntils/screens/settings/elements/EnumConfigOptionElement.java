@@ -63,7 +63,7 @@ public class EnumConfigOptionElement extends ConfigOptionElement {
         FontRenderer.getInstance()
                 .renderAlignedTextInBox(
                         poseStack,
-                        EnumUtils.toNiceString((Enum) configHolder.getValue()),
+                        configHolder.getValueString(),
                         0,
                         maxOptionWidth,
                         renderY + FontRenderer.getInstance().getFont().lineHeight / 2f,

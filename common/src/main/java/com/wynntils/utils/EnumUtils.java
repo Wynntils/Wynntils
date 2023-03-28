@@ -5,6 +5,7 @@
 package com.wynntils.utils;
 
 import com.google.common.base.CaseFormat;
+import java.lang.reflect.Type;
 import java.util.Arrays;
 import java.util.List;
 import org.apache.commons.lang3.text.WordUtils;
@@ -23,12 +24,19 @@ public final class EnumUtils {
         return CaseFormat.UPPER_UNDERSCORE.to(CaseFormat.LOWER_CAMEL, enumValue.name());
     }
 
-    public static String fromJsonFormat(String jsonFormattedString) {
+    public static Enum<?> fromJsonFormat(Class<? extends Enum<?>> enumClazz, String jsonFormattedName) {
         // CaseFormat cannot do round-trip conversion of e.g. TIER_3, hence the
         // replaceAll
-        return CaseFormat.LOWER_CAMEL
-                .to(CaseFormat.UPPER_UNDERSCORE, jsonFormattedString)
+        String enumName = CaseFormat.LOWER_CAMEL
+                .to(CaseFormat.UPPER_UNDERSCORE, jsonFormattedName)
                 .replaceAll("(\\D)(\\d)", "$1_$2");
+
+        try {
+            // The double casting is needed, or javac will complain...
+            return Enum.valueOf((Class<Enum>) (Type) enumClazz, enumName);
+        } catch (IllegalArgumentException e) {
+            return null;
+        }
     }
 
     public static String toNiceString(Enum<?> enumValue) {

@@ -22,6 +22,7 @@ import java.util.Collections;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 import net.minecraft.ChatFormatting;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.commands.Commands;
@@ -97,6 +98,36 @@ public class ConfigCommand extends Command {
                                 .orElse(Collections.emptyIterator());
                     },
                     builder);
+
+    private static final SuggestionProvider<CommandSourceStack> CONFIG_VALUE_SUGGESTION_PROVIDER =
+            (context, builder) -> {
+                String featureName = context.getArgument("feature", String.class);
+                String configName = context.getArgument("config", String.class);
+
+                ConfigHolder config = getConfigHolderFromArguments(context, featureName, configName);
+
+                if (config == null) {
+                    return SharedSuggestionProvider.suggest(Stream.of(), builder);
+                }
+
+                return SharedSuggestionProvider.suggest(config.getValidLiterals(), builder);
+            };
+
+    private static final SuggestionProvider<CommandSourceStack> OVERLAY_CONFIG_VALUE_SUGGESTION_PROVIDER =
+            (context, builder) -> {
+                String featureName = context.getArgument("feature", String.class);
+                String overlayName = context.getArgument("overlay", String.class);
+                String configName = context.getArgument("config", String.class);
+
+                ConfigHolder config =
+                        getOverlayConfigHolderFromArguments(context, featureName, overlayName, configName);
+
+                if (config == null) {
+                    return SharedSuggestionProvider.suggest(Stream.of(), builder);
+                }
+
+                return SharedSuggestionProvider.suggest(config.getValidLiterals(), builder);
+            };
 
     private static final SuggestionProvider<CommandSourceStack> OVERLAY_GROUP_SUGGESTION_PROVIDER =
             (context, builder) -> SharedSuggestionProvider.suggest(
@@ -191,10 +222,12 @@ public class ConfigCommand extends Command {
                                 .then(Commands.argument("config", StringArgumentType.word())
                                         .suggests(OVERLAY_CONFIG_SUGGESTION_PROVIDER)
                                         .then(Commands.argument("newValue", StringArgumentType.greedyString())
+                                                .suggests(OVERLAY_CONFIG_VALUE_SUGGESTION_PROVIDER)
                                                 .executes(this::changeOverlayConfig)))))
                 .then(Commands.argument("config", StringArgumentType.word())
                         .suggests(FEATURE_CONFIG_SUGGESTION_PROVIDER)
                         .then(Commands.argument("newValue", StringArgumentType.greedyString())
+                                .suggests(CONFIG_VALUE_SUGGESTION_PROVIDER)
                                 .executes(this::changeFeatureConfig))));
 
         return setConfigArgBuilder.build();
@@ -433,52 +466,7 @@ public class ConfigCommand extends Command {
 
         ConfigHolder config = getOverlayConfigHolderFromArguments(context, featureName, overlayName, configName);
 
-        if (config == null) {
-            return 0;
-        }
-
-        String newValue = context.getArgument("newValue", String.class);
-        Object parsedValue = config.tryParseStringValue(newValue);
-
-        if (parsedValue == null) {
-            context.getSource()
-                    .sendFailure(Component.literal("Failed to parse the inputted value to the correct type!")
-                            .withStyle(ChatFormatting.RED));
-            return 0;
-        }
-
-        Object oldValue = config.getValue();
-
-        if (Objects.equals(oldValue, parsedValue)) {
-            context.getSource()
-                    .sendFailure(Component.literal("The new value is the same as the current setting.")
-                            .withStyle(ChatFormatting.RED));
-            return 0;
-        }
-
-        config.setValue(parsedValue);
-
-        Managers.Config.saveConfig();
-
-        context.getSource()
-                .sendSuccess(
-                        Component.literal("Successfully set ")
-                                .withStyle(ChatFormatting.GREEN)
-                                .append(Component.literal(config.getDisplayName())
-                                        .withStyle(ChatFormatting.UNDERLINE)
-                                        .withStyle(ChatFormatting.YELLOW))
-                                .append(Component.literal(" from ").withStyle(ChatFormatting.GREEN))
-                                .append(Component.literal(oldValue == null ? "null" : oldValue.toString())
-                                        .withStyle(ChatFormatting.BOLD)
-                                        .withStyle(ChatFormatting.RED))
-                                .append(Component.literal(" to ").withStyle(ChatFormatting.GREEN))
-                                .append(Component.literal(parsedValue.toString())
-                                        .withStyle(ChatFormatting.BOLD)
-                                        .withStyle(ChatFormatting.GREEN))
-                                .append(Component.literal(".").withStyle(ChatFormatting.GREEN)),
-                        false);
-
-        return 1;
+        return changeConfig(context, config);
     }
 
     private int getSpecificConfigOption(CommandContext<CommandSourceStack> context) {
@@ -553,6 +541,10 @@ public class ConfigCommand extends Command {
 
         ConfigHolder config = getConfigHolderFromArguments(context, featureName, configName);
 
+        return changeConfig(context, config);
+    }
+
+    private static int changeConfig(CommandContext<CommandSourceStack> context, ConfigHolder config) {
         if (config == null) {
             return 0;
         }
@@ -568,6 +560,7 @@ public class ConfigCommand extends Command {
         }
 
         Object oldValue = config.getValue();
+        String oldValueString = config.getValueString();
 
         if (Objects.equals(oldValue, parsedValue)) {
             context.getSource()
@@ -577,6 +570,7 @@ public class ConfigCommand extends Command {
         }
 
         config.setValue(parsedValue);
+        String newValueString = config.getValueString();
 
         Managers.Config.saveConfig();
 
@@ -588,11 +582,11 @@ public class ConfigCommand extends Command {
                                         .withStyle(ChatFormatting.UNDERLINE)
                                         .withStyle(ChatFormatting.YELLOW))
                                 .append(Component.literal(" from ").withStyle(ChatFormatting.GREEN))
-                                .append(Component.literal(oldValue == null ? "null" : oldValue.toString())
+                                .append(Component.literal(oldValueString)
                                         .withStyle(ChatFormatting.BOLD)
                                         .withStyle(ChatFormatting.RED))
                                 .append(Component.literal(" to ").withStyle(ChatFormatting.GREEN))
-                                .append(Component.literal(parsedValue.toString())
+                                .append(Component.literal(newValueString)
                                         .withStyle(ChatFormatting.BOLD)
                                         .withStyle(ChatFormatting.GREEN))
                                 .append(Component.literal(".").withStyle(ChatFormatting.GREEN)),
@@ -734,11 +728,9 @@ public class ConfigCommand extends Command {
     }
 
     private MutableComponent getComponentForConfigHolder(ConfigHolder config) {
-        Object value = config.getValue();
-
         String configNameString = config.getDisplayName();
         String configTypeString = " (" + ((Class<?>) config.getType()).getSimpleName() + ")";
-        String valueString = value == null ? "Value is null." : value.toString();
+        String valueString = config.getValueString();
 
         return Component.literal("\n - ")
                 .withStyle(ChatFormatting.GRAY)
@@ -764,9 +756,7 @@ public class ConfigCommand extends Command {
     }
 
     private MutableComponent getSpecificConfigComponent(ConfigHolder config) {
-        Object value = config.getValue();
-
-        String valueString = value == null ? "Value is null." : value.toString();
+        String valueString = config.getValueString();
         String configTypeString = "(" + ((Class<?>) config.getType()).getSimpleName() + ")";
 
         MutableComponent response = Component.literal("");
