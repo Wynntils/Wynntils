@@ -13,6 +13,7 @@ import com.wynntils.screens.maps.widgets.PoiManagerWidget;
 import com.wynntils.utils.colors.CommonColors;
 import com.wynntils.utils.mc.McUtils;
 import com.wynntils.utils.render.FontRenderer;
+import com.wynntils.utils.render.RenderUtils;
 import com.wynntils.utils.render.type.HorizontalAlignment;
 import com.wynntils.utils.render.type.TextShadow;
 import com.wynntils.utils.render.type.VerticalAlignment;
@@ -167,6 +168,15 @@ public class PoiManagementScreen extends WynntilsScreen {
                         VerticalAlignment.Top,
                         TextShadow.NORMAL);
 
+        RenderUtils.drawRect(
+                poseStack,
+                CommonColors.WHITE,
+                this.width/2 - 165,
+                52,
+                0,
+                355,
+                1);
+
         poiManagerWidgets.forEach(widget -> widget.render(poseStack, mouseX, mouseY, partialTick));
     }
 
@@ -195,7 +205,8 @@ public class PoiManagementScreen extends WynntilsScreen {
                 continue;
             }
 
-            //Needs values changing
+            System.out.println(this.width);
+
             PoiManagerWidget newWidget = new PoiManagerWidget(
                     0,
                     0,
