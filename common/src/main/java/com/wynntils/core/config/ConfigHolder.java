@@ -47,7 +47,8 @@ public class ConfigHolder implements Comparable<ConfigHolder> {
         this.allowNull = allowNull;
 
         if (configObj.get() == null && !allowNull) {
-            throw new RuntimeException("Default config value is null in " + parent.getConfigJsonName() + "." + fieldName);
+            throw new RuntimeException(
+                    "Default config value is null in " + parent.getConfigJsonName() + "." + fieldName);
         }
 
         if (!(parent instanceof Translatable)) {
