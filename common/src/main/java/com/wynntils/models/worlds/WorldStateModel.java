@@ -15,6 +15,7 @@ import com.wynntils.mc.event.PlayerTeleportEvent;
 import com.wynntils.models.worlds.event.WorldStateEvent;
 import com.wynntils.models.worlds.type.WorldState;
 import com.wynntils.utils.mc.ComponentUtils;
+import com.wynntils.utils.mc.PosUtils;
 import java.util.List;
 import java.util.UUID;
 import java.util.regex.Matcher;
@@ -102,7 +103,7 @@ public final class WorldStateModel extends Model {
 
     @SubscribeEvent
     public void onTeleport(PlayerTeleportEvent e) {
-        if (e.getNewPosition().equals(CHARACTER_SELECTION_POSITION)) {
+        if (PosUtils.isSame(e.getNewPosition(), CHARACTER_SELECTION_POSITION)) {
             // We get here even if the character selection menu will not show up because of autojoin
             if (getCurrentState() != WorldState.CHARACTER_SELECTION) {
                 // Sometimes the TP comes after the character selection menu, instead of before

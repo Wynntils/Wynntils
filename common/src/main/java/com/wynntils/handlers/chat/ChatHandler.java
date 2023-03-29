@@ -288,16 +288,16 @@ public final class ChatHandler extends Handler {
 
     private void handleFakeChatLine(Component message) {
         // This is a normal, single line chat, sent in the background
+        String coded = ComponentUtils.getCoded(message);
 
         // But it can weirdly enough actually also be a foreground NPC chat message...
-        if (getRecipientType(message, MessageType.FOREGROUND) == RecipientType.NPC) {
+        if (getRecipientType(coded, MessageType.FOREGROUND) == RecipientType.NPC) {
             // In this case, do *not* save this as last chat, since it will soon disappear
             // from history!
             postNpcDialogue(List.of(message), NpcDialogueType.CONFIRMATIONLESS, false);
             return;
         }
 
-        String coded = ComponentUtils.getCoded(message);
         Component updatedMessage = postChatLine(message, coded, MessageType.BACKGROUND);
         // If the message is canceled, we do not need to cancel any packets,
         // just don't send out the chat message
@@ -319,7 +319,9 @@ public final class ChatHandler extends Handler {
             lastRealChat = plainText;
         }
 
-        RecipientType recipientType = getRecipientType(message, messageType);
+        // Normally § codes are stripped from the log; need this to be able to debug chat formatting
+        WynntilsMod.info("[CHAT] " + codedMessage.replace("§", "&"));
+        RecipientType recipientType = getRecipientType(codedMessage, messageType);
 
         if (recipientType == RecipientType.NPC) {
             if (shouldSeparateNPC()) {
@@ -351,12 +353,10 @@ public final class ChatHandler extends Handler {
         WynntilsMod.postEvent(event);
     }
 
-    private RecipientType getRecipientType(Component message, MessageType messageType) {
-        String msg = ComponentUtils.getCoded(message);
-
+    private RecipientType getRecipientType(String codedMessage, MessageType messageType) {
         // Check if message match a recipient category
         for (RecipientType recipientType : RecipientType.values()) {
-            if (recipientType.matchPattern(msg, messageType)) {
+            if (recipientType.matchPattern(codedMessage, messageType)) {
                 return recipientType;
             }
         }
