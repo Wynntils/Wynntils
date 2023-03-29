@@ -4,7 +4,9 @@
  */
 package com.wynntils.utils.render.type;
 
-public enum VerticalAlignment {
+import com.wynntils.core.config.NullableConfig;
+
+public enum VerticalAlignment implements NullableConfig {
     TOP,
     MIDDLE,
     BOTTOM

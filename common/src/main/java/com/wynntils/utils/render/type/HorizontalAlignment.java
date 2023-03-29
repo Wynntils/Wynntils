@@ -4,7 +4,9 @@
  */
 package com.wynntils.utils.render.type;
 
-public enum HorizontalAlignment {
+import com.wynntils.core.config.NullableConfig;
+
+public enum HorizontalAlignment implements NullableConfig {
     LEFT,
     CENTER,
     RIGHT

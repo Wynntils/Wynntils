@@ -6,17 +6,19 @@ package com.wynntils.core.json;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-import com.google.gson.JsonDeserializationContext;
-import com.google.gson.JsonDeserializer;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParseException;
 import com.google.gson.JsonParser;
-import com.google.gson.JsonSerializationContext;
-import com.google.gson.JsonSerializer;
+import com.google.gson.TypeAdapter;
+import com.google.gson.TypeAdapterFactory;
+import com.google.gson.reflect.TypeToken;
 import com.google.gson.stream.JsonReader;
+import com.google.gson.stream.JsonToken;
+import com.google.gson.stream.JsonWriter;
 import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.components.Manager;
+import com.wynntils.core.config.NullableConfig;
 import com.wynntils.utils.EnumUtils;
 import com.wynntils.utils.FileUtils;
 import com.wynntils.utils.colors.CustomColor;
@@ -40,7 +42,7 @@ import org.apache.commons.lang3.reflect.FieldUtils;
 public final class JsonManager extends Manager {
     public static final Gson GSON = new GsonBuilder()
             .registerTypeAdapter(CustomColor.class, new CustomColor.CustomColorSerializer())
-            .registerTypeHierarchyAdapter(Enum.class, new EnumSerializer())
+            .registerTypeAdapterFactory(new EnumTypeAdapterFactory())
             .setPrettyPrinting()
             .serializeNulls()
             .create();
@@ -141,32 +143,69 @@ public final class JsonManager extends Manager {
         FileUtils.deleteFile(jsonFile);
     }
 
-    public static class EnumSerializer implements JsonSerializer<Enum<?>>, JsonDeserializer<Enum<?>> {
+    private static final class EnumTypeAdapterFactory implements TypeAdapterFactory {
         @Override
-        public JsonElement serialize(Enum src, Type type, JsonSerializationContext context) {
-            return context.serialize(EnumUtils.toJsonFormat(src));
+        public <T> TypeAdapter<T> create(Gson gson, TypeToken<T> type) {
+            if (!type.getRawType().isEnum()) return null;
+
+            Class<? extends Enum<?>> enumClazz = (Class<? extends Enum<?>>) type.getRawType();
+            return new EnumTypeAdapter<>(enumClazz);
+        }
+    }
+
+    private static final class EnumTypeAdapter<T> extends TypeAdapter<T> {
+        private final Class<? extends Enum<?>> enumClazz;
+        private final boolean nullAllowed;
+
+        private EnumTypeAdapter(Class<? extends Enum<?>> enumClazz) {
+            this.enumClazz = enumClazz;
+            nullAllowed = NullableConfig.class.isAssignableFrom(enumClazz);
         }
 
         @Override
-        public Enum<?> deserialize(JsonElement json, Type type, JsonDeserializationContext context)
-                throws JsonParseException {
-            if (!(type instanceof Class<?> clazz) || !clazz.isEnum()) {
-                WynntilsMod.error("Type is not enum as expected: " + type.getTypeName());
-                throw new RuntimeException("GSON failure");
+        public void write(JsonWriter out, T value) throws IOException {
+            if (value != null) {
+                out.value(EnumUtils.toJsonFormat((Enum<?>) value));
+            } else {
+                if (!nullAllowed) {
+                    WynntilsMod.warn("Writing null enum value to json for " + enumClazz.getSimpleName());
+                }
+                out.nullValue();
             }
-            Class<? extends Enum<?>> enumClazz = (Class<? extends Enum<?>>) clazz;
+        }
 
-            Enum<?> value = EnumUtils.fromJsonFormat(enumClazz, json.getAsString());
-            if (value == null) {
-                WynntilsMod.warn("Illegal enum value: " + value + " for type " + enumClazz.getName() + " (given as "
-                        + json.getAsString() + ")");
+        @Override
+        public T read(JsonReader in) throws IOException {
+            if (in.peek() == JsonToken.STRING) {
+                String jsonString = in.nextString();
 
-                Enum<?> firstValue = enumClazz.getEnumConstants()[0];
-                WynntilsMod.warn("Will replace with first enum value: " + firstValue.name());
-                return firstValue;
+                Enum<?> value = EnumUtils.fromJsonFormat(enumClazz, jsonString);
+                if (value == null) {
+                    WynntilsMod.warn("Illegal enum value: " + value + " for type " + enumClazz.getName() + " (given as "
+                            + jsonString + ")");
+                    return replacement();
+                }
+
+                return (T) value;
+            } else if (in.peek() == JsonToken.NULL) {
+                in.nextNull();
+
+                if (!nullAllowed) {
+                    WynntilsMod.warn("Null enum value for type " + enumClazz.getName());
+                    return replacement();
+                }
+
+                return null;
+            } else {
+                WynntilsMod.warn("Invalid json type " + in.peek() + " for enum " + enumClazz.getName());
+                return replacement();
             }
+        }
 
-            return value;
+        private T replacement() {
+            Enum<?> firstValue = enumClazz.getEnumConstants()[0];
+            WynntilsMod.warn("Will replace with first enum value: " + firstValue.name());
+            return (T) firstValue;
         }
     }
 }
