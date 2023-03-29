@@ -63,7 +63,7 @@ public class NpcDialogueOverlayFeature extends Feature {
     private ScheduledFuture<?> scheduledAutoProgressKeyPress = null;
 
     private final List<ConfirmationlessDialogue> confirmationlessDialogues = new ArrayList<>();
-    private List<String> currentDialogue;
+    private List<String> currentDialogue = new ArrayList<>();
     private NpcDialogueType dialogueType;
     private boolean isProtected;
 
