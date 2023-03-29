@@ -335,7 +335,7 @@ public class NpcDialogueOverlayFeature extends Feature {
 
         @Override
         public void render(PoseStack poseStack, MultiBufferSource bufferSource, float partialTicks, Window window) {
-            if (currentDialogue.isEmpty() && confirmationlessDialogues.isEmpty()) return;
+            if ((currentDialogue == null || currentDialogue.isEmpty()) && confirmationlessDialogues.isEmpty()) return;
 
             LinkedList<String> allDialogues = new LinkedList<>(currentDialogue);
             confirmationlessDialogues.forEach(d -> {
