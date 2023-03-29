@@ -264,8 +264,8 @@ public final class ConfigManager extends Manager {
 
             Type valueType = Managers.Json.getJsonValueType(configField);
 
-            ConfigHolder configHolder = new ConfigHolder(
-                    parent, configObj, configField.getName(), i18nKey, visible, valueType, configInfo.allowNull());
+            ConfigHolder configHolder =
+                    new ConfigHolder(parent, configObj, configField.getName(), i18nKey, visible, valueType);
             if (WynntilsMod.isDevelopmentEnvironment()) {
                 if (visible) {
                     if (configHolder.getDisplayName().startsWith("feature.wynntils.")) {

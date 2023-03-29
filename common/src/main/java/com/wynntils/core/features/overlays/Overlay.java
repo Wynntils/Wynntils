@@ -36,10 +36,10 @@ public abstract class Overlay extends AbstractConfigurable implements Translatab
     // but the user can modify this config field to use an override.
     // Example use case: Overlay is aligned to the left in the TopRight section,
     //                   but the user wants to use right text alignment
-    @RegisterConfig(value = "overlay.wynntils.overlay.horizontalAlignmentOverride", allowNull = true)
+    @RegisterConfig("overlay.wynntils.overlay.horizontalAlignmentOverride")
     protected final HiddenConfig<HorizontalAlignment> horizontalAlignmentOverride = new HiddenConfig<>(null);
 
-    @RegisterConfig(value = "overlay.wynntils.overlay.verticalAlignmentOverride", allowNull = true)
+    @RegisterConfig("overlay.wynntils.overlay.verticalAlignmentOverride")
     protected final HiddenConfig<VerticalAlignment> verticalAlignmentOverride = new HiddenConfig<>(null);
 
     protected Overlay(OverlayPosition position, float width, float height) {

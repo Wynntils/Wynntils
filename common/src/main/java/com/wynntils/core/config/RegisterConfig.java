@@ -14,6 +14,4 @@ import java.lang.annotation.Target;
 public @interface RegisterConfig {
     /** The base part of the translation key to use for this option */
     String value() default "";
-
-    boolean allowNull() default false;
 }

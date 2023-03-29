@@ -33,29 +33,24 @@ public class ConfigHolder implements Comparable<ConfigHolder> {
     private boolean userEdited = false;
 
     public <T extends Configurable & Translatable> ConfigHolder(
-            T parent,
-            Config configObj,
-            String fieldName,
-            String i18nKey,
-            boolean visible,
-            Type valueType,
-            boolean allowNull) {
+            T parent, Config configObj, String fieldName, String i18nKey, boolean visible, Type valueType) {
         this.parent = parent;
         this.configObj = configObj;
         this.fieldName = fieldName;
         this.i18nKey = i18nKey;
         this.visible = visible;
         this.valueType = valueType;
-        this.allowNull = allowNull;
 
+        // save default value to enable easy resetting
+        // We have to deep copy the value, so it is guaranteed that we detect changes
+        this.defaultValue = Managers.Json.deepCopy(getValue(), valueType);
+
+        this.allowNull = valueType instanceof Class<?> clazz && NullableConfig.class.isAssignableFrom(clazz);
         if (configObj.get() == null && !allowNull) {
             throw new RuntimeException(
                     "Default config value is null in " + parent.getConfigJsonName() + "." + fieldName);
         }
 
-        // save default value to enable easy resetting
-        // We have to deep copy the value, so it is guaranteed that we detect changes
-        this.defaultValue = Managers.Json.deepCopy(getValue(), valueType);
     }
 
     public Stream<String> getValidLiterals() {
@@ -135,7 +130,7 @@ public class ConfigHolder implements Comparable<ConfigHolder> {
     }
 
     public boolean isEnum() {
-        return fieldType instanceof Class clazz && clazz.isEnum();
+        return valueType instanceof Class clazz && clazz.isEnum();
     }
 
     public Object getDefaultValue() {
