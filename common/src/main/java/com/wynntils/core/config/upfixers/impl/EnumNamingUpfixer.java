@@ -42,7 +42,7 @@ public class EnumNamingUpfixer implements ConfigUpfixer {
             Object value = GSON.fromJson(origJson, config.getType());
             JsonElement newJson = Managers.Json.GSON.toJsonTree(value, config.getType());
 
-            if (!(newJson.equals(origJson))) {
+            if (!(newJson.toString().equals(origJson.toString()))) {
                 configObject.add(jsonName, newJson);
             }
         }
