@@ -6,6 +6,7 @@ package com.wynntils.core.config;
 
 import com.google.common.base.CaseFormat;
 import com.google.gson.reflect.TypeToken;
+import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.components.Managers;
 import com.wynntils.core.features.Configurable;
 import com.wynntils.core.features.Translatable;
@@ -23,6 +24,7 @@ public class ConfigHolder implements Comparable<ConfigHolder> {
     private final String fieldName;
     private final String i18nKey;
     private final boolean visible;
+    private final boolean allowNull;
 
     private final Type fieldType;
     private final Object defaultValue;
@@ -35,12 +37,18 @@ public class ConfigHolder implements Comparable<ConfigHolder> {
             String fieldName,
             String i18nKey,
             boolean visible,
-            Type typeOverride) {
+            Type typeOverride,
+            boolean allowNull) {
         this.parent = parent;
         this.configObj = configObj;
         this.fieldName = fieldName;
         this.i18nKey = i18nKey;
         this.visible = visible;
+        this.allowNull = allowNull;
+
+        if (configObj.get() == null && !allowNull) {
+            throw new RuntimeException("Default config value is null in " + parent.getConfigJsonName() + "." + fieldName);
+        }
 
         if (!(parent instanceof Translatable)) {
             throw new RuntimeException("Parent must implement Translatable interface.");
@@ -51,11 +59,11 @@ public class ConfigHolder implements Comparable<ConfigHolder> {
         //       and is not instantiated by default, we cannot get it's actual class easily,
         //       making tryParseStringValue fail.
         //       Use TypeOverride to fix this
-        this.fieldType = calculateType(typeOverride, getValue());
+        this.fieldType = calculateType(typeOverride, configObj.get());
 
         // save default value to enable easy resetting
         // We have to deep copy the value, so it is guaranteed that we detect changes
-        this.defaultValue = Managers.Json.deepCopy(getValue(), this.fieldType);
+        this.defaultValue = Managers.Json.deepCopy(configObj.get(), this.fieldType);
     }
 
     private Type calculateType(Type typeOverride, Object value) {
@@ -137,6 +145,12 @@ public class ConfigHolder implements Comparable<ConfigHolder> {
     }
 
     public void setValue(Object value) {
+        if (value == null && !allowNull) {
+            WynntilsMod.warn("Trying to set null to config " + getJsonName() + ". Will be replaced by default.");
+            reset();
+            return;
+        }
+
         configObj.updateConfig(value);
         parent.updateConfigOption(this);
         userEdited = true;
