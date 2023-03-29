@@ -167,8 +167,7 @@ public final class JsonManager extends Manager {
 
                 Enum<?> value = EnumUtils.fromJsonFormat(enumClazz, jsonString);
                 if (value == null) {
-                    WynntilsMod.warn("Illegal enum value: " + value + " for type " + enumClazz.getName() + " (given as "
-                            + jsonString + ")");
+                    WynntilsMod.warn("Illegal enum value: " + jsonString + " for type " + enumClazz.getName());
                     return replacement();
                 }
 
