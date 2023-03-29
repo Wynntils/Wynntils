@@ -5,7 +5,6 @@
 package com.wynntils.screens.maps;
 
 import com.mojang.blaze3d.platform.InputConstants;
-import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.wynntils.core.components.Models;
 import com.wynntils.models.map.MapTexture;
@@ -342,7 +341,7 @@ public abstract class AbstractMapScreen extends WynntilsScreen {
                     renderUsingLinear);
         }
 
-        RenderSystem.disableScissor();
+        RenderUtils.disableScissor();
     }
 
     protected void updateMapCenterIfDragging(int mouseX, int mouseY) {
