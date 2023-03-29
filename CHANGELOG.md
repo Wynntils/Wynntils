@@ -1,9 +1,26 @@
+## [0.0.2-alpha.395](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.394...v0.0.2-alpha.395) (2023-03-29)
+
+
+### Bug Fixes
+
+* Restore render system after crash in overlay ([#1397](https://github.com/Wynntils/Artemis/issues/1397)) ([84280a6](https://github.com/Wynntils/Artemis/commit/84280a6796fd709130657a32a46f08970b104613))
+
+
+### New Features
+
+* Use short format for XP overlay ([#1384](https://github.com/Wynntils/Artemis/issues/1384)) ([327b11c](https://github.com/Wynntils/Artemis/commit/327b11ca98ff411e6aec577cc898518829a41820))
+
 ## [0.0.2-alpha.394](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.393...v0.0.2-alpha.394) (2023-03-29)
 
 
 ### New Features
 
 * Functions for mob totem x, y, z ([#1394](https://github.com/Wynntils/Artemis/issues/1394)) ([20cdca8](https://github.com/Wynntils/Artemis/commit/20cdca81a2ad336dc528f85c73046ebac0cbbe67))
+
+
+### Miscellaneous Chores
+
+* **release:** v0.0.2-alpha.394 [skip ci] ([0316a0d](https://github.com/Wynntils/Artemis/commit/0316a0ddcc1455197db3154b573eccdf418e0670))
 
 ## [0.0.2-alpha.393](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.392...v0.0.2-alpha.393) (2023-03-29)
 
@@ -40,16 +57,4 @@
 ### Miscellaneous Chores
 
 * **release:** v0.0.2-alpha.391 [skip ci] ([97288e0](https://github.com/Wynntils/Artemis/commit/97288e00628c27481d0ae8f0c15ad70d987d639a))
-
-## [0.0.2-alpha.390](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.389...v0.0.2-alpha.390) (2023-03-28)
-
-
-### Bug Fixes
-
-* Function descriptions didn't reflect addition of infinite arguments ([#1392](https://github.com/Wynntils/Artemis/issues/1392)) ([5e5330c](https://github.com/Wynntils/Artemis/commit/5e5330c2bbbf60a5a575126d14f8499d330d5b20))
-
-
-### Miscellaneous Chores
-
-* **release:** v0.0.2-alpha.390 [skip ci] ([abb8bc2](https://github.com/Wynntils/Artemis/commit/abb8bc2ca0fdbef68317bda1638a1868ee408632))
 
