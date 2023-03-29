@@ -48,6 +48,7 @@ import com.wynntils.features.debug.ConnectionProgressFeature;
 import com.wynntils.features.debug.ItemDebugTooltipsFeature;
 import com.wynntils.features.debug.LogItemInfoFeature;
 import com.wynntils.features.debug.PacketDebuggerFeature;
+import com.wynntils.features.embellishments.WybelSoundFeature;
 import com.wynntils.features.inventory.BulkBuyFeature;
 import com.wynntils.features.inventory.ContainerSearchFeature;
 import com.wynntils.features.inventory.DurabilityArcFeature;
@@ -249,6 +250,7 @@ public final class FeatureManager extends Manager {
         registerFeature(new UnidentifiedItemIconFeature());
         registerFeature(new UpdatesFeature());
         registerFeature(new WorldWaypointDistanceFeature());
+        registerFeature(new WybelSoundFeature());
         registerFeature(new WynncraftButtonFeature());
         registerFeature(new WynncraftPauseScreenFeature());
         registerFeature(new WynntilsCosmeticsFeature());
