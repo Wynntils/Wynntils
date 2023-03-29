@@ -1,9 +1,21 @@
+## [0.0.2-alpha.392](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.391...v0.0.2-alpha.392) (2023-03-29)
+
+
+### New Features
+
+* Embellishment feature: Wybel sounds ([#1391](https://github.com/Wynntils/Artemis/issues/1391)) ([54f59ab](https://github.com/Wynntils/Artemis/commit/54f59ab63e030ee63828405eca212b1788d902d6))
+
 ## [0.0.2-alpha.391](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.390...v0.0.2-alpha.391) (2023-03-29)
 
 
 ### Bug Fixes
 
 * Fix NPC dialogue pattern to match some odd dialogues ([#1387](https://github.com/Wynntils/Artemis/issues/1387)) ([61f3e3c](https://github.com/Wynntils/Artemis/commit/61f3e3cc760a98c15e00394cec080566e99b8948))
+
+
+### Miscellaneous Chores
+
+* **release:** v0.0.2-alpha.391 [skip ci] ([97288e0](https://github.com/Wynntils/Artemis/commit/97288e00628c27481d0ae8f0c15ad70d987d639a))
 
 ## [0.0.2-alpha.390](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.389...v0.0.2-alpha.390) (2023-03-28)
 
@@ -40,16 +52,4 @@
 ### Miscellaneous Chores
 
 * **release:** v0.0.2-alpha.388 [skip ci] ([05e8c8f](https://github.com/Wynntils/Artemis/commit/05e8c8fdffab4e117040bd81de74cda21558defb))
-
-## [0.0.2-alpha.387](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.386...v0.0.2-alpha.387) (2023-03-27)
-
-
-### Bug Fixes
-
-* We failed to properly detect INTERIM world state ([#1385](https://github.com/Wynntils/Artemis/issues/1385)) ([97ec505](https://github.com/Wynntils/Artemis/commit/97ec505d2ef5e7a0a051a60208fbfddf659c04f1))
-
-
-### Miscellaneous Chores
-
-* **release:** v0.0.2-alpha.387 [skip ci] ([fff795c](https://github.com/Wynntils/Artemis/commit/fff795c169418a9ec34ccb67644faf65e186b9ff))
 
