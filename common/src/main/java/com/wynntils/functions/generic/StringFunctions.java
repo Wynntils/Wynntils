@@ -7,6 +7,7 @@ package com.wynntils.functions.generic;
 import com.wynntils.core.functions.GenericFunction;
 import com.wynntils.core.functions.arguments.FunctionArguments;
 import com.wynntils.utils.StringUtils;
+import com.wynntils.utils.type.CappedValue;
 import java.util.List;
 
 public class StringFunctions {
@@ -21,6 +22,21 @@ public class StringFunctions {
         public FunctionArguments.RequiredArgumentBuilder getRequiredArgumentsBuilder() {
             return new FunctionArguments.RequiredArgumentBuilder(
                     List.of(new FunctionArguments.Argument<>("value", Number.class, null)));
+        }
+    }
+
+    public static class FormatCappedFunction extends GenericFunction<String> {
+        @Override
+        public String getValue(FunctionArguments arguments) {
+            CappedValue value = arguments.getArgument("value").getCappedValue();
+            return StringUtils.integerToShortString(value.current()) + "/"
+                    + StringUtils.integerToShortString(value.max());
+        }
+
+        @Override
+        public FunctionArguments.RequiredArgumentBuilder getRequiredArgumentsBuilder() {
+            return new FunctionArguments.RequiredArgumentBuilder(
+                    List.of(new FunctionArguments.Argument<>("value", CappedValue.class, null)));
         }
     }
 
@@ -133,6 +149,29 @@ public class StringFunctions {
             return new FunctionArguments.RequiredArgumentBuilder(List.of(
                     new FunctionArguments.Argument<>("value", String.class, null),
                     new FunctionArguments.Argument<>("count", Integer.class, null)));
+        }
+    }
+
+    public static class CappedStringFunction extends GenericFunction<String> {
+        @Override
+        public String getValue(FunctionArguments arguments) {
+            int current = arguments.getArgument("value").getCappedValue().current();
+            int max = arguments.getArgument("value").getCappedValue().max();
+            String delimiter = arguments.getArgument("delimiter").getStringValue();
+
+            return String.format("%d%s%d", current, delimiter, max);
+        }
+
+        @Override
+        public FunctionArguments.RequiredArgumentBuilder getRequiredArgumentsBuilder() {
+            return new FunctionArguments.RequiredArgumentBuilder(List.of(
+                    new FunctionArguments.Argument<>("value", CappedValue.class, null),
+                    new FunctionArguments.Argument<>("delimiter", String.class, null)));
+        }
+
+        @Override
+        public List<String> getAliases() {
+            return List.of("cap_str", "str_cap");
         }
     }
 }
