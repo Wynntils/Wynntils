@@ -1,9 +1,21 @@
+## [0.0.2-alpha.394](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.393...v0.0.2-alpha.394) (2023-03-29)
+
+
+### New Features
+
+* Functions for mob totem x, y, z ([#1394](https://github.com/Wynntils/Artemis/issues/1394)) ([20cdca8](https://github.com/Wynntils/Artemis/commit/20cdca81a2ad336dc528f85c73046ebac0cbbe67))
+
 ## [0.0.2-alpha.393](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.392...v0.0.2-alpha.393) (2023-03-29)
 
 
 ### New Features
 
 * Custom Loading Screen ([#1386](https://github.com/Wynntils/Artemis/issues/1386)) ([fd06956](https://github.com/Wynntils/Artemis/commit/fd069567d7b95095c86dc868076ef287f5aed8ad))
+
+
+### Miscellaneous Chores
+
+* **release:** v0.0.2-alpha.393 [skip ci] ([43e046c](https://github.com/Wynntils/Artemis/commit/43e046cbf5af566be2260e750055d228777edeef))
 
 ## [0.0.2-alpha.392](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.391...v0.0.2-alpha.392) (2023-03-29)
 
@@ -40,16 +52,4 @@
 ### Miscellaneous Chores
 
 * **release:** v0.0.2-alpha.390 [skip ci] ([abb8bc2](https://github.com/Wynntils/Artemis/commit/abb8bc2ca0fdbef68317bda1638a1868ee408632))
-
-## [0.0.2-alpha.389](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.388...v0.0.2-alpha.389) (2023-03-28)
-
-
-### Bug Fixes
-
-* Tentative fix for isWeapon crash on reskinned crafted weapons ([#1388](https://github.com/Wynntils/Artemis/issues/1388)) ([9ebddfc](https://github.com/Wynntils/Artemis/commit/9ebddfc1d2089c4cec3213c6932646c16b58842a))
-
-
-### Miscellaneous Chores
-
-* **release:** v0.0.2-alpha.389 [skip ci] ([8d77bf1](https://github.com/Wynntils/Artemis/commit/8d77bf1999a08e7438be65d925295883454e23ee))
 
