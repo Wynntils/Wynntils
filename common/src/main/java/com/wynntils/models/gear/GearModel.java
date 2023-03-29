@@ -100,6 +100,16 @@ public final class GearModel extends Model {
         WynnItemParseResult result = WynnItemParser.parseItemStack(itemStack, null);
         CappedValue durability = new CappedValue(result.durabilityCurrent(), result.durabilityMax());
         GearType gearType = GearType.fromItemStack(itemStack);
+        if (gearType == null) {
+            // If it is crafted, and has a skin, then we cannot determine weapon type from item stack
+            // Maybe it is possible to find in the string type, e.g. "Crafted Wand"
+            gearType = GearType.fromString(result.itemType());
+            if (gearType == null) {
+                // ... but if the item is signed, this will not work either. We're out of luck,
+                // fall back to a generic type, and assume it is a weapon
+                gearType = GearType.WEAPON;
+            }
+        }
         // FIXME: Damages and requirements are not yet parsed
         return new CraftedGearItem(
                 gearType, result.level(), List.of(), List.of(), result.identifications(), result.powders(), durability);

@@ -17,6 +17,8 @@ public enum GearType {
     DAGGER(ClassType.ASSASSIN, Items.SHEARS, 0),
     BOW(ClassType.ARCHER, Items.BOW, 0),
     RELIK(ClassType.SHAMAN, Items.STONE_SHOVEL, 7),
+    // This is a fallback for signed, crafted gear with a skin
+    WEAPON(null, Items.DIAMOND_SHOVEL, 0),
     // FIXME: We need a complete mapping of damage values for ring, bracelet and necklace to be able
     // to get rid of this (needed for crafted and unknown gear)
     ACCESSORY(null, Items.FLINT_AND_STEEL, 0),
@@ -103,7 +105,7 @@ public enum GearType {
     }
 
     public boolean isWeapon() {
-        return classReq != null;
+        return (classReq != null) || this == WEAPON;
     }
 
     public boolean isAccessory() {

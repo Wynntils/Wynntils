@@ -13,6 +13,7 @@ public enum Category {
     COMBAT,
     COMMANDS,
     DEBUG,
+    EMBELLISHMENTS,
     INVENTORY,
     MAP,
     OVERLAYS,
