@@ -5,7 +5,6 @@
 package com.wynntils.core.config;
 
 import com.google.common.base.CaseFormat;
-import com.google.gson.reflect.TypeToken;
 import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.components.Managers;
 import com.wynntils.core.features.Configurable;
@@ -50,7 +49,6 @@ public class ConfigHolder implements Comparable<ConfigHolder> {
             throw new RuntimeException(
                     "Default config value is null in " + parent.getConfigJsonName() + "." + fieldName);
         }
-
     }
 
     public Stream<String> getValidLiterals() {
@@ -65,10 +63,6 @@ public class ConfigHolder implements Comparable<ConfigHolder> {
 
     public Type getType() {
         return valueType;
-    }
-
-    public Class<?> getClassOfConfigField() {
-        return TypeToken.get(this.getType()).getRawType();
     }
 
     public String getFieldName() {

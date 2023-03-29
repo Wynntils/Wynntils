@@ -29,7 +29,7 @@ public class EnumConfigOptionElement extends ConfigOptionElement {
     public EnumConfigOptionElement(ConfigHolder configHolder) {
         super(configHolder);
 
-        this.enumConstants = EnumUtils.getEnumConstants(this.configHolder.getClassOfConfigField());
+        this.enumConstants = EnumUtils.getEnumConstants((Class<?>) this.configHolder.getType());
         this.maxOptionWidth = this.enumConstants.stream()
                         .mapToInt(enumValue ->
                                 FontRenderer.getInstance().getFont().width(EnumUtils.toNiceString(enumValue)))
