@@ -1,9 +1,21 @@
+## [0.0.2-alpha.397](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.396...v0.0.2-alpha.397) (2023-03-29)
+
+
+### Bug Fixes
+
+* NPC dialogue feature crashes when enabled after starting disabled ([#1395](https://github.com/Wynntils/Artemis/issues/1395)) ([7957552](https://github.com/Wynntils/Artemis/commit/7957552bd47efb6a6134d0ebb0f2f835a0a22d22))
+
 ## [0.0.2-alpha.396](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.395...v0.0.2-alpha.396) (2023-03-29)
 
 
 ### New Features
 
 * Capped String Function ([#1400](https://github.com/Wynntils/Artemis/issues/1400)) ([c7fb562](https://github.com/Wynntils/Artemis/commit/c7fb562db7fd166054f33e9179ae58573eded0f0))
+
+
+### Miscellaneous Chores
+
+* **release:** v0.0.2-alpha.396 [skip ci] ([33a74ab](https://github.com/Wynntils/Artemis/commit/33a74abf6998ab9804cd98fda0f1771c758d366b))
 
 ## [0.0.2-alpha.395](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.394...v0.0.2-alpha.395) (2023-03-29)
 
@@ -45,16 +57,4 @@
 ### Miscellaneous Chores
 
 * **release:** v0.0.2-alpha.393 [skip ci] ([43e046c](https://github.com/Wynntils/Artemis/commit/43e046cbf5af566be2260e750055d228777edeef))
-
-## [0.0.2-alpha.392](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.391...v0.0.2-alpha.392) (2023-03-29)
-
-
-### New Features
-
-* Embellishment feature: Wybel sounds ([#1391](https://github.com/Wynntils/Artemis/issues/1391)) ([54f59ab](https://github.com/Wynntils/Artemis/commit/54f59ab63e030ee63828405eca212b1788d902d6))
-
-
-### Miscellaneous Chores
-
-* **release:** v0.0.2-alpha.392 [skip ci] ([79e3711](https://github.com/Wynntils/Artemis/commit/79e3711cb55a5a56c6680eaf58981a685c3d6efa))
 
