@@ -1,3 +1,10 @@
+## [0.0.2-alpha.396](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.395...v0.0.2-alpha.396) (2023-03-29)
+
+
+### New Features
+
+* Capped String Function ([#1400](https://github.com/Wynntils/Artemis/issues/1400)) ([c7fb562](https://github.com/Wynntils/Artemis/commit/c7fb562db7fd166054f33e9179ae58573eded0f0))
+
 ## [0.0.2-alpha.395](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.394...v0.0.2-alpha.395) (2023-03-29)
 
 
@@ -9,6 +16,11 @@
 ### New Features
 
 * Use short format for XP overlay ([#1384](https://github.com/Wynntils/Artemis/issues/1384)) ([327b11c](https://github.com/Wynntils/Artemis/commit/327b11ca98ff411e6aec577cc898518829a41820))
+
+
+### Miscellaneous Chores
+
+* **release:** v0.0.2-alpha.395 [skip ci] ([64e7d05](https://github.com/Wynntils/Artemis/commit/64e7d057d54704a857cc949e1db031ced0c02f0b))
 
 ## [0.0.2-alpha.394](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.393...v0.0.2-alpha.394) (2023-03-29)
 
@@ -45,16 +57,4 @@
 ### Miscellaneous Chores
 
 * **release:** v0.0.2-alpha.392 [skip ci] ([79e3711](https://github.com/Wynntils/Artemis/commit/79e3711cb55a5a56c6680eaf58981a685c3d6efa))
-
-## [0.0.2-alpha.391](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.390...v0.0.2-alpha.391) (2023-03-29)
-
-
-### Bug Fixes
-
-* Fix NPC dialogue pattern to match some odd dialogues ([#1387](https://github.com/Wynntils/Artemis/issues/1387)) ([61f3e3c](https://github.com/Wynntils/Artemis/commit/61f3e3cc760a98c15e00394cec080566e99b8948))
-
-
-### Miscellaneous Chores
-
-* **release:** v0.0.2-alpha.391 [skip ci] ([97288e0](https://github.com/Wynntils/Artemis/commit/97288e00628c27481d0ae8f0c15ad70d987d639a))
 
