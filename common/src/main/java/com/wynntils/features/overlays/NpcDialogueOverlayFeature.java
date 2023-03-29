@@ -63,7 +63,7 @@ public class NpcDialogueOverlayFeature extends Feature {
     private ScheduledFuture<?> scheduledAutoProgressKeyPress = null;
 
     private final List<ConfirmationlessDialogue> confirmationlessDialogues = new ArrayList<>();
-    private List<String> currentDialogue;
+    private List<String> currentDialogue = new ArrayList<>();
     private NpcDialogueType dialogueType;
     private boolean isProtected;
 
@@ -335,7 +335,7 @@ public class NpcDialogueOverlayFeature extends Feature {
 
         @Override
         public void render(PoseStack poseStack, MultiBufferSource bufferSource, float partialTicks, Window window) {
-            if ((currentDialogue == null || currentDialogue.isEmpty()) && confirmationlessDialogues.isEmpty()) return;
+            if (currentDialogue.isEmpty() && confirmationlessDialogues.isEmpty()) return;
 
             LinkedList<String> allDialogues = new LinkedList<>(currentDialogue);
             confirmationlessDialogues.forEach(d -> {
