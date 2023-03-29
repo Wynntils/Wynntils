@@ -5,7 +5,6 @@
 package com.wynntils.features.chat;
 
 import com.google.common.collect.Sets;
-import com.google.common.reflect.TypeToken;
 import com.wynntils.core.chat.ChatTab;
 import com.wynntils.core.components.Managers;
 import com.wynntils.core.config.Category;
@@ -14,7 +13,6 @@ import com.wynntils.core.config.ConfigHolder;
 import com.wynntils.core.config.HiddenConfig;
 import com.wynntils.core.config.RegisterConfig;
 import com.wynntils.core.features.Feature;
-import com.wynntils.core.json.TypeOverride;
 import com.wynntils.handlers.chat.event.ChatMessageReceivedEvent;
 import com.wynntils.handlers.chat.type.RecipientType;
 import com.wynntils.mc.event.ChatScreenKeyTypedEvent;
@@ -27,7 +25,6 @@ import com.wynntils.screens.chattabs.widgets.ChatTabAddButton;
 import com.wynntils.screens.chattabs.widgets.ChatTabButton;
 import com.wynntils.utils.mc.KeyboardUtils;
 import com.wynntils.utils.mc.McUtils;
-import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.List;
 import net.minecraft.client.gui.screens.ChatScreen;
@@ -47,9 +44,6 @@ public class ChatTabsFeature extends Feature {
             new ChatTab("Party", false, "/p  ", Sets.newHashSet(RecipientType.PARTY), null),
             new ChatTab("Private", false, "/r  ", Sets.newHashSet(RecipientType.PRIVATE), null),
             new ChatTab("Shout", false, null, Sets.newHashSet(RecipientType.SHOUT), null))));
-
-    @TypeOverride
-    private final Type chatTabsType = new TypeToken<ArrayList<ChatTab>>() {}.getType();
 
     // We do this here, and not in Models.ChatTab to not introduce a feature-model dependency.
     @SubscribeEvent(priority = EventPriority.LOWEST)

@@ -4,7 +4,6 @@
  */
 package com.wynntils.features.map;
 
-import com.google.common.reflect.TypeToken;
 import com.wynntils.core.components.Managers;
 import com.wynntils.core.components.Models;
 import com.wynntils.core.config.Category;
@@ -14,7 +13,6 @@ import com.wynntils.core.config.HiddenConfig;
 import com.wynntils.core.config.RegisterConfig;
 import com.wynntils.core.features.Feature;
 import com.wynntils.core.features.properties.RegisterKeyBind;
-import com.wynntils.core.json.TypeOverride;
 import com.wynntils.core.keybinds.KeyBind;
 import com.wynntils.mc.event.PlayerInteractEvent;
 import com.wynntils.mc.event.ScreenOpenedEvent;
@@ -30,7 +28,6 @@ import com.wynntils.utils.render.Texture;
 import com.wynntils.utils.render.type.HealthTexture;
 import com.wynntils.utils.render.type.PointerType;
 import com.wynntils.utils.render.type.TextShadow;
-import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.Matcher;
@@ -47,9 +44,6 @@ import org.lwjgl.glfw.GLFW;
 public class MapFeature extends Feature {
     @RegisterConfig
     public final HiddenConfig<List<CustomPoi>> customPois = new HiddenConfig<>(new ArrayList<>());
-
-    @TypeOverride
-    private final Type customPoisType = new TypeToken<ArrayList<CustomPoi>>() {}.getType();
 
     @RegisterConfig
     public final Config<Float> poiFadeAdjustment = new Config<>(0.4f);

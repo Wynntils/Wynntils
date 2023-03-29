@@ -4,14 +4,12 @@
  */
 package com.wynntils.features.inventory;
 
-import com.google.common.reflect.TypeToken;
 import com.wynntils.core.components.Models;
 import com.wynntils.core.config.Category;
 import com.wynntils.core.config.ConfigCategory;
 import com.wynntils.core.config.HiddenConfig;
 import com.wynntils.core.config.RegisterConfig;
 import com.wynntils.core.features.Feature;
-import com.wynntils.core.json.TypeOverride;
 import com.wynntils.mc.event.ContainerCloseEvent;
 import com.wynntils.mc.event.SlotRenderEvent;
 import com.wynntils.models.items.WynnItem;
@@ -20,7 +18,6 @@ import com.wynntils.utils.mc.McUtils;
 import com.wynntils.utils.render.RenderUtils;
 import com.wynntils.utils.render.Texture;
 import com.wynntils.utils.wynn.ContainerUtils;
-import java.lang.reflect.Type;
 import java.util.Optional;
 import java.util.Set;
 import java.util.TreeSet;
@@ -35,9 +32,6 @@ public class ItemFavoriteFeature extends Feature {
     // This should really move to FavoritesModel, but for now, models cannot have configs
     @RegisterConfig
     public final HiddenConfig<Set<String>> favoriteItems = new HiddenConfig<>(new TreeSet<>());
-
-    @TypeOverride
-    private final Type favoriteItemsType = new TypeToken<TreeSet<String>>() {}.getType();
 
     @SubscribeEvent
     public void onChestCloseAttempt(ContainerCloseEvent.Pre e) {

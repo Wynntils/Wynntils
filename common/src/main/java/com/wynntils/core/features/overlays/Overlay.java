@@ -6,7 +6,6 @@ package com.wynntils.core.features.overlays;
 
 import com.google.common.base.CaseFormat;
 import com.google.common.collect.ComparisonChain;
-import com.google.common.reflect.TypeToken;
 import com.mojang.blaze3d.platform.Window;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.wynntils.core.components.Managers;
@@ -16,10 +15,8 @@ import com.wynntils.core.config.HiddenConfig;
 import com.wynntils.core.config.RegisterConfig;
 import com.wynntils.core.features.AbstractConfigurable;
 import com.wynntils.core.features.Translatable;
-import com.wynntils.core.json.TypeOverride;
 import com.wynntils.utils.render.type.HorizontalAlignment;
 import com.wynntils.utils.render.type.VerticalAlignment;
-import java.lang.reflect.Type;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.resources.language.I18n;
 import net.minecraft.world.phys.Vec2;
@@ -42,14 +39,8 @@ public abstract class Overlay extends AbstractConfigurable implements Translatab
     @RegisterConfig(value = "overlay.wynntils.overlay.horizontalAlignmentOverride", allowNull = true)
     protected final HiddenConfig<HorizontalAlignment> horizontalAlignmentOverride = new HiddenConfig<>(null);
 
-    @TypeOverride
-    private final Type horizontalAlignmentOverrideType = new TypeToken<HorizontalAlignment>() {}.getType();
-
     @RegisterConfig(value = "overlay.wynntils.overlay.verticalAlignmentOverride", allowNull = true)
     protected final HiddenConfig<VerticalAlignment> verticalAlignmentOverride = new HiddenConfig<>(null);
-
-    @TypeOverride
-    private final Type verticalAlignmentOverrideType = new TypeToken<VerticalAlignment>() {}.getType();
 
     protected Overlay(OverlayPosition position, float width, float height) {
         this.position.updateConfig(position);
