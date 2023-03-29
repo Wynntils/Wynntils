@@ -139,8 +139,7 @@ public class ContainerSearchFeature extends Feature {
             long diff = System.currentTimeMillis() - guildBankLastSearch;
             if (diff < GUILD_BANK_SEARCH_DELAY) {
                 Managers.TickScheduler.scheduleLater(
-                        () -> tryAutoSearch(abstractContainerScreen),
-                        (int) (GUILD_BANK_SEARCH_DELAY - diff) / 20);
+                        () -> tryAutoSearch(abstractContainerScreen), (int) (GUILD_BANK_SEARCH_DELAY - diff) / 20);
                 return;
             }
             guildBankLastSearch = System.currentTimeMillis();
