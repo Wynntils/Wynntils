@@ -110,6 +110,7 @@ import com.wynntils.features.ui.AbilityTreeScrollFeature;
 import com.wynntils.features.ui.AutoApplyResourcePackFeature;
 import com.wynntils.features.ui.CosmeticsPreviewFeature;
 import com.wynntils.features.ui.CustomCharacterSelectionScreenFeature;
+import com.wynntils.features.ui.CustomLoadingScreenFeature;
 import com.wynntils.features.ui.LobbyUptimeFeature;
 import com.wynntils.features.ui.SoulPointTimerFeature;
 import com.wynntils.features.ui.WynncraftButtonFeature;
@@ -182,6 +183,7 @@ public final class FeatureManager extends Manager {
         registerFeature(new CustomBarsOverlayFeature());
         registerFeature(new CustomCharacterSelectionScreenFeature());
         registerFeature(new CustomCommandKeybindsFeature());
+        registerFeature(new CustomLoadingScreenFeature());
         registerFeature(new CustomNametagRendererFeature());
         registerFeature(new DeathCoordinatesFeature());
         registerFeature(new DialogueOptionOverrideFeature());
