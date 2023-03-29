@@ -517,12 +517,12 @@ public class MinimapFeature extends Feature {
 
         @Override
         public String getTemplate() {
-            return "{x:0} {y:0} {z:0}";
+            return "{x(my_loc):0} {y(my_loc):0} {z(my_loc):0}";
         }
 
         @Override
         public String getPreviewTemplate() {
-            return "{x:0} {y:0} {z:0}";
+            return "{x(my_loc):0} {y(my_loc):0} {z(my_loc):0}";
         }
     }
 

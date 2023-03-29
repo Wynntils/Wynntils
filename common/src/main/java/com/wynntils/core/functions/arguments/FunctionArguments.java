@@ -4,6 +4,7 @@
  */
 package com.wynntils.core.functions.arguments;
 
+import com.wynntils.utils.mc.type.Location;
 import com.wynntils.utils.type.CappedValue;
 import com.wynntils.utils.type.ErrorOr;
 import java.util.Collections;
@@ -124,8 +125,14 @@ public final class FunctionArguments {
     }
 
     public static class Argument<T> {
-        private static final List<Class<?>> SUPPORTED_ARGUMENT_TYPES =
-                List.of(String.class, Integer.class, Double.class, Number.class, CappedValue.class, Boolean.class);
+        private static final List<Class<?>> SUPPORTED_ARGUMENT_TYPES = List.of(
+                String.class,
+                Boolean.class,
+                Integer.class,
+                Double.class,
+                Number.class,
+                CappedValue.class,
+                Location.class);
 
         private final String name;
         private final Class<T> type;
@@ -190,6 +197,10 @@ public final class FunctionArguments {
 
         public CappedValue getCappedValue() {
             return (CappedValue) this.getValue();
+        }
+
+        public Location getLocation() {
+            return (Location) this.getValue();
         }
 
         public String getStringValue() {
