@@ -1,9 +1,21 @@
+## [0.0.2-alpha.393](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.392...v0.0.2-alpha.393) (2023-03-29)
+
+
+### New Features
+
+* Custom Loading Screen ([#1386](https://github.com/Wynntils/Artemis/issues/1386)) ([fd06956](https://github.com/Wynntils/Artemis/commit/fd069567d7b95095c86dc868076ef287f5aed8ad))
+
 ## [0.0.2-alpha.392](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.391...v0.0.2-alpha.392) (2023-03-29)
 
 
 ### New Features
 
 * Embellishment feature: Wybel sounds ([#1391](https://github.com/Wynntils/Artemis/issues/1391)) ([54f59ab](https://github.com/Wynntils/Artemis/commit/54f59ab63e030ee63828405eca212b1788d902d6))
+
+
+### Miscellaneous Chores
+
+* **release:** v0.0.2-alpha.392 [skip ci] ([79e3711](https://github.com/Wynntils/Artemis/commit/79e3711cb55a5a56c6680eaf58981a685c3d6efa))
 
 ## [0.0.2-alpha.391](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.390...v0.0.2-alpha.391) (2023-03-29)
 
@@ -40,16 +52,4 @@
 ### Miscellaneous Chores
 
 * **release:** v0.0.2-alpha.389 [skip ci] ([8d77bf1](https://github.com/Wynntils/Artemis/commit/8d77bf1999a08e7438be65d925295883454e23ee))
-
-## [0.0.2-alpha.388](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.387...v0.0.2-alpha.388) (2023-03-28)
-
-
-### Bug Fixes
-
-* The config UI reset button has stopped working ([#1389](https://github.com/Wynntils/Artemis/issues/1389)) ([3275dc3](https://github.com/Wynntils/Artemis/commit/3275dc35b64fd575894ab310fa77de5d692d5ec6))
-
-
-### Miscellaneous Chores
-
-* **release:** v0.0.2-alpha.388 [skip ci] ([05e8c8f](https://github.com/Wynntils/Artemis/commit/05e8c8fdffab4e117040bd81de74cda21558defb))
 
