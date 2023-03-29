@@ -38,7 +38,11 @@ public class CustomLoadingScreenFeature extends Feature {
 
     @SubscribeEvent
     public void onLoadingProgress(LoadingProgressEvent event) {
-        if (loadingScreen == null) return;
+        if (loadingScreen == null) {
+            loadingScreen = LoadingScreen.create();
+            loadingScreen.setMessage(event.getMessage());
+            McUtils.mc().setScreen(loadingScreen);
+        }
 
         loadingScreen.setMessage(event.getMessage());
     }
@@ -72,6 +76,12 @@ public class CustomLoadingScreenFeature extends Feature {
                 loadingScreen.setMessage("Joining Wynncraft world...");
             }
             case WORLD -> {
+                if (loadingScreen == null) return;
+
+                loadingScreen = null;
+                McUtils.mc().setScreen(null);
+            }
+            case HUB -> {
                 if (loadingScreen == null) return;
 
                 loadingScreen = null;
