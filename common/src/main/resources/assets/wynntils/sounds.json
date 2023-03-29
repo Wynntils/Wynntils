@@ -1,0 +1,14 @@
+{
+  "wybel.purr": {
+    "sounds": [
+      "wynntils:wybel-purr",
+      "wynntils:wybel-purr-2"
+    ]
+  },
+  "wybel.squeak": {
+    "sounds": [
+      "wynntils:wybel-squeak",
+      "wynntils:wybel-squeak-2"
+    ]
+  }
+}
