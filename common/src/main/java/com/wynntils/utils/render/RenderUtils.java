@@ -943,6 +943,10 @@ public final class RenderUtils {
                         (height * scale));
     }
 
+    public static void disableScissor() {
+        RenderSystem.disableScissor();
+    }
+
     public static void rotatePose(PoseStack poseStack, float centerX, float centerZ, float angle) {
         poseStack.translate(centerX, centerZ, 0);
         // See Quaternion#fromXYZ
