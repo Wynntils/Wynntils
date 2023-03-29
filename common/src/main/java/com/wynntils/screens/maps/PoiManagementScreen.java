@@ -198,6 +198,10 @@ public class PoiManagementScreen extends WynntilsScreen {
 
         this.poiManagerWidgets.clear();
 
+        if (Math.min(pageHeight, waypoints.size() - pageHeight * page) == 0 && page != 0) {
+            previousPage();
+        }
+
         for (int i = 0, lim = Math.min(pageHeight, waypoints.size() - pageHeight * page); i < lim; i++) {
             CustomPoi poi = waypoints.get(page * pageHeight + i);
 
