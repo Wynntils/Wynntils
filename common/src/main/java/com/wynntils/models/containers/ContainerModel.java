@@ -47,6 +47,16 @@ public final class ContainerModel extends Model {
         return BANK_PATTERN.matcher(ComponentUtils.getCoded(screen.getTitle())).matches();
     }
 
+    /**
+     * @return True if the page is the last page in a Bank, Block Bank, or Misc Bucket
+     */
+    public boolean isLastBankPage(Screen screen) {
+        return (isBankScreen(screen) || isBlockBankScreen(screen) || isMiscBucketScreen(screen))
+                && screen instanceof ContainerScreen cs
+                && ComponentUtils.getCoded(cs.getMenu().getSlot(8).getItem().getHoverName())
+                        .endsWith(">§4>§c>§4>§c>");
+    }
+
     public boolean isGuildBankScreen(Screen screen) {
         return GUILD_BANK_PATTERN
                 .matcher(ComponentUtils.getCoded(screen.getTitle()))
@@ -58,6 +68,13 @@ public final class ContainerModel extends Model {
         // No regex required, title is very simple and can be checked with .equals()
         return cs.getMenu().getRowCount() == 6
                 && ComponentUtils.getCoded(screen.getTitle()).equals("Trade Market");
+    }
+
+    public boolean isFirstTradeMarketPage(Screen screen) {
+        return isTradeMarketScreen(screen)
+                && screen instanceof ContainerScreen cs
+                && ComponentUtils.getCoded(cs.getMenu().getSlot(17).getItem().getHoverName())
+                        .equals("§bReveal Item Names");
     }
 
     public boolean isBlockBankScreen(Screen screen) {

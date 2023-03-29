@@ -11,7 +11,6 @@ import com.wynntils.core.config.ConfigCategory;
 import com.wynntils.core.config.RegisterConfig;
 import com.wynntils.core.features.Feature;
 import com.wynntils.mc.event.MouseScrollEvent;
-import com.wynntils.utils.mc.ComponentUtils;
 import com.wynntils.utils.mc.McUtils;
 import com.wynntils.utils.wynn.ContainerUtils;
 import net.minecraft.client.gui.screens.Screen;
@@ -52,23 +51,13 @@ public class ContainerScrollFeature extends Feature {
                 || Models.Container.isBlockBankScreen(gui)) {
             slot = up ? bankPreviousSlot : bankNextSlot;
             // Do not purchase new pages when scrolling
-            if (slot == bankNextSlot
-                    && ComponentUtils.getCoded(gui.getMenu()
-                                    .getSlot(bankNextSlot)
-                                    .getItem()
-                                    .getHoverName())
-                            .endsWith(">§4>§c>§4>§c>")) return;
+            if (slot == bankNextSlot && Models.Container.isLastBankPage(screen)) return;
         } else if (Models.Container.isGuildBankScreen(gui)) {
             slot = up ? guildBankPreviousSlot : guildBankNextSlot;
         } else if (Models.Container.isTradeMarketScreen(gui)) {
-            // Do not click on "Reveal Item Names" on the first page of TM
             slot = up ? tradeMarketPreviousSlot : tradeMarketNextSlot;
-            if (slot == tradeMarketPreviousSlot
-                    && ComponentUtils.getCoded(gui.getMenu()
-                                    .getSlot(tradeMarketPreviousSlot)
-                                    .getItem()
-                                    .getHoverName())
-                            .equals("§bReveal Item Names")) return;
+            // Do not click on "Reveal Item Names" on the first page of TM
+            if (slot == tradeMarketPreviousSlot && Models.Container.isFirstTradeMarketPage(screen)) return;
         } else {
             return;
         }
