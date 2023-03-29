@@ -151,4 +151,27 @@ public class StringFunctions {
                     new FunctionArguments.Argument<>("count", Integer.class, null)));
         }
     }
+
+    public static class CappedStringFunction extends GenericFunction<String> {
+        @Override
+        public String getValue(FunctionArguments arguments) {
+            int current = arguments.getArgument("value").getCappedValue().current();
+            int max = arguments.getArgument("value").getCappedValue().max();
+            String delimiter = arguments.getArgument("delimiter").getStringValue();
+
+            return String.format("%d%s%d", current, delimiter, max);
+        }
+
+        @Override
+        public FunctionArguments.RequiredArgumentBuilder getRequiredArgumentsBuilder() {
+            return new FunctionArguments.RequiredArgumentBuilder(List.of(
+                    new FunctionArguments.Argument<>("value", CappedValue.class, null),
+                    new FunctionArguments.Argument<>("delimiter", String.class, null)));
+        }
+
+        @Override
+        public List<String> getAliases() {
+            return List.of("cap_str", "str_cap");
+        }
+    }
 }
