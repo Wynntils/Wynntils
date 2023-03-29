@@ -205,8 +205,6 @@ public class PoiManagementScreen extends WynntilsScreen {
                 continue;
             }
 
-            System.out.println(this.width);
-
             PoiManagerWidget newWidget = new PoiManagerWidget(
                     0,
                     0,
