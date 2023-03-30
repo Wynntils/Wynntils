@@ -17,15 +17,14 @@ import com.wynntils.utils.render.RenderUtils;
 import com.wynntils.utils.render.type.HorizontalAlignment;
 import com.wynntils.utils.render.type.TextShadow;
 import com.wynntils.utils.render.type.VerticalAlignment;
+import java.util.ArrayList;
+import java.util.List;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.gui.components.AbstractWidget;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.resources.language.I18n;
 import net.minecraft.network.chat.Component;
-
-import java.util.ArrayList;
-import java.util.List;
 
 public class PoiManagementScreen extends WynntilsScreen {
     private final MainMapScreen oldMapScreen;
@@ -38,6 +37,7 @@ public class PoiManagementScreen extends WynntilsScreen {
     private int page;
     private int spacingMultiplier = 20;
     private final List<AbstractWidget> poiManagerWidgets = new ArrayList<>();
+
     private PoiManagementScreen(MainMapScreen oldMapScreen) {
         super(Component.literal("Poi Management Screen"));
 
@@ -57,35 +57,33 @@ public class PoiManagementScreen extends WynntilsScreen {
     protected void doInit() {
         pageHeight = (this.height - 100) / spacingMultiplier;
 
-        this.addRenderableWidget(new Button.Builder(
-                Component.literal("X").withStyle(ChatFormatting.RED), (button) -> this.onClose())
-                .pos(this.width - 40, 20)
-                .size(20, 20)
-                .build());
-
         this.addRenderableWidget(
-                nextButton = new Button.Builder(
-                                Component.literal(">"), (button) -> {
-                                    nextPage();
-                                })
-                        .pos(this.width/2 + 2, this.height - 45)
+                new Button.Builder(Component.literal("X").withStyle(ChatFormatting.RED), (button) -> this.onClose())
+                        .pos(this.width - 40, 20)
                         .size(20, 20)
                         .build());
 
         this.addRenderableWidget(
-                previousButton = new Button.Builder(
-                                Component.literal("<"), (button) -> {
-                                    previousPage();
-                                })
-                        .pos(this.width/2 - 22, this.height - 45)
+                nextButton = new Button.Builder(Component.literal(">"), (button) -> {
+                            nextPage();
+                        })
+                        .pos(this.width / 2 + 2, this.height - 45)
+                        .size(20, 20)
+                        .build());
+
+        this.addRenderableWidget(
+                previousButton = new Button.Builder(Component.literal("<"), (button) -> {
+                            previousPage();
+                        })
+                        .pos(this.width / 2 - 22, this.height - 45)
                         .size(20, 20)
                         .build());
 
         this.addRenderableWidget(
                 deleteAllButton = new Button.Builder(
-                        Component.literal("DELETE ALL (Press " + deleteCount + " times)"), (button) -> {
-                    clearAllButton();
-                })
+                                Component.literal("DELETE ALL (Press " + deleteCount + " times)"), (button) -> {
+                                    clearAllButton();
+                                })
                         .pos(25, this.height - 45)
                         .size(font.width("DELETE ALL (Press " + deleteCount + " times)") + 15, 20)
                         .build());
@@ -95,9 +93,8 @@ public class PoiManagementScreen extends WynntilsScreen {
             deleteAllButton.setMessage(Component.literal("DELETED!"));
         }
 
-        waypoints = Managers.Feature.getFeatureInstance(MapFeature.class)
-                .customPois
-                .get();
+        waypoints =
+                Managers.Feature.getFeatureInstance(MapFeature.class).customPois.get();
 
         if (!waypoints.isEmpty() && page * pageHeight > waypoints.size() - 1) {
             page = (waypoints.size() - 1) / pageHeight;
@@ -149,7 +146,7 @@ public class PoiManagementScreen extends WynntilsScreen {
         FontRenderer.getInstance()
                 .renderText(
                         poseStack,
-                       "Y",
+                        "Y",
                         this.width / 2f + 40,
                         43,
                         CommonColors.WHITE,
@@ -168,14 +165,7 @@ public class PoiManagementScreen extends WynntilsScreen {
                         VerticalAlignment.Top,
                         TextShadow.NORMAL);
 
-        RenderUtils.drawRect(
-                poseStack,
-                CommonColors.WHITE,
-                this.width/2 - 165,
-                52,
-                0,
-                355,
-                1);
+        RenderUtils.drawRect(poseStack, CommonColors.WHITE, this.width / 2 - 165, 52, 0, 355, 1);
 
         poiManagerWidgets.forEach(widget -> widget.render(poseStack, mouseX, mouseY, partialTick));
     }
@@ -209,14 +199,7 @@ public class PoiManagementScreen extends WynntilsScreen {
                 continue;
             }
 
-            PoiManagerWidget newWidget = new PoiManagerWidget(
-                    0,
-                    0,
-                    this.width,
-                    this.height,
-                    poi,
-                    i,
-                    this);
+            PoiManagerWidget newWidget = new PoiManagerWidget(0, 0, this.width, this.height, poi, i, this);
 
             poiManagerWidgets.add(newWidget);
 
@@ -245,12 +228,15 @@ public class PoiManagementScreen extends WynntilsScreen {
         deleteCount--;
 
         if (deleteCount == 0) {
-            Managers.Feature.getFeatureInstance(MapFeature.class).customPois.get().clear();
+            Managers.Feature.getFeatureInstance(MapFeature.class)
+                    .customPois
+                    .get()
+                    .clear();
 
             Managers.Config.saveConfig();
             deleteAllButton.setMessage(Component.literal("DELETED!"));
             populatePois();
-        } else if (deleteCount > 0){
+        } else if (deleteCount > 0) {
             deleteAllButton.setMessage(Component.literal("DELETE ALL (Press " + deleteCount + " times)"));
         }
     }

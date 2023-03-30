@@ -17,14 +17,13 @@ import com.wynntils.utils.render.FontRenderer;
 import com.wynntils.utils.render.type.HorizontalAlignment;
 import com.wynntils.utils.render.type.TextShadow;
 import com.wynntils.utils.render.type.VerticalAlignment;
+import java.util.List;
+import java.util.Optional;
 import net.minecraft.client.gui.components.AbstractWidget;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.narration.NarrationElementOutput;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.network.chat.Component;
-
-import java.util.List;
-import java.util.Optional;
 
 public class PoiManagerWidget extends AbstractWidget {
     private CustomPoi poi;
@@ -54,37 +53,32 @@ public class PoiManagerWidget extends AbstractWidget {
         }
 
         this.editButton = new Button.Builder(
-                Component.translatable("screens.wynntils.poiManagementGui.edit"),
-                (button) -> McUtils.mc().setScreen(PoiCreationScreen.create(managementScreen, poi)))
-                .pos(this.width/2 + 85 + 20, 54 + spacingMultiplier * row)
+                        Component.translatable("screens.wynntils.poiManagementGui.edit"),
+                        (button) -> McUtils.mc().setScreen(PoiCreationScreen.create(managementScreen, poi)))
+                .pos(this.width / 2 + 85 + 20, 54 + spacingMultiplier * row)
                 .size(40, 20)
                 .build();
 
         this.deleteButton = new Button.Builder(
-                Component.translatable("screens.wynntils.poiManagementGui.delete"),
-                (button) -> {
-                    Managers.Feature.getFeatureInstance(MapFeature.class)
-                            .customPois
-                            .get()
-                            .remove(poi);
-                    Managers.Config.saveConfig();
-                    managementScreen.populatePois();
-                })
-                .pos(this.width/2 + 130 + 20, 54 + spacingMultiplier * row)
+                        Component.translatable("screens.wynntils.poiManagementGui.delete"), (button) -> {
+                            Managers.Feature.getFeatureInstance(MapFeature.class)
+                                    .customPois
+                                    .get()
+                                    .remove(poi);
+                            Managers.Config.saveConfig();
+                            managementScreen.populatePois();
+                        })
+                .pos(this.width / 2 + 130 + 20, 54 + spacingMultiplier * row)
                 .size(40, 20)
                 .build();
 
-        this.upButton = new Button.Builder(
-                Component.literal("\u2303"),
-                (button) -> updateIndex(-1))
-                .pos(this.width/2 + 172 + 20, 54 + spacingMultiplier * row)
+        this.upButton = new Button.Builder(Component.literal("\u2303"), (button) -> updateIndex(-1))
+                .pos(this.width / 2 + 172 + 20, 54 + spacingMultiplier * row)
                 .size(9, 9)
                 .build();
 
-        this.downButton = new Button.Builder(
-                Component.literal("\u2304"),
-                (button) -> updateIndex(1))
-                .pos(this.width/2 + 172 + 20, 54 + spacingMultiplier * row + 9)
+        this.downButton = new Button.Builder(Component.literal("\u2304"), (button) -> updateIndex(1))
+                .pos(this.width / 2 + 172 + 20, 54 + spacingMultiplier * row + 9)
                 .size(9, 9)
                 .build();
 
@@ -111,7 +105,7 @@ public class PoiManagerWidget extends AbstractWidget {
                 .renderText(
                         poseStack,
                         poiName,
-                        this.width/2f - 130,
+                        this.width / 2f - 130,
                         60 + spacingMultiplier * row,
                         color,
                         HorizontalAlignment.Left,
@@ -122,7 +116,7 @@ public class PoiManagerWidget extends AbstractWidget {
                 .renderText(
                         poseStack,
                         String.valueOf(poi.getLocation().getX()),
-                        this.width/2f - 15,
+                        this.width / 2f - 15,
                         60 + spacingMultiplier * row,
                         color,
                         HorizontalAlignment.Center,
@@ -135,7 +129,7 @@ public class PoiManagerWidget extends AbstractWidget {
                 .renderText(
                         poseStack,
                         y.isPresent() ? String.valueOf(y.get()) : "",
-                        this.width/2f + 40,
+                        this.width / 2f + 40,
                         60 + spacingMultiplier * row,
                         color,
                         HorizontalAlignment.Center,
@@ -146,7 +140,7 @@ public class PoiManagerWidget extends AbstractWidget {
                 .renderText(
                         poseStack,
                         String.valueOf(poi.getLocation().getZ()),
-                        this.width/2f + 80,
+                        this.width / 2f + 80,
                         60 + spacingMultiplier * row,
                         color,
                         HorizontalAlignment.Center,

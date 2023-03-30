@@ -488,10 +488,15 @@ public final class PoiCreationScreen extends WynntilsScreen implements TextboxSc
                 selectedVisiblity);
 
         if (oldPoi != null) {
-            List<CustomPoi> pois = Managers.Feature.getFeatureInstance(MapFeature.class).customPois.get();
+            List<CustomPoi> pois = Managers.Feature.getFeatureInstance(MapFeature.class)
+                    .customPois
+                    .get();
             pois.set(pois.indexOf(oldPoi), poi);
         } else {
-            Managers.Feature.getFeatureInstance(MapFeature.class).customPois.get().add(poi);
+            Managers.Feature.getFeatureInstance(MapFeature.class)
+                    .customPois
+                    .get()
+                    .add(poi);
         }
 
         Managers.Config.saveConfig();
