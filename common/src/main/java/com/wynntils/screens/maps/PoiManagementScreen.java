@@ -30,9 +30,12 @@ public class PoiManagementScreen extends WynntilsScreen {
     private final MainMapScreen oldMapScreen;
     private Button nextButton;
     private Button previousButton;
+    private Button undoDeleteButton;
     private List<CustomPoi> waypoints;
     private int pageHeight;
     private int currentPage;
+    private CustomPoi lastDeletedPoi;
+    private int lastDeletedIndex;
     private final List<AbstractWidget> poiManagerWidgets = new ArrayList<>();
 
     private PoiManagementScreen(MainMapScreen oldMapScreen) {
@@ -75,6 +78,18 @@ public class PoiManagementScreen extends WynntilsScreen {
                         .pos(this.width / 2 - 22, this.height - 45)
                         .size(20, 20)
                         .build());
+
+        this.addRenderableWidget(
+                undoDeleteButton = new Button.Builder(Component.translatable("screens.wynntils.poiManagementGui.undo"), (button) -> {
+                            undoDelete();
+                        })
+                        .pos(this.width - 25 - font.width(Component.translatable("screens.wynntils.poiManagementGui.undo")), this.height - 45)
+                        .size(font.width(Component.translatable("screens.wynntils.poiManagementGui.undo")) + 15, 20)
+                        .build());
+
+        if (lastDeletedPoi == null) {
+            undoDeleteButton.active = false;
+        }
 
         waypoints =
                 Managers.Feature.getFeatureInstance(MapFeature.class).customPois.get();
@@ -204,5 +219,26 @@ public class PoiManagementScreen extends WynntilsScreen {
     private void checkAvailablePages() {
         nextButton.active = waypoints.size() - currentPage * pageHeight > pageHeight;
         previousButton.active = currentPage > 0;
+    }
+
+    public void setLastDeletedPoi(CustomPoi deletedPoi, int deletedPoiIndex) {
+        lastDeletedPoi = deletedPoi;
+        lastDeletedIndex = deletedPoiIndex;
+
+        undoDeleteButton.active = true;
+    }
+
+    private void undoDelete() {
+        Managers.Feature.getFeatureInstance(MapFeature.class)
+                .customPois
+                .get()
+                .add(lastDeletedIndex, lastDeletedPoi);
+
+        lastDeletedPoi = null;
+        lastDeletedIndex = -1;
+
+        undoDeleteButton.active = false;
+
+        populatePois();
     }
 }
