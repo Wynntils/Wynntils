@@ -4,6 +4,7 @@
  */
 package com.wynntils.features.inventory;
 
+import com.wynntils.core.components.Managers;
 import com.wynntils.core.components.Models;
 import com.wynntils.core.config.Category;
 import com.wynntils.core.config.Config;
@@ -53,6 +54,13 @@ public class ContainerSearchFeature extends Feature {
 
     @RegisterConfig
     public final Config<CustomColor> highlightColor = new Config<>(CommonColors.MAGENTA);
+
+    // If the guild bank has lots of custom (crafted) items, it can take multiple packets and a decent amount of time
+    // for Wynn to send us the entire updated inventory. During this, the inventory will be in a weird state where
+    // some items are updated and some are not. We will assume that after SEARCH_DELAY_MS milliseconds, the inventory
+    // is fully updated.
+    private static final int GUILD_BANK_SEARCH_DELAY = 500;
+    private long guildBankLastSearch = 0;
 
     private SearchWidget lastSearchWidget;
     private SearchableContainerType currentSearchableContainerType;
@@ -107,6 +115,7 @@ public class ContainerSearchFeature extends Feature {
         lastSearchWidget = null;
         currentSearchableContainerType = null;
         autoSearching = false;
+        guildBankLastSearch = 0;
     }
 
     @SubscribeEvent
@@ -125,6 +134,15 @@ public class ContainerSearchFeature extends Feature {
 
     private void tryAutoSearch(AbstractContainerScreen<?> abstractContainerScreen) {
         if (!autoSearching) return;
+        if (currentSearchableContainerType == SearchableContainerType.GUILD_BANK) {
+            long diff = System.currentTimeMillis() - guildBankLastSearch;
+            if (diff < GUILD_BANK_SEARCH_DELAY) {
+                Managers.TickScheduler.scheduleLater(
+                        () -> tryAutoSearch(abstractContainerScreen), (int) (GUILD_BANK_SEARCH_DELAY - diff) / 50);
+                return;
+            }
+            guildBankLastSearch = System.currentTimeMillis();
+        }
 
         String name = ComponentUtils.getCoded(abstractContainerScreen
                 .getMenu()
