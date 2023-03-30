@@ -34,8 +34,8 @@ public class PoiManagementScreen extends WynntilsScreen {
     private List<CustomPoi> waypoints;
     private int pageHeight;
     private int currentPage;
-    private CustomPoi lastDeletedPoi;
-    private int lastDeletedIndex;
+    private List<CustomPoi> deletedPois = new ArrayList<>();
+    private List<Integer> deletedIndexes = new ArrayList<>();
     private final List<AbstractWidget> poiManagerWidgets = new ArrayList<>();
 
     private PoiManagementScreen(MainMapScreen oldMapScreen) {
@@ -87,7 +87,7 @@ public class PoiManagementScreen extends WynntilsScreen {
                         .size(font.width(Component.translatable("screens.wynntils.poiManagementGui.undo")) + 15, 20)
                         .build());
 
-        if (lastDeletedPoi == null) {
+        if (deletedIndexes.isEmpty()) {
             undoDeleteButton.active = false;
         }
 
@@ -222,8 +222,8 @@ public class PoiManagementScreen extends WynntilsScreen {
     }
 
     public void setLastDeletedPoi(CustomPoi deletedPoi, int deletedPoiIndex) {
-        lastDeletedPoi = deletedPoi;
-        lastDeletedIndex = deletedPoiIndex;
+        deletedPois.add(deletedPoi);
+        deletedIndexes.add(deletedPoiIndex);
 
         undoDeleteButton.active = true;
     }
@@ -232,12 +232,14 @@ public class PoiManagementScreen extends WynntilsScreen {
         Managers.Feature.getFeatureInstance(MapFeature.class)
                 .customPois
                 .get()
-                .add(lastDeletedIndex, lastDeletedPoi);
+                .add(deletedIndexes.get(deletedIndexes.size() - 1), deletedPois.get(deletedPois.size() - 1));
 
-        lastDeletedPoi = null;
-        lastDeletedIndex = -1;
+        deletedIndexes.remove(deletedIndexes.size() - 1);
+        deletedPois.remove(deletedPois.size() - 1);
 
-        undoDeleteButton.active = false;
+        if (deletedIndexes.isEmpty()) {
+            undoDeleteButton.active = false;
+        }
 
         populatePois();
     }
