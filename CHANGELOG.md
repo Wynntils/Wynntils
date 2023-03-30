@@ -1,9 +1,21 @@
+## [0.0.2-alpha.401](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.400...v0.0.2-alpha.401) (2023-03-30)
+
+
+### New Features
+
+* Auto guild bank search ([#1396](https://github.com/Wynntils/Artemis/issues/1396)) ([de85a6a](https://github.com/Wynntils/Artemis/commit/de85a6adfb16909f6855d673dc7db2499168230b))
+
 ## [0.0.2-alpha.400](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.399...v0.0.2-alpha.400) (2023-03-30)
 
 
 ### New Features
 
 * More container scrolling ([#1393](https://github.com/Wynntils/Artemis/issues/1393)) ([cfdafbf](https://github.com/Wynntils/Artemis/commit/cfdafbfb8630eb86fdb50570b2d485a23ab7fbec))
+
+
+### Miscellaneous Chores
+
+* **release:** v0.0.2-alpha.400 [skip ci] ([5925a63](https://github.com/Wynntils/Artemis/commit/5925a63425771f4a13806a5d0bcb0970890c850a))
 
 ## [0.0.2-alpha.399](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.398...v0.0.2-alpha.399) (2023-03-30)
 
@@ -40,16 +52,4 @@
 ### Miscellaneous Chores
 
 * **release:** v0.0.2-alpha.397 [skip ci] ([1798255](https://github.com/Wynntils/Artemis/commit/1798255f8a44680d4ad699a927a1a5f509a0ccbc))
-
-## [0.0.2-alpha.396](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.395...v0.0.2-alpha.396) (2023-03-29)
-
-
-### New Features
-
-* Capped String Function ([#1400](https://github.com/Wynntils/Artemis/issues/1400)) ([c7fb562](https://github.com/Wynntils/Artemis/commit/c7fb562db7fd166054f33e9179ae58573eded0f0))
-
-
-### Miscellaneous Chores
-
-* **release:** v0.0.2-alpha.396 [skip ci] ([33a74ab](https://github.com/Wynntils/Artemis/commit/33a74abf6998ab9804cd98fda0f1771c758d366b))
 
