@@ -1,9 +1,21 @@
+## [0.0.2-alpha.408](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.407...v0.0.2-alpha.408) (2023-03-30)
+
+
+### New Features
+
+* Remove secondsPerRecalculation for text/bar overlays, update on tick ([#1409](https://github.com/Wynntils/Artemis/issues/1409)) ([3faf8d6](https://github.com/Wynntils/Artemis/commit/3faf8d6a70e71507157053fd1ea27e966dcb2e33))
+
 ## [0.0.2-alpha.407](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.406...v0.0.2-alpha.407) (2023-03-30)
 
 
 ### New Features
 
 * Stopwatch functions now return an int; add LeadingZerosFunction ([#1407](https://github.com/Wynntils/Artemis/issues/1407)) ([9b445b4](https://github.com/Wynntils/Artemis/commit/9b445b48ba6d214be22d2442cfaefa5fd754ce67))
+
+
+### Miscellaneous Chores
+
+* **release:** v0.0.2-alpha.407 [skip ci] ([167222d](https://github.com/Wynntils/Artemis/commit/167222dda65d39872eb934a9b69a183c881f9afb))
 
 ## [0.0.2-alpha.406](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.405...v0.0.2-alpha.406) (2023-03-30)
 
@@ -45,16 +57,4 @@
 ### Miscellaneous Chores
 
 * **release:** v0.0.2-alpha.404 [skip ci] ([80a1ec3](https://github.com/Wynntils/Artemis/commit/80a1ec365288e249a9f348b631ba80021ce8a120))
-
-## [0.0.2-alpha.403](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.402...v0.0.2-alpha.403) (2023-03-30)
-
-
-### New Features
-
-* Location as new function type ([#1402](https://github.com/Wynntils/Artemis/issues/1402)) ([b91b4e1](https://github.com/Wynntils/Artemis/commit/b91b4e117468952413f4a44c799b10277491ef68))
-
-
-### Miscellaneous Chores
-
-* **release:** v0.0.2-alpha.403 [skip ci] ([8f8c636](https://github.com/Wynntils/Artemis/commit/8f8c6362ac1b81f53b0e4adf46d5e1fb27acb7e0))
 
