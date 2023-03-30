@@ -10,6 +10,7 @@ import com.wynntils.features.map.MapFeature;
 import com.wynntils.models.map.pois.CustomPoi;
 import com.wynntils.screens.maps.PoiCreationScreen;
 import com.wynntils.screens.maps.PoiManagementScreen;
+import com.wynntils.utils.colors.CommonColors;
 import com.wynntils.utils.colors.CustomColor;
 import com.wynntils.utils.mc.McUtils;
 import com.wynntils.utils.mc.RenderedStringUtils;
@@ -33,7 +34,6 @@ public class PoiManagerWidget extends AbstractWidget {
     private Button downButton;
     private int row;
     private CustomColor color;
-    private int spacingMultiplier = 20;
     private PoiManagementScreen managementScreen;
     private List<CustomPoi> pois;
 
@@ -46,16 +46,16 @@ public class PoiManagerWidget extends AbstractWidget {
 
         pois = Managers.Feature.getFeatureInstance(MapFeature.class).customPois.get();
 
-        color = CustomColor.fromInt(0xFFFFFF);
+        color = CommonColors.WHITE;
 
         if (poi.getVisibility() == CustomPoi.Visibility.HIDDEN) {
-            color = CustomColor.fromInt(0x636363);
+            color = CommonColors.GRAY;
         }
 
         this.editButton = new Button.Builder(
                         Component.translatable("screens.wynntils.poiManagementGui.edit"),
                         (button) -> McUtils.mc().setScreen(PoiCreationScreen.create(managementScreen, poi)))
-                .pos(this.width / 2 + 85 + 20, 54 + spacingMultiplier * row)
+                .pos(this.width / 2 + 85 + 20, 54 + 20 * row)
                 .size(40, 20)
                 .build();
 
@@ -68,17 +68,17 @@ public class PoiManagerWidget extends AbstractWidget {
                             Managers.Config.saveConfig();
                             managementScreen.populatePois();
                         })
-                .pos(this.width / 2 + 130 + 20, 54 + spacingMultiplier * row)
+                .pos(this.width / 2 + 130 + 20, 54 + 20 * row)
                 .size(40, 20)
                 .build();
 
         this.upButton = new Button.Builder(Component.literal("\u2303"), (button) -> updateIndex(-1))
-                .pos(this.width / 2 + 172 + 20, 54 + spacingMultiplier * row)
+                .pos(this.width / 2 + 172 + 20, 54 + 20 * row)
                 .size(9, 9)
                 .build();
 
         this.downButton = new Button.Builder(Component.literal("\u2304"), (button) -> updateIndex(1))
-                .pos(this.width / 2 + 172 + 20, 54 + spacingMultiplier * row + 9)
+                .pos(this.width / 2 + 172 + 20, 54 + 20 * row + 9)
                 .size(9, 9)
                 .build();
 
@@ -94,7 +94,7 @@ public class PoiManagerWidget extends AbstractWidget {
         MultiBufferSource.BufferSource bufferSource =
                 McUtils.mc().renderBuffers().bufferSource();
 
-        float centreZ = 64 + spacingMultiplier * row;
+        float centreZ = 64 + 20 * row;
 
         poi.renderAt(poseStack, bufferSource, this.width / 2f - 151, centreZ, false, 1f, 1f);
 
@@ -106,7 +106,7 @@ public class PoiManagerWidget extends AbstractWidget {
                         poseStack,
                         poiName,
                         this.width / 2f - 130,
-                        60 + spacingMultiplier * row,
+                        60 + 20 * row,
                         color,
                         HorizontalAlignment.Left,
                         VerticalAlignment.Top,
@@ -117,7 +117,7 @@ public class PoiManagerWidget extends AbstractWidget {
                         poseStack,
                         String.valueOf(poi.getLocation().getX()),
                         this.width / 2f - 15,
-                        60 + spacingMultiplier * row,
+                        60 + 20 * row,
                         color,
                         HorizontalAlignment.Center,
                         VerticalAlignment.Top,
@@ -130,7 +130,7 @@ public class PoiManagerWidget extends AbstractWidget {
                         poseStack,
                         y.isPresent() ? String.valueOf(y.get()) : "",
                         this.width / 2f + 40,
-                        60 + spacingMultiplier * row,
+                        60 + 20 * row,
                         color,
                         HorizontalAlignment.Center,
                         VerticalAlignment.Top,
@@ -141,7 +141,7 @@ public class PoiManagerWidget extends AbstractWidget {
                         poseStack,
                         String.valueOf(poi.getLocation().getZ()),
                         this.width / 2f + 80,
-                        60 + spacingMultiplier * row,
+                        60 + 20 * row,
                         color,
                         HorizontalAlignment.Center,
                         VerticalAlignment.Top,

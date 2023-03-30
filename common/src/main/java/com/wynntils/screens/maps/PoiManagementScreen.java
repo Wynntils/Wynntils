@@ -32,8 +32,7 @@ public class PoiManagementScreen extends WynntilsScreen {
     private Button previousButton;
     private List<CustomPoi> waypoints;
     private int pageHeight;
-    private int page;
-    private int spacingMultiplier = 20;
+    private int currentPage;
     private final List<AbstractWidget> poiManagerWidgets = new ArrayList<>();
 
     private PoiManagementScreen(MainMapScreen oldMapScreen) {
@@ -53,7 +52,7 @@ public class PoiManagementScreen extends WynntilsScreen {
 
     @Override
     protected void doInit() {
-        pageHeight = (this.height - 100) / spacingMultiplier;
+        pageHeight = (this.height - 100) / 20;
 
         this.addRenderableWidget(
                 new Button.Builder(Component.literal("X").withStyle(ChatFormatting.RED), (button) -> this.onClose())
@@ -80,8 +79,8 @@ public class PoiManagementScreen extends WynntilsScreen {
         waypoints =
                 Managers.Feature.getFeatureInstance(MapFeature.class).customPois.get();
 
-        if (!waypoints.isEmpty() && page * pageHeight > waypoints.size() - 1) {
-            page = (waypoints.size() - 1) / pageHeight;
+        if (currentPage * pageHeight > waypoints.size() - 1) {
+            currentPage = (waypoints.size() - 1) / pageHeight;
         }
 
         checkAvailablePages();
@@ -172,16 +171,15 @@ public class PoiManagementScreen extends WynntilsScreen {
 
         this.poiManagerWidgets.clear();
 
-        if (Math.min(pageHeight, waypoints.size() - pageHeight * page) == 0 && page != 0) {
+        waypoints =
+                Managers.Feature.getFeatureInstance(MapFeature.class).customPois.get();
+
+        if (Math.min(pageHeight, waypoints.size() - pageHeight * currentPage) == 0 && currentPage != 0) {
             previousPage();
         }
 
-        for (int i = 0, lim = Math.min(pageHeight, waypoints.size() - pageHeight * page); i < lim; i++) {
-            CustomPoi poi = waypoints.get(page * pageHeight + i);
-
-            if (poi == null) {
-                continue;
-            }
+        for (int i = 0; i < Math.min(pageHeight, waypoints.size() - pageHeight * currentPage); i++) {
+            CustomPoi poi = waypoints.get(currentPage * pageHeight + i);
 
             PoiManagerWidget newWidget = new PoiManagerWidget(0, 0, this.width, this.height, poi, i, this);
 
@@ -192,19 +190,19 @@ public class PoiManagementScreen extends WynntilsScreen {
     }
 
     private void nextPage() {
-        page++;
+        currentPage++;
         checkAvailablePages();
         populatePois();
     }
 
     private void previousPage() {
-        page--;
+        currentPage--;
         checkAvailablePages();
         populatePois();
     }
 
     private void checkAvailablePages() {
-        nextButton.active = waypoints.size() - page * pageHeight > pageHeight;
-        previousButton.active = page > 0;
+        nextButton.active = waypoints.size() - currentPage * pageHeight > pageHeight;
+        previousButton.active = currentPage > 0;
     }
 }
