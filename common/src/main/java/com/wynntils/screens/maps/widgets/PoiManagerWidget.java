@@ -4,6 +4,8 @@
  */
 package com.wynntils.screens.maps.widgets;
 
+import com.mojang.blaze3d.platform.GlStateManager;
+import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.wynntils.core.components.Managers;
 import com.wynntils.features.map.MapFeature;
@@ -15,6 +17,7 @@ import com.wynntils.utils.colors.CustomColor;
 import com.wynntils.utils.mc.McUtils;
 import com.wynntils.utils.mc.RenderedStringUtils;
 import com.wynntils.utils.render.FontRenderer;
+import com.wynntils.utils.render.RenderUtils;
 import com.wynntils.utils.render.type.HorizontalAlignment;
 import com.wynntils.utils.render.type.TextShadow;
 import com.wynntils.utils.render.type.VerticalAlignment;
@@ -23,7 +26,6 @@ import java.util.Optional;
 import net.minecraft.client.gui.components.AbstractWidget;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.narration.NarrationElementOutput;
-import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.network.chat.Component;
 
 public class PoiManagerWidget extends AbstractWidget {
@@ -97,12 +99,7 @@ public class PoiManagerWidget extends AbstractWidget {
 
     @Override
     public void renderButton(PoseStack poseStack, int mouseX, int mouseY, float partialTick) {
-        MultiBufferSource.BufferSource bufferSource =
-                McUtils.mc().renderBuffers().bufferSource();
-
-        float centreZ = 64 + 20 * row;
-
-        poi.renderAt(poseStack, bufferSource, this.width / 2f - 151, centreZ, false, 1f, 1f);
+        renderIcon(poseStack);
 
         int maxTextWidth = 90;
         String poiName = RenderedStringUtils.getMaxFittingText(poi.getName(), maxTextWidth, McUtils.mc().font);
@@ -157,6 +154,22 @@ public class PoiManagerWidget extends AbstractWidget {
         deleteButton.render(poseStack, mouseX, mouseY, partialTick);
         upButton.render(poseStack, mouseX, mouseY, partialTick);
         downButton.render(poseStack, mouseX, mouseY, partialTick);
+    }
+
+    private void renderIcon(PoseStack poseStack) {
+        float[] poiColor = CustomColor.fromInt(poi.getColor().asInt()).asFloatArray();
+        RenderSystem.enableBlend();
+        RenderSystem.blendFunc(GlStateManager.SourceFactor.SRC_ALPHA, GlStateManager.DestFactor.ONE_MINUS_SRC_ALPHA);
+        RenderSystem.setShaderColor(poiColor[0], poiColor[1], poiColor[2], 1);
+
+        float centreZ = 64 + 20 * row;
+
+        RenderUtils.drawTexturedRect(
+                poseStack, poi.getIcon(), this.width / 2f - 151 - (poi.getIcon().width() / 2f), centreZ - (poi.getIcon().height() / 2f));
+
+        RenderSystem.disableBlend();
+        RenderSystem.defaultBlendFunc();
+        RenderSystem.setShaderColor(1, 1, 1, 1);
     }
 
     private void updateIndex(int direction) {

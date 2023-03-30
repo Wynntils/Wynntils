@@ -169,8 +169,6 @@ public class PoiManagementScreen extends WynntilsScreen {
                         TextShadow.NORMAL);
 
         RenderUtils.drawRect(poseStack, CommonColors.WHITE, this.width / 2 - 165, 52, 0, 355, 1);
-
-        poiManagerWidgets.forEach(widget -> widget.render(poseStack, mouseX, mouseY, partialTick));
     }
 
     @Override
