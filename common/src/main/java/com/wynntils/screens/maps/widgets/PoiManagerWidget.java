@@ -165,7 +165,10 @@ public class PoiManagerWidget extends AbstractWidget {
         float centreZ = 64 + 20 * row;
 
         RenderUtils.drawTexturedRect(
-                poseStack, poi.getIcon(), this.width / 2f - 151 - (poi.getIcon().width() / 2f), centreZ - (poi.getIcon().height() / 2f));
+                poseStack,
+                poi.getIcon(),
+                this.width / 2f - 151 - (poi.getIcon().width() / 2f),
+                centreZ - (poi.getIcon().height() / 2f));
 
         RenderSystem.disableBlend();
         RenderSystem.defaultBlendFunc();

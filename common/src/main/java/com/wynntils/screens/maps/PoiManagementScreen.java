@@ -232,7 +232,10 @@ public class PoiManagementScreen extends WynntilsScreen {
     }
 
     private void undoDelete() {
-        Managers.Feature.getFeatureInstance(MapFeature.class).customPois.get().add(deletedIndexes.get(deletedIndexes.size() - 1), deletedPois.get(deletedPois.size() - 1));
+        Managers.Feature.getFeatureInstance(MapFeature.class)
+                .customPois
+                .get()
+                .add(deletedIndexes.get(deletedIndexes.size() - 1), deletedPois.get(deletedPois.size() - 1));
 
         deletedIndexes.remove(deletedIndexes.size() - 1);
         deletedPois.remove(deletedPois.size() - 1);
