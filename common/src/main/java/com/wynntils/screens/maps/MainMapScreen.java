@@ -239,7 +239,7 @@ public final class MainMapScreen extends AbstractMapScreen {
                         .pointerType
                         .get());
 
-        RenderSystem.disableScissor();
+        RenderUtils.disableScissor();
 
         renderBackground(poseStack);
 

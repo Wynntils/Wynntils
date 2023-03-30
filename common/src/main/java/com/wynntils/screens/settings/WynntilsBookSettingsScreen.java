@@ -209,25 +209,9 @@ public final class WynntilsBookSettingsScreen extends WynntilsScreen implements 
         double adjustedMouseX = mouseX - getTranslationX();
         double adjustedMouseY = mouseY - getTranslationY();
 
-        for (GuiEventListener child : children()) {
-            if (child.isMouseOver(adjustedMouseX, adjustedMouseY)) {
-                child.mouseClicked(adjustedMouseX, adjustedMouseY, button);
-            }
-        }
-
-        for (int i = configurableScrollOffset * CONFIGURABLES_PER_PAGE;
-                i < Math.min(configurables.size(), (configurableScrollOffset + 1) * CONFIGURABLES_PER_PAGE);
-                i++) {
-            WynntilsButton featureButton = configurables.get(i);
-            if (featureButton.isMouseOver(adjustedMouseX, adjustedMouseY)) {
-                featureButton.mouseClicked(adjustedMouseX, adjustedMouseY, button);
-            }
-        }
-
-        for (int i = configScrollOffset; i < Math.min(configs.size(), configScrollOffset + CONFIGS_PER_PAGE); i++) {
-            WynntilsButton configButton = configs.get(i);
-            if (configButton.isMouseOver(adjustedMouseX, adjustedMouseY)) {
-                configButton.mouseClicked(adjustedMouseX, adjustedMouseY, button);
+        for (GuiEventListener listener : getWidgetsForIteration().toList()) {
+            if (listener.isMouseOver(adjustedMouseX, adjustedMouseY)) {
+                return listener.mouseClicked(adjustedMouseX, adjustedMouseY, button);
             }
         }
 
@@ -237,6 +221,43 @@ public final class WynntilsBookSettingsScreen extends WynntilsScreen implements 
 
         if (configListScrollButton != null && configListScrollButton.isMouseOver(adjustedMouseX, adjustedMouseY)) {
             configListScrollButton.mouseClicked(adjustedMouseX, adjustedMouseY, button);
+        }
+
+        return true;
+    }
+
+    @Override
+    public boolean mouseDragged(double mouseX, double mouseY, int button, double dragX, double dragY) {
+        double adjustedMouseX = mouseX - getTranslationX();
+        double adjustedMouseY = mouseY - getTranslationY();
+
+        for (GuiEventListener listener : getWidgetsForIteration().toList()) {
+            if (listener.isMouseOver(adjustedMouseX, adjustedMouseY)) {
+                return listener.mouseDragged(adjustedMouseX, adjustedMouseY, button, dragX, dragY);
+            }
+        }
+
+        configurableListScrollButton.mouseDragged(adjustedMouseX, adjustedMouseY, button, dragX, dragY);
+        if (configListScrollButton != null) {
+            configListScrollButton.mouseDragged(adjustedMouseX, adjustedMouseY, button, dragX, dragY);
+        }
+
+        return true;
+    }
+
+    @Override
+    public boolean mouseReleased(double mouseX, double mouseY, int button) {
+        double adjustedMouseX = mouseX - getTranslationX();
+        double adjustedMouseY = mouseY - getTranslationY();
+
+        for (GuiEventListener listener : getWidgetsForIteration().toList()) {
+            listener.mouseReleased(adjustedMouseX, adjustedMouseY, button);
+        }
+
+        configurableListScrollButton.mouseReleased(adjustedMouseX, adjustedMouseY, button);
+
+        if (configListScrollButton != null) {
+            configListScrollButton.mouseReleased(adjustedMouseX, adjustedMouseY, button);
         }
 
         return true;
@@ -256,30 +277,22 @@ public final class WynntilsBookSettingsScreen extends WynntilsScreen implements 
         return true;
     }
 
-    @Override
-    public boolean mouseReleased(double mouseX, double mouseY, int button) {
-        double adjustedMouseX = mouseX - getTranslationX();
-        double adjustedMouseY = mouseY - getTranslationY();
-        configurableListScrollButton.mouseReleased(adjustedMouseX, adjustedMouseY, button);
-
-        if (configListScrollButton != null) {
-            configListScrollButton.mouseReleased(adjustedMouseX, adjustedMouseY, button);
-        }
-
-        return true;
-    }
-
-    @Override
-    public boolean mouseDragged(double mouseX, double mouseY, int button, double dragX, double dragY) {
-        double adjustedMouseX = mouseX - getTranslationX();
-        double adjustedMouseY = mouseY - getTranslationY();
-
-        configurableListScrollButton.mouseDragged(adjustedMouseX, adjustedMouseY, button, dragX, dragY);
-        if (configListScrollButton != null) {
-            configListScrollButton.mouseDragged(adjustedMouseX, adjustedMouseY, button, dragX, dragY);
-        }
-
-        return true;
+    private Stream<GuiEventListener> getWidgetsForIteration() {
+        return Stream.concat(
+                children().stream(),
+                Stream.concat(
+                        configurables
+                                .subList(
+                                        configurableScrollOffset * CONFIGURABLES_PER_PAGE,
+                                        Math.min(
+                                                configurables.size(),
+                                                (configurableScrollOffset + 1) * CONFIGURABLES_PER_PAGE))
+                                .stream(),
+                        configs
+                                .subList(
+                                        configScrollOffset,
+                                        Math.min(configs.size(), configScrollOffset + CONFIGS_PER_PAGE))
+                                .stream()));
     }
 
     private void scrollConfigurableList(double delta) {

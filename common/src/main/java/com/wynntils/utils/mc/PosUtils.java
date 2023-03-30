@@ -26,4 +26,11 @@ public final class PosUtils {
     public static Vec3 toVec3(Position position) {
         return new Vec3(position.x(), position.y(), position.z());
     }
+
+    /** Return true if the two positions is "roughly" the same, i.e. they only differ slightly
+     * in the y position.
+     */
+    public static boolean isSame(Position first, Position second) {
+        return second.x() == first.x() && second.z() == first.z() && Math.abs(second.y() - first.y()) < 1.5;
+    }
 }

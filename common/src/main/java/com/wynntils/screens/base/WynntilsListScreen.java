@@ -117,6 +117,30 @@ public abstract class WynntilsListScreen<E, B extends WynntilsButton> extends Wy
     }
 
     @Override
+    public boolean mouseDragged(double mouseX, double mouseY, int button, double dragX, double dragY) {
+        final float translationX = getTranslationX();
+        final float translationY = getTranslationY();
+
+        for (GuiEventListener child : new ArrayList<>(this.children())) {
+            child.mouseDragged(mouseX - translationX, mouseY - translationY, button, dragX, dragY);
+        }
+
+        return true;
+    }
+
+    @Override
+    public boolean mouseReleased(double mouseX, double mouseY, int button) {
+        final float translationX = getTranslationX();
+        final float translationY = getTranslationY();
+
+        for (GuiEventListener child : new ArrayList<>(this.children())) {
+            child.mouseReleased(mouseX - translationX, mouseY - translationY, button);
+        }
+
+        return true;
+    }
+
+    @Override
     public boolean keyPressed(int keyCode, int scanCode, int modifiers) {
         if (keyCode == GLFW.GLFW_KEY_ESCAPE && this.shouldCloseOnEsc()) {
             McUtils.mc().setScreen(null);

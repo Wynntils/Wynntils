@@ -9,7 +9,11 @@ import java.util.regex.Pattern;
 public enum RecipientType {
     INFO(null, null, "Info"),
     CLIENTSIDE(null, null, "Clientside"),
-    NPC("(?:§r)?§7\\[\\d+\\/\\d+\\] §r§2.+: §r§..*", "(?:§r)?§8\\[\\d+\\/\\d+\\] .+: §r§..*", "NPC"),
+    // https://regexr.com/7b14s
+    NPC(
+            "^(?:§r)?§7\\[\\d+\\/\\d+\\](?:§r§.)? ?§r§[25] ?.+: ?§r§..*$",
+            "^(?:§r)?§8\\[\\d+\\/\\d+\\] .+: ?§r§..*$",
+            "NPC"),
     GLOBAL(
             "^§8\\[(Lv\\. )?\\d+\\*?/\\d+/..(/[^]]+)?\\]§r§7 \\[[A-Z0-9]+\\]§r.*$",
             "^(§r§8)?\\[(Lv\\. )?\\d+\\*?/\\d+/..(/[^]]+)?\\] \\[[A-Z0-9]+\\](§r§7)?( \\[(§k\\|)?§r§.[A-Z+]+§r§.(§k\\|§r§7)?\\])?(§r§7)? (§r§8)?.*$",
@@ -21,7 +25,8 @@ public enum RecipientType {
     GUILD("^(§r)?§3\\[(§b★{0,5}§3)?.*§3]§. .*$", "^(§r§8)?\\[(§r§7★{0,5}§r§8)?.*]§r§7 .*$", "Guild"),
     PARTY("^§7\\[§r§e[^➤]*§r§7\\] §r§f.*$", "^(§r§8)?\\[§r§7[^➤]*§r§8\\] §r§7[^§]*$", "Party"),
     PRIVATE("^§7\\[.* ➤ .*\\] §r§f.*$", "^(§r§8)?\\[.* ➤ .*\\] §r§7.*$", "Private"),
-    SHOUT("^§3.* \\[[A-Z0-9]+\\] shouts: §r§b.*$", "^(§r§8)?.* \\[[A-Z0-9]+\\] shouts: §r§7.*$", "Shout");
+    SHOUT("^§3.* \\[[A-Z0-9]+\\] shouts: §r§b.*$", "^(§r§8)?.* \\[[A-Z0-9]+\\] shouts: §r§7.*$", "Shout"),
+    PETS("^§2(.*): §r§a(.*)$", "^§8(.*): §r§7(.*)$", "Pets");
 
     private final Pattern foregroundPattern;
     private final Pattern backgroundPattern;

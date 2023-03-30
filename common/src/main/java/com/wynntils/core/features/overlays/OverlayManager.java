@@ -20,6 +20,7 @@ import com.wynntils.mc.event.RenderEvent;
 import com.wynntils.mc.event.TitleScreenInitEvent;
 import com.wynntils.screens.overlays.placement.OverlayManagementScreen;
 import com.wynntils.utils.mc.McUtils;
+import com.wynntils.utils.render.RenderUtils;
 import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -247,6 +248,9 @@ public final class OverlayManager extends Manager {
                     }
                 }
             } catch (Throwable t) {
+                RenderUtils.disableScissor();
+                RenderUtils.clearMask();
+
                 // We can't disable it right away since that will cause ConcurrentModificationException
                 crashedOverlays.add(overlay);
 

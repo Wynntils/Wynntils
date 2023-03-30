@@ -15,6 +15,7 @@ import com.wynntils.mc.event.ItemTooltipRenderEvent;
 import com.wynntils.mc.event.ScreenClosedEvent;
 import com.wynntils.mc.event.SlotRenderEvent;
 import com.wynntils.models.items.items.game.GearItem;
+import com.wynntils.models.items.properties.GearTypeItemProperty;
 import com.wynntils.models.worlds.event.WorldStateEvent;
 import com.wynntils.utils.colors.CommonColors;
 import com.wynntils.utils.mc.McUtils;
@@ -69,7 +70,8 @@ public class ItemCompareFeature extends Feature {
             return;
         }
 
-        Optional<GearItem> gearItemOpt = Models.Item.asWynnItem(hoveredItemStack, GearItem.class);
+        Optional<GearTypeItemProperty> gearItemOpt =
+                Models.Item.asWynnItemPropery(hoveredItemStack, GearTypeItemProperty.class);
         if (gearItemOpt.isEmpty()) return;
 
         ItemStack itemToCompare = null;
@@ -120,12 +122,11 @@ public class ItemCompareFeature extends Feature {
         poseStack.popPose();
     }
 
-    private boolean isMatchingType(ItemStack itemStack, GearItem gearItemReference) {
-        Optional<GearItem> gearOpt = Models.Item.asWynnItem(itemStack, GearItem.class);
+    private boolean isMatchingType(ItemStack itemStack, GearTypeItemProperty gearItemReference) {
+        Optional<GearTypeItemProperty> gearOpt = Models.Item.asWynnItemPropery(itemStack, GearTypeItemProperty.class);
         if (gearOpt.isEmpty()) return false;
 
-        return gearOpt.get().getGearInfo().type()
-                == gearItemReference.getGearInfo().type();
+        return gearOpt.get().getGearType() == gearItemReference.getGearType();
     }
 
     @SubscribeEvent

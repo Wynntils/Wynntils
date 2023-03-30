@@ -5,8 +5,7 @@
 package com.wynntils.utils.wynn;
 
 import com.wynntils.core.components.Models;
-import com.wynntils.models.items.items.game.CraftedGearItem;
-import com.wynntils.models.items.items.game.GearItem;
+import com.wynntils.models.items.properties.GearTypeItemProperty;
 import com.wynntils.utils.mc.McUtils;
 import it.unimi.dsi.fastutil.ints.Int2ObjectMap;
 import it.unimi.dsi.fastutil.ints.Int2ObjectOpenHashMap;
@@ -37,20 +36,11 @@ public final class InventoryUtils {
     }
 
     public static boolean isWeapon(ItemStack itemStack) {
-        Optional<GearItem> gearItemOpt = Models.Item.asWynnItem(itemStack, GearItem.class);
-        if (gearItemOpt.isPresent()) {
-            return gearItemOpt.get().getGearInfo().type().isWeapon();
-        }
+        Optional<GearTypeItemProperty> gearItemOpt =
+                Models.Item.asWynnItemPropery(itemStack, GearTypeItemProperty.class);
+        if (gearItemOpt.isEmpty()) return false;
 
-        Optional<CraftedGearItem> craftedGearItemOpt = Models.Item.asWynnItem(itemStack, CraftedGearItem.class);
-        if (craftedGearItemOpt.isPresent()) {
-            // FIXME: We do not have gear type recognition for crafted gear
-            // so for the moment, we assume all crafted items are weapon
-            // return craftedGearItemOpt.get().getGearType().isWeapon();
-            return true;
-        }
-
-        return false;
+        return gearItemOpt.get().getGearType().isWeapon();
     }
 
     public enum MouseClickType {

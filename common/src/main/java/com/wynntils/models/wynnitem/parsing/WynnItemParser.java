@@ -12,7 +12,6 @@ import com.wynntils.models.elements.type.Powder;
 import com.wynntils.models.elements.type.Skill;
 import com.wynntils.models.gear.type.GearInfo;
 import com.wynntils.models.gear.type.GearTier;
-import com.wynntils.models.gear.type.GearType;
 import com.wynntils.models.stats.StatCalculator;
 import com.wynntils.models.stats.type.SkillStatType;
 import com.wynntils.models.stats.type.StatActualValue;
@@ -38,7 +37,7 @@ public final class WynnItemParser {
 
     // Test suite: https://regexr.com/782rk
     private static final Pattern TIER_AND_REROLL_PATTERN = Pattern.compile(
-            "^(§fNormal|§eUnique|§dRare|§bLegendary|§cFabled|§5Mythic|§aSet|§3Crafted) [A-Za-z\\d _]+(?:§r§8)?(?: \\[(\\d+)(?:\\/(\\d+) Durability)?\\])?$");
+            "^(§fNormal|§eUnique|§dRare|§bLegendary|§cFabled|§5Mythic|§aSet|§3Crafted) ([A-Za-z\\d _]+)(?:§r§8)?(?: \\[(\\d+)(?:\\/(\\d+) Durability)?\\])?$");
 
     // Test suite: https://regexr.com/778gk
     private static final Pattern POWDER_PATTERN =
@@ -65,7 +64,7 @@ public final class WynnItemParser {
         int tierCount = 0;
         int durabilityMax = 0;
         GearTier tier = null;
-        GearType gearType = null;
+        String itemType = "";
         boolean setBonusStats = false;
         boolean parsingEffects = false;
         String effectsColorCode = "";
@@ -107,14 +106,15 @@ public final class WynnItemParser {
             if (tierMatcher.matches()) {
                 String tierString = tierMatcher.group(1);
                 tier = GearTier.fromFormattedString(tierString);
+                itemType = tierMatcher.group(2);
 
                 // This is either the rerolls (for re-identified gear), or the
                 // current durability (for crafted gear)
-                String tierCountString = tierMatcher.group(2);
+                String tierCountString = tierMatcher.group(3);
                 tierCount = tierCountString != null ? Integer.parseInt(tierCountString) : 0;
 
                 // If we have a crafted gear, we also have a durability max
-                String durabilityMaxString = tierMatcher.group(3);
+                String durabilityMaxString = tierMatcher.group(4);
                 durabilityMax = durabilityMaxString != null ? Integer.parseInt(durabilityMaxString) : 0;
                 continue;
             }
@@ -197,7 +197,7 @@ public final class WynnItemParser {
         }
 
         return new WynnItemParseResult(
-                tier, gearType, level, identifications, effects, powders, tierCount, tierCount, durabilityMax);
+                tier, itemType, level, identifications, effects, powders, tierCount, tierCount, durabilityMax);
     }
 
     public static WynnItemParseResult parseInternalRolls(GearInfo gearInfo, JsonObject itemData) {
@@ -244,7 +244,7 @@ public final class WynnItemParser {
                 ? itemData.get("identification_rolls").getAsInt()
                 : 0;
 
-        return new WynnItemParseResult(gearInfo.tier(), null, 0, identifications, List.of(), powders, rerolls, 0, 0);
+        return new WynnItemParseResult(gearInfo.tier(), "", 0, identifications, List.of(), powders, rerolls, 0, 0);
     }
 
     private static StatActualValue getStatActualValue(GearInfo gearInfo, StatType statType, int internalRoll) {

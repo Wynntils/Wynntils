@@ -48,6 +48,7 @@ import com.wynntils.features.debug.ConnectionProgressFeature;
 import com.wynntils.features.debug.ItemDebugTooltipsFeature;
 import com.wynntils.features.debug.LogItemInfoFeature;
 import com.wynntils.features.debug.PacketDebuggerFeature;
+import com.wynntils.features.embellishments.WybelSoundFeature;
 import com.wynntils.features.inventory.BulkBuyFeature;
 import com.wynntils.features.inventory.ContainerSearchFeature;
 import com.wynntils.features.inventory.DurabilityArcFeature;
@@ -105,10 +106,11 @@ import com.wynntils.features.tooltips.ItemGuessFeature;
 import com.wynntils.features.tooltips.ItemStatInfoFeature;
 import com.wynntils.features.tooltips.TooltipFittingFeature;
 import com.wynntils.features.tooltips.TooltipVanillaHideFeature;
-import com.wynntils.features.ui.AbilityTreeScrollFeature;
 import com.wynntils.features.ui.AutoApplyResourcePackFeature;
+import com.wynntils.features.ui.ContainerScrollFeature;
 import com.wynntils.features.ui.CosmeticsPreviewFeature;
 import com.wynntils.features.ui.CustomCharacterSelectionScreenFeature;
+import com.wynntils.features.ui.CustomLoadingScreenFeature;
 import com.wynntils.features.ui.LobbyUptimeFeature;
 import com.wynntils.features.ui.SoulPointTimerFeature;
 import com.wynntils.features.ui.WynncraftButtonFeature;
@@ -156,7 +158,7 @@ public final class FeatureManager extends Manager {
         // user
         registerFeature(new AbbreviateMobHealthFeature());
         registerFeature(new AbilityRefreshRedirectFeature());
-        registerFeature(new AbilityTreeScrollFeature());
+        registerFeature(new ContainerScrollFeature());
         registerFeature(new AddCommandExpansionFeature());
         registerFeature(new ArrowShieldTrackingFeature());
         registerFeature(new AuraTimerOverlayFeature());
@@ -181,6 +183,7 @@ public final class FeatureManager extends Manager {
         registerFeature(new CustomBarsOverlayFeature());
         registerFeature(new CustomCharacterSelectionScreenFeature());
         registerFeature(new CustomCommandKeybindsFeature());
+        registerFeature(new CustomLoadingScreenFeature());
         registerFeature(new CustomNametagRendererFeature());
         registerFeature(new DeathCoordinatesFeature());
         registerFeature(new DialogueOptionOverrideFeature());
@@ -249,6 +252,7 @@ public final class FeatureManager extends Manager {
         registerFeature(new UnidentifiedItemIconFeature());
         registerFeature(new UpdatesFeature());
         registerFeature(new WorldWaypointDistanceFeature());
+        registerFeature(new WybelSoundFeature());
         registerFeature(new WynncraftButtonFeature());
         registerFeature(new WynncraftPauseScreenFeature());
         registerFeature(new WynntilsCosmeticsFeature());

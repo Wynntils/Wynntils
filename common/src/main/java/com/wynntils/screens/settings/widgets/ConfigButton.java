@@ -68,7 +68,7 @@ public class ConfigButton extends WynntilsButton {
                 .renderText(
                         poseStack,
                         displayName,
-                        (this.getX() + 3) / 0.8f,
+                        getRenderX() / 0.8f,
                         (this.getY() + 3) / 0.8f,
                         CommonColors.BLACK,
                         HorizontalAlignment.Left,
@@ -87,8 +87,8 @@ public class ConfigButton extends WynntilsButton {
                 1);
 
         poseStack.pushPose();
-        final int renderX = this.getX() + 3;
-        final int renderY = this.getY() + 12;
+        final int renderX = getRenderX();
+        final int renderY = getRenderY();
         poseStack.translate(renderX, renderY, 0);
         configOptionElement.renderConfigAppropriateButton(
                 poseStack, this.width - 45, 30, mouseX - renderX, mouseY - renderY, partialTick);
@@ -114,13 +114,42 @@ public class ConfigButton extends WynntilsButton {
 
     @Override
     public boolean mouseClicked(double mouseX, double mouseY, int button) {
+        double actualMouseX = mouseX - getRenderX();
+        double actualMouseY = mouseY - getRenderY();
+
         return resetButton.mouseClicked(mouseX, mouseY, button)
-                || configOptionElement.mouseClicked(mouseX, mouseY, button);
+                || configOptionElement.mouseClicked(actualMouseX, actualMouseY, button);
+    }
+
+    @Override
+    public boolean mouseDragged(double mouseX, double mouseY, int button, double deltaX, double deltaY) {
+        double actualMouseX = mouseX - getRenderX();
+        double actualMouseY = mouseY - getRenderY();
+
+        return configOptionElement.mouseDragged(actualMouseX, actualMouseY, button, deltaX, deltaY)
+                || super.mouseDragged(actualMouseX, actualMouseY, button, deltaX, deltaY);
+    }
+
+    @Override
+    public boolean mouseReleased(double mouseX, double mouseY, int button) {
+        double actualMouseX = mouseX - getRenderX();
+        double actualMouseY = mouseY - getRenderY();
+
+        return configOptionElement.mouseReleased(actualMouseX, actualMouseY, button)
+                || super.mouseReleased(actualMouseX, actualMouseY, button);
     }
 
     @Override
     public void onPress() {
         // noop
+    }
+
+    private int getRenderY() {
+        return this.getY() + 12;
+    }
+
+    private int getRenderX() {
+        return this.getX() + 3;
     }
 
     private ConfigOptionElement getWidgetFromConfigHolder(ConfigHolder configOption) {
