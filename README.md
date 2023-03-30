@@ -64,7 +64,7 @@ If you are using Hotswap Agent on Windows and experience the "The process cannot
 ### Run Configurations and Authenticating
 Architectury Loom currently only supports VSCode and IntelliJ IDEA. Eclipse is not supported by upstream at the moment. After running Initial Setup, run configurations should appear automatically (note that you might have to restart your IDE after Initial Setup).
 
-The project has [DevAuth](https://github.com/DJtheRedstoner/DevAuth) set up by default. When you run the development run configurations, you will get a link to log in with your Microsoft account. After first login, you will be able to run the game like you would in a production environment. You can an alt configuration by specifying `-Ddevauth.account=alt` in your JVM options.
+The project has [DevAuth](https://github.com/DJtheRedstoner/DevAuth) set up by default. When you run the development run configurations, you will get a link to log in with your Microsoft account. After first login, you will be able to run the game like you would in a production environment. You can use an alt configuration by specifying `-Ddevauth.account=alt` in your JVM options, or by temporarily changing `.devauth/config.toml`.
 
 ### Quiltflower decompiler
 The project has [LoomQuiltflower](https://github.com/Juuxel/LoomQuiltflower) set-up automatically. This is done so to highly increase the quality of decompiled sources. To use it, run `./gradlew genSourcesWithQuiltflower`. After it finished, the decompiled Minecraft source will be in `minecraft-project-@common-clientOnly-named-sources.jar` You have to attach these sources in Intellij IDEA for Quiltflower to take effect.
