@@ -10,6 +10,7 @@ import com.wynntils.utils.mc.ComponentUtils;
 import com.wynntils.utils.type.Pair;
 import com.wynntils.utils.wynn.WynnUtils;
 import java.util.List;
+import java.util.Optional;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import net.minecraft.client.gui.screens.Screen;
@@ -116,7 +117,14 @@ public final class ContainerModel extends Model {
                 WynnUtils.normalizeBadString(ComponentUtils.getUnformatted(screen.getTitle())));
     }
 
-    public Pair<Integer, Integer> getScrollSlots(AbstractContainerScreen<?> gui, boolean scrollUp) {
+    public Optional<Integer> getScrollSlot(AbstractContainerScreen<?> gui, boolean scrollUp) {
+        Pair<Integer, Integer> slots = getScrollSlots(gui, scrollUp);
+        if (slots == null) return Optional.empty();
+
+        return Optional.of(scrollUp ? slots.a() : slots.b());
+    }
+
+    private Pair<Integer, Integer> getScrollSlots(AbstractContainerScreen<?> gui, boolean scrollUp) {
         if (Models.Container.isAbilityTreeScreen(gui)) {
             return ABILITY_TREE_PREVIOUS_NEXT_SLOTS;
         }

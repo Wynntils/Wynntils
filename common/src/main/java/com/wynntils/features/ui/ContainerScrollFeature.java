@@ -12,8 +12,8 @@ import com.wynntils.core.config.RegisterConfig;
 import com.wynntils.core.features.Feature;
 import com.wynntils.mc.event.MouseScrollEvent;
 import com.wynntils.utils.mc.McUtils;
-import com.wynntils.utils.type.Pair;
 import com.wynntils.utils.wynn.ContainerUtils;
+import java.util.Optional;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
@@ -32,15 +32,15 @@ public class ContainerScrollFeature extends Feature {
 
         boolean scrollUp = event.isScrollingUp() ^ invertScroll.get();
 
-        Pair<Integer, Integer> slots = Models.Container.getScrollSlots(gui, scrollUp);
+        Optional<Integer> slot = Models.Container.getScrollSlot(gui, scrollUp);
 
-        if (slots == null) return;
+        if (slot.isEmpty()) return;
 
         // Prevent the scroll from being handled by the game
         event.setCanceled(true);
 
         ContainerUtils.clickOnSlot(
-                scrollUp ? slots.a() : slots.b(),
+                slot.get(),
                 gui.getMenu().containerId,
                 GLFW.GLFW_MOUSE_BUTTON_LEFT,
                 gui.getMenu().getItems());
