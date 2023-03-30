@@ -57,8 +57,8 @@ public abstract class BarOverlay extends DynamicOverlay {
 
     @Override
     public void renderPreview(PoseStack poseStack, MultiBufferSource bufferSource, float partialTicks, Window window) {
-        BarOverlayTemplatePair previewTempalte = getPreviewTemplate();
-        Pair<String, ErrorOr<CappedValue>> calculatedTemplate = calculateTemplate(previewTempalte);
+        BarOverlayTemplatePair previewTemplate = getPreviewTemplate();
+        Pair<String, ErrorOr<CappedValue>> calculatedTemplate = calculateTemplate(previewTemplate);
 
         render(poseStack, bufferSource, calculatedTemplate);
     }
