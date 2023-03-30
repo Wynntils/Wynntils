@@ -11,6 +11,7 @@ import com.wynntils.core.components.Models;
 import com.wynntils.core.config.Config;
 import com.wynntils.core.config.ConfigHolder;
 import com.wynntils.core.config.RegisterConfig;
+import com.wynntils.mc.event.TickEvent;
 import com.wynntils.utils.colors.CommonColors;
 import com.wynntils.utils.colors.CustomColor;
 import com.wynntils.utils.render.FontRenderer;
@@ -19,6 +20,8 @@ import com.wynntils.utils.render.type.HorizontalAlignment;
 import com.wynntils.utils.render.type.TextShadow;
 import com.wynntils.utils.render.type.VerticalAlignment;
 import net.minecraft.client.renderer.MultiBufferSource;
+import net.minecraftforge.eventbus.api.EventPriority;
+import net.minecraftforge.eventbus.api.SubscribeEvent;
 
 /**
  * An overlay, which main purpose is to display function templates.
@@ -27,11 +30,7 @@ public abstract class TextOverlay extends DynamicOverlay {
     @RegisterConfig("overlay.wynntils.textOverlay.textShadow")
     public final Config<TextShadow> textShadow = new Config<>(TextShadow.OUTLINE);
 
-    @RegisterConfig("overlay.wynntils.textOverlay.secondsPerRecalculation")
-    public final Config<Float> secondsPerRecalculation = new Config<>(0.5f);
-
-    protected String[] cachedLines;
-    protected long lastUpdate = 0;
+    protected String[] cachedLines = new String[0];
 
     protected TextOverlay(OverlayPosition position, float width, float height) {
         super(position, width, height, 1);
@@ -66,23 +65,21 @@ public abstract class TextOverlay extends DynamicOverlay {
     public void render(PoseStack poseStack, MultiBufferSource bufferSource, float partialTicks, Window window) {
         if (!Models.WorldState.onWorld()) return;
 
-        renderTemplate(poseStack, bufferSource, getTemplate(), getTextScale());
+        renderTemplate(poseStack, bufferSource, cachedLines, getTextScale());
     }
 
     @Override
     public void renderPreview(PoseStack poseStack, MultiBufferSource bufferSource, float partialTicks, Window window) {
         if (!Models.WorldState.onWorld()) return;
 
-        renderTemplate(poseStack, bufferSource, getPreviewTemplate(), getTextScale());
+        renderTemplate(poseStack, bufferSource, calculateTemplateValue(getPreviewTemplate()), getTextScale());
     }
 
     protected void renderTemplate(
-            PoseStack poseStack, MultiBufferSource bufferSource, String template, float textScale) {
-        updateCachedLines(template);
-
+            PoseStack poseStack, MultiBufferSource bufferSource, String[] lines, float textScale) {
         float renderX = this.getRenderX();
         float renderY = this.getRenderY();
-        for (String line : cachedLines) {
+        for (String line : lines) {
             BufferedFontRenderer.getInstance()
                     .renderAlignedTextInBox(
                             poseStack,
@@ -103,11 +100,11 @@ public abstract class TextOverlay extends DynamicOverlay {
         }
     }
 
-    protected void updateCachedLines(String template) {
-        if (System.currentTimeMillis() - lastUpdate > secondsPerRecalculation.get() * 1000) {
-            lastUpdate = System.currentTimeMillis();
-            cachedLines = calculateTemplateValue(template);
-        }
+    @SubscribeEvent(priority = EventPriority.HIGHEST)
+    public void onTick(TickEvent event) {
+        if (!Models.WorldState.onWorld()) return;
+
+        cachedLines = calculateTemplateValue(getTemplate());
     }
 
     protected String[] calculateTemplateValue(String template) {
