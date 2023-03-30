@@ -340,10 +340,12 @@ public final class FunctionManager extends Manager {
         registerFunction(new MathFunctions.SubtractFunction());
 
         registerFunction(new StringFunctions.ConcatFunction());
+        registerFunction(new StringFunctions.FormatCappedFunction());
         registerFunction(new StringFunctions.FormatFunction());
         registerFunction(new StringFunctions.ParseDoubleFunction());
         registerFunction(new StringFunctions.ParseIntegerFunction());
         registerFunction(new StringFunctions.RepeatFunction());
+        registerFunction(new StringFunctions.CappedStringFunction());
         registerFunction(new StringFunctions.StringEqualsFunction());
         registerFunction(new StringFunctions.StringFunction());
 
@@ -352,6 +354,9 @@ public final class FunctionManager extends Manager {
         registerFunction(new WorldFunctions.CurrentWorldUptimeFunction());
         registerFunction(new WorldFunctions.MobTotemCountFunction());
         registerFunction(new WorldFunctions.MobTotemDistanceFunction());
+        registerFunction(new WorldFunctions.MobTotemXFunction());
+        registerFunction(new WorldFunctions.MobTotemYFunction());
+        registerFunction(new WorldFunctions.MobTotemZFunction());
         registerFunction(new WorldFunctions.MobTotemOwnerFunction());
         registerFunction(new WorldFunctions.MobTotemTimeLeftFunction());
         registerFunction(new WorldFunctions.TokenGatekeeperCountFunction());

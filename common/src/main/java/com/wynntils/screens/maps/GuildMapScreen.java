@@ -172,7 +172,7 @@ public final class GuildMapScreen extends AbstractMapScreen {
                         .pointerType
                         .get());
 
-        RenderSystem.disableScissor();
+        RenderUtils.disableScissor();
 
         renderBackground(poseStack);
 
