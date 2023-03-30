@@ -1,9 +1,21 @@
+## [0.0.2-alpha.403](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.402...v0.0.2-alpha.403) (2023-03-30)
+
+
+### New Features
+
+* Location as new function type ([#1402](https://github.com/Wynntils/Artemis/issues/1402)) ([b91b4e1](https://github.com/Wynntils/Artemis/commit/b91b4e117468952413f4a44c799b10277491ef68))
+
 ## [0.0.2-alpha.402](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.401...v0.0.2-alpha.402) (2023-03-30)
 
 
 ### Bug Fixes
 
 * Custom loading screen interacted badly with lobby.wynncraft.com ([#1403](https://github.com/Wynntils/Artemis/issues/1403)) ([ba7d774](https://github.com/Wynntils/Artemis/commit/ba7d77420eb7dff9d3fa1b0310233176ef25c62e))
+
+
+### Miscellaneous Chores
+
+* **release:** v0.0.2-alpha.402 [skip ci] ([044bcfd](https://github.com/Wynntils/Artemis/commit/044bcfdd04b3a762596926fb14d7531e0fe2ab96))
 
 ## [0.0.2-alpha.401](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.400...v0.0.2-alpha.401) (2023-03-30)
 
@@ -40,16 +52,4 @@
 ### Miscellaneous Chores
 
 * **release:** v0.0.2-alpha.399 [skip ci] ([28a57f8](https://github.com/Wynntils/Artemis/commit/28a57f81960c7514de3f17e9767b932b831538bc))
-
-## [0.0.2-alpha.398](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.397...v0.0.2-alpha.398) (2023-03-29)
-
-
-### Bug Fixes
-
-* Fix NPC pattern to handle performance announcements ([#1401](https://github.com/Wynntils/Artemis/issues/1401)) ([f8f7c9a](https://github.com/Wynntils/Artemis/commit/f8f7c9abbfbbae5ff76d1cd57aae94c921be5233))
-
-
-### Miscellaneous Chores
-
-* **release:** v0.0.2-alpha.398 [skip ci] ([db347b3](https://github.com/Wynntils/Artemis/commit/db347b3bbda20ded09f0a044346c84725a092d4f))
 
