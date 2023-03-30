@@ -1,9 +1,26 @@
+## [0.0.2-alpha.406](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.405...v0.0.2-alpha.406) (2023-03-30)
+
+
+### New Features
+
+* Enum improvements ([#1390](https://github.com/Wynntils/Artemis/issues/1390)) ([fffb2bb](https://github.com/Wynntils/Artemis/commit/fffb2bb42f73dc29a3b6c1342f77532f2f3430d3)), closes [#1406](https://github.com/Wynntils/Artemis/issues/1406)
+
+
+### Code Refactoring
+
+* Clean up ContainerScrollFeature and ContainerModel ([#1405](https://github.com/Wynntils/Artemis/issues/1405)) ([7270a17](https://github.com/Wynntils/Artemis/commit/7270a17addc1315b5b15e017e35d0a1337dfc3ae))
+
 ## [0.0.2-alpha.405](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.404...v0.0.2-alpha.405) (2023-03-30)
 
 
 ### New Features
 
 * Make reset button grayed-out if no change has been made ([#1406](https://github.com/Wynntils/Artemis/issues/1406)) ([7222fd5](https://github.com/Wynntils/Artemis/commit/7222fd5d9dcecb120cb56b0e25877155db376753))
+
+
+### Miscellaneous Chores
+
+* **release:** v0.0.2-alpha.405 [skip ci] ([a2712f8](https://github.com/Wynntils/Artemis/commit/a2712f88c8a33d9480454d56c4ef70d57665d4e8))
 
 ## [0.0.2-alpha.404](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.403...v0.0.2-alpha.404) (2023-03-30)
 
@@ -40,16 +57,4 @@
 ### Miscellaneous Chores
 
 * **release:** v0.0.2-alpha.402 [skip ci] ([044bcfd](https://github.com/Wynntils/Artemis/commit/044bcfdd04b3a762596926fb14d7531e0fe2ab96))
-
-## [0.0.2-alpha.401](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.400...v0.0.2-alpha.401) (2023-03-30)
-
-
-### New Features
-
-* Auto guild bank search ([#1396](https://github.com/Wynntils/Artemis/issues/1396)) ([de85a6a](https://github.com/Wynntils/Artemis/commit/de85a6adfb16909f6855d673dc7db2499168230b))
-
-
-### Miscellaneous Chores
-
-* **release:** v0.0.2-alpha.401 [skip ci] ([203624c](https://github.com/Wynntils/Artemis/commit/203624cd5fa06973b25c4fe0f59d4f60d00b60ff))
 
