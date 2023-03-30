@@ -121,8 +121,8 @@ public class LabelPoi implements Poi {
                         0,
                         0,
                         color,
-                        HorizontalAlignment.Center,
-                        VerticalAlignment.Middle,
+                        HorizontalAlignment.CENTER,
+                        VerticalAlignment.MIDDLE,
                         getTextShadow(),
                         1f);
         if (hovered) {
@@ -136,8 +136,8 @@ public class LabelPoi implements Poi {
                                 0,
                                 10,
                                 color,
-                                HorizontalAlignment.Center,
-                                VerticalAlignment.Middle,
+                                HorizontalAlignment.CENTER,
+                                VerticalAlignment.MIDDLE,
                                 getTextShadow(),
                                 1f);
             }

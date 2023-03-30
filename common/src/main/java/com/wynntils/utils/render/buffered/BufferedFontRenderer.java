@@ -59,14 +59,14 @@ public final class BufferedFontRenderer {
         // TODO: Add rainbow color support
 
         renderX = switch (horizontalAlignment) {
-            case Left -> x;
-            case Center -> x - (font.width(text) / 2f * textScale);
-            case Right -> x - font.width(text) * textScale;};
+            case LEFT -> x;
+            case CENTER -> x - (font.width(text) / 2f * textScale);
+            case RIGHT -> x - font.width(text) * textScale;};
 
         renderY = switch (verticalAlignment) {
-            case Top -> y;
-            case Middle -> y - (font.lineHeight / 2f * textScale);
-            case Bottom -> y - font.lineHeight * textScale;};
+            case TOP -> y;
+            case MIDDLE -> y - (font.lineHeight / 2f * textScale);
+            case BOTTOM -> y - font.lineHeight * textScale;};
 
         poseStack.pushPose();
         poseStack.translate(renderX, renderY, 0);
@@ -184,16 +184,16 @@ public final class BufferedFontRenderer {
             float textScale) {
         float renderX =
                 switch (horizontalAlignment) {
-                    case Left -> x1;
-                    case Center -> (x1 + x2) / 2f;
-                    case Right -> x2;
+                    case LEFT -> x1;
+                    case CENTER -> (x1 + x2) / 2f;
+                    case RIGHT -> x2;
                 };
 
         float renderY =
                 switch (verticalAlignment) {
-                    case Top -> y1;
-                    case Middle -> (y1 + y2) / 2f;
-                    case Bottom -> y2;
+                    case TOP -> y1;
+                    case MIDDLE -> (y1 + y2) / 2f;
+                    case BOTTOM -> y2;
                 };
 
         renderText(
@@ -261,7 +261,7 @@ public final class BufferedFontRenderer {
                 maxWidth,
                 customColor,
                 horizontalAlignment,
-                VerticalAlignment.Top,
+                VerticalAlignment.TOP,
                 textShadow,
                 1f);
     }
@@ -287,7 +287,7 @@ public final class BufferedFontRenderer {
                 y2,
                 maxWidth,
                 customColor,
-                HorizontalAlignment.Left,
+                HorizontalAlignment.LEFT,
                 verticalAlignment,
                 textShadow,
                 1f);
@@ -369,16 +369,16 @@ public final class BufferedFontRenderer {
             VerticalAlignment verticalAlignment) {
         float renderX =
                 switch (horizontalAlignment) {
-                    case Left -> x;
-                    case Center -> x + width / 2;
-                    case Right -> x + width;
+                    case LEFT -> x;
+                    case CENTER -> x + width / 2;
+                    case RIGHT -> x + width;
                 };
 
         float renderY =
                 switch (verticalAlignment) {
-                    case Top -> y;
-                    case Middle -> y + (height - FontRenderer.getInstance().calculateRenderHeight(toRender)) / 2;
-                    case Bottom -> y + (height - FontRenderer.getInstance().calculateRenderHeight(toRender));
+                    case TOP -> y;
+                    case MIDDLE -> y + (height - FontRenderer.getInstance().calculateRenderHeight(toRender)) / 2;
+                    case BOTTOM -> y + (height - FontRenderer.getInstance().calculateRenderHeight(toRender));
                 };
 
         renderTexts(poseStack, bufferSource, renderX, renderY, toRender);

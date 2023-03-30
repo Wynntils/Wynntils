@@ -102,7 +102,7 @@ public final class WynntilsGuidesListScreen extends WynntilsListScreen<Screen, G
                         80,
                         Texture.QUEST_BOOK_BACKGROUND.width() / 2f - 30,
                         CommonColors.BLACK,
-                        HorizontalAlignment.Left,
+                        HorizontalAlignment.LEFT,
                         TextShadow.NONE);
     }
 

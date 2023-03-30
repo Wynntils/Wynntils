@@ -103,8 +103,8 @@ public final class WynntilsItemGuideScreen extends WynntilsListScreen<GuideGearI
                         Texture.QUEST_BOOK_BACKGROUND.width() * 0.75f,
                         30,
                         CommonColors.BLACK,
-                        HorizontalAlignment.Center,
-                        VerticalAlignment.Top,
+                        HorizontalAlignment.CENTER,
+                        VerticalAlignment.TOP,
                         TextShadow.NONE);
     }
 

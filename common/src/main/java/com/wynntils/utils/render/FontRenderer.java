@@ -94,16 +94,16 @@ public final class FontRenderer {
             float textScale) {
         float renderX =
                 switch (horizontalAlignment) {
-                    case Left -> x1;
-                    case Center -> (x1 + x2) / 2f;
-                    case Right -> x2;
+                    case LEFT -> x1;
+                    case CENTER -> (x1 + x2) / 2f;
+                    case RIGHT -> x2;
                 };
 
         float renderY =
                 switch (verticalAlignment) {
-                    case Top -> y1;
-                    case Middle -> (y1 + y2) / 2f;
-                    case Bottom -> y2;
+                    case TOP -> y1;
+                    case MIDDLE -> (y1 + y2) / 2f;
+                    case BOTTOM -> y2;
                 };
 
         renderText(
@@ -160,23 +160,23 @@ public final class FontRenderer {
             VerticalAlignment verticalAlignment) {
         float renderX =
                 switch (horizontalAlignment) {
-                    case Left -> x1;
-                    case Center -> (x1 + x2) / 2f;
-                    case Right -> x2;
+                    case LEFT -> x1;
+                    case CENTER -> (x1 + x2) / 2f;
+                    case RIGHT -> x2;
                 };
 
         float renderY =
                 switch (verticalAlignment) {
-                    case Top -> y1;
-                    case Middle -> (y1 + y2) / 2f;
-                    case Bottom -> y2;
+                    case TOP -> y1;
+                    case MIDDLE -> (y1 + y2) / 2f;
+                    case BOTTOM -> y2;
                 };
 
         float cursorRenderY =
                 switch (verticalAlignment) {
-                    case Top -> renderY - 2;
-                    case Middle -> renderY - (font.lineHeight / 2f) - 2;
-                    case Bottom -> renderY - font.lineHeight + 2;
+                    case TOP -> renderY - 2;
+                    case MIDDLE -> renderY - (font.lineHeight / 2f) - 2;
+                    case BOTTOM -> renderY - font.lineHeight + 2;
                 };
 
         RenderUtils.drawRect(
@@ -217,7 +217,7 @@ public final class FontRenderer {
                 maxWidth,
                 customColor,
                 horizontalAlignment,
-                VerticalAlignment.Top,
+                VerticalAlignment.TOP,
                 textShadow,
                 1f);
     }
@@ -241,7 +241,7 @@ public final class FontRenderer {
                 y2,
                 maxWidth,
                 customColor,
-                HorizontalAlignment.Left,
+                HorizontalAlignment.LEFT,
                 verticalAlignment,
                 textShadow,
                 1f);
@@ -335,16 +335,16 @@ public final class FontRenderer {
             VerticalAlignment verticalAlignment) {
         float renderX =
                 switch (horizontalAlignment) {
-                    case Left -> x;
-                    case Center -> x + width / 2;
-                    case Right -> x + width;
+                    case LEFT -> x;
+                    case CENTER -> x + width / 2;
+                    case RIGHT -> x + width;
                 };
 
         float renderY =
                 switch (verticalAlignment) {
-                    case Top -> y;
-                    case Middle -> y + (height - calculateRenderHeight(toRender)) / 2;
-                    case Bottom -> y + (height - calculateRenderHeight(toRender));
+                    case TOP -> y;
+                    case MIDDLE -> y + (height - calculateRenderHeight(toRender)) / 2;
+                    case BOTTOM -> y + (height - calculateRenderHeight(toRender));
                 };
 
         renderTexts(poseStack, renderX, renderY, toRender);

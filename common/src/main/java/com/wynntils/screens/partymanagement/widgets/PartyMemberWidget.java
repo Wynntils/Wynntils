@@ -134,8 +134,8 @@ public class PartyMemberWidget extends AbstractWidget {
                         this.getX() + (this.width / gridDivisions * 3),
                         this.getY() + this.height / 2,
                         color,
-                        HorizontalAlignment.Left,
-                        VerticalAlignment.Middle,
+                        HorizontalAlignment.LEFT,
+                        VerticalAlignment.MIDDLE,
                         TextShadow.NORMAL);
 
         // only leader can promote/kick

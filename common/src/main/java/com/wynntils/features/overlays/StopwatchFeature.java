@@ -73,19 +73,19 @@ public class StopwatchFeature extends Feature {
 
     public static class StopwatchOverlay extends TextOverlay {
         private static final String TEMPLATE =
-                "{if_str(stopwatch_zero;\"\";concat(if_str(stopwatch_running;\"\";\"&e\");stopwatch_hours;\":\";stopwatch_minutes;\":\";stopwatch_seconds;\".\";stopwatch_milliseconds))}";
+                "{if_str(stopwatch_zero;\"\";concat(if_str(stopwatch_running;\"\";\"&e\");leading_zeros(stopwatch_hours;2);\":\";leading_zeros(stopwatch_minutes;2);\":\";leading_zeros(stopwatch_seconds;2);\".\";leading_zeros(stopwatch_milliseconds;3)))}";
 
         protected StopwatchOverlay() {
             super(
                     new OverlayPosition(
                             0,
                             0,
-                            VerticalAlignment.Bottom,
-                            HorizontalAlignment.Left,
-                            OverlayPosition.AnchorSection.BottomLeft),
+                            VerticalAlignment.BOTTOM,
+                            HorizontalAlignment.LEFT,
+                            OverlayPosition.AnchorSection.BOTTOM_LEFT),
                     new OverlaySize(100, 20),
-                    HorizontalAlignment.Center,
-                    VerticalAlignment.Middle);
+                    HorizontalAlignment.CENTER,
+                    VerticalAlignment.MIDDLE);
         }
 
         @Override

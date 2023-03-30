@@ -142,8 +142,8 @@ public class TextInputBoxWidget extends AbstractWidget {
                         this.height - textPadding,
                         0,
                         renderColor,
-                        HorizontalAlignment.Left,
-                        VerticalAlignment.Middle,
+                        HorizontalAlignment.LEFT,
+                        VerticalAlignment.MIDDLE,
                         TextShadow.NORMAL);
 
         FontRenderer.getInstance()
@@ -157,8 +157,8 @@ public class TextInputBoxWidget extends AbstractWidget {
                         0,
                         CommonColors.BLUE,
                         CommonColors.WHITE,
-                        HorizontalAlignment.Left,
-                        VerticalAlignment.Middle);
+                        HorizontalAlignment.LEFT,
+                        VerticalAlignment.MIDDLE);
 
         FontRenderer.getInstance()
                 .renderAlignedTextInBox(
@@ -170,15 +170,15 @@ public class TextInputBoxWidget extends AbstractWidget {
                         this.height - textPadding,
                         0,
                         renderColor,
-                        HorizontalAlignment.Left,
-                        VerticalAlignment.Middle,
+                        HorizontalAlignment.LEFT,
+                        VerticalAlignment.MIDDLE,
                         TextShadow.NORMAL);
 
         drawCursor(
                 poseStack,
                 font.width(renderedText.substring(0, Math.min(cursorPosition, renderedText.length()))),
                 (textPadding + this.height - textPadding) / 2,
-                VerticalAlignment.Middle,
+                VerticalAlignment.MIDDLE,
                 false);
 
         poseStack.popPose();
@@ -510,9 +510,9 @@ public class TextInputBoxWidget extends AbstractWidget {
 
             float cursorRenderY =
                     switch (verticalAlignment) {
-                        case Top -> y - (CURSOR_PADDING - 1);
-                        case Middle -> y - font.lineHeight + (CURSOR_PADDING - 1);
-                        case Bottom -> y - font.lineHeight - (CURSOR_PADDING - 1);
+                        case TOP -> y - (CURSOR_PADDING - 1);
+                        case MIDDLE -> y - font.lineHeight + (CURSOR_PADDING - 1);
+                        case BOTTOM -> y - font.lineHeight - (CURSOR_PADDING - 1);
                     };
 
             RenderUtils.drawRect(poseStack, CommonColors.WHITE, x + 1, cursorRenderY, 0, 1, font.lineHeight + 3);

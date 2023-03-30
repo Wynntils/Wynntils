@@ -56,13 +56,13 @@ public final class ConfigManager extends Manager {
         // First, we load the config file
         configObject = Managers.Json.loadPreciousJson(userConfig);
 
-        // Now, we have to apply upfixers, before any config loading happens
-        if (Managers.ConfigUpfixer.runUpfixers(configObject)) {
-            Managers.Json.savePreciousJson(userConfig, configObject);
-        }
-
         // Register all features and overlays
         Managers.Feature.getFeatures().forEach(this::registerFeature);
+
+        // Now, we have to apply upfixers, before any config loading happens
+        if (Managers.ConfigUpfixer.runUpfixers(configObject, CONFIG_HOLDERS)) {
+            Managers.Json.savePreciousJson(userConfig, configObject);
+        }
 
         // Finish off the config init process
 

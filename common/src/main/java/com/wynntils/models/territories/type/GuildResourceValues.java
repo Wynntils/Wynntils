@@ -7,11 +7,11 @@ package com.wynntils.models.territories.type;
 import net.minecraft.ChatFormatting;
 
 public enum GuildResourceValues {
-    VeryLow("Very Low", ChatFormatting.DARK_GREEN, 1),
-    Low("Low", ChatFormatting.GREEN, 2),
-    Medium("Medium", ChatFormatting.YELLOW, 3),
-    High("High", ChatFormatting.RED, 4),
-    VeryHigh("Very High", ChatFormatting.DARK_RED, ChatFormatting.AQUA, 5);
+    VERY_LOW("Very Low", ChatFormatting.DARK_GREEN, 1),
+    LOW("Low", ChatFormatting.GREEN, 2),
+    MEDIUM("Medium", ChatFormatting.YELLOW, 3),
+    HIGH("High", ChatFormatting.RED, 4),
+    VERY_HIGH("Very High", ChatFormatting.DARK_RED, ChatFormatting.AQUA, 5);
 
     private final String asString;
     private final ChatFormatting defenceColor;
