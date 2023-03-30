@@ -9,6 +9,7 @@ import com.wynntils.core.functions.Function;
 import com.wynntils.core.functions.arguments.FunctionArguments;
 import com.wynntils.models.token.type.TokenGatekeeper;
 import com.wynntils.models.worlds.profile.ServerProfile;
+import com.wynntils.utils.mc.type.Location;
 import com.wynntils.utils.type.CappedValue;
 import java.util.List;
 import java.util.Locale;
@@ -183,13 +184,12 @@ public class WorldFunctions {
         }
     }
 
-    public static class MobTotemXFunction extends Function<Double> {
+    public static class MobTotemFunction extends Function<Location> {
         @Override
-        public Double getValue(FunctionArguments arguments) {
-            return Models.MobTotem.getMobTotem(
+        public Location getValue(FunctionArguments arguments) {
+            return Location.containing(Models.MobTotem.getMobTotem(
                             arguments.getArgument("totemNumber").getIntegerValue() - 1)
-                    .getPosition()
-                    .x();
+                    .getPosition());
         }
 
         @Override
