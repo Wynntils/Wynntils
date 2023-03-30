@@ -149,9 +149,9 @@ public abstract class BarOverlay extends DynamicOverlay {
 
     protected float getModifiedRenderY(float renderedHeight) {
         return switch (this.getRenderVerticalAlignment()) {
-            case Top -> this.getRenderY();
-            case Middle -> this.getRenderY() + (this.getHeight() - renderedHeight) / 2;
-            case Bottom -> this.getRenderY() + this.getHeight() - renderedHeight;
+            case TOP -> this.getRenderY();
+            case MIDDLE -> this.getRenderY() + (this.getHeight() - renderedHeight) / 2;
+            case BOTTOM -> this.getRenderY() + this.getHeight() - renderedHeight;
         };
     }
 

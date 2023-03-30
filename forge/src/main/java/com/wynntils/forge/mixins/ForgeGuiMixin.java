@@ -39,7 +39,7 @@ public abstract class ForgeGuiMixin extends Gui {
         if (!MixinHelper.onWynncraft()) return;
 
         RenderEvent.Pre event =
-                new RenderEvent.Pre(poseStack, 0, this.minecraft.getWindow(), RenderEvent.ElementType.FoodBar);
+                new RenderEvent.Pre(poseStack, 0, this.minecraft.getWindow(), RenderEvent.ElementType.FOOD_BAR);
         MixinHelper.post(event);
 
         // we have to reset shader texture
@@ -56,7 +56,7 @@ public abstract class ForgeGuiMixin extends Gui {
         if (!MixinHelper.onWynncraft()) return;
 
         RenderEvent.Pre event =
-                new RenderEvent.Pre(poseStack, 0, this.minecraft.getWindow(), RenderEvent.ElementType.FoodBar);
+                new RenderEvent.Pre(poseStack, 0, this.minecraft.getWindow(), RenderEvent.ElementType.FOOD_BAR);
         MixinHelper.post(event);
 
         // we have to reset shader texture

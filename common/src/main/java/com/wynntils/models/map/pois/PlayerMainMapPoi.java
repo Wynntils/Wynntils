@@ -102,8 +102,8 @@ public class PlayerMainMapPoi extends PlayerPoiBase {
                         renderX - (width - playerHeadRenderSize) / 2f,
                         renderY + playerHeadRenderSize + 8,
                         user.getRelationColor(),
-                        HorizontalAlignment.Left,
-                        VerticalAlignment.Top,
+                        HorizontalAlignment.LEFT,
+                        VerticalAlignment.TOP,
                         Managers.Feature.getFeatureInstance(MapFeature.class)
                                 .remotePlayerNameShadow
                                 .get(),

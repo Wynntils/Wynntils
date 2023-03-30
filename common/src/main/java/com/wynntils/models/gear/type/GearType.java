@@ -12,11 +12,11 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 
 public enum GearType {
-    SPEAR(ClassType.Warrior, Items.IRON_SHOVEL, 0),
-    WAND(ClassType.Mage, Items.STICK, 0, List.of(Items.WOODEN_SHOVEL)),
-    DAGGER(ClassType.Assassin, Items.SHEARS, 0),
-    BOW(ClassType.Archer, Items.BOW, 0),
-    RELIK(ClassType.Shaman, Items.STONE_SHOVEL, 7),
+    SPEAR(ClassType.WARRIOR, Items.IRON_SHOVEL, 0),
+    WAND(ClassType.MAGE, Items.STICK, 0, List.of(Items.WOODEN_SHOVEL)),
+    DAGGER(ClassType.ASSASSIN, Items.SHEARS, 0),
+    BOW(ClassType.ARCHER, Items.BOW, 0),
+    RELIK(ClassType.SHAMAN, Items.STONE_SHOVEL, 7),
     // This is a fallback for signed, crafted gear with a skin
     WEAPON(null, Items.DIAMOND_SHOVEL, 0),
     // FIXME: We need a complete mapping of damage values for ring, bracelet and necklace to be able

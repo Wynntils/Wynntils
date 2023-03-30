@@ -51,10 +51,10 @@ import net.minecraft.client.renderer.MultiBufferSource;
 
 @ConfigCategory(Category.MAP)
 public class MinimapFeature extends Feature {
-    @OverlayInfo(renderType = RenderEvent.ElementType.GUI, renderAt = RenderState.Pre)
+    @OverlayInfo(renderType = RenderEvent.ElementType.GUI, renderAt = RenderState.PRE)
     public final MinimapOverlay minimapOverlay = new MinimapOverlay();
 
-    @OverlayInfo(renderAt = RenderState.Pre, renderType = RenderEvent.ElementType.GUI)
+    @OverlayInfo(renderAt = RenderState.PRE, renderType = RenderEvent.ElementType.GUI)
     private final Overlay coordinatesOverlay = new CoordinateOverlay();
 
     public static class MinimapOverlay extends Overlay {
@@ -79,16 +79,16 @@ public class MinimapFeature extends Feature {
         public final Config<CustomColor> pointerColor = new Config<>(new CustomColor(1f, 1f, 1f, 1f));
 
         @RegisterConfig
-        public final Config<MapMaskType> maskType = new Config<>(MapMaskType.Circle);
+        public final Config<MapMaskType> maskType = new Config<>(MapMaskType.CIRCLE);
 
         @RegisterConfig
-        public final Config<MapBorderType> borderType = new Config<>(MapBorderType.Wynn);
+        public final Config<MapBorderType> borderType = new Config<>(MapBorderType.WYNN);
 
         @RegisterConfig
-        public final Config<PointerType> pointerType = new Config<>(PointerType.Arrow);
+        public final Config<PointerType> pointerType = new Config<>(PointerType.ARROW);
 
         @RegisterConfig
-        public final Config<CompassRenderType> showCompass = new Config<>(CompassRenderType.All);
+        public final Config<CompassRenderType> showCompass = new Config<>(CompassRenderType.ALL);
 
         @RegisterConfig
         public final Config<Boolean> renderRemoteFriendPlayers = new Config<>(true);
@@ -104,9 +104,9 @@ public class MinimapFeature extends Feature {
                     new OverlayPosition(
                             5,
                             5,
-                            VerticalAlignment.Top,
-                            HorizontalAlignment.Left,
-                            OverlayPosition.AnchorSection.TopLeft),
+                            VerticalAlignment.TOP,
+                            HorizontalAlignment.LEFT,
+                            OverlayPosition.AnchorSection.TOP_LEFT),
                     new OverlaySize(DEFAULT_SIZE, DEFAULT_SIZE));
         }
 
@@ -134,8 +134,8 @@ public class MinimapFeature extends Feature {
 
             // enable mask
             switch (maskType.get()) {
-                case Rectangular -> RenderUtils.enableScissor((int) renderX, (int) renderY, (int) width, (int) height);
-                case Circle -> RenderUtils.createMask(
+                case RECTANGULAR -> RenderUtils.enableScissor((int) renderX, (int) renderY, (int) width, (int) height);
+                case CIRCLE -> RenderUtils.createMask(
                         poseStack, Texture.CIRCLE_MASK, (int) renderX, (int) renderY, (int) (renderX + width), (int)
                                 (renderY + height));
             }
@@ -200,8 +200,8 @@ public class MinimapFeature extends Feature {
 
             // disable mask & render border
             switch (maskType.get()) {
-                case Rectangular -> RenderUtils.disableScissor();
-                case Circle -> RenderUtils.clearMask();
+                case RECTANGULAR -> RenderUtils.disableScissor();
+                case CIRCLE -> RenderUtils.clearMask();
             }
 
             // render border
@@ -317,11 +317,11 @@ public class MinimapFeature extends Feature {
 
             float toBorderScale = 1f;
 
-            if (maskType.get() == MapMaskType.Rectangular) {
+            if (maskType.get() == MapMaskType.RECTANGULAR) {
                 // Scale as necessary
                 toBorderScale =
                         Math.min(scaledWidth / Math.abs(compassOffsetX), scaledHeight / Math.abs(compassOffsetZ)) / 2;
-            } else if (maskType.get() == MapMaskType.Circle) {
+            } else if (maskType.get() == MapMaskType.CIRCLE) {
                 toBorderScale = scaledWidth
                         / (MathUtils.magnitude(compassOffsetX, compassOffsetZ * scaledWidth / scaledHeight))
                         / 2;
@@ -379,8 +379,8 @@ public class MinimapFeature extends Feature {
                     compassRenderX,
                     compassRenderZ - 3f,
                     CommonColors.WHITE,
-                    HorizontalAlignment.Center,
-                    VerticalAlignment.Top,
+                    HorizontalAlignment.CENTER,
+                    VerticalAlignment.TOP,
                     TextShadow.NORMAL);
 
             poseStack.popPose();
@@ -388,7 +388,7 @@ public class MinimapFeature extends Feature {
 
         private void renderCardinalDirections(
                 PoseStack poseStack, float width, float height, float centerX, float centerZ) {
-            if (showCompass.get() == CompassRenderType.None) return;
+            if (showCompass.get() == CompassRenderType.NONE) return;
 
             float northDX;
             float northDY;
@@ -400,9 +400,9 @@ public class MinimapFeature extends Feature {
 
                 double toBorderScaleNorth = 1;
 
-                if (maskType.get() == MapMaskType.Rectangular) {
+                if (maskType.get() == MapMaskType.RECTANGULAR) {
                     toBorderScaleNorth = Math.min(width / Math.abs(northDX), height / Math.abs(northDY)) / 2;
-                } else if (maskType.get() == MapMaskType.Circle) {
+                } else if (maskType.get() == MapMaskType.CIRCLE) {
                     toBorderScaleNorth = width / (MathUtils.magnitude(northDX, northDY * width / height)) / 2;
                 }
 
@@ -421,7 +421,7 @@ public class MinimapFeature extends Feature {
                             centerZ + northDY,
                             new TextRenderTask("N", TextRenderSetting.CENTERED));
 
-            if (showCompass.get() == CompassRenderType.North) return;
+            if (showCompass.get() == CompassRenderType.NORTH) return;
 
             // we can't do manipulations from north to east as it might not be square
             float eastDX;
@@ -433,9 +433,9 @@ public class MinimapFeature extends Feature {
 
                 double toBorderScaleEast = 1f;
 
-                if (maskType.get() == MapMaskType.Rectangular) {
+                if (maskType.get() == MapMaskType.RECTANGULAR) {
                     toBorderScaleEast = Math.min(width / Math.abs(northDY), height / Math.abs(northDX)) / 2;
-                } else if (maskType.get() == MapMaskType.Circle) {
+                } else if (maskType.get() == MapMaskType.CIRCLE) {
                     toBorderScaleEast = width / (MathUtils.magnitude(eastDX, eastDY * width / height)) / 2;
                 }
 
@@ -469,7 +469,7 @@ public class MinimapFeature extends Feature {
         private void renderMapBorder(PoseStack poseStack, float renderX, float renderY, float width, float height) {
             Texture texture = borderType.get().texture();
             int grooves = borderType.get().groovesSize();
-            BorderInfo borderInfo = maskType.get() == MapMaskType.Circle
+            BorderInfo borderInfo = maskType.get() == MapMaskType.CIRCLE
                     ? borderType.get().circle()
                     : borderType.get().square();
             int tx1 = borderInfo.tx1();
@@ -507,12 +507,12 @@ public class MinimapFeature extends Feature {
                     new OverlayPosition(
                             160,
                             20,
-                            VerticalAlignment.Top,
-                            HorizontalAlignment.Left,
-                            OverlayPosition.AnchorSection.TopLeft),
+                            VerticalAlignment.TOP,
+                            HorizontalAlignment.LEFT,
+                            OverlayPosition.AnchorSection.TOP_LEFT),
                     new OverlaySize(120, 20),
-                    HorizontalAlignment.Center,
-                    VerticalAlignment.Middle);
+                    HorizontalAlignment.CENTER,
+                    VerticalAlignment.MIDDLE);
         }
 
         @Override
@@ -527,20 +527,21 @@ public class MinimapFeature extends Feature {
     }
 
     public enum CompassRenderType {
-        None,
-        North,
-        All
+        NONE,
+        NORTH,
+        ALL
     }
 
     public enum MapMaskType {
-        Rectangular,
-        Circle
+        RECTANGULAR,
+        CIRCLE
     }
 
     public enum MapBorderType {
-        Gilded(Texture.GILDED_MAP_TEXTURES, new BorderInfo(0, 262, 262, 524), new BorderInfo(0, 0, 262, 262), 1),
-        Paper(Texture.PAPER_MAP_TEXTURES, new BorderInfo(0, 0, 217, 217), new BorderInfo(0, 217, 217, 438), 3),
-        Wynn(Texture.WYNN_MAP_TEXTURES, new BorderInfo(0, 0, 112, 112), new BorderInfo(0, 112, 123, 235), 3);
+        GILDED(Texture.GILDED_MAP_TEXTURES, new BorderInfo(0, 262, 262, 524), new BorderInfo(0, 0, 262, 262), 1),
+        PAPER(Texture.PAPER_MAP_TEXTURES, new BorderInfo(0, 0, 217, 217), new BorderInfo(0, 217, 217, 438), 3),
+        WYNN(Texture.WYNN_MAP_TEXTURES, new BorderInfo(0, 0, 112, 112), new BorderInfo(0, 112, 123, 235), 3);
+
         private final Texture texture;
         private final BorderInfo square;
         private final BorderInfo circle;

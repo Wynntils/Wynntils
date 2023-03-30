@@ -51,12 +51,12 @@ public class ShamanMasksOverlayFeature extends Feature {
                     new OverlayPosition(
                             -60,
                             150,
-                            VerticalAlignment.Bottom,
-                            HorizontalAlignment.Center,
-                            OverlayPosition.AnchorSection.BottomMiddle),
+                            VerticalAlignment.BOTTOM,
+                            HorizontalAlignment.CENTER,
+                            OverlayPosition.AnchorSection.BOTTOM_MIDDLE),
                     new OverlaySize(81, 21),
-                    HorizontalAlignment.Center,
-                    VerticalAlignment.Middle);
+                    HorizontalAlignment.CENTER,
+                    VerticalAlignment.MIDDLE);
         }
 
         @Override

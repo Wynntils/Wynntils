@@ -58,9 +58,9 @@ public class StatusOverlayFeature extends Feature {
                     new OverlayPosition(
                             55,
                             -5,
-                            VerticalAlignment.Top,
-                            HorizontalAlignment.Right,
-                            OverlayPosition.AnchorSection.TopRight),
+                            VerticalAlignment.TOP,
+                            HorizontalAlignment.RIGHT,
+                            OverlayPosition.AnchorSection.TOP_RIGHT),
                     new OverlaySize(250, 110));
 
             updateTextRenderSetting();
