@@ -56,7 +56,7 @@ public class GeneralSettingsButton extends WynntilsButton {
                         this.getY(),
                         this.getY() + this.height,
                         0,
-                        isHovered ? CommonColors.YELLOW : CommonColors.WHITE,
+                        getTextColor(isHovered),
                         HorizontalAlignment.Center,
                         VerticalAlignment.Middle,
                         TextShadow.OUTLINE);
@@ -71,6 +71,10 @@ public class GeneralSettingsButton extends WynntilsButton {
                     FontRenderer.getInstance().getFont(),
                     true);
         }
+    }
+
+    protected CustomColor getTextColor(boolean isHovered) {
+        return isHovered ? CommonColors.YELLOW : CommonColors.WHITE;
     }
 
     @Override
