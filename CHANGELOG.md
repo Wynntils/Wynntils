@@ -1,3 +1,10 @@
+## [0.0.2-alpha.407](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.406...v0.0.2-alpha.407) (2023-03-30)
+
+
+### New Features
+
+* Stopwatch functions now return an int; add LeadingZerosFunction ([#1407](https://github.com/Wynntils/Artemis/issues/1407)) ([9b445b4](https://github.com/Wynntils/Artemis/commit/9b445b48ba6d214be22d2442cfaefa5fd754ce67))
+
 ## [0.0.2-alpha.406](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.405...v0.0.2-alpha.406) (2023-03-30)
 
 
@@ -9,6 +16,11 @@
 ### Code Refactoring
 
 * Clean up ContainerScrollFeature and ContainerModel ([#1405](https://github.com/Wynntils/Artemis/issues/1405)) ([7270a17](https://github.com/Wynntils/Artemis/commit/7270a17addc1315b5b15e017e35d0a1337dfc3ae))
+
+
+### Miscellaneous Chores
+
+* **release:** v0.0.2-alpha.406 [skip ci] ([87f42e7](https://github.com/Wynntils/Artemis/commit/87f42e7c38940644a9abe4efe0c0eeb9582aa90d))
 
 ## [0.0.2-alpha.405](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.404...v0.0.2-alpha.405) (2023-03-30)
 
@@ -45,16 +57,4 @@
 ### Miscellaneous Chores
 
 * **release:** v0.0.2-alpha.403 [skip ci] ([8f8c636](https://github.com/Wynntils/Artemis/commit/8f8c6362ac1b81f53b0e4adf46d5e1fb27acb7e0))
-
-## [0.0.2-alpha.402](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.401...v0.0.2-alpha.402) (2023-03-30)
-
-
-### Bug Fixes
-
-* Custom loading screen interacted badly with lobby.wynncraft.com ([#1403](https://github.com/Wynntils/Artemis/issues/1403)) ([ba7d774](https://github.com/Wynntils/Artemis/commit/ba7d77420eb7dff9d3fa1b0310233176ef25c62e))
-
-
-### Miscellaneous Chores
-
-* **release:** v0.0.2-alpha.402 [skip ci] ([044bcfd](https://github.com/Wynntils/Artemis/commit/044bcfdd04b3a762596926fb14d7531e0fe2ab96))
 
