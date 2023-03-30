@@ -36,6 +36,9 @@ public class ContainerScrollFeature extends Feature {
 
         if (slots == null) return;
 
+        // Prevent the scroll from being handled by the game
+        event.setCanceled(true);
+
         ContainerUtils.clickOnSlot(
                 scrollUp ? slots.a() : slots.b(),
                 gui.getMenu().containerId,
