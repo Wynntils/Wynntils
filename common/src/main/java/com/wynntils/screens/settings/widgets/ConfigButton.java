@@ -38,17 +38,27 @@ public class ConfigButton extends WynntilsButton {
         super(x, y, width, height, Component.literal(configHolder.getJsonName()));
         this.settingsScreen = settingsScreen;
         this.configHolder = configHolder;
-        this.resetButton = new GeneralSettingsButton(
-                this.getX() + this.width - 40,
-                this.getY() + 13,
-                35,
-                12,
-                Component.translatable("screens.wynntils.settingsScreen.reset.name"),
-                () -> {
-                    configHolder.reset();
-                    this.configOptionElement = getWidgetFromConfigHolder(configHolder);
-                },
-                List.of(Component.translatable("screens.wynntils.settingsScreen.reset.description")));
+        this.resetButton =
+                new GeneralSettingsButton(
+                        this.getX() + this.width - 40,
+                        this.getY() + 13,
+                        35,
+                        12,
+                        Component.translatable("screens.wynntils.settingsScreen.reset.name"),
+                        () -> {
+                            if (!configHolder.valueChanged()) return;
+
+                            configHolder.reset();
+                            this.configOptionElement = getWidgetFromConfigHolder(configHolder);
+                        },
+                        List.of(Component.translatable("screens.wynntils.settingsScreen.reset.description"))) {
+                    @Override
+                    protected CustomColor getTextColor(boolean isHovered) {
+                        if (!configHolder.valueChanged()) return CommonColors.GRAY;
+
+                        return super.getTextColor(isHovered);
+                    }
+                };
         this.configOptionElement = getWidgetFromConfigHolder(configHolder);
     }
 
