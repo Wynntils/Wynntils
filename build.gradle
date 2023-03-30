@@ -1,7 +1,7 @@
 plugins {
     id "architectury-plugin" version "${architectury_plugin_version}"
     id "dev.architectury.loom" version "${architectury_loom_version}" apply false
-    id "io.github.juuxel.loom-quiltflower" version "${quiltflower_version}" apply false
+    id "io.github.juuxel.loom-quiltflower" version "${loom_quiltflower_version}" apply false
     id "com.diffplug.spotless" version "${spotless_version}"
 }
 
