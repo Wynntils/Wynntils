@@ -22,15 +22,13 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.lang.reflect.Field;
+import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
 import java.nio.charset.StandardCharsets;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
-import java.util.Arrays;
 import java.util.List;
-import java.util.Optional;
 import org.apache.commons.lang3.RandomStringUtils;
-import org.apache.commons.lang3.reflect.FieldUtils;
 
 public final class JsonManager extends Manager {
     public static final Gson GSON = new GsonBuilder()
@@ -43,21 +41,9 @@ public final class JsonManager extends Manager {
         super(List.of());
     }
 
-    public Type findFieldTypeOverride(Object parent, Field field) {
-        Optional<Field> typeField = Arrays.stream(
-                        FieldUtils.getFieldsWithAnnotation(parent.getClass(), TypeOverride.class))
-                .filter(f -> f.getType() == Type.class && f.getName().equals(field.getName() + "Type"))
-                .findFirst();
-
-        if (typeField.isPresent()) {
-            try {
-                return (Type) FieldUtils.readField(typeField.get(), parent, true);
-            } catch (IllegalAccessException e) {
-                WynntilsMod.error("Unable to get field " + typeField.get().getName(), e);
-            }
-        }
-
-        return null;
+    public Type getJsonValueType(Field field) {
+        ParameterizedType genericType = (ParameterizedType) field.getGenericType();
+        return JsonTypeWrapper.wrap(genericType.getActualTypeArguments()[0]);
     }
 
     public Object deepCopy(Object value, Type fieldType) {
