@@ -58,7 +58,8 @@ public class GeneralSettingsButton extends WynntilsButton {
                         0,
                         getTextColor(isHovered),
                         HorizontalAlignment.CENTER,
-                        VerticalAlignment.MIDDLE,                        TextShadow.OUTLINE);
+                        VerticalAlignment.MIDDLE,
+                        TextShadow.OUTLINE);
 
         if (isHovered) {
             RenderUtils.drawTooltipAt(
