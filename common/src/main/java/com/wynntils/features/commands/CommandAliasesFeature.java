@@ -4,7 +4,6 @@
  */
 package com.wynntils.features.commands;
 
-import com.google.gson.reflect.TypeToken;
 import com.mojang.brigadier.builder.LiteralArgumentBuilder;
 import com.mojang.brigadier.tree.RootCommandNode;
 import com.wynntils.core.components.Managers;
@@ -13,11 +12,9 @@ import com.wynntils.core.config.ConfigCategory;
 import com.wynntils.core.config.HiddenConfig;
 import com.wynntils.core.config.RegisterConfig;
 import com.wynntils.core.features.Feature;
-import com.wynntils.core.json.TypeOverride;
 import com.wynntils.mc.event.CommandSentEvent;
 import com.wynntils.mc.event.CommandsAddedEvent;
 import com.wynntils.utils.mc.McUtils;
-import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
@@ -34,9 +31,6 @@ public class CommandAliasesFeature extends Feature {
             new CommandAlias("guild attack", List.of("gu a", "guild a")),
             new CommandAlias("guild manage", List.of("gu m", "gu man", "guild m", "guild man")),
             new CommandAlias("guild territory", List.of("gu t", "gu terr", "guild t", "guild terr")))));
-
-    @TypeOverride
-    private final Type aliasesType = new TypeToken<ArrayList<CommandAlias>>() {}.getType();
 
     @SubscribeEvent(priority = EventPriority.LOWEST)
     public void onCommandSent(CommandSentEvent e) {

@@ -23,56 +23,28 @@ public class ConfigHolder implements Comparable<ConfigHolder> {
     private final String fieldName;
     private final String i18nKey;
     private final boolean visible;
+    private final Type valueType;
 
-    private final Type fieldType;
     private final Object defaultValue;
 
     private boolean userEdited = false;
 
-    public ConfigHolder(
-            Configurable parent,
-            Config configObj,
-            String fieldName,
-            String i18nKey,
-            boolean visible,
-            Type typeOverride) {
+    public <T extends Configurable & Translatable> ConfigHolder(
+            T parent, Config configObj, String fieldName, String i18nKey, boolean visible, Type valueType) {
         this.parent = parent;
         this.configObj = configObj;
         this.fieldName = fieldName;
         this.i18nKey = i18nKey;
         this.visible = visible;
-
-        if (!(parent instanceof Translatable)) {
-            throw new RuntimeException("Parent must implement Translatable interface.");
-        }
-
-        // This is done so the last subclass gets saved (so tryParseStringValue) works
-        // TODO: This is still not perfect. If the config field is an abstract class,
-        //       and is not instantiated by default, we cannot get it's actual class easily,
-        //       making tryParseStringValue fail.
-        //       Use TypeOverride to fix this
-        this.fieldType = calculateType(typeOverride, getValue());
+        this.valueType = valueType;
 
         // save default value to enable easy resetting
         // We have to deep copy the value, so it is guaranteed that we detect changes
-        this.defaultValue = Managers.Json.deepCopy(getValue(), this.fieldType);
-    }
-
-    private Type calculateType(Type typeOverride, Object value) {
-        if (typeOverride != null) {
-            return typeOverride;
-        }
-
-        if (value != null) {
-            return value.getClass();
-        }
-
-        throw new RuntimeException("Config must either have a non-null default value or a @TypeOverride: "
-                + parent.getClass().getName() + "." + fieldName);
+        this.defaultValue = Managers.Json.deepCopy(getValue(), valueType);
     }
 
     public Type getType() {
-        return fieldType;
+        return valueType;
     }
 
     public Class<?> getClassOfConfigField() {
@@ -94,11 +66,6 @@ public class ConfigHolder implements Comparable<ConfigHolder> {
         }
         // "featureName.settingName"
         return parent.getConfigJsonName() + "." + getFieldName();
-    }
-
-    private String getNameCamelCase() {
-        String name = parent.getClass().getSimpleName();
-        return CaseFormat.UPPER_CAMEL.to(CaseFormat.LOWER_CAMEL, name);
     }
 
     private String getDeclaringFeatureNameCamelCase() {
@@ -165,14 +132,14 @@ public class ConfigHolder implements Comparable<ConfigHolder> {
     public void reset() {
         // deep copy because writeField set's the field to be our default value instance when resetting, making default
         // value change with the field's actual value
-        setValue(Managers.Json.deepCopy(defaultValue, this.fieldType));
+        setValue(Managers.Json.deepCopy(defaultValue, this.valueType));
         // reset this flag so option is no longer saved to file
         userEdited = false;
     }
 
     public Object tryParseStringValue(String value) {
         try {
-            Class<?> wrapped = ClassUtils.primitiveToWrapper(((Class<?>) fieldType));
+            Class<?> wrapped = ClassUtils.primitiveToWrapper(((Class<?>) valueType));
             if (wrapped.isEnum()) {
                 return EnumUtils.getEnumIgnoreCase((Class<? extends Enum>) wrapped, value);
             }
