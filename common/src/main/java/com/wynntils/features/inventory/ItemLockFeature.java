@@ -4,7 +4,6 @@
  */
 package com.wynntils.features.inventory;
 
-import com.google.common.reflect.TypeToken;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.wynntils.core.components.Managers;
 import com.wynntils.core.components.Models;
@@ -15,7 +14,6 @@ import com.wynntils.core.config.HiddenConfig;
 import com.wynntils.core.config.RegisterConfig;
 import com.wynntils.core.features.Feature;
 import com.wynntils.core.features.properties.RegisterKeyBind;
-import com.wynntils.core.json.TypeOverride;
 import com.wynntils.core.keybinds.KeyBind;
 import com.wynntils.mc.event.ContainerClickEvent;
 import com.wynntils.mc.event.ContainerRenderEvent;
@@ -23,7 +21,6 @@ import com.wynntils.mc.event.DropHeldItemEvent;
 import com.wynntils.utils.mc.McUtils;
 import com.wynntils.utils.render.RenderUtils;
 import com.wynntils.utils.render.Texture;
-import java.lang.reflect.Type;
 import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
@@ -46,9 +43,6 @@ public class ItemLockFeature extends Feature {
 
     @RegisterConfig
     public final HiddenConfig<Map<String, Set<Integer>>> classSlotLockMap = new HiddenConfig<>(new TreeMap<>());
-
-    @TypeOverride
-    private final Type classSlotLockMapType = new TypeToken<TreeMap<String, TreeSet<Integer>>>() {}.getType();
 
     @RegisterConfig
     public final Config<Boolean> blockAllActionsOnLockedItems = new Config<>(false);

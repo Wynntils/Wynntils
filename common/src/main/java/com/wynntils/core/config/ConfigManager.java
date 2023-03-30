@@ -14,6 +14,7 @@ import com.wynntils.core.config.upfixers.ConfigUpfixerManager;
 import com.wynntils.core.features.Configurable;
 import com.wynntils.core.features.Feature;
 import com.wynntils.core.features.FeatureManager;
+import com.wynntils.core.features.Translatable;
 import com.wynntils.core.features.overlays.DynamicOverlay;
 import com.wynntils.core.features.overlays.Overlay;
 import com.wynntils.core.features.overlays.OverlayManager;
@@ -87,7 +88,7 @@ public final class ConfigManager extends Manager {
         }
     }
 
-    private void registerConfigOptions(Configurable configurable) {
+    private <T extends Configurable & Translatable> void registerConfigOptions(T configurable) {
         List<ConfigHolder> configOptions = getConfigOptions(configurable);
 
         configurable.addConfigOptions(configOptions);
@@ -221,7 +222,7 @@ public final class ConfigManager extends Manager {
         Managers.Json.savePreciousJson(DEFAULT_CONFIG, holderJson);
     }
 
-    private List<ConfigHolder> getConfigOptions(Configurable parent) {
+    private <T extends Configurable & Translatable> List<ConfigHolder> getConfigOptions(T parent) {
         List<ConfigHolder> options = new ArrayList<>();
 
         Field[] annotatedConfigs = FieldUtils.getFieldsWithAnnotation(parent.getClass(), RegisterConfig.class);
@@ -261,10 +262,10 @@ public final class ConfigManager extends Manager {
             }
             boolean visible = !(configObj instanceof HiddenConfig<?>);
 
-            Type typeOverride = Managers.Json.findFieldTypeOverride(parent, configField);
+            Type valueType = Managers.Json.getJsonValueType(configField);
 
             ConfigHolder configHolder =
-                    new ConfigHolder(parent, configObj, configField.getName(), i18nKey, visible, typeOverride);
+                    new ConfigHolder(parent, configObj, configField.getName(), i18nKey, visible, valueType);
             if (WynntilsMod.isDevelopmentEnvironment()) {
                 if (visible) {
                     if (configHolder.getDisplayName().startsWith("feature.wynntils.")) {
