@@ -5,6 +5,7 @@
 package com.wynntils.models.containers;
 
 import com.wynntils.core.components.Model;
+import com.wynntils.core.components.Models;
 import com.wynntils.utils.mc.ComponentUtils;
 import com.wynntils.utils.type.Pair;
 import com.wynntils.utils.wynn.WynnUtils;
@@ -36,10 +37,10 @@ public final class ContainerModel extends Model {
 
     private static final Pattern LOOT_CHEST_PATTERN = Pattern.compile("Loot Chest (.+)");
 
-    public static final Pair<Integer, Integer> ABILITY_TREE_PREVIOUS_NEXT_SLOTS = new Pair<>(57, 59);
-    public static final Pair<Integer, Integer> BANK_PREVIOUS_NEXT_SLOTS = new Pair<>(17, 8);
-    public static final Pair<Integer, Integer> GUILD_BANK_PREVIOUS_NEXT_SLOTS = new Pair<>(9, 27);
-    public static final Pair<Integer, Integer> TRADE_MARKET_PREVIOUS_NEXT_SLOTS = new Pair<>(17, 26);
+    private static final Pair<Integer, Integer> ABILITY_TREE_PREVIOUS_NEXT_SLOTS = new Pair<>(57, 59);
+    private static final Pair<Integer, Integer> BANK_PREVIOUS_NEXT_SLOTS = new Pair<>(17, 8);
+    private static final Pair<Integer, Integer> GUILD_BANK_PREVIOUS_NEXT_SLOTS = new Pair<>(9, 27);
+    private static final Pair<Integer, Integer> TRADE_MARKET_PREVIOUS_NEXT_SLOTS = new Pair<>(17, 26);
 
     public ContainerModel() {
         super(List.of());
@@ -113,5 +114,31 @@ public final class ContainerModel extends Model {
     public Matcher lootChestMatcher(Screen screen) {
         return LOOT_CHEST_PATTERN.matcher(
                 WynnUtils.normalizeBadString(ComponentUtils.getUnformatted(screen.getTitle())));
+    }
+
+    public Pair<Integer, Integer> getScrollSlots(AbstractContainerScreen<?> gui, boolean scrollUp) {
+        if (Models.Container.isAbilityTreeScreen(gui)) {
+            return ABILITY_TREE_PREVIOUS_NEXT_SLOTS;
+        }
+
+        if (Models.Container.isBankScreen(gui)
+                || Models.Container.isMiscBucketScreen(gui)
+                || Models.Container.isBlockBankScreen(gui)) {
+            if (!scrollUp && Models.Container.isLastBankPage(gui)) return null;
+
+            return BANK_PREVIOUS_NEXT_SLOTS;
+        }
+
+        if (Models.Container.isGuildBankScreen(gui)) {
+            return GUILD_BANK_PREVIOUS_NEXT_SLOTS;
+        }
+
+        if (Models.Container.isTradeMarketScreen(gui)) {
+            if (scrollUp && Models.Container.isFirstTradeMarketPage(gui)) return null;
+
+            return TRADE_MARKET_PREVIOUS_NEXT_SLOTS;
+        }
+
+        return null;
     }
 }
