@@ -1,9 +1,21 @@
+## [0.0.2-alpha.405](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.404...v0.0.2-alpha.405) (2023-03-30)
+
+
+### New Features
+
+* Make reset button grayed-out if no change has been made ([#1406](https://github.com/Wynntils/Artemis/issues/1406)) ([7222fd5](https://github.com/Wynntils/Artemis/commit/7222fd5d9dcecb120cb56b0e25877155db376753))
+
 ## [0.0.2-alpha.404](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.403...v0.0.2-alpha.404) (2023-03-30)
 
 
 ### New Features
 
 * Remove @TypeOverride ([#1399](https://github.com/Wynntils/Artemis/issues/1399)) ([78bce6c](https://github.com/Wynntils/Artemis/commit/78bce6c784612a649977b74f07eb2de14217b426))
+
+
+### Miscellaneous Chores
+
+* **release:** v0.0.2-alpha.404 [skip ci] ([80a1ec3](https://github.com/Wynntils/Artemis/commit/80a1ec365288e249a9f348b631ba80021ce8a120))
 
 ## [0.0.2-alpha.403](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.402...v0.0.2-alpha.403) (2023-03-30)
 
@@ -40,16 +52,4 @@
 ### Miscellaneous Chores
 
 * **release:** v0.0.2-alpha.401 [skip ci] ([203624c](https://github.com/Wynntils/Artemis/commit/203624cd5fa06973b25c4fe0f59d4f60d00b60ff))
-
-## [0.0.2-alpha.400](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.399...v0.0.2-alpha.400) (2023-03-30)
-
-
-### New Features
-
-* More container scrolling ([#1393](https://github.com/Wynntils/Artemis/issues/1393)) ([cfdafbf](https://github.com/Wynntils/Artemis/commit/cfdafbfb8630eb86fdb50570b2d485a23ab7fbec))
-
-
-### Miscellaneous Chores
-
-* **release:** v0.0.2-alpha.400 [skip ci] ([5925a63](https://github.com/Wynntils/Artemis/commit/5925a63425771f4a13806a5d0bcb0970890c850a))
 
