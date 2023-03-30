@@ -65,6 +65,10 @@ public class ConfigHolder implements Comparable<ConfigHolder> {
         return valueType;
     }
 
+    public Class<?> getClassOfConfigField() {
+        return TypeToken.get(this.getType()).getRawType();
+    }
+
     public String getFieldName() {
         return fieldName;
     }
@@ -178,6 +182,11 @@ public class ConfigHolder implements Comparable<ConfigHolder> {
 
         try {
             Class<?> wrapped = ClassUtils.primitiveToWrapper(((Class<?>) valueType));
+
+            if (wrapped.isEnum()) {
+                return EnumUtils.getEnumIgnoreCase((Class<? extends Enum>) wrapped, value);
+            }
+
             return wrapped.getConstructor(String.class).newInstance(value);
         } catch (Exception ignored) {
         }

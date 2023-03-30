@@ -27,6 +27,7 @@ import com.wynntils.functions.WarFunctions;
 import com.wynntils.functions.WorldFunctions;
 import com.wynntils.functions.generic.CappedFunctions;
 import com.wynntils.functions.generic.ConditionalFunctions;
+import com.wynntils.functions.generic.LocationFunctions;
 import com.wynntils.functions.generic.LogicFunctions;
 import com.wynntils.functions.generic.MathFunctions;
 import com.wynntils.functions.generic.StringFunctions;
@@ -316,6 +317,12 @@ public final class FunctionManager extends Manager {
         registerFunction(new ConditionalFunctions.IfNumberFunction());
         registerFunction(new ConditionalFunctions.IfStringFunction());
 
+        registerFunction(new LocationFunctions.DistanceFunction());
+        registerFunction(new LocationFunctions.LocationFunction());
+        registerFunction(new LocationFunctions.XFunction());
+        registerFunction(new LocationFunctions.YFunction());
+        registerFunction(new LocationFunctions.ZFunction());
+
         registerFunction(new LogicFunctions.AndFunction());
         registerFunction(new LogicFunctions.EqualsFunction());
         registerFunction(new LogicFunctions.LessThanFunction());
@@ -354,9 +361,7 @@ public final class FunctionManager extends Manager {
         registerFunction(new WorldFunctions.CurrentWorldUptimeFunction());
         registerFunction(new WorldFunctions.MobTotemCountFunction());
         registerFunction(new WorldFunctions.MobTotemDistanceFunction());
-        registerFunction(new WorldFunctions.MobTotemXFunction());
-        registerFunction(new WorldFunctions.MobTotemYFunction());
-        registerFunction(new WorldFunctions.MobTotemZFunction());
+        registerFunction(new WorldFunctions.MobTotemFunction());
         registerFunction(new WorldFunctions.MobTotemOwnerFunction());
         registerFunction(new WorldFunctions.MobTotemTimeLeftFunction());
         registerFunction(new WorldFunctions.TokenGatekeeperCountFunction());
@@ -441,9 +446,7 @@ public final class FunctionManager extends Manager {
 
         registerFunction(new MinecraftFunctions.DirFunction());
         registerFunction(new MinecraftFunctions.FpsFunction());
-        registerFunction(new MinecraftFunctions.XFunction());
-        registerFunction(new MinecraftFunctions.YFunction());
-        registerFunction(new MinecraftFunctions.ZFunction());
+        registerFunction(new MinecraftFunctions.MyLocationFunction());
 
         registerFunction(new ProfessionFunctions.ProfessionLevelFunction());
         registerFunction(new ProfessionFunctions.ProfessionPercentageFunction());
