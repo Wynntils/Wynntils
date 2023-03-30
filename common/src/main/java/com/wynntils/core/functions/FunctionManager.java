@@ -346,13 +346,14 @@ public final class FunctionManager extends Manager {
         registerFunction(new MathFunctions.SquareRootFunction());
         registerFunction(new MathFunctions.SubtractFunction());
 
+        registerFunction(new StringFunctions.CappedStringFunction());
         registerFunction(new StringFunctions.ConcatFunction());
         registerFunction(new StringFunctions.FormatCappedFunction());
         registerFunction(new StringFunctions.FormatFunction());
+        registerFunction(new StringFunctions.LeadingZerosFunction());
         registerFunction(new StringFunctions.ParseDoubleFunction());
         registerFunction(new StringFunctions.ParseIntegerFunction());
         registerFunction(new StringFunctions.RepeatFunction());
-        registerFunction(new StringFunctions.CappedStringFunction());
         registerFunction(new StringFunctions.StringEqualsFunction());
         registerFunction(new StringFunctions.StringFunction());
 

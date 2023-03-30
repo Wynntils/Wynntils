@@ -50,10 +50,7 @@ public class EnvironmentFunctions {
     public static class StopwatchZero extends Function<Boolean> {
         @Override
         public Boolean getValue(FunctionArguments arguments) {
-            return Models.Stopwatch.getHours() == 0
-                    && Models.Stopwatch.getMinutes() == 0
-                    && Models.Stopwatch.getSeconds() == 0
-                    && Models.Stopwatch.getMilliseconds() == 0;
+            return Models.Stopwatch.isZero();
         }
 
         @Override
@@ -69,31 +66,31 @@ public class EnvironmentFunctions {
         }
     }
 
-    public static class StopwatchHoursFunction extends Function<String> {
+    public static class StopwatchHoursFunction extends Function<Integer> {
         @Override
-        public String getValue(FunctionArguments arguments) {
-            return String.format("%02d", Models.Stopwatch.getHours());
+        public Integer getValue(FunctionArguments arguments) {
+            return Models.Stopwatch.getHours();
         }
     }
 
-    public static class StopwatchMinutesFunction extends Function<String> {
+    public static class StopwatchMinutesFunction extends Function<Integer> {
         @Override
-        public String getValue(FunctionArguments arguments) {
-            return String.format("%02d", Models.Stopwatch.getMinutes());
+        public Integer getValue(FunctionArguments arguments) {
+            return Models.Stopwatch.getMinutes();
         }
     }
 
-    public static class StopwatchSecondsFunction extends Function<String> {
+    public static class StopwatchSecondsFunction extends Function<Integer> {
         @Override
-        public String getValue(FunctionArguments arguments) {
-            return String.format("%02d", Models.Stopwatch.getSeconds());
+        public Integer getValue(FunctionArguments arguments) {
+            return Models.Stopwatch.getSeconds();
         }
     }
 
-    public static class StopwatchMillisecondsFunction extends Function<String> {
+    public static class StopwatchMillisecondsFunction extends Function<Integer> {
         @Override
-        public String getValue(FunctionArguments arguments) {
-            return String.format("%03d", Models.Stopwatch.getMilliseconds());
+        public Integer getValue(FunctionArguments arguments) {
+            return Models.Stopwatch.getMilliseconds();
         }
     }
 
