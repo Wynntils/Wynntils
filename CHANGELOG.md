@@ -1,9 +1,21 @@
+## [0.0.2-alpha.400](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.399...v0.0.2-alpha.400) (2023-03-30)
+
+
+### New Features
+
+* More container scrolling ([#1393](https://github.com/Wynntils/Artemis/issues/1393)) ([cfdafbf](https://github.com/Wynntils/Artemis/commit/cfdafbfb8630eb86fdb50570b2d485a23ab7fbec))
+
 ## [0.0.2-alpha.399](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.398...v0.0.2-alpha.399) (2023-03-30)
 
 
 ### Documentation
 
 * Fix typo, add alt config to readme ([#1404](https://github.com/Wynntils/Artemis/issues/1404)) ([b854604](https://github.com/Wynntils/Artemis/commit/b8546045434fc5c1fe5414fe08f2ada30e05b943))
+
+
+### Miscellaneous Chores
+
+* **release:** v0.0.2-alpha.399 [skip ci] ([28a57f8](https://github.com/Wynntils/Artemis/commit/28a57f81960c7514de3f17e9767b932b831538bc))
 
 ## [0.0.2-alpha.398](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.397...v0.0.2-alpha.398) (2023-03-29)
 
@@ -40,21 +52,4 @@
 ### Miscellaneous Chores
 
 * **release:** v0.0.2-alpha.396 [skip ci] ([33a74ab](https://github.com/Wynntils/Artemis/commit/33a74abf6998ab9804cd98fda0f1771c758d366b))
-
-## [0.0.2-alpha.395](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.394...v0.0.2-alpha.395) (2023-03-29)
-
-
-### Bug Fixes
-
-* Restore render system after crash in overlay ([#1397](https://github.com/Wynntils/Artemis/issues/1397)) ([84280a6](https://github.com/Wynntils/Artemis/commit/84280a6796fd709130657a32a46f08970b104613))
-
-
-### New Features
-
-* Use short format for XP overlay ([#1384](https://github.com/Wynntils/Artemis/issues/1384)) ([327b11c](https://github.com/Wynntils/Artemis/commit/327b11ca98ff411e6aec577cc898518829a41820))
-
-
-### Miscellaneous Chores
-
-* **release:** v0.0.2-alpha.395 [skip ci] ([64e7d05](https://github.com/Wynntils/Artemis/commit/64e7d057d54704a857cc949e1db031ced0c02f0b))
 
