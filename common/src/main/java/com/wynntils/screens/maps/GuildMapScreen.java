@@ -40,7 +40,7 @@ import org.lwjgl.glfw.GLFW;
 public final class GuildMapScreen extends AbstractMapScreen {
     private boolean resourceMode = false;
     private boolean territoryDefenseFilterEnabled = false;
-    private GuildResourceValues territoryDefenseFilterLevel = GuildResourceValues.VeryHigh;
+    private GuildResourceValues territoryDefenseFilterLevel = GuildResourceValues.VERY_HIGH;
     private TerritoryDefenseFilterType territoryDefenseFilterType = TerritoryDefenseFilterType.DEFAULT;
 
     private BasicTexturedButton territoryDefenseFilterButton;
@@ -286,8 +286,8 @@ public final class GuildMapScreen extends AbstractMapScreen {
                         10,
                         10,
                         CommonColors.MAGENTA,
-                        HorizontalAlignment.Left,
-                        VerticalAlignment.Top,
+                        HorizontalAlignment.LEFT,
+                        VerticalAlignment.TOP,
                         TextShadow.OUTLINE);
 
         float renderYOffset = 20;
@@ -307,8 +307,8 @@ public final class GuildMapScreen extends AbstractMapScreen {
                                 10,
                                 10 + renderYOffset,
                                 CommonColors.WHITE,
-                                HorizontalAlignment.Left,
-                                VerticalAlignment.Top,
+                                HorizontalAlignment.LEFT,
+                                VerticalAlignment.TOP,
                                 TextShadow.OUTLINE);
                 renderYOffset += 10;
             }
@@ -324,8 +324,8 @@ public final class GuildMapScreen extends AbstractMapScreen {
                                 10,
                                 10 + renderYOffset,
                                 CommonColors.WHITE,
-                                HorizontalAlignment.Left,
-                                VerticalAlignment.Top,
+                                HorizontalAlignment.LEFT,
+                                VerticalAlignment.TOP,
                                 TextShadow.OUTLINE);
                 renderYOffset += 10;
             }
@@ -349,8 +349,8 @@ public final class GuildMapScreen extends AbstractMapScreen {
                         10,
                         10 + renderYOffset,
                         CommonColors.WHITE,
-                        HorizontalAlignment.Left,
-                        VerticalAlignment.Top,
+                        HorizontalAlignment.LEFT,
+                        VerticalAlignment.TOP,
                         TextShadow.OUTLINE);
         renderYOffset += 10;
         FontRenderer.getInstance()
@@ -360,8 +360,8 @@ public final class GuildMapScreen extends AbstractMapScreen {
                         10,
                         10 + renderYOffset,
                         CommonColors.WHITE,
-                        HorizontalAlignment.Left,
-                        VerticalAlignment.Top,
+                        HorizontalAlignment.LEFT,
+                        VerticalAlignment.TOP,
                         TextShadow.OUTLINE);
 
         if (territoryInfo.isHeadquarters()) {
@@ -373,8 +373,8 @@ public final class GuildMapScreen extends AbstractMapScreen {
                             10,
                             10 + renderYOffset,
                             CommonColors.RED,
-                            HorizontalAlignment.Left,
-                            VerticalAlignment.Top,
+                            HorizontalAlignment.LEFT,
+                            VerticalAlignment.TOP,
                             TextShadow.OUTLINE);
         }
 
@@ -388,8 +388,8 @@ public final class GuildMapScreen extends AbstractMapScreen {
                         10,
                         10 + renderYOffset,
                         CommonColors.WHITE,
-                        HorizontalAlignment.Left,
-                        VerticalAlignment.Top,
+                        HorizontalAlignment.LEFT,
+                        VerticalAlignment.TOP,
                         TextShadow.OUTLINE);
 
         // Territory name
@@ -403,8 +403,8 @@ public final class GuildMapScreen extends AbstractMapScreen {
                         Texture.TERRITORY_TOOLTIP_TOP.height() + centerHeight + Texture.TERRITORY_NAME_BOX.height(),
                         0,
                         CommonColors.WHITE,
-                        HorizontalAlignment.Left,
-                        VerticalAlignment.Middle,
+                        HorizontalAlignment.LEFT,
+                        VerticalAlignment.MIDDLE,
                         TextShadow.OUTLINE);
 
         poseStack.popPose();

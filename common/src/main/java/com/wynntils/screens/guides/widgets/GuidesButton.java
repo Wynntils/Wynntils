@@ -47,8 +47,8 @@ public class GuidesButton extends WynntilsButton {
                         this.getY() + 1,
                         0,
                         CommonColors.BLACK,
-                        HorizontalAlignment.Left,
-                        VerticalAlignment.Top,
+                        HorizontalAlignment.LEFT,
+                        VerticalAlignment.TOP,
                         TextShadow.NONE);
     }
 

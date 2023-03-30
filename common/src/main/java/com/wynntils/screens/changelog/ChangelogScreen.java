@@ -101,7 +101,7 @@ public final class ChangelogScreen extends WynntilsScreen implements WynntilsPag
                         Texture.CHANGELOG_BACKGROUND.height() - 17,
                         0,
                         CommonColors.WHITE,
-                        HorizontalAlignment.Center,
+                        HorizontalAlignment.CENTER,
                         TextShadow.OUTLINE);
     }
 

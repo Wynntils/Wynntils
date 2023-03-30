@@ -19,5 +19,5 @@ public @interface OverlayGroup {
 
     RenderEvent.ElementType renderType();
 
-    RenderState renderAt() default RenderState.Post;
+    RenderState renderAt() default RenderState.POST;
 }

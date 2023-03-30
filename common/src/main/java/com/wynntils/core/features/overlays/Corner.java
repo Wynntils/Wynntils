@@ -7,17 +7,17 @@ package com.wynntils.core.features.overlays;
 import java.util.List;
 
 public enum Corner {
-    TopLeft,
-    TopRight,
-    BottomLeft,
-    BottomRight;
+    TOP_LEFT,
+    TOP_RIGHT,
+    BOTTOM_LEFT,
+    BOTTOM_RIGHT;
 
     public List<Edge> getEdges() {
         return switch (this) {
-            case TopLeft -> List.of(Edge.Top, Edge.Left);
-            case TopRight -> List.of(Edge.Top, Edge.Right);
-            case BottomLeft -> List.of(Edge.Bottom, Edge.Left);
-            case BottomRight -> List.of(Edge.Bottom, Edge.Right);
+            case TOP_LEFT -> List.of(Edge.TOP, Edge.LEFT);
+            case TOP_RIGHT -> List.of(Edge.TOP, Edge.RIGHT);
+            case BOTTOM_LEFT -> List.of(Edge.BOTTOM, Edge.LEFT);
+            case BOTTOM_RIGHT -> List.of(Edge.BOTTOM, Edge.RIGHT);
         };
     }
 }

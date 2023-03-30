@@ -29,7 +29,7 @@ public class LowHealthVignetteFeature extends Feature {
     public final Config<Float> animationSpeed = new Config<>(0.6f);
 
     @RegisterConfig
-    public final Config<HealthVignetteEffect> healthVignetteEffect = new Config<>(HealthVignetteEffect.Pulse);
+    public final Config<HealthVignetteEffect> healthVignetteEffect = new Config<>(HealthVignetteEffect.PULSE);
 
     @RegisterConfig
     public final Config<CustomColor> color = new Config<>(new CustomColor(255, 0, 0));
@@ -56,18 +56,18 @@ public class LowHealthVignetteFeature extends Feature {
         shouldRender = true;
 
         switch (healthVignetteEffect.get()) {
-            case Pulse -> {
+            case PULSE -> {
                 animation = (animation + animationSpeed.get()) % 40;
                 value = threshold - healthProgress * INTENSITY + 0.01f * Math.abs(20 - animation);
             }
-            case Growing -> value = MathUtils.map(healthProgress, 0, threshold, INTENSITY, 0.1f);
-            case Static -> value = INTENSITY;
+            case GROWING -> value = MathUtils.map(healthProgress, 0, threshold, INTENSITY, 0.1f);
+            case STATIC -> value = INTENSITY;
         }
     }
 
     public enum HealthVignetteEffect {
-        Pulse,
-        Growing,
-        Static
+        PULSE,
+        GROWING,
+        STATIC
     }
 }
