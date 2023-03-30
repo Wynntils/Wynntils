@@ -30,19 +30,19 @@ import net.minecraft.client.renderer.MultiBufferSource;
 
 @ConfigCategory(Category.OVERLAYS)
 public class CustomBarsOverlayFeature extends Feature {
-    @OverlayGroup(instances = 0, renderType = RenderEvent.ElementType.GUI, renderAt = RenderState.Pre)
+    @OverlayGroup(instances = 0, renderType = RenderEvent.ElementType.GUI, renderAt = RenderState.PRE)
     private final List<UniversalTexturedCustomBarOverlay> customUniversalBarOverlays = new ArrayList<>();
 
-    @OverlayGroup(instances = 0, renderType = RenderEvent.ElementType.GUI, renderAt = RenderState.Pre)
+    @OverlayGroup(instances = 0, renderType = RenderEvent.ElementType.GUI, renderAt = RenderState.PRE)
     private final List<HealthTexturedCustomBarOverlay> customHealthBarOverlays = new ArrayList<>();
 
-    @OverlayGroup(instances = 0, renderType = RenderEvent.ElementType.GUI, renderAt = RenderState.Pre)
+    @OverlayGroup(instances = 0, renderType = RenderEvent.ElementType.GUI, renderAt = RenderState.PRE)
     private final List<ManaTexturedCustomBarOverlay> customManaBarOverlays = new ArrayList<>();
 
-    @OverlayGroup(instances = 0, renderType = RenderEvent.ElementType.GUI, renderAt = RenderState.Pre)
+    @OverlayGroup(instances = 0, renderType = RenderEvent.ElementType.GUI, renderAt = RenderState.PRE)
     private final List<ExperienceTexturedCustomBarOverlay> customExperienceBarOverlays = new ArrayList<>();
 
-    @OverlayGroup(instances = 0, renderType = RenderEvent.ElementType.GUI, renderAt = RenderState.Pre)
+    @OverlayGroup(instances = 0, renderType = RenderEvent.ElementType.GUI, renderAt = RenderState.PRE)
     private final List<BubbleTexturedCustomBarOverlay> customBubbleBarOverlays = new ArrayList<>();
 
     protected static class UniversalTexturedCustomBarOverlay extends CustomBarOverlayBase {
@@ -76,7 +76,7 @@ public class CustomBarsOverlayFeature extends Feature {
 
     protected static class HealthTexturedCustomBarOverlay extends CustomBarOverlayBase {
         @RegisterConfig("overlay.healthBar.healthTexture")
-        public final Config<HealthTexture> healthTexture = new Config<>(HealthTexture.a);
+        public final Config<HealthTexture> healthTexture = new Config<>(HealthTexture.A);
 
         public HealthTexturedCustomBarOverlay(int id) {
             super(id, new OverlaySize(81, 21));
@@ -122,7 +122,7 @@ public class CustomBarsOverlayFeature extends Feature {
 
     protected static class ManaTexturedCustomBarOverlay extends CustomBarOverlayBase {
         @RegisterConfig("overlay.wynntils.manaBar.manaTexture")
-        public final Config<ManaTexture> manaTexture = new Config<>(ManaTexture.a);
+        public final Config<ManaTexture> manaTexture = new Config<>(ManaTexture.A);
 
         public ManaTexturedCustomBarOverlay(int id) {
             super(id, new OverlaySize(81, 21));
@@ -168,7 +168,7 @@ public class CustomBarsOverlayFeature extends Feature {
 
     protected static class ExperienceTexturedCustomBarOverlay extends CustomBarOverlayBase {
         @RegisterConfig("overlay.wynntils.objectivesTexture")
-        public final Config<ObjectivesTextures> objectivesTexture = new Config<>(ObjectivesTextures.a);
+        public final Config<ObjectivesTextures> objectivesTexture = new Config<>(ObjectivesTextures.A);
 
         public ExperienceTexturedCustomBarOverlay(int id) {
             super(id, new OverlaySize(150, 30));
@@ -210,7 +210,7 @@ public class CustomBarsOverlayFeature extends Feature {
 
     protected static class BubbleTexturedCustomBarOverlay extends CustomBarOverlayBase {
         @RegisterConfig("overlay.wynntils.objectivesTexture")
-        public final Config<ObjectivesTextures> objectivesTexture = new Config<>(ObjectivesTextures.a);
+        public final Config<ObjectivesTextures> objectivesTexture = new Config<>(ObjectivesTextures.A);
 
         public BubbleTexturedCustomBarOverlay(int id) {
             super(id, new OverlaySize(150, 30));

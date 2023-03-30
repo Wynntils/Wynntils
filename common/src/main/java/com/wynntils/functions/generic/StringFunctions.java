@@ -174,4 +174,21 @@ public class StringFunctions {
             return List.of("cap_str", "str_cap");
         }
     }
+
+    public static class LeadingZerosFunction extends GenericFunction<String> {
+        @Override
+        public String getValue(FunctionArguments arguments) {
+            int value = arguments.getArgument("value").getIntegerValue();
+            int length = arguments.getArgument("length").getIntegerValue();
+
+            return String.format("%0" + length + "d", value);
+        }
+
+        @Override
+        public FunctionArguments.RequiredArgumentBuilder getRequiredArgumentsBuilder() {
+            return new FunctionArguments.RequiredArgumentBuilder(List.of(
+                    new FunctionArguments.Argument<>("value", Integer.class, null),
+                    new FunctionArguments.Argument<>("length", Integer.class, null)));
+        }
+    }
 }

@@ -38,12 +38,12 @@ public abstract class DynamicOverlay extends Overlay {
                 new OverlayPosition(
                         0,
                         0,
-                        VerticalAlignment.Middle,
-                        HorizontalAlignment.Center,
-                        OverlayPosition.AnchorSection.Middle),
+                        VerticalAlignment.MIDDLE,
+                        HorizontalAlignment.CENTER,
+                        OverlayPosition.AnchorSection.MIDDLE),
                 new OverlaySize(100f, 20f),
-                HorizontalAlignment.Center,
-                VerticalAlignment.Middle);
+                HorizontalAlignment.CENTER,
+                VerticalAlignment.MIDDLE);
         this.id = id;
     }
 

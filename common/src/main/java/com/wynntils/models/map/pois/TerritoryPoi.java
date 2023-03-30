@@ -109,8 +109,8 @@ public class TerritoryPoi implements Poi {
                             actualRenderZ + renderHeight,
                             0,
                             color,
-                            HorizontalAlignment.Center,
-                            VerticalAlignment.Middle,
+                            HorizontalAlignment.CENTER,
+                            VerticalAlignment.MIDDLE,
                             TextShadow.OUTLINE);
         }
 
@@ -129,8 +129,8 @@ public class TerritoryPoi implements Poi {
                                     actualRenderZ + renderHeight,
                                     0,
                                     CommonColors.WHITE,
-                                    HorizontalAlignment.Center,
-                                    VerticalAlignment.Bottom,
+                                    HorizontalAlignment.CENTER,
+                                    VerticalAlignment.BOTTOM,
                                     TextShadow.OUTLINE);
                 });
 
@@ -146,8 +146,8 @@ public class TerritoryPoi implements Poi {
                             actualRenderZ + renderHeight,
                             0,
                             CommonColors.WHITE,
-                            HorizontalAlignment.Center,
-                            VerticalAlignment.Top,
+                            HorizontalAlignment.CENTER,
+                            VerticalAlignment.TOP,
                             TextShadow.OUTLINE);
         }
 

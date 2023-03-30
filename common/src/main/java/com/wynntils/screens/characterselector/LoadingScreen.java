@@ -69,8 +69,8 @@ public final class LoadingScreen extends WynntilsScreen {
                         centerX,
                         60,
                         CommonColors.WHITE,
-                        HorizontalAlignment.Center,
-                        VerticalAlignment.Top,
+                        HorizontalAlignment.CENTER,
+                        VerticalAlignment.TOP,
                         TextShadow.NONE);
 
         // Draw loading progress
@@ -81,8 +81,8 @@ public final class LoadingScreen extends WynntilsScreen {
                         centerX,
                         120,
                         MOSS_GREEN,
-                        HorizontalAlignment.Center,
-                        VerticalAlignment.Top,
+                        HorizontalAlignment.CENTER,
+                        VerticalAlignment.TOP,
                         TextShadow.NONE);
 
         // Draw spinner

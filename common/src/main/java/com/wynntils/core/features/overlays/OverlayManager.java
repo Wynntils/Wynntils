@@ -197,14 +197,14 @@ public final class OverlayManager extends Manager {
     @SubscribeEvent
     public void onRenderPre(RenderEvent.Pre event) {
         McUtils.mc().getProfiler().push("preRenOverlay");
-        renderOverlays(event, RenderState.Pre);
+        renderOverlays(event, RenderState.PRE);
         McUtils.mc().getProfiler().pop();
     }
 
     @SubscribeEvent
     public void onRenderPost(RenderEvent.Post event) {
         McUtils.mc().getProfiler().push("postRenOverlay");
-        renderOverlays(event, RenderState.Post);
+        renderOverlays(event, RenderState.POST);
         McUtils.mc().getProfiler().pop();
     }
 
@@ -225,8 +225,8 @@ public final class OverlayManager extends Manager {
                 continue;
             }
 
-            if (renderInfo.renderState() == RenderState.Replace) {
-                if (renderState != RenderState.Pre) {
+            if (renderInfo.renderState() == RenderState.REPLACE) {
+                if (renderState != RenderState.PRE) {
                     continue;
                 }
                 event.setCanceled(true);
