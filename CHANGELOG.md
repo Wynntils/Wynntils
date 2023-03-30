@@ -1,9 +1,21 @@
+## [0.0.2-alpha.404](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.403...v0.0.2-alpha.404) (2023-03-30)
+
+
+### New Features
+
+* Remove @TypeOverride ([#1399](https://github.com/Wynntils/Artemis/issues/1399)) ([78bce6c](https://github.com/Wynntils/Artemis/commit/78bce6c784612a649977b74f07eb2de14217b426))
+
 ## [0.0.2-alpha.403](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.402...v0.0.2-alpha.403) (2023-03-30)
 
 
 ### New Features
 
 * Location as new function type ([#1402](https://github.com/Wynntils/Artemis/issues/1402)) ([b91b4e1](https://github.com/Wynntils/Artemis/commit/b91b4e117468952413f4a44c799b10277491ef68))
+
+
+### Miscellaneous Chores
+
+* **release:** v0.0.2-alpha.403 [skip ci] ([8f8c636](https://github.com/Wynntils/Artemis/commit/8f8c6362ac1b81f53b0e4adf46d5e1fb27acb7e0))
 
 ## [0.0.2-alpha.402](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.401...v0.0.2-alpha.402) (2023-03-30)
 
@@ -40,16 +52,4 @@
 ### Miscellaneous Chores
 
 * **release:** v0.0.2-alpha.400 [skip ci] ([5925a63](https://github.com/Wynntils/Artemis/commit/5925a63425771f4a13806a5d0bcb0970890c850a))
-
-## [0.0.2-alpha.399](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.398...v0.0.2-alpha.399) (2023-03-30)
-
-
-### Documentation
-
-* Fix typo, add alt config to readme ([#1404](https://github.com/Wynntils/Artemis/issues/1404)) ([b854604](https://github.com/Wynntils/Artemis/commit/b8546045434fc5c1fe5414fe08f2ada30e05b943))
-
-
-### Miscellaneous Chores
-
-* **release:** v0.0.2-alpha.399 [skip ci] ([28a57f8](https://github.com/Wynntils/Artemis/commit/28a57f81960c7514de3f17e9767b932b831538bc))
 
