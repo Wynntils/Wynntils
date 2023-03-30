@@ -6,6 +6,7 @@ package com.wynntils.models.containers;
 
 import com.wynntils.core.components.Model;
 import com.wynntils.utils.mc.ComponentUtils;
+import com.wynntils.utils.type.Pair;
 import com.wynntils.utils.wynn.WynnUtils;
 import java.util.List;
 import java.util.regex.Matcher;
@@ -18,7 +19,27 @@ public final class ContainerModel extends Model {
     private static final Pattern ABILITY_TREE_PATTERN =
             Pattern.compile("(?:Warrior|Shaman|Mage|Assassin|Archer) Abilities");
 
+    // Test suite: https://regexr.com/7b4l0
+    private static final Pattern BANK_PATTERN = Pattern.compile("§0\\[Pg\\. \\d+\\] §8[a-zA-Z0-9_]+'s§0 Bank");
+
+    // Test suite: https://regexr.com/7b4lf
+    private static final Pattern GUILD_BANK_PATTERN =
+            Pattern.compile("[a-zA-Z ]+: Bank \\((?:Everyone|High Ranked)\\)");
+
+    // Test suite: https://regexr.com/7b4m1
+    private static final Pattern BLOCK_BANK_PATTERN =
+            Pattern.compile("§0\\[Pg\\. \\d+\\] §8[a-zA-Z0-9_]+'s§0 Block Bank");
+
+    // Test suite: https://regexr.com/7b4ma
+    private static final Pattern MISC_BUCKET_PATTERN =
+            Pattern.compile("§0\\[Pg\\. \\d+\\] §8[a-zA-Z0-9_]+'s§0 Misc\\. Bucket");
+
     private static final Pattern LOOT_CHEST_PATTERN = Pattern.compile("Loot Chest (.+)");
+
+    public static final Pair<Integer, Integer> ABILITY_TREE_PREVIOUS_NEXT_SLOTS = new Pair<>(57, 59);
+    public static final Pair<Integer, Integer> BANK_PREVIOUS_NEXT_SLOTS = new Pair<>(17, 8);
+    public static final Pair<Integer, Integer> GUILD_BANK_PREVIOUS_NEXT_SLOTS = new Pair<>(9, 27);
+    public static final Pair<Integer, Integer> TRADE_MARKET_PREVIOUS_NEXT_SLOTS = new Pair<>(17, 26);
 
     public ContainerModel() {
         super(List.of());
@@ -26,6 +47,52 @@ public final class ContainerModel extends Model {
 
     public boolean isAbilityTreeScreen(Screen screen) {
         return ABILITY_TREE_PATTERN.matcher(screen.getTitle().getString()).matches();
+    }
+
+    public boolean isBankScreen(Screen screen) {
+        return BANK_PATTERN.matcher(ComponentUtils.getCoded(screen.getTitle())).matches();
+    }
+
+    /**
+     * @return True if the page is the last page in a Bank, Block Bank, or Misc Bucket
+     */
+    public boolean isLastBankPage(Screen screen) {
+        return (isBankScreen(screen) || isBlockBankScreen(screen) || isMiscBucketScreen(screen))
+                && screen instanceof ContainerScreen cs
+                && ComponentUtils.getCoded(cs.getMenu().getSlot(8).getItem().getHoverName())
+                        .endsWith(">§4>§c>§4>§c>");
+    }
+
+    public boolean isGuildBankScreen(Screen screen) {
+        return GUILD_BANK_PATTERN
+                .matcher(ComponentUtils.getCoded(screen.getTitle()))
+                .matches();
+    }
+
+    public boolean isTradeMarketScreen(Screen screen) {
+        if (!(screen instanceof ContainerScreen cs)) return false;
+        // No regex required, title is very simple and can be checked with .equals()
+        return cs.getMenu().getRowCount() == 6
+                && ComponentUtils.getCoded(screen.getTitle()).equals("Trade Market");
+    }
+
+    public boolean isFirstTradeMarketPage(Screen screen) {
+        return isTradeMarketScreen(screen)
+                && screen instanceof ContainerScreen cs
+                && ComponentUtils.getCoded(cs.getMenu().getSlot(17).getItem().getHoverName())
+                        .equals("§bReveal Item Names");
+    }
+
+    public boolean isBlockBankScreen(Screen screen) {
+        return BLOCK_BANK_PATTERN
+                .matcher(ComponentUtils.getCoded(screen.getTitle()))
+                .matches();
+    }
+
+    public boolean isMiscBucketScreen(Screen screen) {
+        return MISC_BUCKET_PATTERN
+                .matcher(ComponentUtils.getCoded(screen.getTitle()))
+                .matches();
     }
 
     public boolean isLootChest(Screen screen) {

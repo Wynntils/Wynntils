@@ -106,8 +106,8 @@ import com.wynntils.features.tooltips.ItemGuessFeature;
 import com.wynntils.features.tooltips.ItemStatInfoFeature;
 import com.wynntils.features.tooltips.TooltipFittingFeature;
 import com.wynntils.features.tooltips.TooltipVanillaHideFeature;
-import com.wynntils.features.ui.AbilityTreeScrollFeature;
 import com.wynntils.features.ui.AutoApplyResourcePackFeature;
+import com.wynntils.features.ui.ContainerScrollFeature;
 import com.wynntils.features.ui.CosmeticsPreviewFeature;
 import com.wynntils.features.ui.CustomCharacterSelectionScreenFeature;
 import com.wynntils.features.ui.CustomLoadingScreenFeature;
@@ -158,7 +158,7 @@ public final class FeatureManager extends Manager {
         // user
         registerFeature(new AbbreviateMobHealthFeature());
         registerFeature(new AbilityRefreshRedirectFeature());
-        registerFeature(new AbilityTreeScrollFeature());
+        registerFeature(new ContainerScrollFeature());
         registerFeature(new AddCommandExpansionFeature());
         registerFeature(new ArrowShieldTrackingFeature());
         registerFeature(new AuraTimerOverlayFeature());
