@@ -59,8 +59,7 @@ public class ContainerSearchFeature extends Feature {
     // for Wynn to send us the entire updated inventory. During this, the inventory will be in a weird state where
     // some items are updated and some are not. We will assume that after SEARCH_DELAY_MS milliseconds, the inventory
     // is fully updated.
-    // From my testing, 150 seems to work, but is not very reliable, so we will use 200
-    private static final int GUILD_BANK_SEARCH_DELAY = 200;
+    private static final int GUILD_BANK_SEARCH_DELAY = 500;
     private long guildBankLastSearch = 0;
 
     private SearchWidget lastSearchWidget;
@@ -139,7 +138,7 @@ public class ContainerSearchFeature extends Feature {
             long diff = System.currentTimeMillis() - guildBankLastSearch;
             if (diff < GUILD_BANK_SEARCH_DELAY) {
                 Managers.TickScheduler.scheduleLater(
-                        () -> tryAutoSearch(abstractContainerScreen), (int) (GUILD_BANK_SEARCH_DELAY - diff) / 20);
+                        () -> tryAutoSearch(abstractContainerScreen), (int) (GUILD_BANK_SEARCH_DELAY - diff) / 50);
                 return;
             }
             guildBankLastSearch = System.currentTimeMillis();
