@@ -61,10 +61,12 @@ public class PoiManagerWidget extends AbstractWidget {
 
         this.deleteButton = new Button.Builder(
                         Component.translatable("screens.wynntils.poiManagementGui.delete"), (button) -> {
-                            managementScreen.setLastDeletedPoi(poi,
+                            managementScreen.setLastDeletedPoi(
+                                    poi,
                                     Managers.Feature.getFeatureInstance(MapFeature.class)
-                                    .customPois
-                                    .get().indexOf(poi));
+                                            .customPois
+                                            .get()
+                                            .indexOf(poi));
                             Managers.Feature.getFeatureInstance(MapFeature.class)
                                     .customPois
                                     .get()

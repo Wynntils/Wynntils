@@ -80,10 +80,15 @@ public class PoiManagementScreen extends WynntilsScreen {
                         .build());
 
         this.addRenderableWidget(
-                undoDeleteButton = new Button.Builder(Component.translatable("screens.wynntils.poiManagementGui.undo"), (button) -> {
-                            undoDelete();
-                        })
-                        .pos(this.width - 25 - font.width(Component.translatable("screens.wynntils.poiManagementGui.undo")), this.height - 45)
+                undoDeleteButton = new Button.Builder(
+                                Component.translatable("screens.wynntils.poiManagementGui.undo"), (button) -> {
+                                    undoDelete();
+                                })
+                        .pos(
+                                this.width
+                                        - 25
+                                        - font.width(Component.translatable("screens.wynntils.poiManagementGui.undo")),
+                                this.height - 45)
                         .size(font.width(Component.translatable("screens.wynntils.poiManagementGui.undo")) + 15, 20)
                         .build());
 
@@ -229,10 +234,7 @@ public class PoiManagementScreen extends WynntilsScreen {
     }
 
     private void undoDelete() {
-        Managers.Feature.getFeatureInstance(MapFeature.class)
-                .customPois
-                .get()
-                .add(lastDeletedIndex, lastDeletedPoi);
+        Managers.Feature.getFeatureInstance(MapFeature.class).customPois.get().add(lastDeletedIndex, lastDeletedPoi);
 
         lastDeletedPoi = null;
         lastDeletedIndex = -1;
