@@ -22,7 +22,6 @@ import com.wynntils.utils.type.CappedValue;
 import com.wynntils.utils.type.ErrorOr;
 import com.wynntils.utils.type.Pair;
 import net.minecraft.client.renderer.MultiBufferSource;
-import net.minecraftforge.eventbus.api.EventPriority;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 
 public abstract class BarOverlay extends DynamicOverlay {
@@ -85,7 +84,7 @@ public abstract class BarOverlay extends DynamicOverlay {
         renderBar(poseStack, bufferSource, renderY + 10, barHeight, progress);
     }
 
-    @SubscribeEvent(priority = EventPriority.HIGHEST)
+    @SubscribeEvent
     public void onTick(TickEvent event) {
         if (!Models.WorldState.onWorld()) return;
 
