@@ -1,9 +1,21 @@
+## [0.0.2-alpha.399](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.398...v0.0.2-alpha.399) (2023-03-30)
+
+
+### Documentation
+
+* Fix typo, add alt config to readme ([#1404](https://github.com/Wynntils/Artemis/issues/1404)) ([b854604](https://github.com/Wynntils/Artemis/commit/b8546045434fc5c1fe5414fe08f2ada30e05b943))
+
 ## [0.0.2-alpha.398](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.397...v0.0.2-alpha.398) (2023-03-29)
 
 
 ### Bug Fixes
 
 * Fix NPC pattern to handle performance announcements ([#1401](https://github.com/Wynntils/Artemis/issues/1401)) ([f8f7c9a](https://github.com/Wynntils/Artemis/commit/f8f7c9abbfbbae5ff76d1cd57aae94c921be5233))
+
+
+### Miscellaneous Chores
+
+* **release:** v0.0.2-alpha.398 [skip ci] ([db347b3](https://github.com/Wynntils/Artemis/commit/db347b3bbda20ded09f0a044346c84725a092d4f))
 
 ## [0.0.2-alpha.397](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.396...v0.0.2-alpha.397) (2023-03-29)
 
@@ -45,16 +57,4 @@
 ### Miscellaneous Chores
 
 * **release:** v0.0.2-alpha.395 [skip ci] ([64e7d05](https://github.com/Wynntils/Artemis/commit/64e7d057d54704a857cc949e1db031ced0c02f0b))
-
-## [0.0.2-alpha.394](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.393...v0.0.2-alpha.394) (2023-03-29)
-
-
-### New Features
-
-* Functions for mob totem x, y, z ([#1394](https://github.com/Wynntils/Artemis/issues/1394)) ([20cdca8](https://github.com/Wynntils/Artemis/commit/20cdca81a2ad336dc528f85c73046ebac0cbbe67))
-
-
-### Miscellaneous Chores
-
-* **release:** v0.0.2-alpha.394 [skip ci] ([0316a0d](https://github.com/Wynntils/Artemis/commit/0316a0ddcc1455197db3154b573eccdf418e0670))
 
