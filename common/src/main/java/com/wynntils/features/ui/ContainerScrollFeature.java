@@ -12,6 +12,7 @@ import com.wynntils.core.config.RegisterConfig;
 import com.wynntils.core.features.Feature;
 import com.wynntils.mc.event.MouseScrollEvent;
 import com.wynntils.utils.mc.McUtils;
+import com.wynntils.utils.type.Pair;
 import com.wynntils.utils.wynn.ContainerUtils;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
@@ -40,30 +41,30 @@ public class ContainerScrollFeature extends Feature {
         Screen screen = McUtils.mc().screen;
 
         if (!(screen instanceof AbstractContainerScreen<?> gui)) return;
-        boolean up = event.isScrollingUp() ^ invertScroll.get();
+        boolean previous = event.isScrollingUp() ^ invertScroll.get();
 
-        int slot;
+        Pair<Integer, Integer> slots;
 
         if (Models.Container.isAbilityTreeScreen(gui)) {
-            slot = up ? abilityTreePreviousSlot : abilityTreeNextSlot;
+            slots = Models.Container.ABILITY_TREE_PREVIOUS_NEXT_SLOTS;
         } else if (Models.Container.isBankScreen(gui)
                 || Models.Container.isMiscBucketScreen(gui)
                 || Models.Container.isBlockBankScreen(gui)) {
-            slot = up ? bankPreviousSlot : bankNextSlot;
+            slots = Models.Container.BANK_PREVIOUS_NEXT_SLOTS;
             // Do not purchase new pages when scrolling
-            if (slot == bankNextSlot && Models.Container.isLastBankPage(screen)) return;
+            if (!previous && Models.Container.isLastBankPage(screen)) return;
         } else if (Models.Container.isGuildBankScreen(gui)) {
-            slot = up ? guildBankPreviousSlot : guildBankNextSlot;
+            slots = Models.Container.GUILD_BANK_PREVIOUS_NEXT_SLOTS;
         } else if (Models.Container.isTradeMarketScreen(gui)) {
-            slot = up ? tradeMarketPreviousSlot : tradeMarketNextSlot;
+            slots = Models.Container.TRADE_MARKET_PREVIOUS_NEXT_SLOTS;
             // Do not click on "Reveal Item Names" on the first page of TM
-            if (slot == tradeMarketPreviousSlot && Models.Container.isFirstTradeMarketPage(screen)) return;
+            if (previous && Models.Container.isFirstTradeMarketPage(screen)) return;
         } else {
             return;
         }
 
         ContainerUtils.clickOnSlot(
-                slot,
+                previous ? slots.a() : slots.b(),
                 gui.getMenu().containerId,
                 GLFW.GLFW_MOUSE_BUTTON_LEFT,
                 gui.getMenu().getItems());
