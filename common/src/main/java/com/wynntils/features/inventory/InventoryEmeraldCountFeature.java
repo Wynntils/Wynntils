@@ -36,7 +36,7 @@ public class InventoryEmeraldCountFeature extends Feature {
     private static final int TEXTURE_SIZE = 28;
 
     @RegisterConfig
-    public final Config<EmeraldCountType> emeraldCountType = new Config<>(EmeraldCountType.Texture);
+    public final Config<EmeraldCountType> emeraldCountType = new Config<>(EmeraldCountType.TEXTURE);
 
     @RegisterConfig
     public final Config<Boolean> showInventoryEmeraldCount = new Config<>(true);
@@ -77,8 +77,8 @@ public class InventoryEmeraldCountFeature extends Feature {
         if (topEmeralds != 0) {
             int y = containerScreen.topPos;
             switch (emeraldCountType.get()) {
-                case Text -> renderTextCount(event.getPoseStack(), x + 2, y, topEmeralds);
-                case Texture -> renderTexturedCount(
+                case TEXT -> renderTextCount(event.getPoseStack(), x + 2, y, topEmeralds);
+                case TEXTURE -> renderTexturedCount(
                         event.getPoseStack(), x, y, topEmeralds, showZerosInEmeraldCount.get());
             }
         }
@@ -88,8 +88,8 @@ public class InventoryEmeraldCountFeature extends Feature {
             if (bottomEmeralds != 0) {
                 int y = containerScreen.topPos + containerScreen.imageHeight;
                 switch (emeraldCountType.get()) {
-                    case Text -> renderTextCount(event.getPoseStack(), x + 2, y + 11, bottomEmeralds);
-                    case Texture -> renderTexturedCount(
+                    case TEXT -> renderTextCount(event.getPoseStack(), x + 2, y + 11, bottomEmeralds);
+                    case TEXTURE -> renderTexturedCount(
                             event.getPoseStack(), x, y - 28 * 3 - 2, bottomEmeralds, showZerosInEmeraldCount.get());
                 }
             }
@@ -115,8 +115,8 @@ public class InventoryEmeraldCountFeature extends Feature {
                         y - 10,
                         0,
                         CommonColors.WHITE,
-                        HorizontalAlignment.Left,
-                        VerticalAlignment.Top,
+                        HorizontalAlignment.LEFT,
+                        VerticalAlignment.TOP,
                         TextShadow.NORMAL);
 
         poseStack.popPose();
@@ -176,8 +176,8 @@ public class InventoryEmeraldCountFeature extends Feature {
                             renderY + TEXTURE_SIZE - 2,
                             0,
                             CommonColors.WHITE,
-                            HorizontalAlignment.Right,
-                            VerticalAlignment.Bottom,
+                            HorizontalAlignment.RIGHT,
+                            VerticalAlignment.BOTTOM,
                             TextShadow.OUTLINE);
             poseStack.popPose();
 
@@ -188,7 +188,7 @@ public class InventoryEmeraldCountFeature extends Feature {
     }
 
     public enum EmeraldCountType {
-        Text,
-        Texture
+        TEXT,
+        TEXTURE
     }
 }

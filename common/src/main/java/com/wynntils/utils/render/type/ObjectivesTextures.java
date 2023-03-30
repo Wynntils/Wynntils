@@ -5,12 +5,12 @@
 package com.wynntils.utils.render.type;
 
 public enum ObjectivesTextures {
-    Wynn(0),
-    Liquid(40),
-    Emerald(50),
-    a(10),
-    b(20),
-    c(30);
+    WYNN(0),
+    LIQUID(40),
+    EMERALD(50),
+    A(10),
+    B(20),
+    C(30);
 
     private final int yOffset;
 

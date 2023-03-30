@@ -21,7 +21,7 @@ import com.wynntils.utils.render.type.VerticalAlignment;
 
 @ConfigCategory(Category.OVERLAYS)
 public class CombatExperienceOverlayFeature extends Feature {
-    @OverlayInfo(renderAt = RenderState.Pre, renderType = RenderEvent.ElementType.GUI)
+    @OverlayInfo(renderAt = RenderState.PRE, renderType = RenderEvent.ElementType.GUI)
     private final Overlay combatExperienceOverlay = new CombatExperienceOverlay();
 
     public static class CombatExperienceOverlay extends TextOverlay {
@@ -33,12 +33,12 @@ public class CombatExperienceOverlayFeature extends Feature {
                     new OverlayPosition(
                             -73,
                             0,
-                            VerticalAlignment.Bottom,
-                            HorizontalAlignment.Center,
-                            OverlayPosition.AnchorSection.BottomMiddle),
+                            VerticalAlignment.BOTTOM,
+                            HorizontalAlignment.CENTER,
+                            OverlayPosition.AnchorSection.BOTTOM_MIDDLE),
                     new OverlaySize(200, 20),
-                    HorizontalAlignment.Center,
-                    VerticalAlignment.Middle);
+                    HorizontalAlignment.CENTER,
+                    VerticalAlignment.MIDDLE);
         }
 
         @Override

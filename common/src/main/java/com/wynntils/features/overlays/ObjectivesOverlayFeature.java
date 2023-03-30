@@ -73,12 +73,12 @@ public class ObjectivesOverlayFeature extends Feature {
                     new OverlayPosition(
                             -5.5f,
                             -5,
-                            VerticalAlignment.Bottom,
-                            HorizontalAlignment.Right,
-                            OverlayPosition.AnchorSection.BottomRight),
+                            VerticalAlignment.BOTTOM,
+                            HorizontalAlignment.RIGHT,
+                            OverlayPosition.AnchorSection.BOTTOM_RIGHT),
                     new OverlaySize(150, 30),
-                    HorizontalAlignment.Left,
-                    VerticalAlignment.Middle);
+                    HorizontalAlignment.LEFT,
+                    VerticalAlignment.MIDDLE);
         }
 
         @Override
@@ -105,9 +105,9 @@ public class ObjectivesOverlayFeature extends Feature {
 
             float renderY = this.getRenderY()
                     + switch (this.getRenderVerticalAlignment()) {
-                        case Top -> 0;
-                        case Middle -> (this.getHeight() - renderedHeight) / 2f;
-                        case Bottom -> this.getHeight() - renderedHeight;
+                        case TOP -> 0;
+                        case MIDDLE -> (this.getHeight() - renderedHeight) / 2f;
+                        case BOTTOM -> this.getHeight() - renderedHeight;
                     };
 
             final String text = guildObjective.asObjectiveString();
@@ -160,12 +160,12 @@ public class ObjectivesOverlayFeature extends Feature {
                     new OverlayPosition(
                             -35,
                             -5,
-                            VerticalAlignment.Bottom,
-                            HorizontalAlignment.Right,
-                            OverlayPosition.AnchorSection.BottomRight),
+                            VerticalAlignment.BOTTOM,
+                            HorizontalAlignment.RIGHT,
+                            OverlayPosition.AnchorSection.BOTTOM_RIGHT),
                     new OverlaySize(150, 100),
-                    HorizontalAlignment.Left,
-                    VerticalAlignment.Bottom);
+                    HorizontalAlignment.LEFT,
+                    VerticalAlignment.BOTTOM);
         }
 
         @Override
@@ -187,9 +187,9 @@ public class ObjectivesOverlayFeature extends Feature {
 
             float offsetY =
                     switch (this.getRenderVerticalAlignment()) {
-                        case Top -> 0;
-                        case Middle -> (this.getHeight() - fullHeight) / 2f;
-                        case Bottom -> this.getHeight() - fullHeight;
+                        case TOP -> 0;
+                        case MIDDLE -> (this.getHeight() - fullHeight) / 2f;
+                        case BOTTOM -> this.getHeight() - fullHeight;
                     };
 
             for (WynnObjective objective : objectives) {
@@ -254,7 +254,7 @@ public class ObjectivesOverlayFeature extends Feature {
         public final Config<Boolean> enableProgressBar = new Config<>(true);
 
         @RegisterConfig("overlay.wynntils.objectivesTexture")
-        public final Config<ObjectivesTextures> objectivesTexture = new Config<>(ObjectivesTextures.a);
+        public final Config<ObjectivesTextures> objectivesTexture = new Config<>(ObjectivesTextures.A);
 
         @RegisterConfig("feature.wynntils.objectivesOverlay.overlay.objectiveOverlayBase.textShadow")
         public final Config<TextShadow> textShadow = new Config<>(TextShadow.OUTLINE);

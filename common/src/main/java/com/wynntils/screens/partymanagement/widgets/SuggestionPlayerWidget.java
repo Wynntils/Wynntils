@@ -85,8 +85,8 @@ public class SuggestionPlayerWidget extends AbstractWidget {
                         this.getX() + (this.width / gridDivisions * 3),
                         this.getY() + this.height / 2,
                         CommonColors.GREEN,
-                        HorizontalAlignment.Left,
-                        VerticalAlignment.Middle,
+                        HorizontalAlignment.LEFT,
+                        VerticalAlignment.MIDDLE,
                         TextShadow.NORMAL);
 
         if (Models.Party.getPartyMembers().contains(playerName)) return;

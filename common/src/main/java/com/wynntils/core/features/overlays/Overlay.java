@@ -166,18 +166,18 @@ public abstract class Overlay extends AbstractConfigurable implements Translatab
     public float getRenderX(OverlayPosition position) {
         final SectionCoordinates section = Managers.Overlay.getSection(position.getAnchorSection());
         return switch (position.getHorizontalAlignment()) {
-            case Left -> section.x1() + position.getHorizontalOffset();
-            case Center -> (section.x1() + section.x2() - this.getWidth()) / 2 + position.getHorizontalOffset();
-            case Right -> section.x2() + position.getHorizontalOffset() - this.getWidth();
+            case LEFT -> section.x1() + position.getHorizontalOffset();
+            case CENTER -> (section.x1() + section.x2() - this.getWidth()) / 2 + position.getHorizontalOffset();
+            case RIGHT -> section.x2() + position.getHorizontalOffset() - this.getWidth();
         };
     }
 
     public float getRenderY(OverlayPosition position) {
         final SectionCoordinates section = Managers.Overlay.getSection(position.getAnchorSection());
         return switch (position.getVerticalAlignment()) {
-            case Top -> section.y1() + position.getVerticalOffset();
-            case Middle -> (section.y1() + section.y2() - this.getHeight()) / 2 + position.getVerticalOffset();
-            case Bottom -> section.y2() + position.getVerticalOffset() - this.getHeight();
+            case TOP -> section.y1() + position.getVerticalOffset();
+            case MIDDLE -> (section.y1() + section.y2() - this.getHeight()) / 2 + position.getVerticalOffset();
+            case BOTTOM -> section.y2() + position.getVerticalOffset() - this.getHeight();
         };
     }
 
@@ -195,10 +195,10 @@ public abstract class Overlay extends AbstractConfigurable implements Translatab
 
     public Vec2 getCornerPoints(Corner corner) {
         return switch (corner) {
-            case TopLeft -> new Vec2(getRenderX(), getRenderY());
-            case TopRight -> new Vec2(getRenderX() + getWidth(), getRenderY());
-            case BottomLeft -> new Vec2(getRenderX(), getRenderY() + getHeight());
-            case BottomRight -> new Vec2(getRenderX() + getWidth(), getRenderY() + getHeight());
+            case TOP_LEFT -> new Vec2(getRenderX(), getRenderY());
+            case TOP_RIGHT -> new Vec2(getRenderX() + getWidth(), getRenderY());
+            case BOTTOM_LEFT -> new Vec2(getRenderX(), getRenderY() + getHeight());
+            case BOTTOM_RIGHT -> new Vec2(getRenderX() + getWidth(), getRenderY() + getHeight());
         };
     }
 

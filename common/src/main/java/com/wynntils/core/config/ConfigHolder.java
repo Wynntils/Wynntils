@@ -5,16 +5,17 @@
 package com.wynntils.core.config;
 
 import com.google.common.base.CaseFormat;
-import com.google.gson.reflect.TypeToken;
+import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.components.Managers;
 import com.wynntils.core.features.Configurable;
 import com.wynntils.core.features.Translatable;
 import com.wynntils.core.features.overlays.Overlay;
+import com.wynntils.utils.EnumUtils;
 import java.lang.reflect.Type;
 import java.util.Objects;
+import java.util.stream.Stream;
 import net.minecraft.client.resources.language.I18n;
 import org.apache.commons.lang3.ClassUtils;
-import org.apache.commons.lang3.EnumUtils;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 
 public class ConfigHolder implements Comparable<ConfigHolder> {
@@ -24,6 +25,7 @@ public class ConfigHolder implements Comparable<ConfigHolder> {
     private final String i18nKey;
     private final boolean visible;
     private final Type valueType;
+    private final boolean allowNull;
 
     private final Object defaultValue;
 
@@ -41,14 +43,26 @@ public class ConfigHolder implements Comparable<ConfigHolder> {
         // save default value to enable easy resetting
         // We have to deep copy the value, so it is guaranteed that we detect changes
         this.defaultValue = Managers.Json.deepCopy(getValue(), valueType);
+
+        this.allowNull = valueType instanceof Class<?> clazz && NullableConfig.class.isAssignableFrom(clazz);
+        if (configObj.get() == null && !allowNull) {
+            throw new RuntimeException(
+                    "Default config value is null in " + parent.getConfigJsonName() + "." + fieldName);
+        }
+    }
+
+    public Stream<String> getValidLiterals() {
+        if (valueType instanceof Class clazz && clazz.isEnum()) {
+            return EnumUtils.getEnumConstants(clazz).stream().map(e -> EnumUtils.toJsonFormat(e));
+        }
+        if (valueType.equals(Boolean.class)) {
+            return Stream.of("true", "false");
+        }
+        return Stream.of();
     }
 
     public Type getType() {
         return valueType;
-    }
-
-    public Class<?> getClassOfConfigField() {
-        return TypeToken.get(this.getType()).getRawType();
     }
 
     public String getFieldName() {
@@ -99,11 +113,31 @@ public class ConfigHolder implements Comparable<ConfigHolder> {
         return configObj.get();
     }
 
+    public String getValueString() {
+        if (configObj.get() == null) return "(null)";
+
+        if (isEnum()) {
+            return EnumUtils.toNiceString((Enum) this.getValue());
+        }
+
+        return configObj.get().toString();
+    }
+
+    public boolean isEnum() {
+        return valueType instanceof Class clazz && clazz.isEnum();
+    }
+
     public Object getDefaultValue() {
         return defaultValue;
     }
 
     public void setValue(Object value) {
+        if (value == null && !allowNull) {
+            WynntilsMod.warn("Trying to set null to config " + getJsonName() + ". Will be replaced by default.");
+            reset();
+            return;
+        }
+
         configObj.updateConfig(value);
         parent.updateConfigOption(this);
         userEdited = true;
@@ -138,11 +172,12 @@ public class ConfigHolder implements Comparable<ConfigHolder> {
     }
 
     public Object tryParseStringValue(String value) {
+        if (isEnum()) {
+            return EnumUtils.fromJsonFormat((Class<? extends Enum<?>>) getType(), value);
+        }
+
         try {
             Class<?> wrapped = ClassUtils.primitiveToWrapper(((Class<?>) valueType));
-            if (wrapped.isEnum()) {
-                return EnumUtils.getEnumIgnoreCase((Class<? extends Enum>) wrapped, value);
-            }
             return wrapped.getConstructor(String.class).newInstance(value);
         } catch (Exception ignored) {
         }

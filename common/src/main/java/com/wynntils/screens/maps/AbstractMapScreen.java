@@ -274,8 +274,8 @@ public abstract class AbstractMapScreen extends WynntilsScreen {
                         this.centerX,
                         this.renderHeight - this.renderedBorderYOffset - 40,
                         CommonColors.WHITE,
-                        HorizontalAlignment.Center,
-                        VerticalAlignment.Top,
+                        HorizontalAlignment.CENTER,
+                        VerticalAlignment.TOP,
                         TextShadow.OUTLINE);
     }
 

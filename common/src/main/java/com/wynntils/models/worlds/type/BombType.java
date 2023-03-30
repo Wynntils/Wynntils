@@ -5,11 +5,11 @@
 package com.wynntils.models.worlds.type;
 
 public enum BombType {
-    CombatXp("Combat XP", 20),
-    Dungeon("Dungeon", 10),
-    Loot("Loot", 20),
-    ProfessionSpeed("Profession Speed", 10),
-    ProfessionXp("Profession XP", 20);
+    COMBAT_XP("Combat XP", 20),
+    DUNGEON("Dungeon", 10),
+    LOOT("Loot", 20),
+    PROFESSION_SPEED("Profession Speed", 10),
+    PROFESSION_XP("Profession XP", 20);
 
     private final String parseName;
     private final int activeMinutes;

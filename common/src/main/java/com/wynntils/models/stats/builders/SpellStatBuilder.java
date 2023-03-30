@@ -18,7 +18,7 @@ public final class SpellStatBuilder extends StatBuilder<SpellStatType> {
     @Override
     public void buildStats(Consumer<SpellStatType> callback) {
         for (int spellNumber = 1; spellNumber <= SpellType.MAX_SPELL; spellNumber++) {
-            SpellType spellType = SpellType.forClass(ClassType.None, spellNumber);
+            SpellType spellType = SpellType.forClass(ClassType.NONE, spellNumber);
 
             callback.accept(buildSpellStat(spellType, StatUnit.PERCENT));
             callback.accept(buildSpellStat(spellType, StatUnit.RAW));
@@ -34,7 +34,7 @@ public final class SpellStatBuilder extends StatBuilder<SpellStatType> {
         SpellType genericSpell = statType.getSpellType();
         for (ClassType classType : ClassType.values()) {
             // Skip the unspecified class, we have that as our base name
-            if (classType == ClassType.None) continue;
+            if (classType == ClassType.NONE) continue;
 
             SpellType classSpecificSpell = genericSpell.forOtherClass(classType);
             aliases.add(getStatNameForSpell(classSpecificSpell.getName()));

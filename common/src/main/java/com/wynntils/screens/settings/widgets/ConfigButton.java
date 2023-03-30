@@ -81,8 +81,8 @@ public class ConfigButton extends WynntilsButton {
                         getRenderX() / 0.8f,
                         (this.getY() + 3) / 0.8f,
                         CommonColors.BLACK,
-                        HorizontalAlignment.Left,
-                        VerticalAlignment.Top,
+                        HorizontalAlignment.LEFT,
+                        VerticalAlignment.TOP,
                         TextShadow.NONE);
         poseStack.popPose();
 
@@ -165,7 +165,7 @@ public class ConfigButton extends WynntilsButton {
     private ConfigOptionElement getWidgetFromConfigHolder(ConfigHolder configOption) {
         if (configOption.getType().equals(Boolean.class)) {
             return new BooleanConfigOptionElement(configOption);
-        } else if (configOption.getClassOfConfigField().isEnum()) {
+        } else if (configOption.isEnum()) {
             return new EnumConfigOptionElement(configOption);
         } else if (configOption.getType().equals(CustomColor.class)) {
             return new CustomColorConfigOptionElement(configOption, settingsScreen);

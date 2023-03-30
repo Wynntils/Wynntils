@@ -8,7 +8,6 @@ import com.wynntils.core.components.Model;
 import java.util.List;
 
 public class StopwatchModel extends Model {
-
     private long startTimeMillis = 0;
     private long elapsedBeforePause = 0;
     private boolean running = false;
@@ -31,6 +30,10 @@ public class StopwatchModel extends Model {
 
     public int getMilliseconds() {
         return (int) getElapsedMillis() % 1000;
+    }
+
+    public boolean isZero() {
+        return getHours() == 0 && getMinutes() == 0 && getSeconds() == 0 && getMilliseconds() == 0;
     }
 
     private long getElapsedMillis() {

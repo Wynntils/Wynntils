@@ -57,8 +57,8 @@ public class GeneralSettingsButton extends WynntilsButton {
                         this.getY() + this.height,
                         0,
                         getTextColor(isHovered),
-                        HorizontalAlignment.Center,
-                        VerticalAlignment.Middle,
+                        HorizontalAlignment.CENTER,
+                        VerticalAlignment.MIDDLE,
                         TextShadow.OUTLINE);
 
         if (isHovered) {

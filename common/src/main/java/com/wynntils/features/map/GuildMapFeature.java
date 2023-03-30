@@ -23,7 +23,7 @@ public class GuildMapFeature extends Feature {
     public final Config<Boolean> renderUsingLinear = new Config<>(true);
 
     @RegisterConfig
-    public final Config<PointerType> pointerType = new Config<>(PointerType.Arrow);
+    public final Config<PointerType> pointerType = new Config<>(PointerType.ARROW);
 
     @RegisterConfig
     public final Config<CustomColor> pointerColor = new Config<>(new CustomColor(1f, 1f, 1f, 1f));
