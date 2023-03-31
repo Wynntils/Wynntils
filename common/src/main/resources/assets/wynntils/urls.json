@@ -7,66 +7,66 @@
     "url": "https://athena.wynntils.com/auth/getPublicKey"
   },
   {
-    "id": "apiAthenaAuthResponse",
-    "url": "https://athena.wynntils.com/auth/responseEncryption",
-    "method": "post",
     "arguments": [
       "key",
       "username",
       "version"
-    ]
+    ],
+    "id": "apiAthenaAuthResponse",
+    "method": "post",
+    "url": "https://athena.wynntils.com/auth/responseEncryption"
   },
   {
-    "id": "apiAthenaTelemetryCrash",
-    "url": "https://athena.wynntils.com/crash/report",
-    "method": "post",
     "arguments": [
       "trace"
-    ]
+    ],
+    "id": "apiAthenaTelemetryCrash",
+    "method": "post",
+    "url": "https://athena.wynntils.com/crash/report"
   },
   {
     "id": "apiAthenaUpdateCheck",
     "url": "https://athena.wynntils.com/version/latest/ce"
   },
   {
-    "id": "apiAthenaUpdateChangelog",
-    "url": "https://athena.wynntils.com/version/changelog/%{old_version}/%{new_version}",
     "arguments": [
       "old_version",
       "new_version"
-    ]
+    ],
+    "id": "apiAthenaUpdateChangelog",
+    "url": "https://athena.wynntils.com/version/changelog/%{old_version}/%{new_version}"
   },
   {
-    "id": "apiAthenaUserInfo",
-    "url": "https://athena.wynntils.com/user/getInfo",
-    "method": "post",
     "arguments": [
       "uuid"
-    ]
+    ],
+    "id": "apiAthenaUserInfo",
+    "method": "post",
+    "url": "https://athena.wynntils.com/user/getInfo"
   },
   {
-    "id": "apiGoogleTranslation",
-    "url": "https://translate.googleapis.com/translate_a/single?client=gtx&sl=en&tl=%{lang}&dt=t&q=%{text}",
     "arguments": [
       "lang",
       "text"
-    ]
+    ],
+    "id": "apiGoogleTranslation",
+    "url": "https://translate.googleapis.com/translate_a/single?client=gtx&sl=en&tl=%{lang}&dt=t&q=%{text}"
   },
   {
+    "arguments": [
+      "name"
+    ],
+    "encoding": "wiki",
     "id": "apiWikiDiscoveryQuery",
-    "url": "https://wynncraft.gamepedia.com/api.php?action=parse&format=json&prop=wikitext&section=0&redirects=true&page=%{name}",
-    "arguments": [
-      "name"
-    ],
-    "encoding": "wiki"
+    "url": "https://wynncraft.gamepedia.com/api.php?action=parse&format=json&prop=wikitext&section=0&redirects=true&page=%{name}"
   },
   {
-    "id": "apiWikiQuestPageQuery",
-    "url": "https://wynncraft.fandom.com/index.php?title=Special:CargoExport&format=json&tables=Quests&fields=Quests._pageTitle&where=Quests.name=%{name}",
     "arguments": [
       "name"
     ],
-    "encoding": "cargo"
+    "encoding": "cargo",
+    "id": "apiWikiQuestPageQuery",
+    "url": "https://wynncraft.fandom.com/index.php?title=Special:CargoExport&format=json&tables=Quests&fields=Quests._pageTitle&where=Quests.name=%{name}"
   },
   {
     "id": "dataAthenaIngredientList",
@@ -86,94 +86,94 @@
   },
   {
     "id": "dataStaticCombatLocations",
-    "url": "https://raw.githubusercontent.com/Wynntils/WynntilsWebsite-API/master/combatlocations.json",
-    "md5": "f8d2b16d8cd33181b6a3857fa5e390a9"
+    "md5": "f8d2b16d8cd33181b6a3857fa5e390a9",
+    "url": "https://raw.githubusercontent.com/Wynntils/WynntilsWebsite-API/master/combatlocations.json"
   },
   {
     "id": "dataStaticDiscoveries",
-    "url": "https://raw.githubusercontent.com/Wynntils/WynntilsWebsite-API/master/discoveries.json",
-    "md5": "a61038978cc3e26b4f3a80bf42b207b3"
+    "md5": "a61038978cc3e26b4f3a80bf42b207b3",
+    "url": "https://raw.githubusercontent.com/Wynntils/WynntilsWebsite-API/master/discoveries.json"
   },
   {
     "id": "dataStaticGear",
-    "url": "https://raw.githubusercontent.com/Wynntils/WynntilsWebsite-API/master/gear.json",
-    "md5": "08ad22a9fcda25e82673d1b9ec8cda6b"
+    "md5": "08ad22a9fcda25e82673d1b9ec8cda6b",
+    "url": "https://raw.githubusercontent.com/Wynntils/WynntilsWebsite-API/master/gear.json"
   },
   {
     "id": "dataStaticItemObtain",
-    "url": "https://raw.githubusercontent.com/Wynntils/WynntilsWebsite-API/e0db51de957b4c5d0b47e8a9b46f9cb3657958a0/obtaining.json",
-    "md5": "3534e92cff986aba30742f55eaed4082"
+    "md5": "3534e92cff986aba30742f55eaed4082",
+    "url": "https://raw.githubusercontent.com/Wynntils/WynntilsWebsite-API/e0db51de957b4c5d0b47e8a9b46f9cb3657958a0/obtaining.json"
   },
   {
     "id": "dataStaticIngredients",
-    "url": "https://raw.githubusercontent.com/Wynntils/WynntilsWebsite-API/master/ingredients.json",
-    "md5": "a7aa8bcf7b682f31d343eb47fc4ec821"
+    "md5": "a7aa8bcf7b682f31d343eb47fc4ec821",
+    "url": "https://raw.githubusercontent.com/Wynntils/WynntilsWebsite-API/master/ingredients.json"
   },
   {
     "id": "dataStaticIngredientSkins",
-    "url": "https://raw.githubusercontent.com/Wynntils/WynntilsWebsite-API/master/ingredients_skins.json",
-    "md5": "04c5e1ee6dcd78bc0939ec7b5a6d6dd0"
+    "md5": "04c5e1ee6dcd78bc0939ec7b5a6d6dd0",
+    "url": "https://raw.githubusercontent.com/Wynntils/WynntilsWebsite-API/master/ingredients_skins.json"
   },
   {
     "id": "dataStaticItemGuesses",
-    "url": "https://raw.githubusercontent.com/Wynntils/WynntilsWebsite-API/master/item_guesses.json",
-    "md5": "8b54ff8c64ca1d45dfccc9a826ca63b8"
+    "md5": "8b54ff8c64ca1d45dfccc9a826ca63b8",
+    "url": "https://raw.githubusercontent.com/Wynntils/WynntilsWebsite-API/master/item_guesses.json"
   },
   {
     "id": "dataStaticMajorIds",
-    "url": "https://raw.githubusercontent.com/Wynntils/WynntilsWebsite-API/master/major_ids.json",
-    "md5": "eb8ef7fff4b931a28ffaf7d8fac5a9fb"
+    "md5": "eb8ef7fff4b931a28ffaf7d8fac5a9fb",
+    "url": "https://raw.githubusercontent.com/Wynntils/WynntilsWebsite-API/master/major_ids.json"
   },
   {
     "id": "dataStaticMaps",
-    "url": "https://raw.githubusercontent.com/Wynntils/WynntilsWebsite-API/master/maps/maps.json",
-    "md5": "ce8fa555b856dce76b285a606c422aad"
+    "md5": "ce8fa555b856dce76b285a606c422aad",
+    "url": "https://raw.githubusercontent.com/Wynntils/WynntilsWebsite-API/master/maps/maps.json"
   },
   {
     "id": "dataStaticMaterialConversion",
-    "url": "https://raw.githubusercontent.com/Wynntils/WynntilsWebsite-API/master/material_conversions.json",
-    "md5": "ae4b6270b0541c26f730a1bf33f7b1f9"
+    "md5": "ae4b6270b0541c26f730a1bf33f7b1f9",
+    "url": "https://raw.githubusercontent.com/Wynntils/WynntilsWebsite-API/master/material_conversions.json"
   },
   {
     "id": "dataStaticPlaces",
-    "url": "https://raw.githubusercontent.com/Wynntils/Reference/main/locations/places.json",
-    "md5": "c1907ba6d7c8851be2c6cf3062d17de5"
+    "md5": "c1907ba6d7c8851be2c6cf3062d17de5",
+    "url": "https://raw.githubusercontent.com/Wynntils/Reference/main/locations/places.json"
   },
   {
     "id": "dataStaticServices",
-    "url": "https://raw.githubusercontent.com/Wynntils/Reference/main/locations/services.json",
-    "md5": "20c6bad6dddac9fdf32b582764e266ef"
+    "md5": "20c6bad6dddac9fdf32b582764e266ef",
+    "url": "https://raw.githubusercontent.com/Wynntils/Reference/main/locations/services.json"
   },
   {
     "id": "dataStaticSplashes",
-    "url": "https://raw.githubusercontent.com/Wynntils/WynntilsWebsite-API/master/splashes.json",
-    "md5": "53341c283d2cc3c0e721844064a24603"
+    "md5": "53341c283d2cc3c0e721844064a24603",
+    "url": "https://raw.githubusercontent.com/Wynntils/WynntilsWebsite-API/master/splashes.json"
   },
   {
     "id": "dataStaticUrls",
     "url": "https://raw.githubusercontent.com/Wynntils/WynntilsWebsite-API/master/urls.json"
   },
   {
-    "id": "linkWikiLookup",
-    "url": "https://wynncraft.fandom.com/wiki/%{title}",
     "arguments": [
       "title"
     ],
-    "encoding": "wiki"
+    "encoding": "wiki",
+    "id": "linkWikiLookup",
+    "url": "https://wynncraft.fandom.com/wiki/%{title}"
   },
   {
-    "id": "linkWynncraftPlayerStats",
-    "url": "https://wynncraft.com/stats/player/%{username}",
     "arguments": [
       "username"
-    ]
+    ],
+    "id": "linkWynncraftPlayerStats",
+    "url": "https://wynncraft.com/stats/player/%{username}"
   },
   {
-    "id": "linkWynndataItemLookup",
-    "url": "https://www.wynndata.tk/i/%{itemname}",
     "arguments": [
       "itemname"
-    ]
+    ],
+    "id": "linkWynndataItemLookup",
+    "url": "https://www.wynndata.tk/i/%{itemname}"
   },
   {
     "id": "linkWynntilsDiscordInvite",
@@ -184,11 +184,11 @@
     "url": "https://www.patreon.com/Wynntils"
   },
   {
-    "id": "linkWynntilsRegisterAccount",
-    "url": "https://account.wynntils.com/register.php?token=%{token}",
     "arguments": [
       "token"
-    ]
+    ],
+    "id": "linkWynntilsRegisterAccount",
+    "url": "https://account.wynntils.com/register.php?token=%{token}"
   },
   {
     "id": "linkWynntilsStatus",
