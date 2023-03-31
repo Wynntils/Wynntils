@@ -13,10 +13,13 @@ import com.wynntils.core.features.properties.RegisterKeyBind;
 import com.wynntils.core.keybinds.KeyBind;
 import com.wynntils.mc.event.PlayerInteractEvent;
 import com.wynntils.mc.event.UseItemEvent;
+import com.wynntils.models.quests.event.TrackedQuestUpdateEvent;
 import com.wynntils.screens.questbook.WynntilsQuestBookScreen;
 import com.wynntils.screens.wynntilsmenu.WynntilsMenuScreen;
 import com.wynntils.utils.mc.ComponentUtils;
 import com.wynntils.utils.mc.McUtils;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.sounds.SoundEvent;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.eventbus.api.Event;
@@ -25,6 +28,9 @@ import org.lwjgl.glfw.GLFW;
 
 @ConfigCategory(Category.UI)
 public class WynntilsQuestBookFeature extends Feature {
+    private static final ResourceLocation QUEST_UPDATE_ID = new ResourceLocation("wynntils:ui.quest.update");
+    private static SoundEvent QUEST_UPDATE_SOUND = SoundEvent.createVariableRangeEvent(QUEST_UPDATE_ID);
+
     private static final String QUEST_BOOK_NAME = "§dQuest Book";
 
     @RegisterKeyBind
@@ -41,6 +47,18 @@ public class WynntilsQuestBookFeature extends Feature {
 
     @RegisterConfig
     public final Config<Boolean> questBookShouldOpenWynntilsMenu = new Config<>(false);
+
+    @RegisterConfig
+    public final Config<Boolean> playSoundOnUpdate = new Config<>(true);
+
+    @SubscribeEvent
+    public void onQuestUpdate(TrackedQuestUpdateEvent event) {
+        if (event.getQuestInfo() == null) return;
+
+        if (playSoundOnUpdate.get()) {
+            McUtils.playSound(QUEST_UPDATE_SOUND);
+        }
+    }
 
     @SubscribeEvent
     public void onUseItem(UseItemEvent event) {
