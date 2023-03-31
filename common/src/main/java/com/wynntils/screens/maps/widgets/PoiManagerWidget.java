@@ -113,8 +113,8 @@ public class PoiManagerWidget extends AbstractWidget {
                         this.width / 2f - 130,
                         60 + 20 * row,
                         color,
-                        HorizontalAlignment.Left,
-                        VerticalAlignment.Top,
+                        HorizontalAlignment.LEFT,
+                        VerticalAlignment.TOP,
                         TextShadow.NORMAL);
 
         FontRenderer.getInstance()
@@ -124,8 +124,8 @@ public class PoiManagerWidget extends AbstractWidget {
                         this.width / 2f - 15,
                         60 + 20 * row,
                         color,
-                        HorizontalAlignment.Center,
-                        VerticalAlignment.Top,
+                        HorizontalAlignment.CENTER,
+                        VerticalAlignment.TOP,
                         TextShadow.NORMAL);
 
         Optional<Integer> y = poi.getLocation().getY();
@@ -137,8 +137,8 @@ public class PoiManagerWidget extends AbstractWidget {
                         this.width / 2f + 40,
                         60 + 20 * row,
                         color,
-                        HorizontalAlignment.Center,
-                        VerticalAlignment.Top,
+                        HorizontalAlignment.CENTER,
+                        VerticalAlignment.TOP,
                         TextShadow.NORMAL);
 
         FontRenderer.getInstance()
@@ -148,8 +148,8 @@ public class PoiManagerWidget extends AbstractWidget {
                         this.width / 2f + 80,
                         60 + 20 * row,
                         color,
-                        HorizontalAlignment.Center,
-                        VerticalAlignment.Top,
+                        HorizontalAlignment.CENTER,
+                        VerticalAlignment.TOP,
                         TextShadow.NORMAL);
 
         editButton.render(poseStack, mouseX, mouseY, partialTick);

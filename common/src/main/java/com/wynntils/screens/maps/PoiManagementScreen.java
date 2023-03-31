@@ -120,8 +120,8 @@ public class PoiManagementScreen extends WynntilsScreen {
                         this.width / 2f - 165,
                         43,
                         CommonColors.WHITE,
-                        HorizontalAlignment.Left,
-                        VerticalAlignment.Top,
+                        HorizontalAlignment.LEFT,
+                        VerticalAlignment.TOP,
                         TextShadow.NORMAL);
 
         FontRenderer.getInstance()
@@ -131,8 +131,8 @@ public class PoiManagementScreen extends WynntilsScreen {
                         this.width / 2f - 130,
                         43,
                         CommonColors.WHITE,
-                        HorizontalAlignment.Left,
-                        VerticalAlignment.Top,
+                        HorizontalAlignment.LEFT,
+                        VerticalAlignment.TOP,
                         TextShadow.NORMAL);
 
         FontRenderer.getInstance()
@@ -142,8 +142,8 @@ public class PoiManagementScreen extends WynntilsScreen {
                         this.width / 2f - 15,
                         43,
                         CommonColors.WHITE,
-                        HorizontalAlignment.Left,
-                        VerticalAlignment.Top,
+                        HorizontalAlignment.LEFT,
+                        VerticalAlignment.TOP,
                         TextShadow.NORMAL);
 
         FontRenderer.getInstance()
@@ -153,8 +153,8 @@ public class PoiManagementScreen extends WynntilsScreen {
                         this.width / 2f + 40,
                         43,
                         CommonColors.WHITE,
-                        HorizontalAlignment.Left,
-                        VerticalAlignment.Top,
+                        HorizontalAlignment.LEFT,
+                        VerticalAlignment.TOP,
                         TextShadow.NORMAL);
 
         FontRenderer.getInstance()
@@ -164,8 +164,8 @@ public class PoiManagementScreen extends WynntilsScreen {
                         this.width / 2f + 80,
                         43,
                         CommonColors.WHITE,
-                        HorizontalAlignment.Left,
-                        VerticalAlignment.Top,
+                        HorizontalAlignment.LEFT,
+                        VerticalAlignment.TOP,
                         TextShadow.NORMAL);
 
         RenderUtils.drawRect(poseStack, CommonColors.WHITE, this.width / 2 - 165, 52, 0, 355, 1);
