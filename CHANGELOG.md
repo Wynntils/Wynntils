@@ -1,9 +1,21 @@
+## [0.0.2-alpha.409](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.408...v0.0.2-alpha.409) (2023-03-31)
+
+
+### Bug Fixes
+
+* Fix enum converting bug, also try to fix config corruption (bubble bar POIs) ([#1412](https://github.com/Wynntils/Artemis/issues/1412)) ([3aa5307](https://github.com/Wynntils/Artemis/commit/3aa5307940134ef56c9a56d7d38beedb01626e0c))
+
 ## [0.0.2-alpha.408](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.407...v0.0.2-alpha.408) (2023-03-30)
 
 
 ### New Features
 
 * Remove secondsPerRecalculation for text/bar overlays, update on tick ([#1409](https://github.com/Wynntils/Artemis/issues/1409)) ([3faf8d6](https://github.com/Wynntils/Artemis/commit/3faf8d6a70e71507157053fd1ea27e966dcb2e33))
+
+
+### Miscellaneous Chores
+
+* **release:** v0.0.2-alpha.408 [skip ci] ([3c4f31c](https://github.com/Wynntils/Artemis/commit/3c4f31ca38ced50e310391c7b6a223280cf92f8c))
 
 ## [0.0.2-alpha.407](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.406...v0.0.2-alpha.407) (2023-03-30)
 
@@ -45,16 +57,4 @@
 ### Miscellaneous Chores
 
 * **release:** v0.0.2-alpha.405 [skip ci] ([a2712f8](https://github.com/Wynntils/Artemis/commit/a2712f88c8a33d9480454d56c4ef70d57665d4e8))
-
-## [0.0.2-alpha.404](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.403...v0.0.2-alpha.404) (2023-03-30)
-
-
-### New Features
-
-* Remove @TypeOverride ([#1399](https://github.com/Wynntils/Artemis/issues/1399)) ([78bce6c](https://github.com/Wynntils/Artemis/commit/78bce6c784612a649977b74f07eb2de14217b426))
-
-
-### Miscellaneous Chores
-
-* **release:** v0.0.2-alpha.404 [skip ci] ([80a1ec3](https://github.com/Wynntils/Artemis/commit/80a1ec365288e249a9f348b631ba80021ce8a120))
 
