@@ -1,30 +1,24 @@
 modLoader = "javafml"
 loaderVersion = "[44,)"
-#issueTrackerURL = ""
+issueTrackerURL = "https://github.com/Wynntils/Artemis/issues"
 license = "GNU AGPL 3"
 
 [[mods]]
-modId = "wynntils"
-
-#Version is added in build.gradle
-version = "${version}"
-displayName = "Wynntils"
-authors = ["Team Wynntils"]
-description = "The best Wynncraft mod you'll probably find!"
-# needs to be "root" file
-#logoFile = "assets/wynntils/logo.png"
+    modId = "wynntils"
+    version = "${version}"  #Version is added in build.gradle
+    displayName = "Wynntils"
+    authors = "Team Wynntils"
+    description = "The best Wynncraft mod you'll probably find!"
+    displayURL = "wynntils.com"
+    logoFile = "assets/wynntils/logo.png"
 
 [[dependencies.wynntils]]
-modId = "forge"
-mandatory = true
-versionRange = "[44.1.2,)"
-ordering = "NONE"
-side = "BOTH"
+    modId = "minecraft"
+    mandatory = true
+    versionRange = "[1.19.3]"
 
 [[dependencies.wynntils]]
-modId = "minecraft"
-mandatory = true
-versionRange = "[1.19.3]"
-ordering = "NONE"
-side = "BOTH"
+    modId = "forge"
+    mandatory = true
+    versionRange = "[44.1.2,)"
 
