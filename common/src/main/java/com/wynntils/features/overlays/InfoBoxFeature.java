@@ -36,7 +36,7 @@ public class InfoBoxFeature extends Feature {
 
         @Override
         public String getPreviewTemplate() {
-            return "&cX: {x:0}, &9Y: {y:0}, &aZ: {z:0}";
+            return "&cX: {x(my_loc):0}, &9Y: {y(my_loc):0}, &aZ: {z(my_loc):0}";
         }
     }
 }
