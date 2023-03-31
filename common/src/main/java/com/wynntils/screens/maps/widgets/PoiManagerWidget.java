@@ -92,7 +92,9 @@ public class PoiManagerWidget extends AbstractWidget {
 
         if (pois.indexOf(poi) == 0) {
             upButton.active = false;
-        } else if (pois.indexOf(poi) == (pois.size() - 1)) {
+        }
+
+        if (pois.indexOf(poi) == (pois.size() - 1)) {
             downButton.active = false;
         }
     }
