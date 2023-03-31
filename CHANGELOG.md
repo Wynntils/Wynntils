@@ -1,9 +1,21 @@
+## [0.0.2-alpha.414](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.413...v0.0.2-alpha.414) (2023-03-31)
+
+
+### Bug Fixes
+
+* Fix occasional crash for custom bars ([#1416](https://github.com/Wynntils/Artemis/issues/1416)) ([1b5b18b](https://github.com/Wynntils/Artemis/commit/1b5b18b26331f32307035bfbe56702e7bd784ab4))
+
 ## [0.0.2-alpha.413](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.412...v0.0.2-alpha.413) (2023-03-31)
 
 
 ### New Features
 
 * Add Horse Whistle ([#1414](https://github.com/Wynntils/Artemis/issues/1414)) ([85bd0ee](https://github.com/Wynntils/Artemis/commit/85bd0ee034b3fe59afe562032bc03161c9fde71a))
+
+
+### Miscellaneous Chores
+
+* **release:** v0.0.2-alpha.413 [skip ci] ([cd87b49](https://github.com/Wynntils/Artemis/commit/cd87b49ad15aafebb343c4d06dd0232a18df5361))
 
 ## [0.0.2-alpha.412](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.411...v0.0.2-alpha.412) (2023-03-31)
 
@@ -36,16 +48,4 @@
 ### Miscellaneous Chores
 
 * **release:** v0.0.2-alpha.410 [skip ci] ([c6aa794](https://github.com/Wynntils/Artemis/commit/c6aa7946de4032e25a38443485539093c0900d9f))
-
-## [0.0.2-alpha.409](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.408...v0.0.2-alpha.409) (2023-03-31)
-
-
-### Bug Fixes
-
-* Fix enum converting bug, also try to fix config corruption (bubble bar POIs) ([#1412](https://github.com/Wynntils/Artemis/issues/1412)) ([3aa5307](https://github.com/Wynntils/Artemis/commit/3aa5307940134ef56c9a56d7d38beedb01626e0c))
-
-
-### Miscellaneous Chores
-
-* **release:** v0.0.2-alpha.409 [skip ci] ([c3de291](https://github.com/Wynntils/Artemis/commit/c3de2918980c882f8455e9f1ca089dd37e14b1a8))
 
