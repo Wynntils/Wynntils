@@ -51,6 +51,11 @@ public abstract class BarOverlay extends DynamicOverlay {
         if (!isRendered()) return;
 
         BarOverlayTemplatePair template = getTemplate();
+
+        if (templateCache == null) {
+            templateCache = calculateTemplate(template);
+        }
+
         render(poseStack, bufferSource, templateCache);
     }
 
