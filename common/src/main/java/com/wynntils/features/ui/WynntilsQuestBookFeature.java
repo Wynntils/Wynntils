@@ -29,7 +29,7 @@ import org.lwjgl.glfw.GLFW;
 @ConfigCategory(Category.UI)
 public class WynntilsQuestBookFeature extends Feature {
     private static final ResourceLocation QUEST_UPDATE_ID = new ResourceLocation("wynntils:ui.quest.update");
-    private static SoundEvent QUEST_UPDATE_SOUND = SoundEvent.createVariableRangeEvent(QUEST_UPDATE_ID);
+    private static final SoundEvent QUEST_UPDATE_SOUND = SoundEvent.createVariableRangeEvent(QUEST_UPDATE_ID);
 
     private static final String QUEST_BOOK_NAME = "§dQuest Book";
 
