@@ -192,8 +192,8 @@ public final class WynntilsQuestBookScreen extends WynntilsListScreen<QuestInfo,
                         Texture.QUEST_BOOK_BACKGROUND.height(),
                         Texture.QUEST_BOOK_BACKGROUND.width() / 2f - 30f,
                         CommonColors.BLACK,
-                        HorizontalAlignment.Center,
-                        VerticalAlignment.Middle,
+                        HorizontalAlignment.CENTER,
+                        VerticalAlignment.MIDDLE,
                         TextShadow.NONE);
     }
 
@@ -350,7 +350,7 @@ public final class WynntilsQuestBookScreen extends WynntilsListScreen<QuestInfo,
                         80,
                         Texture.QUEST_BOOK_BACKGROUND.width() / 2f - 30,
                         CommonColors.BLACK,
-                        HorizontalAlignment.Left,
+                        HorizontalAlignment.LEFT,
                         TextShadow.NONE);
 
         FontRenderer.getInstance()
@@ -362,7 +362,7 @@ public final class WynntilsQuestBookScreen extends WynntilsListScreen<QuestInfo,
                         170,
                         Texture.QUEST_BOOK_BACKGROUND.width() / 2f - 30,
                         CommonColors.BLACK,
-                        HorizontalAlignment.Left,
+                        HorizontalAlignment.LEFT,
                         TextShadow.NONE);
     }
 

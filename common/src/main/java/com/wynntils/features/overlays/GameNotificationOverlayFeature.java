@@ -100,9 +100,9 @@ public class GameNotificationOverlayFeature extends Feature {
                     new OverlayPosition(
                             -20,
                             -5,
-                            VerticalAlignment.Top,
-                            HorizontalAlignment.Right,
-                            OverlayPosition.AnchorSection.BottomRight),
+                            VerticalAlignment.TOP,
+                            HorizontalAlignment.RIGHT,
+                            OverlayPosition.AnchorSection.BOTTOM_RIGHT),
                     new OverlaySize(250, 110));
 
             updateTextRenderSetting();

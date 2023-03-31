@@ -106,12 +106,12 @@ public class SpellCastRenderFeature extends Feature {
                     new OverlayPosition(
                             -100,
                             0,
-                            VerticalAlignment.Bottom,
-                            HorizontalAlignment.Center,
-                            OverlayPosition.AnchorSection.BottomMiddle),
+                            VerticalAlignment.BOTTOM,
+                            HorizontalAlignment.CENTER,
+                            OverlayPosition.AnchorSection.BOTTOM_MIDDLE),
                     new OverlaySize(200, 20),
-                    HorizontalAlignment.Center,
-                    VerticalAlignment.Bottom);
+                    HorizontalAlignment.CENTER,
+                    VerticalAlignment.BOTTOM);
         }
 
         @Override

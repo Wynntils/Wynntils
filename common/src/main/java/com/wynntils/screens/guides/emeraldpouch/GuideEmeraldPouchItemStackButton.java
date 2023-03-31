@@ -66,7 +66,7 @@ public class GuideEmeraldPouchItemStackButton extends WynntilsButton {
                         getY() + 8,
                         0,
                         color,
-                        HorizontalAlignment.Center,
+                        HorizontalAlignment.CENTER,
                         TextShadow.OUTLINE);
         poseStack.popPose();
 

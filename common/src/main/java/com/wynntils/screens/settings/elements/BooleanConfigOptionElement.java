@@ -66,7 +66,7 @@ public class BooleanConfigOptionElement extends ConfigOptionElement {
                         renderY + FontRenderer.getInstance().getFont().lineHeight / 2f,
                         0,
                         value ? CommonColors.GREEN : CommonColors.RED,
-                        HorizontalAlignment.Center,
+                        HorizontalAlignment.CENTER,
                         TextShadow.OUTLINE);
     }
 

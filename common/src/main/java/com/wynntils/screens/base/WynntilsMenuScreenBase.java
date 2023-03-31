@@ -51,7 +51,7 @@ public abstract class WynntilsMenuScreenBase extends WynntilsScreen {
                         Texture.QUEST_BOOK_BACKGROUND.height() * 1.3f - 6f,
                         0,
                         CommonColors.YELLOW,
-                        HorizontalAlignment.Center,
+                        HorizontalAlignment.CENTER,
                         TextShadow.NORMAL);
         poseStack.popPose();
     }
@@ -71,8 +71,8 @@ public abstract class WynntilsMenuScreenBase extends WynntilsScreen {
                         5,
                         18,
                         CommonColors.YELLOW,
-                        HorizontalAlignment.Left,
-                        VerticalAlignment.Top,
+                        HorizontalAlignment.LEFT,
+                        VerticalAlignment.TOP,
                         TextShadow.NORMAL);
         poseStack.popPose();
     }
@@ -87,7 +87,7 @@ public abstract class WynntilsMenuScreenBase extends WynntilsScreen {
                         140,
                         Texture.QUEST_BOOK_BACKGROUND.width() / 2f - 30,
                         CommonColors.BLACK,
-                        HorizontalAlignment.Left,
+                        HorizontalAlignment.LEFT,
                         TextShadow.NONE);
     }
 

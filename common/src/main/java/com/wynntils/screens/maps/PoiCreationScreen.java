@@ -307,8 +307,8 @@ public final class PoiCreationScreen extends WynntilsScreen implements TextboxSc
                         this.width / 2f - 100,
                         this.height / 2f - 60,
                         CommonColors.WHITE,
-                        HorizontalAlignment.Left,
-                        VerticalAlignment.Top,
+                        HorizontalAlignment.LEFT,
+                        VerticalAlignment.TOP,
                         TextShadow.NORMAL);
 
         FontRenderer.getInstance()
@@ -318,8 +318,8 @@ public final class PoiCreationScreen extends WynntilsScreen implements TextboxSc
                         this.width / 2f - 100,
                         this.height / 2f - 15,
                         CommonColors.WHITE,
-                        HorizontalAlignment.Left,
-                        VerticalAlignment.Top,
+                        HorizontalAlignment.LEFT,
+                        VerticalAlignment.TOP,
                         TextShadow.NORMAL);
         FontRenderer.getInstance()
                 .renderText(
@@ -328,8 +328,8 @@ public final class PoiCreationScreen extends WynntilsScreen implements TextboxSc
                         this.width / 2f - 95,
                         this.height / 2f,
                         CommonColors.WHITE,
-                        HorizontalAlignment.Left,
-                        VerticalAlignment.Top,
+                        HorizontalAlignment.LEFT,
+                        VerticalAlignment.TOP,
                         TextShadow.NORMAL);
         FontRenderer.getInstance()
                 .renderText(
@@ -338,8 +338,8 @@ public final class PoiCreationScreen extends WynntilsScreen implements TextboxSc
                         this.width / 2f - 45,
                         this.height / 2f,
                         CommonColors.WHITE,
-                        HorizontalAlignment.Left,
-                        VerticalAlignment.Top,
+                        HorizontalAlignment.LEFT,
+                        VerticalAlignment.TOP,
                         TextShadow.NORMAL);
         FontRenderer.getInstance()
                 .renderText(
@@ -348,8 +348,8 @@ public final class PoiCreationScreen extends WynntilsScreen implements TextboxSc
                         this.width / 2f + 5,
                         this.height / 2f,
                         CommonColors.WHITE,
-                        HorizontalAlignment.Left,
-                        VerticalAlignment.Top,
+                        HorizontalAlignment.LEFT,
+                        VerticalAlignment.TOP,
                         TextShadow.NORMAL);
 
         FontRenderer.getInstance()
@@ -359,8 +359,8 @@ public final class PoiCreationScreen extends WynntilsScreen implements TextboxSc
                         this.width / 2f - 100,
                         this.height / 2f + 30,
                         CommonColors.WHITE,
-                        HorizontalAlignment.Left,
-                        VerticalAlignment.Top,
+                        HorizontalAlignment.LEFT,
+                        VerticalAlignment.TOP,
                         TextShadow.NORMAL);
 
         renderIcon(poseStack);
@@ -372,8 +372,8 @@ public final class PoiCreationScreen extends WynntilsScreen implements TextboxSc
                         this.width / 2f - 10,
                         this.height / 2f + 30,
                         CommonColors.WHITE,
-                        HorizontalAlignment.Left,
-                        VerticalAlignment.Top,
+                        HorizontalAlignment.LEFT,
+                        VerticalAlignment.TOP,
                         TextShadow.NORMAL);
 
         FontRenderer.getInstance()
@@ -383,8 +383,8 @@ public final class PoiCreationScreen extends WynntilsScreen implements TextboxSc
                         this.width / 2f - 100,
                         this.height / 2f + 80,
                         CommonColors.WHITE,
-                        HorizontalAlignment.Left,
-                        VerticalAlignment.Top,
+                        HorizontalAlignment.LEFT,
+                        VerticalAlignment.TOP,
                         TextShadow.NORMAL);
         FontRenderer.getInstance()
                 .renderAlignedTextInBox(
@@ -396,8 +396,8 @@ public final class PoiCreationScreen extends WynntilsScreen implements TextboxSc
                         this.height / 2f + 110,
                         0,
                         CommonColors.WHITE,
-                        HorizontalAlignment.Center,
-                        VerticalAlignment.Middle,
+                        HorizontalAlignment.CENTER,
+                        VerticalAlignment.MIDDLE,
                         TextShadow.NORMAL);
     }
 

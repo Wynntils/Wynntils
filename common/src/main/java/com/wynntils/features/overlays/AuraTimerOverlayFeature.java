@@ -62,12 +62,12 @@ public class AuraTimerOverlayFeature extends Feature {
                     new OverlayPosition(
                             0,
                             0,
-                            VerticalAlignment.Top,
-                            HorizontalAlignment.Center,
-                            OverlayPosition.AnchorSection.Middle),
+                            VerticalAlignment.TOP,
+                            HorizontalAlignment.CENTER,
+                            OverlayPosition.AnchorSection.MIDDLE),
                     new OverlaySize(150, 30),
-                    HorizontalAlignment.Center,
-                    VerticalAlignment.Middle);
+                    HorizontalAlignment.CENTER,
+                    VerticalAlignment.MIDDLE);
         }
 
         @Override

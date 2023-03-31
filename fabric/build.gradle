@@ -11,20 +11,20 @@ buildscript {
 
     Architectury fabric transformer
     - Transforms relevant classes in dev environment at runtime
-    - class EventBusTransform in com.github.coehlrich:EventBusTransformer dependency
+    - class EventBusTransform in com.github.wynntils:EventBusTransformer dependency
 
     GradleTask applyEventBus
     - Transforms relevant classes after shadowing jar for use in final jar
-    - class Main in com.github.coehlrich:EventBusTransformer dependency
+    - class Main in com.github.wynntils:EventBusTransformer dependency
      */
 
     dependencies {
-        classpath "com.github.wynntils:EventBusTransformer:${rootProject.event_bus_transformer_version}"
+        classpath "com.github.wynntils:EventBusTransformer:${event_bus_transformer_version}"
     }
 }
 
 plugins {
-    id "com.github.johnrengelman.shadow" version "7.1.2"
+    id "com.github.johnrengelman.shadow" version "${shadow_version}"
 }
 
 import com.wynntils.eventbustransformer.EventBusTransform
@@ -55,27 +55,27 @@ repositories {
 }
 
 dependencies {
-    modImplementation "net.fabricmc:fabric-loader:${rootProject.fabric_loader_version}"
-    include(modImplementation(fabricApi.module("fabric-resource-loader-v0", rootProject.fabric_version)))
+    modImplementation "net.fabricmc:fabric-loader:${fabric_loader_version}"
+    include(modImplementation(fabricApi.module("fabric-resource-loader-v0", fabric_version)))
 
     common(project(path: ":common", configuration: "namedElements")) { transitive false }
     shadowCommon(project(path: ":common", configuration: "transformProductionFabric")) { transitive false }
 
-    shadowImplementation("net.minecraftforge:eventbus:${rootProject.forge_eventbus_version}") {
-        exclude group: 'org.ow2.asm'
-        exclude group: 'org.apache.logging.log4j'
-        exclude group: 'cpw.mods', module: 'modlauncher'
+    shadowImplementation("net.minecraftforge:eventbus:${forge_eventbus_version}") {
+        exclude group: "org.ow2.asm"
+        exclude group: "org.apache.logging.log4j"
+        exclude group: "cpw.mods", module: "modlauncher"
     }
 
     // Hades Protocol
-    shadowImplementation("com.wynntils.hades:hades:${rootProject.hades_version}") { transitive false }
+    shadowImplementation("com.wynntils.hades:hades:${hades_version}") { transitive false }
 
-    include(implementation(annotationProcessor("com.github.llamalad7.mixinextras:mixinextras-fabric:${rootProject.mixinextras_version}")))
+    include(implementation(annotationProcessor("com.github.llamalad7.mixinextras:mixinextras-fabric:${mixinextras_version}")))
 
     // EventBusTransform needs to only be available for the dev env at runtime and
     // does not need to be shadowed
-    runtimeOnly "com.github.wynntils:EventBusTransformer:${rootProject.event_bus_transformer_version}"
-    modRuntimeOnly "me.djtheredstoner:DevAuth-fabric:${rootProject.devauth_version}"
+    runtimeOnly "com.github.wynntils:EventBusTransformer:${event_bus_transformer_version}"
+    modRuntimeOnly "me.djtheredstoner:DevAuth-fabric:${devauth_version}"
 }
 
 processResources {
@@ -102,7 +102,7 @@ shadowJar {
     classifier "dev-shadow"
 }
 
-tasks.register('applyEventBus', Jar) {
+tasks.register("applyEventBus", Jar) {
     inputs.file shadowJar.archiveFile
     classifier "transformed-eventbus"
     dependsOn shadowJar

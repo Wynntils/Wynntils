@@ -1,4 +1,10 @@
 {
+  "horse.whistle": {
+    "sounds": [
+      "wynntils:horse-whistle",
+      "wynntils:horse-whistle-2"
+    ]
+  },
   "wybel.purr": {
     "sounds": [
       "wynntils:wybel-purr",

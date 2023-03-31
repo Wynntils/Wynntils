@@ -24,6 +24,8 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.network.protocol.game.ServerboundInteractPacket;
 import net.minecraft.network.protocol.game.ServerboundSetCarriedItemPacket;
 import net.minecraft.network.protocol.game.ServerboundUseItemPacket;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.sounds.SoundEvent;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.animal.horse.AbstractHorse;
@@ -33,6 +35,9 @@ import org.lwjgl.glfw.GLFW;
 
 @ConfigCategory(Category.COMBAT)
 public class HorseMountFeature extends Feature {
+    private static final ResourceLocation HORSE_WHISTLE_ID = new ResourceLocation("wynntils:horse.whistle");
+    private static SoundEvent HORSE_WHISTLE_SOUND = SoundEvent.createVariableRangeEvent(HORSE_WHISTLE_ID);
+
     private static final int SEARCH_RADIUS = 6; // Furthest blocks away from which we can interact with a horse
     private static final int SUMMON_ATTEMPTS = 8;
     private static final int SUMMON_DELAY_TICKS = 6;
@@ -45,6 +50,9 @@ public class HorseMountFeature extends Feature {
 
     @RegisterConfig
     public final Config<Boolean> guaranteedMount = new Config<>(true);
+
+    @RegisterConfig
+    public final Config<Boolean> playWhistle = new Config<>(true);
 
     @SubscribeEvent
     public void onUseItem(UseItemEvent event) {
@@ -82,6 +90,10 @@ public class HorseMountFeature extends Feature {
 
     /** Horse should be nearby when this is called */
     private void mountHorse(Entity horse) {
+        if (playWhistle.get()) {
+            McUtils.playSound(HORSE_WHISTLE_SOUND);
+        }
+
         // swap to soul points to avoid right click problems
         int prevItem = McUtils.inventory().selected;
         McUtils.sendPacket(new ServerboundSetCarriedItemPacket(InventoryUtils.SOUL_POINTS_SLOT_NUM));

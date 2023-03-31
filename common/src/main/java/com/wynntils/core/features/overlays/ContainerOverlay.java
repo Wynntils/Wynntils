@@ -172,9 +172,9 @@ public abstract class ContainerOverlay<T extends Overlay> extends Overlay {
             return new OverlayPosition(
                     containerY + heightOffset + accumulatedHeight * verticalMultiplier,
                     containerX + widthOffset + accumulatedWidth * horizontalMultiplier,
-                    VerticalAlignment.Top,
-                    HorizontalAlignment.Left,
-                    OverlayPosition.AnchorSection.TopLeft);
+                    VerticalAlignment.TOP,
+                    HorizontalAlignment.LEFT,
+                    OverlayPosition.AnchorSection.TOP_LEFT);
         }
     }
 }

@@ -4,8 +4,10 @@
  */
 package com.wynntils.utils.render.type;
 
-public enum VerticalAlignment {
-    Top,
-    Middle,
-    Bottom
+import com.wynntils.core.config.NullableConfig;
+
+public enum VerticalAlignment implements NullableConfig {
+    TOP,
+    MIDDLE,
+    BOTTOM
 }

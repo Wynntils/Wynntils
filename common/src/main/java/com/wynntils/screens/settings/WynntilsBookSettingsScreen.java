@@ -150,8 +150,8 @@ public final class WynntilsBookSettingsScreen extends WynntilsScreen implements 
                         Texture.SETTING_BACKGROUND.width() / 2f / 0.8f + 10,
                         12,
                         CommonColors.BLACK,
-                        HorizontalAlignment.Left,
-                        VerticalAlignment.Top,
+                        HorizontalAlignment.LEFT,
+                        VerticalAlignment.TOP,
                         TextShadow.NONE);
         poseStack.popPose();
     }
