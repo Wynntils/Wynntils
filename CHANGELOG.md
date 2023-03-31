@@ -1,9 +1,21 @@
+## [0.0.2-alpha.413](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.412...v0.0.2-alpha.413) (2023-03-31)
+
+
+### New Features
+
+* Add Horse Whistle ([#1414](https://github.com/Wynntils/Artemis/issues/1414)) ([85bd0ee](https://github.com/Wynntils/Artemis/commit/85bd0ee034b3fe59afe562032bc03161c9fde71a))
+
 ## [0.0.2-alpha.412](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.411...v0.0.2-alpha.412) (2023-03-31)
 
 
 ### Bug Fixes
 
 * Fix Forge mods.toml to include logo etc ([#1413](https://github.com/Wynntils/Artemis/issues/1413)) ([975df2a](https://github.com/Wynntils/Artemis/commit/975df2ae83229cb5cadbecc74fa54fafbea6c680))
+
+
+### Miscellaneous Chores
+
+* **release:** v0.0.2-alpha.412 [skip ci] ([f62146d](https://github.com/Wynntils/Artemis/commit/f62146d3ff13c6d1a98500f2b0319a29e257ef33))
 
 ## [0.0.2-alpha.411](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.410...v0.0.2-alpha.411) (2023-03-31)
 
@@ -36,16 +48,4 @@
 ### Miscellaneous Chores
 
 * **release:** v0.0.2-alpha.409 [skip ci] ([c3de291](https://github.com/Wynntils/Artemis/commit/c3de2918980c882f8455e9f1ca089dd37e14b1a8))
-
-## [0.0.2-alpha.408](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.407...v0.0.2-alpha.408) (2023-03-30)
-
-
-### New Features
-
-* Remove secondsPerRecalculation for text/bar overlays, update on tick ([#1409](https://github.com/Wynntils/Artemis/issues/1409)) ([3faf8d6](https://github.com/Wynntils/Artemis/commit/3faf8d6a70e71507157053fd1ea27e966dcb2e33))
-
-
-### Miscellaneous Chores
-
-* **release:** v0.0.2-alpha.408 [skip ci] ([3c4f31c](https://github.com/Wynntils/Artemis/commit/3c4f31ca38ced50e310391c7b6a223280cf92f8c))
 
