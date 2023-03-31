@@ -13,6 +13,7 @@ import com.wynntils.core.features.properties.RegisterKeyBind;
 import com.wynntils.core.keybinds.KeyBind;
 import com.wynntils.mc.event.PlayerInteractEvent;
 import com.wynntils.mc.event.UseItemEvent;
+import com.wynntils.screens.base.WynntilsMenuScreenBase;
 import com.wynntils.screens.questbook.WynntilsQuestBookScreen;
 import com.wynntils.screens.wynntilsmenu.WynntilsMenuScreen;
 import com.wynntils.utils.mc.ComponentUtils;
@@ -29,12 +30,17 @@ public class WynntilsQuestBookFeature extends Feature {
 
     @RegisterKeyBind
     private final KeyBind openQuestBook = new KeyBind(
-            "Open Quest Book", GLFW.GLFW_KEY_K, true, () -> McUtils.mc().setScreen(WynntilsQuestBookScreen.create()));
+            "Open Quest Book",
+            GLFW.GLFW_KEY_K,
+            true,
+            () -> WynntilsMenuScreenBase.openBook(WynntilsQuestBookScreen.create()));
 
     @RegisterKeyBind
-    private final KeyBind openWynntilsMenu =
-            new KeyBind("Open Wynntils Menu", GLFW.GLFW_KEY_UNKNOWN, true, () -> McUtils.mc()
-                    .setScreen(WynntilsMenuScreen.create()));
+    private final KeyBind openWynntilsMenu = new KeyBind(
+            "Open Wynntils Menu",
+            GLFW.GLFW_KEY_UNKNOWN,
+            true,
+            () -> WynntilsMenuScreenBase.openBook(WynntilsMenuScreen.create()));
 
     @RegisterConfig
     public final Config<Boolean> replaceWynncraftQuestBook = new Config<>(true);
@@ -69,11 +75,10 @@ public class WynntilsQuestBookFeature extends Feature {
         if (itemInHand != null
                 && ComponentUtils.getCoded(itemInHand.getHoverName()).equals(QUEST_BOOK_NAME)) {
             event.setCanceled(true);
-            McUtils.mc()
-                    .setScreen(
-                            questBookShouldOpenWynntilsMenu.get()
-                                    ? WynntilsMenuScreen.create()
-                                    : WynntilsQuestBookScreen.create());
+            WynntilsMenuScreenBase.openBook(
+                    questBookShouldOpenWynntilsMenu.get()
+                            ? WynntilsMenuScreen.create()
+                            : WynntilsQuestBookScreen.create());
         }
     }
 }
