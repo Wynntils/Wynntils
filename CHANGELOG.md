@@ -1,8 +1,16 @@
+## [0.0.2-alpha.412](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.411...v0.0.2-alpha.412) (2023-03-31)
+
+
+### Bug Fixes
+
+* Fix Forge mods.toml to include logo etc ([#1413](https://github.com/Wynntils/Artemis/issues/1413)) ([975df2a](https://github.com/Wynntils/Artemis/commit/975df2ae83229cb5cadbecc74fa54fafbea6c680))
+
 ## [0.0.2-alpha.411](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.410...v0.0.2-alpha.411) (2023-03-31)
 
 
 ### Miscellaneous Chores
 
+* **release:** v0.0.2-alpha.411 [skip ci] ([2697c4c](https://github.com/Wynntils/Artemis/commit/2697c4ca3abe9ef77740a39e27aa2e9520595a39))
 * Update dependencies to latest versions ([#1410](https://github.com/Wynntils/Artemis/issues/1410)) ([9e01df2](https://github.com/Wynntils/Artemis/commit/9e01df20cb8be14eb43b96d34af714c1abc23bbf))
 
 ## [0.0.2-alpha.410](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.409...v0.0.2-alpha.410) (2023-03-31)
@@ -40,16 +48,4 @@
 ### Miscellaneous Chores
 
 * **release:** v0.0.2-alpha.408 [skip ci] ([3c4f31c](https://github.com/Wynntils/Artemis/commit/3c4f31ca38ced50e310391c7b6a223280cf92f8c))
-
-## [0.0.2-alpha.407](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.406...v0.0.2-alpha.407) (2023-03-30)
-
-
-### New Features
-
-* Stopwatch functions now return an int; add LeadingZerosFunction ([#1407](https://github.com/Wynntils/Artemis/issues/1407)) ([9b445b4](https://github.com/Wynntils/Artemis/commit/9b445b48ba6d214be22d2442cfaefa5fd754ce67))
-
-
-### Miscellaneous Chores
-
-* **release:** v0.0.2-alpha.407 [skip ci] ([167222d](https://github.com/Wynntils/Artemis/commit/167222dda65d39872eb934a9b69a183c881f9afb))
 
