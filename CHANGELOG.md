@@ -1,9 +1,21 @@
+## [0.0.2-alpha.410](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.409...v0.0.2-alpha.410) (2023-03-31)
+
+
+### New Features
+
+* Clean up build files and move all verions to gradle.properties ([#1408](https://github.com/Wynntils/Artemis/issues/1408)) ([812947f](https://github.com/Wynntils/Artemis/commit/812947f964997b3d542ed1ac161485c86879608b))
+
 ## [0.0.2-alpha.409](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.408...v0.0.2-alpha.409) (2023-03-31)
 
 
 ### Bug Fixes
 
 * Fix enum converting bug, also try to fix config corruption (bubble bar POIs) ([#1412](https://github.com/Wynntils/Artemis/issues/1412)) ([3aa5307](https://github.com/Wynntils/Artemis/commit/3aa5307940134ef56c9a56d7d38beedb01626e0c))
+
+
+### Miscellaneous Chores
+
+* **release:** v0.0.2-alpha.409 [skip ci] ([c3de291](https://github.com/Wynntils/Artemis/commit/c3de2918980c882f8455e9f1ca089dd37e14b1a8))
 
 ## [0.0.2-alpha.408](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.407...v0.0.2-alpha.408) (2023-03-30)
 
@@ -45,16 +57,4 @@
 ### Miscellaneous Chores
 
 * **release:** v0.0.2-alpha.406 [skip ci] ([87f42e7](https://github.com/Wynntils/Artemis/commit/87f42e7c38940644a9abe4efe0c0eeb9582aa90d))
-
-## [0.0.2-alpha.405](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.404...v0.0.2-alpha.405) (2023-03-30)
-
-
-### New Features
-
-* Make reset button grayed-out if no change has been made ([#1406](https://github.com/Wynntils/Artemis/issues/1406)) ([7222fd5](https://github.com/Wynntils/Artemis/commit/7222fd5d9dcecb120cb56b0e25877155db376753))
-
-
-### Miscellaneous Chores
-
-* **release:** v0.0.2-alpha.405 [skip ci] ([a2712f8](https://github.com/Wynntils/Artemis/commit/a2712f88c8a33d9480454d56c4ef70d57665d4e8))
 
