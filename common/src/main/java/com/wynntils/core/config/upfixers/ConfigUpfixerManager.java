@@ -11,6 +11,7 @@ import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.components.Manager;
 import com.wynntils.core.config.ConfigHolder;
 import com.wynntils.core.config.upfixers.impl.CustomCommandKeybindSlashStartUpfixer;
+import com.wynntils.core.config.upfixers.impl.CustomPoiIconEnumBugUpfixer;
 import com.wynntils.core.config.upfixers.impl.CustomPoiVisbilityUpfixer;
 import com.wynntils.core.config.upfixers.impl.EnumNamingUpfixer;
 import com.wynntils.core.config.upfixers.impl.GameBarOverlayMoveUpfixer;
@@ -31,6 +32,7 @@ public class ConfigUpfixerManager extends Manager {
         registerUpfixer(new CustomCommandKeybindSlashStartUpfixer());
         registerUpfixer(new GameBarOverlayMoveUpfixer());
         registerUpfixer(new EnumNamingUpfixer());
+        registerUpfixer(new CustomPoiIconEnumBugUpfixer());
     }
 
     private void registerUpfixer(ConfigUpfixer upfixer) {
