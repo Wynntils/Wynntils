@@ -27,9 +27,9 @@ public final class EnumUtils {
     public static Enum<?> fromJsonFormat(Class<? extends Enum<?>> enumClazz, String jsonFormattedName) {
         // CaseFormat cannot do round-trip conversion of e.g. TIER_3, hence the
         // replaceAll
-        String enumName = CaseFormat.LOWER_CAMEL
-                .to(CaseFormat.UPPER_UNDERSCORE, jsonFormattedName)
-                .replaceAll("(\\D)(\\d)", "$1_$2");
+        // We have to account for CHEST_T1, which works fine with CaseFormat, hence the [a-z] regex
+        String enumName = CaseFormat.LOWER_CAMEL.to(
+                CaseFormat.UPPER_UNDERSCORE, jsonFormattedName.replaceAll("([a-z])(\\d)", "$1_$2"));
 
         try {
             // The double casting is needed, or javac will complain...
