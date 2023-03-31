@@ -284,6 +284,8 @@
   "feature.wynntils.horseMount.guaranteedMount.name": "Guaranteed Mount",
   "feature.wynntils.horseMount.name": "Horse Mounting",
   "feature.wynntils.horseMount.noHorse": "Your horse was unable to be found.",
+  "feature.wynntils.horseMount.playWhistle.description": "Should a whistle sound play when you mount your horse?",
+  "feature.wynntils.horseMount.playWhistle.name": "Play Whistle",
   "feature.wynntils.infoBox.name": "Info Boxes",
   "feature.wynntils.infoBox.overlay.infoBox.content.description": "What should be displayed in the info box?",
   "feature.wynntils.infoBox.overlay.infoBox.content.name": "Info Box Content",
