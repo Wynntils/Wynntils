@@ -8,12 +8,12 @@ import com.wynntils.handlers.scoreboard.ScoreboardPart;
 import com.wynntils.handlers.scoreboard.ScoreboardSegment;
 import com.wynntils.handlers.scoreboard.type.SegmentMatcher;
 
-public class PartyScoreboardPart extends ScoreboardPart {
-    private static final SegmentMatcher PARTY_MATCHER = SegmentMatcher.fromPattern("Party:\\s\\[Lv. (\\d+)]");
+public class PartyFinderScoreboardPart extends ScoreboardPart {
+    private static final SegmentMatcher PARTY_FINDER_MATCHER = SegmentMatcher.fromPattern("Party Finder:");
 
     @Override
     public SegmentMatcher getSegmentMatcher() {
-        return PARTY_MATCHER;
+        return PARTY_FINDER_MATCHER;
     }
 
     @Override
@@ -33,6 +33,6 @@ public class PartyScoreboardPart extends ScoreboardPart {
 
     @Override
     public String toString() {
-        return "PartyScoreboardPart{}";
+        return "PartyFinderScoreboardPart{}";
     }
 }

@@ -20,6 +20,7 @@ import com.wynntils.core.features.overlays.annotations.OverlayInfo;
 import com.wynntils.handlers.scoreboard.event.ScoreboardSegmentAdditionEvent;
 import com.wynntils.mc.event.RenderEvent;
 import com.wynntils.models.quests.QuestInfo;
+import com.wynntils.models.quests.QuestScoreboardPart;
 import com.wynntils.models.quests.event.TrackedQuestUpdateEvent;
 import com.wynntils.utils.colors.CommonColors;
 import com.wynntils.utils.colors.CustomColor;
@@ -48,7 +49,7 @@ public class QuestInfoOverlayFeature extends Feature {
     public void onScoreboardSegmentChange(ScoreboardSegmentAdditionEvent event) {
         if (questInfoOverlay.shouldBeEnabled()
                 && disableQuestTrackingOnScoreboard.get()
-                && Models.Quest.isQuestSegment(event.getSegment())) {
+                && event.getSegment().getScoreboardPart() instanceof QuestScoreboardPart) {
             event.setCanceled(true);
         }
     }

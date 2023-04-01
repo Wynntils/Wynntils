@@ -8,13 +8,13 @@ import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.components.Handlers;
 import com.wynntils.core.components.Model;
 import com.wynntils.handlers.scoreboard.ScoreboardPart;
-import com.wynntils.handlers.scoreboard.ScoreboardSegment;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
 public class ObjectivesModel extends Model {
-    private static final ScoreboardPart OBJECTIVES_SCOREBOARD_PART = new ObjectivesScoreboardPart();
+    private static final ScoreboardPart DAILY_OBJECTIVES_SCOREBOARD_PART = new DailyObjectiveScoreboardPart();
+    private static final ScoreboardPart GUILD_OBJECTIVES_SCOREBOARD_PART = new GuildObjectiveScoreboardPart();
 
     private List<WynnObjective> personalObjectives = new ArrayList<>();
     private WynnObjective guildObjective = null;
@@ -22,7 +22,8 @@ public class ObjectivesModel extends Model {
     public ObjectivesModel() {
         super(List.of());
 
-        Handlers.Scoreboard.addPart(OBJECTIVES_SCOREBOARD_PART);
+        Handlers.Scoreboard.addPart(DAILY_OBJECTIVES_SCOREBOARD_PART);
+        Handlers.Scoreboard.addPart(GUILD_OBJECTIVES_SCOREBOARD_PART);
     }
 
     public WynnObjective getGuildObjective() {
@@ -32,14 +33,6 @@ public class ObjectivesModel extends Model {
     public List<WynnObjective> getPersonalObjectives() {
         // Make copy, so we don't have to worry about concurrent modification
         return new ArrayList<>(personalObjectives);
-    }
-
-    public boolean isObjectiveSegment(ScoreboardSegment segment) {
-        return segment.getMatcher() == ObjectivesScoreboardPart.OBJECTIVES_MATCHER;
-    }
-
-    public boolean isGuildObjectiveSegment(ScoreboardSegment segment) {
-        return segment.getMatcher() == ObjectivesScoreboardPart.GUILD_OBJECTIVES_MATCHER;
     }
 
     void resetObjectives() {

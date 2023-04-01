@@ -4,88 +4,65 @@
  */
 package com.wynntils.handlers.scoreboard;
 
-import com.wynntils.handlers.scoreboard.type.SegmentMatcher;
-import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
+import org.apache.commons.lang3.ArrayUtils;
 
 public final class ScoreboardSegment {
-    private final SegmentMatcher matcher;
+    private final ScoreboardPart scoreboardPart;
     private final String header;
-    private final int startIndex;
+    private List<String> content;
+    private boolean visible = true;
 
-    private String end;
-    private List<String> content = null;
-    private int endIndex = -1;
-    private boolean changed;
-
-    public ScoreboardSegment(SegmentMatcher matcher, String header, int startIndex) {
-        this.matcher = matcher;
+    public ScoreboardSegment(ScoreboardPart scoreboardPart, String header, List<String> content) {
+        this.scoreboardPart = scoreboardPart;
         this.header = header;
-        this.startIndex = startIndex;
-        this.changed = false;
+        this.content = content;
     }
 
-    @Override
-    public String toString() {
-        return "Segment[" + "matcher="
-                + matcher + ", " + "header="
-                + header + ", " + "content="
-                + content + ", " + "startIndex="
-                + startIndex + ", " + "endIndex="
-                + endIndex + ']';
-    }
-
-    public List<String> getContent() {
-        return content;
-    }
-
-    public int getStartIndex() {
-        return startIndex;
-    }
-
-    public int getEndIndex() {
-        return endIndex;
-    }
-
-    public SegmentMatcher getMatcher() {
-        return matcher;
+    public ScoreboardPart getScoreboardPart() {
+        return scoreboardPart;
     }
 
     public String getHeader() {
         return header;
     }
 
-    public String getEnd() {
-        return end;
+    public List<String> getContent() {
+        return content;
     }
 
-    public List<String> getScoreboardLines() {
-        List<String> lines = new ArrayList<>(this.content);
-        lines.add(this.header);
-        if (this.end != null) {
-            lines.add(this.end);
-        }
-
-        return lines;
+    public boolean isVisible() {
+        return visible;
     }
 
-    public boolean isChanged() {
-        return changed;
+    public void setVisibility(boolean visible) {
+        this.visible = visible;
     }
 
-    public void setContent(List<String> content) {
-        this.content = content;
+    @Override
+    public String toString() {
+        return "ScoreboardSegment{" + "scoreboardPart="
+                + scoreboardPart + ", header='"
+                + header + '\'' + ", content="
+                + ArrayUtils.toString(content.toArray()) + ", visible="
+                + visible + '}';
     }
 
-    public void setEndIndex(int endIndex) {
-        this.endIndex = endIndex;
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        ScoreboardSegment segment = (ScoreboardSegment) o;
+        return visible == segment.visible
+                && Objects.equals(scoreboardPart, segment.scoreboardPart)
+                && Objects.equals(header, segment.header)
+                && Objects.deepEquals(content, segment.content);
     }
 
-    public void setChanged(boolean changed) {
-        this.changed = changed;
-    }
-
-    public void setEnd(String end) {
-        this.end = end;
+    @Override
+    public int hashCode() {
+        return Objects.hash(scoreboardPart, header, content, visible);
     }
 }

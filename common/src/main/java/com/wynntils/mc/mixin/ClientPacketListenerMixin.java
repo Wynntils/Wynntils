@@ -25,6 +25,8 @@ import com.wynntils.mc.event.PlayerInfoFooterChangedEvent;
 import com.wynntils.mc.event.PlayerTeleportEvent;
 import com.wynntils.mc.event.RemoveEntitiesEvent;
 import com.wynntils.mc.event.ResourcePackEvent;
+import com.wynntils.mc.event.ScoreboardSetDisplayObjectiveEvent;
+import com.wynntils.mc.event.ScoreboardSetObjectiveEvent;
 import com.wynntils.mc.event.ScoreboardSetScoreEvent;
 import com.wynntils.mc.event.SetEntityDataEvent;
 import com.wynntils.mc.event.SetEntityPassengersEvent;
@@ -62,8 +64,10 @@ import net.minecraft.network.protocol.game.ClientboundRemoveEntitiesPacket;
 import net.minecraft.network.protocol.game.ClientboundRemoveMobEffectPacket;
 import net.minecraft.network.protocol.game.ClientboundResourcePackPacket;
 import net.minecraft.network.protocol.game.ClientboundSetDefaultSpawnPositionPacket;
+import net.minecraft.network.protocol.game.ClientboundSetDisplayObjectivePacket;
 import net.minecraft.network.protocol.game.ClientboundSetEntityDataPacket;
 import net.minecraft.network.protocol.game.ClientboundSetExperiencePacket;
+import net.minecraft.network.protocol.game.ClientboundSetObjectivePacket;
 import net.minecraft.network.protocol.game.ClientboundSetPassengersPacket;
 import net.minecraft.network.protocol.game.ClientboundSetPlayerTeamPacket;
 import net.minecraft.network.protocol.game.ClientboundSetScorePacket;
@@ -454,6 +458,17 @@ public abstract class ClientPacketListenerMixin {
     }
 
     @Inject(
+            method = "handleAddObjective(Lnet/minecraft/network/protocol/game/ClientboundSetObjectivePacket;)V",
+            at = @At("HEAD"))
+    private void handleAddObjective(ClientboundSetObjectivePacket packet, CallbackInfo ci) {
+        if (!isRenderThread()) return;
+
+        ScoreboardSetObjectiveEvent event = new ScoreboardSetObjectiveEvent(
+                packet.getObjectiveName(), packet.getDisplayName(), packet.getRenderType(), packet.getMethod());
+        MixinHelper.post(event);
+    }
+
+    @Inject(
             method = "handleSetScore(Lnet/minecraft/network/protocol/game/ClientboundSetScorePacket;)V",
             at = @At("HEAD"),
             cancellable = true)
@@ -462,6 +477,22 @@ public abstract class ClientPacketListenerMixin {
 
         ScoreboardSetScoreEvent event = new ScoreboardSetScoreEvent(
                 packet.getOwner(), packet.getObjectiveName(), packet.getScore(), packet.getMethod());
+        MixinHelper.post(event);
+        if (event.isCanceled()) {
+            ci.cancel();
+        }
+    }
+
+    @Inject(
+            method =
+                    "handleSetDisplayObjective(Lnet/minecraft/network/protocol/game/ClientboundSetDisplayObjectivePacket;)V",
+            at = @At("HEAD"),
+            cancellable = true)
+    private void handleSetDisplayObjective(ClientboundSetDisplayObjectivePacket packet, CallbackInfo ci) {
+        if (!isRenderThread()) return;
+
+        ScoreboardSetDisplayObjectiveEvent event =
+                new ScoreboardSetDisplayObjectiveEvent(packet.getSlot(), packet.getObjectiveName());
         MixinHelper.post(event);
         if (event.isCanceled()) {
             ci.cancel();

@@ -19,6 +19,7 @@ import com.wynntils.core.features.overlays.OverlaySize;
 import com.wynntils.core.features.overlays.annotations.OverlayInfo;
 import com.wynntils.handlers.scoreboard.event.ScoreboardSegmentAdditionEvent;
 import com.wynntils.mc.event.RenderEvent;
+import com.wynntils.models.territories.GuildAttackScoreboardPart;
 import com.wynntils.models.territories.TerritoryAttackTimer;
 import com.wynntils.utils.render.TextRenderSetting;
 import com.wynntils.utils.render.TextRenderTask;
@@ -43,7 +44,7 @@ public class GuildAttackTimerOverlayFeature extends Feature {
     @SubscribeEvent(priority = EventPriority.HIGHEST)
     public void onScoreboardSegmentChange(ScoreboardSegmentAdditionEvent event) {
         if (disableAttackTimersOnScoreboard.get()) {
-            if (Models.GuildAttackTimer.isGuildAttackSegment(event.getSegment())
+            if (event.getSegment().getScoreboardPart() instanceof GuildAttackScoreboardPart
                     && territoryAttackTimerOverlay.shouldBeEnabled()) {
                 event.setCanceled(true);
             }
