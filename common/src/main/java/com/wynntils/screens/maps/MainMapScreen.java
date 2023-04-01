@@ -100,6 +100,23 @@ public final class MainMapScreen extends AbstractMapScreen {
                                 .append(Component.translatable("screens.wynntils.map.help.description9")))));
 
         this.addRenderableWidget(new BasicTexturedButton(
+                width / 2 - Texture.MAP_BUTTONS_BACKGROUND.width() / 2 + 6 + 20 * 3,
+                (int) (this.renderHeight
+                        - this.renderedBorderYOffset
+                        - Texture.MAP_BUTTONS_BACKGROUND.height() / 2
+                        - 6),
+                16,
+                16,
+                Texture.MAP_MANAGER_BUTTON,
+                (b) -> McUtils.mc().setScreen(PoiManagementScreen.create(this)),
+                List.of(
+                        Component.literal("[>] ")
+                                .withStyle(ChatFormatting.RED)
+                                .append(Component.translatable("screens.wynntils.map.manager.name")),
+                        Component.translatable("screens.wynntils.map.manager.description")
+                                .withStyle(ChatFormatting.GRAY))));
+
+        this.addRenderableWidget(new BasicTexturedButton(
                 width / 2 - Texture.MAP_BUTTONS_BACKGROUND.width() / 2 + 6 + 20 * 2,
                 (int) (this.renderHeight
                         - this.renderedBorderYOffset

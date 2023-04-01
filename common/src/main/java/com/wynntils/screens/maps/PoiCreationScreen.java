@@ -65,14 +65,14 @@ public final class PoiCreationScreen extends WynntilsScreen implements TextboxSc
     private CustomPoi.Visibility selectedVisiblity = CustomPoi.Visibility.DEFAULT;
     private CustomColor colorCache = CommonColors.WHITE;
 
-    private final MainMapScreen oldMapScreen;
+    private final Screen returnScreen;
     private CustomPoi oldPoi;
     private PoiLocation setupLocation;
     private boolean firstSetup;
 
     private PoiCreationScreen(MainMapScreen oldMapScreen) {
         super(Component.literal("Poi Creation Screen"));
-        this.oldMapScreen = oldMapScreen;
+        this.returnScreen = oldMapScreen;
 
         this.firstSetup = true;
     }
@@ -91,6 +91,14 @@ public final class PoiCreationScreen extends WynntilsScreen implements TextboxSc
         this.firstSetup = true;
     }
 
+    public PoiCreationScreen(PoiManagementScreen managementScreen, CustomPoi poi) {
+        super(Component.literal("Poi Edit Screen"));
+        this.returnScreen = managementScreen;
+
+        this.oldPoi = poi;
+        this.firstSetup = true;
+    }
+
     public static Screen create(MainMapScreen oldMapScreen) {
         return new PoiCreationScreen(oldMapScreen);
     }
@@ -101,6 +109,10 @@ public final class PoiCreationScreen extends WynntilsScreen implements TextboxSc
 
     public static Screen create(MainMapScreen oldMapScreen, CustomPoi poi) {
         return new PoiCreationScreen(oldMapScreen, poi);
+    }
+
+    public static Screen create(PoiManagementScreen managementScreen, CustomPoi poi) {
+        return new PoiCreationScreen(managementScreen, poi);
     }
 
     @Override
@@ -450,7 +462,7 @@ public final class PoiCreationScreen extends WynntilsScreen implements TextboxSc
 
     @Override
     public void onClose() {
-        McUtils.mc().setScreen(oldMapScreen);
+        McUtils.mc().setScreen(returnScreen);
     }
 
     private void updateSaveStatus() {
@@ -476,13 +488,16 @@ public final class PoiCreationScreen extends WynntilsScreen implements TextboxSc
                 selectedVisiblity);
 
         if (oldPoi != null) {
+            List<CustomPoi> pois = Managers.Feature.getFeatureInstance(MapFeature.class)
+                    .customPois
+                    .get();
+            pois.set(pois.indexOf(oldPoi), poi);
+        } else {
             Managers.Feature.getFeatureInstance(MapFeature.class)
                     .customPois
                     .get()
-                    .remove(oldPoi);
+                    .add(poi);
         }
-
-        Managers.Feature.getFeatureInstance(MapFeature.class).customPois.get().add(poi);
 
         Managers.Config.saveConfig();
     }

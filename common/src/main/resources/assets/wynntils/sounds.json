@@ -17,6 +17,11 @@
       "wynntils:book-turn-page-3"
     ]
   },
+  "ui.quest.update": {
+    "sounds": [
+      "wynntils:quest-update"
+    ]
+  },
   "wybel.purr": {
     "sounds": [
       "wynntils:wybel-purr",
