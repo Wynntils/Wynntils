@@ -48,6 +48,7 @@ import com.wynntils.features.debug.ConnectionProgressFeature;
 import com.wynntils.features.debug.ItemDebugTooltipsFeature;
 import com.wynntils.features.debug.LogItemInfoFeature;
 import com.wynntils.features.debug.PacketDebuggerFeature;
+import com.wynntils.features.embellishments.MythicFoundSoundFeature;
 import com.wynntils.features.embellishments.WybelSoundFeature;
 import com.wynntils.features.inventory.BulkBuyFeature;
 import com.wynntils.features.inventory.ContainerSearchFeature;
@@ -223,6 +224,7 @@ public final class FeatureManager extends Manager {
         registerFeature(new MobTotemTrackingFeature());
         registerFeature(new MythicBlockerFeature());
         registerFeature(new MythicBoxScalerFeature());
+        registerFeature(new MythicFoundSoundFeature());
         registerFeature(new NpcDialogueOverlayFeature());
         registerFeature(new ObjectivesOverlayFeature());
         registerFeature(new PartyManagementScreenFeature());
