@@ -1,9 +1,21 @@
+## [0.0.2-alpha.424](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.423...v0.0.2-alpha.424) (2023-04-01)
+
+
+### New Features
+
+* Add import button for PoiManagementScreen (works with legacy's Artemis Export button) ([#1425](https://github.com/Wynntils/Artemis/issues/1425)) ([ea46772](https://github.com/Wynntils/Artemis/commit/ea46772566be1043a962bdc085c2f575a29d3767))
+
 ## [0.0.2-alpha.423](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.422...v0.0.2-alpha.423) (2023-04-01)
 
 
 ### Bug Fixes
 
 * Prevent crash in DialogueOptionOverrideFeature ([#1424](https://github.com/Wynntils/Artemis/issues/1424)) ([dee4a47](https://github.com/Wynntils/Artemis/commit/dee4a47d03329614d2008ee746131d1efa33bbfb))
+
+
+### Miscellaneous Chores
+
+* **release:** v0.0.2-alpha.423 [skip ci] ([d355ae5](https://github.com/Wynntils/Artemis/commit/d355ae5984e5f185168bf63465044345caad8010))
 
 ## [0.0.2-alpha.422](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.421...v0.0.2-alpha.422) (2023-04-01)
 
@@ -40,16 +52,4 @@
 ### Miscellaneous Chores
 
 * **release:** v0.0.2-alpha.420 [skip ci] ([234de4f](https://github.com/Wynntils/Artemis/commit/234de4fdd19beeb60e5d82abdbc5d3f6d8ac2bc6))
-
-## [0.0.2-alpha.419](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.418...v0.0.2-alpha.419) (2023-04-01)
-
-
-### Bug Fixes
-
-* Fix even more login redirects ([#1422](https://github.com/Wynntils/Artemis/issues/1422)) ([8c7d125](https://github.com/Wynntils/Artemis/commit/8c7d12524890e90f8aed0b10da861dfaa5ed7140))
-
-
-### Miscellaneous Chores
-
-* **release:** v0.0.2-alpha.419 [skip ci] ([0292916](https://github.com/Wynntils/Artemis/commit/0292916f0dd984a887e3deace1c458c5b0d3e249))
 
