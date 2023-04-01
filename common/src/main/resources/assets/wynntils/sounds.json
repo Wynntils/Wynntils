@@ -5,6 +5,18 @@
       "wynntils:horse-whistle-2"
     ]
   },
+  "ui.book.open": {
+    "sounds": [
+      "wynntils:book-open"
+    ]
+  },
+  "ui.book.turn-page": {
+    "sounds": [
+      "wynntils:book-turn-page",
+      "wynntils:book-turn-page-2",
+      "wynntils:book-turn-page-3"
+    ]
+  },
   "ui.quest.update": {
     "sounds": [
       "wynntils:quest-update"
