@@ -1,9 +1,21 @@
+## [0.0.2-alpha.421](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.420...v0.0.2-alpha.421) (2023-04-01)
+
+
+### New Features
+
+* Preload our resource pack earlier to skip reload ([#1419](https://github.com/Wynntils/Artemis/issues/1419)) ([1906def](https://github.com/Wynntils/Artemis/commit/1906def76c431e89958f643e3595088ad81db058))
+
 ## [0.0.2-alpha.420](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.419...v0.0.2-alpha.420) (2023-04-01)
 
 
 ### New Features
 
 * Add mythic found sound ([#1421](https://github.com/Wynntils/Artemis/issues/1421)) ([7f81c14](https://github.com/Wynntils/Artemis/commit/7f81c14e2ba98996848f045c7e23d8370ebd0019))
+
+
+### Miscellaneous Chores
+
+* **release:** v0.0.2-alpha.420 [skip ci] ([234de4f](https://github.com/Wynntils/Artemis/commit/234de4fdd19beeb60e5d82abdbc5d3f6d8ac2bc6))
 
 ## [0.0.2-alpha.419](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.418...v0.0.2-alpha.419) (2023-04-01)
 
@@ -40,16 +52,4 @@
 ### Miscellaneous Chores
 
 * **release:** v0.0.2-alpha.417 [skip ci] ([26da70a](https://github.com/Wynntils/Artemis/commit/26da70a386f325d1684673097c22075441518b01))
-
-## [0.0.2-alpha.416](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.415...v0.0.2-alpha.416) (2023-04-01)
-
-
-### New Features
-
-* Waypoint management GUI ([#1382](https://github.com/Wynntils/Artemis/issues/1382)) ([1af9f77](https://github.com/Wynntils/Artemis/commit/1af9f77825cc2d52c4e6f044b51b3624f85ef606))
-
-
-### Miscellaneous Chores
-
-* **release:** v0.0.2-alpha.416 [skip ci] ([b1c6468](https://github.com/Wynntils/Artemis/commit/b1c64684159bc7a231e69a8710f55810ca3822af))
 
