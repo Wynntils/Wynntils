@@ -24,7 +24,7 @@ public class GoogleApiTranslationService extends CachingTranslationService {
     @Override
     protected void translateNew(List<String> messageList, String toLanguage, Consumer<List<String>> handleTranslation) {
         if (toLanguage == null || toLanguage.isEmpty()) {
-            handleTranslation.accept(null);
+            handleTranslation.accept(List.copyOf(messageList));
             return;
         }
 
@@ -50,7 +50,7 @@ public class GoogleApiTranslationService extends CachingTranslationService {
                 },
                 onError -> {
                     // If Google translate return no data ( 500 error ), display default lang
-                    handleTranslation.accept(null);
+                    handleTranslation.accept(List.copyOf(messageList));
                 });
     }
 }
