@@ -1,9 +1,21 @@
+## [0.0.2-alpha.417](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.416...v0.0.2-alpha.417) (2023-04-01)
+
+
+### New Features
+
+* Add the quest update sound from legacy ([#1417](https://github.com/Wynntils/Artemis/issues/1417)) ([eea383f](https://github.com/Wynntils/Artemis/commit/eea383f6126e8d30de1837bcbfcfdf4e39e0e788))
+
 ## [0.0.2-alpha.416](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.415...v0.0.2-alpha.416) (2023-04-01)
 
 
 ### New Features
 
 * Waypoint management GUI ([#1382](https://github.com/Wynntils/Artemis/issues/1382)) ([1af9f77](https://github.com/Wynntils/Artemis/commit/1af9f77825cc2d52c4e6f044b51b3624f85ef606))
+
+
+### Miscellaneous Chores
+
+* **release:** v0.0.2-alpha.416 [skip ci] ([b1c6468](https://github.com/Wynntils/Artemis/commit/b1c64684159bc7a231e69a8710f55810ca3822af))
 
 ## [0.0.2-alpha.415](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.414...v0.0.2-alpha.415) (2023-03-31)
 
@@ -40,16 +52,4 @@
 ### Miscellaneous Chores
 
 * **release:** v0.0.2-alpha.413 [skip ci] ([cd87b49](https://github.com/Wynntils/Artemis/commit/cd87b49ad15aafebb343c4d06dd0232a18df5361))
-
-## [0.0.2-alpha.412](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.411...v0.0.2-alpha.412) (2023-03-31)
-
-
-### Bug Fixes
-
-* Fix Forge mods.toml to include logo etc ([#1413](https://github.com/Wynntils/Artemis/issues/1413)) ([975df2a](https://github.com/Wynntils/Artemis/commit/975df2ae83229cb5cadbecc74fa54fafbea6c680))
-
-
-### Miscellaneous Chores
-
-* **release:** v0.0.2-alpha.412 [skip ci] ([f62146d](https://github.com/Wynntils/Artemis/commit/f62146d3ff13c6d1a98500f2b0319a29e257ef33))
 
