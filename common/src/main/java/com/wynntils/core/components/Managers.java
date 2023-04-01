@@ -15,6 +15,7 @@ import com.wynntils.core.json.JsonManager;
 import com.wynntils.core.keybinds.KeyBindManager;
 import com.wynntils.core.mod.ConnectionManager;
 import com.wynntils.core.mod.CrashReportManager;
+import com.wynntils.core.mod.ResourcePackManager;
 import com.wynntils.core.mod.TickSchedulerManager;
 import com.wynntils.core.net.NetManager;
 import com.wynntils.core.net.UrlManager;
@@ -40,6 +41,7 @@ public final class Managers {
     public static final JsonManager Json = new JsonManager();
     public static final KeyBindManager KeyBind = new KeyBindManager();
     public static final NotificationManager Notification = new NotificationManager();
+    public static final ResourcePackManager ResourcePack = new ResourcePackManager();
     public static final TranslationManager Translation = new TranslationManager();
 
     // Managers with dependencies, ordered alphabetically as far as possible

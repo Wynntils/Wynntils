@@ -186,6 +186,9 @@ public final class WynntilsMod {
         registerComponents(Handlers.class, Handler.class);
         registerComponents(Models.class, Model.class);
 
+        // Init storage for loaded components immediately
+        Managers.Storage.init();
+
         addCrashCallbacks();
     }
 
