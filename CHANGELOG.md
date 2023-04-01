@@ -1,9 +1,21 @@
+## [0.0.2-alpha.416](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.415...v0.0.2-alpha.416) (2023-04-01)
+
+
+### New Features
+
+* Waypoint management GUI ([#1382](https://github.com/Wynntils/Artemis/issues/1382)) ([1af9f77](https://github.com/Wynntils/Artemis/commit/1af9f77825cc2d52c4e6f044b51b3624f85ef606))
+
 ## [0.0.2-alpha.415](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.414...v0.0.2-alpha.415) (2023-03-31)
 
 
 ### Bug Fixes
 
 * Fix info box preview ([#1415](https://github.com/Wynntils/Artemis/issues/1415)) ([91555df](https://github.com/Wynntils/Artemis/commit/91555df39332007337f9cd0991c9bb960e72259f))
+
+
+### Miscellaneous Chores
+
+* **release:** v0.0.2-alpha.415 [skip ci] ([0409319](https://github.com/Wynntils/Artemis/commit/04093198c2c00cad2889b6de2cd047bc8b29b0e7))
 
 ## [0.0.2-alpha.414](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.413...v0.0.2-alpha.414) (2023-03-31)
 
@@ -40,12 +52,4 @@
 ### Miscellaneous Chores
 
 * **release:** v0.0.2-alpha.412 [skip ci] ([f62146d](https://github.com/Wynntils/Artemis/commit/f62146d3ff13c6d1a98500f2b0319a29e257ef33))
-
-## [0.0.2-alpha.411](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.410...v0.0.2-alpha.411) (2023-03-31)
-
-
-### Miscellaneous Chores
-
-* **release:** v0.0.2-alpha.411 [skip ci] ([2697c4c](https://github.com/Wynntils/Artemis/commit/2697c4ca3abe9ef77740a39e27aa2e9520595a39))
-* Update dependencies to latest versions ([#1410](https://github.com/Wynntils/Artemis/issues/1410)) ([9e01df2](https://github.com/Wynntils/Artemis/commit/9e01df20cb8be14eb43b96d34af714c1abc23bbf))
 
