@@ -30,7 +30,7 @@ public class PageSelectorButton extends WynntilsButton {
     public void onPress() {
         if (!isValid()) return;
 
-        McUtils.playSound(BOOK_TURN_PAGE_SOUND);
+        McUtils.playSoundUI(BOOK_TURN_PAGE_SOUND);
 
         if (forward) {
             screen.setCurrentPage(screen.getCurrentPage() + 1);

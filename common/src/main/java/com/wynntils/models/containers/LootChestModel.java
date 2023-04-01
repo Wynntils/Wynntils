@@ -4,6 +4,7 @@
  */
 package com.wynntils.models.containers;
 
+import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.components.Managers;
 import com.wynntils.core.components.Model;
 import com.wynntils.core.components.Models;
@@ -11,6 +12,7 @@ import com.wynntils.core.storage.Storage;
 import com.wynntils.mc.event.ChestMenuQuickMoveEvent;
 import com.wynntils.mc.event.ContainerSetSlotEvent;
 import com.wynntils.mc.event.MenuEvent;
+import com.wynntils.models.containers.event.MythicFoundEvent;
 import com.wynntils.models.gear.type.GearTier;
 import com.wynntils.utils.mc.ComponentUtils;
 import com.wynntils.utils.wynn.WynnItemMatchers;
@@ -62,6 +64,7 @@ public final class LootChestModel extends Model {
         if (gearTier == GearTier.MYTHIC) {
             dryBoxes.store(0);
             dryCount.store(0);
+            WynntilsMod.postEvent(new MythicFoundEvent(itemStack));
         } else {
             dryBoxes.store(dryBoxes.get() + 1);
         }

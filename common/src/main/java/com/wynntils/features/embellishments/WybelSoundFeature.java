@@ -33,13 +33,13 @@ public class WybelSoundFeature extends Feature {
 
         String msg = event.getCodedMessage();
         if (msg.contains("squeak")) {
-            McUtils.playSound(WYBEL_SQUEAK_SOUND);
+            McUtils.playSoundAmbient(WYBEL_SQUEAK_SOUND);
             if (hideText.get()) {
                 event.setCanceled(true);
             }
         }
         if (msg.contains("purr")) {
-            McUtils.playSound(WYBEL_PURR_SOUND);
+            McUtils.playSoundAmbient(WYBEL_PURR_SOUND);
             if (hideText.get()) {
                 event.setCanceled(true);
             }

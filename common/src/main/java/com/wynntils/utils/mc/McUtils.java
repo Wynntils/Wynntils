@@ -55,8 +55,12 @@ public final class McUtils {
         return window().getGuiScale();
     }
 
-    public static void playSound(SoundEvent sound) {
+    public static void playSoundUI(SoundEvent sound) {
         mc().getSoundManager().play(SimpleSoundInstance.forUI(sound, 1.0F));
+    }
+
+    public static void playSoundAmbient(SoundEvent sound) {
+        mc().getSoundManager().play(SimpleSoundInstance.forLocalAmbience(sound, 1.0F, 1.0F));
     }
 
     public static void sendMessageToClient(Component component) {

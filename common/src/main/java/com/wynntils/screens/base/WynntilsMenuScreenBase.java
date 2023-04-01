@@ -29,7 +29,7 @@ public abstract class WynntilsMenuScreenBase extends WynntilsScreen {
 
     public static void openBook(Screen screen) {
         McUtils.mc().setScreen(screen);
-        McUtils.playSound(BOOK_OPEN_SOUND);
+        McUtils.playSoundUI(BOOK_OPEN_SOUND);
     }
 
     protected void renderBackgroundTexture(PoseStack poseStack) {

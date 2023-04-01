@@ -29,7 +29,7 @@ public class ViewPlayerStatsButton extends WynntilsButton {
 
     @Override
     public void onPress() {
-        McUtils.playSound(SoundEvents.UI_BUTTON_CLICK.value());
+        McUtils.playSoundUI(SoundEvents.UI_BUTTON_CLICK.value());
         Managers.Net.openLink(UrlId.LINK_WYNNCRAFT_PLAYER_STATS, Map.of("username", playerName));
     }
 

@@ -471,9 +471,9 @@ public class ChatRedirectFeature extends Feature {
 
     private class LoginRedirector extends SimpleRedirector {
         private static final Pattern FOREGROUND_PATTERN = Pattern.compile(
-                "^§.\\[§r(§.)+\\|?(§.)*(?<rank>[A-Z+]+)§r(§.)+\\|?(§.)*\\] §r§.(?<name>.*)§r§. has just logged in!$");
+                "^§.\\[§r(§.)+\\|?(§.)*(?<rank>[a-zA-Z+]+)§r(§.)+\\|?(§.)*\\] §r§.(?<name>.*)§r§. has just logged in!$");
         private static final Pattern BACKGROUND_PATTERN = Pattern.compile(
-                "^(?:§r§8)?\\[§r(§.)+\\|?(§.)*(?<rank>[A-Z+]+)§r(§.)+\\|?(§.)*\\] §r§7(?<name>.*)§r§8 has just logged in!$");
+                "^(?:§r§8)?\\[§r(§.)+\\|?(§.)*(?<rank>[a-zA-Z+]+)§r(§.)+\\|?(§.)*\\] §r§7(?<name>.*)§r§8 has just logged in!$");
 
         @Override
         protected Pattern getForegroundPattern() {

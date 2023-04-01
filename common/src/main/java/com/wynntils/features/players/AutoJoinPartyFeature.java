@@ -27,7 +27,7 @@ public class AutoJoinPartyFeature extends Feature {
         if (Models.Party.isInParty()) return;
 
         Managers.Notification.queueMessage("Auto-joined " + event.getPlayerName() + "'s party");
-        McUtils.playSound(SoundEvents.END_PORTAL_FRAME_FILL);
+        McUtils.playSoundAmbient(SoundEvents.END_PORTAL_FRAME_FILL);
 
         Models.Party.partyJoin(event.getPlayerName());
     }

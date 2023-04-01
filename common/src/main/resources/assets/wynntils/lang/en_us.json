@@ -629,6 +629,7 @@
   "feature.wynntils.mythicBoxScaler.name": "Mythic Box Item Scaling",
   "feature.wynntils.mythicBoxScaler.scale.description": "How much more should mythic boxes should be scaled by?",
   "feature.wynntils.mythicBoxScaler.scale.name": "Mythic Box Scale",
+  "feature.wynntils.mythicFoundSound.name": "Myhtic Found Sound",
   "feature.wynntils.notifications.name": "Notifications",
   "feature.wynntils.npcDialogueOverlay.autoProgress.description": "Should the feature automatically progress the current dialogue by pressing sneak?",
   "feature.wynntils.npcDialogueOverlay.autoProgress.name": "Auto Progress",

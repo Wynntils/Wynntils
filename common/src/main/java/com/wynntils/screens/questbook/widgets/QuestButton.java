@@ -118,7 +118,7 @@ public class QuestButton extends WynntilsButton {
 
     private void trackQuest() {
         if (this.questInfo.isTrackable()) {
-            McUtils.playSound(SoundEvents.ANVIL_LAND);
+            McUtils.playSoundUI(SoundEvents.ANVIL_LAND);
             if (this.questInfo.equals(Models.Quest.getTrackedQuest())) {
                 Models.Quest.stopTracking();
                 questBookScreen.setTrackingRequested(null);
@@ -130,7 +130,7 @@ public class QuestButton extends WynntilsButton {
     }
 
     private void openQuestWiki() {
-        McUtils.playSound(SoundEvents.EXPERIENCE_ORB_PICKUP);
+        McUtils.playSoundUI(SoundEvents.EXPERIENCE_ORB_PICKUP);
         Models.Quest.openQuestOnWiki(questInfo);
     }
 
