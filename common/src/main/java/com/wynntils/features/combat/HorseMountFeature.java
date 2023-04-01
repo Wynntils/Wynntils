@@ -91,7 +91,7 @@ public class HorseMountFeature extends Feature {
     /** Horse should be nearby when this is called */
     private void mountHorse(Entity horse) {
         if (playWhistle.get()) {
-            McUtils.playSound(HORSE_WHISTLE_SOUND);
+            McUtils.playSoundAmbient(HORSE_WHISTLE_SOUND);
         }
 
         // swap to soul points to avoid right click problems

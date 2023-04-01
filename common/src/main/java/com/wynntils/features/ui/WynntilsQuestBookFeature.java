@@ -62,7 +62,7 @@ public class WynntilsQuestBookFeature extends Feature {
         if (event.getQuestInfo() == null) return;
 
         if (playSoundOnUpdate.get()) {
-            McUtils.playSound(QUEST_UPDATE_SOUND);
+            McUtils.playSoundUI(QUEST_UPDATE_SOUND);
         }
     }
 

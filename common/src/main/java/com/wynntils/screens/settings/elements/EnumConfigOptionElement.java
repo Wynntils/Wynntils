@@ -95,7 +95,7 @@ public class EnumConfigOptionElement extends ConfigOptionElement {
 
         configHolder.setValue(nextValue);
 
-        McUtils.playSound(SoundEvents.UI_BUTTON_CLICK.value());
+        McUtils.playSoundUI(SoundEvents.UI_BUTTON_CLICK.value());
 
         return true;
     }
