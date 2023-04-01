@@ -5,6 +5,11 @@
       "wynntils:horse-whistle-2"
     ]
   },
+  "misc.mythic-found": {
+    "sounds": [
+      "wynntils:mythic-found"
+    ]
+  },
   "ui.book.open": {
     "sounds": [
       "wynntils:book-open"
