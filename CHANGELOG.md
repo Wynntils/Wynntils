@@ -1,9 +1,21 @@
+## [0.0.2-alpha.418](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.417...v0.0.2-alpha.418) (2023-04-01)
+
+
+### New Features
+
+* Add book open/page turn sounds from Legacy ([#1418](https://github.com/Wynntils/Artemis/issues/1418)) ([025c56f](https://github.com/Wynntils/Artemis/commit/025c56f929493105845643a6f4cbf7a5d1031079))
+
 ## [0.0.2-alpha.417](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.416...v0.0.2-alpha.417) (2023-04-01)
 
 
 ### New Features
 
 * Add the quest update sound from legacy ([#1417](https://github.com/Wynntils/Artemis/issues/1417)) ([eea383f](https://github.com/Wynntils/Artemis/commit/eea383f6126e8d30de1837bcbfcfdf4e39e0e788))
+
+
+### Miscellaneous Chores
+
+* **release:** v0.0.2-alpha.417 [skip ci] ([26da70a](https://github.com/Wynntils/Artemis/commit/26da70a386f325d1684673097c22075441518b01))
 
 ## [0.0.2-alpha.416](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.415...v0.0.2-alpha.416) (2023-04-01)
 
@@ -40,16 +52,4 @@
 ### Miscellaneous Chores
 
 * **release:** v0.0.2-alpha.414 [skip ci] ([e8c524b](https://github.com/Wynntils/Artemis/commit/e8c524b608f7555a1b16b22d0159b904d61e07e5))
-
-## [0.0.2-alpha.413](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.412...v0.0.2-alpha.413) (2023-03-31)
-
-
-### New Features
-
-* Add Horse Whistle ([#1414](https://github.com/Wynntils/Artemis/issues/1414)) ([85bd0ee](https://github.com/Wynntils/Artemis/commit/85bd0ee034b3fe59afe562032bc03161c9fde71a))
-
-
-### Miscellaneous Chores
-
-* **release:** v0.0.2-alpha.413 [skip ci] ([cd87b49](https://github.com/Wynntils/Artemis/commit/cd87b49ad15aafebb343c4d06dd0232a18df5361))
 
