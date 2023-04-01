@@ -8,6 +8,7 @@ import com.wynntils.core.config.Category;
 import com.wynntils.core.config.ConfigCategory;
 import com.wynntils.core.features.Feature;
 import com.wynntils.mc.event.PauseMenuInitEvent;
+import com.wynntils.screens.base.WynntilsMenuScreenBase;
 import com.wynntils.screens.maps.GuildMapScreen;
 import com.wynntils.screens.wynntilsmenu.WynntilsMenuScreen;
 import com.wynntils.utils.mc.McUtils;
@@ -56,7 +57,7 @@ public class WynncraftPauseScreenFeature extends Feature {
         Button wynntilsMenu = replaceButtonFunction(
                 replacedButtons.get(2),
                 Component.translatable("feature.wynntils.wynncraftPauseScreen.wynntilsMenuButton.name"),
-                (button) -> McUtils.mc().setScreen(WynntilsMenuScreen.create()));
+                (button) -> WynntilsMenuScreenBase.openBook(WynntilsMenuScreen.create()));
         replacedButtons.set(2, wynntilsMenu);
 
         Button classSelection = replaceButtonFunction(

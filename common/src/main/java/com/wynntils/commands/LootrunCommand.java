@@ -16,6 +16,7 @@ import com.wynntils.models.lootruns.type.LootrunNote;
 import com.wynntils.models.lootruns.type.LootrunSaveResult;
 import com.wynntils.models.lootruns.type.LootrunState;
 import com.wynntils.models.lootruns.type.LootrunUndoResult;
+import com.wynntils.screens.base.WynntilsMenuScreenBase;
 import com.wynntils.screens.lootrun.WynntilsLootrunsScreen;
 import com.wynntils.utils.mc.McUtils;
 import com.wynntils.utils.mc.PosUtils;
@@ -388,7 +389,7 @@ public class LootrunCommand extends Command {
 
     private int screenLootrun(CommandContext<CommandSourceStack> context) {
         // Delay is needed to prevent chat screen overwriting the lootrun screen
-        Managers.TickScheduler.scheduleLater(() -> McUtils.mc().setScreen(WynntilsLootrunsScreen.create()), 2);
+        Managers.TickScheduler.scheduleLater(() -> WynntilsMenuScreenBase.openBook(WynntilsLootrunsScreen.create()), 2);
         return 1;
     }
 }
