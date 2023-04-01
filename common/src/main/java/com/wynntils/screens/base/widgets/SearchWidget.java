@@ -144,7 +144,7 @@ public class SearchWidget extends TextInputBoxWidget {
                 && mouseX <= this.getX() + this.width
                 && mouseY >= this.getY()
                 && mouseY <= this.getY() + this.height) {
-            McUtils.playSound(SoundEvents.UI_BUTTON_CLICK.value());
+            McUtils.playSoundUI(SoundEvents.UI_BUTTON_CLICK.value());
             setCursorAndHighlightPositions(getIndexAtPosition(mouseX));
             isDragging = true;
             textboxScreen.setFocusedTextInput(this);

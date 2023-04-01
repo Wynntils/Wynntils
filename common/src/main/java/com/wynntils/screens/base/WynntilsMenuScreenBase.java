@@ -7,17 +7,29 @@ package com.wynntils.screens.base;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.wynntils.core.WynntilsMod;
 import com.wynntils.utils.colors.CommonColors;
+import com.wynntils.utils.mc.McUtils;
 import com.wynntils.utils.render.FontRenderer;
 import com.wynntils.utils.render.RenderUtils;
 import com.wynntils.utils.render.Texture;
 import com.wynntils.utils.render.type.HorizontalAlignment;
 import com.wynntils.utils.render.type.TextShadow;
 import com.wynntils.utils.render.type.VerticalAlignment;
+import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.network.chat.Component;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.sounds.SoundEvent;
 
 public abstract class WynntilsMenuScreenBase extends WynntilsScreen {
+    private static final ResourceLocation BOOK_OPEN_ID = new ResourceLocation("wynntils:ui.book.open");
+    private static final SoundEvent BOOK_OPEN_SOUND = SoundEvent.createVariableRangeEvent(BOOK_OPEN_ID);
+
     protected WynntilsMenuScreenBase(Component component) {
         super(component);
+    }
+
+    public static void openBook(Screen screen) {
+        McUtils.mc().setScreen(screen);
+        McUtils.playSoundUI(BOOK_OPEN_SOUND);
     }
 
     protected void renderBackgroundTexture(PoseStack poseStack) {

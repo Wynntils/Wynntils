@@ -19,10 +19,10 @@ import net.minecraftforge.eventbus.api.SubscribeEvent;
 @ConfigCategory(Category.EMBELLISHMENTS)
 public class WybelSoundFeature extends Feature {
     private static final ResourceLocation WYBEL_SQUEAK_ID = new ResourceLocation("wynntils:wybel.squeak");
-    private static SoundEvent WYBEL_SQUEAK_SOUND = SoundEvent.createVariableRangeEvent(WYBEL_SQUEAK_ID);
+    private static final SoundEvent WYBEL_SQUEAK_SOUND = SoundEvent.createVariableRangeEvent(WYBEL_SQUEAK_ID);
 
     private static final ResourceLocation WYBEL_PURR_ID = new ResourceLocation("wynntils:wybel.purr");
-    private static SoundEvent WYBEL_PURR_SOUND = SoundEvent.createVariableRangeEvent(WYBEL_PURR_ID);
+    private static final SoundEvent WYBEL_PURR_SOUND = SoundEvent.createVariableRangeEvent(WYBEL_PURR_ID);
 
     @RegisterConfig
     public final Config<Boolean> hideText = new Config<>(false);
@@ -33,13 +33,13 @@ public class WybelSoundFeature extends Feature {
 
         String msg = event.getCodedMessage();
         if (msg.contains("squeak")) {
-            McUtils.playSound(WYBEL_SQUEAK_SOUND);
+            McUtils.playSoundAmbient(WYBEL_SQUEAK_SOUND);
             if (hideText.get()) {
                 event.setCanceled(true);
             }
         }
         if (msg.contains("purr")) {
-            McUtils.playSound(WYBEL_PURR_SOUND);
+            McUtils.playSoundAmbient(WYBEL_PURR_SOUND);
             if (hideText.get()) {
                 event.setCanceled(true);
             }

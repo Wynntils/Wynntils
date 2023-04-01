@@ -68,7 +68,7 @@ public class ChatMentionFeature extends Feature {
                 e.setMessage(rewriteComponentTree(message));
             }
             if (dingMention.get()) {
-                McUtils.playSound(SoundEvents.NOTE_BLOCK_PLING.value());
+                McUtils.playSoundUI(SoundEvents.NOTE_BLOCK_PLING.value());
             }
         }
     }

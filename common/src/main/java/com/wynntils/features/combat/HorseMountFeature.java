@@ -36,7 +36,7 @@ import org.lwjgl.glfw.GLFW;
 @ConfigCategory(Category.COMBAT)
 public class HorseMountFeature extends Feature {
     private static final ResourceLocation HORSE_WHISTLE_ID = new ResourceLocation("wynntils:horse.whistle");
-    private static SoundEvent HORSE_WHISTLE_SOUND = SoundEvent.createVariableRangeEvent(HORSE_WHISTLE_ID);
+    private static final SoundEvent HORSE_WHISTLE_SOUND = SoundEvent.createVariableRangeEvent(HORSE_WHISTLE_ID);
 
     private static final int SEARCH_RADIUS = 6; // Furthest blocks away from which we can interact with a horse
     private static final int SUMMON_ATTEMPTS = 8;
@@ -91,7 +91,7 @@ public class HorseMountFeature extends Feature {
     /** Horse should be nearby when this is called */
     private void mountHorse(Entity horse) {
         if (playWhistle.get()) {
-            McUtils.playSound(HORSE_WHISTLE_SOUND);
+            McUtils.playSoundAmbient(HORSE_WHISTLE_SOUND);
         }
 
         // swap to soul points to avoid right click problems
