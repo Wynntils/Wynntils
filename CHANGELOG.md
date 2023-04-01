@@ -1,9 +1,21 @@
+## [0.0.2-alpha.420](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.419...v0.0.2-alpha.420) (2023-04-01)
+
+
+### New Features
+
+* Add mythic found sound ([#1421](https://github.com/Wynntils/Artemis/issues/1421)) ([7f81c14](https://github.com/Wynntils/Artemis/commit/7f81c14e2ba98996848f045c7e23d8370ebd0019))
+
 ## [0.0.2-alpha.419](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.418...v0.0.2-alpha.419) (2023-04-01)
 
 
 ### Bug Fixes
 
 * Fix even more login redirects ([#1422](https://github.com/Wynntils/Artemis/issues/1422)) ([8c7d125](https://github.com/Wynntils/Artemis/commit/8c7d12524890e90f8aed0b10da861dfaa5ed7140))
+
+
+### Miscellaneous Chores
+
+* **release:** v0.0.2-alpha.419 [skip ci] ([0292916](https://github.com/Wynntils/Artemis/commit/0292916f0dd984a887e3deace1c458c5b0d3e249))
 
 ## [0.0.2-alpha.418](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.417...v0.0.2-alpha.418) (2023-04-01)
 
@@ -40,16 +52,4 @@
 ### Miscellaneous Chores
 
 * **release:** v0.0.2-alpha.416 [skip ci] ([b1c6468](https://github.com/Wynntils/Artemis/commit/b1c64684159bc7a231e69a8710f55810ca3822af))
-
-## [0.0.2-alpha.415](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.414...v0.0.2-alpha.415) (2023-03-31)
-
-
-### Bug Fixes
-
-* Fix info box preview ([#1415](https://github.com/Wynntils/Artemis/issues/1415)) ([91555df](https://github.com/Wynntils/Artemis/commit/91555df39332007337f9cd0991c9bb960e72259f))
-
-
-### Miscellaneous Chores
-
-* **release:** v0.0.2-alpha.415 [skip ci] ([0409319](https://github.com/Wynntils/Artemis/commit/04093198c2c00cad2889b6de2cd047bc8b29b0e7))
 
