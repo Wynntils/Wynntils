@@ -36,6 +36,7 @@ public final class StorageManager extends Manager {
     private final ScheduledExecutorService executor = Executors.newScheduledThreadPool(1);
     private final Map<String, Storage<?>> storages = new TreeMap<>();
     private final Map<Storage<?>, Type> storageTypes = new HashMap<>();
+    private final Map<Storage<?>, Storageable> storageOwner = new HashMap<>();
 
     private long lastPersisted;
     private boolean scheduledPersist;
@@ -74,6 +75,7 @@ public final class StorageManager extends Manager {
 
                 Type valueType = Managers.Json.getJsonValueType(storageField);
                 storageTypes.put(storage, valueType);
+                storageOwner.put(storage, storageable);
             } catch (IllegalAccessException e) {
                 throw new RuntimeException(e);
             }
@@ -113,6 +115,9 @@ public final class StorageManager extends Manager {
             JsonElement jsonElem = storageJson.get(jsonName);
             Object value = Managers.Json.GSON.fromJson(jsonElem, storageTypes.get(storage));
             storage.set(value);
+
+            Storageable owner = storageOwner.get(storage);
+            owner.onStorageLoad();
         });
     }
 
