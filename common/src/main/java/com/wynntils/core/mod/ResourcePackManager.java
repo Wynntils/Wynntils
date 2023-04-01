@@ -9,7 +9,6 @@ import com.wynntils.core.components.Manager;
 import com.wynntils.core.storage.Storage;
 import com.wynntils.mc.event.ResourcePackClearEvent;
 import com.wynntils.mc.event.ResourcePackEvent;
-import com.wynntils.mc.extension.DownloadedPackSourceExtension;
 import com.wynntils.utils.mc.McUtils;
 import java.io.File;
 import java.nio.charset.StandardCharsets;
@@ -73,9 +72,7 @@ public final class ResourcePackManager extends Manager {
     }
 
     private Optional<String> getCurrentPreloadedHash() {
-        DownloadedPackSourceExtension downloadedPackSource =
-                ((DownloadedPackSourceExtension) McUtils.mc().getDownloadedPackSource());
-        Pack pack = downloadedPackSource.getServerPack();
+        Pack pack = McUtils.mc().getDownloadedPackSource().serverPack;
         if (!(pack instanceof PreloadedPack preloadedPack)) return Optional.empty();
 
         String currentHash = preloadedPack.getHash();
@@ -88,8 +85,6 @@ public final class ResourcePackManager extends Manager {
         Optional<String> current = getCurrentPreloadedHash();
         if (current.isPresent() && current.get().equals(requestedPreloadHash.get())) return;
 
-        DownloadedPackSourceExtension downloadedPackSource =
-                (DownloadedPackSourceExtension) McUtils.mc().getDownloadedPackSource();
         Pack pack = getPackForHash(requestedPreloadHash.get());
         if (pack == null) {
             // File is missing, forget about it
@@ -97,7 +92,7 @@ public final class ResourcePackManager extends Manager {
             return;
         }
 
-        downloadedPackSource.setServerPack(pack);
+        McUtils.mc().getDownloadedPackSource().serverPack = pack;
     }
 
     private Pack getPackForHash(String hash) {

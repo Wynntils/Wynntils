@@ -6,7 +6,6 @@ package com.wynntils.mc.mixin;
 
 import com.wynntils.core.events.MixinHelper;
 import com.wynntils.mc.event.ResourcePackClearEvent;
-import com.wynntils.mc.extension.DownloadedPackSourceExtension;
 import java.util.concurrent.CompletableFuture;
 import net.minecraft.client.resources.DownloadedPackSource;
 import net.minecraft.server.packs.repository.Pack;
@@ -18,7 +17,7 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 @Mixin(DownloadedPackSource.class)
-public abstract class DownloadedPackSourceMixin implements DownloadedPackSourceExtension {
+public abstract class DownloadedPackSourceMixin {
     @Shadow
     private Pack serverPack;
 
@@ -32,15 +31,5 @@ public abstract class DownloadedPackSourceMixin implements DownloadedPackSourceE
             cir.setReturnValue(CompletableFuture.completedFuture(null));
             cir.cancel();
         }
-    }
-
-    @Override
-    public void setServerPack(Pack pack) {
-        serverPack = pack;
-    }
-
-    @Override
-    public Pack getServerPack() {
-        return serverPack;
     }
 }
