@@ -6,4 +6,6 @@ package com.wynntils.core.storage;
 
 public interface Storageable {
     String getStorageJsonName();
+
+    default void onStorageLoad() {}
 }
