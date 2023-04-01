@@ -1,9 +1,21 @@
+## [0.0.2-alpha.423](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.422...v0.0.2-alpha.423) (2023-04-01)
+
+
+### Bug Fixes
+
+* Prevent crash in DialogueOptionOverrideFeature ([#1424](https://github.com/Wynntils/Artemis/issues/1424)) ([dee4a47](https://github.com/Wynntils/Artemis/commit/dee4a47d03329614d2008ee746131d1efa33bbfb))
+
 ## [0.0.2-alpha.422](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.421...v0.0.2-alpha.422) (2023-04-01)
 
 
 ### Bug Fixes
 
 * Fix translations feature crashes ([#1423](https://github.com/Wynntils/Artemis/issues/1423)) ([d061a95](https://github.com/Wynntils/Artemis/commit/d061a95ec74a5441169db2aed699df8cd2d49985))
+
+
+### Miscellaneous Chores
+
+* **release:** v0.0.2-alpha.422 [skip ci] ([ec87598](https://github.com/Wynntils/Artemis/commit/ec8759822712cd0d819a79cd1634429abf67c82d))
 
 ## [0.0.2-alpha.421](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.420...v0.0.2-alpha.421) (2023-04-01)
 
@@ -40,16 +52,4 @@
 ### Miscellaneous Chores
 
 * **release:** v0.0.2-alpha.419 [skip ci] ([0292916](https://github.com/Wynntils/Artemis/commit/0292916f0dd984a887e3deace1c458c5b0d3e249))
-
-## [0.0.2-alpha.418](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.417...v0.0.2-alpha.418) (2023-04-01)
-
-
-### New Features
-
-* Add book open/page turn sounds from Legacy ([#1418](https://github.com/Wynntils/Artemis/issues/1418)) ([025c56f](https://github.com/Wynntils/Artemis/commit/025c56f929493105845643a6f4cbf7a5d1031079))
-
-
-### Miscellaneous Chores
-
-* **release:** v0.0.2-alpha.418 [skip ci] ([2a2df7f](https://github.com/Wynntils/Artemis/commit/2a2df7f48d7177e511321771c05d0f5876890caa))
 
