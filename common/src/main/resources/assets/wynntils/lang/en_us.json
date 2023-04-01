@@ -858,6 +858,8 @@
   "feature.wynntils.wynntilsCosmetics.renderOwnCape.description": "Should your custom Wynntils cape/elytra be shown on your own screen?",
   "feature.wynntils.wynntilsCosmetics.renderOwnCape.name": "Show Own Cape",
   "feature.wynntils.wynntilsQuestBook.name": "Wynntils Quest Book",
+  "feature.wynntils.wynntilsQuestBook.playSoundOnUpdate.description": "Should a sound be played when the quest books get updated with a new task?",
+  "feature.wynntils.wynntilsQuestBook.playSoundOnUpdate.name": "Play Sound on Quest Book Updates",
   "feature.wynntils.wynntilsQuestBook.questBookShouldOpenWynntilsMenu.description": "Should the Wynncraft quest book item open the Wynntils Menu instead of the quest book?",
   "feature.wynntils.wynntilsQuestBook.questBookShouldOpenWynntilsMenu.name": "Quest Book Opens Wynntils Menu",
   "feature.wynntils.wynntilsQuestBook.replaceWynncraftQuestBook.description": "Should the Wynncraft quest book be replaced with the mod's custom one?",
