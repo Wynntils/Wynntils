@@ -1,9 +1,21 @@
+## [0.0.2-alpha.419](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.418...v0.0.2-alpha.419) (2023-04-01)
+
+
+### Bug Fixes
+
+* Fix even more login redirects ([#1422](https://github.com/Wynntils/Artemis/issues/1422)) ([8c7d125](https://github.com/Wynntils/Artemis/commit/8c7d12524890e90f8aed0b10da861dfaa5ed7140))
+
 ## [0.0.2-alpha.418](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.417...v0.0.2-alpha.418) (2023-04-01)
 
 
 ### New Features
 
 * Add book open/page turn sounds from Legacy ([#1418](https://github.com/Wynntils/Artemis/issues/1418)) ([025c56f](https://github.com/Wynntils/Artemis/commit/025c56f929493105845643a6f4cbf7a5d1031079))
+
+
+### Miscellaneous Chores
+
+* **release:** v0.0.2-alpha.418 [skip ci] ([2a2df7f](https://github.com/Wynntils/Artemis/commit/2a2df7f48d7177e511321771c05d0f5876890caa))
 
 ## [0.0.2-alpha.417](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.416...v0.0.2-alpha.417) (2023-04-01)
 
@@ -40,16 +52,4 @@
 ### Miscellaneous Chores
 
 * **release:** v0.0.2-alpha.415 [skip ci] ([0409319](https://github.com/Wynntils/Artemis/commit/04093198c2c00cad2889b6de2cd047bc8b29b0e7))
-
-## [0.0.2-alpha.414](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.413...v0.0.2-alpha.414) (2023-03-31)
-
-
-### Bug Fixes
-
-* Fix occasional crash for custom bars ([#1416](https://github.com/Wynntils/Artemis/issues/1416)) ([1b5b18b](https://github.com/Wynntils/Artemis/commit/1b5b18b26331f32307035bfbe56702e7bd784ab4))
-
-
-### Miscellaneous Chores
-
-* **release:** v0.0.2-alpha.414 [skip ci] ([e8c524b](https://github.com/Wynntils/Artemis/commit/e8c524b608f7555a1b16b22d0159b904d61e07e5))
 
