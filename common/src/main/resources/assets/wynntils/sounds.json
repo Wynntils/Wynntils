@@ -5,6 +5,11 @@
       "wynntils:horse-whistle-2"
     ]
   },
+  "ui.quest.update": {
+    "sounds": [
+      "wynntils:quest-update"
+    ]
+  },
   "wybel.purr": {
     "sounds": [
       "wynntils:wybel-purr",
