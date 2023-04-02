@@ -31,8 +31,8 @@ public abstract class BarOverlay extends DynamicOverlay {
     @RegisterConfig("overlay.wynntils.barOverlay.flip")
     public final Config<Boolean> flip = new Config<>(false);
 
-    @RegisterConfig("overlay.wynntils.barOverlay.animated")
-    public final Config<Float> animated = new Config<>(2f);
+    @RegisterConfig("overlay.wynntils.barOverlay.animationTime")
+    public final Config<Float> animationTime = new Config<>(2f);
 
     @RegisterConfig("overlay.wynntils.barOverlay.heightModifier")
     public final Config<Float> heightModifier = new Config<>(1f);
@@ -108,12 +108,12 @@ public abstract class BarOverlay extends DynamicOverlay {
 
         if (value == CappedValue.EMPTY) return;
 
-        if (animated.get() == 0) {
+        if (animationTime.get() == 0) {
             currentProgress = (float) value.getProgress();
             return;
         }
 
-        currentProgress -= (animated.get() * 0.1f) * (currentProgress - value.getProgress());
+        currentProgress -= (animationTime.get() * 0.1f) * (currentProgress - value.getProgress());
     }
 
     private Pair<String, ErrorOr<CappedValue>> calculateTemplate(BarOverlayTemplatePair template) {

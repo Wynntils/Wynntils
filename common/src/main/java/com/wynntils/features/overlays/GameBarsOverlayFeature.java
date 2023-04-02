@@ -99,8 +99,8 @@ public class GameBarsOverlayFeature extends Feature {
         @RegisterConfig("feature.wynntils.gameBarsOverlay.overlay.baseBar.flip")
         public final Config<Boolean> flip = new Config<>(false);
 
-        @RegisterConfig("feature.wynntils.gameBarsOverlay.overlay.baseBar.animated")
-        public final Config<Float> animated = new Config<>(2f);
+        @RegisterConfig("feature.wynntils.gameBarsOverlay.overlay.baseBar.animationTime")
+        public final Config<Float> animationTime = new Config<>(2f);
 
         @RegisterConfig("feature.wynntils.gameBarsOverlay.overlay.baseBar.shouldDisplayOriginal")
         public final Config<Boolean> shouldDisplayOriginal = new Config<>(false);
@@ -130,13 +130,13 @@ public class GameBarsOverlayFeature extends Feature {
         public void onTick(TickEvent event) {
             if (!Models.WorldState.onWorld() || !isActive()) return;
 
-            if (animated.get() == 0) {
+            if (animationTime.get() == 0) {
                 currentProgress = progress().progress();
                 return;
             }
 
             currentProgress -=
-                    (animated.get() * 0.1f) * (currentProgress - progress().progress());
+                    (animationTime.get() * 0.1f) * (currentProgress - progress().progress());
         }
 
         @Override
