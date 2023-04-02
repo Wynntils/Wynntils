@@ -5,7 +5,7 @@
 package com.wynntils.features.chat;
 
 import com.google.common.collect.Sets;
-import com.wynntils.core.chat.ChatTab;
+import com.wynntils.core.chat.tab.ChatTab;
 import com.wynntils.core.components.Managers;
 import com.wynntils.core.config.Category;
 import com.wynntils.core.config.ConfigCategory;

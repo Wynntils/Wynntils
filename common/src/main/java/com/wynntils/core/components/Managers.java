@@ -4,7 +4,8 @@
  */
 package com.wynntils.core.components;
 
-import com.wynntils.core.chat.ChatTabManager;
+import com.wynntils.core.chat.tab.ChatTabManager;
+import com.wynntils.core.chat.transcoder.ChatTranscoderManager;
 import com.wynntils.core.commands.CommandManager;
 import com.wynntils.core.config.ConfigManager;
 import com.wynntils.core.config.upfixers.ConfigUpfixerManager;
@@ -33,6 +34,7 @@ public final class Managers {
     public static final UrlManager Url = new UrlManager(TickScheduler);
 
     public static final ChatTabManager ChatTab = new ChatTabManager();
+    public static final ChatTranscoderManager ChatTranscoder = new ChatTranscoderManager();
     public static final CommandManager Command = new CommandManager();
     public static final ConfigUpfixerManager ConfigUpfixer = new ConfigUpfixerManager();
     public static final ConnectionManager Connection = new ConnectionManager();

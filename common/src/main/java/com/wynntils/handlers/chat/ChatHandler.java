@@ -100,6 +100,9 @@ public final class ChatHandler extends Handler {
         if (e instanceof ChatPacketReceivedEvent.GameInfo) return;
 
         Component message = e.getMessage();
+
+        WynntilsMod.info(Managers.ChatTranscoder.fromComponent(message).getCoded());
+
         String codedMessage = ComponentUtils.getCoded(message);
 
         // Sometimes there is just a trailing newline; that does not

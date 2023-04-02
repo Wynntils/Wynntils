@@ -29,6 +29,7 @@ accessible field net/minecraft/client/gui/screens/inventory/AbstractContainerScr
 accessible field net/minecraft/client/gui/screens/inventory/AbstractContainerScreen topPos I
 accessible field net/minecraft/client/renderer/entity/ItemRenderer textureManager Lnet/minecraft/client/renderer/texture/TextureManager;
 accessible field net/minecraft/client/resources/DownloadedPackSource serverPack Lnet/minecraft/server/packs/repository/Pack;
+accessible field net/minecraft/network/chat/HoverEvent$Action LOOKUP Ljava/util/Map;
 accessible field net/minecraft/network/protocol/game/ClientboundBossEventPacket$AddOperation name Lnet/minecraft/network/chat/Component;
 accessible field net/minecraft/network/protocol/game/ClientboundBossEventPacket$UpdateNameOperation name Lnet/minecraft/network/chat/Component;
 accessible field net/minecraft/server/packs/FilePackResources file Ljava/io/File;
