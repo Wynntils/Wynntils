@@ -20,6 +20,8 @@ public final class CodedString {
     private final List<ClickEvent> clickEvents = new LinkedList<>();
     private final List<HoverEvent> hoverEvents = new LinkedList<>();
 
+    private Component componentCache;
+
     CodedString(Component component) {
         parts = new LinkedList<>();
 
@@ -44,9 +46,15 @@ public final class CodedString {
     }
 
     public Component getComponent() {
+        if (componentCache != null) {
+            return componentCache;
+        }
+
         MutableComponent component = Component.empty();
 
-        // TODO: Implement this
+        parts.forEach(part -> component.append(part.getComponent()));
+
+        componentCache = component;
 
         return component;
     }
@@ -77,6 +85,10 @@ public final class CodedString {
         hoverEvents.add(hoverEvent);
 
         return hoverEvents.size();
+    }
+
+    void invalidateCache() {
+        componentCache = null;
     }
 
     @Override

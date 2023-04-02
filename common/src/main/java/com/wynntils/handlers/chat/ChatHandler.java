@@ -102,6 +102,7 @@ public final class ChatHandler extends Handler {
         Component message = e.getMessage();
 
         WynntilsMod.info(Managers.ChatTranscoder.fromComponent(message).getCoded());
+        McUtils.sendMessageToClient(message);
 
         String codedMessage = ComponentUtils.getCoded(message);
 

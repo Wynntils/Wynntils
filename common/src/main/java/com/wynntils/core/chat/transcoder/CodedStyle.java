@@ -26,6 +26,8 @@ public final class CodedStyle {
     private final ClickEvent clickEvent;
     private final HoverEvent hoverEvent;
 
+    private Style styleCache;
+
     private CodedStyle(
             CodedStringPart owner,
             CustomColor color,
@@ -129,6 +131,33 @@ public final class CodedStyle {
         }
 
         return styleString.toString();
+    }
+
+    public Style getStyle() {
+        if (styleCache != null) {
+            return styleCache;
+        }
+
+        Style reconstructedStyle = Style.EMPTY
+                .withBold(bold)
+                .withItalic(italic)
+                .withUnderlined(underlined)
+                .withStrikethrough(strikethrough)
+                .withObfuscated(obfuscated)
+                .withClickEvent(clickEvent)
+                .withHoverEvent(hoverEvent);
+
+        if (color != CustomColor.NONE) {
+            reconstructedStyle = reconstructedStyle.withColor(color.asInt());
+        }
+
+        styleCache = reconstructedStyle;
+
+        return reconstructedStyle;
+    }
+
+    void invalidateCache() {
+        styleCache = null;
     }
 
     @Override

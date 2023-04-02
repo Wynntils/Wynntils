@@ -4,6 +4,8 @@
  */
 package com.wynntils.core.chat.transcoder;
 
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.network.chat.Style;
 
 public final class CodedStringPart {
@@ -11,6 +13,8 @@ public final class CodedStringPart {
     private final CodedStyle style;
 
     private final CodedString parent;
+
+    private Component componentCache;
 
     CodedStringPart(String text, Style style, CodedString parent) {
         this.text = text;
@@ -24,6 +28,22 @@ public final class CodedStringPart {
 
     public CodedString getParent() {
         return parent;
+    }
+
+    public Component getComponent() {
+        if (componentCache != null) {
+            return componentCache;
+        }
+
+        MutableComponent component = Component.literal(text).withStyle(style.getStyle());
+
+        componentCache = component;
+
+        return component;
+    }
+
+    void invalidateCache() {
+        componentCache = null;
     }
 
     @Override
