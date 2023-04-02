@@ -75,7 +75,7 @@ public class CustomBarsOverlayFeature extends Feature {
     }
 
     protected static class HealthTexturedCustomBarOverlay extends CustomBarOverlayBase {
-        @RegisterConfig("overlay.healthBar.healthTexture")
+        @RegisterConfig("overlay.wynntils.healthBar.healthTexture")
         public final Config<HealthTexture> healthTexture = new Config<>(HealthTexture.A);
 
         public HealthTexturedCustomBarOverlay(int id) {
