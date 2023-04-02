@@ -18,7 +18,7 @@ import net.minecraft.client.resources.language.I18n;
  * A single, modular feature that Wynntils provides that can be enabled or disabled. A feature
  * should never be a dependency for anything else.
  */
-public abstract class Feature extends AbstractConfigurable implements Storageable, Translatable, Comparable<Feature> {
+public abstract class Feature extends AbstractConfigurable implements Storageable, Translatable, Comparable<Object> {
     private Category category = Category.UNCATEGORIZED;
 
     @RegisterConfig("feature.wynntils.userFeature.userEnabled")
@@ -97,10 +97,14 @@ public abstract class Feature extends AbstractConfigurable implements Storageabl
     }
 
     @Override
-    public int compareTo(Feature other) {
+    public int compareTo(Object other) {
+        if (!(other instanceof Feature feature)) {
+            return 0;
+        }
+
         return ComparisonChain.start()
-                .compare(this.getCategory().toString(), other.getCategory().toString())
-                .compare(this.getTranslatedName(), other.getTranslatedName())
+                .compare(this.getCategory().toString(), feature.getCategory().toString())
+                .compare(this.getTranslatedName(), feature.getTranslatedName())
                 .result();
     }
 }

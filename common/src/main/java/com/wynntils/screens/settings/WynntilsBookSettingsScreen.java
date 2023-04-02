@@ -349,35 +349,50 @@ public final class WynntilsBookSettingsScreen extends WynntilsScreen implements 
 
         Category oldCategory = null;
 
-        List<Feature> featureList = Managers.Feature.getFeatures().stream()
-                .filter(feature -> searchMatches(feature)
-                        || feature.getVisibleConfigOptions().stream().anyMatch(this::configOptionContains)
-                        || Managers.Overlay.getFeatureOverlays(feature).stream()
-                                .anyMatch(overlay -> searchMatches(feature)
+        List<Configurable> configurableList = Stream.concat(
+                        Managers.Feature.getFeatures().stream()
+                                .filter(feature -> searchMatches(feature)
+                                        || feature.getVisibleConfigOptions().stream()
+                                                .anyMatch(this::configOptionContains))
+                                .map(feature -> (Configurable) feature),
+                        Managers.Overlay.getOverlays().stream()
+                                .filter(overlay -> searchMatches(overlay)
                                         || overlay.getVisibleConfigOptions().stream()
                                                 .anyMatch(this::configOptionContains)))
                 .sorted()
                 .toList();
 
         int offset = 0;
-        for (int i = 0; i < featureList.size(); i++) {
-            Feature feature = featureList.get(i);
+        for (int i = 0; i < configurableList.size(); i++) {
+            Configurable configurable = configurableList.get(i);
 
             int renderIndex = (i + offset) % CONFIGURABLES_PER_PAGE;
 
-            if (feature.getCategory() != oldCategory) {
-                configurables.add(new CategoryButton(37, 21 + renderIndex * 12, 140, 10, feature.getCategory()));
-                oldCategory = feature.getCategory();
+            Category category;
+
+            if (configurable instanceof Feature feature) {
+                category = feature.getCategory();
+            } else if (configurable instanceof Overlay overlay) {
+                category = Managers.Overlay.getOverlayParent(overlay).getCategory();
+            } else {
+                throw new IllegalStateException("Unknown configurable type: " + configurable.getClass());
+            }
+
+            if (category != oldCategory) {
+                configurables.add(new CategoryButton(37, 21 + renderIndex * 12, 140, 10, category));
+                oldCategory = category;
                 offset++;
                 renderIndex = (i + offset) % CONFIGURABLES_PER_PAGE;
             }
 
-            configurables.add(new ConfigurableButton(37, 21 + renderIndex * 12, 140, 10, feature));
+            configurables.add(new ConfigurableButton(37, 21 + renderIndex * 12, 140, 10, configurable));
 
-            for (Overlay overlay : Managers.Overlay.getFeatureOverlays(feature)) {
-                offset++;
-                renderIndex = (i + offset) % CONFIGURABLES_PER_PAGE;
-                configurables.add(new ConfigurableButton(37, 21 + renderIndex * 12, 140, 10, overlay));
+            if (configurable instanceof Feature feature) {
+                for (Overlay overlay : Managers.Overlay.getFeatureOverlays(feature)) {
+                    offset++;
+                    renderIndex = (i + offset) % CONFIGURABLES_PER_PAGE;
+                    configurables.add(new ConfigurableButton(37, 21 + renderIndex * 12, 140, 10, overlay));
+                }
             }
         }
 

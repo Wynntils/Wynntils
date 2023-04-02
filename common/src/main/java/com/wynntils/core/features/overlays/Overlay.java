@@ -21,7 +21,7 @@ import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.resources.language.I18n;
 import net.minecraft.world.phys.Vec2;
 
-public abstract class Overlay extends AbstractConfigurable implements Translatable, Comparable<Overlay> {
+public abstract class Overlay extends AbstractConfigurable implements Translatable, Comparable<Object> {
     @RegisterConfig("overlay.wynntils.overlay.position")
     protected final HiddenConfig<OverlayPosition> position = new HiddenConfig<>(null);
 
@@ -203,11 +203,15 @@ public abstract class Overlay extends AbstractConfigurable implements Translatab
     }
 
     @Override
-    public int compareTo(Overlay other) {
+    public int compareTo(Object other) {
+        if (!(other instanceof Overlay overlay)) {
+            return 0;
+        }
+
         return ComparisonChain.start()
-                .compareTrueFirst(this.isParentEnabled(), other.isParentEnabled())
-                .compare(this.getDeclaringClassName(), other.getDeclaringClassName())
-                .compare(this.getTranslatedName(), other.getTranslatedName())
+                .compareTrueFirst(this.isParentEnabled(), overlay.isParentEnabled())
+                .compare(this.getDeclaringClassName(), overlay.getDeclaringClassName())
+                .compare(this.getTranslatedName(), overlay.getTranslatedName())
                 .result();
     }
 
