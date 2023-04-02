@@ -1,9 +1,21 @@
+## [0.0.2-alpha.428](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.427...v0.0.2-alpha.428) (2023-04-02)
+
+
+### New Features
+
+* Config search now properly finds overlays by name, and search only shows relevant configurables ([#1433](https://github.com/Wynntils/Artemis/issues/1433)) ([8aae546](https://github.com/Wynntils/Artemis/commit/8aae5468efc8e2d0c02277290220c1f0af069b30))
+
 ## [0.0.2-alpha.427](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.426...v0.0.2-alpha.427) (2023-04-02)
 
 
 ### Bug Fixes
 
 * Fix scrolling bugs in CharacterSelectorScreen ([#1436](https://github.com/Wynntils/Artemis/issues/1436)) ([13e7103](https://github.com/Wynntils/Artemis/commit/13e7103bda96fb4e27e2f5843447d7d666ba8616))
+
+
+### Miscellaneous Chores
+
+* **release:** v0.0.2-alpha.427 [skip ci] ([6f87c20](https://github.com/Wynntils/Artemis/commit/6f87c20daf59d376cfdf98578147af8404437261))
 
 ## [0.0.2-alpha.426](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.425...v0.0.2-alpha.426) (2023-04-02)
 
@@ -40,16 +52,4 @@
 ### Miscellaneous Chores
 
 * **release:** v0.0.2-alpha.424 [skip ci] ([b6af628](https://github.com/Wynntils/Artemis/commit/b6af6283f1073b6745f2b2fdb61ea0f3082f538a))
-
-## [0.0.2-alpha.423](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.422...v0.0.2-alpha.423) (2023-04-01)
-
-
-### Bug Fixes
-
-* Prevent crash in DialogueOptionOverrideFeature ([#1424](https://github.com/Wynntils/Artemis/issues/1424)) ([dee4a47](https://github.com/Wynntils/Artemis/commit/dee4a47d03329614d2008ee746131d1efa33bbfb))
-
-
-### Miscellaneous Chores
-
-* **release:** v0.0.2-alpha.423 [skip ci] ([d355ae5](https://github.com/Wynntils/Artemis/commit/d355ae5984e5f185168bf63465044345caad8010))
 
