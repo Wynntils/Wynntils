@@ -1241,6 +1241,8 @@
   "function.wynntils.xpReq.name": "XP[req]",
   "function.wynntils.xpReqRaw.description": "XP points needed to level up (raw number)",
   "function.wynntils.xpReqRaw.name": "XP[req]",
+  "overlay.wynntils.barOverlay.animated.description": "Should the bar be animated? Set this to 0 to disable.",
+  "overlay.wynntils.barOverlay.animated.name": "Animated",
   "overlay.wynntils.barOverlay.flip.description": "Should the overlay be flipped?",
   "overlay.wynntils.barOverlay.flip.name": "Flip",
   "overlay.wynntils.barOverlay.heightModifier.description": "How much should the overlay height be modified?",
