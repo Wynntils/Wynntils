@@ -22,6 +22,7 @@ import com.wynntils.handlers.bossbar.TrackedBar;
 import com.wynntils.handlers.bossbar.event.BossBarAddedEvent;
 import com.wynntils.handlers.bossbar.type.BossBarProgress;
 import com.wynntils.mc.event.RenderEvent;
+import com.wynntils.mc.event.TickEvent;
 import com.wynntils.models.abilities.bossbars.AwakenedBar;
 import com.wynntils.models.abilities.bossbars.BloodPoolBar;
 import com.wynntils.models.abilities.bossbars.CorruptedBar;
@@ -98,12 +99,17 @@ public class GameBarsOverlayFeature extends Feature {
         @RegisterConfig("feature.wynntils.gameBarsOverlay.overlay.baseBar.flip")
         public final Config<Boolean> flip = new Config<>(false);
 
+        @RegisterConfig("feature.wynntils.gameBarsOverlay.overlay.baseBar.animated")
+        public final Config<Float> animated = new Config<>(2f);
+
         @RegisterConfig("feature.wynntils.gameBarsOverlay.overlay.baseBar.shouldDisplayOriginal")
         public final Config<Boolean> shouldDisplayOriginal = new Config<>(false);
 
         // hacky override of custom color
         @RegisterConfig("feature.wynntils.gameBarsOverlay.overlay.baseBar.textColor")
         public final Config<CustomColor> textColor = new Config<>(CommonColors.WHITE);
+
+        protected float currentProgress = 0f;
 
         protected BaseBarOverlay(OverlayPosition position, OverlaySize size, CustomColor textColor) {
             super(position, size);
@@ -120,6 +126,19 @@ public class GameBarsOverlayFeature extends Feature {
 
         protected abstract boolean isActive();
 
+        @SubscribeEvent
+        public void onTick(TickEvent event) {
+            if (!Models.WorldState.onWorld() || !isActive()) return;
+
+            if (animated.get() == 0) {
+                currentProgress = progress().progress();
+                return;
+            }
+
+            currentProgress -=
+                    (animated.get() * 0.1f) * (currentProgress - progress().progress());
+        }
+
         @Override
         public void render(PoseStack poseStack, MultiBufferSource bufferSource, float partialTicks, Window window) {
             if (!Models.WorldState.onWorld() || !isActive()) return;
@@ -134,8 +153,8 @@ public class GameBarsOverlayFeature extends Feature {
                     barProgress.value().current(), icon(), barProgress.value().max());
             renderText(poseStack, bufferSource, renderY, text);
 
-            float progress = (flip.get() ? -1 : 1) * barProgress.progress();
-            renderBar(poseStack, bufferSource, renderY + 10, barHeight, progress);
+            float renderedProgress = (flip.get() ? -1 : 1) * currentProgress;
+            renderBar(poseStack, bufferSource, renderY + 10, barHeight, renderedProgress);
         }
 
         protected float getModifiedRenderY(float renderedHeight) {
