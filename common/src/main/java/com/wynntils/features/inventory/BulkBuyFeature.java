@@ -17,6 +17,7 @@ import com.wynntils.utils.mc.ComponentUtils;
 import com.wynntils.utils.mc.KeyboardUtils;
 import com.wynntils.utils.mc.LoreUtils;
 import com.wynntils.utils.mc.McUtils;
+import com.wynntils.utils.mc.type.CodedString;
 import com.wynntils.utils.wynn.ContainerUtils;
 import java.util.ArrayList;
 import java.util.List;
@@ -79,15 +80,15 @@ public class BulkBuyFeature extends Feature {
     private List<Component> replacePrices(List<Component> oldLore) {
         if (!KeyboardUtils.isShiftDown()) return oldLore;
 
-        String priceLine = ComponentUtils.getCoded(oldLore.get(oldLore.size() - 1));
-        Matcher priceMatcher = PRICE_PATTERN.matcher(priceLine);
+        CodedString priceLine = ComponentUtils.getCoded(oldLore.get(oldLore.size() - 1));
+        Matcher priceMatcher = PRICE_PATTERN.matcher(priceLine.str());
         if (!priceMatcher.find()) {
             WynntilsMod.warn("Could not find price for " + oldLore.get(0).getString() + " in " + priceLine);
             return oldLore;
         }
         int newPrice = Integer.parseInt(priceMatcher.group(1)) * bulkBuyAmount.get();
 
-        String newLine = priceLine.replace(priceMatcher.group(1), BULK_BUY_ACTIVE_COLOR + Integer.toString(newPrice));
+        String newLine = priceLine.str().replace(priceMatcher.group(1), BULK_BUY_ACTIVE_COLOR + Integer.toString(newPrice));
 
         if (newPrice > Models.Emerald.getAmountInInventory()) {
             newLine = newLine.replace("a✔", "c✖"); // Replace green checkmark with red x

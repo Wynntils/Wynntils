@@ -13,6 +13,7 @@ import com.wynntils.models.character.type.ClassType;
 import com.wynntils.screens.characterselector.CharacterSelectorScreen;
 import com.wynntils.utils.mc.ComponentUtils;
 import com.wynntils.utils.mc.LoreUtils;
+import com.wynntils.utils.mc.type.CodedString;
 import com.wynntils.utils.wynn.ContainerUtils;
 import java.util.ArrayList;
 import java.util.List;
@@ -77,8 +78,8 @@ public final class CharacterSelectionModel extends Model {
         List<ItemStack> items = event.getItems();
         for (int i = 0; i < items.size(); i++) {
             ItemStack itemStack = items.get(i);
-            String itemName = ComponentUtils.getCoded(itemStack.getHoverName());
-            Matcher classItemMatcher = CLASS_ITEM_NAME_PATTERN.matcher(itemName);
+            CodedString itemName = ComponentUtils.getCoded(itemStack.getHoverName());
+            Matcher classItemMatcher = CLASS_ITEM_NAME_PATTERN.matcher(itemName.str());
             if (classItemMatcher.matches()) {
                 ClassInfo classInfo = getClassInfoFromItem(itemStack, i, classItemMatcher.group(1));
                 classInfoList.add(classInfo);
@@ -86,7 +87,7 @@ public final class CharacterSelectionModel extends Model {
             }
 
             if (firstNewCharacterSlot == -1
-                    && NEW_CLASS_ITEM_NAME_PATTERN.matcher(itemName).matches()) {
+                    && NEW_CLASS_ITEM_NAME_PATTERN.matcher(itemName.str()).matches()) {
                 firstNewCharacterSlot = i;
             }
         }

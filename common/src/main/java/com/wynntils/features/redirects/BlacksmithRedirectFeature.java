@@ -62,7 +62,7 @@ public class BlacksmithRedirectFeature extends Feature {
             for (Component sibling : event.getOriginalMessage().getSiblings()) {
                 // Retrieve the color code of the item, and then match it to the item tier.
                 Matcher itemMatcher =
-                        ITEM_PATTERN.matcher(ComponentUtils.getCoded(sibling)); // Second group contains the items.
+                        ITEM_PATTERN.matcher(ComponentUtils.getCoded(sibling).str()); // Second group contains the items.
 
                 if (!itemMatcher.matches()) {
                     continue;

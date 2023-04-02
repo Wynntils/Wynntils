@@ -11,6 +11,7 @@ import com.wynntils.core.features.Feature;
 import com.wynntils.handlers.chat.event.ChatMessageReceivedEvent;
 import com.wynntils.mc.event.ClientsideMessageEvent;
 import com.wynntils.utils.mc.ComponentUtils;
+import com.wynntils.utils.mc.type.CodedString;
 import com.wynntils.utils.mc.type.Location;
 import com.wynntils.utils.wynn.LocationUtils;
 import java.util.List;
@@ -63,7 +64,7 @@ public class ChatCoordinatesFeature extends Feature {
             }
 
             do {
-                String text = ComponentUtils.getCoded(comp);
+                CodedString text = ComponentUtils.getCoded(comp);
                 Style style = comp.getStyle();
 
                 Optional<Location> location = LocationUtils.parseFromString(m.group());
@@ -72,7 +73,7 @@ public class ChatCoordinatesFeature extends Feature {
                     continue;
                 }
 
-                MutableComponent preText = Component.literal(text.substring(0, m.start()));
+                MutableComponent preText = Component.literal(text.str().substring(0, m.start()));
                 preText.withStyle(style);
                 temp.append(preText);
 
@@ -81,7 +82,7 @@ public class ChatCoordinatesFeature extends Feature {
                 temp.append(compassComponent);
 
                 comp = Component.literal(ComponentUtils.getLastPartCodes(ComponentUtils.getCoded(preText))
-                                + text.substring(m.end()))
+                                + text.str().substring(m.end()))
                         .withStyle(style);
                 m = LocationUtils.strictCoordinateMatcher(
                         ComponentUtils.getCoded(comp)); // recreate matcher for new substring

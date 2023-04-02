@@ -5,6 +5,7 @@
 package com.wynntils.utils.wynn;
 
 import com.wynntils.utils.mc.McUtils;
+import com.wynntils.utils.mc.type.CodedString;
 import com.wynntils.utils.mc.type.Location;
 import java.util.Optional;
 import java.util.regex.Matcher;
@@ -32,8 +33,8 @@ public final class LocationUtils {
         return Optional.empty();
     }
 
-    public static Matcher strictCoordinateMatcher(String string) {
-        return STRICT_COORDINATE_PATTERN.matcher(string);
+    public static Matcher strictCoordinateMatcher(CodedString coded) {
+        return STRICT_COORDINATE_PATTERN.matcher(coded.str());
     }
 
     public static void shareLocation(String target) {

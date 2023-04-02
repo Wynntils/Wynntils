@@ -5,6 +5,7 @@
 package com.wynntils.utils.mc;
 
 import com.wynntils.utils.MathUtils;
+import com.wynntils.utils.mc.type.CodedString;
 import com.wynntils.utils.mc.type.Location;
 import com.wynntils.utils.wynn.WynnUtils;
 import java.awt.Color;
@@ -30,12 +31,12 @@ public final class ComponentUtils {
     private static final Pattern NEWLINE_PATTERN = Pattern.compile("\n");
 
     // Text with formatting codes "§cTest §1Text"
-    public static String getCoded(Component component) {
+    public static CodedString getCoded(Component component) {
         StringBuilder result = new StringBuilder();
 
         component.visit(new CodedStringGenerator(result), Style.EMPTY);
 
-        return result.toString();
+        return new CodedString(result.toString());
     }
 
     // Text without formatting codes "Test text"
@@ -143,8 +144,8 @@ public final class ComponentUtils {
         return newLore;
     }
 
-    public static String stripFormatting(String text) {
-        return text == null ? "" : ChatFormatting.stripFormatting(text);
+    public static String stripFormatting(CodedString coded) {
+        return coded == null ? "" : ChatFormatting.stripFormatting(coded.str());
     }
 
     public static String stripColorFormatting(String text) {
@@ -155,7 +156,7 @@ public final class ComponentUtils {
         return COLOR_CODE_PATTERN.matcher(text).replaceAll("");
     }
 
-    public static String getLastPartCodes(String lastPart) {
+    public static String getLastPartCodes(CodedString lastPart) {
         if (!lastPart.contains("§")) return "";
 
         String lastPartCodes = "";
