@@ -5,15 +5,19 @@
 package com.wynntils.models.players;
 
 import com.wynntils.core.WynntilsMod;
+import com.wynntils.core.components.Handlers;
 import com.wynntils.core.components.Managers;
 import com.wynntils.core.components.Model;
 import com.wynntils.core.components.Models;
 import com.wynntils.handlers.chat.event.ChatMessageReceivedEvent;
 import com.wynntils.handlers.chat.type.MessageType;
+import com.wynntils.handlers.scoreboard.ScoreboardPart;
 import com.wynntils.mc.event.SetPlayerTeamEvent;
 import com.wynntils.models.players.event.HadesRelationsUpdateEvent;
 import com.wynntils.models.players.event.PartyEvent;
 import com.wynntils.models.players.hades.event.HadesEvent;
+import com.wynntils.models.players.scoreboard.PartyFinderScoreboardPart;
+import com.wynntils.models.players.scoreboard.PartyScoreboardPart;
 import com.wynntils.models.worlds.WorldStateModel;
 import com.wynntils.models.worlds.event.WorldStateEvent;
 import com.wynntils.models.worlds.type.WorldState;
@@ -74,6 +78,9 @@ public final class PartyModel extends Model {
     private static final Pattern PARTY_KICK_OTHER = Pattern.compile("§eYou have kicked the player from the party\\.");
     // endregion
 
+    private static final ScoreboardPart PARTY_SCOREBOARD_PART = new PartyScoreboardPart();
+    private static final ScoreboardPart PARTY_FINDER_SCOREBOARD_PART = new PartyFinderScoreboardPart();
+
     private boolean expectingPartyMessage = false; // Whether the client is expecting a response from "/party list"
     private long lastPartyRequest = 0; // The last time the client requested party data
     private boolean nextKickHandled = false; // Whether the next "/party kick" sent by the client is being handled
@@ -87,6 +94,9 @@ public final class PartyModel extends Model {
     public PartyModel(WorldStateModel worldStateModel) {
         super(List.of(worldStateModel));
         resetData();
+
+        Handlers.Scoreboard.addPart(PARTY_SCOREBOARD_PART);
+        Handlers.Scoreboard.addPart(PARTY_FINDER_SCOREBOARD_PART);
     }
 
     @SubscribeEvent

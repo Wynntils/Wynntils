@@ -70,10 +70,6 @@ public final class GuildAttackTimerModel extends Model {
                 .findFirst();
     }
 
-    public boolean isGuildAttackSegment(ScoreboardSegment segment) {
-        return segment.getMatcher() == GuildAttackScoreboardPart.GUILD_ATTACK_MATCHER;
-    }
-
     void processChanges(ScoreboardSegment segment) {
         List<TerritoryAttackTimer> newList = new ArrayList<>();
 
