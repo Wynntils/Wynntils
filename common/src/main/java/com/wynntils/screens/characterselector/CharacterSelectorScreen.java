@@ -43,6 +43,7 @@ public final class CharacterSelectorScreen extends WynntilsScreen {
     private int scrollOffset = 0;
     private boolean draggingScroll = false;
     private double lastMouseY = 0;
+    private double mouseDrag = 0;
     private ClassInfoButton selected = null;
 
     private CharacterSelectorScreen() {
@@ -113,9 +114,16 @@ public final class CharacterSelectorScreen extends WynntilsScreen {
 
     @Override
     public void doRender(PoseStack poseStack, int mouseX, int mouseY, float partialTick) {
-        if (Math.abs(lastMouseY - mouseY) > 20f && draggingScroll) {
-            setScrollOffset(lastMouseY > mouseY ? 1 : -1);
+        if (draggingScroll) {
+            mouseDrag += mouseY - lastMouseY;
             lastMouseY = mouseY;
+
+            if (Math.abs(mouseDrag) > this.height / CHARACTER_INFO_PER_PAGE) {
+                boolean positive = mouseDrag > 0;
+
+                mouseDrag += (positive ? -1 : 1) * this.height / CHARACTER_INFO_PER_PAGE;
+                setScrollOffset(positive ? -1 : 1);
+            }
         }
 
         this.renderBackground(poseStack);
@@ -162,8 +170,7 @@ public final class CharacterSelectorScreen extends WynntilsScreen {
             child.mouseClicked(mouseX, mouseY, button);
         }
 
-        for (int i = scrollOffset; i < Math.min(classInfoButtons.size(), scrollOffset + CHARACTER_INFO_PER_PAGE); i++) {
-            ClassInfoButton classInfoButton = classInfoButtons.get(i);
+        for (ClassInfoButton classInfoButton : classInfoButtons) {
             if (classInfoButton.isMouseOver(mouseX, mouseY)) {
                 classInfoButton.mouseClicked(mouseX, mouseY, button);
                 this.selected = classInfoButton;
@@ -175,7 +182,7 @@ public final class CharacterSelectorScreen extends WynntilsScreen {
             float scrollButtonRenderY = MathUtils.map(
                     scrollOffset,
                     0,
-                    classInfoButtons.size() - CHARACTER_INFO_PER_PAGE,
+                    classInfoList.size() - CHARACTER_INFO_PER_PAGE,
                     Texture.LIST_BACKGROUND.height() * currentTextureScale * 0.01f,
                     Texture.LIST_BACKGROUND.height() * currentTextureScale * 0.92f);
 
@@ -327,7 +334,7 @@ public final class CharacterSelectorScreen extends WynntilsScreen {
                 MathUtils.map(
                         scrollOffset,
                         0,
-                        classInfoButtons.size() - CHARACTER_INFO_PER_PAGE,
+                        classInfoList.size() - CHARACTER_INFO_PER_PAGE,
                         Texture.LIST_BACKGROUND.height() * currentTextureScale * 0.01f,
                         Texture.LIST_BACKGROUND.height() * currentTextureScale * 0.92f),
                 0,
@@ -342,8 +349,8 @@ public final class CharacterSelectorScreen extends WynntilsScreen {
             renderable.render(poseStack, mouseX, mouseY, partialTick);
         }
 
-        for (int i = scrollOffset; i < Math.min(classInfoButtons.size(), scrollOffset + CHARACTER_INFO_PER_PAGE); i++) {
-            classInfoButtons.get(i).render(poseStack, mouseX, mouseY, partialTick);
+        for (ClassInfoButton classInfoButton : classInfoButtons) {
+            classInfoButton.render(poseStack, mouseX, mouseY, partialTick);
         }
     }
 
@@ -359,23 +366,26 @@ public final class CharacterSelectorScreen extends WynntilsScreen {
     }
 
     private void setScrollOffset(int delta) {
-        scrollOffset = MathUtils.clamp(
-                scrollOffset - delta * CHARACTER_INFO_PER_PAGE,
-                0,
-                Math.max(0, classInfoButtons.size() - CHARACTER_INFO_PER_PAGE));
+        scrollOffset =
+                MathUtils.clamp(scrollOffset - delta, 0, Math.max(0, classInfoList.size() - CHARACTER_INFO_PER_PAGE));
+
+        reloadButtons();
     }
 
     private void reloadButtons() {
-        this.selected = null;
-        this.scrollOffset = 0;
         classInfoButtons.clear();
 
         final float width = Texture.LIST_BACKGROUND.width() * currentTextureScale * 0.9f - 3;
         final int height = Math.round(Texture.LIST_BACKGROUND.height() * currentTextureScale / 8f);
-        for (int i = 0; i < classInfoList.size(); i++) {
+        for (int i = scrollOffset; i < Math.min(classInfoList.size(), scrollOffset + CHARACTER_INFO_PER_PAGE); i++) {
             ClassInfo classInfo = classInfoList.get(i);
-            classInfoButtons.add(new ClassInfoButton(
-                    5, (5 + ((i % CHARACTER_INFO_PER_PAGE) * height)), (int) width, height, classInfo, this));
+            ClassInfoButton newButton = new ClassInfoButton(
+                    5, (5 + (classInfoButtons.size() * height)), (int) width, height, classInfo, this);
+            classInfoButtons.add(newButton);
+
+            if (selected != null && selected.getClassInfo() == classInfo) {
+                selected = newButton;
+            }
         }
     }
 
