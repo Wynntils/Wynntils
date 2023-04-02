@@ -5,7 +5,7 @@
 package com.wynntils.models.quests;
 
 import com.wynntils.core.components.Models;
-import com.wynntils.models.concepts.ProfessionType;
+import com.wynntils.models.profession.type.ProfessionType;
 import com.wynntils.models.quests.type.QuestLength;
 import com.wynntils.models.quests.type.QuestStatus;
 import com.wynntils.utils.StringUtils;
@@ -26,7 +26,8 @@ import net.minecraft.network.chat.MutableComponent;
 
 public class QuestInfo {
     private static final int NEXT_TASK_MAX_WIDTH = 200;
-    private static final Pattern COORDINATE_PATTERN = Pattern.compile(".*\\[(-?\\d+), ?(-?\\d+), ?(-?\\d+)\\].*");
+    private static final Pattern COORDINATE_PATTERN =
+            Pattern.compile(".*\\[(-?\\d+)(?:.\\d+)?, ?(-?\\d+)(?:.\\d+)?, ?(-?\\d+)(?:.\\d+)?\\].*");
 
     // Quest metadata is forever constant
     private final String name;
@@ -163,7 +164,7 @@ public class QuestInfo {
         tooltipLines.add(Component.literal(""));
         // We always parse level as one, so check if this mini-quest does not have a min combat level
         if (!questInfo.isMiniQuest || questInfo.additionalRequirements.isEmpty()) {
-            tooltipLines.add((Models.CombatXp.getXpLevel() >= questInfo.getLevel()
+            tooltipLines.add((Models.CombatXp.getCombatLevel().current() >= questInfo.getLevel()
                             ? Component.literal("✔").withStyle(ChatFormatting.GREEN)
                             : Component.literal("✖").withStyle(ChatFormatting.RED))
                     .append(Component.literal(" Combat Lv. Min: ").withStyle(ChatFormatting.GRAY))
@@ -172,11 +173,10 @@ public class QuestInfo {
         }
 
         for (Pair<String, Integer> additionalRequirement : questInfo.getAdditionalRequirements()) {
-            MutableComponent base =
-                    Models.Character.getProfessionInfo().getLevel(ProfessionType.fromString(additionalRequirement.a()))
-                                    >= additionalRequirement.b()
-                            ? Component.literal("✔ ").withStyle(ChatFormatting.GREEN)
-                            : Component.literal("✖ ").withStyle(ChatFormatting.RED);
+            MutableComponent base = Models.Profession.getLevel(ProfessionType.fromString(additionalRequirement.a()))
+                            >= additionalRequirement.b()
+                    ? Component.literal("✔ ").withStyle(ChatFormatting.GREEN)
+                    : Component.literal("✖ ").withStyle(ChatFormatting.RED);
 
             tooltipLines.add(base.append(Component.literal(additionalRequirement.a() + " Lv. Min: ")
                     .withStyle(ChatFormatting.GRAY)

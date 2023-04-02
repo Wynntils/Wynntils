@@ -11,6 +11,7 @@ import com.wynntils.core.components.Managers;
 import com.wynntils.core.components.Model;
 import com.wynntils.core.net.Download;
 import com.wynntils.core.net.UrlId;
+import com.wynntils.core.net.event.NetResultProcessedEvent;
 import com.wynntils.models.map.pois.CombatPoi;
 import com.wynntils.models.map.pois.LabelPoi;
 import com.wynntils.models.map.pois.ServicePoi;
@@ -25,6 +26,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import java.util.concurrent.CopyOnWriteArrayList;
+import net.minecraftforge.eventbus.api.SubscribeEvent;
 
 public final class MapModel extends Model {
     private final List<MapTexture> maps = new CopyOnWriteArrayList<>();
@@ -38,6 +40,7 @@ public final class MapModel extends Model {
         loadData();
     }
 
+    @Override
     public void reloadData() {
         loadData();
     }
@@ -45,8 +48,27 @@ public final class MapModel extends Model {
     private void loadData() {
         loadMaps();
         loadPlaces();
+        // Slightly hacky way to reduce risk of class loading race in development environment
+        // These are loaded serially after places instad
+        if (WynntilsMod.isDevelopmentEnvironment()) return;
+
         loadServices();
         loadCombat();
+    }
+
+    @SubscribeEvent
+    public void onDataLoaded(NetResultProcessedEvent.ForUrlId event) {
+        if (!WynntilsMod.isDevelopmentEnvironment()) return;
+        // Serialize loading of POIs when on dev env
+
+        if (event.getUrlId() == UrlId.DATA_STATIC_PLACES) {
+            loadServices();
+            return;
+        }
+        if (event.getUrlId() == UrlId.DATA_STATIC_SERVICES) {
+            loadCombat();
+            return;
+        }
     }
 
     public Set<LabelPoi> getLabelPois() {
@@ -76,22 +98,25 @@ public final class MapModel extends Model {
             for (MapPartProfile mapPart : mapPartList) {
                 String fileName = mapPart.md5 + ".png";
 
-                Download dlPart = Managers.Net.download(URI.create(mapPart.url), "maps/" + fileName, mapPart.md5);
-                dlPart.handleInputStream(
-                        inputStream -> {
-                            try {
-                                NativeImage nativeImage = NativeImage.read(inputStream);
-                                MapTexture mapPartImage = new MapTexture(
-                                        fileName, nativeImage, mapPart.x1, mapPart.z1, mapPart.x2, mapPart.z2);
-                                maps.add(mapPartImage);
-                            } catch (IOException e) {
-                                WynntilsMod.warn("IOException occurred while loading map image of " + mapPart.name, e);
-                            }
-                        },
-                        onError -> WynntilsMod.warn(
-                                "Error occurred while download map image of " + mapPart.name, onError));
+                loadMapPart(mapPart, fileName);
             }
         });
+    }
+
+    private void loadMapPart(MapPartProfile mapPart, String fileName) {
+        Download dl = Managers.Net.download(URI.create(mapPart.url), "maps/" + fileName, mapPart.md5);
+        dl.handleInputStream(
+                inputStream -> {
+                    try {
+                        NativeImage nativeImage = NativeImage.read(inputStream);
+                        MapTexture mapPartImage =
+                                new MapTexture(fileName, nativeImage, mapPart.x1, mapPart.z1, mapPart.x2, mapPart.z2);
+                        maps.add(mapPartImage);
+                    } catch (IOException e) {
+                        WynntilsMod.warn("IOException occurred while loading map image of " + mapPart.name, e);
+                    }
+                },
+                onError -> WynntilsMod.warn("Error occurred while download map image of " + mapPart.name, onError));
     }
 
     private void loadPlaces() {

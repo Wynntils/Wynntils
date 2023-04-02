@@ -8,6 +8,7 @@ import com.google.gson.reflect.TypeToken;
 import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.components.Manager;
 import com.wynntils.core.components.Managers;
+import com.wynntils.core.mod.TickSchedulerManager;
 import com.wynntils.utils.StringUtils;
 import com.wynntils.utils.type.Pair;
 import java.io.File;
@@ -30,8 +31,8 @@ public final class UrlManager extends Manager {
     private Map<UrlId, UrlInfo> urlMap = Map.of();
     private int version = -1;
 
-    public UrlManager() {
-        super(List.of());
+    public UrlManager(TickSchedulerManager tickScheduler) {
+        super(List.of(tickScheduler));
         // This is a way of resolving the circular dependencies between UrlManager and
         // NetManager. UrlManager needs Net to download the urls.json file, but NetManager
         // needs UrlManager to resolve the URL for the source urls.json file to download.
@@ -72,7 +73,8 @@ public final class UrlManager extends Manager {
                                 StringUtils.encodeUrl(urlInfo.encoding().encode(arguments.get(argKey)))));
     }
 
-    public void reloadUrls() {
+    @Override
+    public void reloadData() {
         // If we reload URLs after initial bootstrapping, use normal manager
         loadUrls(Managers.Net);
     }
@@ -160,7 +162,6 @@ public final class UrlManager extends Manager {
 
             if (urlId.isEmpty()) {
                 // This is a URL we don't know about. Ignore it.
-                WynntilsMod.warn("Unknown URL: " + urlProfile.id);
                 continue;
             }
 

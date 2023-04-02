@@ -4,7 +4,7 @@
  */
 package com.wynntils.models.gear.type;
 
-import net.minecraft.ChatFormatting;
+import com.wynntils.core.WynntilsMod;
 
 public enum GearAttackSpeed {
     SUPER_FAST("Super Fast Attack Speed", 3),
@@ -23,15 +23,21 @@ public enum GearAttackSpeed {
         this.offset = offset;
     }
 
+    public static GearAttackSpeed fromString(String str) {
+        if (str == null) return null;
+        try {
+            return GearAttackSpeed.valueOf(str);
+        } catch (IllegalArgumentException e) {
+            WynntilsMod.warn("Invalid gear attack speed: " + str);
+            return null;
+        }
+    }
+
     public String getName() {
         return name;
     }
 
     public int getOffset() {
         return offset;
-    }
-
-    public String asLore() {
-        return ChatFormatting.GRAY + name;
     }
 }

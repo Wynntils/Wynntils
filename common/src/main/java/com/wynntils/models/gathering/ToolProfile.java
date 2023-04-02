@@ -4,16 +4,24 @@
  */
 package com.wynntils.models.gathering;
 
-import com.wynntils.models.concepts.ProfessionType;
+import com.wynntils.models.profession.type.ProfessionType;
 import java.util.Locale;
 
 public record ToolProfile(ToolProfile.ToolType toolType, int tier) {
-
     public static ToolProfile fromString(String toolTypeName, int tier) {
         ToolType toolType = ToolType.fromString(toolTypeName);
         if (toolType == null) return null;
 
         return new ToolProfile(toolType, tier);
+    }
+
+    public int getLevel() {
+        return tier == 1 ? 1 : 5 + (tier - 2) * 10;
+    }
+
+    @Override
+    public String toString() {
+        return "ToolProfile{" + "toolType=" + toolType + ", tier=" + tier + '}';
     }
 
     public enum ToolType {
@@ -35,10 +43,5 @@ public record ToolProfile(ToolProfile.ToolType toolType, int tier) {
                 return null;
             }
         }
-    }
-
-    @Override
-    public String toString() {
-        return "ToolProfile{" + "toolType=" + toolType + ", tier=" + tier + '}';
     }
 }

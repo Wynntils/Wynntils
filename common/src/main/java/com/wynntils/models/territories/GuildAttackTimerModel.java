@@ -6,8 +6,8 @@ package com.wynntils.models.territories;
 
 import com.wynntils.core.components.Handlers;
 import com.wynntils.core.components.Model;
-import com.wynntils.handlers.chat.RecipientType;
 import com.wynntils.handlers.chat.event.ChatMessageReceivedEvent;
+import com.wynntils.handlers.chat.type.RecipientType;
 import com.wynntils.handlers.scoreboard.ScoreboardPart;
 import com.wynntils.handlers.scoreboard.ScoreboardSegment;
 import com.wynntils.utils.type.Pair;
@@ -68,10 +68,6 @@ public final class GuildAttackTimerModel extends Model {
         return attackTimers.stream()
                 .filter(t -> t.territory().equals(territory))
                 .findFirst();
-    }
-
-    public boolean isGuildAttackSegment(ScoreboardSegment segment) {
-        return segment.getMatcher() == GuildAttackScoreboardPart.GUILD_ATTACK_MATCHER;
     }
 
     void processChanges(ScoreboardSegment segment) {

@@ -7,10 +7,11 @@ package com.wynntils.screens.chattabs;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.wynntils.core.chat.ChatTab;
 import com.wynntils.core.components.Managers;
-import com.wynntils.features.user.ChatTabsFeature;
-import com.wynntils.handlers.chat.RecipientType;
+import com.wynntils.handlers.chat.type.RecipientType;
 import com.wynntils.screens.base.TextboxScreen;
+import com.wynntils.screens.base.WynntilsScreen;
 import com.wynntils.screens.base.widgets.TextInputBoxWidget;
+import com.wynntils.screens.base.widgets.TextWidget;
 import com.wynntils.utils.colors.CommonColors;
 import com.wynntils.utils.mc.McUtils;
 import com.wynntils.utils.render.FontRenderer;
@@ -20,6 +21,8 @@ import com.wynntils.utils.render.type.VerticalAlignment;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
+import java.util.regex.Pattern;
+import java.util.regex.PatternSyntaxException;
 import java.util.stream.Collectors;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.gui.components.Button;
@@ -28,9 +31,10 @@ import net.minecraft.client.gui.screens.ChatScreen;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.resources.language.I18n;
 import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.MutableComponent;
 import org.lwjgl.glfw.GLFW;
 
-public final class ChatTabEditingScreen extends Screen implements TextboxScreen {
+public final class ChatTabEditingScreen extends WynntilsScreen implements TextboxScreen {
     private TextInputBoxWidget focusedTextInput;
 
     private TextInputBoxWidget nameInput;
@@ -38,6 +42,7 @@ public final class ChatTabEditingScreen extends Screen implements TextboxScreen 
     private TextInputBoxWidget orderInput;
     private final List<Checkbox> recipientTypeBoxes = new ArrayList<>();
     private TextInputBoxWidget filterRegexInput;
+    private TextWidget regexErrorMsg;
     private Checkbox consumingCheckbox;
 
     private Button saveButton;
@@ -66,7 +71,7 @@ public final class ChatTabEditingScreen extends Screen implements TextboxScreen 
     }
 
     @Override
-    protected void init() {
+    protected void doInit() {
         // region Name
         this.addRenderableWidget(
                 nameInput = new TextInputBoxWidget(
@@ -106,7 +111,7 @@ public final class ChatTabEditingScreen extends Screen implements TextboxScreen 
                         this,
                         orderInput));
         if (firstSetup && edited != null) {
-            orderInput.setTextBoxInput(Integer.toString(ChatTabsFeature.INSTANCE.chatTabs.indexOf(edited)));
+            orderInput.setTextBoxInput(Integer.toString(Managers.ChatTab.getTabIndex(edited)));
         }
         // endregion
 
@@ -149,10 +154,20 @@ public final class ChatTabEditingScreen extends Screen implements TextboxScreen 
         // region Filter Regex
         this.addRenderableWidget(
                 filterRegexInput = new TextInputBoxWidget(
-                        this.width / 2 - 160, this.height / 2 + 45, 300, 20, null, this, filterRegexInput));
+                        this.width / 2 - 160,
+                        this.height / 2 + 45,
+                        300,
+                        20,
+                        (s) -> updateSaveStatus(),
+                        this,
+                        filterRegexInput));
         if (firstSetup && edited != null && edited.getCustomRegexString() != null) {
             filterRegexInput.setTextBoxInput(edited.getCustomRegexString());
         }
+
+        this.addRenderableWidget(
+                regexErrorMsg = new TextWidget(
+                        this.width / 2 - 160 + 100, this.height / 2 + 75 + 7, 200, 20, Component.empty()));
         // endregion
 
         // region Consuming
@@ -208,9 +223,9 @@ public final class ChatTabEditingScreen extends Screen implements TextboxScreen 
     }
 
     @Override
-    public void render(PoseStack poseStack, int mouseX, int mouseY, float partialTick) {
+    public void doRender(PoseStack poseStack, int mouseX, int mouseY, float partialTick) {
         renderBackground(poseStack);
-        super.render(poseStack, mouseX, mouseY, partialTick);
+        super.doRender(poseStack, mouseX, mouseY, partialTick);
 
         // Name
         FontRenderer.getInstance()
@@ -220,8 +235,8 @@ public final class ChatTabEditingScreen extends Screen implements TextboxScreen 
                         this.width / 2f - 160,
                         this.height / 2f - 85,
                         CommonColors.WHITE,
-                        HorizontalAlignment.Left,
-                        VerticalAlignment.Top,
+                        HorizontalAlignment.LEFT,
+                        VerticalAlignment.TOP,
                         TextShadow.NORMAL);
 
         // Auto Command
@@ -232,8 +247,8 @@ public final class ChatTabEditingScreen extends Screen implements TextboxScreen 
                         this.width / 2f - 30,
                         this.height / 2f - 85,
                         CommonColors.WHITE,
-                        HorizontalAlignment.Left,
-                        VerticalAlignment.Top,
+                        HorizontalAlignment.LEFT,
+                        VerticalAlignment.TOP,
                         TextShadow.NORMAL);
 
         // Order
@@ -244,8 +259,8 @@ public final class ChatTabEditingScreen extends Screen implements TextboxScreen 
                         this.width / 2f + 100,
                         this.height / 2f - 85,
                         CommonColors.WHITE,
-                        HorizontalAlignment.Left,
-                        VerticalAlignment.Top,
+                        HorizontalAlignment.LEFT,
+                        VerticalAlignment.TOP,
                         TextShadow.NORMAL);
 
         // Recipient Types
@@ -256,8 +271,8 @@ public final class ChatTabEditingScreen extends Screen implements TextboxScreen 
                         this.width / 2f - 160,
                         this.height / 2f - 40,
                         CommonColors.WHITE,
-                        HorizontalAlignment.Left,
-                        VerticalAlignment.Top,
+                        HorizontalAlignment.LEFT,
+                        VerticalAlignment.TOP,
                         TextShadow.NORMAL);
 
         // Filter Pattern
@@ -268,8 +283,8 @@ public final class ChatTabEditingScreen extends Screen implements TextboxScreen 
                         this.width / 2f - 160,
                         this.height / 2f + 30,
                         CommonColors.WHITE,
-                        HorizontalAlignment.Left,
-                        VerticalAlignment.Top,
+                        HorizontalAlignment.LEFT,
+                        VerticalAlignment.TOP,
                         TextShadow.NORMAL);
     }
 
@@ -324,34 +339,32 @@ public final class ChatTabEditingScreen extends Screen implements TextboxScreen 
 
     private void saveChatTab() {
         if (edited != null) {
-            ChatTabsFeature.INSTANCE.chatTabs.remove(edited);
+            Managers.ChatTab.removeTab(edited);
         }
 
         int insertIndex = orderInput.getTextBoxInput().isEmpty()
-                ? ChatTabsFeature.INSTANCE.chatTabs.size()
-                : Math.min(ChatTabsFeature.INSTANCE.chatTabs.size(), Integer.parseInt(orderInput.getTextBoxInput()));
+                ? Managers.ChatTab.getTabCount()
+                : Math.min(Managers.ChatTab.getTabCount(), Integer.parseInt(orderInput.getTextBoxInput()));
 
-        ChatTabsFeature.INSTANCE.chatTabs.add(
-                insertIndex,
-                new ChatTab(
-                        nameInput.getTextBoxInput(),
-                        consumingCheckbox.selected(),
-                        autoCommandInput.getTextBoxInput(),
-                        recipientTypeBoxes.stream()
-                                .filter(Checkbox::selected)
-                                .map(box ->
-                                        RecipientType.fromName(box.getMessage().getString()))
-                                .collect(Collectors.toSet()),
-                        filterRegexInput.getTextBoxInput().isBlank() ? null : filterRegexInput.getTextBoxInput()));
+        ChatTab chatTab = new ChatTab(
+                nameInput.getTextBoxInput(),
+                consumingCheckbox.selected(),
+                autoCommandInput.getTextBoxInput(),
+                recipientTypeBoxes.stream()
+                        .filter(Checkbox::selected)
+                        .map(box -> RecipientType.fromName(box.getMessage().getString()))
+                        .collect(Collectors.toSet()),
+                filterRegexInput.getTextBoxInput().isBlank() ? null : filterRegexInput.getTextBoxInput());
+        Managers.ChatTab.addTab(insertIndex, chatTab);
 
         Managers.Config.saveConfig();
     }
 
     private void deleteChatTab() {
-        ChatTabsFeature.INSTANCE.chatTabs.remove(edited);
+        Managers.ChatTab.removeTab(edited);
         if (Objects.equals(Managers.ChatTab.getFocusedTab(), edited)) {
-            if (!ChatTabsFeature.INSTANCE.chatTabs.isEmpty()) {
-                Managers.ChatTab.setFocusedTab(ChatTabsFeature.INSTANCE.chatTabs.get(0));
+            if (!Managers.ChatTab.isTabListEmpty()) {
+                Managers.ChatTab.setFocusedTab(0);
             } else {
                 Managers.ChatTab.setFocusedTab(null);
             }
@@ -374,7 +387,22 @@ public final class ChatTabEditingScreen extends Screen implements TextboxScreen 
         if (saveButton == null) return;
 
         saveButton.active = !nameInput.getTextBoxInput().isEmpty()
+                && validatePattern()
                 && recipientTypeBoxes.stream().anyMatch(Checkbox::selected);
+    }
+
+    private boolean validatePattern() {
+        try {
+            Pattern.compile(filterRegexInput.getTextBoxInput());
+            regexErrorMsg.setMessage(Component.empty());
+        } catch (PatternSyntaxException e) {
+            MutableComponent errorMessage = Component.literal(e.getDescription())
+                    .withStyle(ChatFormatting.RED)
+                    .append(Component.literal(" (at pos " + e.getIndex() + ")").withStyle(ChatFormatting.DARK_RED));
+            regexErrorMsg.setMessage(errorMessage);
+            return false;
+        }
+        return true;
     }
 
     @Override

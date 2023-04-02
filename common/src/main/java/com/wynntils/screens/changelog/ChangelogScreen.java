@@ -26,12 +26,12 @@ import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.protocol.game.ServerboundContainerClosePacket;
 
-public class ChangelogScreen extends WynntilsScreen implements WynntilsPagedScreen {
+public final class ChangelogScreen extends WynntilsScreen implements WynntilsPagedScreen {
     private final String changelog;
     private List<List<TextRenderTask>> changelogTasks;
     private int currentPage = 0;
 
-    public ChangelogScreen(String changelog) {
+    private ChangelogScreen(String changelog) {
         super(Component.translatable("screens.wynntils.changelog.name"));
 
         this.changelog = changelog;
@@ -101,16 +101,16 @@ public class ChangelogScreen extends WynntilsScreen implements WynntilsPagedScre
                         Texture.CHANGELOG_BACKGROUND.height() - 17,
                         0,
                         CommonColors.WHITE,
-                        HorizontalAlignment.Center,
+                        HorizontalAlignment.CENTER,
                         TextShadow.OUTLINE);
     }
 
     @Override
     public boolean mouseClicked(double mouseX, double mouseY, int button) {
-        mouseX -= (this.width - Texture.CHANGELOG_BACKGROUND.width()) / 2f;
-        mouseY -= (this.height - Texture.CHANGELOG_BACKGROUND.height()) / 2f;
+        double adjustedMouseX = mouseX - (this.width - Texture.CHANGELOG_BACKGROUND.width()) / 2f;
+        double adjustedMouseY = mouseY - (this.height - Texture.CHANGELOG_BACKGROUND.height()) / 2f;
 
-        return super.mouseClicked(mouseX, mouseY, button);
+        return super.mouseClicked(adjustedMouseX, adjustedMouseY, button);
     }
 
     private void calculateRenderTasks() {

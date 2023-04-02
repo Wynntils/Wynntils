@@ -7,19 +7,28 @@ package com.wynntils.models.territories.type;
 import net.minecraft.ChatFormatting;
 
 public enum GuildResourceValues {
-    VeryLow("Very Low", ChatFormatting.DARK_GREEN, 1),
-    Low("Low", ChatFormatting.GREEN, 2),
-    Medium("Medium", ChatFormatting.YELLOW, 3),
-    High("High", ChatFormatting.RED, 4),
-    VeryHigh("Very High", ChatFormatting.AQUA, 5);
+    VERY_LOW("Very Low", ChatFormatting.DARK_GREEN, 1),
+    LOW("Low", ChatFormatting.GREEN, 2),
+    MEDIUM("Medium", ChatFormatting.YELLOW, 3),
+    HIGH("High", ChatFormatting.RED, 4),
+    VERY_HIGH("Very High", ChatFormatting.DARK_RED, ChatFormatting.AQUA, 5);
 
     private final String asString;
-    private final ChatFormatting color;
+    private final ChatFormatting defenceColor;
+    private final ChatFormatting treasuryColor;
     private final int level;
 
     GuildResourceValues(String asString, ChatFormatting color, int level) {
         this.asString = asString;
-        this.color = color;
+        this.defenceColor = color;
+        this.treasuryColor = color;
+        this.level = level;
+    }
+
+    GuildResourceValues(String asString, ChatFormatting defenceColor, ChatFormatting treasuryColor, int level) {
+        this.asString = asString;
+        this.defenceColor = defenceColor;
+        this.treasuryColor = treasuryColor;
         this.level = level;
     }
 
@@ -33,8 +42,16 @@ public enum GuildResourceValues {
         return null;
     }
 
-    public String asColoredString() {
-        return color + asString;
+    public String getAsString() {
+        return asString;
+    }
+
+    public ChatFormatting getDefenceColor() {
+        return defenceColor;
+    }
+
+    public ChatFormatting getTreasuryColor() {
+        return treasuryColor;
     }
 
     public GuildResourceValues getFilterNext(boolean limited) {

@@ -5,7 +5,9 @@
 package com.wynntils.features.debug;
 
 import com.wynntils.core.components.Models;
-import com.wynntils.core.features.DebugFeature;
+import com.wynntils.core.config.Category;
+import com.wynntils.core.config.ConfigCategory;
+import com.wynntils.core.features.Feature;
 import com.wynntils.core.features.properties.StartDisabled;
 import com.wynntils.mc.event.ItemTooltipRenderEvent;
 import com.wynntils.models.items.WynnItem;
@@ -23,7 +25,8 @@ import net.minecraftforge.eventbus.api.SubscribeEvent;
 import org.lwjgl.glfw.GLFW;
 
 @StartDisabled
-public class ItemDebugTooltipsFeature extends DebugFeature {
+@ConfigCategory(Category.DEBUG)
+public class ItemDebugTooltipsFeature extends Feature {
     @SubscribeEvent(priority = EventPriority.LOWEST)
     public void onTooltipPre(ItemTooltipRenderEvent.Pre event) {
         Optional<WynnItem> wynnItemOpt = Models.Item.getWynnItem(event.getItemStack());
@@ -37,8 +40,6 @@ public class ItemDebugTooltipsFeature extends DebugFeature {
 
     private List<Component> getTooltipAddon(WynnItem wynnItem) {
         List<Component> addon = new ArrayList<>();
-
-        addon.add(Component.literal("Wynn Item Type:").withStyle(ChatFormatting.GREEN));
 
         List<String> wrappedDescription = Arrays.stream(RenderedStringUtils.wrapTextBySize(wynnItem.toString(), 150))
                 .toList();

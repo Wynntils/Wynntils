@@ -6,7 +6,7 @@ package com.wynntils.screens.characterselector.widgets;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.wynntils.core.components.Models;
-import com.wynntils.models.character.ClassInfo;
+import com.wynntils.models.character.type.ClassInfo;
 import com.wynntils.screens.base.widgets.WynntilsButton;
 import com.wynntils.screens.characterselector.CharacterSelectorScreen;
 import com.wynntils.utils.colors.CommonColors;
@@ -30,7 +30,7 @@ public class ClassInfoButton extends WynntilsButton {
     }
 
     @Override
-    public void renderButton(PoseStack poseStack, int mouseX, int mouseY, float partialTick) {
+    public void renderWidget(PoseStack poseStack, int mouseX, int mouseY, float partialTick) {
         RenderUtils.drawTexturedRect(
                 poseStack,
                 Texture.CHARACTER_BUTTON.resource(),
@@ -49,11 +49,9 @@ public class ClassInfoButton extends WynntilsButton {
                 Texture.CHARACTER_BUTTON.height());
 
         float itemScale = this.height * 0.03f;
-        RenderUtils.renderGuiItem(
-                classInfo.itemStack(),
-                (int) (this.getX() + this.width * 0.038f * itemScale),
-                (int) (this.getY() + this.height * 0.12f * itemScale),
-                itemScale);
+        int x = (int) (this.getX() + this.width * 0.038f * itemScale);
+        int y = (int) (this.getY() + this.height * 0.12f * itemScale);
+        RenderUtils.renderItem(0, 0, classInfo.itemStack(), x, y, itemScale);
 
         poseStack.pushPose();
         poseStack.translate(this.getX() + this.width * 0.25f, this.getY() + this.height * 0.16f, 0f);
@@ -67,8 +65,8 @@ public class ClassInfoButton extends WynntilsButton {
                         0,
                         0,
                         CommonColors.BLACK,
-                        HorizontalAlignment.Left,
-                        VerticalAlignment.Top,
+                        HorizontalAlignment.LEFT,
+                        VerticalAlignment.TOP,
                         TextShadow.NONE);
         FontRenderer.getInstance()
                 .renderText(
@@ -77,8 +75,8 @@ public class ClassInfoButton extends WynntilsButton {
                         0,
                         10f,
                         CommonColors.BLACK,
-                        HorizontalAlignment.Left,
-                        VerticalAlignment.Top,
+                        HorizontalAlignment.LEFT,
+                        VerticalAlignment.TOP,
                         TextShadow.NONE);
 
         poseStack.popPose();

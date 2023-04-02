@@ -4,7 +4,9 @@
  */
 package com.wynntils.screens.guides.emeraldpouch;
 
+import com.wynntils.core.components.Models;
 import com.wynntils.models.emeralds.type.EmeraldUnits;
+import com.wynntils.models.items.items.game.EmeraldPouchItem;
 import com.wynntils.screens.guides.GuideItemStack;
 import com.wynntils.utils.MathUtils;
 import java.util.ArrayList;
@@ -23,7 +25,7 @@ public final class GuideEmeraldPouchItemStack extends GuideItemStack {
     private final List<Component> generatedTooltip;
 
     public GuideEmeraldPouchItemStack(int tier) {
-        super(new ItemStack(Items.DIAMOND_AXE));
+        super(new ItemStack(Items.DIAMOND_AXE), new EmeraldPouchItem(tier, 0), "Emerald Pouch");
         this.setDamageValue(97);
 
         this.tier = tier;
@@ -108,6 +110,15 @@ public final class GuideEmeraldPouchItemStack extends GuideItemStack {
         List<Component> tooltip = new ArrayList<>();
         tooltip.add(getHoverName());
         tooltip.addAll(generatedTooltip);
+
+        tooltip.add(Component.empty());
+        if (Models.Favorites.isFavorite(this)) {
+            tooltip.add(Component.translatable("screens.wynntils.wynntilsGuides.itemGuide.unfavorite")
+                    .withStyle(ChatFormatting.YELLOW));
+        } else {
+            tooltip.add(Component.translatable("screens.wynntils.wynntilsGuides.itemGuide.favorite")
+                    .withStyle(ChatFormatting.GREEN));
+        }
 
         return tooltip;
     }

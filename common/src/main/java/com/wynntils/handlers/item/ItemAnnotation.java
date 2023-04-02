@@ -4,4 +4,8 @@
  */
 package com.wynntils.handlers.item;
 
-public interface ItemAnnotation {}
+import net.minecraft.world.item.ItemStack;
+
+public interface ItemAnnotation {
+    void onUpdate(ItemStack itemStack);
+}

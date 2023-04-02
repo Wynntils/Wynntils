@@ -8,8 +8,8 @@ import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.wynntils.core.components.Managers;
 import com.wynntils.core.components.Models;
-import com.wynntils.features.user.map.MapFeature;
 import com.wynntils.models.lootruns.LootrunInstance;
+import com.wynntils.features.map.MapFeature;
 import com.wynntils.models.map.PoiLocation;
 import com.wynntils.models.map.pois.CustomPoi;
 import com.wynntils.models.map.pois.IconPoi;
@@ -56,8 +56,8 @@ public final class MainMapScreen extends AbstractMapScreen {
     }
 
     @Override
-    protected void init() {
-        super.init();
+    protected void doInit() {
+        super.doInit();
 
         this.addRenderableWidget(new BasicTexturedButton(
                 width / 2 - Texture.MAP_BUTTONS_BACKGROUND.width() / 2 + 6 + 20 * 6,
@@ -100,6 +100,23 @@ public final class MainMapScreen extends AbstractMapScreen {
                         Component.literal("- ")
                                 .withStyle(ChatFormatting.GRAY)
                                 .append(Component.translatable("screens.wynntils.map.help.description9")))));
+
+        this.addRenderableWidget(new BasicTexturedButton(
+                width / 2 - Texture.MAP_BUTTONS_BACKGROUND.width() / 2 + 6 + 20 * 3,
+                (int) (this.renderHeight
+                        - this.renderedBorderYOffset
+                        - Texture.MAP_BUTTONS_BACKGROUND.height() / 2
+                        - 6),
+                16,
+                16,
+                Texture.MAP_MANAGER_BUTTON,
+                (b) -> McUtils.mc().setScreen(PoiManagementScreen.create(this)),
+                List.of(
+                        Component.literal("[>] ")
+                                .withStyle(ChatFormatting.RED)
+                                .append(Component.translatable("screens.wynntils.map.manager.name")),
+                        Component.translatable("screens.wynntils.map.manager.description")
+                                .withStyle(ChatFormatting.GRAY))));
 
         this.addRenderableWidget(new BasicTexturedButton(
                 width / 2 - Texture.MAP_BUTTONS_BACKGROUND.width() / 2 + 6 + 20 * 2,
@@ -145,7 +162,7 @@ public final class MainMapScreen extends AbstractMapScreen {
 
                     if (Models.Compass.getCompassLocation().isPresent()) {
                         Location location = Models.Compass.getCompassLocation().get();
-                        updateMapCenter((float) location.x, (float) location.z);
+                        updateMapCenter(location.x, location.z);
                     }
                 },
                 List.of(
@@ -178,8 +195,12 @@ public final class MainMapScreen extends AbstractMapScreen {
     }
 
     @Override
-    public void render(PoseStack poseStack, int mouseX, int mouseY, float partialTick) {
-        if (holdingMapKey && !MapFeature.INSTANCE.openMapKeybind.getKeyMapping().isDown()) {
+    public void doRender(PoseStack poseStack, int mouseX, int mouseY, float partialTick) {
+        if (holdingMapKey
+                && !Managers.Feature.getFeatureInstance(MapFeature.class)
+                        .openMapKeybind
+                        .getKeyMapping()
+                        .isDown()) {
             this.onClose();
             return;
         }
@@ -190,7 +211,11 @@ public final class MainMapScreen extends AbstractMapScreen {
 
         RenderSystem.enableDepthTest();
 
-        renderMap(poseStack, MapFeature.INSTANCE.renderUsingLinear);
+        renderMap(
+                poseStack,
+                Managers.Feature.getFeatureInstance(MapFeature.class)
+                        .renderUsingLinear
+                        .get());
 
         RenderUtils.enableScissor(
                 (int) (renderX + renderedBorderXOffset), (int) (renderY + renderedBorderYOffset), (int) mapWidth, (int)
@@ -201,17 +226,23 @@ public final class MainMapScreen extends AbstractMapScreen {
         // Cursor
         renderCursor(
                 poseStack,
-                MapFeature.INSTANCE.playerPointerScale,
-                MapFeature.INSTANCE.pointerColor,
-                MapFeature.INSTANCE.pointerType);
+                Managers.Feature.getFeatureInstance(MapFeature.class)
+                        .playerPointerScale
+                        .get(),
+                Managers.Feature.getFeatureInstance(MapFeature.class)
+                        .pointerColor
+                        .get(),
+                Managers.Feature.getFeatureInstance(MapFeature.class)
+                        .pointerType
+                        .get());
 
+        RenderUtils.disableScissor();
+        
         LootrunInstance currentLootrun = Models.Lootrun.getCurrentLootrun();
         if (currentLootrun != null) {
             MapRenderer.renderLootrunLine(
                     currentLootrun, 5f, poseStack, centerX, centerZ, mapCenterX, mapCenterZ, currentZoom);
         }
-
-        RenderSystem.disableScissor();
 
         renderBackground(poseStack);
 
@@ -225,15 +256,21 @@ public final class MainMapScreen extends AbstractMapScreen {
 
         pois = Stream.concat(pois, Models.Map.getCombatPois().stream());
         pois = Stream.concat(pois, Models.Map.getLabelPois().stream());
-        pois = Stream.concat(pois, MapFeature.INSTANCE.customPois.stream());
+        pois = Stream.concat(pois, Managers.Feature.getFeatureInstance(MapFeature.class).customPois.get().stream());
         pois = Stream.concat(pois, Models.Compass.getCompassWaypoint().stream());
         pois = Stream.concat(
                 pois,
                 Models.Hades.getHadesUsers()
                         .filter(
-                                hadesUser -> (hadesUser.isPartyMember() && MapFeature.INSTANCE.renderRemotePartyPlayers)
-                                        || (hadesUser.isMutualFriend() && MapFeature.INSTANCE.renderRemoteFriendPlayers)
-                                /*|| (hadesUser.isGuildMember() && MapFeature.INSTANCE.renderRemoteGuildPlayers)*/ )
+                                hadesUser -> (hadesUser.isPartyMember()
+                                                && Managers.Feature.getFeatureInstance(MapFeature.class)
+                                                        .renderRemotePartyPlayers
+                                                        .get())
+                                        || (hadesUser.isMutualFriend()
+                                                && Managers.Feature.getFeatureInstance(MapFeature.class)
+                                                        .renderRemoteFriendPlayers
+                                                        .get())
+                                /*|| (hadesUser.isGuildMember() && Managers.Feature.getFeatureInstance(MapFeature.class).renderRemoteGuildPlayers)*/ )
                         .map(PlayerMainMapPoi::new));
 
         if (KeyboardUtils.isControlDown()) {
@@ -244,7 +281,7 @@ public final class MainMapScreen extends AbstractMapScreen {
                 pois.collect(Collectors.toList()),
                 poseStack,
                 BoundingBox.centered(mapCenterX, mapCenterZ, width / currentZoom, height / currentZoom),
-                MapFeature.INSTANCE.poiScale,
+                Managers.Feature.getFeatureInstance(MapFeature.class).poiScale.get(),
                 mouseX,
                 mouseY);
     }
@@ -262,7 +299,7 @@ public final class MainMapScreen extends AbstractMapScreen {
             if (McUtils.mc().player.isShiftKeyDown()
                     && Models.Compass.getCompassLocation().isPresent()) {
                 Location location = Models.Compass.getCompassLocation().get();
-                updateMapCenter((float) location.x, (float) location.z);
+                updateMapCenter(location.x, location.z);
                 return true;
             }
 
@@ -274,7 +311,7 @@ public final class MainMapScreen extends AbstractMapScreen {
             }
 
             if (hovered != null && !(hovered instanceof TerritoryPoi)) {
-                McUtils.playSound(SoundEvents.EXPERIENCE_ORB_PICKUP);
+                McUtils.playSoundUI(SoundEvents.EXPERIENCE_ORB_PICKUP);
                 if (hovered.hasStaticLocation()) {
                     if (hovered instanceof IconPoi iconPoi) {
                         if (iconPoi instanceof CustomPoi customPoi) {
@@ -305,7 +342,10 @@ public final class MainMapScreen extends AbstractMapScreen {
                 }
             } else if (KeyboardUtils.isAltDown()) {
                 if (hovered instanceof CustomPoi customPoi) {
-                    MapFeature.INSTANCE.customPois.remove(customPoi);
+                    Managers.Feature.getFeatureInstance(MapFeature.class)
+                            .customPois
+                            .get()
+                            .remove(customPoi);
                     Managers.Config.saveConfig();
                 }
             } else {
@@ -319,10 +359,10 @@ public final class MainMapScreen extends AbstractMapScreen {
     private void setCompassToMouseCoords(double mouseX, double mouseY) {
         double gameX = (mouseX - centerX) / currentZoom + mapCenterX;
         double gameZ = (mouseY - centerZ) / currentZoom + mapCenterZ;
-        Location compassLocation = new Location(gameX, 0, gameZ);
+        Location compassLocation = Location.containing(gameX, 0, gameZ);
         Models.Compass.setCompassLocation(compassLocation);
 
-        McUtils.playSound(SoundEvents.EXPERIENCE_ORB_PICKUP);
+        McUtils.playSoundUI(SoundEvents.EXPERIENCE_ORB_PICKUP);
     }
 
     private void shareLocationOrCompass(int button) {

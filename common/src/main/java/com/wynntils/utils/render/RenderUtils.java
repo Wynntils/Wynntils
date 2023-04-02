@@ -180,10 +180,6 @@ public final class RenderUtils {
         drawLine(poseStack, color, x1, y2, x1, y1, z, lineWidth);
     }
 
-    public static void drawRect(CustomColor color, float x, float y, float z, float width, float height) {
-        drawRect(new PoseStack(), color, x, y, z, width, height);
-    }
-
     public static void drawRect(
             PoseStack poseStack, CustomColor color, float x, float y, float z, float width, float height) {
         Matrix4f matrix = poseStack.last().pose();
@@ -328,6 +324,7 @@ public final class RenderUtils {
     }
 
     public static void drawTexturedRectWithColor(
+            PoseStack poseStack,
             ResourceLocation tex,
             CustomColor color,
             float x,
@@ -338,7 +335,7 @@ public final class RenderUtils {
             int textureWidth,
             int textureHeight) {
         drawTexturedRectWithColor(
-                new PoseStack(),
+                poseStack,
                 tex,
                 color,
                 x,
@@ -405,8 +402,15 @@ public final class RenderUtils {
     }
 
     public static void drawArc(
-            CustomColor color, float x, float y, float z, float fill, int innerRadius, int outerRadius) {
-        drawArc(new PoseStack(), color, x, y, z, fill, innerRadius, outerRadius, 0);
+            PoseStack poseStack,
+            CustomColor color,
+            float x,
+            float y,
+            float z,
+            float fill,
+            int innerRadius,
+            int outerRadius) {
+        drawArc(poseStack, color, x, y, z, fill, innerRadius, outerRadius, 0);
     }
 
     public static void drawArc(
@@ -466,7 +470,6 @@ public final class RenderUtils {
             float lineWidth,
             int innerRadius,
             int outerRadius) {
-
         float x2 = x + width;
         float y2 = y + height;
 
@@ -497,9 +500,9 @@ public final class RenderUtils {
         poseStack.pushPose();
         poseStack.translate(-1, -1, 0);
         drawRoundedCorner(poseStack, borderColor, x, y, z, innerRadius, outerRadius, Mth.HALF_PI * 3);
-        drawRoundedCorner(poseStack, borderColor, x, y2 - offset * 2, z, innerRadius, outerRadius, Mth.HALF_PI * 2);
+        drawRoundedCorner(poseStack, borderColor, x, y2 - offset * 2, z, innerRadius, outerRadius, (float) Math.PI);
         drawRoundedCorner(
-                poseStack, borderColor, x2 - offset * 2, y2 - offset * 2, z, innerRadius, outerRadius, Mth.HALF_PI * 1);
+                poseStack, borderColor, x2 - offset * 2, y2 - offset * 2, z, innerRadius, outerRadius, Mth.HALF_PI);
         drawRoundedCorner(poseStack, borderColor, x2 - offset * 2, y, z, innerRadius, outerRadius, 0);
         poseStack.popPose();
     }
@@ -692,7 +695,6 @@ public final class RenderUtils {
             int textureX2,
             int textureY2,
             float progress) {
-
         int half = (textureY1 + textureY2) / 2 + (textureY2 - textureY1) % 2;
         drawProgressBarBackground(poseStack, texture, x1, y1, x2, y2, textureX1, textureY1, textureX2, half);
         drawProgressBarForegroundWithColor(
@@ -738,7 +740,6 @@ public final class RenderUtils {
             int textureX2,
             int textureY2,
             float progress) {
-
         int half = (textureY1 + textureY2) / 2 + (textureY2 - textureY1) % 2;
         drawProgressBarBackground(poseStack, texture, x1, y1, x2, y2, textureX1, textureY1, textureX2, half);
         drawProgressBarForeground(
@@ -942,6 +943,10 @@ public final class RenderUtils {
                         (height * scale));
     }
 
+    public static void disableScissor() {
+        RenderSystem.disableScissor();
+    }
+
     public static void rotatePose(PoseStack poseStack, float centerX, float centerZ, float angle) {
         poseStack.translate(centerX, centerZ, 0);
         // See Quaternion#fromXYZ
@@ -951,7 +956,7 @@ public final class RenderUtils {
     }
 
     // Basically this is ItemRenderer#renderGuiItem, but we can modify the poseStack
-    public static void renderGuiItem(ItemStack itemStack, int x, int y, float scale) {
+    private static void renderGuiItem(ItemStack itemStack, int x, int y, float scale) {
         BakedModel bakedModel = McUtils.mc().getItemRenderer().getModel(itemStack, null, null, 0);
 
         McUtils.mc()
@@ -1005,6 +1010,15 @@ public final class RenderUtils {
         RenderSystem.applyModelViewMatrix();
     }
 
+    public static void renderItem(float translationX, float translationY, ItemStack itemStack, int x, int y) {
+        renderItem(translationX, translationY, itemStack, x, y, 1.0f);
+    }
+
+    public static void renderItem(
+            float translationX, float translationY, ItemStack itemStack, int x, int y, float itemScale) {
+        renderGuiItem(itemStack, x + (int) translationX, y + (int) translationY, itemScale);
+    }
+
     public static void renderVignetteOverlay(PoseStack poseStack, CustomColor color, float alpha) {
         float[] colorArray = color.asFloatArray();
         RenderSystem.setShaderColor(colorArray[0], colorArray[1], colorArray[2], alpha);
@@ -1052,7 +1066,7 @@ public final class RenderUtils {
         if (d <= 4096.0) {
             float yOffset = entity.getBbHeight() + 0.25F + customOffset;
             float xOffset = -(font.width(nametag) / 2f);
-            boolean notSneaking = !entity.isDiscrete();
+            boolean sneaking = entity.isDiscrete();
 
             matrixStack.pushPose();
             matrixStack.translate(0.0F, yOffset, 0.0F);
@@ -1068,10 +1082,10 @@ public final class RenderUtils {
                     false,
                     matrix4f,
                     buffer,
-                    notSneaking,
+                    !sneaking,
                     backgroundColor,
                     packedLight);
-            if (notSneaking) {
+            if (!sneaking) {
                 font.drawInBatch(nametag, xOffset, 0f, -1, false, matrix4f, buffer, false, 0, packedLight);
             }
 

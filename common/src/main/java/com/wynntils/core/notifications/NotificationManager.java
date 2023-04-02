@@ -8,7 +8,7 @@ import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.components.Manager;
 import com.wynntils.core.components.Managers;
 import com.wynntils.core.notifications.event.NotificationEvent;
-import com.wynntils.features.user.overlays.GameNotificationOverlayFeature;
+import com.wynntils.features.overlays.GameNotificationOverlayFeature;
 import com.wynntils.models.worlds.event.WorldStateEvent;
 import com.wynntils.utils.mc.ComponentUtils;
 import com.wynntils.utils.mc.McUtils;
@@ -103,7 +103,8 @@ public final class NotificationManager extends Manager {
 
     private void sendToChatIfNeeded(MessageContainer container) {
         // Overlay is not enabled, send in chat
-        if (!GameNotificationOverlayFeature.INSTANCE.isEnabled()) {
+        if (!Managers.Feature.getFeatureInstance(GameNotificationOverlayFeature.class)
+                .isEnabled()) {
             sendOrEditNotification(container);
         }
     }

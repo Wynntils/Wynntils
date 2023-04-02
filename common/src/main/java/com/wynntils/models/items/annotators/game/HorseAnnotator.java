@@ -16,8 +16,10 @@ import net.minecraft.world.item.Items;
 
 public final class HorseAnnotator implements ItemAnnotator {
     private static final Pattern HORSE_PATTERN = Pattern.compile("^§f(.*) Horse$");
-    private static final Pattern HORSE_LORE_PATTERN = Pattern.compile(
-            "§7Tier (\\d)§6Speed: (\\d+)/(\\d+)§6Jump: \\d+/\\d+§5Armour: None§bXp: (\\d+)/100(?:§cUntradable Item)?(:?§7Name: (.+))?");
+    private static final Pattern HORSE_TIER_PATTERN = Pattern.compile("^§7Tier (\\d)$");
+    private static final Pattern HORSE_LEVEL_PATTERN = Pattern.compile("^§6Speed: (\\d+)/(\\d+)$");
+    private static final Pattern HORSE_XP_PATTERN = Pattern.compile("^§bXp: (\\d+)/100$");
+    private static final Pattern HORSE_NAME_PATTERN = Pattern.compile("^§7Name: (.+)$");
 
     @Override
     public ItemAnnotation getAnnotation(ItemStack itemStack, String name) {
@@ -25,17 +27,22 @@ public final class HorseAnnotator implements ItemAnnotator {
         Matcher matcher = HORSE_PATTERN.matcher(name);
         if (!matcher.matches()) return null;
 
-        String lore = LoreUtils.getStringLore(itemStack);
-        Matcher m = HORSE_LORE_PATTERN.matcher(lore);
+        Matcher tierMatcher = LoreUtils.matchLoreLine(itemStack, 0, HORSE_TIER_PATTERN);
+        if (!tierMatcher.matches()) return null;
+        int tier = Integer.parseInt(tierMatcher.group(1));
 
-        if (!m.matches()) return null;
+        Matcher levelMatcher = LoreUtils.matchLoreLine(itemStack, 1, HORSE_LEVEL_PATTERN);
+        if (!levelMatcher.matches()) return null;
+        int level = Integer.parseInt(levelMatcher.group(1));
+        int maxLevel = Integer.parseInt(levelMatcher.group(2));
 
-        int tier = Integer.parseInt(m.group(1));
-        int level = Integer.parseInt(m.group(2));
-        int maxLevel = Integer.parseInt(m.group(3));
-        int xp = Integer.parseInt(m.group(4));
-        String horseName = m.group(5);
+        Matcher xpMatcher = LoreUtils.matchLoreLine(itemStack, 4, HORSE_XP_PATTERN);
+        if (!xpMatcher.matches()) return null;
+        int xp = Integer.parseInt(xpMatcher.group(1));
 
-        return new HorseItem(tier, new CappedValue(level, maxLevel), xp, horseName);
+        Matcher nameMatcher = LoreUtils.matchLoreLine(itemStack, 5, HORSE_NAME_PATTERN);
+        String horseName = nameMatcher.matches() ? nameMatcher.group(1) : null;
+
+        return new HorseItem(tier, new CappedValue(level, maxLevel), new CappedValue(xp, 100), horseName);
     }
 }

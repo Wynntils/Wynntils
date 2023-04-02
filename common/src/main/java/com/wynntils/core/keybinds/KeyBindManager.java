@@ -9,29 +9,51 @@ import com.mojang.blaze3d.platform.InputConstants;
 import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.components.Manager;
 import com.wynntils.core.components.Managers;
+import com.wynntils.core.features.Feature;
+import com.wynntils.core.features.properties.RegisterKeyBind;
+import com.wynntils.core.mod.type.CrashType;
 import com.wynntils.mc.event.InventoryKeyPressEvent;
 import com.wynntils.mc.event.InventoryMouseClickedEvent;
 import com.wynntils.mc.event.TickEvent;
 import com.wynntils.mc.mixin.accessors.OptionsAccessor;
 import com.wynntils.utils.mc.McUtils;
+import com.wynntils.utils.type.Pair;
+import java.lang.reflect.Field;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.function.Consumer;
-import net.minecraft.ChatFormatting;
 import net.minecraft.client.KeyMapping;
 import net.minecraft.client.Options;
-import net.minecraft.network.chat.Component;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
+import org.apache.commons.lang3.reflect.FieldUtils;
 
 /** Registers and handles keybinds */
 public final class KeyBindManager extends Manager {
-    private final Set<KeyBind> keyBinds = ConcurrentHashMap.newKeySet();
+    private final Set<KeyBind> enabledKeyBinds = ConcurrentHashMap.newKeySet();
+    private final Map<Feature, List<Pair<KeyBind, String>>> keyBinds = new ConcurrentHashMap<>();
 
     public KeyBindManager() {
         super(List.of());
+    }
+
+    public void discoverKeyBinds(Feature feature) {
+        for (Field f : FieldUtils.getFieldsWithAnnotation(feature.getClass(), RegisterKeyBind.class)) {
+            if (!f.getType().equals(KeyBind.class)) continue;
+
+            try {
+                KeyBind keyBind = (KeyBind) FieldUtils.readField(f, feature, true);
+                keyBinds.putIfAbsent(feature, new LinkedList<>());
+                keyBinds.get(feature).add(Pair.of(keyBind, f.getName()));
+            } catch (Exception e) {
+                WynntilsMod.error(
+                        "Failed to register KeyBind " + f.getName() + " in "
+                                + feature.getClass().getName(),
+                        e);
+            }
+        }
     }
 
     @SubscribeEvent
@@ -57,7 +79,23 @@ public final class KeyBindManager extends Manager {
         });
     }
 
-    public void registerKeybind(KeyBind toAdd) {
+    public void enableFeatureKeyBinds(Feature feature) {
+        if (!keyBinds.containsKey(feature)) return;
+
+        for (Pair<KeyBind, String> keyBind : keyBinds.get(feature)) {
+            registerKeybind(feature, keyBind.key(), keyBind.value());
+        }
+    }
+
+    public void disableFeatureKeyBinds(Feature feature) {
+        if (!keyBinds.containsKey(feature)) return;
+
+        for (Pair<KeyBind, String> keyBind : keyBinds.get(feature)) {
+            unregisterKeybind(feature, keyBind.key());
+        }
+    }
+
+    private void registerKeybind(Feature parent, KeyBind toAdd, String fieldName) {
         if (hasName(toAdd.getName())) {
             throw new IllegalStateException(
                     "Can not add keybind " + toAdd.getName() + " since the name already exists");
@@ -66,7 +104,7 @@ public final class KeyBindManager extends Manager {
         KeyMapping keyMapping = toAdd.getKeyMapping();
 
         synchronized (McUtils.options()) {
-            keyBinds.add(toAdd);
+            enabledKeyBinds.add(toAdd);
 
             Options options = McUtils.options();
             KeyMapping[] keyMappings = options.keyMappings;
@@ -82,8 +120,8 @@ public final class KeyBindManager extends Manager {
         KeyMapping.resetMapping();
     }
 
-    public void unregisterKeybind(KeyBind toRemove) {
-        if (!keyBinds.remove(toRemove)) return;
+    private void unregisterKeybind(Feature parent, KeyBind toRemove) {
+        if (!enabledKeyBinds.remove(toRemove)) return;
 
         KeyMapping keyMapping = toRemove.getKeyMapping();
 
@@ -117,30 +155,30 @@ public final class KeyBindManager extends Manager {
     private void checkAllKeyBinds(Consumer<KeyBind> checkKeybind) {
         if (!Managers.Connection.onServer()) return;
 
-        List<KeyBind> crashedKeyBinds = new LinkedList<>();
+        List<Pair<Feature, KeyBind>> crashedKeyBinds = new LinkedList<>();
 
-        for (KeyBind keyBind : keyBinds) {
-            try {
-                checkKeybind.accept(keyBind);
-            } catch (Throwable t) {
-                WynntilsMod.error("Exception when handling key bind " + keyBind, t);
-                WynntilsMod.warn("This key bind will be disabled");
-                McUtils.sendMessageToClient(
-                        Component.literal("Wynntils error: Key bind " + keyBind + " has crashed and will be disabled")
-                                .withStyle(ChatFormatting.RED));
-                // We can't disable it right away since that will cause ConcurrentModificationException
-                crashedKeyBinds.add(keyBind);
+        for (Feature parent : keyBinds.keySet()) {
+            for (Pair<KeyBind, String> keyBind : keyBinds.get(parent)) {
+                try {
+                    checkKeybind.accept(keyBind.key());
+                } catch (Throwable t) {
+                    // We can't disable it right away since that will cause ConcurrentModificationException
+                    crashedKeyBinds.add(Pair.of(parent, keyBind.key()));
+
+                    WynntilsMod.reportCrash(
+                            parent.getClass().getName() + "." + keyBind.value(), keyBind.value(), CrashType.KEYBIND, t);
+                }
             }
         }
 
         // Hopefully we have none :)
-        for (KeyBind keyBind : crashedKeyBinds) {
-            unregisterKeybind(keyBind);
+        for (Pair<Feature, KeyBind> keyBindPair : crashedKeyBinds) {
+            unregisterKeybind(keyBindPair.key(), keyBindPair.value());
         }
     }
 
     private boolean hasName(String name) {
-        return keyBinds.stream().anyMatch(k -> k.getName().equals(name));
+        return enabledKeyBinds.stream().anyMatch(k -> k.getName().equals(name));
     }
 
     /**

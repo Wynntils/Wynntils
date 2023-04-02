@@ -6,16 +6,17 @@ package com.wynntils.screens.maps;
 
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
+import com.wynntils.core.components.Managers;
 import com.wynntils.core.components.Models;
-import com.wynntils.features.user.map.GuildMapFeature;
+import com.wynntils.features.map.GuildMapFeature;
 import com.wynntils.models.map.pois.Poi;
 import com.wynntils.models.map.pois.TerritoryPoi;
 import com.wynntils.models.map.type.TerritoryDefenseFilterType;
 import com.wynntils.models.territories.TerritoryInfo;
-import com.wynntils.models.territories.TerritoryStorage;
 import com.wynntils.models.territories.profile.TerritoryProfile;
 import com.wynntils.models.territories.type.GuildResource;
 import com.wynntils.models.territories.type.GuildResourceValues;
+import com.wynntils.models.territories.type.TerritoryStorage;
 import com.wynntils.screens.base.widgets.BasicTexturedButton;
 import com.wynntils.utils.colors.CommonColors;
 import com.wynntils.utils.mc.KeyboardUtils;
@@ -39,7 +40,7 @@ import org.lwjgl.glfw.GLFW;
 public final class GuildMapScreen extends AbstractMapScreen {
     private boolean resourceMode = false;
     private boolean territoryDefenseFilterEnabled = false;
-    private GuildResourceValues territoryDefenseFilterLevel = GuildResourceValues.VeryHigh;
+    private GuildResourceValues territoryDefenseFilterLevel = GuildResourceValues.VERY_HIGH;
     private TerritoryDefenseFilterType territoryDefenseFilterType = TerritoryDefenseFilterType.DEFAULT;
 
     private BasicTexturedButton territoryDefenseFilterButton;
@@ -51,8 +52,8 @@ public final class GuildMapScreen extends AbstractMapScreen {
     }
 
     @Override
-    protected void init() {
-        super.init();
+    protected void doInit() {
+        super.doInit();
 
         // Buttons have to be added in reverse order (right to left) so they don't overlap
 
@@ -133,9 +134,12 @@ public final class GuildMapScreen extends AbstractMapScreen {
     }
 
     @Override
-    public void render(PoseStack poseStack, int mouseX, int mouseY, float partialTick) {
+    public void doRender(PoseStack poseStack, int mouseX, int mouseY, float partialTick) {
         if (holdingMapKey
-                && !GuildMapFeature.INSTANCE.openGuildMapKeybind.getKeyMapping().isDown()) {
+                && !Managers.Feature.getFeatureInstance(GuildMapFeature.class)
+                        .openGuildMapKeybind
+                        .getKeyMapping()
+                        .isDown()) {
             this.onClose();
             return;
         }
@@ -146,7 +150,11 @@ public final class GuildMapScreen extends AbstractMapScreen {
 
         RenderSystem.enableDepthTest();
 
-        renderMap(poseStack, GuildMapFeature.INSTANCE.renderUsingLinear);
+        renderMap(
+                poseStack,
+                Managers.Feature.getFeatureInstance(GuildMapFeature.class)
+                        .renderUsingLinear
+                        .get());
 
         RenderUtils.enableScissor(
                 (int) (renderX + renderedBorderXOffset), (int) (renderY + renderedBorderYOffset), (int) mapWidth, (int)
@@ -154,9 +162,17 @@ public final class GuildMapScreen extends AbstractMapScreen {
 
         renderPois(poseStack, mouseX, mouseY);
 
-        renderCursor(poseStack, 1.5f, GuildMapFeature.INSTANCE.pointerColor, GuildMapFeature.INSTANCE.pointerType);
+        renderCursor(
+                poseStack,
+                1.5f,
+                Managers.Feature.getFeatureInstance(GuildMapFeature.class)
+                        .pointerColor
+                        .get(),
+                Managers.Feature.getFeatureInstance(GuildMapFeature.class)
+                        .pointerType
+                        .get());
 
-        RenderSystem.disableScissor();
+        RenderUtils.disableScissor();
 
         renderBackground(poseStack);
 
@@ -270,8 +286,8 @@ public final class GuildMapScreen extends AbstractMapScreen {
                         10,
                         10,
                         CommonColors.MAGENTA,
-                        HorizontalAlignment.Left,
-                        VerticalAlignment.Top,
+                        HorizontalAlignment.LEFT,
+                        VerticalAlignment.TOP,
                         TextShadow.OUTLINE);
 
         float renderYOffset = 20;
@@ -291,8 +307,8 @@ public final class GuildMapScreen extends AbstractMapScreen {
                                 10,
                                 10 + renderYOffset,
                                 CommonColors.WHITE,
-                                HorizontalAlignment.Left,
-                                VerticalAlignment.Top,
+                                HorizontalAlignment.LEFT,
+                                VerticalAlignment.TOP,
                                 TextShadow.OUTLINE);
                 renderYOffset += 10;
             }
@@ -308,8 +324,8 @@ public final class GuildMapScreen extends AbstractMapScreen {
                                 10,
                                 10 + renderYOffset,
                                 CommonColors.WHITE,
-                                HorizontalAlignment.Left,
-                                VerticalAlignment.Top,
+                                HorizontalAlignment.LEFT,
+                                VerticalAlignment.TOP,
                                 TextShadow.OUTLINE);
                 renderYOffset += 10;
             }
@@ -318,9 +334,13 @@ public final class GuildMapScreen extends AbstractMapScreen {
         renderYOffset += 10;
 
         String treasury = ChatFormatting.GRAY
-                + "✦ Treasury: %s".formatted(territoryInfo.getTreasury().asColoredString());
+                + "✦ Treasury: %s"
+                        .formatted(territoryInfo.getTreasury().getTreasuryColor()
+                                + territoryInfo.getTreasury().getAsString());
         String defences = ChatFormatting.GRAY
-                + "Territory Defences: %s".formatted(territoryInfo.getDefences().asColoredString());
+                + "Territory Defences: %s"
+                        .formatted(territoryInfo.getDefences().getDefenceColor()
+                                + territoryInfo.getDefences().getAsString());
 
         FontRenderer.getInstance()
                 .renderText(
@@ -329,8 +349,8 @@ public final class GuildMapScreen extends AbstractMapScreen {
                         10,
                         10 + renderYOffset,
                         CommonColors.WHITE,
-                        HorizontalAlignment.Left,
-                        VerticalAlignment.Top,
+                        HorizontalAlignment.LEFT,
+                        VerticalAlignment.TOP,
                         TextShadow.OUTLINE);
         renderYOffset += 10;
         FontRenderer.getInstance()
@@ -340,8 +360,8 @@ public final class GuildMapScreen extends AbstractMapScreen {
                         10,
                         10 + renderYOffset,
                         CommonColors.WHITE,
-                        HorizontalAlignment.Left,
-                        VerticalAlignment.Top,
+                        HorizontalAlignment.LEFT,
+                        VerticalAlignment.TOP,
                         TextShadow.OUTLINE);
 
         if (territoryInfo.isHeadquarters()) {
@@ -353,8 +373,8 @@ public final class GuildMapScreen extends AbstractMapScreen {
                             10,
                             10 + renderYOffset,
                             CommonColors.RED,
-                            HorizontalAlignment.Left,
-                            VerticalAlignment.Top,
+                            HorizontalAlignment.LEFT,
+                            VerticalAlignment.TOP,
                             TextShadow.OUTLINE);
         }
 
@@ -368,8 +388,8 @@ public final class GuildMapScreen extends AbstractMapScreen {
                         10,
                         10 + renderYOffset,
                         CommonColors.WHITE,
-                        HorizontalAlignment.Left,
-                        VerticalAlignment.Top,
+                        HorizontalAlignment.LEFT,
+                        VerticalAlignment.TOP,
                         TextShadow.OUTLINE);
 
         // Territory name
@@ -383,8 +403,8 @@ public final class GuildMapScreen extends AbstractMapScreen {
                         Texture.TERRITORY_TOOLTIP_TOP.height() + centerHeight + Texture.TERRITORY_NAME_BOX.height(),
                         0,
                         CommonColors.WHITE,
-                        HorizontalAlignment.Left,
-                        VerticalAlignment.Middle,
+                        HorizontalAlignment.LEFT,
+                        VerticalAlignment.MIDDLE,
                         TextShadow.OUTLINE);
 
         poseStack.popPose();
@@ -413,7 +433,8 @@ public final class GuildMapScreen extends AbstractMapScreen {
         Component lastLine = territoryDefenseFilterEnabled
                 ? Component.translatable("screens.wynntils.guildMap.cycleDefenseFilter.description4")
                         .withStyle(ChatFormatting.GRAY)
-                        .append(territoryDefenseFilterLevel.asColoredString())
+                        .append(territoryDefenseFilterLevel.getDefenceColor()
+                                + territoryDefenseFilterLevel.getAsString())
                         .append(territoryDefenseFilterType.asComponent())
                 : Component.translatable("screens.wynntils.guildMap.cycleDefenseFilter.description4")
                         .withStyle(ChatFormatting.GRAY)

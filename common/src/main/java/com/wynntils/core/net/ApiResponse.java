@@ -5,22 +5,21 @@
 package com.wynntils.core.net;
 
 import com.wynntils.core.components.Managers;
+import com.wynntils.core.net.event.NetResultProcessedEvent;
 import java.io.InputStream;
 import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
 import java.util.concurrent.CompletableFuture;
 
 public class ApiResponse extends NetResult {
-    public ApiResponse(String desc, HttpRequest request) {
-        super("API:" + desc, request);
+    public ApiResponse(String desc, HttpRequest request, NetResultProcessedEvent processedEvent) {
+        super("API:" + desc, request, processedEvent);
     }
 
     @Override
     protected CompletableFuture<InputStream> getInputStreamFuture() {
-        CompletableFuture<InputStream> future = Managers.Net.HTTP_CLIENT
+        return Managers.Net.HTTP_CLIENT
                 .sendAsync(request, HttpResponse.BodyHandlers.ofInputStream())
                 .thenApply(HttpResponse::body);
-
-        return future;
     }
 }

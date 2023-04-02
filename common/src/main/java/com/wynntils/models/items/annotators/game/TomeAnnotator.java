@@ -7,9 +7,7 @@ package com.wynntils.models.items.annotators.game;
 import com.wynntils.core.components.Models;
 import com.wynntils.handlers.item.ItemAnnotation;
 import com.wynntils.handlers.item.ItemAnnotator;
-import com.wynntils.models.gear.type.GearTier;
-import com.wynntils.models.gear.type.TomeProfile;
-import com.wynntils.models.gear.type.TomeType;
+import com.wynntils.models.rewards.type.TomeType;
 import java.util.Optional;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -22,21 +20,18 @@ public final class TomeAnnotator implements ItemAnnotator {
 
     @Override
     public ItemAnnotation getAnnotation(ItemStack itemStack, String name) {
-        if (!(itemStack.getItem() == Items.ENCHANTED_BOOK)) return null;
+        if (itemStack.getItem() != Items.ENCHANTED_BOOK) return null;
         Matcher matcher = TOME_PATTERN.matcher(name);
         if (!matcher.matches()) return null;
 
+        String displayName = matcher.group(1);
         Optional<TomeType> tomeTypeOpt = TomeType.fromString(matcher.group("Type"));
         if (tomeTypeOpt.isEmpty()) return null;
 
         TomeType tomeType = tomeTypeOpt.get();
-        GearTier gearTier = GearTier.fromString(name);
-        String variant = tomeType.hasVariants() ? matcher.group("Variant") : null;
         String tier = tomeType.isTiered() ? matcher.group("Tier") : null;
+        String variant = tomeType.hasVariants() ? matcher.group("Variant") : null;
 
-        // TODO: replace with API lookup
-        TomeProfile tomeProfile = new TomeProfile(matcher.group(1), gearTier, variant, tomeType, tier);
-
-        return Models.GearItem.fromTomeItemStack(itemStack, tomeProfile);
+        return Models.Rewards.fromTomeItemStack(itemStack, name, displayName, tomeType, tier, variant);
     }
 }

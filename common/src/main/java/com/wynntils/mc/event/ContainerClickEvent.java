@@ -4,6 +4,7 @@
  */
 package com.wynntils.mc.event;
 
+import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.inventory.ClickType;
 import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.eventbus.api.Cancelable;
@@ -12,30 +13,24 @@ import net.minecraftforge.eventbus.api.Event;
 /** Fired on click in a container */
 @Cancelable
 public class ContainerClickEvent extends Event {
-    private final int containerId;
+    private final AbstractContainerMenu containerMenu;
     private final int slotNum;
-    private final ItemStack itemStack;
     private final ClickType clickType;
     private final int buttonNum;
 
-    public ContainerClickEvent(int containerId, int slotNum, ItemStack itemStack, ClickType clickType, int buttonNum) {
-        this.containerId = containerId;
+    public ContainerClickEvent(AbstractContainerMenu containerMenu, int slotNum, ClickType clickType, int buttonNum) {
+        this.containerMenu = containerMenu;
         this.slotNum = slotNum;
-        this.itemStack = itemStack;
         this.clickType = clickType;
         this.buttonNum = buttonNum;
     }
 
-    public int getContainerId() {
-        return containerId;
+    public AbstractContainerMenu getContainerMenu() {
+        return containerMenu;
     }
 
     public int getSlotNum() {
         return slotNum;
-    }
-
-    public ItemStack getItemStack() {
-        return itemStack;
     }
 
     public ClickType getClickType() {
@@ -44,5 +39,13 @@ public class ContainerClickEvent extends Event {
 
     public int getButtonNum() {
         return buttonNum;
+    }
+
+    public ItemStack getItemStack() {
+        if (slotNum >= 0) {
+            return containerMenu.getSlot(slotNum).getItem();
+        } else {
+            return ItemStack.EMPTY;
+        }
     }
 }

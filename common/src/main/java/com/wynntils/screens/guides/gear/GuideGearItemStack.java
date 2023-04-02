@@ -4,38 +4,32 @@
  */
 package com.wynntils.screens.guides.gear;
 
-import com.wynntils.models.gear.profile.GearProfile;
+import com.wynntils.core.components.Models;
+import com.wynntils.models.gear.tooltip.GearTooltipBuilder;
+import com.wynntils.models.gear.type.GearInfo;
+import com.wynntils.models.items.WynnItemCache;
+import com.wynntils.models.items.items.game.GearItem;
 import com.wynntils.screens.guides.GuideItemStack;
-import com.wynntils.utils.wynn.GearTooltipBuilder;
-import com.wynntils.utils.wynn.WynnItemUtils;
 import java.util.ArrayList;
 import java.util.List;
-import net.minecraft.nbt.CompoundTag;
+import java.util.Optional;
+import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.TooltipFlag;
 
 public final class GuideGearItemStack extends GuideItemStack {
-    private final List<Component> generatedTooltip;
+    private final GearInfo gearInfo;
     private final MutableComponent name;
-    private final GearProfile gearProfile;
+    private List<Component> generatedTooltip;
 
-    public GuideGearItemStack(GearProfile gearProfile) {
-        super(gearProfile.getGearInfo().asItemStack());
-        this.gearProfile = gearProfile;
+    public GuideGearItemStack(GearInfo gearInfo) {
+        super(gearInfo.metaInfo().material().itemStack(), new GearItem(gearInfo, null), gearInfo.name());
 
-        CompoundTag tag = this.getOrCreateTag();
-        tag.putBoolean("Unbreakable", true);
-        if (gearProfile.getGearInfo().isArmorColorValid())
-            tag.putInt("color", gearProfile.getGearInfo().getArmorColorAsInt());
-        this.setTag(tag);
-
-        name = Component.literal(gearProfile.getDisplayName())
-                .withStyle(gearProfile.getTier().getChatFormatting());
-
-        this.generatedTooltip = GearTooltipBuilder.fromGearProfile(gearProfile)
-                .getTooltipLines(WynnItemUtils.getCurrentIdentificationStyle());
+        this.gearInfo = gearInfo;
+        this.name = Component.literal(gearInfo.name()).withStyle(gearInfo.tier().getChatFormatting());
+        this.generatedTooltip = List.of();
     }
 
     @Override
@@ -45,10 +39,35 @@ public final class GuideGearItemStack extends GuideItemStack {
 
     @Override
     public List<Component> getTooltipLines(Player player, TooltipFlag flag) {
-        return new ArrayList<>(generatedTooltip);
+        List<Component> tooltipLines = new ArrayList<>(generatedTooltip);
+
+        appendObtainInfo(tooltipLines, gearInfo.metaInfo().obtainInfo());
+
+        tooltipLines.add(Component.empty());
+        if (Models.Favorites.isFavorite(this)) {
+            tooltipLines.add(Component.translatable("screens.wynntils.wynntilsGuides.itemGuide.unfavorite")
+                    .withStyle(ChatFormatting.YELLOW));
+        } else {
+            tooltipLines.add(Component.translatable("screens.wynntils.wynntilsGuides.itemGuide.favorite")
+                    .withStyle(ChatFormatting.GREEN));
+        }
+        tooltipLines.add(Component.translatable("screens.wynntils.wynntilsGuides.itemGuide.open")
+                .withStyle(ChatFormatting.RED));
+
+        return tooltipLines;
     }
 
-    public GearProfile getGearProfile() {
-        return gearProfile;
+    public GearInfo getGearInfo() {
+        return gearInfo;
+    }
+
+    public void buildTooltip() {
+        GearTooltipBuilder gearTooltipBuilder = Models.GearTooltip.buildNew(gearInfo, null, true);
+        this.generatedTooltip = gearTooltipBuilder.getTooltipLines(Models.Character.getClassType());
+
+        // Force ItemStatInfoFeature to recreate its cache
+        Optional<GearItem> gearItemOpt = Models.Item.asWynnItem(this, GearItem.class);
+        if (gearItemOpt.isEmpty()) return;
+        gearItemOpt.get().getCache().clear(WynnItemCache.TOOLTIP_KEY);
     }
 }

@@ -10,4 +10,8 @@ public interface ItemStackExtension {
     ItemAnnotation getAnnotation();
 
     void setAnnotation(ItemAnnotation annotation);
+
+    String getOriginalName();
+
+    void setOriginalName(String name);
 }

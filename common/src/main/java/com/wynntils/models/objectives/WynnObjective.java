@@ -5,6 +5,7 @@
 package com.wynntils.models.objectives;
 
 import com.wynntils.utils.mc.ComponentUtils;
+import com.wynntils.utils.type.CappedValue;
 import java.util.Objects;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -15,17 +16,14 @@ import java.util.regex.Pattern;
 public final class WynnObjective {
     private static final Pattern OBJECTIVE_PARSER_PATTERN = Pattern.compile("^[- ] (.*): *(\\d+)/(\\d+)$");
     private final String goal;
-    private int score;
-    private final int maxScore;
+    private CappedValue score;
     private long updatedAt;
     private final String original;
     private final boolean isGuildObjective;
 
-    private WynnObjective(
-            String goal, int score, int maxScore, long updatedAt, String original, boolean isGuildObjective) {
+    private WynnObjective(String goal, CappedValue score, long updatedAt, String original, boolean isGuildObjective) {
         this.goal = goal;
         this.score = score;
-        this.maxScore = maxScore;
         this.updatedAt = updatedAt;
         this.original = original;
         this.isGuildObjective = isGuildObjective;
@@ -52,16 +50,17 @@ public final class WynnObjective {
             }
         }
 
-        return new WynnObjective(goal, score, maxScore, System.currentTimeMillis(), objectiveLine, isGuildObjective);
+        return new WynnObjective(
+                goal, new CappedValue(score, maxScore), System.currentTimeMillis(), objectiveLine, isGuildObjective);
     }
 
     @Override
     public String toString() {
-        return goal + " [" + score + "/" + maxScore + "]";
+        return goal + ": " + score;
     }
 
     public String asObjectiveString() {
-        return this.getGoal() + ": " + this.getScore() + "/" + this.getMaxScore();
+        return this.getGoal() + ": " + getScore();
     }
 
     private void updateTimestamp() {
@@ -69,11 +68,11 @@ public final class WynnObjective {
     }
 
     public boolean hasProgress() {
-        return this.maxScore > 0;
+        return this.score.max() > 0;
     }
 
     public float getProgress() {
-        return (float) this.score / (float) this.maxScore;
+        return (float) this.score.getProgress();
     }
 
     public long getUpdatedAt() {
@@ -88,11 +87,7 @@ public final class WynnObjective {
         return this.original;
     }
 
-    public int getMaxScore() {
-        return maxScore;
-    }
-
-    public int getScore() {
+    public CappedValue getScore() {
         return score;
     }
 
@@ -101,11 +96,12 @@ public final class WynnObjective {
     }
 
     public boolean isSameObjective(WynnObjective other) {
-        return Objects.equals(this.getGoal(), other.getGoal()) && this.getMaxScore() == other.getMaxScore();
+        return Objects.equals(this.getGoal(), other.getGoal())
+                && getScore().max() == other.getScore().max();
     }
 
-    public void setScore(int score) {
-        this.score = score;
+    public void setCurrentScore(int newCurrentScore) {
+        this.score = score.withCurrent(newCurrentScore);
         updateTimestamp();
     }
 }

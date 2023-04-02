@@ -12,7 +12,7 @@ import net.minecraftforge.eventbus.api.Event;
 public abstract class ScreenOpenedEvent extends Event {
     private final Screen screen;
 
-    public ScreenOpenedEvent(Screen screen) {
+    protected ScreenOpenedEvent(Screen screen) {
         this.screen = screen;
     }
 

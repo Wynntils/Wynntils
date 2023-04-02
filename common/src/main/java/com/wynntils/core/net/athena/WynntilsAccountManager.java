@@ -81,7 +81,7 @@ public final class WynntilsAccountManager extends Manager {
         return loggedIn;
     }
 
-    public HashMap<String, String> getEncodedConfigs() {
+    public Map<String, String> getEncodedConfigs() {
         return encodedConfigs;
     }
 
@@ -102,10 +102,6 @@ public final class WynntilsAccountManager extends Manager {
 
             ApiResponse apiAuthResponse = Managers.Net.callApi(UrlId.API_ATHENA_AUTH_RESPONSE, arguments);
             apiAuthResponse.handleJsonObject(authJson -> {
-                // FIXME: This is needed for patching class loading issue with Forge EventBus:
-                //        https://github.com/MinecraftForge/EventBus/issues/44
-                Thread.currentThread().setContextClassLoader(WynntilsMod.class.getClassLoader());
-
                 token = authJson.get("authToken").getAsString(); /* md5 hashes*/
                 JsonObject hashes = authJson.getAsJsonObject("hashes");
                 hashes.entrySet()

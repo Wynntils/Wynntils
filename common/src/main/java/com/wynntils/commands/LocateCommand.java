@@ -35,6 +35,37 @@ public class LocateCommand extends Command {
     public static final SuggestionProvider<CommandSourceStack> PLACES_SUGGESTION_PROVIDER = (context, builder) ->
             SharedSuggestionProvider.suggest(Models.Map.getLabelPois().stream().map(Poi::getName), builder);
 
+    @Override
+    public String getCommandName() {
+        return "locate";
+    }
+
+    @Override
+    public String getDescription() {
+        return "Search Wynntils database for locations";
+    }
+
+    @Override
+    public LiteralArgumentBuilder<CommandSourceStack> getCommandBuilder() {
+        return Commands.literal(getCommandName())
+                .then(Commands.literal("service")
+                        .then(Commands.argument("name", StringArgumentType.greedyString())
+                                .suggests(LocateCommand.SERVICE_SUGGESTION_PROVIDER)
+                                .executes(this::locateService)))
+                .then(Commands.literal("place")
+                        .then(Commands.argument("name", StringArgumentType.greedyString())
+                                .suggests(LocateCommand.PLACES_SUGGESTION_PROVIDER)
+                                .executes(this::locatePlace)))
+                .then(Commands.literal("npc")
+                        .then(Commands.argument("name", StringArgumentType.greedyString())
+                                .executes(this::notImplemented)))
+                .then(Commands.literal("other")
+                        .then(Commands.argument("name", StringArgumentType.greedyString())
+                                .executes(this::notImplemented)))
+                .executes(this::syntaxError);
+    }
+
+    // This is shared between /locate and /compass
     public static ServiceKind getServiceKind(CommandContext<CommandSourceStack> context, String searchedName) {
         List<ServiceKind> matchedKinds = Arrays.stream(ServiceKind.values())
                 .filter(kind -> StringUtils.partialMatch(kind.getName(), searchedName))
@@ -66,32 +97,7 @@ public class LocateCommand extends Command {
         }
 
         // Got exactly one match
-        ServiceKind selectedKind = matchedKinds.get(0);
-        return selectedKind;
-    }
-
-    @Override
-    public LiteralArgumentBuilder<CommandSourceStack> getBaseCommandBuilder() {
-        return Commands.literal("locate")
-                .then(Commands.literal("service")
-                        .then(Commands.argument("name", StringArgumentType.greedyString())
-                                .suggests(LocateCommand.SERVICE_SUGGESTION_PROVIDER)
-                                .executes(this::locateService))
-                        .build())
-                .then(Commands.literal("place")
-                        .then(Commands.argument("name", StringArgumentType.greedyString())
-                                .suggests(LocateCommand.PLACES_SUGGESTION_PROVIDER)
-                                .executes(this::locatePlace))
-                        .build())
-                .then(Commands.literal("npc")
-                        .then(Commands.argument("name", StringArgumentType.greedyString())
-                                .executes(this::notImplemented))
-                        .build())
-                .then(Commands.literal("other")
-                        .then(Commands.argument("name", StringArgumentType.greedyString())
-                                .executes(this::notImplemented))
-                        .build())
-                .executes(this::syntaxError);
+        return matchedKinds.get(0);
     }
 
     private int locateService(CommandContext<CommandSourceStack> context) {
@@ -111,7 +117,9 @@ public class LocateCommand extends Command {
                 poi.getLocation().getY().orElse((int) currentLocation.y),
                 poi.getLocation().getZ())));
         // Removes from element 4 to the end of the list
-        services.subList(4, services.size()).clear();
+        if (services.size() > 4) {
+            services.subList(4, services.size()).clear();
+        }
 
         MutableComponent response = Component.literal("Found " + selectedKind.getName() + " services:")
                 .withStyle(ChatFormatting.AQUA);

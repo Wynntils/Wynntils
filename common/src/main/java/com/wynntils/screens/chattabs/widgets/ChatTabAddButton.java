@@ -22,7 +22,7 @@ public class ChatTabAddButton extends WynntilsButton {
     }
 
     @Override
-    public void renderButton(PoseStack poseStack, int mouseX, int mouseY, float partialTick) {
+    public void renderWidget(PoseStack poseStack, int mouseX, int mouseY, float partialTick) {
         RenderUtils.drawRect(
                 poseStack, CommonColors.BLACK.withAlpha(isHovered ? 0.7f : 0.5f), getX(), getY(), 0, width, height);
 
@@ -36,8 +36,8 @@ public class ChatTabAddButton extends WynntilsButton {
                         getY() + height,
                         0,
                         CommonColors.ORANGE,
-                        HorizontalAlignment.Center,
-                        VerticalAlignment.Middle,
+                        HorizontalAlignment.CENTER,
+                        VerticalAlignment.MIDDLE,
                         TextShadow.OUTLINE);
     }
 

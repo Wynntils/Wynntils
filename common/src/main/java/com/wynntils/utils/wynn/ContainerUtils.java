@@ -43,6 +43,10 @@ public final class ContainerUtils {
         return true;
     }
 
+    /**
+     * Clicks on a slot in the specified container. containerId and the list of items should correspond to the
+     * same container!
+     */
     public static void clickOnSlot(int clickedSlot, int containerId, int mouseButton, List<ItemStack> items) {
         Int2ObjectMap<ItemStack> changedSlots = new Int2ObjectOpenHashMap<>();
         changedSlots.put(clickedSlot, new ItemStack(Items.AIR));

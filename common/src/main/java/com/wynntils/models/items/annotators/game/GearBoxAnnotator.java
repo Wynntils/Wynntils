@@ -10,7 +10,7 @@ import com.wynntils.models.gear.type.GearTier;
 import com.wynntils.models.gear.type.GearType;
 import com.wynntils.models.items.items.game.GearBoxItem;
 import com.wynntils.utils.mc.LoreUtils;
-import java.util.Optional;
+import com.wynntils.utils.type.RangedValue;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import net.minecraft.world.item.ItemStack;
@@ -29,21 +29,24 @@ public final class GearBoxAnnotator implements ItemAnnotator {
         Matcher matcher = GEAR_BOX_PATTERN.matcher(name);
         if (!matcher.matches()) return null;
 
-        Optional<GearType> gearTypeOpt = GearType.fromString(matcher.group(1));
-        if (gearTypeOpt.isEmpty()) return null;
+        GearType gearType = GearType.fromString(matcher.group(1));
+        if (gearType == null) return null;
 
-        GearType gearType = gearTypeOpt.get();
-        GearTier gearTier = GearTier.fromString(name);
-        String levelRange = getLevelRange(itemStack);
+        GearTier gearTier = GearTier.fromFormattedString(name);
+        RangedValue levelRange = getLevelRange(itemStack);
 
         if (gearTier == null || levelRange == null) return null;
 
         return new GearBoxItem(gearType, gearTier, levelRange);
     }
 
-    private static String getLevelRange(ItemStack itemStack) {
+    private static RangedValue getLevelRange(ItemStack itemStack) {
         Matcher matcher = LoreUtils.matchLoreLine(itemStack, 6, LEVEL_RANGE_PATTERN);
         if (!matcher.matches()) return null;
-        return matcher.group(1) + "-" + matcher.group(2);
+        int low = Integer.parseInt(matcher.group(1));
+        int high = Integer.parseInt(matcher.group(2));
+        // Wynncraft "lies" to us, it says like "range 8-12" but in reality this means "9-12".
+        // The lowest level is presented as "0-4" so this should be fine
+        return RangedValue.of(low + 1, high);
     }
 }

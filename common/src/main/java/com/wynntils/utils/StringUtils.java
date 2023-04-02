@@ -5,22 +5,24 @@
 package com.wynntils.utils;
 
 import java.net.URLEncoder;
+import java.nio.ByteBuffer;
 import java.nio.charset.StandardCharsets;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
+import java.util.Base64;
 import java.util.List;
 import java.util.Locale;
 import java.util.regex.Pattern;
 import net.minecraft.ChatFormatting;
 
 public final class StringUtils {
-    private static final String[] suffixes = {"", "k", "m", "b", "t"}; // kilo, million, billion, trillion (short scale)
-    private static final DecimalFormat fractionalFormat = new DecimalFormat("#.#");
+    private static final String[] SUFFIXES = {"", "k", "m", "b", "t"}; // kilo, million, billion, trillion (short scale)
+    private static final DecimalFormat FRACTIONAL_FORMAT = new DecimalFormat("#.#");
 
     /**
      * Converts a delimited list into a {@link java.util.List} of strings
      *
-     * <p>e.g. "1, 2, 3,, 4," for delimiter "," -> returns a list of "1", "2", "3", "4"
+     * <p>e.g. "1, 2, 3, 4," for delimiter "," -> returns a list of "1", "2", "3", "4"
      */
     public static List<String> parseStringToList(String input, String delimiter) {
         List<String> result = new ArrayList<>();
@@ -70,20 +72,20 @@ public final class StringUtils {
         if (value < 0.75) return "0";
 
         int suffix = 0;
-        while (suffix < suffixes.length && value >= 750) {
+        while (suffix < SUFFIXES.length && value >= 750) {
             value /= 1000;
             ++suffix;
         }
 
-        return fractionalFormat.format(value) + suffixes[suffix];
+        return FRACTIONAL_FORMAT.format(value) + SUFFIXES[suffix];
     }
 
     /**
      * Matches a string to a specific search term
      */
-    public static boolean partialMatch(String toMatch, String searchTerm) {
-        searchTerm = searchTerm.toLowerCase(Locale.ROOT);
-        toMatch = toMatch.toLowerCase(Locale.ROOT);
+    public static boolean partialMatch(String toMatchStr, String searchTermStr) {
+        String searchTerm = searchTermStr.toLowerCase(Locale.ROOT);
+        String toMatch = toMatchStr.toLowerCase(Locale.ROOT);
 
         int firstIndexToMatch = 0;
 
@@ -134,5 +136,12 @@ public final class StringUtils {
 
     public static String convertMarkdownToColorCode(String input) {
         return ChatFormatting.RESET + input.replaceFirst("#+\\s+", String.valueOf(ChatFormatting.BOLD));
+    }
+
+    public static ByteBuffer decodeBase64(String base64) {
+        if (base64 == null) return null;
+
+        return Base64.getDecoder()
+                .decode(ByteBuffer.wrap(base64.replaceAll("\n", "").getBytes(StandardCharsets.UTF_8)));
     }
 }

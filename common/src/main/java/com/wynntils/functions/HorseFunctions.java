@@ -5,18 +5,41 @@
 package com.wynntils.functions;
 
 import com.wynntils.core.components.Models;
-import com.wynntils.core.functions.ActiveFunction;
+import com.wynntils.core.functions.Function;
+import com.wynntils.core.functions.arguments.FunctionArguments;
 import com.wynntils.models.items.items.game.HorseItem;
+import com.wynntils.utils.type.CappedValue;
 import java.util.List;
+import java.util.Optional;
 
 public class HorseFunctions {
-
-    public static class HorseLevelFunction extends ActiveFunction<Integer> {
+    public static class CappedHorseLevelFunction extends Function<CappedValue> {
         @Override
-        public Integer getValue(String argument) {
-            HorseItem horse = Models.Horse.getHorse();
-            if (horse == null) return null;
-            return horse.getLevel().getCurrent();
+        public CappedValue getValue(FunctionArguments arguments) {
+            Optional<HorseItem> horse = Models.Horse.getHorse();
+            if (horse.isEmpty()) return CappedValue.EMPTY;
+
+            return horse.get().getLevel();
+        }
+    }
+
+    public static class CappedHorseXpFunction extends Function<CappedValue> {
+        @Override
+        public CappedValue getValue(FunctionArguments arguments) {
+            Optional<HorseItem> horse = Models.Horse.getHorse();
+            if (horse.isEmpty()) return CappedValue.EMPTY;
+
+            return horse.get().getXp();
+        }
+    }
+
+    public static class HorseLevelFunction extends Function<Integer> {
+        @Override
+        public Integer getValue(FunctionArguments arguments) {
+            Optional<HorseItem> horse = Models.Horse.getHorse();
+            if (horse.isEmpty()) return -1;
+
+            return horse.get().getLevel().current();
         }
 
         @Override
@@ -25,12 +48,13 @@ public class HorseFunctions {
         }
     }
 
-    public static class HorseLevelMaxFunction extends ActiveFunction<Integer> {
+    public static class HorseLevelMaxFunction extends Function<Integer> {
         @Override
-        public Integer getValue(String argument) {
-            HorseItem horse = Models.Horse.getHorse();
-            if (horse == null) return null;
-            return horse.getLevel().getMax();
+        public Integer getValue(FunctionArguments arguments) {
+            Optional<HorseItem> horse = Models.Horse.getHorse();
+            if (horse.isEmpty()) return -1;
+
+            return horse.get().getLevel().max();
         }
 
         @Override
@@ -39,12 +63,13 @@ public class HorseFunctions {
         }
     }
 
-    public static class HorseXpFunction extends ActiveFunction<Integer> {
+    public static class HorseXpFunction extends Function<Integer> {
         @Override
-        public Integer getValue(String argument) {
-            HorseItem horse = Models.Horse.getHorse();
-            if (horse == null) return null;
-            return horse.getXp();
+        public Integer getValue(FunctionArguments arguments) {
+            Optional<HorseItem> horse = Models.Horse.getHorse();
+            if (horse.isEmpty()) return -1;
+
+            return horse.get().getXp().current();
         }
 
         @Override
@@ -53,12 +78,13 @@ public class HorseFunctions {
         }
     }
 
-    public static class HorseTierFunction extends ActiveFunction<Integer> {
+    public static class HorseTierFunction extends Function<Integer> {
         @Override
-        public Integer getValue(String argument) {
-            HorseItem horse = Models.Horse.getHorse();
-            if (horse == null) return null;
-            return horse.getTier();
+        public Integer getValue(FunctionArguments arguments) {
+            Optional<HorseItem> horse = Models.Horse.getHorse();
+            if (horse.isEmpty()) return -1;
+
+            return horse.get().getTier();
         }
 
         @Override
@@ -67,13 +93,14 @@ public class HorseFunctions {
         }
     }
 
-    public static class HorseNameFunction extends ActiveFunction<String> {
+    public static class HorseNameFunction extends Function<String> {
         @Override
-        public String getValue(String argument) {
-            HorseItem horse = Models.Horse.getHorse();
-            if (horse == null) return null;
-            String name = horse.getName();
-            return (name.isEmpty()) ? null : name;
+        public String getValue(FunctionArguments arguments) {
+            Optional<HorseItem> horse = Models.Horse.getHorse();
+            if (horse.isEmpty()) return "";
+
+            Optional<String> name = horse.get().getName();
+            return name.isPresent() ? name.get() : "";
         }
 
         @Override

@@ -7,7 +7,7 @@ package com.wynntils.screens.wynntilsmenu;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.wynntils.core.components.Managers;
 import com.wynntils.core.components.Models;
-import com.wynntils.features.user.map.MapFeature;
+import com.wynntils.features.map.MapFeature;
 import com.wynntils.screens.base.WynntilsMenuScreenBase;
 import com.wynntils.screens.discoveries.WynntilsDiscoveriesScreen;
 import com.wynntils.screens.guides.WynntilsGuidesListScreen;
@@ -119,7 +119,7 @@ public final class WynntilsMenuScreen extends WynntilsMenuScreenBase {
                         Component.literal(""),
                         Component.translatable("screens.wynntils.wynntilsMenu.leftClickToSelect")
                                 .withStyle(ChatFormatting.GREEN))));
-        if (MapFeature.INSTANCE.isEnabled()) {
+        if (Managers.Feature.getFeatureInstance(MapFeature.class).isEnabled()) {
             buttons.add(new WynntilsMenuButton(
                     Texture.MAP_ICON,
                     true,
@@ -201,7 +201,7 @@ public final class WynntilsMenuScreen extends WynntilsMenuScreenBase {
 
         renderVersion(poseStack);
 
-        renderButtons(poseStack, mouseX, mouseY);
+        renderWidgets(poseStack, mouseX, mouseY);
 
         renderDescription(poseStack, I18n.get("screens.wynntils.wynntilsMenu.description"));
 
@@ -216,7 +216,7 @@ public final class WynntilsMenuScreen extends WynntilsMenuScreenBase {
             PoseStack poseStack, int mouseX, int mouseY, float translationX, float translationY) {
         int posX = (int) (translationX + Texture.QUEST_BOOK_BACKGROUND.width()) - 85;
         int posY = (int) (translationY + Texture.QUEST_BOOK_BACKGROUND.height() / 2f) + 25;
-        InventoryScreen.renderEntityInInventory(posX, posY, 30, posX - mouseX, posY - mouseY, McUtils.player());
+        InventoryScreen.renderEntityInInventory(posX, posY, 30, posX - mouseX, posY - 50 - mouseY, McUtils.player());
 
         FontRenderer.getInstance()
                 .renderAlignedTextInBox(
@@ -227,19 +227,19 @@ public final class WynntilsMenuScreen extends WynntilsMenuScreenBase {
                         60,
                         0,
                         CommonColors.BLACK,
-                        HorizontalAlignment.Center,
+                        HorizontalAlignment.CENTER,
                         TextShadow.NONE);
         FontRenderer.getInstance()
                 .renderAlignedTextInBox(
                         poseStack,
                         Models.Character.getClassType().getName().toUpperCase(Locale.ROOT) + " Level "
-                                + Models.CombatXp.getXpLevel(),
+                                + Models.CombatXp.getCombatLevel().current(),
                         Texture.QUEST_BOOK_BACKGROUND.width() / 2f,
                         Texture.QUEST_BOOK_BACKGROUND.width(),
                         145,
                         0,
                         CommonColors.PURPLE,
-                        HorizontalAlignment.Center,
+                        HorizontalAlignment.CENTER,
                         TextShadow.NONE);
 
         String currentSplash = Managers.Splash.getCurrentSplash();
@@ -253,7 +253,7 @@ public final class WynntilsMenuScreen extends WynntilsMenuScreenBase {
                         Texture.QUEST_BOOK_BACKGROUND.height() - 45,
                         0,
                         CommonColors.MAGENTA,
-                        HorizontalAlignment.Center,
+                        HorizontalAlignment.CENTER,
                         TextShadow.NONE);
     }
 
@@ -281,17 +281,17 @@ public final class WynntilsMenuScreen extends WynntilsMenuScreenBase {
         }
     }
 
-    private void renderButtons(PoseStack poseStack, int mouseX, int mouseY) {
+    private void renderWidgets(PoseStack poseStack, int mouseX, int mouseY) {
         int buttonCount = buttons.size();
 
         poseStack.pushPose();
         poseStack.translate(20, 65, 0);
 
-        final float translationX = (this.width - Texture.QUEST_BOOK_BACKGROUND.width()) / 2f + 20;
-        final float translationY = (this.height - Texture.QUEST_BOOK_BACKGROUND.height()) / 2f + 65;
+        final int translationX = (this.width - Texture.QUEST_BOOK_BACKGROUND.width()) / 2 + 20;
+        final int translationY = (this.height - Texture.QUEST_BOOK_BACKGROUND.height()) / 2 + 65;
 
-        mouseX -= translationX;
-        mouseY -= translationY;
+        int adjustedMouseX = mouseX - translationX;
+        int adjustedMouseY = mouseY - translationY;
 
         this.hovered = null;
 
@@ -299,7 +299,10 @@ public final class WynntilsMenuScreen extends WynntilsMenuScreenBase {
             final int x = i % 4 * (BUTTON_SIZE + 5);
             final int y = (i / 4) * (BUTTON_SIZE + 5);
 
-            boolean hovered = x <= mouseX && x + BUTTON_SIZE >= mouseX && y <= mouseY && y + BUTTON_SIZE >= mouseY;
+            boolean hovered = x <= adjustedMouseX
+                    && x + BUTTON_SIZE >= adjustedMouseX
+                    && y <= adjustedMouseY
+                    && y + BUTTON_SIZE >= adjustedMouseY;
 
             RenderUtils.drawRect(
                     poseStack, hovered ? BUTTON_COLOR_HOVERED : BUTTON_COLOR, x, y, 0, BUTTON_SIZE, BUTTON_SIZE);

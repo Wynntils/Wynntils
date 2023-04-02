@@ -4,7 +4,7 @@
  */
 package com.wynntils.models.gathering;
 
-import com.wynntils.models.concepts.ProfessionType;
+import com.wynntils.models.profession.type.ProfessionType;
 import java.util.Collection;
 import java.util.List;
 import java.util.Locale;

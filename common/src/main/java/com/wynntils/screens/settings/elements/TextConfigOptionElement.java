@@ -47,6 +47,16 @@ public class TextConfigOptionElement extends ConfigOptionElement {
         return textInputBoxWidget.mouseClicked(mouseX, mouseY, button);
     }
 
+    @Override
+    public boolean mouseDragged(double mouseX, double mouseY, int button, double deltaX, double deltaY) {
+        return textInputBoxWidget.mouseDragged(mouseX, mouseY, button, deltaX, deltaY);
+    }
+
+    @Override
+    public boolean mouseReleased(double mouseX, double mouseY, int button) {
+        return textInputBoxWidget.mouseReleased(mouseX, mouseY, button);
+    }
+
     private void onTextInputUpdate(String textInput) {
         Object parsedValue = configHolder.tryParseStringValue(textInput);
 

@@ -4,7 +4,12 @@
  */
 package com.wynntils.mc.mixin;
 
-import com.wynntils.mc.EventFactory;
+import com.wynntils.core.events.MixinHelper;
+import com.wynntils.mc.event.DisplayResizeEvent;
+import com.wynntils.mc.event.ScreenClosedEvent;
+import com.wynntils.mc.event.ScreenOpenedEvent;
+import com.wynntils.mc.event.TickAlwaysEvent;
+import com.wynntils.mc.event.TickEvent;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screens.Screen;
 import org.spongepowered.asm.mixin.Mixin;
@@ -17,28 +22,31 @@ public abstract class MinecraftMixin {
     @Inject(method = "setScreen(Lnet/minecraft/client/gui/screens/Screen;)V", at = @At("RETURN"))
     private void setScreenPost(Screen screen, CallbackInfo ci) {
         if (screen == null) {
-            EventFactory.onScreenClose();
+            MixinHelper.post(new ScreenClosedEvent());
         } else {
-            EventFactory.onScreenOpenedPost(screen);
+            MixinHelper.post(new ScreenOpenedEvent.Post(screen));
         }
     }
 
     @Inject(method = "setScreen(Lnet/minecraft/client/gui/screens/Screen;)V", at = @At("HEAD"), cancellable = true)
     private void setScreenPre(Screen screen, CallbackInfo ci) {
-        if (screen != null) {
-            if (EventFactory.onScreenOpenedPre(screen).isCanceled()) {
-                ci.cancel();
-            }
+        if (screen == null) return;
+
+        ScreenOpenedEvent.Pre event = new ScreenOpenedEvent.Pre(screen);
+        MixinHelper.post(event);
+        if (event.isCanceled()) {
+            ci.cancel();
         }
     }
 
-    @Inject(method = "tick", at = @At("HEAD"))
+    @Inject(method = "tick()V", at = @At("HEAD"))
     private void tickPost(CallbackInfo ci) {
-        EventFactory.onTick();
+        MixinHelper.post(new TickEvent());
+        MixinHelper.postAlways(new TickAlwaysEvent());
     }
 
-    @Inject(method = "resizeDisplay", at = @At("RETURN"))
+    @Inject(method = "resizeDisplay()V", at = @At("RETURN"))
     private void resizeDisplayPost(CallbackInfo ci) {
-        EventFactory.onResizeDisplayPost();
+        MixinHelper.postAlways(new DisplayResizeEvent());
     }
 }

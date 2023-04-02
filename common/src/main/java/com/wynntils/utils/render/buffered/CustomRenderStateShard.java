@@ -21,7 +21,7 @@ public abstract class CustomRenderStateShard extends RenderStateShard {
                 RenderSystem.defaultBlendFunc();
             });
 
-    public CustomRenderStateShard(String string, Runnable runnable, Runnable runnable2) {
+    protected CustomRenderStateShard(String string, Runnable runnable, Runnable runnable2) {
         super(string, runnable, runnable2);
     }
 }

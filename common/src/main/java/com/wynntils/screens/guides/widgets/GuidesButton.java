@@ -31,7 +31,7 @@ public class GuidesButton extends WynntilsButton {
     }
 
     @Override
-    public void renderButton(PoseStack poseStack, int mouseX, int mouseY, float partialTick) {
+    public void renderWidget(PoseStack poseStack, int mouseX, int mouseY, float partialTick) {
         CustomColor backgroundColor = this.isHovered ? BUTTON_COLOR_HOVERED : BUTTON_COLOR;
         RenderUtils.drawRect(poseStack, backgroundColor, this.getX(), this.getY(), 0, this.width, this.height);
 
@@ -47,8 +47,8 @@ public class GuidesButton extends WynntilsButton {
                         this.getY() + 1,
                         0,
                         CommonColors.BLACK,
-                        HorizontalAlignment.Left,
-                        VerticalAlignment.Top,
+                        HorizontalAlignment.LEFT,
+                        VerticalAlignment.TOP,
                         TextShadow.NONE);
     }
 

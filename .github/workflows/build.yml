@@ -4,6 +4,8 @@ on:
   workflow_dispatch:
   pull_request_target:
     types: [opened, synchronize, reopened, ready_for_review]
+  merge_group:
+    branches: [main]
 
 jobs:
   format-and-build:
@@ -14,6 +16,7 @@ jobs:
         uses: actions/checkout@v3
         with:
           repository: ${{ github.event.pull_request.head.repo.full_name }}
+          token: ${{ secrets.PRIVATE_TOKEN }}
           ref: ${{ github.head_ref }}
 
       - name: Set up JDK

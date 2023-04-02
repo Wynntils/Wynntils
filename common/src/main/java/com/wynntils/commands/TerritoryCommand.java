@@ -1,90 +1,34 @@
 /*
- * Copyright © Wynntils 2022.
+ * Copyright © Wynntils 2023.
  * This file is released under AGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.commands;
 
 import com.mojang.brigadier.arguments.StringArgumentType;
 import com.mojang.brigadier.builder.LiteralArgumentBuilder;
-import com.mojang.brigadier.context.CommandContext;
 import com.wynntils.core.commands.Command;
-import com.wynntils.core.components.Models;
-import com.wynntils.models.territories.profile.TerritoryProfile;
-import com.wynntils.utils.mc.type.Location;
-import net.minecraft.ChatFormatting;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.commands.Commands;
-import net.minecraft.commands.SharedSuggestionProvider;
-import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.MutableComponent;
-import net.minecraft.network.chat.Style;
 
 public class TerritoryCommand extends Command {
+    private final CompassCommand delagate = new CompassCommand();
+
     @Override
-    public LiteralArgumentBuilder<CommandSourceStack> getBaseCommandBuilder() {
+    public String getCommandName() {
+        return "territory";
+    }
+
+    @Override
+    public String getDescription() {
+        return "Alias of /compass territory";
+    }
+
+    @Override
+    public LiteralArgumentBuilder<CommandSourceStack> getCommandBuilder() {
         return Commands.literal("territory")
                 .then(Commands.argument("territory", StringArgumentType.greedyString())
-                        .suggests((context, builder) ->
-                                SharedSuggestionProvider.suggest(Models.Territory.getTerritoryNames(), builder))
-                        .executes(this::territory))
-                .executes(this::help);
-    }
-
-    private int help(CommandContext<CommandSourceStack> context) {
-        context.getSource().sendSuccess(helpComponent(), false);
-        return 1;
-    }
-
-    private MutableComponent helpComponent() {
-        return Component.literal("Usage: /territory [name] | Ex: /territory Detlas")
-                .withStyle(ChatFormatting.RED);
-    }
-
-    private int territory(CommandContext<CommandSourceStack> context) {
-        String territoryArg = context.getArgument("territory", String.class);
-
-        TerritoryProfile territoryProfile = Models.Territory.getTerritoryProfile(territoryArg);
-
-        if (territoryProfile == null) {
-            context.getSource()
-                    .sendFailure(Component.literal(
-                                    "Can't access territory " + "\"" + territoryArg + "\". There likely is a typo.")
-                            .withStyle(ChatFormatting.RED));
-            return 1;
-        }
-
-        int xMiddle = (territoryProfile.getStartX() + territoryProfile.getEndX()) / 2;
-        int zMiddle = (territoryProfile.getStartZ() + territoryProfile.getEndZ()) / 2;
-
-        MutableComponent territoryComponent = Component.literal(territoryProfile.getFriendlyName())
-                .withStyle(Style.EMPTY.withColor(ChatFormatting.DARK_GREEN).withUnderlined(true));
-
-        Models.Compass.setCompassLocation(new Location(xMiddle, 0, zMiddle)); // update
-
-        MutableComponent separator = Component.literal("-----------------------------------------------------")
-                .withStyle(Style.EMPTY.withColor(ChatFormatting.DARK_GRAY).withStrikethrough(true));
-
-        MutableComponent finalMessage = Component.literal("");
-
-        finalMessage.append(separator);
-
-        MutableComponent success = Component.literal("The compass is now pointing towards ")
-                .withStyle(ChatFormatting.GREEN)
-                .append(territoryComponent)
-                .append(Component.literal(" (" + xMiddle + ", " + zMiddle + ")").withStyle(ChatFormatting.GREEN));
-
-        finalMessage.append("\n").append(success);
-
-        MutableComponent warn = Component.literal(
-                        "Note that this command redirects your" + " compass to the middle of said territory.")
-                .withStyle(ChatFormatting.AQUA);
-
-        finalMessage.append("\n").append(warn);
-
-        finalMessage.append("\n").append(separator);
-
-        context.getSource().sendSuccess(finalMessage, false);
-
-        return 1;
+                        .suggests(CompassCommand.TERRITORY_SUGGESTION_PROVIDER)
+                        .executes(delagate::territory))
+                .executes(delagate::syntaxError);
     }
 }

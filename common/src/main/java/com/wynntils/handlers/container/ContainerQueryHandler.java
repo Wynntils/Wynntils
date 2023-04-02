@@ -6,6 +6,7 @@ package com.wynntils.handlers.container;
 
 import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.components.Handler;
+import com.wynntils.handlers.container.type.ContainerContent;
 import com.wynntils.mc.event.ContainerSetContentEvent;
 import com.wynntils.mc.event.MenuEvent;
 import com.wynntils.mc.event.TickEvent;

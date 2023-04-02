@@ -47,13 +47,12 @@ public class TerritoryPoi implements Poi {
     @Override
     public void renderAt(
             PoseStack poseStack,
-            MultiBufferSource.BufferSource bufferSource,
+            MultiBufferSource bufferSource,
             float renderX,
             float renderY,
             boolean hovered,
             float scale,
             float mapZoom) {
-
         poseStack.pushPose();
         poseStack.translate(0, 0, 100);
 
@@ -110,8 +109,8 @@ public class TerritoryPoi implements Poi {
                             actualRenderZ + renderHeight,
                             0,
                             color,
-                            HorizontalAlignment.Center,
-                            VerticalAlignment.Middle,
+                            HorizontalAlignment.CENTER,
+                            VerticalAlignment.MIDDLE,
                             TextShadow.OUTLINE);
         }
 
@@ -130,8 +129,8 @@ public class TerritoryPoi implements Poi {
                                     actualRenderZ + renderHeight,
                                     0,
                                     CommonColors.WHITE,
-                                    HorizontalAlignment.Center,
-                                    VerticalAlignment.Bottom,
+                                    HorizontalAlignment.CENTER,
+                                    VerticalAlignment.BOTTOM,
                                     TextShadow.OUTLINE);
                 });
 
@@ -147,8 +146,8 @@ public class TerritoryPoi implements Poi {
                             actualRenderZ + renderHeight,
                             0,
                             CommonColors.WHITE,
-                            HorizontalAlignment.Center,
-                            VerticalAlignment.Top,
+                            HorizontalAlignment.CENTER,
+                            VerticalAlignment.TOP,
                             TextShadow.OUTLINE);
         }
 

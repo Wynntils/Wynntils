@@ -13,13 +13,16 @@ import com.mojang.brigadier.tree.LiteralCommandNode;
 import com.wynntils.core.commands.Command;
 import com.wynntils.core.components.Managers;
 import com.wynntils.core.config.ConfigHolder;
+import com.wynntils.core.config.OverlayGroupHolder;
 import com.wynntils.core.features.Feature;
+import com.wynntils.core.features.overlays.DynamicOverlay;
 import com.wynntils.core.features.overlays.Overlay;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 import net.minecraft.ChatFormatting;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.commands.Commands;
@@ -42,13 +45,14 @@ public class ConfigCommand extends Command {
 
                         Optional<Feature> foundFeature = Managers.Feature.getFeatureFromString(featureName);
 
-                        if (foundFeature.isEmpty()) return Collections.emptyIterator();
-
-                        return foundFeature.get().getOverlays().stream()
-                                .map(Overlay::getConfigJsonName)
-                                .iterator();
+                        return foundFeature
+                                .map(feature -> Managers.Overlay.getFeatureOverlays(feature).stream()
+                                        .map(Overlay::getConfigJsonName)
+                                        .iterator())
+                                .orElse(Collections.emptyIterator());
                     },
                     builder);
+
     private static final SuggestionProvider<CommandSourceStack> FEATURE_CONFIG_SUGGESTION_PROVIDER =
             (context, builder) -> SharedSuggestionProvider.suggest(
                     () -> {
@@ -56,12 +60,20 @@ public class ConfigCommand extends Command {
 
                         Optional<Feature> foundFeature = Managers.Feature.getFeatureFromString(featureName);
 
-                        if (foundFeature.isEmpty()) return Collections.emptyIterator();
-
-                        return foundFeature.get().getVisibleConfigOptions().stream()
-                                .map(ConfigHolder::getFieldName)
-                                .iterator();
+                        return foundFeature
+                                .map(feature -> feature.getVisibleConfigOptions().stream()
+                                        .map(ConfigHolder::getFieldName)
+                                        .iterator())
+                                .orElse(Collections.emptyIterator());
                     },
+                    builder);
+
+    private static final SuggestionProvider<CommandSourceStack> OVERLAY_GROUP_FEATURE_SUGGESTION_PROVIDER =
+            (context, builder) -> SharedSuggestionProvider.suggest(
+                    Managers.Feature.getFeatures().stream()
+                            .filter(feature -> !Managers.Overlay.getFeatureOverlayGroups(feature)
+                                    .isEmpty())
+                            .map(Feature::getShortName),
                     builder);
 
     private static final SuggestionProvider<CommandSourceStack> OVERLAY_CONFIG_SUGGESTION_PROVIDER =
@@ -75,31 +87,100 @@ public class ConfigCommand extends Command {
                         if (featureOptional.isEmpty()) return Collections.emptyIterator();
 
                         Feature feature = featureOptional.get();
-                        Optional<Overlay> overlayOptional = feature.getOverlays().stream()
+                        Optional<Overlay> overlayOptional = Managers.Overlay.getFeatureOverlays(feature).stream()
                                 .filter(overlay -> overlay.getConfigJsonName().equals(overlayName))
                                 .findFirst();
 
-                        if (overlayOptional.isEmpty()) return Collections.emptyIterator();
+                        return overlayOptional
+                                .map(overlay -> overlay.getVisibleConfigOptions().stream()
+                                        .map(ConfigHolder::getFieldName)
+                                        .iterator())
+                                .orElse(Collections.emptyIterator());
+                    },
+                    builder);
 
-                        return overlayOptional.get().getVisibleConfigOptions().stream()
-                                .map(ConfigHolder::getFieldName)
+    private static final SuggestionProvider<CommandSourceStack> CONFIG_VALUE_SUGGESTION_PROVIDER =
+            (context, builder) -> {
+                String featureName = context.getArgument("feature", String.class);
+                String configName = context.getArgument("config", String.class);
+
+                ConfigHolder config = getConfigHolderFromArguments(context, featureName, configName);
+
+                if (config == null) {
+                    return SharedSuggestionProvider.suggest(Stream.of(), builder);
+                }
+
+                return SharedSuggestionProvider.suggest(config.getValidLiterals(), builder);
+            };
+
+    private static final SuggestionProvider<CommandSourceStack> OVERLAY_CONFIG_VALUE_SUGGESTION_PROVIDER =
+            (context, builder) -> {
+                String featureName = context.getArgument("feature", String.class);
+                String overlayName = context.getArgument("overlay", String.class);
+                String configName = context.getArgument("config", String.class);
+
+                ConfigHolder config =
+                        getOverlayConfigHolderFromArguments(context, featureName, overlayName, configName);
+
+                if (config == null) {
+                    return SharedSuggestionProvider.suggest(Stream.of(), builder);
+                }
+
+                return SharedSuggestionProvider.suggest(config.getValidLiterals(), builder);
+            };
+
+    private static final SuggestionProvider<CommandSourceStack> OVERLAY_GROUP_SUGGESTION_PROVIDER =
+            (context, builder) -> SharedSuggestionProvider.suggest(
+                    () -> {
+                        String featureName = context.getArgument("feature", String.class);
+
+                        Optional<Feature> featureOptional = Managers.Feature.getFeatureFromString(featureName);
+
+                        return featureOptional
+                                .map(feature -> Managers.Overlay.getFeatureOverlayGroups(feature).stream()
+                                        .map(OverlayGroupHolder::getFieldName)
+                                        .iterator())
+                                .orElse(Collections.emptyIterator());
+                    },
+                    builder);
+
+    private static final SuggestionProvider<CommandSourceStack> OVERLAY_GROUP_REMOVE_ID_SUGGESTION_PROVIDER =
+            (context, builder) -> SharedSuggestionProvider.suggest(
+                    () -> {
+                        String featureName = context.getArgument("feature", String.class);
+                        String groupName = context.getArgument("group", String.class);
+
+                        OverlayGroupHolder overlayGroupHolder =
+                                getOverlayGroupHolderFromArguments(context, featureName, groupName);
+
+                        if (overlayGroupHolder == null) return Collections.emptyIterator();
+
+                        return overlayGroupHolder.getOverlays().stream()
+                                .map(overlay -> ((DynamicOverlay) overlay).getId())
+                                .map(String::valueOf)
                                 .iterator();
                     },
                     builder);
 
     @Override
-    public LiteralArgumentBuilder<CommandSourceStack> getBaseCommandBuilder() {
-        return Commands.literal("config")
+    public String getCommandName() {
+        return "config";
+    }
+
+    @Override
+    public String getDescription() {
+        return "Read and manipulate Wynntils settings";
+    }
+
+    @Override
+    public LiteralArgumentBuilder<CommandSourceStack> getCommandBuilder() {
+        return Commands.literal(getCommandName())
                 .then(this.buildGetConfigNode())
                 .then(this.buildSetConfigNode())
                 .then(this.buildResetConfigNode())
                 .then(this.buildReloadConfigNode())
+                .then(this.buildOverlayGroupNode())
                 .executes(this::syntaxError);
-    }
-
-    private int syntaxError(CommandContext<CommandSourceStack> context) {
-        context.getSource().sendFailure(Component.literal("Missing argument").withStyle(ChatFormatting.RED));
-        return 0;
     }
 
     private LiteralCommandNode<CommandSourceStack> buildGetConfigNode() {
@@ -141,10 +222,12 @@ public class ConfigCommand extends Command {
                                 .then(Commands.argument("config", StringArgumentType.word())
                                         .suggests(OVERLAY_CONFIG_SUGGESTION_PROVIDER)
                                         .then(Commands.argument("newValue", StringArgumentType.greedyString())
+                                                .suggests(OVERLAY_CONFIG_VALUE_SUGGESTION_PROVIDER)
                                                 .executes(this::changeOverlayConfig)))))
                 .then(Commands.argument("config", StringArgumentType.word())
                         .suggests(FEATURE_CONFIG_SUGGESTION_PROVIDER)
                         .then(Commands.argument("newValue", StringArgumentType.greedyString())
+                                .suggests(CONFIG_VALUE_SUGGESTION_PROVIDER)
                                 .executes(this::changeFeatureConfig))));
 
         return setConfigArgBuilder.build();
@@ -186,9 +269,83 @@ public class ConfigCommand extends Command {
         return reloadConfigArgBuilder.build();
     }
 
+    private LiteralCommandNode<CommandSourceStack> buildOverlayGroupNode() {
+        LiteralArgumentBuilder<CommandSourceStack> overlayGroupArgBuilder = Commands.literal("overlaygroup");
+
+        overlayGroupArgBuilder.then(Commands.argument("feature", StringArgumentType.word())
+                .suggests(OVERLAY_GROUP_FEATURE_SUGGESTION_PROVIDER)
+                .then(Commands.argument("group", StringArgumentType.word())
+                        .suggests(OVERLAY_GROUP_SUGGESTION_PROVIDER)
+                        .then(Commands.literal("add").executes(this::addOverlayGroup))
+                        .then(Commands.literal("remove")
+                                .then(Commands.argument("id", StringArgumentType.word())
+                                        .suggests(OVERLAY_GROUP_REMOVE_ID_SUGGESTION_PROVIDER)
+                                        .executes(this::removeOverlayGroup)))));
+
+        return overlayGroupArgBuilder.build();
+    }
+
+    private int addOverlayGroup(CommandContext<CommandSourceStack> context) {
+        String featureName = context.getArgument("feature", String.class);
+        String groupName = context.getArgument("group", String.class);
+
+        OverlayGroupHolder overlayGroupHolder = getOverlayGroupHolderFromArguments(context, featureName, groupName);
+
+        if (overlayGroupHolder == null) return 0;
+
+        int newId = Managers.Overlay.extendOverlayGroup(overlayGroupHolder);
+
+        Managers.Config.loadConfigOptions(true, false);
+        Managers.Config.saveConfig();
+
+        context.getSource()
+                .sendSuccess(
+                        Component.literal("Successfully added a new %s to %s with the id %d."
+                                        .formatted(
+                                                overlayGroupHolder
+                                                        .getOverlayClass()
+                                                        .getSimpleName(),
+                                                overlayGroupHolder.getFieldName(),
+                                                newId))
+                                .withStyle(ChatFormatting.GREEN),
+                        false);
+
+        return 1;
+    }
+
+    private int removeOverlayGroup(CommandContext<CommandSourceStack> context) {
+        String featureName = context.getArgument("feature", String.class);
+        String groupName = context.getArgument("group", String.class);
+        String idName = context.getArgument("id", String.class);
+
+        OverlayGroupHolder overlayGroupHolder = getOverlayGroupHolderFromArguments(context, featureName, groupName);
+
+        if (overlayGroupHolder == null) return 0;
+
+        int id = Integer.parseInt(idName);
+
+        Managers.Overlay.removeIdFromOverlayGroup(overlayGroupHolder, id);
+
+        Managers.Config.loadConfigOptions(true, false);
+        Managers.Config.saveConfig();
+
+        context.getSource()
+                .sendSuccess(
+                        Component.literal("Successfully removed %s from %s with the id %d."
+                                        .formatted(
+                                                overlayGroupHolder
+                                                        .getOverlayClass()
+                                                        .getSimpleName(),
+                                                overlayGroupHolder.getFieldName(),
+                                                id))
+                                .withStyle(ChatFormatting.GREEN),
+                        false);
+
+        return 1;
+    }
+
     private int reloadAllConfigOptions(CommandContext<CommandSourceStack> context) {
-        Managers.Config.loadConfigFile();
-        Managers.Config.loadAllConfigOptions(true);
+        Managers.Config.reloadConfiguration();
         Managers.Config.saveConfig();
 
         context.getSource()
@@ -309,57 +466,7 @@ public class ConfigCommand extends Command {
 
         ConfigHolder config = getOverlayConfigHolderFromArguments(context, featureName, overlayName, configName);
 
-        if (config == null) {
-            return 0;
-        }
-
-        String newValue = context.getArgument("newValue", String.class);
-        Object parsedValue = config.tryParseStringValue(newValue);
-
-        if (parsedValue == null) {
-            context.getSource()
-                    .sendFailure(Component.literal("Failed to parse the inputted value to the correct type!")
-                            .withStyle(ChatFormatting.RED));
-            return 0;
-        }
-
-        Object oldValue = config.getValue();
-
-        if (Objects.equals(oldValue, parsedValue)) {
-            context.getSource()
-                    .sendFailure(Component.literal("The new value is the same as the current setting.")
-                            .withStyle(ChatFormatting.RED));
-            return 0;
-        }
-
-        if (!config.setValue(parsedValue)) {
-            context.getSource()
-                    .sendFailure(
-                            Component.literal("Failed to set config field!").withStyle(ChatFormatting.RED));
-            return 0;
-        }
-
-        Managers.Config.saveConfig();
-
-        context.getSource()
-                .sendSuccess(
-                        Component.literal("Successfully set ")
-                                .withStyle(ChatFormatting.GREEN)
-                                .append(Component.literal(config.getDisplayName())
-                                        .withStyle(ChatFormatting.UNDERLINE)
-                                        .withStyle(ChatFormatting.YELLOW))
-                                .append(Component.literal(" from ").withStyle(ChatFormatting.GREEN))
-                                .append(Component.literal(oldValue == null ? "null" : oldValue.toString())
-                                        .withStyle(ChatFormatting.BOLD)
-                                        .withStyle(ChatFormatting.RED))
-                                .append(Component.literal(" to ").withStyle(ChatFormatting.GREEN))
-                                .append(Component.literal(parsedValue.toString())
-                                        .withStyle(ChatFormatting.BOLD)
-                                        .withStyle(ChatFormatting.GREEN))
-                                .append(Component.literal(".").withStyle(ChatFormatting.GREEN)),
-                        false);
-
-        return 1;
+        return changeConfig(context, config);
     }
 
     private int getSpecificConfigOption(CommandContext<CommandSourceStack> context) {
@@ -413,7 +520,7 @@ public class ConfigCommand extends Command {
                         .withStyle(ChatFormatting.YELLOW)
                         .append(Component.literal("'s overlays:\n").withStyle(ChatFormatting.WHITE)));
 
-        for (Overlay overlay : feature.getOverlays()) {
+        for (Overlay overlay : Managers.Overlay.getFeatureOverlays(feature)) {
             MutableComponent current = getComponentForOverlay(overlay);
 
             current.withStyle(style -> style.withClickEvent(new ClickEvent(
@@ -434,6 +541,10 @@ public class ConfigCommand extends Command {
 
         ConfigHolder config = getConfigHolderFromArguments(context, featureName, configName);
 
+        return changeConfig(context, config);
+    }
+
+    private static int changeConfig(CommandContext<CommandSourceStack> context, ConfigHolder config) {
         if (config == null) {
             return 0;
         }
@@ -449,6 +560,7 @@ public class ConfigCommand extends Command {
         }
 
         Object oldValue = config.getValue();
+        String oldValueString = config.getValueString();
 
         if (Objects.equals(oldValue, parsedValue)) {
             context.getSource()
@@ -457,12 +569,8 @@ public class ConfigCommand extends Command {
             return 0;
         }
 
-        if (!config.setValue(parsedValue)) {
-            context.getSource()
-                    .sendFailure(
-                            Component.literal("Failed to set config field!").withStyle(ChatFormatting.RED));
-            return 0;
-        }
+        config.setValue(parsedValue);
+        String newValueString = config.getValueString();
 
         Managers.Config.saveConfig();
 
@@ -474,11 +582,11 @@ public class ConfigCommand extends Command {
                                         .withStyle(ChatFormatting.UNDERLINE)
                                         .withStyle(ChatFormatting.YELLOW))
                                 .append(Component.literal(" from ").withStyle(ChatFormatting.GREEN))
-                                .append(Component.literal(oldValue == null ? "null" : oldValue.toString())
+                                .append(Component.literal(oldValueString)
                                         .withStyle(ChatFormatting.BOLD)
                                         .withStyle(ChatFormatting.RED))
                                 .append(Component.literal(" to ").withStyle(ChatFormatting.GREEN))
-                                .append(Component.literal(parsedValue.toString())
+                                .append(Component.literal(newValueString)
                                         .withStyle(ChatFormatting.BOLD)
                                         .withStyle(ChatFormatting.GREEN))
                                 .append(Component.literal(".").withStyle(ChatFormatting.GREEN)),
@@ -532,7 +640,7 @@ public class ConfigCommand extends Command {
         return 1;
     }
 
-    private Feature getFeatureFromArguments(CommandContext<CommandSourceStack> context, String featureName) {
+    private static Feature getFeatureFromArguments(CommandContext<CommandSourceStack> context, String featureName) {
         Optional<Feature> featureOptional = Managers.Feature.getFeatureFromString(featureName);
 
         if (featureOptional.isEmpty()) {
@@ -544,7 +652,7 @@ public class ConfigCommand extends Command {
         return featureOptional.get();
     }
 
-    private ConfigHolder getConfigHolderFromArguments(
+    private static ConfigHolder getConfigHolderFromArguments(
             CommandContext<CommandSourceStack> context, String featureName, String configName) {
         Feature feature = getFeatureFromArguments(context, featureName);
 
@@ -561,7 +669,7 @@ public class ConfigCommand extends Command {
         return configOptional.get();
     }
 
-    private ConfigHolder getOverlayConfigHolderFromArguments(
+    private static ConfigHolder getOverlayConfigHolderFromArguments(
             CommandContext<CommandSourceStack> context, String featureName, String overlayName, String configName) {
         Overlay overlay = getOverlayFromArguments(context, featureName, overlayName);
 
@@ -578,7 +686,7 @@ public class ConfigCommand extends Command {
         return configOptional.get();
     }
 
-    private Overlay getOverlayFromArguments(
+    private static Overlay getOverlayFromArguments(
             CommandContext<CommandSourceStack> context, String featureName, String overlayName) {
         Feature feature = getFeatureFromArguments(context, featureName);
 
@@ -588,7 +696,7 @@ public class ConfigCommand extends Command {
             return null;
         }
 
-        Optional<Overlay> overlayOptional = feature.getOverlays().stream()
+        Optional<Overlay> overlayOptional = Managers.Overlay.getFeatureOverlays(feature).stream()
                 .filter(overlay -> overlay.getConfigJsonName().equals(overlayName))
                 .findFirst();
 
@@ -601,12 +709,28 @@ public class ConfigCommand extends Command {
         return overlayOptional.get();
     }
 
-    private MutableComponent getComponentForConfigHolder(ConfigHolder config) {
-        Object value = config.getValue();
+    private static OverlayGroupHolder getOverlayGroupHolderFromArguments(
+            CommandContext<CommandSourceStack> context, String featureName, String overlayGroupName) {
+        Feature feature = getFeatureFromArguments(context, featureName);
+        if (feature == null) return null;
 
+        Optional<OverlayGroupHolder> group = Managers.Overlay.getFeatureOverlayGroups(feature).stream()
+                .filter(overlayGroupHolder -> overlayGroupHolder.getFieldName().equalsIgnoreCase(overlayGroupName))
+                .findFirst();
+
+        if (group.isEmpty()) {
+            context.getSource()
+                    .sendFailure(Component.literal("Overlay group not found!").withStyle(ChatFormatting.RED));
+            return null;
+        }
+
+        return group.get();
+    }
+
+    private MutableComponent getComponentForConfigHolder(ConfigHolder config) {
         String configNameString = config.getDisplayName();
         String configTypeString = " (" + ((Class<?>) config.getType()).getSimpleName() + ")";
-        String valueString = value == null ? "Value is null." : value.toString();
+        String valueString = config.getValueString();
 
         return Component.literal("\n - ")
                 .withStyle(ChatFormatting.GRAY)
@@ -632,9 +756,7 @@ public class ConfigCommand extends Command {
     }
 
     private MutableComponent getSpecificConfigComponent(ConfigHolder config) {
-        Object value = config.getValue();
-
-        String valueString = value == null ? "Value is null." : value.toString();
+        String valueString = config.getValueString();
         String configTypeString = "(" + ((Class<?>) config.getType()).getSimpleName() + ")";
 
         MutableComponent response = Component.literal("");
@@ -649,14 +771,15 @@ public class ConfigCommand extends Command {
                         .append(Component.literal(": "))
                         .append(Component.literal(valueString).withStyle(ChatFormatting.GREEN)))
                 .append("\n");
-        response.append(Component.literal("Subcategory: ")
-                        .withStyle(ChatFormatting.WHITE)
-                        .append(Component.literal(config.getMetadata().subcategory())))
-                .append("\n");
         response.append(Component.literal("Description: ")
                         .withStyle(ChatFormatting.WHITE)
                         .append(Component.literal(config.getDescription())))
                 .append("\n");
         return response;
+    }
+
+    private int syntaxError(CommandContext<CommandSourceStack> context) {
+        context.getSource().sendFailure(Component.literal("Missing argument").withStyle(ChatFormatting.RED));
+        return 0;
     }
 }

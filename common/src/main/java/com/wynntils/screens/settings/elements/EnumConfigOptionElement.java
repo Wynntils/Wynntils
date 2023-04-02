@@ -6,6 +6,7 @@ package com.wynntils.screens.settings.elements;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.wynntils.core.config.ConfigHolder;
+import com.wynntils.utils.EnumUtils;
 import com.wynntils.utils.colors.CommonColors;
 import com.wynntils.utils.colors.CustomColor;
 import com.wynntils.utils.mc.McUtils;
@@ -13,7 +14,6 @@ import com.wynntils.utils.render.FontRenderer;
 import com.wynntils.utils.render.RenderUtils;
 import com.wynntils.utils.render.type.HorizontalAlignment;
 import com.wynntils.utils.render.type.TextShadow;
-import java.util.Arrays;
 import java.util.List;
 import net.minecraft.sounds.SoundEvents;
 import org.lwjgl.glfw.GLFW;
@@ -29,10 +29,10 @@ public class EnumConfigOptionElement extends ConfigOptionElement {
     public EnumConfigOptionElement(ConfigHolder configHolder) {
         super(configHolder);
 
-        this.enumConstants = getEnumConstants();
+        this.enumConstants = EnumUtils.getEnumConstants((Class<?>) this.configHolder.getType());
         this.maxOptionWidth = this.enumConstants.stream()
                         .mapToInt(enumValue ->
-                                FontRenderer.getInstance().getFont().width(enumValue.toString()))
+                                FontRenderer.getInstance().getFont().width(EnumUtils.toNiceString(enumValue)))
                         .max()
                         .orElse(0)
                 + 8;
@@ -63,13 +63,13 @@ public class EnumConfigOptionElement extends ConfigOptionElement {
         FontRenderer.getInstance()
                 .renderAlignedTextInBox(
                         poseStack,
-                        configHolder.getValue().toString(),
+                        configHolder.getValueString(),
                         0,
                         maxOptionWidth,
                         renderY + FontRenderer.getInstance().getFont().lineHeight / 2f,
                         0,
                         CommonColors.WHITE,
-                        HorizontalAlignment.Center,
+                        HorizontalAlignment.CENTER,
                         TextShadow.OUTLINE);
     }
 
@@ -95,16 +95,8 @@ public class EnumConfigOptionElement extends ConfigOptionElement {
 
         configHolder.setValue(nextValue);
 
-        McUtils.playSound(SoundEvents.UI_BUTTON_CLICK.value());
+        McUtils.playSoundUI(SoundEvents.UI_BUTTON_CLICK.value());
 
         return true;
-    }
-
-    private List<? extends Enum<?>> getEnumConstants() {
-        Class<?> clazz = configHolder.getClassOfConfigField();
-        assert clazz.isEnum();
-
-        return Arrays.stream(((Class<? extends Enum<?>>) clazz).getEnumConstants())
-                .toList();
     }
 }

@@ -5,6 +5,7 @@
 package com.wynntils.core.events;
 
 import com.wynntils.core.WynntilsMod;
+import java.util.Locale;
 import net.minecraftforge.eventbus.BusBuilderImpl;
 import net.minecraftforge.eventbus.EventBus;
 import net.minecraftforge.eventbus.api.BusBuilder;
@@ -41,7 +42,7 @@ public final class EventBusWrapper extends EventBus {
                     switch (threadAnnotation.value()) {
                         case RENDER -> threadName.equals("Render thread");
                         case IO -> threadName.startsWith("Netty Client IO #");
-                        case WORKER -> threadName.contains("pool");
+                        case WORKER -> threadName.toLowerCase(Locale.ROOT).contains("pool");
                         case ANY -> true;
                     };
             if (!threadOk) {

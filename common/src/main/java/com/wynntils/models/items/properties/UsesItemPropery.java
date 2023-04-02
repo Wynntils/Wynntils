@@ -12,7 +12,7 @@ public interface UsesItemPropery extends CountedItemProperty {
     default int getCount() {
         CappedValue value = getUses();
         if (value == null) return 0;
-        return value.getCurrent();
+        return value.current();
     }
 
     @Override

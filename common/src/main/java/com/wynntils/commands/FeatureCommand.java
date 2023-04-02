@@ -8,15 +8,10 @@ import com.mojang.brigadier.arguments.StringArgumentType;
 import com.mojang.brigadier.builder.LiteralArgumentBuilder;
 import com.mojang.brigadier.context.CommandContext;
 import com.mojang.brigadier.suggestion.SuggestionProvider;
-import com.mojang.brigadier.tree.LiteralCommandNode;
-import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.commands.Command;
 import com.wynntils.core.components.Managers;
-import com.wynntils.core.features.DebugFeature;
+import com.wynntils.core.config.Category;
 import com.wynntils.core.features.Feature;
-import com.wynntils.core.features.StateManagedFeature;
-import com.wynntils.core.features.UserFeature;
-import com.wynntils.core.features.properties.FeatureCategory;
 import java.util.List;
 import java.util.Optional;
 import net.minecraft.ChatFormatting;
@@ -24,71 +19,55 @@ import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.commands.Commands;
 import net.minecraft.commands.SharedSuggestionProvider;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.HoverEvent;
 import net.minecraft.network.chat.MutableComponent;
 
 public class FeatureCommand extends Command {
-    private static final SuggestionProvider<CommandSourceStack> USER_FEATURE_SUGGESTION_PROVIDER =
+    private static final SuggestionProvider<CommandSourceStack> FEATURE_SUGGESTION_PROVIDER =
             (context, builder) -> SharedSuggestionProvider.suggest(
-                    Managers.Feature.getFeatures().stream()
-                            .filter(feature -> feature instanceof UserFeature && isVisible(feature))
-                            .map(Feature::getShortName),
-                    builder);
+                    Managers.Feature.getFeatures().stream().map(Feature::getShortName), builder);
 
     @Override
-    public LiteralArgumentBuilder<CommandSourceStack> getBaseCommandBuilder() {
-        return Commands.literal("feature")
-                .then(this.buildListNode())
-                .then(this.enableFeatureNode())
-                .then(this.disableFeatureNode())
-                .then(this.reloadFeatureNode())
+    public String getCommandName() {
+        return "feature";
+    }
+
+    @Override
+    public String getDescription() {
+        return "List and manage Wynntils features";
+    }
+
+    @Override
+    public LiteralArgumentBuilder<CommandSourceStack> getCommandBuilder() {
+        return Commands.literal(getCommandName())
+                .then(Commands.literal("list").executes(this::listFeatures))
+                .then(Commands.literal("enable")
+                        .then(Commands.argument("feature", StringArgumentType.word())
+                                .suggests(FEATURE_SUGGESTION_PROVIDER)
+                                .executes(this::enableFeature)))
+                .then(Commands.literal("disable")
+                        .then(Commands.argument("feature", StringArgumentType.word())
+                                .suggests(FEATURE_SUGGESTION_PROVIDER)
+                                .executes(this::disableFeature)))
+                .then(Commands.literal("reload")
+                        .then(Commands.argument("feature", StringArgumentType.word())
+                                .suggests(FEATURE_SUGGESTION_PROVIDER)
+                                .executes(this::reloadFeature)))
                 .executes(this::syntaxError);
-    }
-
-    private int syntaxError(CommandContext<CommandSourceStack> context) {
-        context.getSource().sendFailure(Component.literal("Missing argument").withStyle(ChatFormatting.RED));
-        return 0;
-    }
-
-    private LiteralCommandNode<CommandSourceStack> buildListNode() {
-        return Commands.literal("list").executes(this::listFeatures).build();
     }
 
     private int listFeatures(CommandContext<CommandSourceStack> context) {
         List<Feature> features = Managers.Feature.getFeatures().stream()
-                .filter(FeatureCommand::isVisible)
                 .sorted(Feature::compareTo)
                 .toList();
 
         MutableComponent response =
                 Component.literal("Currently registered features:").withStyle(ChatFormatting.AQUA);
 
-        FeatureCategory lastCategory = null;
+        Category lastCategory = null;
 
         for (Feature feature : features) {
-            Class<?> superclass = feature.getClass().getSuperclass();
-
-            ChatFormatting color;
             String translatedName = feature.getTranslatedName();
-
-            if (feature instanceof DebugFeature) {
-                color = ChatFormatting.YELLOW;
-
-                if (feature.isEnabled()) {
-                    translatedName += " {ENABLED DEBUG}";
-                } else {
-                    translatedName += " {DISABLED DEBUG}";
-                }
-            } else {
-                if (feature.isEnabled()) {
-                    color = ChatFormatting.GREEN;
-                } else {
-                    color = ChatFormatting.RED;
-                }
-                if (feature instanceof StateManagedFeature) {
-                    translatedName += " {SYSTEM CONTROLLED}";
-                }
-            }
+            ChatFormatting color = feature.isEnabled() ? ChatFormatting.GREEN : ChatFormatting.RED;
 
             if (lastCategory != feature.getCategory()) {
                 lastCategory = feature.getCategory();
@@ -98,10 +77,7 @@ public class FeatureCommand extends Command {
             }
 
             response.append(Component.literal("\n - ").withStyle(ChatFormatting.GRAY))
-                    .append(Component.literal(translatedName)
-                            .withStyle(style -> style.withHoverEvent(new HoverEvent(
-                                    HoverEvent.Action.SHOW_TEXT, Component.literal(superclass.getSimpleName()))))
-                            .withStyle(color));
+                    .append(Component.literal(translatedName).withStyle(color));
         }
 
         context.getSource().sendSuccess(response, false);
@@ -109,29 +85,17 @@ public class FeatureCommand extends Command {
         return 1;
     }
 
-    private static boolean isVisible(Feature feature) {
-        if (!(feature instanceof DebugFeature)) return true;
-        return WynntilsMod.isDevelopmentEnvironment();
-    }
-
-    private LiteralCommandNode<CommandSourceStack> enableFeatureNode() {
-        return Commands.literal("enable")
-                .then(Commands.argument("feature", StringArgumentType.word())
-                        .suggests(USER_FEATURE_SUGGESTION_PROVIDER)
-                        .executes(this::enableFeature))
-                .build();
-    }
-
     private int enableFeature(CommandContext<CommandSourceStack> context) {
         String featureName = context.getArgument("feature", String.class);
 
         Optional<Feature> featureOptional = Managers.Feature.getFeatureFromString(featureName);
 
-        if (featureOptional.isEmpty() || !(featureOptional.get() instanceof UserFeature feature)) {
+        if (featureOptional.isEmpty()) {
             context.getSource()
                     .sendFailure(Component.literal("Feature not found!").withStyle(ChatFormatting.RED));
             return 0;
         }
+        Feature feature = featureOptional.get();
 
         if (feature.isEnabled()) {
             context.getSource()
@@ -141,7 +105,6 @@ public class FeatureCommand extends Command {
         }
 
         feature.setUserEnabled(true);
-        feature.tryUserToggle();
 
         if (!feature.isEnabled()) {
             context.getSource()
@@ -161,24 +124,18 @@ public class FeatureCommand extends Command {
         return 1;
     }
 
-    private LiteralCommandNode<CommandSourceStack> disableFeatureNode() {
-        return Commands.literal("disable")
-                .then(Commands.argument("feature", StringArgumentType.word())
-                        .suggests(USER_FEATURE_SUGGESTION_PROVIDER)
-                        .executes(this::disableFeature))
-                .build();
-    }
-
     private int disableFeature(CommandContext<CommandSourceStack> context) {
         String featureName = context.getArgument("feature", String.class);
 
         Optional<Feature> featureOptional = Managers.Feature.getFeatureFromString(featureName);
 
-        if (featureOptional.isEmpty() || !(featureOptional.get() instanceof UserFeature feature)) {
+        if (featureOptional.isEmpty()) {
             context.getSource()
                     .sendFailure(Component.literal("Feature not found!").withStyle(ChatFormatting.RED));
             return 0;
         }
+
+        Feature feature = featureOptional.get();
 
         if (!feature.isEnabled()) {
             context.getSource()
@@ -188,7 +145,6 @@ public class FeatureCommand extends Command {
         }
 
         feature.setUserEnabled(false);
-        feature.tryUserToggle();
 
         if (feature.isEnabled()) {
             context.getSource()
@@ -208,24 +164,18 @@ public class FeatureCommand extends Command {
         return 1;
     }
 
-    private LiteralCommandNode<CommandSourceStack> reloadFeatureNode() {
-        return Commands.literal("reload")
-                .then(Commands.argument("feature", StringArgumentType.word())
-                        .suggests(USER_FEATURE_SUGGESTION_PROVIDER)
-                        .executes(this::reloadFeature))
-                .build();
-    }
-
     private int reloadFeature(CommandContext<CommandSourceStack> context) {
         String featureName = context.getArgument("feature", String.class);
 
         Optional<Feature> featureOptional = Managers.Feature.getFeatureFromString(featureName);
 
-        if (featureOptional.isEmpty() || !(featureOptional.get() instanceof UserFeature feature)) {
+        if (featureOptional.isEmpty()) {
             context.getSource()
                     .sendFailure(Component.literal("Feature not found!").withStyle(ChatFormatting.RED));
             return 0;
         }
+
+        Feature feature = featureOptional.get();
 
         if (!feature.isEnabled()) {
             context.getSource()
@@ -235,7 +185,7 @@ public class FeatureCommand extends Command {
             return 1;
         }
 
-        feature.disable();
+        Managers.Feature.disableFeature(feature);
 
         if (feature.isEnabled()) {
             context.getSource()
@@ -244,7 +194,7 @@ public class FeatureCommand extends Command {
             return 1;
         }
 
-        feature.enable();
+        Managers.Feature.enableFeature(feature);
 
         if (!feature.isEnabled()) {
             context.getSource()
@@ -260,5 +210,10 @@ public class FeatureCommand extends Command {
                         false);
 
         return 1;
+    }
+
+    private int syntaxError(CommandContext<CommandSourceStack> context) {
+        context.getSource().sendFailure(Component.literal("Missing argument").withStyle(ChatFormatting.RED));
+        return 0;
     }
 }

@@ -11,7 +11,6 @@ import com.mojang.blaze3d.vertex.DefaultVertexFormat;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.Tesselator;
 import com.mojang.blaze3d.vertex.VertexFormat;
-import com.wynntils.features.user.map.PointerType;
 import com.wynntils.models.lootruns.LootrunInstance;
 import com.wynntils.models.lootruns.type.ColoredPath;
 import com.wynntils.models.lootruns.type.ColoredPoint;
@@ -21,6 +20,7 @@ import com.wynntils.utils.colors.CommonColors;
 import com.wynntils.utils.colors.CustomColor;
 import com.wynntils.utils.mc.McUtils;
 import java.util.List;
+import com.wynntils.utils.render.type.PointerType;
 import net.minecraft.client.renderer.GameRenderer;
 import net.minecraft.world.phys.Vec3;
 import org.joml.Matrix4f;
@@ -115,7 +115,6 @@ public final class MapRenderer {
             CustomColor pointerColor,
             PointerType pointerType,
             boolean followPlayerRotation) {
-
         if (!followPlayerRotation) {
             poseStack.pushPose();
             RenderUtils.rotatePose(

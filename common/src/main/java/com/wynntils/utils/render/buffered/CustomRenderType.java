@@ -46,8 +46,8 @@ public class CustomRenderType extends RenderType {
                     .setShaderState(POSITION_COLOR_TEX_SHADER)
                     .setCullState(NO_CULL)
                     .setTextureState(new TextureStateShard(Texture.LOOTRUN_LINE.resource(), false, false))
-                    .setTransparencyState(CustomRenderStateShard.SEMI_TRANSPARENT_TRANSPARENCY)
-                    .setWriteMaskState(COLOR_WRITE)
+                    .setTransparencyState(RenderStateShard.TRANSLUCENT_TRANSPARENCY)
+                    .setWriteMaskState(COLOR_DEPTH_WRITE)
                     .createCompositeState(false));
 
     public static final RenderType POSITION_COLOR_TRIANGLE_STRIP = RenderType.create(

@@ -4,7 +4,7 @@
  */
 package com.wynntils.models.items.items.gui;
 
-import com.wynntils.models.concepts.Skill;
+import com.wynntils.models.elements.type.Skill;
 import com.wynntils.models.items.properties.CountedItemProperty;
 import com.wynntils.utils.colors.CustomColor;
 

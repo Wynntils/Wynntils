@@ -5,27 +5,33 @@
 package com.wynntils.functions;
 
 import com.wynntils.core.components.Models;
-import com.wynntils.core.functions.ActiveFunction;
 import com.wynntils.core.functions.Function;
-import com.wynntils.models.experience.event.CombatXpGainEvent;
+import com.wynntils.core.functions.arguments.FunctionArguments;
 import com.wynntils.utils.StringUtils;
-import com.wynntils.utils.type.TimedSet;
+import com.wynntils.utils.type.CappedValue;
 import java.util.List;
-import java.util.concurrent.TimeUnit;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
 
 public class CombatXpFunctions {
-    public static class XpPerMinuteRawFunction extends ActiveFunction<Integer> {
-        private static final TimedSet<Double> timedXpSet = new TimedSet<>(1, TimeUnit.MINUTES, true);
-
+    public static class CappedLevelFunction extends Function<CappedValue> {
         @Override
-        public Integer getValue(String argument) {
-            return (int) (timedXpSet.stream().mapToDouble(Double::doubleValue).sum());
+        public CappedValue getValue(FunctionArguments arguments) {
+            return Models.CombatXp.getCombatLevel();
         }
+    }
 
-        @SubscribeEvent
-        public void onExperienceGain(CombatXpGainEvent event) {
-            timedXpSet.put((double) event.getGainedXpRaw());
+    public static class CappedXpFunction extends Function<CappedValue> {
+        @Override
+        public CappedValue getValue(FunctionArguments arguments) {
+            return Models.CombatXp.getXp();
+        }
+    }
+
+    public static class XpPerMinuteRawFunction extends Function<Integer> {
+        @Override
+        public Integer getValue(FunctionArguments arguments) {
+            return (int) (Models.CombatXp.getRawXpGainInLastMinute().stream()
+                    .mapToDouble(Float::doubleValue)
+                    .sum());
         }
 
         @Override
@@ -34,18 +40,12 @@ public class CombatXpFunctions {
         }
     }
 
-    public static class XpPerMinuteFunction extends ActiveFunction<String> {
-        private static final TimedSet<Double> timedXpSet = new TimedSet<>(1, TimeUnit.MINUTES, true);
-
+    public static class XpPerMinuteFunction extends Function<String> {
         @Override
-        public String getValue(String argument) {
-            return StringUtils.integerToShortString(
-                    (int) (timedXpSet.stream().mapToDouble(Double::doubleValue).sum()));
-        }
-
-        @SubscribeEvent
-        public void onExperienceGain(CombatXpGainEvent event) {
-            timedXpSet.put((double) event.getGainedXpRaw());
+        public String getValue(FunctionArguments arguments) {
+            return StringUtils.integerToShortString((int) (Models.CombatXp.getRawXpGainInLastMinute().stream()
+                    .mapToDouble(Float::doubleValue)
+                    .sum()));
         }
 
         @Override
@@ -54,20 +54,12 @@ public class CombatXpFunctions {
         }
     }
 
-    public static class XpPercentagePerMinuteFunction extends ActiveFunction<Double> {
-        private static final TimedSet<Double> timedXpSet = new TimedSet<>(1, TimeUnit.MINUTES, true);
-
+    public static class XpPercentagePerMinuteFunction extends Function<Double> {
         @Override
-        public Double getValue(String argument) {
-            // Round to 2 decimal places
-            return Math.round(
-                            timedXpSet.stream().mapToDouble(Double::doubleValue).sum() * 100.0)
-                    / 100.0;
-        }
-
-        @SubscribeEvent
-        public void onExperienceGain(CombatXpGainEvent event) {
-            timedXpSet.put((double) event.getGainedXpPercentage());
+        public Double getValue(FunctionArguments arguments) {
+            return Models.CombatXp.getPercentageXpGainInLastMinute().stream()
+                    .mapToDouble(Float::doubleValue)
+                    .sum();
         }
 
         @Override
@@ -78,8 +70,8 @@ public class CombatXpFunctions {
 
     public static class LevelFunction extends Function<Integer> {
         @Override
-        public Integer getValue(String argument) {
-            return Models.CombatXp.getXpLevel();
+        public Integer getValue(FunctionArguments arguments) {
+            return Models.CombatXp.getCombatLevel().current();
         }
 
         @Override
@@ -90,36 +82,36 @@ public class CombatXpFunctions {
 
     public static class XpFunction extends Function<String> {
         @Override
-        public String getValue(String argument) {
-            return StringUtils.integerToShortString((int) Models.CombatXp.getCurrentXp());
+        public String getValue(FunctionArguments arguments) {
+            return StringUtils.integerToShortString(Models.CombatXp.getXp().current());
         }
     }
 
-    public static class XpRawFunction extends Function<Float> {
+    public static class XpRawFunction extends Function<Integer> {
         @Override
-        public Float getValue(String argument) {
-            return Models.CombatXp.getCurrentXp();
+        public Integer getValue(FunctionArguments arguments) {
+            return Models.CombatXp.getXp().current();
         }
     }
 
     public static class XpReqFunction extends Function<String> {
         @Override
-        public String getValue(String argument) {
-            return StringUtils.integerToShortString(Models.CombatXp.getXpPointsNeededToLevelUp());
+        public String getValue(FunctionArguments arguments) {
+            return StringUtils.integerToShortString(Models.CombatXp.getXp().max());
         }
     }
 
     public static class XpReqRawFunction extends Function<Integer> {
         @Override
-        public Integer getValue(String argument) {
-            return Models.CombatXp.getXpPointsNeededToLevelUp();
+        public Integer getValue(FunctionArguments arguments) {
+            return Models.CombatXp.getXp().max();
         }
     }
 
-    public static class XpPctFunction extends Function<Float> {
+    public static class XpPctFunction extends Function<Double> {
         @Override
-        public Float getValue(String argument) {
-            return Models.CombatXp.getXpProgress() * 100.0f;
+        public Double getValue(FunctionArguments arguments) {
+            return Models.CombatXp.getXp().getPercentage();
         }
     }
 }

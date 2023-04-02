@@ -6,6 +6,7 @@ package com.wynntils.handlers.container;
 
 import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.components.Handlers;
+import com.wynntils.handlers.container.type.ContainerContent;
 import com.wynntils.utils.wynn.ContainerUtils;
 import java.util.LinkedList;
 import java.util.function.Consumer;
@@ -203,9 +204,9 @@ public final class ScriptedContainerQuery {
                 throw new IllegalStateException("Set startAction twice");
             }
             this.startAction = (container) -> {
-                ItemStack item = container.items().get(slotNum);
-                if (!item.is(expectedItemType)
-                        || !item.getDisplayName().getString().equals(expectedItemName)) return false;
+                ItemStack itemStack = container.items().get(slotNum);
+                if (!itemStack.is(expectedItemType)
+                        || !itemStack.getDisplayName().getString().equals(expectedItemName)) return false;
 
                 ContainerUtils.clickOnSlot(
                         slotNum, container.containerId(), GLFW.GLFW_MOUSE_BUTTON_LEFT, container.items());

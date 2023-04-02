@@ -82,7 +82,7 @@ public final class WynntilsGuidesListScreen extends WynntilsListScreen<Screen, G
 
         renderVersion(poseStack);
 
-        renderButtons(poseStack, mouseX, mouseY, partialTick);
+        renderWidgets(poseStack, mouseX, mouseY, partialTick);
 
         renderDescription(poseStack, I18n.get("screens.wynntils.wynntilsGuides.screenDescription"));
 
@@ -102,7 +102,7 @@ public final class WynntilsGuidesListScreen extends WynntilsListScreen<Screen, G
                         80,
                         Texture.QUEST_BOOK_BACKGROUND.width() / 2f - 30,
                         CommonColors.BLACK,
-                        HorizontalAlignment.Left,
+                        HorizontalAlignment.LEFT,
                         TextShadow.NONE);
     }
 

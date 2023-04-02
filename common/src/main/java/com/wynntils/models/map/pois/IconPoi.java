@@ -5,7 +5,8 @@
 package com.wynntils.models.map.pois;
 
 import com.mojang.blaze3d.vertex.PoseStack;
-import com.wynntils.features.user.map.MapFeature;
+import com.wynntils.core.components.Managers;
+import com.wynntils.features.map.MapFeature;
 import com.wynntils.utils.MathUtils;
 import com.wynntils.utils.colors.CommonColors;
 import com.wynntils.utils.colors.CustomColor;
@@ -39,7 +40,18 @@ public abstract class IconPoi implements Poi {
         if (minZoom <= -1) return 1f;
 
         return MathUtils.clamp(
-                MathUtils.map(zoom, minZoom * (1 - MapFeature.INSTANCE.poiFadeAdjustment), minZoom, 0f, 1f), 0f, 1f);
+                MathUtils.map(
+                        zoom,
+                        minZoom
+                                * (1
+                                        - Managers.Feature.getFeatureInstance(MapFeature.class)
+                                                .poiFadeAdjustment
+                                                .get()),
+                        minZoom,
+                        0f,
+                        1f),
+                0f,
+                1f);
     }
 
     public CustomColor getIconColor() {
@@ -49,7 +61,7 @@ public abstract class IconPoi implements Poi {
     @Override
     public void renderAt(
             PoseStack poseStack,
-            MultiBufferSource.BufferSource bufferSource,
+            MultiBufferSource bufferSource,
             float renderX,
             float renderY,
             boolean hovered,
@@ -90,8 +102,8 @@ public abstract class IconPoi implements Poi {
                             renderX,
                             15 + renderY,
                             CommonColors.GREEN,
-                            HorizontalAlignment.Center,
-                            VerticalAlignment.Middle,
+                            HorizontalAlignment.CENTER,
+                            VerticalAlignment.MIDDLE,
                             TextShadow.OUTLINE);
 
             poseStack.popPose();

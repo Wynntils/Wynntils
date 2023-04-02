@@ -44,7 +44,7 @@ public class QuestButton extends WynntilsButton {
     }
 
     @Override
-    public void renderButton(PoseStack poseStack, int mouseX, int mouseY, float partialTick) {
+    public void renderWidget(PoseStack poseStack, int mouseX, int mouseY, float partialTick) {
         CustomColor backgroundColor = getBackgroundColor();
         RenderUtils.drawRect(poseStack, backgroundColor, this.getX(), this.getY(), 0, this.width, this.height);
 
@@ -60,8 +60,8 @@ public class QuestButton extends WynntilsButton {
                         this.getY() + 1,
                         0,
                         CommonColors.BLACK,
-                        HorizontalAlignment.Left,
-                        VerticalAlignment.Top,
+                        HorizontalAlignment.LEFT,
+                        VerticalAlignment.TOP,
                         TextShadow.NONE);
 
         Texture stateTexture =
@@ -108,8 +108,7 @@ public class QuestButton extends WynntilsButton {
         } else if (button == GLFW.GLFW_MOUSE_BUTTON_MIDDLE) {
             Optional<Location> nextLocation = this.questInfo.getNextLocation();
 
-            nextLocation.ifPresent(
-                    location -> McUtils.mc().setScreen(MainMapScreen.create((float) location.x, (float) location.z)));
+            nextLocation.ifPresent(location -> McUtils.mc().setScreen(MainMapScreen.create(location.x, location.z)));
         } else if (button == GLFW.GLFW_MOUSE_BUTTON_RIGHT) {
             openQuestWiki();
         }
@@ -119,7 +118,7 @@ public class QuestButton extends WynntilsButton {
 
     private void trackQuest() {
         if (this.questInfo.isTrackable()) {
-            McUtils.playSound(SoundEvents.ANVIL_LAND);
+            McUtils.playSoundUI(SoundEvents.ANVIL_LAND);
             if (this.questInfo.equals(Models.Quest.getTrackedQuest())) {
                 Models.Quest.stopTracking();
                 questBookScreen.setTrackingRequested(null);
@@ -131,7 +130,7 @@ public class QuestButton extends WynntilsButton {
     }
 
     private void openQuestWiki() {
-        McUtils.playSound(SoundEvents.EXPERIENCE_ORB_PICKUP);
+        McUtils.playSoundUI(SoundEvents.EXPERIENCE_ORB_PICKUP);
         Models.Quest.openQuestOnWiki(questInfo);
     }
 

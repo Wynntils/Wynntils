@@ -10,7 +10,7 @@ import java.util.List;
  * Managers constitute the core functionality of Wynntils. They are created
  * as singletons in the {@link Managers} holding class.
  */
-public abstract class Manager {
+public abstract class Manager extends CoreComponent {
     protected Manager(List<Manager> dependencies) {
         // dependencies are technically not used, but only required
         // as a reminder for implementers to be wary about dependencies
@@ -18,4 +18,11 @@ public abstract class Manager {
         // A manager is responsible for never accessing another manager except
         // those listed in the dependencies, due to bootstrapping ordering
     }
+
+    @Override
+    protected String getComponentType() {
+        return "Manager";
+    }
+
+    public void reloadData() {}
 }

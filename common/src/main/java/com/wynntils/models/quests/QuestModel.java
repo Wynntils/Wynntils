@@ -12,8 +12,7 @@ import com.wynntils.core.components.Models;
 import com.wynntils.core.net.ApiResponse;
 import com.wynntils.core.net.UrlId;
 import com.wynntils.handlers.scoreboard.ScoreboardPart;
-import com.wynntils.handlers.scoreboard.ScoreboardSegment;
-import com.wynntils.models.experience.CombatXpModel;
+import com.wynntils.models.characterstats.CombatXpModel;
 import com.wynntils.models.quests.event.QuestBookReloadedEvent;
 import com.wynntils.models.quests.event.TrackedQuestUpdateEvent;
 import com.wynntils.models.quests.type.QuestSortOrder;
@@ -53,10 +52,6 @@ public final class QuestModel extends Model {
         reset();
     }
 
-    public boolean isQuestSegment(ScoreboardSegment segment) {
-        return segment.getMatcher() == QuestScoreboardPart.QUEST_MATCHER;
-    }
-
     private void reset() {
         quests = List.of();
         miniQuests = List.of();
@@ -78,6 +73,10 @@ public final class QuestModel extends Model {
 
     public void rescanDialogueHistory() {
         DIALOGUE_HISTORY_QUERIES.scanDialogueHistory();
+    }
+
+    public Optional<QuestInfo> getQuestFromName(String name) {
+        return quests.stream().filter(quest -> quest.getName().equals(name)).findFirst();
     }
 
     public List<QuestInfo> getQuestsRaw() {
@@ -155,9 +154,7 @@ public final class QuestModel extends Model {
 
         Optional<Location> location = questInfo.getNextLocation();
 
-        if (location.isEmpty()) return null;
-
-        return location.get();
+        return location.orElse(null);
     }
 
     public void clearTrackedQuestFromScoreBoard() {

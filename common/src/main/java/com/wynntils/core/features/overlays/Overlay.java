@@ -11,47 +11,45 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import com.wynntils.core.components.Managers;
 import com.wynntils.core.config.Config;
 import com.wynntils.core.config.ConfigHolder;
+import com.wynntils.core.config.HiddenConfig;
+import com.wynntils.core.config.RegisterConfig;
 import com.wynntils.core.features.AbstractConfigurable;
 import com.wynntils.core.features.Translatable;
-import com.wynntils.core.features.overlays.sizes.GuiScaledOverlaySize;
-import com.wynntils.core.features.overlays.sizes.OverlaySize;
 import com.wynntils.utils.render.type.HorizontalAlignment;
 import com.wynntils.utils.render.type.VerticalAlignment;
-import java.util.List;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.resources.language.I18n;
 import net.minecraft.world.phys.Vec2;
 
 public abstract class Overlay extends AbstractConfigurable implements Translatable, Comparable<Overlay> {
+    @RegisterConfig("overlay.wynntils.overlay.position")
+    protected final HiddenConfig<OverlayPosition> position = new HiddenConfig<>(null);
 
-    @Config(key = "overlay.wynntils.overlay.position", visible = false)
-    protected OverlayPosition position;
+    @RegisterConfig("overlay.wynntils.overlay.size")
+    protected final HiddenConfig<OverlaySize> size = new HiddenConfig<>(null);
 
-    @Config(key = "overlay.wynntils.overlay.size", visible = false)
-    protected OverlaySize size;
-
-    @Config(key = "overlay.wynntils.overlay.userEnabled")
-    protected Boolean userEnabled = null;
+    @RegisterConfig("overlay.wynntils.overlay.userEnabled")
+    protected final Config<Boolean> userEnabled = new Config<>(true);
 
     // This is used in rendering.
     // Initially we use the overlay position horizontal alignment
     // but the user can modify this config field to use an override.
     // Example use case: Overlay is aligned to the left in the TopRight section,
     //                   but the user wants to use right text alignment
-    @Config(key = "overlay.wynntils.overlay.horizontalAlignmentOverride", visible = false)
-    protected HorizontalAlignment horizontalAlignmentOverride = null;
+    @RegisterConfig("overlay.wynntils.overlay.horizontalAlignmentOverride")
+    protected final HiddenConfig<HorizontalAlignment> horizontalAlignmentOverride = new HiddenConfig<>(null);
 
-    @Config(key = "overlay.wynntils.overlay.verticalAlignmentOverride", visible = false)
-    protected VerticalAlignment verticalAlignmentOverride = null;
+    @RegisterConfig("overlay.wynntils.overlay.verticalAlignmentOverride")
+    protected final HiddenConfig<VerticalAlignment> verticalAlignmentOverride = new HiddenConfig<>(null);
 
     protected Overlay(OverlayPosition position, float width, float height) {
-        this.position = position;
-        this.size = new GuiScaledOverlaySize(width, height);
+        this.position.updateConfig(position);
+        this.size.updateConfig(new OverlaySize(width, height));
     }
 
     protected Overlay(OverlayPosition position, OverlaySize size) {
-        this.position = position;
-        this.size = size;
+        this.position.updateConfig(position);
+        this.size.updateConfig(size);
     }
 
     protected Overlay(
@@ -59,17 +57,15 @@ public abstract class Overlay extends AbstractConfigurable implements Translatab
             OverlaySize size,
             HorizontalAlignment horizontalAlignmentOverride,
             VerticalAlignment verticalAlignmentOverride) {
-        this.position = position;
-        this.size = size;
-        this.horizontalAlignmentOverride = horizontalAlignmentOverride;
-        this.verticalAlignmentOverride = verticalAlignmentOverride;
+        this.position.updateConfig(position);
+        this.size.updateConfig(size);
+        this.horizontalAlignmentOverride.updateConfig(horizontalAlignmentOverride);
+        this.verticalAlignmentOverride.updateConfig(verticalAlignmentOverride);
     }
 
-    public abstract void render(
-            PoseStack poseStack, MultiBufferSource.BufferSource bufferSource, float partialTicks, Window window);
+    public abstract void render(PoseStack poseStack, MultiBufferSource bufferSource, float partialTicks, Window window);
 
-    public void renderPreview(
-            PoseStack poseStack, MultiBufferSource.BufferSource bufferSource, float partialTicks, Window window) {
+    public void renderPreview(PoseStack poseStack, MultiBufferSource bufferSource, float partialTicks, Window window) {
         this.render(poseStack, bufferSource, partialTicks, window);
     }
 
@@ -78,8 +74,8 @@ public abstract class Overlay extends AbstractConfigurable implements Translatab
         // if user toggle was changed, enable/disable feature accordingly
         if (configHolder.getFieldName().equals("userEnabled")) {
             // This is done so all state checks run in order
-            Managers.Overlay.disableOverlays(List.of(this));
-            Managers.Overlay.enableOverlays(List.of(this), false);
+            Managers.Overlay.disableOverlay(this);
+            Managers.Overlay.enableOverlay(this);
         }
 
         onConfigUpdate(configHolder);
@@ -103,8 +99,8 @@ public abstract class Overlay extends AbstractConfigurable implements Translatab
         return this.getClass().getSimpleName();
     }
 
-    private Class<?> getDeclaringClass() {
-        return this.getClass().getDeclaringClass();
+    protected String getDeclaringClassName() {
+        return this.getClass().getDeclaringClass().getSimpleName();
     }
 
     protected String getNameCamelCase() {
@@ -113,15 +109,15 @@ public abstract class Overlay extends AbstractConfigurable implements Translatab
     }
 
     protected String getDeclaringFeatureNameCamelCase() {
-        String name = this.getClass().getDeclaringClass().getSimpleName().replace("Feature", "");
+        String name = getDeclaringClassName().replace("Feature", "");
         return CaseFormat.UPPER_CAMEL.to(CaseFormat.LOWER_CAMEL, name);
     }
 
     public Boolean isUserEnabled() {
-        return userEnabled;
+        return userEnabled.get();
     }
 
-    public boolean isEnabled() {
+    public boolean shouldBeEnabled() {
         if (!isParentEnabled()) {
             return false;
         }
@@ -130,7 +126,7 @@ public abstract class Overlay extends AbstractConfigurable implements Translatab
             return this.isUserEnabled();
         }
 
-        return Managers.Overlay.getOverlayInfo(this).enabled();
+        return Managers.Overlay.isEnabledByDefault(this);
     }
 
     public final boolean isParentEnabled() {
@@ -138,67 +134,71 @@ public abstract class Overlay extends AbstractConfigurable implements Translatab
     }
 
     public float getWidth() {
-        return this.size.getWidth();
+        return this.size.get().getWidth();
     }
 
     public float getHeight() {
-        return this.size.getHeight();
+        return this.size.get().getHeight();
     }
 
     public OverlaySize getSize() {
-        return size;
+        return size.get();
     }
 
     public OverlayPosition getPosition() {
-        return position;
+        return position.get();
     }
 
     public void setPosition(OverlayPosition position) {
-        this.position = position;
+        this.position.updateConfig(position);
     }
 
     // Return the X where the overlay should be rendered
     public float getRenderX() {
-        return getRenderX(this.position);
+        return getRenderX(this.position.get());
     }
 
     // Return the Y where the overlay should be rendered
     public float getRenderY() {
-        return getRenderY(this.position);
+        return getRenderY(this.position.get());
     }
 
     public float getRenderX(OverlayPosition position) {
         final SectionCoordinates section = Managers.Overlay.getSection(position.getAnchorSection());
         return switch (position.getHorizontalAlignment()) {
-            case Left -> section.x1() + position.getHorizontalOffset();
-            case Center -> (section.x1() + section.x2() - this.getWidth()) / 2 + position.getHorizontalOffset();
-            case Right -> section.x2() + position.getHorizontalOffset() - this.getWidth();
+            case LEFT -> section.x1() + position.getHorizontalOffset();
+            case CENTER -> (section.x1() + section.x2() - this.getWidth()) / 2 + position.getHorizontalOffset();
+            case RIGHT -> section.x2() + position.getHorizontalOffset() - this.getWidth();
         };
     }
 
     public float getRenderY(OverlayPosition position) {
         final SectionCoordinates section = Managers.Overlay.getSection(position.getAnchorSection());
         return switch (position.getVerticalAlignment()) {
-            case Top -> section.y1() + position.getVerticalOffset();
-            case Middle -> (section.y1() + section.y2() - this.getHeight()) / 2 + position.getVerticalOffset();
-            case Bottom -> section.y2() + position.getVerticalOffset() - this.getHeight();
+            case TOP -> section.y1() + position.getVerticalOffset();
+            case MIDDLE -> (section.y1() + section.y2() - this.getHeight()) / 2 + position.getVerticalOffset();
+            case BOTTOM -> section.y2() + position.getVerticalOffset() - this.getHeight();
         };
     }
 
     public HorizontalAlignment getRenderHorizontalAlignment() {
-        return horizontalAlignmentOverride == null ? position.getHorizontalAlignment() : horizontalAlignmentOverride;
+        return horizontalAlignmentOverride.get() == null
+                ? position.get().getHorizontalAlignment()
+                : horizontalAlignmentOverride.get();
     }
 
     public VerticalAlignment getRenderVerticalAlignment() {
-        return verticalAlignmentOverride == null ? position.getVerticalAlignment() : verticalAlignmentOverride;
+        return verticalAlignmentOverride.get() == null
+                ? position.get().getVerticalAlignment()
+                : verticalAlignmentOverride.get();
     }
 
     public Vec2 getCornerPoints(Corner corner) {
         return switch (corner) {
-            case TopLeft -> new Vec2(getRenderX(), getRenderY());
-            case TopRight -> new Vec2(getRenderX() + getWidth(), getRenderY());
-            case BottomLeft -> new Vec2(getRenderX(), getRenderY() + getHeight());
-            case BottomRight -> new Vec2(getRenderX() + getWidth(), getRenderY() + getHeight());
+            case TOP_LEFT -> new Vec2(getRenderX(), getRenderY());
+            case TOP_RIGHT -> new Vec2(getRenderX() + getWidth(), getRenderY());
+            case BOTTOM_LEFT -> new Vec2(getRenderX(), getRenderY() + getHeight());
+            case BOTTOM_RIGHT -> new Vec2(getRenderX() + getWidth(), getRenderY() + getHeight());
         };
     }
 
@@ -206,10 +206,16 @@ public abstract class Overlay extends AbstractConfigurable implements Translatab
     public int compareTo(Overlay other) {
         return ComparisonChain.start()
                 .compareTrueFirst(this.isParentEnabled(), other.isParentEnabled())
-                .compare(
-                        this.getDeclaringClass().getSimpleName(),
-                        other.getDeclaringClass().getSimpleName())
+                .compare(this.getDeclaringClassName(), other.getDeclaringClassName())
                 .compare(this.getTranslatedName(), other.getTranslatedName())
                 .result();
+    }
+
+    public void setHeight(float height) {
+        getSize().setHeight(height);
+    }
+
+    public void setWidth(float width) {
+        getSize().setWidth(width);
     }
 }

@@ -6,6 +6,7 @@ package com.wynntils.handlers.item;
 
 import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.components.Handler;
+import com.wynntils.core.mod.type.CrashType;
 import com.wynntils.handlers.item.event.ItemRenamedEvent;
 import com.wynntils.mc.event.ContainerSetContentEvent;
 import com.wynntils.mc.event.SetSlotEvent;
@@ -21,23 +22,26 @@ import java.util.Map;
 import java.util.Optional;
 import net.minecraft.ChatFormatting;
 import net.minecraft.core.NonNullList;
-import net.minecraft.nbt.ListTag;
 import net.minecraft.network.chat.Component;
+import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
 import net.minecraftforge.eventbus.api.EventPriority;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 
 public class ItemHandler extends Handler {
+    private static final List<Item> WILDCARD_ITEMS = List.of(Items.DIAMOND_SHOVEL, Items.DIAMOND_PICKAXE);
+
     private final List<ItemAnnotator> annotators = new ArrayList<>();
-    private Map<Class<?>, Integer> profilingTimes = new HashMap<>();
-    private Map<Class<?>, Integer> profilingCounts = new HashMap<>();
+    private final Map<Class<?>, Integer> profilingTimes = new HashMap<>();
+    private final Map<Class<?>, Integer> profilingCounts = new HashMap<>();
     // Keep this as a field just of performance reasons to skip a new allocation in annotate()
-    private List<ItemAnnotator> crashedAnnotators = new ArrayList<>();
+    private final List<ItemAnnotator> crashedAnnotators = new ArrayList<>();
 
-    public static Optional<ItemAnnotation> getItemStackAnnotation(ItemStack item) {
-        if (item == null) return Optional.empty();
+    public static Optional<ItemAnnotation> getItemStackAnnotation(ItemStack itemStack) {
+        if (itemStack == null) return Optional.empty();
 
-        ItemAnnotation annotation = ((ItemStackExtension) item).getAnnotation();
+        ItemAnnotation annotation = ((ItemStackExtension) itemStack).getAnnotation();
         return Optional.ofNullable(annotation);
     }
 
@@ -45,9 +49,16 @@ public class ItemHandler extends Handler {
         annotators.add(annotator);
     }
 
+    public void updateItem(ItemStack itemStack, ItemAnnotation annotation, String name) {
+        ItemStackExtension itemStackExtension = (ItemStackExtension) itemStack;
+        itemStackExtension.setAnnotation(annotation);
+        itemStackExtension.setOriginalName(name);
+        annotation.onUpdate(itemStack);
+    }
+
     @SubscribeEvent(priority = EventPriority.HIGHEST)
     public void onSetSlot(SetSlotEvent.Pre event) {
-        updateAnnotation(event.getContainer().getItem(event.getSlot()), event.getItem());
+        onItemStackUpdate(event.getContainer().getItem(event.getSlot()), event.getItemStack());
     }
 
     @SubscribeEvent(priority = EventPriority.HIGHEST)
@@ -68,11 +79,14 @@ public class ItemHandler extends Handler {
         List<ItemStack> newItems = event.getItems();
 
         for (int i = 0; i < newItems.size(); i++) {
-            updateAnnotation(existingItems.get(i), newItems.get(i));
+            onItemStackUpdate(existingItems.get(i), newItems.get(i));
         }
     }
 
-    private void updateAnnotation(ItemStack existingItem, ItemStack newItem) {
+    private void onItemStackUpdate(ItemStack existingItem, ItemStack newItem) {
+        // For e.g. FakeItemStacks we will already have an annotation
+        if (((ItemStackExtension) newItem).getAnnotation() != null) return;
+
         ItemAnnotation annotation = ((ItemStackExtension) existingItem).getAnnotation();
         if (annotation == null) {
             annotate(newItem);
@@ -80,34 +94,62 @@ public class ItemHandler extends Handler {
         }
 
         // Check if item type, damage and count matches, if not, it's definitely a new item
-        if (!similarStack(existingItem, newItem)) {
+        // Wildcard items are exempt from this check due to the possibility of gear skins
+        if (!similarStack(existingItem, newItem) && !isWildcardItem(existingItem) && !isWildcardItem(newItem)) {
             annotate(newItem);
             return;
         }
 
         // This might be just a name update. Check if lore matches:
-        ListTag existingLore = LoreUtils.getLoreTag(existingItem);
-        ListTag newLore = LoreUtils.getLoreTag(newItem);
-
-        if (!LoreUtils.isLoreEquals(existingLore, newLore)) {
+        if (!LoreUtils.loreSoftMatches(existingItem, newItem, 3)) {
+            // This could be a new item, or a crafted item losing in durability
             annotate(newItem);
             return;
         }
 
-        // We consider it to be the same item, so copy existing annotation
-        ((ItemStackExtension) newItem).setAnnotation(annotation);
+        String originalName = ((ItemStackExtension) existingItem).getOriginalName();
+        String existingName = WynnUtils.normalizeBadString(ComponentUtils.getCoded(existingItem.getHoverName()));
+        String newName = WynnUtils.normalizeBadString(ComponentUtils.getCoded(newItem.getHoverName()));
 
-        // Name might have changed for Wynn to use this functionality to
-        // signal info like spells etc.
-        Component existingName = existingItem.getHoverName();
-        Component newName = newItem.getHoverName();
-        if (!newName.equals(existingName)) {
-            ItemRenamedEvent event = new ItemRenamedEvent(newItem, existingName.getString(), newName.getString());
+        if (newName.equals(existingName)) {
+            // This is exactly the same item, so copy existing annotation
+            updateItem(newItem, annotation, originalName);
+            return;
+        }
+
+        // The lore is the same, but the name is different. Determine the reason for the name change
+        String originalBaseName = getBaseName(originalName);
+        String existingBaseName = getBaseName(existingName);
+        String newBaseName = getBaseName(newName);
+
+        // When a crafted item loses durability (or a consumable loses a charge), we need to detect
+        // this and update the item. But note that this might happen exactly after a spell!
+        // So check against originalName, not existingName.
+        if (!newName.equals(originalName) && newBaseName.equals(originalBaseName)) {
+            // The base name is the same but the full name differs. This means we have an updated
+            // title, and the existing item has changed some property.
+            annotation = calculateAnnotation(newItem, newName);
+        }
+
+        // Set the new item with the old (or updated) annotation, and keep the original name
+        updateItem(newItem, annotation, originalName);
+
+        // If an item is "really" renamed, we need to send out an event. But this should not
+        // trigger just for a consumable or crafted gear that changes the [...] text, so
+        // check only on base name, not the full name.
+        if (!newBaseName.equals(existingBaseName)) {
+            // This is the same item, but it is renamed to signal e.g. a spell.
+            ItemRenamedEvent event = new ItemRenamedEvent(newItem, existingName, newName);
             WynntilsMod.postEvent(event);
             if (event.isCanceled()) {
-                newItem.setHoverName(existingName);
+                newItem.setHoverName(existingItem.getHoverName());
             }
         }
+    }
+
+    private String getBaseName(String name) {
+        int bracketIndex = name.lastIndexOf('[');
+        return bracketIndex == -1 ? name : name.substring(0, bracketIndex);
     }
 
     private boolean similarStack(ItemStack firstItem, ItemStack secondItem) {
@@ -118,35 +160,38 @@ public class ItemHandler extends Handler {
             return false;
         }
 
-        if (firstItem.getDamageValue() != secondItem.getDamageValue()) return false;
-
-        return true;
+        return firstItem.getDamageValue() == secondItem.getDamageValue();
     }
 
-    private void annotate(ItemStack item) {
-        ItemAnnotation annotation = null;
+    private boolean isWildcardItem(ItemStack itemStack) {
+        // This checks for gear skin items, which are a special exception for item comparisons
+        return WILDCARD_ITEMS.contains(itemStack.getItem());
+    }
 
+    private ItemAnnotation calculateAnnotation(ItemStack itemStack, String name) {
         long startTime = System.currentTimeMillis();
-        String name = WynnUtils.normalizeBadString(ComponentUtils.getCoded(item.getHoverName()));
+
+        ItemAnnotation annotation = null;
 
         for (ItemAnnotator annotator : annotators) {
             try {
-                annotation = annotator.getAnnotation(item, name);
+                annotation = annotator.getAnnotation(itemStack, name);
                 if (annotation != null) {
                     break;
                 }
             } catch (Throwable t) {
-                String annotatorName = annotator.getClass().getSimpleName();
-                WynntilsMod.error("Exception when processing item annotator " + annotatorName, t);
-                WynntilsMod.warn("This annotator will be disabled");
-                WynntilsMod.warn("Problematic item:" + item);
-                WynntilsMod.warn("Problematic item name:" + ComponentUtils.getCoded(item.getHoverName()));
-                WynntilsMod.warn("Problematic item tags:" + item.getTag());
-                McUtils.sendMessageToClient(Component.literal("Wynntils error: Item Annotator '" + annotatorName
-                                + "' has crashed and will be disabled. Not all items will be properly parsed.")
-                        .withStyle(ChatFormatting.RED));
                 // We can't disable it right away since that will cause ConcurrentModificationException
                 crashedAnnotators.add(annotator);
+
+                String annotatorName = annotator.getClass().getSimpleName();
+                WynntilsMod.reportCrash(annotator.getClass().getName(), annotatorName, CrashType.ANNOTATOR, t);
+
+                WynntilsMod.warn("Problematic item:" + itemStack);
+                WynntilsMod.warn("Problematic item name:" + ComponentUtils.getCoded(itemStack.getHoverName()));
+                WynntilsMod.warn("Problematic item tags:" + itemStack.getTag());
+
+                McUtils.sendMessageToClient(Component.literal("Not all items will be properly parsed.")
+                        .withStyle(ChatFormatting.RED));
             }
         }
 
@@ -156,12 +201,20 @@ public class ItemHandler extends Handler {
         }
         crashedAnnotators.clear();
 
-        if (annotation == null) return;
+        if (annotation == null) return null;
 
         // Measure performance
         logProfilingData(startTime, annotation);
 
-        ((ItemStackExtension) item).setAnnotation(annotation);
+        return annotation;
+    }
+
+    private void annotate(ItemStack itemStack) {
+        String name = WynnUtils.normalizeBadString(ComponentUtils.getCoded(itemStack.getHoverName()));
+        ItemAnnotation annotation = calculateAnnotation(itemStack, name);
+        if (annotation == null) return;
+
+        updateItem(itemStack, annotation, name);
     }
 
     private void logProfilingData(long startTime, ItemAnnotation annotation) {

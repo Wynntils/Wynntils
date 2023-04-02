@@ -34,4 +34,12 @@ public class WynnItemCache {
     public <T> void store(String key, T obj) {
         cache.put(key, obj);
     }
+
+    public <T> void clear(String key) {
+        cache.remove(key);
+    }
+
+    public void clearAll() {
+        cache.clear();
+    }
 }

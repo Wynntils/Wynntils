@@ -6,76 +6,68 @@ package com.wynntils.core.functions;
 
 import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.components.Manager;
+import com.wynntils.core.functions.arguments.FunctionArguments;
+import com.wynntils.core.functions.arguments.parser.ArgumentParser;
+import com.wynntils.core.functions.expressions.Expression;
+import com.wynntils.core.functions.expressions.parser.ExpressionParser;
+import com.wynntils.core.functions.templates.parser.TemplateParser;
+import com.wynntils.core.mod.type.CrashType;
 import com.wynntils.functions.CharacterFunctions;
+import com.wynntils.functions.CombatFunctions;
 import com.wynntils.functions.CombatXpFunctions;
 import com.wynntils.functions.EnvironmentFunctions;
 import com.wynntils.functions.HorseFunctions;
 import com.wynntils.functions.InventoryFunctions;
 import com.wynntils.functions.LootrunFunctions;
 import com.wynntils.functions.MinecraftFunctions;
+import com.wynntils.functions.ProfessionFunctions;
 import com.wynntils.functions.SocialFunctions;
+import com.wynntils.functions.SpellFunctions;
+import com.wynntils.functions.WarFunctions;
 import com.wynntils.functions.WorldFunctions;
+import com.wynntils.functions.generic.CappedFunctions;
+import com.wynntils.functions.generic.ConditionalFunctions;
+import com.wynntils.functions.generic.LocationFunctions;
+import com.wynntils.functions.generic.LogicFunctions;
+import com.wynntils.functions.generic.MathFunctions;
+import com.wynntils.functions.generic.StringFunctions;
 import com.wynntils.models.emeralds.type.EmeraldUnits;
-import com.wynntils.utils.mc.McUtils;
+import com.wynntils.utils.type.ErrorOr;
+import java.text.DecimalFormat;
+import java.text.NumberFormat;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
-import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
-import java.util.function.Consumer;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
 
 /** Manage all built-in {@link Function}s */
 public final class FunctionManager extends Manager {
-    private static final Pattern INFO_VARIABLE_PATTERN =
-            Pattern.compile("%([a-zA-Z_]+|%)%|\\\\([\\\\n%§EBLMH]|x[\\dA-Fa-f]{2}|u[\\dA-Fa-f]{4}|U[\\dA-Fa-f]{8})");
-
     private final List<Function<?>> functions = new ArrayList<>();
-    private final Set<ActiveFunction<?>> enabledFunctions = new HashSet<>();
     private final Set<Function<?>> crashedFunctions = new HashSet<>();
 
     public FunctionManager() {
         super(List.of());
-        registerAllFunctions();
     }
 
     public List<Function<?>> getFunctions() {
         return functions;
     }
 
-    public boolean enableFunction(Function<?> function) {
-        if (!(function instanceof ActiveFunction<?> activeFunction)) return true;
-
+    public void enableFunction(Function<?> function) {
         // try to recover, worst case we disable it again
         crashedFunctions.remove(function);
-
-        WynntilsMod.registerEventListener(activeFunction);
-
-        boolean enableSucceeded = activeFunction.onEnable();
-
-        if (!enableSucceeded) {
-            WynntilsMod.unregisterEventListener(activeFunction);
-        }
-        enabledFunctions.add(activeFunction);
-        return enableSucceeded;
     }
 
-    public void disableFunction(Function<?> function) {
-        if (!(function instanceof ActiveFunction<?> activeFunction)) return;
-
-        WynntilsMod.unregisterEventListener(activeFunction);
-        enabledFunctions.remove(activeFunction);
+    private void crashFunction(Function<?> function) {
+        crashedFunctions.add(function);
     }
 
-    public boolean isEnabled(Function<?> function) {
-        if (!(function instanceof ActiveFunction<?>)) return true;
-
-        return (enabledFunctions.contains(function));
+    public boolean isCrashed(Function<?> function) {
+        return crashedFunctions.contains(function);
     }
 
     public Optional<Function<?>> forName(String functionName) {
@@ -96,153 +88,157 @@ public final class FunctionManager extends Manager {
         return false;
     }
 
-    private Optional<Object> getFunctionValueSafely(Function<?> function, String argument) {
+    private Optional<Object> getFunctionValueSafely(Function<?> function, FunctionArguments arguments) {
         if (crashedFunctions.contains(function)) {
             return Optional.empty();
         }
 
         try {
-            Object value = function.getValue(argument);
+            Object value = function.getValue(arguments);
             return Optional.ofNullable(value);
         } catch (Throwable throwable) {
-            WynntilsMod.warn("Exception when trying to get value of function " + function, throwable);
-            McUtils.sendMessageToClient(Component.literal(String.format(
-                            "Function '%s' was disabled due to an exception.", function.getTranslatedName()))
-                    .withStyle(ChatFormatting.RED));
+            crashFunction(function);
 
-            disableFunction(function);
-            crashedFunctions.add(function);
+            WynntilsMod.reportCrash(
+                    function.getClass().getName(), function.getTranslatedName(), CrashType.FUNCTION, throwable);
         }
 
         return Optional.empty();
     }
 
+    // region String value calculations
+
     public Component getSimpleValueString(
-            Function<?> function, String argument, ChatFormatting color, boolean includeName) {
+            Function<?> function, String rawArguments, ChatFormatting color, boolean includeName) {
         MutableComponent header = includeName
                 ? Component.literal(function.getTranslatedName() + ": ").withStyle(ChatFormatting.WHITE)
                 : Component.literal("");
 
-        Optional<Object> value = getFunctionValueSafely(function, argument);
+        ErrorOr<FunctionArguments> errorOrArguments =
+                ArgumentParser.parseArguments(function.getArgumentsBuilder(), rawArguments);
+
+        if (errorOrArguments.hasError()) {
+            return header.append(Component.literal(errorOrArguments.getError()).withStyle(ChatFormatting.RED));
+        }
+
+        Optional<Object> value = getFunctionValueSafely(function, errorOrArguments.getValue());
         if (value.isEmpty()) {
             return header.append(Component.literal("??"));
         }
 
-        String formattedValue = format(value.get());
+        String formattedValue = format(value.get(), false, 2);
 
         return header.append(Component.literal(formattedValue).withStyle(color));
     }
 
-    private String getRawValueString(Function<?> function, String argument) {
-        Optional<Object> value = getFunctionValueSafely(function, argument);
+    public String getStringFunctionValue(
+            Function<?> function, FunctionArguments arguments, boolean formatted, int decimals) {
+        Optional<Object> value = getFunctionValueSafely(function, arguments);
         if (value.isEmpty()) {
             return "??";
         }
 
-        return format(value.get());
+        return format(value.get(), formatted, decimals);
     }
 
-    private String format(Object value) {
+    private String format(Object value, boolean formatted, int decimals) {
+        if (value instanceof Integer integer && !formatted) {
+            return String.valueOf(integer);
+        } else if (value instanceof Number number) {
+            if (formatted) {
+                // French locale has NBSP
+                // https://stackoverflow.com/questions/34156585/java-decimal-format-parsing-issue
+                NumberFormat instance = NumberFormat.getInstance();
+                instance.setMinimumFractionDigits(decimals);
+                instance.setMaximumFractionDigits(decimals);
+
+                return instance.format(number).replaceAll("\u00A0", " ");
+            } else {
+                if (decimals == 0) {
+                    return String.valueOf(number.intValue());
+                }
+
+                DecimalFormat decimalFormat = new DecimalFormat("0." + "0".repeat(decimals));
+                return decimalFormat.format(number);
+            }
+        }
+
         return value.toString();
     }
 
-    /**
-     * Return a string, based on the template, with values filled in from the referenced
-     * functions.
-     */
-    public Component getStringFromTemplate(String template) {
-        // FIXME: implement template parser
-        return Component.literal(template);
+    // endregion
+
+    // region Raw value calculations
+    // These are needed for getting a function value without converting its type to a string
+
+    public ErrorOr<Object> getRawFunctionValue(Function<?> function, FunctionArguments arguments) {
+        Optional<Object> value = getFunctionValueSafely(function, arguments);
+        return value.map(ErrorOr::of)
+                .orElseGet(() -> ErrorOr.error("Failed to get value of function: " + function.getName()));
     }
 
-    /**
-     * Return a list of all functions referenced in a template string
-     */
-    public List<Function<?>> getFunctionsInTemplate(String template) {
-        // FIXME: implement template parser
-        return List.of();
+    public <T> ErrorOr<T> tryGetRawValueOfType(String valueTemplate, Class<T> clazz) {
+        ErrorOr<Expression> valueExpression = ExpressionParser.tryParse(valueTemplate);
+
+        if (valueExpression.hasError()) {
+            return ErrorOr.error(valueExpression.getError());
+        }
+
+        Expression expression = valueExpression.getValue();
+
+        ErrorOr<Object> calculatedExpression = expression.calculate();
+
+        if (calculatedExpression.hasError()) {
+            return ErrorOr.error(calculatedExpression.getError());
+        }
+
+        try {
+            return ErrorOr.of(clazz.cast(calculatedExpression.getValue()));
+        } catch (Exception e) {
+            return ErrorOr.error("The provided expression does not return a " + clazz.getSimpleName());
+        }
     }
 
-    public <T> void doFormat(
-            String format,
-            Consumer<T> consumer,
-            java.util.function.Function<String, T> mapper,
-            Map<String, T> infoVariableMap) {
-        Set<String> infoVariables = infoVariableMap.keySet();
+    // endregion
 
-        int index = 0;
-        // TODO: Can we get away with less calculations since we now have asymmetric delimiters?
-        while (index < format.length()) {
-            int indexStartOfNextVariable = format.indexOf('{', index);
-            if (indexStartOfNextVariable == -1) {
-                break;
-            }
+    // region Template formatting
 
-            int indexEndOfNextVariable = format.indexOf('}', indexStartOfNextVariable + 1);
-            if (indexEndOfNextVariable == -1) {
-                break;
-            }
+    private String doFormat(String templateString) {
+        return TemplateParser.doFormat(templateString);
+    }
 
-            if (index != indexStartOfNextVariable) { // update none done too
-                consumer.accept(mapper.apply(format.substring(index, indexStartOfNextVariable)));
-            }
+    public String[] doFormatLines(String templateString) {
+        StringBuilder resultBuilder = new StringBuilder();
 
-            String toMatch = format.substring(indexStartOfNextVariable + 1, indexEndOfNextVariable);
+        // Iterate though the string and escape characters
+        // that are prefixed with `\`, remove the `\` and add it to the result
 
-            for (String infoVariable : infoVariables) {
-                if (!toMatch.equals(infoVariable)) {
+        for (int i = 0; i < templateString.length(); i++) {
+            char c = templateString.charAt(i);
+            if (c == '\\') {
+                if (i + 1 < templateString.length()) {
+                    char nextChar = templateString.charAt(i + 1);
+
+                    resultBuilder.append(doEscapeFormat(nextChar));
+                    i++;
+
                     continue;
                 }
-
-                index = indexEndOfNextVariable + 1; // skip ending }
-                consumer.accept(infoVariableMap.get(infoVariable));
-                break;
             }
+
+            resultBuilder.append(c);
         }
 
-        consumer.accept(mapper.apply(format.substring(index)));
-    }
+        // Parse color codes before calculating the templates
+        String escapedTemplate = parseColorCodes(resultBuilder.toString());
 
-    // region Legacy formatting
+        String calculatedString = doFormat(escapedTemplate);
 
-    public List<Function<?>> getDependenciesFromStringLegacy(String renderableText) {
-        List<Function<?>> dependencies = new ArrayList<>();
+        // Turn escaped {} (`\[\` and `\]\`) back into real {}
+        calculatedString = calculatedString.replace("\\[\\", "{");
+        calculatedString = calculatedString.replace("\\]\\", "}");
 
-        Matcher m = INFO_VARIABLE_PATTERN.matcher(renderableText);
-        while (m.find()) {
-            if (m.group(1) != null && forName(m.group(1)).isPresent()) {
-                // %variable%
-                Function<?> function = forName(m.group(1)).get();
-                dependencies.add(function);
-            }
-        }
-
-        return dependencies;
-    }
-
-    public String[] getLinesFromLegacyTemplate(String renderableText) {
-        StringBuilder builder = new StringBuilder(renderableText.length() + 10);
-        Matcher m = INFO_VARIABLE_PATTERN.matcher(renderableText);
-        while (m.find()) {
-            String replacement = null;
-            if (m.group(1) != null && forName(m.group(1)).isPresent()) {
-                // %variable%
-                Function<?> function = forName(m.group(1)).get();
-
-                replacement = getRawValueString(function, "");
-            } else if (m.group(2) != null) {
-                // \escape
-                replacement = doEscapeFormat(m.group(2));
-            }
-            if (replacement == null) {
-                replacement = m.group(0);
-            }
-
-            m.appendReplacement(builder, replacement);
-        }
-        m.appendTail(builder);
-
-        return parseColorCodes(builder.toString()).split("\n");
+        return calculatedString.split("\n");
     }
 
     private String parseColorCodes(String toProcess) {
@@ -265,57 +261,140 @@ public final class FunctionManager extends Manager {
         return sb.toString();
     }
 
-    private String doEscapeFormat(String escaped) {
+    private String doEscapeFormat(char escaped) {
         return switch (escaped) {
-            case "\\" -> "\\\\";
-            case "n" -> "\n";
-            case "%" -> "%";
-            case "§" -> "&";
-            case "E" -> EmeraldUnits.EMERALD.getSymbol();
-            case "B" -> EmeraldUnits.EMERALD_BLOCK.getSymbol();
-            case "L" -> EmeraldUnits.LIQUID_EMERALD.getSymbol();
-            case "M" -> "✺";
-            case "H" -> "❤";
-            default -> null;
+            case '\\' -> "\\\\";
+            case 'n' -> "\n";
+            case '{' -> "\\[\\";
+            case '}' -> "\\]\\";
+            case 'E' -> EmeraldUnits.EMERALD.getSymbol();
+            case 'B' -> EmeraldUnits.EMERALD_BLOCK.getSymbol();
+            case 'L' -> EmeraldUnits.LIQUID_EMERALD.getSymbol();
+            case 'M' -> "✺";
+            case 'H' -> "❤";
+            default -> String.valueOf(escaped);
         };
     }
+
     // endregion
+
+    public void init() {
+        try {
+            registerAllFunctions();
+        } catch (AssertionError ae) {
+            WynntilsMod.error("Fix i18n for functions", ae);
+            if (WynntilsMod.isDevelopmentEnvironment()) {
+                System.exit(1);
+            }
+        }
+    }
 
     private void registerFunction(Function<?> function) {
         functions.add(function);
+
+        assert !function.getTranslatedName().startsWith("function.wynntils.")
+                : "Fix i18n name for " + function.getTranslatedName();
+        assert !function.getDescription().startsWith("function.wynntils.")
+                : "Fix i18n description for " + function.getDescription();
+        for (FunctionArguments.Argument<?> argument :
+                function.getArgumentsBuilder().getArguments()) {
+            assert !function.getArgumentDescription(argument.getName()).startsWith("function.wynntils.")
+                    : "Fix i18n argument description for " + function.getArgumentDescription(argument.getName());
+        }
     }
 
     private void registerAllFunctions() {
+        // Generic Functions
+
+        registerFunction(new CappedFunctions.AtCapFunction());
+        registerFunction(new CappedFunctions.CapFunction());
+        registerFunction(new CappedFunctions.CappedFunction());
+        registerFunction(new CappedFunctions.CurrentFunction());
+        registerFunction(new CappedFunctions.PercentageFunction());
+        registerFunction(new CappedFunctions.RemainingFunction());
+
+        registerFunction(new ConditionalFunctions.IfCappedValueFunction());
+        registerFunction(new ConditionalFunctions.IfNumberFunction());
+        registerFunction(new ConditionalFunctions.IfStringFunction());
+
+        registerFunction(new LocationFunctions.DistanceFunction());
+        registerFunction(new LocationFunctions.LocationFunction());
+        registerFunction(new LocationFunctions.XFunction());
+        registerFunction(new LocationFunctions.YFunction());
+        registerFunction(new LocationFunctions.ZFunction());
+
+        registerFunction(new LogicFunctions.AndFunction());
+        registerFunction(new LogicFunctions.EqualsFunction());
+        registerFunction(new LogicFunctions.LessThanFunction());
+        registerFunction(new LogicFunctions.LessThanOrEqualsFunction());
+        registerFunction(new LogicFunctions.GreaterThanFunction());
+        registerFunction(new LogicFunctions.GreaterThanOrEqualsFunction());
+        registerFunction(new LogicFunctions.NotEqualsFunction());
+        registerFunction(new LogicFunctions.NotFunction());
+        registerFunction(new LogicFunctions.OrFunction());
+
+        registerFunction(new MathFunctions.AddFunction());
+        registerFunction(new MathFunctions.DivideFunction());
+        registerFunction(new MathFunctions.IntegerFunction());
+        registerFunction(new MathFunctions.MaxFunction());
+        registerFunction(new MathFunctions.MinFunction());
+        registerFunction(new MathFunctions.ModuloFunction());
+        registerFunction(new MathFunctions.MultiplyFunction());
+        registerFunction(new MathFunctions.PowerFunction());
+        registerFunction(new MathFunctions.RandomFunction());
+        registerFunction(new MathFunctions.RoundFunction());
+        registerFunction(new MathFunctions.SquareRootFunction());
+        registerFunction(new MathFunctions.SubtractFunction());
+
+        registerFunction(new StringFunctions.CappedStringFunction());
+        registerFunction(new StringFunctions.ConcatFunction());
+        registerFunction(new StringFunctions.FormatCappedFunction());
+        registerFunction(new StringFunctions.FormatFunction());
+        registerFunction(new StringFunctions.LeadingZerosFunction());
+        registerFunction(new StringFunctions.ParseDoubleFunction());
+        registerFunction(new StringFunctions.ParseIntegerFunction());
+        registerFunction(new StringFunctions.RepeatFunction());
+        registerFunction(new StringFunctions.StringEqualsFunction());
+        registerFunction(new StringFunctions.StringFunction());
+
+        // Regular Functions
         registerFunction(new WorldFunctions.CurrentWorldFunction());
         registerFunction(new WorldFunctions.CurrentWorldUptimeFunction());
+        registerFunction(new WorldFunctions.MobTotemCountFunction());
+        registerFunction(new WorldFunctions.MobTotemDistanceFunction());
+        registerFunction(new WorldFunctions.MobTotemFunction());
+        registerFunction(new WorldFunctions.MobTotemOwnerFunction());
+        registerFunction(new WorldFunctions.MobTotemTimeLeftFunction());
+        registerFunction(new WorldFunctions.TokenGatekeeperCountFunction());
+        registerFunction(new WorldFunctions.TokenGatekeeperDepositedFunction());
+        registerFunction(new WorldFunctions.TokenGatekeeperFunction());
+        registerFunction(new WorldFunctions.TokenGatekeeperTypeFunction());
+        registerFunction(new WorldFunctions.WorldStateFunction());
 
-        registerFunction(new CharacterFunctions.AlchemismLevelFunction());
-        registerFunction(new CharacterFunctions.ArmouringLevelFunction());
         registerFunction(new CharacterFunctions.BpsFunction());
         registerFunction(new CharacterFunctions.BpsXzFunction());
+        registerFunction(new CharacterFunctions.CappedHealthFunction());
+        registerFunction(new CharacterFunctions.CappedManaFunction());
+        registerFunction(new CharacterFunctions.CappedSoulPointsFunction());
         registerFunction(new CharacterFunctions.ClassFunction());
-        registerFunction(new CharacterFunctions.CookingLevelFunction());
-        registerFunction(new CharacterFunctions.FarmingLevelFunction());
-        registerFunction(new CharacterFunctions.FishingLevelFunction());
         registerFunction(new CharacterFunctions.HealthFunction());
         registerFunction(new CharacterFunctions.HealthMaxFunction());
         registerFunction(new CharacterFunctions.HealthPctFunction());
-        registerFunction(new CharacterFunctions.JewelingLevelFunction());
+        registerFunction(new CharacterFunctions.IdFunction());
         registerFunction(new CharacterFunctions.ManaFunction());
         registerFunction(new CharacterFunctions.ManaMaxFunction());
         registerFunction(new CharacterFunctions.ManaPctFunction());
-        registerFunction(new CharacterFunctions.MiningLevelFunction());
-        registerFunction(new CharacterFunctions.ScribingLevelFunction());
         registerFunction(new CharacterFunctions.SoulpointFunction());
         registerFunction(new CharacterFunctions.SoulpointMaxFunction());
         registerFunction(new CharacterFunctions.SoulpointTimerFunction());
         registerFunction(new CharacterFunctions.SoulpointTimerMFunction());
         registerFunction(new CharacterFunctions.SoulpointTimerSFunction());
-        registerFunction(new CharacterFunctions.TailoringLevelFunction());
-        registerFunction(new CharacterFunctions.WeaponsmithingLevelFunction());
-        registerFunction(new CharacterFunctions.WoodcuttingLevelFunction());
-        registerFunction(new CharacterFunctions.WoodworkingLevelFunction());
 
+        registerFunction(new CombatFunctions.AreaDamageAverageFunction());
+        registerFunction(new CombatFunctions.AreaDamagePerSecondFunction());
+
+        registerFunction(new CombatXpFunctions.CappedLevelFunction());
+        registerFunction(new CombatXpFunctions.CappedXpFunction());
         registerFunction(new CombatXpFunctions.LevelFunction());
         registerFunction(new CombatXpFunctions.XpFunction());
         registerFunction(new CombatXpFunctions.XpPctFunction());
@@ -326,23 +405,37 @@ public final class FunctionManager extends Manager {
         registerFunction(new CombatXpFunctions.XpReqFunction());
         registerFunction(new CombatXpFunctions.XpReqRawFunction());
 
+        registerFunction(new EnvironmentFunctions.CappedMemFunction());
         registerFunction(new EnvironmentFunctions.ClockFunction());
         registerFunction(new EnvironmentFunctions.ClockmFunction());
+        registerFunction(new EnvironmentFunctions.StopwatchZero());
+        registerFunction(new EnvironmentFunctions.StopwatchRunningFunction());
+        registerFunction(new EnvironmentFunctions.StopwatchHoursFunction());
+        registerFunction(new EnvironmentFunctions.StopwatchMinutesFunction());
+        registerFunction(new EnvironmentFunctions.StopwatchSecondsFunction());
+        registerFunction(new EnvironmentFunctions.StopwatchMillisecondsFunction());
         registerFunction(new EnvironmentFunctions.MemMaxFunction());
         registerFunction(new EnvironmentFunctions.MemPctFunction());
         registerFunction(new EnvironmentFunctions.MemUsedFunction());
 
+        registerFunction(new InventoryFunctions.CappedHeldItemDurabilityFunction());
+        registerFunction(new InventoryFunctions.CappedIngredientPouchSlotsFunction());
+        registerFunction(new InventoryFunctions.CappedInventorySlotsFunction());
         registerFunction(new InventoryFunctions.EmeraldBlockFunction());
+        registerFunction(new InventoryFunctions.EmeraldStringFunction());
         registerFunction(new InventoryFunctions.EmeraldsFunction());
+        registerFunction(new InventoryFunctions.HeldItemCurrentDurabilityFunction());
+        registerFunction(new InventoryFunctions.HeldItemMaxDurabilityFunction());
+        registerFunction(new InventoryFunctions.HeldItemTypeFunction());
         registerFunction(new InventoryFunctions.IngredientPouchOpenSlotsFunction());
         registerFunction(new InventoryFunctions.IngredientPouchUsedSlotsFunction());
         registerFunction(new InventoryFunctions.InventoryFreeFunction());
         registerFunction(new InventoryFunctions.InventoryUsedFunction());
         registerFunction(new InventoryFunctions.LiquidEmeraldFunction());
-        registerFunction(new InventoryFunctions.HeldItemCurrentDurabilityFunction());
-        registerFunction(new InventoryFunctions.HeldItemMaxDurabilityFunction());
         registerFunction(new InventoryFunctions.MoneyFunction());
 
+        registerFunction(new HorseFunctions.CappedHorseLevelFunction());
+        registerFunction(new HorseFunctions.CappedHorseXpFunction());
         registerFunction(new HorseFunctions.HorseLevelFunction());
         registerFunction(new HorseFunctions.HorseLevelMaxFunction());
         registerFunction(new HorseFunctions.HorseNameFunction());
@@ -354,11 +447,23 @@ public final class FunctionManager extends Manager {
 
         registerFunction(new MinecraftFunctions.DirFunction());
         registerFunction(new MinecraftFunctions.FpsFunction());
-        registerFunction(new MinecraftFunctions.XFunction());
-        registerFunction(new MinecraftFunctions.YFunction());
-        registerFunction(new MinecraftFunctions.ZFunction());
+        registerFunction(new MinecraftFunctions.MyLocationFunction());
+
+        registerFunction(new ProfessionFunctions.ProfessionLevelFunction());
+        registerFunction(new ProfessionFunctions.ProfessionPercentageFunction());
+        registerFunction(new ProfessionFunctions.ProfessionXpPerMinuteFunction());
+        registerFunction(new ProfessionFunctions.ProfessionXpPerMinuteRawFunction());
+
+        registerFunction(new SpellFunctions.ArrowShieldCountFunction());
+        registerFunction(new SpellFunctions.ShamanMaskFunction());
+        registerFunction(new SpellFunctions.ShamanTotemDistanceFunction());
+        registerFunction(new SpellFunctions.ShamanTotemLocationFunction());
+        registerFunction(new SpellFunctions.ShamanTotemStateFunction());
+        registerFunction(new SpellFunctions.ShamanTotemTimeLeftFunction());
 
         registerFunction(new SocialFunctions.OnlineFriendsFunction());
         registerFunction(new SocialFunctions.OnlinePartyMembersFunction());
+
+        registerFunction(new WarFunctions.AuraTimerFunction());
     }
 }

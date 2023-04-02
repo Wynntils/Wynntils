@@ -7,8 +7,12 @@ package com.wynntils.core.commands;
 import com.mojang.brigadier.CommandDispatcher;
 import com.mojang.brigadier.ParseResults;
 import com.mojang.brigadier.StringReader;
+import com.mojang.brigadier.builder.LiteralArgumentBuilder;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import com.mojang.brigadier.suggestion.Suggestions;
+import com.mojang.brigadier.tree.CommandNode;
+import com.mojang.brigadier.tree.LiteralCommandNode;
+import com.mojang.brigadier.tree.RootCommandNode;
 import com.wynntils.commands.BombBellCommand;
 import com.wynntils.commands.CompassCommand;
 import com.wynntils.commands.ConfigCommand;
@@ -17,18 +21,15 @@ import com.wynntils.commands.FunctionCommand;
 import com.wynntils.commands.LocateCommand;
 import com.wynntils.commands.LootrunCommand;
 import com.wynntils.commands.QuestCommand;
-import com.wynntils.commands.ServerCommand;
+import com.wynntils.commands.ServersCommand;
 import com.wynntils.commands.TerritoryCommand;
-import com.wynntils.commands.TokenCommand;
-import com.wynntils.commands.UpdateCommand;
 import com.wynntils.commands.WynntilsCommand;
 import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.components.Manager;
+import com.wynntils.mc.event.CommandSuggestionsEvent;
 import com.wynntils.utils.mc.McUtils;
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 import java.util.concurrent.CompletableFuture;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.player.LocalPlayer;
@@ -40,13 +41,14 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.HoverEvent;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.network.chat.Style;
+import net.minecraftforge.eventbus.api.SubscribeEvent;
 
 // Credits to Earthcomputer and Forge
 // Parts of this code originates from https://github.com/Earthcomputer/clientcommands, and other
 // parts originate from https://github.com/MinecraftForge/MinecraftForge
 // Kudos to both of the above
 public final class CommandManager extends Manager {
-    private final Set<Command> commandInstanceSet = new HashSet<>();
+    private final List<Command> commandInstanceSet = new ArrayList<>();
     private final CommandDispatcher<CommandSourceStack> clientDispatcher = new CommandDispatcher<>();
 
     public CommandManager() {
@@ -54,13 +56,19 @@ public final class CommandManager extends Manager {
         registerAllCommands();
     }
 
-    public CommandDispatcher<CommandSourceStack> getClientDispatcher() {
-        return clientDispatcher;
+    @SuppressWarnings("unchecked")
+    public void addNode(
+            RootCommandNode<SharedSuggestionProvider> root, CommandNode<? extends SharedSuggestionProvider> node) {
+        root.addChild((LiteralCommandNode<SharedSuggestionProvider>) node);
+    }
+
+    public LiteralCommandNode<CommandSourceStack> registerCommand(LiteralArgumentBuilder<CommandSourceStack> command) {
+        return clientDispatcher.register(command);
     }
 
     private void registerCommand(Command command) {
         commandInstanceSet.add(command);
-        command.register(clientDispatcher);
+        clientDispatcher.register(command.getCommandBuilder());
     }
 
     private void registerCommandWithCommandSet(WynntilsCommand command) {
@@ -73,21 +81,14 @@ public final class CommandManager extends Manager {
         return executeCommand(reader, message);
     }
 
-    public CompletableFuture<Suggestions> getCompletionSuggestions(
-            String cmd,
-            CommandDispatcher<SharedSuggestionProvider> serverDispatcher,
-            ParseResults<CommandSourceStack> clientParse,
-            ParseResults<SharedSuggestionProvider> serverParse,
-            int cursor) {
-        StringReader stringReader = new StringReader(cmd);
-        if (stringReader.canRead() && stringReader.peek() == '/') {
-            stringReader.skip();
-        }
+    @SubscribeEvent
+    public void onCommandSuggestions(CommandSuggestionsEvent event) {
+        CompletableFuture<Suggestions> serverSuggestions = event.getSuggestions();
+        StringReader command = event.getCommand();
 
+        ParseResults<CommandSourceStack> clientParse = clientDispatcher.parse(command, getSource());
         CompletableFuture<Suggestions> clientSuggestions =
-                clientDispatcher.getCompletionSuggestions(clientParse, cursor);
-        CompletableFuture<Suggestions> serverSuggestions =
-                serverDispatcher.getCompletionSuggestions(serverParse, cursor);
+                clientDispatcher.getCompletionSuggestions(clientParse, event.getCursor());
 
         CompletableFuture<Suggestions> result = new CompletableFuture<>();
 
@@ -95,10 +96,10 @@ public final class CommandManager extends Manager {
             final List<Suggestions> suggestions = new ArrayList<>();
             suggestions.add(clientSuggestions.join());
             suggestions.add(serverSuggestions.join());
-            result.complete(Suggestions.merge(stringReader.getString(), suggestions));
+            result.complete(Suggestions.merge(command.getString(), suggestions));
         });
 
-        return result;
+        event.setSuggestions(result);
     }
 
     public ClientCommandSourceStack getSource() {
@@ -161,7 +162,7 @@ public final class CommandManager extends Manager {
         McUtils.sendMessageToClient(error.withStyle(ChatFormatting.RED));
     }
 
-    public Set<Command> getCommandInstanceSet() {
+    public List<Command> getCommandInstanceSet() {
         return commandInstanceSet;
     }
 
@@ -174,10 +175,8 @@ public final class CommandManager extends Manager {
         registerCommand(new LocateCommand());
         registerCommand(new LootrunCommand());
         registerCommand(new QuestCommand());
-        registerCommand(new UpdateCommand());
-        registerCommand(new ServerCommand());
+        registerCommand(new ServersCommand());
         registerCommand(new TerritoryCommand());
-        registerCommand(new TokenCommand());
 
         // The WynntilsCommand must be registered last, since it
         // need the above commands as aliases

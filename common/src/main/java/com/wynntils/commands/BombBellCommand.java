@@ -10,7 +10,7 @@ import com.mojang.brigadier.context.CommandContext;
 import com.mojang.brigadier.suggestion.SuggestionProvider;
 import com.wynntils.core.commands.Command;
 import com.wynntils.core.components.Models;
-import com.wynntils.models.worlds.BombInfo;
+import com.wynntils.models.worlds.type.BombInfo;
 import com.wynntils.models.worlds.type.BombType;
 import java.util.Arrays;
 import java.util.Comparator;
@@ -24,17 +24,28 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
 
 public class BombBellCommand extends Command {
-    private final SuggestionProvider<CommandSourceStack> bombTypeSuggestionProvider = (context, builder) ->
+    private static final SuggestionProvider<CommandSourceStack> BOMB_TYPE_SUGGESTION_PROVIDER = (context, builder) ->
             SharedSuggestionProvider.suggest(Arrays.stream(BombType.values()).map(Enum::name), builder);
 
     @Override
-    public LiteralArgumentBuilder<CommandSourceStack> getBaseCommandBuilder() {
-        return Commands.literal("bombbell")
+    public String getCommandName() {
+        return "bombbell";
+    }
+
+    @Override
+    public String getDescription() {
+        return "List previously announced bombs";
+    }
+
+    @Override
+    public LiteralArgumentBuilder<CommandSourceStack> getCommandBuilder() {
+        return Commands.literal(getCommandName())
                 .then(Commands.literal("list").executes(this::listBombs))
                 .then(Commands.literal("get")
                         .then(Commands.argument("bombType", StringArgumentType.word())
-                                .suggests(bombTypeSuggestionProvider)
-                                .executes(this::getBombTypeList)));
+                                .suggests(BOMB_TYPE_SUGGESTION_PROVIDER)
+                                .executes(this::getBombTypeList)))
+                .executes(this::listBombs);
     }
 
     private int getBombTypeList(CommandContext<CommandSourceStack> context) {

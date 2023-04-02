@@ -5,7 +5,8 @@
 package com.wynntils.mc.mixin;
 
 import com.google.common.collect.Maps;
-import com.wynntils.mc.EventFactory;
+import com.wynntils.core.events.MixinHelper;
+import com.wynntils.mc.event.BossHealthUpdateEvent;
 import java.util.Map;
 import java.util.UUID;
 import net.minecraft.client.gui.components.BossHealthOverlay;
@@ -24,7 +25,7 @@ public abstract class BossHealthOverlayMixin {
     @Shadow
     public Map<UUID, LerpingBossEvent> events;
 
-    @Inject(method = "<init>", at = @At("RETURN"))
+    @Inject(method = "<init>(Lnet/minecraft/client/Minecraft;)V", at = @At("RETURN"))
     private void onCtor(CallbackInfo ci) {
         events = Maps.newConcurrentMap();
     }
@@ -34,7 +35,9 @@ public abstract class BossHealthOverlayMixin {
             at = @At("HEAD"),
             cancellable = true)
     private void updatePre(ClientboundBossEventPacket packet, CallbackInfo ci) {
-        if (EventFactory.onBossHealthUpdate(packet, events).isCanceled()) {
+        BossHealthUpdateEvent event = new BossHealthUpdateEvent(packet, events);
+        MixinHelper.post(event);
+        if (event.isCanceled()) {
             ci.cancel();
         }
     }

@@ -6,8 +6,8 @@ package com.wynntils.models.discoveries;
 
 import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.components.Models;
-import com.wynntils.handlers.container.ContainerContent;
 import com.wynntils.handlers.container.ScriptedContainerQuery;
+import com.wynntils.handlers.container.type.ContainerContent;
 import com.wynntils.utils.mc.ComponentUtils;
 import com.wynntils.utils.mc.LoreUtils;
 import com.wynntils.utils.mc.McUtils;
@@ -145,8 +145,8 @@ public class DiscoveryContainerQueries {
             for (int col = 0; col < 7; col++) {
                 int slot = row * 9 + col;
 
-                ItemStack item = container.items().get(slot);
-                DiscoveryInfo discoveryInfo = DiscoveryInfo.parseFromItemStack(item);
+                ItemStack itemStack = container.items().get(slot);
+                DiscoveryInfo discoveryInfo = DiscoveryInfo.parseFromItemStack(itemStack);
                 if (discoveryInfo == null) continue;
 
                 newDiscoveries.add(discoveryInfo);

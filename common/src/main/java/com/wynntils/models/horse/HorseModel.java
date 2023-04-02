@@ -23,33 +23,25 @@ public class HorseModel extends Model {
         super(List.of(itemModel));
     }
 
-    public HorseItem getHorse() {
+    public Optional<HorseItem> getHorse() {
         int horseSlot = findHorseSlotNum();
-        if (horseSlot == -1) return null;
+        if (horseSlot == -1) return Optional.empty();
 
-        return getHorseItem(McUtils.inventory().getItem(horseSlot));
+        return Models.Item.asWynnItem(McUtils.inventory().getItem(horseSlot), HorseItem.class);
     }
 
     public int findHorseSlotNum() {
         Inventory inventory = McUtils.inventory();
         for (int slotNum = 0; slotNum <= 44; slotNum++) {
-            ItemStack stack = inventory.getItem(slotNum);
-            if (getHorseItem(stack) != null) {
+            ItemStack itemStack = inventory.getItem(slotNum);
+            if (Models.Item.asWynnItem(itemStack, HorseItem.class).isPresent()) {
                 return slotNum;
             }
         }
         return -1;
     }
 
-    public HorseItem getHorseItem(ItemStack itemStack) {
-        Optional<HorseItem> horseOpt = Models.Item.asWynnItem(itemStack, HorseItem.class);
-        if (horseOpt.isEmpty()) return null;
-
-        return horseOpt.get();
-    }
-
-    public AbstractHorse searchForHorseNearby(int searchRadius) {
-        Player player = McUtils.player();
+    public AbstractHorse searchForHorseNearby(Player player, int searchRadius) {
         List<AbstractHorse> horses = McUtils.mc()
                 .level
                 .getEntitiesOfClass(

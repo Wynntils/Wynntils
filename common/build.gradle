@@ -1,17 +1,16 @@
 dependencies {
     // We depend on fabric loader here to use the fabric @Environment annotations and get the mixin dependencies
     // Do NOT use other classes from fabric loader
-    modImplementation "net.fabricmc:fabric-loader:${rootProject.fabric_loader_version}"
+    modImplementation "net.fabricmc:fabric-loader:${fabric_loader_version}"
 
     // This dependency is provided by forge naturally and by fabric in its build.gradle
-    compileOnly "net.minecraftforge:eventbus:${rootProject.forge_eventbus_version}"
+    compileOnly "net.minecraftforge:eventbus:${forge_eventbus_version}"
 
-    implementation("com.wynntils.hades:hades:${rootProject.hades_version}")
+    implementation("com.wynntils.hades:hades:${hades_version}")
 
-    implementation("com.github.LlamaLad7:MixinExtras:${rootProject.mixinextras_version}")
-    annotationProcessor("com.github.LlamaLad7:MixinExtras:${rootProject.mixinextras_version}")
+    implementation(annotationProcessor("com.github.llamalad7.mixinextras:mixinextras-common:${mixinextras_version}"))
 }
 
 architectury {
-    common(rootProject.enabled_platforms.split(","))
+    common(enabled_platforms.split(","))
 }

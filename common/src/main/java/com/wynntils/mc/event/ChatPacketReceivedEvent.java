@@ -11,6 +11,7 @@ import net.minecraftforge.eventbus.api.Event;
 @Cancelable
 public abstract class ChatPacketReceivedEvent extends Event {
     private Component message;
+    private boolean messageChanged;
 
     protected ChatPacketReceivedEvent(Component message) {
         this.message = message;
@@ -22,6 +23,11 @@ public abstract class ChatPacketReceivedEvent extends Event {
 
     public void setMessage(Component message) {
         this.message = message;
+        this.messageChanged = true;
+    }
+
+    public boolean isMessageChanged() {
+        return messageChanged;
     }
 
     public static final class GameInfo extends ChatPacketReceivedEvent {

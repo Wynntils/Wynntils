@@ -4,69 +4,24 @@
  */
 package com.wynntils.utils.wynn;
 
-import com.wynntils.models.gear.profile.IdentificationProfile;
-import com.wynntils.models.spells.type.SpellType;
-import com.wynntils.utils.mc.ComponentUtils;
+import com.wynntils.models.gear.type.GearTier;
 import com.wynntils.utils.mc.LoreUtils;
 import com.wynntils.utils.type.CappedValue;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import net.minecraft.ChatFormatting;
-import net.minecraft.nbt.ListTag;
-import net.minecraft.nbt.Tag;
 import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.TooltipFlag;
 
 /** Tests if an item is a certain wynncraft item */
 public final class WynnItemMatchers {
-    private static final Pattern SERVER_ITEM_PATTERN = Pattern.compile("§[baec]§lWorld (\\d+)(§3 \\(Recommended\\))?");
-    private static final Pattern CONSUMABLE_PATTERN = Pattern.compile("(.+)\\[([0-9]+)/([0-9]+)]");
     private static final Pattern ITEM_RARITY_PATTERN =
             Pattern.compile("(Normal|Set|Unique|Rare|Legendary|Fabled|Mythic)( Raid)? (Item|Reward).*");
     private static final Pattern DURABILITY_PATTERN = Pattern.compile("\\[(\\d+)/(\\d+) Durability\\]");
-    private static final Pattern POWDER_PATTERN =
-            Pattern.compile("§[2ebcf8].? ?(Earth|Thunder|Water|Fire|Air) Powder ([IV]{1,3})");
-    private static final Pattern EMERALD_POUCH_TIER_PATTERN = Pattern.compile("Emerald Pouch \\[Tier ([IVX]{1,4})\\]");
-    private static final Pattern INGREDIENT_OR_MATERIAL_PATTERN = Pattern.compile("(.*) \\[✫✫✫\\]");
-
-    public static boolean isHealingPotion(ItemStack itemStack) {
-        if (!isConsumable(itemStack)) return false;
-        if (itemStack.getHoverName().getString().contains(ChatFormatting.LIGHT_PURPLE + "Potions of Healing")
-                || itemStack.getHoverName().getString().contains(ChatFormatting.RED + "Potion of Healing")) return true;
-
-        boolean isCraftedPotion = false;
-        boolean hasHealEffect = false;
-        ListTag lore = LoreUtils.getLoreTagElseEmpty(itemStack);
-        for (Tag tag : lore) {
-            String unformattedLoreLine = ComponentUtils.getUnformatted(tag.getAsString());
-
-            if (unformattedLoreLine == null) continue;
-
-            if (unformattedLoreLine.equals("Crafted Potion")) {
-                isCraftedPotion = true;
-            } else if (unformattedLoreLine.startsWith("- Heal:")) {
-                hasHealEffect = true;
-            }
-        }
-
-        return isCraftedPotion && hasHealEffect;
-    }
-
-    private static boolean isConsumable(ItemStack itemStack) {
-        if (itemStack.isEmpty()) return false;
-
-        // consumables are either a potion or a diamond axe for crafteds
-        // to ensure an axe item is really a consumable, make sure it has the right name color
-        if (itemStack.getItem() != Items.POTION
-                && !(itemStack.getItem() == Items.DIAMOND_AXE
-                        && itemStack.getHoverName().getString().startsWith(ChatFormatting.DARK_AQUA.toString())))
-            return false;
-
-        return consumableNameMatcher(itemStack.getHoverName()).matches();
-    }
 
     public static boolean isGearBox(ItemStack itemStack) {
         return (itemStack.getItem() == Items.STONE_SHOVEL
@@ -111,10 +66,6 @@ public final class WynnItemMatchers {
         return DURABILITY_PATTERN.matcher(text.getString());
     }
 
-    private static Matcher consumableNameMatcher(Component text) {
-        return CONSUMABLE_PATTERN.matcher(WynnUtils.normalizeBadString(text.getString()));
-    }
-
     public static CappedValue getDurability(ItemStack itemStack) {
         List<Component> lore = itemStack.getTooltipLines(null, TooltipFlag.NORMAL);
         for (Component line : lore) {
@@ -129,12 +80,20 @@ public final class WynnItemMatchers {
         return CappedValue.EMPTY;
     }
 
-    public static String getShortIdentificationName(String fullIdName, boolean isRaw) {
-        SpellType spell = SpellType.fromName(fullIdName);
-        if (spell != null) {
-            return spell.getShortIdName(isRaw);
+    public static MutableComponent getNonGearDescription(ItemStack itemStack, String gearName) {
+        if (gearName.contains("Crafted")) {
+            return Component.literal(gearName).withStyle(ChatFormatting.DARK_AQUA);
         }
 
-        return IdentificationProfile.getAsShortName(fullIdName, isRaw);
+        // this solves an unidentified item showcase exploit
+        // boxes items are STONE_SHOVEL, 1 represents UNIQUE boxes and 6 MYTHIC boxes
+        if (itemStack.getItem() == Items.STONE_SHOVEL
+                && itemStack.getDamageValue() >= 1
+                && itemStack.getDamageValue() <= 6) {
+            return Component.literal("Unidentified Item")
+                    .withStyle(
+                            GearTier.fromBoxDamage(itemStack.getDamageValue()).getChatFormatting());
+        }
+        return null;
     }
 }

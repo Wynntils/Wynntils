@@ -6,29 +6,33 @@ package com.wynntils.models.players.scoreboard;
 
 import com.wynntils.handlers.scoreboard.ScoreboardPart;
 import com.wynntils.handlers.scoreboard.ScoreboardSegment;
-import com.wynntils.handlers.scoreboard.SegmentMatcher;
-import java.util.Set;
+import com.wynntils.handlers.scoreboard.type.SegmentMatcher;
 
-public class PartyScoreboardPart implements ScoreboardPart {
-    static final SegmentMatcher PARTY_MATCHER = SegmentMatcher.fromPattern("Party:\\s\\[Lv. (\\d+)]");
+public class PartyScoreboardPart extends ScoreboardPart {
+    private static final SegmentMatcher PARTY_MATCHER = SegmentMatcher.fromPattern("Party:\\s\\[Lv. (\\d+)]");
 
     @Override
-    public Set<SegmentMatcher> getSegmentMatchers() {
-        return Set.of(PARTY_MATCHER);
+    public SegmentMatcher getSegmentMatcher() {
+        return PARTY_MATCHER;
     }
 
     @Override
-    public void onSegmentChange(ScoreboardSegment newValue, SegmentMatcher segmentMatcher) {
+    public void onSegmentChange(ScoreboardSegment newValue) {
         // Not yet implemented
     }
 
     @Override
-    public void onSegmentRemove(ScoreboardSegment segment, SegmentMatcher segmentMatcher) {
+    public void onSegmentRemove(ScoreboardSegment segment) {
         // Not yet implemented
     }
 
     @Override
     public void reset() {
         // Not yet implemented
+    }
+
+    @Override
+    public String toString() {
+        return "PartyScoreboardPart{}";
     }
 }

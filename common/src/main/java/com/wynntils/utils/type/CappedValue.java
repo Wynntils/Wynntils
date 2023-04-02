@@ -4,49 +4,44 @@
  */
 package com.wynntils.utils.type;
 
-import java.util.Objects;
-
-public class CappedValue {
+public record CappedValue(int current, int max) {
     public static final CappedValue EMPTY = new CappedValue(0, 0);
-    private int current;
-    private int max;
 
-    public CappedValue(int current, int max) {
-        this.current = current;
-        this.max = max;
+    public CappedValue withCurrent(int newCurrent) {
+        return new CappedValue(newCurrent, max);
     }
 
-    public int getCurrent() {
-        return current;
+    /** Return true iff the current value is equal to the max value */
+    public boolean isAtCap() {
+        return current == max;
+    }
+    /** Return the difference between the current and the max value */
+    public int getRemaining() {
+        return max - current;
     }
 
-    public void setCurrent(int current) {
-        this.current = current;
+    /** Return the current value as a percentage of max, in 0..100, rounded
+     * to the nearest integer */
+    public int getPercentageInt() {
+        return Math.round((float) getPercentage());
     }
 
-    public int getMax() {
-        return max;
+    /** Return the current value as a percentage of max, in 0..100.0 */
+    public double getPercentage() {
+        return getProgress() * 100.0;
     }
 
-    public void setMax(int max) {
-        this.max = max;
+    /** Return the current value as a proportion of max, in 0..1 */
+    public double getProgress() {
+        // Treating emtpy capped values as 100% progress makes reasonable invariants
+        // with remaining and atCap hold.
+        if (max == 0) return 1.0;
+
+        return (double) current / max;
     }
 
     @Override
     public String toString() {
-        return "[" + current + "/" + max + ']';
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        CappedValue that = (CappedValue) o;
-        return current == that.current && max == that.max;
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(current, max);
+        return current + "/" + max;
     }
 }

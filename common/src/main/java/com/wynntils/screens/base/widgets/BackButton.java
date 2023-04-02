@@ -20,7 +20,7 @@ public class BackButton extends WynntilsButton {
     }
 
     @Override
-    public void renderButton(PoseStack poseStack, int mouseX, int mouseY, float partialTick) {
+    public void renderWidget(PoseStack poseStack, int mouseX, int mouseY, float partialTick) {
         Texture backArrow = Texture.BACK_ARROW;
         if (this.isHovered) {
             RenderUtils.drawTexturedRect(

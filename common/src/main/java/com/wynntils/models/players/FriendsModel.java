@@ -7,8 +7,8 @@ package com.wynntils.models.players;
 import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.components.Model;
 import com.wynntils.core.components.Models;
-import com.wynntils.handlers.chat.MessageType;
 import com.wynntils.handlers.chat.event.ChatMessageReceivedEvent;
+import com.wynntils.handlers.chat.type.MessageType;
 import com.wynntils.models.players.event.FriendsEvent;
 import com.wynntils.models.players.event.HadesRelationsUpdateEvent;
 import com.wynntils.models.players.hades.event.HadesEvent;
@@ -36,7 +36,7 @@ public final class FriendsModel extends Model {
     ACTION should be something like ADD, LIST, etc.
     DETAIL (optional) should be a descriptor if necessary
      */
-    private static final Pattern FRIEND_LIST = Pattern.compile(".+'s friends \\(.+\\): (.*)");
+    private static final Pattern FRIEND_LIST = Pattern.compile(".+'s? friends \\(.+\\): (.*)");
     private static final Pattern FRIEND_LIST_FAIL_1 = Pattern.compile("§eWe couldn't find any friends\\.");
     private static final Pattern FRIEND_LIST_FAIL_2 = Pattern.compile("§eTry typing §r§6/friend add Username§r§e!");
     private static final Pattern FRIEND_REMOVE_MESSAGE_PATTERN =
@@ -49,6 +49,7 @@ public final class FriendsModel extends Model {
     // endregion
 
     private boolean expectingFriendMessage = false;
+    private long lastFriendRequest = 0;
 
     private Set<String> friends;
 
@@ -170,12 +171,27 @@ public final class FriendsModel extends Model {
                 new HadesRelationsUpdateEvent.FriendList(friends, HadesRelationsUpdateEvent.ChangeType.RELOAD));
     }
 
+    /**
+     * Sends "/friend list" to Wynncraft and waits for the response.
+     * (!) Skips if the last request was less than 250ms ago.
+     * When the response is received, friends will be updated.
+     */
     public void requestData() {
         if (McUtils.player() == null) return;
 
+        if (System.currentTimeMillis() - lastFriendRequest < 250) {
+            WynntilsMod.info("Skipping friend list request because it was requested less than 250ms ago.");
+            return;
+        }
+
         expectingFriendMessage = true;
+        lastFriendRequest = System.currentTimeMillis();
         McUtils.sendCommand("friend list");
         WynntilsMod.info("Requested friend list from Wynncraft.");
+    }
+
+    public boolean isFriend(String playerName) {
+        return friends.contains(playerName);
     }
 
     public Set<String> getFriends() {

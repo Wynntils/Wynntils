@@ -4,17 +4,24 @@
  */
 package com.wynntils.mc.event;
 
+import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.world.inventory.Slot;
 import net.minecraftforge.eventbus.api.Event;
 
 public abstract class SlotRenderEvent extends Event {
+    private final PoseStack poseStack;
     private final Screen screen;
     private final Slot slot;
 
-    protected SlotRenderEvent(Screen screen, Slot slot) {
+    protected SlotRenderEvent(PoseStack poseStack, Screen screen, Slot slot) {
+        this.poseStack = poseStack;
         this.screen = screen;
         this.slot = slot;
+    }
+
+    public PoseStack getPoseStack() {
+        return poseStack;
     }
 
     public Screen getScreen() {
@@ -26,14 +33,20 @@ public abstract class SlotRenderEvent extends Event {
     }
 
     public static class Pre extends SlotRenderEvent {
-        public Pre(Screen screen, Slot slot) {
-            super(screen, slot);
+        public Pre(PoseStack poseStack, Screen screen, Slot slot) {
+            super(poseStack, screen, slot);
+        }
+    }
+
+    public static class CountPre extends SlotRenderEvent {
+        public CountPre(PoseStack poseStack, Screen screen, Slot slot) {
+            super(poseStack, screen, slot);
         }
     }
 
     public static class Post extends SlotRenderEvent {
-        public Post(Screen screen, Slot slot) {
-            super(screen, slot);
+        public Post(PoseStack poseStack, Screen screen, Slot slot) {
+            super(poseStack, screen, slot);
         }
     }
 }

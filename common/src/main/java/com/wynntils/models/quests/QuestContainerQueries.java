@@ -6,8 +6,8 @@ package com.wynntils.models.quests;
 
 import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.components.Models;
-import com.wynntils.handlers.container.ContainerContent;
 import com.wynntils.handlers.container.ScriptedContainerQuery;
+import com.wynntils.handlers.container.type.ContainerContent;
 import com.wynntils.utils.mc.McUtils;
 import com.wynntils.utils.wynn.ContainerUtils;
 import com.wynntils.utils.wynn.InventoryUtils;
@@ -67,8 +67,8 @@ public class QuestContainerQueries {
                 // Very first slot is chat history
                 if (slot == 0) continue;
 
-                ItemStack item = container.items().get(slot);
-                QuestInfo questInfo = QuestInfoParser.parseItem(item, page, false);
+                ItemStack itemStack = container.items().get(slot);
+                QuestInfo questInfo = QuestInfoParser.parseItemStack(itemStack, page, false);
                 if (questInfo == null) continue;
 
                 newQuests.add(questInfo);
@@ -123,8 +123,8 @@ public class QuestContainerQueries {
             for (int col = 0; col < 7; col++) {
                 int slot = row * 9 + col;
 
-                ItemStack item = container.items().get(slot);
-                QuestInfo questInfo = QuestInfoParser.parseItem(item, page, true);
+                ItemStack itemStack = container.items().get(slot);
+                QuestInfo questInfo = QuestInfoParser.parseItemStack(itemStack, page, true);
                 if (questInfo == null) continue;
 
                 if (questInfo.isTracked()) {
@@ -163,22 +163,22 @@ public class QuestContainerQueries {
             }
         }
         queryBuilder
-                .processContainer(c -> findQuestForTracking(c, questInfo))
+                .processContainer(c -> findQuestForTracking(c, questInfo, questInfo.isMiniQuest()))
                 .build()
                 .executeQuery();
     }
 
-    private void findQuestForTracking(ContainerContent container, QuestInfo questInfo) {
+    private void findQuestForTracking(ContainerContent container, QuestInfo questInfo, boolean isMiniQuest) {
         for (int row = 0; row < 6; row++) {
             for (int col = 0; col < 7; col++) {
                 int slot = row * 9 + col;
 
-                // Very first slot is chat history
-                if (slot == 0) continue;
+                // Very first slot is chat history, but only in the main quests page
+                if (!isMiniQuest && slot == 0) continue;
 
-                ItemStack item = container.items().get(slot);
+                ItemStack itemStack = container.items().get(slot);
 
-                String questName = QuestInfoParser.getQuestName(item);
+                String questName = QuestInfoParser.getQuestName(itemStack);
                 if (Objects.equals(questName, questInfo.getName())) {
                     ContainerUtils.clickOnSlot(
                             slot, container.containerId(), GLFW.GLFW_MOUSE_BUTTON_LEFT, container.items());

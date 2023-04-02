@@ -11,7 +11,7 @@ import java.util.UUID;
 import java.util.concurrent.ConcurrentHashMap;
 
 public final class HadesUserRegistry {
-    private Map<UUID, HadesUser> hadesUserMap = new ConcurrentHashMap<>();
+    private final Map<UUID, HadesUser> hadesUserMap = new ConcurrentHashMap<>();
 
     public Map<UUID, HadesUser> getHadesUserMap() {
         return hadesUserMap;

@@ -55,7 +55,7 @@ public abstract class WynntilsListScreen<E, B extends WynntilsButton> extends Wy
                 this);
     }
 
-    protected void renderButtons(PoseStack poseStack, int mouseX, int mouseY, float partialTick) {
+    protected void renderWidgets(PoseStack poseStack, int mouseX, int mouseY, float partialTick) {
         this.hovered = null;
 
         final float translationX = getTranslationX();
@@ -82,7 +82,7 @@ public abstract class WynntilsListScreen<E, B extends WynntilsButton> extends Wy
                         Texture.QUEST_BOOK_BACKGROUND.height() - 25,
                         0,
                         CommonColors.BLACK,
-                        HorizontalAlignment.Center,
+                        HorizontalAlignment.CENTER,
                         TextShadow.NONE);
     }
 
@@ -97,8 +97,8 @@ public abstract class WynntilsListScreen<E, B extends WynntilsButton> extends Wy
                         Texture.QUEST_BOOK_BACKGROUND.height(),
                         Texture.QUEST_BOOK_BACKGROUND.width() / 2f - 30f,
                         CommonColors.BLACK,
-                        HorizontalAlignment.Center,
-                        VerticalAlignment.Middle,
+                        HorizontalAlignment.CENTER,
+                        VerticalAlignment.MIDDLE,
                         TextShadow.NONE);
     }
 
@@ -111,6 +111,30 @@ public abstract class WynntilsListScreen<E, B extends WynntilsButton> extends Wy
             if (child.isMouseOver(mouseX - translationX, mouseY - translationY)) {
                 child.mouseClicked(mouseX - translationX, mouseY - translationY, button);
             }
+        }
+
+        return true;
+    }
+
+    @Override
+    public boolean mouseDragged(double mouseX, double mouseY, int button, double dragX, double dragY) {
+        final float translationX = getTranslationX();
+        final float translationY = getTranslationY();
+
+        for (GuiEventListener child : new ArrayList<>(this.children())) {
+            child.mouseDragged(mouseX - translationX, mouseY - translationY, button, dragX, dragY);
+        }
+
+        return true;
+    }
+
+    @Override
+    public boolean mouseReleased(double mouseX, double mouseY, int button) {
+        final float translationX = getTranslationX();
+        final float translationY = getTranslationY();
+
+        for (GuiEventListener child : new ArrayList<>(this.children())) {
+            child.mouseReleased(mouseX - translationX, mouseY - translationY, button);
         }
 
         return true;

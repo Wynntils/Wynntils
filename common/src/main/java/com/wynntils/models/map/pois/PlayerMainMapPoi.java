@@ -5,14 +5,15 @@
 package com.wynntils.models.map.pois;
 
 import com.mojang.blaze3d.vertex.PoseStack;
-import com.wynntils.features.user.map.MapFeature;
-import com.wynntils.features.user.overlays.CustomBarsOverlayFeature;
+import com.wynntils.core.components.Managers;
+import com.wynntils.features.map.MapFeature;
 import com.wynntils.models.players.hades.objects.HadesUser;
-import com.wynntils.utils.mc.PlayerInfoUtils;
+import com.wynntils.utils.mc.SkinUtils;
 import com.wynntils.utils.render.FontRenderer;
 import com.wynntils.utils.render.Texture;
 import com.wynntils.utils.render.buffered.BufferedFontRenderer;
 import com.wynntils.utils.render.buffered.BufferedRenderUtils;
+import com.wynntils.utils.render.type.HealthTexture;
 import com.wynntils.utils.render.type.HorizontalAlignment;
 import com.wynntils.utils.render.type.VerticalAlignment;
 import net.minecraft.client.gui.Font;
@@ -27,7 +28,7 @@ public class PlayerMainMapPoi extends PlayerPoiBase {
     @Override
     public void renderAt(
             PoseStack poseStack,
-            MultiBufferSource.BufferSource bufferSource,
+            MultiBufferSource bufferSource,
             float renderX,
             float renderY,
             boolean hovered,
@@ -36,7 +37,7 @@ public class PlayerMainMapPoi extends PlayerPoiBase {
         poseStack.pushPose();
         poseStack.translate(-playerHeadRenderSize / 2f, -playerHeadRenderSize / 2f, 0); // center the player icon
 
-        ResourceLocation skin = PlayerInfoUtils.getSkin(user.getUuid());
+        ResourceLocation skin = SkinUtils.getSkin(user.getUuid());
 
         // head
         BufferedRenderUtils.drawTexturedRect(
@@ -73,7 +74,9 @@ public class PlayerMainMapPoi extends PlayerPoiBase {
                 64);
 
         // health
-        CustomBarsOverlayFeature.HealthTexture healthTexture = MapFeature.INSTANCE.remotePlayerHealthTexture;
+        HealthTexture healthTexture = Managers.Feature.getFeatureInstance(MapFeature.class)
+                .remotePlayerHealthTexture
+                .get();
         BufferedRenderUtils.drawProgressBar(
                 poseStack,
                 bufferSource,
@@ -86,7 +89,7 @@ public class PlayerMainMapPoi extends PlayerPoiBase {
                 healthTexture.getTextureY1(),
                 81,
                 healthTexture.getTextureY2(),
-                (float) user.getHealth() / user.getMaxHealth());
+                (float) user.getHealth().getProgress());
 
         // name
         Font font = FontRenderer.getInstance().getFont();
@@ -99,9 +102,11 @@ public class PlayerMainMapPoi extends PlayerPoiBase {
                         renderX - (width - playerHeadRenderSize) / 2f,
                         renderY + playerHeadRenderSize + 8,
                         user.getRelationColor(),
-                        HorizontalAlignment.Left,
-                        VerticalAlignment.Top,
-                        MapFeature.INSTANCE.remotePlayerNameShadow,
+                        HorizontalAlignment.LEFT,
+                        VerticalAlignment.TOP,
+                        Managers.Feature.getFeatureInstance(MapFeature.class)
+                                .remotePlayerNameShadow
+                                .get(),
                         1f);
 
         poseStack.popPose();

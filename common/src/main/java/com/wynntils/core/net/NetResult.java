@@ -8,6 +8,7 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import com.wynntils.core.WynntilsMod;
+import com.wynntils.core.net.event.NetResultProcessedEvent;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -23,10 +24,12 @@ public abstract class NetResult {
 
     protected final HttpRequest request;
     private final String desc;
+    private final NetResultProcessedEvent processedEvent;
 
-    protected NetResult(String desc, HttpRequest request) {
+    protected NetResult(String desc, HttpRequest request, NetResultProcessedEvent processedEvent) {
         this.request = request;
         this.desc = desc;
+        this.processedEvent = processedEvent;
     }
 
     public void handleInputStream(Consumer<InputStream> handler, Consumer<Throwable> onError) {
@@ -93,11 +96,20 @@ public abstract class NetResult {
     private Consumer<InputStream> wrappingHandler(Consumer<InputStream> handler, Consumer<Throwable> onError) {
         return (inputStream) -> {
             try {
+                // FIXME: This is needed for patching class loading issue with Forge EventBus:
+                //        https://github.com/MinecraftForge/EventBus/issues/44
+                Thread.currentThread().setContextClassLoader(WynntilsMod.class.getClassLoader());
+
                 handler.accept(inputStream);
+
+                if (processedEvent != null) {
+                    WynntilsMod.postEventOnMainThread(processedEvent);
+                }
             } catch (Throwable t) {
                 // Something went wrong in our handlers, perhaps an NPE?
                 WynntilsMod.warn("Failure in net manager [wrappingHandler], processing " + desc, t);
                 onError.accept(t);
+                onHandlingFailed();
             } finally {
                 try {
                     // We must always close the input stream
@@ -107,6 +119,8 @@ public abstract class NetResult {
             }
         };
     }
+
+    protected void onHandlingFailed() {}
 
     protected abstract CompletableFuture<InputStream> getInputStreamFuture();
 }

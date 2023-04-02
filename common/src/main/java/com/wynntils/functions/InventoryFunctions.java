@@ -6,20 +6,66 @@ package com.wynntils.functions;
 
 import com.wynntils.core.components.Models;
 import com.wynntils.core.functions.Function;
+import com.wynntils.core.functions.arguments.FunctionArguments;
 import com.wynntils.models.items.WynnItem;
-import com.wynntils.models.items.items.gui.IngredientPouchItem;
 import com.wynntils.models.items.properties.DurableItemProperty;
 import com.wynntils.utils.mc.McUtils;
-import com.wynntils.utils.wynn.InventoryUtils;
+import com.wynntils.utils.type.CappedValue;
 import java.util.List;
 import java.util.Optional;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.item.ItemStack;
 
 public class InventoryFunctions {
+    public static class CappedInventorySlotsFunction extends Function<CappedValue> {
+        @Override
+        public CappedValue getValue(FunctionArguments arguments) {
+            return Models.PlayerInventory.getInventorySlots();
+        }
+    }
+
+    public static class CappedIngredientPouchSlotsFunction extends Function<CappedValue> {
+        @Override
+        public CappedValue getValue(FunctionArguments arguments) {
+            return Models.PlayerInventory.getIngredientPouchSlots();
+        }
+    }
+
+    public static class CappedHeldItemDurabilityFunction extends Function<CappedValue> {
+        @Override
+        public CappedValue getValue(FunctionArguments arguments) {
+            ItemStack itemStack = McUtils.player().getItemInHand(InteractionHand.MAIN_HAND);
+            Optional<DurableItemProperty> durableItemOpt =
+                    Models.Item.asWynnItemPropery(itemStack, DurableItemProperty.class);
+            if (durableItemOpt.isEmpty()) return CappedValue.EMPTY;
+
+            return durableItemOpt.get().getDurability();
+        }
+    }
+
+    public static class EmeraldStringFunction extends Function<String> {
+        @Override
+        public String getValue(FunctionArguments arguments) {
+            return Models.Emerald.getFormattedString(
+                    Models.Emerald.getAmountInInventory(),
+                    arguments.getArgument("zeros").getBooleanValue());
+        }
+
+        @Override
+        public FunctionArguments.Builder getArgumentsBuilder() {
+            return new FunctionArguments.OptionalArgumentBuilder(
+                    List.of(new FunctionArguments.Argument<>("zeros", Boolean.class, false)));
+        }
+
+        @Override
+        public List<String> getAliases() {
+            return List.of("estr");
+        }
+    }
+
     public static class LiquidEmeraldFunction extends Function<Integer> {
         @Override
-        public Integer getValue(String argument) {
+        public Integer getValue(FunctionArguments arguments) {
             int ems = Models.Emerald.getAmountInInventory();
             return ems / 4096;
         }
@@ -32,7 +78,7 @@ public class InventoryFunctions {
 
     public static class EmeraldBlockFunction extends Function<Integer> {
         @Override
-        public Integer getValue(String argument) {
+        public Integer getValue(FunctionArguments arguments) {
             int ems = Models.Emerald.getAmountInInventory();
             return (ems % 4096) / 64;
         }
@@ -45,7 +91,7 @@ public class InventoryFunctions {
 
     public static class EmeraldsFunction extends Function<Integer> {
         @Override
-        public Integer getValue(String argument) {
+        public Integer getValue(FunctionArguments arguments) {
             return Models.Emerald.getAmountInInventory() % 64;
         }
 
@@ -57,15 +103,15 @@ public class InventoryFunctions {
 
     public static class MoneyFunction extends Function<Integer> {
         @Override
-        public Integer getValue(String argument) {
+        public Integer getValue(FunctionArguments arguments) {
             return Models.Emerald.getAmountInInventory();
         }
     }
 
     public static class InventoryFreeFunction extends Function<Integer> {
         @Override
-        public Integer getValue(String argument) {
-            return Models.PlayerInventory.getOpenInvSlots();
+        public Integer getValue(FunctionArguments arguments) {
+            return Models.PlayerInventory.getInventorySlots().getRemaining();
         }
 
         @Override
@@ -76,8 +122,8 @@ public class InventoryFunctions {
 
     public static class InventoryUsedFunction extends Function<Integer> {
         @Override
-        public Integer getValue(String argument) {
-            return Models.PlayerInventory.getUsedInvSlots();
+        public Integer getValue(FunctionArguments arguments) {
+            return Models.PlayerInventory.getInventorySlots().current();
         }
 
         @Override
@@ -88,36 +134,20 @@ public class InventoryFunctions {
 
     public static class IngredientPouchOpenSlotsFunction extends Function<Integer> {
         @Override
-        public Integer getValue(String argument) {
-            ItemStack itemStack = McUtils.inventory().items.get(InventoryUtils.INGREDIENT_POUCH_SLOT_NUM);
-
-            Optional<WynnItem> wynnItem = Models.Item.getWynnItem(itemStack);
-
-            if (wynnItem.isPresent() && wynnItem.get() instanceof IngredientPouchItem pouchItem) {
-                return 27 - pouchItem.getCount();
-            }
-
-            return -1;
+        public Integer getValue(FunctionArguments arguments) {
+            return Models.PlayerInventory.getIngredientPouchSlots().getRemaining();
         }
 
         @Override
         public List<String> getAliases() {
-            return List.of("pouch_open");
+            return List.of("pouch_open", "pouch_free");
         }
     }
 
     public static class IngredientPouchUsedSlotsFunction extends Function<Integer> {
         @Override
-        public Integer getValue(String argument) {
-            ItemStack itemStack = McUtils.inventory().items.get(InventoryUtils.INGREDIENT_POUCH_SLOT_NUM);
-
-            Optional<WynnItem> wynnItem = Models.Item.getWynnItem(itemStack);
-
-            if (wynnItem.isPresent() && wynnItem.get() instanceof IngredientPouchItem pouchItem) {
-                return pouchItem.getCount();
-            }
-
-            return -1;
+        public Integer getValue(FunctionArguments arguments) {
+            return Models.PlayerInventory.getIngredientPouchSlots().current();
         }
 
         @Override
@@ -126,18 +156,15 @@ public class InventoryFunctions {
         }
     }
 
-    public static class HeldItemCurrentDurabilityFunction extends Function<String> {
+    public static class HeldItemCurrentDurabilityFunction extends Function<Integer> {
         @Override
-        public String getValue(String argument) {
+        public Integer getValue(FunctionArguments arguments) {
             ItemStack itemStack = McUtils.player().getItemInHand(InteractionHand.MAIN_HAND);
+            Optional<DurableItemProperty> durableItemOpt =
+                    Models.Item.asWynnItemPropery(itemStack, DurableItemProperty.class);
+            if (durableItemOpt.isEmpty()) return -1;
 
-            Optional<WynnItem> wynnItem = Models.Item.getWynnItem(itemStack);
-
-            if (wynnItem.isPresent() && wynnItem.get() instanceof DurableItemProperty durableItem) {
-                return String.valueOf(durableItem.getDurability().getCurrent());
-            }
-
-            return "";
+            return durableItemOpt.get().getDurability().current();
         }
 
         @Override
@@ -146,23 +173,44 @@ public class InventoryFunctions {
         }
     }
 
-    public static class HeldItemMaxDurabilityFunction extends Function<String> {
+    public static class HeldItemMaxDurabilityFunction extends Function<Integer> {
         @Override
-        public String getValue(String argument) {
+        public Integer getValue(FunctionArguments arguments) {
             ItemStack itemStack = McUtils.player().getItemInHand(InteractionHand.MAIN_HAND);
+            Optional<DurableItemProperty> durableItemOpt =
+                    Models.Item.asWynnItemPropery(itemStack, DurableItemProperty.class);
+            if (durableItemOpt.isEmpty()) return -1;
 
-            Optional<WynnItem> wynnItem = Models.Item.getWynnItem(itemStack);
-
-            if (wynnItem.isPresent() && wynnItem.get() instanceof DurableItemProperty durableItem) {
-                return String.valueOf(durableItem.getDurability().getMax());
-            }
-
-            return "";
+            return durableItemOpt.get().getDurability().max();
         }
 
         @Override
         public List<String> getAliases() {
             return List.of("max_held_durability");
+        }
+    }
+
+    public static class HeldItemTypeFunction extends Function<String> {
+        @Override
+        public String getValue(FunctionArguments arguments) {
+            ItemStack itemInHand = McUtils.player().getItemInHand(InteractionHand.MAIN_HAND);
+
+            if (itemInHand == null) {
+                return "NONE";
+            }
+
+            Optional<WynnItem> wynnItem = Models.Item.getWynnItem(itemInHand);
+
+            if (wynnItem.isEmpty()) {
+                return "NONE";
+            }
+
+            return wynnItem.get().getClass().getSimpleName();
+        }
+
+        @Override
+        public List<String> getAliases() {
+            return List.of("held_type");
         }
     }
 }

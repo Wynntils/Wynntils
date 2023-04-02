@@ -17,7 +17,7 @@ import org.lwjgl.opengl.GL11;
 public final class BufferedRenderUtils {
     public static void drawLine(
             PoseStack poseStack,
-            MultiBufferSource.BufferSource bufferSource,
+            MultiBufferSource bufferSource,
             CustomColor color,
             float x1,
             float y1,
@@ -119,7 +119,7 @@ public final class BufferedRenderUtils {
 
     public static void drawRectBorders(
             PoseStack poseStack,
-            MultiBufferSource.BufferSource bufferSource,
+            MultiBufferSource bufferSource,
             CustomColor color,
             float x1,
             float y1,
@@ -135,7 +135,7 @@ public final class BufferedRenderUtils {
 
     public static void drawRect(
             PoseStack poseStack,
-            MultiBufferSource.BufferSource bufferSource,
+            MultiBufferSource bufferSource,
             CustomColor color,
             float x,
             float y,
@@ -160,7 +160,7 @@ public final class BufferedRenderUtils {
 
     public static void drawColoredTexturedRect(
             PoseStack poseStack,
-            MultiBufferSource.BufferSource bufferSource,
+            MultiBufferSource bufferSource,
             ResourceLocation tex,
             CustomColor color,
             float alpha,
@@ -169,7 +169,6 @@ public final class BufferedRenderUtils {
             float z,
             float width,
             float height) {
-
         Matrix4f matrix = poseStack.last().pose();
 
         VertexConsumer buffer = bufferSource.getBuffer(CustomRenderType.getPositionColorTextureQuad(tex));
@@ -195,7 +194,7 @@ public final class BufferedRenderUtils {
     }
 
     public static void drawTexturedRect(
-            PoseStack poseStack, MultiBufferSource.BufferSource bufferSource, Texture texture, float x, float y) {
+            PoseStack poseStack, MultiBufferSource bufferSource, Texture texture, float x, float y) {
         drawTexturedRect(
                 poseStack,
                 bufferSource,
@@ -210,7 +209,7 @@ public final class BufferedRenderUtils {
 
     public static void drawTexturedRect(
             PoseStack poseStack,
-            MultiBufferSource.BufferSource bufferSource,
+            MultiBufferSource bufferSource,
             ResourceLocation tex,
             float x,
             float y,
@@ -237,7 +236,7 @@ public final class BufferedRenderUtils {
 
     public static void drawTexturedRect(
             PoseStack poseStack,
-            MultiBufferSource.BufferSource bufferSource,
+            MultiBufferSource bufferSource,
             ResourceLocation tex,
             float x,
             float y,
@@ -271,7 +270,7 @@ public final class BufferedRenderUtils {
 
     public static void drawTexturedRectWithColor(
             PoseStack poseStack,
-            MultiBufferSource.BufferSource bufferSource,
+            MultiBufferSource bufferSource,
             ResourceLocation tex,
             CustomColor color,
             float x,
@@ -330,7 +329,7 @@ public final class BufferedRenderUtils {
      */
     public static void drawColoredProgressBar(
             PoseStack poseStack,
-            MultiBufferSource.BufferSource bufferSource,
+            MultiBufferSource bufferSource,
             Texture texture,
             CustomColor customColor,
             float x1,
@@ -342,7 +341,6 @@ public final class BufferedRenderUtils {
             int textureX2,
             int textureY2,
             float progress) {
-
         int half = (textureY1 + textureY2) / 2 + (textureY2 - textureY1) % 2;
         drawProgressBarBackground(
                 poseStack, bufferSource, texture, x1, y1, x2, y2, textureX1, textureY1, textureX2, half);
@@ -364,7 +362,7 @@ public final class BufferedRenderUtils {
 
     private static void drawProgressBarForegroundWithColor(
             PoseStack poseStack,
-            MultiBufferSource.BufferSource bufferSource,
+            MultiBufferSource bufferSource,
             Texture texture,
             CustomColor customColor,
             float x1,
@@ -441,7 +439,7 @@ public final class BufferedRenderUtils {
      */
     public static void drawProgressBar(
             PoseStack poseStack,
-            MultiBufferSource.BufferSource bufferSource,
+            MultiBufferSource bufferSource,
             Texture texture,
             float x1,
             float y1,
@@ -452,7 +450,6 @@ public final class BufferedRenderUtils {
             int textureX2,
             int textureY2,
             float progress) {
-
         int half = (textureY1 + textureY2) / 2 + (textureY2 - textureY1) % 2;
         drawProgressBarBackground(
                 poseStack, bufferSource, texture, x1, y1, x2, y2, textureX1, textureY1, textureX2, half);
@@ -473,7 +470,7 @@ public final class BufferedRenderUtils {
 
     public static void drawProgressBarForeground(
             PoseStack poseStack,
-            MultiBufferSource.BufferSource bufferSource,
+            MultiBufferSource bufferSource,
             Texture texture,
             float x1,
             float y1,
@@ -519,7 +516,7 @@ public final class BufferedRenderUtils {
 
     public static void drawProgressBarBackground(
             PoseStack poseStack,
-            MultiBufferSource.BufferSource bufferSource,
+            MultiBufferSource bufferSource,
             Texture texture,
             float x1,
             float y1,
@@ -549,13 +546,7 @@ public final class BufferedRenderUtils {
     }
 
     public static void createMask(
-            PoseStack poseStack,
-            MultiBufferSource.BufferSource bufferSource,
-            Texture texture,
-            int x1,
-            int y1,
-            int x2,
-            int y2) {
+            PoseStack poseStack, MultiBufferSource bufferSource, Texture texture, int x1, int y1, int x2, int y2) {
         createMask(poseStack, bufferSource, texture, x1, y1, x2, y2, 0, 0, texture.width(), texture.height());
     }
 
@@ -574,7 +565,7 @@ public final class BufferedRenderUtils {
      */
     public static void createMask(
             PoseStack poseStack,
-            MultiBufferSource.BufferSource bufferSource,
+            MultiBufferSource bufferSource,
             Texture texture,
             float x1,
             float y1,

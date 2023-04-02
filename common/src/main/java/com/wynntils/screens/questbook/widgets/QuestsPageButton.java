@@ -18,7 +18,7 @@ public class QuestsPageButton extends WynntilsButton {
     }
 
     @Override
-    public void renderButton(PoseStack poseStack, int mouseX, int mouseY, float partialTick) {
+    public void renderWidget(PoseStack poseStack, int mouseX, int mouseY, float partialTick) {
         RenderUtils.drawTexturedRect(
                 poseStack,
                 Texture.QUESTS_BUTTON.resource(),

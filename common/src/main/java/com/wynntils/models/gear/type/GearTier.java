@@ -11,14 +11,14 @@ import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
 
 public enum GearTier {
-    NORMAL(ChatFormatting.WHITE, -1, 0),
+    NORMAL(ChatFormatting.WHITE, 0, 0.0f),
     UNIQUE(ChatFormatting.YELLOW, 3, 0.5f),
     RARE(ChatFormatting.LIGHT_PURPLE, 8, 1.2f),
     SET(ChatFormatting.GREEN, 8, 1.2f),
-    FABLED(ChatFormatting.RED, 12, 4.5f),
-    LEGENDARY(ChatFormatting.AQUA, 16, 8.0f),
+    LEGENDARY(ChatFormatting.AQUA, 12, 4.5f),
+    FABLED(ChatFormatting.RED, 16, 8.0f),
     MYTHIC(ChatFormatting.DARK_PURPLE, 90, 18.0f),
-    CRAFTED(ChatFormatting.DARK_AQUA, -1, 0);
+    CRAFTED(ChatFormatting.DARK_AQUA, 0, 0.0f);
 
     private final ChatFormatting chatFormatting;
     private final int baseCost;
@@ -30,11 +30,15 @@ public enum GearTier {
         this.costMultiplier = costMultiplier;
     }
 
-    public ChatFormatting getChatFormatting() {
-        return chatFormatting;
+    public static GearTier fromString(String typeStr) {
+        try {
+            return GearTier.valueOf(typeStr.toUpperCase(Locale.ROOT));
+        } catch (IllegalArgumentException e) {
+            return null;
+        }
     }
 
-    public static GearTier fromString(String name) {
+    public static GearTier fromFormattedString(String name) {
         if (name.charAt(0) == '§') {
             return fromChatFormatting(ChatFormatting.getByCode(name.charAt(1)));
         }
@@ -43,13 +47,7 @@ public enum GearTier {
     }
 
     public static GearTier fromComponent(Component component) {
-        String name = component.getString();
-
-        if (name.charAt(0) == '§') {
-            return fromChatFormatting(ChatFormatting.getByCode(name.charAt(1)));
-        }
-
-        return null;
+        return fromFormattedString(component.getString());
     }
 
     public static GearTier fromChatFormatting(ChatFormatting formatting) {
@@ -64,16 +62,20 @@ public enum GearTier {
         return GearTier.values()[damage];
     }
 
+    public ChatFormatting getChatFormatting() {
+        return chatFormatting;
+    }
+
     public int getGearIdentificationCost(int level) {
         return this.baseCost + (int) Math.ceil(level * this.costMultiplier);
     }
 
-    public Component asLore() {
-        return Component.literal(this + " Item").withStyle(chatFormatting);
+    public String getName() {
+        return StringUtils.capitalizeFirst(name().toLowerCase(Locale.ROOT));
     }
 
     @Override
     public String toString() {
-        return StringUtils.capitalizeFirst(name().toLowerCase(Locale.ROOT));
+        return getName();
     }
 }

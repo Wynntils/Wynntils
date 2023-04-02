@@ -29,7 +29,7 @@ public class BasicTexturedButton extends WynntilsButton {
     }
 
     @Override
-    public void renderButton(PoseStack poseStack, int mouseX, int mouseY, float partialTick) {
+    public void renderWidget(PoseStack poseStack, int mouseX, int mouseY, float partialTick) {
         RenderUtils.drawTexturedRect(poseStack, texture, this.getX(), this.getY());
 
         if (this.isHovered) {

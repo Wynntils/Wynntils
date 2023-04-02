@@ -35,7 +35,7 @@ Workspace Setup
 To set up the workspace, just import the project as a gradle project into your IDE. You might have to run `./gradlew --refresh-dependencies` if your IDE does not automatically do it.
 
 ### Building
-To build the mod just call the `buildDependents` and the artifacts should be generated in `fabric/build/libs`, `quilt/build/libs` and `forge/build/libs`. There are a lot of jars there, use the jar which has the respective loader at the end (eg. `wynntils-VERSION-fabric.jar`).
+To build the mod just run `./gradlew buildDependents` and the artifacts should be generated in `fabric/build/libs`, `quilt/build/libs` and `forge/build/libs`. There are a lot of jars there, use the jar which has the respective loader at the end (eg. `wynntils-VERSION-fabric.jar`).
 
 ### Code Formatting
 The code format is checked by Spotless using the Palantir engine. When opening a PR, Spotless checks will be run automatically by GitHub Actions. This bot runs the `spotlessApply` which fixes all formatting errors that it can find. If such errors are found, the bot will then push a commit to your branch with these fixes.
@@ -55,15 +55,19 @@ Using the Hotswap Agent is recommended if you want to do live code editing. Plea
 but bear in mind that the instructions are incorrect (!). Don't "unpack" `hotswap-agent.jar`, instead
 rename the downloaded jar file to `hotswap-agent.jar`. Finally, add `wynntils.hotswap=true` in your personal `gradle.properties` file.
 By default, this is `C:\Users\<your username>\.gradle\gradle.properties` on Windows, or `~/.gradle/gradle.properties` on Linux/MacOS.
+If the file does not exist, you can create it yourself.
 Don't forget to set the correct Java installation for your run configurations, and make sure to use [these](https://i.imgur.com/4VMFCM0.png) settings in IntelliJ IDEA.
 
-### Run Configurations and Authenticating
-Architectury Loom currently only supports VSCode and IntelliJ IDEA. Eclipse if not supported by upstream at the moment. After running Initial Setup, run configurations should appear automatically (note that you might have to restart your IDE after Initial Setup).
+#### Windows
+If you are using Hotswap Agent on Windows and experience the "The process cannot access the file because it is being used by another process" error, you can replace your Architectury transformer runtime as a temporary fix. Check out and build [this pull request](https://github.com/architectury/architectury-transformer/pull/17). Then, find `dev.architectury:architectury-transformer:runtime:5.2.72` and open the folder containing the existing `.jar` in explorer. Copy the `.jar` file from the build output and replace the existing one.
 
-The project has [DevAuth](https://github.com/DJtheRedstoner/DevAuth) set up by default. When you run the development run configurations, you will get a link to log in with your Microsoft account. After first login, you will be able to run the game like you would in a production environment.
+### Run Configurations and Authenticating
+Architectury Loom currently only supports VSCode and IntelliJ IDEA. Eclipse is not supported by upstream at the moment. After running Initial Setup, run configurations should appear automatically (note that you might have to restart your IDE after Initial Setup).
+
+The project has [DevAuth](https://github.com/DJtheRedstoner/DevAuth) set up by default. When you run the development run configurations, you will get a link to log in with your Microsoft account. After first login, you will be able to run the game like you would in a production environment. You can use an alt configuration by specifying `-Ddevauth.account=alt` in your JVM options, or by temporarily changing `.devauth/config.toml`.
 
 ### Quiltflower decompiler
-The project has [LoomQuiltflower](https://github.com/Juuxel/LoomQuiltflower) set-up automatically. This is done so to highly increase the quality of decompiled sources. To use it, run `./gradlew genSourcesQuiltflower`. After it finished, the decompiled Minecraft source will be in `minecraft-project-@common-clientOnly-named-sources.jar` You have to attach these sources in Intellij IDEA for Quiltflower to take effect.
+The project has [LoomQuiltflower](https://github.com/Juuxel/LoomQuiltflower) set-up automatically. This is done so to highly increase the quality of decompiled sources. To use it, run `./gradlew genSourcesWithQuiltflower`. After it finished, the decompiled Minecraft source will be in `minecraft-project-@common-clientOnly-named-sources.jar` You have to attach these sources in Intellij IDEA for Quiltflower to take effect.
 
 License
 ========

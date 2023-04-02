@@ -8,10 +8,11 @@ import com.mojang.blaze3d.platform.GlStateManager;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.wynntils.core.components.Managers;
-import com.wynntils.features.user.map.MapFeature;
+import com.wynntils.features.map.MapFeature;
 import com.wynntils.models.map.PoiLocation;
 import com.wynntils.models.map.pois.CustomPoi;
 import com.wynntils.screens.base.TextboxScreen;
+import com.wynntils.screens.base.WynntilsScreen;
 import com.wynntils.screens.base.widgets.TextInputBoxWidget;
 import com.wynntils.utils.colors.CommonColors;
 import com.wynntils.utils.colors.CustomColor;
@@ -31,7 +32,7 @@ import net.minecraft.client.resources.language.I18n;
 import net.minecraft.network.chat.Component;
 import org.lwjgl.glfw.GLFW;
 
-public final class PoiCreationScreen extends Screen implements TextboxScreen {
+public final class PoiCreationScreen extends WynntilsScreen implements TextboxScreen {
     private static final Pattern COORDINATE_PATTERN = Pattern.compile("[-+]?\\d+");
 
     private static final List<Texture> POI_ICONS = List.of(
@@ -64,14 +65,14 @@ public final class PoiCreationScreen extends Screen implements TextboxScreen {
     private CustomPoi.Visibility selectedVisiblity = CustomPoi.Visibility.DEFAULT;
     private CustomColor colorCache = CommonColors.WHITE;
 
-    private final MainMapScreen oldMapScreen;
+    private final Screen returnScreen;
     private CustomPoi oldPoi;
     private PoiLocation setupLocation;
     private boolean firstSetup;
 
     private PoiCreationScreen(MainMapScreen oldMapScreen) {
         super(Component.literal("Poi Creation Screen"));
-        this.oldMapScreen = oldMapScreen;
+        this.returnScreen = oldMapScreen;
 
         this.firstSetup = true;
     }
@@ -90,6 +91,14 @@ public final class PoiCreationScreen extends Screen implements TextboxScreen {
         this.firstSetup = true;
     }
 
+    public PoiCreationScreen(PoiManagementScreen managementScreen, CustomPoi poi) {
+        super(Component.literal("Poi Edit Screen"));
+        this.returnScreen = managementScreen;
+
+        this.oldPoi = poi;
+        this.firstSetup = true;
+    }
+
     public static Screen create(MainMapScreen oldMapScreen) {
         return new PoiCreationScreen(oldMapScreen);
     }
@@ -102,9 +111,13 @@ public final class PoiCreationScreen extends Screen implements TextboxScreen {
         return new PoiCreationScreen(oldMapScreen, poi);
     }
 
+    public static Screen create(PoiManagementScreen managementScreen, CustomPoi poi) {
+        return new PoiCreationScreen(managementScreen, poi);
+    }
+
     @Override
-    protected void init() {
-        super.init();
+    protected void doInit() {
+        super.doInit();
 
         // region Name
         this.addRenderableWidget(
@@ -283,9 +296,9 @@ public final class PoiCreationScreen extends Screen implements TextboxScreen {
     }
 
     @Override
-    public void render(PoseStack poseStack, int mouseX, int mouseY, float partialTick) {
+    public void doRender(PoseStack poseStack, int mouseX, int mouseY, float partialTick) {
         renderBackground(poseStack);
-        super.render(poseStack, mouseX, mouseY, partialTick);
+        super.doRender(poseStack, mouseX, mouseY, partialTick);
 
         FontRenderer.getInstance()
                 .renderText(
@@ -294,8 +307,8 @@ public final class PoiCreationScreen extends Screen implements TextboxScreen {
                         this.width / 2f - 100,
                         this.height / 2f - 60,
                         CommonColors.WHITE,
-                        HorizontalAlignment.Left,
-                        VerticalAlignment.Top,
+                        HorizontalAlignment.LEFT,
+                        VerticalAlignment.TOP,
                         TextShadow.NORMAL);
 
         FontRenderer.getInstance()
@@ -305,8 +318,8 @@ public final class PoiCreationScreen extends Screen implements TextboxScreen {
                         this.width / 2f - 100,
                         this.height / 2f - 15,
                         CommonColors.WHITE,
-                        HorizontalAlignment.Left,
-                        VerticalAlignment.Top,
+                        HorizontalAlignment.LEFT,
+                        VerticalAlignment.TOP,
                         TextShadow.NORMAL);
         FontRenderer.getInstance()
                 .renderText(
@@ -315,8 +328,8 @@ public final class PoiCreationScreen extends Screen implements TextboxScreen {
                         this.width / 2f - 95,
                         this.height / 2f,
                         CommonColors.WHITE,
-                        HorizontalAlignment.Left,
-                        VerticalAlignment.Top,
+                        HorizontalAlignment.LEFT,
+                        VerticalAlignment.TOP,
                         TextShadow.NORMAL);
         FontRenderer.getInstance()
                 .renderText(
@@ -325,8 +338,8 @@ public final class PoiCreationScreen extends Screen implements TextboxScreen {
                         this.width / 2f - 45,
                         this.height / 2f,
                         CommonColors.WHITE,
-                        HorizontalAlignment.Left,
-                        VerticalAlignment.Top,
+                        HorizontalAlignment.LEFT,
+                        VerticalAlignment.TOP,
                         TextShadow.NORMAL);
         FontRenderer.getInstance()
                 .renderText(
@@ -335,8 +348,8 @@ public final class PoiCreationScreen extends Screen implements TextboxScreen {
                         this.width / 2f + 5,
                         this.height / 2f,
                         CommonColors.WHITE,
-                        HorizontalAlignment.Left,
-                        VerticalAlignment.Top,
+                        HorizontalAlignment.LEFT,
+                        VerticalAlignment.TOP,
                         TextShadow.NORMAL);
 
         FontRenderer.getInstance()
@@ -346,8 +359,8 @@ public final class PoiCreationScreen extends Screen implements TextboxScreen {
                         this.width / 2f - 100,
                         this.height / 2f + 30,
                         CommonColors.WHITE,
-                        HorizontalAlignment.Left,
-                        VerticalAlignment.Top,
+                        HorizontalAlignment.LEFT,
+                        VerticalAlignment.TOP,
                         TextShadow.NORMAL);
 
         renderIcon(poseStack);
@@ -359,8 +372,8 @@ public final class PoiCreationScreen extends Screen implements TextboxScreen {
                         this.width / 2f - 10,
                         this.height / 2f + 30,
                         CommonColors.WHITE,
-                        HorizontalAlignment.Left,
-                        VerticalAlignment.Top,
+                        HorizontalAlignment.LEFT,
+                        VerticalAlignment.TOP,
                         TextShadow.NORMAL);
 
         FontRenderer.getInstance()
@@ -370,8 +383,8 @@ public final class PoiCreationScreen extends Screen implements TextboxScreen {
                         this.width / 2f - 100,
                         this.height / 2f + 80,
                         CommonColors.WHITE,
-                        HorizontalAlignment.Left,
-                        VerticalAlignment.Top,
+                        HorizontalAlignment.LEFT,
+                        VerticalAlignment.TOP,
                         TextShadow.NORMAL);
         FontRenderer.getInstance()
                 .renderAlignedTextInBox(
@@ -383,8 +396,8 @@ public final class PoiCreationScreen extends Screen implements TextboxScreen {
                         this.height / 2f + 110,
                         0,
                         CommonColors.WHITE,
-                        HorizontalAlignment.Center,
-                        VerticalAlignment.Middle,
+                        HorizontalAlignment.CENTER,
+                        VerticalAlignment.MIDDLE,
                         TextShadow.NORMAL);
     }
 
@@ -449,7 +462,7 @@ public final class PoiCreationScreen extends Screen implements TextboxScreen {
 
     @Override
     public void onClose() {
-        McUtils.mc().setScreen(oldMapScreen);
+        McUtils.mc().setScreen(returnScreen);
     }
 
     private void updateSaveStatus() {
@@ -475,10 +488,16 @@ public final class PoiCreationScreen extends Screen implements TextboxScreen {
                 selectedVisiblity);
 
         if (oldPoi != null) {
-            MapFeature.INSTANCE.customPois.remove(oldPoi);
+            List<CustomPoi> pois = Managers.Feature.getFeatureInstance(MapFeature.class)
+                    .customPois
+                    .get();
+            pois.set(pois.indexOf(oldPoi), poi);
+        } else {
+            Managers.Feature.getFeatureInstance(MapFeature.class)
+                    .customPois
+                    .get()
+                    .add(poi);
         }
-
-        MapFeature.INSTANCE.customPois.add(poi);
 
         Managers.Config.saveConfig();
     }

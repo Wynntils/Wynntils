@@ -7,7 +7,6 @@ package com.wynntils.utils.render;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.Tesselator;
 import com.wynntils.mc.mixin.accessors.MinecraftAccessor;
-import com.wynntils.utils.colors.CommonColors;
 import com.wynntils.utils.colors.CustomColor;
 import com.wynntils.utils.mc.ComponentUtils;
 import com.wynntils.utils.mc.McUtils;
@@ -26,7 +25,6 @@ public final class FontRenderer {
     private final Font font;
 
     private static final int NEWLINE_OFFSET = 10;
-    private static final CustomColor SHADOW_COLOR = CommonColors.BLACK;
 
     private FontRenderer() {
         this.font = ((MinecraftAccessor) McUtils.mc()).getFont();
@@ -94,19 +92,18 @@ public final class FontRenderer {
             VerticalAlignment verticalAlignment,
             TextShadow textShadow,
             float textScale) {
-
         float renderX =
                 switch (horizontalAlignment) {
-                    case Left -> x1;
-                    case Center -> (x1 + x2) / 2f;
-                    case Right -> x2;
+                    case LEFT -> x1;
+                    case CENTER -> (x1 + x2) / 2f;
+                    case RIGHT -> x2;
                 };
 
         float renderY =
                 switch (verticalAlignment) {
-                    case Top -> y1;
-                    case Middle -> (y1 + y2) / 2f;
-                    case Bottom -> y2;
+                    case TOP -> y1;
+                    case MIDDLE -> (y1 + y2) / 2f;
+                    case BOTTOM -> y2;
                 };
 
         renderText(
@@ -149,6 +146,57 @@ public final class FontRenderer {
                 1f);
     }
 
+    public void renderAlignedHighlightedTextInBox(
+            PoseStack poseStack,
+            String text,
+            float x1,
+            float x2,
+            float y1,
+            float y2,
+            float maxWidth,
+            CustomColor textColor,
+            CustomColor backgroundColor,
+            HorizontalAlignment horizontalAlignment,
+            VerticalAlignment verticalAlignment) {
+        float renderX =
+                switch (horizontalAlignment) {
+                    case LEFT -> x1;
+                    case CENTER -> (x1 + x2) / 2f;
+                    case RIGHT -> x2;
+                };
+
+        float renderY =
+                switch (verticalAlignment) {
+                    case TOP -> y1;
+                    case MIDDLE -> (y1 + y2) / 2f;
+                    case BOTTOM -> y2;
+                };
+
+        float cursorRenderY =
+                switch (verticalAlignment) {
+                    case TOP -> renderY - 2;
+                    case MIDDLE -> renderY - (font.lineHeight / 2f) - 2;
+                    case BOTTOM -> renderY - font.lineHeight + 2;
+                };
+
+        RenderUtils.drawRect(
+                poseStack, backgroundColor, renderX, cursorRenderY, 0, font.width(text), font.lineHeight + 2);
+
+        renderAlignedTextInBox(
+                poseStack,
+                text,
+                x1,
+                x2,
+                y1,
+                y2,
+                maxWidth,
+                textColor,
+                horizontalAlignment,
+                verticalAlignment,
+                TextShadow.NONE,
+                1f);
+    }
+
     public void renderAlignedTextInBox(
             PoseStack poseStack,
             String text,
@@ -169,7 +217,7 @@ public final class FontRenderer {
                 maxWidth,
                 customColor,
                 horizontalAlignment,
-                VerticalAlignment.Top,
+                VerticalAlignment.TOP,
                 textShadow,
                 1f);
     }
@@ -193,7 +241,7 @@ public final class FontRenderer {
                 y2,
                 maxWidth,
                 customColor,
-                HorizontalAlignment.Left,
+                HorizontalAlignment.LEFT,
                 verticalAlignment,
                 textShadow,
                 1f);
@@ -287,16 +335,16 @@ public final class FontRenderer {
             VerticalAlignment verticalAlignment) {
         float renderX =
                 switch (horizontalAlignment) {
-                    case Left -> x;
-                    case Center -> x + width / 2;
-                    case Right -> x + width;
+                    case LEFT -> x;
+                    case CENTER -> x + width / 2;
+                    case RIGHT -> x + width;
                 };
 
         float renderY =
                 switch (verticalAlignment) {
-                    case Top -> y;
-                    case Middle -> y + (height - calculateRenderHeight(toRender)) / 2;
-                    case Bottom -> y + (height - calculateRenderHeight(toRender));
+                    case TOP -> y;
+                    case MIDDLE -> y + (height - calculateRenderHeight(toRender)) / 2;
+                    case BOTTOM -> y + (height - calculateRenderHeight(toRender));
                 };
 
         renderTexts(poseStack, renderX, renderY, toRender);

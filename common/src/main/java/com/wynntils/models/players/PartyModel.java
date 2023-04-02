@@ -5,15 +5,19 @@
 package com.wynntils.models.players;
 
 import com.wynntils.core.WynntilsMod;
+import com.wynntils.core.components.Handlers;
 import com.wynntils.core.components.Managers;
 import com.wynntils.core.components.Model;
 import com.wynntils.core.components.Models;
-import com.wynntils.handlers.chat.MessageType;
 import com.wynntils.handlers.chat.event.ChatMessageReceivedEvent;
+import com.wynntils.handlers.chat.type.MessageType;
+import com.wynntils.handlers.scoreboard.ScoreboardPart;
 import com.wynntils.mc.event.SetPlayerTeamEvent;
 import com.wynntils.models.players.event.HadesRelationsUpdateEvent;
 import com.wynntils.models.players.event.PartyEvent;
 import com.wynntils.models.players.hades.event.HadesEvent;
+import com.wynntils.models.players.scoreboard.PartyFinderScoreboardPart;
+import com.wynntils.models.players.scoreboard.PartyScoreboardPart;
 import com.wynntils.models.worlds.WorldStateModel;
 import com.wynntils.models.worlds.event.WorldStateEvent;
 import com.wynntils.models.worlds.type.WorldState;
@@ -69,10 +73,16 @@ public final class PartyModel extends Model {
 
     private static final Pattern PARTY_CREATE_SELF = Pattern.compile("§eYou have successfully created a party\\.");
 
-    private static final Pattern PARTY_KICK_OTHER = Pattern.compile("§eYou have kicked the player from the party.\\.");
+    private static final Pattern PARTY_INVITED = Pattern.compile("§eYou have been invited to join (.*)'s? party\\.");
+
+    private static final Pattern PARTY_KICK_OTHER = Pattern.compile("§eYou have kicked the player from the party\\.");
     // endregion
 
+    private static final ScoreboardPart PARTY_SCOREBOARD_PART = new PartyScoreboardPart();
+    private static final ScoreboardPart PARTY_FINDER_SCOREBOARD_PART = new PartyFinderScoreboardPart();
+
     private boolean expectingPartyMessage = false; // Whether the client is expecting a response from "/party list"
+    private long lastPartyRequest = 0; // The last time the client requested party data
     private boolean nextKickHandled = false; // Whether the next "/party kick" sent by the client is being handled
 
     private boolean inParty; // Whether the player is in a party
@@ -84,6 +94,9 @@ public final class PartyModel extends Model {
     public PartyModel(WorldStateModel worldStateModel) {
         super(List.of(worldStateModel));
         resetData();
+
+        Handlers.Scoreboard.addPart(PARTY_SCOREBOARD_PART);
+        Handlers.Scoreboard.addPart(PARTY_FINDER_SCOREBOARD_PART);
     }
 
     @SubscribeEvent
@@ -207,6 +220,15 @@ public final class PartyModel extends Model {
             return true;
         }
 
+        matcher = PARTY_INVITED.matcher(coded);
+        if (matcher.matches()) {
+            String inviter = matcher.group(1);
+            WynntilsMod.info("Player has been invited to party by " + inviter);
+
+            WynntilsMod.postEvent(new PartyEvent.Invited(inviter));
+            return true;
+        }
+
         matcher = PARTY_KICK_OTHER.matcher(coded);
         if (matcher.matches()) {
             WynntilsMod.info("Other player was kicked from player's party");
@@ -308,13 +330,20 @@ public final class PartyModel extends Model {
 
     /**
      * Sends "/party list" to Wynncraft and waits for the response.
+     * (!) Skips if the last request was less than 250ms ago.
      * When the response is received, partyMembers and partyLeader will be updated.
      * After that, the offlineMembers list will be updated from scoreboard data.
      */
     public void requestData() {
         if (McUtils.player() == null) return;
 
+        if (System.currentTimeMillis() - lastPartyRequest < 250) {
+            WynntilsMod.info("Skipping party list request because it was requested less than 250ms ago.");
+            return;
+        }
+
         expectingPartyMessage = true;
+        lastPartyRequest = System.currentTimeMillis();
         McUtils.sendCommand("party list");
         WynntilsMod.info("Requested party list from Wynncraft.");
     }
@@ -394,6 +423,13 @@ public final class PartyModel extends Model {
      */
     public void partyCreate() {
         McUtils.sendCommand("party create");
+    }
+
+    /**
+     * Join another players party
+     */
+    public void partyJoin(String playerName) {
+        McUtils.sendCommand("party join " + playerName);
     }
 
     /**

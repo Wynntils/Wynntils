@@ -38,7 +38,7 @@ public class OverlayPosition {
     }
 
     public OverlayPosition(String string) {
-        Matcher matcher = POSITION_PATTERN.matcher(string.replaceAll(" ", ""));
+        Matcher matcher = POSITION_PATTERN.matcher(string.replace(" ", ""));
 
         if (!matcher.matches()) {
             throw new RuntimeException("Failed to parse OverlayPosition");
@@ -95,27 +95,27 @@ public class OverlayPosition {
                 .filter(anchorSection ->
                         Managers.Overlay.getSection(anchorSection).overlaps(referencePoint.x, referencePoint.y))
                 .findAny()
-                .orElse(AnchorSection.Middle);
+                .orElse(AnchorSection.MIDDLE);
 
         SectionCoordinates sectionCoordinates = Managers.Overlay.getSection(section);
 
         // 2. Calculate the best alignment inside the section
-        HorizontalAlignment horizontalAlignment = HorizontalAlignment.Right;
+        HorizontalAlignment horizontalAlignment = HorizontalAlignment.RIGHT;
 
         float horizontalChunkWidth = (sectionCoordinates.x2() - sectionCoordinates.x1()) / 3f;
         if (referencePoint.x < sectionCoordinates.x1() + horizontalChunkWidth) {
-            horizontalAlignment = HorizontalAlignment.Left;
+            horizontalAlignment = HorizontalAlignment.LEFT;
         } else if (referencePoint.x < sectionCoordinates.x1() + horizontalChunkWidth * 2) {
-            horizontalAlignment = HorizontalAlignment.Center;
+            horizontalAlignment = HorizontalAlignment.CENTER;
         }
 
-        VerticalAlignment verticalAlignment = VerticalAlignment.Bottom;
+        VerticalAlignment verticalAlignment = VerticalAlignment.BOTTOM;
 
         float verticalChunkHeight = (sectionCoordinates.y2() - sectionCoordinates.y1()) / 3f;
         if (referencePoint.y < sectionCoordinates.y1() + verticalChunkHeight) {
-            verticalAlignment = VerticalAlignment.Top;
+            verticalAlignment = VerticalAlignment.TOP;
         } else if (referencePoint.y < sectionCoordinates.y1() + verticalChunkHeight * 2) {
-            verticalAlignment = VerticalAlignment.Middle;
+            verticalAlignment = VerticalAlignment.MIDDLE;
         }
 
         // 3. Calculate render positions for new alignment
@@ -135,15 +135,15 @@ public class OverlayPosition {
     }
 
     public enum AnchorSection {
-        TopLeft(0),
-        TopMiddle(1),
-        TopRight(2),
-        MiddleLeft(3),
-        Middle(4),
-        MiddleRight(5),
-        BottomLeft(6),
-        BottomMiddle(7),
-        BottomRight(8);
+        TOP_LEFT(0),
+        TOP_MIDDLE(1),
+        TOP_RIGHT(2),
+        MIDDLE_LEFT(3),
+        MIDDLE(4),
+        MIDDLE_RIGHT(5),
+        BOTTOM_LEFT(6),
+        BOTTOM_MIDDLE(7),
+        BOTTOM_RIGHT(8);
 
         private final int index;
 

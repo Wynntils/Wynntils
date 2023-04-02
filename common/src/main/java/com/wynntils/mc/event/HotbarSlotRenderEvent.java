@@ -4,22 +4,29 @@
  */
 package com.wynntils.mc.event;
 
+import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.eventbus.api.Event;
 
 public abstract class HotbarSlotRenderEvent extends Event {
-    private final ItemStack stack;
+    private final PoseStack poseStack;
+    private final ItemStack itemStack;
     private final int x;
     private final int y;
 
-    protected HotbarSlotRenderEvent(ItemStack stack, int x, int y) {
-        this.stack = stack;
+    protected HotbarSlotRenderEvent(PoseStack poseStack, ItemStack itemStack, int x, int y) {
+        this.poseStack = poseStack;
+        this.itemStack = itemStack;
         this.x = x;
         this.y = y;
     }
 
-    public ItemStack getStack() {
-        return stack;
+    public PoseStack getPoseStack() {
+        return poseStack;
+    }
+
+    public ItemStack getItemStack() {
+        return itemStack;
     }
 
     public int getX() {
@@ -31,14 +38,20 @@ public abstract class HotbarSlotRenderEvent extends Event {
     }
 
     public static class Pre extends HotbarSlotRenderEvent {
-        public Pre(ItemStack stack, int x, int y) {
-            super(stack, x, y);
+        public Pre(PoseStack poseStack, ItemStack itemStack, int x, int y) {
+            super(poseStack, itemStack, x, y);
+        }
+    }
+
+    public static class CountPre extends HotbarSlotRenderEvent {
+        public CountPre(PoseStack poseStack, ItemStack itemStack, int x, int y) {
+            super(poseStack, itemStack, x, y);
         }
     }
 
     public static class Post extends HotbarSlotRenderEvent {
-        public Post(ItemStack stack, int x, int y) {
-            super(stack, x, y);
+        public Post(PoseStack poseStack, ItemStack itemStack, int x, int y) {
+            super(poseStack, itemStack, x, y);
         }
     }
 }

@@ -5,7 +5,7 @@
 package com.wynntils.core.mod;
 
 import com.wynntils.core.components.Manager;
-import com.wynntils.mc.event.TickEvent;
+import com.wynntils.mc.event.TickAlwaysEvent;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
@@ -28,7 +28,7 @@ public final class TickSchedulerManager extends Manager {
     }
 
     @SubscribeEvent
-    public void onTick(TickEvent e) {
+    public void onTick(TickAlwaysEvent e) {
         Iterator<Map.Entry<Runnable, Integer>> it = tasks.entrySet().iterator();
         while (it.hasNext()) {
             Map.Entry<Runnable, Integer> entry = it.next();

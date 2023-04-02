@@ -9,7 +9,7 @@ import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.screens.inventory.tooltip.ClientTooltipComponent;
 import net.minecraft.network.chat.Component;
 
-public class TooltipUtils {
+public final class TooltipUtils {
     public static int getToolTipWidth(List<ClientTooltipComponent> lines, Font font) {
         return lines.stream()
                 .map(clientTooltipComponent -> clientTooltipComponent.getWidth(font))

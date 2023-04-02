@@ -4,6 +4,7 @@
  */
 package com.wynntils.handlers.actionbar;
 
+import com.wynntils.handlers.actionbar.type.ActionBarPosition;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 

@@ -4,26 +4,32 @@
  */
 package com.wynntils.models.items.items.game;
 
-import com.wynntils.models.ingredients.profile.IngredientProfile;
+import com.wynntils.models.ingredients.type.IngredientInfo;
+import com.wynntils.models.items.properties.LeveledItemProperty;
 import com.wynntils.models.items.properties.QualityTierItemProperty;
 
-public class IngredientItem extends GameItem implements QualityTierItemProperty {
-    private final IngredientProfile ingredientProfile;
+public class IngredientItem extends GameItem implements QualityTierItemProperty, LeveledItemProperty {
+    private final IngredientInfo ingredientInfo;
 
-    public IngredientItem(IngredientProfile ingredientProfile) {
-        this.ingredientProfile = ingredientProfile;
+    public IngredientItem(IngredientInfo ingredientInfo) {
+        this.ingredientInfo = ingredientInfo;
     }
 
-    public IngredientProfile getIngredientProfile() {
-        return ingredientProfile;
+    public IngredientInfo getIngredientInfo() {
+        return ingredientInfo;
     }
 
     public int getQualityTier() {
-        return ingredientProfile.getTier().getTierInt();
+        return ingredientInfo.tier();
+    }
+
+    @Override
+    public int getLevel() {
+        return ingredientInfo.level();
     }
 
     @Override
     public String toString() {
-        return "IngredientItem{" + "ingredientProfile=" + ingredientProfile + '}';
+        return "IngredientItem{" + "ingredientInfo=" + ingredientInfo + '}';
     }
 }

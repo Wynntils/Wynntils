@@ -33,7 +33,7 @@ public class GeneralSettingsButton extends WynntilsButton {
     }
 
     @Override
-    public void renderButton(PoseStack poseStack, int mouseX, int mouseY, float partialTick) {
+    public void renderWidget(PoseStack poseStack, int mouseX, int mouseY, float partialTick) {
         RenderUtils.drawRoundedRectWithBorder(
                 poseStack,
                 CommonColors.BLACK,
@@ -56,9 +56,9 @@ public class GeneralSettingsButton extends WynntilsButton {
                         this.getY(),
                         this.getY() + this.height,
                         0,
-                        isHovered ? CommonColors.YELLOW : CommonColors.WHITE,
-                        HorizontalAlignment.Center,
-                        VerticalAlignment.Middle,
+                        getTextColor(isHovered),
+                        HorizontalAlignment.CENTER,
+                        VerticalAlignment.MIDDLE,
                         TextShadow.OUTLINE);
 
         if (isHovered) {
@@ -71,6 +71,10 @@ public class GeneralSettingsButton extends WynntilsButton {
                     FontRenderer.getInstance().getFont(),
                     true);
         }
+    }
+
+    protected CustomColor getTextColor(boolean isHovered) {
+        return isHovered ? CommonColors.YELLOW : CommonColors.WHITE;
     }
 
     @Override

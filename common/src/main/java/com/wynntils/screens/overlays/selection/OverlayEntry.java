@@ -78,8 +78,8 @@ public class OverlayEntry extends ContainerObjectSelectionList.Entry<OverlayEntr
                         (OverlayList.getItemHeight() - renderHeightForOverlayName / 2f) / 2f - PADDING / 2f,
                         width - PADDING,
                         CommonColors.WHITE,
-                        HorizontalAlignment.Left,
-                        VerticalAlignment.Top,
+                        HorizontalAlignment.LEFT,
+                        VerticalAlignment.TOP,
                         TextShadow.NORMAL);
 
         poseStack.popPose();
@@ -112,16 +112,16 @@ public class OverlayEntry extends ContainerObjectSelectionList.Entry<OverlayEntr
 
         // right click
         if (button == 1) {
-            Managers.Config.getConfigHolders().stream()
+            Managers.Config.getConfigHolders()
                     .filter(configHolder -> configHolder.getParent() == overlay
                             && configHolder.getFieldName().equals("userEnabled"))
                     .findFirst()
-                    .ifPresent(configHolder -> configHolder.setValue(!overlay.isEnabled()));
+                    .ifPresent(configHolder -> configHolder.setValue(!overlay.shouldBeEnabled()));
             Managers.Config.saveConfig();
             return true;
         }
 
-        if (!overlay.isEnabled()) return false;
+        if (!overlay.shouldBeEnabled()) return false;
 
         McUtils.mc().setScreen(OverlayManagementScreen.create(this.overlay));
         return true;

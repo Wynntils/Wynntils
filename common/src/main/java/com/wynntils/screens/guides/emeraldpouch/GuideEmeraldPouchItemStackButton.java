@@ -38,24 +38,22 @@ public class GuideEmeraldPouchItemStackButton extends WynntilsButton {
     }
 
     @Override
-    public void renderButton(PoseStack poseStack, int mouseX, int mouseY, float partialTick) {
+    public void renderWidget(PoseStack poseStack, int mouseX, int mouseY, float partialTick) {
         CustomColor color = CustomColor.fromChatFormatting(ChatFormatting.GREEN);
 
-        float actualX = screen.getTranslationX() + getX();
-        float actualY = screen.getTranslationY() + getY();
-
         RenderUtils.drawTexturedRectWithColor(
+                poseStack,
                 Texture.HIGHLIGHT.resource(),
                 color.withAlpha(1f),
-                actualX - 1,
-                actualY - 1,
+                getX() - 1,
+                getY() - 1,
                 0,
                 18,
                 18,
                 Texture.HIGHLIGHT.width(),
                 Texture.HIGHLIGHT.height());
 
-        RenderUtils.renderGuiItem(itemStack, (int) (actualX), (int) (actualY), 1f);
+        RenderUtils.renderItem(screen.getTranslationX(), screen.getTranslationY(), itemStack, getX(), getY());
 
         poseStack.pushPose();
         poseStack.translate(0, 0, 200);
@@ -68,7 +66,7 @@ public class GuideEmeraldPouchItemStackButton extends WynntilsButton {
                         getY() + 8,
                         0,
                         color,
-                        HorizontalAlignment.Center,
+                        HorizontalAlignment.CENTER,
                         TextShadow.OUTLINE);
         poseStack.popPose();
 

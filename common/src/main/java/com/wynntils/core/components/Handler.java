@@ -11,6 +11,11 @@ package com.wynntils.core.components;
  * clear 1-to-1 relationship between Minecraft components and models.
  * Handlers are created as singletons in the {@link Handlers} holding class.
  */
-public abstract class Handler {
+public abstract class Handler extends CoreComponent {
     protected Handler() {}
+
+    @Override
+    protected String getComponentType() {
+        return "Handler";
+    }
 }

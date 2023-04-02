@@ -9,7 +9,6 @@ import com.wynntils.core.components.Handler;
 import com.wynntils.handlers.bossbar.event.BossBarAddedEvent;
 import com.wynntils.mc.event.BossHealthUpdateEvent;
 import com.wynntils.utils.mc.ComponentUtils;
-import com.wynntils.utils.mc.McUtils;
 import com.wynntils.utils.type.Pair;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -31,10 +30,6 @@ public class BossBarHandler extends Handler {
 
     public void registerBar(TrackedBar trackedBar) {
         knownBars.add(trackedBar);
-    }
-
-    public void unregisterBar(TrackedBar trackedBar) {
-        knownBars.remove(trackedBar);
     }
 
     // FixPacketBugsFeature gets in the way if receiveCanceled is not set
@@ -71,8 +66,6 @@ public class BossBarHandler extends Handler {
             TrackedBar trackedBar = trackedBarOpt.get().a();
             Matcher matcher = trackedBarOpt.get().b();
 
-            event.setCanceled(true);
-
             LerpingBossEvent bossEvent =
                     new LerpingBossEvent(id, name, progress, color, overlay, darkenScreen, playMusic, createWorldFog);
             trackedBar.setEvent(bossEvent);
@@ -83,9 +76,9 @@ public class BossBarHandler extends Handler {
 
             if (barAddEvent.isCanceled()) {
                 trackedBar.setRendered(false);
+                event.setCanceled(true);
             } else {
                 trackedBar.setRendered(true);
-                McUtils.mc().gui.getBossOverlay().events.put(id, bossEvent);
             }
 
             trackedBar.onUpdateName(matcher);

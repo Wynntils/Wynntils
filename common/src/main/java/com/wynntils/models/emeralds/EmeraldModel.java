@@ -9,8 +9,8 @@ import com.wynntils.core.components.Models;
 import com.wynntils.mc.event.ContainerSetContentEvent;
 import com.wynntils.mc.event.MenuEvent;
 import com.wynntils.mc.event.SetSlotEvent;
+import com.wynntils.models.emeralds.type.EmeraldUnits;
 import com.wynntils.models.items.ItemModel;
-import com.wynntils.models.items.WynnItem;
 import com.wynntils.models.items.items.game.EmeraldPouchItem;
 import com.wynntils.models.items.properties.EmeraldValuedItemProperty;
 import com.wynntils.models.worlds.event.WorldStateEvent;
@@ -46,6 +46,26 @@ public final class EmeraldModel extends Model {
         super(List.of(itemModel));
     }
 
+    public String getFormattedString(int emeralds, boolean appendZeros) {
+        StringBuilder builder = new StringBuilder();
+
+        int[] emeraldAmounts = emeraldsPerUnit(emeralds);
+
+        for (int i = emeraldAmounts.length - 1; i >= 0; i--) {
+            if (emeraldAmounts[i] == 0 && !appendZeros) continue;
+
+            builder.append(emeraldAmounts[i])
+                    .append(EmeraldUnits.values()[i].getSymbol())
+                    .append(" ");
+        }
+
+        return builder.toString().trim();
+    }
+
+    public int[] emeraldsPerUnit(int emeralds) {
+        return new int[] {emeralds % 64, (emeralds / 64) % 64, emeralds / 4096};
+    }
+
     public boolean isEmeraldPouch(ItemStack itemStack) {
         Optional<EmeraldPouchItem> itemOpt = Models.Item.asWynnItem(itemStack, EmeraldPouchItem.class);
         return itemOpt.isPresent();
@@ -59,11 +79,11 @@ public final class EmeraldModel extends Model {
         return containerEmeralds;
     }
 
-    public String convertEmeraldPrice(String input) {
-        Matcher rawMatcher = RAW_PRICE_PATTERN.matcher(input);
+    public String convertEmeraldPrice(String inputStr) {
+        Matcher rawMatcher = RAW_PRICE_PATTERN.matcher(inputStr);
         if (rawMatcher.matches()) return "";
 
-        input = input.toLowerCase(Locale.ROOT);
+        String input = inputStr.toLowerCase(Locale.ROOT);
         long emeralds = 0;
 
         try {
@@ -135,7 +155,7 @@ public final class EmeraldModel extends Model {
         // Subtract the outgoing object from our balance
         adjustBalance(event.getContainer().getItem(event.getSlot()), -1, isInventory);
         // And add the incoming value
-        adjustBalance(event.getItem(), 1, isInventory);
+        adjustBalance(event.getItemStack(), 1, isInventory);
     }
 
     @SubscribeEvent
@@ -184,11 +204,11 @@ public final class EmeraldModel extends Model {
     }
 
     private void adjustBalance(ItemStack itemStack, int multiplier, boolean isInventory) {
-        Optional<WynnItem> wynnItemOpt = Models.Item.getWynnItem(itemStack);
-        if (wynnItemOpt.isEmpty()) return;
-        if (!(wynnItemOpt.get() instanceof EmeraldValuedItemProperty valuedItem)) return;
+        Optional<EmeraldValuedItemProperty> valuedItemOpt =
+                Models.Item.asWynnItemPropery(itemStack, EmeraldValuedItemProperty.class);
+        if (valuedItemOpt.isEmpty()) return;
 
-        int adjustValue = valuedItem.getEmeraldValue() * multiplier;
+        int adjustValue = valuedItemOpt.get().getEmeraldValue() * multiplier;
         if (isInventory) {
             inventoryEmeralds += adjustValue;
         } else {

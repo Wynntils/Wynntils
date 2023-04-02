@@ -8,9 +8,10 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.wynntils.core.WynntilsMod;
+import com.wynntils.core.components.Managers;
 import com.wynntils.core.components.Model;
 import com.wynntils.core.components.Models;
-import com.wynntils.features.statemanaged.LootrunFeature;
+import com.wynntils.features.LootrunFeature;
 import com.wynntils.mc.event.PlayerInteractEvent;
 import com.wynntils.mc.event.RenderLevelEvent;
 import com.wynntils.mc.event.ScreenOpenedEvent;
@@ -24,14 +25,17 @@ import com.wynntils.models.lootruns.type.LootrunState;
 import com.wynntils.models.lootruns.type.LootrunUndoResult;
 import com.wynntils.utils.FileUtils;
 import com.wynntils.utils.mc.McUtils;
+import com.wynntils.utils.mc.PosUtils;
 import java.io.File;
 import java.io.FileReader;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
+import net.minecraft.ChatFormatting;
 import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.Position;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.level.block.Blocks;
@@ -42,7 +46,7 @@ import net.minecraftforge.eventbus.api.SubscribeEvent;
 public final class LootrunModel extends Model {
     public static final File LOOTRUNS = WynntilsMod.getModStorageDir("lootruns");
 
-    private static List<LootrunInstance> lootrunInstanceCache = new ArrayList<>();
+    private List<LootrunInstance> lootrunInstanceCache = new ArrayList<>();
 
     private LootrunUncompiled uncompiled = null;
 
@@ -105,7 +109,6 @@ public final class LootrunModel extends Model {
     }
 
     public void clearCurrentLootrun() {
-        LootrunFeature.INSTANCE.disable();
         state = LootrunState.DISABLED;
         lootrun = null;
         uncompiled = null;
@@ -128,7 +131,6 @@ public final class LootrunModel extends Model {
         state = LootrunState.RECORDING;
         recording = new LootrunUncompiled(new LootrunPath(new ArrayList<>()), new HashSet<>(), new ArrayList<>(), null);
         recordingInformation = new RecordingInformation();
-        LootrunFeature.INSTANCE.enable();
     }
 
     public List<LootrunInstance> getLootruns() {
@@ -156,7 +158,7 @@ public final class LootrunModel extends Model {
         WynntilsMod.postEvent(new LootrunCacheRefreshEvent());
     }
 
-    public boolean loadFile(String fileName) {
+    private boolean loadFile(String fileName) {
         String lootrunFileName = fileName + ".json";
         File lootrunFile = new File(LOOTRUNS, lootrunFileName);
         if (lootrunFile.exists()) {
@@ -166,7 +168,6 @@ public final class LootrunModel extends Model {
                 uncompiled = LootrunFileParser.readJson(lootrunFile, json);
                 lootrun = LootrunCompiler.compile(uncompiled, false);
                 state = LootrunState.LOADED;
-                LootrunFeature.INSTANCE.enable();
                 file.close();
                 return true;
             } catch (Exception e) {
@@ -175,6 +176,20 @@ public final class LootrunModel extends Model {
             }
         }
         return false;
+    }
+
+    public void tryLoadLootrun(String fileName) {
+        if (loadFile(fileName)) {
+            Position startingPoint = Models.Lootrun.getStartingPoint();
+
+            BlockPos start = PosUtils.newBlockPos(startingPoint);
+            McUtils.sendMessageToClient(Component.translatable(
+                            "feature.wynntils.lootrunUtils.lootrunStart", start.getX(), start.getY(), start.getZ())
+                    .withStyle(ChatFormatting.GREEN));
+        } else {
+            McUtils.sendMessageToClient(
+                    Component.translatable("feature.wynntils.lootrunUtils.lootrunCouldNotBeLoaded"));
+        }
     }
 
     public LootrunUndoResult tryUndo() {
@@ -228,7 +243,7 @@ public final class LootrunModel extends Model {
         List<LootrunNote> notes = current.notes();
         for (int i = 0; i < notes.size(); i++) {
             LootrunNote note = notes.get(i);
-            if (pos.equals(new BlockPos(note.position()))) {
+            if (pos.equals(PosUtils.newBlockPos(note.position()))) {
                 return notes.remove(i);
             }
         }
@@ -242,7 +257,7 @@ public final class LootrunModel extends Model {
         return activeLootrun.notes();
     }
 
-    public Vec3 getStartingPoint() {
+    public Position getStartingPoint() {
         LootrunUncompiled activeLootrun = getActiveLootrun();
         if (activeLootrun == null) return null;
 
@@ -258,15 +273,27 @@ public final class LootrunModel extends Model {
         File file = new File(LOOTRUNS, name + ".json");
         uncompiled = new LootrunUncompiled(activeLootrun.path(), activeLootrun.chests(), activeLootrun.notes(), file);
 
-        return LootrunFileParser.writeJson(activeLootrun, file, name);
+        return LootrunFileParser.writeJson(activeLootrun, file);
     }
 
     @SubscribeEvent
     public void onRenderLastLevel(RenderLevelEvent.Post event) {
         PoseStack poseStack = event.getPoseStack();
 
-        LootrunRenderer.renderLootrun(poseStack, lootrun, LootrunFeature.INSTANCE.activePathColor.asInt());
-        LootrunRenderer.renderLootrun(poseStack, recordingCompiled, LootrunFeature.INSTANCE.recordingPathColor.asInt());
+        LootrunRenderer.renderLootrun(
+                poseStack,
+                lootrun,
+                Managers.Feature.getFeatureInstance(LootrunFeature.class)
+                        .activePathColor
+                        .get()
+                        .asInt());
+        LootrunRenderer.renderLootrun(
+                poseStack,
+                recordingCompiled,
+                Managers.Feature.getFeatureInstance(LootrunFeature.class)
+                        .recordingPathColor
+                        .get()
+                        .asInt());
     }
 
     @SubscribeEvent

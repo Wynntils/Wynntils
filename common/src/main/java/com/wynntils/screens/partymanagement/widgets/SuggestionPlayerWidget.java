@@ -16,43 +16,77 @@ import com.wynntils.utils.render.type.VerticalAlignment;
 import net.minecraft.client.gui.components.AbstractWidget;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.narration.NarrationElementOutput;
+import net.minecraft.client.multiplayer.PlayerInfo;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 
 public class SuggestionPlayerWidget extends AbstractWidget {
-
     private final String playerName;
     private final Button inviteButton;
+    private final float gridDivisions;
 
-    public SuggestionPlayerWidget(int x, int y, int width, int height, String playerName) {
-        super(x, y, width, height, Component.literal(playerName));
+    public SuggestionPlayerWidget(float x, float y, int width, int height, String playerName, float gridDivisions) {
+        super((int) x, (int) y, width, height, Component.literal(playerName));
         this.playerName = playerName;
+        this.gridDivisions = gridDivisions;
         this.inviteButton = new Button.Builder(
                         Component.translatable("screens.wynntils.partyManagementGui.invite"),
                         (button) -> Models.Party.partyInvite(playerName))
-                .pos(this.getX() + 130, this.getY())
-                .size(40, 20)
+                .pos((int) (this.getX() + (this.width / this.gridDivisions * 20)) + 1, this.getY())
+                .size(
+                        (int) ((this.getX() + (this.width / this.gridDivisions * 24))
+                                        - (this.getX() + (this.width / this.gridDivisions * 20)))
+                                - 2,
+                        20)
                 .build();
     }
 
     @Override
-    public void render(PoseStack poseStack, int mouseX, int mouseY, float partialTick) {
+    public void renderButton(PoseStack poseStack, int mouseX, int mouseY, float partialTick) {
+        PlayerInfo playerInfo =
+                McUtils.mc().getConnection().getPlayerInfo(playerName); // Disconnected players will just be steves
         ResourceLocation skin =
-                McUtils.mc().getConnection().getPlayerInfo(playerName).getSkinLocation();
+                (playerInfo == null) ? new ResourceLocation("textures/entity/steve.png") : playerInfo.getSkinLocation();
         // head rendering
-        RenderUtils.drawTexturedRect(poseStack, skin, this.getX(), this.getY(), 8, 16, 16, 8, 8, 8, 8, 64, 64);
-        RenderUtils.drawTexturedRect(poseStack, skin, this.getX(), this.getY(), 8, 16, 16, 40, 8, 8, 8, 64, 64);
+        RenderUtils.drawTexturedRect(
+                poseStack,
+                skin,
+                this.getX() + (this.width / gridDivisions) - 8,
+                this.getY() + (this.height / 2) - 8,
+                8,
+                16,
+                16,
+                8,
+                8,
+                8,
+                8,
+                64,
+                64);
+        RenderUtils.drawTexturedRect(
+                poseStack,
+                skin,
+                this.getX() + (this.width / gridDivisions) - 8,
+                this.getY() + (this.height / 2) - 8,
+                8,
+                16,
+                16,
+                40,
+                8,
+                8,
+                8,
+                64,
+                64);
 
         // name rendering
         FontRenderer.getInstance()
                 .renderText(
                         poseStack,
                         playerName,
-                        this.getX() + 36,
-                        this.getY() + 8,
+                        this.getX() + (this.width / gridDivisions * 3),
+                        this.getY() + this.height / 2,
                         CommonColors.GREEN,
-                        HorizontalAlignment.Left,
-                        VerticalAlignment.Middle,
+                        HorizontalAlignment.LEFT,
+                        VerticalAlignment.MIDDLE,
                         TextShadow.NORMAL);
 
         if (Models.Party.getPartyMembers().contains(playerName)) return;
@@ -65,7 +99,5 @@ public class SuggestionPlayerWidget extends AbstractWidget {
     }
 
     @Override
-    protected void updateWidgetNarration(NarrationElementOutput narrationElementOutput) {
-        // nothing
-    }
+    protected void updateWidgetNarration(NarrationElementOutput narrationElementOutput) {}
 }

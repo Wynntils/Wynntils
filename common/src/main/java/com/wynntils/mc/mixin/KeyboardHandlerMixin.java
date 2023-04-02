@@ -4,7 +4,8 @@
  */
 package com.wynntils.mc.mixin;
 
-import com.wynntils.mc.EventFactory;
+import com.wynntils.core.events.MixinHelper;
+import com.wynntils.mc.event.KeyInputEvent;
 import net.minecraft.client.KeyboardHandler;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
@@ -15,7 +16,9 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 public abstract class KeyboardHandlerMixin {
     @Inject(method = "keyPress(JIIII)V", at = @At("HEAD"), cancellable = true)
     private void keyPressPre(long windowPointer, int key, int scanCode, int action, int modifiers, CallbackInfo ci) {
-        if (EventFactory.onKeyInput(key, scanCode, action, modifiers).isCanceled()) {
+        KeyInputEvent event = new KeyInputEvent(key, scanCode, action, modifiers);
+        MixinHelper.post(event);
+        if (event.isCanceled()) {
             ci.cancel();
         }
     }

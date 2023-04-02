@@ -38,22 +38,32 @@ public class ConfigButton extends WynntilsButton {
         super(x, y, width, height, Component.literal(configHolder.getJsonName()));
         this.settingsScreen = settingsScreen;
         this.configHolder = configHolder;
-        this.resetButton = new GeneralSettingsButton(
-                this.getX() + this.width - 40,
-                this.getY() + 13,
-                35,
-                12,
-                Component.translatable("screens.wynntils.settingsScreen.reset.name"),
-                () -> {
-                    configHolder.reset();
-                    this.configOptionElement = getWidgetFromConfigHolder(configHolder);
-                },
-                List.of(Component.translatable("screens.wynntils.settingsScreen.reset.description")));
+        this.resetButton =
+                new GeneralSettingsButton(
+                        this.getX() + this.width - 40,
+                        this.getY() + 13,
+                        35,
+                        12,
+                        Component.translatable("screens.wynntils.settingsScreen.reset.name"),
+                        () -> {
+                            if (!configHolder.valueChanged()) return;
+
+                            configHolder.reset();
+                            this.configOptionElement = getWidgetFromConfigHolder(configHolder);
+                        },
+                        List.of(Component.translatable("screens.wynntils.settingsScreen.reset.description"))) {
+                    @Override
+                    protected CustomColor getTextColor(boolean isHovered) {
+                        if (!configHolder.valueChanged()) return CommonColors.GRAY;
+
+                        return super.getTextColor(isHovered);
+                    }
+                };
         this.configOptionElement = getWidgetFromConfigHolder(configHolder);
     }
 
     @Override
-    public void renderButton(PoseStack poseStack, int mouseX, int mouseY, float partialTick) {
+    public void renderWidget(PoseStack poseStack, int mouseX, int mouseY, float partialTick) {
         resetButton.render(poseStack, mouseX, mouseY, partialTick);
 
         String displayName = configHolder.getDisplayName();
@@ -68,11 +78,11 @@ public class ConfigButton extends WynntilsButton {
                 .renderText(
                         poseStack,
                         displayName,
-                        (this.getX() + 3) / 0.8f,
+                        getRenderX() / 0.8f,
                         (this.getY() + 3) / 0.8f,
                         CommonColors.BLACK,
-                        HorizontalAlignment.Left,
-                        VerticalAlignment.Top,
+                        HorizontalAlignment.LEFT,
+                        VerticalAlignment.TOP,
                         TextShadow.NONE);
         poseStack.popPose();
 
@@ -87,8 +97,8 @@ public class ConfigButton extends WynntilsButton {
                 1);
 
         poseStack.pushPose();
-        final int renderX = this.getX() + 3;
-        final int renderY = this.getY() + 12;
+        final int renderX = getRenderX();
+        final int renderY = getRenderY();
         poseStack.translate(renderX, renderY, 0);
         configOptionElement.renderConfigAppropriateButton(
                 poseStack, this.width - 45, 30, mouseX - renderX, mouseY - renderY, partialTick);
@@ -114,8 +124,29 @@ public class ConfigButton extends WynntilsButton {
 
     @Override
     public boolean mouseClicked(double mouseX, double mouseY, int button) {
+        double actualMouseX = mouseX - getRenderX();
+        double actualMouseY = mouseY - getRenderY();
+
         return resetButton.mouseClicked(mouseX, mouseY, button)
-                || configOptionElement.mouseClicked(mouseX, mouseY, button);
+                || configOptionElement.mouseClicked(actualMouseX, actualMouseY, button);
+    }
+
+    @Override
+    public boolean mouseDragged(double mouseX, double mouseY, int button, double deltaX, double deltaY) {
+        double actualMouseX = mouseX - getRenderX();
+        double actualMouseY = mouseY - getRenderY();
+
+        return configOptionElement.mouseDragged(actualMouseX, actualMouseY, button, deltaX, deltaY)
+                || super.mouseDragged(actualMouseX, actualMouseY, button, deltaX, deltaY);
+    }
+
+    @Override
+    public boolean mouseReleased(double mouseX, double mouseY, int button) {
+        double actualMouseX = mouseX - getRenderX();
+        double actualMouseY = mouseY - getRenderY();
+
+        return configOptionElement.mouseReleased(actualMouseX, actualMouseY, button)
+                || super.mouseReleased(actualMouseX, actualMouseY, button);
     }
 
     @Override
@@ -123,10 +154,18 @@ public class ConfigButton extends WynntilsButton {
         // noop
     }
 
+    private int getRenderY() {
+        return this.getY() + 12;
+    }
+
+    private int getRenderX() {
+        return this.getX() + 3;
+    }
+
     private ConfigOptionElement getWidgetFromConfigHolder(ConfigHolder configOption) {
         if (configOption.getType().equals(Boolean.class)) {
             return new BooleanConfigOptionElement(configOption);
-        } else if (configOption.getClassOfConfigField().isEnum()) {
+        } else if (configOption.isEnum()) {
             return new EnumConfigOptionElement(configOption);
         } else if (configOption.getType().equals(CustomColor.class)) {
             return new CustomColorConfigOptionElement(configOption, settingsScreen);

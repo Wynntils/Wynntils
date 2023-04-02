@@ -16,7 +16,7 @@ import java.util.regex.Pattern;
 import net.minecraft.world.item.ItemStack;
 
 public final class TrinketAnnotator implements ItemAnnotator {
-    private static final Pattern TRINKET_PATTERN = Pattern.compile("^§[5abcdef]([^\\[]*)( \\[(\\d+)/(\\d+)\\])?$");
+    private static final Pattern TRINKET_PATTERN = Pattern.compile("^§[5abcdef](.*?)(?: \\[(\\d+)/(\\d+)\\])?$");
     private static final Pattern TRINKET_LORE_PATTERN = Pattern.compile("^§7Right-Click to (use|toggle)$");
 
     @Override
@@ -30,10 +30,10 @@ public final class TrinketAnnotator implements ItemAnnotator {
             if (!loreMatcher.matches()) return null;
 
             String trinketName = matcher.group(1);
-            GearTier gearTier = GearTier.fromString(name);
-            if (matcher.group(3) != null) {
+            GearTier gearTier = GearTier.fromFormattedString(name);
+            if (matcher.group(2) != null) {
                 CappedValue uses =
-                        new CappedValue(Integer.parseInt(matcher.group(3)), Integer.parseInt(matcher.group(4)));
+                        new CappedValue(Integer.parseInt(matcher.group(2)), Integer.parseInt(matcher.group(3)));
                 return new TrinketItem(trinketName, gearTier, uses);
             } else {
                 return new TrinketItem(trinketName, gearTier);

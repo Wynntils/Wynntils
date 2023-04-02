@@ -29,8 +29,8 @@ import java.util.Objects;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.resources.language.I18n;
+import net.minecraft.core.Position;
 import net.minecraft.network.chat.Component;
-import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 
 public final class WynntilsLootrunsScreen extends WynntilsListScreen<LootrunInstance, LootrunButton> {
@@ -146,7 +146,7 @@ public final class WynntilsLootrunsScreen extends WynntilsListScreen<LootrunInst
 
         renderVersion(poseStack);
 
-        renderButtons(poseStack, mouseX, mouseY, partialTick);
+        renderWidgets(poseStack, mouseX, mouseY, partialTick);
 
         if (elements.isEmpty()) {
             renderNoElementsHelper(poseStack, I18n.get("screens.wynntils.lootruns.noLootruns"));
@@ -176,8 +176,8 @@ public final class WynntilsLootrunsScreen extends WynntilsListScreen<LootrunInst
                             0,
                             0,
                             CommonColors.BLACK,
-                            HorizontalAlignment.Left,
-                            VerticalAlignment.Top,
+                            HorizontalAlignment.LEFT,
+                            VerticalAlignment.TOP,
                             TextShadow.NONE);
             poseStack.popPose();
 
@@ -189,8 +189,8 @@ public final class WynntilsLootrunsScreen extends WynntilsListScreen<LootrunInst
                             0,
                             19,
                             CommonColors.BLACK,
-                            HorizontalAlignment.Left,
-                            VerticalAlignment.Top,
+                            HorizontalAlignment.LEFT,
+                            VerticalAlignment.TOP,
                             TextShadow.NONE);
 
             FontRenderer.getInstance()
@@ -201,24 +201,24 @@ public final class WynntilsLootrunsScreen extends WynntilsListScreen<LootrunInst
                             0,
                             29,
                             CommonColors.BLACK,
-                            HorizontalAlignment.Left,
-                            VerticalAlignment.Top,
+                            HorizontalAlignment.LEFT,
+                            VerticalAlignment.TOP,
                             TextShadow.NONE);
 
-            Vec3 start = currentLootrun.path().points().get(0);
+            Position start = currentLootrun.path().points().get(0);
             FontRenderer.getInstance()
                     .renderText(
                             poseStack,
                             I18n.get("screens.wynntils.lootruns.start") + ": "
-                                    + String.format("[%d, %d, %d]", (int) start.x, (int) start.y, (int) start.z),
+                                    + String.format("[%d, %d, %d]", (int) start.x(), (int) start.y(), (int) start.z()),
                             0,
                             39,
                             CommonColors.BLACK,
-                            HorizontalAlignment.Left,
-                            VerticalAlignment.Top,
+                            HorizontalAlignment.LEFT,
+                            VerticalAlignment.TOP,
                             TextShadow.NONE);
 
-            Vec3 end = currentLootrun
+            Position end = currentLootrun
                     .path()
                     .points()
                     .get(currentLootrun.path().points().size() - 1);
@@ -226,12 +226,12 @@ public final class WynntilsLootrunsScreen extends WynntilsListScreen<LootrunInst
                     .renderText(
                             poseStack,
                             I18n.get("screens.wynntils.lootruns.end") + ": "
-                                    + String.format("[%d, %d, %d]", (int) end.x, (int) end.y, (int) end.z),
+                                    + String.format("[%d, %d, %d]", (int) end.x(), (int) end.y(), (int) end.z()),
                             0,
                             49,
                             CommonColors.BLACK,
-                            HorizontalAlignment.Left,
-                            VerticalAlignment.Top,
+                            HorizontalAlignment.LEFT,
+                            VerticalAlignment.TOP,
                             TextShadow.NONE);
 
             poseStack.popPose();
@@ -245,7 +245,7 @@ public final class WynntilsLootrunsScreen extends WynntilsListScreen<LootrunInst
                             80,
                             Texture.QUEST_BOOK_BACKGROUND.width() / 2f - 30,
                             CommonColors.BLACK,
-                            HorizontalAlignment.Left,
+                            HorizontalAlignment.LEFT,
                             TextShadow.NONE);
 
             FontRenderer.getInstance()
@@ -257,7 +257,7 @@ public final class WynntilsLootrunsScreen extends WynntilsListScreen<LootrunInst
                             155,
                             Texture.QUEST_BOOK_BACKGROUND.width() / 2f - 30,
                             CommonColors.BLACK,
-                            HorizontalAlignment.Left,
+                            HorizontalAlignment.LEFT,
                             TextShadow.NONE);
         }
     }

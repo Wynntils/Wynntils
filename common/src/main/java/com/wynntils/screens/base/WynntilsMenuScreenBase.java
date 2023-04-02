@@ -7,17 +7,29 @@ package com.wynntils.screens.base;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.wynntils.core.WynntilsMod;
 import com.wynntils.utils.colors.CommonColors;
+import com.wynntils.utils.mc.McUtils;
 import com.wynntils.utils.render.FontRenderer;
 import com.wynntils.utils.render.RenderUtils;
 import com.wynntils.utils.render.Texture;
 import com.wynntils.utils.render.type.HorizontalAlignment;
 import com.wynntils.utils.render.type.TextShadow;
 import com.wynntils.utils.render.type.VerticalAlignment;
+import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.network.chat.Component;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.sounds.SoundEvent;
 
 public abstract class WynntilsMenuScreenBase extends WynntilsScreen {
+    private static final ResourceLocation BOOK_OPEN_ID = new ResourceLocation("wynntils:ui.book.open");
+    private static final SoundEvent BOOK_OPEN_SOUND = SoundEvent.createVariableRangeEvent(BOOK_OPEN_ID);
+
     protected WynntilsMenuScreenBase(Component component) {
         super(component);
+    }
+
+    public static void openBook(Screen screen) {
+        McUtils.mc().setScreen(screen);
+        McUtils.playSoundUI(BOOK_OPEN_SOUND);
     }
 
     protected void renderBackgroundTexture(PoseStack poseStack) {
@@ -51,7 +63,7 @@ public abstract class WynntilsMenuScreenBase extends WynntilsScreen {
                         Texture.QUEST_BOOK_BACKGROUND.height() * 1.3f - 6f,
                         0,
                         CommonColors.YELLOW,
-                        HorizontalAlignment.Center,
+                        HorizontalAlignment.CENTER,
                         TextShadow.NORMAL);
         poseStack.popPose();
     }
@@ -71,8 +83,8 @@ public abstract class WynntilsMenuScreenBase extends WynntilsScreen {
                         5,
                         18,
                         CommonColors.YELLOW,
-                        HorizontalAlignment.Left,
-                        VerticalAlignment.Top,
+                        HorizontalAlignment.LEFT,
+                        VerticalAlignment.TOP,
                         TextShadow.NORMAL);
         poseStack.popPose();
     }
@@ -87,7 +99,7 @@ public abstract class WynntilsMenuScreenBase extends WynntilsScreen {
                         140,
                         Texture.QUEST_BOOK_BACKGROUND.width() / 2f - 30,
                         CommonColors.BLACK,
-                        HorizontalAlignment.Left,
+                        HorizontalAlignment.LEFT,
                         TextShadow.NONE);
     }
 

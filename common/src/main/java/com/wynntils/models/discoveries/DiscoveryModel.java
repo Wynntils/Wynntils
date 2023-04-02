@@ -12,10 +12,10 @@ import com.wynntils.core.components.Models;
 import com.wynntils.core.net.ApiResponse;
 import com.wynntils.core.net.Download;
 import com.wynntils.core.net.UrlId;
+import com.wynntils.models.characterstats.CombatXpModel;
 import com.wynntils.models.discoveries.event.DiscoveriesUpdatedEvent;
 import com.wynntils.models.discoveries.profile.DiscoveryProfile;
 import com.wynntils.models.discoveries.type.DiscoveryType;
-import com.wynntils.models.experience.CombatXpModel;
 import com.wynntils.models.map.CompassModel;
 import com.wynntils.models.quests.QuestModel;
 import com.wynntils.models.territories.TerritoryModel;
@@ -52,6 +52,7 @@ public final class DiscoveryModel extends Model {
         super(List.of(combatXpModel, compassModel, questModel, territoryModel));
     }
 
+    @Override
     public void reloadData() {
         updateDiscoveriesResource();
     }

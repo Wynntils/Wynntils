@@ -8,6 +8,7 @@ import com.wynntils.hades.protocol.packets.server.HSPacketUpdateMutual;
 import com.wynntils.models.map.PoiLocation;
 import com.wynntils.utils.colors.CommonColors;
 import com.wynntils.utils.colors.CustomColor;
+import com.wynntils.utils.type.CappedValue;
 import java.util.UUID;
 
 public class HadesUser {
@@ -19,8 +20,8 @@ public class HadesUser {
     private boolean isGuildMember;
     private float x, y, z;
     private PoiLocation poiLocation;
-    private int health, maxHealth;
-    private int mana, maxMana;
+    private CappedValue health;
+    private CappedValue mana;
 
     public HadesUser(HSPacketUpdateMutual packet) {
         uuid = packet.getUser();
@@ -65,20 +66,12 @@ public class HadesUser {
         return poiLocation;
     }
 
-    public int getHealth() {
+    public CappedValue getHealth() {
         return health;
     }
 
-    public int getMaxHealth() {
-        return maxHealth;
-    }
-
-    public int getMana() {
+    public CappedValue getMana() {
         return mana;
-    }
-
-    public int getMaxMana() {
-        return maxMana;
     }
 
     public void updateFromPacket(HSPacketUpdateMutual packet) {
@@ -87,11 +80,8 @@ public class HadesUser {
         this.z = packet.getZ();
         this.poiLocation = new PoiLocation((int) x, (int) y, (int) z);
 
-        this.health = packet.getHealth();
-        this.maxHealth = packet.getMaxHealth();
-
-        this.mana = packet.getMana();
-        this.maxMana = packet.getMaxMana();
+        this.health = new CappedValue(packet.getHealth(), packet.getMaxHealth());
+        this.mana = new CappedValue(packet.getMana(), packet.getMaxMana());
 
         this.isPartyMember = packet.isPartyMember();
         this.isMutualFriend = packet.isMutualFriend();

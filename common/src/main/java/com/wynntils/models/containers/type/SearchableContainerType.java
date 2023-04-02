@@ -8,7 +8,11 @@ import java.util.regex.Pattern;
 
 public enum SearchableContainerType {
     BANK(Pattern.compile("§0\\[Pg. (\\d+)\\] §8(.*)'s?§0 Bank"), Pattern.compile("§f§lPage \\d+§a >§2>§a>§2>§a>"), 8),
-    GUILD_BANK(Pattern.compile(".+: Bank \\(.+\\)"), null, -1),
+    MISC_BUCKET(
+            Pattern.compile("§0\\[Pg. (\\d+)\\] §8(.*)'s?§0 Misc. Bucket"),
+            Pattern.compile("§f§lPage \\d+§a >§2>§a>§2>§a>"),
+            8),
+    GUILD_BANK(Pattern.compile(".+: Bank \\(.+\\)"), Pattern.compile("§a§lNext Page"), 27),
     MEMBER_LIST(Pattern.compile(".+: Members"), Pattern.compile("§a§lNext Page"), 28);
 
     private final Pattern titlePattern;

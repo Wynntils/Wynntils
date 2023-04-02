@@ -7,5 +7,5 @@ package com.wynntils.models.spells.type;
 public enum PartialSpellSource {
     HOTBAR,
     TITLE_LETTER,
-    TITLE_FULL;
+    TITLE_FULL
 }

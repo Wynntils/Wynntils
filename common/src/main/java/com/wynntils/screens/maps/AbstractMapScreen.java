@@ -5,14 +5,14 @@
 package com.wynntils.screens.maps;
 
 import com.mojang.blaze3d.platform.InputConstants;
-import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.wynntils.core.components.Models;
-import com.wynntils.features.user.map.PointerType;
 import com.wynntils.models.map.MapTexture;
+import com.wynntils.models.map.PoiLocation;
 import com.wynntils.models.map.pois.IconPoi;
 import com.wynntils.models.map.pois.LabelPoi;
 import com.wynntils.models.map.pois.Poi;
+import com.wynntils.screens.base.WynntilsScreen;
 import com.wynntils.utils.MathUtils;
 import com.wynntils.utils.colors.CommonColors;
 import com.wynntils.utils.colors.CustomColor;
@@ -23,6 +23,7 @@ import com.wynntils.utils.render.MapRenderer;
 import com.wynntils.utils.render.RenderUtils;
 import com.wynntils.utils.render.Texture;
 import com.wynntils.utils.render.type.HorizontalAlignment;
+import com.wynntils.utils.render.type.PointerType;
 import com.wynntils.utils.render.type.TextShadow;
 import com.wynntils.utils.render.type.VerticalAlignment;
 import com.wynntils.utils.type.BoundingBox;
@@ -30,12 +31,11 @@ import java.util.ArrayList;
 import java.util.List;
 import net.minecraft.client.KeyMapping;
 import net.minecraft.client.gui.components.Renderable;
-import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.network.chat.Component;
 import org.lwjgl.glfw.GLFW;
 
-public abstract class AbstractMapScreen extends Screen {
+public abstract class AbstractMapScreen extends WynntilsScreen {
     protected static final float SCREEN_SIDE_OFFSET = 10;
     private static final float BORDER_OFFSET = 6;
 
@@ -81,7 +81,7 @@ public abstract class AbstractMapScreen extends Screen {
     }
 
     @Override
-    protected void init() {
+    protected void doInit() {
         // FIXME: Figure out a way to not need this.
         //        At the moment, this is needed for Minecraft not to forget we hold keys when we open the GUI...
         KeyMapping.set(
@@ -168,6 +168,10 @@ public abstract class AbstractMapScreen extends Screen {
         // Filter and find hovered
         for (int i = pois.size() - 1; i >= 0; i--) {
             Poi poi = pois.get(i);
+            PoiLocation location = poi.getLocation();
+            // This is due to bad design of the compass dynamic waypoint provider,
+            // once that is fixed this can be removed
+            if (location == null) continue;
 
             if (poi instanceof IconPoi iconPoi) {
                 // Check if the poi is visible
@@ -187,8 +191,7 @@ public abstract class AbstractMapScreen extends Screen {
             float poiWidth = poi.getWidth(currentZoom, poiScale);
             float poiHeight = poi.getHeight(currentZoom, poiScale);
 
-            BoundingBox filterBox = BoundingBox.centered(
-                    poi.getLocation().getX(), poi.getLocation().getZ(), poiWidth, poiHeight);
+            BoundingBox filterBox = BoundingBox.centered(location.getX(), location.getZ(), poiWidth, poiHeight);
             BoundingBox mouseBox = BoundingBox.centered(poiRenderX, poiRenderZ, poiWidth, poiHeight);
 
             if (filterBox.intersects(textureBoundingBox)) {
@@ -271,8 +274,8 @@ public abstract class AbstractMapScreen extends Screen {
                         this.centerX,
                         this.renderHeight - this.renderedBorderYOffset - 40,
                         CommonColors.WHITE,
-                        HorizontalAlignment.Center,
-                        VerticalAlignment.Top,
+                        HorizontalAlignment.CENTER,
+                        VerticalAlignment.TOP,
                         TextShadow.OUTLINE);
     }
 
@@ -338,7 +341,7 @@ public abstract class AbstractMapScreen extends Screen {
                     renderUsingLinear);
         }
 
-        RenderSystem.disableScissor();
+        RenderUtils.disableScissor();
     }
 
     protected void updateMapCenterIfDragging(int mouseX, int mouseY) {

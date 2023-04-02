@@ -19,7 +19,6 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.zip.CRC32;
 import net.minecraft.ChatFormatting;
-import net.minecraft.util.Mth;
 
 public class CustomColor {
     public static final CustomColor NONE = new CustomColor(-1, -1, -1, -1);
@@ -64,7 +63,7 @@ public class CustomColor {
     }
 
     public CustomColor(String toParse) {
-        String noSpace = toParse.replaceAll(" ", "");
+        String noSpace = toParse.replace(" ", "");
 
         CustomColor parseTry = CustomColor.fromString(noSpace);
 
@@ -100,7 +99,7 @@ public class CustomColor {
 
         float vh = ((h % 1 + 1) * 6) % 6;
 
-        int vi = Mth.fastFloor(vh);
+        int vi = MathUtils.floor(vh);
         float v1 = v * (1 - s);
         float v2 = v * (1 - s * (vh - vi));
         float v3 = v * (1 - s * (1 - (vh - vi)));

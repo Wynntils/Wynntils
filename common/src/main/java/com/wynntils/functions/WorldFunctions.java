@@ -5,17 +5,22 @@
 package com.wynntils.functions;
 
 import com.wynntils.core.components.Models;
-import com.wynntils.core.functions.ActiveFunction;
+import com.wynntils.core.functions.Function;
+import com.wynntils.core.functions.arguments.FunctionArguments;
+import com.wynntils.models.token.type.TokenGatekeeper;
 import com.wynntils.models.worlds.profile.ServerProfile;
+import com.wynntils.utils.mc.type.Location;
+import com.wynntils.utils.type.CappedValue;
 import java.util.List;
+import java.util.Locale;
 
 public class WorldFunctions {
-    public static class CurrentWorldFunction extends ActiveFunction<String> {
+    public static class CurrentWorldFunction extends Function<String> {
         private static final String NO_DATA = "<unknown>";
         private static final String NO_WORLD = "<not on world>";
 
         @Override
-        public String getValue(String argument) {
+        public String getValue(FunctionArguments arguments) {
             if (!Models.WorldState.onWorld()) {
                 return NO_WORLD;
             }
@@ -30,12 +35,12 @@ public class WorldFunctions {
         }
     }
 
-    public static class CurrentWorldUptimeFunction extends ActiveFunction<String> {
+    public static class CurrentWorldUptimeFunction extends Function<String> {
         private static final String NO_DATA = "<unknown>";
         private static final String NO_WORLD = "<not on world>";
 
         @Override
-        public String getValue(String argument) {
+        public String getValue(FunctionArguments arguments) {
             if (!Models.WorldState.onWorld()) {
                 return NO_WORLD;
             }
@@ -54,6 +59,190 @@ public class WorldFunctions {
         @Override
         public List<String> getAliases() {
             return List.of("world_uptime", "uptime");
+        }
+    }
+
+    public static class WorldStateFunction extends Function<String> {
+        @Override
+        public String getValue(FunctionArguments arguments) {
+            return Models.WorldState.getCurrentState().toString().toUpperCase(Locale.ROOT);
+        }
+    }
+
+    public static class TokenGatekeeperCountFunction extends Function<Integer> {
+        @Override
+        public Integer getValue(FunctionArguments arguments) {
+            return Models.Token.getGatekeepers().size();
+        }
+
+        @Override
+        public List<String> getAliases() {
+            return List.of("token_count");
+        }
+    }
+
+    public static class TokenGatekeeperDepositedFunction extends Function<CappedValue> {
+        @Override
+        public CappedValue getValue(FunctionArguments arguments) {
+            int index = arguments.getArgument("gatekeeperNumber").getIntegerValue() - 1;
+            List<TokenGatekeeper> gatekeeperList = Models.Token.getGatekeepers();
+            if (index >= gatekeeperList.size() || index < 0) return CappedValue.EMPTY;
+
+            return gatekeeperList.get(index).getDeposited();
+        }
+
+        @Override
+        public FunctionArguments.Builder getArgumentsBuilder() {
+            return new FunctionArguments.OptionalArgumentBuilder(
+                    List.of(new FunctionArguments.Argument<>("gatekeeperNumber", Integer.class, 0)));
+        }
+
+        @Override
+        public List<String> getAliases() {
+            return List.of("token_dep");
+        }
+    }
+
+    public static class TokenGatekeeperFunction extends Function<CappedValue> {
+        @Override
+        public CappedValue getValue(FunctionArguments arguments) {
+            int index = arguments.getArgument("gatekeeperNumber").getIntegerValue() - 1;
+            List<TokenGatekeeper> gatekeeperList = Models.Token.getGatekeepers();
+            if (index >= gatekeeperList.size() || index < 0) return CappedValue.EMPTY;
+
+            return Models.Token.getCollected(gatekeeperList.get(index));
+        }
+
+        @Override
+        public FunctionArguments.Builder getArgumentsBuilder() {
+            return new FunctionArguments.OptionalArgumentBuilder(
+                    List.of(new FunctionArguments.Argument<>("gatekeeperNumber", Integer.class, 0)));
+        }
+
+        @Override
+        public List<String> getAliases() {
+            return List.of("token");
+        }
+    }
+
+    public static class TokenGatekeeperTypeFunction extends Function<String> {
+        @Override
+        public String getValue(FunctionArguments arguments) {
+            int index = arguments.getArgument("gatekeeperNumber").getIntegerValue() - 1;
+            List<TokenGatekeeper> gatekeeperList = Models.Token.getGatekeepers();
+            if (index >= gatekeeperList.size() || index < 0) return "";
+
+            return gatekeeperList.get(index).getGatekeeperTokenName();
+        }
+
+        @Override
+        public FunctionArguments.Builder getArgumentsBuilder() {
+            return new FunctionArguments.OptionalArgumentBuilder(
+                    List.of(new FunctionArguments.Argument<>("gatekeeperNumber", Integer.class, 0)));
+        }
+
+        @Override
+        public List<String> getAliases() {
+            return List.of("token_type");
+        }
+    }
+
+    public static class MobTotemCountFunction extends Function<Integer> {
+        @Override
+        public Integer getValue(FunctionArguments arguments) {
+            return Models.MobTotem.getMobTotems().size();
+        }
+    }
+
+    public static class MobTotemOwnerFunction extends Function<String> {
+        @Override
+        public String getValue(FunctionArguments arguments) {
+            return Models.MobTotem.getMobTotem(
+                            arguments.getArgument("totemNumber").getIntegerValue() - 1)
+                    .getOwner();
+        }
+
+        @Override
+        public FunctionArguments.Builder getArgumentsBuilder() {
+            return new FunctionArguments.RequiredArgumentBuilder(
+                    List.of(new FunctionArguments.Argument<>("totemNumber", Integer.class, null)));
+        }
+    }
+
+    public static class MobTotemDistanceFunction extends Function<Double> {
+        @Override
+        public Double getValue(FunctionArguments arguments) {
+            return Models.MobTotem.getMobTotem(
+                            arguments.getArgument("totemNumber").getIntegerValue() - 1)
+                    .getDistanceToPlayer();
+        }
+
+        @Override
+        public FunctionArguments.Builder getArgumentsBuilder() {
+            return new FunctionArguments.RequiredArgumentBuilder(
+                    List.of(new FunctionArguments.Argument<>("totemNumber", Integer.class, null)));
+        }
+    }
+
+    public static class MobTotemFunction extends Function<Location> {
+        @Override
+        public Location getValue(FunctionArguments arguments) {
+            return Location.containing(Models.MobTotem.getMobTotem(
+                            arguments.getArgument("totemNumber").getIntegerValue() - 1)
+                    .getPosition());
+        }
+
+        @Override
+        public FunctionArguments.Builder getArgumentsBuilder() {
+            return new FunctionArguments.RequiredArgumentBuilder(
+                    List.of(new FunctionArguments.Argument<>("totemNumber", Integer.class, null)));
+        }
+    }
+
+    public static class MobTotemYFunction extends Function<Double> {
+        @Override
+        public Double getValue(FunctionArguments arguments) {
+            return Models.MobTotem.getMobTotem(
+                            arguments.getArgument("totemNumber").getIntegerValue() - 1)
+                    .getPosition()
+                    .y();
+        }
+
+        @Override
+        public FunctionArguments.Builder getArgumentsBuilder() {
+            return new FunctionArguments.RequiredArgumentBuilder(
+                    List.of(new FunctionArguments.Argument<>("totemNumber", Integer.class, null)));
+        }
+    }
+
+    public static class MobTotemZFunction extends Function<Double> {
+        @Override
+        public Double getValue(FunctionArguments arguments) {
+            return Models.MobTotem.getMobTotem(
+                            arguments.getArgument("totemNumber").getIntegerValue() - 1)
+                    .getPosition()
+                    .z();
+        }
+
+        @Override
+        public FunctionArguments.Builder getArgumentsBuilder() {
+            return new FunctionArguments.RequiredArgumentBuilder(
+                    List.of(new FunctionArguments.Argument<>("totemNumber", Integer.class, null)));
+        }
+    }
+
+    public static class MobTotemTimeLeftFunction extends Function<String> {
+        @Override
+        public String getValue(FunctionArguments arguments) {
+            return Models.MobTotem.getMobTotem(
+                            arguments.getArgument("totemNumber").getIntegerValue() - 1)
+                    .getTimerString();
+        }
+
+        @Override
+        public FunctionArguments.Builder getArgumentsBuilder() {
+            return new FunctionArguments.RequiredArgumentBuilder(
+                    List.of(new FunctionArguments.Argument<>("totemNumber", Integer.class, null)));
         }
     }
 }

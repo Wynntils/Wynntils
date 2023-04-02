@@ -4,357 +4,361 @@
  */
 package com.wynntils.handlers.scoreboard;
 
+import com.google.common.collect.ImmutableMap;
 import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.components.Handler;
-import com.wynntils.core.components.Models;
 import com.wynntils.handlers.scoreboard.event.ScoreboardSegmentAdditionEvent;
+import com.wynntils.handlers.scoreboard.type.ScoreboardLine;
+import com.wynntils.mc.event.ScoreboardSetDisplayObjectiveEvent;
+import com.wynntils.mc.event.ScoreboardSetObjectiveEvent;
 import com.wynntils.mc.event.ScoreboardSetScoreEvent;
 import com.wynntils.models.worlds.event.WorldStateEvent;
 import com.wynntils.models.worlds.type.WorldState;
 import com.wynntils.utils.mc.ComponentUtils;
 import com.wynntils.utils.mc.McUtils;
-import com.wynntils.utils.type.Pair;
 import java.util.ArrayList;
-import java.util.Comparator;
 import java.util.HashSet;
-import java.util.LinkedList;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
-import java.util.Optional;
 import java.util.Set;
-import java.util.TreeMap;
-import java.util.concurrent.Executors;
-import java.util.concurrent.ScheduledExecutorService;
-import java.util.concurrent.TimeUnit;
-import java.util.stream.Collectors;
+import java.util.TreeSet;
+import java.util.regex.Pattern;
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.server.ServerScoreboard;
 import net.minecraft.world.scores.Objective;
-import net.minecraft.world.scores.PlayerTeam;
-import net.minecraft.world.scores.Score;
 import net.minecraft.world.scores.Scoreboard;
 import net.minecraft.world.scores.criteria.ObjectiveCriteria;
 import net.minecraftforge.eventbus.api.EventPriority;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 
 public final class ScoreboardHandler extends Handler {
-    // TimeUnit.MILLISECONDS
-    // 250 -> 4 times a second
-    private static final int CHANGE_PROCESS_RATE = 250;
+    private static final Pattern NEXT_LINE_PATTERN = Pattern.compile("À+");
+    private static final String SCOREBOARD_KEY = "wynntilsSB";
+    private static final MutableComponent SCOREBOARD_TITLE_COMPONENT = Component.literal("play.wynncraft.com")
+            .withStyle(ChatFormatting.BOLD)
+            .withStyle(ChatFormatting.GOLD);
+    private static final int MAX_SCOREBOARD_LINE = 16;
 
-    private List<ScoreboardLine> reconstructedScoreboard = new ArrayList<>();
+    private Set<ScoreboardLine> reconstructedScoreboard = new TreeSet<>();
+    private Map<ScoreboardPart, ScoreboardSegment> scoreboardSegments = new LinkedHashMap<>();
 
-    private List<ScoreboardSegment> segments = new ArrayList<>();
-
-    private final LinkedList<ScoreboardLineChange> queuedChanges = new LinkedList<>();
-
-    private final List<Pair<ScoreboardPart, Set<SegmentMatcher>>> scoreboardParts = new ArrayList<>();
-    private List<SegmentMatcher> segmentMatchers = List.of();
-
-    private ScheduledExecutorService executor = null;
-
-    private boolean firstExecution = false;
-
-    private void periodicTask() {
-        // FIXME: Reverse dependency
-        if (!Models.WorldState.onWorld() || McUtils.player() == null) return;
-
-        if (queuedChanges.isEmpty()) {
-            handleScoreboardReconstruction();
-            return;
-        }
-
-        List<ScoreboardLine> scoreboardCopy = new ArrayList<>(reconstructedScoreboard);
-        LinkedList<ScoreboardLineChange> queueCopy = new LinkedList<>(queuedChanges);
-        queuedChanges.clear();
-
-        Map<Integer, ScoreboardLine> scoreboardLineMap = new TreeMap<>();
-
-        for (ScoreboardLine scoreboardLine : scoreboardCopy) {
-            scoreboardLineMap.put(scoreboardLine.index(), scoreboardLine);
-        }
-
-        Set<String> changedLines = new HashSet<>();
-        while (!queueCopy.isEmpty()) {
-            ScoreboardLineChange processed = queueCopy.pop();
-
-            if (processed.method() == ServerScoreboard.Method.REMOVE) {
-                for (ScoreboardLine lineToRemove : scoreboardLineMap.values().stream()
-                        .filter(scoreboardLine -> Objects.equals(scoreboardLine.line(), processed.lineText()))
-                        .toList()) {
-                    scoreboardLineMap.remove(lineToRemove.index());
-                }
-            } else {
-                ScoreboardLine line = new ScoreboardLine(processed.lineText(), processed.lineIndex());
-                scoreboardLineMap.put(line.index(), line);
-                changedLines.add(processed.lineText());
-            }
-        }
-
-        scoreboardCopy.clear();
-
-        scoreboardCopy = scoreboardLineMap.values().stream()
-                .sorted(Comparator.comparing(ScoreboardLine::index).reversed())
-                .collect(Collectors.toList());
-
-        List<ScoreboardSegment> parsedSegments = calculateSegments(scoreboardCopy);
-
-        for (String changedString : changedLines) {
-            int changedLine =
-                    scoreboardCopy.stream().map(ScoreboardLine::line).toList().indexOf(changedString);
-
-            if (changedLine == -1) {
-                continue;
-            }
-
-            Optional<ScoreboardSegment> foundSegment = parsedSegments.stream()
-                    .filter(segment -> segment.getStartIndex() <= changedLine
-                            && segment.getEndIndex() >= changedLine
-                            && !segment.isChanged())
-                    .findFirst();
-
-            if (foundSegment.isEmpty()) {
-                continue;
-            }
-
-            // Prevent bugs where content was not changed, but rather replaced to prepare room for other segment updates
-            //  (Objective -> Daily Objective update)
-            Optional<ScoreboardSegment> oldMatchingSegment = segments.stream()
-                    .filter(segment ->
-                            segment.getMatcher() == foundSegment.get().getMatcher())
-                    .findFirst();
-
-            if (oldMatchingSegment.isEmpty()) {
-                foundSegment.get().setChanged(true);
-                continue;
-            }
-
-            if (!oldMatchingSegment.get().getContent().equals(foundSegment.get().getContent())
-                    || !Objects.equals(
-                            oldMatchingSegment.get().getHeader(),
-                            foundSegment.get().getHeader())) {
-                foundSegment.get().setChanged(true);
-            }
-        }
-
-        List<ScoreboardSegment> removedSegments = segments.stream()
-                .filter(segment ->
-                        parsedSegments.stream().noneMatch(parsed -> parsed.getMatcher() == segment.getMatcher()))
-                .toList();
-
-        reconstructedScoreboard = scoreboardCopy;
-        segments = parsedSegments;
-
-        for (ScoreboardSegment segment : removedSegments) {
-            for (Pair<ScoreboardPart, Set<SegmentMatcher>> scoreboardPart : scoreboardParts) {
-                if (scoreboardPart.b().contains(segment.getMatcher())) {
-                    scoreboardPart.a().onSegmentRemove(segment, segment.getMatcher());
-                }
-            }
-        }
-
-        List<ScoreboardSegment> changedSegments;
-
-        if (firstExecution) {
-            firstExecution = false;
-            changedSegments = parsedSegments.stream().toList();
-        } else {
-            changedSegments =
-                    parsedSegments.stream().filter(ScoreboardSegment::isChanged).toList();
-        }
-
-        for (ScoreboardSegment segment : changedSegments) {
-            for (Pair<ScoreboardPart, Set<SegmentMatcher>> scoreboardPart : scoreboardParts) {
-                if (scoreboardPart.b().contains(segment.getMatcher())) {
-                    scoreboardPart.a().onSegmentChange(segment, segment.getMatcher());
-                }
-            }
-        }
-
-        handleScoreboardReconstruction();
-    }
-
-    private void handleScoreboardReconstruction() {
-        McUtils.mc().doRunTask(() -> {
-            Scoreboard scoreboard = McUtils.player().getScoreboard();
-
-            List<String> skipped = new ArrayList<>();
-
-            for (ScoreboardSegment parsedSegment : segments) {
-                boolean cancelled = WynntilsMod.postEvent(new ScoreboardSegmentAdditionEvent(parsedSegment));
-
-                if (cancelled) {
-                    skipped.addAll(parsedSegment.getScoreboardLines());
-                }
-            }
-
-            final String objectiveName = "wynntilsSB" + McUtils.player().getScoreboardName();
-
-            Objective objective = scoreboard.getObjective(objectiveName);
-
-            if (objective == null) {
-                objective = scoreboard.addObjective(
-                        objectiveName,
-                        ObjectiveCriteria.DUMMY,
-                        Component.literal(" play.wynncraft.com")
-                                .withStyle(ChatFormatting.GOLD)
-                                .withStyle(ChatFormatting.BOLD),
-                        ObjectiveCriteria.RenderType.INTEGER);
-            }
-
-            scoreboard.setDisplayObjective(1, objective);
-
-            // Set player team display objective
-            // This fixes scoreboard gui flickering
-            PlayerTeam playerTeam = scoreboard.getPlayersTeam(McUtils.player().getScoreboardName());
-            if (playerTeam != null) {
-                if (playerTeam.getColor().getId() >= 0) {
-                    int id = playerTeam.getColor().getId() + 3;
-                    scoreboard.setDisplayObjective(id, objective);
-                }
-            }
-
-            for (Map<Objective, Score> scoreMap : scoreboard.playerScores.values()) {
-                scoreMap.remove(objective);
-            }
-
-            // Filter and skip leading empty lines
-            List<ScoreboardLine> toBeAdded = reconstructedScoreboard.stream()
-                    .filter(scoreboardLine -> !skipped.contains(scoreboardLine.line()))
-                    .dropWhile(scoreboardLine -> scoreboardLine.line().matches("À+"))
-                    .toList();
-
-            boolean allEmpty = true;
-
-            // Skip trailing empty lines
-            for (int i = toBeAdded.size() - 1; i >= 0; i--) {
-                if (allEmpty && toBeAdded.get(i).line().matches("À+")) {
-                    continue;
-                }
-
-                allEmpty = false;
-                Score score = scoreboard.getOrCreatePlayerScore(toBeAdded.get(i).line(), objective);
-                score.setScore(toBeAdded.get(i).index());
-            }
-        });
-    }
-
-    private List<ScoreboardSegment> calculateSegments(List<ScoreboardLine> scoreboardCopy) {
-        List<ScoreboardSegment> segments = new ArrayList<>();
-
-        ScoreboardSegment currentSegment = null;
-
-        for (int i = 0; i < scoreboardCopy.size(); i++) {
-            String strippedLine =
-                    ComponentUtils.stripFormatting(scoreboardCopy.get(i).line());
-
-            if (strippedLine == null) {
-                continue;
-            }
-
-            if (strippedLine.matches("À+")) {
-                if (currentSegment != null) {
-                    currentSegment.setContent(scoreboardCopy.stream()
-                            .map(ScoreboardLine::line)
-                            .collect(Collectors.toList())
-                            .subList(currentSegment.getStartIndex() + 1, i));
-                    currentSegment.setEndIndex(i - 1);
-                    currentSegment.setEnd(strippedLine);
-                    segments.add(currentSegment);
-                    currentSegment = null;
-                }
-
-                continue;
-            }
-
-            for (SegmentMatcher value : segmentMatchers) {
-                if (!value.headerPattern().matcher(strippedLine).matches()) continue;
-
-                if (currentSegment != null) {
-                    if (currentSegment.getMatcher() != value) {
-                        WynntilsMod.error(
-                                "ScoreboardModel: currentSegment was not null and SegmentMatcher was mismatched. We might have skipped a scoreboard category.");
-                    }
-                    continue;
-                }
-
-                currentSegment =
-                        new ScoreboardSegment(value, scoreboardCopy.get(i).line(), i);
-                break;
-            }
-        }
-
-        if (currentSegment != null) {
-            currentSegment.setContent(scoreboardCopy.stream()
-                    .map(ScoreboardLine::line)
-                    .collect(Collectors.toList())
-                    .subList(currentSegment.getStartIndex(), scoreboardCopy.size()));
-            currentSegment.setEndIndex(scoreboardCopy.size() - 1);
-            segments.add(currentSegment);
-        }
-
-        return segments;
-    }
-
-    public void init() {
-        startThread();
-    }
-
-    public void disable() {
-        resetState();
-        scoreboardParts.clear();
-        updateSegmentMatchers();
-    }
+    private List<ScoreboardPart> scoreboardParts = new ArrayList<>();
 
     public void addPart(ScoreboardPart scoreboardPart) {
-        scoreboardParts.add(new Pair<>(scoreboardPart, scoreboardPart.getSegmentMatchers()));
-        updateSegmentMatchers();
+        scoreboardParts.add(scoreboardPart);
     }
 
     @SubscribeEvent(priority = EventPriority.HIGHEST)
     public void onSetScore(ScoreboardSetScoreEvent event) {
-        queuedChanges.add(new ScoreboardLineChange(event.getOwner(), event.getMethod(), event.getScore()));
+        if (!Objects.equals(event.getObjectiveName(), "sb" + McUtils.player().getScoreboardName())) {
+            return;
+        }
+
+        handleSetScore(event.getOwner(), event.getScore(), event.getMethod());
+    }
+
+    @SubscribeEvent(priority = EventPriority.HIGHEST)
+    public void onSetObjective(ScoreboardSetObjectiveEvent event) {
+        if (!Objects.equals(event.getObjectiveName(), "sb" + McUtils.player().getScoreboardName())) {
+            return;
+        }
+
+        if (event.getMethod() != ScoreboardSetObjectiveEvent.METHOD_REMOVE) return;
+
+        // Reset the scoreboard
+        reconstructedScoreboard.clear();
+
+        // Reset the scoreboard segments
+        calculateScoreboardSegments();
+        createScoreboardFromSegments();
+    }
+
+    @SubscribeEvent
+    public void onSetObjectiveDisplay(ScoreboardSetDisplayObjectiveEvent event) {
+        event.setCanceled(true);
     }
 
     @SubscribeEvent
     public void onWorldStateChange(WorldStateEvent event) {
-        if (event.getNewState() == WorldState.WORLD) {
-            startThread();
+        if (event.getNewState() == WorldState.WORLD) return;
+
+        scoreboardSegments.keySet().forEach(ScoreboardPart::reset);
+
+        reconstructedScoreboard.clear();
+        scoreboardSegments.clear();
+    }
+
+    private void handleSetScore(String owner, int score, ServerScoreboard.Method method) {
+        // 1. Handle the current change
+        switch (method) {
+            case CHANGE -> handleScoreChange(owner, score);
+            case REMOVE -> handleScoreRemove(owner);
+        }
+
+        // 2. Verify that the scoreboard is in a valid state (not in a state where we are "waiting" for other packets)
+        if (!isScoreboardValid()) return;
+
+        // 3. Calculate the scoreboard segments, do segment updates
+        calculateScoreboardSegments();
+
+        // 4. Create our own scoreboard to hide specific segments
+        createScoreboardFromSegments();
+    }
+
+    private void handleScoreChange(String owner, int score) {
+        // A score change can mean two things:
+        // 1. A new line was added to the scoreboard
+        // 2. An existing line with the same score was changed
+        // 3. An existing line's score was changed
+
+        // First, we check if the line already exists, by using the score as the identifier
+        ScoreboardLine existingScore = reconstructedScoreboard.stream()
+                .filter(line -> line.score() == score)
+                .findFirst()
+                .orElse(null);
+
+        if (existingScore != null) {
+            // The line already exists, so we just update the line
+            reconstructedScoreboard.remove(existingScore);
+            reconstructedScoreboard.add(new ScoreboardLine(owner, score));
             return;
         }
 
-        resetState();
-    }
+        // Secondly, we check if the line already exists, by using the owner as the identifier
+        ScoreboardLine existingLine = reconstructedScoreboard.stream()
+                .filter(line -> line.line().equals(owner))
+                .findFirst()
+                .orElse(null);
 
-    private void startThread() {
-        firstExecution = true;
-        executor = Executors.newScheduledThreadPool(1);
-        executor.scheduleAtFixedRate(this::periodicTask, 0, CHANGE_PROCESS_RATE, TimeUnit.MILLISECONDS);
-    }
-
-    private void resetState() {
-        if (executor != null) {
-            executor.shutdownNow();
-            executor = null;
+        if (existingLine != null) {
+            // The line already exists, so we just update the score
+            reconstructedScoreboard.remove(existingLine);
+            reconstructedScoreboard.add(new ScoreboardLine(owner, score));
+            return;
         }
 
-        queuedChanges.clear();
-        reconstructedScoreboard.clear();
-        segments.clear();
+        // The line doesn't exist, so we add it
+        reconstructedScoreboard.add(new ScoreboardLine(owner, score));
+    }
 
-        for (Pair<ScoreboardPart, Set<SegmentMatcher>> scoreboardPart : scoreboardParts) {
-            scoreboardPart.a().reset();
+    private void handleScoreRemove(String owner) {
+        // A score remove can mean two things:
+        // 1. An existing line was removed
+        // 2. The line to be removed was changed before, so it doesn't exist anymore
+
+        // First, we check if the line exists, and remove it
+        // If it doesn't, we don't need to do anything
+        reconstructedScoreboard.stream()
+                .filter(line -> line.line().equals(owner))
+                .findFirst()
+                .ifPresent(existingLine -> reconstructedScoreboard.remove(existingLine));
+    }
+
+    private boolean isScoreboardValid() {
+        // The scoreboard is valid if:
+        // 1. There are no duplicate lines
+        // 2. There are no gaps in the scores, and they are decreasing (there are no duplicate scores)
+
+        // We can also check for validness by checking scoreboard parts:
+        // 3. A valid scoreboard always starts with a new line (À)
+        // 4. A valid scoreboard if it consists of valid segments:
+        //    - A valid segment is a part that stats with a header, then one or more lines, then a footer which is (À+).
+        //    - The footer is not present if the segment is the last one.
+
+        // 0. An empty scoreboard is valid
+        if (reconstructedScoreboard.isEmpty()) {
+            return true;
+        }
+
+        // 1. Check for duplicate lines
+        List<String> lines = new ArrayList<>();
+        for (ScoreboardLine line : reconstructedScoreboard) {
+            if (lines.contains(line.line())) {
+                return false;
+            }
+
+            lines.add(line.line());
+        }
+
+        // 2. Check for gaps in the scores
+        int lastScore = reconstructedScoreboard.stream()
+                .map(ScoreboardLine::score)
+                .findFirst()
+                .orElse(0);
+        for (ScoreboardLine line : reconstructedScoreboard.stream().skip(1).toList()) {
+            if (line.score() + 1 != lastScore) {
+                return false;
+            }
+
+            lastScore = line.score();
+        }
+
+        // 3. Check for a new line at the start
+        if (!reconstructedScoreboard.stream()
+                .findFirst()
+                .map(ScoreboardLine::line)
+                .orElse("")
+                .equals("À")) {
+            return false;
+        }
+
+        // 4. Check for segment correctness
+        int currentIndex = 1;
+        List<ScoreboardLine> scoreboardLines = reconstructedScoreboard.stream().toList();
+
+        Set<ScoreboardPart> usedParts = new HashSet<>();
+
+        while (currentIndex < scoreboardLines.size()) {
+            ScoreboardPart part = getScoreboardPartForHeader(scoreboardLines.get(currentIndex));
+
+            // We could not find a suitable part for the header
+            if (part == null || usedParts.contains(part)) {
+                return false;
+            }
+
+            // The header cannot be the last line
+            if (currentIndex + 1 == scoreboardLines.size()) {
+                return false;
+            }
+
+            // The next line cannot be the end of this segment
+            // (As it would mean the header has no content)
+            if (NEXT_LINE_PATTERN
+                    .matcher(scoreboardLines.get(currentIndex + 1).line())
+                    .matches()) {
+                return false;
+            }
+
+            usedParts.add(part);
+
+            // Find the next segment end
+            for (currentIndex = currentIndex + 1; currentIndex < scoreboardLines.size(); currentIndex++) {
+                ScoreboardLine line = scoreboardLines.get(currentIndex);
+
+                if (NEXT_LINE_PATTERN.matcher(line.line()).matches()) {
+                    currentIndex++;
+                    break;
+                }
+            }
+        }
+
+        // All checks passed, so the scoreboard is valid
+        // (In theory, this can happen while the scoreboard is still being updated, but it's very unlikely, and we
+        // cannot do anything about it)
+        return true;
+    }
+
+    private void calculateScoreboardSegments() {
+        int currentIndex = 1;
+        List<ScoreboardLine> scoreboardLines = reconstructedScoreboard.stream().toList();
+
+        Map<ScoreboardPart, ScoreboardSegment> oldSegments = ImmutableMap.copyOf(scoreboardSegments);
+        scoreboardSegments.clear();
+
+        while (currentIndex < scoreboardLines.size()) {
+            ScoreboardLine headerLine = scoreboardLines.get(currentIndex);
+            ScoreboardPart part = getScoreboardPartForHeader(headerLine);
+
+            // We could not find a suitable part for the header
+            if (part == null) {
+                WynntilsMod.error(
+                        "Scoreboard passed validness check, but we could not find a scoreboard part for the line: "
+                                + scoreboardLines.get(currentIndex).line());
+                return;
+            }
+
+            List<String> contentLines = new ArrayList<>();
+            for (currentIndex = currentIndex + 1; currentIndex < scoreboardLines.size(); currentIndex++) {
+                ScoreboardLine line = scoreboardLines.get(currentIndex);
+
+                if (NEXT_LINE_PATTERN.matcher(line.line()).matches()) {
+                    currentIndex++;
+                    break;
+                }
+
+                contentLines.add(line.line());
+            }
+
+            ScoreboardSegment segment = new ScoreboardSegment(part, headerLine.line(), contentLines);
+            boolean eventCanceled = WynntilsMod.postEvent(new ScoreboardSegmentAdditionEvent(segment));
+
+            segment.setVisibility(!eventCanceled);
+            scoreboardSegments.put(part, segment);
+        }
+
+        // Handle segment removals
+        for (Map.Entry<ScoreboardPart, ScoreboardSegment> entry : oldSegments.entrySet()) {
+            if (scoreboardSegments.get(entry.getKey()) == null) {
+                entry.getKey().onSegmentRemove(entry.getValue());
+            }
+        }
+
+        // Handle segment changes
+        for (Map.Entry<ScoreboardPart, ScoreboardSegment> entry : scoreboardSegments.entrySet()) {
+            ScoreboardSegment oldSegment = oldSegments.get(entry.getKey());
+
+            if (oldSegment == null || !oldSegment.equals(entry.getValue())) {
+                entry.getKey().onSegmentChange(entry.getValue());
+            }
         }
     }
 
-    private void updateSegmentMatchers() {
-        segmentMatchers =
-                scoreboardParts.stream().flatMap(pair -> pair.b().stream()).toList();
+    private void createScoreboardFromSegments() {
+        Scoreboard scoreboard = McUtils.player().getScoreboard();
+
+        Objective oldObjective = scoreboard.getObjective(SCOREBOARD_KEY);
+        if (oldObjective != null) {
+            scoreboard.removeObjective(oldObjective);
+        }
+
+        Objective wynntilsObjective = scoreboard.addObjective(
+                SCOREBOARD_KEY,
+                ObjectiveCriteria.DUMMY,
+                SCOREBOARD_TITLE_COMPONENT,
+                ObjectiveCriteria.RenderType.INTEGER);
+
+        scoreboard.setDisplayObjective(1, wynntilsObjective);
+
+        if (scoreboardSegments.values().stream().noneMatch(ScoreboardSegment::isVisible)) return;
+
+        int currentScoreboardLine = MAX_SCOREBOARD_LINE;
+
+        // Insert the first line at the top
+        scoreboard.getOrCreatePlayerScore("À", wynntilsObjective).setScore(currentScoreboardLine);
+        currentScoreboardLine--;
+
+        // Insert the visible segments
+        for (ScoreboardSegment scoreboardSegment : scoreboardSegments.values()) {
+            if (!scoreboardSegment.isVisible()) continue;
+
+            scoreboard
+                    .getOrCreatePlayerScore(scoreboardSegment.getHeader(), wynntilsObjective)
+                    .setScore(currentScoreboardLine);
+            currentScoreboardLine--;
+
+            for (String line : scoreboardSegment.getContent()) {
+                scoreboard.getOrCreatePlayerScore(line, wynntilsObjective).setScore(currentScoreboardLine);
+                currentScoreboardLine--;
+            }
+        }
     }
 
-    public void removePart(ScoreboardPart scoreboardPart) {
-        // FIXME: Implement
+    private ScoreboardPart getScoreboardPartForHeader(ScoreboardLine scoreboardLine) {
+        String unformattedLine = ComponentUtils.stripFormatting(scoreboardLine.line());
+
+        for (ScoreboardPart part : scoreboardParts) {
+            if (part.getSegmentMatcher()
+                    .headerPattern()
+                    .matcher(unformattedLine)
+                    .matches()) {
+                return part;
+            }
+        }
+
+        return null;
     }
 }

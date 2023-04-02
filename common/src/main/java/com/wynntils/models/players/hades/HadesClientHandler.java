@@ -6,7 +6,7 @@ package com.wynntils.models.players.hades;
 
 import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.components.Managers;
-import com.wynntils.features.user.HadesFeature;
+import com.wynntils.features.players.HadesFeature;
 import com.wynntils.hades.objects.HadesConnection;
 import com.wynntils.hades.protocol.interfaces.adapters.IHadesClientAdapter;
 import com.wynntils.hades.protocol.packets.client.HCPacketAuthenticate;
@@ -104,7 +104,9 @@ public class HadesClientHandler implements IHadesClientAdapter {
 
     @Override
     public void handleUpdateMutual(HSPacketUpdateMutual packet) {
-        if (!HadesFeature.INSTANCE.getOtherPlayerInfo) return;
+        if (!Managers.Feature.getFeatureInstance(HadesFeature.class)
+                .getOtherPlayerInfo
+                .get()) return;
 
         Optional<HadesUser> userOptional = userRegistry.getUser(packet.getUser());
         if (userOptional.isPresent()) {

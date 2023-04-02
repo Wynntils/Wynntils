@@ -5,7 +5,7 @@
 package com.wynntils.screens.characterselector;
 
 import com.mojang.blaze3d.vertex.PoseStack;
-import com.wynntils.models.character.ClassInfo;
+import com.wynntils.models.character.type.ClassInfo;
 import com.wynntils.screens.base.WynntilsScreen;
 import com.wynntils.screens.characterselector.widgets.ClassInfoButton;
 import com.wynntils.screens.characterselector.widgets.ClassSelectionAddButton;
@@ -131,11 +131,11 @@ public final class CharacterSelectorScreen extends WynntilsScreen {
                 Texture.LIST_BACKGROUND.width(),
                 Texture.LIST_BACKGROUND.height());
 
-        renderButtons(poseStack, mouseX, mouseY, partialTick);
+        renderWidgets(poseStack, mouseX, mouseY, partialTick);
 
         renderScrollButton(poseStack);
 
-        renderPlayer();
+        renderPlayer(poseStack);
 
         if (selected == null) return;
 
@@ -270,8 +270,8 @@ public final class CharacterSelectorScreen extends WynntilsScreen {
                         0,
                         0,
                         CommonColors.BLACK,
-                        HorizontalAlignment.Left,
-                        VerticalAlignment.Top,
+                        HorizontalAlignment.LEFT,
+                        VerticalAlignment.TOP,
                         TextShadow.NONE);
         poseStack.popPose();
 
@@ -297,8 +297,8 @@ public final class CharacterSelectorScreen extends WynntilsScreen {
                         0,
                         0,
                         CommonColors.BLACK,
-                        HorizontalAlignment.Left,
-                        VerticalAlignment.Top,
+                        HorizontalAlignment.LEFT,
+                        VerticalAlignment.TOP,
                         TextShadow.NONE);
         poseStack.popPose();
 
@@ -337,7 +337,7 @@ public final class CharacterSelectorScreen extends WynntilsScreen {
                 Texture.CHARACTER_SELECTION_SCROLL_BUTTON.height());
     }
 
-    private void renderButtons(PoseStack poseStack, int mouseX, int mouseY, float partialTick) {
+    private void renderWidgets(PoseStack poseStack, int mouseX, int mouseY, float partialTick) {
         for (Renderable renderable : this.renderables) {
             renderable.render(poseStack, mouseX, mouseY, partialTick);
         }
@@ -347,7 +347,7 @@ public final class CharacterSelectorScreen extends WynntilsScreen {
         }
     }
 
-    private void renderPlayer() {
+    private void renderPlayer(PoseStack poseStack) {
         McUtils.player().setInvisible(false);
         // This is actually needed...
         McUtils.player().resetFallDistance();

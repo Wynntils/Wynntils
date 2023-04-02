@@ -9,7 +9,7 @@ import com.wynntils.core.components.Managers;
 import com.wynntils.core.components.Model;
 import com.wynntils.core.components.Models;
 import com.wynntils.core.net.athena.event.AthenaLoginEvent;
-import com.wynntils.features.user.HadesFeature;
+import com.wynntils.features.players.HadesFeature;
 import com.wynntils.hades.objects.HadesConnection;
 import com.wynntils.hades.protocol.builders.HadesNetworkBuilder;
 import com.wynntils.hades.protocol.enums.PacketAction;
@@ -50,8 +50,9 @@ public final class HadesModel extends Model {
     private static final int TICKS_PER_UPDATE = 5;
     private static final int MS_PER_PING = 1000;
 
+    private final HadesUserRegistry userRegistry = new HadesUserRegistry();
+
     private HadesConnection hadesConnection;
-    private HadesUserRegistry userRegistry = new HadesUserRegistry();
     private int tickCountUntilUpdate = 0;
     private PlayerStatus lastSentStatus;
     private ScheduledExecutorService pingScheduler;
@@ -64,7 +65,7 @@ public final class HadesModel extends Model {
         return userRegistry.getHadesUserMap().values().stream();
     }
 
-    private void onLogin() {
+    private void login() {
         // Try to log in to Hades, if we're not already connected
         if (!isConnected()) {
             tryCreateConnection();
@@ -95,6 +96,11 @@ public final class HadesModel extends Model {
 
     @SubscribeEvent
     public void onAuth(HadesEvent.Authenticated event) {
+        if (Models.WorldState.onWorld()) {
+            // Send initial world data if Hades login only happened after joining the player's class
+            tryResendWorldData();
+        }
+
         WynntilsMod.info("Starting Hades Ping Scheduler Task");
 
         pingScheduler = Executors.newSingleThreadScheduledExecutor();
@@ -117,7 +123,9 @@ public final class HadesModel extends Model {
     @SubscribeEvent
     public void onFriendListUpdate(HadesRelationsUpdateEvent.FriendList event) {
         if (!isConnected()) return;
-        if (!HadesFeature.INSTANCE.shareWithFriends) return;
+        if (!Managers.Feature.getFeatureInstance(HadesFeature.class)
+                .shareWithFriends
+                .get()) return;
 
         hadesConnection.sendPacket(new HCPacketSocialUpdate(
                 event.getChangedPlayers().stream().toList(),
@@ -128,7 +136,9 @@ public final class HadesModel extends Model {
     @SubscribeEvent
     public void onPartyListUpdate(HadesRelationsUpdateEvent.PartyList event) {
         if (!isConnected()) return;
-        if (!HadesFeature.INSTANCE.shareWithParty) return;
+        if (!Managers.Feature.getFeatureInstance(HadesFeature.class)
+                .shareWithParty
+                .get()) return;
 
         hadesConnection.sendPacket(new HCPacketSocialUpdate(
                 event.getChangedPlayers().stream().toList(),
@@ -168,7 +178,7 @@ public final class HadesModel extends Model {
     public void onAthenaLogin(AthenaLoginEvent event) {
         if (Models.WorldState.getCurrentState() != WorldState.NOT_CONNECTED && !isConnected()) {
             if (Managers.WynntilsAccount.isLoggedIn()) {
-                tryCreateConnection();
+                login();
             }
         }
     }
@@ -182,9 +192,15 @@ public final class HadesModel extends Model {
     public void onTick(TickEvent event) {
         if (!isConnected()) return;
         if (!Models.WorldState.onWorld() || McUtils.player().hasEffect(MobEffects.NIGHT_VISION)) return;
-        if (!HadesFeature.INSTANCE.shareWithParty
-                && !HadesFeature.INSTANCE.shareWithGuild
-                && !HadesFeature.INSTANCE.shareWithFriends) return;
+        if (!Managers.Feature.getFeatureInstance(HadesFeature.class)
+                        .shareWithParty
+                        .get()
+                && !Managers.Feature.getFeatureInstance(HadesFeature.class)
+                        .shareWithGuild
+                        .get()
+                && !Managers.Feature.getFeatureInstance(HadesFeature.class)
+                        .shareWithFriends
+                        .get()) return;
 
         tickCountUntilUpdate--;
 
@@ -195,46 +211,35 @@ public final class HadesModel extends Model {
             float pY = (float) player.getY();
             float pZ = (float) player.getZ();
 
-            if (lastSentStatus != null
-                    && lastSentStatus.equals(
-                            pX,
-                            pY,
-                            pZ,
-                            Models.Character.getCurrentHealth(),
-                            Models.Character.getMaxHealth(),
-                            Models.Character.getCurrentMana(),
-                            Models.Character.getMaxMana())) {
+            PlayerStatus newStatus =
+                    new PlayerStatus(pX, pY, pZ, Models.CharacterStats.getHealth(), Models.CharacterStats.getMana());
+
+            if (newStatus.equals(lastSentStatus)) {
                 tickCountUntilUpdate = 1;
                 return;
             }
 
             tickCountUntilUpdate = TICKS_PER_UPDATE;
 
-            lastSentStatus = new PlayerStatus(
-                    pX,
-                    pY,
-                    pZ,
-                    Models.Character.getCurrentHealth(),
-                    Models.Character.getMaxHealth(),
-                    Models.Character.getCurrentMana(),
-                    Models.Character.getMaxMana());
+            lastSentStatus = newStatus;
 
             hadesConnection.sendPacketAndFlush(new HCPacketUpdateStatus(
                     lastSentStatus.x(),
                     lastSentStatus.y(),
                     lastSentStatus.z(),
-                    lastSentStatus.health(),
-                    lastSentStatus.maxHealth(),
-                    lastSentStatus.mana(),
-                    lastSentStatus.maxMana()));
+                    lastSentStatus.health().current(),
+                    lastSentStatus.health().max(),
+                    lastSentStatus.mana().current(),
+                    lastSentStatus.mana().max()));
         }
     }
 
     public void tryResendWorldData() {
         if (!isConnected()) return;
 
-        hadesConnection.sendPacket(
-                new HCPacketUpdateWorld(Models.WorldState.getCurrentWorldName(), Models.Character.getId()));
+        hadesConnection.sendPacket(new HCPacketUpdateWorld(
+                Models.WorldState.getCurrentWorldName(),
+                Models.Character.getId().hashCode()));
     }
 
     public void resetSocialType(SocialType socialType) {

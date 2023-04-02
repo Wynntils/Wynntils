@@ -1,23 +1,21 @@
 /*
- * Copyright © Wynntils 2022.
+ * Copyright © Wynntils 2023.
  * This file is released under AGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.core.config;
 
-import java.lang.annotation.ElementType;
-import java.lang.annotation.Retention;
-import java.lang.annotation.RetentionPolicy;
-import java.lang.annotation.Target;
+public class Config<T> {
+    private T value;
 
-@Retention(RetentionPolicy.RUNTIME)
-@Target(ElementType.FIELD)
-public @interface Config {
-    /** The base part of the translation key to use for this option */
-    String key() default "";
+    public Config(T value) {
+        this.value = value;
+    }
 
-    /** The subcategory this option belongs in within its container */
-    String subcategory() default "";
+    public T get() {
+        return value;
+    }
 
-    /** Whether this option should be visible to users */
-    boolean visible() default true;
+    public void updateConfig(T value) {
+        this.value = value;
+    }
 }

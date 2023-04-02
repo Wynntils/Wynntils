@@ -16,11 +16,20 @@ public record RangedValue(int low, int high) {
         return new RangedValue(Integer.parseInt(pair[0]), Integer.parseInt(pair[1]));
     }
 
+    public boolean isFixed() {
+        return low == high;
+    }
+
+    public boolean inRange(int value) {
+        return value >= low && value <= high;
+    }
+
     public String asString() {
         return low + "-" + high;
     }
 
-    public boolean isFixed() {
-        return low == high;
+    @Override
+    public String toString() {
+        return "<" + low + "-" + high + '>';
     }
 }

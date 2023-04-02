@@ -8,7 +8,6 @@ import java.util.Set;
 import java.util.concurrent.TimeUnit;
 
 public class ServerProfile {
-
     private long firstSeen;
     private final Set<String> players;
 

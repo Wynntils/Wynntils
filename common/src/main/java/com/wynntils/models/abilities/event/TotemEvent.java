@@ -4,8 +4,8 @@
  */
 package com.wynntils.models.abilities.event;
 
-import com.wynntils.models.abilities.ShamanTotem;
-import com.wynntils.utils.mc.type.Location;
+import com.wynntils.models.abilities.type.ShamanTotem;
+import net.minecraft.core.Position;
 import net.minecraft.world.entity.decoration.ArmorStand;
 import net.minecraftforge.eventbus.api.Event;
 
@@ -24,15 +24,15 @@ public abstract class TotemEvent extends Event {
      * Fired when the totem's timer ArmorStand is bound to the visible totem
      */
     public static class Activated extends TotemEvent {
-        private final Location location;
+        private final Position position;
 
-        public Activated(int totemNumber, Location location) {
+        public Activated(int totemNumber, Position position) {
             super(totemNumber);
-            this.location = location;
+            this.position = position;
         }
 
-        public Location getLocation() {
-            return location;
+        public Position getPosition() {
+            return position;
         }
     }
 
@@ -41,20 +41,20 @@ public abstract class TotemEvent extends Event {
      */
     public static class Updated extends TotemEvent {
         private final int time;
-        private final Location location;
+        private final Position position;
 
-        public Updated(int totemNumber, int time, Location location) {
+        public Updated(int totemNumber, int time, Position position) {
             super(totemNumber);
             this.time = time;
-            this.location = location;
+            this.position = position;
         }
 
         public int getTime() {
             return time;
         }
 
-        public Location getLocation() {
-            return location;
+        public Position getPosition() {
+            return position;
         }
     }
 

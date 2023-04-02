@@ -4,9 +4,22 @@
  */
 package com.wynntils.models.items.items.gui;
 
-public class SoulPointItem extends GuiItem {
+import com.wynntils.models.items.properties.CountedItemProperty;
+
+public class SoulPointItem extends GuiItem implements CountedItemProperty {
+    private final int count;
+
+    public SoulPointItem(int count) {
+        this.count = count;
+    }
+
+    @Override
+    public int getCount() {
+        return count;
+    }
+
     @Override
     public String toString() {
-        return "SoulPointItem{}";
+        return "SoulPointItem{" + "count=" + count + '}';
     }
 }

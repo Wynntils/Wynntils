@@ -35,8 +35,8 @@ public final class LoreUtils {
      *
      * @return an {@link List} containing all item lore
      */
-    public static LinkedList<String> getLore(ItemStack item) {
-        ListTag loreTag = getLoreTag(item);
+    public static LinkedList<String> getLore(ItemStack itemStack) {
+        ListTag loreTag = getLoreTag(itemStack);
 
         LinkedList<String> lore = new LinkedList<>();
         if (loreTag == null) return lore;
@@ -52,8 +52,8 @@ public final class LoreUtils {
      * Returns the lore for the given line, or the empty string if there is no
      * such line.
      */
-    public static String getLoreLine(ItemStack item, int line) {
-        ListTag loreTag = getLoreTag(item);
+    public static String getLoreLine(ItemStack itemStack, int line) {
+        ListTag loreTag = getLoreTag(itemStack);
         if (loreTag == null) return "";
 
         return ComponentUtils.getCoded(loreTag.getString(line));
@@ -64,10 +64,10 @@ public final class LoreUtils {
      * and checking 5 more lines. (The reason for this is that the Trade Market
      * inserts additional lines at the top of the lore.)
      */
-    public static Matcher matchLoreLine(ItemStack item, int startLineNum, Pattern pattern) {
+    public static Matcher matchLoreLine(ItemStack itemStack, int startLineNum, Pattern pattern) {
         Matcher matcher = null;
         for (int i = startLineNum; i <= startLineNum + 5; i++) {
-            String line = getLoreLine(item, i);
+            String line = getLoreLine(itemStack, i);
             matcher = pattern.matcher(line);
             if (matcher.matches()) return matcher;
         }
@@ -83,18 +83,18 @@ public final class LoreUtils {
      *
      * @return a {@link String} containing all item lore
      */
-    public static String getStringLore(ItemStack item) {
+    public static String getStringLore(ItemStack itemStack) {
         StringBuilder toReturn = new StringBuilder();
-        for (String x : getLore(item)) {
+        for (String x : getLore(itemStack)) {
             toReturn.append(x);
         }
         return toReturn.toString();
     }
 
     /** Get the lore NBT tag from an item, else return empty */
-    public static ListTag getLoreTagElseEmpty(ItemStack item) {
-        if (item.isEmpty()) return new ListTag();
-        CompoundTag display = item.getTagElement("display");
+    public static ListTag getLoreTagElseEmpty(ItemStack itemStack) {
+        if (itemStack.isEmpty()) return new ListTag();
+        CompoundTag display = itemStack.getTagElement("display");
 
         if (display == null || display.getType() != CompoundTag.TYPE || !display.contains("Lore")) return new ListTag();
         Tag loreBase = display.get("Lore");
@@ -104,9 +104,9 @@ public final class LoreUtils {
     }
 
     /** Get the lore NBT tag from an item, else return null */
-    public static ListTag getLoreTag(ItemStack item) {
-        if (item.isEmpty()) return null;
-        CompoundTag display = item.getTagElement("display");
+    public static ListTag getLoreTag(ItemStack itemStack) {
+        if (itemStack.isEmpty()) return null;
+        CompoundTag display = itemStack.getTagElement("display");
 
         if (display == null || display.getType() != CompoundTag.TYPE || !display.contains("Lore")) return null;
         Tag loreBase = display.get("Lore");
@@ -116,10 +116,10 @@ public final class LoreUtils {
     }
 
     /** Get the lore NBT tag from an item, else return null */
-    public static ListTag getOrCreateLoreTag(ItemStack item) {
-        if (item.isEmpty()) return null;
+    public static ListTag getOrCreateLoreTag(ItemStack itemStack) {
+        if (itemStack.isEmpty()) return null;
 
-        Tag display = getOrCreateTag(item.getOrCreateTag(), "display", CompoundTag::new);
+        Tag display = getOrCreateTag(itemStack.getOrCreateTag(), "display", CompoundTag::new);
         if (display.getType() != CompoundTag.TYPE) return null;
 
         Tag lore = getOrCreateTag((CompoundTag) display, "lore", ListTag::new);
@@ -135,15 +135,15 @@ public final class LoreUtils {
     /**
      * Replace the lore on an item's NBT tag.
      *
-     * @param stack The {@link ItemStack} to have its
+     * @param itemStack The {@link ItemStack} to have its
      * @param tag The {@link ListTag} to replace with
      */
-    public static void replaceLore(ItemStack stack, ListTag tag) {
-        CompoundTag nbt = stack.getOrCreateTag();
+    public static void replaceLore(ItemStack itemStack, ListTag tag) {
+        CompoundTag nbt = itemStack.getOrCreateTag();
         CompoundTag display = (CompoundTag) getOrCreateTag(nbt, "display", CompoundTag::new);
         display.put("Lore", tag);
         nbt.put("display", display);
-        stack.setTag(nbt);
+        itemStack.setTag(nbt);
     }
 
     /** Converts a string to a usable lore tag */
@@ -180,9 +180,9 @@ public final class LoreUtils {
         return StringTag.valueOf(Component.Serializer.toJson(toConvert));
     }
 
-    public static List<Component> getTooltipLines(ItemStack stack) {
+    public static List<Component> getTooltipLines(ItemStack itemStack) {
         TooltipFlag flag = McUtils.options().advancedItemTooltips ? TooltipFlag.ADVANCED : TooltipFlag.NORMAL;
-        return stack.getTooltipLines(McUtils.player(), flag);
+        return itemStack.getTooltipLines(McUtils.player(), flag);
     }
 
     public static List<Component> appendTooltip(
@@ -240,6 +240,31 @@ public final class LoreUtils {
         String newLoreString = newLore.getAsString();
 
         return existingLoreString.equals(newLoreString);
+    }
+
+    /**
+     * This checks if the lore of the second item contains the entirety of the first item's lore, or vice versa.
+     * It might have additional lines added, but these are not checked.
+     */
+    public static boolean loreSoftMatches(ItemStack firstItem, ItemStack secondItem, int tolerance) {
+        List<String> firstLines = getLore(firstItem);
+        List<String> secondLines = getLore(secondItem);
+        int firstLinesLen = firstLines.size();
+        int secondLinesLen = secondLines.size();
+
+        // Only allow a maximum number of additional lines in the longer tooltip
+        if (Math.abs(firstLinesLen - secondLinesLen) > tolerance) return false;
+
+        int linesToCheck = Math.min(firstLinesLen, secondLinesLen);
+        // Prevent soft matching on tooltips that are very small
+        if (linesToCheck < 3 && firstLinesLen != secondLinesLen) return false;
+
+        for (int i = 0; i < linesToCheck; i++) {
+            if (!firstLines.get(i).equals(secondLines.get(i))) return false;
+        }
+
+        // Every lore line matches from the first to the second (or second to the first), so we have a match
+        return true;
     }
 
     /**

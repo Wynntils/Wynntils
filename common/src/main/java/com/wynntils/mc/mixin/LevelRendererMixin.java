@@ -7,7 +7,9 @@ package com.wynntils.mc.mixin;
 import com.llamalad7.mixinextras.injector.ModifyExpressionValue;
 import com.llamalad7.mixinextras.sugar.Local;
 import com.mojang.blaze3d.vertex.PoseStack;
-import com.wynntils.mc.EventFactory;
+import com.wynntils.core.events.MixinHelper;
+import com.wynntils.mc.event.RenderLevelEvent;
+import com.wynntils.mc.event.RenderTileLevelLastEvent;
 import com.wynntils.mc.extension.EntityExtension;
 import com.wynntils.utils.colors.CustomColor;
 import net.minecraft.client.Camera;
@@ -30,7 +32,10 @@ public abstract class LevelRendererMixin {
     @Final
     private Minecraft minecraft;
 
-    @Inject(at = @At("TAIL"), method = "renderLevel")
+    @Inject(
+            at = @At("TAIL"),
+            method =
+                    "renderLevel(Lcom/mojang/blaze3d/vertex/PoseStack;FJZLnet/minecraft/client/Camera;Lnet/minecraft/client/renderer/GameRenderer;Lnet/minecraft/client/renderer/LightTexture;Lorg/joml/Matrix4f;)V")
     private void renderLevelPost(
             PoseStack poseStack,
             float partialTick,
@@ -41,11 +46,14 @@ public abstract class LevelRendererMixin {
             LightTexture lightTexture,
             Matrix4f projectionMatrix,
             CallbackInfo ci) {
-        EventFactory.onRenderLevelPost(
-                this.minecraft.levelRenderer, poseStack, partialTick, projectionMatrix, finishNanoTime, camera);
+        MixinHelper.post(new RenderLevelEvent.Post(
+                this.minecraft.levelRenderer, poseStack, partialTick, projectionMatrix, finishNanoTime, camera));
     }
 
-    @Inject(at = @At("HEAD"), method = "renderLevel")
+    @Inject(
+            at = @At("HEAD"),
+            method =
+                    "renderLevel(Lcom/mojang/blaze3d/vertex/PoseStack;FJZLnet/minecraft/client/Camera;Lnet/minecraft/client/renderer/GameRenderer;Lnet/minecraft/client/renderer/LightTexture;Lorg/joml/Matrix4f;)V")
     private void renderLevelPre(
             PoseStack poseStack,
             float partialTick,
@@ -56,12 +64,13 @@ public abstract class LevelRendererMixin {
             LightTexture lightTexture,
             Matrix4f projectionMatrix,
             CallbackInfo ci) {
-        EventFactory.onRenderLevelPre(
-                this.minecraft.levelRenderer, poseStack, partialTick, projectionMatrix, finishNanoTime, camera);
+        MixinHelper.post(new RenderLevelEvent.Pre(
+                this.minecraft.levelRenderer, poseStack, partialTick, projectionMatrix, finishNanoTime, camera));
     }
 
     @ModifyExpressionValue(
-            method = "renderLevel",
+            method =
+                    "renderLevel(Lcom/mojang/blaze3d/vertex/PoseStack;FJZLnet/minecraft/client/Camera;Lnet/minecraft/client/renderer/GameRenderer;Lnet/minecraft/client/renderer/LightTexture;Lorg/joml/Matrix4f;)V",
             at = @At(value = "INVOKE", target = "Lnet/minecraft/world/entity/Entity;getTeamColor()I"))
     private int modifyOutlineColor(int original, @Local Entity entity) {
         EntityExtension entityExt = (EntityExtension) entity;
@@ -80,7 +89,8 @@ public abstract class LevelRendererMixin {
                             target =
                                     "Lnet/minecraft/client/renderer/LevelRenderer;checkPoseStack(Lcom/mojang/blaze3d/vertex/PoseStack;)V",
                             ordinal = 2),
-            method = "renderLevel")
+            method =
+                    "renderLevel(Lcom/mojang/blaze3d/vertex/PoseStack;FJZLnet/minecraft/client/Camera;Lnet/minecraft/client/renderer/GameRenderer;Lnet/minecraft/client/renderer/LightTexture;Lorg/joml/Matrix4f;)V")
     private void renderTilePost(
             PoseStack poseStack,
             float partialTick,
@@ -91,7 +101,7 @@ public abstract class LevelRendererMixin {
             LightTexture lightTexture,
             Matrix4f projectionMatrix,
             CallbackInfo ci) {
-        EventFactory.onRenderTileLast(
-                this.minecraft.levelRenderer, poseStack, partialTick, projectionMatrix, finishNanoTime, camera);
+        MixinHelper.post(new RenderTileLevelLastEvent(
+                this.minecraft.levelRenderer, poseStack, partialTick, projectionMatrix, finishNanoTime, camera));
     }
 }

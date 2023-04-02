@@ -21,7 +21,7 @@ import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.network.chat.FormattedText;
 import net.minecraft.network.chat.Style;
 
-public class BufferedFontRenderer {
+public final class BufferedFontRenderer {
     private static final BufferedFontRenderer INSTANCE = new BufferedFontRenderer();
     private final Font font;
 
@@ -42,7 +42,7 @@ public class BufferedFontRenderer {
 
     public void renderText(
             PoseStack poseStack,
-            MultiBufferSource.BufferSource bufferSource,
+            MultiBufferSource bufferSource,
             String text,
             float x,
             float y,
@@ -59,14 +59,14 @@ public class BufferedFontRenderer {
         // TODO: Add rainbow color support
 
         renderX = switch (horizontalAlignment) {
-            case Left -> x;
-            case Center -> x - (font.width(text) / 2f * textScale);
-            case Right -> x - font.width(text) * textScale;};
+            case LEFT -> x;
+            case CENTER -> x - (font.width(text) / 2f * textScale);
+            case RIGHT -> x - font.width(text) * textScale;};
 
         renderY = switch (verticalAlignment) {
-            case Top -> y;
-            case Middle -> y - (font.lineHeight / 2f * textScale);
-            case Bottom -> y - font.lineHeight * textScale;};
+            case TOP -> y;
+            case MIDDLE -> y - (font.lineHeight / 2f * textScale);
+            case BOTTOM -> y - font.lineHeight * textScale;};
 
         poseStack.pushPose();
         poseStack.translate(renderX, renderY, 0);
@@ -170,7 +170,7 @@ public class BufferedFontRenderer {
 
     public void renderAlignedTextInBox(
             PoseStack poseStack,
-            MultiBufferSource.BufferSource bufferSource,
+            MultiBufferSource bufferSource,
             String text,
             float x1,
             float x2,
@@ -182,19 +182,18 @@ public class BufferedFontRenderer {
             VerticalAlignment verticalAlignment,
             TextShadow textShadow,
             float textScale) {
-
         float renderX =
                 switch (horizontalAlignment) {
-                    case Left -> x1;
-                    case Center -> (x1 + x2) / 2f;
-                    case Right -> x2;
+                    case LEFT -> x1;
+                    case CENTER -> (x1 + x2) / 2f;
+                    case RIGHT -> x2;
                 };
 
         float renderY =
                 switch (verticalAlignment) {
-                    case Top -> y1;
-                    case Middle -> (y1 + y2) / 2f;
-                    case Bottom -> y2;
+                    case TOP -> y1;
+                    case MIDDLE -> (y1 + y2) / 2f;
+                    case BOTTOM -> y2;
                 };
 
         renderText(
@@ -213,7 +212,7 @@ public class BufferedFontRenderer {
 
     public void renderAlignedTextInBox(
             PoseStack poseStack,
-            MultiBufferSource.BufferSource bufferSource,
+            MultiBufferSource bufferSource,
             String text,
             float x1,
             float x2,
@@ -242,7 +241,7 @@ public class BufferedFontRenderer {
 
     public void renderAlignedTextInBox(
             PoseStack poseStack,
-            MultiBufferSource.BufferSource bufferSource,
+            MultiBufferSource bufferSource,
             String text,
             float x1,
             float x2,
@@ -262,14 +261,14 @@ public class BufferedFontRenderer {
                 maxWidth,
                 customColor,
                 horizontalAlignment,
-                VerticalAlignment.Top,
+                VerticalAlignment.TOP,
                 textShadow,
                 1f);
     }
 
     public void renderAlignedTextInBox(
             PoseStack poseStack,
-            MultiBufferSource.BufferSource bufferSource,
+            MultiBufferSource bufferSource,
             String text,
             float x,
             float y1,
@@ -288,7 +287,7 @@ public class BufferedFontRenderer {
                 y2,
                 maxWidth,
                 customColor,
-                HorizontalAlignment.Left,
+                HorizontalAlignment.LEFT,
                 verticalAlignment,
                 textShadow,
                 1f);
@@ -296,7 +295,7 @@ public class BufferedFontRenderer {
 
     public void renderText(
             PoseStack poseStack,
-            MultiBufferSource.BufferSource bufferSource,
+            MultiBufferSource bufferSource,
             String text,
             float x,
             float y,
@@ -310,7 +309,7 @@ public class BufferedFontRenderer {
 
     public void renderText(
             PoseStack poseStack,
-            MultiBufferSource.BufferSource bufferSource,
+            MultiBufferSource bufferSource,
             String text,
             float x,
             float y,
@@ -360,7 +359,7 @@ public class BufferedFontRenderer {
 
     public void renderTextsWithAlignment(
             PoseStack poseStack,
-            MultiBufferSource.BufferSource bufferSource,
+            MultiBufferSource bufferSource,
             float x,
             float y,
             List<TextRenderTask> toRender,
@@ -370,27 +369,23 @@ public class BufferedFontRenderer {
             VerticalAlignment verticalAlignment) {
         float renderX =
                 switch (horizontalAlignment) {
-                    case Left -> x;
-                    case Center -> x + width / 2;
-                    case Right -> x + width;
+                    case LEFT -> x;
+                    case CENTER -> x + width / 2;
+                    case RIGHT -> x + width;
                 };
 
         float renderY =
                 switch (verticalAlignment) {
-                    case Top -> y;
-                    case Middle -> y + (height - FontRenderer.getInstance().calculateRenderHeight(toRender)) / 2;
-                    case Bottom -> y + (height - FontRenderer.getInstance().calculateRenderHeight(toRender));
+                    case TOP -> y;
+                    case MIDDLE -> y + (height - FontRenderer.getInstance().calculateRenderHeight(toRender)) / 2;
+                    case BOTTOM -> y + (height - FontRenderer.getInstance().calculateRenderHeight(toRender));
                 };
 
         renderTexts(poseStack, bufferSource, renderX, renderY, toRender);
     }
 
     public void renderTexts(
-            PoseStack poseStack,
-            MultiBufferSource.BufferSource bufferSource,
-            float x,
-            float y,
-            List<TextRenderTask> lines) {
+            PoseStack poseStack, MultiBufferSource bufferSource, float x, float y, List<TextRenderTask> lines) {
         float currentY = y;
         for (TextRenderTask line : lines) {
             renderText(poseStack, bufferSource, x, currentY, line);
@@ -402,8 +397,7 @@ public class BufferedFontRenderer {
         }
     }
 
-    public void renderText(
-            PoseStack poseStack, MultiBufferSource.BufferSource bufferSource, float x, float y, TextRenderTask line) {
+    public void renderText(PoseStack poseStack, MultiBufferSource bufferSource, float x, float y, TextRenderTask line) {
         renderText(
                 poseStack,
                 bufferSource,
@@ -419,7 +413,7 @@ public class BufferedFontRenderer {
 
     public void renderText(
             PoseStack poseStack,
-            MultiBufferSource.BufferSource bufferSource,
+            MultiBufferSource bufferSource,
             String text,
             float x,
             float y,
@@ -444,7 +438,7 @@ public class BufferedFontRenderer {
 
     public void renderTextWithAlignment(
             PoseStack poseStack,
-            MultiBufferSource.BufferSource bufferSource,
+            MultiBufferSource bufferSource,
             float renderX,
             float renderY,
             TextRenderTask toRender,

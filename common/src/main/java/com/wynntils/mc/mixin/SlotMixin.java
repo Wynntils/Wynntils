@@ -4,29 +4,29 @@
  */
 package com.wynntils.mc.mixin;
 
-import com.wynntils.mc.EventFactory;
+import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
+import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
+import com.wynntils.core.events.MixinHelper;
 import com.wynntils.mc.event.SetSlotEvent;
 import net.minecraft.world.Container;
 import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.ItemStack;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
-import org.spongepowered.asm.mixin.injection.Redirect;
 
 @Mixin(Slot.class)
 public abstract class SlotMixin {
-    @Redirect(
+    @WrapOperation(
             method = "set(Lnet/minecraft/world/item/ItemStack;)V",
             at =
                     @At(
                             value = "INVOKE",
                             target = "Lnet/minecraft/world/Container;setItem(ILnet/minecraft/world/item/ItemStack;)V"))
-    private void redirectSetItem(Container container, int slot, ItemStack stack) {
-        SetSlotEvent result = EventFactory.onSetSlotPre(container, slot, stack);
-        if (result.isCanceled()) return;
+    private void onSetItem(Container container, int slot, ItemStack itemStack, Operation<Void> original) {
+        MixinHelper.post(new SetSlotEvent.Pre(container, slot, itemStack));
 
-        container.setItem(slot, result.getItem());
+        original.call(container, slot, itemStack);
 
-        EventFactory.onSetSlotPost(container, slot, stack);
+        MixinHelper.post(new SetSlotEvent.Post(container, slot, itemStack));
     }
 }

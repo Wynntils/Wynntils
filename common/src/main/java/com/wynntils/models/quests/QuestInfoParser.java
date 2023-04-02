@@ -25,12 +25,12 @@ public final class QuestInfoParser {
     private static final Pattern LEVEL_MATCHER = Pattern.compile("^§..§r§7 Combat Lv. Min: §r§f(\\d+)$");
     private static final Pattern REQ_MATCHER = Pattern.compile("^§..§r§7 (.*) Lv. Min: §r§f(\\d+)$");
 
-    static QuestInfo parseItem(ItemStack item, int pageNumber, boolean isMiniQuest) {
+    static QuestInfo parseItemStack(ItemStack itemStack, int pageNumber, boolean isMiniQuest) {
         try {
-            String name = getQuestName(item);
+            String name = getQuestName(itemStack);
             if (name == null) return null;
 
-            LinkedList<String> lore = LoreUtils.getLore(item);
+            LinkedList<String> lore = LoreUtils.getLore(itemStack);
 
             QuestStatus status = getQuestStatus(lore);
             if (status == null) return null;
@@ -46,9 +46,9 @@ public final class QuestInfoParser {
             if (!skipEmptyLine(lore)) return null;
 
             String description = getDescription(lore);
-            boolean tracked = isQuestTracked(item);
+            boolean tracked = isQuestTracked(itemStack);
 
-            QuestInfo questInfo = new QuestInfo(
+            return new QuestInfo(
                     name,
                     status,
                     questLength,
@@ -58,15 +58,14 @@ public final class QuestInfoParser {
                     isMiniQuest,
                     pageNumber,
                     tracked);
-            return questInfo;
         } catch (NoSuchElementException e) {
-            WynntilsMod.warn("Failed to parse quest book item: " + item);
+            WynntilsMod.warn("Failed to parse quest book item: " + itemStack);
             return null;
         }
     }
 
-    static String getQuestName(ItemStack item) {
-        String rawName = item.getHoverName().getString();
+    static String getQuestName(ItemStack itemStack) {
+        String rawName = itemStack.getHoverName().getString();
         if (rawName.trim().isEmpty()) {
             return null;
         }
@@ -78,8 +77,8 @@ public final class QuestInfoParser {
         return m.group(2);
     }
 
-    private static boolean isQuestTracked(ItemStack item) {
-        String rawName = item.getHoverName().getString();
+    private static boolean isQuestTracked(ItemStack itemStack) {
+        String rawName = itemStack.getHoverName().getString();
         if (rawName.trim().isEmpty()) {
             return false;
         }

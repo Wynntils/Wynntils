@@ -9,9 +9,9 @@ import com.wynntils.core.components.Model;
 import com.wynntils.handlers.item.ItemAnnotation;
 import com.wynntils.handlers.item.ItemAnnotator;
 import com.wynntils.handlers.item.ItemHandler;
-import com.wynntils.models.gear.GearItemModel;
-import com.wynntils.models.gear.GearProfilesModel;
-import com.wynntils.models.ingredients.IngredientProfilesModel;
+import com.wynntils.models.elements.ElementModel;
+import com.wynntils.models.gear.GearModel;
+import com.wynntils.models.ingredients.IngredientModel;
 import com.wynntils.models.items.annotators.game.AmplifierAnnotator;
 import com.wynntils.models.items.annotators.game.CharmAnnotator;
 import com.wynntils.models.items.annotators.game.CraftedConsumableAnnotator;
@@ -22,33 +22,38 @@ import com.wynntils.models.items.annotators.game.EmeraldPouchAnnotator;
 import com.wynntils.models.items.annotators.game.GatheringToolAnnotator;
 import com.wynntils.models.items.annotators.game.GearAnnotator;
 import com.wynntils.models.items.annotators.game.GearBoxAnnotator;
-import com.wynntils.models.items.annotators.game.HealthPotionAnnotator;
 import com.wynntils.models.items.annotators.game.HorseAnnotator;
 import com.wynntils.models.items.annotators.game.IngredientAnnotator;
-import com.wynntils.models.items.annotators.game.ManaPotionAnnotator;
 import com.wynntils.models.items.annotators.game.MaterialAnnotator;
+import com.wynntils.models.items.annotators.game.MiscAnnotator;
+import com.wynntils.models.items.annotators.game.MultiHealthPotionAnnotator;
+import com.wynntils.models.items.annotators.game.PotionAnnotator;
 import com.wynntils.models.items.annotators.game.PowderAnnotator;
-import com.wynntils.models.items.annotators.game.SkillPotionAnnotator;
 import com.wynntils.models.items.annotators.game.TeleportScrollAnnotator;
 import com.wynntils.models.items.annotators.game.TomeAnnotator;
 import com.wynntils.models.items.annotators.game.TrinketAnnotator;
-import com.wynntils.models.items.annotators.game.XpPotionAnnotator;
+import com.wynntils.models.items.annotators.game.UnknownGearAnnotator;
+import com.wynntils.models.items.annotators.gui.AbilityTreeAnnotator;
 import com.wynntils.models.items.annotators.gui.CosmeticTierAnnotator;
 import com.wynntils.models.items.annotators.gui.DailyRewardMultiplierAnnotator;
 import com.wynntils.models.items.annotators.gui.IngredientPouchAnnotator;
+import com.wynntils.models.items.annotators.gui.SeaskipperDestinationAnnotator;
 import com.wynntils.models.items.annotators.gui.ServerAnnotator;
+import com.wynntils.models.items.annotators.gui.SkillCrystalAnnotator;
 import com.wynntils.models.items.annotators.gui.SkillPointAnnotator;
 import com.wynntils.models.items.annotators.gui.SoulPointAnnotator;
+import com.wynntils.models.rewards.RewardsModel;
 import java.util.List;
 import java.util.Optional;
 import net.minecraft.world.item.ItemStack;
 
 public class ItemModel extends Model {
     public ItemModel(
-            GearItemModel gearItemModel,
-            GearProfilesModel gearProfilesModel,
-            IngredientProfilesModel ingredientProfilesModel) {
-        super(List.of(gearItemModel, gearProfilesModel, ingredientProfilesModel));
+            ElementModel elementModel,
+            GearModel gearModel,
+            RewardsModel rewardsModel,
+            IngredientModel ingredientModel) {
+        super(List.of(elementModel, gearModel, rewardsModel, ingredientModel));
 
         // For efficiency, register these annotators first
         Handlers.Item.registerAnnotator(new GearAnnotator());
@@ -66,24 +71,27 @@ public class ItemModel extends Model {
         Handlers.Item.registerAnnotator(new EmeraldAnnotator());
         Handlers.Item.registerAnnotator(new EmeraldPouchAnnotator());
         Handlers.Item.registerAnnotator(new GatheringToolAnnotator());
-        Handlers.Item.registerAnnotator(new HealthPotionAnnotator());
         Handlers.Item.registerAnnotator(new HorseAnnotator());
-        Handlers.Item.registerAnnotator(new ManaPotionAnnotator());
+        Handlers.Item.registerAnnotator(new MultiHealthPotionAnnotator());
+        Handlers.Item.registerAnnotator(new PotionAnnotator());
         Handlers.Item.registerAnnotator(new PowderAnnotator());
-        Handlers.Item.registerAnnotator(new SkillPotionAnnotator());
         Handlers.Item.registerAnnotator(new TeleportScrollAnnotator());
         Handlers.Item.registerAnnotator(new TrinketAnnotator());
-        Handlers.Item.registerAnnotator(new XpPotionAnnotator());
 
         // GUI handlers
+        Handlers.Item.registerAnnotator(new AbilityTreeAnnotator());
         Handlers.Item.registerAnnotator(new CosmeticTierAnnotator());
         Handlers.Item.registerAnnotator(new DailyRewardMultiplierAnnotator());
         Handlers.Item.registerAnnotator(new IngredientPouchAnnotator());
+        Handlers.Item.registerAnnotator(new SeaskipperDestinationAnnotator());
         Handlers.Item.registerAnnotator(new ServerAnnotator());
+        Handlers.Item.registerAnnotator(new SkillCrystalAnnotator());
         Handlers.Item.registerAnnotator(new SkillPointAnnotator());
         Handlers.Item.registerAnnotator(new SoulPointAnnotator());
 
         // This must be done last
+        Handlers.Item.registerAnnotator(new UnknownGearAnnotator());
+        Handlers.Item.registerAnnotator(new MiscAnnotator());
         Handlers.Item.registerAnnotator(new FallbackAnnotator());
     }
 
@@ -100,6 +108,15 @@ public class ItemModel extends Model {
         if (annotationOpt.isEmpty()) return Optional.empty();
         if (!(annotationOpt.get() instanceof WynnItem wynnItem)) return Optional.empty();
         if (wynnItem.getClass() != clazz) return Optional.empty();
+
+        return Optional.of((T) wynnItem);
+    }
+
+    public <T> Optional<T> asWynnItemPropery(ItemStack itemStack, Class<T> clazz) {
+        Optional<ItemAnnotation> annotationOpt = ItemHandler.getItemStackAnnotation(itemStack);
+        if (annotationOpt.isEmpty()) return Optional.empty();
+        if (!(annotationOpt.get() instanceof WynnItem wynnItem)) return Optional.empty();
+        if (!clazz.isAssignableFrom(wynnItem.getClass())) return Optional.empty();
 
         return Optional.of((T) wynnItem);
     }
