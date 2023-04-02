@@ -1,9 +1,21 @@
+## [0.0.2-alpha.426](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.425...v0.0.2-alpha.426) (2023-04-02)
+
+
+### Bug Fixes
+
+* Fixed reload_button texture alignment ([#1429](https://github.com/Wynntils/Artemis/issues/1429)) ([1fcc917](https://github.com/Wynntils/Artemis/commit/1fcc917f6efe1a8bbe7905b071dbf8787641cacd))
+
 ## [0.0.2-alpha.425](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.424...v0.0.2-alpha.425) (2023-04-02)
 
 
 ### New Features
 
 * Rewrite ScoreboardHandler ([#1420](https://github.com/Wynntils/Artemis/issues/1420)) ([ed69f62](https://github.com/Wynntils/Artemis/commit/ed69f62835d708b4e7ce6ee13328cc55b25bae41))
+
+
+### Miscellaneous Chores
+
+* **release:** v0.0.2-alpha.425 [skip ci] ([053ba4e](https://github.com/Wynntils/Artemis/commit/053ba4ee0fc68f939ee1545f52dfebda25b4e06e))
 
 ## [0.0.2-alpha.424](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.423...v0.0.2-alpha.424) (2023-04-01)
 
@@ -40,16 +52,4 @@
 ### Miscellaneous Chores
 
 * **release:** v0.0.2-alpha.422 [skip ci] ([ec87598](https://github.com/Wynntils/Artemis/commit/ec8759822712cd0d819a79cd1634429abf67c82d))
-
-## [0.0.2-alpha.421](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.420...v0.0.2-alpha.421) (2023-04-01)
-
-
-### New Features
-
-* Preload our resource pack earlier to skip reload ([#1419](https://github.com/Wynntils/Artemis/issues/1419)) ([1906def](https://github.com/Wynntils/Artemis/commit/1906def76c431e89958f643e3595088ad81db058))
-
-
-### Miscellaneous Chores
-
-* **release:** v0.0.2-alpha.421 [skip ci] ([8c04966](https://github.com/Wynntils/Artemis/commit/8c04966494db54b9137a7a3f011d615b44d581d7))
 
