@@ -72,12 +72,12 @@ public final class CodedStyle {
         //    If this is a custom color, a hex color code is used.
         //    Example: §#FF0000 or §1
         // 2. Formatting is converted the same way as in the Style class.
-        // 3. Click events are wrapped in angle brackets, and is reprenseted as an id.
+        // 3. Click events are wrapped in square brackets, and is reprenseted as an id.
         //    The parent of this style's owner is responsible for keeping track of click events.
-        //    Example: §<1> -> (1st click event)
-        // 4. Hover events are wrapped in square brackets, and is represented as an id.
+        //    Example: §[1] -> (1st click event)
+        // 4. Hover events are wrapped in angle brackets, and is represented as an id.
         //    The parent of this style's owner is responsible for keeping track of hover events.
-        //    Example: §[1] -> (1st hover event)
+        //    Example: §<1> -> (1st hover event)
 
         StringBuilder styleString = new StringBuilder();
 
@@ -116,18 +116,18 @@ public final class CodedStyle {
         if (clickEvent != null) {
             styleString
                     .append(STYLE_PREFIX)
-                    .append("<")
+                    .append("[")
                     .append(owner.getParent().addClickEvent(clickEvent))
-                    .append(">");
+                    .append("]");
         }
 
         // 4. Hover event
         if (hoverEvent != null) {
             styleString
                     .append(STYLE_PREFIX)
-                    .append("[")
+                    .append("<")
                     .append(owner.getParent().addHoverEvent(hoverEvent))
-                    .append("]");
+                    .append(">");
         }
 
         return styleString.toString();

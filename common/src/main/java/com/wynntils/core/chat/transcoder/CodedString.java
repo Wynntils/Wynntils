@@ -35,7 +35,9 @@ public final class CodedString {
         }
     }
 
-    public String getCoded() {
+    // We don't want to expose the actual string to the outside world
+    // If you need to do an operation with this string, implement it as a method
+    private String getCoded() {
         StringBuilder builder = new StringBuilder();
 
         for (CodedStringPart part : parts) {
