@@ -1,9 +1,21 @@
+## [0.0.2-alpha.427](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.426...v0.0.2-alpha.427) (2023-04-02)
+
+
+### Bug Fixes
+
+* Fix scrolling bugs in CharacterSelectorScreen ([#1436](https://github.com/Wynntils/Artemis/issues/1436)) ([13e7103](https://github.com/Wynntils/Artemis/commit/13e7103bda96fb4e27e2f5843447d7d666ba8616))
+
 ## [0.0.2-alpha.426](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.425...v0.0.2-alpha.426) (2023-04-02)
 
 
 ### Bug Fixes
 
 * Fixed reload_button texture alignment ([#1429](https://github.com/Wynntils/Artemis/issues/1429)) ([1fcc917](https://github.com/Wynntils/Artemis/commit/1fcc917f6efe1a8bbe7905b071dbf8787641cacd))
+
+
+### Miscellaneous Chores
+
+* **release:** v0.0.2-alpha.426 [skip ci] ([97d76bb](https://github.com/Wynntils/Artemis/commit/97d76bbec5109a49a47a00710e68717972e7bde3))
 
 ## [0.0.2-alpha.425](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.424...v0.0.2-alpha.425) (2023-04-02)
 
@@ -40,16 +52,4 @@
 ### Miscellaneous Chores
 
 * **release:** v0.0.2-alpha.423 [skip ci] ([d355ae5](https://github.com/Wynntils/Artemis/commit/d355ae5984e5f185168bf63465044345caad8010))
-
-## [0.0.2-alpha.422](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.421...v0.0.2-alpha.422) (2023-04-01)
-
-
-### Bug Fixes
-
-* Fix translations feature crashes ([#1423](https://github.com/Wynntils/Artemis/issues/1423)) ([d061a95](https://github.com/Wynntils/Artemis/commit/d061a95ec74a5441169db2aed699df8cd2d49985))
-
-
-### Miscellaneous Chores
-
-* **release:** v0.0.2-alpha.422 [skip ci] ([ec87598](https://github.com/Wynntils/Artemis/commit/ec8759822712cd0d819a79cd1634429abf67c82d))
 
