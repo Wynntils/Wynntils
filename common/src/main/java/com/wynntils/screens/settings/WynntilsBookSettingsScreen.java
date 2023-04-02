@@ -354,12 +354,13 @@ public final class WynntilsBookSettingsScreen extends WynntilsScreen implements 
                                 .filter(feature -> searchMatches(feature)
                                         || feature.getVisibleConfigOptions().stream()
                                                 .anyMatch(this::configOptionContains))
-                                .map(feature -> (Configurable) feature),
+                                .map(feature -> (Configurable) feature)
+                                .sorted(),
                         Managers.Overlay.getOverlays().stream()
                                 .filter(overlay -> searchMatches(overlay)
                                         || overlay.getVisibleConfigOptions().stream()
-                                                .anyMatch(this::configOptionContains)))
-                .sorted()
+                                                .anyMatch(this::configOptionContains))
+                                .sorted())
                 .toList();
 
         int offset = 0;
@@ -388,7 +389,9 @@ public final class WynntilsBookSettingsScreen extends WynntilsScreen implements 
             configurables.add(new ConfigurableButton(37, 21 + renderIndex * 12, 140, 10, configurable));
 
             if (configurable instanceof Feature feature) {
-                for (Overlay overlay : Managers.Overlay.getFeatureOverlays(feature)) {
+                for (Overlay overlay : Managers.Overlay.getFeatureOverlays(feature).stream()
+                        .sorted()
+                        .toList()) {
                     offset++;
                     renderIndex = (i + offset) % CONFIGURABLES_PER_PAGE;
                     configurables.add(new ConfigurableButton(37, 21 + renderIndex * 12, 140, 10, overlay));

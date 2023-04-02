@@ -78,19 +78,15 @@ public abstract class DynamicOverlay extends Overlay {
     }
 
     @Override
-    public int compareTo(Object other) {
-        if (!(other instanceof Overlay overlay)) {
-            return 0;
-        }
-
+    public int compareTo(Overlay other) {
         return ComparisonChain.start()
-                .compareTrueFirst(this.isParentEnabled(), overlay.isParentEnabled())
-                .compare(this.getDeclaringClassName(), overlay.getDeclaringClassName())
+                .compareTrueFirst(this.isParentEnabled(), other.isParentEnabled())
+                .compare(this.getDeclaringClassName(), other.getDeclaringClassName())
                 .compare(
                         this.getId(),
                         (other instanceof DynamicOverlay dynamicOverlay) ? dynamicOverlay.getId() : 0,
                         Integer::compareTo)
-                .compare(this.getTranslatedName(), overlay.getTranslatedName())
+                .compare(this.getTranslatedName(), other.getTranslatedName())
                 .result();
     }
 }
