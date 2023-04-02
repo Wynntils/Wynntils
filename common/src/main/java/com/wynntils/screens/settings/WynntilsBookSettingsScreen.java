@@ -131,7 +131,7 @@ public final class WynntilsBookSettingsScreen extends WynntilsScreen implements 
         String name = "";
         boolean enabled = false;
         if (selected instanceof Overlay selectedOverlay) {
-            enabled = selectedOverlay.shouldBeEnabled();
+            enabled = Managers.Overlay.isEnabled(selectedOverlay);
             name = selectedOverlay.getTranslatedName();
         } else if (selected instanceof Feature selectedFeature) {
             enabled = selectedFeature.isEnabled();
