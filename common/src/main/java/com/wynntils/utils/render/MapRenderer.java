@@ -13,14 +13,14 @@ import com.mojang.blaze3d.vertex.Tesselator;
 import com.mojang.blaze3d.vertex.VertexFormat;
 import com.wynntils.models.lootruns.LootrunInstance;
 import com.wynntils.models.lootruns.type.ColoredPath;
-import com.wynntils.models.lootruns.type.ColoredPoint;
+import com.wynntils.models.lootruns.type.ColoredPosition;
 import com.wynntils.models.map.MapTexture;
 import com.wynntils.models.map.pois.Poi;
 import com.wynntils.utils.colors.CommonColors;
 import com.wynntils.utils.colors.CustomColor;
 import com.wynntils.utils.mc.McUtils;
-import java.util.List;
 import com.wynntils.utils.render.type.PointerType;
+import java.util.List;
 import net.minecraft.client.renderer.GameRenderer;
 import net.minecraft.world.phys.Vec3;
 import org.joml.Matrix4f;
@@ -190,15 +190,15 @@ public final class MapRenderer {
                 BufferBuilder bufferBuilder = Tesselator.getInstance().getBuilder();
                 bufferBuilder.begin(VertexFormat.Mode.TRIANGLE_STRIP, DefaultVertexFormat.POSITION_COLOR);
 
-                List<ColoredPoint> points = path.points();
+                List<ColoredPosition> points = path.points();
                 for (int i = 0; i < points.size() - 1; i++) {
-                    ColoredPoint point1 = points.get(i);
-                    Vec3 pos1 = point1.vec3();
+                    ColoredPosition point1 = points.get(i);
+                    Vec3 pos1 = point1.position();
                     float renderX1 = getRenderX((int) pos1.x(), mapTextureX, centerX, currentZoom);
                     float renderZ1 = getRenderZ((int) pos1.z(), mapTextureZ, centerZ, currentZoom);
 
-                    ColoredPoint point2 = points.get(i + 1);
-                    Vec3 pos2 = point2.vec3();
+                    ColoredPosition point2 = points.get(i + 1);
+                    Vec3 pos2 = point2.position();
                     float renderX2 = getRenderX((int) pos2.x(), mapTextureX, centerX, currentZoom);
                     float renderZ2 = getRenderZ((int) pos2.z(), mapTextureZ, centerZ, currentZoom);
 
