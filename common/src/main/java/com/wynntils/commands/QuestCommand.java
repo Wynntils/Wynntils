@@ -123,7 +123,7 @@ public class QuestCommand extends Command {
 
         quests = Models.Quest.getQuestsRaw().stream()
                 .filter(quest -> StringUtils.initialMatch(quest.getName(), searchText)
-                        || StringUtils.initialMatch(quest.getNextTask(), searchText))
+                        || StringUtils.initialMatch(quest.getNextTask().withoutFormatting(), searchText))
                 .toList();
 
         if (quests.isEmpty()) {
@@ -187,7 +187,8 @@ public class QuestCommand extends Command {
                                 StringUtils.capitalized(quest.getLength().toString()))
                         .withStyle(ChatFormatting.YELLOW))
                 .append(Component.literal("\n - Next task: ").withStyle(ChatFormatting.WHITE))
-                .append(Component.literal(quest.getNextTask()).withStyle(ChatFormatting.GRAY))
+                .append(Component.literal(quest.getNextTask().withoutFormatting())
+                        .withStyle(ChatFormatting.GRAY))
                 .append(Component.literal("\n"))
                 .append(Component.literal("[Track quest]")
                         .withStyle(style -> style.withClickEvent(new ClickEvent(

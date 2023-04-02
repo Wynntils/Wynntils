@@ -58,7 +58,9 @@ public class BossBarHandler extends Handler {
                 boolean playMusic,
                 boolean createWorldFog) {
             Optional<Pair<TrackedBar, Matcher>> trackedBarOpt = knownBars.stream()
-                    .map(bar -> new Pair<>(bar, bar.pattern.matcher(ComponentUtils.getCoded(name).str())))
+                    .map(bar -> new Pair<>(
+                            bar,
+                            bar.pattern.matcher(ComponentUtils.getCoded(name).str())))
                     .filter(pair -> pair.b().matches())
                     .findFirst();
             if (trackedBarOpt.isEmpty()) return;
@@ -118,7 +120,8 @@ public class BossBarHandler extends Handler {
         @Override
         public void updateName(UUID id, Component name) {
             handleBarUpdate(id, trackedBar -> {
-                Matcher matcher = trackedBar.pattern.matcher(ComponentUtils.getCoded(name).str());
+                Matcher matcher =
+                        trackedBar.pattern.matcher(ComponentUtils.getCoded(name).str());
                 if (!matcher.matches()) {
                     WynntilsMod.error("Failed to match already matched boss bar");
                     return;

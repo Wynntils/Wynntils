@@ -105,7 +105,8 @@ public final class ChatHandler extends Handler {
 
         // Sometimes there is just a trailing newline; that does not
         // make it a multiline message
-        if (codedMessage.str().contains("\n") && codedMessage.str().indexOf('\n') != (codedMessage.str().length() - 1)) {
+        if (codedMessage.str().contains("\n")
+                && codedMessage.str().indexOf('\n') != (codedMessage.str().length() - 1)) {
             // This is a "chat screen"
             if (shouldSeparateNPC()) {
                 handleIncomingChatScreen(message);
@@ -230,7 +231,7 @@ public final class ChatHandler extends Handler {
                     }
                 } else {
                     // If there is anything after the dialogue, it is new chat lines
-                    if (!EMPTY_LINE_PATTERN.matcher(codedLine).find()) {
+                    if (!EMPTY_LINE_PATTERN.matcher(codedLine.str()).find()) {
                         newChatLines.push(line);
                     }
                 }
@@ -240,7 +241,8 @@ public final class ChatHandler extends Handler {
             // We just ignore that part. Also, remove empty lines or lines with just the §r code
             while (!newLines.isEmpty()
                     && EMPTY_LINE_PATTERN
-                            .matcher(ComponentUtils.getCoded(newLines.getFirst()).str())
+                            .matcher(
+                                    ComponentUtils.getCoded(newLines.getFirst()).str())
                             .find()) {
                 newLines.removeFirst();
             }

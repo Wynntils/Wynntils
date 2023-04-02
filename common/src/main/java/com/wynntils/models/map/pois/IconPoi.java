@@ -10,6 +10,7 @@ import com.wynntils.features.map.MapFeature;
 import com.wynntils.utils.MathUtils;
 import com.wynntils.utils.colors.CommonColors;
 import com.wynntils.utils.colors.CustomColor;
+import com.wynntils.utils.mc.type.CodedString;
 import com.wynntils.utils.render.FontRenderer;
 import com.wynntils.utils.render.Texture;
 import com.wynntils.utils.render.buffered.BufferedRenderUtils;
@@ -98,7 +99,7 @@ public abstract class IconPoi implements Poi {
             FontRenderer.getInstance()
                     .renderText(
                             poseStack,
-                            getName(),
+                            CodedString.of(getName()),
                             renderX,
                             15 + renderY,
                             CommonColors.GREEN,

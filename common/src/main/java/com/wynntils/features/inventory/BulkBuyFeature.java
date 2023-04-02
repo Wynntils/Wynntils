@@ -88,7 +88,8 @@ public class BulkBuyFeature extends Feature {
         }
         int newPrice = Integer.parseInt(priceMatcher.group(1)) * bulkBuyAmount.get();
 
-        String newLine = priceLine.str().replace(priceMatcher.group(1), BULK_BUY_ACTIVE_COLOR + Integer.toString(newPrice));
+        String newLine =
+                priceLine.str().replace(priceMatcher.group(1), BULK_BUY_ACTIVE_COLOR + Integer.toString(newPrice));
 
         if (newPrice > Models.Emerald.getAmountInInventory()) {
             newLine = newLine.replace("a✔", "c✖"); // Replace green checkmark with red x
@@ -104,6 +105,6 @@ public class BulkBuyFeature extends Feature {
 
         return title.startsWith(ChatFormatting.GREEN.toString())
                 && title.endsWith(" Shop")
-                && LoreUtils.getStringLore(toBuy).contains("§6Price:");
+                && LoreUtils.getStringLore(toBuy).str().contains("§6Price:");
     }
 }

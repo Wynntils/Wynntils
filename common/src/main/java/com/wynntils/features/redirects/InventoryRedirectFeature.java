@@ -14,6 +14,7 @@ import com.wynntils.core.notifications.MessageContainer;
 import com.wynntils.mc.event.SubtitleSetTextEvent;
 import com.wynntils.models.worlds.event.WorldStateEvent;
 import com.wynntils.utils.mc.ComponentUtils;
+import com.wynntils.utils.mc.type.CodedString;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import net.minecraft.network.chat.Component;
@@ -50,10 +51,10 @@ public class InventoryRedirectFeature extends Feature {
         }
 
         Component component = event.getComponent();
-        String codedString = ComponentUtils.getCoded(component);
+        CodedString codedString = ComponentUtils.getCoded(component);
 
         if (redirectIngredientPouch.get()) {
-            if (INGREDIENT_POUCH_PICKUP_PATTERN.matcher(codedString).matches()) {
+            if (INGREDIENT_POUCH_PICKUP_PATTERN.matcher(codedString.str()).matches()) {
                 event.setCanceled(true);
                 Managers.Notification.queueMessage(codedString);
                 return;
@@ -61,7 +62,7 @@ public class InventoryRedirectFeature extends Feature {
         }
 
         if (redirectEmeraldPouch.get()) {
-            Matcher matcher = EMERALD_POUCH_PICKUP_PATTERN.matcher(codedString);
+            Matcher matcher = EMERALD_POUCH_PICKUP_PATTERN.matcher(codedString.str());
             if (matcher.matches()) {
                 event.setCanceled(true);
 
@@ -82,11 +83,11 @@ public class InventoryRedirectFeature extends Feature {
         }
 
         if (redirectPotionStack.get()) {
-            Matcher matcher = POTION_STACK_PATTERN.matcher(codedString);
+            Matcher matcher = POTION_STACK_PATTERN.matcher(codedString.str());
             if (matcher.matches()) {
                 event.setCanceled(true);
                 String potionCount = matcher.group(1);
-                String potionMessage = String.format("§a+%s Potion Charges", potionCount);
+                CodedString potionMessage = CodedString.of(String.format("§a+%s Potion Charges", potionCount));
                 Managers.Notification.queueMessage(potionMessage);
 
                 return;

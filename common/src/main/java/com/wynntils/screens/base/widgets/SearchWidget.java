@@ -8,6 +8,7 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import com.wynntils.screens.base.TextboxScreen;
 import com.wynntils.utils.colors.CommonColors;
 import com.wynntils.utils.mc.McUtils;
+import com.wynntils.utils.mc.type.CodedString;
 import com.wynntils.utils.render.FontRenderer;
 import com.wynntils.utils.render.RenderUtils;
 import com.wynntils.utils.render.type.HorizontalAlignment;
@@ -72,7 +73,7 @@ public class SearchWidget extends TextInputBoxWidget {
         FontRenderer.getInstance()
                 .renderAlignedTextInBox(
                         poseStack,
-                        defaultText ? DEFAULT_TEXT.getString() : firstPortion,
+                        CodedString.of(defaultText ? DEFAULT_TEXT.getString() : firstPortion),
                         this.getX() + textPadding,
                         this.getX() + this.width - textPadding - lastWidth - highlightedWidth,
                         this.getY() + VERTICAL_OFFSET,
@@ -86,7 +87,7 @@ public class SearchWidget extends TextInputBoxWidget {
         FontRenderer.getInstance()
                 .renderAlignedHighlightedTextInBox(
                         poseStack,
-                        highlightedPortion,
+                        CodedString.of(highlightedPortion),
                         this.getX() + textPadding + firstWidth,
                         this.getX() + this.width - textPadding - lastWidth,
                         this.getY() + VERTICAL_OFFSET,
@@ -100,7 +101,7 @@ public class SearchWidget extends TextInputBoxWidget {
         FontRenderer.getInstance()
                 .renderAlignedTextInBox(
                         poseStack,
-                        lastPortion,
+                        CodedString.of(lastPortion),
                         this.getX() + textPadding + firstWidth + highlightedWidth,
                         this.getX() + this.width - textPadding,
                         this.getY() + VERTICAL_OFFSET,

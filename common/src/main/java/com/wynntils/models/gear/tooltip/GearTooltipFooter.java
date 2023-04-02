@@ -12,6 +12,7 @@ import com.wynntils.models.gear.type.GearRestrictions;
 import com.wynntils.models.gear.type.GearTier;
 import com.wynntils.utils.StringUtils;
 import com.wynntils.utils.mc.RenderedStringUtils;
+import com.wynntils.utils.mc.type.CodedString;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -35,7 +36,7 @@ public final class GearTooltipFooter {
             for (GearMajorId majorId : gearInfo.fixedStats().majorIds()) {
                 footer.add(Component.literal("+" + majorId.name() + ": ").withStyle(ChatFormatting.AQUA));
                 Stream.of(RenderedStringUtils.wrapTextBySize(majorId.lore(), PIXEL_WIDTH))
-                        .forEach(c -> footer.add(Component.literal(c).withStyle(ChatFormatting.DARK_AQUA)));
+                        .forEach(c -> footer.add(c.asComponent().withStyle(ChatFormatting.DARK_AQUA)));
             }
         }
 
@@ -80,10 +81,10 @@ public final class GearTooltipFooter {
         }
 
         // lore
-        Optional<String> lore = gearInfo.metaInfo().lore();
+        Optional<CodedString> lore = gearInfo.metaInfo().lore();
         if (lore.isPresent()) {
             Stream.of(RenderedStringUtils.wrapTextBySize(lore.get(), PIXEL_WIDTH))
-                    .forEach(c -> footer.add(Component.literal(c).withStyle(ChatFormatting.DARK_GRAY)));
+                    .forEach(c -> footer.add(c.asComponent().withStyle(ChatFormatting.DARK_GRAY)));
         }
 
         return footer;

@@ -4,4 +4,6 @@
  */
 package com.wynntils.models.gear.type;
 
-public record GearMajorId(String id, String name, String lore) {}
+import com.wynntils.utils.mc.type.CodedString;
+
+public record GearMajorId(String id, String name, CodedString lore) {}

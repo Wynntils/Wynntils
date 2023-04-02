@@ -17,6 +17,7 @@ import com.wynntils.models.token.type.TokenGatekeeper;
 import com.wynntils.models.worlds.event.WorldStateEvent;
 import com.wynntils.utils.MathUtils;
 import com.wynntils.utils.mc.PosUtils;
+import com.wynntils.utils.mc.type.CodedString;
 import com.wynntils.utils.mc.type.Location;
 import com.wynntils.utils.type.CappedValue;
 import com.wynntils.utils.type.TimedSet;
@@ -76,9 +77,9 @@ public class TokenModel extends Model {
     public void onLabelChange(EntityLabelChangedEvent event) {
         if (!(event.getEntity() instanceof ArmorStand)) return;
 
-        String name = event.getName();
+        CodedString name = event.getName();
 
-        Matcher typeMatcher = TYPE_PATTERN.matcher(name);
+        Matcher typeMatcher = TYPE_PATTERN.matcher(name.str());
         if (typeMatcher.matches()) {
             String countString = typeMatcher.group(1);
             int max = countString != null ? Integer.parseInt(countString) : 1;
@@ -96,7 +97,7 @@ public class TokenModel extends Model {
             return;
         }
 
-        Matcher tokensMatcher = TOKEN_PATTERN.matcher(name);
+        Matcher tokensMatcher = TOKEN_PATTERN.matcher(name.str());
         if (tokensMatcher.matches()) {
             CappedValue tokens =
                     new CappedValue(Integer.parseInt(tokensMatcher.group(1)), Integer.parseInt(tokensMatcher.group(2)));
@@ -134,7 +135,7 @@ public class TokenModel extends Model {
             return;
         }
 
-        Matcher toaMatcher = TOA_GATEKEEPER_NAME_PATTERN.matcher(name);
+        Matcher toaMatcher = TOA_GATEKEEPER_NAME_PATTERN.matcher(name.str());
         if (toaMatcher.matches()) {
             int floor = Integer.parseInt(toaMatcher.group(1));
             int level = Integer.parseInt(toaMatcher.group(2));
@@ -149,7 +150,7 @@ public class TokenModel extends Model {
                     new TokenGatekeeper(gatekeeperTokenName, itemName, location, new CappedValue(0, maxTokens)));
         }
 
-        Matcher hiveMatcher = HIVE_GATEKEEPER_NAME_PATTERN.matcher(name);
+        Matcher hiveMatcher = HIVE_GATEKEEPER_NAME_PATTERN.matcher(name.str());
         if (hiveMatcher.matches()) {
             String division = hiveMatcher.group(1);
             int level = Integer.parseInt(hiveMatcher.group(2));

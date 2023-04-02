@@ -23,6 +23,7 @@ import com.wynntils.mc.event.TickEvent;
 import com.wynntils.models.spells.event.SpellEvent;
 import com.wynntils.utils.colors.CommonColors;
 import com.wynntils.utils.colors.CustomColor;
+import com.wynntils.utils.mc.type.CodedString;
 import com.wynntils.utils.render.RenderUtils;
 import com.wynntils.utils.render.buffered.BufferedFontRenderer;
 import com.wynntils.utils.render.type.HorizontalAlignment;
@@ -126,7 +127,7 @@ public class SpellCastRenderFeature extends Feature {
                     .renderAlignedTextInBox(
                             poseStack,
                             bufferSource,
-                            spellMessage,
+                            CodedString.of(spellMessage),
                             this.getRenderX(),
                             this.getRenderX() + this.getWidth(),
                             this.getRenderY(),

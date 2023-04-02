@@ -18,6 +18,7 @@ import com.wynntils.utils.colors.CommonColors;
 import com.wynntils.utils.mc.ComponentUtils;
 import com.wynntils.utils.mc.KeyboardUtils;
 import com.wynntils.utils.mc.McUtils;
+import com.wynntils.utils.mc.type.CodedString;
 import com.wynntils.utils.render.FontRenderer;
 import com.wynntils.utils.render.RenderUtils;
 import com.wynntils.utils.render.Texture;
@@ -110,7 +111,7 @@ public class InventoryEmeraldCountFeature extends Feature {
         FontRenderer.getInstance()
                 .renderText(
                         poseStack,
-                        emeraldText,
+                        CodedString.of(emeraldText),
                         x + 1,
                         y - 10,
                         0,
@@ -169,7 +170,7 @@ public class InventoryEmeraldCountFeature extends Feature {
             FontRenderer.getInstance()
                     .renderAlignedTextInBox(
                             poseStack,
-                            emeraldAmount,
+                            CodedString.of(emeraldAmount),
                             renderX,
                             renderX + TEXTURE_SIZE - 2,
                             renderY,

@@ -16,6 +16,7 @@ import com.wynntils.models.worlds.event.WorldStateEvent;
 import com.wynntils.models.worlds.type.WorldState;
 import com.wynntils.utils.mc.ComponentUtils;
 import com.wynntils.utils.mc.PosUtils;
+import com.wynntils.utils.mc.type.CodedString;
 import java.util.List;
 import java.util.UUID;
 import java.util.regex.Matcher;
@@ -140,8 +141,8 @@ public final class WorldStateModel extends Model {
         if (!e.getId().equals(WORLD_NAME_UUID)) return;
 
         Component displayName = e.getDisplayName();
-        String name = ComponentUtils.getCoded(displayName);
-        Matcher m = WORLD_NAME.matcher(name);
+        CodedString name = ComponentUtils.getCoded(displayName);
+        Matcher m = WORLD_NAME.matcher(name.str());
         if (m.find()) {
             String worldName = m.group(1);
             setState(WorldState.WORLD, worldName, !hasJoinedAnyWorld);

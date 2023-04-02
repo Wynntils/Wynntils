@@ -11,6 +11,7 @@ import com.wynntils.models.quests.type.QuestStatus;
 import com.wynntils.utils.StringUtils;
 import com.wynntils.utils.mc.ComponentUtils;
 import com.wynntils.utils.mc.RenderedStringUtils;
+import com.wynntils.utils.mc.type.CodedString;
 import com.wynntils.utils.mc.type.Location;
 import com.wynntils.utils.type.Pair;
 import java.util.ArrayList;
@@ -41,7 +42,7 @@ public class QuestInfo {
 
     // Quest progress can change over time
     private final QuestStatus status;
-    private String nextTask;
+    private CodedString nextTask;
     private final boolean tracked;
 
     protected QuestInfo(
@@ -49,7 +50,7 @@ public class QuestInfo {
             QuestStatus status,
             QuestLength length,
             int level,
-            String nextTask,
+            CodedString nextTask,
             List<Pair<String, Integer>> additionalRequirements,
             boolean isMiniQuest,
             int pageNumber,
@@ -101,11 +102,11 @@ public class QuestInfo {
                 : additionalRequirements.get(0).b();
     }
 
-    public String getNextTask() {
+    public CodedString getNextTask() {
         return nextTask;
     }
 
-    public void setNextTask(String nextTask) {
+    public void setNextTask(CodedString nextTask) {
         this.nextTask = nextTask;
     }
 
@@ -193,11 +194,11 @@ public class QuestInfo {
 
         if (questInfo.getStatus() != QuestStatus.COMPLETED) {
             tooltipLines.add(Component.literal(""));
-            String nextTask = questInfo.getNextTask();
-            String[] lines = RenderedStringUtils.wrapTextBySize(nextTask, NEXT_TASK_MAX_WIDTH);
+            CodedString nextTask = questInfo.getNextTask();
+            CodedString[] lines = RenderedStringUtils.wrapTextBySize(nextTask, NEXT_TASK_MAX_WIDTH);
 
-            for (String line : lines) {
-                tooltipLines.add(Component.literal(line).withStyle(ChatFormatting.GRAY));
+            for (CodedString line : lines) {
+                tooltipLines.add(line.asComponent().withStyle(ChatFormatting.GRAY));
             }
         }
 

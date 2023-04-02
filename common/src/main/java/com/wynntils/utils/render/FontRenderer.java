@@ -10,6 +10,7 @@ import com.wynntils.mc.mixin.accessors.MinecraftAccessor;
 import com.wynntils.utils.colors.CustomColor;
 import com.wynntils.utils.mc.ComponentUtils;
 import com.wynntils.utils.mc.McUtils;
+import com.wynntils.utils.mc.type.CodedString;
 import com.wynntils.utils.render.buffered.BufferedFontRenderer;
 import com.wynntils.utils.render.type.HorizontalAlignment;
 import com.wynntils.utils.render.type.TextShadow;
@@ -40,7 +41,7 @@ public final class FontRenderer {
 
     public void renderText(
             PoseStack poseStack,
-            String text,
+            CodedString text,
             float x,
             float y,
             CustomColor customColor,
@@ -69,7 +70,7 @@ public final class FontRenderer {
 
     public void renderText(
             PoseStack poseStack,
-            String text,
+            CodedString text,
             float x,
             float y,
             CustomColor customColor,
@@ -81,7 +82,7 @@ public final class FontRenderer {
 
     public void renderAlignedTextInBox(
             PoseStack poseStack,
-            String text,
+            CodedString text,
             float x1,
             float x2,
             float y1,
@@ -121,7 +122,7 @@ public final class FontRenderer {
 
     public void renderAlignedTextInBox(
             PoseStack poseStack,
-            String text,
+            CodedString text,
             float x1,
             float x2,
             float y1,
@@ -148,7 +149,7 @@ public final class FontRenderer {
 
     public void renderAlignedHighlightedTextInBox(
             PoseStack poseStack,
-            String text,
+            CodedString text,
             float x1,
             float x2,
             float y1,
@@ -180,7 +181,13 @@ public final class FontRenderer {
                 };
 
         RenderUtils.drawRect(
-                poseStack, backgroundColor, renderX, cursorRenderY, 0, font.width(text), font.lineHeight + 2);
+                poseStack,
+                backgroundColor,
+                renderX,
+                cursorRenderY,
+                0,
+                font.width(text.withoutFormatting()),
+                font.lineHeight + 2);
 
         renderAlignedTextInBox(
                 poseStack,
@@ -199,7 +206,7 @@ public final class FontRenderer {
 
     public void renderAlignedTextInBox(
             PoseStack poseStack,
-            String text,
+            CodedString text,
             float x1,
             float x2,
             float y,
@@ -224,7 +231,7 @@ public final class FontRenderer {
 
     public void renderAlignedTextInBox(
             PoseStack poseStack,
-            String text,
+            CodedString text,
             float x,
             float y1,
             float y2,
@@ -249,7 +256,7 @@ public final class FontRenderer {
 
     public void renderText(
             PoseStack poseStack,
-            String text,
+            CodedString text,
             float x,
             float y,
             float maxWidth,
@@ -260,18 +267,19 @@ public final class FontRenderer {
             float textScale) {
         if (text == null) return;
 
-        if (maxWidth == 0 || font.width(text) < maxWidth) {
+        if (maxWidth == 0 || font.width(text.withoutFormatting()) < maxWidth) {
             renderText(poseStack, text, x, y, customColor, horizontalAlignment, verticalAlignment, shadow, textScale);
             return;
         }
 
-        List<FormattedText> parts = font.getSplitter().splitLines(text, (int) maxWidth, Style.EMPTY);
+        // FIXME...
+        List<FormattedText> parts = font.getSplitter().splitLines(text.str(), (int) maxWidth, Style.EMPTY);
 
-        String lastPart = "";
+        CodedString lastPart = CodedString.EMPTY;
         for (int i = 0; i < parts.size(); i++) {
             // copy the format codes to this part as well
-            String part =
-                    ComponentUtils.getLastPartCodes(lastPart) + parts.get(i).getString();
+            CodedString part = CodedString.of(
+                    ComponentUtils.getLastPartCodes(lastPart) + parts.get(i).getString());
             lastPart = part;
             renderText(
                     poseStack,
@@ -287,7 +295,7 @@ public final class FontRenderer {
 
     public void renderText(
             PoseStack poseStack,
-            String text,
+            CodedString text,
             float x,
             float y,
             float maxWidth,
@@ -317,7 +325,7 @@ public final class FontRenderer {
             renderText(poseStack, x, currentY, line);
             // If we ask Mojang code the line height of an empty line we get 0 back so replace with space
             currentY += calculateRenderHeight(
-                    line.getText().isEmpty() ? " " : line.getText(),
+                    line.getText().str().isEmpty() ? CodedString.of(" ") : line.getText(),
                     line.getSetting().maxWidth());
         }
     }
@@ -373,7 +381,7 @@ public final class FontRenderer {
             if (textRenderTask.getSetting().maxWidth() == 0) {
                 height += font.lineHeight;
             } else {
-                height += font.wordWrapHeight(textRenderTask.getText(), (int)
+                height += font.wordWrapHeight(textRenderTask.getText().str(), (int)
                         textRenderTask.getSetting().maxWidth());
             }
             totalLineCount++;
@@ -385,12 +393,16 @@ public final class FontRenderer {
         return height;
     }
 
-    public float calculateRenderHeight(List<String> lines, float maxWidth) {
+    public float calculateRenderHeight(List<CodedString> lines, float maxWidth) {
         int sum = 0;
-        for (String line : lines) {
-            sum += font.wordWrapHeight(line, (int) maxWidth);
+        for (CodedString line : lines) {
+            sum += font.wordWrapHeight(line.str(), (int) maxWidth);
         }
         return sum;
+    }
+
+    public float calculateRenderHeight(CodedString line, float maxWidth) {
+        return font.wordWrapHeight(line.str(), maxWidth == 0 ? Integer.MAX_VALUE : (int) maxWidth);
     }
 
     public float calculateRenderHeight(String line, float maxWidth) {

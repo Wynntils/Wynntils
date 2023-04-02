@@ -30,6 +30,7 @@ import com.wynntils.utils.MathUtils;
 import com.wynntils.utils.colors.CommonColors;
 import com.wynntils.utils.mc.ComponentUtils;
 import com.wynntils.utils.mc.McUtils;
+import com.wynntils.utils.mc.type.CodedString;
 import com.wynntils.utils.render.FontRenderer;
 import com.wynntils.utils.render.TextRenderSetting;
 import com.wynntils.utils.render.TextRenderTask;
@@ -63,7 +64,7 @@ public class NpcDialogueOverlayFeature extends Feature {
     private ScheduledFuture<?> scheduledAutoProgressKeyPress = null;
 
     private final List<ConfirmationlessDialogue> confirmationlessDialogues = new ArrayList<>();
-    private List<String> currentDialogue = new ArrayList<>();
+    private List<CodedString> currentDialogue = new ArrayList<>();
     private NpcDialogueType dialogueType;
     private boolean isProtected;
 
@@ -88,13 +89,13 @@ public class NpcDialogueOverlayFeature extends Feature {
 
     @SubscribeEvent(priority = EventPriority.HIGHEST)
     public void onNpcDialogue(NpcDialogEvent e) {
-        List<String> msg =
+        List<CodedString> msg =
                 e.getChatMessage().stream().map(ComponentUtils::getCoded).toList();
 
         // Print dialogue to the system log
         WynntilsMod.info("[NPC] Type: " + (msg.isEmpty() ? "<empty> " : "") + (e.isProtected() ? "<protected> " : "")
                 + e.getType());
-        msg.forEach(s -> WynntilsMod.info("[NPC] " + (s.isEmpty() ? "<empty>" : s)));
+        msg.forEach(s -> WynntilsMod.info("[NPC] " + (s.str().isEmpty() ? "<empty>" : s)));
 
         // The same message can be repeating before we have finished removing the old
         // Just remove the old and add the new with an updated remove time
@@ -113,7 +114,7 @@ public class NpcDialogueOverlayFeature extends Feature {
         dialogueType = e.getType();
         isProtected = e.isProtected();
 
-        if (!msg.isEmpty() && NEW_QUEST_STARTED.matcher(msg.get(0)).find()) {
+        if (!msg.isEmpty() && NEW_QUEST_STARTED.matcher(msg.get(0).str()).find()) {
             // TODO: Show nice banner notification instead
             // but then we'd also need to confirm it with a sneak
             Managers.Notification.queueMessage(msg.get(0));
@@ -152,7 +153,7 @@ public class NpcDialogueOverlayFeature extends Feature {
         confirmationlessDialogues.removeIf(dialogue -> now >= dialogue.removeTime);
     }
 
-    private ScheduledFuture<?> scheduledSneakPress(List<String> msg) {
+    private ScheduledFuture<?> scheduledSneakPress(List<CodedString> msg) {
         long delay = calculateMessageReadTime(msg);
 
         return autoProgressExecutor.schedule(
@@ -162,8 +163,9 @@ public class NpcDialogueOverlayFeature extends Feature {
                 TimeUnit.MILLISECONDS);
     }
 
-    private long calculateMessageReadTime(List<String> msg) {
-        int words = String.join(" ", msg).split(" ").length;
+    private long calculateMessageReadTime(List<CodedString> msg) {
+        int words =
+                String.join(" ", msg.stream().map(CodedString::str).toList()).split(" ").length;
         long delay =
                 dialogAutoProgressDefaultTime.get() + ((long) words * dialogAutoProgressAdditionalTimePerWord.get());
         return delay;
@@ -234,7 +236,7 @@ public class NpcDialogueOverlayFeature extends Feature {
         private void renderDialogue(
                 PoseStack poseStack,
                 MultiBufferSource bufferSource,
-                List<String> currentDialogue,
+                List<CodedString> currentDialogue,
                 NpcDialogueType dialogueType) {
             List<TextRenderTask> dialogueRenderTasks = currentDialogue.stream()
                     .map(s -> new TextRenderTask(s, renderSetting))
@@ -337,9 +339,9 @@ public class NpcDialogueOverlayFeature extends Feature {
         public void render(PoseStack poseStack, MultiBufferSource bufferSource, float partialTicks, Window window) {
             if (currentDialogue.isEmpty() && confirmationlessDialogues.isEmpty()) return;
 
-            LinkedList<String> allDialogues = new LinkedList<>(currentDialogue);
+            LinkedList<CodedString> allDialogues = new LinkedList<>(currentDialogue);
             confirmationlessDialogues.forEach(d -> {
-                allDialogues.add("");
+                allDialogues.add(CodedString.EMPTY);
                 allDialogues.addAll(d.text());
             });
 
@@ -353,8 +355,9 @@ public class NpcDialogueOverlayFeature extends Feature {
         @Override
         public void renderPreview(
                 PoseStack poseStack, MultiBufferSource bufferSource, float partialTicks, Window window) {
-            List<String> fakeDialogue = List.of(
-                    "§7[1/1] §r§2Random Citizen: §r§aDid you know that Wynntils is the best Wynncraft mod you'll probably find?§r");
+            List<CodedString> fakeDialogue = List.of(
+                    CodedString.of(
+                            "§7[1/1] §r§2Random Citizen: §r§aDid you know that Wynntils is the best Wynncraft mod you'll probably find?§r"));
             // we have to force update every time
             updateTextRenderSettings();
 
@@ -362,5 +365,5 @@ public class NpcDialogueOverlayFeature extends Feature {
         }
     }
 
-    protected record ConfirmationlessDialogue(List<String> text, long removeTime) {}
+    protected record ConfirmationlessDialogue(List<CodedString> text, long removeTime) {}
 }

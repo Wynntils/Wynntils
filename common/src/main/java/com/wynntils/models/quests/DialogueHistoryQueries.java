@@ -9,6 +9,7 @@ import com.wynntils.core.components.Models;
 import com.wynntils.handlers.container.ScriptedContainerQuery;
 import com.wynntils.utils.mc.ComponentUtils;
 import com.wynntils.utils.mc.LoreUtils;
+import com.wynntils.utils.mc.type.CodedString;
 import com.wynntils.utils.wynn.InventoryUtils;
 import java.util.ArrayList;
 import java.util.List;
@@ -19,7 +20,7 @@ import net.minecraft.world.item.ItemStack;
 public class DialogueHistoryQueries {
     private static final Pattern DIALOGUE_HISTORY_PAGE_PATTERN = Pattern.compile("§7Page \\[(\\d+)/(\\d+)\\]");
 
-    private List<List<String>> newDialogueHistory;
+    private List<List<CodedString>> newDialogueHistory;
 
     protected void scanDialogueHistory() {
         findNumberOfPages();
@@ -37,8 +38,8 @@ public class DialogueHistoryQueries {
                     if (!ComponentUtils.getCoded(dialogueHistoryItem.getHoverName())
                             .equals("§bDialogue History")) return;
 
-                    for (String line : LoreUtils.getLore(dialogueHistoryItem)) {
-                        Matcher matcher = DIALOGUE_HISTORY_PAGE_PATTERN.matcher(line);
+                    for (CodedString line : LoreUtils.getLore(dialogueHistoryItem)) {
+                        Matcher matcher = DIALOGUE_HISTORY_PAGE_PATTERN.matcher(line.str());
 
                         if (matcher.matches()) {
                             int pageCount = Integer.parseInt(matcher.group(2));
@@ -68,9 +69,9 @@ public class DialogueHistoryQueries {
 
                     newDialogueHistory = new ArrayList<>();
 
-                    List<String> current = LoreUtils.getLore(dialogueHistoryItem).stream()
-                            .dropWhile(String::isBlank)
-                            .takeWhile(s -> !s.isBlank())
+                    List<CodedString> current = LoreUtils.getLore(dialogueHistoryItem).stream()
+                            .dropWhile(s -> s.str().isBlank())
+                            .takeWhile(s -> !s.str().isBlank())
                             .toList();
 
                     newDialogueHistory.add(current);
@@ -88,9 +89,9 @@ public class DialogueHistoryQueries {
                         if (!ComponentUtils.getCoded(dialogueHistoryItem.getHoverName())
                                 .equals("§bDialogue History")) return;
 
-                        List<String> current = LoreUtils.getLore(dialogueHistoryItem).stream()
-                                .dropWhile(String::isBlank)
-                                .takeWhile(s -> !s.isBlank())
+                        List<CodedString> current = LoreUtils.getLore(dialogueHistoryItem).stream()
+                                .dropWhile(s -> s.str().isBlank())
+                                .takeWhile(s -> !s.str().isBlank())
                                 .toList();
 
                         newDialogueHistory.add(current);

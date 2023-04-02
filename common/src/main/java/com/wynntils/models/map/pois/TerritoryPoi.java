@@ -14,6 +14,7 @@ import com.wynntils.screens.maps.GuildMapScreen;
 import com.wynntils.utils.colors.CommonColors;
 import com.wynntils.utils.colors.CustomColor;
 import com.wynntils.utils.mc.McUtils;
+import com.wynntils.utils.mc.type.CodedString;
 import com.wynntils.utils.render.Texture;
 import com.wynntils.utils.render.buffered.BufferedFontRenderer;
 import com.wynntils.utils.render.buffered.BufferedRenderUtils;
@@ -102,7 +103,7 @@ public class TerritoryPoi implements Poi {
                     .renderAlignedTextInBox(
                             poseStack,
                             bufferSource,
-                            territoryProfile.getGuildPrefix(),
+                            CodedString.of(territoryProfile.getGuildPrefix()),
                             actualRenderX,
                             actualRenderX + renderWidth,
                             actualRenderZ,
@@ -122,7 +123,7 @@ public class TerritoryPoi implements Poi {
                             .renderAlignedTextInBox(
                                     poseStack,
                                     bufferSource,
-                                    timeLeft,
+                                    CodedString.of(timeLeft),
                                     actualRenderX,
                                     actualRenderX + renderWidth,
                                     actualRenderZ,
@@ -139,7 +140,7 @@ public class TerritoryPoi implements Poi {
                     .renderAlignedTextInBox(
                             poseStack,
                             bufferSource,
-                            territoryProfile.getFriendlyName(),
+                            CodedString.of(territoryProfile.getFriendlyName()),
                             actualRenderX,
                             actualRenderX + renderWidth,
                             actualRenderZ,

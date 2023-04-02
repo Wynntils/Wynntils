@@ -52,7 +52,9 @@ public final class ContainerModel extends Model {
     }
 
     public boolean isBankScreen(Screen screen) {
-        return BANK_PATTERN.matcher(ComponentUtils.getCoded(screen.getTitle()).str()).matches();
+        return BANK_PATTERN
+                .matcher(ComponentUtils.getCoded(screen.getTitle()).str())
+                .matches();
     }
 
     /**
@@ -61,7 +63,8 @@ public final class ContainerModel extends Model {
     public boolean isLastBankPage(Screen screen) {
         return (isBankScreen(screen) || isBlockBankScreen(screen) || isMiscBucketScreen(screen))
                 && screen instanceof ContainerScreen cs
-                && ComponentUtils.getCoded(cs.getMenu().getSlot(8).getItem().getHoverName()).str()
+                && ComponentUtils.getCoded(cs.getMenu().getSlot(8).getItem().getHoverName())
+                        .str()
                         .endsWith(">§4>§c>§4>§c>");
     }
 

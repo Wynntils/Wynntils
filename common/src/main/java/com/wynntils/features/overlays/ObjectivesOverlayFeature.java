@@ -23,6 +23,7 @@ import com.wynntils.mc.event.RenderEvent;
 import com.wynntils.models.objectives.WynnObjective;
 import com.wynntils.utils.colors.CommonColors;
 import com.wynntils.utils.colors.CustomColor;
+import com.wynntils.utils.mc.type.CodedString;
 import com.wynntils.utils.render.FontRenderer;
 import com.wynntils.utils.render.Texture;
 import com.wynntils.utils.render.buffered.BufferedFontRenderer;
@@ -115,7 +116,7 @@ public class ObjectivesOverlayFeature extends Feature {
                     .renderAlignedTextInBox(
                             poseStack,
                             bufferSource,
-                            text,
+                            CodedString.of(text),
                             this.getRenderX(),
                             this.getRenderX() + this.getWidth(),
                             renderY,
@@ -207,7 +208,7 @@ public class ObjectivesOverlayFeature extends Feature {
                         .renderAlignedTextInBox(
                                 poseStack,
                                 bufferSource,
-                                text,
+                                CodedString.of(text),
                                 this.getRenderX(),
                                 this.getRenderX() + this.getWidth(),
                                 renderY,

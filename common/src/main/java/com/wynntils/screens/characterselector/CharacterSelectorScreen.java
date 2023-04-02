@@ -15,6 +15,7 @@ import com.wynntils.screens.characterselector.widgets.PlayButton;
 import com.wynntils.utils.MathUtils;
 import com.wynntils.utils.colors.CommonColors;
 import com.wynntils.utils.mc.McUtils;
+import com.wynntils.utils.mc.type.CodedString;
 import com.wynntils.utils.render.FontRenderer;
 import com.wynntils.utils.render.RenderUtils;
 import com.wynntils.utils.render.Texture;
@@ -266,7 +267,8 @@ public final class CharacterSelectorScreen extends WynntilsScreen {
         FontRenderer.getInstance()
                 .renderText(
                         poseStack,
-                        String.valueOf(this.selected.getClassInfo().soulPoints()),
+                        CodedString.of(
+                                String.valueOf(this.selected.getClassInfo().soulPoints())),
                         0,
                         0,
                         CommonColors.BLACK,
@@ -293,7 +295,8 @@ public final class CharacterSelectorScreen extends WynntilsScreen {
         FontRenderer.getInstance()
                 .renderText(
                         poseStack,
-                        String.valueOf(this.selected.getClassInfo().completedQuests()),
+                        CodedString.of(
+                                String.valueOf(this.selected.getClassInfo().completedQuests())),
                         0,
                         0,
                         CommonColors.BLACK,

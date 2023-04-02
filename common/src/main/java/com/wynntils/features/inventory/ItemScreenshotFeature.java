@@ -21,6 +21,7 @@ import com.wynntils.models.items.items.game.GearItem;
 import com.wynntils.utils.SystemUtils;
 import com.wynntils.utils.mc.ComponentUtils;
 import com.wynntils.utils.mc.McUtils;
+import com.wynntils.utils.mc.type.CodedString;
 import com.wynntils.utils.render.FontRenderer;
 import com.wynntils.utils.render.RenderUtils;
 import com.wynntils.utils.wynn.WynnItemMatchers;
@@ -125,7 +126,7 @@ public class ItemScreenshotFeature extends Feature {
         if (saveToDisk.get()) {
             // First try to save it to disk
             String itemNameForFile = WynnUtils.normalizeBadString(ComponentUtils.stripFormatting(
-                            itemStack.getHoverName().getString()))
+                            CodedString.of(itemStack.getHoverName().getString())))
                     .replaceAll("[/ ]", "_");
             File screenshotDir = new File(McUtils.mc().gameDirectory, "screenshots");
             String filename = Util.getFilenameFormattedDateTime() + "-" + itemNameForFile + ".png";

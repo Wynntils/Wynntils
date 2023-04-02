@@ -16,6 +16,7 @@ import com.wynntils.screens.settings.elements.TextConfigOptionElement;
 import com.wynntils.utils.colors.CommonColors;
 import com.wynntils.utils.colors.CustomColor;
 import com.wynntils.utils.mc.RenderedStringUtils;
+import com.wynntils.utils.mc.type.CodedString;
 import com.wynntils.utils.render.FontRenderer;
 import com.wynntils.utils.render.RenderUtils;
 import com.wynntils.utils.render.type.HorizontalAlignment;
@@ -66,10 +67,10 @@ public class ConfigButton extends WynntilsButton {
     public void renderWidget(PoseStack poseStack, int mouseX, int mouseY, float partialTick) {
         resetButton.render(poseStack, mouseX, mouseY, partialTick);
 
-        String displayName = configHolder.getDisplayName();
+        CodedString displayName = CodedString.of(configHolder.getDisplayName());
 
         if (settingsScreen.configOptionContains(configHolder)) {
-            displayName = ChatFormatting.UNDERLINE + displayName;
+            displayName = CodedString.of(ChatFormatting.UNDERLINE + displayName.str());
         }
 
         poseStack.pushPose();
@@ -106,10 +107,9 @@ public class ConfigButton extends WynntilsButton {
 
         if (!resetButton.isHoveredOrFocused() && isHovered) {
             String description = configHolder.getDescription();
-            String[] parts = RenderedStringUtils.wrapTextBySize(description, 200);
-            List<Component> components = Arrays.stream(parts)
-                    .map(s -> (Component) Component.literal(s))
-                    .toList();
+            CodedString[] parts = RenderedStringUtils.wrapTextBySize(CodedString.of(description), 200);
+            List<Component> components =
+                    Arrays.stream(parts).map(s -> (Component) s.asComponent()).toList();
 
             RenderUtils.drawTooltipAt(
                     poseStack,

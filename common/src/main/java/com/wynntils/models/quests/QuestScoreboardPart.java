@@ -10,6 +10,7 @@ import com.wynntils.handlers.scoreboard.ScoreboardPart;
 import com.wynntils.handlers.scoreboard.ScoreboardSegment;
 import com.wynntils.handlers.scoreboard.type.SegmentMatcher;
 import com.wynntils.utils.mc.ComponentUtils;
+import com.wynntils.utils.mc.type.CodedString;
 import com.wynntils.utils.wynn.WynnUtils;
 import java.util.List;
 import java.util.Set;
@@ -25,7 +26,7 @@ public class QuestScoreboardPart implements ScoreboardPart {
 
     @Override
     public void onSegmentChange(ScoreboardSegment newValue, SegmentMatcher segmentMatcher) {
-        List<String> content = newValue.getContent();
+        List<CodedString> content = newValue.getContent();
 
         if (content.isEmpty()) {
             WynntilsMod.error("QuestHandler: content was empty.");
@@ -34,18 +35,19 @@ public class QuestScoreboardPart implements ScoreboardPart {
         StringBuilder questName = new StringBuilder();
         StringBuilder nextTask = new StringBuilder();
 
-        for (String line : content) {
-            if (line.startsWith("§e")) {
+        for (CodedString line : content) {
+            if (line.str().startsWith("§e")) {
                 questName.append(ComponentUtils.stripFormatting(line)).append(" ");
             } else {
-                nextTask.append(line.replaceAll(ChatFormatting.WHITE.toString(), ChatFormatting.AQUA.toString())
+                nextTask.append(line.str()
+                                .replaceAll(ChatFormatting.WHITE.toString(), ChatFormatting.AQUA.toString())
                                 .replaceAll(ChatFormatting.GRAY.toString(), ChatFormatting.RESET.toString()))
                         .append(" ");
             }
         }
 
         String fixedName = WynnUtils.normalizeBadString(questName.toString().trim());
-        String fixedNextTask = WynnUtils.normalizeBadString(nextTask.toString().trim());
+        CodedString fixedNextTask = new CodedString(nextTask.toString().trim()).getNormalized();
         Models.Quest.updateTrackedQuestFromScoreboard(fixedName, fixedNextTask);
     }
 

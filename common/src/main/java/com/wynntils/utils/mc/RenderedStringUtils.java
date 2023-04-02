@@ -4,15 +4,17 @@
  */
 package com.wynntils.utils.mc;
 
+import com.wynntils.utils.mc.type.CodedString;
 import com.wynntils.utils.render.FontRenderer;
+import java.util.Arrays;
 import net.minecraft.client.gui.Font;
 
 public final class RenderedStringUtils {
-    public static String[] wrapTextBySize(String s, int maxPixels) {
+    public static CodedString[] wrapTextBySize(CodedString s, int maxPixels) {
         Font font = McUtils.mc().font;
         int spaceSize = font.width(" ");
 
-        String[] stringArray = s.split(" ");
+        String[] stringArray = s.str().split(" ");
         StringBuilder result = new StringBuilder();
         int length = 0;
 
@@ -31,7 +33,7 @@ public final class RenderedStringUtils {
             }
         }
 
-        return result.toString().split("\n");
+        return Arrays.stream(result.toString().split("\n")).map(CodedString::of).toArray(CodedString[]::new);
     }
 
     public static String getMaxFittingText(String text, float maxTextWidth, Font font) {

@@ -24,6 +24,7 @@ import com.wynntils.screens.wynntilsmenu.WynntilsMenuScreen;
 import com.wynntils.utils.StringUtils;
 import com.wynntils.utils.colors.CommonColors;
 import com.wynntils.utils.mc.McUtils;
+import com.wynntils.utils.mc.type.CodedString;
 import com.wynntils.utils.render.FontRenderer;
 import com.wynntils.utils.render.RenderUtils;
 import com.wynntils.utils.render.Texture;
@@ -185,7 +186,7 @@ public final class WynntilsQuestBookScreen extends WynntilsListScreen<QuestInfo,
         FontRenderer.getInstance()
                 .renderAlignedTextInBox(
                         poseStack,
-                        I18n.get("screens.wynntils.wynntilsQuestBook.tryReload"),
+                        CodedString.of(I18n.get("screens.wynntils.wynntilsQuestBook.tryReload")),
                         Texture.QUEST_BOOK_BACKGROUND.width() / 2f + 15f,
                         Texture.QUEST_BOOK_BACKGROUND.width() - 15f,
                         0,
@@ -344,7 +345,7 @@ public final class WynntilsQuestBookScreen extends WynntilsListScreen<QuestInfo,
         FontRenderer.getInstance()
                 .renderAlignedTextInBox(
                         poseStack,
-                        I18n.get("screens.wynntils.wynntilsQuestBook.description1"),
+                        CodedString.of(I18n.get("screens.wynntils.wynntilsQuestBook.description1")),
                         20,
                         Texture.QUEST_BOOK_BACKGROUND.width() / 2f - 10,
                         80,
@@ -356,7 +357,7 @@ public final class WynntilsQuestBookScreen extends WynntilsListScreen<QuestInfo,
         FontRenderer.getInstance()
                 .renderAlignedTextInBox(
                         poseStack,
-                        I18n.get("screens.wynntils.wynntilsQuestBook.description2"),
+                        CodedString.of(I18n.get("screens.wynntils.wynntilsQuestBook.description2")),
                         20,
                         Texture.QUEST_BOOK_BACKGROUND.width() / 2f - 10,
                         170,

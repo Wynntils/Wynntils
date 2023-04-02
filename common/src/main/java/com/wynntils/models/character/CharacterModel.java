@@ -20,6 +20,7 @@ import com.wynntils.models.worlds.type.WorldState;
 import com.wynntils.utils.mc.ComponentUtils;
 import com.wynntils.utils.mc.LoreUtils;
 import com.wynntils.utils.mc.McUtils;
+import com.wynntils.utils.mc.type.CodedString;
 import com.wynntils.utils.mc.type.Location;
 import com.wynntils.utils.wynn.InventoryUtils;
 import java.util.List;
@@ -142,11 +143,11 @@ public final class CharacterModel extends Model {
     private void updateCharacterId() {
         ItemStack soulPointItem = McUtils.inventory().items.get(SOUL_POINT_SLOT);
 
-        List<String> soulLore = LoreUtils.getLore(soulPointItem);
+        List<CodedString> soulLore = LoreUtils.getLore(soulPointItem);
 
         String id = "";
-        for (String line : soulLore) {
-            if (line.startsWith(ChatFormatting.DARK_GRAY.toString())) {
+        for (CodedString line : soulLore) {
+            if (line.str().startsWith(ChatFormatting.DARK_GRAY.toString())) {
                 id = ComponentUtils.stripFormatting(line);
                 break;
             }
@@ -166,19 +167,19 @@ public final class CharacterModel extends Model {
     }
 
     private void parseCharacterFromCharacterMenu(ItemStack characterInfoItem) {
-        List<String> lore = LoreUtils.getLore(characterInfoItem);
+        List<CodedString> lore = LoreUtils.getLore(characterInfoItem);
 
         int level = 0;
         String className = "";
 
-        for (String line : lore) {
-            Matcher levelMatcher = INFO_MENU_LEVEL_PATTERN.matcher(line);
+        for (CodedString line : lore) {
+            Matcher levelMatcher = INFO_MENU_LEVEL_PATTERN.matcher(line.str());
             if (levelMatcher.matches()) {
                 level = Integer.parseInt(levelMatcher.group(1));
                 continue;
             }
 
-            Matcher classMatcher = INFO_MENU_CLASS_PATTERN.matcher(line);
+            Matcher classMatcher = INFO_MENU_CLASS_PATTERN.matcher(line.str());
 
             if (classMatcher.matches()) {
                 className = classMatcher.group(1);
@@ -201,19 +202,19 @@ public final class CharacterModel extends Model {
     }
 
     private void parseCharacter(ItemStack itemStack, int id) {
-        List<String> lore = LoreUtils.getLore(itemStack);
+        List<CodedString> lore = LoreUtils.getLore(itemStack);
 
         int level = 0;
         String className = "";
 
-        for (String line : lore) {
-            Matcher levelMatcher = CLASS_MENU_LEVEL_PATTERN.matcher(line);
+        for (CodedString line : lore) {
+            Matcher levelMatcher = CLASS_MENU_LEVEL_PATTERN.matcher(line.str());
             if (levelMatcher.matches()) {
                 level = Integer.parseInt(levelMatcher.group(1));
                 continue;
             }
 
-            Matcher classMatcher = CLASS_MENU_CLASS_PATTERN.matcher(line);
+            Matcher classMatcher = CLASS_MENU_CLASS_PATTERN.matcher(line.str());
 
             if (classMatcher.matches()) {
                 className = classMatcher.group(1);
@@ -232,7 +233,7 @@ public final class CharacterModel extends Model {
 
     @SubscribeEvent
     public void onChatReceived(ChatMessageReceivedEvent e) {
-        if (!WYNN_DEATH_MESSAGE.matcher(e.getCodedMessage()).matches()) return;
+        if (!WYNN_DEATH_MESSAGE.matcher(e.getCodedMessage().str()).matches()) return;
         lastDeathLocation = Location.containing(lastPositionBeforeTeleport);
         WynntilsMod.postEvent(new CharacterDeathEvent(lastDeathLocation));
     }

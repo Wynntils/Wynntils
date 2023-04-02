@@ -14,6 +14,7 @@ import com.wynntils.core.config.RegisterConfig;
 import com.wynntils.mc.event.TickEvent;
 import com.wynntils.utils.colors.CommonColors;
 import com.wynntils.utils.colors.CustomColor;
+import com.wynntils.utils.mc.type.CodedString;
 import com.wynntils.utils.render.Texture;
 import com.wynntils.utils.render.buffered.BufferedFontRenderer;
 import com.wynntils.utils.render.buffered.BufferedRenderUtils;
@@ -21,6 +22,7 @@ import com.wynntils.utils.render.type.TextShadow;
 import com.wynntils.utils.type.CappedValue;
 import com.wynntils.utils.type.ErrorOr;
 import com.wynntils.utils.type.Pair;
+import java.util.Arrays;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 
@@ -34,7 +36,7 @@ public abstract class BarOverlay extends DynamicOverlay {
     @RegisterConfig("overlay.wynntils.barOverlay.heightModifier")
     public final Config<Float> heightModifier = new Config<>(1f);
 
-    private Pair<String, ErrorOr<CappedValue>> templateCache;
+    private Pair<CodedString, ErrorOr<CappedValue>> templateCache;
 
     protected BarOverlay(int id, OverlaySize overlaySize) {
         super(id);
@@ -62,24 +64,24 @@ public abstract class BarOverlay extends DynamicOverlay {
     @Override
     public void renderPreview(PoseStack poseStack, MultiBufferSource bufferSource, float partialTicks, Window window) {
         BarOverlayTemplatePair previewTemplate = getPreviewTemplate();
-        Pair<String, ErrorOr<CappedValue>> calculatedTemplate = calculateTemplate(previewTemplate);
+        Pair<CodedString, ErrorOr<CappedValue>> calculatedTemplate = calculateTemplate(previewTemplate);
 
         render(poseStack, bufferSource, calculatedTemplate);
     }
 
     protected void render(
-            PoseStack poseStack, MultiBufferSource bufferSource, Pair<String, ErrorOr<CappedValue>> template) {
+            PoseStack poseStack, MultiBufferSource bufferSource, Pair<CodedString, ErrorOr<CappedValue>> template) {
         ErrorOr<CappedValue> valueOrError = template.b();
 
         float barHeight = getTextureHeight() * heightModifier.get();
         float renderY = getModifiedRenderY(barHeight + 10);
 
         if (valueOrError.hasError()) {
-            renderText(poseStack, bufferSource, renderY, valueOrError.getError());
+            renderText(poseStack, bufferSource, renderY, CodedString.of(valueOrError.getError()));
             return;
         }
 
-        String textValue = template.a();
+        CodedString textValue = template.a();
         CappedValue value = valueOrError.getValue();
         if (value.equals(CappedValue.EMPTY)) return;
 
@@ -98,9 +100,13 @@ public abstract class BarOverlay extends DynamicOverlay {
         templateCache = calculateTemplate(template);
     }
 
-    private Pair<String, ErrorOr<CappedValue>> calculateTemplate(BarOverlayTemplatePair template) {
+    private Pair<CodedString, ErrorOr<CappedValue>> calculateTemplate(BarOverlayTemplatePair template) {
         return Pair.of(
-                String.join(" ", Managers.Function.doFormatLines(template.textTemplate)),
+                CodedString.of(String.join(
+                        " ",
+                        Arrays.stream(Managers.Function.doFormatLines(template.textTemplate))
+                                .map(CodedString::str)
+                                .toList())),
                 Managers.Function.tryGetRawValueOfType(template.valueTemplate, CappedValue.class));
     }
 
@@ -142,7 +148,7 @@ public abstract class BarOverlay extends DynamicOverlay {
         }
     }
 
-    protected void renderText(PoseStack poseStack, MultiBufferSource bufferSource, float renderY, String text) {
+    protected void renderText(PoseStack poseStack, MultiBufferSource bufferSource, float renderY, CodedString text) {
         BufferedFontRenderer.getInstance()
                 .renderAlignedTextInBox(
                         poseStack,

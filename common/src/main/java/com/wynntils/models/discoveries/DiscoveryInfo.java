@@ -9,7 +9,7 @@ import com.wynntils.models.discoveries.profile.DiscoveryProfile;
 import com.wynntils.models.discoveries.type.DiscoveryType;
 import com.wynntils.utils.mc.ComponentUtils;
 import com.wynntils.utils.mc.LoreUtils;
-import com.wynntils.utils.wynn.WynnUtils;
+import com.wynntils.utils.mc.type.CodedString;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
@@ -45,13 +45,13 @@ public class DiscoveryInfo {
     }
 
     public static DiscoveryInfo parseFromItemStack(ItemStack itemStack) {
-        List<String> lore = LoreUtils.getLore(itemStack);
+        List<CodedString> lore = LoreUtils.getLore(itemStack);
         if (lore.isEmpty()) {
             return null;
         }
 
-        String name = WynnUtils.normalizeBadString(ComponentUtils.getCoded(itemStack.getHoverName()));
-        int minLevel = Integer.parseInt(lore.get(0).replace("§a✔§r§7 Combat Lv. Min: §r§f", ""));
+        CodedString name = ComponentUtils.getCoded(itemStack.getHoverName()).getNormalized();
+        int minLevel = Integer.parseInt(lore.get(0).str().replace("§a✔§r§7 Combat Lv. Min: §r§f", ""));
 
         DiscoveryType type = DiscoveryType.getDiscoveryTypeFromString(name);
         if (type == null) return null;

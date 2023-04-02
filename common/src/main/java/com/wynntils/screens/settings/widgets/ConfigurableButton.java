@@ -13,6 +13,7 @@ import com.wynntils.screens.settings.WynntilsBookSettingsScreen;
 import com.wynntils.utils.colors.CommonColors;
 import com.wynntils.utils.colors.CustomColor;
 import com.wynntils.utils.mc.McUtils;
+import com.wynntils.utils.mc.type.CodedString;
 import com.wynntils.utils.render.FontRenderer;
 import com.wynntils.utils.render.type.HorizontalAlignment;
 import com.wynntils.utils.render.type.TextShadow;
@@ -42,7 +43,7 @@ public class ConfigurableButton extends WynntilsButton {
         FontRenderer.getInstance()
                 .renderText(
                         poseStack,
-                        (isOverlay ? "   " : "") + ((Translatable) configurable).getTranslatedName(),
+                        CodedString.of((isOverlay ? "   " : "") + ((Translatable) configurable).getTranslatedName()),
                         this.getX(),
                         this.getY(),
                         color,

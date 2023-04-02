@@ -12,6 +12,7 @@ import com.wynntils.models.abilities.type.ShamanMaskType;
 import com.wynntils.models.worlds.WorldStateModel;
 import com.wynntils.models.worlds.event.WorldStateEvent;
 import com.wynntils.utils.mc.ComponentUtils;
+import com.wynntils.utils.mc.type.CodedString;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -28,9 +29,9 @@ public final class ShamanMaskModel extends Model {
 
     @SubscribeEvent
     public void onTitle(SubtitleSetTextEvent event) {
-        String title = ComponentUtils.getCoded(event.getComponent());
+        CodedString title = ComponentUtils.getCoded(event.getComponent());
 
-        if (title.contains("Mask of the ") || title.contains("➤")) {
+        if (title.str().contains("Mask of the ") || title.str().contains("➤")) {
             parseMask(title);
             ShamanMaskTitlePacketEvent maskEvent = new ShamanMaskTitlePacketEvent();
             WynntilsMod.postEvent(maskEvent);
@@ -46,8 +47,8 @@ public final class ShamanMaskModel extends Model {
         currentMaskType = ShamanMaskType.NONE;
     }
 
-    private void parseMask(String title) {
-        Matcher matcher = MASK_PATTERN.matcher(title);
+    private void parseMask(CodedString title) {
+        Matcher matcher = MASK_PATTERN.matcher(title.str());
 
         ShamanMaskType parsedMask = ShamanMaskType.NONE;
 
@@ -57,7 +58,7 @@ public final class ShamanMaskModel extends Model {
             for (ShamanMaskType type : ShamanMaskType.values()) {
                 if (type.getParseString() == null) continue;
 
-                if (title.contains(type.getParseString())) {
+                if (title.str().contains(type.getParseString())) {
                     parsedMask = type;
                     break;
                 }

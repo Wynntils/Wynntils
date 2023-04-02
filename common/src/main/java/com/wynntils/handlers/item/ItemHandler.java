@@ -108,8 +108,10 @@ public class ItemHandler extends Handler {
         }
 
         String originalName = ((ItemStackExtension) existingItem).getOriginalName();
-        String existingName = WynnUtils.normalizeBadString(ComponentUtils.getCoded(existingItem.getHoverName()).str());
-        String newName = WynnUtils.normalizeBadString(ComponentUtils.getCoded(newItem.getHoverName()).str());
+        String existingName = WynnUtils.normalizeBadString(
+                ComponentUtils.getCoded(existingItem.getHoverName()).str());
+        String newName = WynnUtils.normalizeBadString(
+                ComponentUtils.getCoded(newItem.getHoverName()).str());
 
         if (newName.equals(existingName)) {
             // This is exactly the same item, so copy existing annotation
@@ -210,7 +212,8 @@ public class ItemHandler extends Handler {
     }
 
     private void annotate(ItemStack itemStack) {
-        String name = WynnUtils.normalizeBadString(ComponentUtils.getCoded(itemStack.getHoverName()).str());
+        String name = WynnUtils.normalizeBadString(
+                ComponentUtils.getCoded(itemStack.getHoverName()).str());
         ItemAnnotation annotation = calculateAnnotation(itemStack, name);
         if (annotation == null) return;
 

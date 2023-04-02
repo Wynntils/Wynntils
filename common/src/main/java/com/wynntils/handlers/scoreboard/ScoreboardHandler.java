@@ -16,6 +16,7 @@ import com.wynntils.models.worlds.event.WorldStateEvent;
 import com.wynntils.models.worlds.type.WorldState;
 import com.wynntils.utils.mc.ComponentUtils;
 import com.wynntils.utils.mc.McUtils;
+import com.wynntils.utils.mc.type.CodedString;
 import com.wynntils.utils.type.Pair;
 import java.util.ArrayList;
 import java.util.Comparator;
@@ -79,7 +80,7 @@ public final class ScoreboardHandler extends Handler {
             scoreboardLineMap.put(scoreboardLine.index(), scoreboardLine);
         }
 
-        Set<String> changedLines = new HashSet<>();
+        Set<CodedString> changedLines = new HashSet<>();
         while (!queueCopy.isEmpty()) {
             ScoreboardLineChange processed = queueCopy.pop();
 
@@ -104,7 +105,7 @@ public final class ScoreboardHandler extends Handler {
 
         List<ScoreboardSegment> parsedSegments = calculateSegments(scoreboardCopy);
 
-        for (String changedString : changedLines) {
+        for (CodedString changedString : changedLines) {
             int changedLine =
                     scoreboardCopy.stream().map(ScoreboardLine::line).toList().indexOf(changedString);
 
@@ -183,7 +184,7 @@ public final class ScoreboardHandler extends Handler {
         McUtils.mc().doRunTask(() -> {
             Scoreboard scoreboard = McUtils.player().getScoreboard();
 
-            List<String> skipped = new ArrayList<>();
+            List<CodedString> skipped = new ArrayList<>();
 
             for (ScoreboardSegment parsedSegment : segments) {
                 boolean cancelled = WynntilsMod.postEvent(new ScoreboardSegmentAdditionEvent(parsedSegment));
@@ -226,19 +227,20 @@ public final class ScoreboardHandler extends Handler {
             // Filter and skip leading empty lines
             List<ScoreboardLine> toBeAdded = reconstructedScoreboard.stream()
                     .filter(scoreboardLine -> !skipped.contains(scoreboardLine.line()))
-                    .dropWhile(scoreboardLine -> scoreboardLine.line().matches("À+"))
+                    .dropWhile(scoreboardLine -> scoreboardLine.line().str().matches("À+"))
                     .toList();
 
             boolean allEmpty = true;
 
             // Skip trailing empty lines
             for (int i = toBeAdded.size() - 1; i >= 0; i--) {
-                if (allEmpty && toBeAdded.get(i).line().matches("À+")) {
+                if (allEmpty && toBeAdded.get(i).line().str().matches("À+")) {
                     continue;
                 }
 
                 allEmpty = false;
-                Score score = scoreboard.getOrCreatePlayerScore(toBeAdded.get(i).line(), objective);
+                Score score = scoreboard.getOrCreatePlayerScore(
+                        toBeAdded.get(i).line().str(), objective);
                 score.setScore(toBeAdded.get(i).index());
             }
         });

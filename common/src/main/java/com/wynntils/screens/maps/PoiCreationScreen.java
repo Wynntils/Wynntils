@@ -17,6 +17,7 @@ import com.wynntils.screens.base.widgets.TextInputBoxWidget;
 import com.wynntils.utils.colors.CommonColors;
 import com.wynntils.utils.colors.CustomColor;
 import com.wynntils.utils.mc.McUtils;
+import com.wynntils.utils.mc.type.CodedString;
 import com.wynntils.utils.render.FontRenderer;
 import com.wynntils.utils.render.RenderUtils;
 import com.wynntils.utils.render.Texture;
@@ -303,7 +304,7 @@ public final class PoiCreationScreen extends WynntilsScreen implements TextboxSc
         FontRenderer.getInstance()
                 .renderText(
                         poseStack,
-                        I18n.get("screens.wynntils.poiCreation.waypointName") + ":",
+                        CodedString.of(I18n.get("screens.wynntils.poiCreation.waypointName") + ":"),
                         this.width / 2f - 100,
                         this.height / 2f - 60,
                         CommonColors.WHITE,
@@ -314,7 +315,7 @@ public final class PoiCreationScreen extends WynntilsScreen implements TextboxSc
         FontRenderer.getInstance()
                 .renderText(
                         poseStack,
-                        I18n.get("screens.wynntils.poiCreation.coordinates") + ":",
+                        CodedString.of(I18n.get("screens.wynntils.poiCreation.coordinates") + ":"),
                         this.width / 2f - 100,
                         this.height / 2f - 15,
                         CommonColors.WHITE,
@@ -324,7 +325,7 @@ public final class PoiCreationScreen extends WynntilsScreen implements TextboxSc
         FontRenderer.getInstance()
                 .renderText(
                         poseStack,
-                        "X",
+                        CodedString.of("X"),
                         this.width / 2f - 95,
                         this.height / 2f,
                         CommonColors.WHITE,
@@ -334,7 +335,7 @@ public final class PoiCreationScreen extends WynntilsScreen implements TextboxSc
         FontRenderer.getInstance()
                 .renderText(
                         poseStack,
-                        "Y",
+                        CodedString.of("Y"),
                         this.width / 2f - 45,
                         this.height / 2f,
                         CommonColors.WHITE,
@@ -344,7 +345,7 @@ public final class PoiCreationScreen extends WynntilsScreen implements TextboxSc
         FontRenderer.getInstance()
                 .renderText(
                         poseStack,
-                        "Z",
+                        CodedString.of("Z"),
                         this.width / 2f + 5,
                         this.height / 2f,
                         CommonColors.WHITE,
@@ -355,7 +356,7 @@ public final class PoiCreationScreen extends WynntilsScreen implements TextboxSc
         FontRenderer.getInstance()
                 .renderText(
                         poseStack,
-                        I18n.get("screens.wynntils.poiCreation.icon") + ":",
+                        CodedString.of(I18n.get("screens.wynntils.poiCreation.icon") + ":"),
                         this.width / 2f - 100,
                         this.height / 2f + 30,
                         CommonColors.WHITE,
@@ -368,7 +369,7 @@ public final class PoiCreationScreen extends WynntilsScreen implements TextboxSc
         FontRenderer.getInstance()
                 .renderText(
                         poseStack,
-                        I18n.get("screens.wynntils.poiCreation.color") + ":",
+                        CodedString.of(I18n.get("screens.wynntils.poiCreation.color") + ":"),
                         this.width / 2f - 10,
                         this.height / 2f + 30,
                         CommonColors.WHITE,
@@ -379,7 +380,7 @@ public final class PoiCreationScreen extends WynntilsScreen implements TextboxSc
         FontRenderer.getInstance()
                 .renderText(
                         poseStack,
-                        I18n.get("screens.wynntils.poiCreation.visibility") + ":",
+                        CodedString.of(I18n.get("screens.wynntils.poiCreation.visibility") + ":"),
                         this.width / 2f - 100,
                         this.height / 2f + 80,
                         CommonColors.WHITE,
@@ -389,7 +390,7 @@ public final class PoiCreationScreen extends WynntilsScreen implements TextboxSc
         FontRenderer.getInstance()
                 .renderAlignedTextInBox(
                         poseStack,
-                        I18n.get(selectedVisiblity.getTranslationKey()),
+                        CodedString.of(I18n.get(selectedVisiblity.getTranslationKey())),
                         this.width / 2f - 100,
                         this.width / 2f + 100,
                         this.height / 2f + 90,

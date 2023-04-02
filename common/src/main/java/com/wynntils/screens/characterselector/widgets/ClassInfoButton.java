@@ -10,6 +10,7 @@ import com.wynntils.models.character.type.ClassInfo;
 import com.wynntils.screens.base.widgets.WynntilsButton;
 import com.wynntils.screens.characterselector.CharacterSelectorScreen;
 import com.wynntils.utils.colors.CommonColors;
+import com.wynntils.utils.mc.type.CodedString;
 import com.wynntils.utils.render.FontRenderer;
 import com.wynntils.utils.render.RenderUtils;
 import com.wynntils.utils.render.Texture;
@@ -61,7 +62,7 @@ public class ClassInfoButton extends WynntilsButton {
         FontRenderer.getInstance()
                 .renderText(
                         poseStack,
-                        classInfo.name(),
+                        CodedString.of(classInfo.name()),
                         0,
                         0,
                         CommonColors.BLACK,
@@ -71,7 +72,7 @@ public class ClassInfoButton extends WynntilsButton {
         FontRenderer.getInstance()
                 .renderText(
                         poseStack,
-                        "Level " + classInfo.level(),
+                        CodedString.of("Level " + classInfo.level()),
                         0,
                         10f,
                         CommonColors.BLACK,

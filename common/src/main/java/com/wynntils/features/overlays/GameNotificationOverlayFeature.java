@@ -123,14 +123,14 @@ public class GameNotificationOverlayFeature extends Feature {
 
                 TextRenderTask messageTask = message.getRenderTask();
 
-                if (messageMaxLength.get() == 0 || messageTask.getText().length() < messageMaxLength.get()) {
+                if (messageMaxLength.get() == 0 || messageTask.getText().str().length() < messageMaxLength.get()) {
                     toRender.add(message);
                 } else {
                     TimedMessageContainer first = new TimedMessageContainer(
-                            new MessageContainer(messageTask.getText().substring(0, messageMaxLength.get())),
+                            new MessageContainer(messageTask.getText().str().substring(0, messageMaxLength.get())),
                             message.getEndTime());
                     TimedMessageContainer second = new TimedMessageContainer(
-                            new MessageContainer(messageTask.getText().substring(messageMaxLength.get())),
+                            new MessageContainer(messageTask.getText().str().substring(messageMaxLength.get())),
                             message.getEndTime());
                     if (this.invertGrowth.get()) {
                         toRender.add(first);

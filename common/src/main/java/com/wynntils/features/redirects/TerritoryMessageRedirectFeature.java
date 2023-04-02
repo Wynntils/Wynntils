@@ -11,6 +11,7 @@ import com.wynntils.core.features.Feature;
 import com.wynntils.handlers.chat.event.ChatMessageReceivedEvent;
 import com.wynntils.mc.event.SubtitleSetTextEvent;
 import com.wynntils.utils.mc.ComponentUtils;
+import com.wynntils.utils.mc.type.CodedString;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
@@ -23,8 +24,8 @@ public class TerritoryMessageRedirectFeature extends Feature {
     // Handles the subtitle text event.
     @SubscribeEvent
     public void onSubtitleSetText(SubtitleSetTextEvent event) {
-        String codedString = ComponentUtils.getCoded(event.getComponent());
-        Matcher matcher = TERRITORY_MESSAGE_PATTERN.matcher(codedString);
+        CodedString codedString = ComponentUtils.getCoded(event.getComponent());
+        Matcher matcher = TERRITORY_MESSAGE_PATTERN.matcher(codedString.str());
         if (!matcher.matches()) return;
 
         event.setCanceled(true);
@@ -45,7 +46,7 @@ public class TerritoryMessageRedirectFeature extends Feature {
         // for the sake of our brief message (looks odd otherwise).
         String territoryName = StringUtils.capitalize(rawTerritoryName);
 
-        String enteringMessage = String.format("§7%s %s", directionalArrow, territoryName);
+        CodedString enteringMessage = CodedString.of(String.format("§7%s %s", directionalArrow, territoryName));
         Managers.Notification.queueMessage(enteringMessage);
     }
 
@@ -53,6 +54,8 @@ public class TerritoryMessageRedirectFeature extends Feature {
     // text event.
     @SubscribeEvent
     public void onChat(ChatMessageReceivedEvent event) {
-        if (TERRITORY_MESSAGE_PATTERN.matcher(event.getOriginalCodedMessage()).matches()) event.setCanceled(true);
+        if (TERRITORY_MESSAGE_PATTERN
+                .matcher(event.getOriginalCodedMessage().str())
+                .matches()) event.setCanceled(true);
     }
 }

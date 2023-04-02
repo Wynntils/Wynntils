@@ -11,6 +11,7 @@ import com.wynntils.handlers.container.type.ContainerContent;
 import com.wynntils.utils.mc.ComponentUtils;
 import com.wynntils.utils.mc.LoreUtils;
 import com.wynntils.utils.mc.McUtils;
+import com.wynntils.utils.mc.type.CodedString;
 import com.wynntils.utils.wynn.InventoryUtils;
 import java.util.ArrayList;
 import java.util.List;
@@ -54,8 +55,8 @@ public class DiscoveryContainerQueries {
                     }
 
                     int discoveryCount = -1;
-                    for (String line : LoreUtils.getLore(discoveriesItem)) {
-                        Matcher matcher = DISCOVERY_COUNT_PATTERN.matcher(line);
+                    for (CodedString line : LoreUtils.getLore(discoveriesItem)) {
+                        Matcher matcher = DISCOVERY_COUNT_PATTERN.matcher(line.str());
 
                         if (matcher.matches()) {
                             discoveryCount = Integer.parseInt(matcher.group(1));
@@ -69,8 +70,8 @@ public class DiscoveryContainerQueries {
                         return;
                     }
 
-                    for (String line : LoreUtils.getLore(secretDiscoveriesItem)) {
-                        Matcher matcher = SECRET_DISCOVERY_COUNT_PATTERN.matcher(line);
+                    for (CodedString line : LoreUtils.getLore(secretDiscoveriesItem)) {
+                        Matcher matcher = SECRET_DISCOVERY_COUNT_PATTERN.matcher(line.str());
 
                         if (matcher.matches()) {
                             int secretDiscoveryCount = Integer.parseInt(matcher.group(1));

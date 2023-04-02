@@ -10,6 +10,7 @@ import com.wynntils.handlers.chat.event.ChatMessageReceivedEvent;
 import com.wynntils.handlers.chat.type.RecipientType;
 import com.wynntils.handlers.scoreboard.ScoreboardPart;
 import com.wynntils.handlers.scoreboard.ScoreboardSegment;
+import com.wynntils.utils.mc.type.CodedString;
 import com.wynntils.utils.type.Pair;
 import com.wynntils.utils.type.TimedSet;
 import java.util.ArrayList;
@@ -39,7 +40,8 @@ public final class GuildAttackTimerModel extends Model {
     public void onMessage(ChatMessageReceivedEvent event) {
         if (event.getRecipientType() != RecipientType.GUILD) return;
 
-        Matcher matcher = GUILD_DEFENSE_CHAT_PATTERN.matcher(event.getOriginalCodedMessage());
+        Matcher matcher = GUILD_DEFENSE_CHAT_PATTERN.matcher(
+                event.getOriginalCodedMessage().str());
         if (!matcher.matches()) return;
 
         Optional<TerritoryAttackTimer> territory = attackTimers.stream()
@@ -77,8 +79,8 @@ public final class GuildAttackTimerModel extends Model {
     void processChanges(ScoreboardSegment segment) {
         List<TerritoryAttackTimer> newList = new ArrayList<>();
 
-        for (String line : segment.getContent()) {
-            Matcher matcher = GUILD_ATTACK_PATTERN.matcher(line);
+        for (CodedString line : segment.getContent()) {
+            Matcher matcher = GUILD_ATTACK_PATTERN.matcher(line.str());
 
             if (matcher.matches()) {
                 TerritoryAttackTimer timer = new TerritoryAttackTimer(

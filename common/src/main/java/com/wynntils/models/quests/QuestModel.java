@@ -19,6 +19,7 @@ import com.wynntils.models.quests.event.TrackedQuestUpdateEvent;
 import com.wynntils.models.quests.type.QuestSortOrder;
 import com.wynntils.models.worlds.event.WorldStateEvent;
 import com.wynntils.utils.mc.McUtils;
+import com.wynntils.utils.mc.type.CodedString;
 import com.wynntils.utils.mc.type.Location;
 import java.util.Comparator;
 import java.util.List;
@@ -37,10 +38,10 @@ public final class QuestModel extends Model {
 
     private List<QuestInfo> quests = List.of();
     private List<QuestInfo> miniQuests = List.of();
-    private List<List<String>> dialogueHistory = List.of();
+    private List<List<CodedString>> dialogueHistory = List.of();
     private QuestInfo trackedQuest = null;
     private String afterRescanName;
-    private String afterRescanTask;
+    private CodedString afterRescanTask;
 
     public QuestModel(CombatXpModel combatXpModel) {
         super(List.of(combatXpModel));
@@ -118,7 +119,7 @@ public final class QuestModel extends Model {
         };
     }
 
-    public List<List<String>> getDialogueHistory() {
+    public List<List<CodedString>> getDialogueHistory() {
         return dialogueHistory;
     }
 
@@ -166,7 +167,7 @@ public final class QuestModel extends Model {
         updateTrackedQuest(null);
     }
 
-    public void updateTrackedQuestFromScoreboard(String name, String nextTask) {
+    public void updateTrackedQuestFromScoreboard(String name, CodedString nextTask) {
         // If our quest book has not yet been scanned, we can't update now
         // but will do after scanning is complete
         if (updateAfterRescan(name, nextTask)) return;
@@ -196,7 +197,7 @@ public final class QuestModel extends Model {
                 .findFirst();
     }
 
-    private boolean updateAfterRescan(String name, String nextTask) {
+    private boolean updateAfterRescan(String name, CodedString nextTask) {
         boolean isMiniQuest = name.startsWith(MINI_QUEST_PREFIX);
         List<QuestInfo> questInfoList = isMiniQuest ? miniQuests : quests;
 
@@ -241,7 +242,7 @@ public final class QuestModel extends Model {
         }
     }
 
-    void setDialogueHistory(List<List<String>> newDialogueHistory) {
+    void setDialogueHistory(List<List<CodedString>> newDialogueHistory) {
         dialogueHistory = newDialogueHistory;
         WynntilsMod.postEvent(new QuestBookReloadedEvent.DialogueHistoryReloaded());
     }

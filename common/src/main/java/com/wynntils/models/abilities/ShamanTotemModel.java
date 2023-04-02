@@ -19,6 +19,7 @@ import com.wynntils.models.spells.event.SpellEvent;
 import com.wynntils.models.spells.type.SpellType;
 import com.wynntils.models.worlds.WorldStateModel;
 import com.wynntils.utils.mc.McUtils;
+import com.wynntils.utils.mc.type.CodedString;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -155,10 +156,10 @@ public class ShamanTotemModel extends Model {
         Entity entity = e.getEntity();
         if (!(entity instanceof ArmorStand)) return;
 
-        String name = e.getName();
-        if (name.isEmpty()) return;
+        CodedString name = e.getName();
+        if (name.str().isEmpty()) return;
 
-        Matcher m = SHAMAN_TOTEM_TIMER.matcher(name);
+        Matcher m = SHAMAN_TOTEM_TIMER.matcher(name.str());
         if (!m.find()) return;
 
         int parsedTime = Integer.parseInt(m.group(1));

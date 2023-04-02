@@ -15,6 +15,7 @@ import com.wynntils.screens.partymanagement.widgets.PartyMemberWidget;
 import com.wynntils.screens.partymanagement.widgets.SuggestionPlayerWidget;
 import com.wynntils.utils.colors.CommonColors;
 import com.wynntils.utils.mc.McUtils;
+import com.wynntils.utils.mc.type.CodedString;
 import com.wynntils.utils.render.FontRenderer;
 import com.wynntils.utils.render.RenderUtils;
 import com.wynntils.utils.render.type.HorizontalAlignment;
@@ -161,9 +162,9 @@ public final class PartyManagementScreen extends WynntilsScreen implements Textb
                         // Yes this is kind of abusive of the formatting system, and I should probably do
                         // another .renderText call, but this makes aligning these two texts significantly easier
                         // (especially with changing gui scales and resolutions)
-                        I18n.get("screens.wynntils.partyManagementGui.inviteFieldHeader1")
+                        CodedString.of(I18n.get("screens.wynntils.partyManagementGui.inviteFieldHeader1")
                                 + ChatFormatting.GRAY
-                                + I18n.get("screens.wynntils.partyManagementGui.inviteFieldHeader2"),
+                                + I18n.get("screens.wynntils.partyManagementGui.inviteFieldHeader2")),
                         dividedWidth * 36,
                         dividedHeight * PARTY_LIST_DIV_HEIGHT, // should be lined up with the party list header
                         CommonColors.WHITE,
@@ -186,7 +187,7 @@ public final class PartyManagementScreen extends WynntilsScreen implements Textb
         FontRenderer.getInstance()
                 .renderText(
                         poseStack,
-                        I18n.get("screens.wynntils.partyManagementGui.head"),
+                        CodedString.of(I18n.get("screens.wynntils.partyManagementGui.head")),
                         dividedWidth * 5,
                         dividedHeight * PARTY_LIST_DIV_HEIGHT,
                         CommonColors.WHITE,
@@ -196,7 +197,7 @@ public final class PartyManagementScreen extends WynntilsScreen implements Textb
         FontRenderer.getInstance()
                 .renderText(
                         poseStack,
-                        I18n.get("screens.wynntils.partyManagementGui.name"),
+                        CodedString.of(I18n.get("screens.wynntils.partyManagementGui.name")),
                         dividedWidth * 7,
                         dividedHeight * PARTY_LIST_DIV_HEIGHT,
                         CommonColors.WHITE,
@@ -206,7 +207,7 @@ public final class PartyManagementScreen extends WynntilsScreen implements Textb
         FontRenderer.getInstance()
                 .renderText(
                         poseStack,
-                        I18n.get("screens.wynntils.partyManagementGui.promote"),
+                        CodedString.of(I18n.get("screens.wynntils.partyManagementGui.promote")),
                         dividedWidth * 22,
                         dividedHeight * PARTY_LIST_DIV_HEIGHT,
                         CommonColors.WHITE,
@@ -216,7 +217,7 @@ public final class PartyManagementScreen extends WynntilsScreen implements Textb
         FontRenderer.getInstance()
                 .renderText(
                         poseStack,
-                        I18n.get("screens.wynntils.partyManagementGui.kick"),
+                        CodedString.of(I18n.get("screens.wynntils.partyManagementGui.kick")),
                         dividedWidth * 26,
                         dividedHeight * PARTY_LIST_DIV_HEIGHT,
                         CommonColors.WHITE,
@@ -239,7 +240,7 @@ public final class PartyManagementScreen extends WynntilsScreen implements Textb
         FontRenderer.getInstance()
                 .renderText(
                         poseStack,
-                        I18n.get("screens.wynntils.partyManagementGui.head"),
+                        CodedString.of(I18n.get("screens.wynntils.partyManagementGui.head")),
                         dividedWidth * 37,
                         dividedHeight * SUGGESTION_LIST_DIV_HEIGHT,
                         CommonColors.WHITE,
@@ -249,7 +250,7 @@ public final class PartyManagementScreen extends WynntilsScreen implements Textb
         FontRenderer.getInstance()
                 .renderText(
                         poseStack,
-                        I18n.get("screens.wynntils.partyManagementGui.suggestions"),
+                        CodedString.of(I18n.get("screens.wynntils.partyManagementGui.suggestions")),
                         dividedWidth * 39,
                         dividedHeight * SUGGESTION_LIST_DIV_HEIGHT,
                         CommonColors.WHITE,
@@ -259,7 +260,7 @@ public final class PartyManagementScreen extends WynntilsScreen implements Textb
         FontRenderer.getInstance()
                 .renderText(
                         poseStack,
-                        I18n.get("screens.wynntils.partyManagementGui.invite"),
+                        CodedString.of(I18n.get("screens.wynntils.partyManagementGui.invite")),
                         dividedWidth * 58,
                         dividedHeight * SUGGESTION_LIST_DIV_HEIGHT,
                         CommonColors.WHITE,
@@ -412,7 +413,7 @@ public final class PartyManagementScreen extends WynntilsScreen implements Textb
             FontRenderer.getInstance()
                     .renderText(
                             poseStack,
-                            String.valueOf(i),
+                            CodedString.of(String.valueOf(i)),
                             (float) x,
                             this.height / 2,
                             CommonColors.RED,
@@ -422,7 +423,7 @@ public final class PartyManagementScreen extends WynntilsScreen implements Textb
             FontRenderer.getInstance()
                     .renderText(
                             poseStack,
-                            String.valueOf(i),
+                            CodedString.of(String.valueOf(i)),
                             this.width / 2,
                             (float) y,
                             CommonColors.CYAN,

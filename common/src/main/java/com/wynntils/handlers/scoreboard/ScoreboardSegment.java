@@ -5,20 +5,21 @@
 package com.wynntils.handlers.scoreboard;
 
 import com.wynntils.handlers.scoreboard.type.SegmentMatcher;
+import com.wynntils.utils.mc.type.CodedString;
 import java.util.ArrayList;
 import java.util.List;
 
 public final class ScoreboardSegment {
     private final SegmentMatcher matcher;
-    private final String header;
+    private final CodedString header;
     private final int startIndex;
 
     private String end;
-    private List<String> content = null;
+    private List<CodedString> content = null;
     private int endIndex = -1;
     private boolean changed;
 
-    public ScoreboardSegment(SegmentMatcher matcher, String header, int startIndex) {
+    public ScoreboardSegment(SegmentMatcher matcher, CodedString header, int startIndex) {
         this.matcher = matcher;
         this.header = header;
         this.startIndex = startIndex;
@@ -35,7 +36,7 @@ public final class ScoreboardSegment {
                 + endIndex + ']';
     }
 
-    public List<String> getContent() {
+    public List<CodedString> getContent() {
         return content;
     }
 
@@ -51,7 +52,7 @@ public final class ScoreboardSegment {
         return matcher;
     }
 
-    public String getHeader() {
+    public CodedString getHeader() {
         return header;
     }
 
@@ -59,11 +60,12 @@ public final class ScoreboardSegment {
         return end;
     }
 
-    public List<String> getScoreboardLines() {
-        List<String> lines = new ArrayList<>(this.content);
+    public List<CodedString> getScoreboardLines() {
+        List<CodedString> lines = new ArrayList<>(this.content);
         lines.add(this.header);
         if (this.end != null) {
-            lines.add(this.end);
+            // FIXME: Note that end is without formatting!
+            lines.add(CodedString.of(this.end));
         }
 
         return lines;
@@ -73,7 +75,7 @@ public final class ScoreboardSegment {
         return changed;
     }
 
-    public void setContent(List<String> content) {
+    public void setContent(List<CodedString> content) {
         this.content = content;
     }
 

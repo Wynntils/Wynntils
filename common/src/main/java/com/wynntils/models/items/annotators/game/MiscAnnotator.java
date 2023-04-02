@@ -9,6 +9,7 @@ import com.wynntils.handlers.item.ItemAnnotator;
 import com.wynntils.models.items.items.game.MiscItem;
 import com.wynntils.utils.mc.ComponentUtils;
 import com.wynntils.utils.mc.LoreUtils;
+import com.wynntils.utils.mc.type.CodedString;
 import net.minecraft.nbt.ListTag;
 import net.minecraft.nbt.Tag;
 import net.minecraft.world.item.ItemStack;
@@ -26,11 +27,11 @@ public final class MiscAnnotator implements ItemAnnotator {
         boolean questItem = false;
 
         for (Tag line : loreTag) {
-            String coded = ComponentUtils.getCoded(line.getAsString());
-            if (coded.equals(UNTRADABLE)) {
+            CodedString coded = ComponentUtils.getCoded(line.getAsString());
+            if (coded.str().equals(UNTRADABLE)) {
                 untradable = true;
             }
-            if (coded.equals(QUEST_ITEM)) {
+            if (coded.str().equals(QUEST_ITEM)) {
                 questItem = true;
             }
         }

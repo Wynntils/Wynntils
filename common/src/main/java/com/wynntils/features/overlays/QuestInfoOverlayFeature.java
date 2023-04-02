@@ -23,6 +23,7 @@ import com.wynntils.models.quests.QuestInfo;
 import com.wynntils.models.quests.event.TrackedQuestUpdateEvent;
 import com.wynntils.utils.colors.CommonColors;
 import com.wynntils.utils.colors.CustomColor;
+import com.wynntils.utils.mc.type.CodedString;
 import com.wynntils.utils.render.TextRenderSetting;
 import com.wynntils.utils.render.TextRenderTask;
 import com.wynntils.utils.render.buffered.BufferedFontRenderer;
@@ -107,7 +108,7 @@ public class QuestInfoOverlayFeature extends Feature {
             List<TextRenderTask> renderTaskList = new ArrayList<>(3);
             for (int i = 0; i < 3; i++) {
                 renderTaskList.add(new TextRenderTask(
-                        null,
+                        CodedString.EMPTY,
                         TextRenderSetting.DEFAULT
                                 .withMaxWidth(this.getWidth())
                                 .withCustomColor(TEXT_COLORS.get(i))

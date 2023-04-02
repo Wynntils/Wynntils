@@ -4,4 +4,6 @@
  */
 package com.wynntils.handlers.scoreboard.type;
 
-public record ScoreboardLine(String line, int index) {}
+import com.wynntils.utils.mc.type.CodedString;
+
+public record ScoreboardLine(CodedString line, int index) {}

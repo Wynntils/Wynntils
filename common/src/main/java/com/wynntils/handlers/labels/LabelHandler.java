@@ -36,7 +36,8 @@ public class LabelHandler extends Handler {
                 if (value.isEmpty()) return;
 
                 Component oldNameComponent = entity.getCustomName();
-                CodedString oldName = oldNameComponent != null ? ComponentUtils.getCoded(oldNameComponent) : CodedString.EMPTY;
+                CodedString oldName =
+                        oldNameComponent != null ? ComponentUtils.getCoded(oldNameComponent) : CodedString.EMPTY;
                 CodedString newName = ComponentUtils.getCoded(value.get());
 
                 // Sometimes there is no actual change; ignore it then

@@ -11,6 +11,7 @@ import com.wynntils.models.character.CharacterModel;
 import com.wynntils.models.profession.type.ProfessionProgress;
 import com.wynntils.models.profession.type.ProfessionType;
 import com.wynntils.utils.mc.LoreUtils;
+import com.wynntils.utils.mc.type.CodedString;
 import com.wynntils.utils.type.TimedSet;
 import java.util.Collections;
 import java.util.HashMap;
@@ -46,7 +47,8 @@ public class ProfessionModel extends Model {
 
     @SubscribeEvent
     public void onLabelSpawn(EntityLabelChangedEvent event) {
-        Matcher matcher = PROFESSION_NODE_HARVERSTED_PATTERN.matcher(event.getName());
+        Matcher matcher =
+                PROFESSION_NODE_HARVERSTED_PATTERN.matcher(event.getName().str());
 
         if (matcher.matches()) {
             updateValue(
@@ -58,9 +60,9 @@ public class ProfessionModel extends Model {
 
     @SubscribeEvent
     public void onChatMessage(ChatMessageReceivedEvent event) {
-        String codedMessage = event.getOriginalCodedMessage();
+        CodedString codedMessage = event.getOriginalCodedMessage();
 
-        Matcher matcher = PROFESSION_CRAFT_PATTERN.matcher(codedMessage);
+        Matcher matcher = PROFESSION_CRAFT_PATTERN.matcher(codedMessage.str());
 
         if (matcher.matches()) {
             updateValue(
@@ -72,9 +74,9 @@ public class ProfessionModel extends Model {
 
     public void resetValueFromItem(ItemStack professionInfoItem) {
         Map<ProfessionType, ProfessionProgress> levels = new ConcurrentHashMap<>();
-        List<String> professionLore = LoreUtils.getLore(professionInfoItem);
-        for (String line : professionLore) {
-            Matcher matcher = INFO_MENU_PROFESSION_LORE_PATTERN.matcher(line);
+        List<CodedString> professionLore = LoreUtils.getLore(professionInfoItem);
+        for (CodedString line : professionLore) {
+            Matcher matcher = INFO_MENU_PROFESSION_LORE_PATTERN.matcher(line.str());
 
             if (matcher.matches()) {
                 // NOTE: When writing this, progress was quite a bit off in this lore. Still, parse it and use it while

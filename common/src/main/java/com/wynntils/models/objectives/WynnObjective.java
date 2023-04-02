@@ -5,6 +5,7 @@
 package com.wynntils.models.objectives;
 
 import com.wynntils.utils.mc.ComponentUtils;
+import com.wynntils.utils.mc.type.CodedString;
 import com.wynntils.utils.type.CappedValue;
 import java.util.Objects;
 import java.util.regex.Matcher;
@@ -18,10 +19,11 @@ public final class WynnObjective {
     private final String goal;
     private CappedValue score;
     private long updatedAt;
-    private final String original;
+    private final CodedString original;
     private final boolean isGuildObjective;
 
-    private WynnObjective(String goal, CappedValue score, long updatedAt, String original, boolean isGuildObjective) {
+    private WynnObjective(
+            String goal, CappedValue score, long updatedAt, CodedString original, boolean isGuildObjective) {
         this.goal = goal;
         this.score = score;
         this.updatedAt = updatedAt;
@@ -29,7 +31,7 @@ public final class WynnObjective {
         this.isGuildObjective = isGuildObjective;
     }
 
-    static WynnObjective parseObjectiveLine(String objectiveLine, boolean isGuildObjective) {
+    static WynnObjective parseObjectiveLine(CodedString objectiveLine, boolean isGuildObjective) {
         String stripped = ComponentUtils.stripFormatting(objectiveLine);
 
         assert stripped != null;
@@ -83,7 +85,7 @@ public final class WynnObjective {
         return this.goal;
     }
 
-    public String getOriginal() {
+    public CodedString getOriginal() {
         return this.original;
     }
 

@@ -17,6 +17,7 @@ import com.wynntils.models.worlds.event.WorldStateEvent;
 import com.wynntils.models.worlds.type.WorldState;
 import com.wynntils.utils.mc.ComponentUtils;
 import com.wynntils.utils.mc.McUtils;
+import com.wynntils.utils.mc.type.CodedString;
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
@@ -78,14 +79,14 @@ public final class FriendsModel extends Model {
     public void onChatReceived(ChatMessageReceivedEvent event) {
         if (event.getMessageType() != MessageType.FOREGROUND) return;
 
-        String coded = event.getOriginalCodedMessage();
+        CodedString coded = event.getOriginalCodedMessage();
         String unformatted = ComponentUtils.stripFormatting(coded);
 
-        Matcher joinMatcher = JOIN_PATTERN.matcher(coded);
+        Matcher joinMatcher = JOIN_PATTERN.matcher(coded.str());
         if (joinMatcher.matches()) {
             WynntilsMod.postEvent(new FriendsEvent.Joined(joinMatcher.group(1)));
         } else {
-            Matcher leaveMatcher = LEAVE_PATTERN.matcher(coded);
+            Matcher leaveMatcher = LEAVE_PATTERN.matcher(coded.str());
             if (leaveMatcher.matches()) {
                 WynntilsMod.postEvent(new FriendsEvent.Left(leaveMatcher.group(1)));
             }
@@ -103,15 +104,15 @@ public final class FriendsModel extends Model {
             }
 
             // Skip first message of two, but still expect more messages
-            if (FRIEND_LIST_FAIL_1.matcher(coded).matches()) {
+            if (FRIEND_LIST_FAIL_1.matcher(coded.str()).matches()) {
                 event.setCanceled(true);
                 return;
             }
         }
     }
 
-    private boolean tryParseNoFriendList(String coded) {
-        if (FRIEND_LIST_FAIL_2.matcher(coded).matches()) {
+    private boolean tryParseNoFriendList(CodedString coded) {
+        if (FRIEND_LIST_FAIL_2.matcher(coded.str()).matches()) {
             WynntilsMod.info("Friend list is empty.");
             return true;
         }
@@ -119,8 +120,8 @@ public final class FriendsModel extends Model {
         return false;
     }
 
-    private boolean tryParseFriendMessages(String coded) {
-        Matcher matcher = FRIEND_REMOVE_MESSAGE_PATTERN.matcher(coded);
+    private boolean tryParseFriendMessages(CodedString coded) {
+        Matcher matcher = FRIEND_REMOVE_MESSAGE_PATTERN.matcher(coded.str());
         if (matcher.matches()) {
             String player = matcher.group(1);
 
@@ -133,7 +134,7 @@ public final class FriendsModel extends Model {
             return true;
         }
 
-        matcher = FRIEND_ADD_MESSAGE_PATTERN.matcher(coded);
+        matcher = FRIEND_ADD_MESSAGE_PATTERN.matcher(coded.str());
         if (matcher.matches()) {
             String player = matcher.group(1);
 

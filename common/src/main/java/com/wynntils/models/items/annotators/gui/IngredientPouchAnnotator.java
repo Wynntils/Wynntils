@@ -11,6 +11,7 @@ import com.wynntils.handlers.item.ItemAnnotator;
 import com.wynntils.models.ingredients.type.IngredientInfo;
 import com.wynntils.models.items.items.gui.IngredientPouchItem;
 import com.wynntils.utils.mc.LoreUtils;
+import com.wynntils.utils.mc.type.CodedString;
 import com.wynntils.utils.type.Pair;
 import java.util.ArrayList;
 import java.util.List;
@@ -30,9 +31,9 @@ public final class IngredientPouchAnnotator implements ItemAnnotator {
         if (!name.equals(INGREDIENT_POUCH_NAME)) return null;
 
         List<Pair<IngredientInfo, Integer>> ingredients = new ArrayList<>();
-        List<String> lore = LoreUtils.getLore(itemStack);
-        for (String line : lore) {
-            Matcher matcher = INGREDIENT_LORE_LINE_PATTERN.matcher(line);
+        List<CodedString> lore = LoreUtils.getLore(itemStack);
+        for (CodedString line : lore) {
+            Matcher matcher = INGREDIENT_LORE_LINE_PATTERN.matcher(line.str());
             if (!matcher.matches()) continue;
 
             int count = Integer.parseInt(matcher.group(1));

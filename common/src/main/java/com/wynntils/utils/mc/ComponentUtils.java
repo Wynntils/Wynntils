@@ -41,12 +41,12 @@ public final class ComponentUtils {
 
     // Text without formatting codes "Test text"
     public static String getUnformatted(Component component) {
-        return ComponentUtils.stripFormatting(component.getString());
+        return ComponentUtils.stripFormatting(new CodedString(component.getString()));
     }
 
-    public static String getCoded(String jsonString) {
+    public static CodedString getCoded(String jsonString) {
         MutableComponent component = Component.Serializer.fromJson(jsonString);
-        if (component == null) return "";
+        if (component == null) return CodedString.EMPTY;
 
         return getCoded(component);
     }
@@ -148,26 +148,26 @@ public final class ComponentUtils {
         return coded == null ? "" : ChatFormatting.stripFormatting(coded.str());
     }
 
-    public static String stripColorFormatting(String text) {
+    public static String stripColorFormatting(CodedString text) {
         if (text == null) {
             return "";
         }
 
-        return COLOR_CODE_PATTERN.matcher(text).replaceAll("");
+        return COLOR_CODE_PATTERN.matcher(text.str()).replaceAll("");
     }
 
     public static String getLastPartCodes(CodedString lastPart) {
-        if (!lastPart.contains("§")) return "";
+        if (!lastPart.str().contains("§")) return "";
 
         String lastPartCodes = "";
         int index;
-        while ((index = lastPart.lastIndexOf('§')) != -1) {
-            if (index >= lastPart.length() - 1) {
+        while ((index = lastPart.str().lastIndexOf('§')) != -1) {
+            if (index >= lastPart.str().length() - 1) {
                 // trailing §, no format code, skip it
-                lastPart = lastPart.substring(0, index);
+                lastPart = CodedString.of(lastPart.str().substring(0, index));
                 continue;
             }
-            String thisCode = lastPart.substring(index, index + 2);
+            String thisCode = lastPart.str().substring(index, index + 2);
             if (thisCode.charAt(1) == 'r') {
                 // it's a reset code, we can stop looking
                 break;
@@ -175,7 +175,7 @@ public final class ComponentUtils {
             // prepend to codes since we're going backwards
             lastPartCodes = thisCode + lastPartCodes;
 
-            lastPart = lastPart.substring(0, index);
+            lastPart = CodedString.of(lastPart.str().substring(0, index));
         }
 
         return lastPartCodes;

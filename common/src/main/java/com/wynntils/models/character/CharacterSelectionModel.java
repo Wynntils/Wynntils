@@ -104,8 +104,8 @@ public final class CharacterSelectionModel extends Model {
         int xp = 0;
         int soulPoints = 0;
         int finishedQuests = 0;
-        for (String line : LoreUtils.getLore(itemStack)) {
-            Matcher matcher = CLASS_ITEM_CLASS_PATTERN.matcher(line);
+        for (CodedString line : LoreUtils.getLore(itemStack)) {
+            Matcher matcher = CLASS_ITEM_CLASS_PATTERN.matcher(line.str());
 
             if (matcher.matches()) {
                 String classTypeString = matcher.group("name");
@@ -116,25 +116,25 @@ public final class CharacterSelectionModel extends Model {
                 continue;
             }
 
-            matcher = CLASS_ITEM_LEVEL_PATTERN.matcher(line);
+            matcher = CLASS_ITEM_LEVEL_PATTERN.matcher(line.str());
             if (matcher.matches()) {
                 level = Integer.parseInt(matcher.group(1));
                 continue;
             }
 
-            matcher = CLASS_ITEM_XP_PATTERN.matcher(line);
+            matcher = CLASS_ITEM_XP_PATTERN.matcher(line.str());
             if (matcher.matches()) {
                 xp = Integer.parseInt(matcher.group(1));
                 continue;
             }
 
-            matcher = CLASS_ITEM_SOUL_POINTS_PATTERN.matcher(line);
+            matcher = CLASS_ITEM_SOUL_POINTS_PATTERN.matcher(line.str());
             if (matcher.matches()) {
                 soulPoints = Integer.parseInt(matcher.group(1));
                 continue;
             }
 
-            matcher = CLASS_ITEM_FINISHED_QUESTS_PATTERN.matcher(line);
+            matcher = CLASS_ITEM_FINISHED_QUESTS_PATTERN.matcher(line.str());
             if (matcher.matches()) {
                 finishedQuests = Integer.parseInt(matcher.group(1));
             }
