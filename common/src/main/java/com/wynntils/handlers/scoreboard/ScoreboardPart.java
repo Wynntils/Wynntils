@@ -5,18 +5,20 @@
 package com.wynntils.handlers.scoreboard;
 
 import com.wynntils.handlers.scoreboard.type.SegmentMatcher;
-import java.util.Set;
 
 /**
  * This is the "segment handler" that is implemented by the different models that want to
  * take part in the scoreboard handler.
  */
-public interface ScoreboardPart {
-    Set<SegmentMatcher> getSegmentMatchers();
+public abstract class ScoreboardPart {
+    public abstract SegmentMatcher getSegmentMatcher();
 
-    void onSegmentChange(ScoreboardSegment newValue, SegmentMatcher segmentMatcher);
+    public abstract void onSegmentChange(ScoreboardSegment newValue);
 
-    void onSegmentRemove(ScoreboardSegment segment, SegmentMatcher segmentMatcher);
+    public abstract void onSegmentRemove(ScoreboardSegment segment);
 
-    void reset();
+    public abstract void reset();
+
+    @Override
+    public abstract String toString();
 }
