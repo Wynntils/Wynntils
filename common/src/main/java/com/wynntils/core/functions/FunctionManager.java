@@ -37,6 +37,7 @@ import com.wynntils.utils.type.ErrorOr;
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
@@ -239,7 +240,7 @@ public final class FunctionManager extends Manager {
         calculatedString = calculatedString.replace("\\[\\", "{");
         calculatedString = calculatedString.replace("\\]\\", "}");
 
-        return calculatedString.split("\n");
+        return Arrays.stream(calculatedString.split("\n")).map(CodedString::of).toArray(CodedString[]::new);
     }
 
     private String parseColorCodes(String toProcess) {

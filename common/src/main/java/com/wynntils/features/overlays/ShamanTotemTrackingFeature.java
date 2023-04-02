@@ -20,6 +20,7 @@ import com.wynntils.models.abilities.event.TotemEvent;
 import com.wynntils.utils.colors.CommonColors;
 import com.wynntils.utils.colors.CustomColor;
 import com.wynntils.utils.mc.RenderedStringUtils;
+import com.wynntils.utils.mc.type.CodedString;
 import com.wynntils.utils.render.type.HorizontalAlignment;
 import com.wynntils.utils.render.type.VerticalAlignment;
 import java.util.Arrays;
@@ -124,12 +125,12 @@ public class ShamanTotemTrackingFeature extends Feature {
         }
 
         @Override
-        protected String[] calculateTemplateValue(String template) {
+        protected CodedString[] calculateTemplateValue(String template) {
             return Arrays.stream(super.calculateTemplateValue(template))
                     .map(s -> RenderedStringUtils.trySplitOptimally(s, this.getWidth()))
-                    .map(s -> s.split("\n"))
+                    .map(s -> s.str().split("\n"))
                     .flatMap(Arrays::stream)
-                    .toArray(String[]::new);
+                    .toArray(CodedString[]::new);
         }
     }
 

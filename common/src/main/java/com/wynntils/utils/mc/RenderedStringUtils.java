@@ -59,27 +59,27 @@ public final class RenderedStringUtils {
         return renderedText;
     }
 
-    public static String trySplitOptimally(String line, float maxWidth) {
+    public static CodedString trySplitOptimally(CodedString line, float maxWidth) {
         String maxFitting = RenderedStringUtils.getMaxFittingText(
-                line, maxWidth, FontRenderer.getInstance().getFont());
+                line.withoutFormatting(), maxWidth, FontRenderer.getInstance().getFont());
 
         if (maxFitting.contains("[") && !maxFitting.contains("]")) { // Detail line did not appear to fit, force break
             String color = "";
 
-            if (line.startsWith("§")) {
-                color = line.substring(0, 2);
+            if (line.str().startsWith("§")) {
+                color = line.str().substring(0, 2);
             }
 
-            return line.replaceFirst(" \\[", "\n" + color + "[");
+            return CodedString.of(line.str().replaceFirst(" \\[", "\n" + color + "["));
         } else if (maxFitting.contains("(")
                 && !maxFitting.contains(")")) { // Detail line did not appear to fit, force break
             String color = "";
 
-            if (line.startsWith("§")) {
-                color = line.substring(0, 2);
+            if (line.str().startsWith("§")) {
+                color = line.str().substring(0, 2);
             }
 
-            return line.replaceFirst(" \\(", "\n" + color + "(");
+            return CodedString.of(line.str().replaceFirst(" \\(", "\n" + color + "("));
         } else { // Fits fine, give normal lines
             return line;
         }
