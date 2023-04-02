@@ -59,6 +59,7 @@ public class MobTotemTrackingFeature extends Feature {
                     .map(s -> RenderedStringUtils.trySplitOptimally(s, this.getWidth()))
                     .map(s -> s.str().split("\n"))
                     .flatMap(Arrays::stream)
+                    .map(CodedString::of)
                     .toArray(CodedString[]::new);
         }
     }
