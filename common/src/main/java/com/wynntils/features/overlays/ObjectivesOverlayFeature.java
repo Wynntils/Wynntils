@@ -6,6 +6,7 @@ package com.wynntils.features.overlays;
 
 import com.mojang.blaze3d.platform.Window;
 import com.mojang.blaze3d.vertex.PoseStack;
+import com.wynntils.core.components.Managers;
 import com.wynntils.core.components.Models;
 import com.wynntils.core.config.Category;
 import com.wynntils.core.config.Config;
@@ -50,12 +51,12 @@ public class ObjectivesOverlayFeature extends Feature {
         if (disableObjectiveTrackingOnScoreboard.get()) {
             ScoreboardSegment segment = event.getSegment();
             if (segment.getScoreboardPart() instanceof DailyObjectiveScoreboardPart
-                    && guildObjectiveOverlay.shouldBeEnabled()) {
+                    && Managers.Overlay.isEnabled(guildObjectiveOverlay)) {
                 event.setCanceled(true);
                 return;
             }
             if (segment.getScoreboardPart() instanceof GuildObjectiveScoreboardPart
-                    && dailyObjectiveOverlay.shouldBeEnabled()) {
+                    && Managers.Overlay.isEnabled(dailyObjectiveOverlay)) {
                 event.setCanceled(true);
                 return;
             }
