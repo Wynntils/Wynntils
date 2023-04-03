@@ -49,24 +49,40 @@ public final class CodedStyle {
         this.hoverEvent = hoverEvent;
     }
 
-    static CodedStyle fromStyle(Style style, CodedStringPart owner) {
+    static CodedStyle fromStyle(Style style, CodedStringPart owner, CodedStringPart partBefore) {
+        Style inheritedStyle;
+
+        if (partBefore == null) {
+            inheritedStyle = style;
+        } else {
+            // This changes properties that are null, as-in, inherting from the previous style.
+            inheritedStyle = style.applyTo(partBefore.getCodedStyle().getStyle());
+
+            // We don't want to inherit these properties.
+            inheritedStyle.withClickEvent(style.getClickEvent());
+            inheritedStyle.withHoverEvent(style.getHoverEvent());
+            inheritedStyle.withInsertion(style.getInsertion());
+            inheritedStyle.withFont(style.getFont());
+        }
+
         return new CodedStyle(
                 owner,
-                style.getColor() == null
+                inheritedStyle.getColor() == null
                         ? CustomColor.NONE
-                        : CustomColor.fromInt(style.getColor().getValue()),
-                style.isBold(),
-                style.isItalic(),
-                style.isUnderlined(),
-                style.isStrikethrough(),
-                style.isObfuscated(),
-                style.getClickEvent(),
-                style.getHoverEvent());
+                        : CustomColor.fromInt(inheritedStyle.getColor().getValue()),
+                inheritedStyle.isBold(),
+                inheritedStyle.isItalic(),
+                inheritedStyle.isUnderlined(),
+                inheritedStyle.isStrikethrough(),
+                inheritedStyle.isObfuscated(),
+                inheritedStyle.getClickEvent(),
+                inheritedStyle.getHoverEvent());
     }
 
     public String asString() {
         // Rules of converting a Style to a String:
-        // 0. Every style is prefixed with a §.
+        // Every style is prefixed with a §.
+        // 0. Every style string is fully qualified, meaning that it contains all the formatting, and reset if needed.
         // 1. Style color is converted to a color segment.
         //    A color segment is the prefix and the chatFormatting char.
         //    If this is a custom color, a hex color code is used.
@@ -80,6 +96,14 @@ public final class CodedStyle {
         //    Example: §<1> -> (1st hover event)
 
         StringBuilder styleString = new StringBuilder();
+
+        CodedStringPart partBefore = owner.getPartBefore();
+
+        if (partBefore != null) {
+            if (!this.isCompatibleWith(partBefore.getCodedStyle())) {
+                styleString.append(STYLE_PREFIX).append(ChatFormatting.RESET.getChar());
+            }
+        }
 
         // 1. Color
         if (color != CustomColor.NONE) {
@@ -154,6 +178,45 @@ public final class CodedStyle {
         styleCache = reconstructedStyle;
 
         return reconstructedStyle;
+    }
+
+    private boolean isCompatibleWith(CodedStyle other) {
+        // A style is compatible with another style if:
+        // 1. If the color is non-null in this style, it is the same as the other style or other style's color is null.
+        // 2. If the other formatting is false, this formatting can be false or true.
+        // 3. If the other formatting is true, this formatting must be true.
+
+        if (color != CustomColor.NONE && other.color != CustomColor.NONE) {
+            if (!color.equals(other.color)) {
+                return false;
+            }
+        }
+
+        if (color == CustomColor.NONE && other.color != CustomColor.NONE) {
+            return false;
+        }
+
+        if (!bold && other.bold) {
+            return false;
+        }
+
+        if (!italic && other.italic) {
+            return false;
+        }
+
+        if (!underlined && other.underlined) {
+            return false;
+        }
+
+        if (!strikethrough && other.strikethrough) {
+            return false;
+        }
+
+        if (!obfuscated && other.obfuscated) {
+            return false;
+        }
+
+        return true;
     }
 
     void invalidateCache() {

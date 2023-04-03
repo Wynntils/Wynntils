@@ -25,13 +25,19 @@ public final class CodedString {
     CodedString(Component component) {
         parts = new LinkedList<>();
 
+        CodedStringPart lastPart = null;
+
         for (Component current : component.toFlatList()) {
+            final CodedStringPart finalLastPart = lastPart;
+
             current.visit(
                     (style, string) -> {
-                        parts.add(new CodedStringPart(string, style, this));
+                        parts.add(new CodedStringPart(string, style, this, finalLastPart));
                         return Optional.empty();
                     },
                     Style.EMPTY);
+
+            lastPart = parts.get(parts.size() - 1);
         }
     }
 
@@ -59,6 +65,15 @@ public final class CodedString {
         componentCache = component;
 
         return component;
+    }
+
+    public CodedStringPart getPartBefore(CodedStringPart codedStringPart) {
+        int index = parts.indexOf(codedStringPart);
+        if (index == 0) {
+            return null;
+        }
+
+        return parts.get(index - 1);
     }
 
     int addClickEvent(ClickEvent clickEvent) {

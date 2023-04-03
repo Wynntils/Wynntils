@@ -16,10 +16,12 @@ public final class CodedStringPart {
 
     private Component componentCache;
 
-    CodedStringPart(String text, Style style, CodedString parent) {
+    CodedStringPart(String text, Style style, CodedString parent, CodedStringPart partBefore) {
         this.text = text;
-        this.style = CodedStyle.fromStyle(style, this);
         this.parent = parent;
+
+        // Must be done last
+        this.style = CodedStyle.fromStyle(style, this, partBefore);
     }
 
     public String getCoded() {
@@ -28,6 +30,14 @@ public final class CodedStringPart {
 
     public CodedString getParent() {
         return parent;
+    }
+
+    public CodedStyle getCodedStyle() {
+        return style;
+    }
+
+    public CodedStringPart getPartBefore() {
+        return parent.getPartBefore(this);
     }
 
     public Component getComponent() {
