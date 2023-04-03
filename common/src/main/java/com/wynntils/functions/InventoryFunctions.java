@@ -9,6 +9,7 @@ import com.wynntils.core.functions.Function;
 import com.wynntils.core.functions.arguments.FunctionArguments;
 import com.wynntils.models.items.WynnItem;
 import com.wynntils.models.items.properties.DurableItemProperty;
+import com.wynntils.utils.mc.ComponentUtils;
 import com.wynntils.utils.mc.McUtils;
 import com.wynntils.utils.type.CappedValue;
 import java.util.List;
@@ -211,6 +212,19 @@ public class InventoryFunctions {
         @Override
         public List<String> getAliases() {
             return List.of("held_type");
+        }
+    }
+
+    public static class HeldItemNameFunction extends Function<String> {
+        @Override
+        public String getValue(FunctionArguments arguments) {
+            ItemStack itemStack = McUtils.player().getItemInHand(InteractionHand.MAIN_HAND);
+            return ComponentUtils.getUnformatted(itemStack.getHoverName());
+        }
+
+        @Override
+        public List<String> getAliases() {
+            return List.of("held_item", "held_name");
         }
     }
 }

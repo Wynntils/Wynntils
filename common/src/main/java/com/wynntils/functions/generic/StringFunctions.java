@@ -96,6 +96,28 @@ public class StringFunctions {
         }
     }
 
+    public static class StringContainsFunction extends GenericFunction<Boolean> {
+        @Override
+        public Boolean getValue(FunctionArguments arguments) {
+            return arguments
+                    .getArgument("first")
+                    .getStringValue()
+                    .contains(arguments.getArgument("second").getStringValue());
+        }
+
+        @Override
+        public FunctionArguments.RequiredArgumentBuilder getRequiredArgumentsBuilder() {
+            return new FunctionArguments.RequiredArgumentBuilder(List.of(
+                    new FunctionArguments.Argument<>("first", String.class, null),
+                    new FunctionArguments.Argument<>("second", String.class, null)));
+        }
+
+        @Override
+        public List<String> getAliases() {
+            return List.of("contains_str");
+        }
+    }
+
     public static class ParseIntegerFunction extends GenericFunction<Integer> {
         @Override
         public Integer getValue(FunctionArguments arguments) {
