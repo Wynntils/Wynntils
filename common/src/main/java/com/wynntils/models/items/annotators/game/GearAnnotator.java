@@ -29,7 +29,7 @@ public final class GearAnnotator implements ItemAnnotator {
         if (gearInfo == null) return null;
 
         // Verify that rarity matches
-        if (!name.str().startsWith(gearInfo.tier().getChatFormatting().toString())) return null;
+        if (!name.startsWith(gearInfo.tier().getChatFormatting().toString())) return null;
 
         GearInstance gearInstance = matcher.group(1) != null ? null : Models.Gear.parseInstance(gearInfo, itemStack);
         return new GearItem(gearInfo, gearInstance);

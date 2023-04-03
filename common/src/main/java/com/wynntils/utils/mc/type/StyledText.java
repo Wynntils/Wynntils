@@ -70,6 +70,13 @@ public class StyledText {
         return str.contains(string);
     }
 
+    public boolean startsWith(StyledText prefix) {
+        return str.startsWith(prefix.str());
+    }
+
+    public boolean startsWith(String prefix) {
+        return str.startsWith(prefix);
+    }
 
     public StyledText getNormalized() {
         return new StyledText(WynnUtils.normalizeBadString(str));

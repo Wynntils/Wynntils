@@ -147,7 +147,7 @@ public final class CharacterModel extends Model {
 
         String id = "";
         for (StyledText line : soulLore) {
-            if (line.str().startsWith(ChatFormatting.DARK_GRAY.toString())) {
+            if (line.startsWith(ChatFormatting.DARK_GRAY.toString())) {
                 id = ComponentUtils.stripFormatting(line);
                 break;
             }

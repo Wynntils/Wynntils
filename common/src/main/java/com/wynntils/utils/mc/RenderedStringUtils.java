@@ -68,7 +68,7 @@ public final class RenderedStringUtils {
         if (maxFitting.contains("[") && !maxFitting.contains("]")) { // Detail line did not appear to fit, force break
             String color = "";
 
-            if (line.str().startsWith("§")) {
+            if (line.startsWith("§")) {
                 color = line.str().substring(0, 2);
             }
 
@@ -77,7 +77,7 @@ public final class RenderedStringUtils {
                 && !maxFitting.contains(")")) { // Detail line did not appear to fit, force break
             String color = "";
 
-            if (line.str().startsWith("§")) {
+            if (line.startsWith("§")) {
                 color = line.str().substring(0, 2);
             }
 

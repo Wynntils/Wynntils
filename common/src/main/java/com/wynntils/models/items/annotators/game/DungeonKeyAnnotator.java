@@ -40,7 +40,7 @@ public final class DungeonKeyAnnotator implements ItemAnnotator {
     }
 
     private boolean verifyDungeonKey(ItemStack itemStack, StyledText name) {
-        if (name.str().startsWith("Broken")) return true;
+        if (name.startsWith("Broken")) return true;
 
         Matcher matcher = LoreUtils.matchLoreLine(itemStack, 0, LORE_PATTERN);
         return matcher.matches();

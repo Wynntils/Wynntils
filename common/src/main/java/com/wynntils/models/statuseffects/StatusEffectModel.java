@@ -66,7 +66,7 @@ public final class StatusEffectModel extends Model {
             return;
         }
 
-        if (!footer.str().startsWith(STATUS_EFFECTS_TITLE.str())) return;
+        if (!footer.startsWith(STATUS_EFFECTS_TITLE)) return;
 
         List<StatusEffect> newStatusEffects = new ArrayList<>();
 
