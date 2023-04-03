@@ -219,7 +219,7 @@ public class StringFunctions {
     public static class RegexMatchFunction extends GenericFunction<Boolean> {
         @Override
         public Boolean getValue(FunctionArguments arguments) {
-            String value = arguments.getArgument("value").getStringValue();
+            String value = arguments.getArgument("source").getStringValue();
             String regex = arguments.getArgument("regex").getStringValue();
 
             try {
@@ -232,7 +232,7 @@ public class StringFunctions {
         @Override
         public FunctionArguments.RequiredArgumentBuilder getRequiredArgumentsBuilder() {
             return new FunctionArguments.RequiredArgumentBuilder(List.of(
-                    new FunctionArguments.Argument<>("value", String.class, null),
+                    new FunctionArguments.Argument<>("source", String.class, null),
                     new FunctionArguments.Argument<>("regex", String.class, null)));
         }
     }
@@ -240,7 +240,7 @@ public class StringFunctions {
     public static class RegexFindFunction extends GenericFunction<Boolean> {
         @Override
         public Boolean getValue(FunctionArguments arguments) {
-            String value = arguments.getArgument("value").getStringValue();
+            String value = arguments.getArgument("source").getStringValue();
             Pattern regex = Pattern.compile(arguments.getArgument("regex").getStringValue());
 
             try {
@@ -253,7 +253,7 @@ public class StringFunctions {
         @Override
         public FunctionArguments.RequiredArgumentBuilder getRequiredArgumentsBuilder() {
             return new FunctionArguments.RequiredArgumentBuilder(List.of(
-                    new FunctionArguments.Argument<>("value", String.class, null),
+                    new FunctionArguments.Argument<>("source", String.class, null),
                     new FunctionArguments.Argument<>("regex", String.class, null)));
         }
     }
@@ -261,7 +261,7 @@ public class StringFunctions {
     public static class RegexReplaceFunction extends GenericFunction<String> {
         @Override
         public String getValue(FunctionArguments arguments) {
-            String value = arguments.getArgument("value").getStringValue();
+            String value = arguments.getArgument("source").getStringValue();
             String regex = arguments.getArgument("regex").getStringValue();
             String replacement = arguments.getArgument("replacement").getStringValue();
 
@@ -275,7 +275,7 @@ public class StringFunctions {
         @Override
         public FunctionArguments.RequiredArgumentBuilder getRequiredArgumentsBuilder() {
             return new FunctionArguments.RequiredArgumentBuilder(List.of(
-                    new FunctionArguments.Argument<>("value", String.class, null),
+                    new FunctionArguments.Argument<>("source", String.class, null),
                     new FunctionArguments.Argument<>("regex", String.class, null),
                     new FunctionArguments.Argument<>("replacement", String.class, null)));
         }
