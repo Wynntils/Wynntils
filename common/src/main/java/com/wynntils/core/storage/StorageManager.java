@@ -48,7 +48,11 @@ public final class StorageManager extends Manager {
         userStorageFile = new File(STORAGE_DIR, McUtils.mc().getUser().getUuid() + FILE_SUFFIX);
     }
 
-    public void init() {
+    public void initComponents() {
+        readFromJson();
+    }
+
+    public void initFeatures() {
         // Register all storageables
         Managers.Feature.getFeatures().forEach(this::registerStorageable);
 
