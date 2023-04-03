@@ -195,6 +195,26 @@ public final class PartStyle {
         return this;
     }
 
+    public boolean isBold() {
+        return bold;
+    }
+
+    public boolean isItalic() {
+        return italic;
+    }
+
+    public boolean isObfuscated() {
+        return obfuscated;
+    }
+
+    public boolean isStrikethrough() {
+        return strikethrough;
+    }
+
+    public boolean isUnderlined() {
+        return underlined;
+    }
+
     public PartStyle setBold(boolean bold) {
         this.bold = bold;
         return this;

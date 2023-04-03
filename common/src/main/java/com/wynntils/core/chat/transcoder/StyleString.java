@@ -147,12 +147,12 @@ public final class StyleString {
         String firstString = partString.substring(0, indexToSplit);
         String secondString = partString.substring(indexToSplit);
 
+        StyleStringPart partBefore = getPartBefore(partToSplit);
+        Style styleBefore =
+                partBefore == null ? Style.EMPTY : partBefore.getPartStyle().getStyle();
+
         Style style = partToSplit.getPartStyle().getStyle();
-        StyleStringPart firstPart = new StyleStringPart(
-                firstString,
-                style,
-                this,
-                getPartBefore(partToSplit).getPartStyle().getStyle());
+        StyleStringPart firstPart = new StyleStringPart(firstString, style, this, styleBefore);
         StyleStringPart secondPart = new StyleStringPart(
                 secondString, style, this, firstPart.getPartStyle().getStyle());
 
@@ -197,6 +197,10 @@ public final class StyleString {
         }
 
         return null;
+    }
+
+    public int getPartCount() {
+        return parts.size();
     }
 
     int addClickEvent(ClickEvent clickEvent) {
