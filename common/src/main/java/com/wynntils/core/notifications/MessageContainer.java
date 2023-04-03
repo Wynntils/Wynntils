@@ -55,7 +55,7 @@ public class MessageContainer {
         } else {
             StyledText messageMultiplier = StyledText.of(" §7[x" + this.messageCount + "]");
             this.renderTask = new TextRenderTask(
-                    StyledText.of(this.message.str() + messageMultiplier.str()), this.renderTask.getSetting());
+                    this.message.append(messageMultiplier), this.renderTask.getSetting());
         }
     }
 

@@ -173,7 +173,7 @@ public final class ComponentUtils {
                 break;
             }
             // prepend to codes since we're going backwards
-            lastPartCodes = StyledText.of(thisCode + lastPartCodes.str());
+            lastPartCodes = lastPartCodes.prepend(thisCode);
 
             lastPart = StyledText.of(lastPart.str().substring(0, index));
         }

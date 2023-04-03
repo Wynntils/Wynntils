@@ -293,7 +293,7 @@ public class NpcDialogueOverlayFeature extends Feature {
                 StyledText protection = isProtected ? StyledText.of("§f<protected> §r") : StyledText.EMPTY;
                 if (dialogueType == NpcDialogueType.NORMAL) {
                     TextRenderTask pressSneakMessage = new TextRenderTask(
-                            StyledText.of(protection.str() + PRESS_SNEAK_TO_CONTINUE.str()), renderSetting);
+                            PRESS_SNEAK_TO_CONTINUE.prepend(protection), renderSetting);
                     renderTaskList.add(pressSneakMessage);
                 } else if (dialogueType == NpcDialogueType.SELECTION) {
                     String msg;
@@ -304,7 +304,7 @@ public class NpcDialogueOverlayFeature extends Feature {
                     }
 
                     TextRenderTask pressSneakMessage =
-                            new TextRenderTask(StyledText.of(protection.str() + "§c") + msg, renderSetting);
+                            new TextRenderTask(protection.append("§c"+ msg), renderSetting);
                     renderTaskList.add(pressSneakMessage);
                 }
 

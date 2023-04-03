@@ -58,6 +58,22 @@ public class StyledText {
         return str;
     }
 
+    public StyledText prepend(StyledText prefix) {
+        return prefix.append(str);
+    }
+
+    public StyledText prepend(String prefix) {
+        return StyledText.of(prefix + str);
+    }
+
+    public StyledText append(StyledText suffix) {
+        return StyledText.of(str + suffix.str());
+    }
+
+    public StyledText append(String suffix) {
+        return StyledText.of(str + suffix);
+    }
+
     public StyledText trim() {
         return StyledText.of(str.trim());
     }
