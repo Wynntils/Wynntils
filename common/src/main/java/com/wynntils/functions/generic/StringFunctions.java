@@ -268,7 +268,7 @@ public class StringFunctions {
             try {
                 return value.replaceAll(regex, replacement);
             } catch (PatternSyntaxException ignored) {
-                return value;
+                return "<Regex Syntax Error>";
             }
         }
 
