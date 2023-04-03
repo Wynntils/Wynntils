@@ -22,6 +22,7 @@ import com.wynntils.handlers.bossbar.TrackedBar;
 import com.wynntils.handlers.bossbar.event.BossBarAddedEvent;
 import com.wynntils.handlers.bossbar.type.BossBarProgress;
 import com.wynntils.mc.event.RenderEvent;
+import com.wynntils.mc.event.TickEvent;
 import com.wynntils.models.abilities.bossbars.AwakenedBar;
 import com.wynntils.models.abilities.bossbars.BloodPoolBar;
 import com.wynntils.models.abilities.bossbars.CorruptedBar;
@@ -99,12 +100,17 @@ public class GameBarsOverlayFeature extends Feature {
         @RegisterConfig("feature.wynntils.gameBarsOverlay.overlay.baseBar.flip")
         public final Config<Boolean> flip = new Config<>(false);
 
+        @RegisterConfig("feature.wynntils.gameBarsOverlay.overlay.baseBar.animationTime")
+        public final Config<Float> animationTime = new Config<>(2f);
+
         @RegisterConfig("feature.wynntils.gameBarsOverlay.overlay.baseBar.shouldDisplayOriginal")
         public final Config<Boolean> shouldDisplayOriginal = new Config<>(false);
 
         // hacky override of custom color
         @RegisterConfig("feature.wynntils.gameBarsOverlay.overlay.baseBar.textColor")
         public final Config<CustomColor> textColor = new Config<>(CommonColors.WHITE);
+
+        protected float currentProgress = 0f;
 
         protected BaseBarOverlay(OverlayPosition position, OverlaySize size, CustomColor textColor) {
             super(position, size);
@@ -121,6 +127,19 @@ public class GameBarsOverlayFeature extends Feature {
 
         protected abstract boolean isActive();
 
+        @SubscribeEvent
+        public void onTick(TickEvent event) {
+            if (!Models.WorldState.onWorld() || !isActive()) return;
+
+            if (animationTime.get() == 0) {
+                currentProgress = progress().progress();
+                return;
+            }
+
+            currentProgress -=
+                    (animationTime.get() * 0.1f) * (currentProgress - progress().progress());
+        }
+
         @Override
         public void render(PoseStack poseStack, MultiBufferSource bufferSource, float partialTicks, Window window) {
             if (!Models.WorldState.onWorld() || !isActive()) return;
@@ -135,8 +154,8 @@ public class GameBarsOverlayFeature extends Feature {
                     barProgress.value().current(), icon(), barProgress.value().max());
             renderText(poseStack, bufferSource, renderY, text);
 
-            float progress = (flip.get() ? -1 : 1) * barProgress.progress();
-            renderBar(poseStack, bufferSource, renderY + 10, barHeight, progress);
+            float renderedProgress = (flip.get() ? -1 : 1) * currentProgress;
+            renderBar(poseStack, bufferSource, renderY + 10, barHeight, renderedProgress);
         }
 
         protected float getModifiedRenderY(float renderedHeight) {
@@ -190,7 +209,100 @@ public class GameBarsOverlayFeature extends Feature {
         }
     }
 
-    protected static class HealthBarOverlay extends BaseBarOverlay {
+    public abstract static class OverflowableBarOverlay extends BaseBarOverlay {
+        protected OverflowableBarOverlay(OverlayPosition position, OverlaySize size, CustomColor textColor) {
+            super(position, size, textColor);
+        }
+
+        @Override
+        protected void renderBar(
+                PoseStack poseStack,
+                MultiBufferSource bufferSource,
+                float renderY,
+                float renderHeight,
+                float progress) {
+            int textureY1 = getTextureY1();
+            int textureY2 = getTextureY2();
+
+            Texture texture = getTexture();
+
+            // Handle overflow
+            if (Math.abs(progress) > 1) {
+                Texture overflowTexture = getOverflowTexture();
+
+                float x1 = this.getRenderX();
+                float x2 = this.getRenderX() + this.getWidth();
+
+                int half = (textureY1 + textureY2) / 2 + (textureY2 - textureY1) % 2;
+                BufferedRenderUtils.drawProgressBarBackground(
+                        poseStack,
+                        bufferSource,
+                        texture,
+                        x1,
+                        renderY,
+                        x2,
+                        renderY + renderHeight,
+                        0,
+                        textureY1,
+                        81,
+                        half);
+                BufferedRenderUtils.drawProgressBarForeground(
+                        poseStack,
+                        bufferSource,
+                        texture,
+                        x1,
+                        renderY,
+                        x2,
+                        renderY + renderHeight,
+                        0,
+                        half,
+                        81,
+                        textureY2 + (textureY2 - textureY1) % 2,
+                        1f);
+
+                float overflowProgress = progress < 0 ? progress + 1 : progress - 1;
+                BufferedRenderUtils.drawProgressBarForeground(
+                        poseStack,
+                        bufferSource,
+                        overflowTexture,
+                        x1,
+                        renderY,
+                        x2,
+                        renderY + renderHeight,
+                        0,
+                        half,
+                        81,
+                        textureY2 + (textureY2 - textureY1) % 2,
+                        overflowProgress);
+
+                return;
+            }
+
+            BufferedRenderUtils.drawProgressBar(
+                    poseStack,
+                    bufferSource,
+                    texture,
+                    this.getRenderX(),
+                    renderY,
+                    this.getRenderX() + this.getWidth(),
+                    renderY + renderHeight,
+                    0,
+                    textureY1,
+                    81,
+                    textureY2,
+                    progress);
+        }
+
+        protected abstract Texture getTexture();
+
+        protected abstract Texture getOverflowTexture();
+
+        protected abstract int getTextureY1();
+
+        protected abstract int getTextureY2();
+    }
+
+    protected static class HealthBarOverlay extends OverflowableBarOverlay {
         @RegisterConfig("overlay.wynntils.healthBar.healthTexture")
         public final Config<HealthTexture> healthTexture = new Config<>(HealthTexture.A);
 
@@ -205,8 +317,8 @@ public class GameBarsOverlayFeature extends Feature {
                     new OverlaySize(81, 21));
         }
 
-        protected HealthBarOverlay(OverlayPosition overlayPosition, OverlaySize OverlaySize) {
-            super(overlayPosition, OverlaySize, CommonColors.RED);
+        protected HealthBarOverlay(OverlayPosition overlayPosition, OverlaySize overlaySize) {
+            super(overlayPosition, overlaySize, CommonColors.RED);
         }
 
         @Override
@@ -236,74 +348,23 @@ public class GameBarsOverlayFeature extends Feature {
         }
 
         @Override
-        protected void renderBar(
-                PoseStack poseStack,
-                MultiBufferSource bufferSource,
-                float renderY,
-                float renderHeight,
-                float progress) {
-            if (progress > 1) { // overflowing health
-                float x1 = this.getRenderX();
-                float x2 = this.getRenderX() + this.getWidth();
-                int textureY1 = healthTexture.get().getTextureY1();
-                int textureY2 = healthTexture.get().getTextureY2();
+        protected Texture getTexture() {
+            return Texture.HEALTH_BAR;
+        }
 
-                int half = (textureY1 + textureY2) / 2 + (textureY2 - textureY1) % 2;
-                BufferedRenderUtils.drawProgressBarBackground(
-                        poseStack,
-                        bufferSource,
-                        Texture.HEALTH_BAR,
-                        x1,
-                        renderY,
-                        x2,
-                        renderY + renderHeight,
-                        0,
-                        textureY1,
-                        81,
-                        half);
-                BufferedRenderUtils.drawProgressBarForeground(
-                        poseStack,
-                        bufferSource,
-                        Texture.HEALTH_BAR,
-                        x1,
-                        renderY,
-                        x2,
-                        renderY + renderHeight,
-                        0,
-                        half,
-                        81,
-                        textureY2 + (textureY2 - textureY1) % 2,
-                        1f / progress);
-                BufferedRenderUtils.drawProgressBarForeground(
-                        poseStack,
-                        bufferSource,
-                        Texture.HEALTH_BAR_OVERFLOW,
-                        x1,
-                        renderY,
-                        x2,
-                        renderY + renderHeight,
-                        0,
-                        half,
-                        81,
-                        textureY2 + (textureY2 - textureY1) % 2,
-                        1f / progress - 1);
+        @Override
+        protected Texture getOverflowTexture() {
+            return Texture.HEALTH_BAR_OVERFLOW;
+        }
 
-                return;
-            }
+        @Override
+        protected int getTextureY1() {
+            return healthTexture.get().getTextureY1();
+        }
 
-            BufferedRenderUtils.drawProgressBar(
-                    poseStack,
-                    bufferSource,
-                    Texture.HEALTH_BAR,
-                    this.getRenderX(),
-                    renderY,
-                    this.getRenderX() + this.getWidth(),
-                    renderY + renderHeight,
-                    0,
-                    healthTexture.get().getTextureY1(),
-                    81,
-                    healthTexture.get().getTextureY2(),
-                    progress);
+        @Override
+        protected int getTextureY2() {
+            return healthTexture.get().getTextureY2();
         }
     }
 
@@ -340,7 +401,7 @@ public class GameBarsOverlayFeature extends Feature {
         }
     }
 
-    protected static class ManaBarOverlay extends BaseBarOverlay {
+    protected static class ManaBarOverlay extends OverflowableBarOverlay {
         @RegisterConfig("overlay.wynntils.manaBar.manaTexture")
         public final Config<ManaTexture> manaTexture = new Config<>(ManaTexture.A);
 
@@ -355,8 +416,8 @@ public class GameBarsOverlayFeature extends Feature {
                     new OverlaySize(81, 21));
         }
 
-        protected ManaBarOverlay(OverlayPosition overlayPosition, OverlaySize OverlaySize) {
-            super(overlayPosition, OverlaySize, CommonColors.LIGHT_BLUE);
+        protected ManaBarOverlay(OverlayPosition overlayPosition, OverlaySize overlaySize) {
+            super(overlayPosition, overlaySize, CommonColors.LIGHT_BLUE);
         }
 
         @Override
@@ -386,74 +447,23 @@ public class GameBarsOverlayFeature extends Feature {
         }
 
         @Override
-        protected void renderBar(
-                PoseStack poseStack,
-                MultiBufferSource bufferSource,
-                float renderY,
-                float renderHeight,
-                float progress) {
-            if (progress > 1) { // overflowing mana
-                float x1 = this.getRenderX();
-                float x2 = this.getRenderX() + this.getWidth();
-                int textureY1 = manaTexture.get().getTextureY1();
-                int textureY2 = manaTexture.get().getTextureY2();
+        protected Texture getTexture() {
+            return Texture.MANA_BAR;
+        }
 
-                int half = (textureY1 + textureY2) / 2 + (textureY2 - textureY1) % 2;
-                BufferedRenderUtils.drawProgressBarBackground(
-                        poseStack,
-                        bufferSource,
-                        Texture.MANA_BAR,
-                        x1,
-                        renderY,
-                        x2,
-                        renderY + renderHeight,
-                        0,
-                        textureY1,
-                        81,
-                        half);
-                BufferedRenderUtils.drawProgressBarForeground(
-                        poseStack,
-                        bufferSource,
-                        Texture.MANA_BAR,
-                        x1,
-                        renderY,
-                        x2,
-                        renderY + renderHeight,
-                        0,
-                        half,
-                        81,
-                        textureY2 + (textureY2 - textureY1) % 2,
-                        1f / progress);
-                BufferedRenderUtils.drawProgressBarForeground(
-                        poseStack,
-                        bufferSource,
-                        Texture.MANA_BAR_OVERFLOW,
-                        x1,
-                        renderY,
-                        x2,
-                        renderY + renderHeight,
-                        0,
-                        half,
-                        81,
-                        textureY2 + (textureY2 - textureY1) % 2,
-                        1f / progress - 1);
+        @Override
+        protected Texture getOverflowTexture() {
+            return Texture.MANA_BAR_OVERFLOW;
+        }
 
-                return;
-            }
+        @Override
+        protected int getTextureY1() {
+            return manaTexture.get().getTextureY1();
+        }
 
-            BufferedRenderUtils.drawProgressBar(
-                    poseStack,
-                    bufferSource,
-                    Texture.MANA_BAR,
-                    this.getRenderX(),
-                    renderY,
-                    this.getRenderX() + this.getWidth(),
-                    renderY + renderHeight,
-                    0,
-                    manaTexture.get().getTextureY1(),
-                    81,
-                    manaTexture.get().getTextureY2(),
-                    progress);
+        @Override
+        protected int getTextureY2() {
+            return manaTexture.get().getTextureY2();
         }
     }
 

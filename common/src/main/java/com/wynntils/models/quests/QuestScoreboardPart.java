@@ -13,19 +13,18 @@ import com.wynntils.utils.mc.ComponentUtils;
 import com.wynntils.utils.mc.type.StyledText;
 import com.wynntils.utils.wynn.WynnUtils;
 import java.util.List;
-import java.util.Set;
 import net.minecraft.ChatFormatting;
 
-public class QuestScoreboardPart implements ScoreboardPart {
-    static final SegmentMatcher QUEST_MATCHER = SegmentMatcher.fromPattern("Tracked Quest:");
+public class QuestScoreboardPart extends ScoreboardPart {
+    private static final SegmentMatcher QUEST_MATCHER = SegmentMatcher.fromPattern("Tracked Quest:");
 
     @Override
-    public Set<SegmentMatcher> getSegmentMatchers() {
-        return Set.of(QUEST_MATCHER);
+    public SegmentMatcher getSegmentMatcher() {
+        return QUEST_MATCHER;
     }
 
     @Override
-    public void onSegmentChange(ScoreboardSegment newValue, SegmentMatcher segmentMatcher) {
+    public void onSegmentChange(ScoreboardSegment newValue) {
         List<StyledText> content = newValue.getContent();
 
         if (content.isEmpty()) {
@@ -52,12 +51,17 @@ public class QuestScoreboardPart implements ScoreboardPart {
     }
 
     @Override
-    public void onSegmentRemove(ScoreboardSegment segment, SegmentMatcher segmentMatcher) {
+    public void onSegmentRemove(ScoreboardSegment segment) {
         Models.Quest.clearTrackedQuestFromScoreBoard();
     }
 
     @Override
     public void reset() {
         Models.Quest.clearTrackedQuestFromScoreBoard();
+    }
+
+    @Override
+    public String toString() {
+        return "QuestScoreboardPart{}";
     }
 }

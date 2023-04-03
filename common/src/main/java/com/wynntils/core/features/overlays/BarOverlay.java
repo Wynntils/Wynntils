@@ -32,10 +32,15 @@ public abstract class BarOverlay extends DynamicOverlay {
     @RegisterConfig("overlay.wynntils.barOverlay.flip")
     public final Config<Boolean> flip = new Config<>(false);
 
+    @RegisterConfig("overlay.wynntils.barOverlay.animationTime")
+    public final Config<Float> animationTime = new Config<>(2f);
+
     @RegisterConfig("overlay.wynntils.barOverlay.heightModifier")
     public final Config<Float> heightModifier = new Config<>(1f);
 
     private Pair<StyledText, ErrorOr<CappedValue>> templateCache;
+
+    protected float currentProgress = 0f;
 
     protected BarOverlay(int id, OverlaySize overlaySize) {
         super(id);
@@ -86,17 +91,30 @@ public abstract class BarOverlay extends DynamicOverlay {
 
         renderText(poseStack, bufferSource, renderY, textValue);
 
-        float progress = (float) ((flip.get() ? -1 : 1) * value.getProgress());
+        float progress = (flip.get() ? -1 : 1) * currentProgress;
         renderBar(poseStack, bufferSource, renderY + 10, barHeight, progress);
     }
 
     @SubscribeEvent
     public void onTick(TickEvent event) {
-        if (!Models.WorldState.onWorld()) return;
+        if (!Models.WorldState.onWorld() || !isRendered()) return;
 
         BarOverlayTemplatePair template = getTemplate();
 
         templateCache = calculateTemplate(template);
+
+        if (templateCache.b().hasError()) return;
+
+        CappedValue value = templateCache.b().getValue();
+
+        if (value == CappedValue.EMPTY) return;
+
+        if (animationTime.get() == 0) {
+            currentProgress = (float) value.getProgress();
+            return;
+        }
+
+        currentProgress -= (animationTime.get() * 0.1f) * (currentProgress - value.getProgress());
     }
 
     private Pair<StyledText, ErrorOr<CappedValue>> calculateTemplate(BarOverlayTemplatePair template) {

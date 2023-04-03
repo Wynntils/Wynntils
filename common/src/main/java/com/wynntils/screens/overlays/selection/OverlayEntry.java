@@ -116,12 +116,12 @@ public class OverlayEntry extends ContainerObjectSelectionList.Entry<OverlayEntr
                     .filter(configHolder -> configHolder.getParent() == overlay
                             && configHolder.getFieldName().equals("userEnabled"))
                     .findFirst()
-                    .ifPresent(configHolder -> configHolder.setValue(!overlay.shouldBeEnabled()));
+                    .ifPresent(configHolder -> configHolder.setValue(!Managers.Overlay.isEnabled(overlay)));
             Managers.Config.saveConfig();
             return true;
         }
 
-        if (!overlay.shouldBeEnabled()) return false;
+        if (!Managers.Overlay.isEnabled(overlay)) return false;
 
         McUtils.mc().setScreen(OverlayManagementScreen.create(this.overlay));
         return true;

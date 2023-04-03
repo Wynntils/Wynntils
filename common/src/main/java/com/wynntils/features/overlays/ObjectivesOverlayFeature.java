@@ -6,6 +6,7 @@ package com.wynntils.features.overlays;
 
 import com.mojang.blaze3d.platform.Window;
 import com.mojang.blaze3d.vertex.PoseStack;
+import com.wynntils.core.components.Managers;
 import com.wynntils.core.components.Models;
 import com.wynntils.core.config.Category;
 import com.wynntils.core.config.Config;
@@ -20,6 +21,8 @@ import com.wynntils.core.features.overlays.annotations.OverlayInfo;
 import com.wynntils.handlers.scoreboard.ScoreboardSegment;
 import com.wynntils.handlers.scoreboard.event.ScoreboardSegmentAdditionEvent;
 import com.wynntils.mc.event.RenderEvent;
+import com.wynntils.models.objectives.DailyObjectiveScoreboardPart;
+import com.wynntils.models.objectives.GuildObjectiveScoreboardPart;
 import com.wynntils.models.objectives.WynnObjective;
 import com.wynntils.utils.colors.CommonColors;
 import com.wynntils.utils.colors.CustomColor;
@@ -48,11 +51,13 @@ public class ObjectivesOverlayFeature extends Feature {
     public void onScoreboardSegmentChange(ScoreboardSegmentAdditionEvent event) {
         if (disableObjectiveTrackingOnScoreboard.get()) {
             ScoreboardSegment segment = event.getSegment();
-            if (Models.Objectives.isGuildObjectiveSegment(segment) && guildObjectiveOverlay.shouldBeEnabled()) {
+            if (segment.getScoreboardPart() instanceof DailyObjectiveScoreboardPart
+                    && Managers.Overlay.isEnabled(guildObjectiveOverlay)) {
                 event.setCanceled(true);
                 return;
             }
-            if (Models.Objectives.isObjectiveSegment(segment) && dailyObjectiveOverlay.shouldBeEnabled()) {
+            if (segment.getScoreboardPart() instanceof GuildObjectiveScoreboardPart
+                    && Managers.Overlay.isEnabled(dailyObjectiveOverlay)) {
                 event.setCanceled(true);
                 return;
             }

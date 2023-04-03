@@ -224,7 +224,7 @@ public class NpcDialogueOverlayFeature extends Feature {
         }
 
         private void updateDialogExtractionSettings() {
-            if (shouldBeEnabled()) {
+            if (Managers.Overlay.isEnabled(this)) {
                 Handlers.Chat.addNpcDialogExtractionDependent(NpcDialogueOverlayFeature.this);
             } else {
                 Handlers.Chat.removeNpcDialogExtractionDependent(NpcDialogueOverlayFeature.this);

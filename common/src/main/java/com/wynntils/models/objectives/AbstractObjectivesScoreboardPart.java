@@ -8,19 +8,14 @@ import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.components.Models;
 import com.wynntils.handlers.scoreboard.ScoreboardPart;
 import com.wynntils.handlers.scoreboard.ScoreboardSegment;
-import com.wynntils.handlers.scoreboard.type.SegmentMatcher;
 import com.wynntils.utils.mc.type.StyledText;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
-import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-public class ObjectivesScoreboardPart implements ScoreboardPart {
-    static final SegmentMatcher OBJECTIVES_MATCHER = SegmentMatcher.fromPattern("([★⭑] )?(Daily )?Objectives?:");
-    static final SegmentMatcher GUILD_OBJECTIVES_MATCHER = SegmentMatcher.fromPattern("([★⭑] )?Guild Obj: (.+)");
-
+public abstract class AbstractObjectivesScoreboardPart extends ScoreboardPart {
     // §b is guild objective, §a is normal objective and §c is daily objective
     private static final Pattern OBJECTIVE_PATTERN_ONE_LINE =
             Pattern.compile("^§([abc])[- ]\\s§7(.*): *§f(\\d+)§7/(\\d+)$");
@@ -28,37 +23,7 @@ public class ObjectivesScoreboardPart implements ScoreboardPart {
     private static final Pattern OBJECTIVE_PATTERN_MULTILINE_END = Pattern.compile(".*§f(\\d+)§7/(\\d+)$");
     private static final Pattern SEGMENT_HEADER = Pattern.compile("^§.§l[A-Za-z ]+:.*$");
 
-    @Override
-    public Set<SegmentMatcher> getSegmentMatchers() {
-        return Set.of(OBJECTIVES_MATCHER, GUILD_OBJECTIVES_MATCHER);
-    }
-
-    @Override
-    public void onSegmentChange(ScoreboardSegment newValue, SegmentMatcher segmentMatcher) {
-        List<WynnObjective> objectives = parseObjectives(newValue).stream()
-                .filter(wynnObjective -> wynnObjective.getScore().current()
-                        < wynnObjective.getScore().max())
-                .toList();
-
-        if (segmentMatcher == GUILD_OBJECTIVES_MATCHER) {
-            for (WynnObjective objective : objectives) {
-                if (objective.isGuildObjective()) {
-                    Models.Objectives.updateGuildObjective(objective);
-                }
-            }
-        } else {
-            for (WynnObjective objective : objectives) {
-                if (!objective.isGuildObjective()) {
-                    Models.Objectives.updatePersonalObjective(objective);
-                }
-            }
-
-            // filter out deleted objectives
-            Models.Objectives.purgePersonalObjectives(objectives);
-        }
-    }
-
-    private List<WynnObjective> parseObjectives(ScoreboardSegment segment) {
+    protected List<WynnObjective> parseObjectives(ScoreboardSegment segment) {
         List<WynnObjective> parsedObjectives = new ArrayList<>();
 
         List<StyledText> actualContent = new ArrayList<>();
@@ -113,7 +78,7 @@ public class ObjectivesScoreboardPart implements ScoreboardPart {
     }
 
     @Override
-    public void onSegmentRemove(ScoreboardSegment segment, SegmentMatcher segmentMatcher) {
+    public void onSegmentRemove(ScoreboardSegment segment) {
         List<WynnObjective> objectives = parseObjectives(segment);
 
         for (WynnObjective objective : objectives) {

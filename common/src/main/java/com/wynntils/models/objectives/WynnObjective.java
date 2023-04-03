@@ -58,7 +58,7 @@ public final class WynnObjective {
 
     @Override
     public String toString() {
-        return goal + score;
+        return goal + ": " + score;
     }
 
     public String asObjectiveString() {

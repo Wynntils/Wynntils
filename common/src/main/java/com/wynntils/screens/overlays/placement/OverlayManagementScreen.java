@@ -729,7 +729,7 @@ public final class OverlayManagementScreen extends WynntilsScreen {
         }
 
         for (Overlay overlay : Managers.Overlay.getOverlays().stream()
-                .filter(Overlay::shouldBeEnabled)
+                .filter(Managers.Overlay::isEnabled)
                 .toList()) {
             if (overlay == selectedOverlay) continue;
 

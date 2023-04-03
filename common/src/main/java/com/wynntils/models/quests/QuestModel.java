@@ -12,7 +12,6 @@ import com.wynntils.core.components.Models;
 import com.wynntils.core.net.ApiResponse;
 import com.wynntils.core.net.UrlId;
 import com.wynntils.handlers.scoreboard.ScoreboardPart;
-import com.wynntils.handlers.scoreboard.ScoreboardSegment;
 import com.wynntils.models.characterstats.CombatXpModel;
 import com.wynntils.models.quests.event.QuestBookReloadedEvent;
 import com.wynntils.models.quests.event.TrackedQuestUpdateEvent;
@@ -52,10 +51,6 @@ public final class QuestModel extends Model {
     @SubscribeEvent(priority = EventPriority.HIGH)
     public void onWorldStateChanged(WorldStateEvent e) {
         reset();
-    }
-
-    public boolean isQuestSegment(ScoreboardSegment segment) {
-        return segment.getMatcher() == QuestScoreboardPart.QUEST_MATCHER;
     }
 
     private void reset() {
