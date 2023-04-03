@@ -187,7 +187,7 @@ public final class WynntilsMod {
         registerComponents(Models.class, Model.class);
 
         // Init storage for loaded components immediately
-        Managers.Storage.init();
+        Managers.Storage.initComponents();
 
         addCrashCallbacks();
     }
@@ -228,7 +228,7 @@ public final class WynntilsMod {
 
         // Init config and data from files
         Managers.Config.init();
-        Managers.Storage.init();
+        Managers.Storage.initFeatures();
 
         LOGGER.info(
                 "Wynntils: {} features and {} functions are now loaded and ready",
