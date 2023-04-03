@@ -10,6 +10,7 @@ import com.wynntils.handlers.item.ItemAnnotation;
 import com.wynntils.handlers.item.ItemAnnotator;
 import com.wynntils.models.ingredients.type.IngredientInfo;
 import com.wynntils.models.items.items.game.IngredientItem;
+import com.wynntils.utils.mc.type.CodedString;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import net.minecraft.world.item.ItemStack;
@@ -19,8 +20,8 @@ public final class IngredientAnnotator implements ItemAnnotator {
             Pattern.compile("^§7(.*)§[3567] \\[§([8bde])✫(§8)?✫(§8)?✫§[3567]\\]$");
 
     @Override
-    public ItemAnnotation getAnnotation(ItemStack itemStack, String name) {
-        Matcher matcher = INGREDIENT_PATTERN.matcher(name);
+    public ItemAnnotation getAnnotation(ItemStack itemStack, CodedString name) {
+        Matcher matcher = name.match(INGREDIENT_PATTERN);
         if (!matcher.matches()) return null;
 
         String ingredientName = matcher.group(1);

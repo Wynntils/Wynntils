@@ -19,7 +19,7 @@ public final class MiscAnnotator implements ItemAnnotator {
     private static final String QUEST_ITEM = "§cQuest Item";
 
     @Override
-    public ItemAnnotation getAnnotation(ItemStack itemStack, String name) {
+    public ItemAnnotation getAnnotation(ItemStack itemStack, CodedString name) {
         ListTag loreTag = LoreUtils.getLoreTag(itemStack);
         if (loreTag == null) return null;
 

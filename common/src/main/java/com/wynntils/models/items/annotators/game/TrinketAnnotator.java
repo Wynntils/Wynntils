@@ -9,6 +9,7 @@ import com.wynntils.handlers.item.ItemAnnotator;
 import com.wynntils.models.gear.type.GearTier;
 import com.wynntils.models.items.items.game.TrinketItem;
 import com.wynntils.utils.mc.LoreUtils;
+import com.wynntils.utils.mc.type.CodedString;
 import com.wynntils.utils.type.CappedValue;
 import java.util.NoSuchElementException;
 import java.util.regex.Matcher;
@@ -20,8 +21,8 @@ public final class TrinketAnnotator implements ItemAnnotator {
     private static final Pattern TRINKET_LORE_PATTERN = Pattern.compile("^§7Right-Click to (use|toggle)$");
 
     @Override
-    public ItemAnnotation getAnnotation(ItemStack itemStack, String name) {
-        Matcher matcher = TRINKET_PATTERN.matcher(name);
+    public ItemAnnotation getAnnotation(ItemStack itemStack, CodedString name) {
+        Matcher matcher = name.match(TRINKET_PATTERN);
         if (!matcher.matches()) return null;
 
         try {

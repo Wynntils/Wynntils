@@ -27,6 +27,10 @@ public class CodedString {
         return new CodedString(s);
     }
 
+    public static CodedString fromComponent(Component component) {
+        return CodedString.of(component.getString());
+    }
+
     public static CodedString join(List<CodedString> strings, String delimiter) {
         return CodedString.of(
                 String.join(delimiter, strings.stream().map(CodedString::str).toList()));

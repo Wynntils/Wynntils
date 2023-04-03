@@ -176,7 +176,7 @@ public class ItemHandler extends Handler {
 
         for (ItemAnnotator annotator : annotators) {
             try {
-                annotation = annotator.getAnnotation(itemStack, name.str());
+                annotation = annotator.getAnnotation(itemStack, name);
                 if (annotation != null) {
                     break;
                 }

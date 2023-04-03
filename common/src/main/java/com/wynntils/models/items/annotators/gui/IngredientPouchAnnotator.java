@@ -21,12 +21,12 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 
 public final class IngredientPouchAnnotator implements ItemAnnotator {
-    private static final String INGREDIENT_POUCH_NAME = "§6Ingredient Pouch";
+    private static final CodedString INGREDIENT_POUCH_NAME = CodedString.of("§6Ingredient Pouch");
     private static final Pattern INGREDIENT_LORE_LINE_PATTERN = Pattern.compile(
             "^§f(\\d+) x (?:§r)?§7([^§]*)(?:§r)?(?:§[3567])? \\[(?:§r)?§([8bde])✫(?:§r)?(§8)?✫(?:§r)?(§8)?✫(?:§r)?§[3567]\\]$");
 
     @Override
-    public ItemAnnotation getAnnotation(ItemStack itemStack, String name) {
+    public ItemAnnotation getAnnotation(ItemStack itemStack, CodedString name) {
         if (itemStack.getItem() != Items.DIAMOND_AXE) return null;
         if (!name.equals(INGREDIENT_POUCH_NAME)) return null;
 

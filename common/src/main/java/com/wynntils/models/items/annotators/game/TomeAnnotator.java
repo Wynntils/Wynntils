@@ -8,6 +8,7 @@ import com.wynntils.core.components.Models;
 import com.wynntils.handlers.item.ItemAnnotation;
 import com.wynntils.handlers.item.ItemAnnotator;
 import com.wynntils.models.rewards.type.TomeType;
+import com.wynntils.utils.mc.type.CodedString;
 import java.util.Optional;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -19,9 +20,9 @@ public final class TomeAnnotator implements ItemAnnotator {
             "^§[5abcdef]((?<Variant>[\\w']+)? ?Tome of (?<Type>\\w+)" + "(?:| Mastery (?<Tier>[IVX]{1,4})))$");
 
     @Override
-    public ItemAnnotation getAnnotation(ItemStack itemStack, String name) {
+    public ItemAnnotation getAnnotation(ItemStack itemStack, CodedString name) {
         if (itemStack.getItem() != Items.ENCHANTED_BOOK) return null;
-        Matcher matcher = TOME_PATTERN.matcher(name);
+        Matcher matcher = name.match(TOME_PATTERN);
         if (!matcher.matches()) return null;
 
         String displayName = matcher.group(1);

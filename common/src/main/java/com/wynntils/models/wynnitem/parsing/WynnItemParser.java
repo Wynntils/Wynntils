@@ -105,7 +105,7 @@ public final class WynnItemParser {
             Matcher tierMatcher = normalizedCoded.match(TIER_AND_REROLL_PATTERN);
             if (tierMatcher.matches()) {
                 String tierString = tierMatcher.group(1);
-                tier = GearTier.fromFormattedString(tierString);
+                tier = GearTier.fromFormattedString(CodedString.of(tierString));
                 itemType = tierMatcher.group(2);
 
                 // This is either the rerolls (for re-identified gear), or the

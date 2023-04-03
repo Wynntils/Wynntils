@@ -5,6 +5,7 @@
 package com.wynntils.models.gear.type;
 
 import com.wynntils.utils.StringUtils;
+import com.wynntils.utils.mc.type.CodedString;
 import java.util.Arrays;
 import java.util.Locale;
 import net.minecraft.ChatFormatting;
@@ -38,16 +39,16 @@ public enum GearTier {
         }
     }
 
-    public static GearTier fromFormattedString(String name) {
-        if (name.charAt(0) == '§') {
-            return fromChatFormatting(ChatFormatting.getByCode(name.charAt(1)));
+    public static GearTier fromFormattedString(CodedString name) {
+        if (name.str().charAt(0) == '§') {
+            return fromChatFormatting(ChatFormatting.getByCode(name.str().charAt(1)));
         }
 
         return null;
     }
 
     public static GearTier fromComponent(Component component) {
-        return fromFormattedString(component.getString());
+        return fromFormattedString(CodedString.fromComponent(component));
     }
 
     public static GearTier fromChatFormatting(ChatFormatting formatting) {

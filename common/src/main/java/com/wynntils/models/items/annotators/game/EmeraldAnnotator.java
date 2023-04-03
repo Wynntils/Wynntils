@@ -8,6 +8,7 @@ import com.wynntils.handlers.item.ItemAnnotation;
 import com.wynntils.handlers.item.ItemAnnotator;
 import com.wynntils.models.emeralds.type.EmeraldUnits;
 import com.wynntils.models.items.items.game.EmeraldItem;
+import com.wynntils.utils.mc.type.CodedString;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import net.minecraft.world.item.ItemStack;
@@ -16,12 +17,12 @@ public final class EmeraldAnnotator implements ItemAnnotator {
     private static final Pattern EMERALD_PATTERN = Pattern.compile("^§a(Liquid )?Emerald( Block)?$");
 
     @Override
-    public ItemAnnotation getAnnotation(ItemStack itemStack, String name) {
+    public ItemAnnotation getAnnotation(ItemStack itemStack, CodedString name) {
         EmeraldUnits unit = EmeraldUnits.fromItemType(itemStack.getItem());
         if (unit == null) return null;
 
         // Verify that name is correct
-        Matcher matcher = EMERALD_PATTERN.matcher(name);
+        Matcher matcher = name.match(EMERALD_PATTERN);
         if (!matcher.matches()) return null;
 
         return new EmeraldItem(itemStack.getCount(), unit);

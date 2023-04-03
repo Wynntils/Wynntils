@@ -8,16 +8,17 @@ import com.wynntils.handlers.item.ItemAnnotation;
 import com.wynntils.handlers.item.ItemAnnotator;
 import com.wynntils.models.items.items.gui.AbilityTreeItem;
 import com.wynntils.utils.mc.LoreUtils;
+import com.wynntils.utils.mc.type.CodedString;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import net.minecraft.world.item.ItemStack;
 
 public final class AbilityTreeAnnotator implements ItemAnnotator {
-    private static final String ABILITY_TREE_NAME = "§b§lAbility Tree";
+    private static final CodedString ABILITY_TREE_NAME = CodedString.of("§b§lAbility Tree");
     private static final Pattern ABILITY_POINTS_PATTERN = Pattern.compile("^§3✦ Unused Points: §r§f(\\d+)$");
 
     @Override
-    public ItemAnnotation getAnnotation(ItemStack itemStack, String name) {
+    public ItemAnnotation getAnnotation(ItemStack itemStack, CodedString name) {
         if (!name.equals(ABILITY_TREE_NAME)) return null;
 
         Matcher matcher = LoreUtils.matchLoreLine(itemStack, 3, ABILITY_POINTS_PATTERN);

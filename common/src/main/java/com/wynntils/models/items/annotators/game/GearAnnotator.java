@@ -10,6 +10,7 @@ import com.wynntils.handlers.item.ItemAnnotator;
 import com.wynntils.models.gear.type.GearInfo;
 import com.wynntils.models.gear.type.GearInstance;
 import com.wynntils.models.items.items.game.GearItem;
+import com.wynntils.utils.mc.type.CodedString;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import net.minecraft.world.item.ItemStack;
@@ -18,8 +19,8 @@ public final class GearAnnotator implements ItemAnnotator {
     private static final Pattern GEAR_PATTERN = Pattern.compile("^§[5abcdef](Unidentified )?(.+)$");
 
     @Override
-    public ItemAnnotation getAnnotation(ItemStack itemStack, String name) {
-        Matcher matcher = GEAR_PATTERN.matcher(name);
+    public ItemAnnotation getAnnotation(ItemStack itemStack, CodedString name) {
+        Matcher matcher = name.match(GEAR_PATTERN);
         if (!matcher.matches()) return null;
 
         // Lookup Gear Profile
@@ -28,7 +29,7 @@ public final class GearAnnotator implements ItemAnnotator {
         if (gearInfo == null) return null;
 
         // Verify that rarity matches
-        if (!name.startsWith(gearInfo.tier().getChatFormatting().toString())) return null;
+        if (!name.str().startsWith(gearInfo.tier().getChatFormatting().toString())) return null;
 
         GearInstance gearInstance = matcher.group(1) != null ? null : Models.Gear.parseInstance(gearInfo, itemStack);
         return new GearItem(gearInfo, gearInstance);
