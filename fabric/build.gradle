@@ -76,6 +76,14 @@ dependencies {
     // does not need to be shadowed
     runtimeOnly "com.github.wynntils:EventBusTransformer:${event_bus_transformer_version}"
     modRuntimeOnly "me.djtheredstoner:DevAuth-fabric:${devauth_version}"
+
+    testImplementation("net.fabricmc:fabric-loader-junit:${fabric_loader_version}")
+    testImplementation("org.junit.jupiter:junit-jupiter:${junit_version}")
+    testImplementation project(path: ':common')
+}
+
+test {
+    useJUnitPlatform()
 }
 
 processResources {

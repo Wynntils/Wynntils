@@ -9,14 +9,8 @@ dependencies {
     implementation("com.wynntils.hades:hades:${hades_version}")
 
     implementation(annotationProcessor("com.github.llamalad7.mixinextras:mixinextras-common:${mixinextras_version}"))
-
-    testImplementation("org.junit.jupiter:junit-jupiter:${junit_version}")
 }
 
 architectury {
     common(enabled_platforms.split(","))
-}
-
-test {
-    useJUnitPlatform()
 }

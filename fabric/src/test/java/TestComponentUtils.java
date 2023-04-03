@@ -4,11 +4,20 @@
  */
 import com.wynntils.utils.mc.ComponentUtils;
 import net.minecraft.ChatFormatting;
+import net.minecraft.SharedConstants;
 import net.minecraft.network.chat.Component;
+import net.minecraft.server.Bootstrap;
 import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
 public class TestComponentUtils {
+    @BeforeAll
+    public static void setup() {
+        SharedConstants.tryDetectVersion();
+        Bootstrap.bootStrap();
+    }
+
     @Test
     void getCoded_ShouldWork() {
         final Component component = Component.literal("Hello,")
