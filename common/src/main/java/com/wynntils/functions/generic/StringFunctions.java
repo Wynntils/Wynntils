@@ -102,16 +102,16 @@ public class StringFunctions {
         @Override
         public Boolean getValue(FunctionArguments arguments) {
             return arguments
-                    .getArgument("first")
+                    .getArgument("source")
                     .getStringValue()
-                    .contains(arguments.getArgument("second").getStringValue());
+                    .contains(arguments.getArgument("substring").getStringValue());
         }
 
         @Override
         public FunctionArguments.RequiredArgumentBuilder getRequiredArgumentsBuilder() {
             return new FunctionArguments.RequiredArgumentBuilder(List.of(
-                    new FunctionArguments.Argument<>("first", String.class, null),
-                    new FunctionArguments.Argument<>("second", String.class, null)));
+                    new FunctionArguments.Argument<>("source", String.class, null),
+                    new FunctionArguments.Argument<>("substring", String.class, null)));
         }
 
         @Override
