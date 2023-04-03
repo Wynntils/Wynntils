@@ -8,6 +8,8 @@ import com.wynntils.core.functions.GenericFunction;
 import com.wynntils.core.functions.arguments.FunctionArguments;
 import com.wynntils.utils.StringUtils;
 import com.wynntils.utils.type.CappedValue;
+import net.minecraft.network.chat.Component;
+
 import java.util.List;
 import java.util.regex.Pattern;
 import java.util.regex.PatternSyntaxException;
@@ -268,7 +270,7 @@ public class StringFunctions {
             try {
                 return value.replaceAll(regex, replacement);
             } catch (PatternSyntaxException ignored) {
-                return "<Regex Syntax Error>";
+                return Component.translatable("function.wynntils.generic.regexReplace.syntaxError").toString();
             }
         }
 

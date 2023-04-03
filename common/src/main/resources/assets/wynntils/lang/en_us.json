@@ -1074,6 +1074,7 @@
     "function.wynntils.generic.regexReplace.argument.source": "String to replace",
     "function.wynntils.generic.regexReplace.description": "Replaces all matches of the given regex with the given replacement",
     "function.wynntils.generic.regexReplace.name": "Regex Replace",
+  "function.wynntils.generic.regexReplace.syntaxError": "Syntax error in regex",
   "function.wynntils.generic.repeat.argument.count": "The amount of times to repeat the string",
   "function.wynntils.generic.repeat.argument.value": "The string to repeat",
   "function.wynntils.generic.repeat.description": "Repeats the given string the specified amount of times",
