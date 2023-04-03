@@ -4,24 +4,26 @@
  */
 package com.wynntils.models.spells.type;
 
+import com.wynntils.utils.mc.type.CodedString;
+
 public enum SpellFailureReason {
-    NOT_ENOUGH_MANA("§4You don't have enough mana to cast that spell!"),
-    NOT_UNLOCKED("§4You have not unlocked this spell!");
+    NOT_ENOUGH_MANA(CodedString.of("§4You don't have enough mana to cast that spell!")),
+    NOT_UNLOCKED(CodedString.of("§4You have not unlocked this spell!"));
 
-    private final String message;
+    private final CodedString message;
 
-    SpellFailureReason(String message) {
+    SpellFailureReason(CodedString message) {
         this.message = message;
     }
 
-    public static SpellFailureReason fromMsg(String msg) {
+    public static SpellFailureReason fromMsg(CodedString msg) {
         for (SpellFailureReason failureReason : values()) {
             if (failureReason.message.equals(msg)) return failureReason;
         }
         return null;
     }
 
-    public String getMessage() {
+    public CodedString getMessage() {
         return message;
     }
 }

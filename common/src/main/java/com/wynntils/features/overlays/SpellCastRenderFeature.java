@@ -53,7 +53,7 @@ public class SpellCastRenderFeature extends Feature {
     public final Config<CustomColor> vignetteColor = new Config<>(new CustomColor(0, 71, 201));
 
     private int spellTimer;
-    private String spellMessage;
+    private CodedString spellMessage;
     private float intensity;
 
     @SubscribeEvent
@@ -67,7 +67,8 @@ public class SpellCastRenderFeature extends Feature {
     @SubscribeEvent
     public void onSpellCast(SpellEvent.Cast event) {
         int manaCost = event.getManaCost();
-        spellMessage = "§7" + event.getSpellType().getName() + " spell cast! §3[§b-" + manaCost + " ✺§3]";
+        spellMessage =
+                CodedString.of("§7" + event.getSpellType().getName() + " spell cast! §3[§b-" + manaCost + " ✺§3]");
 
         // An relativeCost of 1.0 means we just used all mana we have left
         float relativeCost = (float) manaCost / Models.CharacterStats.getMana().current();
@@ -127,7 +128,7 @@ public class SpellCastRenderFeature extends Feature {
                     .renderAlignedTextInBox(
                             poseStack,
                             bufferSource,
-                            CodedString.of(spellMessage),
+                            spellMessage,
                             this.getRenderX(),
                             this.getRenderX() + this.getWidth(),
                             this.getRenderY(),

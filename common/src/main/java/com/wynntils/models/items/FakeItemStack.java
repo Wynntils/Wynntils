@@ -8,6 +8,7 @@ import com.wynntils.core.components.Handlers;
 import com.wynntils.core.components.Models;
 import com.wynntils.models.gear.tooltip.GearTooltipBuilder;
 import com.wynntils.models.items.items.game.GearItem;
+import com.wynntils.utils.mc.type.CodedString;
 import java.util.List;
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
@@ -22,7 +23,8 @@ public class FakeItemStack extends ItemStack {
     private FakeItemStack(GearItem gearItem, ItemStack itemStack, String source) {
         super(itemStack.getItem(), 1);
         this.setTag(itemStack.getTag());
-        Handlers.Item.updateItem(this, gearItem, gearItem.getGearInfo().name());
+        Handlers.Item.updateItem(
+                this, gearItem, CodedString.of(gearItem.getGearInfo().name()));
 
         this.gearItem = gearItem;
         this.source = source;

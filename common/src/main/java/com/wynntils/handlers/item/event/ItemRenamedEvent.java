@@ -4,6 +4,7 @@
  */
 package com.wynntils.handlers.item.event;
 
+import com.wynntils.utils.mc.type.CodedString;
 import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.eventbus.api.Cancelable;
 import net.minecraftforge.eventbus.api.Event;
@@ -11,10 +12,10 @@ import net.minecraftforge.eventbus.api.Event;
 @Cancelable
 public class ItemRenamedEvent extends Event {
     private final ItemStack itemStack;
-    private final String oldName;
-    private final String newName;
+    private final CodedString oldName;
+    private final CodedString newName;
 
-    public ItemRenamedEvent(ItemStack itemStack, String oldName, String newName) {
+    public ItemRenamedEvent(ItemStack itemStack, CodedString oldName, CodedString newName) {
         this.itemStack = itemStack;
         this.oldName = oldName;
         this.newName = newName;
@@ -24,11 +25,11 @@ public class ItemRenamedEvent extends Event {
         return itemStack;
     }
 
-    public String getOldName() {
+    public CodedString getOldName() {
         return oldName;
     }
 
-    public String getNewName() {
+    public CodedString getNewName() {
         return newName;
     }
 }
