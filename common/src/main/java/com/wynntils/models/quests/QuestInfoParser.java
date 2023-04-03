@@ -151,14 +151,17 @@ public final class QuestInfoParser {
         // Every line begins with a format code of length 2 ("§7"), skip that
         // and join everything together, trying to avoid excess whitespace
 
-        CodedString description = CodedString.of(String.join(
+        // FIXME: We should really keep the rest of the formatting, apart from the
+        // initial §7.
+
+        String description = String.join(
                         " ",
                         descriptionLines.stream()
                                 .map(CodedString::str)
                                 .map(ChatFormatting::stripFormatting)
                                 .toList())
                 .replaceAll("\\s+", " ")
-                .trim());
-        return description;
+                .trim();
+        return CodedString.of(description);
     }
 }

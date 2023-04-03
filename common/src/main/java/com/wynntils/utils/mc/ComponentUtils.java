@@ -145,7 +145,7 @@ public final class ComponentUtils {
     }
 
     public static String stripFormatting(CodedString coded) {
-        return coded == null ? "" : ChatFormatting.stripFormatting(coded.str());
+        return coded == null ? "" : coded.withoutFormatting();
     }
 
     public static String stripColorFormatting(CodedString text) {

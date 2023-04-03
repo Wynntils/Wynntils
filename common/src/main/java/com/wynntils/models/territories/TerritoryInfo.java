@@ -8,6 +8,7 @@ import com.wynntils.models.territories.type.GuildResource;
 import com.wynntils.models.territories.type.GuildResourceValues;
 import com.wynntils.models.territories.type.TerritoryStorage;
 import com.wynntils.utils.colors.CustomColor;
+import com.wynntils.utils.mc.type.CodedString;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -57,12 +58,12 @@ public class TerritoryInfo {
      * @param raw the input achievement description without colors
      * @param colored the input achievement description with colors
      */
-    public TerritoryInfo(String[] raw, String[] colored, boolean headquarters) {
+    public TerritoryInfo(String[] raw, CodedString[] colored, boolean headquarters) {
         this.headquarters = headquarters;
 
         for (int i = 0; i < raw.length; i++) {
             String unformatted = raw[i];
-            String formatted = colored[i];
+            CodedString formatted = colored[i];
 
             // initial trading route parsing
             if (unformatted.startsWith("-")) {
@@ -87,7 +88,7 @@ public class TerritoryInfo {
             // finding the resource type
             GuildResource resource = null;
             for (GuildResource type : GuildResource.values()) {
-                if (!formatted.contains(type.getColor().toString())) continue;
+                if (!formatted.str().contains(type.getColor().toString())) continue;
 
                 resource = type;
                 break;

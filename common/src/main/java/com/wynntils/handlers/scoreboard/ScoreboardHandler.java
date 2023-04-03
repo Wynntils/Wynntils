@@ -31,6 +31,7 @@ import java.util.TreeMap;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
+import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
@@ -47,6 +48,7 @@ public final class ScoreboardHandler extends Handler {
     // TimeUnit.MILLISECONDS
     // 250 -> 4 times a second
     private static final int CHANGE_PROCESS_RATE = 250;
+    private static final Pattern EMPTY_LINE = Pattern.compile("À+");
 
     private List<ScoreboardLine> reconstructedScoreboard = new ArrayList<>();
 
@@ -227,14 +229,15 @@ public final class ScoreboardHandler extends Handler {
             // Filter and skip leading empty lines
             List<ScoreboardLine> toBeAdded = reconstructedScoreboard.stream()
                     .filter(scoreboardLine -> !skipped.contains(scoreboardLine.line()))
-                    .dropWhile(scoreboardLine -> scoreboardLine.line().str().matches("À+"))
+                    .dropWhile(scoreboardLine ->
+                            scoreboardLine.line().match(EMPTY_LINE).matches())
                     .toList();
 
             boolean allEmpty = true;
 
             // Skip trailing empty lines
             for (int i = toBeAdded.size() - 1; i >= 0; i--) {
-                if (allEmpty && toBeAdded.get(i).line().str().matches("À+")) {
+                if (allEmpty && toBeAdded.get(i).line().match(EMPTY_LINE).matches()) {
                     continue;
                 }
 
@@ -259,7 +262,7 @@ public final class ScoreboardHandler extends Handler {
                 continue;
             }
 
-            if (strippedLine.matches("À+")) {
+            if (EMPTY_LINE.matcher(strippedLine).matches()) {
                 if (currentSegment != null) {
                     currentSegment.setContent(scoreboardCopy.stream()
                             .map(ScoreboardLine::line)

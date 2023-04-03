@@ -131,7 +131,7 @@ public final class TerritoryModel extends Model {
 
             // description is a raw string with \n, so we have to split
             CodedString description = ComponentUtils.getCoded(built.getDisplay().getDescription());
-            String[] colored = description.str().split("\n");
+            CodedString[] colored = description.split("\n");
             String[] raw = ComponentUtils.stripFormatting(description).split("\n");
 
             TerritoryInfo container = new TerritoryInfo(raw, colored, headquarters);

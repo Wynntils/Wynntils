@@ -22,7 +22,6 @@ import com.wynntils.utils.render.type.TextShadow;
 import com.wynntils.utils.type.CappedValue;
 import com.wynntils.utils.type.ErrorOr;
 import com.wynntils.utils.type.Pair;
-import java.util.Arrays;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 
@@ -102,11 +101,7 @@ public abstract class BarOverlay extends DynamicOverlay {
 
     private Pair<CodedString, ErrorOr<CappedValue>> calculateTemplate(BarOverlayTemplatePair template) {
         return Pair.of(
-                CodedString.of(String.join(
-                        " ",
-                        Arrays.stream(Managers.Function.doFormatLines(template.textTemplate))
-                                .map(CodedString::str)
-                                .toList())),
+                CodedString.join(Managers.Function.doFormatLines(template.textTemplate), " "),
                 Managers.Function.tryGetRawValueOfType(template.valueTemplate, CappedValue.class));
     }
 

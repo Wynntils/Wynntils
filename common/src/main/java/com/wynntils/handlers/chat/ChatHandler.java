@@ -358,7 +358,7 @@ public final class ChatHandler extends Handler {
     private RecipientType getRecipientType(CodedString codedMessage, MessageType messageType) {
         // Check if message match a recipient category
         for (RecipientType recipientType : RecipientType.values()) {
-            if (recipientType.matchPattern(codedMessage.str(), messageType)) {
+            if (recipientType.matchPattern(codedMessage, messageType)) {
                 return recipientType;
             }
         }

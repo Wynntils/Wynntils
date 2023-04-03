@@ -14,21 +14,23 @@ public final class RenderedStringUtils {
         Font font = McUtils.mc().font;
         int spaceSize = font.width(" ");
 
-        String[] stringArray = s.str().split(" ");
+        CodedString[] stringArray = s.split(" ");
         StringBuilder result = new StringBuilder();
         int length = 0;
 
-        for (String string : stringArray) {
-            String[] lines = string.split("\\\\n", -1);
+        // FIXME: codes should not count toward the word length
+
+        for (CodedString string : stringArray) {
+            CodedString[] lines = string.split("\\\\n");
             for (int i = 0; i < lines.length; i++) {
-                String line = lines[i];
-                if (i > 0 || length + font.width(line) >= maxPixels) {
+                CodedString line = lines[i];
+                if (i > 0 || length + font.width(line.str()) >= maxPixels) {
                     result.append('\n');
                     length = 0;
                 }
-                if (!line.isEmpty()) {
+                if (!line.str().isEmpty()) {
                     result.append(line).append(' ');
-                    length += font.width(line) + spaceSize;
+                    length += font.width(line.str()) + spaceSize;
                 }
             }
         }

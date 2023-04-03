@@ -5,6 +5,8 @@
 package com.wynntils.utils.mc.type;
 
 import com.wynntils.utils.wynn.WynnUtils;
+import java.util.Arrays;
+import java.util.List;
 import java.util.Objects;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -23,6 +25,20 @@ public class CodedString {
 
     public static CodedString of(String s) {
         return new CodedString(s);
+    }
+
+    public static CodedString join(List<CodedString> strings, String delimiter) {
+        return CodedString.of(
+                String.join(delimiter, strings.stream().map(CodedString::str).toList()));
+    }
+
+    public static CodedString join(CodedString[] strings, String delimiter) {
+        return CodedString.of(String.join(
+                delimiter, Arrays.stream(strings).map(CodedString::str).toList()));
+    }
+
+    public CodedString[] split(String regex) {
+        return Arrays.stream(str.split(regex)).map(CodedString::of).toArray(CodedString[]::new);
     }
 
     public MutableComponent asComponent() {

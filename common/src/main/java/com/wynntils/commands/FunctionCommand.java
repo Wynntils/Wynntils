@@ -99,12 +99,7 @@ public class FunctionCommand extends Command {
 
         CodedString[] result = Managers.Function.doFormatLines(template);
 
-        CodedString resultString = CodedString.of(String.join(
-                ", ",
-                Arrays.stream(result)
-                        .map(CodedString::str)
-                        .map(s -> "\"" + s + "\"" + ChatFormatting.RESET)
-                        .toArray(String[]::new)));
+        CodedString resultString = CodedString.join(result, ", ");
 
         context.getSource()
                 .sendSuccess(

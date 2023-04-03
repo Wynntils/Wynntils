@@ -128,9 +128,8 @@ public class ShamanTotemTrackingFeature extends Feature {
         protected CodedString[] calculateTemplateValue(String template) {
             return Arrays.stream(super.calculateTemplateValue(template))
                     .map(s -> RenderedStringUtils.trySplitOptimally(s, this.getWidth()))
-                    .map(s -> s.str().split("\n"))
+                    .map(s -> s.split("\n"))
                     .flatMap(Arrays::stream)
-                    .map(CodedString::of)
                     .toArray(CodedString[]::new);
         }
     }

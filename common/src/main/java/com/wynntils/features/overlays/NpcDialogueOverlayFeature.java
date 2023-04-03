@@ -164,8 +164,7 @@ public class NpcDialogueOverlayFeature extends Feature {
     }
 
     private long calculateMessageReadTime(List<CodedString> msg) {
-        int words =
-                String.join(" ", msg.stream().map(CodedString::str).toList()).split(" ").length;
+        int words = CodedString.join(msg, " ").split(" ").length;
         long delay =
                 dialogAutoProgressDefaultTime.get() + ((long) words * dialogAutoProgressAdditionalTimePerWord.get());
         return delay;
