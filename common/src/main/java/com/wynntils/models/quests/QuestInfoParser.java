@@ -83,7 +83,7 @@ public final class QuestInfoParser {
         if (name.str().trim().isEmpty()) {
             return false;
         }
-        return name.str().endsWith("§e[Tracked]");
+        return name.endsWith("§e[Tracked]");
     }
 
     private static QuestStatus getQuestStatus(LinkedList<StyledText> lore) {

@@ -69,6 +69,6 @@ public class HorseModel extends Model {
         String playerName = player.getName().getString();
         StyledText defaultName = StyledText.of("§f" + playerName + "§7" + "'s horse");
         StyledText codedHorseName = StyledText.fromComponent(horseName);
-        return defaultName.equals(codedHorseName) || codedHorseName.str().endsWith("§7" + " [" + playerName + "]");
+        return defaultName.equals(codedHorseName) || codedHorseName.endsWith("§7" + " [" + playerName + "]");
     }
 }

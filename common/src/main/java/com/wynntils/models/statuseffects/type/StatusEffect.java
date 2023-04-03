@@ -20,7 +20,7 @@ public class StatusEffect {
         // Sometimes, " §7" will be parsed as part of the prefix, in an attempt to keep the name field
         // as a proper unformatted string
         // The two differing examples I have for this are Archer's Windy Feet and Warrior's Boiling Blood cooldown
-        if (prefix.str().endsWith(" ") || prefix.str().endsWith(" §7")) {
+        if (prefix.endsWith(" ") || prefix.endsWith(" §7")) {
             this.fullName = StyledText.concat(prefix, name, StyledText.of(" "), displayedTime);
         } else {
             this.fullName = StyledText.concat(prefix, StyledText.of(" "), name, StyledText.of(" "), displayedTime);

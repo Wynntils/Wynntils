@@ -82,6 +82,14 @@ public class StyledText {
         return str.startsWith(prefix);
     }
 
+    public boolean endsWith(StyledText suffix) {
+        return str.endsWith(suffix.str());
+    }
+
+    public boolean endsWith(String suffix) {
+        return str.endsWith(suffix);
+    }
+
     public StyledText getNormalized() {
         return new StyledText(WynnUtils.normalizeBadString(str));
     }
