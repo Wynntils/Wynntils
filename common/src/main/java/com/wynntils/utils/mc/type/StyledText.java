@@ -62,6 +62,15 @@ public class StyledText {
         return str.isEmpty();
     }
 
+    public boolean contains(StyledText string) {
+        return str.contains(string.str());
+    }
+
+    public boolean contains(String string) {
+        return str.contains(string);
+    }
+
+
     public StyledText getNormalized() {
         return new StyledText(WynnUtils.normalizeBadString(str));
     }

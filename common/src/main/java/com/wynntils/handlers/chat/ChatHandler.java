@@ -105,7 +105,7 @@ public final class ChatHandler extends Handler {
 
         // Sometimes there is just a trailing newline; that does not
         // make it a multiline message
-        if (codedMessage.str().contains("\n")
+        if (codedMessage.contains("\n")
                 && codedMessage.str().indexOf('\n') != (codedMessage.str().length() - 1)) {
             // This is a "chat screen"
             if (shouldSeparateNPC()) {

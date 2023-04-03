@@ -35,7 +35,7 @@ public final class WynnItemMatchers {
      */
     public static boolean isWeapon(ItemStack itemStack) {
         StyledText lore = LoreUtils.getStringLore(itemStack);
-        return lore.str().contains("Attack Speed") && lore.str().contains("§7");
+        return lore.contains("Attack Speed") && lore.contains("§7");
     }
 
     /**

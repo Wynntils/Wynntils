@@ -107,6 +107,6 @@ public class BulkBuyFeature extends Feature {
 
         return title.startsWith(ChatFormatting.GREEN.toString())
                 && title.endsWith(" Shop")
-                && LoreUtils.getStringLore(toBuy).str().contains(PRICE_STR.str());
+                && LoreUtils.getStringLore(toBuy).contains(PRICE_STR);
     }
 }

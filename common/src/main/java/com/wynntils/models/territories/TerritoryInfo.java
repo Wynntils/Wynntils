@@ -88,7 +88,7 @@ public class TerritoryInfo {
             // finding the resource type
             GuildResource resource = null;
             for (GuildResource type : GuildResource.values()) {
-                if (!formatted.str().contains(type.getColor().toString())) continue;
+                if (!formatted.contains(type.getColor().toString())) continue;
 
                 resource = type;
                 break;

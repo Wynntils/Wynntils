@@ -157,7 +157,7 @@ public final class ComponentUtils {
     }
 
     public static StyledText getLastPartCodes(StyledText lastPart) {
-        if (!lastPart.str().contains("§")) return StyledText.EMPTY;
+        if (!lastPart.contains("§")) return StyledText.EMPTY;
 
         StyledText lastPartCodes = StyledText.EMPTY;
         int index;

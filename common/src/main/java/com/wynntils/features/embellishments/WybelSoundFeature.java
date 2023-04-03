@@ -33,13 +33,13 @@ public class WybelSoundFeature extends Feature {
         if (event.getRecipientType() != RecipientType.PETS) return;
 
         StyledText msg = event.getCodedMessage();
-        if (msg.str().contains("squeak")) {
+        if (msg.contains("squeak")) {
             McUtils.playSoundAmbient(WYBEL_SQUEAK_SOUND);
             if (hideText.get()) {
                 event.setCanceled(true);
             }
         }
-        if (msg.str().contains("purr")) {
+        if (msg.contains("purr")) {
             McUtils.playSoundAmbient(WYBEL_PURR_SOUND);
             if (hideText.get()) {
                 event.setCanceled(true);

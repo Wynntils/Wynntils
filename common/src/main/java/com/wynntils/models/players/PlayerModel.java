@@ -199,6 +199,6 @@ public final class PlayerModel extends Model {
     }
 
     private boolean isNpc(StyledText name) {
-        return name.str().contains("\u0001") || name.str().contains("§");
+        return name.contains("\u0001") || name.contains("§");
     }
 }
