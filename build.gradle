@@ -39,7 +39,6 @@ subprojects {
 
     loom {
         silentMojangMappingsLicense()
-        clientOnlyMinecraftJar()
 
         accessWidenerPath = file("src/main/resources/wynntils.accessWidener")
 
