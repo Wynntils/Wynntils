@@ -71,8 +71,8 @@ public class DialogueHistoryQueries {
                     newDialogueHistory = new ArrayList<>();
 
                     List<StyledText> current = LoreUtils.getLore(dialogueHistoryItem).stream()
-                            .dropWhile(s -> s.str().isBlank())
-                            .takeWhile(s -> !s.str().isBlank())
+                            .dropWhile(s -> s.isBlank())
+                            .takeWhile(s -> !s.isBlank())
                             .toList();
 
                     newDialogueHistory.add(current);
@@ -91,8 +91,8 @@ public class DialogueHistoryQueries {
                                 .equals(DIALOGUE_HISTORY)) return;
 
                         List<StyledText> current = LoreUtils.getLore(dialogueHistoryItem).stream()
-                                .dropWhile(s -> s.str().isBlank())
-                                .takeWhile(s -> !s.str().isBlank())
+                                .dropWhile(s -> s.isBlank())
+                                .takeWhile(s -> !s.isBlank())
                                 .toList();
 
                         newDialogueHistory.add(current);

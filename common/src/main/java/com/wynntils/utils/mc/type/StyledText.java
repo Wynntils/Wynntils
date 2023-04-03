@@ -62,6 +62,10 @@ public class StyledText {
         return str.isEmpty();
     }
 
+    public boolean isBlank() {
+        return str.isBlank();
+    }
+
     public boolean contains(StyledText string) {
         return str.contains(string.str());
     }
