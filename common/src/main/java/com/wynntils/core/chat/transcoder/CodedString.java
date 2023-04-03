@@ -46,8 +46,10 @@ public final class CodedString {
     private String getCoded() {
         StringBuilder builder = new StringBuilder();
 
+        CodedStyle previousStyle = null;
         for (CodedStringPart part : parts) {
-            builder.append(part.getCoded());
+            builder.append(part.getCoded(previousStyle));
+            previousStyle = part.getCodedStyle();
         }
 
         return builder.toString();
@@ -65,15 +67,6 @@ public final class CodedString {
         componentCache = component;
 
         return component;
-    }
-
-    public CodedStringPart getPartBefore(CodedStringPart codedStringPart) {
-        int index = parts.indexOf(codedStringPart);
-        if (index == 0) {
-            return null;
-        }
-
-        return parts.get(index - 1);
     }
 
     int addClickEvent(ClickEvent clickEvent) {

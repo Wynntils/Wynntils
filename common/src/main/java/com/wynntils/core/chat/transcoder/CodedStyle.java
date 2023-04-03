@@ -49,14 +49,14 @@ public final class CodedStyle {
         this.hoverEvent = hoverEvent;
     }
 
-    static CodedStyle fromStyle(Style style, CodedStringPart owner, CodedStringPart partBefore) {
+    static CodedStyle fromStyle(Style style, CodedStringPart owner, CodedStyle previousStyle) {
         Style inheritedStyle;
 
-        if (partBefore == null) {
+        if (previousStyle == null) {
             inheritedStyle = style;
         } else {
             // This changes properties that are null, as-in, inherting from the previous style.
-            inheritedStyle = style.applyTo(partBefore.getCodedStyle().getStyle());
+            inheritedStyle = style.applyTo(previousStyle.getStyle());
 
             // We don't want to inherit these properties.
             inheritedStyle.withClickEvent(style.getClickEvent());
@@ -79,7 +79,7 @@ public final class CodedStyle {
                 inheritedStyle.getHoverEvent());
     }
 
-    public String asString() {
+    public String asString(CodedStyle previousStyle) {
         // Rules of converting a Style to a String:
         // Every style is prefixed with a §.
         // 0. Every style string is fully qualified, meaning that it contains all the formatting, and reset if needed.
@@ -97,10 +97,8 @@ public final class CodedStyle {
 
         StringBuilder styleString = new StringBuilder();
 
-        CodedStringPart partBefore = owner.getPartBefore();
-
-        if (partBefore != null) {
-            if (!this.isCompatibleWith(partBefore.getCodedStyle())) {
+        if (previousStyle != null) {
+            if (!this.isCompatibleWith(previousStyle)) {
                 styleString.append(STYLE_PREFIX).append(ChatFormatting.RESET.getChar());
             }
         }
@@ -182,15 +180,9 @@ public final class CodedStyle {
 
     private boolean isCompatibleWith(CodedStyle other) {
         // A style is compatible with another style if:
-        // 1. If the color is non-null in this style, it is the same as the other style or other style's color is null.
+        // 1. If the other style's color is not NONE, but this style's color must not be NONE.
         // 2. If the other formatting is false, this formatting can be false or true.
         // 3. If the other formatting is true, this formatting must be true.
-
-        if (color != CustomColor.NONE && other.color != CustomColor.NONE) {
-            if (!color.equals(other.color)) {
-                return false;
-            }
-        }
 
         if (color == CustomColor.NONE && other.color != CustomColor.NONE) {
             return false;

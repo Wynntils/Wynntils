@@ -21,11 +21,11 @@ public final class CodedStringPart {
         this.parent = parent;
 
         // Must be done last
-        this.style = CodedStyle.fromStyle(style, this, partBefore);
+        this.style = CodedStyle.fromStyle(style, this, partBefore == null ? null : partBefore.getCodedStyle());
     }
 
-    public String getCoded() {
-        return style.asString() + text;
+    public String getCoded(CodedStyle previousStyle) {
+        return style.asString(previousStyle) + text;
     }
 
     public CodedString getParent() {
@@ -34,10 +34,6 @@ public final class CodedStringPart {
 
     public CodedStyle getCodedStyle() {
         return style;
-    }
-
-    public CodedStringPart getPartBefore() {
-        return parent.getPartBefore(this);
     }
 
     public Component getComponent() {
