@@ -9,6 +9,8 @@ import com.wynntils.core.functions.arguments.FunctionArguments;
 import com.wynntils.utils.StringUtils;
 import com.wynntils.utils.type.CappedValue;
 import java.util.List;
+import java.util.regex.Pattern;
+import java.util.regex.PatternSyntaxException;
 
 public class StringFunctions {
     public static class FormatFunction extends GenericFunction<String> {
@@ -211,6 +213,71 @@ public class StringFunctions {
             return new FunctionArguments.RequiredArgumentBuilder(List.of(
                     new FunctionArguments.Argument<>("value", Integer.class, null),
                     new FunctionArguments.Argument<>("length", Integer.class, null)));
+        }
+    }
+
+    public static class RegexMatchFunction extends GenericFunction<Boolean> {
+        @Override
+        public Boolean getValue(FunctionArguments arguments) {
+            String value = arguments.getArgument("value").getStringValue();
+            String regex = arguments.getArgument("regex").getStringValue();
+
+            try {
+                return value.matches(regex);
+            } catch (PatternSyntaxException ignored) {
+                return false;
+            }
+        }
+
+        @Override
+        public FunctionArguments.RequiredArgumentBuilder getRequiredArgumentsBuilder() {
+            return new FunctionArguments.RequiredArgumentBuilder(List.of(
+                    new FunctionArguments.Argument<>("value", String.class, null),
+                    new FunctionArguments.Argument<>("regex", String.class, null)));
+        }
+    }
+
+    public static class RegexFindFunction extends GenericFunction<Boolean> {
+        @Override
+        public Boolean getValue(FunctionArguments arguments) {
+            String value = arguments.getArgument("value").getStringValue();
+            Pattern regex = Pattern.compile(arguments.getArgument("regex").getStringValue());
+
+            try {
+                return regex.matcher(value).find();
+            } catch (PatternSyntaxException ignored) {
+                return false;
+            }
+        }
+
+        @Override
+        public FunctionArguments.RequiredArgumentBuilder getRequiredArgumentsBuilder() {
+            return new FunctionArguments.RequiredArgumentBuilder(List.of(
+                    new FunctionArguments.Argument<>("value", String.class, null),
+                    new FunctionArguments.Argument<>("regex", String.class, null)));
+        }
+    }
+
+    public static class RegexReplaceFunction extends GenericFunction<String> {
+        @Override
+        public String getValue(FunctionArguments arguments) {
+            String value = arguments.getArgument("value").getStringValue();
+            String regex = arguments.getArgument("regex").getStringValue();
+            String replacement = arguments.getArgument("replacement").getStringValue();
+
+            try {
+                return value.replaceAll(regex, replacement);
+            } catch (PatternSyntaxException ignored) {
+                return value;
+            }
+        }
+
+        @Override
+        public FunctionArguments.RequiredArgumentBuilder getRequiredArgumentsBuilder() {
+            return new FunctionArguments.RequiredArgumentBuilder(List.of(
+                    new FunctionArguments.Argument<>("value", String.class, null),
+                    new FunctionArguments.Argument<>("regex", String.class, null),
+                    new FunctionArguments.Argument<>("replacement", String.class, null)));
         }
     }
 }
