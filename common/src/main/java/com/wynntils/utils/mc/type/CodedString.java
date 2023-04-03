@@ -10,6 +10,7 @@ import java.util.List;
 import java.util.Objects;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import java.util.stream.Collectors;
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
@@ -39,6 +40,10 @@ public class CodedString {
     public static CodedString join(CodedString[] strings, String delimiter) {
         return CodedString.of(String.join(
                 delimiter, Arrays.stream(strings).map(CodedString::str).toList()));
+    }
+
+    public static CodedString concat(CodedString... str) {
+        return CodedString.of(Arrays.stream(str).map(CodedString::str).collect(Collectors.joining()));
     }
 
     public CodedString[] split(String regex) {

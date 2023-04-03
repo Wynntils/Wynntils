@@ -33,6 +33,8 @@ import net.minecraftforge.eventbus.api.SubscribeEvent;
 
 @ConfigCategory(Category.INVENTORY)
 public class BulkBuyFeature extends Feature {
+    public static final CodedString PRICE_STR = CodedString.of("§6Price:");
+
     @RegisterConfig
     public final Config<Integer> bulkBuyAmount = new Config<>(4);
 
@@ -105,6 +107,6 @@ public class BulkBuyFeature extends Feature {
 
         return title.startsWith(ChatFormatting.GREEN.toString())
                 && title.endsWith(" Shop")
-                && LoreUtils.getStringLore(toBuy).str().contains("§6Price:");
+                && LoreUtils.getStringLore(toBuy).str().contains(PRICE_STR.str());
     }
 }

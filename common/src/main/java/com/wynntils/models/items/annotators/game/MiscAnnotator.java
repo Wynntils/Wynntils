@@ -15,8 +15,8 @@ import net.minecraft.nbt.Tag;
 import net.minecraft.world.item.ItemStack;
 
 public final class MiscAnnotator implements ItemAnnotator {
-    private static final String UNTRADABLE = "§cUntradable Item";
-    private static final String QUEST_ITEM = "§cQuest Item";
+    private static final CodedString UNTRADABLE = CodedString.of("§cUntradable Item");
+    private static final CodedString QUEST_ITEM = CodedString.of("§cQuest Item");
 
     @Override
     public ItemAnnotation getAnnotation(ItemStack itemStack, CodedString name) {
@@ -28,10 +28,10 @@ public final class MiscAnnotator implements ItemAnnotator {
 
         for (Tag line : loreTag) {
             CodedString coded = ComponentUtils.getCoded(line.getAsString());
-            if (coded.str().equals(UNTRADABLE)) {
+            if (coded.equals(UNTRADABLE)) {
                 untradable = true;
             }
-            if (coded.str().equals(QUEST_ITEM)) {
+            if (coded.equals(QUEST_ITEM)) {
                 questItem = true;
             }
         }

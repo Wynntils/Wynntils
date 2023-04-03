@@ -248,7 +248,7 @@ public final class QuestModel extends Model {
     }
 
     /** Shared between the container query classes */
-    public String getQuestBookTitle(int pageNum) {
+    public String getQuestBookTitleRegex(int pageNum) {
         return "^§0\\[Pg. " + pageNum + "\\] §8.*§0 Quests$";
     }
 

@@ -59,6 +59,7 @@ import org.lwjgl.glfw.GLFW;
 @ConfigCategory(Category.OVERLAYS)
 public class NpcDialogueOverlayFeature extends Feature {
     private static final Pattern NEW_QUEST_STARTED = Pattern.compile("^§r§6§lNew Quest Started: §r§e§l(.*)§r$");
+    public static final CodedString PRESS_SNEAK_TO_CONTINUE = CodedString.of("§cPress SNEAK to continue");
 
     private final ScheduledExecutorService autoProgressExecutor = Executors.newSingleThreadScheduledExecutor();
     private ScheduledFuture<?> scheduledAutoProgressKeyPress = null;
@@ -289,10 +290,10 @@ public class NpcDialogueOverlayFeature extends Feature {
             if (showHelperTexts.get()) {
                 // Render "To continue" message
                 List<TextRenderTask> renderTaskList = new LinkedList<>();
-                String protection = isProtected ? "§f<protected> §r" : "";
+                CodedString protection = isProtected ? CodedString.of("§f<protected> §r") : CodedString.EMPTY;
                 if (dialogueType == NpcDialogueType.NORMAL) {
-                    TextRenderTask pressSneakMessage =
-                            new TextRenderTask(protection + "§cPress SNEAK to continue", renderSetting);
+                    TextRenderTask pressSneakMessage = new TextRenderTask(
+                            CodedString.of(protection.str() + PRESS_SNEAK_TO_CONTINUE.str()), renderSetting);
                     renderTaskList.add(pressSneakMessage);
                 } else if (dialogueType == NpcDialogueType.SELECTION) {
                     String msg;
@@ -302,7 +303,8 @@ public class NpcDialogueOverlayFeature extends Feature {
                         msg = "Open chat and click on the option to select it";
                     }
 
-                    TextRenderTask pressSneakMessage = new TextRenderTask(protection + "§c" + msg, renderSetting);
+                    TextRenderTask pressSneakMessage =
+                            new TextRenderTask(CodedString.of(protection.str() + "§c") + msg, renderSetting);
                     renderTaskList.add(pressSneakMessage);
                 }
 

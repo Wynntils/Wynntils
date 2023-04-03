@@ -58,7 +58,7 @@ public final class ShamanMaskModel extends Model {
             for (ShamanMaskType type : ShamanMaskType.values()) {
                 if (type.getParseString() == null) continue;
 
-                if (title.str().contains(type.getParseString())) {
+                if (title.str().contains(type.getParseString().str())) {
                     parsedMask = type;
                     break;
                 }

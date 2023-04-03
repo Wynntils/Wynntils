@@ -9,6 +9,7 @@ import com.wynntils.core.components.Handler;
 import com.wynntils.core.components.Models;
 import com.wynntils.handlers.actionbar.type.ActionBarPosition;
 import com.wynntils.mc.event.ChatPacketReceivedEvent;
+import com.wynntils.utils.mc.type.CodedString;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -16,13 +17,12 @@ import java.util.List;
 import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-import net.minecraft.network.chat.Component;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 
 public final class ActionBarHandler extends Handler {
     // example: "§c❤ 218/218§0    §7502§f S§7 -1580    §b✺ 1/119"
     private static final Pattern ACTIONBAR_PATTERN = Pattern.compile("(?<LEFT>§[^§]+)(?<CENTER>.*)(?<RIGHT>§[^§]+)");
-    private static final String CENTER_PADDING = "§0               ";
+    private static final CodedString CENTER_PADDING = CodedString.of("§0               ");
 
     private final Map<ActionBarPosition, List<ActionBarSegment>> allSegments = Map.of(
             ActionBarPosition.LEFT,
@@ -32,8 +32,8 @@ public final class ActionBarHandler extends Handler {
             ActionBarPosition.RIGHT,
             new ArrayList<>());
     private final Map<ActionBarPosition, ActionBarSegment> lastSegments = new HashMap<>();
-    private String previousRawContent = null;
-    private String previousProcessedContent;
+    private CodedString previousRawContent = null;
+    private CodedString previousProcessedContent;
 
     public void registerSegment(ActionBarSegment segment) {
         allSegments.get(segment.getPosition()).add(segment);
@@ -44,25 +44,26 @@ public final class ActionBarHandler extends Handler {
         // FIXME: Reverse dependency!
         if (!Models.WorldState.onWorld()) return;
 
-        String content = event.getMessage().getString();
+        CodedString content = CodedString.fromComponent(event.getMessage());
         if (content.equals(previousRawContent)) {
             // No changes, skip parsing
             if (!content.equals(previousProcessedContent)) {
-                event.setMessage(Component.literal(previousProcessedContent));
+                event.setMessage(previousProcessedContent.asComponent());
             }
             return;
         }
         previousRawContent = content;
 
-        Matcher matcher = ACTIONBAR_PATTERN.matcher(content);
+        Matcher matcher = content.match(ACTIONBAR_PATTERN);
         if (!matcher.matches()) {
             WynntilsMod.warn("ActionBarHandler pattern failed to match: " + content);
             return;
         }
 
         // Create map of position -> matching part of the content
-        Map<ActionBarPosition, String> positionMatches = new HashMap<>();
-        Arrays.stream(ActionBarPosition.values()).forEach(pos -> positionMatches.put(pos, matcher.group(pos.name())));
+        Map<ActionBarPosition, CodedString> positionMatches = new HashMap<>();
+        Arrays.stream(ActionBarPosition.values())
+                .forEach(pos -> positionMatches.put(pos, CodedString.of(matcher.group(pos.name()))));
 
         Arrays.stream(ActionBarPosition.values()).forEach(pos -> processPosition(pos, positionMatches));
 
@@ -79,18 +80,18 @@ public final class ActionBarHandler extends Handler {
         if (!lastSegments.get(ActionBarPosition.RIGHT).isHidden()) {
             newContentBuilder.append(positionMatches.get(ActionBarPosition.RIGHT));
         }
-        String newContent = newContentBuilder.toString();
+        CodedString newContent = CodedString.of(newContentBuilder.toString());
         previousProcessedContent = newContent;
 
         if (!content.equals(newContent)) {
-            event.setMessage(Component.literal(newContent));
+            event.setMessage(newContent.asComponent());
         }
     }
 
-    private void processPosition(ActionBarPosition pos, Map<ActionBarPosition, String> positionMatches) {
+    private void processPosition(ActionBarPosition pos, Map<ActionBarPosition, CodedString> positionMatches) {
         List<ActionBarSegment> potentialSegments = allSegments.get(pos);
         for (ActionBarSegment segment : potentialSegments) {
-            Matcher m = segment.getPattern().matcher(positionMatches.get(pos));
+            Matcher m = positionMatches.get(pos).match(segment.getPattern());
             if (m.matches()) {
                 ActionBarSegment lastSegment = lastSegments.get(pos);
                 if (segment != lastSegment) {

@@ -16,6 +16,7 @@ import com.wynntils.models.gear.type.GearInfo;
 import com.wynntils.models.gear.type.GearTier;
 import com.wynntils.models.items.items.game.GearBoxItem;
 import com.wynntils.utils.mc.LoreUtils;
+import com.wynntils.utils.mc.type.CodedString;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -87,7 +88,7 @@ public class ItemGuessFeature extends Feature {
                         .withStyle(ChatFormatting.GRAY));
             }
 
-            guesses.append("§7: ");
+            guesses.append(CodedString.of("§7: ").asComponent());
 
             Optional<MutableComponent> itemsComponent = itemsForLevel.stream()
                     .reduce((i, j) -> i.append(Component.literal(", ").withStyle(ChatFormatting.GRAY))

@@ -21,6 +21,7 @@ import com.wynntils.core.notifications.TimedMessageContainer;
 import com.wynntils.core.notifications.event.NotificationEvent;
 import com.wynntils.mc.event.RenderEvent;
 import com.wynntils.models.worlds.event.WorldStateEvent;
+import com.wynntils.utils.mc.type.CodedString;
 import com.wynntils.utils.render.TextRenderSetting;
 import com.wynntils.utils.render.TextRenderTask;
 import com.wynntils.utils.render.buffered.BufferedFontRenderer;
@@ -187,7 +188,8 @@ public class GameNotificationOverlayFeature extends Feature {
                             bufferSource,
                             this.getRenderX(),
                             this.getRenderY(),
-                            new TextRenderTask("§r§a→ §r§2Player [§r§aWC1/Archer§r§2]", textRenderSetting),
+                            new TextRenderTask(
+                                    CodedString.of("§r§a→ §r§2Player [§r§aWC1/Archer§r§2]"), textRenderSetting),
                             this.getWidth(),
                             this.getHeight(),
                             this.getRenderHorizontalAlignment(),

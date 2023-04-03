@@ -79,11 +79,11 @@ public final class QuestInfoParser {
     }
 
     private static boolean isQuestTracked(ItemStack itemStack) {
-        String rawName = itemStack.getHoverName().getString();
-        if (rawName.trim().isEmpty()) {
+        CodedString name = CodedString.fromComponent(itemStack.getHoverName());
+        if (name.str().trim().isEmpty()) {
             return false;
         }
-        return rawName.endsWith("§e[Tracked]");
+        return name.str().endsWith("§e[Tracked]");
     }
 
     private static QuestStatus getQuestStatus(LinkedList<CodedString> lore) {

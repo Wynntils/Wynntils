@@ -34,6 +34,8 @@ public class DiscoveryContainerQueries {
             Pattern.compile("§6Total Discoveries: §r§e\\[(\\d+)/\\d+\\]");
     private static final Pattern SECRET_DISCOVERY_COUNT_PATTERN =
             Pattern.compile("§bTotal Secret Discoveries: §r§3\\[(\\d+)/\\d+\\]");
+    public static final CodedString DISCOVERIES_STRING = CodedString.of("§6§lDiscoveries");
+    public static final CodedString SECRET_DISCOVERIES_STRING = CodedString.of("§b§lSecret Discoveries");
 
     private List<DiscoveryInfo> newDiscoveries;
 
@@ -41,14 +43,14 @@ public class DiscoveryContainerQueries {
         ScriptedContainerQuery.QueryBuilder queryBuilder = ScriptedContainerQuery.builder("Discovery Count Query")
                 .onError(msg -> WynntilsMod.warn("Problem getting discovery count in Quest Book: " + msg))
                 .useItemInHotbar(InventoryUtils.QUEST_BOOK_SLOT_NUM)
-                .matchTitle(Models.Quest.getQuestBookTitle(1))
+                .matchTitle(Models.Quest.getQuestBookTitleRegex(1))
                 .processContainer((c) -> {
                     ItemStack discoveriesItem = c.items().get(DISCOVERIES_SLOT);
                     ItemStack secretDiscoveriesItem = c.items().get(SECRET_DISCOVERIES_SLOT);
 
-                    if (!ComponentUtils.getCoded(discoveriesItem.getHoverName()).equals("§6§lDiscoveries")
+                    if (!ComponentUtils.getCoded(discoveriesItem.getHoverName()).equals(DISCOVERIES_STRING)
                             || !ComponentUtils.getCoded(secretDiscoveriesItem.getHoverName())
-                                    .equals("§b§lSecret Discoveries")) {
+                                    .equals(SECRET_DISCOVERIES_STRING)) {
                         WynntilsMod.error("Returned early because discovery items were not found.");
 
                         return;
@@ -107,30 +109,30 @@ public class DiscoveryContainerQueries {
                             Component.literal("Error updating discoveries.").withStyle(ChatFormatting.RED));
                 })
                 .useItemInHotbar(InventoryUtils.QUEST_BOOK_SLOT_NUM)
-                .matchTitle(Models.Quest.getQuestBookTitle(1))
+                .matchTitle(Models.Quest.getQuestBookTitleRegex(1))
                 .processContainer(c -> {})
                 .clickOnSlot(DISCOVERIES_SLOT)
-                .matchTitle(getDiscoveryPageTitle(1))
+                .matchTitle(getDiscoveryPageTitleRegex(1))
                 .processContainer(c -> processDiscoveryPage(c, 1, discoveryPages, false));
 
         for (int i = 2; i <= discoveryPages; i++) {
             final int page = i; // Lambdas need final variables
             queryBuilder
                     .clickOnSlotWithName(NEXT_PAGE_SLOT, Items.GOLDEN_SHOVEL, getNextPageButtonName(page))
-                    .matchTitle(getDiscoveryPageTitle(page))
+                    .matchTitle(getDiscoveryPageTitleRegex(page))
                     .processContainer(c -> processDiscoveryPage(c, page, discoveryPages, false));
         }
 
         queryBuilder
                 .clickOnSlot(SECRET_DISCOVERIES_SLOT)
-                .matchTitle(getDiscoveryPageTitle(1))
+                .matchTitle(getDiscoveryPageTitleRegex(1))
                 .processContainer(c -> processDiscoveryPage(c, 1, secretDiscoveryPages, true));
 
         for (int i = 2; i <= secretDiscoveryPages; i++) {
             final int page = i; // Lambdas need final variables
             queryBuilder
                     .clickOnSlotWithName(NEXT_PAGE_SLOT, Items.GOLDEN_SHOVEL, getNextPageButtonName(page))
-                    .matchTitle(getDiscoveryPageTitle(page))
+                    .matchTitle(getDiscoveryPageTitleRegex(page))
                     .processContainer(c -> processDiscoveryPage(c, page, secretDiscoveryPages, true));
         }
 
@@ -166,12 +168,12 @@ public class DiscoveryContainerQueries {
         }
     }
 
-    private static String getDiscoveryPageTitle(int pageNum) {
+    private static String getDiscoveryPageTitleRegex(int pageNum) {
         // FIXME: We ignore pageNum, as we do not have a valid way of only querying dynamic amounts of pages
         return "^§0\\[Pg. \\d+\\] §8.*§0 Discoveries$";
     }
 
-    private String getNextPageButtonName(int nextPageNum) {
-        return "[§f§lPage " + nextPageNum + "§a >§2>§a>§2>§a>]";
+    private CodedString getNextPageButtonName(int nextPageNum) {
+        return CodedString.of("[§f§lPage " + nextPageNum + "§a >§2>§a>§2>§a>]");
     }
 }

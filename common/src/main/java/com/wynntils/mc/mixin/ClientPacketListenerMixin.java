@@ -196,7 +196,7 @@ public abstract class ClientPacketListenerMixin {
     private void handleTabListCustomisationPost(ClientboundTabListPacket packet, CallbackInfo ci) {
         if (!isRenderThread()) return;
 
-        MixinHelper.post(new PlayerInfoFooterChangedEvent(packet.getFooter().getString()));
+        MixinHelper.post(new PlayerInfoFooterChangedEvent(CodedString.fromComponent(packet.getFooter())));
     }
 
     @Inject(

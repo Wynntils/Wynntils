@@ -10,6 +10,7 @@ import com.wynntils.mc.event.PlayerInfoFooterChangedEvent;
 import com.wynntils.models.statuseffects.event.StatusEffectsChangedEvent;
 import com.wynntils.models.statuseffects.type.StatusEffect;
 import com.wynntils.models.worlds.event.WorldStateEvent;
+import com.wynntils.utils.mc.type.CodedString;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.Matcher;
@@ -35,7 +36,7 @@ public final class StatusEffectModel extends Model {
     private static final Pattern STATUS_EFFECT_PATTERN =
             Pattern.compile("(.+?§7 ?(?:\\d+(?:\\.\\d+)?%)?) ?([%\\-+\\/\\da-zA-Z'\\s]+?) §[84a]\\((.+?)\\).*");
 
-    private static final String STATUS_EFFECTS_TITLE = "§d§lStatus Effects";
+    private static final CodedString STATUS_EFFECTS_TITLE = CodedString.of("§d§lStatus Effects");
 
     private List<StatusEffect> statusEffects = List.of();
 
@@ -54,9 +55,9 @@ public final class StatusEffectModel extends Model {
 
     @SubscribeEvent
     public void onTabListCustomization(PlayerInfoFooterChangedEvent event) {
-        String footer = event.getFooter();
+        CodedString footer = event.getFooter();
 
-        if (footer.isEmpty()) {
+        if (footer.str().isEmpty()) {
             if (!statusEffects.isEmpty()) {
                 statusEffects = List.of(); // No timers, get rid of them
                 WynntilsMod.postEvent(new StatusEffectsChangedEvent());
@@ -65,22 +66,22 @@ public final class StatusEffectModel extends Model {
             return;
         }
 
-        if (!footer.startsWith(STATUS_EFFECTS_TITLE)) return;
+        if (!footer.str().startsWith(STATUS_EFFECTS_TITLE.str())) return;
 
         List<StatusEffect> newStatusEffects = new ArrayList<>();
 
-        String[] effects = footer.split("\\s{2}"); // Effects are split up by 2 spaces
-        for (String effect : effects) {
-            String trimmedEffect = effect.trim();
-            if (trimmedEffect.isEmpty()) continue;
+        CodedString[] effects = footer.split("\\s{2}"); // Effects are split up by 2 spaces
+        for (CodedString effect : effects) {
+            CodedString trimmedEffect = CodedString.of(effect.str().trim());
+            if (trimmedEffect.str().isEmpty()) continue;
 
-            Matcher m = STATUS_EFFECT_PATTERN.matcher(trimmedEffect);
+            Matcher m = STATUS_EFFECT_PATTERN.matcher(trimmedEffect.str());
             if (!m.find()) continue;
 
             // See comment at STATUS_EFFECT_PATTERN definition for format description of these
-            String prefix = m.group(1);
-            String name = m.group(2);
-            String displayedTime = m.group(3);
+            CodedString prefix = CodedString.of(m.group(1));
+            CodedString name = CodedString.of(m.group(2));
+            CodedString displayedTime = CodedString.of(m.group(3));
             newStatusEffects.add(new StatusEffect(name, displayedTime, prefix));
         }
 

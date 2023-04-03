@@ -16,6 +16,7 @@ import com.wynntils.mc.event.PlayerTeamEvent;
 import com.wynntils.models.worlds.event.WorldStateEvent;
 import com.wynntils.models.worlds.type.WorldState;
 import com.wynntils.utils.mc.McUtils;
+import com.wynntils.utils.mc.type.CodedString;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 import java.util.Base64;
@@ -57,7 +58,7 @@ public final class PlayerModel extends Model {
     }
 
     public boolean isNpc(Player player) {
-        String scoreboardName = player.getScoreboardName();
+        CodedString scoreboardName = CodedString.of(player.getScoreboardName());
         return isNpc(scoreboardName);
     }
 
@@ -95,10 +96,10 @@ public final class PlayerModel extends Model {
     public void onPlayerJoin(PlayerJoinedWorldEvent event) {
         Player player = event.getPlayer();
         if (player == null || player.getUUID() == null) return;
-        String name = player.getGameProfile().getName();
+        CodedString name = CodedString.of(player.getGameProfile().getName());
         if (isNpc(name)) return; // avoid player npcs
 
-        loadUser(player.getUUID(), name);
+        loadUser(player.getUUID(), name.str());
     }
 
     @SubscribeEvent
@@ -122,7 +123,7 @@ public final class PlayerModel extends Model {
         ghosts.put(uuid, world);
     }
 
-    private void loadUser(UUID uuid, String name) {
+    private void loadUser(UUID uuid, String userName) {
         if (fetching.contains(uuid)) return;
         if (errorCount >= MAX_ERRORS) {
             // Athena is having problems, skip this
@@ -130,7 +131,7 @@ public final class PlayerModel extends Model {
         }
 
         fetching.add(uuid); // temporary, avoid extra loads
-        nameMap.put(uuid, name);
+        nameMap.put(uuid, userName);
 
         ApiResponse apiResponse = Managers.Net.callApi(UrlId.API_ATHENA_USER_INFO, Map.of("uuid", uuid.toString()));
         apiResponse.handleJsonObject(
@@ -197,7 +198,7 @@ public final class PlayerModel extends Model {
         ghosts.clear();
     }
 
-    private boolean isNpc(String name) {
-        return name.contains("\u0001") || name.contains("§");
+    private boolean isNpc(CodedString name) {
+        return name.str().contains("\u0001") || name.str().contains("§");
     }
 }

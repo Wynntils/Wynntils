@@ -34,8 +34,9 @@ public final class WorldStateModel extends Model {
     private static final Position CHARACTER_SELECTION_POSITION = new PositionImpl(-1337.5, 16.2, -1120.5);
     private static final Pattern WYNNCRAFT_SERVER_PATTERN = Pattern.compile("^(.*)\\.wynncraft\\.(?:com|net|org)$");
     private static final String WYNNCRAFT_BETA_NAME = "beta";
+    public static final CodedString CHARACTER_SELECTION_TITLE = CodedString.of("§8§lSelect a Character");
 
-    private String currentTabListFooter = "";
+    private CodedString currentTabListFooter = CodedString.EMPTY;
     private String currentWorldName = "";
     private boolean onBetaServer;
     private boolean hasJoinedAnyWorld = false;
@@ -92,7 +93,7 @@ public final class WorldStateModel extends Model {
         String host = e.getHost();
         onBetaServer = host.equals(WYNNCRAFT_BETA_NAME);
         setState(WorldState.CONNECTING);
-        currentTabListFooter = "";
+        currentTabListFooter = CodedString.EMPTY;
     }
 
     @SubscribeEvent
@@ -117,20 +118,20 @@ public final class WorldStateModel extends Model {
     @SubscribeEvent
     public void onMenuOpened(MenuEvent.MenuOpenedEvent e) {
         if (e.getMenuType() == MenuType.GENERIC_9x3
-                && ComponentUtils.getCoded(e.getTitle()).equals("§8§lSelect a Character")) {
+                && ComponentUtils.getCoded(e.getTitle()).equals(CHARACTER_SELECTION_TITLE)) {
             setState(WorldState.CHARACTER_SELECTION);
         }
     }
 
     @SubscribeEvent
     public void onTabListFooter(PlayerInfoFooterChangedEvent e) {
-        String footer = e.getFooter();
+        CodedString footer = e.getFooter();
         if (footer.equals(currentTabListFooter)) return;
 
         currentTabListFooter = footer;
 
-        if (!footer.isEmpty()) {
-            if (HUB_NAME.matcher(footer).find()) {
+        if (!footer.str().isEmpty()) {
+            if (HUB_NAME.matcher(footer.str()).find()) {
                 setState(WorldState.HUB);
             }
         }

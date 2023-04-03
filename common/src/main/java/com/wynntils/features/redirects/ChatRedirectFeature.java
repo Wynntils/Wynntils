@@ -462,11 +462,12 @@ public class ChatRedirectFeature extends Feature {
         @Override
         protected CodedString getNotification(Matcher matcher) {
             int ingredientCount = Integer.parseInt(matcher.group(1));
-            String ingredientString = ingredientCount + " §dingredient" + (ingredientCount == 1 ? "" : "s");
+            CodedString ingredientString =
+                    CodedString.of(ingredientCount + " §dingredient" + (ingredientCount == 1 ? "" : "s"));
 
             String emeraldString = matcher.group(2);
 
-            return CodedString.of(String.format("§dSold §7%s §dfor §a%s§d.", ingredientString, emeraldString));
+            return CodedString.of(String.format("§dSold §7%s §dfor §a%s§d.", ingredientString.str(), emeraldString));
         }
     }
 

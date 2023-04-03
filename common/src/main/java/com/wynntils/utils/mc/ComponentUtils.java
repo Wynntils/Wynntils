@@ -156,10 +156,10 @@ public final class ComponentUtils {
         return text.match(COLOR_CODE_PATTERN).replaceAll("");
     }
 
-    public static String getLastPartCodes(CodedString lastPart) {
-        if (!lastPart.str().contains("§")) return "";
+    public static CodedString getLastPartCodes(CodedString lastPart) {
+        if (!lastPart.str().contains("§")) return CodedString.EMPTY;
 
-        String lastPartCodes = "";
+        CodedString lastPartCodes = CodedString.EMPTY;
         int index;
         while ((index = lastPart.str().lastIndexOf('§')) != -1) {
             if (index >= lastPart.str().length() - 1) {
@@ -173,7 +173,7 @@ public final class ComponentUtils {
                 break;
             }
             // prepend to codes since we're going backwards
-            lastPartCodes = thisCode + lastPartCodes;
+            lastPartCodes = CodedString.of(thisCode + lastPartCodes.str());
 
             lastPart = CodedString.of(lastPart.str().substring(0, index));
         }

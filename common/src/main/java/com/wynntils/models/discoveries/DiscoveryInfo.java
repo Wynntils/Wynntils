@@ -13,11 +13,14 @@ import com.wynntils.utils.mc.type.CodedString;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.ItemStack;
 
 public class DiscoveryInfo {
+    private static final Pattern COMBAT_LEVEL_PATTERN = Pattern.compile("§a✔§r§7 Combat Lv. Min: §r§f(\\d+)");
     private final String name;
     private final DiscoveryType type;
     private final String description;
@@ -50,9 +53,11 @@ public class DiscoveryInfo {
             return null;
         }
 
-        CodedString name = ComponentUtils.getCoded(itemStack.getHoverName()).getNormalized();
-        int minLevel = Integer.parseInt(lore.get(0).str().replace("§a✔§r§7 Combat Lv. Min: §r§f", ""));
+        Matcher m = COMBAT_LEVEL_PATTERN.matcher(lore.get(0).str());
+        if (!m.matches()) return null;
+        int minLevel = Integer.parseInt(m.group(1));
 
+        CodedString name = ComponentUtils.getCoded(itemStack.getHoverName()).getNormalized();
         DiscoveryType type = DiscoveryType.getDiscoveryTypeFromString(name);
         if (type == null) return null;
 

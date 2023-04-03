@@ -19,6 +19,7 @@ import net.minecraft.world.item.ItemStack;
 
 public class DialogueHistoryQueries {
     private static final Pattern DIALOGUE_HISTORY_PAGE_PATTERN = Pattern.compile("§7Page \\[(\\d+)/(\\d+)\\]");
+    public static final CodedString DIALOGUE_HISTORY = CodedString.of("§bDialogue History");
 
     private List<List<CodedString>> newDialogueHistory;
 
@@ -31,12 +32,12 @@ public class DialogueHistoryQueries {
                         "Quest Book Dialogue History Query")
                 .onError(msg -> WynntilsMod.warn("Problem getting dialogue history in Quest Book: " + msg))
                 .useItemInHotbar(InventoryUtils.QUEST_BOOK_SLOT_NUM)
-                .matchTitle(Models.Quest.getQuestBookTitle(1))
+                .matchTitle(Models.Quest.getQuestBookTitleRegex(1))
                 .processContainer((c) -> {
                     ItemStack dialogueHistoryItem = c.items().get(0);
 
                     if (!ComponentUtils.getCoded(dialogueHistoryItem.getHoverName())
-                            .equals("§bDialogue History")) return;
+                            .equals(DIALOGUE_HISTORY)) return;
 
                     for (CodedString line : LoreUtils.getLore(dialogueHistoryItem)) {
                         Matcher matcher = line.match(DIALOGUE_HISTORY_PAGE_PATTERN);
@@ -59,13 +60,13 @@ public class DialogueHistoryQueries {
                         "Quest Book Dialogue History Query 2")
                 .onError(msg -> WynntilsMod.warn("Problem getting dialogue history (2) in Quest Book: " + msg))
                 .useItemInHotbar(InventoryUtils.QUEST_BOOK_SLOT_NUM)
-                .matchTitle(Models.Quest.getQuestBookTitle(1))
+                .matchTitle(Models.Quest.getQuestBookTitleRegex(1))
                 .setWaitForMenuReopen(false)
                 .processContainer((c) -> {
                     ItemStack dialogueHistoryItem = c.items().get(0);
 
                     if (!ComponentUtils.getCoded(dialogueHistoryItem.getHoverName())
-                            .equals("§bDialogue History")) return;
+                            .equals(DIALOGUE_HISTORY)) return;
 
                     newDialogueHistory = new ArrayList<>();
 
@@ -81,13 +82,13 @@ public class DialogueHistoryQueries {
             int page = i;
             queryBuilder
                     .clickOnSlot(0)
-                    .matchTitle(Models.Quest.getQuestBookTitle(1))
+                    .matchTitle(Models.Quest.getQuestBookTitleRegex(1))
                     .setWaitForMenuReopen(false)
                     .processContainer((c) -> {
                         ItemStack dialogueHistoryItem = c.items().get(0);
 
                         if (!ComponentUtils.getCoded(dialogueHistoryItem.getHoverName())
-                                .equals("§bDialogue History")) return;
+                                .equals(DIALOGUE_HISTORY)) return;
 
                         List<CodedString> current = LoreUtils.getLore(dialogueHistoryItem).stream()
                                 .dropWhile(s -> s.str().isBlank())

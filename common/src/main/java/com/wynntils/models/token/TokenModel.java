@@ -41,7 +41,7 @@ public class TokenModel extends Model {
 
     private static final Pattern TOKEN_PATTERN = Pattern.compile("^§a(\\d+)§2/(\\d+)(?:§r)?$");
     private static final Pattern TYPE_PATTERN = Pattern.compile("^§7Get §[e6]\\[(?:(\\d+) )?(.*)\\]$");
-    private static final String VERIFICATION_STRING = "§7Right-click to add";
+    private static final CodedString VERIFICATION_STRING = CodedString.of("§7Right-click to add");
 
     private final Map<Integer, TokenGatekeeper> activeGatekeepers = new HashMap<>();
     private final Map<TokenGatekeeper, TokenInventoryWatcher> inventoryWatchers = new HashMap<>();
@@ -83,7 +83,7 @@ public class TokenModel extends Model {
         if (typeMatcher.matches()) {
             String countString = typeMatcher.group(1);
             int max = countString != null ? Integer.parseInt(countString) : 1;
-            String type = typeMatcher.group(2);
+            CodedString type = CodedString.of(typeMatcher.group(2));
 
             BakingTokenGatekeeper baking = getBaking(event.getEntity().position());
             baking.type = type;
@@ -143,8 +143,8 @@ public class TokenModel extends Model {
             Location location =
                     Location.containing(event.getEntity().position()).offset(0, 3, 0);
 
-            String gatekeeperTokenName = "Shard [Floor " + floor + " - Level " + level + "]";
-            String itemName = "§d[Floor " + floor + " - Lv. " + level + "]";
+            CodedString gatekeeperTokenName = CodedString.of("Shard [Floor " + floor + " - Level " + level + "]");
+            CodedString itemName = CodedString.of("§d[Floor " + floor + " - Lv. " + level + "]");
             addGatekeeper(
                     event.getEntity().getId(),
                     new TokenGatekeeper(gatekeeperTokenName, itemName, location, new CappedValue(0, maxTokens)));
@@ -158,7 +158,7 @@ public class TokenModel extends Model {
             Location location =
                     Location.containing(event.getEntity().position()).offset(0, 3, 0);
 
-            String tokenName = division + " Catalyst " + MathUtils.toRoman(level);
+            CodedString tokenName = CodedString.of(division + " Catalyst " + MathUtils.toRoman(level));
             addGatekeeper(
                     event.getEntity().getId(), new TokenGatekeeper(tokenName, location, new CappedValue(0, maxTokens)));
         }
@@ -256,7 +256,7 @@ public class TokenModel extends Model {
 
     private static final class BakingTokenGatekeeper {
         private final Position position;
-        private String type;
+        private CodedString type;
         private int typeMax;
         private CappedValue value;
         private int valueEntityId;
@@ -280,7 +280,7 @@ public class TokenModel extends Model {
     private static final class TokenInventoryWatcher extends InventoryWatcher {
         private final TokenGatekeeper gatekeeper;
 
-        private TokenInventoryWatcher(TokenGatekeeper gatekeeper, String tokenItemName) {
+        private TokenInventoryWatcher(TokenGatekeeper gatekeeper, CodedString tokenItemName) {
             super(itemStack -> isToken(tokenItemName, itemStack));
             this.gatekeeper = gatekeeper;
         }
@@ -289,14 +289,14 @@ public class TokenModel extends Model {
             this(gatekeeper, gatekeeper.getItemTokenName());
         }
 
-        private static boolean isToken(String tokenItemName, ItemStack itemStack) {
+        private static boolean isToken(CodedString tokenItemName, ItemStack itemStack) {
             Optional<MiscItem> miscItemOpt = Models.Item.asWynnItem(itemStack, MiscItem.class);
             if (miscItemOpt.isEmpty()) return false;
 
             MiscItem miscItem = miscItemOpt.get();
             if (!miscItem.isUntradable()) return false;
 
-            return miscItem.getName().str().contains(tokenItemName);
+            return miscItem.getName().str().contains(tokenItemName.str());
         }
 
         @Override

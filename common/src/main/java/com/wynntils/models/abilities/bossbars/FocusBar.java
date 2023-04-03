@@ -10,8 +10,10 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public final class FocusBar extends TrackedBar {
+    private static final Pattern FOCUS_PATTERN = Pattern.compile("§eFocus §6\\[§e(\\d+)/(\\d+)§6]");
+
     public FocusBar() {
-        super(Pattern.compile("§eFocus §6\\[§e(\\d+)/(\\d+)§6]"));
+        super(FOCUS_PATTERN);
     }
 
     @Override
