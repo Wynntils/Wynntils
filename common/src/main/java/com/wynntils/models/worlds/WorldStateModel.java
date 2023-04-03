@@ -131,7 +131,7 @@ public final class WorldStateModel extends Model {
         currentTabListFooter = footer;
 
         if (!footer.str().isEmpty()) {
-            if (HUB_NAME.matcher(footer.str()).find()) {
+            if (footer.match(HUB_NAME).find()) {
                 setState(WorldState.HUB);
             }
         }

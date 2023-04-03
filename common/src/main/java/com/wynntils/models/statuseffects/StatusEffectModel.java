@@ -75,7 +75,7 @@ public final class StatusEffectModel extends Model {
             CodedString trimmedEffect = CodedString.of(effect.str().trim());
             if (trimmedEffect.str().isEmpty()) continue;
 
-            Matcher m = STATUS_EFFECT_PATTERN.matcher(trimmedEffect.str());
+            Matcher m = trimmedEffect.match(STATUS_EFFECT_PATTERN);
             if (!m.find()) continue;
 
             // See comment at STATUS_EFFECT_PATTERN definition for format description of these
