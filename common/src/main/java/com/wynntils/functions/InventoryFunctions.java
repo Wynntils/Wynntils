@@ -219,7 +219,16 @@ public class InventoryFunctions {
         @Override
         public String getValue(FunctionArguments arguments) {
             ItemStack itemStack = McUtils.player().getItemInHand(InteractionHand.MAIN_HAND);
-            return ComponentUtils.getUnformatted(itemStack.getHoverName());
+            if (!arguments.getArgument("formatted").getBooleanValue()) {
+                return ComponentUtils.getUnformatted(itemStack.getHoverName());
+            }
+            return ComponentUtils.getCoded(itemStack.getHoverName());
+        }
+
+        @Override
+        public FunctionArguments.Builder getArgumentsBuilder() {
+            return new FunctionArguments.OptionalArgumentBuilder(
+                    List.of(new FunctionArguments.Argument<>("formatted", Boolean.class, false)));
         }
 
         @Override
