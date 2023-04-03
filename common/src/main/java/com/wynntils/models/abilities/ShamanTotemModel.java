@@ -19,7 +19,7 @@ import com.wynntils.models.spells.event.SpellEvent;
 import com.wynntils.models.spells.type.SpellType;
 import com.wynntils.models.worlds.WorldStateModel;
 import com.wynntils.utils.mc.McUtils;
-import com.wynntils.utils.mc.type.CodedString;
+import com.wynntils.utils.mc.type.StyledText;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -156,7 +156,7 @@ public class ShamanTotemModel extends Model {
         Entity entity = e.getEntity();
         if (!(entity instanceof ArmorStand)) return;
 
-        CodedString name = e.getName();
+        StyledText name = e.getName();
         if (name.str().isEmpty()) return;
 
         Matcher m = name.match(SHAMAN_TOTEM_TIMER);

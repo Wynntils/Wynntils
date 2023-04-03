@@ -22,7 +22,7 @@ import com.wynntils.models.elements.type.Powder;
 import com.wynntils.utils.colors.CommonColors;
 import com.wynntils.utils.colors.CustomColor;
 import com.wynntils.utils.mc.McUtils;
-import com.wynntils.utils.mc.type.CodedString;
+import com.wynntils.utils.mc.type.StyledText;
 import com.wynntils.utils.render.Texture;
 import com.wynntils.utils.render.buffered.BufferedFontRenderer;
 import com.wynntils.utils.render.buffered.BufferedRenderUtils;
@@ -98,13 +98,13 @@ public class PowderSpecialBarOverlayFeature extends Feature {
                     };
 
             CustomColor color;
-            CodedString text;
+            StyledText text;
             if (powderSpecialType == null) {
                 color = CommonColors.GRAY;
-                text = CodedString.of("Unknown");
+                text = StyledText.of("Unknown");
             } else {
                 color = powderSpecialType.getColor();
-                text = CodedString.of(powderSpecialType.getColoredSymbol() + " " + (int) powderSpecialCharge + "%");
+                text = StyledText.of(powderSpecialType.getColoredSymbol() + " " + (int) powderSpecialCharge + "%");
             }
 
             BufferedFontRenderer.getInstance()

@@ -21,7 +21,7 @@ import com.wynntils.utils.colors.CustomColor;
 import com.wynntils.utils.mc.KeyboardUtils;
 import com.wynntils.utils.mc.McUtils;
 import com.wynntils.utils.mc.TooltipUtils;
-import com.wynntils.utils.mc.type.CodedString;
+import com.wynntils.utils.mc.type.StyledText;
 import com.wynntils.utils.render.FontRenderer;
 import com.wynntils.utils.render.RenderUtils;
 import com.wynntils.utils.render.TextRenderSetting;
@@ -206,7 +206,7 @@ public final class OverlayManagementScreen extends WynntilsScreen {
                 FontRenderer.getInstance()
                         .renderAlignedTextInBox(
                                 poseStack,
-                                CodedString.of(overlay.getTranslatedName()),
+                                StyledText.of(overlay.getTranslatedName()),
                                 renderX,
                                 renderX + overlay.getWidth(),
                                 renderY,

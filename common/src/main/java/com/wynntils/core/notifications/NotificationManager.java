@@ -12,7 +12,7 @@ import com.wynntils.features.overlays.GameNotificationOverlayFeature;
 import com.wynntils.models.worlds.event.WorldStateEvent;
 import com.wynntils.utils.mc.ComponentUtils;
 import com.wynntils.utils.mc.McUtils;
-import com.wynntils.utils.mc.type.CodedString;
+import com.wynntils.utils.mc.type.StyledText;
 import com.wynntils.utils.render.TextRenderSetting;
 import com.wynntils.utils.render.TextRenderTask;
 import com.wynntils.utils.type.TimedSet;
@@ -34,7 +34,7 @@ public final class NotificationManager extends Manager {
         cachedMessageSet.clear();
     }
 
-    public MessageContainer queueMessage(CodedString codedMessage) {
+    public MessageContainer queueMessage(StyledText codedMessage) {
         return queueMessage(new TextRenderTask(codedMessage, TextRenderSetting.DEFAULT));
     }
 
@@ -47,10 +47,10 @@ public final class NotificationManager extends Manager {
 
         WynntilsMod.info("Message Queued: " + message);
         MessageContainer msgContainer = new MessageContainer(message);
-        CodedString messageText = message.getText();
+        StyledText messageText = message.getText();
 
         for (MessageContainer cachedContainer : cachedMessageSet) {
-            CodedString checkableMessage = cachedContainer.getMessage();
+            StyledText checkableMessage = cachedContainer.getMessage();
             if (messageText.equals(checkableMessage)) {
                 cachedContainer.setMessageCount(cachedContainer.getMessageCount() + 1);
 
@@ -78,7 +78,7 @@ public final class NotificationManager extends Manager {
      * @param newMessage The new message
      * @return The message container that was edited. This may be the new message container.
      */
-    public MessageContainer editMessage(MessageContainer msgContainer, CodedString newMessage) {
+    public MessageContainer editMessage(MessageContainer msgContainer, StyledText newMessage) {
         WynntilsMod.info("Message Edited: " + msgContainer.getRenderTask() + " -> " + newMessage.str());
 
         // If we have multiple repeated messages, we want to only edit the last one.

@@ -7,7 +7,7 @@ package com.wynntils.models.items.annotators.gui;
 import com.wynntils.handlers.item.ItemAnnotation;
 import com.wynntils.handlers.item.ItemAnnotator;
 import com.wynntils.models.items.items.gui.SoulPointItem;
-import com.wynntils.utils.mc.type.CodedString;
+import com.wynntils.utils.mc.type.StyledText;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import net.minecraft.world.item.ItemStack;
@@ -17,7 +17,7 @@ public final class SoulPointAnnotator implements ItemAnnotator {
     private static final Pattern SOUL_POINTS_PATTERN = Pattern.compile("^§l(\\d+)§b Soul Points$");
 
     @Override
-    public ItemAnnotation getAnnotation(ItemStack itemStack, CodedString name) {
+    public ItemAnnotation getAnnotation(ItemStack itemStack, StyledText name) {
         if (itemStack.getItem() != Items.NETHER_STAR) return null;
         Matcher matcher = name.match(SOUL_POINTS_PATTERN);
         if (!matcher.matches()) return null;

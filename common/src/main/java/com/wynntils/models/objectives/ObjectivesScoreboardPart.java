@@ -9,7 +9,7 @@ import com.wynntils.core.components.Models;
 import com.wynntils.handlers.scoreboard.ScoreboardPart;
 import com.wynntils.handlers.scoreboard.ScoreboardSegment;
 import com.wynntils.handlers.scoreboard.type.SegmentMatcher;
-import com.wynntils.utils.mc.type.CodedString;
+import com.wynntils.utils.mc.type.StyledText;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
@@ -61,10 +61,10 @@ public class ObjectivesScoreboardPart implements ScoreboardPart {
     private List<WynnObjective> parseObjectives(ScoreboardSegment segment) {
         List<WynnObjective> parsedObjectives = new ArrayList<>();
 
-        List<CodedString> actualContent = new ArrayList<>();
+        List<StyledText> actualContent = new ArrayList<>();
         StringBuilder multiLine = new StringBuilder();
 
-        for (CodedString line : segment.getContent()) {
+        for (StyledText line : segment.getContent()) {
             if (line.match(OBJECTIVE_PATTERN_ONE_LINE).matches()) {
                 actualContent.add(line);
                 continue;
@@ -87,7 +87,7 @@ public class ObjectivesScoreboardPart implements ScoreboardPart {
             }
 
             if (line.match(OBJECTIVE_PATTERN_MULTILINE_END).matches()) {
-                actualContent.add(CodedString.of(multiLine.toString().trim().replaceAll(" +", " ")));
+                actualContent.add(StyledText.of(multiLine.toString().trim().replaceAll(" +", " ")));
                 multiLine = new StringBuilder();
             }
         }
@@ -96,7 +96,7 @@ public class ObjectivesScoreboardPart implements ScoreboardPart {
             WynntilsMod.error("ObjectiveManager: Got a not finished multi-line objective: " + multiLine);
         }
 
-        for (CodedString line : actualContent) {
+        for (StyledText line : actualContent) {
             Matcher objectiveMatcher = line.match(OBJECTIVE_PATTERN_ONE_LINE);
             if (!objectiveMatcher.matches()) {
                 WynntilsMod.error("ObjectiveManager: Broken objective stored: " + line);

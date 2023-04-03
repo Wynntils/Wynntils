@@ -10,7 +10,7 @@ import com.wynntils.mc.event.PlayerInfoFooterChangedEvent;
 import com.wynntils.models.statuseffects.event.StatusEffectsChangedEvent;
 import com.wynntils.models.statuseffects.type.StatusEffect;
 import com.wynntils.models.worlds.event.WorldStateEvent;
-import com.wynntils.utils.mc.type.CodedString;
+import com.wynntils.utils.mc.type.StyledText;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.Matcher;
@@ -36,7 +36,7 @@ public final class StatusEffectModel extends Model {
     private static final Pattern STATUS_EFFECT_PATTERN =
             Pattern.compile("(.+?§7 ?(?:\\d+(?:\\.\\d+)?%)?) ?([%\\-+\\/\\da-zA-Z'\\s]+?) §[84a]\\((.+?)\\).*");
 
-    private static final CodedString STATUS_EFFECTS_TITLE = CodedString.of("§d§lStatus Effects");
+    private static final StyledText STATUS_EFFECTS_TITLE = StyledText.of("§d§lStatus Effects");
 
     private List<StatusEffect> statusEffects = List.of();
 
@@ -55,7 +55,7 @@ public final class StatusEffectModel extends Model {
 
     @SubscribeEvent
     public void onTabListCustomization(PlayerInfoFooterChangedEvent event) {
-        CodedString footer = event.getFooter();
+        StyledText footer = event.getFooter();
 
         if (footer.str().isEmpty()) {
             if (!statusEffects.isEmpty()) {
@@ -70,18 +70,18 @@ public final class StatusEffectModel extends Model {
 
         List<StatusEffect> newStatusEffects = new ArrayList<>();
 
-        CodedString[] effects = footer.split("\\s{2}"); // Effects are split up by 2 spaces
-        for (CodedString effect : effects) {
-            CodedString trimmedEffect = CodedString.of(effect.str().trim());
+        StyledText[] effects = footer.split("\\s{2}"); // Effects are split up by 2 spaces
+        for (StyledText effect : effects) {
+            StyledText trimmedEffect = StyledText.of(effect.str().trim());
             if (trimmedEffect.str().isEmpty()) continue;
 
             Matcher m = trimmedEffect.match(STATUS_EFFECT_PATTERN);
             if (!m.find()) continue;
 
             // See comment at STATUS_EFFECT_PATTERN definition for format description of these
-            CodedString prefix = CodedString.of(m.group(1));
-            CodedString name = CodedString.of(m.group(2));
-            CodedString displayedTime = CodedString.of(m.group(3));
+            StyledText prefix = StyledText.of(m.group(1));
+            StyledText name = StyledText.of(m.group(2));
+            StyledText displayedTime = StyledText.of(m.group(3));
             newStatusEffects.add(new StatusEffect(name, displayedTime, prefix));
         }
 

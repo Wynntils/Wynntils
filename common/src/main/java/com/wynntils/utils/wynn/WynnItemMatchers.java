@@ -6,7 +6,7 @@ package com.wynntils.utils.wynn;
 
 import com.wynntils.models.gear.type.GearTier;
 import com.wynntils.utils.mc.LoreUtils;
-import com.wynntils.utils.mc.type.CodedString;
+import com.wynntils.utils.mc.type.StyledText;
 import com.wynntils.utils.type.CappedValue;
 import java.util.List;
 import java.util.regex.Matcher;
@@ -34,7 +34,7 @@ public final class WynnItemMatchers {
      * Returns true if the passed item has an attack speed
      */
     public static boolean isWeapon(ItemStack itemStack) {
-        CodedString lore = LoreUtils.getStringLore(itemStack);
+        StyledText lore = LoreUtils.getStringLore(itemStack);
         return lore.str().contains("Attack Speed") && lore.str().contains("§7");
     }
 

@@ -9,7 +9,7 @@ import com.wynntils.core.components.Managers;
 import com.wynntils.features.map.MapFeature;
 import com.wynntils.models.players.hades.objects.HadesUser;
 import com.wynntils.utils.mc.SkinUtils;
-import com.wynntils.utils.mc.type.CodedString;
+import com.wynntils.utils.mc.type.StyledText;
 import com.wynntils.utils.render.FontRenderer;
 import com.wynntils.utils.render.Texture;
 import com.wynntils.utils.render.buffered.BufferedFontRenderer;
@@ -99,7 +99,7 @@ public class PlayerMainMapPoi extends PlayerPoiBase {
                 .renderText(
                         poseStack,
                         bufferSource,
-                        CodedString.of(user.getName()),
+                        StyledText.of(user.getName()),
                         renderX - (width - playerHeadRenderSize) / 2f,
                         renderY + playerHeadRenderSize + 8,
                         user.getRelationColor(),

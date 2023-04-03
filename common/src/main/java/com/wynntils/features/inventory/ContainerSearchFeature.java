@@ -26,7 +26,7 @@ import com.wynntils.utils.colors.CommonColors;
 import com.wynntils.utils.colors.CustomColor;
 import com.wynntils.utils.mc.ComponentUtils;
 import com.wynntils.utils.mc.McUtils;
-import com.wynntils.utils.mc.type.CodedString;
+import com.wynntils.utils.mc.type.StyledText;
 import com.wynntils.utils.render.RenderUtils;
 import com.wynntils.utils.wynn.ContainerUtils;
 import java.util.Locale;
@@ -71,7 +71,7 @@ public class ContainerSearchFeature extends Feature {
     public void onScreenInit(ScreenInitEvent event) {
         if (!(event.getScreen() instanceof AbstractContainerScreen<?> screen)) return;
 
-        CodedString title = ComponentUtils.getCoded(screen.getTitle());
+        StyledText title = ComponentUtils.getCoded(screen.getTitle());
 
         // This is screen.topPos and screen.leftPos, but they are not calculated yet when this is called
         int renderX = (screen.width - screen.imageWidth) / 2;
@@ -145,7 +145,7 @@ public class ContainerSearchFeature extends Feature {
             guildBankLastSearch = System.currentTimeMillis();
         }
 
-        CodedString name = ComponentUtils.getCoded(abstractContainerScreen
+        StyledText name = ComponentUtils.getCoded(abstractContainerScreen
                 .getMenu()
                 .getItems()
                 .get(currentSearchableContainerType.getNextItemSlot())
@@ -163,7 +163,7 @@ public class ContainerSearchFeature extends Feature {
                 abstractContainerScreen.getMenu().getItems());
     }
 
-    private SearchableContainerType getCurrentSearchableContainerType(CodedString title) {
+    private SearchableContainerType getCurrentSearchableContainerType(StyledText title) {
         SearchableContainerType containerType = SearchableContainerType.getContainerType(title);
 
         if (containerType == SearchableContainerType.BANK && filterInBank.get()) {

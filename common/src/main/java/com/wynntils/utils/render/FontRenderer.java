@@ -10,7 +10,7 @@ import com.wynntils.mc.mixin.accessors.MinecraftAccessor;
 import com.wynntils.utils.colors.CustomColor;
 import com.wynntils.utils.mc.ComponentUtils;
 import com.wynntils.utils.mc.McUtils;
-import com.wynntils.utils.mc.type.CodedString;
+import com.wynntils.utils.mc.type.StyledText;
 import com.wynntils.utils.render.buffered.BufferedFontRenderer;
 import com.wynntils.utils.render.type.HorizontalAlignment;
 import com.wynntils.utils.render.type.TextShadow;
@@ -41,7 +41,7 @@ public final class FontRenderer {
 
     public void renderText(
             PoseStack poseStack,
-            CodedString text,
+            StyledText text,
             float x,
             float y,
             CustomColor customColor,
@@ -70,7 +70,7 @@ public final class FontRenderer {
 
     public void renderText(
             PoseStack poseStack,
-            CodedString text,
+            StyledText text,
             float x,
             float y,
             CustomColor customColor,
@@ -82,7 +82,7 @@ public final class FontRenderer {
 
     public void renderAlignedTextInBox(
             PoseStack poseStack,
-            CodedString text,
+            StyledText text,
             float x1,
             float x2,
             float y1,
@@ -122,7 +122,7 @@ public final class FontRenderer {
 
     public void renderAlignedTextInBox(
             PoseStack poseStack,
-            CodedString text,
+            StyledText text,
             float x1,
             float x2,
             float y1,
@@ -149,7 +149,7 @@ public final class FontRenderer {
 
     public void renderAlignedHighlightedTextInBox(
             PoseStack poseStack,
-            CodedString text,
+            StyledText text,
             float x1,
             float x2,
             float y1,
@@ -206,7 +206,7 @@ public final class FontRenderer {
 
     public void renderAlignedTextInBox(
             PoseStack poseStack,
-            CodedString text,
+            StyledText text,
             float x1,
             float x2,
             float y,
@@ -231,7 +231,7 @@ public final class FontRenderer {
 
     public void renderAlignedTextInBox(
             PoseStack poseStack,
-            CodedString text,
+            StyledText text,
             float x,
             float y1,
             float y2,
@@ -256,7 +256,7 @@ public final class FontRenderer {
 
     public void renderText(
             PoseStack poseStack,
-            CodedString text,
+            StyledText text,
             float x,
             float y,
             float maxWidth,
@@ -275,10 +275,10 @@ public final class FontRenderer {
         // FIXME...
         List<FormattedText> parts = font.getSplitter().splitLines(text.str(), (int) maxWidth, Style.EMPTY);
 
-        CodedString lastPart = CodedString.EMPTY;
+        StyledText lastPart = StyledText.EMPTY;
         for (int i = 0; i < parts.size(); i++) {
             // copy the format codes to this part as well
-            CodedString part = CodedString.of(
+            StyledText part = StyledText.of(
                     ComponentUtils.getLastPartCodes(lastPart) + parts.get(i).getString());
             lastPart = part;
             renderText(
@@ -295,7 +295,7 @@ public final class FontRenderer {
 
     public void renderText(
             PoseStack poseStack,
-            CodedString text,
+            StyledText text,
             float x,
             float y,
             float maxWidth,
@@ -325,7 +325,7 @@ public final class FontRenderer {
             renderText(poseStack, x, currentY, line);
             // If we ask Mojang code the line height of an empty line we get 0 back so replace with space
             currentY += calculateRenderHeight(
-                    line.getText().str().isEmpty() ? CodedString.of(" ") : line.getText(),
+                    line.getText().str().isEmpty() ? StyledText.of(" ") : line.getText(),
                     line.getSetting().maxWidth());
         }
     }
@@ -393,15 +393,15 @@ public final class FontRenderer {
         return height;
     }
 
-    public float calculateRenderHeight(List<CodedString> lines, float maxWidth) {
+    public float calculateRenderHeight(List<StyledText> lines, float maxWidth) {
         int sum = 0;
-        for (CodedString line : lines) {
+        for (StyledText line : lines) {
             sum += font.wordWrapHeight(line.str(), (int) maxWidth);
         }
         return sum;
     }
 
-    public float calculateRenderHeight(CodedString line, float maxWidth) {
+    public float calculateRenderHeight(StyledText line, float maxWidth) {
         return font.wordWrapHeight(line.str(), maxWidth == 0 ? Integer.MAX_VALUE : (int) maxWidth);
     }
 

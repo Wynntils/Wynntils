@@ -14,8 +14,8 @@ import com.wynntils.utils.colors.CommonColors;
 import com.wynntils.utils.colors.CustomColor;
 import com.wynntils.utils.mc.McUtils;
 import com.wynntils.utils.mc.RenderedStringUtils;
-import com.wynntils.utils.mc.type.CodedString;
 import com.wynntils.utils.mc.type.Location;
+import com.wynntils.utils.mc.type.StyledText;
 import com.wynntils.utils.render.FontRenderer;
 import com.wynntils.utils.render.RenderUtils;
 import com.wynntils.utils.render.Texture;
@@ -53,7 +53,7 @@ public class QuestButton extends WynntilsButton {
         FontRenderer.getInstance()
                 .renderText(
                         poseStack,
-                        CodedString.of(RenderedStringUtils.getMaxFittingText(
+                        StyledText.of(RenderedStringUtils.getMaxFittingText(
                                 questInfo.getName(),
                                 maxTextWidth,
                                 FontRenderer.getInstance().getFont())),

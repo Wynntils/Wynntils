@@ -9,7 +9,7 @@ import com.wynntils.core.components.Models;
 import com.wynntils.utils.colors.CommonColors;
 import com.wynntils.utils.colors.CustomColor;
 import com.wynntils.utils.mc.McUtils;
-import com.wynntils.utils.mc.type.CodedString;
+import com.wynntils.utils.mc.type.StyledText;
 import com.wynntils.utils.render.FontRenderer;
 import com.wynntils.utils.render.RenderUtils;
 import com.wynntils.utils.render.type.HorizontalAlignment;
@@ -126,7 +126,7 @@ public class PartyMemberWidget extends AbstractWidget {
             prefix = ChatFormatting.BOLD.toString();
         }
 
-        CodedString formattedPlayerName = CodedString.of(prefix + playerName);
+        StyledText formattedPlayerName = StyledText.of(prefix + playerName);
 
         FontRenderer.getInstance()
                 .renderText(

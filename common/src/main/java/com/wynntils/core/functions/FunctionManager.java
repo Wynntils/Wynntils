@@ -32,7 +32,7 @@ import com.wynntils.functions.generic.LogicFunctions;
 import com.wynntils.functions.generic.MathFunctions;
 import com.wynntils.functions.generic.StringFunctions;
 import com.wynntils.models.emeralds.type.EmeraldUnits;
-import com.wynntils.utils.mc.type.CodedString;
+import com.wynntils.utils.mc.type.StyledText;
 import com.wynntils.utils.type.ErrorOr;
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
@@ -209,7 +209,7 @@ public final class FunctionManager extends Manager {
         return TemplateParser.doFormat(templateString);
     }
 
-    public CodedString[] doFormatLines(String templateString) {
+    public StyledText[] doFormatLines(String templateString) {
         StringBuilder resultBuilder = new StringBuilder();
 
         // Iterate though the string and escape characters
@@ -240,7 +240,7 @@ public final class FunctionManager extends Manager {
         calculatedString = calculatedString.replace("\\[\\", "{");
         calculatedString = calculatedString.replace("\\]\\", "}");
 
-        return Arrays.stream(calculatedString.split("\n")).map(CodedString::of).toArray(CodedString[]::new);
+        return Arrays.stream(calculatedString.split("\n")).map(StyledText::of).toArray(StyledText[]::new);
     }
 
     private String parseColorCodes(String toProcess) {

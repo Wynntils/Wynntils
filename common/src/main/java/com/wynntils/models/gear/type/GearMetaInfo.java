@@ -6,7 +6,7 @@ package com.wynntils.models.gear.type;
 
 import com.wynntils.models.wynnitem.type.ItemMaterial;
 import com.wynntils.models.wynnitem.type.ItemObtainInfo;
-import com.wynntils.utils.mc.type.CodedString;
+import com.wynntils.utils.mc.type.StyledText;
 import java.util.List;
 import java.util.Optional;
 
@@ -16,6 +16,6 @@ public record GearMetaInfo(
         GearRestrictions restrictions,
         ItemMaterial material,
         List<ItemObtainInfo> obtainInfo,
-        Optional<CodedString> lore,
+        Optional<StyledText> lore,
         Optional<String> apiName,
         boolean allowCraftsman) {}

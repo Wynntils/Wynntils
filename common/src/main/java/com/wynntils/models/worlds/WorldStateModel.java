@@ -16,7 +16,7 @@ import com.wynntils.models.worlds.event.WorldStateEvent;
 import com.wynntils.models.worlds.type.WorldState;
 import com.wynntils.utils.mc.ComponentUtils;
 import com.wynntils.utils.mc.PosUtils;
-import com.wynntils.utils.mc.type.CodedString;
+import com.wynntils.utils.mc.type.StyledText;
 import java.util.List;
 import java.util.UUID;
 import java.util.regex.Matcher;
@@ -34,9 +34,9 @@ public final class WorldStateModel extends Model {
     private static final Position CHARACTER_SELECTION_POSITION = new PositionImpl(-1337.5, 16.2, -1120.5);
     private static final Pattern WYNNCRAFT_SERVER_PATTERN = Pattern.compile("^(.*)\\.wynncraft\\.(?:com|net|org)$");
     private static final String WYNNCRAFT_BETA_NAME = "beta";
-    public static final CodedString CHARACTER_SELECTION_TITLE = CodedString.of("§8§lSelect a Character");
+    public static final StyledText CHARACTER_SELECTION_TITLE = StyledText.of("§8§lSelect a Character");
 
-    private CodedString currentTabListFooter = CodedString.EMPTY;
+    private StyledText currentTabListFooter = StyledText.EMPTY;
     private String currentWorldName = "";
     private boolean onBetaServer;
     private boolean hasJoinedAnyWorld = false;
@@ -93,7 +93,7 @@ public final class WorldStateModel extends Model {
         String host = e.getHost();
         onBetaServer = host.equals(WYNNCRAFT_BETA_NAME);
         setState(WorldState.CONNECTING);
-        currentTabListFooter = CodedString.EMPTY;
+        currentTabListFooter = StyledText.EMPTY;
     }
 
     @SubscribeEvent
@@ -125,7 +125,7 @@ public final class WorldStateModel extends Model {
 
     @SubscribeEvent
     public void onTabListFooter(PlayerInfoFooterChangedEvent e) {
-        CodedString footer = e.getFooter();
+        StyledText footer = e.getFooter();
         if (footer.equals(currentTabListFooter)) return;
 
         currentTabListFooter = footer;
@@ -142,7 +142,7 @@ public final class WorldStateModel extends Model {
         if (!e.getId().equals(WORLD_NAME_UUID)) return;
 
         Component displayName = e.getDisplayName();
-        CodedString name = ComponentUtils.getCoded(displayName);
+        StyledText name = ComponentUtils.getCoded(displayName);
         Matcher m = name.match(WORLD_NAME);
         if (m.find()) {
             String worldName = m.group(1);

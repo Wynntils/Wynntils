@@ -11,7 +11,7 @@ import com.wynntils.handlers.container.type.ContainerContent;
 import com.wynntils.utils.mc.ComponentUtils;
 import com.wynntils.utils.mc.LoreUtils;
 import com.wynntils.utils.mc.McUtils;
-import com.wynntils.utils.mc.type.CodedString;
+import com.wynntils.utils.mc.type.StyledText;
 import com.wynntils.utils.wynn.InventoryUtils;
 import java.util.ArrayList;
 import java.util.List;
@@ -34,8 +34,8 @@ public class DiscoveryContainerQueries {
             Pattern.compile("§6Total Discoveries: §r§e\\[(\\d+)/\\d+\\]");
     private static final Pattern SECRET_DISCOVERY_COUNT_PATTERN =
             Pattern.compile("§bTotal Secret Discoveries: §r§3\\[(\\d+)/\\d+\\]");
-    public static final CodedString DISCOVERIES_STRING = CodedString.of("§6§lDiscoveries");
-    public static final CodedString SECRET_DISCOVERIES_STRING = CodedString.of("§b§lSecret Discoveries");
+    public static final StyledText DISCOVERIES_STRING = StyledText.of("§6§lDiscoveries");
+    public static final StyledText SECRET_DISCOVERIES_STRING = StyledText.of("§b§lSecret Discoveries");
 
     private List<DiscoveryInfo> newDiscoveries;
 
@@ -57,7 +57,7 @@ public class DiscoveryContainerQueries {
                     }
 
                     int discoveryCount = -1;
-                    for (CodedString line : LoreUtils.getLore(discoveriesItem)) {
+                    for (StyledText line : LoreUtils.getLore(discoveriesItem)) {
                         Matcher matcher = line.match(DISCOVERY_COUNT_PATTERN);
 
                         if (matcher.matches()) {
@@ -72,7 +72,7 @@ public class DiscoveryContainerQueries {
                         return;
                     }
 
-                    for (CodedString line : LoreUtils.getLore(secretDiscoveriesItem)) {
+                    for (StyledText line : LoreUtils.getLore(secretDiscoveriesItem)) {
                         Matcher matcher = line.match(SECRET_DISCOVERY_COUNT_PATTERN);
 
                         if (matcher.matches()) {
@@ -173,7 +173,7 @@ public class DiscoveryContainerQueries {
         return "^§0\\[Pg. \\d+\\] §8.*§0 Discoveries$";
     }
 
-    private CodedString getNextPageButtonName(int nextPageNum) {
-        return CodedString.of("[§f§lPage " + nextPageNum + "§a >§2>§a>§2>§a>]");
+    private StyledText getNextPageButtonName(int nextPageNum) {
+        return StyledText.of("[§f§lPage " + nextPageNum + "§a >§2>§a>§2>§a>]");
     }
 }

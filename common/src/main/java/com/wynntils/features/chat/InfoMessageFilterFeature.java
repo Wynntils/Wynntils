@@ -12,7 +12,7 @@ import com.wynntils.core.features.Feature;
 import com.wynntils.handlers.chat.event.ChatMessageReceivedEvent;
 import com.wynntils.handlers.chat.type.MessageType;
 import com.wynntils.handlers.chat.type.RecipientType;
-import com.wynntils.utils.mc.type.CodedString;
+import com.wynntils.utils.mc.type.StyledText;
 import java.util.regex.Pattern;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 
@@ -57,7 +57,7 @@ public class InfoMessageFilterFeature extends Feature {
     public void onInfoMessage(ChatMessageReceivedEvent e) {
         if (e.getRecipientType() != RecipientType.INFO) return;
 
-        CodedString msg = e.getOriginalCodedMessage();
+        StyledText msg = e.getOriginalCodedMessage();
         MessageType messageType = e.getMessageType();
 
         if (messageType == MessageType.FOREGROUND) {

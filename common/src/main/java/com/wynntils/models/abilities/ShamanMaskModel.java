@@ -12,7 +12,7 @@ import com.wynntils.models.abilities.type.ShamanMaskType;
 import com.wynntils.models.worlds.WorldStateModel;
 import com.wynntils.models.worlds.event.WorldStateEvent;
 import com.wynntils.utils.mc.ComponentUtils;
-import com.wynntils.utils.mc.type.CodedString;
+import com.wynntils.utils.mc.type.StyledText;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -29,7 +29,7 @@ public final class ShamanMaskModel extends Model {
 
     @SubscribeEvent
     public void onTitle(SubtitleSetTextEvent event) {
-        CodedString title = ComponentUtils.getCoded(event.getComponent());
+        StyledText title = ComponentUtils.getCoded(event.getComponent());
 
         if (title.str().contains("Mask of the ") || title.str().contains("➤")) {
             parseMask(title);
@@ -47,7 +47,7 @@ public final class ShamanMaskModel extends Model {
         currentMaskType = ShamanMaskType.NONE;
     }
 
-    private void parseMask(CodedString title) {
+    private void parseMask(StyledText title) {
         Matcher matcher = title.match(MASK_PATTERN);
 
         ShamanMaskType parsedMask = ShamanMaskType.NONE;

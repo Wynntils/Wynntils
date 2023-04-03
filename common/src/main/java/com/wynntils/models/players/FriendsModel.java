@@ -17,7 +17,7 @@ import com.wynntils.models.worlds.event.WorldStateEvent;
 import com.wynntils.models.worlds.type.WorldState;
 import com.wynntils.utils.mc.ComponentUtils;
 import com.wynntils.utils.mc.McUtils;
-import com.wynntils.utils.mc.type.CodedString;
+import com.wynntils.utils.mc.type.StyledText;
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
@@ -79,7 +79,7 @@ public final class FriendsModel extends Model {
     public void onChatReceived(ChatMessageReceivedEvent event) {
         if (event.getMessageType() != MessageType.FOREGROUND) return;
 
-        CodedString coded = event.getOriginalCodedMessage();
+        StyledText coded = event.getOriginalCodedMessage();
         String unformatted = ComponentUtils.stripFormatting(coded);
 
         Matcher joinMatcher = coded.match(JOIN_PATTERN);
@@ -111,7 +111,7 @@ public final class FriendsModel extends Model {
         }
     }
 
-    private boolean tryParseNoFriendList(CodedString coded) {
+    private boolean tryParseNoFriendList(StyledText coded) {
         if (coded.match(FRIEND_LIST_FAIL_2).matches()) {
             WynntilsMod.info("Friend list is empty.");
             return true;
@@ -120,7 +120,7 @@ public final class FriendsModel extends Model {
         return false;
     }
 
-    private boolean tryParseFriendMessages(CodedString coded) {
+    private boolean tryParseFriendMessages(StyledText coded) {
         Matcher matcher = coded.match(FRIEND_REMOVE_MESSAGE_PATTERN);
         if (matcher.matches()) {
             String player = matcher.group(1);

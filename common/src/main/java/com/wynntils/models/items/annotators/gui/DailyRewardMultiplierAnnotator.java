@@ -8,17 +8,17 @@ import com.wynntils.handlers.item.ItemAnnotation;
 import com.wynntils.handlers.item.ItemAnnotator;
 import com.wynntils.models.items.items.gui.DailyRewardItem;
 import com.wynntils.utils.mc.LoreUtils;
-import com.wynntils.utils.mc.type.CodedString;
+import com.wynntils.utils.mc.type.StyledText;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import net.minecraft.world.item.ItemStack;
 
 public final class DailyRewardMultiplierAnnotator implements ItemAnnotator {
-    private static final CodedString DAILY_REWARD_NAME = CodedString.of("§6§lDaily Reward");
+    private static final StyledText DAILY_REWARD_NAME = StyledText.of("§6§lDaily Reward");
     private static final Pattern STREAK_PATTERN = Pattern.compile("^§e✦ Streak Multiplier: §r§f(\\d+)x$");
 
     @Override
-    public ItemAnnotation getAnnotation(ItemStack itemStack, CodedString name) {
+    public ItemAnnotation getAnnotation(ItemStack itemStack, StyledText name) {
         if (!name.equals(DAILY_REWARD_NAME)) return null;
 
         Matcher matcher = LoreUtils.matchLoreLine(itemStack, 3, STREAK_PATTERN);

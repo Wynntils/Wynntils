@@ -14,7 +14,7 @@ import com.wynntils.core.notifications.MessageContainer;
 import com.wynntils.mc.event.SubtitleSetTextEvent;
 import com.wynntils.models.worlds.event.WorldStateEvent;
 import com.wynntils.utils.mc.ComponentUtils;
-import com.wynntils.utils.mc.type.CodedString;
+import com.wynntils.utils.mc.type.StyledText;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import net.minecraft.network.chat.Component;
@@ -51,18 +51,18 @@ public class InventoryRedirectFeature extends Feature {
         }
 
         Component component = event.getComponent();
-        CodedString codedString = ComponentUtils.getCoded(component);
+        StyledText styledText = ComponentUtils.getCoded(component);
 
         if (redirectIngredientPouch.get()) {
-            if (codedString.match(INGREDIENT_POUCH_PICKUP_PATTERN).matches()) {
+            if (styledText.match(INGREDIENT_POUCH_PICKUP_PATTERN).matches()) {
                 event.setCanceled(true);
-                Managers.Notification.queueMessage(codedString);
+                Managers.Notification.queueMessage(styledText);
                 return;
             }
         }
 
         if (redirectEmeraldPouch.get()) {
-            Matcher matcher = codedString.match(EMERALD_POUCH_PICKUP_PATTERN);
+            Matcher matcher = styledText.match(EMERALD_POUCH_PICKUP_PATTERN);
             if (matcher.matches()) {
                 event.setCanceled(true);
 
@@ -71,9 +71,9 @@ public class InventoryRedirectFeature extends Feature {
                 // Edit the first message it gave us with the new amount
                 // editMessage doesn't return the new MessageContainer, so we can just keep re-using the first one
                 if (lastEmeraldPouchPickup > System.currentTimeMillis() - 3000 && emeraldPouchMessage != null) {
-                    emeraldPouchMessage = Managers.Notification.editMessage(emeraldPouchMessage, codedString);
+                    emeraldPouchMessage = Managers.Notification.editMessage(emeraldPouchMessage, styledText);
                 } else {
-                    emeraldPouchMessage = Managers.Notification.queueMessage(codedString);
+                    emeraldPouchMessage = Managers.Notification.queueMessage(styledText);
                 }
 
                 lastEmeraldPouchPickup = System.currentTimeMillis();
@@ -83,11 +83,11 @@ public class InventoryRedirectFeature extends Feature {
         }
 
         if (redirectPotionStack.get()) {
-            Matcher matcher = codedString.match(POTION_STACK_PATTERN);
+            Matcher matcher = styledText.match(POTION_STACK_PATTERN);
             if (matcher.matches()) {
                 event.setCanceled(true);
                 String potionCount = matcher.group(1);
-                CodedString potionMessage = CodedString.of(String.format("§a+%s Potion Charges", potionCount));
+                StyledText potionMessage = StyledText.of(String.format("§a+%s Potion Charges", potionCount));
                 Managers.Notification.queueMessage(potionMessage);
 
                 return;

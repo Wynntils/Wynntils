@@ -16,13 +16,13 @@ import com.wynntils.models.worlds.type.WorldState;
 import com.wynntils.screens.characterselector.CharacterSelectorScreen;
 import com.wynntils.utils.mc.ComponentUtils;
 import com.wynntils.utils.mc.McUtils;
-import com.wynntils.utils.mc.type.CodedString;
+import com.wynntils.utils.mc.type.StyledText;
 import net.minecraftforge.eventbus.api.EventPriority;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 
 @ConfigCategory(Category.UI)
 public class CustomCharacterSelectionScreenFeature extends Feature {
-    public static final CodedString CHARACTER_SELECTION_TITLE = CodedString.of("§8§lSelect a Character");
+    public static final StyledText CHARACTER_SELECTION_TITLE = StyledText.of("§8§lSelect a Character");
 
     @RegisterConfig
     public final Config<Boolean> onlyOpenOnce = new Config<>(false);

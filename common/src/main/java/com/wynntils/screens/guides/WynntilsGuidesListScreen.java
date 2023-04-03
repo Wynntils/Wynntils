@@ -17,7 +17,7 @@ import com.wynntils.screens.wynntilsmenu.WynntilsMenuScreen;
 import com.wynntils.utils.StringUtils;
 import com.wynntils.utils.colors.CommonColors;
 import com.wynntils.utils.mc.ComponentUtils;
-import com.wynntils.utils.mc.type.CodedString;
+import com.wynntils.utils.mc.type.StyledText;
 import com.wynntils.utils.render.FontRenderer;
 import com.wynntils.utils.render.Texture;
 import com.wynntils.utils.render.type.HorizontalAlignment;
@@ -97,7 +97,7 @@ public final class WynntilsGuidesListScreen extends WynntilsListScreen<Screen, G
         FontRenderer.getInstance()
                 .renderAlignedTextInBox(
                         poseStack,
-                        CodedString.of(description),
+                        StyledText.of(description),
                         20,
                         Texture.QUEST_BOOK_BACKGROUND.width() / 2f - 10,
                         80,

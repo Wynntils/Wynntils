@@ -9,7 +9,7 @@ import com.wynntils.core.events.MixinHelper;
 import com.wynntils.handlers.item.ItemAnnotation;
 import com.wynntils.mc.event.ItemTooltipFlagsEvent;
 import com.wynntils.mc.extension.ItemStackExtension;
-import com.wynntils.utils.mc.type.CodedString;
+import com.wynntils.utils.mc.type.StyledText;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
 import org.spongepowered.asm.mixin.Mixin;
@@ -23,7 +23,7 @@ public abstract class ItemStackMixin implements ItemStackExtension {
     private ItemAnnotation wynntilsAnnotation;
 
     @Unique
-    private CodedString wynntilsOriginalName;
+    private StyledText wynntilsOriginalName;
 
     @ModifyExpressionValue(
             method =
@@ -65,13 +65,13 @@ public abstract class ItemStackMixin implements ItemStackExtension {
 
     @Override
     @Unique
-    public CodedString getOriginalName() {
+    public StyledText getOriginalName() {
         return this.wynntilsOriginalName;
     }
 
     @Override
     @Unique
-    public void setOriginalName(CodedString name) {
+    public void setOriginalName(StyledText name) {
         this.wynntilsOriginalName = name;
     }
 }

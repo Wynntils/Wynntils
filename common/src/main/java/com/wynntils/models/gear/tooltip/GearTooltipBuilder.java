@@ -13,7 +13,7 @@ import com.wynntils.models.stats.type.StatListOrdering;
 import com.wynntils.models.wynnitem.parsing.WynnItemParser;
 import com.wynntils.utils.mc.ComponentUtils;
 import com.wynntils.utils.mc.LoreUtils;
-import com.wynntils.utils.mc.type.CodedString;
+import com.wynntils.utils.mc.type.StyledText;
 import com.wynntils.utils.type.Pair;
 import java.util.ArrayList;
 import java.util.List;
@@ -107,7 +107,7 @@ public final class GearTooltipBuilder {
         boolean headerEnded = false;
         boolean footerStarted = false;
         for (Component loreLine : lore) {
-            CodedString codedLine = ComponentUtils.getCoded(loreLine).getNormalized();
+            StyledText codedLine = ComponentUtils.getCoded(loreLine).getNormalized();
 
             if (!footerStarted) {
                 Matcher setBonusMatcher = codedLine.match(WynnItemParser.SET_BONUS_PATTEN);

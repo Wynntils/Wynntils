@@ -9,7 +9,7 @@ import com.wynntils.screens.base.widgets.WynntilsButton;
 import com.wynntils.utils.colors.CommonColors;
 import com.wynntils.utils.colors.CustomColor;
 import com.wynntils.utils.mc.ComponentUtils;
-import com.wynntils.utils.mc.type.CodedString;
+import com.wynntils.utils.mc.type.StyledText;
 import com.wynntils.utils.render.FontRenderer;
 import com.wynntils.utils.render.RenderUtils;
 import com.wynntils.utils.render.type.HorizontalAlignment;
@@ -51,7 +51,7 @@ public class GeneralSettingsButton extends WynntilsButton {
         FontRenderer.getInstance()
                 .renderAlignedTextInBox(
                         poseStack,
-                        CodedString.of(title),
+                        StyledText.of(title),
                         this.getX(),
                         this.getX() + this.width,
                         this.getY(),

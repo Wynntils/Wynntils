@@ -17,7 +17,7 @@ import com.wynntils.models.spells.type.SpellDirection;
 import com.wynntils.models.worlds.event.WorldStateEvent;
 import com.wynntils.utils.mc.LoreUtils;
 import com.wynntils.utils.mc.McUtils;
-import com.wynntils.utils.mc.type.CodedString;
+import com.wynntils.utils.mc.type.StyledText;
 import com.wynntils.utils.wynn.WynnItemMatchers;
 import java.util.Arrays;
 import java.util.LinkedList;
@@ -105,10 +105,10 @@ public class QuickCastFeature extends Feature {
             return;
         }
 
-        List<CodedString> loreLines = LoreUtils.getLore(heldItem);
+        List<StyledText> loreLines = LoreUtils.getLore(heldItem);
 
         boolean isArcher = false;
-        for (CodedString lore : loreLines) {
+        for (StyledText lore : loreLines) {
             if (lore.str().contains("Archer/Hunter")) isArcher = true;
             Matcher matcher = lore.match(INCORRECT_CLASS_PATTERN);
             if (!matcher.matches()) continue;
@@ -116,7 +116,7 @@ public class QuickCastFeature extends Feature {
             return;
         }
 
-        for (CodedString lore : loreLines) {
+        for (StyledText lore : loreLines) {
             Matcher matcher = lore.match(LVL_MIN_NOT_REACHED_PATTERN);
             if (!matcher.matches()) continue;
             sendCancelReason(Component.translatable(

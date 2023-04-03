@@ -11,8 +11,8 @@ import com.wynntils.models.quests.type.QuestStatus;
 import com.wynntils.utils.StringUtils;
 import com.wynntils.utils.mc.ComponentUtils;
 import com.wynntils.utils.mc.RenderedStringUtils;
-import com.wynntils.utils.mc.type.CodedString;
 import com.wynntils.utils.mc.type.Location;
+import com.wynntils.utils.mc.type.StyledText;
 import com.wynntils.utils.type.Pair;
 import java.util.ArrayList;
 import java.util.List;
@@ -42,7 +42,7 @@ public class QuestInfo {
 
     // Quest progress can change over time
     private final QuestStatus status;
-    private CodedString nextTask;
+    private StyledText nextTask;
     private final boolean tracked;
 
     protected QuestInfo(
@@ -50,7 +50,7 @@ public class QuestInfo {
             QuestStatus status,
             QuestLength length,
             int level,
-            CodedString nextTask,
+            StyledText nextTask,
             List<Pair<String, Integer>> additionalRequirements,
             boolean isMiniQuest,
             int pageNumber,
@@ -102,11 +102,11 @@ public class QuestInfo {
                 : additionalRequirements.get(0).b();
     }
 
-    public CodedString getNextTask() {
+    public StyledText getNextTask() {
         return nextTask;
     }
 
-    public void setNextTask(CodedString nextTask) {
+    public void setNextTask(StyledText nextTask) {
         this.nextTask = nextTask;
     }
 
@@ -194,10 +194,10 @@ public class QuestInfo {
 
         if (questInfo.getStatus() != QuestStatus.COMPLETED) {
             tooltipLines.add(Component.literal(""));
-            CodedString nextTask = questInfo.getNextTask();
-            CodedString[] lines = RenderedStringUtils.wrapTextBySize(nextTask, NEXT_TASK_MAX_WIDTH);
+            StyledText nextTask = questInfo.getNextTask();
+            StyledText[] lines = RenderedStringUtils.wrapTextBySize(nextTask, NEXT_TASK_MAX_WIDTH);
 
-            for (CodedString line : lines) {
+            for (StyledText line : lines) {
                 tooltipLines.add(line.asComponent().withStyle(ChatFormatting.GRAY));
             }
         }

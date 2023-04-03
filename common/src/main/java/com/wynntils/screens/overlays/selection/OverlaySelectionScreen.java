@@ -12,7 +12,7 @@ import com.wynntils.screens.overlays.placement.OverlayManagementScreen;
 import com.wynntils.screens.wynntilsmenu.WynntilsMenuScreen;
 import com.wynntils.utils.colors.CommonColors;
 import com.wynntils.utils.mc.McUtils;
-import com.wynntils.utils.mc.type.CodedString;
+import com.wynntils.utils.mc.type.StyledText;
 import com.wynntils.utils.render.FontRenderer;
 import com.wynntils.utils.render.Texture;
 import com.wynntils.utils.render.type.HorizontalAlignment;
@@ -90,7 +90,7 @@ public final class OverlaySelectionScreen extends WynntilsScreen {
         FontRenderer.getInstance()
                 .renderText(
                         poseStack,
-                        CodedString.of(I18n.get("screens.wynntils.overlaySelection.overlays")),
+                        StyledText.of(I18n.get("screens.wynntils.overlaySelection.overlays")),
                         5,
                         4,
                         CommonColors.WHITE,

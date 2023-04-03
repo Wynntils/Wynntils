@@ -5,14 +5,14 @@
 package com.wynntils.mc.extension;
 
 import com.wynntils.handlers.item.ItemAnnotation;
-import com.wynntils.utils.mc.type.CodedString;
+import com.wynntils.utils.mc.type.StyledText;
 
 public interface ItemStackExtension {
     ItemAnnotation getAnnotation();
 
     void setAnnotation(ItemAnnotation annotation);
 
-    CodedString getOriginalName();
+    StyledText getOriginalName();
 
-    void setOriginalName(CodedString name);
+    void setOriginalName(StyledText name);
 }

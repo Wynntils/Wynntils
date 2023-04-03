@@ -15,39 +15,39 @@ import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
 
-public class CodedString {
-    public static final CodedString EMPTY = new CodedString("");
+public class StyledText {
+    public static final StyledText EMPTY = new StyledText("");
 
     private final String str;
 
-    public CodedString(String str) {
+    public StyledText(String str) {
         this.str = str;
     }
 
-    public static CodedString of(String s) {
-        return new CodedString(s);
+    public static StyledText of(String s) {
+        return new StyledText(s);
     }
 
-    public static CodedString fromComponent(Component component) {
-        return CodedString.of(component.getString());
+    public static StyledText fromComponent(Component component) {
+        return StyledText.of(component.getString());
     }
 
-    public static CodedString join(List<CodedString> strings, String delimiter) {
-        return CodedString.of(
-                String.join(delimiter, strings.stream().map(CodedString::str).toList()));
+    public static StyledText join(List<StyledText> strings, String delimiter) {
+        return StyledText.of(
+                String.join(delimiter, strings.stream().map(StyledText::str).toList()));
     }
 
-    public static CodedString join(CodedString[] strings, String delimiter) {
-        return CodedString.of(String.join(
-                delimiter, Arrays.stream(strings).map(CodedString::str).toList()));
+    public static StyledText join(StyledText[] strings, String delimiter) {
+        return StyledText.of(String.join(
+                delimiter, Arrays.stream(strings).map(StyledText::str).toList()));
     }
 
-    public static CodedString concat(CodedString... str) {
-        return CodedString.of(Arrays.stream(str).map(CodedString::str).collect(Collectors.joining()));
+    public static StyledText concat(StyledText... str) {
+        return StyledText.of(Arrays.stream(str).map(StyledText::str).collect(Collectors.joining()));
     }
 
-    public CodedString[] split(String regex) {
-        return Arrays.stream(str.split(regex)).map(CodedString::of).toArray(CodedString[]::new);
+    public StyledText[] split(String regex) {
+        return Arrays.stream(str.split(regex)).map(StyledText::of).toArray(StyledText[]::new);
     }
 
     public MutableComponent asComponent() {
@@ -58,8 +58,8 @@ public class CodedString {
         return str;
     }
 
-    public CodedString getNormalized() {
-        return new CodedString(WynnUtils.normalizeBadString(str));
+    public StyledText getNormalized() {
+        return new StyledText(WynnUtils.normalizeBadString(str));
     }
 
     public Matcher match(Pattern pattern) {
@@ -79,7 +79,7 @@ public class CodedString {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        CodedString that = (CodedString) o;
+        StyledText that = (StyledText) o;
         return Objects.equals(str, that.str);
     }
 

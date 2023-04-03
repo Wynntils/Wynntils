@@ -9,7 +9,7 @@ import com.wynntils.handlers.item.ItemAnnotator;
 import com.wynntils.models.elements.type.Skill;
 import com.wynntils.models.items.items.gui.SkillPointItem;
 import com.wynntils.utils.mc.LoreUtils;
-import com.wynntils.utils.mc.type.CodedString;
+import com.wynntils.utils.mc.type.StyledText;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import net.minecraft.world.item.ItemStack;
@@ -19,7 +19,7 @@ public final class SkillPointAnnotator implements ItemAnnotator {
     private static final Pattern LORE_PATTERN = Pattern.compile("^§7[ À]+(-?\\d+) points?[ À]+§r§6-?\\d+ points?$");
 
     @Override
-    public ItemAnnotation getAnnotation(ItemStack itemStack, CodedString name) {
+    public ItemAnnotation getAnnotation(ItemStack itemStack, StyledText name) {
         Matcher matcher = name.match(SKILL_POINT_PATTERN);
         if (!matcher.matches()) return null;
 

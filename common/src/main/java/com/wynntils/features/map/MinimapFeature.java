@@ -32,7 +32,7 @@ import com.wynntils.utils.StringUtils;
 import com.wynntils.utils.colors.CommonColors;
 import com.wynntils.utils.colors.CustomColor;
 import com.wynntils.utils.mc.McUtils;
-import com.wynntils.utils.mc.type.CodedString;
+import com.wynntils.utils.mc.type.StyledText;
 import com.wynntils.utils.render.FontRenderer;
 import com.wynntils.utils.render.MapRenderer;
 import com.wynntils.utils.render.RenderUtils;
@@ -376,7 +376,7 @@ public class MinimapFeature extends Feature {
                     2 * h + 1);
             fontRenderer.renderText(
                     poseStack,
-                    CodedString.of(text),
+                    StyledText.of(text),
                     compassRenderX,
                     compassRenderZ - 3f,
                     CommonColors.WHITE,

@@ -12,7 +12,7 @@ import com.wynntils.screens.overlays.placement.OverlayManagementScreen;
 import com.wynntils.utils.colors.CommonColors;
 import com.wynntils.utils.colors.CustomColor;
 import com.wynntils.utils.mc.McUtils;
-import com.wynntils.utils.mc.type.CodedString;
+import com.wynntils.utils.mc.type.StyledText;
 import com.wynntils.utils.render.FontRenderer;
 import com.wynntils.utils.render.RenderUtils;
 import com.wynntils.utils.render.type.HorizontalAlignment;
@@ -73,7 +73,7 @@ public class OverlayEntry extends ContainerObjectSelectionList.Entry<OverlayEntr
         FontRenderer.getInstance()
                 .renderText(
                         poseStack,
-                        CodedString.of(translatedName),
+                        StyledText.of(translatedName),
                         3,
                         (OverlayList.getItemHeight() - renderHeightForOverlayName / 2f) / 2f - PADDING / 2f,
                         width - PADDING,

@@ -14,7 +14,7 @@ import com.wynntils.core.config.RegisterConfig;
 import com.wynntils.mc.event.TickEvent;
 import com.wynntils.utils.colors.CommonColors;
 import com.wynntils.utils.colors.CustomColor;
-import com.wynntils.utils.mc.type.CodedString;
+import com.wynntils.utils.mc.type.StyledText;
 import com.wynntils.utils.render.FontRenderer;
 import com.wynntils.utils.render.buffered.BufferedFontRenderer;
 import com.wynntils.utils.render.type.HorizontalAlignment;
@@ -30,7 +30,7 @@ public abstract class TextOverlay extends DynamicOverlay {
     @RegisterConfig("overlay.wynntils.textOverlay.textShadow")
     public final Config<TextShadow> textShadow = new Config<>(TextShadow.OUTLINE);
 
-    protected CodedString[] cachedLines = new CodedString[0];
+    protected StyledText[] cachedLines = new StyledText[0];
 
     protected TextOverlay(OverlayPosition position, float width, float height) {
         super(position, width, height, 1);
@@ -76,10 +76,10 @@ public abstract class TextOverlay extends DynamicOverlay {
     }
 
     protected void renderTemplate(
-            PoseStack poseStack, MultiBufferSource bufferSource, CodedString[] lines, float textScale) {
+            PoseStack poseStack, MultiBufferSource bufferSource, StyledText[] lines, float textScale) {
         float renderX = this.getRenderX();
         float renderY = this.getRenderY();
-        for (CodedString line : lines) {
+        for (StyledText line : lines) {
             BufferedFontRenderer.getInstance()
                     .renderAlignedTextInBox(
                             poseStack,
@@ -107,7 +107,7 @@ public abstract class TextOverlay extends DynamicOverlay {
         cachedLines = calculateTemplateValue(getTemplate());
     }
 
-    protected CodedString[] calculateTemplateValue(String template) {
+    protected StyledText[] calculateTemplateValue(String template) {
         return Managers.Function.doFormatLines(template);
     }
 

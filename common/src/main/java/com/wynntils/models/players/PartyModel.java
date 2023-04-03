@@ -19,7 +19,7 @@ import com.wynntils.models.worlds.event.WorldStateEvent;
 import com.wynntils.models.worlds.type.WorldState;
 import com.wynntils.utils.mc.ComponentUtils;
 import com.wynntils.utils.mc.McUtils;
-import com.wynntils.utils.mc.type.CodedString;
+import com.wynntils.utils.mc.type.StyledText;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -110,7 +110,7 @@ public final class PartyModel extends Model {
     public void onChatReceived(ChatMessageReceivedEvent event) {
         if (event.getMessageType() != MessageType.FOREGROUND) return;
 
-        CodedString coded = event.getOriginalCodedMessage();
+        StyledText coded = event.getOriginalCodedMessage();
 
         if (tryParsePartyMessages(coded)) {
             return;
@@ -125,7 +125,7 @@ public final class PartyModel extends Model {
         }
     }
 
-    private boolean tryParsePartyMessages(CodedString coded) {
+    private boolean tryParsePartyMessages(StyledText coded) {
         if (coded.match(PARTY_CREATE_SELF).matches()) {
             WynntilsMod.info("Player created a new party.");
 
@@ -250,7 +250,7 @@ public final class PartyModel extends Model {
         return false;
     }
 
-    private boolean tryParseNoPartyMessage(CodedString coded) {
+    private boolean tryParseNoPartyMessage(StyledText coded) {
         if (coded.match(PARTY_LIST_SELF_FAILED).matches()) {
             resetData();
             WynntilsMod.info("Player is not in a party.");
@@ -260,7 +260,7 @@ public final class PartyModel extends Model {
         return false;
     }
 
-    private boolean tryParsePartyList(CodedString coded) {
+    private boolean tryParsePartyList(StyledText coded) {
         Matcher matcher = coded.match(PARTY_LIST_ALL);
         if (!matcher.matches()) return false;
 
@@ -273,7 +273,7 @@ public final class PartyModel extends Model {
                 partyLeader = m.group(1);
             }
 
-            partyMembers.add(ComponentUtils.stripFormatting(new CodedString(member)));
+            partyMembers.add(ComponentUtils.stripFormatting(new StyledText(member)));
         }
 
         inParty = true;

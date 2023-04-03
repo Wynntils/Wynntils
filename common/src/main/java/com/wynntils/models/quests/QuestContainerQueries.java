@@ -9,7 +9,7 @@ import com.wynntils.core.components.Models;
 import com.wynntils.handlers.container.ScriptedContainerQuery;
 import com.wynntils.handlers.container.type.ContainerContent;
 import com.wynntils.utils.mc.McUtils;
-import com.wynntils.utils.mc.type.CodedString;
+import com.wynntils.utils.mc.type.StyledText;
 import com.wynntils.utils.wynn.ContainerUtils;
 import com.wynntils.utils.wynn.InventoryUtils;
 import java.util.ArrayList;
@@ -85,8 +85,8 @@ public class QuestContainerQueries {
         }
     }
 
-    private CodedString getNextPageButtonName(int nextPageNum) {
-        return CodedString.of("[§f§lPage " + nextPageNum + "§a >§2>§a>§2>§a>]");
+    private StyledText getNextPageButtonName(int nextPageNum) {
+        return StyledText.of("[§f§lPage " + nextPageNum + "§a >§2>§a>§2>§a>]");
     }
 
     protected void queryMiniQuests() {

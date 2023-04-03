@@ -10,7 +10,7 @@ import com.wynntils.handlers.chat.event.ChatMessageReceivedEvent;
 import com.wynntils.handlers.chat.type.RecipientType;
 import com.wynntils.handlers.scoreboard.ScoreboardPart;
 import com.wynntils.handlers.scoreboard.ScoreboardSegment;
-import com.wynntils.utils.mc.type.CodedString;
+import com.wynntils.utils.mc.type.StyledText;
 import com.wynntils.utils.type.Pair;
 import com.wynntils.utils.type.TimedSet;
 import java.util.ArrayList;
@@ -78,7 +78,7 @@ public final class GuildAttackTimerModel extends Model {
     void processChanges(ScoreboardSegment segment) {
         List<TerritoryAttackTimer> newList = new ArrayList<>();
 
-        for (CodedString line : segment.getContent()) {
+        for (StyledText line : segment.getContent()) {
             Matcher matcher = line.match(GUILD_ATTACK_PATTERN);
 
             if (matcher.matches()) {

@@ -10,7 +10,7 @@ import com.wynntils.utils.colors.CommonColors;
 import com.wynntils.utils.colors.CustomColor;
 import com.wynntils.utils.mc.ComponentUtils;
 import com.wynntils.utils.mc.McUtils;
-import com.wynntils.utils.mc.type.CodedString;
+import com.wynntils.utils.mc.type.StyledText;
 import com.wynntils.utils.render.FontRenderer;
 import com.wynntils.utils.render.TextRenderTask;
 import com.wynntils.utils.render.type.HorizontalAlignment;
@@ -44,7 +44,7 @@ public final class BufferedFontRenderer {
     public void renderText(
             PoseStack poseStack,
             MultiBufferSource bufferSource,
-            CodedString text,
+            StyledText text,
             float x,
             float y,
             CustomColor customColor,
@@ -172,7 +172,7 @@ public final class BufferedFontRenderer {
     public void renderAlignedTextInBox(
             PoseStack poseStack,
             MultiBufferSource bufferSource,
-            CodedString text,
+            StyledText text,
             float x1,
             float x2,
             float y1,
@@ -214,7 +214,7 @@ public final class BufferedFontRenderer {
     public void renderAlignedTextInBox(
             PoseStack poseStack,
             MultiBufferSource bufferSource,
-            CodedString text,
+            StyledText text,
             float x1,
             float x2,
             float y1,
@@ -243,7 +243,7 @@ public final class BufferedFontRenderer {
     public void renderAlignedTextInBox(
             PoseStack poseStack,
             MultiBufferSource bufferSource,
-            CodedString text,
+            StyledText text,
             float x1,
             float x2,
             float y,
@@ -270,7 +270,7 @@ public final class BufferedFontRenderer {
     public void renderAlignedTextInBox(
             PoseStack poseStack,
             MultiBufferSource bufferSource,
-            CodedString text,
+            StyledText text,
             float x,
             float y1,
             float y2,
@@ -297,7 +297,7 @@ public final class BufferedFontRenderer {
     public void renderText(
             PoseStack poseStack,
             MultiBufferSource bufferSource,
-            CodedString text,
+            StyledText text,
             float x,
             float y,
             CustomColor customColor,
@@ -311,7 +311,7 @@ public final class BufferedFontRenderer {
     public void renderText(
             PoseStack poseStack,
             MultiBufferSource bufferSource,
-            CodedString text,
+            StyledText text,
             float x,
             float y,
             float maxWidth,
@@ -340,10 +340,10 @@ public final class BufferedFontRenderer {
         // FIXME..?
         List<FormattedText> parts = font.getSplitter().splitLines(text.str(), (int) maxWidth, Style.EMPTY);
 
-        CodedString lastPart = CodedString.EMPTY;
+        StyledText lastPart = StyledText.EMPTY;
         for (int i = 0; i < parts.size(); i++) {
             // copy the format codes to this part as well
-            CodedString part = CodedString.of(
+            StyledText part = StyledText.of(
                     ComponentUtils.getLastPartCodes(lastPart) + parts.get(i).getString());
             lastPart = part;
             renderText(
@@ -394,7 +394,7 @@ public final class BufferedFontRenderer {
             // If we ask Mojang code the line height of an empty line we get 0 back so replace with space
             currentY += FontRenderer.getInstance()
                     .calculateRenderHeight(
-                            line.getText().str().isEmpty() ? CodedString.of(" ") : line.getText(),
+                            line.getText().str().isEmpty() ? StyledText.of(" ") : line.getText(),
                             line.getSetting().maxWidth());
         }
     }
@@ -416,7 +416,7 @@ public final class BufferedFontRenderer {
     public void renderText(
             PoseStack poseStack,
             MultiBufferSource bufferSource,
-            CodedString text,
+            StyledText text,
             float x,
             float y,
             float maxWidth,

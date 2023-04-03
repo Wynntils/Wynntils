@@ -16,7 +16,7 @@ import com.wynntils.utils.colors.CommonColors;
 import com.wynntils.utils.colors.CustomColor;
 import com.wynntils.utils.mc.McUtils;
 import com.wynntils.utils.mc.RenderedStringUtils;
-import com.wynntils.utils.mc.type.CodedString;
+import com.wynntils.utils.mc.type.StyledText;
 import com.wynntils.utils.render.FontRenderer;
 import com.wynntils.utils.render.RenderUtils;
 import com.wynntils.utils.render.type.HorizontalAlignment;
@@ -110,7 +110,7 @@ public class PoiManagerWidget extends AbstractWidget {
         FontRenderer.getInstance()
                 .renderText(
                         poseStack,
-                        CodedString.of(poiName),
+                        StyledText.of(poiName),
                         this.width / 2f - 130,
                         60 + 20 * row,
                         color,
@@ -121,7 +121,7 @@ public class PoiManagerWidget extends AbstractWidget {
         FontRenderer.getInstance()
                 .renderText(
                         poseStack,
-                        CodedString.of(String.valueOf(poi.getLocation().getX())),
+                        StyledText.of(String.valueOf(poi.getLocation().getX())),
                         this.width / 2f - 15,
                         60 + 20 * row,
                         color,
@@ -134,7 +134,7 @@ public class PoiManagerWidget extends AbstractWidget {
         FontRenderer.getInstance()
                 .renderText(
                         poseStack,
-                        y.isPresent() ? CodedString.of(String.valueOf(y.get())) : CodedString.EMPTY,
+                        y.isPresent() ? StyledText.of(String.valueOf(y.get())) : StyledText.EMPTY,
                         this.width / 2f + 40,
                         60 + 20 * row,
                         color,
@@ -145,7 +145,7 @@ public class PoiManagerWidget extends AbstractWidget {
         FontRenderer.getInstance()
                 .renderText(
                         poseStack,
-                        CodedString.of(String.valueOf(poi.getLocation().getZ())),
+                        StyledText.of(String.valueOf(poi.getLocation().getZ())),
                         this.width / 2f + 80,
                         60 + 20 * row,
                         color,

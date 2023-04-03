@@ -7,7 +7,7 @@ package com.wynntils.screens.guides;
 import com.wynntils.core.components.Handlers;
 import com.wynntils.handlers.item.ItemAnnotation;
 import com.wynntils.models.wynnitem.type.ItemObtainInfo;
-import com.wynntils.utils.mc.type.CodedString;
+import com.wynntils.utils.mc.type.StyledText;
 import java.util.List;
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
@@ -18,7 +18,7 @@ public abstract class GuideItemStack extends ItemStack {
     protected GuideItemStack(ItemStack itemStack, ItemAnnotation annotation, String baseName) {
         super(itemStack.getItem(), 1);
         this.setTag(itemStack.getTag());
-        Handlers.Item.updateItem(this, annotation, CodedString.of(baseName));
+        Handlers.Item.updateItem(this, annotation, StyledText.of(baseName));
     }
 
     protected void appendObtainInfo(List<Component> tooltipLines, List<ItemObtainInfo> itemObtainInfos) {

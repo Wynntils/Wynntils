@@ -14,7 +14,7 @@ import com.wynntils.models.stats.type.StatActualValue;
 import com.wynntils.models.stats.type.StatListOrdering;
 import com.wynntils.models.stats.type.StatPossibleValues;
 import com.wynntils.models.stats.type.StatType;
-import com.wynntils.utils.mc.type.CodedString;
+import com.wynntils.utils.mc.type.StyledText;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.util.ArrayList;
@@ -203,7 +203,7 @@ public class GearChatEncoding {
         return new GearItem(gearInfo, gearInstance);
     }
 
-    public Matcher gearChatEncodingMatcher(CodedString coded) {
+    public Matcher gearChatEncodingMatcher(StyledText coded) {
         return coded.match(ENCODED_PATTERN);
     }
 

@@ -10,7 +10,7 @@ import com.wynntils.models.map.PoiLocation;
 import com.wynntils.models.map.type.DisplayPriority;
 import com.wynntils.utils.MathUtils;
 import com.wynntils.utils.colors.CustomColor;
-import com.wynntils.utils.mc.type.CodedString;
+import com.wynntils.utils.mc.type.StyledText;
 import com.wynntils.utils.render.FontRenderer;
 import com.wynntils.utils.render.buffered.BufferedFontRenderer;
 import com.wynntils.utils.render.type.HorizontalAlignment;
@@ -118,7 +118,7 @@ public class LabelPoi implements Poi {
                 .renderText(
                         poseStack,
                         bufferSource,
-                        CodedString.of(label.getName()),
+                        StyledText.of(label.getName()),
                         0,
                         0,
                         color,
@@ -133,7 +133,7 @@ public class LabelPoi implements Poi {
                         .renderText(
                                 poseStack,
                                 bufferSource,
-                                CodedString.of("[Lv " + level + "]"),
+                                StyledText.of("[Lv " + level + "]"),
                                 0,
                                 10,
                                 color,

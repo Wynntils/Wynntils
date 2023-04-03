@@ -10,7 +10,7 @@ import com.wynntils.handlers.item.ItemAnnotator;
 import com.wynntils.models.gear.type.GearInfo;
 import com.wynntils.models.gear.type.GearInstance;
 import com.wynntils.models.items.items.game.GearItem;
-import com.wynntils.utils.mc.type.CodedString;
+import com.wynntils.utils.mc.type.StyledText;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import net.minecraft.world.item.ItemStack;
@@ -19,7 +19,7 @@ public final class GearAnnotator implements ItemAnnotator {
     private static final Pattern GEAR_PATTERN = Pattern.compile("^§[5abcdef](Unidentified )?(.+)$");
 
     @Override
-    public ItemAnnotation getAnnotation(ItemStack itemStack, CodedString name) {
+    public ItemAnnotation getAnnotation(ItemStack itemStack, StyledText name) {
         Matcher matcher = name.match(GEAR_PATTERN);
         if (!matcher.matches()) return null;
 

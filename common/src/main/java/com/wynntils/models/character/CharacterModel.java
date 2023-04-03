@@ -20,8 +20,8 @@ import com.wynntils.models.worlds.type.WorldState;
 import com.wynntils.utils.mc.ComponentUtils;
 import com.wynntils.utils.mc.LoreUtils;
 import com.wynntils.utils.mc.McUtils;
-import com.wynntils.utils.mc.type.CodedString;
 import com.wynntils.utils.mc.type.Location;
+import com.wynntils.utils.mc.type.StyledText;
 import com.wynntils.utils.wynn.InventoryUtils;
 import java.util.List;
 import java.util.regex.Matcher;
@@ -143,10 +143,10 @@ public final class CharacterModel extends Model {
     private void updateCharacterId() {
         ItemStack soulPointItem = McUtils.inventory().items.get(SOUL_POINT_SLOT);
 
-        List<CodedString> soulLore = LoreUtils.getLore(soulPointItem);
+        List<StyledText> soulLore = LoreUtils.getLore(soulPointItem);
 
         String id = "";
-        for (CodedString line : soulLore) {
+        for (StyledText line : soulLore) {
             if (line.str().startsWith(ChatFormatting.DARK_GRAY.toString())) {
                 id = ComponentUtils.stripFormatting(line);
                 break;
@@ -167,12 +167,12 @@ public final class CharacterModel extends Model {
     }
 
     private void parseCharacterFromCharacterMenu(ItemStack characterInfoItem) {
-        List<CodedString> lore = LoreUtils.getLore(characterInfoItem);
+        List<StyledText> lore = LoreUtils.getLore(characterInfoItem);
 
         int level = 0;
         String className = "";
 
-        for (CodedString line : lore) {
+        for (StyledText line : lore) {
             Matcher levelMatcher = line.match(INFO_MENU_LEVEL_PATTERN);
             if (levelMatcher.matches()) {
                 level = Integer.parseInt(levelMatcher.group(1));
@@ -202,12 +202,12 @@ public final class CharacterModel extends Model {
     }
 
     private void parseCharacter(ItemStack itemStack, int id) {
-        List<CodedString> lore = LoreUtils.getLore(itemStack);
+        List<StyledText> lore = LoreUtils.getLore(itemStack);
 
         int level = 0;
         String className = "";
 
-        for (CodedString line : lore) {
+        for (StyledText line : lore) {
             Matcher levelMatcher = line.match(CLASS_MENU_LEVEL_PATTERN);
             if (levelMatcher.matches()) {
                 level = Integer.parseInt(levelMatcher.group(1));

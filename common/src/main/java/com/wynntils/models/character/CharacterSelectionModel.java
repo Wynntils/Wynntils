@@ -13,7 +13,7 @@ import com.wynntils.models.character.type.ClassType;
 import com.wynntils.screens.characterselector.CharacterSelectorScreen;
 import com.wynntils.utils.mc.ComponentUtils;
 import com.wynntils.utils.mc.LoreUtils;
-import com.wynntils.utils.mc.type.CodedString;
+import com.wynntils.utils.mc.type.StyledText;
 import com.wynntils.utils.wynn.ContainerUtils;
 import java.util.ArrayList;
 import java.util.List;
@@ -38,7 +38,7 @@ public final class CharacterSelectionModel extends Model {
     private static final String DEFAULT_CLASS_NAME = "This Character";
 
     private static final int EDIT_BUTTON_SLOT = 8;
-    public static final CodedString CHARACTER_SELECTION_TITLE = CodedString.of("§8§lSelect a Character");
+    public static final StyledText CHARACTER_SELECTION_TITLE = StyledText.of("§8§lSelect a Character");
 
     private CharacterSelectorScreen currentScreen;
     private int containerId = -1;
@@ -79,7 +79,7 @@ public final class CharacterSelectionModel extends Model {
         List<ItemStack> items = event.getItems();
         for (int i = 0; i < items.size(); i++) {
             ItemStack itemStack = items.get(i);
-            CodedString itemName = ComponentUtils.getCoded(itemStack.getHoverName());
+            StyledText itemName = ComponentUtils.getCoded(itemStack.getHoverName());
             Matcher classItemMatcher = itemName.match(CLASS_ITEM_NAME_PATTERN);
             if (classItemMatcher.matches()) {
                 ClassInfo classInfo = getClassInfoFromItem(itemStack, i, classItemMatcher.group(1));
@@ -105,7 +105,7 @@ public final class CharacterSelectionModel extends Model {
         int xp = 0;
         int soulPoints = 0;
         int finishedQuests = 0;
-        for (CodedString line : LoreUtils.getLore(itemStack)) {
+        for (StyledText line : LoreUtils.getLore(itemStack)) {
             Matcher matcher = line.match(CLASS_ITEM_CLASS_PATTERN);
 
             if (matcher.matches()) {

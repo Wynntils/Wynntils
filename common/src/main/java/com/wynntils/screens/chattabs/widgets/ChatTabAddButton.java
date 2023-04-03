@@ -9,7 +9,7 @@ import com.wynntils.screens.base.widgets.WynntilsButton;
 import com.wynntils.screens.chattabs.ChatTabEditingScreen;
 import com.wynntils.utils.colors.CommonColors;
 import com.wynntils.utils.mc.McUtils;
-import com.wynntils.utils.mc.type.CodedString;
+import com.wynntils.utils.mc.type.StyledText;
 import com.wynntils.utils.render.FontRenderer;
 import com.wynntils.utils.render.RenderUtils;
 import com.wynntils.utils.render.type.HorizontalAlignment;
@@ -30,7 +30,7 @@ public class ChatTabAddButton extends WynntilsButton {
         FontRenderer.getInstance()
                 .renderAlignedTextInBox(
                         poseStack,
-                        CodedString.of("+"),
+                        StyledText.of("+"),
                         getX() + 1,
                         getX() + width,
                         getY() + 1,

@@ -14,7 +14,7 @@ import com.wynntils.mc.extension.ItemStackExtension;
 import com.wynntils.utils.mc.ComponentUtils;
 import com.wynntils.utils.mc.LoreUtils;
 import com.wynntils.utils.mc.McUtils;
-import com.wynntils.utils.mc.type.CodedString;
+import com.wynntils.utils.mc.type.StyledText;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -49,7 +49,7 @@ public class ItemHandler extends Handler {
         annotators.add(annotator);
     }
 
-    public void updateItem(ItemStack itemStack, ItemAnnotation annotation, CodedString name) {
+    public void updateItem(ItemStack itemStack, ItemAnnotation annotation, StyledText name) {
         ItemStackExtension itemStackExtension = (ItemStackExtension) itemStack;
         itemStackExtension.setAnnotation(annotation);
         itemStackExtension.setOriginalName(name);
@@ -107,10 +107,10 @@ public class ItemHandler extends Handler {
             return;
         }
 
-        CodedString originalName = ((ItemStackExtension) existingItem).getOriginalName();
-        CodedString existingName =
+        StyledText originalName = ((ItemStackExtension) existingItem).getOriginalName();
+        StyledText existingName =
                 ComponentUtils.getCoded(existingItem.getHoverName()).getNormalized();
-        CodedString newName = ComponentUtils.getCoded(newItem.getHoverName()).getNormalized();
+        StyledText newName = ComponentUtils.getCoded(newItem.getHoverName()).getNormalized();
 
         if (newName.equals(existingName)) {
             // This is exactly the same item, so copy existing annotation
@@ -119,9 +119,9 @@ public class ItemHandler extends Handler {
         }
 
         // The lore is the same, but the name is different. Determine the reason for the name change
-        CodedString originalBaseName = getBaseName(originalName);
-        CodedString existingBaseName = getBaseName(existingName);
-        CodedString newBaseName = getBaseName(newName);
+        StyledText originalBaseName = getBaseName(originalName);
+        StyledText existingBaseName = getBaseName(existingName);
+        StyledText newBaseName = getBaseName(newName);
 
         // When a crafted item loses durability (or a consumable loses a charge), we need to detect
         // this and update the item. But note that this might happen exactly after a spell!
@@ -148,9 +148,9 @@ public class ItemHandler extends Handler {
         }
     }
 
-    private CodedString getBaseName(CodedString name) {
+    private StyledText getBaseName(StyledText name) {
         int bracketIndex = name.str().lastIndexOf('[');
-        return bracketIndex == -1 ? name : CodedString.of(name.str().substring(0, bracketIndex));
+        return bracketIndex == -1 ? name : StyledText.of(name.str().substring(0, bracketIndex));
     }
 
     private boolean similarStack(ItemStack firstItem, ItemStack secondItem) {
@@ -169,7 +169,7 @@ public class ItemHandler extends Handler {
         return WILDCARD_ITEMS.contains(itemStack.getItem());
     }
 
-    private ItemAnnotation calculateAnnotation(ItemStack itemStack, CodedString name) {
+    private ItemAnnotation calculateAnnotation(ItemStack itemStack, StyledText name) {
         long startTime = System.currentTimeMillis();
 
         ItemAnnotation annotation = null;
@@ -211,7 +211,7 @@ public class ItemHandler extends Handler {
     }
 
     private void annotate(ItemStack itemStack) {
-        CodedString name = ComponentUtils.getCoded(itemStack.getHoverName()).getNormalized();
+        StyledText name = ComponentUtils.getCoded(itemStack.getHoverName()).getNormalized();
         ItemAnnotation annotation = calculateAnnotation(itemStack, name);
         if (annotation == null) return;
 

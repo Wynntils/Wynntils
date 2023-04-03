@@ -8,7 +8,7 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import com.wynntils.core.WynntilsMod;
 import com.wynntils.utils.colors.CommonColors;
 import com.wynntils.utils.mc.McUtils;
-import com.wynntils.utils.mc.type.CodedString;
+import com.wynntils.utils.mc.type.StyledText;
 import com.wynntils.utils.render.FontRenderer;
 import com.wynntils.utils.render.RenderUtils;
 import com.wynntils.utils.render.Texture;
@@ -58,7 +58,7 @@ public abstract class WynntilsMenuScreenBase extends WynntilsScreen {
         FontRenderer.getInstance()
                 .renderAlignedTextInBox(
                         poseStack,
-                        CodedString.of(version),
+                        StyledText.of(version),
                         59f * 1.3f,
                         (Texture.QUEST_BOOK_BACKGROUND.width() / 2f - 30f) * 1.3f,
                         Texture.QUEST_BOOK_BACKGROUND.height() * 1.3f - 6f,
@@ -80,7 +80,7 @@ public abstract class WynntilsMenuScreenBase extends WynntilsScreen {
         FontRenderer.getInstance()
                 .renderText(
                         poseStack,
-                        CodedString.of(titleString),
+                        StyledText.of(titleString),
                         5,
                         18,
                         CommonColors.YELLOW,
@@ -94,7 +94,7 @@ public abstract class WynntilsMenuScreenBase extends WynntilsScreen {
         FontRenderer.getInstance()
                 .renderAlignedTextInBox(
                         poseStack,
-                        CodedString.of(description),
+                        StyledText.of(description),
                         20,
                         Texture.QUEST_BOOK_BACKGROUND.width() / 2f - 10,
                         140,

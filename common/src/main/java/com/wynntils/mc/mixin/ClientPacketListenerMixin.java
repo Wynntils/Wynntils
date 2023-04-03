@@ -35,7 +35,7 @@ import com.wynntils.mc.event.SubtitleSetTextEvent;
 import com.wynntils.mc.event.TitleSetTextEvent;
 import com.wynntils.mc.mixin.accessors.ClientboundSetPlayerTeamPacketAccessor;
 import com.wynntils.utils.mc.McUtils;
-import com.wynntils.utils.mc.type.CodedString;
+import com.wynntils.utils.mc.type.StyledText;
 import java.util.UUID;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screens.ReceivingLevelScreen;
@@ -196,7 +196,7 @@ public abstract class ClientPacketListenerMixin {
     private void handleTabListCustomisationPost(ClientboundTabListPacket packet, CallbackInfo ci) {
         if (!isRenderThread()) return;
 
-        MixinHelper.post(new PlayerInfoFooterChangedEvent(CodedString.fromComponent(packet.getFooter())));
+        MixinHelper.post(new PlayerInfoFooterChangedEvent(StyledText.fromComponent(packet.getFooter())));
     }
 
     @Inject(
@@ -462,7 +462,7 @@ public abstract class ClientPacketListenerMixin {
         if (!isRenderThread()) return;
 
         ScoreboardSetScoreEvent event = new ScoreboardSetScoreEvent(
-                CodedString.of(packet.getOwner()), packet.getObjectiveName(), packet.getScore(), packet.getMethod());
+                StyledText.of(packet.getOwner()), packet.getObjectiveName(), packet.getScore(), packet.getMethod());
         MixinHelper.post(event);
         if (event.isCanceled()) {
             ci.cancel();

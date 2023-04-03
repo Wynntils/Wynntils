@@ -12,7 +12,7 @@ import com.wynntils.core.features.Feature;
 import com.wynntils.handlers.chat.event.ChatMessageReceivedEvent;
 import com.wynntils.handlers.chat.type.RecipientType;
 import com.wynntils.utils.mc.McUtils;
-import com.wynntils.utils.mc.type.CodedString;
+import com.wynntils.utils.mc.type.StyledText;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
@@ -32,7 +32,7 @@ public class WybelSoundFeature extends Feature {
     public void onChat(ChatMessageReceivedEvent event) {
         if (event.getRecipientType() != RecipientType.PETS) return;
 
-        CodedString msg = event.getCodedMessage();
+        StyledText msg = event.getCodedMessage();
         if (msg.str().contains("squeak")) {
             McUtils.playSoundAmbient(WYBEL_SQUEAK_SOUND);
             if (hideText.get()) {

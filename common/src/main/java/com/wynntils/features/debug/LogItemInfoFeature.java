@@ -18,7 +18,7 @@ import com.wynntils.core.keybinds.KeyBind;
 import com.wynntils.models.items.WynnItem;
 import com.wynntils.utils.mc.LoreUtils;
 import com.wynntils.utils.mc.McUtils;
-import com.wynntils.utils.mc.type.CodedString;
+import com.wynntils.utils.mc.type.StyledText;
 import java.util.Optional;
 import net.minecraft.ChatFormatting;
 import net.minecraft.commands.CommandSourceStack;
@@ -70,7 +70,7 @@ public class LogItemInfoFeature extends Feature {
 
         return "[Logging Item]\nName: "
                 + itemStack.getHoverName().getString() + "\nLore:\n"
-                + CodedString.join(LoreUtils.getLore(itemStack), "\n") + "\nItem Type: "
+                + StyledText.join(LoreUtils.getLore(itemStack), "\n") + "\nItem Type: "
                 + itemStack.getItem() + "\nDamage Value: "
                 + itemStack.getDamageValue() + "\nWynn Item: "
                 + wynnItemDesc + "\nNBT: "

@@ -19,7 +19,7 @@ import com.wynntils.core.features.overlays.OverlaySize;
 import com.wynntils.core.features.overlays.annotations.OverlayInfo;
 import com.wynntils.mc.event.RenderEvent;
 import com.wynntils.models.statuseffects.event.StatusEffectsChangedEvent;
-import com.wynntils.utils.mc.type.CodedString;
+import com.wynntils.utils.mc.type.StyledText;
 import com.wynntils.utils.render.TextRenderSetting;
 import com.wynntils.utils.render.TextRenderTask;
 import com.wynntils.utils.render.buffered.BufferedFontRenderer;
@@ -91,7 +91,7 @@ public class StatusOverlayFeature extends Feature {
                             bufferSource,
                             this.getRenderX(),
                             this.getRenderY(),
-                            new TextRenderTask(CodedString.of("§8⬤ §7 Purification 00:02"), textRenderSetting),
+                            new TextRenderTask(StyledText.of("§8⬤ §7 Purification 00:02"), textRenderSetting),
                             this.getWidth(),
                             this.getHeight(),
                             this.getRenderHorizontalAlignment(),

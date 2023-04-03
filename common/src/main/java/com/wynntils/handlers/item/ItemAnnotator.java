@@ -4,10 +4,10 @@
  */
 package com.wynntils.handlers.item;
 
-import com.wynntils.utils.mc.type.CodedString;
+import com.wynntils.utils.mc.type.StyledText;
 import net.minecraft.world.item.ItemStack;
 
 @FunctionalInterface
 public interface ItemAnnotator {
-    ItemAnnotation getAnnotation(ItemStack itemStack, CodedString name);
+    ItemAnnotation getAnnotation(ItemStack itemStack, StyledText name);
 }

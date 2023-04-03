@@ -20,7 +20,7 @@ import com.wynntils.models.stats.StatModel;
 import com.wynntils.models.wynnitem.WynnItemModel;
 import com.wynntils.models.wynnitem.parsing.WynnItemParseResult;
 import com.wynntils.models.wynnitem.parsing.WynnItemParser;
-import com.wynntils.utils.mc.type.CodedString;
+import com.wynntils.utils.mc.type.StyledText;
 import com.wynntils.utils.type.CappedValue;
 import java.util.HashMap;
 import java.util.List;
@@ -141,7 +141,7 @@ public final class GearModel extends Model {
         return gearChatEncoding.toEncodedString(gearItem);
     }
 
-    public Matcher gearChatEncodingMatcher(CodedString str) {
+    public Matcher gearChatEncodingMatcher(StyledText str) {
         return gearChatEncoding.gearChatEncodingMatcher(str);
     }
 

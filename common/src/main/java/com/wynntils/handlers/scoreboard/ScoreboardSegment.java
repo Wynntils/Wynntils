@@ -5,21 +5,21 @@
 package com.wynntils.handlers.scoreboard;
 
 import com.wynntils.handlers.scoreboard.type.SegmentMatcher;
-import com.wynntils.utils.mc.type.CodedString;
+import com.wynntils.utils.mc.type.StyledText;
 import java.util.ArrayList;
 import java.util.List;
 
 public final class ScoreboardSegment {
     private final SegmentMatcher matcher;
-    private final CodedString header;
+    private final StyledText header;
     private final int startIndex;
 
     private String end;
-    private List<CodedString> content = null;
+    private List<StyledText> content = null;
     private int endIndex = -1;
     private boolean changed;
 
-    public ScoreboardSegment(SegmentMatcher matcher, CodedString header, int startIndex) {
+    public ScoreboardSegment(SegmentMatcher matcher, StyledText header, int startIndex) {
         this.matcher = matcher;
         this.header = header;
         this.startIndex = startIndex;
@@ -36,7 +36,7 @@ public final class ScoreboardSegment {
                 + endIndex + ']';
     }
 
-    public List<CodedString> getContent() {
+    public List<StyledText> getContent() {
         return content;
     }
 
@@ -52,7 +52,7 @@ public final class ScoreboardSegment {
         return matcher;
     }
 
-    public CodedString getHeader() {
+    public StyledText getHeader() {
         return header;
     }
 
@@ -60,12 +60,12 @@ public final class ScoreboardSegment {
         return end;
     }
 
-    public List<CodedString> getScoreboardLines() {
-        List<CodedString> lines = new ArrayList<>(this.content);
+    public List<StyledText> getScoreboardLines() {
+        List<StyledText> lines = new ArrayList<>(this.content);
         lines.add(this.header);
         if (this.end != null) {
             // FIXME: Note that end is without formatting!
-            lines.add(CodedString.of(this.end));
+            lines.add(StyledText.of(this.end));
         }
 
         return lines;
@@ -75,7 +75,7 @@ public final class ScoreboardSegment {
         return changed;
     }
 
-    public void setContent(List<CodedString> content) {
+    public void setContent(List<StyledText> content) {
         this.content = content;
     }
 

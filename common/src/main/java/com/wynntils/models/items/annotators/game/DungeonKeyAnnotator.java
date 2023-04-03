@@ -8,7 +8,7 @@ import com.wynntils.handlers.item.ItemAnnotation;
 import com.wynntils.handlers.item.ItemAnnotator;
 import com.wynntils.models.items.items.game.DungeonKeyItem;
 import com.wynntils.utils.mc.LoreUtils;
-import com.wynntils.utils.mc.type.CodedString;
+import com.wynntils.utils.mc.type.StyledText;
 import java.util.Arrays;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -22,7 +22,7 @@ public final class DungeonKeyAnnotator implements ItemAnnotator {
     private static final Pattern LORE_PATTERN = Pattern.compile("§7(Grants access to the|Use this item at the)");
 
     @Override
-    public ItemAnnotation getAnnotation(ItemStack itemStack, CodedString name) {
+    public ItemAnnotation getAnnotation(ItemStack itemStack, StyledText name) {
         Matcher keyMatcher = name.match(DUNGEON_KEY_PATTERN);
         if (!keyMatcher.matches()) return null;
 
@@ -39,7 +39,7 @@ public final class DungeonKeyAnnotator implements ItemAnnotator {
         return new DungeonKeyItem(dungeon, corrupted);
     }
 
-    private boolean verifyDungeonKey(ItemStack itemStack, CodedString name) {
+    private boolean verifyDungeonKey(ItemStack itemStack, StyledText name) {
         if (name.str().startsWith("Broken")) return true;
 
         Matcher matcher = LoreUtils.matchLoreLine(itemStack, 0, LORE_PATTERN);

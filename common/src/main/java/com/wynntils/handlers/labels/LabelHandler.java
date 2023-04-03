@@ -11,7 +11,7 @@ import com.wynntils.handlers.labels.event.EntityLabelVisibilityEvent;
 import com.wynntils.mc.event.SetEntityDataEvent;
 import com.wynntils.utils.mc.ComponentUtils;
 import com.wynntils.utils.mc.McUtils;
-import com.wynntils.utils.mc.type.CodedString;
+import com.wynntils.utils.mc.type.StyledText;
 import java.util.Optional;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.syncher.SynchedEntityData;
@@ -36,9 +36,9 @@ public class LabelHandler extends Handler {
                 if (value.isEmpty()) return;
 
                 Component oldNameComponent = entity.getCustomName();
-                CodedString oldName =
-                        oldNameComponent != null ? ComponentUtils.getCoded(oldNameComponent) : CodedString.EMPTY;
-                CodedString newName = ComponentUtils.getCoded(value.get());
+                StyledText oldName =
+                        oldNameComponent != null ? ComponentUtils.getCoded(oldNameComponent) : StyledText.EMPTY;
+                StyledText newName = ComponentUtils.getCoded(value.get());
 
                 // Sometimes there is no actual change; ignore it then
                 if (newName.equals(oldName)) return;

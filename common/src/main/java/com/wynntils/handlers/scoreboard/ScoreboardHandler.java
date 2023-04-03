@@ -16,7 +16,7 @@ import com.wynntils.models.worlds.event.WorldStateEvent;
 import com.wynntils.models.worlds.type.WorldState;
 import com.wynntils.utils.mc.ComponentUtils;
 import com.wynntils.utils.mc.McUtils;
-import com.wynntils.utils.mc.type.CodedString;
+import com.wynntils.utils.mc.type.StyledText;
 import com.wynntils.utils.type.Pair;
 import java.util.ArrayList;
 import java.util.Comparator;
@@ -82,7 +82,7 @@ public final class ScoreboardHandler extends Handler {
             scoreboardLineMap.put(scoreboardLine.index(), scoreboardLine);
         }
 
-        Set<CodedString> changedLines = new HashSet<>();
+        Set<StyledText> changedLines = new HashSet<>();
         while (!queueCopy.isEmpty()) {
             ScoreboardLineChange processed = queueCopy.pop();
 
@@ -107,7 +107,7 @@ public final class ScoreboardHandler extends Handler {
 
         List<ScoreboardSegment> parsedSegments = calculateSegments(scoreboardCopy);
 
-        for (CodedString changedString : changedLines) {
+        for (StyledText changedString : changedLines) {
             int changedLine =
                     scoreboardCopy.stream().map(ScoreboardLine::line).toList().indexOf(changedString);
 
@@ -186,7 +186,7 @@ public final class ScoreboardHandler extends Handler {
         McUtils.mc().doRunTask(() -> {
             Scoreboard scoreboard = McUtils.player().getScoreboard();
 
-            List<CodedString> skipped = new ArrayList<>();
+            List<StyledText> skipped = new ArrayList<>();
 
             for (ScoreboardSegment parsedSegment : segments) {
                 boolean cancelled = WynntilsMod.postEvent(new ScoreboardSegmentAdditionEvent(parsedSegment));

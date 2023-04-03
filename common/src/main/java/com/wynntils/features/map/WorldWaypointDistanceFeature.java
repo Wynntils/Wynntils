@@ -21,8 +21,8 @@ import com.wynntils.models.map.pois.WaypointPoi;
 import com.wynntils.utils.colors.CommonColors;
 import com.wynntils.utils.colors.CustomColor;
 import com.wynntils.utils.mc.McUtils;
-import com.wynntils.utils.mc.type.CodedString;
 import com.wynntils.utils.mc.type.Location;
+import com.wynntils.utils.mc.type.StyledText;
 import com.wynntils.utils.render.FontRenderer;
 import com.wynntils.utils.render.RenderUtils;
 import com.wynntils.utils.render.Texture;
@@ -161,7 +161,7 @@ public class WorldWaypointDistanceFeature extends Feature {
             FontRenderer.getInstance()
                     .renderAlignedTextInBox(
                             event.getPoseStack(),
-                            CodedString.of(distanceText),
+                            StyledText.of(distanceText),
                             displayPositionX - backgroundWidth,
                             displayPositionX + backgroundWidth,
                             displayPositionY - backgroundHeight,

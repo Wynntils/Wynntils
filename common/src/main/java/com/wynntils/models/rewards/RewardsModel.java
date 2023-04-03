@@ -15,7 +15,7 @@ import com.wynntils.models.rewards.type.TomeInfo;
 import com.wynntils.models.rewards.type.TomeType;
 import com.wynntils.models.wynnitem.parsing.WynnItemParseResult;
 import com.wynntils.models.wynnitem.parsing.WynnItemParser;
-import com.wynntils.utils.mc.type.CodedString;
+import com.wynntils.utils.mc.type.StyledText;
 import java.util.List;
 import net.minecraft.world.item.ItemStack;
 
@@ -24,7 +24,7 @@ public class RewardsModel extends Model {
         super(List.of());
     }
 
-    public ItemAnnotation fromCharmItemStack(ItemStack itemStack, CodedString name, String displayName, String type) {
+    public ItemAnnotation fromCharmItemStack(ItemStack itemStack, StyledText name, String displayName, String type) {
         GearTier tier = GearTier.fromFormattedString(name);
 
         // TODO: replace with API lookup
@@ -39,7 +39,7 @@ public class RewardsModel extends Model {
     }
 
     public static TomeItem fromTomeItemStack(
-            ItemStack itemStack, CodedString name, String displayName, TomeType tomeType, String tier, String variant) {
+            ItemStack itemStack, StyledText name, String displayName, TomeType tomeType, String tier, String variant) {
         GearTier gearTier = GearTier.fromFormattedString(name);
 
         // TODO: replace with API lookup

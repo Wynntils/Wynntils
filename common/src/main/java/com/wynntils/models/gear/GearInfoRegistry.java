@@ -39,7 +39,7 @@ import com.wynntils.models.wynnitem.type.ItemObtainInfo;
 import com.wynntils.models.wynnitem.type.ItemObtainType;
 import com.wynntils.utils.JsonUtils;
 import com.wynntils.utils.colors.CustomColor;
-import com.wynntils.utils.mc.type.CodedString;
+import com.wynntils.utils.mc.type.StyledText;
 import com.wynntils.utils.type.Pair;
 import com.wynntils.utils.type.RangedValue;
 import com.wynntils.utils.wynn.WynnUtils;
@@ -156,7 +156,7 @@ public class GearInfoRegistry {
             return new GearMajorId(
                     JsonUtils.getNullableJsonString(json, "id"),
                     JsonUtils.getNullableJsonString(json, "name"),
-                    CodedString.of(JsonUtils.getNullableJsonString(json, "lore")));
+                    StyledText.of(JsonUtils.getNullableJsonString(json, "lore")));
         }
     }
 
@@ -258,7 +258,7 @@ public class GearInfoRegistry {
                 obtainInfo.add(new ItemObtainInfo(ItemObtainType.UNKNOWN, Optional.empty()));
             }
 
-            Optional<CodedString> loreOpt = parseLore(json);
+            Optional<StyledText> loreOpt = parseLore(json);
             Optional<String> apiNameOpt = Optional.ofNullable(apiName);
 
             boolean allowCraftsman = JsonUtils.getNullableJsonBoolean(json, "allowCraftsman");
@@ -266,13 +266,13 @@ public class GearInfoRegistry {
             return new GearMetaInfo(restrictions, material, obtainInfo, loreOpt, apiNameOpt, allowCraftsman);
         }
 
-        private Optional<CodedString> parseLore(JsonObject json) {
+        private Optional<StyledText> parseLore(JsonObject json) {
             String lore = JsonUtils.getNullableJsonString(json, "addedLore");
             if (lore == null) return Optional.empty();
 
             // Some lore contain like "\\[Community Event Winner\\]", fix that
-            return Optional.of(CodedString.of(
-                    StringUtils.replaceEach(lore, new String[] {"\\[", "\\]"}, new String[] {"[", "]"})));
+            return Optional.of(
+                    StyledText.of(StringUtils.replaceEach(lore, new String[] {"\\[", "\\]"}, new String[] {"[", "]"})));
         }
 
         private GearRestrictions parseRestrictions(JsonObject json) {

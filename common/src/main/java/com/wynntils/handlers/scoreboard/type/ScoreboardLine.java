@@ -4,6 +4,6 @@
  */
 package com.wynntils.handlers.scoreboard.type;
 
-import com.wynntils.utils.mc.type.CodedString;
+import com.wynntils.utils.mc.type.StyledText;
 
-public record ScoreboardLine(CodedString line, int index) {}
+public record ScoreboardLine(StyledText line, int index) {}

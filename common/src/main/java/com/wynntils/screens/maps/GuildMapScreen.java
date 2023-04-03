@@ -21,7 +21,7 @@ import com.wynntils.screens.base.widgets.BasicTexturedButton;
 import com.wynntils.utils.colors.CommonColors;
 import com.wynntils.utils.mc.KeyboardUtils;
 import com.wynntils.utils.mc.McUtils;
-import com.wynntils.utils.mc.type.CodedString;
+import com.wynntils.utils.mc.type.StyledText;
 import com.wynntils.utils.render.FontRenderer;
 import com.wynntils.utils.render.MapRenderer;
 import com.wynntils.utils.render.RenderUtils;
@@ -283,7 +283,7 @@ public final class GuildMapScreen extends AbstractMapScreen {
         FontRenderer.getInstance()
                 .renderText(
                         poseStack,
-                        CodedString.of(
+                        StyledText.of(
                                 "%s [%s]".formatted(territoryProfile.getGuild(), territoryProfile.getGuildPrefix())),
                         10,
                         10,
@@ -299,7 +299,7 @@ public final class GuildMapScreen extends AbstractMapScreen {
             TerritoryStorage storage = territoryInfo.getStorage(value);
 
             if (generation != 0) {
-                CodedString formattedGenerated = CodedString.of(
+                StyledText formattedGenerated = StyledText.of(
                         "%s+%d %s per Hour".formatted(value.getPrettySymbol(), generation, value.getName()));
 
                 FontRenderer.getInstance()
@@ -316,7 +316,7 @@ public final class GuildMapScreen extends AbstractMapScreen {
             }
 
             if (storage != null) {
-                CodedString formattedStored = CodedString.of("%s%d/%d %s stored"
+                StyledText formattedStored = StyledText.of("%s%d/%d %s stored"
                         .formatted(value.getPrettySymbol(), storage.current(), storage.max(), value.getName()));
 
                 FontRenderer.getInstance()
@@ -335,11 +335,11 @@ public final class GuildMapScreen extends AbstractMapScreen {
 
         renderYOffset += 10;
 
-        CodedString treasury = CodedString.of(ChatFormatting.GRAY
+        StyledText treasury = StyledText.of(ChatFormatting.GRAY
                 + "✦ Treasury: %s"
                         .formatted(territoryInfo.getTreasury().getTreasuryColor()
                                 + territoryInfo.getTreasury().getAsString()));
-        CodedString defences = CodedString.of(ChatFormatting.GRAY
+        StyledText defences = StyledText.of(ChatFormatting.GRAY
                 + "Territory Defences: %s"
                         .formatted(territoryInfo.getDefences().getDefenceColor()
                                 + territoryInfo.getDefences().getAsString()));
@@ -371,7 +371,7 @@ public final class GuildMapScreen extends AbstractMapScreen {
             FontRenderer.getInstance()
                     .renderText(
                             poseStack,
-                            CodedString.of("Guild Headquarters"),
+                            StyledText.of("Guild Headquarters"),
                             10,
                             10 + renderYOffset,
                             CommonColors.RED,
@@ -385,7 +385,7 @@ public final class GuildMapScreen extends AbstractMapScreen {
         FontRenderer.getInstance()
                 .renderText(
                         poseStack,
-                        CodedString.of(ChatFormatting.GRAY + "Time Held: " + territoryProfile.getTimeAcquiredColor()
+                        StyledText.of(ChatFormatting.GRAY + "Time Held: " + territoryProfile.getTimeAcquiredColor()
                                 + territoryProfile.getReadableRelativeTimeAcquired()),
                         10,
                         10 + renderYOffset,
@@ -398,7 +398,7 @@ public final class GuildMapScreen extends AbstractMapScreen {
         FontRenderer.getInstance()
                 .renderAlignedTextInBox(
                         poseStack,
-                        CodedString.of(territoryPoi.getName()),
+                        StyledText.of(territoryPoi.getName()),
                         7,
                         textureWidth,
                         Texture.TERRITORY_TOOLTIP_TOP.height() + centerHeight,

@@ -17,7 +17,7 @@ import com.wynntils.utils.mc.ComponentUtils;
 import com.wynntils.utils.mc.KeyboardUtils;
 import com.wynntils.utils.mc.LoreUtils;
 import com.wynntils.utils.mc.McUtils;
-import com.wynntils.utils.mc.type.CodedString;
+import com.wynntils.utils.mc.type.StyledText;
 import com.wynntils.utils.wynn.ContainerUtils;
 import java.util.ArrayList;
 import java.util.List;
@@ -33,7 +33,7 @@ import net.minecraftforge.eventbus.api.SubscribeEvent;
 
 @ConfigCategory(Category.INVENTORY)
 public class BulkBuyFeature extends Feature {
-    public static final CodedString PRICE_STR = CodedString.of("§6Price:");
+    public static final StyledText PRICE_STR = StyledText.of("§6Price:");
 
     @RegisterConfig
     public final Config<Integer> bulkBuyAmount = new Config<>(4);
@@ -82,7 +82,7 @@ public class BulkBuyFeature extends Feature {
     private List<Component> replacePrices(List<Component> oldLore) {
         if (!KeyboardUtils.isShiftDown()) return oldLore;
 
-        CodedString priceLine = ComponentUtils.getCoded(oldLore.get(oldLore.size() - 1));
+        StyledText priceLine = ComponentUtils.getCoded(oldLore.get(oldLore.size() - 1));
         Matcher priceMatcher = priceLine.match(PRICE_PATTERN);
         if (!priceMatcher.find()) {
             WynntilsMod.warn("Could not find price for " + oldLore.get(0).getString() + " in " + priceLine);
@@ -90,11 +90,11 @@ public class BulkBuyFeature extends Feature {
         }
         int newPrice = Integer.parseInt(priceMatcher.group(1)) * bulkBuyAmount.get();
 
-        CodedString newLine = CodedString.of(
+        StyledText newLine = StyledText.of(
                 priceLine.str().replace(priceMatcher.group(1), BULK_BUY_ACTIVE_COLOR + Integer.toString(newPrice)));
 
         if (newPrice > Models.Emerald.getAmountInInventory()) {
-            newLine = CodedString.of(newLine.str().replace("a✔", "c✖")); // Replace green checkmark with red x
+            newLine = StyledText.of(newLine.str().replace("a✔", "c✖")); // Replace green checkmark with red x
         }
 
         List<Component> newLore = new ArrayList<>(oldLore);

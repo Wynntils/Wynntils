@@ -12,7 +12,7 @@ import com.wynntils.handlers.chat.event.ChatMessageReceivedEvent;
 import com.wynntils.models.emeralds.type.EmeraldUnits;
 import com.wynntils.models.gear.type.GearTier;
 import com.wynntils.utils.mc.ComponentUtils;
-import com.wynntils.utils.mc.type.CodedString;
+import com.wynntils.utils.mc.type.StyledText;
 import java.util.EnumMap;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -39,7 +39,7 @@ public class BlacksmithRedirectFeature extends Feature {
         String paymentString = messageMatcher.group(3);
 
         // Full message to send to the user.
-        CodedString sendableMessage;
+        StyledText sendableMessage;
 
         // Should we use item, or items?
         String itemPluralizer;
@@ -97,7 +97,7 @@ public class BlacksmithRedirectFeature extends Feature {
             String countByTierString = countByTier.toString();
 
             // Sold 1 (1/0/0/0/0/0/0/0) item for 4e.
-            sendableMessage = CodedString.of(String.format(
+            sendableMessage = StyledText.of(String.format(
                     "§dSold %d %s %s for §a%s%s§d.",
                     totalItemInteger,
                     itemPluralizer,
@@ -109,7 +109,7 @@ public class BlacksmithRedirectFeature extends Feature {
         else {
             itemPluralizer = totalItemInteger == 1 ? "item" : "items";
 
-            sendableMessage = CodedString.of(String.format(
+            sendableMessage = StyledText.of(String.format(
                     "§dScrapped %d %s for §a%s scrap§d.", totalItemInteger, itemPluralizer, paymentString));
         }
 

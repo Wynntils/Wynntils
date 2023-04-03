@@ -18,7 +18,7 @@ import com.wynntils.screens.wynntilsmenu.WynntilsMenuScreen;
 import com.wynntils.utils.StringUtils;
 import com.wynntils.utils.TaskUtils;
 import com.wynntils.utils.colors.CommonColors;
-import com.wynntils.utils.mc.type.CodedString;
+import com.wynntils.utils.mc.type.StyledText;
 import com.wynntils.utils.render.FontRenderer;
 import com.wynntils.utils.render.RenderUtils;
 import com.wynntils.utils.render.Texture;
@@ -173,7 +173,7 @@ public final class WynntilsLootrunsScreen extends WynntilsListScreen<LootrunInst
             FontRenderer.getInstance()
                     .renderText(
                             poseStack,
-                            CodedString.of(currentLootrun.name()),
+                            StyledText.of(currentLootrun.name()),
                             0,
                             0,
                             CommonColors.BLACK,
@@ -185,7 +185,7 @@ public final class WynntilsLootrunsScreen extends WynntilsListScreen<LootrunInst
             FontRenderer.getInstance()
                     .renderText(
                             poseStack,
-                            CodedString.of(I18n.get("screens.wynntils.lootruns.chests") + ": "
+                            StyledText.of(I18n.get("screens.wynntils.lootruns.chests") + ": "
                                     + currentLootrun.chests().size()),
                             0,
                             19,
@@ -197,7 +197,7 @@ public final class WynntilsLootrunsScreen extends WynntilsListScreen<LootrunInst
             FontRenderer.getInstance()
                     .renderText(
                             poseStack,
-                            CodedString.of(I18n.get("screens.wynntils.lootruns.notes") + ": "
+                            StyledText.of(I18n.get("screens.wynntils.lootruns.notes") + ": "
                                     + currentLootrun.notes().size()),
                             0,
                             29,
@@ -210,7 +210,7 @@ public final class WynntilsLootrunsScreen extends WynntilsListScreen<LootrunInst
             FontRenderer.getInstance()
                     .renderText(
                             poseStack,
-                            CodedString.of(I18n.get("screens.wynntils.lootruns.start") + ": "
+                            StyledText.of(I18n.get("screens.wynntils.lootruns.start") + ": "
                                     + String.format("[%d, %d, %d]", (int) start.x(), (int) start.y(), (int) start.z())),
                             0,
                             39,
@@ -226,7 +226,7 @@ public final class WynntilsLootrunsScreen extends WynntilsListScreen<LootrunInst
             FontRenderer.getInstance()
                     .renderText(
                             poseStack,
-                            CodedString.of(I18n.get("screens.wynntils.lootruns.end") + ": "
+                            StyledText.of(I18n.get("screens.wynntils.lootruns.end") + ": "
                                     + String.format("[%d, %d, %d]", (int) end.x(), (int) end.y(), (int) end.z())),
                             0,
                             49,
@@ -240,7 +240,7 @@ public final class WynntilsLootrunsScreen extends WynntilsListScreen<LootrunInst
             FontRenderer.getInstance()
                     .renderAlignedTextInBox(
                             poseStack,
-                            CodedString.of(I18n.get("screens.wynntils.lootruns.description1")),
+                            StyledText.of(I18n.get("screens.wynntils.lootruns.description1")),
                             20,
                             Texture.QUEST_BOOK_BACKGROUND.width() / 2f - 10,
                             80,
@@ -252,7 +252,7 @@ public final class WynntilsLootrunsScreen extends WynntilsListScreen<LootrunInst
             FontRenderer.getInstance()
                     .renderAlignedTextInBox(
                             poseStack,
-                            CodedString.of(I18n.get("screens.wynntils.lootruns.description2")),
+                            StyledText.of(I18n.get("screens.wynntils.lootruns.description2")),
                             20,
                             Texture.QUEST_BOOK_BACKGROUND.width() / 2f - 10,
                             155,

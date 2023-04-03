@@ -8,7 +8,7 @@ import com.wynntils.handlers.item.ItemAnnotation;
 import com.wynntils.handlers.item.ItemAnnotator;
 import com.wynntils.models.items.items.game.TeleportScrollItem;
 import com.wynntils.utils.mc.LoreUtils;
-import com.wynntils.utils.mc.type.CodedString;
+import com.wynntils.utils.mc.type.StyledText;
 import com.wynntils.utils.wynn.WynnUtils;
 import java.util.Arrays;
 import java.util.Locale;
@@ -22,7 +22,7 @@ public final class TeleportScrollAnnotator implements ItemAnnotator {
     private static final Pattern TELEPORT_LOCATION_PATTERN = Pattern.compile("§3- (?:§r)?§7Teleports to: (?:§r)§f(.*)");
 
     @Override
-    public ItemAnnotation getAnnotation(ItemStack itemStack, CodedString name) {
+    public ItemAnnotation getAnnotation(ItemStack itemStack, StyledText name) {
         Matcher nameMatcher = name.match(TELEPORT_SCROLL_PATTERN);
         if (!nameMatcher.matches()) return null;
 

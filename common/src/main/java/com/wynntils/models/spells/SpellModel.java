@@ -17,7 +17,7 @@ import com.wynntils.models.spells.type.PartialSpellSource;
 import com.wynntils.models.spells.type.SpellDirection;
 import com.wynntils.models.spells.type.SpellFailureReason;
 import com.wynntils.models.spells.type.SpellType;
-import com.wynntils.utils.mc.type.CodedString;
+import com.wynntils.utils.mc.type.StyledText;
 import java.util.Arrays;
 import java.util.List;
 import java.util.regex.MatchResult;
@@ -45,7 +45,7 @@ public class SpellModel extends Model {
 
     @SubscribeEvent(receiveCanceled = true)
     public void onItemRenamed(ItemRenamedEvent event) {
-        CodedString msg = event.getNewName();
+        StyledText msg = event.getNewName();
         SpellFailureReason failureReason = SpellFailureReason.fromMsg(msg);
         if (failureReason != null) {
             WynntilsMod.postEvent(new SpellEvent.Failed(failureReason));

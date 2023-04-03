@@ -12,7 +12,7 @@ import com.wynntils.screens.guides.WynntilsGuidesListScreen;
 import com.wynntils.utils.StringUtils;
 import com.wynntils.utils.colors.CommonColors;
 import com.wynntils.utils.mc.ComponentUtils;
-import com.wynntils.utils.mc.type.CodedString;
+import com.wynntils.utils.mc.type.StyledText;
 import com.wynntils.utils.render.FontRenderer;
 import com.wynntils.utils.render.RenderUtils;
 import com.wynntils.utils.render.Texture;
@@ -113,7 +113,7 @@ public final class WynntilsEmeraldPouchGuideScreen
         FontRenderer.getInstance()
                 .renderText(
                         poseStack,
-                        CodedString.of(titleString),
+                        StyledText.of(titleString),
                         0,
                         0,
                         CommonColors.YELLOW,
@@ -133,7 +133,7 @@ public final class WynntilsEmeraldPouchGuideScreen
         FontRenderer.getInstance()
                 .renderText(
                         poseStack,
-                        CodedString.of(I18n.get("screens.wynntils.wynntilsGuides.itemGuide.available")),
+                        StyledText.of(I18n.get("screens.wynntils.wynntilsGuides.itemGuide.available")),
                         Texture.QUEST_BOOK_BACKGROUND.width() * 0.75f,
                         30,
                         CommonColors.BLACK,

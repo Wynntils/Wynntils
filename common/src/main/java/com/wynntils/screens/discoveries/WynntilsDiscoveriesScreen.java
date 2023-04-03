@@ -21,7 +21,7 @@ import com.wynntils.screens.wynntilsmenu.WynntilsMenuScreen;
 import com.wynntils.utils.StringUtils;
 import com.wynntils.utils.colors.CommonColors;
 import com.wynntils.utils.mc.McUtils;
-import com.wynntils.utils.mc.type.CodedString;
+import com.wynntils.utils.mc.type.StyledText;
 import com.wynntils.utils.render.FontRenderer;
 import com.wynntils.utils.render.RenderUtils;
 import com.wynntils.utils.render.Texture;
@@ -274,7 +274,7 @@ public final class WynntilsDiscoveriesScreen extends WynntilsListScreen<Discover
         FontRenderer.getInstance()
                 .renderAlignedTextInBox(
                         poseStack,
-                        CodedString.of(I18n.get("screens.wynntils.wynntilsDiscoveries.noDiscoveries")),
+                        StyledText.of(I18n.get("screens.wynntils.wynntilsDiscoveries.noDiscoveries")),
                         Texture.QUEST_BOOK_BACKGROUND.width() / 2f + 15f,
                         Texture.QUEST_BOOK_BACKGROUND.width() - 15f,
                         0,
@@ -290,7 +290,7 @@ public final class WynntilsDiscoveriesScreen extends WynntilsListScreen<Discover
         FontRenderer.getInstance()
                 .renderAlignedTextInBox(
                         poseStack,
-                        CodedString.of(description),
+                        StyledText.of(description),
                         20,
                         Texture.QUEST_BOOK_BACKGROUND.width() / 2f - 10,
                         80,
@@ -302,7 +302,7 @@ public final class WynntilsDiscoveriesScreen extends WynntilsListScreen<Discover
         FontRenderer.getInstance()
                 .renderAlignedTextInBox(
                         poseStack,
-                        CodedString.of(filterHelper),
+                        StyledText.of(filterHelper),
                         20,
                         Texture.QUEST_BOOK_BACKGROUND.width() / 2f - 10,
                         105,

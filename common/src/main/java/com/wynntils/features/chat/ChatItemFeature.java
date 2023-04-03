@@ -16,7 +16,7 @@ import com.wynntils.models.items.FakeItemStack;
 import com.wynntils.models.items.items.game.GearItem;
 import com.wynntils.utils.mc.ComponentUtils;
 import com.wynntils.utils.mc.McUtils;
-import com.wynntils.utils.mc.type.CodedString;
+import com.wynntils.utils.mc.type.StyledText;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -55,7 +55,7 @@ public class ChatItemFeature extends Feature {
         }
 
         // replace encoded strings with placeholders for less confusion
-        Matcher m = Models.Gear.gearChatEncodingMatcher(CodedString.of(chatInput.getValue()));
+        Matcher m = Models.Gear.gearChatEncodingMatcher(StyledText.of(chatInput.getValue()));
         while (m.find()) {
             String encodedItem = m.group();
             StringBuilder name = new StringBuilder(m.group("Name"));
@@ -99,7 +99,7 @@ public class ChatItemFeature extends Feature {
             boolean lastComponentIsItem = false;
 
             do {
-                CodedString text = ComponentUtils.getCoded(comp);
+                StyledText text = ComponentUtils.getCoded(comp);
                 Style style = comp.getStyle();
 
                 GearItem item = Models.Gear.fromEncodedString(m.group());

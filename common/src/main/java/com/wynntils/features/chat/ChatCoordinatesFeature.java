@@ -11,8 +11,8 @@ import com.wynntils.core.features.Feature;
 import com.wynntils.handlers.chat.event.ChatMessageReceivedEvent;
 import com.wynntils.mc.event.ClientsideMessageEvent;
 import com.wynntils.utils.mc.ComponentUtils;
-import com.wynntils.utils.mc.type.CodedString;
 import com.wynntils.utils.mc.type.Location;
+import com.wynntils.utils.mc.type.StyledText;
 import com.wynntils.utils.wynn.LocationUtils;
 import java.util.List;
 import java.util.Optional;
@@ -64,7 +64,7 @@ public class ChatCoordinatesFeature extends Feature {
             }
 
             do {
-                CodedString text = ComponentUtils.getCoded(comp);
+                StyledText text = ComponentUtils.getCoded(comp);
                 Style style = comp.getStyle();
 
                 Optional<Location> location = LocationUtils.parseFromString(m.group());

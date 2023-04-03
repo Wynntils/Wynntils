@@ -19,7 +19,7 @@ import com.wynntils.handlers.chat.type.NpcDialogueType;
 import com.wynntils.handlers.chat.type.RecipientType;
 import com.wynntils.utils.mc.ComponentUtils;
 import com.wynntils.utils.mc.McUtils;
-import com.wynntils.utils.mc.type.CodedString;
+import com.wynntils.utils.mc.type.StyledText;
 import java.util.List;
 import net.minecraft.network.chat.Component;
 import net.minecraftforge.eventbus.api.EventPriority;
@@ -55,11 +55,11 @@ public class TranslationFeature extends Feature {
         if (e.getRecipientType() != RecipientType.INFO && !translatePlayerChat.get()) return;
         if (e.getRecipientType() == RecipientType.INFO && !translateInfo.get()) return;
 
-        CodedString origCoded = e.getCodedMessage();
+        StyledText origCoded = e.getCodedMessage();
         String wrapped = wrapCoding(origCoded);
         Managers.Translation.getTranslator(translationService.get())
                 .translate(List.of(wrapped), languageName.get(), translatedMsgList -> {
-                    CodedString messageToSend;
+                    StyledText messageToSend;
                     if (!translatedMsgList.isEmpty()) {
                         String result = translatedMsgList.get(0);
                         messageToSend = unwrapCoding(result);
@@ -87,7 +87,7 @@ public class TranslationFeature extends Feature {
                     .toList();
             Managers.Translation.getTranslator(translationService.get())
                     .translate(wrapped, languageName.get(), translatedMsgList -> {
-                        List<CodedString> unwrapped = translatedMsgList.stream()
+                        List<StyledText> unwrapped = translatedMsgList.stream()
                                 .map(this::unwrapCoding)
                                 .toList();
                         // FIXME: We need a ComponentUtils.componentFromCoded()...
@@ -111,11 +111,11 @@ public class TranslationFeature extends Feature {
         }
     }
 
-    private CodedString unwrapCoding(String origCoded) {
-        return CodedString.of(origCoded.replaceAll("\\{ ?§ ?([0-9a-fklmnor]) ?\\}", "§$1"));
+    private StyledText unwrapCoding(String origCoded) {
+        return StyledText.of(origCoded.replaceAll("\\{ ?§ ?([0-9a-fklmnor]) ?\\}", "§$1"));
     }
 
-    private String wrapCoding(CodedString origCoded) {
+    private String wrapCoding(StyledText origCoded) {
         return origCoded.str().replaceAll("(§[0-9a-fklmnor])", "{$1}");
     }
 

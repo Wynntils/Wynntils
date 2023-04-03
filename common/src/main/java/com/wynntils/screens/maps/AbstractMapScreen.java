@@ -18,7 +18,7 @@ import com.wynntils.utils.colors.CommonColors;
 import com.wynntils.utils.colors.CustomColor;
 import com.wynntils.utils.mc.KeyboardUtils;
 import com.wynntils.utils.mc.McUtils;
-import com.wynntils.utils.mc.type.CodedString;
+import com.wynntils.utils.mc.type.StyledText;
 import com.wynntils.utils.render.FontRenderer;
 import com.wynntils.utils.render.MapRenderer;
 import com.wynntils.utils.render.RenderUtils;
@@ -271,7 +271,7 @@ public abstract class AbstractMapScreen extends WynntilsScreen {
         FontRenderer.getInstance()
                 .renderText(
                         poseStack,
-                        CodedString.of(gameX + ", " + gameZ),
+                        StyledText.of(gameX + ", " + gameZ),
                         this.centerX,
                         this.renderHeight - this.renderedBorderYOffset - 40,
                         CommonColors.WHITE,

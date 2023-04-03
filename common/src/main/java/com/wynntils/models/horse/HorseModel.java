@@ -9,7 +9,7 @@ import com.wynntils.core.components.Models;
 import com.wynntils.models.items.ItemModel;
 import com.wynntils.models.items.items.game.HorseItem;
 import com.wynntils.utils.mc.McUtils;
-import com.wynntils.utils.mc.type.CodedString;
+import com.wynntils.utils.mc.type.StyledText;
 import java.util.List;
 import java.util.Optional;
 import net.minecraft.network.chat.Component;
@@ -67,8 +67,8 @@ public class HorseModel extends Model {
         if (horseName == null) return false;
 
         String playerName = player.getName().getString();
-        CodedString defaultName = CodedString.of("§f" + playerName + "§7" + "'s horse");
-        CodedString codedHorseName = CodedString.fromComponent(horseName);
+        StyledText defaultName = StyledText.of("§f" + playerName + "§7" + "'s horse");
+        StyledText codedHorseName = StyledText.fromComponent(horseName);
         return defaultName.equals(codedHorseName) || codedHorseName.str().endsWith("§7" + " [" + playerName + "]");
     }
 }

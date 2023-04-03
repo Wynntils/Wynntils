@@ -43,7 +43,7 @@ import com.wynntils.models.items.annotators.gui.SkillCrystalAnnotator;
 import com.wynntils.models.items.annotators.gui.SkillPointAnnotator;
 import com.wynntils.models.items.annotators.gui.SoulPointAnnotator;
 import com.wynntils.models.rewards.RewardsModel;
-import com.wynntils.utils.mc.type.CodedString;
+import com.wynntils.utils.mc.type.StyledText;
 import java.util.List;
 import java.util.Optional;
 import net.minecraft.world.item.ItemStack;
@@ -124,7 +124,7 @@ public class ItemModel extends Model {
 
     public static final class FallbackAnnotator implements ItemAnnotator {
         @Override
-        public ItemAnnotation getAnnotation(ItemStack itemStack, CodedString name) {
+        public ItemAnnotation getAnnotation(ItemStack itemStack, StyledText name) {
             return new WynnItem();
         }
     }

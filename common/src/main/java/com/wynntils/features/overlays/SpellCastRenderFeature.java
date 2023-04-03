@@ -23,7 +23,7 @@ import com.wynntils.mc.event.TickEvent;
 import com.wynntils.models.spells.event.SpellEvent;
 import com.wynntils.utils.colors.CommonColors;
 import com.wynntils.utils.colors.CustomColor;
-import com.wynntils.utils.mc.type.CodedString;
+import com.wynntils.utils.mc.type.StyledText;
 import com.wynntils.utils.render.RenderUtils;
 import com.wynntils.utils.render.buffered.BufferedFontRenderer;
 import com.wynntils.utils.render.type.HorizontalAlignment;
@@ -53,7 +53,7 @@ public class SpellCastRenderFeature extends Feature {
     public final Config<CustomColor> vignetteColor = new Config<>(new CustomColor(0, 71, 201));
 
     private int spellTimer;
-    private CodedString spellMessage;
+    private StyledText spellMessage;
     private float intensity;
 
     @SubscribeEvent
@@ -68,7 +68,7 @@ public class SpellCastRenderFeature extends Feature {
     public void onSpellCast(SpellEvent.Cast event) {
         int manaCost = event.getManaCost();
         spellMessage =
-                CodedString.of("§7" + event.getSpellType().getName() + " spell cast! §3[§b-" + manaCost + " ✺§3]");
+                StyledText.of("§7" + event.getSpellType().getName() + " spell cast! §3[§b-" + manaCost + " ✺§3]");
 
         // An relativeCost of 1.0 means we just used all mana we have left
         float relativeCost = (float) manaCost / Models.CharacterStats.getMana().current();
