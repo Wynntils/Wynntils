@@ -10,7 +10,7 @@ import net.minecraft.network.chat.Style;
 
 public final class StyleStringPart {
     private final String text;
-    private final CodedStyle style;
+    private final PartStyle style;
 
     private final StyleString parent;
 
@@ -19,10 +19,10 @@ public final class StyleStringPart {
         this.parent = parent;
 
         // Must be done last
-        this.style = CodedStyle.fromStyle(style, this, partBefore == null ? null : partBefore.getCodedStyle());
+        this.style = PartStyle.fromStyle(style, this, partBefore == null ? null : partBefore.getCodedStyle());
     }
 
-    public String getString(CodedStyle previousStyle, CodedStyle.StyleType type) {
+    public String getString(PartStyle previousStyle, PartStyle.StyleType type) {
         return style.asString(previousStyle, type) + text;
     }
 
@@ -30,7 +30,7 @@ public final class StyleStringPart {
         return parent;
     }
 
-    public CodedStyle getCodedStyle() {
+    public PartStyle getCodedStyle() {
         return style;
     }
 

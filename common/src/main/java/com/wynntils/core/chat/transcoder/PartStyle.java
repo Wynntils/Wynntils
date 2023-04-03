@@ -13,7 +13,7 @@ import net.minecraft.network.chat.ClickEvent;
 import net.minecraft.network.chat.HoverEvent;
 import net.minecraft.network.chat.Style;
 
-public final class CodedStyle {
+public final class PartStyle {
     private static final String STYLE_PREFIX = "§";
 
     private final StyleStringPart owner;
@@ -27,7 +27,7 @@ public final class CodedStyle {
     private final ClickEvent clickEvent;
     private final HoverEvent hoverEvent;
 
-    private CodedStyle(
+    private PartStyle(
             StyleStringPart owner,
             CustomColor color,
             boolean bold,
@@ -48,7 +48,7 @@ public final class CodedStyle {
         this.hoverEvent = hoverEvent;
     }
 
-    static CodedStyle fromStyle(Style style, StyleStringPart owner, CodedStyle previousStyle) {
+    static PartStyle fromStyle(Style style, StyleStringPart owner, PartStyle previousStyle) {
         Style inheritedStyle;
 
         if (previousStyle == null) {
@@ -64,7 +64,7 @@ public final class CodedStyle {
             inheritedStyle.withFont(style.getFont());
         }
 
-        return new CodedStyle(
+        return new PartStyle(
                 owner,
                 inheritedStyle.getColor() == null
                         ? CustomColor.NONE
@@ -78,7 +78,7 @@ public final class CodedStyle {
                 inheritedStyle.getHoverEvent());
     }
 
-    public String asString(CodedStyle previousStyle, StyleType type) {
+    public String asString(PartStyle previousStyle, StyleType type) {
         // Rules of converting a Style to a String:
         // Every style is prefixed with a §.
         // 0. Every style string is fully qualified, meaning that it contains all the formatting, and reset if needed.
@@ -167,7 +167,7 @@ public final class CodedStyle {
         return styleString.toString();
     }
 
-    private StringBuilder tryConstructDifference(CodedStyle oldStyle) {
+    private StringBuilder tryConstructDifference(PartStyle oldStyle) {
         StringBuilder add = new StringBuilder();
 
         int oldColorInt = oldStyle.color.asInt();

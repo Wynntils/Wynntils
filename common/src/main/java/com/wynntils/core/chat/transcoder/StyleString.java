@@ -46,14 +46,14 @@ public final class StyleString {
 
     // We don't want to expose the actual string to the outside world
     // If you need to do an operation with this string, implement it as a method
-    public String getString(CodedStyle.StyleType type) {
-        if (type == CodedStyle.StyleType.FULL) {
+    public String getString(PartStyle.StyleType type) {
+        if (type == PartStyle.StyleType.FULL) {
             return ComponentUtils.getCoded(temporaryWorkaround);
         }
 
         StringBuilder builder = new StringBuilder();
 
-        CodedStyle previousStyle = null;
+        PartStyle previousStyle = null;
         for (StyleStringPart part : parts) {
             builder.append(part.getString(previousStyle, type));
             previousStyle = part.getCodedStyle();
