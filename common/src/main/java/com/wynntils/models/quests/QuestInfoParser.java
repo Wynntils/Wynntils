@@ -157,8 +157,7 @@ public final class QuestInfoParser {
         String description = String.join(
                         " ",
                         descriptionLines.stream()
-                                .map(StyledText::str)
-                                .map(ChatFormatting::stripFormatting)
+                                .map(StyledText::withoutFormatting)
                                 .toList())
                 .replaceAll("\\s+", " ")
                 .trim();
