@@ -15,7 +15,6 @@ import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-import net.minecraft.ChatFormatting;
 import net.minecraft.world.item.ItemStack;
 
 public final class QuestInfoParser {

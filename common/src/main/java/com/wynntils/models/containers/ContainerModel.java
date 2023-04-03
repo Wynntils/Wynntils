@@ -65,7 +65,8 @@ public final class ContainerModel extends Model {
     public boolean isLastBankPage(Screen screen) {
         return (isBankScreen(screen) || isBlockBankScreen(screen) || isMiscBucketScreen(screen))
                 && screen instanceof ContainerScreen cs
-                && ComponentUtils.getCoded(cs.getMenu().getSlot(8).getItem().getHoverName()).endsWith(LAST_BANK_PAGE_STRING);
+                && ComponentUtils.getCoded(cs.getMenu().getSlot(8).getItem().getHoverName())
+                        .endsWith(LAST_BANK_PAGE_STRING);
     }
 
     public boolean isGuildBankScreen(Screen screen) {

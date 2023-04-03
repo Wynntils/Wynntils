@@ -292,8 +292,8 @@ public class NpcDialogueOverlayFeature extends Feature {
                 List<TextRenderTask> renderTaskList = new LinkedList<>();
                 StyledText protection = isProtected ? StyledText.of("§f<protected> §r") : StyledText.EMPTY;
                 if (dialogueType == NpcDialogueType.NORMAL) {
-                    TextRenderTask pressSneakMessage = new TextRenderTask(
-                            PRESS_SNEAK_TO_CONTINUE.prepend(protection), renderSetting);
+                    TextRenderTask pressSneakMessage =
+                            new TextRenderTask(PRESS_SNEAK_TO_CONTINUE.prepend(protection), renderSetting);
                     renderTaskList.add(pressSneakMessage);
                 } else if (dialogueType == NpcDialogueType.SELECTION) {
                     String msg;
@@ -303,8 +303,7 @@ public class NpcDialogueOverlayFeature extends Feature {
                         msg = "Open chat and click on the option to select it";
                     }
 
-                    TextRenderTask pressSneakMessage =
-                            new TextRenderTask(protection.append("§c"+ msg), renderSetting);
+                    TextRenderTask pressSneakMessage = new TextRenderTask(protection.append("§c" + msg), renderSetting);
                     renderTaskList.add(pressSneakMessage);
                 }
 

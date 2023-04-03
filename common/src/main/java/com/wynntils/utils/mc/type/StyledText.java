@@ -32,46 +32,20 @@ public class StyledText {
         return StyledText.of(component.getString());
     }
 
-    public static StyledText join(List<StyledText> strings, String delimiter) {
-        return StyledText.of(
-                String.join(delimiter, strings.stream().map(StyledText::str).toList()));
+    public String str() {
+        return str;
     }
 
-    public static StyledText join(StyledText[] strings, String delimiter) {
-        return StyledText.of(String.join(
-                delimiter, Arrays.stream(strings).map(StyledText::str).toList()));
-    }
-
-    public static StyledText concat(StyledText... str) {
-        return StyledText.of(Arrays.stream(str).map(StyledText::str).collect(Collectors.joining()));
-    }
-
-    public StyledText[] split(String regex) {
-        return Arrays.stream(str.split(regex)).map(StyledText::of).toArray(StyledText[]::new);
+    public String withoutFormatting() {
+        return ChatFormatting.stripFormatting(str);
     }
 
     public MutableComponent asComponent() {
         return Component.literal(str);
     }
 
-    public String str() {
-        return str;
-    }
-
-    public StyledText prepend(StyledText prefix) {
-        return prefix.append(str);
-    }
-
-    public StyledText prepend(String prefix) {
-        return StyledText.of(prefix + str);
-    }
-
-    public StyledText append(StyledText suffix) {
-        return StyledText.of(str + suffix.str());
-    }
-
-    public StyledText append(String suffix) {
-        return StyledText.of(str + suffix);
+    public StyledText getNormalized() {
+        return new StyledText(WynnUtils.normalizeBadString(str));
     }
 
     public StyledText trim() {
@@ -84,6 +58,10 @@ public class StyledText {
 
     public boolean isBlank() {
         return str.isBlank();
+    }
+
+    public Matcher match(Pattern pattern) {
+        return pattern.matcher(str);
     }
 
     public boolean contains(StyledText string) {
@@ -110,16 +88,38 @@ public class StyledText {
         return str.endsWith(suffix);
     }
 
-    public StyledText getNormalized() {
-        return new StyledText(WynnUtils.normalizeBadString(str));
+    public static StyledText join(List<StyledText> strings, String delimiter) {
+        return StyledText.of(
+                String.join(delimiter, strings.stream().map(StyledText::str).toList()));
     }
 
-    public Matcher match(Pattern pattern) {
-        return pattern.matcher(stripToVanillaEncoding(str));
+    public StyledText[] split(String regex) {
+        return Arrays.stream(str.split(regex)).map(StyledText::of).toArray(StyledText[]::new);
     }
 
-    private String stripToVanillaEncoding(String string) {
-        return string;
+    public static StyledText join(StyledText[] strings, String delimiter) {
+        return StyledText.of(String.join(
+                delimiter, Arrays.stream(strings).map(StyledText::str).toList()));
+    }
+
+    public static StyledText concat(StyledText... str) {
+        return StyledText.of(Arrays.stream(str).map(StyledText::str).collect(Collectors.joining()));
+    }
+
+    public StyledText prepend(StyledText prefix) {
+        return prefix.append(str);
+    }
+
+    public StyledText prepend(String prefix) {
+        return StyledText.of(prefix + str);
+    }
+
+    public StyledText append(StyledText suffix) {
+        return StyledText.of(str + suffix.str());
+    }
+
+    public StyledText append(String suffix) {
+        return StyledText.of(str + suffix);
     }
 
     @Override
@@ -138,9 +138,5 @@ public class StyledText {
     @Override
     public int hashCode() {
         return Objects.hash(str);
-    }
-
-    public String withoutFormatting() {
-        return ChatFormatting.stripFormatting(str);
     }
 }
