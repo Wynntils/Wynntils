@@ -6,6 +6,7 @@ package com.wynntils.features.overlays;
 
 import com.mojang.blaze3d.platform.Window;
 import com.mojang.blaze3d.vertex.PoseStack;
+import com.wynntils.core.components.Managers;
 import com.wynntils.core.components.Models;
 import com.wynntils.core.config.Category;
 import com.wynntils.core.config.Config;
@@ -47,7 +48,7 @@ public class QuestInfoOverlayFeature extends Feature {
 
     @SubscribeEvent(priority = EventPriority.HIGHEST)
     public void onScoreboardSegmentChange(ScoreboardSegmentAdditionEvent event) {
-        if (questInfoOverlay.shouldBeEnabled()
+        if (Managers.Overlay.isEnabled(questInfoOverlay)
                 && disableQuestTrackingOnScoreboard.get()
                 && event.getSegment().getScoreboardPart() instanceof QuestScoreboardPart) {
             event.setCanceled(true);
