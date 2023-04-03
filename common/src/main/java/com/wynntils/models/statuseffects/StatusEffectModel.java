@@ -72,7 +72,7 @@ public final class StatusEffectModel extends Model {
 
         StyledText[] effects = footer.split("\\s{2}"); // Effects are split up by 2 spaces
         for (StyledText effect : effects) {
-            StyledText trimmedEffect = StyledText.of(effect.str().trim());
+            StyledText trimmedEffect = effect.trim();
             if (trimmedEffect.isEmpty()) continue;
 
             Matcher m = trimmedEffect.match(STATUS_EFFECT_PATTERN);

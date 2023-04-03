@@ -58,6 +58,10 @@ public class StyledText {
         return str;
     }
 
+    public StyledText trim() {
+        return StyledText.of(str.trim());
+    }
+
     public boolean isEmpty() {
         return str.isEmpty();
     }
