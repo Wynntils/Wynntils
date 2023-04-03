@@ -58,7 +58,7 @@ dependencies {
     modImplementation "net.fabricmc:fabric-loader:${fabric_loader_version}"
     include(modImplementation(fabricApi.module("fabric-resource-loader-v0", fabric_version)))
 
-    common(project(path: ":common", configuration: "namedElements")) { transitive false }
+    testImplementation(common(project(path: ":common", configuration: "namedElements"))) { transitive false }
     shadowCommon(project(path: ":common", configuration: "transformProductionFabric")) { transitive false }
 
     shadowImplementation("net.minecraftforge:eventbus:${forge_eventbus_version}") {
@@ -79,7 +79,6 @@ dependencies {
 
     testImplementation("net.fabricmc:fabric-loader-junit:${fabric_loader_version}")
     testImplementation("org.junit.jupiter:junit-jupiter:${junit_version}")
-    testImplementation project(path: ':common')
 }
 
 test {

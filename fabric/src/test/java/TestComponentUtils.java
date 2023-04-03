@@ -28,7 +28,6 @@ public class TestComponentUtils {
         final String expected = "§cHello,§r§9§l World!";
 
         String actual = ComponentUtils.getCoded(component);
-
         Assertions.assertEquals(expected, actual, "ComponentUtils.getCoded() returned an unexpected value.");
     }
 }
