@@ -96,7 +96,7 @@ public class NpcDialogueOverlayFeature extends Feature {
         // Print dialogue to the system log
         WynntilsMod.info("[NPC] Type: " + (msg.isEmpty() ? "<empty> " : "") + (e.isProtected() ? "<protected> " : "")
                 + e.getType());
-        msg.forEach(s -> WynntilsMod.info("[NPC] " + (s.str().isEmpty() ? "<empty>" : s)));
+        msg.forEach(s -> WynntilsMod.info("[NPC] " + (s.isEmpty() ? "<empty>" : s)));
 
         // The same message can be repeating before we have finished removing the old
         // Just remove the old and add the new with an updated remove time

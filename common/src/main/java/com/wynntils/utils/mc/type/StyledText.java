@@ -58,6 +58,10 @@ public class StyledText {
         return str;
     }
 
+    public boolean isEmpty() {
+        return str.isEmpty();
+    }
+
     public StyledText getNormalized() {
         return new StyledText(WynnUtils.normalizeBadString(str));
     }

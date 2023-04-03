@@ -98,7 +98,7 @@ public final class QuestInfoParser {
 
     private static boolean skipEmptyLine(LinkedList<StyledText> lore) {
         StyledText loreLine = lore.pop();
-        if (!loreLine.str().isEmpty()) {
+        if (!loreLine.isEmpty()) {
             WynntilsMod.warn("Unexpected value in quest: " + loreLine);
             return false;
         }

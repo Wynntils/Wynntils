@@ -57,7 +57,7 @@ public final class StatusEffectModel extends Model {
     public void onTabListCustomization(PlayerInfoFooterChangedEvent event) {
         StyledText footer = event.getFooter();
 
-        if (footer.str().isEmpty()) {
+        if (footer.isEmpty()) {
             if (!statusEffects.isEmpty()) {
                 statusEffects = List.of(); // No timers, get rid of them
                 WynntilsMod.postEvent(new StatusEffectsChangedEvent());
@@ -73,7 +73,7 @@ public final class StatusEffectModel extends Model {
         StyledText[] effects = footer.split("\\s{2}"); // Effects are split up by 2 spaces
         for (StyledText effect : effects) {
             StyledText trimmedEffect = StyledText.of(effect.str().trim());
-            if (trimmedEffect.str().isEmpty()) continue;
+            if (trimmedEffect.isEmpty()) continue;
 
             Matcher m = trimmedEffect.match(STATUS_EFFECT_PATTERN);
             if (!m.find()) continue;

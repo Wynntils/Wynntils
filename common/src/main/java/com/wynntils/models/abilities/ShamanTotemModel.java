@@ -157,7 +157,7 @@ public class ShamanTotemModel extends Model {
         if (!(entity instanceof ArmorStand)) return;
 
         StyledText name = e.getName();
-        if (name.str().isEmpty()) return;
+        if (name.isEmpty()) return;
 
         Matcher m = name.match(SHAMAN_TOTEM_TIMER);
         if (!m.find()) return;

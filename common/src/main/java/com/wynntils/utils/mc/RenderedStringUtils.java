@@ -28,7 +28,7 @@ public final class RenderedStringUtils {
                     result.append('\n');
                     length = 0;
                 }
-                if (!line.str().isEmpty()) {
+                if (!line.isEmpty()) {
                     result.append(line).append(' ');
                     length += font.width(line.str()) + spaceSize;
                 }

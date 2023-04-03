@@ -394,7 +394,7 @@ public final class BufferedFontRenderer {
             // If we ask Mojang code the line height of an empty line we get 0 back so replace with space
             currentY += FontRenderer.getInstance()
                     .calculateRenderHeight(
-                            line.getText().str().isEmpty() ? StyledText.of(" ") : line.getText(),
+                            line.getText().isEmpty() ? StyledText.of(" ") : line.getText(),
                             line.getSetting().maxWidth());
         }
     }
