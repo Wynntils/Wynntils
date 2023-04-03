@@ -1,9 +1,21 @@
+## [0.0.2-alpha.431](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.430...v0.0.2-alpha.431) (2023-04-03)
+
+
+### Bug Fixes
+
+* Fix storage init (changelog not saving) ([#1439](https://github.com/Wynntils/Artemis/issues/1439)) ([cbdf996](https://github.com/Wynntils/Artemis/commit/cbdf9962e153a0265ba78ac0a8d3a94eef5a0aa7))
+
 ## [0.0.2-alpha.430](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.429...v0.0.2-alpha.430) (2023-04-02)
 
 
 ### New Features
 
 * Add game, custom bar animations + fix overflow behavior ([#1432](https://github.com/Wynntils/Artemis/issues/1432)) ([1441215](https://github.com/Wynntils/Artemis/commit/1441215492073881b6f25e71caaba782c6da6710))
+
+
+### Miscellaneous Chores
+
+* **release:** v0.0.2-alpha.430 [skip ci] ([e6d943d](https://github.com/Wynntils/Artemis/commit/e6d943d24ac6f88531813d133275484a2caa63c6))
 
 ## [0.0.2-alpha.429](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.428...v0.0.2-alpha.429) (2023-04-02)
 
@@ -40,16 +52,4 @@
 ### Miscellaneous Chores
 
 * **release:** v0.0.2-alpha.427 [skip ci] ([6f87c20](https://github.com/Wynntils/Artemis/commit/6f87c20daf59d376cfdf98578147af8404437261))
-
-## [0.0.2-alpha.426](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.425...v0.0.2-alpha.426) (2023-04-02)
-
-
-### Bug Fixes
-
-* Fixed reload_button texture alignment ([#1429](https://github.com/Wynntils/Artemis/issues/1429)) ([1fcc917](https://github.com/Wynntils/Artemis/commit/1fcc917f6efe1a8bbe7905b071dbf8787641cacd))
-
-
-### Miscellaneous Chores
-
-* **release:** v0.0.2-alpha.426 [skip ci] ([97d76bb](https://github.com/Wynntils/Artemis/commit/97d76bbec5109a49a47a00710e68717972e7bde3))
 
