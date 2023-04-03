@@ -62,6 +62,10 @@ public final class StyleString {
         }
     }
 
+    public static StyleString fromComponent(Component component) {
+        return new StyleString(component);
+    }
+
     // We don't want to expose the actual string to the outside world
     // If you need to do an operation with this string, implement it as a method
     public String getString(PartStyle.StyleType type) {

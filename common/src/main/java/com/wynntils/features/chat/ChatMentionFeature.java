@@ -8,7 +8,6 @@ import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.chat.transcoder.PartStyle;
 import com.wynntils.core.chat.transcoder.StyleString;
 import com.wynntils.core.chat.transcoder.StyleStringPart;
-import com.wynntils.core.components.Managers;
 import com.wynntils.core.config.Category;
 import com.wynntils.core.config.Config;
 import com.wynntils.core.config.ConfigCategory;
@@ -62,7 +61,7 @@ public class ChatMentionFeature extends Feature {
     public void onChat(ChatMessageReceivedEvent e) {
         Component message = e.getMessage();
 
-        StyleString styleString = Managers.ChatTranscoder.fromComponent(message);
+        StyleString styleString = StyleString.fromComponent(message);
 
         StyleStringPart partFinding = styleString.getPartFinding(mentionPattern, PartStyle.StyleType.NONE);
 
