@@ -16,7 +16,7 @@ public class ChatTranscoderManager extends Manager {
         super(List.of());
     }
 
-    public CodedString fromComponent(Component component) {
-        return new CodedString(component);
+    public StyleString fromComponent(Component component) {
+        return new StyleString(component);
     }
 }

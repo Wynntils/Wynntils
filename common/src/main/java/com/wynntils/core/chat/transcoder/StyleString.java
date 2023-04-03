@@ -4,6 +4,7 @@
  */
 package com.wynntils.core.chat.transcoder;
 
+import com.wynntils.utils.mc.ComponentUtils;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Optional;
@@ -14,25 +15,27 @@ import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.network.chat.Style;
 import org.apache.commons.lang3.ArrayUtils;
 
-public final class CodedString {
-    private final List<CodedStringPart> parts;
+public final class StyleString {
+    private final Component temporaryWorkaround;
+
+    private final List<StyleStringPart> parts;
 
     private final List<ClickEvent> clickEvents = new LinkedList<>();
     private final List<HoverEvent> hoverEvents = new LinkedList<>();
 
-    private Component componentCache;
+    StyleString(Component component) {
+        temporaryWorkaround = component;
 
-    CodedString(Component component) {
         parts = new LinkedList<>();
 
-        CodedStringPart lastPart = null;
+        StyleStringPart lastPart = null;
 
         for (Component current : component.toFlatList()) {
-            final CodedStringPart finalLastPart = lastPart;
+            final StyleStringPart finalLastPart = lastPart;
 
             current.visit(
                     (style, string) -> {
-                        parts.add(new CodedStringPart(string, style, this, finalLastPart));
+                        parts.add(new StyleStringPart(string, style, this, finalLastPart));
                         return Optional.empty();
                     },
                     Style.EMPTY);
@@ -43,12 +46,16 @@ public final class CodedString {
 
     // We don't want to expose the actual string to the outside world
     // If you need to do an operation with this string, implement it as a method
-    private String getCoded() {
+    public String getString(CodedStyle.StyleType type) {
+        if (type == CodedStyle.StyleType.FULL) {
+            return ComponentUtils.getCoded(temporaryWorkaround);
+        }
+
         StringBuilder builder = new StringBuilder();
 
         CodedStyle previousStyle = null;
-        for (CodedStringPart part : parts) {
-            builder.append(part.getCoded(previousStyle));
+        for (StyleStringPart part : parts) {
+            builder.append(part.getString(previousStyle, type));
             previousStyle = part.getCodedStyle();
         }
 
@@ -56,15 +63,9 @@ public final class CodedString {
     }
 
     public Component getComponent() {
-        if (componentCache != null) {
-            return componentCache;
-        }
-
         MutableComponent component = Component.empty();
 
         parts.forEach(part -> component.append(part.getComponent()));
-
-        componentCache = component;
 
         return component;
     }
@@ -95,10 +96,6 @@ public final class CodedString {
         hoverEvents.add(hoverEvent);
 
         return hoverEvents.size();
-    }
-
-    void invalidateCache() {
-        componentCache = null;
     }
 
     @Override

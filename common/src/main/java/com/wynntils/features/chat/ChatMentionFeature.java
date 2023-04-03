@@ -4,13 +4,14 @@
  */
 package com.wynntils.features.chat;
 
+import com.wynntils.core.chat.transcoder.CodedStyle;
+import com.wynntils.core.components.Managers;
 import com.wynntils.core.config.Category;
 import com.wynntils.core.config.Config;
 import com.wynntils.core.config.ConfigCategory;
 import com.wynntils.core.config.ConfigHolder;
 import com.wynntils.core.config.RegisterConfig;
 import com.wynntils.core.features.Feature;
-import com.wynntils.core.features.properties.StartDisabled;
 import com.wynntils.handlers.chat.event.ChatMessageReceivedEvent;
 import com.wynntils.utils.mc.ComponentUtils;
 import com.wynntils.utils.mc.McUtils;
@@ -21,9 +22,9 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.network.chat.Style;
 import net.minecraft.sounds.SoundEvents;
+import net.minecraftforge.eventbus.api.EventPriority;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 
-@StartDisabled
 @ConfigCategory(Category.CHAT)
 public class ChatMentionFeature extends Feature {
     @RegisterConfig
@@ -57,19 +58,26 @@ public class ChatMentionFeature extends Feature {
                 Pattern.CASE_INSENSITIVE);
     }
 
-    @SubscribeEvent
+    @SubscribeEvent(priority = EventPriority.HIGH)
     public void onChat(ChatMessageReceivedEvent e) {
         Component message = e.getMessage();
 
-        Matcher looseMatcher = mentionPattern.matcher(ComponentUtils.getUnformatted(message));
+        System.out.println("ComponentUtils.getCoded(message) = " + ComponentUtils.getCoded(message));
+        System.out.println("Managers.ChatTranscoder.fromComponent(e.getMessage()).getCoded() = "
+                + Managers.ChatTranscoder.fromComponent(e.getMessage()).getString(CodedStyle.StyleType.DEFAULT));
 
-        if (looseMatcher.find()) {
-            if (markMention.get()) {
-                e.setMessage(rewriteComponentTree(message));
-            }
-            if (dingMention.get()) {
-                McUtils.playSoundUI(SoundEvents.NOTE_BLOCK_PLING.value());
-            }
+        //  §8[105*/309/Ma/✫✫CHEM]§r§7 [WC8]§r§5 [§r§dHERO§r§5]§r §5BeastBenK: §r§fstarfish oil
+        //  §8[105*/309/Ma/✫✫CHEM]§r§7 [WC8]§r§5 [§r§dHERO§r§5] BeastBenK: §r§fstarfish oil
+
+        // CodedString codedString = Managers.ChatTranscoder.fromComponent(message);
+
+        // fixme: impl
+        // go through comp parts, find matches, if found, split part into three parts, add mention style to middle part
+
+        if (markMention.get()) {}
+
+        if (dingMention.get()) {
+            McUtils.playSoundUI(SoundEvents.NOTE_BLOCK_PLING.value());
         }
     }
 

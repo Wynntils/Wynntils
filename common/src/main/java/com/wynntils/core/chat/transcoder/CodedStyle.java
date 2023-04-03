@@ -5,6 +5,7 @@
 package com.wynntils.core.chat.transcoder;
 
 import com.wynntils.utils.colors.CustomColor;
+import com.wynntils.utils.mc.ComponentUtils;
 import java.util.Arrays;
 import java.util.Optional;
 import net.minecraft.ChatFormatting;
@@ -15,7 +16,7 @@ import net.minecraft.network.chat.Style;
 public final class CodedStyle {
     private static final String STYLE_PREFIX = "§";
 
-    private final CodedStringPart owner;
+    private final StyleStringPart owner;
 
     private final CustomColor color;
     private final boolean bold;
@@ -26,10 +27,8 @@ public final class CodedStyle {
     private final ClickEvent clickEvent;
     private final HoverEvent hoverEvent;
 
-    private Style styleCache;
-
     private CodedStyle(
-            CodedStringPart owner,
+            StyleStringPart owner,
             CustomColor color,
             boolean bold,
             boolean italic,
@@ -49,7 +48,7 @@ public final class CodedStyle {
         this.hoverEvent = hoverEvent;
     }
 
-    static CodedStyle fromStyle(Style style, CodedStringPart owner, CodedStyle previousStyle) {
+    static CodedStyle fromStyle(Style style, StyleStringPart owner, CodedStyle previousStyle) {
         Style inheritedStyle;
 
         if (previousStyle == null) {
@@ -79,7 +78,7 @@ public final class CodedStyle {
                 inheritedStyle.getHoverEvent());
     }
 
-    public String asString(CodedStyle previousStyle) {
+    public String asString(CodedStyle previousStyle, StyleType type) {
         // Rules of converting a Style to a String:
         // Every style is prefixed with a §.
         // 0. Every style string is fully qualified, meaning that it contains all the formatting, and reset if needed.
@@ -95,71 +94,112 @@ public final class CodedStyle {
         //    The parent of this style's owner is responsible for keeping track of hover events.
         //    Example: §<1> -> (1st hover event)
 
+        if (type == StyleType.NONE) return "";
+
         StringBuilder styleString = new StringBuilder();
 
+        boolean skipFormatting = false;
+
         if (previousStyle != null) {
-            if (!this.isCompatibleWith(previousStyle)) {
+            StringBuilder stringBuilder = this.tryConstructDifference(previousStyle);
+
+            if (stringBuilder != null) {
+                styleString.append(stringBuilder);
+                skipFormatting = true;
+            } else {
                 styleString.append(STYLE_PREFIX).append(ChatFormatting.RESET.getChar());
             }
         }
 
-        // 1. Color
-        if (color != CustomColor.NONE) {
-            Optional<ChatFormatting> chatFormatting = Arrays.stream(ChatFormatting.values())
-                    .filter(ChatFormatting::isColor)
-                    .filter(c -> c.getColor() == color.asInt())
-                    .findFirst();
+        if (!skipFormatting) {
+            // 1. Color
+            if (color != CustomColor.NONE) {
+                Optional<ChatFormatting> chatFormatting = Arrays.stream(ChatFormatting.values())
+                        .filter(ChatFormatting::isColor)
+                        .filter(c -> c.getColor() == color.asInt())
+                        .findFirst();
 
-            if (chatFormatting.isPresent()) {
-                styleString.append(STYLE_PREFIX).append(chatFormatting.get().getChar());
-            } else {
-                styleString.append(STYLE_PREFIX).append(color.toHexString());
+                if (chatFormatting.isPresent()) {
+                    styleString.append(STYLE_PREFIX).append(chatFormatting.get().getChar());
+                } else {
+                    styleString.append(STYLE_PREFIX).append(color.toHexString());
+                }
+            }
+
+            // 2. Formatting
+            if (bold) {
+                styleString.append(STYLE_PREFIX).append(ChatFormatting.BOLD.getChar());
+            }
+            if (italic) {
+                styleString.append(STYLE_PREFIX).append(ChatFormatting.ITALIC.getChar());
+            }
+            if (underlined) {
+                styleString.append(STYLE_PREFIX).append(ChatFormatting.UNDERLINE.getChar());
+            }
+            if (strikethrough) {
+                styleString.append(STYLE_PREFIX).append(ChatFormatting.STRIKETHROUGH.getChar());
+            }
+            if (obfuscated) {
+                styleString.append(STYLE_PREFIX).append(ChatFormatting.OBFUSCATED.getChar());
             }
         }
 
-        // 2. Formatting
-        if (bold) {
-            styleString.append(STYLE_PREFIX).append(ChatFormatting.BOLD.getChar());
-        }
-        if (italic) {
-            styleString.append(STYLE_PREFIX).append(ChatFormatting.ITALIC.getChar());
-        }
-        if (underlined) {
-            styleString.append(STYLE_PREFIX).append(ChatFormatting.UNDERLINE.getChar());
-        }
-        if (strikethrough) {
-            styleString.append(STYLE_PREFIX).append(ChatFormatting.STRIKETHROUGH.getChar());
-        }
-        if (obfuscated) {
-            styleString.append(STYLE_PREFIX).append(ChatFormatting.OBFUSCATED.getChar());
-        }
+        if (type == StyleType.INCLUDE_EVENTS) {
+            // 3. Click event
+            if (clickEvent != null) {
+                styleString
+                        .append(STYLE_PREFIX)
+                        .append("[")
+                        .append(owner.getParent().addClickEvent(clickEvent))
+                        .append("]");
+            }
 
-        // 3. Click event
-        if (clickEvent != null) {
-            styleString
-                    .append(STYLE_PREFIX)
-                    .append("[")
-                    .append(owner.getParent().addClickEvent(clickEvent))
-                    .append("]");
-        }
-
-        // 4. Hover event
-        if (hoverEvent != null) {
-            styleString
-                    .append(STYLE_PREFIX)
-                    .append("<")
-                    .append(owner.getParent().addHoverEvent(hoverEvent))
-                    .append(">");
+            // 4. Hover event
+            if (hoverEvent != null) {
+                styleString
+                        .append(STYLE_PREFIX)
+                        .append("<")
+                        .append(owner.getParent().addHoverEvent(hoverEvent))
+                        .append(">");
+            }
         }
 
         return styleString.toString();
     }
 
-    public Style getStyle() {
-        if (styleCache != null) {
-            return styleCache;
+    private StringBuilder tryConstructDifference(CodedStyle oldStyle) {
+        StringBuilder add = new StringBuilder();
+
+        int oldColorInt = oldStyle.color.asInt();
+        int newColorInt = this.color.asInt();
+
+        if (oldColorInt == -1) {
+            if (newColorInt != -1) {
+                ComponentUtils.getChatFormatting(newColorInt).ifPresent(add::append);
+            }
+        } else if (oldColorInt != newColorInt) {
+            return null;
         }
 
+        if (oldStyle.bold && !this.bold) return null;
+        if (!oldStyle.bold && this.bold) add.append(ChatFormatting.BOLD);
+
+        if (oldStyle.italic && !this.italic) return null;
+        if (!oldStyle.italic && this.italic) add.append(ChatFormatting.ITALIC);
+
+        if (oldStyle.underlined && !this.underlined) return null;
+        if (!oldStyle.underlined && this.underlined) add.append(ChatFormatting.UNDERLINE);
+
+        if (oldStyle.strikethrough && !this.strikethrough) return null;
+        if (!oldStyle.strikethrough && this.strikethrough) add.append(ChatFormatting.STRIKETHROUGH);
+
+        if (oldStyle.obfuscated && !this.obfuscated) return null;
+        if (!oldStyle.obfuscated && this.obfuscated) add.append(ChatFormatting.OBFUSCATED);
+
+        return add;
+    }
+
+    public Style getStyle() {
         Style reconstructedStyle = Style.EMPTY
                 .withBold(bold)
                 .withItalic(italic)
@@ -173,46 +213,7 @@ public final class CodedStyle {
             reconstructedStyle = reconstructedStyle.withColor(color.asInt());
         }
 
-        styleCache = reconstructedStyle;
-
         return reconstructedStyle;
-    }
-
-    private boolean isCompatibleWith(CodedStyle other) {
-        // A style is compatible with another style if:
-        // 1. If the other style's color is not NONE, but this style's color must not be NONE.
-        // 2. If the other formatting is false, this formatting can be false or true.
-        // 3. If the other formatting is true, this formatting must be true.
-
-        if (color == CustomColor.NONE && other.color != CustomColor.NONE) {
-            return false;
-        }
-
-        if (!bold && other.bold) {
-            return false;
-        }
-
-        if (!italic && other.italic) {
-            return false;
-        }
-
-        if (!underlined && other.underlined) {
-            return false;
-        }
-
-        if (!strikethrough && other.strikethrough) {
-            return false;
-        }
-
-        if (!obfuscated && other.obfuscated) {
-            return false;
-        }
-
-        return true;
-    }
-
-    void invalidateCache() {
-        styleCache = null;
     }
 
     @Override
@@ -226,5 +227,12 @@ public final class CodedStyle {
                 + obfuscated + ", clickEvent="
                 + clickEvent + ", hoverEvent="
                 + hoverEvent + '}';
+    }
+
+    public enum StyleType {
+        INCLUDE_EVENTS, // Includes click and hover events
+        FULL, // This is how ComponentUtils does, this is to be removed
+        DEFAULT, // The most minimal way to represent a style
+        NONE // No styling
     }
 }

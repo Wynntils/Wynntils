@@ -8,15 +8,13 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.network.chat.Style;
 
-public final class CodedStringPart {
+public final class StyleStringPart {
     private final String text;
     private final CodedStyle style;
 
-    private final CodedString parent;
+    private final StyleString parent;
 
-    private Component componentCache;
-
-    CodedStringPart(String text, Style style, CodedString parent, CodedStringPart partBefore) {
+    StyleStringPart(String text, Style style, StyleString parent, StyleStringPart partBefore) {
         this.text = text;
         this.parent = parent;
 
@@ -24,11 +22,11 @@ public final class CodedStringPart {
         this.style = CodedStyle.fromStyle(style, this, partBefore == null ? null : partBefore.getCodedStyle());
     }
 
-    public String getCoded(CodedStyle previousStyle) {
-        return style.asString(previousStyle) + text;
+    public String getString(CodedStyle previousStyle, CodedStyle.StyleType type) {
+        return style.asString(previousStyle, type) + text;
     }
 
-    public CodedString getParent() {
+    public StyleString getParent() {
         return parent;
     }
 
@@ -37,19 +35,9 @@ public final class CodedStringPart {
     }
 
     public Component getComponent() {
-        if (componentCache != null) {
-            return componentCache;
-        }
-
         MutableComponent component = Component.literal(text).withStyle(style.getStyle());
 
-        componentCache = component;
-
         return component;
-    }
-
-    void invalidateCache() {
-        componentCache = null;
     }
 
     @Override
