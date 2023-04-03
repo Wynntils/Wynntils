@@ -6,8 +6,8 @@ package com.wynntils.features.chat;
 
 import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.chat.transcoder.PartStyle;
-import com.wynntils.core.chat.transcoder.StyleString;
-import com.wynntils.core.chat.transcoder.StyleStringPart;
+import com.wynntils.core.chat.transcoder.StyledText;
+import com.wynntils.core.chat.transcoder.StyledTextPart;
 import com.wynntils.core.config.Category;
 import com.wynntils.core.config.Config;
 import com.wynntils.core.config.ConfigCategory;
@@ -61,9 +61,9 @@ public class ChatMentionFeature extends Feature {
     public void onChat(ChatMessageReceivedEvent e) {
         Component message = e.getMessage();
 
-        StyleString styleString = StyleString.fromComponent(message);
+        StyledText styledText = StyledText.fromComponent(message);
 
-        StyleStringPart partFinding = styleString.getPartFinding(mentionPattern, PartStyle.StyleType.NONE);
+        StyledTextPart partFinding = styledText.getPartFinding(mentionPattern, PartStyle.StyleType.NONE);
 
         // If the part is null, it means that the mention is in two different parts, we likely don't want to mark it.
         if (partFinding == null) {
@@ -71,7 +71,7 @@ public class ChatMentionFeature extends Feature {
         }
 
         if (markMention.get()) {
-            Matcher matcher = styleString.getMatcher(mentionPattern, PartStyle.StyleType.NONE);
+            Matcher matcher = styledText.getMatcher(mentionPattern, PartStyle.StyleType.NONE);
 
             if (!matcher.find()) {
                 WynntilsMod.error(
@@ -79,10 +79,10 @@ public class ChatMentionFeature extends Feature {
                 return;
             }
 
-            styleString.splitAt(matcher.start());
-            styleString.splitAt(matcher.end());
+            styledText.splitAt(matcher.start());
+            styledText.splitAt(matcher.end());
 
-            StyleStringPart partMatching = styleString.getPartMatching(mentionPattern, PartStyle.StyleType.NONE);
+            StyledTextPart partMatching = styledText.getPartMatching(mentionPattern, PartStyle.StyleType.NONE);
 
             if (partMatching == null) {
                 WynntilsMod.error(
@@ -92,7 +92,7 @@ public class ChatMentionFeature extends Feature {
 
             partMatching.getPartStyle().setColor(mentionColor.get());
 
-            MutableComponent newComponent = styleString.getComponent();
+            MutableComponent newComponent = styledText.getComponent();
             e.setMessage(newComponent);
         }
 

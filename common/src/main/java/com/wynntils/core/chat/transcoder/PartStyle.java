@@ -16,7 +16,7 @@ import net.minecraft.network.chat.Style;
 public final class PartStyle {
     private static final String STYLE_PREFIX = "§";
 
-    private final StyleStringPart owner;
+    private final StyledTextPart owner;
 
     private CustomColor color;
     private boolean bold;
@@ -28,7 +28,7 @@ public final class PartStyle {
     private HoverEvent hoverEvent;
 
     private PartStyle(
-            StyleStringPart owner,
+            StyledTextPart owner,
             CustomColor color,
             boolean bold,
             boolean italic,
@@ -48,7 +48,7 @@ public final class PartStyle {
         this.hoverEvent = hoverEvent;
     }
 
-    static PartStyle fromStyle(Style style, StyleStringPart owner, Style parentStyle) {
+    static PartStyle fromStyle(Style style, StyledTextPart owner, Style parentStyle) {
         Style inheritedStyle;
 
         if (parentStyle == null) {

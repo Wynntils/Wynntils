@@ -8,13 +8,13 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.network.chat.Style;
 
-public final class StyleStringPart {
+public final class StyledTextPart {
     private final String text;
     private final PartStyle style;
 
-    private final StyleString parent;
+    private final StyledText parent;
 
-    StyleStringPart(String text, Style style, StyleString parent, Style parentStyle) {
+    StyledTextPart(String text, Style style, StyledText parent, Style parentStyle) {
         this.text = text;
         this.parent = parent;
 
@@ -26,7 +26,7 @@ public final class StyleStringPart {
         return style.asString(previousStyle, type) + text;
     }
 
-    public StyleString getParent() {
+    public StyledText getParent() {
         return parent;
     }
 

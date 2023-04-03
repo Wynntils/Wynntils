@@ -3,8 +3,8 @@
  * This file is released under AGPLv3. See LICENSE for full license details.
  */
 import com.wynntils.core.chat.transcoder.PartStyle;
-import com.wynntils.core.chat.transcoder.StyleString;
-import com.wynntils.core.chat.transcoder.StyleStringPart;
+import com.wynntils.core.chat.transcoder.StyledText;
+import com.wynntils.core.chat.transcoder.StyledTextPart;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import net.minecraft.ChatFormatting;
@@ -18,7 +18,7 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
-public class TestStyleString {
+public class TestStyledText {
     @BeforeAll
     public static void setup() {
         SharedConstants.tryDetectVersion();
@@ -46,34 +46,34 @@ public class TestStyleString {
         final String expectedDefault = "§c§oitalicred§r§9§oblue§r§cnonitalic§oinherited§lbold§rafter";
         final String expectedNoFormat = "italicredbluenonitalicinheritedboldafter";
 
-        StyleString styleString = StyleString.fromComponent(component);
+        StyledText styledText = StyledText.fromComponent(component);
 
         Assertions.assertEquals(
                 expectedIncludeEvents,
-                styleString.getString(PartStyle.StyleType.INCLUDE_EVENTS),
+                styledText.getString(PartStyle.StyleType.INCLUDE_EVENTS),
                 "StyleString.getString(INCLUDE_EVENTS) returned an unexpected value.");
         Assertions.assertEquals(
                 expectedDefault,
-                styleString.getString(PartStyle.StyleType.DEFAULT),
+                styledText.getString(PartStyle.StyleType.DEFAULT),
                 "StyleString.getString(DEFAULT) returned an unexpected value.");
         Assertions.assertEquals(
                 expectedNoFormat,
-                styleString.getString(PartStyle.StyleType.NONE),
+                styledText.getString(PartStyle.StyleType.NONE),
                 "StyleString.getString(NONE) returned an unexpected value.");
     }
 
     @Test
-    public void styleString_shouldProduceCorrectComponent() {
+    public void styledTextshouldProduceCorrectComponent() {
         final Component component = Component.literal("a").append(Component.literal("b"));
 
-        StyleString styleString = StyleString.fromComponent(component);
+        StyledText styledText = StyledText.fromComponent(component);
 
         Assertions.assertEquals(
-                component, styleString.getComponent(), "StyleString.getComponent() returned an unexpected value.");
+                component, styledText.getComponent(), "StyleString.getComponent() returned an unexpected value.");
     }
 
     @Test
-    public void styleString_shouldProduceCorrectMatcher() {
+    public void styledTextshouldProduceCorrectMatcher() {
         final Component component = Component.literal("This is a test string, where there are ")
                 .append(Component.literal("multiple").withStyle(ChatFormatting.BOLD))
                 .append(Component.literal(" components."));
@@ -84,10 +84,10 @@ public class TestStyleString {
 
         final String expectedMatch = "multiple";
 
-        StyleString styleString = StyleString.fromComponent(component);
+        StyledText styledText = StyledText.fromComponent(component);
 
-        Matcher formattedMatcher = styleString.getMatcher(formattedPattern);
-        Matcher unformattedMatcher = styleString.getMatcher(unformattedPattern, PartStyle.StyleType.NONE);
+        Matcher formattedMatcher = styledText.getMatcher(formattedPattern);
+        Matcher unformattedMatcher = styledText.getMatcher(unformattedPattern, PartStyle.StyleType.NONE);
 
         Assertions.assertTrue(formattedMatcher.matches(), "StyleString.matches(DEFAULT) returned an unexpected value.");
         Assertions.assertEquals(
@@ -102,44 +102,44 @@ public class TestStyleString {
     }
 
     @Test
-    public void styleString_shouldSplitCorrectly() {
+    public void styledTextshouldSplitCorrectly() {
         final Component component = Component.literal("This is a test string, where there are ")
                 .append(Component.literal("multiple").withStyle(ChatFormatting.BOLD))
                 .append(Component.literal(" components."));
 
-        StyleString styleString = StyleString.fromComponent(component);
+        StyledText styledText = StyledText.fromComponent(component);
 
         Assertions.assertEquals(
-                3, styleString.getPartCount(), "StyleString.getParts().size() returned an unexpected value.");
+                3, styledText.getPartCount(), "StyleString.getParts().size() returned an unexpected value.");
 
         final int splitAt = 22;
 
-        styleString.splitAt(splitAt);
+        styledText.splitAt(splitAt);
 
         Assertions.assertEquals(
                 4,
-                styleString.getPartCount(),
+                styledText.getPartCount(),
                 "StyleString.splitAt() did not split the string correctly. The number of parts is incorrect.");
     }
 
     @Test
-    public void styleString_incorrectSplitIndexShouldThrow() {
+    public void styledTextincorrectSplitIndexShouldThrow() {
         final Component component = Component.literal("Test component");
 
-        StyleString styleString = StyleString.fromComponent(component);
+        StyledText styledText = StyledText.fromComponent(component);
 
         Assertions.assertThrows(
                 IndexOutOfBoundsException.class,
-                () -> styleString.splitAt(10000),
+                () -> styledText.splitAt(10000),
                 "StyleString#splitAt() did not throw an exception when given a too big index.");
         Assertions.assertThrows(
                 IndexOutOfBoundsException.class,
-                () -> styleString.splitAt(-1),
+                () -> styledText.splitAt(-1),
                 "StyleString#splitAt() did not throw an exception when given a negative index.");
     }
 
     @Test
-    public void styleString_getPartFindingShouldFind() {
+    public void styledTextgetPartFindingShouldFind() {
         final String partText = "This is a test string, where there are ";
         final Component component = Component.literal(partText)
                 .append(Component.literal("multiple").withStyle(ChatFormatting.BOLD))
@@ -147,9 +147,9 @@ public class TestStyleString {
 
         final Pattern pattern = Pattern.compile("\\bthere\\b");
 
-        StyleString styleString = StyleString.fromComponent(component);
+        StyledText styledText = StyledText.fromComponent(component);
 
-        StyleStringPart partFinding = styleString.getPartFinding(pattern);
+        StyledTextPart partFinding = styledText.getPartFinding(pattern);
 
         Assertions.assertNotNull(
                 partFinding, "StyleString.getPartFinding() returned null when it should have found a part.");
@@ -161,15 +161,15 @@ public class TestStyleString {
     }
 
     @Test
-    public void styleString_getPartMatchingShouldFind() {
+    public void styledTextgetPartMatchingShouldFind() {
         final Component component = Component.literal("Test string")
                 .append(Component.literal("Test string").withStyle(ChatFormatting.BOLD));
 
         final Pattern pattern = Pattern.compile("§lTest string");
 
-        StyleString styleString = StyleString.fromComponent(component);
+        StyledText styledText = StyledText.fromComponent(component);
 
-        StyleStringPart partMatching = styleString.getPartMatching(pattern);
+        StyledTextPart partMatching = styledText.getPartMatching(pattern);
 
         Assertions.assertNotNull(
                 partMatching, "StyleString.getPartMatching() returned null when it should have found a part.");

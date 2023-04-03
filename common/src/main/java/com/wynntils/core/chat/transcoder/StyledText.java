@@ -20,15 +20,15 @@ import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.network.chat.Style;
 import org.apache.commons.lang3.ArrayUtils;
 
-public final class StyleString {
+public final class StyledText {
     private final Component temporaryWorkaround;
 
-    private final List<StyleStringPart> parts;
+    private final List<StyledTextPart> parts;
 
     private final List<ClickEvent> clickEvents = new LinkedList<>();
     private final List<HoverEvent> hoverEvents = new LinkedList<>();
 
-    StyleString(Component component) {
+    StyledText(Component component) {
         temporaryWorkaround = component;
 
         parts = new LinkedList<>();
@@ -47,23 +47,22 @@ public final class StyleString {
             String componentString =
                     MutableComponent.create(current.getContents()).getString();
 
-            StyleStringPart styleStringPart =
-                    new StyleStringPart(componentString, current.getStyle(), this, parentStyle);
+            StyledTextPart styledTextPart = new StyledTextPart(componentString, current.getStyle(), this, parentStyle);
 
             List<Pair<Component, Style>> siblingPairs = current.getSiblings().stream()
                     .map(sibling ->
-                            new Pair<>(sibling, styleStringPart.getPartStyle().getStyle()))
+                            new Pair<>(sibling, styledTextPart.getPartStyle().getStyle()))
                     .collect(Collectors.toList());
 
             Collections.reverse(siblingPairs);
             siblingPairs.forEach(deque::addFirst);
 
-            parts.add(styleStringPart);
+            parts.add(styledTextPart);
         }
     }
 
-    public static StyleString fromComponent(Component component) {
-        return new StyleString(component);
+    public static StyledText fromComponent(Component component) {
+        return new StyledText(component);
     }
 
     // We don't want to expose the actual string to the outside world
@@ -76,7 +75,7 @@ public final class StyleString {
         StringBuilder builder = new StringBuilder();
 
         PartStyle previousStyle = null;
-        for (StyleStringPart part : parts) {
+        for (StyledTextPart part : parts) {
             builder.append(part.getString(previousStyle, type));
             previousStyle = part.getPartStyle();
         }
@@ -124,10 +123,10 @@ public final class StyleString {
             throw new IndexOutOfBoundsException("Index must be non-negative.");
         }
 
-        StyleStringPart partToSplit = null;
+        StyledTextPart partToSplit = null;
         int indexToSplit = 0;
 
-        for (StyleStringPart part : parts) {
+        for (StyledTextPart part : parts) {
             int currentLength = part.getString(null, PartStyle.StyleType.NONE).length();
             stringLength += currentLength;
 
@@ -147,13 +146,13 @@ public final class StyleString {
         String firstString = partString.substring(0, indexToSplit);
         String secondString = partString.substring(indexToSplit);
 
-        StyleStringPart partBefore = getPartBefore(partToSplit);
+        StyledTextPart partBefore = getPartBefore(partToSplit);
         Style styleBefore =
                 partBefore == null ? Style.EMPTY : partBefore.getPartStyle().getStyle();
 
         Style style = partToSplit.getPartStyle().getStyle();
-        StyleStringPart firstPart = new StyleStringPart(firstString, style, this, styleBefore);
-        StyleStringPart secondPart = new StyleStringPart(
+        StyledTextPart firstPart = new StyledTextPart(firstString, style, this, styleBefore);
+        StyledTextPart secondPart = new StyledTextPart(
                 secondString, style, this, firstPart.getPartStyle().getStyle());
 
         int indexOfPart = parts.indexOf(partToSplit);
@@ -163,14 +162,14 @@ public final class StyleString {
         parts.remove(partToSplit);
     }
 
-    public StyleStringPart getPartFinding(Pattern pattern) {
+    public StyledTextPart getPartFinding(Pattern pattern) {
         return getPartFinding(pattern, PartStyle.StyleType.DEFAULT);
     }
 
-    public StyleStringPart getPartFinding(Pattern pattern, PartStyle.StyleType styleType) {
+    public StyledTextPart getPartFinding(Pattern pattern, PartStyle.StyleType styleType) {
         PartStyle previousPartStyle = null;
 
-        for (StyleStringPart part : parts) {
+        for (StyledTextPart part : parts) {
             if (pattern.matcher(part.getString(previousPartStyle, styleType)).find()) {
                 return part;
             }
@@ -181,14 +180,14 @@ public final class StyleString {
         return null;
     }
 
-    public StyleStringPart getPartMatching(Pattern pattern) {
+    public StyledTextPart getPartMatching(Pattern pattern) {
         return getPartMatching(pattern, PartStyle.StyleType.DEFAULT);
     }
 
-    public StyleStringPart getPartMatching(Pattern pattern, PartStyle.StyleType styleType) {
+    public StyledTextPart getPartMatching(Pattern pattern, PartStyle.StyleType styleType) {
         PartStyle previousPartStyle = null;
 
-        for (StyleStringPart part : parts) {
+        for (StyledTextPart part : parts) {
             if (pattern.matcher(part.getString(previousPartStyle, styleType)).matches()) {
                 return part;
             }
@@ -231,7 +230,7 @@ public final class StyleString {
         return hoverEvents.size();
     }
 
-    private StyleStringPart getPartBefore(StyleStringPart part) {
+    private StyledTextPart getPartBefore(StyledTextPart part) {
         int index = parts.indexOf(part);
         if (index == 0) {
             return null;
