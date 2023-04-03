@@ -1,9 +1,21 @@
+## [0.0.2-alpha.432](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.431...v0.0.2-alpha.432) (2023-04-03)
+
+
+### New Features
+
+* Introduce JUnit tests ([#1437](https://github.com/Wynntils/Artemis/issues/1437)) ([1e49036](https://github.com/Wynntils/Artemis/commit/1e490369f56ff8bd6f740a4f7fb4620243f19b76))
+
 ## [0.0.2-alpha.431](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.430...v0.0.2-alpha.431) (2023-04-03)
 
 
 ### Bug Fixes
 
 * Fix storage init (changelog not saving) ([#1439](https://github.com/Wynntils/Artemis/issues/1439)) ([cbdf996](https://github.com/Wynntils/Artemis/commit/cbdf9962e153a0265ba78ac0a8d3a94eef5a0aa7))
+
+
+### Miscellaneous Chores
+
+* **release:** v0.0.2-alpha.431 [skip ci] ([ce8806d](https://github.com/Wynntils/Artemis/commit/ce8806d820d2d5622f894f202b9a1f6d5be99a99))
 
 ## [0.0.2-alpha.430](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.429...v0.0.2-alpha.430) (2023-04-02)
 
@@ -40,16 +52,4 @@
 ### Miscellaneous Chores
 
 * **release:** v0.0.2-alpha.428 [skip ci] ([916f7ae](https://github.com/Wynntils/Artemis/commit/916f7ae8d041c7d902c9072b640549e21b1c4161))
-
-## [0.0.2-alpha.427](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.426...v0.0.2-alpha.427) (2023-04-02)
-
-
-### Bug Fixes
-
-* Fix scrolling bugs in CharacterSelectorScreen ([#1436](https://github.com/Wynntils/Artemis/issues/1436)) ([13e7103](https://github.com/Wynntils/Artemis/commit/13e7103bda96fb4e27e2f5843447d7d666ba8616))
-
-
-### Miscellaneous Chores
-
-* **release:** v0.0.2-alpha.427 [skip ci] ([6f87c20](https://github.com/Wynntils/Artemis/commit/6f87c20daf59d376cfdf98578147af8404437261))
 
