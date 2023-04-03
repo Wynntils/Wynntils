@@ -48,7 +48,7 @@ public final class ShamanMaskModel extends Model {
     }
 
     private void parseMask(CodedString title) {
-        Matcher matcher = MASK_PATTERN.matcher(title.str());
+        Matcher matcher = title.match(MASK_PATTERN);
 
         ShamanMaskType parsedMask = ShamanMaskType.NONE;
 

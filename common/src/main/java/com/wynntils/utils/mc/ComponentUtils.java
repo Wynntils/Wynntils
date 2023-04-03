@@ -153,7 +153,7 @@ public final class ComponentUtils {
             return "";
         }
 
-        return COLOR_CODE_PATTERN.matcher(text.str()).replaceAll("");
+        return text.match(COLOR_CODE_PATTERN).replaceAll("");
     }
 
     public static String getLastPartCodes(CodedString lastPart) {

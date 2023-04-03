@@ -126,7 +126,7 @@ public class ChatRedirectFeature extends Feature {
             Pattern pattern = redirector.getPattern(messageType);
             if (pattern == null) continue;
 
-            Matcher matcher = pattern.matcher(message.str());
+            Matcher matcher = message.match(pattern);
 
             if (matcher.find()) {
                 e.setCanceled(true);

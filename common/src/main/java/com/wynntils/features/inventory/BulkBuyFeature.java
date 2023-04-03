@@ -81,7 +81,7 @@ public class BulkBuyFeature extends Feature {
         if (!KeyboardUtils.isShiftDown()) return oldLore;
 
         CodedString priceLine = ComponentUtils.getCoded(oldLore.get(oldLore.size() - 1));
-        Matcher priceMatcher = PRICE_PATTERN.matcher(priceLine.str());
+        Matcher priceMatcher = priceLine.match(PRICE_PATTERN);
         if (!priceMatcher.find()) {
             WynntilsMod.warn("Could not find price for " + oldLore.get(0).getString() + " in " + priceLine);
             return oldLore;

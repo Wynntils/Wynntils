@@ -52,9 +52,7 @@ public final class ContainerModel extends Model {
     }
 
     public boolean isBankScreen(Screen screen) {
-        return BANK_PATTERN
-                .matcher(ComponentUtils.getCoded(screen.getTitle()).str())
-                .matches();
+        return ComponentUtils.getCoded(screen.getTitle()).match(BANK_PATTERN).matches();
     }
 
     /**
@@ -69,8 +67,8 @@ public final class ContainerModel extends Model {
     }
 
     public boolean isGuildBankScreen(Screen screen) {
-        return GUILD_BANK_PATTERN
-                .matcher(ComponentUtils.getCoded(screen.getTitle()).str())
+        return ComponentUtils.getCoded(screen.getTitle())
+                .match(GUILD_BANK_PATTERN)
                 .matches();
     }
 
@@ -89,14 +87,14 @@ public final class ContainerModel extends Model {
     }
 
     public boolean isBlockBankScreen(Screen screen) {
-        return BLOCK_BANK_PATTERN
-                .matcher(ComponentUtils.getCoded(screen.getTitle()).str())
+        return ComponentUtils.getCoded(screen.getTitle())
+                .match(BLOCK_BANK_PATTERN)
                 .matches();
     }
 
     public boolean isMiscBucketScreen(Screen screen) {
-        return MISC_BUCKET_PATTERN
-                .matcher(ComponentUtils.getCoded(screen.getTitle()).str())
+        return ComponentUtils.getCoded(screen.getTitle())
+                .match(MISC_BUCKET_PATTERN)
                 .matches();
     }
 

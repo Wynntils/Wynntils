@@ -88,7 +88,7 @@ public final class QuestInfoParser {
 
     private static QuestStatus getQuestStatus(LinkedList<CodedString> lore) {
         CodedString rawStatus = lore.pop();
-        Matcher m = STATUS_MATCHER.matcher(rawStatus.str());
+        Matcher m = rawStatus.match(STATUS_MATCHER);
         if (!m.find()) {
             WynntilsMod.warn("Non-matching status value: " + rawStatus);
             return null;
@@ -107,7 +107,7 @@ public final class QuestInfoParser {
 
     private static int getLevel(LinkedList<CodedString> lore) {
         CodedString rawLevel = lore.getFirst();
-        Matcher m = LEVEL_MATCHER.matcher(rawLevel.str());
+        Matcher m = rawLevel.match(LEVEL_MATCHER);
         if (!m.find()) {
             // This can happen for the very first quests; accept without error
             // and interpret level requirement as 1
@@ -121,7 +121,7 @@ public final class QuestInfoParser {
         List<Pair<String, Integer>> requirements = new LinkedList<>();
         Matcher m;
 
-        m = REQ_MATCHER.matcher(lore.getFirst().str());
+        m = lore.getFirst().match(REQ_MATCHER);
         while (m.matches()) {
             lore.pop();
             String profession = m.group(1);
@@ -129,7 +129,7 @@ public final class QuestInfoParser {
             Pair<String, Integer> requirement = new Pair<>(profession, level);
             requirements.add(requirement);
 
-            m = REQ_MATCHER.matcher(lore.getFirst().str());
+            m = lore.getFirst().match(REQ_MATCHER);
         }
         return requirements;
     }
@@ -137,7 +137,7 @@ public final class QuestInfoParser {
     private static QuestLength getQuestLength(LinkedList<CodedString> lore) {
         CodedString lengthRaw = lore.pop();
 
-        Matcher m = LENGTH_MATCHER.matcher(lengthRaw.str());
+        Matcher m = lengthRaw.match(LENGTH_MATCHER);
         if (!m.find()) {
             WynntilsMod.warn("Non-matching quest length: " + lengthRaw);
             return null;

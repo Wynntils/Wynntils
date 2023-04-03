@@ -110,14 +110,14 @@ public class QuickCastFeature extends Feature {
         boolean isArcher = false;
         for (CodedString lore : loreLines) {
             if (lore.str().contains("Archer/Hunter")) isArcher = true;
-            Matcher matcher = INCORRECT_CLASS_PATTERN.matcher(lore.str());
+            Matcher matcher = lore.match(INCORRECT_CLASS_PATTERN);
             if (!matcher.matches()) continue;
             sendCancelReason(Component.translatable("feature.wynntils.quickCast.classMismatch", matcher.group(1)));
             return;
         }
 
         for (CodedString lore : loreLines) {
-            Matcher matcher = LVL_MIN_NOT_REACHED_PATTERN.matcher(lore.str());
+            Matcher matcher = lore.match(LVL_MIN_NOT_REACHED_PATTERN);
             if (!matcher.matches()) continue;
             sendCancelReason(Component.translatable(
                     "feature.wynntils.quickCast.levelRequirementNotReached", matcher.group(1), matcher.group(2)));

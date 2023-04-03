@@ -142,7 +142,7 @@ public final class WorldStateModel extends Model {
 
         Component displayName = e.getDisplayName();
         CodedString name = ComponentUtils.getCoded(displayName);
-        Matcher m = WORLD_NAME.matcher(name.str());
+        Matcher m = name.match(WORLD_NAME);
         if (m.find()) {
             String worldName = m.group(1);
             setState(WorldState.WORLD, worldName, !hasJoinedAnyWorld);

@@ -25,7 +25,7 @@ public class TerritoryMessageRedirectFeature extends Feature {
     @SubscribeEvent
     public void onSubtitleSetText(SubtitleSetTextEvent event) {
         CodedString codedString = ComponentUtils.getCoded(event.getComponent());
-        Matcher matcher = TERRITORY_MESSAGE_PATTERN.matcher(codedString.str());
+        Matcher matcher = codedString.match(TERRITORY_MESSAGE_PATTERN);
         if (!matcher.matches()) return;
 
         event.setCanceled(true);
@@ -54,8 +54,6 @@ public class TerritoryMessageRedirectFeature extends Feature {
     // text event.
     @SubscribeEvent
     public void onChat(ChatMessageReceivedEvent event) {
-        if (TERRITORY_MESSAGE_PATTERN
-                .matcher(event.getOriginalCodedMessage().str())
-                .matches()) event.setCanceled(true);
+        if (event.getOriginalCodedMessage().match(TERRITORY_MESSAGE_PATTERN).matches()) event.setCanceled(true);
     }
 }

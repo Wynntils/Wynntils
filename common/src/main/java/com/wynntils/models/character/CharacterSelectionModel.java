@@ -79,7 +79,7 @@ public final class CharacterSelectionModel extends Model {
         for (int i = 0; i < items.size(); i++) {
             ItemStack itemStack = items.get(i);
             CodedString itemName = ComponentUtils.getCoded(itemStack.getHoverName());
-            Matcher classItemMatcher = CLASS_ITEM_NAME_PATTERN.matcher(itemName.str());
+            Matcher classItemMatcher = itemName.match(CLASS_ITEM_NAME_PATTERN);
             if (classItemMatcher.matches()) {
                 ClassInfo classInfo = getClassInfoFromItem(itemStack, i, classItemMatcher.group(1));
                 classInfoList.add(classInfo);
@@ -87,7 +87,7 @@ public final class CharacterSelectionModel extends Model {
             }
 
             if (firstNewCharacterSlot == -1
-                    && NEW_CLASS_ITEM_NAME_PATTERN.matcher(itemName.str()).matches()) {
+                    && itemName.match(NEW_CLASS_ITEM_NAME_PATTERN).matches()) {
                 firstNewCharacterSlot = i;
             }
         }
@@ -105,7 +105,7 @@ public final class CharacterSelectionModel extends Model {
         int soulPoints = 0;
         int finishedQuests = 0;
         for (CodedString line : LoreUtils.getLore(itemStack)) {
-            Matcher matcher = CLASS_ITEM_CLASS_PATTERN.matcher(line.str());
+            Matcher matcher = line.match(CLASS_ITEM_CLASS_PATTERN);
 
             if (matcher.matches()) {
                 String classTypeString = matcher.group("name");
@@ -116,25 +116,25 @@ public final class CharacterSelectionModel extends Model {
                 continue;
             }
 
-            matcher = CLASS_ITEM_LEVEL_PATTERN.matcher(line.str());
+            matcher = line.match(CLASS_ITEM_LEVEL_PATTERN);
             if (matcher.matches()) {
                 level = Integer.parseInt(matcher.group(1));
                 continue;
             }
 
-            matcher = CLASS_ITEM_XP_PATTERN.matcher(line.str());
+            matcher = line.match(CLASS_ITEM_XP_PATTERN);
             if (matcher.matches()) {
                 xp = Integer.parseInt(matcher.group(1));
                 continue;
             }
 
-            matcher = CLASS_ITEM_SOUL_POINTS_PATTERN.matcher(line.str());
+            matcher = line.match(CLASS_ITEM_SOUL_POINTS_PATTERN);
             if (matcher.matches()) {
                 soulPoints = Integer.parseInt(matcher.group(1));
                 continue;
             }
 
-            matcher = CLASS_ITEM_FINISHED_QUESTS_PATTERN.matcher(line.str());
+            matcher = line.match(CLASS_ITEM_FINISHED_QUESTS_PATTERN);
             if (matcher.matches()) {
                 finishedQuests = Integer.parseInt(matcher.group(1));
             }

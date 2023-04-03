@@ -114,7 +114,7 @@ public class NpcDialogueOverlayFeature extends Feature {
         dialogueType = e.getType();
         isProtected = e.isProtected();
 
-        if (!msg.isEmpty() && NEW_QUEST_STARTED.matcher(msg.get(0).str()).find()) {
+        if (!msg.isEmpty() && msg.get(0).match(NEW_QUEST_STARTED).find()) {
             // TODO: Show nice banner notification instead
             // but then we'd also need to confirm it with a sneak
             Managers.Notification.queueMessage(msg.get(0));

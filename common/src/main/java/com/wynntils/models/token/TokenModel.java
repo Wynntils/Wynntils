@@ -79,7 +79,7 @@ public class TokenModel extends Model {
 
         CodedString name = event.getName();
 
-        Matcher typeMatcher = TYPE_PATTERN.matcher(name.str());
+        Matcher typeMatcher = name.match(TYPE_PATTERN);
         if (typeMatcher.matches()) {
             String countString = typeMatcher.group(1);
             int max = countString != null ? Integer.parseInt(countString) : 1;
@@ -97,7 +97,7 @@ public class TokenModel extends Model {
             return;
         }
 
-        Matcher tokensMatcher = TOKEN_PATTERN.matcher(name.str());
+        Matcher tokensMatcher = name.match(TOKEN_PATTERN);
         if (tokensMatcher.matches()) {
             CappedValue tokens =
                     new CappedValue(Integer.parseInt(tokensMatcher.group(1)), Integer.parseInt(tokensMatcher.group(2)));
@@ -135,7 +135,7 @@ public class TokenModel extends Model {
             return;
         }
 
-        Matcher toaMatcher = TOA_GATEKEEPER_NAME_PATTERN.matcher(name.str());
+        Matcher toaMatcher = name.match(TOA_GATEKEEPER_NAME_PATTERN);
         if (toaMatcher.matches()) {
             int floor = Integer.parseInt(toaMatcher.group(1));
             int level = Integer.parseInt(toaMatcher.group(2));
@@ -150,7 +150,7 @@ public class TokenModel extends Model {
                     new TokenGatekeeper(gatekeeperTokenName, itemName, location, new CappedValue(0, maxTokens)));
         }
 
-        Matcher hiveMatcher = HIVE_GATEKEEPER_NAME_PATTERN.matcher(name.str());
+        Matcher hiveMatcher = name.match(HIVE_GATEKEEPER_NAME_PATTERN);
         if (hiveMatcher.matches()) {
             String division = hiveMatcher.group(1);
             int level = Integer.parseInt(hiveMatcher.group(2));

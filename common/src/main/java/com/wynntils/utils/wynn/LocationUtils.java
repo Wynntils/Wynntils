@@ -34,7 +34,7 @@ public final class LocationUtils {
     }
 
     public static Matcher strictCoordinateMatcher(CodedString coded) {
-        return STRICT_COORDINATE_PATTERN.matcher(coded.str());
+        return coded.match(STRICT_COORDINATE_PATTERN);
     }
 
     public static void shareLocation(String target) {

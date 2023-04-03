@@ -62,54 +62,52 @@ public class InfoMessageFilterFeature extends Feature {
 
         if (messageType == MessageType.FOREGROUND) {
             if (hideSystemInfo.get()) {
-                if (SYSTEM_INFO.matcher(msg.str()).find()) {
+                if (msg.match(SYSTEM_INFO).find()) {
                     e.setCanceled(true);
                     return;
                 }
             }
 
             if (hideWelcome.get()) {
-                if (WELCOME_1.matcher(msg.str()).find()
-                        || WELCOME_2.matcher(msg.str()).find()) {
+                if (msg.match(WELCOME_1).find() || msg.match(WELCOME_2).find()) {
                     e.setCanceled(true);
                     return;
                 }
             }
             if (hideLevelUp.get()) {
-                if (LEVEL_UP_1.matcher(msg.str()).find()
-                        || LEVEL_UP_2.matcher(msg.str()).find()) {
+                if (msg.match(LEVEL_UP_1).find() || msg.match(LEVEL_UP_2).find()) {
                     e.setCanceled(true);
                     return;
                 }
             }
 
             if (hideWelcome.get()) {
-                if (PRE_WELCOME_1.matcher(msg.str()).find()
-                        || PRE_WELCOME_2.matcher(msg.str()).find()
-                        || PRE_WELCOME_3.matcher(msg.str()).find()) {
+                if (msg.match(PRE_WELCOME_1).find()
+                        || msg.match(PRE_WELCOME_2).find()
+                        || msg.match(PRE_WELCOME_3).find()) {
                     e.setCanceled(true);
                     return;
                 }
             }
         } else if (messageType == MessageType.BACKGROUND) {
             if (hideSystemInfo.get()) {
-                if (BACKGROUND_SYSTEM_INFO.matcher(msg.str()).find()) {
+                if (msg.match(BACKGROUND_SYSTEM_INFO).find()) {
                     e.setCanceled(true);
                     return;
                 }
             }
 
             if (hideLevelUp.get()) {
-                if (BACKGROUND_LEVEL_UP_1.matcher(msg.str()).find()
-                        || BACKGROUND_LEVEL_UP_2.matcher(msg.str()).find()) {
+                if (msg.match(BACKGROUND_LEVEL_UP_1).find()
+                        || msg.match(BACKGROUND_LEVEL_UP_2).find()) {
                     e.setCanceled(true);
                     return;
                 }
             }
 
             if (hideWelcome.get()) {
-                if (BACKGROUND_WELCOME_1.matcher(msg.str()).find()
-                        || BACKGROUND_WELCOME_2.matcher(msg.str()).find()) {
+                if (msg.match(BACKGROUND_WELCOME_1).find()
+                        || msg.match(BACKGROUND_WELCOME_2).find()) {
                     e.setCanceled(true);
                     return;
                 }

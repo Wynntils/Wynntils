@@ -69,7 +69,7 @@ public final class LoreUtils {
         Matcher matcher = null;
         for (int i = startLineNum; i <= startLineNum + 5; i++) {
             CodedString line = getLoreLine(itemStack, i);
-            matcher = pattern.matcher(line.str());
+            matcher = line.match(pattern);
             if (matcher.matches()) return matcher;
         }
 

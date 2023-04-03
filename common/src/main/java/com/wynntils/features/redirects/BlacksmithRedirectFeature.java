@@ -29,8 +29,7 @@ public class BlacksmithRedirectFeature extends Feature {
 
     @SubscribeEvent(priority = EventPriority.HIGH)
     public void onChat(ChatMessageReceivedEvent event) {
-        Matcher messageMatcher = BLACKSMITH_MESSAGE_PATTERN.matcher(
-                event.getOriginalCodedMessage().str());
+        Matcher messageMatcher = event.getOriginalCodedMessage().match(BLACKSMITH_MESSAGE_PATTERN);
         if (!messageMatcher.matches()) return;
         event.setCanceled(true);
 
@@ -63,8 +62,8 @@ public class BlacksmithRedirectFeature extends Feature {
             // Tally up the items that we sold.
             for (Component sibling : event.getOriginalMessage().getSiblings()) {
                 // Retrieve the color code of the item, and then match it to the item tier.
-                Matcher itemMatcher = ITEM_PATTERN.matcher(
-                        ComponentUtils.getCoded(sibling).str()); // Second group contains the items.
+                Matcher itemMatcher =
+                        ComponentUtils.getCoded(sibling).match(ITEM_PATTERN); // Second group contains the items.
 
                 if (!itemMatcher.matches()) {
                     continue;

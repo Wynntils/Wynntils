@@ -110,12 +110,12 @@ public final class GearTooltipBuilder {
             CodedString codedLine = ComponentUtils.getCoded(loreLine).getNormalized();
 
             if (!footerStarted) {
-                Matcher setBonusMatcher = WynnItemParser.SET_BONUS_PATTEN.matcher(codedLine.str());
+                Matcher setBonusMatcher = codedLine.match(WynnItemParser.SET_BONUS_PATTEN);
                 if (setBonusMatcher.matches()) {
                     headerEnded = true;
                     footerStarted = true;
                 } else {
-                    Matcher matcher = WynnItemParser.IDENTIFICATION_STAT_PATTERN.matcher(codedLine.str());
+                    Matcher matcher = codedLine.match(WynnItemParser.IDENTIFICATION_STAT_PATTERN);
                     if (matcher.matches()) {
                         String statName = matcher.group(6);
 

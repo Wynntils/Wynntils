@@ -39,7 +39,7 @@ public class DialogueHistoryQueries {
                             .equals("§bDialogue History")) return;
 
                     for (CodedString line : LoreUtils.getLore(dialogueHistoryItem)) {
-                        Matcher matcher = DIALOGUE_HISTORY_PAGE_PATTERN.matcher(line.str());
+                        Matcher matcher = line.match(DIALOGUE_HISTORY_PAGE_PATTERN);
 
                         if (matcher.matches()) {
                             int pageCount = Integer.parseInt(matcher.group(2));

@@ -54,7 +54,7 @@ public class InventoryRedirectFeature extends Feature {
         CodedString codedString = ComponentUtils.getCoded(component);
 
         if (redirectIngredientPouch.get()) {
-            if (INGREDIENT_POUCH_PICKUP_PATTERN.matcher(codedString.str()).matches()) {
+            if (codedString.match(INGREDIENT_POUCH_PICKUP_PATTERN).matches()) {
                 event.setCanceled(true);
                 Managers.Notification.queueMessage(codedString);
                 return;
@@ -62,7 +62,7 @@ public class InventoryRedirectFeature extends Feature {
         }
 
         if (redirectEmeraldPouch.get()) {
-            Matcher matcher = EMERALD_POUCH_PICKUP_PATTERN.matcher(codedString.str());
+            Matcher matcher = codedString.match(EMERALD_POUCH_PICKUP_PATTERN);
             if (matcher.matches()) {
                 event.setCanceled(true);
 
@@ -83,7 +83,7 @@ public class InventoryRedirectFeature extends Feature {
         }
 
         if (redirectPotionStack.get()) {
-            Matcher matcher = POTION_STACK_PATTERN.matcher(codedString.str());
+            Matcher matcher = codedString.match(POTION_STACK_PATTERN);
             if (matcher.matches()) {
                 event.setCanceled(true);
                 String potionCount = matcher.group(1);

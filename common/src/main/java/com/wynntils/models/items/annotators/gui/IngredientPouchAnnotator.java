@@ -33,7 +33,7 @@ public final class IngredientPouchAnnotator implements ItemAnnotator {
         List<Pair<IngredientInfo, Integer>> ingredients = new ArrayList<>();
         List<CodedString> lore = LoreUtils.getLore(itemStack);
         for (CodedString line : lore) {
-            Matcher matcher = INGREDIENT_LORE_LINE_PATTERN.matcher(line.str());
+            Matcher matcher = line.match(INGREDIENT_LORE_LINE_PATTERN);
             if (!matcher.matches()) continue;
 
             int count = Integer.parseInt(matcher.group(1));

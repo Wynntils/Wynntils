@@ -56,7 +56,7 @@ public class DiscoveryContainerQueries {
 
                     int discoveryCount = -1;
                     for (CodedString line : LoreUtils.getLore(discoveriesItem)) {
-                        Matcher matcher = DISCOVERY_COUNT_PATTERN.matcher(line.str());
+                        Matcher matcher = line.match(DISCOVERY_COUNT_PATTERN);
 
                         if (matcher.matches()) {
                             discoveryCount = Integer.parseInt(matcher.group(1));
@@ -71,7 +71,7 @@ public class DiscoveryContainerQueries {
                     }
 
                     for (CodedString line : LoreUtils.getLore(secretDiscoveriesItem)) {
-                        Matcher matcher = SECRET_DISCOVERY_COUNT_PATTERN.matcher(line.str());
+                        Matcher matcher = line.match(SECRET_DISCOVERY_COUNT_PATTERN);
 
                         if (matcher.matches()) {
                             int secretDiscoveryCount = Integer.parseInt(matcher.group(1));

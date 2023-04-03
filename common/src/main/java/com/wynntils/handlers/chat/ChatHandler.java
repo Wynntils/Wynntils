@@ -195,8 +195,8 @@ public final class ChatHandler extends Handler {
         LinkedList<Component> dialogue = new LinkedList<>();
 
         CodedString firstLineCoded = ComponentUtils.getCoded(newLines.getFirst());
-        boolean isNpcConfirm = NPC_CONFIRM_PATTERN.matcher(firstLineCoded.str()).find();
-        boolean isNpcSelect = NPC_SELECT_PATTERN.matcher(firstLineCoded.str()).find();
+        boolean isNpcConfirm = firstLineCoded.match(NPC_CONFIRM_PATTERN).find();
+        boolean isNpcSelect = firstLineCoded.match(NPC_SELECT_PATTERN).find();
 
         if (isNpcConfirm || isNpcSelect) {
             // This is an NPC dialogue screen.
@@ -217,7 +217,7 @@ public final class ChatHandler extends Handler {
             for (Component line : newLines) {
                 CodedString codedLine = ComponentUtils.getCoded(line);
                 if (!dialogDone) {
-                    if (EMPTY_LINE_PATTERN.matcher(codedLine.str()).find()) {
+                    if (codedLine.match(EMPTY_LINE_PATTERN).find()) {
                         if (!optionsFound) {
                             // First part of the dialogue found
                             optionsFound = true;
@@ -231,7 +231,7 @@ public final class ChatHandler extends Handler {
                     }
                 } else {
                     // If there is anything after the dialogue, it is new chat lines
-                    if (!EMPTY_LINE_PATTERN.matcher(codedLine.str()).find()) {
+                    if (!codedLine.match(EMPTY_LINE_PATTERN).find()) {
                         newChatLines.push(line);
                     }
                 }
@@ -240,9 +240,8 @@ public final class ChatHandler extends Handler {
             // After a NPC dialog screen, Wynncraft sends a "clear screen" with line of ÀÀÀ...
             // We just ignore that part. Also, remove empty lines or lines with just the §r code
             while (!newLines.isEmpty()
-                    && EMPTY_LINE_PATTERN
-                            .matcher(
-                                    ComponentUtils.getCoded(newLines.getFirst()).str())
+                    && ComponentUtils.getCoded(newLines.getFirst())
+                            .match(EMPTY_LINE_PATTERN)
                             .find()) {
                 newLines.removeFirst();
             }

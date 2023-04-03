@@ -159,7 +159,7 @@ public class ShamanTotemModel extends Model {
         CodedString name = e.getName();
         if (name.str().isEmpty()) return;
 
-        Matcher m = SHAMAN_TOTEM_TIMER.matcher(name.str());
+        Matcher m = name.match(SHAMAN_TOTEM_TIMER);
         if (!m.find()) return;
 
         int parsedTime = Integer.parseInt(m.group(1));
