@@ -18,14 +18,14 @@ public final class PartStyle {
 
     private final StyleStringPart owner;
 
-    private final CustomColor color;
-    private final boolean bold;
-    private final boolean italic;
-    private final boolean underlined;
-    private final boolean strikethrough;
-    private final boolean obfuscated;
-    private final ClickEvent clickEvent;
-    private final HoverEvent hoverEvent;
+    private CustomColor color;
+    private boolean bold;
+    private boolean italic;
+    private boolean underlined;
+    private boolean strikethrough;
+    private boolean obfuscated;
+    private ClickEvent clickEvent;
+    private HoverEvent hoverEvent;
 
     private PartStyle(
             StyleStringPart owner,
@@ -48,20 +48,21 @@ public final class PartStyle {
         this.hoverEvent = hoverEvent;
     }
 
-    static PartStyle fromStyle(Style style, StyleStringPart owner, PartStyle previousStyle) {
+    static PartStyle fromStyle(Style style, StyleStringPart owner, Style parentStyle) {
         Style inheritedStyle;
 
-        if (previousStyle == null) {
+        if (parentStyle == null) {
             inheritedStyle = style;
         } else {
             // This changes properties that are null, as-in, inherting from the previous style.
-            inheritedStyle = style.applyTo(previousStyle.getStyle());
+            inheritedStyle = style.applyTo(parentStyle);
 
             // We don't want to inherit these properties.
-            inheritedStyle.withClickEvent(style.getClickEvent());
-            inheritedStyle.withHoverEvent(style.getHoverEvent());
-            inheritedStyle.withInsertion(style.getInsertion());
-            inheritedStyle.withFont(style.getFont());
+            inheritedStyle = inheritedStyle
+                    .withClickEvent(style.getClickEvent())
+                    .withHoverEvent(style.getHoverEvent())
+                    .withInsertion(style.getInsertion())
+                    .withFont(style.getFont());
         }
 
         return new PartStyle(
@@ -167,6 +168,68 @@ public final class PartStyle {
         return styleString.toString();
     }
 
+    public Style getStyle() {
+        Style reconstructedStyle = Style.EMPTY
+                .withBold(bold)
+                .withItalic(italic)
+                .withUnderlined(underlined)
+                .withStrikethrough(strikethrough)
+                .withObfuscated(obfuscated)
+                .withClickEvent(clickEvent)
+                .withHoverEvent(hoverEvent);
+
+        if (color != CustomColor.NONE) {
+            reconstructedStyle = reconstructedStyle.withColor(color.asInt());
+        }
+
+        return reconstructedStyle;
+    }
+
+    public PartStyle setColor(ChatFormatting color) {
+        if (!color.isColor()) {
+            throw new IllegalArgumentException("ChatFormatting " + color + " is not a color!");
+        }
+
+        this.color = CustomColor.fromInt(color.getColor());
+
+        return this;
+    }
+
+    public PartStyle setBold(boolean bold) {
+        this.bold = bold;
+        return this;
+    }
+
+    public PartStyle setItalic(boolean italic) {
+        this.italic = italic;
+        return this;
+    }
+
+    public PartStyle setUnderlined(boolean underlined) {
+        this.underlined = underlined;
+        return this;
+    }
+
+    public PartStyle setStrikethrough(boolean strikethrough) {
+        this.strikethrough = strikethrough;
+        return this;
+    }
+
+    public PartStyle setObfuscated(boolean obfuscated) {
+        this.obfuscated = obfuscated;
+        return this;
+    }
+
+    public PartStyle setClickEvent(ClickEvent clickEvent) {
+        this.clickEvent = clickEvent;
+        return this;
+    }
+
+    public PartStyle setHoverEvent(HoverEvent hoverEvent) {
+        this.hoverEvent = hoverEvent;
+        return this;
+    }
+
     private StringBuilder tryConstructDifference(PartStyle oldStyle) {
         StringBuilder add = new StringBuilder();
 
@@ -197,23 +260,6 @@ public final class PartStyle {
         if (!oldStyle.obfuscated && this.obfuscated) add.append(ChatFormatting.OBFUSCATED);
 
         return add;
-    }
-
-    public Style getStyle() {
-        Style reconstructedStyle = Style.EMPTY
-                .withBold(bold)
-                .withItalic(italic)
-                .withUnderlined(underlined)
-                .withStrikethrough(strikethrough)
-                .withObfuscated(obfuscated)
-                .withClickEvent(clickEvent)
-                .withHoverEvent(hoverEvent);
-
-        if (color != CustomColor.NONE) {
-            reconstructedStyle = reconstructedStyle.withColor(color.asInt());
-        }
-
-        return reconstructedStyle;
     }
 
     @Override

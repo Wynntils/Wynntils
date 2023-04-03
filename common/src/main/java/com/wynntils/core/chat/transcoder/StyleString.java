@@ -5,9 +5,14 @@
 package com.wynntils.core.chat.transcoder;
 
 import com.wynntils.utils.mc.ComponentUtils;
+import com.wynntils.utils.type.Pair;
+import java.util.Collections;
+import java.util.Deque;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Optional;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+import java.util.stream.Collectors;
 import net.minecraft.network.chat.ClickEvent;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.HoverEvent;
@@ -28,19 +33,32 @@ public final class StyleString {
 
         parts = new LinkedList<>();
 
-        StyleStringPart lastPart = null;
+        // Walk the component tree using DFS
+        // Save the style of the parent component so we can inherit it
+        Deque<Pair<Component, Style>> deque = new LinkedList<>();
 
-        for (Component current : component.toFlatList()) {
-            final StyleStringPart finalLastPart = lastPart;
+        deque.add(new Pair<>(component, Style.EMPTY));
 
-            current.visit(
-                    (style, string) -> {
-                        parts.add(new StyleStringPart(string, style, this, finalLastPart));
-                        return Optional.empty();
-                    },
-                    Style.EMPTY);
+        while (!deque.isEmpty()) {
+            Pair<Component, Style> currentPair = deque.pop();
+            Component current = currentPair.key();
+            Style parentStyle = currentPair.value();
 
-            lastPart = parts.get(parts.size() - 1);
+            String componentString =
+                    MutableComponent.create(current.getContents()).getString();
+
+            StyleStringPart styleStringPart =
+                    new StyleStringPart(componentString, current.getStyle(), this, parentStyle);
+
+            List<Pair<Component, Style>> siblingPairs = current.getSiblings().stream()
+                    .map(sibling ->
+                            new Pair<>(sibling, styleStringPart.getPartStyle().getStyle()))
+                    .collect(Collectors.toList());
+
+            Collections.reverse(siblingPairs);
+            siblingPairs.forEach(deque::addFirst);
+
+            parts.add(styleStringPart);
         }
     }
 
@@ -56,18 +74,125 @@ public final class StyleString {
         PartStyle previousStyle = null;
         for (StyleStringPart part : parts) {
             builder.append(part.getString(previousStyle, type));
-            previousStyle = part.getCodedStyle();
+            previousStyle = part.getPartStyle();
         }
 
         return builder.toString();
     }
 
-    public Component getComponent() {
-        MutableComponent component = Component.empty();
+    public MutableComponent getComponent() {
+        if (parts.isEmpty()) {
+            return Component.empty();
+        }
 
-        parts.forEach(part -> component.append(part.getComponent()));
+        MutableComponent component = parts.get(0).getComponent();
+
+        for (int i = 1; i < parts.size(); i++) {
+            component.append(parts.get(i).getComponent());
+        }
 
         return component;
+    }
+
+    public Matcher getMatcher(Pattern pattern) {
+        return getMatcher(pattern, PartStyle.StyleType.DEFAULT);
+    }
+
+    public Matcher getMatcher(Pattern pattern, PartStyle.StyleType styleType) {
+        return pattern.matcher(getString(styleType));
+    }
+
+    /**
+     * Splits the style string into two parts at the given index.
+     * The index is part of the second string.
+     *
+     * @param index The index to split at.
+     * @throws IndexOutOfBoundsException if the index is out of bounds.
+     */
+    public void splitAt(int index) {
+        int stringLength = 0;
+
+        // test: test string
+        // index = 6
+        // 5 6
+
+        if (index < 0) {
+            throw new IndexOutOfBoundsException("Index must be non-negative.");
+        }
+
+        StyleStringPart partToSplit = null;
+        int indexToSplit = 0;
+
+        for (StyleStringPart part : parts) {
+            int currentLength = part.getString(null, PartStyle.StyleType.NONE).length();
+            stringLength += currentLength;
+
+            if (index < stringLength) {
+                partToSplit = part;
+                indexToSplit = index - (stringLength - currentLength);
+                break;
+            }
+        }
+
+        if (partToSplit == null) {
+            throw new IndexOutOfBoundsException("Index out of bounds.");
+        }
+
+        String partString = partToSplit.getString(null, PartStyle.StyleType.NONE);
+
+        String firstString = partString.substring(0, indexToSplit);
+        String secondString = partString.substring(indexToSplit);
+
+        Style style = partToSplit.getPartStyle().getStyle();
+        StyleStringPart firstPart = new StyleStringPart(
+                firstString,
+                style,
+                this,
+                getPartBefore(partToSplit).getPartStyle().getStyle());
+        StyleStringPart secondPart = new StyleStringPart(
+                secondString, style, this, firstPart.getPartStyle().getStyle());
+
+        int indexOfPart = parts.indexOf(partToSplit);
+
+        parts.add(indexOfPart, firstPart);
+        parts.add(indexOfPart + 1, secondPart);
+        parts.remove(partToSplit);
+    }
+
+    public StyleStringPart getPartFinding(Pattern pattern) {
+        return getPartFinding(pattern, PartStyle.StyleType.DEFAULT);
+    }
+
+    public StyleStringPart getPartFinding(Pattern pattern, PartStyle.StyleType styleType) {
+        PartStyle previousPartStyle = null;
+
+        for (StyleStringPart part : parts) {
+            if (pattern.matcher(part.getString(previousPartStyle, styleType)).find()) {
+                return part;
+            }
+
+            previousPartStyle = part.getPartStyle();
+        }
+
+        return null;
+    }
+
+    public StyleStringPart getPartMatching(Pattern pattern) {
+        return getPartMatching(pattern, PartStyle.StyleType.DEFAULT);
+    }
+
+    public StyleStringPart getPartMatching(Pattern pattern, PartStyle.StyleType styleType) {
+        PartStyle previousPartStyle = null;
+
+        for (StyleStringPart part : parts) {
+            if (pattern.matcher(part.getString(previousPartStyle, styleType)).matches()) {
+                return part;
+            }
+
+            previousPartStyle = part.getPartStyle();
+        }
+
+        return null;
     }
 
     int addClickEvent(ClickEvent clickEvent) {
@@ -96,6 +221,15 @@ public final class StyleString {
         hoverEvents.add(hoverEvent);
 
         return hoverEvents.size();
+    }
+
+    private StyleStringPart getPartBefore(StyleStringPart part) {
+        int index = parts.indexOf(part);
+        if (index == 0) {
+            return null;
+        }
+
+        return parts.get(index - 1);
     }
 
     @Override

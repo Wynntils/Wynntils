@@ -14,12 +14,12 @@ public final class StyleStringPart {
 
     private final StyleString parent;
 
-    StyleStringPart(String text, Style style, StyleString parent, StyleStringPart partBefore) {
+    StyleStringPart(String text, Style style, StyleString parent, Style parentStyle) {
         this.text = text;
         this.parent = parent;
 
         // Must be done last
-        this.style = PartStyle.fromStyle(style, this, partBefore == null ? null : partBefore.getCodedStyle());
+        this.style = PartStyle.fromStyle(style, this, parentStyle);
     }
 
     public String getString(PartStyle previousStyle, PartStyle.StyleType type) {
@@ -30,11 +30,11 @@ public final class StyleStringPart {
         return parent;
     }
 
-    public PartStyle getCodedStyle() {
+    public PartStyle getPartStyle() {
         return style;
     }
 
-    public Component getComponent() {
+    public MutableComponent getComponent() {
         MutableComponent component = Component.literal(text).withStyle(style.getStyle());
 
         return component;

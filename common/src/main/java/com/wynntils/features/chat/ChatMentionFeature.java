@@ -4,7 +4,10 @@
  */
 package com.wynntils.features.chat;
 
-import com.wynntils.core.chat.transcoder.CodedStyle;
+import com.wynntils.core.WynntilsMod;
+import com.wynntils.core.chat.transcoder.PartStyle;
+import com.wynntils.core.chat.transcoder.StyleString;
+import com.wynntils.core.chat.transcoder.StyleStringPart;
 import com.wynntils.core.components.Managers;
 import com.wynntils.core.config.Category;
 import com.wynntils.core.config.Config;
@@ -13,16 +16,13 @@ import com.wynntils.core.config.ConfigHolder;
 import com.wynntils.core.config.RegisterConfig;
 import com.wynntils.core.features.Feature;
 import com.wynntils.handlers.chat.event.ChatMessageReceivedEvent;
-import com.wynntils.utils.mc.ComponentUtils;
 import com.wynntils.utils.mc.McUtils;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
-import net.minecraft.network.chat.Style;
 import net.minecraft.sounds.SoundEvents;
-import net.minecraftforge.eventbus.api.EventPriority;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 
 @ConfigCategory(Category.CHAT)
@@ -58,80 +58,47 @@ public class ChatMentionFeature extends Feature {
                 Pattern.CASE_INSENSITIVE);
     }
 
-    @SubscribeEvent(priority = EventPriority.HIGH)
+    @SubscribeEvent
     public void onChat(ChatMessageReceivedEvent e) {
         Component message = e.getMessage();
 
-        System.out.println("ComponentUtils.getCoded(message) = " + ComponentUtils.getCoded(message));
-        System.out.println("Managers.ChatTranscoder.fromComponent(e.getMessage()).getCoded() = "
-                + Managers.ChatTranscoder.fromComponent(e.getMessage()).getString(CodedStyle.StyleType.DEFAULT));
+        StyleString styleString = Managers.ChatTranscoder.fromComponent(message);
 
-        //  §8[105*/309/Ma/✫✫CHEM]§r§7 [WC8]§r§5 [§r§dHERO§r§5]§r §5BeastBenK: §r§fstarfish oil
-        //  §8[105*/309/Ma/✫✫CHEM]§r§7 [WC8]§r§5 [§r§dHERO§r§5] BeastBenK: §r§fstarfish oil
+        StyleStringPart partFinding = styleString.getPartFinding(mentionPattern, PartStyle.StyleType.NONE);
 
-        // CodedString codedString = Managers.ChatTranscoder.fromComponent(message);
+        // If the part is null, it means that the mention is in two different parts, we likely don't want to mark it.
+        if (partFinding == null) {
+            return;
+        }
 
-        // fixme: impl
-        // go through comp parts, find matches, if found, split part into three parts, add mention style to middle part
+        if (markMention.get()) {
+            Matcher matcher = styleString.getMatcher(mentionPattern, PartStyle.StyleType.NONE);
 
-        if (markMention.get()) {}
+            if (!matcher.find()) {
+                WynntilsMod.error(
+                        "Found a part matching the mention pattern, but couldn't find a match in the string.");
+                return;
+            }
+
+            styleString.splitAt(matcher.start());
+            styleString.splitAt(matcher.end());
+
+            StyleStringPart partMatching = styleString.getPartMatching(mentionPattern, PartStyle.StyleType.NONE);
+
+            if (partMatching == null) {
+                WynntilsMod.error(
+                        "Found a part finding the mention pattern, but couldn't find a match in the string after splitting.");
+                return;
+            }
+
+            partMatching.getPartStyle().setColor(mentionColor.get());
+
+            MutableComponent newComponent = styleString.getComponent();
+            e.setMessage(newComponent);
+        }
 
         if (dingMention.get()) {
             McUtils.playSoundUI(SoundEvents.NOTE_BLOCK_PLING.value());
         }
-    }
-
-    private Component rewriteComponentTree(Component comp) {
-        // Make a copy of the component without the siblings
-        MutableComponent curr = MutableComponent.create(comp.getContents()).withStyle(comp.getStyle());
-        // .getString() is used here as it gives formattingchars when those exist. It is needed for guild messages
-        // because wynn still uses legacy coloring for it.
-        String text = curr.getString();
-
-        // if current component has text check it for mentions and rewrite the component if necessary
-        if (!text.isEmpty()) {
-            curr = rewriteMentions(curr, text, comp.getStyle());
-        }
-
-        // process and append siblings
-        for (Component c : comp.getSiblings()) {
-            curr.append(rewriteComponentTree(c));
-        }
-
-        return curr;
-    }
-
-    private MutableComponent rewriteMentions(MutableComponent curr, String text, Style style) {
-        Matcher match = mentionPattern.matcher(text);
-
-        // if we match then rewrite the component if there are no matches the function will just return
-        if (match.find()) {
-            // get the start of the string before any mention and set curr to be it
-            curr = Component.literal(text.substring(0, match.start())).withStyle(style);
-
-            // do the name of the first mention
-            curr.append(Component.literal(mentionColor.get() + match.group(0)));
-
-            // Store the point at which this match ended
-            int lastEnd = match.end();
-
-            // Handle any additional mentions within the message
-            while (match.find()) {
-                // get the bit in between of matches
-                curr.append(Component.literal(text.substring(lastEnd, match.start())))
-                        .withStyle(style);
-
-                // get the name and recolor it
-                curr.append(Component.literal(mentionColor.get() + match.group(0)));
-
-                // set the starting point for the next mentions before variable
-                lastEnd = match.end();
-            }
-
-            // finally add any text after the mentions back onto the component tree
-            curr.append(Component.literal(text.substring(lastEnd))).withStyle(style);
-        }
-
-        return curr;
     }
 }
