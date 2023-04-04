@@ -28,10 +28,6 @@ public final class StyledTextPart {
         return style.asString(previousStyle, type) + text;
     }
 
-    public StyledTextPart asNormalized() {
-        return new StyledTextPart(WynnUtils.normalizeBadString(text), style.getStyle(), parent, null);
-    }
-
     public StyledText getParent() {
         return parent;
     }
@@ -52,6 +48,14 @@ public final class StyledTextPart {
         MutableComponent component = Component.literal(text).withStyle(style.getStyle());
 
         return component;
+    }
+
+    StyledTextPart asNormalized() {
+        return new StyledTextPart(WynnUtils.normalizeBadString(text), style.getStyle(), parent, null);
+    }
+
+    StyledTextPart trim() {
+        return new StyledTextPart(text.trim(), style.getStyle(), parent, null);
     }
 
     @Override

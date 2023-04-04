@@ -93,6 +93,19 @@ public class TestStyledText {
     }
 
     @Test
+    public void untrimmedText_shouldProduceTrimmedString() {
+        final String badText = "   Hello, World!  ";
+        final String expected = "Hello, World!";
+
+        StyledText styledText = StyledText.fromString(badText);
+
+        Assertions.assertEquals(
+                expected,
+                styledText.trim().getString(PartStyle.StyleType.NONE),
+                "StyledText.getString() returned an unexpected value.");
+    }
+
+    @Test
     public void styledText_shouldProduceCorrectComponent() {
         final Component component = Component.literal("a").append(Component.literal("b"));
 

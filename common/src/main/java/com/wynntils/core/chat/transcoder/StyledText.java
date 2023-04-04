@@ -174,6 +174,14 @@ public final class StyledText {
                 hoverEvents);
     }
 
+    public StyledText trim() {
+        return new StyledText(
+                parts.stream().map(StyledTextPart::trim).collect(Collectors.toList()),
+                temporaryWorkaround,
+                clickEvents,
+                hoverEvents);
+    }
+
     public Matcher getMatcher(Pattern pattern) {
         return getMatcher(pattern, PartStyle.StyleType.DEFAULT);
     }
