@@ -51,15 +51,15 @@ public class TestStyledText {
         Assertions.assertEquals(
                 expectedIncludeEvents,
                 styledText.getString(PartStyle.StyleType.INCLUDE_EVENTS),
-                "StyleString.getString(INCLUDE_EVENTS) returned an unexpected value.");
+                "StyledText.getString(INCLUDE_EVENTS) returned an unexpected value.");
         Assertions.assertEquals(
                 expectedDefault,
                 styledText.getString(PartStyle.StyleType.DEFAULT),
-                "StyleString.getString(DEFAULT) returned an unexpected value.");
+                "StyledText.getString(DEFAULT) returned an unexpected value.");
         Assertions.assertEquals(
                 expectedNoFormat,
                 styledText.getString(PartStyle.StyleType.NONE),
-                "StyleString.getString(NONE) returned an unexpected value.");
+                "StyledText.getString(NONE) returned an unexpected value.");
     }
 
     @Test
@@ -69,7 +69,7 @@ public class TestStyledText {
         StyledText styledText = StyledText.fromComponent(component);
 
         Assertions.assertEquals(
-                component, styledText.getComponent(), "StyleString.getComponent() returned an unexpected value.");
+                component, styledText.getComponent(), "StyledText.getComponent() returned an unexpected value.");
     }
 
     @Test
@@ -89,16 +89,16 @@ public class TestStyledText {
         Matcher formattedMatcher = styledText.getMatcher(formattedPattern);
         Matcher unformattedMatcher = styledText.getMatcher(unformattedPattern, PartStyle.StyleType.NONE);
 
-        Assertions.assertTrue(formattedMatcher.matches(), "StyleString.matches(DEFAULT) returned an unexpected value.");
+        Assertions.assertTrue(formattedMatcher.matches(), "StyledText.matches(DEFAULT) returned an unexpected value.");
         Assertions.assertEquals(
                 expectedMatch,
                 formattedMatcher.group(1),
-                "StyleString.matches(DEFAULT).group() returned an unexpected value.");
-        Assertions.assertTrue(unformattedMatcher.matches(), "StyleString.matches(NONE) returned an unexpected value.");
+                "StyledText.matches(DEFAULT).group() returned an unexpected value.");
+        Assertions.assertTrue(unformattedMatcher.matches(), "StyledText.matches(NONE) returned an unexpected value.");
         Assertions.assertEquals(
                 expectedMatch,
                 unformattedMatcher.group(1),
-                "StyleString.matches(NONE).group() returned an unexpected value.");
+                "StyledText.matches(NONE).group() returned an unexpected value.");
     }
 
     @Test
@@ -110,16 +110,16 @@ public class TestStyledText {
         StyledText styledText = StyledText.fromComponent(component);
 
         Assertions.assertEquals(
-                3, styledText.getPartCount(), "StyleString.getParts().size() returned an unexpected value.");
+                3, styledText.getPartCount(), "StyledText.getParts().size() returned an unexpected value.");
 
         final int splitAt = 22;
 
-        styledText.splitAt(splitAt);
+        StyledText newText = styledText.splitAt(splitAt);
 
         Assertions.assertEquals(
                 4,
-                styledText.getPartCount(),
-                "StyleString.splitAt() did not split the string correctly. The number of parts is incorrect.");
+                newText.getPartCount(),
+                "StyledText.splitAt() did not split the string correctly. The number of parts is incorrect.");
     }
 
     @Test
@@ -131,11 +131,11 @@ public class TestStyledText {
         Assertions.assertThrows(
                 IndexOutOfBoundsException.class,
                 () -> styledText.splitAt(10000),
-                "StyleString#splitAt() did not throw an exception when given a too big index.");
+                "StyledText#splitAt() did not throw an exception when given a too big index.");
         Assertions.assertThrows(
                 IndexOutOfBoundsException.class,
                 () -> styledText.splitAt(-1),
-                "StyleString#splitAt() did not throw an exception when given a negative index.");
+                "StyledText#splitAt() did not throw an exception when given a negative index.");
     }
 
     @Test
@@ -152,12 +152,12 @@ public class TestStyledText {
         StyledTextPart partFinding = styledText.getPartFinding(pattern);
 
         Assertions.assertNotNull(
-                partFinding, "StyleString.getPartFinding() returned null when it should have found a part.");
+                partFinding, "StyledText.getPartFinding() returned null when it should have found a part.");
 
         String partString = partFinding.getString(null, PartStyle.StyleType.NONE);
 
         Assertions.assertEquals(
-                partText, partString, "StyleString.getPartFinding() returned a part with the wrong text.");
+                partText, partString, "StyledText.getPartFinding() returned a part with the wrong text.");
     }
 
     @Test
@@ -172,14 +172,14 @@ public class TestStyledText {
         StyledTextPart partMatching = styledText.getPartMatching(pattern);
 
         Assertions.assertNotNull(
-                partMatching, "StyleString.getPartMatching() returned null when it should have found a part.");
+                partMatching, "StyledText.getPartMatching() returned null when it should have found a part.");
 
         String partString = partMatching.getString(null, PartStyle.StyleType.NONE);
 
         Assertions.assertEquals(
-                "Test string", partString, "StyleString.getPartMatching() returned a part with the wrong text.");
+                "Test string", partString, "StyledText.getPartMatching() returned a part with the wrong text.");
         Assertions.assertTrue(
                 partMatching.getPartStyle().isBold(),
-                "StyleString.getPartMatching() returned a part with the wrong style.");
+                "StyledText.getPartMatching() returned a part with the wrong style.");
     }
 }

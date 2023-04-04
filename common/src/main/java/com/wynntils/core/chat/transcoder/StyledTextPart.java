@@ -4,13 +4,14 @@
  */
 package com.wynntils.core.chat.transcoder;
 
+import java.util.function.Function;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.network.chat.Style;
 
 public final class StyledTextPart {
     private final String text;
-    private final PartStyle style;
+    private PartStyle style;
 
     private final StyledText parent;
 
@@ -32,6 +33,14 @@ public final class StyledTextPart {
 
     public PartStyle getPartStyle() {
         return style;
+    }
+
+    public void setPartStyle(PartStyle style) {
+        this.style = style;
+    }
+
+    public void setPartStyle(Function<PartStyle, PartStyle> function) {
+        this.style = function.apply(style);
     }
 
     public MutableComponent getComponent() {

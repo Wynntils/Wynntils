@@ -79,8 +79,7 @@ public class ChatMentionFeature extends Feature {
                 return;
             }
 
-            styledText.splitAt(matcher.start());
-            styledText.splitAt(matcher.end());
+            StyledText newText = styledText.splitAt(matcher.start()).splitAt(matcher.end());
 
             StyledTextPart partMatching = styledText.getPartMatching(mentionPattern, PartStyle.StyleType.NONE);
 
@@ -90,9 +89,9 @@ public class ChatMentionFeature extends Feature {
                 return;
             }
 
-            partMatching.getPartStyle().setColor(mentionColor.get());
+            partMatching.setPartStyle(style -> style.withColor(mentionColor.get()));
 
-            MutableComponent newComponent = styledText.getComponent();
+            MutableComponent newComponent = newText.getComponent();
             e.setMessage(newComponent);
         }
 

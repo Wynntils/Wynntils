@@ -185,14 +185,15 @@ public final class PartStyle {
         return reconstructedStyle;
     }
 
-    public PartStyle setColor(ChatFormatting color) {
+    public PartStyle withColor(ChatFormatting color) {
         if (!color.isColor()) {
             throw new IllegalArgumentException("ChatFormatting " + color + " is not a color!");
         }
 
-        this.color = CustomColor.fromInt(color.getColor());
+        CustomColor newColor = CustomColor.fromInt(color.getColor());
 
-        return this;
+        return new PartStyle(
+                owner, newColor, bold, italic, underlined, strikethrough, obfuscated, clickEvent, hoverEvent);
     }
 
     public boolean isBold() {
@@ -215,39 +216,32 @@ public final class PartStyle {
         return underlined;
     }
 
-    public PartStyle setBold(boolean bold) {
-        this.bold = bold;
-        return this;
+    public PartStyle withBold(boolean bold) {
+        return new PartStyle(owner, color, bold, italic, underlined, strikethrough, obfuscated, clickEvent, hoverEvent);
     }
 
-    public PartStyle setItalic(boolean italic) {
-        this.italic = italic;
-        return this;
+    public PartStyle withItalic(boolean italic) {
+        return new PartStyle(owner, color, bold, italic, underlined, strikethrough, obfuscated, clickEvent, hoverEvent);
     }
 
-    public PartStyle setUnderlined(boolean underlined) {
-        this.underlined = underlined;
-        return this;
+    public PartStyle withUnderlined(boolean underlined) {
+        return new PartStyle(owner, color, bold, italic, underlined, strikethrough, obfuscated, clickEvent, hoverEvent);
     }
 
-    public PartStyle setStrikethrough(boolean strikethrough) {
-        this.strikethrough = strikethrough;
-        return this;
+    public PartStyle withStrikethrough(boolean strikethrough) {
+        return new PartStyle(owner, color, bold, italic, underlined, strikethrough, obfuscated, clickEvent, hoverEvent);
     }
 
-    public PartStyle setObfuscated(boolean obfuscated) {
-        this.obfuscated = obfuscated;
-        return this;
+    public PartStyle withObfuscated(boolean obfuscated) {
+        return new PartStyle(owner, color, bold, italic, underlined, strikethrough, obfuscated, clickEvent, hoverEvent);
     }
 
-    public PartStyle setClickEvent(ClickEvent clickEvent) {
-        this.clickEvent = clickEvent;
-        return this;
+    public PartStyle withClickEvent(ClickEvent clickEvent) {
+        return new PartStyle(owner, color, bold, italic, underlined, strikethrough, obfuscated, clickEvent, hoverEvent);
     }
 
-    public PartStyle setHoverEvent(HoverEvent hoverEvent) {
-        this.hoverEvent = hoverEvent;
-        return this;
+    public PartStyle withHoverEvent(HoverEvent hoverEvent) {
+        return new PartStyle(owner, color, bold, italic, underlined, strikethrough, obfuscated, clickEvent, hoverEvent);
     }
 
     private StringBuilder tryConstructDifference(PartStyle oldStyle) {

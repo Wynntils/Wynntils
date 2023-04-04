@@ -25,13 +25,15 @@ public final class StyledText {
 
     private final List<StyledTextPart> parts;
 
-    private final List<ClickEvent> clickEvents = new LinkedList<>();
-    private final List<HoverEvent> hoverEvents = new LinkedList<>();
+    private final List<ClickEvent> clickEvents;
+    private final List<HoverEvent> hoverEvents;
 
     StyledText(Component component) {
         temporaryWorkaround = component;
 
         parts = new LinkedList<>();
+        clickEvents = new LinkedList<>();
+        hoverEvents = new LinkedList<>();
 
         // Walk the component tree using DFS
         // Save the style of the parent component so we can inherit it
@@ -59,6 +61,17 @@ public final class StyledText {
 
             parts.add(styledTextPart);
         }
+    }
+
+    private StyledText(
+            List<StyledTextPart> parts,
+            Component temporaryWorkaround,
+            List<ClickEvent> clickEvents,
+            List<HoverEvent> hoverEvents) {
+        this.parts = parts;
+        this.temporaryWorkaround = temporaryWorkaround;
+        this.clickEvents = clickEvents;
+        this.hoverEvents = hoverEvents;
     }
 
     public static StyledText fromComponent(Component component) {
@@ -112,12 +125,8 @@ public final class StyledText {
      * @param index The index to split at.
      * @throws IndexOutOfBoundsException if the index is out of bounds.
      */
-    public void splitAt(int index) {
+    public StyledText splitAt(int index) {
         int stringLength = 0;
-
-        // test: test string
-        // index = 6
-        // 5 6
 
         if (index < 0) {
             throw new IndexOutOfBoundsException("Index must be non-negative.");
@@ -141,6 +150,8 @@ public final class StyledText {
             throw new IndexOutOfBoundsException("Index out of bounds.");
         }
 
+        List<StyledTextPart> newParts = new LinkedList<>(parts);
+
         String partString = partToSplit.getString(null, PartStyle.StyleType.NONE);
 
         String firstString = partString.substring(0, indexToSplit);
@@ -157,9 +168,11 @@ public final class StyledText {
 
         int indexOfPart = parts.indexOf(partToSplit);
 
-        parts.add(indexOfPart, firstPart);
-        parts.add(indexOfPart + 1, secondPart);
-        parts.remove(partToSplit);
+        newParts.add(indexOfPart, firstPart);
+        newParts.add(indexOfPart + 1, secondPart);
+        newParts.remove(partToSplit);
+
+        return new StyledText(newParts, temporaryWorkaround, clickEvents, hoverEvents);
     }
 
     public StyledTextPart getPartFinding(Pattern pattern) {
