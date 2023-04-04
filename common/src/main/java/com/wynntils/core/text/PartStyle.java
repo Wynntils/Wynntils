@@ -89,7 +89,7 @@ public final class PartStyle {
         //    If this is a custom color, a hex color code is used.
         //    Example: §#FF0000 or §1
         // 2. Formatting is converted the same way as in the Style class.
-        // 3. Click events are wrapped in square brackets, and is reprenseted as an id.
+        // 3. Click events are wrapped in square brackets, and is represented as an id.
         //    The parent of this style's owner is responsible for keeping track of click events.
         //    Example: §[1] -> (1st click event)
         // 4. Hover events are wrapped in angle brackets, and is represented as an id.
