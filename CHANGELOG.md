@@ -1,9 +1,21 @@
+## [0.0.2-alpha.433](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.432...v0.0.2-alpha.433) (2023-04-04)
+
+
+### New Features
+
+* Held item & regex functions ([#1440](https://github.com/Wynntils/Artemis/issues/1440)) ([de71913](https://github.com/Wynntils/Artemis/commit/de71913f76762273bd7871a1d3fa3a45ae7a837b))
+
 ## [0.0.2-alpha.432](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.431...v0.0.2-alpha.432) (2023-04-03)
 
 
 ### New Features
 
 * Introduce JUnit tests ([#1437](https://github.com/Wynntils/Artemis/issues/1437)) ([1e49036](https://github.com/Wynntils/Artemis/commit/1e490369f56ff8bd6f740a4f7fb4620243f19b76))
+
+
+### Miscellaneous Chores
+
+* **release:** v0.0.2-alpha.432 [skip ci] ([9c9fc72](https://github.com/Wynntils/Artemis/commit/9c9fc723cd33d890aa6a7aa6ffcb96dd43c73500))
 
 ## [0.0.2-alpha.431](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.430...v0.0.2-alpha.431) (2023-04-03)
 
@@ -40,16 +52,4 @@
 ### Miscellaneous Chores
 
 * **release:** v0.0.2-alpha.429 [skip ci] ([485645d](https://github.com/Wynntils/Artemis/commit/485645d8503f4f6f9744879ca2918352c15c7f45))
-
-## [0.0.2-alpha.428](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.427...v0.0.2-alpha.428) (2023-04-02)
-
-
-### New Features
-
-* Config search now properly finds overlays by name, and search only shows relevant configurables ([#1433](https://github.com/Wynntils/Artemis/issues/1433)) ([8aae546](https://github.com/Wynntils/Artemis/commit/8aae5468efc8e2d0c02277290220c1f0af069b30))
-
-
-### Miscellaneous Chores
-
-* **release:** v0.0.2-alpha.428 [skip ci] ([916f7ae](https://github.com/Wynntils/Artemis/commit/916f7ae8d041c7d902c9072b640549e21b1c4161))
 
