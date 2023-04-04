@@ -65,7 +65,8 @@ public class ChatMentionFeature extends Feature {
 
         StyledTextPart partFinding = styledText.getPartFinding(mentionPattern, PartStyle.StyleType.NONE);
 
-        // If the part is null, it means that the mention is in two different parts, we likely don't want to mark it.
+        // If the part is null, it means that we did not get mentioned,
+        // or the mention is in two different parts, we likely don't want to mark it.
         if (partFinding == null) {
             return;
         }
