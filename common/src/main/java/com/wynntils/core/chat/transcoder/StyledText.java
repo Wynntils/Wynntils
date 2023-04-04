@@ -73,11 +73,11 @@ public final class StyledText {
         Style currentStyle = Style.EMPTY;
         StringBuilder currentString = new StringBuilder();
 
-        boolean nextIsColoring = false;
+        boolean nextIsFormatting = false;
 
         for (char current : string.toCharArray()) {
-            if (nextIsColoring) {
-                nextIsColoring = false;
+            if (nextIsFormatting) {
+                nextIsFormatting = false;
 
                 ChatFormatting formatting = ChatFormatting.getByCode(current);
 
@@ -100,7 +100,7 @@ public final class StyledText {
             }
 
             if (current == ChatFormatting.PREFIX_CODE) {
-                nextIsColoring = true;
+                nextIsFormatting = true;
                 continue;
             }
 
