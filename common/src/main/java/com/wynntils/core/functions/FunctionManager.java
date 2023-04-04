@@ -353,7 +353,11 @@ public final class FunctionManager extends Manager {
         registerFunction(new StringFunctions.LeadingZerosFunction());
         registerFunction(new StringFunctions.ParseDoubleFunction());
         registerFunction(new StringFunctions.ParseIntegerFunction());
+        registerFunction(new StringFunctions.RegexFindFunction());
+        registerFunction(new StringFunctions.RegexMatchFunction());
+        registerFunction(new StringFunctions.RegexReplaceFunction());
         registerFunction(new StringFunctions.RepeatFunction());
+        registerFunction(new StringFunctions.StringContainsFunction());
         registerFunction(new StringFunctions.StringEqualsFunction());
         registerFunction(new StringFunctions.StringFunction());
 
@@ -426,6 +430,7 @@ public final class FunctionManager extends Manager {
         registerFunction(new InventoryFunctions.EmeraldsFunction());
         registerFunction(new InventoryFunctions.HeldItemCurrentDurabilityFunction());
         registerFunction(new InventoryFunctions.HeldItemMaxDurabilityFunction());
+        registerFunction(new InventoryFunctions.HeldItemNameFunction());
         registerFunction(new InventoryFunctions.HeldItemTypeFunction());
         registerFunction(new InventoryFunctions.IngredientPouchOpenSlotsFunction());
         registerFunction(new InventoryFunctions.IngredientPouchUsedSlotsFunction());
