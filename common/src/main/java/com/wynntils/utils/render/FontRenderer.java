@@ -273,7 +273,8 @@ public final class FontRenderer {
         }
 
         // FIXME...
-        List<FormattedText> parts = font.getSplitter().splitLines(text.str(), (int) maxWidth, Style.EMPTY);
+        List<FormattedText> parts =
+                font.getSplitter().splitLines(text.getInternalCodedStringRepresentation(), (int) maxWidth, Style.EMPTY);
 
         StyledText lastPart = StyledText.EMPTY;
         for (int i = 0; i < parts.size(); i++) {
@@ -381,7 +382,7 @@ public final class FontRenderer {
             if (textRenderTask.getSetting().maxWidth() == 0) {
                 height += font.lineHeight;
             } else {
-                height += font.wordWrapHeight(textRenderTask.getText().str(), (int)
+                height += font.wordWrapHeight(textRenderTask.getText().getInternalCodedStringRepresentation(), (int)
                         textRenderTask.getSetting().maxWidth());
             }
             totalLineCount++;
@@ -396,13 +397,14 @@ public final class FontRenderer {
     public float calculateRenderHeight(List<StyledText> lines, float maxWidth) {
         int sum = 0;
         for (StyledText line : lines) {
-            sum += font.wordWrapHeight(line.str(), (int) maxWidth);
+            sum += font.wordWrapHeight(line.getInternalCodedStringRepresentation(), (int) maxWidth);
         }
         return sum;
     }
 
     public float calculateRenderHeight(StyledText line, float maxWidth) {
-        return font.wordWrapHeight(line.str(), maxWidth == 0 ? Integer.MAX_VALUE : (int) maxWidth);
+        return font.wordWrapHeight(
+                line.getInternalCodedStringRepresentation(), maxWidth == 0 ? Integer.MAX_VALUE : (int) maxWidth);
     }
 
     public float calculateRenderHeight(String line, float maxWidth) {

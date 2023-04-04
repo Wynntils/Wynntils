@@ -32,7 +32,7 @@ public class StyledText {
         return StyledText.of(component.getString());
     }
 
-    public String str() {
+    public String getInternalCodedStringRepresentation() {
         return str;
     }
 
@@ -65,7 +65,7 @@ public class StyledText {
     }
 
     public boolean contains(StyledText string) {
-        return str.contains(string.str());
+        return str.contains(string.str);
     }
 
     public boolean contains(String string) {
@@ -73,7 +73,7 @@ public class StyledText {
     }
 
     public boolean startsWith(StyledText prefix) {
-        return str.startsWith(prefix.str());
+        return str.startsWith(prefix.str);
     }
 
     public boolean startsWith(String prefix) {
@@ -81,7 +81,7 @@ public class StyledText {
     }
 
     public boolean endsWith(StyledText suffix) {
-        return str.endsWith(suffix.str());
+        return str.endsWith(suffix.str);
     }
 
     public boolean endsWith(String suffix) {
@@ -90,7 +90,7 @@ public class StyledText {
 
     public static StyledText join(List<StyledText> strings, String delimiter) {
         return StyledText.of(
-                String.join(delimiter, strings.stream().map(StyledText::str).toList()));
+                String.join(delimiter, strings.stream().map(s -> s.str).toList()));
     }
 
     public StyledText[] split(String regex) {
@@ -98,12 +98,12 @@ public class StyledText {
     }
 
     public static StyledText join(StyledText[] strings, String delimiter) {
-        return StyledText.of(String.join(
-                delimiter, Arrays.stream(strings).map(StyledText::str).toList()));
+        return StyledText.of(
+                String.join(delimiter, Arrays.stream(strings).map(s -> s.str).toList()));
     }
 
     public static StyledText concat(StyledText... str) {
-        return StyledText.of(Arrays.stream(str).map(StyledText::str).collect(Collectors.joining()));
+        return StyledText.of(Arrays.stream(str).map(s -> s.str).collect(Collectors.joining()));
     }
 
     public StyledText prepend(StyledText prefix) {
@@ -115,7 +115,7 @@ public class StyledText {
     }
 
     public StyledText append(StyledText suffix) {
-        return StyledText.of(str + suffix.str());
+        return StyledText.of(str + suffix.str);
     }
 
     public StyledText append(String suffix) {

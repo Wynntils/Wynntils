@@ -207,7 +207,9 @@ public final class ScriptedContainerQuery {
             this.startAction = (container) -> {
                 ItemStack itemStack = container.items().get(slotNum);
                 if (!itemStack.is(expectedItemType)
-                        || !StyledText.fromComponentIgnoringComponentStylesAndJustUsingFormattingCodes(itemStack.getDisplayName()).equals(expectedItemName)) return false;
+                        || !StyledText.fromComponentIgnoringComponentStylesAndJustUsingFormattingCodes(
+                                        itemStack.getDisplayName())
+                                .equals(expectedItemName)) return false;
 
                 ContainerUtils.clickOnSlot(
                         slotNum, container.containerId(), GLFW.GLFW_MOUSE_BUTTON_LEFT, container.items());

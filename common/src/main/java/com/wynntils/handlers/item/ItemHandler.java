@@ -149,8 +149,10 @@ public class ItemHandler extends Handler {
     }
 
     private StyledText getBaseName(StyledText name) {
-        int bracketIndex = name.str().lastIndexOf('[');
-        return bracketIndex == -1 ? name : StyledText.of(name.str().substring(0, bracketIndex));
+        int bracketIndex = name.getInternalCodedStringRepresentation().lastIndexOf('[');
+        return bracketIndex == -1
+                ? name
+                : StyledText.of(name.getInternalCodedStringRepresentation().substring(0, bracketIndex));
     }
 
     private boolean similarStack(ItemStack firstItem, ItemStack secondItem) {

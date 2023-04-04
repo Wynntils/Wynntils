@@ -99,7 +99,7 @@ public final class PlayerModel extends Model {
         StyledText name = StyledText.of(player.getGameProfile().getName());
         if (isNpc(name)) return; // avoid player npcs
 
-        loadUser(player.getUUID(), name.str());
+        loadUser(player.getUUID(), name.getInternalCodedStringRepresentation());
     }
 
     @SubscribeEvent

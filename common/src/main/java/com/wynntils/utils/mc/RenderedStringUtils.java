@@ -24,13 +24,13 @@ public final class RenderedStringUtils {
             StyledText[] lines = string.split("\\\\n");
             for (int i = 0; i < lines.length; i++) {
                 StyledText line = lines[i];
-                if (i > 0 || length + font.width(line.str()) >= maxPixels) {
+                if (i > 0 || length + font.width(line.getInternalCodedStringRepresentation()) >= maxPixels) {
                     result.append('\n');
                     length = 0;
                 }
                 if (!line.isEmpty()) {
                     result.append(line).append(' ');
-                    length += font.width(line.str()) + spaceSize;
+                    length += font.width(line.getInternalCodedStringRepresentation()) + spaceSize;
                 }
             }
         }
@@ -69,19 +69,19 @@ public final class RenderedStringUtils {
             String color = "";
 
             if (line.startsWith("§")) {
-                color = line.str().substring(0, 2);
+                color = line.getInternalCodedStringRepresentation().substring(0, 2);
             }
 
-            return StyledText.of(line.str().replaceFirst(" \\[", "\n" + color + "["));
+            return StyledText.of(line.getInternalCodedStringRepresentation().replaceFirst(" \\[", "\n" + color + "["));
         } else if (maxFitting.contains("(")
                 && !maxFitting.contains(")")) { // Detail line did not appear to fit, force break
             String color = "";
 
             if (line.startsWith("§")) {
-                color = line.str().substring(0, 2);
+                color = line.getInternalCodedStringRepresentation().substring(0, 2);
             }
 
-            return StyledText.of(line.str().replaceFirst(" \\(", "\n" + color + "("));
+            return StyledText.of(line.getInternalCodedStringRepresentation().replaceFirst(" \\(", "\n" + color + "("));
         } else { // Fits fine, give normal lines
             return line;
         }

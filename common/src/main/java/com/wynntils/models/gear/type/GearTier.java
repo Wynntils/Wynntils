@@ -40,15 +40,17 @@ public enum GearTier {
     }
 
     public static GearTier fromFormattedString(StyledText name) {
-        if (name.str().charAt(0) == '§') {
-            return fromChatFormatting(ChatFormatting.getByCode(name.str().charAt(1)));
+        if (name.getInternalCodedStringRepresentation().charAt(0) == '§') {
+            return fromChatFormatting(ChatFormatting.getByCode(
+                    name.getInternalCodedStringRepresentation().charAt(1)));
         }
 
         return null;
     }
 
     public static GearTier fromComponent(Component component) {
-        return fromFormattedString(StyledText.fromComponentIgnoringComponentStylesAndJustUsingFormattingCodes(component));
+        return fromFormattedString(
+                StyledText.fromComponentIgnoringComponentStylesAndJustUsingFormattingCodes(component));
     }
 
     public static GearTier fromChatFormatting(ChatFormatting formatting) {

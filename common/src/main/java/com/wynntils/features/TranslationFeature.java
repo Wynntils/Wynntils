@@ -116,7 +116,7 @@ public class TranslationFeature extends Feature {
     }
 
     private String wrapCoding(StyledText origCoded) {
-        return origCoded.str().replaceAll("(§[0-9a-fklmnor])", "{$1}");
+        return origCoded.getInternalCodedStringRepresentation().replaceAll("(§[0-9a-fklmnor])", "{$1}");
     }
 
     private static class TranslatedNpcDialogEvent extends NpcDialogEvent {

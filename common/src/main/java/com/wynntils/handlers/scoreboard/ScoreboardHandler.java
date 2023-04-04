@@ -339,12 +339,15 @@ public final class ScoreboardHandler extends Handler {
             if (!scoreboardSegment.isVisible()) continue;
 
             scoreboard
-                    .getOrCreatePlayerScore(scoreboardSegment.getHeader().str(), wynntilsObjective)
+                    .getOrCreatePlayerScore(
+                            scoreboardSegment.getHeader().getInternalCodedStringRepresentation(), wynntilsObjective)
                     .setScore(currentScoreboardLine);
             currentScoreboardLine--;
 
             for (StyledText line : scoreboardSegment.getContent()) {
-                scoreboard.getOrCreatePlayerScore(line.str(), wynntilsObjective).setScore(currentScoreboardLine);
+                scoreboard
+                        .getOrCreatePlayerScore(line.getInternalCodedStringRepresentation(), wynntilsObjective)
+                        .setScore(currentScoreboardLine);
                 currentScoreboardLine--;
             }
         }

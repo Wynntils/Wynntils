@@ -273,8 +273,9 @@ public final class LoreUtils {
      * This lore has a completely different format from the normal lore shown to the player
      */
     public static JsonObject getJsonFromIngameLore(ItemStack itemStack) {
-        String rawLore = StringUtils.substringBeforeLast(
-                        getStringLore(itemStack).str(), "}") + "}"; // remove extra unnecessary info
+        String rawLore =
+                StringUtils.substringBeforeLast(getStringLore(itemStack).getInternalCodedStringRepresentation(), "}")
+                        + "}"; // remove extra unnecessary info
         try {
             return JsonParser.parseString(rawLore).getAsJsonObject();
         } catch (JsonSyntaxException e) {

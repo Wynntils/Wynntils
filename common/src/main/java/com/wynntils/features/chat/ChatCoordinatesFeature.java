@@ -73,7 +73,8 @@ public class ChatCoordinatesFeature extends Feature {
                     continue;
                 }
 
-                MutableComponent preText = Component.literal(text.str().substring(0, m.start()));
+                MutableComponent preText = Component.literal(
+                        text.getInternalCodedStringRepresentation().substring(0, m.start()));
                 preText.withStyle(style);
                 temp.append(preText);
 
@@ -82,7 +83,7 @@ public class ChatCoordinatesFeature extends Feature {
                 temp.append(compassComponent);
 
                 comp = Component.literal(ComponentUtils.getLastPartCodes(ComponentUtils.getCoded(preText))
-                                + text.str().substring(m.end()))
+                                + text.getInternalCodedStringRepresentation().substring(m.end()))
                         .withStyle(style);
                 m = LocationUtils.strictCoordinateMatcher(
                         ComponentUtils.getCoded(comp)); // recreate matcher for new substring

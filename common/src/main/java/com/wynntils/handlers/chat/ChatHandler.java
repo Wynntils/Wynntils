@@ -106,7 +106,8 @@ public final class ChatHandler extends Handler {
         // Sometimes there is just a trailing newline; that does not
         // make it a multiline message
         if (codedMessage.contains("\n")
-                && codedMessage.str().indexOf('\n') != (codedMessage.str().length() - 1)) {
+                && codedMessage.getInternalCodedStringRepresentation().indexOf('\n')
+                        != (codedMessage.getInternalCodedStringRepresentation().length() - 1)) {
             // This is a "chat screen"
             if (shouldSeparateNPC()) {
                 handleIncomingChatScreen(message);
@@ -322,7 +323,8 @@ public final class ChatHandler extends Handler {
         }
 
         // Normally § codes are stripped from the log; need this to be able to debug chat formatting
-        WynntilsMod.info("[CHAT] " + codedMessage.str().replace("§", "&"));
+        WynntilsMod.info(
+                "[CHAT] " + codedMessage.getInternalCodedStringRepresentation().replace("§", "&"));
         RecipientType recipientType = getRecipientType(codedMessage, messageType);
 
         if (recipientType == RecipientType.NPC) {

@@ -161,13 +161,14 @@ public final class ComponentUtils {
 
         StyledText lastPartCodes = StyledText.EMPTY;
         int index;
-        while ((index = lastPart.str().lastIndexOf('§')) != -1) {
-            if (index >= lastPart.str().length() - 1) {
+        while ((index = lastPart.getInternalCodedStringRepresentation().lastIndexOf('§')) != -1) {
+            if (index >= lastPart.getInternalCodedStringRepresentation().length() - 1) {
                 // trailing §, no format code, skip it
-                lastPart = StyledText.of(lastPart.str().substring(0, index));
+                lastPart = StyledText.of(
+                        lastPart.getInternalCodedStringRepresentation().substring(0, index));
                 continue;
             }
-            String thisCode = lastPart.str().substring(index, index + 2);
+            String thisCode = lastPart.getInternalCodedStringRepresentation().substring(index, index + 2);
             if (thisCode.charAt(1) == 'r') {
                 // it's a reset code, we can stop looking
                 break;
@@ -175,7 +176,8 @@ public final class ComponentUtils {
             // prepend to codes since we're going backwards
             lastPartCodes = lastPartCodes.prepend(thisCode);
 
-            lastPart = StyledText.of(lastPart.str().substring(0, index));
+            lastPart = StyledText.of(
+                    lastPart.getInternalCodedStringRepresentation().substring(0, index));
         }
 
         return lastPartCodes;

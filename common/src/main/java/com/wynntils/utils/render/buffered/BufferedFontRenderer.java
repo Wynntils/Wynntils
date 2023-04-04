@@ -75,7 +75,7 @@ public final class BufferedFontRenderer {
 
         switch (shadow) {
             case NONE -> font.drawInBatch(
-                    text.str(),
+                    text.getInternalCodedStringRepresentation(),
                     0,
                     0,
                     customColor.asInt(),
@@ -87,7 +87,7 @@ public final class BufferedFontRenderer {
                     0xF000F0,
                     font.isBidirectional());
             case NORMAL -> font.drawInBatch(
-                    text.str(),
+                    text.getInternalCodedStringRepresentation(),
                     0,
                     0,
                     customColor.asInt(),
@@ -152,7 +152,7 @@ public final class BufferedFontRenderer {
                         font.isBidirectional());
 
                 font.drawInBatch(
-                        text.str(),
+                        text.getInternalCodedStringRepresentation(),
                         0,
                         0,
                         customColor.asInt(),
@@ -338,7 +338,8 @@ public final class BufferedFontRenderer {
         }
 
         // FIXME..?
-        List<FormattedText> parts = font.getSplitter().splitLines(text.str(), (int) maxWidth, Style.EMPTY);
+        List<FormattedText> parts =
+                font.getSplitter().splitLines(text.getInternalCodedStringRepresentation(), (int) maxWidth, Style.EMPTY);
 
         StyledText lastPart = StyledText.EMPTY;
         for (int i = 0; i < parts.size(); i++) {

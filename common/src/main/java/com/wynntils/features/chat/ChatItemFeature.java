@@ -109,7 +109,8 @@ public class ChatItemFeature extends Feature {
                     continue;
                 }
 
-                MutableComponent preText = Component.literal(text.str().substring(0, m.start()));
+                MutableComponent preText = Component.literal(
+                        text.getInternalCodedStringRepresentation().substring(0, m.start()));
                 preText.withStyle(style);
                 temp.append(preText);
 
@@ -124,7 +125,7 @@ public class ChatItemFeature extends Feature {
                 temp.append(itemComponent);
 
                 comp = Component.literal(ComponentUtils.getLastPartCodes(ComponentUtils.getCoded(preText))
-                                + text.str().substring(m.end()))
+                                + text.getInternalCodedStringRepresentation().substring(m.end()))
                         .withStyle(style);
                 m = Models.Gear.gearChatEncodingMatcher(
                         ComponentUtils.getCoded(comp)); // recreate matcher for new substring

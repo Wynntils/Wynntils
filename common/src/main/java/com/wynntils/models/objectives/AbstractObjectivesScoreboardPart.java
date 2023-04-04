@@ -42,7 +42,7 @@ public abstract class AbstractObjectivesScoreboardPart extends ScoreboardPart {
                     WynntilsMod.error("Next line: " + line);
                 }
 
-                multiLine = new StringBuilder(line.str());
+                multiLine = new StringBuilder(line.getInternalCodedStringRepresentation());
                 continue;
             }
 

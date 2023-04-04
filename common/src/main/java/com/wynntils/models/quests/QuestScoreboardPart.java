@@ -38,7 +38,7 @@ public class QuestScoreboardPart extends ScoreboardPart {
             if (line.startsWith("§e")) {
                 questName.append(ComponentUtils.stripFormatting(line)).append(" ");
             } else {
-                nextTask.append(line.str()
+                nextTask.append(line.getInternalCodedStringRepresentation()
                                 .replaceAll(ChatFormatting.WHITE.toString(), ChatFormatting.AQUA.toString())
                                 .replaceAll(ChatFormatting.GRAY.toString(), ChatFormatting.RESET.toString()))
                         .append(" ");

@@ -22,7 +22,8 @@ public class TowerAuraTimerModel extends Model {
 
     @SubscribeEvent
     public void onSubtitle(SubtitleSetTextEvent event) {
-        if (!StyledText.fromComponentIgnoringComponentStylesAndJustUsingFormattingCodes(event.getComponent()).equals(AURA_TITLE)) return;
+        if (!StyledText.fromComponentIgnoringComponentStylesAndJustUsingFormattingCodes(event.getComponent())
+                .equals(AURA_TITLE)) return;
 
         lastAuraProc = System.currentTimeMillis();
     }

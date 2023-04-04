@@ -70,7 +70,7 @@ public class ConfigButton extends WynntilsButton {
         StyledText displayName = StyledText.of(configHolder.getDisplayName());
 
         if (settingsScreen.configOptionContains(configHolder)) {
-            displayName = StyledText.of(ChatFormatting.UNDERLINE + displayName.str());
+            displayName = StyledText.of(ChatFormatting.UNDERLINE + displayName.getInternalCodedStringRepresentation());
         }
 
         poseStack.pushPose();

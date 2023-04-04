@@ -42,10 +42,13 @@ public class SprintSegment implements ActionBarSegment {
         StyledText sprint = StyledText.of(matcher.group(1));
         // If the sprint string starts with §[ae] we must start counting from after this
         // formatting, but not if it starts with §[8c]
-        int startPos = (sprint.str().charAt(1) == 'a' || sprint.str().charAt(1) == 'e') ? 2 : 0;
-        int redIndex = sprint.str().indexOf("§8");
+        int startPos = (sprint.getInternalCodedStringRepresentation().charAt(1) == 'a'
+                        || sprint.getInternalCodedStringRepresentation().charAt(1) == 'e')
+                ? 2
+                : 0;
+        int redIndex = sprint.getInternalCodedStringRepresentation().indexOf("§8");
         if (redIndex == -1) {
-            int greyIndex = sprint.str().indexOf("§c");
+            int greyIndex = sprint.getInternalCodedStringRepresentation().indexOf("§c");
             if (greyIndex != -1) {
                 // We're at the last bar and has started flashing
                 if (greyIndex != 0) {
