@@ -28,7 +28,7 @@ public class StyledText {
         return new StyledText(s);
     }
 
-    public static StyledText fromComponent(Component component) {
+    public static StyledText fromComponentIgnoringComponentStylesAndJustUsingFormattingCodes(Component component) {
         return StyledText.of(component.getString());
     }
 

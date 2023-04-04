@@ -44,7 +44,7 @@ public final class ActionBarHandler extends Handler {
         // FIXME: Reverse dependency!
         if (!Models.WorldState.onWorld()) return;
 
-        StyledText content = StyledText.fromComponent(event.getMessage());
+        StyledText content = StyledText.fromComponentIgnoringComponentStylesAndJustUsingFormattingCodes(event.getMessage());
         if (content.equals(previousRawContent)) {
             // No changes, skip parsing
             if (!content.equals(previousProcessedContent)) {

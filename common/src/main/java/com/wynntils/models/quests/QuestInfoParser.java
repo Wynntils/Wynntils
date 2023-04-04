@@ -78,7 +78,7 @@ public final class QuestInfoParser {
     }
 
     private static boolean isQuestTracked(ItemStack itemStack) {
-        StyledText name = StyledText.fromComponent(itemStack.getHoverName());
+        StyledText name = StyledText.fromComponentIgnoringComponentStylesAndJustUsingFormattingCodes(itemStack.getHoverName());
         if (name.trim().isEmpty()) {
             return false;
         }

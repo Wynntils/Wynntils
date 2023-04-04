@@ -48,7 +48,7 @@ public enum GearTier {
     }
 
     public static GearTier fromComponent(Component component) {
-        return fromFormattedString(StyledText.fromComponent(component));
+        return fromFormattedString(StyledText.fromComponentIgnoringComponentStylesAndJustUsingFormattingCodes(component));
     }
 
     public static GearTier fromChatFormatting(ChatFormatting formatting) {
