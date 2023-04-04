@@ -7,6 +7,7 @@ package com.wynntils.core.text;
 import com.wynntils.utils.colors.CustomColor;
 import com.wynntils.utils.mc.ComponentUtils;
 import java.util.Arrays;
+import java.util.Objects;
 import java.util.Optional;
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.ClickEvent;
@@ -287,6 +288,27 @@ public final class PartStyle {
                 + obfuscated + ", clickEvent="
                 + clickEvent + ", hoverEvent="
                 + hoverEvent + '}';
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        PartStyle partStyle = (PartStyle) o;
+        return bold == partStyle.bold
+                && italic == partStyle.italic
+                && underlined == partStyle.underlined
+                && strikethrough == partStyle.strikethrough
+                && obfuscated == partStyle.obfuscated
+                && Objects.equals(owner, partStyle.owner)
+                && Objects.equals(color, partStyle.color)
+                && Objects.equals(clickEvent, partStyle.clickEvent)
+                && Objects.equals(hoverEvent, partStyle.hoverEvent);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(owner, color, bold, italic, underlined, strikethrough, obfuscated, clickEvent, hoverEvent);
     }
 
     public enum StyleType {

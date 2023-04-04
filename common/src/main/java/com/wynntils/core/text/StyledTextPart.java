@@ -5,6 +5,7 @@
 package com.wynntils.core.text;
 
 import com.wynntils.utils.wynn.WynnUtils;
+import java.util.Objects;
 import java.util.function.Function;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
@@ -75,5 +76,20 @@ public final class StyledTextPart {
     @Override
     public String toString() {
         return "CodedStringPart[" + "text=" + text + ", " + "style=" + style + ']';
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        StyledTextPart that = (StyledTextPart) o;
+        return Objects.equals(text, that.text)
+                && Objects.equals(style, that.style)
+                && Objects.equals(parent, that.parent);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(text, style, parent);
     }
 }

@@ -11,6 +11,7 @@ import java.util.Collections;
 import java.util.Deque;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Objects;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
@@ -459,5 +460,20 @@ public final class StyledText {
                 + ArrayUtils.toString(parts) + ", clickEvents="
                 + ArrayUtils.toString(clickEvents) + ", hoverEvents="
                 + ArrayUtils.toString(hoverEvents) + '}';
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        StyledText that = (StyledText) o;
+        return Objects.deepEquals(parts, that.parts)
+                && Objects.deepEquals(clickEvents, that.clickEvents)
+                && Objects.deepEquals(hoverEvents, that.hoverEvents);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(parts, clickEvents, hoverEvents);
     }
 }
