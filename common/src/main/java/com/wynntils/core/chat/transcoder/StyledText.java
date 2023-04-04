@@ -4,6 +4,7 @@
  */
 package com.wynntils.core.chat.transcoder;
 
+import com.google.common.collect.Iterables;
 import com.wynntils.utils.mc.ComponentUtils;
 import com.wynntils.utils.type.Pair;
 import java.util.Collections;
@@ -120,10 +121,23 @@ public final class StyledText {
             Component temporaryWorkaround,
             List<ClickEvent> clickEvents,
             List<HoverEvent> hoverEvents) {
-        this.parts = parts;
+        this.parts = parts.stream()
+                .map(styledTextPart -> new StyledTextPart(styledTextPart, this))
+                .collect(Collectors.toList());
         this.temporaryWorkaround = temporaryWorkaround;
         this.clickEvents = clickEvents;
         this.hoverEvents = hoverEvents;
+    }
+
+    private StyledText(List<StyledTextPart> parts, List<ClickEvent> clickEvents, List<HoverEvent> hoverEvents) {
+        this.parts = parts.stream()
+                .map(styledTextPart -> new StyledTextPart(styledTextPart, this))
+                .collect(Collectors.toList());
+        this.clickEvents = clickEvents;
+        this.hoverEvents = hoverEvents;
+
+        // We can't know the component, just use our own representation
+        this.temporaryWorkaround = getComponent();
     }
 
     public static StyledText fromComponent(Component component) {
@@ -164,6 +178,31 @@ public final class StyledText {
         }
 
         return component;
+    }
+
+    public static StyledText join(String separator, StyledText... texts) {
+        List<StyledTextPart> parts = new LinkedList<>();
+        List<ClickEvent> clickEvents = new LinkedList<>();
+        List<HoverEvent> hoverEvents = new LinkedList<>();
+
+        final int length = texts.length;
+        for (int i = 0; i < length; i++) {
+            StyledText text = texts[i];
+            parts.addAll(text.parts);
+
+            if (i != length - 1) {
+                parts.add(new StyledTextPart(separator, Style.EMPTY, null, null));
+            }
+
+            clickEvents.addAll(text.clickEvents);
+            hoverEvents.addAll(text.hoverEvents);
+        }
+
+        return new StyledText(parts, clickEvents, hoverEvents);
+    }
+
+    public static StyledText join(String separator, Iterable<StyledText> texts) {
+        return join(separator, Iterables.toArray(texts, StyledText.class));
     }
 
     public StyledText getNormalized() {

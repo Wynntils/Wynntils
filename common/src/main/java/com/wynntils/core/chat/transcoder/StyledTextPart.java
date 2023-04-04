@@ -24,6 +24,12 @@ public final class StyledTextPart {
         this.style = PartStyle.fromStyle(style, this, parentStyle);
     }
 
+    StyledTextPart(StyledTextPart part, StyledText parent) {
+        this.text = part.text;
+        this.style = part.style;
+        this.parent = parent;
+    }
+
     public String getString(PartStyle previousStyle, PartStyle.StyleType type) {
         return style.asString(previousStyle, type) + text;
     }

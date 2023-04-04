@@ -5,6 +5,7 @@
 import com.wynntils.core.chat.transcoder.PartStyle;
 import com.wynntils.core.chat.transcoder.StyledText;
 import com.wynntils.core.chat.transcoder.StyledTextPart;
+import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import net.minecraft.ChatFormatting;
@@ -172,6 +173,21 @@ public class TestStyledText {
         Assertions.assertTrue(
                 styledText.endsWith(StyledText.fromString(expectedEnd)),
                 "StyledText.startsWith() did not produce a correct result for: " + expectedEnd);
+    }
+
+    @Test
+    public void join_shouldProduceCorrectResult() {
+        final StyledText firstStyled = StyledText.fromString("Hello");
+        final StyledText secondStyled = StyledText.fromString("World");
+
+        final String expected = "Hello, World";
+
+        StyledText joinedStyled = StyledText.join(", ", List.of(firstStyled, secondStyled));
+
+        Assertions.assertEquals(
+                expected,
+                joinedStyled.getString(PartStyle.StyleType.NONE),
+                "StyledText.join() did not produce a correct result.");
     }
 
     @Test
