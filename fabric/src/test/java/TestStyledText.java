@@ -191,6 +191,21 @@ public class TestStyledText {
     }
 
     @Test
+    public void concat_shouldProduceCorrectResult() {
+        final StyledText firstStyled = StyledText.fromString("Hello, ");
+        final StyledText secondStyled = StyledText.fromString("World");
+
+        final String expected = "Hello, World";
+
+        StyledText joinedStyled = StyledText.concat(List.of(firstStyled, secondStyled));
+
+        Assertions.assertEquals(
+                expected,
+                joinedStyled.getString(PartStyle.StyleType.NONE),
+                "StyledText.concat() did not produce a correct result.");
+    }
+
+    @Test
     public void styledText_shouldProduceCorrectComponent() {
         final Component component = Component.literal("a").append(Component.literal("b"));
 

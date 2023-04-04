@@ -205,6 +205,24 @@ public final class StyledText {
         return join(separator, Iterables.toArray(texts, StyledText.class));
     }
 
+    public static StyledText concat(StyledText... texts) {
+        List<StyledTextPart> parts = new LinkedList<>();
+        List<ClickEvent> clickEvents = new LinkedList<>();
+        List<HoverEvent> hoverEvents = new LinkedList<>();
+
+        for (StyledText text : texts) {
+            parts.addAll(text.parts);
+            clickEvents.addAll(text.clickEvents);
+            hoverEvents.addAll(text.hoverEvents);
+        }
+
+        return new StyledText(parts, clickEvents, hoverEvents);
+    }
+
+    public static StyledText concat(Iterable<StyledText> texts) {
+        return concat(Iterables.toArray(texts, StyledText.class));
+    }
+
     public StyledText getNormalized() {
         return new StyledText(
                 parts.stream().map(StyledTextPart::asNormalized).collect(Collectors.toList()),
