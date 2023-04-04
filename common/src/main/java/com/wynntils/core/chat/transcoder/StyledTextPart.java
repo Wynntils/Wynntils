@@ -4,6 +4,7 @@
  */
 package com.wynntils.core.chat.transcoder;
 
+import com.wynntils.utils.wynn.WynnUtils;
 import java.util.function.Function;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
@@ -25,6 +26,10 @@ public final class StyledTextPart {
 
     public String getString(PartStyle previousStyle, PartStyle.StyleType type) {
         return style.asString(previousStyle, type) + text;
+    }
+
+    public StyledTextPart asNormalized() {
+        return new StyledTextPart(WynnUtils.normalizeBadString(text), style.getStyle(), parent, null);
     }
 
     public StyledText getParent() {

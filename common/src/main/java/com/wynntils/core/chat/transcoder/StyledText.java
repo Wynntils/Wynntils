@@ -166,6 +166,14 @@ public final class StyledText {
         return component;
     }
 
+    public StyledText getNormalized() {
+        return new StyledText(
+                parts.stream().map(StyledTextPart::asNormalized).collect(Collectors.toList()),
+                temporaryWorkaround,
+                clickEvents,
+                hoverEvents);
+    }
+
     public Matcher getMatcher(Pattern pattern) {
         return getMatcher(pattern, PartStyle.StyleType.DEFAULT);
     }

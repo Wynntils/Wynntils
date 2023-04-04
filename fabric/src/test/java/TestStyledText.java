@@ -80,6 +80,19 @@ public class TestStyledText {
     }
 
     @Test
+    public void normalizedStringCreation_shouldProduceCorrectString() {
+        final String badText = "ÀÀÀÀHello, ÀWorld!֎";
+        final String expected = "Hello, World!";
+
+        StyledText styledText = StyledText.fromString(badText);
+
+        Assertions.assertEquals(
+                expected,
+                styledText.getNormalized().getString(PartStyle.StyleType.NONE),
+                "StyledText.getNormalized().getString() returned an unexpected value.");
+    }
+
+    @Test
     public void styledText_shouldProduceCorrectComponent() {
         final Component component = Component.literal("a").append(Component.literal("b"));
 
