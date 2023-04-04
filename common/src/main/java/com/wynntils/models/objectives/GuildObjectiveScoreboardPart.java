@@ -4,6 +4,7 @@
  */
 package com.wynntils.models.objectives;
 
+import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.components.Models;
 import com.wynntils.handlers.scoreboard.ScoreboardSegment;
 import com.wynntils.handlers.scoreboard.type.SegmentMatcher;
@@ -24,6 +25,12 @@ public class GuildObjectiveScoreboardPart extends AbstractObjectivesScoreboardPa
                 .filter(wynnObjective -> wynnObjective.getScore().current()
                         < wynnObjective.getScore().max())
                 .toList();
+
+        if (objectives.isEmpty()) {
+            WynntilsMod.warn("Guild objective segment changed, but no objectives were parsed.");
+            WynntilsMod.warn(newValue.toString());
+            return;
+        }
 
         for (WynnObjective objective : objectives) {
             if (objective.isGuildObjective()) {
