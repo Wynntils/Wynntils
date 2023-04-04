@@ -42,10 +42,16 @@ public final class StyledTextPart {
         StringBuilder textBuilder = new StringBuilder(text.length());
         Style textStyle = style;
         boolean formattingNext = false;
-        for (char c : text.toCharArray()) {
+        for (char current : text.toCharArray()) {
             if (formattingNext) {
                 formattingNext = false;
-                ChatFormatting formatting = ChatFormatting.getByCode(c);
+                ChatFormatting formatting = ChatFormatting.getByCode(current);
+
+                if (formatting == null) {
+                    textBuilder.append(ChatFormatting.PREFIX_CODE);
+                    textBuilder.append(current);
+                    continue;
+                }
 
                 // Color formatting resets the style
                 if (formatting.isColor()) {
@@ -57,12 +63,12 @@ public final class StyledTextPart {
                 continue;
             }
 
-            if (c == '§') {
+            if (current == '§') {
                 formattingNext = true;
                 continue;
             }
 
-            textBuilder.append(c);
+            textBuilder.append(current);
         }
 
         // We might have lost an event, so we need to add it back
