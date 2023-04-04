@@ -81,7 +81,7 @@ public class ChatMentionFeature extends Feature {
 
             StyledText newText = styledText.splitAt(matcher.start()).splitAt(matcher.end());
 
-            StyledTextPart partMatching = styledText.getPartMatching(mentionPattern, PartStyle.StyleType.NONE);
+            StyledTextPart partMatching = newText.getPartMatching(mentionPattern, PartStyle.StyleType.NONE);
 
             if (partMatching == null) {
                 WynntilsMod.error(
