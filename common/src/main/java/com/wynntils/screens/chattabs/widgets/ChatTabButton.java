@@ -5,7 +5,7 @@
 package com.wynntils.screens.chattabs.widgets;
 
 import com.mojang.blaze3d.vertex.PoseStack;
-import com.wynntils.core.chat.tab.ChatTab;
+import com.wynntils.core.chat.ChatTab;
 import com.wynntils.core.components.Managers;
 import com.wynntils.screens.base.widgets.WynntilsButton;
 import com.wynntils.screens.chattabs.ChatTabEditingScreen;

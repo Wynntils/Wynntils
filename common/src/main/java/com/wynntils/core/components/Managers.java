@@ -4,7 +4,7 @@
  */
 package com.wynntils.core.components;
 
-import com.wynntils.core.chat.tab.ChatTabManager;
+import com.wynntils.core.chat.ChatTabManager;
 import com.wynntils.core.commands.CommandManager;
 import com.wynntils.core.config.ConfigManager;
 import com.wynntils.core.config.upfixers.ConfigUpfixerManager;
