@@ -49,7 +49,7 @@ public final class ActionBarHandler extends Handler {
         if (content.equals(previousRawContent)) {
             // No changes, skip parsing
             if (!content.equals(previousProcessedContent)) {
-                event.setMessage(previousProcessedContent.asComponent());
+                event.setMessage(previousProcessedContent.asSingleLiteralComponentWithCodedString());
             }
             return;
         }
@@ -85,7 +85,7 @@ public final class ActionBarHandler extends Handler {
         previousProcessedContent = newContent;
 
         if (!content.equals(newContent)) {
-            event.setMessage(newContent.asComponent());
+            event.setMessage(newContent.asSingleLiteralComponentWithCodedString());
         }
     }
 

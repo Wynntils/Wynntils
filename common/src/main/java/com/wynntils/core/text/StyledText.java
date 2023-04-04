@@ -40,7 +40,7 @@ public class StyledText {
         return ChatFormatting.stripFormatting(str);
     }
 
-    public MutableComponent asComponent() {
+    public MutableComponent asSingleLiteralComponentWithCodedString() {
         return Component.literal(str);
     }
 

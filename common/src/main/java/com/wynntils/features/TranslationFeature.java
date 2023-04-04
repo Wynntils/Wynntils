@@ -69,7 +69,9 @@ public class TranslationFeature extends Feature {
                         // We failed to get a translation; send the original message so it's not lost
                         messageToSend = origCoded;
                     }
-                    McUtils.mc().doRunTask(() -> McUtils.sendMessageToClient(messageToSend.asComponent()));
+                    McUtils.mc()
+                            .doRunTask(() -> McUtils.sendMessageToClient(
+                                    messageToSend.asSingleLiteralComponentWithCodedString()));
                 });
         if (!keepOriginal.get()) {
             e.setCanceled(true);

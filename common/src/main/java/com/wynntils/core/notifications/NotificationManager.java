@@ -115,6 +115,6 @@ public final class NotificationManager extends Manager {
         McUtils.mc()
                 .gui
                 .getChat()
-                .addMessage(msgContainer.getRenderTask().getText().asComponent());
+                .addMessage(msgContainer.getRenderTask().getText().asSingleLiteralComponentWithCodedString());
     }
 }

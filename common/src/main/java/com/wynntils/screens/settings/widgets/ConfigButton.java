@@ -108,8 +108,9 @@ public class ConfigButton extends WynntilsButton {
         if (!resetButton.isHoveredOrFocused() && isHovered) {
             String description = configHolder.getDescription();
             StyledText[] parts = RenderedStringUtils.wrapTextBySize(StyledText.of(description), 200);
-            List<Component> components =
-                    Arrays.stream(parts).map(s -> (Component) s.asComponent()).toList();
+            List<Component> components = Arrays.stream(parts)
+                    .map(s -> (Component) s.asSingleLiteralComponentWithCodedString())
+                    .toList();
 
             RenderUtils.drawTooltipAt(
                     poseStack,

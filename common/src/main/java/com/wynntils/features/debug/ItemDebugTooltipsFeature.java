@@ -52,7 +52,7 @@ public class ItemDebugTooltipsFeature extends Feature {
         }
 
         for (StyledText line : wrappedDescription) {
-            addon.add(line.asComponent().withStyle(ChatFormatting.DARK_GREEN));
+            addon.add(line.asSingleLiteralComponentWithCodedString().withStyle(ChatFormatting.DARK_GREEN));
         }
 
         return addon;

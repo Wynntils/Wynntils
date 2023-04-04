@@ -100,7 +100,7 @@ public class BulkBuyFeature extends Feature {
         }
 
         List<Component> newLore = new ArrayList<>(oldLore);
-        newLore.set(newLore.size() - 1, newLine.asComponent());
+        newLore.set(newLore.size() - 1, newLine.asSingleLiteralComponentWithCodedString());
         return newLore;
     }
 
