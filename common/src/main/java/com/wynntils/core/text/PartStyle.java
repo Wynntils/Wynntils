@@ -19,14 +19,14 @@ public final class PartStyle {
 
     private final StyledTextPart owner;
 
-    private CustomColor color;
-    private boolean bold;
-    private boolean italic;
-    private boolean underlined;
-    private boolean strikethrough;
-    private boolean obfuscated;
-    private ClickEvent clickEvent;
-    private HoverEvent hoverEvent;
+    private final CustomColor color;
+    private final boolean bold;
+    private final boolean italic;
+    private final boolean underlined;
+    private final boolean strikethrough;
+    private final boolean obfuscated;
+    private final ClickEvent clickEvent;
+    private final HoverEvent hoverEvent;
 
     private PartStyle(
             StyledTextPart owner,
