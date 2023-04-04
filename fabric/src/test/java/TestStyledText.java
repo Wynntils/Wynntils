@@ -180,7 +180,16 @@ public class TestStyledText {
     @Test
     public void contains_shouldProduceCorrectResult() {
         final String testString = "§c§oitalicred§9§oblue§cnonitalic§oinherited§lbold§rafter";
-        final String[] expectedParts = {"§c§oitalicred", "§9§oblue", "§cnonitalic", "§oinherited", "§lbold", "§rafter"};
+        final String[] expectedParts = {
+            "§c§oitalicred",
+            "§9§oblue",
+            "§cnonitalic",
+            "§oinherited",
+            "§lbold",
+            "§rafter",
+            "licred§9§oblue§cno",
+            "erited§lbo"
+        };
 
         StyledText styledText = StyledText.fromString(testString);
 
@@ -202,8 +211,9 @@ public class TestStyledText {
 
     @Test
     public void startsWith_shouldProduceCorrectResult() {
-        final String testString = "§c§oitalicred§r§9§oblue§r§cnonitalic§oinherited§lbold§rafter";
+        final String testString = "§c§oitalicred§9§oblue§cnonitalic§oinherited§lbold§rafter";
         final String expectedStart = "§c§oitalicred";
+        final String expectedMultipartStart = "§c§oitalicred§9§oblue§cnonit";
 
         StyledText styledText = StyledText.fromString(testString);
 
@@ -213,12 +223,20 @@ public class TestStyledText {
         Assertions.assertTrue(
                 styledText.startsWith(StyledText.fromString(expectedStart)),
                 "StyledText.startsWith() did not produce a correct result for: " + expectedStart);
+
+        Assertions.assertTrue(
+                styledText.startsWith(expectedMultipartStart),
+                "StyledText.startsWith() did not produce a correct result for: " + expectedMultipartStart);
+        Assertions.assertTrue(
+                styledText.startsWith(StyledText.fromString(expectedMultipartStart)),
+                "StyledText.startsWith() did not produce a correct result for: " + expectedMultipartStart);
     }
 
     @Test
     public void endsWith_shouldProduceCorrectResult() {
-        final String testString = "§c§oitalicred§r§9§oblue§r§cnonitalic§oinherited§lbold§rafter";
+        final String testString = "§c§oitalicred§9§oblue§cnonitalic§oinherited§lbold§rafter";
         final String expectedEnd = "§rafter";
+        final String expectedMultipartEnd = "erited§lbold§rafter";
 
         StyledText styledText = StyledText.fromString(testString);
 
@@ -228,6 +246,13 @@ public class TestStyledText {
         Assertions.assertTrue(
                 styledText.endsWith(StyledText.fromString(expectedEnd)),
                 "StyledText.startsWith() did not produce a correct result for: " + expectedEnd);
+
+        Assertions.assertTrue(
+                styledText.endsWith(expectedMultipartEnd),
+                "StyledText.startsWith() did not produce a correct result for: " + expectedMultipartEnd);
+        Assertions.assertTrue(
+                styledText.endsWith(StyledText.fromString(expectedMultipartEnd)),
+                "StyledText.startsWith() did not produce a correct result for: " + expectedMultipartEnd);
     }
 
     @Test
