@@ -52,8 +52,8 @@ public final class StyledText {
             String componentString =
                     MutableComponent.create(current.getContents()).getString();
 
-            StyledTextPart styledTextPart =
-                    StyledTextPart.fromStyledString(componentString, current.getStyle(), this, parentStyle);
+            StyledTextPart styledTextPart = StyledTextPart.fromComponentWithPossibleFormattingCodes(
+                    componentString, current.getStyle(), this, parentStyle);
 
             List<Pair<Component, Style>> siblingPairs = current.getSiblings().stream()
                     .map(sibling ->
@@ -200,7 +200,7 @@ public final class StyledText {
 
             if (i != length - 1) {
                 // Possible micro-optimization: If the separator does not have formatting, use the normal constructor
-                parts.add(StyledTextPart.fromStyledString(separator, Style.EMPTY, null, null));
+                parts.add(StyledTextPart.fromComponentWithPossibleFormattingCodes(separator, Style.EMPTY, null, null));
             }
 
             clickEvents.addAll(text.clickEvents);

@@ -32,17 +32,22 @@ public final class StyledTextPart {
         this.parent = parent;
     }
 
-    // This factory is used to create a StyledTextPart from a string that has formatting codes
+    // This factory is used to create a StyledTextPart from a component that has formatting codes
     // It is separate from the constructor because this only needs to be applied in cases there the text could have
     // formatting codes
-    static StyledTextPart fromStyledString(String text, Style style, StyledText parent, Style parentStyle) {
+    static StyledTextPart fromComponentWithPossibleFormattingCodes(
+            String text, Style style, StyledText parent, Style parentStyle) {
         // When we have a style, but the text has formatting codes,
         // we need to apply the formatting codes to the style
         // This means that the actual style applies first; then the formatting codes
         StringBuilder textBuilder = new StringBuilder(text.length());
         Style textStyle = style;
         boolean formattingNext = false;
-        for (char current : text.toCharArray()) {
+
+        char[] charArray = text.toCharArray();
+        for (int i = 0; i < charArray.length; i++) {
+            char current = charArray[i];
+
             if (formattingNext) {
                 formattingNext = false;
                 ChatFormatting formatting = ChatFormatting.getByCode(current);
@@ -68,7 +73,9 @@ public final class StyledTextPart {
                 continue;
             }
 
-            textBuilder.append(current);
+            // No more formatting, append the rest of the text
+            textBuilder.append(text, i, text.length());
+            break;
         }
 
         // We might have lost an event, so we need to add it back
