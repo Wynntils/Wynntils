@@ -5,9 +5,9 @@
 package com.wynntils.models.characterstats.actionbar;
 
 import com.wynntils.core.WynntilsMod;
+import com.wynntils.core.text.StyledText;
 import com.wynntils.handlers.actionbar.ActionBarSegment;
 import com.wynntils.handlers.actionbar.type.ActionBarPosition;
-import com.wynntils.utils.mc.type.StyledText;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 

@@ -4,7 +4,7 @@
  */
 package com.wynntils.models.statuseffects.type;
 
-import com.wynntils.utils.mc.type.StyledText;
+import com.wynntils.core.text.StyledText;
 
 public class StatusEffect {
     private final StyledText fullName;

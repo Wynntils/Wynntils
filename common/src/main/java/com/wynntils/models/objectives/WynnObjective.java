@@ -4,8 +4,8 @@
  */
 package com.wynntils.models.objectives;
 
+import com.wynntils.core.text.StyledText;
 import com.wynntils.utils.mc.ComponentUtils;
-import com.wynntils.utils.mc.type.StyledText;
 import com.wynntils.utils.type.CappedValue;
 import java.util.Objects;
 import java.util.regex.Matcher;

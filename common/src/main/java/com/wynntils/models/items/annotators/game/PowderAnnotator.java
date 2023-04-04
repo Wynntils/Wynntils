@@ -5,13 +5,13 @@
 package com.wynntils.models.items.annotators.game;
 
 import com.wynntils.core.components.Models;
+import com.wynntils.core.text.StyledText;
 import com.wynntils.handlers.item.ItemAnnotation;
 import com.wynntils.handlers.item.ItemAnnotator;
 import com.wynntils.models.elements.type.Powder;
 import com.wynntils.models.elements.type.PowderTierInfo;
 import com.wynntils.models.items.items.game.PowderItem;
 import com.wynntils.utils.MathUtils;
-import com.wynntils.utils.mc.type.StyledText;
 import java.util.Locale;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;

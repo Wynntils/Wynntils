@@ -4,7 +4,7 @@
  */
 package com.wynntils.utils.mc;
 
-import com.wynntils.utils.mc.type.StyledText;
+import com.wynntils.core.text.StyledText;
 import com.wynntils.utils.render.FontRenderer;
 import java.util.Arrays;
 import net.minecraft.client.gui.Font;

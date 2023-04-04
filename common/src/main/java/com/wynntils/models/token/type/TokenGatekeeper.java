@@ -4,8 +4,8 @@
  */
 package com.wynntils.models.token.type;
 
+import com.wynntils.core.text.StyledText;
 import com.wynntils.utils.mc.type.Location;
-import com.wynntils.utils.mc.type.StyledText;
 import com.wynntils.utils.type.CappedValue;
 import java.util.Objects;
 

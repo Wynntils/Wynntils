@@ -4,7 +4,7 @@
  */
 package com.wynntils.handlers.item.event;
 
-import com.wynntils.utils.mc.type.StyledText;
+import com.wynntils.core.text.StyledText;
 import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.eventbus.api.Cancelable;
 import net.minecraftforge.eventbus.api.Event;

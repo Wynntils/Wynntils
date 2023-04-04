@@ -6,9 +6,9 @@ package com.wynntils.models.items;
 
 import com.wynntils.core.components.Handlers;
 import com.wynntils.core.components.Models;
+import com.wynntils.core.text.StyledText;
 import com.wynntils.models.gear.tooltip.GearTooltipBuilder;
 import com.wynntils.models.items.items.game.GearItem;
-import com.wynntils.utils.mc.type.StyledText;
 import java.util.List;
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;

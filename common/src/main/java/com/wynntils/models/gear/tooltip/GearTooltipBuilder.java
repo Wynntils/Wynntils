@@ -4,6 +4,7 @@
  */
 package com.wynntils.models.gear.tooltip;
 
+import com.wynntils.core.text.StyledText;
 import com.wynntils.models.character.type.ClassType;
 import com.wynntils.models.elements.type.Skill;
 import com.wynntils.models.gear.type.GearInfo;
@@ -13,7 +14,6 @@ import com.wynntils.models.stats.type.StatListOrdering;
 import com.wynntils.models.wynnitem.parsing.WynnItemParser;
 import com.wynntils.utils.mc.ComponentUtils;
 import com.wynntils.utils.mc.LoreUtils;
-import com.wynntils.utils.mc.type.StyledText;
 import com.wynntils.utils.type.Pair;
 import java.util.ArrayList;
 import java.util.List;

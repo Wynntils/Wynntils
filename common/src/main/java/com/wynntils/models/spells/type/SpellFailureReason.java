@@ -4,7 +4,7 @@
  */
 package com.wynntils.models.spells.type;
 
-import com.wynntils.utils.mc.type.StyledText;
+import com.wynntils.core.text.StyledText;
 
 public enum SpellFailureReason {
     NOT_ENOUGH_MANA(StyledText.of("§4You don't have enough mana to cast that spell!")),

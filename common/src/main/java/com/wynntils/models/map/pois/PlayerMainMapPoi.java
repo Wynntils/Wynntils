@@ -6,10 +6,10 @@ package com.wynntils.models.map.pois;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.wynntils.core.components.Managers;
+import com.wynntils.core.text.StyledText;
 import com.wynntils.features.map.MapFeature;
 import com.wynntils.models.players.hades.objects.HadesUser;
 import com.wynntils.utils.mc.SkinUtils;
-import com.wynntils.utils.mc.type.StyledText;
 import com.wynntils.utils.render.FontRenderer;
 import com.wynntils.utils.render.Texture;
 import com.wynntils.utils.render.buffered.BufferedFontRenderer;

@@ -5,11 +5,11 @@
 package com.wynntils.models.items.annotators.game;
 
 import com.wynntils.core.WynntilsMod;
+import com.wynntils.core.text.StyledText;
 import com.wynntils.handlers.item.ItemAnnotation;
 import com.wynntils.handlers.item.ItemAnnotator;
 import com.wynntils.models.gathering.MaterialProfile;
 import com.wynntils.models.items.items.game.MaterialItem;
-import com.wynntils.utils.mc.type.StyledText;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import net.minecraft.world.item.ItemStack;

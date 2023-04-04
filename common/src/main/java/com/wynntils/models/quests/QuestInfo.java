@@ -5,6 +5,7 @@
 package com.wynntils.models.quests;
 
 import com.wynntils.core.components.Models;
+import com.wynntils.core.text.StyledText;
 import com.wynntils.models.profession.type.ProfessionType;
 import com.wynntils.models.quests.type.QuestLength;
 import com.wynntils.models.quests.type.QuestStatus;
@@ -12,7 +13,6 @@ import com.wynntils.utils.StringUtils;
 import com.wynntils.utils.mc.ComponentUtils;
 import com.wynntils.utils.mc.RenderedStringUtils;
 import com.wynntils.utils.mc.type.Location;
-import com.wynntils.utils.mc.type.StyledText;
 import com.wynntils.utils.type.Pair;
 import java.util.ArrayList;
 import java.util.List;

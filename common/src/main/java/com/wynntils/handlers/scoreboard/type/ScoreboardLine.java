@@ -4,7 +4,7 @@
  */
 package com.wynntils.handlers.scoreboard.type;
 
-import com.wynntils.utils.mc.type.StyledText;
+import com.wynntils.core.text.StyledText;
 
 public record ScoreboardLine(StyledText line, int score) implements Comparable {
     @Override

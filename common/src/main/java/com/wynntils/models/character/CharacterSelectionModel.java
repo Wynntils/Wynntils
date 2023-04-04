@@ -5,6 +5,7 @@
 package com.wynntils.models.character;
 
 import com.wynntils.core.components.Model;
+import com.wynntils.core.text.StyledText;
 import com.wynntils.mc.event.ContainerSetContentEvent;
 import com.wynntils.mc.event.MenuEvent;
 import com.wynntils.mc.event.ScreenOpenedEvent;
@@ -13,7 +14,6 @@ import com.wynntils.models.character.type.ClassType;
 import com.wynntils.screens.characterselector.CharacterSelectorScreen;
 import com.wynntils.utils.mc.ComponentUtils;
 import com.wynntils.utils.mc.LoreUtils;
-import com.wynntils.utils.mc.type.StyledText;
 import com.wynntils.utils.wynn.ContainerUtils;
 import java.util.ArrayList;
 import java.util.List;

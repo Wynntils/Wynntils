@@ -4,7 +4,7 @@
  */
 package com.wynntils.handlers.chat.type;
 
-import com.wynntils.utils.mc.type.StyledText;
+import com.wynntils.core.text.StyledText;
 import java.util.regex.Pattern;
 
 public enum RecipientType {

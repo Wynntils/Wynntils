@@ -4,8 +4,8 @@
  */
 package com.wynntils.mc.extension;
 
+import com.wynntils.core.text.StyledText;
 import com.wynntils.handlers.item.ItemAnnotation;
-import com.wynntils.utils.mc.type.StyledText;
 
 public interface ItemStackExtension {
     ItemAnnotation getAnnotation();

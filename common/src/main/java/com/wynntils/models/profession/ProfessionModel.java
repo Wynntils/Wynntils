@@ -5,13 +5,13 @@
 package com.wynntils.models.profession;
 
 import com.wynntils.core.components.Model;
+import com.wynntils.core.text.StyledText;
 import com.wynntils.handlers.chat.event.ChatMessageReceivedEvent;
 import com.wynntils.handlers.labels.event.EntityLabelChangedEvent;
 import com.wynntils.models.character.CharacterModel;
 import com.wynntils.models.profession.type.ProfessionProgress;
 import com.wynntils.models.profession.type.ProfessionType;
 import com.wynntils.utils.mc.LoreUtils;
-import com.wynntils.utils.mc.type.StyledText;
 import com.wynntils.utils.type.TimedSet;
 import java.util.Collections;
 import java.util.HashMap;

@@ -6,6 +6,7 @@ package com.wynntils.models.rewards;
 
 import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.components.Model;
+import com.wynntils.core.text.StyledText;
 import com.wynntils.handlers.item.ItemAnnotation;
 import com.wynntils.models.gear.type.GearTier;
 import com.wynntils.models.items.items.game.CharmItem;
@@ -15,7 +16,6 @@ import com.wynntils.models.rewards.type.TomeInfo;
 import com.wynntils.models.rewards.type.TomeType;
 import com.wynntils.models.wynnitem.parsing.WynnItemParseResult;
 import com.wynntils.models.wynnitem.parsing.WynnItemParser;
-import com.wynntils.utils.mc.type.StyledText;
 import java.util.List;
 import net.minecraft.world.item.ItemStack;
 

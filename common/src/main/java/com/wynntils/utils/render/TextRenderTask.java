@@ -4,7 +4,7 @@
  */
 package com.wynntils.utils.render;
 
-import com.wynntils.utils.mc.type.StyledText;
+import com.wynntils.core.text.StyledText;
 
 public final class TextRenderTask {
     private StyledText text;

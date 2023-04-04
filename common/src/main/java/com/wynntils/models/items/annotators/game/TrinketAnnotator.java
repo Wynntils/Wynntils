@@ -4,12 +4,12 @@
  */
 package com.wynntils.models.items.annotators.game;
 
+import com.wynntils.core.text.StyledText;
 import com.wynntils.handlers.item.ItemAnnotation;
 import com.wynntils.handlers.item.ItemAnnotator;
 import com.wynntils.models.gear.type.GearTier;
 import com.wynntils.models.items.items.game.TrinketItem;
 import com.wynntils.utils.mc.LoreUtils;
-import com.wynntils.utils.mc.type.StyledText;
 import com.wynntils.utils.type.CappedValue;
 import java.util.NoSuchElementException;
 import java.util.regex.Matcher;

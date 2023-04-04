@@ -5,8 +5,8 @@
 package com.wynntils.models.territories;
 
 import com.wynntils.core.components.Model;
+import com.wynntils.core.text.StyledText;
 import com.wynntils.mc.event.SubtitleSetTextEvent;
-import com.wynntils.utils.mc.type.StyledText;
 import java.util.List;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 

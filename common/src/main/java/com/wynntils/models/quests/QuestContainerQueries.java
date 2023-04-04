@@ -6,10 +6,10 @@ package com.wynntils.models.quests;
 
 import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.components.Models;
+import com.wynntils.core.text.StyledText;
 import com.wynntils.handlers.container.ScriptedContainerQuery;
 import com.wynntils.handlers.container.type.ContainerContent;
 import com.wynntils.utils.mc.McUtils;
-import com.wynntils.utils.mc.type.StyledText;
 import com.wynntils.utils.wynn.ContainerUtils;
 import com.wynntils.utils.wynn.InventoryUtils;
 import java.util.ArrayList;

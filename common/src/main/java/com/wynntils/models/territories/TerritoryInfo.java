@@ -4,11 +4,11 @@
  */
 package com.wynntils.models.territories;
 
+import com.wynntils.core.text.StyledText;
 import com.wynntils.models.territories.type.GuildResource;
 import com.wynntils.models.territories.type.GuildResourceValues;
 import com.wynntils.models.territories.type.TerritoryStorage;
 import com.wynntils.utils.colors.CustomColor;
-import com.wynntils.utils.mc.type.StyledText;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;

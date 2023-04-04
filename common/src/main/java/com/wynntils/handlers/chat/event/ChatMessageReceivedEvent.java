@@ -4,10 +4,10 @@
  */
 package com.wynntils.handlers.chat.event;
 
+import com.wynntils.core.text.StyledText;
 import com.wynntils.handlers.chat.type.MessageType;
 import com.wynntils.handlers.chat.type.RecipientType;
 import com.wynntils.utils.mc.ComponentUtils;
-import com.wynntils.utils.mc.type.StyledText;
 import net.minecraft.network.chat.Component;
 import net.minecraftforge.eventbus.api.Cancelable;
 import net.minecraftforge.eventbus.api.Event;

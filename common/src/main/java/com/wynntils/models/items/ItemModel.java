@@ -6,6 +6,7 @@ package com.wynntils.models.items;
 
 import com.wynntils.core.components.Handlers;
 import com.wynntils.core.components.Model;
+import com.wynntils.core.text.StyledText;
 import com.wynntils.handlers.item.ItemAnnotation;
 import com.wynntils.handlers.item.ItemAnnotator;
 import com.wynntils.handlers.item.ItemHandler;
@@ -43,7 +44,6 @@ import com.wynntils.models.items.annotators.gui.SkillCrystalAnnotator;
 import com.wynntils.models.items.annotators.gui.SkillPointAnnotator;
 import com.wynntils.models.items.annotators.gui.SoulPointAnnotator;
 import com.wynntils.models.rewards.RewardsModel;
-import com.wynntils.utils.mc.type.StyledText;
 import java.util.List;
 import java.util.Optional;
 import net.minecraft.world.item.ItemStack;

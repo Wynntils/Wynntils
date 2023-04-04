@@ -5,13 +5,13 @@
 package com.wynntils.screens.base;
 
 import com.mojang.blaze3d.vertex.PoseStack;
+import com.wynntils.core.text.StyledText;
 import com.wynntils.screens.base.widgets.TextInputBoxWidget;
 import com.wynntils.screens.base.widgets.WynntilsButton;
 import com.wynntils.screens.questbook.widgets.QuestBookSearchWidget;
 import com.wynntils.utils.MathUtils;
 import com.wynntils.utils.colors.CommonColors;
 import com.wynntils.utils.mc.McUtils;
-import com.wynntils.utils.mc.type.StyledText;
 import com.wynntils.utils.render.FontRenderer;
 import com.wynntils.utils.render.Texture;
 import com.wynntils.utils.render.type.HorizontalAlignment;

@@ -4,9 +4,9 @@
  */
 package com.wynntils.utils.wynn;
 
+import com.wynntils.core.text.StyledText;
 import com.wynntils.utils.mc.McUtils;
 import com.wynntils.utils.mc.type.Location;
-import com.wynntils.utils.mc.type.StyledText;
 import java.util.Optional;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;

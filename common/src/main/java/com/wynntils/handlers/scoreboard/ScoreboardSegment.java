@@ -4,7 +4,7 @@
  */
 package com.wynntils.handlers.scoreboard;
 
-import com.wynntils.utils.mc.type.StyledText;
+import com.wynntils.core.text.StyledText;
 import java.util.List;
 import java.util.Objects;
 import org.apache.commons.lang3.ArrayUtils;

@@ -4,7 +4,7 @@
  */
 package com.wynntils.models.items.items.game;
 
-import com.wynntils.utils.mc.type.StyledText;
+import com.wynntils.core.text.StyledText;
 
 public class MiscItem extends GameItem {
     private final StyledText name;

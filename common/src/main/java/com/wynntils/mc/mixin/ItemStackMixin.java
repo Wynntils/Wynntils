@@ -6,10 +6,10 @@ package com.wynntils.mc.mixin;
 
 import com.llamalad7.mixinextras.injector.ModifyExpressionValue;
 import com.wynntils.core.events.MixinHelper;
+import com.wynntils.core.text.StyledText;
 import com.wynntils.handlers.item.ItemAnnotation;
 import com.wynntils.mc.event.ItemTooltipFlagsEvent;
 import com.wynntils.mc.extension.ItemStackExtension;
-import com.wynntils.utils.mc.type.StyledText;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
 import org.spongepowered.asm.mixin.Mixin;

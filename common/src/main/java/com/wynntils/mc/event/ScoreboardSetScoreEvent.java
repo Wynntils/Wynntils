@@ -4,7 +4,7 @@
  */
 package com.wynntils.mc.event;
 
-import com.wynntils.utils.mc.type.StyledText;
+import com.wynntils.core.text.StyledText;
 import net.minecraft.server.ServerScoreboard;
 import net.minecraftforge.eventbus.api.Cancelable;
 import net.minecraftforge.eventbus.api.Event;

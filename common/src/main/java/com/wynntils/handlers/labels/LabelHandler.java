@@ -6,12 +6,12 @@ package com.wynntils.handlers.labels;
 
 import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.components.Handler;
+import com.wynntils.core.text.StyledText;
 import com.wynntils.handlers.labels.event.EntityLabelChangedEvent;
 import com.wynntils.handlers.labels.event.EntityLabelVisibilityEvent;
 import com.wynntils.mc.event.SetEntityDataEvent;
 import com.wynntils.utils.mc.ComponentUtils;
 import com.wynntils.utils.mc.McUtils;
-import com.wynntils.utils.mc.type.StyledText;
 import java.util.Optional;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.syncher.SynchedEntityData;

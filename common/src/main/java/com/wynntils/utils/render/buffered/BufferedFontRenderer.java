@@ -5,12 +5,12 @@
 package com.wynntils.utils.render.buffered;
 
 import com.mojang.blaze3d.vertex.PoseStack;
+import com.wynntils.core.text.StyledText;
 import com.wynntils.mc.mixin.accessors.MinecraftAccessor;
 import com.wynntils.utils.colors.CommonColors;
 import com.wynntils.utils.colors.CustomColor;
 import com.wynntils.utils.mc.ComponentUtils;
 import com.wynntils.utils.mc.McUtils;
-import com.wynntils.utils.mc.type.StyledText;
 import com.wynntils.utils.render.FontRenderer;
 import com.wynntils.utils.render.TextRenderTask;
 import com.wynntils.utils.render.type.HorizontalAlignment;

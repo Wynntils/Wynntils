@@ -4,9 +4,9 @@
  */
 package com.wynntils.models.gear.type;
 
+import com.wynntils.core.text.StyledText;
 import com.wynntils.models.wynnitem.type.ItemMaterial;
 import com.wynntils.models.wynnitem.type.ItemObtainInfo;
-import com.wynntils.utils.mc.type.StyledText;
 import java.util.List;
 import java.util.Optional;
 

@@ -6,11 +6,11 @@ package com.wynntils.models.quests;
 
 import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.components.Models;
+import com.wynntils.core.text.StyledText;
 import com.wynntils.handlers.scoreboard.ScoreboardPart;
 import com.wynntils.handlers.scoreboard.ScoreboardSegment;
 import com.wynntils.handlers.scoreboard.type.SegmentMatcher;
 import com.wynntils.utils.mc.ComponentUtils;
-import com.wynntils.utils.mc.type.StyledText;
 import com.wynntils.utils.wynn.WynnUtils;
 import java.util.List;
 import net.minecraft.ChatFormatting;

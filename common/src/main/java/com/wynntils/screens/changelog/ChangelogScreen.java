@@ -5,6 +5,7 @@
 package com.wynntils.screens.changelog;
 
 import com.mojang.blaze3d.vertex.PoseStack;
+import com.wynntils.core.text.StyledText;
 import com.wynntils.screens.base.WynntilsPagedScreen;
 import com.wynntils.screens.base.WynntilsScreen;
 import com.wynntils.screens.base.widgets.PageSelectorButton;
@@ -12,7 +13,6 @@ import com.wynntils.utils.MathUtils;
 import com.wynntils.utils.StringUtils;
 import com.wynntils.utils.colors.CommonColors;
 import com.wynntils.utils.mc.McUtils;
-import com.wynntils.utils.mc.type.StyledText;
 import com.wynntils.utils.render.FontRenderer;
 import com.wynntils.utils.render.RenderUtils;
 import com.wynntils.utils.render.TextRenderSetting;

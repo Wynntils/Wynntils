@@ -4,11 +4,11 @@
  */
 package com.wynntils.models.items.annotators.game;
 
+import com.wynntils.core.text.StyledText;
 import com.wynntils.handlers.item.ItemAnnotation;
 import com.wynntils.handlers.item.ItemAnnotator;
 import com.wynntils.models.gathering.ToolProfile;
 import com.wynntils.models.items.items.game.GatheringToolItem;
-import com.wynntils.utils.mc.type.StyledText;
 import com.wynntils.utils.type.CappedValue;
 import com.wynntils.utils.wynn.WynnItemMatchers;
 import java.util.regex.Matcher;

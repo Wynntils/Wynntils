@@ -13,7 +13,7 @@ import com.wynntils.core.components.Managers;
 import com.wynntils.core.functions.Function;
 import com.wynntils.core.functions.GenericFunction;
 import com.wynntils.core.functions.arguments.FunctionArguments;
-import com.wynntils.utils.mc.type.StyledText;
+import com.wynntils.core.text.StyledText;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Comparator;

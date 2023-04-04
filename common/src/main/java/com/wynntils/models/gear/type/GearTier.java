@@ -4,8 +4,8 @@
  */
 package com.wynntils.models.gear.type;
 
+import com.wynntils.core.text.StyledText;
 import com.wynntils.utils.StringUtils;
-import com.wynntils.utils.mc.type.StyledText;
 import java.util.Arrays;
 import java.util.Locale;
 import net.minecraft.ChatFormatting;

@@ -6,13 +6,13 @@ package com.wynntils.models.abilities;
 
 import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.components.Model;
+import com.wynntils.core.text.StyledText;
 import com.wynntils.mc.event.SubtitleSetTextEvent;
 import com.wynntils.models.abilities.event.ShamanMaskTitlePacketEvent;
 import com.wynntils.models.abilities.type.ShamanMaskType;
 import com.wynntils.models.worlds.WorldStateModel;
 import com.wynntils.models.worlds.event.WorldStateEvent;
 import com.wynntils.utils.mc.ComponentUtils;
-import com.wynntils.utils.mc.type.StyledText;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;

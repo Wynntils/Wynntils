@@ -6,6 +6,7 @@ package com.wynntils.models.gear;
 
 import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.components.Models;
+import com.wynntils.core.text.StyledText;
 import com.wynntils.models.elements.type.Powder;
 import com.wynntils.models.gear.type.GearInfo;
 import com.wynntils.models.gear.type.GearInstance;
@@ -14,7 +15,6 @@ import com.wynntils.models.stats.type.StatActualValue;
 import com.wynntils.models.stats.type.StatListOrdering;
 import com.wynntils.models.stats.type.StatPossibleValues;
 import com.wynntils.models.stats.type.StatType;
-import com.wynntils.utils.mc.type.StyledText;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.util.ArrayList;

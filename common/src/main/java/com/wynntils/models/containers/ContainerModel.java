@@ -6,8 +6,8 @@ package com.wynntils.models.containers;
 
 import com.wynntils.core.components.Model;
 import com.wynntils.core.components.Models;
+import com.wynntils.core.text.StyledText;
 import com.wynntils.utils.mc.ComponentUtils;
-import com.wynntils.utils.mc.type.StyledText;
 import com.wynntils.utils.type.Pair;
 import com.wynntils.utils.wynn.WynnUtils;
 import java.util.List;

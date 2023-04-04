@@ -4,7 +4,7 @@
  */
 package com.wynntils.mc.event;
 
-import com.wynntils.utils.mc.type.StyledText;
+import com.wynntils.core.text.StyledText;
 import net.minecraftforge.eventbus.api.Event;
 
 /** Fires on change to footer of scoreboard */

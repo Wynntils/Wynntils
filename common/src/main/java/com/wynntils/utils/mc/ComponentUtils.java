@@ -4,9 +4,9 @@
  */
 package com.wynntils.utils.mc;
 
+import com.wynntils.core.text.StyledText;
 import com.wynntils.utils.MathUtils;
 import com.wynntils.utils.mc.type.Location;
-import com.wynntils.utils.mc.type.StyledText;
 import com.wynntils.utils.wynn.WynnUtils;
 import java.awt.Color;
 import java.util.ArrayList;

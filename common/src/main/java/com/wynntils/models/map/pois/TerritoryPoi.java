@@ -6,6 +6,7 @@ package com.wynntils.models.map.pois;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.wynntils.core.components.Models;
+import com.wynntils.core.text.StyledText;
 import com.wynntils.models.map.PoiLocation;
 import com.wynntils.models.map.type.DisplayPriority;
 import com.wynntils.models.territories.TerritoryInfo;
@@ -14,7 +15,6 @@ import com.wynntils.screens.maps.GuildMapScreen;
 import com.wynntils.utils.colors.CommonColors;
 import com.wynntils.utils.colors.CustomColor;
 import com.wynntils.utils.mc.McUtils;
-import com.wynntils.utils.mc.type.StyledText;
 import com.wynntils.utils.render.Texture;
 import com.wynntils.utils.render.buffered.BufferedFontRenderer;
 import com.wynntils.utils.render.buffered.BufferedRenderUtils;

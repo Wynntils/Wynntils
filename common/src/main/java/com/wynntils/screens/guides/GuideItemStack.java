@@ -5,9 +5,9 @@
 package com.wynntils.screens.guides;
 
 import com.wynntils.core.components.Handlers;
+import com.wynntils.core.text.StyledText;
 import com.wynntils.handlers.item.ItemAnnotation;
 import com.wynntils.models.wynnitem.type.ItemObtainInfo;
-import com.wynntils.utils.mc.type.StyledText;
 import java.util.List;
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;

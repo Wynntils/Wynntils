@@ -4,7 +4,7 @@
  */
 package com.wynntils.models.discoveries.type;
 
-import com.wynntils.utils.mc.type.StyledText;
+import com.wynntils.core.text.StyledText;
 import net.minecraft.ChatFormatting;
 
 public enum DiscoveryType {

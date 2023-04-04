@@ -4,7 +4,7 @@
  */
 package com.wynntils.handlers.item;
 
-import com.wynntils.utils.mc.type.StyledText;
+import com.wynntils.core.text.StyledText;
 import net.minecraft.world.item.ItemStack;
 
 @FunctionalInterface

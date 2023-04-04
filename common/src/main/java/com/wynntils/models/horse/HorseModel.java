@@ -6,10 +6,10 @@ package com.wynntils.models.horse;
 
 import com.wynntils.core.components.Model;
 import com.wynntils.core.components.Models;
+import com.wynntils.core.text.StyledText;
 import com.wynntils.models.items.ItemModel;
 import com.wynntils.models.items.items.game.HorseItem;
 import com.wynntils.utils.mc.McUtils;
-import com.wynntils.utils.mc.type.StyledText;
 import java.util.List;
 import java.util.Optional;
 import net.minecraft.network.chat.Component;
