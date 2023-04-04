@@ -34,6 +34,7 @@ import net.minecraft.world.scores.Scoreboard;
 import net.minecraft.world.scores.criteria.ObjectiveCriteria;
 import net.minecraftforge.eventbus.api.EventPriority;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
+import org.apache.commons.lang3.StringUtils;
 
 public final class ScoreboardHandler extends Handler {
     private static final Pattern NEXT_LINE_PATTERN = Pattern.compile("À+");
@@ -331,8 +332,12 @@ public final class ScoreboardHandler extends Handler {
         scoreboard.getOrCreatePlayerScore("À", wynntilsObjective).setScore(currentScoreboardLine);
         currentScoreboardLine--;
 
+        int separatorCount = 2;
+
         // Insert the visible segments
-        for (ScoreboardSegment scoreboardSegment : scoreboardSegments.values()) {
+        List<ScoreboardSegment> segments = scoreboardSegments.values().stream().toList();
+        for (int i = 0; i < segments.size(); i++) {
+            ScoreboardSegment scoreboardSegment = segments.get(i);
             if (!scoreboardSegment.isVisible()) continue;
 
             scoreboard
@@ -343,6 +348,14 @@ public final class ScoreboardHandler extends Handler {
             for (String line : scoreboardSegment.getContent()) {
                 scoreboard.getOrCreatePlayerScore(line, wynntilsObjective).setScore(currentScoreboardLine);
                 currentScoreboardLine--;
+            }
+
+            if (i != segments.size() - 1) {
+                scoreboard
+                        .getOrCreatePlayerScore(StringUtils.repeat('À', separatorCount), wynntilsObjective)
+                        .setScore(currentScoreboardLine);
+                currentScoreboardLine--;
+                separatorCount++;
             }
         }
     }
