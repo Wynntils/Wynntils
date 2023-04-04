@@ -190,6 +190,22 @@ public final class StyledText {
         return parts.stream().allMatch(StyledTextPart::isBlank);
     }
 
+    public boolean contains(String string) {
+        return contains(string, PartStyle.StyleType.DEFAULT);
+    }
+
+    public boolean contains(StyledText styledText) {
+        return contains(styledText.getString(PartStyle.StyleType.DEFAULT), PartStyle.StyleType.DEFAULT);
+    }
+
+    public boolean contains(String string, PartStyle.StyleType styleType) {
+        return getString(styleType).contains(string);
+    }
+
+    public boolean contains(StyledText styledText, PartStyle.StyleType styleType) {
+        return contains(styledText.getString(styleType), styleType);
+    }
+
     public Matcher getMatcher(Pattern pattern) {
         return getMatcher(pattern, PartStyle.StyleType.DEFAULT);
     }

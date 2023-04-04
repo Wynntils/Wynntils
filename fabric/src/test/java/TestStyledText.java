@@ -120,6 +120,41 @@ public class TestStyledText {
     }
 
     @Test
+    public void containsString_shouldProduceCorrectResult() {
+        final String testString = "§c§oitalicred§r§9§oblue§r§cnonitalic§oinherited§lbold§rafter";
+        final String[] expectedParts = {
+            "§c§oitalicred", "§r§9§oblue", "§r§cnonitalic", "§oinherited", "§lbold", "§rafter"
+        };
+
+        StyledText styledText = StyledText.fromString(testString);
+
+        for (String expectedPart : expectedParts) {
+            Assertions.assertTrue(
+                    styledText.contains(expectedPart),
+                    "StyledText.contains() could not find a part matching: " + expectedPart);
+        }
+    }
+
+    @Test
+    public void containsStyledText_shouldProduceCorrectResult() {
+        final String testString = "§c§oitalicred§r§9§oblue§r§cnonitalic§oinherited§lbold§rafter";
+        final String[] expectedParts = {
+            "§c§oitalicred", "§r§9§oblue", "§r§cnonitalic", "§oinherited", "§lbold", "§rafter"
+        };
+
+        StyledText styledText = StyledText.fromString(testString);
+
+        for (String expectedPart : expectedParts) {
+            Assertions.assertTrue(
+                    styledText.contains(StyledText.fromString(expectedPart)),
+                    "StyledText.contains() could not find a part matching: " + expectedPart);
+            Assertions.assertTrue(
+                    styledText.contains(StyledText.fromString(expectedPart), PartStyle.StyleType.NONE),
+                    "StyledText.contains(NONE) could not find a part matching: " + expectedPart);
+        }
+    }
+
+    @Test
     public void styledText_shouldProduceCorrectComponent() {
         final Component component = Component.literal("a").append(Component.literal("b"));
 
