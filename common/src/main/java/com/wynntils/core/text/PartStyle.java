@@ -102,7 +102,11 @@ public final class PartStyle {
 
         boolean skipFormatting = false;
 
-        if (previousStyle != null) {
+        // If the color is the same as the previous style, we can try to construct a difference.
+        // If colors don't match, the inserted color will reset the formatting, thus we need to include all formatting.
+        // If the current color is NONE, we NEED to try to construct a difference,
+        // since there will be no color formatting resetting the formatting afterwards.
+        if (previousStyle != null && (color == CustomColor.NONE || previousStyle.color.equals(color))) {
             StringBuilder stringBuilder = this.tryConstructDifference(previousStyle);
 
             if (stringBuilder != null) {
@@ -279,7 +283,7 @@ public final class PartStyle {
 
     @Override
     public String toString() {
-        return "CodedStyle{" + "color="
+        return "PartStyle{" + "color="
                 + color + ", bold="
                 + bold + ", italic="
                 + italic + ", underlined="
@@ -300,7 +304,6 @@ public final class PartStyle {
                 && underlined == partStyle.underlined
                 && strikethrough == partStyle.strikethrough
                 && obfuscated == partStyle.obfuscated
-                && Objects.equals(owner, partStyle.owner)
                 && Objects.equals(color, partStyle.color)
                 && Objects.equals(clickEvent, partStyle.clickEvent)
                 && Objects.equals(hoverEvent, partStyle.hoverEvent);
@@ -308,7 +311,7 @@ public final class PartStyle {
 
     @Override
     public int hashCode() {
-        return Objects.hash(owner, color, bold, italic, underlined, strikethrough, obfuscated, clickEvent, hoverEvent);
+        return Objects.hash(color, bold, italic, underlined, strikethrough, obfuscated, clickEvent, hoverEvent);
     }
 
     public enum StyleType {

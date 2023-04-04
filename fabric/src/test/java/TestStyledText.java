@@ -43,8 +43,8 @@ public class TestStyledText {
                         .withStyle(style ->
                                 style.withClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/command"))));
 
-        final String expectedIncludeEvents = "§c§oitalicred§r§9§o§<1>blue§r§cnonitalic§oinherited§lbold§r§[1]after";
-        final String expectedDefault = "§c§oitalicred§r§9§oblue§r§cnonitalic§oinherited§lbold§rafter";
+        final String expectedIncludeEvents = "§c§oitalicred§9§o§<1>blue§cnonitalic§oinherited§lbold§r§[1]after";
+        final String expectedDefault = "§c§oitalicred§9§oblue§cnonitalic§oinherited§lbold§rafter";
         final String expectedNoFormat = "italicredbluenonitalicinheritedboldafter";
 
         StyledText styledText = StyledText.fromComponent(component);
@@ -64,11 +64,68 @@ public class TestStyledText {
     }
 
     @Test
+    public void colorResetsFormatting_shouldProduceCorrectString() {
+        // Any color code resets formatting, so the bold should be removed.
+
+        final String testString = "§l§cboldthenred";
+
+        final String expected = "§cboldthenred";
+
+        StyledText styledText = StyledText.fromString(testString);
+
+        Assertions.assertEquals(
+                expected,
+                styledText.getString(PartStyle.StyleType.DEFAULT),
+                "StyledText.getString() returned an unexpected value.");
+    }
+
+    @Test
+    public void colorCodedStyledComponent_shouldProduceCorrectString() {
+        final Component firstTestComponent = Component.literal("§credstring").withStyle(ChatFormatting.BOLD);
+        // Any color code resets formatting, so the bold should be removed.
+        final String firstExpected = "§credstring";
+
+        final Component secondTestComponent = Component.literal("§lboldstring").withStyle(ChatFormatting.RED);
+        // Style is applied first, so the color does not reset the bold.
+        final String secondExpected = "§c§lboldstring";
+
+        final Component thirdTestComponent = Component.literal("boldparent")
+                .withStyle(ChatFormatting.BOLD)
+                .append(Component.literal("coloredchild").withStyle(ChatFormatting.RED));
+        // Style is applied first, so the color does not reset the bold.
+        final String thirdExpected = "§lboldparent§c§lcoloredchild";
+
+        final Component fourthTestComponent = Component.literal("bold")
+                .withStyle(ChatFormatting.BOLD)
+                .append(Component.literal("red").withStyle(ChatFormatting.RED))
+                .append(Component.literal("unformatted"));
+        final String fourthExpected = "§lbold§c§lred§r§lunformatted";
+
+        Assertions.assertEquals(
+                firstExpected,
+                StyledText.fromComponent(firstTestComponent).getString(PartStyle.StyleType.DEFAULT),
+                "StyledText.getString() returned an unexpected value.");
+
+        Assertions.assertEquals(
+                secondExpected,
+                StyledText.fromComponent(secondTestComponent).getString(PartStyle.StyleType.DEFAULT),
+                "StyledText.getString() returned an unexpected value.");
+
+        Assertions.assertEquals(
+                thirdExpected,
+                StyledText.fromComponent(thirdTestComponent).getString(PartStyle.StyleType.DEFAULT),
+                "StyledText.getString() returned an unexpected value.");
+
+        Assertions.assertEquals(
+                fourthExpected,
+                StyledText.fromComponent(fourthTestComponent).getString(PartStyle.StyleType.DEFAULT),
+                "StyledText.getString() returned an unexpected value.");
+    }
+
+    @Test
     public void advancedComponentString_shouldProduceCorrectStyledText() {
-        final String testString = "§c§oitalicred§r§9§oblue§r§cnonitalic§oinherited§lbold§rafter";
-        final String[] expectedParts = {
-            "§c§oitalicred", "§r§9§oblue", "§r§cnonitalic", "§oinherited", "§lbold", "§rafter"
-        };
+        final String testString = "§c§oitalicred§9§oblue§cnonitalic§oinherited§lbold§rafter";
+        final String[] expectedParts = {"§c§oitalicred", "§9§oblue", "§cnonitalic", "§oinherited", "§lbold", "§rafter"};
 
         StyledText styledText = StyledText.fromString(testString);
 
@@ -122,10 +179,8 @@ public class TestStyledText {
 
     @Test
     public void contains_shouldProduceCorrectResult() {
-        final String testString = "§c§oitalicred§r§9§oblue§r§cnonitalic§oinherited§lbold§rafter";
-        final String[] expectedParts = {
-            "§c§oitalicred", "§r§9§oblue", "§r§cnonitalic", "§oinherited", "§lbold", "§rafter"
-        };
+        final String testString = "§c§oitalicred§9§oblue§cnonitalic§oinherited§lbold§rafter";
+        final String[] expectedParts = {"§c§oitalicred", "§9§oblue", "§cnonitalic", "§oinherited", "§lbold", "§rafter"};
 
         StyledText styledText = StyledText.fromString(testString);
 

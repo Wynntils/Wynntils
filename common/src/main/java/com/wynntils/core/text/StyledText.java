@@ -462,7 +462,7 @@ public final class StyledText {
 
     @Override
     public String toString() {
-        return "CodedString{" + "parts="
+        return "StyledText{" + "parts="
                 + ArrayUtils.toString(parts) + ", clickEvents="
                 + ArrayUtils.toString(clickEvents) + ", hoverEvents="
                 + ArrayUtils.toString(hoverEvents) + '}';

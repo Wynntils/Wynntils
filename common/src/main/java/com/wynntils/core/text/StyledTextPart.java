@@ -23,6 +23,7 @@ public final class StyledTextPart {
 
         // When we have a style, but the text has formatting codes,
         // we need to apply the formatting codes to the style
+        // This means that the actual style applies first; then the formatting codes
         StringBuilder textBuilder = new StringBuilder();
         Style textStyle = style;
         boolean formattingNext = false;
@@ -35,7 +36,7 @@ public final class StyledTextPart {
                 if (formatting.isColor()) {
                     textStyle = Style.EMPTY.withColor(formatting);
                 } else {
-                    textStyle.applyFormat(formatting);
+                    textStyle = textStyle.applyFormat(formatting);
                 }
 
                 continue;
@@ -108,7 +109,7 @@ public final class StyledTextPart {
 
     @Override
     public String toString() {
-        return "CodedStringPart[" + "text=" + text + ", " + "style=" + style + ']';
+        return "StyledTextPart[" + "text=" + text + ", " + "style=" + style + ']';
     }
 
     @Override
@@ -116,13 +117,11 @@ public final class StyledTextPart {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
         StyledTextPart that = (StyledTextPart) o;
-        return Objects.equals(text, that.text)
-                && Objects.equals(style, that.style)
-                && Objects.equals(parent, that.parent);
+        return Objects.equals(text, that.text) && Objects.equals(style, that.style);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(text, style, parent);
+        return Objects.hash(text, style);
     }
 }
