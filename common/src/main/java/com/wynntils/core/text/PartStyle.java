@@ -20,31 +20,31 @@ public final class PartStyle {
     private final StyledTextPart owner;
 
     private final CustomColor color;
-    private final boolean bold;
-    private final boolean italic;
-    private final boolean underlined;
-    private final boolean strikethrough;
     private final boolean obfuscated;
+    private final boolean bold;
+    private final boolean strikethrough;
+    private final boolean underlined;
+    private final boolean italic;
     private final ClickEvent clickEvent;
     private final HoverEvent hoverEvent;
 
     private PartStyle(
             StyledTextPart owner,
             CustomColor color,
-            boolean bold,
-            boolean italic,
-            boolean underlined,
-            boolean strikethrough,
             boolean obfuscated,
+            boolean bold,
+            boolean strikethrough,
+            boolean underlined,
+            boolean italic,
             ClickEvent clickEvent,
             HoverEvent hoverEvent) {
         this.owner = owner;
         this.color = color;
-        this.bold = bold;
-        this.italic = italic;
-        this.underlined = underlined;
-        this.strikethrough = strikethrough;
         this.obfuscated = obfuscated;
+        this.bold = bold;
+        this.strikethrough = strikethrough;
+        this.underlined = underlined;
+        this.italic = italic;
         this.clickEvent = clickEvent;
         this.hoverEvent = hoverEvent;
     }
@@ -71,11 +71,11 @@ public final class PartStyle {
                 inheritedStyle.getColor() == null
                         ? CustomColor.NONE
                         : CustomColor.fromInt(inheritedStyle.getColor().getValue()),
-                inheritedStyle.isBold(),
-                inheritedStyle.isItalic(),
-                inheritedStyle.isUnderlined(),
-                inheritedStyle.isStrikethrough(),
                 inheritedStyle.isObfuscated(),
+                inheritedStyle.isBold(),
+                inheritedStyle.isStrikethrough(),
+                inheritedStyle.isUnderlined(),
+                inheritedStyle.isItalic(),
                 inheritedStyle.getClickEvent(),
                 inheritedStyle.getHoverEvent());
     }
@@ -133,20 +133,20 @@ public final class PartStyle {
             }
 
             // 2. Formatting
+            if (obfuscated) {
+                styleString.append(STYLE_PREFIX).append(ChatFormatting.OBFUSCATED.getChar());
+            }
             if (bold) {
                 styleString.append(STYLE_PREFIX).append(ChatFormatting.BOLD.getChar());
-            }
-            if (italic) {
-                styleString.append(STYLE_PREFIX).append(ChatFormatting.ITALIC.getChar());
-            }
-            if (underlined) {
-                styleString.append(STYLE_PREFIX).append(ChatFormatting.UNDERLINE.getChar());
             }
             if (strikethrough) {
                 styleString.append(STYLE_PREFIX).append(ChatFormatting.STRIKETHROUGH.getChar());
             }
-            if (obfuscated) {
-                styleString.append(STYLE_PREFIX).append(ChatFormatting.OBFUSCATED.getChar());
+            if (underlined) {
+                styleString.append(STYLE_PREFIX).append(ChatFormatting.UNDERLINE.getChar());
+            }
+            if (italic) {
+                styleString.append(STYLE_PREFIX).append(ChatFormatting.ITALIC.getChar());
             }
         }
 
@@ -175,11 +175,11 @@ public final class PartStyle {
 
     public Style getStyle() {
         Style reconstructedStyle = Style.EMPTY
-                .withBold(bold)
-                .withItalic(italic)
-                .withUnderlined(underlined)
-                .withStrikethrough(strikethrough)
                 .withObfuscated(obfuscated)
+                .withBold(bold)
+                .withStrikethrough(strikethrough)
+                .withUnderlined(underlined)
+                .withItalic(italic)
                 .withClickEvent(clickEvent)
                 .withHoverEvent(hoverEvent);
 
@@ -198,15 +198,11 @@ public final class PartStyle {
         CustomColor newColor = CustomColor.fromInt(color.getColor());
 
         return new PartStyle(
-                owner, newColor, bold, italic, underlined, strikethrough, obfuscated, clickEvent, hoverEvent);
+                owner, newColor, obfuscated, bold, strikethrough, underlined, italic, clickEvent, hoverEvent);
     }
 
     public boolean isBold() {
         return bold;
-    }
-
-    public boolean isItalic() {
-        return italic;
     }
 
     public boolean isObfuscated() {
@@ -221,32 +217,36 @@ public final class PartStyle {
         return underlined;
     }
 
+    public boolean isItalic() {
+        return italic;
+    }
+
     public PartStyle withBold(boolean bold) {
-        return new PartStyle(owner, color, bold, italic, underlined, strikethrough, obfuscated, clickEvent, hoverEvent);
-    }
-
-    public PartStyle withItalic(boolean italic) {
-        return new PartStyle(owner, color, bold, italic, underlined, strikethrough, obfuscated, clickEvent, hoverEvent);
-    }
-
-    public PartStyle withUnderlined(boolean underlined) {
-        return new PartStyle(owner, color, bold, italic, underlined, strikethrough, obfuscated, clickEvent, hoverEvent);
-    }
-
-    public PartStyle withStrikethrough(boolean strikethrough) {
-        return new PartStyle(owner, color, bold, italic, underlined, strikethrough, obfuscated, clickEvent, hoverEvent);
+        return new PartStyle(owner, color, obfuscated, bold, strikethrough, underlined, italic, clickEvent, hoverEvent);
     }
 
     public PartStyle withObfuscated(boolean obfuscated) {
-        return new PartStyle(owner, color, bold, italic, underlined, strikethrough, obfuscated, clickEvent, hoverEvent);
+        return new PartStyle(owner, color, obfuscated, bold, strikethrough, underlined, italic, clickEvent, hoverEvent);
+    }
+
+    public PartStyle withStrikethrough(boolean strikethrough) {
+        return new PartStyle(owner, color, obfuscated, bold, strikethrough, underlined, italic, clickEvent, hoverEvent);
+    }
+
+    public PartStyle withUnderlined(boolean underlined) {
+        return new PartStyle(owner, color, obfuscated, bold, strikethrough, underlined, italic, clickEvent, hoverEvent);
+    }
+
+    public PartStyle withItalic(boolean italic) {
+        return new PartStyle(owner, color, obfuscated, bold, strikethrough, underlined, italic, clickEvent, hoverEvent);
     }
 
     public PartStyle withClickEvent(ClickEvent clickEvent) {
-        return new PartStyle(owner, color, bold, italic, underlined, strikethrough, obfuscated, clickEvent, hoverEvent);
+        return new PartStyle(owner, color, obfuscated, bold, strikethrough, underlined, italic, clickEvent, hoverEvent);
     }
 
     public PartStyle withHoverEvent(HoverEvent hoverEvent) {
-        return new PartStyle(owner, color, bold, italic, underlined, strikethrough, obfuscated, clickEvent, hoverEvent);
+        return new PartStyle(owner, color, obfuscated, bold, strikethrough, underlined, italic, clickEvent, hoverEvent);
     }
 
     private StringBuilder tryConstructDifference(PartStyle oldStyle) {
@@ -263,20 +263,20 @@ public final class PartStyle {
             return null;
         }
 
+        if (oldStyle.obfuscated && !this.obfuscated) return null;
+        if (!oldStyle.obfuscated && this.obfuscated) add.append(ChatFormatting.OBFUSCATED);
+
         if (oldStyle.bold && !this.bold) return null;
         if (!oldStyle.bold && this.bold) add.append(ChatFormatting.BOLD);
-
-        if (oldStyle.italic && !this.italic) return null;
-        if (!oldStyle.italic && this.italic) add.append(ChatFormatting.ITALIC);
-
-        if (oldStyle.underlined && !this.underlined) return null;
-        if (!oldStyle.underlined && this.underlined) add.append(ChatFormatting.UNDERLINE);
 
         if (oldStyle.strikethrough && !this.strikethrough) return null;
         if (!oldStyle.strikethrough && this.strikethrough) add.append(ChatFormatting.STRIKETHROUGH);
 
-        if (oldStyle.obfuscated && !this.obfuscated) return null;
-        if (!oldStyle.obfuscated && this.obfuscated) add.append(ChatFormatting.OBFUSCATED);
+        if (oldStyle.underlined && !this.underlined) return null;
+        if (!oldStyle.underlined && this.underlined) add.append(ChatFormatting.UNDERLINE);
+
+        if (oldStyle.italic && !this.italic) return null;
+        if (!oldStyle.italic && this.italic) add.append(ChatFormatting.ITALIC);
 
         return add;
     }
