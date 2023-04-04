@@ -206,6 +206,38 @@ public final class StyledText {
         return contains(styledText.getString(styleType), styleType);
     }
 
+    public boolean startsWith(String string) {
+        return startsWith(string, PartStyle.StyleType.DEFAULT);
+    }
+
+    public boolean startsWith(StyledText styledText) {
+        return startsWith(styledText.getString(PartStyle.StyleType.DEFAULT), PartStyle.StyleType.DEFAULT);
+    }
+
+    public boolean startsWith(String string, PartStyle.StyleType styleType) {
+        return getString(styleType).startsWith(string);
+    }
+
+    public boolean startsWith(StyledText styledText, PartStyle.StyleType styleType) {
+        return startsWith(styledText.getString(styleType), styleType);
+    }
+
+    public boolean endsWith(String string) {
+        return endsWith(string, PartStyle.StyleType.DEFAULT);
+    }
+
+    public boolean endsWith(StyledText styledText) {
+        return endsWith(styledText.getString(PartStyle.StyleType.DEFAULT), PartStyle.StyleType.DEFAULT);
+    }
+
+    public boolean endsWith(String string, PartStyle.StyleType styleType) {
+        return getString(styleType).endsWith(string);
+    }
+
+    public boolean endsWith(StyledText styledText, PartStyle.StyleType styleType) {
+        return endsWith(styledText.getString(styleType), styleType);
+    }
+
     public Matcher getMatcher(Pattern pattern) {
         return getMatcher(pattern, PartStyle.StyleType.DEFAULT);
     }

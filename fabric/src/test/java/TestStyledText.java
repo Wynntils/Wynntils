@@ -120,7 +120,7 @@ public class TestStyledText {
     }
 
     @Test
-    public void containsString_shouldProduceCorrectResult() {
+    public void contains_shouldProduceCorrectResult() {
         final String testString = "§c§oitalicred§r§9§oblue§r§cnonitalic§oinherited§lbold§rafter";
         final String[] expectedParts = {
             "§c§oitalicred", "§r§9§oblue", "§r§cnonitalic", "§oinherited", "§lbold", "§rafter"
@@ -133,16 +133,6 @@ public class TestStyledText {
                     styledText.contains(expectedPart),
                     "StyledText.contains() could not find a part matching: " + expectedPart);
         }
-    }
-
-    @Test
-    public void containsStyledText_shouldProduceCorrectResult() {
-        final String testString = "§c§oitalicred§r§9§oblue§r§cnonitalic§oinherited§lbold§rafter";
-        final String[] expectedParts = {
-            "§c§oitalicred", "§r§9§oblue", "§r§cnonitalic", "§oinherited", "§lbold", "§rafter"
-        };
-
-        StyledText styledText = StyledText.fromString(testString);
 
         for (String expectedPart : expectedParts) {
             Assertions.assertTrue(
@@ -152,6 +142,36 @@ public class TestStyledText {
                     styledText.contains(StyledText.fromString(expectedPart), PartStyle.StyleType.NONE),
                     "StyledText.contains(NONE) could not find a part matching: " + expectedPart);
         }
+    }
+
+    @Test
+    public void startsWith_shouldProduceCorrectResult() {
+        final String testString = "§c§oitalicred§r§9§oblue§r§cnonitalic§oinherited§lbold§rafter";
+        final String expectedStart = "§c§oitalicred";
+
+        StyledText styledText = StyledText.fromString(testString);
+
+        Assertions.assertTrue(
+                styledText.startsWith(expectedStart),
+                "StyledText.startsWith() did not produce a correct result for: " + expectedStart);
+        Assertions.assertTrue(
+                styledText.startsWith(StyledText.fromString(expectedStart)),
+                "StyledText.startsWith() did not produce a correct result for: " + expectedStart);
+    }
+
+    @Test
+    public void endsWith_shouldProduceCorrectResult() {
+        final String testString = "§c§oitalicred§r§9§oblue§r§cnonitalic§oinherited§lbold§rafter";
+        final String expectedEnd = "§rafter";
+
+        StyledText styledText = StyledText.fromString(testString);
+
+        Assertions.assertTrue(
+                styledText.endsWith(expectedEnd),
+                "StyledText.startsWith() did not produce a correct result for: " + expectedEnd);
+        Assertions.assertTrue(
+                styledText.endsWith(StyledText.fromString(expectedEnd)),
+                "StyledText.startsWith() did not produce a correct result for: " + expectedEnd);
     }
 
     @Test
