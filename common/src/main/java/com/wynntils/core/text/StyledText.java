@@ -95,6 +95,12 @@ public final class StyledText {
                     currentString = new StringBuilder();
                 }
 
+                // Color formatting resets the style
+                if (formatting.isColor()) {
+                    currentStyle = Style.EMPTY.withColor(formatting);
+                    continue;
+                }
+
                 currentStyle = currentStyle.applyFormat(formatting);
 
                 continue;

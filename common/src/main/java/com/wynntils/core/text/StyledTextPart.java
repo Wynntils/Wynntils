@@ -7,6 +7,7 @@ package com.wynntils.core.text;
 import com.wynntils.utils.wynn.WynnUtils;
 import java.util.Objects;
 import java.util.function.Function;
+import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.network.chat.Style;
@@ -18,11 +19,43 @@ public final class StyledTextPart {
     private final StyledText parent;
 
     StyledTextPart(String text, Style style, StyledText parent, Style parentStyle) {
-        this.text = text;
         this.parent = parent;
 
+        // When we have a style, but the text has formatting codes,
+        // we need to apply the formatting codes to the style
+        StringBuilder textBuilder = new StringBuilder();
+        Style textStyle = style;
+        boolean formattingNext = false;
+        for (char c : text.toCharArray()) {
+            if (formattingNext) {
+                formattingNext = false;
+                ChatFormatting formatting = ChatFormatting.getByCode(c);
+
+                // Color formatting resets the style
+                if (formatting.isColor()) {
+                    textStyle = Style.EMPTY.withColor(formatting);
+                } else {
+                    textStyle.applyFormat(formatting);
+                }
+
+                continue;
+            }
+
+            if (c == '§') {
+                formattingNext = true;
+                continue;
+            }
+
+            textBuilder.append(c);
+        }
+
+        this.text = textBuilder.toString();
+
+        // We might have lost an event, so we need to add it back
+        textStyle = textStyle.withClickEvent(style.getClickEvent()).withHoverEvent(style.getHoverEvent());
+
         // Must be done last
-        this.style = PartStyle.fromStyle(style, this, parentStyle);
+        this.style = PartStyle.fromStyle(textStyle, this, parentStyle);
     }
 
     StyledTextPart(StyledTextPart part, StyledText parent) {
