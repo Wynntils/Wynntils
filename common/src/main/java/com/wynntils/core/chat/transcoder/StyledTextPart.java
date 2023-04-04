@@ -58,6 +58,14 @@ public final class StyledTextPart {
         return new StyledTextPart(text.trim(), style.getStyle(), parent, null);
     }
 
+    boolean isEmpty() {
+        return text.isEmpty();
+    }
+
+    boolean isBlank() {
+        return text.isBlank();
+    }
+
     @Override
     public String toString() {
         return "CodedStringPart[" + "text=" + text + ", " + "style=" + style + ']';

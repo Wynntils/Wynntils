@@ -106,6 +106,20 @@ public class TestStyledText {
     }
 
     @Test
+    public void emptyText_shouldProduceEmptyString() {
+        StyledText styledText = StyledText.fromString("");
+
+        Assertions.assertTrue(styledText.isEmpty(), "StyledText.isEmpty() returned an unexpected value.");
+    }
+
+    @Test
+    public void blankText_shouldProduceBlankString() {
+        StyledText styledText = StyledText.fromString("    ");
+
+        Assertions.assertTrue(styledText.isBlank(), "StyledText.isBlank() returned an unexpected value.");
+    }
+
+    @Test
     public void styledText_shouldProduceCorrectComponent() {
         final Component component = Component.literal("a").append(Component.literal("b"));
 

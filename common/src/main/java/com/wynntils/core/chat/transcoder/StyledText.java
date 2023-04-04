@@ -182,6 +182,14 @@ public final class StyledText {
                 hoverEvents);
     }
 
+    public boolean isEmpty() {
+        return parts.stream().allMatch(StyledTextPart::isEmpty);
+    }
+
+    public boolean isBlank() {
+        return parts.stream().allMatch(StyledTextPart::isBlank);
+    }
+
     public Matcher getMatcher(Pattern pattern) {
         return getMatcher(pattern, PartStyle.StyleType.DEFAULT);
     }
