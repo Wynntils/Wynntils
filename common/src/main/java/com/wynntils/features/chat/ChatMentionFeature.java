@@ -5,15 +5,15 @@
 package com.wynntils.features.chat;
 
 import com.wynntils.core.WynntilsMod;
-import com.wynntils.core.chat.transcoder.PartStyle;
-import com.wynntils.core.chat.transcoder.StyledText;
-import com.wynntils.core.chat.transcoder.StyledTextPart;
 import com.wynntils.core.config.Category;
 import com.wynntils.core.config.Config;
 import com.wynntils.core.config.ConfigCategory;
 import com.wynntils.core.config.ConfigHolder;
 import com.wynntils.core.config.RegisterConfig;
 import com.wynntils.core.features.Feature;
+import com.wynntils.core.text.PartStyle;
+import com.wynntils.core.text.StyledText;
+import com.wynntils.core.text.StyledTextPart;
 import com.wynntils.handlers.chat.event.ChatMessageReceivedEvent;
 import com.wynntils.utils.mc.McUtils;
 import java.util.regex.Matcher;

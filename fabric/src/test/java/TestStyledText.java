@@ -2,9 +2,9 @@
  * Copyright © Wynntils 2023.
  * This file is released under AGPLv3. See LICENSE for full license details.
  */
-import com.wynntils.core.chat.transcoder.PartStyle;
-import com.wynntils.core.chat.transcoder.StyledText;
-import com.wynntils.core.chat.transcoder.StyledTextPart;
+import com.wynntils.core.text.PartStyle;
+import com.wynntils.core.text.StyledText;
+import com.wynntils.core.text.StyledTextPart;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
