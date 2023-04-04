@@ -303,6 +303,22 @@ public final class StyledText {
         return pattern.matcher(getString(styleType));
     }
 
+    public StyledText append(StyledText styledText) {
+        return concat(this, styledText);
+    }
+
+    public StyledText append(String string) {
+        return append(StyledText.fromString(string));
+    }
+
+    public StyledText prepend(StyledText styledText) {
+        return concat(styledText, this);
+    }
+
+    public StyledText prepend(String string) {
+        return prepend(StyledText.fromString(string));
+    }
+
     /**
      * Splits the style string into two parts at the given index.
      * The index is part of the second string.

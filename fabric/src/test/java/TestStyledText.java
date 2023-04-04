@@ -206,6 +206,36 @@ public class TestStyledText {
     }
 
     @Test
+    public void append_shouldProduceCorrectResult() {
+        final StyledText firstStyled = StyledText.fromString("Hello, ");
+        final StyledText secondStyled = StyledText.fromString("World");
+
+        final String expected = "Hello, World";
+
+        StyledText joinedStyled = firstStyled.append(secondStyled);
+
+        Assertions.assertEquals(
+                expected,
+                joinedStyled.getString(PartStyle.StyleType.NONE),
+                "StyledText.append() did not produce a correct result.");
+    }
+
+    @Test
+    public void prepend_shouldProduceCorrectResult() {
+        final StyledText firstStyled = StyledText.fromString("Hello, ");
+        final StyledText secondStyled = StyledText.fromString("World");
+
+        final String expected = "Hello, World";
+
+        StyledText joinedStyled = secondStyled.prepend(firstStyled);
+
+        Assertions.assertEquals(
+                expected,
+                joinedStyled.getString(PartStyle.StyleType.NONE),
+                "StyledText.prepend() did not produce a correct result.");
+    }
+
+    @Test
     public void styledText_shouldProduceCorrectComponent() {
         final Component component = Component.literal("a").append(Component.literal("b"));
 
