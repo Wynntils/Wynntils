@@ -63,7 +63,24 @@ public class TestStyledText {
     }
 
     @Test
-    public void styledTextshouldProduceCorrectComponent() {
+    public void advancedComponentString_shouldProduceCorrectStyledText() {
+        final String testString = "§c§oitalicred§r§9§oblue§r§cnonitalic§oinherited§lbold§rafter";
+        final String[] expectedParts = {
+            "§c§oitalicred", "§r§9§oblue", "§r§cnonitalic", "§oinherited", "§lbold", "§rafter"
+        };
+
+        StyledText styledText = StyledText.fromString(testString);
+
+        for (String expectedPart : expectedParts) {
+            StyledTextPart partMatching = styledText.getPartMatching(Pattern.compile(expectedPart));
+
+            Assertions.assertNotNull(
+                    partMatching, "StyledText.getPartMatching() could not find a part matching: " + expectedPart);
+        }
+    }
+
+    @Test
+    public void styledText_shouldProduceCorrectComponent() {
         final Component component = Component.literal("a").append(Component.literal("b"));
 
         StyledText styledText = StyledText.fromComponent(component);
@@ -73,7 +90,7 @@ public class TestStyledText {
     }
 
     @Test
-    public void styledTextshouldProduceCorrectMatcher() {
+    public void styledText_shouldProduceCorrectMatcher() {
         final Component component = Component.literal("This is a test string, where there are ")
                 .append(Component.literal("multiple").withStyle(ChatFormatting.BOLD))
                 .append(Component.literal(" components."));
@@ -102,7 +119,7 @@ public class TestStyledText {
     }
 
     @Test
-    public void styledTextshouldSplitCorrectly() {
+    public void styledText_shouldSplitCorrectly() {
         final Component component = Component.literal("This is a test string, where there are ")
                 .append(Component.literal("multiple").withStyle(ChatFormatting.BOLD))
                 .append(Component.literal(" components."));
@@ -123,7 +140,7 @@ public class TestStyledText {
     }
 
     @Test
-    public void styledTextincorrectSplitIndexShouldThrow() {
+    public void styledText_incorrectSplitIndexShouldThrow() {
         final Component component = Component.literal("Test component");
 
         StyledText styledText = StyledText.fromComponent(component);
@@ -139,7 +156,7 @@ public class TestStyledText {
     }
 
     @Test
-    public void styledTextgetPartFindingShouldFind() {
+    public void styledText_getPartFindingShouldFind() {
         final String partText = "This is a test string, where there are ";
         final Component component = Component.literal(partText)
                 .append(Component.literal("multiple").withStyle(ChatFormatting.BOLD))
@@ -161,7 +178,7 @@ public class TestStyledText {
     }
 
     @Test
-    public void styledTextgetPartMatchingShouldFind() {
+    public void styledText_getPartMatchingShouldFind() {
         final Component component = Component.literal("Test string")
                 .append(Component.literal("Test string").withStyle(ChatFormatting.BOLD));
 

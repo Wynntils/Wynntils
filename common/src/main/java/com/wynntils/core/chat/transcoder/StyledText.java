@@ -13,6 +13,7 @@ import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
+import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.ClickEvent;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.HoverEvent;
@@ -63,6 +64,57 @@ public final class StyledText {
         }
     }
 
+    StyledText(String string) {
+        parts = new LinkedList<>();
+        clickEvents = new LinkedList<>();
+        hoverEvents = new LinkedList<>();
+
+        Style currentStyle = Style.EMPTY;
+        StringBuilder currentString = new StringBuilder();
+
+        boolean nextIsColoring = false;
+
+        for (char current : string.toCharArray()) {
+            if (nextIsColoring) {
+                nextIsColoring = false;
+
+                ChatFormatting formatting = ChatFormatting.getByCode(current);
+
+                if (formatting == null) {
+                    currentString.append(ChatFormatting.PREFIX_CODE);
+                    currentString.append(current);
+                    continue;
+                }
+
+                // We already had some text with the current style
+                // Append it before modifying the style
+                if (!currentString.isEmpty()) {
+                    parts.add(new StyledTextPart(currentString.toString(), currentStyle, this, null));
+                    currentString = new StringBuilder();
+                }
+
+                currentStyle = currentStyle.applyFormat(formatting);
+
+                continue;
+            }
+
+            if (current == ChatFormatting.PREFIX_CODE) {
+                nextIsColoring = true;
+                continue;
+            }
+
+            currentString.append(current);
+        }
+
+        // Check if we have some text left
+        if (!currentString.isEmpty()) {
+            parts.add(new StyledTextPart(currentString.toString(), currentStyle, this, null));
+        }
+
+        // We can't know the component, just use our own representation
+        temporaryWorkaround = getComponent();
+    }
+
     private StyledText(
             List<StyledTextPart> parts,
             Component temporaryWorkaround,
@@ -76,6 +128,10 @@ public final class StyledText {
 
     public static StyledText fromComponent(Component component) {
         return new StyledText(component);
+    }
+
+    public static StyledText fromString(String string) {
+        return new StyledText(string);
     }
 
     // We don't want to expose the actual string to the outside world
