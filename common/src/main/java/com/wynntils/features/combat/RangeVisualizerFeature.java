@@ -8,6 +8,7 @@ import com.wynntils.core.config.Category;
 import com.wynntils.core.config.ConfigCategory;
 import com.wynntils.core.features.Feature;
 import com.wynntils.mc.event.PlayerRenderEvent;
+import com.wynntils.models.gear.type.GearMajorId;
 import com.wynntils.models.gear.type.GearType;
 import com.wynntils.models.items.items.game.GearItem;
 import com.wynntils.utils.mc.ComponentUtils;
@@ -21,6 +22,7 @@ import net.minecraftforge.eventbus.api.SubscribeEvent;
 import org.joml.Matrix3f;
 import org.joml.Matrix4f;
 
+import java.util.List;
 import java.util.Optional;
 
 @ConfigCategory(Category.COMBAT)
@@ -35,18 +37,27 @@ public class RangeVisualizerFeature extends Feature {
         if (ComponentUtils.getUnformatted(e.getPlayer().getName()).equals("§\u0001")) return; // Weird fake player name
         Optional<GearItem> item = Models.Item.asWynnItem(e.getPlayer().getItemInHand(InteractionHand.MAIN_HAND), GearItem.class);
         if (item.isEmpty()) return;
-        GearItem gearItem = item.get();
+        List<GearMajorId> majorIds = item.get().getGearInfo().fixedStats().majorIds();
+        if (majorIds.isEmpty()) return;
 
         // Major IDs that we can visualize:
         // Taunt (12 blocks)
         // Magnet (8 blocks)
         // Saviour's Sacrifice (8 blocks)?
-        // Heart of the pack (8 blocks)?
+        // Heart of the Pack (8 blocks)?
         // Guardian (8 blocks)?
         // Marked with a ? needs additional confirmation
 
-        GearType gearType = item.get().getGearType();
-        renderCircleWithRadius(e.getPoseStack(), 8);
+        for (GearMajorId majorId : majorIds) {
+            if (majorId.name().equals("Taunt")) {
+                renderCircleWithRadius(e.getPoseStack(), 12);
+            } else if (majorId.name().equals("Magnet") ||
+                    majorId.name().equals("Saviour's Sacrifice") ||
+                    majorId.name().equals("Heart of the Pack") ||
+                    majorId.name().equals("Guardian")) {
+                renderCircleWithRadius(e.getPoseStack(), 8);
+            }
+        }
     }
 
     /**
@@ -54,6 +65,7 @@ public class RangeVisualizerFeature extends Feature {
      * - The circle is rendered at the player's feet, from the ground to HEIGHT blocks above the ground.<p>
      * - .color() takes floats from 0-1, but ints from 0-255<p>
      * - Increase SEGMENTS to make the circle smoother, but it will also increase the amount of vertices (and thus the amount of memory used and the amount of time it takes to render)<p>
+     * - The order of the consumer.vertex() calls matter. Here, we draw a quad, so we do bottom left corner, top left corner, top right corner, bottom right corner. This is filled in with the color we set.<p>
      * @param poseStack The pose stack to render with. This is supposed to be the pose stack from the event.
      *                  We do the translation here, so no need to do it before passing it in.
      * @param radius Pretty self explanatory, radius in blocks.
