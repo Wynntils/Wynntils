@@ -61,47 +61,14 @@ public class RangeVisualizerFeature extends Feature {
             Matrix3f matrix3f = poseStack.last().normal();
             float x = (float) (McUtils.player().getX() + Math.sin(angle) * radius);
             float z = (float) (McUtils.player().getZ() + Math.cos(angle) * radius);
-            consumer.vertex(matrix4f, x, (float) McUtils.player().getY(), z).color(1, 1, 1, 1).normal(matrix3f, 0, -1, 0).endVertex();
+            consumer.vertex(matrix4f, x, (float) McUtils.player().getY(), z).color(1.0F, 1.0F, 1.0F, 1.0F).normal(matrix3f, 0, -1.0F, 0).endVertex();
             angle += angleStep;
             float x2 = (float) (McUtils.player().getX() + Math.sin(angle) * radius);
             float z2 = (float) (McUtils.player().getZ() + Math.cos(angle) * radius);
-            consumer.vertex(matrix4f, x2, (float) McUtils.player().getY(), z2).color(0, 1, 0, 1).normal(matrix3f, 0, -1, 0).endVertex();
+            consumer.vertex(matrix4f, x2, (float) McUtils.player().getY(), z2).color(1.0F, 1.0F, 1.0F, 1.0F).normal(matrix3f, 0, -1.0F, 0).endVertex();
 
             // debug
-            //LevelRenderer.renderLineBox(poseStack, consumer, x, McUtils.player().getY(), z, x2, McUtils.player().getY() + 5, z2, 1, 1, 1, 1, 1, 1, 1);
-            // why doesn't this part render???? it's the EXACT same as the single line above?????
-            matrix4f = poseStack.last().pose();
-            matrix3f = poseStack.last().normal();
-            float minX = x;
-            float minY = (float) McUtils.player().getY();
-            float minZ = z;
-            float maxX = x2;
-            float maxY = (float) (McUtils.player().getY() + 5);
-            float maxZ = z2;
-            consumer.vertex(matrix4f, minX, minY, minZ).color(1, 1, 1, 1).normal(matrix3f, 1.0F, 0.0F, 0.0F).endVertex();
-            consumer.vertex(matrix4f, maxX, minY, minZ).color(1, 1, 1, 1).normal(matrix3f, 1.0F, 0.0F, 0.0F).endVertex();
-            consumer.vertex(matrix4f, minX, minY, minZ).color(1, 1, 1, 1).normal(matrix3f, 0.0F, 1.0F, 0.0F).endVertex();
-            consumer.vertex(matrix4f, minX, maxY, minZ).color(1, 1, 1, 1).normal(matrix3f, 0.0F, 1.0F, 0.0F).endVertex();
-            consumer.vertex(matrix4f, minX, minY, minZ).color(1, 1, 1, 1).normal(matrix3f, 0.0F, 0.0F, 1.0F).endVertex();
-            consumer.vertex(matrix4f, minX, minY, maxZ).color(1, 1, 1, 1).normal(matrix3f, 0.0F, 0.0F, 1.0F).endVertex();
-            consumer.vertex(matrix4f, maxX, minY, minZ).color(1, 1, 1, 1).normal(matrix3f, 0.0F, 1.0F, 0.0F).endVertex();
-            consumer.vertex(matrix4f, maxX, maxY, minZ).color(1, 1, 1, 1).normal(matrix3f, 0.0F, 1.0F, 0.0F).endVertex();
-            consumer.vertex(matrix4f, maxX, maxY, minZ).color(1, 1, 1, 1).normal(matrix3f, -1.0F, 0.0F, 0.0F).endVertex();
-            consumer.vertex(matrix4f, minX, maxY, minZ).color(1, 1, 1, 1).normal(matrix3f, -1.0F, 0.0F, 0.0F).endVertex();
-            consumer.vertex(matrix4f, minX, maxY, minZ).color(1, 1, 1, 1).normal(matrix3f, 0.0F, 0.0F, 1.0F).endVertex();
-            consumer.vertex(matrix4f, minX, maxY, maxZ).color(1, 1, 1, 1).normal(matrix3f, 0.0F, 0.0F, 1.0F).endVertex();
-            consumer.vertex(matrix4f, minX, maxY, maxZ).color(1, 1, 1, 1).normal(matrix3f, 0.0F, -1.0F, 0.0F).endVertex();
-            consumer.vertex(matrix4f, minX, minY, maxZ).color(1, 1, 1, 1).normal(matrix3f, 0.0F, -1.0F, 0.0F).endVertex();
-            consumer.vertex(matrix4f, minX, minY, maxZ).color(1, 1, 1, 1).normal(matrix3f, 1.0F, 0.0F, 0.0F).endVertex();
-            consumer.vertex(matrix4f, maxX, minY, maxZ).color(1, 1, 1, 1).normal(matrix3f, 1.0F, 0.0F, 0.0F).endVertex();
-            consumer.vertex(matrix4f, maxX, minY, maxZ).color(1, 1, 1, 1).normal(matrix3f, 0.0F, 0.0F, -1.0F).endVertex();
-            consumer.vertex(matrix4f, maxX, minY, minZ).color(1, 1, 1, 1).normal(matrix3f, 0.0F, 0.0F, -1.0F).endVertex();
-            consumer.vertex(matrix4f, minX, maxY, maxZ).color(1, 1, 1, 1).normal(matrix3f, 1.0F, 0.0F, 0.0F).endVertex();
-            consumer.vertex(matrix4f, maxX, maxY, maxZ).color(1, 1, 1, 1).normal(matrix3f, 1.0F, 0.0F, 0.0F).endVertex();
-            consumer.vertex(matrix4f, maxX, minY, maxZ).color(1, 1, 1, 1).normal(matrix3f, 0.0F, 1.0F, 0.0F).endVertex();
-            consumer.vertex(matrix4f, maxX, maxY, maxZ).color(1, 1, 1, 1).normal(matrix3f, 0.0F, 1.0F, 0.0F).endVertex();
-            consumer.vertex(matrix4f, maxX, maxY, minZ).color(1, 1, 1, 1).normal(matrix3f, 0.0F, 0.0F, 1.0F).endVertex();
-            consumer.vertex(matrix4f, maxX, maxY, maxZ).color(1, 1, 1, 1).normal(matrix3f, 0.0F, 0.0F, 1.0F).endVertex();
+            //LevelRenderer.renderLineBox(poseStack, consumer, x, McUtils.player().getY(), z, x2, McUtils.player().getY() + 5, z2, 1.0F, 1.0F, 1.0F, 1.0F, 1.0F, 1.0F, 1.0F);
         }
 
         BUFFER_SOURCE.endBatch();
