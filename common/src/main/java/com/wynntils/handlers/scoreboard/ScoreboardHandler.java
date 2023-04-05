@@ -21,7 +21,6 @@ import java.util.HashSet;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Objects;
 import java.util.Set;
 import java.util.TreeSet;
 import java.util.regex.Pattern;
@@ -44,6 +43,7 @@ public final class ScoreboardHandler extends Handler {
             .withStyle(ChatFormatting.GOLD);
     private static final int MAX_SCOREBOARD_LINE = 16;
 
+    private String scoreboardNameCache;
     private Set<ScoreboardLine> reconstructedScoreboard = new TreeSet<>();
     private Map<ScoreboardPart, ScoreboardSegment> scoreboardSegments = new LinkedHashMap<>();
 
@@ -53,20 +53,28 @@ public final class ScoreboardHandler extends Handler {
         scoreboardParts.add(scoreboardPart);
     }
 
+    private String getScoreboardName() {
+        if (scoreboardNameCache != null) {
+            return scoreboardNameCache;
+        }
+
+        String baseName = "sb" + McUtils.player().getScoreboardName();
+
+        // If the baseName is longer than 16 characters, we need to trim it
+        scoreboardNameCache = baseName.length() > 16 ? baseName.substring(0, 16) : baseName;
+        return scoreboardNameCache;
+    }
+
     @SubscribeEvent(priority = EventPriority.HIGHEST)
     public void onSetScore(ScoreboardSetScoreEvent event) {
-        if (!Objects.equals(event.getObjectiveName(), "sb" + McUtils.player().getScoreboardName())) {
-            return;
-        }
+        if (!getScoreboardName().equals(event.getObjectiveName())) return;
 
         handleSetScore(event.getOwner(), event.getScore(), event.getMethod());
     }
 
     @SubscribeEvent(priority = EventPriority.HIGHEST)
     public void onSetObjective(ScoreboardSetObjectiveEvent event) {
-        if (!Objects.equals(event.getObjectiveName(), "sb" + McUtils.player().getScoreboardName())) {
-            return;
-        }
+        if (!getScoreboardName().equals(event.getObjectiveName())) return;
 
         if (event.getMethod() != ScoreboardSetObjectiveEvent.METHOD_REMOVE) return;
 
@@ -91,6 +99,9 @@ public final class ScoreboardHandler extends Handler {
 
         reconstructedScoreboard.clear();
         scoreboardSegments.clear();
+
+        // Support mods that allow changing account in-game
+        scoreboardNameCache = null;
     }
 
     private void handleSetScore(String owner, int score, ServerScoreboard.Method method) {
