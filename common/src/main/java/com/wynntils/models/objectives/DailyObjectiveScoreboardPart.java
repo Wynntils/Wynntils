@@ -8,6 +8,7 @@ import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.components.Models;
 import com.wynntils.handlers.scoreboard.ScoreboardSegment;
 import com.wynntils.handlers.scoreboard.type.SegmentMatcher;
+import java.util.ArrayList;
 import java.util.List;
 
 public class DailyObjectiveScoreboardPart extends AbstractObjectivesScoreboardPart {
@@ -21,16 +22,21 @@ public class DailyObjectiveScoreboardPart extends AbstractObjectivesScoreboardPa
 
     @Override
     public void onSegmentChange(ScoreboardSegment newValue) {
-        List<WynnObjective> objectives = parseObjectives(newValue).stream()
-                .filter(wynnObjective -> wynnObjective.getScore().current()
-                        < wynnObjective.getScore().max())
-                .toList();
+        if (isSegmentAllDone(newValue)) {
+            WynntilsMod.info("Daily objectives were all done.");
+            removeAllOfType();
+            return;
+        }
+
+        List<WynnObjective> objectives = parseObjectives(newValue);
 
         if (objectives.isEmpty()) {
             WynntilsMod.warn("Daily objective segment changed, but no objectives were parsed.");
             WynntilsMod.warn(newValue.toString());
             return;
         }
+
+        WynntilsMod.info("Adding " + objectives.size() + " daily objectives.");
 
         for (WynnObjective objective : objectives) {
             if (!objective.isGuildObjective()) {
@@ -40,6 +46,17 @@ public class DailyObjectiveScoreboardPart extends AbstractObjectivesScoreboardPa
 
         // filter out deleted objectives
         Models.Objectives.purgePersonalObjectives(objectives);
+    }
+
+    @Override
+    public void onSegmentRemove(ScoreboardSegment segment) {
+        // Remove all objectives of this type
+        removeAllOfType();
+    }
+
+    private static void removeAllOfType() {
+        List<WynnObjective> personalObjectives = new ArrayList<>(Models.Objectives.getPersonalObjectives());
+        personalObjectives.forEach(Models.Objectives::removeObjective);
     }
 
     @Override
