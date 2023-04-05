@@ -1,9 +1,21 @@
+## [0.0.2-alpha.436](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.435...v0.0.2-alpha.436) (2023-04-05)
+
+
+### Bug Fixes
+
+* ExperienceTexturedCustomBarOverlay i18n ([#1444](https://github.com/Wynntils/Artemis/issues/1444)) ([a86a09d](https://github.com/Wynntils/Artemis/commit/a86a09d5d1170cf268eb3e4bc8d8b353d55653c4))
+
 ## [0.0.2-alpha.435](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.434...v0.0.2-alpha.435) (2023-04-04)
 
 
 ### Bug Fixes
 
 * Add separators between scoreboard segments, log suspicious states for objective scoreboard part ([#1442](https://github.com/Wynntils/Artemis/issues/1442)) ([686887c](https://github.com/Wynntils/Artemis/commit/686887cfb32532359687e3dc3c2ff006e816326a))
+
+
+### Miscellaneous Chores
+
+* **release:** v0.0.2-alpha.435 [skip ci] ([320ed78](https://github.com/Wynntils/Artemis/commit/320ed78bd0f7dc92c14ccc69c341bf3a597a6c5d))
 
 ## [0.0.2-alpha.434](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.433...v0.0.2-alpha.434) (2023-04-04)
 
@@ -40,16 +52,4 @@
 ### Miscellaneous Chores
 
 * **release:** v0.0.2-alpha.432 [skip ci] ([9c9fc72](https://github.com/Wynntils/Artemis/commit/9c9fc723cd33d890aa6a7aa6ffcb96dd43c73500))
-
-## [0.0.2-alpha.431](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.430...v0.0.2-alpha.431) (2023-04-03)
-
-
-### Bug Fixes
-
-* Fix storage init (changelog not saving) ([#1439](https://github.com/Wynntils/Artemis/issues/1439)) ([cbdf996](https://github.com/Wynntils/Artemis/commit/cbdf9962e153a0265ba78ac0a8d3a94eef5a0aa7))
-
-
-### Miscellaneous Chores
-
-* **release:** v0.0.2-alpha.431 [skip ci] ([ce8806d](https://github.com/Wynntils/Artemis/commit/ce8806d820d2d5622f894f202b9a1f6d5be99a99))
 
