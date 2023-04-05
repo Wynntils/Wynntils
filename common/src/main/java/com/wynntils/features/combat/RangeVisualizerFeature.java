@@ -9,14 +9,10 @@ import com.wynntils.core.config.ConfigCategory;
 import com.wynntils.core.features.Feature;
 import com.wynntils.mc.event.PlayerRenderEvent;
 import com.wynntils.models.gear.type.GearMajorId;
-import com.wynntils.models.gear.type.GearType;
 import com.wynntils.models.items.items.game.GearItem;
-import com.wynntils.utils.mc.ComponentUtils;
 import com.wynntils.utils.mc.McUtils;
 import com.wynntils.utils.render.buffered.CustomRenderType;
-import net.minecraft.client.renderer.LevelRenderer;
 import net.minecraft.client.renderer.MultiBufferSource;
-import net.minecraft.client.renderer.RenderType;
 import net.minecraft.world.InteractionHand;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import org.joml.Matrix3f;
@@ -34,15 +30,15 @@ public class RangeVisualizerFeature extends Feature {
 
     @SubscribeEvent
     public void onPlayerRender(PlayerRenderEvent e) {
-        if (ComponentUtils.getUnformatted(e.getPlayer().getName()).equals("§\u0001")) return; // Weird fake player name
+        if (!Models.Player.isLocalPlayer(e.getPlayer())) return;
         Optional<GearItem> item = Models.Item.asWynnItem(e.getPlayer().getItemInHand(InteractionHand.MAIN_HAND), GearItem.class);
         if (item.isEmpty()) return;
+        renderCircleWithRadius(e.getPoseStack(), 4); // TODO: remove debug
         List<GearMajorId> majorIds = item.get().getGearInfo().fixedStats().majorIds();
         if (majorIds.isEmpty()) return;
 
         // Major IDs that we can visualize:
         // Taunt (12 blocks)
-        // Magnet (8 blocks)
         // Saviour's Sacrifice (8 blocks)?
         // Heart of the Pack (8 blocks)?
         // Guardian (8 blocks)?
@@ -51,8 +47,7 @@ public class RangeVisualizerFeature extends Feature {
         for (GearMajorId majorId : majorIds) {
             if (majorId.name().equals("Taunt")) {
                 renderCircleWithRadius(e.getPoseStack(), 12);
-            } else if (majorId.name().equals("Magnet") ||
-                    majorId.name().equals("Saviour's Sacrifice") ||
+            } else if (majorId.name().equals("Saviour's Sacrifice") ||
                     majorId.name().equals("Heart of the Pack") ||
                     majorId.name().equals("Guardian")) {
                 renderCircleWithRadius(e.getPoseStack(), 8);
