@@ -72,6 +72,8 @@ public final class OverlayManager extends Manager {
     public void unregisterOverlay(Overlay overlay) {
         overlayParentMap.get(overlayInfoMap.get(overlay).parent()).remove(overlay);
 
+        WynntilsMod.unregisterEventListener(overlay);
+
         overlayInfoMap.remove(overlay);
         enabledOverlays.remove(overlay);
     }
