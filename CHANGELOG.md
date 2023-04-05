@@ -1,9 +1,21 @@
+## [0.0.2-alpha.439](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.438...v0.0.2-alpha.439) (2023-04-05)
+
+
+### Bug Fixes
+
+* Add NPE checks for mob totem functions (and remove leftover y z functions) ([#1451](https://github.com/Wynntils/Artemis/issues/1451)) ([ce32ea1](https://github.com/Wynntils/Artemis/commit/ce32ea12c380a2d446019392ef664f1d29aaa8c4))
+
 ## [0.0.2-alpha.438](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.437...v0.0.2-alpha.438) (2023-04-05)
 
 
 ### Bug Fixes
 
 * Fix scoreboard not working for players with long (>14 chars) names ([#1447](https://github.com/Wynntils/Artemis/issues/1447)) ([d7bd3dc](https://github.com/Wynntils/Artemis/commit/d7bd3dce19861f030269265ccc30bbef785e2c76))
+
+
+### Miscellaneous Chores
+
+* **release:** v0.0.2-alpha.438 [skip ci] ([30878ab](https://github.com/Wynntils/Artemis/commit/30878abb596c50f457e3a51e6c41f771041132a5))
 
 ## [0.0.2-alpha.437](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.436...v0.0.2-alpha.437) (2023-04-05)
 
@@ -40,16 +52,4 @@
 ### Miscellaneous Chores
 
 * **release:** v0.0.2-alpha.435 [skip ci] ([320ed78](https://github.com/Wynntils/Artemis/commit/320ed78bd0f7dc92c14ccc69c341bf3a597a6c5d))
-
-## [0.0.2-alpha.434](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.433...v0.0.2-alpha.434) (2023-04-04)
-
-
-### Bug Fixes
-
-* Don't show duplicate values in WynntilsBookSettingsScreen ([#1443](https://github.com/Wynntils/Artemis/issues/1443)) ([e71d988](https://github.com/Wynntils/Artemis/commit/e71d9885a4a5856ccde4a138741c168532d3dc3c))
-
-
-### Miscellaneous Chores
-
-* **release:** v0.0.2-alpha.434 [skip ci] ([4e33c3b](https://github.com/Wynntils/Artemis/commit/4e33c3b3533203bfd040f66349b1c08837877623))
 
