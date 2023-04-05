@@ -207,6 +207,9 @@ public abstract class Overlay extends AbstractConfigurable implements Translatab
         return ComparisonChain.start()
                 .compareTrueFirst(this.isParentEnabled(), other.isParentEnabled())
                 .compare(this.getDeclaringClassName(), other.getDeclaringClassName())
+                .compare(
+                        (this instanceof DynamicOverlay dynamicThis ? dynamicThis.getId() : 0),
+                        (other instanceof DynamicOverlay dynamicOther ? dynamicOther.getId() : 0))
                 .compare(this.getTranslatedName(), other.getTranslatedName())
                 .result();
     }
