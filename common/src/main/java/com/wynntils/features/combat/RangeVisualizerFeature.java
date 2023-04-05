@@ -12,6 +12,7 @@ import com.wynntils.models.gear.type.GearType;
 import com.wynntils.models.items.items.game.GearItem;
 import com.wynntils.utils.mc.ComponentUtils;
 import com.wynntils.utils.mc.McUtils;
+import com.wynntils.utils.render.buffered.CustomRenderType;
 import net.minecraft.client.renderer.LevelRenderer;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
@@ -27,6 +28,7 @@ public class RangeVisualizerFeature extends Feature {
 
     private static final MultiBufferSource.BufferSource BUFFER_SOURCE = MultiBufferSource.immediate(new BufferBuilder(256));
     private static final int SEGMENTS = 128;
+    private static final float HEIGHT = 0.1f;
 
     @SubscribeEvent
     public void onPlayerRender(PlayerRenderEvent e) {
@@ -47,28 +49,34 @@ public class RangeVisualizerFeature extends Feature {
         renderCircleWithRadius(e.getPoseStack(), 8);
     }
 
-    // renders circle around player with radius
+    /**
+     * Renders a circle with the given radius. Some notes for future reference:<p>
+     * - The circle is rendered at the player's feet, from the ground to HEIGHT blocks above the ground.<p>
+     * - .color() takes floats from 0-1, but ints from 0-255<p>
+     * - Increase SEGMENTS to make the circle smoother, but it will also increase the amount of vertices (and thus the amount of memory used and the amount of time it takes to render)<p>
+     * @param poseStack The pose stack to render with. This is supposed to be the pose stack from the event.
+     *                  We do the translation here, so no need to do it before passing it in.
+     * @param radius Pretty self explanatory, radius in blocks.
+     */
     private void renderCircleWithRadius(PoseStack poseStack, int radius) {
         poseStack.pushPose();
         poseStack.translate(-McUtils.player().getX(), -McUtils.player().getY(), -McUtils.player().getZ());
-        VertexConsumer consumer = BUFFER_SOURCE.getBuffer(RenderType.LINE_STRIP);
+        VertexConsumer consumer = BUFFER_SOURCE.getBuffer(CustomRenderType.POSITION_COLOR_QUAD);
 
-
+        Matrix4f matrix4f = poseStack.last().pose();
+        Matrix3f matrix3f = poseStack.last().normal();
         double angleStep = 2 * Math.PI / SEGMENTS;
         double angle = 0;
         for (int i = 0; i < SEGMENTS; i++) {
-            Matrix4f matrix4f = poseStack.last().pose();
-            Matrix3f matrix3f = poseStack.last().normal();
             float x = (float) (McUtils.player().getX() + Math.sin(angle) * radius);
             float z = (float) (McUtils.player().getZ() + Math.cos(angle) * radius);
-            consumer.vertex(matrix4f, x, (float) McUtils.player().getY(), z).color(1.0F, 1.0F, 1.0F, 1.0F).normal(matrix3f, 0, -1.0F, 0).endVertex();
+            consumer.vertex(matrix4f, x, (float) McUtils.player().getY(), z).color(1.0F, 1.0F, 1.0F, 1.0F).normal(matrix3f, 1.0F, 1.0F, 1.0F).endVertex();
+            consumer.vertex(matrix4f, x, (float) McUtils.player().getY() + HEIGHT, z).color(1.0F, 1.0F, 1.0F, 1.0F).normal(matrix3f, 1.0F, 1.0F, 1.0F).endVertex();
             angle += angleStep;
             float x2 = (float) (McUtils.player().getX() + Math.sin(angle) * radius);
             float z2 = (float) (McUtils.player().getZ() + Math.cos(angle) * radius);
-            consumer.vertex(matrix4f, x2, (float) McUtils.player().getY(), z2).color(1.0F, 1.0F, 1.0F, 1.0F).normal(matrix3f, 0, -1.0F, 0).endVertex();
-
-            // debug
-            //LevelRenderer.renderLineBox(poseStack, consumer, x, McUtils.player().getY(), z, x2, McUtils.player().getY() + 5, z2, 1.0F, 1.0F, 1.0F, 1.0F, 1.0F, 1.0F, 1.0F);
+            consumer.vertex(matrix4f, x2, (float) McUtils.player().getY() + HEIGHT, z2).color(1.0F, 1.0F, 1.0F, 1.0F).normal(matrix3f, 1.0F, 1.0F, 1.0F).endVertex();
+            consumer.vertex(matrix4f, x2, (float) McUtils.player().getY(), z2).color(1.0F, 1.0F, 1.0F, 1.0F).normal(matrix3f, 1.0F, 1.0F, 1.0F).endVertex();
         }
 
         BUFFER_SOURCE.endBatch();
