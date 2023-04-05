@@ -1,9 +1,21 @@
+## [0.0.2-alpha.437](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.436...v0.0.2-alpha.437) (2023-04-05)
+
+
+### Performance Improvements
+
+* Stop leaking overlays from overlay groups on config reload ([#1446](https://github.com/Wynntils/Artemis/issues/1446)) ([219252d](https://github.com/Wynntils/Artemis/commit/219252d29c4f7eb42c6b8db6ed86be45a90734c9))
+
 ## [0.0.2-alpha.436](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.435...v0.0.2-alpha.436) (2023-04-05)
 
 
 ### Bug Fixes
 
 * ExperienceTexturedCustomBarOverlay i18n ([#1444](https://github.com/Wynntils/Artemis/issues/1444)) ([a86a09d](https://github.com/Wynntils/Artemis/commit/a86a09d5d1170cf268eb3e4bc8d8b353d55653c4))
+
+
+### Miscellaneous Chores
+
+* **release:** v0.0.2-alpha.436 [skip ci] ([9290901](https://github.com/Wynntils/Artemis/commit/9290901276672523d49c5fc748f944061d3767c0))
 
 ## [0.0.2-alpha.435](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.434...v0.0.2-alpha.435) (2023-04-04)
 
@@ -40,16 +52,4 @@
 ### Miscellaneous Chores
 
 * **release:** v0.0.2-alpha.433 [skip ci] ([9571939](https://github.com/Wynntils/Artemis/commit/9571939800f9ae64986318b5f3aed729d02a74b2))
-
-## [0.0.2-alpha.432](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.431...v0.0.2-alpha.432) (2023-04-03)
-
-
-### New Features
-
-* Introduce JUnit tests ([#1437](https://github.com/Wynntils/Artemis/issues/1437)) ([1e49036](https://github.com/Wynntils/Artemis/commit/1e490369f56ff8bd6f740a4f7fb4620243f19b76))
-
-
-### Miscellaneous Chores
-
-* **release:** v0.0.2-alpha.432 [skip ci] ([9c9fc72](https://github.com/Wynntils/Artemis/commit/9c9fc723cd33d890aa6a7aa6ffcb96dd43c73500))
 
