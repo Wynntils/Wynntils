@@ -106,6 +106,12 @@ public class ProfessionModel extends Model {
     public void updatePercentage(ProfessionType type, float newPercentage, float xpGain) {
         ProfessionProgress oldValue = professionProgressMap.getOrDefault(type, ProfessionProgress.NO_PROGRESS);
 
+        // We leveled up, but we don't know how many times.
+        // Set the progress, level will be parsed from other messages.
+        if (newPercentage == 100) {
+            newPercentage = 0;
+        }
+
         professionProgressMap.put(type, new ProfessionProgress(oldValue.level(), newPercentage));
 
         rawXpGainInLastMinute.get(type).put(xpGain);
