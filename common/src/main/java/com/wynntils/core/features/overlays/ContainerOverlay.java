@@ -6,6 +6,7 @@ package com.wynntils.core.features.overlays;
 
 import com.mojang.blaze3d.platform.Window;
 import com.mojang.blaze3d.vertex.PoseStack;
+import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.config.Config;
 import com.wynntils.core.config.ConfigHolder;
 import com.wynntils.core.config.RegisterConfig;
@@ -59,11 +60,13 @@ public abstract class ContainerOverlay<T extends Overlay> extends Overlay {
     public void addChild(T overlay) {
         inherentSize.put(overlay, overlay.getSize().copy());
         children.add(overlay);
+        WynntilsMod.registerEventListener(overlay);
 
         updateAllChildren();
     }
 
     public void clearChildren() {
+        children.forEach(WynntilsMod::unregisterEventListener);
         children.clear();
         inherentSize.clear();
     }
