@@ -25,11 +25,13 @@ import net.minecraftforge.eventbus.api.SubscribeEvent;
 
 public class ProfessionModel extends Model {
     // §7[+36§f Ⓙ§7 Farming§7 XP] §6[9%]
-    private static final Pattern PROFESSION_NODE_HARVERSTED_PATTERN =
-            Pattern.compile("§7\\[\\+(?<gain>\\d+)§f [ⓀⒸⒷⒿⒺⒹⓁⒶⒼⒻⒾⒽ]§7 (?<name>.+)§7 XP\\] §6\\[(?<current>\\d+)%\\]");
+    // §dx2.0 §7[+§d93§f Ⓙ§7 Farming§7 XP] §6[9%]
+    private static final Pattern PROFESSION_NODE_HARVERSTED_PATTERN = Pattern.compile(
+            "(§dx[\\d\\.]+ )?§7\\[\\+(§d)?(?<gain>\\d+)§f [ⓀⒸⒷⒿⒺⒹⓁⒶⒼⒻⒾⒽ]§7 (?<name>.+)§7 XP\\] §6\\[(?<current>\\d+)%\\]");
 
+    // §dx2.0 §r§7[+§r§d28 §r§fⒺ §r§7Scribing XP] §r§6[56%]
     private static final Pattern PROFESSION_CRAFT_PATTERN = Pattern.compile(
-            "§7\\[\\+(?<gain>\\d+) §r§f[ⓀⒸⒷⒿⒺⒹⓁⒶⒼⒻⒾⒽ] §r§7(?<name>.+) XP\\] §r§6\\[(?<current>\\d+)%\\]");
+            "(§dx[\\d\\.]+ §r)?§7\\[\\+(§r§d)?(?<gain>\\d+) §r§f[ⓀⒸⒷⒿⒺⒹⓁⒶⒼⒻⒾⒽ] §r§7(?<name>.+) XP\\] §r§6\\[(?<current>\\d+)%\\]");
 
     private static final Pattern PROFESSION_LEVELUP_PATTERN = Pattern.compile(
             "§e                   You are now level (?<level>\\d+) in §r§f[ⓀⒸⒷⒿⒺⒹⓁⒶⒼⒻⒾⒽ]§r§e (?<name>.+)");
