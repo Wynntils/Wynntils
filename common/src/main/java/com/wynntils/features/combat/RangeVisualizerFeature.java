@@ -1,5 +1,6 @@
 package com.wynntils.features.combat;
 
+import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.BufferBuilder;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
@@ -8,8 +9,10 @@ import com.wynntils.core.config.Category;
 import com.wynntils.core.config.ConfigCategory;
 import com.wynntils.core.features.Feature;
 import com.wynntils.mc.event.PlayerRenderEvent;
+import com.wynntils.models.gear.type.GearInfo;
 import com.wynntils.models.gear.type.GearMajorId;
 import com.wynntils.models.items.items.game.GearItem;
+import com.wynntils.utils.mc.ComponentUtils;
 import com.wynntils.utils.mc.McUtils;
 import com.wynntils.utils.render.buffered.CustomRenderType;
 import net.minecraft.client.renderer.MultiBufferSource;
@@ -31,10 +34,13 @@ public class RangeVisualizerFeature extends Feature {
     @SubscribeEvent
     public void onPlayerRender(PlayerRenderEvent e) {
         if (!Models.Player.isLocalPlayer(e.getPlayer())) return;
-        Optional<GearItem> item = Models.Item.asWynnItem(e.getPlayer().getItemInHand(InteractionHand.MAIN_HAND), GearItem.class);
-        if (item.isEmpty()) return;
-        renderCircleWithRadius(e.getPoseStack(), 4); // TODO: remove debug
-        List<GearMajorId> majorIds = item.get().getGearInfo().fixedStats().majorIds();
+
+        // We are getting the item info the same way as GearViewerScreen since we care about other people's items
+        String gearName = ComponentUtils.getUnformatted(e.getPlayer().getMainHandItem().getHoverName());
+        GearInfo gearInfo = Models.Gear.getGearInfoFromApiName(gearName);
+        if (gearInfo == null) return;
+        renderCircleWithRadius(e.getPoseStack(), 5); // TODO: remove debug
+        List<GearMajorId> majorIds = gearInfo.fixedStats().majorIds();
         if (majorIds.isEmpty()) return;
 
         // Major IDs that we can visualize:
@@ -66,6 +72,7 @@ public class RangeVisualizerFeature extends Feature {
      * @param radius Pretty self explanatory, radius in blocks.
      */
     private void renderCircleWithRadius(PoseStack poseStack, int radius) {
+        RenderSystem.disableCull(); // Circle must be rendered on both sides, otherwise it will be invisible when looking at it from the outside
         poseStack.pushPose();
         poseStack.translate(-McUtils.player().getX(), -McUtils.player().getY(), -McUtils.player().getZ());
         VertexConsumer consumer = BUFFER_SOURCE.getBuffer(CustomRenderType.POSITION_COLOR_QUAD);
@@ -77,16 +84,17 @@ public class RangeVisualizerFeature extends Feature {
         for (int i = 0; i < SEGMENTS; i++) {
             float x = (float) (McUtils.player().getX() + Math.sin(angle) * radius);
             float z = (float) (McUtils.player().getZ() + Math.cos(angle) * radius);
-            consumer.vertex(matrix4f, x, (float) McUtils.player().getY(), z).color(1.0F, 1.0F, 1.0F, 1.0F).normal(matrix3f, 1.0F, 1.0F, 1.0F).endVertex();
-            consumer.vertex(matrix4f, x, (float) McUtils.player().getY() + HEIGHT, z).color(1.0F, 1.0F, 1.0F, 1.0F).normal(matrix3f, 1.0F, 1.0F, 1.0F).endVertex();
+            consumer.vertex(matrix4f, x, (float) McUtils.player().getY(), z).color(1.0F, 1.0F, 1.0F, 1.0F).endVertex();
+            consumer.vertex(matrix4f, x, (float) McUtils.player().getY() + HEIGHT, z).color(1.0F, 1.0F, 1.0F, 1.0F).endVertex();
             angle += angleStep;
             float x2 = (float) (McUtils.player().getX() + Math.sin(angle) * radius);
             float z2 = (float) (McUtils.player().getZ() + Math.cos(angle) * radius);
-            consumer.vertex(matrix4f, x2, (float) McUtils.player().getY() + HEIGHT, z2).color(1.0F, 1.0F, 1.0F, 1.0F).normal(matrix3f, 1.0F, 1.0F, 1.0F).endVertex();
-            consumer.vertex(matrix4f, x2, (float) McUtils.player().getY(), z2).color(1.0F, 1.0F, 1.0F, 1.0F).normal(matrix3f, 1.0F, 1.0F, 1.0F).endVertex();
+            consumer.vertex(matrix4f, x2, (float) McUtils.player().getY() + HEIGHT, z2).color(1.0F, 1.0F, 1.0F, 1.0F).endVertex();
+            consumer.vertex(matrix4f, x2, (float) McUtils.player().getY(), z2).color(1.0F, 1.0F, 1.0F, 1.0F).endVertex();
         }
 
         BUFFER_SOURCE.endBatch();
         poseStack.popPose();
+        RenderSystem.enableCull();
     }
 }
