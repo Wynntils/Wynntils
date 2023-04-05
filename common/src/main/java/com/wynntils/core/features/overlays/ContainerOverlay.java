@@ -33,14 +33,27 @@ public abstract class ContainerOverlay<T extends Overlay> extends Overlay {
     private final List<T> children = new ArrayList<>();
     private final Map<T, OverlaySize> inherentSize = new HashMap<>();
 
-    protected ContainerOverlay(OverlayPosition position, OverlaySize size, GrowDirection growDirection, int spacing) {
+    protected ContainerOverlay(
+            OverlayPosition position,
+            OverlaySize size,
+            GrowDirection growDirection,
+            int spacing,
+            HorizontalAlignment horizontalAlignment,
+            VerticalAlignment verticalAlignment) {
         super(position, size);
         this.growDirection.updateConfig(growDirection);
         this.spacing.updateConfig(spacing);
+        this.horizontalAlignmentOverride.updateConfig(horizontalAlignment);
+        this.verticalAlignmentOverride.updateConfig(verticalAlignment);
     }
 
-    protected ContainerOverlay(OverlayPosition position, OverlaySize size, GrowDirection growDirection) {
-        this(position, size, growDirection, DEFAULT_SPACING);
+    protected ContainerOverlay(
+            OverlayPosition position,
+            OverlaySize size,
+            GrowDirection growDirection,
+            HorizontalAlignment horizontalAlignment,
+            VerticalAlignment verticalAlignment) {
+        this(position, size, growDirection, DEFAULT_SPACING, horizontalAlignment, verticalAlignment);
     }
 
     public void addChild(T overlay) {
