@@ -136,7 +136,7 @@ public final class StyledText {
         return component;
     }
 
-    public static StyledText join(String separator, StyledText... texts) {
+    public static StyledText join(StyledText styledTextSeparator, StyledText... texts) {
         List<StyledTextPart> parts = new ArrayList<>();
         List<ClickEvent> clickEvents = new ArrayList<>();
         List<HoverEvent> hoverEvents = new ArrayList<>();
@@ -147,18 +147,29 @@ public final class StyledText {
             parts.addAll(text.parts);
 
             if (i != length - 1) {
-                parts.addAll(StyledTextPart.fromCodedString(separator, Style.EMPTY, null, null));
+                parts.addAll(styledTextSeparator.parts);
             }
 
             clickEvents.addAll(text.clickEvents);
             hoverEvents.addAll(text.hoverEvents);
         }
 
+        clickEvents.addAll(styledTextSeparator.clickEvents);
+        hoverEvents.addAll(styledTextSeparator.hoverEvents);
+
         return new StyledText(parts, clickEvents, hoverEvents);
     }
 
-    public static StyledText join(String separator, Iterable<StyledText> texts) {
-        return join(separator, Iterables.toArray(texts, StyledText.class));
+    public static StyledText join(StyledText styledTextSeparator, Iterable<StyledText> texts) {
+        return join(styledTextSeparator, Iterables.toArray(texts, StyledText.class));
+    }
+
+    public static StyledText join(String codedStringSeparator, StyledText... texts) {
+        return join(StyledText.fromString(codedStringSeparator), texts);
+    }
+
+    public static StyledText join(String codedStringSeparator, Iterable<StyledText> texts) {
+        return join(StyledText.fromString(codedStringSeparator), Iterables.toArray(texts, StyledText.class));
     }
 
     public static StyledText concat(StyledText... texts) {
