@@ -24,19 +24,19 @@ public class StyledText2 {
         this.str = str;
     }
 
-    public static StyledText2 of(String s) {
+    public static StyledText2 fromString(String s) {
         return new StyledText2(s);
     }
 
     public static StyledText2 fromComponentIgnoringComponentStylesAndJustUsingFormattingCodes(Component component) {
-        return StyledText2.of(component.getString());
+        return StyledText2.fromString(component.getString());
     }
 
     public String getInternalCodedStringRepresentation() {
         return str;
     }
 
-    public String withoutFormatting() {
+    public String getUnformattedString() {
         return ChatFormatting.stripFormatting(str);
     }
 
@@ -49,7 +49,7 @@ public class StyledText2 {
     }
 
     public StyledText2 trim() {
-        return StyledText2.of(str.trim());
+        return StyledText2.fromString(str.trim());
     }
 
     public boolean isEmpty() {
@@ -60,7 +60,7 @@ public class StyledText2 {
         return str.isBlank();
     }
 
-    public Matcher match(Pattern pattern) {
+    public Matcher getMatcher(Pattern pattern) {
         return pattern.matcher(str);
     }
 
@@ -88,22 +88,22 @@ public class StyledText2 {
         return str.endsWith(suffix);
     }
 
-    public static StyledText2 join(List<StyledText2> strings, String delimiter) {
-        return StyledText2.of(
+    public static StyledText2 join(String delimiter, List<StyledText2> strings) {
+        return StyledText2.fromString(
                 String.join(delimiter, strings.stream().map(s -> s.str).toList()));
     }
 
     public StyledText2[] split(String regex) {
-        return Arrays.stream(str.split(regex)).map(StyledText2::of).toArray(StyledText2[]::new);
+        return Arrays.stream(str.split(regex)).map(StyledText2::fromString).toArray(StyledText2[]::new);
     }
 
-    public static StyledText2 join(StyledText2[] strings, String delimiter) {
-        return StyledText2.of(
+    public static StyledText2 join(String delimiter, StyledText2[] strings) {
+        return StyledText2.fromString(
                 String.join(delimiter, Arrays.stream(strings).map(s -> s.str).toList()));
     }
 
     public static StyledText2 concat(StyledText2... str) {
-        return StyledText2.of(Arrays.stream(str).map(s -> s.str).collect(Collectors.joining()));
+        return StyledText2.fromString(Arrays.stream(str).map(s -> s.str).collect(Collectors.joining()));
     }
 
     public StyledText2 prepend(StyledText2 prefix) {
@@ -111,15 +111,15 @@ public class StyledText2 {
     }
 
     public StyledText2 prepend(String prefix) {
-        return StyledText2.of(prefix + str);
+        return StyledText2.fromString(prefix + str);
     }
 
     public StyledText2 append(StyledText2 suffix) {
-        return StyledText2.of(str + suffix.str);
+        return StyledText2.fromString(str + suffix.str);
     }
 
     public StyledText2 append(String suffix) {
-        return StyledText2.of(str + suffix);
+        return StyledText2.fromString(str + suffix);
     }
 
     @Override

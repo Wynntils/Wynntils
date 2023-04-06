@@ -33,7 +33,7 @@ import net.minecraftforge.eventbus.api.SubscribeEvent;
 
 @ConfigCategory(Category.INVENTORY)
 public class BulkBuyFeature extends Feature {
-    public static final StyledText2 PRICE_STR = StyledText2.of("§6Price:");
+    public static final StyledText2 PRICE_STR = StyledText2.fromString("§6Price:");
 
     @RegisterConfig
     public final Config<Integer> bulkBuyAmount = new Config<>(4);
@@ -83,19 +83,19 @@ public class BulkBuyFeature extends Feature {
         if (!KeyboardUtils.isShiftDown()) return oldLore;
 
         StyledText2 priceLine = ComponentUtils.getCoded(oldLore.get(oldLore.size() - 1));
-        Matcher priceMatcher = priceLine.match(PRICE_PATTERN);
+        Matcher priceMatcher = priceLine.getMatcher(PRICE_PATTERN);
         if (!priceMatcher.find()) {
             WynntilsMod.warn("Could not find price for " + oldLore.get(0).getString() + " in " + priceLine);
             return oldLore;
         }
         int newPrice = Integer.parseInt(priceMatcher.group(1)) * bulkBuyAmount.get();
 
-        StyledText2 newLine = StyledText2.of(priceLine
+        StyledText2 newLine = StyledText2.fromString(priceLine
                 .getInternalCodedStringRepresentation()
                 .replace(priceMatcher.group(1), BULK_BUY_ACTIVE_COLOR + Integer.toString(newPrice)));
 
         if (newPrice > Models.Emerald.getAmountInInventory()) {
-            newLine = StyledText2.of(newLine.getInternalCodedStringRepresentation()
+            newLine = StyledText2.fromString(newLine.getInternalCodedStringRepresentation()
                     .replace("a✔", "c✖")); // Replace green checkmark with red x
         }
 

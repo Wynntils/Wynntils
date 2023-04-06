@@ -40,7 +40,7 @@ public final class GuildAttackTimerModel extends Model {
     public void onMessage(ChatMessageReceivedEvent event) {
         if (event.getRecipientType() != RecipientType.GUILD) return;
 
-        Matcher matcher = event.getOriginalCodedMessage().match(GUILD_DEFENSE_CHAT_PATTERN);
+        Matcher matcher = event.getOriginalCodedMessage().getMatcher(GUILD_DEFENSE_CHAT_PATTERN);
         if (!matcher.matches()) return;
 
         Optional<TerritoryAttackTimer> territory = attackTimers.stream()
@@ -75,7 +75,7 @@ public final class GuildAttackTimerModel extends Model {
         List<TerritoryAttackTimer> newList = new ArrayList<>();
 
         for (StyledText2 line : segment.getContent()) {
-            Matcher matcher = line.match(GUILD_ATTACK_PATTERN);
+            Matcher matcher = line.getMatcher(GUILD_ATTACK_PATTERN);
 
             if (matcher.matches()) {
                 TerritoryAttackTimer timer = new TerritoryAttackTimer(

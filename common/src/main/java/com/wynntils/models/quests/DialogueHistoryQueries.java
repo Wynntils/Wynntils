@@ -19,7 +19,7 @@ import net.minecraft.world.item.ItemStack;
 
 public class DialogueHistoryQueries {
     private static final Pattern DIALOGUE_HISTORY_PAGE_PATTERN = Pattern.compile("§7Page \\[(\\d+)/(\\d+)\\]");
-    public static final StyledText2 DIALOGUE_HISTORY = StyledText2.of("§bDialogue History");
+    public static final StyledText2 DIALOGUE_HISTORY = StyledText2.fromString("§bDialogue History");
 
     private List<List<StyledText2>> newDialogueHistory;
 
@@ -40,7 +40,7 @@ public class DialogueHistoryQueries {
                             .equals(DIALOGUE_HISTORY)) return;
 
                     for (StyledText2 line : LoreUtils.getLore(dialogueHistoryItem)) {
-                        Matcher matcher = line.match(DIALOGUE_HISTORY_PAGE_PATTERN);
+                        Matcher matcher = line.getMatcher(DIALOGUE_HISTORY_PAGE_PATTERN);
 
                         if (matcher.matches()) {
                             int pageCount = Integer.parseInt(matcher.group(2));

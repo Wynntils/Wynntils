@@ -59,7 +59,7 @@ import org.lwjgl.glfw.GLFW;
 @ConfigCategory(Category.OVERLAYS)
 public class NpcDialogueOverlayFeature extends Feature {
     private static final Pattern NEW_QUEST_STARTED = Pattern.compile("^§r§6§lNew Quest Started: §r§e§l(.*)§r$");
-    public static final StyledText2 PRESS_SNEAK_TO_CONTINUE = StyledText2.of("§cPress SNEAK to continue");
+    public static final StyledText2 PRESS_SNEAK_TO_CONTINUE = StyledText2.fromString("§cPress SNEAK to continue");
 
     private final ScheduledExecutorService autoProgressExecutor = Executors.newSingleThreadScheduledExecutor();
     private ScheduledFuture<?> scheduledAutoProgressKeyPress = null;
@@ -115,7 +115,7 @@ public class NpcDialogueOverlayFeature extends Feature {
         dialogueType = e.getType();
         isProtected = e.isProtected();
 
-        if (!msg.isEmpty() && msg.get(0).match(NEW_QUEST_STARTED).find()) {
+        if (!msg.isEmpty() && msg.get(0).getMatcher(NEW_QUEST_STARTED).find()) {
             // TODO: Show nice banner notification instead
             // but then we'd also need to confirm it with a sneak
             Managers.Notification.queueMessage(msg.get(0));
@@ -165,7 +165,7 @@ public class NpcDialogueOverlayFeature extends Feature {
     }
 
     private long calculateMessageReadTime(List<StyledText2> msg) {
-        int words = StyledText2.join(msg, " ").split(" ").length;
+        int words = StyledText2.join(" ", msg).split(" ").length;
         long delay =
                 dialogAutoProgressDefaultTime.get() + ((long) words * dialogAutoProgressAdditionalTimePerWord.get());
         return delay;
@@ -290,7 +290,7 @@ public class NpcDialogueOverlayFeature extends Feature {
             if (showHelperTexts.get()) {
                 // Render "To continue" message
                 List<TextRenderTask> renderTaskList = new LinkedList<>();
-                StyledText2 protection = isProtected ? StyledText2.of("§f<protected> §r") : StyledText2.EMPTY;
+                StyledText2 protection = isProtected ? StyledText2.fromString("§f<protected> §r") : StyledText2.EMPTY;
                 if (dialogueType == NpcDialogueType.NORMAL) {
                     TextRenderTask pressSneakMessage =
                             new TextRenderTask(PRESS_SNEAK_TO_CONTINUE.prepend(protection), renderSetting);
@@ -356,7 +356,7 @@ public class NpcDialogueOverlayFeature extends Feature {
         public void renderPreview(
                 PoseStack poseStack, MultiBufferSource bufferSource, float partialTicks, Window window) {
             List<StyledText2> fakeDialogue = List.of(
-                    StyledText2.of(
+                    StyledText2.fromString(
                             "§7[1/1] §r§2Random Citizen: §r§aDid you know that Wynntils is the best Wynncraft mod you'll probably find?§r"));
             // we have to force update every time
             updateTextRenderSettings();

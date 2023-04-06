@@ -47,7 +47,7 @@ public class DiscoveryButton extends WynntilsButton implements TooltipProvider {
         FontRenderer.getInstance()
                 .renderText(
                         poseStack,
-                        StyledText2.of(RenderedStringUtils.getMaxFittingText(
+                        StyledText2.fromString(RenderedStringUtils.getMaxFittingText(
                                 discoveryInfo.getName(),
                                 maxTextWidth,
                                 FontRenderer.getInstance().getFont())),

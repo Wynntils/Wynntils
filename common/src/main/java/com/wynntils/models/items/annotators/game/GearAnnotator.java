@@ -20,7 +20,7 @@ public final class GearAnnotator implements ItemAnnotator {
 
     @Override
     public ItemAnnotation getAnnotation(ItemStack itemStack, StyledText2 name) {
-        Matcher matcher = name.match(GEAR_PATTERN);
+        Matcher matcher = name.getMatcher(GEAR_PATTERN);
         if (!matcher.matches()) return null;
 
         // Lookup Gear Profile

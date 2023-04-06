@@ -21,9 +21,10 @@ public class StatusEffect {
         // as a proper unformatted string
         // The two differing examples I have for this are Archer's Windy Feet and Warrior's Boiling Blood cooldown
         if (prefix.endsWith(" ") || prefix.endsWith(" §7")) {
-            this.fullName = StyledText2.concat(prefix, name, StyledText2.of(" "), displayedTime);
+            this.fullName = StyledText2.concat(prefix, name, StyledText2.fromString(" "), displayedTime);
         } else {
-            this.fullName = StyledText2.concat(prefix, StyledText2.of(" "), name, StyledText2.of(" "), displayedTime);
+            this.fullName = StyledText2.concat(
+                    prefix, StyledText2.fromString(" "), name, StyledText2.fromString(" "), displayedTime);
         }
     }
 

@@ -114,7 +114,7 @@ public class TranslationFeature extends Feature {
     }
 
     private StyledText2 unwrapCoding(String origCoded) {
-        return StyledText2.of(origCoded.replaceAll("\\{ ?§ ?([0-9a-fklmnor]) ?\\}", "§$1"));
+        return StyledText2.fromString(origCoded.replaceAll("\\{ ?§ ?([0-9a-fklmnor]) ?\\}", "§$1"));
     }
 
     private String wrapCoding(StyledText2 origCoded) {

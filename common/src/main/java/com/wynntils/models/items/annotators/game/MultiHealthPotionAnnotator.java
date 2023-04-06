@@ -19,7 +19,7 @@ public final class MultiHealthPotionAnnotator implements ItemAnnotator {
 
     @Override
     public ItemAnnotation getAnnotation(ItemStack itemStack, StyledText2 name) {
-        Matcher matcher = name.match(MULTI_HEALTH_POTION_PATTERN);
+        Matcher matcher = name.getMatcher(MULTI_HEALTH_POTION_PATTERN);
         if (!matcher.matches()) return null;
 
         int hearts = Integer.parseInt(matcher.group(1));

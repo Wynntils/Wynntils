@@ -22,7 +22,7 @@ public final class EmeraldAnnotator implements ItemAnnotator {
         if (unit == null) return null;
 
         // Verify that name is correct
-        Matcher matcher = name.match(EMERALD_PATTERN);
+        Matcher matcher = name.getMatcher(EMERALD_PATTERN);
         if (!matcher.matches()) return null;
 
         return new EmeraldItem(itemStack.getCount(), unit);

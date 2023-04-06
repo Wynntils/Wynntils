@@ -200,7 +200,7 @@ public class GameNotificationOverlayFeature extends Feature {
                             this.getRenderX(),
                             this.getRenderY(),
                             new TextRenderTask(
-                                    StyledText2.of("§r§a→ §r§2Player [§r§aWC1/Archer§r§2]"), textRenderSetting),
+                                    StyledText2.fromString("§r§a→ §r§2Player [§r§aWC1/Archer§r§2]"), textRenderSetting),
                             this.getWidth(),
                             this.getHeight(),
                             this.getRenderHorizontalAlignment(),

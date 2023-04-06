@@ -151,7 +151,8 @@ public class ContainerSearchFeature extends Feature {
                 .get(currentSearchableContainerType.getNextItemSlot())
                 .getHoverName());
 
-        if (!name.match(currentSearchableContainerType.getNextItemPattern()).matches()) {
+        if (!name.getMatcher(currentSearchableContainerType.getNextItemPattern())
+                .matches()) {
             autoSearching = false;
             return;
         }

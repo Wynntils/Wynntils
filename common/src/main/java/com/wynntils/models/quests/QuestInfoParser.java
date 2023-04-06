@@ -88,7 +88,7 @@ public final class QuestInfoParser {
 
     private static QuestStatus getQuestStatus(LinkedList<StyledText2> lore) {
         StyledText2 rawStatus = lore.pop();
-        Matcher m = rawStatus.match(STATUS_MATCHER);
+        Matcher m = rawStatus.getMatcher(STATUS_MATCHER);
         if (!m.find()) {
             WynntilsMod.warn("Non-matching status value: " + rawStatus);
             return null;
@@ -107,7 +107,7 @@ public final class QuestInfoParser {
 
     private static int getLevel(LinkedList<StyledText2> lore) {
         StyledText2 rawLevel = lore.getFirst();
-        Matcher m = rawLevel.match(LEVEL_MATCHER);
+        Matcher m = rawLevel.getMatcher(LEVEL_MATCHER);
         if (!m.find()) {
             // This can happen for the very first quests; accept without error
             // and interpret level requirement as 1
@@ -121,7 +121,7 @@ public final class QuestInfoParser {
         List<Pair<String, Integer>> requirements = new LinkedList<>();
         Matcher m;
 
-        m = lore.getFirst().match(REQ_MATCHER);
+        m = lore.getFirst().getMatcher(REQ_MATCHER);
         while (m.matches()) {
             lore.pop();
             String profession = m.group(1);
@@ -129,7 +129,7 @@ public final class QuestInfoParser {
             Pair<String, Integer> requirement = new Pair<>(profession, level);
             requirements.add(requirement);
 
-            m = lore.getFirst().match(REQ_MATCHER);
+            m = lore.getFirst().getMatcher(REQ_MATCHER);
         }
         return requirements;
     }
@@ -137,7 +137,7 @@ public final class QuestInfoParser {
     private static QuestLength getQuestLength(LinkedList<StyledText2> lore) {
         StyledText2 lengthRaw = lore.pop();
 
-        Matcher m = lengthRaw.match(LENGTH_MATCHER);
+        Matcher m = lengthRaw.getMatcher(LENGTH_MATCHER);
         if (!m.find()) {
             WynntilsMod.warn("Non-matching quest length: " + lengthRaw);
             return null;
@@ -157,10 +157,10 @@ public final class QuestInfoParser {
         String description = String.join(
                         " ",
                         descriptionLines.stream()
-                                .map(StyledText2::withoutFormatting)
+                                .map(StyledText2::getUnformattedString)
                                 .toList())
                 .replaceAll("\\s+", " ")
                 .trim();
-        return StyledText2.of(description);
+        return StyledText2.fromString(description);
     }
 }

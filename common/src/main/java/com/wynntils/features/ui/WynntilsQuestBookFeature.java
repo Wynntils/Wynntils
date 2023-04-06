@@ -33,7 +33,7 @@ public class WynntilsQuestBookFeature extends Feature {
     private static final ResourceLocation QUEST_UPDATE_ID = new ResourceLocation("wynntils:ui.quest.update");
     private static final SoundEvent QUEST_UPDATE_SOUND = SoundEvent.createVariableRangeEvent(QUEST_UPDATE_ID);
 
-    private static final StyledText2 QUEST_BOOK_NAME = StyledText2.of("§dQuest Book");
+    private static final StyledText2 QUEST_BOOK_NAME = StyledText2.fromString("§dQuest Book");
 
     @RegisterKeyBind
     private final KeyBind openQuestBook = new KeyBind(

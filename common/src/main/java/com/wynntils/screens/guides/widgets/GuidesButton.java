@@ -40,7 +40,7 @@ public class GuidesButton extends WynntilsButton {
         FontRenderer.getInstance()
                 .renderText(
                         poseStack,
-                        StyledText2.of(RenderedStringUtils.getMaxFittingText(
+                        StyledText2.fromString(RenderedStringUtils.getMaxFittingText(
                                 ComponentUtils.getUnformatted(guideScreen.getTitle()),
                                 maxTextWidth,
                                 FontRenderer.getInstance().getFont())),

@@ -23,7 +23,7 @@ public final class DungeonKeyAnnotator implements ItemAnnotator {
 
     @Override
     public ItemAnnotation getAnnotation(ItemStack itemStack, StyledText2 name) {
-        Matcher keyMatcher = name.match(DUNGEON_KEY_PATTERN);
+        Matcher keyMatcher = name.getMatcher(DUNGEON_KEY_PATTERN);
         if (!keyMatcher.matches()) return null;
 
         if (!verifyDungeonKey(itemStack, name)) return null;

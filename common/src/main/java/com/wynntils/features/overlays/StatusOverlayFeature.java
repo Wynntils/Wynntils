@@ -91,7 +91,7 @@ public class StatusOverlayFeature extends Feature {
                             bufferSource,
                             this.getRenderX(),
                             this.getRenderY(),
-                            new TextRenderTask(StyledText2.of("§8⬤ §7 Purification 00:02"), textRenderSetting),
+                            new TextRenderTask(StyledText2.fromString("§8⬤ §7 Purification 00:02"), textRenderSetting),
                             this.getWidth(),
                             this.getHeight(),
                             this.getRenderHorizontalAlignment(),

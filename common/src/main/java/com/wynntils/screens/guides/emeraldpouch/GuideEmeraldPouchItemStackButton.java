@@ -61,7 +61,7 @@ public class GuideEmeraldPouchItemStackButton extends WynntilsButton {
         FontRenderer.getInstance()
                 .renderAlignedTextInBox(
                         poseStack,
-                        StyledText2.of(MathUtils.toRoman(itemStack.getTier())),
+                        StyledText2.fromString(MathUtils.toRoman(itemStack.getTier())),
                         getX() + 2,
                         getX() + 14,
                         getY() + 8,

@@ -43,7 +43,7 @@ public enum RecipientType {
     public boolean matchPattern(StyledText2 msg, MessageType messageType) {
         Pattern pattern = (messageType == MessageType.FOREGROUND ? foregroundPattern : backgroundPattern);
         if (pattern == null) return false;
-        return msg.match(pattern).find();
+        return msg.getMatcher(pattern).find();
     }
 
     public static RecipientType fromName(String string) {

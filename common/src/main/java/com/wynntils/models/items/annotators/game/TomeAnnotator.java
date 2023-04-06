@@ -22,7 +22,7 @@ public final class TomeAnnotator implements ItemAnnotator {
     @Override
     public ItemAnnotation getAnnotation(ItemStack itemStack, StyledText2 name) {
         if (itemStack.getItem() != Items.ENCHANTED_BOOK) return null;
-        Matcher matcher = name.match(TOME_PATTERN);
+        Matcher matcher = name.getMatcher(TOME_PATTERN);
         if (!matcher.matches()) return null;
 
         String displayName = matcher.group(1);

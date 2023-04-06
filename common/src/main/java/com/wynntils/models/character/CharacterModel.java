@@ -173,13 +173,13 @@ public final class CharacterModel extends Model {
         String className = "";
 
         for (StyledText2 line : lore) {
-            Matcher levelMatcher = line.match(INFO_MENU_LEVEL_PATTERN);
+            Matcher levelMatcher = line.getMatcher(INFO_MENU_LEVEL_PATTERN);
             if (levelMatcher.matches()) {
                 level = Integer.parseInt(levelMatcher.group(1));
                 continue;
             }
 
-            Matcher classMatcher = line.match(INFO_MENU_CLASS_PATTERN);
+            Matcher classMatcher = line.getMatcher(INFO_MENU_CLASS_PATTERN);
 
             if (classMatcher.matches()) {
                 className = classMatcher.group(1);
@@ -208,13 +208,13 @@ public final class CharacterModel extends Model {
         String className = "";
 
         for (StyledText2 line : lore) {
-            Matcher levelMatcher = line.match(CLASS_MENU_LEVEL_PATTERN);
+            Matcher levelMatcher = line.getMatcher(CLASS_MENU_LEVEL_PATTERN);
             if (levelMatcher.matches()) {
                 level = Integer.parseInt(levelMatcher.group(1));
                 continue;
             }
 
-            Matcher classMatcher = line.match(CLASS_MENU_CLASS_PATTERN);
+            Matcher classMatcher = line.getMatcher(CLASS_MENU_CLASS_PATTERN);
 
             if (classMatcher.matches()) {
                 className = classMatcher.group(1);
@@ -233,7 +233,7 @@ public final class CharacterModel extends Model {
 
     @SubscribeEvent
     public void onChatReceived(ChatMessageReceivedEvent e) {
-        if (!e.getCodedMessage().match(WYNN_DEATH_MESSAGE).matches()) return;
+        if (!e.getCodedMessage().getMatcher(WYNN_DEATH_MESSAGE).matches()) return;
         lastDeathLocation = Location.containing(lastPositionBeforeTeleport);
         WynntilsMod.postEvent(new CharacterDeathEvent(lastDeathLocation));
     }

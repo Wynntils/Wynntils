@@ -28,7 +28,7 @@ public class CategoryButton extends WynntilsButton {
         FontRenderer.getInstance()
                 .renderAlignedTextInBox(
                         poseStack,
-                        StyledText2.of(I18n.get(category.toString())),
+                        StyledText2.fromString(I18n.get(category.toString())),
                         this.getX(),
                         this.getX() + this.width,
                         this.getY(),

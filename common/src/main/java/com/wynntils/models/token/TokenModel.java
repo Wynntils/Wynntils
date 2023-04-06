@@ -43,7 +43,7 @@ public class TokenModel extends Model {
 
     private static final Pattern TOKEN_PATTERN = Pattern.compile("^§a(\\d+)§2/(\\d+)(?:§r)?$");
     private static final Pattern TYPE_PATTERN = Pattern.compile("^§7Get §[e6]\\[(?:(\\d+) )?(.*)\\]$");
-    private static final StyledText2 VERIFICATION_STRING = StyledText2.of("§7Right-click to add");
+    private static final StyledText2 VERIFICATION_STRING = StyledText2.fromString("§7Right-click to add");
 
     private final Map<Integer, TokenGatekeeper> activeGatekeepers = new HashMap<>();
     private final Map<TokenGatekeeper, TokenInventoryWatcher> inventoryWatchers = new HashMap<>();
@@ -81,11 +81,11 @@ public class TokenModel extends Model {
 
         StyledText2 name = event.getName();
 
-        Matcher typeMatcher = name.match(TYPE_PATTERN);
+        Matcher typeMatcher = name.getMatcher(TYPE_PATTERN);
         if (typeMatcher.matches()) {
             String countString = typeMatcher.group(1);
             int max = countString != null ? Integer.parseInt(countString) : 1;
-            StyledText2 type = StyledText2.of(typeMatcher.group(2));
+            StyledText2 type = StyledText2.fromString(typeMatcher.group(2));
 
             BakingTokenGatekeeper baking = getBaking(event.getEntity().position());
             baking.type = type;
@@ -99,7 +99,7 @@ public class TokenModel extends Model {
             return;
         }
 
-        Matcher tokensMatcher = name.match(TOKEN_PATTERN);
+        Matcher tokensMatcher = name.getMatcher(TOKEN_PATTERN);
         if (tokensMatcher.matches()) {
             CappedValue tokens =
                     new CappedValue(Integer.parseInt(tokensMatcher.group(1)), Integer.parseInt(tokensMatcher.group(2)));
@@ -137,7 +137,7 @@ public class TokenModel extends Model {
             return;
         }
 
-        Matcher toaMatcher = name.match(TOA_GATEKEEPER_NAME_PATTERN);
+        Matcher toaMatcher = name.getMatcher(TOA_GATEKEEPER_NAME_PATTERN);
         if (toaMatcher.matches()) {
             int floor = Integer.parseInt(toaMatcher.group(1));
             int level = Integer.parseInt(toaMatcher.group(2));
@@ -145,14 +145,15 @@ public class TokenModel extends Model {
             Location location =
                     Location.containing(event.getEntity().position()).offset(0, 3, 0);
 
-            StyledText2 gatekeeperTokenName = StyledText2.of("Shard [Floor " + floor + " - Level " + level + "]");
-            StyledText2 itemName = StyledText2.of("§d[Floor " + floor + " - Lv. " + level + "]");
+            StyledText2 gatekeeperTokenName =
+                    StyledText2.fromString("Shard [Floor " + floor + " - Level " + level + "]");
+            StyledText2 itemName = StyledText2.fromString("§d[Floor " + floor + " - Lv. " + level + "]");
             addGatekeeper(
                     event.getEntity().getId(),
                     new TokenGatekeeper(gatekeeperTokenName, itemName, location, new CappedValue(0, maxTokens)));
         }
 
-        Matcher hiveMatcher = name.match(HIVE_GATEKEEPER_NAME_PATTERN);
+        Matcher hiveMatcher = name.getMatcher(HIVE_GATEKEEPER_NAME_PATTERN);
         if (hiveMatcher.matches()) {
             String division = hiveMatcher.group(1);
             int level = Integer.parseInt(hiveMatcher.group(2));
@@ -160,7 +161,7 @@ public class TokenModel extends Model {
             Location location =
                     Location.containing(event.getEntity().position()).offset(0, 3, 0);
 
-            StyledText2 tokenName = StyledText2.of(division + " Catalyst " + MathUtils.toRoman(level));
+            StyledText2 tokenName = StyledText2.fromString(division + " Catalyst " + MathUtils.toRoman(level));
             addGatekeeper(
                     event.getEntity().getId(), new TokenGatekeeper(tokenName, location, new CappedValue(0, maxTokens)));
         }

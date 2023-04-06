@@ -22,7 +22,7 @@ public final class TrinketAnnotator implements ItemAnnotator {
 
     @Override
     public ItemAnnotation getAnnotation(ItemStack itemStack, StyledText2 name) {
-        Matcher matcher = name.match(TRINKET_PATTERN);
+        Matcher matcher = name.getMatcher(TRINKET_PATTERN);
         if (!matcher.matches()) return null;
 
         try {

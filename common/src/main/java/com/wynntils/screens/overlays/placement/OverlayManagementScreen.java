@@ -206,7 +206,7 @@ public final class OverlayManagementScreen extends WynntilsScreen {
                 FontRenderer.getInstance()
                         .renderAlignedTextInBox(
                                 poseStack,
-                                StyledText2.of(overlay.getTranslatedName()),
+                                StyledText2.fromString(overlay.getTranslatedName()),
                                 renderX,
                                 renderX + overlay.getWidth(),
                                 renderY,

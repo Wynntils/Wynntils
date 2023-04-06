@@ -27,7 +27,7 @@ public final class GearBoxAnnotator implements ItemAnnotator {
         if (!(itemStack.getItem() == Items.STONE_SHOVEL
                 && itemStack.getDamageValue() >= 1
                 && itemStack.getDamageValue() <= 6)) return null;
-        Matcher matcher = name.match(GEAR_BOX_PATTERN);
+        Matcher matcher = name.getMatcher(GEAR_BOX_PATTERN);
         if (!matcher.matches()) return null;
 
         GearType gearType = GearType.fromString(matcher.group(1));

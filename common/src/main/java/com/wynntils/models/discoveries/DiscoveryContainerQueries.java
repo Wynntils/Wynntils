@@ -34,8 +34,8 @@ public class DiscoveryContainerQueries {
             Pattern.compile("§6Total Discoveries: §r§e\\[(\\d+)/\\d+\\]");
     private static final Pattern SECRET_DISCOVERY_COUNT_PATTERN =
             Pattern.compile("§bTotal Secret Discoveries: §r§3\\[(\\d+)/\\d+\\]");
-    public static final StyledText2 DISCOVERIES_STRING = StyledText2.of("§6§lDiscoveries");
-    public static final StyledText2 SECRET_DISCOVERIES_STRING = StyledText2.of("§b§lSecret Discoveries");
+    public static final StyledText2 DISCOVERIES_STRING = StyledText2.fromString("§6§lDiscoveries");
+    public static final StyledText2 SECRET_DISCOVERIES_STRING = StyledText2.fromString("§b§lSecret Discoveries");
 
     private List<DiscoveryInfo> newDiscoveries;
 
@@ -58,7 +58,7 @@ public class DiscoveryContainerQueries {
 
                     int discoveryCount = -1;
                     for (StyledText2 line : LoreUtils.getLore(discoveriesItem)) {
-                        Matcher matcher = line.match(DISCOVERY_COUNT_PATTERN);
+                        Matcher matcher = line.getMatcher(DISCOVERY_COUNT_PATTERN);
 
                         if (matcher.matches()) {
                             discoveryCount = Integer.parseInt(matcher.group(1));
@@ -73,7 +73,7 @@ public class DiscoveryContainerQueries {
                     }
 
                     for (StyledText2 line : LoreUtils.getLore(secretDiscoveriesItem)) {
-                        Matcher matcher = line.match(SECRET_DISCOVERY_COUNT_PATTERN);
+                        Matcher matcher = line.getMatcher(SECRET_DISCOVERY_COUNT_PATTERN);
 
                         if (matcher.matches()) {
                             int secretDiscoveryCount = Integer.parseInt(matcher.group(1));
@@ -174,6 +174,6 @@ public class DiscoveryContainerQueries {
     }
 
     private StyledText2 getNextPageButtonName(int nextPageNum) {
-        return StyledText2.of("[§f§lPage " + nextPageNum + "§a >§2>§a>§2>§a>]");
+        return StyledText2.fromString("[§f§lPage " + nextPageNum + "§a >§2>§a>§2>§a>]");
     }
 }

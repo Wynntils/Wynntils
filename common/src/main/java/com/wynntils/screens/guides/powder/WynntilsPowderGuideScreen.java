@@ -107,7 +107,7 @@ public final class WynntilsPowderGuideScreen
         FontRenderer.getInstance()
                 .renderText(
                         poseStack,
-                        StyledText2.of(I18n.get("screens.wynntils.wynntilsGuides.itemGuide.available")),
+                        StyledText2.fromString(I18n.get("screens.wynntils.wynntilsGuides.itemGuide.available")),
                         Texture.QUEST_BOOK_BACKGROUND.width() * 0.75f,
                         30,
                         CommonColors.BLACK,

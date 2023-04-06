@@ -14,7 +14,7 @@ import java.util.regex.Pattern;
 import net.minecraft.world.item.ItemStack;
 
 public final class SkillCrystalAnnotator implements ItemAnnotator {
-    private static final StyledText2 SKILL_CRYSTAL_NAME = StyledText2.of("§2§lSkill Crystal");
+    private static final StyledText2 SKILL_CRYSTAL_NAME = StyledText2.fromString("§2§lSkill Crystal");
     private static final Pattern SKILL_POINTS_PATTERN = Pattern.compile("^§7You have §r§a(\\d+)§r§7 skill points$");
 
     @Override

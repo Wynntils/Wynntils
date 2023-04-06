@@ -54,7 +54,7 @@ public class InventoryRedirectFeature extends Feature {
         StyledText2 styledText = ComponentUtils.getCoded(component);
 
         if (redirectIngredientPouch.get()) {
-            if (styledText.match(INGREDIENT_POUCH_PICKUP_PATTERN).matches()) {
+            if (styledText.getMatcher(INGREDIENT_POUCH_PICKUP_PATTERN).matches()) {
                 event.setCanceled(true);
                 Managers.Notification.queueMessage(styledText);
                 return;
@@ -62,7 +62,7 @@ public class InventoryRedirectFeature extends Feature {
         }
 
         if (redirectEmeraldPouch.get()) {
-            Matcher matcher = styledText.match(EMERALD_POUCH_PICKUP_PATTERN);
+            Matcher matcher = styledText.getMatcher(EMERALD_POUCH_PICKUP_PATTERN);
             if (matcher.matches()) {
                 event.setCanceled(true);
 
@@ -83,11 +83,11 @@ public class InventoryRedirectFeature extends Feature {
         }
 
         if (redirectPotionStack.get()) {
-            Matcher matcher = styledText.match(POTION_STACK_PATTERN);
+            Matcher matcher = styledText.getMatcher(POTION_STACK_PATTERN);
             if (matcher.matches()) {
                 event.setCanceled(true);
                 String potionCount = matcher.group(1);
-                StyledText2 potionMessage = StyledText2.of(String.format("§a+%s Potion Charges", potionCount));
+                StyledText2 potionMessage = StyledText2.fromString(String.format("§a+%s Potion Charges", potionCount));
                 Managers.Notification.queueMessage(potionMessage);
 
                 return;

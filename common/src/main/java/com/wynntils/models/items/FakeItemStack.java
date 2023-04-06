@@ -24,7 +24,7 @@ public class FakeItemStack extends ItemStack {
         super(itemStack.getItem(), 1);
         this.setTag(itemStack.getTag());
         Handlers.Item.updateItem(
-                this, gearItem, StyledText2.of(gearItem.getGearInfo().name()));
+                this, gearItem, StyledText2.fromString(gearItem.getGearInfo().name()));
 
         this.gearItem = gearItem;
         this.source = source;

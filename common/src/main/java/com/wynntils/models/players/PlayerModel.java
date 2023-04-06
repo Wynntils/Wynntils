@@ -58,7 +58,7 @@ public final class PlayerModel extends Model {
     }
 
     public boolean isNpc(Player player) {
-        StyledText2 scoreboardName = StyledText2.of(player.getScoreboardName());
+        StyledText2 scoreboardName = StyledText2.fromString(player.getScoreboardName());
         return isNpc(scoreboardName);
     }
 
@@ -96,7 +96,7 @@ public final class PlayerModel extends Model {
     public void onPlayerJoin(PlayerJoinedWorldEvent event) {
         Player player = event.getPlayer();
         if (player == null || player.getUUID() == null) return;
-        StyledText2 name = StyledText2.of(player.getGameProfile().getName());
+        StyledText2 name = StyledText2.fromString(player.getGameProfile().getName());
         if (isNpc(name)) return; // avoid player npcs
 
         loadUser(player.getUUID(), name.getInternalCodedStringRepresentation());

@@ -215,7 +215,7 @@ public final class ScoreboardHandler extends Handler {
                 .findFirst()
                 .map(ScoreboardLine::line)
                 .orElse(StyledText2.EMPTY)
-                .equals(StyledText2.of("À"))) {
+                .equals(StyledText2.fromString("À"))) {
             return false;
         }
 
@@ -243,7 +243,7 @@ public final class ScoreboardHandler extends Handler {
             if (scoreboardLines
                     .get(currentIndex + 1)
                     .line()
-                    .match(NEXT_LINE_PATTERN)
+                    .getMatcher(NEXT_LINE_PATTERN)
                     .matches()) {
                 return false;
             }
@@ -254,7 +254,7 @@ public final class ScoreboardHandler extends Handler {
             for (currentIndex = currentIndex + 1; currentIndex < scoreboardLines.size(); currentIndex++) {
                 ScoreboardLine line = scoreboardLines.get(currentIndex);
 
-                if (line.line().match(NEXT_LINE_PATTERN).matches()) {
+                if (line.line().getMatcher(NEXT_LINE_PATTERN).matches()) {
                     currentIndex++;
                     break;
                 }
@@ -290,7 +290,7 @@ public final class ScoreboardHandler extends Handler {
             for (currentIndex = currentIndex + 1; currentIndex < scoreboardLines.size(); currentIndex++) {
                 ScoreboardLine line = scoreboardLines.get(currentIndex);
 
-                if (line.line().match(NEXT_LINE_PATTERN).matches()) {
+                if (line.line().getMatcher(NEXT_LINE_PATTERN).matches()) {
                     currentIndex++;
                     break;
                 }

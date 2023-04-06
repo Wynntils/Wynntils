@@ -99,7 +99,7 @@ public class FunctionCommand extends Command {
 
         StyledText2[] result = Managers.Function.doFormatLines(template);
 
-        StyledText2 resultString = StyledText2.join(result, ", ");
+        StyledText2 resultString = StyledText2.join(", ", result);
 
         context.getSource()
                 .sendSuccess(

@@ -478,7 +478,10 @@ public abstract class ClientPacketListenerMixin {
         if (!isRenderThread()) return;
 
         ScoreboardSetScoreEvent event = new ScoreboardSetScoreEvent(
-                StyledText2.of(packet.getOwner()), packet.getObjectiveName(), packet.getScore(), packet.getMethod());
+                StyledText2.fromString(packet.getOwner()),
+                packet.getObjectiveName(),
+                packet.getScore(),
+                packet.getMethod());
         MixinHelper.post(event);
         if (event.isCanceled()) {
             ci.cancel();

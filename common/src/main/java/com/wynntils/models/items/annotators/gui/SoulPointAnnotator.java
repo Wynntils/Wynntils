@@ -19,7 +19,7 @@ public final class SoulPointAnnotator implements ItemAnnotator {
     @Override
     public ItemAnnotation getAnnotation(ItemStack itemStack, StyledText2 name) {
         if (itemStack.getItem() != Items.NETHER_STAR) return null;
-        Matcher matcher = name.match(SOUL_POINTS_PATTERN);
+        Matcher matcher = name.getMatcher(SOUL_POINTS_PATTERN);
         if (!matcher.matches()) return null;
 
         int count = Integer.parseInt(matcher.group(1));

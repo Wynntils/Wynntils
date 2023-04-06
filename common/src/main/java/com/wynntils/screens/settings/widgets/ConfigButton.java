@@ -67,10 +67,11 @@ public class ConfigButton extends WynntilsButton {
     public void renderWidget(PoseStack poseStack, int mouseX, int mouseY, float partialTick) {
         resetButton.render(poseStack, mouseX, mouseY, partialTick);
 
-        StyledText2 displayName = StyledText2.of(configHolder.getDisplayName());
+        StyledText2 displayName = StyledText2.fromString(configHolder.getDisplayName());
 
         if (settingsScreen.configOptionContains(configHolder)) {
-            displayName = StyledText2.of(ChatFormatting.UNDERLINE + displayName.getInternalCodedStringRepresentation());
+            displayName = StyledText2.fromString(
+                    ChatFormatting.UNDERLINE + displayName.getInternalCodedStringRepresentation());
         }
 
         poseStack.pushPose();
@@ -107,7 +108,7 @@ public class ConfigButton extends WynntilsButton {
 
         if (!resetButton.isHoveredOrFocused() && isHovered) {
             String description = configHolder.getDescription();
-            StyledText2[] parts = RenderedStringUtils.wrapTextBySize(StyledText2.of(description), 200);
+            StyledText2[] parts = RenderedStringUtils.wrapTextBySize(StyledText2.fromString(description), 200);
             List<Component> components = Arrays.stream(parts)
                     .map(s -> (Component) s.asSingleLiteralComponentWithCodedString())
                     .toList();

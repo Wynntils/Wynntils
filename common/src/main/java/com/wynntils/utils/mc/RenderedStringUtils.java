@@ -35,7 +35,9 @@ public final class RenderedStringUtils {
             }
         }
 
-        return Arrays.stream(result.toString().split("\n")).map(StyledText2::of).toArray(StyledText2[]::new);
+        return Arrays.stream(result.toString().split("\n"))
+                .map(StyledText2::fromString)
+                .toArray(StyledText2[]::new);
     }
 
     public static String getMaxFittingText(String text, float maxTextWidth, Font font) {
@@ -63,7 +65,9 @@ public final class RenderedStringUtils {
 
     public static StyledText2 trySplitOptimally(StyledText2 line, float maxWidth) {
         String maxFitting = RenderedStringUtils.getMaxFittingText(
-                line.withoutFormatting(), maxWidth, FontRenderer.getInstance().getFont());
+                line.getUnformattedString(),
+                maxWidth,
+                FontRenderer.getInstance().getFont());
 
         if (maxFitting.contains("[") && !maxFitting.contains("]")) { // Detail line did not appear to fit, force break
             String color = "";
@@ -72,7 +76,8 @@ public final class RenderedStringUtils {
                 color = line.getInternalCodedStringRepresentation().substring(0, 2);
             }
 
-            return StyledText2.of(line.getInternalCodedStringRepresentation().replaceFirst(" \\[", "\n" + color + "["));
+            return StyledText2.fromString(
+                    line.getInternalCodedStringRepresentation().replaceFirst(" \\[", "\n" + color + "["));
         } else if (maxFitting.contains("(")
                 && !maxFitting.contains(")")) { // Detail line did not appear to fit, force break
             String color = "";
@@ -81,7 +86,8 @@ public final class RenderedStringUtils {
                 color = line.getInternalCodedStringRepresentation().substring(0, 2);
             }
 
-            return StyledText2.of(line.getInternalCodedStringRepresentation().replaceFirst(" \\(", "\n" + color + "("));
+            return StyledText2.fromString(
+                    line.getInternalCodedStringRepresentation().replaceFirst(" \\(", "\n" + color + "("));
         } else { // Fits fine, give normal lines
             return line;
         }

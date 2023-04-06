@@ -82,7 +82,7 @@ public class SuggestionPlayerWidget extends AbstractWidget {
         FontRenderer.getInstance()
                 .renderText(
                         poseStack,
-                        StyledText2.of(playerName),
+                        StyledText2.fromString(playerName),
                         this.getX() + (this.width / gridDivisions * 3),
                         this.getY() + this.height / 2,
                         CommonColors.GREEN,

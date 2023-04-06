@@ -34,7 +34,7 @@ public final class WorldStateModel extends Model {
     private static final Position CHARACTER_SELECTION_POSITION = new PositionImpl(-1337.5, 16.2, -1120.5);
     private static final Pattern WYNNCRAFT_SERVER_PATTERN = Pattern.compile("^(.*)\\.wynncraft\\.(?:com|net|org)$");
     private static final String WYNNCRAFT_BETA_NAME = "beta";
-    public static final StyledText2 CHARACTER_SELECTION_TITLE = StyledText2.of("§8§lSelect a Character");
+    public static final StyledText2 CHARACTER_SELECTION_TITLE = StyledText2.fromString("§8§lSelect a Character");
 
     private StyledText2 currentTabListFooter = StyledText2.EMPTY;
     private String currentWorldName = "";
@@ -131,7 +131,7 @@ public final class WorldStateModel extends Model {
         currentTabListFooter = footer;
 
         if (!footer.isEmpty()) {
-            if (footer.match(HUB_NAME).find()) {
+            if (footer.getMatcher(HUB_NAME).find()) {
                 setState(WorldState.HUB);
             }
         }
@@ -143,7 +143,7 @@ public final class WorldStateModel extends Model {
 
         Component displayName = e.getDisplayName();
         StyledText2 name = ComponentUtils.getCoded(displayName);
-        Matcher m = name.match(WORLD_NAME);
+        Matcher m = name.getMatcher(WORLD_NAME);
         if (m.find()) {
             String worldName = m.group(1);
             setState(WorldState.WORLD, worldName, !hasJoinedAnyWorld);

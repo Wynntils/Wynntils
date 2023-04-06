@@ -14,7 +14,7 @@ import java.util.regex.Pattern;
 import net.minecraft.world.item.ItemStack;
 
 public final class AbilityTreeAnnotator implements ItemAnnotator {
-    private static final StyledText2 ABILITY_TREE_NAME = StyledText2.of("§b§lAbility Tree");
+    private static final StyledText2 ABILITY_TREE_NAME = StyledText2.fromString("§b§lAbility Tree");
     private static final Pattern ABILITY_POINTS_PATTERN = Pattern.compile("^§3✦ Unused Points: §r§f(\\d+)$");
 
     @Override

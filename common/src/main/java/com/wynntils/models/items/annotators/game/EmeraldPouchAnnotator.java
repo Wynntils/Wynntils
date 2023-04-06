@@ -26,7 +26,7 @@ public final class EmeraldPouchAnnotator implements ItemAnnotator {
         // Checks for normal emerald pouch (diamond axe) and emerald pouch pickup texture (gold shovel)
         if (itemStack.getItem() != Items.DIAMOND_AXE && itemStack.getItem() != Items.GOLDEN_SHOVEL) return null;
 
-        Matcher matcher = name.match(EMERALD_POUCH_PATTERN);
+        Matcher matcher = name.getMatcher(EMERALD_POUCH_PATTERN);
         if (!matcher.matches()) return null;
 
         int tier = MathUtils.integerFromRoman(matcher.group(1));

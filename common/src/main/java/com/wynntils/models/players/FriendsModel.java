@@ -83,11 +83,11 @@ public final class FriendsModel extends Model {
         StyledText2 coded = event.getOriginalCodedMessage();
         String unformatted = ComponentUtils.stripFormatting(coded);
 
-        Matcher joinMatcher = coded.match(JOIN_PATTERN);
+        Matcher joinMatcher = coded.getMatcher(JOIN_PATTERN);
         if (joinMatcher.matches()) {
             WynntilsMod.postEvent(new FriendsEvent.Joined(joinMatcher.group(1)));
         } else {
-            Matcher leaveMatcher = coded.match(LEAVE_PATTERN);
+            Matcher leaveMatcher = coded.getMatcher(LEAVE_PATTERN);
             if (leaveMatcher.matches()) {
                 WynntilsMod.postEvent(new FriendsEvent.Left(leaveMatcher.group(1)));
             }
@@ -105,7 +105,7 @@ public final class FriendsModel extends Model {
             }
 
             // Skip first message of two, but still expect more messages
-            if (coded.match(FRIEND_LIST_FAIL_1).matches()) {
+            if (coded.getMatcher(FRIEND_LIST_FAIL_1).matches()) {
                 event.setCanceled(true);
                 return;
             }
@@ -113,7 +113,7 @@ public final class FriendsModel extends Model {
     }
 
     private boolean tryParseNoFriendList(StyledText2 coded) {
-        if (coded.match(FRIEND_LIST_FAIL_2).matches()) {
+        if (coded.getMatcher(FRIEND_LIST_FAIL_2).matches()) {
             WynntilsMod.info("Friend list is empty.");
             return true;
         }
@@ -122,7 +122,7 @@ public final class FriendsModel extends Model {
     }
 
     private boolean tryParseFriendMessages(StyledText2 coded) {
-        Matcher matcher = coded.match(FRIEND_REMOVE_MESSAGE_PATTERN);
+        Matcher matcher = coded.getMatcher(FRIEND_REMOVE_MESSAGE_PATTERN);
         if (matcher.matches()) {
             String player = matcher.group(1);
 
@@ -135,7 +135,7 @@ public final class FriendsModel extends Model {
             return true;
         }
 
-        matcher = coded.match(FRIEND_ADD_MESSAGE_PATTERN);
+        matcher = coded.getMatcher(FRIEND_ADD_MESSAGE_PATTERN);
         if (matcher.matches()) {
             String player = matcher.group(1);
 

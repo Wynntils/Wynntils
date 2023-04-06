@@ -14,7 +14,7 @@ import java.util.regex.Pattern;
 import net.minecraft.world.item.ItemStack;
 
 public final class DailyRewardMultiplierAnnotator implements ItemAnnotator {
-    private static final StyledText2 DAILY_REWARD_NAME = StyledText2.of("§6§lDaily Reward");
+    private static final StyledText2 DAILY_REWARD_NAME = StyledText2.fromString("§6§lDaily Reward");
     private static final Pattern STREAK_PATTERN = Pattern.compile("^§e✦ Streak Multiplier: §r§f(\\d+)x$");
 
     @Override

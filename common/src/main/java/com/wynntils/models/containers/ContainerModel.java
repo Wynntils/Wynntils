@@ -43,9 +43,9 @@ public final class ContainerModel extends Model {
     private static final Pair<Integer, Integer> BANK_PREVIOUS_NEXT_SLOTS = new Pair<>(17, 8);
     private static final Pair<Integer, Integer> GUILD_BANK_PREVIOUS_NEXT_SLOTS = new Pair<>(9, 27);
     private static final Pair<Integer, Integer> TRADE_MARKET_PREVIOUS_NEXT_SLOTS = new Pair<>(17, 26);
-    public static final StyledText2 LAST_BANK_PAGE_STRING = StyledText2.of(">§4>§c>§4>§c>");
-    public static final StyledText2 FIRST_TRADE_MARKET_PAGE_STRING = StyledText2.of("§bReveal Item Names");
-    public static final StyledText2 TRADE_MARKET_TITLE = StyledText2.of("Trade Market");
+    public static final StyledText2 LAST_BANK_PAGE_STRING = StyledText2.fromString(">§4>§c>§4>§c>");
+    public static final StyledText2 FIRST_TRADE_MARKET_PAGE_STRING = StyledText2.fromString("§bReveal Item Names");
+    public static final StyledText2 TRADE_MARKET_TITLE = StyledText2.fromString("Trade Market");
 
     public ContainerModel() {
         super(List.of());
@@ -56,7 +56,9 @@ public final class ContainerModel extends Model {
     }
 
     public boolean isBankScreen(Screen screen) {
-        return ComponentUtils.getCoded(screen.getTitle()).match(BANK_PATTERN).matches();
+        return ComponentUtils.getCoded(screen.getTitle())
+                .getMatcher(BANK_PATTERN)
+                .matches();
     }
 
     /**
@@ -71,7 +73,7 @@ public final class ContainerModel extends Model {
 
     public boolean isGuildBankScreen(Screen screen) {
         return ComponentUtils.getCoded(screen.getTitle())
-                .match(GUILD_BANK_PATTERN)
+                .getMatcher(GUILD_BANK_PATTERN)
                 .matches();
     }
 
@@ -91,13 +93,13 @@ public final class ContainerModel extends Model {
 
     public boolean isBlockBankScreen(Screen screen) {
         return ComponentUtils.getCoded(screen.getTitle())
-                .match(BLOCK_BANK_PATTERN)
+                .getMatcher(BLOCK_BANK_PATTERN)
                 .matches();
     }
 
     public boolean isMiscBucketScreen(Screen screen) {
         return ComponentUtils.getCoded(screen.getTitle())
-                .match(MISC_BUCKET_PATTERN)
+                .getMatcher(MISC_BUCKET_PATTERN)
                 .matches();
     }
 

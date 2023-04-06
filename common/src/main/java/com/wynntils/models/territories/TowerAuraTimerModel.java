@@ -12,7 +12,7 @@ import net.minecraftforge.eventbus.api.SubscribeEvent;
 
 public class TowerAuraTimerModel extends Model {
     private static final int AURA_PROC_MS = 3200;
-    private static final StyledText2 AURA_TITLE = StyledText2.of("§4§n/!\\§7 Tower §6Aura");
+    private static final StyledText2 AURA_TITLE = StyledText2.fromString("§4§n/!\\§7 Tower §6Aura");
 
     public TowerAuraTimerModel() {
         super(List.of());

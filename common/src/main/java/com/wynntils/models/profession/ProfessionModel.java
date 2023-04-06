@@ -52,7 +52,7 @@ public class ProfessionModel extends Model {
 
     @SubscribeEvent
     public void onLabelSpawn(EntityLabelChangedEvent event) {
-        Matcher matcher = event.getName().match(PROFESSION_NODE_HARVERSTED_PATTERN);
+        Matcher matcher = event.getName().getMatcher(PROFESSION_NODE_HARVERSTED_PATTERN);
 
         if (matcher.matches()) {
             updatePercentage(
@@ -66,7 +66,7 @@ public class ProfessionModel extends Model {
     public void onChatMessage(ChatMessageReceivedEvent event) {
         StyledText2 codedMessage = event.getOriginalCodedMessage();
 
-        Matcher matcher = codedMessage.match(PROFESSION_CRAFT_PATTERN);
+        Matcher matcher = codedMessage.getMatcher(PROFESSION_CRAFT_PATTERN);
 
         if (matcher.matches()) {
             updatePercentage(
@@ -75,7 +75,7 @@ public class ProfessionModel extends Model {
                     Float.parseFloat(matcher.group("gain")));
         }
 
-        matcher = codedMessage.match(PROFESSION_LEVELUP_PATTERN);
+        matcher = codedMessage.getMatcher(PROFESSION_LEVELUP_PATTERN);
 
         if (matcher.matches()) {
             updateLevel(ProfessionType.fromString(matcher.group("name")), Integer.parseInt(matcher.group("level")));
@@ -86,7 +86,7 @@ public class ProfessionModel extends Model {
         Map<ProfessionType, ProfessionProgress> levels = new ConcurrentHashMap<>();
         List<StyledText2> professionLore = LoreUtils.getLore(professionInfoItem);
         for (StyledText2 line : professionLore) {
-            Matcher matcher = line.match(INFO_MENU_PROFESSION_LORE_PATTERN);
+            Matcher matcher = line.getMatcher(INFO_MENU_PROFESSION_LORE_PATTERN);
 
             if (matcher.matches()) {
                 // NOTE: When writing this, progress was quite a bit off in this lore. Still, parse it and use it while

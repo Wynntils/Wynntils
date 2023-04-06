@@ -156,7 +156,7 @@ public class GearInfoRegistry {
             return new GearMajorId(
                     JsonUtils.getNullableJsonString(json, "id"),
                     JsonUtils.getNullableJsonString(json, "name"),
-                    StyledText2.of(JsonUtils.getNullableJsonString(json, "lore")));
+                    StyledText2.fromString(JsonUtils.getNullableJsonString(json, "lore")));
         }
     }
 
@@ -271,7 +271,7 @@ public class GearInfoRegistry {
             if (lore == null) return Optional.empty();
 
             // Some lore contain like "\\[Community Event Winner\\]", fix that
-            return Optional.of(StyledText2.of(
+            return Optional.of(StyledText2.fromString(
                     StringUtils.replaceEach(lore, new String[] {"\\[", "\\]"}, new String[] {"[", "]"})));
         }
 

@@ -18,7 +18,7 @@ public final class TokenGatekeeper implements Comparable<TokenGatekeeper> {
     public TokenGatekeeper(StyledText2 gatekeeperTokenName, Location location, CappedValue deposited) {
         this.gatekeeperTokenName = gatekeeperTokenName;
         // Remove the trailing plural 's'
-        this.itemTokenName = StyledText2.of(
+        this.itemTokenName = StyledText2.fromString(
                 gatekeeperTokenName.getInternalCodedStringRepresentation().replaceAll("s$", ""));
         this.location = location;
         this.deposited = deposited;

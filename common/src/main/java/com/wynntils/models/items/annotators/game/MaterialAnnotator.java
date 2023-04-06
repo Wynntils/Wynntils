@@ -19,7 +19,7 @@ public final class MaterialAnnotator implements ItemAnnotator {
 
     @Override
     public ItemAnnotation getAnnotation(ItemStack itemStack, StyledText2 name) {
-        Matcher matcher = name.match(MATERIAL_PATTERN);
+        Matcher matcher = name.getMatcher(MATERIAL_PATTERN);
         if (!matcher.matches()) return null;
 
         String materialSource = matcher.group(1);

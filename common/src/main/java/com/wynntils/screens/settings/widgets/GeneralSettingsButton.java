@@ -51,7 +51,7 @@ public class GeneralSettingsButton extends WynntilsButton {
         FontRenderer.getInstance()
                 .renderAlignedTextInBox(
                         poseStack,
-                        StyledText2.of(title),
+                        StyledText2.fromString(title),
                         this.getX(),
                         this.getX() + this.width,
                         this.getY(),

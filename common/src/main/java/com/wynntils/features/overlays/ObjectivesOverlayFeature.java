@@ -119,7 +119,7 @@ public class ObjectivesOverlayFeature extends Feature {
                     .renderAlignedTextInBox(
                             poseStack,
                             bufferSource,
-                            StyledText2.of(text),
+                            StyledText2.fromString(text),
                             this.getRenderX(),
                             this.getRenderX() + this.getWidth(),
                             renderY,
@@ -213,7 +213,7 @@ public class ObjectivesOverlayFeature extends Feature {
                         .renderAlignedTextInBox(
                                 poseStack,
                                 bufferSource,
-                                StyledText2.of(text),
+                                StyledText2.fromString(text),
                                 this.getRenderX(),
                                 this.getRenderX() + this.getWidth(),
                                 renderY,

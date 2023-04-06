@@ -180,7 +180,7 @@ public final class WynntilsDialogueHistoryScreen extends WynntilsMenuScreenBase 
         FontRenderer.getInstance()
                 .renderAlignedTextInBox(
                         poseStack,
-                        StyledText2.of((currentPage) + " / " + (maxPage)),
+                        StyledText2.fromString((currentPage) + " / " + (maxPage)),
                         Texture.QUEST_BOOK_BACKGROUND.width() / 2f,
                         Texture.QUEST_BOOK_BACKGROUND.width(),
                         Texture.QUEST_BOOK_BACKGROUND.height() - 25,
@@ -261,7 +261,7 @@ public final class WynntilsDialogueHistoryScreen extends WynntilsMenuScreenBase 
         FontRenderer.getInstance()
                 .renderAlignedTextInBox(
                         poseStack,
-                        StyledText2.of(I18n.get("screens.wynntils.wynntilsDialogueHistory.tryReload")),
+                        StyledText2.fromString(I18n.get("screens.wynntils.wynntilsDialogueHistory.tryReload")),
                         Texture.QUEST_BOOK_BACKGROUND.width() / 2f + 15f,
                         Texture.QUEST_BOOK_BACKGROUND.width() - 15f,
                         0,

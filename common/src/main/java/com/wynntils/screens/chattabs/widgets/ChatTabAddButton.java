@@ -30,7 +30,7 @@ public class ChatTabAddButton extends WynntilsButton {
         FontRenderer.getInstance()
                 .renderAlignedTextInBox(
                         poseStack,
-                        StyledText2.of("+"),
+                        StyledText2.fromString("+"),
                         getX() + 1,
                         getX() + width,
                         getY() + 1,

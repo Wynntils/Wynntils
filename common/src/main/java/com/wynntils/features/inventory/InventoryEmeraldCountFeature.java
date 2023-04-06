@@ -111,7 +111,7 @@ public class InventoryEmeraldCountFeature extends Feature {
         FontRenderer.getInstance()
                 .renderText(
                         poseStack,
-                        StyledText2.of(emeraldText),
+                        StyledText2.fromString(emeraldText),
                         x + 1,
                         y - 10,
                         0,
@@ -170,7 +170,7 @@ public class InventoryEmeraldCountFeature extends Feature {
             FontRenderer.getInstance()
                     .renderAlignedTextInBox(
                             poseStack,
-                            StyledText2.of(emeraldAmount),
+                            StyledText2.fromString(emeraldAmount),
                             renderX,
                             renderX + TEXTURE_SIZE - 2,
                             renderY,

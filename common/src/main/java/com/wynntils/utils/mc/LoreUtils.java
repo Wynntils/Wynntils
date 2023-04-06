@@ -69,7 +69,7 @@ public final class LoreUtils {
         Matcher matcher = null;
         for (int i = startLineNum; i <= startLineNum + 5; i++) {
             StyledText2 line = getLoreLine(itemStack, i);
-            matcher = line.match(pattern);
+            matcher = line.getMatcher(pattern);
             if (matcher.matches()) return matcher;
         }
 
@@ -89,7 +89,7 @@ public final class LoreUtils {
         for (StyledText2 x : getLore(itemStack)) {
             toReturn.append(x);
         }
-        return StyledText2.of(toReturn.toString());
+        return StyledText2.fromString(toReturn.toString());
     }
 
     /** Get the lore NBT tag from an item, else return empty */

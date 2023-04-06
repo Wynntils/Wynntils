@@ -25,7 +25,7 @@ public final class HorseAnnotator implements ItemAnnotator {
     @Override
     public ItemAnnotation getAnnotation(ItemStack itemStack, StyledText2 name) {
         if (itemStack.getItem() != Items.SADDLE) return null;
-        Matcher matcher = name.match(HORSE_PATTERN);
+        Matcher matcher = name.getMatcher(HORSE_PATTERN);
         if (!matcher.matches()) return null;
 
         Matcher tierMatcher = LoreUtils.matchLoreLine(itemStack, 0, HORSE_TIER_PATTERN);

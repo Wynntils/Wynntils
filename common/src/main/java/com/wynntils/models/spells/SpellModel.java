@@ -52,7 +52,7 @@ public class SpellModel extends Model {
             return;
         }
 
-        Matcher spellMatcher = msg.match(SPELL_CAST);
+        Matcher spellMatcher = msg.getMatcher(SPELL_CAST);
         if (spellMatcher.matches()) {
             SpellType spellType = SpellType.fromName(spellMatcher.group(1));
             int manaCost = Integer.parseInt(spellMatcher.group(2));

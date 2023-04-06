@@ -110,7 +110,7 @@ public class PoiManagerWidget extends AbstractWidget {
         FontRenderer.getInstance()
                 .renderText(
                         poseStack,
-                        StyledText2.of(poiName),
+                        StyledText2.fromString(poiName),
                         this.width / 2f - 130,
                         60 + 20 * row,
                         color,
@@ -121,7 +121,7 @@ public class PoiManagerWidget extends AbstractWidget {
         FontRenderer.getInstance()
                 .renderText(
                         poseStack,
-                        StyledText2.of(String.valueOf(poi.getLocation().getX())),
+                        StyledText2.fromString(String.valueOf(poi.getLocation().getX())),
                         this.width / 2f - 15,
                         60 + 20 * row,
                         color,
@@ -134,7 +134,7 @@ public class PoiManagerWidget extends AbstractWidget {
         FontRenderer.getInstance()
                 .renderText(
                         poseStack,
-                        y.isPresent() ? StyledText2.of(String.valueOf(y.get())) : StyledText2.EMPTY,
+                        y.isPresent() ? StyledText2.fromString(String.valueOf(y.get())) : StyledText2.EMPTY,
                         this.width / 2f + 40,
                         60 + 20 * row,
                         color,
@@ -145,7 +145,7 @@ public class PoiManagerWidget extends AbstractWidget {
         FontRenderer.getInstance()
                 .renderText(
                         poseStack,
-                        StyledText2.of(String.valueOf(poi.getLocation().getZ())),
+                        StyledText2.fromString(String.valueOf(poi.getLocation().getZ())),
                         this.width / 2f + 80,
                         60 + 20 * row,
                         color,

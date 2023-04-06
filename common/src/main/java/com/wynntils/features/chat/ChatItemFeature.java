@@ -55,7 +55,7 @@ public class ChatItemFeature extends Feature {
         }
 
         // replace encoded strings with placeholders for less confusion
-        Matcher m = Models.Gear.gearChatEncodingMatcher(StyledText2.of(chatInput.getValue()));
+        Matcher m = Models.Gear.gearChatEncodingMatcher(StyledText2.fromString(chatInput.getValue()));
         while (m.find()) {
             String encodedItem = m.group();
             StringBuilder name = new StringBuilder(m.group("Name"));

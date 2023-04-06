@@ -36,7 +36,7 @@ public final class StatusEffectModel extends Model {
     private static final Pattern STATUS_EFFECT_PATTERN =
             Pattern.compile("(.+?§7 ?(?:\\d+(?:\\.\\d+)?%)?) ?([%\\-+\\/\\da-zA-Z'\\s]+?) §[84a]\\((.+?)\\).*");
 
-    private static final StyledText2 STATUS_EFFECTS_TITLE = StyledText2.of("§d§lStatus Effects");
+    private static final StyledText2 STATUS_EFFECTS_TITLE = StyledText2.fromString("§d§lStatus Effects");
 
     private List<StatusEffect> statusEffects = List.of();
 
@@ -75,13 +75,13 @@ public final class StatusEffectModel extends Model {
             StyledText2 trimmedEffect = effect.trim();
             if (trimmedEffect.isEmpty()) continue;
 
-            Matcher m = trimmedEffect.match(STATUS_EFFECT_PATTERN);
+            Matcher m = trimmedEffect.getMatcher(STATUS_EFFECT_PATTERN);
             if (!m.find()) continue;
 
             // See comment at STATUS_EFFECT_PATTERN definition for format description of these
-            StyledText2 prefix = StyledText2.of(m.group(1));
-            StyledText2 name = StyledText2.of(m.group(2));
-            StyledText2 displayedTime = StyledText2.of(m.group(3));
+            StyledText2 prefix = StyledText2.fromString(m.group(1));
+            StyledText2 name = StyledText2.fromString(m.group(2));
+            StyledText2 displayedTime = StyledText2.fromString(m.group(3));
             newStatusEffects.add(new StatusEffect(name, displayedTime, prefix));
         }
 

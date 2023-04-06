@@ -7,8 +7,8 @@ package com.wynntils.models.spells.type;
 import com.wynntils.core.text.StyledText2;
 
 public enum SpellFailureReason {
-    NOT_ENOUGH_MANA(StyledText2.of("§4You don't have enough mana to cast that spell!")),
-    NOT_UNLOCKED(StyledText2.of("§4You have not unlocked this spell!"));
+    NOT_ENOUGH_MANA(StyledText2.fromString("§4You don't have enough mana to cast that spell!")),
+    NOT_UNLOCKED(StyledText2.fromString("§4You have not unlocked this spell!"));
 
     private final StyledText2 message;
 

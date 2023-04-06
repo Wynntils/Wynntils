@@ -101,7 +101,7 @@ public class TradeMarketBulkSellFeature extends Feature {
         ItemStack is = cs.getMenu().getSlot(SELLABLE_ITEM_SLOT).getItem();
         if (is == ItemStack.EMPTY) return null;
         if (is.getHoverName().toString().contains("Click an Item to sell")) return null;
-        Matcher m = ComponentUtils.getCoded(is.getHoverName()).match(ITEM_NAME_PATTERN);
+        Matcher m = ComponentUtils.getCoded(is.getHoverName()).getMatcher(ITEM_NAME_PATTERN);
 
         if (!m.matches()) return null;
         return m.group(2);

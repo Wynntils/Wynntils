@@ -137,7 +137,7 @@ public final class PartyModel extends Model {
     }
 
     private boolean tryParsePartyMessages(StyledText2 coded) {
-        if (coded.match(PARTY_CREATE_SELF).matches()) {
+        if (coded.getMatcher(PARTY_CREATE_SELF).matches()) {
             WynntilsMod.info("Player created a new party.");
 
             inParty = true;
@@ -149,23 +149,23 @@ public final class PartyModel extends Model {
             return true;
         }
 
-        if (coded.match(PARTY_DISBAND_ALL).matches()
-                || coded.match(PARTY_LEAVE_SELF_KICK).matches()
-                || coded.match(PARTY_LEAVE_SELF_ALREADYLEFT).matches()
-                || coded.match(PARTY_DISBAND_SELF).matches()) {
+        if (coded.getMatcher(PARTY_DISBAND_ALL).matches()
+                || coded.getMatcher(PARTY_LEAVE_SELF_KICK).matches()
+                || coded.getMatcher(PARTY_LEAVE_SELF_ALREADYLEFT).matches()
+                || coded.getMatcher(PARTY_DISBAND_SELF).matches()) {
             WynntilsMod.info("Player left the party.");
 
             resetData(); // (!) resetData() already posts events for both HadesRelationsUpdateEvent and PartyEvent
             return true;
         }
 
-        if (coded.match(PARTY_JOIN_SELF).matches()) {
+        if (coded.getMatcher(PARTY_JOIN_SELF).matches()) {
             WynntilsMod.info("Player joined a party.");
             requestData();
             return true;
         }
 
-        Matcher matcher = coded.match(PARTY_JOIN_OTHER);
+        Matcher matcher = coded.getMatcher(PARTY_JOIN_OTHER);
         if (matcher.matches()) {
             String player = matcher.group(1);
 
@@ -178,7 +178,7 @@ public final class PartyModel extends Model {
             return true;
         }
 
-        matcher = coded.match(PARTY_JOIN_OTHER_SWITCH);
+        matcher = coded.getMatcher(PARTY_JOIN_OTHER_SWITCH);
         if (matcher.matches()) {
             String player = matcher.group(1);
 
@@ -191,7 +191,7 @@ public final class PartyModel extends Model {
             return true;
         }
 
-        matcher = coded.match(PARTY_LEAVE_OTHER);
+        matcher = coded.getMatcher(PARTY_LEAVE_OTHER);
         if (matcher.matches()) {
             String player = matcher.group(1);
 
@@ -204,7 +204,7 @@ public final class PartyModel extends Model {
             return true;
         }
 
-        matcher = coded.match(PARTY_PROMOTE_OTHER);
+        matcher = coded.getMatcher(PARTY_PROMOTE_OTHER);
         if (matcher.matches()) {
             String player = matcher.group(1);
 
@@ -214,7 +214,7 @@ public final class PartyModel extends Model {
             return true;
         }
 
-        matcher = coded.match(PARTY_PROMOTE_SELF);
+        matcher = coded.getMatcher(PARTY_PROMOTE_SELF);
         if (matcher.matches()) {
             WynntilsMod.info("Player has been promoted to party leader.");
 
@@ -222,7 +222,7 @@ public final class PartyModel extends Model {
             return true;
         }
 
-        matcher = coded.match(PARTY_INVITED);
+        matcher = coded.getMatcher(PARTY_INVITED);
         if (matcher.matches()) {
             String inviter = matcher.group(1);
             WynntilsMod.info("Player has been invited to party by " + inviter);
@@ -231,7 +231,7 @@ public final class PartyModel extends Model {
             return true;
         }
 
-        matcher = coded.match(PARTY_KICK_OTHER);
+        matcher = coded.getMatcher(PARTY_KICK_OTHER);
         if (matcher.matches()) {
             WynntilsMod.info("Other player was kicked from player's party");
 
@@ -262,7 +262,7 @@ public final class PartyModel extends Model {
     }
 
     private boolean tryParseNoPartyMessage(StyledText2 coded) {
-        if (coded.match(PARTY_LIST_SELF_FAILED).matches()) {
+        if (coded.getMatcher(PARTY_LIST_SELF_FAILED).matches()) {
             resetData();
             WynntilsMod.info("Player is not in a party.");
             return true;
@@ -272,7 +272,7 @@ public final class PartyModel extends Model {
     }
 
     private boolean tryParsePartyList(StyledText2 coded) {
-        Matcher matcher = coded.match(PARTY_LIST_ALL);
+        Matcher matcher = coded.getMatcher(PARTY_LIST_ALL);
         if (!matcher.matches()) return false;
 
         String[] partyList = matcher.group(1).split(", ");

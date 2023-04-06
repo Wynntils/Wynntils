@@ -23,7 +23,7 @@ public final class PowderAnnotator implements ItemAnnotator {
 
     @Override
     public ItemAnnotation getAnnotation(ItemStack itemStack, StyledText2 name) {
-        Matcher matcher = name.match(POWDER_PATTERN);
+        Matcher matcher = name.getMatcher(POWDER_PATTERN);
         if (!matcher.matches()) return null;
 
         Powder element = Powder.valueOf(matcher.group(1).toUpperCase(Locale.ROOT));

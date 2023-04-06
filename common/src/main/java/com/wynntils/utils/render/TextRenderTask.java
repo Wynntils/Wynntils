@@ -38,7 +38,7 @@ public final class TextRenderTask {
     }
 
     public void setText(String text) {
-        this.text = StyledText2.of(text);
+        this.text = StyledText2.fromString(text);
     }
 
     @Override

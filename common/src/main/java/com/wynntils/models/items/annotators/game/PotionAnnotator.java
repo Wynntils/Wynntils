@@ -26,7 +26,7 @@ public final class PotionAnnotator implements ItemAnnotator {
 
     @Override
     public ItemAnnotation getAnnotation(ItemStack itemStack, StyledText2 name) {
-        Matcher matcher = name.match(POTION_PATTERN);
+        Matcher matcher = name.getMatcher(POTION_PATTERN);
         if (!matcher.matches()) return null;
 
         String potionType = matcher.group(1);

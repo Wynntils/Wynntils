@@ -11,10 +11,10 @@ import net.minecraft.ChatFormatting;
 
 public enum ShamanMaskType {
     NONE("None", ChatFormatting.GRAY, null),
-    LUNATIC("L", ChatFormatting.RED, StyledText2.of("§cL")),
-    FANATIC("F", ChatFormatting.GOLD, StyledText2.of("§6F")),
-    COWARD("C", ChatFormatting.AQUA, StyledText2.of("§bC")),
-    AWAKENED("A", ChatFormatting.DARK_PURPLE, StyledText2.of("Awakened"));
+    LUNATIC("L", ChatFormatting.RED, StyledText2.fromString("§cL")),
+    FANATIC("F", ChatFormatting.GOLD, StyledText2.fromString("§6F")),
+    COWARD("C", ChatFormatting.AQUA, StyledText2.fromString("§bC")),
+    AWAKENED("A", ChatFormatting.DARK_PURPLE, StyledText2.fromString("Awakened"));
 
     private final String alias;
     private final ChatFormatting color;

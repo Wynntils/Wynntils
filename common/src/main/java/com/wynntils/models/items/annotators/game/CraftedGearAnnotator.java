@@ -17,7 +17,7 @@ public final class CraftedGearAnnotator implements ItemAnnotator {
 
     @Override
     public ItemAnnotation getAnnotation(ItemStack itemStack, StyledText2 name) {
-        Matcher matcher = name.match(CRAFTED_GEAR_PATTERN);
+        Matcher matcher = name.getMatcher(CRAFTED_GEAR_PATTERN);
         if (!matcher.matches()) return null;
 
         return Models.Gear.parseCraftedGearItem(itemStack);

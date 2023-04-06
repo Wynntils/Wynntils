@@ -62,7 +62,7 @@ public class ClassInfoButton extends WynntilsButton {
         FontRenderer.getInstance()
                 .renderText(
                         poseStack,
-                        StyledText2.of(classInfo.name()),
+                        StyledText2.fromString(classInfo.name()),
                         0,
                         0,
                         CommonColors.BLACK,
@@ -72,7 +72,7 @@ public class ClassInfoButton extends WynntilsButton {
         FontRenderer.getInstance()
                 .renderText(
                         poseStack,
-                        StyledText2.of("Level " + classInfo.level()),
+                        StyledText2.fromString("Level " + classInfo.level()),
                         0,
                         10f,
                         CommonColors.BLACK,

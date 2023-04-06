@@ -126,7 +126,7 @@ public class ChatRedirectFeature extends Feature {
             Pattern pattern = redirector.getPattern(messageType);
             if (pattern == null) continue;
 
-            Matcher matcher = message.match(pattern);
+            Matcher matcher = message.getMatcher(pattern);
 
             if (matcher.find()) {
                 e.setCanceled(true);
@@ -194,7 +194,7 @@ public class ChatRedirectFeature extends Feature {
 
         @Override
         protected StyledText2 getNotification(Matcher matcher) {
-            return StyledText2.of(ChatFormatting.DARK_RED + "Your items are damaged.");
+            return StyledText2.fromString(ChatFormatting.DARK_RED + "Your items are damaged.");
         }
     }
 
@@ -225,7 +225,7 @@ public class ChatRedirectFeature extends Feature {
             String server = matcher.group("server");
             String playerClass = matcher.group("class");
 
-            return StyledText2.of(ChatFormatting.GREEN + "→ " + ChatFormatting.DARK_GREEN
+            return StyledText2.fromString(ChatFormatting.GREEN + "→ " + ChatFormatting.DARK_GREEN
                     + playerName + " [" + ChatFormatting.GREEN
                     + server + "/" + playerClass + ChatFormatting.DARK_GREEN
                     + "]");
@@ -255,7 +255,7 @@ public class ChatRedirectFeature extends Feature {
         protected StyledText2 getNotification(Matcher matcher) {
             String playerName = matcher.group("name");
 
-            return StyledText2.of(ChatFormatting.RED + "← " + ChatFormatting.DARK_GREEN + playerName);
+            return StyledText2.fromString(ChatFormatting.RED + "← " + ChatFormatting.DARK_GREEN + playerName);
         }
     }
 
@@ -276,7 +276,7 @@ public class ChatRedirectFeature extends Feature {
         protected StyledText2 getNotification(Matcher matcher) {
             String amount = matcher.group(1);
 
-            return StyledText2.of(ChatFormatting.DARK_RED + "[+" + amount + " ❤]");
+            return StyledText2.fromString(ChatFormatting.DARK_RED + "[+" + amount + " ❤]");
         }
     }
 
@@ -303,7 +303,7 @@ public class ChatRedirectFeature extends Feature {
         protected StyledText2 getNotification(Matcher matcher) {
             String amount = matcher.group(1);
 
-            return StyledText2.of(ChatFormatting.DARK_RED + "[+" + amount + " ❤]");
+            return StyledText2.fromString(ChatFormatting.DARK_RED + "[+" + amount + " ❤]");
         }
     }
 
@@ -323,7 +323,7 @@ public class ChatRedirectFeature extends Feature {
 
         @Override
         protected StyledText2 getNotification(Matcher matcher) {
-            return StyledText2.of(ChatFormatting.DARK_PURPLE + "Your horse has despawned.");
+            return StyledText2.fromString(ChatFormatting.DARK_PURPLE + "Your horse has despawned.");
         }
     }
 
@@ -343,7 +343,7 @@ public class ChatRedirectFeature extends Feature {
 
         @Override
         protected StyledText2 getNotification(Matcher matcher) {
-            return StyledText2.of(ChatFormatting.DARK_RED + "Nearby mobs prevent horse spawning!");
+            return StyledText2.fromString(ChatFormatting.DARK_RED + "Nearby mobs prevent horse spawning!");
         }
     }
 
@@ -362,7 +362,7 @@ public class ChatRedirectFeature extends Feature {
 
         @Override
         protected StyledText2 getNotification(Matcher matcher) {
-            return StyledText2.of(ChatFormatting.DARK_RED + "No room for a horse!");
+            return StyledText2.fromString(ChatFormatting.DARK_RED + "No room for a horse!");
         }
     }
 
@@ -381,7 +381,7 @@ public class ChatRedirectFeature extends Feature {
 
         @Override
         protected StyledText2 getNotification(Matcher matcher) {
-            return StyledText2.of(ChatFormatting.GRAY + "→ Housing Island");
+            return StyledText2.fromString(ChatFormatting.GRAY + "→ Housing Island");
         }
     }
 
@@ -401,7 +401,7 @@ public class ChatRedirectFeature extends Feature {
 
         @Override
         protected StyledText2 getNotification(Matcher matcher) {
-            return StyledText2.of(ChatFormatting.DARK_RED + "Housing teleport is on cooldown!");
+            return StyledText2.fromString(ChatFormatting.DARK_RED + "Housing teleport is on cooldown!");
         }
     }
 
@@ -421,7 +421,7 @@ public class ChatRedirectFeature extends Feature {
 
         @Override
         protected StyledText2 getNotification(Matcher matcher) {
-            return StyledText2.of(ChatFormatting.GRAY + "← Housing Island");
+            return StyledText2.fromString(ChatFormatting.GRAY + "← Housing Island");
         }
     }
 
@@ -441,7 +441,7 @@ public class ChatRedirectFeature extends Feature {
 
         @Override
         protected StyledText2 getNotification(Matcher matcher) {
-            return StyledText2.of(ChatFormatting.DARK_RED + "Housing teleport is on cooldown!");
+            return StyledText2.fromString(ChatFormatting.DARK_RED + "Housing teleport is on cooldown!");
         }
     }
 
@@ -463,11 +463,11 @@ public class ChatRedirectFeature extends Feature {
         protected StyledText2 getNotification(Matcher matcher) {
             int ingredientCount = Integer.parseInt(matcher.group(1));
             StyledText2 ingredientString =
-                    StyledText2.of(ingredientCount + " §dingredient" + (ingredientCount == 1 ? "" : "s"));
+                    StyledText2.fromString(ingredientCount + " §dingredient" + (ingredientCount == 1 ? "" : "s"));
 
             String emeraldString = matcher.group(2);
 
-            return StyledText2.of(String.format(
+            return StyledText2.fromString(String.format(
                     "§dSold §7%s §dfor §a%s§d.",
                     ingredientString.getInternalCodedStringRepresentation(), emeraldString));
         }
@@ -499,7 +499,8 @@ public class ChatRedirectFeature extends Feature {
             String rank = matcher.group("rank");
             String playerName = matcher.group("name");
 
-            return StyledText2.of(ChatFormatting.GREEN + "→ " + WynnPlayerUtils.getFormattedRank(rank) + playerName);
+            return StyledText2.fromString(
+                    ChatFormatting.GREEN + "→ " + WynnPlayerUtils.getFormattedRank(rank) + playerName);
         }
     }
 
@@ -519,7 +520,7 @@ public class ChatRedirectFeature extends Feature {
 
         @Override
         protected StyledText2 getNotification(Matcher matcher) {
-            return StyledText2.of(ChatFormatting.DARK_RED + "Unable to teleport! Move away from blocks.");
+            return StyledText2.fromString(ChatFormatting.DARK_RED + "Unable to teleport! Move away from blocks.");
         }
     }
 
@@ -539,7 +540,7 @@ public class ChatRedirectFeature extends Feature {
 
         @Override
         protected StyledText2 getNotification(Matcher matcher) {
-            return StyledText2.of(ChatFormatting.DARK_RED + "Not enough mana to do that spell!");
+            return StyledText2.fromString(ChatFormatting.DARK_RED + "Not enough mana to do that spell!");
         }
     }
 
@@ -558,7 +559,7 @@ public class ChatRedirectFeature extends Feature {
 
         @Override
         protected StyledText2 getNotification(Matcher matcher) {
-            return StyledText2.of(ChatFormatting.DARK_RED + "No totems nearby!");
+            return StyledText2.fromString(ChatFormatting.DARK_RED + "No totems nearby!");
         }
     }
 
@@ -577,7 +578,7 @@ public class ChatRedirectFeature extends Feature {
 
         @Override
         protected StyledText2 getNotification(Matcher matcher) {
-            return StyledText2.of(ChatFormatting.DARK_RED + "This potion is already active!");
+            return StyledText2.fromString(ChatFormatting.DARK_RED + "This potion is already active!");
         }
     }
 
@@ -597,7 +598,7 @@ public class ChatRedirectFeature extends Feature {
 
         @Override
         protected StyledText2 getNotification(Matcher matcher) {
-            return StyledText2.of(ChatFormatting.DARK_RED + "At potion charge limit!");
+            return StyledText2.fromString(ChatFormatting.DARK_RED + "At potion charge limit!");
         }
     }
 
@@ -617,7 +618,7 @@ public class ChatRedirectFeature extends Feature {
 
         @Override
         protected StyledText2 getNotification(Matcher matcher) {
-            return StyledText2.of(ChatFormatting.GRAY + "Moved excess healing items to bank.");
+            return StyledText2.fromString(ChatFormatting.GRAY + "Moved excess healing items to bank.");
         }
     }
 
@@ -637,7 +638,7 @@ public class ChatRedirectFeature extends Feature {
 
         @Override
         protected StyledText2 getNotification(Matcher matcher) {
-            return StyledText2.of(ChatFormatting.GRAY + "Lesser potion replaced.");
+            return StyledText2.fromString(ChatFormatting.GRAY + "Lesser potion replaced.");
         }
     }
 
@@ -657,7 +658,7 @@ public class ChatRedirectFeature extends Feature {
 
         @Override
         protected StyledText2 getNotification(Matcher matcher) {
-            return StyledText2.of(ChatFormatting.DARK_RED + "Can't teleport on a housing island!");
+            return StyledText2.fromString(ChatFormatting.DARK_RED + "Can't teleport on a housing island!");
         }
     }
 
@@ -676,7 +677,7 @@ public class ChatRedirectFeature extends Feature {
 
         @Override
         protected StyledText2 getNotification(Matcher matcher) {
-            return StyledText2.of(ChatFormatting.DARK_RED + "Nearby mobs prevent scroll teleportation!");
+            return StyledText2.fromString(ChatFormatting.DARK_RED + "Nearby mobs prevent scroll teleportation!");
         }
     }
 
@@ -729,7 +730,7 @@ public class ChatRedirectFeature extends Feature {
         @Override
         protected StyledText2 getNotification(Matcher matcher) {
             // Send the matching part, which could be +1 Soul Point or +2 Soul Points, etc.
-            return StyledText2.of(ChatFormatting.LIGHT_PURPLE + matcher.group(1));
+            return StyledText2.fromString(ChatFormatting.LIGHT_PURPLE + matcher.group(1));
         }
     }
 
@@ -757,7 +758,7 @@ public class ChatRedirectFeature extends Feature {
                 pluralizer = "s";
             }
 
-            return StyledText2.of(String.format("§4-%s Soul Point%s", numberString, pluralizer));
+            return StyledText2.fromString(String.format("§4-%s Soul Point%s", numberString, pluralizer));
         }
     }
 
@@ -777,7 +778,7 @@ public class ChatRedirectFeature extends Feature {
         @Override
         protected StyledText2 getNotification(Matcher matcher) {
             String minutesString = String.format("+%s minutes", matcher.group(1));
-            return StyledText2.of(ChatFormatting.AQUA + minutesString + ChatFormatting.GRAY + " speed boost");
+            return StyledText2.fromString(ChatFormatting.AQUA + minutesString + ChatFormatting.GRAY + " speed boost");
         }
     }
 
@@ -797,7 +798,7 @@ public class ChatRedirectFeature extends Feature {
 
         @Override
         protected StyledText2 getNotification(Matcher matcher) {
-            return StyledText2.of(ChatFormatting.DARK_RED + "Your tool has 0 durability!");
+            return StyledText2.fromString(ChatFormatting.DARK_RED + "Your tool has 0 durability!");
         }
     }
 
@@ -823,8 +824,8 @@ public class ChatRedirectFeature extends Feature {
         }
 
         protected static StyledText2 getUnusedAbilityPointsMessage(String unusedAbilityPoints) {
-            return StyledText2.of(ChatFormatting.DARK_AQUA + "You have " + ChatFormatting.BOLD + unusedAbilityPoints
-                    + ChatFormatting.RESET + ChatFormatting.DARK_AQUA + " unused ability points");
+            return StyledText2.fromString(ChatFormatting.DARK_AQUA + "You have " + ChatFormatting.BOLD
+                    + unusedAbilityPoints + ChatFormatting.RESET + ChatFormatting.DARK_AQUA + " unused ability points");
         }
     }
 
@@ -879,8 +880,8 @@ public class ChatRedirectFeature extends Feature {
         }
 
         protected static StyledText2 getUnusedSkillPointsMessage(String unusedSkillPoints) {
-            return StyledText2.of(ChatFormatting.DARK_RED + "You have " + ChatFormatting.BOLD + unusedSkillPoints
-                    + ChatFormatting.RESET + ChatFormatting.DARK_RED + " unused skill points");
+            return StyledText2.fromString(ChatFormatting.DARK_RED + "You have " + ChatFormatting.BOLD
+                    + unusedSkillPoints + ChatFormatting.RESET + ChatFormatting.DARK_RED + " unused skill points");
         }
     }
 }

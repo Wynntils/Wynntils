@@ -17,7 +17,7 @@ public final class SeaskipperDestinationAnnotator implements ItemAnnotator {
 
     @Override
     public ItemAnnotation getAnnotation(ItemStack itemStack, StyledText2 name) {
-        Matcher matcher = name.match(SEASKIPPER_PASS_PATTERN);
+        Matcher matcher = name.getMatcher(SEASKIPPER_PASS_PATTERN);
         if (!matcher.matches()) return null;
 
         String destination = matcher.group(1);

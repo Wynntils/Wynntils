@@ -18,7 +18,7 @@ public final class AmplifierAnnotator implements ItemAnnotator {
 
     @Override
     public ItemAnnotation getAnnotation(ItemStack itemStack, StyledText2 name) {
-        Matcher ampMatcher = name.match(AMPLIFIER_PATTERN);
+        Matcher ampMatcher = name.getMatcher(AMPLIFIER_PATTERN);
         if (!ampMatcher.matches()) return null;
 
         int tier = MathUtils.integerFromRoman(ampMatcher.group(1));

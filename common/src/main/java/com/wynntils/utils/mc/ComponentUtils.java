@@ -145,7 +145,7 @@ public final class ComponentUtils {
     }
 
     public static String stripFormatting(StyledText2 coded) {
-        return coded == null ? "" : coded.withoutFormatting();
+        return coded == null ? "" : coded.getUnformattedString();
     }
 
     public static String stripColorFormatting(StyledText2 text) {
@@ -153,7 +153,7 @@ public final class ComponentUtils {
             return "";
         }
 
-        return text.match(COLOR_CODE_PATTERN).replaceAll("");
+        return text.getMatcher(COLOR_CODE_PATTERN).replaceAll("");
     }
 
     public static StyledText2 getLastPartCodes(StyledText2 lastPart) {
@@ -164,7 +164,7 @@ public final class ComponentUtils {
         while ((index = lastPart.getInternalCodedStringRepresentation().lastIndexOf('§')) != -1) {
             if (index >= lastPart.getInternalCodedStringRepresentation().length() - 1) {
                 // trailing §, no format code, skip it
-                lastPart = StyledText2.of(
+                lastPart = StyledText2.fromString(
                         lastPart.getInternalCodedStringRepresentation().substring(0, index));
                 continue;
             }
@@ -176,7 +176,7 @@ public final class ComponentUtils {
             // prepend to codes since we're going backwards
             lastPartCodes = lastPartCodes.prepend(thisCode);
 
-            lastPart = StyledText2.of(
+            lastPart = StyledText2.fromString(
                     lastPart.getInternalCodedStringRepresentation().substring(0, index));
         }
 

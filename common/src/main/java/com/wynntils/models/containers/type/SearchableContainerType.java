@@ -36,7 +36,7 @@ public enum SearchableContainerType {
 
     public static SearchableContainerType getContainerType(StyledText2 title) {
         for (SearchableContainerType type : SearchableContainerType.values()) {
-            if (title.match(type.titlePattern).matches()) {
+            if (title.getMatcher(type.titlePattern).matches()) {
                 return type;
             }
         }

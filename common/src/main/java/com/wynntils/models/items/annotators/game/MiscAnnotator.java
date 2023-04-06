@@ -15,8 +15,8 @@ import net.minecraft.nbt.Tag;
 import net.minecraft.world.item.ItemStack;
 
 public final class MiscAnnotator implements ItemAnnotator {
-    private static final StyledText2 UNTRADABLE = StyledText2.of("§cUntradable Item");
-    private static final StyledText2 QUEST_ITEM = StyledText2.of("§cQuest Item");
+    private static final StyledText2 UNTRADABLE = StyledText2.fromString("§cUntradable Item");
+    private static final StyledText2 QUEST_ITEM = StyledText2.fromString("§cQuest Item");
 
     @Override
     public ItemAnnotation getAnnotation(ItemStack itemStack, StyledText2 name) {

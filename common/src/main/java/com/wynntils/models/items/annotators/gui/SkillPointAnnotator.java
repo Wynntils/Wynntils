@@ -20,7 +20,7 @@ public final class SkillPointAnnotator implements ItemAnnotator {
 
     @Override
     public ItemAnnotation getAnnotation(ItemStack itemStack, StyledText2 name) {
-        Matcher matcher = name.match(SKILL_POINT_PATTERN);
+        Matcher matcher = name.getMatcher(SKILL_POINT_PATTERN);
         if (!matcher.matches()) return null;
 
         String skillName = matcher.group(1);

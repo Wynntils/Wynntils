@@ -156,7 +156,7 @@ public final class PoiManagementScreen extends WynntilsScreen {
         FontRenderer.getInstance()
                 .renderText(
                         poseStack,
-                        StyledText2.of(I18n.get("screens.wynntils.poiManagementGui.icon")),
+                        StyledText2.fromString(I18n.get("screens.wynntils.poiManagementGui.icon")),
                         this.width / 2f - 165,
                         43,
                         CommonColors.WHITE,
@@ -167,7 +167,7 @@ public final class PoiManagementScreen extends WynntilsScreen {
         FontRenderer.getInstance()
                 .renderText(
                         poseStack,
-                        StyledText2.of(I18n.get("screens.wynntils.poiManagementGui.name")),
+                        StyledText2.fromString(I18n.get("screens.wynntils.poiManagementGui.name")),
                         this.width / 2f - 130,
                         43,
                         CommonColors.WHITE,
@@ -178,7 +178,7 @@ public final class PoiManagementScreen extends WynntilsScreen {
         FontRenderer.getInstance()
                 .renderText(
                         poseStack,
-                        StyledText2.of("X"),
+                        StyledText2.fromString("X"),
                         this.width / 2f - 15,
                         43,
                         CommonColors.WHITE,
@@ -189,7 +189,7 @@ public final class PoiManagementScreen extends WynntilsScreen {
         FontRenderer.getInstance()
                 .renderText(
                         poseStack,
-                        StyledText2.of("Y"),
+                        StyledText2.fromString("Y"),
                         this.width / 2f + 40,
                         43,
                         CommonColors.WHITE,
@@ -200,7 +200,7 @@ public final class PoiManagementScreen extends WynntilsScreen {
         FontRenderer.getInstance()
                 .renderText(
                         poseStack,
-                        StyledText2.of("Z"),
+                        StyledText2.fromString("Z"),
                         this.width / 2f + 80,
                         43,
                         CommonColors.WHITE,

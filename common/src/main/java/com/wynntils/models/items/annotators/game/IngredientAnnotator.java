@@ -21,7 +21,7 @@ public final class IngredientAnnotator implements ItemAnnotator {
 
     @Override
     public ItemAnnotation getAnnotation(ItemStack itemStack, StyledText2 name) {
-        Matcher matcher = name.match(INGREDIENT_PATTERN);
+        Matcher matcher = name.getMatcher(INGREDIENT_PATTERN);
         if (!matcher.matches()) return null;
 
         String ingredientName = matcher.group(1);

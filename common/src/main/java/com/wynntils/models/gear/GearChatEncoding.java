@@ -204,7 +204,7 @@ public class GearChatEncoding {
     }
 
     public Matcher gearChatEncodingMatcher(StyledText2 coded) {
-        return coded.match(ENCODED_PATTERN);
+        return coded.getMatcher(ENCODED_PATTERN);
     }
 
     private String encodeString(String text) {

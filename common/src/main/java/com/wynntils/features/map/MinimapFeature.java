@@ -376,7 +376,7 @@ public class MinimapFeature extends Feature {
                     2 * h + 1);
             fontRenderer.renderText(
                     poseStack,
-                    StyledText2.of(text),
+                    StyledText2.fromString(text),
                     compassRenderX,
                     compassRenderZ - 3f,
                     CommonColors.WHITE,

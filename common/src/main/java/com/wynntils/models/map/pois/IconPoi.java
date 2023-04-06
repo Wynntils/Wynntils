@@ -99,7 +99,7 @@ public abstract class IconPoi implements Poi {
             FontRenderer.getInstance()
                     .renderText(
                             poseStack,
-                            StyledText2.of(getName()),
+                            StyledText2.fromString(getName()),
                             renderX,
                             15 + renderY,
                             CommonColors.GREEN,

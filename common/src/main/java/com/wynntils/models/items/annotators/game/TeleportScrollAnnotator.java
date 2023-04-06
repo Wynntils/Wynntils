@@ -23,7 +23,7 @@ public final class TeleportScrollAnnotator implements ItemAnnotator {
 
     @Override
     public ItemAnnotation getAnnotation(ItemStack itemStack, StyledText2 name) {
-        Matcher nameMatcher = name.match(TELEPORT_SCROLL_PATTERN);
+        Matcher nameMatcher = name.getMatcher(TELEPORT_SCROLL_PATTERN);
         if (!nameMatcher.matches()) return null;
 
         String scrollName = nameMatcher.group(1);

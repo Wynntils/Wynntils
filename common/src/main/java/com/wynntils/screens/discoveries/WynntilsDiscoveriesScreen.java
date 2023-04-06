@@ -274,7 +274,7 @@ public final class WynntilsDiscoveriesScreen extends WynntilsListScreen<Discover
         FontRenderer.getInstance()
                 .renderAlignedTextInBox(
                         poseStack,
-                        StyledText2.of(I18n.get("screens.wynntils.wynntilsDiscoveries.noDiscoveries")),
+                        StyledText2.fromString(I18n.get("screens.wynntils.wynntilsDiscoveries.noDiscoveries")),
                         Texture.QUEST_BOOK_BACKGROUND.width() / 2f + 15f,
                         Texture.QUEST_BOOK_BACKGROUND.width() - 15f,
                         0,
@@ -290,7 +290,7 @@ public final class WynntilsDiscoveriesScreen extends WynntilsListScreen<Discover
         FontRenderer.getInstance()
                 .renderAlignedTextInBox(
                         poseStack,
-                        StyledText2.of(description),
+                        StyledText2.fromString(description),
                         20,
                         Texture.QUEST_BOOK_BACKGROUND.width() / 2f - 10,
                         80,
@@ -302,7 +302,7 @@ public final class WynntilsDiscoveriesScreen extends WynntilsListScreen<Discover
         FontRenderer.getInstance()
                 .renderAlignedTextInBox(
                         poseStack,
-                        StyledText2.of(filterHelper),
+                        StyledText2.fromString(filterHelper),
                         20,
                         Texture.QUEST_BOOK_BACKGROUND.width() / 2f - 10,
                         105,

@@ -97,7 +97,7 @@ public final class WynntilsGuidesListScreen extends WynntilsListScreen<Screen, G
         FontRenderer.getInstance()
                 .renderAlignedTextInBox(
                         poseStack,
-                        StyledText2.of(description),
+                        StyledText2.fromString(description),
                         20,
                         Texture.QUEST_BOOK_BACKGROUND.width() / 2f - 10,
                         80,

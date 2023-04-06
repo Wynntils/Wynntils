@@ -61,8 +61,8 @@ public final class BufferedFontRenderer {
 
         renderX = switch (horizontalAlignment) {
             case LEFT -> x;
-            case CENTER -> x - (font.width(text.withoutFormatting()) / 2f * textScale);
-            case RIGHT -> x - font.width(text.withoutFormatting()) * textScale;};
+            case CENTER -> x - (font.width(text.getUnformattedString()) / 2f * textScale);
+            case RIGHT -> x - font.width(text.getUnformattedString()) * textScale;};
 
         renderY = switch (verticalAlignment) {
             case TOP -> y;
@@ -322,7 +322,7 @@ public final class BufferedFontRenderer {
             float textScale) {
         if (text == null) return;
 
-        if (maxWidth == 0 || font.width(text.withoutFormatting()) < maxWidth) {
+        if (maxWidth == 0 || font.width(text.getUnformattedString()) < maxWidth) {
             renderText(
                     poseStack,
                     bufferSource,
@@ -344,7 +344,7 @@ public final class BufferedFontRenderer {
         StyledText2 lastPart = StyledText2.EMPTY;
         for (int i = 0; i < parts.size(); i++) {
             // copy the format codes to this part as well
-            StyledText2 part = StyledText2.of(
+            StyledText2 part = StyledText2.fromString(
                     ComponentUtils.getLastPartCodes(lastPart) + parts.get(i).getString());
             lastPart = part;
             renderText(
@@ -395,7 +395,7 @@ public final class BufferedFontRenderer {
             // If we ask Mojang code the line height of an empty line we get 0 back so replace with space
             currentY += FontRenderer.getInstance()
                     .calculateRenderHeight(
-                            line.getText().isEmpty() ? StyledText2.of(" ") : line.getText(),
+                            line.getText().isEmpty() ? StyledText2.fromString(" ") : line.getText(),
                             line.getSetting().maxWidth());
         }
     }

@@ -222,7 +222,7 @@ public class InventoryFunctions {
             ItemStack itemStack = McUtils.player().getItemInHand(InteractionHand.MAIN_HAND);
             StyledText2 hoverName = ComponentUtils.getCoded(itemStack.getHoverName());
             if (!arguments.getArgument("formatted").getBooleanValue()) {
-                return hoverName.withoutFormatting();
+                return hoverName.getUnformattedString();
             }
             return hoverName.getInternalCodedStringRepresentation();
         }

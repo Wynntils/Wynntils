@@ -22,7 +22,7 @@ import net.minecraftforge.eventbus.api.SubscribeEvent;
 
 @ConfigCategory(Category.UI)
 public class CustomCharacterSelectionScreenFeature extends Feature {
-    public static final StyledText2 CHARACTER_SELECTION_TITLE = StyledText2.of("§8§lSelect a Character");
+    public static final StyledText2 CHARACTER_SELECTION_TITLE = StyledText2.fromString("§8§lSelect a Character");
 
     @RegisterConfig
     public final Config<Boolean> onlyOpenOnce = new Config<>(false);

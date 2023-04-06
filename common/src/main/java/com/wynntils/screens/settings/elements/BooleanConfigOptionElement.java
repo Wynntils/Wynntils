@@ -59,7 +59,7 @@ public class BooleanConfigOptionElement extends ConfigOptionElement {
         FontRenderer.getInstance()
                 .renderAlignedTextInBox(
                         poseStack,
-                        StyledText2.of(
+                        StyledText2.fromString(
                                 value
                                         ? I18n.get("screens.wynntils.settingsScreen.booleanConfig.enabled")
                                         : I18n.get("screens.wynntils.settingsScreen.booleanConfig.disabled")),

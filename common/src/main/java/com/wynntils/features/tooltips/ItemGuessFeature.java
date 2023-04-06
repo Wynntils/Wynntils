@@ -88,7 +88,7 @@ public class ItemGuessFeature extends Feature {
                         .withStyle(ChatFormatting.GRAY));
             }
 
-            guesses.append(StyledText2.of("§7: ").asSingleLiteralComponentWithCodedString());
+            guesses.append(StyledText2.fromString("§7: ").asSingleLiteralComponentWithCodedString());
 
             Optional<MutableComponent> itemsComponent = itemsForLevel.stream()
                     .reduce((i, j) -> i.append(Component.literal(", ").withStyle(ChatFormatting.GRAY))

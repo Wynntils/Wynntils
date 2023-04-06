@@ -152,7 +152,8 @@ public class ItemHandler extends Handler {
         int bracketIndex = name.getInternalCodedStringRepresentation().lastIndexOf('[');
         return bracketIndex == -1
                 ? name
-                : StyledText2.of(name.getInternalCodedStringRepresentation().substring(0, bracketIndex));
+                : StyledText2.fromString(
+                        name.getInternalCodedStringRepresentation().substring(0, bracketIndex));
     }
 
     private boolean similarStack(ItemStack firstItem, ItemStack secondItem) {

@@ -21,7 +21,7 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 
 public final class IngredientPouchAnnotator implements ItemAnnotator {
-    private static final StyledText2 INGREDIENT_POUCH_NAME = StyledText2.of("§6Ingredient Pouch");
+    private static final StyledText2 INGREDIENT_POUCH_NAME = StyledText2.fromString("§6Ingredient Pouch");
     private static final Pattern INGREDIENT_LORE_LINE_PATTERN = Pattern.compile(
             "^§f(\\d+) x (?:§r)?§7([^§]*)(?:§r)?(?:§[3567])? \\[(?:§r)?§([8bde])✫(?:§r)?(§8)?✫(?:§r)?(§8)?✫(?:§r)?§[3567]\\]$");
 
@@ -33,7 +33,7 @@ public final class IngredientPouchAnnotator implements ItemAnnotator {
         List<Pair<IngredientInfo, Integer>> ingredients = new ArrayList<>();
         List<StyledText2> lore = LoreUtils.getLore(itemStack);
         for (StyledText2 line : lore) {
-            Matcher matcher = line.match(INGREDIENT_LORE_LINE_PATTERN);
+            Matcher matcher = line.getMatcher(INGREDIENT_LORE_LINE_PATTERN);
             if (!matcher.matches()) continue;
 
             int count = Integer.parseInt(matcher.group(1));

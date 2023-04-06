@@ -21,7 +21,7 @@ public final class GatheringToolAnnotator implements ItemAnnotator {
 
     @Override
     public ItemAnnotation getAnnotation(ItemStack itemStack, StyledText2 name) {
-        Matcher matcher = name.match(GATHERING_TOOL_PATTERN);
+        Matcher matcher = name.getMatcher(GATHERING_TOOL_PATTERN);
         if (!matcher.matches()) return null;
 
         String toolType = matcher.group(1);

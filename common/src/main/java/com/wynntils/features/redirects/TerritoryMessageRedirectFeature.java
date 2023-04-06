@@ -25,7 +25,7 @@ public class TerritoryMessageRedirectFeature extends Feature {
     @SubscribeEvent
     public void onSubtitleSetText(SubtitleSetTextEvent event) {
         StyledText2 styledText = ComponentUtils.getCoded(event.getComponent());
-        Matcher matcher = styledText.match(TERRITORY_MESSAGE_PATTERN);
+        Matcher matcher = styledText.getMatcher(TERRITORY_MESSAGE_PATTERN);
         if (!matcher.matches()) return;
 
         event.setCanceled(true);
@@ -46,7 +46,7 @@ public class TerritoryMessageRedirectFeature extends Feature {
         // for the sake of our brief message (looks odd otherwise).
         String territoryName = StringUtils.capitalize(rawTerritoryName);
 
-        StyledText2 enteringMessage = StyledText2.of(String.format("§7%s %s", directionalArrow, territoryName));
+        StyledText2 enteringMessage = StyledText2.fromString(String.format("§7%s %s", directionalArrow, territoryName));
         Managers.Notification.queueMessage(enteringMessage);
     }
 
@@ -54,6 +54,8 @@ public class TerritoryMessageRedirectFeature extends Feature {
     // text event.
     @SubscribeEvent
     public void onChat(ChatMessageReceivedEvent event) {
-        if (event.getOriginalCodedMessage().match(TERRITORY_MESSAGE_PATTERN).matches()) event.setCanceled(true);
+        if (event.getOriginalCodedMessage()
+                .getMatcher(TERRITORY_MESSAGE_PATTERN)
+                .matches()) event.setCanceled(true);
     }
 }

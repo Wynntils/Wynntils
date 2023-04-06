@@ -103,7 +103,7 @@ public class TerritoryPoi implements Poi {
                     .renderAlignedTextInBox(
                             poseStack,
                             bufferSource,
-                            StyledText2.of(territoryProfile.getGuildPrefix()),
+                            StyledText2.fromString(territoryProfile.getGuildPrefix()),
                             actualRenderX,
                             actualRenderX + renderWidth,
                             actualRenderZ,
@@ -123,7 +123,7 @@ public class TerritoryPoi implements Poi {
                             .renderAlignedTextInBox(
                                     poseStack,
                                     bufferSource,
-                                    StyledText2.of(timeLeft),
+                                    StyledText2.fromString(timeLeft),
                                     actualRenderX,
                                     actualRenderX + renderWidth,
                                     actualRenderZ,
@@ -140,7 +140,7 @@ public class TerritoryPoi implements Poi {
                     .renderAlignedTextInBox(
                             poseStack,
                             bufferSource,
-                            StyledText2.of(territoryProfile.getFriendlyName()),
+                            StyledText2.fromString(territoryProfile.getFriendlyName()),
                             actualRenderX,
                             actualRenderX + renderWidth,
                             actualRenderZ,

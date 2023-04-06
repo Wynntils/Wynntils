@@ -161,7 +161,7 @@ public class WorldWaypointDistanceFeature extends Feature {
             FontRenderer.getInstance()
                     .renderAlignedTextInBox(
                             event.getPoseStack(),
-                            StyledText2.of(distanceText),
+                            StyledText2.fromString(distanceText),
                             displayPositionX - backgroundWidth,
                             displayPositionX + backgroundWidth,
                             displayPositionY - backgroundHeight,

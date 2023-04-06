@@ -53,7 +53,7 @@ public class MessageContainer {
         if (this.messageCount == 1) {
             this.renderTask = new TextRenderTask(this.message, TextRenderSetting.DEFAULT);
         } else {
-            StyledText2 messageMultiplier = StyledText2.of(" §7[x" + this.messageCount + "]");
+            StyledText2 messageMultiplier = StyledText2.fromString(" §7[x" + this.messageCount + "]");
             this.renderTask = new TextRenderTask(this.message.append(messageMultiplier), this.renderTask.getSetting());
         }
     }

@@ -53,7 +53,7 @@ public class DiscoveryInfo {
             return null;
         }
 
-        Matcher m = lore.get(0).match(COMBAT_LEVEL_PATTERN);
+        Matcher m = lore.get(0).getMatcher(COMBAT_LEVEL_PATTERN);
         if (!m.matches()) return null;
         int minLevel = Integer.parseInt(m.group(1));
 

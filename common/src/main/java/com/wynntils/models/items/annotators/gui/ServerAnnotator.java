@@ -17,7 +17,7 @@ public final class ServerAnnotator implements ItemAnnotator {
 
     @Override
     public ItemAnnotation getAnnotation(ItemStack itemStack, StyledText2 name) {
-        Matcher matcher = name.match(SERVER_ITEM_PATTERN);
+        Matcher matcher = name.getMatcher(SERVER_ITEM_PATTERN);
         if (!matcher.matches()) return null;
 
         int serverId = Integer.parseInt(matcher.group(1));

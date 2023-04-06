@@ -43,12 +43,12 @@ public class ItemDebugTooltipsFeature extends Feature {
         List<Component> addon = new ArrayList<>();
 
         List<StyledText2> wrappedDescription = Arrays.stream(
-                        RenderedStringUtils.wrapTextBySize(StyledText2.of(wynnItem.toString()), 150))
+                        RenderedStringUtils.wrapTextBySize(StyledText2.fromString(wynnItem.toString()), 150))
                 .toList();
         if (!KeyboardUtils.isKeyDown(GLFW.GLFW_KEY_RIGHT_SHIFT) && wrappedDescription.size() > 4) {
             wrappedDescription = new ArrayList<>(wrappedDescription.subList(0, 3));
-            wrappedDescription.add(StyledText2.of("..."));
-            wrappedDescription.add(StyledText2.of("Press Right Shift for all"));
+            wrappedDescription.add(StyledText2.fromString("..."));
+            wrappedDescription.add(StyledText2.fromString("Press Right Shift for all"));
         }
 
         for (StyledText2 line : wrappedDescription) {

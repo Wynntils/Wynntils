@@ -196,8 +196,8 @@ public final class ChatHandler extends Handler {
         LinkedList<Component> dialogue = new LinkedList<>();
 
         StyledText2 firstLineCoded = ComponentUtils.getCoded(newLines.getFirst());
-        boolean isNpcConfirm = firstLineCoded.match(NPC_CONFIRM_PATTERN).find();
-        boolean isNpcSelect = firstLineCoded.match(NPC_SELECT_PATTERN).find();
+        boolean isNpcConfirm = firstLineCoded.getMatcher(NPC_CONFIRM_PATTERN).find();
+        boolean isNpcSelect = firstLineCoded.getMatcher(NPC_SELECT_PATTERN).find();
 
         if (isNpcConfirm || isNpcSelect) {
             // This is an NPC dialogue screen.
@@ -218,7 +218,7 @@ public final class ChatHandler extends Handler {
             for (Component line : newLines) {
                 StyledText2 codedLine = ComponentUtils.getCoded(line);
                 if (!dialogDone) {
-                    if (codedLine.match(EMPTY_LINE_PATTERN).find()) {
+                    if (codedLine.getMatcher(EMPTY_LINE_PATTERN).find()) {
                         if (!optionsFound) {
                             // First part of the dialogue found
                             optionsFound = true;
@@ -232,7 +232,7 @@ public final class ChatHandler extends Handler {
                     }
                 } else {
                     // If there is anything after the dialogue, it is new chat lines
-                    if (!codedLine.match(EMPTY_LINE_PATTERN).find()) {
+                    if (!codedLine.getMatcher(EMPTY_LINE_PATTERN).find()) {
                         newChatLines.push(line);
                     }
                 }
@@ -242,7 +242,7 @@ public final class ChatHandler extends Handler {
             // We just ignore that part. Also, remove empty lines or lines with just the §r code
             while (!newLines.isEmpty()
                     && ComponentUtils.getCoded(newLines.getFirst())
-                            .match(EMPTY_LINE_PATTERN)
+                            .getMatcher(EMPTY_LINE_PATTERN)
                             .find()) {
                 newLines.removeFirst();
             }

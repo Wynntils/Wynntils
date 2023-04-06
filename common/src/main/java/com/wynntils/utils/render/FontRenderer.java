@@ -186,7 +186,7 @@ public final class FontRenderer {
                 renderX,
                 cursorRenderY,
                 0,
-                font.width(text.withoutFormatting()),
+                font.width(text.getUnformattedString()),
                 font.lineHeight + 2);
 
         renderAlignedTextInBox(
@@ -267,7 +267,7 @@ public final class FontRenderer {
             float textScale) {
         if (text == null) return;
 
-        if (maxWidth == 0 || font.width(text.withoutFormatting()) < maxWidth) {
+        if (maxWidth == 0 || font.width(text.getUnformattedString()) < maxWidth) {
             renderText(poseStack, text, x, y, customColor, horizontalAlignment, verticalAlignment, shadow, textScale);
             return;
         }
@@ -279,7 +279,7 @@ public final class FontRenderer {
         StyledText2 lastPart = StyledText2.EMPTY;
         for (int i = 0; i < parts.size(); i++) {
             // copy the format codes to this part as well
-            StyledText2 part = StyledText2.of(
+            StyledText2 part = StyledText2.fromString(
                     ComponentUtils.getLastPartCodes(lastPart) + parts.get(i).getString());
             lastPart = part;
             renderText(
@@ -326,7 +326,7 @@ public final class FontRenderer {
             renderText(poseStack, x, currentY, line);
             // If we ask Mojang code the line height of an empty line we get 0 back so replace with space
             currentY += calculateRenderHeight(
-                    line.getText().isEmpty() ? StyledText2.of(" ") : line.getText(),
+                    line.getText().isEmpty() ? StyledText2.fromString(" ") : line.getText(),
                     line.getSetting().maxWidth());
         }
     }

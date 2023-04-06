@@ -22,7 +22,7 @@ public final class UnknownGearAnnotator implements ItemAnnotator {
         GearType gearType = GearType.fromItemStack(itemStack);
         if (gearType == null) return null;
 
-        Matcher matcher = name.match(UNKNOWN_GEAR_PATTERN);
+        Matcher matcher = name.getMatcher(UNKNOWN_GEAR_PATTERN);
         if (!matcher.matches()) return null;
 
         String gearName = matcher.group(1);

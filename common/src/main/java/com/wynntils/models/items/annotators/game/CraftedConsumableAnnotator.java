@@ -20,7 +20,7 @@ public final class CraftedConsumableAnnotator implements ItemAnnotator {
 
     @Override
     public ItemAnnotation getAnnotation(ItemStack itemStack, StyledText2 name) {
-        Matcher matcher = name.match(CRAFTED_CONSUMABLE_PATTERN);
+        Matcher matcher = name.getMatcher(CRAFTED_CONSUMABLE_PATTERN);
         if (!matcher.matches()) return null;
 
         String craftedName = matcher.group(1);

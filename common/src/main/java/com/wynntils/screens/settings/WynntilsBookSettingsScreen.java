@@ -145,7 +145,7 @@ public final class WynntilsBookSettingsScreen extends WynntilsScreen implements 
         FontRenderer.getInstance()
                 .renderText(
                         poseStack,
-                        StyledText2.of(name + ": "
+                        StyledText2.fromString(name + ": "
                                 + (enabled
                                         ? ChatFormatting.DARK_GREEN + "Enabled"
                                         : ChatFormatting.DARK_RED + "Disabled")),

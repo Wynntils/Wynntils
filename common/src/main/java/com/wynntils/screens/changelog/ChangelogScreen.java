@@ -96,7 +96,7 @@ public final class ChangelogScreen extends WynntilsScreen implements WynntilsPag
         FontRenderer.getInstance()
                 .renderAlignedTextInBox(
                         poseStack,
-                        StyledText2.of((currentPage) + " / " + (maxPage)),
+                        StyledText2.fromString((currentPage) + " / " + (maxPage)),
                         80,
                         Texture.CHANGELOG_BACKGROUND.width() - 80,
                         Texture.CHANGELOG_BACKGROUND.height() - 17,

@@ -53,7 +53,7 @@ public class QuestButton extends WynntilsButton {
         FontRenderer.getInstance()
                 .renderText(
                         poseStack,
-                        StyledText2.of(RenderedStringUtils.getMaxFittingText(
+                        StyledText2.fromString(RenderedStringUtils.getMaxFittingText(
                                 questInfo.getName(),
                                 maxTextWidth,
                                 FontRenderer.getInstance().getFont())),

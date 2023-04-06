@@ -17,7 +17,7 @@ public final class CharmAnnotator implements ItemAnnotator {
 
     @Override
     public ItemAnnotation getAnnotation(ItemStack itemStack, StyledText2 name) {
-        Matcher matcher = name.match(CHARM_PATTERN);
+        Matcher matcher = name.getMatcher(CHARM_PATTERN);
         if (!matcher.matches()) return null;
 
         String displayName = matcher.group(1);
