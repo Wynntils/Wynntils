@@ -90,9 +90,7 @@ public class ObjectivesOverlayFeature extends Feature {
         public void render(PoseStack poseStack, MultiBufferSource bufferSource, float partialTicks, Window window) {
             WynnObjective guildObjective = Models.Objectives.getGuildObjective();
 
-            if (guildObjective == null) {
-                return;
-            }
+            if (guildObjective == null) return;
 
             if (this.hideOnInactivity.get()) {
                 final int maxInactivityMs = 3000;
@@ -176,6 +174,8 @@ public class ObjectivesOverlayFeature extends Feature {
         @Override
         public void render(PoseStack poseStack, MultiBufferSource bufferSource, float partialTicks, Window window) {
             List<WynnObjective> objectives = Models.Objectives.getPersonalObjectives();
+
+            if (objectives.isEmpty()) return;
 
             final int barHeight = this.enableProgressBar.get() ? 5 : 0;
             final int barWidth = 182;
