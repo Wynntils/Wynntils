@@ -1,9 +1,21 @@
+## [0.0.2-alpha.447](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.446...v0.0.2-alpha.447) (2023-04-06)
+
+
+### New Features
+
+* Wrap coded string access inside CodedString ([#1458](https://github.com/Wynntils/Artemis/issues/1458)) ([19f5e8a](https://github.com/Wynntils/Artemis/commit/19f5e8a34743f0d0a08e0b67511d43c61d5a2e8f))
+
 ## [0.0.2-alpha.446](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.445...v0.0.2-alpha.446) (2023-04-06)
 
 
 ### New Features
 
 * Add StyledText, rewrite ChatMentionsFeature and enable it ([#1434](https://github.com/Wynntils/Artemis/issues/1434)) ([d8d67a4](https://github.com/Wynntils/Artemis/commit/d8d67a4f03f8452cc8a93de2bcada4cab4562040))
+
+
+### Miscellaneous Chores
+
+* **release:** v0.0.2-alpha.446 [skip ci] ([675d805](https://github.com/Wynntils/Artemis/commit/675d805174c2a7c75d6853d6dca2012eac35db22))
 
 ## [0.0.2-alpha.445](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.444...v0.0.2-alpha.445) (2023-04-06)
 
@@ -40,16 +52,4 @@
 ### Miscellaneous Chores
 
 * **release:** v0.0.2-alpha.443 [skip ci] ([d6aff4c](https://github.com/Wynntils/Artemis/commit/d6aff4ca9c7332810502a83368845e5151e7d798))
-
-## [0.0.2-alpha.442](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.441...v0.0.2-alpha.442) (2023-04-06)
-
-
-### Bug Fixes
-
-* Fix many cases of objective parsing ([#1452](https://github.com/Wynntils/Artemis/issues/1452)) ([c566757](https://github.com/Wynntils/Artemis/commit/c566757c484557b807caed642c334ffd6fec2b98))
-
-
-### Miscellaneous Chores
-
-* **release:** v0.0.2-alpha.442 [skip ci] ([d6b4bf5](https://github.com/Wynntils/Artemis/commit/d6b4bf5e08dec7855a4680d8ce730fe4c7f233ac))
 
