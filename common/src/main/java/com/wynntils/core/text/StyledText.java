@@ -236,7 +236,7 @@ public final class StyledText {
 
     public StyledText trim() {
         if (parts.isEmpty()) {
-            return new StyledText(List.of(), temporaryWorkaround, clickEvents, hoverEvents);
+            return this;
         }
 
         List<StyledTextPart> newParts = new ArrayList<>(parts);
