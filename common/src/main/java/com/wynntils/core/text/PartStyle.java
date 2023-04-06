@@ -119,10 +119,10 @@ public final class PartStyle {
         // If the current color is NONE, we NEED to try to construct a difference,
         // since there will be no color formatting resetting the formatting afterwards.
         if (previousStyle != null && (color == CustomColor.NONE || previousStyle.color.equals(color))) {
-            StringBuilder stringBuilder = this.tryConstructDifference(previousStyle);
+            String differenceString = this.tryConstructDifference(previousStyle);
 
-            if (stringBuilder != null) {
-                styleString.append(stringBuilder);
+            if (differenceString != null) {
+                styleString.append(differenceString);
                 skipFormatting = true;
             } else {
                 styleString.append(STYLE_PREFIX).append(ChatFormatting.RESET.getChar());
@@ -261,7 +261,7 @@ public final class PartStyle {
         return new PartStyle(owner, color, obfuscated, bold, strikethrough, underlined, italic, clickEvent, hoverEvent);
     }
 
-    private StringBuilder tryConstructDifference(PartStyle oldStyle) {
+    private String tryConstructDifference(PartStyle oldStyle) {
         StringBuilder add = new StringBuilder();
 
         int oldColorInt = oldStyle.color.asInt();
@@ -290,7 +290,7 @@ public final class PartStyle {
         if (oldStyle.italic && !this.italic) return null;
         if (!oldStyle.italic && this.italic) add.append(ChatFormatting.ITALIC);
 
-        return add;
+        return add.toString();
     }
 
     @Override
