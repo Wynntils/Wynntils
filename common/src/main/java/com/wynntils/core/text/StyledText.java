@@ -240,10 +240,10 @@ public final class StyledText {
         }
 
         List<StyledTextPart> newParts = new ArrayList<>(parts);
-        newParts.set(0, newParts.get(0).trim());
+        newParts.set(0, newParts.get(0).stripLeading());
 
         int lastIndex = newParts.size() - 1;
-        newParts.set(lastIndex, newParts.get(lastIndex).trim());
+        newParts.set(lastIndex, newParts.get(lastIndex).stripTrailing());
 
         return new StyledText(newParts, temporaryWorkaround, clickEvents, hoverEvents);
     }

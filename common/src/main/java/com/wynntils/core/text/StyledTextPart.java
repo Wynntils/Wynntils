@@ -114,8 +114,12 @@ public final class StyledTextPart {
         return new StyledTextPart(WynnUtils.normalizeBadString(text), style.getStyle(), parent, null);
     }
 
-    StyledTextPart trim() {
-        return new StyledTextPart(text.trim(), style.getStyle(), parent, null);
+    StyledTextPart stripLeading() {
+        return new StyledTextPart(text.stripLeading(), style.getStyle(), parent, null);
+    }
+
+    StyledTextPart stripTrailing() {
+        return new StyledTextPart(text.stripTrailing(), style.getStyle(), parent, null);
     }
 
     boolean isEmpty() {
