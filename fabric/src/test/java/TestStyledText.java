@@ -4,7 +4,6 @@
  */
 import com.wynntils.core.text.PartStyle;
 import com.wynntils.core.text.StyledText;
-import com.wynntils.core.text.StyledTextPart;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -129,21 +128,6 @@ public class TestStyledText {
                 fifthExpected,
                 StyledText.fromComponent(fifthTestComponent).getString(PartStyle.StyleType.DEFAULT),
                 "StyledText.getString() returned an unexpected value.");
-    }
-
-    @Test
-    public void advancedComponentString_shouldProduceCorrectStyledText() {
-        final String testString = "§c§oitalicred§9§oblue§cnonitalic§oinherited§lbold§rafter";
-        final String[] expectedParts = {"§c§oitalicred", "§9§oblue", "§cnonitalic", "§oinherited", "§lbold", "§rafter"};
-
-        StyledText styledText = StyledText.fromString(testString);
-
-        for (String expectedPart : expectedParts) {
-            StyledTextPart partMatching = styledText.getPartMatching(Pattern.compile(expectedPart));
-
-            Assertions.assertNotNull(
-                    partMatching, "StyledText.getPartMatching() could not find a part matching: " + expectedPart);
-        }
     }
 
     @Test
@@ -361,87 +345,5 @@ public class TestStyledText {
                 expectedMatch,
                 unformattedMatcher.group(1),
                 "StyledText.matches(NONE).group() returned an unexpected value.");
-    }
-
-    @Test
-    public void styledText_shouldSplitCorrectly() {
-        final Component component = Component.literal("This is a test string, where there are ")
-                .append(Component.literal("multiple").withStyle(ChatFormatting.BOLD))
-                .append(Component.literal(" components."));
-
-        StyledText styledText = StyledText.fromComponent(component);
-
-        Assertions.assertEquals(
-                3, styledText.getPartCount(), "StyledText.getParts().size() returned an unexpected value.");
-
-        final int splitAt = 22;
-
-        StyledText newText = styledText.splitAt(splitAt);
-
-        Assertions.assertEquals(
-                4,
-                newText.getPartCount(),
-                "StyledText.splitAt() did not split the string correctly. The number of parts is incorrect.");
-    }
-
-    @Test
-    public void styledText_incorrectSplitIndexShouldThrow() {
-        final Component component = Component.literal("Test component");
-
-        StyledText styledText = StyledText.fromComponent(component);
-
-        Assertions.assertThrows(
-                IndexOutOfBoundsException.class,
-                () -> styledText.splitAt(10000),
-                "StyledText#splitAt() did not throw an exception when given a too big index.");
-        Assertions.assertThrows(
-                IndexOutOfBoundsException.class,
-                () -> styledText.splitAt(-1),
-                "StyledText#splitAt() did not throw an exception when given a negative index.");
-    }
-
-    @Test
-    public void styledText_getPartFindingShouldFind() {
-        final String partText = "This is a test string, where there are ";
-        final Component component = Component.literal(partText)
-                .append(Component.literal("multiple").withStyle(ChatFormatting.BOLD))
-                .append(Component.literal(" components."));
-
-        final Pattern pattern = Pattern.compile("\\bthere\\b");
-
-        StyledText styledText = StyledText.fromComponent(component);
-
-        StyledTextPart partFinding = styledText.getPartFinding(pattern);
-
-        Assertions.assertNotNull(
-                partFinding, "StyledText.getPartFinding() returned null when it should have found a part.");
-
-        String partString = partFinding.getString(null, PartStyle.StyleType.NONE);
-
-        Assertions.assertEquals(
-                partText, partString, "StyledText.getPartFinding() returned a part with the wrong text.");
-    }
-
-    @Test
-    public void styledText_getPartMatchingShouldFind() {
-        final Component component = Component.literal("Test string")
-                .append(Component.literal("Test string").withStyle(ChatFormatting.BOLD));
-
-        final Pattern pattern = Pattern.compile("§lTest string");
-
-        StyledText styledText = StyledText.fromComponent(component);
-
-        StyledTextPart partMatching = styledText.getPartMatching(pattern);
-
-        Assertions.assertNotNull(
-                partMatching, "StyledText.getPartMatching() returned null when it should have found a part.");
-
-        String partString = partMatching.getString(null, PartStyle.StyleType.NONE);
-
-        Assertions.assertEquals(
-                "Test string", partString, "StyledText.getPartMatching() returned a part with the wrong text.");
-        Assertions.assertTrue(
-                partMatching.getPartStyle().isBold(),
-                "StyledText.getPartMatching() returned a part with the wrong style.");
     }
 }

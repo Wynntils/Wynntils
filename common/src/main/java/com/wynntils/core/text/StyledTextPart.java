@@ -20,7 +20,7 @@ public final class StyledTextPart {
 
     private final StyledText parent;
 
-    StyledTextPart(String text, Style style, StyledText parent, Style parentStyle) {
+    public StyledTextPart(String text, Style style, StyledText parent, Style parentStyle) {
         this.parent = parent;
         this.text = text;
 
@@ -111,6 +111,10 @@ public final class StyledTextPart {
 
     public String getString(PartStyle previousStyle, PartStyle.StyleType type) {
         return style.asString(previousStyle, type) + text;
+    }
+
+    public String getUnformattedString() {
+        return getString(null, PartStyle.StyleType.NONE);
     }
 
     public StyledText getParent() {

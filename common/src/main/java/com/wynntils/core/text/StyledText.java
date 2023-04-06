@@ -6,6 +6,7 @@ package com.wynntils.core.text;
 
 import com.google.common.collect.Iterables;
 import com.wynntils.utils.mc.ComponentUtils;
+import com.wynntils.utils.type.IterationDecision;
 import com.wynntils.utils.type.Pair;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -13,6 +14,7 @@ import java.util.Deque;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Objects;
+import java.util.function.BiFunction;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
@@ -294,113 +296,25 @@ public final class StyledText {
         return prepend(StyledText.fromString(codedString));
     }
 
-    /**
-     * Splits the style string into two parts at the given index.
-     * The index is part of the second string.
-     *
-     * @param index The index to split at.
-     * @throws IndexOutOfBoundsException if the index is out of bounds.
-     */
-    public StyledText splitAt(int index) {
-        if (index < 0) {
-            throw new IndexOutOfBoundsException("Index must be non-negative.");
-        }
+    public StyledText iterate(BiFunction<StyledTextPart, List<StyledTextPart>, IterationDecision> function) {
+        List<StyledTextPart> newParts = new ArrayList<>();
 
-        if (index == getString(PartStyle.StyleType.NONE).length()) {
-            return this;
-        }
+        for (int i = 0; i < parts.size(); i++) {
+            StyledTextPart part = parts.get(i);
+            List<StyledTextPart> functionParts = new ArrayList<>();
+            functionParts.add(part);
+            IterationDecision decision = function.apply(part, functionParts);
 
-        int stringLength = 0;
-        int indexToSplit = 0;
-        StyledTextPart partToSplit = null;
+            newParts.addAll(functionParts);
 
-        for (StyledTextPart part : parts) {
-            int currentLength = part.getString(null, PartStyle.StyleType.NONE).length();
-            stringLength += currentLength;
-
-            if (index < stringLength) {
-                partToSplit = part;
-                indexToSplit = index - (stringLength - currentLength);
+            if (decision == IterationDecision.BREAK) {
+                // Add the rest of the parts
+                newParts.addAll(parts.subList(i + 1, parts.size()));
                 break;
             }
         }
 
-        if (partToSplit == null) {
-            throw new IndexOutOfBoundsException("Index out of bounds.");
-        }
-
-        List<StyledTextPart> newParts = new ArrayList<>(parts);
-
-        String partString = partToSplit.getString(null, PartStyle.StyleType.NONE);
-
-        String firstString = partString.substring(0, indexToSplit);
-        String secondString = partString.substring(indexToSplit);
-
-        StyledTextPart partBefore = getPartBefore(partToSplit);
-        Style styleBefore =
-                partBefore == null ? Style.EMPTY : partBefore.getPartStyle().getStyle();
-
-        Style style = partToSplit.getPartStyle().getStyle();
-        StyledTextPart firstPart = new StyledTextPart(firstString, style, this, styleBefore);
-        StyledTextPart secondPart = new StyledTextPart(
-                secondString, style, this, firstPart.getPartStyle().getStyle());
-
-        int indexOfPart = parts.indexOf(partToSplit);
-
-        newParts.add(indexOfPart, firstPart);
-        newParts.add(indexOfPart + 1, secondPart);
-        newParts.remove(partToSplit);
-
         return new StyledText(newParts, temporaryWorkaround, clickEvents, hoverEvents);
-    }
-
-    public StyledText replacePart(StyledTextPart part, StyledTextPart newPart) {
-        int index = parts.indexOf(part);
-
-        if (index == -1) {
-            throw new IllegalArgumentException("Part not found.");
-        }
-
-        List<StyledTextPart> newParts = new ArrayList<>(parts);
-        newParts.set(index, newPart);
-
-        return new StyledText(newParts, temporaryWorkaround, clickEvents, hoverEvents);
-    }
-
-    public StyledTextPart getPartFinding(Pattern pattern) {
-        return getPartFinding(pattern, PartStyle.StyleType.DEFAULT);
-    }
-
-    public StyledTextPart getPartFinding(Pattern pattern, PartStyle.StyleType styleType) {
-        PartStyle previousPartStyle = null;
-
-        for (StyledTextPart part : parts) {
-            if (pattern.matcher(part.getString(previousPartStyle, styleType)).find()) {
-                return part;
-            }
-
-            previousPartStyle = part.getPartStyle();
-        }
-
-        return null;
-    }
-
-    public StyledTextPart getPartMatching(Pattern pattern) {
-        return getPartMatching(pattern, PartStyle.StyleType.DEFAULT);
-    }
-
-    public StyledTextPart getPartMatching(Pattern pattern, PartStyle.StyleType styleType) {
-        PartStyle previousPartStyle = null;
-
-        for (StyledTextPart part : parts) {
-            if (pattern.matcher(part.getString(previousPartStyle, styleType)).matches()) {
-                return part;
-            }
-
-            previousPartStyle = part.getPartStyle();
-        }
-
-        return null;
     }
 
     public int getPartCount() {
