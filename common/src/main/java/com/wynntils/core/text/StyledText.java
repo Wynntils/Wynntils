@@ -68,7 +68,7 @@ public final class StyledText {
         }
     }
 
-    StyledText(String string) {
+    StyledText(String codedString) {
         parts = new LinkedList<>();
         clickEvents = new LinkedList<>();
         hoverEvents = new LinkedList<>();
@@ -78,7 +78,7 @@ public final class StyledText {
 
         boolean nextIsFormatting = false;
 
-        for (char current : string.toCharArray()) {
+        for (char current : codedString.toCharArray()) {
             if (nextIsFormatting) {
                 nextIsFormatting = false;
 
@@ -153,8 +153,8 @@ public final class StyledText {
         return new StyledText(component);
     }
 
-    public static StyledText fromString(String string) {
-        return new StyledText(string);
+    public static StyledText fromString(String codedString) {
+        return new StyledText(codedString);
     }
 
     // We don't want to expose the actual string to the outside world
@@ -263,48 +263,48 @@ public final class StyledText {
         return parts.stream().allMatch(StyledTextPart::isBlank);
     }
 
-    public boolean contains(String string) {
-        return contains(string, PartStyle.StyleType.DEFAULT);
+    public boolean contains(String codedString) {
+        return contains(codedString, PartStyle.StyleType.DEFAULT);
     }
 
     public boolean contains(StyledText styledText) {
         return contains(styledText.getString(PartStyle.StyleType.DEFAULT), PartStyle.StyleType.DEFAULT);
     }
 
-    public boolean contains(String string, PartStyle.StyleType styleType) {
-        return getString(styleType).contains(string);
+    public boolean contains(String codedString, PartStyle.StyleType styleType) {
+        return getString(styleType).contains(codedString);
     }
 
     public boolean contains(StyledText styledText, PartStyle.StyleType styleType) {
         return contains(styledText.getString(styleType), styleType);
     }
 
-    public boolean startsWith(String string) {
-        return startsWith(string, PartStyle.StyleType.DEFAULT);
+    public boolean startsWith(String codedString) {
+        return startsWith(codedString, PartStyle.StyleType.DEFAULT);
     }
 
     public boolean startsWith(StyledText styledText) {
         return startsWith(styledText.getString(PartStyle.StyleType.DEFAULT), PartStyle.StyleType.DEFAULT);
     }
 
-    public boolean startsWith(String string, PartStyle.StyleType styleType) {
-        return getString(styleType).startsWith(string);
+    public boolean startsWith(String codedString, PartStyle.StyleType styleType) {
+        return getString(styleType).startsWith(codedString);
     }
 
     public boolean startsWith(StyledText styledText, PartStyle.StyleType styleType) {
         return startsWith(styledText.getString(styleType), styleType);
     }
 
-    public boolean endsWith(String string) {
-        return endsWith(string, PartStyle.StyleType.DEFAULT);
+    public boolean endsWith(String codedString) {
+        return endsWith(codedString, PartStyle.StyleType.DEFAULT);
     }
 
     public boolean endsWith(StyledText styledText) {
         return endsWith(styledText.getString(PartStyle.StyleType.DEFAULT), PartStyle.StyleType.DEFAULT);
     }
 
-    public boolean endsWith(String string, PartStyle.StyleType styleType) {
-        return getString(styleType).endsWith(string);
+    public boolean endsWith(String codedString, PartStyle.StyleType styleType) {
+        return getString(styleType).endsWith(codedString);
     }
 
     public boolean endsWith(StyledText styledText, PartStyle.StyleType styleType) {
@@ -323,16 +323,16 @@ public final class StyledText {
         return concat(this, styledText);
     }
 
-    public StyledText append(String string) {
-        return append(StyledText.fromString(string));
+    public StyledText append(String codedString) {
+        return append(StyledText.fromString(codedString));
     }
 
     public StyledText prepend(StyledText styledText) {
         return concat(styledText, this);
     }
 
-    public StyledText prepend(String string) {
-        return prepend(StyledText.fromString(string));
+    public StyledText prepend(String codedString) {
+        return prepend(StyledText.fromString(codedString));
     }
 
     /**
