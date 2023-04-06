@@ -35,9 +35,6 @@ public class RangeVisualizerFeature extends Feature {
             128; // number of straight lines to draw when rendering circle, higher = smoother but more expensive
     private static final float HEIGHT = 0.1f;
 
-    /**
-     * Deals with rendering the circle for other party members only.
-     */
     @SubscribeEvent
     public void onPlayerRender(PlayerRenderEvent e) {
         if (!Models.Player.isLocalPlayer(e.getPlayer())) return; // Don't render for ghost/npc
