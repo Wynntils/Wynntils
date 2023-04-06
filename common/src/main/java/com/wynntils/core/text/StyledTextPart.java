@@ -43,8 +43,7 @@ public final class StyledTextPart {
     // This factory is used to create a StyledTextPart from a component that has formatting codes
     // It is separate from the constructor because this only needs to be applied in cases there the text could have
     // formatting codes
-    static List<StyledTextPart> fromComponentWithPossibleFormattingCodes(
-            String codedString, Style style, StyledText parent, Style parentStyle) {
+    static List<StyledTextPart> fromCodedString(String codedString, Style style, StyledText parent, Style parentStyle) {
         // When we have a style, but the text has formatting codes,
         // we need to apply the formatting codes to the style
         // This means that the actual style applies first; then the formatting codes

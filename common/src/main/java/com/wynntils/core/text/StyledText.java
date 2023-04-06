@@ -78,8 +78,8 @@ public final class StyledText {
             String componentString =
                     MutableComponent.create(current.getContents()).getString();
 
-            List<StyledTextPart> styledTextParts = StyledTextPart.fromComponentWithPossibleFormattingCodes(
-                    componentString, current.getStyle(), null, parentStyle);
+            List<StyledTextPart> styledTextParts =
+                    StyledTextPart.fromCodedString(componentString, current.getStyle(), null, parentStyle);
 
             // Only actual styles are inherited, string formatting codes are not
             Style styleToFollowForChildren = current.getStyle().applyTo(parentStyle);
@@ -101,9 +101,7 @@ public final class StyledText {
 
     public static StyledText fromString(String codedString) {
         return new StyledText(
-                StyledTextPart.fromComponentWithPossibleFormattingCodes(codedString, Style.EMPTY, null, Style.EMPTY),
-                List.of(),
-                List.of());
+                StyledTextPart.fromCodedString(codedString, Style.EMPTY, null, Style.EMPTY), List.of(), List.of());
     }
 
     // We don't want to expose the actual string to the outside world
@@ -150,8 +148,7 @@ public final class StyledText {
 
             if (i != length - 1) {
                 // Possible micro-optimization: If the separator does not have formatting, use the normal constructor
-                parts.addAll(
-                        StyledTextPart.fromComponentWithPossibleFormattingCodes(separator, Style.EMPTY, null, null));
+                parts.addAll(StyledTextPart.fromCodedString(separator, Style.EMPTY, null, null));
             }
 
             clickEvents.addAll(text.clickEvents);
