@@ -61,7 +61,13 @@ public abstract class BarOverlay extends DynamicOverlay {
             templateCache = calculateTemplate(template);
         }
 
-        render(poseStack, bufferSource, templateCache);
+        ErrorOr<CappedValue> valueOrError = templateCache.value();
+        if (valueOrError.hasError()) {
+            renderText(poseStack, bufferSource, getModifiedRenderY(10), valueOrError.getError());
+            return;
+        }
+
+        render(poseStack, bufferSource, currentProgress, templateCache.key());
     }
 
     @Override
@@ -69,28 +75,23 @@ public abstract class BarOverlay extends DynamicOverlay {
         BarOverlayTemplatePair previewTemplate = getPreviewTemplate();
         Pair<String, ErrorOr<CappedValue>> calculatedTemplate = calculateTemplate(previewTemplate);
 
-        render(poseStack, bufferSource, calculatedTemplate);
-    }
-
-    protected void render(
-            PoseStack poseStack, MultiBufferSource bufferSource, Pair<String, ErrorOr<CappedValue>> template) {
-        ErrorOr<CappedValue> valueOrError = template.b();
-
-        float barHeight = getTextureHeight() * heightModifier.get();
-        float renderY = getModifiedRenderY(barHeight + 10);
-
+        ErrorOr<CappedValue> valueOrError = calculatedTemplate.value();
         if (valueOrError.hasError()) {
-            renderText(poseStack, bufferSource, renderY, valueOrError.getError());
+            renderText(poseStack, bufferSource, getModifiedRenderY(10), valueOrError.getError());
             return;
         }
 
-        String textValue = template.a();
-        CappedValue value = valueOrError.getValue();
-        if (value.equals(CappedValue.EMPTY)) return;
+        render(poseStack, bufferSource, (float) valueOrError.getValue().getProgress(), calculatedTemplate.key());
+    }
+
+    protected void render(
+            PoseStack poseStack, MultiBufferSource bufferSource, float renderedProgress, String textValue) {
+        float barHeight = getTextureHeight() * heightModifier.get();
+        float renderY = getModifiedRenderY(barHeight + 10);
 
         renderText(poseStack, bufferSource, renderY, textValue);
 
-        float progress = (flip.get() ? -1 : 1) * currentProgress;
+        float progress = (flip.get() ? -1 : 1) * renderedProgress;
         renderBar(poseStack, bufferSource, renderY + 10, barHeight, progress);
     }
 

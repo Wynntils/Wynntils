@@ -71,11 +71,15 @@ public abstract class Overlay extends AbstractConfigurable implements Translatab
 
     @Override
     public final void updateConfigOption(ConfigHolder configHolder) {
-        // if user toggle was changed, enable/disable feature accordingly
+        // if user toggle was changed, enable/disable overlay accordingly
         if (configHolder.getFieldName().equals("userEnabled")) {
-            // This is done so all state checks run in order
-            Managers.Overlay.disableOverlay(this);
-            Managers.Overlay.enableOverlay(this);
+            if (configHolder.getValue() == Boolean.FALSE) {
+                Managers.Overlay.disableOverlay(this);
+            } else {
+                // If new state is TRUE or null, try to enable overlay
+                // (worst case overlay.shouldBeEnabled() will return false)
+                Managers.Overlay.enableOverlay(this);
+            }
         }
 
         onConfigUpdate(configHolder);
@@ -207,6 +211,9 @@ public abstract class Overlay extends AbstractConfigurable implements Translatab
         return ComparisonChain.start()
                 .compareTrueFirst(this.isParentEnabled(), other.isParentEnabled())
                 .compare(this.getDeclaringClassName(), other.getDeclaringClassName())
+                .compare(
+                        (this instanceof DynamicOverlay dynamicThis ? dynamicThis.getId() : 0),
+                        (other instanceof DynamicOverlay dynamicOther ? dynamicOther.getId() : 0))
                 .compare(this.getTranslatedName(), other.getTranslatedName())
                 .result();
     }

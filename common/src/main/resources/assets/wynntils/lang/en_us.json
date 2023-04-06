@@ -1184,6 +1184,8 @@
   "function.wynntils.onlineFriends.name": "Online Friends",
   "function.wynntils.onlinePartyMembers.description": "Number of party members online",
   "function.wynntils.onlinePartyMembers.name": "Online Party Members",
+  "function.wynntils.ping.description": "Your ping to the Wynncraft server",
+  "function.wynntils.ping.name": "Ping",
   "function.wynntils.professionLevel.argument.profession": "The profession to check",
   "function.wynntils.professionLevel.description": "The level of the specified profession",
   "function.wynntils.professionLevel.name": "Profession Level",
