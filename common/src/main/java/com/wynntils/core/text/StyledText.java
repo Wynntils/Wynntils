@@ -147,7 +147,6 @@ public final class StyledText {
             parts.addAll(text.parts);
 
             if (i != length - 1) {
-                // Possible micro-optimization: If the separator does not have formatting, use the normal constructor
                 parts.addAll(StyledTextPart.fromCodedString(separator, Style.EMPTY, null, null));
             }
 
