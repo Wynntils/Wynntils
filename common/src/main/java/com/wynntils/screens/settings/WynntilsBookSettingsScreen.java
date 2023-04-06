@@ -39,6 +39,7 @@ import java.util.Collection;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Objects;
+import java.util.stream.Collectors;
 import java.util.stream.Stream;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.gui.components.Renderable;
@@ -350,19 +351,19 @@ public final class WynntilsBookSettingsScreen extends WynntilsScreen implements 
 
         Category oldCategory = null;
 
-        List<Configurable> configurableList = Stream.concat(
-                        Managers.Feature.getFeatures().stream()
-                                .filter(feature -> searchMatches(feature)
-                                        || feature.getVisibleConfigOptions().stream()
-                                                .anyMatch(this::configOptionContains))
-                                .map(feature -> (Configurable) feature)
-                                .sorted(),
-                        Managers.Overlay.getOverlays().stream()
-                                .filter(overlay -> searchMatches(overlay)
-                                        || overlay.getVisibleConfigOptions().stream()
-                                                .anyMatch(this::configOptionContains))
-                                .sorted())
-                .toList();
+        List<Configurable> configurableList = Managers.Feature.getFeatures().stream()
+                .filter(feature -> searchMatches(feature)
+                        || feature.getVisibleConfigOptions().stream().anyMatch(this::configOptionContains))
+                .map(feature -> (Configurable) feature)
+                .sorted()
+                .collect(Collectors.toList());
+
+        configurableList.addAll(Managers.Overlay.getOverlays().stream()
+                .filter(overlay -> !configurableList.contains(Managers.Overlay.getOverlayParent(overlay)))
+                .filter(overlay -> searchMatches(overlay)
+                        || overlay.getVisibleConfigOptions().stream().anyMatch(this::configOptionContains))
+                .sorted()
+                .toList());
 
         int offset = 0;
         for (int i = 0; i < configurableList.size(); i++) {

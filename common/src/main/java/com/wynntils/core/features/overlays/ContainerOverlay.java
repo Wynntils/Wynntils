@@ -6,6 +6,7 @@ package com.wynntils.core.features.overlays;
 
 import com.mojang.blaze3d.platform.Window;
 import com.mojang.blaze3d.vertex.PoseStack;
+import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.config.Config;
 import com.wynntils.core.config.ConfigHolder;
 import com.wynntils.core.config.RegisterConfig;
@@ -33,24 +34,39 @@ public abstract class ContainerOverlay<T extends Overlay> extends Overlay {
     private final List<T> children = new ArrayList<>();
     private final Map<T, OverlaySize> inherentSize = new HashMap<>();
 
-    protected ContainerOverlay(OverlayPosition position, OverlaySize size, GrowDirection growDirection, int spacing) {
+    protected ContainerOverlay(
+            OverlayPosition position,
+            OverlaySize size,
+            GrowDirection growDirection,
+            int spacing,
+            HorizontalAlignment horizontalAlignment,
+            VerticalAlignment verticalAlignment) {
         super(position, size);
         this.growDirection.updateConfig(growDirection);
         this.spacing.updateConfig(spacing);
+        this.horizontalAlignmentOverride.updateConfig(horizontalAlignment);
+        this.verticalAlignmentOverride.updateConfig(verticalAlignment);
     }
 
-    protected ContainerOverlay(OverlayPosition position, OverlaySize size, GrowDirection growDirection) {
-        this(position, size, growDirection, DEFAULT_SPACING);
+    protected ContainerOverlay(
+            OverlayPosition position,
+            OverlaySize size,
+            GrowDirection growDirection,
+            HorizontalAlignment horizontalAlignment,
+            VerticalAlignment verticalAlignment) {
+        this(position, size, growDirection, DEFAULT_SPACING, horizontalAlignment, verticalAlignment);
     }
 
     public void addChild(T overlay) {
         inherentSize.put(overlay, overlay.getSize().copy());
         children.add(overlay);
+        WynntilsMod.registerEventListener(overlay);
 
         updateAllChildren();
     }
 
     public void clearChildren() {
+        children.forEach(WynntilsMod::unregisterEventListener);
         children.clear();
         inherentSize.clear();
     }

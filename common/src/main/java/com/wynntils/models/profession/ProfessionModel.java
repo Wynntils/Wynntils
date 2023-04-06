@@ -26,11 +26,16 @@ import net.minecraftforge.eventbus.api.SubscribeEvent;
 
 public class ProfessionModel extends Model {
     // §7[+36§f Ⓙ§7 Farming§7 XP] §6[9%]
-    private static final Pattern PROFESSION_NODE_HARVERSTED_PATTERN =
-            Pattern.compile("§7\\[\\+(?<gain>\\d+)§f [ⓀⒸⒷⒿⒺⒹⓁⒶⒼⒻⒾⒽ]§7 (?<name>.+)§7 XP\\] §6\\[(?<current>\\d+)%\\]");
+    // §dx2.0 §7[+§d93§f Ⓙ§7 Farming§7 XP] §6[9%]
+    private static final Pattern PROFESSION_NODE_HARVERSTED_PATTERN = Pattern.compile(
+            "(§dx[\\d\\.]+ )?§7\\[\\+(§d)?(?<gain>\\d+)§f [ⓀⒸⒷⒿⒺⒹⓁⒶⒼⒻⒾⒽ]§7 (?<name>.+)§7 XP\\] §6\\[(?<current>\\d+)%\\]");
 
+    // §dx2.0 §r§7[+§r§d28 §r§fⒺ §r§7Scribing XP] §r§6[56%]
     private static final Pattern PROFESSION_CRAFT_PATTERN = Pattern.compile(
-            "§7\\[\\+(?<gain>\\d+) §r§f[ⓀⒸⒷⒿⒺⒹⓁⒶⒼⒻⒾⒽ] §r§7(?<name>.+) XP\\] §r§6\\[(?<current>\\d+)%\\]");
+            "(§dx[\\d\\.]+ §r)?§7\\[\\+(§r§d)?(?<gain>\\d+) §r§f[ⓀⒸⒷⒿⒺⒹⓁⒶⒼⒻⒾⒽ] §r§7(?<name>.+) XP\\] §r§6\\[(?<current>\\d+)%\\]");
+
+    private static final Pattern PROFESSION_LEVELUP_PATTERN = Pattern.compile(
+            "§e                   You are now level (?<level>\\d+) in §r§f[ⓀⒸⒷⒿⒺⒹⓁⒶⒼⒻⒾⒽ]§r§e (?<name>.+)");
 
     private static final Pattern INFO_MENU_PROFESSION_LORE_PATTERN =
             Pattern.compile("§6- §r§7[ⓀⒸⒷⒿⒺⒹⓁⒶⒼⒻⒾⒽ] Lv. (\\d+) (.+)§r§8 \\[([\\d.]+)%\\]");
@@ -50,7 +55,7 @@ public class ProfessionModel extends Model {
         Matcher matcher = event.getName().match(PROFESSION_NODE_HARVERSTED_PATTERN);
 
         if (matcher.matches()) {
-            updateValue(
+            updatePercentage(
                     ProfessionType.fromString(matcher.group("name")),
                     Float.parseFloat(matcher.group("current")),
                     Float.parseFloat(matcher.group("gain")));
@@ -64,10 +69,16 @@ public class ProfessionModel extends Model {
         Matcher matcher = codedMessage.match(PROFESSION_CRAFT_PATTERN);
 
         if (matcher.matches()) {
-            updateValue(
+            updatePercentage(
                     ProfessionType.fromString(matcher.group("name")),
                     Float.parseFloat(matcher.group("current")),
                     Float.parseFloat(matcher.group("gain")));
+        }
+
+        matcher = codedMessage.match(PROFESSION_LEVELUP_PATTERN);
+
+        if (matcher.matches()) {
+            updateLevel(ProfessionType.fromString(matcher.group("name")), Integer.parseInt(matcher.group("level")));
         }
     }
 
@@ -93,16 +104,24 @@ public class ProfessionModel extends Model {
         professionProgressMap = levels;
     }
 
-    public void updateValue(ProfessionType type, float newPercentage, float xpGain) {
+    public void updatePercentage(ProfessionType type, float newPercentage, float xpGain) {
         ProfessionProgress oldValue = professionProgressMap.getOrDefault(type, ProfessionProgress.NO_PROGRESS);
 
-        // Assume a level up if the progress is less than the previous value.
-        if (oldValue.progress() > newPercentage) {
-            professionProgressMap.put(type, new ProfessionProgress(oldValue.level() + 1, newPercentage));
-        } else {
-            professionProgressMap.put(type, new ProfessionProgress(oldValue.level(), newPercentage));
+        // We leveled up, but we don't know how many times.
+        // Set the progress, level will be parsed from other messages.
+        if (newPercentage == 100) {
+            newPercentage = 0;
         }
+
+        professionProgressMap.put(type, new ProfessionProgress(oldValue.level(), newPercentage));
+
         rawXpGainInLastMinute.get(type).put(xpGain);
+    }
+
+    public void updateLevel(ProfessionType type, int newLevel) {
+        ProfessionProgress oldValue = professionProgressMap.getOrDefault(type, ProfessionProgress.NO_PROGRESS);
+
+        professionProgressMap.put(type, new ProfessionProgress(newLevel, oldValue.progress()));
     }
 
     public int getLevel(ProfessionType type) {

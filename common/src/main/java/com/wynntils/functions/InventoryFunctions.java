@@ -7,8 +7,10 @@ package com.wynntils.functions;
 import com.wynntils.core.components.Models;
 import com.wynntils.core.functions.Function;
 import com.wynntils.core.functions.arguments.FunctionArguments;
+import com.wynntils.core.text.StyledText;
 import com.wynntils.models.items.WynnItem;
 import com.wynntils.models.items.properties.DurableItemProperty;
+import com.wynntils.utils.mc.ComponentUtils;
 import com.wynntils.utils.mc.McUtils;
 import com.wynntils.utils.type.CappedValue;
 import java.util.List;
@@ -211,6 +213,29 @@ public class InventoryFunctions {
         @Override
         public List<String> getAliases() {
             return List.of("held_type");
+        }
+    }
+
+    public static class HeldItemNameFunction extends Function<String> {
+        @Override
+        public String getValue(FunctionArguments arguments) {
+            ItemStack itemStack = McUtils.player().getItemInHand(InteractionHand.MAIN_HAND);
+            StyledText hoverName = ComponentUtils.getCoded(itemStack.getHoverName());
+            if (!arguments.getArgument("formatted").getBooleanValue()) {
+                return hoverName.withoutFormatting();
+            }
+            return hoverName.getInternalCodedStringRepresentation();
+        }
+
+        @Override
+        public FunctionArguments.Builder getArgumentsBuilder() {
+            return new FunctionArguments.OptionalArgumentBuilder(
+                    List.of(new FunctionArguments.Argument<>("formatted", Boolean.class, false)));
+        }
+
+        @Override
+        public List<String> getAliases() {
+            return List.of("held_item", "held_name");
         }
     }
 }

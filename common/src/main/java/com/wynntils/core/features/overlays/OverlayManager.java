@@ -72,6 +72,8 @@ public final class OverlayManager extends Manager {
     public void unregisterOverlay(Overlay overlay) {
         overlayParentMap.get(overlayInfoMap.get(overlay).parent()).remove(overlay);
 
+        WynntilsMod.unregisterEventListener(overlay);
+
         overlayInfoMap.remove(overlay);
         enabledOverlays.remove(overlay);
     }
@@ -80,9 +82,11 @@ public final class OverlayManager extends Manager {
         overlayParentMap.getOrDefault(parent, List.of()).forEach(this::disableOverlay);
     }
 
-    public void disableOverlay(Overlay disabled) {
-        enabledOverlays.remove(disabled);
-        WynntilsMod.unregisterEventListener(disabled);
+    public void disableOverlay(Overlay disabledOverlay) {
+        if (!isEnabled(disabledOverlay)) return;
+
+        enabledOverlays.remove(disabledOverlay);
+        WynntilsMod.unregisterEventListener(disabledOverlay);
 
         enabledOverlays.forEach(
                 overlay -> overlay.getConfigOptionFromString("userEnabled").ifPresent(overlay::onConfigUpdate));
@@ -93,7 +97,7 @@ public final class OverlayManager extends Manager {
     }
 
     public void enableOverlay(Overlay enableOverlay) {
-        if (!enableOverlay.shouldBeEnabled()) return;
+        if (!enableOverlay.shouldBeEnabled() || isEnabled(enableOverlay)) return;
 
         enabledOverlays.add(enableOverlay);
         WynntilsMod.registerEventListener(enableOverlay);
