@@ -8,7 +8,7 @@ import com.wynntils.core.components.Managers;
 import com.wynntils.core.config.Category;
 import com.wynntils.core.config.ConfigCategory;
 import com.wynntils.core.features.Feature;
-import com.wynntils.core.text.StyledText2;
+import com.wynntils.core.text.CodedString;
 import com.wynntils.handlers.chat.event.ChatMessageReceivedEvent;
 import com.wynntils.mc.event.SubtitleSetTextEvent;
 import com.wynntils.utils.mc.ComponentUtils;
@@ -24,7 +24,7 @@ public class TerritoryMessageRedirectFeature extends Feature {
     // Handles the subtitle text event.
     @SubscribeEvent
     public void onSubtitleSetText(SubtitleSetTextEvent event) {
-        StyledText2 styledText = ComponentUtils.getCoded(event.getComponent());
+        CodedString styledText = ComponentUtils.getCoded(event.getComponent());
         Matcher matcher = styledText.getMatcher(TERRITORY_MESSAGE_PATTERN);
         if (!matcher.matches()) return;
 
@@ -46,7 +46,7 @@ public class TerritoryMessageRedirectFeature extends Feature {
         // for the sake of our brief message (looks odd otherwise).
         String territoryName = StringUtils.capitalize(rawTerritoryName);
 
-        StyledText2 enteringMessage = StyledText2.fromString(String.format("§7%s %s", directionalArrow, territoryName));
+        CodedString enteringMessage = CodedString.fromString(String.format("§7%s %s", directionalArrow, territoryName));
         Managers.Notification.queueMessage(enteringMessage);
     }
 

@@ -11,7 +11,7 @@ import com.wynntils.core.components.Managers;
 import com.wynntils.core.components.Model;
 import com.wynntils.core.net.ApiResponse;
 import com.wynntils.core.net.UrlId;
-import com.wynntils.core.text.StyledText2;
+import com.wynntils.core.text.CodedString;
 import com.wynntils.mc.event.PlayerJoinedWorldEvent;
 import com.wynntils.mc.event.PlayerTeamEvent;
 import com.wynntils.models.worlds.event.WorldStateEvent;
@@ -58,7 +58,7 @@ public final class PlayerModel extends Model {
     }
 
     public boolean isNpc(Player player) {
-        StyledText2 scoreboardName = StyledText2.fromString(player.getScoreboardName());
+        CodedString scoreboardName = CodedString.fromString(player.getScoreboardName());
         return isNpc(scoreboardName);
     }
 
@@ -96,7 +96,7 @@ public final class PlayerModel extends Model {
     public void onPlayerJoin(PlayerJoinedWorldEvent event) {
         Player player = event.getPlayer();
         if (player == null || player.getUUID() == null) return;
-        StyledText2 name = StyledText2.fromString(player.getGameProfile().getName());
+        CodedString name = CodedString.fromString(player.getGameProfile().getName());
         if (isNpc(name)) return; // avoid player npcs
 
         loadUser(player.getUUID(), name.getInternalCodedStringRepresentation());
@@ -198,7 +198,7 @@ public final class PlayerModel extends Model {
         ghosts.clear();
     }
 
-    private boolean isNpc(StyledText2 name) {
+    private boolean isNpc(CodedString name) {
         return name.contains("\u0001") || name.contains("§");
     }
 }

@@ -11,7 +11,7 @@ import com.wynntils.core.config.ConfigCategory;
 import com.wynntils.core.config.RegisterConfig;
 import com.wynntils.core.features.Feature;
 import com.wynntils.core.notifications.MessageContainer;
-import com.wynntils.core.text.StyledText2;
+import com.wynntils.core.text.CodedString;
 import com.wynntils.mc.event.SubtitleSetTextEvent;
 import com.wynntils.models.worlds.event.WorldStateEvent;
 import com.wynntils.utils.mc.ComponentUtils;
@@ -51,7 +51,7 @@ public class InventoryRedirectFeature extends Feature {
         }
 
         Component component = event.getComponent();
-        StyledText2 styledText = ComponentUtils.getCoded(component);
+        CodedString styledText = ComponentUtils.getCoded(component);
 
         if (redirectIngredientPouch.get()) {
             if (styledText.getMatcher(INGREDIENT_POUCH_PICKUP_PATTERN).matches()) {
@@ -87,7 +87,7 @@ public class InventoryRedirectFeature extends Feature {
             if (matcher.matches()) {
                 event.setCanceled(true);
                 String potionCount = matcher.group(1);
-                StyledText2 potionMessage = StyledText2.fromString(String.format("§a+%s Potion Charges", potionCount));
+                CodedString potionMessage = CodedString.fromString(String.format("§a+%s Potion Charges", potionCount));
                 Managers.Notification.queueMessage(potionMessage);
 
                 return;

@@ -6,7 +6,7 @@ package com.wynntils.screens.guides.gear;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.wynntils.core.components.Models;
-import com.wynntils.core.text.StyledText2;
+import com.wynntils.core.text.CodedString;
 import com.wynntils.screens.base.WynntilsListScreen;
 import com.wynntils.screens.base.widgets.BackButton;
 import com.wynntils.screens.base.widgets.PageSelectorButton;
@@ -100,7 +100,7 @@ public final class WynntilsItemGuideScreen extends WynntilsListScreen<GuideGearI
         FontRenderer.getInstance()
                 .renderText(
                         poseStack,
-                        StyledText2.fromString(I18n.get("screens.wynntils.wynntilsGuides.itemGuide.available")),
+                        CodedString.fromString(I18n.get("screens.wynntils.wynntilsGuides.itemGuide.available")),
                         Texture.QUEST_BOOK_BACKGROUND.width() * 0.75f,
                         30,
                         CommonColors.BLACK,

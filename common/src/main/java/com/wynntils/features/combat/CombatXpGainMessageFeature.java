@@ -11,7 +11,7 @@ import com.wynntils.core.config.Config;
 import com.wynntils.core.config.ConfigCategory;
 import com.wynntils.core.config.RegisterConfig;
 import com.wynntils.core.features.Feature;
-import com.wynntils.core.text.StyledText2;
+import com.wynntils.core.text.CodedString;
 import com.wynntils.models.characterstats.event.CombatXpGainEvent;
 import com.wynntils.models.worlds.event.WorldStateEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
@@ -33,7 +33,7 @@ public class CombatXpGainMessageFeature extends Feature {
         if (!Models.WorldState.onWorld()) return;
         if (System.currentTimeMillis() - lastXpDisplayTime < secondDelay.get() * 1000) return;
 
-        StyledText2 message = StyledText2.fromString(
+        CodedString message = CodedString.fromString(
                 String.format("§2+%.0f XP (§6%.2f%%§2)", event.getGainedXpRaw(), event.getGainedXpPercentage()));
 
         Managers.Notification.queueMessage(message);

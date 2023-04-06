@@ -12,7 +12,7 @@ import com.wynntils.core.components.Managers;
 import com.wynntils.core.components.Model;
 import com.wynntils.core.net.Download;
 import com.wynntils.core.net.UrlId;
-import com.wynntils.core.text.StyledText2;
+import com.wynntils.core.text.CodedString;
 import com.wynntils.mc.event.AdvancementUpdateEvent;
 import com.wynntils.models.map.pois.Poi;
 import com.wynntils.models.map.pois.TerritoryPoi;
@@ -130,8 +130,8 @@ public final class TerritoryModel extends Model {
             boolean headquarters = built.getDisplay().getFrame() == FrameType.CHALLENGE;
 
             // description is a raw string with \n, so we have to split
-            StyledText2 description = ComponentUtils.getCoded(built.getDisplay().getDescription());
-            StyledText2[] colored = description.split("\n");
+            CodedString description = ComponentUtils.getCoded(built.getDisplay().getDescription());
+            CodedString[] colored = description.split("\n");
             String[] raw = ComponentUtils.stripFormatting(description).split("\n");
 
             TerritoryInfo container = new TerritoryInfo(raw, colored, headquarters);

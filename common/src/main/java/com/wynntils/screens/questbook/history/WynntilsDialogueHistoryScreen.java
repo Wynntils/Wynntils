@@ -7,7 +7,7 @@ package com.wynntils.screens.questbook.history;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.components.Models;
-import com.wynntils.core.text.StyledText2;
+import com.wynntils.core.text.CodedString;
 import com.wynntils.models.quests.event.QuestBookReloadedEvent;
 import com.wynntils.screens.base.WynntilsMenuScreenBase;
 import com.wynntils.screens.base.WynntilsPagedScreen;
@@ -48,7 +48,7 @@ public final class WynntilsDialogueHistoryScreen extends WynntilsMenuScreenBase 
     private Renderable hovered = null;
 
     private int currentPage = 0;
-    private List<List<StyledText2>> dialogues = new ArrayList<>();
+    private List<List<CodedString>> dialogues = new ArrayList<>();
 
     private WynntilsDialogueHistoryScreen() {
         super(Component.translatable("screens.wynntils.wynntilsDialogueHistory.name"));
@@ -153,7 +153,7 @@ public final class WynntilsDialogueHistoryScreen extends WynntilsMenuScreenBase 
         List<TextRenderTask> textRenderTaskList = new ArrayList<>();
         float maxWidth = Texture.QUEST_BOOK_BACKGROUND.width() / 2f - 20;
 
-        for (StyledText2 line : dialogues.get(currentPage)) {
+        for (CodedString line : dialogues.get(currentPage)) {
             textRenderTaskList.add(new TextRenderTask(
                     line,
                     new TextRenderSetting(
@@ -180,7 +180,7 @@ public final class WynntilsDialogueHistoryScreen extends WynntilsMenuScreenBase 
         FontRenderer.getInstance()
                 .renderAlignedTextInBox(
                         poseStack,
-                        StyledText2.fromString((currentPage) + " / " + (maxPage)),
+                        CodedString.fromString((currentPage) + " / " + (maxPage)),
                         Texture.QUEST_BOOK_BACKGROUND.width() / 2f,
                         Texture.QUEST_BOOK_BACKGROUND.width(),
                         Texture.QUEST_BOOK_BACKGROUND.height() - 25,
@@ -261,7 +261,7 @@ public final class WynntilsDialogueHistoryScreen extends WynntilsMenuScreenBase 
         FontRenderer.getInstance()
                 .renderAlignedTextInBox(
                         poseStack,
-                        StyledText2.fromString(I18n.get("screens.wynntils.wynntilsDialogueHistory.tryReload")),
+                        CodedString.fromString(I18n.get("screens.wynntils.wynntilsDialogueHistory.tryReload")),
                         Texture.QUEST_BOOK_BACKGROUND.width() / 2f + 15f,
                         Texture.QUEST_BOOK_BACKGROUND.width() - 15f,
                         0,
@@ -273,17 +273,17 @@ public final class WynntilsDialogueHistoryScreen extends WynntilsMenuScreenBase 
                         TextShadow.NONE);
     }
 
-    private void setDialogues(List<List<StyledText2>> dialogues) {
+    private void setDialogues(List<List<CodedString>> dialogues) {
         // Optimize pages so they fit
-        List<List<StyledText2>> splitDialogues = new ArrayList<>();
-        List<StyledText2> currentPage = new ArrayList<>();
+        List<List<CodedString>> splitDialogues = new ArrayList<>();
+        List<CodedString> currentPage = new ArrayList<>();
         float currentHeight = 0;
 
         float maxWidth = Texture.QUEST_BOOK_BACKGROUND.width() / 2f - 20;
         final float maxPageHeight = LINES_PER_PAGE * 9f;
 
-        for (List<StyledText2> dialogueList : dialogues) {
-            for (StyledText2 dialogueLine : dialogueList) {
+        for (List<CodedString> dialogueList : dialogues) {
+            for (CodedString dialogueLine : dialogueList) {
                 float renderHeight = FontRenderer.getInstance().calculateRenderHeight(List.of(dialogueLine), maxWidth);
 
                 if (currentHeight + renderHeight > maxPageHeight) {

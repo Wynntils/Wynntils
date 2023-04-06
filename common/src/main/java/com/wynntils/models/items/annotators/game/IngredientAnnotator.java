@@ -6,7 +6,7 @@ package com.wynntils.models.items.annotators.game;
 
 import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.components.Models;
-import com.wynntils.core.text.StyledText2;
+import com.wynntils.core.text.CodedString;
 import com.wynntils.handlers.item.ItemAnnotation;
 import com.wynntils.handlers.item.ItemAnnotator;
 import com.wynntils.models.ingredients.type.IngredientInfo;
@@ -20,7 +20,7 @@ public final class IngredientAnnotator implements ItemAnnotator {
             Pattern.compile("^§7(.*)§[3567] \\[§([8bde])✫(§8)?✫(§8)?✫§[3567]\\]$");
 
     @Override
-    public ItemAnnotation getAnnotation(ItemStack itemStack, StyledText2 name) {
+    public ItemAnnotation getAnnotation(ItemStack itemStack, CodedString name) {
         Matcher matcher = name.getMatcher(INGREDIENT_PATTERN);
         if (!matcher.matches()) return null;
 

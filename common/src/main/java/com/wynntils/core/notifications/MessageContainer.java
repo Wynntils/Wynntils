@@ -4,13 +4,13 @@
  */
 package com.wynntils.core.notifications;
 
-import com.wynntils.core.text.StyledText2;
+import com.wynntils.core.text.CodedString;
 import com.wynntils.utils.render.TextRenderSetting;
 import com.wynntils.utils.render.TextRenderTask;
 import java.util.Objects;
 
 public class MessageContainer {
-    private StyledText2 message;
+    private CodedString message;
     private TextRenderTask renderTask;
     private int messageCount;
 
@@ -24,7 +24,7 @@ public class MessageContainer {
         this.messageCount = 1;
     }
 
-    public StyledText2 getMessage() {
+    public CodedString getMessage() {
         return message;
     }
 
@@ -43,7 +43,7 @@ public class MessageContainer {
     }
 
     // Do NOT call this to edit the container. Use Managers.Notification methods instead.
-    void editMessage(StyledText2 newMessage) {
+    void editMessage(CodedString newMessage) {
         this.message = newMessage;
 
         updateRenderTask();
@@ -53,7 +53,7 @@ public class MessageContainer {
         if (this.messageCount == 1) {
             this.renderTask = new TextRenderTask(this.message, TextRenderSetting.DEFAULT);
         } else {
-            StyledText2 messageMultiplier = StyledText2.fromString(" §7[x" + this.messageCount + "]");
+            CodedString messageMultiplier = CodedString.fromString(" §7[x" + this.messageCount + "]");
             this.renderTask = new TextRenderTask(this.message.append(messageMultiplier), this.renderTask.getSetting());
         }
     }

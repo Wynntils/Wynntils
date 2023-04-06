@@ -6,7 +6,7 @@ package com.wynntils.models.objectives;
 
 import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.components.Models;
-import com.wynntils.core.text.StyledText2;
+import com.wynntils.core.text.CodedString;
 import com.wynntils.handlers.scoreboard.ScoreboardPart;
 import com.wynntils.handlers.scoreboard.ScoreboardSegment;
 import java.util.ArrayList;
@@ -23,15 +23,15 @@ public abstract class AbstractObjectivesScoreboardPart extends ScoreboardPart {
     private static final Pattern OBJECTIVE_PATTERN_MULTILINE_END = Pattern.compile(".*§f(\\d+)§7/(\\d+)$");
     private static final Pattern SEGMENT_HEADER = Pattern.compile("^§.§l[A-Za-z ]+:.*$");
 
-    private static final StyledText2 ALL_DONE = StyledText2.fromString("§c- §7All done");
+    private static final CodedString ALL_DONE = CodedString.fromString("§c- §7All done");
 
     protected List<WynnObjective> parseObjectives(ScoreboardSegment segment) {
         List<WynnObjective> parsedObjectives = new ArrayList<>();
 
-        List<StyledText2> actualContent = new ArrayList<>();
+        List<CodedString> actualContent = new ArrayList<>();
         StringBuilder multiLine = new StringBuilder();
 
-        for (StyledText2 line : segment.getContent()) {
+        for (CodedString line : segment.getContent()) {
             if (line.getMatcher(OBJECTIVE_PATTERN_ONE_LINE).matches()) {
                 actualContent.add(line);
                 continue;
@@ -55,7 +55,7 @@ public abstract class AbstractObjectivesScoreboardPart extends ScoreboardPart {
 
             if (line.getMatcher(OBJECTIVE_PATTERN_MULTILINE_END).matches()) {
                 actualContent.add(
-                        StyledText2.fromString(multiLine.toString().trim().replaceAll(" +", " ")));
+                        CodedString.fromString(multiLine.toString().trim().replaceAll(" +", " ")));
                 multiLine = new StringBuilder();
             }
         }
@@ -64,7 +64,7 @@ public abstract class AbstractObjectivesScoreboardPart extends ScoreboardPart {
             WynntilsMod.error("ObjectiveManager: Got a not finished multi-line objective: " + multiLine);
         }
 
-        for (StyledText2 line : actualContent) {
+        for (CodedString line : actualContent) {
             Matcher objectiveMatcher = line.getMatcher(OBJECTIVE_PATTERN_ONE_LINE);
             if (!objectiveMatcher.matches()) {
                 WynntilsMod.error("ObjectiveManager: Broken objective stored: " + line);

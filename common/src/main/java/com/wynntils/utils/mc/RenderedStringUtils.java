@@ -4,26 +4,26 @@
  */
 package com.wynntils.utils.mc;
 
-import com.wynntils.core.text.StyledText2;
+import com.wynntils.core.text.CodedString;
 import com.wynntils.utils.render.FontRenderer;
 import java.util.Arrays;
 import net.minecraft.client.gui.Font;
 
 public final class RenderedStringUtils {
-    public static StyledText2[] wrapTextBySize(StyledText2 s, int maxPixels) {
+    public static CodedString[] wrapTextBySize(CodedString s, int maxPixels) {
         Font font = McUtils.mc().font;
         int spaceSize = font.width(" ");
 
-        StyledText2[] stringArray = s.split(" ");
+        CodedString[] stringArray = s.split(" ");
         StringBuilder result = new StringBuilder();
         int length = 0;
 
         // FIXME: codes should not count toward the word length
 
-        for (StyledText2 string : stringArray) {
-            StyledText2[] lines = string.split("\\\\n");
+        for (CodedString string : stringArray) {
+            CodedString[] lines = string.split("\\\\n");
             for (int i = 0; i < lines.length; i++) {
-                StyledText2 line = lines[i];
+                CodedString line = lines[i];
                 if (i > 0 || length + font.width(line.getInternalCodedStringRepresentation()) >= maxPixels) {
                     result.append('\n');
                     length = 0;
@@ -36,8 +36,8 @@ public final class RenderedStringUtils {
         }
 
         return Arrays.stream(result.toString().split("\n"))
-                .map(StyledText2::fromString)
-                .toArray(StyledText2[]::new);
+                .map(CodedString::fromString)
+                .toArray(CodedString[]::new);
     }
 
     public static String getMaxFittingText(String text, float maxTextWidth, Font font) {
@@ -63,7 +63,7 @@ public final class RenderedStringUtils {
         return renderedText;
     }
 
-    public static StyledText2 trySplitOptimally(StyledText2 line, float maxWidth) {
+    public static CodedString trySplitOptimally(CodedString line, float maxWidth) {
         String maxFitting = RenderedStringUtils.getMaxFittingText(
                 line.getUnformattedString(),
                 maxWidth,
@@ -76,7 +76,7 @@ public final class RenderedStringUtils {
                 color = line.getInternalCodedStringRepresentation().substring(0, 2);
             }
 
-            return StyledText2.fromString(
+            return CodedString.fromString(
                     line.getInternalCodedStringRepresentation().replaceFirst(" \\[", "\n" + color + "["));
         } else if (maxFitting.contains("(")
                 && !maxFitting.contains(")")) { // Detail line did not appear to fit, force break
@@ -86,7 +86,7 @@ public final class RenderedStringUtils {
                 color = line.getInternalCodedStringRepresentation().substring(0, 2);
             }
 
-            return StyledText2.fromString(
+            return CodedString.fromString(
                     line.getInternalCodedStringRepresentation().replaceFirst(" \\(", "\n" + color + "("));
         } else { // Fits fine, give normal lines
             return line;

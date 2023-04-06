@@ -12,7 +12,7 @@ import com.wynntils.core.functions.expressions.Expression;
 import com.wynntils.core.functions.expressions.parser.ExpressionParser;
 import com.wynntils.core.functions.templates.parser.TemplateParser;
 import com.wynntils.core.mod.type.CrashType;
-import com.wynntils.core.text.StyledText2;
+import com.wynntils.core.text.CodedString;
 import com.wynntils.functions.CharacterFunctions;
 import com.wynntils.functions.CombatFunctions;
 import com.wynntils.functions.CombatXpFunctions;
@@ -209,7 +209,7 @@ public final class FunctionManager extends Manager {
         return TemplateParser.doFormat(templateString);
     }
 
-    public StyledText2[] doFormatLines(String templateString) {
+    public CodedString[] doFormatLines(String templateString) {
         StringBuilder resultBuilder = new StringBuilder();
 
         // Iterate though the string and escape characters
@@ -241,8 +241,8 @@ public final class FunctionManager extends Manager {
         calculatedString = calculatedString.replace("\\]\\", "}");
 
         return Arrays.stream(calculatedString.split("\n"))
-                .map(StyledText2::fromString)
-                .toArray(StyledText2[]::new);
+                .map(CodedString::fromString)
+                .toArray(CodedString[]::new);
     }
 
     private String parseColorCodes(String toProcess) {

@@ -5,7 +5,7 @@
 package com.wynntils.screens.characterselector;
 
 import com.mojang.blaze3d.vertex.PoseStack;
-import com.wynntils.core.text.StyledText2;
+import com.wynntils.core.text.CodedString;
 import com.wynntils.models.character.type.ClassInfo;
 import com.wynntils.screens.base.WynntilsScreen;
 import com.wynntils.screens.characterselector.widgets.ClassInfoButton;
@@ -274,7 +274,7 @@ public final class CharacterSelectorScreen extends WynntilsScreen {
         FontRenderer.getInstance()
                 .renderText(
                         poseStack,
-                        StyledText2.fromString(
+                        CodedString.fromString(
                                 String.valueOf(this.selected.getClassInfo().soulPoints())),
                         0,
                         0,
@@ -302,7 +302,7 @@ public final class CharacterSelectorScreen extends WynntilsScreen {
         FontRenderer.getInstance()
                 .renderText(
                         poseStack,
-                        StyledText2.fromString(
+                        CodedString.fromString(
                                 String.valueOf(this.selected.getClassInfo().completedQuests())),
                         0,
                         0,

@@ -11,7 +11,7 @@ import com.wynntils.core.config.Config;
 import com.wynntils.core.config.ConfigCategory;
 import com.wynntils.core.config.RegisterConfig;
 import com.wynntils.core.features.Feature;
-import com.wynntils.core.text.StyledText2;
+import com.wynntils.core.text.CodedString;
 import com.wynntils.mc.event.ContainerClickEvent;
 import com.wynntils.mc.event.ItemTooltipRenderEvent;
 import com.wynntils.utils.mc.ComponentUtils;
@@ -33,7 +33,7 @@ import net.minecraftforge.eventbus.api.SubscribeEvent;
 
 @ConfigCategory(Category.INVENTORY)
 public class BulkBuyFeature extends Feature {
-    public static final StyledText2 PRICE_STR = StyledText2.fromString("§6Price:");
+    public static final CodedString PRICE_STR = CodedString.fromString("§6Price:");
 
     @RegisterConfig
     public final Config<Integer> bulkBuyAmount = new Config<>(4);
@@ -82,7 +82,7 @@ public class BulkBuyFeature extends Feature {
     private List<Component> replacePrices(List<Component> oldLore) {
         if (!KeyboardUtils.isShiftDown()) return oldLore;
 
-        StyledText2 priceLine = ComponentUtils.getCoded(oldLore.get(oldLore.size() - 1));
+        CodedString priceLine = ComponentUtils.getCoded(oldLore.get(oldLore.size() - 1));
         Matcher priceMatcher = priceLine.getMatcher(PRICE_PATTERN);
         if (!priceMatcher.find()) {
             WynntilsMod.warn("Could not find price for " + oldLore.get(0).getString() + " in " + priceLine);
@@ -90,12 +90,12 @@ public class BulkBuyFeature extends Feature {
         }
         int newPrice = Integer.parseInt(priceMatcher.group(1)) * bulkBuyAmount.get();
 
-        StyledText2 newLine = StyledText2.fromString(priceLine
+        CodedString newLine = CodedString.fromString(priceLine
                 .getInternalCodedStringRepresentation()
                 .replace(priceMatcher.group(1), BULK_BUY_ACTIVE_COLOR + Integer.toString(newPrice)));
 
         if (newPrice > Models.Emerald.getAmountInInventory()) {
-            newLine = StyledText2.fromString(newLine.getInternalCodedStringRepresentation()
+            newLine = CodedString.fromString(newLine.getInternalCodedStringRepresentation()
                     .replace("a✔", "c✖")); // Replace green checkmark with red x
         }
 

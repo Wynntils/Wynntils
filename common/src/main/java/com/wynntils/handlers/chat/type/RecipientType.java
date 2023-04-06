@@ -4,7 +4,7 @@
  */
 package com.wynntils.handlers.chat.type;
 
-import com.wynntils.core.text.StyledText2;
+import com.wynntils.core.text.CodedString;
 import java.util.regex.Pattern;
 
 public enum RecipientType {
@@ -40,7 +40,7 @@ public enum RecipientType {
         this.name = name;
     }
 
-    public boolean matchPattern(StyledText2 msg, MessageType messageType) {
+    public boolean matchPattern(CodedString msg, MessageType messageType) {
         Pattern pattern = (messageType == MessageType.FOREGROUND ? foregroundPattern : backgroundPattern);
         if (pattern == null) return false;
         return msg.getMatcher(pattern).find();

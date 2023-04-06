@@ -6,7 +6,7 @@ package com.wynntils.handlers.container;
 
 import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.components.Handlers;
-import com.wynntils.core.text.StyledText2;
+import com.wynntils.core.text.CodedString;
 import com.wynntils.handlers.container.type.ContainerContent;
 import com.wynntils.utils.wynn.ContainerUtils;
 import java.util.LinkedList;
@@ -200,14 +200,14 @@ public final class ScriptedContainerQuery {
             return this;
         }
 
-        public QueryBuilder clickOnSlotWithName(int slotNum, Item expectedItemType, StyledText2 expectedItemName) {
+        public QueryBuilder clickOnSlotWithName(int slotNum, Item expectedItemType, CodedString expectedItemName) {
             if (startAction != null) {
                 throw new IllegalStateException("Set startAction twice");
             }
             this.startAction = (container) -> {
                 ItemStack itemStack = container.items().get(slotNum);
                 if (!itemStack.is(expectedItemType)
-                        || !StyledText2.fromComponentIgnoringComponentStylesAndJustUsingFormattingCodes(
+                        || !CodedString.fromComponentIgnoringComponentStylesAndJustUsingFormattingCodes(
                                         itemStack.getDisplayName())
                                 .equals(expectedItemName)) return false;
 

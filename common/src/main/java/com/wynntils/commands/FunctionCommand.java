@@ -13,7 +13,7 @@ import com.wynntils.core.components.Managers;
 import com.wynntils.core.functions.Function;
 import com.wynntils.core.functions.GenericFunction;
 import com.wynntils.core.functions.arguments.FunctionArguments;
-import com.wynntils.core.text.StyledText2;
+import com.wynntils.core.text.CodedString;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Comparator;
@@ -97,9 +97,9 @@ public class FunctionCommand extends Command {
     private int testExpression(CommandContext<CommandSourceStack> context) {
         String template = context.getArgument("template", String.class);
 
-        StyledText2[] result = Managers.Function.doFormatLines(template);
+        CodedString[] result = Managers.Function.doFormatLines(template);
 
-        StyledText2 resultString = StyledText2.join(", ", result);
+        CodedString resultString = CodedString.join(", ", result);
 
         context.getSource()
                 .sendSuccess(

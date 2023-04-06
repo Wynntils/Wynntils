@@ -7,7 +7,7 @@ package com.wynntils.functions;
 import com.wynntils.core.components.Models;
 import com.wynntils.core.functions.Function;
 import com.wynntils.core.functions.arguments.FunctionArguments;
-import com.wynntils.core.text.StyledText2;
+import com.wynntils.core.text.CodedString;
 import com.wynntils.models.items.WynnItem;
 import com.wynntils.models.items.properties.DurableItemProperty;
 import com.wynntils.utils.mc.ComponentUtils;
@@ -220,7 +220,7 @@ public class InventoryFunctions {
         @Override
         public String getValue(FunctionArguments arguments) {
             ItemStack itemStack = McUtils.player().getItemInHand(InteractionHand.MAIN_HAND);
-            StyledText2 hoverName = ComponentUtils.getCoded(itemStack.getHoverName());
+            CodedString hoverName = ComponentUtils.getCoded(itemStack.getHoverName());
             if (!arguments.getArgument("formatted").getBooleanValue()) {
                 return hoverName.getUnformattedString();
             }

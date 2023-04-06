@@ -14,7 +14,7 @@ import com.wynntils.core.features.overlays.OverlayPosition;
 import com.wynntils.core.features.overlays.OverlaySize;
 import com.wynntils.core.features.overlays.TextOverlay;
 import com.wynntils.core.features.overlays.annotations.OverlayInfo;
-import com.wynntils.core.text.StyledText2;
+import com.wynntils.core.text.CodedString;
 import com.wynntils.mc.event.RenderEvent;
 import com.wynntils.mc.extension.EntityExtension;
 import com.wynntils.models.abilities.event.TotemEvent;
@@ -125,12 +125,12 @@ public class ShamanTotemTrackingFeature extends Feature {
         }
 
         @Override
-        protected StyledText2[] calculateTemplateValue(String template) {
+        protected CodedString[] calculateTemplateValue(String template) {
             return Arrays.stream(super.calculateTemplateValue(template))
                     .map(s -> RenderedStringUtils.trySplitOptimally(s, this.getWidth()))
                     .map(s -> s.split("\n"))
                     .flatMap(Arrays::stream)
-                    .toArray(StyledText2[]::new);
+                    .toArray(CodedString[]::new);
         }
     }
 

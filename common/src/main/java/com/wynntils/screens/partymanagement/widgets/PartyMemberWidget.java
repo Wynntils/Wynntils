@@ -6,7 +6,7 @@ package com.wynntils.screens.partymanagement.widgets;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.wynntils.core.components.Models;
-import com.wynntils.core.text.StyledText2;
+import com.wynntils.core.text.CodedString;
 import com.wynntils.utils.colors.CommonColors;
 import com.wynntils.utils.colors.CustomColor;
 import com.wynntils.utils.mc.McUtils;
@@ -126,7 +126,7 @@ public class PartyMemberWidget extends AbstractWidget {
             prefix = ChatFormatting.BOLD.toString();
         }
 
-        StyledText2 formattedPlayerName = StyledText2.fromString(prefix + playerName);
+        CodedString formattedPlayerName = CodedString.fromString(prefix + playerName);
 
         FontRenderer.getInstance()
                 .renderText(

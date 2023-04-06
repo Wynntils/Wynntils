@@ -4,7 +4,7 @@
  */
 package com.wynntils.models.gear.type;
 
-import com.wynntils.core.text.StyledText2;
+import com.wynntils.core.text.CodedString;
 import com.wynntils.utils.StringUtils;
 import java.util.Arrays;
 import java.util.Locale;
@@ -39,7 +39,7 @@ public enum GearTier {
         }
     }
 
-    public static GearTier fromFormattedString(StyledText2 name) {
+    public static GearTier fromFormattedString(CodedString name) {
         if (name.getInternalCodedStringRepresentation().charAt(0) == '§') {
             return fromChatFormatting(ChatFormatting.getByCode(
                     name.getInternalCodedStringRepresentation().charAt(1)));
@@ -50,7 +50,7 @@ public enum GearTier {
 
     public static GearTier fromComponent(Component component) {
         return fromFormattedString(
-                StyledText2.fromComponentIgnoringComponentStylesAndJustUsingFormattingCodes(component));
+                CodedString.fromComponentIgnoringComponentStylesAndJustUsingFormattingCodes(component));
     }
 
     public static GearTier fromChatFormatting(ChatFormatting formatting) {

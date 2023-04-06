@@ -6,7 +6,7 @@ package com.wynntils.models.map.pois;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.wynntils.core.components.Managers;
-import com.wynntils.core.text.StyledText2;
+import com.wynntils.core.text.CodedString;
 import com.wynntils.features.map.MapFeature;
 import com.wynntils.utils.MathUtils;
 import com.wynntils.utils.colors.CommonColors;
@@ -99,7 +99,7 @@ public abstract class IconPoi implements Poi {
             FontRenderer.getInstance()
                     .renderText(
                             poseStack,
-                            StyledText2.fromString(getName()),
+                            CodedString.fromString(getName()),
                             renderX,
                             15 + renderY,
                             CommonColors.GREEN,

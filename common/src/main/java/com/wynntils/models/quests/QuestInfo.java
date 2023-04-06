@@ -5,7 +5,7 @@
 package com.wynntils.models.quests;
 
 import com.wynntils.core.components.Models;
-import com.wynntils.core.text.StyledText2;
+import com.wynntils.core.text.CodedString;
 import com.wynntils.models.profession.type.ProfessionType;
 import com.wynntils.models.quests.type.QuestLength;
 import com.wynntils.models.quests.type.QuestStatus;
@@ -42,7 +42,7 @@ public class QuestInfo {
 
     // Quest progress can change over time
     private final QuestStatus status;
-    private StyledText2 nextTask;
+    private CodedString nextTask;
     private final boolean tracked;
 
     protected QuestInfo(
@@ -50,7 +50,7 @@ public class QuestInfo {
             QuestStatus status,
             QuestLength length,
             int level,
-            StyledText2 nextTask,
+            CodedString nextTask,
             List<Pair<String, Integer>> additionalRequirements,
             boolean isMiniQuest,
             int pageNumber,
@@ -102,11 +102,11 @@ public class QuestInfo {
                 : additionalRequirements.get(0).b();
     }
 
-    public StyledText2 getNextTask() {
+    public CodedString getNextTask() {
         return nextTask;
     }
 
-    public void setNextTask(StyledText2 nextTask) {
+    public void setNextTask(CodedString nextTask) {
         this.nextTask = nextTask;
     }
 
@@ -194,10 +194,10 @@ public class QuestInfo {
 
         if (questInfo.getStatus() != QuestStatus.COMPLETED) {
             tooltipLines.add(Component.literal(""));
-            StyledText2 nextTask = questInfo.getNextTask();
-            StyledText2[] lines = RenderedStringUtils.wrapTextBySize(nextTask, NEXT_TASK_MAX_WIDTH);
+            CodedString nextTask = questInfo.getNextTask();
+            CodedString[] lines = RenderedStringUtils.wrapTextBySize(nextTask, NEXT_TASK_MAX_WIDTH);
 
-            for (StyledText2 line : lines) {
+            for (CodedString line : lines) {
                 tooltipLines.add(line.asSingleLiteralComponentWithCodedString().withStyle(ChatFormatting.GRAY));
             }
         }

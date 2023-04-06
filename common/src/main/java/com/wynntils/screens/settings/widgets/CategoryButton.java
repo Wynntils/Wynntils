@@ -6,7 +6,7 @@ package com.wynntils.screens.settings.widgets;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.wynntils.core.config.Category;
-import com.wynntils.core.text.StyledText2;
+import com.wynntils.core.text.CodedString;
 import com.wynntils.screens.base.widgets.WynntilsButton;
 import com.wynntils.utils.colors.CommonColors;
 import com.wynntils.utils.render.FontRenderer;
@@ -28,7 +28,7 @@ public class CategoryButton extends WynntilsButton {
         FontRenderer.getInstance()
                 .renderAlignedTextInBox(
                         poseStack,
-                        StyledText2.fromString(I18n.get(category.toString())),
+                        CodedString.fromString(I18n.get(category.toString())),
                         this.getX(),
                         this.getX() + this.width,
                         this.getY(),

@@ -9,7 +9,7 @@ import com.mojang.authlib.GameProfile;
 import com.mojang.brigadier.CommandDispatcher;
 import com.mojang.brigadier.tree.RootCommandNode;
 import com.wynntils.core.events.MixinHelper;
-import com.wynntils.core.text.StyledText2;
+import com.wynntils.core.text.CodedString;
 import com.wynntils.mc.event.AddEntityEvent;
 import com.wynntils.mc.event.AdvancementUpdateEvent;
 import com.wynntils.mc.event.ChatPacketReceivedEvent;
@@ -201,7 +201,7 @@ public abstract class ClientPacketListenerMixin {
         if (!isRenderThread()) return;
 
         MixinHelper.post(new PlayerInfoFooterChangedEvent(
-                StyledText2.fromComponentIgnoringComponentStylesAndJustUsingFormattingCodes(packet.getFooter())));
+                CodedString.fromComponentIgnoringComponentStylesAndJustUsingFormattingCodes(packet.getFooter())));
     }
 
     @Inject(
@@ -478,7 +478,7 @@ public abstract class ClientPacketListenerMixin {
         if (!isRenderThread()) return;
 
         ScoreboardSetScoreEvent event = new ScoreboardSetScoreEvent(
-                StyledText2.fromString(packet.getOwner()),
+                CodedString.fromString(packet.getOwner()),
                 packet.getObjectiveName(),
                 packet.getScore(),
                 packet.getMethod());

@@ -110,8 +110,8 @@ public final class StyledText {
                 StyledTextPart.fromCodedString(codedString, Style.EMPTY, null, Style.EMPTY), List.of(), List.of());
     }
 
-    public static StyledText fromStyledText2(StyledText2 styledText2) {
-        return fromString(styledText2.getInternalCodedStringRepresentation());
+    public static StyledText fromStyledText2(CodedString codedString) {
+        return fromString(codedString.getInternalCodedStringRepresentation());
     }
 
     // We don't want to expose the actual string to the outside world

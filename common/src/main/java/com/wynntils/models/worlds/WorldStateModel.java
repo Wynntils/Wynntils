@@ -7,7 +7,7 @@ package com.wynntils.models.worlds;
 import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.components.Model;
 import com.wynntils.core.mod.event.WynncraftConnectionEvent;
-import com.wynntils.core.text.StyledText2;
+import com.wynntils.core.text.CodedString;
 import com.wynntils.mc.event.MenuEvent;
 import com.wynntils.mc.event.PlayerInfoEvent.PlayerDisplayNameChangeEvent;
 import com.wynntils.mc.event.PlayerInfoEvent.PlayerLogOutEvent;
@@ -34,9 +34,9 @@ public final class WorldStateModel extends Model {
     private static final Position CHARACTER_SELECTION_POSITION = new PositionImpl(-1337.5, 16.2, -1120.5);
     private static final Pattern WYNNCRAFT_SERVER_PATTERN = Pattern.compile("^(.*)\\.wynncraft\\.(?:com|net|org)$");
     private static final String WYNNCRAFT_BETA_NAME = "beta";
-    public static final StyledText2 CHARACTER_SELECTION_TITLE = StyledText2.fromString("§8§lSelect a Character");
+    public static final CodedString CHARACTER_SELECTION_TITLE = CodedString.fromString("§8§lSelect a Character");
 
-    private StyledText2 currentTabListFooter = StyledText2.EMPTY;
+    private CodedString currentTabListFooter = CodedString.EMPTY;
     private String currentWorldName = "";
     private boolean onBetaServer;
     private boolean hasJoinedAnyWorld = false;
@@ -93,7 +93,7 @@ public final class WorldStateModel extends Model {
         String host = e.getHost();
         onBetaServer = host.equals(WYNNCRAFT_BETA_NAME);
         setState(WorldState.CONNECTING);
-        currentTabListFooter = StyledText2.EMPTY;
+        currentTabListFooter = CodedString.EMPTY;
     }
 
     @SubscribeEvent
@@ -125,7 +125,7 @@ public final class WorldStateModel extends Model {
 
     @SubscribeEvent
     public void onTabListFooter(PlayerInfoFooterChangedEvent e) {
-        StyledText2 footer = e.getFooter();
+        CodedString footer = e.getFooter();
         if (footer.equals(currentTabListFooter)) return;
 
         currentTabListFooter = footer;
@@ -142,7 +142,7 @@ public final class WorldStateModel extends Model {
         if (!e.getId().equals(WORLD_NAME_UUID)) return;
 
         Component displayName = e.getDisplayName();
-        StyledText2 name = ComponentUtils.getCoded(displayName);
+        CodedString name = ComponentUtils.getCoded(displayName);
         Matcher m = name.getMatcher(WORLD_NAME);
         if (m.find()) {
             String worldName = m.group(1);

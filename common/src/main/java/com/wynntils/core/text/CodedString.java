@@ -15,24 +15,24 @@ import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
 
-public class StyledText2 {
-    public static final StyledText2 EMPTY = StyledText2.fromString("");
+public class CodedString {
+    public static final CodedString EMPTY = CodedString.fromString("");
 
     private final String str;
 
-    private StyledText2(String str) {
+    private CodedString(String str) {
         this.str = str;
     }
 
-    public static StyledText2 fromString(String s) {
-        return new StyledText2(s);
+    public static CodedString fromString(String s) {
+        return new CodedString(s);
     }
 
-    public static StyledText2 fromComponentIgnoringComponentStylesAndJustUsingFormattingCodes(Component component) {
-        return StyledText2.fromString(component.getString());
+    public static CodedString fromComponentIgnoringComponentStylesAndJustUsingFormattingCodes(Component component) {
+        return CodedString.fromString(component.getString());
     }
 
-    public static StyledText2 fromStyledText(StyledText styledText) {
+    public static CodedString fromStyledText(StyledText styledText) {
         return fromString(styledText.getString(PartStyle.StyleType.FULL));
     }
 
@@ -48,12 +48,12 @@ public class StyledText2 {
         return Component.literal(str);
     }
 
-    public StyledText2 getNormalized() {
-        return StyledText2.fromString(WynnUtils.normalizeBadString(str));
+    public CodedString getNormalized() {
+        return CodedString.fromString(WynnUtils.normalizeBadString(str));
     }
 
-    public StyledText2 trim() {
-        return StyledText2.fromString(str.trim());
+    public CodedString trim() {
+        return CodedString.fromString(str.trim());
     }
 
     public boolean isEmpty() {
@@ -68,7 +68,7 @@ public class StyledText2 {
         return pattern.matcher(str);
     }
 
-    public boolean contains(StyledText2 string) {
+    public boolean contains(CodedString string) {
         return str.contains(string.str);
     }
 
@@ -76,7 +76,7 @@ public class StyledText2 {
         return str.contains(string);
     }
 
-    public boolean startsWith(StyledText2 prefix) {
+    public boolean startsWith(CodedString prefix) {
         return str.startsWith(prefix.str);
     }
 
@@ -84,7 +84,7 @@ public class StyledText2 {
         return str.startsWith(prefix);
     }
 
-    public boolean endsWith(StyledText2 suffix) {
+    public boolean endsWith(CodedString suffix) {
         return str.endsWith(suffix.str);
     }
 
@@ -92,38 +92,38 @@ public class StyledText2 {
         return str.endsWith(suffix);
     }
 
-    public static StyledText2 join(String delimiter, List<StyledText2> strings) {
-        return StyledText2.fromString(
+    public static CodedString join(String delimiter, List<CodedString> strings) {
+        return CodedString.fromString(
                 String.join(delimiter, strings.stream().map(s -> s.str).toList()));
     }
 
-    public StyledText2[] split(String regex) {
-        return Arrays.stream(str.split(regex)).map(StyledText2::fromString).toArray(StyledText2[]::new);
+    public CodedString[] split(String regex) {
+        return Arrays.stream(str.split(regex)).map(CodedString::fromString).toArray(CodedString[]::new);
     }
 
-    public static StyledText2 join(String delimiter, StyledText2[] strings) {
-        return StyledText2.fromString(
+    public static CodedString join(String delimiter, CodedString[] strings) {
+        return CodedString.fromString(
                 String.join(delimiter, Arrays.stream(strings).map(s -> s.str).toList()));
     }
 
-    public static StyledText2 concat(StyledText2... str) {
-        return StyledText2.fromString(Arrays.stream(str).map(s -> s.str).collect(Collectors.joining()));
+    public static CodedString concat(CodedString... str) {
+        return CodedString.fromString(Arrays.stream(str).map(s -> s.str).collect(Collectors.joining()));
     }
 
-    public StyledText2 prepend(StyledText2 prefix) {
+    public CodedString prepend(CodedString prefix) {
         return prefix.append(str);
     }
 
-    public StyledText2 prepend(String prefix) {
-        return StyledText2.fromString(prefix + str);
+    public CodedString prepend(String prefix) {
+        return CodedString.fromString(prefix + str);
     }
 
-    public StyledText2 append(StyledText2 suffix) {
-        return StyledText2.fromString(str + suffix.str);
+    public CodedString append(CodedString suffix) {
+        return CodedString.fromString(str + suffix.str);
     }
 
-    public StyledText2 append(String suffix) {
-        return StyledText2.fromString(str + suffix);
+    public CodedString append(String suffix) {
+        return CodedString.fromString(str + suffix);
     }
 
     @Override
@@ -135,7 +135,7 @@ public class StyledText2 {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        StyledText2 that = (StyledText2) o;
+        CodedString that = (CodedString) o;
         return Objects.equals(str, that.str);
     }
 

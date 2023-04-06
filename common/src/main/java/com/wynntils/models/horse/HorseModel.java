@@ -6,7 +6,7 @@ package com.wynntils.models.horse;
 
 import com.wynntils.core.components.Model;
 import com.wynntils.core.components.Models;
-import com.wynntils.core.text.StyledText2;
+import com.wynntils.core.text.CodedString;
 import com.wynntils.models.items.ItemModel;
 import com.wynntils.models.items.items.game.HorseItem;
 import com.wynntils.utils.mc.McUtils;
@@ -67,9 +67,9 @@ public class HorseModel extends Model {
         if (horseName == null) return false;
 
         String playerName = player.getName().getString();
-        StyledText2 defaultName = StyledText2.fromString("§f" + playerName + "§7" + "'s horse");
-        StyledText2 codedHorseName =
-                StyledText2.fromComponentIgnoringComponentStylesAndJustUsingFormattingCodes(horseName);
+        CodedString defaultName = CodedString.fromString("§f" + playerName + "§7" + "'s horse");
+        CodedString codedHorseName =
+                CodedString.fromComponentIgnoringComponentStylesAndJustUsingFormattingCodes(horseName);
         return defaultName.equals(codedHorseName) || codedHorseName.endsWith("§7" + " [" + playerName + "]");
     }
 }

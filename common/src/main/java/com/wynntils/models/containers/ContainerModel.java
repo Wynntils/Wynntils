@@ -6,7 +6,7 @@ package com.wynntils.models.containers;
 
 import com.wynntils.core.components.Model;
 import com.wynntils.core.components.Models;
-import com.wynntils.core.text.StyledText2;
+import com.wynntils.core.text.CodedString;
 import com.wynntils.utils.mc.ComponentUtils;
 import com.wynntils.utils.type.Pair;
 import com.wynntils.utils.wynn.WynnUtils;
@@ -43,9 +43,9 @@ public final class ContainerModel extends Model {
     private static final Pair<Integer, Integer> BANK_PREVIOUS_NEXT_SLOTS = new Pair<>(17, 8);
     private static final Pair<Integer, Integer> GUILD_BANK_PREVIOUS_NEXT_SLOTS = new Pair<>(9, 27);
     private static final Pair<Integer, Integer> TRADE_MARKET_PREVIOUS_NEXT_SLOTS = new Pair<>(17, 26);
-    public static final StyledText2 LAST_BANK_PAGE_STRING = StyledText2.fromString(">§4>§c>§4>§c>");
-    public static final StyledText2 FIRST_TRADE_MARKET_PAGE_STRING = StyledText2.fromString("§bReveal Item Names");
-    public static final StyledText2 TRADE_MARKET_TITLE = StyledText2.fromString("Trade Market");
+    public static final CodedString LAST_BANK_PAGE_STRING = CodedString.fromString(">§4>§c>§4>§c>");
+    public static final CodedString FIRST_TRADE_MARKET_PAGE_STRING = CodedString.fromString("§bReveal Item Names");
+    public static final CodedString TRADE_MARKET_TITLE = CodedString.fromString("Trade Market");
 
     public ContainerModel() {
         super(List.of());

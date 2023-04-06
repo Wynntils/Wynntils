@@ -6,7 +6,7 @@ package com.wynntils.models.quests;
 
 import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.components.Models;
-import com.wynntils.core.text.StyledText2;
+import com.wynntils.core.text.CodedString;
 import com.wynntils.handlers.container.ScriptedContainerQuery;
 import com.wynntils.handlers.container.type.ContainerContent;
 import com.wynntils.utils.mc.McUtils;
@@ -85,8 +85,8 @@ public class QuestContainerQueries {
         }
     }
 
-    private StyledText2 getNextPageButtonName(int nextPageNum) {
-        return StyledText2.fromString("[§f§lPage " + nextPageNum + "§a >§2>§a>§2>§a>]");
+    private CodedString getNextPageButtonName(int nextPageNum) {
+        return CodedString.fromString("[§f§lPage " + nextPageNum + "§a >§2>§a>§2>§a>]");
     }
 
     protected void queryMiniQuests() {

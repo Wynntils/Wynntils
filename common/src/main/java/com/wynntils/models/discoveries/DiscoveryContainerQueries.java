@@ -6,7 +6,7 @@ package com.wynntils.models.discoveries;
 
 import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.components.Models;
-import com.wynntils.core.text.StyledText2;
+import com.wynntils.core.text.CodedString;
 import com.wynntils.handlers.container.ScriptedContainerQuery;
 import com.wynntils.handlers.container.type.ContainerContent;
 import com.wynntils.utils.mc.ComponentUtils;
@@ -34,8 +34,8 @@ public class DiscoveryContainerQueries {
             Pattern.compile("§6Total Discoveries: §r§e\\[(\\d+)/\\d+\\]");
     private static final Pattern SECRET_DISCOVERY_COUNT_PATTERN =
             Pattern.compile("§bTotal Secret Discoveries: §r§3\\[(\\d+)/\\d+\\]");
-    public static final StyledText2 DISCOVERIES_STRING = StyledText2.fromString("§6§lDiscoveries");
-    public static final StyledText2 SECRET_DISCOVERIES_STRING = StyledText2.fromString("§b§lSecret Discoveries");
+    public static final CodedString DISCOVERIES_STRING = CodedString.fromString("§6§lDiscoveries");
+    public static final CodedString SECRET_DISCOVERIES_STRING = CodedString.fromString("§b§lSecret Discoveries");
 
     private List<DiscoveryInfo> newDiscoveries;
 
@@ -57,7 +57,7 @@ public class DiscoveryContainerQueries {
                     }
 
                     int discoveryCount = -1;
-                    for (StyledText2 line : LoreUtils.getLore(discoveriesItem)) {
+                    for (CodedString line : LoreUtils.getLore(discoveriesItem)) {
                         Matcher matcher = line.getMatcher(DISCOVERY_COUNT_PATTERN);
 
                         if (matcher.matches()) {
@@ -72,7 +72,7 @@ public class DiscoveryContainerQueries {
                         return;
                     }
 
-                    for (StyledText2 line : LoreUtils.getLore(secretDiscoveriesItem)) {
+                    for (CodedString line : LoreUtils.getLore(secretDiscoveriesItem)) {
                         Matcher matcher = line.getMatcher(SECRET_DISCOVERY_COUNT_PATTERN);
 
                         if (matcher.matches()) {
@@ -173,7 +173,7 @@ public class DiscoveryContainerQueries {
         return "^§0\\[Pg. \\d+\\] §8.*§0 Discoveries$";
     }
 
-    private StyledText2 getNextPageButtonName(int nextPageNum) {
-        return StyledText2.fromString("[§f§lPage " + nextPageNum + "§a >§2>§a>§2>§a>]");
+    private CodedString getNextPageButtonName(int nextPageNum) {
+        return CodedString.fromString("[§f§lPage " + nextPageNum + "§a >§2>§a>§2>§a>]");
     }
 }

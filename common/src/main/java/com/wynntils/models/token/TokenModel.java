@@ -7,7 +7,7 @@ package com.wynntils.models.token;
 import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.components.Model;
 import com.wynntils.core.components.Models;
-import com.wynntils.core.text.StyledText2;
+import com.wynntils.core.text.CodedString;
 import com.wynntils.handlers.labels.event.EntityLabelChangedEvent;
 import com.wynntils.handlers.labels.event.EntityLabelVisibilityEvent;
 import com.wynntils.mc.event.RemoveEntitiesEvent;
@@ -43,7 +43,7 @@ public class TokenModel extends Model {
 
     private static final Pattern TOKEN_PATTERN = Pattern.compile("^§a(\\d+)§2/(\\d+)(?:§r)?$");
     private static final Pattern TYPE_PATTERN = Pattern.compile("^§7Get §[e6]\\[(?:(\\d+) )?(.*)\\]$");
-    private static final StyledText2 VERIFICATION_STRING = StyledText2.fromString("§7Right-click to add");
+    private static final CodedString VERIFICATION_STRING = CodedString.fromString("§7Right-click to add");
 
     private final Map<Integer, TokenGatekeeper> activeGatekeepers = new HashMap<>();
     private final Map<TokenGatekeeper, TokenInventoryWatcher> inventoryWatchers = new HashMap<>();
@@ -79,13 +79,13 @@ public class TokenModel extends Model {
     public void onLabelChange(EntityLabelChangedEvent event) {
         if (!(event.getEntity() instanceof ArmorStand)) return;
 
-        StyledText2 name = event.getName();
+        CodedString name = event.getName();
 
         Matcher typeMatcher = name.getMatcher(TYPE_PATTERN);
         if (typeMatcher.matches()) {
             String countString = typeMatcher.group(1);
             int max = countString != null ? Integer.parseInt(countString) : 1;
-            StyledText2 type = StyledText2.fromString(typeMatcher.group(2));
+            CodedString type = CodedString.fromString(typeMatcher.group(2));
 
             BakingTokenGatekeeper baking = getBaking(event.getEntity().position());
             baking.type = type;
@@ -145,9 +145,9 @@ public class TokenModel extends Model {
             Location location =
                     Location.containing(event.getEntity().position()).offset(0, 3, 0);
 
-            StyledText2 gatekeeperTokenName =
-                    StyledText2.fromString("Shard [Floor " + floor + " - Level " + level + "]");
-            StyledText2 itemName = StyledText2.fromString("§d[Floor " + floor + " - Lv. " + level + "]");
+            CodedString gatekeeperTokenName =
+                    CodedString.fromString("Shard [Floor " + floor + " - Level " + level + "]");
+            CodedString itemName = CodedString.fromString("§d[Floor " + floor + " - Lv. " + level + "]");
             addGatekeeper(
                     event.getEntity().getId(),
                     new TokenGatekeeper(gatekeeperTokenName, itemName, location, new CappedValue(0, maxTokens)));
@@ -161,7 +161,7 @@ public class TokenModel extends Model {
             Location location =
                     Location.containing(event.getEntity().position()).offset(0, 3, 0);
 
-            StyledText2 tokenName = StyledText2.fromString(division + " Catalyst " + MathUtils.toRoman(level));
+            CodedString tokenName = CodedString.fromString(division + " Catalyst " + MathUtils.toRoman(level));
             addGatekeeper(
                     event.getEntity().getId(), new TokenGatekeeper(tokenName, location, new CappedValue(0, maxTokens)));
         }
@@ -262,7 +262,7 @@ public class TokenModel extends Model {
 
     private static final class BakingTokenGatekeeper {
         private final Position position;
-        private StyledText2 type;
+        private CodedString type;
         private int typeMax;
         private CappedValue value;
         private int valueEntityId;
@@ -286,7 +286,7 @@ public class TokenModel extends Model {
     private static final class TokenInventoryWatcher extends InventoryWatcher {
         private final TokenGatekeeper gatekeeper;
 
-        private TokenInventoryWatcher(TokenGatekeeper gatekeeper, StyledText2 tokenItemName) {
+        private TokenInventoryWatcher(TokenGatekeeper gatekeeper, CodedString tokenItemName) {
             super(itemStack -> isToken(tokenItemName, itemStack));
             this.gatekeeper = gatekeeper;
         }
@@ -295,7 +295,7 @@ public class TokenModel extends Model {
             this(gatekeeper, gatekeeper.getItemTokenName());
         }
 
-        private static boolean isToken(StyledText2 tokenItemName, ItemStack itemStack) {
+        private static boolean isToken(CodedString tokenItemName, ItemStack itemStack) {
             Optional<MiscItem> miscItemOpt = Models.Item.asWynnItem(itemStack, MiscItem.class);
             if (miscItemOpt.isEmpty()) return false;
 

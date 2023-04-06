@@ -4,7 +4,7 @@
  */
 package com.wynntils.models.items.annotators.game;
 
-import com.wynntils.core.text.StyledText2;
+import com.wynntils.core.text.CodedString;
 import com.wynntils.handlers.item.ItemAnnotation;
 import com.wynntils.handlers.item.ItemAnnotator;
 import com.wynntils.models.gathering.ToolProfile;
@@ -20,7 +20,7 @@ public final class GatheringToolAnnotator implements ItemAnnotator {
             Pattern.compile("^§f[ⒸⒷⓀⒿ] Gathering (Axe|Rod|Scythe|Pickaxe) T(\\d+)$");
 
     @Override
-    public ItemAnnotation getAnnotation(ItemStack itemStack, StyledText2 name) {
+    public ItemAnnotation getAnnotation(ItemStack itemStack, CodedString name) {
         Matcher matcher = name.getMatcher(GATHERING_TOOL_PATTERN);
         if (!matcher.matches()) return null;
 

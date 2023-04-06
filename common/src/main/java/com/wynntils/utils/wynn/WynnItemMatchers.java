@@ -4,7 +4,7 @@
  */
 package com.wynntils.utils.wynn;
 
-import com.wynntils.core.text.StyledText2;
+import com.wynntils.core.text.CodedString;
 import com.wynntils.models.gear.type.GearTier;
 import com.wynntils.utils.mc.LoreUtils;
 import com.wynntils.utils.type.CappedValue;
@@ -34,7 +34,7 @@ public final class WynnItemMatchers {
      * Returns true if the passed item has an attack speed
      */
     public static boolean isWeapon(ItemStack itemStack) {
-        StyledText2 lore = LoreUtils.getStringLore(itemStack);
+        CodedString lore = LoreUtils.getStringLore(itemStack);
         return lore.contains("Attack Speed") && lore.contains("§7");
     }
 

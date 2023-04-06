@@ -6,7 +6,7 @@ package com.wynntils.models.map.pois;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.wynntils.core.components.Managers;
-import com.wynntils.core.text.StyledText2;
+import com.wynntils.core.text.CodedString;
 import com.wynntils.features.map.MapFeature;
 import com.wynntils.models.players.hades.objects.HadesUser;
 import com.wynntils.utils.mc.SkinUtils;
@@ -99,7 +99,7 @@ public class PlayerMainMapPoi extends PlayerPoiBase {
                 .renderText(
                         poseStack,
                         bufferSource,
-                        StyledText2.fromString(user.getName()),
+                        CodedString.fromString(user.getName()),
                         renderX - (width - playerHeadRenderSize) / 2f,
                         renderY + playerHeadRenderSize + 8,
                         user.getRelationColor(),

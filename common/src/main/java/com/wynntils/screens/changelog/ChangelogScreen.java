@@ -5,7 +5,7 @@
 package com.wynntils.screens.changelog;
 
 import com.mojang.blaze3d.vertex.PoseStack;
-import com.wynntils.core.text.StyledText2;
+import com.wynntils.core.text.CodedString;
 import com.wynntils.screens.base.WynntilsPagedScreen;
 import com.wynntils.screens.base.WynntilsScreen;
 import com.wynntils.screens.base.widgets.PageSelectorButton;
@@ -96,7 +96,7 @@ public final class ChangelogScreen extends WynntilsScreen implements WynntilsPag
         FontRenderer.getInstance()
                 .renderAlignedTextInBox(
                         poseStack,
-                        StyledText2.fromString((currentPage) + " / " + (maxPage)),
+                        CodedString.fromString((currentPage) + " / " + (maxPage)),
                         80,
                         Texture.CHANGELOG_BACKGROUND.width() - 80,
                         Texture.CHANGELOG_BACKGROUND.height() - 17,

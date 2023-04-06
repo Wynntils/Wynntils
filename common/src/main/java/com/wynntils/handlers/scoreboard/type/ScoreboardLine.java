@@ -4,9 +4,9 @@
  */
 package com.wynntils.handlers.scoreboard.type;
 
-import com.wynntils.core.text.StyledText2;
+import com.wynntils.core.text.CodedString;
 
-public record ScoreboardLine(StyledText2 line, int score) implements Comparable {
+public record ScoreboardLine(CodedString line, int score) implements Comparable {
     @Override
     public int compareTo(Object o) {
         if (o instanceof ScoreboardLine other) {
