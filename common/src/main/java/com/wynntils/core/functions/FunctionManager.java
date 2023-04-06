@@ -369,6 +369,7 @@ public final class FunctionManager extends Manager {
         registerFunction(new WorldFunctions.MobTotemFunction());
         registerFunction(new WorldFunctions.MobTotemOwnerFunction());
         registerFunction(new WorldFunctions.MobTotemTimeLeftFunction());
+        registerFunction(new WorldFunctions.PingFunction());
         registerFunction(new WorldFunctions.TokenGatekeeperCountFunction());
         registerFunction(new WorldFunctions.TokenGatekeeperDepositedFunction());
         registerFunction(new WorldFunctions.TokenGatekeeperFunction());

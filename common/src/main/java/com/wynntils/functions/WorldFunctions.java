@@ -234,4 +234,11 @@ public class WorldFunctions {
                     List.of(new FunctionArguments.Argument<>("totemNumber", Integer.class, null)));
         }
     }
+
+    public static class PingFunction extends Function<Integer> {
+        @Override
+        public Integer getValue(FunctionArguments arguments) {
+            return Models.Ping.getPing();
+        }
+    }
 }
