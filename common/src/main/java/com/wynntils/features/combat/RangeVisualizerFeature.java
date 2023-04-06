@@ -8,22 +8,23 @@ import com.wynntils.core.components.Models;
 import com.wynntils.core.config.Category;
 import com.wynntils.core.config.ConfigCategory;
 import com.wynntils.core.features.Feature;
+import com.wynntils.mc.event.ItemInHandRenderEvent;
 import com.wynntils.mc.event.PlayerRenderEvent;
 import com.wynntils.models.gear.type.GearInfo;
 import com.wynntils.models.gear.type.GearMajorId;
-import com.wynntils.models.items.items.game.GearItem;
 import com.wynntils.utils.mc.ComponentUtils;
 import com.wynntils.utils.mc.McUtils;
 import com.wynntils.utils.render.buffered.CustomRenderType;
+import net.minecraft.client.gui.screens.inventory.InventoryScreen;
 import net.minecraft.client.renderer.MultiBufferSource;
+import net.minecraft.client.renderer.blockentity.BlockEntityRenderDispatcher;
+import net.minecraft.core.BlockPos;
 import net.minecraft.core.Position;
-import net.minecraft.world.InteractionHand;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import org.joml.Matrix3f;
 import org.joml.Matrix4f;
 
 import java.util.List;
-import java.util.Optional;
 
 @ConfigCategory(Category.COMBAT)
 public class RangeVisualizerFeature extends Feature {
@@ -39,8 +40,10 @@ public class RangeVisualizerFeature extends Feature {
     public void onPlayerRender(PlayerRenderEvent e) {
         if (!Models.Player.isLocalPlayer(e.getPlayer())) return; // Don't render for ghost/npc
         String playerName = ComponentUtils.getUnformatted(e.getPlayer().getName());
-        if (ComponentUtils.getUnformatted(McUtils.player().getName()).equals(playerName)) return; // Don't render for ourselves
-        if (!Models.Party.getPartyMembers().contains(playerName)) return; // Must be in party
+        if (ComponentUtils.getUnformatted(McUtils.player().getName()).equals(playerName)) {
+            if (McUtils.mc().screen instanceof InventoryScreen) return; // Don't render for preview in inventory
+        }
+        if (Models.Party.isInParty() && !Models.Party.getPartyMembers().contains(playerName)) return; // Other players must be in party
 
         // We are getting the item info the same way as GearViewerScreen since we care about other people's items
         String gearName = ComponentUtils.getUnformatted(e.getPlayer().getMainHandItem().getHoverName());
@@ -58,13 +61,18 @@ public class RangeVisualizerFeature extends Feature {
 
         for (GearMajorId majorId : majorIds) {
             if (majorId.name().equals("Taunt")) {
-                renderCircleWithRadius(e.getPoseStack(), 12, e.getPlayer().getPosition(e.getPartialTicks()));
+                renderCircleWithRadius(e.getPoseStack(), 12, e.getPlayer().position());
             } else if (majorId.name().equals("Saviour's Sacrifice") ||
                     majorId.name().equals("Heart of the Pack") ||
                     majorId.name().equals("Guardian")) {
-                renderCircleWithRadius(e.getPoseStack(), 8, e.getPlayer().getPosition(e.getPartialTicks()));
+                renderCircleWithRadius(e.getPoseStack(), 8, e.getPlayer().position());
             }
         }
+    }
+
+    @SubscribeEvent
+    public void onItemInHandRender(ItemInHandRenderEvent e) {
+        renderFirstPersonCircleWithRadius(e.getPoseStack(), 8);
     }
 
     /**
@@ -97,6 +105,34 @@ public class RangeVisualizerFeature extends Feature {
             float z2 = (float) (position.z() + Math.cos(angle) * radius);
             consumer.vertex(matrix4f, x2, (float) position.y() + HEIGHT, z2).color(1.0F, 1.0F, 1.0F, 1.0F).endVertex();
             consumer.vertex(matrix4f, x2, (float) position.y(), z2).color(1.0F, 1.0F, 1.0F, 1.0F).endVertex();
+        }
+
+        BUFFER_SOURCE.endBatch();
+        poseStack.popPose();
+        RenderSystem.enableCull();
+    }
+
+    private void renderFirstPersonCircleWithRadius(PoseStack poseStack, int radius) {
+        RenderSystem.disableCull();
+        poseStack.pushPose();
+        poseStack.translate(-McUtils.player().getX(), -McUtils.player().getY(), -McUtils.player().getZ());
+
+        VertexConsumer consumer = BUFFER_SOURCE.getBuffer(CustomRenderType.POSITION_COLOR_QUAD);
+        Matrix4f matrix4f = poseStack.last().pose();
+        Matrix3f matrix3f = poseStack.last().normal();
+        double angleStep = 2 * Math.PI / SEGMENTS;
+        double angle = 0;
+
+        for (int i = 0; i < SEGMENTS; i++) {
+            float x = (float) (Math.sin(angle) * radius);
+            float z = (float) (Math.cos(angle) * radius);
+            consumer.vertex(matrix4f, x, (float) McUtils.player().getY(), z).color(1.0F, 1.0F, 1.0F, 1.0F).endVertex();
+            consumer.vertex(matrix4f, x, (float) McUtils.player().getY() + HEIGHT, z).color(1.0F, 1.0F, 1.0F, 1.0F).endVertex();
+            angle += angleStep;
+            float x2 = (float) (Math.sin(angle) * radius);
+            float z2 = (float) (Math.cos(angle) * radius);
+            consumer.vertex(matrix4f, x2, (float) McUtils.player().getY() + HEIGHT, z2).color(1.0F, 1.0F, 1.0F, 1.0F).endVertex();
+            consumer.vertex(matrix4f, x2, (float) McUtils.player().getY(), z2).color(1.0F, 1.0F, 1.0F, 1.0F).endVertex();
         }
 
         BUFFER_SOURCE.endBatch();
