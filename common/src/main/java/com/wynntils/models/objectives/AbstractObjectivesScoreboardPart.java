@@ -22,6 +22,8 @@ public abstract class AbstractObjectivesScoreboardPart extends ScoreboardPart {
     private static final Pattern OBJECTIVE_PATTERN_MULTILINE_END = Pattern.compile(".*§f(\\d+)§7/(\\d+)$");
     private static final Pattern SEGMENT_HEADER = Pattern.compile("^§.§l[A-Za-z ]+:.*$");
 
+    private static final String ALL_DONE = "§c- §7All done";
+
     protected List<WynnObjective> parseObjectives(ScoreboardSegment segment) {
         List<WynnObjective> parsedObjectives = new ArrayList<>();
 
@@ -76,15 +78,8 @@ public abstract class AbstractObjectivesScoreboardPart extends ScoreboardPart {
         return parsedObjectives;
     }
 
-    @Override
-    public void onSegmentRemove(ScoreboardSegment segment) {
-        List<WynnObjective> objectives = parseObjectives(segment);
-
-        for (WynnObjective objective : objectives) {
-            if (objective.getGoal() != null) {
-                Models.Objectives.removeObjective(objective);
-            }
-        }
+    public static boolean isSegmentAllDone(ScoreboardSegment segment) {
+        return segment.getContent().size() == 1 && segment.getContent().get(0).equals(ALL_DONE);
     }
 
     @Override
