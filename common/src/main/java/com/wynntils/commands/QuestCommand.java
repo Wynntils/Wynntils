@@ -187,7 +187,7 @@ public class QuestCommand extends Command {
                                 StringUtils.capitalized(quest.getLength().toString()))
                         .withStyle(ChatFormatting.YELLOW))
                 .append(Component.literal("\n - Next task: ").withStyle(ChatFormatting.WHITE))
-                .append(Component.literal(quest.getNextTask().withoutFormatting())
+                .append(quest.getNextTask().asSingleLiteralComponentWithCodedString()
                         .withStyle(ChatFormatting.GRAY))
                 .append(Component.literal("\n"))
                 .append(Component.literal("[Track quest]")
