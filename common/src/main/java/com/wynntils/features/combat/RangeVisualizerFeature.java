@@ -11,6 +11,8 @@ import com.wynntils.core.features.Feature;
 import com.wynntils.mc.event.PlayerRenderEvent;
 import com.wynntils.models.gear.type.GearInfo;
 import com.wynntils.models.gear.type.GearMajorId;
+import com.wynntils.utils.colors.CommonColors;
+import com.wynntils.utils.colors.CustomColor;
 import com.wynntils.utils.mc.ComponentUtils;
 import com.wynntils.utils.mc.McUtils;
 import com.wynntils.utils.render.buffered.CustomRenderType;
@@ -36,17 +38,14 @@ public class RangeVisualizerFeature extends Feature {
     public void onPlayerRender(PlayerRenderEvent e) {
         if (!Models.Player.isLocalPlayer(e.getPlayer())) return; // Don't render for ghost/npc
         String playerName = ComponentUtils.getUnformatted(e.getPlayer().getName());
-        if (ComponentUtils.getUnformatted(McUtils.player().getName()).equals(playerName)) {
-            if (McUtils.mc().screen instanceof InventoryScreen) return; // Don't render for preview in inventory
-        }
-        if (Models.Party.isInParty() && !Models.Party.getPartyMembers().contains(playerName)) return; // Other players must be in party
+        boolean isSelf = ComponentUtils.getUnformatted(McUtils.player().getName()).equals(playerName);
+        if (isSelf && McUtils.mc().screen instanceof InventoryScreen) return; // Don't render for preview in inventory
+        if (!Models.Party.getPartyMembers().contains(playerName) && !isSelf) return; // Other players must be in party
 
         // We are getting the item info the same way as GearViewerScreen since we care about other people's items
         String gearName = ComponentUtils.getUnformatted(e.getPlayer().getMainHandItem().getHoverName());
         GearInfo gearInfo = Models.Gear.getGearInfoFromApiName(gearName);
         if (gearInfo == null) return;
-        List<GearMajorId> majorIds = gearInfo.fixedStats().majorIds();
-        if (majorIds.isEmpty()) return;
 
         // Major IDs that we can visualize:
         // Taunt (12 blocks)
@@ -55,14 +54,16 @@ public class RangeVisualizerFeature extends Feature {
         // Guardian (8 blocks)?
         // Marked with a ? needs additional confirmation
 
-        for (GearMajorId majorId : majorIds) {
-            System.out.println(majorId);
-            if (majorId.id().equals("TAUNT")) {
-                renderCircleWithRadius(e.getPoseStack(), 12, e.getPlayer().position());
-            } else if (majorId.id().equals("HERO") ||
-                    majorId.id().equals("ALTRUISM") ||
-                    majorId.id().equals("GUARDIAN")) {
-                renderCircleWithRadius(e.getPoseStack(), 8, e.getPlayer().position());
+        for (GearMajorId majorId : gearInfo.fixedStats().majorIds()) {
+            switch (majorId.id()) {
+                case "TAUNT" ->
+                        renderCircleWithRadius(e.getPoseStack(), 12, e.getPlayer().position(), CommonColors.MAGENTA);
+                case "HERO" ->
+                        renderCircleWithRadius(e.getPoseStack(), 8, e.getPlayer().position(), CommonColors.WHITE);
+                case "ALTRUISM" ->
+                        renderCircleWithRadius(e.getPoseStack(), 8, e.getPlayer().position(), CommonColors.PINK);
+                case "GUARDIAN" ->
+                        renderCircleWithRadius(e.getPoseStack(), 8, e.getPlayer().position(), CommonColors.RED);
             }
         }
     }
@@ -77,7 +78,7 @@ public class RangeVisualizerFeature extends Feature {
      *                  We do the translation here, so no need to do it before passing it in.
      * @param radius Pretty self explanatory, radius in blocks.
      */
-    private void renderCircleWithRadius(PoseStack poseStack, int radius, Position position) {
+    private void renderCircleWithRadius(PoseStack poseStack, int radius, Position position, CustomColor color) {
         RenderSystem.disableCull(); // Circle must be rendered on both sides, otherwise it will be invisible when looking at it from the outside
         poseStack.pushPose();
         poseStack.translate(-position.x(), -position.y(), -position.z());
@@ -89,13 +90,13 @@ public class RangeVisualizerFeature extends Feature {
         for (int i = 0; i < SEGMENTS; i++) {
             float x = (float) (position.x() + Math.sin(angle) * radius);
             float z = (float) (position.z() + Math.cos(angle) * radius);
-            consumer.vertex(matrix4f, x, (float) position.y(), z).color(1.0F, 1.0F, 1.0F, 1.0F).endVertex();
-            consumer.vertex(matrix4f, x, (float) position.y() + HEIGHT, z).color(1.0F, 1.0F, 1.0F, 1.0F).endVertex();
+            consumer.vertex(matrix4f, x, (float) position.y(), z).color(color.asInt()).endVertex();
+            consumer.vertex(matrix4f, x, (float) position.y() + HEIGHT, z).color(color.asInt()).endVertex();
             angle += angleStep;
             float x2 = (float) (position.x() + Math.sin(angle) * radius);
             float z2 = (float) (position.z() + Math.cos(angle) * radius);
-            consumer.vertex(matrix4f, x2, (float) position.y() + HEIGHT, z2).color(1.0F, 1.0F, 1.0F, 1.0F).endVertex();
-            consumer.vertex(matrix4f, x2, (float) position.y(), z2).color(1.0F, 1.0F, 1.0F, 1.0F).endVertex();
+            consumer.vertex(matrix4f, x2, (float) position.y() + HEIGHT, z2).color(color.asInt()).endVertex();
+            consumer.vertex(matrix4f, x2, (float) position.y(), z2).color(color.asInt()).endVertex();
         }
 
         BUFFER_SOURCE.endBatch();
