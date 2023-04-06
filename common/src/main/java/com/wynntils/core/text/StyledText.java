@@ -74,6 +74,7 @@ public final class StyledText {
             Component current = currentPair.key();
             Style parentStyle = currentPair.value();
 
+            // We use getContents here to get this and only this component's string.
             String componentString =
                     MutableComponent.create(current.getContents()).getString();
 
@@ -88,7 +89,10 @@ public final class StyledText {
             Collections.reverse(siblingPairs);
             siblingPairs.forEach(deque::addFirst);
 
-            parts.add(styledTextPart);
+            // Disallow empty parts
+            if (!styledTextPart.isEmpty()) {
+                parts.add(styledTextPart);
+            }
         }
 
         return new StyledText(parts, temporaryWorkaround, clickEvents, hoverEvents);
@@ -249,7 +253,7 @@ public final class StyledText {
     }
 
     public boolean isEmpty() {
-        return parts.stream().allMatch(StyledTextPart::isEmpty);
+        return parts.isEmpty();
     }
 
     public boolean isBlank() {
