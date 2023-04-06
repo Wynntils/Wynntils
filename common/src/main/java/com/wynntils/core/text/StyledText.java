@@ -58,9 +58,9 @@ public final class StyledText {
     public static StyledText fromComponent(Component component) {
         Component temporaryWorkaround = component;
 
-        List<StyledTextPart> parts = new LinkedList<>();
-        List<ClickEvent> clickEvents = new LinkedList<>();
-        List<HoverEvent> hoverEvents = new LinkedList<>();
+        List<StyledTextPart> parts = new ArrayList<>();
+        List<ClickEvent> clickEvents = new ArrayList<>();
+        List<HoverEvent> hoverEvents = new ArrayList<>();
 
         // Walk the component tree using DFS
         // Component#visit behaves weirdly, so we do it manually
@@ -139,9 +139,9 @@ public final class StyledText {
     }
 
     public static StyledText join(String separator, StyledText... texts) {
-        List<StyledTextPart> parts = new LinkedList<>();
-        List<ClickEvent> clickEvents = new LinkedList<>();
-        List<HoverEvent> hoverEvents = new LinkedList<>();
+        List<StyledTextPart> parts = new ArrayList<>();
+        List<ClickEvent> clickEvents = new ArrayList<>();
+        List<HoverEvent> hoverEvents = new ArrayList<>();
 
         final int length = texts.length;
         for (int i = 0; i < length; i++) {
@@ -166,9 +166,9 @@ public final class StyledText {
     }
 
     public static StyledText concat(StyledText... texts) {
-        List<StyledTextPart> parts = new LinkedList<>();
-        List<ClickEvent> clickEvents = new LinkedList<>();
-        List<HoverEvent> hoverEvents = new LinkedList<>();
+        List<StyledTextPart> parts = new ArrayList<>();
+        List<ClickEvent> clickEvents = new ArrayList<>();
+        List<HoverEvent> hoverEvents = new ArrayList<>();
 
         for (StyledText text : texts) {
             parts.addAll(text.parts);
@@ -293,14 +293,17 @@ public final class StyledText {
      * @throws IndexOutOfBoundsException if the index is out of bounds.
      */
     public StyledText splitAt(int index) {
-        int stringLength = 0;
-
         if (index < 0) {
             throw new IndexOutOfBoundsException("Index must be non-negative.");
         }
 
-        StyledTextPart partToSplit = null;
+        if (index == getString(PartStyle.StyleType.NONE).length()) {
+            return this;
+        }
+
+        int stringLength = 0;
         int indexToSplit = 0;
+        StyledTextPart partToSplit = null;
 
         for (StyledTextPart part : parts) {
             int currentLength = part.getString(null, PartStyle.StyleType.NONE).length();
@@ -317,7 +320,7 @@ public final class StyledText {
             throw new IndexOutOfBoundsException("Index out of bounds.");
         }
 
-        List<StyledTextPart> newParts = new LinkedList<>(parts);
+        List<StyledTextPart> newParts = new ArrayList<>(parts);
 
         String partString = partToSplit.getString(null, PartStyle.StyleType.NONE);
 
@@ -338,6 +341,19 @@ public final class StyledText {
         newParts.add(indexOfPart, firstPart);
         newParts.add(indexOfPart + 1, secondPart);
         newParts.remove(partToSplit);
+
+        return new StyledText(newParts, temporaryWorkaround, clickEvents, hoverEvents);
+    }
+
+    public StyledText replacePart(StyledTextPart part, StyledTextPart newPart) {
+        int index = parts.indexOf(part);
+
+        if (index == -1) {
+            throw new IllegalArgumentException("Part not found.");
+        }
+
+        List<StyledTextPart> newParts = new ArrayList<>(parts);
+        newParts.set(index, newPart);
 
         return new StyledText(newParts, temporaryWorkaround, clickEvents, hoverEvents);
     }

@@ -16,7 +16,7 @@ import net.minecraft.network.chat.Style;
 
 public final class StyledTextPart {
     private final String text;
-    private PartStyle style;
+    private final PartStyle style;
 
     private final StyledText parent;
 
@@ -31,6 +31,12 @@ public final class StyledTextPart {
     StyledTextPart(StyledTextPart part, StyledText parent) {
         this.text = part.text;
         this.style = new PartStyle(part.style, this);
+        this.parent = parent;
+    }
+
+    StyledTextPart(StyledTextPart part, PartStyle style, StyledText parent) {
+        this.text = part.text;
+        this.style = style;
         this.parent = parent;
     }
 
@@ -116,12 +122,12 @@ public final class StyledTextPart {
         return style;
     }
 
-    public void setPartStyle(PartStyle style) {
-        this.style = style;
+    public StyledTextPart withStyle(PartStyle style) {
+        return new StyledTextPart(this, style, parent);
     }
 
-    public void setPartStyle(Function<PartStyle, PartStyle> function) {
-        this.style = function.apply(style);
+    public StyledTextPart withStyle(Function<PartStyle, PartStyle> function) {
+        return withStyle(function.apply(style));
     }
 
     public MutableComponent getComponent() {

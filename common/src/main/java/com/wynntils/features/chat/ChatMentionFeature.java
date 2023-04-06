@@ -90,7 +90,8 @@ public class ChatMentionFeature extends Feature {
                 return;
             }
 
-            partMatching.setPartStyle(style -> style.withColor(mentionColor.get()));
+            newText = newText.replacePart(
+                    partMatching, partMatching.withStyle(style -> style.withColor(mentionColor.get())));
 
             MutableComponent newComponent = newText.getComponent();
             e.setMessage(newComponent);
