@@ -19,7 +19,7 @@ public class TestComponentUtils {
     }
 
     @Test
-    void getCoded_ShouldWork() {
+    void getCoded_shouldWork() {
         final Component component = Component.literal("Hello,")
                 .withStyle(ChatFormatting.RED)
                 .append(Component.literal(" World!")
