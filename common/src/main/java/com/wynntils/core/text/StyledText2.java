@@ -16,11 +16,11 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
 
 public class StyledText2 {
-    public static final StyledText2 EMPTY = new StyledText2("");
+    public static final StyledText2 EMPTY = StyledText2.fromString("");
 
     private final String str;
 
-    public StyledText2(String str) {
+    private StyledText2(String str) {
         this.str = str;
     }
 
@@ -45,7 +45,7 @@ public class StyledText2 {
     }
 
     public StyledText2 getNormalized() {
-        return new StyledText2(WynnUtils.normalizeBadString(str));
+        return StyledText2.fromString(WynnUtils.normalizeBadString(str));
     }
 
     public StyledText2 trim() {

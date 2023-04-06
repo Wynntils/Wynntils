@@ -36,12 +36,13 @@ public final class ComponentUtils {
 
         component.visit(new CodedStringGenerator(result), Style.EMPTY);
 
-        return new StyledText2(result.toString());
+        return StyledText2.fromString(result.toString());
     }
 
     // Text without formatting codes "Test text"
     public static String getUnformatted(Component component) {
-        return ComponentUtils.stripFormatting(new StyledText2(component.getString()));
+        return StyledText2.fromComponentIgnoringComponentStylesAndJustUsingFormattingCodes(component)
+                .getUnformattedString();
     }
 
     public static StyledText2 getCoded(String jsonString) {

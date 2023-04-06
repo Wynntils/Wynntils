@@ -284,7 +284,7 @@ public final class PartyModel extends Model {
                 partyLeader = m.group(1);
             }
 
-            partyMembers.add(ComponentUtils.stripFormatting(new StyledText2(member)));
+            partyMembers.add(ComponentUtils.stripFormatting(StyledText2.fromString(member)));
         }
 
         inParty = true;

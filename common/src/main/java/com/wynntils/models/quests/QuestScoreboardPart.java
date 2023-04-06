@@ -46,7 +46,8 @@ public class QuestScoreboardPart extends ScoreboardPart {
         }
 
         String fixedName = WynnUtils.normalizeBadString(questName.toString().trim());
-        StyledText2 fixedNextTask = new StyledText2(nextTask.toString().trim()).getNormalized();
+        StyledText2 fixedNextTask =
+                StyledText2.fromString(nextTask.toString().trim()).getNormalized();
         Models.Quest.updateTrackedQuestFromScoreboard(fixedName, fixedNextTask);
     }
 

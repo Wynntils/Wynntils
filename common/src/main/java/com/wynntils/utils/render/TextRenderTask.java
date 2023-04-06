@@ -16,7 +16,7 @@ public final class TextRenderTask {
     }
 
     public TextRenderTask(String text, TextRenderSetting setting) {
-        this.text = new StyledText2(text);
+        this.text = StyledText2.fromString(text);
         this.setting = setting;
     }
 
