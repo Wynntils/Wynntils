@@ -5,7 +5,6 @@
 package com.wynntils.core.text;
 
 import com.google.common.collect.Iterables;
-import com.wynntils.core.WynntilsMod;
 import com.wynntils.utils.mc.ComponentUtils;
 import com.wynntils.utils.render.FontRenderer;
 import com.wynntils.utils.type.IterationDecision;
@@ -417,7 +416,6 @@ public final class StyledText {
 
     @Override
     public String toString() {
-        WynntilsMod.error("StyledText.toString() was called: " + ArrayUtils.toString(parts));
         return "StyledText{" + "parts="
                 + ArrayUtils.toString(parts) + ", clickEvents="
                 + ArrayUtils.toString(clickEvents) + ", hoverEvents="
