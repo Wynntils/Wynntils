@@ -1,9 +1,21 @@
+## [0.0.2-alpha.443](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.442...v0.0.2-alpha.443) (2023-04-06)
+
+
+### Bug Fixes
+
+* Many fixes to Token overlay ([#1448](https://github.com/Wynntils/Artemis/issues/1448)) ([64f9a7c](https://github.com/Wynntils/Artemis/commit/64f9a7c7fc566e4d7bedb41a17c3483239a92d4c))
+
 ## [0.0.2-alpha.442](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.441...v0.0.2-alpha.442) (2023-04-06)
 
 
 ### Bug Fixes
 
 * Fix many cases of objective parsing ([#1452](https://github.com/Wynntils/Artemis/issues/1452)) ([c566757](https://github.com/Wynntils/Artemis/commit/c566757c484557b807caed642c334ffd6fec2b98))
+
+
+### Miscellaneous Chores
+
+* **release:** v0.0.2-alpha.442 [skip ci] ([d6b4bf5](https://github.com/Wynntils/Artemis/commit/d6b4bf5e08dec7855a4680d8ce730fe4c7f233ac))
 
 ## [0.0.2-alpha.441](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.440...v0.0.2-alpha.441) (2023-04-06)
 
@@ -45,16 +57,4 @@
 ### Miscellaneous Chores
 
 * **release:** v0.0.2-alpha.439 [skip ci] ([6fd7c98](https://github.com/Wynntils/Artemis/commit/6fd7c98ca359df708b5b99faea90716e141d99bf))
-
-## [0.0.2-alpha.438](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.437...v0.0.2-alpha.438) (2023-04-05)
-
-
-### Bug Fixes
-
-* Fix scoreboard not working for players with long (>14 chars) names ([#1447](https://github.com/Wynntils/Artemis/issues/1447)) ([d7bd3dc](https://github.com/Wynntils/Artemis/commit/d7bd3dce19861f030269265ccc30bbef785e2c76))
-
-
-### Miscellaneous Chores
-
-* **release:** v0.0.2-alpha.438 [skip ci] ([30878ab](https://github.com/Wynntils/Artemis/commit/30878abb596c50f457e3a51e6c41f771041132a5))
 
