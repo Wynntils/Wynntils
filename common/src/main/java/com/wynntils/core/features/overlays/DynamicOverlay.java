@@ -4,7 +4,6 @@
  */
 package com.wynntils.core.features.overlays;
 
-import com.google.common.collect.ComparisonChain;
 import com.wynntils.utils.render.type.HorizontalAlignment;
 import com.wynntils.utils.render.type.VerticalAlignment;
 import net.minecraft.client.resources.language.I18n;
@@ -75,18 +74,5 @@ public abstract class DynamicOverlay extends Overlay {
 
     public int getId() {
         return id;
-    }
-
-    @Override
-    public int compareTo(Overlay other) {
-        return ComparisonChain.start()
-                .compareTrueFirst(this.isParentEnabled(), other.isParentEnabled())
-                .compare(this.getDeclaringClassName(), other.getDeclaringClassName())
-                .compare(
-                        this.getId(),
-                        (other instanceof DynamicOverlay dynamicOverlay) ? dynamicOverlay.getId() : 0,
-                        Integer::compareTo)
-                .compare(this.getTranslatedName(), other.getTranslatedName())
-                .result();
     }
 }
