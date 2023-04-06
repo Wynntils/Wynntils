@@ -120,8 +120,7 @@ public class ProfessionModel extends Model {
     public void updateLevel(ProfessionType type, int newLevel) {
         ProfessionProgress oldValue = professionProgressMap.getOrDefault(type, ProfessionProgress.NO_PROGRESS);
 
-        // We don't know the progress, so we set it to 0.
-        professionProgressMap.put(type, new ProfessionProgress(newLevel, 0));
+        professionProgressMap.put(type, new ProfessionProgress(newLevel, oldValue.progress()));
     }
 
     public int getLevel(ProfessionType type) {
