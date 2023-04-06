@@ -15,11 +15,13 @@ import com.wynntils.models.gear.type.GearMajorId;
 import com.wynntils.utils.mc.ComponentUtils;
 import com.wynntils.utils.mc.McUtils;
 import com.wynntils.utils.render.buffered.CustomRenderType;
+import net.minecraft.client.Camera;
 import net.minecraft.client.gui.screens.inventory.InventoryScreen;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.blockentity.BlockEntityRenderDispatcher;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Position;
+import net.minecraft.world.entity.player.Player;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import org.joml.Matrix3f;
 import org.joml.Matrix4f;
@@ -72,7 +74,11 @@ public class RangeVisualizerFeature extends Feature {
 
     @SubscribeEvent
     public void onItemInHandRender(ItemInHandRenderEvent e) {
-        renderFirstPersonCircleWithRadius(e.getPoseStack(), 8);
+        if (!(e.getLivingEntity() instanceof Player player)) return;
+        if (!Models.Player.isLocalPlayer(player)) return; // Don't render for ghost/npc
+        if (e.getItemStack() != player.getMainHandItem()) return; // Don't render for non-main-hand items
+
+        renderFirstPersonCircleWithRadius(e.getPoseStack(), 8, player.position());
     }
 
     /**
@@ -112,27 +118,27 @@ public class RangeVisualizerFeature extends Feature {
         RenderSystem.enableCull();
     }
 
-    private void renderFirstPersonCircleWithRadius(PoseStack poseStack, int radius) {
-        RenderSystem.disableCull();
+    private void renderFirstPersonCircleWithRadius(PoseStack poseStack, int radius, Position position) {
+        RenderSystem.disableCull(); // Circle must be rendered on both sides, otherwise it will be invisible when looking at it from the outside
         poseStack.pushPose();
-        poseStack.translate(-McUtils.player().getX(), -McUtils.player().getY(), -McUtils.player().getZ());
-
+        poseStack.translate(-position.x(), -position.y(), -position.z());
+        
         VertexConsumer consumer = BUFFER_SOURCE.getBuffer(CustomRenderType.POSITION_COLOR_QUAD);
+
         Matrix4f matrix4f = poseStack.last().pose();
         Matrix3f matrix3f = poseStack.last().normal();
         double angleStep = 2 * Math.PI / SEGMENTS;
         double angle = 0;
-
         for (int i = 0; i < SEGMENTS; i++) {
-            float x = (float) (Math.sin(angle) * radius);
-            float z = (float) (Math.cos(angle) * radius);
-            consumer.vertex(matrix4f, x, (float) McUtils.player().getY(), z).color(1.0F, 1.0F, 1.0F, 1.0F).endVertex();
-            consumer.vertex(matrix4f, x, (float) McUtils.player().getY() + HEIGHT, z).color(1.0F, 1.0F, 1.0F, 1.0F).endVertex();
+            float x = (float) (position.x() + Math.sin(angle) * radius);
+            float z = (float) (position.z() + Math.cos(angle) * radius);
+            consumer.vertex(matrix4f, x, (float) position.y(), z).color(1.0F, 1.0F, 1.0F, 1.0F).endVertex();
+            consumer.vertex(matrix4f, x, (float) position.y() + HEIGHT, z).color(1.0F, 1.0F, 1.0F, 1.0F).endVertex();
             angle += angleStep;
-            float x2 = (float) (Math.sin(angle) * radius);
-            float z2 = (float) (Math.cos(angle) * radius);
-            consumer.vertex(matrix4f, x2, (float) McUtils.player().getY() + HEIGHT, z2).color(1.0F, 1.0F, 1.0F, 1.0F).endVertex();
-            consumer.vertex(matrix4f, x2, (float) McUtils.player().getY(), z2).color(1.0F, 1.0F, 1.0F, 1.0F).endVertex();
+            float x2 = (float) (position.x() + Math.sin(angle) * radius);
+            float z2 = (float) (position.z() + Math.cos(angle) * radius);
+            consumer.vertex(matrix4f, x2, (float) position.y() + HEIGHT, z2).color(1.0F, 1.0F, 1.0F, 1.0F).endVertex();
+            consumer.vertex(matrix4f, x2, (float) position.y(), z2).color(1.0F, 1.0F, 1.0F, 1.0F).endVertex();
         }
 
         BUFFER_SOURCE.endBatch();
