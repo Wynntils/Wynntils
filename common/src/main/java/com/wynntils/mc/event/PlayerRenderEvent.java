@@ -1,3 +1,7 @@
+/*
+ * Copyright © Wynntils 2023.
+ * This file is released under AGPLv3. See LICENSE for full license details.
+ */
 package com.wynntils.mc.event;
 
 import com.mojang.blaze3d.vertex.PoseStack;
@@ -13,7 +17,13 @@ public class PlayerRenderEvent extends Event {
     private final MultiBufferSource buffer;
     private final int packedLight;
 
-    public PlayerRenderEvent(AbstractClientPlayer entity, float entityYaw, float partialTicks, PoseStack poseStack, MultiBufferSource buffer, int packedLight) {
+    public PlayerRenderEvent(
+            AbstractClientPlayer entity,
+            float entityYaw,
+            float partialTicks,
+            PoseStack poseStack,
+            MultiBufferSource buffer,
+            int packedLight) {
         this.entity = entity;
         this.entityYaw = entityYaw;
         this.partialTicks = partialTicks;

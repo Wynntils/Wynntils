@@ -62,11 +62,21 @@ public abstract class PlayerRendererMixin
         }
     }
 
-    @Inject(method="render(Lnet/minecraft/client/player/AbstractClientPlayer;FFLcom/mojang/blaze3d/vertex/PoseStack;Lnet/minecraft/client/renderer/MultiBufferSource;I)V",
-    at = @At("RETURN"),
-    cancellable = true)
-    private void onRenderPost(AbstractClientPlayer entity, float entityYaw, float partialTicks, PoseStack matrixStack, MultiBufferSource buffer, int packedLight, CallbackInfo ci) {
-        PlayerRenderEvent event = new PlayerRenderEvent(entity, entityYaw, partialTicks, matrixStack, buffer, packedLight);
+    @Inject(
+            method =
+                    "render(Lnet/minecraft/client/player/AbstractClientPlayer;FFLcom/mojang/blaze3d/vertex/PoseStack;Lnet/minecraft/client/renderer/MultiBufferSource;I)V",
+            at = @At("RETURN"),
+            cancellable = true)
+    private void onRenderPost(
+            AbstractClientPlayer entity,
+            float entityYaw,
+            float partialTicks,
+            PoseStack matrixStack,
+            MultiBufferSource buffer,
+            int packedLight,
+            CallbackInfo ci) {
+        PlayerRenderEvent event =
+                new PlayerRenderEvent(entity, entityYaw, partialTicks, matrixStack, buffer, packedLight);
         MixinHelper.post(event);
         if (event.isCanceled()) {
             ci.cancel();
