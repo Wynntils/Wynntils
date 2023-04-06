@@ -6,6 +6,7 @@ package com.wynntils.models.quests;
 
 import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.components.Models;
+import com.wynntils.core.text.CodedString;
 import com.wynntils.handlers.container.ScriptedContainerQuery;
 import com.wynntils.handlers.container.type.ContainerContent;
 import com.wynntils.utils.mc.McUtils;
@@ -40,14 +41,14 @@ public class QuestContainerQueries {
                             Component.literal("Error updating quest book.").withStyle(ChatFormatting.RED));
                 })
                 .useItemInHotbar(InventoryUtils.QUEST_BOOK_SLOT_NUM)
-                .matchTitle(Models.Quest.getQuestBookTitle(1))
+                .matchTitle(Models.Quest.getQuestBookTitleRegex(1))
                 .processContainer(c -> processQuestBookPage(c, 1));
 
         for (int i = 2; i < 5; i++) {
             final int page = i; // Lambdas need final variables
             queryBuilder
                     .clickOnSlotWithName(NEXT_PAGE_SLOT, Items.GOLDEN_SHOVEL, getNextPageButtonName(page))
-                    .matchTitle(Models.Quest.getQuestBookTitle(page))
+                    .matchTitle(Models.Quest.getQuestBookTitleRegex(page))
                     .processContainer(c -> processQuestBookPage(c, page));
         }
 
@@ -84,8 +85,8 @@ public class QuestContainerQueries {
         }
     }
 
-    private String getNextPageButtonName(int nextPageNum) {
-        return "[§f§lPage " + nextPageNum + "§a >§2>§a>§2>§a>]";
+    private CodedString getNextPageButtonName(int nextPageNum) {
+        return CodedString.fromString("[§f§lPage " + nextPageNum + "§a >§2>§a>§2>§a>]");
     }
 
     protected void queryMiniQuests() {
@@ -96,17 +97,17 @@ public class QuestContainerQueries {
                             Component.literal("Error updating quest book.").withStyle(ChatFormatting.RED));
                 })
                 .useItemInHotbar(InventoryUtils.QUEST_BOOK_SLOT_NUM)
-                .matchTitle(Models.Quest.getQuestBookTitle(1))
+                .matchTitle(Models.Quest.getQuestBookTitleRegex(1))
                 .processContainer(c -> {})
                 .clickOnSlot(MINI_QUESTS_SLOT)
-                .matchTitle(getMiniQuestBookTitle(1))
+                .matchTitle(getMiniQuestBookTitleRegex(1))
                 .processContainer(c -> processMiniQuestBookPage(c, 1));
 
         for (int i = 2; i < 4; i++) {
             final int page = i; // Lambdas need final variables
             queryBuilder
                     .clickOnSlotWithName(NEXT_PAGE_SLOT, Items.GOLDEN_SHOVEL, getNextPageButtonName(page))
-                    .matchTitle(getMiniQuestBookTitle(page))
+                    .matchTitle(getMiniQuestBookTitleRegex(page))
                     .processContainer(c -> processMiniQuestBookPage(c, page));
         }
 
@@ -140,7 +141,7 @@ public class QuestContainerQueries {
         }
     }
 
-    private String getMiniQuestBookTitle(int pageNum) {
+    private String getMiniQuestBookTitleRegex(int pageNum) {
         return "^§0\\[Pg. " + pageNum + "\\] §8.*§0 Mini-Quests$";
     }
 
@@ -148,10 +149,13 @@ public class QuestContainerQueries {
         ScriptedContainerQuery.QueryBuilder queryBuilder = ScriptedContainerQuery.builder("Quest Book Quest Pin Query")
                 .onError(msg -> WynntilsMod.warn("Problem pinning quest in Quest Book: " + msg))
                 .useItemInHotbar(InventoryUtils.QUEST_BOOK_SLOT_NUM)
-                .matchTitle(Models.Quest.getQuestBookTitle(1));
+                .matchTitle(Models.Quest.getQuestBookTitleRegex(1));
 
         if (questInfo.isMiniQuest()) {
-            queryBuilder.processContainer(c -> {}).clickOnSlot(MINI_QUESTS_SLOT).matchTitle(getMiniQuestBookTitle(1));
+            queryBuilder
+                    .processContainer(c -> {})
+                    .clickOnSlot(MINI_QUESTS_SLOT)
+                    .matchTitle(getMiniQuestBookTitleRegex(1));
         }
 
         if (questInfo.getPageNumber() > 1) {
@@ -159,7 +163,7 @@ public class QuestContainerQueries {
                 queryBuilder
                         .processContainer(container -> {}) // we ignore this because this is not the correct page
                         .clickOnSlotWithName(NEXT_PAGE_SLOT, Items.GOLDEN_SHOVEL, getNextPageButtonName(i))
-                        .matchTitle(Models.Quest.getQuestBookTitle(i));
+                        .matchTitle(Models.Quest.getQuestBookTitleRegex(i));
             }
         }
         queryBuilder

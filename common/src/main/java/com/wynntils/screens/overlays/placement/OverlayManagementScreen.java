@@ -13,6 +13,7 @@ import com.wynntils.core.features.overlays.Overlay;
 import com.wynntils.core.features.overlays.OverlayPosition;
 import com.wynntils.core.features.overlays.OverlaySize;
 import com.wynntils.core.features.overlays.SectionCoordinates;
+import com.wynntils.core.text.CodedString;
 import com.wynntils.screens.base.WynntilsScreen;
 import com.wynntils.screens.overlays.selection.OverlaySelectionScreen;
 import com.wynntils.utils.MathUtils;
@@ -205,7 +206,7 @@ public final class OverlayManagementScreen extends WynntilsScreen {
                 FontRenderer.getInstance()
                         .renderAlignedTextInBox(
                                 poseStack,
-                                overlay.getTranslatedName(),
+                                CodedString.fromString(overlay.getTranslatedName()),
                                 renderX,
                                 renderX + overlay.getWidth(),
                                 renderY,

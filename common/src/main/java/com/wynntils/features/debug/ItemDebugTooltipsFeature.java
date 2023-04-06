@@ -9,6 +9,7 @@ import com.wynntils.core.config.Category;
 import com.wynntils.core.config.ConfigCategory;
 import com.wynntils.core.features.Feature;
 import com.wynntils.core.features.properties.StartDisabled;
+import com.wynntils.core.text.CodedString;
 import com.wynntils.mc.event.ItemTooltipRenderEvent;
 import com.wynntils.models.items.WynnItem;
 import com.wynntils.utils.mc.KeyboardUtils;
@@ -41,16 +42,17 @@ public class ItemDebugTooltipsFeature extends Feature {
     private List<Component> getTooltipAddon(WynnItem wynnItem) {
         List<Component> addon = new ArrayList<>();
 
-        List<String> wrappedDescription = Arrays.stream(RenderedStringUtils.wrapTextBySize(wynnItem.toString(), 150))
+        List<CodedString> wrappedDescription = Arrays.stream(
+                        RenderedStringUtils.wrapTextBySize(CodedString.fromString(wynnItem.toString()), 150))
                 .toList();
         if (!KeyboardUtils.isKeyDown(GLFW.GLFW_KEY_RIGHT_SHIFT) && wrappedDescription.size() > 4) {
             wrappedDescription = new ArrayList<>(wrappedDescription.subList(0, 3));
-            wrappedDescription.add("...");
-            wrappedDescription.add("Press Right Shift for all");
+            wrappedDescription.add(CodedString.fromString("..."));
+            wrappedDescription.add(CodedString.fromString("Press Right Shift for all"));
         }
 
-        for (String line : wrappedDescription) {
-            addon.add(Component.literal(line).withStyle(ChatFormatting.DARK_GREEN));
+        for (CodedString line : wrappedDescription) {
+            addon.add(line.asSingleLiteralComponentWithCodedString().withStyle(ChatFormatting.DARK_GREEN));
         }
 
         return addon;

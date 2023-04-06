@@ -6,6 +6,7 @@ package com.wynntils.models.quests;
 
 import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.components.Models;
+import com.wynntils.core.text.CodedString;
 import com.wynntils.handlers.scoreboard.ScoreboardPart;
 import com.wynntils.handlers.scoreboard.ScoreboardSegment;
 import com.wynntils.handlers.scoreboard.type.SegmentMatcher;
@@ -24,7 +25,7 @@ public class QuestScoreboardPart extends ScoreboardPart {
 
     @Override
     public void onSegmentChange(ScoreboardSegment newValue) {
-        List<String> content = newValue.getContent();
+        List<CodedString> content = newValue.getContent();
 
         if (content.isEmpty()) {
             WynntilsMod.error("QuestHandler: content was empty.");
@@ -33,18 +34,20 @@ public class QuestScoreboardPart extends ScoreboardPart {
         StringBuilder questName = new StringBuilder();
         StringBuilder nextTask = new StringBuilder();
 
-        for (String line : content) {
+        for (CodedString line : content) {
             if (line.startsWith("§e")) {
                 questName.append(ComponentUtils.stripFormatting(line)).append(" ");
             } else {
-                nextTask.append(line.replaceAll(ChatFormatting.WHITE.toString(), ChatFormatting.AQUA.toString())
+                nextTask.append(line.getInternalCodedStringRepresentation()
+                                .replaceAll(ChatFormatting.WHITE.toString(), ChatFormatting.AQUA.toString())
                                 .replaceAll(ChatFormatting.GRAY.toString(), ChatFormatting.RESET.toString()))
                         .append(" ");
             }
         }
 
         String fixedName = WynnUtils.normalizeBadString(questName.toString().trim());
-        String fixedNextTask = WynnUtils.normalizeBadString(nextTask.toString().trim());
+        CodedString fixedNextTask =
+                CodedString.fromString(nextTask.toString().trim()).getNormalized();
         Models.Quest.updateTrackedQuestFromScoreboard(fixedName, fixedNextTask);
     }
 

@@ -9,6 +9,7 @@ import com.mojang.authlib.GameProfile;
 import com.mojang.brigadier.CommandDispatcher;
 import com.mojang.brigadier.tree.RootCommandNode;
 import com.wynntils.core.events.MixinHelper;
+import com.wynntils.core.text.CodedString;
 import com.wynntils.mc.event.AddEntityEvent;
 import com.wynntils.mc.event.AdvancementUpdateEvent;
 import com.wynntils.mc.event.ChatPacketReceivedEvent;
@@ -199,7 +200,8 @@ public abstract class ClientPacketListenerMixin {
     private void handleTabListCustomisationPost(ClientboundTabListPacket packet, CallbackInfo ci) {
         if (!isRenderThread()) return;
 
-        MixinHelper.post(new PlayerInfoFooterChangedEvent(packet.getFooter().getString()));
+        MixinHelper.post(new PlayerInfoFooterChangedEvent(
+                CodedString.fromComponentIgnoringComponentStylesAndJustUsingFormattingCodes(packet.getFooter())));
     }
 
     @Inject(
@@ -476,7 +478,10 @@ public abstract class ClientPacketListenerMixin {
         if (!isRenderThread()) return;
 
         ScoreboardSetScoreEvent event = new ScoreboardSetScoreEvent(
-                packet.getOwner(), packet.getObjectiveName(), packet.getScore(), packet.getMethod());
+                CodedString.fromString(packet.getOwner()),
+                packet.getObjectiveName(),
+                packet.getScore(),
+                packet.getMethod());
         MixinHelper.post(event);
         if (event.isCanceled()) {
             ci.cancel();

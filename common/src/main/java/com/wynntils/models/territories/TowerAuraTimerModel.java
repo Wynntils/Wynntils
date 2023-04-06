@@ -5,13 +5,14 @@
 package com.wynntils.models.territories;
 
 import com.wynntils.core.components.Model;
+import com.wynntils.core.text.CodedString;
 import com.wynntils.mc.event.SubtitleSetTextEvent;
 import java.util.List;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 
 public class TowerAuraTimerModel extends Model {
     private static final int AURA_PROC_MS = 3200;
-    private static final String AURA_TITLE = "§4§n/!\\§7 Tower §6Aura";
+    private static final CodedString AURA_TITLE = CodedString.fromString("§4§n/!\\§7 Tower §6Aura");
 
     public TowerAuraTimerModel() {
         super(List.of());
@@ -21,7 +22,8 @@ public class TowerAuraTimerModel extends Model {
 
     @SubscribeEvent
     public void onSubtitle(SubtitleSetTextEvent event) {
-        if (!event.getComponent().getString().equals(AURA_TITLE)) return;
+        if (!CodedString.fromComponentIgnoringComponentStylesAndJustUsingFormattingCodes(event.getComponent())
+                .equals(AURA_TITLE)) return;
 
         lastAuraProc = System.currentTimeMillis();
     }

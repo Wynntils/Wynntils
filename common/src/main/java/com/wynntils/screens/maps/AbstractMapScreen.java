@@ -7,6 +7,7 @@ package com.wynntils.screens.maps;
 import com.mojang.blaze3d.platform.InputConstants;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.wynntils.core.components.Models;
+import com.wynntils.core.text.CodedString;
 import com.wynntils.models.map.MapTexture;
 import com.wynntils.models.map.PoiLocation;
 import com.wynntils.models.map.pois.IconPoi;
@@ -270,7 +271,7 @@ public abstract class AbstractMapScreen extends WynntilsScreen {
         FontRenderer.getInstance()
                 .renderText(
                         poseStack,
-                        gameX + ", " + gameZ,
+                        CodedString.fromString(gameX + ", " + gameZ),
                         this.centerX,
                         this.renderHeight - this.renderedBorderYOffset - 40,
                         CommonColors.WHITE,

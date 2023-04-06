@@ -4,6 +4,7 @@
  */
 package com.wynntils.models.items.annotators.game;
 
+import com.wynntils.core.text.CodedString;
 import com.wynntils.handlers.item.ItemAnnotation;
 import com.wynntils.handlers.item.ItemAnnotator;
 import com.wynntils.models.gear.type.GearTier;
@@ -22,11 +23,11 @@ public final class GearBoxAnnotator implements ItemAnnotator {
             Pattern.compile("^§a- (?:§r)?§7Lv\\. Range: (?:§r)?§f(\\d+)-(\\d+)$");
 
     @Override
-    public ItemAnnotation getAnnotation(ItemStack itemStack, String name) {
+    public ItemAnnotation getAnnotation(ItemStack itemStack, CodedString name) {
         if (!(itemStack.getItem() == Items.STONE_SHOVEL
                 && itemStack.getDamageValue() >= 1
                 && itemStack.getDamageValue() <= 6)) return null;
-        Matcher matcher = GEAR_BOX_PATTERN.matcher(name);
+        Matcher matcher = name.getMatcher(GEAR_BOX_PATTERN);
         if (!matcher.matches()) return null;
 
         GearType gearType = GearType.fromString(matcher.group(1));

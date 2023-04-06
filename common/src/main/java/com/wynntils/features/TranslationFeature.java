@@ -13,6 +13,7 @@ import com.wynntils.core.config.RegisterConfig;
 import com.wynntils.core.features.Feature;
 import com.wynntils.core.features.properties.StartDisabled;
 import com.wynntils.core.net.translation.TranslationManager;
+import com.wynntils.core.text.CodedString;
 import com.wynntils.handlers.chat.event.ChatMessageReceivedEvent;
 import com.wynntils.handlers.chat.event.NpcDialogEvent;
 import com.wynntils.handlers.chat.type.NpcDialogueType;
@@ -54,11 +55,11 @@ public class TranslationFeature extends Feature {
         if (e.getRecipientType() != RecipientType.INFO && !translatePlayerChat.get()) return;
         if (e.getRecipientType() == RecipientType.INFO && !translateInfo.get()) return;
 
-        String origCoded = e.getCodedMessage();
+        CodedString origCoded = e.getCodedMessage();
         String wrapped = wrapCoding(origCoded);
         Managers.Translation.getTranslator(translationService.get())
                 .translate(List.of(wrapped), languageName.get(), translatedMsgList -> {
-                    String messageToSend;
+                    CodedString messageToSend;
                     if (!translatedMsgList.isEmpty()) {
                         String result = translatedMsgList.get(0);
                         messageToSend = unwrapCoding(result);
@@ -68,7 +69,9 @@ public class TranslationFeature extends Feature {
                         // We failed to get a translation; send the original message so it's not lost
                         messageToSend = origCoded;
                     }
-                    McUtils.mc().doRunTask(() -> McUtils.sendMessageToClient(Component.literal(messageToSend)));
+                    McUtils.mc()
+                            .doRunTask(() -> McUtils.sendMessageToClient(
+                                    messageToSend.asSingleLiteralComponentWithCodedString()));
                 });
         if (!keepOriginal.get()) {
             e.setCanceled(true);
@@ -86,7 +89,7 @@ public class TranslationFeature extends Feature {
                     .toList();
             Managers.Translation.getTranslator(translationService.get())
                     .translate(wrapped, languageName.get(), translatedMsgList -> {
-                        List<String> unwrapped = translatedMsgList.stream()
+                        List<CodedString> unwrapped = translatedMsgList.stream()
                                 .map(this::unwrapCoding)
                                 .toList();
                         // FIXME: We need a ComponentUtils.componentFromCoded()...
@@ -110,12 +113,12 @@ public class TranslationFeature extends Feature {
         }
     }
 
-    private String unwrapCoding(String origCoded) {
-        return origCoded.replaceAll("\\{ ?§ ?([0-9a-fklmnor]) ?\\}", "§$1");
+    private CodedString unwrapCoding(String origCoded) {
+        return CodedString.fromString(origCoded.replaceAll("\\{ ?§ ?([0-9a-fklmnor]) ?\\}", "§$1"));
     }
 
-    private String wrapCoding(String origCoded) {
-        return origCoded.replaceAll("(§[0-9a-fklmnor])", "{$1}");
+    private String wrapCoding(CodedString origCoded) {
+        return origCoded.getInternalCodedStringRepresentation().replaceAll("(§[0-9a-fklmnor])", "{$1}");
     }
 
     private static class TranslatedNpcDialogEvent extends NpcDialogEvent {

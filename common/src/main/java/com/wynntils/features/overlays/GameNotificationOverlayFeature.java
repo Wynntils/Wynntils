@@ -19,6 +19,7 @@ import com.wynntils.core.features.overlays.annotations.OverlayInfo;
 import com.wynntils.core.notifications.MessageContainer;
 import com.wynntils.core.notifications.TimedMessageContainer;
 import com.wynntils.core.notifications.event.NotificationEvent;
+import com.wynntils.core.text.CodedString;
 import com.wynntils.mc.event.RenderEvent;
 import com.wynntils.models.worlds.event.WorldStateEvent;
 import com.wynntils.utils.render.TextRenderSetting;
@@ -123,14 +124,25 @@ public class GameNotificationOverlayFeature extends Feature {
 
                 TextRenderTask messageTask = message.getRenderTask();
 
-                if (messageMaxLength.get() == 0 || messageTask.getText().length() < messageMaxLength.get()) {
+                if (messageMaxLength.get() == 0
+                        || messageTask
+                                        .getText()
+                                        .getInternalCodedStringRepresentation()
+                                        .length()
+                                < messageMaxLength.get()) {
                     toRender.add(message);
                 } else {
                     TimedMessageContainer first = new TimedMessageContainer(
-                            new MessageContainer(messageTask.getText().substring(0, messageMaxLength.get())),
+                            new MessageContainer(messageTask
+                                    .getText()
+                                    .getInternalCodedStringRepresentation()
+                                    .substring(0, messageMaxLength.get())),
                             message.getEndTime());
                     TimedMessageContainer second = new TimedMessageContainer(
-                            new MessageContainer(messageTask.getText().substring(messageMaxLength.get())),
+                            new MessageContainer(messageTask
+                                    .getText()
+                                    .getInternalCodedStringRepresentation()
+                                    .substring(messageMaxLength.get())),
                             message.getEndTime());
                     if (this.invertGrowth.get()) {
                         toRender.add(first);
@@ -187,7 +199,8 @@ public class GameNotificationOverlayFeature extends Feature {
                             bufferSource,
                             this.getRenderX(),
                             this.getRenderY(),
-                            new TextRenderTask("§r§a→ §r§2Player [§r§aWC1/Archer§r§2]", textRenderSetting),
+                            new TextRenderTask(
+                                    CodedString.fromString("§r§a→ §r§2Player [§r§aWC1/Archer§r§2]"), textRenderSetting),
                             this.getWidth(),
                             this.getHeight(),
                             this.getRenderHorizontalAlignment(),

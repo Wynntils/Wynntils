@@ -9,6 +9,7 @@ import com.wynntils.core.config.Config;
 import com.wynntils.core.config.ConfigCategory;
 import com.wynntils.core.config.RegisterConfig;
 import com.wynntils.core.features.Feature;
+import com.wynntils.core.text.CodedString;
 import com.wynntils.handlers.chat.event.ChatMessageReceivedEvent;
 import com.wynntils.handlers.chat.type.MessageType;
 import com.wynntils.handlers.chat.type.RecipientType;
@@ -56,57 +57,59 @@ public class InfoMessageFilterFeature extends Feature {
     public void onInfoMessage(ChatMessageReceivedEvent e) {
         if (e.getRecipientType() != RecipientType.INFO) return;
 
-        String msg = e.getOriginalCodedMessage();
+        CodedString msg = e.getOriginalCodedMessage();
         MessageType messageType = e.getMessageType();
 
         if (messageType == MessageType.FOREGROUND) {
             if (hideSystemInfo.get()) {
-                if (SYSTEM_INFO.matcher(msg).find()) {
+                if (msg.getMatcher(SYSTEM_INFO).find()) {
                     e.setCanceled(true);
                     return;
                 }
             }
 
             if (hideWelcome.get()) {
-                if (WELCOME_1.matcher(msg).find() || WELCOME_2.matcher(msg).find()) {
+                if (msg.getMatcher(WELCOME_1).find()
+                        || msg.getMatcher(WELCOME_2).find()) {
                     e.setCanceled(true);
                     return;
                 }
             }
             if (hideLevelUp.get()) {
-                if (LEVEL_UP_1.matcher(msg).find() || LEVEL_UP_2.matcher(msg).find()) {
+                if (msg.getMatcher(LEVEL_UP_1).find()
+                        || msg.getMatcher(LEVEL_UP_2).find()) {
                     e.setCanceled(true);
                     return;
                 }
             }
 
             if (hideWelcome.get()) {
-                if (PRE_WELCOME_1.matcher(msg).find()
-                        || PRE_WELCOME_2.matcher(msg).find()
-                        || PRE_WELCOME_3.matcher(msg).find()) {
+                if (msg.getMatcher(PRE_WELCOME_1).find()
+                        || msg.getMatcher(PRE_WELCOME_2).find()
+                        || msg.getMatcher(PRE_WELCOME_3).find()) {
                     e.setCanceled(true);
                     return;
                 }
             }
         } else if (messageType == MessageType.BACKGROUND) {
             if (hideSystemInfo.get()) {
-                if (BACKGROUND_SYSTEM_INFO.matcher(msg).find()) {
+                if (msg.getMatcher(BACKGROUND_SYSTEM_INFO).find()) {
                     e.setCanceled(true);
                     return;
                 }
             }
 
             if (hideLevelUp.get()) {
-                if (BACKGROUND_LEVEL_UP_1.matcher(msg).find()
-                        || BACKGROUND_LEVEL_UP_2.matcher(msg).find()) {
+                if (msg.getMatcher(BACKGROUND_LEVEL_UP_1).find()
+                        || msg.getMatcher(BACKGROUND_LEVEL_UP_2).find()) {
                     e.setCanceled(true);
                     return;
                 }
             }
 
             if (hideWelcome.get()) {
-                if (BACKGROUND_WELCOME_1.matcher(msg).find()
-                        || BACKGROUND_WELCOME_2.matcher(msg).find()) {
+                if (msg.getMatcher(BACKGROUND_WELCOME_1).find()
+                        || msg.getMatcher(BACKGROUND_WELCOME_2).find()) {
                     e.setCanceled(true);
                     return;
                 }
