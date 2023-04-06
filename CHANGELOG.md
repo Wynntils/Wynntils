@@ -1,9 +1,21 @@
+## [0.0.2-alpha.444](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.443...v0.0.2-alpha.444) (2023-04-06)
+
+
+### New Features
+
+* Add ping function ([#1455](https://github.com/Wynntils/Artemis/issues/1455)) ([4086f7e](https://github.com/Wynntils/Artemis/commit/4086f7eafa61e113992a45ef116ce05b92803820))
+
 ## [0.0.2-alpha.443](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.442...v0.0.2-alpha.443) (2023-04-06)
 
 
 ### Bug Fixes
 
 * Many fixes to Token overlay ([#1448](https://github.com/Wynntils/Artemis/issues/1448)) ([64f9a7c](https://github.com/Wynntils/Artemis/commit/64f9a7c7fc566e4d7bedb41a17c3483239a92d4c))
+
+
+### Miscellaneous Chores
+
+* **release:** v0.0.2-alpha.443 [skip ci] ([d6aff4c](https://github.com/Wynntils/Artemis/commit/d6aff4ca9c7332810502a83368845e5151e7d798))
 
 ## [0.0.2-alpha.442](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.441...v0.0.2-alpha.442) (2023-04-06)
 
@@ -45,16 +57,4 @@
 ### Miscellaneous Chores
 
 * **release:** v0.0.2-alpha.440 [skip ci] ([78b6583](https://github.com/Wynntils/Artemis/commit/78b6583230c031cba467ff162a8d850e97a288bf))
-
-## [0.0.2-alpha.439](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.438...v0.0.2-alpha.439) (2023-04-05)
-
-
-### Bug Fixes
-
-* Add NPE checks for mob totem functions (and remove leftover y z functions) ([#1451](https://github.com/Wynntils/Artemis/issues/1451)) ([ce32ea1](https://github.com/Wynntils/Artemis/commit/ce32ea12c380a2d446019392ef664f1d29aaa8c4))
-
-
-### Miscellaneous Chores
-
-* **release:** v0.0.2-alpha.439 [skip ci] ([6fd7c98](https://github.com/Wynntils/Artemis/commit/6fd7c98ca359df708b5b99faea90716e141d99bf))
 
