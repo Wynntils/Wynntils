@@ -26,6 +26,8 @@ import net.minecraft.network.chat.Style;
 import org.apache.commons.lang3.ArrayUtils;
 
 public final class StyledText {
+    public static final StyledText EMPTY = new StyledText(List.of(), List.of(), List.of());
+
     private final Component temporaryWorkaround;
 
     private final List<StyledTextPart> parts;
@@ -106,6 +108,10 @@ public final class StyledText {
     public static StyledText fromString(String codedString) {
         return new StyledText(
                 StyledTextPart.fromCodedString(codedString, Style.EMPTY, null, Style.EMPTY), List.of(), List.of());
+    }
+
+    public static StyledText fromStyledText2(StyledText2 styledText2) {
+        return fromString(styledText2.getInternalCodedStringRepresentation());
     }
 
     // We don't want to expose the actual string to the outside world

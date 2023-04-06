@@ -32,6 +32,10 @@ public class StyledText2 {
         return StyledText2.fromString(component.getString());
     }
 
+    public static StyledText2 fromStyledText(StyledText styledText) {
+        return fromString(styledText.getString(PartStyle.StyleType.FULL));
+    }
+
     public String getInternalCodedStringRepresentation() {
         return str;
     }
