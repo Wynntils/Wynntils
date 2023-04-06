@@ -21,10 +21,12 @@ import com.wynntils.utils.mc.type.Location;
 import com.wynntils.utils.type.CappedValue;
 import com.wynntils.utils.type.TimedSet;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.Set;
 import java.util.concurrent.TimeUnit;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -197,14 +199,17 @@ public class TokenModel extends Model {
 
     @SubscribeEvent
     public void onWorldChange(WorldStateEvent event) {
-        activeGatekeepers.forEach(
-                (id, gatekeeper) -> WynntilsMod.postEvent(new TokenGatekeeperEvent.Removed(gatekeeper)));
         inventoryWatchers.values().forEach(Models.PlayerInventory::unregisterWatcher);
+
+        Set<TokenGatekeeper> oldGatekeepers = new HashSet<>(activeGatekeepers.values());
 
         activeGatekeepers.clear();
         invisibleGatekeepers.clear();
         bakingGatekeepers.clear();
         inventoryWatchers.clear();
+
+        // Event is fired last, to make sure the gatekeepers are cleared
+        oldGatekeepers.forEach((gatekeeper) -> WynntilsMod.postEvent(new TokenGatekeeperEvent.Removed(gatekeeper)));
     }
 
     private void addGatekeeper(int entityId, TokenGatekeeper gatekeeper) {

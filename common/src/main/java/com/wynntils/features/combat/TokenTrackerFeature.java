@@ -77,7 +77,7 @@ public class TokenTrackerFeature extends Feature {
 
         public TokenBarOverlay(int id) {
             super(id, new OverlaySize(81, 21));
-            horizontalAlignmentOverride.updateConfig(HorizontalAlignment.LEFT);
+            horizontalAlignmentOverride.updateConfig(HorizontalAlignment.RIGHT);
             verticalAlignmentOverride.updateConfig(VerticalAlignment.TOP);
         }
 
@@ -116,7 +116,7 @@ public class TokenTrackerFeature extends Feature {
 
     public static class TokenBarsOverlay extends ContainerOverlay<TokenBarOverlay> {
         public TokenBarsOverlay(OverlayPosition position, OverlaySize size, GrowDirection growDirection) {
-            super(position, size, growDirection);
+            super(position, size, growDirection, HorizontalAlignment.RIGHT, VerticalAlignment.TOP);
         }
 
         @Override
