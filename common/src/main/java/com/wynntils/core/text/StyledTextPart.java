@@ -5,6 +5,8 @@
 package com.wynntils.core.text;
 
 import com.wynntils.utils.wynn.WynnUtils;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
 import java.util.function.Function;
 import net.minecraft.ChatFormatting;
@@ -35,53 +37,71 @@ public final class StyledTextPart {
     // This factory is used to create a StyledTextPart from a component that has formatting codes
     // It is separate from the constructor because this only needs to be applied in cases there the text could have
     // formatting codes
-    static StyledTextPart fromComponentWithPossibleFormattingCodes(
-            String text, Style style, StyledText parent, Style parentStyle) {
+    static List<StyledTextPart> fromComponentWithPossibleFormattingCodes(
+            String codedString, Style style, StyledText parent, Style parentStyle) {
         // When we have a style, but the text has formatting codes,
         // we need to apply the formatting codes to the style
         // This means that the actual style applies first; then the formatting codes
-        StringBuilder textBuilder = new StringBuilder(text.length());
-        Style textStyle = style;
-        boolean formattingNext = false;
+        List<StyledTextPart> parts = new ArrayList<>();
 
-        char[] charArray = text.toCharArray();
-        for (int i = 0; i < charArray.length; i++) {
-            char current = charArray[i];
+        Style currentStyle = style;
+        StringBuilder currentString = new StringBuilder();
 
-            if (formattingNext) {
-                formattingNext = false;
+        boolean nextIsFormatting = false;
+
+        for (char current : codedString.toCharArray()) {
+            if (nextIsFormatting) {
+                nextIsFormatting = false;
+
                 ChatFormatting formatting = ChatFormatting.getByCode(current);
 
                 if (formatting == null) {
-                    textBuilder.append(ChatFormatting.PREFIX_CODE);
-                    textBuilder.append(current);
+                    currentString.append(ChatFormatting.PREFIX_CODE);
+                    currentString.append(current);
                     continue;
+                }
+
+                // We already had some text with the current style
+                // Append it before modifying the style
+                if (!currentString.isEmpty()) {
+                    // We might have lost an event, so we need to add it back
+                    currentStyle =
+                            currentStyle.withClickEvent(style.getClickEvent()).withHoverEvent(style.getHoverEvent());
+
+                    parts.add(new StyledTextPart(currentString.toString(), currentStyle, null, parentStyle));
+
+                    // reset string
+                    // style is not reset, because we want to keep the formatting
+                    currentString = new StringBuilder();
                 }
 
                 // Color formatting resets the style
                 if (formatting.isColor()) {
-                    textStyle = Style.EMPTY.withColor(formatting);
-                } else {
-                    textStyle = textStyle.applyFormat(formatting);
+                    currentStyle = Style.EMPTY.withColor(formatting);
+                    continue;
                 }
 
+                currentStyle = currentStyle.applyFormat(formatting);
+
                 continue;
             }
 
-            if (current == '§') {
-                formattingNext = true;
+            if (current == ChatFormatting.PREFIX_CODE) {
+                nextIsFormatting = true;
                 continue;
             }
 
-            // No more formatting, append the rest of the text
-            textBuilder.append(text, i, text.length());
-            break;
+            currentString.append(current);
         }
 
-        // We might have lost an event, so we need to add it back
-        textStyle = textStyle.withClickEvent(style.getClickEvent()).withHoverEvent(style.getHoverEvent());
+        // Check if we have some text left
+        if (!currentString.isEmpty()) {
+            // We might have lost an event, so we need to add it back
+            currentStyle = currentStyle.withClickEvent(style.getClickEvent()).withHoverEvent(style.getHoverEvent());
+            parts.add(new StyledTextPart(currentString.toString(), currentStyle, null, parentStyle));
+        }
 
-        return new StyledTextPart(textBuilder.toString(), textStyle, parent, parentStyle);
+        return parts;
     }
 
     public String getString(PartStyle previousStyle, PartStyle.StyleType type) {

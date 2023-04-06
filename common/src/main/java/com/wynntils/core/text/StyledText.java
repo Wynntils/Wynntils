@@ -16,7 +16,6 @@ import java.util.Objects;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
-import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.ClickEvent;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.HoverEvent;
@@ -41,16 +40,16 @@ public final class StyledText {
                 .map(styledTextPart -> new StyledTextPart(styledTextPart, this))
                 .collect(Collectors.toList());
         this.temporaryWorkaround = temporaryWorkaround;
-        this.clickEvents = clickEvents;
-        this.hoverEvents = hoverEvents;
+        this.clickEvents = new ArrayList<>(clickEvents);
+        this.hoverEvents = new ArrayList<>(hoverEvents);
     }
 
     private StyledText(List<StyledTextPart> parts, List<ClickEvent> clickEvents, List<HoverEvent> hoverEvents) {
         this.parts = parts.stream()
                 .map(styledTextPart -> new StyledTextPart(styledTextPart, this))
                 .collect(Collectors.toList());
-        this.clickEvents = clickEvents;
-        this.hoverEvents = hoverEvents;
+        this.clickEvents = new ArrayList<>(clickEvents);
+        this.hoverEvents = new ArrayList<>(hoverEvents);
 
         // We can't know the component, just use our own representation
         this.temporaryWorkaround = getComponent();
@@ -79,80 +78,32 @@ public final class StyledText {
             String componentString =
                     MutableComponent.create(current.getContents()).getString();
 
-            StyledTextPart styledTextPart = StyledTextPart.fromComponentWithPossibleFormattingCodes(
+            List<StyledTextPart> styledTextParts = StyledTextPart.fromComponentWithPossibleFormattingCodes(
                     componentString, current.getStyle(), null, parentStyle);
 
+            // Only actual styles are inherited, string formatting codes are not
+            Style styleToFollowForChildren = current.getStyle().applyTo(parentStyle);
+
             List<Pair<Component, Style>> siblingPairs = current.getSiblings().stream()
-                    .map(sibling ->
-                            new Pair<>(sibling, styledTextPart.getPartStyle().getStyle()))
+                    .map(sibling -> new Pair<>(sibling, styleToFollowForChildren))
                     .collect(Collectors.toList());
 
             Collections.reverse(siblingPairs);
             siblingPairs.forEach(deque::addFirst);
 
             // Disallow empty parts
-            if (!styledTextPart.isEmpty()) {
-                parts.add(styledTextPart);
-            }
+            parts.addAll(
+                    styledTextParts.stream().filter(part -> !part.isEmpty()).toList());
         }
 
         return new StyledText(parts, temporaryWorkaround, clickEvents, hoverEvents);
     }
 
     public static StyledText fromString(String codedString) {
-        List<StyledTextPart> parts = new LinkedList<>();
-        List<ClickEvent> clickEvents = new LinkedList<>();
-        List<HoverEvent> hoverEvents = new LinkedList<>();
-
-        Style currentStyle = Style.EMPTY;
-        StringBuilder currentString = new StringBuilder();
-
-        boolean nextIsFormatting = false;
-
-        for (char current : codedString.toCharArray()) {
-            if (nextIsFormatting) {
-                nextIsFormatting = false;
-
-                ChatFormatting formatting = ChatFormatting.getByCode(current);
-
-                if (formatting == null) {
-                    currentString.append(ChatFormatting.PREFIX_CODE);
-                    currentString.append(current);
-                    continue;
-                }
-
-                // We already had some text with the current style
-                // Append it before modifying the style
-                if (!currentString.isEmpty()) {
-                    parts.add(new StyledTextPart(currentString.toString(), currentStyle, null, null));
-                    currentString = new StringBuilder();
-                }
-
-                // Color formatting resets the style
-                if (formatting.isColor()) {
-                    currentStyle = Style.EMPTY.withColor(formatting);
-                    continue;
-                }
-
-                currentStyle = currentStyle.applyFormat(formatting);
-
-                continue;
-            }
-
-            if (current == ChatFormatting.PREFIX_CODE) {
-                nextIsFormatting = true;
-                continue;
-            }
-
-            currentString.append(current);
-        }
-
-        // Check if we have some text left
-        if (!currentString.isEmpty()) {
-            parts.add(new StyledTextPart(currentString.toString(), currentStyle, null, null));
-        }
-
-        return new StyledText(parts, clickEvents, hoverEvents);
+        return new StyledText(
+                StyledTextPart.fromComponentWithPossibleFormattingCodes(codedString, Style.EMPTY, null, Style.EMPTY),
+                List.of(),
+                List.of());
     }
 
     // We don't want to expose the actual string to the outside world
@@ -199,7 +150,8 @@ public final class StyledText {
 
             if (i != length - 1) {
                 // Possible micro-optimization: If the separator does not have formatting, use the normal constructor
-                parts.add(StyledTextPart.fromComponentWithPossibleFormattingCodes(separator, Style.EMPTY, null, null));
+                parts.addAll(
+                        StyledTextPart.fromComponentWithPossibleFormattingCodes(separator, Style.EMPTY, null, null));
             }
 
             clickEvents.addAll(text.clickEvents);

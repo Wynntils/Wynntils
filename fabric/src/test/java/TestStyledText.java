@@ -101,6 +101,10 @@ public class TestStyledText {
                 .append(Component.literal("unformatted"));
         final String fourthExpected = "§lbold§c§lred§r§lunformatted";
 
+        final Component fifthTestComponent =
+                Component.literal("§c§lredthenbold").append(Component.literal("unformattedchild"));
+        final String fifthExpected = "§c§lredthenbold§runformattedchild";
+
         Assertions.assertEquals(
                 firstExpected,
                 StyledText.fromComponent(firstTestComponent).getString(PartStyle.StyleType.DEFAULT),
@@ -119,6 +123,11 @@ public class TestStyledText {
         Assertions.assertEquals(
                 fourthExpected,
                 StyledText.fromComponent(fourthTestComponent).getString(PartStyle.StyleType.DEFAULT),
+                "StyledText.getString() returned an unexpected value.");
+
+        Assertions.assertEquals(
+                fifthExpected,
+                StyledText.fromComponent(fifthTestComponent).getString(PartStyle.StyleType.DEFAULT),
                 "StyledText.getString() returned an unexpected value.");
     }
 
