@@ -37,6 +37,7 @@ public final class StyledText {
             List<ClickEvent> clickEvents,
             List<HoverEvent> hoverEvents) {
         this.parts = parts.stream()
+                .filter(styledTextPart -> !styledTextPart.isEmpty())
                 .map(styledTextPart -> new StyledTextPart(styledTextPart, this))
                 .collect(Collectors.toList());
         this.temporaryWorkaround = temporaryWorkaround;
@@ -46,6 +47,7 @@ public final class StyledText {
 
     private StyledText(List<StyledTextPart> parts, List<ClickEvent> clickEvents, List<HoverEvent> hoverEvents) {
         this.parts = parts.stream()
+                .filter(styledTextPart -> !styledTextPart.isEmpty())
                 .map(styledTextPart -> new StyledTextPart(styledTextPart, this))
                 .collect(Collectors.toList());
         this.clickEvents = new ArrayList<>(clickEvents);
