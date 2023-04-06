@@ -19,7 +19,6 @@
     "GuiMixin",
     "HumanoidArmorLayerMixin",
     "InventoryScreenMixin",
-    "ItemInHandRendererMixin",
     "ItemRendererMixin",
     "ItemStackMixin",
     "KeyboardHandlerMixin",
