@@ -10,6 +10,8 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import com.google.gson.JsonSyntaxException;
 import com.wynntils.core.text.CodedString;
+import com.wynntils.core.text.PartStyle;
+import com.wynntils.core.text.StyledText;
 import com.wynntils.utils.StringUtils;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
@@ -84,12 +86,12 @@ public final class LoreUtils {
      *
      * @return a {@link String} containing all item lore
      */
-    public static CodedString getStringLore(ItemStack itemStack) {
+    public static StyledText getStringLore(ItemStack itemStack) {
         StringBuilder toReturn = new StringBuilder();
         for (CodedString x : getLore(itemStack)) {
             toReturn.append(x);
         }
-        return CodedString.fromString(toReturn.toString());
+        return StyledText.fromString(toReturn.toString());
     }
 
     /** Get the lore NBT tag from an item, else return empty */
@@ -274,7 +276,7 @@ public final class LoreUtils {
      */
     public static JsonObject getJsonFromIngameLore(ItemStack itemStack) {
         String rawLore =
-                StringUtils.substringBeforeLast(getStringLore(itemStack).getInternalCodedStringRepresentation(), "}")
+                StringUtils.substringBeforeLast(getStringLore(itemStack).getString(PartStyle.StyleType.DEFAULT), "}")
                         + "}"; // remove extra unnecessary info
         try {
             return JsonParser.parseString(rawLore).getAsJsonObject();
