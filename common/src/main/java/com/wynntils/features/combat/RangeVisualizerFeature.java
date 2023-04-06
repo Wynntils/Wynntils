@@ -13,6 +13,7 @@ import com.wynntils.core.config.Category;
 import com.wynntils.core.config.ConfigCategory;
 import com.wynntils.core.features.Feature;
 import com.wynntils.mc.event.PlayerRenderEvent;
+import com.wynntils.models.character.type.ClassType;
 import com.wynntils.models.gear.type.GearInfo;
 import com.wynntils.models.gear.type.GearMajorId;
 import com.wynntils.utils.colors.CommonColors;
@@ -49,6 +50,12 @@ public class RangeVisualizerFeature extends Feature {
                 ComponentUtils.getUnformatted(e.getPlayer().getMainHandItem().getHoverName());
         GearInfo gearInfo = Models.Gear.getGearInfoFromApiName(gearName);
         if (gearInfo == null) return;
+
+        if (isSelf) { // Do not render if the item is not for the player's class
+            if (gearInfo.requirements().classType().isEmpty()) return;
+            ClassType classType = gearInfo.requirements().classType().get();
+            if (classType != Models.Character.getClassType()) return;
+        }
 
         // Major IDs that we can visualize:
         // Taunt (12 blocks)
