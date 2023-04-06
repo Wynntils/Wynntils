@@ -8,6 +8,7 @@ import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.wynntils.core.components.Managers;
 import com.wynntils.core.components.Models;
+import com.wynntils.core.text.CodedString;
 import com.wynntils.features.map.GuildMapFeature;
 import com.wynntils.models.map.pois.Poi;
 import com.wynntils.models.map.pois.TerritoryPoi;
@@ -282,7 +283,8 @@ public final class GuildMapScreen extends AbstractMapScreen {
         FontRenderer.getInstance()
                 .renderText(
                         poseStack,
-                        "%s [%s]".formatted(territoryProfile.getGuild(), territoryProfile.getGuildPrefix()),
+                        CodedString.fromString(
+                                "%s [%s]".formatted(territoryProfile.getGuild(), territoryProfile.getGuildPrefix())),
                         10,
                         10,
                         CommonColors.MAGENTA,
@@ -297,8 +299,8 @@ public final class GuildMapScreen extends AbstractMapScreen {
             TerritoryStorage storage = territoryInfo.getStorage(value);
 
             if (generation != 0) {
-                String formattedGenerated =
-                        "%s+%d %s per Hour".formatted(value.getPrettySymbol(), generation, value.getName());
+                CodedString formattedGenerated = CodedString.fromString(
+                        "%s+%d %s per Hour".formatted(value.getPrettySymbol(), generation, value.getName()));
 
                 FontRenderer.getInstance()
                         .renderText(
@@ -314,8 +316,8 @@ public final class GuildMapScreen extends AbstractMapScreen {
             }
 
             if (storage != null) {
-                String formattedStored = "%s%d/%d %s stored"
-                        .formatted(value.getPrettySymbol(), storage.current(), storage.max(), value.getName());
+                CodedString formattedStored = CodedString.fromString("%s%d/%d %s stored"
+                        .formatted(value.getPrettySymbol(), storage.current(), storage.max(), value.getName()));
 
                 FontRenderer.getInstance()
                         .renderText(
@@ -333,14 +335,14 @@ public final class GuildMapScreen extends AbstractMapScreen {
 
         renderYOffset += 10;
 
-        String treasury = ChatFormatting.GRAY
+        CodedString treasury = CodedString.fromString(ChatFormatting.GRAY
                 + "✦ Treasury: %s"
                         .formatted(territoryInfo.getTreasury().getTreasuryColor()
-                                + territoryInfo.getTreasury().getAsString());
-        String defences = ChatFormatting.GRAY
+                                + territoryInfo.getTreasury().getAsString()));
+        CodedString defences = CodedString.fromString(ChatFormatting.GRAY
                 + "Territory Defences: %s"
                         .formatted(territoryInfo.getDefences().getDefenceColor()
-                                + territoryInfo.getDefences().getAsString());
+                                + territoryInfo.getDefences().getAsString()));
 
         FontRenderer.getInstance()
                 .renderText(
@@ -369,7 +371,7 @@ public final class GuildMapScreen extends AbstractMapScreen {
             FontRenderer.getInstance()
                     .renderText(
                             poseStack,
-                            "Guild Headquarters",
+                            CodedString.fromString("Guild Headquarters"),
                             10,
                             10 + renderYOffset,
                             CommonColors.RED,
@@ -383,8 +385,9 @@ public final class GuildMapScreen extends AbstractMapScreen {
         FontRenderer.getInstance()
                 .renderText(
                         poseStack,
-                        ChatFormatting.GRAY + "Time Held: " + territoryProfile.getTimeAcquiredColor()
-                                + territoryProfile.getReadableRelativeTimeAcquired(),
+                        CodedString.fromString(
+                                ChatFormatting.GRAY + "Time Held: " + territoryProfile.getTimeAcquiredColor()
+                                        + territoryProfile.getReadableRelativeTimeAcquired()),
                         10,
                         10 + renderYOffset,
                         CommonColors.WHITE,
@@ -396,7 +399,7 @@ public final class GuildMapScreen extends AbstractMapScreen {
         FontRenderer.getInstance()
                 .renderAlignedTextInBox(
                         poseStack,
-                        territoryPoi.getName(),
+                        CodedString.fromString(territoryPoi.getName()),
                         7,
                         textureWidth,
                         Texture.TERRITORY_TOOLTIP_TOP.height() + centerHeight,

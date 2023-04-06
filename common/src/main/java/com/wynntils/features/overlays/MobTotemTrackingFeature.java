@@ -12,6 +12,7 @@ import com.wynntils.core.features.overlays.OverlayPosition;
 import com.wynntils.core.features.overlays.OverlaySize;
 import com.wynntils.core.features.overlays.TextOverlay;
 import com.wynntils.core.features.overlays.annotations.OverlayInfo;
+import com.wynntils.core.text.CodedString;
 import com.wynntils.mc.event.RenderEvent;
 import com.wynntils.utils.mc.RenderedStringUtils;
 import com.wynntils.utils.render.type.HorizontalAlignment;
@@ -53,12 +54,12 @@ public class MobTotemTrackingFeature extends Feature {
         }
 
         @Override
-        protected String[] calculateTemplateValue(String template) {
+        protected CodedString[] calculateTemplateValue(String template) {
             return Arrays.stream(super.calculateTemplateValue(template))
                     .map(s -> RenderedStringUtils.trySplitOptimally(s, this.getWidth()))
                     .map(s -> s.split("\n"))
                     .flatMap(Arrays::stream)
-                    .toArray(String[]::new);
+                    .toArray(CodedString[]::new);
         }
     }
 }

@@ -5,6 +5,7 @@
 package com.wynntils.screens.guides;
 
 import com.wynntils.core.components.Handlers;
+import com.wynntils.core.text.CodedString;
 import com.wynntils.handlers.item.ItemAnnotation;
 import com.wynntils.models.wynnitem.type.ItemObtainInfo;
 import java.util.List;
@@ -17,7 +18,7 @@ public abstract class GuideItemStack extends ItemStack {
     protected GuideItemStack(ItemStack itemStack, ItemAnnotation annotation, String baseName) {
         super(itemStack.getItem(), 1);
         this.setTag(itemStack.getTag());
-        Handlers.Item.updateItem(this, annotation, baseName);
+        Handlers.Item.updateItem(this, annotation, CodedString.fromString(baseName));
     }
 
     protected void appendObtainInfo(List<Component> tooltipLines, List<ItemObtainInfo> itemObtainInfos) {

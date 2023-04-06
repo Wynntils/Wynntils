@@ -4,6 +4,7 @@
  */
 package com.wynntils.models.items.annotators.gui;
 
+import com.wynntils.core.text.CodedString;
 import com.wynntils.handlers.item.ItemAnnotation;
 import com.wynntils.handlers.item.ItemAnnotator;
 import com.wynntils.models.elements.type.Skill;
@@ -18,8 +19,8 @@ public final class SkillPointAnnotator implements ItemAnnotator {
     private static final Pattern LORE_PATTERN = Pattern.compile("^§7[ À]+(-?\\d+) points?[ À]+§r§6-?\\d+ points?$");
 
     @Override
-    public ItemAnnotation getAnnotation(ItemStack itemStack, String name) {
-        Matcher matcher = SKILL_POINT_PATTERN.matcher(name);
+    public ItemAnnotation getAnnotation(ItemStack itemStack, CodedString name) {
+        Matcher matcher = name.getMatcher(SKILL_POINT_PATTERN);
         if (!matcher.matches()) return null;
 
         String skillName = matcher.group(1);

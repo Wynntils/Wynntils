@@ -6,6 +6,7 @@ package com.wynntils.models.rewards;
 
 import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.components.Model;
+import com.wynntils.core.text.CodedString;
 import com.wynntils.handlers.item.ItemAnnotation;
 import com.wynntils.models.gear.type.GearTier;
 import com.wynntils.models.items.items.game.CharmItem;
@@ -23,7 +24,7 @@ public class RewardsModel extends Model {
         super(List.of());
     }
 
-    public ItemAnnotation fromCharmItemStack(ItemStack itemStack, String name, String displayName, String type) {
+    public ItemAnnotation fromCharmItemStack(ItemStack itemStack, CodedString name, String displayName, String type) {
         GearTier tier = GearTier.fromFormattedString(name);
 
         // TODO: replace with API lookup
@@ -38,7 +39,7 @@ public class RewardsModel extends Model {
     }
 
     public static TomeItem fromTomeItemStack(
-            ItemStack itemStack, String name, String displayName, TomeType tomeType, String tier, String variant) {
+            ItemStack itemStack, CodedString name, String displayName, TomeType tomeType, String tier, String variant) {
         GearTier gearTier = GearTier.fromFormattedString(name);
 
         // TODO: replace with API lookup

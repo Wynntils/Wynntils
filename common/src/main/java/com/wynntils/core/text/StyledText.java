@@ -26,6 +26,8 @@ import net.minecraft.network.chat.Style;
 import org.apache.commons.lang3.ArrayUtils;
 
 public final class StyledText {
+    public static final StyledText EMPTY = new StyledText(List.of(), List.of(), List.of());
+
     private final Component temporaryWorkaround;
 
     private final List<StyledTextPart> parts;
@@ -108,11 +110,15 @@ public final class StyledText {
                 StyledTextPart.fromCodedString(codedString, Style.EMPTY, null, Style.EMPTY), List.of(), List.of());
     }
 
+    public static StyledText fromCodedString(CodedString codedString) {
+        return fromString(codedString.getInternalCodedStringRepresentation());
+    }
+
     // We don't want to expose the actual string to the outside world
     // If you need to do an operation with this string, implement it as a method
     public String getString(PartStyle.StyleType type) {
         if (type == PartStyle.StyleType.FULL) {
-            return ComponentUtils.getCoded(temporaryWorkaround);
+            return ComponentUtils.getCoded(temporaryWorkaround).getInternalCodedStringRepresentation();
         }
 
         StringBuilder builder = new StringBuilder();

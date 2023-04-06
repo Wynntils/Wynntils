@@ -18,6 +18,7 @@ import com.wynntils.core.features.overlays.OverlayPosition;
 import com.wynntils.core.features.overlays.OverlaySize;
 import com.wynntils.core.features.overlays.RenderState;
 import com.wynntils.core.features.overlays.annotations.OverlayInfo;
+import com.wynntils.core.text.CodedString;
 import com.wynntils.handlers.bossbar.TrackedBar;
 import com.wynntils.handlers.bossbar.event.BossBarAddedEvent;
 import com.wynntils.handlers.bossbar.type.BossBarProgress;
@@ -197,7 +198,7 @@ public class GameBarsOverlayFeature extends Feature {
                     .renderAlignedTextInBox(
                             poseStack,
                             bufferSource,
-                            text,
+                            CodedString.fromString(text),
                             this.getRenderX(),
                             this.getRenderX() + this.getWidth(),
                             renderY,

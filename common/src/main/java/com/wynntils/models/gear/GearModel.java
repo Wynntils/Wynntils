@@ -7,6 +7,7 @@ package com.wynntils.models.gear;
 import com.google.gson.JsonObject;
 import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.components.Model;
+import com.wynntils.core.text.CodedString;
 import com.wynntils.models.elements.ElementModel;
 import com.wynntils.models.gear.type.GearInfo;
 import com.wynntils.models.gear.type.GearInstance;
@@ -140,7 +141,7 @@ public final class GearModel extends Model {
         return gearChatEncoding.toEncodedString(gearItem);
     }
 
-    public Matcher gearChatEncodingMatcher(String str) {
+    public Matcher gearChatEncodingMatcher(CodedString str) {
         return gearChatEncoding.gearChatEncodingMatcher(str);
     }
 

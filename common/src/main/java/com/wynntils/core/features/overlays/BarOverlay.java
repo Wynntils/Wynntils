@@ -11,6 +11,7 @@ import com.wynntils.core.components.Models;
 import com.wynntils.core.config.Config;
 import com.wynntils.core.config.ConfigHolder;
 import com.wynntils.core.config.RegisterConfig;
+import com.wynntils.core.text.CodedString;
 import com.wynntils.mc.event.TickEvent;
 import com.wynntils.utils.colors.CommonColors;
 import com.wynntils.utils.colors.CustomColor;
@@ -37,7 +38,7 @@ public abstract class BarOverlay extends DynamicOverlay {
     @RegisterConfig("overlay.wynntils.barOverlay.heightModifier")
     public final Config<Float> heightModifier = new Config<>(1f);
 
-    private Pair<String, ErrorOr<CappedValue>> templateCache;
+    private Pair<CodedString, ErrorOr<CappedValue>> templateCache;
 
     protected float currentProgress = 0f;
 
@@ -63,7 +64,8 @@ public abstract class BarOverlay extends DynamicOverlay {
 
         ErrorOr<CappedValue> valueOrError = templateCache.value();
         if (valueOrError.hasError()) {
-            renderText(poseStack, bufferSource, getModifiedRenderY(10), valueOrError.getError());
+            renderText(
+                    poseStack, bufferSource, getModifiedRenderY(10), CodedString.fromString(valueOrError.getError()));
             return;
         }
 
@@ -73,11 +75,12 @@ public abstract class BarOverlay extends DynamicOverlay {
     @Override
     public void renderPreview(PoseStack poseStack, MultiBufferSource bufferSource, float partialTicks, Window window) {
         BarOverlayTemplatePair previewTemplate = getPreviewTemplate();
-        Pair<String, ErrorOr<CappedValue>> calculatedTemplate = calculateTemplate(previewTemplate);
+        Pair<CodedString, ErrorOr<CappedValue>> calculatedTemplate = calculateTemplate(previewTemplate);
 
         ErrorOr<CappedValue> valueOrError = calculatedTemplate.value();
         if (valueOrError.hasError()) {
-            renderText(poseStack, bufferSource, getModifiedRenderY(10), valueOrError.getError());
+            renderText(
+                    poseStack, bufferSource, getModifiedRenderY(10), CodedString.fromString(valueOrError.getError()));
             return;
         }
 
@@ -85,7 +88,7 @@ public abstract class BarOverlay extends DynamicOverlay {
     }
 
     protected void render(
-            PoseStack poseStack, MultiBufferSource bufferSource, float renderedProgress, String textValue) {
+            PoseStack poseStack, MultiBufferSource bufferSource, float renderedProgress, CodedString textValue) {
         float barHeight = getTextureHeight() * heightModifier.get();
         float renderY = getModifiedRenderY(barHeight + 10);
 
@@ -117,9 +120,9 @@ public abstract class BarOverlay extends DynamicOverlay {
         currentProgress -= (animationTime.get() * 0.1f) * (currentProgress - value.getProgress());
     }
 
-    private Pair<String, ErrorOr<CappedValue>> calculateTemplate(BarOverlayTemplatePair template) {
+    private Pair<CodedString, ErrorOr<CappedValue>> calculateTemplate(BarOverlayTemplatePair template) {
         return Pair.of(
-                String.join(" ", Managers.Function.doFormatLines(template.textTemplate)),
+                CodedString.join(" ", Managers.Function.doFormatLines(template.textTemplate)),
                 Managers.Function.tryGetRawValueOfType(template.valueTemplate, CappedValue.class));
     }
 
@@ -161,7 +164,7 @@ public abstract class BarOverlay extends DynamicOverlay {
         }
     }
 
-    protected void renderText(PoseStack poseStack, MultiBufferSource bufferSource, float renderY, String text) {
+    protected void renderText(PoseStack poseStack, MultiBufferSource bufferSource, float renderY, CodedString text) {
         BufferedFontRenderer.getInstance()
                 .renderAlignedTextInBox(
                         poseStack,

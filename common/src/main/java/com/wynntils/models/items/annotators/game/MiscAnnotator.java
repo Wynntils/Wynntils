@@ -4,6 +4,7 @@
  */
 package com.wynntils.models.items.annotators.game;
 
+import com.wynntils.core.text.CodedString;
 import com.wynntils.handlers.item.ItemAnnotation;
 import com.wynntils.handlers.item.ItemAnnotator;
 import com.wynntils.models.items.items.game.MiscItem;
@@ -14,11 +15,11 @@ import net.minecraft.nbt.Tag;
 import net.minecraft.world.item.ItemStack;
 
 public final class MiscAnnotator implements ItemAnnotator {
-    private static final String UNTRADABLE = "§cUntradable Item";
-    private static final String QUEST_ITEM = "§cQuest Item";
+    private static final CodedString UNTRADABLE = CodedString.fromString("§cUntradable Item");
+    private static final CodedString QUEST_ITEM = CodedString.fromString("§cQuest Item");
 
     @Override
-    public ItemAnnotation getAnnotation(ItemStack itemStack, String name) {
+    public ItemAnnotation getAnnotation(ItemStack itemStack, CodedString name) {
         ListTag loreTag = LoreUtils.getLoreTag(itemStack);
         if (loreTag == null) return null;
 
@@ -26,7 +27,7 @@ public final class MiscAnnotator implements ItemAnnotator {
         boolean questItem = false;
 
         for (Tag line : loreTag) {
-            String coded = ComponentUtils.getCoded(line.getAsString());
+            CodedString coded = ComponentUtils.getCoded(line.getAsString());
             if (coded.equals(UNTRADABLE)) {
                 untradable = true;
             }

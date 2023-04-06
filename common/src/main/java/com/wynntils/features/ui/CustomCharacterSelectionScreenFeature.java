@@ -10,6 +10,7 @@ import com.wynntils.core.config.Config;
 import com.wynntils.core.config.ConfigCategory;
 import com.wynntils.core.config.RegisterConfig;
 import com.wynntils.core.features.Feature;
+import com.wynntils.core.text.CodedString;
 import com.wynntils.mc.event.ScreenOpenedEvent;
 import com.wynntils.models.worlds.event.WorldStateEvent;
 import com.wynntils.models.worlds.type.WorldState;
@@ -21,6 +22,8 @@ import net.minecraftforge.eventbus.api.SubscribeEvent;
 
 @ConfigCategory(Category.UI)
 public class CustomCharacterSelectionScreenFeature extends Feature {
+    public static final CodedString CHARACTER_SELECTION_TITLE = CodedString.fromString("§8§lSelect a Character");
+
     @RegisterConfig
     public final Config<Boolean> onlyOpenOnce = new Config<>(false);
 
@@ -31,7 +34,7 @@ public class CustomCharacterSelectionScreenFeature extends Feature {
         if ((onlyOpenOnce.get() && openedInThisCharacterSelectionState)
                 || Models.WorldState.getCurrentState() != WorldState.CHARACTER_SELECTION) return;
 
-        if (!ComponentUtils.getCoded(event.getScreen().getTitle()).equals("§8§lSelect a Character")) {
+        if (!ComponentUtils.getCoded(event.getScreen().getTitle()).equals(CHARACTER_SELECTION_TITLE)) {
             return;
         }
 

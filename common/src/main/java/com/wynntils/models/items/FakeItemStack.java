@@ -6,6 +6,7 @@ package com.wynntils.models.items;
 
 import com.wynntils.core.components.Handlers;
 import com.wynntils.core.components.Models;
+import com.wynntils.core.text.CodedString;
 import com.wynntils.models.gear.tooltip.GearTooltipBuilder;
 import com.wynntils.models.items.items.game.GearItem;
 import java.util.List;
@@ -22,7 +23,8 @@ public class FakeItemStack extends ItemStack {
     private FakeItemStack(GearItem gearItem, ItemStack itemStack, String source) {
         super(itemStack.getItem(), 1);
         this.setTag(itemStack.getTag());
-        Handlers.Item.updateItem(this, gearItem, gearItem.getGearInfo().name());
+        Handlers.Item.updateItem(
+                this, gearItem, CodedString.fromString(gearItem.getGearInfo().name()));
 
         this.gearItem = gearItem;
         this.source = source;

@@ -27,7 +27,7 @@ public class TestComponentUtils {
                         .withStyle(ChatFormatting.BOLD));
         final String expected = "§cHello,§r§9§l World!";
 
-        String actual = ComponentUtils.getCoded(component);
+        String actual = ComponentUtils.getCoded(component).getInternalCodedStringRepresentation();
         Assertions.assertEquals(expected, actual, "ComponentUtils.getCoded() returned an unexpected value.");
     }
 }

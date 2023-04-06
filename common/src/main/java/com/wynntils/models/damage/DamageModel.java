@@ -51,7 +51,7 @@ public final class DamageModel extends Model {
     public void onLabelChange(EntityLabelChangedEvent event) {
         if (!(event.getEntity() instanceof ArmorStand)) return;
 
-        Matcher matcher = DAMAGE_LABEL_PATTERN.matcher(event.getName());
+        Matcher matcher = event.getName().getMatcher(DAMAGE_LABEL_PATTERN);
         if (!matcher.find()) return;
 
         Map<DamageType, Integer> damages = new HashMap<>();

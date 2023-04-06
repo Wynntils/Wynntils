@@ -7,6 +7,7 @@ package com.wynntils.handlers.scoreboard;
 import com.google.common.collect.ImmutableMap;
 import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.components.Handler;
+import com.wynntils.core.text.CodedString;
 import com.wynntils.handlers.scoreboard.event.ScoreboardSegmentAdditionEvent;
 import com.wynntils.handlers.scoreboard.type.ScoreboardLine;
 import com.wynntils.mc.event.ScoreboardSetDisplayObjectiveEvent;
@@ -104,7 +105,7 @@ public final class ScoreboardHandler extends Handler {
         scoreboardNameCache = null;
     }
 
-    private void handleSetScore(String owner, int score, ServerScoreboard.Method method) {
+    private void handleSetScore(CodedString owner, int score, ServerScoreboard.Method method) {
         // 1. Handle the current change
         switch (method) {
             case CHANGE -> handleScoreChange(owner, score);
@@ -121,7 +122,7 @@ public final class ScoreboardHandler extends Handler {
         createScoreboardFromSegments();
     }
 
-    private void handleScoreChange(String owner, int score) {
+    private void handleScoreChange(CodedString owner, int score) {
         // A score change can mean two things:
         // 1. A new line was added to the scoreboard
         // 2. An existing line with the same score was changed
@@ -157,7 +158,7 @@ public final class ScoreboardHandler extends Handler {
         reconstructedScoreboard.add(new ScoreboardLine(owner, score));
     }
 
-    private void handleScoreRemove(String owner) {
+    private void handleScoreRemove(CodedString owner) {
         // A score remove can mean two things:
         // 1. An existing line was removed
         // 2. The line to be removed was changed before, so it doesn't exist anymore
@@ -187,7 +188,7 @@ public final class ScoreboardHandler extends Handler {
         }
 
         // 1. Check for duplicate lines
-        List<String> lines = new ArrayList<>();
+        List<CodedString> lines = new ArrayList<>();
         for (ScoreboardLine line : reconstructedScoreboard) {
             if (lines.contains(line.line())) {
                 return false;
@@ -213,8 +214,8 @@ public final class ScoreboardHandler extends Handler {
         if (!reconstructedScoreboard.stream()
                 .findFirst()
                 .map(ScoreboardLine::line)
-                .orElse("")
-                .equals("À")) {
+                .orElse(CodedString.EMPTY)
+                .equals(CodedString.fromString("À"))) {
             return false;
         }
 
@@ -239,8 +240,10 @@ public final class ScoreboardHandler extends Handler {
 
             // The next line cannot be the end of this segment
             // (As it would mean the header has no content)
-            if (NEXT_LINE_PATTERN
-                    .matcher(scoreboardLines.get(currentIndex + 1).line())
+            if (scoreboardLines
+                    .get(currentIndex + 1)
+                    .line()
+                    .getMatcher(NEXT_LINE_PATTERN)
                     .matches()) {
                 return false;
             }
@@ -251,7 +254,7 @@ public final class ScoreboardHandler extends Handler {
             for (currentIndex = currentIndex + 1; currentIndex < scoreboardLines.size(); currentIndex++) {
                 ScoreboardLine line = scoreboardLines.get(currentIndex);
 
-                if (NEXT_LINE_PATTERN.matcher(line.line()).matches()) {
+                if (line.line().getMatcher(NEXT_LINE_PATTERN).matches()) {
                     currentIndex++;
                     break;
                 }
@@ -283,11 +286,11 @@ public final class ScoreboardHandler extends Handler {
                 return;
             }
 
-            List<String> contentLines = new ArrayList<>();
+            List<CodedString> contentLines = new ArrayList<>();
             for (currentIndex = currentIndex + 1; currentIndex < scoreboardLines.size(); currentIndex++) {
                 ScoreboardLine line = scoreboardLines.get(currentIndex);
 
-                if (NEXT_LINE_PATTERN.matcher(line.line()).matches()) {
+                if (line.line().getMatcher(NEXT_LINE_PATTERN).matches()) {
                     currentIndex++;
                     break;
                 }
@@ -352,12 +355,15 @@ public final class ScoreboardHandler extends Handler {
             if (!scoreboardSegment.isVisible()) continue;
 
             scoreboard
-                    .getOrCreatePlayerScore(scoreboardSegment.getHeader(), wynntilsObjective)
+                    .getOrCreatePlayerScore(
+                            scoreboardSegment.getHeader().getInternalCodedStringRepresentation(), wynntilsObjective)
                     .setScore(currentScoreboardLine);
             currentScoreboardLine--;
 
-            for (String line : scoreboardSegment.getContent()) {
-                scoreboard.getOrCreatePlayerScore(line, wynntilsObjective).setScore(currentScoreboardLine);
+            for (CodedString line : scoreboardSegment.getContent()) {
+                scoreboard
+                        .getOrCreatePlayerScore(line.getInternalCodedStringRepresentation(), wynntilsObjective)
+                        .setScore(currentScoreboardLine);
                 currentScoreboardLine--;
             }
 

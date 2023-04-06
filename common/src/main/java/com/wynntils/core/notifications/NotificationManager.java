@@ -8,6 +8,7 @@ import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.components.Manager;
 import com.wynntils.core.components.Managers;
 import com.wynntils.core.notifications.event.NotificationEvent;
+import com.wynntils.core.text.CodedString;
 import com.wynntils.features.overlays.GameNotificationOverlayFeature;
 import com.wynntils.models.worlds.event.WorldStateEvent;
 import com.wynntils.utils.mc.ComponentUtils;
@@ -33,8 +34,8 @@ public final class NotificationManager extends Manager {
         cachedMessageSet.clear();
     }
 
-    public MessageContainer queueMessage(String message) {
-        return queueMessage(new TextRenderTask(message, TextRenderSetting.DEFAULT));
+    public MessageContainer queueMessage(CodedString codedMessage) {
+        return queueMessage(new TextRenderTask(codedMessage, TextRenderSetting.DEFAULT));
     }
 
     public MessageContainer queueMessage(Component message) {
@@ -46,10 +47,10 @@ public final class NotificationManager extends Manager {
 
         WynntilsMod.info("Message Queued: " + message);
         MessageContainer msgContainer = new MessageContainer(message);
-        String messageText = message.getText();
+        CodedString messageText = message.getText();
 
         for (MessageContainer cachedContainer : cachedMessageSet) {
-            String checkableMessage = cachedContainer.getMessage();
+            CodedString checkableMessage = cachedContainer.getMessage();
             if (messageText.equals(checkableMessage)) {
                 cachedContainer.setMessageCount(cachedContainer.getMessageCount() + 1);
 
@@ -77,8 +78,9 @@ public final class NotificationManager extends Manager {
      * @param newMessage The new message
      * @return The message container that was edited. This may be the new message container.
      */
-    public MessageContainer editMessage(MessageContainer msgContainer, String newMessage) {
-        WynntilsMod.info("Message Edited: " + msgContainer.getRenderTask() + " -> " + newMessage);
+    public MessageContainer editMessage(MessageContainer msgContainer, CodedString newMessage) {
+        WynntilsMod.info("Message Edited: " + msgContainer.getRenderTask() + " -> "
+                + newMessage.getInternalCodedStringRepresentation());
 
         // If we have multiple repeated messages, we want to only edit the last one.
         if (msgContainer.getMessageCount() > 1) {
@@ -113,6 +115,6 @@ public final class NotificationManager extends Manager {
         McUtils.mc()
                 .gui
                 .getChat()
-                .addMessage(Component.literal(msgContainer.getRenderTask().getText()));
+                .addMessage(msgContainer.getRenderTask().getText().asSingleLiteralComponentWithCodedString());
     }
 }

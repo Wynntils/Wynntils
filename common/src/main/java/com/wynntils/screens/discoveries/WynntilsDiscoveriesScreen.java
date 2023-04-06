@@ -7,6 +7,7 @@ package com.wynntils.screens.discoveries;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.components.Models;
+import com.wynntils.core.text.CodedString;
 import com.wynntils.models.discoveries.DiscoveryInfo;
 import com.wynntils.models.discoveries.event.DiscoveriesUpdatedEvent;
 import com.wynntils.screens.base.TooltipProvider;
@@ -273,7 +274,7 @@ public final class WynntilsDiscoveriesScreen extends WynntilsListScreen<Discover
         FontRenderer.getInstance()
                 .renderAlignedTextInBox(
                         poseStack,
-                        I18n.get("screens.wynntils.wynntilsDiscoveries.noDiscoveries"),
+                        CodedString.fromString(I18n.get("screens.wynntils.wynntilsDiscoveries.noDiscoveries")),
                         Texture.QUEST_BOOK_BACKGROUND.width() / 2f + 15f,
                         Texture.QUEST_BOOK_BACKGROUND.width() - 15f,
                         0,
@@ -289,7 +290,7 @@ public final class WynntilsDiscoveriesScreen extends WynntilsListScreen<Discover
         FontRenderer.getInstance()
                 .renderAlignedTextInBox(
                         poseStack,
-                        description,
+                        CodedString.fromString(description),
                         20,
                         Texture.QUEST_BOOK_BACKGROUND.width() / 2f - 10,
                         80,
@@ -301,7 +302,7 @@ public final class WynntilsDiscoveriesScreen extends WynntilsListScreen<Discover
         FontRenderer.getInstance()
                 .renderAlignedTextInBox(
                         poseStack,
-                        filterHelper,
+                        CodedString.fromString(filterHelper),
                         20,
                         Texture.QUEST_BOOK_BACKGROUND.width() / 2f - 10,
                         105,

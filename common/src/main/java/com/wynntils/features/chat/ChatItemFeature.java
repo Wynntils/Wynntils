@@ -8,6 +8,7 @@ import com.wynntils.core.components.Models;
 import com.wynntils.core.config.Category;
 import com.wynntils.core.config.ConfigCategory;
 import com.wynntils.core.features.Feature;
+import com.wynntils.core.text.CodedString;
 import com.wynntils.handlers.chat.event.ChatMessageReceivedEvent;
 import com.wynntils.mc.event.KeyInputEvent;
 import com.wynntils.mc.mixin.accessors.ChatScreenAccessor;
@@ -54,7 +55,7 @@ public class ChatItemFeature extends Feature {
         }
 
         // replace encoded strings with placeholders for less confusion
-        Matcher m = Models.Gear.gearChatEncodingMatcher(chatInput.getValue());
+        Matcher m = Models.Gear.gearChatEncodingMatcher(CodedString.fromString(chatInput.getValue()));
         while (m.find()) {
             String encodedItem = m.group();
             StringBuilder name = new StringBuilder(m.group("Name"));
@@ -98,7 +99,7 @@ public class ChatItemFeature extends Feature {
             boolean lastComponentIsItem = false;
 
             do {
-                String text = ComponentUtils.getCoded(comp);
+                CodedString text = ComponentUtils.getCoded(comp);
                 Style style = comp.getStyle();
 
                 GearItem item = Models.Gear.fromEncodedString(m.group());
@@ -108,7 +109,8 @@ public class ChatItemFeature extends Feature {
                     continue;
                 }
 
-                MutableComponent preText = Component.literal(text.substring(0, m.start()));
+                MutableComponent preText = Component.literal(
+                        text.getInternalCodedStringRepresentation().substring(0, m.start()));
                 preText.withStyle(style);
                 temp.append(preText);
 
@@ -123,7 +125,7 @@ public class ChatItemFeature extends Feature {
                 temp.append(itemComponent);
 
                 comp = Component.literal(ComponentUtils.getLastPartCodes(ComponentUtils.getCoded(preText))
-                                + text.substring(m.end()))
+                                + text.getInternalCodedStringRepresentation().substring(m.end()))
                         .withStyle(style);
                 m = Models.Gear.gearChatEncodingMatcher(
                         ComponentUtils.getCoded(comp)); // recreate matcher for new substring

@@ -8,6 +8,7 @@ import com.wynntils.core.components.Managers;
 import com.wynntils.core.config.Category;
 import com.wynntils.core.config.ConfigCategory;
 import com.wynntils.core.features.Feature;
+import com.wynntils.core.text.CodedString;
 import com.wynntils.handlers.chat.event.ChatMessageReceivedEvent;
 import com.wynntils.models.emeralds.type.EmeraldUnits;
 import com.wynntils.models.gear.type.GearTier;
@@ -28,7 +29,7 @@ public class BlacksmithRedirectFeature extends Feature {
 
     @SubscribeEvent(priority = EventPriority.HIGH)
     public void onChat(ChatMessageReceivedEvent event) {
-        Matcher messageMatcher = BLACKSMITH_MESSAGE_PATTERN.matcher(event.getOriginalCodedMessage());
+        Matcher messageMatcher = event.getOriginalCodedMessage().getMatcher(BLACKSMITH_MESSAGE_PATTERN);
         if (!messageMatcher.matches()) return;
         event.setCanceled(true);
 
@@ -38,7 +39,7 @@ public class BlacksmithRedirectFeature extends Feature {
         String paymentString = messageMatcher.group(3);
 
         // Full message to send to the user.
-        String sendableMessage;
+        CodedString sendableMessage;
 
         // Should we use item, or items?
         String itemPluralizer;
@@ -62,7 +63,7 @@ public class BlacksmithRedirectFeature extends Feature {
             for (Component sibling : event.getOriginalMessage().getSiblings()) {
                 // Retrieve the color code of the item, and then match it to the item tier.
                 Matcher itemMatcher =
-                        ITEM_PATTERN.matcher(ComponentUtils.getCoded(sibling)); // Second group contains the items.
+                        ComponentUtils.getCoded(sibling).getMatcher(ITEM_PATTERN); // Second group contains the items.
 
                 if (!itemMatcher.matches()) {
                     continue;
@@ -96,20 +97,20 @@ public class BlacksmithRedirectFeature extends Feature {
             String countByTierString = countByTier.toString();
 
             // Sold 1 (1/0/0/0/0/0/0/0) item for 4e.
-            sendableMessage = String.format(
+            sendableMessage = CodedString.fromString(String.format(
                     "§dSold %d %s %s for §a%s%s§d.",
                     totalItemInteger,
                     itemPluralizer,
                     countByTierString,
                     paymentString,
-                    EmeraldUnits.EMERALD.getSymbol());
+                    EmeraldUnits.EMERALD.getSymbol()));
         }
         // Scrapping items for scrap.
         else {
             itemPluralizer = totalItemInteger == 1 ? "item" : "items";
 
-            sendableMessage = String.format(
-                    "§dScrapped %d %s for §a%s scrap§d.", totalItemInteger, itemPluralizer, paymentString);
+            sendableMessage = CodedString.fromString(String.format(
+                    "§dScrapped %d %s for §a%s scrap§d.", totalItemInteger, itemPluralizer, paymentString));
         }
 
         // Finally, we send the message.

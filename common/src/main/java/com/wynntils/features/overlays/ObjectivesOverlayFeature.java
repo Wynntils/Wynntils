@@ -18,6 +18,7 @@ import com.wynntils.core.features.overlays.Overlay;
 import com.wynntils.core.features.overlays.OverlayPosition;
 import com.wynntils.core.features.overlays.OverlaySize;
 import com.wynntils.core.features.overlays.annotations.OverlayInfo;
+import com.wynntils.core.text.CodedString;
 import com.wynntils.handlers.scoreboard.ScoreboardSegment;
 import com.wynntils.handlers.scoreboard.event.ScoreboardSegmentAdditionEvent;
 import com.wynntils.mc.event.RenderEvent;
@@ -118,7 +119,7 @@ public class ObjectivesOverlayFeature extends Feature {
                     .renderAlignedTextInBox(
                             poseStack,
                             bufferSource,
-                            text,
+                            CodedString.fromString(text),
                             this.getRenderX(),
                             this.getRenderX() + this.getWidth(),
                             renderY,
@@ -212,7 +213,7 @@ public class ObjectivesOverlayFeature extends Feature {
                         .renderAlignedTextInBox(
                                 poseStack,
                                 bufferSource,
-                                text,
+                                CodedString.fromString(text),
                                 this.getRenderX(),
                                 this.getRenderX() + this.getWidth(),
                                 renderY,

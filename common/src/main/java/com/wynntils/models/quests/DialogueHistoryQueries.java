@@ -6,6 +6,7 @@ package com.wynntils.models.quests;
 
 import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.components.Models;
+import com.wynntils.core.text.CodedString;
 import com.wynntils.handlers.container.ScriptedContainerQuery;
 import com.wynntils.utils.mc.ComponentUtils;
 import com.wynntils.utils.mc.LoreUtils;
@@ -18,8 +19,9 @@ import net.minecraft.world.item.ItemStack;
 
 public class DialogueHistoryQueries {
     private static final Pattern DIALOGUE_HISTORY_PAGE_PATTERN = Pattern.compile("§7Page \\[(\\d+)/(\\d+)\\]");
+    public static final CodedString DIALOGUE_HISTORY = CodedString.fromString("§bDialogue History");
 
-    private List<List<String>> newDialogueHistory;
+    private List<List<CodedString>> newDialogueHistory;
 
     protected void scanDialogueHistory() {
         findNumberOfPages();
@@ -30,15 +32,15 @@ public class DialogueHistoryQueries {
                         "Quest Book Dialogue History Query")
                 .onError(msg -> WynntilsMod.warn("Problem getting dialogue history in Quest Book: " + msg))
                 .useItemInHotbar(InventoryUtils.QUEST_BOOK_SLOT_NUM)
-                .matchTitle(Models.Quest.getQuestBookTitle(1))
+                .matchTitle(Models.Quest.getQuestBookTitleRegex(1))
                 .processContainer((c) -> {
                     ItemStack dialogueHistoryItem = c.items().get(0);
 
                     if (!ComponentUtils.getCoded(dialogueHistoryItem.getHoverName())
-                            .equals("§bDialogue History")) return;
+                            .equals(DIALOGUE_HISTORY)) return;
 
-                    for (String line : LoreUtils.getLore(dialogueHistoryItem)) {
-                        Matcher matcher = DIALOGUE_HISTORY_PAGE_PATTERN.matcher(line);
+                    for (CodedString line : LoreUtils.getLore(dialogueHistoryItem)) {
+                        Matcher matcher = line.getMatcher(DIALOGUE_HISTORY_PAGE_PATTERN);
 
                         if (matcher.matches()) {
                             int pageCount = Integer.parseInt(matcher.group(2));
@@ -58,18 +60,18 @@ public class DialogueHistoryQueries {
                         "Quest Book Dialogue History Query 2")
                 .onError(msg -> WynntilsMod.warn("Problem getting dialogue history (2) in Quest Book: " + msg))
                 .useItemInHotbar(InventoryUtils.QUEST_BOOK_SLOT_NUM)
-                .matchTitle(Models.Quest.getQuestBookTitle(1))
+                .matchTitle(Models.Quest.getQuestBookTitleRegex(1))
                 .setWaitForMenuReopen(false)
                 .processContainer((c) -> {
                     ItemStack dialogueHistoryItem = c.items().get(0);
 
                     if (!ComponentUtils.getCoded(dialogueHistoryItem.getHoverName())
-                            .equals("§bDialogue History")) return;
+                            .equals(DIALOGUE_HISTORY)) return;
 
                     newDialogueHistory = new ArrayList<>();
 
-                    List<String> current = LoreUtils.getLore(dialogueHistoryItem).stream()
-                            .dropWhile(String::isBlank)
+                    List<CodedString> current = LoreUtils.getLore(dialogueHistoryItem).stream()
+                            .dropWhile(s -> s.isBlank())
                             .takeWhile(s -> !s.isBlank())
                             .toList();
 
@@ -80,16 +82,16 @@ public class DialogueHistoryQueries {
             int page = i;
             queryBuilder
                     .clickOnSlot(0)
-                    .matchTitle(Models.Quest.getQuestBookTitle(1))
+                    .matchTitle(Models.Quest.getQuestBookTitleRegex(1))
                     .setWaitForMenuReopen(false)
                     .processContainer((c) -> {
                         ItemStack dialogueHistoryItem = c.items().get(0);
 
                         if (!ComponentUtils.getCoded(dialogueHistoryItem.getHoverName())
-                                .equals("§bDialogue History")) return;
+                                .equals(DIALOGUE_HISTORY)) return;
 
-                        List<String> current = LoreUtils.getLore(dialogueHistoryItem).stream()
-                                .dropWhile(String::isBlank)
+                        List<CodedString> current = LoreUtils.getLore(dialogueHistoryItem).stream()
+                                .dropWhile(s -> s.isBlank())
                                 .takeWhile(s -> !s.isBlank())
                                 .toList();
 

@@ -4,17 +4,18 @@
  */
 package com.wynntils.handlers.scoreboard;
 
+import com.wynntils.core.text.CodedString;
 import java.util.List;
 import java.util.Objects;
 import org.apache.commons.lang3.ArrayUtils;
 
 public final class ScoreboardSegment {
     private final ScoreboardPart scoreboardPart;
-    private final String header;
-    private List<String> content;
+    private final CodedString header;
+    private List<CodedString> content;
     private boolean visible = true;
 
-    public ScoreboardSegment(ScoreboardPart scoreboardPart, String header, List<String> content) {
+    public ScoreboardSegment(ScoreboardPart scoreboardPart, CodedString header, List<CodedString> content) {
         this.scoreboardPart = scoreboardPart;
         this.header = header;
         this.content = content;
@@ -24,11 +25,11 @@ public final class ScoreboardSegment {
         return scoreboardPart;
     }
 
-    public String getHeader() {
+    public CodedString getHeader() {
         return header;
     }
 
-    public List<String> getContent() {
+    public List<CodedString> getContent() {
         return content;
     }
 

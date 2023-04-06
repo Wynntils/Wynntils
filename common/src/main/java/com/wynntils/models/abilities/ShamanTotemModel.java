@@ -8,6 +8,7 @@ import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.components.Managers;
 import com.wynntils.core.components.Model;
 import com.wynntils.core.components.Models;
+import com.wynntils.core.text.CodedString;
 import com.wynntils.handlers.labels.event.EntityLabelChangedEvent;
 import com.wynntils.mc.event.AddEntityEvent;
 import com.wynntils.mc.event.ChangeCarriedItemEvent;
@@ -155,10 +156,10 @@ public class ShamanTotemModel extends Model {
         Entity entity = e.getEntity();
         if (!(entity instanceof ArmorStand)) return;
 
-        String name = e.getName();
+        CodedString name = e.getName();
         if (name.isEmpty()) return;
 
-        Matcher m = SHAMAN_TOTEM_TIMER.matcher(name);
+        Matcher m = name.getMatcher(SHAMAN_TOTEM_TIMER);
         if (!m.find()) return;
 
         int parsedTime = Integer.parseInt(m.group(1));
