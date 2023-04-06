@@ -16,6 +16,7 @@ import com.wynntils.utils.mc.ComponentUtils;
 import com.wynntils.utils.mc.McUtils;
 import com.wynntils.utils.render.buffered.CustomRenderType;
 import net.minecraft.client.renderer.MultiBufferSource;
+import net.minecraft.core.Position;
 import net.minecraft.world.InteractionHand;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import org.joml.Matrix3f;
@@ -31,15 +32,20 @@ public class RangeVisualizerFeature extends Feature {
     private static final int SEGMENTS = 128;
     private static final float HEIGHT = 0.1f;
 
+    /**
+     * Deals with rendering the circle for other party members only.
+     */
     @SubscribeEvent
     public void onPlayerRender(PlayerRenderEvent e) {
-        if (!Models.Player.isLocalPlayer(e.getPlayer())) return;
+        if (!Models.Player.isLocalPlayer(e.getPlayer())) return; // Don't render for ghost/npc
+        String playerName = ComponentUtils.getUnformatted(e.getPlayer().getName());
+        if (ComponentUtils.getUnformatted(McUtils.player().getName()).equals(playerName)) return; // Don't render for ourselves
+        if (!Models.Party.getPartyMembers().contains(playerName)) return; // Must be in party
 
         // We are getting the item info the same way as GearViewerScreen since we care about other people's items
         String gearName = ComponentUtils.getUnformatted(e.getPlayer().getMainHandItem().getHoverName());
         GearInfo gearInfo = Models.Gear.getGearInfoFromApiName(gearName);
         if (gearInfo == null) return;
-        renderCircleWithRadius(e.getPoseStack(), 5); // TODO: remove debug
         List<GearMajorId> majorIds = gearInfo.fixedStats().majorIds();
         if (majorIds.isEmpty()) return;
 
@@ -52,11 +58,11 @@ public class RangeVisualizerFeature extends Feature {
 
         for (GearMajorId majorId : majorIds) {
             if (majorId.name().equals("Taunt")) {
-                renderCircleWithRadius(e.getPoseStack(), 12);
+                renderCircleWithRadius(e.getPoseStack(), 12, e.getPlayer().getPosition(e.getPartialTicks()));
             } else if (majorId.name().equals("Saviour's Sacrifice") ||
                     majorId.name().equals("Heart of the Pack") ||
                     majorId.name().equals("Guardian")) {
-                renderCircleWithRadius(e.getPoseStack(), 8);
+                renderCircleWithRadius(e.getPoseStack(), 8, e.getPlayer().getPosition(e.getPartialTicks()));
             }
         }
     }
@@ -71,10 +77,10 @@ public class RangeVisualizerFeature extends Feature {
      *                  We do the translation here, so no need to do it before passing it in.
      * @param radius Pretty self explanatory, radius in blocks.
      */
-    private void renderCircleWithRadius(PoseStack poseStack, int radius) {
+    private void renderCircleWithRadius(PoseStack poseStack, int radius, Position position) {
         RenderSystem.disableCull(); // Circle must be rendered on both sides, otherwise it will be invisible when looking at it from the outside
         poseStack.pushPose();
-        poseStack.translate(-McUtils.player().getX(), -McUtils.player().getY(), -McUtils.player().getZ());
+        poseStack.translate(-position.x(), -position.y(), -position.z());
         VertexConsumer consumer = BUFFER_SOURCE.getBuffer(CustomRenderType.POSITION_COLOR_QUAD);
 
         Matrix4f matrix4f = poseStack.last().pose();
@@ -82,15 +88,15 @@ public class RangeVisualizerFeature extends Feature {
         double angleStep = 2 * Math.PI / SEGMENTS;
         double angle = 0;
         for (int i = 0; i < SEGMENTS; i++) {
-            float x = (float) (McUtils.player().getX() + Math.sin(angle) * radius);
-            float z = (float) (McUtils.player().getZ() + Math.cos(angle) * radius);
-            consumer.vertex(matrix4f, x, (float) McUtils.player().getY(), z).color(1.0F, 1.0F, 1.0F, 1.0F).endVertex();
-            consumer.vertex(matrix4f, x, (float) McUtils.player().getY() + HEIGHT, z).color(1.0F, 1.0F, 1.0F, 1.0F).endVertex();
+            float x = (float) (position.x() + Math.sin(angle) * radius);
+            float z = (float) (position.z() + Math.cos(angle) * radius);
+            consumer.vertex(matrix4f, x, (float) position.y(), z).color(1.0F, 1.0F, 1.0F, 1.0F).endVertex();
+            consumer.vertex(matrix4f, x, (float) position.y() + HEIGHT, z).color(1.0F, 1.0F, 1.0F, 1.0F).endVertex();
             angle += angleStep;
-            float x2 = (float) (McUtils.player().getX() + Math.sin(angle) * radius);
-            float z2 = (float) (McUtils.player().getZ() + Math.cos(angle) * radius);
-            consumer.vertex(matrix4f, x2, (float) McUtils.player().getY() + HEIGHT, z2).color(1.0F, 1.0F, 1.0F, 1.0F).endVertex();
-            consumer.vertex(matrix4f, x2, (float) McUtils.player().getY(), z2).color(1.0F, 1.0F, 1.0F, 1.0F).endVertex();
+            float x2 = (float) (position.x() + Math.sin(angle) * radius);
+            float z2 = (float) (position.z() + Math.cos(angle) * radius);
+            consumer.vertex(matrix4f, x2, (float) position.y() + HEIGHT, z2).color(1.0F, 1.0F, 1.0F, 1.0F).endVertex();
+            consumer.vertex(matrix4f, x2, (float) position.y(), z2).color(1.0F, 1.0F, 1.0F, 1.0F).endVertex();
         }
 
         BUFFER_SOURCE.endBatch();
