@@ -7,6 +7,7 @@ package com.wynntils.functions;
 import com.wynntils.core.components.Models;
 import com.wynntils.core.functions.Function;
 import com.wynntils.core.functions.arguments.FunctionArguments;
+import com.wynntils.models.mobtotem.MobTotem;
 import com.wynntils.models.token.type.TokenGatekeeper;
 import com.wynntils.models.worlds.profile.ServerProfile;
 import com.wynntils.utils.mc.type.Location;
@@ -157,9 +158,14 @@ public class WorldFunctions {
     public static class MobTotemOwnerFunction extends Function<String> {
         @Override
         public String getValue(FunctionArguments arguments) {
-            return Models.MobTotem.getMobTotem(
-                            arguments.getArgument("totemNumber").getIntegerValue() - 1)
-                    .getOwner();
+            MobTotem mobTotem = Models.MobTotem.getMobTotem(
+                    arguments.getArgument("totemNumber").getIntegerValue() - 1);
+
+            if (mobTotem == null) {
+                return "";
+            }
+
+            return mobTotem.getOwner();
         }
 
         @Override
@@ -172,9 +178,14 @@ public class WorldFunctions {
     public static class MobTotemDistanceFunction extends Function<Double> {
         @Override
         public Double getValue(FunctionArguments arguments) {
-            return Models.MobTotem.getMobTotem(
-                            arguments.getArgument("totemNumber").getIntegerValue() - 1)
-                    .getDistanceToPlayer();
+            MobTotem mobTotem = Models.MobTotem.getMobTotem(
+                    arguments.getArgument("totemNumber").getIntegerValue() - 1);
+
+            if (mobTotem == null) {
+                return 0.0d;
+            }
+
+            return mobTotem.getDistanceToPlayer();
         }
 
         @Override
@@ -187,41 +198,14 @@ public class WorldFunctions {
     public static class MobTotemFunction extends Function<Location> {
         @Override
         public Location getValue(FunctionArguments arguments) {
-            return Location.containing(Models.MobTotem.getMobTotem(
-                            arguments.getArgument("totemNumber").getIntegerValue() - 1)
-                    .getPosition());
-        }
+            MobTotem mobTotem = Models.MobTotem.getMobTotem(
+                    arguments.getArgument("totemNumber").getIntegerValue() - 1);
 
-        @Override
-        public FunctionArguments.Builder getArgumentsBuilder() {
-            return new FunctionArguments.RequiredArgumentBuilder(
-                    List.of(new FunctionArguments.Argument<>("totemNumber", Integer.class, null)));
-        }
-    }
+            if (mobTotem == null) {
+                return new Location(0, 0, 0);
+            }
 
-    public static class MobTotemYFunction extends Function<Double> {
-        @Override
-        public Double getValue(FunctionArguments arguments) {
-            return Models.MobTotem.getMobTotem(
-                            arguments.getArgument("totemNumber").getIntegerValue() - 1)
-                    .getPosition()
-                    .y();
-        }
-
-        @Override
-        public FunctionArguments.Builder getArgumentsBuilder() {
-            return new FunctionArguments.RequiredArgumentBuilder(
-                    List.of(new FunctionArguments.Argument<>("totemNumber", Integer.class, null)));
-        }
-    }
-
-    public static class MobTotemZFunction extends Function<Double> {
-        @Override
-        public Double getValue(FunctionArguments arguments) {
-            return Models.MobTotem.getMobTotem(
-                            arguments.getArgument("totemNumber").getIntegerValue() - 1)
-                    .getPosition()
-                    .z();
+            return Location.containing(mobTotem.getPosition());
         }
 
         @Override
@@ -234,9 +218,14 @@ public class WorldFunctions {
     public static class MobTotemTimeLeftFunction extends Function<String> {
         @Override
         public String getValue(FunctionArguments arguments) {
-            return Models.MobTotem.getMobTotem(
-                            arguments.getArgument("totemNumber").getIntegerValue() - 1)
-                    .getTimerString();
+            MobTotem mobTotem = Models.MobTotem.getMobTotem(
+                    arguments.getArgument("totemNumber").getIntegerValue() - 1);
+
+            if (mobTotem == null) {
+                return "";
+            }
+
+            return mobTotem.getTimerString();
         }
 
         @Override
