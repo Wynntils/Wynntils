@@ -7,6 +7,7 @@ package com.wynntils.core.text;
 import com.google.common.collect.Iterables;
 import com.wynntils.utils.mc.ComponentUtils;
 import com.wynntils.utils.type.Pair;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Deque;
 import java.util.LinkedList;
@@ -241,11 +242,17 @@ public final class StyledText {
     }
 
     public StyledText trim() {
-        return new StyledText(
-                parts.stream().map(StyledTextPart::trim).collect(Collectors.toList()),
-                temporaryWorkaround,
-                clickEvents,
-                hoverEvents);
+        if (parts.isEmpty()) {
+            return new StyledText(List.of(), temporaryWorkaround, clickEvents, hoverEvents);
+        }
+
+        List<StyledTextPart> newParts = new ArrayList<>(parts);
+        newParts.set(0, newParts.get(0).trim());
+
+        int lastIndex = newParts.size() - 1;
+        newParts.set(lastIndex, newParts.get(lastIndex).trim());
+
+        return new StyledText(newParts, temporaryWorkaround, clickEvents, hoverEvents);
     }
 
     public boolean isEmpty() {
