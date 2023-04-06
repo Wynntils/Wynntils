@@ -1,9 +1,21 @@
+## [0.0.2-alpha.446](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.445...v0.0.2-alpha.446) (2023-04-06)
+
+
+### New Features
+
+* Add StyledText, rewrite ChatMentionsFeature and enable it ([#1434](https://github.com/Wynntils/Artemis/issues/1434)) ([d8d67a4](https://github.com/Wynntils/Artemis/commit/d8d67a4f03f8452cc8a93de2bcada4cab4562040))
+
 ## [0.0.2-alpha.445](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.444...v0.0.2-alpha.445) (2023-04-06)
 
 
 ### New Features
 
 * Parse profession level up messages and xp gains with multipliers ([#1453](https://github.com/Wynntils/Artemis/issues/1453)) ([e1a9406](https://github.com/Wynntils/Artemis/commit/e1a9406d684ada423780aee1d8cc10a940cee0f8))
+
+
+### Miscellaneous Chores
+
+* **release:** v0.0.2-alpha.445 [skip ci] ([7e1247f](https://github.com/Wynntils/Artemis/commit/7e1247fae66f93dd3230af8aec5d4e3300cb0a17))
 
 ## [0.0.2-alpha.444](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.443...v0.0.2-alpha.444) (2023-04-06)
 
@@ -40,16 +52,4 @@
 ### Miscellaneous Chores
 
 * **release:** v0.0.2-alpha.442 [skip ci] ([d6b4bf5](https://github.com/Wynntils/Artemis/commit/d6b4bf5e08dec7855a4680d8ce730fe4c7f233ac))
-
-## [0.0.2-alpha.441](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.440...v0.0.2-alpha.441) (2023-04-06)
-
-
-### Bug Fixes
-
-* Fix overlay comparator ([#1450](https://github.com/Wynntils/Artemis/issues/1450)) ([491fc90](https://github.com/Wynntils/Artemis/commit/491fc901ef0f1bf6eeea3ddcaf661d1ffe5f379f))
-
-
-### Miscellaneous Chores
-
-* **release:** v0.0.2-alpha.441 [skip ci] ([8ba2bec](https://github.com/Wynntils/Artemis/commit/8ba2beccc9b3f4078d8da21a66c9c76910c39909))
 
