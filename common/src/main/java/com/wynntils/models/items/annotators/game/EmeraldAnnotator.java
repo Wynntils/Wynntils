@@ -4,6 +4,7 @@
  */
 package com.wynntils.models.items.annotators.game;
 
+import com.wynntils.core.text.PartStyle;
 import com.wynntils.core.text.StyledText;
 import com.wynntils.handlers.item.ItemAnnotation;
 import com.wynntils.handlers.item.ItemAnnotator;
@@ -22,7 +23,7 @@ public final class EmeraldAnnotator implements ItemAnnotator {
         if (unit == null) return null;
 
         // Verify that name is correct
-        Matcher matcher = name.match(EMERALD_PATTERN);
+        Matcher matcher = name.getMatcher(EMERALD_PATTERN, PartStyle.StyleType.FULL);
         if (!matcher.matches()) return null;
 
         return new EmeraldItem(itemStack.getCount(), unit);

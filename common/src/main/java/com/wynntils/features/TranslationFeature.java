@@ -69,9 +69,7 @@ public class TranslationFeature extends Feature {
                         // We failed to get a translation; send the original message so it's not lost
                         messageToSend = origCoded;
                     }
-                    McUtils.mc()
-                            .doRunTask(() -> McUtils.sendMessageToClient(
-                                    messageToSend.asSingleLiteralComponentWithCodedString()));
+                    McUtils.mc().doRunTask(() -> McUtils.sendMessageToClient(messageToSend.getComponent()));
                 });
         if (!keepOriginal.get()) {
             e.setCanceled(true);
@@ -85,7 +83,7 @@ public class TranslationFeature extends Feature {
 
         if (!e.getChatMessage().isEmpty()) {
             List<String> wrapped = e.getChatMessage().stream()
-                    .map(component -> wrapCoding(ComponentUtils.getCoded(component)))
+                    .map(component -> wrapCoding(StyledText.fromComponent(component)))
                     .toList();
             Managers.Translation.getTranslator(translationService.get())
                     .translate(wrapped, languageName.get(), translatedMsgList -> {
@@ -114,7 +112,7 @@ public class TranslationFeature extends Feature {
     }
 
     private StyledText unwrapCoding(String origCoded) {
-        return StyledText.of(origCoded.replaceAll("\\{ ?§ ?([0-9a-fklmnor]) ?\\}", "§$1"));
+        return StyledText.fromString(origCoded.replaceAll("\\{ ?§ ?([0-9a-fklmnor]) ?\\}", "§$1"));
     }
 
     private String wrapCoding(StyledText origCoded) {

@@ -18,7 +18,6 @@ import com.wynntils.models.map.pois.Poi;
 import com.wynntils.models.map.pois.TerritoryPoi;
 import com.wynntils.models.map.type.TerritoryDefenseFilterType;
 import com.wynntils.models.territories.profile.TerritoryProfile;
-import com.wynntils.utils.mc.ComponentUtils;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -114,8 +113,8 @@ public final class TerritoryModel extends Model {
 
             if (built.getDisplay() == null) continue;
 
-            String territoryName = ComponentUtils.getUnformatted(
-                            built.getDisplay().getTitle())
+            String territoryName = StyledText.fromComponent(built.getDisplay().getTitle())
+                    .withoutFormatting()
                     .replace("[", "")
                     .replace("]", "")
                     .trim();
@@ -130,9 +129,9 @@ public final class TerritoryModel extends Model {
             boolean headquarters = built.getDisplay().getFrame() == FrameType.CHALLENGE;
 
             // description is a raw string with \n, so we have to split
-            StyledText description = ComponentUtils.getCoded(built.getDisplay().getDescription());
+            StyledText description = StyledText.fromComponent(built.getDisplay().getDescription());
             StyledText[] colored = description.split("\n");
-            String[] raw = ComponentUtils.stripFormatting(description).split("\n");
+            String[] raw = description.withoutFormatting().split("\n");
 
             TerritoryInfo container = new TerritoryInfo(raw, colored, headquarters);
             tempMap.put(territoryName, container);

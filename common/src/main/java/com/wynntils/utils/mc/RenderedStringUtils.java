@@ -35,7 +35,9 @@ public final class RenderedStringUtils {
             }
         }
 
-        return Arrays.stream(result.toString().split("\n")).map(StyledText::of).toArray(StyledText[]::new);
+        return Arrays.stream(result.toString().split("\n"))
+                .map(StyledText::fromString)
+                .toArray(StyledText[]::new);
     }
 
     public static String getMaxFittingText(String text, float maxTextWidth, Font font) {
@@ -72,7 +74,8 @@ public final class RenderedStringUtils {
                 color = line.getInternalCodedStringRepresentation().substring(0, 2);
             }
 
-            return StyledText.of(line.getInternalCodedStringRepresentation().replaceFirst(" \\[", "\n" + color + "["));
+            return StyledText.fromString(
+                    line.getInternalCodedStringRepresentation().replaceFirst(" \\[", "\n" + color + "["));
         } else if (maxFitting.contains("(")
                 && !maxFitting.contains(")")) { // Detail line did not appear to fit, force break
             String color = "";
@@ -81,7 +84,8 @@ public final class RenderedStringUtils {
                 color = line.getInternalCodedStringRepresentation().substring(0, 2);
             }
 
-            return StyledText.of(line.getInternalCodedStringRepresentation().replaceFirst(" \\(", "\n" + color + "("));
+            return StyledText.fromString(
+                    line.getInternalCodedStringRepresentation().replaceFirst(" \\(", "\n" + color + "("));
         } else { // Fits fine, give normal lines
             return line;
         }

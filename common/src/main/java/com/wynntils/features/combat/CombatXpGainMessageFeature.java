@@ -33,7 +33,7 @@ public class CombatXpGainMessageFeature extends Feature {
         if (!Models.WorldState.onWorld()) return;
         if (System.currentTimeMillis() - lastXpDisplayTime < secondDelay.get() * 1000) return;
 
-        StyledText message = StyledText.of(
+        StyledText message = StyledText.fromString(
                 String.format("§2+%.0f XP (§6%.2f%%§2)", event.getGainedXpRaw(), event.getGainedXpPercentage()));
 
         Managers.Notification.queueMessage(message);

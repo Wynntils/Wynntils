@@ -5,6 +5,7 @@
 package com.wynntils.models.items.annotators.game;
 
 import com.wynntils.core.components.Models;
+import com.wynntils.core.text.PartStyle;
 import com.wynntils.core.text.StyledText;
 import com.wynntils.handlers.item.ItemAnnotation;
 import com.wynntils.handlers.item.ItemAnnotator;
@@ -17,7 +18,7 @@ public final class CraftedGearAnnotator implements ItemAnnotator {
 
     @Override
     public ItemAnnotation getAnnotation(ItemStack itemStack, StyledText name) {
-        Matcher matcher = name.match(CRAFTED_GEAR_PATTERN);
+        Matcher matcher = name.getMatcher(CRAFTED_GEAR_PATTERN, PartStyle.StyleType.FULL);
         if (!matcher.matches()) return null;
 
         return Models.Gear.parseCraftedGearItem(itemStack);

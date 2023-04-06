@@ -25,7 +25,6 @@ import com.wynntils.models.items.WynnItemCache;
 import com.wynntils.screens.base.widgets.SearchWidget;
 import com.wynntils.utils.colors.CommonColors;
 import com.wynntils.utils.colors.CustomColor;
-import com.wynntils.utils.mc.ComponentUtils;
 import com.wynntils.utils.mc.McUtils;
 import com.wynntils.utils.render.RenderUtils;
 import com.wynntils.utils.wynn.ContainerUtils;
@@ -71,7 +70,7 @@ public class ContainerSearchFeature extends Feature {
     public void onScreenInit(ScreenInitEvent event) {
         if (!(event.getScreen() instanceof AbstractContainerScreen<?> screen)) return;
 
-        StyledText title = ComponentUtils.getCoded(screen.getTitle());
+        StyledText title = StyledText.fromComponent(screen.getTitle());
 
         // This is screen.topPos and screen.leftPos, but they are not calculated yet when this is called
         int renderX = (screen.width - screen.imageWidth) / 2;
@@ -145,13 +144,14 @@ public class ContainerSearchFeature extends Feature {
             guildBankLastSearch = System.currentTimeMillis();
         }
 
-        StyledText name = ComponentUtils.getCoded(abstractContainerScreen
+        StyledText name = StyledText.fromComponent(abstractContainerScreen
                 .getMenu()
                 .getItems()
                 .get(currentSearchableContainerType.getNextItemSlot())
                 .getHoverName());
 
-        if (!name.match(currentSearchableContainerType.getNextItemPattern()).matches()) {
+        if (!name.getMatcher(currentSearchableContainerType.getNextItemPattern(), PartStyle.StyleType.FULL)
+                .matches()) {
             autoSearching = false;
             return;
         }
@@ -208,8 +208,9 @@ public class ContainerSearchFeature extends Feature {
             if (wynnItemOpt.isEmpty()) return;
             if (playerItems.contains(itemStack)) continue;
 
-            String name =
-                    ComponentUtils.getUnformatted(itemStack.getHoverName()).toLowerCase(Locale.ROOT);
+            String name = StyledText.fromComponent(itemStack.getHoverName())
+                    .withoutFormatting()
+                    .toLowerCase(Locale.ROOT);
 
             boolean filtered = !search.isEmpty() && name.contains(search) && itemStack.getItem() != Items.AIR;
             wynnItemOpt.get().getCache().store(WynnItemCache.SEARCHED_KEY, filtered);

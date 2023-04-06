@@ -4,6 +4,7 @@
  */
 package com.wynntils.models.items.annotators.game;
 
+import com.wynntils.core.text.PartStyle;
 import com.wynntils.core.text.StyledText;
 import com.wynntils.handlers.item.ItemAnnotation;
 import com.wynntils.handlers.item.ItemAnnotator;
@@ -22,7 +23,7 @@ public final class TrinketAnnotator implements ItemAnnotator {
 
     @Override
     public ItemAnnotation getAnnotation(ItemStack itemStack, StyledText name) {
-        Matcher matcher = name.match(TRINKET_PATTERN);
+        Matcher matcher = name.getMatcher(TRINKET_PATTERN, PartStyle.StyleType.FULL);
         if (!matcher.matches()) return null;
 
         try {

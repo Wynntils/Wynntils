@@ -59,7 +59,7 @@ import org.lwjgl.glfw.GLFW;
 @ConfigCategory(Category.OVERLAYS)
 public class NpcDialogueOverlayFeature extends Feature {
     private static final Pattern NEW_QUEST_STARTED = Pattern.compile("^§r§6§lNew Quest Started: §r§e§l(.*)§r$");
-    public static final StyledText PRESS_SNEAK_TO_CONTINUE = StyledText.of("§cPress SNEAK to continue");
+    public static final StyledText PRESS_SNEAK_TO_CONTINUE = StyledText.fromString("§cPress SNEAK to continue");
 
     private final ScheduledExecutorService autoProgressExecutor = Executors.newSingleThreadScheduledExecutor();
     private ScheduledFuture<?> scheduledAutoProgressKeyPress = null;
@@ -91,7 +91,7 @@ public class NpcDialogueOverlayFeature extends Feature {
     @SubscribeEvent(priority = EventPriority.HIGHEST)
     public void onNpcDialogue(NpcDialogEvent e) {
         List<StyledText> msg =
-                e.getChatMessage().stream().map(ComponentUtils::getCoded).toList();
+                e.getChatMessage().stream().map(StyledText::fromComponent).toList();
 
         // Print dialogue to the system log
         WynntilsMod.info("[NPC] Type: " + (msg.isEmpty() ? "<empty> " : "") + (e.isProtected() ? "<protected> " : "")
@@ -115,7 +115,7 @@ public class NpcDialogueOverlayFeature extends Feature {
         dialogueType = e.getType();
         isProtected = e.isProtected();
 
-        if (!msg.isEmpty() && msg.get(0).match(NEW_QUEST_STARTED).find()) {
+        if (!msg.isEmpty() && msg.get(0).getMatcher(NEW_QUEST_STARTED).find()) {
             // TODO: Show nice banner notification instead
             // but then we'd also need to confirm it with a sneak
             Managers.Notification.queueMessage(msg.get(0));
@@ -165,7 +165,7 @@ public class NpcDialogueOverlayFeature extends Feature {
     }
 
     private long calculateMessageReadTime(List<StyledText> msg) {
-        int words = StyledText.join(msg, " ").split(" ").length;
+        int words = StyledText.join(" ", msg).split(" ").length;
         long delay =
                 dialogAutoProgressDefaultTime.get() + ((long) words * dialogAutoProgressAdditionalTimePerWord.get());
         return delay;
@@ -290,7 +290,7 @@ public class NpcDialogueOverlayFeature extends Feature {
             if (showHelperTexts.get()) {
                 // Render "To continue" message
                 List<TextRenderTask> renderTaskList = new LinkedList<>();
-                StyledText protection = isProtected ? StyledText.of("§f<protected> §r") : StyledText.EMPTY;
+                StyledText protection = isProtected ? StyledText.fromString("§f<protected> §r") : StyledText.EMPTY;
                 if (dialogueType == NpcDialogueType.NORMAL) {
                     TextRenderTask pressSneakMessage =
                             new TextRenderTask(PRESS_SNEAK_TO_CONTINUE.prepend(protection), renderSetting);
@@ -313,9 +313,10 @@ public class NpcDialogueOverlayFeature extends Feature {
                             ChatFormatting.GREEN + "Auto-progress: "
                                     + Math.max(0, Math.round(timeUntilProgress / 1000f))
                                     + " seconds (Press "
-                                    + ComponentUtils.getUnformatted(cancelAutoProgressKeybind
-                                            .getKeyMapping()
-                                            .getTranslatedKeyMessage())
+                                    + StyledText.fromComponent(cancelAutoProgressKeybind
+                                                    .getKeyMapping()
+                                                    .getTranslatedKeyMessage())
+                                            .withoutFormatting()
                                     + " to cancel)",
                             renderSetting);
                     renderTaskList.add(autoProgressMessage);
@@ -356,7 +357,7 @@ public class NpcDialogueOverlayFeature extends Feature {
         public void renderPreview(
                 PoseStack poseStack, MultiBufferSource bufferSource, float partialTicks, Window window) {
             List<StyledText> fakeDialogue = List.of(
-                    StyledText.of(
+                    StyledText.fromString(
                             "§7[1/1] §r§2Random Citizen: §r§aDid you know that Wynntils is the best Wynncraft mod you'll probably find?§r"));
             // we have to force update every time
             updateTextRenderSettings();

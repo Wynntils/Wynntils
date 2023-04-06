@@ -11,7 +11,6 @@ import com.wynntils.core.features.Feature;
 import com.wynntils.core.text.StyledText;
 import com.wynntils.handlers.chat.event.ChatMessageReceivedEvent;
 import com.wynntils.mc.event.SubtitleSetTextEvent;
-import com.wynntils.utils.mc.ComponentUtils;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
@@ -24,8 +23,8 @@ public class TerritoryMessageRedirectFeature extends Feature {
     // Handles the subtitle text event.
     @SubscribeEvent
     public void onSubtitleSetText(SubtitleSetTextEvent event) {
-        StyledText styledText = ComponentUtils.getCoded(event.getComponent());
-        Matcher matcher = styledText.match(TERRITORY_MESSAGE_PATTERN);
+        StyledText styledText = StyledText.fromComponent(event.getComponent());
+        Matcher matcher = styledText.getMatcher(TERRITORY_MESSAGE_PATTERN, PartStyle.StyleType.FULL);
         if (!matcher.matches()) return;
 
         event.setCanceled(true);
@@ -46,7 +45,7 @@ public class TerritoryMessageRedirectFeature extends Feature {
         // for the sake of our brief message (looks odd otherwise).
         String territoryName = StringUtils.capitalize(rawTerritoryName);
 
-        StyledText enteringMessage = StyledText.of(String.format("§7%s %s", directionalArrow, territoryName));
+        StyledText enteringMessage = StyledText.fromString(String.format("§7%s %s", directionalArrow, territoryName));
         Managers.Notification.queueMessage(enteringMessage);
     }
 
@@ -54,6 +53,10 @@ public class TerritoryMessageRedirectFeature extends Feature {
     // text event.
     @SubscribeEvent
     public void onChat(ChatMessageReceivedEvent event) {
-        if (event.getOriginalCodedMessage().match(TERRITORY_MESSAGE_PATTERN).matches()) event.setCanceled(true);
+        if (event.getOriginalCodedMessage()
+                .getMatcher(TERRITORY_MESSAGE_PATTERN, PartStyle.StyleType.FULL)
+                .matches()) {
+            event.setCanceled(true);
+        }
     }
 }

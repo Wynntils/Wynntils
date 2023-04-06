@@ -4,6 +4,7 @@
  */
 package com.wynntils.models.items.annotators.gui;
 
+import com.wynntils.core.text.PartStyle;
 import com.wynntils.core.text.StyledText;
 import com.wynntils.handlers.item.ItemAnnotation;
 import com.wynntils.handlers.item.ItemAnnotator;
@@ -20,7 +21,7 @@ public final class SkillPointAnnotator implements ItemAnnotator {
 
     @Override
     public ItemAnnotation getAnnotation(ItemStack itemStack, StyledText name) {
-        Matcher matcher = name.match(SKILL_POINT_PATTERN);
+        Matcher matcher = name.getMatcher(SKILL_POINT_PATTERN, PartStyle.StyleType.FULL);
         if (!matcher.matches()) return null;
 
         String skillName = matcher.group(1);

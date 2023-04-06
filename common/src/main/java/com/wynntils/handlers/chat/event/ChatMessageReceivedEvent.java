@@ -7,7 +7,6 @@ package com.wynntils.handlers.chat.event;
 import com.wynntils.core.text.StyledText;
 import com.wynntils.handlers.chat.type.MessageType;
 import com.wynntils.handlers.chat.type.RecipientType;
-import com.wynntils.utils.mc.ComponentUtils;
 import net.minecraft.network.chat.Component;
 import net.minecraftforge.eventbus.api.Cancelable;
 import net.minecraftforge.eventbus.api.Event;
@@ -40,7 +39,7 @@ public class ChatMessageReceivedEvent extends Event {
 
     public void setMessage(Component message) {
         this.message = message;
-        this.codedMessage = ComponentUtils.getCoded(message);
+        this.codedMessage = StyledText.fromComponent(message);
     }
 
     public StyledText getCodedMessage() {

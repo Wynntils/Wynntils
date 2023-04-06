@@ -70,7 +70,7 @@ public class LogItemInfoFeature extends Feature {
 
         return "[Logging Item]\nName: "
                 + itemStack.getHoverName().getString() + "\nLore:\n"
-                + StyledText.join(LoreUtils.getLore(itemStack), "\n") + "\nItem Type: "
+                + StyledText.join("\n", LoreUtils.getLore(itemStack)) + "\nItem Type: "
                 + itemStack.getItem() + "\nDamage Value: "
                 + itemStack.getDamageValue() + "\nWynn Item: "
                 + wynnItemDesc + "\nNBT: "

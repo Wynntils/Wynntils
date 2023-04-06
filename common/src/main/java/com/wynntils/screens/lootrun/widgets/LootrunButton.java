@@ -53,7 +53,7 @@ public class LootrunButton extends WynntilsButton {
         FontRenderer.getInstance()
                 .renderText(
                         poseStack,
-                        StyledText.of(RenderedStringUtils.getMaxFittingText(
+                        StyledText.fromString(RenderedStringUtils.getMaxFittingText(
                                 lootrun.name(),
                                 maxTextWidth,
                                 FontRenderer.getInstance().getFont())),

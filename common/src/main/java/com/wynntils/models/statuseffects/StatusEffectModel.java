@@ -6,6 +6,7 @@ package com.wynntils.models.statuseffects;
 
 import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.components.Model;
+import com.wynntils.core.text.PartStyle;
 import com.wynntils.core.text.StyledText;
 import com.wynntils.mc.event.PlayerInfoFooterChangedEvent;
 import com.wynntils.models.statuseffects.event.StatusEffectsChangedEvent;
@@ -36,7 +37,7 @@ public final class StatusEffectModel extends Model {
     private static final Pattern STATUS_EFFECT_PATTERN =
             Pattern.compile("(.+?§7 ?(?:\\d+(?:\\.\\d+)?%)?) ?([%\\-+\\/\\da-zA-Z'\\s]+?) §[84a]\\((.+?)\\).*");
 
-    private static final StyledText STATUS_EFFECTS_TITLE = StyledText.of("§d§lStatus Effects");
+    private static final StyledText STATUS_EFFECTS_TITLE = StyledText.fromString("§d§lStatus Effects");
 
     private List<StatusEffect> statusEffects = List.of();
 
@@ -75,13 +76,13 @@ public final class StatusEffectModel extends Model {
             StyledText trimmedEffect = effect.trim();
             if (trimmedEffect.isEmpty()) continue;
 
-            Matcher m = trimmedEffect.match(STATUS_EFFECT_PATTERN);
+            Matcher m = trimmedEffect.getMatcher(STATUS_EFFECT_PATTERN, PartStyle.StyleType.FULL);
             if (!m.find()) continue;
 
             // See comment at STATUS_EFFECT_PATTERN definition for format description of these
-            StyledText prefix = StyledText.of(m.group(1));
-            StyledText name = StyledText.of(m.group(2));
-            StyledText displayedTime = StyledText.of(m.group(3));
+            StyledText prefix = StyledText.fromString(m.group(1));
+            StyledText name = StyledText.fromString(m.group(2));
+            StyledText displayedTime = StyledText.fromString(m.group(3));
             newStatusEffects.add(new StatusEffect(name, displayedTime, prefix));
         }
 

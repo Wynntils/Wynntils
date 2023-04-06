@@ -7,8 +7,8 @@ package com.wynntils.features;
 import com.wynntils.core.config.Category;
 import com.wynntils.core.config.ConfigCategory;
 import com.wynntils.core.features.Feature;
+import com.wynntils.core.text.StyledText;
 import com.wynntils.mc.event.InventoryMouseClickedEvent;
-import com.wynntils.utils.mc.ComponentUtils;
 import com.wynntils.utils.mc.LoreUtils;
 import com.wynntils.utils.mc.McUtils;
 import java.util.regex.Matcher;
@@ -32,7 +32,7 @@ public class TerritoryDefenseMessageFeature extends Feature {
         ItemStack itemStack = event.getHoveredSlot().getItem();
 
         for (Component tooltipLine : LoreUtils.getTooltipLines(itemStack)) {
-            String unformatted = ComponentUtils.getUnformatted(tooltipLine);
+            String unformatted = StyledText.fromComponent(tooltipLine).withoutFormatting();
             Matcher matcher = TERRITORY_DEFENSE_PATTERN.matcher(unformatted);
             if (matcher.matches()) {
                 McUtils.sendCommand("g %s defense is %s".formatted(titleMatcher.group(1), matcher.group(1)));

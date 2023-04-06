@@ -31,31 +31,20 @@ public final class ComponentUtils {
     private static final Pattern NEWLINE_PATTERN = Pattern.compile("\n");
 
     // Text with formatting codes "§cTest §1Text"
-    public static StyledText getCoded(Component component) {
+    @Deprecated
+    public static String getCoded(Component component) {
         StringBuilder result = new StringBuilder();
 
         component.visit(new CodedStringGenerator(result), Style.EMPTY);
 
-        return new StyledText(result.toString());
+        return result.toString();
     }
 
-    // Text without formatting codes "Test text"
-    public static String getUnformatted(Component component) {
-        return ComponentUtils.stripFormatting(new StyledText(component.getString()));
-    }
-
-    public static StyledText getCoded(String jsonString) {
+    public static Component parseComponentFromJson(String jsonString) {
         MutableComponent component = Component.Serializer.fromJson(jsonString);
-        if (component == null) return StyledText.EMPTY;
+        if (component == null) return Component.empty();
 
-        return getCoded(component);
-    }
-
-    public static String getUnformatted(String jsonString) {
-        MutableComponent component = Component.Serializer.fromJson(jsonString);
-        if (component == null) return null;
-
-        return getUnformatted(component);
+        return component;
     }
 
     private static StringBuilder tryConstructDifference(Style oldStyle, Style newStyle) {
@@ -153,7 +142,7 @@ public final class ComponentUtils {
             return "";
         }
 
-        return text.match(COLOR_CODE_PATTERN).replaceAll("");
+        return text.getMatcher(COLOR_CODE_PATTERN).replaceAll("");
     }
 
     public static StyledText getLastPartCodes(StyledText lastPart) {
@@ -164,7 +153,7 @@ public final class ComponentUtils {
         while ((index = lastPart.getInternalCodedStringRepresentation().lastIndexOf('§')) != -1) {
             if (index >= lastPart.getInternalCodedStringRepresentation().length() - 1) {
                 // trailing §, no format code, skip it
-                lastPart = StyledText.of(
+                lastPart = StyledText.fromString(
                         lastPart.getInternalCodedStringRepresentation().substring(0, index));
                 continue;
             }
@@ -176,7 +165,7 @@ public final class ComponentUtils {
             // prepend to codes since we're going backwards
             lastPartCodes = lastPartCodes.prepend(thisCode);
 
-            lastPart = StyledText.of(
+            lastPart = StyledText.fromString(
                     lastPart.getInternalCodedStringRepresentation().substring(0, index));
         }
 

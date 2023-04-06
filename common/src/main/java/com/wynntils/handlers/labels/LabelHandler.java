@@ -10,7 +10,6 @@ import com.wynntils.core.text.StyledText;
 import com.wynntils.handlers.labels.event.EntityLabelChangedEvent;
 import com.wynntils.handlers.labels.event.EntityLabelVisibilityEvent;
 import com.wynntils.mc.event.SetEntityDataEvent;
-import com.wynntils.utils.mc.ComponentUtils;
 import com.wynntils.utils.mc.McUtils;
 import java.util.Optional;
 import net.minecraft.network.chat.Component;
@@ -37,11 +36,11 @@ public class LabelHandler extends Handler {
 
                 Component oldNameComponent = entity.getCustomName();
                 StyledText oldName =
-                        oldNameComponent != null ? ComponentUtils.getCoded(oldNameComponent) : StyledText.EMPTY;
-                StyledText newName = ComponentUtils.getCoded(value.get());
+                        oldNameComponent != null ? StyledText.fromComponent(oldNameComponent) : StyledText.EMPTY;
+                StyledText newName = StyledText.fromComponent(value.get());
 
                 // Sometimes there is no actual change; ignore it then
-                if (newName.equals(oldName)) return;
+                if (newName.equalsString(oldName, PartStyle.StyleType.FULL)) return;
 
                 WynntilsMod.postEvent(new EntityLabelChangedEvent(entity, newName, oldName));
             }

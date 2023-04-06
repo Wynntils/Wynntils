@@ -4,6 +4,7 @@
  */
 package com.wynntils.models.items.annotators.game;
 
+import com.wynntils.core.text.PartStyle;
 import com.wynntils.core.text.StyledText;
 import com.wynntils.handlers.item.ItemAnnotation;
 import com.wynntils.handlers.item.ItemAnnotator;
@@ -23,7 +24,7 @@ public final class TeleportScrollAnnotator implements ItemAnnotator {
 
     @Override
     public ItemAnnotation getAnnotation(ItemStack itemStack, StyledText name) {
-        Matcher nameMatcher = name.match(TELEPORT_SCROLL_PATTERN);
+        Matcher nameMatcher = name.getMatcher(TELEPORT_SCROLL_PATTERN, PartStyle.StyleType.FULL);
         if (!nameMatcher.matches()) return null;
 
         String scrollName = nameMatcher.group(1);

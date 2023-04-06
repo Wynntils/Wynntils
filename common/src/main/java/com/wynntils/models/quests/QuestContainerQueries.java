@@ -86,7 +86,7 @@ public class QuestContainerQueries {
     }
 
     private StyledText getNextPageButtonName(int nextPageNum) {
-        return StyledText.of("[§f§lPage " + nextPageNum + "§a >§2>§a>§2>§a>]");
+        return StyledText.fromString("[§f§lPage " + nextPageNum + "§a >§2>§a>§2>§a>]");
     }
 
     protected void queryMiniQuests() {

@@ -4,6 +4,7 @@
  */
 package com.wynntils.utils.wynn;
 
+import com.wynntils.core.text.PartStyle;
 import com.wynntils.core.text.StyledText;
 import com.wynntils.utils.mc.McUtils;
 import com.wynntils.utils.mc.type.Location;
@@ -34,7 +35,7 @@ public final class LocationUtils {
     }
 
     public static Matcher strictCoordinateMatcher(StyledText coded) {
-        return coded.match(STRICT_COORDINATE_PATTERN);
+        return coded.getMatcher(STRICT_COORDINATE_PATTERN, PartStyle.StyleType.FULL);
     }
 
     public static void shareLocation(String target) {
@@ -46,8 +47,7 @@ public final class LocationUtils {
     }
 
     public static void shareCompass(String target, Location compass) {
-        String locationString =
-                "My compass is at [" + (int) compass.x + ", " + (int) compass.y + ", " + (int) compass.z + "]";
+        String locationString = "My compass is at [" + compass.x + ", " + compass.y + ", " + compass.z + "]";
 
         LocationUtils.sendShareMessage(target, locationString);
     }

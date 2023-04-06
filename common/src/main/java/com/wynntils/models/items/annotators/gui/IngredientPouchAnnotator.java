@@ -6,6 +6,7 @@ package com.wynntils.models.items.annotators.gui;
 
 import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.components.Models;
+import com.wynntils.core.text.PartStyle;
 import com.wynntils.core.text.StyledText;
 import com.wynntils.handlers.item.ItemAnnotation;
 import com.wynntils.handlers.item.ItemAnnotator;
@@ -21,7 +22,7 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 
 public final class IngredientPouchAnnotator implements ItemAnnotator {
-    private static final StyledText INGREDIENT_POUCH_NAME = StyledText.of("§6Ingredient Pouch");
+    private static final StyledText INGREDIENT_POUCH_NAME = StyledText.fromString("§6Ingredient Pouch");
     private static final Pattern INGREDIENT_LORE_LINE_PATTERN = Pattern.compile(
             "^§f(\\d+) x (?:§r)?§7([^§]*)(?:§r)?(?:§[3567])? \\[(?:§r)?§([8bde])✫(?:§r)?(§8)?✫(?:§r)?(§8)?✫(?:§r)?§[3567]\\]$");
 
@@ -33,7 +34,7 @@ public final class IngredientPouchAnnotator implements ItemAnnotator {
         List<Pair<IngredientInfo, Integer>> ingredients = new ArrayList<>();
         List<StyledText> lore = LoreUtils.getLore(itemStack);
         for (StyledText line : lore) {
-            Matcher matcher = line.match(INGREDIENT_LORE_LINE_PATTERN);
+            Matcher matcher = line.getMatcher(INGREDIENT_LORE_LINE_PATTERN, PartStyle.StyleType.FULL);
             if (!matcher.matches()) continue;
 
             int count = Integer.parseInt(matcher.group(1));

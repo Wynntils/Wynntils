@@ -14,7 +14,6 @@ import com.wynntils.core.notifications.MessageContainer;
 import com.wynntils.core.text.StyledText;
 import com.wynntils.mc.event.SubtitleSetTextEvent;
 import com.wynntils.models.worlds.event.WorldStateEvent;
-import com.wynntils.utils.mc.ComponentUtils;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import net.minecraft.network.chat.Component;
@@ -51,10 +50,12 @@ public class InventoryRedirectFeature extends Feature {
         }
 
         Component component = event.getComponent();
-        StyledText styledText = ComponentUtils.getCoded(component);
+        StyledText styledText = StyledText.fromComponent(component);
 
         if (redirectIngredientPouch.get()) {
-            if (styledText.match(INGREDIENT_POUCH_PICKUP_PATTERN).matches()) {
+            if (styledText
+                    .getMatcher(INGREDIENT_POUCH_PICKUP_PATTERN, PartStyle.StyleType.FULL)
+                    .matches()) {
                 event.setCanceled(true);
                 Managers.Notification.queueMessage(styledText);
                 return;
@@ -62,7 +63,7 @@ public class InventoryRedirectFeature extends Feature {
         }
 
         if (redirectEmeraldPouch.get()) {
-            Matcher matcher = styledText.match(EMERALD_POUCH_PICKUP_PATTERN);
+            Matcher matcher = styledText.getMatcher(EMERALD_POUCH_PICKUP_PATTERN, PartStyle.StyleType.FULL);
             if (matcher.matches()) {
                 event.setCanceled(true);
 
@@ -83,11 +84,11 @@ public class InventoryRedirectFeature extends Feature {
         }
 
         if (redirectPotionStack.get()) {
-            Matcher matcher = styledText.match(POTION_STACK_PATTERN);
+            Matcher matcher = styledText.getMatcher(POTION_STACK_PATTERN, PartStyle.StyleType.FULL);
             if (matcher.matches()) {
                 event.setCanceled(true);
                 String potionCount = matcher.group(1);
-                StyledText potionMessage = StyledText.of(String.format("§a+%s Potion Charges", potionCount));
+                StyledText potionMessage = StyledText.fromString(String.format("§a+%s Potion Charges", potionCount));
                 Managers.Notification.queueMessage(potionMessage);
 
                 return;

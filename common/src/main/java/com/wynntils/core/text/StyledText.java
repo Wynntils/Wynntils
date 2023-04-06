@@ -9,6 +9,7 @@ import com.wynntils.utils.mc.ComponentUtils;
 import com.wynntils.utils.type.IterationDecision;
 import com.wynntils.utils.type.Pair;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.Deque;
 import java.util.LinkedList;
@@ -26,7 +27,10 @@ import net.minecraft.network.chat.Style;
 import org.apache.commons.lang3.ArrayUtils;
 
 public final class StyledText {
+    public static final StyledText EMPTY = new StyledText(List.of(), List.of(), List.of());
+
     private final Component temporaryWorkaround;
+    private final String temporaryWorkaroundString;
 
     private final List<StyledTextPart> parts;
 
@@ -43,6 +47,7 @@ public final class StyledText {
                 .map(styledTextPart -> new StyledTextPart(styledTextPart, this))
                 .collect(Collectors.toList());
         this.temporaryWorkaround = temporaryWorkaround;
+        this.temporaryWorkaroundString = null;
         this.clickEvents = new ArrayList<>(clickEvents);
         this.hoverEvents = new ArrayList<>(hoverEvents);
     }
@@ -57,6 +62,24 @@ public final class StyledText {
 
         // We can't know the component, just use our own representation
         this.temporaryWorkaround = getComponent();
+        this.temporaryWorkaroundString = null;
+    }
+
+    private StyledText(
+            List<StyledTextPart> parts,
+            List<ClickEvent> clickEvents,
+            List<HoverEvent> hoverEvents,
+            String temporaryWorkaroundString) {
+        this.parts = parts.stream()
+                .filter(styledTextPart -> !styledTextPart.isEmpty())
+                .map(styledTextPart -> new StyledTextPart(styledTextPart, this))
+                .collect(Collectors.toList());
+        this.clickEvents = new ArrayList<>(clickEvents);
+        this.hoverEvents = new ArrayList<>(hoverEvents);
+
+        // We can't know the component, just use our own representation
+        this.temporaryWorkaroundString = temporaryWorkaroundString;
+        this.temporaryWorkaround = null;
     }
 
     public static StyledText fromComponent(Component component) {
@@ -105,14 +128,18 @@ public final class StyledText {
 
     public static StyledText fromString(String codedString) {
         return new StyledText(
-                StyledTextPart.fromCodedString(codedString, Style.EMPTY, null, Style.EMPTY), List.of(), List.of());
+                StyledTextPart.fromCodedString(codedString, Style.EMPTY, null, Style.EMPTY),
+                List.of(),
+                List.of(),
+                codedString);
     }
 
     // We don't want to expose the actual string to the outside world
     // If you need to do an operation with this string, implement it as a method
     public String getString(PartStyle.StyleType type) {
         if (type == PartStyle.StyleType.FULL) {
-            return ComponentUtils.getCoded(temporaryWorkaround);
+            return Objects.requireNonNullElseGet(
+                    temporaryWorkaroundString, () -> ComponentUtils.getCoded(temporaryWorkaround));
         }
 
         StringBuilder builder = new StringBuilder();
@@ -124,6 +151,16 @@ public final class StyledText {
         }
 
         return builder.toString();
+    }
+
+    // FIXME: This should be removed in favor of returning a new StyledText stripping the formatting
+    public String withoutFormatting() {
+        return getString(PartStyle.StyleType.NONE);
+    }
+
+    // FIXME: This should be removed in favor of not leaking the internal representation
+    public String getInternalCodedStringRepresentation() {
+        return getString(PartStyle.StyleType.FULL);
     }
 
     public MutableComponent getComponent() {
@@ -272,6 +309,24 @@ public final class StyledText {
         return endsWith(styledText.getString(styleType), styleType);
     }
 
+    // FIXME: This should be removed in favor of using the equals method (most likely... I can see some use cases for
+    // this when using StyleType.NONE)
+    public boolean equalsString(String codedString, PartStyle.StyleType styleType) {
+        return getString(styleType).equals(codedString);
+    }
+
+    public boolean equalsString(String codedString) {
+        return equalsString(codedString, PartStyle.StyleType.DEFAULT);
+    }
+
+    public boolean equalsString(StyledText styledText, PartStyle.StyleType styleType) {
+        return getString(styleType).equals(styledText.getString(styleType));
+    }
+
+    public boolean equalsString(StyledText styledText) {
+        return equalsString(styledText.getString(PartStyle.StyleType.DEFAULT), PartStyle.StyleType.DEFAULT);
+    }
+
     public Matcher getMatcher(Pattern pattern) {
         return getMatcher(pattern, PartStyle.StyleType.DEFAULT);
     }
@@ -294,6 +349,12 @@ public final class StyledText {
 
     public StyledText prepend(String codedString) {
         return prepend(StyledText.fromString(codedString));
+    }
+
+    public StyledText[] split(String stringSeparator) {
+        return Arrays.stream(this.getString(PartStyle.StyleType.INCLUDE_EVENTS).split(stringSeparator))
+                .map(StyledText::fromString)
+                .toArray(StyledText[]::new);
     }
 
     public StyledText iterate(BiFunction<StyledTextPart, List<StyledTextPart>, IterationDecision> function) {

@@ -6,6 +6,7 @@ package com.wynntils.core.chat;
 
 import com.wynntils.core.components.Manager;
 import com.wynntils.core.components.Managers;
+import com.wynntils.core.text.PartStyle;
 import com.wynntils.features.chat.ChatTabsFeature;
 import com.wynntils.handlers.chat.event.ChatMessageReceivedEvent;
 import com.wynntils.handlers.chat.type.RecipientType;
@@ -222,7 +223,9 @@ public final class ChatTabManager extends Manager {
 
         Optional<Pattern> regex = chatTab.getCustomRegex();
         return regex.isEmpty()
-                || event.getOriginalCodedMessage().match(regex.get()).matches();
+                || event.getOriginalCodedMessage()
+                        .getMatcher(regex.get(), PartStyle.StyleType.FULL)
+                        .matches();
     }
 
     private boolean matchMessageFromEvent(ChatTab chatTab, ClientsideMessageEvent event) {
@@ -235,6 +238,8 @@ public final class ChatTabManager extends Manager {
         Optional<Pattern> regex = chatTab.getCustomRegex();
         if (regex.isEmpty()) return true;
 
-        return event.getOriginalCodedMessage().match(regex.get()).matches();
+        return event.getOriginalStyledText()
+                .getMatcher(regex.get(), PartStyle.StyleType.FULL)
+                .matches();
     }
 }

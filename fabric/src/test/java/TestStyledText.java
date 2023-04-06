@@ -58,7 +58,7 @@ public class TestStyledText {
                 "StyledText.getString(DEFAULT) returned an unexpected value.");
         Assertions.assertEquals(
                 expectedNoFormat,
-                styledText.getString(PartStyle.StyleType.NONE),
+                styledText.withoutFormatting(),
                 "StyledText.getString(NONE) returned an unexpected value.");
     }
 
@@ -139,7 +139,7 @@ public class TestStyledText {
 
         Assertions.assertEquals(
                 expected,
-                styledText.getNormalized().getString(PartStyle.StyleType.NONE),
+                styledText.getNormalized().withoutFormatting(),
                 "StyledText.getNormalized().getString() returned an unexpected value.");
     }
 
@@ -152,7 +152,7 @@ public class TestStyledText {
 
         Assertions.assertEquals(
                 expected,
-                styledText.trim().getString(PartStyle.StyleType.NONE),
+                styledText.trim().withoutFormatting(),
                 "StyledText.getString() returned an unexpected value.");
     }
 
@@ -258,9 +258,7 @@ public class TestStyledText {
         StyledText joinedStyled = StyledText.join(", ", List.of(firstStyled, secondStyled));
 
         Assertions.assertEquals(
-                expected,
-                joinedStyled.getString(PartStyle.StyleType.NONE),
-                "StyledText.join() did not produce a correct result.");
+                expected, joinedStyled.withoutFormatting(), "StyledText.join() did not produce a correct result.");
     }
 
     @Test
@@ -273,9 +271,7 @@ public class TestStyledText {
         StyledText joinedStyled = StyledText.concat(List.of(firstStyled, secondStyled));
 
         Assertions.assertEquals(
-                expected,
-                joinedStyled.getString(PartStyle.StyleType.NONE),
-                "StyledText.concat() did not produce a correct result.");
+                expected, joinedStyled.withoutFormatting(), "StyledText.concat() did not produce a correct result.");
     }
 
     @Test
@@ -288,9 +284,7 @@ public class TestStyledText {
         StyledText joinedStyled = firstStyled.append(secondStyled);
 
         Assertions.assertEquals(
-                expected,
-                joinedStyled.getString(PartStyle.StyleType.NONE),
-                "StyledText.append() did not produce a correct result.");
+                expected, joinedStyled.withoutFormatting(), "StyledText.append() did not produce a correct result.");
     }
 
     @Test
@@ -303,9 +297,7 @@ public class TestStyledText {
         StyledText joinedStyled = secondStyled.prepend(firstStyled);
 
         Assertions.assertEquals(
-                expected,
-                joinedStyled.getString(PartStyle.StyleType.NONE),
-                "StyledText.prepend() did not produce a correct result.");
+                expected, joinedStyled.withoutFormatting(), "StyledText.prepend() did not produce a correct result.");
     }
 
     @Test

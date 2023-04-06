@@ -58,7 +58,7 @@ public abstract class WynntilsMenuScreenBase extends WynntilsScreen {
         FontRenderer.getInstance()
                 .renderAlignedTextInBox(
                         poseStack,
-                        StyledText.of(version),
+                        StyledText.fromString(version),
                         59f * 1.3f,
                         (Texture.QUEST_BOOK_BACKGROUND.width() / 2f - 30f) * 1.3f,
                         Texture.QUEST_BOOK_BACKGROUND.height() * 1.3f - 6f,
@@ -80,7 +80,7 @@ public abstract class WynntilsMenuScreenBase extends WynntilsScreen {
         FontRenderer.getInstance()
                 .renderText(
                         poseStack,
-                        StyledText.of(titleString),
+                        StyledText.fromString(titleString),
                         5,
                         18,
                         CommonColors.YELLOW,
@@ -94,7 +94,7 @@ public abstract class WynntilsMenuScreenBase extends WynntilsScreen {
         FontRenderer.getInstance()
                 .renderAlignedTextInBox(
                         poseStack,
-                        StyledText.of(description),
+                        StyledText.fromString(description),
                         20,
                         Texture.QUEST_BOOK_BACKGROUND.width() / 2f - 10,
                         140,

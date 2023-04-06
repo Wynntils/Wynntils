@@ -46,7 +46,7 @@ public class ChatCoordinatesFeature extends Feature {
 
     private static Component insertCoordinateComponents(Component message) {
         // no coordinate clickables to insert
-        if (!LocationUtils.strictCoordinateMatcher(ComponentUtils.getCoded(message))
+        if (!LocationUtils.strictCoordinateMatcher(StyledText.fromComponent(message))
                 .find()) return message;
 
         List<MutableComponent> components =
@@ -56,7 +56,7 @@ public class ChatCoordinatesFeature extends Feature {
         MutableComponent temp = Component.literal("");
 
         for (Component comp : components) {
-            Matcher m = LocationUtils.strictCoordinateMatcher((ComponentUtils.getCoded(comp)));
+            Matcher m = LocationUtils.strictCoordinateMatcher(StyledText.fromComponent(comp));
             if (!m.find()) {
                 Component newComponent = comp.copy();
                 temp.append(newComponent);
@@ -64,7 +64,7 @@ public class ChatCoordinatesFeature extends Feature {
             }
 
             do {
-                StyledText text = ComponentUtils.getCoded(comp);
+                StyledText text = StyledText.fromComponent(comp);
                 Style style = comp.getStyle();
 
                 Optional<Location> location = LocationUtils.parseFromString(m.group());
@@ -82,11 +82,11 @@ public class ChatCoordinatesFeature extends Feature {
                 Component compassComponent = ComponentUtils.createLocationComponent(location.get());
                 temp.append(compassComponent);
 
-                comp = Component.literal(ComponentUtils.getLastPartCodes(ComponentUtils.getCoded(preText))
+                comp = Component.literal(ComponentUtils.getLastPartCodes(StyledText.fromComponent(preText))
                                 + text.getInternalCodedStringRepresentation().substring(m.end()))
                         .withStyle(style);
                 m = LocationUtils.strictCoordinateMatcher(
-                        ComponentUtils.getCoded(comp)); // recreate matcher for new substring
+                        StyledText.fromComponent(comp)); // recreate matcher for new substring
             } while (m.find()); // search for multiple items in the same message
 
             temp.append(comp); // leftover text after item(s)

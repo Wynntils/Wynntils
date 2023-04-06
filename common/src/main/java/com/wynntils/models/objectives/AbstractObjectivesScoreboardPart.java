@@ -6,6 +6,7 @@ package com.wynntils.models.objectives;
 
 import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.components.Models;
+import com.wynntils.core.text.PartStyle;
 import com.wynntils.core.text.StyledText;
 import com.wynntils.handlers.scoreboard.ScoreboardPart;
 import com.wynntils.handlers.scoreboard.ScoreboardSegment;
@@ -23,7 +24,7 @@ public abstract class AbstractObjectivesScoreboardPart extends ScoreboardPart {
     private static final Pattern OBJECTIVE_PATTERN_MULTILINE_END = Pattern.compile(".*§f(\\d+)§7/(\\d+)$");
     private static final Pattern SEGMENT_HEADER = Pattern.compile("^§.§l[A-Za-z ]+:.*$");
 
-    private static final StyledText ALL_DONE = StyledText.of("§c- §7All done");
+    private static final StyledText ALL_DONE = StyledText.fromString("§c- §7All done");
 
     protected List<WynnObjective> parseObjectives(ScoreboardSegment segment) {
         List<WynnObjective> parsedObjectives = new ArrayList<>();
@@ -32,12 +33,14 @@ public abstract class AbstractObjectivesScoreboardPart extends ScoreboardPart {
         StringBuilder multiLine = new StringBuilder();
 
         for (StyledText line : segment.getContent()) {
-            if (line.match(OBJECTIVE_PATTERN_ONE_LINE).matches()) {
+            if (line.getMatcher(OBJECTIVE_PATTERN_ONE_LINE, PartStyle.StyleType.FULL)
+                    .matches()) {
                 actualContent.add(line);
                 continue;
             }
 
-            if (line.match(OBJECTIVE_PATTERN_MULTILINE_START).matches()) {
+            if (line.getMatcher(OBJECTIVE_PATTERN_MULTILINE_START, PartStyle.StyleType.FULL)
+                    .matches()) {
                 if (!multiLine.isEmpty()) {
                     WynntilsMod.error("ObjectiveManager: Multi-line objective start repeatedly:");
                     WynntilsMod.error("Already got: " + multiLine);
@@ -53,8 +56,10 @@ public abstract class AbstractObjectivesScoreboardPart extends ScoreboardPart {
                 multiLine.append(line);
             }
 
-            if (line.match(OBJECTIVE_PATTERN_MULTILINE_END).matches()) {
-                actualContent.add(StyledText.of(multiLine.toString().trim().replaceAll(" +", " ")));
+            if (line.getMatcher(OBJECTIVE_PATTERN_MULTILINE_END, PartStyle.StyleType.FULL)
+                    .matches()) {
+                actualContent.add(
+                        StyledText.fromString(multiLine.toString().trim().replaceAll(" +", " ")));
                 multiLine = new StringBuilder();
             }
         }
@@ -64,7 +69,7 @@ public abstract class AbstractObjectivesScoreboardPart extends ScoreboardPart {
         }
 
         for (StyledText line : actualContent) {
-            Matcher objectiveMatcher = line.match(OBJECTIVE_PATTERN_ONE_LINE);
+            Matcher objectiveMatcher = line.getMatcher(OBJECTIVE_PATTERN_ONE_LINE, PartStyle.StyleType.FULL);
             if (!objectiveMatcher.matches()) {
                 WynntilsMod.error("ObjectiveManager: Broken objective stored: " + line);
                 continue;

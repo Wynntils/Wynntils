@@ -73,7 +73,7 @@ public class OverlayEntry extends ContainerObjectSelectionList.Entry<OverlayEntr
         FontRenderer.getInstance()
                 .renderText(
                         poseStack,
-                        StyledText.of(translatedName),
+                        StyledText.fromString(translatedName),
                         3,
                         (OverlayList.getItemHeight() - renderHeightForOverlayName / 2f) / 2f - PADDING / 2f,
                         width - PADDING,

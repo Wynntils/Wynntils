@@ -8,6 +8,7 @@ import com.wynntils.core.components.Models;
 import com.wynntils.core.config.Category;
 import com.wynntils.core.config.ConfigCategory;
 import com.wynntils.core.features.Feature;
+import com.wynntils.core.text.PartStyle;
 import com.wynntils.handlers.chat.event.ChatMessageReceivedEvent;
 import com.wynntils.mc.event.ChatSentEvent;
 import com.wynntils.mc.event.ScreenOpenedEvent;
@@ -26,10 +27,14 @@ public class TradeMarketPriceConversionFeature extends Feature {
 
     @SubscribeEvent
     public void onChatMessageReceive(ChatMessageReceivedEvent event) {
-        if (event.getOriginalCodedMessage().match(PRICE_PATTERN).matches()) {
+        if (event.getOriginalCodedMessage()
+                .getMatcher(PRICE_PATTERN, PartStyle.StyleType.FULL)
+                .matches()) {
             shouldConvert = true;
         }
-        if (event.getOriginalCodedMessage().match(CANCELLED_PATTERN).matches()) {
+        if (event.getOriginalCodedMessage()
+                .getMatcher(CANCELLED_PATTERN, PartStyle.StyleType.FULL)
+                .matches()) {
             shouldConvert = false;
         }
     }

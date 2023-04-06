@@ -4,6 +4,7 @@
  */
 package com.wynntils.models.items.annotators.game;
 
+import com.wynntils.core.text.PartStyle;
 import com.wynntils.core.text.StyledText;
 import com.wynntils.handlers.item.ItemAnnotation;
 import com.wynntils.handlers.item.ItemAnnotator;
@@ -26,7 +27,7 @@ public final class PotionAnnotator implements ItemAnnotator {
 
     @Override
     public ItemAnnotation getAnnotation(ItemStack itemStack, StyledText name) {
-        Matcher matcher = name.match(POTION_PATTERN);
+        Matcher matcher = name.getMatcher(POTION_PATTERN, PartStyle.StyleType.FULL);
         if (!matcher.matches()) return null;
 
         String potionType = matcher.group(1);

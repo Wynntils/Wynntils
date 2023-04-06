@@ -4,6 +4,7 @@
  */
 package com.wynntils.models.items.annotators.game;
 
+import com.wynntils.core.text.PartStyle;
 import com.wynntils.core.text.StyledText;
 import com.wynntils.handlers.item.ItemAnnotation;
 import com.wynntils.handlers.item.ItemAnnotator;
@@ -19,7 +20,7 @@ public final class MultiHealthPotionAnnotator implements ItemAnnotator {
 
     @Override
     public ItemAnnotation getAnnotation(ItemStack itemStack, StyledText name) {
-        Matcher matcher = name.match(MULTI_HEALTH_POTION_PATTERN);
+        Matcher matcher = name.getMatcher(MULTI_HEALTH_POTION_PATTERN, PartStyle.StyleType.FULL);
         if (!matcher.matches()) return null;
 
         int hearts = Integer.parseInt(matcher.group(1));

@@ -14,7 +14,6 @@ import com.wynntils.handlers.chat.event.ChatMessageReceivedEvent;
 import com.wynntils.mc.event.ContainerSetSlotEvent;
 import com.wynntils.mc.event.ScreenOpenedEvent;
 import com.wynntils.screens.base.widgets.WynntilsButton;
-import com.wynntils.utils.mc.ComponentUtils;
 import com.wynntils.utils.mc.McUtils;
 import com.wynntils.utils.wynn.ContainerUtils;
 import java.util.ArrayList;
@@ -54,7 +53,7 @@ public class TradeMarketBulkSellFeature extends Feature {
     @SubscribeEvent
     public void onSellDialogueOpened(ScreenOpenedEvent e) {
         if (!(e.getScreen() instanceof ContainerScreen cs)) return;
-        if (!ComponentUtils.getUnformatted(cs.getTitle()).equals(SELL_DIALOGUE_TITLE)) return;
+        if (!StyledText.fromComponent(cs.getTitle()).withoutFormatting().equals(SELL_DIALOGUE_TITLE)) return;
 
         sellButtons.clear();
         sellButtons.add(new SellButton(cs.leftPos - BUTTON_WIDTH, cs.topPos, 0, true));
@@ -74,7 +73,7 @@ public class TradeMarketBulkSellFeature extends Feature {
     @SubscribeEvent
     public void onSellDialogueUpdated(ContainerSetSlotEvent e) {
         if (!(McUtils.mc().screen instanceof ContainerScreen cs)) return;
-        if (!ComponentUtils.getUnformatted(cs.getTitle()).equals(SELL_DIALOGUE_TITLE)) return;
+        if (!StyledText.fromComponent(cs.getTitle()).withoutFormatting().equals(SELL_DIALOGUE_TITLE)) return;
 
         String itemName = getItemName(cs);
         if (itemName == null) {
@@ -89,7 +88,8 @@ public class TradeMarketBulkSellFeature extends Feature {
     @SubscribeEvent
     public void onChatMessage(ChatMessageReceivedEvent e) {
         if (!shouldSend) return;
-        if (!ComponentUtils.getUnformatted(e.getMessage())
+        if (!StyledText.fromComponent(e.getMessage())
+                .withoutFormatting()
                 .contains("Type the amount you wish to sell or type 'cancel' to cancel:")) return;
 
         WynntilsMod.info("Trying to bulk sell " + amountToSend + " items");
@@ -101,7 +101,7 @@ public class TradeMarketBulkSellFeature extends Feature {
         ItemStack is = cs.getMenu().getSlot(SELLABLE_ITEM_SLOT).getItem();
         if (is == ItemStack.EMPTY) return null;
         if (is.getHoverName().toString().contains("Click an Item to sell")) return null;
-        Matcher m = ComponentUtils.getCoded(is.getHoverName()).match(ITEM_NAME_PATTERN);
+        Matcher m = StyledText.fromComponent(is.getHoverName()).getMatcher(ITEM_NAME_PATTERN, PartStyle.StyleType.FULL);
 
         if (!m.matches()) return null;
         return m.group(2);

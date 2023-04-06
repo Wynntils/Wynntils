@@ -18,7 +18,7 @@ public abstract class GuideItemStack extends ItemStack {
     protected GuideItemStack(ItemStack itemStack, ItemAnnotation annotation, String baseName) {
         super(itemStack.getItem(), 1);
         this.setTag(itemStack.getTag());
-        Handlers.Item.updateItem(this, annotation, StyledText.of(baseName));
+        Handlers.Item.updateItem(this, annotation, StyledText.fromString(baseName));
     }
 
     protected void appendObtainInfo(List<Component> tooltipLines, List<ItemObtainInfo> itemObtainInfos) {

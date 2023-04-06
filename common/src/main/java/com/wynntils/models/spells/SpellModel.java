@@ -7,6 +7,7 @@ package com.wynntils.models.spells;
 import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.components.Handlers;
 import com.wynntils.core.components.Model;
+import com.wynntils.core.text.PartStyle;
 import com.wynntils.core.text.StyledText;
 import com.wynntils.handlers.item.event.ItemRenamedEvent;
 import com.wynntils.mc.event.SubtitleSetTextEvent;
@@ -52,7 +53,7 @@ public class SpellModel extends Model {
             return;
         }
 
-        Matcher spellMatcher = msg.match(SPELL_CAST);
+        Matcher spellMatcher = msg.getMatcher(SPELL_CAST, PartStyle.StyleType.FULL);
         if (spellMatcher.matches()) {
             SpellType spellType = SpellType.fromName(spellMatcher.group(1));
             int manaCost = Integer.parseInt(spellMatcher.group(2));

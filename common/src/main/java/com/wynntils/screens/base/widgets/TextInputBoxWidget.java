@@ -136,7 +136,7 @@ public class TextInputBoxWidget extends AbstractWidget {
         FontRenderer.getInstance()
                 .renderAlignedTextInBox(
                         poseStack,
-                        StyledText.of(firstPortion),
+                        StyledText.fromString(firstPortion),
                         textPadding,
                         this.width - lastWidth - highlightedWidth,
                         textPadding,
@@ -150,7 +150,7 @@ public class TextInputBoxWidget extends AbstractWidget {
         FontRenderer.getInstance()
                 .renderAlignedHighlightedTextInBox(
                         poseStack,
-                        StyledText.of(highlightedPortion),
+                        StyledText.fromString(highlightedPortion),
                         textPadding + firstWidth,
                         this.width - lastWidth,
                         textPadding,
@@ -164,7 +164,7 @@ public class TextInputBoxWidget extends AbstractWidget {
         FontRenderer.getInstance()
                 .renderAlignedTextInBox(
                         poseStack,
-                        StyledText.of(lastPortion),
+                        StyledText.fromString(lastPortion),
                         textPadding + firstWidth + highlightedWidth,
                         this.width,
                         textPadding,

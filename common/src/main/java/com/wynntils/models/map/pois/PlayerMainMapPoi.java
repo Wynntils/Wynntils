@@ -99,7 +99,7 @@ public class PlayerMainMapPoi extends PlayerPoiBase {
                 .renderText(
                         poseStack,
                         bufferSource,
-                        StyledText.of(user.getName()),
+                        StyledText.fromString(user.getName()),
                         renderX - (width - playerHeadRenderSize) / 2f,
                         renderY + playerHeadRenderSize + 8,
                         user.getRelationColor(),

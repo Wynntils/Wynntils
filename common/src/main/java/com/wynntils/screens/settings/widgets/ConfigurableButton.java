@@ -43,7 +43,8 @@ public class ConfigurableButton extends WynntilsButton {
         FontRenderer.getInstance()
                 .renderText(
                         poseStack,
-                        StyledText.of((isOverlay ? "   " : "") + ((Translatable) configurable).getTranslatedName()),
+                        StyledText.fromString(
+                                (isOverlay ? "   " : "") + ((Translatable) configurable).getTranslatedName()),
                         this.getX(),
                         this.getY(),
                         color,

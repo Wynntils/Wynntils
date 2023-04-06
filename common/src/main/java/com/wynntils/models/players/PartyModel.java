@@ -137,7 +137,7 @@ public final class PartyModel extends Model {
     }
 
     private boolean tryParsePartyMessages(StyledText coded) {
-        if (coded.match(PARTY_CREATE_SELF).matches()) {
+        if (coded.getMatcher(PARTY_CREATE_SELF, PartStyle.StyleType.FULL).matches()) {
             WynntilsMod.info("Player created a new party.");
 
             inParty = true;
@@ -149,23 +149,26 @@ public final class PartyModel extends Model {
             return true;
         }
 
-        if (coded.match(PARTY_DISBAND_ALL).matches()
-                || coded.match(PARTY_LEAVE_SELF_KICK).matches()
-                || coded.match(PARTY_LEAVE_SELF_ALREADYLEFT).matches()
-                || coded.match(PARTY_DISBAND_SELF).matches()) {
+        if (coded.getMatcher(PARTY_DISBAND_ALL, PartStyle.StyleType.FULL).matches()
+                || coded.getMatcher(PARTY_LEAVE_SELF_KICK, PartStyle.StyleType.FULL)
+                        .matches()
+                || coded.getMatcher(PARTY_LEAVE_SELF_ALREADYLEFT, PartStyle.StyleType.FULL)
+                        .matches()
+                || coded.getMatcher(PARTY_DISBAND_SELF, PartStyle.StyleType.FULL)
+                        .matches()) {
             WynntilsMod.info("Player left the party.");
 
             resetData(); // (!) resetData() already posts events for both HadesRelationsUpdateEvent and PartyEvent
             return true;
         }
 
-        if (coded.match(PARTY_JOIN_SELF).matches()) {
+        if (coded.getMatcher(PARTY_JOIN_SELF, PartStyle.StyleType.FULL).matches()) {
             WynntilsMod.info("Player joined a party.");
             requestData();
             return true;
         }
 
-        Matcher matcher = coded.match(PARTY_JOIN_OTHER);
+        Matcher matcher = coded.getMatcher(PARTY_JOIN_OTHER, PartStyle.StyleType.FULL);
         if (matcher.matches()) {
             String player = matcher.group(1);
 
@@ -178,7 +181,7 @@ public final class PartyModel extends Model {
             return true;
         }
 
-        matcher = coded.match(PARTY_JOIN_OTHER_SWITCH);
+        matcher = coded.getMatcher(PARTY_JOIN_OTHER_SWITCH, PartStyle.StyleType.FULL);
         if (matcher.matches()) {
             String player = matcher.group(1);
 
@@ -191,7 +194,7 @@ public final class PartyModel extends Model {
             return true;
         }
 
-        matcher = coded.match(PARTY_LEAVE_OTHER);
+        matcher = coded.getMatcher(PARTY_LEAVE_OTHER, PartStyle.StyleType.FULL);
         if (matcher.matches()) {
             String player = matcher.group(1);
 
@@ -204,7 +207,7 @@ public final class PartyModel extends Model {
             return true;
         }
 
-        matcher = coded.match(PARTY_PROMOTE_OTHER);
+        matcher = coded.getMatcher(PARTY_PROMOTE_OTHER, PartStyle.StyleType.FULL);
         if (matcher.matches()) {
             String player = matcher.group(1);
 
@@ -214,7 +217,7 @@ public final class PartyModel extends Model {
             return true;
         }
 
-        matcher = coded.match(PARTY_PROMOTE_SELF);
+        matcher = coded.getMatcher(PARTY_PROMOTE_SELF, PartStyle.StyleType.FULL);
         if (matcher.matches()) {
             WynntilsMod.info("Player has been promoted to party leader.");
 
@@ -222,7 +225,7 @@ public final class PartyModel extends Model {
             return true;
         }
 
-        matcher = coded.match(PARTY_INVITED);
+        matcher = coded.getMatcher(PARTY_INVITED, PartStyle.StyleType.FULL);
         if (matcher.matches()) {
             String inviter = matcher.group(1);
             WynntilsMod.info("Player has been invited to party by " + inviter);
@@ -231,7 +234,7 @@ public final class PartyModel extends Model {
             return true;
         }
 
-        matcher = coded.match(PARTY_KICK_OTHER);
+        matcher = coded.getMatcher(PARTY_KICK_OTHER, PartStyle.StyleType.FULL);
         if (matcher.matches()) {
             WynntilsMod.info("Other player was kicked from player's party");
 
@@ -262,7 +265,7 @@ public final class PartyModel extends Model {
     }
 
     private boolean tryParseNoPartyMessage(StyledText coded) {
-        if (coded.match(PARTY_LIST_SELF_FAILED).matches()) {
+        if (coded.getMatcher(PARTY_LIST_SELF_FAILED, PartStyle.StyleType.FULL).matches()) {
             resetData();
             WynntilsMod.info("Player is not in a party.");
             return true;
@@ -272,7 +275,7 @@ public final class PartyModel extends Model {
     }
 
     private boolean tryParsePartyList(StyledText coded) {
-        Matcher matcher = coded.match(PARTY_LIST_ALL);
+        Matcher matcher = coded.getMatcher(PARTY_LIST_ALL, PartStyle.StyleType.FULL);
         if (!matcher.matches()) return false;
 
         String[] partyList = matcher.group(1).split(", ");
@@ -284,7 +287,7 @@ public final class PartyModel extends Model {
                 partyLeader = m.group(1);
             }
 
-            partyMembers.add(ComponentUtils.stripFormatting(new StyledText(member)));
+            partyMembers.add(ComponentUtils.stripFormatting(StyledText.fromString(member)));
         }
 
         inParty = true;

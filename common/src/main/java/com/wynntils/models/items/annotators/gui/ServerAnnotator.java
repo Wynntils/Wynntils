@@ -4,6 +4,7 @@
  */
 package com.wynntils.models.items.annotators.gui;
 
+import com.wynntils.core.text.PartStyle;
 import com.wynntils.core.text.StyledText;
 import com.wynntils.handlers.item.ItemAnnotation;
 import com.wynntils.handlers.item.ItemAnnotator;
@@ -17,7 +18,7 @@ public final class ServerAnnotator implements ItemAnnotator {
 
     @Override
     public ItemAnnotation getAnnotation(ItemStack itemStack, StyledText name) {
-        Matcher matcher = name.match(SERVER_ITEM_PATTERN);
+        Matcher matcher = name.getMatcher(SERVER_ITEM_PATTERN, PartStyle.StyleType.FULL);
         if (!matcher.matches()) return null;
 
         int serverId = Integer.parseInt(matcher.group(1));

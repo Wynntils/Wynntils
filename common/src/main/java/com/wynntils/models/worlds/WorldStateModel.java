@@ -15,7 +15,6 @@ import com.wynntils.mc.event.PlayerInfoFooterChangedEvent;
 import com.wynntils.mc.event.PlayerTeleportEvent;
 import com.wynntils.models.worlds.event.WorldStateEvent;
 import com.wynntils.models.worlds.type.WorldState;
-import com.wynntils.utils.mc.ComponentUtils;
 import com.wynntils.utils.mc.PosUtils;
 import java.util.List;
 import java.util.UUID;
@@ -34,7 +33,7 @@ public final class WorldStateModel extends Model {
     private static final Position CHARACTER_SELECTION_POSITION = new PositionImpl(-1337.5, 16.2, -1120.5);
     private static final Pattern WYNNCRAFT_SERVER_PATTERN = Pattern.compile("^(.*)\\.wynncraft\\.(?:com|net|org)$");
     private static final String WYNNCRAFT_BETA_NAME = "beta";
-    public static final StyledText CHARACTER_SELECTION_TITLE = StyledText.of("§8§lSelect a Character");
+    public static final StyledText CHARACTER_SELECTION_TITLE = StyledText.fromString("§8§lSelect a Character");
 
     private StyledText currentTabListFooter = StyledText.EMPTY;
     private String currentWorldName = "";
@@ -118,7 +117,8 @@ public final class WorldStateModel extends Model {
     @SubscribeEvent
     public void onMenuOpened(MenuEvent.MenuOpenedEvent e) {
         if (e.getMenuType() == MenuType.GENERIC_9x3
-                && ComponentUtils.getCoded(e.getTitle()).equals(CHARACTER_SELECTION_TITLE)) {
+                && StyledText.fromComponent(e.getTitle())
+                        .equalsString(CHARACTER_SELECTION_TITLE, PartStyle.StyleType.FULL)) {
             setState(WorldState.CHARACTER_SELECTION);
         }
     }
@@ -131,7 +131,7 @@ public final class WorldStateModel extends Model {
         currentTabListFooter = footer;
 
         if (!footer.isEmpty()) {
-            if (footer.match(HUB_NAME).find()) {
+            if (footer.getMatcher(HUB_NAME, PartStyle.StyleType.FULL).find()) {
                 setState(WorldState.HUB);
             }
         }
@@ -142,8 +142,8 @@ public final class WorldStateModel extends Model {
         if (!e.getId().equals(WORLD_NAME_UUID)) return;
 
         Component displayName = e.getDisplayName();
-        StyledText name = ComponentUtils.getCoded(displayName);
-        Matcher m = name.match(WORLD_NAME);
+        StyledText name = StyledText.fromComponent(displayName);
+        Matcher m = name.getMatcher(WORLD_NAME, PartStyle.StyleType.FULL);
         if (m.find()) {
             String worldName = m.group(1);
             setState(WorldState.WORLD, worldName, !hasJoinedAnyWorld);

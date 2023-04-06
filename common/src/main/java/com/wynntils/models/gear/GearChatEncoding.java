@@ -6,6 +6,7 @@ package com.wynntils.models.gear;
 
 import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.components.Models;
+import com.wynntils.core.text.PartStyle;
 import com.wynntils.core.text.StyledText;
 import com.wynntils.models.elements.type.Powder;
 import com.wynntils.models.gear.type.GearInfo;
@@ -204,7 +205,7 @@ public class GearChatEncoding {
     }
 
     public Matcher gearChatEncodingMatcher(StyledText coded) {
-        return coded.match(ENCODED_PATTERN);
+        return coded.getMatcher(ENCODED_PATTERN, PartStyle.StyleType.FULL);
     }
 
     private String encodeString(String text) {

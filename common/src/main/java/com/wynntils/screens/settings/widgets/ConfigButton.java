@@ -67,10 +67,11 @@ public class ConfigButton extends WynntilsButton {
     public void renderWidget(PoseStack poseStack, int mouseX, int mouseY, float partialTick) {
         resetButton.render(poseStack, mouseX, mouseY, partialTick);
 
-        StyledText displayName = StyledText.of(configHolder.getDisplayName());
+        StyledText displayName = StyledText.fromString(configHolder.getDisplayName());
 
         if (settingsScreen.configOptionContains(configHolder)) {
-            displayName = StyledText.of(ChatFormatting.UNDERLINE + displayName.getInternalCodedStringRepresentation());
+            displayName = StyledText.fromString(
+                    ChatFormatting.UNDERLINE + displayName.getInternalCodedStringRepresentation());
         }
 
         poseStack.pushPose();
@@ -107,10 +108,9 @@ public class ConfigButton extends WynntilsButton {
 
         if (!resetButton.isHoveredOrFocused() && isHovered) {
             String description = configHolder.getDescription();
-            StyledText[] parts = RenderedStringUtils.wrapTextBySize(StyledText.of(description), 200);
-            List<Component> components = Arrays.stream(parts)
-                    .map(s -> (Component) s.asSingleLiteralComponentWithCodedString())
-                    .toList();
+            StyledText[] parts = RenderedStringUtils.wrapTextBySize(StyledText.fromString(description), 200);
+            List<Component> components =
+                    Arrays.stream(parts).map(s -> (Component) s.getComponent()).toList();
 
             RenderUtils.drawTooltipAt(
                     poseStack,

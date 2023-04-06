@@ -39,7 +39,7 @@ public class SprintSegment implements ActionBarSegment {
         // "§4[§8|||Sprint|||§4]" -- flashing
         // "§4[§c|||Sprint|||§4]"
 
-        StyledText sprint = StyledText.of(matcher.group(1));
+        StyledText sprint = StyledText.fromString(matcher.group(1));
         // If the sprint string starts with §[ae] we must start counting from after this
         // formatting, but not if it starts with §[8c]
         int startPos = (sprint.getInternalCodedStringRepresentation().charAt(1) == 'a'

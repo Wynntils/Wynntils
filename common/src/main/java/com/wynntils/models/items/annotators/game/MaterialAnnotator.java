@@ -5,6 +5,7 @@
 package com.wynntils.models.items.annotators.game;
 
 import com.wynntils.core.WynntilsMod;
+import com.wynntils.core.text.PartStyle;
 import com.wynntils.core.text.StyledText;
 import com.wynntils.handlers.item.ItemAnnotation;
 import com.wynntils.handlers.item.ItemAnnotator;
@@ -19,7 +20,7 @@ public final class MaterialAnnotator implements ItemAnnotator {
 
     @Override
     public ItemAnnotation getAnnotation(ItemStack itemStack, StyledText name) {
-        Matcher matcher = name.match(MATERIAL_PATTERN);
+        Matcher matcher = name.getMatcher(MATERIAL_PATTERN, PartStyle.StyleType.FULL);
         if (!matcher.matches()) return null;
 
         String materialSource = matcher.group(1);

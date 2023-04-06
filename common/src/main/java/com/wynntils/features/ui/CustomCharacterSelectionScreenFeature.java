@@ -15,14 +15,13 @@ import com.wynntils.mc.event.ScreenOpenedEvent;
 import com.wynntils.models.worlds.event.WorldStateEvent;
 import com.wynntils.models.worlds.type.WorldState;
 import com.wynntils.screens.characterselector.CharacterSelectorScreen;
-import com.wynntils.utils.mc.ComponentUtils;
 import com.wynntils.utils.mc.McUtils;
 import net.minecraftforge.eventbus.api.EventPriority;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 
 @ConfigCategory(Category.UI)
 public class CustomCharacterSelectionScreenFeature extends Feature {
-    public static final StyledText CHARACTER_SELECTION_TITLE = StyledText.of("§8§lSelect a Character");
+    public static final StyledText CHARACTER_SELECTION_TITLE = StyledText.fromString("§8§lSelect a Character");
 
     @RegisterConfig
     public final Config<Boolean> onlyOpenOnce = new Config<>(false);
@@ -34,7 +33,7 @@ public class CustomCharacterSelectionScreenFeature extends Feature {
         if ((onlyOpenOnce.get() && openedInThisCharacterSelectionState)
                 || Models.WorldState.getCurrentState() != WorldState.CHARACTER_SELECTION) return;
 
-        if (!ComponentUtils.getCoded(event.getScreen().getTitle()).equals(CHARACTER_SELECTION_TITLE)) {
+        if (!StyledText.fromComponent(event.getScreen().getTitle()).equals(CHARACTER_SELECTION_TITLE)) {
             return;
         }
 

@@ -7,6 +7,7 @@ package com.wynntils.models.damage;
 import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.components.Handlers;
 import com.wynntils.core.components.Model;
+import com.wynntils.core.text.PartStyle;
 import com.wynntils.handlers.bossbar.TrackedBar;
 import com.wynntils.handlers.labels.event.EntityLabelChangedEvent;
 import com.wynntils.models.damage.type.DamageDealtEvent;
@@ -51,7 +52,7 @@ public final class DamageModel extends Model {
     public void onLabelChange(EntityLabelChangedEvent event) {
         if (!(event.getEntity() instanceof ArmorStand)) return;
 
-        Matcher matcher = event.getName().match(DAMAGE_LABEL_PATTERN);
+        Matcher matcher = event.getName().getMatcher(DAMAGE_LABEL_PATTERN, PartStyle.StyleType.FULL);
         if (!matcher.find()) return;
 
         Map<DamageType, Integer> damages = new HashMap<>();

@@ -90,7 +90,7 @@ public final class OverlaySelectionScreen extends WynntilsScreen {
         FontRenderer.getInstance()
                 .renderText(
                         poseStack,
-                        StyledText.of(I18n.get("screens.wynntils.overlaySelection.overlays")),
+                        StyledText.fromString(I18n.get("screens.wynntils.overlaySelection.overlays")),
                         5,
                         4,
                         CommonColors.WHITE,

@@ -4,6 +4,7 @@
  */
 package com.wynntils.models.containers.type;
 
+import com.wynntils.core.text.PartStyle;
 import com.wynntils.core.text.StyledText;
 import java.util.regex.Pattern;
 
@@ -36,7 +37,7 @@ public enum SearchableContainerType {
 
     public static SearchableContainerType getContainerType(StyledText title) {
         for (SearchableContainerType type : SearchableContainerType.values()) {
-            if (title.match(type.titlePattern).matches()) {
+            if (title.getMatcher(type.titlePattern, PartStyle.StyleType.FULL).matches()) {
                 return type;
             }
         }

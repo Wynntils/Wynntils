@@ -101,10 +101,11 @@ public class PowderSpecialBarOverlayFeature extends Feature {
             StyledText text;
             if (powderSpecialType == null) {
                 color = CommonColors.GRAY;
-                text = StyledText.of("Unknown");
+                text = StyledText.fromString("Unknown");
             } else {
                 color = powderSpecialType.getColor();
-                text = StyledText.of(powderSpecialType.getColoredSymbol() + " " + (int) powderSpecialCharge + "%");
+                text = StyledText.fromString(
+                        powderSpecialType.getColoredSymbol() + " " + (int) powderSpecialCharge + "%");
             }
 
             BufferedFontRenderer.getInstance()

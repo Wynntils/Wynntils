@@ -101,7 +101,7 @@ public final class ChatHandler extends Handler {
         if (e instanceof ChatPacketReceivedEvent.GameInfo) return;
 
         Component message = e.getMessage();
-        StyledText codedMessage = ComponentUtils.getCoded(message);
+        StyledText codedMessage = StyledText.fromComponent(message);
 
         // Sometimes there is just a trailing newline; that does not
         // make it a multiline message
@@ -195,9 +195,13 @@ public final class ChatHandler extends Handler {
         LinkedList<Component> newChatLines = new LinkedList<>();
         LinkedList<Component> dialogue = new LinkedList<>();
 
-        StyledText firstLineCoded = ComponentUtils.getCoded(newLines.getFirst());
-        boolean isNpcConfirm = firstLineCoded.match(NPC_CONFIRM_PATTERN).find();
-        boolean isNpcSelect = firstLineCoded.match(NPC_SELECT_PATTERN).find();
+        StyledText firstLineCoded = StyledText.fromComponent(newLines.getFirst());
+        boolean isNpcConfirm = firstLineCoded
+                .getMatcher(NPC_CONFIRM_PATTERN, PartStyle.StyleType.FULL)
+                .find();
+        boolean isNpcSelect = firstLineCoded
+                .getMatcher(NPC_SELECT_PATTERN, PartStyle.StyleType.FULL)
+                .find();
 
         if (isNpcConfirm || isNpcSelect) {
             // This is an NPC dialogue screen.
@@ -216,9 +220,11 @@ public final class ChatHandler extends Handler {
 
             // Separate the dialog part from any potential new "real" chat lines
             for (Component line : newLines) {
-                StyledText codedLine = ComponentUtils.getCoded(line);
+                StyledText codedLine = StyledText.fromComponent(line);
                 if (!dialogDone) {
-                    if (codedLine.match(EMPTY_LINE_PATTERN).find()) {
+                    if (codedLine
+                            .getMatcher(EMPTY_LINE_PATTERN, PartStyle.StyleType.FULL)
+                            .find()) {
                         if (!optionsFound) {
                             // First part of the dialogue found
                             optionsFound = true;
@@ -232,7 +238,9 @@ public final class ChatHandler extends Handler {
                     }
                 } else {
                     // If there is anything after the dialogue, it is new chat lines
-                    if (!codedLine.match(EMPTY_LINE_PATTERN).find()) {
+                    if (!codedLine
+                            .getMatcher(EMPTY_LINE_PATTERN, PartStyle.StyleType.FULL)
+                            .find()) {
                         newChatLines.push(line);
                     }
                 }
@@ -241,8 +249,8 @@ public final class ChatHandler extends Handler {
             // After a NPC dialog screen, Wynncraft sends a "clear screen" with line of ÀÀÀ...
             // We just ignore that part. Also, remove empty lines or lines with just the §r code
             while (!newLines.isEmpty()
-                    && ComponentUtils.getCoded(newLines.getFirst())
-                            .match(EMPTY_LINE_PATTERN)
+                    && StyledText.fromComponent(newLines.getFirst())
+                            .getMatcher(EMPTY_LINE_PATTERN, PartStyle.StyleType.FULL)
                             .find()) {
                 newLines.removeFirst();
             }
@@ -291,7 +299,7 @@ public final class ChatHandler extends Handler {
 
     private void handleFakeChatLine(Component message) {
         // This is a normal, single line chat, sent in the background
-        StyledText coded = ComponentUtils.getCoded(message);
+        StyledText coded = StyledText.fromComponent(message);
 
         // But it can weirdly enough actually also be a foreground NPC chat message...
         if (getRecipientType(coded, MessageType.FOREGROUND) == RecipientType.NPC) {

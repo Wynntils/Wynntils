@@ -14,7 +14,6 @@ import com.wynntils.mc.event.ContainerSetSlotEvent;
 import com.wynntils.mc.event.MenuEvent;
 import com.wynntils.models.containers.event.MythicFoundEvent;
 import com.wynntils.models.gear.type.GearTier;
-import com.wynntils.utils.mc.ComponentUtils;
 import com.wynntils.utils.wynn.WynnItemMatchers;
 import java.util.List;
 import net.minecraft.world.item.ItemStack;
@@ -42,7 +41,7 @@ public final class LootChestModel extends Model {
 
     @SubscribeEvent
     public void onMenuOpened(MenuEvent.MenuOpenedEvent event) {
-        if (Models.Container.isLootChest(ComponentUtils.getUnformatted(event.getTitle()))) {
+        if (Models.Container.isLootChest(StyledText.fromComponent(event.getTitle()))) {
             nextExpectedLootContainerId = event.getContainerId();
 
             dryCount.store(dryCount.get() + 1);

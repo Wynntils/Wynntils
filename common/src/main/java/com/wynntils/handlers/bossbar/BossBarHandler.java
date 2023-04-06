@@ -8,7 +8,6 @@ import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.components.Handler;
 import com.wynntils.handlers.bossbar.event.BossBarAddedEvent;
 import com.wynntils.mc.event.BossHealthUpdateEvent;
-import com.wynntils.utils.mc.ComponentUtils;
 import com.wynntils.utils.type.Pair;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -58,7 +57,8 @@ public class BossBarHandler extends Handler {
                 boolean playMusic,
                 boolean createWorldFog) {
             Optional<Pair<TrackedBar, Matcher>> trackedBarOpt = knownBars.stream()
-                    .map(bar -> new Pair<>(bar, ComponentUtils.getCoded(name).match(bar.pattern)))
+                    .map(bar -> new Pair<>(
+                            bar, StyledText.fromComponent(name).getMatcher(bar.pattern, PartStyle.StyleType.FULL)))
                     .filter(pair -> pair.b().matches())
                     .findFirst();
             if (trackedBarOpt.isEmpty()) return;
@@ -118,7 +118,8 @@ public class BossBarHandler extends Handler {
         @Override
         public void updateName(UUID id, Component name) {
             handleBarUpdate(id, trackedBar -> {
-                Matcher matcher = ComponentUtils.getCoded(name).match(trackedBar.pattern);
+                Matcher matcher =
+                        StyledText.fromComponent(name).getMatcher(trackedBar.pattern, PartStyle.StyleType.FULL);
                 if (!matcher.matches()) {
                     WynntilsMod.error("Failed to match already matched boss bar");
                     return;

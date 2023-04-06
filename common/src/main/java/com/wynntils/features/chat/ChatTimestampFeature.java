@@ -51,8 +51,8 @@ public class ChatTimestampFeature extends Feature {
         Component message = event.getMessage();
 
         LocalDateTime date = LocalDateTime.now();
-        MutableComponent timestamp =
-                StyledText.of("§8[§7" + date.format(formatter) + "§8]§r ").asSingleLiteralComponentWithCodedString();
+        MutableComponent timestamp = StyledText.fromString("§8[§7" + date.format(formatter) + "§8]§r ")
+                .getComponent();
 
         timestamp.append(message);
 

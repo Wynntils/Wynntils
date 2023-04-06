@@ -198,7 +198,7 @@ public class QuestInfo {
             StyledText[] lines = RenderedStringUtils.wrapTextBySize(nextTask, NEXT_TASK_MAX_WIDTH);
 
             for (StyledText line : lines) {
-                tooltipLines.add(line.asSingleLiteralComponentWithCodedString().withStyle(ChatFormatting.GRAY));
+                tooltipLines.add(line.getComponent().withStyle(ChatFormatting.GRAY));
             }
         }
 

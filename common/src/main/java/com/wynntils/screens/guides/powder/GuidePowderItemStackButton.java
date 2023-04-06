@@ -11,7 +11,6 @@ import com.wynntils.core.text.StyledText;
 import com.wynntils.screens.base.widgets.WynntilsButton;
 import com.wynntils.utils.MathUtils;
 import com.wynntils.utils.colors.CustomColor;
-import com.wynntils.utils.mc.ComponentUtils;
 import com.wynntils.utils.mc.KeyboardUtils;
 import com.wynntils.utils.render.FontRenderer;
 import com.wynntils.utils.render.RenderUtils;
@@ -55,7 +54,7 @@ public class GuidePowderItemStackButton extends WynntilsButton {
         FontRenderer.getInstance()
                 .renderAlignedTextInBox(
                         poseStack,
-                        StyledText.of(MathUtils.toRoman(itemStack.getTier())),
+                        StyledText.fromString(MathUtils.toRoman(itemStack.getTier())),
                         getX() + 2,
                         getX() + 14,
                         getY() + 8,
@@ -85,7 +84,8 @@ public class GuidePowderItemStackButton extends WynntilsButton {
             return false;
         }
 
-        String unformattedName = ComponentUtils.getUnformatted(itemStack.getHoverName());
+        String unformattedName =
+                StyledText.fromComponent(itemStack.getHoverName()).withoutFormatting();
         if (button == GLFW.GLFW_MOUSE_BUTTON_LEFT) {
             Models.Favorites.toggleFavorite(unformattedName);
             Managers.Config.saveConfig();

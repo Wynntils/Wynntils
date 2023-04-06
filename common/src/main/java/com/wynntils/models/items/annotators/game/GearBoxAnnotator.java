@@ -4,6 +4,7 @@
  */
 package com.wynntils.models.items.annotators.game;
 
+import com.wynntils.core.text.PartStyle;
 import com.wynntils.core.text.StyledText;
 import com.wynntils.handlers.item.ItemAnnotation;
 import com.wynntils.handlers.item.ItemAnnotator;
@@ -27,7 +28,7 @@ public final class GearBoxAnnotator implements ItemAnnotator {
         if (!(itemStack.getItem() == Items.STONE_SHOVEL
                 && itemStack.getDamageValue() >= 1
                 && itemStack.getDamageValue() <= 6)) return null;
-        Matcher matcher = name.match(GEAR_BOX_PATTERN);
+        Matcher matcher = name.getMatcher(GEAR_BOX_PATTERN, PartStyle.StyleType.FULL);
         if (!matcher.matches()) return null;
 
         GearType gearType = GearType.fromString(matcher.group(1));

@@ -12,7 +12,6 @@ import com.wynntils.handlers.item.event.ItemRenamedEvent;
 import com.wynntils.mc.event.ContainerSetContentEvent;
 import com.wynntils.mc.event.SetSlotEvent;
 import com.wynntils.mc.extension.ItemStackExtension;
-import com.wynntils.utils.mc.ComponentUtils;
 import com.wynntils.utils.mc.LoreUtils;
 import com.wynntils.utils.mc.McUtils;
 import java.util.ArrayList;
@@ -109,8 +108,8 @@ public class ItemHandler extends Handler {
 
         StyledText originalName = ((ItemStackExtension) existingItem).getOriginalName();
         StyledText existingName =
-                ComponentUtils.getCoded(existingItem.getHoverName()).getNormalized();
-        StyledText newName = ComponentUtils.getCoded(newItem.getHoverName()).getNormalized();
+                StyledText.fromComponent(existingItem.getHoverName()).getNormalized();
+        StyledText newName = StyledText.fromComponent(newItem.getHoverName()).getNormalized();
 
         if (newName.equals(existingName)) {
             // This is exactly the same item, so copy existing annotation
@@ -126,7 +125,8 @@ public class ItemHandler extends Handler {
         // When a crafted item loses durability (or a consumable loses a charge), we need to detect
         // this and update the item. But note that this might happen exactly after a spell!
         // So check against originalName, not existingName.
-        if (!newName.equals(originalName) && newBaseName.equals(originalBaseName)) {
+        if (!newName.equalsString(originalName, PartStyle.StyleType.FULL)
+                && newBaseName.equalsString(originalBaseName, PartStyle.StyleType.FULL)) {
             // The base name is the same but the full name differs. This means we have an updated
             // title, and the existing item has changed some property.
             annotation = calculateAnnotation(newItem, newName);
@@ -138,7 +138,7 @@ public class ItemHandler extends Handler {
         // If an item is "really" renamed, we need to send out an event. But this should not
         // trigger just for a consumable or crafted gear that changes the [...] text, so
         // check only on base name, not the full name.
-        if (!newBaseName.equals(existingBaseName)) {
+        if (!newBaseName.equalsString(existingBaseName, PartStyle.StyleType.FULL)) {
             // This is the same item, but it is renamed to signal e.g. a spell.
             ItemRenamedEvent event = new ItemRenamedEvent(newItem, existingName, newName);
             WynntilsMod.postEvent(event);
@@ -152,7 +152,8 @@ public class ItemHandler extends Handler {
         int bracketIndex = name.getInternalCodedStringRepresentation().lastIndexOf('[');
         return bracketIndex == -1
                 ? name
-                : StyledText.of(name.getInternalCodedStringRepresentation().substring(0, bracketIndex));
+                : StyledText.fromString(
+                        name.getInternalCodedStringRepresentation().substring(0, bracketIndex));
     }
 
     private boolean similarStack(ItemStack firstItem, ItemStack secondItem) {
@@ -190,7 +191,7 @@ public class ItemHandler extends Handler {
                 WynntilsMod.reportCrash(annotator.getClass().getName(), annotatorName, CrashType.ANNOTATOR, t);
 
                 WynntilsMod.warn("Problematic item:" + itemStack);
-                WynntilsMod.warn("Problematic item name:" + ComponentUtils.getCoded(itemStack.getHoverName()));
+                WynntilsMod.warn("Problematic item name:" + StyledText.fromComponent(itemStack.getHoverName()));
                 WynntilsMod.warn("Problematic item tags:" + itemStack.getTag());
 
                 McUtils.sendMessageToClient(Component.literal("Not all items will be properly parsed.")
@@ -213,7 +214,7 @@ public class ItemHandler extends Handler {
     }
 
     private void annotate(ItemStack itemStack) {
-        StyledText name = ComponentUtils.getCoded(itemStack.getHoverName()).getNormalized();
+        StyledText name = StyledText.fromComponent(itemStack.getHoverName()).getNormalized();
         ItemAnnotation annotation = calculateAnnotation(itemStack, name);
         if (annotation == null) return;
 

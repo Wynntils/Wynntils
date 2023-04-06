@@ -156,7 +156,7 @@ public class GearInfoRegistry {
             return new GearMajorId(
                     JsonUtils.getNullableJsonString(json, "id"),
                     JsonUtils.getNullableJsonString(json, "name"),
-                    StyledText.of(JsonUtils.getNullableJsonString(json, "lore")));
+                    StyledText.fromString(JsonUtils.getNullableJsonString(json, "lore")));
         }
     }
 
@@ -271,8 +271,8 @@ public class GearInfoRegistry {
             if (lore == null) return Optional.empty();
 
             // Some lore contain like "\\[Community Event Winner\\]", fix that
-            return Optional.of(
-                    StyledText.of(StringUtils.replaceEach(lore, new String[] {"\\[", "\\]"}, new String[] {"[", "]"})));
+            return Optional.of(StyledText.fromString(
+                    StringUtils.replaceEach(lore, new String[] {"\\[", "\\]"}, new String[] {"[", "]"})));
         }
 
         private GearRestrictions parseRestrictions(JsonObject json) {

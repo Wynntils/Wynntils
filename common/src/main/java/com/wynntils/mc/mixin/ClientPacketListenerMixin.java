@@ -200,8 +200,7 @@ public abstract class ClientPacketListenerMixin {
     private void handleTabListCustomisationPost(ClientboundTabListPacket packet, CallbackInfo ci) {
         if (!isRenderThread()) return;
 
-        MixinHelper.post(new PlayerInfoFooterChangedEvent(
-                StyledText.fromComponentIgnoringComponentStylesAndJustUsingFormattingCodes(packet.getFooter())));
+        MixinHelper.post(new PlayerInfoFooterChangedEvent(StyledText.fromComponent(packet.getFooter())));
     }
 
     @Inject(
@@ -478,7 +477,10 @@ public abstract class ClientPacketListenerMixin {
         if (!isRenderThread()) return;
 
         ScoreboardSetScoreEvent event = new ScoreboardSetScoreEvent(
-                StyledText.of(packet.getOwner()), packet.getObjectiveName(), packet.getScore(), packet.getMethod());
+                StyledText.fromString(packet.getOwner()),
+                packet.getObjectiveName(),
+                packet.getScore(),
+                packet.getMethod());
         MixinHelper.post(event);
         if (event.isCanceled()) {
             ci.cancel();

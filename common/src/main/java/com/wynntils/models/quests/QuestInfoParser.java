@@ -5,6 +5,7 @@
 package com.wynntils.models.quests;
 
 import com.wynntils.core.WynntilsMod;
+import com.wynntils.core.text.PartStyle;
 import com.wynntils.core.text.StyledText;
 import com.wynntils.models.quests.type.QuestLength;
 import com.wynntils.models.quests.type.QuestStatus;
@@ -78,8 +79,7 @@ public final class QuestInfoParser {
     }
 
     private static boolean isQuestTracked(ItemStack itemStack) {
-        StyledText name =
-                StyledText.fromComponentIgnoringComponentStylesAndJustUsingFormattingCodes(itemStack.getHoverName());
+        StyledText name = StyledText.fromComponent(itemStack.getHoverName());
         if (name.trim().isEmpty()) {
             return false;
         }
@@ -88,7 +88,7 @@ public final class QuestInfoParser {
 
     private static QuestStatus getQuestStatus(LinkedList<StyledText> lore) {
         StyledText rawStatus = lore.pop();
-        Matcher m = rawStatus.match(STATUS_MATCHER);
+        Matcher m = rawStatus.getMatcher(STATUS_MATCHER, PartStyle.StyleType.FULL);
         if (!m.find()) {
             WynntilsMod.warn("Non-matching status value: " + rawStatus);
             return null;
@@ -107,7 +107,7 @@ public final class QuestInfoParser {
 
     private static int getLevel(LinkedList<StyledText> lore) {
         StyledText rawLevel = lore.getFirst();
-        Matcher m = rawLevel.match(LEVEL_MATCHER);
+        Matcher m = rawLevel.getMatcher(LEVEL_MATCHER, PartStyle.StyleType.FULL);
         if (!m.find()) {
             // This can happen for the very first quests; accept without error
             // and interpret level requirement as 1
@@ -121,7 +121,7 @@ public final class QuestInfoParser {
         List<Pair<String, Integer>> requirements = new LinkedList<>();
         Matcher m;
 
-        m = lore.getFirst().match(REQ_MATCHER);
+        m = lore.getFirst().getMatcher(REQ_MATCHER, PartStyle.StyleType.FULL);
         while (m.matches()) {
             lore.pop();
             String profession = m.group(1);
@@ -129,7 +129,7 @@ public final class QuestInfoParser {
             Pair<String, Integer> requirement = new Pair<>(profession, level);
             requirements.add(requirement);
 
-            m = lore.getFirst().match(REQ_MATCHER);
+            m = lore.getFirst().getMatcher(REQ_MATCHER, PartStyle.StyleType.FULL);
         }
         return requirements;
     }
@@ -137,7 +137,7 @@ public final class QuestInfoParser {
     private static QuestLength getQuestLength(LinkedList<StyledText> lore) {
         StyledText lengthRaw = lore.pop();
 
-        Matcher m = lengthRaw.match(LENGTH_MATCHER);
+        Matcher m = lengthRaw.getMatcher(LENGTH_MATCHER, PartStyle.StyleType.FULL);
         if (!m.find()) {
             WynntilsMod.warn("Non-matching quest length: " + lengthRaw);
             return null;
@@ -161,6 +161,6 @@ public final class QuestInfoParser {
                                 .toList())
                 .replaceAll("\\s+", " ")
                 .trim();
-        return StyledText.of(description);
+        return StyledText.fromString(description);
     }
 }

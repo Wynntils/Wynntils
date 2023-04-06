@@ -14,7 +14,6 @@ import com.wynntils.core.features.Feature;
 import com.wynntils.core.text.StyledText;
 import com.wynntils.mc.event.ContainerClickEvent;
 import com.wynntils.mc.event.ItemTooltipRenderEvent;
-import com.wynntils.utils.mc.ComponentUtils;
 import com.wynntils.utils.mc.KeyboardUtils;
 import com.wynntils.utils.mc.LoreUtils;
 import com.wynntils.utils.mc.McUtils;
@@ -33,7 +32,7 @@ import net.minecraftforge.eventbus.api.SubscribeEvent;
 
 @ConfigCategory(Category.INVENTORY)
 public class BulkBuyFeature extends Feature {
-    public static final StyledText PRICE_STR = StyledText.of("§6Price:");
+    public static final StyledText PRICE_STR = StyledText.fromString("§6Price:");
 
     @RegisterConfig
     public final Config<Integer> bulkBuyAmount = new Config<>(4);
@@ -82,25 +81,25 @@ public class BulkBuyFeature extends Feature {
     private List<Component> replacePrices(List<Component> oldLore) {
         if (!KeyboardUtils.isShiftDown()) return oldLore;
 
-        StyledText priceLine = ComponentUtils.getCoded(oldLore.get(oldLore.size() - 1));
-        Matcher priceMatcher = priceLine.match(PRICE_PATTERN);
+        StyledText priceLine = StyledText.fromComponent(oldLore.get(oldLore.size() - 1));
+        Matcher priceMatcher = priceLine.getMatcher(PRICE_PATTERN, PartStyle.StyleType.FULL);
         if (!priceMatcher.find()) {
             WynntilsMod.warn("Could not find price for " + oldLore.get(0).getString() + " in " + priceLine);
             return oldLore;
         }
         int newPrice = Integer.parseInt(priceMatcher.group(1)) * bulkBuyAmount.get();
 
-        StyledText newLine = StyledText.of(priceLine
+        StyledText newLine = StyledText.fromString(priceLine
                 .getInternalCodedStringRepresentation()
                 .replace(priceMatcher.group(1), BULK_BUY_ACTIVE_COLOR + Integer.toString(newPrice)));
 
         if (newPrice > Models.Emerald.getAmountInInventory()) {
-            newLine = StyledText.of(newLine.getInternalCodedStringRepresentation()
+            newLine = StyledText.fromString(newLine.getInternalCodedStringRepresentation()
                     .replace("a✔", "c✖")); // Replace green checkmark with red x
         }
 
         List<Component> newLore = new ArrayList<>(oldLore);
-        newLore.set(newLore.size() - 1, newLine.asSingleLiteralComponentWithCodedString());
+        newLore.set(newLore.size() - 1, newLine.getComponent());
         return newLore;
     }
 

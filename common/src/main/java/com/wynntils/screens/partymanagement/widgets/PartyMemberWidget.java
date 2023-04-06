@@ -126,7 +126,7 @@ public class PartyMemberWidget extends AbstractWidget {
             prefix = ChatFormatting.BOLD.toString();
         }
 
-        StyledText formattedPlayerName = StyledText.of(prefix + playerName);
+        StyledText formattedPlayerName = StyledText.fromString(prefix + playerName);
 
         FontRenderer.getInstance()
                 .renderText(

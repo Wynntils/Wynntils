@@ -64,7 +64,7 @@ public abstract class BarOverlay extends DynamicOverlay {
 
         ErrorOr<CappedValue> valueOrError = templateCache.value();
         if (valueOrError.hasError()) {
-            renderText(poseStack, bufferSource, getModifiedRenderY(10), StyledText.of(valueOrError.getError()));
+            renderText(poseStack, bufferSource, getModifiedRenderY(10), StyledText.fromString(valueOrError.getError()));
             return;
         }
 
@@ -78,7 +78,7 @@ public abstract class BarOverlay extends DynamicOverlay {
 
         ErrorOr<CappedValue> valueOrError = calculatedTemplate.value();
         if (valueOrError.hasError()) {
-            renderText(poseStack, bufferSource, getModifiedRenderY(10), StyledText.of(valueOrError.getError()));
+            renderText(poseStack, bufferSource, getModifiedRenderY(10), StyledText.fromString(valueOrError.getError()));
             return;
         }
 
@@ -120,7 +120,7 @@ public abstract class BarOverlay extends DynamicOverlay {
 
     private Pair<StyledText, ErrorOr<CappedValue>> calculateTemplate(BarOverlayTemplatePair template) {
         return Pair.of(
-                StyledText.join(Managers.Function.doFormatLines(template.textTemplate), " "),
+                StyledText.join(" ", Managers.Function.doFormatLines(template.textTemplate)),
                 Managers.Function.tryGetRawValueOfType(template.valueTemplate, CappedValue.class));
     }
 

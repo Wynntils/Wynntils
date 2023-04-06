@@ -12,7 +12,6 @@ import com.wynntils.mc.event.ScreenOpenedEvent;
 import com.wynntils.models.character.type.ClassInfo;
 import com.wynntils.models.character.type.ClassType;
 import com.wynntils.screens.characterselector.CharacterSelectorScreen;
-import com.wynntils.utils.mc.ComponentUtils;
 import com.wynntils.utils.mc.LoreUtils;
 import com.wynntils.utils.wynn.ContainerUtils;
 import java.util.ArrayList;
@@ -38,7 +37,7 @@ public final class CharacterSelectionModel extends Model {
     private static final String DEFAULT_CLASS_NAME = "This Character";
 
     private static final int EDIT_BUTTON_SLOT = 8;
-    public static final StyledText CHARACTER_SELECTION_TITLE = StyledText.of("§8§lSelect a Character");
+    public static final StyledText CHARACTER_SELECTION_TITLE = StyledText.fromString("§8§lSelect a Character");
 
     private CharacterSelectorScreen currentScreen;
     private int containerId = -1;
@@ -61,7 +60,7 @@ public final class CharacterSelectionModel extends Model {
 
     @SubscribeEvent
     public void onMenuOpened(MenuEvent.MenuOpenedEvent event) {
-        if (!ComponentUtils.getCoded(event.getTitle()).equals(CHARACTER_SELECTION_TITLE)) {
+        if (!StyledText.fromComponent(event.getTitle()).equals(CHARACTER_SELECTION_TITLE)) {
             return;
         }
 
@@ -79,8 +78,8 @@ public final class CharacterSelectionModel extends Model {
         List<ItemStack> items = event.getItems();
         for (int i = 0; i < items.size(); i++) {
             ItemStack itemStack = items.get(i);
-            StyledText itemName = ComponentUtils.getCoded(itemStack.getHoverName());
-            Matcher classItemMatcher = itemName.match(CLASS_ITEM_NAME_PATTERN);
+            StyledText itemName = StyledText.fromComponent(itemStack.getHoverName());
+            Matcher classItemMatcher = itemName.getMatcher(CLASS_ITEM_NAME_PATTERN, PartStyle.StyleType.FULL);
             if (classItemMatcher.matches()) {
                 ClassInfo classInfo = getClassInfoFromItem(itemStack, i, classItemMatcher.group(1));
                 classInfoList.add(classInfo);
@@ -88,7 +87,8 @@ public final class CharacterSelectionModel extends Model {
             }
 
             if (firstNewCharacterSlot == -1
-                    && itemName.match(NEW_CLASS_ITEM_NAME_PATTERN).matches()) {
+                    && itemName.getMatcher(NEW_CLASS_ITEM_NAME_PATTERN, PartStyle.StyleType.FULL)
+                            .matches()) {
                 firstNewCharacterSlot = i;
             }
         }
@@ -106,7 +106,7 @@ public final class CharacterSelectionModel extends Model {
         int soulPoints = 0;
         int finishedQuests = 0;
         for (StyledText line : LoreUtils.getLore(itemStack)) {
-            Matcher matcher = line.match(CLASS_ITEM_CLASS_PATTERN);
+            Matcher matcher = line.getMatcher(CLASS_ITEM_CLASS_PATTERN, PartStyle.StyleType.FULL);
 
             if (matcher.matches()) {
                 String classTypeString = matcher.group("name");
@@ -117,25 +117,25 @@ public final class CharacterSelectionModel extends Model {
                 continue;
             }
 
-            matcher = line.match(CLASS_ITEM_LEVEL_PATTERN);
+            matcher = line.getMatcher(CLASS_ITEM_LEVEL_PATTERN, PartStyle.StyleType.FULL);
             if (matcher.matches()) {
                 level = Integer.parseInt(matcher.group(1));
                 continue;
             }
 
-            matcher = line.match(CLASS_ITEM_XP_PATTERN);
+            matcher = line.getMatcher(CLASS_ITEM_XP_PATTERN, PartStyle.StyleType.FULL);
             if (matcher.matches()) {
                 xp = Integer.parseInt(matcher.group(1));
                 continue;
             }
 
-            matcher = line.match(CLASS_ITEM_SOUL_POINTS_PATTERN);
+            matcher = line.getMatcher(CLASS_ITEM_SOUL_POINTS_PATTERN, PartStyle.StyleType.FULL);
             if (matcher.matches()) {
                 soulPoints = Integer.parseInt(matcher.group(1));
                 continue;
             }
 
-            matcher = line.match(CLASS_ITEM_FINISHED_QUESTS_PATTERN);
+            matcher = line.getMatcher(CLASS_ITEM_FINISHED_QUESTS_PATTERN, PartStyle.StyleType.FULL);
             if (matcher.matches()) {
                 finishedQuests = Integer.parseInt(matcher.group(1));
             }

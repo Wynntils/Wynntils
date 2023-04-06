@@ -50,8 +50,8 @@ public class PreventTradesDuelsFeature extends Feature {
         event.setCanceled(true);
 
         if (onlyWhileFighting.get()) {
-            Managers.Notification.queueMessage(
-                    StyledText.of("Trade/Duel blocked for " + (fightingTimeCutoff.get() - timeSinceLastFight) + " s"));
+            Managers.Notification.queueMessage(StyledText.fromString(
+                    "Trade/Duel blocked for " + (fightingTimeCutoff.get() - timeSinceLastFight) + " s"));
         }
     }
 

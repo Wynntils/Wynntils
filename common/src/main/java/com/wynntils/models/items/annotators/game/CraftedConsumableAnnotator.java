@@ -4,6 +4,7 @@
  */
 package com.wynntils.models.items.annotators.game;
 
+import com.wynntils.core.text.PartStyle;
 import com.wynntils.core.text.StyledText;
 import com.wynntils.handlers.item.ItemAnnotation;
 import com.wynntils.handlers.item.ItemAnnotator;
@@ -20,7 +21,7 @@ public final class CraftedConsumableAnnotator implements ItemAnnotator {
 
     @Override
     public ItemAnnotation getAnnotation(ItemStack itemStack, StyledText name) {
-        Matcher matcher = name.match(CRAFTED_CONSUMABLE_PATTERN);
+        Matcher matcher = name.getMatcher(CRAFTED_CONSUMABLE_PATTERN, PartStyle.StyleType.FULL);
         if (!matcher.matches()) return null;
 
         String craftedName = matcher.group(1);

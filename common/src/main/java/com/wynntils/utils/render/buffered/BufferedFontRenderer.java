@@ -344,7 +344,7 @@ public final class BufferedFontRenderer {
         StyledText lastPart = StyledText.EMPTY;
         for (int i = 0; i < parts.size(); i++) {
             // copy the format codes to this part as well
-            StyledText part = StyledText.of(
+            StyledText part = StyledText.fromString(
                     ComponentUtils.getLastPartCodes(lastPart) + parts.get(i).getString());
             lastPart = part;
             renderText(
@@ -395,7 +395,7 @@ public final class BufferedFontRenderer {
             // If we ask Mojang code the line height of an empty line we get 0 back so replace with space
             currentY += FontRenderer.getInstance()
                     .calculateRenderHeight(
-                            line.getText().isEmpty() ? StyledText.of(" ") : line.getText(),
+                            line.getText().isEmpty() ? StyledText.fromString(" ") : line.getText(),
                             line.getSetting().maxWidth());
         }
     }

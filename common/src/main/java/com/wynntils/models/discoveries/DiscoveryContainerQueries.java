@@ -9,7 +9,6 @@ import com.wynntils.core.components.Models;
 import com.wynntils.core.text.StyledText;
 import com.wynntils.handlers.container.ScriptedContainerQuery;
 import com.wynntils.handlers.container.type.ContainerContent;
-import com.wynntils.utils.mc.ComponentUtils;
 import com.wynntils.utils.mc.LoreUtils;
 import com.wynntils.utils.mc.McUtils;
 import com.wynntils.utils.wynn.InventoryUtils;
@@ -34,8 +33,8 @@ public class DiscoveryContainerQueries {
             Pattern.compile("§6Total Discoveries: §r§e\\[(\\d+)/\\d+\\]");
     private static final Pattern SECRET_DISCOVERY_COUNT_PATTERN =
             Pattern.compile("§bTotal Secret Discoveries: §r§3\\[(\\d+)/\\d+\\]");
-    public static final StyledText DISCOVERIES_STRING = StyledText.of("§6§lDiscoveries");
-    public static final StyledText SECRET_DISCOVERIES_STRING = StyledText.of("§b§lSecret Discoveries");
+    public static final StyledText DISCOVERIES_STRING = StyledText.fromString("§6§lDiscoveries");
+    public static final StyledText SECRET_DISCOVERIES_STRING = StyledText.fromString("§b§lSecret Discoveries");
 
     private List<DiscoveryInfo> newDiscoveries;
 
@@ -48,9 +47,10 @@ public class DiscoveryContainerQueries {
                     ItemStack discoveriesItem = c.items().get(DISCOVERIES_SLOT);
                     ItemStack secretDiscoveriesItem = c.items().get(SECRET_DISCOVERIES_SLOT);
 
-                    if (!ComponentUtils.getCoded(discoveriesItem.getHoverName()).equals(DISCOVERIES_STRING)
-                            || !ComponentUtils.getCoded(secretDiscoveriesItem.getHoverName())
-                                    .equals(SECRET_DISCOVERIES_STRING)) {
+                    if (!StyledText.fromComponent(discoveriesItem.getHoverName())
+                                    .equalsString(DISCOVERIES_STRING, PartStyle.StyleType.FULL)
+                            || !StyledText.fromComponent(secretDiscoveriesItem.getHoverName())
+                                    .equalsString(SECRET_DISCOVERIES_STRING, PartStyle.StyleType.FULL)) {
                         WynntilsMod.error("Returned early because discovery items were not found.");
 
                         return;
@@ -58,7 +58,7 @@ public class DiscoveryContainerQueries {
 
                     int discoveryCount = -1;
                     for (StyledText line : LoreUtils.getLore(discoveriesItem)) {
-                        Matcher matcher = line.match(DISCOVERY_COUNT_PATTERN);
+                        Matcher matcher = line.getMatcher(DISCOVERY_COUNT_PATTERN, PartStyle.StyleType.FULL);
 
                         if (matcher.matches()) {
                             discoveryCount = Integer.parseInt(matcher.group(1));
@@ -73,7 +73,7 @@ public class DiscoveryContainerQueries {
                     }
 
                     for (StyledText line : LoreUtils.getLore(secretDiscoveriesItem)) {
-                        Matcher matcher = line.match(SECRET_DISCOVERY_COUNT_PATTERN);
+                        Matcher matcher = line.getMatcher(SECRET_DISCOVERY_COUNT_PATTERN, PartStyle.StyleType.FULL);
 
                         if (matcher.matches()) {
                             int secretDiscoveryCount = Integer.parseInt(matcher.group(1));
@@ -174,6 +174,6 @@ public class DiscoveryContainerQueries {
     }
 
     private StyledText getNextPageButtonName(int nextPageNum) {
-        return StyledText.of("[§f§lPage " + nextPageNum + "§a >§2>§a>§2>§a>]");
+        return StyledText.fromString("[§f§lPage " + nextPageNum + "§a >§2>§a>§2>§a>]");
     }
 }

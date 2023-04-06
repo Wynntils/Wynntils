@@ -12,7 +12,6 @@ import com.wynntils.models.gear.type.GearInstance;
 import com.wynntils.models.items.items.game.GearItem;
 import com.wynntils.models.stats.type.StatListOrdering;
 import com.wynntils.models.wynnitem.parsing.WynnItemParser;
-import com.wynntils.utils.mc.ComponentUtils;
 import com.wynntils.utils.mc.LoreUtils;
 import com.wynntils.utils.type.Pair;
 import java.util.ArrayList;
@@ -107,15 +106,17 @@ public final class GearTooltipBuilder {
         boolean headerEnded = false;
         boolean footerStarted = false;
         for (Component loreLine : lore) {
-            StyledText codedLine = ComponentUtils.getCoded(loreLine).getNormalized();
+            StyledText codedLine = StyledText.fromComponent(loreLine).getNormalized();
 
             if (!footerStarted) {
-                Matcher setBonusMatcher = codedLine.match(WynnItemParser.SET_BONUS_PATTEN);
+                Matcher setBonusMatcher =
+                        codedLine.getMatcher(WynnItemParser.SET_BONUS_PATTEN, PartStyle.StyleType.FULL);
                 if (setBonusMatcher.matches()) {
                     headerEnded = true;
                     footerStarted = true;
                 } else {
-                    Matcher matcher = codedLine.match(WynnItemParser.IDENTIFICATION_STAT_PATTERN);
+                    Matcher matcher =
+                            codedLine.getMatcher(WynnItemParser.IDENTIFICATION_STAT_PATTERN, PartStyle.StyleType.FULL);
                     if (matcher.matches()) {
                         String statName = matcher.group(6);
 

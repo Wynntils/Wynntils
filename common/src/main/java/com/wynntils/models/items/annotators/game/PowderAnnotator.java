@@ -5,6 +5,7 @@
 package com.wynntils.models.items.annotators.game;
 
 import com.wynntils.core.components.Models;
+import com.wynntils.core.text.PartStyle;
 import com.wynntils.core.text.StyledText;
 import com.wynntils.handlers.item.ItemAnnotation;
 import com.wynntils.handlers.item.ItemAnnotator;
@@ -23,7 +24,7 @@ public final class PowderAnnotator implements ItemAnnotator {
 
     @Override
     public ItemAnnotation getAnnotation(ItemStack itemStack, StyledText name) {
-        Matcher matcher = name.match(POWDER_PATTERN);
+        Matcher matcher = name.getMatcher(POWDER_PATTERN, PartStyle.StyleType.FULL);
         if (!matcher.matches()) return null;
 
         Powder element = Powder.valueOf(matcher.group(1).toUpperCase(Locale.ROOT));

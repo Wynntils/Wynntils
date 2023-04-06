@@ -66,7 +66,7 @@ public final class LoadingScreen extends WynntilsScreen {
         FontRenderer.getInstance()
                 .renderText(
                         poseStack,
-                        StyledText.of(LOGO_STRING),
+                        StyledText.fromString(LOGO_STRING),
                         centerX,
                         60,
                         CommonColors.WHITE,
@@ -78,7 +78,7 @@ public final class LoadingScreen extends WynntilsScreen {
         FontRenderer.getInstance()
                 .renderText(
                         poseStack,
-                        StyledText.of(message),
+                        StyledText.fromString(message),
                         centerX,
                         120,
                         MOSS_GREEN,

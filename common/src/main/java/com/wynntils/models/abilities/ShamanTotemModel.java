@@ -8,6 +8,7 @@ import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.components.Managers;
 import com.wynntils.core.components.Model;
 import com.wynntils.core.components.Models;
+import com.wynntils.core.text.PartStyle;
 import com.wynntils.core.text.StyledText;
 import com.wynntils.handlers.labels.event.EntityLabelChangedEvent;
 import com.wynntils.mc.event.AddEntityEvent;
@@ -159,7 +160,7 @@ public class ShamanTotemModel extends Model {
         StyledText name = e.getName();
         if (name.isEmpty()) return;
 
-        Matcher m = name.match(SHAMAN_TOTEM_TIMER);
+        Matcher m = name.getMatcher(SHAMAN_TOTEM_TIMER, PartStyle.StyleType.FULL);
         if (!m.find()) return;
 
         int parsedTime = Integer.parseInt(m.group(1));

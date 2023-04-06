@@ -8,7 +8,6 @@ import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.components.Models;
 import com.wynntils.core.text.StyledText;
 import com.wynntils.handlers.container.ScriptedContainerQuery;
-import com.wynntils.utils.mc.ComponentUtils;
 import com.wynntils.utils.mc.LoreUtils;
 import com.wynntils.utils.wynn.InventoryUtils;
 import java.util.ArrayList;
@@ -19,7 +18,7 @@ import net.minecraft.world.item.ItemStack;
 
 public class DialogueHistoryQueries {
     private static final Pattern DIALOGUE_HISTORY_PAGE_PATTERN = Pattern.compile("§7Page \\[(\\d+)/(\\d+)\\]");
-    public static final StyledText DIALOGUE_HISTORY = StyledText.of("§bDialogue History");
+    public static final StyledText DIALOGUE_HISTORY = StyledText.fromString("§bDialogue History");
 
     private List<List<StyledText>> newDialogueHistory;
 
@@ -36,11 +35,11 @@ public class DialogueHistoryQueries {
                 .processContainer((c) -> {
                     ItemStack dialogueHistoryItem = c.items().get(0);
 
-                    if (!ComponentUtils.getCoded(dialogueHistoryItem.getHoverName())
-                            .equals(DIALOGUE_HISTORY)) return;
+                    if (!StyledText.fromComponent(dialogueHistoryItem.getHoverName())
+                            .equalsString(DIALOGUE_HISTORY, PartStyle.StyleType.FULL)) return;
 
                     for (StyledText line : LoreUtils.getLore(dialogueHistoryItem)) {
-                        Matcher matcher = line.match(DIALOGUE_HISTORY_PAGE_PATTERN);
+                        Matcher matcher = line.getMatcher(DIALOGUE_HISTORY_PAGE_PATTERN, PartStyle.StyleType.FULL);
 
                         if (matcher.matches()) {
                             int pageCount = Integer.parseInt(matcher.group(2));
@@ -65,13 +64,13 @@ public class DialogueHistoryQueries {
                 .processContainer((c) -> {
                     ItemStack dialogueHistoryItem = c.items().get(0);
 
-                    if (!ComponentUtils.getCoded(dialogueHistoryItem.getHoverName())
-                            .equals(DIALOGUE_HISTORY)) return;
+                    if (!StyledText.fromComponent(dialogueHistoryItem.getHoverName())
+                            .equalsString(DIALOGUE_HISTORY, PartStyle.StyleType.FULL)) return;
 
                     newDialogueHistory = new ArrayList<>();
 
                     List<StyledText> current = LoreUtils.getLore(dialogueHistoryItem).stream()
-                            .dropWhile(s -> s.isBlank())
+                            .dropWhile(StyledText::isBlank)
                             .takeWhile(s -> !s.isBlank())
                             .toList();
 
@@ -87,11 +86,11 @@ public class DialogueHistoryQueries {
                     .processContainer((c) -> {
                         ItemStack dialogueHistoryItem = c.items().get(0);
 
-                        if (!ComponentUtils.getCoded(dialogueHistoryItem.getHoverName())
-                                .equals(DIALOGUE_HISTORY)) return;
+                        if (!StyledText.fromComponent(dialogueHistoryItem.getHoverName())
+                                .equalsString(DIALOGUE_HISTORY)) return;
 
                         List<StyledText> current = LoreUtils.getLore(dialogueHistoryItem).stream()
-                                .dropWhile(s -> s.isBlank())
+                                .dropWhile(StyledText::isBlank)
                                 .takeWhile(s -> !s.isBlank())
                                 .toList();
 

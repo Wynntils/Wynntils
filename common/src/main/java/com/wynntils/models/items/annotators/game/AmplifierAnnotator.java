@@ -4,6 +4,7 @@
  */
 package com.wynntils.models.items.annotators.game;
 
+import com.wynntils.core.text.PartStyle;
 import com.wynntils.core.text.StyledText;
 import com.wynntils.handlers.item.ItemAnnotation;
 import com.wynntils.handlers.item.ItemAnnotator;
@@ -18,7 +19,7 @@ public final class AmplifierAnnotator implements ItemAnnotator {
 
     @Override
     public ItemAnnotation getAnnotation(ItemStack itemStack, StyledText name) {
-        Matcher ampMatcher = name.match(AMPLIFIER_PATTERN);
+        Matcher ampMatcher = name.getMatcher(AMPLIFIER_PATTERN, PartStyle.StyleType.FULL);
         if (!ampMatcher.matches()) return null;
 
         int tier = MathUtils.integerFromRoman(ampMatcher.group(1));

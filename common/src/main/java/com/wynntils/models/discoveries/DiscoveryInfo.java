@@ -53,11 +53,11 @@ public class DiscoveryInfo {
             return null;
         }
 
-        Matcher m = lore.get(0).match(COMBAT_LEVEL_PATTERN);
+        Matcher m = lore.get(0).getMatcher(COMBAT_LEVEL_PATTERN, PartStyle.StyleType.FULL);
         if (!m.matches()) return null;
         int minLevel = Integer.parseInt(m.group(1));
 
-        StyledText name = ComponentUtils.getCoded(itemStack.getHoverName()).getNormalized();
+        StyledText name = StyledText.fromComponent(itemStack.getHoverName()).getNormalized();
         DiscoveryType type = DiscoveryType.getDiscoveryTypeFromString(name);
         if (type == null) return null;
 

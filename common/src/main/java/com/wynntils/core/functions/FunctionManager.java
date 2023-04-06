@@ -240,7 +240,9 @@ public final class FunctionManager extends Manager {
         calculatedString = calculatedString.replace("\\[\\", "{");
         calculatedString = calculatedString.replace("\\]\\", "}");
 
-        return Arrays.stream(calculatedString.split("\n")).map(StyledText::of).toArray(StyledText[]::new);
+        return Arrays.stream(calculatedString.split("\n"))
+                .map(StyledText::fromString)
+                .toArray(StyledText[]::new);
     }
 
     private String parseColorCodes(String toProcess) {

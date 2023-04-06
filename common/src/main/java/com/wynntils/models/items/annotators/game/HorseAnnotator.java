@@ -4,6 +4,7 @@
  */
 package com.wynntils.models.items.annotators.game;
 
+import com.wynntils.core.text.PartStyle;
 import com.wynntils.core.text.StyledText;
 import com.wynntils.handlers.item.ItemAnnotation;
 import com.wynntils.handlers.item.ItemAnnotator;
@@ -25,7 +26,7 @@ public final class HorseAnnotator implements ItemAnnotator {
     @Override
     public ItemAnnotation getAnnotation(ItemStack itemStack, StyledText name) {
         if (itemStack.getItem() != Items.SADDLE) return null;
-        Matcher matcher = name.match(HORSE_PATTERN);
+        Matcher matcher = name.getMatcher(HORSE_PATTERN, PartStyle.StyleType.FULL);
         if (!matcher.matches()) return null;
 
         Matcher tierMatcher = LoreUtils.matchLoreLine(itemStack, 0, HORSE_TIER_PATTERN);

@@ -7,6 +7,7 @@ package com.wynntils.models.token;
 import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.components.Model;
 import com.wynntils.core.components.Models;
+import com.wynntils.core.text.PartStyle;
 import com.wynntils.core.text.StyledText;
 import com.wynntils.handlers.labels.event.EntityLabelChangedEvent;
 import com.wynntils.handlers.labels.event.EntityLabelVisibilityEvent;
@@ -43,7 +44,7 @@ public class TokenModel extends Model {
 
     private static final Pattern TOKEN_PATTERN = Pattern.compile("^§a(\\d+)§2/(\\d+)(?:§r)?$");
     private static final Pattern TYPE_PATTERN = Pattern.compile("^§7Get §[e6]\\[(?:(\\d+) )?(.*)\\]$");
-    private static final StyledText VERIFICATION_STRING = StyledText.of("§7Right-click to add");
+    private static final StyledText VERIFICATION_STRING = StyledText.fromString("§7Right-click to add");
 
     private final Map<Integer, TokenGatekeeper> activeGatekeepers = new HashMap<>();
     private final Map<TokenGatekeeper, TokenInventoryWatcher> inventoryWatchers = new HashMap<>();
@@ -81,11 +82,11 @@ public class TokenModel extends Model {
 
         StyledText name = event.getName();
 
-        Matcher typeMatcher = name.match(TYPE_PATTERN);
+        Matcher typeMatcher = name.getMatcher(TYPE_PATTERN, PartStyle.StyleType.FULL);
         if (typeMatcher.matches()) {
             String countString = typeMatcher.group(1);
             int max = countString != null ? Integer.parseInt(countString) : 1;
-            StyledText type = StyledText.of(typeMatcher.group(2));
+            StyledText type = StyledText.fromString(typeMatcher.group(2));
 
             BakingTokenGatekeeper baking = getBaking(event.getEntity().position());
             baking.type = type;
@@ -99,7 +100,7 @@ public class TokenModel extends Model {
             return;
         }
 
-        Matcher tokensMatcher = name.match(TOKEN_PATTERN);
+        Matcher tokensMatcher = name.getMatcher(TOKEN_PATTERN, PartStyle.StyleType.FULL);
         if (tokensMatcher.matches()) {
             CappedValue tokens =
                     new CappedValue(Integer.parseInt(tokensMatcher.group(1)), Integer.parseInt(tokensMatcher.group(2)));
@@ -137,7 +138,7 @@ public class TokenModel extends Model {
             return;
         }
 
-        Matcher toaMatcher = name.match(TOA_GATEKEEPER_NAME_PATTERN);
+        Matcher toaMatcher = name.getMatcher(TOA_GATEKEEPER_NAME_PATTERN, PartStyle.StyleType.FULL);
         if (toaMatcher.matches()) {
             int floor = Integer.parseInt(toaMatcher.group(1));
             int level = Integer.parseInt(toaMatcher.group(2));
@@ -145,14 +146,14 @@ public class TokenModel extends Model {
             Location location =
                     Location.containing(event.getEntity().position()).offset(0, 3, 0);
 
-            StyledText gatekeeperTokenName = StyledText.of("Shard [Floor " + floor + " - Level " + level + "]");
-            StyledText itemName = StyledText.of("§d[Floor " + floor + " - Lv. " + level + "]");
+            StyledText gatekeeperTokenName = StyledText.fromString("Shard [Floor " + floor + " - Level " + level + "]");
+            StyledText itemName = StyledText.fromString("§d[Floor " + floor + " - Lv. " + level + "]");
             addGatekeeper(
                     event.getEntity().getId(),
                     new TokenGatekeeper(gatekeeperTokenName, itemName, location, new CappedValue(0, maxTokens)));
         }
 
-        Matcher hiveMatcher = name.match(HIVE_GATEKEEPER_NAME_PATTERN);
+        Matcher hiveMatcher = name.getMatcher(HIVE_GATEKEEPER_NAME_PATTERN, PartStyle.StyleType.FULL);
         if (hiveMatcher.matches()) {
             String division = hiveMatcher.group(1);
             int level = Integer.parseInt(hiveMatcher.group(2));
@@ -160,7 +161,7 @@ public class TokenModel extends Model {
             Location location =
                     Location.containing(event.getEntity().position()).offset(0, 3, 0);
 
-            StyledText tokenName = StyledText.of(division + " Catalyst " + MathUtils.toRoman(level));
+            StyledText tokenName = StyledText.fromString(division + " Catalyst " + MathUtils.toRoman(level));
             addGatekeeper(
                     event.getEntity().getId(), new TokenGatekeeper(tokenName, location, new CappedValue(0, maxTokens)));
         }

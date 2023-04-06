@@ -5,6 +5,7 @@
 package com.wynntils.models.profession;
 
 import com.wynntils.core.components.Model;
+import com.wynntils.core.text.PartStyle;
 import com.wynntils.core.text.StyledText;
 import com.wynntils.handlers.chat.event.ChatMessageReceivedEvent;
 import com.wynntils.handlers.labels.event.EntityLabelChangedEvent;
@@ -52,7 +53,7 @@ public class ProfessionModel extends Model {
 
     @SubscribeEvent
     public void onLabelSpawn(EntityLabelChangedEvent event) {
-        Matcher matcher = event.getName().match(PROFESSION_NODE_HARVERSTED_PATTERN);
+        Matcher matcher = event.getName().getMatcher(PROFESSION_NODE_HARVERSTED_PATTERN, PartStyle.StyleType.FULL);
 
         if (matcher.matches()) {
             updatePercentage(
@@ -66,7 +67,7 @@ public class ProfessionModel extends Model {
     public void onChatMessage(ChatMessageReceivedEvent event) {
         StyledText codedMessage = event.getOriginalCodedMessage();
 
-        Matcher matcher = codedMessage.match(PROFESSION_CRAFT_PATTERN);
+        Matcher matcher = codedMessage.getMatcher(PROFESSION_CRAFT_PATTERN, PartStyle.StyleType.FULL);
 
         if (matcher.matches()) {
             updatePercentage(
@@ -75,7 +76,7 @@ public class ProfessionModel extends Model {
                     Float.parseFloat(matcher.group("gain")));
         }
 
-        matcher = codedMessage.match(PROFESSION_LEVELUP_PATTERN);
+        matcher = codedMessage.getMatcher(PROFESSION_LEVELUP_PATTERN, PartStyle.StyleType.FULL);
 
         if (matcher.matches()) {
             updateLevel(ProfessionType.fromString(matcher.group("name")), Integer.parseInt(matcher.group("level")));
@@ -86,7 +87,7 @@ public class ProfessionModel extends Model {
         Map<ProfessionType, ProfessionProgress> levels = new ConcurrentHashMap<>();
         List<StyledText> professionLore = LoreUtils.getLore(professionInfoItem);
         for (StyledText line : professionLore) {
-            Matcher matcher = line.match(INFO_MENU_PROFESSION_LORE_PATTERN);
+            Matcher matcher = line.getMatcher(INFO_MENU_PROFESSION_LORE_PATTERN, PartStyle.StyleType.FULL);
 
             if (matcher.matches()) {
                 // NOTE: When writing this, progress was quite a bit off in this lore. Still, parse it and use it while

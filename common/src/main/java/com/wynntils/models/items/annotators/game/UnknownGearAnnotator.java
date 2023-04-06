@@ -5,6 +5,7 @@
 package com.wynntils.models.items.annotators.game;
 
 import com.wynntils.core.components.Models;
+import com.wynntils.core.text.PartStyle;
 import com.wynntils.core.text.StyledText;
 import com.wynntils.handlers.item.ItemAnnotation;
 import com.wynntils.handlers.item.ItemAnnotator;
@@ -22,7 +23,7 @@ public final class UnknownGearAnnotator implements ItemAnnotator {
         GearType gearType = GearType.fromItemStack(itemStack);
         if (gearType == null) return null;
 
-        Matcher matcher = name.match(UNKNOWN_GEAR_PATTERN);
+        Matcher matcher = name.getMatcher(UNKNOWN_GEAR_PATTERN, PartStyle.StyleType.FULL);
         if (!matcher.matches()) return null;
 
         String gearName = matcher.group(1);

@@ -8,6 +8,7 @@ import com.wynntils.core.components.Models;
 import com.wynntils.core.config.Category;
 import com.wynntils.core.config.ConfigCategory;
 import com.wynntils.core.features.Feature;
+import com.wynntils.core.text.PartStyle;
 import com.wynntils.handlers.chat.event.ChatMessageReceivedEvent;
 import com.wynntils.mc.event.ScreenClosedEvent;
 import com.wynntils.mc.event.ScreenOpenedEvent;
@@ -29,7 +30,9 @@ public class TradeMarketAutoOpenChatFeature extends Feature {
     public void onChatMessageReceive(ChatMessageReceivedEvent event) {
         if (!Models.WorldState.onWorld()) return;
 
-        if (event.getOriginalCodedMessage().match(TYPE_TO_CHAT_PATTERN).matches()) {
+        if (event.getOriginalCodedMessage()
+                .getMatcher(TYPE_TO_CHAT_PATTERN, PartStyle.StyleType.FULL)
+                .matches()) {
             openChatWhenContainerClosed = true;
         }
     }

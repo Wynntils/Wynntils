@@ -4,6 +4,7 @@
  */
 package com.wynntils.models.items.annotators.gui;
 
+import com.wynntils.core.text.PartStyle;
 import com.wynntils.core.text.StyledText;
 import com.wynntils.handlers.item.ItemAnnotation;
 import com.wynntils.handlers.item.ItemAnnotator;
@@ -19,7 +20,7 @@ public final class SoulPointAnnotator implements ItemAnnotator {
     @Override
     public ItemAnnotation getAnnotation(ItemStack itemStack, StyledText name) {
         if (itemStack.getItem() != Items.NETHER_STAR) return null;
-        Matcher matcher = name.match(SOUL_POINTS_PATTERN);
+        Matcher matcher = name.getMatcher(SOUL_POINTS_PATTERN, PartStyle.StyleType.FULL);
         if (!matcher.matches()) return null;
 
         int count = Integer.parseInt(matcher.group(1));

@@ -6,6 +6,7 @@ package com.wynntils.models.mobtotem;
 
 import com.wynntils.core.components.Model;
 import com.wynntils.core.components.Models;
+import com.wynntils.core.text.PartStyle;
 import com.wynntils.handlers.labels.event.EntityLabelChangedEvent;
 import com.wynntils.mc.event.RemoveEntitiesEvent;
 import com.wynntils.models.worlds.WorldStateModel;
@@ -41,7 +42,7 @@ public class MobTotemModel extends Model {
 
         // If a new mob totem just appeared, add it to the unstarted list
         // Totem timers do not match the MOB_TOTEM_NAME pattern
-        Matcher nameMatcher = e.getName().match(MOB_TOTEM_NAME);
+        Matcher nameMatcher = e.getName().getMatcher(MOB_TOTEM_NAME, PartStyle.StyleType.FULL);
         if (nameMatcher.find()) {
             int mobTotemId = e.getEntity().getId();
 
@@ -51,7 +52,7 @@ public class MobTotemModel extends Model {
             return;
         }
 
-        Matcher timerMatcher = e.getName().match(MOB_TOTEM_TIMER);
+        Matcher timerMatcher = e.getName().getMatcher(MOB_TOTEM_TIMER, PartStyle.StyleType.FULL);
         if (!timerMatcher.find()) return;
 
         mobTotems.values().stream()

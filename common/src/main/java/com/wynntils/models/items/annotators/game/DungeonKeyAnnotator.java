@@ -4,6 +4,7 @@
  */
 package com.wynntils.models.items.annotators.game;
 
+import com.wynntils.core.text.PartStyle;
 import com.wynntils.core.text.StyledText;
 import com.wynntils.handlers.item.ItemAnnotation;
 import com.wynntils.handlers.item.ItemAnnotator;
@@ -23,7 +24,7 @@ public final class DungeonKeyAnnotator implements ItemAnnotator {
 
     @Override
     public ItemAnnotation getAnnotation(ItemStack itemStack, StyledText name) {
-        Matcher keyMatcher = name.match(DUNGEON_KEY_PATTERN);
+        Matcher keyMatcher = name.getMatcher(DUNGEON_KEY_PATTERN, PartStyle.StyleType.FULL);
         if (!keyMatcher.matches()) return null;
 
         if (!verifyDungeonKey(itemStack, name)) return null;

@@ -12,7 +12,6 @@ import com.wynntils.core.text.StyledText;
 import com.wynntils.handlers.chat.event.ChatMessageReceivedEvent;
 import com.wynntils.models.emeralds.type.EmeraldUnits;
 import com.wynntils.models.gear.type.GearTier;
-import com.wynntils.utils.mc.ComponentUtils;
 import java.util.EnumMap;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -29,7 +28,8 @@ public class BlacksmithRedirectFeature extends Feature {
 
     @SubscribeEvent(priority = EventPriority.HIGH)
     public void onChat(ChatMessageReceivedEvent event) {
-        Matcher messageMatcher = event.getOriginalCodedMessage().match(BLACKSMITH_MESSAGE_PATTERN);
+        Matcher messageMatcher =
+                event.getOriginalCodedMessage().getMatcher(BLACKSMITH_MESSAGE_PATTERN, PartStyle.StyleType.FULL);
         if (!messageMatcher.matches()) return;
         event.setCanceled(true);
 
@@ -62,8 +62,8 @@ public class BlacksmithRedirectFeature extends Feature {
             // Tally up the items that we sold.
             for (Component sibling : event.getOriginalMessage().getSiblings()) {
                 // Retrieve the color code of the item, and then match it to the item tier.
-                Matcher itemMatcher =
-                        ComponentUtils.getCoded(sibling).match(ITEM_PATTERN); // Second group contains the items.
+                Matcher itemMatcher = StyledText.fromComponent(sibling)
+                        .getMatcher(ITEM_PATTERN, PartStyle.StyleType.FULL); // Second group contains the items.
 
                 if (!itemMatcher.matches()) {
                     continue;
@@ -97,7 +97,7 @@ public class BlacksmithRedirectFeature extends Feature {
             String countByTierString = countByTier.toString();
 
             // Sold 1 (1/0/0/0/0/0/0/0) item for 4e.
-            sendableMessage = StyledText.of(String.format(
+            sendableMessage = StyledText.fromString(String.format(
                     "§dSold %d %s %s for §a%s%s§d.",
                     totalItemInteger,
                     itemPluralizer,
@@ -109,7 +109,7 @@ public class BlacksmithRedirectFeature extends Feature {
         else {
             itemPluralizer = totalItemInteger == 1 ? "item" : "items";
 
-            sendableMessage = StyledText.of(String.format(
+            sendableMessage = StyledText.fromString(String.format(
                     "§dScrapped %d %s for §a%s scrap§d.", totalItemInteger, itemPluralizer, paymentString));
         }
 

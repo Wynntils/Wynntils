@@ -77,7 +77,7 @@ public abstract class WynntilsListScreen<E, B extends WynntilsButton> extends Wy
         FontRenderer.getInstance()
                 .renderAlignedTextInBox(
                         poseStack,
-                        StyledText.of((currentPage) + " / " + (maxPage)),
+                        StyledText.fromString((currentPage) + " / " + (maxPage)),
                         Texture.QUEST_BOOK_BACKGROUND.width() / 2f,
                         Texture.QUEST_BOOK_BACKGROUND.width(),
                         Texture.QUEST_BOOK_BACKGROUND.height() - 25,
@@ -91,7 +91,7 @@ public abstract class WynntilsListScreen<E, B extends WynntilsButton> extends Wy
         FontRenderer.getInstance()
                 .renderAlignedTextInBox(
                         poseStack,
-                        StyledText.of(key),
+                        StyledText.fromString(key),
                         Texture.QUEST_BOOK_BACKGROUND.width() / 2f + 15f,
                         Texture.QUEST_BOOK_BACKGROUND.width() - 15f,
                         0,

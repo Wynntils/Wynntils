@@ -11,7 +11,6 @@ import com.wynntils.core.notifications.event.NotificationEvent;
 import com.wynntils.core.text.StyledText;
 import com.wynntils.features.overlays.GameNotificationOverlayFeature;
 import com.wynntils.models.worlds.event.WorldStateEvent;
-import com.wynntils.utils.mc.ComponentUtils;
 import com.wynntils.utils.mc.McUtils;
 import com.wynntils.utils.render.TextRenderSetting;
 import com.wynntils.utils.render.TextRenderTask;
@@ -39,7 +38,8 @@ public final class NotificationManager extends Manager {
     }
 
     public MessageContainer queueMessage(Component message) {
-        return queueMessage(new TextRenderTask(ComponentUtils.getCoded(message), TextRenderSetting.DEFAULT));
+        return queueMessage(new TextRenderTask(
+                StyledText.fromComponent(message).getInternalCodedStringRepresentation(), TextRenderSetting.DEFAULT));
     }
 
     public MessageContainer queueMessage(TextRenderTask message) {
@@ -115,6 +115,6 @@ public final class NotificationManager extends Manager {
         McUtils.mc()
                 .gui
                 .getChat()
-                .addMessage(msgContainer.getRenderTask().getText().asSingleLiteralComponentWithCodedString());
+                .addMessage(msgContainer.getRenderTask().getText().getComponent());
     }
 }

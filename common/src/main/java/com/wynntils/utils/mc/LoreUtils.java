@@ -9,6 +9,7 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import com.google.gson.JsonSyntaxException;
+import com.wynntils.core.text.PartStyle;
 import com.wynntils.core.text.StyledText;
 import com.wynntils.utils.StringUtils;
 import java.lang.reflect.Type;
@@ -43,7 +44,7 @@ public final class LoreUtils {
         if (loreTag == null) return lore;
 
         for (int i = 0; i < loreTag.size(); ++i) {
-            lore.add(ComponentUtils.getCoded(loreTag.getString(i)));
+            lore.add(StyledText.fromComponent(ComponentUtils.parseComponentFromJson(loreTag.getString(i))));
         }
 
         return lore;
@@ -57,7 +58,7 @@ public final class LoreUtils {
         ListTag loreTag = getLoreTag(itemStack);
         if (loreTag == null) return StyledText.EMPTY;
 
-        return ComponentUtils.getCoded(loreTag.getString(line));
+        return StyledText.fromComponent(ComponentUtils.parseComponentFromJson(loreTag.getString(line)));
     }
 
     /**
@@ -69,7 +70,7 @@ public final class LoreUtils {
         Matcher matcher = null;
         for (int i = startLineNum; i <= startLineNum + 5; i++) {
             StyledText line = getLoreLine(itemStack, i);
-            matcher = line.match(pattern);
+            matcher = line.getMatcher(pattern, PartStyle.StyleType.FULL);
             if (matcher.matches()) return matcher;
         }
 
@@ -89,7 +90,7 @@ public final class LoreUtils {
         for (StyledText x : getLore(itemStack)) {
             toReturn.append(x);
         }
-        return StyledText.of(toReturn.toString());
+        return StyledText.fromString(toReturn.toString());
     }
 
     /** Get the lore NBT tag from an item, else return empty */

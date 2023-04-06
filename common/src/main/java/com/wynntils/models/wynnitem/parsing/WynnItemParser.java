@@ -74,11 +74,11 @@ public final class WynnItemParser {
         lore.remove(0); // remove item name
 
         for (Component loreLine : lore) {
-            StyledText coded = ComponentUtils.getCoded(loreLine);
+            StyledText coded = StyledText.fromComponent(loreLine);
             StyledText normalizedCoded = coded.getNormalized();
 
             // Look for powder
-            Matcher powderMatcher = normalizedCoded.match(POWDER_PATTERN);
+            Matcher powderMatcher = normalizedCoded.getMatcher(POWDER_PATTERN, PartStyle.StyleType.FULL);
             if (powderMatcher.matches()) {
                 int usedSlots = Integer.parseInt(powderMatcher.group(1));
                 String codedPowders = powderMatcher.group(3);
@@ -102,10 +102,10 @@ public final class WynnItemParser {
             }
 
             // Look for tier and rerolls
-            Matcher tierMatcher = normalizedCoded.match(TIER_AND_REROLL_PATTERN);
+            Matcher tierMatcher = normalizedCoded.getMatcher(TIER_AND_REROLL_PATTERN, PartStyle.StyleType.FULL);
             if (tierMatcher.matches()) {
                 String tierString = tierMatcher.group(1);
-                tier = GearTier.fromFormattedString(StyledText.of(tierString));
+                tier = GearTier.fromFormattedString(StyledText.fromString(tierString));
                 itemType = tierMatcher.group(2);
 
                 // This is either the rerolls (for re-identified gear), or the
@@ -120,13 +120,13 @@ public final class WynnItemParser {
             }
 
             // Look for level requirements
-            Matcher levelMatcher = normalizedCoded.match(MIN_LEVEL_PATTERN);
+            Matcher levelMatcher = normalizedCoded.getMatcher(MIN_LEVEL_PATTERN, PartStyle.StyleType.FULL);
             if (levelMatcher.matches()) {
                 level = Integer.parseInt(levelMatcher.group(1));
                 continue;
             }
 
-            Matcher setBonusMatcher = normalizedCoded.match(SET_BONUS_PATTEN);
+            Matcher setBonusMatcher = normalizedCoded.getMatcher(SET_BONUS_PATTEN, PartStyle.StyleType.FULL);
             if (setBonusMatcher.matches()) {
                 // Any stat lines that follow from now on belongs to the Set Bonus
                 // Maybe these could be collected separately, but for now, ignore them
@@ -134,14 +134,14 @@ public final class WynnItemParser {
             }
 
             // Look for effects (only on consumables)
-            Matcher effectHeaderMatcher = normalizedCoded.match(EFFECT_HEADER_PATTERN);
+            Matcher effectHeaderMatcher = normalizedCoded.getMatcher(EFFECT_HEADER_PATTERN, PartStyle.StyleType.FULL);
             if (effectHeaderMatcher.matches()) {
                 effectsColorCode = effectHeaderMatcher.group(1);
                 parsingEffects = true;
                 continue;
             }
             if (parsingEffects) {
-                Matcher effectMatcher = normalizedCoded.match(EFFECT_LINE_PATTERN);
+                Matcher effectMatcher = normalizedCoded.getMatcher(EFFECT_LINE_PATTERN, PartStyle.StyleType.FULL);
                 if (effectMatcher.matches()) {
                     String colorCode = effectMatcher.group(1);
                     String type = effectMatcher.group(2);
@@ -165,7 +165,7 @@ public final class WynnItemParser {
             }
 
             // Look for identifications
-            Matcher statMatcher = normalizedCoded.match(IDENTIFICATION_STAT_PATTERN);
+            Matcher statMatcher = normalizedCoded.getMatcher(IDENTIFICATION_STAT_PATTERN, PartStyle.StyleType.FULL);
             if (statMatcher.matches() && !setBonusStats) {
                 int value = Integer.parseInt(statMatcher.group(1));
                 // group 2 is only present for unidentified gears, as the to-part of the range

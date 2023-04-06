@@ -198,7 +198,7 @@ public class GameBarsOverlayFeature extends Feature {
                     .renderAlignedTextInBox(
                             poseStack,
                             bufferSource,
-                            StyledText.of(text),
+                            StyledText.fromString(text),
                             this.getRenderX(),
                             this.getRenderX() + this.getWidth(),
                             renderY,

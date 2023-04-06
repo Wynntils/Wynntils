@@ -274,7 +274,7 @@ public final class CharacterSelectorScreen extends WynntilsScreen {
         FontRenderer.getInstance()
                 .renderText(
                         poseStack,
-                        StyledText.of(
+                        StyledText.fromString(
                                 String.valueOf(this.selected.getClassInfo().soulPoints())),
                         0,
                         0,
@@ -302,7 +302,7 @@ public final class CharacterSelectorScreen extends WynntilsScreen {
         FontRenderer.getInstance()
                 .renderText(
                         poseStack,
-                        StyledText.of(
+                        StyledText.fromString(
                                 String.valueOf(this.selected.getClassInfo().completedQuests())),
                         0,
                         0,

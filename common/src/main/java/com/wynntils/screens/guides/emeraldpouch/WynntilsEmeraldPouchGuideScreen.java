@@ -12,7 +12,6 @@ import com.wynntils.screens.base.widgets.PageSelectorButton;
 import com.wynntils.screens.guides.WynntilsGuidesListScreen;
 import com.wynntils.utils.StringUtils;
 import com.wynntils.utils.colors.CommonColors;
-import com.wynntils.utils.mc.ComponentUtils;
 import com.wynntils.utils.render.FontRenderer;
 import com.wynntils.utils.render.RenderUtils;
 import com.wynntils.utils.render.Texture;
@@ -113,7 +112,7 @@ public final class WynntilsEmeraldPouchGuideScreen
         FontRenderer.getInstance()
                 .renderText(
                         poseStack,
-                        StyledText.of(titleString),
+                        StyledText.fromString(titleString),
                         0,
                         0,
                         CommonColors.YELLOW,
@@ -133,7 +132,7 @@ public final class WynntilsEmeraldPouchGuideScreen
         FontRenderer.getInstance()
                 .renderText(
                         poseStack,
-                        StyledText.of(I18n.get("screens.wynntils.wynntilsGuides.itemGuide.available")),
+                        StyledText.fromString(I18n.get("screens.wynntils.wynntilsGuides.itemGuide.available")),
                         Texture.QUEST_BOOK_BACKGROUND.width() * 0.75f,
                         30,
                         CommonColors.BLACK,
@@ -154,8 +153,8 @@ public final class WynntilsEmeraldPouchGuideScreen
     @Override
     protected void reloadElementsList(String searchTerm) {
         elements.addAll(parsedItemCache.stream()
-                .filter(itemStack ->
-                        StringUtils.partialMatch(ComponentUtils.getUnformatted(itemStack.getHoverName()), searchTerm))
+                .filter(itemStack -> StringUtils.partialMatch(
+                        StyledText.fromComponent(itemStack.getHoverName()).withoutFormatting(), searchTerm))
                 .toList());
     }
 

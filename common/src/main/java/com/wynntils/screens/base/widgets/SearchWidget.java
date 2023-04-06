@@ -73,7 +73,7 @@ public class SearchWidget extends TextInputBoxWidget {
         FontRenderer.getInstance()
                 .renderAlignedTextInBox(
                         poseStack,
-                        StyledText.of(defaultText ? DEFAULT_TEXT.getString() : firstPortion),
+                        StyledText.fromString(defaultText ? DEFAULT_TEXT.getString() : firstPortion),
                         this.getX() + textPadding,
                         this.getX() + this.width - textPadding - lastWidth - highlightedWidth,
                         this.getY() + VERTICAL_OFFSET,
@@ -87,7 +87,7 @@ public class SearchWidget extends TextInputBoxWidget {
         FontRenderer.getInstance()
                 .renderAlignedHighlightedTextInBox(
                         poseStack,
-                        StyledText.of(highlightedPortion),
+                        StyledText.fromString(highlightedPortion),
                         this.getX() + textPadding + firstWidth,
                         this.getX() + this.width - textPadding - lastWidth,
                         this.getY() + VERTICAL_OFFSET,
@@ -101,7 +101,7 @@ public class SearchWidget extends TextInputBoxWidget {
         FontRenderer.getInstance()
                 .renderAlignedTextInBox(
                         poseStack,
-                        StyledText.of(lastPortion),
+                        StyledText.fromString(lastPortion),
                         this.getX() + textPadding + firstWidth + highlightedWidth,
                         this.getX() + this.width - textPadding,
                         this.getY() + VERTICAL_OFFSET,
