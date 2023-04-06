@@ -1,3 +1,10 @@
+## [0.0.2-alpha.441](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.440...v0.0.2-alpha.441) (2023-04-06)
+
+
+### Bug Fixes
+
+* Fix overlay comparator ([#1450](https://github.com/Wynntils/Artemis/issues/1450)) ([491fc90](https://github.com/Wynntils/Artemis/commit/491fc901ef0f1bf6eeea3ddcaf661d1ffe5f379f))
+
 ## [0.0.2-alpha.440](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.439...v0.0.2-alpha.440) (2023-04-06)
 
 
@@ -9,6 +16,11 @@
 ### Performance Improvements
 
 * Some minor optimization in config saving ([#1445](https://github.com/Wynntils/Artemis/issues/1445)) ([45eb929](https://github.com/Wynntils/Artemis/commit/45eb92980ca393087301a2f064f9af485cff0157))
+
+
+### Miscellaneous Chores
+
+* **release:** v0.0.2-alpha.440 [skip ci] ([78b6583](https://github.com/Wynntils/Artemis/commit/78b6583230c031cba467ff162a8d850e97a288bf))
 
 ## [0.0.2-alpha.439](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.438...v0.0.2-alpha.439) (2023-04-05)
 
@@ -45,16 +57,4 @@
 ### Miscellaneous Chores
 
 * **release:** v0.0.2-alpha.437 [skip ci] ([ebb524a](https://github.com/Wynntils/Artemis/commit/ebb524a6e258e55992982d4fe860050c99d7f2f5))
-
-## [0.0.2-alpha.436](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.435...v0.0.2-alpha.436) (2023-04-05)
-
-
-### Bug Fixes
-
-* ExperienceTexturedCustomBarOverlay i18n ([#1444](https://github.com/Wynntils/Artemis/issues/1444)) ([a86a09d](https://github.com/Wynntils/Artemis/commit/a86a09d5d1170cf268eb3e4bc8d8b353d55653c4))
-
-
-### Miscellaneous Chores
-
-* **release:** v0.0.2-alpha.436 [skip ci] ([9290901](https://github.com/Wynntils/Artemis/commit/9290901276672523d49c5fc748f944061d3767c0))
 
