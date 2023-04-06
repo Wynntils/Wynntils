@@ -1,9 +1,21 @@
+## [0.0.2-alpha.442](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.441...v0.0.2-alpha.442) (2023-04-06)
+
+
+### Bug Fixes
+
+* Fix many cases of objective parsing ([#1452](https://github.com/Wynntils/Artemis/issues/1452)) ([c566757](https://github.com/Wynntils/Artemis/commit/c566757c484557b807caed642c334ffd6fec2b98))
+
 ## [0.0.2-alpha.441](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.440...v0.0.2-alpha.441) (2023-04-06)
 
 
 ### Bug Fixes
 
 * Fix overlay comparator ([#1450](https://github.com/Wynntils/Artemis/issues/1450)) ([491fc90](https://github.com/Wynntils/Artemis/commit/491fc901ef0f1bf6eeea3ddcaf661d1ffe5f379f))
+
+
+### Miscellaneous Chores
+
+* **release:** v0.0.2-alpha.441 [skip ci] ([8ba2bec](https://github.com/Wynntils/Artemis/commit/8ba2beccc9b3f4078d8da21a66c9c76910c39909))
 
 ## [0.0.2-alpha.440](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.439...v0.0.2-alpha.440) (2023-04-06)
 
@@ -45,16 +57,4 @@
 ### Miscellaneous Chores
 
 * **release:** v0.0.2-alpha.438 [skip ci] ([30878ab](https://github.com/Wynntils/Artemis/commit/30878abb596c50f457e3a51e6c41f771041132a5))
-
-## [0.0.2-alpha.437](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.436...v0.0.2-alpha.437) (2023-04-05)
-
-
-### Performance Improvements
-
-* Stop leaking overlays from overlay groups on config reload ([#1446](https://github.com/Wynntils/Artemis/issues/1446)) ([219252d](https://github.com/Wynntils/Artemis/commit/219252d29c4f7eb42c6b8db6ed86be45a90734c9))
-
-
-### Miscellaneous Chores
-
-* **release:** v0.0.2-alpha.437 [skip ci] ([ebb524a](https://github.com/Wynntils/Artemis/commit/ebb524a6e258e55992982d4fe860050c99d7f2f5))
 
