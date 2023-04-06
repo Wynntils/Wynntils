@@ -62,11 +62,12 @@ public class RangeVisualizerFeature extends Feature {
         // Marked with a ? needs additional confirmation
 
         for (GearMajorId majorId : majorIds) {
-            if (majorId.name().equals("Taunt")) {
+            System.out.println(majorId);
+            if (majorId.id().equals("TAUNT")) {
                 renderCircleWithRadius(e.getPoseStack(), 12, e.getPlayer().position());
-            } else if (majorId.name().equals("Saviour's Sacrifice") ||
-                    majorId.name().equals("Heart of the Pack") ||
-                    majorId.name().equals("Guardian")) {
+            } else if (majorId.id().equals("HERO") ||
+                    majorId.id().equals("ALTRUISM") ||
+                    majorId.id().equals("GUARDIAN")) {
                 renderCircleWithRadius(e.getPoseStack(), 8, e.getPlayer().position());
             }
         }
@@ -98,7 +99,6 @@ public class RangeVisualizerFeature extends Feature {
         VertexConsumer consumer = BUFFER_SOURCE.getBuffer(CustomRenderType.POSITION_COLOR_QUAD);
 
         Matrix4f matrix4f = poseStack.last().pose();
-        Matrix3f matrix3f = poseStack.last().normal();
         double angleStep = 2 * Math.PI / SEGMENTS;
         double angle = 0;
         for (int i = 0; i < SEGMENTS; i++) {
@@ -122,11 +122,10 @@ public class RangeVisualizerFeature extends Feature {
         RenderSystem.disableCull(); // Circle must be rendered on both sides, otherwise it will be invisible when looking at it from the outside
         poseStack.pushPose();
         poseStack.translate(-position.x(), -position.y(), -position.z());
-        
+
         VertexConsumer consumer = BUFFER_SOURCE.getBuffer(CustomRenderType.POSITION_COLOR_QUAD);
 
         Matrix4f matrix4f = poseStack.last().pose();
-        Matrix3f matrix3f = poseStack.last().normal();
         double angleStep = 2 * Math.PI / SEGMENTS;
         double angle = 0;
         for (int i = 0; i < SEGMENTS; i++) {
