@@ -64,6 +64,7 @@ public final class StyledText {
         List<HoverEvent> hoverEvents = new LinkedList<>();
 
         // Walk the component tree using DFS
+        // Component#visit behaves weirdly, so we do it manually
         // Save the style of the parent component so we can inherit it
         Deque<Pair<Component, Style>> deque = new LinkedList<>();
 
