@@ -271,8 +271,8 @@ public class GearInfoRegistry {
             if (lore == null) return Optional.empty();
 
             // Some lore contain like "\\[Community Event Winner\\]", fix that
-            return Optional.of(
-                    StyledText2.of(StringUtils.replaceEach(lore, new String[] {"\\[", "\\]"}, new String[] {"[", "]"})));
+            return Optional.of(StyledText2.of(
+                    StringUtils.replaceEach(lore, new String[] {"\\[", "\\]"}, new String[] {"[", "]"})));
         }
 
         private GearRestrictions parseRestrictions(JsonObject json) {

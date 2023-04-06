@@ -112,7 +112,7 @@ public final class StyledText {
     // If you need to do an operation with this string, implement it as a method
     public String getString(PartStyle.StyleType type) {
         if (type == PartStyle.StyleType.FULL) {
-            return ComponentUtils.getCoded(temporaryWorkaround);
+            return ComponentUtils.getCoded(temporaryWorkaround).getInternalCodedStringRepresentation();
         }
 
         StringBuilder builder = new StringBuilder();
