@@ -5,6 +5,7 @@
 package com.wynntils.models.discoveries;
 
 import com.wynntils.core.components.Models;
+import com.wynntils.core.text.PartStyle;
 import com.wynntils.core.text.StyledText;
 import com.wynntils.models.discoveries.profile.DiscoveryProfile;
 import com.wynntils.models.discoveries.type.DiscoveryType;

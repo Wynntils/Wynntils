@@ -5,6 +5,7 @@
 package com.wynntils.models.character;
 
 import com.wynntils.core.components.Model;
+import com.wynntils.core.text.PartStyle;
 import com.wynntils.core.text.StyledText;
 import com.wynntils.mc.event.ContainerSetContentEvent;
 import com.wynntils.mc.event.MenuEvent;

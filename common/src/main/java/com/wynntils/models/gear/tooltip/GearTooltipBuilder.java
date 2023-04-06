@@ -4,6 +4,7 @@
  */
 package com.wynntils.models.gear.tooltip;
 
+import com.wynntils.core.text.PartStyle;
 import com.wynntils.core.text.StyledText;
 import com.wynntils.models.character.type.ClassType;
 import com.wynntils.models.elements.type.Skill;

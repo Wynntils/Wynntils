@@ -7,6 +7,7 @@ package com.wynntils.models.favorites;
 import com.wynntils.core.components.Managers;
 import com.wynntils.core.components.Model;
 import com.wynntils.core.components.Models;
+import com.wynntils.core.text.StyledText;
 import com.wynntils.features.inventory.ItemFavoriteFeature;
 import com.wynntils.models.gear.type.GearInfo;
 import com.wynntils.models.ingredients.type.IngredientInfo;

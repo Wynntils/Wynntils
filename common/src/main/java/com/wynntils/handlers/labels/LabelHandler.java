@@ -6,6 +6,7 @@ package com.wynntils.handlers.labels;
 
 import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.components.Handler;
+import com.wynntils.core.text.PartStyle;
 import com.wynntils.core.text.StyledText;
 import com.wynntils.handlers.labels.event.EntityLabelChangedEvent;
 import com.wynntils.handlers.labels.event.EntityLabelVisibilityEvent;
