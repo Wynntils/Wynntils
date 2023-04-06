@@ -110,7 +110,7 @@ public final class StyledText {
                 StyledTextPart.fromCodedString(codedString, Style.EMPTY, null, Style.EMPTY), List.of(), List.of());
     }
 
-    public static StyledText fromStyledText2(CodedString codedString) {
+    public static StyledText fromCodedString(CodedString codedString) {
         return fromString(codedString.getInternalCodedStringRepresentation());
     }
 

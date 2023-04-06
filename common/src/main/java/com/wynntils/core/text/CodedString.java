@@ -15,6 +15,11 @@ import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
 
+/**
+ * This should not be used for new code. All uses of this class should be transitioned to
+ * use {@link StyledText} instead.
+ */
+@Deprecated
 public class CodedString {
     public static final CodedString EMPTY = CodedString.fromString("");
 
@@ -24,10 +29,20 @@ public class CodedString {
         this.str = str;
     }
 
+    /**
+     * This should not be used for new code. All uses of this class should be transitioned to
+     * use {@link StyledText} instead.
+     */
+    @Deprecated
     public static CodedString fromString(String s) {
         return new CodedString(s);
     }
 
+    /**
+     * This should not be used for new code. All uses of this class should be transitioned to
+     * use {@link StyledText} instead.
+     */
+    @Deprecated
     public static CodedString fromComponentIgnoringComponentStylesAndJustUsingFormattingCodes(Component component) {
         return CodedString.fromString(component.getString());
     }
@@ -36,6 +51,10 @@ public class CodedString {
         return fromString(styledText.getString(PartStyle.StyleType.FULL));
     }
 
+    /**
+     * This exposes the internal representation, and should be avoided.
+     */
+    @Deprecated
     public String getInternalCodedStringRepresentation() {
         return str;
     }
