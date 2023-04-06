@@ -1,9 +1,21 @@
+## [0.0.2-alpha.445](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.444...v0.0.2-alpha.445) (2023-04-06)
+
+
+### New Features
+
+* Parse profession level up messages and xp gains with multipliers ([#1453](https://github.com/Wynntils/Artemis/issues/1453)) ([e1a9406](https://github.com/Wynntils/Artemis/commit/e1a9406d684ada423780aee1d8cc10a940cee0f8))
+
 ## [0.0.2-alpha.444](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.443...v0.0.2-alpha.444) (2023-04-06)
 
 
 ### New Features
 
 * Add ping function ([#1455](https://github.com/Wynntils/Artemis/issues/1455)) ([4086f7e](https://github.com/Wynntils/Artemis/commit/4086f7eafa61e113992a45ef116ce05b92803820))
+
+
+### Miscellaneous Chores
+
+* **release:** v0.0.2-alpha.444 [skip ci] ([5455782](https://github.com/Wynntils/Artemis/commit/54557820defca0d36265dd0f7650de0824fedb7d))
 
 ## [0.0.2-alpha.443](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.442...v0.0.2-alpha.443) (2023-04-06)
 
@@ -40,21 +52,4 @@
 ### Miscellaneous Chores
 
 * **release:** v0.0.2-alpha.441 [skip ci] ([8ba2bec](https://github.com/Wynntils/Artemis/commit/8ba2beccc9b3f4078d8da21a66c9c76910c39909))
-
-## [0.0.2-alpha.440](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.439...v0.0.2-alpha.440) (2023-04-06)
-
-
-### Bug Fixes
-
-* Show info box content in preview, if set ([#1449](https://github.com/Wynntils/Artemis/issues/1449)) ([b6ae3c8](https://github.com/Wynntils/Artemis/commit/b6ae3c87bec8039b6d93c1ee0f5c02e67559c0f9))
-
-
-### Performance Improvements
-
-* Some minor optimization in config saving ([#1445](https://github.com/Wynntils/Artemis/issues/1445)) ([45eb929](https://github.com/Wynntils/Artemis/commit/45eb92980ca393087301a2f064f9af485cff0157))
-
-
-### Miscellaneous Chores
-
-* **release:** v0.0.2-alpha.440 [skip ci] ([78b6583](https://github.com/Wynntils/Artemis/commit/78b6583230c031cba467ff162a8d850e97a288bf))
 
