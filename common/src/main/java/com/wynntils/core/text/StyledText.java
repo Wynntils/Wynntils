@@ -32,99 +32,6 @@ public final class StyledText {
     private final List<ClickEvent> clickEvents;
     private final List<HoverEvent> hoverEvents;
 
-    StyledText(Component component) {
-        temporaryWorkaround = component;
-
-        parts = new LinkedList<>();
-        clickEvents = new LinkedList<>();
-        hoverEvents = new LinkedList<>();
-
-        // Walk the component tree using DFS
-        // Save the style of the parent component so we can inherit it
-        Deque<Pair<Component, Style>> deque = new LinkedList<>();
-
-        deque.add(new Pair<>(component, Style.EMPTY));
-
-        while (!deque.isEmpty()) {
-            Pair<Component, Style> currentPair = deque.pop();
-            Component current = currentPair.key();
-            Style parentStyle = currentPair.value();
-
-            String componentString =
-                    MutableComponent.create(current.getContents()).getString();
-
-            StyledTextPart styledTextPart = StyledTextPart.fromComponentWithPossibleFormattingCodes(
-                    componentString, current.getStyle(), this, parentStyle);
-
-            List<Pair<Component, Style>> siblingPairs = current.getSiblings().stream()
-                    .map(sibling ->
-                            new Pair<>(sibling, styledTextPart.getPartStyle().getStyle()))
-                    .collect(Collectors.toList());
-
-            Collections.reverse(siblingPairs);
-            siblingPairs.forEach(deque::addFirst);
-
-            parts.add(styledTextPart);
-        }
-    }
-
-    StyledText(String codedString) {
-        parts = new LinkedList<>();
-        clickEvents = new LinkedList<>();
-        hoverEvents = new LinkedList<>();
-
-        Style currentStyle = Style.EMPTY;
-        StringBuilder currentString = new StringBuilder();
-
-        boolean nextIsFormatting = false;
-
-        for (char current : codedString.toCharArray()) {
-            if (nextIsFormatting) {
-                nextIsFormatting = false;
-
-                ChatFormatting formatting = ChatFormatting.getByCode(current);
-
-                if (formatting == null) {
-                    currentString.append(ChatFormatting.PREFIX_CODE);
-                    currentString.append(current);
-                    continue;
-                }
-
-                // We already had some text with the current style
-                // Append it before modifying the style
-                if (!currentString.isEmpty()) {
-                    parts.add(new StyledTextPart(currentString.toString(), currentStyle, this, null));
-                    currentString = new StringBuilder();
-                }
-
-                // Color formatting resets the style
-                if (formatting.isColor()) {
-                    currentStyle = Style.EMPTY.withColor(formatting);
-                    continue;
-                }
-
-                currentStyle = currentStyle.applyFormat(formatting);
-
-                continue;
-            }
-
-            if (current == ChatFormatting.PREFIX_CODE) {
-                nextIsFormatting = true;
-                continue;
-            }
-
-            currentString.append(current);
-        }
-
-        // Check if we have some text left
-        if (!currentString.isEmpty()) {
-            parts.add(new StyledTextPart(currentString.toString(), currentStyle, this, null));
-        }
-
-        // We can't know the component, just use our own representation
-        temporaryWorkaround = getComponent();
-    }
-
     private StyledText(
             List<StyledTextPart> parts,
             Component temporaryWorkaround,
@@ -150,11 +57,97 @@ public final class StyledText {
     }
 
     public static StyledText fromComponent(Component component) {
-        return new StyledText(component);
+        Component temporaryWorkaround = component;
+
+        List<StyledTextPart> parts = new LinkedList<>();
+        List<ClickEvent> clickEvents = new LinkedList<>();
+        List<HoverEvent> hoverEvents = new LinkedList<>();
+
+        // Walk the component tree using DFS
+        // Save the style of the parent component so we can inherit it
+        Deque<Pair<Component, Style>> deque = new LinkedList<>();
+
+        deque.add(new Pair<>(component, Style.EMPTY));
+
+        while (!deque.isEmpty()) {
+            Pair<Component, Style> currentPair = deque.pop();
+            Component current = currentPair.key();
+            Style parentStyle = currentPair.value();
+
+            String componentString =
+                    MutableComponent.create(current.getContents()).getString();
+
+            StyledTextPart styledTextPart = StyledTextPart.fromComponentWithPossibleFormattingCodes(
+                    componentString, current.getStyle(), null, parentStyle);
+
+            List<Pair<Component, Style>> siblingPairs = current.getSiblings().stream()
+                    .map(sibling ->
+                            new Pair<>(sibling, styledTextPart.getPartStyle().getStyle()))
+                    .collect(Collectors.toList());
+
+            Collections.reverse(siblingPairs);
+            siblingPairs.forEach(deque::addFirst);
+
+            parts.add(styledTextPart);
+        }
+
+        return new StyledText(parts, temporaryWorkaround, clickEvents, hoverEvents);
     }
 
     public static StyledText fromString(String codedString) {
-        return new StyledText(codedString);
+        List<StyledTextPart> parts = new LinkedList<>();
+        List<ClickEvent> clickEvents = new LinkedList<>();
+        List<HoverEvent> hoverEvents = new LinkedList<>();
+
+        Style currentStyle = Style.EMPTY;
+        StringBuilder currentString = new StringBuilder();
+
+        boolean nextIsFormatting = false;
+
+        for (char current : codedString.toCharArray()) {
+            if (nextIsFormatting) {
+                nextIsFormatting = false;
+
+                ChatFormatting formatting = ChatFormatting.getByCode(current);
+
+                if (formatting == null) {
+                    currentString.append(ChatFormatting.PREFIX_CODE);
+                    currentString.append(current);
+                    continue;
+                }
+
+                // We already had some text with the current style
+                // Append it before modifying the style
+                if (!currentString.isEmpty()) {
+                    parts.add(new StyledTextPart(currentString.toString(), currentStyle, null, null));
+                    currentString = new StringBuilder();
+                }
+
+                // Color formatting resets the style
+                if (formatting.isColor()) {
+                    currentStyle = Style.EMPTY.withColor(formatting);
+                    continue;
+                }
+
+                currentStyle = currentStyle.applyFormat(formatting);
+
+                continue;
+            }
+
+            if (current == ChatFormatting.PREFIX_CODE) {
+                nextIsFormatting = true;
+                continue;
+            }
+
+            currentString.append(current);
+        }
+
+        // Check if we have some text left
+        if (!currentString.isEmpty()) {
+            parts.add(new StyledTextPart(currentString.toString(), currentStyle, null, null));
+        }
+
+        return new StyledText(parts, clickEvents, hoverEvents);
     }
 
     // We don't want to expose the actual string to the outside world

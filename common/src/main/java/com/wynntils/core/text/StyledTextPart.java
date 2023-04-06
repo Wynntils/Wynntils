@@ -28,7 +28,7 @@ public final class StyledTextPart {
 
     StyledTextPart(StyledTextPart part, StyledText parent) {
         this.text = part.text;
-        this.style = part.style;
+        this.style = new PartStyle(part.style, this);
         this.parent = parent;
     }
 

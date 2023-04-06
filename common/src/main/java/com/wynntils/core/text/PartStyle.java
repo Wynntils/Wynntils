@@ -49,6 +49,18 @@ public final class PartStyle {
         this.hoverEvent = hoverEvent;
     }
 
+    PartStyle(PartStyle partStyle, StyledTextPart owner) {
+        this.owner = owner;
+        this.color = partStyle.color;
+        this.obfuscated = partStyle.obfuscated;
+        this.bold = partStyle.bold;
+        this.strikethrough = partStyle.strikethrough;
+        this.underlined = partStyle.underlined;
+        this.italic = partStyle.italic;
+        this.clickEvent = partStyle.clickEvent;
+        this.hoverEvent = partStyle.hoverEvent;
+    }
+
     static PartStyle fromStyle(Style style, StyledTextPart owner, Style parentStyle) {
         Style inheritedStyle;
 
