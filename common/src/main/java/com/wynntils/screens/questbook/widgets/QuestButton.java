@@ -6,7 +6,7 @@ package com.wynntils.screens.questbook.widgets;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.wynntils.core.components.Models;
-import com.wynntils.core.text.StyledText;
+import com.wynntils.core.text.StyledText2;
 import com.wynntils.models.quests.QuestInfo;
 import com.wynntils.screens.base.widgets.WynntilsButton;
 import com.wynntils.screens.maps.MainMapScreen;
@@ -53,7 +53,7 @@ public class QuestButton extends WynntilsButton {
         FontRenderer.getInstance()
                 .renderText(
                         poseStack,
-                        StyledText.of(RenderedStringUtils.getMaxFittingText(
+                        StyledText2.of(RenderedStringUtils.getMaxFittingText(
                                 questInfo.getName(),
                                 maxTextWidth,
                                 FontRenderer.getInstance().getFont())),

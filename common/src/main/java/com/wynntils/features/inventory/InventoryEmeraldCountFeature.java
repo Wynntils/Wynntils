@@ -11,7 +11,7 @@ import com.wynntils.core.config.Config;
 import com.wynntils.core.config.ConfigCategory;
 import com.wynntils.core.config.RegisterConfig;
 import com.wynntils.core.features.Feature;
-import com.wynntils.core.text.StyledText;
+import com.wynntils.core.text.StyledText2;
 import com.wynntils.mc.event.ContainerRenderEvent;
 import com.wynntils.models.emeralds.type.EmeraldUnits;
 import com.wynntils.utils.StringUtils;
@@ -111,7 +111,7 @@ public class InventoryEmeraldCountFeature extends Feature {
         FontRenderer.getInstance()
                 .renderText(
                         poseStack,
-                        StyledText.of(emeraldText),
+                        StyledText2.of(emeraldText),
                         x + 1,
                         y - 10,
                         0,
@@ -170,7 +170,7 @@ public class InventoryEmeraldCountFeature extends Feature {
             FontRenderer.getInstance()
                     .renderAlignedTextInBox(
                             poseStack,
-                            StyledText.of(emeraldAmount),
+                            StyledText2.of(emeraldAmount),
                             renderX,
                             renderX + TEXTURE_SIZE - 2,
                             renderY,

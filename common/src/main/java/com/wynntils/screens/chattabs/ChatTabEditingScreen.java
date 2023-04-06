@@ -7,7 +7,7 @@ package com.wynntils.screens.chattabs;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.wynntils.core.chat.ChatTab;
 import com.wynntils.core.components.Managers;
-import com.wynntils.core.text.StyledText;
+import com.wynntils.core.text.StyledText2;
 import com.wynntils.handlers.chat.type.RecipientType;
 import com.wynntils.screens.base.TextboxScreen;
 import com.wynntils.screens.base.WynntilsScreen;
@@ -232,7 +232,7 @@ public final class ChatTabEditingScreen extends WynntilsScreen implements Textbo
         FontRenderer.getInstance()
                 .renderText(
                         poseStack,
-                        StyledText.of(I18n.get("screens.wynntils.chatTabsGui.name") + ChatFormatting.DARK_RED + " *"),
+                        StyledText2.of(I18n.get("screens.wynntils.chatTabsGui.name") + ChatFormatting.DARK_RED + " *"),
                         this.width / 2f - 160,
                         this.height / 2f - 85,
                         CommonColors.WHITE,
@@ -244,7 +244,7 @@ public final class ChatTabEditingScreen extends WynntilsScreen implements Textbo
         FontRenderer.getInstance()
                 .renderText(
                         poseStack,
-                        StyledText.of(I18n.get("screens.wynntils.chatTabsGui.autoCommand")),
+                        StyledText2.of(I18n.get("screens.wynntils.chatTabsGui.autoCommand")),
                         this.width / 2f - 30,
                         this.height / 2f - 85,
                         CommonColors.WHITE,
@@ -256,7 +256,7 @@ public final class ChatTabEditingScreen extends WynntilsScreen implements Textbo
         FontRenderer.getInstance()
                 .renderText(
                         poseStack,
-                        StyledText.of(I18n.get("screens.wynntils.chatTabsGui.order")),
+                        StyledText2.of(I18n.get("screens.wynntils.chatTabsGui.order")),
                         this.width / 2f + 100,
                         this.height / 2f - 85,
                         CommonColors.WHITE,
@@ -268,7 +268,7 @@ public final class ChatTabEditingScreen extends WynntilsScreen implements Textbo
         FontRenderer.getInstance()
                 .renderText(
                         poseStack,
-                        StyledText.of(I18n.get("screens.wynntils.chatTabsGui.types") + ChatFormatting.DARK_RED + " *"),
+                        StyledText2.of(I18n.get("screens.wynntils.chatTabsGui.types") + ChatFormatting.DARK_RED + " *"),
                         this.width / 2f - 160,
                         this.height / 2f - 40,
                         CommonColors.WHITE,
@@ -280,7 +280,7 @@ public final class ChatTabEditingScreen extends WynntilsScreen implements Textbo
         FontRenderer.getInstance()
                 .renderText(
                         poseStack,
-                        StyledText.of(I18n.get("screens.wynntils.chatTabsGui.filter")),
+                        StyledText2.of(I18n.get("screens.wynntils.chatTabsGui.filter")),
                         this.width / 2f - 160,
                         this.height / 2f + 30,
                         CommonColors.WHITE,

@@ -6,7 +6,7 @@ package com.wynntils.screens.settings.elements;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.wynntils.core.config.ConfigHolder;
-import com.wynntils.core.text.StyledText;
+import com.wynntils.core.text.StyledText2;
 import com.wynntils.utils.EnumUtils;
 import com.wynntils.utils.colors.CommonColors;
 import com.wynntils.utils.colors.CustomColor;
@@ -64,7 +64,7 @@ public class EnumConfigOptionElement extends ConfigOptionElement {
         FontRenderer.getInstance()
                 .renderAlignedTextInBox(
                         poseStack,
-                        StyledText.of(configHolder.getValueString()),
+                        StyledText2.of(configHolder.getValueString()),
                         0,
                         maxOptionWidth,
                         renderY + FontRenderer.getInstance().getFont().lineHeight / 2f,

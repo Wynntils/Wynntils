@@ -8,7 +8,7 @@ import com.mojang.blaze3d.platform.GlStateManager;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.wynntils.core.components.Managers;
-import com.wynntils.core.text.StyledText;
+import com.wynntils.core.text.StyledText2;
 import com.wynntils.features.map.MapFeature;
 import com.wynntils.models.map.pois.CustomPoi;
 import com.wynntils.screens.maps.PoiCreationScreen;
@@ -110,7 +110,7 @@ public class PoiManagerWidget extends AbstractWidget {
         FontRenderer.getInstance()
                 .renderText(
                         poseStack,
-                        StyledText.of(poiName),
+                        StyledText2.of(poiName),
                         this.width / 2f - 130,
                         60 + 20 * row,
                         color,
@@ -121,7 +121,7 @@ public class PoiManagerWidget extends AbstractWidget {
         FontRenderer.getInstance()
                 .renderText(
                         poseStack,
-                        StyledText.of(String.valueOf(poi.getLocation().getX())),
+                        StyledText2.of(String.valueOf(poi.getLocation().getX())),
                         this.width / 2f - 15,
                         60 + 20 * row,
                         color,
@@ -134,7 +134,7 @@ public class PoiManagerWidget extends AbstractWidget {
         FontRenderer.getInstance()
                 .renderText(
                         poseStack,
-                        y.isPresent() ? StyledText.of(String.valueOf(y.get())) : StyledText.EMPTY,
+                        y.isPresent() ? StyledText2.of(String.valueOf(y.get())) : StyledText2.EMPTY,
                         this.width / 2f + 40,
                         60 + 20 * row,
                         color,
@@ -145,7 +145,7 @@ public class PoiManagerWidget extends AbstractWidget {
         FontRenderer.getInstance()
                 .renderText(
                         poseStack,
-                        StyledText.of(String.valueOf(poi.getLocation().getZ())),
+                        StyledText2.of(String.valueOf(poi.getLocation().getZ())),
                         this.width / 2f + 80,
                         60 + 20 * row,
                         color,

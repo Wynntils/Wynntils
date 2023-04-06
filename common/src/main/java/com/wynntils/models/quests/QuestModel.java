@@ -11,7 +11,7 @@ import com.wynntils.core.components.Model;
 import com.wynntils.core.components.Models;
 import com.wynntils.core.net.ApiResponse;
 import com.wynntils.core.net.UrlId;
-import com.wynntils.core.text.StyledText;
+import com.wynntils.core.text.StyledText2;
 import com.wynntils.handlers.scoreboard.ScoreboardPart;
 import com.wynntils.models.characterstats.CombatXpModel;
 import com.wynntils.models.quests.event.QuestBookReloadedEvent;
@@ -37,10 +37,10 @@ public final class QuestModel extends Model {
 
     private List<QuestInfo> quests = List.of();
     private List<QuestInfo> miniQuests = List.of();
-    private List<List<StyledText>> dialogueHistory = List.of();
+    private List<List<StyledText2>> dialogueHistory = List.of();
     private QuestInfo trackedQuest = null;
     private String afterRescanName;
-    private StyledText afterRescanTask;
+    private StyledText2 afterRescanTask;
 
     public QuestModel(CombatXpModel combatXpModel) {
         super(List.of(combatXpModel));
@@ -114,7 +114,7 @@ public final class QuestModel extends Model {
         };
     }
 
-    public List<List<StyledText>> getDialogueHistory() {
+    public List<List<StyledText2>> getDialogueHistory() {
         return dialogueHistory;
     }
 
@@ -162,7 +162,7 @@ public final class QuestModel extends Model {
         updateTrackedQuest(null);
     }
 
-    public void updateTrackedQuestFromScoreboard(String name, StyledText nextTask) {
+    public void updateTrackedQuestFromScoreboard(String name, StyledText2 nextTask) {
         // If our quest book has not yet been scanned, we can't update now
         // but will do after scanning is complete
         if (updateAfterRescan(name, nextTask)) return;
@@ -192,7 +192,7 @@ public final class QuestModel extends Model {
                 .findFirst();
     }
 
-    private boolean updateAfterRescan(String name, StyledText nextTask) {
+    private boolean updateAfterRescan(String name, StyledText2 nextTask) {
         boolean isMiniQuest = name.startsWith(MINI_QUEST_PREFIX);
         List<QuestInfo> questInfoList = isMiniQuest ? miniQuests : quests;
 
@@ -237,7 +237,7 @@ public final class QuestModel extends Model {
         }
     }
 
-    void setDialogueHistory(List<List<StyledText>> newDialogueHistory) {
+    void setDialogueHistory(List<List<StyledText2>> newDialogueHistory) {
         dialogueHistory = newDialogueHistory;
         WynntilsMod.postEvent(new QuestBookReloadedEvent.DialogueHistoryReloaded());
     }

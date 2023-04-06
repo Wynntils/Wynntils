@@ -6,7 +6,7 @@ package com.wynntils.utils.render;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.Tesselator;
-import com.wynntils.core.text.StyledText;
+import com.wynntils.core.text.StyledText2;
 import com.wynntils.mc.mixin.accessors.MinecraftAccessor;
 import com.wynntils.utils.colors.CustomColor;
 import com.wynntils.utils.mc.ComponentUtils;
@@ -41,7 +41,7 @@ public final class FontRenderer {
 
     public void renderText(
             PoseStack poseStack,
-            StyledText text,
+            StyledText2 text,
             float x,
             float y,
             CustomColor customColor,
@@ -70,7 +70,7 @@ public final class FontRenderer {
 
     public void renderText(
             PoseStack poseStack,
-            StyledText text,
+            StyledText2 text,
             float x,
             float y,
             CustomColor customColor,
@@ -82,7 +82,7 @@ public final class FontRenderer {
 
     public void renderAlignedTextInBox(
             PoseStack poseStack,
-            StyledText text,
+            StyledText2 text,
             float x1,
             float x2,
             float y1,
@@ -122,7 +122,7 @@ public final class FontRenderer {
 
     public void renderAlignedTextInBox(
             PoseStack poseStack,
-            StyledText text,
+            StyledText2 text,
             float x1,
             float x2,
             float y1,
@@ -149,7 +149,7 @@ public final class FontRenderer {
 
     public void renderAlignedHighlightedTextInBox(
             PoseStack poseStack,
-            StyledText text,
+            StyledText2 text,
             float x1,
             float x2,
             float y1,
@@ -206,7 +206,7 @@ public final class FontRenderer {
 
     public void renderAlignedTextInBox(
             PoseStack poseStack,
-            StyledText text,
+            StyledText2 text,
             float x1,
             float x2,
             float y,
@@ -231,7 +231,7 @@ public final class FontRenderer {
 
     public void renderAlignedTextInBox(
             PoseStack poseStack,
-            StyledText text,
+            StyledText2 text,
             float x,
             float y1,
             float y2,
@@ -256,7 +256,7 @@ public final class FontRenderer {
 
     public void renderText(
             PoseStack poseStack,
-            StyledText text,
+            StyledText2 text,
             float x,
             float y,
             float maxWidth,
@@ -276,10 +276,10 @@ public final class FontRenderer {
         List<FormattedText> parts =
                 font.getSplitter().splitLines(text.getInternalCodedStringRepresentation(), (int) maxWidth, Style.EMPTY);
 
-        StyledText lastPart = StyledText.EMPTY;
+        StyledText2 lastPart = StyledText2.EMPTY;
         for (int i = 0; i < parts.size(); i++) {
             // copy the format codes to this part as well
-            StyledText part = StyledText.of(
+            StyledText2 part = StyledText2.of(
                     ComponentUtils.getLastPartCodes(lastPart) + parts.get(i).getString());
             lastPart = part;
             renderText(
@@ -296,7 +296,7 @@ public final class FontRenderer {
 
     public void renderText(
             PoseStack poseStack,
-            StyledText text,
+            StyledText2 text,
             float x,
             float y,
             float maxWidth,
@@ -326,7 +326,7 @@ public final class FontRenderer {
             renderText(poseStack, x, currentY, line);
             // If we ask Mojang code the line height of an empty line we get 0 back so replace with space
             currentY += calculateRenderHeight(
-                    line.getText().isEmpty() ? StyledText.of(" ") : line.getText(),
+                    line.getText().isEmpty() ? StyledText2.of(" ") : line.getText(),
                     line.getSetting().maxWidth());
         }
     }
@@ -394,15 +394,15 @@ public final class FontRenderer {
         return height;
     }
 
-    public float calculateRenderHeight(List<StyledText> lines, float maxWidth) {
+    public float calculateRenderHeight(List<StyledText2> lines, float maxWidth) {
         int sum = 0;
-        for (StyledText line : lines) {
+        for (StyledText2 line : lines) {
             sum += font.wordWrapHeight(line.getInternalCodedStringRepresentation(), (int) maxWidth);
         }
         return sum;
     }
 
-    public float calculateRenderHeight(StyledText line, float maxWidth) {
+    public float calculateRenderHeight(StyledText2 line, float maxWidth) {
         return font.wordWrapHeight(
                 line.getInternalCodedStringRepresentation(), maxWidth == 0 ? Integer.MAX_VALUE : (int) maxWidth);
     }

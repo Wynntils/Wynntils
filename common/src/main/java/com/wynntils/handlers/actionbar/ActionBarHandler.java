@@ -7,7 +7,7 @@ package com.wynntils.handlers.actionbar;
 import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.components.Handler;
 import com.wynntils.core.components.Models;
-import com.wynntils.core.text.StyledText;
+import com.wynntils.core.text.StyledText2;
 import com.wynntils.handlers.actionbar.type.ActionBarPosition;
 import com.wynntils.mc.event.ChatPacketReceivedEvent;
 import java.util.ArrayList;
@@ -22,7 +22,7 @@ import net.minecraftforge.eventbus.api.SubscribeEvent;
 public final class ActionBarHandler extends Handler {
     // example: "§c❤ 218/218§0    §7502§f S§7 -1580    §b✺ 1/119"
     private static final Pattern ACTIONBAR_PATTERN = Pattern.compile("(?<LEFT>§[^§]+)(?<CENTER>.*)(?<RIGHT>§[^§]+)");
-    private static final StyledText CENTER_PADDING = StyledText.of("§0               ");
+    private static final StyledText2 CENTER_PADDING = StyledText2.of("§0               ");
 
     private final Map<ActionBarPosition, List<ActionBarSegment>> allSegments = Map.of(
             ActionBarPosition.LEFT,
@@ -32,8 +32,8 @@ public final class ActionBarHandler extends Handler {
             ActionBarPosition.RIGHT,
             new ArrayList<>());
     private final Map<ActionBarPosition, ActionBarSegment> lastSegments = new HashMap<>();
-    private StyledText previousRawContent = null;
-    private StyledText previousProcessedContent;
+    private StyledText2 previousRawContent = null;
+    private StyledText2 previousProcessedContent;
 
     public void registerSegment(ActionBarSegment segment) {
         allSegments.get(segment.getPosition()).add(segment);
@@ -44,8 +44,8 @@ public final class ActionBarHandler extends Handler {
         // FIXME: Reverse dependency!
         if (!Models.WorldState.onWorld()) return;
 
-        StyledText content =
-                StyledText.fromComponentIgnoringComponentStylesAndJustUsingFormattingCodes(event.getMessage());
+        StyledText2 content =
+                StyledText2.fromComponentIgnoringComponentStylesAndJustUsingFormattingCodes(event.getMessage());
         if (content.equals(previousRawContent)) {
             // No changes, skip parsing
             if (!content.equals(previousProcessedContent)) {
@@ -62,9 +62,9 @@ public final class ActionBarHandler extends Handler {
         }
 
         // Create map of position -> matching part of the content
-        Map<ActionBarPosition, StyledText> positionMatches = new HashMap<>();
+        Map<ActionBarPosition, StyledText2> positionMatches = new HashMap<>();
         Arrays.stream(ActionBarPosition.values())
-                .forEach(pos -> positionMatches.put(pos, StyledText.of(matcher.group(pos.name()))));
+                .forEach(pos -> positionMatches.put(pos, StyledText2.of(matcher.group(pos.name()))));
 
         Arrays.stream(ActionBarPosition.values()).forEach(pos -> processPosition(pos, positionMatches));
 
@@ -81,7 +81,7 @@ public final class ActionBarHandler extends Handler {
         if (!lastSegments.get(ActionBarPosition.RIGHT).isHidden()) {
             newContentBuilder.append(positionMatches.get(ActionBarPosition.RIGHT));
         }
-        StyledText newContent = StyledText.of(newContentBuilder.toString());
+        StyledText2 newContent = StyledText2.of(newContentBuilder.toString());
         previousProcessedContent = newContent;
 
         if (!content.equals(newContent)) {
@@ -89,7 +89,7 @@ public final class ActionBarHandler extends Handler {
         }
     }
 
-    private void processPosition(ActionBarPosition pos, Map<ActionBarPosition, StyledText> positionMatches) {
+    private void processPosition(ActionBarPosition pos, Map<ActionBarPosition, StyledText2> positionMatches) {
         List<ActionBarSegment> potentialSegments = allSegments.get(pos);
         for (ActionBarSegment segment : potentialSegments) {
             Matcher m = positionMatches.get(pos).match(segment.getPattern());

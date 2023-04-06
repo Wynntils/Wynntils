@@ -18,7 +18,7 @@ import com.wynntils.core.components.Models;
 import com.wynntils.core.net.Download;
 import com.wynntils.core.net.UrlId;
 import com.wynntils.core.net.event.NetResultProcessedEvent;
-import com.wynntils.core.text.StyledText;
+import com.wynntils.core.text.StyledText2;
 import com.wynntils.models.character.type.ClassType;
 import com.wynntils.models.elements.type.Element;
 import com.wynntils.models.elements.type.Skill;
@@ -156,7 +156,7 @@ public class GearInfoRegistry {
             return new GearMajorId(
                     JsonUtils.getNullableJsonString(json, "id"),
                     JsonUtils.getNullableJsonString(json, "name"),
-                    StyledText.of(JsonUtils.getNullableJsonString(json, "lore")));
+                    StyledText2.of(JsonUtils.getNullableJsonString(json, "lore")));
         }
     }
 
@@ -258,7 +258,7 @@ public class GearInfoRegistry {
                 obtainInfo.add(new ItemObtainInfo(ItemObtainType.UNKNOWN, Optional.empty()));
             }
 
-            Optional<StyledText> loreOpt = parseLore(json);
+            Optional<StyledText2> loreOpt = parseLore(json);
             Optional<String> apiNameOpt = Optional.ofNullable(apiName);
 
             boolean allowCraftsman = JsonUtils.getNullableJsonBoolean(json, "allowCraftsman");
@@ -266,13 +266,13 @@ public class GearInfoRegistry {
             return new GearMetaInfo(restrictions, material, obtainInfo, loreOpt, apiNameOpt, allowCraftsman);
         }
 
-        private Optional<StyledText> parseLore(JsonObject json) {
+        private Optional<StyledText2> parseLore(JsonObject json) {
             String lore = JsonUtils.getNullableJsonString(json, "addedLore");
             if (lore == null) return Optional.empty();
 
             // Some lore contain like "\\[Community Event Winner\\]", fix that
             return Optional.of(
-                    StyledText.of(StringUtils.replaceEach(lore, new String[] {"\\[", "\\]"}, new String[] {"[", "]"})));
+                    StyledText2.of(StringUtils.replaceEach(lore, new String[] {"\\[", "\\]"}, new String[] {"[", "]"})));
         }
 
         private GearRestrictions parseRestrictions(JsonObject json) {

@@ -5,7 +5,7 @@
 package com.wynntils.utils.render.buffered;
 
 import com.mojang.blaze3d.vertex.PoseStack;
-import com.wynntils.core.text.StyledText;
+import com.wynntils.core.text.StyledText2;
 import com.wynntils.mc.mixin.accessors.MinecraftAccessor;
 import com.wynntils.utils.colors.CommonColors;
 import com.wynntils.utils.colors.CustomColor;
@@ -44,7 +44,7 @@ public final class BufferedFontRenderer {
     public void renderText(
             PoseStack poseStack,
             MultiBufferSource bufferSource,
-            StyledText text,
+            StyledText2 text,
             float x,
             float y,
             CustomColor customColor,
@@ -172,7 +172,7 @@ public final class BufferedFontRenderer {
     public void renderAlignedTextInBox(
             PoseStack poseStack,
             MultiBufferSource bufferSource,
-            StyledText text,
+            StyledText2 text,
             float x1,
             float x2,
             float y1,
@@ -214,7 +214,7 @@ public final class BufferedFontRenderer {
     public void renderAlignedTextInBox(
             PoseStack poseStack,
             MultiBufferSource bufferSource,
-            StyledText text,
+            StyledText2 text,
             float x1,
             float x2,
             float y1,
@@ -243,7 +243,7 @@ public final class BufferedFontRenderer {
     public void renderAlignedTextInBox(
             PoseStack poseStack,
             MultiBufferSource bufferSource,
-            StyledText text,
+            StyledText2 text,
             float x1,
             float x2,
             float y,
@@ -270,7 +270,7 @@ public final class BufferedFontRenderer {
     public void renderAlignedTextInBox(
             PoseStack poseStack,
             MultiBufferSource bufferSource,
-            StyledText text,
+            StyledText2 text,
             float x,
             float y1,
             float y2,
@@ -297,7 +297,7 @@ public final class BufferedFontRenderer {
     public void renderText(
             PoseStack poseStack,
             MultiBufferSource bufferSource,
-            StyledText text,
+            StyledText2 text,
             float x,
             float y,
             CustomColor customColor,
@@ -311,7 +311,7 @@ public final class BufferedFontRenderer {
     public void renderText(
             PoseStack poseStack,
             MultiBufferSource bufferSource,
-            StyledText text,
+            StyledText2 text,
             float x,
             float y,
             float maxWidth,
@@ -341,10 +341,10 @@ public final class BufferedFontRenderer {
         List<FormattedText> parts =
                 font.getSplitter().splitLines(text.getInternalCodedStringRepresentation(), (int) maxWidth, Style.EMPTY);
 
-        StyledText lastPart = StyledText.EMPTY;
+        StyledText2 lastPart = StyledText2.EMPTY;
         for (int i = 0; i < parts.size(); i++) {
             // copy the format codes to this part as well
-            StyledText part = StyledText.of(
+            StyledText2 part = StyledText2.of(
                     ComponentUtils.getLastPartCodes(lastPart) + parts.get(i).getString());
             lastPart = part;
             renderText(
@@ -395,7 +395,7 @@ public final class BufferedFontRenderer {
             // If we ask Mojang code the line height of an empty line we get 0 back so replace with space
             currentY += FontRenderer.getInstance()
                     .calculateRenderHeight(
-                            line.getText().isEmpty() ? StyledText.of(" ") : line.getText(),
+                            line.getText().isEmpty() ? StyledText2.of(" ") : line.getText(),
                             line.getSetting().maxWidth());
         }
     }
@@ -417,7 +417,7 @@ public final class BufferedFontRenderer {
     public void renderText(
             PoseStack poseStack,
             MultiBufferSource bufferSource,
-            StyledText text,
+            StyledText2 text,
             float x,
             float y,
             float maxWidth,

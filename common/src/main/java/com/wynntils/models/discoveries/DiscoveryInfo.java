@@ -5,7 +5,7 @@
 package com.wynntils.models.discoveries;
 
 import com.wynntils.core.components.Models;
-import com.wynntils.core.text.StyledText;
+import com.wynntils.core.text.StyledText2;
 import com.wynntils.models.discoveries.profile.DiscoveryProfile;
 import com.wynntils.models.discoveries.type.DiscoveryType;
 import com.wynntils.utils.mc.ComponentUtils;
@@ -48,7 +48,7 @@ public class DiscoveryInfo {
     }
 
     public static DiscoveryInfo parseFromItemStack(ItemStack itemStack) {
-        List<StyledText> lore = LoreUtils.getLore(itemStack);
+        List<StyledText2> lore = LoreUtils.getLore(itemStack);
         if (lore.isEmpty()) {
             return null;
         }
@@ -57,7 +57,7 @@ public class DiscoveryInfo {
         if (!m.matches()) return null;
         int minLevel = Integer.parseInt(m.group(1));
 
-        StyledText name = ComponentUtils.getCoded(itemStack.getHoverName()).getNormalized();
+        StyledText2 name = ComponentUtils.getCoded(itemStack.getHoverName()).getNormalized();
         DiscoveryType type = DiscoveryType.getDiscoveryTypeFromString(name);
         if (type == null) return null;
 

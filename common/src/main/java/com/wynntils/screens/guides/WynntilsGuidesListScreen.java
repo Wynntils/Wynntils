@@ -5,7 +5,7 @@
 package com.wynntils.screens.guides;
 
 import com.mojang.blaze3d.vertex.PoseStack;
-import com.wynntils.core.text.StyledText;
+import com.wynntils.core.text.StyledText2;
 import com.wynntils.screens.base.WynntilsListScreen;
 import com.wynntils.screens.base.widgets.BackButton;
 import com.wynntils.screens.base.widgets.PageSelectorButton;
@@ -97,7 +97,7 @@ public final class WynntilsGuidesListScreen extends WynntilsListScreen<Screen, G
         FontRenderer.getInstance()
                 .renderAlignedTextInBox(
                         poseStack,
-                        StyledText.of(description),
+                        StyledText2.of(description),
                         20,
                         Texture.QUEST_BOOK_BACKGROUND.width() / 2f - 10,
                         80,

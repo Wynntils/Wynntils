@@ -6,7 +6,7 @@ package com.wynntils.screens.partymanagement.widgets;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.wynntils.core.components.Models;
-import com.wynntils.core.text.StyledText;
+import com.wynntils.core.text.StyledText2;
 import com.wynntils.utils.colors.CommonColors;
 import com.wynntils.utils.mc.McUtils;
 import com.wynntils.utils.render.FontRenderer;
@@ -82,7 +82,7 @@ public class SuggestionPlayerWidget extends AbstractWidget {
         FontRenderer.getInstance()
                 .renderText(
                         poseStack,
-                        StyledText.of(playerName),
+                        StyledText2.of(playerName),
                         this.getX() + (this.width / gridDivisions * 3),
                         this.getY() + this.height / 2,
                         CommonColors.GREEN,

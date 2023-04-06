@@ -4,7 +4,7 @@
  */
 package com.wynntils.handlers.chat.event;
 
-import com.wynntils.core.text.StyledText;
+import com.wynntils.core.text.StyledText2;
 import com.wynntils.handlers.chat.type.MessageType;
 import com.wynntils.handlers.chat.type.RecipientType;
 import com.wynntils.utils.mc.ComponentUtils;
@@ -16,15 +16,15 @@ import net.minecraftforge.eventbus.api.Event;
 public class ChatMessageReceivedEvent extends Event {
     // These are used to keep the original message so different features don't have to fight over it.
     private final Component originalMessage;
-    private final StyledText originalCodedMessage;
+    private final StyledText2 originalCodedMessage;
 
     private Component message;
-    private StyledText codedMessage;
+    private StyledText2 codedMessage;
     private final MessageType messageType;
     private final RecipientType recipientType;
 
     public ChatMessageReceivedEvent(
-            Component message, StyledText codedMessage, MessageType messageType, RecipientType recipientType) {
+            Component message, StyledText2 codedMessage, MessageType messageType, RecipientType recipientType) {
         this.originalMessage = message;
         this.originalCodedMessage = codedMessage;
 
@@ -43,7 +43,7 @@ public class ChatMessageReceivedEvent extends Event {
         this.codedMessage = ComponentUtils.getCoded(message);
     }
 
-    public StyledText getCodedMessage() {
+    public StyledText2 getCodedMessage() {
         return codedMessage;
     }
 
@@ -59,7 +59,7 @@ public class ChatMessageReceivedEvent extends Event {
         return originalMessage;
     }
 
-    public StyledText getOriginalCodedMessage() {
+    public StyledText2 getOriginalCodedMessage() {
         return originalCodedMessage;
     }
 }

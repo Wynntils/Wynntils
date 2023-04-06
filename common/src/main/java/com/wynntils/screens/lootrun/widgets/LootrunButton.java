@@ -6,7 +6,7 @@ package com.wynntils.screens.lootrun.widgets;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.wynntils.core.components.Models;
-import com.wynntils.core.text.StyledText;
+import com.wynntils.core.text.StyledText2;
 import com.wynntils.models.lootruns.LootrunInstance;
 import com.wynntils.models.lootruns.type.LootrunPath;
 import com.wynntils.screens.base.widgets.WynntilsButton;
@@ -53,7 +53,7 @@ public class LootrunButton extends WynntilsButton {
         FontRenderer.getInstance()
                 .renderText(
                         poseStack,
-                        StyledText.of(RenderedStringUtils.getMaxFittingText(
+                        StyledText2.of(RenderedStringUtils.getMaxFittingText(
                                 lootrun.name(),
                                 maxTextWidth,
                                 FontRenderer.getInstance().getFont())),

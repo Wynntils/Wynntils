@@ -16,7 +16,7 @@ import com.wynntils.core.config.RegisterConfig;
 import com.wynntils.core.features.Feature;
 import com.wynntils.core.features.properties.RegisterKeyBind;
 import com.wynntils.core.keybinds.KeyBind;
-import com.wynntils.core.text.StyledText;
+import com.wynntils.core.text.StyledText2;
 import com.wynntils.mc.event.ItemTooltipRenderEvent;
 import com.wynntils.models.items.items.game.GearItem;
 import com.wynntils.utils.SystemUtils;
@@ -126,7 +126,7 @@ public class ItemScreenshotFeature extends Feature {
         if (saveToDisk.get()) {
             // First try to save it to disk
             String itemNameForFile = WynnUtils.normalizeBadString(ComponentUtils.stripFormatting(
-                            StyledText.of(itemStack.getHoverName().getString())))
+                            StyledText2.of(itemStack.getHoverName().getString())))
                     .replaceAll("[/ ]", "_");
             File screenshotDir = new File(McUtils.mc().gameDirectory, "screenshots");
             String filename = Util.getFilenameFormattedDateTime() + "-" + itemNameForFile + ".png";

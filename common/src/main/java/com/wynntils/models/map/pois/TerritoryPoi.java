@@ -6,7 +6,7 @@ package com.wynntils.models.map.pois;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.wynntils.core.components.Models;
-import com.wynntils.core.text.StyledText;
+import com.wynntils.core.text.StyledText2;
 import com.wynntils.models.map.PoiLocation;
 import com.wynntils.models.map.type.DisplayPriority;
 import com.wynntils.models.territories.TerritoryInfo;
@@ -103,7 +103,7 @@ public class TerritoryPoi implements Poi {
                     .renderAlignedTextInBox(
                             poseStack,
                             bufferSource,
-                            StyledText.of(territoryProfile.getGuildPrefix()),
+                            StyledText2.of(territoryProfile.getGuildPrefix()),
                             actualRenderX,
                             actualRenderX + renderWidth,
                             actualRenderZ,
@@ -123,7 +123,7 @@ public class TerritoryPoi implements Poi {
                             .renderAlignedTextInBox(
                                     poseStack,
                                     bufferSource,
-                                    StyledText.of(timeLeft),
+                                    StyledText2.of(timeLeft),
                                     actualRenderX,
                                     actualRenderX + renderWidth,
                                     actualRenderZ,
@@ -140,7 +140,7 @@ public class TerritoryPoi implements Poi {
                     .renderAlignedTextInBox(
                             poseStack,
                             bufferSource,
-                            StyledText.of(territoryProfile.getFriendlyName()),
+                            StyledText2.of(territoryProfile.getFriendlyName()),
                             actualRenderX,
                             actualRenderX + renderWidth,
                             actualRenderZ,

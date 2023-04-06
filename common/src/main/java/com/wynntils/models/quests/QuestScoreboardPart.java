@@ -6,7 +6,7 @@ package com.wynntils.models.quests;
 
 import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.components.Models;
-import com.wynntils.core.text.StyledText;
+import com.wynntils.core.text.StyledText2;
 import com.wynntils.handlers.scoreboard.ScoreboardPart;
 import com.wynntils.handlers.scoreboard.ScoreboardSegment;
 import com.wynntils.handlers.scoreboard.type.SegmentMatcher;
@@ -25,7 +25,7 @@ public class QuestScoreboardPart extends ScoreboardPart {
 
     @Override
     public void onSegmentChange(ScoreboardSegment newValue) {
-        List<StyledText> content = newValue.getContent();
+        List<StyledText2> content = newValue.getContent();
 
         if (content.isEmpty()) {
             WynntilsMod.error("QuestHandler: content was empty.");
@@ -34,7 +34,7 @@ public class QuestScoreboardPart extends ScoreboardPart {
         StringBuilder questName = new StringBuilder();
         StringBuilder nextTask = new StringBuilder();
 
-        for (StyledText line : content) {
+        for (StyledText2 line : content) {
             if (line.startsWith("§e")) {
                 questName.append(ComponentUtils.stripFormatting(line)).append(" ");
             } else {
@@ -46,7 +46,7 @@ public class QuestScoreboardPart extends ScoreboardPart {
         }
 
         String fixedName = WynnUtils.normalizeBadString(questName.toString().trim());
-        StyledText fixedNextTask = new StyledText(nextTask.toString().trim()).getNormalized();
+        StyledText2 fixedNextTask = new StyledText2(nextTask.toString().trim()).getNormalized();
         Models.Quest.updateTrackedQuestFromScoreboard(fixedName, fixedNextTask);
     }
 

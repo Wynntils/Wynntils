@@ -7,7 +7,7 @@ package com.wynntils.screens.chattabs.widgets;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.wynntils.core.chat.ChatTab;
 import com.wynntils.core.components.Managers;
-import com.wynntils.core.text.StyledText;
+import com.wynntils.core.text.StyledText2;
 import com.wynntils.screens.base.widgets.WynntilsButton;
 import com.wynntils.screens.chattabs.ChatTabEditingScreen;
 import com.wynntils.utils.colors.CommonColors;
@@ -40,7 +40,7 @@ public class ChatTabButton extends WynntilsButton {
         FontRenderer.getInstance()
                 .renderAlignedTextInBox(
                         poseStack,
-                        StyledText.of(tab.getName()),
+                        StyledText2.of(tab.getName()),
                         getX() + 1,
                         getX() + width,
                         getY() + 1,

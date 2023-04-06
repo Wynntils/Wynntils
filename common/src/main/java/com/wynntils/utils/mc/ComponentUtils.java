@@ -4,7 +4,7 @@
  */
 package com.wynntils.utils.mc;
 
-import com.wynntils.core.text.StyledText;
+import com.wynntils.core.text.StyledText2;
 import com.wynntils.utils.MathUtils;
 import com.wynntils.utils.mc.type.Location;
 import com.wynntils.utils.wynn.WynnUtils;
@@ -31,22 +31,22 @@ public final class ComponentUtils {
     private static final Pattern NEWLINE_PATTERN = Pattern.compile("\n");
 
     // Text with formatting codes "§cTest §1Text"
-    public static StyledText getCoded(Component component) {
+    public static StyledText2 getCoded(Component component) {
         StringBuilder result = new StringBuilder();
 
         component.visit(new CodedStringGenerator(result), Style.EMPTY);
 
-        return new StyledText(result.toString());
+        return new StyledText2(result.toString());
     }
 
     // Text without formatting codes "Test text"
     public static String getUnformatted(Component component) {
-        return ComponentUtils.stripFormatting(new StyledText(component.getString()));
+        return ComponentUtils.stripFormatting(new StyledText2(component.getString()));
     }
 
-    public static StyledText getCoded(String jsonString) {
+    public static StyledText2 getCoded(String jsonString) {
         MutableComponent component = Component.Serializer.fromJson(jsonString);
-        if (component == null) return StyledText.EMPTY;
+        if (component == null) return StyledText2.EMPTY;
 
         return getCoded(component);
     }
@@ -144,11 +144,11 @@ public final class ComponentUtils {
         return newLore;
     }
 
-    public static String stripFormatting(StyledText coded) {
+    public static String stripFormatting(StyledText2 coded) {
         return coded == null ? "" : coded.withoutFormatting();
     }
 
-    public static String stripColorFormatting(StyledText text) {
+    public static String stripColorFormatting(StyledText2 text) {
         if (text == null) {
             return "";
         }
@@ -156,15 +156,15 @@ public final class ComponentUtils {
         return text.match(COLOR_CODE_PATTERN).replaceAll("");
     }
 
-    public static StyledText getLastPartCodes(StyledText lastPart) {
-        if (!lastPart.contains("§")) return StyledText.EMPTY;
+    public static StyledText2 getLastPartCodes(StyledText2 lastPart) {
+        if (!lastPart.contains("§")) return StyledText2.EMPTY;
 
-        StyledText lastPartCodes = StyledText.EMPTY;
+        StyledText2 lastPartCodes = StyledText2.EMPTY;
         int index;
         while ((index = lastPart.getInternalCodedStringRepresentation().lastIndexOf('§')) != -1) {
             if (index >= lastPart.getInternalCodedStringRepresentation().length() - 1) {
                 // trailing §, no format code, skip it
-                lastPart = StyledText.of(
+                lastPart = StyledText2.of(
                         lastPart.getInternalCodedStringRepresentation().substring(0, index));
                 continue;
             }
@@ -176,7 +176,7 @@ public final class ComponentUtils {
             // prepend to codes since we're going backwards
             lastPartCodes = lastPartCodes.prepend(thisCode);
 
-            lastPart = StyledText.of(
+            lastPart = StyledText2.of(
                     lastPart.getInternalCodedStringRepresentation().substring(0, index));
         }
 

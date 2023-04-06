@@ -6,7 +6,7 @@ package com.wynntils.models.territories;
 
 import com.wynntils.core.components.Handlers;
 import com.wynntils.core.components.Model;
-import com.wynntils.core.text.StyledText;
+import com.wynntils.core.text.StyledText2;
 import com.wynntils.handlers.chat.event.ChatMessageReceivedEvent;
 import com.wynntils.handlers.chat.type.RecipientType;
 import com.wynntils.handlers.scoreboard.ScoreboardPart;
@@ -74,7 +74,7 @@ public final class GuildAttackTimerModel extends Model {
     void processChanges(ScoreboardSegment segment) {
         List<TerritoryAttackTimer> newList = new ArrayList<>();
 
-        for (StyledText line : segment.getContent()) {
+        for (StyledText2 line : segment.getContent()) {
             Matcher matcher = line.match(GUILD_ATTACK_PATTERN);
 
             if (matcher.matches()) {

@@ -11,7 +11,7 @@ import com.wynntils.core.config.RegisterConfig;
 import com.wynntils.core.features.Feature;
 import com.wynntils.core.features.properties.RegisterKeyBind;
 import com.wynntils.core.keybinds.KeyBind;
-import com.wynntils.core.text.StyledText;
+import com.wynntils.core.text.StyledText2;
 import com.wynntils.mc.event.PlayerInteractEvent;
 import com.wynntils.mc.event.UseItemEvent;
 import com.wynntils.models.quests.event.TrackedQuestUpdateEvent;
@@ -33,7 +33,7 @@ public class WynntilsQuestBookFeature extends Feature {
     private static final ResourceLocation QUEST_UPDATE_ID = new ResourceLocation("wynntils:ui.quest.update");
     private static final SoundEvent QUEST_UPDATE_SOUND = SoundEvent.createVariableRangeEvent(QUEST_UPDATE_ID);
 
-    private static final StyledText QUEST_BOOK_NAME = StyledText.of("§dQuest Book");
+    private static final StyledText2 QUEST_BOOK_NAME = StyledText2.of("§dQuest Book");
 
     @RegisterKeyBind
     private final KeyBind openQuestBook = new KeyBind(

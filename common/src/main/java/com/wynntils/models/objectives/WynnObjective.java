@@ -4,7 +4,7 @@
  */
 package com.wynntils.models.objectives;
 
-import com.wynntils.core.text.StyledText;
+import com.wynntils.core.text.StyledText2;
 import com.wynntils.utils.mc.ComponentUtils;
 import com.wynntils.utils.type.CappedValue;
 import java.util.Objects;
@@ -19,11 +19,11 @@ public final class WynnObjective {
     private final String goal;
     private CappedValue score;
     private long updatedAt;
-    private final StyledText original;
+    private final StyledText2 original;
     private final boolean isGuildObjective;
 
     private WynnObjective(
-            String goal, CappedValue score, long updatedAt, StyledText original, boolean isGuildObjective) {
+            String goal, CappedValue score, long updatedAt, StyledText2 original, boolean isGuildObjective) {
         this.goal = goal;
         this.score = score;
         this.updatedAt = updatedAt;
@@ -31,7 +31,7 @@ public final class WynnObjective {
         this.isGuildObjective = isGuildObjective;
     }
 
-    static WynnObjective parseObjectiveLine(StyledText objectiveLine, boolean isGuildObjective) {
+    static WynnObjective parseObjectiveLine(StyledText2 objectiveLine, boolean isGuildObjective) {
         String stripped = ComponentUtils.stripFormatting(objectiveLine);
 
         assert stripped != null;
@@ -85,7 +85,7 @@ public final class WynnObjective {
         return this.goal;
     }
 
-    public StyledText getOriginal() {
+    public StyledText2 getOriginal() {
         return this.original;
     }
 

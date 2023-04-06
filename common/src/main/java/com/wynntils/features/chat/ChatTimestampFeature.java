@@ -11,7 +11,7 @@ import com.wynntils.core.config.ConfigHolder;
 import com.wynntils.core.config.RegisterConfig;
 import com.wynntils.core.features.Feature;
 import com.wynntils.core.features.properties.StartDisabled;
-import com.wynntils.core.text.StyledText;
+import com.wynntils.core.text.StyledText2;
 import com.wynntils.handlers.chat.event.ChatMessageReceivedEvent;
 import com.wynntils.utils.mc.McUtils;
 import java.time.LocalDateTime;
@@ -52,7 +52,7 @@ public class ChatTimestampFeature extends Feature {
 
         LocalDateTime date = LocalDateTime.now();
         MutableComponent timestamp =
-                StyledText.of("§8[§7" + date.format(formatter) + "§8]§r ").asSingleLiteralComponentWithCodedString();
+                StyledText2.of("§8[§7" + date.format(formatter) + "§8]§r ").asSingleLiteralComponentWithCodedString();
 
         timestamp.append(message);
 

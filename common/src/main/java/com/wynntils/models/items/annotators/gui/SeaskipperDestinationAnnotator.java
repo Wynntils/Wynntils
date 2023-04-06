@@ -4,7 +4,7 @@
  */
 package com.wynntils.models.items.annotators.gui;
 
-import com.wynntils.core.text.StyledText;
+import com.wynntils.core.text.StyledText2;
 import com.wynntils.handlers.item.ItemAnnotation;
 import com.wynntils.handlers.item.ItemAnnotator;
 import com.wynntils.models.items.items.gui.SeaskipperDestinationItem;
@@ -16,7 +16,7 @@ public final class SeaskipperDestinationAnnotator implements ItemAnnotator {
     private static final Pattern SEASKIPPER_PASS_PATTERN = Pattern.compile("^§b(.*) Pass §7for §b(\\d+)²$");
 
     @Override
-    public ItemAnnotation getAnnotation(ItemStack itemStack, StyledText name) {
+    public ItemAnnotation getAnnotation(ItemStack itemStack, StyledText2 name) {
         Matcher matcher = name.match(SEASKIPPER_PASS_PATTERN);
         if (!matcher.matches()) return null;
 

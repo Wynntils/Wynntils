@@ -9,7 +9,7 @@ import com.wynntils.core.components.Handlers;
 import com.wynntils.core.components.Managers;
 import com.wynntils.core.components.Model;
 import com.wynntils.core.components.Models;
-import com.wynntils.core.text.StyledText;
+import com.wynntils.core.text.StyledText2;
 import com.wynntils.handlers.chat.event.ChatMessageReceivedEvent;
 import com.wynntils.handlers.chat.type.MessageType;
 import com.wynntils.handlers.scoreboard.ScoreboardPart;
@@ -120,7 +120,7 @@ public final class PartyModel extends Model {
     public void onChatReceived(ChatMessageReceivedEvent event) {
         if (event.getMessageType() != MessageType.FOREGROUND) return;
 
-        StyledText coded = event.getOriginalCodedMessage();
+        StyledText2 coded = event.getOriginalCodedMessage();
 
         if (tryParsePartyMessages(coded)) {
             return;
@@ -135,7 +135,7 @@ public final class PartyModel extends Model {
         }
     }
 
-    private boolean tryParsePartyMessages(StyledText coded) {
+    private boolean tryParsePartyMessages(StyledText2 coded) {
         if (coded.match(PARTY_CREATE_SELF).matches()) {
             WynntilsMod.info("Player created a new party.");
 
@@ -260,7 +260,7 @@ public final class PartyModel extends Model {
         return false;
     }
 
-    private boolean tryParseNoPartyMessage(StyledText coded) {
+    private boolean tryParseNoPartyMessage(StyledText2 coded) {
         if (coded.match(PARTY_LIST_SELF_FAILED).matches()) {
             resetData();
             WynntilsMod.info("Player is not in a party.");
@@ -270,7 +270,7 @@ public final class PartyModel extends Model {
         return false;
     }
 
-    private boolean tryParsePartyList(StyledText coded) {
+    private boolean tryParsePartyList(StyledText2 coded) {
         Matcher matcher = coded.match(PARTY_LIST_ALL);
         if (!matcher.matches()) return false;
 
@@ -283,7 +283,7 @@ public final class PartyModel extends Model {
                 partyLeader = m.group(1);
             }
 
-            partyMembers.add(ComponentUtils.stripFormatting(new StyledText(member)));
+            partyMembers.add(ComponentUtils.stripFormatting(new StyledText2(member)));
         }
 
         inParty = true;

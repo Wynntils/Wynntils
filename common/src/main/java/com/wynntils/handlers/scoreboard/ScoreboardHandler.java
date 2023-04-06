@@ -7,7 +7,7 @@ package com.wynntils.handlers.scoreboard;
 import com.google.common.collect.ImmutableMap;
 import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.components.Handler;
-import com.wynntils.core.text.StyledText;
+import com.wynntils.core.text.StyledText2;
 import com.wynntils.handlers.scoreboard.event.ScoreboardSegmentAdditionEvent;
 import com.wynntils.handlers.scoreboard.type.ScoreboardLine;
 import com.wynntils.mc.event.ScoreboardSetDisplayObjectiveEvent;
@@ -105,7 +105,7 @@ public final class ScoreboardHandler extends Handler {
         scoreboardNameCache = null;
     }
 
-    private void handleSetScore(StyledText owner, int score, ServerScoreboard.Method method) {
+    private void handleSetScore(StyledText2 owner, int score, ServerScoreboard.Method method) {
         // 1. Handle the current change
         switch (method) {
             case CHANGE -> handleScoreChange(owner, score);
@@ -122,7 +122,7 @@ public final class ScoreboardHandler extends Handler {
         createScoreboardFromSegments();
     }
 
-    private void handleScoreChange(StyledText owner, int score) {
+    private void handleScoreChange(StyledText2 owner, int score) {
         // A score change can mean two things:
         // 1. A new line was added to the scoreboard
         // 2. An existing line with the same score was changed
@@ -158,7 +158,7 @@ public final class ScoreboardHandler extends Handler {
         reconstructedScoreboard.add(new ScoreboardLine(owner, score));
     }
 
-    private void handleScoreRemove(StyledText owner) {
+    private void handleScoreRemove(StyledText2 owner) {
         // A score remove can mean two things:
         // 1. An existing line was removed
         // 2. The line to be removed was changed before, so it doesn't exist anymore
@@ -188,7 +188,7 @@ public final class ScoreboardHandler extends Handler {
         }
 
         // 1. Check for duplicate lines
-        List<StyledText> lines = new ArrayList<>();
+        List<StyledText2> lines = new ArrayList<>();
         for (ScoreboardLine line : reconstructedScoreboard) {
             if (lines.contains(line.line())) {
                 return false;
@@ -214,8 +214,8 @@ public final class ScoreboardHandler extends Handler {
         if (!reconstructedScoreboard.stream()
                 .findFirst()
                 .map(ScoreboardLine::line)
-                .orElse(StyledText.EMPTY)
-                .equals(StyledText.of("À"))) {
+                .orElse(StyledText2.EMPTY)
+                .equals(StyledText2.of("À"))) {
             return false;
         }
 
@@ -286,7 +286,7 @@ public final class ScoreboardHandler extends Handler {
                 return;
             }
 
-            List<StyledText> contentLines = new ArrayList<>();
+            List<StyledText2> contentLines = new ArrayList<>();
             for (currentIndex = currentIndex + 1; currentIndex < scoreboardLines.size(); currentIndex++) {
                 ScoreboardLine line = scoreboardLines.get(currentIndex);
 
@@ -360,7 +360,7 @@ public final class ScoreboardHandler extends Handler {
                     .setScore(currentScoreboardLine);
             currentScoreboardLine--;
 
-            for (StyledText line : scoreboardSegment.getContent()) {
+            for (StyledText2 line : scoreboardSegment.getContent()) {
                 scoreboard
                         .getOrCreatePlayerScore(line.getInternalCodedStringRepresentation(), wynntilsObjective)
                         .setScore(currentScoreboardLine);

@@ -4,7 +4,7 @@
  */
 package com.wynntils.models.items.annotators.game;
 
-import com.wynntils.core.text.StyledText;
+import com.wynntils.core.text.StyledText2;
 import com.wynntils.handlers.item.ItemAnnotation;
 import com.wynntils.handlers.item.ItemAnnotator;
 import com.wynntils.models.elements.type.PotionType;
@@ -25,7 +25,7 @@ public final class PotionAnnotator implements ItemAnnotator {
     private static final Pattern SKILL_PATTERN = Pattern.compile("^§[2ebcf][✤✦❉✹❋] (.*)§a \\[(\\d+)/(\\d+)\\]$");
 
     @Override
-    public ItemAnnotation getAnnotation(ItemStack itemStack, StyledText name) {
+    public ItemAnnotation getAnnotation(ItemStack itemStack, StyledText2 name) {
         Matcher matcher = name.match(POTION_PATTERN);
         if (!matcher.matches()) return null;
 

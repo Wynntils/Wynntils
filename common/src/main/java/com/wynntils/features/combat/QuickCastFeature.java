@@ -11,7 +11,7 @@ import com.wynntils.core.config.ConfigCategory;
 import com.wynntils.core.features.Feature;
 import com.wynntils.core.features.properties.RegisterKeyBind;
 import com.wynntils.core.keybinds.KeyBind;
-import com.wynntils.core.text.StyledText;
+import com.wynntils.core.text.StyledText2;
 import com.wynntils.mc.event.TickEvent;
 import com.wynntils.models.spells.event.SpellEvent;
 import com.wynntils.models.spells.type.SpellDirection;
@@ -105,10 +105,10 @@ public class QuickCastFeature extends Feature {
             return;
         }
 
-        List<StyledText> loreLines = LoreUtils.getLore(heldItem);
+        List<StyledText2> loreLines = LoreUtils.getLore(heldItem);
 
         boolean isArcher = false;
-        for (StyledText lore : loreLines) {
+        for (StyledText2 lore : loreLines) {
             if (lore.contains("Archer/Hunter")) isArcher = true;
             Matcher matcher = lore.match(INCORRECT_CLASS_PATTERN);
             if (!matcher.matches()) continue;
@@ -116,7 +116,7 @@ public class QuickCastFeature extends Feature {
             return;
         }
 
-        for (StyledText lore : loreLines) {
+        for (StyledText2 lore : loreLines) {
             Matcher matcher = lore.match(LVL_MIN_NOT_REACHED_PATTERN);
             if (!matcher.matches()) continue;
             sendCancelReason(Component.translatable(

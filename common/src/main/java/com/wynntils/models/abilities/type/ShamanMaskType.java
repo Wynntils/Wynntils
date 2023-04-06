@@ -4,23 +4,23 @@
  */
 package com.wynntils.models.abilities.type;
 
-import com.wynntils.core.text.StyledText;
+import com.wynntils.core.text.StyledText2;
 import com.wynntils.utils.StringUtils;
 import java.util.Locale;
 import net.minecraft.ChatFormatting;
 
 public enum ShamanMaskType {
     NONE("None", ChatFormatting.GRAY, null),
-    LUNATIC("L", ChatFormatting.RED, StyledText.of("§cL")),
-    FANATIC("F", ChatFormatting.GOLD, StyledText.of("§6F")),
-    COWARD("C", ChatFormatting.AQUA, StyledText.of("§bC")),
-    AWAKENED("A", ChatFormatting.DARK_PURPLE, StyledText.of("Awakened"));
+    LUNATIC("L", ChatFormatting.RED, StyledText2.of("§cL")),
+    FANATIC("F", ChatFormatting.GOLD, StyledText2.of("§6F")),
+    COWARD("C", ChatFormatting.AQUA, StyledText2.of("§bC")),
+    AWAKENED("A", ChatFormatting.DARK_PURPLE, StyledText2.of("Awakened"));
 
     private final String alias;
     private final ChatFormatting color;
-    private final StyledText parseString;
+    private final StyledText2 parseString;
 
-    ShamanMaskType(String alias, ChatFormatting color, StyledText parseString) {
+    ShamanMaskType(String alias, ChatFormatting color, StyledText2 parseString) {
         this.alias = alias;
         this.color = color;
         this.parseString = parseString;
@@ -40,7 +40,7 @@ public enum ShamanMaskType {
         return color;
     }
 
-    public StyledText getParseString() {
+    public StyledText2 getParseString() {
         return parseString;
     }
 

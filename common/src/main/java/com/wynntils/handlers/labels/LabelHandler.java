@@ -6,7 +6,7 @@ package com.wynntils.handlers.labels;
 
 import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.components.Handler;
-import com.wynntils.core.text.StyledText;
+import com.wynntils.core.text.StyledText2;
 import com.wynntils.handlers.labels.event.EntityLabelChangedEvent;
 import com.wynntils.handlers.labels.event.EntityLabelVisibilityEvent;
 import com.wynntils.mc.event.SetEntityDataEvent;
@@ -36,9 +36,9 @@ public class LabelHandler extends Handler {
                 if (value.isEmpty()) return;
 
                 Component oldNameComponent = entity.getCustomName();
-                StyledText oldName =
-                        oldNameComponent != null ? ComponentUtils.getCoded(oldNameComponent) : StyledText.EMPTY;
-                StyledText newName = ComponentUtils.getCoded(value.get());
+                StyledText2 oldName =
+                        oldNameComponent != null ? ComponentUtils.getCoded(oldNameComponent) : StyledText2.EMPTY;
+                StyledText2 newName = ComponentUtils.getCoded(value.get());
 
                 // Sometimes there is no actual change; ignore it then
                 if (newName.equals(oldName)) return;

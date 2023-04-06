@@ -8,7 +8,7 @@ import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.components.Manager;
 import com.wynntils.core.components.Managers;
 import com.wynntils.core.notifications.event.NotificationEvent;
-import com.wynntils.core.text.StyledText;
+import com.wynntils.core.text.StyledText2;
 import com.wynntils.features.overlays.GameNotificationOverlayFeature;
 import com.wynntils.models.worlds.event.WorldStateEvent;
 import com.wynntils.utils.mc.ComponentUtils;
@@ -34,7 +34,7 @@ public final class NotificationManager extends Manager {
         cachedMessageSet.clear();
     }
 
-    public MessageContainer queueMessage(StyledText codedMessage) {
+    public MessageContainer queueMessage(StyledText2 codedMessage) {
         return queueMessage(new TextRenderTask(codedMessage, TextRenderSetting.DEFAULT));
     }
 
@@ -47,10 +47,10 @@ public final class NotificationManager extends Manager {
 
         WynntilsMod.info("Message Queued: " + message);
         MessageContainer msgContainer = new MessageContainer(message);
-        StyledText messageText = message.getText();
+        StyledText2 messageText = message.getText();
 
         for (MessageContainer cachedContainer : cachedMessageSet) {
-            StyledText checkableMessage = cachedContainer.getMessage();
+            StyledText2 checkableMessage = cachedContainer.getMessage();
             if (messageText.equals(checkableMessage)) {
                 cachedContainer.setMessageCount(cachedContainer.getMessageCount() + 1);
 
@@ -78,7 +78,7 @@ public final class NotificationManager extends Manager {
      * @param newMessage The new message
      * @return The message container that was edited. This may be the new message container.
      */
-    public MessageContainer editMessage(MessageContainer msgContainer, StyledText newMessage) {
+    public MessageContainer editMessage(MessageContainer msgContainer, StyledText2 newMessage) {
         WynntilsMod.info("Message Edited: " + msgContainer.getRenderTask() + " -> "
                 + newMessage.getInternalCodedStringRepresentation());
 

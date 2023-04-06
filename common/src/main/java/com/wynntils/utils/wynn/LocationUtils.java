@@ -4,7 +4,7 @@
  */
 package com.wynntils.utils.wynn;
 
-import com.wynntils.core.text.StyledText;
+import com.wynntils.core.text.StyledText2;
 import com.wynntils.utils.mc.McUtils;
 import com.wynntils.utils.mc.type.Location;
 import java.util.Optional;
@@ -33,7 +33,7 @@ public final class LocationUtils {
         return Optional.empty();
     }
 
-    public static Matcher strictCoordinateMatcher(StyledText coded) {
+    public static Matcher strictCoordinateMatcher(StyledText2 coded) {
         return coded.match(STRICT_COORDINATE_PATTERN);
     }
 

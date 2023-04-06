@@ -8,7 +8,7 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.components.Models;
-import com.wynntils.core.text.StyledText;
+import com.wynntils.core.text.StyledText2;
 import com.wynntils.models.elements.type.Powder;
 import com.wynntils.models.elements.type.Skill;
 import com.wynntils.models.gear.type.GearInfo;
@@ -74,8 +74,8 @@ public final class WynnItemParser {
         lore.remove(0); // remove item name
 
         for (Component loreLine : lore) {
-            StyledText coded = ComponentUtils.getCoded(loreLine);
-            StyledText normalizedCoded = coded.getNormalized();
+            StyledText2 coded = ComponentUtils.getCoded(loreLine);
+            StyledText2 normalizedCoded = coded.getNormalized();
 
             // Look for powder
             Matcher powderMatcher = normalizedCoded.match(POWDER_PATTERN);
@@ -105,7 +105,7 @@ public final class WynnItemParser {
             Matcher tierMatcher = normalizedCoded.match(TIER_AND_REROLL_PATTERN);
             if (tierMatcher.matches()) {
                 String tierString = tierMatcher.group(1);
-                tier = GearTier.fromFormattedString(StyledText.of(tierString));
+                tier = GearTier.fromFormattedString(StyledText2.of(tierString));
                 itemType = tierMatcher.group(2);
 
                 // This is either the rerolls (for re-identified gear), or the

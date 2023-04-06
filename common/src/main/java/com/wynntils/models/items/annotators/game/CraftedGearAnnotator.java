@@ -5,7 +5,7 @@
 package com.wynntils.models.items.annotators.game;
 
 import com.wynntils.core.components.Models;
-import com.wynntils.core.text.StyledText;
+import com.wynntils.core.text.StyledText2;
 import com.wynntils.handlers.item.ItemAnnotation;
 import com.wynntils.handlers.item.ItemAnnotator;
 import java.util.regex.Matcher;
@@ -16,7 +16,7 @@ public final class CraftedGearAnnotator implements ItemAnnotator {
     private static final Pattern CRAFTED_GEAR_PATTERN = Pattern.compile("^§3(.*)§b \\[\\d{1,3}%\\]$");
 
     @Override
-    public ItemAnnotation getAnnotation(ItemStack itemStack, StyledText name) {
+    public ItemAnnotation getAnnotation(ItemStack itemStack, StyledText2 name) {
         Matcher matcher = name.match(CRAFTED_GEAR_PATTERN);
         if (!matcher.matches()) return null;
 

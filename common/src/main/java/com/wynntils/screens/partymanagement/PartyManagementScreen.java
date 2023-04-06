@@ -6,7 +6,7 @@ package com.wynntils.screens.partymanagement;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.wynntils.core.components.Models;
-import com.wynntils.core.text.StyledText;
+import com.wynntils.core.text.StyledText2;
 import com.wynntils.screens.base.TextboxScreen;
 import com.wynntils.screens.base.WynntilsScreen;
 import com.wynntils.screens.base.widgets.TextInputBoxWidget;
@@ -162,7 +162,7 @@ public final class PartyManagementScreen extends WynntilsScreen implements Textb
                         // Yes this is kind of abusive of the formatting system, and I should probably do
                         // another .renderText call, but this makes aligning these two texts significantly easier
                         // (especially with changing gui scales and resolutions)
-                        StyledText.of(I18n.get("screens.wynntils.partyManagementGui.inviteFieldHeader1")
+                        StyledText2.of(I18n.get("screens.wynntils.partyManagementGui.inviteFieldHeader1")
                                 + ChatFormatting.GRAY
                                 + I18n.get("screens.wynntils.partyManagementGui.inviteFieldHeader2")),
                         dividedWidth * 36,
@@ -187,7 +187,7 @@ public final class PartyManagementScreen extends WynntilsScreen implements Textb
         FontRenderer.getInstance()
                 .renderText(
                         poseStack,
-                        StyledText.of(I18n.get("screens.wynntils.partyManagementGui.head")),
+                        StyledText2.of(I18n.get("screens.wynntils.partyManagementGui.head")),
                         dividedWidth * 5,
                         dividedHeight * PARTY_LIST_DIV_HEIGHT,
                         CommonColors.WHITE,
@@ -197,7 +197,7 @@ public final class PartyManagementScreen extends WynntilsScreen implements Textb
         FontRenderer.getInstance()
                 .renderText(
                         poseStack,
-                        StyledText.of(I18n.get("screens.wynntils.partyManagementGui.name")),
+                        StyledText2.of(I18n.get("screens.wynntils.partyManagementGui.name")),
                         dividedWidth * 7,
                         dividedHeight * PARTY_LIST_DIV_HEIGHT,
                         CommonColors.WHITE,
@@ -207,7 +207,7 @@ public final class PartyManagementScreen extends WynntilsScreen implements Textb
         FontRenderer.getInstance()
                 .renderText(
                         poseStack,
-                        StyledText.of(I18n.get("screens.wynntils.partyManagementGui.promote")),
+                        StyledText2.of(I18n.get("screens.wynntils.partyManagementGui.promote")),
                         dividedWidth * 22,
                         dividedHeight * PARTY_LIST_DIV_HEIGHT,
                         CommonColors.WHITE,
@@ -217,7 +217,7 @@ public final class PartyManagementScreen extends WynntilsScreen implements Textb
         FontRenderer.getInstance()
                 .renderText(
                         poseStack,
-                        StyledText.of(I18n.get("screens.wynntils.partyManagementGui.kick")),
+                        StyledText2.of(I18n.get("screens.wynntils.partyManagementGui.kick")),
                         dividedWidth * 26,
                         dividedHeight * PARTY_LIST_DIV_HEIGHT,
                         CommonColors.WHITE,
@@ -240,7 +240,7 @@ public final class PartyManagementScreen extends WynntilsScreen implements Textb
         FontRenderer.getInstance()
                 .renderText(
                         poseStack,
-                        StyledText.of(I18n.get("screens.wynntils.partyManagementGui.head")),
+                        StyledText2.of(I18n.get("screens.wynntils.partyManagementGui.head")),
                         dividedWidth * 37,
                         dividedHeight * SUGGESTION_LIST_DIV_HEIGHT,
                         CommonColors.WHITE,
@@ -250,7 +250,7 @@ public final class PartyManagementScreen extends WynntilsScreen implements Textb
         FontRenderer.getInstance()
                 .renderText(
                         poseStack,
-                        StyledText.of(I18n.get("screens.wynntils.partyManagementGui.suggestions")),
+                        StyledText2.of(I18n.get("screens.wynntils.partyManagementGui.suggestions")),
                         dividedWidth * 39,
                         dividedHeight * SUGGESTION_LIST_DIV_HEIGHT,
                         CommonColors.WHITE,
@@ -260,7 +260,7 @@ public final class PartyManagementScreen extends WynntilsScreen implements Textb
         FontRenderer.getInstance()
                 .renderText(
                         poseStack,
-                        StyledText.of(I18n.get("screens.wynntils.partyManagementGui.invite")),
+                        StyledText2.of(I18n.get("screens.wynntils.partyManagementGui.invite")),
                         dividedWidth * 58,
                         dividedHeight * SUGGESTION_LIST_DIV_HEIGHT,
                         CommonColors.WHITE,
@@ -413,7 +413,7 @@ public final class PartyManagementScreen extends WynntilsScreen implements Textb
             FontRenderer.getInstance()
                     .renderText(
                             poseStack,
-                            StyledText.of(String.valueOf(i)),
+                            StyledText2.of(String.valueOf(i)),
                             (float) x,
                             this.height / 2,
                             CommonColors.RED,
@@ -423,7 +423,7 @@ public final class PartyManagementScreen extends WynntilsScreen implements Textb
             FontRenderer.getInstance()
                     .renderText(
                             poseStack,
-                            StyledText.of(String.valueOf(i)),
+                            StyledText2.of(String.valueOf(i)),
                             this.width / 2,
                             (float) y,
                             CommonColors.CYAN,

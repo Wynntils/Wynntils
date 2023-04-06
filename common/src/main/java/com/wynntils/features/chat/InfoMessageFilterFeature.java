@@ -9,7 +9,7 @@ import com.wynntils.core.config.Config;
 import com.wynntils.core.config.ConfigCategory;
 import com.wynntils.core.config.RegisterConfig;
 import com.wynntils.core.features.Feature;
-import com.wynntils.core.text.StyledText;
+import com.wynntils.core.text.StyledText2;
 import com.wynntils.handlers.chat.event.ChatMessageReceivedEvent;
 import com.wynntils.handlers.chat.type.MessageType;
 import com.wynntils.handlers.chat.type.RecipientType;
@@ -57,7 +57,7 @@ public class InfoMessageFilterFeature extends Feature {
     public void onInfoMessage(ChatMessageReceivedEvent e) {
         if (e.getRecipientType() != RecipientType.INFO) return;
 
-        StyledText msg = e.getOriginalCodedMessage();
+        StyledText2 msg = e.getOriginalCodedMessage();
         MessageType messageType = e.getMessageType();
 
         if (messageType == MessageType.FOREGROUND) {

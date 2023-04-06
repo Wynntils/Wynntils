@@ -6,7 +6,7 @@ package com.wynntils.screens.settings.widgets;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.wynntils.core.config.ConfigHolder;
-import com.wynntils.core.text.StyledText;
+import com.wynntils.core.text.StyledText2;
 import com.wynntils.screens.base.widgets.WynntilsButton;
 import com.wynntils.screens.settings.WynntilsBookSettingsScreen;
 import com.wynntils.screens.settings.elements.BooleanConfigOptionElement;
@@ -67,10 +67,10 @@ public class ConfigButton extends WynntilsButton {
     public void renderWidget(PoseStack poseStack, int mouseX, int mouseY, float partialTick) {
         resetButton.render(poseStack, mouseX, mouseY, partialTick);
 
-        StyledText displayName = StyledText.of(configHolder.getDisplayName());
+        StyledText2 displayName = StyledText2.of(configHolder.getDisplayName());
 
         if (settingsScreen.configOptionContains(configHolder)) {
-            displayName = StyledText.of(ChatFormatting.UNDERLINE + displayName.getInternalCodedStringRepresentation());
+            displayName = StyledText2.of(ChatFormatting.UNDERLINE + displayName.getInternalCodedStringRepresentation());
         }
 
         poseStack.pushPose();
@@ -107,7 +107,7 @@ public class ConfigButton extends WynntilsButton {
 
         if (!resetButton.isHoveredOrFocused() && isHovered) {
             String description = configHolder.getDescription();
-            StyledText[] parts = RenderedStringUtils.wrapTextBySize(StyledText.of(description), 200);
+            StyledText2[] parts = RenderedStringUtils.wrapTextBySize(StyledText2.of(description), 200);
             List<Component> components = Arrays.stream(parts)
                     .map(s -> (Component) s.asSingleLiteralComponentWithCodedString())
                     .toList();

@@ -4,7 +4,7 @@
  */
 package com.wynntils.mc.event;
 
-import com.wynntils.core.text.StyledText;
+import com.wynntils.core.text.StyledText2;
 import com.wynntils.utils.mc.ComponentUtils;
 import net.minecraft.network.chat.Component;
 import net.minecraftforge.eventbus.api.Cancelable;
@@ -14,10 +14,10 @@ import net.minecraftforge.eventbus.api.Event;
 @Cancelable
 public class ClientsideMessageEvent extends Event {
     private final Component originalComponent;
-    private final StyledText originalCodedMessage;
+    private final StyledText2 originalCodedMessage;
 
     private Component component;
-    private StyledText codedMessage;
+    private StyledText2 codedMessage;
 
     public ClientsideMessageEvent(Component component) {
         this.originalComponent = component;
@@ -36,7 +36,7 @@ public class ClientsideMessageEvent extends Event {
         return originalComponent;
     }
 
-    public StyledText getOriginalCodedMessage() {
+    public StyledText2 getOriginalCodedMessage() {
         return originalCodedMessage;
     }
 
@@ -44,7 +44,7 @@ public class ClientsideMessageEvent extends Event {
         return component;
     }
 
-    public StyledText getCodedMessage() {
+    public StyledText2 getCodedMessage() {
         return codedMessage;
     }
 }

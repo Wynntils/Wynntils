@@ -9,7 +9,7 @@ import com.wynntils.core.config.Config;
 import com.wynntils.core.config.ConfigCategory;
 import com.wynntils.core.config.RegisterConfig;
 import com.wynntils.core.features.Feature;
-import com.wynntils.core.text.StyledText;
+import com.wynntils.core.text.StyledText2;
 import com.wynntils.handlers.chat.event.ChatMessageReceivedEvent;
 import com.wynntils.handlers.chat.type.RecipientType;
 import com.wynntils.utils.mc.McUtils;
@@ -32,7 +32,7 @@ public class WybelSoundFeature extends Feature {
     public void onChat(ChatMessageReceivedEvent event) {
         if (event.getRecipientType() != RecipientType.PETS) return;
 
-        StyledText msg = event.getCodedMessage();
+        StyledText2 msg = event.getCodedMessage();
         if (msg.contains("squeak")) {
             McUtils.playSoundAmbient(WYBEL_SQUEAK_SOUND);
             if (hideText.get()) {

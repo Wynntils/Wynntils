@@ -11,7 +11,7 @@ import com.wynntils.core.config.Config;
 import com.wynntils.core.config.ConfigCategory;
 import com.wynntils.core.config.RegisterConfig;
 import com.wynntils.core.features.Feature;
-import com.wynntils.core.text.StyledText;
+import com.wynntils.core.text.StyledText2;
 import com.wynntils.mc.event.PlayerAttackEvent;
 import com.wynntils.mc.event.PlayerInteractEvent;
 import com.wynntils.utils.wynn.WynnItemMatchers;
@@ -51,7 +51,7 @@ public class PreventTradesDuelsFeature extends Feature {
 
         if (onlyWhileFighting.get()) {
             Managers.Notification.queueMessage(
-                    StyledText.of("Trade/Duel blocked for " + (fightingTimeCutoff.get() - timeSinceLastFight) + " s"));
+                    StyledText2.of("Trade/Duel blocked for " + (fightingTimeCutoff.get() - timeSinceLastFight) + " s"));
         }
     }
 

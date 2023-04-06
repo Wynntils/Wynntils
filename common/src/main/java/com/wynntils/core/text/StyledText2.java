@@ -15,21 +15,21 @@ import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
 
-public class StyledText {
-    public static final StyledText EMPTY = new StyledText("");
+public class StyledText2 {
+    public static final StyledText2 EMPTY = new StyledText2("");
 
     private final String str;
 
-    public StyledText(String str) {
+    public StyledText2(String str) {
         this.str = str;
     }
 
-    public static StyledText of(String s) {
-        return new StyledText(s);
+    public static StyledText2 of(String s) {
+        return new StyledText2(s);
     }
 
-    public static StyledText fromComponentIgnoringComponentStylesAndJustUsingFormattingCodes(Component component) {
-        return StyledText.of(component.getString());
+    public static StyledText2 fromComponentIgnoringComponentStylesAndJustUsingFormattingCodes(Component component) {
+        return StyledText2.of(component.getString());
     }
 
     public String getInternalCodedStringRepresentation() {
@@ -44,12 +44,12 @@ public class StyledText {
         return Component.literal(str);
     }
 
-    public StyledText getNormalized() {
-        return new StyledText(WynnUtils.normalizeBadString(str));
+    public StyledText2 getNormalized() {
+        return new StyledText2(WynnUtils.normalizeBadString(str));
     }
 
-    public StyledText trim() {
-        return StyledText.of(str.trim());
+    public StyledText2 trim() {
+        return StyledText2.of(str.trim());
     }
 
     public boolean isEmpty() {
@@ -64,7 +64,7 @@ public class StyledText {
         return pattern.matcher(str);
     }
 
-    public boolean contains(StyledText string) {
+    public boolean contains(StyledText2 string) {
         return str.contains(string.str);
     }
 
@@ -72,7 +72,7 @@ public class StyledText {
         return str.contains(string);
     }
 
-    public boolean startsWith(StyledText prefix) {
+    public boolean startsWith(StyledText2 prefix) {
         return str.startsWith(prefix.str);
     }
 
@@ -80,7 +80,7 @@ public class StyledText {
         return str.startsWith(prefix);
     }
 
-    public boolean endsWith(StyledText suffix) {
+    public boolean endsWith(StyledText2 suffix) {
         return str.endsWith(suffix.str);
     }
 
@@ -88,38 +88,38 @@ public class StyledText {
         return str.endsWith(suffix);
     }
 
-    public static StyledText join(List<StyledText> strings, String delimiter) {
-        return StyledText.of(
+    public static StyledText2 join(List<StyledText2> strings, String delimiter) {
+        return StyledText2.of(
                 String.join(delimiter, strings.stream().map(s -> s.str).toList()));
     }
 
-    public StyledText[] split(String regex) {
-        return Arrays.stream(str.split(regex)).map(StyledText::of).toArray(StyledText[]::new);
+    public StyledText2[] split(String regex) {
+        return Arrays.stream(str.split(regex)).map(StyledText2::of).toArray(StyledText2[]::new);
     }
 
-    public static StyledText join(StyledText[] strings, String delimiter) {
-        return StyledText.of(
+    public static StyledText2 join(StyledText2[] strings, String delimiter) {
+        return StyledText2.of(
                 String.join(delimiter, Arrays.stream(strings).map(s -> s.str).toList()));
     }
 
-    public static StyledText concat(StyledText... str) {
-        return StyledText.of(Arrays.stream(str).map(s -> s.str).collect(Collectors.joining()));
+    public static StyledText2 concat(StyledText2... str) {
+        return StyledText2.of(Arrays.stream(str).map(s -> s.str).collect(Collectors.joining()));
     }
 
-    public StyledText prepend(StyledText prefix) {
+    public StyledText2 prepend(StyledText2 prefix) {
         return prefix.append(str);
     }
 
-    public StyledText prepend(String prefix) {
-        return StyledText.of(prefix + str);
+    public StyledText2 prepend(String prefix) {
+        return StyledText2.of(prefix + str);
     }
 
-    public StyledText append(StyledText suffix) {
-        return StyledText.of(str + suffix.str);
+    public StyledText2 append(StyledText2 suffix) {
+        return StyledText2.of(str + suffix.str);
     }
 
-    public StyledText append(String suffix) {
-        return StyledText.of(str + suffix);
+    public StyledText2 append(String suffix) {
+        return StyledText2.of(str + suffix);
     }
 
     @Override
@@ -131,7 +131,7 @@ public class StyledText {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        StyledText that = (StyledText) o;
+        StyledText2 that = (StyledText2) o;
         return Objects.equals(str, that.str);
     }
 

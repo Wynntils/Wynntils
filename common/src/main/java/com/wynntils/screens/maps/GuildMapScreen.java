@@ -8,7 +8,7 @@ import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.wynntils.core.components.Managers;
 import com.wynntils.core.components.Models;
-import com.wynntils.core.text.StyledText;
+import com.wynntils.core.text.StyledText2;
 import com.wynntils.features.map.GuildMapFeature;
 import com.wynntils.models.map.pois.Poi;
 import com.wynntils.models.map.pois.TerritoryPoi;
@@ -283,7 +283,7 @@ public final class GuildMapScreen extends AbstractMapScreen {
         FontRenderer.getInstance()
                 .renderText(
                         poseStack,
-                        StyledText.of(
+                        StyledText2.of(
                                 "%s [%s]".formatted(territoryProfile.getGuild(), territoryProfile.getGuildPrefix())),
                         10,
                         10,
@@ -299,7 +299,7 @@ public final class GuildMapScreen extends AbstractMapScreen {
             TerritoryStorage storage = territoryInfo.getStorage(value);
 
             if (generation != 0) {
-                StyledText formattedGenerated = StyledText.of(
+                StyledText2 formattedGenerated = StyledText2.of(
                         "%s+%d %s per Hour".formatted(value.getPrettySymbol(), generation, value.getName()));
 
                 FontRenderer.getInstance()
@@ -316,7 +316,7 @@ public final class GuildMapScreen extends AbstractMapScreen {
             }
 
             if (storage != null) {
-                StyledText formattedStored = StyledText.of("%s%d/%d %s stored"
+                StyledText2 formattedStored = StyledText2.of("%s%d/%d %s stored"
                         .formatted(value.getPrettySymbol(), storage.current(), storage.max(), value.getName()));
 
                 FontRenderer.getInstance()
@@ -335,11 +335,11 @@ public final class GuildMapScreen extends AbstractMapScreen {
 
         renderYOffset += 10;
 
-        StyledText treasury = StyledText.of(ChatFormatting.GRAY
+        StyledText2 treasury = StyledText2.of(ChatFormatting.GRAY
                 + "✦ Treasury: %s"
                         .formatted(territoryInfo.getTreasury().getTreasuryColor()
                                 + territoryInfo.getTreasury().getAsString()));
-        StyledText defences = StyledText.of(ChatFormatting.GRAY
+        StyledText2 defences = StyledText2.of(ChatFormatting.GRAY
                 + "Territory Defences: %s"
                         .formatted(territoryInfo.getDefences().getDefenceColor()
                                 + territoryInfo.getDefences().getAsString()));
@@ -371,7 +371,7 @@ public final class GuildMapScreen extends AbstractMapScreen {
             FontRenderer.getInstance()
                     .renderText(
                             poseStack,
-                            StyledText.of("Guild Headquarters"),
+                            StyledText2.of("Guild Headquarters"),
                             10,
                             10 + renderYOffset,
                             CommonColors.RED,
@@ -385,7 +385,7 @@ public final class GuildMapScreen extends AbstractMapScreen {
         FontRenderer.getInstance()
                 .renderText(
                         poseStack,
-                        StyledText.of(ChatFormatting.GRAY + "Time Held: " + territoryProfile.getTimeAcquiredColor()
+                        StyledText2.of(ChatFormatting.GRAY + "Time Held: " + territoryProfile.getTimeAcquiredColor()
                                 + territoryProfile.getReadableRelativeTimeAcquired()),
                         10,
                         10 + renderYOffset,
@@ -398,7 +398,7 @@ public final class GuildMapScreen extends AbstractMapScreen {
         FontRenderer.getInstance()
                 .renderAlignedTextInBox(
                         poseStack,
-                        StyledText.of(territoryPoi.getName()),
+                        StyledText2.of(territoryPoi.getName()),
                         7,
                         textureWidth,
                         Texture.TERRITORY_TOOLTIP_TOP.height() + centerHeight,

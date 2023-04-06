@@ -6,7 +6,7 @@ package com.wynntils.models.statuseffects;
 
 import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.components.Model;
-import com.wynntils.core.text.StyledText;
+import com.wynntils.core.text.StyledText2;
 import com.wynntils.mc.event.PlayerInfoFooterChangedEvent;
 import com.wynntils.models.statuseffects.event.StatusEffectsChangedEvent;
 import com.wynntils.models.statuseffects.type.StatusEffect;
@@ -36,7 +36,7 @@ public final class StatusEffectModel extends Model {
     private static final Pattern STATUS_EFFECT_PATTERN =
             Pattern.compile("(.+?§7 ?(?:\\d+(?:\\.\\d+)?%)?) ?([%\\-+\\/\\da-zA-Z'\\s]+?) §[84a]\\((.+?)\\).*");
 
-    private static final StyledText STATUS_EFFECTS_TITLE = StyledText.of("§d§lStatus Effects");
+    private static final StyledText2 STATUS_EFFECTS_TITLE = StyledText2.of("§d§lStatus Effects");
 
     private List<StatusEffect> statusEffects = List.of();
 
@@ -55,7 +55,7 @@ public final class StatusEffectModel extends Model {
 
     @SubscribeEvent
     public void onTabListCustomization(PlayerInfoFooterChangedEvent event) {
-        StyledText footer = event.getFooter();
+        StyledText2 footer = event.getFooter();
 
         if (footer.isEmpty()) {
             if (!statusEffects.isEmpty()) {
@@ -70,18 +70,18 @@ public final class StatusEffectModel extends Model {
 
         List<StatusEffect> newStatusEffects = new ArrayList<>();
 
-        StyledText[] effects = footer.split("\\s{2}"); // Effects are split up by 2 spaces
-        for (StyledText effect : effects) {
-            StyledText trimmedEffect = effect.trim();
+        StyledText2[] effects = footer.split("\\s{2}"); // Effects are split up by 2 spaces
+        for (StyledText2 effect : effects) {
+            StyledText2 trimmedEffect = effect.trim();
             if (trimmedEffect.isEmpty()) continue;
 
             Matcher m = trimmedEffect.match(STATUS_EFFECT_PATTERN);
             if (!m.find()) continue;
 
             // See comment at STATUS_EFFECT_PATTERN definition for format description of these
-            StyledText prefix = StyledText.of(m.group(1));
-            StyledText name = StyledText.of(m.group(2));
-            StyledText displayedTime = StyledText.of(m.group(3));
+            StyledText2 prefix = StyledText2.of(m.group(1));
+            StyledText2 name = StyledText2.of(m.group(2));
+            StyledText2 displayedTime = StyledText2.of(m.group(3));
             newStatusEffects.add(new StatusEffect(name, displayedTime, prefix));
         }
 

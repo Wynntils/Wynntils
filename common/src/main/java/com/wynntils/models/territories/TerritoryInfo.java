@@ -4,7 +4,7 @@
  */
 package com.wynntils.models.territories;
 
-import com.wynntils.core.text.StyledText;
+import com.wynntils.core.text.StyledText2;
 import com.wynntils.models.territories.type.GuildResource;
 import com.wynntils.models.territories.type.GuildResourceValues;
 import com.wynntils.models.territories.type.TerritoryStorage;
@@ -58,12 +58,12 @@ public class TerritoryInfo {
      * @param raw the input achievement description without colors
      * @param colored the input achievement description with colors
      */
-    public TerritoryInfo(String[] raw, StyledText[] colored, boolean headquarters) {
+    public TerritoryInfo(String[] raw, StyledText2[] colored, boolean headquarters) {
         this.headquarters = headquarters;
 
         for (int i = 0; i < raw.length; i++) {
             String unformatted = raw[i];
-            StyledText formatted = colored[i];
+            StyledText2 formatted = colored[i];
 
             // initial trading route parsing
             if (unformatted.startsWith("-")) {

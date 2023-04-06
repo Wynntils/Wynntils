@@ -5,7 +5,7 @@
 package com.wynntils.models.profession;
 
 import com.wynntils.core.components.Model;
-import com.wynntils.core.text.StyledText;
+import com.wynntils.core.text.StyledText2;
 import com.wynntils.handlers.chat.event.ChatMessageReceivedEvent;
 import com.wynntils.handlers.labels.event.EntityLabelChangedEvent;
 import com.wynntils.models.character.CharacterModel;
@@ -64,7 +64,7 @@ public class ProfessionModel extends Model {
 
     @SubscribeEvent
     public void onChatMessage(ChatMessageReceivedEvent event) {
-        StyledText codedMessage = event.getOriginalCodedMessage();
+        StyledText2 codedMessage = event.getOriginalCodedMessage();
 
         Matcher matcher = codedMessage.match(PROFESSION_CRAFT_PATTERN);
 
@@ -84,8 +84,8 @@ public class ProfessionModel extends Model {
 
     public void resetValueFromItem(ItemStack professionInfoItem) {
         Map<ProfessionType, ProfessionProgress> levels = new ConcurrentHashMap<>();
-        List<StyledText> professionLore = LoreUtils.getLore(professionInfoItem);
-        for (StyledText line : professionLore) {
+        List<StyledText2> professionLore = LoreUtils.getLore(professionInfoItem);
+        for (StyledText2 line : professionLore) {
             Matcher matcher = line.match(INFO_MENU_PROFESSION_LORE_PATTERN);
 
             if (matcher.matches()) {

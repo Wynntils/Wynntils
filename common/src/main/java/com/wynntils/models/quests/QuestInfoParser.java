@@ -5,7 +5,7 @@
 package com.wynntils.models.quests;
 
 import com.wynntils.core.WynntilsMod;
-import com.wynntils.core.text.StyledText;
+import com.wynntils.core.text.StyledText2;
 import com.wynntils.models.quests.type.QuestLength;
 import com.wynntils.models.quests.type.QuestStatus;
 import com.wynntils.utils.mc.LoreUtils;
@@ -30,7 +30,7 @@ public final class QuestInfoParser {
             String name = getQuestName(itemStack);
             if (name == null) return null;
 
-            LinkedList<StyledText> lore = LoreUtils.getLore(itemStack);
+            LinkedList<StyledText2> lore = LoreUtils.getLore(itemStack);
 
             QuestStatus status = getQuestStatus(lore);
             if (status == null) return null;
@@ -45,7 +45,7 @@ public final class QuestInfoParser {
 
             if (!skipEmptyLine(lore)) return null;
 
-            StyledText description = getDescription(lore);
+            StyledText2 description = getDescription(lore);
             boolean tracked = isQuestTracked(itemStack);
 
             return new QuestInfo(
@@ -78,16 +78,16 @@ public final class QuestInfoParser {
     }
 
     private static boolean isQuestTracked(ItemStack itemStack) {
-        StyledText name =
-                StyledText.fromComponentIgnoringComponentStylesAndJustUsingFormattingCodes(itemStack.getHoverName());
+        StyledText2 name =
+                StyledText2.fromComponentIgnoringComponentStylesAndJustUsingFormattingCodes(itemStack.getHoverName());
         if (name.trim().isEmpty()) {
             return false;
         }
         return name.endsWith("§e[Tracked]");
     }
 
-    private static QuestStatus getQuestStatus(LinkedList<StyledText> lore) {
-        StyledText rawStatus = lore.pop();
+    private static QuestStatus getQuestStatus(LinkedList<StyledText2> lore) {
+        StyledText2 rawStatus = lore.pop();
         Matcher m = rawStatus.match(STATUS_MATCHER);
         if (!m.find()) {
             WynntilsMod.warn("Non-matching status value: " + rawStatus);
@@ -96,8 +96,8 @@ public final class QuestInfoParser {
         return QuestStatus.fromString(m.group(1));
     }
 
-    private static boolean skipEmptyLine(LinkedList<StyledText> lore) {
-        StyledText loreLine = lore.pop();
+    private static boolean skipEmptyLine(LinkedList<StyledText2> lore) {
+        StyledText2 loreLine = lore.pop();
         if (!loreLine.isEmpty()) {
             WynntilsMod.warn("Unexpected value in quest: " + loreLine);
             return false;
@@ -105,8 +105,8 @@ public final class QuestInfoParser {
         return true;
     }
 
-    private static int getLevel(LinkedList<StyledText> lore) {
-        StyledText rawLevel = lore.getFirst();
+    private static int getLevel(LinkedList<StyledText2> lore) {
+        StyledText2 rawLevel = lore.getFirst();
         Matcher m = rawLevel.match(LEVEL_MATCHER);
         if (!m.find()) {
             // This can happen for the very first quests; accept without error
@@ -117,7 +117,7 @@ public final class QuestInfoParser {
         return Integer.parseInt(m.group(1));
     }
 
-    private static List<Pair<String, Integer>> getAdditionalRequirements(LinkedList<StyledText> lore) {
+    private static List<Pair<String, Integer>> getAdditionalRequirements(LinkedList<StyledText2> lore) {
         List<Pair<String, Integer>> requirements = new LinkedList<>();
         Matcher m;
 
@@ -134,8 +134,8 @@ public final class QuestInfoParser {
         return requirements;
     }
 
-    private static QuestLength getQuestLength(LinkedList<StyledText> lore) {
-        StyledText lengthRaw = lore.pop();
+    private static QuestLength getQuestLength(LinkedList<StyledText2> lore) {
+        StyledText2 lengthRaw = lore.pop();
 
         Matcher m = lengthRaw.match(LENGTH_MATCHER);
         if (!m.find()) {
@@ -145,9 +145,9 @@ public final class QuestInfoParser {
         return QuestLength.fromString(m.group(1));
     }
 
-    private static StyledText getDescription(List<StyledText> lore) {
+    private static StyledText2 getDescription(List<StyledText2> lore) {
         // The last two lines is an empty line and "RIGHT-CLICK TO TRACK"; skip those
-        List<StyledText> descriptionLines = lore.subList(0, lore.size() - 2);
+        List<StyledText2> descriptionLines = lore.subList(0, lore.size() - 2);
         // Every line begins with a format code of length 2 ("§7"), skip that
         // and join everything together, trying to avoid excess whitespace
 
@@ -157,10 +157,10 @@ public final class QuestInfoParser {
         String description = String.join(
                         " ",
                         descriptionLines.stream()
-                                .map(StyledText::withoutFormatting)
+                                .map(StyledText2::withoutFormatting)
                                 .toList())
                 .replaceAll("\\s+", " ")
                 .trim();
-        return StyledText.of(description);
+        return StyledText2.of(description);
     }
 }

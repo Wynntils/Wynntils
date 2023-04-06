@@ -8,7 +8,7 @@ import com.wynntils.core.components.Models;
 import com.wynntils.core.config.Category;
 import com.wynntils.core.config.ConfigCategory;
 import com.wynntils.core.features.Feature;
-import com.wynntils.core.text.StyledText;
+import com.wynntils.core.text.StyledText2;
 import com.wynntils.handlers.chat.event.ChatMessageReceivedEvent;
 import com.wynntils.mc.event.ClientsideMessageEvent;
 import com.wynntils.utils.mc.ComponentUtils;
@@ -64,7 +64,7 @@ public class ChatCoordinatesFeature extends Feature {
             }
 
             do {
-                StyledText text = ComponentUtils.getCoded(comp);
+                StyledText2 text = ComponentUtils.getCoded(comp);
                 Style style = comp.getStyle();
 
                 Optional<Location> location = LocationUtils.parseFromString(m.group());

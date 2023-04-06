@@ -8,7 +8,7 @@ import com.wynntils.core.components.Models;
 import com.wynntils.core.config.Category;
 import com.wynntils.core.config.ConfigCategory;
 import com.wynntils.core.features.Feature;
-import com.wynntils.core.text.StyledText;
+import com.wynntils.core.text.StyledText2;
 import com.wynntils.handlers.chat.event.ChatMessageReceivedEvent;
 import com.wynntils.mc.event.KeyInputEvent;
 import com.wynntils.mc.mixin.accessors.ChatScreenAccessor;
@@ -55,7 +55,7 @@ public class ChatItemFeature extends Feature {
         }
 
         // replace encoded strings with placeholders for less confusion
-        Matcher m = Models.Gear.gearChatEncodingMatcher(StyledText.of(chatInput.getValue()));
+        Matcher m = Models.Gear.gearChatEncodingMatcher(StyledText2.of(chatInput.getValue()));
         while (m.find()) {
             String encodedItem = m.group();
             StringBuilder name = new StringBuilder(m.group("Name"));
@@ -99,7 +99,7 @@ public class ChatItemFeature extends Feature {
             boolean lastComponentIsItem = false;
 
             do {
-                StyledText text = ComponentUtils.getCoded(comp);
+                StyledText2 text = ComponentUtils.getCoded(comp);
                 Style style = comp.getStyle();
 
                 GearItem item = Models.Gear.fromEncodedString(m.group());

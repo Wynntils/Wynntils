@@ -15,7 +15,7 @@ import com.wynntils.core.features.properties.RegisterCommand;
 import com.wynntils.core.features.properties.RegisterKeyBind;
 import com.wynntils.core.features.properties.StartDisabled;
 import com.wynntils.core.keybinds.KeyBind;
-import com.wynntils.core.text.StyledText;
+import com.wynntils.core.text.StyledText2;
 import com.wynntils.models.items.WynnItem;
 import com.wynntils.utils.mc.LoreUtils;
 import com.wynntils.utils.mc.McUtils;
@@ -70,7 +70,7 @@ public class LogItemInfoFeature extends Feature {
 
         return "[Logging Item]\nName: "
                 + itemStack.getHoverName().getString() + "\nLore:\n"
-                + StyledText.join(LoreUtils.getLore(itemStack), "\n") + "\nItem Type: "
+                + StyledText2.join(LoreUtils.getLore(itemStack), "\n") + "\nItem Type: "
                 + itemStack.getItem() + "\nDamage Value: "
                 + itemStack.getDamageValue() + "\nWynn Item: "
                 + wynnItemDesc + "\nNBT: "
