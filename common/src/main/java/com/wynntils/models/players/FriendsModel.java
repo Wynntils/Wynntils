@@ -24,6 +24,7 @@ import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
+import net.minecraftforge.eventbus.api.EventPriority;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 
 public final class FriendsModel extends Model {
@@ -74,7 +75,7 @@ public final class FriendsModel extends Model {
         }
     }
 
-    @SubscribeEvent
+    @SubscribeEvent(priority = EventPriority.HIGHEST)
     public void onChatReceived(ChatMessageReceivedEvent event) {
         if (event.getMessageType() != MessageType.FOREGROUND) return;
 
