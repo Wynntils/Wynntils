@@ -9,6 +9,7 @@ import com.wynntils.core.components.Handlers;
 import com.wynntils.core.components.Model;
 import com.wynntils.handlers.scoreboard.ScoreboardPart;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
@@ -32,7 +33,7 @@ public class ObjectivesModel extends Model {
 
     public List<WynnObjective> getPersonalObjectives() {
         // Make copy, so we don't have to worry about concurrent modification
-        return new ArrayList<>(personalObjectives);
+        return Collections.unmodifiableList(personalObjectives);
     }
 
     void resetObjectives() {
