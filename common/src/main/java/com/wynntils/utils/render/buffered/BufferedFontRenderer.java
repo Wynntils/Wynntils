@@ -19,8 +19,6 @@ import com.wynntils.utils.render.type.VerticalAlignment;
 import java.util.List;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.renderer.MultiBufferSource;
-import net.minecraft.network.chat.FormattedText;
-import net.minecraft.network.chat.Style;
 
 public final class BufferedFontRenderer {
     private static final BufferedFontRenderer INSTANCE = new BufferedFontRenderer();
@@ -337,20 +335,14 @@ public final class BufferedFontRenderer {
             return;
         }
 
-        // FIXME..?
-        List<FormattedText> parts =
-                font.getSplitter().splitLines(text.getInternalCodedStringRepresentation(), (int) maxWidth, Style.EMPTY);
+        List<StyledText> parts = text.withMaxWidth((int) maxWidth);
 
         StyledText lastPart = StyledText.EMPTY;
         for (int i = 0; i < parts.size(); i++) {
-            // copy the format codes to this part as well
-            StyledText part = StyledText.fromString(
-                    ComponentUtils.getLastPartCodes(lastPart) + parts.get(i).getString());
-            lastPart = part;
             renderText(
                     poseStack,
                     bufferSource,
-                    part,
+                    parts.get(i),
                     x,
                     y + (i * font.lineHeight),
                     customColor,

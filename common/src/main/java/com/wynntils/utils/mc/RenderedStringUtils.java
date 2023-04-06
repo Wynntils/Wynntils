@@ -6,7 +6,6 @@ package com.wynntils.utils.mc;
 
 import com.wynntils.core.text.StyledText;
 import com.wynntils.utils.render.FontRenderer;
-import java.util.Arrays;
 import net.minecraft.client.gui.Font;
 
 public final class RenderedStringUtils {
@@ -15,7 +14,7 @@ public final class RenderedStringUtils {
         int spaceSize = font.width(" ");
 
         StyledText[] stringArray = s.split(" ");
-        StringBuilder result = new StringBuilder();
+        StyledText result = StyledText.EMPTY;
         int length = 0;
 
         // FIXME: codes should not count toward the word length
@@ -25,19 +24,17 @@ public final class RenderedStringUtils {
             for (int i = 0; i < lines.length; i++) {
                 StyledText line = lines[i];
                 if (i > 0 || length + font.width(line.getInternalCodedStringRepresentation()) >= maxPixels) {
-                    result.append('\n');
+                    result = result.append("\n");
                     length = 0;
                 }
                 if (!line.isEmpty()) {
-                    result.append(line).append(' ');
+                    result = result.append(line).append(" ");
                     length += font.width(line.getInternalCodedStringRepresentation()) + spaceSize;
                 }
             }
         }
 
-        return Arrays.stream(result.toString().split("\n"))
-                .map(StyledText::fromString)
-                .toArray(StyledText[]::new);
+        return result.split("\n");
     }
 
     public static String getMaxFittingText(String text, float maxTextWidth, Font font) {

@@ -9,7 +9,6 @@ import com.mojang.blaze3d.vertex.Tesselator;
 import com.wynntils.core.text.StyledText;
 import com.wynntils.mc.mixin.accessors.MinecraftAccessor;
 import com.wynntils.utils.colors.CustomColor;
-import com.wynntils.utils.mc.ComponentUtils;
 import com.wynntils.utils.mc.McUtils;
 import com.wynntils.utils.render.buffered.BufferedFontRenderer;
 import com.wynntils.utils.render.type.HorizontalAlignment;
@@ -18,8 +17,6 @@ import com.wynntils.utils.render.type.VerticalAlignment;
 import java.util.List;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.renderer.MultiBufferSource;
-import net.minecraft.network.chat.FormattedText;
-import net.minecraft.network.chat.Style;
 
 public final class FontRenderer {
     private static final FontRenderer INSTANCE = new FontRenderer();
@@ -272,19 +269,12 @@ public final class FontRenderer {
             return;
         }
 
-        // FIXME...
-        List<FormattedText> parts =
-                font.getSplitter().splitLines(text.getInternalCodedStringRepresentation(), (int) maxWidth, Style.EMPTY);
+        List<StyledText> parts = text.withMaxWidth((int) maxWidth);
 
-        StyledText lastPart = StyledText.EMPTY;
         for (int i = 0; i < parts.size(); i++) {
-            // copy the format codes to this part as well
-            StyledText part = StyledText.fromString(
-                    ComponentUtils.getLastPartCodes(lastPart) + parts.get(i).getString());
-            lastPart = part;
             renderText(
                     poseStack,
-                    part,
+                    parts.get(i),
                     x,
                     y + (i * font.lineHeight),
                     customColor,

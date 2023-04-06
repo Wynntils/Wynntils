@@ -86,11 +86,11 @@ public final class LoreUtils {
      * @return a {@link String} containing all item lore
      */
     public static StyledText getStringLore(ItemStack itemStack) {
-        StringBuilder toReturn = new StringBuilder();
+        StyledText toReturn = StyledText.EMPTY;
         for (StyledText x : getLore(itemStack)) {
-            toReturn.append(x);
+            toReturn = toReturn.append(x);
         }
-        return StyledText.fromString(toReturn.toString());
+        return toReturn;
     }
 
     /** Get the lore NBT tag from an item, else return empty */

@@ -5,7 +5,9 @@
 package com.wynntils.core.text;
 
 import com.google.common.collect.Iterables;
+import com.wynntils.core.WynntilsMod;
 import com.wynntils.utils.mc.ComponentUtils;
+import com.wynntils.utils.render.FontRenderer;
 import com.wynntils.utils.type.IterationDecision;
 import com.wynntils.utils.type.Pair;
 import java.util.ArrayList;
@@ -29,8 +31,7 @@ import org.apache.commons.lang3.ArrayUtils;
 public final class StyledText {
     public static final StyledText EMPTY = new StyledText(List.of(), List.of(), List.of());
 
-    private final Component temporaryWorkaround;
-    private final String temporaryWorkaroundString;
+    private final Pair<Component, String> temporaryWorkaround;
 
     private final List<StyledTextPart> parts;
 
@@ -39,7 +40,7 @@ public final class StyledText {
 
     private StyledText(
             List<StyledTextPart> parts,
-            Component temporaryWorkaround,
+            Pair<Component, String> temporaryWorkaround,
             List<ClickEvent> clickEvents,
             List<HoverEvent> hoverEvents) {
         this.parts = parts.stream()
@@ -47,7 +48,6 @@ public final class StyledText {
                 .map(styledTextPart -> new StyledTextPart(styledTextPart, this))
                 .collect(Collectors.toList());
         this.temporaryWorkaround = temporaryWorkaround;
-        this.temporaryWorkaroundString = null;
         this.clickEvents = new ArrayList<>(clickEvents);
         this.hoverEvents = new ArrayList<>(hoverEvents);
     }
@@ -61,25 +61,7 @@ public final class StyledText {
         this.hoverEvents = new ArrayList<>(hoverEvents);
 
         // We can't know the component, just use our own representation
-        this.temporaryWorkaround = getComponent();
-        this.temporaryWorkaroundString = null;
-    }
-
-    private StyledText(
-            List<StyledTextPart> parts,
-            List<ClickEvent> clickEvents,
-            List<HoverEvent> hoverEvents,
-            String temporaryWorkaroundString) {
-        this.parts = parts.stream()
-                .filter(styledTextPart -> !styledTextPart.isEmpty())
-                .map(styledTextPart -> new StyledTextPart(styledTextPart, this))
-                .collect(Collectors.toList());
-        this.clickEvents = new ArrayList<>(clickEvents);
-        this.hoverEvents = new ArrayList<>(hoverEvents);
-
-        // We can't know the component, just use our own representation
-        this.temporaryWorkaroundString = temporaryWorkaroundString;
-        this.temporaryWorkaround = null;
+        this.temporaryWorkaround = Pair.of(getComponent(), null);
     }
 
     public static StyledText fromComponent(Component component) {
@@ -123,15 +105,15 @@ public final class StyledText {
                     styledTextParts.stream().filter(part -> !part.isEmpty()).toList());
         }
 
-        return new StyledText(parts, temporaryWorkaround, clickEvents, hoverEvents);
+        return new StyledText(parts, Pair.of(temporaryWorkaround, null), clickEvents, hoverEvents);
     }
 
     public static StyledText fromString(String codedString) {
         return new StyledText(
                 StyledTextPart.fromCodedString(codedString, Style.EMPTY, null, Style.EMPTY),
+                Pair.of(null, codedString),
                 List.of(),
-                List.of(),
-                codedString);
+                List.of());
     }
 
     // We don't want to expose the actual string to the outside world
@@ -139,7 +121,7 @@ public final class StyledText {
     public String getString(PartStyle.StyleType type) {
         if (type == PartStyle.StyleType.FULL) {
             return Objects.requireNonNullElseGet(
-                    temporaryWorkaroundString, () -> ComponentUtils.getCoded(temporaryWorkaround));
+                    temporaryWorkaround.b(), () -> ComponentUtils.getCoded(temporaryWorkaround.a()));
         }
 
         StringBuilder builder = new StringBuilder();
@@ -357,6 +339,20 @@ public final class StyledText {
                 .toArray(StyledText[]::new);
     }
 
+    public List<StyledText> withMaxWidth(int maxWidth) {
+        if (FontRenderer.getInstance().getFont().width(getString(PartStyle.StyleType.DEFAULT)) <= maxWidth) {
+            return List.of(this);
+        }
+
+        return FontRenderer.getInstance()
+                .getFont()
+                .getSplitter()
+                .splitLines(getString(PartStyle.StyleType.DEFAULT), maxWidth, Style.EMPTY)
+                .stream()
+                .map(formattedText -> StyledText.fromString(formattedText.getString()))
+                .collect(Collectors.toList());
+    }
+
     public StyledText iterate(BiFunction<StyledTextPart, List<StyledTextPart>, IterationDecision> function) {
         List<StyledTextPart> newParts = new ArrayList<>();
 
@@ -421,6 +417,7 @@ public final class StyledText {
 
     @Override
     public String toString() {
+        WynntilsMod.error("StyledText.toString() was called: " + ArrayUtils.toString(parts));
         return "StyledText{" + "parts="
                 + ArrayUtils.toString(parts) + ", clickEvents="
                 + ArrayUtils.toString(clickEvents) + ", hoverEvents="
