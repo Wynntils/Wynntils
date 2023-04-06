@@ -1,9 +1,26 @@
+## [0.0.2-alpha.440](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.439...v0.0.2-alpha.440) (2023-04-06)
+
+
+### Bug Fixes
+
+* Show info box content in preview, if set ([#1449](https://github.com/Wynntils/Artemis/issues/1449)) ([b6ae3c8](https://github.com/Wynntils/Artemis/commit/b6ae3c87bec8039b6d93c1ee0f5c02e67559c0f9))
+
+
+### Performance Improvements
+
+* Some minor optimization in config saving ([#1445](https://github.com/Wynntils/Artemis/issues/1445)) ([45eb929](https://github.com/Wynntils/Artemis/commit/45eb92980ca393087301a2f064f9af485cff0157))
+
 ## [0.0.2-alpha.439](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.438...v0.0.2-alpha.439) (2023-04-05)
 
 
 ### Bug Fixes
 
 * Add NPE checks for mob totem functions (and remove leftover y z functions) ([#1451](https://github.com/Wynntils/Artemis/issues/1451)) ([ce32ea1](https://github.com/Wynntils/Artemis/commit/ce32ea12c380a2d446019392ef664f1d29aaa8c4))
+
+
+### Miscellaneous Chores
+
+* **release:** v0.0.2-alpha.439 [skip ci] ([6fd7c98](https://github.com/Wynntils/Artemis/commit/6fd7c98ca359df708b5b99faea90716e141d99bf))
 
 ## [0.0.2-alpha.438](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.437...v0.0.2-alpha.438) (2023-04-05)
 
@@ -40,16 +57,4 @@
 ### Miscellaneous Chores
 
 * **release:** v0.0.2-alpha.436 [skip ci] ([9290901](https://github.com/Wynntils/Artemis/commit/9290901276672523d49c5fc748f944061d3767c0))
-
-## [0.0.2-alpha.435](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.434...v0.0.2-alpha.435) (2023-04-04)
-
-
-### Bug Fixes
-
-* Add separators between scoreboard segments, log suspicious states for objective scoreboard part ([#1442](https://github.com/Wynntils/Artemis/issues/1442)) ([686887c](https://github.com/Wynntils/Artemis/commit/686887cfb32532359687e3dc3c2ff006e816326a))
-
-
-### Miscellaneous Chores
-
-* **release:** v0.0.2-alpha.435 [skip ci] ([320ed78](https://github.com/Wynntils/Artemis/commit/320ed78bd0f7dc92c14ccc69c341bf3a597a6c5d))
 
