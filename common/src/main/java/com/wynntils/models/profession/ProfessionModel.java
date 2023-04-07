@@ -64,7 +64,7 @@ public class ProfessionModel extends Model {
 
     @SubscribeEvent
     public void onChatMessage(ChatMessageReceivedEvent event) {
-        CodedString codedMessage = event.getOriginalCodedMessage();
+        CodedString codedMessage = event.getOriginalCodedString();
 
         Matcher matcher = codedMessage.getMatcher(PROFESSION_CRAFT_PATTERN);
 

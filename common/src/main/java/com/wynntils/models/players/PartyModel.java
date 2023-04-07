@@ -121,7 +121,7 @@ public final class PartyModel extends Model {
     public void onChatReceived(ChatMessageReceivedEvent event) {
         if (event.getMessageType() != MessageType.FOREGROUND) return;
 
-        CodedString coded = event.getOriginalCodedMessage();
+        CodedString coded = event.getOriginalCodedString();
 
         if (tryParsePartyMessages(coded)) {
             return;
