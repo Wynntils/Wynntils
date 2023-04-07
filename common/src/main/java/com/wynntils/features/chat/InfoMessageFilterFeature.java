@@ -57,7 +57,7 @@ public class InfoMessageFilterFeature extends Feature {
     public void onInfoMessage(ChatMessageReceivedEvent e) {
         if (e.getRecipientType() != RecipientType.INFO) return;
 
-        CodedString msg = e.getOriginalCodedMessage();
+        CodedString msg = e.getOriginalCodedString();
         MessageType messageType = e.getMessageType();
 
         if (messageType == MessageType.FOREGROUND) {

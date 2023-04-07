@@ -17,6 +17,7 @@ import com.wynntils.core.features.overlays.OverlaySize;
 import com.wynntils.core.features.overlays.annotations.OverlayInfo;
 import com.wynntils.mc.event.RenderEvent;
 import com.wynntils.models.token.event.TokenGatekeeperEvent;
+import com.wynntils.utils.colors.ColorChatFormatting;
 import com.wynntils.utils.colors.CustomColor;
 import com.wynntils.utils.mc.McUtils;
 import com.wynntils.utils.render.Texture;
@@ -24,7 +25,6 @@ import com.wynntils.utils.render.type.HorizontalAlignment;
 import com.wynntils.utils.render.type.VerticalAlignment;
 import com.wynntils.utils.type.CappedValue;
 import java.util.List;
-import net.minecraft.ChatFormatting;
 import net.minecraft.client.resources.sounds.SimpleSoundInstance;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
@@ -73,7 +73,7 @@ public class TokenTrackerFeature extends Feature {
 
     protected static final class TokenBarOverlay extends BarOverlay {
         @RegisterConfig
-        public final Config<ChatFormatting> color = new Config<>(ChatFormatting.GOLD);
+        public final Config<ColorChatFormatting> color = new Config<>(ColorChatFormatting.GOLD);
 
         public TokenBarOverlay(int id) {
             super(id, new OverlaySize(81, 21));
@@ -100,7 +100,7 @@ public class TokenTrackerFeature extends Feature {
 
         @Override
         public CustomColor getRenderColor() {
-            return CustomColor.fromChatFormatting(color.get());
+            return CustomColor.fromChatFormatting(color.get().getChatFormatting());
         }
 
         @Override

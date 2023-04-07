@@ -26,10 +26,10 @@ public class TradeMarketPriceConversionFeature extends Feature {
 
     @SubscribeEvent
     public void onChatMessageReceive(ChatMessageReceivedEvent event) {
-        if (event.getOriginalCodedMessage().getMatcher(PRICE_PATTERN).matches()) {
+        if (event.getOriginalCodedString().getMatcher(PRICE_PATTERN).matches()) {
             shouldConvert = true;
         }
-        if (event.getOriginalCodedMessage().getMatcher(CANCELLED_PATTERN).matches()) {
+        if (event.getOriginalCodedString().getMatcher(CANCELLED_PATTERN).matches()) {
             shouldConvert = false;
         }
     }

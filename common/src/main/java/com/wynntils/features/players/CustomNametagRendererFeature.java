@@ -10,7 +10,8 @@ import com.wynntils.core.config.Config;
 import com.wynntils.core.config.ConfigCategory;
 import com.wynntils.core.config.RegisterConfig;
 import com.wynntils.core.features.Feature;
-import com.wynntils.mc.event.NametagRenderEvent;
+import com.wynntils.mc.event.EntityNameTagRenderEvent;
+import com.wynntils.mc.event.PlayerNametagRenderEvent;
 import com.wynntils.mc.event.RenderLevelEvent;
 import com.wynntils.models.gear.type.GearInfo;
 import com.wynntils.models.players.WynntilsUser;
@@ -42,6 +43,12 @@ public class CustomNametagRendererFeature extends Feature {
     public final Config<Boolean> hideAllNametags = new Config<>(false);
 
     @RegisterConfig
+    public final Config<Boolean> hidePlayerNametags = new Config<>(false);
+
+    @RegisterConfig
+    public final Config<Boolean> hideNametagBackground = new Config<>(false);
+
+    @RegisterConfig
     public final Config<Boolean> showGearOnHover = new Config<>(true);
 
     @RegisterConfig
@@ -50,8 +57,8 @@ public class CustomNametagRendererFeature extends Feature {
     private Player hitPlayerCache = null;
 
     @SubscribeEvent
-    public void onNameTagRender(NametagRenderEvent event) {
-        if (hideAllNametags.get()) {
+    public void onPlayerNameTagRender(PlayerNametagRenderEvent event) {
+        if (hidePlayerNametags.get()) {
             event.setCanceled(true);
             return;
         }
@@ -78,12 +85,24 @@ public class CustomNametagRendererFeature extends Feature {
     }
 
     @SubscribeEvent
+    public void onEntityNameTagRender(EntityNameTagRenderEvent event) {
+        if (hideAllNametags.get()) {
+            event.setCanceled(true);
+            return;
+        }
+
+        if (hideNametagBackground.get()) {
+            event.setBackgroundOpacity(0f);
+        }
+    }
+
+    @SubscribeEvent
     public void onRenderLevel(RenderLevelEvent.Pre event) {
         Optional<Player> hitPlayer = RaycastUtils.getHoveredPlayer();
         hitPlayerCache = hitPlayer.orElse(null);
     }
 
-    private void addGearNametags(NametagRenderEvent event, List<CustomNametag> nametags) {
+    private void addGearNametags(PlayerNametagRenderEvent event, List<CustomNametag> nametags) {
         LocalPlayer player = McUtils.player();
 
         if (hitPlayerCache != event.getEntity()) return;
@@ -114,7 +133,7 @@ public class CustomNametagRendererFeature extends Feature {
         return Component.literal(gearInfo.name()).withStyle(gearInfo.tier().getChatFormatting());
     }
 
-    private void addAccountTypeNametag(NametagRenderEvent event, List<CustomNametag> nametags) {
+    private void addAccountTypeNametag(PlayerNametagRenderEvent event, List<CustomNametag> nametags) {
         WynntilsUser user = Models.Player.getUser(event.getEntity().getUUID());
         if (user == null) return;
         AccountType accountType = user.accountType();
@@ -123,9 +142,11 @@ public class CustomNametagRendererFeature extends Feature {
         nametags.add(new CustomNametag(accountType.getComponent(), customNametagScale.get() * ACCOUNT_TYPE_MULTIPLIER));
     }
 
-    private void drawNametags(NametagRenderEvent event, List<CustomNametag> nametags) {
+    private void drawNametags(PlayerNametagRenderEvent event, List<CustomNametag> nametags) {
         // calculate color of nametag box
-        int backgroundColor = (int) (Minecraft.getInstance().options.getBackgroundOpacity(0.25F) * 255f) << 24;
+        int backgroundColor = hideNametagBackground.get()
+                ? 0
+                : ((int) (Minecraft.getInstance().options.getBackgroundOpacity(0.25F) * 255f) << 24);
 
         // add vanilla nametag to list
         nametags.add(new CustomNametag(event.getDisplayName(), 1f));

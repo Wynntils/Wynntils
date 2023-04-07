@@ -14,11 +14,11 @@ import com.wynntils.core.text.PartStyle;
 import com.wynntils.core.text.StyledText;
 import com.wynntils.core.text.StyledTextPart;
 import com.wynntils.handlers.chat.event.ChatMessageReceivedEvent;
+import com.wynntils.utils.colors.ColorChatFormatting;
 import com.wynntils.utils.mc.McUtils;
 import com.wynntils.utils.type.IterationDecision;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.Style;
 import net.minecraft.sounds.SoundEvents;
@@ -35,7 +35,7 @@ public class ChatMentionFeature extends Feature {
     public final Config<Boolean> dingMention = new Config<>(true);
 
     @RegisterConfig
-    public final Config<ChatFormatting> mentionColor = new Config<>(ChatFormatting.YELLOW);
+    public final Config<ColorChatFormatting> mentionColor = new Config<>(ColorChatFormatting.YELLOW);
 
     @RegisterConfig
     public final Config<String> aliases = new Config<>("");
@@ -63,7 +63,7 @@ public class ChatMentionFeature extends Feature {
     public void onChat(ChatMessageReceivedEvent e) {
         Component message = e.getMessage();
 
-        StyledText styledText = StyledText.fromComponent(message);
+        StyledText styledText = e.getStyledText();
 
         StyledText modified = styledText.iterateBackwards((part, changes) -> {
             // We have reached the end of the message content,
@@ -86,7 +86,10 @@ public class ChatMentionFeature extends Feature {
 
                 StyledTextPart first = new StyledTextPart(firstPart, partStyle.getStyle(), null, Style.EMPTY);
                 StyledTextPart mention = new StyledTextPart(
-                        mentionPart, partStyle.getStyle().withColor(mentionColor.get()), null, Style.EMPTY);
+                        mentionPart,
+                        partStyle.getStyle().withColor(mentionColor.get().getChatFormatting()),
+                        null,
+                        first.getPartStyle().getStyle());
                 StyledTextPart last = new StyledTextPart(lastPart, partStyle.getStyle(), null, Style.EMPTY);
 
                 changes.remove(partToReplace);

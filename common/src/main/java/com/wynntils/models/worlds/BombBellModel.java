@@ -29,7 +29,7 @@ public final class BombBellModel extends Model {
 
     @SubscribeEvent(priority = EventPriority.HIGHEST)
     public void onChat(ChatMessageReceivedEvent event) {
-        String unformatted = ComponentUtils.stripFormatting(event.getOriginalCodedMessage());
+        String unformatted = ComponentUtils.stripFormatting(event.getOriginalCodedString());
 
         Matcher matcher = BOMB_BELL_PATTERN.matcher(unformatted);
         if (matcher.matches()) {
