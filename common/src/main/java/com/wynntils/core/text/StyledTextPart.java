@@ -113,10 +113,6 @@ public final class StyledTextPart {
         return style.asString(previousStyle, type) + text;
     }
 
-    public String getUnformattedString() {
-        return getString(null, PartStyle.StyleType.NONE);
-    }
-
     public StyledText getParent() {
         return parent;
     }

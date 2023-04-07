@@ -56,7 +56,8 @@ public class ChatCoordinatesFeature extends Feature {
     private static StyledText getStyledTextWithCoordinatesInserted(StyledText styledText) {
         StyledText modified = styledText.iterate((part, changes) -> {
             StyledTextPart partToReplace = part;
-            Matcher matcher = LocationUtils.strictCoordinateMatcher(partToReplace.getUnformattedString());
+            Matcher matcher =
+                    LocationUtils.strictCoordinateMatcher(partToReplace.getString(null, PartStyle.StyleType.NONE));
 
             while (matcher.find()) {
                 Optional<Location> location = LocationUtils.parseFromString(matcher.group());
@@ -65,7 +66,7 @@ public class ChatCoordinatesFeature extends Feature {
                     continue;
                 }
 
-                String unformattedString = partToReplace.getUnformattedString();
+                String unformattedString = partToReplace.getString(null, PartStyle.StyleType.NONE);
 
                 String firstPart = unformattedString.substring(0, matcher.start());
                 String lastPart = unformattedString.substring(matcher.end());
