@@ -1,9 +1,21 @@
+## [0.0.2-alpha.452](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.451...v0.0.2-alpha.452) (2023-04-07)
+
+
+### New Features
+
+* Add config to hide all/player nametags, hide nametag backgrounds ([#1471](https://github.com/Wynntils/Artemis/issues/1471)) ([2116e07](https://github.com/Wynntils/Artemis/commit/2116e07a60d78e694607dfbf1f5321d3b3748ed1))
+
 ## [0.0.2-alpha.451](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.450...v0.0.2-alpha.451) (2023-04-07)
 
 
 ### New Features
 
 * Auto focus search box for WynntilsBookSettingsScreen ([#1469](https://github.com/Wynntils/Artemis/issues/1469)) ([bd65455](https://github.com/Wynntils/Artemis/commit/bd6545586edbe1072e48ac803ba8afbc6e936c3a))
+
+
+### Miscellaneous Chores
+
+* **release:** v0.0.2-alpha.451 [skip ci] ([f1229cc](https://github.com/Wynntils/Artemis/commit/f1229ccfdf50d581ebc34c3233c8f888c5460e70))
 
 ## [0.0.2-alpha.450](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.449...v0.0.2-alpha.450) (2023-04-07)
 
@@ -40,16 +52,4 @@
 ### Miscellaneous Chores
 
 * **release:** v0.0.2-alpha.448 [skip ci] ([3bff20d](https://github.com/Wynntils/Artemis/commit/3bff20dd1bffdfc104b60f5e2a8227185d01202a))
-
-## [0.0.2-alpha.447](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.446...v0.0.2-alpha.447) (2023-04-06)
-
-
-### New Features
-
-* Wrap coded string access inside CodedString ([#1458](https://github.com/Wynntils/Artemis/issues/1458)) ([19f5e8a](https://github.com/Wynntils/Artemis/commit/19f5e8a34743f0d0a08e0b67511d43c61d5a2e8f))
-
-
-### Miscellaneous Chores
-
-* **release:** v0.0.2-alpha.447 [skip ci] ([3d9a8a4](https://github.com/Wynntils/Artemis/commit/3d9a8a4bd4d44af361c0717a7ea962404a755304))
 
