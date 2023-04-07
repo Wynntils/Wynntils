@@ -72,9 +72,10 @@ public class ChatMentionFeature extends Feature {
                 return IterationDecision.BREAK;
             }
 
-            Matcher matcher = mentionPattern.matcher(part.getUnformattedString());
+            StyledTextPart partToReplace = part;
+            Matcher matcher = mentionPattern.matcher(partToReplace.getUnformattedString());
 
-            if (matcher.find()) {
+            while (matcher.find()) {
                 String unformattedString = part.getUnformattedString();
 
                 String firstPart = unformattedString.substring(0, matcher.start());
@@ -95,10 +96,13 @@ public class ChatMentionFeature extends Feature {
                         null,
                         mention.getPartStyle().getStyle());
 
-                changes.clear();
+                changes.remove(partToReplace);
                 changes.add(first);
                 changes.add(mention);
                 changes.add(last);
+
+                partToReplace = last;
+                matcher = mentionPattern.matcher(lastPart);
             }
 
             return IterationDecision.CONTINUE;
