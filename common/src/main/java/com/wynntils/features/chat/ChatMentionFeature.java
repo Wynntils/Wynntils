@@ -76,13 +76,13 @@ public class ChatMentionFeature extends Feature {
             Matcher matcher = mentionPattern.matcher(partToReplace.getUnformattedString());
 
             while (matcher.find()) {
-                String unformattedString = part.getUnformattedString();
+                String unformattedString = partToReplace.getUnformattedString();
 
                 String firstPart = unformattedString.substring(0, matcher.start());
                 String mentionPart = unformattedString.substring(matcher.start(), matcher.end());
                 String lastPart = unformattedString.substring(matcher.end());
 
-                PartStyle partStyle = part.getPartStyle();
+                PartStyle partStyle = partToReplace.getPartStyle();
 
                 StyledTextPart first = new StyledTextPart(firstPart, partStyle.getStyle(), null, Style.EMPTY);
                 StyledTextPart mention = new StyledTextPart(
