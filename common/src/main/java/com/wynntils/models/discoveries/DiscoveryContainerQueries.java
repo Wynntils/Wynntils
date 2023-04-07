@@ -7,6 +7,7 @@ package com.wynntils.models.discoveries;
 import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.components.Models;
 import com.wynntils.core.text.CodedString;
+import com.wynntils.core.text.StyledText;
 import com.wynntils.handlers.container.ScriptedContainerQuery;
 import com.wynntils.handlers.container.type.ContainerContent;
 import com.wynntils.utils.mc.ComponentUtils;
@@ -173,7 +174,7 @@ public class DiscoveryContainerQueries {
         return "^§0\\[Pg. \\d+\\] §8.*§0 Discoveries$";
     }
 
-    private CodedString getNextPageButtonName(int nextPageNum) {
-        return CodedString.fromString("[§f§lPage " + nextPageNum + "§a >§2>§a>§2>§a>]");
+    private StyledText getNextPageButtonName(int nextPageNum) {
+        return StyledText.fromString("§f§lPage " + nextPageNum + "§a >§2>§a>§2>§a>");
     }
 }
