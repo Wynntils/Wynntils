@@ -63,7 +63,7 @@ public class ChatMentionFeature extends Feature {
     public void onChat(ChatMessageReceivedEvent e) {
         Component message = e.getMessage();
 
-        StyledText styledText = e.getStyledText();
+        StyledText styledText = StyledText.fromComponent(message);
 
         StyledText modified = styledText.iterateBackwards((part, changes) -> {
             // We have reached the end of the message content,
