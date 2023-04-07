@@ -1,9 +1,21 @@
+## [0.0.2-alpha.448](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.447...v0.0.2-alpha.448) (2023-04-07)
+
+
+### Bug Fixes
+
+* If enabled, allow opening emerald pouch, but do not allow moving it ([#1468](https://github.com/Wynntils/Artemis/issues/1468)) ([d635b74](https://github.com/Wynntils/Artemis/commit/d635b749f45c7a6bd656a482ed1b29b782bef900))
+
 ## [0.0.2-alpha.447](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.446...v0.0.2-alpha.447) (2023-04-06)
 
 
 ### New Features
 
 * Wrap coded string access inside CodedString ([#1458](https://github.com/Wynntils/Artemis/issues/1458)) ([19f5e8a](https://github.com/Wynntils/Artemis/commit/19f5e8a34743f0d0a08e0b67511d43c61d5a2e8f))
+
+
+### Miscellaneous Chores
+
+* **release:** v0.0.2-alpha.447 [skip ci] ([3d9a8a4](https://github.com/Wynntils/Artemis/commit/3d9a8a4bd4d44af361c0717a7ea962404a755304))
 
 ## [0.0.2-alpha.446](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.445...v0.0.2-alpha.446) (2023-04-06)
 
@@ -40,16 +52,4 @@
 ### Miscellaneous Chores
 
 * **release:** v0.0.2-alpha.444 [skip ci] ([5455782](https://github.com/Wynntils/Artemis/commit/54557820defca0d36265dd0f7650de0824fedb7d))
-
-## [0.0.2-alpha.443](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.442...v0.0.2-alpha.443) (2023-04-06)
-
-
-### Bug Fixes
-
-* Many fixes to Token overlay ([#1448](https://github.com/Wynntils/Artemis/issues/1448)) ([64f9a7c](https://github.com/Wynntils/Artemis/commit/64f9a7c7fc566e4d7bedb41a17c3483239a92d4c))
-
-
-### Miscellaneous Chores
-
-* **release:** v0.0.2-alpha.443 [skip ci] ([d6aff4c](https://github.com/Wynntils/Artemis/commit/d6aff4ca9c7332810502a83368845e5151e7d798))
 
