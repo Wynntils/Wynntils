@@ -4,7 +4,7 @@
  */
 package com.wynntils.models.items.annotators.game;
 
-import com.wynntils.core.text.CodedString;
+import com.wynntils.core.text.StyledText;
 import com.wynntils.handlers.item.ItemAnnotation;
 import com.wynntils.handlers.item.ItemAnnotator;
 import com.wynntils.models.items.items.game.CraftedConsumableItem;
@@ -19,7 +19,7 @@ public final class CraftedConsumableAnnotator implements ItemAnnotator {
     private static final Pattern CRAFTED_CONSUMABLE_PATTERN = Pattern.compile("^§3(.*)§b \\[(\\d+)/(\\d+)\\]$");
 
     @Override
-    public ItemAnnotation getAnnotation(ItemStack itemStack, CodedString name) {
+    public ItemAnnotation getAnnotation(ItemStack itemStack, StyledText name) {
         Matcher matcher = name.getMatcher(CRAFTED_CONSUMABLE_PATTERN);
         if (!matcher.matches()) return null;
 

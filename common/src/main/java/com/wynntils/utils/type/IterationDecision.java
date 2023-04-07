@@ -6,5 +6,6 @@ package com.wynntils.utils.type;
 
 public enum IterationDecision {
     CONTINUE,
-    BREAK
+    BREAK,
+    SKIP // Skips appending the next elements to the new list
 }

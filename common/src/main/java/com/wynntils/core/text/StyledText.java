@@ -146,6 +146,12 @@ public final class StyledText {
         return component;
     }
 
+    // Only used for porting. To be removed.
+    @Deprecated
+    public String getInternalCodedStringRepresentation() {
+        return getString(PartStyle.StyleType.FULL);
+    }
+
     public static StyledText join(StyledText styledTextSeparator, StyledText... texts) {
         List<StyledTextPart> parts = new ArrayList<>();
         List<ClickEvent> clickEvents = new ArrayList<>();
