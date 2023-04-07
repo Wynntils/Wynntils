@@ -26,6 +26,8 @@ import net.minecraftforge.eventbus.api.SubscribeEvent;
 
 @ConfigCategory(Category.CHAT)
 public class ChatMentionFeature extends Feature {
+    private static final Pattern END_OF_HEADER_PATTERN = Pattern.compile(".*[\\]:]\\s?");
+
     @RegisterConfig
     public final Config<Boolean> markMention = new Config<>(true);
 
@@ -63,17 +65,24 @@ public class ChatMentionFeature extends Feature {
 
         StyledText styledText = e.getStyledText();
 
-        StyledText modified = styledText.iterate((part, changes) -> {
-            Matcher matcher = mentionPattern.matcher(part.getUnformattedString());
+        StyledText modified = styledText.iterateBackwards((part, changes) -> {
+            // We have reached the end of the message content,
+            // we don't want to highlight our own name in our own message
+            if (END_OF_HEADER_PATTERN.matcher(part.getUnformattedString()).matches()) {
+                return IterationDecision.BREAK;
+            }
 
-            if (matcher.find()) {
-                String unformattedString = part.getUnformattedString();
+            StyledTextPart partToReplace = part;
+            Matcher matcher = mentionPattern.matcher(partToReplace.getUnformattedString());
+
+            while (matcher.find()) {
+                String unformattedString = partToReplace.getUnformattedString();
 
                 String firstPart = unformattedString.substring(0, matcher.start());
                 String mentionPart = unformattedString.substring(matcher.start(), matcher.end());
                 String lastPart = unformattedString.substring(matcher.end());
 
-                PartStyle partStyle = part.getPartStyle();
+                PartStyle partStyle = partToReplace.getPartStyle();
 
                 StyledTextPart first = new StyledTextPart(firstPart, partStyle.getStyle(), null, Style.EMPTY);
                 StyledTextPart mention = new StyledTextPart(
@@ -81,18 +90,15 @@ public class ChatMentionFeature extends Feature {
                         partStyle.getStyle().withColor(mentionColor.get().getChatFormatting()),
                         null,
                         first.getPartStyle().getStyle());
-                StyledTextPart last = new StyledTextPart(
-                        lastPart,
-                        partStyle.getStyle(),
-                        null,
-                        mention.getPartStyle().getStyle());
+                StyledTextPart last = new StyledTextPart(lastPart, partStyle.getStyle(), null, Style.EMPTY);
 
-                changes.clear();
+                changes.remove(partToReplace);
                 changes.add(first);
                 changes.add(mention);
                 changes.add(last);
 
-                return IterationDecision.BREAK;
+                partToReplace = last;
+                matcher = mentionPattern.matcher(lastPart);
             }
 
             return IterationDecision.CONTINUE;
