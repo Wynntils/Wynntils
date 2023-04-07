@@ -6,7 +6,7 @@ package com.wynntils.mc.mixin;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.wynntils.core.events.MixinHelper;
-import com.wynntils.mc.event.NametagRenderEvent;
+import com.wynntils.mc.event.PlayerNametagRenderEvent;
 import com.wynntils.mc.event.RenderLayerRegistrationEvent;
 import net.minecraft.client.model.PlayerModel;
 import net.minecraft.client.player.AbstractClientPlayer;
@@ -53,7 +53,7 @@ public abstract class PlayerRendererMixin
             MultiBufferSource buffer,
             int packedLight,
             CallbackInfo ci) {
-        NametagRenderEvent event = new NametagRenderEvent(
+        PlayerNametagRenderEvent event = new PlayerNametagRenderEvent(
                 entity, displayName, matrixStack, buffer, packedLight, this.entityRenderDispatcher, this.getFont());
         MixinHelper.post(event);
         if (event.isCanceled()) {

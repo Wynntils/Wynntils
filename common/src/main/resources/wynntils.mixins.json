@@ -9,6 +9,7 @@
     "ClientLevelMixin",
     "ClientPacketListenerMixin",
     "CommandSuggestionsMixin",
+    "EntityRendererMixin",
     "ConnectionMixin",
     "ConnectScreenMixin",
     "CrashReportMixin",
