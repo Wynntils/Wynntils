@@ -86,15 +86,8 @@ public class ChatMentionFeature extends Feature {
 
                 StyledTextPart first = new StyledTextPart(firstPart, partStyle.getStyle(), null, Style.EMPTY);
                 StyledTextPart mention = new StyledTextPart(
-                        mentionPart,
-                        partStyle.getStyle().withColor(mentionColor.get()),
-                        null,
-                        first.getPartStyle().getStyle());
-                StyledTextPart last = new StyledTextPart(
-                        lastPart,
-                        partStyle.getStyle(),
-                        null,
-                        mention.getPartStyle().getStyle());
+                        mentionPart, partStyle.getStyle().withColor(mentionColor.get()), null, Style.EMPTY);
+                StyledTextPart last = new StyledTextPart(lastPart, partStyle.getStyle(), null, Style.EMPTY);
 
                 changes.remove(partToReplace);
                 changes.add(first);
