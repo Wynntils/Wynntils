@@ -235,6 +235,6 @@ public final class ChatTabManager extends Manager {
         Optional<Pattern> regex = chatTab.getCustomRegex();
         if (regex.isEmpty()) return true;
 
-        return event.getOriginalCodedMessage().getMatcher(regex.get()).matches();
+        return event.getOriginalCodedString().getMatcher(regex.get()).matches();
     }
 }
