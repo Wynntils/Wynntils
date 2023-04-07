@@ -1,9 +1,21 @@
+## [0.0.2-alpha.456](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.455...v0.0.2-alpha.456) (2023-04-07)
+
+
+### Bug Fixes
+
+* Chat mentions should not mark own name in header ([#1460](https://github.com/Wynntils/Artemis/issues/1460)) ([9d0a79f](https://github.com/Wynntils/Artemis/commit/9d0a79f33fa245981c3b2ddf2787cbb08b0b2d49))
+
 ## [0.0.2-alpha.455](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.454...v0.0.2-alpha.455) (2023-04-07)
 
 
 ### Code Refactoring
 
 * Port ScriptedContainerQuery CodedString usages ([#1461](https://github.com/Wynntils/Artemis/issues/1461)) ([d523c72](https://github.com/Wynntils/Artemis/commit/d523c728e43b61c4e1382d1e56b5a5db1d73d29d))
+
+
+### Miscellaneous Chores
+
+* **release:** v0.0.2-alpha.455 [skip ci] ([265ec1c](https://github.com/Wynntils/Artemis/commit/265ec1c96e03b739031568b93ecc8d6de2af0ba8))
 
 ## [0.0.2-alpha.454](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.453...v0.0.2-alpha.454) (2023-04-07)
 
@@ -40,16 +52,4 @@
 ### Miscellaneous Chores
 
 * **release:** v0.0.2-alpha.452 [skip ci] ([7194be4](https://github.com/Wynntils/Artemis/commit/7194be403457cf88049e0baa0adb5bbb8f33ec85))
-
-## [0.0.2-alpha.451](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.450...v0.0.2-alpha.451) (2023-04-07)
-
-
-### New Features
-
-* Auto focus search box for WynntilsBookSettingsScreen ([#1469](https://github.com/Wynntils/Artemis/issues/1469)) ([bd65455](https://github.com/Wynntils/Artemis/commit/bd6545586edbe1072e48ac803ba8afbc6e936c3a))
-
-
-### Miscellaneous Chores
-
-* **release:** v0.0.2-alpha.451 [skip ci] ([f1229cc](https://github.com/Wynntils/Artemis/commit/f1229ccfdf50d581ebc34c3233c8f888c5460e70))
 
