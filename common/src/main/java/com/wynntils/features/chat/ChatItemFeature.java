@@ -74,13 +74,14 @@ public class ChatItemFeature extends Feature {
 
         StyledText modified = styledText.iterate((part, changes) -> {
             StyledTextPart partToReplace = part;
-            Matcher matcher = Models.Gear.gearChatEncodingMatcher(partToReplace.getUnformattedString());
+            Matcher matcher =
+                    Models.Gear.gearChatEncodingMatcher(partToReplace.getString(null, PartStyle.StyleType.NONE));
 
             while (matcher.find()) {
                 GearItem decodedItem = Models.Gear.fromEncodedString(matcher.group());
                 if (decodedItem == null) continue;
 
-                String unformattedString = partToReplace.getUnformattedString();
+                String unformattedString = partToReplace.getString(null, PartStyle.StyleType.NONE);
 
                 String firstPart = unformattedString.substring(0, matcher.start());
                 String lastPart = unformattedString.substring(matcher.end());

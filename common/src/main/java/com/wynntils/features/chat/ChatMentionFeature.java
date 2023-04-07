@@ -64,10 +64,10 @@ public class ChatMentionFeature extends Feature {
         StyledText styledText = e.getStyledText();
 
         StyledText modified = styledText.iterate((part, changes) -> {
-            Matcher matcher = mentionPattern.matcher(part.getUnformattedString());
+            Matcher matcher = mentionPattern.matcher(part.getString(null, PartStyle.StyleType.NONE));
 
             if (matcher.find()) {
-                String unformattedString = part.getUnformattedString();
+                String unformattedString = part.getString(null, PartStyle.StyleType.NONE);
 
                 String firstPart = unformattedString.substring(0, matcher.start());
                 String mentionPart = unformattedString.substring(matcher.start(), matcher.end());
