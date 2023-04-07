@@ -9,6 +9,7 @@ import com.wynntils.core.components.Handler;
 import com.wynntils.core.components.Managers;
 import com.wynntils.core.features.Feature;
 import com.wynntils.core.text.CodedString;
+import com.wynntils.core.text.StyledText;
 import com.wynntils.handlers.chat.event.ChatMessageReceivedEvent;
 import com.wynntils.handlers.chat.event.NpcDialogEvent;
 import com.wynntils.handlers.chat.type.MessageType;
@@ -102,6 +103,7 @@ public final class ChatHandler extends Handler {
 
         Component message = e.getMessage();
         CodedString codedMessage = ComponentUtils.getCoded(message);
+        StyledText styledText = StyledText.fromComponent(message);
 
         // Sometimes there is just a trailing newline; that does not
         // make it a multiline message
@@ -117,7 +119,7 @@ public final class ChatHandler extends Handler {
             // nothing about it.
         } else {
             // No, it's a normal one line chat
-            Component updatedMessage = postChatLine(message, codedMessage, MessageType.FOREGROUND);
+            Component updatedMessage = postChatLine(message, codedMessage, styledText, MessageType.FOREGROUND);
 
             if (updatedMessage == null) {
                 e.setCanceled(true);
@@ -292,6 +294,7 @@ public final class ChatHandler extends Handler {
     private void handleFakeChatLine(Component message) {
         // This is a normal, single line chat, sent in the background
         CodedString coded = ComponentUtils.getCoded(message);
+        StyledText styledText = StyledText.fromComponent(message);
 
         // But it can weirdly enough actually also be a foreground NPC chat message...
         if (getRecipientType(coded, MessageType.FOREGROUND) == RecipientType.NPC) {
@@ -301,7 +304,7 @@ public final class ChatHandler extends Handler {
             return;
         }
 
-        Component updatedMessage = postChatLine(message, coded, MessageType.BACKGROUND);
+        Component updatedMessage = postChatLine(message, coded, styledText, MessageType.BACKGROUND);
         // If the message is canceled, we do not need to cancel any packets,
         // just don't send out the chat message
         if (updatedMessage == null) return;
@@ -314,7 +317,8 @@ public final class ChatHandler extends Handler {
      * Return a "massaged" version of the message, or null if we should cancel the
      * message entirely.
      */
-    private Component postChatLine(Component message, CodedString codedMessage, MessageType messageType) {
+    private Component postChatLine(
+            Component message, CodedString codedMessage, StyledText styledText, MessageType messageType) {
         String plainText = message.getString();
         if (!plainText.isBlank()) {
             // We store the unformatted string version to be able to compare between
@@ -339,7 +343,7 @@ public final class ChatHandler extends Handler {
         }
 
         ChatMessageReceivedEvent event =
-                new ChatMessageReceivedEvent(message, codedMessage, messageType, recipientType);
+                new ChatMessageReceivedEvent(message, codedMessage, styledText, messageType, recipientType);
         WynntilsMod.postEvent(event);
         if (event.isCanceled()) return null;
         return event.getMessage();

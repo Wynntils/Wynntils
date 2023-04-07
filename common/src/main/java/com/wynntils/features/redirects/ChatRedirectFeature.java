@@ -116,7 +116,7 @@ public class ChatRedirectFeature extends Feature {
     public void onChatMessage(ChatMessageReceivedEvent e) {
         if (e.getRecipientType() != RecipientType.INFO) return;
 
-        CodedString message = e.getOriginalCodedMessage();
+        CodedString message = e.getOriginalCodedString();
         MessageType messageType = e.getMessageType();
 
         for (Redirector redirector : redirectors) {
