@@ -29,7 +29,7 @@ public class BlacksmithRedirectFeature extends Feature {
 
     @SubscribeEvent(priority = EventPriority.HIGH)
     public void onChat(ChatMessageReceivedEvent event) {
-        Matcher messageMatcher = event.getOriginalCodedMessage().getMatcher(BLACKSMITH_MESSAGE_PATTERN);
+        Matcher messageMatcher = event.getOriginalCodedString().getMatcher(BLACKSMITH_MESSAGE_PATTERN);
         if (!messageMatcher.matches()) return;
         event.setCanceled(true);
 
