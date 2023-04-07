@@ -323,6 +323,27 @@ public final class StyledText {
         return new StyledText(newParts, temporaryWorkaround, clickEvents, hoverEvents);
     }
 
+    public StyledText iterateBackwards(BiFunction<StyledTextPart, List<StyledTextPart>, IterationDecision> function) {
+        List<StyledTextPart> newParts = new ArrayList<>();
+
+        for (int i = parts.size() - 1; i >= 0; i--) {
+            StyledTextPart part = parts.get(i);
+            List<StyledTextPart> functionParts = new ArrayList<>();
+            functionParts.add(part);
+            IterationDecision decision = function.apply(part, functionParts);
+
+            newParts.addAll(0, functionParts);
+
+            if (decision == IterationDecision.BREAK) {
+                // Add the rest of the parts
+                newParts.addAll(0, parts.subList(0, i));
+                break;
+            }
+        }
+
+        return new StyledText(newParts, temporaryWorkaround, clickEvents, hoverEvents);
+    }
+
     public int getPartCount() {
         return parts.size();
     }
