@@ -69,6 +69,7 @@ public final class WynntilsBookSettingsScreen extends WynntilsScreen implements 
 
         searchWidget = new SearchWidget(
                 95, Texture.SETTING_BACKGROUND.height() - 32, 100, 20, s -> reloadConfigurableButtons(), this);
+        setFocusedTextInput(searchWidget);
         reloadConfigurableButtons();
     }
 
