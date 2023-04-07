@@ -28,5 +28,6 @@ public class PlayerNametagRenderEvent extends EntityNameTagRenderEvent {
     @Override
     public void setBackgroundOpacity(float backgroundOpacity) {
         // Cannot set background opacity for PlayerNametagRenderEvent. Use EntityNameTagRenderEvent instead.
+        // For custom rendered player nametags, CustomNameTagRendererFeature takes care of the background.
     }
 }
