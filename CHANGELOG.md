@@ -1,9 +1,21 @@
+## [0.0.2-alpha.451](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.450...v0.0.2-alpha.451) (2023-04-07)
+
+
+### New Features
+
+* Auto focus search box for WynntilsBookSettingsScreen ([#1469](https://github.com/Wynntils/Artemis/issues/1469)) ([bd65455](https://github.com/Wynntils/Artemis/commit/bd6545586edbe1072e48ac803ba8afbc6e936c3a))
+
 ## [0.0.2-alpha.450](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.449...v0.0.2-alpha.450) (2023-04-07)
 
 
 ### New Features
 
 * Add CombatXpGainMessageFeature XP merging time as config ([#1470](https://github.com/Wynntils/Artemis/issues/1470)) ([9d10fb2](https://github.com/Wynntils/Artemis/commit/9d10fb24beacef8e63b3f6cffb781ed8f5a038fd))
+
+
+### Miscellaneous Chores
+
+* **release:** v0.0.2-alpha.450 [skip ci] ([9520142](https://github.com/Wynntils/Artemis/commit/95201429893d33ff8ac750cb094dd27bf80026d2))
 
 ## [0.0.2-alpha.449](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.448...v0.0.2-alpha.449) (2023-04-07)
 
@@ -40,16 +52,4 @@
 ### Miscellaneous Chores
 
 * **release:** v0.0.2-alpha.447 [skip ci] ([3d9a8a4](https://github.com/Wynntils/Artemis/commit/3d9a8a4bd4d44af361c0717a7ea962404a755304))
-
-## [0.0.2-alpha.446](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.445...v0.0.2-alpha.446) (2023-04-06)
-
-
-### New Features
-
-* Add StyledText, rewrite ChatMentionsFeature and enable it ([#1434](https://github.com/Wynntils/Artemis/issues/1434)) ([d8d67a4](https://github.com/Wynntils/Artemis/commit/d8d67a4f03f8452cc8a93de2bcada4cab4562040))
-
-
-### Miscellaneous Chores
-
-* **release:** v0.0.2-alpha.446 [skip ci] ([675d805](https://github.com/Wynntils/Artemis/commit/675d805174c2a7c75d6853d6dca2012eac35db22))
 
