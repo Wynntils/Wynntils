@@ -1,21 +1,21 @@
 /*
- * Copyright © Wynntils 2022.
+ * Copyright © Wynntils 2023.
  * This file is released under AGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.mc.event;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.client.gui.Font;
-import net.minecraft.client.player.AbstractClientPlayer;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.entity.EntityRenderDispatcher;
 import net.minecraft.network.chat.Component;
+import net.minecraft.world.entity.Entity;
 import net.minecraftforge.eventbus.api.Cancelable;
 import net.minecraftforge.eventbus.api.Event;
 
 @Cancelable
-public class NametagRenderEvent extends Event {
-    private final AbstractClientPlayer entity;
+public class EntityNameTagRenderEvent extends Event {
+    private final Entity entity;
     private final Component displayName;
     private final PoseStack poseStack;
     private final MultiBufferSource buffer;
@@ -23,14 +23,17 @@ public class NametagRenderEvent extends Event {
     private final EntityRenderDispatcher entityRenderDispatcher;
     private final Font font;
 
-    public NametagRenderEvent(
-            AbstractClientPlayer entity,
+    private float backgroundOpacity;
+
+    public EntityNameTagRenderEvent(
+            Entity entity,
             Component displayName,
             PoseStack poseStack,
             MultiBufferSource buffer,
             int packedLight,
             EntityRenderDispatcher entityRenderDispatcher,
-            Font font) {
+            Font font,
+            float backgroundOpacity) {
         this.entity = entity;
         this.displayName = displayName;
         this.poseStack = poseStack;
@@ -38,9 +41,10 @@ public class NametagRenderEvent extends Event {
         this.packedLight = packedLight;
         this.entityRenderDispatcher = entityRenderDispatcher;
         this.font = font;
+        this.backgroundOpacity = backgroundOpacity;
     }
 
-    public AbstractClientPlayer getEntity() {
+    public Entity getEntity() {
         return entity;
     }
 
@@ -48,16 +52,16 @@ public class NametagRenderEvent extends Event {
         return displayName;
     }
 
-    public int getPackedLight() {
-        return packedLight;
+    public PoseStack getPoseStack() {
+        return poseStack;
     }
 
     public MultiBufferSource getBuffer() {
         return buffer;
     }
 
-    public PoseStack getPoseStack() {
-        return poseStack;
+    public int getPackedLight() {
+        return packedLight;
     }
 
     public EntityRenderDispatcher getEntityRenderDispatcher() {
@@ -66,5 +70,13 @@ public class NametagRenderEvent extends Event {
 
     public Font getFont() {
         return font;
+    }
+
+    public float getBackgroundOpacity() {
+        return backgroundOpacity;
+    }
+
+    public void setBackgroundOpacity(float backgroundOpacity) {
+        this.backgroundOpacity = backgroundOpacity;
     }
 }
