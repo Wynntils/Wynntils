@@ -26,6 +26,8 @@ import net.minecraftforge.eventbus.api.SubscribeEvent;
 
 @ConfigCategory(Category.CHAT)
 public class ChatMentionFeature extends Feature {
+    private static final Pattern END_OF_HEADER_PATTERN = Pattern.compile(".*[\\]:]\\s?");
+
     @RegisterConfig
     public final Config<Boolean> markMention = new Config<>(true);
 
@@ -63,7 +65,13 @@ public class ChatMentionFeature extends Feature {
 
         StyledText styledText = e.getStyledText();
 
-        StyledText modified = styledText.iterate((part, changes) -> {
+        StyledText modified = styledText.iterateBackwards((part, changes) -> {
+            // We have reached the end of the message content,
+            // we don't want to highlight our own name in our own message
+            if (END_OF_HEADER_PATTERN.matcher(part.getUnformattedString()).matches()) {
+                return IterationDecision.BREAK;
+            }
+
             Matcher matcher = mentionPattern.matcher(part.getUnformattedString());
 
             if (matcher.find()) {
