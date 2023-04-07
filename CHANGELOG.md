@@ -1,9 +1,21 @@
+## [0.0.2-alpha.450](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.449...v0.0.2-alpha.450) (2023-04-07)
+
+
+### New Features
+
+* Add CombatXpGainMessageFeature XP merging time as config ([#1470](https://github.com/Wynntils/Artemis/issues/1470)) ([9d10fb2](https://github.com/Wynntils/Artemis/commit/9d10fb24beacef8e63b3f6cffb781ed8f5a038fd))
+
 ## [0.0.2-alpha.449](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.448...v0.0.2-alpha.449) (2023-04-07)
 
 
 ### Bug Fixes
 
 * Fix color enums showing up as an empty string, disallow non color chatformatting enums ([#1467](https://github.com/Wynntils/Artemis/issues/1467)) ([4975982](https://github.com/Wynntils/Artemis/commit/4975982c3fcc1c747902cbf2c85377b229a4b8f1))
+
+
+### Miscellaneous Chores
+
+* **release:** v0.0.2-alpha.449 [skip ci] ([6f6422e](https://github.com/Wynntils/Artemis/commit/6f6422e302d153aa5c90fe80d937092f798db266))
 
 ## [0.0.2-alpha.448](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.447...v0.0.2-alpha.448) (2023-04-07)
 
@@ -40,16 +52,4 @@
 ### Miscellaneous Chores
 
 * **release:** v0.0.2-alpha.446 [skip ci] ([675d805](https://github.com/Wynntils/Artemis/commit/675d805174c2a7c75d6853d6dca2012eac35db22))
-
-## [0.0.2-alpha.445](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.444...v0.0.2-alpha.445) (2023-04-06)
-
-
-### New Features
-
-* Parse profession level up messages and xp gains with multipliers ([#1453](https://github.com/Wynntils/Artemis/issues/1453)) ([e1a9406](https://github.com/Wynntils/Artemis/commit/e1a9406d684ada423780aee1d8cc10a940cee0f8))
-
-
-### Miscellaneous Chores
-
-* **release:** v0.0.2-alpha.445 [skip ci] ([7e1247f](https://github.com/Wynntils/Artemis/commit/7e1247fae66f93dd3230af8aec5d4e3300cb0a17))
 
