@@ -61,7 +61,7 @@ public class ChatMentionFeature extends Feature {
     public void onChat(ChatMessageReceivedEvent e) {
         Component message = e.getMessage();
 
-        StyledText styledText = StyledText.fromComponent(message);
+        StyledText styledText = e.getStyledText();
 
         StyledText modified = styledText.iterate((part, changes) -> {
             Matcher matcher = mentionPattern.matcher(part.getUnformattedString());
