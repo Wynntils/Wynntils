@@ -1,9 +1,21 @@
+## [0.0.2-alpha.449](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.448...v0.0.2-alpha.449) (2023-04-07)
+
+
+### Bug Fixes
+
+* Fix color enums showing up as an empty string, disallow non color chatformatting enums ([#1467](https://github.com/Wynntils/Artemis/issues/1467)) ([4975982](https://github.com/Wynntils/Artemis/commit/4975982c3fcc1c747902cbf2c85377b229a4b8f1))
+
 ## [0.0.2-alpha.448](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.447...v0.0.2-alpha.448) (2023-04-07)
 
 
 ### Bug Fixes
 
 * If enabled, allow opening emerald pouch, but do not allow moving it ([#1468](https://github.com/Wynntils/Artemis/issues/1468)) ([d635b74](https://github.com/Wynntils/Artemis/commit/d635b749f45c7a6bd656a482ed1b29b782bef900))
+
+
+### Miscellaneous Chores
+
+* **release:** v0.0.2-alpha.448 [skip ci] ([3bff20d](https://github.com/Wynntils/Artemis/commit/3bff20dd1bffdfc104b60f5e2a8227185d01202a))
 
 ## [0.0.2-alpha.447](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.446...v0.0.2-alpha.447) (2023-04-06)
 
@@ -40,16 +52,4 @@
 ### Miscellaneous Chores
 
 * **release:** v0.0.2-alpha.445 [skip ci] ([7e1247f](https://github.com/Wynntils/Artemis/commit/7e1247fae66f93dd3230af8aec5d4e3300cb0a17))
-
-## [0.0.2-alpha.444](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.443...v0.0.2-alpha.444) (2023-04-06)
-
-
-### New Features
-
-* Add ping function ([#1455](https://github.com/Wynntils/Artemis/issues/1455)) ([4086f7e](https://github.com/Wynntils/Artemis/commit/4086f7eafa61e113992a45ef116ce05b92803820))
-
-
-### Miscellaneous Chores
-
-* **release:** v0.0.2-alpha.444 [skip ci] ([5455782](https://github.com/Wynntils/Artemis/commit/54557820defca0d36265dd0f7650de0824fedb7d))
 
