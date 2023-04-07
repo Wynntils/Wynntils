@@ -127,6 +127,7 @@ public class ItemScreenshotFeature extends Feature {
             // First try to save it to disk
             String itemNameForFile = WynnUtils.normalizeBadString(ComponentUtils.stripFormatting(
                             CodedString.fromString(itemStack.getHoverName().getString())))
+                    .trim()
                     .replaceAll("[/ ]", "_");
             File screenshotDir = new File(McUtils.mc().gameDirectory, "screenshots");
             String filename = Util.getFilenameFormattedDateTime() + "-" + itemNameForFile + ".png";
