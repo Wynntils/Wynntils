@@ -80,7 +80,7 @@ public final class FriendsModel extends Model {
     public void onChatReceived(ChatMessageReceivedEvent event) {
         if (event.getMessageType() != MessageType.FOREGROUND) return;
 
-        CodedString coded = event.getOriginalCodedMessage();
+        CodedString coded = event.getOriginalCodedString();
         String unformatted = ComponentUtils.stripFormatting(coded);
 
         Matcher joinMatcher = coded.getMatcher(JOIN_PATTERN);
