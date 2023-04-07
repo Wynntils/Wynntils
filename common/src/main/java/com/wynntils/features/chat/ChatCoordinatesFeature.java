@@ -8,18 +8,17 @@ import com.wynntils.core.components.Models;
 import com.wynntils.core.config.Category;
 import com.wynntils.core.config.ConfigCategory;
 import com.wynntils.core.features.Feature;
-import com.wynntils.core.text.CodedString;
+import com.wynntils.core.text.PartStyle;
+import com.wynntils.core.text.StyledText;
+import com.wynntils.core.text.StyledTextPart;
 import com.wynntils.handlers.chat.event.ChatMessageReceivedEvent;
 import com.wynntils.mc.event.ClientsideMessageEvent;
-import com.wynntils.utils.mc.ComponentUtils;
+import com.wynntils.utils.mc.StyledTextUtils;
 import com.wynntils.utils.mc.type.Location;
+import com.wynntils.utils.type.IterationDecision;
 import com.wynntils.utils.wynn.LocationUtils;
-import java.util.List;
 import java.util.Optional;
 import java.util.regex.Matcher;
-import java.util.stream.Collectors;
-import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.network.chat.Style;
 import net.minecraftforge.eventbus.api.EventPriority;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
@@ -30,68 +29,65 @@ public class ChatCoordinatesFeature extends Feature {
     public void onChatReceived(ChatMessageReceivedEvent e) {
         if (!Models.WorldState.onWorld()) return;
 
-        Component message = e.getMessage();
+        StyledText styledText = e.getStyledText();
 
-        e.setMessage(insertCoordinateComponents(message));
+        StyledText modified = getStyledTextWithCoordinatesInserted(styledText);
+
+        // No changes were made, there were no coordinates.
+        if (styledText.equals(modified)) return;
+
+        e.setMessage(modified.getComponent());
     }
 
     @SubscribeEvent(priority = EventPriority.HIGHEST)
     public void onClientsideMessage(ClientsideMessageEvent e) {
         if (!Models.WorldState.onWorld()) return;
 
-        Component message = e.getComponent();
+        StyledText styledText = e.getStyledText();
 
-        e.setMessage(insertCoordinateComponents(message));
+        StyledText modified = getStyledTextWithCoordinatesInserted(styledText);
+
+        // No changes were made, there were no coordinates.
+        if (styledText.equals(modified)) return;
+
+        e.setMessage(modified.getComponent());
     }
 
-    private static Component insertCoordinateComponents(Component message) {
-        // no coordinate clickables to insert
-        if (!LocationUtils.strictCoordinateMatcher(ComponentUtils.getCoded(message))
-                .find()) return message;
+    private static StyledText getStyledTextWithCoordinatesInserted(StyledText styledText) {
+        StyledText modified = styledText.iterate((part, changes) -> {
+            StyledTextPart partToReplace = part;
+            Matcher matcher = LocationUtils.strictCoordinateMatcher(partToReplace.getUnformattedString());
 
-        List<MutableComponent> components =
-                message.getSiblings().stream().map(Component::copy).collect(Collectors.toList());
-        components.add(0, message.plainCopy().withStyle(message.getStyle()));
+            while (matcher.find()) {
+                Optional<Location> location = LocationUtils.parseFromString(matcher.group());
 
-        MutableComponent temp = Component.literal("");
-
-        for (Component comp : components) {
-            Matcher m = LocationUtils.strictCoordinateMatcher((ComponentUtils.getCoded(comp)));
-            if (!m.find()) {
-                Component newComponent = comp.copy();
-                temp.append(newComponent);
-                continue;
-            }
-
-            do {
-                CodedString text = ComponentUtils.getCoded(comp);
-                Style style = comp.getStyle();
-
-                Optional<Location> location = LocationUtils.parseFromString(m.group());
-                if (location.isEmpty()) { // couldn't decode, skip
-                    comp = comp.copy();
+                if (location.isEmpty()) {
                     continue;
                 }
 
-                MutableComponent preText = Component.literal(
-                        text.getInternalCodedStringRepresentation().substring(0, m.start()));
-                preText.withStyle(style);
-                temp.append(preText);
+                String unformattedString = partToReplace.getUnformattedString();
 
-                // create hover-able text component for the item
-                Component compassComponent = ComponentUtils.createLocationComponent(location.get());
-                temp.append(compassComponent);
+                String firstPart = unformattedString.substring(0, matcher.start());
+                String lastPart = unformattedString.substring(matcher.end());
 
-                comp = Component.literal(ComponentUtils.getLastPartCodes(ComponentUtils.getCoded(preText))
-                                + text.getInternalCodedStringRepresentation().substring(m.end()))
-                        .withStyle(style);
-                m = LocationUtils.strictCoordinateMatcher(
-                        ComponentUtils.getCoded(comp)); // recreate matcher for new substring
-            } while (m.find()); // search for multiple items in the same message
+                PartStyle partStyle = partToReplace.getPartStyle();
 
-            temp.append(comp); // leftover text after item(s)
-        }
+                StyledTextPart first = new StyledTextPart(firstPart, partStyle.getStyle(), null, Style.EMPTY);
+                StyledTextPart coordinate = StyledTextUtils.createLocationPart(location.get());
+                StyledTextPart last = new StyledTextPart(lastPart, partStyle.getStyle(), null, Style.EMPTY);
 
-        return temp;
+                changes.remove(partToReplace);
+                changes.add(first);
+                changes.add(coordinate);
+                changes.add(last);
+
+                partToReplace = last;
+                matcher = LocationUtils.strictCoordinateMatcher(lastPart);
+            }
+
+            return IterationDecision.CONTINUE;
+        });
+
+        return modified;
     }
 }
