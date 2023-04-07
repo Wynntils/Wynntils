@@ -1,9 +1,21 @@
+## [0.0.2-alpha.454](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.453...v0.0.2-alpha.454) (2023-04-07)
+
+
+### New Features
+
+* ChatMessageReceivedEvent now sends StyledText too ([#1464](https://github.com/Wynntils/Artemis/issues/1464)) ([b24d58c](https://github.com/Wynntils/Artemis/commit/b24d58c9386f1d7b40ff487dd198969e355b0d36))
+
 ## [0.0.2-alpha.453](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.452...v0.0.2-alpha.453) (2023-04-07)
 
 
 ### Code Refactoring
 
 * In preparation for using StyledText for item annotators, remove trimming from WynnUtils#normalizeBadString ([#1462](https://github.com/Wynntils/Artemis/issues/1462)) ([a1d3a6d](https://github.com/Wynntils/Artemis/commit/a1d3a6d4b512c11bd44b2d5c1d58712227aec437))
+
+
+### Miscellaneous Chores
+
+* **release:** v0.0.2-alpha.453 [skip ci] ([426491b](https://github.com/Wynntils/Artemis/commit/426491b5b794254245be4f71bcdc319711f8aee8))
 
 ## [0.0.2-alpha.452](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.451...v0.0.2-alpha.452) (2023-04-07)
 
@@ -40,16 +52,4 @@
 ### Miscellaneous Chores
 
 * **release:** v0.0.2-alpha.450 [skip ci] ([9520142](https://github.com/Wynntils/Artemis/commit/95201429893d33ff8ac750cb094dd27bf80026d2))
-
-## [0.0.2-alpha.449](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.448...v0.0.2-alpha.449) (2023-04-07)
-
-
-### Bug Fixes
-
-* Fix color enums showing up as an empty string, disallow non color chatformatting enums ([#1467](https://github.com/Wynntils/Artemis/issues/1467)) ([4975982](https://github.com/Wynntils/Artemis/commit/4975982c3fcc1c747902cbf2c85377b229a4b8f1))
-
-
-### Miscellaneous Chores
-
-* **release:** v0.0.2-alpha.449 [skip ci] ([6f6422e](https://github.com/Wynntils/Artemis/commit/6f6422e302d153aa5c90fe80d937092f798db266))
 
