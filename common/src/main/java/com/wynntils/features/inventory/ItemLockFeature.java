@@ -87,8 +87,10 @@ public class ItemLockFeature extends Feature {
         }
 
         // We want to allow opening emerald pouch even if locked
+        // Right click is opening pouch, left click is picking it up.
+        // We want to allow opening pouch even if locked, but not picking it up.
         if (allowClickOnEmeraldPouchInBlockingMode.get()
-                && event.getClickType() == ClickType.PICKUP
+                && event.getMouseButton() == GLFW.GLFW_MOUSE_BUTTON_RIGHT
                 && Models.Emerald.isEmeraldPouch(slotOptional.get().getItem())) {
             return;
         }

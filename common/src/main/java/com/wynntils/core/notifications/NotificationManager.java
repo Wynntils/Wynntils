@@ -9,6 +9,7 @@ import com.wynntils.core.components.Manager;
 import com.wynntils.core.components.Managers;
 import com.wynntils.core.notifications.event.NotificationEvent;
 import com.wynntils.core.text.CodedString;
+import com.wynntils.core.text.StyledText;
 import com.wynntils.features.overlays.GameNotificationOverlayFeature;
 import com.wynntils.models.worlds.event.WorldStateEvent;
 import com.wynntils.utils.mc.ComponentUtils;
@@ -36,6 +37,10 @@ public final class NotificationManager extends Manager {
 
     public MessageContainer queueMessage(CodedString codedMessage) {
         return queueMessage(new TextRenderTask(codedMessage, TextRenderSetting.DEFAULT));
+    }
+
+    public MessageContainer queueMessage(StyledText styledText) {
+        return queueMessage(new TextRenderTask(CodedString.fromStyledText(styledText), TextRenderSetting.DEFAULT));
     }
 
     public MessageContainer queueMessage(Component message) {
