@@ -99,8 +99,6 @@ public class ChatMentionFeature extends Feature {
                 changes.add(first);
                 changes.add(mention);
                 changes.add(last);
-
-                return IterationDecision.BREAK;
             }
 
             return IterationDecision.CONTINUE;
