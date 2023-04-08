@@ -6,7 +6,6 @@ package com.wynntils.utils.mc;
 
 import com.wynntils.core.text.CodedString;
 import com.wynntils.utils.MathUtils;
-import com.wynntils.utils.mc.type.Location;
 import com.wynntils.utils.wynn.WynnUtils;
 import java.awt.Color;
 import java.util.ArrayList;
@@ -17,10 +16,8 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 import net.minecraft.ChatFormatting;
-import net.minecraft.network.chat.ClickEvent;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.FormattedText;
-import net.minecraft.network.chat.HoverEvent;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.network.chat.Style;
 import net.minecraft.network.chat.TextColor;
@@ -374,18 +371,5 @@ public final class ComponentUtils {
             if (newStyle.isStrikethrough()) result.append(ChatFormatting.STRIKETHROUGH);
             if (newStyle.isObfuscated()) result.append(ChatFormatting.OBFUSCATED);
         }
-    }
-
-    public static Component createLocationComponent(Location location) {
-        MutableComponent component = Component.literal("[%d, %d, %d]".formatted(location.x, location.y, location.z))
-                .withStyle(ChatFormatting.DARK_AQUA)
-                .withStyle(ChatFormatting.UNDERLINE);
-
-        component.withStyle(style -> style.withClickEvent(new ClickEvent(
-                ClickEvent.Action.RUN_COMMAND, "/compass at " + location.x + " " + location.y + " " + location.z)));
-        component.withStyle(style -> style.withHoverEvent(new HoverEvent(
-                HoverEvent.Action.SHOW_TEXT, Component.translatable("utils.wynntils.component.clickToSetCompass"))));
-
-        return component;
     }
 }
