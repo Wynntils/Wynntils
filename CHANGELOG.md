@@ -1,9 +1,21 @@
+## [0.0.2-alpha.458](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.457...v0.0.2-alpha.458) (2023-04-08)
+
+
+### Code Refactoring
+
+* Port ChatItemFeature to use StyledText ([#1465](https://github.com/Wynntils/Artemis/issues/1465)) ([9ccea56](https://github.com/Wynntils/Artemis/commit/9ccea563f8df0a6eb0f6c91cf938cde14c7a7fe9))
+
 ## [0.0.2-alpha.457](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.456...v0.0.2-alpha.457) (2023-04-08)
 
 
 ### Code Refactoring
 
 * Port ChatCoordinatesFeature (and DeathCoordinatesFeature) to use StyledText ([#1466](https://github.com/Wynntils/Artemis/issues/1466)) ([f751152](https://github.com/Wynntils/Artemis/commit/f751152115dd5fee74d487f6e459c35f9b175918))
+
+
+### Miscellaneous Chores
+
+* **release:** v0.0.2-alpha.457 [skip ci] ([109ca6b](https://github.com/Wynntils/Artemis/commit/109ca6bc557f0ab151aa6a90ab0eb5eabdb03660))
 
 ## [0.0.2-alpha.456](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.455...v0.0.2-alpha.456) (2023-04-07)
 
@@ -40,16 +52,4 @@
 ### Miscellaneous Chores
 
 * **release:** v0.0.2-alpha.454 [skip ci] ([12a3d1c](https://github.com/Wynntils/Artemis/commit/12a3d1c104f4872532c9671fd37f54e7a49b9c73))
-
-## [0.0.2-alpha.453](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.452...v0.0.2-alpha.453) (2023-04-07)
-
-
-### Code Refactoring
-
-* In preparation for using StyledText for item annotators, remove trimming from WynnUtils#normalizeBadString ([#1462](https://github.com/Wynntils/Artemis/issues/1462)) ([a1d3a6d](https://github.com/Wynntils/Artemis/commit/a1d3a6d4b512c11bd44b2d5c1d58712227aec437))
-
-
-### Miscellaneous Chores
-
-* **release:** v0.0.2-alpha.453 [skip ci] ([426491b](https://github.com/Wynntils/Artemis/commit/426491b5b794254245be4f71bcdc319711f8aee8))
 
