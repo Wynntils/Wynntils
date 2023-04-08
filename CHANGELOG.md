@@ -1,9 +1,21 @@
+## [0.0.2-alpha.457](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.456...v0.0.2-alpha.457) (2023-04-08)
+
+
+### Code Refactoring
+
+* Port ChatCoordinatesFeature (and DeathCoordinatesFeature) to use StyledText ([#1466](https://github.com/Wynntils/Artemis/issues/1466)) ([f751152](https://github.com/Wynntils/Artemis/commit/f751152115dd5fee74d487f6e459c35f9b175918))
+
 ## [0.0.2-alpha.456](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.455...v0.0.2-alpha.456) (2023-04-07)
 
 
 ### Bug Fixes
 
 * Chat mentions should not mark own name in header ([#1460](https://github.com/Wynntils/Artemis/issues/1460)) ([9d0a79f](https://github.com/Wynntils/Artemis/commit/9d0a79f33fa245981c3b2ddf2787cbb08b0b2d49))
+
+
+### Miscellaneous Chores
+
+* **release:** v0.0.2-alpha.456 [skip ci] ([635cc2b](https://github.com/Wynntils/Artemis/commit/635cc2b00bff58c88994dee5919c686fc29fad71))
 
 ## [0.0.2-alpha.455](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.454...v0.0.2-alpha.455) (2023-04-07)
 
@@ -40,16 +52,4 @@
 ### Miscellaneous Chores
 
 * **release:** v0.0.2-alpha.453 [skip ci] ([426491b](https://github.com/Wynntils/Artemis/commit/426491b5b794254245be4f71bcdc319711f8aee8))
-
-## [0.0.2-alpha.452](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.451...v0.0.2-alpha.452) (2023-04-07)
-
-
-### New Features
-
-* Add config to hide all/player nametags, hide nametag backgrounds ([#1471](https://github.com/Wynntils/Artemis/issues/1471)) ([2116e07](https://github.com/Wynntils/Artemis/commit/2116e07a60d78e694607dfbf1f5321d3b3748ed1))
-
-
-### Miscellaneous Chores
-
-* **release:** v0.0.2-alpha.452 [skip ci] ([7194be4](https://github.com/Wynntils/Artemis/commit/7194be403457cf88049e0baa0adb5bbb8f33ec85))
 
