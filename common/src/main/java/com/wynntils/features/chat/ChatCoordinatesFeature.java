@@ -66,10 +66,10 @@ public class ChatCoordinatesFeature extends Feature {
                     continue;
                 }
 
-                String unformattedString = partToReplace.getString(null, PartStyle.StyleType.NONE);
+                String match = partToReplace.getString(null, PartStyle.StyleType.NONE);
 
-                String firstPart = unformattedString.substring(0, matcher.start());
-                String lastPart = unformattedString.substring(matcher.end());
+                String firstPart = match.substring(0, matcher.start());
+                String lastPart = match.substring(matcher.end());
 
                 PartStyle partStyle = partToReplace.getPartStyle();
 
