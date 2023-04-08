@@ -294,12 +294,24 @@ public final class StyledText {
         return append(StyledText.fromString(codedString));
     }
 
+    public StyledText appendPart(StyledTextPart part) {
+        List<StyledTextPart> newParts = new ArrayList<>(parts);
+        newParts.add(part);
+        return new StyledText(newParts, temporaryWorkaround, clickEvents, hoverEvents);
+    }
+
     public StyledText prepend(StyledText styledText) {
         return concat(styledText, this);
     }
 
     public StyledText prepend(String codedString) {
         return prepend(StyledText.fromString(codedString));
+    }
+
+    public StyledText prependPart(StyledTextPart part) {
+        List<StyledTextPart> newParts = new ArrayList<>(parts);
+        newParts.add(0, part);
+        return new StyledText(newParts, temporaryWorkaround, clickEvents, hoverEvents);
     }
 
     public StyledText iterate(BiFunction<StyledTextPart, List<StyledTextPart>, IterationDecision> function) {
