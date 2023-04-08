@@ -68,19 +68,21 @@ public class ChatMentionFeature extends Feature {
         StyledText modified = styledText.iterateBackwards((part, changes) -> {
             // We have reached the end of the message content,
             // we don't want to highlight our own name in our own message
-            if (END_OF_HEADER_PATTERN.matcher(part.getUnformattedString()).matches()) {
+            if (END_OF_HEADER_PATTERN
+                    .matcher(part.getString(null, PartStyle.StyleType.NONE))
+                    .matches()) {
                 return IterationDecision.BREAK;
             }
 
             StyledTextPart partToReplace = part;
-            Matcher matcher = mentionPattern.matcher(partToReplace.getUnformattedString());
+            Matcher matcher = mentionPattern.matcher(partToReplace.getString(null, PartStyle.StyleType.NONE));
 
             while (matcher.find()) {
-                String unformattedString = partToReplace.getUnformattedString();
+                String match = partToReplace.getString(null, PartStyle.StyleType.NONE);
 
-                String firstPart = unformattedString.substring(0, matcher.start());
-                String mentionPart = unformattedString.substring(matcher.start(), matcher.end());
-                String lastPart = unformattedString.substring(matcher.end());
+                String firstPart = match.substring(0, matcher.start());
+                String mentionPart = match.substring(matcher.start(), matcher.end());
+                String lastPart = match.substring(matcher.end());
 
                 PartStyle partStyle = partToReplace.getPartStyle();
 
