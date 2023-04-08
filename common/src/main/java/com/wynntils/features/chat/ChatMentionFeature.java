@@ -67,11 +67,11 @@ public class ChatMentionFeature extends Feature {
             Matcher matcher = mentionPattern.matcher(part.getString(null, PartStyle.StyleType.NONE));
 
             if (matcher.find()) {
-                String unformattedString = part.getString(null, PartStyle.StyleType.NONE);
+                String match = part.getString(null, PartStyle.StyleType.NONE);
 
-                String firstPart = unformattedString.substring(0, matcher.start());
-                String mentionPart = unformattedString.substring(matcher.start(), matcher.end());
-                String lastPart = unformattedString.substring(matcher.end());
+                String firstPart = match.substring(0, matcher.start());
+                String mentionPart = match.substring(matcher.start(), matcher.end());
+                String lastPart = match.substring(matcher.end());
 
                 PartStyle partStyle = part.getPartStyle();
 
