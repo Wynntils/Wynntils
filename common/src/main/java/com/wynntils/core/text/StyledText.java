@@ -335,6 +335,9 @@ public final class StyledText {
                 // Add the rest of the parts
                 newParts.addAll(parts.subList(i + 1, parts.size()));
                 break;
+            } else if (decision == IterationDecision.SKIP) {
+                // Skip the rest of the parts
+                break;
             }
         }
 
@@ -355,6 +358,9 @@ public final class StyledText {
             if (decision == IterationDecision.BREAK) {
                 // Add the rest of the parts
                 newParts.addAll(0, parts.subList(0, i));
+                break;
+            } else if (decision == IterationDecision.SKIP) {
+                // Skip the rest of the parts
                 break;
             }
         }
