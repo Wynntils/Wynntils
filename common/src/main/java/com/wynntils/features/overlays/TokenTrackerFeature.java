@@ -2,7 +2,7 @@
  * Copyright © Wynntils 2023.
  * This file is released under AGPLv3. See LICENSE for full license details.
  */
-package com.wynntils.features.combat;
+package com.wynntils.features.overlays;
 
 import com.wynntils.core.components.Models;
 import com.wynntils.core.config.Category;
@@ -29,7 +29,7 @@ import net.minecraft.client.resources.sounds.SimpleSoundInstance;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 
-@ConfigCategory(Category.COMBAT)
+@ConfigCategory(Category.OVERLAYS)
 public class TokenTrackerFeature extends Feature {
     @RegisterConfig
     public final Config<Boolean> playSound = new Config<>(true);
