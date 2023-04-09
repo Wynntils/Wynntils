@@ -33,7 +33,6 @@ import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.network.chat.Component;
-import net.minecraft.world.item.ItemStack;
 import org.lwjgl.glfw.GLFW;
 
 public final class SeaskipperMapScreen extends AbstractMapScreen {
@@ -490,7 +489,10 @@ public final class SeaskipperMapScreen extends AbstractMapScreen {
 
     private void buyBoat() {
         ContainerUtils.clickOnSlot(
-                boatSlot, actualSeaskipperScreen.getMenu().containerId, GLFW.GLFW_MOUSE_BUTTON_LEFT, actualSeaskipperScreen.getMenu().getItems());
+                boatSlot,
+                actualSeaskipperScreen.getMenu().containerId,
+                GLFW.GLFW_MOUSE_BUTTON_LEFT,
+                actualSeaskipperScreen.getMenu().getItems());
     }
 
     private void buyPass(String destinationToTravelTo) {
@@ -510,6 +512,9 @@ public final class SeaskipperMapScreen extends AbstractMapScreen {
         }
 
         ContainerUtils.clickOnSlot(
-                passSlot, actualSeaskipperScreen.getMenu().containerId, GLFW.GLFW_MOUSE_BUTTON_LEFT, actualSeaskipperScreen.getMenu().getItems());
+                passSlot,
+                actualSeaskipperScreen.getMenu().containerId,
+                GLFW.GLFW_MOUSE_BUTTON_LEFT,
+                actualSeaskipperScreen.getMenu().getItems());
     }
 }

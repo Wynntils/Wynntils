@@ -18,7 +18,8 @@ import net.minecraftforge.eventbus.api.SubscribeEvent;
 public class CustomSeaskipperScreenFeature extends Feature {
     @SubscribeEvent
     public void onScreenOpen(ScreenOpenedEvent.Post event) {
-        if (!Models.Container.isSeaskipper(ComponentUtils.getUnformatted(event.getScreen().getTitle()))) {
+        if (!Models.Container.isSeaskipper(
+                ComponentUtils.getUnformatted(event.getScreen().getTitle()))) {
             return;
         }
 
