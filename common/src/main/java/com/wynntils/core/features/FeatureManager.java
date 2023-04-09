@@ -111,6 +111,7 @@ import com.wynntils.features.ui.AutoApplyResourcePackFeature;
 import com.wynntils.features.ui.ContainerScrollFeature;
 import com.wynntils.features.ui.CosmeticsPreviewFeature;
 import com.wynntils.features.ui.CustomCharacterSelectionScreenFeature;
+import com.wynntils.features.ui.CustomSeaskipperMapScreenFeature;
 import com.wynntils.features.ui.CustomLoadingScreenFeature;
 import com.wynntils.features.ui.LobbyUptimeFeature;
 import com.wynntils.features.ui.SoulPointTimerFeature;
@@ -235,6 +236,7 @@ public final class FeatureManager extends Manager {
         registerFeature(new QuestInfoOverlayFeature());
         registerFeature(new QuickCastFeature());
         registerFeature(new ReplaceRecipeBookFeature());
+        registerFeature(new CustomSeaskipperMapScreenFeature());
         registerFeature(new ShamanMasksOverlayFeature());
         registerFeature(new ShamanTotemTrackingFeature());
         registerFeature(new SoulPointTimerFeature());

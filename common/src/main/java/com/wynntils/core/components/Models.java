@@ -15,6 +15,7 @@ import com.wynntils.models.characterstats.CombatXpModel;
 import com.wynntils.models.containers.ContainerModel;
 import com.wynntils.models.containers.LootChestModel;
 import com.wynntils.models.containers.PlayerInventoryModel;
+import com.wynntils.models.seaskipper.SeaskipperModel;
 import com.wynntils.models.damage.DamageModel;
 import com.wynntils.models.discoveries.DiscoveryModel;
 import com.wynntils.models.elements.ElementModel;
@@ -93,6 +94,7 @@ public final class Models {
     public static final PingModel Ping = new PingModel(WorldState);
     public static final ProfessionModel Profession = new ProfessionModel(Character);
     public static final QuestModel Quest = new QuestModel(CombatXp);
+    public static final SeaskipperModel Seaskipper = new SeaskipperModel(Container);
     public static final ShamanMaskModel ShamanMask = new ShamanMaskModel(WorldState);
     public static final ShamanTotemModel ShamanTotem = new ShamanTotemModel(WorldState);
     public static final SpellModel Spell = new SpellModel(Character);

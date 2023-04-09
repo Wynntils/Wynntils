@@ -112,6 +112,10 @@ public final class ContainerModel extends Model {
         return isLootChest(title) || title.startsWith("Daily Rewards") || title.contains("Objective Rewards");
     }
 
+    public boolean isSeaskipper(String title) {
+        return title.equals("V.S.S. Seaskipper");
+    }
+
     public Matcher lootChestMatcher(Screen screen) {
         return LOOT_CHEST_PATTERN.matcher(
                 WynnUtils.normalizeBadString(ComponentUtils.getUnformatted(screen.getTitle())));
