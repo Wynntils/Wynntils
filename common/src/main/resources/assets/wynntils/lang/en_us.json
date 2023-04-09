@@ -787,7 +787,7 @@
   "feature.wynntils.tooltipVanillaHide.hideAdditionalnfo.name": "Hide Additional Tooltip Info",
   "feature.wynntils.tooltipVanillaHide.hideAdvanced.description": "This will turn off the advanced tooltip (F3+H) on Wynncraft",
   "feature.wynntils.tooltipVanillaHide.hideAdvanced.name": "Always Hide Advanced Tooltip",
-  "feature.wynntils.tooltipVanillaHide.name": "Hide Irrelevant Vanilla Tooltip Info",
+  "feature.wynntils.tooltipVanillaHide.name": "Hide Irrelevant Tooltip Info",
   "feature.wynntils.tradeMarketAutoOpenChat.name": "Market Auto Open Chat",
   "feature.wynntils.tradeMarketBulkSell.bulkSell1Amount.description": "How many items should be sold when the bulk sell 1 button is pressed?",
   "feature.wynntils.tradeMarketBulkSell.bulkSell1Amount.name": "Bulk Sell 1 Amount",
