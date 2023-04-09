@@ -4,6 +4,7 @@
  */
 package com.wynntils.features.ui;
 
+import com.wynntils.core.components.Models;
 import com.wynntils.core.config.Category;
 import com.wynntils.core.config.ConfigCategory;
 import com.wynntils.core.features.Feature;
@@ -17,7 +18,7 @@ import net.minecraftforge.eventbus.api.SubscribeEvent;
 public class CustomSeaskipperMapScreenFeature extends Feature {
     @SubscribeEvent
     public void onScreenOpen(ScreenOpenedEvent.Post event) {
-        if (!ComponentUtils.getCoded(event.getScreen().getTitle()).equals("V.S.S. Seaskipper")) {
+        if (!Models.Container.isSeaskipper(ComponentUtils.getUnformatted(event.getScreen().getTitle()))) {
             return;
         }
 
