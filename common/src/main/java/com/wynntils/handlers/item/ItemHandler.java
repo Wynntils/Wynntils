@@ -15,7 +15,6 @@ import com.wynntils.mc.extension.ItemStackExtension;
 import com.wynntils.utils.mc.ComponentUtils;
 import com.wynntils.utils.mc.LoreUtils;
 import com.wynntils.utils.mc.McUtils;
-import com.wynntils.utils.type.IterationDecision;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -150,7 +149,7 @@ public class ItemHandler extends Handler {
     }
 
     private StyledText getBaseName(StyledText name) {
-        return name.getPartCount() == 1 ? name : name.iterate((part, changes) -> IterationDecision.SKIP);
+        return StyledText.fromPart(name.getFirstPart());
     }
 
     private boolean similarStack(ItemStack firstItem, ItemStack secondItem) {

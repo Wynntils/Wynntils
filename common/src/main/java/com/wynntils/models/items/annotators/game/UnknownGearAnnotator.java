@@ -5,7 +5,6 @@
 package com.wynntils.models.items.annotators.game;
 
 import com.wynntils.core.components.Models;
-import com.wynntils.core.text.CodedString;
 import com.wynntils.core.text.StyledText;
 import com.wynntils.handlers.item.ItemAnnotation;
 import com.wynntils.handlers.item.ItemAnnotator;
@@ -27,7 +26,7 @@ public final class UnknownGearAnnotator implements ItemAnnotator {
         if (!matcher.matches()) return null;
 
         String gearName = matcher.group(1);
-        GearTier gearTier = GearTier.fromFormattedString(CodedString.fromStyledText(name));
+        GearTier gearTier = GearTier.fromStyledText(name);
 
         return Models.Gear.parseUnknownGearItem(gearName, gearType, gearTier, itemStack);
     }

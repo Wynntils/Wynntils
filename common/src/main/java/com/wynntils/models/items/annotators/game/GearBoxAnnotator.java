@@ -4,7 +4,6 @@
  */
 package com.wynntils.models.items.annotators.game;
 
-import com.wynntils.core.text.CodedString;
 import com.wynntils.core.text.StyledText;
 import com.wynntils.handlers.item.ItemAnnotation;
 import com.wynntils.handlers.item.ItemAnnotator;
@@ -34,7 +33,7 @@ public final class GearBoxAnnotator implements ItemAnnotator {
         GearType gearType = GearType.fromString(matcher.group(1));
         if (gearType == null) return null;
 
-        GearTier gearTier = GearTier.fromFormattedString(CodedString.fromStyledText(name));
+        GearTier gearTier = GearTier.fromStyledText(name);
         RangedValue levelRange = getLevelRange(itemStack);
 
         if (gearTier == null || levelRange == null) return null;

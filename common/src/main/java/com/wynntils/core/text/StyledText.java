@@ -110,6 +110,10 @@ public final class StyledText {
                 StyledTextPart.fromCodedString(codedString, Style.EMPTY, null, Style.EMPTY), List.of(), List.of());
     }
 
+    public static StyledText fromPart(StyledTextPart part) {
+        return new StyledText(List.of(part), List.of(), List.of());
+    }
+
     public static StyledText fromCodedString(CodedString codedString) {
         return fromString(codedString.getInternalCodedStringRepresentation());
     }
@@ -335,9 +339,6 @@ public final class StyledText {
                 // Add the rest of the parts
                 newParts.addAll(parts.subList(i + 1, parts.size()));
                 break;
-            } else if (decision == IterationDecision.SKIP) {
-                // Skip the rest of the parts
-                break;
             }
         }
 
@@ -359,13 +360,18 @@ public final class StyledText {
                 // Add the rest of the parts
                 newParts.addAll(0, parts.subList(0, i));
                 break;
-            } else if (decision == IterationDecision.SKIP) {
-                // Skip the rest of the parts
-                break;
             }
         }
 
         return new StyledText(newParts, temporaryWorkaround, clickEvents, hoverEvents);
+    }
+
+    public StyledTextPart getFirstPart() {
+        if (parts.isEmpty()) {
+            return null;
+        }
+
+        return parts.get(0);
     }
 
     public int getPartCount() {
