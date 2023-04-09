@@ -6,5 +6,5 @@ package com.wynntils.utils.type;
 
 public enum IterationDecision {
     CONTINUE,
-    BREAK,
+    BREAK
 }
