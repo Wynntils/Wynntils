@@ -13,11 +13,10 @@ import com.wynntils.models.containers.ContainerModel;
 import com.wynntils.models.items.items.gui.SeaskipperDestinationItem;
 import com.wynntils.screens.maps.SeaskipperMapScreen;
 import com.wynntils.utils.mc.ComponentUtils;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
-
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import net.minecraftforge.eventbus.api.SubscribeEvent;
 
 public final class SeaskipperModel extends Model {
     private static final Pattern SEASKIPPER_PASS_PATTERN = Pattern.compile("^§b(.*) Pass §7for §b(\\d+)²$");
@@ -52,7 +51,8 @@ public final class SeaskipperModel extends Model {
             currentScreen.setBoatSlot(event.getSlot());
         }
 
-        Matcher matcher = SEASKIPPER_PASS_PATTERN.matcher(event.getItemStack().getHoverName().getString());
+        Matcher matcher = SEASKIPPER_PASS_PATTERN.matcher(
+                event.getItemStack().getHoverName().getString());
         if (!matcher.matches()) return;
 
         String destination = matcher.group(1);
