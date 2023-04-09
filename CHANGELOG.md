@@ -1,9 +1,21 @@
+## [0.0.2-alpha.459](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.458...v0.0.2-alpha.459) (2023-04-09)
+
+
+### Bug Fixes
+
+* Fix some feature names/categories ([#1472](https://github.com/Wynntils/Artemis/issues/1472)) ([8dfce59](https://github.com/Wynntils/Artemis/commit/8dfce59322625d8a0d9c5f3820ee5d071a8801c9))
+
 ## [0.0.2-alpha.458](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.457...v0.0.2-alpha.458) (2023-04-08)
 
 
 ### Code Refactoring
 
 * Port ChatItemFeature to use StyledText ([#1465](https://github.com/Wynntils/Artemis/issues/1465)) ([9ccea56](https://github.com/Wynntils/Artemis/commit/9ccea563f8df0a6eb0f6c91cf938cde14c7a7fe9))
+
+
+### Miscellaneous Chores
+
+* **release:** v0.0.2-alpha.458 [skip ci] ([24fb42a](https://github.com/Wynntils/Artemis/commit/24fb42aa11a1d118c652e0f73dc95b6040daeeab))
 
 ## [0.0.2-alpha.457](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.456...v0.0.2-alpha.457) (2023-04-08)
 
@@ -40,16 +52,4 @@
 ### Miscellaneous Chores
 
 * **release:** v0.0.2-alpha.455 [skip ci] ([265ec1c](https://github.com/Wynntils/Artemis/commit/265ec1c96e03b739031568b93ecc8d6de2af0ba8))
-
-## [0.0.2-alpha.454](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.453...v0.0.2-alpha.454) (2023-04-07)
-
-
-### New Features
-
-* ChatMessageReceivedEvent now sends StyledText too ([#1464](https://github.com/Wynntils/Artemis/issues/1464)) ([b24d58c](https://github.com/Wynntils/Artemis/commit/b24d58c9386f1d7b40ff487dd198969e355b0d36))
-
-
-### Miscellaneous Chores
-
-* **release:** v0.0.2-alpha.454 [skip ci] ([12a3d1c](https://github.com/Wynntils/Artemis/commit/12a3d1c104f4872532c9671fd37f54e7a49b9c73))
 
