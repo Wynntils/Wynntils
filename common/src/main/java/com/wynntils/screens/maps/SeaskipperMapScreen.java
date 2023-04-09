@@ -23,6 +23,10 @@ import com.wynntils.utils.render.type.TextShadow;
 import com.wynntils.utils.render.type.VerticalAlignment;
 import com.wynntils.utils.type.BoundingBox;
 import com.wynntils.utils.wynn.ContainerUtils;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.gui.components.events.GuiEventListener;
 import net.minecraft.client.gui.screens.Screen;
@@ -32,11 +36,6 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.phys.Vec3;
 import org.lwjgl.glfw.GLFW;
-
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
 
 public class SeaskipperMapScreen extends AbstractMapScreen {
     private final AbstractContainerScreen<?> actualSeaskipperScreen;
@@ -117,8 +116,10 @@ public class SeaskipperMapScreen extends AbstractMapScreen {
                 List.of(
                         Component.literal("[>] ")
                                 .withStyle(ChatFormatting.BLUE)
-                                .append(Component.translatable("screens.wynntils.seaskipperMapGui.showInaccessibleLocations.name")),
-                        Component.translatable("screens.wynntils.seaskipperMapGui.showInaccessibleLocations.description")
+                                .append(Component.translatable(
+                                        "screens.wynntils.seaskipperMapGui.showInaccessibleLocations.name")),
+                        Component.translatable(
+                                        "screens.wynntils.seaskipperMapGui.showInaccessibleLocations.description")
                                 .withStyle(ChatFormatting.GRAY))));
 
         this.addRenderableWidget(new BasicTexturedButton(
@@ -265,7 +266,8 @@ public class SeaskipperMapScreen extends AbstractMapScreen {
                 float x = MapRenderer.getRenderX(destination, mapCenterX, centerX, currentZoom);
                 float z = MapRenderer.getRenderZ(destination, mapCenterZ, centerZ, currentZoom);
 
-                RenderUtils.drawLine(poseStack, CommonColors.DARK_GRAY.withAlpha(0.5f), poiRenderX, poiRenderZ, x, z, 0, 1);
+                RenderUtils.drawLine(
+                        poseStack, CommonColors.DARK_GRAY.withAlpha(0.5f), poiRenderX, poiRenderZ, x, z, 0, 1);
             }
         }
 
@@ -495,10 +497,7 @@ public class SeaskipperMapScreen extends AbstractMapScreen {
 
     private void buyBoat() {
         ContainerUtils.clickOnSlot(
-                boatSlot,
-                actualSeaskipperScreen.getMenu().containerId,
-                GLFW.GLFW_MOUSE_BUTTON_LEFT,
-                items);
+                boatSlot, actualSeaskipperScreen.getMenu().containerId, GLFW.GLFW_MOUSE_BUTTON_LEFT, items);
     }
 
     private void buyPass(String destinationToTravelTo) {
@@ -518,9 +517,6 @@ public class SeaskipperMapScreen extends AbstractMapScreen {
         }
 
         ContainerUtils.clickOnSlot(
-                passSlot,
-                actualSeaskipperScreen.getMenu().containerId,
-                GLFW.GLFW_MOUSE_BUTTON_LEFT,
-                items);
+                passSlot, actualSeaskipperScreen.getMenu().containerId, GLFW.GLFW_MOUSE_BUTTON_LEFT, items);
     }
 }

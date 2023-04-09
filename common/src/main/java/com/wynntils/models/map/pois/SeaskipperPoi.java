@@ -42,8 +42,7 @@ public class SeaskipperPoi implements Poi {
         this.endZ = endZ;
         this.width = endX - startX;
         this.height = endZ - startZ;
-        this.destinationCenter = new PoiLocation(
-                startX + width / 2, null, startZ + height / 2);
+        this.destinationCenter = new PoiLocation(startX + width / 2, null, startZ + height / 2);
     }
 
     @Override
@@ -113,29 +112,25 @@ public class SeaskipperPoi implements Poi {
                 1.5f);
 
         BufferedFontRenderer.getInstance()
-                    .renderAlignedTextInBox(
-                            poseStack,
-                            bufferSource,
-                            destination,
-                            actualRenderX,
-                            actualRenderX + renderWidth,
-                            actualRenderZ,
-                            actualRenderZ + renderHeight,
-                            0,
-                            color,
-                            HorizontalAlignment.CENTER,
-                            VerticalAlignment.TOP,
-                            TextShadow.OUTLINE);
+                .renderAlignedTextInBox(
+                        poseStack,
+                        bufferSource,
+                        destination,
+                        actualRenderX,
+                        actualRenderX + renderWidth,
+                        actualRenderZ,
+                        actualRenderZ + renderHeight,
+                        0,
+                        color,
+                        HorizontalAlignment.CENTER,
+                        VerticalAlignment.TOP,
+                        TextShadow.OUTLINE);
 
         poseStack.popPose();
     }
 
     public void renderAtWithoutBorders(
-            PoseStack poseStack,
-            MultiBufferSource bufferSource,
-            float renderX,
-            float renderY,
-            float mapZoom) {
+            PoseStack poseStack, MultiBufferSource bufferSource, float renderX, float renderY, float mapZoom) {
         poseStack.pushPose();
         poseStack.translate(0, 0, 100);
 
@@ -190,7 +185,10 @@ public class SeaskipperPoi implements Poi {
     }
 
     public boolean isPlayerInside(Vec3 playerPosition) {
-        if (playerPosition.x > startX && playerPosition.x < endX && playerPosition.z > startZ && playerPosition.z < endZ) {
+        if (playerPosition.x > startX
+                && playerPosition.x < endX
+                && playerPosition.z > startZ
+                && playerPosition.z < endZ) {
             isPlayerAtPoi = true;
             return true;
         } else {
