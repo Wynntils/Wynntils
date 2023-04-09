@@ -5,19 +5,22 @@
 package com.wynntils.models.discoveries;
 
 import com.wynntils.core.components.Models;
+import com.wynntils.core.text.CodedString;
 import com.wynntils.models.discoveries.profile.DiscoveryProfile;
 import com.wynntils.models.discoveries.type.DiscoveryType;
 import com.wynntils.utils.mc.ComponentUtils;
 import com.wynntils.utils.mc.LoreUtils;
-import com.wynntils.utils.wynn.WynnUtils;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.ItemStack;
 
 public class DiscoveryInfo {
+    private static final Pattern COMBAT_LEVEL_PATTERN = Pattern.compile("§a✔§r§7 Combat Lv. Min: §r§f(\\d+)");
     private final String name;
     private final DiscoveryType type;
     private final String description;
@@ -45,14 +48,16 @@ public class DiscoveryInfo {
     }
 
     public static DiscoveryInfo parseFromItemStack(ItemStack itemStack) {
-        List<String> lore = LoreUtils.getLore(itemStack);
+        List<CodedString> lore = LoreUtils.getLore(itemStack);
         if (lore.isEmpty()) {
             return null;
         }
 
-        String name = WynnUtils.normalizeBadString(ComponentUtils.getCoded(itemStack.getHoverName()));
-        int minLevel = Integer.parseInt(lore.get(0).replace("§a✔§r§7 Combat Lv. Min: §r§f", ""));
+        Matcher m = lore.get(0).getMatcher(COMBAT_LEVEL_PATTERN);
+        if (!m.matches()) return null;
+        int minLevel = Integer.parseInt(m.group(1));
 
+        CodedString name = ComponentUtils.getCoded(itemStack.getHoverName()).getNormalized();
         DiscoveryType type = DiscoveryType.getDiscoveryTypeFromString(name);
         if (type == null) return null;
 

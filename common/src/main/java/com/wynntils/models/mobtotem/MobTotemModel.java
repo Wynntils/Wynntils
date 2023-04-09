@@ -41,7 +41,7 @@ public class MobTotemModel extends Model {
 
         // If a new mob totem just appeared, add it to the unstarted list
         // Totem timers do not match the MOB_TOTEM_NAME pattern
-        Matcher nameMatcher = MOB_TOTEM_NAME.matcher(e.getName());
+        Matcher nameMatcher = e.getName().getMatcher(MOB_TOTEM_NAME);
         if (nameMatcher.find()) {
             int mobTotemId = e.getEntity().getId();
 
@@ -51,7 +51,7 @@ public class MobTotemModel extends Model {
             return;
         }
 
-        Matcher timerMatcher = MOB_TOTEM_TIMER.matcher(e.getName());
+        Matcher timerMatcher = e.getName().getMatcher(MOB_TOTEM_TIMER);
         if (!timerMatcher.find()) return;
 
         mobTotems.values().stream()

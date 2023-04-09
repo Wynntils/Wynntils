@@ -5,6 +5,7 @@
 package com.wynntils.models.profession;
 
 import com.wynntils.core.components.Model;
+import com.wynntils.core.text.CodedString;
 import com.wynntils.handlers.chat.event.ChatMessageReceivedEvent;
 import com.wynntils.handlers.labels.event.EntityLabelChangedEvent;
 import com.wynntils.models.character.CharacterModel;
@@ -51,7 +52,7 @@ public class ProfessionModel extends Model {
 
     @SubscribeEvent
     public void onLabelSpawn(EntityLabelChangedEvent event) {
-        Matcher matcher = PROFESSION_NODE_HARVERSTED_PATTERN.matcher(event.getName());
+        Matcher matcher = event.getName().getMatcher(PROFESSION_NODE_HARVERSTED_PATTERN);
 
         if (matcher.matches()) {
             updatePercentage(
@@ -63,9 +64,9 @@ public class ProfessionModel extends Model {
 
     @SubscribeEvent
     public void onChatMessage(ChatMessageReceivedEvent event) {
-        String codedMessage = event.getOriginalCodedMessage();
+        CodedString codedMessage = event.getOriginalCodedString();
 
-        Matcher matcher = PROFESSION_CRAFT_PATTERN.matcher(codedMessage);
+        Matcher matcher = codedMessage.getMatcher(PROFESSION_CRAFT_PATTERN);
 
         if (matcher.matches()) {
             updatePercentage(
@@ -74,7 +75,7 @@ public class ProfessionModel extends Model {
                     Float.parseFloat(matcher.group("gain")));
         }
 
-        matcher = PROFESSION_LEVELUP_PATTERN.matcher(codedMessage);
+        matcher = codedMessage.getMatcher(PROFESSION_LEVELUP_PATTERN);
 
         if (matcher.matches()) {
             updateLevel(ProfessionType.fromString(matcher.group("name")), Integer.parseInt(matcher.group("level")));
@@ -83,9 +84,9 @@ public class ProfessionModel extends Model {
 
     public void resetValueFromItem(ItemStack professionInfoItem) {
         Map<ProfessionType, ProfessionProgress> levels = new ConcurrentHashMap<>();
-        List<String> professionLore = LoreUtils.getLore(professionInfoItem);
-        for (String line : professionLore) {
-            Matcher matcher = INFO_MENU_PROFESSION_LORE_PATTERN.matcher(line);
+        List<CodedString> professionLore = LoreUtils.getLore(professionInfoItem);
+        for (CodedString line : professionLore) {
+            Matcher matcher = line.getMatcher(INFO_MENU_PROFESSION_LORE_PATTERN);
 
             if (matcher.matches()) {
                 // NOTE: When writing this, progress was quite a bit off in this lore. Still, parse it and use it while

@@ -4,6 +4,7 @@
  */
 package com.wynntils.models.discoveries.type;
 
+import com.wynntils.core.text.CodedString;
 import net.minecraft.ChatFormatting;
 
 public enum DiscoveryType {
@@ -19,9 +20,10 @@ public enum DiscoveryType {
         this.color = color;
     }
 
-    public static DiscoveryType getDiscoveryTypeFromString(String name) {
+    public static DiscoveryType getDiscoveryTypeFromString(CodedString name) {
         for (DiscoveryType type : values()) {
-            if (name.charAt(1) == type.getColor().getChar()) {
+            if (name.getInternalCodedStringRepresentation().charAt(1)
+                    == type.getColor().getChar()) {
                 return type;
             }
         }

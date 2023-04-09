@@ -5,6 +5,7 @@
 package com.wynntils.models.map.pois;
 
 import com.mojang.blaze3d.vertex.PoseStack;
+import com.wynntils.core.text.CodedString;
 import com.wynntils.models.map.Label;
 import com.wynntils.models.map.PoiLocation;
 import com.wynntils.models.map.type.DisplayPriority;
@@ -117,7 +118,7 @@ public class LabelPoi implements Poi {
                 .renderText(
                         poseStack,
                         bufferSource,
-                        label.getName(),
+                        CodedString.fromString(label.getName()),
                         0,
                         0,
                         color,
@@ -132,7 +133,7 @@ public class LabelPoi implements Poi {
                         .renderText(
                                 poseStack,
                                 bufferSource,
-                                "[Lv " + level + "]",
+                                CodedString.fromString("[Lv " + level + "]"),
                                 0,
                                 10,
                                 color,

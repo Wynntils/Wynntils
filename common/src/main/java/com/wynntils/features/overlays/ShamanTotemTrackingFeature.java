@@ -14,9 +14,11 @@ import com.wynntils.core.features.overlays.OverlayPosition;
 import com.wynntils.core.features.overlays.OverlaySize;
 import com.wynntils.core.features.overlays.TextOverlay;
 import com.wynntils.core.features.overlays.annotations.OverlayInfo;
+import com.wynntils.core.text.CodedString;
 import com.wynntils.mc.event.RenderEvent;
 import com.wynntils.mc.extension.EntityExtension;
 import com.wynntils.models.abilities.event.TotemEvent;
+import com.wynntils.utils.colors.ColorChatFormatting;
 import com.wynntils.utils.colors.CommonColors;
 import com.wynntils.utils.colors.CustomColor;
 import com.wynntils.utils.mc.RenderedStringUtils;
@@ -75,16 +77,18 @@ public class ShamanTotemTrackingFeature extends Feature {
         public final Config<TotemTrackingDetail> totemTrackingDetail = new Config<>(TotemTrackingDetail.COORDS);
 
         @RegisterConfig
-        public final Config<ChatFormatting> firstTotemTextColor = new Config<>(ChatFormatting.WHITE);
+        public final Config<ColorChatFormatting> firstTotemTextColor = new Config<>(ColorChatFormatting.WHITE);
 
         @RegisterConfig
-        public final Config<ChatFormatting> secondTotemTextColor = new Config<>(ChatFormatting.BLUE);
+        public final Config<ColorChatFormatting> secondTotemTextColor = new Config<>(ColorChatFormatting.BLUE);
 
         @RegisterConfig
-        public final Config<ChatFormatting> thirdTotemTextColor = new Config<>(ChatFormatting.RED);
+        public final Config<ColorChatFormatting> thirdTotemTextColor = new Config<>(ColorChatFormatting.RED);
 
         private final ChatFormatting[] totemColorsArray = {
-            firstTotemTextColor.get(), secondTotemTextColor.get(), thirdTotemTextColor.get()
+            firstTotemTextColor.get().getChatFormatting(),
+            secondTotemTextColor.get().getChatFormatting(),
+            thirdTotemTextColor.get().getChatFormatting()
         };
 
         protected ShamanTotemTimerOverlay() {
@@ -124,12 +128,12 @@ public class ShamanTotemTrackingFeature extends Feature {
         }
 
         @Override
-        protected String[] calculateTemplateValue(String template) {
+        protected CodedString[] calculateTemplateValue(String template) {
             return Arrays.stream(super.calculateTemplateValue(template))
                     .map(s -> RenderedStringUtils.trySplitOptimally(s, this.getWidth()))
                     .map(s -> s.split("\n"))
                     .flatMap(Arrays::stream)
-                    .toArray(String[]::new);
+                    .toArray(CodedString[]::new);
         }
     }
 

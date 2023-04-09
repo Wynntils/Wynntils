@@ -19,7 +19,7 @@ public class TestComponentUtils {
     }
 
     @Test
-    void getCoded_ShouldWork() {
+    void getCoded_shouldWork() {
         final Component component = Component.literal("Hello,")
                 .withStyle(ChatFormatting.RED)
                 .append(Component.literal(" World!")
@@ -27,7 +27,7 @@ public class TestComponentUtils {
                         .withStyle(ChatFormatting.BOLD));
         final String expected = "§cHello,§r§9§l World!";
 
-        String actual = ComponentUtils.getCoded(component);
+        String actual = ComponentUtils.getCoded(component).getInternalCodedStringRepresentation();
         Assertions.assertEquals(expected, actual, "ComponentUtils.getCoded() returned an unexpected value.");
     }
 }

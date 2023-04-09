@@ -21,6 +21,7 @@ import com.wynntils.core.features.overlays.OverlaySize;
 import com.wynntils.core.features.overlays.annotations.OverlayInfo;
 import com.wynntils.core.features.properties.RegisterKeyBind;
 import com.wynntils.core.keybinds.KeyBind;
+import com.wynntils.core.text.CodedString;
 import com.wynntils.handlers.chat.event.NpcDialogEvent;
 import com.wynntils.handlers.chat.type.NpcDialogueType;
 import com.wynntils.mc.event.RenderEvent;
@@ -58,12 +59,13 @@ import org.lwjgl.glfw.GLFW;
 @ConfigCategory(Category.OVERLAYS)
 public class NpcDialogueOverlayFeature extends Feature {
     private static final Pattern NEW_QUEST_STARTED = Pattern.compile("^§r§6§lNew Quest Started: §r§e§l(.*)§r$");
+    public static final CodedString PRESS_SNEAK_TO_CONTINUE = CodedString.fromString("§cPress SNEAK to continue");
 
     private final ScheduledExecutorService autoProgressExecutor = Executors.newSingleThreadScheduledExecutor();
     private ScheduledFuture<?> scheduledAutoProgressKeyPress = null;
 
     private final List<ConfirmationlessDialogue> confirmationlessDialogues = new ArrayList<>();
-    private List<String> currentDialogue = new ArrayList<>();
+    private List<CodedString> currentDialogue = new ArrayList<>();
     private NpcDialogueType dialogueType;
     private boolean isProtected;
 
@@ -88,7 +90,7 @@ public class NpcDialogueOverlayFeature extends Feature {
 
     @SubscribeEvent(priority = EventPriority.HIGHEST)
     public void onNpcDialogue(NpcDialogEvent e) {
-        List<String> msg =
+        List<CodedString> msg =
                 e.getChatMessage().stream().map(ComponentUtils::getCoded).toList();
 
         // Print dialogue to the system log
@@ -113,7 +115,7 @@ public class NpcDialogueOverlayFeature extends Feature {
         dialogueType = e.getType();
         isProtected = e.isProtected();
 
-        if (!msg.isEmpty() && NEW_QUEST_STARTED.matcher(msg.get(0)).find()) {
+        if (!msg.isEmpty() && msg.get(0).getMatcher(NEW_QUEST_STARTED).find()) {
             // TODO: Show nice banner notification instead
             // but then we'd also need to confirm it with a sneak
             Managers.Notification.queueMessage(msg.get(0));
@@ -152,7 +154,7 @@ public class NpcDialogueOverlayFeature extends Feature {
         confirmationlessDialogues.removeIf(dialogue -> now >= dialogue.removeTime);
     }
 
-    private ScheduledFuture<?> scheduledSneakPress(List<String> msg) {
+    private ScheduledFuture<?> scheduledSneakPress(List<CodedString> msg) {
         long delay = calculateMessageReadTime(msg);
 
         return autoProgressExecutor.schedule(
@@ -162,8 +164,8 @@ public class NpcDialogueOverlayFeature extends Feature {
                 TimeUnit.MILLISECONDS);
     }
 
-    private long calculateMessageReadTime(List<String> msg) {
-        int words = String.join(" ", msg).split(" ").length;
+    private long calculateMessageReadTime(List<CodedString> msg) {
+        int words = CodedString.join(" ", msg).split(" ").length;
         long delay =
                 dialogAutoProgressDefaultTime.get() + ((long) words * dialogAutoProgressAdditionalTimePerWord.get());
         return delay;
@@ -234,7 +236,7 @@ public class NpcDialogueOverlayFeature extends Feature {
         private void renderDialogue(
                 PoseStack poseStack,
                 MultiBufferSource bufferSource,
-                List<String> currentDialogue,
+                List<CodedString> currentDialogue,
                 NpcDialogueType dialogueType) {
             List<TextRenderTask> dialogueRenderTasks = currentDialogue.stream()
                     .map(s -> new TextRenderTask(s, renderSetting))
@@ -288,10 +290,10 @@ public class NpcDialogueOverlayFeature extends Feature {
             if (showHelperTexts.get()) {
                 // Render "To continue" message
                 List<TextRenderTask> renderTaskList = new LinkedList<>();
-                String protection = isProtected ? "§f<protected> §r" : "";
+                CodedString protection = isProtected ? CodedString.fromString("§f<protected> §r") : CodedString.EMPTY;
                 if (dialogueType == NpcDialogueType.NORMAL) {
                     TextRenderTask pressSneakMessage =
-                            new TextRenderTask(protection + "§cPress SNEAK to continue", renderSetting);
+                            new TextRenderTask(PRESS_SNEAK_TO_CONTINUE.prepend(protection), renderSetting);
                     renderTaskList.add(pressSneakMessage);
                 } else if (dialogueType == NpcDialogueType.SELECTION) {
                     String msg;
@@ -301,7 +303,7 @@ public class NpcDialogueOverlayFeature extends Feature {
                         msg = "Open chat and click on the option to select it";
                     }
 
-                    TextRenderTask pressSneakMessage = new TextRenderTask(protection + "§c" + msg, renderSetting);
+                    TextRenderTask pressSneakMessage = new TextRenderTask(protection.append("§c" + msg), renderSetting);
                     renderTaskList.add(pressSneakMessage);
                 }
 
@@ -337,9 +339,9 @@ public class NpcDialogueOverlayFeature extends Feature {
         public void render(PoseStack poseStack, MultiBufferSource bufferSource, float partialTicks, Window window) {
             if (currentDialogue.isEmpty() && confirmationlessDialogues.isEmpty()) return;
 
-            LinkedList<String> allDialogues = new LinkedList<>(currentDialogue);
+            LinkedList<CodedString> allDialogues = new LinkedList<>(currentDialogue);
             confirmationlessDialogues.forEach(d -> {
-                allDialogues.add("");
+                allDialogues.add(CodedString.EMPTY);
                 allDialogues.addAll(d.text());
             });
 
@@ -353,8 +355,9 @@ public class NpcDialogueOverlayFeature extends Feature {
         @Override
         public void renderPreview(
                 PoseStack poseStack, MultiBufferSource bufferSource, float partialTicks, Window window) {
-            List<String> fakeDialogue = List.of(
-                    "§7[1/1] §r§2Random Citizen: §r§aDid you know that Wynntils is the best Wynncraft mod you'll probably find?§r");
+            List<CodedString> fakeDialogue = List.of(
+                    CodedString.fromString(
+                            "§7[1/1] §r§2Random Citizen: §r§aDid you know that Wynntils is the best Wynncraft mod you'll probably find?§r"));
             // we have to force update every time
             updateTextRenderSettings();
 
@@ -362,5 +365,5 @@ public class NpcDialogueOverlayFeature extends Feature {
         }
     }
 
-    protected record ConfirmationlessDialogue(List<String> text, long removeTime) {}
+    protected record ConfirmationlessDialogue(List<CodedString> text, long removeTime) {}
 }

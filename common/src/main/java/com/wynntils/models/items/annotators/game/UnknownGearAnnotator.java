@@ -5,6 +5,7 @@
 package com.wynntils.models.items.annotators.game;
 
 import com.wynntils.core.components.Models;
+import com.wynntils.core.text.CodedString;
 import com.wynntils.handlers.item.ItemAnnotation;
 import com.wynntils.handlers.item.ItemAnnotator;
 import com.wynntils.models.gear.type.GearTier;
@@ -17,11 +18,11 @@ public final class UnknownGearAnnotator implements ItemAnnotator {
     private static final Pattern UNKNOWN_GEAR_PATTERN = Pattern.compile("^§[5abcdef](.*)$");
 
     @Override
-    public ItemAnnotation getAnnotation(ItemStack itemStack, String name) {
+    public ItemAnnotation getAnnotation(ItemStack itemStack, CodedString name) {
         GearType gearType = GearType.fromItemStack(itemStack);
         if (gearType == null) return null;
 
-        Matcher matcher = UNKNOWN_GEAR_PATTERN.matcher(name);
+        Matcher matcher = name.getMatcher(UNKNOWN_GEAR_PATTERN);
         if (!matcher.matches()) return null;
 
         String gearName = matcher.group(1);

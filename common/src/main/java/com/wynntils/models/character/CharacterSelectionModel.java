@@ -5,6 +5,7 @@
 package com.wynntils.models.character;
 
 import com.wynntils.core.components.Model;
+import com.wynntils.core.text.CodedString;
 import com.wynntils.mc.event.ContainerSetContentEvent;
 import com.wynntils.mc.event.MenuEvent;
 import com.wynntils.mc.event.ScreenOpenedEvent;
@@ -37,6 +38,7 @@ public final class CharacterSelectionModel extends Model {
     private static final String DEFAULT_CLASS_NAME = "This Character";
 
     private static final int EDIT_BUTTON_SLOT = 8;
+    public static final CodedString CHARACTER_SELECTION_TITLE = CodedString.fromString("§8§lSelect a Character");
 
     private CharacterSelectorScreen currentScreen;
     private int containerId = -1;
@@ -59,7 +61,7 @@ public final class CharacterSelectionModel extends Model {
 
     @SubscribeEvent
     public void onMenuOpened(MenuEvent.MenuOpenedEvent event) {
-        if (!ComponentUtils.getCoded(event.getTitle()).equals("§8§lSelect a Character")) {
+        if (!ComponentUtils.getCoded(event.getTitle()).equals(CHARACTER_SELECTION_TITLE)) {
             return;
         }
 
@@ -77,8 +79,8 @@ public final class CharacterSelectionModel extends Model {
         List<ItemStack> items = event.getItems();
         for (int i = 0; i < items.size(); i++) {
             ItemStack itemStack = items.get(i);
-            String itemName = ComponentUtils.getCoded(itemStack.getHoverName());
-            Matcher classItemMatcher = CLASS_ITEM_NAME_PATTERN.matcher(itemName);
+            CodedString itemName = ComponentUtils.getCoded(itemStack.getHoverName());
+            Matcher classItemMatcher = itemName.getMatcher(CLASS_ITEM_NAME_PATTERN);
             if (classItemMatcher.matches()) {
                 ClassInfo classInfo = getClassInfoFromItem(itemStack, i, classItemMatcher.group(1));
                 classInfoList.add(classInfo);
@@ -86,7 +88,7 @@ public final class CharacterSelectionModel extends Model {
             }
 
             if (firstNewCharacterSlot == -1
-                    && NEW_CLASS_ITEM_NAME_PATTERN.matcher(itemName).matches()) {
+                    && itemName.getMatcher(NEW_CLASS_ITEM_NAME_PATTERN).matches()) {
                 firstNewCharacterSlot = i;
             }
         }
@@ -103,8 +105,8 @@ public final class CharacterSelectionModel extends Model {
         int xp = 0;
         int soulPoints = 0;
         int finishedQuests = 0;
-        for (String line : LoreUtils.getLore(itemStack)) {
-            Matcher matcher = CLASS_ITEM_CLASS_PATTERN.matcher(line);
+        for (CodedString line : LoreUtils.getLore(itemStack)) {
+            Matcher matcher = line.getMatcher(CLASS_ITEM_CLASS_PATTERN);
 
             if (matcher.matches()) {
                 String classTypeString = matcher.group("name");
@@ -115,25 +117,25 @@ public final class CharacterSelectionModel extends Model {
                 continue;
             }
 
-            matcher = CLASS_ITEM_LEVEL_PATTERN.matcher(line);
+            matcher = line.getMatcher(CLASS_ITEM_LEVEL_PATTERN);
             if (matcher.matches()) {
                 level = Integer.parseInt(matcher.group(1));
                 continue;
             }
 
-            matcher = CLASS_ITEM_XP_PATTERN.matcher(line);
+            matcher = line.getMatcher(CLASS_ITEM_XP_PATTERN);
             if (matcher.matches()) {
                 xp = Integer.parseInt(matcher.group(1));
                 continue;
             }
 
-            matcher = CLASS_ITEM_SOUL_POINTS_PATTERN.matcher(line);
+            matcher = line.getMatcher(CLASS_ITEM_SOUL_POINTS_PATTERN);
             if (matcher.matches()) {
                 soulPoints = Integer.parseInt(matcher.group(1));
                 continue;
             }
 
-            matcher = CLASS_ITEM_FINISHED_QUESTS_PATTERN.matcher(line);
+            matcher = line.getMatcher(CLASS_ITEM_FINISHED_QUESTS_PATTERN);
             if (matcher.matches()) {
                 finishedQuests = Integer.parseInt(matcher.group(1));
             }

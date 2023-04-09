@@ -4,34 +4,40 @@
  */
 package com.wynntils.utils.mc;
 
+import com.wynntils.core.text.CodedString;
 import com.wynntils.utils.render.FontRenderer;
+import java.util.Arrays;
 import net.minecraft.client.gui.Font;
 
 public final class RenderedStringUtils {
-    public static String[] wrapTextBySize(String s, int maxPixels) {
+    public static CodedString[] wrapTextBySize(CodedString s, int maxPixels) {
         Font font = McUtils.mc().font;
         int spaceSize = font.width(" ");
 
-        String[] stringArray = s.split(" ");
+        CodedString[] stringArray = s.split(" ");
         StringBuilder result = new StringBuilder();
         int length = 0;
 
-        for (String string : stringArray) {
-            String[] lines = string.split("\\\\n", -1);
+        // FIXME: codes should not count toward the word length
+
+        for (CodedString string : stringArray) {
+            CodedString[] lines = string.split("\\\\n");
             for (int i = 0; i < lines.length; i++) {
-                String line = lines[i];
-                if (i > 0 || length + font.width(line) >= maxPixels) {
+                CodedString line = lines[i];
+                if (i > 0 || length + font.width(line.getInternalCodedStringRepresentation()) >= maxPixels) {
                     result.append('\n');
                     length = 0;
                 }
                 if (!line.isEmpty()) {
                     result.append(line).append(' ');
-                    length += font.width(line) + spaceSize;
+                    length += font.width(line.getInternalCodedStringRepresentation()) + spaceSize;
                 }
             }
         }
 
-        return result.toString().split("\n");
+        return Arrays.stream(result.toString().split("\n"))
+                .map(CodedString::fromString)
+                .toArray(CodedString[]::new);
     }
 
     public static String getMaxFittingText(String text, float maxTextWidth, Font font) {
@@ -57,27 +63,31 @@ public final class RenderedStringUtils {
         return renderedText;
     }
 
-    public static String trySplitOptimally(String line, float maxWidth) {
+    public static CodedString trySplitOptimally(CodedString line, float maxWidth) {
         String maxFitting = RenderedStringUtils.getMaxFittingText(
-                line, maxWidth, FontRenderer.getInstance().getFont());
+                line.getUnformattedString(),
+                maxWidth,
+                FontRenderer.getInstance().getFont());
 
         if (maxFitting.contains("[") && !maxFitting.contains("]")) { // Detail line did not appear to fit, force break
             String color = "";
 
             if (line.startsWith("§")) {
-                color = line.substring(0, 2);
+                color = line.getInternalCodedStringRepresentation().substring(0, 2);
             }
 
-            return line.replaceFirst(" \\[", "\n" + color + "[");
+            return CodedString.fromString(
+                    line.getInternalCodedStringRepresentation().replaceFirst(" \\[", "\n" + color + "["));
         } else if (maxFitting.contains("(")
                 && !maxFitting.contains(")")) { // Detail line did not appear to fit, force break
             String color = "";
 
             if (line.startsWith("§")) {
-                color = line.substring(0, 2);
+                color = line.getInternalCodedStringRepresentation().substring(0, 2);
             }
 
-            return line.replaceFirst(" \\(", "\n" + color + "(");
+            return CodedString.fromString(
+                    line.getInternalCodedStringRepresentation().replaceFirst(" \\(", "\n" + color + "("));
         } else { // Fits fine, give normal lines
             return line;
         }

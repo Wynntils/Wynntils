@@ -10,8 +10,10 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public final class CorruptedBar extends TrackedBar {
+    private static final Pattern CORRUPTED_PATTERN = Pattern.compile("§cCorrupted §4\\[§c(\\d+)%§4]");
+
     public CorruptedBar() {
-        super(Pattern.compile("§cCorrupted §4\\[§c(\\d+)%§4]"));
+        super(CORRUPTED_PATTERN);
     }
 
     @Override

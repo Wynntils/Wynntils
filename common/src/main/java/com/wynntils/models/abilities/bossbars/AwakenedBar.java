@@ -10,8 +10,10 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public final class AwakenedBar extends TrackedBar {
+    private static final Pattern AWAKENED_PATTERN = Pattern.compile("§fAwakening §7\\[§f(\\d+)/(\\d+)§7]");
+
     public AwakenedBar() {
-        super(Pattern.compile("§fAwakening §7\\[§f(\\d+)/(\\d+)§7]"));
+        super(AWAKENED_PATTERN);
     }
 
     @Override

@@ -10,10 +10,11 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public final class BloodPoolBar extends TrackedBar {
+    private static final Pattern BLOOD_POOL_PATTERN = Pattern.compile("§cBlood Pool §4\\[§c(\\d+)%§4\\]");
     private int current;
 
     public BloodPoolBar() {
-        super(Pattern.compile("§cBlood Pool §4\\[§c(\\d+)%§4\\]"));
+        super(BLOOD_POOL_PATTERN);
     }
 
     @Override

@@ -11,6 +11,7 @@ import com.wynntils.core.config.ConfigCategory;
 import com.wynntils.core.features.Feature;
 import com.wynntils.core.features.properties.RegisterKeyBind;
 import com.wynntils.core.keybinds.KeyBind;
+import com.wynntils.core.text.CodedString;
 import com.wynntils.mc.event.TickEvent;
 import com.wynntils.models.spells.event.SpellEvent;
 import com.wynntils.models.spells.type.SpellDirection;
@@ -104,19 +105,19 @@ public class QuickCastFeature extends Feature {
             return;
         }
 
-        List<String> loreLines = LoreUtils.getLore(heldItem);
+        List<CodedString> loreLines = LoreUtils.getLore(heldItem);
 
         boolean isArcher = false;
-        for (String lore : loreLines) {
+        for (CodedString lore : loreLines) {
             if (lore.contains("Archer/Hunter")) isArcher = true;
-            Matcher matcher = INCORRECT_CLASS_PATTERN.matcher(lore);
+            Matcher matcher = lore.getMatcher(INCORRECT_CLASS_PATTERN);
             if (!matcher.matches()) continue;
             sendCancelReason(Component.translatable("feature.wynntils.quickCast.classMismatch", matcher.group(1)));
             return;
         }
 
-        for (String lore : loreLines) {
-            Matcher matcher = LVL_MIN_NOT_REACHED_PATTERN.matcher(lore);
+        for (CodedString lore : loreLines) {
+            Matcher matcher = lore.getMatcher(LVL_MIN_NOT_REACHED_PATTERN);
             if (!matcher.matches()) continue;
             sendCancelReason(Component.translatable(
                     "feature.wynntils.quickCast.levelRequirementNotReached", matcher.group(1), matcher.group(2)));

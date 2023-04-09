@@ -6,6 +6,7 @@ package com.wynntils.models.containers;
 
 import com.wynntils.core.components.Model;
 import com.wynntils.core.components.Models;
+import com.wynntils.core.text.CodedString;
 import com.wynntils.utils.mc.ComponentUtils;
 import com.wynntils.utils.type.Pair;
 import com.wynntils.utils.wynn.WynnUtils;
@@ -42,6 +43,9 @@ public final class ContainerModel extends Model {
     private static final Pair<Integer, Integer> BANK_PREVIOUS_NEXT_SLOTS = new Pair<>(17, 8);
     private static final Pair<Integer, Integer> GUILD_BANK_PREVIOUS_NEXT_SLOTS = new Pair<>(9, 27);
     private static final Pair<Integer, Integer> TRADE_MARKET_PREVIOUS_NEXT_SLOTS = new Pair<>(17, 26);
+    public static final CodedString LAST_BANK_PAGE_STRING = CodedString.fromString(">§4>§c>§4>§c>");
+    public static final CodedString FIRST_TRADE_MARKET_PAGE_STRING = CodedString.fromString("§bReveal Item Names");
+    public static final CodedString TRADE_MARKET_TITLE = CodedString.fromString("Trade Market");
 
     public ContainerModel() {
         super(List.of());
@@ -52,7 +56,9 @@ public final class ContainerModel extends Model {
     }
 
     public boolean isBankScreen(Screen screen) {
-        return BANK_PATTERN.matcher(ComponentUtils.getCoded(screen.getTitle())).matches();
+        return ComponentUtils.getCoded(screen.getTitle())
+                .getMatcher(BANK_PATTERN)
+                .matches();
     }
 
     /**
@@ -62,12 +68,12 @@ public final class ContainerModel extends Model {
         return (isBankScreen(screen) || isBlockBankScreen(screen) || isMiscBucketScreen(screen))
                 && screen instanceof ContainerScreen cs
                 && ComponentUtils.getCoded(cs.getMenu().getSlot(8).getItem().getHoverName())
-                        .endsWith(">§4>§c>§4>§c>");
+                        .endsWith(LAST_BANK_PAGE_STRING);
     }
 
     public boolean isGuildBankScreen(Screen screen) {
-        return GUILD_BANK_PATTERN
-                .matcher(ComponentUtils.getCoded(screen.getTitle()))
+        return ComponentUtils.getCoded(screen.getTitle())
+                .getMatcher(GUILD_BANK_PATTERN)
                 .matches();
     }
 
@@ -75,25 +81,25 @@ public final class ContainerModel extends Model {
         if (!(screen instanceof ContainerScreen cs)) return false;
         // No regex required, title is very simple and can be checked with .equals()
         return cs.getMenu().getRowCount() == 6
-                && ComponentUtils.getCoded(screen.getTitle()).equals("Trade Market");
+                && ComponentUtils.getCoded(screen.getTitle()).equals(TRADE_MARKET_TITLE);
     }
 
     public boolean isFirstTradeMarketPage(Screen screen) {
         return isTradeMarketScreen(screen)
                 && screen instanceof ContainerScreen cs
                 && ComponentUtils.getCoded(cs.getMenu().getSlot(17).getItem().getHoverName())
-                        .equals("§bReveal Item Names");
+                        .equals(FIRST_TRADE_MARKET_PAGE_STRING);
     }
 
     public boolean isBlockBankScreen(Screen screen) {
-        return BLOCK_BANK_PATTERN
-                .matcher(ComponentUtils.getCoded(screen.getTitle()))
+        return ComponentUtils.getCoded(screen.getTitle())
+                .getMatcher(BLOCK_BANK_PATTERN)
                 .matches();
     }
 
     public boolean isMiscBucketScreen(Screen screen) {
-        return MISC_BUCKET_PATTERN
-                .matcher(ComponentUtils.getCoded(screen.getTitle()))
+        return ComponentUtils.getCoded(screen.getTitle())
+                .getMatcher(MISC_BUCKET_PATTERN)
                 .matches();
     }
 

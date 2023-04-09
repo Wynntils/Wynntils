@@ -5,6 +5,7 @@
 package com.wynntils.models.characterstats.actionbar;
 
 import com.wynntils.core.WynntilsMod;
+import com.wynntils.core.text.CodedString;
 import com.wynntils.handlers.actionbar.ActionBarSegment;
 import com.wynntils.handlers.actionbar.type.ActionBarPosition;
 import java.util.regex.Matcher;
@@ -38,13 +39,16 @@ public class SprintSegment implements ActionBarSegment {
         // "§4[§8|||Sprint|||§4]" -- flashing
         // "§4[§c|||Sprint|||§4]"
 
-        String sprint = matcher.group(1);
+        CodedString sprint = CodedString.fromString(matcher.group(1));
         // If the sprint string starts with §[ae] we must start counting from after this
         // formatting, but not if it starts with §[8c]
-        int startPos = (sprint.charAt(1) == 'a' || sprint.charAt(1) == 'e') ? 2 : 0;
-        int redIndex = sprint.indexOf("§8");
+        int startPos = (sprint.getInternalCodedStringRepresentation().charAt(1) == 'a'
+                        || sprint.getInternalCodedStringRepresentation().charAt(1) == 'e')
+                ? 2
+                : 0;
+        int redIndex = sprint.getInternalCodedStringRepresentation().indexOf("§8");
         if (redIndex == -1) {
-            int greyIndex = sprint.indexOf("§c");
+            int greyIndex = sprint.getInternalCodedStringRepresentation().indexOf("§c");
             if (greyIndex != -1) {
                 // We're at the last bar and has started flashing
                 if (greyIndex != 0) {
