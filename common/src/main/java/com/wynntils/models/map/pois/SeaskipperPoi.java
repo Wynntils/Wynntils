@@ -9,6 +9,7 @@ import com.wynntils.models.map.PoiLocation;
 import com.wynntils.models.map.type.DisplayPriority;
 import com.wynntils.utils.colors.CommonColors;
 import com.wynntils.utils.colors.CustomColor;
+import com.wynntils.utils.mc.McUtils;
 import com.wynntils.utils.render.buffered.BufferedFontRenderer;
 import com.wynntils.utils.render.buffered.BufferedRenderUtils;
 import com.wynntils.utils.render.type.HorizontalAlignment;
@@ -20,7 +21,6 @@ import net.minecraft.world.phys.Vec3;
 public class SeaskipperPoi implements Poi {
     private final String destination;
     private final PoiLocation destinationCenter;
-    private boolean isPlayerAtPoi;
     private final int combatLevel;
     private final int width;
     private final int height;
@@ -28,6 +28,8 @@ public class SeaskipperPoi implements Poi {
     private final int startZ;
     private final int endX;
     private final int endZ;
+    private final boolean isPlayerAtPoi;
+
     private float renderedX;
     private float renderedX2;
     private float renderedY;
@@ -43,6 +45,13 @@ public class SeaskipperPoi implements Poi {
         this.width = endX - startX;
         this.height = endZ - startZ;
         this.destinationCenter = new PoiLocation(startX + width / 2, null, startZ + height / 2);
+
+        Vec3 playerLocation = McUtils.player().position();
+
+        isPlayerAtPoi = playerLocation.x > startX
+                && playerLocation.x < endX
+                && playerLocation.z > startZ
+                && playerLocation.z < endZ;
     }
 
     @Override
@@ -57,7 +66,7 @@ public class SeaskipperPoi implements Poi {
 
     @Override
     public boolean hasStaticLocation() {
-        return false;
+        return true;
     }
 
     @Override
@@ -184,17 +193,8 @@ public class SeaskipperPoi implements Poi {
         return combatLevel;
     }
 
-    public boolean isPlayerInside(Vec3 playerPosition) {
-        if (playerPosition.x > startX
-                && playerPosition.x < endX
-                && playerPosition.z > startZ
-                && playerPosition.z < endZ) {
-            isPlayerAtPoi = true;
-            return true;
-        } else {
-            isPlayerAtPoi = false;
-            return false;
-        }
+    public boolean isPlayerInside() {
+        return isPlayerAtPoi;
     }
 
     public boolean isSelected(double mouseX, double mouseY) {

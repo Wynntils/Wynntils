@@ -34,20 +34,19 @@ import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.phys.Vec3;
 import org.lwjgl.glfw.GLFW;
 
-public class SeaskipperMapScreen extends AbstractMapScreen {
+public final class SeaskipperMapScreen extends AbstractMapScreen {
     private final AbstractContainerScreen<?> actualSeaskipperScreen;
+    private final Map<SeaskipperDestinationItem, Integer> destinations = new HashMap<>();
+    private final List<Poi> seaskipperPois = new ArrayList<>();
+
+    private List<Poi> availableDestinations = new ArrayList<>();
+    private Poi currentPoi;
     private boolean hideTerritoryBorders = false;
     private boolean renderAllDestinations = false;
     private boolean renderRoutes = false;
     private int boatSlot;
-    private final List<ItemStack> items = new ArrayList<>();
-    private final Map<SeaskipperDestinationItem, Integer> destinations = new HashMap<>();
-    private final List<Poi> seaskipperPois = new ArrayList<>();
-    private List<Poi> availableDestinations = new ArrayList<>();
-    private Poi currentPoi;
 
     private SeaskipperMapScreen() {
         if (McUtils.mc().screen instanceof AbstractContainerScreen<?> abstractContainerScreen) {
@@ -76,10 +75,6 @@ public class SeaskipperMapScreen extends AbstractMapScreen {
 
     public void setBoatSlot(int slot) {
         boatSlot = slot;
-    }
-
-    public void addItemStack(ItemStack item) {
-        items.add(item);
     }
 
     @Override
@@ -199,12 +194,10 @@ public class SeaskipperMapScreen extends AbstractMapScreen {
     }
 
     private void renderPois(PoseStack poseStack, int mouseX, int mouseY) {
-        Vec3 playerLocation = McUtils.player().position();
-
         for (Poi poi : seaskipperPois) {
             SeaskipperPoi seaskipperPoi = (SeaskipperPoi) poi;
 
-            if (seaskipperPoi.isPlayerInside(playerLocation)) {
+            if (seaskipperPoi.isPlayerInside()) {
                 currentPoi = poi;
                 break;
             }
@@ -497,7 +490,7 @@ public class SeaskipperMapScreen extends AbstractMapScreen {
 
     private void buyBoat() {
         ContainerUtils.clickOnSlot(
-                boatSlot, actualSeaskipperScreen.getMenu().containerId, GLFW.GLFW_MOUSE_BUTTON_LEFT, items);
+                boatSlot, actualSeaskipperScreen.getMenu().containerId, GLFW.GLFW_MOUSE_BUTTON_LEFT, actualSeaskipperScreen.getMenu().getItems());
     }
 
     private void buyPass(String destinationToTravelTo) {
@@ -517,6 +510,6 @@ public class SeaskipperMapScreen extends AbstractMapScreen {
         }
 
         ContainerUtils.clickOnSlot(
-                passSlot, actualSeaskipperScreen.getMenu().containerId, GLFW.GLFW_MOUSE_BUTTON_LEFT, items);
+                passSlot, actualSeaskipperScreen.getMenu().containerId, GLFW.GLFW_MOUSE_BUTTON_LEFT, actualSeaskipperScreen.getMenu().getItems());
     }
 }

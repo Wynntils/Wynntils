@@ -45,10 +45,10 @@ public final class SeaskipperModel extends Model {
     public void onSetSlot(ContainerSetSlotEvent event) {
         if (currentScreen == null) return;
         if (event.getContainerId() != containerId) return;
-        currentScreen.addItemStack(event.getItemStack());
 
         if (event.getItemStack().getHoverName().getString().equals("§bOak Boat")) {
             currentScreen.setBoatSlot(event.getSlot());
+            return;
         }
 
         Matcher matcher = SEASKIPPER_PASS_PATTERN.matcher(

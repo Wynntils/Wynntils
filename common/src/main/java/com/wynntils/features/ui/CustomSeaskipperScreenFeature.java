@@ -15,7 +15,7 @@ import com.wynntils.utils.mc.McUtils;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 
 @ConfigCategory(Category.UI)
-public class CustomSeaskipperMapScreenFeature extends Feature {
+public class CustomSeaskipperScreenFeature extends Feature {
     @SubscribeEvent
     public void onScreenOpen(ScreenOpenedEvent.Post event) {
         if (!Models.Container.isSeaskipper(ComponentUtils.getUnformatted(event.getScreen().getTitle()))) {

@@ -188,7 +188,7 @@
   "feature.wynntils.customNametagRenderer.name": "Nametag Rendering",
   "feature.wynntils.customNametagRenderer.showGearOnHover.description": "Should a hovered player's gears' name be rendered in the nametag?",
   "feature.wynntils.customNametagRenderer.showGearOnHover.name": "Show Player's Gear on Hover",
-  "feature.wynntils.customSeaskipperMapScreen.name": "Custom Seaskipper Screen",
+  "feature.wynntils.customSeaskipperScreen.name": "Custom Seaskipper Screen",
   "feature.wynntils.dataStorage.dryBoxes.description": "Dry Boxes for Function variable",
   "feature.wynntils.dataStorage.dryBoxes.name": "Dry Boxes",
   "feature.wynntils.dataStorage.dryCount.description": "Dry Count for Function variable",
