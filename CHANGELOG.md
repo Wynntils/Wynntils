@@ -1,9 +1,21 @@
+## [0.0.2-alpha.460](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.459...v0.0.2-alpha.460) (2023-04-09)
+
+
+### Bug Fixes
+
+* Fix TokenTrackerFeature color settings applying as text ([#1474](https://github.com/Wynntils/Artemis/issues/1474)) ([6a48a18](https://github.com/Wynntils/Artemis/commit/6a48a185f21dbd7b093cd27dda1a25ac004edb6f))
+
 ## [0.0.2-alpha.459](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.458...v0.0.2-alpha.459) (2023-04-09)
 
 
 ### Bug Fixes
 
 * Fix some feature names/categories ([#1472](https://github.com/Wynntils/Artemis/issues/1472)) ([8dfce59](https://github.com/Wynntils/Artemis/commit/8dfce59322625d8a0d9c5f3820ee5d071a8801c9))
+
+
+### Miscellaneous Chores
+
+* **release:** v0.0.2-alpha.459 [skip ci] ([e4d51bb](https://github.com/Wynntils/Artemis/commit/e4d51bbb326a4d2da70d65c3e84c958fdb927c9e))
 
 ## [0.0.2-alpha.458](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.457...v0.0.2-alpha.458) (2023-04-08)
 
@@ -40,16 +52,4 @@
 ### Miscellaneous Chores
 
 * **release:** v0.0.2-alpha.456 [skip ci] ([635cc2b](https://github.com/Wynntils/Artemis/commit/635cc2b00bff58c88994dee5919c686fc29fad71))
-
-## [0.0.2-alpha.455](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.454...v0.0.2-alpha.455) (2023-04-07)
-
-
-### Code Refactoring
-
-* Port ScriptedContainerQuery CodedString usages ([#1461](https://github.com/Wynntils/Artemis/issues/1461)) ([d523c72](https://github.com/Wynntils/Artemis/commit/d523c728e43b61c4e1382d1e56b5a5db1d73d29d))
-
-
-### Miscellaneous Chores
-
-* **release:** v0.0.2-alpha.455 [skip ci] ([265ec1c](https://github.com/Wynntils/Artemis/commit/265ec1c96e03b739031568b93ecc8d6de2af0ba8))
 
