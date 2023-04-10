@@ -35,7 +35,7 @@ public class TradeMarketBulkSellFeature extends Feature {
     public Config<Integer> bulkSell1Amount = new Config<>(64);
 
     @RegisterConfig
-    public Config<Integer> bulkSell2Amount = new Config<>(0);
+    public Config<Integer> bulkSell2Amount = new Config<>(6399);
 
     @RegisterConfig
     public Config<Integer> bulkSell3Amount = new Config<>(0);
