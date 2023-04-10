@@ -24,13 +24,11 @@ import com.wynntils.utils.render.type.TextShadow;
 import com.wynntils.utils.render.type.VerticalAlignment;
 import com.wynntils.utils.type.BoundingBox;
 import com.wynntils.utils.wynn.ContainerUtils;
-
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
-
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.gui.components.events.GuiEventListener;
 import net.minecraft.client.gui.screens.Screen;
@@ -221,8 +219,8 @@ public final class SeaskipperMapScreen extends AbstractMapScreen {
 
             availableDestinations = destinations.keySet().stream()
                     .map(SeaskipperDestinationItem::getDestination)
-                    .flatMap(destination -> seaskipperPois.stream()
-                            .filter(poi -> poi.getName().equals(destination)))
+                    .flatMap(destination ->
+                            seaskipperPois.stream().filter(poi -> poi.getName().equals(destination)))
                     .collect(Collectors.toList());
 
             availableDestinations.add(currentPoi);
@@ -353,7 +351,8 @@ public final class SeaskipperMapScreen extends AbstractMapScreen {
         FontRenderer.getInstance()
                 .renderText(
                         poseStack,
-                        CodedString.fromString("Starting Coordinates: %d, %d".formatted(hoveredPoi.getStartX(), hoveredPoi.getStartZ())),
+                        CodedString.fromString("Starting Coordinates: %d, %d"
+                                .formatted(hoveredPoi.getStartX(), hoveredPoi.getStartZ())),
                         10,
                         10 + renderYOffset,
                         CommonColors.YELLOW,
@@ -366,7 +365,8 @@ public final class SeaskipperMapScreen extends AbstractMapScreen {
         FontRenderer.getInstance()
                 .renderText(
                         poseStack,
-                        CodedString.fromString("Ending Coordinates: %d, %d".formatted(hoveredPoi.getEndX(), hoveredPoi.getEndZ())),
+                        CodedString.fromString(
+                                "Ending Coordinates: %d, %d".formatted(hoveredPoi.getEndX(), hoveredPoi.getEndZ())),
                         10,
                         10 + renderYOffset,
                         CommonColors.YELLOW,
@@ -519,7 +519,10 @@ public final class SeaskipperMapScreen extends AbstractMapScreen {
 
     private void buyBoat() {
         ContainerUtils.clickOnSlot(
-                boatSlot, actualSeaskipperScreen.getMenu().containerId, GLFW.GLFW_MOUSE_BUTTON_LEFT, actualSeaskipperScreen.getMenu().getItems());
+                boatSlot,
+                actualSeaskipperScreen.getMenu().containerId,
+                GLFW.GLFW_MOUSE_BUTTON_LEFT,
+                actualSeaskipperScreen.getMenu().getItems());
     }
 
     private void buyPass(String destinationToTravelTo) {
@@ -539,6 +542,9 @@ public final class SeaskipperMapScreen extends AbstractMapScreen {
         }
 
         ContainerUtils.clickOnSlot(
-                passSlot, actualSeaskipperScreen.getMenu().containerId, GLFW.GLFW_MOUSE_BUTTON_LEFT, actualSeaskipperScreen.getMenu().getItems());
+                passSlot,
+                actualSeaskipperScreen.getMenu().containerId,
+                GLFW.GLFW_MOUSE_BUTTON_LEFT,
+                actualSeaskipperScreen.getMenu().getItems());
     }
 }

@@ -53,7 +53,8 @@ public final class SeaskipperModel extends Model {
             return;
         }
 
-        Matcher matcher = StyledText.fromComponent(event.getItemStack().getHoverName()).getMatcher(SEASKIPPER_PASS_PATTERN);
+        Matcher matcher =
+                StyledText.fromComponent(event.getItemStack().getHoverName()).getMatcher(SEASKIPPER_PASS_PATTERN);
         if (!matcher.matches()) return;
 
         String destination = matcher.group(1);
