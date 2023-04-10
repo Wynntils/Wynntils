@@ -22,6 +22,7 @@ public class AbilityTreeContainerQueries {
     private static final int ABILITY_TREE_PAGES = 7;
     private static final int ABILITY_TREE_SLOT = 9;
     private static final int NEXT_PAGE_SLOT = 59;
+    private static final int DUMMY_SLOT = 89;
     private static final StyledText NEXT_PAGE_ITEM_NAME = StyledText.fromString("§7Next Page");
 
     public void dumpAbilityTreeData() {
@@ -49,7 +50,7 @@ public class AbilityTreeContainerQueries {
                 .matchTitle(Models.Container.ABILITY_TREE_PATTERN.pattern())
                 .processContainer(c -> {});
         queryBuilder
-                .clickOnSlot(89)
+                .clickOnSlot(DUMMY_SLOT)
                 .matchTitle(Models.Container.ABILITY_TREE_PATTERN.pattern())
                 .processContainer(c -> dumpAbilityTreePage(c, 2, dump));
 
