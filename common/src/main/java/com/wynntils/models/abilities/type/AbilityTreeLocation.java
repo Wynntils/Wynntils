@@ -28,8 +28,8 @@ public record AbilityTreeLocation(int page, int row, int col) implements Compara
         return (page - 1) * MAX_ROWS + row;
     }
 
-    // A location is a neighbor of another location if it is on the same row or column and is 1 away (diagonal is not
-    // allowed)
+    // A location is a neighbor of another location if it is on the same row or column and is 1 away
+    // (diagonal is not allowed)
     public boolean isNeighbor(AbilityTreeLocation other) {
         return (getAbsoluteRow() == other.getAbsoluteRow() && Math.abs(col - other.col) == 1)
                 || (col == other.col && Math.abs(getAbsoluteRow() - other.getAbsoluteRow()) == 1);
