@@ -10,6 +10,7 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import com.google.gson.JsonSyntaxException;
 import com.wynntils.core.text.CodedString;
+import com.wynntils.core.text.StyledText;
 import com.wynntils.utils.StringUtils;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
@@ -44,6 +45,24 @@ public final class LoreUtils {
 
         for (int i = 0; i < loreTag.size(); ++i) {
             lore.add(ComponentUtils.getCoded(loreTag.getString(i)));
+        }
+
+        return lore;
+    }
+
+    /**
+     * Get the lore from an item.
+     *
+     * @return an {@link List} containing all item lore
+     */
+    public static List<StyledText> getLoreStyledText(ItemStack itemStack) {
+        ListTag loreTag = getLoreTag(itemStack);
+
+        List<StyledText> lore = new LinkedList<>();
+        if (loreTag == null) return lore;
+
+        for (int i = 0; i < loreTag.size(); ++i) {
+            lore.add(ComponentUtils.getStyledTextFromJson(loreTag.getString(i)));
         }
 
         return lore;

@@ -4,6 +4,7 @@
  */
 package com.wynntils.core.components;
 
+import com.wynntils.models.abilities.AbilityTreeModel;
 import com.wynntils.models.abilities.ArrowShieldModel;
 import com.wynntils.models.abilities.BossBarModel;
 import com.wynntils.models.abilities.ShamanMaskModel;
@@ -52,6 +53,7 @@ import com.wynntils.models.worlds.WorldStateModel;
 import com.wynntils.models.wynnitem.WynnItemModel;
 
 public final class Models {
+    public static final AbilityTreeModel AbilityTree = new AbilityTreeModel();
     public static final ArrowShieldModel ArrowShield = new ArrowShieldModel();
     public static final TowerAuraTimerModel TowerAuraTimer = new TowerAuraTimerModel();
     public static final BombBellModel BombBell = new BombBellModel();

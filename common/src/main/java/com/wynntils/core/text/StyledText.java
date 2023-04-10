@@ -11,6 +11,7 @@ import com.wynntils.utils.type.Pair;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Deque;
+import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Objects;
@@ -25,7 +26,7 @@ import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.network.chat.Style;
 import org.apache.commons.lang3.ArrayUtils;
 
-public final class StyledText {
+public final class StyledText implements Iterable<StyledTextPart> {
     public static final StyledText EMPTY = new StyledText(List.of(), List.of(), List.of());
 
     private final Component temporaryWorkaround;
@@ -395,6 +396,11 @@ public final class StyledText {
         }
 
         return parts.get(index - 1);
+    }
+
+    @Override
+    public Iterator<StyledTextPart> iterator() {
+        return parts.iterator();
     }
 
     @Override

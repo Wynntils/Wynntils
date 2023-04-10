@@ -5,6 +5,7 @@
 package com.wynntils.utils.mc;
 
 import com.wynntils.core.text.CodedString;
+import com.wynntils.core.text.StyledText;
 import com.wynntils.utils.MathUtils;
 import com.wynntils.utils.wynn.WynnUtils;
 import java.awt.Color;
@@ -47,6 +48,13 @@ public final class ComponentUtils {
         if (component == null) return CodedString.EMPTY;
 
         return getCoded(component);
+    }
+
+    public static StyledText getStyledTextFromJson(String jsonString) {
+        MutableComponent component = Component.Serializer.fromJson(jsonString);
+        if (component == null) return StyledText.EMPTY;
+
+        return StyledText.fromComponent(component);
     }
 
     public static String getUnformatted(String jsonString) {
