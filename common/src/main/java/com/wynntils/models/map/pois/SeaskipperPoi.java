@@ -5,6 +5,7 @@
 package com.wynntils.models.map.pois;
 
 import com.mojang.blaze3d.vertex.PoseStack;
+import com.wynntils.core.text.CodedString;
 import com.wynntils.models.map.PoiLocation;
 import com.wynntils.models.map.type.DisplayPriority;
 import com.wynntils.utils.colors.CommonColors;
@@ -124,7 +125,7 @@ public class SeaskipperPoi implements Poi {
                 .renderAlignedTextInBox(
                         poseStack,
                         bufferSource,
-                        destination,
+                        CodedString.fromString(destination),
                         actualRenderX,
                         actualRenderX + renderWidth,
                         actualRenderZ,
@@ -160,7 +161,7 @@ public class SeaskipperPoi implements Poi {
                 .renderAlignedTextInBox(
                         poseStack,
                         bufferSource,
-                        destination,
+                        CodedString.fromString(destination),
                         actualRenderX,
                         actualRenderX + renderWidth,
                         actualRenderZ,

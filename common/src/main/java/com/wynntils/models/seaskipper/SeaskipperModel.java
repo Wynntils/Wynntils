@@ -6,6 +6,7 @@ package com.wynntils.models.seaskipper;
 
 import com.wynntils.core.components.Model;
 import com.wynntils.core.components.Models;
+import com.wynntils.core.text.StyledText;
 import com.wynntils.mc.event.ContainerSetSlotEvent;
 import com.wynntils.mc.event.MenuEvent;
 import com.wynntils.mc.event.ScreenOpenedEvent;
@@ -19,6 +20,7 @@ import java.util.regex.Pattern;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 
 public final class SeaskipperModel extends Model {
+    private static final StyledText OAK_BOAT_NAME = StyledText.fromString("§bOak Boat");
     private static final Pattern SEASKIPPER_PASS_PATTERN = Pattern.compile("^§b(.*) Pass §7for §b(\\d+)²$");
     private int containerId = -2;
     private static SeaskipperMapScreen currentScreen;
@@ -46,13 +48,12 @@ public final class SeaskipperModel extends Model {
         if (currentScreen == null) return;
         if (event.getContainerId() != containerId) return;
 
-        if (event.getItemStack().getHoverName().getString().equals("§bOak Boat")) {
+        if (StyledText.fromComponent(event.getItemStack().getHoverName()).equals(OAK_BOAT_NAME)) {
             currentScreen.setBoatSlot(event.getSlot());
             return;
         }
 
-        Matcher matcher = SEASKIPPER_PASS_PATTERN.matcher(
-                event.getItemStack().getHoverName().getString());
+        Matcher matcher = StyledText.fromComponent(event.getItemStack().getHoverName()).getMatcher(SEASKIPPER_PASS_PATTERN);
         if (!matcher.matches()) return;
 
         String destination = matcher.group(1);

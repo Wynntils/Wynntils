@@ -359,7 +359,7 @@ public abstract class AbstractMapScreen extends WynntilsScreen {
                 (float) McUtils.player().getX(), (float) McUtils.player().getZ());
     }
 
-    private void setZoom(float zoomTargetDelta) {
+    protected void setZoom(float zoomTargetDelta) {
         this.currentZoom = MathUtils.clamp(zoomTargetDelta, MIN_ZOOM, MAX_ZOOM);
     }
 
