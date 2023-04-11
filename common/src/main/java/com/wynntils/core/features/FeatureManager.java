@@ -112,6 +112,7 @@ import com.wynntils.features.tooltips.TooltipVanillaHideFeature;
 import com.wynntils.features.ui.AutoApplyResourcePackFeature;
 import com.wynntils.features.ui.ContainerScrollFeature;
 import com.wynntils.features.ui.CosmeticsPreviewFeature;
+import com.wynntils.features.ui.CustomAbilityTreeFeature;
 import com.wynntils.features.ui.CustomCharacterSelectionScreenFeature;
 import com.wynntils.features.ui.CustomLoadingScreenFeature;
 import com.wynntils.features.ui.LobbyUptimeFeature;
@@ -184,6 +185,7 @@ public final class FeatureManager extends Manager {
         registerFeature(new CommandsFeature());
         registerFeature(new ContainerSearchFeature());
         registerFeature(new CosmeticsPreviewFeature());
+        registerFeature(new CustomAbilityTreeFeature());
         registerFeature(new CustomBarsOverlayFeature());
         registerFeature(new CustomCharacterSelectionScreenFeature());
         registerFeature(new CustomCommandKeybindsFeature());

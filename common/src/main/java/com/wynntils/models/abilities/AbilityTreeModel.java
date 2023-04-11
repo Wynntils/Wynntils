@@ -43,4 +43,8 @@ public class AbilityTreeModel extends Model {
             ABILIIY_TREE_MAP = tempMap;
         });
     }
+
+    public AbilityTreeInfo getAbilityTree(ClassType type) {
+        return ABILIIY_TREE_MAP.get(type);
+    }
 }

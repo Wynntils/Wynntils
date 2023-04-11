@@ -139,6 +139,7 @@
   "feature.wynntils.containerSearch.highlightColor.name": "Highlight color",
   "feature.wynntils.containerSearch.name": "Container Search Highlight",
   "feature.wynntils.cosmeticsPreview.name": "Cosmetics Player Preview",
+  "feature.wynntils.customAbilityTree.name": "Custom Ability Tree",
   "feature.wynntils.customBarsOverlay.name": "Custom Bars",
   "feature.wynntils.customBarsOverlay.overlay.bubbleTexturedCustomBar.name": "Custom Bubble Bar %d",
   "feature.wynntils.customBarsOverlay.overlay.customBarBase.enabledTemplate.description": "A template returning a boolean value, which determines whether the bar should be rendered or not. This template should not have curly brackets.",

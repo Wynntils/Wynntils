@@ -146,6 +146,9 @@ public enum Texture {
     TERRITORY_TOOLTIP_CENTER("map/guild_map/territory_tooltip_center.png", 200, 5),
     TERRITORY_TOOLTIP_TOP("map/guild_map/territory_tooltip_top.png", 200, 10),
 
+    // Ability Tree
+    ABILITY_TREE_BACKGROUND("ability_tree/ability_tree_background.png", 186, 234),
+
     // Character Selection UI
     ADD_BUTTON("character_selection_ui/add_button.png", 14, 28),
     BACKGROUND_SPLASH("character_selection_ui/background_splash.png", 1920, 1027),

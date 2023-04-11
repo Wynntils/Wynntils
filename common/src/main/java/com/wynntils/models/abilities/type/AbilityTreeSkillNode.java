@@ -20,5 +20,21 @@ public record AbilityTreeSkillNode(
         List<String> connections) {
     public record ArchetypeRequirement(String name, int required) {}
 
-    public record ItemInformation(int itemId, int damage) {}
+    public record ItemInformation(int itemId, int damage) {
+        public int getBlockedDamage() {
+            return damage + 3;
+        }
+
+        public int getLockedDamage() {
+            return damage;
+        }
+
+        public int getUnlockedDamage() {
+            return damage + 1;
+        }
+
+        public int getActiveDamage() {
+            return damage + 2;
+        }
+    }
 }
