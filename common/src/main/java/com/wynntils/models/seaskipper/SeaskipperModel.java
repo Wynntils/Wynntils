@@ -20,7 +20,6 @@ import com.wynntils.models.items.items.gui.SeaskipperDestinationItem;
 import com.wynntils.models.map.pois.SeaskipperPoi;
 import com.wynntils.screens.maps.SeaskipperMapScreen;
 import com.wynntils.utils.mc.ComponentUtils;
-
 import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.List;
@@ -84,7 +83,13 @@ public final class SeaskipperModel extends Model {
             List<SeaskipperProfile> seaskipperProfiles = WynntilsMod.GSON.fromJson(reader, type);
 
             for (SeaskipperProfile profile : seaskipperProfiles) {
-                pois.add(new SeaskipperPoi(profile.destination, profile.combatLevel, profile.startX, profile.startZ, profile.endX, profile.endZ));
+                pois.add(new SeaskipperPoi(
+                        profile.destination,
+                        profile.combatLevel,
+                        profile.startX,
+                        profile.startZ,
+                        profile.endX,
+                        profile.endZ));
             }
         });
 
