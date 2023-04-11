@@ -1,6 +1,6 @@
 [
   {
-    "version": 7
+    "version": 8
   },
   {
     "id": "apiAthenaAuthPublicKey",
@@ -138,6 +138,11 @@
     "id": "dataStaticPlaces",
     "md5": "c1907ba6d7c8851be2c6cf3062d17de5",
     "url": "https://raw.githubusercontent.com/Wynntils/Reference/main/locations/places.json"
+  },
+  {
+    "id": "dataStaticSeaskipperLocations",
+    "md5": "",
+    "url": "https://raw.githubusercontent.com/Wynntils/WynntilsWebsite-API/master/seaskipper_locations.json"
   },
   {
     "id": "dataStaticServices",

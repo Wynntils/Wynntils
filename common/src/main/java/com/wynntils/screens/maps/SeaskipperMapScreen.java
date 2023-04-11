@@ -6,6 +6,7 @@ package com.wynntils.screens.maps;
 
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
+import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.components.Managers;
 import com.wynntils.core.text.CodedString;
 import com.wynntils.features.map.GuildMapFeature;
@@ -40,9 +41,9 @@ import org.lwjgl.glfw.GLFW;
 public final class SeaskipperMapScreen extends AbstractMapScreen {
     private final AbstractContainerScreen<?> actualSeaskipperScreen;
     private final Map<SeaskipperDestinationItem, Integer> destinations = new HashMap<>();
-    private final List<SeaskipperPoi> seaskipperPois = new ArrayList<>();
 
     private List<SeaskipperPoi> availableDestinations = new ArrayList<>();
+    private List<SeaskipperPoi> seaskipperPois = new ArrayList<>();
     private SeaskipperPoi currentPoi;
     private SeaskipperPoi hoveredPoi;
     private boolean hideTerritoryBorders = false;
@@ -57,8 +58,6 @@ public final class SeaskipperMapScreen extends AbstractMapScreen {
             throw new IllegalStateException(
                     "Tried to open custom seaskipper screen when normal seaskipper screen is not open");
         }
-
-        generateSeaskipperPois();
     }
 
     public static Screen create() {
@@ -199,6 +198,8 @@ public final class SeaskipperMapScreen extends AbstractMapScreen {
     }
 
     private void renderPois(PoseStack poseStack, int mouseX, int mouseY) {
+        if (seaskipperPois.isEmpty()) return;
+
         for (SeaskipperPoi poi : seaskipperPois) {
             if (poi.isPlayerInside()) {
                 currentPoi = poi;
@@ -483,26 +484,8 @@ public final class SeaskipperMapScreen extends AbstractMapScreen {
         return super.mouseClicked(mouseX, mouseY, button);
     }
 
-    private void generateSeaskipperPois() {
-        seaskipperPois.add(new SeaskipperPoi("Bear Zoo Island", 15, -409, -2539, -283, -2414));
-        seaskipperPois.add(new SeaskipperPoi("Dead Island", 70, 745, -4040, 1000, -3810));
-        seaskipperPois.add(new SeaskipperPoi("Durum Isles", 20, 347, -2988, 595, -2791));
-        seaskipperPois.add(new SeaskipperPoi("Galleon's Graveyard", 60, -688, -3615, -472, -3385));
-        seaskipperPois.add(new SeaskipperPoi("Half Moon Island", 30, 900, -2660, 1100, -2480));
-        seaskipperPois.add(new SeaskipperPoi("Isles of Fiction", 35, -435, -4139, -115, -3938));
-        seaskipperPois.add(new SeaskipperPoi("Jofash Docks", 90, 1178, -4175, 1445, -4012));
-        seaskipperPois.add(new SeaskipperPoi("Llevigar", 40, -2048, -4403, -1910, -4206));
-        seaskipperPois.add(new SeaskipperPoi("Mage Island", 30, 805, -2960, 983, -2787));
-        seaskipperPois.add(new SeaskipperPoi("Maro Peaks", 60, -41, -4174, 453, -3788));
-        seaskipperPois.add(new SeaskipperPoi("Nemract", 20, 10, -2300, 210, -2070));
-        seaskipperPois.add(new SeaskipperPoi("Nesaak", 40, 20, -960, 100, -880));
-        seaskipperPois.add(new SeaskipperPoi("Nodguj Island", 45, 695, -3470, 917, -3210));
-        seaskipperPois.add(new SeaskipperPoi("Pirate Cove", 60, -750, -3251, -580, -3006));
-        seaskipperPois.add(new SeaskipperPoi("Rooster Island", 20, -128, -2538, -30, -2448));
-        seaskipperPois.add(new SeaskipperPoi("Selchar", 25, -100, -3290, 210, -3046));
-        seaskipperPois.add(new SeaskipperPoi("Skiens Island", 55, 297, -3739, 577, -3367));
-        seaskipperPois.add(new SeaskipperPoi("Volcanic Isles", 55, -1164, -3870, -722, -3530));
-        seaskipperPois.add(new SeaskipperPoi("Zhight Island", 55, -727, -2990, -440, -2629));
+    public void setSeaskipperPois(List<SeaskipperPoi> seaskipperPois) {
+        this.seaskipperPois = seaskipperPois;
     }
 
     private void toggleBorders() {
