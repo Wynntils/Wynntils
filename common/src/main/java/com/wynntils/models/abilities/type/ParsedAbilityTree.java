@@ -26,7 +26,7 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 
-public class AbilityTreeDump {
+public class ParsedAbilityTree {
     private static final File SAVE_FOLDER = WynntilsMod.getModStorageDir("debug");
 
     private static final StyledText CONNECTION_NAME = StyledText.fromString(" ");
@@ -199,7 +199,7 @@ public class AbilityTreeDump {
         unprocessedConnections.removeAll(processedLocation);
     }
 
-    public void finalizeDump() {
+    public void saveToDisk() {
         if (!unprocessedConnections.isEmpty()) {
             McUtils.sendMessageToClient(Component.literal(
                     "WARN: There are unprocessed connections left in the dump! Check processing algorithm!"));
