@@ -18,11 +18,11 @@ import java.util.List;
 import net.minecraft.network.chat.Component;
 
 public class CustomAbilityTreeScreen extends WynntilsScreen {
-    private static final int NODE_AREA_OFFSET_X = 15;
-    private static final int NODE_AREA_OFFSET_Y = 21;
+    private static final int NODE_AREA_OFFSET_X = 18;
+    private static final int NODE_AREA_OFFSET_Y = 24;
 
-    private static final int NODE_AREA_WIDTH = 156;
-    private static final int NODE_AREA_HEIGHT = 108;
+    private static final int NODE_AREA_WIDTH = 153;
+    private static final int NODE_AREA_HEIGHT = 105;
 
     private final AbilityTreeInfo abilityTreeInfo;
 
