@@ -130,16 +130,12 @@ public class ParsedAbilityTree {
         return node;
     }
 
-    public boolean isNodeItem(ItemStack itemStack, int slot) {
-        StyledText nameStyledText = StyledText.fromComponent(itemStack.getHoverName());
-        return itemStack.getItem() == Items.STONE_AXE
-                && slot < 54
-                && nameStyledText.getMatcher(NODE_NAME_PATTERN).matches();
-    }
-
-    public boolean isConnectionItem(ItemStack itemStack) {
-        return itemStack.getItem() == Items.STONE_AXE
-                && StyledText.fromComponent(itemStack.getHoverName()).equals(CONNECTION_NAME);
+    public void processItem(ItemStack itemStack, int page, int slot) {
+        if (isNodeItem(itemStack, slot)) {
+            addNodeFromItem(itemStack, page, slot);
+        } else if (isConnectionItem(itemStack)) {
+            addConnectionFromItem(page, slot);
+        }
     }
 
     public void processConnections(int currentPage, boolean lastPage) {
@@ -213,5 +209,17 @@ public class ParsedAbilityTree {
         Managers.Json.savePreciousJson(jsonFile, element.getAsJsonObject());
 
         McUtils.sendMessageToClient(Component.literal("Saved ability tree dump to " + jsonFile.getAbsolutePath()));
+    }
+
+    private boolean isNodeItem(ItemStack itemStack, int slot) {
+        StyledText nameStyledText = StyledText.fromComponent(itemStack.getHoverName());
+        return itemStack.getItem() == Items.STONE_AXE
+                && slot < 54
+                && nameStyledText.getMatcher(NODE_NAME_PATTERN).matches();
+    }
+
+    private boolean isConnectionItem(ItemStack itemStack) {
+        return itemStack.getItem() == Items.STONE_AXE
+                && StyledText.fromComponent(itemStack.getHoverName()).equals(CONNECTION_NAME);
     }
 }

@@ -72,11 +72,7 @@ public class AbilityTreeContainerQueries {
 
         for (int slot = 0; slot < items.size(); slot++) {
             ItemStack item = items.get(slot);
-            if (Models.AbilityTree.isNodeItem(item, slot)) {
-                dump.addNodeFromItem(item, page, slot);
-            } else if (Models.AbilityTree.isConnectionItem(item)) {
-                dump.addConnectionFromItem(page, slot);
-            }
+            dump.processItem(item, slot, page);
         }
 
         dump.processConnections(page, page == ABILITY_TREE_PAGES);
