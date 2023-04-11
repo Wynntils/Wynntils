@@ -55,9 +55,11 @@ public class ParsedAbilityTree {
     public AbilityTreeSkillNode parseNodeFromItem(ItemStack itemStack, int page, int slot) {
         StyledText nameStyledText = StyledText.fromComponent(itemStack.getHoverName());
 
+        boolean unlockable;
         StyledText actualName;
         if (nameStyledText.getPartCount() == 1) {
             actualName = nameStyledText;
+            unlockable = false;
         } else {
             actualName = nameStyledText.iterate((part, changes) -> {
                 // The part which is bolded is the actual name of the ability
@@ -67,9 +69,15 @@ public class ParsedAbilityTree {
 
                 return IterationDecision.CONTINUE;
             });
+            unlockable = true;
         }
 
         List<StyledText> loreStyledText = LoreUtils.getLoreStyledText(itemStack);
+
+        if (unlockable) {
+            // Empty line + "click here to unlock"
+            loreStyledText = loreStyledText.subList(0, loreStyledText.size() - 2);
+        }
 
         int cost = 0;
         List<String> blocks = new ArrayList<>();
@@ -110,8 +118,9 @@ public class ParsedAbilityTree {
             }
         }
 
-        AbilityTreeSkillNode.ItemInformation itemInformation =
-                new AbilityTreeSkillNode.ItemInformation(Item.getId(itemStack.getItem()), itemStack.getDamageValue());
+        AbilityTreeSkillNode.ItemInformation itemInformation = new AbilityTreeSkillNode.ItemInformation(
+                Item.getId(itemStack.getItem()),
+                unlockable ? itemStack.getDamageValue() - 1 : itemStack.getDamageValue());
 
         AbilityTreeSkillNode node = new AbilityTreeSkillNode(
                 actualName.getString(PartStyle.StyleType.NONE),
