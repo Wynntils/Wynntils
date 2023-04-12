@@ -20,11 +20,12 @@ import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
 import net.minecraftforge.eventbus.api.EventPriority;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 
+// NOTE: This feature was intented to be used on fully reset ability trees.
+//       Although support for parsing any tree is present, I would still recommend using a fresh tree to avoid any
+// issues.
 @StartDisabled
 @ConfigCategory(Category.DEBUG)
 public class AbilityTreeDataDumpFeature extends Feature {
-    private static final AbilityTreeContainerQueries ABILITY_TREE_CONTAINER_QUERIES = new AbilityTreeContainerQueries();
-
     @SubscribeEvent(priority = EventPriority.HIGHEST)
     public void onInventoryClick(ContainerClickEvent event) {
         if (!(McUtils.mc().screen instanceof AbstractContainerScreen<?> abstractContainerScreen)) return;
@@ -38,6 +39,8 @@ public class AbilityTreeDataDumpFeature extends Feature {
         McUtils.player().closeContainer();
 
         // Wait for the container to close
-        Managers.TickScheduler.scheduleNextTick(ABILITY_TREE_CONTAINER_QUERIES::dumpAbilityTreeData);
+        Managers.TickScheduler.scheduleNextTick(
+                () -> Models.AbilityTree.ABILITY_TREE_CONTAINER_QUERIES.queryAbilityTree(
+                        new AbilityTreeContainerQueries.AbilityPageDumper()));
     }
 }

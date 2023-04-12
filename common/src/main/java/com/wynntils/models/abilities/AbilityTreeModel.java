@@ -19,6 +19,8 @@ import java.util.List;
 import java.util.Map;
 
 public class AbilityTreeModel extends Model {
+    public static final AbilityTreeContainerQueries ABILITY_TREE_CONTAINER_QUERIES = new AbilityTreeContainerQueries();
+
     private Map<ClassType, AbilityTreeInfo> ABILIIY_TREE_MAP = new HashMap<>();
 
     public AbilityTreeModel() {

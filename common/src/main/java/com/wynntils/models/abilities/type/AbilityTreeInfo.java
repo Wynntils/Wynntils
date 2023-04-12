@@ -34,17 +34,20 @@ public class AbilityTreeInfo {
     private final transient List<AbilityTreeLocation> unprocessedConnections = new ArrayList<>();
 
     public void addNodeFromItem(ItemStack itemStack, int page, int slot) {
-        nodes.add(AbilityTreeSkillNode.parseNodeFromItem(itemStack, page, slot));
+        nodes.add(AbilityTreeSkillNode.parseNodeFromItem(itemStack, page, slot).key());
     }
 
     public void addConnectionFromItem(int page, int slot) {
         unprocessedConnections.add(AbilityTreeLocation.fromSlot(slot, page));
     }
 
-    public void processItem(ItemStack itemStack, int page, int slot) {
+    public void processItem(ItemStack itemStack, int page, int slot, boolean processConnections) {
         if (AbilityTreeSkillNode.isNodeItem(itemStack, slot)) {
             addNodeFromItem(itemStack, page, slot);
-        } else if (isConnectionItem(itemStack)) {
+            return;
+        }
+
+        if (processConnections && isConnectionItem(itemStack)) {
             addConnectionFromItem(page, slot);
         }
     }

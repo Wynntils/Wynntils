@@ -4,15 +4,23 @@
  */
 package com.wynntils.models.abilities;
 
+import com.google.common.collect.ImmutableMap;
 import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.components.Models;
 import com.wynntils.core.text.StyledText;
 import com.wynntils.handlers.container.ScriptedContainerQuery;
 import com.wynntils.handlers.container.type.ContainerContent;
 import com.wynntils.models.abilities.type.AbilityTreeInfo;
+import com.wynntils.models.abilities.type.AbilityTreeNodeState;
+import com.wynntils.models.abilities.type.AbilityTreeSkillNode;
+import com.wynntils.models.abilities.type.ParsedAbilityTree;
 import com.wynntils.utils.mc.McUtils;
+import com.wynntils.utils.type.Pair;
 import com.wynntils.utils.wynn.InventoryUtils;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.function.Consumer;
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.ItemStack;
@@ -25,7 +33,7 @@ public class AbilityTreeContainerQueries {
     private static final int DUMMY_SLOT = 89;
     private static final StyledText NEXT_PAGE_ITEM_NAME = StyledText.fromString("§7Next Page");
 
-    public void dumpAbilityTreeData() {
+    public void queryAbilityTree(AbilityTreeProcessor processor) {
         AbilityTreeInfo dump = new AbilityTreeInfo();
 
         ScriptedContainerQuery.QueryBuilder queryBuilder = ScriptedContainerQuery.builder("Ability Tree Dump Query")
@@ -40,7 +48,7 @@ public class AbilityTreeContainerQueries {
                 .setWaitForMenuReopen(false)
                 .clickOnSlot(ABILITY_TREE_SLOT)
                 .matchTitle(Models.Container.ABILITY_TREE_PATTERN.pattern())
-                .processContainer(c -> dumpAbilityTreePage(c, 1, dump));
+                .processContainer(c -> processor.processPage(c, 1));
 
         // region Hack for setWaitForMenuReopen to work with page 2
         // Going from first page to second adds a new button, "previous". This triggers processContainer prematurely.
@@ -52,7 +60,7 @@ public class AbilityTreeContainerQueries {
         queryBuilder
                 .clickOnSlot(DUMMY_SLOT)
                 .matchTitle(Models.Container.ABILITY_TREE_PATTERN.pattern())
-                .processContainer(c -> dumpAbilityTreePage(c, 2, dump));
+                .processContainer(c -> processor.processPage(c, 2));
 
         // endregion
 
@@ -61,24 +69,73 @@ public class AbilityTreeContainerQueries {
             queryBuilder
                     .clickOnSlotWithName(NEXT_PAGE_SLOT, Items.STONE_AXE, NEXT_PAGE_ITEM_NAME)
                     .matchTitle(Models.Container.ABILITY_TREE_PATTERN.pattern())
-                    .processContainer(c -> dumpAbilityTreePage(c, page, dump));
+                    .processContainer(c -> processor.processPage(c, page));
         }
 
         queryBuilder.build().executeQuery();
     }
 
-    private void dumpAbilityTreePage(ContainerContent content, int page, AbilityTreeInfo dump) {
-        List<ItemStack> items = content.items();
+    @FunctionalInterface
+    public interface AbilityTreeProcessor {
+        void processPage(ContainerContent content, int page);
+    }
 
-        for (int slot = 0; slot < items.size(); slot++) {
-            ItemStack item = items.get(slot);
-            dump.processItem(item, slot, page);
+    /**
+     * Parses the whole ability tree and saves it to disk.
+     */
+    public static class AbilityPageDumper implements AbilityTreeProcessor {
+        private final AbilityTreeInfo dump = new AbilityTreeInfo();
+
+        @Override
+        public void processPage(ContainerContent content, int page) {
+            List<ItemStack> items = content.items();
+
+            for (int slot = 0; slot < items.size(); slot++) {
+                ItemStack itemStack = items.get(slot);
+
+                dump.processItem(itemStack, slot, page, true);
+            }
+
+            boolean lastPage = page == ABILITY_TREE_PAGES;
+
+            dump.processConnections(page, lastPage);
+
+            if (lastPage) {
+                dump.saveToDisk();
+            }
+        }
+    }
+
+    /**
+     * Only parses nodes of an ability tree, and stores it.
+     */
+    public static class AbilityPageSoftProcessor implements AbilityTreeProcessor {
+        private final Map<AbilityTreeSkillNode, AbilityTreeNodeState> collectedInfo = new LinkedHashMap<>();
+        private final Consumer<ParsedAbilityTree> callback;
+
+        public AbilityPageSoftProcessor(Consumer<ParsedAbilityTree> callback) {
+            this.callback = callback;
         }
 
-        dump.processConnections(page, page == ABILITY_TREE_PAGES);
+        @Override
+        public void processPage(ContainerContent content, int page) {
+            List<ItemStack> items = content.items();
 
-        if (page == ABILITY_TREE_PAGES) {
-            dump.saveToDisk();
+            for (int slot = 0; slot < items.size(); slot++) {
+                ItemStack itemStack = items.get(slot);
+                if (!AbilityTreeSkillNode.isNodeItem(itemStack, slot)) continue;
+
+                Pair<AbilityTreeSkillNode, AbilityTreeNodeState> parsedNode =
+                        AbilityTreeSkillNode.parseNodeFromItem(itemStack, page, slot);
+
+                collectedInfo.put(parsedNode.key(), parsedNode.value());
+            }
+
+            boolean lastPage = page == ABILITY_TREE_PAGES;
+
+            if (lastPage) {
+                callback.accept(new ParsedAbilityTree(ImmutableMap.copyOf(collectedInfo)));
+            }
         }
     }
 }

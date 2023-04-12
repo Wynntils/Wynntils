@@ -8,6 +8,7 @@ import com.wynntils.core.text.PartStyle;
 import com.wynntils.core.text.StyledText;
 import com.wynntils.utils.mc.LoreUtils;
 import com.wynntils.utils.type.IterationDecision;
+import com.wynntils.utils.type.Pair;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.Matcher;
@@ -38,11 +39,9 @@ public record AbilityTreeSkillNode(
     private static final Pattern NODE_BLOCKED = Pattern.compile("§cBlocked by another ability");
     private static final Pattern NODE_UNLOCKED = Pattern.compile("§eYou already unlocked this ability");
 
-    public static AbilityTreeSkillNode parseNodeFromItem(ItemStack itemStack, int page, int slot) {
+    public static Pair<AbilityTreeSkillNode, AbilityTreeNodeState> parseNodeFromItem(
+            ItemStack itemStack, int page, int slot) {
         StyledText nameStyledText = StyledText.fromComponent(itemStack.getHoverName());
-
-        System.out.println("nameStyledText.getString(PartStyle.StyleType.DEFAULT) = "
-                + nameStyledText.getString(PartStyle.StyleType.DEFAULT));
 
         AbilityTreeNodeState state = AbilityTreeNodeState.LOCKED;
         StyledText actualName;
@@ -63,9 +62,10 @@ public record AbilityTreeSkillNode(
         List<StyledText> loreStyledText = LoreUtils.getLoreStyledText(itemStack);
 
         if (state == AbilityTreeNodeState.UNLOCKABLE) {
-            // Empty line + "click here to unlock"
+            // Skip empty line + "click here to unlock"
             loreStyledText = loreStyledText.subList(0, loreStyledText.size() - 2);
         }
+        // FIXME: Skip other...
 
         int cost = 0;
         List<String> blocks = new ArrayList<>();
@@ -127,8 +127,6 @@ public record AbilityTreeSkillNode(
                     case BLOCKED -> itemStack.getDamageValue() - 3;
                 });
 
-        System.out.println("state = " + state);
-
         AbilityTreeSkillNode node = new AbilityTreeSkillNode(
                 actualName.getString(PartStyle.StyleType.NONE),
                 actualName.getString(PartStyle.StyleType.DEFAULT),
@@ -143,7 +141,8 @@ public record AbilityTreeSkillNode(
                 archetype,
                 AbilityTreeLocation.fromSlot(slot, page),
                 new ArrayList<>());
-        return node;
+
+        return Pair.of(node, state);
     }
 
     public static boolean isNodeItem(ItemStack itemStack, int slot) {
