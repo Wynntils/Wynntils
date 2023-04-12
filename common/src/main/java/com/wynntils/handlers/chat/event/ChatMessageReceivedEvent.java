@@ -4,6 +4,8 @@
  */
 package com.wynntils.handlers.chat.event;
 
+import com.wynntils.core.text.CodedString;
+import com.wynntils.core.text.StyledText;
 import com.wynntils.handlers.chat.type.MessageType;
 import com.wynntils.handlers.chat.type.RecipientType;
 import com.wynntils.utils.mc.ComponentUtils;
@@ -15,35 +17,65 @@ import net.minecraftforge.eventbus.api.Event;
 public class ChatMessageReceivedEvent extends Event {
     // These are used to keep the original message so different features don't have to fight over it.
     private final Component originalMessage;
-    private final String originalCodedMessage;
+    private final CodedString originalCodedString;
+    private final StyledText originalStyledText;
 
     private Component message;
-    private String codedMessage;
+    private CodedString codedMessage;
+    private StyledText styledText;
+
     private final MessageType messageType;
     private final RecipientType recipientType;
 
     public ChatMessageReceivedEvent(
-            Component message, String codedMessage, MessageType messageType, RecipientType recipientType) {
+            Component message,
+            CodedString codedMessage,
+            StyledText styledText,
+            MessageType messageType,
+            RecipientType recipientType) {
         this.originalMessage = message;
-        this.originalCodedMessage = codedMessage;
+        this.originalCodedString = codedMessage;
+        this.originalStyledText = styledText;
 
         this.message = message;
         this.codedMessage = codedMessage; // message, but as a format-coded string
+        this.styledText = styledText; // message, but as a styled string
         this.messageType = messageType;
         this.recipientType = recipientType;
+    }
+
+    public void setMessage(Component message) {
+        this.message = message;
+        this.codedMessage = ComponentUtils.getCoded(message);
+        this.styledText = StyledText.fromComponent(message);
+    }
+
+    public Component getOriginalMessage() {
+        return originalMessage;
+    }
+
+    // Use getOriginalStyledText() instead
+    @Deprecated
+    public CodedString getOriginalCodedString() {
+        return originalCodedString;
+    }
+
+    public StyledText getOriginalStyledText() {
+        return originalStyledText;
     }
 
     public Component getMessage() {
         return message;
     }
 
-    public void setMessage(Component message) {
-        this.message = message;
-        this.codedMessage = ComponentUtils.getCoded(message);
+    // Use getStyledText() instead
+    @Deprecated
+    public CodedString getCodedMessage() {
+        return codedMessage;
     }
 
-    public String getCodedMessage() {
-        return codedMessage;
+    public StyledText getStyledText() {
+        return styledText;
     }
 
     public MessageType getMessageType() {
@@ -52,13 +84,5 @@ public class ChatMessageReceivedEvent extends Event {
 
     public RecipientType getRecipientType() {
         return recipientType;
-    }
-
-    public Component getOriginalMessage() {
-        return originalMessage;
-    }
-
-    public String getOriginalCodedMessage() {
-        return originalCodedMessage;
     }
 }

@@ -13,6 +13,7 @@ import com.wynntils.core.features.Configurable;
 import com.wynntils.core.features.Feature;
 import com.wynntils.core.features.Translatable;
 import com.wynntils.core.features.overlays.Overlay;
+import com.wynntils.core.text.CodedString;
 import com.wynntils.screens.base.TextboxScreen;
 import com.wynntils.screens.base.WynntilsScreen;
 import com.wynntils.screens.base.widgets.SearchWidget;
@@ -68,6 +69,7 @@ public final class WynntilsBookSettingsScreen extends WynntilsScreen implements 
 
         searchWidget = new SearchWidget(
                 95, Texture.SETTING_BACKGROUND.height() - 32, 100, 20, s -> reloadConfigurableButtons(), this);
+        setFocusedTextInput(searchWidget);
         reloadConfigurableButtons();
     }
 
@@ -144,10 +146,10 @@ public final class WynntilsBookSettingsScreen extends WynntilsScreen implements 
         FontRenderer.getInstance()
                 .renderText(
                         poseStack,
-                        name + ": "
+                        CodedString.fromString(name + ": "
                                 + (enabled
                                         ? ChatFormatting.DARK_GREEN + "Enabled"
-                                        : ChatFormatting.DARK_RED + "Disabled"),
+                                        : ChatFormatting.DARK_RED + "Disabled")),
                         Texture.SETTING_BACKGROUND.width() / 2f / 0.8f + 10,
                         12,
                         CommonColors.BLACK,

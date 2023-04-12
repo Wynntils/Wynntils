@@ -11,6 +11,7 @@ import com.wynntils.core.config.Config;
 import com.wynntils.core.config.ConfigCategory;
 import com.wynntils.core.config.RegisterConfig;
 import com.wynntils.core.features.Feature;
+import com.wynntils.core.text.CodedString;
 import com.wynntils.models.players.event.PartyEvent;
 import com.wynntils.utils.mc.McUtils;
 import net.minecraft.sounds.SoundEvents;
@@ -26,7 +27,7 @@ public class AutoJoinPartyFeature extends Feature {
         if (onlyFriends.get() && !Models.Friends.isFriend(event.getPlayerName())) return;
         if (Models.Party.isInParty()) return;
 
-        Managers.Notification.queueMessage("Auto-joined " + event.getPlayerName() + "'s party");
+        Managers.Notification.queueMessage(CodedString.fromString("Auto-joined " + event.getPlayerName() + "'s party"));
         McUtils.playSoundAmbient(SoundEvents.END_PORTAL_FRAME_FILL);
 
         Models.Party.partyJoin(event.getPlayerName());

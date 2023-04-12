@@ -5,6 +5,7 @@
 package com.wynntils.screens.guides.widgets;
 
 import com.mojang.blaze3d.vertex.PoseStack;
+import com.wynntils.core.text.CodedString;
 import com.wynntils.screens.base.widgets.WynntilsButton;
 import com.wynntils.utils.colors.CommonColors;
 import com.wynntils.utils.colors.CustomColor;
@@ -39,10 +40,10 @@ public class GuidesButton extends WynntilsButton {
         FontRenderer.getInstance()
                 .renderText(
                         poseStack,
-                        RenderedStringUtils.getMaxFittingText(
+                        CodedString.fromString(RenderedStringUtils.getMaxFittingText(
                                 ComponentUtils.getUnformatted(guideScreen.getTitle()),
                                 maxTextWidth,
-                                FontRenderer.getInstance().getFont()),
+                                FontRenderer.getInstance().getFont())),
                         this.getX() + 14,
                         this.getY() + 1,
                         0,

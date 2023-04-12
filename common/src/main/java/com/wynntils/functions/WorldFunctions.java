@@ -133,7 +133,7 @@ public class WorldFunctions {
             List<TokenGatekeeper> gatekeeperList = Models.Token.getGatekeepers();
             if (index >= gatekeeperList.size() || index < 0) return "";
 
-            return gatekeeperList.get(index).getGatekeeperTokenName();
+            return gatekeeperList.get(index).getGatekeeperTokenName().getInternalCodedStringRepresentation();
         }
 
         @Override

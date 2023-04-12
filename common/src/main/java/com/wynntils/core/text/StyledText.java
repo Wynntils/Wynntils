@@ -26,6 +26,8 @@ import net.minecraft.network.chat.Style;
 import org.apache.commons.lang3.ArrayUtils;
 
 public final class StyledText {
+    public static final StyledText EMPTY = new StyledText(List.of(), List.of(), List.of());
+
     private final Component temporaryWorkaround;
 
     private final List<StyledTextPart> parts;
@@ -108,11 +110,15 @@ public final class StyledText {
                 StyledTextPart.fromCodedString(codedString, Style.EMPTY, null, Style.EMPTY), List.of(), List.of());
     }
 
+    public static StyledText fromCodedString(CodedString codedString) {
+        return fromString(codedString.getInternalCodedStringRepresentation());
+    }
+
     // We don't want to expose the actual string to the outside world
     // If you need to do an operation with this string, implement it as a method
     public String getString(PartStyle.StyleType type) {
         if (type == PartStyle.StyleType.FULL) {
-            return ComponentUtils.getCoded(temporaryWorkaround);
+            return ComponentUtils.getCoded(temporaryWorkaround).getInternalCodedStringRepresentation();
         }
 
         StringBuilder builder = new StringBuilder();
@@ -288,12 +294,24 @@ public final class StyledText {
         return append(StyledText.fromString(codedString));
     }
 
+    public StyledText appendPart(StyledTextPart part) {
+        List<StyledTextPart> newParts = new ArrayList<>(parts);
+        newParts.add(part);
+        return new StyledText(newParts, temporaryWorkaround, clickEvents, hoverEvents);
+    }
+
     public StyledText prepend(StyledText styledText) {
         return concat(styledText, this);
     }
 
     public StyledText prepend(String codedString) {
         return prepend(StyledText.fromString(codedString));
+    }
+
+    public StyledText prependPart(StyledTextPart part) {
+        List<StyledTextPart> newParts = new ArrayList<>(parts);
+        newParts.add(0, part);
+        return new StyledText(newParts, temporaryWorkaround, clickEvents, hoverEvents);
     }
 
     public StyledText iterate(BiFunction<StyledTextPart, List<StyledTextPart>, IterationDecision> function) {
@@ -310,6 +328,27 @@ public final class StyledText {
             if (decision == IterationDecision.BREAK) {
                 // Add the rest of the parts
                 newParts.addAll(parts.subList(i + 1, parts.size()));
+                break;
+            }
+        }
+
+        return new StyledText(newParts, temporaryWorkaround, clickEvents, hoverEvents);
+    }
+
+    public StyledText iterateBackwards(BiFunction<StyledTextPart, List<StyledTextPart>, IterationDecision> function) {
+        List<StyledTextPart> newParts = new ArrayList<>();
+
+        for (int i = parts.size() - 1; i >= 0; i--) {
+            StyledTextPart part = parts.get(i);
+            List<StyledTextPart> functionParts = new ArrayList<>();
+            functionParts.add(part);
+            IterationDecision decision = function.apply(part, functionParts);
+
+            newParts.addAll(0, functionParts);
+
+            if (decision == IterationDecision.BREAK) {
+                // Add the rest of the parts
+                newParts.addAll(0, parts.subList(0, i));
                 break;
             }
         }

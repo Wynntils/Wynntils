@@ -2,7 +2,7 @@
  * Copyright © Wynntils 2023.
  * This file is released under AGPLv3. See LICENSE for full license details.
  */
-package com.wynntils.features.combat;
+package com.wynntils.features.overlays;
 
 import com.wynntils.core.components.Models;
 import com.wynntils.core.config.Category;
@@ -17,6 +17,7 @@ import com.wynntils.core.features.overlays.OverlaySize;
 import com.wynntils.core.features.overlays.annotations.OverlayInfo;
 import com.wynntils.mc.event.RenderEvent;
 import com.wynntils.models.token.event.TokenGatekeeperEvent;
+import com.wynntils.utils.colors.ColorChatFormatting;
 import com.wynntils.utils.colors.CustomColor;
 import com.wynntils.utils.mc.McUtils;
 import com.wynntils.utils.render.Texture;
@@ -24,12 +25,11 @@ import com.wynntils.utils.render.type.HorizontalAlignment;
 import com.wynntils.utils.render.type.VerticalAlignment;
 import com.wynntils.utils.type.CappedValue;
 import java.util.List;
-import net.minecraft.ChatFormatting;
 import net.minecraft.client.resources.sounds.SimpleSoundInstance;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 
-@ConfigCategory(Category.COMBAT)
+@ConfigCategory(Category.OVERLAYS)
 public class TokenTrackerFeature extends Feature {
     @RegisterConfig
     public final Config<Boolean> playSound = new Config<>(true);
@@ -73,7 +73,7 @@ public class TokenTrackerFeature extends Feature {
 
     protected static final class TokenBarOverlay extends BarOverlay {
         @RegisterConfig
-        public final Config<ChatFormatting> color = new Config<>(ChatFormatting.GOLD);
+        public final Config<ColorChatFormatting> color = new Config<>(ColorChatFormatting.GOLD);
 
         public TokenBarOverlay(int id) {
             super(id, new OverlaySize(81, 21));
@@ -84,13 +84,13 @@ public class TokenTrackerFeature extends Feature {
         @Override
         public BarOverlayTemplatePair getTemplate() {
             return new BarOverlayTemplatePair(
-                    color.get().toString() + "{token_type(" + getId() + ")}: {token(" + getId() + ")}",
+                    color.get().getChatFormatting() + "{token_type(" + getId() + ")}: {token(" + getId() + ")}",
                     "token(" + getId() + ")");
         }
 
         @Override
         public BarOverlayTemplatePair getPreviewTemplate() {
-            return new BarOverlayTemplatePair(color.get().toString() + "Tokens: 3/10", "capped(3; 10)");
+            return new BarOverlayTemplatePair(color.get().getChatFormatting() + "Tokens: 3/10", "capped(3; 10)");
         }
 
         @Override
@@ -100,7 +100,7 @@ public class TokenTrackerFeature extends Feature {
 
         @Override
         public CustomColor getRenderColor() {
-            return CustomColor.fromChatFormatting(color.get());
+            return CustomColor.fromChatFormatting(color.get().getChatFormatting());
         }
 
         @Override

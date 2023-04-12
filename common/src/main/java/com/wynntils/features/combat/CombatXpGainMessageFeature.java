@@ -11,6 +11,9 @@ import com.wynntils.core.config.Config;
 import com.wynntils.core.config.ConfigCategory;
 import com.wynntils.core.config.RegisterConfig;
 import com.wynntils.core.features.Feature;
+import com.wynntils.core.notifications.MessageContainer;
+import com.wynntils.core.text.CodedString;
+import com.wynntils.core.text.StyledText;
 import com.wynntils.models.characterstats.event.CombatXpGainEvent;
 import com.wynntils.models.worlds.event.WorldStateEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
@@ -18,9 +21,13 @@ import net.minecraftforge.eventbus.api.SubscribeEvent;
 @ConfigCategory(Category.COMBAT)
 public class CombatXpGainMessageFeature extends Feature {
     @RegisterConfig
-    public final Config<Float> secondDelay = new Config<>(0.5f);
+    public final Config<Float> secondDelay = new Config<>(2f);
 
     private long lastXpDisplayTime = 0;
+
+    private MessageContainer lastMessage = null;
+    private float lastRawXpGain = 0;
+    private float lastPercentageXpGain = 0;
 
     @SubscribeEvent
     public void onWorldStateChange(WorldStateEvent event) {
@@ -30,11 +37,29 @@ public class CombatXpGainMessageFeature extends Feature {
     @SubscribeEvent
     public void onExperienceGain(CombatXpGainEvent event) {
         if (!Models.WorldState.onWorld()) return;
-        if (System.currentTimeMillis() - lastXpDisplayTime < secondDelay.get() * 1000) return;
+        if (lastMessage != null && System.currentTimeMillis() - lastXpDisplayTime < secondDelay.get() * 1000) {
+            Managers.Notification.editMessage(
+                    lastMessage,
+                    CodedString.fromStyledText(getXpGainMessage(
+                            lastRawXpGain + event.getGainedXpRaw(),
+                            lastPercentageXpGain + event.getGainedXpPercentage())));
 
-        String message =
-                String.format("§2+%.0f XP (§6%.2f%%§2)", event.getGainedXpRaw(), event.getGainedXpPercentage());
+            lastRawXpGain += event.getGainedXpRaw();
+            lastPercentageXpGain += event.getGainedXpPercentage();
+            lastXpDisplayTime = System.currentTimeMillis();
 
-        Managers.Notification.queueMessage(message);
+            return;
+        }
+
+        lastRawXpGain = event.getGainedXpRaw();
+        lastPercentageXpGain = event.getGainedXpPercentage();
+        lastXpDisplayTime = System.currentTimeMillis();
+
+        lastMessage = Managers.Notification.queueMessage(
+                getXpGainMessage(event.getGainedXpRaw(), event.getGainedXpPercentage()));
+    }
+
+    private static StyledText getXpGainMessage(float rawGain, float percentageGain) {
+        return StyledText.fromString(String.format("§2+%.0f XP (§6%.2f%%§2)", rawGain, percentageGain));
     }
 }

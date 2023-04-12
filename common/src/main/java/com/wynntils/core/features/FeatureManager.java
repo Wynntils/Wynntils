@@ -89,6 +89,7 @@ import com.wynntils.features.overlays.ShamanTotemTrackingFeature;
 import com.wynntils.features.overlays.SpellCastRenderFeature;
 import com.wynntils.features.overlays.StatusOverlayFeature;
 import com.wynntils.features.overlays.StopwatchFeature;
+import com.wynntils.features.overlays.TokenTrackerFeature;
 import com.wynntils.features.overlays.TradeMarketBulkSellFeature;
 import com.wynntils.features.players.AutoJoinPartyFeature;
 import com.wynntils.features.players.CustomNametagRendererFeature;

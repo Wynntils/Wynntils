@@ -8,6 +8,7 @@ import com.mojang.blaze3d.platform.GlStateManager;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.wynntils.core.components.Managers;
+import com.wynntils.core.text.CodedString;
 import com.wynntils.features.map.MapFeature;
 import com.wynntils.models.map.pois.CustomPoi;
 import com.wynntils.screens.maps.PoiCreationScreen;
@@ -109,7 +110,7 @@ public class PoiManagerWidget extends AbstractWidget {
         FontRenderer.getInstance()
                 .renderText(
                         poseStack,
-                        poiName,
+                        CodedString.fromString(poiName),
                         this.width / 2f - 130,
                         60 + 20 * row,
                         color,
@@ -120,7 +121,7 @@ public class PoiManagerWidget extends AbstractWidget {
         FontRenderer.getInstance()
                 .renderText(
                         poseStack,
-                        String.valueOf(poi.getLocation().getX()),
+                        CodedString.fromString(String.valueOf(poi.getLocation().getX())),
                         this.width / 2f - 15,
                         60 + 20 * row,
                         color,
@@ -133,7 +134,7 @@ public class PoiManagerWidget extends AbstractWidget {
         FontRenderer.getInstance()
                 .renderText(
                         poseStack,
-                        y.isPresent() ? String.valueOf(y.get()) : "",
+                        y.isPresent() ? CodedString.fromString(String.valueOf(y.get())) : CodedString.EMPTY,
                         this.width / 2f + 40,
                         60 + 20 * row,
                         color,
@@ -144,7 +145,7 @@ public class PoiManagerWidget extends AbstractWidget {
         FontRenderer.getInstance()
                 .renderText(
                         poseStack,
-                        String.valueOf(poi.getLocation().getZ()),
+                        CodedString.fromString(String.valueOf(poi.getLocation().getZ())),
                         this.width / 2f + 80,
                         60 + 20 * row,
                         color,

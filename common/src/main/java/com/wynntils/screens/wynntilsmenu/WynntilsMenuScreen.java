@@ -7,6 +7,7 @@ package com.wynntils.screens.wynntilsmenu;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.wynntils.core.components.Managers;
 import com.wynntils.core.components.Models;
+import com.wynntils.core.text.CodedString;
 import com.wynntils.features.map.MapFeature;
 import com.wynntils.screens.base.WynntilsMenuScreenBase;
 import com.wynntils.screens.discoveries.WynntilsDiscoveriesScreen;
@@ -221,7 +222,8 @@ public final class WynntilsMenuScreen extends WynntilsMenuScreenBase {
         FontRenderer.getInstance()
                 .renderAlignedTextInBox(
                         poseStack,
-                        ComponentUtils.getUnformatted(McUtils.player().getDisplayName()),
+                        CodedString.fromString(
+                                ComponentUtils.getUnformatted(McUtils.player().getDisplayName())),
                         Texture.QUEST_BOOK_BACKGROUND.width() / 2f,
                         Texture.QUEST_BOOK_BACKGROUND.width(),
                         60,
@@ -232,8 +234,9 @@ public final class WynntilsMenuScreen extends WynntilsMenuScreenBase {
         FontRenderer.getInstance()
                 .renderAlignedTextInBox(
                         poseStack,
-                        Models.Character.getClassType().getName().toUpperCase(Locale.ROOT) + " Level "
-                                + Models.CombatXp.getCombatLevel().current(),
+                        CodedString.fromString(
+                                Models.Character.getClassType().getName().toUpperCase(Locale.ROOT) + " Level "
+                                        + Models.CombatXp.getCombatLevel().current()),
                         Texture.QUEST_BOOK_BACKGROUND.width() / 2f,
                         Texture.QUEST_BOOK_BACKGROUND.width(),
                         145,
@@ -247,7 +250,7 @@ public final class WynntilsMenuScreen extends WynntilsMenuScreenBase {
         FontRenderer.getInstance()
                 .renderAlignedTextInBox(
                         poseStack,
-                        currentSplash,
+                        CodedString.fromString(currentSplash),
                         Texture.QUEST_BOOK_BACKGROUND.width() / 2f,
                         Texture.QUEST_BOOK_BACKGROUND.width(),
                         Texture.QUEST_BOOK_BACKGROUND.height() - 45,

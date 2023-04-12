@@ -5,6 +5,7 @@
 package com.wynntils.models.quests;
 
 import com.wynntils.core.WynntilsMod;
+import com.wynntils.core.text.CodedString;
 import com.wynntils.models.quests.type.QuestLength;
 import com.wynntils.models.quests.type.QuestStatus;
 import com.wynntils.utils.mc.LoreUtils;
@@ -14,7 +15,6 @@ import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-import net.minecraft.ChatFormatting;
 import net.minecraft.world.item.ItemStack;
 
 public final class QuestInfoParser {
@@ -30,7 +30,7 @@ public final class QuestInfoParser {
             String name = getQuestName(itemStack);
             if (name == null) return null;
 
-            LinkedList<String> lore = LoreUtils.getLore(itemStack);
+            LinkedList<CodedString> lore = LoreUtils.getLore(itemStack);
 
             QuestStatus status = getQuestStatus(lore);
             if (status == null) return null;
@@ -45,7 +45,7 @@ public final class QuestInfoParser {
 
             if (!skipEmptyLine(lore)) return null;
 
-            String description = getDescription(lore);
+            CodedString description = getDescription(lore);
             boolean tracked = isQuestTracked(itemStack);
 
             return new QuestInfo(
@@ -78,16 +78,17 @@ public final class QuestInfoParser {
     }
 
     private static boolean isQuestTracked(ItemStack itemStack) {
-        String rawName = itemStack.getHoverName().getString();
-        if (rawName.trim().isEmpty()) {
+        CodedString name =
+                CodedString.fromComponentIgnoringComponentStylesAndJustUsingFormattingCodes(itemStack.getHoverName());
+        if (name.trim().isEmpty()) {
             return false;
         }
-        return rawName.endsWith("§e[Tracked]");
+        return name.endsWith("§e[Tracked]");
     }
 
-    private static QuestStatus getQuestStatus(LinkedList<String> lore) {
-        String rawStatus = lore.pop();
-        Matcher m = STATUS_MATCHER.matcher(rawStatus);
+    private static QuestStatus getQuestStatus(LinkedList<CodedString> lore) {
+        CodedString rawStatus = lore.pop();
+        Matcher m = rawStatus.getMatcher(STATUS_MATCHER);
         if (!m.find()) {
             WynntilsMod.warn("Non-matching status value: " + rawStatus);
             return null;
@@ -95,8 +96,8 @@ public final class QuestInfoParser {
         return QuestStatus.fromString(m.group(1));
     }
 
-    private static boolean skipEmptyLine(LinkedList<String> lore) {
-        String loreLine = lore.pop();
+    private static boolean skipEmptyLine(LinkedList<CodedString> lore) {
+        CodedString loreLine = lore.pop();
         if (!loreLine.isEmpty()) {
             WynntilsMod.warn("Unexpected value in quest: " + loreLine);
             return false;
@@ -104,9 +105,9 @@ public final class QuestInfoParser {
         return true;
     }
 
-    private static int getLevel(LinkedList<String> lore) {
-        String rawLevel = lore.getFirst();
-        Matcher m = LEVEL_MATCHER.matcher(rawLevel);
+    private static int getLevel(LinkedList<CodedString> lore) {
+        CodedString rawLevel = lore.getFirst();
+        Matcher m = rawLevel.getMatcher(LEVEL_MATCHER);
         if (!m.find()) {
             // This can happen for the very first quests; accept without error
             // and interpret level requirement as 1
@@ -116,11 +117,11 @@ public final class QuestInfoParser {
         return Integer.parseInt(m.group(1));
     }
 
-    private static List<Pair<String, Integer>> getAdditionalRequirements(LinkedList<String> lore) {
+    private static List<Pair<String, Integer>> getAdditionalRequirements(LinkedList<CodedString> lore) {
         List<Pair<String, Integer>> requirements = new LinkedList<>();
         Matcher m;
 
-        m = REQ_MATCHER.matcher(lore.getFirst());
+        m = lore.getFirst().getMatcher(REQ_MATCHER);
         while (m.matches()) {
             lore.pop();
             String profession = m.group(1);
@@ -128,15 +129,15 @@ public final class QuestInfoParser {
             Pair<String, Integer> requirement = new Pair<>(profession, level);
             requirements.add(requirement);
 
-            m = REQ_MATCHER.matcher(lore.getFirst());
+            m = lore.getFirst().getMatcher(REQ_MATCHER);
         }
         return requirements;
     }
 
-    private static QuestLength getQuestLength(LinkedList<String> lore) {
-        String lengthRaw = lore.pop();
+    private static QuestLength getQuestLength(LinkedList<CodedString> lore) {
+        CodedString lengthRaw = lore.pop();
 
-        Matcher m = LENGTH_MATCHER.matcher(lengthRaw);
+        Matcher m = lengthRaw.getMatcher(LENGTH_MATCHER);
         if (!m.find()) {
             WynntilsMod.warn("Non-matching quest length: " + lengthRaw);
             return null;
@@ -144,19 +145,22 @@ public final class QuestInfoParser {
         return QuestLength.fromString(m.group(1));
     }
 
-    private static String getDescription(List<String> lore) {
+    private static CodedString getDescription(List<CodedString> lore) {
         // The last two lines is an empty line and "RIGHT-CLICK TO TRACK"; skip those
-        List<String> descriptionLines = lore.subList(0, lore.size() - 2);
+        List<CodedString> descriptionLines = lore.subList(0, lore.size() - 2);
         // Every line begins with a format code of length 2 ("§7"), skip that
         // and join everything together, trying to avoid excess whitespace
+
+        // FIXME: We should really keep the rest of the formatting, apart from the
+        // initial §7.
 
         String description = String.join(
                         " ",
                         descriptionLines.stream()
-                                .map(ChatFormatting::stripFormatting)
+                                .map(CodedString::getUnformattedString)
                                 .toList())
                 .replaceAll("\\s+", " ")
                 .trim();
-        return description;
+        return CodedString.fromString(description);
     }
 }

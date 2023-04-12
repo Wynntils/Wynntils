@@ -6,6 +6,7 @@ package com.wynntils.screens.overlays.selection;
 
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
+import com.wynntils.core.text.CodedString;
 import com.wynntils.screens.base.WynntilsMenuScreenBase;
 import com.wynntils.screens.base.WynntilsScreen;
 import com.wynntils.screens.overlays.placement.OverlayManagementScreen;
@@ -89,7 +90,7 @@ public final class OverlaySelectionScreen extends WynntilsScreen {
         FontRenderer.getInstance()
                 .renderText(
                         poseStack,
-                        I18n.get("screens.wynntils.overlaySelection.overlays"),
+                        CodedString.fromString(I18n.get("screens.wynntils.overlaySelection.overlays")),
                         5,
                         4,
                         CommonColors.WHITE,

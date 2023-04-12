@@ -11,6 +11,7 @@ import com.wynntils.core.config.Config;
 import com.wynntils.core.config.ConfigCategory;
 import com.wynntils.core.config.RegisterConfig;
 import com.wynntils.core.features.Feature;
+import com.wynntils.core.text.CodedString;
 import com.wynntils.mc.event.ContainerClickEvent;
 import com.wynntils.mc.event.ItemTooltipRenderEvent;
 import com.wynntils.utils.mc.ComponentUtils;
@@ -32,6 +33,8 @@ import net.minecraftforge.eventbus.api.SubscribeEvent;
 
 @ConfigCategory(Category.INVENTORY)
 public class BulkBuyFeature extends Feature {
+    public static final CodedString PRICE_STR = CodedString.fromString("§6Price:");
+
     @RegisterConfig
     public final Config<Integer> bulkBuyAmount = new Config<>(4);
 
@@ -79,22 +82,25 @@ public class BulkBuyFeature extends Feature {
     private List<Component> replacePrices(List<Component> oldLore) {
         if (!KeyboardUtils.isShiftDown()) return oldLore;
 
-        String priceLine = ComponentUtils.getCoded(oldLore.get(oldLore.size() - 1));
-        Matcher priceMatcher = PRICE_PATTERN.matcher(priceLine);
+        CodedString priceLine = ComponentUtils.getCoded(oldLore.get(oldLore.size() - 1));
+        Matcher priceMatcher = priceLine.getMatcher(PRICE_PATTERN);
         if (!priceMatcher.find()) {
             WynntilsMod.warn("Could not find price for " + oldLore.get(0).getString() + " in " + priceLine);
             return oldLore;
         }
         int newPrice = Integer.parseInt(priceMatcher.group(1)) * bulkBuyAmount.get();
 
-        String newLine = priceLine.replace(priceMatcher.group(1), BULK_BUY_ACTIVE_COLOR + Integer.toString(newPrice));
+        CodedString newLine = CodedString.fromString(priceLine
+                .getInternalCodedStringRepresentation()
+                .replace(priceMatcher.group(1), BULK_BUY_ACTIVE_COLOR + Integer.toString(newPrice)));
 
         if (newPrice > Models.Emerald.getAmountInInventory()) {
-            newLine = newLine.replace("a✔", "c✖"); // Replace green checkmark with red x
+            newLine = CodedString.fromString(newLine.getInternalCodedStringRepresentation()
+                    .replace("a✔", "c✖")); // Replace green checkmark with red x
         }
 
         List<Component> newLore = new ArrayList<>(oldLore);
-        newLore.set(newLore.size() - 1, Component.nullToEmpty(newLine));
+        newLore.set(newLore.size() - 1, newLine.asSingleLiteralComponentWithCodedString());
         return newLore;
     }
 
@@ -103,6 +109,6 @@ public class BulkBuyFeature extends Feature {
 
         return title.startsWith(ChatFormatting.GREEN.toString())
                 && title.endsWith(" Shop")
-                && LoreUtils.getStringLore(toBuy).contains("§6Price:");
+                && LoreUtils.getStringLore(toBuy).contains(PRICE_STR);
     }
 }

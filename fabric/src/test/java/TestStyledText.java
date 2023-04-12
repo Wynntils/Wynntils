@@ -132,7 +132,7 @@ public class TestStyledText {
 
     @Test
     public void normalizedStringCreation_shouldProduceCorrectString() {
-        final String badText = "ÀÀÀÀHello, ÀWorld!֎";
+        final String badText = "ÀÀHello,ÀÀÀWorld!֎";
         final String expected = "Hello, World!";
 
         StyledText styledText = StyledText.fromString(badText);

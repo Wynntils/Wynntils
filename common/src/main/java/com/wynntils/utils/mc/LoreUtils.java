@@ -9,6 +9,7 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import com.google.gson.JsonSyntaxException;
+import com.wynntils.core.text.CodedString;
 import com.wynntils.utils.StringUtils;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
@@ -35,10 +36,10 @@ public final class LoreUtils {
      *
      * @return an {@link List} containing all item lore
      */
-    public static LinkedList<String> getLore(ItemStack itemStack) {
+    public static LinkedList<CodedString> getLore(ItemStack itemStack) {
         ListTag loreTag = getLoreTag(itemStack);
 
-        LinkedList<String> lore = new LinkedList<>();
+        LinkedList<CodedString> lore = new LinkedList<>();
         if (loreTag == null) return lore;
 
         for (int i = 0; i < loreTag.size(); ++i) {
@@ -52,9 +53,9 @@ public final class LoreUtils {
      * Returns the lore for the given line, or the empty string if there is no
      * such line.
      */
-    public static String getLoreLine(ItemStack itemStack, int line) {
+    public static CodedString getLoreLine(ItemStack itemStack, int line) {
         ListTag loreTag = getLoreTag(itemStack);
-        if (loreTag == null) return "";
+        if (loreTag == null) return CodedString.EMPTY;
 
         return ComponentUtils.getCoded(loreTag.getString(line));
     }
@@ -67,8 +68,8 @@ public final class LoreUtils {
     public static Matcher matchLoreLine(ItemStack itemStack, int startLineNum, Pattern pattern) {
         Matcher matcher = null;
         for (int i = startLineNum; i <= startLineNum + 5; i++) {
-            String line = getLoreLine(itemStack, i);
-            matcher = pattern.matcher(line);
+            CodedString line = getLoreLine(itemStack, i);
+            matcher = line.getMatcher(pattern);
             if (matcher.matches()) return matcher;
         }
 
@@ -83,12 +84,12 @@ public final class LoreUtils {
      *
      * @return a {@link String} containing all item lore
      */
-    public static String getStringLore(ItemStack itemStack) {
+    public static CodedString getStringLore(ItemStack itemStack) {
         StringBuilder toReturn = new StringBuilder();
-        for (String x : getLore(itemStack)) {
+        for (CodedString x : getLore(itemStack)) {
             toReturn.append(x);
         }
-        return toReturn.toString();
+        return CodedString.fromString(toReturn.toString());
     }
 
     /** Get the lore NBT tag from an item, else return empty */
@@ -247,8 +248,8 @@ public final class LoreUtils {
      * It might have additional lines added, but these are not checked.
      */
     public static boolean loreSoftMatches(ItemStack firstItem, ItemStack secondItem, int tolerance) {
-        List<String> firstLines = getLore(firstItem);
-        List<String> secondLines = getLore(secondItem);
+        List<CodedString> firstLines = getLore(firstItem);
+        List<CodedString> secondLines = getLore(secondItem);
         int firstLinesLen = firstLines.size();
         int secondLinesLen = secondLines.size();
 
@@ -273,7 +274,8 @@ public final class LoreUtils {
      */
     public static JsonObject getJsonFromIngameLore(ItemStack itemStack) {
         String rawLore =
-                StringUtils.substringBeforeLast(getStringLore(itemStack), "}") + "}"; // remove extra unnecessary info
+                StringUtils.substringBeforeLast(getStringLore(itemStack).getInternalCodedStringRepresentation(), "}")
+                        + "}"; // remove extra unnecessary info
         try {
             return JsonParser.parseString(rawLore).getAsJsonObject();
         } catch (JsonSyntaxException e) {

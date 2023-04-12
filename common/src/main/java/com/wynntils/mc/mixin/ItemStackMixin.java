@@ -6,6 +6,7 @@ package com.wynntils.mc.mixin;
 
 import com.llamalad7.mixinextras.injector.ModifyExpressionValue;
 import com.wynntils.core.events.MixinHelper;
+import com.wynntils.core.text.CodedString;
 import com.wynntils.handlers.item.ItemAnnotation;
 import com.wynntils.mc.event.ItemTooltipFlagsEvent;
 import com.wynntils.mc.extension.ItemStackExtension;
@@ -22,7 +23,7 @@ public abstract class ItemStackMixin implements ItemStackExtension {
     private ItemAnnotation wynntilsAnnotation;
 
     @Unique
-    private String wynntilsOriginalName;
+    private CodedString wynntilsOriginalName;
 
     @ModifyExpressionValue(
             method =
@@ -64,13 +65,13 @@ public abstract class ItemStackMixin implements ItemStackExtension {
 
     @Override
     @Unique
-    public String getOriginalName() {
+    public CodedString getOriginalName() {
         return this.wynntilsOriginalName;
     }
 
     @Override
     @Unique
-    public void setOriginalName(String name) {
+    public void setOriginalName(CodedString name) {
         this.wynntilsOriginalName = name;
     }
 }
