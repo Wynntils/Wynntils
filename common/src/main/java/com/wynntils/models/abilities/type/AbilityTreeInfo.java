@@ -8,21 +8,15 @@ import com.google.gson.JsonElement;
 import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.components.Managers;
 import com.wynntils.core.components.Models;
-import com.wynntils.core.text.PartStyle;
 import com.wynntils.core.text.StyledText;
-import com.wynntils.utils.mc.LoreUtils;
 import com.wynntils.utils.mc.McUtils;
-import com.wynntils.utils.type.IterationDecision;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Locale;
 import java.util.Set;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 import net.minecraft.network.chat.Component;
-import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 
@@ -34,116 +28,21 @@ public class AbilityTreeInfo {
 
     private static final StyledText CONNECTION_NAME = StyledText.fromString(" ");
 
-    private static final Pattern NODE_NAME_PATTERN = Pattern.compile("§.(Unlock )?§l(.+)(§r§. ability)?");
-    private static final Pattern NODE_POINT_COST_PATTERN = Pattern.compile("§.. §7Ability Points: §f(\\d+)");
-    private static final Pattern NODE_BLOCKS_ABILITY_PATTERN = Pattern.compile("§c- §7(.+)");
-    private static final Pattern NODE_REQUIRED_ABILITY_PATTERN = Pattern.compile("§.. §7Required Ability: §f(.+)");
-    private static final Pattern NODE_REQUIRED_ARCHETYPE_PATTERN =
-            Pattern.compile("§.. §7Min (.+) Archetype: §c(\\d+)§7/(\\d+)");
-    private static final Pattern NODE_ARCHETYPE_PATTERN = Pattern.compile("§.§l(.+) Archetype");
-
     private final List<AbilityTreeSkillNode> nodes = new ArrayList<>();
 
     // Do not serialize this field
     private final transient List<AbilityTreeLocation> unprocessedConnections = new ArrayList<>();
 
     public void addNodeFromItem(ItemStack itemStack, int page, int slot) {
-        nodes.add(parseNodeFromItem(itemStack, page, slot));
+        nodes.add(AbilityTreeSkillNode.parseNodeFromItem(itemStack, page, slot));
     }
 
     public void addConnectionFromItem(int page, int slot) {
         unprocessedConnections.add(AbilityTreeLocation.fromSlot(slot, page));
     }
 
-    public AbilityTreeSkillNode parseNodeFromItem(ItemStack itemStack, int page, int slot) {
-        StyledText nameStyledText = StyledText.fromComponent(itemStack.getHoverName());
-
-        boolean unlockable;
-        StyledText actualName;
-        if (nameStyledText.getPartCount() == 1) {
-            actualName = nameStyledText;
-            unlockable = false;
-        } else {
-            actualName = nameStyledText.iterate((part, changes) -> {
-                // The part which is bolded is the actual name of the ability
-                if (!part.getPartStyle().isBold()) {
-                    changes.clear();
-                }
-
-                return IterationDecision.CONTINUE;
-            });
-            unlockable = true;
-        }
-
-        List<StyledText> loreStyledText = LoreUtils.getLoreStyledText(itemStack);
-
-        if (unlockable) {
-            // Empty line + "click here to unlock"
-            loreStyledText = loreStyledText.subList(0, loreStyledText.size() - 2);
-        }
-
-        int cost = 0;
-        List<String> blocks = new ArrayList<>();
-        String requiredAbility = null;
-        AbilityTreeSkillNode.ArchetypeRequirement requiredArchetype = null;
-        String archetype = null;
-
-        for (StyledText text : loreStyledText) {
-            Matcher matcher = text.getMatcher(NODE_POINT_COST_PATTERN);
-            if (matcher.matches()) {
-                cost = Integer.parseInt(matcher.group(1));
-                continue;
-            }
-
-            matcher = text.getMatcher(NODE_BLOCKS_ABILITY_PATTERN);
-            if (matcher.matches()) {
-                blocks.add(matcher.group(1));
-                continue;
-            }
-
-            matcher = text.getMatcher(NODE_REQUIRED_ABILITY_PATTERN);
-            if (matcher.matches()) {
-                requiredAbility = matcher.group(1);
-                continue;
-            }
-
-            matcher = text.getMatcher(NODE_REQUIRED_ARCHETYPE_PATTERN);
-            if (matcher.matches()) {
-                requiredArchetype = new AbilityTreeSkillNode.ArchetypeRequirement(
-                        matcher.group(1), Integer.parseInt(matcher.group(3)));
-                continue;
-            }
-
-            matcher = text.getMatcher(NODE_ARCHETYPE_PATTERN);
-            if (matcher.matches()) {
-                archetype = matcher.group(1);
-                continue;
-            }
-        }
-
-        AbilityTreeSkillNode.ItemInformation itemInformation = new AbilityTreeSkillNode.ItemInformation(
-                Item.getId(itemStack.getItem()),
-                unlockable ? itemStack.getDamageValue() - 1 : itemStack.getDamageValue());
-
-        AbilityTreeSkillNode node = new AbilityTreeSkillNode(
-                actualName.getString(PartStyle.StyleType.NONE),
-                actualName.getString(PartStyle.StyleType.DEFAULT),
-                loreStyledText.stream()
-                        .map(styledText -> styledText.getString(PartStyle.StyleType.DEFAULT))
-                        .toList(),
-                itemInformation,
-                cost,
-                blocks,
-                requiredAbility,
-                requiredArchetype,
-                archetype,
-                AbilityTreeLocation.fromSlot(slot, page),
-                new ArrayList<>());
-        return node;
-    }
-
     public void processItem(ItemStack itemStack, int page, int slot) {
-        if (isNodeItem(itemStack, slot)) {
+        if (AbilityTreeSkillNode.isNodeItem(itemStack, slot)) {
             addNodeFromItem(itemStack, page, slot);
         } else if (isConnectionItem(itemStack)) {
             addConnectionFromItem(page, slot);
@@ -207,6 +106,10 @@ public class AbilityTreeInfo {
         unprocessedConnections.removeAll(processedLocation);
     }
 
+    public List<AbilityTreeSkillNode> getNodes() {
+        return nodes;
+    }
+
     public void saveToDisk() {
         if (!unprocessedConnections.isEmpty()) {
             McUtils.sendMessageToClient(Component.literal(
@@ -221,13 +124,6 @@ public class AbilityTreeInfo {
         Managers.Json.savePreciousJson(jsonFile, element.getAsJsonObject());
 
         McUtils.sendMessageToClient(Component.literal("Saved ability tree dump to " + jsonFile.getAbsolutePath()));
-    }
-
-    private boolean isNodeItem(ItemStack itemStack, int slot) {
-        StyledText nameStyledText = StyledText.fromComponent(itemStack.getHoverName());
-        return itemStack.getItem() == Items.STONE_AXE
-                && slot < 54
-                && nameStyledText.getMatcher(NODE_NAME_PATTERN).matches();
     }
 
     private boolean isConnectionItem(ItemStack itemStack) {

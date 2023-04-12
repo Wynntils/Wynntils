@@ -17,6 +17,7 @@ import com.wynntils.utils.mc.KeyboardUtils;
 import com.wynntils.utils.mc.McUtils;
 import java.util.Optional;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
+import net.minecraftforge.eventbus.api.EventPriority;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 
 @StartDisabled
@@ -24,7 +25,7 @@ import net.minecraftforge.eventbus.api.SubscribeEvent;
 public class AbilityTreeDataDumpFeature extends Feature {
     private static final AbilityTreeContainerQueries ABILITY_TREE_CONTAINER_QUERIES = new AbilityTreeContainerQueries();
 
-    @SubscribeEvent
+    @SubscribeEvent(priority = EventPriority.HIGHEST)
     public void onInventoryClick(ContainerClickEvent event) {
         if (!(McUtils.mc().screen instanceof AbstractContainerScreen<?> abstractContainerScreen)) return;
         if (!KeyboardUtils.isShiftDown()) return;
