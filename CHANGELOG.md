@@ -1,9 +1,21 @@
+## [0.0.2-alpha.461](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.460...v0.0.2-alpha.461) (2023-04-12)
+
+
+### Bug Fixes
+
+* Use Wynntils' WynnData fork in the mod ([#1476](https://github.com/Wynntils/Artemis/issues/1476)) ([75430f2](https://github.com/Wynntils/Artemis/commit/75430f2a67ad58654ba1d09779b1721d142146e8))
+
 ## [0.0.2-alpha.460](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.459...v0.0.2-alpha.460) (2023-04-09)
 
 
 ### Bug Fixes
 
 * Fix TokenTrackerFeature color settings applying as text ([#1474](https://github.com/Wynntils/Artemis/issues/1474)) ([6a48a18](https://github.com/Wynntils/Artemis/commit/6a48a185f21dbd7b093cd27dda1a25ac004edb6f))
+
+
+### Miscellaneous Chores
+
+* **release:** v0.0.2-alpha.460 [skip ci] ([8f0f9d7](https://github.com/Wynntils/Artemis/commit/8f0f9d7b4c8c4694a2cbef902de586597f29bda1))
 
 ## [0.0.2-alpha.459](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.458...v0.0.2-alpha.459) (2023-04-09)
 
@@ -40,16 +52,4 @@
 ### Miscellaneous Chores
 
 * **release:** v0.0.2-alpha.457 [skip ci] ([109ca6b](https://github.com/Wynntils/Artemis/commit/109ca6bc557f0ab151aa6a90ab0eb5eabdb03660))
-
-## [0.0.2-alpha.456](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.455...v0.0.2-alpha.456) (2023-04-07)
-
-
-### Bug Fixes
-
-* Chat mentions should not mark own name in header ([#1460](https://github.com/Wynntils/Artemis/issues/1460)) ([9d0a79f](https://github.com/Wynntils/Artemis/commit/9d0a79f33fa245981c3b2ddf2787cbb08b0b2d49))
-
-
-### Miscellaneous Chores
-
-* **release:** v0.0.2-alpha.456 [skip ci] ([635cc2b](https://github.com/Wynntils/Artemis/commit/635cc2b00bff58c88994dee5919c686fc29fad71))
 
