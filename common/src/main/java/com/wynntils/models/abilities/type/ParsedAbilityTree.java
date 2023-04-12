@@ -4,9 +4,9 @@
  */
 package com.wynntils.models.abilities.type;
 
-import java.util.Map;
+import com.google.common.collect.ImmutableMap;
 
 /**
  * This class represents the current ability tree, where all nodes have a state.
  */
-public record ParsedAbilityTree(Map<AbilityTreeSkillNode, AbilityTreeNodeState> nodes) {}
+public record ParsedAbilityTree(ImmutableMap<AbilityTreeSkillNode, AbilityTreeNodeState> nodes) {}
