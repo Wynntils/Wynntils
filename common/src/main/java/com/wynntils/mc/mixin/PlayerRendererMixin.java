@@ -6,7 +6,6 @@ package com.wynntils.mc.mixin;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.wynntils.core.events.MixinHelper;
-import com.wynntils.mc.event.NametagRenderEvent;
 import com.wynntils.mc.event.PlayerNametagRenderEvent;
 import com.wynntils.mc.event.PlayerRenderEvent;
 import com.wynntils.mc.event.RenderLayerRegistrationEvent;
