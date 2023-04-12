@@ -9,7 +9,7 @@ import com.wynntils.core.components.Models;
 import com.wynntils.core.text.StyledText;
 import com.wynntils.handlers.container.ScriptedContainerQuery;
 import com.wynntils.handlers.container.type.ContainerContent;
-import com.wynntils.models.abilities.type.ParsedAbilityTree;
+import com.wynntils.models.abilities.type.AbilityTreeInfo;
 import com.wynntils.utils.mc.McUtils;
 import com.wynntils.utils.wynn.InventoryUtils;
 import java.util.List;
@@ -26,7 +26,7 @@ public class AbilityTreeContainerQueries {
     private static final StyledText NEXT_PAGE_ITEM_NAME = StyledText.fromString("§7Next Page");
 
     public void dumpAbilityTreeData() {
-        ParsedAbilityTree dump = new ParsedAbilityTree();
+        AbilityTreeInfo dump = new AbilityTreeInfo();
 
         ScriptedContainerQuery.QueryBuilder queryBuilder = ScriptedContainerQuery.builder("Ability Tree Dump Query")
                 .onError(msg -> {
@@ -67,7 +67,7 @@ public class AbilityTreeContainerQueries {
         queryBuilder.build().executeQuery();
     }
 
-    private void dumpAbilityTreePage(ContainerContent content, int page, ParsedAbilityTree dump) {
+    private void dumpAbilityTreePage(ContainerContent content, int page, AbilityTreeInfo dump) {
         List<ItemStack> items = content.items();
 
         for (int slot = 0; slot < items.size(); slot++) {

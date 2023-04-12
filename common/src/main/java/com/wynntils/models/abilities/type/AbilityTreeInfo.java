@@ -26,7 +26,10 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 
-public class ParsedAbilityTree {
+/**
+ * This class contains all relevant info to a specific class' ability tree.
+ */
+public class AbilityTreeInfo {
     private static final File SAVE_FOLDER = WynntilsMod.getModStorageDir("debug");
 
     private static final StyledText CONNECTION_NAME = StyledText.fromString(" ");
