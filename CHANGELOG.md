@@ -1,9 +1,21 @@
+## [0.0.2-alpha.468](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.467...v0.0.2-alpha.468) (2023-04-13)
+
+
+### New Features
+
+* Add AbilityTreeDataDumpFeature ([#1475](https://github.com/Wynntils/Artemis/issues/1475)) ([f43fd03](https://github.com/Wynntils/Artemis/commit/f43fd03b33800997d15ce0ade8aa230c3f9c45c4))
+
 ## [0.0.2-alpha.467](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.466...v0.0.2-alpha.467) (2023-04-13)
 
 
 ### Code Refactoring
 
 * Port ItemAnnotator (and the fallout) to use StyledText ([#1463](https://github.com/Wynntils/Artemis/issues/1463)) ([c7258f1](https://github.com/Wynntils/Artemis/commit/c7258f11be2c6ddbb7b0e6bc82f547025f203114))
+
+
+### Miscellaneous Chores
+
+* **release:** v0.0.2-alpha.467 [skip ci] ([fa34929](https://github.com/Wynntils/Artemis/commit/fa34929437dbc4e22f90dd3650eb7a5363955a82))
 
 ## [0.0.2-alpha.466](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.465...v0.0.2-alpha.466) (2023-04-13)
 
@@ -40,16 +52,4 @@
 ### Miscellaneous Chores
 
 * **release:** v0.0.2-alpha.464 [skip ci] ([a73b5d0](https://github.com/Wynntils/Artemis/commit/a73b5d09dee98f8c2f0093ca9fa85bfe8fc5d539))
-
-## [0.0.2-alpha.463](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.462...v0.0.2-alpha.463) (2023-04-13)
-
-
-### Bug Fixes
-
-* Make Wynntils Cosmetics render in every case, fix cosmetics leaking memory, introduce CosmeticsModel ([#1480](https://github.com/Wynntils/Artemis/issues/1480)) ([7c4a5fd](https://github.com/Wynntils/Artemis/commit/7c4a5fd25f87c127083e0a0979c12a6e98aee1a2))
-
-
-### Miscellaneous Chores
-
-* **release:** v0.0.2-alpha.463 [skip ci] ([f8d316f](https://github.com/Wynntils/Artemis/commit/f8d316facf4d8613b4750c6f675c6793ae55e49f))
 
