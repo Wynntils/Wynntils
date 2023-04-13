@@ -30,6 +30,7 @@ import com.wynntils.models.items.ItemModel;
 import com.wynntils.models.lootruns.LootrunModel;
 import com.wynntils.models.map.CompassModel;
 import com.wynntils.models.map.MapModel;
+import com.wynntils.models.map.PoiModel;
 import com.wynntils.models.mobtotem.MobTotemModel;
 import com.wynntils.models.objectives.ObjectivesModel;
 import com.wynntils.models.ping.PingModel;
@@ -70,6 +71,7 @@ public final class Models {
     public static final ObjectivesModel Objectives = new ObjectivesModel();
     public static final PlayerInventoryModel PlayerInventory = new PlayerInventoryModel();
     public static final PlayerModel Player = new PlayerModel();
+    public static final PoiModel Poi = new PoiModel();
     public static final RewardsModel Rewards = new RewardsModel();
     public static final ServerListModel ServerList = new ServerListModel();
     public static final StatModel Stat = new StatModel();
