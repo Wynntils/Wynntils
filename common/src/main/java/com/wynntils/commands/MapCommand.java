@@ -62,7 +62,11 @@ public class MapCommand extends Command {
     private int reloadPoiProviders(CommandContext<CommandSourceStack> context) {
         Models.Poi.loadCustomPoiProviders();
 
-        context.getSource().sendSuccess(Component.literal("Successfully reloaded POI providers."), false);
+        context.getSource()
+                .sendSuccess(
+                        Component.literal("Successfully reloaded POI providers.")
+                                .withStyle(ChatFormatting.GREEN),
+                        false);
 
         return 1;
     }
@@ -74,11 +78,15 @@ public class MapCommand extends Command {
         try {
             Models.Poi.addCustomPoiProvider(new CustomPoiProvider(name, new URI(url)));
         } catch (URISyntaxException e) {
-            context.getSource().sendFailure(Component.literal("The provided URL is invalid."));
+            context.getSource()
+                    .sendFailure(
+                            Component.literal("The provided URL is invalid.").withStyle(ChatFormatting.RED));
             return 0;
         }
 
-        context.getSource().sendSuccess(Component.literal("Successfully added POI provider."), false);
+        context.getSource()
+                .sendSuccess(
+                        Component.literal("Successfully added POI provider.").withStyle(ChatFormatting.GREEN), false);
         return 1;
     }
 
@@ -86,11 +94,15 @@ public class MapCommand extends Command {
         String name = context.getArgument("name", String.class);
 
         if (!Models.Poi.removeCustomPoiProvider(name)) {
-            context.getSource().sendFailure(Component.literal("The provided name does not match any POI provider."));
+            context.getSource()
+                    .sendFailure(Component.literal("The provided name does not match any POI provider.")
+                            .withStyle(ChatFormatting.RED));
             return 0;
         }
 
-        context.getSource().sendSuccess(Component.literal("Successfully removed POI provider."), false);
+        context.getSource()
+                .sendSuccess(
+                        Component.literal("Successfully removed POI provider.").withStyle(ChatFormatting.GREEN), false);
         return 1;
     }
 
