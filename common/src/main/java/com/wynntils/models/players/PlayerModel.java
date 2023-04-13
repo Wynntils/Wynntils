@@ -4,11 +4,11 @@
  */
 package com.wynntils.models.players;
 
-import com.mojang.blaze3d.platform.NativeImage;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.components.Managers;
 import com.wynntils.core.components.Model;
+import com.wynntils.core.components.Models;
 import com.wynntils.core.net.ApiResponse;
 import com.wynntils.core.net.UrlId;
 import com.wynntils.core.text.CodedString;
@@ -17,9 +17,6 @@ import com.wynntils.mc.event.PlayerTeamEvent;
 import com.wynntils.models.worlds.event.WorldStateEvent;
 import com.wynntils.models.worlds.type.WorldState;
 import com.wynntils.utils.mc.McUtils;
-import java.io.ByteArrayInputStream;
-import java.io.IOException;
-import java.util.Base64;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -29,8 +26,6 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Stream;
 import net.minecraft.client.multiplayer.PlayerInfo;
-import net.minecraft.client.renderer.texture.DynamicTexture;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.scores.PlayerTeam;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
@@ -40,7 +35,6 @@ public final class PlayerModel extends Model {
     private static final int MAX_ERRORS = 5;
 
     private final Map<UUID, WynntilsUser> users = new ConcurrentHashMap<>();
-    private final Map<UUID, ResourceLocation[]> cosmeticTextures = new ConcurrentHashMap<>();
     private final Set<UUID> fetching = ConcurrentHashMap.newKeySet();
     private final Map<UUID, Integer> ghosts = new ConcurrentHashMap<>();
     private int errorCount;
@@ -68,10 +62,6 @@ public final class PlayerModel extends Model {
 
     public WynntilsUser getUser(UUID uuid) {
         return users.getOrDefault(uuid, null);
-    }
-
-    public ResourceLocation[] getUserCosmeticTexture(UUID uuid) {
-        return cosmeticTextures.getOrDefault(uuid, null);
     }
 
     public Stream<String> getAllPlayerNames() {
@@ -144,7 +134,7 @@ public final class PlayerModel extends Model {
                     fetching.remove(uuid);
 
                     // Schedule cape loading for next render tick
-                    RenderSystem.recordRenderCall(() -> loadCosmeticTextures(uuid, user));
+                    RenderSystem.recordRenderCall(() -> Models.Cosmetics.loadCosmeticTextures(uuid, user));
                 },
                 onError -> {
                     errorCount++;
@@ -154,44 +144,9 @@ public final class PlayerModel extends Model {
                 });
     }
 
-    private void loadCosmeticTextures(UUID uuid, WynntilsUser user) {
-        try {
-            if (user.cosmetics().texture() == null || user.cosmetics().texture().isEmpty()) return;
-            if (cosmeticTextures.containsKey(uuid)) return;
-
-            byte[] textureBytes = Base64.getDecoder().decode(user.cosmetics().texture());
-            ByteArrayInputStream byteStream = new ByteArrayInputStream(textureBytes);
-            NativeImage image = NativeImage.read(byteStream);
-
-            int frames = (image.getHeight() * 2) / image.getWidth();
-            int frameHeight = image.getHeight() / frames;
-
-            ResourceLocation[] locations = new ResourceLocation[frames];
-            String baseLocation = "wynntils:capes/" + uuid.toString().replace("-", "");
-
-            if (frames == 1) { // not animated
-                locations[0] = new ResourceLocation(baseLocation);
-                McUtils.mc().getTextureManager().register(locations[0], new DynamicTexture(image));
-            } else { // animated
-                for (int i = 0; i < frames; i++) {
-                    NativeImage frame = new NativeImage(frameHeight * 2, frameHeight, false);
-                    image.copyRect(frame, 0, frameHeight * i, 0, 0, frameHeight * 2, frameHeight, false, false);
-
-                    locations[i] = new ResourceLocation(baseLocation + "/" + i);
-                    McUtils.mc().getTextureManager().register(locations[i], new DynamicTexture(frame));
-                }
-            }
-
-            cosmeticTextures.put(uuid, locations);
-        } catch (IOException e) {
-            WynntilsMod.warn("IOException occurred while loading cosmetics for user " + uuid, e);
-        }
-    }
-
     private void clearUserCache() {
         users.clear();
         nameMap.clear();
-        cosmeticTextures.clear();
     }
 
     private void clearGhostCache() {

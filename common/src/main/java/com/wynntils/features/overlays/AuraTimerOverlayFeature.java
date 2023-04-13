@@ -68,16 +68,12 @@ public class AuraTimerOverlayFeature extends Feature {
                     new OverlaySize(150, 30),
                     HorizontalAlignment.CENTER,
                     VerticalAlignment.MIDDLE);
+            fontScale.updateConfig(2f);
         }
 
         @Override
         public CustomColor getRenderColor() {
             return textColor.get();
-        }
-
-        @Override
-        public float getTextScale() {
-            return this.getHeight() / 15f;
         }
 
         @Override

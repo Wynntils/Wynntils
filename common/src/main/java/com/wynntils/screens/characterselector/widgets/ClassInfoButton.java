@@ -103,6 +103,12 @@ public class ClassInfoButton extends WynntilsButton {
         }
     }
 
+    @Override
+    protected boolean isValidClickButton(int button) {
+        // Every mouse button is valid
+        return true;
+    }
+
     public ClassInfo getClassInfo() {
         return classInfo;
     }
