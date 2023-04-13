@@ -84,13 +84,13 @@ public class TokenTrackerFeature extends Feature {
         @Override
         public BarOverlayTemplatePair getTemplate() {
             return new BarOverlayTemplatePair(
-                    color.get().toString() + "{token_type(" + getId() + ")}: {token(" + getId() + ")}",
+                    color.get().getChatFormatting() + "{token_type(" + getId() + ")}: {token(" + getId() + ")}",
                     "token(" + getId() + ")");
         }
 
         @Override
         public BarOverlayTemplatePair getPreviewTemplate() {
-            return new BarOverlayTemplatePair(color.get().toString() + "Tokens: 3/10", "capped(3; 10)");
+            return new BarOverlayTemplatePair(color.get().getChatFormatting() + "Tokens: 3/10", "capped(3; 10)");
         }
 
         @Override
