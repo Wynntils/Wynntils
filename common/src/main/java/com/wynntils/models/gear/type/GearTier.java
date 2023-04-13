@@ -4,10 +4,11 @@
  */
 package com.wynntils.models.gear.type;
 
-import com.wynntils.core.text.CodedString;
+import com.wynntils.core.text.StyledText;
 import com.wynntils.utils.StringUtils;
 import java.util.Arrays;
 import java.util.Locale;
+import java.util.Optional;
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
 
@@ -39,18 +40,26 @@ public enum GearTier {
         }
     }
 
-    public static GearTier fromFormattedString(CodedString name) {
-        if (name.getInternalCodedStringRepresentation().charAt(0) == '§') {
-            return fromChatFormatting(ChatFormatting.getByCode(
-                    name.getInternalCodedStringRepresentation().charAt(1)));
+    public static GearTier fromStyledText(StyledText text) {
+        Optional<ChatFormatting> chatFormatting = Arrays.stream(ChatFormatting.values())
+                .filter(ChatFormatting::isColor)
+                .filter(c -> c.getColor()
+                        == text.getFirstPart()
+                                .getPartStyle()
+                                .getStyle()
+                                .getColor()
+                                .getValue())
+                .findFirst();
+
+        if (chatFormatting.isPresent()) {
+            return fromChatFormatting(chatFormatting.get());
         }
 
         return null;
     }
 
     public static GearTier fromComponent(Component component) {
-        return fromFormattedString(
-                CodedString.fromComponentIgnoringComponentStylesAndJustUsingFormattingCodes(component));
+        return fromStyledText(StyledText.fromComponent(component));
     }
 
     public static GearTier fromChatFormatting(ChatFormatting formatting) {
