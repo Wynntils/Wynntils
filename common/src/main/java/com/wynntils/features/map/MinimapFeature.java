@@ -235,7 +235,7 @@ public class MinimapFeature extends Feature {
 
             float currentZoom = 1f / scale.get();
 
-            Stream<? extends Poi> poisToRender = Models.Map.getServicePois().stream();
+            Stream<? extends Poi> poisToRender = Models.Poi.getServicePois().stream();
 
             poisToRender = Stream.concat(
                     poisToRender,
@@ -244,9 +244,10 @@ public class MinimapFeature extends Feature {
                                     || (user.isMutualFriend() && renderRemoteFriendPlayers.get()))
                             .map(PlayerMiniMapPoi::new));
 
-            poisToRender = Stream.concat(poisToRender, Models.Map.getCombatPois().stream());
+            poisToRender = Stream.concat(poisToRender, Models.Poi.getCombatPois().stream());
             poisToRender = Stream.concat(
                     poisToRender, Managers.Feature.getFeatureInstance(MapFeature.class).customPois.get().stream());
+            poisToRender = Stream.concat(poisToRender, Models.Poi.getProvidedCustomPois().stream());
 
             MultiBufferSource.BufferSource bufferSource =
                     McUtils.mc().renderBuffers().bufferSource();
