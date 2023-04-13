@@ -4,11 +4,14 @@
  */
 package com.wynntils.core.net;
 
+import com.google.gson.JsonSyntaxException;
 import com.google.gson.reflect.TypeToken;
+import com.google.gson.stream.MalformedJsonException;
 import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.components.Manager;
 import com.wynntils.core.components.Managers;
 import com.wynntils.core.mod.TickSchedulerManager;
+import com.wynntils.utils.FileUtils;
 import com.wynntils.utils.StringUtils;
 import com.wynntils.utils.type.Pair;
 import java.io.File;
@@ -81,15 +84,27 @@ public final class UrlManager extends Manager {
 
     private void loadUrls(NetManager netManager) {
         // Figure out where to load the URLs from initially
-        for (InputStream tryStream : getLocalInputStreams(netManager)) {
-            try (InputStream inputStream = tryStream) {
-                Pair<Integer, Map<UrlId, UrlInfo>> tryMap = readUrls(inputStream);
-                tryUpdateUrlMap(tryMap);
-            } catch (IOException e) {
-                // We can't load the url list from local disk. This is a catastrophic failure.
-                // Nothing will work after this, so just abort.
-                WynntilsMod.error("ERROR: Cannot load URLs from local disk. Try deleting Wynntils cache.");
-                throw new RuntimeException(e);
+
+        // Start by reading the URLs from the resource embedded in the mod, so we have something to rely on
+        try {
+            readInputStreamForUrl(getBundledInputStream());
+        } catch (IOException | JsonSyntaxException e) {
+            // We can't load the url list bundled. This is a catastrophic failure.
+            // Nothing will work after this, so just abort.
+            throw new RuntimeException(
+                    "ERROR: Bundled JSON has invalid syntax or is malformed, or it could not be read. This might be because of a corrupt download. Try updating Wynntils.",
+                    e);
+        }
+
+        // Then try to read the URLs from the local cache
+        Pair<FileInputStream, File> localCache = getLocalCacheInputStreams(netManager);
+        if (localCache != null) {
+            try {
+                readInputStreamForUrl(localCache.key());
+            } catch (IOException | JsonSyntaxException e) {
+                // The local cache is corrupt. Delete it and try again.
+                WynntilsMod.warn("Problem reading URL list from local cache, deleting it.", e);
+                FileUtils.deleteFile(localCache.value());
             }
         }
 
@@ -115,6 +130,16 @@ public final class UrlManager extends Manager {
         });
     }
 
+    private void readInputStreamForUrl(InputStream tryStream) throws JsonSyntaxException, IOException {
+        try (InputStream inputStream = tryStream) {
+            Pair<Integer, Map<UrlId, UrlInfo>> tryMap = readUrls(inputStream);
+            tryUpdateUrlMap(tryMap);
+        } catch (MalformedJsonException e) {
+            // This is handled by the caller, so just rethrow
+            throw new MalformedJsonException(e);
+        }
+    }
+
     private void tryUpdateUrlMap(Pair<Integer, Map<UrlId, UrlInfo>> tryMap) {
         if (tryMap.a() > version) {
             urlMap = tryMap.b();
@@ -122,7 +147,11 @@ public final class UrlManager extends Manager {
         }
     }
 
-    private List<InputStream> getLocalInputStreams(NetManager netManager) {
+    private InputStream getBundledInputStream() {
+        return WynntilsMod.getModResourceAsStream("urls.json");
+    }
+
+    private Pair<FileInputStream, File> getLocalCacheInputStreams(NetManager netManager) {
         InputStream bundledStream = WynntilsMod.getModResourceAsStream("urls.json");
 
         // First check if there is a copy in the local cache
@@ -130,19 +159,19 @@ public final class UrlManager extends Manager {
         if (cacheFile.exists() && cacheFile.length() > 0) {
             // Yes, we have a cache. Use it to populate the map
             try {
-                return List.of(new FileInputStream(cacheFile), bundledStream);
+                return Pair.of(new FileInputStream(cacheFile), cacheFile);
             } catch (FileNotFoundException e) {
                 // This should not happens since we just checked, but fall through
                 // to bundled case if so
             }
         }
 
-        // No usable cache. Start by reading the URLs from the resource embedded in the mod,
-        // so we have something to rely on
-        return List.of(bundledStream);
+        // No usable cache.
+        return null;
     }
 
-    private Pair<Integer, Map<UrlId, UrlInfo>> readUrls(InputStream inputStream) throws IOException {
+    private Pair<Integer, Map<UrlId, UrlInfo>> readUrls(InputStream inputStream)
+            throws IOException, JsonSyntaxException {
         byte[] data = inputStream.readAllBytes();
         String json = new String(data, StandardCharsets.UTF_8);
         Type type = new TypeToken<List<UrlProfile>>() {}.getType();
