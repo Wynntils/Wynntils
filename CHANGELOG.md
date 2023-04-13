@@ -1,9 +1,21 @@
+## [0.0.2-alpha.469](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.468...v0.0.2-alpha.469) (2023-04-13)
+
+
+### New Features
+
+* Add CustomPoiProviders ([#1484](https://github.com/Wynntils/Artemis/issues/1484)) ([1ad0c4c](https://github.com/Wynntils/Artemis/commit/1ad0c4cfdddf865be36eb4139b2ab4bcdd6bc69a))
+
 ## [0.0.2-alpha.468](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.467...v0.0.2-alpha.468) (2023-04-13)
 
 
 ### New Features
 
 * Add AbilityTreeDataDumpFeature ([#1475](https://github.com/Wynntils/Artemis/issues/1475)) ([f43fd03](https://github.com/Wynntils/Artemis/commit/f43fd03b33800997d15ce0ade8aa230c3f9c45c4))
+
+
+### Miscellaneous Chores
+
+* **release:** v0.0.2-alpha.468 [skip ci] ([a4c5d7b](https://github.com/Wynntils/Artemis/commit/a4c5d7be872bbe76ce5dbd66673af4acaa199e99))
 
 ## [0.0.2-alpha.467](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.466...v0.0.2-alpha.467) (2023-04-13)
 
@@ -40,16 +52,4 @@
 ### Miscellaneous Chores
 
 * **release:** v0.0.2-alpha.465 [skip ci] ([54a1170](https://github.com/Wynntils/Artemis/commit/54a1170a9384686c70a656356eb62ce7c5b881e8))
-
-## [0.0.2-alpha.464](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.463...v0.0.2-alpha.464) (2023-04-13)
-
-
-### Bug Fixes
-
-* Make every mouse button a valid click in CustomCharacterSelectorScreen ([#1481](https://github.com/Wynntils/Artemis/issues/1481)) ([5c29b2d](https://github.com/Wynntils/Artemis/commit/5c29b2d73ff54705621ee3b3f1ed24a1202fc464))
-
-
-### Miscellaneous Chores
-
-* **release:** v0.0.2-alpha.464 [skip ci] ([a73b5d0](https://github.com/Wynntils/Artemis/commit/a73b5d09dee98f8c2f0093ca9fa85bfe8fc5d539))
 
