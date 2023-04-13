@@ -1298,6 +1298,8 @@
   "overlay.wynntils.overlay.userEnabled.name": "Enabled",
   "overlay.wynntils.overlay.verticalAlignmentOverride.description": "Set this if you want to override the position vertical alignment",
   "overlay.wynntils.overlay.verticalAlignmentOverride.name": "Vertical Alignment Override",
+  "overlay.wynntils.textOverlay.fontScale.description": "How large should the text be?",
+  "overlay.wynntils.textOverlay.fontScale.name": "Font Scale",
   "overlay.wynntils.textOverlay.textShadow.description": "Should the text be drawn with a shadow?",
   "overlay.wynntils.textOverlay.textShadow.name": "Text Shadow",
   "screens.wynntils.changelog.name": "Changelog",
