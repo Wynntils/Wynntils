@@ -19,7 +19,7 @@ import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
 import net.minecraft.client.gui.screens.inventory.ContainerScreen;
 
 public final class ContainerModel extends Model {
-    private static final Pattern ABILITY_TREE_PATTERN =
+    public static final Pattern ABILITY_TREE_PATTERN =
             Pattern.compile("(?:Warrior|Shaman|Mage|Assassin|Archer) Abilities");
 
     // Test suite: https://regexr.com/7b4l0
