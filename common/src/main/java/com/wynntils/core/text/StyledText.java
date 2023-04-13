@@ -110,6 +110,10 @@ public final class StyledText {
                 StyledTextPart.fromCodedString(codedString, Style.EMPTY, null, Style.EMPTY), List.of(), List.of());
     }
 
+    public static StyledText fromPart(StyledTextPart part) {
+        return new StyledText(List.of(part), List.of(), List.of());
+    }
+
     public static StyledText fromCodedString(CodedString codedString) {
         return fromString(codedString.getInternalCodedStringRepresentation());
     }
@@ -144,6 +148,12 @@ public final class StyledText {
         }
 
         return component;
+    }
+
+    // Only used for porting. To be removed.
+    @Deprecated
+    public String getInternalCodedStringRepresentation() {
+        return getString(PartStyle.StyleType.FULL);
     }
 
     public static StyledText join(StyledText styledTextSeparator, StyledText... texts) {
@@ -354,6 +364,14 @@ public final class StyledText {
         }
 
         return new StyledText(newParts, temporaryWorkaround, clickEvents, hoverEvents);
+    }
+
+    public StyledTextPart getFirstPart() {
+        if (parts.isEmpty()) {
+            return null;
+        }
+
+        return parts.get(0);
     }
 
     public int getPartCount() {

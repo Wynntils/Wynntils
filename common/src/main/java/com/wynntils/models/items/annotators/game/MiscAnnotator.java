@@ -5,6 +5,7 @@
 package com.wynntils.models.items.annotators.game;
 
 import com.wynntils.core.text.CodedString;
+import com.wynntils.core.text.StyledText;
 import com.wynntils.handlers.item.ItemAnnotation;
 import com.wynntils.handlers.item.ItemAnnotator;
 import com.wynntils.models.items.items.game.MiscItem;
@@ -19,7 +20,7 @@ public final class MiscAnnotator implements ItemAnnotator {
     private static final CodedString QUEST_ITEM = CodedString.fromString("§cQuest Item");
 
     @Override
-    public ItemAnnotation getAnnotation(ItemStack itemStack, CodedString name) {
+    public ItemAnnotation getAnnotation(ItemStack itemStack, StyledText name) {
         ListTag loreTag = LoreUtils.getLoreTag(itemStack);
         if (loreTag == null) return null;
 
@@ -40,6 +41,6 @@ public final class MiscAnnotator implements ItemAnnotator {
         // e.g. a GUI element
         if (!untradable && !questItem) return null;
 
-        return new MiscItem(name, untradable, questItem);
+        return new MiscItem(CodedString.fromStyledText(name), untradable, questItem);
     }
 }
