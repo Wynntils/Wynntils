@@ -1,9 +1,21 @@
+## [0.0.2-alpha.467](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.466...v0.0.2-alpha.467) (2023-04-13)
+
+
+### Code Refactoring
+
+* Port ItemAnnotator (and the fallout) to use StyledText ([#1463](https://github.com/Wynntils/Artemis/issues/1463)) ([c7258f1](https://github.com/Wynntils/Artemis/commit/c7258f11be2c6ddbb7b0e6bc82f547025f203114))
+
 ## [0.0.2-alpha.466](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.465...v0.0.2-alpha.466) (2023-04-13)
 
 
 ### New Features
 
 * Make ManaBankBarOverlay render as dark blue when full ([#1483](https://github.com/Wynntils/Artemis/issues/1483)) ([319195f](https://github.com/Wynntils/Artemis/commit/319195f0a6704eeab01311375d1e668c5a3dbe4b))
+
+
+### Miscellaneous Chores
+
+* **release:** v0.0.2-alpha.466 [skip ci] ([92488e6](https://github.com/Wynntils/Artemis/commit/92488e685add23466f283e7c531669958b8a6a4d))
 
 ## [0.0.2-alpha.465](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.464...v0.0.2-alpha.465) (2023-04-13)
 
@@ -40,16 +52,4 @@
 ### Miscellaneous Chores
 
 * **release:** v0.0.2-alpha.463 [skip ci] ([f8d316f](https://github.com/Wynntils/Artemis/commit/f8d316facf4d8613b4750c6f675c6793ae55e49f))
-
-## [0.0.2-alpha.462](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.461...v0.0.2-alpha.462) (2023-04-13)
-
-
-### Bug Fixes
-
-* Handle corrupted URL caches ([#1479](https://github.com/Wynntils/Artemis/issues/1479)) ([c10e18f](https://github.com/Wynntils/Artemis/commit/c10e18faaa8b0535ad8af5fc8d75ed530b139aed))
-
-
-### Miscellaneous Chores
-
-* **release:** v0.0.2-alpha.462 [skip ci] ([f8dcdd6](https://github.com/Wynntils/Artemis/commit/f8dcdd6a5475ce74315e23e603d8e99b0dc41fea))
 
