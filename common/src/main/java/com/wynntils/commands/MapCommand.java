@@ -100,6 +100,9 @@ public class MapCommand extends Command {
         for (CustomPoiProvider poiProvider : Models.Poi.getCustomPoiProviders()) {
             message.append(Component.literal("\n"));
             message.append(Component.literal(poiProvider.getName()).withStyle(ChatFormatting.GOLD));
+            message.append(Component.literal(poiProvider.isEnabled() ? " (enabled)" : " (disabled)")
+                    .withStyle(poiProvider.isEnabled() ? ChatFormatting.GREEN : ChatFormatting.RED));
+            message.append(Component.empty());
             message.append(Component.literal(" (").withStyle(ChatFormatting.GRAY));
             message.append(Component.literal(poiProvider.getUrl().toString()).withStyle(ChatFormatting.GRAY));
             message.append(Component.literal(")").withStyle(ChatFormatting.GRAY));
