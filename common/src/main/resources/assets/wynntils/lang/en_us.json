@@ -760,6 +760,8 @@
   "feature.wynntils.spellCastRender.vignetteIntensity.description": "How intense should the vignette be displayed?",
   "feature.wynntils.spellCastRender.vignetteIntensity.name": "Vignette Intensity",
   "feature.wynntils.statusOverlay.name": "Statuses",
+  "feature.wynntils.statusOverlay.overlay.status.fontScale.description": "How large should the status text be?",
+  "feature.wynntils.statusOverlay.overlay.status.fontScale.name": "Font Scale",
   "feature.wynntils.statusOverlay.overlay.status.name": "Status Overlay",
   "feature.wynntils.statusOverlay.overlay.status.textShadow.description": "What should the text shadow look like?",
   "feature.wynntils.statusOverlay.overlay.status.textShadow.name": "Text Shadow",
