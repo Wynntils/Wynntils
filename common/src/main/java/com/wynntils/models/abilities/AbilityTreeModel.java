@@ -12,7 +12,10 @@ import com.wynntils.core.components.Model;
 import com.wynntils.core.net.Download;
 import com.wynntils.core.net.UrlId;
 import com.wynntils.models.abilities.type.AbilityTreeInfo;
+import com.wynntils.models.abilities.type.ParsedAbilityTree;
 import com.wynntils.models.character.type.ClassType;
+import com.wynntils.screens.abilities.CustomAbilityTreeScreen;
+import com.wynntils.utils.mc.McUtils;
 import java.lang.reflect.Type;
 import java.util.HashMap;
 import java.util.List;
@@ -22,6 +25,7 @@ public class AbilityTreeModel extends Model {
     public static final AbilityTreeContainerQueries ABILITY_TREE_CONTAINER_QUERIES = new AbilityTreeContainerQueries();
 
     private Map<ClassType, AbilityTreeInfo> ABILIIY_TREE_MAP = new HashMap<>();
+    private ParsedAbilityTree parsedAbilityTree;
 
     public AbilityTreeModel() {
         super(List.of());
@@ -44,6 +48,14 @@ public class AbilityTreeModel extends Model {
 
             ABILIIY_TREE_MAP = tempMap;
         });
+    }
+
+    public void setParsedAbilityTree(ParsedAbilityTree parsedAbilityTree) {
+        this.parsedAbilityTree = parsedAbilityTree;
+
+        if (McUtils.mc().screen instanceof CustomAbilityTreeScreen customAbilityTreeScreen) {
+            customAbilityTreeScreen.updateAbilityTree(parsedAbilityTree);
+        }
     }
 
     public AbilityTreeInfo getAbilityTree(ClassType type) {

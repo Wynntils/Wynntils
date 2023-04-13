@@ -8,6 +8,9 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import com.wynntils.core.components.Models;
 import com.wynntils.models.abilities.type.AbilityTreeInfo;
 import com.wynntils.models.abilities.type.AbilityTreeLocation;
+import com.wynntils.models.abilities.type.AbilityTreeNodeState;
+import com.wynntils.models.abilities.type.AbilityTreeSkillNode;
+import com.wynntils.models.abilities.type.ParsedAbilityTree;
 import com.wynntils.models.character.type.ClassType;
 import com.wynntils.screens.abilities.widgets.AbilityNodeWidget;
 import com.wynntils.screens.base.WynntilsScreen;
@@ -27,6 +30,7 @@ public class CustomAbilityTreeScreen extends WynntilsScreen {
     private static final int NODE_AREA_HEIGHT = 105;
 
     private final AbilityTreeInfo abilityTreeInfo;
+    private ParsedAbilityTree currentAbilityTree;
 
     private final List<AbilityNodeWidget> nodeWidgets = new ArrayList<>();
 
@@ -67,6 +71,22 @@ public class CustomAbilityTreeScreen extends WynntilsScreen {
         poseStack.popPose();
     }
 
+    public void updateAbilityTree(ParsedAbilityTree parsedAbilityTree) {
+        currentAbilityTree = parsedAbilityTree;
+    }
+
+    public AbilityTreeNodeState getNodeState(AbilityTreeSkillNode node) {
+        if (currentAbilityTree == null) {
+            return AbilityTreeNodeState.LOCKED;
+        }
+
+        return currentAbilityTree.nodes().keySet().stream()
+                .filter(n -> n.equals(node))
+                .map(currentAbilityTree.nodes()::get)
+                .findFirst()
+                .orElse(AbilityTreeNodeState.LOCKED);
+    }
+
     private void setCurrentPage(int page) {
         currentPage = page;
 
@@ -86,6 +106,7 @@ public class CustomAbilityTreeScreen extends WynntilsScreen {
                             renderLocation.b() - AbilityNodeWidget.SIZE / 2,
                             AbilityNodeWidget.SIZE,
                             AbilityNodeWidget.SIZE,
+                            this,
                             node));
                 });
     }

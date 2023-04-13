@@ -163,11 +163,11 @@ public record AbilityTreeSkillNode(
             return damage;
         }
 
-        public int getUnlockedDamage() {
+        public int getUnlockableDamage() {
             return damage + 1;
         }
 
-        public int getActiveDamage() {
+        public int getUnlockedDamage() {
             return damage + 2;
         }
     }

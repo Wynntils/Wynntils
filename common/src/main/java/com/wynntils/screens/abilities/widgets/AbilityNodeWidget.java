@@ -6,6 +6,7 @@ package com.wynntils.screens.abilities.widgets;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.wynntils.models.abilities.type.AbilityTreeSkillNode;
+import com.wynntils.screens.abilities.CustomAbilityTreeScreen;
 import com.wynntils.utils.render.RenderUtils;
 import net.minecraft.client.gui.components.AbstractWidget;
 import net.minecraft.client.gui.narration.NarrationElementOutput;
@@ -17,18 +18,34 @@ import net.minecraft.world.item.ItemStack;
 public class AbilityNodeWidget extends AbstractWidget {
     public static final int SIZE = 20;
 
+    private final CustomAbilityTreeScreen customAbilityTreeScreen;
     private final AbilityTreeSkillNode node;
 
-    public AbilityNodeWidget(int x, int y, int width, int height, AbilityTreeSkillNode node) {
+    public AbilityNodeWidget(
+            int x,
+            int y,
+            int width,
+            int height,
+            CustomAbilityTreeScreen customAbilityTreeScreen,
+            AbilityTreeSkillNode node) {
         super(x, y, width, height, Component.literal(node.name()));
         this.node = node;
+        this.customAbilityTreeScreen = customAbilityTreeScreen;
     }
 
     @Override
     public void renderButton(PoseStack poseStack, int mouseX, int mouseY, float partialTick) {
         ItemStack itemStack = new ItemStack(Item.byId(node.itemInformation().itemId()));
 
-        itemStack.setDamageValue(node.itemInformation().damage());
+        int damage =
+                switch (customAbilityTreeScreen.getNodeState(node)) {
+                    case LOCKED -> node.itemInformation().getLockedDamage();
+                    case UNLOCKABLE -> node.itemInformation().getUnlockableDamage();
+                    case UNLOCKED -> node.itemInformation().getUnlockedDamage();
+                    case BLOCKED -> node.itemInformation().getBlockedDamage();
+                };
+
+        itemStack.setDamageValue(damage);
         CompoundTag tag = itemStack.getOrCreateTag();
         tag.putBoolean("Unbreakable", true);
 

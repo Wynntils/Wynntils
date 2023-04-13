@@ -11,13 +11,10 @@ import com.wynntils.core.config.ConfigCategory;
 import com.wynntils.core.features.Feature;
 import com.wynntils.mc.event.ContainerClickEvent;
 import com.wynntils.models.abilities.AbilityTreeContainerQueries;
-import com.wynntils.models.abilities.type.AbilityTreeNodeState;
-import com.wynntils.models.abilities.type.AbilityTreeSkillNode;
 import com.wynntils.models.items.items.gui.AbilityTreeItem;
 import com.wynntils.screens.abilities.CustomAbilityTreeScreen;
 import com.wynntils.utils.mc.KeyboardUtils;
 import com.wynntils.utils.mc.McUtils;
-import java.util.Map;
 import java.util.Optional;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
@@ -39,12 +36,8 @@ public class CustomAbilityTreeFeature extends Feature {
         // Wait for the container to close
         Managers.TickScheduler.scheduleNextTick(
                 () -> Models.AbilityTree.ABILITY_TREE_CONTAINER_QUERIES.queryAbilityTree(
-                        new AbilityTreeContainerQueries.AbilityPageSoftProcessor(parsedAbilityTree -> {
-                            for (Map.Entry<AbilityTreeSkillNode, AbilityTreeNodeState> entry :
-                                    parsedAbilityTree.nodes().entrySet()) {
-                                System.out.println(entry.getKey().name() + ": " + entry.getValue());
-                            }
-                        })));
+                        new AbilityTreeContainerQueries.AbilityPageSoftProcessor(
+                                Models.AbilityTree::setParsedAbilityTree)));
 
         McUtils.mc().setScreen(new CustomAbilityTreeScreen());
     }
