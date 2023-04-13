@@ -29,8 +29,9 @@ import net.minecraft.world.item.Items;
 public class AbilityTreeContainerQueries {
     private static final int ABILITY_TREE_PAGES = 7;
     private static final int ABILITY_TREE_SLOT = 9;
+    private static final int PREVIOUS_PAGE_SLOT = 57;
     private static final int NEXT_PAGE_SLOT = 59;
-    private static final int DUMMY_SLOT = 89;
+    private static final int DUMMY_SLOT = 76; // This is the second archetype icon
     private static final StyledText NEXT_PAGE_ITEM_NAME = StyledText.fromString("§7Next Page");
 
     public void queryAbilityTree(AbilityTreeProcessor processor) {
@@ -47,6 +48,23 @@ public class AbilityTreeContainerQueries {
                 .processContainer(container -> {})
                 .setWaitForMenuReopen(false)
                 .clickOnSlot(ABILITY_TREE_SLOT)
+                .matchTitle(Models.Container.ABILITY_TREE_PATTERN.pattern())
+                .processContainer(c -> {});
+
+        // region Hack for going back to first page without knowing our current page
+
+        for (int i = ABILITY_TREE_PAGES - 1; i > 0; i--) {
+            queryBuilder
+                    .clickOnSlotIfExists(PREVIOUS_PAGE_SLOT, DUMMY_SLOT)
+                    .matchTitle(Models.Container.ABILITY_TREE_PATTERN.pattern())
+                    .processContainer(c -> {});
+        }
+
+        // endregion
+
+        // We are on the first page now
+        queryBuilder
+                .clickOnSlot(DUMMY_SLOT)
                 .matchTitle(Models.Container.ABILITY_TREE_PATTERN.pattern())
                 .processContainer(c -> processor.processPage(c, 1));
 
@@ -89,6 +107,8 @@ public class AbilityTreeContainerQueries {
         @Override
         public void processPage(ContainerContent content, int page) {
             List<ItemStack> items = content.items();
+
+            System.out.println("page = " + page);
 
             for (int slot = 0; slot < items.size(); slot++) {
                 ItemStack itemStack = items.get(slot);
