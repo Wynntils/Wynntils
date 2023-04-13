@@ -1,9 +1,21 @@
+## [0.0.2-alpha.462](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.461...v0.0.2-alpha.462) (2023-04-13)
+
+
+### Bug Fixes
+
+* Handle corrupted URL caches ([#1479](https://github.com/Wynntils/Artemis/issues/1479)) ([c10e18f](https://github.com/Wynntils/Artemis/commit/c10e18faaa8b0535ad8af5fc8d75ed530b139aed))
+
 ## [0.0.2-alpha.461](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.460...v0.0.2-alpha.461) (2023-04-12)
 
 
 ### Bug Fixes
 
 * Use Wynntils' WynnData fork in the mod ([#1476](https://github.com/Wynntils/Artemis/issues/1476)) ([75430f2](https://github.com/Wynntils/Artemis/commit/75430f2a67ad58654ba1d09779b1721d142146e8))
+
+
+### Miscellaneous Chores
+
+* **release:** v0.0.2-alpha.461 [skip ci] ([6d602a6](https://github.com/Wynntils/Artemis/commit/6d602a6e9bd1c2d3871cb6553bdfc2e8a535eeb5))
 
 ## [0.0.2-alpha.460](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.459...v0.0.2-alpha.460) (2023-04-09)
 
@@ -40,16 +52,4 @@
 ### Miscellaneous Chores
 
 * **release:** v0.0.2-alpha.458 [skip ci] ([24fb42a](https://github.com/Wynntils/Artemis/commit/24fb42aa11a1d118c652e0f73dc95b6040daeeab))
-
-## [0.0.2-alpha.457](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.456...v0.0.2-alpha.457) (2023-04-08)
-
-
-### Code Refactoring
-
-* Port ChatCoordinatesFeature (and DeathCoordinatesFeature) to use StyledText ([#1466](https://github.com/Wynntils/Artemis/issues/1466)) ([f751152](https://github.com/Wynntils/Artemis/commit/f751152115dd5fee74d487f6e459c35f9b175918))
-
-
-### Miscellaneous Chores
-
-* **release:** v0.0.2-alpha.457 [skip ci] ([109ca6b](https://github.com/Wynntils/Artemis/commit/109ca6bc557f0ab151aa6a90ab0eb5eabdb03660))
 
