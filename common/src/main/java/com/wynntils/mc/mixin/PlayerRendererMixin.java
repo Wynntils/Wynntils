@@ -7,14 +7,13 @@ package com.wynntils.mc.mixin;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.wynntils.core.events.MixinHelper;
 import com.wynntils.mc.event.PlayerNametagRenderEvent;
-import com.wynntils.mc.event.RenderLayerRegistrationEvent;
+import com.wynntils.models.cosmetics.CosmeticsModel;
 import net.minecraft.client.model.PlayerModel;
 import net.minecraft.client.player.AbstractClientPlayer;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
 import net.minecraft.client.renderer.entity.EntityRendererProvider.Context;
 import net.minecraft.client.renderer.entity.LivingEntityRenderer;
-import net.minecraft.client.renderer.entity.layers.RenderLayer;
 import net.minecraft.client.renderer.entity.player.PlayerRenderer;
 import net.minecraft.network.chat.Component;
 import org.spongepowered.asm.mixin.Mixin;
@@ -33,12 +32,11 @@ public abstract class PlayerRendererMixin
             method = "<init>(Lnet/minecraft/client/renderer/entity/EntityRendererProvider$Context;Z)V",
             at = @At("RETURN"))
     private void onCtor(EntityRendererProvider.Context context, boolean bl, CallbackInfo ci) {
-        RenderLayerRegistrationEvent event =
-                new RenderLayerRegistrationEvent((PlayerRenderer) (Object) this, context, bl);
-        MixinHelper.postAlways(event);
-        for (RenderLayer<AbstractClientPlayer, PlayerModel<AbstractClientPlayer>> layer : event.getRegisteredLayers()) {
-            this.addLayer(layer);
-        }
+        // Note: This is needed because constructor is called in a static context, where class loading is unpredictable.
+        //       This makes it so events can't be used here, since this might happen before initalizing features.
+        CosmeticsModel.getRegisteredLayers().forEach(layerProvider -> {
+            this.addLayer(layerProvider.apply(this, context.getModelSet()));
+        });
     }
 
     @Inject(
