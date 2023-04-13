@@ -1,9 +1,21 @@
+## [0.0.2-alpha.464](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.463...v0.0.2-alpha.464) (2023-04-13)
+
+
+### Bug Fixes
+
+* Make every mouse button a valid click in CustomCharacterSelectorScreen ([#1481](https://github.com/Wynntils/Artemis/issues/1481)) ([5c29b2d](https://github.com/Wynntils/Artemis/commit/5c29b2d73ff54705621ee3b3f1ed24a1202fc464))
+
 ## [0.0.2-alpha.463](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.462...v0.0.2-alpha.463) (2023-04-13)
 
 
 ### Bug Fixes
 
 * Make Wynntils Cosmetics render in every case, fix cosmetics leaking memory, introduce CosmeticsModel ([#1480](https://github.com/Wynntils/Artemis/issues/1480)) ([7c4a5fd](https://github.com/Wynntils/Artemis/commit/7c4a5fd25f87c127083e0a0979c12a6e98aee1a2))
+
+
+### Miscellaneous Chores
+
+* **release:** v0.0.2-alpha.463 [skip ci] ([f8d316f](https://github.com/Wynntils/Artemis/commit/f8d316facf4d8613b4750c6f675c6793ae55e49f))
 
 ## [0.0.2-alpha.462](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.461...v0.0.2-alpha.462) (2023-04-13)
 
@@ -40,16 +52,4 @@
 ### Miscellaneous Chores
 
 * **release:** v0.0.2-alpha.460 [skip ci] ([8f0f9d7](https://github.com/Wynntils/Artemis/commit/8f0f9d7b4c8c4694a2cbef902de586597f29bda1))
-
-## [0.0.2-alpha.459](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.458...v0.0.2-alpha.459) (2023-04-09)
-
-
-### Bug Fixes
-
-* Fix some feature names/categories ([#1472](https://github.com/Wynntils/Artemis/issues/1472)) ([8dfce59](https://github.com/Wynntils/Artemis/commit/8dfce59322625d8a0d9c5f3820ee5d071a8801c9))
-
-
-### Miscellaneous Chores
-
-* **release:** v0.0.2-alpha.459 [skip ci] ([e4d51bb](https://github.com/Wynntils/Artemis/commit/e4d51bbb326a4d2da70d65c3e84c958fdb927c9e))
 
