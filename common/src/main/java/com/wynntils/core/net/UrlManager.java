@@ -88,10 +88,11 @@ public final class UrlManager extends Manager {
         // Start by reading the URLs from the resource embedded in the mod, so we have something to rely on
         try {
             readInputStreamForUrl(getBundledInputStream());
-        } catch (MalformedJsonException | JsonSyntaxException e) {
-            // If the bundled JSON is corrupt, we can't do anything. Abort.
+        } catch (IOException | JsonSyntaxException e) {
+            // We can't load the url list bundled. This is a catastrophic failure.
+            // Nothing will work after this, so just abort.
             throw new RuntimeException(
-                    "ERROR: Bundled JSON has invalid syntax or is malformed. This might be because of a corrupt download. Try updating Wynntils.",
+                    "ERROR: Bundled JSON has invalid syntax or is malformed, or it could not be read. This might be because of a corrupt download. Try updating Wynntils.",
                     e);
         }
 
@@ -100,7 +101,7 @@ public final class UrlManager extends Manager {
         if (localCache != null) {
             try {
                 readInputStreamForUrl(localCache.key());
-            } catch (MalformedJsonException | JsonSyntaxException e) {
+            } catch (IOException | JsonSyntaxException e) {
                 // The local cache is corrupt. Delete it and try again.
                 WynntilsMod.warn("Problem reading URL list from local cache, deleting it.", e);
                 FileUtils.deleteFile(localCache.value());
@@ -129,18 +130,13 @@ public final class UrlManager extends Manager {
         });
     }
 
-    private void readInputStreamForUrl(InputStream tryStream) throws JsonSyntaxException, MalformedJsonException {
+    private void readInputStreamForUrl(InputStream tryStream) throws JsonSyntaxException, IOException {
         try (InputStream inputStream = tryStream) {
             Pair<Integer, Map<UrlId, UrlInfo>> tryMap = readUrls(inputStream);
             tryUpdateUrlMap(tryMap);
         } catch (MalformedJsonException e) {
             // This is handled by the caller, so just rethrow
             throw new MalformedJsonException(e);
-        } catch (IOException e) {
-            // We can't load the url list from local disk. This is a catastrophic failure.
-            // Nothing will work after this, so just abort.
-            WynntilsMod.error("ERROR: Cannot load URLs from local disk. Try deleting Wynntils cache.");
-            throw new RuntimeException(e);
         }
     }
 
