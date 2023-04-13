@@ -154,7 +154,7 @@ public class GameBarsOverlayFeature extends Feature {
                     barProgress.value().current(), icon(), barProgress.value().max());
             renderText(poseStack, bufferSource, renderY, text);
 
-            float renderedProgress = (flip.get() ? -1 : 1) * currentProgress;
+            float renderedProgress = Math.round((flip.get() ? -1 : 1) * currentProgress * 100) / 100f;
             renderBar(poseStack, bufferSource, renderY + 10, barHeight, renderedProgress);
         }
 
@@ -492,6 +492,55 @@ public class GameBarsOverlayFeature extends Feature {
         @Override
         public boolean isActive() {
             return Models.BossBar.manaBankBar.isActive();
+        }
+
+        @Override
+        protected void renderBar(
+                PoseStack poseStack,
+                MultiBufferSource bufferSource,
+                float renderY,
+                float renderHeight,
+                float progress) {
+            int textureY1 = getTextureY1();
+            int textureY2 = getTextureY2();
+
+            Texture texture = getTexture();
+
+            float x1 = this.getRenderX();
+            float x2 = this.getRenderX() + this.getWidth();
+
+            int half = (textureY1 + textureY2) / 2 + (textureY2 - textureY1) % 2;
+            BufferedRenderUtils.drawProgressBarBackground(
+                    poseStack, bufferSource, texture, x1, renderY, x2, renderY + renderHeight, 0, textureY1, 81, half);
+            if (progress == 1f) {
+                BufferedRenderUtils.drawProgressBarForeground(
+                        poseStack,
+                        bufferSource,
+                        getOverflowTexture(),
+                        x1,
+                        renderY,
+                        x2,
+                        renderY + renderHeight,
+                        0,
+                        half,
+                        81,
+                        textureY2 + (textureY2 - textureY1) % 2,
+                        1f);
+            } else {
+                BufferedRenderUtils.drawProgressBarForeground(
+                        poseStack,
+                        bufferSource,
+                        texture,
+                        x1,
+                        renderY,
+                        x2,
+                        renderY + renderHeight,
+                        0,
+                        half,
+                        81,
+                        textureY2 + (textureY2 - textureY1) % 2,
+                        progress);
+            }
         }
 
         @Override
