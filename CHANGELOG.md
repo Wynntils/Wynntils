@@ -1,9 +1,21 @@
+## [0.0.2-alpha.465](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.464...v0.0.2-alpha.465) (2023-04-13)
+
+
+### New Features
+
+* Add font scale setting for TextOverlays + Status Overlay ([#1482](https://github.com/Wynntils/Artemis/issues/1482)) ([8937c74](https://github.com/Wynntils/Artemis/commit/8937c7457faaa577c631f4e672e0835b3a535f76))
+
 ## [0.0.2-alpha.464](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.463...v0.0.2-alpha.464) (2023-04-13)
 
 
 ### Bug Fixes
 
 * Make every mouse button a valid click in CustomCharacterSelectorScreen ([#1481](https://github.com/Wynntils/Artemis/issues/1481)) ([5c29b2d](https://github.com/Wynntils/Artemis/commit/5c29b2d73ff54705621ee3b3f1ed24a1202fc464))
+
+
+### Miscellaneous Chores
+
+* **release:** v0.0.2-alpha.464 [skip ci] ([a73b5d0](https://github.com/Wynntils/Artemis/commit/a73b5d09dee98f8c2f0093ca9fa85bfe8fc5d539))
 
 ## [0.0.2-alpha.463](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.462...v0.0.2-alpha.463) (2023-04-13)
 
@@ -40,16 +52,4 @@
 ### Miscellaneous Chores
 
 * **release:** v0.0.2-alpha.461 [skip ci] ([6d602a6](https://github.com/Wynntils/Artemis/commit/6d602a6e9bd1c2d3871cb6553bdfc2e8a535eeb5))
-
-## [0.0.2-alpha.460](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.459...v0.0.2-alpha.460) (2023-04-09)
-
-
-### Bug Fixes
-
-* Fix TokenTrackerFeature color settings applying as text ([#1474](https://github.com/Wynntils/Artemis/issues/1474)) ([6a48a18](https://github.com/Wynntils/Artemis/commit/6a48a185f21dbd7b093cd27dda1a25ac004edb6f))
-
-
-### Miscellaneous Chores
-
-* **release:** v0.0.2-alpha.460 [skip ci] ([8f0f9d7](https://github.com/Wynntils/Artemis/commit/8f0f9d7b4c8c4694a2cbef902de586597f29bda1))
 
