@@ -73,7 +73,7 @@ public class CosmeticsModel extends Model {
     @SubscribeEvent
     public void onWorldStateChange(WorldStateEvent event) {
         if (event.getNewState() == WorldState.NOT_CONNECTED) {
-            cosmeticTextures.clear();
+            clearCosmeticsCache();
         }
     }
 
@@ -146,5 +146,13 @@ public class CosmeticsModel extends Model {
 
     public ResourceLocation[] getUserCosmeticTexture(UUID uuid) {
         return cosmeticTextures.getOrDefault(uuid, null);
+    }
+
+    private void clearCosmeticsCache() {
+        cosmeticTextures.values().forEach(resourceLocations -> {
+            for (ResourceLocation location : resourceLocations) {
+                McUtils.mc().getTextureManager().release(location);
+            }
+        });
     }
 }
