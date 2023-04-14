@@ -5,13 +5,16 @@
 package com.wynntils.screens.abilities;
 
 import com.mojang.blaze3d.vertex.PoseStack;
+import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.components.Models;
+import com.wynntils.models.abilitytree.type.AbilityTreeConnectionNode;
+import com.wynntils.models.abilitytree.type.AbilityTreeConnectionType;
 import com.wynntils.models.abilitytree.type.AbilityTreeInfo;
 import com.wynntils.models.abilitytree.type.AbilityTreeLocation;
-import com.wynntils.models.abilitytree.type.AbilityTreeNodeState;
 import com.wynntils.models.abilitytree.type.AbilityTreeSkillNode;
 import com.wynntils.models.abilitytree.type.ParsedAbilityTree;
 import com.wynntils.models.character.type.ClassType;
+import com.wynntils.screens.abilities.widgets.AbilityNodeConnectionWidget;
 import com.wynntils.screens.abilities.widgets.AbilityNodeWidget;
 import com.wynntils.screens.base.WynntilsScreen;
 import com.wynntils.utils.mc.McUtils;
@@ -20,6 +23,7 @@ import com.wynntils.utils.render.Texture;
 import com.wynntils.utils.type.Pair;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import net.minecraft.network.chat.Component;
 
 public class CustomAbilityTreeScreen extends WynntilsScreen {
@@ -33,6 +37,7 @@ public class CustomAbilityTreeScreen extends WynntilsScreen {
     private ParsedAbilityTree currentAbilityTree;
 
     private final List<AbilityNodeWidget> nodeWidgets = new ArrayList<>();
+    private final List<AbilityNodeConnectionWidget> connectionWidgets = new ArrayList<>();
 
     private int currentPage;
 
@@ -75,18 +80,6 @@ public class CustomAbilityTreeScreen extends WynntilsScreen {
         currentAbilityTree = parsedAbilityTree;
     }
 
-    public AbilityTreeNodeState getNodeState(AbilityTreeSkillNode node) {
-        if (currentAbilityTree == null) {
-            return AbilityTreeNodeState.LOCKED;
-        }
-
-        return currentAbilityTree.nodes().keySet().stream()
-                .filter(n -> n.equals(node))
-                .map(currentAbilityTree.nodes()::get)
-                .findFirst()
-                .orElse(AbilityTreeNodeState.LOCKED);
-    }
-
     private void setCurrentPage(int page) {
         currentPage = page;
 
@@ -95,6 +88,7 @@ public class CustomAbilityTreeScreen extends WynntilsScreen {
 
     private void reloadAbilityNodeWidgets() {
         nodeWidgets.clear();
+        connectionWidgets.clear();
 
         abilityTreeInfo.getNodes().stream()
                 .filter(node -> node.location().page() == currentPage + 1)
@@ -106,12 +100,75 @@ public class CustomAbilityTreeScreen extends WynntilsScreen {
                             renderLocation.b() - AbilityNodeWidget.SIZE / 2,
                             AbilityNodeWidget.SIZE,
                             AbilityNodeWidget.SIZE,
-                            this,
                             node));
                 });
+
+        for (AbilityNodeWidget nodeWidget : nodeWidgets) {
+            final AbilityTreeSkillNode currentNode = nodeWidget.getNode();
+            final int col = currentNode.location().col();
+            final int row = currentNode.location().row();
+
+            for (String connection : currentNode.connections()) {
+                Optional<AbilityTreeSkillNode> connectionOptional = abilityTreeInfo.getNodes().stream()
+                        .filter(node -> node.name().equals(connection))
+                        .findFirst();
+
+                if (connectionOptional.isEmpty()) {
+                    WynntilsMod.warn("Unable to find connection node for " + connection);
+                    continue;
+                }
+
+                AbilityTreeSkillNode connectionNode = connectionOptional.get();
+
+                // FIXME: Handle connections between pages
+                if (connectionNode.location().page() != currentNode.location().page()) {
+                    continue;
+                }
+
+                final int connectionCol = connectionNode.location().col();
+                final int connectionRow = connectionNode.location().row();
+
+                int startCol = Math.min(col, connectionCol);
+                int endCol = Math.max(col, connectionCol);
+
+                for (int i = startCol + 1; i <= endCol - 1; i++) {
+                    Pair<Integer, Integer> renderLocation = getRenderLocation(
+                            new AbilityTreeLocation(connectionNode.location().page(), row, i));
+
+                    // FIXME: currentNode and connectionNode might be swapped, for merging, make sure to fix order
+                    connectionWidgets.add(new AbilityNodeConnectionWidget(
+                            renderLocation.a() - AbilityNodeWidget.SIZE / 2,
+                            renderLocation.b() - AbilityNodeWidget.SIZE / 2,
+                            AbilityNodeWidget.SIZE,
+                            AbilityNodeWidget.SIZE,
+                            new AbilityTreeConnectionNode(
+                                    AbilityTreeConnectionType.HORIZONTAL,
+                                    new AbilityTreeSkillNode[] {null, currentNode, null, connectionNode})));
+                }
+
+                int startRow = Math.min(row, connectionRow);
+                int endRow = Math.max(row, connectionRow);
+
+                for (int i = startRow + 1; i <= endRow - 1; i++) {
+                    Pair<Integer, Integer> renderLocation = getRenderLocation(
+                            new AbilityTreeLocation(connectionNode.location().page(), i, col));
+
+                    // FIXME: currentNode and connectionNode might be swapped, for merging, make sure to fix order
+                    connectionWidgets.add(new AbilityNodeConnectionWidget(
+                            renderLocation.a() - AbilityNodeWidget.SIZE / 2,
+                            renderLocation.b() - AbilityNodeWidget.SIZE / 2,
+                            AbilityNodeWidget.SIZE,
+                            AbilityNodeWidget.SIZE,
+                            new AbilityTreeConnectionNode(
+                                    AbilityTreeConnectionType.VERTICAL,
+                                    new AbilityTreeSkillNode[] {currentNode, null, connectionNode, null})));
+                }
+            }
+        }
     }
 
     private void renderNodes(PoseStack poseStack, int mouseX, int mouseY, float partialTick) {
+        connectionWidgets.forEach(widget -> widget.render(poseStack, mouseX, mouseY, partialTick));
         nodeWidgets.forEach(widget -> widget.render(poseStack, mouseX, mouseY, partialTick));
     }
 

@@ -37,7 +37,7 @@ public class CustomAbilityTreeFeature extends Feature {
         Managers.TickScheduler.scheduleNextTick(
                 () -> Models.AbilityTree.ABILITY_TREE_CONTAINER_QUERIES.queryAbilityTree(
                         new AbilityTreeContainerQueries.AbilityPageSoftProcessor(
-                                Models.AbilityTree::setParsedAbilityTree)));
+                                Models.AbilityTree::setCurrentAbilityTree)));
 
         McUtils.mc().setScreen(new CustomAbilityTreeScreen());
     }

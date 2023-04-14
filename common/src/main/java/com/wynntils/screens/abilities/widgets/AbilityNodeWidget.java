@@ -5,8 +5,8 @@
 package com.wynntils.screens.abilities.widgets;
 
 import com.mojang.blaze3d.vertex.PoseStack;
+import com.wynntils.core.components.Models;
 import com.wynntils.models.abilitytree.type.AbilityTreeSkillNode;
-import com.wynntils.screens.abilities.CustomAbilityTreeScreen;
 import com.wynntils.utils.render.RenderUtils;
 import net.minecraft.client.gui.components.AbstractWidget;
 import net.minecraft.client.gui.narration.NarrationElementOutput;
@@ -18,19 +18,11 @@ import net.minecraft.world.item.ItemStack;
 public class AbilityNodeWidget extends AbstractWidget {
     public static final int SIZE = 20;
 
-    private final CustomAbilityTreeScreen customAbilityTreeScreen;
     private final AbilityTreeSkillNode node;
 
-    public AbilityNodeWidget(
-            int x,
-            int y,
-            int width,
-            int height,
-            CustomAbilityTreeScreen customAbilityTreeScreen,
-            AbilityTreeSkillNode node) {
+    public AbilityNodeWidget(int x, int y, int width, int height, AbilityTreeSkillNode node) {
         super(x, y, width, height, Component.literal(node.name()));
         this.node = node;
-        this.customAbilityTreeScreen = customAbilityTreeScreen;
     }
 
     @Override
@@ -38,7 +30,7 @@ public class AbilityNodeWidget extends AbstractWidget {
         ItemStack itemStack = new ItemStack(Item.byId(node.itemInformation().itemId()));
 
         int damage =
-                switch (customAbilityTreeScreen.getNodeState(node)) {
+                switch (Models.AbilityTree.getNodeState(node)) {
                     case LOCKED -> node.itemInformation().getLockedDamage();
                     case UNLOCKABLE -> node.itemInformation().getUnlockableDamage();
                     case UNLOCKED -> node.itemInformation().getUnlockedDamage();
@@ -54,4 +46,8 @@ public class AbilityNodeWidget extends AbstractWidget {
 
     @Override
     protected void updateWidgetNarration(NarrationElementOutput narrationElementOutput) {}
+
+    public AbilityTreeSkillNode getNode() {
+        return node;
+    }
 }

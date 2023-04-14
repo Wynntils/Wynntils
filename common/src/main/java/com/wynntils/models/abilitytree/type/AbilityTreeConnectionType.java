@@ -4,13 +4,14 @@
  */
 package com.wynntils.models.abilitytree.type;
 
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 
-public enum AbilityTreeConnection {
+public enum AbilityTreeConnectionType {
     FOUR_WAY(
             1,
             Map.ofEntries(
@@ -58,23 +59,24 @@ public enum AbilityTreeConnection {
     UP_RIGHT_TURN(35, Map.of(new boolean[] {true, true, false, false}, 36)),
     DOWN_LEFT_TURN(37, Map.of(new boolean[] {false, true, true, false}, 38)),
     DOWN_RIGHT_TURN(39, Map.of(new boolean[] {false, false, true, true}, 40)),
-    VERITCAL(41, Map.of(new boolean[] {true, false, true, false}, 42)),
+    VERTICAL(41, Map.of(new boolean[] {true, false, true, false}, 42)),
     HORIZONTAL(43, Map.of(new boolean[] {false, true, false, true}, 44));
 
     private final int baseDamage;
     private final Map<boolean[], Integer> activeDamageMap; // boolean[] is {up, right, down, left}
 
-    private final Map<boolean[], ItemStack> itemStackMap;
+    private final Map<Integer, ItemStack> itemStackMap;
 
-    AbilityTreeConnection(int baseDamage, Map<boolean[], Integer> activeDamageMap) {
+    AbilityTreeConnectionType(int baseDamage, Map<boolean[], Integer> activeDamageMap) {
         this.baseDamage = baseDamage;
         this.activeDamageMap = activeDamageMap;
 
         this.itemStackMap = new HashMap<>();
 
-        this.itemStackMap.put(new boolean[] {false, false, false, false}, generateItemStack(baseDamage));
+        this.itemStackMap.put(
+                Arrays.hashCode((new boolean[] {false, false, false, false})), generateItemStack(baseDamage));
         for (boolean[] active : activeDamageMap.keySet()) {
-            this.itemStackMap.put(active, generateItemStack(activeDamageMap.get(active)));
+            this.itemStackMap.put(Arrays.hashCode(active), generateItemStack(activeDamageMap.get(active)));
         }
     }
 
@@ -87,5 +89,9 @@ public enum AbilityTreeConnection {
         tag.putBoolean("Unbreakable", true);
 
         return itemStack;
+    }
+
+    public ItemStack getItemStack(boolean[] active) {
+        return itemStackMap.get(Arrays.hashCode(active));
     }
 }

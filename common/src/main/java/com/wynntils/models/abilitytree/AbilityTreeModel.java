@@ -12,6 +12,8 @@ import com.wynntils.core.components.Model;
 import com.wynntils.core.net.Download;
 import com.wynntils.core.net.UrlId;
 import com.wynntils.models.abilitytree.type.AbilityTreeInfo;
+import com.wynntils.models.abilitytree.type.AbilityTreeNodeState;
+import com.wynntils.models.abilitytree.type.AbilityTreeSkillNode;
 import com.wynntils.models.abilitytree.type.ParsedAbilityTree;
 import com.wynntils.models.character.type.ClassType;
 import com.wynntils.screens.abilities.CustomAbilityTreeScreen;
@@ -26,7 +28,7 @@ public class AbilityTreeModel extends Model {
     public static final AbilityTreeContainerQueries ABILITY_TREE_CONTAINER_QUERIES = new AbilityTreeContainerQueries();
 
     private Map<ClassType, AbilityTreeInfo> ABILIIY_TREE_MAP = new HashMap<>();
-    private ParsedAbilityTree parsedAbilityTree;
+    private ParsedAbilityTree currentAbilityTree;
 
     public AbilityTreeModel() {
         super(List.of());
@@ -51,12 +53,24 @@ public class AbilityTreeModel extends Model {
         });
     }
 
-    public void setParsedAbilityTree(ParsedAbilityTree parsedAbilityTree) {
-        this.parsedAbilityTree = parsedAbilityTree;
+    public void setCurrentAbilityTree(ParsedAbilityTree currentAbilityTree) {
+        this.currentAbilityTree = currentAbilityTree;
 
         if (McUtils.mc().screen instanceof CustomAbilityTreeScreen customAbilityTreeScreen) {
-            customAbilityTreeScreen.updateAbilityTree(parsedAbilityTree);
+            customAbilityTreeScreen.updateAbilityTree(currentAbilityTree);
         }
+    }
+
+    public AbilityTreeNodeState getNodeState(AbilityTreeSkillNode node) {
+        if (currentAbilityTree == null) {
+            return AbilityTreeNodeState.LOCKED;
+        }
+
+        return currentAbilityTree.nodes().keySet().stream()
+                .filter(n -> n.equals(node))
+                .map(currentAbilityTree.nodes()::get)
+                .findFirst()
+                .orElse(AbilityTreeNodeState.LOCKED);
     }
 
     public AbilityTreeInfo getAbilityTree(ClassType type) {
