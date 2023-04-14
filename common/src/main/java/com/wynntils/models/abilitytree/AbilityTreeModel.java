@@ -2,7 +2,7 @@
  * Copyright © Wynntils 2023.
  * This file is released under AGPLv3. See LICENSE for full license details.
  */
-package com.wynntils.models.abilities;
+package com.wynntils.models.abilitytree;
 
 import com.google.common.reflect.TypeToken;
 import com.google.gson.Gson;
@@ -11,8 +11,8 @@ import com.wynntils.core.components.Managers;
 import com.wynntils.core.components.Model;
 import com.wynntils.core.net.Download;
 import com.wynntils.core.net.UrlId;
-import com.wynntils.models.abilities.type.AbilityTreeInfo;
-import com.wynntils.models.abilities.type.ParsedAbilityTree;
+import com.wynntils.models.abilitytree.type.AbilityTreeInfo;
+import com.wynntils.models.abilitytree.type.ParsedAbilityTree;
 import com.wynntils.models.character.type.ClassType;
 import com.wynntils.screens.abilities.CustomAbilityTreeScreen;
 import com.wynntils.utils.mc.McUtils;
@@ -22,6 +22,7 @@ import java.util.List;
 import java.util.Map;
 
 public class AbilityTreeModel extends Model {
+    public static final AbilityTreeParser ABILITY_TREE_PARSER = new AbilityTreeParser();
     public static final AbilityTreeContainerQueries ABILITY_TREE_CONTAINER_QUERIES = new AbilityTreeContainerQueries();
 
     private Map<ClassType, AbilityTreeInfo> ABILIIY_TREE_MAP = new HashMap<>();

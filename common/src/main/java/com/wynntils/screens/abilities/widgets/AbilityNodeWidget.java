@@ -5,7 +5,7 @@
 package com.wynntils.screens.abilities.widgets;
 
 import com.mojang.blaze3d.vertex.PoseStack;
-import com.wynntils.models.abilities.type.AbilityTreeSkillNode;
+import com.wynntils.models.abilitytree.type.AbilityTreeSkillNode;
 import com.wynntils.screens.abilities.CustomAbilityTreeScreen;
 import com.wynntils.utils.render.RenderUtils;
 import net.minecraft.client.gui.components.AbstractWidget;

@@ -2,10 +2,15 @@
  * Copyright © Wynntils 2023.
  * This file is released under AGPLv3. See LICENSE for full license details.
  */
-package com.wynntils.models.abilities.type;
+package com.wynntils.models.abilitytree;
 
 import com.wynntils.core.text.PartStyle;
 import com.wynntils.core.text.StyledText;
+import com.wynntils.models.abilitytree.type.AbilityTreeLocation;
+import com.wynntils.models.abilitytree.type.AbilityTreeNodeState;
+import com.wynntils.models.abilitytree.type.AbilityTreeSkillNode;
+import com.wynntils.models.abilitytree.type.ArchetypeRequirement;
+import com.wynntils.models.abilitytree.type.ItemInformation;
 import com.wynntils.utils.mc.LoreUtils;
 import com.wynntils.utils.type.IterationDecision;
 import com.wynntils.utils.type.Pair;
@@ -17,18 +22,7 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 
-public record AbilityTreeSkillNode(
-        String name,
-        String formattedName,
-        List<String> description,
-        ItemInformation itemInformation,
-        int cost,
-        List<String> blocks,
-        String requiredAbility,
-        ArchetypeRequirement requiredArchetype,
-        String archetype,
-        AbilityTreeLocation location,
-        List<String> connections) {
+public final class AbilityTreeParser {
     private static final Pattern NODE_NAME_PATTERN = Pattern.compile("§.(Unlock )?§l(.+)(§r§. ability)?");
     private static final Pattern NODE_POINT_COST_PATTERN = Pattern.compile("§.. §7Ability Points: §f(\\d+)");
     private static final Pattern NODE_BLOCKS_ABILITY_PATTERN = Pattern.compile("§c- §7(.+)");
@@ -39,8 +33,9 @@ public record AbilityTreeSkillNode(
     private static final Pattern NODE_BLOCKED = Pattern.compile("§cBlocked by another ability");
     private static final Pattern NODE_UNLOCKED = Pattern.compile("§eYou already unlocked this ability");
 
-    public static Pair<AbilityTreeSkillNode, AbilityTreeNodeState> parseNodeFromItem(
-            ItemStack itemStack, int page, int slot) {
+    private static final StyledText CONNECTION_NAME = StyledText.fromString(" ");
+
+    public Pair<AbilityTreeSkillNode, AbilityTreeNodeState> parseNodeFromItem(ItemStack itemStack, int page, int slot) {
         StyledText nameStyledText = StyledText.fromComponent(itemStack.getHoverName());
 
         AbilityTreeNodeState state = AbilityTreeNodeState.LOCKED;
@@ -70,7 +65,7 @@ public record AbilityTreeSkillNode(
         int cost = 0;
         List<String> blocks = new ArrayList<>();
         String requiredAbility = null;
-        AbilityTreeSkillNode.ArchetypeRequirement requiredArchetype = null;
+        ArchetypeRequirement requiredArchetype = null;
         String archetype = null;
 
         for (StyledText text : loreStyledText) {
@@ -94,8 +89,7 @@ public record AbilityTreeSkillNode(
 
             matcher = text.getMatcher(NODE_REQUIRED_ARCHETYPE_PATTERN);
             if (matcher.matches()) {
-                requiredArchetype = new AbilityTreeSkillNode.ArchetypeRequirement(
-                        matcher.group(1), Integer.parseInt(matcher.group(3)));
+                requiredArchetype = new ArchetypeRequirement(matcher.group(1), Integer.parseInt(matcher.group(3)));
                 continue;
             }
 
@@ -118,7 +112,7 @@ public record AbilityTreeSkillNode(
             }
         }
 
-        AbilityTreeSkillNode.ItemInformation itemInformation = new AbilityTreeSkillNode.ItemInformation(
+        ItemInformation itemInformation = new ItemInformation(
                 Item.getId(itemStack.getItem()),
                 switch (state) {
                     case LOCKED -> itemStack.getDamageValue();
@@ -145,30 +139,15 @@ public record AbilityTreeSkillNode(
         return Pair.of(node, state);
     }
 
-    public static boolean isNodeItem(ItemStack itemStack, int slot) {
+    public boolean isNodeItem(ItemStack itemStack, int slot) {
         StyledText nameStyledText = StyledText.fromComponent(itemStack.getHoverName());
         return itemStack.getItem() == Items.STONE_AXE
                 && slot < 54
                 && nameStyledText.getMatcher(NODE_NAME_PATTERN).matches();
     }
 
-    public record ArchetypeRequirement(String name, int required) {}
-
-    public record ItemInformation(int itemId, int damage) {
-        public int getBlockedDamage() {
-            return damage + 3;
-        }
-
-        public int getLockedDamage() {
-            return damage;
-        }
-
-        public int getUnlockableDamage() {
-            return damage + 1;
-        }
-
-        public int getUnlockedDamage() {
-            return damage + 2;
-        }
+    public boolean isConnectionItem(ItemStack itemStack) {
+        return itemStack.getItem() == Items.STONE_AXE
+                && StyledText.fromComponent(itemStack.getHoverName()).equals(CONNECTION_NAME);
     }
 }

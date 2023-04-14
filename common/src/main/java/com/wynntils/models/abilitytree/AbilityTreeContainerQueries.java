@@ -2,7 +2,7 @@
  * Copyright © Wynntils 2023.
  * This file is released under AGPLv3. See LICENSE for full license details.
  */
-package com.wynntils.models.abilities;
+package com.wynntils.models.abilitytree;
 
 import com.google.common.collect.ImmutableMap;
 import com.wynntils.core.WynntilsMod;
@@ -10,10 +10,10 @@ import com.wynntils.core.components.Models;
 import com.wynntils.core.text.StyledText;
 import com.wynntils.handlers.container.ScriptedContainerQuery;
 import com.wynntils.handlers.container.type.ContainerContent;
-import com.wynntils.models.abilities.type.AbilityTreeInfo;
-import com.wynntils.models.abilities.type.AbilityTreeNodeState;
-import com.wynntils.models.abilities.type.AbilityTreeSkillNode;
-import com.wynntils.models.abilities.type.ParsedAbilityTree;
+import com.wynntils.models.abilitytree.type.AbilityTreeInfo;
+import com.wynntils.models.abilitytree.type.AbilityTreeNodeState;
+import com.wynntils.models.abilitytree.type.AbilityTreeSkillNode;
+import com.wynntils.models.abilitytree.type.ParsedAbilityTree;
 import com.wynntils.utils.mc.McUtils;
 import com.wynntils.utils.type.Pair;
 import com.wynntils.utils.wynn.InventoryUtils;
@@ -143,10 +143,10 @@ public class AbilityTreeContainerQueries {
 
             for (int slot = 0; slot < items.size(); slot++) {
                 ItemStack itemStack = items.get(slot);
-                if (!AbilityTreeSkillNode.isNodeItem(itemStack, slot)) continue;
+                if (!Models.AbilityTree.ABILITY_TREE_PARSER.isNodeItem(itemStack, slot)) continue;
 
                 Pair<AbilityTreeSkillNode, AbilityTreeNodeState> parsedNode =
-                        AbilityTreeSkillNode.parseNodeFromItem(itemStack, page, slot);
+                        Models.AbilityTree.ABILITY_TREE_PARSER.parseNodeFromItem(itemStack, page, slot);
 
                 collectedInfo.put(parsedNode.key(), parsedNode.value());
             }

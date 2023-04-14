@@ -4,11 +4,11 @@
  */
 package com.wynntils.core.components;
 
-import com.wynntils.models.abilities.AbilityTreeModel;
 import com.wynntils.models.abilities.ArrowShieldModel;
 import com.wynntils.models.abilities.BossBarModel;
 import com.wynntils.models.abilities.ShamanMaskModel;
 import com.wynntils.models.abilities.ShamanTotemModel;
+import com.wynntils.models.abilitytree.AbilityTreeModel;
 import com.wynntils.models.character.CharacterModel;
 import com.wynntils.models.character.CharacterSelectionModel;
 import com.wynntils.models.characterstats.CharacterStatsModel;

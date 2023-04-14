@@ -2,13 +2,12 @@
  * Copyright © Wynntils 2023.
  * This file is released under AGPLv3. See LICENSE for full license details.
  */
-package com.wynntils.models.abilities.type;
+package com.wynntils.models.abilitytree.type;
 
 import com.google.gson.JsonElement;
 import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.components.Managers;
 import com.wynntils.core.components.Models;
-import com.wynntils.core.text.StyledText;
 import com.wynntils.utils.mc.McUtils;
 import java.io.File;
 import java.util.ArrayList;
@@ -18,7 +17,6 @@ import java.util.Locale;
 import java.util.Set;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.Items;
 
 /**
  * This class contains all relevant info to a specific class' ability tree.
@@ -26,15 +24,15 @@ import net.minecraft.world.item.Items;
 public class AbilityTreeInfo {
     private static final File SAVE_FOLDER = WynntilsMod.getModStorageDir("debug");
 
-    private static final StyledText CONNECTION_NAME = StyledText.fromString(" ");
-
     private final List<AbilityTreeSkillNode> nodes = new ArrayList<>();
 
     // Do not serialize this field
     private final transient List<AbilityTreeLocation> unprocessedConnections = new ArrayList<>();
 
     public void addNodeFromItem(ItemStack itemStack, int page, int slot) {
-        nodes.add(AbilityTreeSkillNode.parseNodeFromItem(itemStack, page, slot).key());
+        nodes.add(Models.AbilityTree.ABILITY_TREE_PARSER
+                .parseNodeFromItem(itemStack, page, slot)
+                .key());
     }
 
     public void addConnectionFromItem(int page, int slot) {
@@ -42,12 +40,12 @@ public class AbilityTreeInfo {
     }
 
     public void processItem(ItemStack itemStack, int page, int slot, boolean processConnections) {
-        if (AbilityTreeSkillNode.isNodeItem(itemStack, slot)) {
+        if (Models.AbilityTree.ABILITY_TREE_PARSER.isNodeItem(itemStack, slot)) {
             addNodeFromItem(itemStack, page, slot);
             return;
         }
 
-        if (processConnections && isConnectionItem(itemStack)) {
+        if (processConnections && Models.AbilityTree.ABILITY_TREE_PARSER.isConnectionItem(itemStack)) {
             addConnectionFromItem(page, slot);
         }
     }
@@ -127,10 +125,5 @@ public class AbilityTreeInfo {
         Managers.Json.savePreciousJson(jsonFile, element.getAsJsonObject());
 
         McUtils.sendMessageToClient(Component.literal("Saved ability tree dump to " + jsonFile.getAbsolutePath()));
-    }
-
-    private boolean isConnectionItem(ItemStack itemStack) {
-        return itemStack.getItem() == Items.STONE_AXE
-                && StyledText.fromComponent(itemStack.getHoverName()).equals(CONNECTION_NAME);
     }
 }

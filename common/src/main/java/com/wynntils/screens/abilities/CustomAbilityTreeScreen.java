@@ -6,11 +6,11 @@ package com.wynntils.screens.abilities;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.wynntils.core.components.Models;
-import com.wynntils.models.abilities.type.AbilityTreeInfo;
-import com.wynntils.models.abilities.type.AbilityTreeLocation;
-import com.wynntils.models.abilities.type.AbilityTreeNodeState;
-import com.wynntils.models.abilities.type.AbilityTreeSkillNode;
-import com.wynntils.models.abilities.type.ParsedAbilityTree;
+import com.wynntils.models.abilitytree.type.AbilityTreeInfo;
+import com.wynntils.models.abilitytree.type.AbilityTreeLocation;
+import com.wynntils.models.abilitytree.type.AbilityTreeNodeState;
+import com.wynntils.models.abilitytree.type.AbilityTreeSkillNode;
+import com.wynntils.models.abilitytree.type.ParsedAbilityTree;
 import com.wynntils.models.character.type.ClassType;
 import com.wynntils.screens.abilities.widgets.AbilityNodeWidget;
 import com.wynntils.screens.base.WynntilsScreen;

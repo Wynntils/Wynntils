@@ -10,7 +10,7 @@ import com.wynntils.core.config.Category;
 import com.wynntils.core.config.ConfigCategory;
 import com.wynntils.core.features.Feature;
 import com.wynntils.mc.event.ContainerClickEvent;
-import com.wynntils.models.abilities.AbilityTreeContainerQueries;
+import com.wynntils.models.abilitytree.AbilityTreeContainerQueries;
 import com.wynntils.models.items.items.gui.AbilityTreeItem;
 import com.wynntils.screens.abilities.CustomAbilityTreeScreen;
 import com.wynntils.utils.mc.KeyboardUtils;

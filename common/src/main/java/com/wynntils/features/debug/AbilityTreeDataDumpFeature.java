@@ -11,7 +11,7 @@ import com.wynntils.core.config.ConfigCategory;
 import com.wynntils.core.features.Feature;
 import com.wynntils.core.features.properties.StartDisabled;
 import com.wynntils.mc.event.ContainerClickEvent;
-import com.wynntils.models.abilities.AbilityTreeContainerQueries;
+import com.wynntils.models.abilitytree.AbilityTreeContainerQueries;
 import com.wynntils.models.items.items.gui.AbilityTreeItem;
 import com.wynntils.utils.mc.KeyboardUtils;
 import com.wynntils.utils.mc.McUtils;
