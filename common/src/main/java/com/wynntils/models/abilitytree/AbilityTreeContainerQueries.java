@@ -27,7 +27,6 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 
 public class AbilityTreeContainerQueries {
-    private static final int ABILITY_TREE_PAGES = 7;
     private static final int ABILITY_TREE_SLOT = 9;
     private static final int PREVIOUS_PAGE_SLOT = 57;
     private static final int NEXT_PAGE_SLOT = 59;
@@ -53,7 +52,7 @@ public class AbilityTreeContainerQueries {
 
         // region Hack for going back to first page without knowing our current page
 
-        for (int i = ABILITY_TREE_PAGES - 1; i > 0; i--) {
+        for (int i = Models.AbilityTree.ABILITY_TREE_PAGES - 1; i > 0; i--) {
             queryBuilder
                     .clickOnSlotIfExists(PREVIOUS_PAGE_SLOT, DUMMY_SLOT)
                     .matchTitle(Models.Container.ABILITY_TREE_PATTERN.pattern())
@@ -82,7 +81,7 @@ public class AbilityTreeContainerQueries {
 
         // endregion
 
-        for (int i = 3; i <= ABILITY_TREE_PAGES; i++) {
+        for (int i = 3; i <= Models.AbilityTree.ABILITY_TREE_PAGES; i++) {
             final int page = i; // Lambdas need final variables
             queryBuilder
                     .clickOnSlotWithName(NEXT_PAGE_SLOT, Items.STONE_AXE, NEXT_PAGE_ITEM_NAME)
@@ -116,7 +115,7 @@ public class AbilityTreeContainerQueries {
                 dump.processItem(itemStack, slot, page, true);
             }
 
-            boolean lastPage = page == ABILITY_TREE_PAGES;
+            boolean lastPage = page == Models.AbilityTree.ABILITY_TREE_PAGES;
 
             dump.processConnections(page, lastPage);
 
@@ -151,7 +150,7 @@ public class AbilityTreeContainerQueries {
                 collectedInfo.put(parsedNode.key(), parsedNode.value());
             }
 
-            boolean lastPage = page == ABILITY_TREE_PAGES;
+            boolean lastPage = page == Models.AbilityTree.ABILITY_TREE_PAGES;
 
             if (lastPage) {
                 callback.accept(new ParsedAbilityTree(ImmutableMap.copyOf(collectedInfo)));

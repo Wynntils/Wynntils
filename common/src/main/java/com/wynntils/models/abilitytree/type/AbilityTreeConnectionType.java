@@ -55,8 +55,16 @@ public enum AbilityTreeConnectionType {
                     new boolean[] {true, false, false, true}, 30,
                     new boolean[] {false, false, true, true}, 31,
                     new boolean[] {true, false, true, false}, 32)),
-    UP_LEFT_TURN(33, Map.of(new boolean[] {true, false, false, true}, 34)),
-    UP_RIGHT_TURN(35, Map.of(new boolean[] {true, true, false, false}, 36)),
+    UP_LEFT_TURN(
+            33,
+            Map.of(
+                    new boolean[] {true, false, false, true},
+                    34)), // Due to the nature of the ability tree connections, this type is unused
+    UP_RIGHT_TURN(
+            35,
+            Map.of(
+                    new boolean[] {true, true, false, false},
+                    36)), // Due to the nature of the ability tree connections, this type is unused
     DOWN_LEFT_TURN(37, Map.of(new boolean[] {false, true, true, false}, 38)),
     DOWN_RIGHT_TURN(39, Map.of(new boolean[] {false, false, true, true}, 40)),
     VERTICAL(41, Map.of(new boolean[] {true, false, true, false}, 42)),
@@ -65,6 +73,7 @@ public enum AbilityTreeConnectionType {
     private final int baseDamage;
     private final Map<boolean[], Integer> activeDamageMap; // boolean[] is {up, right, down, left}
 
+    private final ItemStack baseItemStack;
     private final Map<Integer, ItemStack> itemStackMap;
 
     AbilityTreeConnectionType(int baseDamage, Map<boolean[], Integer> activeDamageMap) {
@@ -73,8 +82,7 @@ public enum AbilityTreeConnectionType {
 
         this.itemStackMap = new HashMap<>();
 
-        this.itemStackMap.put(
-                Arrays.hashCode((new boolean[] {false, false, false, false})), generateItemStack(baseDamage));
+        this.baseItemStack = generateItemStack(baseDamage);
         for (boolean[] active : activeDamageMap.keySet()) {
             this.itemStackMap.put(Arrays.hashCode(active), generateItemStack(activeDamageMap.get(active)));
         }
@@ -92,6 +100,6 @@ public enum AbilityTreeConnectionType {
     }
 
     public ItemStack getItemStack(boolean[] active) {
-        return itemStackMap.get(Arrays.hashCode(active));
+        return itemStackMap.getOrDefault(Arrays.hashCode(active), baseItemStack);
     }
 }

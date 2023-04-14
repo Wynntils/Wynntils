@@ -12,6 +12,8 @@ import net.minecraft.client.gui.narration.NarrationElementOutput;
 import net.minecraft.network.chat.Component;
 
 public class AbilityNodeConnectionWidget extends AbstractWidget {
+    public static final int SIZE = 20;
+
     private final AbilityTreeConnectionNode node;
 
     public AbilityNodeConnectionWidget(int x, int y, int width, int height, AbilityTreeConnectionNode node) {

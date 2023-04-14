@@ -24,6 +24,7 @@ import java.util.List;
 import java.util.Map;
 
 public class AbilityTreeModel extends Model {
+    public static final int ABILITY_TREE_PAGES = 7;
     public static final AbilityTreeParser ABILITY_TREE_PARSER = new AbilityTreeParser();
     public static final AbilityTreeContainerQueries ABILITY_TREE_CONTAINER_QUERIES = new AbilityTreeContainerQueries();
 
@@ -57,7 +58,7 @@ public class AbilityTreeModel extends Model {
         this.currentAbilityTree = currentAbilityTree;
 
         if (McUtils.mc().screen instanceof CustomAbilityTreeScreen customAbilityTreeScreen) {
-            customAbilityTreeScreen.updateAbilityTree(currentAbilityTree);
+            customAbilityTreeScreen.updateAbilityTree();
         }
     }
 
