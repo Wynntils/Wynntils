@@ -19,6 +19,7 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Locale;
 import net.minecraft.ChatFormatting;
+import net.minecraft.core.Position;
 
 public class TerritoryProfile {
     private static final SimpleDateFormatter DATE_FORMATTER = new SimpleDateFormatter();
@@ -135,8 +136,11 @@ public class TerritoryProfile {
         return new PoiLocation(xMiddle, 0, zMiddle);
     }
 
-    public boolean insideArea(int playerX, int playerZ) {
-        return startX <= playerX && endX >= playerX && startZ <= playerZ && endZ >= playerZ;
+    public boolean insideArea(Position position) {
+        return position.x() >= this.getStartX()
+                && position.x() <= this.getEndX()
+                && position.z() >= this.getStartZ()
+                && position.z() <= this.getEndZ();
     }
 
     private long getTimeHeldInMillis() {
