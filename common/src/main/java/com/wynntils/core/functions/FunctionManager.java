@@ -366,6 +366,7 @@ public final class FunctionManager extends Manager {
         registerFunction(new StringFunctions.StringFunction());
 
         // Regular Functions
+        registerFunction(new WorldFunctions.CurrentTerritoryFunction());
         registerFunction(new WorldFunctions.CurrentWorldFunction());
         registerFunction(new WorldFunctions.CurrentWorldUptimeFunction());
         registerFunction(new WorldFunctions.MobTotemCountFunction());

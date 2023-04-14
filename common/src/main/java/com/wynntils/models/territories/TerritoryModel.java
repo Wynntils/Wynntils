@@ -35,6 +35,7 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 import net.minecraft.advancements.Advancement;
 import net.minecraft.advancements.FrameType;
+import net.minecraft.core.Position;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 
@@ -97,6 +98,13 @@ public final class TerritoryModel extends Model {
 
     public TerritoryPoi getTerritoryPoiFromAdvancement(String name) {
         return territoryPoiMap.get(name);
+    }
+
+    public TerritoryProfile getTerritoryProfileForPosition(Position position) {
+        return territoryProfileMap.values().stream()
+                .filter(profile -> profile.insideArea(position))
+                .findFirst()
+                .orElse(null);
     }
 
     public void reset() {
