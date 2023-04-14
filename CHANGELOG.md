@@ -1,9 +1,21 @@
+## [0.0.2-alpha.470](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.469...v0.0.2-alpha.470) (2023-04-14)
+
+
+### New Features
+
+* Add CurrentTerritoryFunction ([#1485](https://github.com/Wynntils/Artemis/issues/1485)) ([823b363](https://github.com/Wynntils/Artemis/commit/823b36375a451581e730d81f778d3451ed333e8a))
+
 ## [0.0.2-alpha.469](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.468...v0.0.2-alpha.469) (2023-04-13)
 
 
 ### New Features
 
 * Add CustomPoiProviders ([#1484](https://github.com/Wynntils/Artemis/issues/1484)) ([1ad0c4c](https://github.com/Wynntils/Artemis/commit/1ad0c4cfdddf865be36eb4139b2ab4bcdd6bc69a))
+
+
+### Miscellaneous Chores
+
+* **release:** v0.0.2-alpha.469 [skip ci] ([bc42da4](https://github.com/Wynntils/Artemis/commit/bc42da414f1b593a63a99f132e7d784e9d43c464))
 
 ## [0.0.2-alpha.468](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.467...v0.0.2-alpha.468) (2023-04-13)
 
@@ -40,16 +52,4 @@
 ### Miscellaneous Chores
 
 * **release:** v0.0.2-alpha.466 [skip ci] ([92488e6](https://github.com/Wynntils/Artemis/commit/92488e685add23466f283e7c531669958b8a6a4d))
-
-## [0.0.2-alpha.465](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.464...v0.0.2-alpha.465) (2023-04-13)
-
-
-### New Features
-
-* Add font scale setting for TextOverlays + Status Overlay ([#1482](https://github.com/Wynntils/Artemis/issues/1482)) ([8937c74](https://github.com/Wynntils/Artemis/commit/8937c7457faaa577c631f4e672e0835b3a535f76))
-
-
-### Miscellaneous Chores
-
-* **release:** v0.0.2-alpha.465 [skip ci] ([54a1170](https://github.com/Wynntils/Artemis/commit/54a1170a9384686c70a656356eb62ce7c5b881e8))
 
