@@ -141,6 +141,10 @@ public final class StyledText implements Iterable<StyledTextPart> {
         return getString(PartStyle.StyleType.DEFAULT);
     }
 
+    public String getStringWithoutFormatting() {
+        return getString(PartStyle.StyleType.NONE);
+    }
+
     public MutableComponent getComponent() {
         if (parts.isEmpty()) {
             return Component.empty();

@@ -7,8 +7,8 @@ package com.wynntils.models.quests;
 import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.components.Models;
 import com.wynntils.core.text.CodedString;
+import com.wynntils.core.text.StyledText;
 import com.wynntils.handlers.container.ScriptedContainerQuery;
-import com.wynntils.utils.mc.ComponentUtils;
 import com.wynntils.utils.mc.LoreUtils;
 import com.wynntils.utils.wynn.InventoryUtils;
 import java.util.ArrayList;
@@ -19,7 +19,7 @@ import net.minecraft.world.item.ItemStack;
 
 public class DialogueHistoryQueries {
     private static final Pattern DIALOGUE_HISTORY_PAGE_PATTERN = Pattern.compile("§7Page \\[(\\d+)/(\\d+)\\]");
-    public static final CodedString DIALOGUE_HISTORY = CodedString.fromString("§bDialogue History");
+    public static final StyledText DIALOGUE_HISTORY = StyledText.fromString("§bDialogue History");
 
     private List<List<CodedString>> newDialogueHistory;
 
@@ -36,7 +36,7 @@ public class DialogueHistoryQueries {
                 .processContainer((c) -> {
                     ItemStack dialogueHistoryItem = c.items().get(0);
 
-                    if (!ComponentUtils.getCoded(dialogueHistoryItem.getHoverName())
+                    if (!StyledText.fromComponent(dialogueHistoryItem.getHoverName())
                             .equals(DIALOGUE_HISTORY)) return;
 
                     for (CodedString line : LoreUtils.getLore(dialogueHistoryItem)) {
@@ -65,7 +65,7 @@ public class DialogueHistoryQueries {
                 .processContainer((c) -> {
                     ItemStack dialogueHistoryItem = c.items().get(0);
 
-                    if (!ComponentUtils.getCoded(dialogueHistoryItem.getHoverName())
+                    if (!StyledText.fromComponent(dialogueHistoryItem.getHoverName())
                             .equals(DIALOGUE_HISTORY)) return;
 
                     newDialogueHistory = new ArrayList<>();
@@ -87,7 +87,7 @@ public class DialogueHistoryQueries {
                     .processContainer((c) -> {
                         ItemStack dialogueHistoryItem = c.items().get(0);
 
-                        if (!ComponentUtils.getCoded(dialogueHistoryItem.getHoverName())
+                        if (!StyledText.fromComponent(dialogueHistoryItem.getHoverName())
                                 .equals(DIALOGUE_HISTORY)) return;
 
                         List<CodedString> current = LoreUtils.getLore(dialogueHistoryItem).stream()
