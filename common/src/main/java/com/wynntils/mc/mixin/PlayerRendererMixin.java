@@ -65,8 +65,7 @@ public abstract class PlayerRendererMixin
     @Inject(
             method =
                     "render(Lnet/minecraft/client/player/AbstractClientPlayer;FFLcom/mojang/blaze3d/vertex/PoseStack;Lnet/minecraft/client/renderer/MultiBufferSource;I)V",
-            at = @At("RETURN"),
-            cancellable = true)
+            at = @At("RETURN"))
     private void onRenderPost(
             AbstractClientPlayer entity,
             float entityYaw,
@@ -78,8 +77,5 @@ public abstract class PlayerRendererMixin
         PlayerRenderEvent event =
                 new PlayerRenderEvent(entity, entityYaw, partialTicks, matrixStack, buffer, packedLight);
         MixinHelper.post(event);
-        if (event.isCanceled()) {
-            ci.cancel();
-        }
     }
 }
