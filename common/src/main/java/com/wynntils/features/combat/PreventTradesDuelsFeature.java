@@ -11,10 +11,11 @@ import com.wynntils.core.config.Config;
 import com.wynntils.core.config.ConfigCategory;
 import com.wynntils.core.config.RegisterConfig;
 import com.wynntils.core.features.Feature;
-import com.wynntils.core.text.CodedString;
+import com.wynntils.core.text.StyledText;
 import com.wynntils.mc.event.PlayerAttackEvent;
 import com.wynntils.mc.event.PlayerInteractEvent;
 import com.wynntils.utils.wynn.WynnItemMatchers;
+import net.minecraft.ChatFormatting;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
@@ -50,8 +51,8 @@ public class PreventTradesDuelsFeature extends Feature {
         event.setCanceled(true);
 
         if (onlyWhileFighting.get()) {
-            Managers.Notification.queueMessage(CodedString.fromString(
-                    "Trade/Duel blocked for " + (fightingTimeCutoff.get() - timeSinceLastFight) + " s"));
+            Managers.Notification.queueMessage(StyledText.fromString(ChatFormatting.BLUE + "Trade/Duel blocked for "
+                    + (fightingTimeCutoff.get() - timeSinceLastFight) + " s"));
         }
     }
 
