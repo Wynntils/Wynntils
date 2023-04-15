@@ -21,9 +21,14 @@ import com.wynntils.utils.colors.CustomColor;
 import com.wynntils.utils.mc.ComponentUtils;
 import com.wynntils.utils.mc.McUtils;
 import com.wynntils.utils.render.buffered.CustomRenderType;
+import com.wynntils.utils.type.Pair;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Map;
+import java.util.Objects;
+import java.util.Set;
 import net.minecraft.client.gui.screens.inventory.InventoryScreen;
+import net.minecraft.client.player.AbstractClientPlayer;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.core.Position;
 import net.minecraft.world.entity.player.Player;
@@ -32,44 +37,50 @@ import org.joml.Matrix4f;
 
 @ConfigCategory(Category.COMBAT)
 public class RangeVisualizerFeature extends Feature {
-
     private static final MultiBufferSource.BufferSource BUFFER_SOURCE =
             MultiBufferSource.immediate(new BufferBuilder(256));
-    private static final int SEGMENTS =
-            128; // number of straight lines to draw when rendering circle, higher = smoother but more expensive
+
+    // number of straight lines to draw when rendering circle, higher = smoother but more expensive
+    private static final int SEGMENTS = 128;
     private static final float HEIGHT = 0.1f;
-    private final Map<Player, CustomColor> circleColors = new HashMap<>();
-    private final Map<Player, Boolean> playerIsRendered = new HashMap<>();
+
+    private final Map<Player, Pair<CustomColor, Integer>> circlesToRender = new HashMap<>();
+    private final Set<Player> detectedPlayers = new HashSet<>();
 
     @SubscribeEvent
     public void onPlayerRender(PlayerRenderEvent e) {
-        playerIsRendered.put(e.getPlayer(), true);
+        AbstractClientPlayer player = e.getPlayer();
+        detectedPlayers.add(player);
 
-        if (!circleColors.containsKey(e.getPlayer())) return;
+        Pair<CustomColor, Integer> circleType = circlesToRender.get(player);
+        if (circleType == null) return;
 
-        renderCircleWithRadius(e.getPoseStack(), 8, e.getPlayer().position(), circleColors.get(e.getPlayer()));
+        renderCircle(e.getPoseStack(), player.position(), circleType);
     }
 
     @SubscribeEvent
     public void onTick(TickEvent e) {
-        playerIsRendered.forEach((player, rendered) -> {
-            CustomColor color = getCircleColor(player);
-            if (rendered && color != null) {
-                circleColors.put(player, color);
-            } else {
-                circleColors.remove(player);
-            }
+        // Once every tick, calculate circles for all players that were detected (i.e. rendered)
+        // since the previous tick
+        circlesToRender.clear();
+        detectedPlayers.forEach((player) -> {
+            Pair<CustomColor, Integer> circleType = calculateCircleType(player);
+            if (circleType == null) return;
+
+            circlesToRender.put(player, circleType);
         });
-        playerIsRendered.clear();
+        detectedPlayers.clear();
     }
 
-    private CustomColor getCircleColor(Player player) {
+    private Pair<CustomColor, Integer> calculateCircleType(Player player) {
         if (!Models.Player.isLocalPlayer(player)) return null; // Don't render for ghost/npc
+
         String playerName = ComponentUtils.getUnformatted(player.getName());
         boolean isSelf =
                 ComponentUtils.getUnformatted(McUtils.player().getName()).equals(playerName);
         if (isSelf && McUtils.mc().screen instanceof InventoryScreen)
             return null; // Don't render for preview in inventory
+
         if (!Models.Party.getPartyMembers().contains(playerName) && !isSelf)
             return null; // Other players must be in party
 
@@ -80,25 +91,22 @@ public class RangeVisualizerFeature extends Feature {
 
         if (isSelf) { // Do not render if the item is not for the player's class
             if (gearInfo.requirements().classType().isEmpty()) return null;
+
             ClassType classType = gearInfo.requirements().classType().get();
             if (classType != Models.Character.getClassType()) return null;
         }
 
-        // Major IDs that we can visualize:
-        // Taunt (12 blocks)
-        // Saviour's Sacrifice (8 blocks)?
-        // Heart of the Pack (8 blocks)?
-        // Guardian (8 blocks)?
-        // Marked with a ? needs additional confirmation
-
-        if (gearInfo.fixedStats().majorIds().isEmpty()) return null;
-
-        return switch (gearInfo.fixedStats().majorIds().get(0).name()) {
-            case "HERO" -> CommonColors.WHITE;
-            case "ALTRUISM" -> CommonColors.PINK;
-            case "GUARDIAN" -> CommonColors.RED;
-            default -> null;
-        };
+        return gearInfo.fixedStats().majorIds().stream()
+                .map(majorId -> switch (majorId.name()) {
+                    case "TAUNT" -> Pair.of(CommonColors.ORANGE, 12);
+                    case "HERO" -> Pair.of(CommonColors.WHITE, 8);
+                    case "ALTRUISM" -> Pair.of(CommonColors.PINK, 8);
+                    case "GUARDIAN" -> Pair.of(CommonColors.RED, 8);
+                    default -> null;
+                })
+                .filter(Objects::nonNull)
+                .findFirst()
+                .orElse(null);
     }
 
     /**
@@ -109,12 +117,15 @@ public class RangeVisualizerFeature extends Feature {
      * - The order of the consumer.vertex() calls matter. Here, we draw a quad, so we do bottom left corner, top left corner, top right corner, bottom right corner. This is filled in with the color we set.<p>
      * @param poseStack The pose stack to render with. This is supposed to be the pose stack from the event.
      *                  We do the translation here, so no need to do it before passing it in.
-     * @param radius Pretty self explanatory, radius in blocks.
      */
-    private void renderCircleWithRadius(PoseStack poseStack, int radius, Position position, CustomColor color) {
-        RenderSystem
-                .disableCull(); // Circle must be rendered on both sides, otherwise it will be invisible when looking at
+    private void renderCircle(PoseStack poseStack, Position position, Pair<CustomColor, Integer> circleType) {
+        int radius = circleType.b();
+        int color = circleType.a().asInt();
+
+        // Circle must be rendered on both sides, otherwise it will be invisible when looking at
         // it from the outside
+        RenderSystem.disableCull();
+
         poseStack.pushPose();
         poseStack.translate(-position.x(), -position.y(), -position.z());
         VertexConsumer consumer = BUFFER_SOURCE.getBuffer(CustomRenderType.POSITION_COLOR_QUAD);
@@ -125,21 +136,17 @@ public class RangeVisualizerFeature extends Feature {
         for (int i = 0; i < SEGMENTS; i++) {
             float x = (float) (position.x() + Math.sin(angle) * radius);
             float z = (float) (position.z() + Math.cos(angle) * radius);
-            consumer.vertex(matrix4f, x, (float) position.y(), z)
-                    .color(color.asInt())
-                    .endVertex();
+            consumer.vertex(matrix4f, x, (float) position.y(), z).color(color).endVertex();
             consumer.vertex(matrix4f, x, (float) position.y() + HEIGHT, z)
-                    .color(color.asInt())
+                    .color(color)
                     .endVertex();
             angle += angleStep;
             float x2 = (float) (position.x() + Math.sin(angle) * radius);
             float z2 = (float) (position.z() + Math.cos(angle) * radius);
             consumer.vertex(matrix4f, x2, (float) position.y() + HEIGHT, z2)
-                    .color(color.asInt())
+                    .color(color)
                     .endVertex();
-            consumer.vertex(matrix4f, x2, (float) position.y(), z2)
-                    .color(color.asInt())
-                    .endVertex();
+            consumer.vertex(matrix4f, x2, (float) position.y(), z2).color(color).endVertex();
         }
 
         BUFFER_SOURCE.endBatch();
