@@ -248,7 +248,7 @@ public class WorldFunctions {
         @Override
         public String getValue(FunctionArguments arguments) {
             TerritoryProfile territoryProfile = Models.Territory.getTerritoryProfileForPosition(
-                    McUtils.player().getPosition(1));
+                    McUtils.player().position());
 
             if (territoryProfile == null) {
                 return "";
