@@ -273,7 +273,7 @@ public final class PartyManagementScreen extends WynntilsScreen implements Textb
     }
 
     @Override
-    public boolean mouseClicked(double mouseX, double mouseY, int button) {
+    public boolean doMouseClicked(double mouseX, double mouseY, int button) {
         if (createLeaveButton.isMouseOver(mouseX, mouseY)) {
             return createLeaveButton.mouseClicked(mouseX, mouseY, button);
         }

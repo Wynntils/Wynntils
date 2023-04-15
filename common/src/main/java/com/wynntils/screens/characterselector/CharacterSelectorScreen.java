@@ -166,7 +166,7 @@ public final class CharacterSelectorScreen extends WynntilsScreen {
     }
 
     @Override
-    public boolean mouseClicked(double mouseX, double mouseY, int button) {
+    public boolean doMouseClicked(double mouseX, double mouseY, int button) {
         for (GuiEventListener child : children()) {
             child.mouseClicked(mouseX, mouseY, button);
         }

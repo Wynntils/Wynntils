@@ -280,7 +280,7 @@ public final class MainMapScreen extends AbstractMapScreen {
     }
 
     @Override
-    public boolean mouseClicked(double mouseX, double mouseY, int button) {
+    public boolean doMouseClicked(double mouseX, double mouseY, int button) {
         for (GuiEventListener child : children()) {
             if (child.isMouseOver(mouseX, mouseY)) {
                 child.mouseClicked(mouseX, mouseY, button);

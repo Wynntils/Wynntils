@@ -208,7 +208,7 @@ public final class WynntilsBookSettingsScreen extends WynntilsScreen implements 
     // region Mouse events
 
     @Override
-    public boolean mouseClicked(double mouseX, double mouseY, int button) {
+    public boolean doMouseClicked(double mouseX, double mouseY, int button) {
         double adjustedMouseX = mouseX - getTranslationX();
         double adjustedMouseY = mouseY - getTranslationY();
 
