@@ -25,6 +25,7 @@ import com.wynntils.models.worlds.event.WorldStateEvent;
 import com.wynntils.models.worlds.type.WorldState;
 import com.wynntils.utils.mc.ComponentUtils;
 import com.wynntils.utils.mc.McUtils;
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -92,7 +93,7 @@ public final class PartyModel extends Model {
 
     private boolean inParty; // Whether the player is in a party
     private String partyLeader = null; // The name of the party leader
-    private HashSet<String> partyMembers = new HashSet<>(); // A set of Strings representing all party members
+    private List<String> partyMembers = new ArrayList<>(); // A set of Strings representing all party members
     private HashSet<String> offlineMembers =
             new HashSet<>(); // A set of Strings representing all offline (disconnected) party members
 
@@ -146,9 +147,9 @@ public final class PartyModel extends Model {
 
             inParty = true;
             partyLeader = McUtils.player().getName().getString();
-            partyMembers = new HashSet<>(Set.of(partyLeader));
-            WynntilsMod.postEvent(
-                    new HadesRelationsUpdateEvent.PartyList(partyMembers, HadesRelationsUpdateEvent.ChangeType.RELOAD));
+            partyMembers = new ArrayList<>(List.of(partyLeader));
+            WynntilsMod.postEvent(new HadesRelationsUpdateEvent.PartyList(
+                    Set.copyOf(partyMembers), HadesRelationsUpdateEvent.ChangeType.RELOAD));
             WynntilsMod.postEvent(new PartyEvent.Listed());
             return true;
         }
@@ -292,8 +293,8 @@ public final class PartyModel extends Model {
         }
 
         inParty = true;
-        WynntilsMod.postEvent(
-                new HadesRelationsUpdateEvent.PartyList(partyMembers, HadesRelationsUpdateEvent.ChangeType.RELOAD));
+        WynntilsMod.postEvent(new HadesRelationsUpdateEvent.PartyList(
+                Set.copyOf(partyMembers), HadesRelationsUpdateEvent.ChangeType.RELOAD));
         WynntilsMod.postEvent(new PartyEvent.Listed());
         WynntilsMod.info("Successfully updated party list, user has " + partyList.length + " party members.");
 
@@ -324,13 +325,13 @@ public final class PartyModel extends Model {
      * Posts events for both PartyEvent and HadesRelationsUpdateEvent.
      */
     private void resetData() {
-        partyMembers = new HashSet<>();
+        partyMembers = new ArrayList<>();
         partyLeader = null;
         inParty = false;
         offlineMembers = new HashSet<>();
 
-        WynntilsMod.postEvent(
-                new HadesRelationsUpdateEvent.PartyList(partyMembers, HadesRelationsUpdateEvent.ChangeType.RELOAD));
+        WynntilsMod.postEvent(new HadesRelationsUpdateEvent.PartyList(
+                Set.copyOf(partyMembers), HadesRelationsUpdateEvent.ChangeType.RELOAD));
         WynntilsMod.postEvent(new PartyEvent.Listed());
     }
 
@@ -354,6 +355,24 @@ public final class PartyModel extends Model {
         WynntilsMod.info("Requested party list from Wynncraft.");
     }
 
+    public void increasePlayerPriority(String playerName) {
+        int index = partyMembers.indexOf(playerName);
+
+        if (index == -1) return;
+
+        partyMembers.add(Math.max(0, index - 1), partyMembers.remove(index));
+        WynntilsMod.postEvent(new PartyEvent.PriorityChanged(playerName, index - 1));
+    }
+
+    public void decreasePlayerPriority(String playerName) {
+        int index = partyMembers.indexOf(playerName);
+
+        if (index == -1) return;
+
+        partyMembers.add(Math.min(partyMembers.size() - 1, index + 1), partyMembers.remove(index));
+        WynntilsMod.postEvent(new PartyEvent.PriorityChanged(playerName, index + 1));
+    }
+
     public boolean isInParty() {
         return inParty;
     }
@@ -362,7 +381,7 @@ public final class PartyModel extends Model {
         return partyLeader;
     }
 
-    public Set<String> getPartyMembers() {
+    public List<String> getPartyMembers() {
         return partyMembers;
     }
 

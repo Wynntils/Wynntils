@@ -81,6 +81,7 @@ import com.wynntils.features.overlays.InfoBoxFeature;
 import com.wynntils.features.overlays.MobTotemTrackingFeature;
 import com.wynntils.features.overlays.NpcDialogueOverlayFeature;
 import com.wynntils.features.overlays.ObjectivesOverlayFeature;
+import com.wynntils.features.overlays.PartyOverlayFeature;
 import com.wynntils.features.overlays.PowderSpecialBarOverlayFeature;
 import com.wynntils.features.overlays.QuestInfoOverlayFeature;
 import com.wynntils.features.overlays.ShamanMasksOverlayFeature;
@@ -230,6 +231,7 @@ public final class FeatureManager extends Manager {
         registerFeature(new NpcDialogueOverlayFeature());
         registerFeature(new ObjectivesOverlayFeature());
         registerFeature(new PartyManagementScreenFeature());
+        registerFeature(new PartyOverlayFeature());
         registerFeature(new PlayerArmorHidingFeature());
         registerFeature(new PlayerGhostTransparencyFeature());
         registerFeature(new PowderSpecialBarOverlayFeature());
