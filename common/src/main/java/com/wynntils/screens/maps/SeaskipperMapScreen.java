@@ -410,7 +410,7 @@ public final class SeaskipperMapScreen extends AbstractMapScreen {
 
         for (SeaskipperPoi poi : Models.Seaskipper.getSeaskipperPois()) {
             if (poi.isSelected(mouseX, mouseY)) {
-                Models.Seaskipper.buyPass(poi.getName());
+                Models.Seaskipper.purchasePass(poi.getName());
 
                 return true;
             }

@@ -123,7 +123,7 @@ public final class SeaskipperModel extends Model {
         return currentPoi;
     }
 
-    public void buyPass(String destinationToTravelTo) {
+    public void purchasePass(String destinationToTravelTo) {
         int passSlot = -1;
 
         for (Map.Entry<SeaskipperDestinationItem, Integer> entry :
