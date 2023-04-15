@@ -1232,6 +1232,8 @@
   "function.wynntils.soulpointTimerM.name": "SP[m]",
   "function.wynntils.soulpointTimerS.description": "Time until next soul point (seconds)",
   "function.wynntils.soulpointTimerS.name": "SP[s]",
+  "function.wynntils.sprint.description": "Your remaining sprint stamina",
+  "function.wynntils.sprint.name": "Sprint",
   "function.wynntils.stopwatchHours.description": "The number in the hours position on the stopwatch",
   "function.wynntils.stopwatchHours.name": "Stopwatch Hours",
   "function.wynntils.stopwatchMilliseconds.description": "The number in the milliseconds position on the stopwatch",
