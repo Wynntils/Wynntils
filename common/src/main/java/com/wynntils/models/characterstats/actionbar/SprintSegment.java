@@ -8,13 +8,14 @@ import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.text.CodedString;
 import com.wynntils.handlers.actionbar.ActionBarSegment;
 import com.wynntils.handlers.actionbar.type.ActionBarPosition;
+import com.wynntils.utils.type.CappedValue;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class SprintSegment implements ActionBarSegment {
     private static final Pattern SPRINT_PATTERN = Pattern.compile("§0 *§[246]\\[(§.*)§[246]\\] *");
     private static final int MAX_SPRINT = 13;
-    private int currentSprint;
+    private CappedValue sprint = CappedValue.EMPTY;
 
     @Override
     public Pattern getPattern() {
@@ -71,13 +72,17 @@ public class SprintSegment implements ActionBarSegment {
 
     @Override
     public void removed() {
-        updateSprint(0);
+        removeSprint();
     }
 
     private void updateSprint(int newSprint) {
-        if (newSprint != currentSprint) {
-            currentSprint = newSprint;
+        if (newSprint != sprint.current()) {
+            sprint = new CappedValue(newSprint, MAX_SPRINT);
         }
+    }
+
+    private void removeSprint() {
+        sprint = CappedValue.EMPTY;
     }
 
     @Override
@@ -85,11 +90,7 @@ public class SprintSegment implements ActionBarSegment {
         return false;
     }
 
-    public int getCurrentSprint() {
-        return currentSprint;
-    }
-
-    public int getMaxSprint() {
-        return MAX_SPRINT;
+    public CappedValue getSprint() {
+        return sprint;
     }
 }

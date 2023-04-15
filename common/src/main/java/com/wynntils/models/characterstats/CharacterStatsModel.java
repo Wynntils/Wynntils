@@ -45,6 +45,10 @@ public final class CharacterStatsModel extends Model {
         return manaSegment.getMana();
     }
 
+    public CappedValue getSprint() {
+        return sprintSegment.getSprint();
+    }
+
     public float getPowderSpecialCharge() {
         return powderSpecialSegment.getPowderSpecialCharge();
     }
