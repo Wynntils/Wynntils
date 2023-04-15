@@ -13,8 +13,6 @@ import com.wynntils.models.cosmetics.type.WynntilsElytraLayer;
 import com.wynntils.models.cosmetics.type.WynntilsLayer;
 import com.wynntils.models.players.WynntilsUser;
 import com.wynntils.models.players.type.CosmeticInfo;
-import com.wynntils.models.worlds.event.WorldStateEvent;
-import com.wynntils.models.worlds.type.WorldState;
 import com.wynntils.utils.mc.McUtils;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
@@ -32,7 +30,6 @@ import net.minecraft.client.renderer.texture.DynamicTexture;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.entity.player.PlayerModelPart;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
 
 public class CosmeticsModel extends Model {
     private static final BiFunction<
@@ -68,13 +65,6 @@ public class CosmeticsModel extends Model {
                             WynntilsLayer>>
             getRegisteredLayers() {
         return REGISTERED_LAYERS;
-    }
-
-    @SubscribeEvent
-    public void onWorldStateChange(WorldStateEvent event) {
-        if (event.getNewState() == WorldState.NOT_CONNECTED) {
-            clearCosmeticsCache();
-        }
     }
 
     public boolean shouldRenderCape(Player player, boolean elytra) {
@@ -146,13 +136,5 @@ public class CosmeticsModel extends Model {
 
     public ResourceLocation[] getUserCosmeticTexture(UUID uuid) {
         return cosmeticTextures.getOrDefault(uuid, null);
-    }
-
-    private void clearCosmeticsCache() {
-        cosmeticTextures.values().forEach(resourceLocations -> {
-            for (ResourceLocation location : resourceLocations) {
-                McUtils.mc().getTextureManager().release(location);
-            }
-        });
     }
 }
