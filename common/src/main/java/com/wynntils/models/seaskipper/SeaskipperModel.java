@@ -19,6 +19,7 @@ import com.wynntils.models.containers.ContainerModel;
 import com.wynntils.models.items.items.gui.SeaskipperDestinationItem;
 import com.wynntils.models.map.pois.SeaskipperPoi;
 import com.wynntils.utils.mc.ComponentUtils;
+import com.wynntils.utils.mc.McUtils;
 import com.wynntils.utils.wynn.ContainerUtils;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
@@ -69,7 +70,7 @@ public final class SeaskipperModel extends Model {
     }
 
     public void closeScreen() {
-        ContainerUtils.closeContainer(actualSeaskipperScreen.getMenu().containerId);
+        McUtils.player().closeContainer();
     }
 
     @SubscribeEvent
