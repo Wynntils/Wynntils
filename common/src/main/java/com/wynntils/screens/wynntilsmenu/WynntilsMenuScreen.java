@@ -261,7 +261,7 @@ public final class WynntilsMenuScreen extends WynntilsMenuScreenBase {
     }
 
     @Override
-    public boolean mouseClicked(double mouseX, double mouseY, int button) {
+    public boolean doMouseClicked(double mouseX, double mouseY, int button) {
         if (this.hovered == null) return false;
 
         if (button == GLFW.GLFW_MOUSE_BUTTON_LEFT) {

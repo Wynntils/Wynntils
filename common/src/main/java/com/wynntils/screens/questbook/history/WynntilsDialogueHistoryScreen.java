@@ -105,7 +105,7 @@ public final class WynntilsDialogueHistoryScreen extends WynntilsMenuScreenBase 
     }
 
     @Override
-    public boolean mouseClicked(double mouseX, double mouseY, int button) {
+    public boolean doMouseClicked(double mouseX, double mouseY, int button) {
         final float translationX = getTranslationX();
         final float translationY = getTranslationY();
 
