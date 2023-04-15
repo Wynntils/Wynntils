@@ -1,9 +1,21 @@
+## [0.0.2-alpha.482](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.481...v0.0.2-alpha.482) (2023-04-15)
+
+
+### New Features
+
+* Major ID Range Visualizer ([#1454](https://github.com/Wynntils/Artemis/issues/1454)) ([4651b3e](https://github.com/Wynntils/Artemis/commit/4651b3e3ff469ab89182b60fdfa2acc4dce146e4))
+
 ## [0.0.2-alpha.481](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.480...v0.0.2-alpha.481) (2023-04-15)
 
 
 ### Bug Fixes
 
 * Fix storage container patterns for player names ending in -s ([#1501](https://github.com/Wynntils/Artemis/issues/1501)) ([077829a](https://github.com/Wynntils/Artemis/commit/077829a2e5cdfb5f6a7024589b1c7d89651dcb35))
+
+
+### Miscellaneous Chores
+
+* **release:** v0.0.2-alpha.481 [skip ci] ([9e812f2](https://github.com/Wynntils/Artemis/commit/9e812f273a41e2d22a3b3d5157ed635413c8e910))
 
 ## [0.0.2-alpha.480](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.479...v0.0.2-alpha.480) (2023-04-15)
 
@@ -41,16 +53,4 @@
 ### Miscellaneous Chores
 
 * **release:** v0.0.2-alpha.478 [skip ci] ([bbdf824](https://github.com/Wynntils/Artemis/commit/bbdf824bcaf896798d27657942db964400f58ccb))
-
-## [0.0.2-alpha.477](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.476...v0.0.2-alpha.477) (2023-04-15)
-
-
-### Bug Fixes
-
-* Don't call the real super method in instead of doMouseClicked ([#1492](https://github.com/Wynntils/Artemis/issues/1492)) ([9810716](https://github.com/Wynntils/Artemis/commit/98107164141f74e071284f1471d6973979d599ac))
-
-
-### Miscellaneous Chores
-
-* **release:** v0.0.2-alpha.477 [skip ci] ([0ee7595](https://github.com/Wynntils/Artemis/commit/0ee7595abbf94b325d84b89e25d7b6ca997a440f))
 
