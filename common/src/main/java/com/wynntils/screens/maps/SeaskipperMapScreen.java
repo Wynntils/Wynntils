@@ -414,7 +414,7 @@ public final class SeaskipperMapScreen extends AbstractMapScreen {
             }
         }
 
-        return mouseClicked(mouseX, mouseY, button);
+        return super.doMouseClicked(mouseX, mouseY, button);
     }
 
     private void toggleBorders() {
