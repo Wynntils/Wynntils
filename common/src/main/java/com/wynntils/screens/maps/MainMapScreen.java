@@ -346,7 +346,7 @@ public final class MainMapScreen extends AbstractMapScreen {
             }
         }
 
-        return super.mouseClicked(mouseX, mouseY, button);
+        return super.doMouseClicked(mouseX, mouseY, button);
     }
 
     private void setCompassToMouseCoords(double mouseX, double mouseY) {

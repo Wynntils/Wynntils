@@ -111,7 +111,7 @@ public final class ChangelogScreen extends WynntilsScreen implements WynntilsPag
         double adjustedMouseX = mouseX - (this.width - Texture.CHANGELOG_BACKGROUND.width()) / 2f;
         double adjustedMouseY = mouseY - (this.height - Texture.CHANGELOG_BACKGROUND.height()) / 2f;
 
-        return super.mouseClicked(adjustedMouseX, adjustedMouseY, button);
+        return super.doMouseClicked(adjustedMouseX, adjustedMouseY, button);
     }
 
     private void calculateRenderTasks() {
