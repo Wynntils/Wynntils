@@ -13,6 +13,7 @@ import com.wynntils.core.config.Category;
 import com.wynntils.core.config.ConfigCategory;
 import com.wynntils.core.features.Feature;
 import com.wynntils.mc.event.PlayerRenderEvent;
+import com.wynntils.mc.event.TickEvent;
 import com.wynntils.models.character.type.ClassType;
 import com.wynntils.models.gear.type.GearInfo;
 import com.wynntils.models.gear.type.GearMajorId;
@@ -21,11 +22,18 @@ import com.wynntils.utils.colors.CustomColor;
 import com.wynntils.utils.mc.ComponentUtils;
 import com.wynntils.utils.mc.McUtils;
 import com.wynntils.utils.render.buffered.CustomRenderType;
+import com.wynntils.utils.type.Pair;
 import net.minecraft.client.gui.screens.inventory.InventoryScreen;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.core.Position;
+import net.minecraft.world.entity.player.Player;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import org.joml.Matrix4f;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 @ConfigCategory(Category.COMBAT)
 public class RangeVisualizerFeature extends Feature {
@@ -35,11 +43,30 @@ public class RangeVisualizerFeature extends Feature {
     private static final int SEGMENTS =
             128; // number of straight lines to draw when rendering circle, higher = smoother but more expensive
     private static final float HEIGHT = 0.1f;
+    private final Map<Player, CustomColor> renderData = new HashMap<>();
+    private final List<Player> players = new ArrayList<>();
 
     @SubscribeEvent
     public void onPlayerRender(PlayerRenderEvent e) {
-        if (!Models.Player.isLocalPlayer(e.getPlayer())) return; // Don't render for ghost/npc
-        String playerName = ComponentUtils.getUnformatted(e.getPlayer().getName());
+        if (players.contains(e.getPlayer())) return;
+        players.add(e.getPlayer());
+
+        if (!renderData.containsKey(e.getPlayer())) return;
+
+        for (Map.Entry<Player, CustomColor> entry : renderData.entrySet()) {
+            renderCircleWithRadius(e.getPoseStack(), 8, entry.getKey().position(), entry.getValue());
+        }
+    }
+
+    @SubscribeEvent
+    public void onTick(TickEvent e) {
+        players.forEach(this::calculateRenderData);
+        players.clear();
+    }
+
+    private void calculateRenderData(Player player) {
+        if (!Models.Player.isLocalPlayer(player)) return; // Don't render for ghost/npc
+        String playerName = ComponentUtils.getUnformatted(player.getName());
         boolean isSelf =
                 ComponentUtils.getUnformatted(McUtils.player().getName()).equals(playerName);
         if (isSelf && McUtils.mc().screen instanceof InventoryScreen) return; // Don't render for preview in inventory
@@ -47,7 +74,7 @@ public class RangeVisualizerFeature extends Feature {
 
         // We are getting the item info the same way as GearViewerScreen since we care about other people's items
         String gearName =
-                ComponentUtils.getUnformatted(e.getPlayer().getMainHandItem().getHoverName());
+                ComponentUtils.getUnformatted(player.getMainHandItem().getHoverName());
         GearInfo gearInfo = Models.Gear.getGearInfoFromApiName(gearName);
         if (gearInfo == null) return;
 
@@ -64,16 +91,14 @@ public class RangeVisualizerFeature extends Feature {
         // Guardian (8 blocks)?
         // Marked with a ? needs additional confirmation
 
+        renderData.put(player, CommonColors.RED);
+
         for (GearMajorId majorId : gearInfo.fixedStats().majorIds()) {
             switch (majorId.id()) {
-                case "TAUNT" -> renderCircleWithRadius(
-                        e.getPoseStack(), 12, e.getPlayer().position(), CommonColors.MAGENTA);
-                case "HERO" -> renderCircleWithRadius(
-                        e.getPoseStack(), 8, e.getPlayer().position(), CommonColors.WHITE);
-                case "ALTRUISM" -> renderCircleWithRadius(
-                        e.getPoseStack(), 8, e.getPlayer().position(), CommonColors.PINK);
-                case "GUARDIAN" -> renderCircleWithRadius(
-                        e.getPoseStack(), 8, e.getPlayer().position(), CommonColors.RED);
+                case "HERO" -> renderData.put(player, CommonColors.WHITE);
+                case "ALTRUISM" -> renderData.put(player, CommonColors.PINK);
+                case "GUARDIAN" -> renderData.put(player, CommonColors.RED);
+                default -> renderData.remove(player);
             }
         }
     }
