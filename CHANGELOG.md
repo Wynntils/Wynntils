@@ -1,9 +1,21 @@
+## [0.0.2-alpha.481](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.480...v0.0.2-alpha.481) (2023-04-15)
+
+
+### Bug Fixes
+
+* Fix storage container patterns for player names ending in -s ([#1501](https://github.com/Wynntils/Artemis/issues/1501)) ([077829a](https://github.com/Wynntils/Artemis/commit/077829a2e5cdfb5f6a7024589b1c7d89651dcb35))
+
 ## [0.0.2-alpha.480](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.479...v0.0.2-alpha.480) (2023-04-15)
 
 
 ### Bug Fixes
 
 * Fix PartyManagementScreen mouseClicked crash ([#1500](https://github.com/Wynntils/Artemis/issues/1500)) ([da362ab](https://github.com/Wynntils/Artemis/commit/da362ab47a6eceee8107478b74f522492d48df33))
+
+
+### Miscellaneous Chores
+
+* **release:** v0.0.2-alpha.480 [skip ci] ([703ac00](https://github.com/Wynntils/Artemis/commit/703ac00028a577f7ea6160a92d299f1fb2f4208b))
 
 ## [0.0.2-alpha.479](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.478...v0.0.2-alpha.479) (2023-04-15)
 
@@ -41,16 +53,4 @@
 ### Miscellaneous Chores
 
 * **release:** v0.0.2-alpha.477 [skip ci] ([0ee7595](https://github.com/Wynntils/Artemis/commit/0ee7595abbf94b325d84b89e25d7b6ca997a440f))
-
-## [0.0.2-alpha.476](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.475...v0.0.2-alpha.476) (2023-04-15)
-
-
-### New Features
-
-* Allow setting waypoints on guild map ([#1491](https://github.com/Wynntils/Artemis/issues/1491)) ([dc5acd4](https://github.com/Wynntils/Artemis/commit/dc5acd4f688822e786b2e5bc942b0b035a874cf8))
-
-
-### Miscellaneous Chores
-
-* **release:** v0.0.2-alpha.476 [skip ci] ([5694cff](https://github.com/Wynntils/Artemis/commit/5694cff16d3cebe86c05258fb69583b5e3b32ff1))
 
