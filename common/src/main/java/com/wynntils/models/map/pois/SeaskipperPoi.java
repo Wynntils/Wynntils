@@ -182,7 +182,7 @@ public class SeaskipperPoi implements Poi {
 
     @Override
     public int getHeight(float mapZoom, float scale) {
-        return (int) (width * mapZoom);
+        return (int) (height * mapZoom);
     }
 
     @Override
