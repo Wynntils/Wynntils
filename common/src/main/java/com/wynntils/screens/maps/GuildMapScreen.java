@@ -12,6 +12,7 @@ import com.wynntils.core.text.CodedString;
 import com.wynntils.features.map.GuildMapFeature;
 import com.wynntils.models.map.pois.Poi;
 import com.wynntils.models.map.pois.TerritoryPoi;
+import com.wynntils.models.map.pois.WaypointPoi;
 import com.wynntils.models.map.type.TerritoryDefenseFilterType;
 import com.wynntils.models.territories.TerritoryInfo;
 import com.wynntils.models.territories.profile.TerritoryProfile;
@@ -22,6 +23,7 @@ import com.wynntils.screens.base.widgets.BasicTexturedButton;
 import com.wynntils.utils.colors.CommonColors;
 import com.wynntils.utils.mc.KeyboardUtils;
 import com.wynntils.utils.mc.McUtils;
+import com.wynntils.utils.mc.type.Location;
 import com.wynntils.utils.render.FontRenderer;
 import com.wynntils.utils.render.MapRenderer;
 import com.wynntils.utils.render.RenderUtils;
@@ -36,6 +38,7 @@ import net.minecraft.client.gui.components.events.GuiEventListener;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.network.chat.Component;
+import net.minecraft.sounds.SoundEvents;
 import org.lwjgl.glfw.GLFW;
 
 public final class GuildMapScreen extends AbstractMapScreen {
@@ -246,6 +249,17 @@ public final class GuildMapScreen extends AbstractMapScreen {
                 && KeyboardUtils.isShiftDown()
                 && hovered instanceof TerritoryPoi territoryPoi) {
             McUtils.sendCommand("gu territory " + territoryPoi.getName());
+        } else if (button == GLFW.GLFW_MOUSE_BUTTON_LEFT) {
+            if (hovered instanceof WaypointPoi) {
+                Models.Compass.reset();
+                return true;
+            }
+
+            int gameX = (int) ((mouseX - centerX) / currentZoom + mapCenterX);
+            int gameZ = (int) ((mouseY - centerZ) / currentZoom + mapCenterZ);
+            McUtils.playSoundUI(SoundEvents.EXPERIENCE_ORB_PICKUP);
+            Models.Compass.setCompassLocation(new Location(gameX, 0, gameZ));
+            return true;
         }
 
         return super.mouseClicked(mouseX, mouseY, button);
@@ -418,6 +432,8 @@ public final class GuildMapScreen extends AbstractMapScreen {
                 ? Models.Territory.getFilteredTerritoryPoisFromAdvancement(
                         territoryDefenseFilterLevel.getLevel(), territoryDefenseFilterType)
                 : Models.Territory.getTerritoryPoisFromAdvancement();
+
+        Models.Compass.getCompassWaypoint().ifPresent(pois::add);
 
         renderPois(
                 pois,
