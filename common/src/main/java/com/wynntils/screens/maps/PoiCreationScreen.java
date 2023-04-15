@@ -8,6 +8,7 @@ import com.mojang.blaze3d.platform.GlStateManager;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.wynntils.core.components.Managers;
+import com.wynntils.core.components.Models;
 import com.wynntils.core.text.CodedString;
 import com.wynntils.features.map.MapFeature;
 import com.wynntils.models.map.PoiLocation;
@@ -20,7 +21,6 @@ import com.wynntils.utils.colors.CustomColor;
 import com.wynntils.utils.mc.McUtils;
 import com.wynntils.utils.render.FontRenderer;
 import com.wynntils.utils.render.RenderUtils;
-import com.wynntils.utils.render.Texture;
 import com.wynntils.utils.render.type.HorizontalAlignment;
 import com.wynntils.utils.render.type.TextShadow;
 import com.wynntils.utils.render.type.VerticalAlignment;
@@ -35,22 +35,6 @@ import org.lwjgl.glfw.GLFW;
 
 public final class PoiCreationScreen extends WynntilsScreen implements TextboxScreen {
     private static final Pattern COORDINATE_PATTERN = Pattern.compile("[-+]?\\d+");
-
-    private static final List<Texture> POI_ICONS = List.of(
-            Texture.FLAG,
-            Texture.DIAMOND,
-            Texture.FIREBALL,
-            Texture.SIGN,
-            Texture.STAR,
-            Texture.WALL,
-            Texture.CHEST_T1,
-            Texture.CHEST_T2,
-            Texture.CHEST_T3,
-            Texture.CHEST_T4,
-            Texture.FARMING,
-            Texture.FISHING,
-            Texture.MINING,
-            Texture.WOODCUTTING);
 
     private TextInputBoxWidget focusedTextInput;
 
@@ -198,7 +182,7 @@ public final class PoiCreationScreen extends WynntilsScreen implements TextboxSc
         // region Icon
         this.addRenderableWidget(new Button.Builder(Component.literal("<"), (button) -> {
                     if (selectedIconIndex - 1 < 0) {
-                        selectedIconIndex = POI_ICONS.size() - 1;
+                        selectedIconIndex = Models.Poi.POI_ICONS.size() - 1;
                     } else {
                         selectedIconIndex--;
                     }
@@ -207,7 +191,7 @@ public final class PoiCreationScreen extends WynntilsScreen implements TextboxSc
                 .size(20, 20)
                 .build());
         this.addRenderableWidget(new Button.Builder(Component.literal(">"), (button) -> {
-                    if (selectedIconIndex + 1 >= POI_ICONS.size()) {
+                    if (selectedIconIndex + 1 >= Models.Poi.POI_ICONS.size()) {
                         selectedIconIndex = 0;
                     } else {
                         selectedIconIndex++;
@@ -217,7 +201,7 @@ public final class PoiCreationScreen extends WynntilsScreen implements TextboxSc
                 .size(20, 20)
                 .build());
         if (oldPoi != null && firstSetup) {
-            int index = POI_ICONS.indexOf(oldPoi.getIcon());
+            int index = Models.Poi.POI_ICONS.indexOf(oldPoi.getIcon());
             selectedIconIndex = index == -1 ? 0 : index;
         }
         // endregion
@@ -409,7 +393,7 @@ public final class PoiCreationScreen extends WynntilsScreen implements TextboxSc
         RenderSystem.setShaderColor(color[0], color[1], color[2], 1);
 
         RenderUtils.drawTexturedRect(
-                poseStack, POI_ICONS.get(selectedIconIndex), this.width / 2f - 70, this.height / 2f + 40);
+                poseStack, Models.Poi.POI_ICONS.get(selectedIconIndex), this.width / 2f - 70, this.height / 2f + 40);
 
         RenderSystem.disableBlend();
         RenderSystem.defaultBlendFunc();
@@ -485,7 +469,7 @@ public final class PoiCreationScreen extends WynntilsScreen implements TextboxSc
                         Integer.parseInt(zInput.getTextBoxInput())),
                 nameInput.getTextBoxInput(),
                 CustomColor.fromHexString(colorInput.getTextBoxInput()),
-                POI_ICONS.get(selectedIconIndex),
+                Models.Poi.POI_ICONS.get(selectedIconIndex),
                 selectedVisiblity);
 
         if (oldPoi != null) {

@@ -4,7 +4,7 @@
  */
 package com.wynntils.mc.extension;
 
-import com.wynntils.core.text.CodedString;
+import com.wynntils.core.text.StyledText;
 import com.wynntils.handlers.item.ItemAnnotation;
 
 public interface ItemStackExtension {
@@ -12,7 +12,7 @@ public interface ItemStackExtension {
 
     void setAnnotation(ItemAnnotation annotation);
 
-    CodedString getOriginalName();
+    StyledText getOriginalName();
 
-    void setOriginalName(CodedString name);
+    void setOriginalName(StyledText name);
 }

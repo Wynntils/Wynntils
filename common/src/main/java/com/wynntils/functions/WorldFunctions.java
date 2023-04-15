@@ -8,8 +8,10 @@ import com.wynntils.core.components.Models;
 import com.wynntils.core.functions.Function;
 import com.wynntils.core.functions.arguments.FunctionArguments;
 import com.wynntils.models.mobtotem.MobTotem;
+import com.wynntils.models.territories.profile.TerritoryProfile;
 import com.wynntils.models.token.type.TokenGatekeeper;
 import com.wynntils.models.worlds.profile.ServerProfile;
+import com.wynntils.utils.mc.McUtils;
 import com.wynntils.utils.mc.type.Location;
 import com.wynntils.utils.type.CappedValue;
 import java.util.List;
@@ -239,6 +241,25 @@ public class WorldFunctions {
         @Override
         public Integer getValue(FunctionArguments arguments) {
             return Models.Ping.getPing();
+        }
+    }
+
+    public static class CurrentTerritoryFunction extends Function<String> {
+        @Override
+        public String getValue(FunctionArguments arguments) {
+            TerritoryProfile territoryProfile = Models.Territory.getTerritoryProfileForPosition(
+                    McUtils.player().position());
+
+            if (territoryProfile == null) {
+                return "";
+            }
+
+            return territoryProfile.getName();
+        }
+
+        @Override
+        public List<String> getAliases() {
+            return List.of("territory");
         }
     }
 }

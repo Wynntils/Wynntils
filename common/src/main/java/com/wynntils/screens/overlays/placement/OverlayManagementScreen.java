@@ -254,9 +254,9 @@ public final class OverlayManagementScreen extends WynntilsScreen {
     }
 
     @Override
-    public boolean mouseClicked(double mouseX, double mouseY, int button) {
+    public boolean doMouseClicked(double mouseX, double mouseY, int button) {
         // Let the buttons of the Screen have priority
-        if (super.mouseClicked(mouseX, mouseY, button)) return true;
+        if (super.doMouseClicked(mouseX, mouseY, button)) return true;
         if (testMode) return false;
 
         userInteracted = true;

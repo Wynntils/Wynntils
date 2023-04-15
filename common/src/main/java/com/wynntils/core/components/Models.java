@@ -4,6 +4,7 @@
  */
 package com.wynntils.core.components;
 
+import com.wynntils.models.abilities.AbilityTreeModel;
 import com.wynntils.models.abilities.ArrowShieldModel;
 import com.wynntils.models.abilities.BossBarModel;
 import com.wynntils.models.abilities.ShamanMaskModel;
@@ -15,6 +16,7 @@ import com.wynntils.models.characterstats.CombatXpModel;
 import com.wynntils.models.containers.ContainerModel;
 import com.wynntils.models.containers.LootChestModel;
 import com.wynntils.models.containers.PlayerInventoryModel;
+import com.wynntils.models.cosmetics.CosmeticsModel;
 import com.wynntils.models.damage.DamageModel;
 import com.wynntils.models.discoveries.DiscoveryModel;
 import com.wynntils.models.elements.ElementModel;
@@ -28,6 +30,7 @@ import com.wynntils.models.items.ItemModel;
 import com.wynntils.models.lootruns.LootrunModel;
 import com.wynntils.models.map.CompassModel;
 import com.wynntils.models.map.MapModel;
+import com.wynntils.models.map.PoiModel;
 import com.wynntils.models.mobtotem.MobTotemModel;
 import com.wynntils.models.objectives.ObjectivesModel;
 import com.wynntils.models.ping.PingModel;
@@ -53,14 +56,15 @@ import com.wynntils.models.worlds.WorldStateModel;
 import com.wynntils.models.wynnitem.WynnItemModel;
 
 public final class Models {
+    public static final AbilityTreeModel AbilityTree = new AbilityTreeModel();
     public static final ArrowShieldModel ArrowShield = new ArrowShieldModel();
-    public static final TowerAuraTimerModel TowerAuraTimer = new TowerAuraTimerModel();
     public static final BombBellModel BombBell = new BombBellModel();
     public static final BossBarModel BossBar = new BossBarModel();
     public static final CharacterModel Character = new CharacterModel();
     public static final CharacterSelectionModel CharacterSelection = new CharacterSelectionModel();
     public static final CompassModel Compass = new CompassModel();
     public static final ContainerModel Container = new ContainerModel();
+    public static final CosmeticsModel Cosmetics = new CosmeticsModel();
     public static final DamageModel Damage = new DamageModel();
     public static final ElementModel Element = new ElementModel();
     public static final FavoritesModel Favorites = new FavoritesModel();
@@ -68,6 +72,7 @@ public final class Models {
     public static final ObjectivesModel Objectives = new ObjectivesModel();
     public static final PlayerInventoryModel PlayerInventory = new PlayerInventoryModel();
     public static final PlayerModel Player = new PlayerModel();
+    public static final PoiModel Poi = new PoiModel();
     public static final RewardsModel Rewards = new RewardsModel();
     public static final ServerListModel ServerList = new ServerListModel();
     public static final StatModel Stat = new StatModel();
@@ -75,6 +80,7 @@ public final class Models {
     public static final StopwatchModel Stopwatch = new StopwatchModel();
     public static final TerritoryModel Territory = new TerritoryModel();
     public static final TokenModel Token = new TokenModel();
+    public static final TowerAuraTimerModel TowerAuraTimer = new TowerAuraTimerModel();
     public static final WorldStateModel WorldState = new WorldStateModel();
     public static final WynnItemModel WynnItem = new WynnItemModel();
 

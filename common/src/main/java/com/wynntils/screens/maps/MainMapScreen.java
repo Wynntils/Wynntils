@@ -244,11 +244,12 @@ public final class MainMapScreen extends AbstractMapScreen {
     }
 
     private void renderPois(PoseStack poseStack, int mouseX, int mouseY) {
-        Stream<? extends Poi> pois = Models.Map.getServicePois().stream();
+        Stream<? extends Poi> pois = Models.Poi.getServicePois().stream();
 
-        pois = Stream.concat(pois, Models.Map.getCombatPois().stream());
-        pois = Stream.concat(pois, Models.Map.getLabelPois().stream());
+        pois = Stream.concat(pois, Models.Poi.getCombatPois().stream());
+        pois = Stream.concat(pois, Models.Poi.getLabelPois().stream());
         pois = Stream.concat(pois, Managers.Feature.getFeatureInstance(MapFeature.class).customPois.get().stream());
+        pois = Stream.concat(pois, Models.Poi.getProvidedCustomPois().stream());
         pois = Stream.concat(pois, Models.Compass.getCompassWaypoint().stream());
         pois = Stream.concat(
                 pois,
@@ -279,7 +280,7 @@ public final class MainMapScreen extends AbstractMapScreen {
     }
 
     @Override
-    public boolean mouseClicked(double mouseX, double mouseY, int button) {
+    public boolean doMouseClicked(double mouseX, double mouseY, int button) {
         for (GuiEventListener child : children()) {
             if (child.isMouseOver(mouseX, mouseY)) {
                 child.mouseClicked(mouseX, mouseY, button);
@@ -345,7 +346,7 @@ public final class MainMapScreen extends AbstractMapScreen {
             }
         }
 
-        return super.mouseClicked(mouseX, mouseY, button);
+        return super.doMouseClicked(mouseX, mouseY, button);
     }
 
     private void setCompassToMouseCoords(double mouseX, double mouseY) {

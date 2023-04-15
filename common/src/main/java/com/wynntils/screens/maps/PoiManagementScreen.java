@@ -139,6 +139,12 @@ public final class PoiManagementScreen extends WynntilsScreen {
             return;
         }
 
+        if (customPois == null) {
+            importButton.setTooltip(
+                    Tooltip.create(Component.translatable("screens.wynntils.poiManagementGui.import.error")));
+            return;
+        }
+
         Managers.Feature.getFeatureInstance(MapFeature.class).customPois.get().addAll(List.of(customPois));
         Managers.Config.saveConfig();
 

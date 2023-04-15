@@ -7,7 +7,7 @@ package com.wynntils.models.spells;
 import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.components.Handlers;
 import com.wynntils.core.components.Model;
-import com.wynntils.core.text.CodedString;
+import com.wynntils.core.text.StyledText;
 import com.wynntils.handlers.item.event.ItemRenamedEvent;
 import com.wynntils.mc.event.SubtitleSetTextEvent;
 import com.wynntils.models.character.CharacterModel;
@@ -45,7 +45,7 @@ public class SpellModel extends Model {
 
     @SubscribeEvent(receiveCanceled = true)
     public void onItemRenamed(ItemRenamedEvent event) {
-        CodedString msg = event.getNewName();
+        StyledText msg = event.getNewName();
         SpellFailureReason failureReason = SpellFailureReason.fromMsg(msg);
         if (failureReason != null) {
             WynntilsMod.postEvent(new SpellEvent.Failed(failureReason));

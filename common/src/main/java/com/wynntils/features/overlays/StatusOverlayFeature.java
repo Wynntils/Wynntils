@@ -32,26 +32,17 @@ import net.minecraftforge.eventbus.api.SubscribeEvent;
 
 @ConfigCategory(Category.OVERLAYS)
 public class StatusOverlayFeature extends Feature {
-    private List<TextRenderTask> renderCache = List.of();
-
     @OverlayInfo(renderType = RenderEvent.ElementType.GUI)
     public final StatusOverlay statusOverlay = new StatusOverlay();
-
-    @SubscribeEvent
-    public void onStatusChange(StatusEffectsChangedEvent event) {
-        recalculateRenderCache();
-    }
-
-    private void recalculateRenderCache() {
-        renderCache = Models.StatusEffect.getStatusEffects().stream()
-                .map(statusTimer -> new TextRenderTask(statusTimer.asString(), statusOverlay.getTextRenderSetting()))
-                .toList();
-    }
 
     public class StatusOverlay extends Overlay {
         @RegisterConfig
         public final Config<TextShadow> textShadow = new Config<>(TextShadow.OUTLINE);
 
+        @RegisterConfig
+        public final Config<Float> fontScale = new Config<>(1.0f);
+
+        private List<TextRenderTask> renderCache = List.of();
         private TextRenderSetting textRenderSetting;
 
         protected StatusOverlay() {
@@ -67,6 +58,18 @@ public class StatusOverlayFeature extends Feature {
             updateTextRenderSetting();
         }
 
+        @SubscribeEvent
+        public void onStatusChange(StatusEffectsChangedEvent event) {
+            recalculateRenderCache();
+        }
+
+        private void recalculateRenderCache() {
+            renderCache = Models.StatusEffect.getStatusEffects().stream()
+                    .map(statusTimer ->
+                            new TextRenderTask(statusTimer.asString(), statusOverlay.getTextRenderSetting()))
+                    .toList();
+        }
+
         @Override
         public void render(PoseStack poseStack, MultiBufferSource bufferSource, float partialTicks, Window window) {
             BufferedFontRenderer.getInstance()
@@ -75,33 +78,36 @@ public class StatusOverlayFeature extends Feature {
                             bufferSource,
                             this.getRenderX(),
                             this.getRenderY(),
-                            StatusOverlayFeature.this.renderCache,
+                            renderCache,
                             this.getWidth(),
                             this.getHeight(),
                             this.getRenderHorizontalAlignment(),
-                            this.getRenderVerticalAlignment());
+                            this.getRenderVerticalAlignment(),
+                            fontScale.get());
         }
 
         @Override
         public void renderPreview(
                 PoseStack poseStack, MultiBufferSource bufferSource, float partialTicks, Window window) {
             BufferedFontRenderer.getInstance()
-                    .renderTextWithAlignment(
+                    .renderTextsWithAlignment(
                             poseStack,
                             bufferSource,
                             this.getRenderX(),
                             this.getRenderY(),
-                            new TextRenderTask(CodedString.fromString("§8⬤ §7 Purification 00:02"), textRenderSetting),
+                            List.of(new TextRenderTask(
+                                    CodedString.fromString("§8⬤ §7 Purification 00:02"), textRenderSetting)),
                             this.getWidth(),
                             this.getHeight(),
                             this.getRenderHorizontalAlignment(),
-                            this.getRenderVerticalAlignment());
+                            this.getRenderVerticalAlignment(),
+                            fontScale.get());
         }
 
         @Override
         protected void onConfigUpdate(ConfigHolder configHolder) {
             updateTextRenderSetting();
-            StatusOverlayFeature.this.recalculateRenderCache();
+            recalculateRenderCache();
         }
 
         private void updateTextRenderSetting() {

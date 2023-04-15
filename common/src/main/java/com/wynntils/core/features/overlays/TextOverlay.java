@@ -30,6 +30,9 @@ public abstract class TextOverlay extends DynamicOverlay {
     @RegisterConfig("overlay.wynntils.textOverlay.textShadow")
     public final Config<TextShadow> textShadow = new Config<>(TextShadow.OUTLINE);
 
+    @RegisterConfig("overlay.wynntils.textOverlay.fontScale")
+    public final Config<Float> fontScale = new Config<>(1.0f);
+
     protected CodedString[] cachedLines = new CodedString[0];
 
     protected TextOverlay(OverlayPosition position, float width, float height) {
@@ -116,7 +119,7 @@ public abstract class TextOverlay extends DynamicOverlay {
     }
 
     public float getTextScale() {
-        return 1f;
+        return fontScale.get();
     }
 
     public abstract String getTemplate();

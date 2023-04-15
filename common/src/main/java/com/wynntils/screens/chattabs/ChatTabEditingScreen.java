@@ -292,8 +292,8 @@ public final class ChatTabEditingScreen extends WynntilsScreen implements Textbo
     }
 
     @Override
-    public boolean mouseClicked(double mouseX, double mouseY, int button) {
-        super.mouseClicked(mouseX, mouseY, button);
+    public boolean doMouseClicked(double mouseX, double mouseY, int button) {
+        super.doMouseClicked(mouseX, mouseY, button);
 
         updateSaveStatus();
 

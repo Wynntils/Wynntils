@@ -366,6 +366,7 @@ public final class FunctionManager extends Manager {
         registerFunction(new StringFunctions.StringFunction());
 
         // Regular Functions
+        registerFunction(new WorldFunctions.CurrentTerritoryFunction());
         registerFunction(new WorldFunctions.CurrentWorldFunction());
         registerFunction(new WorldFunctions.CurrentWorldUptimeFunction());
         registerFunction(new WorldFunctions.MobTotemCountFunction());
@@ -398,6 +399,7 @@ public final class FunctionManager extends Manager {
         registerFunction(new CharacterFunctions.SoulpointTimerFunction());
         registerFunction(new CharacterFunctions.SoulpointTimerMFunction());
         registerFunction(new CharacterFunctions.SoulpointTimerSFunction());
+        registerFunction(new CharacterFunctions.SprintFunction());
 
         registerFunction(new CombatFunctions.AreaDamageAverageFunction());
         registerFunction(new CombatFunctions.AreaDamagePerSecondFunction());
