@@ -18,20 +18,34 @@ import com.wynntils.mc.event.ScreenOpenedEvent;
 import com.wynntils.models.containers.ContainerModel;
 import com.wynntils.models.items.items.gui.SeaskipperDestinationItem;
 import com.wynntils.models.map.pois.SeaskipperPoi;
-import com.wynntils.screens.maps.SeaskipperMapScreen;
 import com.wynntils.utils.mc.ComponentUtils;
+import com.wynntils.utils.wynn.ContainerUtils;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
+import org.lwjgl.glfw.GLFW;
 
 public final class SeaskipperModel extends Model {
     private static final StyledText OAK_BOAT_NAME = StyledText.fromString("§bOak Boat");
     private static final Pattern SEASKIPPER_PASS_PATTERN = Pattern.compile("^§b(.*) Pass §7for §b(\\d+)²$");
+
+    private static AbstractContainerScreen actualSeaskipperScreen;
+
+    private final Map<SeaskipperDestinationItem, Integer> destinations = new HashMap<>();
+    private final List<SeaskipperPoi> seaskipperPois = new ArrayList<>();
+    private final List<String> availableNames = new ArrayList<>();
+
+    private List<SeaskipperPoi> availableDestinations = new ArrayList<>();
+    private SeaskipperPoi currentPoi;
+    private int boatSlot;
     private int containerId = -2;
-    private static SeaskipperMapScreen currentScreen;
 
     public SeaskipperModel(ContainerModel containerModel) {
         super(List.of(containerModel));
@@ -39,8 +53,9 @@ public final class SeaskipperModel extends Model {
 
     @SubscribeEvent
     public void onScreenOpened(ScreenOpenedEvent.Post event) {
-        if (event.getScreen() instanceof SeaskipperMapScreen seaskipperMapScreen) {
-            currentScreen = seaskipperMapScreen;
+        if (Models.Container.isSeaskipper(
+                ComponentUtils.getUnformatted(event.getScreen().getTitle()))) {
+            actualSeaskipperScreen = (AbstractContainerScreen) event.getScreen();
 
             loadSeaskipperPois();
         }
@@ -53,13 +68,16 @@ public final class SeaskipperModel extends Model {
         }
     }
 
+    public void closeScreen() {
+        ContainerUtils.closeContainer(actualSeaskipperScreen.getMenu().containerId);
+    }
+
     @SubscribeEvent
     public void onSetSlot(ContainerSetSlotEvent event) {
-        if (currentScreen == null) return;
         if (event.getContainerId() != containerId) return;
 
         if (StyledText.fromComponent(event.getItemStack().getHoverName()).equals(OAK_BOAT_NAME)) {
-            currentScreen.setBoatSlot(event.getSlot());
+            setBoatSlot(event.getSlot());
             return;
         }
 
@@ -71,11 +89,72 @@ public final class SeaskipperModel extends Model {
         int price = Integer.parseInt(matcher.group(2));
         String shorthand = destination.substring(0, 2);
 
-        currentScreen.addDestination(new SeaskipperDestinationItem(destination, price, shorthand), event.getSlot());
+        addDestination(new SeaskipperDestinationItem(destination, price, shorthand), event.getSlot());
+
+        availableNames.add(destination);
+    }
+
+    private void addDestination(SeaskipperDestinationItem destination, int slot) {
+        destinations.put(destination, slot);
+    }
+
+    public Map<SeaskipperDestinationItem, Integer> getDestinations() {
+        return Collections.unmodifiableMap(destinations);
+    }
+
+    public List<SeaskipperPoi> getAvailableDestinations() {
+        return Collections.unmodifiableList(availableDestinations);
+    }
+
+    public List<SeaskipperPoi> getSeaskipperPois() {
+        return Collections.unmodifiableList(seaskipperPois);
+    }
+
+    private void setBoatSlot(int boatSlot) {
+        this.boatSlot = boatSlot;
+    }
+
+    public void purchaseBoat() {
+        clickSlot(boatSlot);
+    }
+
+    public SeaskipperPoi getCurrentPoi() {
+        return currentPoi;
+    }
+
+    public void buyPass(String destinationToTravelTo) {
+        int passSlot = -1;
+
+        for (Map.Entry<SeaskipperDestinationItem, Integer> entry :
+                Models.Seaskipper.getDestinations().entrySet()) {
+            String destination = entry.getKey().getDestination();
+
+            if (destination.equals(destinationToTravelTo)) {
+                passSlot = entry.getValue();
+                break;
+            }
+        }
+
+        if (passSlot == -1) {
+            return;
+        }
+
+        clickSlot(passSlot);
+    }
+
+    private void clickSlot(int slot) {
+        ContainerUtils.clickOnSlot(
+                slot,
+                actualSeaskipperScreen.getMenu().containerId,
+                GLFW.GLFW_MOUSE_BUTTON_LEFT,
+                actualSeaskipperScreen.getMenu().getItems());
     }
 
     private void loadSeaskipperPois() {
-        List<SeaskipperPoi> pois = new ArrayList<>();
+        seaskipperPois.clear();
+        availableNames.clear();
+        availableDestinations.clear();
+        destinations.clear();
 
         Download dl = Managers.Net.download(UrlId.DATA_STATIC_SEASKIPPER_LOCATIONS);
         dl.handleReader(reader -> {
@@ -83,7 +162,7 @@ public final class SeaskipperModel extends Model {
             List<SeaskipperProfile> seaskipperProfiles = WynntilsMod.GSON.fromJson(reader, type);
 
             for (SeaskipperProfile profile : seaskipperProfiles) {
-                pois.add(new SeaskipperPoi(
+                seaskipperPois.add(new SeaskipperPoi(
                         profile.destination,
                         profile.combatLevel,
                         profile.startX,
@@ -91,9 +170,25 @@ public final class SeaskipperModel extends Model {
                         profile.endX,
                         profile.endZ));
             }
-        });
 
-        currentScreen.setSeaskipperPois(pois);
+            for (SeaskipperPoi poi : seaskipperPois) {
+                if (poi.isPlayerInside()) {
+                    currentPoi = poi;
+                    availableDestinations.add(currentPoi);
+                    break;
+                }
+            }
+
+            setAvailableDestinations();
+        });
+    }
+
+    private void setAvailableDestinations() {
+        for (SeaskipperPoi poi : seaskipperPois) {
+            if (availableNames.contains(poi.getName())) {
+                availableDestinations.add(poi);
+            }
+        }
     }
 
     private static class SeaskipperProfile {
