@@ -56,4 +56,19 @@ public abstract class WynntilsScreen extends Screen {
     public void doRender(PoseStack poseStack, int mouseX, int mouseY, float partialTick) {
         super.render(poseStack, mouseX, mouseY, partialTick);
     }
+
+    @Override
+    public final boolean mouseClicked(double mouseX, double mouseY, int button) {
+        try {
+            return doMouseClicked(mouseX, mouseY, button);
+        } catch (Throwable t) {
+            failure("mouseClicked", t);
+        }
+
+        return false;
+    }
+
+    public boolean doMouseClicked(double mouseX, double mouseY, int button) {
+        return super.mouseClicked(mouseX, mouseY, button);
+    }
 }
