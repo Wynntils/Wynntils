@@ -189,6 +189,7 @@ public final class FeatureManager extends Manager {
         registerFeature(new CustomCommandKeybindsFeature());
         registerFeature(new CustomLoadingScreenFeature());
         registerFeature(new CustomNametagRendererFeature());
+        registerFeature(new CustomSeaskipperScreenFeature());
         registerFeature(new DeathCoordinatesFeature());
         registerFeature(new DialogueOptionOverrideFeature());
         registerFeature(new GameBarsOverlayFeature());
@@ -238,7 +239,6 @@ public final class FeatureManager extends Manager {
         registerFeature(new QuestInfoOverlayFeature());
         registerFeature(new QuickCastFeature());
         registerFeature(new ReplaceRecipeBookFeature());
-        registerFeature(new CustomSeaskipperScreenFeature());
         registerFeature(new ShamanMasksOverlayFeature());
         registerFeature(new ShamanTotemTrackingFeature());
         registerFeature(new SoulPointTimerFeature());
