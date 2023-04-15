@@ -7,6 +7,7 @@ package com.wynntils.mc.mixin;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.wynntils.core.events.MixinHelper;
 import com.wynntils.mc.event.PlayerNametagRenderEvent;
+import com.wynntils.mc.event.PlayerRenderEvent;
 import com.wynntils.models.cosmetics.CosmeticsModel;
 import net.minecraft.client.model.PlayerModel;
 import net.minecraft.client.player.AbstractClientPlayer;
@@ -57,5 +58,22 @@ public abstract class PlayerRendererMixin
         if (event.isCanceled()) {
             ci.cancel();
         }
+    }
+
+    @Inject(
+            method =
+                    "render(Lnet/minecraft/client/player/AbstractClientPlayer;FFLcom/mojang/blaze3d/vertex/PoseStack;Lnet/minecraft/client/renderer/MultiBufferSource;I)V",
+            at = @At("RETURN"))
+    private void onRenderPost(
+            AbstractClientPlayer entity,
+            float entityYaw,
+            float partialTicks,
+            PoseStack matrixStack,
+            MultiBufferSource buffer,
+            int packedLight,
+            CallbackInfo ci) {
+        PlayerRenderEvent event =
+                new PlayerRenderEvent(entity, entityYaw, partialTicks, matrixStack, buffer, packedLight);
+        MixinHelper.post(event);
     }
 }

@@ -719,6 +719,7 @@
   "feature.wynntils.quickCast.levelRequirementNotReached": "You need to reach %s %s before using this weapon.",
   "feature.wynntils.quickCast.name": "Quick Spell Cast",
   "feature.wynntils.quickCast.notAWeapon": "You can only quick-cast with a weapon!",
+  "feature.wynntils.rangeVisualizer.name": "Major ID Range Visualizer",
   "feature.wynntils.replaceRecipeBook.name": "Replace Recipe Book",
   "feature.wynntils.shamanMasksOverlay.hideMaskTitles.description": "Should titles be hidden about masks?",
   "feature.wynntils.shamanMasksOverlay.hideMaskTitles.name": "Hide Mask Titles",
