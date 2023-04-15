@@ -33,6 +33,8 @@ import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.network.chat.Component;
 
 public final class SeaskipperMapScreen extends AbstractMapScreen {
+    private final int MAP_CENTER_X = -240;
+    private final int MAP_CENTER_Y = -3130;
     private SeaskipperPoi hoveredPoi;
     private boolean hideTerritoryBorders = false;
     private boolean renderAllDestinations = false;
@@ -124,7 +126,7 @@ public final class SeaskipperMapScreen extends AbstractMapScreen {
                         Component.translatable("screens.wynntils.seaskipperMapGui.buyBoat.description")
                                 .withStyle(ChatFormatting.GRAY))));
 
-        updateMapCenter(-240, -3130);
+        updateMapCenter(MAP_CENTER_X, MAP_CENTER_Y);
         setZoom(0.1f);
     }
 
