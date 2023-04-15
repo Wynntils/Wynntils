@@ -262,7 +262,7 @@ public final class GuildMapScreen extends AbstractMapScreen {
             return true;
         }
 
-        return super.mouseClicked(mouseX, mouseY, button);
+        return super.doMouseClicked(mouseX, mouseY, button);
     }
 
     private void renderHoveredTerritoryInfo(PoseStack poseStack) {
