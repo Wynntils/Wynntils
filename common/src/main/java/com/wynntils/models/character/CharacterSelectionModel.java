@@ -6,6 +6,7 @@ package com.wynntils.models.character;
 
 import com.wynntils.core.components.Model;
 import com.wynntils.core.text.CodedString;
+import com.wynntils.core.text.StyledText;
 import com.wynntils.mc.event.ContainerSetContentEvent;
 import com.wynntils.mc.event.MenuEvent;
 import com.wynntils.mc.event.ScreenOpenedEvent;
@@ -38,7 +39,7 @@ public final class CharacterSelectionModel extends Model {
     private static final String DEFAULT_CLASS_NAME = "This Character";
 
     private static final int EDIT_BUTTON_SLOT = 8;
-    public static final CodedString CHARACTER_SELECTION_TITLE = CodedString.fromString("§8§lSelect a Character");
+    private static final StyledText CHARACTER_SELECTION_TITLE = StyledText.fromString("§8§lSelect a Character");
 
     private CharacterSelectorScreen currentScreen;
     private int containerId = -1;
@@ -61,7 +62,7 @@ public final class CharacterSelectionModel extends Model {
 
     @SubscribeEvent
     public void onMenuOpened(MenuEvent.MenuOpenedEvent event) {
-        if (!ComponentUtils.getCoded(event.getTitle()).equals(CHARACTER_SELECTION_TITLE)) {
+        if (!StyledText.fromComponent(event.getTitle()).equals(CHARACTER_SELECTION_TITLE)) {
             return;
         }
 

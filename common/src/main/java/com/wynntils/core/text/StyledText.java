@@ -137,6 +137,10 @@ public final class StyledText implements Iterable<StyledTextPart> {
         return builder.toString();
     }
 
+    public String getString() {
+        return getString(PartStyle.StyleType.DEFAULT);
+    }
+
     public MutableComponent getComponent() {
         if (parts.isEmpty()) {
             return Component.empty();
