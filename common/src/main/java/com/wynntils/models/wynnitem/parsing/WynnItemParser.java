@@ -9,6 +9,7 @@ import com.google.gson.JsonObject;
 import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.components.Models;
 import com.wynntils.core.text.CodedString;
+import com.wynntils.core.text.StyledText;
 import com.wynntils.models.elements.type.Powder;
 import com.wynntils.models.elements.type.Skill;
 import com.wynntils.models.gear.type.GearInfo;
@@ -105,7 +106,7 @@ public final class WynnItemParser {
             Matcher tierMatcher = normalizedCoded.getMatcher(TIER_AND_REROLL_PATTERN);
             if (tierMatcher.matches()) {
                 String tierString = tierMatcher.group(1);
-                tier = GearTier.fromFormattedString(CodedString.fromString(tierString));
+                tier = GearTier.fromStyledText(StyledText.fromString(tierString));
                 itemType = tierMatcher.group(2);
 
                 // This is either the rerolls (for re-identified gear), or the

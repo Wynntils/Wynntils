@@ -370,6 +370,21 @@ public final class BufferedFontRenderer {
             float height,
             HorizontalAlignment horizontalAlignment,
             VerticalAlignment verticalAlignment) {
+        renderTextsWithAlignment(
+                poseStack, bufferSource, x, y, toRender, width, height, horizontalAlignment, verticalAlignment, 1f);
+    }
+
+    public void renderTextsWithAlignment(
+            PoseStack poseStack,
+            MultiBufferSource bufferSource,
+            float x,
+            float y,
+            List<TextRenderTask> toRender,
+            float width,
+            float height,
+            HorizontalAlignment horizontalAlignment,
+            VerticalAlignment verticalAlignment,
+            float textScale) {
         float renderX =
                 switch (horizontalAlignment) {
                     case LEFT -> x;
@@ -384,14 +399,24 @@ public final class BufferedFontRenderer {
                     case BOTTOM -> y + (height - FontRenderer.getInstance().calculateRenderHeight(toRender));
                 };
 
-        renderTexts(poseStack, bufferSource, renderX, renderY, toRender);
+        renderTexts(poseStack, bufferSource, renderX, renderY, toRender, textScale);
     }
 
     public void renderTexts(
             PoseStack poseStack, MultiBufferSource bufferSource, float x, float y, List<TextRenderTask> lines) {
+        renderTexts(poseStack, bufferSource, x, y, lines, 1f);
+    }
+
+    public void renderTexts(
+            PoseStack poseStack,
+            MultiBufferSource bufferSource,
+            float x,
+            float y,
+            List<TextRenderTask> lines,
+            float textScale) {
         float currentY = y;
         for (TextRenderTask line : lines) {
-            renderText(poseStack, bufferSource, x, currentY, line);
+            renderText(poseStack, bufferSource, x, currentY, line, textScale);
             // If we ask Mojang code the line height of an empty line we get 0 back so replace with space
             currentY += FontRenderer.getInstance()
                     .calculateRenderHeight(
@@ -412,6 +437,27 @@ public final class BufferedFontRenderer {
                 line.getSetting().horizontalAlignment(),
                 line.getSetting().verticalAlignment(),
                 line.getSetting().shadow());
+    }
+
+    public void renderText(
+            PoseStack poseStack,
+            MultiBufferSource bufferSource,
+            float x,
+            float y,
+            TextRenderTask line,
+            float textScale) {
+        renderText(
+                poseStack,
+                bufferSource,
+                line.getText(),
+                x,
+                y,
+                line.getSetting().maxWidth(),
+                line.getSetting().customColor(),
+                line.getSetting().horizontalAlignment(),
+                line.getSetting().verticalAlignment(),
+                line.getSetting().shadow(),
+                textScale);
     }
 
     public void renderText(

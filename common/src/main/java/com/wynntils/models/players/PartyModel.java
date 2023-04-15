@@ -19,6 +19,7 @@ import com.wynntils.models.players.event.PartyEvent;
 import com.wynntils.models.players.hades.event.HadesEvent;
 import com.wynntils.models.players.scoreboard.PartyFinderScoreboardPart;
 import com.wynntils.models.players.scoreboard.PartyScoreboardPart;
+import com.wynntils.models.players.scoreboard.WarScoreboardPart;
 import com.wynntils.models.worlds.WorldStateModel;
 import com.wynntils.models.worlds.event.WorldStateEvent;
 import com.wynntils.models.worlds.type.WorldState;
@@ -82,6 +83,8 @@ public final class PartyModel extends Model {
 
     private static final ScoreboardPart PARTY_SCOREBOARD_PART = new PartyScoreboardPart();
     private static final ScoreboardPart PARTY_FINDER_SCOREBOARD_PART = new PartyFinderScoreboardPart();
+    private static final ScoreboardPart WAR_SCOREBOARD_PART =
+            new WarScoreboardPart(); // This is basically a party scoreboard part, but for war members
 
     private boolean expectingPartyMessage = false; // Whether the client is expecting a response from "/party list"
     private long lastPartyRequest = 0; // The last time the client requested party data
@@ -99,6 +102,7 @@ public final class PartyModel extends Model {
 
         Handlers.Scoreboard.addPart(PARTY_SCOREBOARD_PART);
         Handlers.Scoreboard.addPart(PARTY_FINDER_SCOREBOARD_PART);
+        Handlers.Scoreboard.addPart(WAR_SCOREBOARD_PART);
     }
 
     @SubscribeEvent

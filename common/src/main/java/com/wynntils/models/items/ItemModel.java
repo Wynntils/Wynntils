@@ -6,7 +6,7 @@ package com.wynntils.models.items;
 
 import com.wynntils.core.components.Handlers;
 import com.wynntils.core.components.Model;
-import com.wynntils.core.text.CodedString;
+import com.wynntils.core.text.StyledText;
 import com.wynntils.handlers.item.ItemAnnotation;
 import com.wynntils.handlers.item.ItemAnnotator;
 import com.wynntils.handlers.item.ItemHandler;
@@ -124,7 +124,7 @@ public class ItemModel extends Model {
 
     public static final class FallbackAnnotator implements ItemAnnotator {
         @Override
-        public ItemAnnotation getAnnotation(ItemStack itemStack, CodedString name) {
+        public ItemAnnotation getAnnotation(ItemStack itemStack, StyledText name) {
             return new WynnItem();
         }
     }

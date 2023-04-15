@@ -11,6 +11,7 @@ import com.wynntils.utils.type.Pair;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Deque;
+import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Objects;
@@ -25,7 +26,7 @@ import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.network.chat.Style;
 import org.apache.commons.lang3.ArrayUtils;
 
-public final class StyledText {
+public final class StyledText implements Iterable<StyledTextPart> {
     public static final StyledText EMPTY = new StyledText(List.of(), List.of(), List.of());
 
     private final Component temporaryWorkaround;
@@ -110,6 +111,10 @@ public final class StyledText {
                 StyledTextPart.fromCodedString(codedString, Style.EMPTY, null, Style.EMPTY), List.of(), List.of());
     }
 
+    public static StyledText fromPart(StyledTextPart part) {
+        return new StyledText(List.of(part), List.of(), List.of());
+    }
+
     public static StyledText fromCodedString(CodedString codedString) {
         return fromString(codedString.getInternalCodedStringRepresentation());
     }
@@ -144,6 +149,12 @@ public final class StyledText {
         }
 
         return component;
+    }
+
+    // Only used for porting. To be removed.
+    @Deprecated
+    public String getInternalCodedStringRepresentation() {
+        return getString(PartStyle.StyleType.FULL);
     }
 
     public static StyledText join(StyledText styledTextSeparator, StyledText... texts) {
@@ -356,6 +367,14 @@ public final class StyledText {
         return new StyledText(newParts, temporaryWorkaround, clickEvents, hoverEvents);
     }
 
+    public StyledTextPart getFirstPart() {
+        if (parts.isEmpty()) {
+            return null;
+        }
+
+        return parts.get(0);
+    }
+
     public int getPartCount() {
         return parts.size();
     }
@@ -395,6 +414,11 @@ public final class StyledText {
         }
 
         return parts.get(index - 1);
+    }
+
+    @Override
+    public Iterator<StyledTextPart> iterator() {
+        return parts.iterator();
     }
 
     @Override

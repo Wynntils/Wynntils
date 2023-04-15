@@ -213,7 +213,7 @@ public abstract class AbstractMapScreen extends WynntilsScreen {
     }
 
     @Override
-    public boolean mouseClicked(double mouseX, double mouseY, int button) {
+    public boolean doMouseClicked(double mouseX, double mouseY, int button) {
         if (button == GLFW.GLFW_MOUSE_BUTTON_LEFT) {
             dragging = true;
         }
