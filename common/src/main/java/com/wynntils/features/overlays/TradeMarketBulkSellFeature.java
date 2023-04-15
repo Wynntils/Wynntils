@@ -54,6 +54,7 @@ public class TradeMarketBulkSellFeature extends Feature {
     @SubscribeEvent
     public void onSellDialogueOpened(ScreenOpenedEvent e) {
         if (!(e.getScreen() instanceof ContainerScreen cs)) return;
+        if (cs.getMenu().getRowCount() != 3) return;
         if (!ComponentUtils.getUnformatted(cs.getTitle()).equals(SELL_DIALOGUE_TITLE)) return;
 
         sellButtons.clear();
@@ -74,6 +75,7 @@ public class TradeMarketBulkSellFeature extends Feature {
     @SubscribeEvent
     public void onSellDialogueUpdated(ContainerSetSlotEvent e) {
         if (!(McUtils.mc().screen instanceof ContainerScreen cs)) return;
+        if (cs.getMenu().getRowCount() != 3) return;
         if (!ComponentUtils.getUnformatted(cs.getTitle()).equals(SELL_DIALOGUE_TITLE)) return;
 
         String itemName = getItemName(cs);
