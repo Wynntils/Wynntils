@@ -1,9 +1,17 @@
+## [0.0.2-alpha.476](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.475...v0.0.2-alpha.476) (2023-04-15)
+
+
+### New Features
+
+* Allow setting waypoints on guild map ([#1491](https://github.com/Wynntils/Artemis/issues/1491)) ([dc5acd4](https://github.com/Wynntils/Artemis/commit/dc5acd4f688822e786b2e5bc942b0b035a874cf8))
+
 ## [0.0.2-alpha.475](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.474...v0.0.2-alpha.475) (2023-04-15)
 
 
 ### Miscellaneous Chores
 
 * Give PreventTradesDuelsFeature notification a color ([#1490](https://github.com/Wynntils/Artemis/issues/1490)) ([78c7352](https://github.com/Wynntils/Artemis/commit/78c735288c5297612a826387d0475cb205e6d5b1))
+* **release:** v0.0.2-alpha.475 [skip ci] ([b4a3e6f](https://github.com/Wynntils/Artemis/commit/b4a3e6fbcb39957e74a4745e72093c72bc1e9619))
 
 ## [0.0.2-alpha.474](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.473...v0.0.2-alpha.474) (2023-04-15)
 
@@ -40,12 +48,4 @@
 ### Miscellaneous Chores
 
 * **release:** v0.0.2-alpha.472 [skip ci] ([bc74013](https://github.com/Wynntils/Artemis/commit/bc74013d51c3a7627f43978f7b085b4db89fd7a0))
-
-## [0.0.2-alpha.471](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.470...v0.0.2-alpha.471) (2023-04-15)
-
-
-### Miscellaneous Chores
-
-* **release:** v0.0.2-alpha.471 [skip ci] ([580b400](https://github.com/Wynntils/Artemis/commit/580b400dcbb5f930a540744d6a21af09294a8324))
-* Use non-lerping position method instead ([#1486](https://github.com/Wynntils/Artemis/issues/1486)) ([664a5d1](https://github.com/Wynntils/Artemis/commit/664a5d17bf5735b1d2d532dd1e42905c4d5764c1))
 
