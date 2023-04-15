@@ -26,11 +26,14 @@ import com.wynntils.models.worlds.type.WorldState;
 import com.wynntils.utils.mc.ComponentUtils;
 import com.wynntils.utils.mc.McUtils;
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Comparator;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import java.util.stream.Collectors;
 import net.minecraftforge.eventbus.api.EventPriority;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 
@@ -94,7 +97,7 @@ public final class PartyModel extends Model {
     private boolean inParty; // Whether the player is in a party
     private String partyLeader = null; // The name of the party leader
     private List<String> partyMembers = new ArrayList<>(); // A set of Strings representing all party members
-    private HashSet<String> offlineMembers =
+    private Set<String> offlineMembers =
             new HashSet<>(); // A set of Strings representing all offline (disconnected) party members
 
     public PartyModel(WorldStateModel worldStateModel) {
@@ -281,7 +284,7 @@ public final class PartyModel extends Model {
         if (!matcher.matches()) return false;
 
         String[] partyList = matcher.group(1).split(", ");
-        partyMembers.clear();
+        List<String> newPartyMembers = new ArrayList<>();
 
         for (String member : partyList) {
             Matcher m = PARTY_LIST_LEADER.matcher(member);
@@ -289,8 +292,13 @@ public final class PartyModel extends Model {
                 partyLeader = m.group(1);
             }
 
-            partyMembers.add(ComponentUtils.stripFormatting(CodedString.fromString(member)));
+            newPartyMembers.add(ComponentUtils.stripFormatting(CodedString.fromString(member)));
         }
+
+        // Sort the party members by the order they appear in the old party list, to preserve the order
+        partyMembers = newPartyMembers.stream()
+                .sorted(Comparator.comparing(element -> partyMembers.indexOf(element)))
+                .collect(Collectors.toList());
 
         inParty = true;
         WynntilsMod.postEvent(new HadesRelationsUpdateEvent.PartyList(
@@ -298,9 +306,10 @@ public final class PartyModel extends Model {
         WynntilsMod.postEvent(new PartyEvent.Listed());
         WynntilsMod.info("Successfully updated party list, user has " + partyList.length + " party members.");
 
-        offlineMembers.clear();
-        offlineMembers.addAll(partyMembers);
-        offlineMembers.removeAll(McUtils.mc().level.getScoreboard().getTeamNames());
+        Collection<String> teamNames = McUtils.mc().level.getScoreboard().getTeamNames();
+        offlineMembers = partyMembers.stream()
+                .filter(member -> !teamNames.contains(member))
+                .collect(Collectors.toSet());
         WynntilsMod.info("Successfully updated offline members, user's party has " + offlineMembers.size()
                 + " offline members.");
 
