@@ -22,18 +22,16 @@ import com.wynntils.utils.colors.CustomColor;
 import com.wynntils.utils.mc.ComponentUtils;
 import com.wynntils.utils.mc.McUtils;
 import com.wynntils.utils.render.buffered.CustomRenderType;
-import com.wynntils.utils.type.Pair;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import net.minecraft.client.gui.screens.inventory.InventoryScreen;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.core.Position;
 import net.minecraft.world.entity.player.Player;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import org.joml.Matrix4f;
-
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
 
 @ConfigCategory(Category.COMBAT)
 public class RangeVisualizerFeature extends Feature {
@@ -73,8 +71,7 @@ public class RangeVisualizerFeature extends Feature {
         if (!Models.Party.getPartyMembers().contains(playerName) && !isSelf) return; // Other players must be in party
 
         // We are getting the item info the same way as GearViewerScreen since we care about other people's items
-        String gearName =
-                ComponentUtils.getUnformatted(player.getMainHandItem().getHoverName());
+        String gearName = ComponentUtils.getUnformatted(player.getMainHandItem().getHoverName());
         GearInfo gearInfo = Models.Gear.getGearInfoFromApiName(gearName);
         if (gearInfo == null) return;
 
