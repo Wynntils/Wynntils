@@ -35,6 +35,13 @@ public class CharacterFunctions {
         }
     }
 
+    public static class SprintFunction extends Function<CappedValue> {
+        @Override
+        public CappedValue getValue(FunctionArguments arguments) {
+            return Models.CharacterStats.getSprint();
+        }
+    }
+
     public static class SoulpointFunction extends Function<Integer> {
         @Override
         public Integer getValue(FunctionArguments arguments) {

@@ -249,7 +249,7 @@ public final class GuildMapScreen extends AbstractMapScreen {
                 && KeyboardUtils.isShiftDown()
                 && hovered instanceof TerritoryPoi territoryPoi) {
             McUtils.sendCommand("gu territory " + territoryPoi.getName());
-        } else if (button == GLFW.GLFW_MOUSE_BUTTON_LEFT) {
+        } else if (button == GLFW.GLFW_MOUSE_BUTTON_MIDDLE) {
             if (hovered instanceof WaypointPoi) {
                 Models.Compass.reset();
                 return true;
