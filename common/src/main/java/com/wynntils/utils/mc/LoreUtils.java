@@ -68,6 +68,7 @@ public final class LoreUtils {
 
         return lore;
     }
+
     /**
      * Get the lore from an item.
      *
