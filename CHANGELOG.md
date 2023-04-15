@@ -1,9 +1,21 @@
+## [0.0.2-alpha.471](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.470...v0.0.2-alpha.471) (2023-04-15)
+
+
+### Miscellaneous Chores
+
+* Use non-lerping position method instead ([#1486](https://github.com/Wynntils/Artemis/issues/1486)) ([664a5d1](https://github.com/Wynntils/Artemis/commit/664a5d17bf5735b1d2d532dd1e42905c4d5764c1))
+
 ## [0.0.2-alpha.470](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.469...v0.0.2-alpha.470) (2023-04-14)
 
 
 ### New Features
 
 * Add CurrentTerritoryFunction ([#1485](https://github.com/Wynntils/Artemis/issues/1485)) ([823b363](https://github.com/Wynntils/Artemis/commit/823b36375a451581e730d81f778d3451ed333e8a))
+
+
+### Miscellaneous Chores
+
+* **release:** v0.0.2-alpha.470 [skip ci] ([b22d07f](https://github.com/Wynntils/Artemis/commit/b22d07f9cda748984dc7121c2eade2377b0c4c57))
 
 ## [0.0.2-alpha.469](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.468...v0.0.2-alpha.469) (2023-04-13)
 
@@ -40,16 +52,4 @@
 ### Miscellaneous Chores
 
 * **release:** v0.0.2-alpha.467 [skip ci] ([fa34929](https://github.com/Wynntils/Artemis/commit/fa34929437dbc4e22f90dd3650eb7a5363955a82))
-
-## [0.0.2-alpha.466](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.465...v0.0.2-alpha.466) (2023-04-13)
-
-
-### New Features
-
-* Make ManaBankBarOverlay render as dark blue when full ([#1483](https://github.com/Wynntils/Artemis/issues/1483)) ([319195f](https://github.com/Wynntils/Artemis/commit/319195f0a6704eeab01311375d1e668c5a3dbe4b))
-
-
-### Miscellaneous Chores
-
-* **release:** v0.0.2-alpha.466 [skip ci] ([92488e6](https://github.com/Wynntils/Artemis/commit/92488e685add23466f283e7c531669958b8a6a4d))
 
