@@ -8,7 +8,6 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import com.wynntils.core.events.MixinHelper;
 import com.wynntils.mc.event.PlayerNametagRenderEvent;
 import com.wynntils.mc.event.PlayerRenderEvent;
-import com.wynntils.mc.event.RenderLayerRegistrationEvent;
 import com.wynntils.models.cosmetics.CosmeticsModel;
 import net.minecraft.client.model.PlayerModel;
 import net.minecraft.client.player.AbstractClientPlayer;
