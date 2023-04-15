@@ -1,9 +1,21 @@
+## [0.0.2-alpha.478](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.477...v0.0.2-alpha.478) (2023-04-15)
+
+
+### Bug Fixes
+
+* Only create waypoints on middle click for GuildMapScreen ([#1499](https://github.com/Wynntils/Artemis/issues/1499)) ([39416c0](https://github.com/Wynntils/Artemis/commit/39416c0b0d8f5e66c18df4010cbd8a98bf86bc2e))
+
 ## [0.0.2-alpha.477](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.476...v0.0.2-alpha.477) (2023-04-15)
 
 
 ### Bug Fixes
 
 * Don't call the real super method in instead of doMouseClicked ([#1492](https://github.com/Wynntils/Artemis/issues/1492)) ([9810716](https://github.com/Wynntils/Artemis/commit/98107164141f74e071284f1471d6973979d599ac))
+
+
+### Miscellaneous Chores
+
+* **release:** v0.0.2-alpha.477 [skip ci] ([0ee7595](https://github.com/Wynntils/Artemis/commit/0ee7595abbf94b325d84b89e25d7b6ca997a440f))
 
 ## [0.0.2-alpha.476](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.475...v0.0.2-alpha.476) (2023-04-15)
 
@@ -36,16 +48,4 @@
 ### Miscellaneous Chores
 
 * **release:** v0.0.2-alpha.474 [skip ci] ([765c22b](https://github.com/Wynntils/Artemis/commit/765c22bc9f6fd84b1841a75832e1e4c48810ad0f))
-
-## [0.0.2-alpha.473](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.472...v0.0.2-alpha.473) (2023-04-15)
-
-
-### New Features
-
-* Introduce crash protection for screen mouseClicked  [@kristofbolyai](https://github.com/kristofbolyai) ([#1489](https://github.com/Wynntils/Artemis/issues/1489)) ([cbdf0ae](https://github.com/Wynntils/Artemis/commit/cbdf0aef6cf23da4978a87e26c9fd0a8e8ed30ce))
-
-
-### Miscellaneous Chores
-
-* **release:** v0.0.2-alpha.473 [skip ci] ([07f3619](https://github.com/Wynntils/Artemis/commit/07f3619d9e493539a0dfccf598a27cfec7c68117))
 
