@@ -8,6 +8,7 @@ import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.components.Model;
 import com.wynntils.core.components.Models;
 import com.wynntils.core.text.CodedString;
+import com.wynntils.core.text.StyledText;
 import com.wynntils.handlers.labels.event.EntityLabelChangedEvent;
 import com.wynntils.handlers.labels.event.EntityLabelVisibilityEvent;
 import com.wynntils.mc.event.RemoveEntitiesEvent;
@@ -147,7 +148,7 @@ public class TokenModel extends Model {
 
             CodedString gatekeeperTokenName =
                     CodedString.fromString("Shard [Floor " + floor + " - Level " + level + "]");
-            CodedString itemName = CodedString.fromString("§d[Floor " + floor + " - Lv. " + level + "]");
+            StyledText itemName = StyledText.fromString("§d[Floor " + floor + " - Lv. " + level + "]");
             addGatekeeper(
                     event.getEntity().getId(),
                     new TokenGatekeeper(gatekeeperTokenName, itemName, location, new CappedValue(0, maxTokens)));
@@ -286,7 +287,7 @@ public class TokenModel extends Model {
     private static final class TokenInventoryWatcher extends InventoryWatcher {
         private final TokenGatekeeper gatekeeper;
 
-        private TokenInventoryWatcher(TokenGatekeeper gatekeeper, CodedString tokenItemName) {
+        private TokenInventoryWatcher(TokenGatekeeper gatekeeper, StyledText tokenItemName) {
             super(itemStack -> isToken(tokenItemName, itemStack));
             this.gatekeeper = gatekeeper;
         }
@@ -295,7 +296,7 @@ public class TokenModel extends Model {
             this(gatekeeper, gatekeeper.getItemTokenName());
         }
 
-        private static boolean isToken(CodedString tokenItemName, ItemStack itemStack) {
+        private static boolean isToken(StyledText tokenItemName, ItemStack itemStack) {
             Optional<MiscItem> miscItemOpt = Models.Item.asWynnItem(itemStack, MiscItem.class);
             if (miscItemOpt.isEmpty()) return false;
 

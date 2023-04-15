@@ -4,7 +4,6 @@
  */
 package com.wynntils.models.items.annotators.game;
 
-import com.wynntils.core.text.CodedString;
 import com.wynntils.core.text.StyledText;
 import com.wynntils.handlers.item.ItemAnnotation;
 import com.wynntils.handlers.item.ItemAnnotator;
@@ -40,6 +39,6 @@ public final class MiscAnnotator implements ItemAnnotator {
         // e.g. a GUI element
         if (!untradable && !questItem) return null;
 
-        return new MiscItem(CodedString.fromStyledText(name), untradable, questItem);
+        return new MiscItem(name, untradable, questItem);
     }
 }

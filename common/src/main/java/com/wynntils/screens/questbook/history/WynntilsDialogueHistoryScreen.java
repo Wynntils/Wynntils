@@ -8,6 +8,7 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.components.Models;
 import com.wynntils.core.text.CodedString;
+import com.wynntils.core.text.StyledText;
 import com.wynntils.models.quests.event.QuestBookReloadedEvent;
 import com.wynntils.screens.base.WynntilsMenuScreenBase;
 import com.wynntils.screens.base.WynntilsPagedScreen;
@@ -273,7 +274,7 @@ public final class WynntilsDialogueHistoryScreen extends WynntilsMenuScreenBase 
                         TextShadow.NONE);
     }
 
-    private void setDialogues(List<List<CodedString>> dialogues) {
+    private void setDialogues(List<List<StyledText>> dialogues) {
         // Optimize pages so they fit
         List<List<CodedString>> splitDialogues = new ArrayList<>();
         List<CodedString> currentPage = new ArrayList<>();
@@ -282,8 +283,9 @@ public final class WynntilsDialogueHistoryScreen extends WynntilsMenuScreenBase 
         float maxWidth = Texture.QUEST_BOOK_BACKGROUND.width() / 2f - 20;
         final float maxPageHeight = LINES_PER_PAGE * 9f;
 
-        for (List<CodedString> dialogueList : dialogues) {
-            for (CodedString dialogueLine : dialogueList) {
+        for (List<StyledText> dialogueList : dialogues) {
+            for (StyledText dialogueLineAsStyledText : dialogueList) {
+                CodedString dialogueLine = CodedString.fromStyledText(dialogueLineAsStyledText);
                 float renderHeight = FontRenderer.getInstance().calculateRenderHeight(List.of(dialogueLine), maxWidth);
 
                 if (currentHeight + renderHeight > maxPageHeight) {

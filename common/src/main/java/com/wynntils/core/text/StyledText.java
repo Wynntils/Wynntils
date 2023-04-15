@@ -431,7 +431,7 @@ public final class StyledText implements Iterable<StyledTextPart> {
 
     @Override
     public String toString() {
-        return "StyledText{" + "parts="
+        return "StyledText{'" + getString() + "', parts="
                 + ArrayUtils.toString(parts) + ", clickEvents="
                 + ArrayUtils.toString(clickEvents) + ", hoverEvents="
                 + ArrayUtils.toString(hoverEvents) + '}';
