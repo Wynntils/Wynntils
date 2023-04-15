@@ -1,9 +1,22 @@
+## [0.0.2-alpha.479](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.478...v0.0.2-alpha.479) (2023-04-15)
+
+
+### New Features
+
+* Add sprint function ([#1496](https://github.com/Wynntils/Artemis/issues/1496)) ([5def4ec](https://github.com/Wynntils/Artemis/commit/5def4ecb216f89ea6d1503db168033d1c3125056))
+* Reintroduce hide bars without value ([#1497](https://github.com/Wynntils/Artemis/issues/1497)) ([0f02af6](https://github.com/Wynntils/Artemis/commit/0f02af69ff231fb40ea185121cf1066d5609747d))
+
 ## [0.0.2-alpha.478](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.477...v0.0.2-alpha.478) (2023-04-15)
 
 
 ### Bug Fixes
 
 * Only create waypoints on middle click for GuildMapScreen ([#1499](https://github.com/Wynntils/Artemis/issues/1499)) ([39416c0](https://github.com/Wynntils/Artemis/commit/39416c0b0d8f5e66c18df4010cbd8a98bf86bc2e))
+
+
+### Miscellaneous Chores
+
+* **release:** v0.0.2-alpha.478 [skip ci] ([bbdf824](https://github.com/Wynntils/Artemis/commit/bbdf824bcaf896798d27657942db964400f58ccb))
 
 ## [0.0.2-alpha.477](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.476...v0.0.2-alpha.477) (2023-04-15)
 
@@ -36,16 +49,4 @@
 
 * Give PreventTradesDuelsFeature notification a color ([#1490](https://github.com/Wynntils/Artemis/issues/1490)) ([78c7352](https://github.com/Wynntils/Artemis/commit/78c735288c5297612a826387d0475cb205e6d5b1))
 * **release:** v0.0.2-alpha.475 [skip ci] ([b4a3e6f](https://github.com/Wynntils/Artemis/commit/b4a3e6fbcb39957e74a4745e72093c72bc1e9619))
-
-## [0.0.2-alpha.474](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.473...v0.0.2-alpha.474) (2023-04-15)
-
-
-### Bug Fixes
-
-* Parse war scoreboard part ([#1488](https://github.com/Wynntils/Artemis/issues/1488)) ([f1feefd](https://github.com/Wynntils/Artemis/commit/f1feefda6fd11e2a6ed308a6ca5610130afea924))
-
-
-### Miscellaneous Chores
-
-* **release:** v0.0.2-alpha.474 [skip ci] ([765c22b](https://github.com/Wynntils/Artemis/commit/765c22bc9f6fd84b1841a75832e1e4c48810ad0f))
 
