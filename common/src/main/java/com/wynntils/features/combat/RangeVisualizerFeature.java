@@ -16,15 +16,12 @@ import com.wynntils.mc.event.PlayerRenderEvent;
 import com.wynntils.mc.event.TickEvent;
 import com.wynntils.models.character.type.ClassType;
 import com.wynntils.models.gear.type.GearInfo;
-import com.wynntils.models.gear.type.GearMajorId;
 import com.wynntils.utils.colors.CommonColors;
 import com.wynntils.utils.colors.CustomColor;
 import com.wynntils.utils.mc.ComponentUtils;
 import com.wynntils.utils.mc.McUtils;
 import com.wynntils.utils.render.buffered.CustomRenderType;
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 import net.minecraft.client.gui.screens.inventory.InventoryScreen;
 import net.minecraft.client.renderer.MultiBufferSource;
@@ -41,44 +38,50 @@ public class RangeVisualizerFeature extends Feature {
     private static final int SEGMENTS =
             128; // number of straight lines to draw when rendering circle, higher = smoother but more expensive
     private static final float HEIGHT = 0.1f;
-    private final Map<Player, CustomColor> renderData = new HashMap<>();
-    private final List<Player> players = new ArrayList<>();
+    private final Map<Player, CustomColor> circleColors = new HashMap<>();
+    private final Map<Player, Boolean> playerIsRendered = new HashMap<>();
 
     @SubscribeEvent
     public void onPlayerRender(PlayerRenderEvent e) {
-        if (players.contains(e.getPlayer())) return;
-        players.add(e.getPlayer());
+        playerIsRendered.put(e.getPlayer(), true);
 
-        if (!renderData.containsKey(e.getPlayer())) return;
+        if (!circleColors.containsKey(e.getPlayer())) return;
 
-        for (Map.Entry<Player, CustomColor> entry : renderData.entrySet()) {
-            renderCircleWithRadius(e.getPoseStack(), 8, entry.getKey().position(), entry.getValue());
-        }
+        renderCircleWithRadius(e.getPoseStack(), 8, e.getPlayer().position(), circleColors.get(e.getPlayer()));
     }
 
     @SubscribeEvent
     public void onTick(TickEvent e) {
-        players.forEach(this::calculateRenderData);
-        players.clear();
+        playerIsRendered.forEach((player, rendered) -> {
+            CustomColor color = getCircleColor(player);
+            if (rendered && color != null) {
+                circleColors.put(player, color);
+            } else {
+                circleColors.remove(player);
+            }
+        });
+        playerIsRendered.clear();
     }
 
-    private void calculateRenderData(Player player) {
-        if (!Models.Player.isLocalPlayer(player)) return; // Don't render for ghost/npc
+    private CustomColor getCircleColor(Player player) {
+        if (!Models.Player.isLocalPlayer(player)) return null; // Don't render for ghost/npc
         String playerName = ComponentUtils.getUnformatted(player.getName());
         boolean isSelf =
                 ComponentUtils.getUnformatted(McUtils.player().getName()).equals(playerName);
-        if (isSelf && McUtils.mc().screen instanceof InventoryScreen) return; // Don't render for preview in inventory
-        if (!Models.Party.getPartyMembers().contains(playerName) && !isSelf) return; // Other players must be in party
+        if (isSelf && McUtils.mc().screen instanceof InventoryScreen)
+            return null; // Don't render for preview in inventory
+        if (!Models.Party.getPartyMembers().contains(playerName) && !isSelf)
+            return null; // Other players must be in party
 
         // We are getting the item info the same way as GearViewerScreen since we care about other people's items
         String gearName = ComponentUtils.getUnformatted(player.getMainHandItem().getHoverName());
         GearInfo gearInfo = Models.Gear.getGearInfoFromApiName(gearName);
-        if (gearInfo == null) return;
+        if (gearInfo == null) return null;
 
         if (isSelf) { // Do not render if the item is not for the player's class
-            if (gearInfo.requirements().classType().isEmpty()) return;
+            if (gearInfo.requirements().classType().isEmpty()) return null;
             ClassType classType = gearInfo.requirements().classType().get();
-            if (classType != Models.Character.getClassType()) return;
+            if (classType != Models.Character.getClassType()) return null;
         }
 
         // Major IDs that we can visualize:
@@ -88,16 +91,14 @@ public class RangeVisualizerFeature extends Feature {
         // Guardian (8 blocks)?
         // Marked with a ? needs additional confirmation
 
-        renderData.put(player, CommonColors.RED);
+        if (gearInfo.fixedStats().majorIds().isEmpty()) return null;
 
-        for (GearMajorId majorId : gearInfo.fixedStats().majorIds()) {
-            switch (majorId.id()) {
-                case "HERO" -> renderData.put(player, CommonColors.WHITE);
-                case "ALTRUISM" -> renderData.put(player, CommonColors.PINK);
-                case "GUARDIAN" -> renderData.put(player, CommonColors.RED);
-                default -> renderData.remove(player);
-            }
-        }
+        return switch (gearInfo.fixedStats().majorIds().get(0).name()) {
+            case "HERO" -> CommonColors.WHITE;
+            case "ALTRUISM" -> CommonColors.PINK;
+            case "GUARDIAN" -> CommonColors.RED;
+            default -> null;
+        };
     }
 
     /**
