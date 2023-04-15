@@ -84,6 +84,9 @@ public abstract class BarOverlay extends DynamicOverlay {
             return;
         }
 
+        // Do not render bars that has no value
+        if (valueOrError.getValue().equals(CappedValue.EMPTY)) return;
+
         render(poseStack, bufferSource, (float) valueOrError.getValue().getProgress(), calculatedTemplate.key());
     }
 
