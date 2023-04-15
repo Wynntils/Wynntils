@@ -1,9 +1,21 @@
+## [0.0.2-alpha.474](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.473...v0.0.2-alpha.474) (2023-04-15)
+
+
+### Bug Fixes
+
+* Parse war scoreboard part ([#1488](https://github.com/Wynntils/Artemis/issues/1488)) ([f1feefd](https://github.com/Wynntils/Artemis/commit/f1feefda6fd11e2a6ed308a6ca5610130afea924))
+
 ## [0.0.2-alpha.473](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.472...v0.0.2-alpha.473) (2023-04-15)
 
 
 ### New Features
 
 * Introduce crash protection for screen mouseClicked  [@kristofbolyai](https://github.com/kristofbolyai) ([#1489](https://github.com/Wynntils/Artemis/issues/1489)) ([cbdf0ae](https://github.com/Wynntils/Artemis/commit/cbdf0aef6cf23da4978a87e26c9fd0a8e8ed30ce))
+
+
+### Miscellaneous Chores
+
+* **release:** v0.0.2-alpha.473 [skip ci] ([07f3619](https://github.com/Wynntils/Artemis/commit/07f3619d9e493539a0dfccf598a27cfec7c68117))
 
 ## [0.0.2-alpha.472](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.471...v0.0.2-alpha.472) (2023-04-15)
 
@@ -36,16 +48,4 @@
 ### Miscellaneous Chores
 
 * **release:** v0.0.2-alpha.470 [skip ci] ([b22d07f](https://github.com/Wynntils/Artemis/commit/b22d07f9cda748984dc7121c2eade2377b0c4c57))
-
-## [0.0.2-alpha.469](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.468...v0.0.2-alpha.469) (2023-04-13)
-
-
-### New Features
-
-* Add CustomPoiProviders ([#1484](https://github.com/Wynntils/Artemis/issues/1484)) ([1ad0c4c](https://github.com/Wynntils/Artemis/commit/1ad0c4cfdddf865be36eb4139b2ab4bcdd6bc69a))
-
-
-### Miscellaneous Chores
-
-* **release:** v0.0.2-alpha.469 [skip ci] ([bc42da4](https://github.com/Wynntils/Artemis/commit/bc42da414f1b593a63a99f132e7d784e9d43c464))
 
