@@ -1,9 +1,21 @@
+## [0.0.2-alpha.477](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.476...v0.0.2-alpha.477) (2023-04-15)
+
+
+### Bug Fixes
+
+* Don't call the real super method in instead of doMouseClicked ([#1492](https://github.com/Wynntils/Artemis/issues/1492)) ([9810716](https://github.com/Wynntils/Artemis/commit/98107164141f74e071284f1471d6973979d599ac))
+
 ## [0.0.2-alpha.476](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.475...v0.0.2-alpha.476) (2023-04-15)
 
 
 ### New Features
 
 * Allow setting waypoints on guild map ([#1491](https://github.com/Wynntils/Artemis/issues/1491)) ([dc5acd4](https://github.com/Wynntils/Artemis/commit/dc5acd4f688822e786b2e5bc942b0b035a874cf8))
+
+
+### Miscellaneous Chores
+
+* **release:** v0.0.2-alpha.476 [skip ci] ([5694cff](https://github.com/Wynntils/Artemis/commit/5694cff16d3cebe86c05258fb69583b5e3b32ff1))
 
 ## [0.0.2-alpha.475](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.474...v0.0.2-alpha.475) (2023-04-15)
 
@@ -36,16 +48,4 @@
 ### Miscellaneous Chores
 
 * **release:** v0.0.2-alpha.473 [skip ci] ([07f3619](https://github.com/Wynntils/Artemis/commit/07f3619d9e493539a0dfccf598a27cfec7c68117))
-
-## [0.0.2-alpha.472](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.471...v0.0.2-alpha.472) (2023-04-15)
-
-
-### Bug Fixes
-
-* Don't clear cosmetics cache ([#1487](https://github.com/Wynntils/Artemis/issues/1487)) ([bead6d0](https://github.com/Wynntils/Artemis/commit/bead6d0ae65258a5ee50b89ab4146fe1b3be3160))
-
-
-### Miscellaneous Chores
-
-* **release:** v0.0.2-alpha.472 [skip ci] ([bc74013](https://github.com/Wynntils/Artemis/commit/bc74013d51c3a7627f43978f7b085b4db89fd7a0))
 
