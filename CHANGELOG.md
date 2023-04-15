@@ -1,9 +1,21 @@
+## [0.0.2-alpha.473](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.472...v0.0.2-alpha.473) (2023-04-15)
+
+
+### New Features
+
+* Introduce crash protection for screen mouseClicked  [@kristofbolyai](https://github.com/kristofbolyai) ([#1489](https://github.com/Wynntils/Artemis/issues/1489)) ([cbdf0ae](https://github.com/Wynntils/Artemis/commit/cbdf0aef6cf23da4978a87e26c9fd0a8e8ed30ce))
+
 ## [0.0.2-alpha.472](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.471...v0.0.2-alpha.472) (2023-04-15)
 
 
 ### Bug Fixes
 
 * Don't clear cosmetics cache ([#1487](https://github.com/Wynntils/Artemis/issues/1487)) ([bead6d0](https://github.com/Wynntils/Artemis/commit/bead6d0ae65258a5ee50b89ab4146fe1b3be3160))
+
+
+### Miscellaneous Chores
+
+* **release:** v0.0.2-alpha.472 [skip ci] ([bc74013](https://github.com/Wynntils/Artemis/commit/bc74013d51c3a7627f43978f7b085b4db89fd7a0))
 
 ## [0.0.2-alpha.471](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.470...v0.0.2-alpha.471) (2023-04-15)
 
@@ -36,16 +48,4 @@
 ### Miscellaneous Chores
 
 * **release:** v0.0.2-alpha.469 [skip ci] ([bc42da4](https://github.com/Wynntils/Artemis/commit/bc42da414f1b593a63a99f132e7d784e9d43c464))
-
-## [0.0.2-alpha.468](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.467...v0.0.2-alpha.468) (2023-04-13)
-
-
-### New Features
-
-* Add AbilityTreeDataDumpFeature ([#1475](https://github.com/Wynntils/Artemis/issues/1475)) ([f43fd03](https://github.com/Wynntils/Artemis/commit/f43fd03b33800997d15ce0ade8aa230c3f9c45c4))
-
-
-### Miscellaneous Chores
-
-* **release:** v0.0.2-alpha.468 [skip ci] ([a4c5d7b](https://github.com/Wynntils/Artemis/commit/a4c5d7be872bbe76ce5dbd66673af4acaa199e99))
 
