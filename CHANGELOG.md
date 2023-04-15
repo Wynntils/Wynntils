@@ -1,3 +1,10 @@
+## [0.0.2-alpha.480](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.479...v0.0.2-alpha.480) (2023-04-15)
+
+
+### Bug Fixes
+
+* Fix PartyManagementScreen mouseClicked crash ([#1500](https://github.com/Wynntils/Artemis/issues/1500)) ([da362ab](https://github.com/Wynntils/Artemis/commit/da362ab47a6eceee8107478b74f522492d48df33))
+
 ## [0.0.2-alpha.479](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.478...v0.0.2-alpha.479) (2023-04-15)
 
 
@@ -5,6 +12,11 @@
 
 * Add sprint function ([#1496](https://github.com/Wynntils/Artemis/issues/1496)) ([5def4ec](https://github.com/Wynntils/Artemis/commit/5def4ecb216f89ea6d1503db168033d1c3125056))
 * Reintroduce hide bars without value ([#1497](https://github.com/Wynntils/Artemis/issues/1497)) ([0f02af6](https://github.com/Wynntils/Artemis/commit/0f02af69ff231fb40ea185121cf1066d5609747d))
+
+
+### Miscellaneous Chores
+
+* **release:** v0.0.2-alpha.479 [skip ci] ([f805a98](https://github.com/Wynntils/Artemis/commit/f805a981c222b6e1505b154d5049c233cdb5e813))
 
 ## [0.0.2-alpha.478](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.477...v0.0.2-alpha.478) (2023-04-15)
 
@@ -41,12 +53,4 @@
 ### Miscellaneous Chores
 
 * **release:** v0.0.2-alpha.476 [skip ci] ([5694cff](https://github.com/Wynntils/Artemis/commit/5694cff16d3cebe86c05258fb69583b5e3b32ff1))
-
-## [0.0.2-alpha.475](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.474...v0.0.2-alpha.475) (2023-04-15)
-
-
-### Miscellaneous Chores
-
-* Give PreventTradesDuelsFeature notification a color ([#1490](https://github.com/Wynntils/Artemis/issues/1490)) ([78c7352](https://github.com/Wynntils/Artemis/commit/78c735288c5297612a826387d0475cb205e6d5b1))
-* **release:** v0.0.2-alpha.475 [skip ci] ([b4a3e6f](https://github.com/Wynntils/Artemis/commit/b4a3e6fbcb39957e74a4745e72093c72bc1e9619))
 
