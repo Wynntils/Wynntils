@@ -1,9 +1,21 @@
+## [0.0.2-alpha.475](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.474...v0.0.2-alpha.475) (2023-04-15)
+
+
+### Miscellaneous Chores
+
+* Give PreventTradesDuelsFeature notification a color ([#1490](https://github.com/Wynntils/Artemis/issues/1490)) ([78c7352](https://github.com/Wynntils/Artemis/commit/78c735288c5297612a826387d0475cb205e6d5b1))
+
 ## [0.0.2-alpha.474](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.473...v0.0.2-alpha.474) (2023-04-15)
 
 
 ### Bug Fixes
 
 * Parse war scoreboard part ([#1488](https://github.com/Wynntils/Artemis/issues/1488)) ([f1feefd](https://github.com/Wynntils/Artemis/commit/f1feefda6fd11e2a6ed308a6ca5610130afea924))
+
+
+### Miscellaneous Chores
+
+* **release:** v0.0.2-alpha.474 [skip ci] ([765c22b](https://github.com/Wynntils/Artemis/commit/765c22bc9f6fd84b1841a75832e1e4c48810ad0f))
 
 ## [0.0.2-alpha.473](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.472...v0.0.2-alpha.473) (2023-04-15)
 
@@ -36,16 +48,4 @@
 
 * **release:** v0.0.2-alpha.471 [skip ci] ([580b400](https://github.com/Wynntils/Artemis/commit/580b400dcbb5f930a540744d6a21af09294a8324))
 * Use non-lerping position method instead ([#1486](https://github.com/Wynntils/Artemis/issues/1486)) ([664a5d1](https://github.com/Wynntils/Artemis/commit/664a5d17bf5735b1d2d532dd1e42905c4d5764c1))
-
-## [0.0.2-alpha.470](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.469...v0.0.2-alpha.470) (2023-04-14)
-
-
-### New Features
-
-* Add CurrentTerritoryFunction ([#1485](https://github.com/Wynntils/Artemis/issues/1485)) ([823b363](https://github.com/Wynntils/Artemis/commit/823b36375a451581e730d81f778d3451ed333e8a))
-
-
-### Miscellaneous Chores
-
-* **release:** v0.0.2-alpha.470 [skip ci] ([b22d07f](https://github.com/Wynntils/Artemis/commit/b22d07f9cda748984dc7121c2eade2377b0c4c57))
 
