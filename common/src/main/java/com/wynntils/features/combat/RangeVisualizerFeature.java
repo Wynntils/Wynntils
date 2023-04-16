@@ -46,6 +46,7 @@ public class RangeVisualizerFeature extends Feature {
     // number of straight lines to draw when rendering circle, higher = smoother but more expensive
     private static final int SEGMENTS = 128;
     private static final float HEIGHT = 0.1f;
+    private static final int TRANSPARENCY = 95;
 
     private final Map<Player, List<Pair<CustomColor, Float>>> circlesToRender = new HashMap<>();
     private final Set<Player> detectedPlayers = new HashSet<>();
@@ -121,10 +122,10 @@ public class RangeVisualizerFeature extends Feature {
         // Only a few major IDs can actually be applied at the same time, but we make this general
         List<Pair<CustomColor, Float>> circles = validGear.stream()
                 .flatMap(gearInfo -> gearInfo.fixedStats().majorIds().stream().map(majorId -> switch (majorId.name()) {
-                    case "TAUNT" -> Pair.of(CommonColors.ORANGE, 12f);
-                    case "HERO" -> Pair.of(CommonColors.WHITE, 8f);
-                    case "ALTRUISM" -> Pair.of(CommonColors.PINK, 8.02f);
-                    case "GUARDIAN" -> Pair.of(CommonColors.RED, 8.06f);
+                    case "TAUNT" -> Pair.of(CommonColors.ORANGE.withAlpha(TRANSPARENCY), 12f);
+                    case "HERO" -> Pair.of(CommonColors.WHITE.withAlpha(TRANSPARENCY), 8f);
+                    case "ALTRUISM" -> Pair.of(CommonColors.PINK.withAlpha(TRANSPARENCY), 8.1f);
+                    case "GUARDIAN" -> Pair.of(CommonColors.RED.withAlpha(TRANSPARENCY), 7.9f);
                     default -> null;
                 }))
                 .filter(Objects::nonNull)
