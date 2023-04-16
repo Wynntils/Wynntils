@@ -22,30 +22,27 @@ public final class ContainerModel extends Model {
     public static final Pattern ABILITY_TREE_PATTERN =
             Pattern.compile("(?:Warrior|Shaman|Mage|Assassin|Archer) Abilities");
 
-    // Test suite: https://regexr.com/7b4l0
-    private static final Pattern BANK_PATTERN = Pattern.compile("§0\\[Pg\\. \\d+\\] §8[a-zA-Z0-9_]+'s§0 Bank");
-
     // Test suite: https://regexr.com/7b4lf
     private static final Pattern GUILD_BANK_PATTERN =
             Pattern.compile("[a-zA-Z ]+: Bank \\((?:Everyone|High Ranked)\\)");
 
-    // Test suite: https://regexr.com/7b4m1
-    private static final Pattern BLOCK_BANK_PATTERN =
-            Pattern.compile("§0\\[Pg\\. \\d+\\] §8[a-zA-Z0-9_]+'s§0 Block Bank");
-
-    // Test suite: https://regexr.com/7b4ma
-    private static final Pattern MISC_BUCKET_PATTERN =
-            Pattern.compile("§0\\[Pg\\. \\d+\\] §8[a-zA-Z0-9_]+'s§0 Misc\\. Bucket");
-
     private static final Pattern LOOT_CHEST_PATTERN = Pattern.compile("Loot Chest (.+)");
+
+    // Test suite: https://regexr.com/7c4qc
+    private static final Pattern PERSONAL_STORAGE_PATTERN =
+            Pattern.compile("^§0\\[Pg\\. (\\d+)\\] §8[a-zA-Z0-9_]+'s?§0 (.*)$");
+
+    private static final String BANK_NAME = "Bank";
+    private static final String BLOCK_BANK_NAME = "Block Bank";
+    private static final String MISC_BUCKET_NAME = "Misc. Bucket";
 
     private static final Pair<Integer, Integer> ABILITY_TREE_PREVIOUS_NEXT_SLOTS = new Pair<>(57, 59);
     private static final Pair<Integer, Integer> BANK_PREVIOUS_NEXT_SLOTS = new Pair<>(17, 8);
     private static final Pair<Integer, Integer> GUILD_BANK_PREVIOUS_NEXT_SLOTS = new Pair<>(9, 27);
     private static final Pair<Integer, Integer> TRADE_MARKET_PREVIOUS_NEXT_SLOTS = new Pair<>(17, 26);
-    public static final CodedString LAST_BANK_PAGE_STRING = CodedString.fromString(">§4>§c>§4>§c>");
-    public static final CodedString FIRST_TRADE_MARKET_PAGE_STRING = CodedString.fromString("§bReveal Item Names");
-    public static final CodedString TRADE_MARKET_TITLE = CodedString.fromString("Trade Market");
+    private static final CodedString LAST_BANK_PAGE_STRING = CodedString.fromString(">§4>§c>§4>§c>");
+    private static final CodedString FIRST_TRADE_MARKET_PAGE_STRING = CodedString.fromString("§bReveal Item Names");
+    private static final CodedString TRADE_MARKET_TITLE = CodedString.fromString("Trade Market");
 
     public ContainerModel() {
         super(List.of());
@@ -56,9 +53,11 @@ public final class ContainerModel extends Model {
     }
 
     public boolean isBankScreen(Screen screen) {
-        return ComponentUtils.getCoded(screen.getTitle())
-                .getMatcher(BANK_PATTERN)
-                .matches();
+        Matcher matcher = ComponentUtils.getCoded(screen.getTitle()).getMatcher(PERSONAL_STORAGE_PATTERN);
+        if (!matcher.matches()) return false;
+
+        String type = matcher.group(2);
+        return type.equals(BANK_NAME);
     }
 
     /**
@@ -92,15 +91,19 @@ public final class ContainerModel extends Model {
     }
 
     public boolean isBlockBankScreen(Screen screen) {
-        return ComponentUtils.getCoded(screen.getTitle())
-                .getMatcher(BLOCK_BANK_PATTERN)
-                .matches();
+        Matcher matcher = ComponentUtils.getCoded(screen.getTitle()).getMatcher(PERSONAL_STORAGE_PATTERN);
+        if (!matcher.matches()) return false;
+
+        String type = matcher.group(2);
+        return type.equals(BLOCK_BANK_NAME);
     }
 
     public boolean isMiscBucketScreen(Screen screen) {
-        return ComponentUtils.getCoded(screen.getTitle())
-                .getMatcher(MISC_BUCKET_PATTERN)
-                .matches();
+        Matcher matcher = ComponentUtils.getCoded(screen.getTitle()).getMatcher(PERSONAL_STORAGE_PATTERN);
+        if (!matcher.matches()) return false;
+
+        String type = matcher.group(2);
+        return type.equals(MISC_BUCKET_NAME);
     }
 
     public boolean isLootChest(Screen screen) {

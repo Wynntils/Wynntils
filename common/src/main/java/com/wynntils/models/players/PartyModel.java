@@ -10,6 +10,7 @@ import com.wynntils.core.components.Managers;
 import com.wynntils.core.components.Model;
 import com.wynntils.core.components.Models;
 import com.wynntils.core.text.CodedString;
+import com.wynntils.core.text.StyledText;
 import com.wynntils.handlers.chat.event.ChatMessageReceivedEvent;
 import com.wynntils.handlers.chat.type.MessageType;
 import com.wynntils.handlers.scoreboard.ScoreboardPart;
@@ -23,7 +24,6 @@ import com.wynntils.models.players.scoreboard.WarScoreboardPart;
 import com.wynntils.models.worlds.WorldStateModel;
 import com.wynntils.models.worlds.event.WorldStateEvent;
 import com.wynntils.models.worlds.type.WorldState;
-import com.wynntils.utils.mc.ComponentUtils;
 import com.wynntils.utils.mc.McUtils;
 import java.util.HashSet;
 import java.util.List;
@@ -288,7 +288,7 @@ public final class PartyModel extends Model {
                 partyLeader = m.group(1);
             }
 
-            partyMembers.add(ComponentUtils.stripFormatting(CodedString.fromString(member)));
+            partyMembers.add(StyledText.fromString(member).getStringWithoutFormatting());
         }
 
         inParty = true;

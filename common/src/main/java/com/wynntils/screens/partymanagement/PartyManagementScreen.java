@@ -290,7 +290,7 @@ public final class PartyManagementScreen extends WynntilsScreen implements Textb
             }
         }
 
-        return super.mouseClicked(mouseX, mouseY, button);
+        return super.doMouseClicked(mouseX, mouseY, button);
     }
 
     @Override

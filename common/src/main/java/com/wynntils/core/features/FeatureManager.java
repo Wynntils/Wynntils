@@ -39,6 +39,7 @@ import com.wynntils.features.combat.MythicBlockerFeature;
 import com.wynntils.features.combat.MythicBoxScalerFeature;
 import com.wynntils.features.combat.PreventTradesDuelsFeature;
 import com.wynntils.features.combat.QuickCastFeature;
+import com.wynntils.features.combat.RangeVisualizerFeature;
 import com.wynntils.features.commands.AddCommandExpansionFeature;
 import com.wynntils.features.commands.CommandAliasesFeature;
 import com.wynntils.features.commands.CustomCommandKeybindsFeature;
@@ -238,6 +239,7 @@ public final class FeatureManager extends Manager {
         registerFeature(new PreventTradesDuelsFeature());
         registerFeature(new QuestInfoOverlayFeature());
         registerFeature(new QuickCastFeature());
+        registerFeature(new RangeVisualizerFeature());
         registerFeature(new ReplaceRecipeBookFeature());
         registerFeature(new ShamanMasksOverlayFeature());
         registerFeature(new ShamanTotemTrackingFeature());
