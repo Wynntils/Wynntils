@@ -116,6 +116,10 @@ public final class ResourcePackManager extends Manager {
                 hash);
     }
 
+    public boolean hasCustomResourcePack() {
+        return getCurrentPreloadedHash().isPresent();
+    }
+
     private static final class PreloadedPack extends Pack {
         private final String hash;
 
