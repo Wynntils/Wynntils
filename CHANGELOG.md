@@ -1,9 +1,21 @@
+## [0.0.3-alpha.3](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.2...v0.0.3-alpha.3) (2023-04-16)
+
+
+### New Features
+
+* Improve range visualizer ([#1503](https://github.com/Wynntils/Artemis/issues/1503)) ([48e801b](https://github.com/Wynntils/Artemis/commit/48e801be0da9cad7f69d0e221e8d18da31bfc18d))
+
 ## [0.0.3-alpha.2](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.1...v0.0.3-alpha.2) (2023-04-16)
 
 
 ### Bug Fixes
 
 * Fix compatibility with modmenu ([#1512](https://github.com/Wynntils/Artemis/issues/1512)) ([f3f8def](https://github.com/Wynntils/Artemis/commit/f3f8defe4c527b8ae2b45e2ddc703233fba96f44))
+
+
+### Miscellaneous Chores
+
+* **release:** v0.0.3-alpha.2 [skip ci] ([0213da1](https://github.com/Wynntils/Artemis/commit/0213da1f0928129ec81b6879d879f82d669ed8d1))
 
 ## [0.0.3-alpha.1](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.0...v0.0.3-alpha.1) (2023-04-16)
 
@@ -42,16 +54,4 @@
 ### Miscellaneous Chores
 
 * **release:** v0.0.2 [skip ci] ([30167a4](https://github.com/Wynntils/Artemis/commit/30167a46d285f67d42aa6f90bcf2be71754f7646))
-
-## [0.0.2-alpha.485](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.484...v0.0.2-alpha.485) (2023-04-16)
-
-
-### New Features
-
-* Add HadesPartyOverlayFeature ([#1498](https://github.com/Wynntils/Artemis/issues/1498)) ([aac62c3](https://github.com/Wynntils/Artemis/commit/aac62c388e993438247d92e76fadf014aefcb282))
-
-
-### Miscellaneous Chores
-
-* **release:** v0.0.2-alpha.485 [skip ci] ([d934ff9](https://github.com/Wynntils/Artemis/commit/d934ff972afb53b1c12417ba21af52f3eae0ed76))
 
