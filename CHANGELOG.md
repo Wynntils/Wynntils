@@ -1,9 +1,28 @@
+## [0.0.3-alpha.0](https://github.com/Wynntils/Artemis/compare/v0.0.2...v0.0.3-alpha.0) (2023-04-16)
+
+
+### New Features
+
+* Update to Minecraft 1.19.4 ([#1303](https://github.com/Wynntils/Artemis/issues/1303)) ([688aee0](https://github.com/Wynntils/Artemis/commit/688aee0037814ffee38bba5563a6090c26aab60a))
+
+## [0.0.2](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.485...v0.0.2) (2023-04-16)
+
+
+### Miscellaneous Chores
+
+* **release:** v0.0.2 [skip ci] ([30167a4](https://github.com/Wynntils/Artemis/commit/30167a46d285f67d42aa6f90bcf2be71754f7646))
+
 ## [0.0.2-alpha.485](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.484...v0.0.2-alpha.485) (2023-04-16)
 
 
 ### New Features
 
 * Add HadesPartyOverlayFeature ([#1498](https://github.com/Wynntils/Artemis/issues/1498)) ([aac62c3](https://github.com/Wynntils/Artemis/commit/aac62c388e993438247d92e76fadf014aefcb282))
+
+
+### Miscellaneous Chores
+
+* **release:** v0.0.2-alpha.485 [skip ci] ([d934ff9](https://github.com/Wynntils/Artemis/commit/d934ff972afb53b1c12417ba21af52f3eae0ed76))
 
 ## [0.0.2-alpha.484](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.483...v0.0.2-alpha.484) (2023-04-16)
 
@@ -28,28 +47,4 @@
 ### Miscellaneous Chores
 
 * **release:** v0.0.2-alpha.483 [skip ci] ([7d64eb3](https://github.com/Wynntils/Artemis/commit/7d64eb36f052eb2c09be646a79cf667b6d6e2036))
-
-## [0.0.2-alpha.482](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.481...v0.0.2-alpha.482) (2023-04-15)
-
-
-### New Features
-
-* Major ID Range Visualizer ([#1454](https://github.com/Wynntils/Artemis/issues/1454)) ([4651b3e](https://github.com/Wynntils/Artemis/commit/4651b3e3ff469ab89182b60fdfa2acc4dce146e4))
-
-
-### Miscellaneous Chores
-
-* **release:** v0.0.2-alpha.482 [skip ci] ([69a5b92](https://github.com/Wynntils/Artemis/commit/69a5b926c42fcfd167f5e552f398b923b954da2c))
-
-## [0.0.2-alpha.481](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.480...v0.0.2-alpha.481) (2023-04-15)
-
-
-### Bug Fixes
-
-* Fix storage container patterns for player names ending in -s ([#1501](https://github.com/Wynntils/Artemis/issues/1501)) ([077829a](https://github.com/Wynntils/Artemis/commit/077829a2e5cdfb5f6a7024589b1c7d89651dcb35))
-
-
-### Miscellaneous Chores
-
-* **release:** v0.0.2-alpha.481 [skip ci] ([9e812f2](https://github.com/Wynntils/Artemis/commit/9e812f273a41e2d22a3b3d5157ed635413c8e910))
 
