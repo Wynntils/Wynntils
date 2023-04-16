@@ -18,6 +18,7 @@ import com.wynntils.models.items.items.game.GearItem;
 import com.wynntils.utils.MathUtils;
 import com.wynntils.utils.mc.McUtils;
 import com.wynntils.utils.type.CappedValue;
+import com.wynntils.utils.wynn.InventoryUtils;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -114,30 +115,38 @@ public final class CharacterStatsModel extends Model {
     public List<GearInfo> getWornGear() {
         Player player = McUtils.player();
 
-        // Check if main hand has valid weapon
+        // Check if main hand has valid weapon. We can hold weapons we can't yield, so we need
+        // to check that it is indeed a valid and usable weapon
         List<GearInfo> wornGear = new ArrayList<>();
         Optional<GearItem> mainHandGearItem = Models.Item.asWynnItem(player.getMainHandItem(), GearItem.class);
         if (mainHandGearItem.isPresent()) {
             GearInfo gearInfo = mainHandGearItem.get().getGearInfo();
-            if (gearInfo.type().isValidWeapon(Models.Character.getClassType())) {
+            if (gearInfo.type().isValidWeapon(Models.Character.getClassType())
+                    && Models.CombatXp.getCombatLevel().current()
+                            >= gearInfo.requirements().level()) {
                 wornGear.add(gearInfo);
             }
         }
+
+        // We trust that Wynncraft do not let us wear invalid gear, so no further validation checks are needed
 
         // Check armor slots
         player.getArmorSlots().forEach(itemStack -> {
             Optional<GearItem> armorGearItem = Models.Item.asWynnItem(itemStack, GearItem.class);
             if (armorGearItem.isPresent()) {
                 GearInfo gearInfo = armorGearItem.get().getGearInfo();
-                if (gearInfo.type().isArmour()) {
-                    wornGear.add(gearInfo);
-                }
+                wornGear.add(gearInfo);
             }
         });
 
         // Check accessory slots
-
-        // FIXME!
+        InventoryUtils.getAccessories(player).forEach(itemStack -> {
+            Optional<GearItem> accessoryGearItem = Models.Item.asWynnItem(itemStack, GearItem.class);
+            if (accessoryGearItem.isPresent()) {
+                GearInfo gearInfo = accessoryGearItem.get().getGearInfo();
+                wornGear.add(gearInfo);
+            }
+        });
 
         return wornGear;
     }

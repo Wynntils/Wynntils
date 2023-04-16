@@ -98,7 +98,7 @@ public class RangeVisualizerFeature extends Feature {
             GearInfo mainHandGearInfo = getOtherPlayerGearInfo(player.getMainHandItem());
             if (mainHandGearInfo != null) {
                 if (mainHandGearInfo.type().isWeapon()) {
-                    // We cannot verify class :(
+                    // We cannot verify class or level :(
                     validGear.add(mainHandGearInfo);
                 }
             }
