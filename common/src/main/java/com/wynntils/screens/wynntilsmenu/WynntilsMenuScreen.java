@@ -206,18 +206,18 @@ public final class WynntilsMenuScreen extends WynntilsMenuScreenBase {
 
         renderDescription(poseStack, I18n.get("screens.wynntils.wynntilsMenu.description"));
 
-        renderPlayerInfo(poseStack, mouseX, mouseY, translationX, translationY);
+        renderPlayerInfo(poseStack, mouseX, mouseY);
 
         renderTooltip(poseStack, mouseX, mouseY, translationX, translationY);
 
         poseStack.popPose();
     }
 
-    private static void renderPlayerInfo(
-            PoseStack poseStack, int mouseX, int mouseY, float translationX, float translationY) {
-        int posX = (int) (translationX + Texture.QUEST_BOOK_BACKGROUND.width()) - 85;
-        int posY = (int) (translationY + Texture.QUEST_BOOK_BACKGROUND.height() / 2f) + 25;
-        InventoryScreen.renderEntityInInventory(posX, posY, 30, posX - mouseX, posY - 50 - mouseY, McUtils.player());
+    private static void renderPlayerInfo(PoseStack poseStack, int mouseX, int mouseY) {
+        int posX = (int) (Texture.QUEST_BOOK_BACKGROUND.width()) - 85;
+        int posY = (int) (Texture.QUEST_BOOK_BACKGROUND.height() / 2f) + 25;
+        InventoryScreen.renderEntityInInventoryFollowsMouse(
+                poseStack, posX, posY, 30, posX + 45 - mouseX, posY - 40 - mouseY, McUtils.player());
 
         FontRenderer.getInstance()
                 .renderAlignedTextInBox(
