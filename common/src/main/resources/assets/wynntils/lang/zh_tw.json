@@ -184,7 +184,6 @@
   "feature.wynntils.healthPotionBlocker.name": "滿時血量藥水喝避免者",
   "feature.wynntils.healthPotionBlocker.threshold.description": "什麽百分比，如您的血量超過這百分比，就會停止喝血藥水的本領？",
   "feature.wynntils.healthPotionBlocker.threshold.name": "百分比 (%%)",
-  "feature.wynntils.hidePotionGlint.name": "隱藏藥水的閃爍",
   "feature.wynntils.infoBox.name": "數據顯示框",
   "feature.wynntils.infoBox.overlay.infoBox.content.description": "這位框應該顯示什麽？您可以用函數 (Function)",
   "feature.wynntils.infoBox.overlay.infoBox.content.name": "框顯示的内容",
