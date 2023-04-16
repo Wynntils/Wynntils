@@ -12,12 +12,18 @@ import net.minecraftforge.eventbus.api.Event;
  */
 public class ScreenInitEvent extends Event {
     private final Screen screen;
+    private final boolean firstInit;
 
-    public ScreenInitEvent(Screen screen) {
+    public ScreenInitEvent(Screen screen, boolean firstInit) {
         this.screen = screen;
+        this.firstInit = firstInit;
     }
 
     public Screen getScreen() {
         return screen;
+    }
+
+    public boolean isFirstInit() {
+        return firstInit;
     }
 }
