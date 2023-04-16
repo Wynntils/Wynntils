@@ -94,4 +94,22 @@ public abstract class PartyEvent extends Event {
             return playerName;
         }
     }
+
+    public static class PriorityChanged extends PartyEvent {
+        private final String playerName;
+        private final int priority;
+
+        public PriorityChanged(String playerName, int priority) {
+            this.playerName = playerName;
+            this.priority = priority;
+        }
+
+        public String getPlayerName() {
+            return playerName;
+        }
+
+        public int getPriority() {
+            return priority;
+        }
+    }
 }
