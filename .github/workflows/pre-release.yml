@@ -139,7 +139,7 @@ jobs:
           changelog: ${{ needs.changelog.outputs.changelog }}
 
           loaders: ${{ matrix.modloader }}
-          game-versions: 1.19.3
+          game-versions: 1.19.4
           java: 17
 
 

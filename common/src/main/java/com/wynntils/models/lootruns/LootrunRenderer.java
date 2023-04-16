@@ -113,7 +113,16 @@ public final class LootrunRenderer {
             for (FormattedCharSequence line : lines) {
                 int offsetX = -font.width(line) / 2;
                 font.drawInBatch(
-                        line, offsetX, offsetY, color, false, pose, BUFFER_SOURCE, false, 0x80000000, 0xf000f0);
+                        line,
+                        offsetX,
+                        offsetY,
+                        color,
+                        false,
+                        pose,
+                        BUFFER_SOURCE,
+                        Font.DisplayMode.NORMAL,
+                        0x80000000,
+                        0xf000f0);
                 offsetY += font.lineHeight + 2;
             }
             poseStack.popPose();

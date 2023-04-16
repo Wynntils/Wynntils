@@ -56,7 +56,6 @@ import com.wynntils.features.inventory.ContainerSearchFeature;
 import com.wynntils.features.inventory.DurabilityArcFeature;
 import com.wynntils.features.inventory.EmeraldPouchHotkeyFeature;
 import com.wynntils.features.inventory.ExtendedItemCountFeature;
-import com.wynntils.features.inventory.HidePotionGlintFeature;
 import com.wynntils.features.inventory.IngredientPouchHotkeyFeature;
 import com.wynntils.features.inventory.InventoryEmeraldCountFeature;
 import com.wynntils.features.inventory.ItemFavoriteFeature;
@@ -208,7 +207,6 @@ public final class FeatureManager extends Manager {
         registerFeature(new GuildMapFeature());
         registerFeature(new HadesFeature());
         registerFeature(new HealthPotionBlockerFeature());
-        registerFeature(new HidePotionGlintFeature());
         registerFeature(new HorseMountFeature());
         registerFeature(new InfoBoxFeature());
         registerFeature(new InfoMessageFilterFeature());

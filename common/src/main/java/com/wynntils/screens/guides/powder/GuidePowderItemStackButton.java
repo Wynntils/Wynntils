@@ -48,7 +48,7 @@ public class GuidePowderItemStackButton extends WynntilsButton {
                 Texture.HIGHLIGHT.width(),
                 Texture.HIGHLIGHT.height());
 
-        RenderUtils.renderItem(screen.getTranslationX(), screen.getTranslationY(), itemStack, getX(), getY());
+        RenderUtils.renderItem(poseStack, itemStack, getX(), getY());
 
         poseStack.pushPose();
         poseStack.translate(0, 0, 200);

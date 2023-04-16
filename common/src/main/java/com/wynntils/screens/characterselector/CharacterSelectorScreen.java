@@ -364,8 +364,8 @@ public final class CharacterSelectorScreen extends WynntilsScreen {
         McUtils.player().setSwimming(false);
 
         int scale = this.height / 4;
-        InventoryScreen.renderEntityInInventory(
-                (int) (this.width * 0.6f), (int) (this.height * 0.85f), scale, 0, 0, McUtils.player());
+        InventoryScreen.renderEntityInInventoryFollowsMouse(
+                poseStack, (int) (this.width * 0.6f), (int) (this.height * 0.85f), scale, 0, 0, McUtils.player());
     }
 
     private void setScrollOffset(int delta) {

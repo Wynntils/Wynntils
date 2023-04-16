@@ -12,9 +12,9 @@ import com.wynntils.mc.event.GroundItemEntityTransformEvent;
 import com.wynntils.mc.event.ItemCountOverlayRenderEvent;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.renderer.MultiBufferSource;
-import net.minecraft.client.renderer.block.model.ItemTransforms;
 import net.minecraft.client.renderer.entity.ItemRenderer;
 import net.minecraft.client.resources.model.BakedModel;
+import net.minecraft.world.item.ItemDisplayContext;
 import net.minecraft.world.item.ItemStack;
 import org.joml.Matrix4f;
 import org.spongepowered.asm.mixin.Mixin;
@@ -31,7 +31,7 @@ public abstract class ItemRendererMixin {
 
     @Inject(
             method =
-                    "render(Lnet/minecraft/world/item/ItemStack;Lnet/minecraft/client/renderer/block/model/ItemTransforms$TransformType;ZLcom/mojang/blaze3d/vertex/PoseStack;Lnet/minecraft/client/renderer/MultiBufferSource;IILnet/minecraft/client/resources/model/BakedModel;)V",
+                    "render(Lnet/minecraft/world/item/ItemStack;Lnet/minecraft/world/item/ItemDisplayContext;ZLcom/mojang/blaze3d/vertex/PoseStack;Lnet/minecraft/client/renderer/MultiBufferSource;IILnet/minecraft/client/resources/model/BakedModel;)V",
             at =
                     @At(
                             target = "Lcom/mojang/blaze3d/vertex/PoseStack;translate(FFF)V",
@@ -39,7 +39,7 @@ public abstract class ItemRendererMixin {
                             value = "INVOKE"))
     private void onRenderItem(
             ItemStack itemStack,
-            ItemTransforms.TransformType transformType,
+            ItemDisplayContext itemDisplayContext,
             boolean leftHand,
             PoseStack poseStack,
             MultiBufferSource buffer,
@@ -47,19 +47,25 @@ public abstract class ItemRendererMixin {
             int combinedOverlay,
             BakedModel model,
             CallbackInfo ci) {
-        if (transformType != ItemTransforms.TransformType.GROUND) return;
+        if (itemDisplayContext != ItemDisplayContext.GROUND) return;
 
         MixinHelper.post(new GroundItemEntityTransformEvent(poseStack, itemStack));
     }
 
     @ModifyVariable(
             method =
-                    "renderGuiItemDecorations(Lnet/minecraft/client/gui/Font;Lnet/minecraft/world/item/ItemStack;IILjava/lang/String;)V",
+                    "renderGuiItemDecorations(Lcom/mojang/blaze3d/vertex/PoseStack;Lnet/minecraft/client/gui/Font;Lnet/minecraft/world/item/ItemStack;IILjava/lang/String;)V",
             at = @At("HEAD"),
             ordinal = 0,
             argsOnly = true)
     private String renderGuiItemDecorations(
-            String text, Font font, ItemStack itemStack, int xPosition, int yPosition, String ignored) {
+            String text,
+            PoseStack poseStack,
+            Font font,
+            ItemStack itemStack,
+            int xPosition,
+            int yPosition,
+            String ignored) {
         if (!MixinHelper.onWynncraft()) {
             wynntilsCountOverlayColor = 0xFFFFFF;
             return text;
@@ -78,12 +84,12 @@ public abstract class ItemRendererMixin {
 
     @WrapOperation(
             method =
-                    "renderGuiItemDecorations(Lnet/minecraft/client/gui/Font;Lnet/minecraft/world/item/ItemStack;IILjava/lang/String;)V",
+                    "renderGuiItemDecorations(Lcom/mojang/blaze3d/vertex/PoseStack;Lnet/minecraft/client/gui/Font;Lnet/minecraft/world/item/ItemStack;IILjava/lang/String;)V",
             at =
                     @At(
                             value = "INVOKE",
                             target =
-                                    "Lnet/minecraft/client/gui/Font;drawInBatch(Ljava/lang/String;FFIZLorg/joml/Matrix4f;Lnet/minecraft/client/renderer/MultiBufferSource;ZII)I"))
+                                    "Lnet/minecraft/client/gui/Font;drawInBatch(Ljava/lang/String;FFIZLorg/joml/Matrix4f;Lnet/minecraft/client/renderer/MultiBufferSource;Lnet/minecraft/client/gui/Font$DisplayMode;II)I"))
     private int changeCountOverlayColor(
             Font instance,
             String text,
@@ -93,7 +99,7 @@ public abstract class ItemRendererMixin {
             boolean dropShadow,
             Matrix4f matrix,
             MultiBufferSource bufferSource,
-            boolean transparent,
+            Font.DisplayMode displayMode,
             int backgroundColor,
             int packedLightCoords,
             Operation<Integer> original) {
@@ -106,7 +112,7 @@ public abstract class ItemRendererMixin {
                 dropShadow,
                 matrix,
                 bufferSource,
-                transparent,
+                displayMode,
                 backgroundColor,
                 packedLightCoords);
     }
