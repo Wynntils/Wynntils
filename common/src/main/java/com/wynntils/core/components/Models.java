@@ -14,7 +14,7 @@ import com.wynntils.models.character.CharacterSelectionModel;
 import com.wynntils.models.characterstats.CharacterStatsModel;
 import com.wynntils.models.characterstats.CombatXpModel;
 import com.wynntils.models.containers.ContainerModel;
-import com.wynntils.models.containers.LootChestModel;
+import com.wynntils.models.lootrunstats.LootChestModel;
 import com.wynntils.models.containers.PlayerInventoryModel;
 import com.wynntils.models.cosmetics.CosmeticsModel;
 import com.wynntils.models.damage.DamageModel;
