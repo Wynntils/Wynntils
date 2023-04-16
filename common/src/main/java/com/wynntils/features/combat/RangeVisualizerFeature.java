@@ -164,8 +164,13 @@ public class RangeVisualizerFeature extends Feature {
 
         Matrix4f matrix4f = poseStack.last().pose();
         double angleStep = 2 * Math.PI / SEGMENTS;
-        double angle = 0;
+        double startingAngle = -(System.currentTimeMillis() % 40000) * 2 * Math.PI / 40000.0;
+        double angle = startingAngle;
         for (int i = 0; i < SEGMENTS; i++) {
+            if (i % 4 > 2) {
+                angle += angleStep;
+                continue;
+            }
             float x = (float) (position.x() + Math.sin(angle) * radius);
             float z = (float) (position.z() + Math.cos(angle) * radius);
             consumer.vertex(matrix4f, x, (float) position.y(), z).color(color).endVertex();
