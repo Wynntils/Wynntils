@@ -5,6 +5,7 @@
 package com.wynntils.screens.characterselector;
 
 import com.mojang.blaze3d.vertex.PoseStack;
+import com.wynntils.core.components.Managers;
 import com.wynntils.core.text.CodedString;
 import com.wynntils.screens.base.WynntilsScreen;
 import com.wynntils.utils.colors.CommonColors;
@@ -20,6 +21,8 @@ import net.minecraft.resources.ResourceLocation;
 
 public final class LoadingScreen extends WynntilsScreen {
     private static final String LOGO_STRING = "\u2060\u2064\u2061";
+    private static final String TEXT_LOGO_STRING = "Wynncraft";
+    // ⛨
     private static final CustomColor MOSS_GREEN = CustomColor.fromInt(0x527529).withAlpha(255);
     public static final int SPINNER_SPEED = 1200;
 
@@ -63,10 +66,11 @@ public final class LoadingScreen extends WynntilsScreen {
 
         // Draw logo
         int centerX = Texture.CHANGELOG_BACKGROUND.width() / 2 + 15;
+        String logoString = Managers.ResourcePack.hasCustomResourcePack() ? LOGO_STRING : TEXT_LOGO_STRING;
         FontRenderer.getInstance()
                 .renderText(
                         poseStack,
-                        CodedString.fromString(LOGO_STRING),
+                        CodedString.fromString(logoString),
                         centerX,
                         60,
                         CommonColors.WHITE,
