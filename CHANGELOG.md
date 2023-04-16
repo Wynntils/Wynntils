@@ -1,9 +1,20 @@
 ## [0.0.3-alpha.0](https://github.com/Wynntils/Artemis/compare/v0.0.2...v0.0.3-alpha.0) (2023-04-16)
 
 
+### Bug Fixes
+
+* Fix up releases ([#1508](https://github.com/Wynntils/Artemis/issues/1508)) ([4b801de](https://github.com/Wynntils/Artemis/commit/4b801de5f59217593d70d50e9969efe56b1ec595))
+
+
 ### New Features
 
 * Update to Minecraft 1.19.4 ([#1303](https://github.com/Wynntils/Artemis/issues/1303)) ([688aee0](https://github.com/Wynntils/Artemis/commit/688aee0037814ffee38bba5563a6090c26aab60a))
+
+
+### Miscellaneous Chores
+
+* **release:** v0.0.3-alpha.0 [skip ci] ([eb90a3a](https://github.com/Wynntils/Artemis/commit/eb90a3a75fcd2669475f8c112dd61d6f4c1e7149))
+* Trigger version bump after 1.19.4 ([#1507](https://github.com/Wynntils/Artemis/issues/1507)) ([f0486ed](https://github.com/Wynntils/Artemis/commit/f0486ed223f74e6849d1a2f610b284da859d82cf))
 
 ## [0.0.2](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.485...v0.0.2) (2023-04-16)
 
