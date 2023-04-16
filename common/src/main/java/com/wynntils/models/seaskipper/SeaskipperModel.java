@@ -157,7 +157,7 @@ public final class SeaskipperModel extends Model {
         availableDestinations.clear();
         destinations.clear();
 
-        Download dl = Managers.Net.download(UrlId.DATA_STATIC_SEASKIPPER_LOCATIONS);
+        Download dl = Managers.Net.download(UrlId.DATA_STATIC_SEASKIPPER_DESTINATIONS);
         dl.handleReader(reader -> {
             Type type = new TypeToken<ArrayList<SeaskipperProfile>>() {}.getType();
             List<SeaskipperProfile> seaskipperProfiles = WynntilsMod.GSON.fromJson(reader, type);
