@@ -112,7 +112,7 @@ public enum GearType {
         return defaultItem == Items.FLINT_AND_STEEL;
     }
 
-    public boolean isArmour() {
+    public boolean isArmor() {
         return switch (this) {
             case HELMET, CHESTPLATE, LEGGINGS, BOOTS -> true;
             default -> false;
