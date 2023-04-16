@@ -167,11 +167,13 @@ public class CustomNametagRendererFeature extends Feature {
 
         StyledText styledText = StyledText.fromComponent(realName);
         if (styledText.getString(PartStyle.StyleType.NONE).startsWith("[")) {
-            vanillaNametag =
-                    Component.literal(WYNNTILS_LOGO).withStyle(ChatFormatting.DARK_GRAY).append(realName);
+            vanillaNametag = Component.literal(WYNNTILS_LOGO)
+                    .withStyle(ChatFormatting.DARK_GRAY)
+                    .append(realName);
         } else {
-            vanillaNametag =
-                    Component.literal(WYNNTILS_LOGO + " ").withStyle(ChatFormatting.GRAY).append(realName);
+            vanillaNametag = Component.literal(WYNNTILS_LOGO + " ")
+                    .withStyle(ChatFormatting.GRAY)
+                    .append(realName);
         }
         nametags.add(new CustomNametag(vanillaNametag, 1f));
     }
