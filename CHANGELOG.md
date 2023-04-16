@@ -1,9 +1,21 @@
+## [0.0.2-alpha.483](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.482...v0.0.2-alpha.483) (2023-04-16)
+
+
+### Bug Fixes
+
+* Custom loading screen looked bad without the resource pack loaded ([#1505](https://github.com/Wynntils/Artemis/issues/1505)) ([2f51dab](https://github.com/Wynntils/Artemis/commit/2f51dab184e55b4e664b158e5395764d168729d7))
+
 ## [0.0.2-alpha.482](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.481...v0.0.2-alpha.482) (2023-04-15)
 
 
 ### New Features
 
 * Major ID Range Visualizer ([#1454](https://github.com/Wynntils/Artemis/issues/1454)) ([4651b3e](https://github.com/Wynntils/Artemis/commit/4651b3e3ff469ab89182b60fdfa2acc4dce146e4))
+
+
+### Miscellaneous Chores
+
+* **release:** v0.0.2-alpha.482 [skip ci] ([69a5b92](https://github.com/Wynntils/Artemis/commit/69a5b926c42fcfd167f5e552f398b923b954da2c))
 
 ## [0.0.2-alpha.481](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.480...v0.0.2-alpha.481) (2023-04-15)
 
@@ -41,16 +53,4 @@
 ### Miscellaneous Chores
 
 * **release:** v0.0.2-alpha.479 [skip ci] ([f805a98](https://github.com/Wynntils/Artemis/commit/f805a981c222b6e1505b154d5049c233cdb5e813))
-
-## [0.0.2-alpha.478](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.477...v0.0.2-alpha.478) (2023-04-15)
-
-
-### Bug Fixes
-
-* Only create waypoints on middle click for GuildMapScreen ([#1499](https://github.com/Wynntils/Artemis/issues/1499)) ([39416c0](https://github.com/Wynntils/Artemis/commit/39416c0b0d8f5e66c18df4010cbd8a98bf86bc2e))
-
-
-### Miscellaneous Chores
-
-* **release:** v0.0.2-alpha.478 [skip ci] ([bbdf824](https://github.com/Wynntils/Artemis/commit/bbdf824bcaf896798d27657942db964400f58ccb))
 
