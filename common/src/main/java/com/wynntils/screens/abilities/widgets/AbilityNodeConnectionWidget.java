@@ -22,8 +22,8 @@ public class AbilityNodeConnectionWidget extends AbstractWidget {
     }
 
     @Override
-    public void renderButton(PoseStack poseStack, int mouseX, int mouseY, float partialTick) {
-        RenderUtils.renderItem(poseStack, node.getItemStack(), this.getX(), this.getY(), 1f);
+    public void renderWidget(PoseStack poseStack, int mouseX, int mouseY, float partialTick) {
+        RenderUtils.renderItem(poseStack, node.getItemStack(), this.getX(), this.getY());
     }
 
     @Override

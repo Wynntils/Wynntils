@@ -26,7 +26,7 @@ public class AbilityNodeWidget extends AbstractWidget {
     }
 
     @Override
-    public void renderButton(PoseStack poseStack, int mouseX, int mouseY, float partialTick) {
+    public void renderWidget(PoseStack poseStack, int mouseX, int mouseY, float partialTick) {
         ItemStack itemStack = new ItemStack(Item.byId(node.itemInformation().itemId()));
 
         int damage =
@@ -41,7 +41,7 @@ public class AbilityNodeWidget extends AbstractWidget {
         CompoundTag tag = itemStack.getOrCreateTag();
         tag.putBoolean("Unbreakable", true);
 
-        RenderUtils.renderItem(poseStack, itemStack, this.getX(), this.getY(), 1f);
+        RenderUtils.renderItem(poseStack, itemStack, this.getX(), this.getY());
     }
 
     @Override
