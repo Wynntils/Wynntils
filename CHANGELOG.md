@@ -1,9 +1,21 @@
+## [0.0.2-alpha.485](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.484...v0.0.2-alpha.485) (2023-04-16)
+
+
+### New Features
+
+* Add HadesPartyOverlayFeature ([#1498](https://github.com/Wynntils/Artemis/issues/1498)) ([aac62c3](https://github.com/Wynntils/Artemis/commit/aac62c388e993438247d92e76fadf014aefcb282))
+
 ## [0.0.2-alpha.484](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.483...v0.0.2-alpha.484) (2023-04-16)
 
 
 ### Code Refactoring
 
 * Convert more CodedStrings to StyledText ([#1502](https://github.com/Wynntils/Artemis/issues/1502)) ([ffef54d](https://github.com/Wynntils/Artemis/commit/ffef54d96e0061100ffb2cf3086956b8634edf1c))
+
+
+### Miscellaneous Chores
+
+* **release:** v0.0.2-alpha.484 [skip ci] ([2fa33af](https://github.com/Wynntils/Artemis/commit/2fa33af7318bd25771c8a9f1781498fbcd5e411d))
 
 ## [0.0.2-alpha.483](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.482...v0.0.2-alpha.483) (2023-04-16)
 
@@ -40,16 +52,4 @@
 ### Miscellaneous Chores
 
 * **release:** v0.0.2-alpha.481 [skip ci] ([9e812f2](https://github.com/Wynntils/Artemis/commit/9e812f273a41e2d22a3b3d5157ed635413c8e910))
-
-## [0.0.2-alpha.480](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.479...v0.0.2-alpha.480) (2023-04-15)
-
-
-### Bug Fixes
-
-* Fix PartyManagementScreen mouseClicked crash ([#1500](https://github.com/Wynntils/Artemis/issues/1500)) ([da362ab](https://github.com/Wynntils/Artemis/commit/da362ab47a6eceee8107478b74f522492d48df33))
-
-
-### Miscellaneous Chores
-
-* **release:** v0.0.2-alpha.480 [skip ci] ([703ac00](https://github.com/Wynntils/Artemis/commit/703ac00028a577f7ea6160a92d299f1fb2f4208b))
 
