@@ -4,20 +4,20 @@
  */
 package com.wynntils.models.items.items.game;
 
-import com.wynntils.core.text.CodedString;
+import com.wynntils.core.text.StyledText;
 
 public class MiscItem extends GameItem {
-    private final CodedString name;
+    private final StyledText name;
     private final boolean untradable;
     private final boolean questItem;
 
-    public MiscItem(CodedString name, boolean untradable, boolean questItem) {
+    public MiscItem(StyledText name, boolean untradable, boolean questItem) {
         this.name = name;
         this.untradable = untradable;
         this.questItem = questItem;
     }
 
-    public CodedString getName() {
+    public StyledText getName() {
         return name;
     }
 
