@@ -11,7 +11,7 @@
   },
   "depends": {
     "fabricloader": ">=0.14.18",
-    "minecraft": "1.19.3"
+    "minecraft": "1.19.4"
   },
   "description": "The best Wynncraft mod you'll probably find!",
   "entrypoints": {
