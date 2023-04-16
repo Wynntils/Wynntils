@@ -32,7 +32,7 @@ public class HadesUser {
 
     // Dummy constructor for previews
     public HadesUser(String name, CappedValue health, CappedValue mana) {
-        this.uuid = UUID.randomUUID();
+        this.uuid = UUID.fromString("8667ba71-b85a-4004-af54-457a9734eed7"); // Steve
         this.name = name;
 
         this.x = 0;
