@@ -11,7 +11,7 @@ import com.wynntils.core.components.Model;
 import com.wynntils.core.components.Models;
 import com.wynntils.core.net.ApiResponse;
 import com.wynntils.core.net.UrlId;
-import com.wynntils.core.text.CodedString;
+import com.wynntils.core.text.StyledText;
 import com.wynntils.mc.event.PlayerJoinedWorldEvent;
 import com.wynntils.mc.event.PlayerTeamEvent;
 import com.wynntils.models.worlds.event.WorldStateEvent;
@@ -52,7 +52,7 @@ public final class PlayerModel extends Model {
     }
 
     public boolean isNpc(Player player) {
-        CodedString scoreboardName = CodedString.fromString(player.getScoreboardName());
+        StyledText scoreboardName = StyledText.fromString(player.getScoreboardName());
         return isNpc(scoreboardName);
     }
 
@@ -86,10 +86,10 @@ public final class PlayerModel extends Model {
     public void onPlayerJoin(PlayerJoinedWorldEvent event) {
         Player player = event.getPlayer();
         if (player == null || player.getUUID() == null) return;
-        CodedString name = CodedString.fromString(player.getGameProfile().getName());
+        StyledText name = StyledText.fromString(player.getGameProfile().getName());
         if (isNpc(name)) return; // avoid player npcs
 
-        loadUser(player.getUUID(), name.getInternalCodedStringRepresentation());
+        loadUser(player.getUUID(), name.getString());
     }
 
     @SubscribeEvent
@@ -153,7 +153,8 @@ public final class PlayerModel extends Model {
         ghosts.clear();
     }
 
-    private boolean isNpc(CodedString name) {
+    private boolean isNpc(StyledText name) {
+        // FIXME: Maybe make a better check using more native StyledText operations?
         return name.contains("\u0001") || name.contains("§");
     }
 }

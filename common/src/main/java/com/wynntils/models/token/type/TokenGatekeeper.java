@@ -5,27 +5,28 @@
 package com.wynntils.models.token.type;
 
 import com.wynntils.core.text.CodedString;
+import com.wynntils.core.text.StyledText;
 import com.wynntils.utils.mc.type.Location;
 import com.wynntils.utils.type.CappedValue;
 import java.util.Objects;
 
 public final class TokenGatekeeper implements Comparable<TokenGatekeeper> {
     private final CodedString gatekeeperTokenName;
-    private final CodedString itemTokenName;
+    private final StyledText itemTokenName;
     private final Location location;
     private CappedValue deposited;
 
     public TokenGatekeeper(CodedString gatekeeperTokenName, Location location, CappedValue deposited) {
         this.gatekeeperTokenName = gatekeeperTokenName;
         // Remove the trailing plural 's'
-        this.itemTokenName = CodedString.fromString(
+        this.itemTokenName = StyledText.fromString(
                 gatekeeperTokenName.getInternalCodedStringRepresentation().replaceAll("s$", ""));
         this.location = location;
         this.deposited = deposited;
     }
 
     public TokenGatekeeper(
-            CodedString gatekeeperTokenName, CodedString itemTokenName, Location location, CappedValue deposited) {
+            CodedString gatekeeperTokenName, StyledText itemTokenName, Location location, CappedValue deposited) {
         this.gatekeeperTokenName = gatekeeperTokenName;
         this.itemTokenName = itemTokenName;
         this.location = location;
@@ -36,7 +37,7 @@ public final class TokenGatekeeper implements Comparable<TokenGatekeeper> {
         return gatekeeperTokenName;
     }
 
-    public CodedString getItemTokenName() {
+    public StyledText getItemTokenName() {
         return itemTokenName;
     }
 
