@@ -43,7 +43,7 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 
 @ConfigCategory(Category.OVERLAYS)
-public class PartyOverlayFeature extends Feature {
+public class HadesPartyOverlayFeature extends Feature {
     @OverlayInfo(renderType = RenderEvent.ElementType.GUI)
     private final PartyMembersOverlay partyMembersOverlay = new PartyMembersOverlay(
             new OverlayPosition(
@@ -111,7 +111,7 @@ public class PartyOverlayFeature extends Feature {
             double manaProgress = hadesUser.getMana().getProgress();
 
             // health
-            HealthTexture healthTexture = PartyOverlayFeature.this.partyMembersOverlay.healthTexture.get();
+            HealthTexture healthTexture = HadesPartyOverlayFeature.this.partyMembersOverlay.healthTexture.get();
             BufferedRenderUtils.drawProgressBar(
                     poseStack,
                     bufferSource,
@@ -129,7 +129,7 @@ public class PartyOverlayFeature extends Feature {
             poseStack.translate(0, healthTexture.getHeight() * 0.85f, 0);
 
             // mana
-            ManaTexture manaTexture = PartyOverlayFeature.this.partyMembersOverlay.manaTexture.get();
+            ManaTexture manaTexture = HadesPartyOverlayFeature.this.partyMembersOverlay.manaTexture.get();
             BufferedRenderUtils.drawProgressBar(
                     poseStack,
                     bufferSource,
