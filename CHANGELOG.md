@@ -1,3 +1,10 @@
+## [0.0.3-alpha.1](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.0...v0.0.3-alpha.1) (2023-04-16)
+
+
+### Bug Fixes
+
+* fix chat tabs and container search not appearing (ScreenInitEvent) ([#1509](https://github.com/Wynntils/Artemis/issues/1509)) ([2ae6cb3](https://github.com/Wynntils/Artemis/commit/2ae6cb3637125fbed95e84c8e88277d59b40b0e7))
+
 ## [0.0.3-alpha.0](https://github.com/Wynntils/Artemis/compare/v0.0.2...v0.0.3-alpha.0) (2023-04-16)
 
 
@@ -13,6 +20,7 @@
 
 ### Miscellaneous Chores
 
+* **release:** v0.0.3-alpha.0 [skip ci] ([2459b08](https://github.com/Wynntils/Artemis/commit/2459b080eb1ae6c1df89b1a30215227148b11ab2))
 * **release:** v0.0.3-alpha.0 [skip ci] ([eb90a3a](https://github.com/Wynntils/Artemis/commit/eb90a3a75fcd2669475f8c112dd61d6f4c1e7149))
 * Trigger version bump after 1.19.4 ([#1507](https://github.com/Wynntils/Artemis/issues/1507)) ([f0486ed](https://github.com/Wynntils/Artemis/commit/f0486ed223f74e6849d1a2f610b284da859d82cf))
 
@@ -46,16 +54,4 @@
 ### Miscellaneous Chores
 
 * **release:** v0.0.2-alpha.484 [skip ci] ([2fa33af](https://github.com/Wynntils/Artemis/commit/2fa33af7318bd25771c8a9f1781498fbcd5e411d))
-
-## [0.0.2-alpha.483](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.482...v0.0.2-alpha.483) (2023-04-16)
-
-
-### Bug Fixes
-
-* Custom loading screen looked bad without the resource pack loaded ([#1505](https://github.com/Wynntils/Artemis/issues/1505)) ([2f51dab](https://github.com/Wynntils/Artemis/commit/2f51dab184e55b4e664b158e5395764d168729d7))
-
-
-### Miscellaneous Chores
-
-* **release:** v0.0.2-alpha.483 [skip ci] ([7d64eb3](https://github.com/Wynntils/Artemis/commit/7d64eb36f052eb2c09be646a79cf667b6d6e2036))
 
