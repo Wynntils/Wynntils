@@ -53,16 +53,19 @@ public class WynncraftPauseScreenFeature extends Feature {
 
         renderables.set(3, classSelection);
 
-        Button hub = replaceButtonFunction(
-                (Button) renderables.get(4),
-                Component.translatable("feature.wynntils.wynncraftPauseScreen.hubButton.name"),
-                (button) -> {
-                    McUtils.mc().setScreen(null);
-                    McUtils.mc().mouseHandler.grabMouse();
-                    McUtils.sendCommand("hub");
-                });
+        // If the class is not a button, it is overriden by another mod (ModMenu)
+        if (renderables.get(4).getClass() == Button.class) {
+            Button hub = replaceButtonFunction(
+                    (Button) renderables.get(4),
+                    Component.translatable("feature.wynntils.wynncraftPauseScreen.hubButton.name"),
+                    (button) -> {
+                        McUtils.mc().setScreen(null);
+                        McUtils.mc().mouseHandler.grabMouse();
+                        McUtils.sendCommand("hub");
+                    });
 
-        renderables.set(4, hub);
+            renderables.set(4, hub);
+        }
 
         event.getPauseScreen().clearWidgets();
 
