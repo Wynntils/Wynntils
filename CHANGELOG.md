@@ -1,9 +1,21 @@
+## [0.0.3-alpha.2](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.1...v0.0.3-alpha.2) (2023-04-16)
+
+
+### Bug Fixes
+
+* Fix compatibility with modmenu ([#1512](https://github.com/Wynntils/Artemis/issues/1512)) ([f3f8def](https://github.com/Wynntils/Artemis/commit/f3f8defe4c527b8ae2b45e2ddc703233fba96f44))
+
 ## [0.0.3-alpha.1](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.0...v0.0.3-alpha.1) (2023-04-16)
 
 
 ### Bug Fixes
 
 * fix chat tabs and container search not appearing (ScreenInitEvent) ([#1509](https://github.com/Wynntils/Artemis/issues/1509)) ([2ae6cb3](https://github.com/Wynntils/Artemis/commit/2ae6cb3637125fbed95e84c8e88277d59b40b0e7))
+
+
+### Miscellaneous Chores
+
+* **release:** v0.0.3-alpha.1 [skip ci] ([7d93bc1](https://github.com/Wynntils/Artemis/commit/7d93bc1daaa01185517d77185e859cec5d5c1566))
 
 ## [0.0.3-alpha.0](https://github.com/Wynntils/Artemis/compare/v0.0.2...v0.0.3-alpha.0) (2023-04-16)
 
@@ -42,16 +54,4 @@
 ### Miscellaneous Chores
 
 * **release:** v0.0.2-alpha.485 [skip ci] ([d934ff9](https://github.com/Wynntils/Artemis/commit/d934ff972afb53b1c12417ba21af52f3eae0ed76))
-
-## [0.0.2-alpha.484](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.483...v0.0.2-alpha.484) (2023-04-16)
-
-
-### Code Refactoring
-
-* Convert more CodedStrings to StyledText ([#1502](https://github.com/Wynntils/Artemis/issues/1502)) ([ffef54d](https://github.com/Wynntils/Artemis/commit/ffef54d96e0061100ffb2cf3086956b8634edf1c))
-
-
-### Miscellaneous Chores
-
-* **release:** v0.0.2-alpha.484 [skip ci] ([2fa33af](https://github.com/Wynntils/Artemis/commit/2fa33af7318bd25771c8a9f1781498fbcd5e411d))
 
