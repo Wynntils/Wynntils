@@ -30,6 +30,25 @@ public class HadesUser {
         this.updateFromPacket(packet);
     }
 
+    // Dummy constructor for previews
+    public HadesUser(String name, CappedValue health, CappedValue mana) {
+        this.uuid = UUID.fromString("8667ba71-b85a-4004-af54-457a9734eed7"); // Steve
+        this.name = name;
+
+        this.x = 0;
+        this.y = 0;
+        this.z = 0;
+
+        this.poiLocation = new PoiLocation((int) x, (int) y, (int) z);
+
+        this.isGuildMember = false;
+        this.isMutualFriend = false;
+        this.isPartyMember = true;
+
+        this.health = health;
+        this.mana = mana;
+    }
+
     public UUID getUuid() {
         return uuid;
     }

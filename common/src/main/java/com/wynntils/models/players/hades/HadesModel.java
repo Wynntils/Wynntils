@@ -47,7 +47,7 @@ import net.minecraft.world.effect.MobEffects;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 
 public final class HadesModel extends Model {
-    private static final int TICKS_PER_UPDATE = 5;
+    private static final int TICKS_PER_UPDATE = 2;
     private static final int MS_PER_PING = 1000;
 
     private final HadesUserRegistry userRegistry = new HadesUserRegistry();

@@ -182,7 +182,7 @@ public final class PartyManagementScreen extends WynntilsScreen implements Textb
                 dividedWidth * 4,
                 dividedHeight * PARTY_LIST_DIV_HEIGHT,
                 0,
-                dividedWidth * 28 - dividedWidth * 4,
+                dividedWidth * 30 - dividedWidth * 4,
                 1);
         FontRenderer.getInstance()
                 .renderText(
@@ -222,6 +222,16 @@ public final class PartyManagementScreen extends WynntilsScreen implements Textb
                         dividedHeight * PARTY_LIST_DIV_HEIGHT,
                         CommonColors.WHITE,
                         HorizontalAlignment.CENTER, // (!) center as the button spans 2 columns
+                        VerticalAlignment.BOTTOM,
+                        TextShadow.NORMAL);
+        FontRenderer.getInstance()
+                .renderText(
+                        poseStack,
+                        CodedString.fromString(I18n.get("screens.wynntils.partyManagementGui.priority")),
+                        dividedWidth * 28,
+                        dividedHeight * PARTY_LIST_DIV_HEIGHT,
+                        CommonColors.WHITE,
+                        HorizontalAlignment.LEFT,
                         VerticalAlignment.BOTTOM,
                         TextShadow.NORMAL);
 
@@ -335,11 +345,11 @@ public final class PartyManagementScreen extends WynntilsScreen implements Textb
             partyMembersWidgets.add(new PartyMemberWidget(
                     dividedWidth * 4,
                     dividedHeight * (9 + i * 3),
-                    (int) (dividedWidth * 28) - (int) (dividedWidth * 4),
+                    (int) (dividedWidth * 28) - (int) (dividedWidth * 2),
                     20,
                     playerName,
                     Models.Party.getOfflineMembers().contains(playerName),
-                    28 - 4));
+                    28 - 2));
         }
     }
 

@@ -81,10 +81,6 @@ public class TextInputBoxWidget extends AbstractWidget {
     }
 
     @Override
-    public final void renderButton(PoseStack poseStack, int mouseX, int mouseY, float partialTick) {
-        renderWidget(poseStack, mouseX, mouseY, partialTick);
-    }
-
     public void renderWidget(PoseStack poseStack, int mouseX, int mouseY, float partialTick) {
         Pair<String, Integer> renderedTextDetails = getRenderedText(getMaxTextWidth());
         String renderedText = renderedTextDetails.a();
