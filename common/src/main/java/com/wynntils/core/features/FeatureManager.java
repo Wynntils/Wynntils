@@ -78,6 +78,7 @@ import com.wynntils.features.overlays.CustomBarsOverlayFeature;
 import com.wynntils.features.overlays.GameBarsOverlayFeature;
 import com.wynntils.features.overlays.GameNotificationOverlayFeature;
 import com.wynntils.features.overlays.GuildAttackTimerOverlayFeature;
+import com.wynntils.features.overlays.HadesPartyOverlayFeature;
 import com.wynntils.features.overlays.InfoBoxFeature;
 import com.wynntils.features.overlays.MobTotemTrackingFeature;
 import com.wynntils.features.overlays.NpcDialogueOverlayFeature;
@@ -231,6 +232,7 @@ public final class FeatureManager extends Manager {
         registerFeature(new NpcDialogueOverlayFeature());
         registerFeature(new ObjectivesOverlayFeature());
         registerFeature(new PartyManagementScreenFeature());
+        registerFeature(new HadesPartyOverlayFeature());
         registerFeature(new PlayerArmorHidingFeature());
         registerFeature(new PlayerGhostTransparencyFeature());
         registerFeature(new PowderSpecialBarOverlayFeature());
