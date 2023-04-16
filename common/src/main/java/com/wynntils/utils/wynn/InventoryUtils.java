@@ -10,7 +10,6 @@ import com.wynntils.utils.mc.McUtils;
 import it.unimi.dsi.fastutil.ints.Int2ObjectMap;
 import it.unimi.dsi.fastutil.ints.Int2ObjectOpenHashMap;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 import net.minecraft.network.protocol.game.ServerboundContainerClickPacket;
@@ -28,8 +27,8 @@ public final class InventoryUtils {
     private static final int RING_2_SLOT_NUM = 10;
     private static final int BRACELET_SLOT_NUM = 11;
     private static final int NECKLACE_SLOT_NUM = 12;
-    private static final int[] ACCESSORY_SLOTS = {RING_1_SLOT_NUM, RING_2_SLOT_NUM, BRACELET_SLOT_NUM, NECKLACE_SLOT_NUM
-    };
+    private static final List<Integer> ACCESSORY_SLOTS =
+            List.of(RING_1_SLOT_NUM, RING_2_SLOT_NUM, BRACELET_SLOT_NUM, NECKLACE_SLOT_NUM);
 
     public static void sendInventorySlotMouseClick(int slotNumber, MouseClickType mouseButton) {
         Int2ObjectMap<ItemStack> changedSlots = new Int2ObjectOpenHashMap<>();
@@ -56,8 +55,8 @@ public final class InventoryUtils {
 
     public static List<ItemStack> getAccessories(Player player) {
         List<ItemStack> accessories = new ArrayList<>();
-        Arrays.stream(ACCESSORY_SLOTS)
-                .forEach(slot -> accessories.add(player.getInventory().items.get(slot)));
+        ACCESSORY_SLOTS.forEach(
+                slot -> accessories.add(player.getInventory().items.get(slot)));
         return accessories;
     }
 
