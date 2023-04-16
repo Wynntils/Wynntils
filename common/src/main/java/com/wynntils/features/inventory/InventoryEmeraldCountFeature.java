@@ -163,7 +163,7 @@ public class InventoryEmeraldCountFeature extends Feature {
 
             McUtils.mc()
                     .getItemRenderer()
-                    .renderGuiItem(EmeraldUnits.values()[i].getItemStack(), x + renderX + 6, y + renderY + 6);
+                    .renderGuiItem(poseStack, EmeraldUnits.values()[i].getItemStack(), renderX + 6, renderY + 6);
 
             poseStack.pushPose();
             poseStack.translate(0, 0, 200);

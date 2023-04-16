@@ -29,6 +29,8 @@ public class PartyMemberWidget extends AbstractWidget {
     private final Button promoteButton;
     private final Button kickButton;
     private final Button disbandButton;
+    private final Button moveUpButton;
+    private final Button moveDownButton;
     private final float gridDivisions;
 
     public PartyMemberWidget(
@@ -67,6 +69,24 @@ public class PartyMemberWidget extends AbstractWidget {
                                 - 2,
                         20)
                 .build();
+        this.moveUpButton = new Button.Builder(
+                        Component.literal("ʌ"), (button) -> Models.Party.increasePlayerPriority(playerName))
+                .pos((int) (this.getX() + (this.width / this.gridDivisions * 24)) + 1, this.getY())
+                .size(
+                        (int) ((this.getX() + (this.width / this.gridDivisions * 25))
+                                        - (this.getX() + (this.width / this.gridDivisions * 24)))
+                                - 2,
+                        20)
+                .build();
+        this.moveDownButton = new Button.Builder(
+                        Component.literal("v"), (button) -> Models.Party.decreasePlayerPriority(playerName))
+                .pos((int) (this.getX() + (this.width / this.gridDivisions * 25)) + 1, this.getY())
+                .size(
+                        (int) ((this.getX() + (this.width / this.gridDivisions * 26))
+                                        - (this.getX() + (this.width / this.gridDivisions * 25)))
+                                - 2,
+                        20)
+                .build();
         if (playerName.equals(Models.Party.getPartyLeader())) {
             this.promoteButton.active = false;
             this.kickButton.active = false;
@@ -76,7 +96,7 @@ public class PartyMemberWidget extends AbstractWidget {
     }
 
     @Override
-    public void renderButton(PoseStack poseStack, int mouseX, int mouseY, float partialTick) {
+    public void renderWidget(PoseStack poseStack, int mouseX, int mouseY, float partialTick) {
         PlayerInfo playerInfo =
                 McUtils.mc().getConnection().getPlayerInfo(playerName); // Disconnected players will just be steves
         ResourceLocation skin =
@@ -139,6 +159,9 @@ public class PartyMemberWidget extends AbstractWidget {
                         VerticalAlignment.MIDDLE,
                         TextShadow.NORMAL);
 
+        moveUpButton.render(poseStack, mouseX, mouseY, partialTick);
+        moveDownButton.render(poseStack, mouseX, mouseY, partialTick);
+
         // only leader can promote/kick
         if (!McUtils.player().getName().getString().equals(Models.Party.getPartyLeader())) return;
 
@@ -152,6 +175,12 @@ public class PartyMemberWidget extends AbstractWidget {
 
     @Override
     public boolean mouseClicked(double mouseX, double mouseY, int button) {
+        if (moveUpButton.mouseClicked(mouseX, mouseY, button) || moveDownButton.mouseClicked(mouseX, mouseY, button)) {
+            return true;
+        }
+
+        if (!McUtils.player().getName().getString().equals(Models.Party.getPartyLeader())) return false;
+
         return promoteButton.mouseClicked(mouseX, mouseY, button)
                 || kickButton.mouseClicked(mouseX, mouseY, button)
                 || disbandButton.mouseClicked(mouseX, mouseY, button);

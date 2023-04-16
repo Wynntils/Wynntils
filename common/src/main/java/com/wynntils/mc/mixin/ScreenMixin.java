@@ -96,7 +96,16 @@ public abstract class ScreenMixin implements ScreenExtension {
             method = "rebuildWidgets()V",
             at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/screens/Screen;init()V"))
     private void onScreenInit(CallbackInfo ci) {
-        MixinHelper.post(new ScreenInitEvent((Screen) (Object) this));
+        // This is called whenever a screen is re-inited (e.g. when the window is resized)
+        MixinHelper.post(new ScreenInitEvent((Screen) (Object) this, false));
+    }
+
+    @Inject(
+            method = "init(Lnet/minecraft/client/Minecraft;II)V",
+            at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/screens/Screen;init()V"))
+    private void onFirstScreenInit(CallbackInfo ci) {
+        // This is called only once, when the screen is first initialized
+        MixinHelper.post(new ScreenInitEvent((Screen) (Object) this, true));
     }
 
     @Inject(method = "render(Lcom/mojang/blaze3d/vertex/PoseStack;IIF)V", at = @At("RETURN"))

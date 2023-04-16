@@ -16,6 +16,7 @@ import com.wynntils.hades.protocol.packets.server.HSPacketDisconnect;
 import com.wynntils.hades.protocol.packets.server.HSPacketDiscordLobbyServer;
 import com.wynntils.hades.protocol.packets.server.HSPacketPong;
 import com.wynntils.hades.protocol.packets.server.HSPacketUpdateMutual;
+import com.wynntils.models.players.event.HadesUserAddedEvent;
 import com.wynntils.models.players.hades.event.HadesEvent;
 import com.wynntils.models.players.hades.objects.HadesUser;
 import com.wynntils.utils.mc.McUtils;
@@ -112,7 +113,9 @@ public class HadesClientHandler implements IHadesClientAdapter {
         if (userOptional.isPresent()) {
             userOptional.get().updateFromPacket(packet);
         } else {
-            userRegistry.putUser(packet.getUser(), new HadesUser(packet));
+            HadesUser hadesUser = new HadesUser(packet);
+            userRegistry.putUser(packet.getUser(), hadesUser);
+            WynntilsMod.postEventOnMainThread(new HadesUserAddedEvent(hadesUser));
         }
     }
 
