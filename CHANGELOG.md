@@ -1,9 +1,21 @@
+## [0.0.2-alpha.484](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.483...v0.0.2-alpha.484) (2023-04-16)
+
+
+### Code Refactoring
+
+* Convert more CodedStrings to StyledText ([#1502](https://github.com/Wynntils/Artemis/issues/1502)) ([ffef54d](https://github.com/Wynntils/Artemis/commit/ffef54d96e0061100ffb2cf3086956b8634edf1c))
+
 ## [0.0.2-alpha.483](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.482...v0.0.2-alpha.483) (2023-04-16)
 
 
 ### Bug Fixes
 
 * Custom loading screen looked bad without the resource pack loaded ([#1505](https://github.com/Wynntils/Artemis/issues/1505)) ([2f51dab](https://github.com/Wynntils/Artemis/commit/2f51dab184e55b4e664b158e5395764d168729d7))
+
+
+### Miscellaneous Chores
+
+* **release:** v0.0.2-alpha.483 [skip ci] ([7d64eb3](https://github.com/Wynntils/Artemis/commit/7d64eb36f052eb2c09be646a79cf667b6d6e2036))
 
 ## [0.0.2-alpha.482](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.481...v0.0.2-alpha.482) (2023-04-15)
 
@@ -40,17 +52,4 @@
 ### Miscellaneous Chores
 
 * **release:** v0.0.2-alpha.480 [skip ci] ([703ac00](https://github.com/Wynntils/Artemis/commit/703ac00028a577f7ea6160a92d299f1fb2f4208b))
-
-## [0.0.2-alpha.479](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.478...v0.0.2-alpha.479) (2023-04-15)
-
-
-### New Features
-
-* Add sprint function ([#1496](https://github.com/Wynntils/Artemis/issues/1496)) ([5def4ec](https://github.com/Wynntils/Artemis/commit/5def4ecb216f89ea6d1503db168033d1c3125056))
-* Reintroduce hide bars without value ([#1497](https://github.com/Wynntils/Artemis/issues/1497)) ([0f02af6](https://github.com/Wynntils/Artemis/commit/0f02af69ff231fb40ea185121cf1066d5609747d))
-
-
-### Miscellaneous Chores
-
-* **release:** v0.0.2-alpha.479 [skip ci] ([f805a98](https://github.com/Wynntils/Artemis/commit/f805a981c222b6e1505b154d5049c233cdb5e813))
 
