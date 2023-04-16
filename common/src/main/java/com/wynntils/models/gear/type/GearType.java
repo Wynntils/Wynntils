@@ -118,4 +118,12 @@ public enum GearType {
             default -> false;
         };
     }
+
+    public boolean isValidWeapon(ClassType classType) {
+        if (!isWeapon()) return false;
+        // We can't really know what kind of weapon this is, so assume it is valid
+        if (this == WEAPON) return true;
+
+        return classReq == classType;
+    }
 }

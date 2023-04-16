@@ -13,10 +13,15 @@ import com.wynntils.models.characterstats.actionbar.ManaSegment;
 import com.wynntils.models.characterstats.actionbar.PowderSpecialSegment;
 import com.wynntils.models.characterstats.actionbar.SprintSegment;
 import com.wynntils.models.elements.type.Powder;
+import com.wynntils.models.gear.type.GearInfo;
+import com.wynntils.models.items.items.game.GearItem;
 import com.wynntils.utils.MathUtils;
 import com.wynntils.utils.mc.McUtils;
 import com.wynntils.utils.type.CappedValue;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 
@@ -104,6 +109,37 @@ public final class CharacterStatsModel extends Model {
     public int getTicksToNextSoulPoint() {
         if (McUtils.mc().level == null) return -1;
         return 24000 - (int) (McUtils.mc().level.getDayTime() % 24000);
+    }
+
+    public List<GearInfo> getWornGear() {
+        Player player = McUtils.player();
+
+        // Check if main hand has valid weapon
+        List<GearInfo> wornGear = new ArrayList<>();
+        Optional<GearItem> mainHandGearItem = Models.Item.asWynnItem(player.getMainHandItem(), GearItem.class);
+        if (mainHandGearItem.isPresent()) {
+            GearInfo gearInfo = mainHandGearItem.get().getGearInfo();
+            if (gearInfo.type().isValidWeapon(Models.Character.getClassType())) {
+                wornGear.add(gearInfo);
+            }
+        }
+
+        // Check armor slots
+        player.getArmorSlots().forEach(itemStack -> {
+            Optional<GearItem> armorGearItem = Models.Item.asWynnItem(itemStack, GearItem.class);
+            if (armorGearItem.isPresent()) {
+                GearInfo gearInfo = armorGearItem.get().getGearInfo();
+                if (gearInfo.type().isArmour()) {
+                    wornGear.add(gearInfo);
+                }
+            }
+        });
+
+        // Check accessory slots
+
+        // FIXME!
+
+        return wornGear;
     }
 
     private void centerSegmentCleared() {

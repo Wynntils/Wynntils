@@ -14,16 +14,18 @@ import com.wynntils.core.config.ConfigCategory;
 import com.wynntils.core.features.Feature;
 import com.wynntils.mc.event.PlayerRenderEvent;
 import com.wynntils.mc.event.TickEvent;
-import com.wynntils.models.character.type.ClassType;
 import com.wynntils.models.gear.type.GearInfo;
+import com.wynntils.screens.characterselector.CharacterSelectorScreen;
 import com.wynntils.utils.colors.CommonColors;
 import com.wynntils.utils.colors.CustomColor;
 import com.wynntils.utils.mc.ComponentUtils;
 import com.wynntils.utils.mc.McUtils;
 import com.wynntils.utils.render.buffered.CustomRenderType;
 import com.wynntils.utils.type.Pair;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Set;
@@ -32,6 +34,7 @@ import net.minecraft.client.player.AbstractClientPlayer;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.core.Position;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import org.joml.Matrix4f;
 
@@ -44,7 +47,7 @@ public class RangeVisualizerFeature extends Feature {
     private static final int SEGMENTS = 128;
     private static final float HEIGHT = 0.1f;
 
-    private final Map<Player, Pair<CustomColor, Integer>> circlesToRender = new HashMap<>();
+    private final Map<Player, List<Pair<CustomColor, Float>>> circlesToRender = new HashMap<>();
     private final Set<Player> detectedPlayers = new HashSet<>();
 
     @SubscribeEvent
@@ -52,10 +55,15 @@ public class RangeVisualizerFeature extends Feature {
         AbstractClientPlayer player = e.getPlayer();
         detectedPlayers.add(player);
 
-        Pair<CustomColor, Integer> circleType = circlesToRender.get(player);
-        if (circleType == null) return;
+        List<Pair<CustomColor, Float>> circles = circlesToRender.get(player);
+        if (circles == null) return;
 
-        renderCircle(e.getPoseStack(), player.position(), circleType);
+        circles.forEach(circleType -> {
+            float radius = circleType.b();
+            int color = circleType.a().asInt();
+
+            renderCircle(e.getPoseStack(), player.position(), radius, color);
+        });
     }
 
     @SubscribeEvent
@@ -63,50 +71,74 @@ public class RangeVisualizerFeature extends Feature {
         // Once every tick, calculate circles for all players that were detected (i.e. rendered)
         // since the previous tick
         circlesToRender.clear();
-        detectedPlayers.forEach((player) -> {
-            Pair<CustomColor, Integer> circleType = calculateCircleType(player);
-            if (circleType == null) return;
-
-            circlesToRender.put(player, circleType);
-        });
+        detectedPlayers.forEach(this::checkMajorIdCircles);
         detectedPlayers.clear();
     }
 
-    private Pair<CustomColor, Integer> calculateCircleType(Player player) {
-        if (!Models.Player.isLocalPlayer(player)) return null; // Don't render for ghost/npc
+    private void checkMajorIdCircles(Player player) {
+        // Don't render for ghost/npc
+        if (!Models.Player.isLocalPlayer(player)) return;
 
-        String playerName = ComponentUtils.getUnformatted(player.getName());
-        boolean isSelf =
-                ComponentUtils.getUnformatted(McUtils.player().getName()).equals(playerName);
-        if (isSelf && McUtils.mc().screen instanceof InventoryScreen)
-            return null; // Don't render for preview in inventory
+        List<GearInfo> validGear;
 
-        if (!Models.Party.getPartyMembers().contains(playerName) && !isSelf)
-            return null; // Other players must be in party
+        if (player == McUtils.player()) {
+            // This is ourselves, rendered from outside
 
-        // We are getting the item info the same way as GearViewerScreen since we care about other people's items
-        String gearName = ComponentUtils.getUnformatted(player.getMainHandItem().getHoverName());
-        GearInfo gearInfo = Models.Gear.getGearInfoFromApiName(gearName);
-        if (gearInfo == null) return null;
+            // Don't render for preview in inventory or character selection screen
+            if (McUtils.mc().screen instanceof InventoryScreen) return;
+            if (McUtils.mc().screen instanceof CharacterSelectorScreen) return;
 
-        if (isSelf) { // Do not render if the item is not for the player's class
-            if (gearInfo.requirements().classType().isEmpty()) return null;
+            validGear = Models.CharacterStats.getWornGear();
+        } else {
+            // Other players must be in party
+            if (!Models.Party.getPartyMembers().contains(ComponentUtils.getUnformatted(player.getName()))) return;
 
-            ClassType classType = gearInfo.requirements().classType().get();
-            if (classType != Models.Character.getClassType()) return null;
+            validGear = new ArrayList<>();
+            // Check main hand
+            GearInfo mainHandGearInfo = getOtherPlayerGearInfo(player.getMainHandItem());
+            if (mainHandGearInfo != null) {
+                if (mainHandGearInfo.type().isWeapon()) {
+                    // We cannot verify class :(
+                    validGear.add(mainHandGearInfo);
+                }
+            }
+
+            // Check armor slots
+            player.getArmorSlots().forEach(itemStack -> {
+                GearInfo armorGearInfo = getOtherPlayerGearInfo(player.getMainHandItem());
+                if (armorGearInfo != null) {
+                    if (armorGearInfo.type().isArmour()) {
+                        validGear.add(armorGearInfo);
+                    }
+                }
+            });
+
+            // Accessory slots are not available to us :(
         }
 
-        return gearInfo.fixedStats().majorIds().stream()
-                .map(majorId -> switch (majorId.name()) {
-                    case "TAUNT" -> Pair.of(CommonColors.ORANGE, 12);
-                    case "HERO" -> Pair.of(CommonColors.WHITE, 8);
-                    case "ALTRUISM" -> Pair.of(CommonColors.PINK, 8);
-                    case "GUARDIAN" -> Pair.of(CommonColors.RED, 8);
+        // For each valid gear, check all its major IDs, and store them as color/radius pairs
+        // Offset the radius slightly so multiple circles can be shown for each player
+        // Only a few major IDs can actually be applied at the same time, but we make this general
+        List<Pair<CustomColor, Float>> circles = validGear.stream()
+                .flatMap(gearInfo -> gearInfo.fixedStats().majorIds().stream().map(majorId -> switch (majorId.name()) {
+                    case "TAUNT" -> Pair.of(CommonColors.ORANGE, 12f);
+                    case "HERO" -> Pair.of(CommonColors.WHITE, 8f);
+                    case "ALTRUISM" -> Pair.of(CommonColors.PINK, 8.02f);
+                    case "GUARDIAN" -> Pair.of(CommonColors.RED, 8.06f);
                     default -> null;
-                })
+                }))
                 .filter(Objects::nonNull)
-                .findFirst()
-                .orElse(null);
+                .toList();
+
+        if (!circles.isEmpty()) {
+            circlesToRender.put(player, circles);
+        }
+    }
+
+    private GearInfo getOtherPlayerGearInfo(ItemStack itemStack) {
+        // This must specifically NOT be normalized; the ֎ is significant
+        String gearName = ComponentUtils.getUnformatted(itemStack.getHoverName());
+        return Models.Gear.getGearInfoFromApiName(gearName);
     }
 
     /**
@@ -115,13 +147,13 @@ public class RangeVisualizerFeature extends Feature {
      * - .color() takes floats from 0-1, but ints from 0-255<p>
      * - Increase SEGMENTS to make the circle smoother, but it will also increase the amount of vertices (and thus the amount of memory used and the amount of time it takes to render)<p>
      * - The order of the consumer.vertex() calls matter. Here, we draw a quad, so we do bottom left corner, top left corner, top right corner, bottom right corner. This is filled in with the color we set.<p>
+     *
      * @param poseStack The pose stack to render with. This is supposed to be the pose stack from the event.
      *                  We do the translation here, so no need to do it before passing it in.
+     * @param radius
+     * @param color
      */
-    private void renderCircle(PoseStack poseStack, Position position, Pair<CustomColor, Integer> circleType) {
-        int radius = circleType.b();
-        int color = circleType.a().asInt();
-
+    private void renderCircle(PoseStack poseStack, Position position, float radius, int color) {
         // Circle must be rendered on both sides, otherwise it will be invisible when looking at
         // it from the outside
         RenderSystem.disableCull();
