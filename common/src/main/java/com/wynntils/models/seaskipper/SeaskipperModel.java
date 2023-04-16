@@ -17,7 +17,7 @@ import com.wynntils.mc.event.MenuEvent;
 import com.wynntils.mc.event.ScreenOpenedEvent;
 import com.wynntils.models.containers.ContainerModel;
 import com.wynntils.models.items.items.gui.SeaskipperDestinationItem;
-import com.wynntils.models.map.pois.SeaskipperPoi;
+import com.wynntils.models.map.pois.SeaskipperDestinationPoi;
 import com.wynntils.utils.mc.ComponentUtils;
 import com.wynntils.utils.mc.McUtils;
 import com.wynntils.utils.wynn.ContainerUtils;
@@ -40,11 +40,11 @@ public final class SeaskipperModel extends Model {
     private static AbstractContainerScreen actualSeaskipperScreen;
 
     private final Map<SeaskipperDestinationItem, Integer> destinations = new HashMap<>();
-    private final List<SeaskipperPoi> seaskipperPois = new ArrayList<>();
+    private final List<SeaskipperDestinationPoi> seaskipperDestinationPois = new ArrayList<>();
     private final List<String> availableNames = new ArrayList<>();
 
-    private List<SeaskipperPoi> availableDestinations = new ArrayList<>();
-    private SeaskipperPoi currentPoi;
+    private List<SeaskipperDestinationPoi> availableDestinations = new ArrayList<>();
+    private SeaskipperDestinationPoi currentPoi;
     private int boatSlot;
     private int containerId = -2;
 
@@ -103,12 +103,12 @@ public final class SeaskipperModel extends Model {
         return Collections.unmodifiableMap(destinations);
     }
 
-    public List<SeaskipperPoi> getAvailableDestinations() {
+    public List<SeaskipperDestinationPoi> getAvailableDestinations() {
         return Collections.unmodifiableList(availableDestinations);
     }
 
-    public List<SeaskipperPoi> getSeaskipperPois() {
-        return Collections.unmodifiableList(seaskipperPois);
+    public List<SeaskipperDestinationPoi> getSeaskipperPois() {
+        return Collections.unmodifiableList(seaskipperDestinationPois);
     }
 
     private void setBoatSlot(int boatSlot) {
@@ -119,7 +119,7 @@ public final class SeaskipperModel extends Model {
         clickSlot(boatSlot);
     }
 
-    public SeaskipperPoi getCurrentPoi() {
+    public SeaskipperDestinationPoi getCurrentPoi() {
         return currentPoi;
     }
 
@@ -152,7 +152,7 @@ public final class SeaskipperModel extends Model {
     }
 
     private void loadSeaskipperPois() {
-        seaskipperPois.clear();
+        seaskipperDestinationPois.clear();
         availableNames.clear();
         availableDestinations.clear();
         destinations.clear();
@@ -163,7 +163,7 @@ public final class SeaskipperModel extends Model {
             List<SeaskipperProfile> seaskipperProfiles = WynntilsMod.GSON.fromJson(reader, type);
 
             for (SeaskipperProfile profile : seaskipperProfiles) {
-                seaskipperPois.add(new SeaskipperPoi(
+                seaskipperDestinationPois.add(new SeaskipperDestinationPoi(
                         profile.destination,
                         profile.combatLevel,
                         profile.startX,
@@ -172,7 +172,7 @@ public final class SeaskipperModel extends Model {
                         profile.endZ));
             }
 
-            for (SeaskipperPoi poi : seaskipperPois) {
+            for (SeaskipperDestinationPoi poi : seaskipperDestinationPois) {
                 if (poi.isPlayerInside()) {
                     currentPoi = poi;
                     availableDestinations.add(currentPoi);
@@ -185,7 +185,7 @@ public final class SeaskipperModel extends Model {
     }
 
     private void setAvailableDestinations() {
-        for (SeaskipperPoi poi : seaskipperPois) {
+        for (SeaskipperDestinationPoi poi : seaskipperDestinationPois) {
             if (availableNames.contains(poi.getName())) {
                 availableDestinations.add(poi);
             }

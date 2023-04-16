@@ -12,7 +12,7 @@ import com.wynntils.core.text.CodedString;
 import com.wynntils.features.map.GuildMapFeature;
 import com.wynntils.models.items.items.gui.SeaskipperDestinationItem;
 import com.wynntils.models.map.PoiLocation;
-import com.wynntils.models.map.pois.SeaskipperPoi;
+import com.wynntils.models.map.pois.SeaskipperDestinationPoi;
 import com.wynntils.screens.base.widgets.BasicTexturedButton;
 import com.wynntils.utils.colors.CommonColors;
 import com.wynntils.utils.mc.McUtils;
@@ -35,7 +35,7 @@ import net.minecraft.network.chat.Component;
 public final class SeaskipperMapScreen extends AbstractMapScreen {
     private final int MAP_CENTER_X = -240;
     private final int MAP_CENTER_Y = -3130;
-    private SeaskipperPoi hoveredPoi;
+    private SeaskipperDestinationPoi hoveredPoi;
     private boolean hideTerritoryBorders = false;
     private boolean renderAllDestinations = false;
     private boolean renderRoutes = false;
@@ -195,7 +195,7 @@ public final class SeaskipperMapScreen extends AbstractMapScreen {
     }
 
     private void renderDestinations(
-            List<SeaskipperPoi> pois,
+            List<SeaskipperDestinationPoi> pois,
             PoseStack poseStack,
             BoundingBox textureBoundingBox,
             float poiScale,
@@ -203,7 +203,8 @@ public final class SeaskipperMapScreen extends AbstractMapScreen {
             int mouseY) {
         hoveredPoi = null;
 
-        List<SeaskipperPoi> filteredPois = getRenderedDestinations(pois, textureBoundingBox, poiScale, mouseX, mouseY);
+        List<SeaskipperDestinationPoi> filteredPois =
+                getRenderedDestinations(pois, textureBoundingBox, poiScale, mouseX, mouseY);
 
         if (renderRoutes) {
             float poiRenderX =
@@ -211,7 +212,7 @@ public final class SeaskipperMapScreen extends AbstractMapScreen {
             float poiRenderZ =
                     MapRenderer.getRenderZ(Models.Seaskipper.getCurrentPoi(), mapCenterZ, centerZ, currentZoom);
 
-            for (SeaskipperPoi poi : Models.Seaskipper.getAvailableDestinations()) {
+            for (SeaskipperDestinationPoi poi : Models.Seaskipper.getAvailableDestinations()) {
                 float x = MapRenderer.getRenderX(poi, mapCenterX, centerX, currentZoom);
                 float z = MapRenderer.getRenderZ(poi, mapCenterZ, centerZ, currentZoom);
 
@@ -224,7 +225,7 @@ public final class SeaskipperMapScreen extends AbstractMapScreen {
                 McUtils.mc().renderBuffers().bufferSource();
 
         for (int i = filteredPois.size() - 1; i >= 0; i--) {
-            SeaskipperPoi poi = filteredPois.get(i);
+            SeaskipperDestinationPoi poi = filteredPois.get(i);
 
             float poiRenderX = MapRenderer.getRenderX(poi, mapCenterX, centerX, currentZoom);
             float poiRenderZ = MapRenderer.getRenderZ(poi, mapCenterZ, centerZ, currentZoom);
@@ -239,12 +240,16 @@ public final class SeaskipperMapScreen extends AbstractMapScreen {
         bufferSource.endBatch();
     }
 
-    private List<SeaskipperPoi> getRenderedDestinations(
-            List<SeaskipperPoi> pois, BoundingBox textureBoundingBox, float poiScale, int mouseX, int mouseY) {
-        List<SeaskipperPoi> filteredPois = new ArrayList<>();
+    private List<SeaskipperDestinationPoi> getRenderedDestinations(
+            List<SeaskipperDestinationPoi> pois,
+            BoundingBox textureBoundingBox,
+            float poiScale,
+            int mouseX,
+            int mouseY) {
+        List<SeaskipperDestinationPoi> filteredPois = new ArrayList<>();
 
         for (int i = pois.size() - 1; i >= 0; i--) {
-            SeaskipperPoi poi = pois.get(i);
+            SeaskipperDestinationPoi poi = pois.get(i);
             PoiLocation location = poi.getLocation();
 
             if (location == null) continue;
@@ -408,7 +413,7 @@ public final class SeaskipperMapScreen extends AbstractMapScreen {
             }
         }
 
-        for (SeaskipperPoi poi : Models.Seaskipper.getSeaskipperPois()) {
+        for (SeaskipperDestinationPoi poi : Models.Seaskipper.getSeaskipperPois()) {
             if (poi.isSelected(mouseX, mouseY)) {
                 Models.Seaskipper.purchasePass(poi.getName());
 

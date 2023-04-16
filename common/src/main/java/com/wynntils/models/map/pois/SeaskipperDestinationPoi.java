@@ -19,7 +19,7 @@ import com.wynntils.utils.render.type.VerticalAlignment;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.world.phys.Vec3;
 
-public class SeaskipperPoi implements Poi {
+public class SeaskipperDestinationPoi implements Poi {
     private final String destination;
     private final PoiLocation destinationCenter;
     private final int combatLevel;
@@ -36,7 +36,7 @@ public class SeaskipperPoi implements Poi {
     private float renderedY;
     private float renderedY2;
 
-    public SeaskipperPoi(String destination, int combatLevel, int startX, int startZ, int endX, int endZ) {
+    public SeaskipperDestinationPoi(String destination, int combatLevel, int startX, int startZ, int endX, int endZ) {
         this.destination = destination;
         this.combatLevel = combatLevel;
         this.startX = startX;
