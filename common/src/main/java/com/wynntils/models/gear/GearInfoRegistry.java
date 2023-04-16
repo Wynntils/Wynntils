@@ -283,7 +283,7 @@ public class GearInfoRegistry {
         }
 
         private ItemMaterial parseMaterial(JsonObject json, GearType type) {
-            return type.isArmour() ? parseArmorType(json, type) : parseOtherMaterial(json, type);
+            return type.isArmor() ? parseArmorType(json, type) : parseOtherMaterial(json, type);
         }
 
         private ItemMaterial parseArmorType(JsonObject json, GearType gearType) {
