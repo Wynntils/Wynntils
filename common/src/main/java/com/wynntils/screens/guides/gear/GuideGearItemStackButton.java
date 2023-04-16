@@ -49,7 +49,7 @@ public class GuideGearItemStackButton extends WynntilsButton {
                 Texture.HIGHLIGHT.width(),
                 Texture.HIGHLIGHT.height());
 
-        RenderUtils.renderItem(screen.getTranslationX(), screen.getTranslationY(), itemStack, getX(), getY());
+        RenderUtils.renderItem(poseStack, itemStack, getX(), getY());
 
         if (Models.Favorites.isFavorite(itemStack)) {
             RenderUtils.drawScalingTexturedRect(

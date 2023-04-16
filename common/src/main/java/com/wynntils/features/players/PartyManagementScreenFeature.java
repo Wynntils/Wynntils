@@ -58,6 +58,11 @@ public class PartyManagementScreenFeature extends Feature {
         reloadScreenWidgets();
     }
 
+    @SubscribeEvent
+    public void onPartyPriorityChanged(PartyEvent.PriorityChanged e) {
+        reloadScreenWidgets();
+    }
+
     // endregion
 
     // region Friend events

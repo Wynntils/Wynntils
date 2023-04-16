@@ -57,9 +57,7 @@ rename the downloaded jar file to `hotswap-agent.jar`. Finally, add `wynntils.ho
 By default, this is `C:\Users\<your username>\.gradle\gradle.properties` on Windows, or `~/.gradle/gradle.properties` on Linux/MacOS.
 If the file does not exist, you can create it yourself.
 Don't forget to set the correct Java installation for your run configurations, and make sure to use [these](https://i.imgur.com/4VMFCM0.png) settings in IntelliJ IDEA.
-
-#### Windows
-If you are using Hotswap Agent on Windows and experience the "The process cannot access the file because it is being used by another process" error, you can replace your Architectury transformer runtime as a temporary fix. Check out and build [this pull request](https://github.com/architectury/architectury-transformer/pull/17). Then, find `dev.architectury:architectury-transformer:runtime:5.2.72` and open the folder containing the existing `.jar` in explorer. Copy the `.jar` file from the build output and replace the existing one.
+After this, start the game using your run configurations, you should see some logs about HotswapAgent. If you don't see any, you did something wrong. To hotswap, hit the build button (build, not rerun, restart, etc.).
 
 ### Run Configurations and Authenticating
 Architectury Loom currently only supports VSCode and IntelliJ IDEA. Eclipse is not supported by upstream at the moment. After running Initial Setup, run configurations should appear automatically (note that you might have to restart your IDE after Initial Setup).

@@ -37,6 +37,25 @@ public final class LoreUtils {
      *
      * @return an {@link List} containing all item lore
      */
+    public static LinkedList<StyledText> getLoreAsStyledText(ItemStack itemStack) {
+        ListTag loreTag = getLoreTag(itemStack);
+
+        LinkedList<StyledText> lore = new LinkedList<>();
+        if (loreTag == null) return lore;
+
+        for (int i = 0; i < loreTag.size(); ++i) {
+            lore.add(ComponentUtils.getStyledTextFromJson(loreTag.getString(i)));
+        }
+
+        return lore;
+    }
+
+    /**
+     * Get the lore from an item, note that it may not be fully parsed. To do so, check out {@link
+     * ComponentUtils}
+     *
+     * @return an {@link List} containing all item lore
+     */
     public static LinkedList<CodedString> getLore(ItemStack itemStack) {
         ListTag loreTag = getLoreTag(itemStack);
 

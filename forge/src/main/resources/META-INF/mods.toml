@@ -15,7 +15,7 @@ license = "GNU AGPL 3"
 [[dependencies.wynntils]]
     modId = "minecraft"
     mandatory = true
-    versionRange = "[1.19.3]"
+    versionRange = "[1.19.4]"
 
 [[dependencies.wynntils]]
     modId = "forge"
