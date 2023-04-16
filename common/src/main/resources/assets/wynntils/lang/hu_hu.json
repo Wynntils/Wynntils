@@ -181,7 +181,6 @@
   "feature.wynntils.healthPotionBlocker.name": "Életerő Bájital Letiltó",
   "feature.wynntils.healthPotionBlocker.threshold.description": "A maximális életerőd százaléka, ami ahhoz kell, hogy ezt a funkciót aktiváld",
   "feature.wynntils.healthPotionBlocker.threshold.name": "Küszöbérték (%%)",
-  "feature.wynntils.hidePotionGlint.name": "Bájital Csillogás Elrejtése",
   "feature.wynntils.infoBox.name": "Infó Dobozok",
   "feature.wynntils.infoBox.overlay.infoBox.content.description": "Mi jelenjen meg az infó dobozokban?",
   "feature.wynntils.infoBox.overlay.infoBox.content.name": "Infó Doboz Tartalma",
