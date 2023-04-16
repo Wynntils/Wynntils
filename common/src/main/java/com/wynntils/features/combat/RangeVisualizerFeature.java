@@ -16,6 +16,7 @@ import com.wynntils.mc.event.PlayerRenderEvent;
 import com.wynntils.mc.event.TickEvent;
 import com.wynntils.models.gear.type.GearInfo;
 import com.wynntils.screens.characterselector.CharacterSelectorScreen;
+import com.wynntils.screens.wynntilsmenu.WynntilsMenuScreen;
 import com.wynntils.utils.colors.CommonColors;
 import com.wynntils.utils.colors.CustomColor;
 import com.wynntils.utils.mc.ComponentUtils;
@@ -88,6 +89,7 @@ public class RangeVisualizerFeature extends Feature {
             // Don't render for preview in inventory or character selection screen
             if (McUtils.mc().screen instanceof InventoryScreen) return;
             if (McUtils.mc().screen instanceof CharacterSelectorScreen) return;
+            if (McUtils.mc().screen instanceof WynntilsMenuScreen) return;
 
             validGear = Models.CharacterStats.getWornGear();
         } else {
