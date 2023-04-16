@@ -137,6 +137,14 @@ public final class StyledText implements Iterable<StyledTextPart> {
         return builder.toString();
     }
 
+    public String getString() {
+        return getString(PartStyle.StyleType.DEFAULT);
+    }
+
+    public String getStringWithoutFormatting() {
+        return getString(PartStyle.StyleType.NONE);
+    }
+
     public MutableComponent getComponent() {
         if (parts.isEmpty()) {
             return Component.empty();
@@ -423,7 +431,7 @@ public final class StyledText implements Iterable<StyledTextPart> {
 
     @Override
     public String toString() {
-        return "StyledText{" + "parts="
+        return "StyledText{'" + getString() + "', parts="
                 + ArrayUtils.toString(parts) + ", clickEvents="
                 + ArrayUtils.toString(clickEvents) + ", hoverEvents="
                 + ArrayUtils.toString(hoverEvents) + '}';

@@ -12,6 +12,7 @@ import com.wynntils.core.components.Models;
 import com.wynntils.core.net.ApiResponse;
 import com.wynntils.core.net.UrlId;
 import com.wynntils.core.text.CodedString;
+import com.wynntils.core.text.StyledText;
 import com.wynntils.handlers.scoreboard.ScoreboardPart;
 import com.wynntils.models.characterstats.CombatXpModel;
 import com.wynntils.models.quests.event.QuestBookReloadedEvent;
@@ -37,7 +38,7 @@ public final class QuestModel extends Model {
 
     private List<QuestInfo> quests = List.of();
     private List<QuestInfo> miniQuests = List.of();
-    private List<List<CodedString>> dialogueHistory = List.of();
+    private List<List<StyledText>> dialogueHistory = List.of();
     private QuestInfo trackedQuest = null;
     private String afterRescanName;
     private CodedString afterRescanTask;
@@ -114,7 +115,7 @@ public final class QuestModel extends Model {
         };
     }
 
-    public List<List<CodedString>> getDialogueHistory() {
+    public List<List<StyledText>> getDialogueHistory() {
         return dialogueHistory;
     }
 
@@ -237,7 +238,7 @@ public final class QuestModel extends Model {
         }
     }
 
-    void setDialogueHistory(List<List<CodedString>> newDialogueHistory) {
+    void setDialogueHistory(List<List<StyledText>> newDialogueHistory) {
         dialogueHistory = newDialogueHistory;
         WynntilsMod.postEvent(new QuestBookReloadedEvent.DialogueHistoryReloaded());
     }
