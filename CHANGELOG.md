@@ -1,9 +1,21 @@
+## [0.0.3-alpha.1](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.0...v0.0.3-alpha.1) (2023-04-16)
+
+
+### Miscellaneous Chores
+
+* Trigger version bump after 1.19.4 ([#1507](https://github.com/Wynntils/Artemis/issues/1507)) ([f0486ed](https://github.com/Wynntils/Artemis/commit/f0486ed223f74e6849d1a2f610b284da859d82cf))
+
 ## [0.0.3-alpha.0](https://github.com/Wynntils/Artemis/compare/v0.0.2...v0.0.3-alpha.0) (2023-04-16)
 
 
 ### New Features
 
 * Update to Minecraft 1.19.4 ([#1303](https://github.com/Wynntils/Artemis/issues/1303)) ([688aee0](https://github.com/Wynntils/Artemis/commit/688aee0037814ffee38bba5563a6090c26aab60a))
+
+
+### Miscellaneous Chores
+
+* **release:** v0.0.3-alpha.0 [skip ci] ([6bd12a2](https://github.com/Wynntils/Artemis/commit/6bd12a2e14289bbce272167e9a4f4965150a788b))
 
 ## [0.0.2](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.485...v0.0.2) (2023-04-16)
 
@@ -35,16 +47,4 @@
 ### Miscellaneous Chores
 
 * **release:** v0.0.2-alpha.484 [skip ci] ([2fa33af](https://github.com/Wynntils/Artemis/commit/2fa33af7318bd25771c8a9f1781498fbcd5e411d))
-
-## [0.0.2-alpha.483](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.482...v0.0.2-alpha.483) (2023-04-16)
-
-
-### Bug Fixes
-
-* Custom loading screen looked bad without the resource pack loaded ([#1505](https://github.com/Wynntils/Artemis/issues/1505)) ([2f51dab](https://github.com/Wynntils/Artemis/commit/2f51dab184e55b4e664b158e5395764d168729d7))
-
-
-### Miscellaneous Chores
-
-* **release:** v0.0.2-alpha.483 [skip ci] ([7d64eb3](https://github.com/Wynntils/Artemis/commit/7d64eb36f052eb2c09be646a79cf667b6d6e2036))
 
