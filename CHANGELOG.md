@@ -1,9 +1,22 @@
+## [0.0.3-alpha.5](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.4...v0.0.3-alpha.5) (2023-04-17)
+
+
+### Bug Fixes
+
+* Try improving resilience on coordinate pattern ([#1516](https://github.com/Wynntils/Artemis/issues/1516)) ([d559bb7](https://github.com/Wynntils/Artemis/commit/d559bb75e8c3f957d53b159f65feb6ae5a98e9ee))
+* Try to detect a possible cause of null by verifying Wynncraft data ([#1517](https://github.com/Wynntils/Artemis/issues/1517)) ([72359db](https://github.com/Wynntils/Artemis/commit/72359dba343665e411682ddad2d76518929d5bb6))
+
 ## [0.0.3-alpha.4](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.3...v0.0.3-alpha.4) (2023-04-17)
 
 
 ### New Features
 
 * Add a discreet marker to the nametag if the user is running Wynntils ([#1506](https://github.com/Wynntils/Artemis/issues/1506)) ([bc374f9](https://github.com/Wynntils/Artemis/commit/bc374f9cadc00792e175d5d038662b512486d2a3))
+
+
+### Miscellaneous Chores
+
+* **release:** v0.0.3-alpha.4 [skip ci] ([6c9d2fa](https://github.com/Wynntils/Artemis/commit/6c9d2fafa6f1441a2278591f1404f7f3d32e8376))
 
 ## [0.0.3-alpha.3](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.2...v0.0.3-alpha.3) (2023-04-16)
 
@@ -40,23 +53,4 @@
 ### Miscellaneous Chores
 
 * **release:** v0.0.3-alpha.1 [skip ci] ([7d93bc1](https://github.com/Wynntils/Artemis/commit/7d93bc1daaa01185517d77185e859cec5d5c1566))
-
-## [0.0.3-alpha.0](https://github.com/Wynntils/Artemis/compare/v0.0.2...v0.0.3-alpha.0) (2023-04-16)
-
-
-### Bug Fixes
-
-* Fix up releases ([#1508](https://github.com/Wynntils/Artemis/issues/1508)) ([4b801de](https://github.com/Wynntils/Artemis/commit/4b801de5f59217593d70d50e9969efe56b1ec595))
-
-
-### New Features
-
-* Update to Minecraft 1.19.4 ([#1303](https://github.com/Wynntils/Artemis/issues/1303)) ([688aee0](https://github.com/Wynntils/Artemis/commit/688aee0037814ffee38bba5563a6090c26aab60a))
-
-
-### Miscellaneous Chores
-
-* **release:** v0.0.3-alpha.0 [skip ci] ([2459b08](https://github.com/Wynntils/Artemis/commit/2459b080eb1ae6c1df89b1a30215227148b11ab2))
-* **release:** v0.0.3-alpha.0 [skip ci] ([eb90a3a](https://github.com/Wynntils/Artemis/commit/eb90a3a75fcd2669475f8c112dd61d6f4c1e7149))
-* Trigger version bump after 1.19.4 ([#1507](https://github.com/Wynntils/Artemis/issues/1507)) ([f0486ed](https://github.com/Wynntils/Artemis/commit/f0486ed223f74e6849d1a2f610b284da859d82cf))
 
