@@ -1,9 +1,21 @@
+## [0.0.3-alpha.8](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.7...v0.0.3-alpha.8) (2023-04-17)
+
+
+### New Features
+
+* Separate other mods crashes in chat handling ([#1515](https://github.com/Wynntils/Artemis/issues/1515)) ([6bfd88e](https://github.com/Wynntils/Artemis/commit/6bfd88eda2d0ec8fa09a44cf33e5d4f32dac27f2))
+
 ## [0.0.3-alpha.7](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.6...v0.0.3-alpha.7) (2023-04-17)
 
 
 ### Bug Fixes
 
 * Re-add the wynncraft join button after title screen re-init ([#1518](https://github.com/Wynntils/Artemis/issues/1518)) ([ab72744](https://github.com/Wynntils/Artemis/commit/ab727447da98e01fed3fdc11aa48a39ee957e17a))
+
+
+### Miscellaneous Chores
+
+* **release:** v0.0.3-alpha.7 [skip ci] ([0a8fb59](https://github.com/Wynntils/Artemis/commit/0a8fb59c0c6150fe1fc240e45fc1ddaa34677dcf))
 
 ## [0.0.3-alpha.6](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.5...v0.0.3-alpha.6) (2023-04-17)
 
@@ -41,16 +53,4 @@
 ### Miscellaneous Chores
 
 * **release:** v0.0.3-alpha.4 [skip ci] ([6c9d2fa](https://github.com/Wynntils/Artemis/commit/6c9d2fafa6f1441a2278591f1404f7f3d32e8376))
-
-## [0.0.3-alpha.3](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.2...v0.0.3-alpha.3) (2023-04-16)
-
-
-### New Features
-
-* Improve range visualizer ([#1503](https://github.com/Wynntils/Artemis/issues/1503)) ([48e801b](https://github.com/Wynntils/Artemis/commit/48e801be0da9cad7f69d0e221e8d18da31bfc18d))
-
-
-### Miscellaneous Chores
-
-* **release:** v0.0.3-alpha.3 [skip ci] ([f8f77e3](https://github.com/Wynntils/Artemis/commit/f8f77e376066be626b39c78900da715469b30650))
 
