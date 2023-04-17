@@ -10,6 +10,8 @@ import com.wynntils.core.config.Config;
 import com.wynntils.core.config.ConfigCategory;
 import com.wynntils.core.config.RegisterConfig;
 import com.wynntils.core.features.Feature;
+import com.wynntils.core.text.PartStyle;
+import com.wynntils.core.text.StyledText;
 import com.wynntils.mc.event.EntityNameTagRenderEvent;
 import com.wynntils.mc.event.PlayerNametagRenderEvent;
 import com.wynntils.mc.event.RenderLevelEvent;
@@ -25,6 +27,7 @@ import com.wynntils.utils.wynn.WynnItemMatchers;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.network.chat.Component;
@@ -38,6 +41,7 @@ public class CustomNametagRendererFeature extends Feature {
     // how much larger account tags should be relative to gear lines
     private static final float ACCOUNT_TYPE_MULTIPLIER = 1.5f;
     private static final float NAMETAG_HEIGHT = 0.25875f;
+    private static final String WYNNTILS_LOGO = "⛨"; // Well, at least it's a shield...
 
     @RegisterConfig
     public final Config<Boolean> hideAllNametags = new Config<>(false);
@@ -52,12 +56,17 @@ public class CustomNametagRendererFeature extends Feature {
     public final Config<Boolean> showGearOnHover = new Config<>(true);
 
     @RegisterConfig
+    public final Config<Boolean> showWynntilsMarker = new Config<>(true);
+
+    @RegisterConfig
     public final Config<Float> customNametagScale = new Config<>(0.5f);
 
     private Player hitPlayerCache = null;
 
     @SubscribeEvent
     public void onPlayerNameTagRender(PlayerNametagRenderEvent event) {
+        if (Models.Player.isNpc(event.getEntity())) return;
+
         if (hidePlayerNametags.get()) {
             event.setCanceled(true);
             return;
@@ -135,11 +144,38 @@ public class CustomNametagRendererFeature extends Feature {
 
     private void addAccountTypeNametag(PlayerNametagRenderEvent event, List<CustomNametag> nametags) {
         WynntilsUser user = Models.Player.getUser(event.getEntity().getUUID());
-        if (user == null) return;
-        AccountType accountType = user.accountType();
-        if (accountType.getComponent() == null) return;
+        if (user == null) {
+            if (!nametags.isEmpty()) {
+                // We will cancel vanilla rendering, so we must add back the normal vanilla base nametag
+                Component realName = event.getDisplayName();
+                nametags.add(new CustomNametag(realName, 1f));
+            }
+            return;
+        }
 
-        nametags.add(new CustomNametag(accountType.getComponent(), customNametagScale.get() * ACCOUNT_TYPE_MULTIPLIER));
+        AccountType accountType = user.accountType();
+        if (accountType.getComponent() != null) {
+            nametags.add(
+                    new CustomNametag(accountType.getComponent(), customNametagScale.get() * ACCOUNT_TYPE_MULTIPLIER));
+        }
+
+        if (!showWynntilsMarker.get()) return;
+
+        // Add an appropriate Wynntils marker
+        Component realName = event.getDisplayName();
+        Component vanillaNametag;
+
+        StyledText styledText = StyledText.fromComponent(realName);
+        if (styledText.getString(PartStyle.StyleType.NONE).startsWith("[")) {
+            vanillaNametag = Component.literal(WYNNTILS_LOGO)
+                    .withStyle(ChatFormatting.DARK_GRAY)
+                    .append(realName);
+        } else {
+            vanillaNametag = Component.literal(WYNNTILS_LOGO + " ")
+                    .withStyle(ChatFormatting.GRAY)
+                    .append(realName);
+        }
+        nametags.add(new CustomNametag(vanillaNametag, 1f));
     }
 
     private void drawNametags(PlayerNametagRenderEvent event, List<CustomNametag> nametags) {
@@ -147,9 +183,6 @@ public class CustomNametagRendererFeature extends Feature {
         int backgroundColor = hideNametagBackground.get()
                 ? 0
                 : ((int) (Minecraft.getInstance().options.getBackgroundOpacity(0.25F) * 255f) << 24);
-
-        // add vanilla nametag to list
-        nametags.add(new CustomNametag(event.getDisplayName(), 1f));
 
         float yOffset = 0f;
         for (CustomNametag nametag : nametags) {
