@@ -7,7 +7,7 @@ package com.wynntils.mc.event;
 import net.minecraft.client.gui.screens.TitleScreen;
 import net.minecraftforge.eventbus.api.Event;
 
-/** Fired on initialization of {@link TitleScreen} */
+/** Fired on the first initialization of {@link TitleScreen} */
 public abstract class TitleScreenInitEvent extends Event {
     private final TitleScreen titleScreen;
 

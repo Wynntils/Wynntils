@@ -14,6 +14,7 @@ import com.wynntils.core.config.Config;
 import com.wynntils.core.config.ConfigCategory;
 import com.wynntils.core.config.RegisterConfig;
 import com.wynntils.core.features.Feature;
+import com.wynntils.mc.event.ScreenInitEvent;
 import com.wynntils.mc.event.TitleScreenInitEvent;
 import com.wynntils.utils.render.Texture;
 import java.io.IOException;
@@ -43,11 +44,23 @@ public class WynncraftButtonFeature extends Feature {
 
     @SubscribeEvent
     public void onTitleScreenInit(TitleScreenInitEvent.Post e) {
+        TitleScreen titleScreen = e.getTitleScreen();
+
+        addWynncraftButton(titleScreen);
+    }
+
+    @SubscribeEvent
+    public void onTitleScreenInit(ScreenInitEvent e) {
+        if (!(e.getScreen() instanceof TitleScreen titleScreen)) return;
+
+        addWynncraftButton(titleScreen);
+    }
+
+    private void addWynncraftButton(TitleScreen titleScreen) {
         ServerData wynncraftServer =
                 new ServerData("Wynncraft", connectToLobby.get() ? LOBBY_SERVER : GAME_SERVER, false);
         wynncraftServer.setResourcePackStatus(ServerData.ServerPackStatus.ENABLED);
 
-        TitleScreen titleScreen = e.getTitleScreen();
         WynncraftButton wynncraftButton = new WynncraftButton(
                 titleScreen, wynncraftServer, titleScreen.width / 2 + 104, titleScreen.height / 4 + 48 + 24);
         titleScreen.addRenderableWidget(wynncraftButton);
