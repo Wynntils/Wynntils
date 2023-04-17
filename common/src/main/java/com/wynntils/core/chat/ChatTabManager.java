@@ -214,7 +214,7 @@ public final class ChatTabManager extends Manager {
             chatTabData.get(tab).addMessage(message);
         } catch (Throwable t) {
             MutableComponent warning = Component.literal(
-                            "<< WARNING: A chat message was lost due to a crash in a mod. See log for details. >>")
+                            "<< WARNING: A chat message was lost due to a crash in a mod other than Wynntils. See log for details. >>")
                     .withStyle(ChatFormatting.RED);
             chatTabData.get(tab).addMessage(warning);
             // We have seen many issues with badly written mods that inject into addMessage, and
