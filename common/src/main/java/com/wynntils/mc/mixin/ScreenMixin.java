@@ -11,6 +11,7 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import com.wynntils.core.events.MixinHelper;
 import com.wynntils.mc.event.ItemTooltipRenderEvent;
 import com.wynntils.mc.event.PauseMenuInitEvent;
+import com.wynntils.mc.event.ScreenFocusEvent;
 import com.wynntils.mc.event.ScreenInitEvent;
 import com.wynntils.mc.event.ScreenRenderEvent;
 import com.wynntils.mc.event.TitleScreenInitEvent;
@@ -19,6 +20,8 @@ import com.wynntils.screens.base.widgets.TextInputBoxWidget;
 import java.util.List;
 import java.util.Optional;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.ComponentPath;
+import net.minecraft.client.gui.components.events.GuiEventListener;
 import net.minecraft.client.gui.screens.PauseScreen;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.gui.screens.TitleScreen;
@@ -106,6 +109,20 @@ public abstract class ScreenMixin implements ScreenExtension {
     private void onFirstScreenInit(CallbackInfo ci) {
         // This is called only once, when the screen is first initialized
         MixinHelper.post(new ScreenInitEvent((Screen) (Object) this, true));
+    }
+
+    @Inject(method = "changeFocus(Lnet/minecraft/client/gui/ComponentPath;)V", at = @At("HEAD"), cancellable = true)
+    private void onChangeFocus(ComponentPath componentPath, CallbackInfo ci) {
+        GuiEventListener guiEventListener = componentPath instanceof ComponentPath.Path path
+                ? path.childPath().component()
+                : componentPath.component();
+
+        ScreenFocusEvent event = new ScreenFocusEvent((Screen) (Object) this, guiEventListener);
+        MixinHelper.post(event);
+
+        if (event.isCanceled()) {
+            ci.cancel();
+        }
     }
 
     @Inject(method = "render(Lcom/mojang/blaze3d/vertex/PoseStack;IIF)V", at = @At("RETURN"))
