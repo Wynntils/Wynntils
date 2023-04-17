@@ -1,9 +1,21 @@
+## [0.0.3-alpha.7](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.6...v0.0.3-alpha.7) (2023-04-17)
+
+
+### Bug Fixes
+
+* Re-add the wynncraft join button after title screen re-init ([#1518](https://github.com/Wynntils/Artemis/issues/1518)) ([ab72744](https://github.com/Wynntils/Artemis/commit/ab727447da98e01fed3fdc11aa48a39ee957e17a))
+
 ## [0.0.3-alpha.6](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.5...v0.0.3-alpha.6) (2023-04-17)
 
 
 ### Bug Fixes
 
 * Arrows in chat screen don't focus chat tab buttons ([#1519](https://github.com/Wynntils/Artemis/issues/1519)) ([5b94483](https://github.com/Wynntils/Artemis/commit/5b944834529f91b06b40659e1026e4bf32a13e88))
+
+
+### Miscellaneous Chores
+
+* **release:** v0.0.3-alpha.6 [skip ci] ([adcdfad](https://github.com/Wynntils/Artemis/commit/adcdfadcfc673d3f773678c96c7c5439e5d78d0a))
 
 ## [0.0.3-alpha.5](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.4...v0.0.3-alpha.5) (2023-04-17)
 
@@ -41,16 +53,4 @@
 ### Miscellaneous Chores
 
 * **release:** v0.0.3-alpha.3 [skip ci] ([f8f77e3](https://github.com/Wynntils/Artemis/commit/f8f77e376066be626b39c78900da715469b30650))
-
-## [0.0.3-alpha.2](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.1...v0.0.3-alpha.2) (2023-04-16)
-
-
-### Bug Fixes
-
-* Fix compatibility with modmenu ([#1512](https://github.com/Wynntils/Artemis/issues/1512)) ([f3f8def](https://github.com/Wynntils/Artemis/commit/f3f8defe4c527b8ae2b45e2ddc703233fba96f44))
-
-
-### Miscellaneous Chores
-
-* **release:** v0.0.3-alpha.2 [skip ci] ([0213da1](https://github.com/Wynntils/Artemis/commit/0213da1f0928129ec81b6879d879f82d669ed8d1))
 
