@@ -62,10 +62,10 @@ public class TradeMarketBulkSellFeature extends Feature {
     @SubscribeEvent
     public void onSellDialogueUpdated(ContainerSetSlotEvent e) {
         if (!(McUtils.mc().screen instanceof ContainerScreen cs)) return;
+        if (!ComponentUtils.getUnformatted(cs.getTitle()).equals(SELL_DIALOGUE_TITLE)) return;
         if (!ComponentUtils.getUnformatted(
                         cs.getMenu().getSlot(AMOUNT_ITEM_SLOT).getItem().getHoverName())
                 .equals("Click to Set Amount")) return;
-        if (!ComponentUtils.getUnformatted(cs.getTitle()).equals(SELL_DIALOGUE_TITLE)) return;
         if (!buttonsAdded) {
             addSellButtons(cs);
             buttonsAdded = true;
