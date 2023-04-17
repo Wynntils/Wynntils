@@ -107,8 +107,6 @@ public class AbilityTreeContainerQueries {
         public void processPage(ContainerContent content, int page) {
             List<ItemStack> items = content.items();
 
-            System.out.println("page = " + page);
-
             for (int slot = 0; slot < items.size(); slot++) {
                 ItemStack itemStack = items.get(slot);
 
@@ -145,7 +143,8 @@ public class AbilityTreeContainerQueries {
                 if (!Models.AbilityTree.ABILITY_TREE_PARSER.isNodeItem(itemStack, slot)) continue;
 
                 Pair<AbilityTreeSkillNode, AbilityTreeNodeState> parsedNode =
-                        Models.AbilityTree.ABILITY_TREE_PARSER.parseNodeFromItem(itemStack, page, slot);
+                        Models.AbilityTree.ABILITY_TREE_PARSER.parseNodeFromItem(
+                                itemStack, page, slot, collectedInfo.size() + 1);
 
                 collectedInfo.put(parsedNode.key(), parsedNode.value());
             }

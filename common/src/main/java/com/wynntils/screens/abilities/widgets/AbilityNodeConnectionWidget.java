@@ -28,4 +28,8 @@ public class AbilityNodeConnectionWidget extends AbstractWidget {
 
     @Override
     protected void updateWidgetNarration(NarrationElementOutput narrationElementOutput) {}
+
+    public AbilityTreeConnectionNode getNode() {
+        return node;
+    }
 }

@@ -118,10 +118,9 @@ public class CustomAbilityTreeScreen extends WynntilsScreen {
             final int col = currentNode.location().col();
             final int row = currentNode.location().row();
 
-            for (String connection : currentNode.connections()) {
-                // FIXME: Relying on names is not good enough. Use locations + names.
+            for (Integer connection : currentNode.connections()) {
                 Optional<AbilityTreeSkillNode> connectionOptional = abilityTreeInfo.getNodes().stream()
-                        .filter(node -> node.name().equals(connection))
+                        .filter(node -> node.id() == connection)
                         .findFirst();
 
                 if (connectionOptional.isEmpty()) {
@@ -201,6 +200,9 @@ public class CustomAbilityTreeScreen extends WynntilsScreen {
                     new AbilityTreeSkillNode[] {null, currentNode, connectionNode, null});
         }
 
+        AbilityNodeConnectionWidget oldWidget = connectionWidgets.get(location);
+        AbilityTreeConnectionNode merged = node.merge(oldWidget != null ? oldWidget.getNode() : null);
+
         connectionWidgets.put(
                 location,
                 new AbilityNodeConnectionWidget(
@@ -208,7 +210,7 @@ public class CustomAbilityTreeScreen extends WynntilsScreen {
                         renderLocation.b() - AbilityNodeConnectionWidget.SIZE / 2,
                         AbilityNodeConnectionWidget.SIZE,
                         AbilityNodeConnectionWidget.SIZE,
-                        node));
+                        merged));
     }
 
     private void addConnectionsHorizontally(

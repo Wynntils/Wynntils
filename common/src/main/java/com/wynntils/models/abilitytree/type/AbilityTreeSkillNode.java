@@ -8,6 +8,7 @@ import java.util.List;
 import java.util.Objects;
 
 public record AbilityTreeSkillNode(
+        int id,
         String name,
         String formattedName,
         List<String> description,
@@ -18,14 +19,15 @@ public record AbilityTreeSkillNode(
         ArchetypeRequirement requiredArchetype,
         String archetype,
         AbilityTreeLocation location,
-        List<String> connections) {
+        List<Integer> connections) {
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
 
         AbilityTreeSkillNode that = (AbilityTreeSkillNode) o;
-        return cost == that.cost
+        return id == that.id
+                && cost == that.cost
                 && Objects.equals(formattedName, that.formattedName)
                 && Objects.equals(requiredAbility, that.requiredAbility)
                 && Objects.equals(requiredArchetype, that.requiredArchetype)
@@ -35,6 +37,6 @@ public record AbilityTreeSkillNode(
 
     @Override
     public int hashCode() {
-        return Objects.hash(formattedName, cost, requiredAbility, requiredArchetype, archetype, location);
+        return Objects.hash(id, formattedName, cost, requiredAbility, requiredArchetype, archetype, location);
     }
 }

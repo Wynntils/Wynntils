@@ -31,7 +31,7 @@ public class AbilityTreeInfo {
 
     public void addNodeFromItem(ItemStack itemStack, int page, int slot) {
         nodes.add(Models.AbilityTree.ABILITY_TREE_PARSER
-                .parseNodeFromItem(itemStack, page, slot)
+                .parseNodeFromItem(itemStack, page, slot, nodes.size() + 1)
                 .key());
     }
 
@@ -96,7 +96,7 @@ public class AbilityTreeInfo {
                 current.connections()
                         .addAll(connectedNodes.stream()
                                 .filter(node -> !node.equals(current))
-                                .map(AbilityTreeSkillNode::name)
+                                .map(AbilityTreeSkillNode::id)
                                 .toList());
             }
 

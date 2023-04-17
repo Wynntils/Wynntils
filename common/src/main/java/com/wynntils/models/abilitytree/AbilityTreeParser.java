@@ -35,7 +35,8 @@ public final class AbilityTreeParser {
 
     private static final StyledText CONNECTION_NAME = StyledText.fromString(" ");
 
-    public Pair<AbilityTreeSkillNode, AbilityTreeNodeState> parseNodeFromItem(ItemStack itemStack, int page, int slot) {
+    public Pair<AbilityTreeSkillNode, AbilityTreeNodeState> parseNodeFromItem(
+            ItemStack itemStack, int page, int slot, int id) {
         StyledText nameStyledText = StyledText.fromComponent(itemStack.getHoverName());
 
         AbilityTreeNodeState state = AbilityTreeNodeState.LOCKED;
@@ -122,6 +123,7 @@ public final class AbilityTreeParser {
                 });
 
         AbilityTreeSkillNode node = new AbilityTreeSkillNode(
+                id,
                 actualName.getString(PartStyle.StyleType.NONE),
                 actualName.getString(PartStyle.StyleType.DEFAULT),
                 loreStyledText.stream()
