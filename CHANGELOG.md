@@ -1,3 +1,10 @@
+## [0.0.3-alpha.6](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.5...v0.0.3-alpha.6) (2023-04-17)
+
+
+### Bug Fixes
+
+* Arrows in chat screen don't focus chat tab buttons ([#1519](https://github.com/Wynntils/Artemis/issues/1519)) ([5b94483](https://github.com/Wynntils/Artemis/commit/5b944834529f91b06b40659e1026e4bf32a13e88))
+
 ## [0.0.3-alpha.5](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.4...v0.0.3-alpha.5) (2023-04-17)
 
 
@@ -5,6 +12,11 @@
 
 * Try improving resilience on coordinate pattern ([#1516](https://github.com/Wynntils/Artemis/issues/1516)) ([d559bb7](https://github.com/Wynntils/Artemis/commit/d559bb75e8c3f957d53b159f65feb6ae5a98e9ee))
 * Try to detect a possible cause of null by verifying Wynncraft data ([#1517](https://github.com/Wynntils/Artemis/issues/1517)) ([72359db](https://github.com/Wynntils/Artemis/commit/72359dba343665e411682ddad2d76518929d5bb6))
+
+
+### Miscellaneous Chores
+
+* **release:** v0.0.3-alpha.5 [skip ci] ([fe99e37](https://github.com/Wynntils/Artemis/commit/fe99e3761bfb8fc9545a9cfa25745fbf7006e94f))
 
 ## [0.0.3-alpha.4](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.3...v0.0.3-alpha.4) (2023-04-17)
 
@@ -41,16 +53,4 @@
 ### Miscellaneous Chores
 
 * **release:** v0.0.3-alpha.2 [skip ci] ([0213da1](https://github.com/Wynntils/Artemis/commit/0213da1f0928129ec81b6879d879f82d669ed8d1))
-
-## [0.0.3-alpha.1](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.0...v0.0.3-alpha.1) (2023-04-16)
-
-
-### Bug Fixes
-
-* fix chat tabs and container search not appearing (ScreenInitEvent) ([#1509](https://github.com/Wynntils/Artemis/issues/1509)) ([2ae6cb3](https://github.com/Wynntils/Artemis/commit/2ae6cb3637125fbed95e84c8e88277d59b40b0e7))
-
-
-### Miscellaneous Chores
-
-* **release:** v0.0.3-alpha.1 [skip ci] ([7d93bc1](https://github.com/Wynntils/Artemis/commit/7d93bc1daaa01185517d77185e859cec5d5c1566))
 
