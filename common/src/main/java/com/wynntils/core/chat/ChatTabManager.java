@@ -4,8 +4,10 @@
  */
 package com.wynntils.core.chat;
 
+import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.components.Manager;
 import com.wynntils.core.components.Managers;
+import com.wynntils.core.text.StyledText;
 import com.wynntils.features.chat.ChatTabsFeature;
 import com.wynntils.handlers.chat.event.ChatMessageReceivedEvent;
 import com.wynntils.handlers.chat.type.RecipientType;
@@ -24,9 +26,11 @@ import java.util.Optional;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.regex.Pattern;
 import java.util.stream.Stream;
+import net.minecraft.ChatFormatting;
 import net.minecraft.client.gui.components.ChatComponent;
 import net.minecraft.client.gui.screens.ChatScreen;
 import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.MutableComponent;
 import net.minecraftforge.eventbus.api.EventPriority;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 
@@ -206,7 +210,22 @@ public final class ChatTabManager extends Manager {
     private void addMessageToTab(ChatTab tab, Component message) {
         chatTabData.putIfAbsent(tab, new ChatComponent(McUtils.mc()));
 
-        chatTabData.get(tab).addMessage(message);
+        try {
+            chatTabData.get(tab).addMessage(message);
+        } catch (Throwable t) {
+            MutableComponent warning = Component.literal(
+                            "<< WARNING: A chat message was lost due to a crash in a mod. See log for details. >>")
+                    .withStyle(ChatFormatting.RED);
+            chatTabData.get(tab).addMessage(warning);
+            // We have seen many issues with badly written mods that inject into addMessage, and
+            // throws exceptions. Instead of considering it a Wynntils crash, dump it to the log and
+            // ignore it. We can't resend the message to the chat, since that could cause an infinite loop,
+            // but the log should be fine.
+            WynntilsMod.warn("Another mod has caused an exception in ChatComponent.addMessage()");
+            WynntilsMod.warn("The message that could not be displayed is:"
+                    + StyledText.fromComponent(message).getString());
+            WynntilsMod.warn("This is not a Wynntils bug. Here is the exception that we caught.", t);
+        }
 
         if (focusedTab != tab) {
             unreadMessages.put(tab, true);
