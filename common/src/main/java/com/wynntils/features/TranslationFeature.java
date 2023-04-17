@@ -60,14 +60,15 @@ public class TranslationFeature extends Feature {
         Managers.Translation.getTranslator(translationService.get())
                 .translate(List.of(wrapped), languageName.get(), translatedMsgList -> {
                     CodedString messageToSend;
-                    if (!translatedMsgList.isEmpty()) {
-                        String result = translatedMsgList.get(0);
-                        messageToSend = unwrapCoding(result);
-                    } else {
+                    // translatedMsgList should not be null, but yet it happens...
+                    if (translatedMsgList == null || translatedMsgList.isEmpty()) {
                         if (keepOriginal.get()) return;
 
                         // We failed to get a translation; send the original message so it's not lost
                         messageToSend = origCoded;
+                    } else {
+                        String result = translatedMsgList.get(0);
+                        messageToSend = unwrapCoding(result);
                     }
                     McUtils.mc()
                             .doRunTask(() -> McUtils.sendMessageToClient(
