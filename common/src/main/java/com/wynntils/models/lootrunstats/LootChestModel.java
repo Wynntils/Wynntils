@@ -33,6 +33,7 @@ import net.minecraftforge.eventbus.api.SubscribeEvent;
 public final class LootChestModel extends Model {
     private static final int LOOT_CHEST_ITEM_COUNT = 27;
 
+    private Storage<Integer> totalCount = new Storage<>(0);
     private Storage<Integer> dryCount = new Storage<>(0);
     private Storage<Integer> dryBoxes = new Storage<>(0);
     private Storage<Integer> dryEmeralds = new Storage<>(0);
@@ -43,6 +44,10 @@ public final class LootChestModel extends Model {
 
     public LootChestModel(ContainerModel containerModel) {
         super(List.of(containerModel));
+    }
+
+    public int getTotalCount() {
+        return totalCount.get();
     }
 
     public int getDryCount() {
@@ -67,6 +72,7 @@ public final class LootChestModel extends Model {
         if (Models.Container.isLootChest(ComponentUtils.getUnformatted(event.getTitle()))) {
             nextExpectedLootContainerId = event.getContainerId();
 
+            totalCount.store(totalCount.get() + 1);
             dryCount.store(dryCount.get() + 1);
             Managers.Config.saveConfig();
         }
