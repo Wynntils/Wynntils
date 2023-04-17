@@ -1,9 +1,21 @@
+## [0.0.3-alpha.4](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.3...v0.0.3-alpha.4) (2023-04-17)
+
+
+### New Features
+
+* Add a discreet marker to the nametag if the user is running Wynntils ([#1506](https://github.com/Wynntils/Artemis/issues/1506)) ([bc374f9](https://github.com/Wynntils/Artemis/commit/bc374f9cadc00792e175d5d038662b512486d2a3))
+
 ## [0.0.3-alpha.3](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.2...v0.0.3-alpha.3) (2023-04-16)
 
 
 ### New Features
 
 * Improve range visualizer ([#1503](https://github.com/Wynntils/Artemis/issues/1503)) ([48e801b](https://github.com/Wynntils/Artemis/commit/48e801be0da9cad7f69d0e221e8d18da31bfc18d))
+
+
+### Miscellaneous Chores
+
+* **release:** v0.0.3-alpha.3 [skip ci] ([f8f77e3](https://github.com/Wynntils/Artemis/commit/f8f77e376066be626b39c78900da715469b30650))
 
 ## [0.0.3-alpha.2](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.1...v0.0.3-alpha.2) (2023-04-16)
 
@@ -47,11 +59,4 @@
 * **release:** v0.0.3-alpha.0 [skip ci] ([2459b08](https://github.com/Wynntils/Artemis/commit/2459b080eb1ae6c1df89b1a30215227148b11ab2))
 * **release:** v0.0.3-alpha.0 [skip ci] ([eb90a3a](https://github.com/Wynntils/Artemis/commit/eb90a3a75fcd2669475f8c112dd61d6f4c1e7149))
 * Trigger version bump after 1.19.4 ([#1507](https://github.com/Wynntils/Artemis/issues/1507)) ([f0486ed](https://github.com/Wynntils/Artemis/commit/f0486ed223f74e6849d1a2f610b284da859d82cf))
-
-## [0.0.2](https://github.com/Wynntils/Artemis/compare/v0.0.2-alpha.485...v0.0.2) (2023-04-16)
-
-
-### Miscellaneous Chores
-
-* **release:** v0.0.2 [skip ci] ([30167a4](https://github.com/Wynntils/Artemis/commit/30167a46d285f67d42aa6f90bcf2be71754f7646))
 
