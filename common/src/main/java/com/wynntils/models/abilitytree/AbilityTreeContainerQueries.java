@@ -110,7 +110,7 @@ public class AbilityTreeContainerQueries {
             for (int slot = 0; slot < items.size(); slot++) {
                 ItemStack itemStack = items.get(slot);
 
-                dump.processItem(itemStack, slot, page, true);
+                dump.processItem(itemStack, page, slot, true);
             }
 
             boolean lastPage = page == Models.AbilityTree.ABILITY_TREE_PAGES;
