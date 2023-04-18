@@ -1,9 +1,21 @@
+## [0.0.3-alpha.9](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.8...v0.0.3-alpha.9) (2023-04-18)
+
+
+### Bug Fixes
+
+* Bulk sell buttons incorrectly appear in blacksmith ([#1504](https://github.com/Wynntils/Artemis/issues/1504)) ([20de32c](https://github.com/Wynntils/Artemis/commit/20de32cf09d1a5c17b0047710d452156348184f9))
+
 ## [0.0.3-alpha.8](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.7...v0.0.3-alpha.8) (2023-04-17)
 
 
 ### New Features
 
 * Separate other mods crashes in chat handling ([#1515](https://github.com/Wynntils/Artemis/issues/1515)) ([6bfd88e](https://github.com/Wynntils/Artemis/commit/6bfd88eda2d0ec8fa09a44cf33e5d4f32dac27f2))
+
+
+### Miscellaneous Chores
+
+* **release:** v0.0.3-alpha.8 [skip ci] ([5f9babe](https://github.com/Wynntils/Artemis/commit/5f9babe5f187e174f8d0bf878349aab8061ac340))
 
 ## [0.0.3-alpha.7](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.6...v0.0.3-alpha.7) (2023-04-17)
 
@@ -41,16 +53,4 @@
 ### Miscellaneous Chores
 
 * **release:** v0.0.3-alpha.5 [skip ci] ([fe99e37](https://github.com/Wynntils/Artemis/commit/fe99e3761bfb8fc9545a9cfa25745fbf7006e94f))
-
-## [0.0.3-alpha.4](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.3...v0.0.3-alpha.4) (2023-04-17)
-
-
-### New Features
-
-* Add a discreet marker to the nametag if the user is running Wynntils ([#1506](https://github.com/Wynntils/Artemis/issues/1506)) ([bc374f9](https://github.com/Wynntils/Artemis/commit/bc374f9cadc00792e175d5d038662b512486d2a3))
-
-
-### Miscellaneous Chores
-
-* **release:** v0.0.3-alpha.4 [skip ci] ([6c9d2fa](https://github.com/Wynntils/Artemis/commit/6c9d2fafa6f1441a2278591f1404f7f3d32e8376))
 
