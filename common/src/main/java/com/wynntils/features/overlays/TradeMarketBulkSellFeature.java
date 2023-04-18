@@ -48,33 +48,28 @@ public class TradeMarketBulkSellFeature extends Feature {
     private static final List<SellButton> sellButtons = new ArrayList<>();
     private static final int BUTTON_WIDTH = 60;
 
+    private boolean buttonsAdded = false;
     private boolean shouldSend = false;
     private int amountToSend = 0;
 
     @SubscribeEvent
-    public void onSellDialogueOpened(ScreenOpenedEvent e) {
+    public void onScreenChanged(ScreenOpenedEvent e) {
         if (!(e.getScreen() instanceof ContainerScreen cs)) return;
         if (!ComponentUtils.getUnformatted(cs.getTitle()).equals(SELL_DIALOGUE_TITLE)) return;
-
-        sellButtons.clear();
-        sellButtons.add(new SellButton(cs.leftPos - BUTTON_WIDTH, cs.topPos, 0, true));
-        if (bulkSell1Amount.get() > 0) {
-            sellButtons.add(new SellButton(cs.leftPos - BUTTON_WIDTH, cs.topPos + 21, bulkSell1Amount.get(), false));
-        }
-        if (bulkSell2Amount.get() > 0) {
-            sellButtons.add(new SellButton(cs.leftPos - BUTTON_WIDTH, cs.topPos + 42, bulkSell2Amount.get(), false));
-        }
-        if (bulkSell3Amount.get() > 0) {
-            sellButtons.add(new SellButton(cs.leftPos - BUTTON_WIDTH, cs.topPos + 63, bulkSell3Amount.get(), false));
-        }
-        sellButtons.forEach(b -> b.active = false);
-        sellButtons.forEach(cs::addRenderableWidget);
+        buttonsAdded = false;
     }
 
     @SubscribeEvent
     public void onSellDialogueUpdated(ContainerSetSlotEvent e) {
         if (!(McUtils.mc().screen instanceof ContainerScreen cs)) return;
         if (!ComponentUtils.getUnformatted(cs.getTitle()).equals(SELL_DIALOGUE_TITLE)) return;
+        if (!ComponentUtils.getUnformatted(
+                        cs.getMenu().getSlot(AMOUNT_ITEM_SLOT).getItem().getHoverName())
+                .equals("Click to Set Amount")) return;
+        if (!buttonsAdded) {
+            addSellButtons(cs);
+            buttonsAdded = true;
+        }
 
         String itemName = getItemName(cs);
         if (itemName == null) {
@@ -115,6 +110,22 @@ public class TradeMarketBulkSellFeature extends Feature {
             }
         }
         return amount;
+    }
+
+    private void addSellButtons(ContainerScreen cs) {
+        sellButtons.clear();
+        sellButtons.add(new SellButton(cs.leftPos - BUTTON_WIDTH, cs.topPos, 0, true));
+        if (bulkSell1Amount.get() > 0) {
+            sellButtons.add(new SellButton(cs.leftPos - BUTTON_WIDTH, cs.topPos + 21, bulkSell1Amount.get(), false));
+        }
+        if (bulkSell2Amount.get() > 0) {
+            sellButtons.add(new SellButton(cs.leftPos - BUTTON_WIDTH, cs.topPos + 42, bulkSell2Amount.get(), false));
+        }
+        if (bulkSell3Amount.get() > 0) {
+            sellButtons.add(new SellButton(cs.leftPos - BUTTON_WIDTH, cs.topPos + 63, bulkSell3Amount.get(), false));
+        }
+        sellButtons.forEach(b -> b.active = false);
+        sellButtons.forEach(cs::addRenderableWidget);
     }
 
     private final class SellButton extends WynntilsButton {
