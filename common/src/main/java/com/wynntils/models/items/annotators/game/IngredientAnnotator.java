@@ -17,7 +17,7 @@ import net.minecraft.world.item.ItemStack;
 
 public final class IngredientAnnotator implements ItemAnnotator {
     private static final Pattern INGREDIENT_PATTERN =
-            Pattern.compile("^§7(.*)§[3567] \\[§([8bde])✫(§8)?✫(§8)?✫§[3567]\\]$");
+            Pattern.compile("^§7(.+?)(?:§[3567])? \\[§([8bde])✫(§8)?✫(§8)?✫§[3567]\\]$");
 
     @Override
     public ItemAnnotation getAnnotation(ItemStack itemStack, StyledText name) {
