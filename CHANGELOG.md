@@ -1,9 +1,21 @@
+## [0.0.3-alpha.10](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.9...v0.0.3-alpha.10) (2023-04-26)
+
+
+### Bug Fixes
+
+* 0 star ingredients don't get highlighted ([#1524](https://github.com/Wynntils/Artemis/issues/1524)) ([ea58f28](https://github.com/Wynntils/Artemis/commit/ea58f28a11ebc25b41bf55eb9cd75f5bfc787aca))
+
 ## [0.0.3-alpha.9](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.8...v0.0.3-alpha.9) (2023-04-18)
 
 
 ### Bug Fixes
 
 * Bulk sell buttons incorrectly appear in blacksmith ([#1504](https://github.com/Wynntils/Artemis/issues/1504)) ([20de32c](https://github.com/Wynntils/Artemis/commit/20de32cf09d1a5c17b0047710d452156348184f9))
+
+
+### Miscellaneous Chores
+
+* **release:** v0.0.3-alpha.9 [skip ci] ([893cef8](https://github.com/Wynntils/Artemis/commit/893cef8aa4a7c46e008ebd6c7aa9ea8f820876b6))
 
 ## [0.0.3-alpha.8](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.7...v0.0.3-alpha.8) (2023-04-17)
 
@@ -40,17 +52,4 @@
 ### Miscellaneous Chores
 
 * **release:** v0.0.3-alpha.6 [skip ci] ([adcdfad](https://github.com/Wynntils/Artemis/commit/adcdfadcfc673d3f773678c96c7c5439e5d78d0a))
-
-## [0.0.3-alpha.5](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.4...v0.0.3-alpha.5) (2023-04-17)
-
-
-### Bug Fixes
-
-* Try improving resilience on coordinate pattern ([#1516](https://github.com/Wynntils/Artemis/issues/1516)) ([d559bb7](https://github.com/Wynntils/Artemis/commit/d559bb75e8c3f957d53b159f65feb6ae5a98e9ee))
-* Try to detect a possible cause of null by verifying Wynncraft data ([#1517](https://github.com/Wynntils/Artemis/issues/1517)) ([72359db](https://github.com/Wynntils/Artemis/commit/72359dba343665e411682ddad2d76518929d5bb6))
-
-
-### Miscellaneous Chores
-
-* **release:** v0.0.3-alpha.5 [skip ci] ([fe99e37](https://github.com/Wynntils/Artemis/commit/fe99e3761bfb8fc9545a9cfa25745fbf7006e94f))
 
