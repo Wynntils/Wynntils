@@ -26,7 +26,7 @@ import com.wynntils.features.chat.ChatTabsFeature;
 import com.wynntils.features.chat.ChatTimestampFeature;
 import com.wynntils.features.chat.DeathCoordinatesFeature;
 import com.wynntils.features.chat.DialogueOptionOverrideFeature;
-import com.wynntils.features.chat.InfoMessageFilterFeature;
+import com.wynntils.features.chat.MessageFilterFeature;
 import com.wynntils.features.chat.TradeMarketAutoOpenChatFeature;
 import com.wynntils.features.chat.TradeMarketPriceConversionFeature;
 import com.wynntils.features.combat.AbbreviateMobHealthFeature;
@@ -207,7 +207,6 @@ public final class FeatureManager extends Manager {
         registerFeature(new HealthPotionBlockerFeature());
         registerFeature(new HorseMountFeature());
         registerFeature(new InfoBoxFeature());
-        registerFeature(new InfoMessageFilterFeature());
         registerFeature(new IngredientPouchHotkeyFeature());
         registerFeature(new InventoryEmeraldCountFeature());
         registerFeature(new InventoryRedirectFeature());
@@ -222,6 +221,7 @@ public final class FeatureManager extends Manager {
         registerFeature(new LobbyUptimeFeature());
         registerFeature(new LowHealthVignetteFeature());
         registerFeature(new MapFeature());
+        registerFeature(new MessageFilterFeature());
         registerFeature(new MinimapFeature());
         registerFeature(new MobTotemTrackingFeature());
         registerFeature(new MythicBlockerFeature());
