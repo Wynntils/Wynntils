@@ -201,12 +201,12 @@ public final class EmeraldModel extends Model {
         }
 
         for (int i = 0; i < containerStop; i++) {
-            ItemStack is = items.get(i);
-            adjustBalance(is, 1, false);
-            // We need to make a map of the items in the container with emerald values for when the duplicate SetSlot
-            // event is received
-            if (getAmountForItemStack(is) > 0) {
-                handledEmeraldStacks.put(i, is);
+            ItemStack itemStack = items.get(i);
+            adjustBalance(itemStack, 1, false);
+            // We need to make a map of the items in the container with emerald values
+            // When the duplicate SetSlot event is received, this is read and processed properly
+            if (getAmountForItemStack(itemStack) > 0) {
+                handledEmeraldStacks.put(i, itemStack);
             }
         }
         for (int i = containerStop; i < items.size(); i++) {
