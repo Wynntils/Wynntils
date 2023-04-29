@@ -142,6 +142,7 @@ public final class EmeraldModel extends Model {
 
         inventoryEmeralds = 0;
         containerEmeralds = 0;
+        handledEmeraldStacks = new HashMap<>();
 
         // Rescan inventory at login
         Inventory inventory = McUtils.player().getInventory();
