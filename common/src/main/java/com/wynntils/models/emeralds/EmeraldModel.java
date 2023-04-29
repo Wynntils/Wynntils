@@ -156,13 +156,13 @@ public final class EmeraldModel extends Model {
         if (pouchContainerId != -1 && !isInventory) return;
 
         // Subtract the outgoing object from our balance
-        ItemStack outgoingItemStack = event.getContainer().getItem(event.getSlot());
+        ItemStack oldItemStack = event.getContainer().getItem(event.getSlot());
         if (handledEmeraldStacks.containsKey(event.getSlot())) {
-            // We've already handled this stack, replace the outgoingItemStack with the one we've already seen
+            // We've already handled this stack, replace the oldItemStack with the one we've already seen
             // to force the balance to subtract correctly
-            outgoingItemStack = handledEmeraldStacks.get(event.getSlot());
+            oldItemStack = handledEmeraldStacks.get(event.getSlot());
         }
-        adjustBalance(outgoingItemStack, -1, isInventory);
+        adjustBalance(oldItemStack, -1, isInventory);
         // And add the incoming value
         adjustBalance(event.getItemStack(), 1, isInventory);
     }
