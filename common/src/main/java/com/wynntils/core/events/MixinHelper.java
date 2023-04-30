@@ -6,6 +6,7 @@ package com.wynntils.core.events;
 
 import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.components.Managers;
+import com.wynntils.utils.mc.McUtils;
 import net.minecraftforge.eventbus.api.Event;
 
 public final class MixinHelper {
@@ -15,6 +16,7 @@ public final class MixinHelper {
 
     public static void post(Event event) {
         if (!onWynncraft()) return;
+        if (McUtils.player() == null) return;
 
         WynntilsMod.postEvent(event);
     }
