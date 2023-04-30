@@ -1,9 +1,21 @@
+## [0.0.3-alpha.13](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.12...v0.0.3-alpha.13) (2023-04-30)
+
+
+### Bug Fixes
+
+* initial opening of container incorrectly counts emeralds ([#1528](https://github.com/Wynntils/Artemis/issues/1528)) ([334f921](https://github.com/Wynntils/Artemis/commit/334f9218397e2b1cf160f7a40427063f0a7bf61d))
+
 ## [0.0.3-alpha.12](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.11...v0.0.3-alpha.12) (2023-04-30)
 
 
 ### Bug Fixes
 
 * Do not post events if player is null ([#1522](https://github.com/Wynntils/Artemis/issues/1522)) ([c8a7a41](https://github.com/Wynntils/Artemis/commit/c8a7a410361cf94aafe978a8bab7695a3fe82127))
+
+
+### Miscellaneous Chores
+
+* **release:** v0.0.3-alpha.12 [skip ci] ([f7f88aa](https://github.com/Wynntils/Artemis/commit/f7f88aab904400745e5c83e7e7f1a4de2768d141))
 
 ## [0.0.3-alpha.11](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.10...v0.0.3-alpha.11) (2023-04-26)
 
@@ -40,16 +52,4 @@
 ### Miscellaneous Chores
 
 * **release:** v0.0.3-alpha.9 [skip ci] ([893cef8](https://github.com/Wynntils/Artemis/commit/893cef8aa4a7c46e008ebd6c7aa9ea8f820876b6))
-
-## [0.0.3-alpha.8](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.7...v0.0.3-alpha.8) (2023-04-17)
-
-
-### New Features
-
-* Separate other mods crashes in chat handling ([#1515](https://github.com/Wynntils/Artemis/issues/1515)) ([6bfd88e](https://github.com/Wynntils/Artemis/commit/6bfd88eda2d0ec8fa09a44cf33e5d4f32dac27f2))
-
-
-### Miscellaneous Chores
-
-* **release:** v0.0.3-alpha.8 [skip ci] ([5f9babe](https://github.com/Wynntils/Artemis/commit/5f9babe5f187e174f8d0bf878349aab8061ac340))
 
