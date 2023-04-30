@@ -27,16 +27,16 @@ public class MessageFilterFeature extends Feature {
     // List of Pair<Foreground, Background>
 
     private static final List<Pair<Pattern, Pattern>> WELCOME = List.of(
-            Pair.of(Pattern.compile("^§7Loading Resource Pack...$"),
+            Pair.of(Pattern.compile("^§7Loading Resource Pack\\.\\.\\.$"),
                     null),
-            Pair.of(Pattern.compile("^§6Thank you for using the WynnPack. Enjoy the game!$"),
+            Pair.of(Pattern.compile("^§6Thank you for using the WynnPack\\. Enjoy the game!$"),
                     null),
             Pair.of(Pattern.compile("^§cSelect a character! Each character is saved individually across all servers, you can come back at any time with /class and select another character!$"),
                     null),
             Pair.of(Pattern.compile("^ +§6§lWelcome to Wynncraft!$"),
                     Pattern.compile("^ +§6§lWelcome to Wynncraft!$")),
-            Pair.of(Pattern.compile("^ +§fplay.wynncraft.com §7-/-§f wynncraft.com$"),
-                    Pattern.compile("^ +§fplay.wynncraft.com §7-/-§f wynncraft.com$"))
+            Pair.of(Pattern.compile("^ +§fplay\\.wynncraft\\.com §7-/-§f wynncraft\\.com$"),
+                    Pattern.compile("^ +§fplay\\.wynncraft\\.com §7-/-§f wynncraft\\.com$"))
     );
 
     private static final List<Pair<Pattern, Pattern>> SYSTEM_INFO = List.of(
@@ -65,7 +65,7 @@ public class MessageFilterFeature extends Feature {
         CodedString msg = e.getOriginalCodedString();
         MessageType messageType = e.getMessageType();
 
-        System.out.println(msg);
+        System.out.println(msg); // TODO: removeme
 
         if (hideWelcome.get()) {
             for (Pair<Pattern, Pattern> pair : WELCOME) {
