@@ -17,8 +17,10 @@ import com.wynntils.models.worlds.event.WorldStateEvent;
 import com.wynntils.models.worlds.type.WorldState;
 import com.wynntils.utils.mc.McUtils;
 import com.wynntils.utils.wynn.WynnUtils;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
+import java.util.Map;
 import java.util.Optional;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -41,6 +43,7 @@ public final class EmeraldModel extends Model {
     private int inventoryEmeralds = 0;
     private int containerEmeralds = 0;
     private int pouchContainerId = -1;
+    private Map<Integer, ItemStack> handledEmeraldStacks = new HashMap<>();
 
     public EmeraldModel(ItemModel itemModel) {
         super(List.of(itemModel));
@@ -139,6 +142,7 @@ public final class EmeraldModel extends Model {
 
         inventoryEmeralds = 0;
         containerEmeralds = 0;
+        handledEmeraldStacks = new HashMap<>();
 
         // Rescan inventory at login
         Inventory inventory = McUtils.player().getInventory();
@@ -153,7 +157,13 @@ public final class EmeraldModel extends Model {
         if (pouchContainerId != -1 && !isInventory) return;
 
         // Subtract the outgoing object from our balance
-        adjustBalance(event.getContainer().getItem(event.getSlot()), -1, isInventory);
+        ItemStack oldItemStack = event.getContainer().getItem(event.getSlot());
+        if (handledEmeraldStacks.containsKey(event.getSlot())) {
+            // We've already handled this stack, replace the oldItemStack with the one we've already seen
+            // to force the balance to subtract correctly
+            oldItemStack = handledEmeraldStacks.get(event.getSlot());
+        }
+        adjustBalance(oldItemStack, -1, isInventory);
         // And add the incoming value
         adjustBalance(event.getItemStack(), 1, isInventory);
     }
@@ -180,6 +190,7 @@ public final class EmeraldModel extends Model {
 
         inventoryEmeralds = 0;
         containerEmeralds = 0;
+        handledEmeraldStacks = new HashMap<>();
 
         List<ItemStack> items = event.getItems();
         if (event.getContainerId() == 0) {
@@ -191,7 +202,13 @@ public final class EmeraldModel extends Model {
         }
 
         for (int i = 0; i < containerStop; i++) {
-            adjustBalance(items.get(i), 1, false);
+            ItemStack itemStack = items.get(i);
+            adjustBalance(itemStack, 1, false);
+            // We need to make a map of the items in the container with emerald values
+            // When the duplicate SetSlot event is received, this is read and processed properly
+            if (getAmountForItemStack(itemStack) > 0) {
+                handledEmeraldStacks.put(i, itemStack);
+            }
         }
         for (int i = containerStop; i < items.size(); i++) {
             adjustBalance(items.get(i), 1, true);
@@ -204,15 +221,17 @@ public final class EmeraldModel extends Model {
     }
 
     private void adjustBalance(ItemStack itemStack, int multiplier, boolean isInventory) {
-        Optional<EmeraldValuedItemProperty> valuedItemOpt =
-                Models.Item.asWynnItemPropery(itemStack, EmeraldValuedItemProperty.class);
-        if (valuedItemOpt.isEmpty()) return;
-
-        int adjustValue = valuedItemOpt.get().getEmeraldValue() * multiplier;
+        int adjustValue = getAmountForItemStack(itemStack) * multiplier;
         if (isInventory) {
             inventoryEmeralds += adjustValue;
         } else {
             containerEmeralds += adjustValue;
         }
+    }
+
+    private int getAmountForItemStack(ItemStack itemStack) {
+        Optional<EmeraldValuedItemProperty> valuedItemOpt =
+                Models.Item.asWynnItemPropery(itemStack, EmeraldValuedItemProperty.class);
+        return valuedItemOpt.map(EmeraldValuedItemProperty::getEmeraldValue).orElse(0);
     }
 }
