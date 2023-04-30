@@ -1,9 +1,21 @@
+## [0.0.3-alpha.12](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.11...v0.0.3-alpha.12) (2023-04-30)
+
+
+### Bug Fixes
+
+* Do not post events if player is null ([#1522](https://github.com/Wynntils/Artemis/issues/1522)) ([c8a7a41](https://github.com/Wynntils/Artemis/commit/c8a7a410361cf94aafe978a8bab7695a3fe82127))
+
 ## [0.0.3-alpha.11](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.10...v0.0.3-alpha.11) (2023-04-26)
 
 
 ### Bug Fixes
 
 * Selecting different chat tabs does not remove focus from input ([#1526](https://github.com/Wynntils/Artemis/issues/1526)) ([4958598](https://github.com/Wynntils/Artemis/commit/4958598c0dd38d2b321b3e1b9beb5c3acebca994))
+
+
+### Miscellaneous Chores
+
+* **release:** v0.0.3-alpha.11 [skip ci] ([46b3f88](https://github.com/Wynntils/Artemis/commit/46b3f88da97b3ef0afa03173787ac9636555b174))
 
 ## [0.0.3-alpha.10](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.9...v0.0.3-alpha.10) (2023-04-26)
 
@@ -40,16 +52,4 @@
 ### Miscellaneous Chores
 
 * **release:** v0.0.3-alpha.8 [skip ci] ([5f9babe](https://github.com/Wynntils/Artemis/commit/5f9babe5f187e174f8d0bf878349aab8061ac340))
-
-## [0.0.3-alpha.7](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.6...v0.0.3-alpha.7) (2023-04-17)
-
-
-### Bug Fixes
-
-* Re-add the wynncraft join button after title screen re-init ([#1518](https://github.com/Wynntils/Artemis/issues/1518)) ([ab72744](https://github.com/Wynntils/Artemis/commit/ab727447da98e01fed3fdc11aa48a39ee957e17a))
-
-
-### Miscellaneous Chores
-
-* **release:** v0.0.3-alpha.7 [skip ci] ([0a8fb59](https://github.com/Wynntils/Artemis/commit/0a8fb59c0c6150fe1fc240e45fc1ddaa34677dcf))
 
