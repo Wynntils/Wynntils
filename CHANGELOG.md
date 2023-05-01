@@ -1,9 +1,21 @@
+## [0.0.3-alpha.17](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.16...v0.0.3-alpha.17) (2023-05-01)
+
+
+### Bug Fixes
+
+* Fix profession level up messages not parsing every time ([#1533](https://github.com/Wynntils/Artemis/issues/1533)) ([3d61a72](https://github.com/Wynntils/Artemis/commit/3d61a72560fda7a4579d67a2329e01dd81f2a214))
+
 ## [0.0.3-alpha.16](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.15...v0.0.3-alpha.16) (2023-05-01)
 
 
 ### Bug Fixes
 
 * Don't render wynntils cosmetics if WynntilsCosmeticsFeature is disabled ([#1532](https://github.com/Wynntils/Artemis/issues/1532)) ([b477998](https://github.com/Wynntils/Artemis/commit/b477998674266d028e9d95ec5e979a252a944521))
+
+
+### Miscellaneous Chores
+
+* **release:** v0.0.3-alpha.16 [skip ci] ([8fe5574](https://github.com/Wynntils/Artemis/commit/8fe5574ba9e015a7f0b00d88edc0627836852852))
 
 ## [0.0.3-alpha.15](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.14...v0.0.3-alpha.15) (2023-05-01)
 
@@ -40,16 +52,4 @@
 ### Miscellaneous Chores
 
 * **release:** v0.0.3-alpha.13 [skip ci] ([90424d6](https://github.com/Wynntils/Artemis/commit/90424d6d78153dafcadeed5175e01999e28a0f30))
-
-## [0.0.3-alpha.12](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.11...v0.0.3-alpha.12) (2023-04-30)
-
-
-### Bug Fixes
-
-* Do not post events if player is null ([#1522](https://github.com/Wynntils/Artemis/issues/1522)) ([c8a7a41](https://github.com/Wynntils/Artemis/commit/c8a7a410361cf94aafe978a8bab7695a3fe82127))
-
-
-### Miscellaneous Chores
-
-* **release:** v0.0.3-alpha.12 [skip ci] ([f7f88aa](https://github.com/Wynntils/Artemis/commit/f7f88aab904400745e5c83e7e7f1a4de2768d141))
 
