@@ -159,7 +159,9 @@ public final class ComponentUtils {
             return "";
         }
 
-        return text.getMatcher(COLOR_CODE_PATTERN).replaceAll("");
+        // We replace color codes with a reset
+        // because color codes reset the non-color formatting codes
+        return text.getMatcher(COLOR_CODE_PATTERN).replaceAll("§r");
     }
 
     public static CodedString getLastPartCodes(CodedString lastPart) {

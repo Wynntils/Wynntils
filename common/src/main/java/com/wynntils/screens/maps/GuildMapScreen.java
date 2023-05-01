@@ -154,11 +154,7 @@ public final class GuildMapScreen extends AbstractMapScreen {
 
         RenderSystem.enableDepthTest();
 
-        renderMap(
-                poseStack,
-                Managers.Feature.getFeatureInstance(GuildMapFeature.class)
-                        .renderUsingLinear
-                        .get());
+        renderMap(poseStack);
 
         RenderUtils.enableScissor(
                 (int) (renderX + renderedBorderXOffset), (int) (renderY + renderedBorderYOffset), (int) mapWidth, (int)

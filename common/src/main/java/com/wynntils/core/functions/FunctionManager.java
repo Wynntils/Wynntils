@@ -473,8 +473,9 @@ public final class FunctionManager extends Manager {
         registerFunction(new SpellFunctions.ShamanTotemStateFunction());
         registerFunction(new SpellFunctions.ShamanTotemTimeLeftFunction());
 
-        registerFunction(new SocialFunctions.OnlineFriendsFunction());
-        registerFunction(new SocialFunctions.OnlinePartyMembersFunction());
+        registerFunction(new SocialFunctions.FriendsFunction());
+        registerFunction(new SocialFunctions.PartyMembersFunction());
+        registerFunction(new SocialFunctions.PartyLeaderFunction());
 
         registerFunction(new WarFunctions.AuraTimerFunction());
     }

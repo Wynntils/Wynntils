@@ -34,8 +34,8 @@ public class ProfessionModel extends Model {
     private static final Pattern PROFESSION_CRAFT_PATTERN = Pattern.compile(
             "(§dx[\\d\\.]+ §r)?§7\\[\\+(§r§d)?(?<gain>\\d+) §r§f[ⓀⒸⒷⒿⒺⒹⓁⒶⒼⒻⒾⒽ] §r§7(?<name>.+) XP\\] §r§6\\[(?<current>\\d+)%\\]");
 
-    private static final Pattern PROFESSION_LEVELUP_PATTERN = Pattern.compile(
-            "§e                   You are now level (?<level>\\d+) in §r§f[ⓀⒸⒷⒿⒺⒹⓁⒶⒼⒻⒾⒽ]§r§e (?<name>.+)");
+    private static final Pattern PROFESSION_LEVELUP_PATTERN =
+            Pattern.compile("§e\\s+You are now level (?<level>\\d+) in §r§f[ⓀⒸⒷⒿⒺⒹⓁⒶⒼⒻⒾⒽ]§r§e (?<name>.+)");
 
     private static final Pattern INFO_MENU_PROFESSION_LORE_PATTERN =
             Pattern.compile("§6- §r§7[ⓀⒸⒷⒿⒺⒹⓁⒶⒼⒻⒾⒽ] Lv. (\\d+) (.+)§r§8 \\[([\\d.]+)%\\]");
@@ -73,6 +73,7 @@ public class ProfessionModel extends Model {
                     ProfessionType.fromString(matcher.group("name")),
                     Float.parseFloat(matcher.group("current")),
                     Float.parseFloat(matcher.group("gain")));
+            return;
         }
 
         matcher = codedMessage.getMatcher(PROFESSION_LEVELUP_PATTERN);
