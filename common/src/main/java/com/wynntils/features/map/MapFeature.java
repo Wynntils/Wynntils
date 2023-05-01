@@ -82,9 +82,6 @@ public class MapFeature extends Feature {
     public final Config<CustomColor> pointerColor = new Config<>(new CustomColor(1f, 1f, 1f, 1f));
 
     @RegisterConfig
-    public final Config<Boolean> renderUsingLinear = new Config<>(true);
-
-    @RegisterConfig
     public final Config<Float> playerPointerScale = new Config<>(1.5f);
 
     @RegisterConfig
