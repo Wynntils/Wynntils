@@ -1,9 +1,21 @@
+## [0.0.3-alpha.16](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.15...v0.0.3-alpha.16) (2023-05-01)
+
+
+### Bug Fixes
+
+* Don't render wynntils cosmetics if WynntilsCosmeticsFeature is disabled ([#1532](https://github.com/Wynntils/Artemis/issues/1532)) ([b477998](https://github.com/Wynntils/Artemis/commit/b477998674266d028e9d95ec5e979a252a944521))
+
 ## [0.0.3-alpha.15](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.14...v0.0.3-alpha.15) (2023-05-01)
 
 
 ### Bug Fixes
 
 * Render outline text shadow correctly when the color strips other formatting ([#1531](https://github.com/Wynntils/Artemis/issues/1531)) ([fd745c0](https://github.com/Wynntils/Artemis/commit/fd745c0abfe2e6b68cb3d69366e07ccf3bfc26fb))
+
+
+### Miscellaneous Chores
+
+* **release:** v0.0.3-alpha.15 [skip ci] ([5133409](https://github.com/Wynntils/Artemis/commit/5133409c8253a28a77328b4fc751094d61e7a7dc))
 
 ## [0.0.3-alpha.14](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.13...v0.0.3-alpha.14) (2023-05-01)
 
@@ -40,16 +52,4 @@
 ### Miscellaneous Chores
 
 * **release:** v0.0.3-alpha.12 [skip ci] ([f7f88aa](https://github.com/Wynntils/Artemis/commit/f7f88aab904400745e5c83e7e7f1a4de2768d141))
-
-## [0.0.3-alpha.11](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.10...v0.0.3-alpha.11) (2023-04-26)
-
-
-### Bug Fixes
-
-* Selecting different chat tabs does not remove focus from input ([#1526](https://github.com/Wynntils/Artemis/issues/1526)) ([4958598](https://github.com/Wynntils/Artemis/commit/4958598c0dd38d2b321b3e1b9beb5c3acebca994))
-
-
-### Miscellaneous Chores
-
-* **release:** v0.0.3-alpha.11 [skip ci] ([46b3f88](https://github.com/Wynntils/Artemis/commit/46b3f88da97b3ef0afa03173787ac9636555b174))
 
