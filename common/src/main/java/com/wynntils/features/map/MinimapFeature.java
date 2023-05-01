@@ -74,9 +74,6 @@ public class MinimapFeature extends Feature {
         public final Config<Boolean> followPlayerRotation = new Config<>(true);
 
         @RegisterConfig
-        public final Config<Boolean> renderUsingLinear = new Config<>(true);
-
-        @RegisterConfig
         public final Config<CustomColor> pointerColor = new Config<>(new CustomColor(1f, 1f, 1f, 1f));
 
         @RegisterConfig
@@ -178,8 +175,7 @@ public class MinimapFeature extends Feature {
                         textureZ,
                         width * extraFactor,
                         height * extraFactor,
-                        this.scale.get(),
-                        this.renderUsingLinear.get());
+                        this.scale.get());
             }
 
             // disable rotation if necessary
