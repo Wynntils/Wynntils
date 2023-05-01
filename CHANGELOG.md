@@ -1,9 +1,21 @@
+## [0.0.3-alpha.15](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.14...v0.0.3-alpha.15) (2023-05-01)
+
+
+### Bug Fixes
+
+* Render outline text shadow correctly when the color strips other formatting ([#1531](https://github.com/Wynntils/Artemis/issues/1531)) ([fd745c0](https://github.com/Wynntils/Artemis/commit/fd745c0abfe2e6b68cb3d69366e07ccf3bfc26fb))
+
 ## [0.0.3-alpha.14](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.13...v0.0.3-alpha.14) (2023-05-01)
 
 
 ### New Features
 
 * social function improvements ([#1529](https://github.com/Wynntils/Artemis/issues/1529)) ([04974ad](https://github.com/Wynntils/Artemis/commit/04974ad54b81cae7140e9714df42830510d2433a))
+
+
+### Miscellaneous Chores
+
+* **release:** v0.0.3-alpha.14 [skip ci] ([b4aed00](https://github.com/Wynntils/Artemis/commit/b4aed001ce8cb1a1790e0e601bf901cb6abdb1d0))
 
 ## [0.0.3-alpha.13](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.12...v0.0.3-alpha.13) (2023-04-30)
 
@@ -40,16 +52,4 @@
 ### Miscellaneous Chores
 
 * **release:** v0.0.3-alpha.11 [skip ci] ([46b3f88](https://github.com/Wynntils/Artemis/commit/46b3f88da97b3ef0afa03173787ac9636555b174))
-
-## [0.0.3-alpha.10](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.9...v0.0.3-alpha.10) (2023-04-26)
-
-
-### Bug Fixes
-
-* 0 star ingredients don't get highlighted ([#1524](https://github.com/Wynntils/Artemis/issues/1524)) ([ea58f28](https://github.com/Wynntils/Artemis/commit/ea58f28a11ebc25b41bf55eb9cd75f5bfc787aca))
-
-
-### Miscellaneous Chores
-
-* **release:** v0.0.3-alpha.10 [skip ci] ([5789d20](https://github.com/Wynntils/Artemis/commit/5789d20293ec66cc45524efe68c030fd7eb327d6))
 
