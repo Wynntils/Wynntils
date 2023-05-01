@@ -10,6 +10,7 @@ import net.minecraft.client.player.AbstractClientPlayer;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.entity.EntityRenderDispatcher;
 import net.minecraft.network.chat.Component;
+import net.minecraft.world.entity.player.Player;
 import net.minecraftforge.eventbus.api.Cancelable;
 
 @Cancelable
@@ -23,6 +24,11 @@ public class PlayerNametagRenderEvent extends EntityNameTagRenderEvent {
             EntityRenderDispatcher entityRenderDispatcher,
             Font font) {
         super(entity, displayName, poseStack, buffer, packedLight, entityRenderDispatcher, font, 0f);
+    }
+
+    @Override
+    public Player getEntity() {
+        return (Player) super.getEntity();
     }
 
     @Override

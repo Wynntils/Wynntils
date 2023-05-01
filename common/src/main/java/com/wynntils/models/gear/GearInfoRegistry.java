@@ -199,6 +199,9 @@ public class GearInfoRegistry {
             }
 
             GearType type = parseType(json);
+            if (type == null) {
+                throw new RuntimeException("Invalid Wynncraft data: item has no gear type");
+            }
             GearTier tier = GearTier.fromString(json.get("tier").getAsString());
             int powderSlots = JsonUtils.getNullableJsonInt(json, "sockets");
 
@@ -283,7 +286,7 @@ public class GearInfoRegistry {
         }
 
         private ItemMaterial parseMaterial(JsonObject json, GearType type) {
-            return type.isArmour() ? parseArmorType(json, type) : parseOtherMaterial(json, type);
+            return type.isArmor() ? parseArmorType(json, type) : parseOtherMaterial(json, type);
         }
 
         private ItemMaterial parseArmorType(JsonObject json, GearType gearType) {

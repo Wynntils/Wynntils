@@ -194,6 +194,8 @@
   "feature.wynntils.customNametagRenderer.name": "Nametag Rendering",
   "feature.wynntils.customNametagRenderer.showGearOnHover.description": "Should a hovered player's gears' name be rendered in the nametag?",
   "feature.wynntils.customNametagRenderer.showGearOnHover.name": "Show Player's Gear on Hover",
+  "feature.wynntils.customNametagRenderer.showWynntilsMarker.description": "Should a player's nametag have a marker indicating that they are using Wynntils?",
+  "feature.wynntils.customNametagRenderer.showWynntilsMarker.name": "Show Wynntils Marker on Nametag",
   "feature.wynntils.dataStorage.dryBoxes.description": "Dry Boxes for Function variable",
   "feature.wynntils.dataStorage.dryBoxes.name": "Dry Boxes",
   "feature.wynntils.dataStorage.dryCount.description": "Dry Count for Function variable",

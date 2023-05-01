@@ -17,6 +17,7 @@ import com.wynntils.handlers.chat.event.ChatMessageReceivedEvent;
 import com.wynntils.handlers.chat.type.RecipientType;
 import com.wynntils.mc.event.ChatScreenKeyTypedEvent;
 import com.wynntils.mc.event.ClientsideMessageEvent;
+import com.wynntils.mc.event.ScreenFocusEvent;
 import com.wynntils.mc.event.ScreenInitEvent;
 import com.wynntils.mc.event.ScreenRenderEvent;
 import com.wynntils.models.worlds.event.WorldStateEvent;
@@ -27,6 +28,7 @@ import com.wynntils.utils.mc.KeyboardUtils;
 import com.wynntils.utils.mc.McUtils;
 import java.util.ArrayList;
 import java.util.List;
+import net.minecraft.client.gui.components.events.GuiEventListener;
 import net.minecraft.client.gui.screens.ChatScreen;
 import net.minecraftforge.eventbus.api.EventPriority;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
@@ -84,6 +86,18 @@ public class ChatTabsFeature extends Feature {
                 chatScreen.addRenderableWidget(new ChatTabButton(xOffset + 2, chatScreen.height - 35, 40, 13, chatTab));
                 xOffset += 43;
             }
+        }
+    }
+
+    @SubscribeEvent
+    public void onScreenFocusChange(ScreenFocusEvent event) {
+        if (!(event.getScreen() instanceof ChatScreen)) return;
+
+        GuiEventListener guiEventListener = event.getGuiEventListener();
+
+        // These should not be focused
+        if (guiEventListener instanceof ChatTabButton || guiEventListener instanceof ChatTabAddButton) {
+            event.setCanceled(true);
         }
     }
 
