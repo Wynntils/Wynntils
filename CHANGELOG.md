@@ -1,9 +1,21 @@
+## [0.0.3-alpha.18](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.17...v0.0.3-alpha.18) (2023-05-01)
+
+
+### Bug Fixes
+
+* Refactor map rendering to fix map rendering issues with Sodium (black lines) ([#1534](https://github.com/Wynntils/Artemis/issues/1534)) ([8ff481d](https://github.com/Wynntils/Artemis/commit/8ff481d6148b33de044a9f29481cd579c2a21ad7))
+
 ## [0.0.3-alpha.17](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.16...v0.0.3-alpha.17) (2023-05-01)
 
 
 ### Bug Fixes
 
 * Fix profession level up messages not parsing every time ([#1533](https://github.com/Wynntils/Artemis/issues/1533)) ([3d61a72](https://github.com/Wynntils/Artemis/commit/3d61a72560fda7a4579d67a2329e01dd81f2a214))
+
+
+### Miscellaneous Chores
+
+* **release:** v0.0.3-alpha.17 [skip ci] ([312729d](https://github.com/Wynntils/Artemis/commit/312729d254bc56cac59dbddbaf03f9f1b56e0b1b))
 
 ## [0.0.3-alpha.16](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.15...v0.0.3-alpha.16) (2023-05-01)
 
@@ -40,16 +52,4 @@
 ### Miscellaneous Chores
 
 * **release:** v0.0.3-alpha.14 [skip ci] ([b4aed00](https://github.com/Wynntils/Artemis/commit/b4aed001ce8cb1a1790e0e601bf901cb6abdb1d0))
-
-## [0.0.3-alpha.13](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.12...v0.0.3-alpha.13) (2023-04-30)
-
-
-### Bug Fixes
-
-* initial opening of container incorrectly counts emeralds ([#1528](https://github.com/Wynntils/Artemis/issues/1528)) ([334f921](https://github.com/Wynntils/Artemis/commit/334f9218397e2b1cf160f7a40427063f0a7bf61d))
-
-
-### Miscellaneous Chores
-
-* **release:** v0.0.3-alpha.13 [skip ci] ([90424d6](https://github.com/Wynntils/Artemis/commit/90424d6d78153dafcadeed5175e01999e28a0f30))
 
