@@ -13,6 +13,7 @@ import com.wynntils.core.text.CodedString;
 import com.wynntils.handlers.chat.event.ChatMessageReceivedEvent;
 import com.wynntils.handlers.chat.type.MessageType;
 import com.wynntils.utils.type.Pair;
+import net.minecraft.ChatFormatting;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 
 import java.util.List;
@@ -48,11 +49,6 @@ public class MessageFilterFeature extends Feature {
                     Pattern.compile("^(§r§8)?\\[!\\] Congratulations to §r.* for reaching (combat )?§r§7level .*!$"))
     );
 
-    private static final List<Pair<Pattern, Pattern>> PARTY_FINDER = List.of(
-            Pair.of(Pattern.compile("§5Party Finder:§r§d Hey [a-zA-Z0-9_]{2,16}, over here! Join the (?:[a-zA-Z'§ ]+) queue and match up with §r§e\\d+ other players§r§d!"),
-                    null)
-    );
-
     @RegisterConfig
     public final Config<Boolean> hideWelcome = new Config<>(true);
 
@@ -86,7 +82,9 @@ public class MessageFilterFeature extends Feature {
         }
 
         if (hidePartyFinder.get()) {
-            e.setCanceled(processFilter(msg, messageType, PARTY_FINDER));
+            // §5Party Finder:§r§d Hey v8j, over here! Join the §r§bThe Nameless Anomaly§r§d queue and match up with §r§e3 other players§r§d!
+            // Matches until the username
+            e.setCanceled(msg.startsWith(ChatFormatting.DARK_PURPLE + "Party Finder:" + ChatFormatting.RESET + ChatFormatting.LIGHT_PURPLE+ " Hey "));
             return;
         }
     }
