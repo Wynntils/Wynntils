@@ -32,6 +32,13 @@ public abstract class SetSlotEvent extends Event {
         return itemStack;
     }
 
+    /**
+     * Note: This get's called after {@link ContainerSetContentEvent.Pre} and before {@link ContainerSetContentEvent.Post}
+     * This event is also commonly confused with {@link ContainerSetSlotEvent}
+     * If you are experiencing "duplication" of items,
+     * seeing the same items being set multiple times,
+     * when listening to both of these events, consider using {@link ContainerSetContentEvent.Post}
+     */
     public static class Pre extends SetSlotEvent {
         public Pre(Container container, int slot, ItemStack itemStack) {
             super(container, slot, itemStack);
@@ -39,8 +46,15 @@ public abstract class SetSlotEvent extends Event {
     }
 
     public static class Post extends SetSlotEvent {
-        public Post(Container container, int slot, ItemStack item) {
-            super(container, slot, item);
+        private final ItemStack oldItemStack;
+
+        public Post(Container container, int slot, ItemStack newItemStack, ItemStack oldItemStack) {
+            super(container, slot, newItemStack);
+            this.oldItemStack = oldItemStack;
+        }
+
+        public ItemStack getOldItemStack() {
+            return oldItemStack;
         }
     }
 }
