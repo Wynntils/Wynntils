@@ -144,7 +144,7 @@ public class CustomRenderType extends RenderType {
                     CompositeState.builder()
                             .setShaderState(POSITION_COLOR_TEX_SHADER)
                             .setTextureState(new TextureStateShard(resource, false, false))
-                            .setTransparencyState(CustomRenderStateShard.SEMI_TRANSPARENT_TRANSPARENCY)
+                            .setTransparencyState(CustomRenderStateShard.NO_TRANSPARENCY)
                             .setWriteMaskState(COLOR_WRITE)
                             .createCompositeState(false)));
 
