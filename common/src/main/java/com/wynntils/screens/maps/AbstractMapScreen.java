@@ -24,7 +24,6 @@ import com.wynntils.utils.render.FontRenderer;
 import com.wynntils.utils.render.MapRenderer;
 import com.wynntils.utils.render.RenderUtils;
 import com.wynntils.utils.render.Texture;
-import com.wynntils.utils.render.buffered.CustomRenderType;
 import com.wynntils.utils.render.type.HorizontalAlignment;
 import com.wynntils.utils.render.type.PointerType;
 import com.wynntils.utils.render.type.TextShadow;
@@ -328,12 +327,7 @@ public abstract class AbstractMapScreen extends WynntilsScreen {
 
         List<MapTexture> maps = Models.Map.getMapsForBoundingBox(textureBoundingBox);
 
-        int requiredBuffer = maps.stream()
-                .mapToInt(mapTexture -> CustomRenderType.getMapPositionTextureQuad(mapTexture.resource())
-                        .bufferSize())
-                .sum();
-
-        MultiBufferSource.BufferSource bufferSource = MultiBufferSource.immediate(new BufferBuilder(requiredBuffer));
+        MultiBufferSource.BufferSource bufferSource = MultiBufferSource.immediate(new BufferBuilder(256));
 
         for (MapTexture map : maps) {
             float textureX = map.getTextureXPosition(mapCenterX);
