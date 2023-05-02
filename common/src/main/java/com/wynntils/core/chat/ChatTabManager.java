@@ -13,9 +13,7 @@ import com.wynntils.handlers.chat.event.ChatMessageReceivedEvent;
 import com.wynntils.handlers.chat.type.RecipientType;
 import com.wynntils.mc.event.ChatPacketReceivedEvent;
 import com.wynntils.mc.event.ClientsideMessageEvent;
-import com.wynntils.mc.event.ScreenOpenedEvent;
 import com.wynntils.mc.event.TickEvent;
-import com.wynntils.mc.mixin.invokers.ChatScreenInvoker;
 import com.wynntils.models.worlds.event.WorldStateEvent;
 import com.wynntils.models.worlds.type.WorldState;
 import com.wynntils.utils.mc.McUtils;
@@ -28,7 +26,6 @@ import java.util.regex.Pattern;
 import java.util.stream.Stream;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.gui.components.ChatComponent;
-import net.minecraft.client.gui.screens.ChatScreen;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraftforge.eventbus.api.EventPriority;
@@ -98,22 +95,8 @@ public final class ChatTabManager extends Manager {
     }
 
     @SubscribeEvent
-    public void onScreenOpened(ScreenOpenedEvent.Post event) {
-        if (!(event.getScreen() instanceof ChatScreen chatScreen)) return;
-        if (focusedTab == null
-                || focusedTab.getAutoCommand() == null
-                || focusedTab.getAutoCommand().isEmpty()) return;
-
-        replaceChatText(chatScreen, focusedTab.getAutoCommand());
-    }
-
-    @SubscribeEvent
     public void onTick(TickEvent event) {
-        chatTabData.values().forEach(c -> c.tick());
-    }
-
-    private void replaceChatText(ChatScreen chatScreen, String autoCommand) {
-        ((ChatScreenInvoker) chatScreen).invokeInsertText(autoCommand, true);
+        chatTabData.values().forEach(ChatComponent::tick);
     }
 
     @SubscribeEvent(priority = EventPriority.LOWEST)
@@ -145,15 +128,6 @@ public final class ChatTabManager extends Manager {
             chatTabData.putIfAbsent(focusedTab, new ChatComponent(McUtils.mc()));
             unreadMessages.put(focusedTab, false);
             McUtils.mc().gui.chat = chatTabData.get(focusedTab);
-
-            // If chat screen is open, and current message is empty or the previous auto command, set our auto command
-            if (McUtils.mc().screen instanceof ChatScreen chatScreen
-                    && (chatScreen.input.getValue().isEmpty()
-                            || oldFocused == null
-                            || chatScreen.input.getValue().equals(oldFocused.getAutoCommand()))) {
-                String autoCommand = focusedTab.getAutoCommand() == null ? "" : focusedTab.getAutoCommand();
-                replaceChatText(chatScreen, autoCommand);
-            }
         }
     }
 
