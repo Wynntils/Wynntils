@@ -30,9 +30,9 @@ public class MessageFilterFeature extends Feature {
             Pair.of(Pattern.compile("^§cSelect a character! Each character is saved individually across all servers, you can come back at any time with /class and select another character!$"),
                     null),
             Pair.of(Pattern.compile("^ +§6§lWelcome to Wynncraft!$"),
-                    Pattern.compile("^ +§6§lWelcome to Wynncraft!$")),
+                    null),
             Pair.of(Pattern.compile("^ +§fplay\\.wynncraft\\.com §7-/-§f wynncraft\\.com$"),
-                    Pattern.compile("^ +§fplay\\.wynncraft\\.com §7-/-§f wynncraft\\.com$"))
+                    null)
     );
 
     private static final List<Pair<Pattern, Pattern>> SYSTEM_INFO = List.of(
@@ -62,7 +62,6 @@ public class MessageFilterFeature extends Feature {
         MessageType messageType = e.getMessageType();
 
         if (hideWelcome.get()) {
-            System.out.println(msg + " has filter result of " + processFilter(msg, messageType, WELCOME) + " and messageType of " + messageType); // TODO: Remove
             e.setCanceled(processFilter(msg, messageType, WELCOME));
             return;
         }
@@ -81,7 +80,6 @@ public class MessageFilterFeature extends Feature {
     private boolean processFilter(CodedString msg, MessageType messageType, List<Pair<Pattern, Pattern>> patternMap) {
         for (Pair<Pattern, Pattern> pair : patternMap) {
             Pattern pattern = getPattern(pair, messageType);
-            System.out.println("trying to match " + msg + " with pattern " + pattern); // TODO: Remove
             if (msg.getMatcher(pattern).find()) {
                 return true;
             }

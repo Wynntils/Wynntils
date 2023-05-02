@@ -78,6 +78,10 @@ public final class ChatHandler extends Handler {
             Pattern.compile("^ +§[47]Press §r§[cf](SNEAK|SHIFT) §r§[47]to continue§r$");
     private static final Pattern NPC_SELECT_PATTERN =
             Pattern.compile("^ +§[47cf](Select|CLICK) §r§[47cf]an option (§r§[47])?to continue§r$");
+    private static final Pattern WELCOME_1 =
+            Pattern.compile(" +§6§lWelcome to Wynncraft!");
+    private static final Pattern WELCOME_2 =
+            Pattern.compile(" +§fplay\\.wynncraft\\.com §7-/-§f wynncraft\\.com");
 
     private static final Pattern EMPTY_LINE_PATTERN = Pattern.compile("^\\s*(§r|À+)?\\s*$");
     private static final long SLOWDOWN_PACKET_DIFF_MS = 500;
@@ -105,15 +109,13 @@ public final class ChatHandler extends Handler {
         CodedString codedMessage = ComponentUtils.getCoded(message);
         StyledText styledText = StyledText.fromComponent(message);
 
-        System.out.println(codedMessage);
-
         // Sometimes there is just a trailing newline; that does not
         // make it a multiline message
         if (codedMessage.contains("\n")
                 && codedMessage.getInternalCodedStringRepresentation().indexOf('\n')
                         != (codedMessage.getInternalCodedStringRepresentation().length() - 1)) {
             // This is a "chat screen"
-            if (shouldSeparateNPC()) {
+            if (shouldSeparateNPC() || isWelcomeMessage(codedMessage)) {
                 handleIncomingChatScreen(message);
                 e.setCanceled(true);
             }
@@ -377,5 +379,9 @@ public final class ChatHandler extends Handler {
 
     private boolean shouldSeparateNPC() {
         return dialogExtractionDependents.stream().anyMatch(Feature::isEnabled);
+    }
+
+    private boolean isWelcomeMessage(CodedString codedMessage) {
+        return codedMessage.getMatcher(WELCOME_1).find() && codedMessage.getMatcher(WELCOME_2).find();
     }
 }
