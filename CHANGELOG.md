@@ -1,9 +1,21 @@
+## [0.0.3-alpha.20](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.19...v0.0.3-alpha.20) (2023-05-02)
+
+
+### New Features
+
+* Hades Party overlay works in guild wars (limitation: party members need to be mutual friends) ([bc654e2](https://github.com/Wynntils/Artemis/commit/bc654e2acb57c420e6f4dd5a31dabd81262e38cc))
+
 ## [0.0.3-alpha.19](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.18...v0.0.3-alpha.19) (2023-05-02)
 
 
 ### Bug Fixes
 
 * Fix map rendering issues (with Sodium) ([#1535](https://github.com/Wynntils/Artemis/issues/1535)) ([48b13bf](https://github.com/Wynntils/Artemis/commit/48b13bf0f56112e413ad3e7aec7632a71b9d9b88))
+
+
+### Miscellaneous Chores
+
+* **release:** v0.0.3-alpha.19 [skip ci] ([8fd0cc5](https://github.com/Wynntils/Artemis/commit/8fd0cc54bad14f702c4a49a7afd8ede0915151d2))
 
 ## [0.0.3-alpha.18](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.17...v0.0.3-alpha.18) (2023-05-01)
 
@@ -40,16 +52,4 @@
 ### Miscellaneous Chores
 
 * **release:** v0.0.3-alpha.16 [skip ci] ([8fe5574](https://github.com/Wynntils/Artemis/commit/8fe5574ba9e015a7f0b00d88edc0627836852852))
-
-## [0.0.3-alpha.15](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.14...v0.0.3-alpha.15) (2023-05-01)
-
-
-### Bug Fixes
-
-* Render outline text shadow correctly when the color strips other formatting ([#1531](https://github.com/Wynntils/Artemis/issues/1531)) ([fd745c0](https://github.com/Wynntils/Artemis/commit/fd745c0abfe2e6b68cb3d69366e07ccf3bfc26fb))
-
-
-### Miscellaneous Chores
-
-* **release:** v0.0.3-alpha.15 [skip ci] ([5133409](https://github.com/Wynntils/Artemis/commit/5133409c8253a28a77328b4fc751094d61e7a7dc))
 
