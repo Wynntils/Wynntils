@@ -1,9 +1,21 @@
+## [0.0.3-alpha.19](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.18...v0.0.3-alpha.19) (2023-05-02)
+
+
+### Bug Fixes
+
+* Fix map rendering issues (with Sodium) ([#1535](https://github.com/Wynntils/Artemis/issues/1535)) ([48b13bf](https://github.com/Wynntils/Artemis/commit/48b13bf0f56112e413ad3e7aec7632a71b9d9b88))
+
 ## [0.0.3-alpha.18](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.17...v0.0.3-alpha.18) (2023-05-01)
 
 
 ### Bug Fixes
 
 * Refactor map rendering to fix map rendering issues with Sodium (black lines) ([#1534](https://github.com/Wynntils/Artemis/issues/1534)) ([8ff481d](https://github.com/Wynntils/Artemis/commit/8ff481d6148b33de044a9f29481cd579c2a21ad7))
+
+
+### Miscellaneous Chores
+
+* **release:** v0.0.3-alpha.18 [skip ci] ([e98d524](https://github.com/Wynntils/Artemis/commit/e98d524de43269754e0efbf960a64f0f9f415d39))
 
 ## [0.0.3-alpha.17](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.16...v0.0.3-alpha.17) (2023-05-01)
 
@@ -40,16 +52,4 @@
 ### Miscellaneous Chores
 
 * **release:** v0.0.3-alpha.15 [skip ci] ([5133409](https://github.com/Wynntils/Artemis/commit/5133409c8253a28a77328b4fc751094d61e7a7dc))
-
-## [0.0.3-alpha.14](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.13...v0.0.3-alpha.14) (2023-05-01)
-
-
-### New Features
-
-* social function improvements ([#1529](https://github.com/Wynntils/Artemis/issues/1529)) ([04974ad](https://github.com/Wynntils/Artemis/commit/04974ad54b81cae7140e9714df42830510d2433a))
-
-
-### Miscellaneous Chores
-
-* **release:** v0.0.3-alpha.14 [skip ci] ([b4aed00](https://github.com/Wynntils/Artemis/commit/b4aed001ce8cb1a1790e0e601bf901cb6abdb1d0))
 
