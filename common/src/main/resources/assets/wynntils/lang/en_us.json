@@ -310,6 +310,8 @@
   "feature.wynntils.messageFilter.hideSystemInfo.name": "Hide Info Messages",
   "feature.wynntils.messageFilter.hideWelcome.description": "Should Wynncraft welcome messages be hidden?",
   "feature.wynntils.messageFilter.hideWelcome.name": "Hide Welcome Messages",
+  "feature.wynntils.messageFilter.hidePartyFinder.name": "Hide Party Finder Messages",
+    "feature.wynntils.messageFilter.hidePartyFinder.description": "Should Party Finder messages be hidden?",
   "feature.wynntils.messageFilter.name": "Message Filter",
   "feature.wynntils.ingredientPouchHotkey.name": "Ingredient Pouch Keybind",
   "feature.wynntils.inventoryEmeraldCount.combineInventoryAndContainer.description": "Should your inventory and the container get a single count, instead of a separate count?",

@@ -21,6 +21,7 @@ import java.util.regex.Pattern;
 @ConfigCategory(Category.CHAT)
 public class MessageFilterFeature extends Feature {
     // List of Pair<Foreground, Background>
+    // Ensures we only try relevant regexes for any given message
 
     private static final List<Pair<Pattern, Pattern>> WELCOME = List.of(
             Pair.of(Pattern.compile("^§7Loading Resource Pack\\.\\.\\.$"),
@@ -47,6 +48,11 @@ public class MessageFilterFeature extends Feature {
                     Pattern.compile("^(§r§8)?\\[!\\] Congratulations to §r.* for reaching (combat )?§r§7level .*!$"))
     );
 
+    private static final List<Pair<Pattern, Pattern>> PARTY_FINDER = List.of(
+            Pair.of(Pattern.compile("§5Party Finder:§r§d Hey [a-zA-Z0-9_]{2,16}, over here! Join the (?:[a-zA-Z'§ ]+) queue and match up with §r§e\\d+ other players§r§d!"),
+                    null)
+    );
+
     @RegisterConfig
     public final Config<Boolean> hideWelcome = new Config<>(true);
 
@@ -55,6 +61,9 @@ public class MessageFilterFeature extends Feature {
 
     @RegisterConfig
     public final Config<Boolean> hideLevelUp = new Config<>(false);
+
+    @RegisterConfig
+    public final Config<Boolean> hidePartyFinder = new Config<>(false);
 
     @SubscribeEvent
     public void onMessage(ChatMessageReceivedEvent e) {
@@ -73,6 +82,11 @@ public class MessageFilterFeature extends Feature {
 
         if (hideLevelUp.get()) {
             e.setCanceled(processFilter(msg, messageType, LEVEL_UP));
+            return;
+        }
+
+        if (hidePartyFinder.get()) {
+            e.setCanceled(processFilter(msg, messageType, PARTY_FINDER));
             return;
         }
     }
