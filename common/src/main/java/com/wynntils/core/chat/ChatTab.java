@@ -20,7 +20,7 @@ public class ChatTab {
     // Filters
     private final Set<RecipientType> filteredTypes;
     private final String customRegexString;
-    private transient Optional<Pattern> customRegex;
+    private transient Pattern customRegex;
 
     public ChatTab(
             String name,
@@ -52,7 +52,7 @@ public class ChatTab {
             customRegex = compileRegex(customRegexString);
         }
 
-        return customRegex;
+        return Optional.ofNullable(customRegex);
     }
 
     public String getCustomRegexString() {
@@ -80,15 +80,15 @@ public class ChatTab {
         return Objects.hash(name, consuming, filteredTypes, customRegexString);
     }
 
-    private Optional<Pattern> compileRegex(String customRegexString) {
+    private Pattern compileRegex(String customRegexString) {
         if (customRegexString != null && !customRegexString.isBlank()) {
             try {
-                return Optional.of(Pattern.compile(customRegexString, Pattern.DOTALL));
+                return Pattern.compile(customRegexString, Pattern.DOTALL);
             } catch (PatternSyntaxException e) {
                 WynntilsMod.warn("Got a saved invalid chat tab regex: " + customRegexString);
-                return Optional.empty();
+                return null;
             }
         }
-        return Optional.empty();
+        return null;
     }
 }
