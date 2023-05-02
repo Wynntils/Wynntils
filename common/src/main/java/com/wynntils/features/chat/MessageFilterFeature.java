@@ -13,11 +13,10 @@ import com.wynntils.core.text.CodedString;
 import com.wynntils.handlers.chat.event.ChatMessageReceivedEvent;
 import com.wynntils.handlers.chat.type.MessageType;
 import com.wynntils.utils.type.Pair;
-import net.minecraft.ChatFormatting;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
-
 import java.util.List;
 import java.util.regex.Pattern;
+import net.minecraft.ChatFormatting;
+import net.minecraftforge.eventbus.api.SubscribeEvent;
 
 @ConfigCategory(Category.CHAT)
 public class MessageFilterFeature extends Feature {
@@ -25,29 +24,26 @@ public class MessageFilterFeature extends Feature {
     // Ensures we only try relevant regexes for any given message
 
     private static final List<Pair<Pattern, Pattern>> WELCOME = List.of(
-            Pair.of(Pattern.compile("^§7Loading Resource Pack\\.\\.\\.$"),
+            Pair.of(Pattern.compile("^§7Loading Resource Pack\\.\\.\\.$"), null),
+            Pair.of(Pattern.compile("^§6Thank you for using the WynnPack\\. Enjoy the game!$"), null),
+            Pair.of(
+                    Pattern.compile(
+                            "^§cSelect a character! Each character is saved individually across all servers, you can come back at any time with /class and select another character!$"),
                     null),
-            Pair.of(Pattern.compile("^§6Thank you for using the WynnPack\\. Enjoy the game!$"),
-                    null),
-            Pair.of(Pattern.compile("^§cSelect a character! Each character is saved individually across all servers, you can come back at any time with /class and select another character!$"),
-                    null),
-            Pair.of(Pattern.compile("^ +§6§lWelcome to Wynncraft!$"),
-                    null),
-            Pair.of(Pattern.compile("^ +§fplay\\.wynncraft\\.com §7-/-§f wynncraft\\.com$"),
-                    null)
-    );
+            Pair.of(Pattern.compile("^ +§6§lWelcome to Wynncraft!$"), null),
+            Pair.of(Pattern.compile("^ +§fplay\\.wynncraft\\.com §7-/-§f wynncraft\\.com$"), null));
 
-    private static final List<Pair<Pattern, Pattern>> SYSTEM_INFO = List.of(
-            Pair.of(Pattern.compile("^(§r)?§.\\[Info\\] .*$"),
-                    Pattern.compile("^(§r§8)?\\[Info\\] .*$"))
-    );
+    private static final List<Pair<Pattern, Pattern>> SYSTEM_INFO =
+            List.of(Pair.of(Pattern.compile("^(§r)?§.\\[Info\\] .*$"), Pattern.compile("^(§r§8)?\\[Info\\] .*$")));
 
     private static final List<Pair<Pattern, Pattern>> LEVEL_UP = List.of(
-            Pair.of(Pattern.compile("^§6.* is now (?:combat )?level .*(?: in §.*)?$"),
+            Pair.of(
+                    Pattern.compile("^§6.* is now (?:combat )?level .*(?: in §.*)?$"),
                     Pattern.compile("^(?:§r§8)?.* is now (?:combat )?level .*(?: in §.*)?$")),
-            Pair.of(Pattern.compile("^§8\\[§r§7!§r§8\\] §r§7Congratulations to §r.* for reaching (combat )?§r§flevel .*!$"),
-                    Pattern.compile("^(§r§8)?\\[!\\] Congratulations to §r.* for reaching (combat )?§r§7level .*!$"))
-    );
+            Pair.of(
+                    Pattern.compile(
+                            "^§8\\[§r§7!§r§8\\] §r§7Congratulations to §r.* for reaching (combat )?§r§flevel .*!$"),
+                    Pattern.compile("^(§r§8)?\\[!\\] Congratulations to §r.* for reaching (combat )?§r§7level .*!$")));
 
     @RegisterConfig
     public final Config<Boolean> hideWelcome = new Config<>(true);
@@ -82,9 +78,11 @@ public class MessageFilterFeature extends Feature {
         }
 
         if (hidePartyFinder.get()) {
-            // §5Party Finder:§r§d Hey v8j, over here! Join the §r§bThe Nameless Anomaly§r§d queue and match up with §r§e3 other players§r§d!
+            // §5Party Finder:§r§d Hey v8j, over here! Join the §r§bThe Nameless Anomaly§r§d queue and match up with
+            // §r§e3 other players§r§d!
             // Matches until the username
-            e.setCanceled(msg.startsWith(ChatFormatting.DARK_PURPLE + "Party Finder:" + ChatFormatting.RESET + ChatFormatting.LIGHT_PURPLE+ " Hey "));
+            e.setCanceled(msg.startsWith(ChatFormatting.DARK_PURPLE + "Party Finder:" + ChatFormatting.RESET
+                    + ChatFormatting.LIGHT_PURPLE + " Hey "));
             return;
         }
     }
@@ -104,10 +102,11 @@ public class MessageFilterFeature extends Feature {
      * other messageType instead.
      */
     private Pattern getPattern(Pair<Pattern, Pattern> p, MessageType messageType) {
-        Pattern returnable = switch (messageType) {
-            case FOREGROUND -> p.a();
-            case BACKGROUND -> p.b();
-        };
+        Pattern returnable =
+                switch (messageType) {
+                    case FOREGROUND -> p.a();
+                    case BACKGROUND -> p.b();
+                };
 
         if (returnable == null) {
             return switch (messageType) {

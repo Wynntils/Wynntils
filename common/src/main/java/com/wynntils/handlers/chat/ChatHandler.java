@@ -78,10 +78,8 @@ public final class ChatHandler extends Handler {
             Pattern.compile("^ +§[47]Press §r§[cf](SNEAK|SHIFT) §r§[47]to continue§r$");
     private static final Pattern NPC_SELECT_PATTERN =
             Pattern.compile("^ +§[47cf](Select|CLICK) §r§[47cf]an option (§r§[47])?to continue§r$");
-    private static final Pattern WELCOME_1 =
-            Pattern.compile(" +§6§lWelcome to Wynncraft!");
-    private static final Pattern WELCOME_2 =
-            Pattern.compile(" +§fplay\\.wynncraft\\.com §7-/-§f wynncraft\\.com");
+    private static final Pattern WELCOME_1 = Pattern.compile(" +§6§lWelcome to Wynncraft!");
+    private static final Pattern WELCOME_2 = Pattern.compile(" +§fplay\\.wynncraft\\.com §7-/-§f wynncraft\\.com");
 
     private static final Pattern EMPTY_LINE_PATTERN = Pattern.compile("^\\s*(§r|À+)?\\s*$");
     private static final long SLOWDOWN_PACKET_DIFF_MS = 500;
@@ -382,6 +380,7 @@ public final class ChatHandler extends Handler {
     }
 
     private boolean isWelcomeMessage(CodedString codedMessage) {
-        return codedMessage.getMatcher(WELCOME_1).find() && codedMessage.getMatcher(WELCOME_2).find();
+        return codedMessage.getMatcher(WELCOME_1).find()
+                && codedMessage.getMatcher(WELCOME_2).find();
     }
 }
