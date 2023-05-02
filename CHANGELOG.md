@@ -1,9 +1,21 @@
+## [0.0.3-alpha.21](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.20...v0.0.3-alpha.21) (2023-05-02)
+
+
+### New Features
+
+* Chat Tab auto-commands work better (command is prefixed after sending, not by modifying the chat box) ([#1537](https://github.com/Wynntils/Artemis/issues/1537)) ([4308f63](https://github.com/Wynntils/Artemis/commit/4308f63bb3384e0f087b0ec90151702015ff826d))
+
 ## [0.0.3-alpha.20](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.19...v0.0.3-alpha.20) (2023-05-02)
 
 
 ### New Features
 
 * Hades Party overlay works in guild wars (limitation: party members need to be mutual friends) ([bc654e2](https://github.com/Wynntils/Artemis/commit/bc654e2acb57c420e6f4dd5a31dabd81262e38cc))
+
+
+### Miscellaneous Chores
+
+* **release:** v0.0.3-alpha.20 [skip ci] ([04bf71d](https://github.com/Wynntils/Artemis/commit/04bf71dee58f9ce57985c376a815a5b01465abe0))
 
 ## [0.0.3-alpha.19](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.18...v0.0.3-alpha.19) (2023-05-02)
 
@@ -40,16 +52,4 @@
 ### Miscellaneous Chores
 
 * **release:** v0.0.3-alpha.17 [skip ci] ([312729d](https://github.com/Wynntils/Artemis/commit/312729d254bc56cac59dbddbaf03f9f1b56e0b1b))
-
-## [0.0.3-alpha.16](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.15...v0.0.3-alpha.16) (2023-05-01)
-
-
-### Bug Fixes
-
-* Don't render wynntils cosmetics if WynntilsCosmeticsFeature is disabled ([#1532](https://github.com/Wynntils/Artemis/issues/1532)) ([b477998](https://github.com/Wynntils/Artemis/commit/b477998674266d028e9d95ec5e979a252a944521))
-
-
-### Miscellaneous Chores
-
-* **release:** v0.0.3-alpha.16 [skip ci] ([8fe5574](https://github.com/Wynntils/Artemis/commit/8fe5574ba9e015a7f0b00d88edc0627836852852))
 
