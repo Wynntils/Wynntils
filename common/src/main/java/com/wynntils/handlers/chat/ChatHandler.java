@@ -105,6 +105,8 @@ public final class ChatHandler extends Handler {
         CodedString codedMessage = ComponentUtils.getCoded(message);
         StyledText styledText = StyledText.fromComponent(message);
 
+        System.out.println(codedMessage);
+
         // Sometimes there is just a trailing newline; that does not
         // make it a multiline message
         if (codedMessage.contains("\n")

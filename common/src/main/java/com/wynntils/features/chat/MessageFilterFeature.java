@@ -12,15 +12,11 @@ import com.wynntils.core.features.Feature;
 import com.wynntils.core.text.CodedString;
 import com.wynntils.handlers.chat.event.ChatMessageReceivedEvent;
 import com.wynntils.handlers.chat.type.MessageType;
-import com.wynntils.handlers.chat.type.RecipientType;
-
-import java.util.List;
-import java.util.Map;
-import java.util.regex.Pattern;
-
-import com.wynntils.utils.mc.ComponentUtils;
 import com.wynntils.utils.type.Pair;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
+
+import java.util.List;
+import java.util.regex.Pattern;
 
 @ConfigCategory(Category.CHAT)
 public class MessageFilterFeature extends Feature {
@@ -65,40 +61,51 @@ public class MessageFilterFeature extends Feature {
         CodedString msg = e.getOriginalCodedString();
         MessageType messageType = e.getMessageType();
 
-        System.out.println(msg); // TODO: removeme
-
         if (hideWelcome.get()) {
-            for (Pair<Pattern, Pattern> pair : WELCOME) {
-                if (msg.getMatcher(getPattern(pair, messageType)).find()) {
-                    e.setCanceled(true);
-                    return;
-                }
-            }
+            System.out.println(msg + " has filter result of " + processFilter(msg, messageType, WELCOME) + " and messageType of " + messageType); // TODO: Remove
+            e.setCanceled(processFilter(msg, messageType, WELCOME));
+            return;
         }
 
         if (hideSystemInfo.get()) {
-            for (Pair<Pattern, Pattern> pair : SYSTEM_INFO) {
-                if (msg.getMatcher(getPattern(pair, messageType)).find()) {
-                    e.setCanceled(true);
-                    return;
-                }
-            }
+            e.setCanceled(processFilter(msg, messageType, SYSTEM_INFO));
+            return;
         }
 
         if (hideLevelUp.get()) {
-            for (Pair<Pattern, Pattern> pair : LEVEL_UP) {
-                if (msg.getMatcher(getPattern(pair, messageType)).find()) {
-                    e.setCanceled(true);
-                    return;
-                }
-            }
+            e.setCanceled(processFilter(msg, messageType, LEVEL_UP));
+            return;
         }
     }
 
+    private boolean processFilter(CodedString msg, MessageType messageType, List<Pair<Pattern, Pattern>> patternMap) {
+        for (Pair<Pattern, Pattern> pair : patternMap) {
+            Pattern pattern = getPattern(pair, messageType);
+            System.out.println("trying to match " + msg + " with pattern " + pattern); // TODO: Remove
+            if (msg.getMatcher(pattern).find()) {
+                return true;
+            }
+        }
+        return false; // Failed to match any patterns
+    }
+
+    /**
+     * Returns the pattern by the given messageType. If that pattern does not exist (null), returns the pattern for the
+     * other messageType instead.
+     */
     private Pattern getPattern(Pair<Pattern, Pattern> p, MessageType messageType) {
-        return switch (messageType) {
+        Pattern returnable = switch (messageType) {
             case FOREGROUND -> p.a();
             case BACKGROUND -> p.b();
         };
+
+        if (returnable == null) {
+            return switch (messageType) {
+                case FOREGROUND -> p.b();
+                case BACKGROUND -> p.a();
+            };
+        }
+
+        return returnable;
     }
 }
