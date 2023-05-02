@@ -11,14 +11,14 @@ import net.minecraftforge.eventbus.api.Cancelable;
 import net.minecraftforge.eventbus.api.Event;
 
 /** Fired on click in a container */
-@Cancelable
-public class ContainerClickEvent extends Event {
+public abstract class ContainerClickEvent extends Event {
     private final AbstractContainerMenu containerMenu;
     private final int slotNum;
     private final ClickType clickType;
     private final int mouseButton;
 
-    public ContainerClickEvent(AbstractContainerMenu containerMenu, int slotNum, ClickType clickType, int mouseButton) {
+    protected ContainerClickEvent(
+            AbstractContainerMenu containerMenu, int slotNum, ClickType clickType, int mouseButton) {
         this.containerMenu = containerMenu;
         this.slotNum = slotNum;
         this.clickType = clickType;
@@ -46,6 +46,19 @@ public class ContainerClickEvent extends Event {
             return containerMenu.getSlot(slotNum).getItem();
         } else {
             return ItemStack.EMPTY;
+        }
+    }
+
+    @Cancelable
+    public static class Pre extends ContainerClickEvent {
+        public Pre(AbstractContainerMenu containerMenu, int slotNum, ClickType clickType, int mouseButton) {
+            super(containerMenu, slotNum, clickType, mouseButton);
+        }
+    }
+
+    public static class Post extends ContainerClickEvent {
+        public Post(AbstractContainerMenu containerMenu, int slotNum, ClickType clickType, int mouseButton) {
+            super(containerMenu, slotNum, clickType, mouseButton);
         }
     }
 }

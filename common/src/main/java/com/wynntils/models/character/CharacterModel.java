@@ -191,7 +191,7 @@ public final class CharacterModel extends Model {
     }
 
     @SubscribeEvent
-    public void onContainerClick(ContainerClickEvent e) {
+    public void onContainerClick(ContainerClickEvent.Pre e) {
         if (inCharacterSelection) {
             if (e.getItemStack().getItem() == Items.AIR) return;
             parseCharacter(e.getItemStack(), e.getSlotNum());

@@ -35,13 +35,39 @@ public abstract class MultiPlayerGameModeMixin {
             cancellable = true)
     private void handleInventoryMouseClickPre(
             int containerId, int slotId, int mouseButton, ClickType clickType, Player player, CallbackInfo ci) {
-        if (containerId != player.containerMenu.containerId) return;
+        ContainerClickEvent.Pre event;
 
-        ContainerClickEvent event = new ContainerClickEvent(player.containerMenu, slotId, clickType, mouseButton);
+        if (containerId == player.containerMenu.containerId) {
+            event = new ContainerClickEvent.Pre(player.containerMenu, slotId, clickType, mouseButton);
+        } else if (containerId == player.inventoryMenu.containerId) {
+            event = new ContainerClickEvent.Pre(player.inventoryMenu, slotId, clickType, mouseButton);
+        } else {
+            return;
+        }
+
         MixinHelper.post(event);
         if (event.isCanceled()) {
             ci.cancel();
         }
+    }
+
+    @Inject(
+            method =
+                    "handleInventoryMouseClick(IIILnet/minecraft/world/inventory/ClickType;Lnet/minecraft/world/entity/player/Player;)V",
+            at = @At("RETURN"))
+    private void handleInventoryMouseClickPost(
+            int containerId, int slotId, int mouseButton, ClickType clickType, Player player, CallbackInfo ci) {
+        ContainerClickEvent.Post event;
+
+        if (containerId == player.containerMenu.containerId) {
+            event = new ContainerClickEvent.Post(player.containerMenu, slotId, clickType, mouseButton);
+        } else if (containerId == player.inventoryMenu.containerId) {
+            event = new ContainerClickEvent.Post(player.inventoryMenu, slotId, clickType, mouseButton);
+        } else {
+            return;
+        }
+
+        MixinHelper.post(event);
     }
 
     @Inject(

@@ -25,7 +25,7 @@ public class AbilityTreeDataDumpFeature extends Feature {
     private static final AbilityTreeContainerQueries ABILITY_TREE_CONTAINER_QUERIES = new AbilityTreeContainerQueries();
 
     @SubscribeEvent
-    public void onInventoryClick(ContainerClickEvent event) {
+    public void onInventoryClick(ContainerClickEvent.Pre event) {
         if (!(McUtils.mc().screen instanceof AbstractContainerScreen<?> abstractContainerScreen)) return;
         if (!KeyboardUtils.isShiftDown()) return;
 

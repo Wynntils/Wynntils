@@ -71,7 +71,7 @@ public class ItemLockFeature extends Feature {
     }
 
     @SubscribeEvent(priority = EventPriority.HIGHEST)
-    public void onInventoryClickEvent(ContainerClickEvent event) {
+    public void onInventoryClickEvent(ContainerClickEvent.Pre event) {
         // Don't lock ability tree slots
         if (!(McUtils.mc().screen instanceof AbstractContainerScreen<?> abstractContainerScreen)
                 || Models.Container.isAbilityTreeScreen(abstractContainerScreen)) return;
