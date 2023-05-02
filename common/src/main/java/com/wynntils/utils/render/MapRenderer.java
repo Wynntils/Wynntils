@@ -72,8 +72,6 @@ public final class MapRenderer {
         renderMap(map, poseStack, builder, centerX, centerZ, textureX, textureZ, width, height, scale);
 
         BufferUploader.drawWithShader(builder.end());
-
-        RenderSystem.enableBlend();
     }
 
     private static void renderMap(
