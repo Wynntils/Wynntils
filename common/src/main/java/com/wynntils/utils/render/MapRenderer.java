@@ -53,18 +53,19 @@ public final class MapRenderer {
             float width,
             float height,
             float scale) {
-        BufferBuilder builder = Tesselator.getInstance().getBuilder();
-
-        RenderSystem.texParameter(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_MAG_FILTER, GL11.GL_NEAREST);
-        RenderSystem.texParameter(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_MIN_FILTER, GL11.GL_NEAREST);
+        RenderSystem.disableBlend();
 
         RenderSystem.setShader(GameRenderer::getPositionTexShader);
         RenderSystem.setShaderTexture(0, map.resource());
+
+        RenderSystem.texParameter(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_MAG_FILTER, GL11.GL_NEAREST);
+        RenderSystem.texParameter(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_MIN_FILTER, GL11.GL_NEAREST);
 
         // clamp map rendering
         RenderSystem.texParameter(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_WRAP_T, GL13.GL_CLAMP_TO_BORDER);
         RenderSystem.texParameter(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_WRAP_S, GL13.GL_CLAMP_TO_BORDER);
 
+        BufferBuilder builder = Tesselator.getInstance().getBuilder();
         builder.begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.POSITION_TEX);
 
         renderMap(map, poseStack, builder, centerX, centerZ, textureX, textureZ, width, height, scale);
@@ -83,8 +84,6 @@ public final class MapRenderer {
             float width,
             float height,
             float scale) {
-        RenderSystem.disableBlend();
-
         float uScale = 1f / map.getTextureWidth();
         float vScale = 1f / map.getTextureHeight();
 
@@ -107,8 +106,6 @@ public final class MapRenderer {
         buffer.vertex(matrix, (centerX - halfRenderedWidth), (centerZ - halfRenderedHeight), 0)
                 .uv((textureX - halfTextureWidth) * uScale, (textureZ - halfTextureHeight) * vScale)
                 .endVertex();
-
-        RenderSystem.enableBlend();
     }
 
     public static void renderCursor(

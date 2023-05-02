@@ -104,7 +104,7 @@ public class CustomRenderType extends RenderType {
                     CompositeState.builder()
                             .setShaderState(POSITION_TEX_SHADER)
                             .setTextureState(new TextureStateShard(resource, false, false))
-                            .setTransparencyState(CustomRenderStateShard.SEMI_TRANSPARENT_TRANSPARENCY)
+                            .setTransparencyState(RenderStateShard.NO_TRANSPARENCY)
                             .setTexturingState(new TexturingStateShard(
                                     "map_clamping",
                                     () -> {
@@ -119,17 +119,8 @@ public class CustomRenderType extends RenderType {
                                                 GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_WRAP_S, GL13.GL_CLAMP_TO_BORDER);
                                     },
                                     () -> {
-                                        RenderSystem.texParameter(
-                                                GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_MAG_FILTER, GL11.GL_LINEAR);
-                                        RenderSystem.texParameter(
-                                                GL11.GL_TEXTURE_2D,
-                                                GL11.GL_TEXTURE_MIN_FILTER,
-                                                GL11.GL_LINEAR_MIPMAP_LINEAR);
-
-                                        RenderSystem.texParameter(
-                                                GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_WRAP_T, GL11.GL_REPEAT);
-                                        RenderSystem.texParameter(
-                                                GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_WRAP_S, GL11.GL_REPEAT);
+                                        // Hack: We should reset our texture paraments here,
+                                        // but doing so causes weirdness when using Sodium
                                     }))
                             .createCompositeState(false)));
 
