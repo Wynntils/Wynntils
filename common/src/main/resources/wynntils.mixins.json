@@ -44,8 +44,7 @@
     "accessors.ItemStackInfoAccessor",
     "accessors.LerpingBossEventAccessor",
     "accessors.MinecraftAccessor",
-    "accessors.OptionsAccessor",
-    "invokers.ChatScreenInvoker"
+    "accessors.OptionsAccessor"
   ],
   "compatibilityLevel": "JAVA_17",
   "injectors": {
