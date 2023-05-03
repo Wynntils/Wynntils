@@ -1,9 +1,21 @@
+## [0.0.3-alpha.22](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.21...v0.0.3-alpha.22) (2023-05-03)
+
+
+### Bug Fixes
+
+* Refactor emerald count handling to simplify and improve correctness ([#1538](https://github.com/Wynntils/Artemis/issues/1538)) ([fd7d0d5](https://github.com/Wynntils/Artemis/commit/fd7d0d5781a7efe28a58bd4711c90772df06dc47)), closes [#1528](https://github.com/Wynntils/Artemis/issues/1528)
+
 ## [0.0.3-alpha.21](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.20...v0.0.3-alpha.21) (2023-05-02)
 
 
 ### New Features
 
 * Chat Tab auto-commands work better (command is prefixed after sending, not by modifying the chat box) ([#1537](https://github.com/Wynntils/Artemis/issues/1537)) ([4308f63](https://github.com/Wynntils/Artemis/commit/4308f63bb3384e0f087b0ec90151702015ff826d))
+
+
+### Miscellaneous Chores
+
+* **release:** v0.0.3-alpha.21 [skip ci] ([2924695](https://github.com/Wynntils/Artemis/commit/29246957a3e2a8a6eddf9a11ffdf7d24f5fd1210))
 
 ## [0.0.3-alpha.20](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.19...v0.0.3-alpha.20) (2023-05-02)
 
@@ -40,16 +52,4 @@
 ### Miscellaneous Chores
 
 * **release:** v0.0.3-alpha.18 [skip ci] ([e98d524](https://github.com/Wynntils/Artemis/commit/e98d524de43269754e0efbf960a64f0f9f415d39))
-
-## [0.0.3-alpha.17](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.16...v0.0.3-alpha.17) (2023-05-01)
-
-
-### Bug Fixes
-
-* Fix profession level up messages not parsing every time ([#1533](https://github.com/Wynntils/Artemis/issues/1533)) ([3d61a72](https://github.com/Wynntils/Artemis/commit/3d61a72560fda7a4579d67a2329e01dd81f2a214))
-
-
-### Miscellaneous Chores
-
-* **release:** v0.0.3-alpha.17 [skip ci] ([312729d](https://github.com/Wynntils/Artemis/commit/312729d254bc56cac59dbddbaf03f9f1b56e0b1b))
 
