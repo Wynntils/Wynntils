@@ -1,9 +1,21 @@
+## [0.0.3-alpha.23](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.22...v0.0.3-alpha.23) (2023-05-03)
+
+
+### Bug Fixes
+
+* Don't send an empty autocommand when chat is empty ([#1539](https://github.com/Wynntils/Artemis/issues/1539)) ([16a8297](https://github.com/Wynntils/Artemis/commit/16a8297774a311c4007fc14dd07c3a887e2f44a0))
+
 ## [0.0.3-alpha.22](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.21...v0.0.3-alpha.22) (2023-05-03)
 
 
 ### Bug Fixes
 
 * Refactor emerald count handling to simplify and improve correctness ([#1538](https://github.com/Wynntils/Artemis/issues/1538)) ([fd7d0d5](https://github.com/Wynntils/Artemis/commit/fd7d0d5781a7efe28a58bd4711c90772df06dc47)), closes [#1528](https://github.com/Wynntils/Artemis/issues/1528)
+
+
+### Miscellaneous Chores
+
+* **release:** v0.0.3-alpha.22 [skip ci] ([7e31975](https://github.com/Wynntils/Artemis/commit/7e31975b6a416e2a9fe1af9105cd6195b9e83db2))
 
 ## [0.0.3-alpha.21](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.20...v0.0.3-alpha.21) (2023-05-02)
 
@@ -40,16 +52,4 @@
 ### Miscellaneous Chores
 
 * **release:** v0.0.3-alpha.19 [skip ci] ([8fd0cc5](https://github.com/Wynntils/Artemis/commit/8fd0cc54bad14f702c4a49a7afd8ede0915151d2))
-
-## [0.0.3-alpha.18](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.17...v0.0.3-alpha.18) (2023-05-01)
-
-
-### Bug Fixes
-
-* Refactor map rendering to fix map rendering issues with Sodium (black lines) ([#1534](https://github.com/Wynntils/Artemis/issues/1534)) ([8ff481d](https://github.com/Wynntils/Artemis/commit/8ff481d6148b33de044a9f29481cd579c2a21ad7))
-
-
-### Miscellaneous Chores
-
-* **release:** v0.0.3-alpha.18 [skip ci] ([e98d524](https://github.com/Wynntils/Artemis/commit/e98d524de43269754e0efbf960a64f0f9f415d39))
 
