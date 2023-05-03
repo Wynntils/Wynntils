@@ -46,7 +46,7 @@ public class MessageFilterFeature extends Feature {
                     Pattern.compile("^(§r§8)?\\[!\\] Congratulations to §r.* for reaching (combat )?§r§7level .*!$")));
 
     @RegisterConfig
-    public final Config<Boolean> hideWelcome = new Config<>(true);
+    public final Config<Boolean> hideWelcome = new Config<>(false);
 
     @RegisterConfig
     public final Config<Boolean> hideSystemInfo = new Config<>(true);
