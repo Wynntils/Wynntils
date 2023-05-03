@@ -151,7 +151,27 @@ public final class EmeraldModel extends Model {
         boolean isInventory = event.getContainer() == McUtils.player().getInventory();
         if (pouchContainerId != -1 && !isInventory) return;
 
-        adjustBalance(event.getOldItemStack(), event.getItemStack(), isInventory);
+        // FIXME: This is a hack to always have up-to-date emerald counts
+        //        When Wynncraft fixes emerald stacking,
+        //        this can be simplified greatly (by using old and new stacks)
+        //        However, this is really fast so maybe we can keep it (pending profiling)
+        if (isInventory) {
+            inventoryEmeralds = 0;
+
+            // Rescan inventory after merging items
+            List<ItemStack> items = McUtils.inventoryMenu().getItems();
+            for (ItemStack item : items) {
+                adjustBalance(null, item, true);
+            }
+        } else if (event.getContainer() == McUtils.containerMenu()) {
+            containerEmeralds = 0;
+
+            // Rescan container after merging items
+            List<ItemStack> items = McUtils.containerMenu().getItems();
+            for (ItemStack item : items) {
+                adjustBalance(null, item, false);
+            }
+        }
     }
 
     @SubscribeEvent
