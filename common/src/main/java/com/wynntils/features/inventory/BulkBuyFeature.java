@@ -43,7 +43,7 @@ public class BulkBuyFeature extends Feature {
     private static final ChatFormatting BULK_BUY_ACTIVE_COLOR = ChatFormatting.GREEN;
 
     @SubscribeEvent
-    public void onSlotClicked(ContainerClickEvent.Pre e) {
+    public void onSlotClicked(ContainerClickEvent e) {
         if (!KeyboardUtils.isShiftDown()) return;
 
         AbstractContainerMenu container = e.getContainerMenu();

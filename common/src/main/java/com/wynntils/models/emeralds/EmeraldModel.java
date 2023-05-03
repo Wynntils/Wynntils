@@ -6,7 +6,6 @@ package com.wynntils.models.emeralds;
 
 import com.wynntils.core.components.Model;
 import com.wynntils.core.components.Models;
-import com.wynntils.mc.event.ContainerClickEvent;
 import com.wynntils.mc.event.ContainerCloseEvent;
 import com.wynntils.mc.event.MenuEvent;
 import com.wynntils.mc.event.SetSlotEvent;
@@ -174,31 +173,6 @@ public final class EmeraldModel extends Model {
     @SubscribeEvent
     public void onContainerClose(ContainerCloseEvent.Post event) {
         containerEmeralds = 0;
-    }
-
-    // Note: This is only needed since Wynn does
-    //       not update emerald item tooltip after merging items.
-    @SubscribeEvent
-    public void onContainerClick(ContainerClickEvent.Post event) {
-        if (event.getContainerMenu().containerId == pouchContainerId) return;
-
-        if (event.getContainerMenu() == McUtils.inventoryMenu()) {
-            inventoryEmeralds = 0;
-
-            // Rescan inventory after merging items
-            List<ItemStack> items = McUtils.inventoryMenu().getItems();
-            for (ItemStack item : items) {
-                adjustBalance(null, item, true);
-            }
-        } else if (event.getContainerMenu() == McUtils.containerMenu()) {
-            containerEmeralds = 0;
-
-            // Rescan container after merging items
-            List<ItemStack> items = McUtils.containerMenu().getItems();
-            for (ItemStack item : items) {
-                adjustBalance(null, item, false);
-            }
-        }
     }
 
     private void adjustBalance(ItemStack oldItemStack, ItemStack newItemStack, boolean isInventory) {
