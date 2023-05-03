@@ -136,7 +136,7 @@ public class ChatTabsFeature extends Feature {
         if (event.getMessage().isBlank()) return;
 
         ChatTab focusedTab = Managers.ChatTab.getFocusedTab();
-        if (focusedTab.getAutoCommand() != null) {
+        if (focusedTab.getAutoCommand() != null && !focusedTab.getAutoCommand().isBlank()) {
             event.setCanceled(true);
 
             String autoCommand = focusedTab.getAutoCommand();
