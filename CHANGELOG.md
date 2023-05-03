@@ -1,9 +1,21 @@
+## [0.0.3-alpha.24](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.23...v0.0.3-alpha.24) (2023-05-03)
+
+
+### Bug Fixes
+
+* Auto commands can't be blank when running them ([#1540](https://github.com/Wynntils/Artemis/issues/1540)) ([4a900b8](https://github.com/Wynntils/Artemis/commit/4a900b80e27373b7bfdeabb6b9801aa6eaff0c57))
+
 ## [0.0.3-alpha.23](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.22...v0.0.3-alpha.23) (2023-05-03)
 
 
 ### Bug Fixes
 
 * Don't send an empty autocommand when chat is empty ([#1539](https://github.com/Wynntils/Artemis/issues/1539)) ([16a8297](https://github.com/Wynntils/Artemis/commit/16a8297774a311c4007fc14dd07c3a887e2f44a0))
+
+
+### Miscellaneous Chores
+
+* **release:** v0.0.3-alpha.23 [skip ci] ([e691031](https://github.com/Wynntils/Artemis/commit/e6910310fa9a32d55f825b50c1e3d1a9300e468d))
 
 ## [0.0.3-alpha.22](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.21...v0.0.3-alpha.22) (2023-05-03)
 
@@ -40,16 +52,4 @@
 ### Miscellaneous Chores
 
 * **release:** v0.0.3-alpha.20 [skip ci] ([04bf71d](https://github.com/Wynntils/Artemis/commit/04bf71dee58f9ce57985c376a815a5b01465abe0))
-
-## [0.0.3-alpha.19](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.18...v0.0.3-alpha.19) (2023-05-02)
-
-
-### Bug Fixes
-
-* Fix map rendering issues (with Sodium) ([#1535](https://github.com/Wynntils/Artemis/issues/1535)) ([48b13bf](https://github.com/Wynntils/Artemis/commit/48b13bf0f56112e413ad3e7aec7632a71b9d9b88))
-
-
-### Miscellaneous Chores
-
-* **release:** v0.0.3-alpha.19 [skip ci] ([8fd0cc5](https://github.com/Wynntils/Artemis/commit/8fd0cc54bad14f702c4a49a7afd8ede0915151d2))
 
