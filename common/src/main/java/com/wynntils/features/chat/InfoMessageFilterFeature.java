@@ -19,7 +19,7 @@ import net.minecraft.ChatFormatting;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 
 @ConfigCategory(Category.CHAT)
-public class MessageFilterFeature extends Feature {
+public class InfoMessageFilterFeature extends Feature {
     // List of Pair<Foreground, Background>
     // Ensures we only try relevant regexes for any given message
 
