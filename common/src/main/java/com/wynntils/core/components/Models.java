@@ -56,6 +56,7 @@ import com.wynntils.models.worlds.WorldStateModel;
 import com.wynntils.models.wynnitem.WynnItemModel;
 
 public final class Models {
+    public static final AbilityTreeModel AbilityTree = new AbilityTreeModel();
     public static final ArrowShieldModel ArrowShield = new ArrowShieldModel();
     public static final BombBellModel BombBell = new BombBellModel();
     public static final BossBarModel BossBar = new BossBarModel();
