@@ -198,6 +198,14 @@ public class HadesPartyOverlayFeature extends Feature {
         private void updateChildren() {
             this.clearChildren();
 
+            // War users take priority
+            List<HadesUser> warUsers = Models.War.getHadesUsers();
+
+            if (!warUsers.isEmpty()) {
+                warUsers.forEach(hadesUser -> this.addChild(new PartyMemberOverlay(hadesUser)));
+                return;
+            }
+
             List<HadesUser> hadesUsers = Models.Hades.getHadesUsers().toList();
             List<String> partyMembers = Models.Party.getPartyMembers();
 

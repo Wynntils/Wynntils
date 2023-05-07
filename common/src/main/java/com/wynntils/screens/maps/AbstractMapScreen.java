@@ -5,6 +5,7 @@
 package com.wynntils.screens.maps;
 
 import com.mojang.blaze3d.platform.InputConstants;
+import com.mojang.blaze3d.vertex.BufferBuilder;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.wynntils.core.components.Models;
 import com.wynntils.core.text.CodedString;
@@ -306,7 +307,7 @@ public abstract class AbstractMapScreen extends WynntilsScreen {
         MapRenderer.renderCursor(poseStack, cursorX, cursorZ, pointerScale, pointerColor, pointerType, false);
     }
 
-    protected void renderMap(PoseStack poseStack, boolean renderUsingLinear) {
+    protected void renderMap(PoseStack poseStack) {
         RenderUtils.enableScissor(
                 (int) (renderX + renderedBorderXOffset), (int) (renderY + renderedBorderYOffset), (int) mapWidth, (int)
                         mapHeight);
@@ -325,6 +326,9 @@ public abstract class AbstractMapScreen extends WynntilsScreen {
                 BoundingBox.centered(mapCenterX, mapCenterZ, width / currentZoom, height / currentZoom);
 
         List<MapTexture> maps = Models.Map.getMapsForBoundingBox(textureBoundingBox);
+
+        MultiBufferSource.BufferSource bufferSource = MultiBufferSource.immediate(new BufferBuilder(256));
+
         for (MapTexture map : maps) {
             float textureX = map.getTextureXPosition(mapCenterX);
             float textureZ = map.getTextureZPosition(mapCenterZ);
@@ -332,15 +336,17 @@ public abstract class AbstractMapScreen extends WynntilsScreen {
             MapRenderer.renderMapQuad(
                     map,
                     poseStack,
+                    bufferSource,
                     centerX,
                     centerZ,
                     textureX,
                     textureZ,
                     mapWidth,
                     mapHeight,
-                    1f / currentZoom,
-                    renderUsingLinear);
+                    1f / currentZoom);
         }
+
+        bufferSource.endBatch();
 
         RenderUtils.disableScissor();
     }

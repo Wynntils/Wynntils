@@ -209,11 +209,7 @@ public final class MainMapScreen extends AbstractMapScreen {
 
         RenderSystem.enableDepthTest();
 
-        renderMap(
-                poseStack,
-                Managers.Feature.getFeatureInstance(MapFeature.class)
-                        .renderUsingLinear
-                        .get());
+        renderMap(poseStack);
 
         RenderUtils.enableScissor(
                 (int) (renderX + renderedBorderXOffset), (int) (renderY + renderedBorderYOffset), (int) mapWidth, (int)

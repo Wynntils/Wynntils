@@ -10,13 +10,16 @@ import com.mojang.blaze3d.vertex.BufferUploader;
 import com.mojang.blaze3d.vertex.DefaultVertexFormat;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.Tesselator;
+import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.mojang.blaze3d.vertex.VertexFormat;
 import com.wynntils.models.map.MapTexture;
 import com.wynntils.models.map.pois.Poi;
 import com.wynntils.utils.colors.CustomColor;
 import com.wynntils.utils.mc.McUtils;
+import com.wynntils.utils.render.buffered.CustomRenderType;
 import com.wynntils.utils.render.type.PointerType;
 import net.minecraft.client.renderer.GameRenderer;
+import net.minecraft.client.renderer.MultiBufferSource;
 import org.joml.Matrix4f;
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL13;
@@ -27,29 +30,60 @@ public final class MapRenderer {
     public static void renderMapQuad(
             MapTexture map,
             PoseStack poseStack,
+            MultiBufferSource bufferSource,
             float centerX,
             float centerZ,
             float textureX,
             float textureZ,
             float width,
             float height,
-            float scale,
-            boolean renderUsingLinear) {
-        RenderSystem.disableBlend();
+            float scale) {
+        VertexConsumer buffer = bufferSource.getBuffer(CustomRenderType.getMapPositionTextureQuad(map.resource()));
 
-        // has to be before setting shader texture
-        int option = renderUsingLinear ? GL11.GL_LINEAR : GL11.GL_NEAREST;
-        RenderSystem.texParameter(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_MAG_FILTER, option);
-        RenderSystem.texParameter(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_MIN_FILTER, option);
+        renderMap(map, poseStack, buffer, centerX, centerZ, textureX, textureZ, width, height, scale);
+    }
+
+    public static void renderMapQuad(
+            MapTexture map,
+            PoseStack poseStack,
+            float centerX,
+            float centerZ,
+            float textureX,
+            float textureZ,
+            float width,
+            float height,
+            float scale) {
+        RenderSystem.disableBlend();
 
         RenderSystem.setShader(GameRenderer::getPositionTexShader);
         RenderSystem.setShaderTexture(0, map.resource());
 
+        RenderSystem.texParameter(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_MAG_FILTER, GL11.GL_NEAREST);
+        RenderSystem.texParameter(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_MIN_FILTER, GL11.GL_NEAREST);
+
         // clamp map rendering
-        // has to be after setting shader texture
         RenderSystem.texParameter(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_WRAP_T, GL13.GL_CLAMP_TO_BORDER);
         RenderSystem.texParameter(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_WRAP_S, GL13.GL_CLAMP_TO_BORDER);
 
+        BufferBuilder builder = Tesselator.getInstance().getBuilder();
+        builder.begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.POSITION_TEX);
+
+        renderMap(map, poseStack, builder, centerX, centerZ, textureX, textureZ, width, height, scale);
+
+        BufferUploader.drawWithShader(builder.end());
+    }
+
+    private static void renderMap(
+            MapTexture map,
+            PoseStack poseStack,
+            VertexConsumer buffer,
+            float centerX,
+            float centerZ,
+            float textureX,
+            float textureZ,
+            float width,
+            float height,
+            float scale) {
         float uScale = 1f / map.getTextureWidth();
         float vScale = 1f / map.getTextureHeight();
 
@@ -60,25 +94,18 @@ public final class MapRenderer {
 
         Matrix4f matrix = poseStack.last().pose();
 
-        BufferBuilder bufferBuilder = Tesselator.getInstance().getBuilder();
-        bufferBuilder.begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.POSITION_TEX);
-        bufferBuilder
-                .vertex(matrix, (centerX - halfRenderedWidth), (centerZ + halfRenderedHeight), 0)
+        buffer.vertex(matrix, (centerX - halfRenderedWidth), (centerZ + halfRenderedHeight), 0)
                 .uv((textureX - halfTextureWidth) * uScale, (textureZ + halfTextureHeight) * vScale)
                 .endVertex();
-        bufferBuilder
-                .vertex(matrix, (centerX + halfRenderedWidth), (centerZ + halfRenderedHeight), 0)
+        buffer.vertex(matrix, (centerX + halfRenderedWidth), (centerZ + halfRenderedHeight), 0)
                 .uv((textureX + halfTextureWidth) * uScale, (textureZ + halfTextureHeight) * vScale)
                 .endVertex();
-        bufferBuilder
-                .vertex(matrix, (centerX + halfRenderedWidth), (centerZ - halfRenderedHeight), 0)
+        buffer.vertex(matrix, (centerX + halfRenderedWidth), (centerZ - halfRenderedHeight), 0)
                 .uv((textureX + halfTextureWidth) * uScale, (textureZ - halfTextureHeight) * vScale)
                 .endVertex();
-        bufferBuilder
-                .vertex(matrix, (centerX - halfRenderedWidth), (centerZ - halfRenderedHeight), 0)
+        buffer.vertex(matrix, (centerX - halfRenderedWidth), (centerZ - halfRenderedHeight), 0)
                 .uv((textureX - halfTextureWidth) * uScale, (textureZ - halfTextureHeight) * vScale)
                 .endVertex();
-        BufferUploader.drawWithShader(bufferBuilder.end());
     }
 
     public static void renderCursor(
