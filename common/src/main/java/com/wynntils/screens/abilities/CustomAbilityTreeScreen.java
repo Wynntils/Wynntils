@@ -22,12 +22,10 @@ import com.wynntils.utils.render.RenderUtils;
 import com.wynntils.utils.render.Texture;
 import com.wynntils.utils.type.Pair;
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
-import java.util.Set;
 import net.minecraft.network.chat.Component;
 
 public class CustomAbilityTreeScreen extends WynntilsScreen {
@@ -112,7 +110,6 @@ public class CustomAbilityTreeScreen extends WynntilsScreen {
                             node));
                 });
 
-        Set<AbilityTreeSkillNode> alreadyProcessed = new HashSet<>();
         for (AbilityNodeWidget nodeWidget : nodeWidgets) {
             final AbilityTreeSkillNode currentNode = nodeWidget.getNode();
             final int col = currentNode.location().col();
@@ -130,17 +127,20 @@ public class CustomAbilityTreeScreen extends WynntilsScreen {
 
                 AbilityTreeSkillNode connectionNode = connectionOptional.get();
 
-                // Skip if we've already processed this node
-                if (alreadyProcessed.contains(connectionNode)) {
+                // Ids are given out in order, and we should not form backwards connections
+                // However if the connection is not on the same page, we rely on the fact that the connection is fully
+                // vertical
+                // and use it to draw the connection
+                // FIXME: Verify this is correct when the connection parsing is fixed
+                if (currentNode.location().page() == connectionNode.location().page()
+                        && currentNode.id() >= connection) {
                     continue;
                 }
 
                 final int connectionCol = connectionNode.location().col();
                 final int connectionRow = connectionNode.location().row();
 
-                // FIXME: Merging connections is not implemented.
-                // FIXME: Investigate why AbilityTreeLocation#equals is (seemingly) not working. (We can see multiple
-                // widgets on the same location) (I might have fixed this with using correct page numbers)
+                // FIXME: Merging connections is not implemented everywhere.
 
                 // Multi page connections are basically the same as vertical connections,
                 // when the receiving node is the one rendered. But this has to be handled first.
@@ -173,8 +173,6 @@ public class CustomAbilityTreeScreen extends WynntilsScreen {
                 // Finally, we add vertical connections
                 addConnectionsVertically(currentNode, connectionNode, connectionCol, row, connectionRow);
             }
-
-            alreadyProcessed.add(currentNode);
         }
     }
 
