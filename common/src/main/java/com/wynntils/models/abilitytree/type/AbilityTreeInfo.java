@@ -142,7 +142,7 @@ public class AbilityTreeInfo {
                 AbilityTreeLocation adjacentLocation = adjacent[i];
                 if (connectionMap.containsKey(adjacentLocation)) {
                     AbilityTreeConnectionType connection = connectionMap.get(adjacentLocation);
-                    if (!connection.getPossibleDirections()[i + 1]) continue;
+                    if (!connection.getPossibleDirections()[(i + 3) % 4]) continue;
 
                     locations.add(adjacentLocation);
                 }
