@@ -4,16 +4,19 @@
  */
 package com.wynntils.models.abilitytree.type;
 
-import com.google.common.collect.ComparisonChain;
 import com.google.gson.JsonElement;
 import com.wynntils.core.components.Managers;
 import com.wynntils.core.components.Models;
 import com.wynntils.utils.mc.McUtils;
 import java.io.File;
 import java.util.ArrayList;
+import java.util.Deque;
+import java.util.HashMap;
 import java.util.HashSet;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Locale;
+import java.util.Map;
 import java.util.Set;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.ItemStack;
@@ -24,19 +27,23 @@ import net.minecraft.world.item.ItemStack;
 public class AbilityTreeInfo {
     private final List<AbilityTreeSkillNode> nodes = new ArrayList<>();
 
-    // Do not serialize this field
-    private final transient List<AbilityTreeConnectionHolder> unprocessedConnections = new ArrayList<>();
+    // Don't serialize these field, they are only used for processing
+    private final transient Map<AbilityTreeLocation, AbilityTreeConnectionType> connectionMap = new HashMap<>();
+    private final transient Map<AbilityTreeLocation, AbilityTreeSkillNode> nodeMap = new HashMap<>();
 
     public void addNodeFromItem(ItemStack itemStack, int page, int slot) {
-        nodes.add(Models.AbilityTree.ABILITY_TREE_PARSER
+        AbilityTreeSkillNode node = Models.AbilityTree.ABILITY_TREE_PARSER
                 .parseNodeFromItem(itemStack, page, slot, nodes.size() + 1)
-                .key());
+                .key();
+
+        nodes.add(node);
+        nodeMap.put(AbilityTreeLocation.fromSlot(slot, page), node);
     }
 
     public void addConnectionFromItem(ItemStack itemStack, int page, int slot) {
-        unprocessedConnections.add(new AbilityTreeConnectionHolder(
-                AbilityTreeConnectionType.fromDamage(itemStack.getDamageValue()),
-                AbilityTreeLocation.fromSlot(slot, page)));
+        connectionMap.put(
+                AbilityTreeLocation.fromSlot(slot, page),
+                AbilityTreeConnectionType.fromDamage(itemStack.getDamageValue()));
     }
 
     public void processItem(ItemStack itemStack, int page, int slot, boolean processConnections) {
@@ -50,73 +57,117 @@ public class AbilityTreeInfo {
         }
     }
 
-    public void processConnections(int currentPage, boolean lastPage) {
-        List<AbilityTreeConnectionHolder> processedConnections = new ArrayList<>();
+    public void processConnections() {
+        AbilityTreeSkillNode firstNode = nodes.stream()
+                .filter(node -> node.id() == 1)
+                .findFirst()
+                .orElseThrow(() -> new RuntimeException("No root node found!"));
 
-        // We must traverse the connections in a specific order, so we sort them
-        List<AbilityTreeConnectionHolder> sortedConnections =
-                unprocessedConnections.stream().sorted().toList();
+        // Start at the connections of the root node
+        Deque<AbilityTreeLocation> locationQueue = new LinkedList<>(
+                getAdjacentConnections(firstNode.location(), AbilityTreeConnectionType.THREE_WAY_DOWN));
 
-        for (AbilityTreeConnectionHolder holder : sortedConnections) {
-            if (processedConnections.contains(holder)) continue;
+        // This set contains visited locations while processing a node so we don't go backwards
+        Set<AbilityTreeLocation> visitedLocations = new HashSet<>();
 
-            List<AbilityTreeConnectionHolder> connectedLocations = new ArrayList<>();
-            connectedLocations.add(holder);
+        // This set contains nodes that have already been processed, so we don't process them again
+        Set<AbilityTreeSkillNode> processedNodes = new HashSet<>();
 
-            for (AbilityTreeConnectionHolder other : sortedConnections) {
-                if (other.equals(holder)) {
-                    continue;
-                }
+        AbilityTreeSkillNode currentNode = firstNode;
 
-                if (connectedLocations.stream().anyMatch(connected -> connected.isNeighbor(other.location()))) {
-                    connectedLocations.add(other);
-                }
+        while (!locationQueue.isEmpty()) {
+            AbilityTreeLocation currentLocation = locationQueue.poll();
+
+            // Skip locations we have already visited while processing this node
+            if (visitedLocations.contains(currentLocation)) continue;
+            visitedLocations.add(currentLocation);
+
+            AbilityTreeSkillNode nodeAtPosition = nodeMap.get(currentLocation);
+            if (nodeAtPosition != null) {
+                if (processedNodes.contains(nodeAtPosition)) continue;
+
+                // At our current location there is a node, that is the new current node
+                currentNode = nodeAtPosition;
+                processedNodes.add(currentNode);
+                visitedLocations.clear();
             }
 
-            Set<AbilityTreeSkillNode> connectedNodes = new HashSet<>();
-            for (AbilityTreeConnectionHolder connection : connectedLocations) {
-                for (AbilityTreeSkillNode node : nodes) {
-                    if (connection.isNeighbor(node.location())) {
-                        connectedNodes.add(node);
-                    }
-                }
-            }
+            // We have to respect connection types (or use a default one if current location is a node)
+            AbilityTreeConnectionType connectionType =
+                    connectionMap.getOrDefault(currentLocation, AbilityTreeConnectionType.THREE_WAY_DOWN);
 
-            if (connectedNodes.size() <= 1) continue;
+            List<AbilityTreeLocation> adjacentConnections = getAdjacentConnections(currentLocation, connectionType);
 
-            // If the connection continues to the next page,
-            // we process it in the next page (if we are not on the last page)
-            boolean connectionContinuesInNextPage = connectedLocations.stream()
-                    .map(AbilityTreeConnectionHolder::location)
-                    .anyMatch(loc -> loc.page() == currentPage && loc.row() + 1 == AbilityTreeLocation.MAX_ROWS);
+            // Add the adjacent connections to the front of the queue (dfs)
+            adjacentConnections.stream()
+                    .filter(location -> !locationQueue.contains(location))
+                    .forEach(locationQueue::addFirst);
 
-            if (!lastPage && connectionContinuesInNextPage) continue;
+            // Get adjacent nodes, but filter out current node and backwards connections
+            final int currentNodeId = currentNode.id();
+            List<AbilityTreeLocation> adjacentNodes = getAdjacentNodes(currentLocation, connectionType).stream()
+                    .map(nodeMap::get)
+                    .filter(node -> node.id() != currentNodeId)
+                    .filter(node -> !node.connections().contains(currentNodeId))
+                    .map(AbilityTreeSkillNode::location)
+                    .toList();
 
-            for (AbilityTreeSkillNode current : connectedNodes) {
-                current.connections()
-                        .addAll(connectedNodes.stream()
-                                .filter(node -> !node.equals(current))
-                                .map(AbilityTreeSkillNode::id)
-                                .toList());
-            }
+            // Add the adjacent nodes to the back of the queue (bfs)
+            adjacentNodes.stream()
+                    .filter(location -> !locationQueue.contains(location))
+                    .forEach(locationQueue::addLast);
 
-            processedConnections.addAll(connectedLocations);
+            // Adjacent nodes are connected to the current node
+            currentNode
+                    .connections()
+                    .addAll(adjacentNodes.stream()
+                            .map(nodeMap::get)
+                            .map(AbilityTreeSkillNode::id)
+                            .toList());
         }
-
-        // Remove the processed connections
-        unprocessedConnections.removeAll(processedConnections);
     }
 
-    public List<AbilityTreeSkillNode> getNodes() {
-        return nodes;
+    private List<AbilityTreeLocation> getAdjacentConnections(
+            AbilityTreeLocation location, AbilityTreeConnectionType connectionType) {
+        List<AbilityTreeLocation> locations = new ArrayList<>();
+
+        // Find the adjacent connections in 3 directions: right, down, left
+        AbilityTreeLocation[] adjacent = {location.right(), location.down(), location.left()};
+        boolean[] possibleDirections = connectionType.getPossibleDirections();
+
+        for (int i = 0; i < adjacent.length; i++) {
+            if (!possibleDirections[i + 1]) continue;
+
+            AbilityTreeLocation adjacentLocation = adjacent[i];
+            if (connectionMap.containsKey(adjacentLocation)) {
+                locations.add(adjacentLocation);
+            }
+        }
+
+        return locations;
+    }
+
+    private List<AbilityTreeLocation> getAdjacentNodes(
+            AbilityTreeLocation location, AbilityTreeConnectionType connectionType) {
+        List<AbilityTreeLocation> locations = new ArrayList<>();
+
+        // Find the adjacent connections in 3 directions: right, down, left
+        AbilityTreeLocation[] adjacent = {location.right(), location.down(), location.left()};
+        boolean[] possibleDirections = connectionType.getPossibleDirections();
+
+        for (int i = 0; i < adjacent.length; i++) {
+            if (!possibleDirections[i + 1]) continue;
+
+            AbilityTreeLocation adjacentLocation = adjacent[i];
+            if (nodeMap.containsKey(adjacentLocation)) {
+                locations.add(adjacentLocation);
+            }
+        }
+
+        return locations;
     }
 
     public void saveToDisk(File saveFolder) {
-        if (!unprocessedConnections.isEmpty()) {
-            McUtils.sendMessageToClient(Component.literal(
-                    "WARN: There are unprocessed connections left in the dump! Check processing algorithm!"));
-        }
-
         // Save the dump to a file
         JsonElement element = Managers.Json.GSON.toJsonTree(this);
 
@@ -127,32 +178,7 @@ public class AbilityTreeInfo {
         McUtils.sendMessageToClient(Component.literal("Saved ability tree dump to " + jsonFile.getAbsolutePath()));
     }
 
-    private record AbilityTreeConnectionHolder(AbilityTreeConnectionType connectionType, AbilityTreeLocation location)
-            implements Comparable<AbilityTreeConnectionHolder> {
-        public boolean isNeighbor(AbilityTreeLocation other) {
-            boolean[] possibleDirections = this.connectionType.getPossibleDirections();
-
-            if (possibleDirections[0] && this.location.getAbsoluteRow() - 1 == other.getAbsoluteRow()) {
-                return this.location.col() == other.col();
-            }
-            if (possibleDirections[1] && this.location.col() + 1 == other.col()) {
-                return this.location.getAbsoluteRow() == other.getAbsoluteRow();
-            }
-            if (possibleDirections[2] && this.location.getAbsoluteRow() + 1 == other.getAbsoluteRow()) {
-                return this.location.col() == other.col();
-            }
-            if (possibleDirections[3] && this.location.col() - 1 == other.col()) {
-                return this.location.getAbsoluteRow() == other.getAbsoluteRow();
-            }
-
-            return false;
-        }
-
-        @Override
-        public int compareTo(AbilityTreeInfo.AbilityTreeConnectionHolder other) {
-            return ComparisonChain.start()
-                    .compare(this.location(), other.location())
-                    .result();
-        }
+    public List<AbilityTreeSkillNode> getNodes() {
+        return nodes;
     }
 }

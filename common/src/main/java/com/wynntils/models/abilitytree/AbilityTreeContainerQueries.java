@@ -121,9 +121,8 @@ public class AbilityTreeContainerQueries {
 
             boolean lastPage = page == Models.AbilityTree.ABILITY_TREE_PAGES;
 
-            dump.processConnections(page, lastPage);
-
             if (lastPage) {
+                dump.processConnections();
                 dump.saveToDisk(saveFolder);
             }
         }

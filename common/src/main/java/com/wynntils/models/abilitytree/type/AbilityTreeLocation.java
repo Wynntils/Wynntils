@@ -35,6 +35,38 @@ public record AbilityTreeLocation(int page, int row, int col) implements Compara
                 || (col == other.col && Math.abs(getAbsoluteRow() - other.getAbsoluteRow()) == 1);
     }
 
+    public AbilityTreeLocation up() {
+        if (row == 0) {
+            return null;
+        }
+
+        return new AbilityTreeLocation(page, row - 1, col);
+    }
+
+    public AbilityTreeLocation down() {
+        if (row + 1 == MAX_ROWS) {
+            return new AbilityTreeLocation(page + 1, 0, col);
+        }
+
+        return new AbilityTreeLocation(page, row + 1, col);
+    }
+
+    public AbilityTreeLocation left() {
+        if (col == 0) {
+            return null;
+        }
+
+        return new AbilityTreeLocation(page, row, col - 1);
+    }
+
+    public AbilityTreeLocation right() {
+        if (col + 1 == MAX_COLS) {
+            return null;
+        }
+
+        return new AbilityTreeLocation(page, row, col + 1);
+    }
+
     @Override
     public int compareTo(AbilityTreeLocation other) {
         return ComparisonChain.start()
