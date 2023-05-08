@@ -103,7 +103,7 @@ public class CustomAbilityTreeScreen extends WynntilsScreen {
         nodeWidgets.clear();
         connectionWidgets.clear();
 
-        abilityTreeInfo.getNodes().stream()
+        abilityTreeInfo.nodes().stream()
                 .filter(node -> node.location().page() == currentPage + 1)
                 .forEach(node -> {
                     Pair<Integer, Integer> renderLocation = getRenderLocation(node.location());
@@ -116,7 +116,7 @@ public class CustomAbilityTreeScreen extends WynntilsScreen {
                             node));
                 });
 
-        List<AbilityTreeSkillNode> multiPageConnectionNodesFromLastPage = abilityTreeInfo.getNodes().stream()
+        List<AbilityTreeSkillNode> multiPageConnectionNodesFromLastPage = abilityTreeInfo.nodes().stream()
                 .filter(node -> node.location().page() == currentPage)
                 .filter(node -> nodeWidgets.stream()
                         .map(AbilityNodeWidget::getNode)
@@ -148,7 +148,7 @@ public class CustomAbilityTreeScreen extends WynntilsScreen {
             final int row = currentNode.location().row();
 
             for (Integer connection : currentNode.connections()) {
-                Optional<AbilityTreeSkillNode> connectionOptional = abilityTreeInfo.getNodes().stream()
+                Optional<AbilityTreeSkillNode> connectionOptional = abilityTreeInfo.nodes().stream()
                         .filter(node -> node.id() == connection)
                         .findFirst();
 

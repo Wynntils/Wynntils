@@ -2,7 +2,7 @@
  * Copyright © Wynntils 2023.
  * This file is released under AGPLv3. See LICENSE for full license details.
  */
-package com.wynntils.models.abilitytree;
+package com.wynntils.models.abilitytree.parser;
 
 import com.wynntils.core.text.PartStyle;
 import com.wynntils.core.text.StyledText;

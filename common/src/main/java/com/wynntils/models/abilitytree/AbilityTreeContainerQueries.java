@@ -10,6 +10,7 @@ import com.wynntils.core.components.Models;
 import com.wynntils.core.text.StyledText;
 import com.wynntils.handlers.container.ScriptedContainerQuery;
 import com.wynntils.handlers.container.type.ContainerContent;
+import com.wynntils.models.abilitytree.parser.UnprocessedAbilityTreeInfo;
 import com.wynntils.models.abilitytree.type.AbilityTreeInfo;
 import com.wynntils.models.abilitytree.type.AbilityTreeNodeState;
 import com.wynntils.models.abilitytree.type.AbilityTreeSkillNode;
@@ -17,7 +18,6 @@ import com.wynntils.models.abilitytree.type.ParsedAbilityTree;
 import com.wynntils.utils.mc.McUtils;
 import com.wynntils.utils.type.Pair;
 import com.wynntils.utils.wynn.InventoryUtils;
-import java.io.File;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -35,8 +35,6 @@ public class AbilityTreeContainerQueries {
     private static final StyledText NEXT_PAGE_ITEM_NAME = StyledText.fromString("§7Next Page");
 
     public void queryAbilityTree(AbilityTreeProcessor processor) {
-        AbilityTreeInfo dump = new AbilityTreeInfo();
-
         ScriptedContainerQuery.QueryBuilder queryBuilder = ScriptedContainerQuery.builder("Ability Tree Dump Query")
                 .onError(msg -> {
                     WynntilsMod.warn("Problem querying Ability Tree: " + msg);
@@ -102,11 +100,11 @@ public class AbilityTreeContainerQueries {
      * Parses the whole ability tree and saves it to disk.
      */
     public static class AbilityPageDumper implements AbilityTreeProcessor {
-        private final File saveFolder;
-        private final AbilityTreeInfo dump = new AbilityTreeInfo();
+        private final Consumer<AbilityTreeInfo> supplier;
+        private final UnprocessedAbilityTreeInfo unprocessedTree = new UnprocessedAbilityTreeInfo();
 
-        public AbilityPageDumper(File saveFolder) {
-            this.saveFolder = saveFolder;
+        public AbilityPageDumper(Consumer<AbilityTreeInfo> supplier) {
+            this.supplier = supplier;
         }
 
         @Override
@@ -116,14 +114,13 @@ public class AbilityTreeContainerQueries {
             for (int slot = 0; slot < items.size(); slot++) {
                 ItemStack itemStack = items.get(slot);
 
-                dump.processItem(itemStack, page, slot, true);
+                unprocessedTree.processItem(itemStack, page, slot, true);
             }
 
             boolean lastPage = page == Models.AbilityTree.ABILITY_TREE_PAGES;
 
             if (lastPage) {
-                dump.processConnections();
-                dump.saveToDisk(saveFolder);
+                this.supplier.accept(unprocessedTree.getProcesssed());
             }
         }
     }
