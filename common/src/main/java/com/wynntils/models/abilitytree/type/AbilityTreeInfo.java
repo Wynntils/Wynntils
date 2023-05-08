@@ -64,8 +64,7 @@ public class AbilityTreeInfo {
                 .orElseThrow(() -> new RuntimeException("No root node found!"));
 
         // Start at the connections of the root node
-        Deque<AbilityTreeLocation> locationQueue = new LinkedList<>(
-                getAdjacentConnections(firstNode.location(), AbilityTreeConnectionType.THREE_WAY_DOWN));
+        Deque<AbilityTreeLocation> locationQueue = new LinkedList<>(getAdjacentConnections(firstNode.location(), null));
 
         // This set contains visited locations while processing a node so we don't go backwards
         Set<AbilityTreeLocation> visitedLocations = new HashSet<>();
@@ -92,9 +91,9 @@ public class AbilityTreeInfo {
                 visitedLocations.clear();
             }
 
-            // We have to respect connection types (or use a default one if current location is a node)
-            AbilityTreeConnectionType connectionType =
-                    connectionMap.getOrDefault(currentLocation, AbilityTreeConnectionType.THREE_WAY_DOWN);
+            // We have to respect connection types
+            // or use null if current location is a node and handle the logic separately
+            AbilityTreeConnectionType connectionType = connectionMap.getOrDefault(currentLocation, null);
 
             List<AbilityTreeLocation> adjacentConnections = getAdjacentConnections(currentLocation, connectionType);
 
@@ -102,6 +101,9 @@ public class AbilityTreeInfo {
             adjacentConnections.stream()
                     .filter(location -> !locationQueue.contains(location))
                     .forEach(locationQueue::addFirst);
+
+            // If connectionType is null, current location is a node, so there is no nodes next to it
+            if (connectionType == null) continue;
 
             // Get adjacent nodes, but filter out current node and backwards connections
             final int currentNodeId = currentNode.id();
@@ -133,6 +135,22 @@ public class AbilityTreeInfo {
 
         // Find the adjacent connections in 3 directions: right, down, left
         AbilityTreeLocation[] adjacent = {location.right(), location.down(), location.left()};
+
+        if (connectionType == null) {
+            // Rely on checking neighboring connection types
+            for (int i = 0; i < adjacent.length; i++) {
+                AbilityTreeLocation adjacentLocation = adjacent[i];
+                if (connectionMap.containsKey(adjacentLocation)) {
+                    AbilityTreeConnectionType connection = connectionMap.get(adjacentLocation);
+                    if (!connection.getPossibleDirections()[i + 1]) continue;
+
+                    locations.add(adjacentLocation);
+                }
+            }
+
+            return locations;
+        }
+
         boolean[] possibleDirections = connectionType.getPossibleDirections();
 
         for (int i = 0; i < adjacent.length; i++) {
