@@ -4,13 +4,11 @@
  */
 package com.wynntils.features.ui;
 
-import com.wynntils.core.components.Managers;
 import com.wynntils.core.components.Models;
 import com.wynntils.core.config.Category;
 import com.wynntils.core.config.ConfigCategory;
 import com.wynntils.core.features.Feature;
 import com.wynntils.mc.event.ContainerClickEvent;
-import com.wynntils.models.abilitytree.AbilityTreeContainerQueries;
 import com.wynntils.models.items.items.gui.AbilityTreeItem;
 import com.wynntils.screens.abilities.CustomAbilityTreeScreen;
 import com.wynntils.utils.mc.KeyboardUtils;
@@ -27,17 +25,11 @@ public class CustomAbilityTreeFeature extends Feature {
         if (!KeyboardUtils.isShiftDown()) return;
 
         Optional<AbilityTreeItem> abilityTreeItem = Models.Item.asWynnItem(event.getItemStack(), AbilityTreeItem.class);
-
         if (abilityTreeItem.isEmpty()) return;
 
         event.setCanceled(true);
-        McUtils.player().closeContainer();
 
-        // Wait for the container to close
-        Managers.TickScheduler.scheduleNextTick(
-                () -> Models.AbilityTree.ABILITY_TREE_CONTAINER_QUERIES.queryAbilityTree(
-                        new AbilityTreeContainerQueries.AbilityPageSoftProcessor(
-                                Models.AbilityTree::setCurrentAbilityTree)));
+        Models.AbilityTree.ABILITY_TREE_CONTAINER_QUERIES.updateParsedAbilityTree();
 
         McUtils.mc().setScreen(new CustomAbilityTreeScreen());
     }

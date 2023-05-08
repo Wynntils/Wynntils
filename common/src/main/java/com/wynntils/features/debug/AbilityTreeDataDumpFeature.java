@@ -13,7 +13,6 @@ import com.wynntils.core.config.ConfigCategory;
 import com.wynntils.core.features.Feature;
 import com.wynntils.core.features.properties.StartDisabled;
 import com.wynntils.mc.event.ContainerClickEvent;
-import com.wynntils.models.abilitytree.AbilityTreeContainerQueries;
 import com.wynntils.models.abilitytree.type.AbilityTreeInfo;
 import com.wynntils.models.items.items.gui.AbilityTreeItem;
 import com.wynntils.utils.mc.KeyboardUtils;
@@ -48,8 +47,7 @@ public class AbilityTreeDataDumpFeature extends Feature {
 
         // Wait for the container to close
         Managers.TickScheduler.scheduleNextTick(
-                () -> Models.AbilityTree.ABILITY_TREE_CONTAINER_QUERIES.queryAbilityTree(
-                        new AbilityTreeContainerQueries.AbilityPageDumper(this::saveToDisk)));
+                () -> Models.AbilityTree.ABILITY_TREE_CONTAINER_QUERIES.dumpAbilityTree(this::saveToDisk));
     }
 
     public void saveToDisk(AbilityTreeInfo abilityTreeInfo) {

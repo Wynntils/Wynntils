@@ -6,6 +6,7 @@ package com.wynntils.models.abilitytree;
 
 import com.google.common.collect.ImmutableMap;
 import com.wynntils.core.WynntilsMod;
+import com.wynntils.core.components.Managers;
 import com.wynntils.core.components.Models;
 import com.wynntils.core.text.StyledText;
 import com.wynntils.handlers.container.ScriptedContainerQuery;
@@ -34,7 +35,19 @@ public class AbilityTreeContainerQueries {
     private static final int DUMMY_SLOT = 76; // This is the second archetype icon
     private static final StyledText NEXT_PAGE_ITEM_NAME = StyledText.fromString("§7Next Page");
 
-    public void queryAbilityTree(AbilityTreeProcessor processor) {
+    public void dumpAbilityTree(Consumer<AbilityTreeInfo> supplier) {
+        queryAbilityTree(new AbilityTreeContainerQueries.AbilityPageDumper(supplier));
+    }
+
+    public void updateParsedAbilityTree() {
+        McUtils.player().closeContainer();
+
+        // Wait for the container to close
+        Managers.TickScheduler.scheduleNextTick(() -> queryAbilityTree(
+                new AbilityTreeContainerQueries.AbilityPageSoftProcessor(Models.AbilityTree::setCurrentAbilityTree)));
+    }
+
+    private void queryAbilityTree(AbilityTreeProcessor processor) {
         ScriptedContainerQuery.QueryBuilder queryBuilder = ScriptedContainerQuery.builder("Ability Tree Dump Query")
                 .onError(msg -> {
                     WynntilsMod.warn("Problem querying Ability Tree: " + msg);
