@@ -52,6 +52,7 @@ public class CustomAbilityTreeScreen extends WynntilsScreen {
             return;
         }
 
+        // FIXME: Handle failure here
         abilityTreeInfo = Models.AbilityTree.getAbilityTree(Models.Character.getClassType());
         setCurrentPage(0);
     }
@@ -75,6 +76,11 @@ public class CustomAbilityTreeScreen extends WynntilsScreen {
         poseStack.popPose();
 
         poseStack.popPose();
+    }
+
+    private void renderNodes(PoseStack poseStack, int mouseX, int mouseY, float partialTick) {
+        nodeWidgets.forEach(widget -> widget.render(poseStack, mouseX, mouseY, partialTick));
+        connectionWidgets.values().forEach(widget -> widget.render(poseStack, mouseX, mouseY, partialTick));
     }
 
     @Override
@@ -110,6 +116,32 @@ public class CustomAbilityTreeScreen extends WynntilsScreen {
                             node));
                 });
 
+        List<AbilityTreeSkillNode> multiPageConnectionNodesFromLastPage = abilityTreeInfo.getNodes().stream()
+                .filter(node -> node.location().page() == currentPage)
+                .filter(node -> nodeWidgets.stream()
+                        .map(AbilityNodeWidget::getNode)
+                        .map(AbilityTreeSkillNode::id)
+                        .anyMatch(node.connections()::contains))
+                .toList();
+
+        // We do this "backwards":
+        // First find connection nodes from last page, then find the nodes they connect to on this page
+        for (AbilityTreeSkillNode connectionNode : multiPageConnectionNodesFromLastPage) {
+            List<AbilityTreeSkillNode> multiPageConnections = nodeWidgets.stream()
+                    .map(AbilityNodeWidget::getNode)
+                    .filter(node -> connectionNode.connections().contains(node.id()))
+                    .toList();
+
+            for (AbilityTreeSkillNode currentNode : multiPageConnections) {
+                final int col = currentNode.location().col();
+                final int row = currentNode.location().row();
+
+                // Multi page connections are basically the same as vertical connections,
+                // when the receiving node is the one rendered. But this has to be handled first.
+                addConnectionsVertically(currentNode, connectionNode, col, 0, row);
+            }
+        }
+
         for (AbilityNodeWidget nodeWidget : nodeWidgets) {
             final AbilityTreeSkillNode currentNode = nodeWidget.getNode();
             final int col = currentNode.location().col();
@@ -129,14 +161,6 @@ public class CustomAbilityTreeScreen extends WynntilsScreen {
 
                 final int connectionCol = connectionNode.location().col();
                 final int connectionRow = connectionNode.location().row();
-
-                // Multi page connections are basically the same as vertical connections,
-                // when the receiving node is the one rendered. But this has to be handled first.
-                if (currentNode.location().page() - 1
-                        == connectionNode.location().page()) {
-                    addConnectionsVertically(currentNode, connectionNode, col, 0, row);
-                    continue;
-                }
 
                 // Only horizontal connections are needed for the same column
                 if (row == connectionRow) {
@@ -167,6 +191,8 @@ public class CustomAbilityTreeScreen extends WynntilsScreen {
             }
         }
     }
+
+    // region Connection Logic
 
     private void addTurnConnection(
             AbilityTreeSkillNode currentNode,
@@ -290,10 +316,7 @@ public class CustomAbilityTreeScreen extends WynntilsScreen {
         }
     }
 
-    private void renderNodes(PoseStack poseStack, int mouseX, int mouseY, float partialTick) {
-        nodeWidgets.forEach(widget -> widget.render(poseStack, mouseX, mouseY, partialTick));
-        connectionWidgets.values().forEach(widget -> widget.render(poseStack, mouseX, mouseY, partialTick));
-    }
+    // endregion
 
     private Pair<Integer, Integer> getRenderLocation(AbilityTreeLocation location) {
         float horizontalChunkWidth = NODE_AREA_WIDTH / AbilityTreeLocation.MAX_COLS;
