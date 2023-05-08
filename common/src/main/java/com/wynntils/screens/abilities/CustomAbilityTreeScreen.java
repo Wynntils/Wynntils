@@ -128,10 +128,9 @@ public class CustomAbilityTreeScreen extends WynntilsScreen {
                 AbilityTreeSkillNode connectionNode = connectionOptional.get();
 
                 // Ids are given out in order, and we should not form backwards connections
-                // However if the connection is not on the same page, we rely on the fact that the connection is fully
-                // vertical
-                // and use it to draw the connection
-                // FIXME: Verify this is correct when the connection parsing is fixed
+                // However if the connection is not on the same page,
+                // we rely on the fact that the connection is fully
+                // vertical and use it to draw the connection
                 if (currentNode.location().page() == connectionNode.location().page()
                         && currentNode.id() >= connection) {
                     continue;
@@ -139,8 +138,6 @@ public class CustomAbilityTreeScreen extends WynntilsScreen {
 
                 final int connectionCol = connectionNode.location().col();
                 final int connectionRow = connectionNode.location().row();
-
-                // FIXME: Merging connections is not implemented everywhere.
 
                 // Multi page connections are basically the same as vertical connections,
                 // when the receiving node is the one rendered. But this has to be handled first.
@@ -164,14 +161,18 @@ public class CustomAbilityTreeScreen extends WynntilsScreen {
 
                 // Handle complex connections here
 
-                // Firstly, we add horizontal connections
-                addConnectionsHorizontally(currentNode, connectionNode, col, row, connectionCol);
+                // Firstly, we add horizontal connections, if the turn is not enough
+                if (Math.abs(col - connectionCol) > 1) {
+                    addConnectionsHorizontally(currentNode, connectionNode, col, row, connectionCol);
+                }
 
                 // Then we add the turn
                 addTurnConnection(currentNode, connectionNode, col, row, connectionCol);
 
-                // Finally, we add vertical connections
-                addConnectionsVertically(currentNode, connectionNode, connectionCol, row, connectionRow);
+                // Finally, we add vertical connections, if the turn is not enough
+                if (Math.abs(row - connectionRow) > 1) {
+                    addConnectionsVertically(currentNode, connectionNode, connectionCol, row, connectionRow);
+                }
             }
         }
     }
@@ -219,6 +220,7 @@ public class CustomAbilityTreeScreen extends WynntilsScreen {
             int targetCol) {
         AbilityTreeSkillNode startNode = currentCol < targetCol ? currentNode : connectionNode;
         AbilityTreeSkillNode endNode = currentCol < targetCol ? connectionNode : currentNode;
+
         int startCol = Math.min(currentCol, targetCol) + 1;
         int endCol = Math.max(currentCol, targetCol) - 1;
 
@@ -227,6 +229,12 @@ public class CustomAbilityTreeScreen extends WynntilsScreen {
                     new AbilityTreeLocation(currentNode.location().page(), currentRow, i);
             Pair<Integer, Integer> renderLocation = getRenderLocation(location);
 
+            AbilityTreeConnectionNode node = new AbilityTreeConnectionNode(
+                    AbilityTreeConnectionType.HORIZONTAL, new AbilityTreeSkillNode[] {null, endNode, null, startNode});
+
+            AbilityNodeConnectionWidget oldWidget = connectionWidgets.get(location);
+            AbilityTreeConnectionNode merged = node.merge(oldWidget != null ? oldWidget.getNode() : null);
+
             connectionWidgets.put(
                     location,
                     new AbilityNodeConnectionWidget(
@@ -234,9 +242,7 @@ public class CustomAbilityTreeScreen extends WynntilsScreen {
                             renderLocation.b() - AbilityNodeConnectionWidget.SIZE / 2,
                             AbilityNodeConnectionWidget.SIZE,
                             AbilityNodeConnectionWidget.SIZE,
-                            new AbilityTreeConnectionNode(
-                                    AbilityTreeConnectionType.HORIZONTAL,
-                                    new AbilityTreeSkillNode[] {null, startNode, null, endNode})));
+                            merged));
         }
     }
 
@@ -276,6 +282,12 @@ public class CustomAbilityTreeScreen extends WynntilsScreen {
                     new AbilityTreeLocation(currentNode.location().page(), i, currentCol);
             Pair<Integer, Integer> renderLocation = getRenderLocation(location);
 
+            AbilityTreeConnectionNode node = new AbilityTreeConnectionNode(
+                    AbilityTreeConnectionType.VERTICAL, new AbilityTreeSkillNode[] {startNode, null, endNode, null});
+
+            AbilityNodeConnectionWidget oldWidget = connectionWidgets.get(location);
+            AbilityTreeConnectionNode merged = node.merge(oldWidget != null ? oldWidget.getNode() : null);
+
             connectionWidgets.put(
                     location,
                     new AbilityNodeConnectionWidget(
@@ -283,16 +295,12 @@ public class CustomAbilityTreeScreen extends WynntilsScreen {
                             renderLocation.b() - AbilityNodeConnectionWidget.SIZE / 2,
                             AbilityNodeConnectionWidget.SIZE,
                             AbilityNodeConnectionWidget.SIZE,
-                            new AbilityTreeConnectionNode(
-                                    AbilityTreeConnectionType.VERTICAL,
-                                    new AbilityTreeSkillNode[] {startNode, null, endNode, null})));
+                            merged));
         }
     }
 
     private void renderNodes(PoseStack poseStack, int mouseX, int mouseY, float partialTick) {
         nodeWidgets.forEach(widget -> widget.render(poseStack, mouseX, mouseY, partialTick));
-
-        // FIXME: This order is fixed so connection debugging is easier, but it should be fixed
         connectionWidgets.values().forEach(widget -> widget.render(poseStack, mouseX, mouseY, partialTick));
     }
 

@@ -35,6 +35,8 @@ public class AbilityTreeConnectionNode {
 
     private void updateConnectedStates() {
         for (int i = 0; i < nodes.length; i++) {
+            connections[i] = false;
+
             for (AbilityTreeSkillNode nodeInDirection : nodes[i]) {
                 if (Models.AbilityTree.getNodeState(nodeInDirection) == AbilityTreeNodeState.UNLOCKED) {
                     connections[i] = true;

@@ -28,7 +28,7 @@ public final class AbilityTreeParser {
     private static final Pattern NODE_BLOCKS_ABILITY_PATTERN = Pattern.compile("§c- §7(.+)");
     private static final Pattern NODE_REQUIRED_ABILITY_PATTERN = Pattern.compile("§.. §7Required Ability: §f(.+)");
     private static final Pattern NODE_REQUIRED_ARCHETYPE_PATTERN =
-            Pattern.compile("§.. §7Min (.+) Archetype: §c(\\d+)§7/(\\d+)");
+            Pattern.compile("§.. §7Min (.+) Archetype: §.(\\d+)§7/(\\d+)");
     private static final Pattern NODE_ARCHETYPE_PATTERN = Pattern.compile("§.§l(.+) Archetype");
     private static final Pattern NODE_BLOCKED_BY = Pattern.compile("§c§lBlocked by:");
     private static final Pattern NODE_BLOCKED = Pattern.compile("§cBlocked by another ability");
