@@ -143,6 +143,7 @@ public enum AbilityTreeConnectionType {
     // This is a list of all possible merges between two AbilityTreeConnectionTypes. Self merges (this type + other
     // type) are not included.
     private final List<Pair<AbilityTreeConnectionType, AbilityTreeConnectionType>> possibleMerges;
+
     // A set of compatible types. If this type is merged with a type in this set, the result will be this type.
     private final Set<AbilityTreeConnectionType> selfMergeTypes;
 
