@@ -4,6 +4,7 @@
  */
 package com.wynntils.features.debug;
 
+import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.components.Managers;
 import com.wynntils.core.components.Models;
 import com.wynntils.core.config.Category;
@@ -15,6 +16,7 @@ import com.wynntils.models.abilitytree.AbilityTreeContainerQueries;
 import com.wynntils.models.items.items.gui.AbilityTreeItem;
 import com.wynntils.utils.mc.KeyboardUtils;
 import com.wynntils.utils.mc.McUtils;
+import java.io.File;
 import java.util.Optional;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
 import net.minecraftforge.eventbus.api.EventPriority;
@@ -26,6 +28,8 @@ import net.minecraftforge.eventbus.api.SubscribeEvent;
 @StartDisabled
 @ConfigCategory(Category.DEBUG)
 public class AbilityTreeDataDumpFeature extends Feature {
+    private static final File SAVE_FOLDER = WynntilsMod.getModStorageDir("debug");
+
     @SubscribeEvent(priority = EventPriority.HIGHEST)
     public void onInventoryClick(ContainerClickEvent event) {
         if (!(McUtils.mc().screen instanceof AbstractContainerScreen<?> abstractContainerScreen)) return;
@@ -41,6 +45,6 @@ public class AbilityTreeDataDumpFeature extends Feature {
         // Wait for the container to close
         Managers.TickScheduler.scheduleNextTick(
                 () -> Models.AbilityTree.ABILITY_TREE_CONTAINER_QUERIES.queryAbilityTree(
-                        new AbilityTreeContainerQueries.AbilityPageDumper()));
+                        new AbilityTreeContainerQueries.AbilityPageDumper(SAVE_FOLDER)));
     }
 }

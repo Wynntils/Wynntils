@@ -6,7 +6,6 @@ package com.wynntils.models.abilitytree.type;
 
 import com.google.common.collect.ComparisonChain;
 import com.google.gson.JsonElement;
-import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.components.Managers;
 import com.wynntils.core.components.Models;
 import com.wynntils.utils.mc.McUtils;
@@ -23,8 +22,6 @@ import net.minecraft.world.item.ItemStack;
  * This class contains all relevant info to a specific class' ability tree.
  */
 public class AbilityTreeInfo {
-    private static final File SAVE_FOLDER = WynntilsMod.getModStorageDir("debug");
-
     private final List<AbilityTreeSkillNode> nodes = new ArrayList<>();
 
     // Do not serialize this field
@@ -54,14 +51,14 @@ public class AbilityTreeInfo {
     }
 
     public void processConnections(int currentPage, boolean lastPage) {
-        List<AbilityTreeConnectionHolder> processedLocation = new ArrayList<>();
+        List<AbilityTreeConnectionHolder> processedConnections = new ArrayList<>();
 
         // We must traverse the connections in a specific order, so we sort them
         List<AbilityTreeConnectionHolder> sortedConnections =
                 unprocessedConnections.stream().sorted().toList();
 
         for (AbilityTreeConnectionHolder holder : sortedConnections) {
-            if (processedLocation.contains(holder)) continue;
+            if (processedConnections.contains(holder)) continue;
 
             List<AbilityTreeConnectionHolder> connectedLocations = new ArrayList<>();
             connectedLocations.add(holder);
@@ -103,18 +100,18 @@ public class AbilityTreeInfo {
                                 .toList());
             }
 
-            processedLocation.addAll(connectedLocations);
+            processedConnections.addAll(connectedLocations);
         }
 
         // Remove the processed connections
-        unprocessedConnections.removeAll(processedLocation);
+        unprocessedConnections.removeAll(processedConnections);
     }
 
     public List<AbilityTreeSkillNode> getNodes() {
         return nodes;
     }
 
-    public void saveToDisk() {
+    public void saveToDisk(File saveFolder) {
         if (!unprocessedConnections.isEmpty()) {
             McUtils.sendMessageToClient(Component.literal(
                     "WARN: There are unprocessed connections left in the dump! Check processing algorithm!"));
@@ -124,7 +121,7 @@ public class AbilityTreeInfo {
         JsonElement element = Managers.Json.GSON.toJsonTree(this);
 
         String fileName = Models.Character.getClassType().getName().toLowerCase(Locale.ROOT) + "_ablities.json";
-        File jsonFile = new File(SAVE_FOLDER, fileName);
+        File jsonFile = new File(saveFolder, fileName);
         Managers.Json.savePreciousJson(jsonFile, element.getAsJsonObject());
 
         McUtils.sendMessageToClient(Component.literal("Saved ability tree dump to " + jsonFile.getAbsolutePath()));

@@ -17,6 +17,7 @@ import com.wynntils.models.abilitytree.type.ParsedAbilityTree;
 import com.wynntils.utils.mc.McUtils;
 import com.wynntils.utils.type.Pair;
 import com.wynntils.utils.wynn.InventoryUtils;
+import java.io.File;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -101,7 +102,12 @@ public class AbilityTreeContainerQueries {
      * Parses the whole ability tree and saves it to disk.
      */
     public static class AbilityPageDumper implements AbilityTreeProcessor {
+        private final File saveFolder;
         private final AbilityTreeInfo dump = new AbilityTreeInfo();
+
+        public AbilityPageDumper(File saveFolder) {
+            this.saveFolder = saveFolder;
+        }
 
         @Override
         public void processPage(ContainerContent content, int page) {
@@ -118,7 +124,7 @@ public class AbilityTreeContainerQueries {
             dump.processConnections(page, lastPage);
 
             if (lastPage) {
-                dump.saveToDisk();
+                dump.saveToDisk(saveFolder);
             }
         }
     }
