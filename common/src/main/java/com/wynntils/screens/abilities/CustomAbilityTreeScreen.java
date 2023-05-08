@@ -127,15 +127,6 @@ public class CustomAbilityTreeScreen extends WynntilsScreen {
 
                 AbilityTreeSkillNode connectionNode = connectionOptional.get();
 
-                // Ids are given out in order, and we should not form backwards connections
-                // However if the connection is not on the same page,
-                // we rely on the fact that the connection is fully
-                // vertical and use it to draw the connection
-                if (currentNode.location().page() == connectionNode.location().page()
-                        && currentNode.id() >= connection) {
-                    continue;
-                }
-
                 final int connectionCol = connectionNode.location().col();
                 final int connectionRow = connectionNode.location().row();
 
