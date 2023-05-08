@@ -27,6 +27,8 @@ import net.minecraft.world.item.ItemStack;
 public class AbilityTreeInfo {
     private final List<AbilityTreeSkillNode> nodes = new ArrayList<>();
 
+    // region Processing
+
     // Don't serialize these field, they are only used for processing
     private final transient Map<AbilityTreeLocation, AbilityTreeConnectionType> connectionMap = new HashMap<>();
     private final transient Map<AbilityTreeLocation, AbilityTreeSkillNode> nodeMap = new HashMap<>();
@@ -195,6 +197,8 @@ public class AbilityTreeInfo {
 
         McUtils.sendMessageToClient(Component.literal("Saved ability tree dump to " + jsonFile.getAbsolutePath()));
     }
+
+    // endregion
 
     public List<AbilityTreeSkillNode> getNodes() {
         return nodes;
