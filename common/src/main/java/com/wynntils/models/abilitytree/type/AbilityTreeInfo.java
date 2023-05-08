@@ -4,6 +4,7 @@
  */
 package com.wynntils.models.abilitytree.type;
 
+import com.google.common.collect.ComparisonChain;
 import com.google.gson.JsonElement;
 import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.components.Managers;
@@ -27,7 +28,7 @@ public class AbilityTreeInfo {
     private final List<AbilityTreeSkillNode> nodes = new ArrayList<>();
 
     // Do not serialize this field
-    private final transient List<AbilityTreeLocation> unprocessedConnections = new ArrayList<>();
+    private final transient List<AbilityTreeConnectionHolder> unprocessedConnections = new ArrayList<>();
 
     public void addNodeFromItem(ItemStack itemStack, int page, int slot) {
         nodes.add(Models.AbilityTree.ABILITY_TREE_PARSER
@@ -35,8 +36,10 @@ public class AbilityTreeInfo {
                 .key());
     }
 
-    public void addConnectionFromItem(int page, int slot) {
-        unprocessedConnections.add(AbilityTreeLocation.fromSlot(slot, page));
+    public void addConnectionFromItem(ItemStack itemStack, int page, int slot) {
+        unprocessedConnections.add(new AbilityTreeConnectionHolder(
+                AbilityTreeConnectionType.fromDamage(itemStack.getDamageValue()),
+                AbilityTreeLocation.fromSlot(slot, page)));
     }
 
     public void processItem(ItemStack itemStack, int page, int slot, boolean processConnections) {
@@ -46,51 +49,51 @@ public class AbilityTreeInfo {
         }
 
         if (processConnections && Models.AbilityTree.ABILITY_TREE_PARSER.isConnectionItem(itemStack)) {
-            addConnectionFromItem(page, slot);
+            addConnectionFromItem(itemStack, page, slot);
         }
     }
 
     public void processConnections(int currentPage, boolean lastPage) {
-        List<AbilityTreeLocation> processedLocation = new ArrayList<>();
+        List<AbilityTreeConnectionHolder> processedLocation = new ArrayList<>();
 
         // We must traverse the connections in a specific order, so we sort them
-        List<AbilityTreeLocation> sortedConnections =
+        List<AbilityTreeConnectionHolder> sortedConnections =
                 unprocessedConnections.stream().sorted().toList();
 
-        for (AbilityTreeLocation location : sortedConnections) {
-            if (processedLocation.contains(location)) continue;
+        for (AbilityTreeConnectionHolder holder : sortedConnections) {
+            if (processedLocation.contains(holder)) continue;
 
-            List<AbilityTreeLocation> connectedLocations = new ArrayList<>();
-            connectedLocations.add(location);
+            List<AbilityTreeConnectionHolder> connectedLocations = new ArrayList<>();
+            connectedLocations.add(holder);
 
-            for (AbilityTreeLocation other : sortedConnections) {
-                if (other.equals(location)) {
+            for (AbilityTreeConnectionHolder other : sortedConnections) {
+                if (other.equals(holder)) {
                     continue;
                 }
 
-                if (connectedLocations.stream().anyMatch(connected -> connected.isNeighbor(other))) {
+                if (connectedLocations.stream().anyMatch(connected -> connected.isNeighbor(other.location()))) {
                     connectedLocations.add(other);
                 }
             }
 
             Set<AbilityTreeSkillNode> connectedNodes = new HashSet<>();
-            for (AbilityTreeLocation connection : connectedLocations) {
+            for (AbilityTreeConnectionHolder connection : connectedLocations) {
                 for (AbilityTreeSkillNode node : nodes) {
-                    if (node.location().isNeighbor(connection)) {
+                    if (connection.isNeighbor(node.location())) {
                         connectedNodes.add(node);
                     }
                 }
             }
 
-            // If the connection is not valid, or continues to the next page, we keep it for next page (if we are not on
-            // the last page)
-            if (connectedNodes.size() <= 1
-                    || (!lastPage
-                            && connectedLocations.stream()
-                                    .anyMatch(loc -> loc.page() == currentPage
-                                            && loc.row() + 1 == AbilityTreeLocation.MAX_ROWS))) {
-                continue;
-            }
+            if (connectedNodes.size() <= 1) continue;
+
+            // If the connection continues to the next page,
+            // we process it in the next page (if we are not on the last page)
+            boolean connectionContinuesInNextPage = connectedLocations.stream()
+                    .map(AbilityTreeConnectionHolder::location)
+                    .anyMatch(loc -> loc.page() == currentPage && loc.row() + 1 == AbilityTreeLocation.MAX_ROWS);
+
+            if (!lastPage && connectionContinuesInNextPage) continue;
 
             for (AbilityTreeSkillNode current : connectedNodes) {
                 current.connections()
@@ -125,5 +128,34 @@ public class AbilityTreeInfo {
         Managers.Json.savePreciousJson(jsonFile, element.getAsJsonObject());
 
         McUtils.sendMessageToClient(Component.literal("Saved ability tree dump to " + jsonFile.getAbsolutePath()));
+    }
+
+    private record AbilityTreeConnectionHolder(AbilityTreeConnectionType connectionType, AbilityTreeLocation location)
+            implements Comparable<AbilityTreeConnectionHolder> {
+        public boolean isNeighbor(AbilityTreeLocation other) {
+            boolean[] possibleDirections = this.connectionType.getPossibleDirections();
+
+            if (possibleDirections[0] && this.location.getAbsoluteRow() - 1 == other.getAbsoluteRow()) {
+                return this.location.col() == other.col();
+            }
+            if (possibleDirections[1] && this.location.col() + 1 == other.col()) {
+                return this.location.getAbsoluteRow() == other.getAbsoluteRow();
+            }
+            if (possibleDirections[2] && this.location.getAbsoluteRow() + 1 == other.getAbsoluteRow()) {
+                return this.location.col() == other.col();
+            }
+            if (possibleDirections[3] && this.location.col() - 1 == other.col()) {
+                return this.location.getAbsoluteRow() == other.getAbsoluteRow();
+            }
+
+            return false;
+        }
+
+        @Override
+        public int compareTo(AbilityTreeInfo.AbilityTreeConnectionHolder other) {
+            return ComparisonChain.start()
+                    .compare(this.location(), other.location())
+                    .result();
+        }
     }
 }

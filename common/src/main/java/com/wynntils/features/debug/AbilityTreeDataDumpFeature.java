@@ -22,7 +22,7 @@ import net.minecraftforge.eventbus.api.SubscribeEvent;
 
 // NOTE: This feature was intented to be used on fully reset ability trees.
 //       Although support for parsing any tree is present, I would still recommend using a fresh tree to avoid any
-// issues.
+//       issues.
 @StartDisabled
 @ConfigCategory(Category.DEBUG)
 public class AbilityTreeDataDumpFeature extends Feature {
