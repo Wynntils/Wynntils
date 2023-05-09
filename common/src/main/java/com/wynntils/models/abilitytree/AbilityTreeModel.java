@@ -17,8 +17,6 @@ import com.wynntils.models.abilitytree.type.AbilityTreeNodeState;
 import com.wynntils.models.abilitytree.type.AbilityTreeSkillNode;
 import com.wynntils.models.abilitytree.type.ParsedAbilityTree;
 import com.wynntils.models.character.type.ClassType;
-import com.wynntils.screens.abilities.CustomAbilityTreeScreen;
-import com.wynntils.utils.mc.McUtils;
 import java.lang.reflect.Type;
 import java.util.HashMap;
 import java.util.List;
@@ -57,10 +55,6 @@ public class AbilityTreeModel extends Model {
 
     public void setCurrentAbilityTree(ParsedAbilityTree currentAbilityTree) {
         this.currentAbilityTree = currentAbilityTree;
-
-        if (McUtils.mc().screen instanceof CustomAbilityTreeScreen customAbilityTreeScreen) {
-            customAbilityTreeScreen.updateAbilityTree();
-        }
     }
 
     public AbilityTreeNodeState getNodeState(AbilityTreeSkillNode node) {
