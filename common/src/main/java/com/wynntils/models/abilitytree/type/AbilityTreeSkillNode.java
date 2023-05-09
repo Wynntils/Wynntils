@@ -26,17 +26,11 @@ public record AbilityTreeSkillNode(
         if (o == null || getClass() != o.getClass()) return false;
 
         AbilityTreeSkillNode that = (AbilityTreeSkillNode) o;
-        return id == that.id
-                && cost == that.cost
-                && Objects.equals(formattedName, that.formattedName)
-                && Objects.equals(requiredAbility, that.requiredAbility)
-                && Objects.equals(requiredArchetype, that.requiredArchetype)
-                && Objects.equals(archetype, that.archetype)
-                && Objects.equals(location, that.location);
+        return id == that.id && Objects.equals(name, that.name) && Objects.equals(location, that.location);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, formattedName, cost, requiredAbility, requiredArchetype, archetype, location);
+        return Objects.hash(id, name, location);
     }
 }

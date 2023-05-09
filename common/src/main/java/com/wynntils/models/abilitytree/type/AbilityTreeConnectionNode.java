@@ -5,10 +5,15 @@
 package com.wynntils.models.abilitytree.type;
 
 import com.wynntils.core.components.Models;
+import com.wynntils.utils.type.Pair;
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.HashSet;
+import java.util.List;
+import java.util.Objects;
 import java.util.Set;
+import java.util.stream.Stream;
 import net.minecraft.world.item.ItemStack;
 
 public class AbilityTreeConnectionNode {
@@ -17,28 +22,47 @@ public class AbilityTreeConnectionNode {
     // {up, down, left, right}
     // There can be multiple suppliers from a side
     private Set<AbilityTreeSkillNode>[] nodes;
+    private Set<Pair<AbilityTreeSkillNode, AbilityTreeSkillNode>> nodePairs;
     private boolean[] connections = new boolean[4];
 
+    // This constuctor is used for new connections, so there are only 2 non-null nodes
     public AbilityTreeConnectionNode(AbilityTreeConnectionType connectionType, AbilityTreeSkillNode[] nodes) {
         this.connectionType = connectionType;
         this.nodes = Arrays.stream(nodes).map(Collections::singleton).toArray(Set[]::new);
 
+        List<AbilityTreeSkillNode> nonNullNodes = Arrays.stream(this.nodes)
+                .flatMap(Collection::stream)
+                .filter(Objects::nonNull)
+                .toList();
+        this.nodePairs = Collections.singleton(new Pair<>(nonNullNodes.get(0), nonNullNodes.get(1)));
+
         updateConnectedStates();
     }
 
-    private AbilityTreeConnectionNode(AbilityTreeConnectionType connectionType, Set<AbilityTreeSkillNode>[] nodes) {
+    // This node is used for merging connections, so there can be multiple nodes in each direction
+    private AbilityTreeConnectionNode(
+            AbilityTreeConnectionType connectionType,
+            Set<AbilityTreeSkillNode>[] nodes,
+            Set<Pair<AbilityTreeSkillNode, AbilityTreeSkillNode>> nodePairs) {
         this.connectionType = connectionType;
         this.nodes = nodes;
+        this.nodePairs = nodePairs;
 
         updateConnectedStates();
     }
 
     private void updateConnectedStates() {
+        List<AbilityTreeSkillNode> activeNodes = nodePairs.stream()
+                .filter(pair -> Models.AbilityTree.getNodeState(pair.a()) == AbilityTreeNodeState.UNLOCKED
+                        && Models.AbilityTree.getNodeState(pair.b()) == AbilityTreeNodeState.UNLOCKED)
+                .flatMap(pair -> Stream.of(pair.a(), pair.b()))
+                .toList();
+
         for (int i = 0; i < nodes.length; i++) {
             connections[i] = false;
 
             for (AbilityTreeSkillNode nodeInDirection : nodes[i]) {
-                if (Models.AbilityTree.getNodeState(nodeInDirection) == AbilityTreeNodeState.UNLOCKED) {
+                if (activeNodes.contains(nodeInDirection)) {
                     connections[i] = true;
                     break;
                 }
@@ -84,7 +108,10 @@ public class AbilityTreeConnectionNode {
             newNodes[i].addAll(nodes);
         }
 
+        Set<Pair<AbilityTreeSkillNode, AbilityTreeSkillNode>> newPairs = new HashSet<>(this.nodePairs);
+        newPairs.addAll(other.nodePairs);
+
         // Return a merged instance
-        return new AbilityTreeConnectionNode(newConnectionType, newNodes);
+        return new AbilityTreeConnectionNode(newConnectionType, newNodes, newPairs);
     }
 }
