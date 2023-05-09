@@ -28,6 +28,7 @@ public enum UrlId {
     API_WIKI_QUEST_PAGE_QUERY("apiWikiQuestPageQuery"),
     DATA_ATHENA_SERVER_LIST("dataAthenaServerList"),
     DATA_ATHENA_TERRITORY_LIST("dataAthenaTerritoryList"),
+    DATA_STATIC_ABILITIES("dataStaticAbilities"),
     DATA_STATIC_COMBAT_LOCATIONS("dataStaticCombatLocations"),
     DATA_STATIC_DISCOVERIES("dataStaticDiscoveries"),
     DATA_STATIC_GEAR("dataStaticGear"),
