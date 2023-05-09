@@ -52,7 +52,7 @@ public class AbilityTreeDataDumpFeature extends Feature {
 
     public void saveToDisk(AbilityTreeInfo abilityTreeInfo) {
         // Save the dump to a file
-        JsonElement element = Managers.Json.GSON.toJsonTree(this);
+        JsonElement element = Managers.Json.GSON.toJsonTree(abilityTreeInfo);
 
         String fileName = Models.Character.getClassType().getName().toLowerCase(Locale.ROOT) + "_ablities.json";
         File jsonFile = new File(SAVE_FOLDER, fileName);

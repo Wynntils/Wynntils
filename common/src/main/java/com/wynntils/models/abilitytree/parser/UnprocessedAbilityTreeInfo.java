@@ -64,6 +64,9 @@ public class UnprocessedAbilityTreeInfo {
         // This set contains visited locations while processing a node so we don't go backwards
         Set<AbilityTreeLocation> visitedLocations = new HashSet<>();
 
+        // This map contains connection overrides, so we can enforce only vertical movement
+        Map<AbilityTreeLocation, AbilityTreeConnectionType> connectionOverrideMap = new HashMap<>();
+
         // This set contains nodes that have already been processed, so we don't process them again
         Set<AbilityTreeSkillNode> processedNodes = new HashSet<>();
 
@@ -84,15 +87,30 @@ public class UnprocessedAbilityTreeInfo {
                 currentNode = nodeAtPosition;
                 processedNodes.add(currentNode);
                 visitedLocations.clear();
+                connectionOverrideMap.clear();
             }
 
             // We have to respect connection types
             // or use null if current location is a node and handle the logic separately
-            AbilityTreeConnectionType connectionType = connectionMap.getOrDefault(currentLocation, null);
+            AbilityTreeConnectionType connectionType = connectionOverrideMap.getOrDefault(
+                    currentLocation, connectionMap.getOrDefault(currentLocation, null));
 
-            // FIXME: If this connection is vertical, we can't go sideways (connection order is horizontal -> turn ->
-            // vertical)
             List<AbilityTreeLocation> adjacentConnections = getAdjacentConnections(currentLocation, connectionType);
+
+            // If the connection type is vertical, we can only move vertically
+            if (connectionType == AbilityTreeConnectionType.VERTICAL) {
+                // Filter out connections that are not compatible with vertical movement
+                adjacentConnections = adjacentConnections.stream()
+                        .filter(location -> {
+                            AbilityTreeConnectionType type = connectionMap.getOrDefault(location, null);
+                            return type.isCompatible(AbilityTreeConnectionType.VERTICAL);
+                        })
+                        .toList();
+
+                // Save the connection overrides
+                adjacentConnections.forEach(
+                        location -> connectionOverrideMap.put(location, AbilityTreeConnectionType.VERTICAL));
+            }
 
             // Add the adjacent connections to the front of the queue (dfs)
             adjacentConnections.stream()

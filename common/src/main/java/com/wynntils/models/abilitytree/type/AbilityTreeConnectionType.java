@@ -169,9 +169,11 @@ public enum AbilityTreeConnectionType {
 
         this.selfMergeTypes = new HashSet<>();
 
+        this.selfMergeTypes.add(this);
+
         for (Pair<AbilityTreeConnectionType, AbilityTreeConnectionType> merge : possibleMerges) {
-            selfMergeTypes.add(merge.a());
-            selfMergeTypes.add(merge.b());
+            this.selfMergeTypes.add(merge.a());
+            this.selfMergeTypes.add(merge.b());
         }
     }
 
@@ -197,6 +199,10 @@ public enum AbilityTreeConnectionType {
 
     public boolean[] getPossibleDirections() {
         return possibleDirections;
+    }
+
+    public boolean isCompatible(AbilityTreeConnectionType other) {
+        return selfMergeTypes.contains(other);
     }
 
     public static AbilityTreeConnectionType merge(AbilityTreeConnectionType first, AbilityTreeConnectionType second) {
