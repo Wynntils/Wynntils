@@ -1,9 +1,21 @@
+## [0.0.3-alpha.25](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.24...v0.0.3-alpha.25) (2023-05-09)
+
+
+### Bug Fixes
+
+* PoiCreationScreen save button is clickable on every screen size now ([#1542](https://github.com/Wynntils/Artemis/issues/1542)) ([9d481b6](https://github.com/Wynntils/Artemis/commit/9d481b6bcf003659d31764dfcd3318e1674f8289))
+
 ## [0.0.3-alpha.24](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.23...v0.0.3-alpha.24) (2023-05-03)
 
 
 ### Bug Fixes
 
 * Auto commands can't be blank when running them ([#1540](https://github.com/Wynntils/Artemis/issues/1540)) ([4a900b8](https://github.com/Wynntils/Artemis/commit/4a900b80e27373b7bfdeabb6b9801aa6eaff0c57))
+
+
+### Miscellaneous Chores
+
+* **release:** v0.0.3-alpha.24 [skip ci] ([5224049](https://github.com/Wynntils/Artemis/commit/5224049d2d3554f64b3d5ea0e2000b2a9542c2ce))
 
 ## [0.0.3-alpha.23](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.22...v0.0.3-alpha.23) (2023-05-03)
 
@@ -40,16 +52,4 @@
 ### Miscellaneous Chores
 
 * **release:** v0.0.3-alpha.21 [skip ci] ([2924695](https://github.com/Wynntils/Artemis/commit/29246957a3e2a8a6eddf9a11ffdf7d24f5fd1210))
-
-## [0.0.3-alpha.20](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.19...v0.0.3-alpha.20) (2023-05-02)
-
-
-### New Features
-
-* Hades Party overlay works in guild wars (limitation: party members need to be mutual friends) ([bc654e2](https://github.com/Wynntils/Artemis/commit/bc654e2acb57c420e6f4dd5a31dabd81262e38cc))
-
-
-### Miscellaneous Chores
-
-* **release:** v0.0.3-alpha.20 [skip ci] ([04bf71d](https://github.com/Wynntils/Artemis/commit/04bf71dee58f9ce57985c376a815a5b01465abe0))
 
