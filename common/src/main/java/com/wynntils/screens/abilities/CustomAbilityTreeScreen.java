@@ -15,6 +15,7 @@ import com.wynntils.models.abilitytree.type.AbilityTreeSkillNode;
 import com.wynntils.models.character.type.ClassType;
 import com.wynntils.screens.abilities.widgets.AbilityNodeConnectionWidget;
 import com.wynntils.screens.abilities.widgets.AbilityNodeWidget;
+import com.wynntils.screens.abilities.widgets.AbilityTreePageSelectorButton;
 import com.wynntils.screens.base.WynntilsScreen;
 import com.wynntils.utils.MathUtils;
 import com.wynntils.utils.mc.McUtils;
@@ -37,6 +38,9 @@ public class CustomAbilityTreeScreen extends WynntilsScreen {
 
     private static final int NODE_AREA_WIDTH = 155;
     private static final int NODE_AREA_HEIGHT = 99;
+
+    private static final int UP_ARROW_X = 247;
+    private static final int UP_ARROW_Y = 114;
 
     // This scale is used to scale the whole screen to fit the screen size
     private float textureScale = 1f;
@@ -63,10 +67,24 @@ public class CustomAbilityTreeScreen extends WynntilsScreen {
         setCurrentPage(0);
     }
 
+    // region Init
+
     @Override
     protected void doInit() {
         textureScale = height * SCREEN_HEIGHT_PERCENT / Texture.ABILITY_TREE_BACKGROUND.height();
+
+        this.addRenderableWidget(new AbilityTreePageSelectorButton(
+                UP_ARROW_X,
+                UP_ARROW_Y,
+                Texture.ABILITY_TREE_UP_ARROW.width(),
+                Texture.ABILITY_TREE_UP_ARROW.height(),
+                this,
+                true));
     }
+
+    // endregion
+
+    // region Rendering
 
     @Override
     public void doRender(PoseStack poseStack, int mouseX, int mouseY, float partialTick) {
@@ -92,12 +110,9 @@ public class CustomAbilityTreeScreen extends WynntilsScreen {
                 backgroundWidth,
                 backgroundHeight);
 
-        poseStack.pushPose();
-        poseStack.translate(NODE_AREA_OFFSET_X * textureScale, NODE_AREA_OFFSET_Y * textureScale, 0);
-
         renderNodes(poseStack, mouseX, mouseY, partialTick);
 
-        poseStack.popPose();
+        renderWidgets(poseStack, mouseX, mouseY, partialTick);
 
         poseStack.popPose();
     }
@@ -105,12 +120,32 @@ public class CustomAbilityTreeScreen extends WynntilsScreen {
     private void renderNodes(PoseStack poseStack, int mouseX, int mouseY, float partialTick) {
         poseStack.pushPose();
 
+        // Set the node area offset
+        poseStack.translate(NODE_AREA_OFFSET_X * textureScale, NODE_AREA_OFFSET_Y * textureScale, 0);
+
+        // Apply texture scale
         poseStack.scale(textureScale, textureScale, 1);
+
         nodeWidgets.forEach(widget -> widget.render(poseStack, mouseX, mouseY, partialTick));
         connectionWidgets.values().forEach(widget -> widget.render(poseStack, mouseX, mouseY, partialTick));
 
         poseStack.popPose();
     }
+
+    private void renderWidgets(PoseStack poseStack, int mouseX, int mouseY, float partialTick) {
+        poseStack.pushPose();
+
+        // Apply texture scale
+        poseStack.scale(textureScale, textureScale, 1);
+
+        renderables.forEach(widget -> widget.render(poseStack, mouseX, mouseY, partialTick));
+
+        poseStack.popPose();
+    }
+
+    // endregion
+
+    // region Mouse Handlers
 
     @Override
     public boolean mouseScrolled(double mouseX, double mouseY, double delta) {
@@ -118,13 +153,25 @@ public class CustomAbilityTreeScreen extends WynntilsScreen {
         return true;
     }
 
-    public void updateAbilityTree() {
+    // endregion
+
+    // region Page Management
+
+    public void setCurrentPage(int page) {
+        currentPage = MathUtils.clamp(page, 0, Models.AbilityTree.ABILITY_TREE_PAGES - 1);
+
         reconstructWidgets();
     }
 
-    private void setCurrentPage(int page) {
-        currentPage = MathUtils.clamp(page, 0, Models.AbilityTree.ABILITY_TREE_PAGES - 1);
+    public int getCurrentPage() {
+        return currentPage;
+    }
 
+    // endregion
+
+    // region Node Widget Building
+
+    public void updateAbilityTree() {
         reconstructWidgets();
     }
 
@@ -220,6 +267,16 @@ public class CustomAbilityTreeScreen extends WynntilsScreen {
             }
         }
     }
+
+    private Pair<Integer, Integer> getRenderLocation(AbilityTreeLocation location) {
+        float horizontalChunkWidth = NODE_AREA_WIDTH / AbilityTreeLocation.MAX_COLS;
+        float verticalChunkHeight = NODE_AREA_HEIGHT / AbilityTreeLocation.MAX_ROWS;
+
+        return Pair.of((int) (location.col() * horizontalChunkWidth + horizontalChunkWidth / 2f), (int)
+                (location.row() * verticalChunkHeight + verticalChunkHeight / 2f));
+    }
+
+    // endregion
 
     // region Connection Logic
 
@@ -346,12 +403,4 @@ public class CustomAbilityTreeScreen extends WynntilsScreen {
     }
 
     // endregion
-
-    private Pair<Integer, Integer> getRenderLocation(AbilityTreeLocation location) {
-        float horizontalChunkWidth = NODE_AREA_WIDTH / AbilityTreeLocation.MAX_COLS;
-        float verticalChunkHeight = NODE_AREA_HEIGHT / AbilityTreeLocation.MAX_ROWS;
-
-        return Pair.of((int) (location.col() * horizontalChunkWidth + horizontalChunkWidth / 2f), (int)
-                (location.row() * verticalChunkHeight + verticalChunkHeight / 2f));
-    }
 }
