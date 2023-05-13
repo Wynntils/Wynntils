@@ -1,9 +1,21 @@
+## [0.0.3-alpha.26](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.25...v0.0.3-alpha.26) (2023-05-13)
+
+
+### New Features
+
+* Custom Seaskipper Map ([#1473](https://github.com/Wynntils/Artemis/issues/1473)) ([0bc69f9](https://github.com/Wynntils/Artemis/commit/0bc69f935789766c6bcf31f6ee8e74305f959828))
+
 ## [0.0.3-alpha.25](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.24...v0.0.3-alpha.25) (2023-05-09)
 
 
 ### Bug Fixes
 
 * PoiCreationScreen save button is clickable on every screen size now ([#1542](https://github.com/Wynntils/Artemis/issues/1542)) ([9d481b6](https://github.com/Wynntils/Artemis/commit/9d481b6bcf003659d31764dfcd3318e1674f8289))
+
+
+### Miscellaneous Chores
+
+* **release:** v0.0.3-alpha.25 [skip ci] ([2aecf53](https://github.com/Wynntils/Artemis/commit/2aecf532e08d9320a5d9aec6f4f4feb749e27764))
 
 ## [0.0.3-alpha.24](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.23...v0.0.3-alpha.24) (2023-05-03)
 
@@ -40,16 +52,4 @@
 ### Miscellaneous Chores
 
 * **release:** v0.0.3-alpha.22 [skip ci] ([7e31975](https://github.com/Wynntils/Artemis/commit/7e31975b6a416e2a9fe1af9105cd6195b9e83db2))
-
-## [0.0.3-alpha.21](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.20...v0.0.3-alpha.21) (2023-05-02)
-
-
-### New Features
-
-* Chat Tab auto-commands work better (command is prefixed after sending, not by modifying the chat box) ([#1537](https://github.com/Wynntils/Artemis/issues/1537)) ([4308f63](https://github.com/Wynntils/Artemis/commit/4308f63bb3384e0f087b0ec90151702015ff826d))
-
-
-### Miscellaneous Chores
-
-* **release:** v0.0.3-alpha.21 [skip ci] ([2924695](https://github.com/Wynntils/Artemis/commit/29246957a3e2a8a6eddf9a11ffdf7d24f5fd1210))
 
