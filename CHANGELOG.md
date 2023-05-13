@@ -1,9 +1,21 @@
+## [0.0.3-alpha.27](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.26...v0.0.3-alpha.27) (2023-05-13)
+
+
+### New Features
+
+* Message filter refactor, add party finder filter ([#1530](https://github.com/Wynntils/Artemis/issues/1530)) ([611ff66](https://github.com/Wynntils/Artemis/commit/611ff6632785fc733095c5e26dbddc48f50a3646))
+
 ## [0.0.3-alpha.26](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.25...v0.0.3-alpha.26) (2023-05-13)
 
 
 ### New Features
 
 * Custom Seaskipper Map ([#1473](https://github.com/Wynntils/Artemis/issues/1473)) ([0bc69f9](https://github.com/Wynntils/Artemis/commit/0bc69f935789766c6bcf31f6ee8e74305f959828))
+
+
+### Miscellaneous Chores
+
+* **release:** v0.0.3-alpha.26 [skip ci] ([9c38383](https://github.com/Wynntils/Artemis/commit/9c38383f9847c994dbfcc968b15c35a352521a4c))
 
 ## [0.0.3-alpha.25](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.24...v0.0.3-alpha.25) (2023-05-09)
 
@@ -40,16 +52,4 @@
 ### Miscellaneous Chores
 
 * **release:** v0.0.3-alpha.23 [skip ci] ([e691031](https://github.com/Wynntils/Artemis/commit/e6910310fa9a32d55f825b50c1e3d1a9300e468d))
-
-## [0.0.3-alpha.22](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.21...v0.0.3-alpha.22) (2023-05-03)
-
-
-### Bug Fixes
-
-* Refactor emerald count handling to simplify and improve correctness ([#1538](https://github.com/Wynntils/Artemis/issues/1538)) ([fd7d0d5](https://github.com/Wynntils/Artemis/commit/fd7d0d5781a7efe28a58bd4711c90772df06dc47)), closes [#1528](https://github.com/Wynntils/Artemis/issues/1528)
-
-
-### Miscellaneous Chores
-
-* **release:** v0.0.3-alpha.22 [skip ci] ([7e31975](https://github.com/Wynntils/Artemis/commit/7e31975b6a416e2a9fe1af9105cd6195b9e83db2))
 
