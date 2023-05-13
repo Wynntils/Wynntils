@@ -15,11 +15,10 @@ import com.wynntils.handlers.chat.type.MessageType;
 import com.wynntils.utils.type.Pair;
 import java.util.List;
 import java.util.regex.Pattern;
-import net.minecraft.ChatFormatting;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 
 @ConfigCategory(Category.CHAT)
-public class InfoMessageFilterFeature extends Feature {
+public class MessageFilterFeature extends Feature {
     // List of Pair<Foreground, Background>
     // Ensures we only try relevant regexes for any given message
 
@@ -44,6 +43,11 @@ public class InfoMessageFilterFeature extends Feature {
                     Pattern.compile(
                             "^§8\\[§r§7!§r§8\\] §r§7Congratulations to §r.* for reaching (combat )?§r§flevel .*!$"),
                     Pattern.compile("^(§r§8)?\\[!\\] Congratulations to §r.* for reaching (combat )?§r§7level .*!$")));
+
+    private static final List<Pair<Pattern, Pattern>> PARTY_FINDER = List.of(Pair.of(
+            Pattern.compile(
+                    "^§5Party Finder:§r§d Hey [a-zA-Z0-9_]{2,16}, over here! Join the (?:[a-zA-Z'§ ]+) queue and match up with §r§e\\d+ other players§r§d!$"),
+            null));
 
     @RegisterConfig
     public final Config<Boolean> hideWelcome = new Config<>(false);
@@ -78,9 +82,7 @@ public class InfoMessageFilterFeature extends Feature {
         }
 
         if (hidePartyFinder.get()) {
-            // Matches until the username in the party finder message
-            e.setCanceled(msg.startsWith(ChatFormatting.DARK_PURPLE + "Party Finder:" + ChatFormatting.RESET
-                    + ChatFormatting.LIGHT_PURPLE + " Hey "));
+            e.setCanceled(processFilter(msg, messageType, PARTY_FINDER));
             return;
         }
     }
