@@ -16,7 +16,9 @@ import com.wynntils.core.features.Feature;
 import com.wynntils.handlers.chat.event.ChatMessageReceivedEvent;
 import com.wynntils.handlers.chat.type.RecipientType;
 import com.wynntils.mc.event.ChatScreenKeyTypedEvent;
+import com.wynntils.mc.event.ChatSentEvent;
 import com.wynntils.mc.event.ClientsideMessageEvent;
+import com.wynntils.mc.event.ScreenFocusEvent;
 import com.wynntils.mc.event.ScreenInitEvent;
 import com.wynntils.mc.event.ScreenRenderEvent;
 import com.wynntils.models.worlds.event.WorldStateEvent;
@@ -27,6 +29,7 @@ import com.wynntils.utils.mc.KeyboardUtils;
 import com.wynntils.utils.mc.McUtils;
 import java.util.ArrayList;
 import java.util.List;
+import net.minecraft.client.gui.components.events.GuiEventListener;
 import net.minecraft.client.gui.screens.ChatScreen;
 import net.minecraftforge.eventbus.api.EventPriority;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
@@ -88,6 +91,18 @@ public class ChatTabsFeature extends Feature {
     }
 
     @SubscribeEvent
+    public void onScreenFocusChange(ScreenFocusEvent event) {
+        if (!(event.getScreen() instanceof ChatScreen)) return;
+
+        GuiEventListener guiEventListener = event.getGuiEventListener();
+
+        // These should not be focused
+        if (guiEventListener instanceof ChatTabButton || guiEventListener instanceof ChatTabAddButton) {
+            event.setCanceled(true);
+        }
+    }
+
+    @SubscribeEvent
     public void onWorldStateChange(WorldStateEvent event) {
         if (event.getNewState() != WorldState.WORLD) return;
         if (Managers.ChatTab.getFocusedTab() != null) return;
@@ -113,6 +128,21 @@ public class ChatTabsFeature extends Feature {
 
         event.setCanceled(true);
         Managers.ChatTab.setFocusedTab(Managers.ChatTab.getNextFocusedTab());
+    }
+
+    @SubscribeEvent
+    public void onChatSend(ChatSentEvent event) {
+        if (Managers.ChatTab.getFocusedTab() == null) return;
+        if (event.getMessage().isBlank()) return;
+
+        ChatTab focusedTab = Managers.ChatTab.getFocusedTab();
+        if (focusedTab.getAutoCommand() != null && !focusedTab.getAutoCommand().isBlank()) {
+            event.setCanceled(true);
+
+            String autoCommand = focusedTab.getAutoCommand();
+            autoCommand = autoCommand.startsWith("/") ? autoCommand.substring(1) : autoCommand;
+            McUtils.sendCommand(autoCommand + event.getMessage());
+        }
     }
 
     @Override

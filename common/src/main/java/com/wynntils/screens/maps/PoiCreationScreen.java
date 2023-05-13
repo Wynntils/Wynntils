@@ -266,12 +266,12 @@ public final class PoiCreationScreen extends WynntilsScreen implements TextboxSc
                                     savePoi();
                                     this.onClose();
                                 })
-                        .pos(this.width / 2 + 50, this.height / 2 + 140)
+                        .pos(this.width / 2 + 50, this.height - 40)
                         .size(100, 20)
                         .build());
         this.addRenderableWidget(new Button.Builder(
                         Component.translatable("screens.wynntils.poiCreation.cancel"), (button) -> this.onClose())
-                .pos(this.width / 2 - 150, this.height / 2 + 140)
+                .pos(this.width / 2 - 150, this.height - 40)
                 .size(100, 20)
                 .build());
         // endregion

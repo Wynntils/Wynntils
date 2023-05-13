@@ -199,6 +199,9 @@ public class GearInfoRegistry {
             }
 
             GearType type = parseType(json);
+            if (type == null) {
+                throw new RuntimeException("Invalid Wynncraft data: item has no gear type");
+            }
             GearTier tier = GearTier.fromString(json.get("tier").getAsString());
             int powderSlots = JsonUtils.getNullableJsonInt(json, "sockets");
 
