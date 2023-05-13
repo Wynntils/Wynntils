@@ -88,6 +88,9 @@ public class InfoMessageFilterFeature extends Feature {
     private boolean processFilter(CodedString msg, MessageType messageType, List<Pair<Pattern, Pattern>> patternMap) {
         for (Pair<Pattern, Pattern> pair : patternMap) {
             Pattern pattern = getPattern(pair, messageType);
+            if (pattern == null) {
+                continue;
+            }
             if (msg.getMatcher(pattern).find()) {
                 return true;
             }
@@ -100,19 +103,9 @@ public class InfoMessageFilterFeature extends Feature {
      * other messageType instead.
      */
     private Pattern getPattern(Pair<Pattern, Pattern> p, MessageType messageType) {
-        Pattern returnable =
-                switch (messageType) {
-                    case FOREGROUND -> p.a();
-                    case BACKGROUND -> p.b();
-                };
-
-        if (returnable == null) {
-            return switch (messageType) {
-                case FOREGROUND -> p.b();
-                case BACKGROUND -> p.a();
-            };
-        }
-
-        return returnable;
+        return switch (messageType) {
+            case FOREGROUND -> p.a();
+            case BACKGROUND -> p.b();
+        };
     }
 }
