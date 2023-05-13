@@ -114,6 +114,7 @@ import com.wynntils.features.ui.ContainerScrollFeature;
 import com.wynntils.features.ui.CosmeticsPreviewFeature;
 import com.wynntils.features.ui.CustomCharacterSelectionScreenFeature;
 import com.wynntils.features.ui.CustomLoadingScreenFeature;
+import com.wynntils.features.ui.CustomSeaskipperScreenFeature;
 import com.wynntils.features.ui.LobbyUptimeFeature;
 import com.wynntils.features.ui.SoulPointTimerFeature;
 import com.wynntils.features.ui.WynncraftButtonFeature;
@@ -189,6 +190,7 @@ public final class FeatureManager extends Manager {
         registerFeature(new CustomCommandKeybindsFeature());
         registerFeature(new CustomLoadingScreenFeature());
         registerFeature(new CustomNametagRendererFeature());
+        registerFeature(new CustomSeaskipperScreenFeature());
         registerFeature(new DeathCoordinatesFeature());
         registerFeature(new DialogueOptionOverrideFeature());
         registerFeature(new GameBarsOverlayFeature());
