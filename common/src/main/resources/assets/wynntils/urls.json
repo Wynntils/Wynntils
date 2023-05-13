@@ -1,6 +1,6 @@
 [
   {
-    "version": 9
+    "version": 8
   },
   {
     "id": "apiAthenaAuthPublicKey",
@@ -96,7 +96,7 @@
   },
   {
     "id": "dataStaticGear",
-    "md5": "b4c3700ea8aa8ddceb534282ed89676e",
+    "md5": "08ad22a9fcda25e82673d1b9ec8cda6b",
     "url": "https://raw.githubusercontent.com/Wynntils/WynntilsWebsite-API/master/gear.json"
   },
   {
@@ -126,7 +126,7 @@
   },
   {
     "id": "dataStaticMaps",
-    "md5": "9b3e41ff749b39630ee5c042d90991a8",
+    "md5": "ce8fa555b856dce76b285a606c422aad",
     "url": "https://raw.githubusercontent.com/Wynntils/WynntilsWebsite-API/master/maps/maps.json"
   },
   {
