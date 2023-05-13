@@ -9,7 +9,7 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import com.wynntils.core.components.Managers;
 import com.wynntils.core.components.Models;
 import com.wynntils.core.text.CodedString;
-import com.wynntils.features.map.GuildMapFeature;
+import com.wynntils.features.ui.CustomSeaskipperScreenFeature;
 import com.wynntils.models.items.items.gui.SeaskipperDestinationItem;
 import com.wynntils.models.map.PoiLocation;
 import com.wynntils.models.map.pois.SeaskipperDestinationPoi;
@@ -33,12 +33,14 @@ import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.network.chat.Component;
 
 public final class SeaskipperMapScreen extends AbstractMapScreen {
-    private final int MAP_CENTER_X = -240;
-    private final int MAP_CENTER_Y = -3130;
-    private SeaskipperDestinationPoi hoveredPoi;
+    private static final int MAP_CENTER_X = -240;
+    private static final int MAP_CENTER_Y = -3130;
+
     private boolean hideTerritoryBorders = false;
     private boolean renderAllDestinations = false;
     private boolean renderRoutes = false;
+
+    private SeaskipperDestinationPoi hoveredPoi;
 
     private SeaskipperMapScreen() {}
 
@@ -126,6 +128,7 @@ public final class SeaskipperMapScreen extends AbstractMapScreen {
                         Component.translatable("screens.wynntils.seaskipperMapGui.buyBoat.description")
                                 .withStyle(ChatFormatting.GRAY))));
 
+        // FIXME: Check on resize
         updateMapCenter(MAP_CENTER_X, MAP_CENTER_Y);
         setZoom(0.1f);
     }
@@ -138,11 +141,7 @@ public final class SeaskipperMapScreen extends AbstractMapScreen {
 
         RenderSystem.enableDepthTest();
 
-        renderMap(
-                poseStack,
-                Managers.Feature.getFeatureInstance(GuildMapFeature.class)
-                        .renderUsingLinear
-                        .get());
+        renderMap(poseStack);
 
         RenderUtils.enableScissor(
                 (int) (renderX + renderedBorderXOffset), (int) (renderY + renderedBorderYOffset), (int) mapWidth, (int)
@@ -153,10 +152,10 @@ public final class SeaskipperMapScreen extends AbstractMapScreen {
         renderCursor(
                 poseStack,
                 1.5f,
-                Managers.Feature.getFeatureInstance(GuildMapFeature.class)
+                Managers.Feature.getFeatureInstance(CustomSeaskipperScreenFeature.class)
                         .pointerColor
                         .get(),
-                Managers.Feature.getFeatureInstance(GuildMapFeature.class)
+                Managers.Feature.getFeatureInstance(CustomSeaskipperScreenFeature.class)
                         .pointerType
                         .get());
 

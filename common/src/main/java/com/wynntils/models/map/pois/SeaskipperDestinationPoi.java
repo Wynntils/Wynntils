@@ -133,7 +133,7 @@ public class SeaskipperDestinationPoi implements Poi {
                         0,
                         color,
                         HorizontalAlignment.CENTER,
-                        VerticalAlignment.TOP,
+                        VerticalAlignment.MIDDLE,
                         TextShadow.OUTLINE);
 
         poseStack.popPose();

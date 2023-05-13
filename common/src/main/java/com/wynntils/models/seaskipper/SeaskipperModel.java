@@ -18,7 +18,6 @@ import com.wynntils.mc.event.ScreenOpenedEvent;
 import com.wynntils.models.containers.ContainerModel;
 import com.wynntils.models.items.items.gui.SeaskipperDestinationItem;
 import com.wynntils.models.map.pois.SeaskipperDestinationPoi;
-import com.wynntils.utils.mc.ComponentUtils;
 import com.wynntils.utils.mc.McUtils;
 import com.wynntils.utils.wynn.ContainerUtils;
 import java.lang.reflect.Type;
@@ -54,8 +53,7 @@ public final class SeaskipperModel extends Model {
 
     @SubscribeEvent
     public void onScreenOpened(ScreenOpenedEvent.Post event) {
-        if (Models.Container.isSeaskipper(
-                ComponentUtils.getUnformatted(event.getScreen().getTitle()))) {
+        if (Models.Container.isSeaskipper(event.getScreen().getTitle())) {
             actualSeaskipperScreen = (AbstractContainerScreen) event.getScreen();
 
             loadSeaskipperPois();
@@ -64,7 +62,7 @@ public final class SeaskipperModel extends Model {
 
     @SubscribeEvent
     public void onMenuOpened(MenuEvent.MenuOpenedEvent event) {
-        if (Models.Container.isSeaskipper(ComponentUtils.getUnformatted(event.getTitle()))) {
+        if (Models.Container.isSeaskipper(event.getTitle())) {
             containerId = event.getContainerId();
         }
     }

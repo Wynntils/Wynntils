@@ -7,6 +7,7 @@ package com.wynntils.models.containers;
 import com.wynntils.core.components.Model;
 import com.wynntils.core.components.Models;
 import com.wynntils.core.text.CodedString;
+import com.wynntils.core.text.StyledText;
 import com.wynntils.utils.mc.ComponentUtils;
 import com.wynntils.utils.type.Pair;
 import com.wynntils.utils.wynn.WynnUtils;
@@ -17,6 +18,7 @@ import java.util.regex.Pattern;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
 import net.minecraft.client.gui.screens.inventory.ContainerScreen;
+import net.minecraft.network.chat.Component;
 
 public final class ContainerModel extends Model {
     public static final Pattern ABILITY_TREE_PATTERN =
@@ -43,6 +45,7 @@ public final class ContainerModel extends Model {
     private static final CodedString LAST_BANK_PAGE_STRING = CodedString.fromString(">§4>§c>§4>§c>");
     private static final CodedString FIRST_TRADE_MARKET_PAGE_STRING = CodedString.fromString("§bReveal Item Names");
     private static final CodedString TRADE_MARKET_TITLE = CodedString.fromString("Trade Market");
+    private static final StyledText SEASKIPPER_TITLE = StyledText.fromString("V.S.S. Seaskipper");
 
     public ContainerModel() {
         super(List.of());
@@ -121,8 +124,8 @@ public final class ContainerModel extends Model {
         return isLootChest(title) || title.startsWith("Daily Rewards") || title.contains("Objective Rewards");
     }
 
-    public boolean isSeaskipper(String title) {
-        return title.equals("V.S.S. Seaskipper");
+    public boolean isSeaskipper(Component component) {
+        return StyledText.fromComponent(component).equals(SEASKIPPER_TITLE);
     }
 
     public Matcher lootChestMatcher(Screen screen) {
