@@ -78,9 +78,7 @@ public class InfoMessageFilterFeature extends Feature {
         }
 
         if (hidePartyFinder.get()) {
-            // §5Party Finder:§r§d Hey v8j, over here! Join the §r§bThe Nameless Anomaly§r§d queue and match up with
-            // §r§e3 other players§r§d!
-            // Matches until the username
+            // Matches until the username in the party finder message
             e.setCanceled(msg.startsWith(ChatFormatting.DARK_PURPLE + "Party Finder:" + ChatFormatting.RESET
                     + ChatFormatting.LIGHT_PURPLE + " Hey "));
             return;
