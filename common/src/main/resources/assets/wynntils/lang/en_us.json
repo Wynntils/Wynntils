@@ -860,6 +860,8 @@
   "feature.wynntils.wybelSound.hideText.description": "Should we hide the chat text if we play a sound?",
   "feature.wynntils.wybelSound.hideText.name": "Hide Chat Text",
   "feature.wynntils.wybelSound.name": "Wybel Sounds",
+  "feature.wynntils.wynncraftButton.autoConnect.description": "Should you auto-connect to Wynncraft on startup?",
+  "feature.wynntils.wynncraftButton.autoConnect.name": "Auto-Connect on Startup",
   "feature.wynntils.wynncraftButton.connectToLobby.description": "Should the button connect to the lobby or the game server?",
   "feature.wynntils.wynncraftButton.connectToLobby.name": "Connect to Lobby",
   "feature.wynntils.wynncraftButton.name": "Wynncraft Button",

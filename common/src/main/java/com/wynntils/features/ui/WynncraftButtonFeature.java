@@ -38,15 +38,20 @@ import org.apache.commons.lang3.Validate;
 public class WynncraftButtonFeature extends Feature {
     private static final String GAME_SERVER = "play.wynncraft.com";
     private static final String LOBBY_SERVER = "lobby.wynncraft.com";
+    private static boolean initialBoot = false;
 
     @RegisterConfig
     public final Config<Boolean> connectToLobby = new Config<>(false);
+
+    @RegisterConfig
+    public final Config<Boolean> autoConnect = new Config<>(false);
 
     @SubscribeEvent
     public void onTitleScreenInit(TitleScreenInitEvent.Post e) {
         TitleScreen titleScreen = e.getTitleScreen();
 
         addWynncraftButton(titleScreen);
+        autoConnect();
     }
 
     @SubscribeEvent
@@ -64,6 +69,24 @@ public class WynncraftButtonFeature extends Feature {
         WynncraftButton wynncraftButton = new WynncraftButton(
                 titleScreen, wynncraftServer, titleScreen.width / 2 + 104, titleScreen.height / 4 + 48 + 24);
         titleScreen.addRenderableWidget(wynncraftButton);
+    }
+
+    /* connects to the server on "startup" - off by default */
+    private void autoConnect() {
+        if (!autoConnect.get()) return;
+
+        if (!initialBoot) {
+            ServerData wynncraftServer =
+                    new ServerData("Wynncraft", connectToLobby.get() ? LOBBY_SERVER : GAME_SERVER, false);
+            wynncraftServer.setResourcePackStatus(ServerData.ServerPackStatus.ENABLED);
+
+            Minecraft minecraft = Minecraft.getInstance();
+            Screen backScreen = minecraft.screen;
+
+            ConnectScreen.startConnecting(
+                    backScreen, minecraft, ServerAddress.parseString(wynncraftServer.ip), wynncraftServer);
+            initialBoot = true;
+        }
     }
 
     private static class WynncraftButton extends Button {
