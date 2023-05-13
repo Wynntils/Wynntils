@@ -107,7 +107,7 @@ public class ContainerSearchFeature extends Feature {
     }
 
     @SubscribeEvent
-    public void onContainerSetSlot(ContainerSetSlotEvent event) {
+    public void onContainerSetSlot(ContainerSetSlotEvent.Pre event) {
         forceUpdateSearch();
     }
 

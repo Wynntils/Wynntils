@@ -195,6 +195,7 @@
   "feature.wynntils.customNametagRenderer.showGearOnHover.name": "Show Player's Gear on Hover",
   "feature.wynntils.customNametagRenderer.showWynntilsMarker.description": "Should a player's nametag have a marker indicating that they are using Wynntils?",
   "feature.wynntils.customNametagRenderer.showWynntilsMarker.name": "Show Wynntils Marker on Nametag",
+  "feature.wynntils.customSeaskipperScreen.error.noProfile": "Could not download seaskipper profile data. Falling back to regular seaskipper screen.",
   "feature.wynntils.customSeaskipperScreen.name": "Custom Seaskipper Screen",
   "feature.wynntils.customSeaskipperScreen.pointerColor.description": "What color should the main map pointer be?",
   "feature.wynntils.customSeaskipperScreen.pointerColor.name": "Pointer Color",

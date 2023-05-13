@@ -14,188 +14,145 @@ import com.wynntils.core.net.UrlId;
 import com.wynntils.core.text.StyledText;
 import com.wynntils.mc.event.ContainerSetSlotEvent;
 import com.wynntils.mc.event.MenuEvent;
-import com.wynntils.mc.event.ScreenOpenedEvent;
 import com.wynntils.models.containers.ContainerModel;
 import com.wynntils.models.items.items.gui.SeaskipperDestinationItem;
 import com.wynntils.models.map.pois.SeaskipperDestinationPoi;
+import com.wynntils.models.seaskipper.type.SeaskipperDestination;
+import com.wynntils.models.seaskipper.type.SeaskipperDestinationProfile;
+import com.wynntils.screens.maps.SeaskipperMapScreen;
 import com.wynntils.utils.mc.McUtils;
 import com.wynntils.utils.wynn.ContainerUtils;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
+import java.util.Optional;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import org.lwjgl.glfw.GLFW;
 
 public final class SeaskipperModel extends Model {
     private static final StyledText OAK_BOAT_NAME = StyledText.fromString("§bOak Boat");
-    private static final Pattern SEASKIPPER_PASS_PATTERN = Pattern.compile("^§b(.*) Pass §7for §b(\\d+)²$");
 
-    private static AbstractContainerScreen actualSeaskipperScreen;
+    private List<SeaskipperDestination> allDestinations = new ArrayList<>();
+    private List<SeaskipperDestination> availableDestinations = new ArrayList<>();
 
-    private final Map<SeaskipperDestinationItem, Integer> destinations = new HashMap<>();
-    private final List<SeaskipperDestinationPoi> seaskipperDestinationPois = new ArrayList<>();
-    private final List<String> availableNames = new ArrayList<>();
-
-    private List<SeaskipperDestinationPoi> availableDestinations = new ArrayList<>();
-    private SeaskipperDestinationPoi currentPoi;
     private int boatSlot;
     private int containerId = -2;
 
     public SeaskipperModel(ContainerModel containerModel) {
         super(List.of(containerModel));
+
+        reloadData();
     }
 
-    @SubscribeEvent
-    public void onScreenOpened(ScreenOpenedEvent.Post event) {
-        if (Models.Container.isSeaskipper(event.getScreen().getTitle())) {
-            actualSeaskipperScreen = (AbstractContainerScreen) event.getScreen();
-
-            loadSeaskipperPois();
-        }
+    @Override
+    public void reloadData() {
+        loadSeaskipperPois();
     }
 
     @SubscribeEvent
     public void onMenuOpened(MenuEvent.MenuOpenedEvent event) {
-        if (Models.Container.isSeaskipper(event.getTitle())) {
-            containerId = event.getContainerId();
-        }
-    }
+        if (!Models.Container.isSeaskipper(event.getTitle())) return;
 
-    public void closeScreen() {
-        McUtils.player().closeContainer();
+        containerId = event.getContainerId();
+        availableDestinations = new ArrayList<>();
     }
 
     @SubscribeEvent
-    public void onSetSlot(ContainerSetSlotEvent event) {
+    public void onSetSlot(ContainerSetSlotEvent.Post event) {
         if (event.getContainerId() != containerId) return;
 
         if (StyledText.fromComponent(event.getItemStack().getHoverName()).equals(OAK_BOAT_NAME)) {
-            setBoatSlot(event.getSlot());
+            boatSlot = event.getSlot();
             return;
         }
 
-        Matcher matcher =
-                StyledText.fromComponent(event.getItemStack().getHoverName()).getMatcher(SEASKIPPER_PASS_PATTERN);
-        if (!matcher.matches()) return;
+        Optional<SeaskipperDestinationItem> optionalItem =
+                Models.Item.asWynnItem(event.getItemStack(), SeaskipperDestinationItem.class);
 
-        String destination = matcher.group(1);
-        int price = Integer.parseInt(matcher.group(2));
-        String shorthand = destination.substring(0, 2);
+        if (optionalItem.isEmpty()) return;
 
-        addDestination(new SeaskipperDestinationItem(destination, price, shorthand), event.getSlot());
+        SeaskipperDestinationItem item = optionalItem.get();
 
-        availableNames.add(destination);
+        Optional<SeaskipperDestination> destinationOptional = allDestinations.stream()
+                .filter(profile -> profile.profile().destination().equals(item.getDestination()))
+                .findFirst();
+
+        if (destinationOptional.isEmpty()) {
+            WynntilsMod.warn("Could not find profile for destination: " + item.getDestination());
+            return;
+        }
+
+        SeaskipperDestinationProfile profile = destinationOptional.get().profile();
+
+        availableDestinations.add(new SeaskipperDestination(profile, item, event.getSlot()));
+
+        // We added a new destination, reload the map
+        // (This reloads the pois for every item parsed, but performance is not an issue here)
+        if (McUtils.mc().screen instanceof SeaskipperMapScreen seaskipperMapScreen) {
+            seaskipperMapScreen.reloadDestionationPois();
+        }
     }
 
-    private void addDestination(SeaskipperDestinationItem destination, int slot) {
-        destinations.put(destination, slot);
-    }
+    public List<SeaskipperDestinationPoi> getPois(boolean includeAll) {
+        List<SeaskipperDestinationPoi> pois = new ArrayList<>();
 
-    public Map<SeaskipperDestinationItem, Integer> getDestinations() {
-        return Collections.unmodifiableMap(destinations);
-    }
+        for (SeaskipperDestination destination : availableDestinations) {
+            pois.add(new SeaskipperDestinationPoi(destination));
+        }
 
-    public List<SeaskipperDestinationPoi> getAvailableDestinations() {
-        return Collections.unmodifiableList(availableDestinations);
-    }
+        // Include the destination we are currently at
+        allDestinations.stream()
+                .filter(SeaskipperDestination::isPlayerInside)
+                .findFirst()
+                .ifPresent(profile -> pois.add(new SeaskipperDestinationPoi(profile)));
 
-    public List<SeaskipperDestinationPoi> getSeaskipperPois() {
-        return Collections.unmodifiableList(seaskipperDestinationPois);
-    }
+        if (includeAll) {
+            List<SeaskipperDestination> notAvailableProfiles = allDestinations.stream()
+                    .filter(profile -> pois.stream()
+                            .map(SeaskipperDestinationPoi::getDestination)
+                            .noneMatch(destination -> destination.profile().equals(profile.profile())))
+                    .toList();
 
-    private void setBoatSlot(int boatSlot) {
-        this.boatSlot = boatSlot;
+            pois.addAll(notAvailableProfiles.stream()
+                    .map(SeaskipperDestinationPoi::new)
+                    .toList());
+        }
+
+        return pois;
     }
 
     public void purchaseBoat() {
-        clickSlot(boatSlot);
-    }
-
-    public SeaskipperDestinationPoi getCurrentPoi() {
-        return currentPoi;
-    }
-
-    public void purchasePass(String destinationToTravelTo) {
-        int passSlot = -1;
-
-        for (Map.Entry<SeaskipperDestinationItem, Integer> entry :
-                Models.Seaskipper.getDestinations().entrySet()) {
-            String destination = entry.getKey().getDestination();
-
-            if (destination.equals(destinationToTravelTo)) {
-                passSlot = entry.getValue();
-                break;
-            }
-        }
-
-        if (passSlot == -1) {
-            return;
-        }
-
-        clickSlot(passSlot);
-    }
-
-    private void clickSlot(int slot) {
         ContainerUtils.clickOnSlot(
-                slot,
-                actualSeaskipperScreen.getMenu().containerId,
+                boatSlot,
+                containerId,
                 GLFW.GLFW_MOUSE_BUTTON_LEFT,
-                actualSeaskipperScreen.getMenu().getItems());
+                McUtils.containerMenu().getItems());
+    }
+
+    public void purchasePass(SeaskipperDestination destination) {
+        if (destination.slot() == -1) return;
+
+        ContainerUtils.clickOnSlot(
+                destination.slot(),
+                containerId,
+                GLFW.GLFW_MOUSE_BUTTON_LEFT,
+                McUtils.containerMenu().getItems());
+    }
+
+    public boolean isProfileLoaded() {
+        return !allDestinations.isEmpty();
     }
 
     private void loadSeaskipperPois() {
-        seaskipperDestinationPois.clear();
-        availableNames.clear();
-        availableDestinations.clear();
-        destinations.clear();
-
         Download dl = Managers.Net.download(UrlId.DATA_STATIC_SEASKIPPER_DESTINATIONS);
+
         dl.handleReader(reader -> {
-            Type type = new TypeToken<ArrayList<SeaskipperProfile>>() {}.getType();
-            List<SeaskipperProfile> seaskipperProfiles = WynntilsMod.GSON.fromJson(reader, type);
+            Type type = new TypeToken<ArrayList<SeaskipperDestinationProfile>>() {}.getType();
+            List<SeaskipperDestinationProfile> profiles = WynntilsMod.GSON.fromJson(reader, type);
 
-            for (SeaskipperProfile profile : seaskipperProfiles) {
-                seaskipperDestinationPois.add(new SeaskipperDestinationPoi(
-                        profile.destination,
-                        profile.combatLevel,
-                        profile.startX,
-                        profile.startZ,
-                        profile.endX,
-                        profile.endZ));
-            }
-
-            for (SeaskipperDestinationPoi poi : seaskipperDestinationPois) {
-                if (poi.isPlayerInside()) {
-                    currentPoi = poi;
-                    availableDestinations.add(currentPoi);
-                    break;
-                }
-            }
-
-            setAvailableDestinations();
+            allDestinations = profiles.stream()
+                    .map(profile -> new SeaskipperDestination(profile, null, -1))
+                    .toList();
         });
-    }
-
-    private void setAvailableDestinations() {
-        for (SeaskipperDestinationPoi poi : seaskipperDestinationPois) {
-            if (availableNames.contains(poi.getName())) {
-                availableDestinations.add(poi);
-            }
-        }
-    }
-
-    private static class SeaskipperProfile {
-        String destination;
-        int combatLevel;
-        int startX;
-        int startZ;
-        int endX;
-        int endZ;
     }
 }

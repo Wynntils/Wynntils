@@ -60,7 +60,7 @@ public class TradeMarketBulkSellFeature extends Feature {
     }
 
     @SubscribeEvent
-    public void onSellDialogueUpdated(ContainerSetSlotEvent e) {
+    public void onSellDialogueUpdated(ContainerSetSlotEvent.Pre e) {
         if (!(McUtils.mc().screen instanceof ContainerScreen cs)) return;
         if (!ComponentUtils.getUnformatted(cs.getTitle()).equals(SELL_DIALOGUE_TITLE)) return;
         if (!ComponentUtils.getUnformatted(
