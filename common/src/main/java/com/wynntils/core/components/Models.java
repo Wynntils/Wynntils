@@ -40,6 +40,7 @@ import com.wynntils.models.players.hades.HadesModel;
 import com.wynntils.models.profession.ProfessionModel;
 import com.wynntils.models.quests.QuestModel;
 import com.wynntils.models.rewards.RewardsModel;
+import com.wynntils.models.seaskipper.SeaskipperModel;
 import com.wynntils.models.spells.SpellModel;
 import com.wynntils.models.stats.StatModel;
 import com.wynntils.models.statuseffects.StatusEffectModel;
@@ -99,6 +100,7 @@ public final class Models {
     public static final PingModel Ping = new PingModel(WorldState);
     public static final ProfessionModel Profession = new ProfessionModel(Character);
     public static final QuestModel Quest = new QuestModel(CombatXp);
+    public static final SeaskipperModel Seaskipper = new SeaskipperModel(Item);
     public static final ShamanMaskModel ShamanMask = new ShamanMaskModel(WorldState);
     public static final ShamanTotemModel ShamanTotem = new ShamanTotemModel(WorldState);
     public static final SpellModel Spell = new SpellModel(Character);

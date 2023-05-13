@@ -140,6 +140,11 @@
     "url": "https://raw.githubusercontent.com/Wynntils/Reference/main/locations/places.json"
   },
   {
+    "id": "dataStaticSeaskipperDestinations",
+    "md5": "9316de06eb80ef9a26f8b604e9ac13bd",
+    "url": "https://raw.githubusercontent.com/Wynntils/WynntilsWebsite-API/master/seaskipper_destinations.json"
+  },
+  {
     "id": "dataStaticServices",
     "md5": "20c6bad6dddac9fdf32b582764e266ef",
     "url": "https://raw.githubusercontent.com/Wynntils/Reference/main/locations/services.json"
