@@ -28,6 +28,9 @@ public class AbilityTreePageSelectorButton extends AbstractWidget {
 
     @Override
     public void renderWidget(PoseStack poseStack, int i, int j, float f) {
+        if (upDirection && screen.getCurrentPage() == 0) return;
+        if (!upDirection && screen.getCurrentPage() == Models.AbilityTree.ABILITY_TREE_PAGES - 1) return;
+
         Texture texture = upDirection ? Texture.ABILITY_TREE_UP_ARROW : Texture.ABILITY_TREE_DOWN_ARROW;
 
         RenderUtils.drawTexturedRect(poseStack, texture, this.getX(), this.getY());
@@ -36,12 +39,8 @@ public class AbilityTreePageSelectorButton extends AbstractWidget {
     @Override
     public boolean mouseClicked(double mouseX, double mouseY, int button) {
         // Check if we're at the top or bottom of the tree
-        if (upDirection && screen.getCurrentPage() == 0) {
-            return false;
-        }
-        if (!upDirection && screen.getCurrentPage() == Models.AbilityTree.ABILITY_TREE_PAGES - 1) {
-            return false;
-        }
+        if (upDirection && screen.getCurrentPage() == 0) return true;
+        if (!upDirection && screen.getCurrentPage() == Models.AbilityTree.ABILITY_TREE_PAGES - 1) return true;
 
         if (upDirection) {
             screen.setCurrentPage(screen.getCurrentPage() - 1);

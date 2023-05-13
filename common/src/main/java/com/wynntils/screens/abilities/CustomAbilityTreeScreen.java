@@ -27,6 +27,7 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import net.minecraft.client.gui.components.events.GuiEventListener;
 import net.minecraft.network.chat.Component;
 
 public class CustomAbilityTreeScreen extends WynntilsScreen {
@@ -39,8 +40,11 @@ public class CustomAbilityTreeScreen extends WynntilsScreen {
     private static final int NODE_AREA_WIDTH = 155;
     private static final int NODE_AREA_HEIGHT = 99;
 
-    private static final int UP_ARROW_X = 247;
-    private static final int UP_ARROW_Y = 114;
+    private static final int UP_ARROW_X = 250;
+    private static final int UP_ARROW_Y = 117;
+
+    private static final int DOWN_ARROW_X = 278;
+    private static final int DOWN_ARROW_Y = 117;
 
     // This scale is used to scale the whole screen to fit the screen size
     private float textureScale = 1f;
@@ -80,6 +84,14 @@ public class CustomAbilityTreeScreen extends WynntilsScreen {
                 Texture.ABILITY_TREE_UP_ARROW.height(),
                 this,
                 true));
+
+        this.addRenderableWidget(new AbilityTreePageSelectorButton(
+                DOWN_ARROW_X,
+                DOWN_ARROW_Y,
+                Texture.ABILITY_TREE_DOWN_ARROW.width(),
+                Texture.ABILITY_TREE_DOWN_ARROW.height(),
+                this,
+                false));
     }
 
     // endregion
@@ -146,6 +158,27 @@ public class CustomAbilityTreeScreen extends WynntilsScreen {
     // endregion
 
     // region Mouse Handlers
+
+    @Override
+    public boolean doMouseClicked(double mouseX, double mouseY, int button) {
+        // Translate the mouse position to match what is rendered on the screen
+        mouseX -= (this.width - Texture.ABILITY_TREE_BACKGROUND.width() * textureScale) / 2;
+        mouseY -= (this.height - Texture.ABILITY_TREE_BACKGROUND.height() * textureScale) / 2;
+
+        // Actual texture positions are not scaled, only the rendering is
+        mouseX /= textureScale;
+        mouseY /= textureScale;
+
+        for (GuiEventListener child : this.children()) {
+            if (child.isMouseOver(mouseX, mouseY)) {
+                if (child.mouseClicked(mouseX, mouseY, button)) {
+                    return true;
+                }
+            }
+        }
+
+        return false;
+    }
 
     @Override
     public boolean mouseScrolled(double mouseX, double mouseY, double delta) {
