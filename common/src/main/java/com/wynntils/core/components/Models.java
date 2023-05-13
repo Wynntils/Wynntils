@@ -100,7 +100,7 @@ public final class Models {
     public static final PingModel Ping = new PingModel(WorldState);
     public static final ProfessionModel Profession = new ProfessionModel(Character);
     public static final QuestModel Quest = new QuestModel(CombatXp);
-    public static final SeaskipperModel Seaskipper = new SeaskipperModel(Container);
+    public static final SeaskipperModel Seaskipper = new SeaskipperModel(Item);
     public static final ShamanMaskModel ShamanMask = new ShamanMaskModel(WorldState);
     public static final ShamanTotemModel ShamanTotem = new ShamanTotemModel(WorldState);
     public static final SpellModel Spell = new SpellModel(Character);

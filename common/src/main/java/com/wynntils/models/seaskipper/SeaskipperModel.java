@@ -14,7 +14,7 @@ import com.wynntils.core.net.UrlId;
 import com.wynntils.core.text.StyledText;
 import com.wynntils.mc.event.ContainerSetSlotEvent;
 import com.wynntils.mc.event.MenuEvent;
-import com.wynntils.models.containers.ContainerModel;
+import com.wynntils.models.items.ItemModel;
 import com.wynntils.models.items.items.gui.SeaskipperDestinationItem;
 import com.wynntils.models.map.pois.SeaskipperDestinationPoi;
 import com.wynntils.models.seaskipper.type.SeaskipperDestination;
@@ -38,8 +38,8 @@ public final class SeaskipperModel extends Model {
     private int boatSlot;
     private int containerId = -2;
 
-    public SeaskipperModel(ContainerModel containerModel) {
-        super(List.of(containerModel));
+    public SeaskipperModel(ItemModel itemModel) {
+        super(List.of(itemModel));
 
         reloadData();
     }
