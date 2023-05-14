@@ -6,7 +6,10 @@ package com.wynntils.screens.abilities.widgets;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.wynntils.core.components.Models;
+import com.wynntils.models.abilitytree.type.AbilityTreeNodeState;
 import com.wynntils.models.abilitytree.type.AbilityTreeSkillNode;
+import com.wynntils.models.abilitytree.type.ParsedAbilityTree;
+import com.wynntils.utils.render.FontRenderer;
 import com.wynntils.utils.render.RenderUtils;
 import net.minecraft.client.gui.components.AbstractWidget;
 import net.minecraft.client.gui.narration.NarrationElementOutput;
@@ -29,9 +32,12 @@ public class AbilityNodeWidget extends AbstractWidget {
     public void renderWidget(PoseStack poseStack, int mouseX, int mouseY, float partialTick) {
         ItemStack itemStack = new ItemStack(Item.byId(node.itemInformation().itemId()));
 
+        ParsedAbilityTree currentAbilityTree = Models.AbilityTree.getCurrentAbilityTree();
+        AbilityTreeNodeState nodeState = currentAbilityTree.getNodeState(node);
         int damage =
-                switch (Models.AbilityTree.getNodeState(node)) {
-                    case LOCKED -> node.itemInformation().getLockedDamage();
+                switch (nodeState) {
+                    case UNREACHABLE, REQUIREMENT_NOT_MET -> node.itemInformation()
+                            .getLockedDamage();
                     case UNLOCKABLE -> node.itemInformation().getUnlockableDamage();
                     case UNLOCKED -> node.itemInformation().getUnlockedDamage();
                     case BLOCKED -> node.itemInformation().getBlockedDamage();
@@ -42,6 +48,17 @@ public class AbilityNodeWidget extends AbstractWidget {
         tag.putBoolean("Unbreakable", true);
 
         RenderUtils.renderItem(poseStack, itemStack, this.getX(), this.getY());
+
+        if (isMouseOver(mouseX, mouseY)) {
+            RenderUtils.drawTooltipAt(
+                    poseStack,
+                    mouseX,
+                    mouseY,
+                    0,
+                    node.getDescription(nodeState, currentAbilityTree),
+                    FontRenderer.getInstance().getFont(),
+                    false);
+        }
     }
 
     @Override

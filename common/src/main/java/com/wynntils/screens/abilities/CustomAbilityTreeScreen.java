@@ -175,6 +175,8 @@ public class CustomAbilityTreeScreen extends WynntilsScreen {
 
     @Override
     public boolean doMouseClicked(double mouseX, double mouseY, int button) {
+        if (treeParseState != TreeParseState.PARSED) return false;
+
         // Translate the mouse position to match what is rendered on the screen
         mouseX -= (this.width - Texture.ABILITY_TREE_BACKGROUND.width() * textureScale) / 2;
         mouseY -= (this.height - Texture.ABILITY_TREE_BACKGROUND.height() * textureScale) / 2;
@@ -196,6 +198,8 @@ public class CustomAbilityTreeScreen extends WynntilsScreen {
 
     @Override
     public boolean mouseScrolled(double mouseX, double mouseY, double delta) {
+        if (treeParseState != TreeParseState.PARSED) return false;
+
         setCurrentPage((int) (currentPage - Math.signum(delta)));
         return true;
     }

@@ -53,8 +53,10 @@ public class AbilityTreeConnectionNode {
 
     private void updateConnectedStates() {
         List<AbilityTreeSkillNode> activeNodes = nodePairs.stream()
-                .filter(pair -> Models.AbilityTree.getNodeState(pair.a()) == AbilityTreeNodeState.UNLOCKED
-                        && Models.AbilityTree.getNodeState(pair.b()) == AbilityTreeNodeState.UNLOCKED)
+                .filter(pair -> Models.AbilityTree.getCurrentAbilityTree().getNodeState(pair.a())
+                                == AbilityTreeNodeState.UNLOCKED
+                        && Models.AbilityTree.getCurrentAbilityTree().getNodeState(pair.b())
+                                == AbilityTreeNodeState.UNLOCKED)
                 .flatMap(pair -> Stream.of(pair.a(), pair.b()))
                 .toList();
 
