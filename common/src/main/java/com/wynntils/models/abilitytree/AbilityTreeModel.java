@@ -55,6 +55,10 @@ public class AbilityTreeModel extends Model {
         });
     }
 
+    public boolean isLoaded() {
+        return !ABILIIY_TREE_MAP.isEmpty();
+    }
+
     public void setCurrentAbilityTree(ParsedAbilityTree currentAbilityTree) {
         this.currentAbilityTree = currentAbilityTree;
 

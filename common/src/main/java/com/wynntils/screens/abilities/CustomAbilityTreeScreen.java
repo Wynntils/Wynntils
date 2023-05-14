@@ -12,13 +12,11 @@ import com.wynntils.models.abilitytree.type.AbilityTreeConnectionType;
 import com.wynntils.models.abilitytree.type.AbilityTreeInfo;
 import com.wynntils.models.abilitytree.type.AbilityTreeLocation;
 import com.wynntils.models.abilitytree.type.AbilityTreeSkillNode;
-import com.wynntils.models.character.type.ClassType;
 import com.wynntils.screens.abilities.widgets.AbilityNodeConnectionWidget;
 import com.wynntils.screens.abilities.widgets.AbilityNodeWidget;
 import com.wynntils.screens.abilities.widgets.AbilityTreePageSelectorButton;
 import com.wynntils.screens.base.WynntilsScreen;
 import com.wynntils.utils.MathUtils;
-import com.wynntils.utils.mc.McUtils;
 import com.wynntils.utils.render.RenderUtils;
 import com.wynntils.utils.render.Texture;
 import com.wynntils.utils.type.Pair;
@@ -59,14 +57,6 @@ public class CustomAbilityTreeScreen extends WynntilsScreen {
     public CustomAbilityTreeScreen() {
         super(Component.literal("Ability Tree"));
 
-        if (Models.Character.getClassType() == ClassType.NONE) {
-            abilityTreeInfo = null;
-            McUtils.sendMessageToClient(Component.translatable("screens.wynntils.abilityTree.noClassData"));
-            onClose();
-            return;
-        }
-
-        // FIXME: Handle failure here
         abilityTreeInfo = Models.AbilityTree.getAbilityTree(Models.Character.getClassType());
         setCurrentPage(0);
     }
