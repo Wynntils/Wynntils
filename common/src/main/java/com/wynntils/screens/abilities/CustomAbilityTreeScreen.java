@@ -7,6 +7,8 @@ package com.wynntils.screens.abilities;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.components.Models;
+import com.wynntils.core.text.CodedString;
+import com.wynntils.core.text.StyledText;
 import com.wynntils.models.abilitytree.type.AbilityTreeConnectionNode;
 import com.wynntils.models.abilitytree.type.AbilityTreeConnectionType;
 import com.wynntils.models.abilitytree.type.AbilityTreeInfo;
@@ -17,8 +19,13 @@ import com.wynntils.screens.abilities.widgets.AbilityNodeWidget;
 import com.wynntils.screens.abilities.widgets.AbilityTreePageSelectorButton;
 import com.wynntils.screens.base.WynntilsScreen;
 import com.wynntils.utils.MathUtils;
+import com.wynntils.utils.colors.CommonColors;
+import com.wynntils.utils.render.FontRenderer;
 import com.wynntils.utils.render.RenderUtils;
 import com.wynntils.utils.render.Texture;
+import com.wynntils.utils.render.type.HorizontalAlignment;
+import com.wynntils.utils.render.type.TextShadow;
+import com.wynntils.utils.render.type.VerticalAlignment;
 import com.wynntils.utils.type.Pair;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
@@ -44,15 +51,15 @@ public class CustomAbilityTreeScreen extends WynntilsScreen {
     private static final int DOWN_ARROW_X = 278;
     private static final int DOWN_ARROW_Y = 117;
 
-    // This scale is used to scale the whole screen to fit the screen size
-    private float textureScale = 1f;
-
     private final AbilityTreeInfo abilityTreeInfo;
 
     private final List<AbilityNodeWidget> nodeWidgets = new ArrayList<>();
     private final Map<AbilityTreeLocation, AbilityNodeConnectionWidget> connectionWidgets = new LinkedHashMap();
 
+    // This scale is used to scale the whole screen to fit the screen size
+    private float textureScale = 1f;
     private int currentPage;
+    private TreeParseState treeParseState = TreeParseState.PARSING;
 
     public CustomAbilityTreeScreen() {
         super(Component.literal("Ability Tree"));
@@ -112,9 +119,26 @@ public class CustomAbilityTreeScreen extends WynntilsScreen {
                 backgroundWidth,
                 backgroundHeight);
 
-        renderNodes(poseStack, mouseX, mouseY, partialTick);
+        if (treeParseState == TreeParseState.PARSED) {
+            renderNodes(poseStack, mouseX, mouseY, partialTick);
 
-        renderWidgets(poseStack, mouseX, mouseY, partialTick);
+            renderWidgets(poseStack, mouseX, mouseY, partialTick);
+        } else {
+            FontRenderer.getInstance()
+                    .renderAlignedTextInBox(
+                            poseStack,
+                            CodedString.fromStyledText(StyledText.fromComponent(treeParseState.getText())),
+                            0,
+                            backgroundWidth * textureScale,
+                            0,
+                            backgroundHeight * textureScale,
+                            0,
+                            CommonColors.WHITE,
+                            HorizontalAlignment.CENTER,
+                            VerticalAlignment.MIDDLE,
+                            TextShadow.OUTLINE,
+                            1f);
+        }
 
         poseStack.popPose();
     }
@@ -195,6 +219,8 @@ public class CustomAbilityTreeScreen extends WynntilsScreen {
     // region Node Widget Building
 
     public void updateAbilityTree() {
+        setTreeParseState(TreeParseState.PARSED);
+
         reconstructWidgets();
     }
 
@@ -422,6 +448,30 @@ public class CustomAbilityTreeScreen extends WynntilsScreen {
                             AbilityNodeConnectionWidget.SIZE,
                             AbilityNodeConnectionWidget.SIZE,
                             merged));
+        }
+    }
+
+    // endregion
+
+    // region Parse State Logic
+
+    public void setTreeParseState(TreeParseState treeParseState) {
+        this.treeParseState = treeParseState;
+    }
+
+    public enum TreeParseState {
+        PARSING(Component.translatable("screens.wynntils.abilityTree.parsing")),
+        PARSED(null),
+        FAILED(Component.translatable("screens.wynntils.abilityTree.parseFailed"));
+
+        private final Component text;
+
+        TreeParseState(Component text) {
+            this.text = text;
+        }
+
+        public Component getText() {
+            return text;
         }
     }
 
