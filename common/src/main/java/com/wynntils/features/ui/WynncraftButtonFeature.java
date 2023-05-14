@@ -73,9 +73,7 @@ public class WynncraftButtonFeature extends Feature {
 
     /* connects to the server on "startup" - off by default */
     private void autoConnect() {
-        if (!autoConnect.get()) return;
-
-        if (!initialBoot) {
+        if (!initialBoot && autoConnect.get()) {
             ServerData wynncraftServer =
                     new ServerData("Wynncraft", connectToLobby.get() ? LOBBY_SERVER : GAME_SERVER, false);
             wynncraftServer.setResourcePackStatus(ServerData.ServerPackStatus.ENABLED);
@@ -85,8 +83,8 @@ public class WynncraftButtonFeature extends Feature {
 
             ConnectScreen.startConnecting(
                     backScreen, minecraft, ServerAddress.parseString(wynncraftServer.ip), wynncraftServer);
-            initialBoot = true;
         }
+        initialBoot = true;
     }
 
     private static class WynncraftButton extends Button {
