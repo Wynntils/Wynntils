@@ -11,6 +11,7 @@ import com.wynntils.models.abilitytree.type.AbilityTreeSkillNode;
 import com.wynntils.models.abilitytree.type.ParsedAbilityTree;
 import com.wynntils.utils.render.FontRenderer;
 import com.wynntils.utils.render.RenderUtils;
+import java.util.Optional;
 import net.minecraft.client.gui.components.AbstractWidget;
 import net.minecraft.client.gui.narration.NarrationElementOutput;
 import net.minecraft.nbt.CompoundTag;
@@ -32,7 +33,12 @@ public class AbilityNodeWidget extends AbstractWidget {
     public void renderWidget(PoseStack poseStack, int mouseX, int mouseY, float partialTick) {
         ItemStack itemStack = new ItemStack(Item.byId(node.itemInformation().itemId()));
 
-        ParsedAbilityTree currentAbilityTree = Models.AbilityTree.getCurrentAbilityTree();
+        Optional<ParsedAbilityTree> treeOptional = Models.AbilityTree.getCurrentAbilityTree();
+
+        if (treeOptional.isEmpty()) return;
+
+        ParsedAbilityTree currentAbilityTree = treeOptional.get();
+
         AbilityTreeNodeState nodeState = currentAbilityTree.getNodeState(node);
         int damage =
                 switch (nodeState) {

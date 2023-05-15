@@ -21,6 +21,7 @@ import java.lang.reflect.Type;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 public class AbilityTreeModel extends Model {
     public static final int ABILITY_TREE_PAGES = 7;
@@ -65,8 +66,8 @@ public class AbilityTreeModel extends Model {
         }
     }
 
-    public ParsedAbilityTree getCurrentAbilityTree() {
-        return currentAbilityTree;
+    public Optional<ParsedAbilityTree> getCurrentAbilityTree() {
+        return Optional.ofNullable(currentAbilityTree);
     }
 
     public AbilityTreeInfo getAbilityTree(ClassType type) {

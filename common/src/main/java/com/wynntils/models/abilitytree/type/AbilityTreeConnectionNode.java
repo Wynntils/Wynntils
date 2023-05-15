@@ -12,6 +12,7 @@ import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Objects;
+import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Stream;
 import net.minecraft.world.item.ItemStack;
@@ -52,11 +53,15 @@ public class AbilityTreeConnectionNode {
     }
 
     private void updateConnectedStates() {
+        Optional<ParsedAbilityTree> treeOptional = Models.AbilityTree.getCurrentAbilityTree();
+
+        if (treeOptional.isEmpty()) return;
+
+        ParsedAbilityTree parsedAbilityTree = treeOptional.get();
+
         List<AbilityTreeSkillNode> activeNodes = nodePairs.stream()
-                .filter(pair -> Models.AbilityTree.getCurrentAbilityTree().getNodeState(pair.a())
-                                == AbilityTreeNodeState.UNLOCKED
-                        && Models.AbilityTree.getCurrentAbilityTree().getNodeState(pair.b())
-                                == AbilityTreeNodeState.UNLOCKED)
+                .filter(pair -> parsedAbilityTree.getNodeState(pair.a()) == AbilityTreeNodeState.UNLOCKED
+                        && parsedAbilityTree.getNodeState(pair.b()) == AbilityTreeNodeState.UNLOCKED)
                 .flatMap(pair -> Stream.of(pair.a(), pair.b()))
                 .toList();
 
