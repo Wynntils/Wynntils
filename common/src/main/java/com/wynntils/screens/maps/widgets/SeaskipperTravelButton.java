@@ -20,7 +20,8 @@ public class SeaskipperTravelButton extends WynntilsButton {
 
     private List<Component> tooltip;
 
-    public SeaskipperTravelButton(int x, int y, int width, int height, SeaskipperDepartureBoardScreen departureBoardScreen) {
+    public SeaskipperTravelButton(
+            int x, int y, int width, int height, SeaskipperDepartureBoardScreen departureBoardScreen) {
         super(x, y, width, height, Component.literal("Travel Button"));
         this.departureBoardScreen = departureBoardScreen;
     }
@@ -48,8 +49,7 @@ public class SeaskipperTravelButton extends WynntilsButton {
                 Texture.TRAVEL_BUTTON.height());
 
         if (isHovered && departureBoardScreen.hasSelectedDestination()) {
-            tooltip = List.of(Component.translatable(
-                            "screens.wynntils.seaskipperMapGui.travelToDestination")
+            tooltip = List.of(Component.translatable("screens.wynntils.seaskipperMapGui.travelToDestination")
                     .withStyle(ChatFormatting.DARK_GRAY));
 
             RenderUtils.drawTooltipAt(

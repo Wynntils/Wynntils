@@ -94,7 +94,11 @@ public final class SeaskipperDepartureBoardScreen extends AbstractMapScreen {
         float travelButtonHeight = Texture.TRAVEL_BUTTON.height() / 2f * currentTextureScale;
 
         this.addRenderableWidget(new SeaskipperTravelButton(
-                5, (int) (this.height - travelButtonHeight - 5f), (int) travelButtonWidth, (int) travelButtonHeight, this));
+                5,
+                (int) (this.height - travelButtonHeight - 5f),
+                (int) travelButtonWidth,
+                (int) travelButtonHeight,
+                this));
 
         destinationListY =
                 this.height - Texture.DESTINATION_LIST.height() * currentTextureScale - travelButtonHeight - 5f;
