@@ -22,8 +22,8 @@ import net.minecraftforge.eventbus.api.SubscribeEvent;
 @ConfigCategory(Category.UI)
 public class CustomSeaskipperScreenFeature extends Feature {
 
-    @RegisterConfig("feature.wynntils.customseaskipperscreen.screentype")
-    protected final Config<SeaskipperScreenType> screen = new Config<>(SeaskipperScreenType.DEPARTURE_BOARD);
+    @RegisterConfig
+    private final Config<SeaskipperScreenType> screenType = new Config<>(SeaskipperScreenType.DEPARTURE_BOARD);
 
     @RegisterConfig
     public final Config<PointerType> pointerType = new Config<>(PointerType.ARROW);
@@ -41,9 +41,9 @@ public class CustomSeaskipperScreenFeature extends Feature {
             return;
         }
 
-        if (screen.get() == SeaskipperScreenType.DEPARTURE_BOARD) {
+        if (screenType.get() == SeaskipperScreenType.DEPARTURE_BOARD) {
             McUtils.mc().setScreen(SeaskipperDepartureBoardScreen.create());
-        } else if (screen.get() == SeaskipperScreenType.MAP) {
+        } else if (screenType.get() == SeaskipperScreenType.MAP) {
             McUtils.mc().setScreen(SeaskipperMapScreen.create());
         }
     }
