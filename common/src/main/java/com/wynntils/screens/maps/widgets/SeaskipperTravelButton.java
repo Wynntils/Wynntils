@@ -42,7 +42,7 @@ public class SeaskipperTravelButton extends WynntilsButton {
                 this.width,
                 this.height,
                 0,
-                departureBoardScreen.hasSelectedDestination() ? Texture.TRAVEL_BUTTON.height() / 2 : 0,
+                departureBoardScreen.hasSelectedDestination() ? 0 : Texture.TRAVEL_BUTTON.height() / 2,
                 Texture.TRAVEL_BUTTON.width(),
                 Texture.TRAVEL_BUTTON.height() / 2,
                 Texture.TRAVEL_BUTTON.width(),
