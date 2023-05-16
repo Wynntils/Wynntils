@@ -5,9 +5,8 @@
 package com.wynntils.screens.maps.widgets;
 
 import com.mojang.blaze3d.vertex.PoseStack;
-import com.wynntils.core.components.Models;
-import com.wynntils.models.map.pois.SeaskipperDestinationPoi;
 import com.wynntils.screens.base.widgets.WynntilsButton;
+import com.wynntils.screens.maps.SeaskipperDepartureBoardScreen;
 import com.wynntils.utils.mc.TooltipUtils;
 import com.wynntils.utils.render.FontRenderer;
 import com.wynntils.utils.render.RenderUtils;
@@ -17,18 +16,18 @@ import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
 
 public class SeaskipperTravelButton extends WynntilsButton {
-    private List<Component> tooltip;
-    private SeaskipperDestinationPoi selectedPoi = null;
+    private final SeaskipperDepartureBoardScreen departureBoardScreen;
 
-    public SeaskipperTravelButton(int x, int y, int width, int height) {
+    private List<Component> tooltip;
+
+    public SeaskipperTravelButton(int x, int y, int width, int height, SeaskipperDepartureBoardScreen departureBoardScreen) {
         super(x, y, width, height, Component.literal("Travel Button"));
+        this.departureBoardScreen = departureBoardScreen;
     }
 
     @Override
     public void onPress() {
-        if (selectedPoi != null) {
-            Models.Seaskipper.purchasePass(selectedPoi.getDestination());
-        }
+        departureBoardScreen.travelToDestination();
     }
 
     @Override
@@ -42,15 +41,15 @@ public class SeaskipperTravelButton extends WynntilsButton {
                 this.width,
                 this.height,
                 0,
-                selectedPoi == null ? Texture.TRAVEL_BUTTON.height() / 2 : 0,
+                departureBoardScreen.hasSelectedDestination() ? Texture.TRAVEL_BUTTON.height() / 2 : 0,
                 Texture.TRAVEL_BUTTON.width(),
                 Texture.TRAVEL_BUTTON.height() / 2,
                 Texture.TRAVEL_BUTTON.width(),
                 Texture.TRAVEL_BUTTON.height());
 
-        if (isHovered && selectedPoi != null) {
+        if (isHovered && departureBoardScreen.hasSelectedDestination()) {
             tooltip = List.of(Component.translatable(
-                            "screens.wynntils.seaskipperMapGui.travelToDestination", selectedPoi.getName())
+                            "screens.wynntils.seaskipperMapGui.travelToDestination")
                     .withStyle(ChatFormatting.DARK_GRAY));
 
             RenderUtils.drawTooltipAt(
@@ -62,9 +61,5 @@ public class SeaskipperTravelButton extends WynntilsButton {
                     FontRenderer.getInstance().getFont(),
                     true);
         }
-    }
-
-    public void setSelectedPoi(SeaskipperDestinationPoi selectedPoi) {
-        this.selectedPoi = selectedPoi;
     }
 }

@@ -10,7 +10,6 @@ import com.wynntils.core.components.Managers;
 import com.wynntils.core.components.Models;
 import com.wynntils.core.text.CodedString;
 import com.wynntils.features.ui.CustomSeaskipperScreenFeature;
-import com.wynntils.models.map.MapTexture;
 import com.wynntils.models.map.PoiLocation;
 import com.wynntils.models.map.pois.Poi;
 import com.wynntils.models.map.pois.SeaskipperDestinationPoi;
@@ -35,8 +34,9 @@ import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.renderer.MultiBufferSource;
 
 public final class SeaskipperDepartureBoardScreen extends AbstractMapScreen {
-    private static final float SCREEN_WIDTH_OFFSET = 3;
     private static final float BORDER_OFFSET = 3;
+    private static final float SCREEN_WIDTH_OFFSET = 3;
+    private static final float ZOOM_SCALE = 650f;
 
     private final List<SeaskipperDestinationButton> destinationButtons = new ArrayList<>();
 
@@ -46,7 +46,6 @@ public final class SeaskipperDepartureBoardScreen extends AbstractMapScreen {
     private List<SeaskipperDestinationPoi> destinationPois = new ArrayList<>();
     private SeaskipperDestinationPoi currentLocationPoi = null;
     private SeaskipperDestinationPoi selectedDestination;
-    private SeaskipperTravelButton travelButton;
 
     private SeaskipperDepartureBoardScreen() {}
 
@@ -94,8 +93,8 @@ public final class SeaskipperDepartureBoardScreen extends AbstractMapScreen {
         float travelButtonWidth = Texture.TRAVEL_BUTTON.width() * currentTextureScale;
         float travelButtonHeight = Texture.TRAVEL_BUTTON.height() / 2f * currentTextureScale;
 
-        travelButton = this.addRenderableWidget(new SeaskipperTravelButton(
-                5, (int) (this.height - travelButtonHeight - 5f), (int) travelButtonWidth, (int) travelButtonHeight));
+        this.addRenderableWidget(new SeaskipperTravelButton(
+                5, (int) (this.height - travelButtonHeight - 5f), (int) travelButtonWidth, (int) travelButtonHeight, this));
 
         destinationListY =
                 this.height - Texture.DESTINATION_LIST.height() * currentTextureScale - travelButtonHeight - 5f;
@@ -156,30 +155,6 @@ public final class SeaskipperDepartureBoardScreen extends AbstractMapScreen {
                 Texture.DESTINATION_LIST.height());
 
         renderWidgets(poseStack, mouseX, mouseY, partialTick);
-    }
-
-    @Override
-    protected void renderMap(PoseStack poseStack) {
-        RenderUtils.enableScissor(
-                (int) (renderX + renderedBorderXOffset), (int) (renderY + renderedBorderYOffset), (int) mapWidth, (int)
-                        mapHeight);
-
-        // Background black void color
-        RenderUtils.drawRect(poseStack, CommonColors.BLACK, renderX, renderY, 0, mapWidth, mapHeight);
-
-        BoundingBox textureBoundingBox =
-                BoundingBox.centered(mapCenterX, mapCenterZ, width / currentZoom, height / currentZoom);
-
-        List<MapTexture> maps = Models.Map.getMapsForBoundingBox(textureBoundingBox);
-        for (MapTexture map : maps) {
-            float textureX = map.getTextureXPosition(mapCenterX);
-            float textureZ = map.getTextureZPosition(mapCenterZ);
-
-            MapRenderer.renderMapQuad(
-                    map, poseStack, centerX, centerZ, textureX, textureZ, mapWidth, mapHeight, 1f / currentZoom);
-        }
-
-        RenderUtils.disableScissor();
     }
 
     @Override
@@ -353,11 +328,17 @@ public final class SeaskipperDepartureBoardScreen extends AbstractMapScreen {
         }
     }
 
+    public void travelToDestination() {
+        if (selectedDestination != null) {
+            Models.Seaskipper.purchasePass(selectedDestination.getDestination());
+        }
+    }
+
     private void zoomToDestination(Poi destination) {
         updateMapCenter(
                 destination.getLocation().getX(), destination.getLocation().getZ());
 
-        float zoomLevel = McUtils.mc().getWindow().getGuiScaledHeight() / 650f;
+        float zoomLevel = McUtils.mc().getWindow().getGuiScaledHeight() / ZOOM_SCALE;
 
         setZoom(zoomLevel);
     }
@@ -381,8 +362,6 @@ public final class SeaskipperDepartureBoardScreen extends AbstractMapScreen {
                     Models.Seaskipper.purchasePass(selectedDestination.getDestination());
                 } else {
                     selectedDestination = destinationButton.getDestination();
-
-                    travelButton.setSelectedPoi(selectedDestination);
 
                     zoomToDestination(selectedDestination);
                 }
@@ -411,5 +390,9 @@ public final class SeaskipperDepartureBoardScreen extends AbstractMapScreen {
                 .orElse(null);
 
         zoomToDestination(currentLocationPoi);
+    }
+
+    public boolean hasSelectedDestination() {
+        return selectedDestination != null;
     }
 }
