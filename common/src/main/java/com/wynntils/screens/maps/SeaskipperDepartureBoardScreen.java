@@ -396,6 +396,7 @@ public final class SeaskipperDepartureBoardScreen extends AbstractMapScreen {
 
     @Override
     public boolean mouseScrolled(double mouseX, double mouseY, double delta) {
+        // Disallow zooming
         return true;
     }
 
