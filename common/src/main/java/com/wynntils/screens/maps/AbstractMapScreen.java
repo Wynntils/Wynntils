@@ -48,7 +48,7 @@ public abstract class AbstractMapScreen extends WynntilsScreen {
 
     protected boolean holdingMapKey = false;
 
-    private float renderWidth;
+    protected float renderWidth;
     protected float renderHeight;
     protected float renderX;
     protected float renderY;

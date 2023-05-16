@@ -11,6 +11,7 @@ import com.wynntils.core.config.ConfigCategory;
 import com.wynntils.core.config.RegisterConfig;
 import com.wynntils.core.features.Feature;
 import com.wynntils.mc.event.ScreenOpenedEvent;
+import com.wynntils.screens.maps.SeaskipperDepartureBoardScreen;
 import com.wynntils.screens.maps.SeaskipperMapScreen;
 import com.wynntils.utils.colors.CustomColor;
 import com.wynntils.utils.mc.McUtils;
@@ -20,6 +21,9 @@ import net.minecraftforge.eventbus.api.SubscribeEvent;
 
 @ConfigCategory(Category.UI)
 public class CustomSeaskipperScreenFeature extends Feature {
+
+    @RegisterConfig("feature.wynntils.customseaskipperscreen.screentype")
+    protected final Config<SeaskipperScreenType> screen = new Config<>(SeaskipperScreenType.DEPARTURE_BOARD);
 
     @RegisterConfig
     public final Config<PointerType> pointerType = new Config<>(PointerType.ARROW);
@@ -37,6 +41,15 @@ public class CustomSeaskipperScreenFeature extends Feature {
             return;
         }
 
-        McUtils.mc().setScreen(SeaskipperMapScreen.create());
+        if (screen.get() == SeaskipperScreenType.DEPARTURE_BOARD) {
+            McUtils.mc().setScreen(SeaskipperDepartureBoardScreen.create());
+        } else if (screen.get() == SeaskipperScreenType.MAP) {
+            McUtils.mc().setScreen(SeaskipperMapScreen.create());
+        }
+    }
+
+    public enum SeaskipperScreenType {
+        DEPARTURE_BOARD,
+        MAP
     }
 }
