@@ -67,28 +67,29 @@ public class WynncraftButtonFeature extends Feature {
     }
 
     private void addWynncraftButton(TitleScreen titleScreen) {
-        ServerData wynncraftServer =
-                new ServerData("Wynncraft", connectToLobby.get() ? LOBBY_SERVER : GAME_SERVER, false);
-        wynncraftServer.setResourcePackStatus(ServerData.ServerPackStatus.ENABLED);
+        ServerData wynncraftServer = getWynncraftServer();
 
         WynncraftButton wynncraftButton = new WynncraftButton(
                 titleScreen, wynncraftServer, titleScreen.width / 2 + 104, titleScreen.height / 4 + 48 + 24);
         titleScreen.addRenderableWidget(wynncraftButton);
     }
 
-    /** Connects to the server on "startup".
-     *  Requires the WynncraftButtonFeature to be enabled.
-     */
     private void autoConnect() {
-        ServerData wynncraftServer =
-                new ServerData("Wynncraft", connectToLobby.get() ? LOBBY_SERVER : GAME_SERVER, false);
-        wynncraftServer.setResourcePackStatus(ServerData.ServerPackStatus.ENABLED);
+        ServerData wynncraftServer = getWynncraftServer();
 
         ConnectScreen.startConnecting(
                 McUtils.mc().screen,
                 Minecraft.getInstance(),
                 ServerAddress.parseString(wynncraftServer.ip),
                 wynncraftServer);
+    }
+
+    private ServerData getWynncraftServer() {
+        ServerData wynncraftServer =
+                new ServerData("Wynncraft", connectToLobby.get() ? LOBBY_SERVER : GAME_SERVER, false);
+        wynncraftServer.setResourcePackStatus(ServerData.ServerPackStatus.ENABLED);
+
+        return wynncraftServer;
     }
 
     private static class WynncraftButton extends Button {
