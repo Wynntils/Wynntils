@@ -16,6 +16,7 @@ import com.wynntils.core.config.RegisterConfig;
 import com.wynntils.core.features.Feature;
 import com.wynntils.mc.event.ScreenInitEvent;
 import com.wynntils.mc.event.TitleScreenInitEvent;
+import com.wynntils.utils.mc.McUtils;
 import com.wynntils.utils.render.Texture;
 import java.io.IOException;
 import java.nio.ByteBuffer;
@@ -38,7 +39,7 @@ import org.apache.commons.lang3.Validate;
 public class WynncraftButtonFeature extends Feature {
     private static final String GAME_SERVER = "play.wynncraft.com";
     private static final String LOBBY_SERVER = "lobby.wynncraft.com";
-    private static boolean initialBoot = false;
+    private boolean initBootPassed = false;
 
     @RegisterConfig
     public final Config<Boolean> connectToLobby = new Config<>(false);
@@ -51,14 +52,18 @@ public class WynncraftButtonFeature extends Feature {
         TitleScreen titleScreen = e.getTitleScreen();
 
         addWynncraftButton(titleScreen);
-        autoConnect();
     }
 
     @SubscribeEvent
     public void onTitleScreenInit(ScreenInitEvent e) {
         if (!(e.getScreen() instanceof TitleScreen titleScreen)) return;
 
-        addWynncraftButton(titleScreen);
+        if (!initBootPassed && autoConnect.get()) {
+            autoConnect();
+        } else {
+            addWynncraftButton(titleScreen);
+        }
+        initBootPassed = true;
     }
 
     private void addWynncraftButton(TitleScreen titleScreen) {
@@ -71,20 +76,21 @@ public class WynncraftButtonFeature extends Feature {
         titleScreen.addRenderableWidget(wynncraftButton);
     }
 
-    /* connects to the server on "startup" - off by default */
+    /** connects to the server on "startup".
+     *  requires the WynncraftButtonFeature to be enabled.
+     */
     private void autoConnect() {
-        if (!initialBoot && autoConnect.get()) {
-            ServerData wynncraftServer =
-                    new ServerData("Wynncraft", connectToLobby.get() ? LOBBY_SERVER : GAME_SERVER, false);
-            wynncraftServer.setResourcePackStatus(ServerData.ServerPackStatus.ENABLED);
+        ServerData wynncraftServer =
+                new ServerData("Wynncraft", connectToLobby.get() ? LOBBY_SERVER : GAME_SERVER, false);
+        wynncraftServer.setResourcePackStatus(ServerData.ServerPackStatus.ENABLED);
 
-            Minecraft minecraft = Minecraft.getInstance();
-            Screen backScreen = minecraft.screen;
+        initBootPassed = true;
 
-            ConnectScreen.startConnecting(
-                    backScreen, minecraft, ServerAddress.parseString(wynncraftServer.ip), wynncraftServer);
-        }
-        initialBoot = true;
+        ConnectScreen.startConnecting(
+                McUtils.mc().screen,
+                Minecraft.getInstance(),
+                ServerAddress.parseString(wynncraftServer.ip),
+                wynncraftServer);
     }
 
     private static class WynncraftButton extends Button {

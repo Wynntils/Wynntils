@@ -725,8 +725,6 @@
   "feature.wynntils.worldWaypointDistance.textShadow.name": "文字陰影",
   "feature.wynntils.worldWaypointDistance.topBoundingDistance.description": "螢幕外指示器應該離螢幕頂部多遠？",
   "feature.wynntils.worldWaypointDistance.topBoundingDistance.name": "頂部指示器距離",
-  "feature.wynntils.wynncraftButton.autoConnect.description": "translate: Should you auto-connect to Wynncraft on startup?",
-  "feature.wynntils.wynncraftButton.autoConnect.name": "translate: Auto-Connect on Startup",
   "feature.wynntils.wynncraftButton.connectToLobby.description": "按鈕應該連線到大廳還是遊戲伺服器？",
   "feature.wynntils.wynncraftButton.connectToLobby.name": "連線至大廳",
   "feature.wynntils.wynncraftButton.name": "Wynncraft 按鈕",

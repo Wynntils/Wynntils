@@ -686,8 +686,6 @@
   "feature.wynntils.worldWaypointDistance.textShadow.name": "文本阴影",
   "feature.wynntils.worldWaypointDistance.topBoundingDistance.description": "离屏幕时，航路点指示器最近对屏幕的顶部距离是多少？",
   "feature.wynntils.worldWaypointDistance.topBoundingDistance.name": "顶部提示器距离",
-  "feature.wynntils.wynncraftButton.autoConnect.description": "translate: Should you auto-connect to Wynncraft on startup?",
-  "feature.wynntils.wynncraftButton.autoConnect.name": "translate: Auto-Connect on Startup",
   "feature.wynntils.wynncraftButton.connectToLobby.description": "要是否 Wynncraft 按钮去连接大堂而不遊戏的服务器？",
   "feature.wynntils.wynncraftButton.connectToLobby.name": "连接到大堂",
   "feature.wynntils.wynncraftButton.name": "Wynncraft 按钮",
