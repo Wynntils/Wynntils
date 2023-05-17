@@ -84,8 +84,6 @@ public class WynncraftButtonFeature extends Feature {
                 new ServerData("Wynncraft", connectToLobby.get() ? LOBBY_SERVER : GAME_SERVER, false);
         wynncraftServer.setResourcePackStatus(ServerData.ServerPackStatus.ENABLED);
 
-        initBootPassed = true;
-
         ConnectScreen.startConnecting(
                 McUtils.mc().screen,
                 Minecraft.getInstance(),
