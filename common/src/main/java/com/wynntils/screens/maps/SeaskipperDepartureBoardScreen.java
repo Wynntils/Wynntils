@@ -63,7 +63,7 @@ public final class SeaskipperDepartureBoardScreen extends AbstractMapScreen {
     protected void doInit() {
         currentTextureScale = (float) this.height / (Texture.DESTINATION_LIST.height() + 49);
 
-        reloadDestionationPois();
+        reloadDestinationPois();
 
         renderX = Texture.DESTINATION_LIST.width() * currentTextureScale + SCREEN_WIDTH_OFFSET * 2f;
 
@@ -383,7 +383,7 @@ public final class SeaskipperDepartureBoardScreen extends AbstractMapScreen {
         return true;
     }
 
-    public void reloadDestionationPois() {
+    public void reloadDestinationPois() {
         destinationPois = new ArrayList<>();
 
         destinationPois.addAll(Models.Seaskipper.getPois(false));

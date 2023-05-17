@@ -90,9 +90,9 @@ public final class SeaskipperModel extends Model {
         // We added a new destination, reload the map
         // (This reloads the pois for every item parsed, but performance is not an issue here)
         if (McUtils.mc().screen instanceof SeaskipperMapScreen seaskipperMapScreen) {
-            seaskipperMapScreen.reloadDestionationPois();
+            seaskipperMapScreen.reloadDestinationPois();
         } else if (McUtils.mc().screen instanceof SeaskipperDepartureBoardScreen seaskipperDepartureBoardScreen) {
-            seaskipperDepartureBoardScreen.reloadDestionationPois();
+            seaskipperDepartureBoardScreen.reloadDestinationPois();
         }
     }
 
