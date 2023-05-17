@@ -76,7 +76,7 @@ public class WynncraftButtonFeature extends Feature {
         titleScreen.addRenderableWidget(wynncraftButton);
     }
 
-    /** connects to the server on "startup".
+    /** Connects to the server on "startup".
      *  Requires the WynncraftButtonFeature to be enabled.
      */
     private void autoConnect() {
