@@ -77,7 +77,7 @@ public class WynncraftButtonFeature extends Feature {
     }
 
     /** connects to the server on "startup".
-     *  requires the WynncraftButtonFeature to be enabled.
+     *  Requires the WynncraftButtonFeature to be enabled.
      */
     private void autoConnect() {
         ServerData wynncraftServer =
