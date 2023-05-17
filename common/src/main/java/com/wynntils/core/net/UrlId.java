@@ -38,6 +38,7 @@ public enum UrlId {
     DATA_STATIC_MAPS("dataStaticMaps"),
     DATA_STATIC_MATERIAL_CONVERSION("dataStaticMaterialConversion"),
     DATA_STATIC_PLACES("dataStaticPlaces"),
+    DATA_STATIC_SEASKIPPER_DESTINATIONS("dataStaticSeaskipperDestinations"),
     DATA_STATIC_SERVICES("dataStaticServices"),
     DATA_STATIC_SPLASHES("dataStaticSplashes"),
     DATA_STATIC_URLS("dataStaticUrls"),
