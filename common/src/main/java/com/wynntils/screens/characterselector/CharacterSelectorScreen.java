@@ -5,6 +5,7 @@
 package com.wynntils.screens.characterselector;
 
 import com.mojang.blaze3d.vertex.PoseStack;
+import com.wynntils.core.components.Models;
 import com.wynntils.core.text.CodedString;
 import com.wynntils.models.character.type.ClassInfo;
 import com.wynntils.screens.base.WynntilsScreen;
@@ -31,6 +32,7 @@ import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
 import net.minecraft.client.gui.screens.inventory.InventoryScreen;
 import net.minecraft.network.chat.Component;
+import org.lwjgl.glfw.GLFW;
 
 public final class CharacterSelectorScreen extends WynntilsScreen {
     private static final int CHARACTER_INFO_PER_PAGE = 7;
@@ -213,6 +215,16 @@ public final class CharacterSelectorScreen extends WynntilsScreen {
     @Override
     public boolean mouseReleased(double mouseX, double mouseY, int button) {
         draggingScroll = false;
+        return true;
+    }
+
+    @Override
+    public boolean keyPressed(int keyCode, int scanCode, int modifiers) {
+        int number = keyCode - GLFW.GLFW_KEY_0;
+        if (number <= 0 || number > 9) return true;
+        if (number > classInfoList.size()) return true;
+        int slot = classInfoList.get(number - 1).slot();
+        Models.CharacterSelection.playWithCharacter(slot);
         return true;
     }
 
