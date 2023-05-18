@@ -39,7 +39,7 @@ import org.apache.commons.lang3.Validate;
 public class WynncraftButtonFeature extends Feature {
     private static final String GAME_SERVER = "play.wynncraft.com";
     private static final String LOBBY_SERVER = "lobby.wynncraft.com";
-    private boolean initBootPassed = false;
+    private boolean hasInitBootPased = false;
 
     @RegisterConfig
     public final Config<Boolean> connectToLobby = new Config<>(false);
@@ -58,12 +58,13 @@ public class WynncraftButtonFeature extends Feature {
     public void onTitleScreenInit(ScreenInitEvent e) {
         if (!(e.getScreen() instanceof TitleScreen titleScreen)) return;
 
-        if (!initBootPassed && autoConnect.get()) {
-            autoConnect();
+        if (!hasInitBootPased && autoConnect.get()) {
+            ServerData wynncraftServer = getWynncraftServer();
+            connectToServer(wynncraftServer);
         } else {
             addWynncraftButton(titleScreen);
         }
-        initBootPassed = true;
+        hasInitBootPased = true;
     }
 
     private void addWynncraftButton(TitleScreen titleScreen) {
@@ -74,16 +75,6 @@ public class WynncraftButtonFeature extends Feature {
         titleScreen.addRenderableWidget(wynncraftButton);
     }
 
-    private void autoConnect() {
-        ServerData wynncraftServer = getWynncraftServer();
-
-        ConnectScreen.startConnecting(
-                McUtils.mc().screen,
-                Minecraft.getInstance(),
-                ServerAddress.parseString(wynncraftServer.ip),
-                wynncraftServer);
-    }
-
     private ServerData getWynncraftServer() {
         ServerData wynncraftServer =
                 new ServerData("Wynncraft", connectToLobby.get() ? LOBBY_SERVER : GAME_SERVER, false);
@@ -92,8 +83,12 @@ public class WynncraftButtonFeature extends Feature {
         return wynncraftServer;
     }
 
+    private static void connectToServer(ServerData serverData) {
+        ConnectScreen.startConnecting(
+                McUtils.mc().screen, Minecraft.getInstance(), ServerAddress.parseString(serverData.ip), serverData);
+    }
+
     private static class WynncraftButton extends Button {
-        private final Screen backScreen;
         private final ServerData serverData;
         private final ServerIcon serverIcon;
 
@@ -101,7 +96,6 @@ public class WynncraftButtonFeature extends Feature {
         WynncraftButton(Screen backScreen, ServerData serverData, int x, int y) {
             super(x, y, 20, 20, Component.translatable(""), WynncraftButton::onPress, Button.DEFAULT_NARRATION);
             this.serverData = serverData;
-            this.backScreen = backScreen;
 
             this.serverIcon = new ServerIcon(serverData);
             this.serverIcon.loadResource(false);
@@ -123,12 +117,7 @@ public class WynncraftButtonFeature extends Feature {
 
         protected static void onPress(Button button) {
             if (!(button instanceof WynncraftButton wynncraftButton)) return;
-
-            ConnectScreen.startConnecting(
-                    wynncraftButton.backScreen,
-                    Minecraft.getInstance(),
-                    ServerAddress.parseString(wynncraftButton.serverData.ip),
-                    wynncraftButton.serverData);
+            connectToServer(wynncraftButton.serverData);
         }
     }
 
