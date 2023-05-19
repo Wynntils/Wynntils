@@ -17,6 +17,10 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 
 public final class EmeraldPouchAnnotator implements ItemAnnotator {
+    private static final int EMERALD_BLOCK = 64;
+    private static final int LIQUID_EMERALD = 4096;
+    private static final int LIQUID_EMERALD_STACK = 262144;
+    private static final Pattern EMERALD_POUCH_CAPACITY_PATTERN = Pattern.compile(".*§r§8\\((-?\\d+)([^\\s]+).*");
     private static final Pattern EMERALD_POUCH_PATTERN = Pattern.compile("^§aEmerald Pouch§2 \\[Tier ([IVX]{1,4})\\]$");
     private static final Pattern EMERALD_POUCH_LORE_PATTERN =
             Pattern.compile("§6§l([\\d\\s]+)" + EmeraldUnits.EMERALD.getSymbol() + ".*");
@@ -33,10 +37,26 @@ public final class EmeraldPouchAnnotator implements ItemAnnotator {
 
         Matcher amountMatcher = LoreUtils.matchLoreLine(itemStack, 0, EMERALD_POUCH_LORE_PATTERN);
         // This can be an emerald pouch on the trade market, it has no amount line
-        if (!amountMatcher.matches()) return new EmeraldPouchItem(tier, 0);
+        if (!amountMatcher.matches()) return new EmeraldPouchItem(0, tier, 0);
 
         int amount = Integer.parseInt(amountMatcher.group(1).replaceAll("\\s", ""));
 
-        return new EmeraldPouchItem(tier, amount);
+        Matcher capacityMatcher = LoreUtils.matchLoreLine(itemStack, 0, EMERALD_POUCH_CAPACITY_PATTERN);
+        if (!capacityMatcher.matches()) return new EmeraldPouchItem(0, tier, amount);
+
+        int capacity = Integer.parseInt(capacityMatcher.group(1));
+
+        switch (capacityMatcher.group(2)) {
+                // EB
+            case "²½" -> capacity *= EMERALD_BLOCK;
+
+                // LE
+            case "¼²" -> capacity *= LIQUID_EMERALD;
+
+                // stx
+            default -> capacity *= LIQUID_EMERALD_STACK;
+        }
+
+        return new EmeraldPouchItem(capacity, tier, amount);
     }
 }

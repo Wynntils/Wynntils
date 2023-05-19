@@ -54,6 +54,7 @@ import com.wynntils.features.embellishments.WybelSoundFeature;
 import com.wynntils.features.inventory.BulkBuyFeature;
 import com.wynntils.features.inventory.ContainerSearchFeature;
 import com.wynntils.features.inventory.DurabilityArcFeature;
+import com.wynntils.features.inventory.EmeraldPouchFillArc;
 import com.wynntils.features.inventory.EmeraldPouchHotkeyFeature;
 import com.wynntils.features.inventory.ExtendedItemCountFeature;
 import com.wynntils.features.inventory.IngredientPouchHotkeyFeature;
@@ -196,6 +197,7 @@ public final class FeatureManager extends Manager {
         registerFeature(new GameBarsOverlayFeature());
         registerFeature(new DurabilityArcFeature());
         registerFeature(new EmeraldPouchHotkeyFeature());
+        registerFeature(new EmeraldPouchFillArc());
         registerFeature(new ExtendedItemCountFeature());
         registerFeature(new FilterAdminCommandsFeature());
         registerFeature(new FixCastingSpellsFromInventoryFeature());
