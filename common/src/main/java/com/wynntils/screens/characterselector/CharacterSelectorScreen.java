@@ -26,13 +26,13 @@ import com.wynntils.utils.render.type.VerticalAlignment;
 import com.wynntils.utils.wynn.ContainerUtils;
 import java.util.ArrayList;
 import java.util.List;
+import net.minecraft.client.KeyMapping;
 import net.minecraft.client.gui.components.Renderable;
 import net.minecraft.client.gui.components.events.GuiEventListener;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
 import net.minecraft.client.gui.screens.inventory.InventoryScreen;
 import net.minecraft.network.chat.Component;
-import org.lwjgl.glfw.GLFW;
 
 public final class CharacterSelectorScreen extends WynntilsScreen {
     private static final int CHARACTER_INFO_PER_PAGE = 7;
@@ -220,11 +220,13 @@ public final class CharacterSelectorScreen extends WynntilsScreen {
 
     @Override
     public boolean keyPressed(int keyCode, int scanCode, int modifiers) {
-        int number = keyCode - GLFW.GLFW_KEY_0;
-        if (number <= 0 || number > 9) return true;
-        if (number > classInfoList.size()) return true;
-        int slot = classInfoList.get(number - 1).slot();
-        Models.CharacterSelection.playWithCharacter(slot);
+        KeyMapping[] keyHotbarSlots = McUtils.options().keyHotbarSlots;
+        for (int i = 0; i < keyHotbarSlots.length && i < classInfoList.size(); i++) {
+            if (!keyHotbarSlots[i].matches(keyCode, scanCode)) continue;
+            int slot = classInfoList.get(i).slot();
+            Models.CharacterSelection.playWithCharacter(slot);
+            return true;
+        }
         return true;
     }
 
