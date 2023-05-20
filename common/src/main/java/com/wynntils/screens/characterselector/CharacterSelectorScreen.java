@@ -221,12 +221,14 @@ public final class CharacterSelectorScreen extends WynntilsScreen {
     @Override
     public boolean keyPressed(int keyCode, int scanCode, int modifiers) {
         KeyMapping[] keyHotbarSlots = McUtils.options().keyHotbarSlots;
-        for (int i = 0; i < keyHotbarSlots.length && i < classInfoList.size(); i++) {
+
+        for (int i = 0; i < Math.Min(keyHotbarSlots.length, classInfoList.size()); i++) {
             if (!keyHotbarSlots[i].matches(keyCode, scanCode)) continue;
             int slot = classInfoList.get(i).slot();
             Models.CharacterSelection.playWithCharacter(slot);
             return true;
         }
+        
         return true;
     }
 
