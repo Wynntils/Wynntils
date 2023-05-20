@@ -39,7 +39,7 @@ import org.apache.commons.lang3.Validate;
 public class WynncraftButtonFeature extends Feature {
     private static final String GAME_SERVER = "play.wynncraft.com";
     private static final String LOBBY_SERVER = "lobby.wynncraft.com";
-    private boolean hasInitBootPased = false;
+    private boolean firstTitleScreenInit = true;
 
     @RegisterConfig
     public final Config<Boolean> connectToLobby = new Config<>(false);
@@ -58,13 +58,14 @@ public class WynncraftButtonFeature extends Feature {
     public void onTitleScreenInit(ScreenInitEvent e) {
         if (!(e.getScreen() instanceof TitleScreen titleScreen)) return;
 
-        if (!hasInitBootPased && autoConnect.get()) {
+        if (firstTitleScreenInit && autoConnect.get()) {
+            firstTitleScreenInit = false;
             ServerData wynncraftServer = getWynncraftServer();
             connectToServer(wynncraftServer);
-        } else {
-            addWynncraftButton(titleScreen);
+            return;
         }
-        hasInitBootPased = true;
+
+        addWynncraftButton(titleScreen);
     }
 
     private void addWynncraftButton(TitleScreen titleScreen) {
