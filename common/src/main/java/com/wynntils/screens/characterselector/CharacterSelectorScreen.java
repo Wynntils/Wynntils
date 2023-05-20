@@ -228,7 +228,7 @@ public final class CharacterSelectorScreen extends WynntilsScreen {
             Models.CharacterSelection.playWithCharacter(slot);
             return true;
         }
-        
+
         return true;
     }
 
