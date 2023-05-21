@@ -20,12 +20,6 @@ import net.minecraft.world.item.Items;
 import net.minecraft.world.item.TooltipFlag;
 
 public final class GuideEmeraldPouchItemStack extends GuideItemStack {
-    private static final int EMERALD_BLOCK = 64;
-    private static final int LIQUID_EMERALD = 4096;
-    private static final int LIQUID_EMERALD_STACK = 262144;
-
-    private static int capacity = 0;
-
     private final int tier;
 
     private final List<Component> generatedTooltip;
@@ -68,12 +62,9 @@ public final class GuideEmeraldPouchItemStack extends GuideItemStack {
 
         if (tier >= 7) {
             totalString = tier - 6 + "stx";
-            capacity = (tier - 6) * LIQUID_EMERALD_STACK;
         } else if (tier >= 4) {
-            capacity = Integer.parseInt(totalString) * LIQUID_EMERALD;
             totalString += EmeraldUnits.LIQUID_EMERALD.getSymbol();
         } else {
-            capacity = Integer.parseInt(totalString) * EMERALD_BLOCK;
             totalString += EmeraldUnits.EMERALD_BLOCK.getSymbol();
         }
 
@@ -130,10 +121,6 @@ public final class GuideEmeraldPouchItemStack extends GuideItemStack {
         }
 
         return tooltip;
-    }
-
-    public int getCapacity() {
-        return capacity;
     }
 
     public int getTier() {

@@ -48,9 +48,7 @@ public class EmeraldPouchFillArc extends Feature {
 
         if (optionalItem.isEmpty()) return;
 
-        GuideEmeraldPouchItemStack pouchCapacity = new GuideEmeraldPouchItemStack(optionalItem.get().getTier());
-
-        CappedValue capacity = new CappedValue(optionalItem.get().getValue(), pouchCapacity.getCapacity());
+        CappedValue capacity = new CappedValue(optionalItem.get().getValue(),optionalItem.get().getCapacity());
 
         // calculate color of arc
         float capacityFraction = (float) capacity.current() / capacity.max();
