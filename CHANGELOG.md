@@ -1,9 +1,21 @@
+## [0.0.3-alpha.34](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.33...v0.0.3-alpha.34) (2023-05-21)
+
+
+### New Features
+
+* Seaskipper Departure Board Screen ([#1545](https://github.com/Wynntils/Artemis/issues/1545)) ([1c3abd8](https://github.com/Wynntils/Artemis/commit/1c3abd8142c965d23e867acc946b21c16e223957))
+
 ## [0.0.3-alpha.33](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.32...v0.0.3-alpha.33) (2023-05-21)
 
 
 ### Bug Fixes
 
 * Don't assume that poi providers don't contain duplicate elements ([#1553](https://github.com/Wynntils/Artemis/issues/1553)) ([0364822](https://github.com/Wynntils/Artemis/commit/03648224c6a5a079c0b9185cd273576aa344ba61))
+
+
+### Miscellaneous Chores
+
+* **release:** v0.0.3-alpha.33 [skip ci] ([a6a1608](https://github.com/Wynntils/Artemis/commit/a6a1608bf55bc1c5aaa209641098d33478ca9d3e))
 
 ## [0.0.3-alpha.32](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.31...v0.0.3-alpha.32) (2023-05-21)
 
@@ -40,27 +52,4 @@
 ### Miscellaneous Chores
 
 * **release:** v0.0.3-alpha.30 [skip ci] ([b63220a](https://github.com/Wynntils/Artemis/commit/b63220a0bf43c0fde13e1720552868a55317ad71))
-
-## [0.0.3-alpha.29](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.28...v0.0.3-alpha.29) (2023-05-21)
-
-
-### ⚠ BREAKING CHANGES
-
-* WynncraftButton Constructor is now using a local Variable backScreen.
-
-* Update common/src/main/resources/assets/wynntils/lang/en_us.json
-
-Co-authored-by: Kristof Kovacs <49001742+kristofbolyai@users.noreply.github.com>
-
-* fix: Renamed to firstTitleScreenInit and inverted the check.
-
-### New Features
-
-* auto-connect on startup ([#1544](https://github.com/Wynntils/Artemis/issues/1544)) ([043adf3](https://github.com/Wynntils/Artemis/commit/043adf3f4778c564402aeca43d8afe50f353ce7f))
-* select character in CharacterSelectorScreen with hotkey ([#1547](https://github.com/Wynntils/Artemis/issues/1547)) ([8b79dbf](https://github.com/Wynntils/Artemis/commit/8b79dbf2477f28ac0481114e9c05b34a6b5063ee))
-
-
-### Miscellaneous Chores
-
-* **release:** v0.0.3-alpha.29 [skip ci] ([6b653d0](https://github.com/Wynntils/Artemis/commit/6b653d0decc5897d07f462f49e21ac96a1328588))
 
