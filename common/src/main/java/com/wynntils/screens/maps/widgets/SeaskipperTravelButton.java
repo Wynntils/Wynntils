@@ -50,7 +50,7 @@ public class SeaskipperTravelButton extends WynntilsButton {
 
         if (isHovered && departureBoardScreen.hasSelectedDestination()) {
             tooltip = List.of(Component.translatable("screens.wynntils.seaskipperMapGui.travelToDestination")
-                    .withStyle(ChatFormatting.DARK_GRAY));
+                    .withStyle(ChatFormatting.GRAY));
 
             RenderUtils.drawTooltipAt(
                     poseStack,

@@ -114,6 +114,8 @@ public final class SeaskipperDepartureBoardScreen extends AbstractMapScreen {
 
     @Override
     public void doRender(PoseStack poseStack, int mouseX, int mouseY, float partialTick) {
+        renderGradientBackground(poseStack);
+
         RenderSystem.setShaderColor(1f, 1f, 1f, 1f);
 
         RenderSystem.enableDepthTest();
