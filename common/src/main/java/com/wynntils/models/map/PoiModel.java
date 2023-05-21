@@ -4,6 +4,7 @@
  */
 package com.wynntils.models.map;
 
+import com.google.common.collect.ImmutableList;
 import com.google.common.reflect.TypeToken;
 import com.google.gson.JsonElement;
 import com.wynntils.core.WynntilsMod;
@@ -29,7 +30,6 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
-import java.util.stream.Collectors;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 
 public class PoiModel extends Model {
@@ -52,7 +52,7 @@ public class PoiModel extends Model {
     private final Set<LabelPoi> labelPois = new HashSet<>();
     private final Set<ServicePoi> servicePois = new HashSet<>();
     private final Set<CombatPoi> combatPois = new HashSet<>();
-    private final Map<CustomPoiProvider, Set<CustomPoi>> providedCustomPois = new ConcurrentHashMap<>();
+    private final Map<CustomPoiProvider, List<CustomPoi>> providedCustomPois = new ConcurrentHashMap<>();
 
     private Storage<List<CustomPoiProvider>> customPoiProviders = new Storage<>(new ArrayList<>());
 
@@ -86,14 +86,14 @@ public class PoiModel extends Model {
     public void loadCustomPoiProviders() {
         for (CustomPoiProvider poiProvider : customPoiProviders.get()) {
             Managers.Net.download(poiProvider.getUrl(), poiProvider.getName()).handleJsonArray(elements -> {
-                Set<CustomPoi> pois = new HashSet<>();
+                List<CustomPoi> pois = new ArrayList<>();
 
                 for (JsonElement jsonElement : elements) {
                     CustomPoi poi = Managers.Json.GSON.fromJson(jsonElement, CustomPoi.class);
                     pois.add(poi);
                 }
 
-                providedCustomPois.put(poiProvider, pois);
+                providedCustomPois.put(poiProvider, ImmutableList.copyOf(pois));
             });
         }
     }
@@ -129,12 +129,12 @@ public class PoiModel extends Model {
         return combatPois;
     }
 
-    public Set<CustomPoi> getProvidedCustomPois() {
+    public List<CustomPoi> getProvidedCustomPois() {
         return customPoiProviders.get().stream()
                 .filter(CustomPoiProvider::isEnabled)
-                .map(provider -> providedCustomPois.getOrDefault(provider, Set.of()))
-                .flatMap(Set::stream)
-                .collect(Collectors.toUnmodifiableSet());
+                .map(provider -> providedCustomPois.getOrDefault(provider, List.of()))
+                .flatMap(List::stream)
+                .toList();
     }
 
     public List<CustomPoiProvider> getCustomPoiProviders() {
