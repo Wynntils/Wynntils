@@ -374,7 +374,7 @@ public final class SeaskipperDepartureBoardScreen extends AbstractMapScreen {
             }
         }
 
-        return super.doMouseClicked(mouseX, mouseY, button);
+        return true;
     }
 
     @Override
