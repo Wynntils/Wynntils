@@ -136,6 +136,10 @@ public abstract class AbstractMapScreen extends WynntilsScreen {
                 Texture.FULLSCREEN_MAP_BORDER.height());
     }
 
+    protected void renderGradientBackground(PoseStack poseStack) {
+        super.renderBackground(poseStack);
+    }
+
     protected void renderPois(
             List<Poi> pois,
             PoseStack poseStack,
