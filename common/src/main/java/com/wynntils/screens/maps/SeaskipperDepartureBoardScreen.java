@@ -147,8 +147,6 @@ public final class SeaskipperDepartureBoardScreen extends AbstractMapScreen {
 
         renderBackground(poseStack);
 
-        renderCoordinates(poseStack, mouseX, mouseY);
-
         RenderUtils.drawScalingTexturedRect(
                 poseStack,
                 Texture.DESTINATION_LIST.resource(),
@@ -161,55 +159,6 @@ public final class SeaskipperDepartureBoardScreen extends AbstractMapScreen {
                 Texture.DESTINATION_LIST.height());
 
         renderWidgets(poseStack, mouseX, mouseY, partialTick);
-    }
-
-    @Override
-    protected void renderCoordinates(PoseStack poseStack, int mouseX, int mouseY) {
-        // Only display coordinates from mouse position when mouse inside map
-        if (mouseX > renderX
-                && mouseX < (renderX + renderWidth)
-                && mouseY > renderY
-                && mouseY < (renderY + renderHeight)) {
-            int gameX = (int) ((mouseX - centerX) / currentZoom + mapCenterX);
-            int gameZ = (int) ((mouseY - centerZ) / currentZoom + mapCenterZ);
-
-            FontRenderer.getInstance()
-                    .renderText(
-                            poseStack,
-                            CodedString.fromString(gameX + ", " + gameZ),
-                            this.centerX,
-                            mapHeight - renderY,
-                            CommonColors.WHITE,
-                            HorizontalAlignment.CENTER,
-                            VerticalAlignment.TOP,
-                            TextShadow.OUTLINE);
-        } else if (selectedDestination != null) {
-            FontRenderer.getInstance()
-                    .renderText(
-                            poseStack,
-                            CodedString.fromString(
-                                    selectedDestination.getLocation().getX() + ", "
-                                            + selectedDestination.getLocation().getZ()),
-                            this.centerX,
-                            mapHeight - renderY,
-                            CommonColors.WHITE,
-                            HorizontalAlignment.CENTER,
-                            VerticalAlignment.TOP,
-                            TextShadow.OUTLINE);
-        } else if (currentLocationPoi != null) {
-            FontRenderer.getInstance()
-                    .renderText(
-                            poseStack,
-                            CodedString.fromString(
-                                    currentLocationPoi.getLocation().getX() + ", "
-                                            + currentLocationPoi.getLocation().getZ()),
-                            this.centerX,
-                            mapHeight - renderY,
-                            CommonColors.WHITE,
-                            HorizontalAlignment.CENTER,
-                            VerticalAlignment.TOP,
-                            TextShadow.OUTLINE);
-        }
     }
 
     private void renderDestinations(
