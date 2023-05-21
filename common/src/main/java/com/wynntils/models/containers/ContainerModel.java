@@ -19,7 +19,6 @@ import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
 import net.minecraft.client.gui.screens.inventory.ContainerScreen;
 import net.minecraft.network.chat.Component;
-import net.minecraft.world.item.Items;
 
 public final class ContainerModel extends Model {
     public static final Pattern ABILITY_TREE_PATTERN =
@@ -118,12 +117,6 @@ public final class ContainerModel extends Model {
                 && ComponentUtils.getCoded(screen.getTitle()).equals(SCRAP_MENU_TITLE);
     }
 
-    public boolean isFirstScrapMenuPage(Screen screen) {
-        return isScrapMenuScreen(screen)
-                && screen instanceof ContainerScreen cs
-                && cs.getMenu().getSlot(0).getItem().getItem() == Items.AIR;
-    }
-
     public boolean isLootChest(Screen screen) {
         return screen instanceof ContainerScreen && lootChestMatcher(screen).matches();
     }
@@ -179,8 +172,6 @@ public final class ContainerModel extends Model {
         }
 
         if (Models.Container.isScrapMenuScreen(gui)) {
-            if (scrollUp && Models.Container.isFirstScrapMenuPage(gui)) return null;
-
             return SCRAP_MENU_PREVIOUS_NEXT_SLOTS;
         }
 
