@@ -39,16 +39,18 @@ public class WynntilsCommand extends Command {
     private static final Pattern STATUS_HEADING = Pattern.compile("<h1 class='status-page__title'>(.*)</h1>");
 
     public void registerWithCommands(CommandDispatcher<CommandSourceStack> dispatcher, List<Command> commands) {
-        LiteralArgumentBuilder<CommandSourceStack> builder = getCommandBuilder();
+        List<LiteralArgumentBuilder<CommandSourceStack>> commandBuilders = getCommandBuilders();
 
-        // Also register all our commands as subcommands under the wynntils command
-        for (Command commandInstance : commands) {
-            if (commandInstance == this) continue;
+        // Also register all our commands as subcommands under the wynntils command and it's aliases
+        for (LiteralArgumentBuilder<CommandSourceStack> builder : commandBuilders) {
+            for (Command commandInstance : commands) {
+                if (commandInstance == this) continue;
 
-            builder.then(commandInstance.getCommandBuilder());
+                commandInstance.getCommandBuilders().forEach(builder::then);
+            }
+
+            dispatcher.register(builder);
         }
-
-        dispatcher.register(builder);
     }
 
     @Override
@@ -62,9 +64,9 @@ public class WynntilsCommand extends Command {
     }
 
     @Override
-    public LiteralArgumentBuilder<CommandSourceStack> getCommandBuilder() {
-        return Commands.literal(getCommandName())
-                .then(Commands.literal("clearcaches")
+    public LiteralArgumentBuilder<CommandSourceStack> getCommandBuilder(
+            LiteralArgumentBuilder<CommandSourceStack> base) {
+        return base.then(Commands.literal("clearcaches")
                         .then(Commands.literal("run").executes(this::doClearCaches))
                         .executes(this::clearCaches))
                 .then(Commands.literal("debug")

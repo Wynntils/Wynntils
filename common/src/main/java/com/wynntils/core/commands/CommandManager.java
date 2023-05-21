@@ -69,7 +69,7 @@ public final class CommandManager extends Manager {
 
     private void registerCommand(Command command) {
         commandInstanceSet.add(command);
-        clientDispatcher.register(command.getCommandBuilder());
+        command.getCommandBuilders().forEach(clientDispatcher::register);
     }
 
     private void registerCommandWithCommandSet(WynntilsCommand command) {
