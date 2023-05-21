@@ -38,9 +38,9 @@ public class BombBellCommand extends Command {
     }
 
     @Override
-    public LiteralArgumentBuilder<CommandSourceStack> getCommandBuilder() {
-        return Commands.literal(getCommandName())
-                .then(Commands.literal("list").executes(this::listBombs))
+    public LiteralArgumentBuilder<CommandSourceStack> getCommandBuilder(
+            LiteralArgumentBuilder<CommandSourceStack> base) {
+        return base.then(Commands.literal("list").executes(this::listBombs))
                 .then(Commands.literal("get")
                         .then(Commands.argument("bombType", StringArgumentType.word())
                                 .suggests(BOMB_TYPE_SUGGESTION_PROVIDER)

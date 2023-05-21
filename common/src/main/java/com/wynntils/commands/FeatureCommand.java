@@ -37,9 +37,9 @@ public class FeatureCommand extends Command {
     }
 
     @Override
-    public LiteralArgumentBuilder<CommandSourceStack> getCommandBuilder() {
-        return Commands.literal(getCommandName())
-                .then(Commands.literal("list").executes(this::listFeatures))
+    public LiteralArgumentBuilder<CommandSourceStack> getCommandBuilder(
+            LiteralArgumentBuilder<CommandSourceStack> base) {
+        return base.then(Commands.literal("list").executes(this::listFeatures))
                 .then(Commands.literal("enable")
                         .then(Commands.argument("feature", StringArgumentType.word())
                                 .suggests(FEATURE_SUGGESTION_PROVIDER)

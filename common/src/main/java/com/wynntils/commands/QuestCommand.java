@@ -49,9 +49,9 @@ public class QuestCommand extends Command {
     }
 
     @Override
-    public LiteralArgumentBuilder<CommandSourceStack> getCommandBuilder() {
-        return Commands.literal(getCommandName())
-                .then(Commands.literal("list")
+    public LiteralArgumentBuilder<CommandSourceStack> getCommandBuilder(
+            LiteralArgumentBuilder<CommandSourceStack> base) {
+        return base.then(Commands.literal("list")
                         .executes((ctxt) -> listQuests(ctxt, "distance"))
                         .then(Commands.argument("sort", StringArgumentType.word())
                                 .suggests(SORT_SUGGESTION_PROVIDER)
