@@ -34,9 +34,9 @@ public class ServersCommand extends Command {
     }
 
     @Override
-    public LiteralArgumentBuilder<CommandSourceStack> getCommandBuilder() {
-        return Commands.literal(getCommandName())
-                .then(Commands.literal("list")
+    public LiteralArgumentBuilder<CommandSourceStack> getCommandBuilder(
+            LiteralArgumentBuilder<CommandSourceStack> base) {
+        return base.then(Commands.literal("list")
                         .then(Commands.literal("up").executes(this::serverUptimeList))
                         .executes(this::serverList)
                         .build())

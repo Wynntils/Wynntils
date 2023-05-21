@@ -46,9 +46,9 @@ public class LocateCommand extends Command {
     }
 
     @Override
-    public LiteralArgumentBuilder<CommandSourceStack> getCommandBuilder() {
-        return Commands.literal(getCommandName())
-                .then(Commands.literal("service")
+    public LiteralArgumentBuilder<CommandSourceStack> getCommandBuilder(
+            LiteralArgumentBuilder<CommandSourceStack> base) {
+        return base.then(Commands.literal("service")
                         .then(Commands.argument("name", StringArgumentType.greedyString())
                                 .suggests(LocateCommand.SERVICE_SUGGESTION_PROVIDER)
                                 .executes(this::locateService)))

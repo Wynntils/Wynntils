@@ -40,7 +40,8 @@ public class MapCommand extends Command {
     }
 
     @Override
-    public LiteralArgumentBuilder<CommandSourceStack> getCommandBuilder() {
+    public LiteralArgumentBuilder<CommandSourceStack> getCommandBuilder(
+            LiteralArgumentBuilder<CommandSourceStack> base) {
         return Commands.literal("map")
                 .then(Commands.literal("poiProvider")
                         .then(Commands.literal("add")
