@@ -15,6 +15,8 @@ import java.lang.reflect.Type;
 import java.nio.charset.StandardCharsets;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Random;
+import java.util.random.RandomGenerator;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.zip.CRC32;
@@ -152,7 +154,14 @@ public class CustomColor {
         CRC32 crc32 = new CRC32();
         crc32.update(input.getBytes(StandardCharsets.UTF_8));
 
-        CustomColor color = fromInt(((int) crc32.getValue()) & 0xFFFFFF).withAlpha(255);
+        RandomGenerator random = new Random(crc32.getValue());
+        final float minS = .5f;
+        final float minV = .75f;
+        CustomColor color = fromHSV(
+                random.nextFloat(),
+                minS + (1f - minS) * random.nextFloat(),
+                minV + (1f - minV) * random.nextFloat(),
+                1f);
         REGISTERED_HASHED_COLORS.put(input, color);
 
         return color;
