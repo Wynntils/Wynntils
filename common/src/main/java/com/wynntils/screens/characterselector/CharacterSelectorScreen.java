@@ -5,6 +5,7 @@
 package com.wynntils.screens.characterselector;
 
 import com.mojang.blaze3d.vertex.PoseStack;
+import com.wynntils.core.components.Models;
 import com.wynntils.core.text.CodedString;
 import com.wynntils.models.character.type.ClassInfo;
 import com.wynntils.screens.base.WynntilsScreen;
@@ -25,6 +26,7 @@ import com.wynntils.utils.render.type.VerticalAlignment;
 import com.wynntils.utils.wynn.ContainerUtils;
 import java.util.ArrayList;
 import java.util.List;
+import net.minecraft.client.KeyMapping;
 import net.minecraft.client.gui.components.Renderable;
 import net.minecraft.client.gui.components.events.GuiEventListener;
 import net.minecraft.client.gui.screens.Screen;
@@ -213,6 +215,20 @@ public final class CharacterSelectorScreen extends WynntilsScreen {
     @Override
     public boolean mouseReleased(double mouseX, double mouseY, int button) {
         draggingScroll = false;
+        return true;
+    }
+
+    @Override
+    public boolean keyPressed(int keyCode, int scanCode, int modifiers) {
+        KeyMapping[] keyHotbarSlots = McUtils.options().keyHotbarSlots;
+
+        for (int i = 0; i < Math.min(keyHotbarSlots.length, classInfoList.size()); i++) {
+            if (!keyHotbarSlots[i].matches(keyCode, scanCode)) continue;
+            int slot = classInfoList.get(i).slot();
+            Models.CharacterSelection.playWithCharacter(slot);
+            return true;
+        }
+
         return true;
     }
 
