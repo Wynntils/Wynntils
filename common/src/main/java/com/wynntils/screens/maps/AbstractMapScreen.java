@@ -48,7 +48,7 @@ public abstract class AbstractMapScreen extends WynntilsScreen {
 
     protected boolean holdingMapKey = false;
 
-    private float renderWidth;
+    protected float renderWidth;
     protected float renderHeight;
     protected float renderX;
     protected float renderY;
@@ -134,6 +134,10 @@ public abstract class AbstractMapScreen extends WynntilsScreen {
                 renderHeight,
                 Texture.FULLSCREEN_MAP_BORDER.width(),
                 Texture.FULLSCREEN_MAP_BORDER.height());
+    }
+
+    protected void renderGradientBackground(PoseStack poseStack) {
+        super.renderBackground(poseStack);
     }
 
     protected void renderPois(
