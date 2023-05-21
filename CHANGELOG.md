@@ -1,9 +1,21 @@
+## [0.0.3-alpha.31](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.30...v0.0.3-alpha.31) (2023-05-21)
+
+
+### New Features
+
+* Add back command alias support (/lr) ([#1551](https://github.com/Wynntils/Artemis/issues/1551)) ([33090a9](https://github.com/Wynntils/Artemis/commit/33090a9b2c9a2ec9d2b12a6a2587248160d5497a))
+
 ## [0.0.3-alpha.30](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.29...v0.0.3-alpha.30) (2023-05-21)
 
 
 ### New Features
 
 * Emerald Pouch Filled Arc ([#1549](https://github.com/Wynntils/Artemis/issues/1549)) ([5673ba5](https://github.com/Wynntils/Artemis/commit/5673ba552706e3a0a27dfeac3784d6fa125e7b80))
+
+
+### Miscellaneous Chores
+
+* **release:** v0.0.3-alpha.30 [skip ci] ([b63220a](https://github.com/Wynntils/Artemis/commit/b63220a0bf43c0fde13e1720552868a55317ad71))
 
 ## [0.0.3-alpha.29](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.28...v0.0.3-alpha.29) (2023-05-21)
 
@@ -51,16 +63,4 @@ Co-authored-by: Kristof Kovacs <49001742+kristofbolyai@users.noreply.github.com>
 ### Miscellaneous Chores
 
 * **release:** v0.0.3-alpha.27 [skip ci] ([05e09b0](https://github.com/Wynntils/Artemis/commit/05e09b072bb4eec584646b34378e99f3a4c0fa74))
-
-## [0.0.3-alpha.26](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.25...v0.0.3-alpha.26) (2023-05-13)
-
-
-### New Features
-
-* Custom Seaskipper Map ([#1473](https://github.com/Wynntils/Artemis/issues/1473)) ([0bc69f9](https://github.com/Wynntils/Artemis/commit/0bc69f935789766c6bcf31f6ee8e74305f959828))
-
-
-### Miscellaneous Chores
-
-* **release:** v0.0.3-alpha.26 [skip ci] ([9c38383](https://github.com/Wynntils/Artemis/commit/9c38383f9847c994dbfcc968b15c35a352521a4c))
 
