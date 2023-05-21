@@ -23,7 +23,7 @@ import net.minecraftforge.eventbus.api.SubscribeEvent;
 public class CustomSeaskipperScreenFeature extends Feature {
 
     @RegisterConfig
-    private final Config<SeaskipperScreenType> screenType = new Config<>(SeaskipperScreenType.DEPARTURE_BOARD);
+    public final Config<SeaskipperScreenType> screenType = new Config<>(SeaskipperScreenType.DEPARTURE_BOARD);
 
     @RegisterConfig
     public final Config<PointerType> pointerType = new Config<>(PointerType.ARROW);
