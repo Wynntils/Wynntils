@@ -1,9 +1,21 @@
+## [0.0.3-alpha.33](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.32...v0.0.3-alpha.33) (2023-05-21)
+
+
+### Bug Fixes
+
+* Don't assume that poi providers don't contain duplicate elements ([#1553](https://github.com/Wynntils/Artemis/issues/1553)) ([0364822](https://github.com/Wynntils/Artemis/commit/03648224c6a5a079c0b9185cd273576aa344ba61))
+
 ## [0.0.3-alpha.32](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.31...v0.0.3-alpha.32) (2023-05-21)
 
 
 ### Bug Fixes
 
 * Fix up message filter conditions ([#1552](https://github.com/Wynntils/Artemis/issues/1552)) ([3eddfc1](https://github.com/Wynntils/Artemis/commit/3eddfc1839903113e39ebdeb439f844d9395f8e3))
+
+
+### Miscellaneous Chores
+
+* **release:** v0.0.3-alpha.32 [skip ci] ([d681831](https://github.com/Wynntils/Artemis/commit/d6818319c4bb9a8b9e3bc5877c80a13d5fc2a147))
 
 ## [0.0.3-alpha.31](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.30...v0.0.3-alpha.31) (2023-05-21)
 
@@ -51,16 +63,4 @@ Co-authored-by: Kristof Kovacs <49001742+kristofbolyai@users.noreply.github.com>
 ### Miscellaneous Chores
 
 * **release:** v0.0.3-alpha.29 [skip ci] ([6b653d0](https://github.com/Wynntils/Artemis/commit/6b653d0decc5897d07f462f49e21ac96a1328588))
-
-## [0.0.3-alpha.28](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.27...v0.0.3-alpha.28) (2023-05-21)
-
-
-### New Features
-
-* Fully complete ability tree parsing ([#1541](https://github.com/Wynntils/Artemis/issues/1541)) ([ed96888](https://github.com/Wynntils/Artemis/commit/ed968884a71ddd2c9ae380cf795f55c2c81e3265))
-
-
-### Miscellaneous Chores
-
-* **release:** v0.0.3-alpha.28 [skip ci] ([0d3262c](https://github.com/Wynntils/Artemis/commit/0d3262cae4c8e293fd3ddaf56ffee5abcc77935b))
 
