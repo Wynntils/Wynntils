@@ -1,9 +1,21 @@
+## [0.0.3-alpha.28](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.27...v0.0.3-alpha.28) (2023-05-21)
+
+
+### New Features
+
+* Fully complete ability tree parsing ([#1541](https://github.com/Wynntils/Artemis/issues/1541)) ([ed96888](https://github.com/Wynntils/Artemis/commit/ed968884a71ddd2c9ae380cf795f55c2c81e3265))
+
 ## [0.0.3-alpha.27](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.26...v0.0.3-alpha.27) (2023-05-13)
 
 
 ### New Features
 
 * Message filter refactor, add party finder filter ([#1530](https://github.com/Wynntils/Artemis/issues/1530)) ([611ff66](https://github.com/Wynntils/Artemis/commit/611ff6632785fc733095c5e26dbddc48f50a3646))
+
+
+### Miscellaneous Chores
+
+* **release:** v0.0.3-alpha.27 [skip ci] ([05e09b0](https://github.com/Wynntils/Artemis/commit/05e09b072bb4eec584646b34378e99f3a4c0fa74))
 
 ## [0.0.3-alpha.26](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.25...v0.0.3-alpha.26) (2023-05-13)
 
@@ -40,16 +52,4 @@
 ### Miscellaneous Chores
 
 * **release:** v0.0.3-alpha.24 [skip ci] ([5224049](https://github.com/Wynntils/Artemis/commit/5224049d2d3554f64b3d5ea0e2000b2a9542c2ce))
-
-## [0.0.3-alpha.23](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.22...v0.0.3-alpha.23) (2023-05-03)
-
-
-### Bug Fixes
-
-* Don't send an empty autocommand when chat is empty ([#1539](https://github.com/Wynntils/Artemis/issues/1539)) ([16a8297](https://github.com/Wynntils/Artemis/commit/16a8297774a311c4007fc14dd07c3a887e2f44a0))
-
-
-### Miscellaneous Chores
-
-* **release:** v0.0.3-alpha.23 [skip ci] ([e691031](https://github.com/Wynntils/Artemis/commit/e6910310fa9a32d55f825b50c1e3d1a9300e468d))
 
