@@ -66,23 +66,23 @@ public class MessageFilterFeature extends Feature {
         CodedString msg = e.getOriginalCodedString();
         MessageType messageType = e.getMessageType();
 
-        if (hideWelcome.get()) {
-            e.setCanceled(processFilter(msg, messageType, WELCOME));
+        if (hideWelcome.get() && processFilter(msg, messageType, WELCOME)) {
+            e.setCanceled(true);
             return;
         }
 
-        if (hideSystemInfo.get()) {
-            e.setCanceled(processFilter(msg, messageType, SYSTEM_INFO));
+        if (hideSystemInfo.get() && processFilter(msg, messageType, SYSTEM_INFO)) {
+            e.setCanceled(true);
             return;
         }
 
-        if (hideLevelUp.get()) {
-            e.setCanceled(processFilter(msg, messageType, LEVEL_UP));
+        if (hideLevelUp.get() && processFilter(msg, messageType, LEVEL_UP)) {
+            e.setCanceled(true);
             return;
         }
 
-        if (hidePartyFinder.get()) {
-            e.setCanceled(processFilter(msg, messageType, PARTY_FINDER));
+        if (hidePartyFinder.get() && processFilter(msg, messageType, PARTY_FINDER)) {
+            e.setCanceled(true);
             return;
         }
     }
