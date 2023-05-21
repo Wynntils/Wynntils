@@ -14,6 +14,7 @@ import com.wynntils.core.features.Feature;
 import com.wynntils.mc.event.HotbarSlotRenderEvent;
 import com.wynntils.mc.event.SlotRenderEvent;
 import com.wynntils.models.items.items.game.EmeraldPouchItem;
+import com.wynntils.screens.guides.emeraldpouch.GuideEmeraldPouchItemStack;
 import com.wynntils.utils.colors.CustomColor;
 import com.wynntils.utils.render.RenderUtils;
 import com.wynntils.utils.type.CappedValue;
@@ -47,7 +48,9 @@ public class EmeraldPouchFillArc extends Feature {
 
         if (optionalItem.isEmpty()) return;
 
-        CappedValue capacity = optionalItem.get().getCapacity();
+        GuideEmeraldPouchItemStack pouchCapacity = new GuideEmeraldPouchItemStack(optionalItem.get().getTier());
+
+        CappedValue capacity = new CappedValue(optionalItem.get().getValue(), pouchCapacity.getCapacity());
 
         // calculate color of arc
         float capacityFraction = (float) capacity.current() / capacity.max();

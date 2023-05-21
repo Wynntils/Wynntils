@@ -6,21 +6,14 @@ package com.wynntils.models.items.items.game;
 
 import com.wynntils.models.items.properties.EmeraldValuedItemProperty;
 import com.wynntils.models.items.properties.NumberedTierItemProperty;
-import com.wynntils.utils.type.CappedValue;
 
 public class EmeraldPouchItem extends GameItem implements NumberedTierItemProperty, EmeraldValuedItemProperty {
-    private final CappedValue capacity;
     private final int tier;
     private final int value;
 
-    public EmeraldPouchItem(int capacity, int tier, int value) {
-        this.capacity = new CappedValue(value, capacity);
+    public EmeraldPouchItem(int tier, int value) {
         this.tier = tier;
         this.value = value;
-    }
-
-    public CappedValue getCapacity() {
-        return capacity;
     }
 
     public int getTier() {
