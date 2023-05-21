@@ -1,3 +1,10 @@
+## [0.0.3-alpha.30](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.29...v0.0.3-alpha.30) (2023-05-21)
+
+
+### New Features
+
+* Emerald Pouch Filled Arc ([#1549](https://github.com/Wynntils/Artemis/issues/1549)) ([5673ba5](https://github.com/Wynntils/Artemis/commit/5673ba552706e3a0a27dfeac3784d6fa125e7b80))
+
 ## [0.0.3-alpha.29](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.28...v0.0.3-alpha.29) (2023-05-21)
 
 
@@ -15,6 +22,11 @@ Co-authored-by: Kristof Kovacs <49001742+kristofbolyai@users.noreply.github.com>
 
 * auto-connect on startup ([#1544](https://github.com/Wynntils/Artemis/issues/1544)) ([043adf3](https://github.com/Wynntils/Artemis/commit/043adf3f4778c564402aeca43d8afe50f353ce7f))
 * select character in CharacterSelectorScreen with hotkey ([#1547](https://github.com/Wynntils/Artemis/issues/1547)) ([8b79dbf](https://github.com/Wynntils/Artemis/commit/8b79dbf2477f28ac0481114e9c05b34a6b5063ee))
+
+
+### Miscellaneous Chores
+
+* **release:** v0.0.3-alpha.29 [skip ci] ([6b653d0](https://github.com/Wynntils/Artemis/commit/6b653d0decc5897d07f462f49e21ac96a1328588))
 
 ## [0.0.3-alpha.28](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.27...v0.0.3-alpha.28) (2023-05-21)
 
@@ -51,16 +63,4 @@ Co-authored-by: Kristof Kovacs <49001742+kristofbolyai@users.noreply.github.com>
 ### Miscellaneous Chores
 
 * **release:** v0.0.3-alpha.26 [skip ci] ([9c38383](https://github.com/Wynntils/Artemis/commit/9c38383f9847c994dbfcc968b15c35a352521a4c))
-
-## [0.0.3-alpha.25](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.24...v0.0.3-alpha.25) (2023-05-09)
-
-
-### Bug Fixes
-
-* PoiCreationScreen save button is clickable on every screen size now ([#1542](https://github.com/Wynntils/Artemis/issues/1542)) ([9d481b6](https://github.com/Wynntils/Artemis/commit/9d481b6bcf003659d31764dfcd3318e1674f8289))
-
-
-### Miscellaneous Chores
-
-* **release:** v0.0.3-alpha.25 [skip ci] ([2aecf53](https://github.com/Wynntils/Artemis/commit/2aecf532e08d9320a5d9aec6f4f4feb749e27764))
 
