@@ -19,6 +19,7 @@ import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
 import net.minecraft.client.gui.screens.inventory.ContainerScreen;
 import net.minecraft.network.chat.Component;
+import net.minecraft.world.item.Items;
 
 public final class ContainerModel extends Model {
     public static final Pattern ABILITY_TREE_PATTERN =
@@ -42,9 +43,11 @@ public final class ContainerModel extends Model {
     private static final Pair<Integer, Integer> BANK_PREVIOUS_NEXT_SLOTS = new Pair<>(17, 8);
     private static final Pair<Integer, Integer> GUILD_BANK_PREVIOUS_NEXT_SLOTS = new Pair<>(9, 27);
     private static final Pair<Integer, Integer> TRADE_MARKET_PREVIOUS_NEXT_SLOTS = new Pair<>(17, 26);
+    private static final Pair<Integer, Integer> SCRAP_MENU_PREVIOUS_NEXT_SLOTS = new Pair<>(0, 8);
     private static final CodedString LAST_BANK_PAGE_STRING = CodedString.fromString(">§4>§c>§4>§c>");
     private static final CodedString FIRST_TRADE_MARKET_PAGE_STRING = CodedString.fromString("§bReveal Item Names");
     private static final CodedString TRADE_MARKET_TITLE = CodedString.fromString("Trade Market");
+    private static final CodedString SCRAP_MENU_TITLE = CodedString.fromString("Scrap Rewards");
     private static final StyledText SEASKIPPER_TITLE = StyledText.fromString("V.S.S. Seaskipper");
 
     public ContainerModel() {
@@ -109,6 +112,18 @@ public final class ContainerModel extends Model {
         return type.equals(MISC_BUCKET_NAME);
     }
 
+    public boolean isScrapMenuScreen(Screen screen) {
+        if (!(screen instanceof ContainerScreen cs)) return false;
+        return cs.getMenu().getRowCount() == 6
+                && ComponentUtils.getCoded(screen.getTitle()).equals(SCRAP_MENU_TITLE);
+    }
+
+    public boolean isFirstScrapMenuPage(Screen screen) {
+        return isScrapMenuScreen(screen)
+                && screen instanceof ContainerScreen cs
+                && cs.getMenu().getSlot(0).getItem().getItem() == Items.AIR;
+    }
+
     public boolean isLootChest(Screen screen) {
         return screen instanceof ContainerScreen && lootChestMatcher(screen).matches();
     }
@@ -161,6 +176,12 @@ public final class ContainerModel extends Model {
             if (scrollUp && Models.Container.isFirstTradeMarketPage(gui)) return null;
 
             return TRADE_MARKET_PREVIOUS_NEXT_SLOTS;
+        }
+
+        if (Models.Container.isScrapMenuScreen(gui)) {
+            if (scrollUp && Models.Container.isFirstScrapMenuPage(gui)) return null;
+
+            return SCRAP_MENU_PREVIOUS_NEXT_SLOTS;
         }
 
         return null;
