@@ -14,7 +14,6 @@ import com.wynntils.core.features.Feature;
 import com.wynntils.mc.event.HotbarSlotRenderEvent;
 import com.wynntils.mc.event.SlotRenderEvent;
 import com.wynntils.models.items.items.game.EmeraldPouchItem;
-import com.wynntils.screens.guides.emeraldpouch.GuideEmeraldPouchItemStack;
 import com.wynntils.utils.colors.CustomColor;
 import com.wynntils.utils.render.RenderUtils;
 import com.wynntils.utils.type.CappedValue;
@@ -24,7 +23,7 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 
 @ConfigCategory(Category.INVENTORY)
-public class EmeraldPouchFillArc extends Feature {
+public class EmeraldPouchFillArcFeature extends Feature {
     @RegisterConfig
     public final Config<Boolean> renderFillArcHotbar = new Config<>(true);
 
