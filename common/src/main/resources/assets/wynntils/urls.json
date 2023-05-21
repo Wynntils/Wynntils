@@ -198,5 +198,9 @@
   {
     "id": "linkWynntilsStatus",
     "url": "https://status.wynntils.com/"
+  },
+  {
+    "id": "dataStaticAbilities",
+    "url": "https://raw.githubusercontent.com/Wynntils/WynntilsWebsite-API/master/abilities.json"
   }
 ]

@@ -15,6 +15,7 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.world.inventory.MenuType;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
 import org.lwjgl.glfw.GLFW;
 
 public final class ScriptedContainerQuery {
@@ -194,6 +195,25 @@ public final class ScriptedContainerQuery {
             this.startAction = (container) -> {
                 ContainerUtils.clickOnSlot(
                         slotNum, container.containerId(), GLFW.GLFW_MOUSE_BUTTON_LEFT, container.items());
+                return true;
+            };
+            checkForCompletion();
+            return this;
+        }
+
+        public QueryBuilder clickOnSlotIfExists(int slotNum, int secondarySlotNum) {
+            if (startAction != null) {
+                throw new IllegalStateException("Set startAction twice");
+            }
+            this.startAction = (container) -> {
+                ItemStack itemStack = container.items().get(slotNum);
+                if (itemStack.isEmpty() || itemStack.getItem() == Items.AIR) {
+                    ContainerUtils.clickOnSlot(
+                            secondarySlotNum, container.containerId(), GLFW.GLFW_MOUSE_BUTTON_LEFT, container.items());
+                } else {
+                    ContainerUtils.clickOnSlot(
+                            slotNum, container.containerId(), GLFW.GLFW_MOUSE_BUTTON_LEFT, container.items());
+                }
                 return true;
             };
             checkForCompletion();
