@@ -48,7 +48,8 @@ public class EmeraldPouchFillArc extends Feature {
 
         if (optionalItem.isEmpty()) return;
 
-        GuideEmeraldPouchItemStack pouchCapacity = new GuideEmeraldPouchItemStack(optionalItem.get().getTier());
+        GuideEmeraldPouchItemStack pouchCapacity =
+                new GuideEmeraldPouchItemStack(optionalItem.get().getTier());
 
         CappedValue capacity = new CappedValue(optionalItem.get().getValue(), pouchCapacity.getCapacity());
 
