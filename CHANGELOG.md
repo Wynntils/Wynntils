@@ -1,9 +1,21 @@
+## [0.0.3-alpha.32](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.31...v0.0.3-alpha.32) (2023-05-21)
+
+
+### Bug Fixes
+
+* Fix up message filter conditions ([#1552](https://github.com/Wynntils/Artemis/issues/1552)) ([3eddfc1](https://github.com/Wynntils/Artemis/commit/3eddfc1839903113e39ebdeb439f844d9395f8e3))
+
 ## [0.0.3-alpha.31](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.30...v0.0.3-alpha.31) (2023-05-21)
 
 
 ### New Features
 
 * Add back command alias support (/lr) ([#1551](https://github.com/Wynntils/Artemis/issues/1551)) ([33090a9](https://github.com/Wynntils/Artemis/commit/33090a9b2c9a2ec9d2b12a6a2587248160d5497a))
+
+
+### Miscellaneous Chores
+
+* **release:** v0.0.3-alpha.31 [skip ci] ([1618840](https://github.com/Wynntils/Artemis/commit/1618840f93d03812c0d3d06dbdc5effa87982c8b))
 
 ## [0.0.3-alpha.30](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.29...v0.0.3-alpha.30) (2023-05-21)
 
@@ -51,16 +63,4 @@ Co-authored-by: Kristof Kovacs <49001742+kristofbolyai@users.noreply.github.com>
 ### Miscellaneous Chores
 
 * **release:** v0.0.3-alpha.28 [skip ci] ([0d3262c](https://github.com/Wynntils/Artemis/commit/0d3262cae4c8e293fd3ddaf56ffee5abcc77935b))
-
-## [0.0.3-alpha.27](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.26...v0.0.3-alpha.27) (2023-05-13)
-
-
-### New Features
-
-* Message filter refactor, add party finder filter ([#1530](https://github.com/Wynntils/Artemis/issues/1530)) ([611ff66](https://github.com/Wynntils/Artemis/commit/611ff6632785fc733095c5e26dbddc48f50a3646))
-
-
-### Miscellaneous Chores
-
-* **release:** v0.0.3-alpha.27 [skip ci] ([05e09b0](https://github.com/Wynntils/Artemis/commit/05e09b072bb4eec584646b34378e99f3a4c0fa74))
 
