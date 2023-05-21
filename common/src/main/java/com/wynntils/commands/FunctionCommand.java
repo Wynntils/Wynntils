@@ -66,9 +66,9 @@ public class FunctionCommand extends Command {
     }
 
     @Override
-    public LiteralArgumentBuilder<CommandSourceStack> getCommandBuilder() {
-        return Commands.literal(getCommandName())
-                .then(Commands.literal("list")
+    public LiteralArgumentBuilder<CommandSourceStack> getCommandBuilder(
+            LiteralArgumentBuilder<CommandSourceStack> base) {
+        return base.then(Commands.literal("list")
                         .executes(this::listFunctions)
                         .then(Commands.argument("type", StringArgumentType.word())
                                 .suggests(FUNCTION_LIST_TYPES_SUGGESTION_PROVIDER)
