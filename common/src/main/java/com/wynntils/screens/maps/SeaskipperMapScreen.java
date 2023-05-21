@@ -62,7 +62,7 @@ public final class SeaskipperMapScreen extends AbstractMapScreen {
     protected void doInit() {
         super.doInit();
 
-        reloadDestionationPois();
+        reloadDestinationPois();
 
         this.addRenderableWidget(new BasicTexturedButton(
                 width / 2 - Texture.MAP_BUTTONS_BACKGROUND.width() / 2 + 6 + 20 * 3,
@@ -407,7 +407,7 @@ public final class SeaskipperMapScreen extends AbstractMapScreen {
         return super.doMouseClicked(mouseX, mouseY, button);
     }
 
-    public void reloadDestionationPois() {
+    public void reloadDestinationPois() {
         destinationPois = new ArrayList<>();
 
         destinationPois.addAll(Models.Seaskipper.getPois(renderAllDestinations));
@@ -425,7 +425,7 @@ public final class SeaskipperMapScreen extends AbstractMapScreen {
     private void toggleDestinations() {
         renderAllDestinations = !renderAllDestinations;
 
-        reloadDestionationPois();
+        reloadDestinationPois();
     }
 
     private void toggleRoutes() {
