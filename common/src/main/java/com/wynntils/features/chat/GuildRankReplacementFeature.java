@@ -39,7 +39,6 @@ public class GuildRankReplacementFeature extends Feature {
         if (!m.find()) return;
 
         if (rankType.get() == RankType.NONE) {
-
             StyledText modified = styledText.iterate((part, changes) -> {
                 if (part.getString(null, PartStyle.StyleType.NONE).contains("★")) {
                     changes.remove(part);
