@@ -1,9 +1,21 @@
+## [0.0.3-alpha.35](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.34...v0.0.3-alpha.35) (2023-05-22)
+
+
+### New Features
+
+* Territory owner function ([#1556](https://github.com/Wynntils/Artemis/issues/1556)) ([c0c8d09](https://github.com/Wynntils/Artemis/commit/c0c8d094538bdeb404309e750a0ef27af75c998a))
+
 ## [0.0.3-alpha.34](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.33...v0.0.3-alpha.34) (2023-05-21)
 
 
 ### New Features
 
 * Seaskipper Departure Board Screen ([#1545](https://github.com/Wynntils/Artemis/issues/1545)) ([1c3abd8](https://github.com/Wynntils/Artemis/commit/1c3abd8142c965d23e867acc946b21c16e223957))
+
+
+### Miscellaneous Chores
+
+* **release:** v0.0.3-alpha.34 [skip ci] ([a42d8cc](https://github.com/Wynntils/Artemis/commit/a42d8cce5e94b3d32a0b88f79f2fbd0d54366d84))
 
 ## [0.0.3-alpha.33](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.32...v0.0.3-alpha.33) (2023-05-21)
 
@@ -40,16 +52,4 @@
 ### Miscellaneous Chores
 
 * **release:** v0.0.3-alpha.31 [skip ci] ([1618840](https://github.com/Wynntils/Artemis/commit/1618840f93d03812c0d3d06dbdc5effa87982c8b))
-
-## [0.0.3-alpha.30](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.29...v0.0.3-alpha.30) (2023-05-21)
-
-
-### New Features
-
-* Emerald Pouch Filled Arc ([#1549](https://github.com/Wynntils/Artemis/issues/1549)) ([5673ba5](https://github.com/Wynntils/Artemis/commit/5673ba552706e3a0a27dfeac3784d6fa125e7b80))
-
-
-### Miscellaneous Chores
-
-* **release:** v0.0.3-alpha.30 [skip ci] ([b63220a](https://github.com/Wynntils/Artemis/commit/b63220a0bf43c0fde13e1720552868a55317ad71))
 
