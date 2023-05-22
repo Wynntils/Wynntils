@@ -1,9 +1,21 @@
+## [0.0.3-alpha.36](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.35...v0.0.3-alpha.36) (2023-05-22)
+
+
+### New Features
+
+* Scrollable scrap menu ([#1555](https://github.com/Wynntils/Artemis/issues/1555)) ([9e382e1](https://github.com/Wynntils/Artemis/commit/9e382e111943249752fafe1d7b56178e210c455d))
+
 ## [0.0.3-alpha.35](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.34...v0.0.3-alpha.35) (2023-05-22)
 
 
 ### New Features
 
 * Territory owner function ([#1556](https://github.com/Wynntils/Artemis/issues/1556)) ([c0c8d09](https://github.com/Wynntils/Artemis/commit/c0c8d094538bdeb404309e750a0ef27af75c998a))
+
+
+### Miscellaneous Chores
+
+* **release:** v0.0.3-alpha.35 [skip ci] ([7d0f066](https://github.com/Wynntils/Artemis/commit/7d0f066837b0ddb3924e12ddc9e1c70bc64e42ef))
 
 ## [0.0.3-alpha.34](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.33...v0.0.3-alpha.34) (2023-05-21)
 
@@ -40,16 +52,4 @@
 ### Miscellaneous Chores
 
 * **release:** v0.0.3-alpha.32 [skip ci] ([d681831](https://github.com/Wynntils/Artemis/commit/d6818319c4bb9a8b9e3bc5877c80a13d5fc2a147))
-
-## [0.0.3-alpha.31](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.30...v0.0.3-alpha.31) (2023-05-21)
-
-
-### New Features
-
-* Add back command alias support (/lr) ([#1551](https://github.com/Wynntils/Artemis/issues/1551)) ([33090a9](https://github.com/Wynntils/Artemis/commit/33090a9b2c9a2ec9d2b12a6a2587248160d5497a))
-
-
-### Miscellaneous Chores
-
-* **release:** v0.0.3-alpha.31 [skip ci] ([1618840](https://github.com/Wynntils/Artemis/commit/1618840f93d03812c0d3d06dbdc5effa87982c8b))
 
