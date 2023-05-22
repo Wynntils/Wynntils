@@ -17,6 +17,7 @@ import com.wynntils.utils.type.IterationDecision;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import net.minecraft.ChatFormatting;
+import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.network.chat.Style;
 import net.minecraftforge.eventbus.api.EventPriority;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
@@ -38,18 +39,28 @@ public class GuildRankReplacementFeature extends Feature {
         Matcher m = styledText.getMatcher(RANK_STARS_PATTERN);
         if (!m.find()) return;
 
+        MutableComponent modifiedComponent;
         if (rankType.get() == RankType.NONE) {
-            StyledText modified = styledText.iterate((part, changes) -> {
-                if (part.getString(null, PartStyle.StyleType.NONE).contains("★")) {
-                    changes.remove(part);
-                }
-                return IterationDecision.CONTINUE;
-            });
-            e.setMessage(modified.getComponent());
-            return;
+            modifiedComponent = getModifiedRemovedComponent(styledText);
+        } else {
+            modifiedComponent = getModifiedNamedComponent(styledText);
         }
 
-        // rankType == RankType.NAME
+        if (modifiedComponent.equals(styledText.getComponent())) return; // no changes
+        e.setMessage(modifiedComponent);
+    }
+
+    private MutableComponent getModifiedRemovedComponent(StyledText styledText) {
+        StyledText modified = styledText.iterate((part, changes) -> {
+            if (part.getString(null, PartStyle.StyleType.NONE).contains("★")) {
+                changes.remove(part);
+            }
+            return IterationDecision.BREAK;
+        });
+        return modified.getComponent();
+    }
+
+    private MutableComponent getModifiedNamedComponent(StyledText styledText) {
         StyledText modified = styledText.iterateBackwards((part, changes) -> {
             int stars = (int) part.getString(null, PartStyle.StyleType.NONE)
                     .chars()
@@ -86,7 +97,7 @@ public class GuildRankReplacementFeature extends Feature {
 
             return IterationDecision.CONTINUE;
         });
-        e.setMessage(modified.getComponent());
+        return modified.getComponent();
     }
 
     private enum RankType {
