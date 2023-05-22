@@ -44,9 +44,9 @@ public final class ContainerModel extends Model {
     private static final Pair<Integer, Integer> TRADE_MARKET_PREVIOUS_NEXT_SLOTS = new Pair<>(17, 26);
     private static final Pair<Integer, Integer> SCRAP_MENU_PREVIOUS_NEXT_SLOTS = new Pair<>(0, 8);
     private static final CodedString LAST_BANK_PAGE_STRING = CodedString.fromString(">§4>§c>§4>§c>");
-    private static final CodedString FIRST_TRADE_MARKET_PAGE_STRING = CodedString.fromString("§bReveal Item Names");
-    private static final CodedString TRADE_MARKET_TITLE = CodedString.fromString("Trade Market");
-    private static final CodedString SCRAP_MENU_TITLE = CodedString.fromString("Scrap Rewards");
+    private static final StyledText FIRST_TRADE_MARKET_PAGE_STRING = StyledText.fromString("§bReveal Item Names");
+    private static final StyledText TRADE_MARKET_TITLE = StyledText.fromString("Trade Market");
+    private static final StyledText SCRAP_MENU_TITLE = StyledText.fromString("Scrap Rewards");
     private static final StyledText SEASKIPPER_TITLE = StyledText.fromString("V.S.S. Seaskipper");
 
     public ContainerModel() {
@@ -85,13 +85,13 @@ public final class ContainerModel extends Model {
         if (!(screen instanceof ContainerScreen cs)) return false;
         // No regex required, title is very simple and can be checked with .equals()
         return cs.getMenu().getRowCount() == 6
-                && ComponentUtils.getCoded(screen.getTitle()).equals(TRADE_MARKET_TITLE);
+                && StyledText.fromComponent(screen.getTitle()).equals(TRADE_MARKET_TITLE);
     }
 
     public boolean isFirstTradeMarketPage(Screen screen) {
         return isTradeMarketScreen(screen)
                 && screen instanceof ContainerScreen cs
-                && ComponentUtils.getCoded(cs.getMenu().getSlot(17).getItem().getHoverName())
+                && StyledText.fromComponent(cs.getMenu().getSlot(17).getItem().getHoverName())
                         .equals(FIRST_TRADE_MARKET_PAGE_STRING);
     }
 
@@ -114,7 +114,7 @@ public final class ContainerModel extends Model {
     public boolean isScrapMenuScreen(Screen screen) {
         if (!(screen instanceof ContainerScreen cs)) return false;
         return cs.getMenu().getRowCount() == 6
-                && ComponentUtils.getCoded(screen.getTitle()).equals(SCRAP_MENU_TITLE);
+                && StyledText.fromComponent(screen.getTitle()).equals(SCRAP_MENU_TITLE);
     }
 
     public boolean isLootChest(Screen screen) {
