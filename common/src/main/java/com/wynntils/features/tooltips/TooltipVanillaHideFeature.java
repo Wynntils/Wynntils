@@ -19,7 +19,7 @@ public class TooltipVanillaHideFeature extends Feature {
     public final Config<Boolean> hideAdvanced = new Config<>(true);
 
     @RegisterConfig
-    public final Config<Boolean> hideAdditionalnfo = new Config<>(true);
+    public final Config<Boolean> hideAdditionalInfo = new Config<>(true);
 
     @SubscribeEvent
     public void onTooltipFlagsAdvanced(ItemTooltipFlagsEvent.Advanced event) {
@@ -30,7 +30,7 @@ public class TooltipVanillaHideFeature extends Feature {
 
     @SubscribeEvent
     public void onTooltipFlagsMask(ItemTooltipFlagsEvent.Mask event) {
-        if (!hideAdditionalnfo.get()) return;
+        if (!hideAdditionalInfo.get()) return;
 
         event.setMask(-1);
     }
