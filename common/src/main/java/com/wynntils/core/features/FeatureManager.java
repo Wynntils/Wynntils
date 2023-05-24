@@ -162,113 +162,149 @@ public final class FeatureManager extends Manager {
         // always on
         registerFeature(new LootrunFeature());
 
-        // user
-        registerFeature(new AbbreviateMobHealthFeature());
-        registerFeature(new AbilityRefreshRedirectFeature());
-        registerFeature(new ContainerScrollFeature());
-        registerFeature(new AddCommandExpansionFeature());
-        registerFeature(new ArrowShieldTrackingFeature());
-        registerFeature(new AuraTimerOverlayFeature());
-        registerFeature(new AutoApplyResourcePackFeature());
-        registerFeature(new AutoJoinPartyFeature());
-        registerFeature(new BeaconBeamFeature());
-        registerFeature(new BlacksmithRedirectFeature());
-        registerFeature(new BulkBuyFeature());
-        registerFeature(new ChangelogFeature());
+        // region chat
         registerFeature(new ChatCoordinatesFeature());
         registerFeature(new ChatItemFeature());
         registerFeature(new ChatMentionFeature());
-        registerFeature(new ChatRedirectFeature());
         registerFeature(new ChatTabsFeature());
         registerFeature(new ChatTimestampFeature());
-        registerFeature(new CombatExperienceOverlayFeature());
-        registerFeature(new CombatXpGainMessageFeature());
-        registerFeature(new CommandAliasesFeature());
-        registerFeature(new CommandsFeature());
-        registerFeature(new ContainerSearchFeature());
-        registerFeature(new CosmeticsPreviewFeature());
-        registerFeature(new CustomBarsOverlayFeature());
-        registerFeature(new CustomCharacterSelectionScreenFeature());
-        registerFeature(new CustomCommandKeybindsFeature());
-        registerFeature(new CustomLoadingScreenFeature());
-        registerFeature(new CustomNametagRendererFeature());
-        registerFeature(new CustomSeaskipperScreenFeature());
         registerFeature(new DeathCoordinatesFeature());
         registerFeature(new DialogueOptionOverrideFeature());
-        registerFeature(new GameBarsOverlayFeature());
-        registerFeature(new GuildRankReplacementFeature());
+        registerFeature(new MessageFilterFeature());
+        registerFeature(new TradeMarketAutoOpenChatFeature());
+        registerFeature(new TradeMarketPriceConversionFeature());
+        // endregion
+
+        // region combat
+        registerFeature(new AbbreviateMobHealthFeature());
+        registerFeature(new CombatXpGainMessageFeature());
+        registerFeature(new FixCastingSpellsFromInventoryFeature());
+        registerFeature(new HealthPotionBlockerFeature());
+        registerFeature(new HorseMountFeature());
+        registerFeature(new LowHealthVignetteFeature());
+        registerFeature(new MythicBlockerFeature());
+        registerFeature(new MythicBoxScalerFeature());
+        registerFeature(new PreventTradesDuelsFeature());
+        registerFeature(new QuickCastFeature());
+        registerFeature(new RangeVisualizerFeature());
+        // endregion
+
+        // region commands
+        registerFeature(new AddCommandExpansionFeature());
+        registerFeature(new CommandAliasesFeature());
+        registerFeature(new CustomCommandKeybindsFeature());
+        registerFeature(new FilterAdminCommandsFeature());
+        // endregion
+
+        // region embellishments
+        registerFeature(new MythicFoundSoundFeature());
+        registerFeature(new WybelSoundFeature());
+        // endregion
+
+        // region inventory
+        registerFeature(new BulkBuyFeature());
+        registerFeature(new ContainerSearchFeature());
         registerFeature(new DurabilityArcFeature());
         registerFeature(new EmeraldPouchFillArcFeature());
         registerFeature(new EmeraldPouchHotkeyFeature());
         registerFeature(new ExtendedItemCountFeature());
-        registerFeature(new FilterAdminCommandsFeature());
-        registerFeature(new FixCastingSpellsFromInventoryFeature());
-        registerFeature(new FixPacketBugsFeature());
-        registerFeature(new GameNotificationOverlayFeature());
-        registerFeature(new GammabrightFeature());
-        registerFeature(new GearViewerFeature());
-        registerFeature(new GuildAttackTimerOverlayFeature());
-        registerFeature(new GuildMapFeature());
-        registerFeature(new HadesFeature());
-        registerFeature(new HealthPotionBlockerFeature());
-        registerFeature(new HorseMountFeature());
-        registerFeature(new InfoBoxFeature());
         registerFeature(new IngredientPouchHotkeyFeature());
         registerFeature(new InventoryEmeraldCountFeature());
-        registerFeature(new InventoryRedirectFeature());
-        registerFeature(new ItemCompareFeature());
         registerFeature(new ItemFavoriteFeature());
-        registerFeature(new ItemGuessFeature());
         registerFeature(new ItemHighlightFeature());
         registerFeature(new ItemLockFeature());
         registerFeature(new ItemScreenshotFeature());
-        registerFeature(new ItemStatInfoFeature());
         registerFeature(new ItemTextOverlayFeature());
-        registerFeature(new LobbyUptimeFeature());
-        registerFeature(new LowHealthVignetteFeature());
+        registerFeature(new ReplaceRecipeBookFeature());
+        registerFeature(new UnidentifiedItemIconFeature());
+        // endregion
+
+        // region map
+        registerFeature(new BeaconBeamFeature());
+        registerFeature(new GuildMapFeature());
         registerFeature(new MapFeature());
-        registerFeature(new MessageFilterFeature());
         registerFeature(new MinimapFeature());
+        registerFeature(new WorldWaypointDistanceFeature());
+        // endregion
+
+        // region overlays
+        registerFeature(new ArrowShieldTrackingFeature());
+        registerFeature(new AuraTimerOverlayFeature());
+        registerFeature(new CombatExperienceOverlayFeature());
+        registerFeature(new CustomBarsOverlayFeature());
+        registerFeature(new GameBarsOverlayFeature());
+        registerFeature(new GameNotificationOverlayFeature());
+        registerFeature(new GuildAttackTimerOverlayFeature());
+        registerFeature(new HadesPartyOverlayFeature());
+        registerFeature(new InfoBoxFeature());
         registerFeature(new MobTotemTrackingFeature());
-        registerFeature(new MythicBlockerFeature());
-        registerFeature(new MythicBoxScalerFeature());
-        registerFeature(new MythicFoundSoundFeature());
         registerFeature(new NpcDialogueOverlayFeature());
         registerFeature(new ObjectivesOverlayFeature());
-        registerFeature(new PartyManagementScreenFeature());
-        registerFeature(new HadesPartyOverlayFeature());
-        registerFeature(new PlayerArmorHidingFeature());
-        registerFeature(new PlayerGhostTransparencyFeature());
         registerFeature(new PowderSpecialBarOverlayFeature());
-        registerFeature(new PreventTradesDuelsFeature());
         registerFeature(new QuestInfoOverlayFeature());
-        registerFeature(new QuickCastFeature());
-        registerFeature(new RangeVisualizerFeature());
-        registerFeature(new ReplaceRecipeBookFeature());
         registerFeature(new ShamanMasksOverlayFeature());
         registerFeature(new ShamanTotemTrackingFeature());
-        registerFeature(new SoulPointTimerFeature());
         registerFeature(new SpellCastRenderFeature());
         registerFeature(new StatusOverlayFeature());
         registerFeature(new StopwatchFeature());
-        registerFeature(new TelemetryFeature());
-        registerFeature(new TerritoryDefenseMessageFeature());
-        registerFeature(new TerritoryMessageRedirectFeature());
         registerFeature(new TokenTrackerFeature());
+        registerFeature(new TradeMarketBulkSellFeature());
+        // endregion
+
+        // region players
+        registerFeature(new AutoJoinPartyFeature());
+        registerFeature(new CustomNametagRendererFeature());
+        registerFeature(new GearViewerFeature());
+        registerFeature(new HadesFeature());
+        registerFeature(new PartyManagementScreenFeature());
+        registerFeature(new PlayerArmorHidingFeature());
+        registerFeature(new PlayerGhostTransparencyFeature());
+        registerFeature(new WynntilsCosmeticsFeature());
+        // endregion
+
+        // region redirects
+        registerFeature(new AbilityRefreshRedirectFeature());
+        registerFeature(new BlacksmithRedirectFeature());
+        registerFeature(new ChatRedirectFeature());
+        registerFeature(new InventoryRedirectFeature());
+        registerFeature(new TerritoryMessageRedirectFeature());
+        // endregion
+
+        // region tooltips
+        registerFeature(new ItemCompareFeature());
+        registerFeature(new ItemGuessFeature());
+        registerFeature(new ItemStatInfoFeature());
         registerFeature(new TooltipFittingFeature());
         registerFeature(new TooltipVanillaHideFeature());
-        registerFeature(new TradeMarketAutoOpenChatFeature());
-        registerFeature(new TradeMarketBulkSellFeature());
-        registerFeature(new TradeMarketPriceConversionFeature());
-        registerFeature(new TranslationFeature());
-        registerFeature(new UnidentifiedItemIconFeature());
-        registerFeature(new UpdatesFeature());
-        registerFeature(new WorldWaypointDistanceFeature());
-        registerFeature(new WybelSoundFeature());
+        // endregion
+
+        // region ui
+        registerFeature(new AutoApplyResourcePackFeature());
+        registerFeature(new ContainerScrollFeature());
+        registerFeature(new CosmeticsPreviewFeature());
+        registerFeature(new CustomCharacterSelectionScreenFeature());
+        registerFeature(new CustomLoadingScreenFeature());
+        registerFeature(new CustomSeaskipperScreenFeature());
+        registerFeature(new LobbyUptimeFeature());
+        registerFeature(new SoulPointTimerFeature());
         registerFeature(new WynncraftButtonFeature());
         registerFeature(new WynncraftPauseScreenFeature());
-        registerFeature(new WynntilsCosmeticsFeature());
         registerFeature(new WynntilsQuestBookFeature());
+        // endregion
+
+        // region wynntils
+        registerFeature(new ChangelogFeature());
+        registerFeature(new CommandsFeature());
+        registerFeature(new FixPacketBugsFeature());
+        registerFeature(new TelemetryFeature());
+        registerFeature(new UpdatesFeature());
+        // endregion
+
+        // region uncategorized
+        registerFeature(new GammabrightFeature());
+        registerFeature(new TerritoryDefenseMessageFeature());
+        registerFeature(new TranslationFeature());
+        // endregion
 
         // Reload Minecraft's config files so our own keybinds get loaded
         // This is needed because we are late to register the keybinds,
