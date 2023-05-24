@@ -646,7 +646,6 @@
   "function.wynntils.auraTimer.name": "公会塔光环定时器叠加层",
   "function.wynntils.bps.description": " 您的块每秒速度",
   "function.wynntils.bps.name": "速度",
-  "function.wynntils.bpsXz.description": "您的块每秒速度，不忽略垂直的动的部分",
   "function.wynntils.bpsXz.name": "速度 (忽略垂直的动)",
   "function.wynntils.cappedHealth.name": "血量",
   "function.wynntils.cappedMana.name": "魔力",
