@@ -1,9 +1,21 @@
+## [0.0.3-alpha.37](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.36...v0.0.3-alpha.37) (2023-05-24)
+
+
+### Code Refactoring
+
+* FeatureManager categorization, typo fixes ([#1558](https://github.com/Wynntils/Artemis/issues/1558)) ([2757be5](https://github.com/Wynntils/Artemis/commit/2757be565004d5766e85ab07731a398b94106192))
+
 ## [0.0.3-alpha.36](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.35...v0.0.3-alpha.36) (2023-05-22)
 
 
 ### New Features
 
 * Scrollable scrap menu ([#1555](https://github.com/Wynntils/Artemis/issues/1555)) ([9e382e1](https://github.com/Wynntils/Artemis/commit/9e382e111943249752fafe1d7b56178e210c455d))
+
+
+### Miscellaneous Chores
+
+* **release:** v0.0.3-alpha.36 [skip ci] ([ba91626](https://github.com/Wynntils/Artemis/commit/ba9162680ee135fe2b00867fb81231431f86f5df))
 
 ## [0.0.3-alpha.35](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.34...v0.0.3-alpha.35) (2023-05-22)
 
@@ -40,16 +52,4 @@
 ### Miscellaneous Chores
 
 * **release:** v0.0.3-alpha.33 [skip ci] ([a6a1608](https://github.com/Wynntils/Artemis/commit/a6a1608bf55bc1c5aaa209641098d33478ca9d3e))
-
-## [0.0.3-alpha.32](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.31...v0.0.3-alpha.32) (2023-05-21)
-
-
-### Bug Fixes
-
-* Fix up message filter conditions ([#1552](https://github.com/Wynntils/Artemis/issues/1552)) ([3eddfc1](https://github.com/Wynntils/Artemis/commit/3eddfc1839903113e39ebdeb439f844d9395f8e3))
-
-
-### Miscellaneous Chores
-
-* **release:** v0.0.3-alpha.32 [skip ci] ([d681831](https://github.com/Wynntils/Artemis/commit/d6818319c4bb9a8b9e3bc5877c80a13d5fc2a147))
 
