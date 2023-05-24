@@ -69,14 +69,14 @@ public final class MathFunctions {
     public static class DivideFunction extends GenericFunction<Double> {
         @Override
         public Double getValue(FunctionArguments arguments) {
-            return arguments.getArgument("divident").getDoubleValue()
+            return arguments.getArgument("dividend").getDoubleValue()
                     / arguments.getArgument("divisor").getDoubleValue();
         }
 
         @Override
         public FunctionArguments.RequiredArgumentBuilder getRequiredArgumentsBuilder() {
             return new FunctionArguments.RequiredArgumentBuilder(List.of(
-                    new FunctionArguments.Argument<>("divident", Number.class, null),
+                    new FunctionArguments.Argument<>("dividend", Number.class, null),
                     new FunctionArguments.Argument<>("divisor", Number.class, null)));
         }
 
@@ -89,14 +89,14 @@ public final class MathFunctions {
     public static class ModuloFunction extends GenericFunction<Double> {
         @Override
         public Double getValue(FunctionArguments arguments) {
-            return arguments.getArgument("divident").getDoubleValue()
+            return arguments.getArgument("dividend").getDoubleValue()
                     % arguments.getArgument("divisor").getDoubleValue();
         }
 
         @Override
         public FunctionArguments.RequiredArgumentBuilder getRequiredArgumentsBuilder() {
             return new FunctionArguments.RequiredArgumentBuilder(List.of(
-                    new FunctionArguments.Argument<>("divident", Number.class, null),
+                    new FunctionArguments.Argument<>("dividend", Number.class, null),
                     new FunctionArguments.Argument<>("divisor", Number.class, null)));
         }
 
