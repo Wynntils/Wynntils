@@ -170,6 +170,7 @@ public final class FeatureManager extends Manager {
         registerFeature(new ChatTimestampFeature());
         registerFeature(new DeathCoordinatesFeature());
         registerFeature(new DialogueOptionOverrideFeature());
+        registerFeature(new GuildRankReplacementFeature());
         registerFeature(new MessageFilterFeature());
         registerFeature(new TradeMarketAutoOpenChatFeature());
         registerFeature(new TradeMarketPriceConversionFeature());
