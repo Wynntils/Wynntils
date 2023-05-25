@@ -14,7 +14,7 @@ import com.wynntils.core.text.PartStyle;
 import com.wynntils.core.text.StyledText;
 import com.wynntils.core.text.StyledTextPart;
 import com.wynntils.handlers.chat.event.ChatMessageReceivedEvent;
-import com.wynntils.models.players.GuildModel;
+import com.wynntils.models.players.type.GuildRank;
 import com.wynntils.utils.type.IterationDecision;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -74,7 +74,7 @@ public class GuildRankReplacementFeature extends Feature {
                     .count();
 
             if (stars > 0) {
-                String rankName = GuildModel.GuildRank.values()[stars].getName();
+                String rankName = GuildRank.values()[stars].getName();
 
                 changes.remove(part);
                 changes.add(new StyledTextPart(rankName, part.getPartStyle().getStyle(), null, Style.EMPTY));
