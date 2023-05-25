@@ -15,11 +15,9 @@ import com.wynntils.mc.extension.ItemStackExtension;
 import com.wynntils.utils.mc.ComponentUtils;
 import com.wynntils.utils.mc.LoreUtils;
 import com.wynntils.utils.mc.McUtils;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
+
+import java.util.*;
+
 import net.minecraft.ChatFormatting;
 import net.minecraft.core.NonNullList;
 import net.minecraft.network.chat.Component;
@@ -66,11 +64,11 @@ public class ItemHandler extends Handler {
         NonNullList<ItemStack> existingItems;
         if (event.getContainerId() == 0) {
             // Set all for inventory
-            existingItems = McUtils.player().inventoryMenu.getItems();
-        } else if (event.getContainerId() == McUtils.player().containerMenu.containerId) {
+            existingItems = McUtils.inventoryMenu().getItems();
+        } else if (event.getContainerId() == McUtils.containerMenu().containerId) {
             // Set all for the currently open container. Vanilla has copied inventory in the last
             // slots
-            existingItems = McUtils.player().containerMenu.getItems();
+            existingItems = McUtils.containerMenu().getItems();
         } else {
             // No matching container, just ignore this
             return;
@@ -228,11 +226,11 @@ public class ItemHandler extends Handler {
     }
 
     public Map<Class<?>, Integer> getProfilingTimes() {
-        return profilingTimes;
+        return Collections.unmodifiableMap(profilingTimes);
     }
 
     public Map<Class<?>, Integer> getProfilingCounts() {
-        return profilingCounts;
+        return Collections.unmodifiableMap(profilingCounts);
     }
 
     public void resetProfiling() {

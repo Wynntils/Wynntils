@@ -187,14 +187,7 @@ public final class KeyBindManager extends Manager {
     public static void initKeyMapping(String category, Map<String, Integer> categorySortOrder) {
         if (categorySortOrder.containsKey(category)) return;
 
-        int max = 0;
-
-        for (int val : categorySortOrder.values()) {
-            if (val > max) {
-                max = val;
-            }
-        }
-
+        int max = categorySortOrder.values().stream().max(Integer::compare).orElse(0);
         categorySortOrder.put(category, max + 1);
     }
 }

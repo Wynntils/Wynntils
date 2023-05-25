@@ -280,7 +280,7 @@ public final class WynntilsDialogueHistoryScreen extends WynntilsMenuScreenBase 
         List<CodedString> currentPage = new ArrayList<>();
         float currentHeight = 0;
 
-        float maxWidth = Texture.QUEST_BOOK_BACKGROUND.width() / 2f - 20;
+        int maxWidth = Texture.QUEST_BOOK_BACKGROUND.width() / 2 - 20;
         final float maxPageHeight = LINES_PER_PAGE * 9f;
 
         for (List<StyledText> dialogueList : dialogues) {

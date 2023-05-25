@@ -182,7 +182,7 @@ public class CustomNametagRendererFeature extends Feature {
         // calculate color of nametag box
         int backgroundColor = hideNametagBackground.get()
                 ? 0
-                : ((int) (Minecraft.getInstance().options.getBackgroundOpacity(0.25F) * 255f) << 24);
+                : ((int) (McUtils.options().getBackgroundOpacity(0.25F) * 255f) << 24);
 
         float yOffset = 0f;
         for (CustomNametag nametag : nametags) {

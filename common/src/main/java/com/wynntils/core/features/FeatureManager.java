@@ -132,6 +132,7 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.stream.Collectors;
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.ClickEvent;
 import net.minecraft.network.chat.Component;
@@ -272,7 +273,7 @@ public final class FeatureManager extends Manager {
         // This is needed because we are late to register the keybinds,
         // but we cannot move it earlier to the init process because of I18n
         synchronized (McUtils.options()) {
-            McUtils.mc().options.load();
+            McUtils.options().load();
         }
 
         addCrashCallbacks();
@@ -440,16 +441,9 @@ public final class FeatureManager extends Manager {
     }
 
     private void addCrashCallbacks() {
-        Managers.CrashReport.registerCrashContext("Loaded Features", () -> {
-            StringBuilder result = new StringBuilder();
-
-            for (Feature feature : FEATURES.keySet()) {
-                if (feature.isEnabled()) {
-                    result.append("\n\t\t").append(feature.getTranslatedName());
-                }
-            }
-
-            return result.toString();
-        });
+        Managers.CrashReport.registerCrashContext("Loaded Features", () -> FEATURES.keySet().stream()
+                .filter(Feature::isEnabled)
+                .map(Feature::getTranslatedName)
+                .collect(Collectors.joining("\n\t\t")));
     }
 }

@@ -52,7 +52,7 @@ public class PingModel extends Model {
 
     private void sendPingPacket() {
         // We use -1 as the id, as it is not used by Minecraft.
-        McUtils.mc().getConnection().send(new ServerboundCommandSuggestionPacket(-1, ""));
+        McUtils.sendPacket(new ServerboundCommandSuggestionPacket(-1, ""));
         lastPingSent = System.currentTimeMillis();
     }
 

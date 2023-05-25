@@ -16,6 +16,7 @@ import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.List;
 import org.apache.commons.lang3.reflect.FieldUtils;
+import org.jetbrains.annotations.ApiStatus;
 
 public class OverlayGroupHolder {
     private final Field field;
@@ -93,6 +94,7 @@ public class OverlayGroupHolder {
     }
 
     // Do not call this. Use OverlayManager instead.
+    @ApiStatus.Internal
     public void initGroup(List<Integer> ids) {
         try {
             List<Overlay> overlays = new ArrayList<>();

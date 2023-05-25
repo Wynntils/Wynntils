@@ -28,6 +28,7 @@ import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
@@ -266,9 +267,10 @@ public final class OverlayManager extends Manager {
         bufferSource.endBatch();
 
         // Hopefully we have none :)
-        for (Overlay overlay : crashedOverlays) {
-            overlay.getConfigOptionFromString("userEnabled").ifPresent(c -> c.setValue(Boolean.FALSE));
-        }
+        crashedOverlays.stream()
+                .map(overlay -> overlay.getConfigOptionFromString("userEnabled"))
+                .flatMap(Optional::stream)
+                .forEach(c -> c.setValue(false));
     }
 
     // endregion
@@ -331,15 +333,9 @@ public final class OverlayManager extends Manager {
     // endregion
 
     private void addCrashCallbacks() {
-        Managers.CrashReport.registerCrashContext("Loaded Overlays", () -> {
-            StringBuilder result = new StringBuilder();
-
-            for (Overlay overlay : enabledOverlays) {
-                result.append("\n\t\t").append(overlay.getTranslatedName());
-            }
-
-            return result.toString();
-        });
+        Managers.CrashReport.registerCrashContext("Loaded Overlays", () -> enabledOverlays.stream()
+                .map(Overlay::getTranslatedName)
+                .collect(Collectors.joining("\n\t\t")));
     }
 
     public SectionCoordinates getSection(OverlayPosition.AnchorSection section) {

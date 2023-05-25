@@ -285,7 +285,7 @@ public final class MainMapScreen extends AbstractMapScreen {
         }
 
         if (button == GLFW.GLFW_MOUSE_BUTTON_RIGHT) {
-            if (McUtils.mc().player.isShiftKeyDown()
+            if (McUtils.player().isShiftKeyDown()
                     && Models.Compass.getCompassLocation().isPresent()) {
                 Location location = Models.Compass.getCompassLocation().get();
                 updateMapCenter(location.x, location.z);

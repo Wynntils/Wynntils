@@ -87,23 +87,23 @@ public abstract class AbstractMapScreen extends WynntilsScreen {
         // FIXME: Figure out a way to not need this.
         //        At the moment, this is needed for Minecraft not to forget we hold keys when we open the GUI...
         KeyMapping.set(
-                McUtils.mc().options.keyUp.key,
-                KeyboardUtils.isKeyDown(McUtils.mc().options.keyUp.key.getValue()));
+                McUtils.options().keyUp.key,
+                KeyboardUtils.isKeyDown(McUtils.options().keyUp.key.getValue()));
         KeyMapping.set(
-                McUtils.mc().options.keyDown.key,
-                KeyboardUtils.isKeyDown(McUtils.mc().options.keyDown.key.getValue()));
+                McUtils.options().keyDown.key,
+                KeyboardUtils.isKeyDown(McUtils.options().keyDown.key.getValue()));
         KeyMapping.set(
-                McUtils.mc().options.keyLeft.key,
-                KeyboardUtils.isKeyDown(McUtils.mc().options.keyLeft.key.getValue()));
+                McUtils.options().keyLeft.key,
+                KeyboardUtils.isKeyDown(McUtils.options().keyLeft.key.getValue()));
         KeyMapping.set(
-                McUtils.mc().options.keyRight.key,
-                KeyboardUtils.isKeyDown(McUtils.mc().options.keyRight.key.getValue()));
+                McUtils.options().keyRight.key,
+                KeyboardUtils.isKeyDown(McUtils.options().keyRight.key.getValue()));
         KeyMapping.set(
-                McUtils.mc().options.keyJump.key,
-                KeyboardUtils.isKeyDown(McUtils.mc().options.keyJump.key.getValue()));
+                McUtils.options().keyJump.key,
+                KeyboardUtils.isKeyDown(McUtils.options().keyJump.key.getValue()));
         KeyMapping.set(
-                McUtils.mc().options.keyShift.key,
-                KeyboardUtils.isKeyDown(McUtils.mc().options.keyShift.key.getValue()));
+                McUtils.options().keyShift.key,
+                KeyboardUtils.isKeyDown(McUtils.options().keyShift.key.getValue()));
 
         renderWidth = this.width - SCREEN_SIDE_OFFSET * 2f;
         renderHeight = this.height - SCREEN_SIDE_OFFSET * 2f;

@@ -82,10 +82,8 @@ public class ConfigUpfixerManager extends Manager {
         JsonArray upfixers = configObject.getAsJsonArray(UPFIXER_JSON_MEMBER_NAME);
         if (upfixers == null) return configUpfixers;
 
-        List<String> appliedUpfixers = new ArrayList<>();
-        for (JsonElement upfixer : upfixers) {
-            appliedUpfixers.add(upfixer.getAsString());
-        }
+        List<String> appliedUpfixers =
+                upfixers.asList().stream().map(JsonElement::getAsString).toList();
 
         return configUpfixers.stream()
                 .filter(upfixer -> !appliedUpfixers.contains(upfixer.getUpfixerName()))

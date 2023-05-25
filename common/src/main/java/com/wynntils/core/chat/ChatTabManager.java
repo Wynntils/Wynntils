@@ -22,6 +22,7 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Stream;
 import net.minecraft.ChatFormatting;
@@ -141,44 +142,30 @@ public final class ChatTabManager extends Manager {
 
     public void matchMessage(ClientsideMessageEvent event) {
         // Firstly, find the FIRST matching tab with high priority
-        for (ChatTab chatTab : getChatTabs()) {
-            if (!chatTab.isConsuming()) continue;
-
-            if (matchMessageFromEvent(chatTab, event)) {
-                addMessageToTab(chatTab, event.getComponent());
-                return;
-            }
-        }
-
+        getChatTabs().stream()
+                .filter(ChatTab::isConsuming)
+                .filter(chatTab -> matchMessageFromEvent(chatTab, event))
+                .findFirst()
+                .ifPresent(chatTab -> addMessageToTab(chatTab, event.getComponent()));
         // Secondly, match ALL tabs with low priority
-        for (ChatTab chatTab : getChatTabs()) {
-            if (chatTab.isConsuming()) continue;
-
-            if (matchMessageFromEvent(chatTab, event)) {
-                addMessageToTab(chatTab, event.getComponent());
-            }
-        }
+        getChatTabs().stream()
+                .filter(ChatTab::isConsuming)
+                .filter(chatTab -> matchMessageFromEvent(chatTab, event))
+                .forEach(chatTab -> addMessageToTab(chatTab, event.getComponent()));
     }
 
     public void matchMessage(ChatMessageReceivedEvent event) {
         // Firstly, find the FIRST matching tab with high priority
-        for (ChatTab chatTab : getChatTabs()) {
-            if (!chatTab.isConsuming()) continue;
-
-            if (matchMessageFromEvent(chatTab, event)) {
-                addMessageToTab(chatTab, event.getMessage());
-                return;
-            }
-        }
-
+        getChatTabs().stream()
+                .filter(ChatTab::isConsuming)
+                .filter(chatTab -> matchMessageFromEvent(chatTab, event))
+                .findFirst()
+                .ifPresent(chatTab -> addMessageToTab(chatTab, event.getMessage()));
         // Secondly, match ALL tabs with low priority
-        for (ChatTab chatTab : getChatTabs()) {
-            if (chatTab.isConsuming()) continue;
-
-            if (matchMessageFromEvent(chatTab, event)) {
-                addMessageToTab(chatTab, event.getMessage());
-            }
-        }
+        getChatTabs().stream()
+                .filter(ChatTab::isConsuming)
+                .filter(chatTab -> matchMessageFromEvent(chatTab, event))
+                .forEach(chatTab -> addMessageToTab(chatTab, event.getMessage()));
     }
 
     private void addMessageToTab(ChatTab tab, Component message) {
@@ -224,10 +211,9 @@ public final class ChatTabManager extends Manager {
                 && !chatTab.getFilteredTypes().contains(RecipientType.CLIENTSIDE)) {
             return false;
         }
-
-        Optional<Pattern> regex = chatTab.getCustomRegex();
-        if (regex.isEmpty()) return true;
-
-        return event.getOriginalCodedString().getMatcher(regex.get()).matches();
+        return chatTab.getCustomRegex()
+                .map(pattern -> event.getOriginalCodedString().getMatcher(pattern))
+                .map(Matcher::matches)
+                .orElse(true);
     }
 }

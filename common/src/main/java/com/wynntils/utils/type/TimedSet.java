@@ -8,7 +8,6 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashSet;
 import java.util.Iterator;
-import java.util.Optional;
 import java.util.Set;
 import java.util.concurrent.TimeUnit;
 import java.util.stream.Stream;
@@ -44,10 +43,10 @@ public class TimedSet<T> implements Iterable<T> {
     }
 
     public long getLastAddedTimestamp() {
-        Optional<TimedEntry> latest = entries.stream().max(Comparator.comparing(TimedEntry::getExpiration));
-        if (latest.isEmpty()) return 0;
-
-        return latest.get().getExpiration() - timeJump;
+        return entries.stream()
+                .max(Comparator.comparing(TimedEntry::getExpiration))
+                .map(timedEntry -> timedEntry.getExpiration() - timeJump)
+                .orElse(0L);
     }
 
     public void clear() {

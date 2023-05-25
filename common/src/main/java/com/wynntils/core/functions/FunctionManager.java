@@ -73,21 +73,14 @@ public final class FunctionManager extends Manager {
     }
 
     public Optional<Function<?>> forName(String functionName) {
-        for (Function<?> function : getFunctions()) {
-            if (hasName(function, functionName)) {
-                return Optional.of(function);
-            }
-        }
-
-        return Optional.empty();
+        return getFunctions().stream()
+                .filter(function -> hasName(function, functionName))
+                .findFirst();
     }
 
     private boolean hasName(Function<?> function, String name) {
         if (function.getName().equalsIgnoreCase(name)) return true;
-        for (String alias : function.getAliases()) {
-            if (alias.equalsIgnoreCase(name)) return true;
-        }
-        return false;
+        return function.getAliases().stream().anyMatch(alias -> alias.equalsIgnoreCase(name));
     }
 
     private Optional<Object> getFunctionValueSafely(Function<?> function, FunctionArguments arguments) {

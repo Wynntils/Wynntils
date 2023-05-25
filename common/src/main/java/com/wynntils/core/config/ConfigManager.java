@@ -29,6 +29,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Set;
 import java.util.TreeSet;
+import java.util.stream.Collectors;
 import java.util.stream.Stream;
 import org.apache.commons.lang3.reflect.FieldUtils;
 
@@ -79,13 +80,12 @@ public final class ConfigManager extends Manager {
     public void registerFeature(Feature feature) {
         registerConfigOptions(feature);
 
-        for (Overlay overlay : Managers.Overlay.getFeatureOverlays(feature).stream()
-                .filter(overlay -> Managers.Overlay.getFeatureOverlayGroups(feature).stream()
-                        .noneMatch(overlayGroupHolder ->
-                                overlayGroupHolder.getOverlays().contains(overlay)))
-                .toList()) {
-            registerConfigOptions(overlay);
-        }
+        List<OverlayGroupHolder> featureOverlayGroups = Managers.Overlay.getFeatureOverlayGroups(feature);
+        Managers.Overlay.getFeatureOverlays(feature).stream()
+                .filter(overlay -> featureOverlayGroups.stream()
+                        .map(OverlayGroupHolder::getOverlays)
+                        .noneMatch(overlays -> overlays.contains(overlay)))
+                .forEach(this::registerConfigOptions);
     }
 
     private <T extends Configurable & Translatable> void registerConfigOptions(T configurable) {
@@ -132,11 +132,6 @@ public final class ConfigManager extends Manager {
                 }
             }
 
-            List<ConfigHolder> overlayHolders = holder.getOverlays().stream()
-                    .map(this::getConfigOptions)
-                    .flatMap(List::stream)
-                    .toList();
-
             holder.getOverlays().forEach(overlay -> overlay.addConfigOptions(this.getConfigOptions(overlay)));
         }
 
@@ -156,9 +151,10 @@ public final class ConfigManager extends Manager {
         }
 
         // Newly created group overlays need to be enabled
-        for (OverlayGroupHolder holder : Managers.Overlay.getOverlayGroups()) {
-            Managers.Overlay.enableOverlays(holder.getParent());
-        }
+        Managers.Overlay.getOverlayGroups()
+                .stream()
+                .map(OverlayGroupHolder::getParent)
+                .forEach(Managers.Overlay::enableOverlays);
     }
 
     private static List<ConfigHolder> getConfigHolderList() {
