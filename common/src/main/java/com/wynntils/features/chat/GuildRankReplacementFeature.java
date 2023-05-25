@@ -85,7 +85,8 @@ public class GuildRankReplacementFeature extends Feature {
             }
 
             // Check for recruit rank (0 stars)
-            Matcher usernameMatcher = RECRUIT_USERNAME_PATTERN.matcher(part.getString(null, PartStyle.StyleType.FULL));
+            Matcher usernameMatcher =
+                    RECRUIT_USERNAME_PATTERN.matcher(part.getString(null, PartStyle.StyleType.DEFAULT));
             if (usernameMatcher.find()) {
                 String username = usernameMatcher.group(1);
 
