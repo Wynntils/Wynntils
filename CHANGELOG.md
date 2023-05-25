@@ -1,9 +1,21 @@
+## [0.0.3-alpha.38](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.37...v0.0.3-alpha.38) (2023-05-25)
+
+
+### New Features
+
+* Chat guild rank replacement ([#1557](https://github.com/Wynntils/Artemis/issues/1557)) ([db6f661](https://github.com/Wynntils/Artemis/commit/db6f66175d02878e3dedf2a1c210944be53c9fe8))
+
 ## [0.0.3-alpha.37](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.36...v0.0.3-alpha.37) (2023-05-24)
 
 
 ### Code Refactoring
 
 * FeatureManager categorization, typo fixes ([#1558](https://github.com/Wynntils/Artemis/issues/1558)) ([2757be5](https://github.com/Wynntils/Artemis/commit/2757be565004d5766e85ab07731a398b94106192))
+
+
+### Miscellaneous Chores
+
+* **release:** v0.0.3-alpha.37 [skip ci] ([fdb2469](https://github.com/Wynntils/Artemis/commit/fdb2469f43baedec277123a5914441604fa97d54))
 
 ## [0.0.3-alpha.36](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.35...v0.0.3-alpha.36) (2023-05-22)
 
@@ -40,16 +52,4 @@
 ### Miscellaneous Chores
 
 * **release:** v0.0.3-alpha.34 [skip ci] ([a42d8cc](https://github.com/Wynntils/Artemis/commit/a42d8cce5e94b3d32a0b88f79f2fbd0d54366d84))
-
-## [0.0.3-alpha.33](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.32...v0.0.3-alpha.33) (2023-05-21)
-
-
-### Bug Fixes
-
-* Don't assume that poi providers don't contain duplicate elements ([#1553](https://github.com/Wynntils/Artemis/issues/1553)) ([0364822](https://github.com/Wynntils/Artemis/commit/03648224c6a5a079c0b9185cd273576aa344ba61))
-
-
-### Miscellaneous Chores
-
-* **release:** v0.0.3-alpha.33 [skip ci] ([a6a1608](https://github.com/Wynntils/Artemis/commit/a6a1608bf55bc1c5aaa209641098d33478ca9d3e))
 
