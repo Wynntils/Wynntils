@@ -287,7 +287,6 @@
   "feature.wynntils.guildRankReplacement.name": "Guild Rank Replacement",
   "feature.wynntils.guildRankReplacement.rankType.description": "What should guild ranks be replaced with?",
   "feature.wynntils.guildRankReplacement.rankType.name": "Replacement Type",
-  "feature.wynntils.guildRankReplacement.replaceGuildRank.description": "Should guild ranks in chat be replaced?",
   "feature.wynntils.hades.getOtherPlayerInfo.description": "Do you want to get your mutuals' info? Disable this config if you only want to share your info, but do not want to load other player's data.",
   "feature.wynntils.hades.getOtherPlayerInfo.name": "Get Other Players' Info",
   "feature.wynntils.hades.name": "Hades",
