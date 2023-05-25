@@ -19,7 +19,6 @@ import com.wynntils.utils.mc.McUtils;
 import com.wynntils.utils.type.IterationDecision;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.Style;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
@@ -61,8 +60,6 @@ public class ChatMentionFeature extends Feature {
 
     @SubscribeEvent
     public void onChat(ChatMessageReceivedEvent e) {
-        Component message = e.getMessage();
-
         StyledText styledText = e.getStyledText();
 
         StyledText modified = styledText.iterateBackwards((part, changes) -> {
