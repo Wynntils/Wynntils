@@ -394,11 +394,12 @@ public final class FontRenderer {
         return height;
     }
 
-    public float calculateRenderHeight(List<CodedString> lines, int maxWidth) {
-        return lines.stream()
-                .map(CodedString::getInternalCodedStringRepresentation)
-                .mapToInt(internal -> font.wordWrapHeight(internal, maxWidth))
-                .sum();
+    public float calculateRenderHeight(List<CodedString> lines, float maxWidth) {
+        int sum = 0;
+        for (CodedString line : lines) {
+            sum += font.wordWrapHeight(line.getInternalCodedStringRepresentation(), (int) maxWidth);
+        }
+        return sum;
     }
 
     public float calculateRenderHeight(CodedString line, float maxWidth) {

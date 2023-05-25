@@ -21,6 +21,8 @@ import com.wynntils.core.features.overlays.OverlayManager;
 import com.wynntils.core.json.JsonManager;
 import com.wynntils.utils.JsonUtils;
 import com.wynntils.utils.mc.McUtils;
+import org.apache.commons.lang3.reflect.FieldUtils;
+
 import java.io.File;
 import java.lang.reflect.Field;
 import java.lang.reflect.Type;
@@ -29,9 +31,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Set;
 import java.util.TreeSet;
-import java.util.stream.Collectors;
 import java.util.stream.Stream;
-import org.apache.commons.lang3.reflect.FieldUtils;
 
 public final class ConfigManager extends Manager {
     private static final File CONFIGS = WynntilsMod.getModStorageDir("config");
@@ -151,10 +151,9 @@ public final class ConfigManager extends Manager {
         }
 
         // Newly created group overlays need to be enabled
-        Managers.Overlay.getOverlayGroups()
-                .stream()
-                .map(OverlayGroupHolder::getParent)
-                .forEach(Managers.Overlay::enableOverlays);
+        for (OverlayGroupHolder holder : Managers.Overlay.getOverlayGroups()) {
+            Managers.Overlay.enableOverlays(holder.getParent());
+        }
     }
 
     private static List<ConfigHolder> getConfigHolderList() {

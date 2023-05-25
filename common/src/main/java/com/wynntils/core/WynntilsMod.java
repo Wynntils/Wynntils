@@ -178,7 +178,7 @@ public final class WynntilsMod {
                 "Wynntils: Starting version {} (using {} on Minecraft {})",
                 version,
                 modLoader,
-                McUtils.mc().getLaunchedVersion());
+                Minecraft.getInstance().getLaunchedVersion());
 
         WynntilsMod.eventBus = EventBusWrapper.createEventBus();
 

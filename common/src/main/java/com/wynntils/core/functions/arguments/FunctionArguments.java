@@ -7,7 +7,6 @@ package com.wynntils.core.functions.arguments;
 import com.wynntils.utils.mc.type.Location;
 import com.wynntils.utils.type.CappedValue;
 import com.wynntils.utils.type.ErrorOr;
-
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
@@ -39,8 +38,8 @@ public final class FunctionArguments {
 
         public ErrorOr<FunctionArguments> buildWithValues(List<Object> values) {
             if (arguments.stream()
-                    .filter(argument -> argument instanceof ListArgument<?>)
-                    .count()
+                            .filter(argument -> argument instanceof ListArgument<?>)
+                            .count()
                     > 1) {
                 throw new IllegalArgumentException("Only one list argument is allowed.");
             }
@@ -141,7 +140,7 @@ public final class FunctionArguments {
 
         private T value;
 
-        Argument(String name, Class<T> type, T defaultValue) {
+        public Argument(String name, Class<T> type, T defaultValue) {
             if (!SUPPORTED_ARGUMENT_TYPES.contains(type)) {
                 throw new IllegalArgumentException("Unsupported argument type: " + type);
             }
@@ -220,8 +219,7 @@ public final class FunctionArguments {
 
         @SuppressWarnings("unchecked")
         public void setValues(List<Object> values) {
-            if (!values.isEmpty() && values.get(0).getClass().isAssignableFrom(getType())) return;
-            this.setValue(values);
+            this.setValue(values.stream().map(value -> (T) value).collect(Collectors.toList()));
         }
 
         @SuppressWarnings("unchecked")

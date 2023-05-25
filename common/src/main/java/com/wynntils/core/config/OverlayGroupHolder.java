@@ -10,13 +10,13 @@ import com.wynntils.core.features.Feature;
 import com.wynntils.core.features.overlays.Overlay;
 import com.wynntils.core.features.overlays.RenderState;
 import com.wynntils.mc.event.RenderEvent;
+import org.apache.commons.lang3.reflect.FieldUtils;
+
 import java.lang.reflect.Field;
 import java.lang.reflect.ParameterizedType;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.List;
-import org.apache.commons.lang3.reflect.FieldUtils;
-import org.jetbrains.annotations.ApiStatus;
 
 public class OverlayGroupHolder {
     private final Field field;
@@ -94,7 +94,6 @@ public class OverlayGroupHolder {
     }
 
     // Do not call this. Use OverlayManager instead.
-    @ApiStatus.Internal
     public void initGroup(List<Integer> ids) {
         try {
             List<Overlay> overlays = new ArrayList<>();

@@ -80,7 +80,10 @@ public final class FunctionManager extends Manager {
 
     private boolean hasName(Function<?> function, String name) {
         if (function.getName().equalsIgnoreCase(name)) return true;
-        return function.getAliases().stream().anyMatch(alias -> alias.equalsIgnoreCase(name));
+        for (String alias : function.getAliases()) {
+            if (alias.equalsIgnoreCase(name)) return true;
+        }
+        return false;
     }
 
     private Optional<Object> getFunctionValueSafely(Function<?> function, FunctionArguments arguments) {

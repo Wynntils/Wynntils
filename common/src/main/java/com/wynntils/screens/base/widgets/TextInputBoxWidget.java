@@ -20,6 +20,7 @@ import com.wynntils.utils.type.Pair;
 import java.util.function.Consumer;
 
 import net.minecraft.client.KeyboardHandler;
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.components.AbstractWidget;
 import net.minecraft.client.gui.narration.NarrationElementOutput;
@@ -347,7 +348,7 @@ public class TextInputBoxWidget extends AbstractWidget {
             return true;
         }
 
-        KeyboardHandler keyboardHandler = McUtils.mc().keyboardHandler;
+        KeyboardHandler keyboardHandler = Minecraft.getInstance().keyboardHandler;
         if (Screen.isCopy(keyCode)) {
             keyboardHandler.setClipboard(hasHighlighted() ? getHighlightedText() : getTextBoxInput());
             return true;

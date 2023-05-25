@@ -8,8 +8,6 @@ import com.wynntils.core.WynntilsMod;
 import com.wynntils.mc.event.TitleScreenInitEvent;
 import java.io.File;
 import java.nio.file.Path;
-
-import com.wynntils.utils.mc.McUtils;
 import net.minecraft.client.Minecraft;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.ModLoadingContext;
@@ -45,7 +43,7 @@ public class WynntilsModForge {
     @SubscribeEvent
     public void onClientLoad(TitleScreenInitEvent.Pre event) {
         // Enable stencil support
-        McUtils.mc().getMainRenderTarget().enableStencil();
+        Minecraft.getInstance().getMainRenderTarget().enableStencil();
 
         WynntilsMod.unregisterEventListener(this);
     }

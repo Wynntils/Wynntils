@@ -21,6 +21,10 @@ import com.wynntils.mc.event.TitleScreenInitEvent;
 import com.wynntils.screens.overlays.placement.OverlayManagementScreen;
 import com.wynntils.utils.mc.McUtils;
 import com.wynntils.utils.render.RenderUtils;
+import net.minecraft.client.renderer.MultiBufferSource;
+import net.minecraftforge.eventbus.api.SubscribeEvent;
+import org.apache.commons.lang3.reflect.FieldUtils;
+
 import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -28,14 +32,10 @@ import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
-import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 import java.util.stream.Stream;
-import net.minecraft.client.renderer.MultiBufferSource;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
-import org.apache.commons.lang3.reflect.FieldUtils;
 
 public final class OverlayManager extends Manager {
     private final MultiBufferSource.BufferSource bufferSource = MultiBufferSource.immediate(new BufferBuilder(256));
@@ -267,10 +267,9 @@ public final class OverlayManager extends Manager {
         bufferSource.endBatch();
 
         // Hopefully we have none :)
-        crashedOverlays.stream()
-                .map(overlay -> overlay.getConfigOptionFromString("userEnabled"))
-                .flatMap(Optional::stream)
-                .forEach(c -> c.setValue(false));
+        for (Overlay overlay : crashedOverlays) {
+            overlay.getConfigOptionFromString("userEnabled").ifPresent(c -> c.setValue(Boolean.FALSE));
+        }
     }
 
     // endregion

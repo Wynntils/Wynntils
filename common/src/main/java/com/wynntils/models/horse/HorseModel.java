@@ -33,8 +33,7 @@ public class HorseModel extends Model {
 
     public int findHorseSlotNum() {
         Inventory inventory = McUtils.inventory();
-        //41: items 36, armor 4, offhand 1
-        for (int slotNum = 0; slotNum < 41; slotNum++) {
+        for (int slotNum = 0; slotNum < Inventory.INVENTORY_SIZE; slotNum++) {
             ItemStack itemStack = inventory.getItem(slotNum);
             if (Models.Item.asWynnItem(itemStack, HorseItem.class).isPresent()) {
                 return slotNum;

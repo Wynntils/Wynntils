@@ -32,6 +32,7 @@ import com.wynntils.utils.type.BoundingBox;
 import java.util.ArrayList;
 import java.util.List;
 import net.minecraft.client.KeyMapping;
+import net.minecraft.client.Options;
 import net.minecraft.client.gui.components.Renderable;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.network.chat.Component;
@@ -86,24 +87,25 @@ public abstract class AbstractMapScreen extends WynntilsScreen {
     protected void doInit() {
         // FIXME: Figure out a way to not need this.
         //        At the moment, this is needed for Minecraft not to forget we hold keys when we open the GUI...
+        Options options = McUtils.options();
         KeyMapping.set(
-                McUtils.options().keyUp.key,
-                KeyboardUtils.isKeyDown(McUtils.options().keyUp.key.getValue()));
+                options.keyUp.key,
+                KeyboardUtils.isKeyDown(options.keyUp.key.getValue()));
         KeyMapping.set(
-                McUtils.options().keyDown.key,
-                KeyboardUtils.isKeyDown(McUtils.options().keyDown.key.getValue()));
+                options.keyDown.key,
+                KeyboardUtils.isKeyDown(options.keyDown.key.getValue()));
         KeyMapping.set(
-                McUtils.options().keyLeft.key,
-                KeyboardUtils.isKeyDown(McUtils.options().keyLeft.key.getValue()));
+                options.keyLeft.key,
+                KeyboardUtils.isKeyDown(options.keyLeft.key.getValue()));
         KeyMapping.set(
-                McUtils.options().keyRight.key,
-                KeyboardUtils.isKeyDown(McUtils.options().keyRight.key.getValue()));
+                options.keyRight.key,
+                KeyboardUtils.isKeyDown(options.keyRight.key.getValue()));
         KeyMapping.set(
-                McUtils.options().keyJump.key,
-                KeyboardUtils.isKeyDown(McUtils.options().keyJump.key.getValue()));
+                options.keyJump.key,
+                KeyboardUtils.isKeyDown(options.keyJump.key.getValue()));
         KeyMapping.set(
-                McUtils.options().keyShift.key,
-                KeyboardUtils.isKeyDown(McUtils.options().keyShift.key.getValue()));
+                options.keyShift.key,
+                KeyboardUtils.isKeyDown(options.keyShift.key.getValue()));
 
         renderWidth = this.width - SCREEN_SIDE_OFFSET * 2f;
         renderHeight = this.height - SCREEN_SIDE_OFFSET * 2f;

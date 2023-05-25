@@ -36,12 +36,12 @@ public final class ArgumentParser {
                 .map(ExpressionParser::tryParse)
                 .toList();
 
-        Optional<String> optionalError =
-                parts.stream().filter(ErrorOr::hasError).map(ErrorOr::getError).findAny();
+        Optional<ErrorOr<Expression>> optionalError =
+                parts.stream().filter(ErrorOr::hasError).findFirst();
 
         // 2, If any of the expressions failed to parse, return the error
         if (optionalError.isPresent()) {
-            return ErrorOr.error(optionalError.get());
+            return ErrorOr.error(optionalError.get().getError());
         }
 
         // 3, Calculate the expressions

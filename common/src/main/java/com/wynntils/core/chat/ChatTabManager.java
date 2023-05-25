@@ -142,30 +142,44 @@ public final class ChatTabManager extends Manager {
 
     public void matchMessage(ClientsideMessageEvent event) {
         // Firstly, find the FIRST matching tab with high priority
-        getChatTabs().stream()
-                .filter(ChatTab::isConsuming)
-                .filter(chatTab -> matchMessageFromEvent(chatTab, event))
-                .findFirst()
-                .ifPresent(chatTab -> addMessageToTab(chatTab, event.getComponent()));
+        for (ChatTab chatTab : getChatTabs()) {
+            if (!chatTab.isConsuming()) continue;
+
+            if (matchMessageFromEvent(chatTab, event)) {
+                addMessageToTab(chatTab, event.getComponent());
+                return;
+            }
+        }
+
         // Secondly, match ALL tabs with low priority
-        getChatTabs().stream()
-                .filter(ChatTab::isConsuming)
-                .filter(chatTab -> matchMessageFromEvent(chatTab, event))
-                .forEach(chatTab -> addMessageToTab(chatTab, event.getComponent()));
+        for (ChatTab chatTab : getChatTabs()) {
+            if (chatTab.isConsuming()) continue;
+
+            if (matchMessageFromEvent(chatTab, event)) {
+                addMessageToTab(chatTab, event.getComponent());
+            }
+        }
     }
 
     public void matchMessage(ChatMessageReceivedEvent event) {
         // Firstly, find the FIRST matching tab with high priority
-        getChatTabs().stream()
-                .filter(ChatTab::isConsuming)
-                .filter(chatTab -> matchMessageFromEvent(chatTab, event))
-                .findFirst()
-                .ifPresent(chatTab -> addMessageToTab(chatTab, event.getMessage()));
+        for (ChatTab chatTab : getChatTabs()) {
+            if (!chatTab.isConsuming()) continue;
+
+            if (matchMessageFromEvent(chatTab, event)) {
+                addMessageToTab(chatTab, event.getMessage());
+                return;
+            }
+        }
+
         // Secondly, match ALL tabs with low priority
-        getChatTabs().stream()
-                .filter(ChatTab::isConsuming)
-                .filter(chatTab -> matchMessageFromEvent(chatTab, event))
-                .forEach(chatTab -> addMessageToTab(chatTab, event.getMessage()));
+        for (ChatTab chatTab : getChatTabs()) {
+            if (chatTab.isConsuming()) continue;
+
+            if (matchMessageFromEvent(chatTab, event)) {
+                addMessageToTab(chatTab, event.getMessage());
+            }
+        }
     }
 
     private void addMessageToTab(ChatTab tab, Component message) {

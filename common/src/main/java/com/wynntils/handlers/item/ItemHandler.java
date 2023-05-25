@@ -226,11 +226,11 @@ public class ItemHandler extends Handler {
     }
 
     public Map<Class<?>, Integer> getProfilingTimes() {
-        return Collections.unmodifiableMap(profilingTimes);
+        return profilingTimes;
     }
 
     public Map<Class<?>, Integer> getProfilingCounts() {
-        return Collections.unmodifiableMap(profilingCounts);
+        return profilingCounts;
     }
 
     public void resetProfiling() {

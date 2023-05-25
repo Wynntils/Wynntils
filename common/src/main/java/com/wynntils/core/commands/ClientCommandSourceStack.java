@@ -4,17 +4,18 @@
  */
 package com.wynntils.core.commands;
 
-import com.wynntils.utils.mc.McUtils;
-import java.util.Collection;
-import java.util.Set;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.core.RegistryAccess;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.Level;
+
+import java.util.Collection;
+import java.util.Set;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 public class ClientCommandSourceStack extends CommandSourceStack {
     public ClientCommandSourceStack(LocalPlayer player) {
@@ -32,9 +33,9 @@ public class ClientCommandSourceStack extends CommandSourceStack {
 
     @Override
     public Collection<String> getOnlinePlayerNames() {
-        return McUtils.mc().getConnection().getOnlinePlayers().stream()
+        return Minecraft.getInstance().getConnection().getOnlinePlayers().stream()
                 .map(e -> e.getProfile().getName())
-                .toList();
+                .collect(Collectors.toList());
     }
 
     @Override
