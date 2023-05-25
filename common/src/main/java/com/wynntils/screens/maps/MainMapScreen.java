@@ -53,6 +53,9 @@ public final class MainMapScreen extends AbstractMapScreen {
         return new MainMapScreen(mapCenterX, mapCenterZ);
     }
 
+    private boolean guildMapToggle = false;
+    private boolean lastFrameCtrl = false;
+
     @Override
     protected void doInit() {
         super.doInit();
@@ -262,8 +265,29 @@ public final class MainMapScreen extends AbstractMapScreen {
                                 /*|| (hadesUser.isGuildMember() && Managers.Feature.getFeatureInstance(MapFeature.class).renderRemoteGuildPlayers)*/ )
                         .map(PlayerMainMapPoi::new));
 
-        if (KeyboardUtils.isControlDown()) {
+        if (Managers.Feature.getFeatureInstance(MapFeature.class)
+                .holdGuildMapOpen
+                .get()) {
+            if (KeyboardUtils.isControlDown()) {
+                pois = Stream.concat(pois, Models.Territory.getTerritoryPois().stream());
+            }
+        } else if (guildMapToggle) {
             pois = Stream.concat(pois, Models.Territory.getTerritoryPois().stream());
+            if (KeyboardUtils.isControlDown()) {
+                if (!lastFrameCtrl) {
+                    guildMapToggle = false;
+                    lastFrameCtrl = true;
+                }
+            } else {
+                lastFrameCtrl = false;
+            }
+        } else if (KeyboardUtils.isControlDown()) {
+            if (!lastFrameCtrl) {
+                guildMapToggle = true;
+                lastFrameCtrl = true;
+            }
+        } else {
+            lastFrameCtrl = false;
         }
 
         renderPois(
