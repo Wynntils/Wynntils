@@ -89,12 +89,22 @@ public class GuildRankReplacementFeature extends Feature {
             if (usernameMatcher.find()) {
                 String username = usernameMatcher.group(1);
 
+                Style originalStyle = part.getPartStyle().getStyle();
+
+                // Remove the alias formatting
+                Style defaultNameStyle = originalStyle.withHoverEvent(null).withItalic(false);
+
                 changes.remove(part);
+                changes.add(new StyledTextPart("[", defaultNameStyle, null, Style.EMPTY));
+
                 changes.add(new StyledTextPart(
-                        "[" + ChatFormatting.AQUA + "Recruit " + ChatFormatting.DARK_AQUA + username,
-                        part.getPartStyle().getStyle(),
-                        null,
-                        Style.EMPTY));
+                        "Recruit", defaultNameStyle.withColor(ChatFormatting.AQUA), null, Style.EMPTY));
+
+                changes.add(
+                        new StyledTextPart(" ", defaultNameStyle.withColor(ChatFormatting.AQUA), null, Style.EMPTY));
+
+                changes.add(new StyledTextPart(
+                        username, originalStyle.withColor(ChatFormatting.DARK_AQUA), null, Style.EMPTY));
 
                 return IterationDecision.BREAK;
             }
