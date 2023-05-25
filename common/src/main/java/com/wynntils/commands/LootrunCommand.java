@@ -51,14 +51,19 @@ public class LootrunCommand extends Command {
     }
 
     @Override
+    public List<String> getAliases() {
+        return List.of("lr");
+    }
+
+    @Override
     public String getDescription() {
         return "Load, record and manage lootruns";
     }
 
     @Override
-    public LiteralArgumentBuilder<CommandSourceStack> getCommandBuilder() {
-        return Commands.literal(getCommandName())
-                .then(Commands.literal("load")
+    public LiteralArgumentBuilder<CommandSourceStack> getCommandBuilder(
+            LiteralArgumentBuilder<CommandSourceStack> base) {
+        return base.then(Commands.literal("load")
                         .then(Commands.argument("lootrun", StringArgumentType.string())
                                 .suggests(LOOTRUN_SUGGESTION_PROVIDER)
                                 .executes(this::loadLootrun)))

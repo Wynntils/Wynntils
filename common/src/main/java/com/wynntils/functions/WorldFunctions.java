@@ -262,4 +262,31 @@ public class WorldFunctions {
             return List.of("territory");
         }
     }
+
+    public static class CurrentTerritoryOwnerFunction extends Function<String> {
+        @Override
+        public String getValue(FunctionArguments arguments) {
+            TerritoryProfile territoryProfile = Models.Territory.getTerritoryProfileForPosition(
+                    McUtils.player().position());
+
+            if (territoryProfile == null) {
+                return "";
+            }
+
+            return arguments.getArgument("prefixOnly").getBooleanValue()
+                    ? territoryProfile.getGuildPrefix()
+                    : territoryProfile.getGuild();
+        }
+
+        @Override
+        public List<String> getAliases() {
+            return List.of("territory_owner");
+        }
+
+        @Override
+        public FunctionArguments.Builder getArgumentsBuilder() {
+            return new FunctionArguments.OptionalArgumentBuilder(
+                    List.of(new FunctionArguments.Argument<>("prefixOnly", Boolean.class, false)));
+        }
+    }
 }

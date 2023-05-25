@@ -88,11 +88,6 @@ public final class CappedFunctions {
             return new FunctionArguments.RequiredArgumentBuilder(
                     List.of(new FunctionArguments.Argument<>("capped", CappedValue.class, null)));
         }
-
-        @Override
-        public List<String> getAliases() {
-            return List.of("at_cap");
-        }
     }
 
     public static class CappedFunction extends GenericFunction<CappedValue> {

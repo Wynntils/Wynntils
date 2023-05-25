@@ -19,6 +19,7 @@ import com.wynntils.models.items.items.gui.SeaskipperDestinationItem;
 import com.wynntils.models.map.pois.SeaskipperDestinationPoi;
 import com.wynntils.models.seaskipper.type.SeaskipperDestination;
 import com.wynntils.models.seaskipper.type.SeaskipperDestinationProfile;
+import com.wynntils.screens.maps.SeaskipperDepartureBoardScreen;
 import com.wynntils.screens.maps.SeaskipperMapScreen;
 import com.wynntils.utils.mc.McUtils;
 import com.wynntils.utils.wynn.ContainerUtils;
@@ -89,7 +90,9 @@ public final class SeaskipperModel extends Model {
         // We added a new destination, reload the map
         // (This reloads the pois for every item parsed, but performance is not an issue here)
         if (McUtils.mc().screen instanceof SeaskipperMapScreen seaskipperMapScreen) {
-            seaskipperMapScreen.reloadDestionationPois();
+            seaskipperMapScreen.reloadDestinationPois();
+        } else if (McUtils.mc().screen instanceof SeaskipperDepartureBoardScreen seaskipperDepartureBoardScreen) {
+            seaskipperDepartureBoardScreen.reloadDestinationPois();
         }
     }
 
