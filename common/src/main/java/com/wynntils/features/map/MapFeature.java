@@ -105,6 +105,9 @@ public class MapFeature extends Feature {
     @RegisterConfig
     public final Config<TextShadow> remotePlayerNameShadow = new Config<>(TextShadow.OUTLINE);
 
+    @RegisterConfig
+    public final Config<Boolean> holdGuildMapOpen = new Config<>(true);
+
     private BlockPos lastChestPos;
 
     @RegisterKeyBind

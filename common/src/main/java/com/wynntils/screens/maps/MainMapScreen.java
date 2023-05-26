@@ -53,6 +53,8 @@ public final class MainMapScreen extends AbstractMapScreen {
         return new MainMapScreen(mapCenterX, mapCenterZ);
     }
 
+    private boolean showTerrs = false;
+
     @Override
     protected void doInit() {
         super.doInit();
@@ -262,7 +264,7 @@ public final class MainMapScreen extends AbstractMapScreen {
                                 /*|| (hadesUser.isGuildMember() && Managers.Feature.getFeatureInstance(MapFeature.class).renderRemoteGuildPlayers)*/ )
                         .map(PlayerMainMapPoi::new));
 
-        if (KeyboardUtils.isControlDown()) {
+        if (showTerrs) {
             pois = Stream.concat(pois, Models.Territory.getTerritoryPois().stream());
         }
 
@@ -273,6 +275,34 @@ public final class MainMapScreen extends AbstractMapScreen {
                 Managers.Feature.getFeatureInstance(MapFeature.class).poiScale.get(),
                 mouseX,
                 mouseY);
+    }
+
+    @Override
+    public boolean keyPressed(int keyCode, int scanCode, int modifiers) {
+        if (keyCode == GLFW.GLFW_KEY_LEFT_CONTROL) {
+            if (Managers.Feature.getFeatureInstance(MapFeature.class)
+                    .holdGuildMapOpen
+                    .get()) {
+                showTerrs = true;
+            } else {
+                showTerrs = !showTerrs;
+            }
+        }
+
+        return super.keyPressed(keyCode, scanCode, modifiers);
+    }
+
+    @Override
+    public boolean keyReleased(int keyCode, int scanCode, int modifiers) {
+        if (keyCode == GLFW.GLFW_KEY_LEFT_CONTROL) {
+            if (Managers.Feature.getFeatureInstance(MapFeature.class)
+                    .holdGuildMapOpen
+                    .get()) {
+                showTerrs = false;
+            }
+        }
+
+        return super.keyReleased(keyCode, scanCode, modifiers);
     }
 
     @Override
