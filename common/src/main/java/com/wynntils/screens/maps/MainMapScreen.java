@@ -279,7 +279,6 @@ public final class MainMapScreen extends AbstractMapScreen {
 
     @Override
     public boolean keyPressed(int keyCode, int scanCode, int modifiers) {
-
         if (keyCode == GLFW.GLFW_KEY_LEFT_CONTROL) {
             if (Managers.Feature.getFeatureInstance(MapFeature.class)
                     .holdGuildMapOpen
@@ -295,7 +294,6 @@ public final class MainMapScreen extends AbstractMapScreen {
 
     @Override
     public boolean keyReleased(int keyCode, int scanCode, int modifiers) {
-
         if (keyCode == GLFW.GLFW_KEY_LEFT_CONTROL) {
             if (Managers.Feature.getFeatureInstance(MapFeature.class)
                     .holdGuildMapOpen
