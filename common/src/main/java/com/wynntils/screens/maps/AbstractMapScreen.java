@@ -88,24 +88,12 @@ public abstract class AbstractMapScreen extends WynntilsScreen {
         // FIXME: Figure out a way to not need this.
         //        At the moment, this is needed for Minecraft not to forget we hold keys when we open the GUI...
         Options options = McUtils.options();
-        KeyMapping.set(
-                options.keyUp.key,
-                KeyboardUtils.isKeyDown(options.keyUp.key.getValue()));
-        KeyMapping.set(
-                options.keyDown.key,
-                KeyboardUtils.isKeyDown(options.keyDown.key.getValue()));
-        KeyMapping.set(
-                options.keyLeft.key,
-                KeyboardUtils.isKeyDown(options.keyLeft.key.getValue()));
-        KeyMapping.set(
-                options.keyRight.key,
-                KeyboardUtils.isKeyDown(options.keyRight.key.getValue()));
-        KeyMapping.set(
-                options.keyJump.key,
-                KeyboardUtils.isKeyDown(options.keyJump.key.getValue()));
-        KeyMapping.set(
-                options.keyShift.key,
-                KeyboardUtils.isKeyDown(options.keyShift.key.getValue()));
+        KeyMapping.set(options.keyUp.key, KeyboardUtils.isKeyDown(options.keyUp.key.getValue()));
+        KeyMapping.set(options.keyDown.key, KeyboardUtils.isKeyDown(options.keyDown.key.getValue()));
+        KeyMapping.set(options.keyLeft.key, KeyboardUtils.isKeyDown(options.keyLeft.key.getValue()));
+        KeyMapping.set(options.keyRight.key, KeyboardUtils.isKeyDown(options.keyRight.key.getValue()));
+        KeyMapping.set(options.keyJump.key, KeyboardUtils.isKeyDown(options.keyJump.key.getValue()));
+        KeyMapping.set(options.keyShift.key, KeyboardUtils.isKeyDown(options.keyShift.key.getValue()));
 
         renderWidth = this.width - SCREEN_SIDE_OFFSET * 2f;
         renderHeight = this.height - SCREEN_SIDE_OFFSET * 2f;

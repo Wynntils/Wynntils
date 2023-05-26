@@ -65,6 +65,7 @@ public enum UrlId {
     public boolean matches(String str) {
         return id.equals(str);
     }
+
     public static Optional<UrlId> from(String str) {
         return Arrays.stream(values()).filter(urlId -> urlId.matches(str)).findAny();
     }

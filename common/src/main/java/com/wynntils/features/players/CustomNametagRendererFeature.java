@@ -28,7 +28,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import net.minecraft.ChatFormatting;
-import net.minecraft.client.Minecraft;
 import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
@@ -180,9 +179,8 @@ public class CustomNametagRendererFeature extends Feature {
 
     private void drawNametags(PlayerNametagRenderEvent event, List<CustomNametag> nametags) {
         // calculate color of nametag box
-        int backgroundColor = hideNametagBackground.get()
-                ? 0
-                : ((int) (McUtils.options().getBackgroundOpacity(0.25F) * 255f) << 24);
+        int backgroundColor =
+                hideNametagBackground.get() ? 0 : ((int) (McUtils.options().getBackgroundOpacity(0.25F) * 255f) << 24);
 
         float yOffset = 0f;
         for (CustomNametag nametag : nametags) {
