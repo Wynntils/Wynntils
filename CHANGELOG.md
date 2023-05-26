@@ -1,9 +1,21 @@
+## [0.0.3-alpha.39](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.38...v0.0.3-alpha.39) (2023-05-26)
+
+
+### New Features
+
+* Added toggle option for territories on map ([#1559](https://github.com/Wynntils/Artemis/issues/1559)) ([5072a27](https://github.com/Wynntils/Artemis/commit/5072a27aaa0e2ab038ed6f03b9d51ac947287b61)), closes [#1550](https://github.com/Wynntils/Artemis/issues/1550)
+
 ## [0.0.3-alpha.38](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.37...v0.0.3-alpha.38) (2023-05-25)
 
 
 ### New Features
 
 * Chat guild rank replacement ([#1557](https://github.com/Wynntils/Artemis/issues/1557)) ([db6f661](https://github.com/Wynntils/Artemis/commit/db6f66175d02878e3dedf2a1c210944be53c9fe8))
+
+
+### Miscellaneous Chores
+
+* **release:** v0.0.3-alpha.38 [skip ci] ([fa5b1f5](https://github.com/Wynntils/Artemis/commit/fa5b1f5d451600338eec0215428d68b26a23c709))
 
 ## [0.0.3-alpha.37](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.36...v0.0.3-alpha.37) (2023-05-24)
 
@@ -40,16 +52,4 @@
 ### Miscellaneous Chores
 
 * **release:** v0.0.3-alpha.35 [skip ci] ([7d0f066](https://github.com/Wynntils/Artemis/commit/7d0f066837b0ddb3924e12ddc9e1c70bc64e42ef))
-
-## [0.0.3-alpha.34](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.33...v0.0.3-alpha.34) (2023-05-21)
-
-
-### New Features
-
-* Seaskipper Departure Board Screen ([#1545](https://github.com/Wynntils/Artemis/issues/1545)) ([1c3abd8](https://github.com/Wynntils/Artemis/commit/1c3abd8142c965d23e867acc946b21c16e223957))
-
-
-### Miscellaneous Chores
-
-* **release:** v0.0.3-alpha.34 [skip ci] ([a42d8cc](https://github.com/Wynntils/Artemis/commit/a42d8cce5e94b3d32a0b88f79f2fbd0d54366d84))
 
