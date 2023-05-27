@@ -56,7 +56,7 @@ public class WynntilsQuestBookFeature extends Feature {
             () -> WynntilsMenuScreenBase.openBook(WynntilsMenuScreen.create()));
 
     @RegisterKeyBind
-    private final KeyBind itemGuideListKeyBind =
+    private final KeyBind openItemGuideList =
             new KeyBind("Open Item Guide List", GLFW.GLFW_KEY_UNKNOWN, true, this::onItemGuideListKeyPress);
 
     @RegisterConfig
