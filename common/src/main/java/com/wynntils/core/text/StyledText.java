@@ -9,14 +9,6 @@ import com.wynntils.utils.mc.ComponentUtils;
 import com.wynntils.utils.mc.McUtils;
 import com.wynntils.utils.type.IterationDecision;
 import com.wynntils.utils.type.Pair;
-import net.minecraft.nbt.Tag;
-import net.minecraft.network.chat.ClickEvent;
-import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.HoverEvent;
-import net.minecraft.network.chat.MutableComponent;
-import net.minecraft.network.chat.Style;
-import org.apache.commons.lang3.ArrayUtils;
-
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -28,6 +20,12 @@ import java.util.function.BiFunction;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
+import net.minecraft.network.chat.ClickEvent;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.HoverEvent;
+import net.minecraft.network.chat.MutableComponent;
+import net.minecraft.network.chat.Style;
+import org.apache.commons.lang3.ArrayUtils;
 
 public final class StyledText {
     public static final StyledText EMPTY = new StyledText(List.of(), List.of(), List.of());
@@ -305,6 +303,7 @@ public final class StyledText {
     public boolean matches(Pattern pattern, PartStyle.StyleType styleType) {
         return getMatcher(pattern, styleType).matches();
     }
+
     public StyledText append(StyledText styledText) {
         return concat(this, styledText);
     }
@@ -378,6 +377,26 @@ public final class StyledText {
         return McUtils.mc().font.width(getString(PartStyle.StyleType.NONE));
     }
 
+    public StyledText[] split(String s) {
+        return Arrays.stream(getString().split(s)).map(StyledText::fromString).toArray(StyledText[]::new);
+    }
+
+    public StyledText subtext(int start, int end) {
+        return StyledText.fromString(getString().substring(start, end));
+    }
+
+    public StyledText subtext(int start) {
+        return StyledText.fromString(getString().substring(start));
+    }
+
+    public StyledText replaceAll(String regex, String replacement) {
+        return StyledText.fromString(getString().replaceAll(regex, replacement));
+    }
+
+    public StyledText replace(String target, String replacement) {
+        return StyledText.fromString(getString().replace(target, replacement));
+    }
+
     private StyledTextPart getPartBefore(StyledTextPart part) {
         int index = parts.indexOf(part);
         if (index == 0) {
@@ -408,9 +427,5 @@ public final class StyledText {
     @Override
     public int hashCode() {
         return Objects.hash(parts, clickEvents, hoverEvents);
-    }
-
-    public StyledText[] split(String s) {
-        return Arrays.stream(getString().split(s)).map(StyledText::fromString).toArray(StyledText[]::new);
     }
 }

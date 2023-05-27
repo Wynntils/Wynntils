@@ -53,9 +53,7 @@ public class TestStyledText {
                 styledText.getString(PartStyle.StyleType.INCLUDE_EVENTS),
                 "StyledText.getString(INCLUDE_EVENTS) returned an unexpected value.");
         Assertions.assertEquals(
-                expectedDefault,
-                styledText.getString(PartStyle.StyleType.DEFAULT),
-                "StyledText.getString(DEFAULT) returned an unexpected value.");
+                expectedDefault, styledText.getString(), "StyledText.getString(DEFAULT) returned an unexpected value.");
         Assertions.assertEquals(
                 expectedNoFormat,
                 styledText.getString(PartStyle.StyleType.NONE),
@@ -73,9 +71,7 @@ public class TestStyledText {
         StyledText styledText = StyledText.fromString(testString);
 
         Assertions.assertEquals(
-                expected,
-                styledText.getString(PartStyle.StyleType.DEFAULT),
-                "StyledText.getString() returned an unexpected value.");
+                expected, styledText.getString(), "StyledText.getString() returned an unexpected value.");
     }
 
     @Test
@@ -106,27 +102,27 @@ public class TestStyledText {
 
         Assertions.assertEquals(
                 firstExpected,
-                StyledText.fromComponent(firstTestComponent).getString(PartStyle.StyleType.DEFAULT),
+                StyledText.fromComponent(firstTestComponent).getString(),
                 "StyledText.getString() returned an unexpected value.");
 
         Assertions.assertEquals(
                 secondExpected,
-                StyledText.fromComponent(secondTestComponent).getString(PartStyle.StyleType.DEFAULT),
+                StyledText.fromComponent(secondTestComponent).getString(),
                 "StyledText.getString() returned an unexpected value.");
 
         Assertions.assertEquals(
                 thirdExpected,
-                StyledText.fromComponent(thirdTestComponent).getString(PartStyle.StyleType.DEFAULT),
+                StyledText.fromComponent(thirdTestComponent).getString(),
                 "StyledText.getString() returned an unexpected value.");
 
         Assertions.assertEquals(
                 fourthExpected,
-                StyledText.fromComponent(fourthTestComponent).getString(PartStyle.StyleType.DEFAULT),
+                StyledText.fromComponent(fourthTestComponent).getString(),
                 "StyledText.getString() returned an unexpected value.");
 
         Assertions.assertEquals(
                 fifthExpected,
-                StyledText.fromComponent(fifthTestComponent).getString(PartStyle.StyleType.DEFAULT),
+                StyledText.fromComponent(fifthTestComponent).getString(),
                 "StyledText.getString() returned an unexpected value.");
     }
 

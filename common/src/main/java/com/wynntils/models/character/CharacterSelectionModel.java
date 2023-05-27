@@ -5,14 +5,13 @@
 package com.wynntils.models.character;
 
 import com.wynntils.core.components.Model;
-import com.wynntils.core.text.CodedString;
+import com.wynntils.core.text.StyledText;
 import com.wynntils.mc.event.ContainerSetContentEvent;
 import com.wynntils.mc.event.MenuEvent;
 import com.wynntils.mc.event.ScreenOpenedEvent;
 import com.wynntils.models.character.type.ClassInfo;
 import com.wynntils.models.character.type.ClassType;
 import com.wynntils.screens.characterselector.CharacterSelectorScreen;
-import com.wynntils.utils.mc.ComponentUtils;
 import com.wynntils.utils.mc.LoreUtils;
 import com.wynntils.utils.wynn.ContainerUtils;
 import java.util.ArrayList;
@@ -27,18 +26,18 @@ import org.lwjgl.glfw.GLFW;
 public final class CharacterSelectionModel extends Model {
     private static final Pattern NEW_CLASS_ITEM_NAME_PATTERN = Pattern.compile("§l§a\\[\\+\\] Create a new character");
     private static final Pattern CLASS_ITEM_NAME_PATTERN = Pattern.compile("§l§6\\[>\\] Select (.+)");
-    private static final Pattern CLASS_ITEM_CLASS_PATTERN =
-            Pattern.compile("§e- §r§7Class: (§r)?(§c§l☠§r)?(§6§l❂§r)?(§3§l⛏§r)?(§5§l⚔§r)?(\\s)?(§r)?§f(?<name>.+)");
-    private static final Pattern CLASS_ITEM_LEVEL_PATTERN = Pattern.compile("§e- §r§7Level: §r§f(\\d+)");
-    private static final Pattern CLASS_ITEM_XP_PATTERN = Pattern.compile("§e- §r§7XP: §r§f(\\d+)%");
-    private static final Pattern CLASS_ITEM_SOUL_POINTS_PATTERN = Pattern.compile("§e- §r§7Soul Points: §r§f(\\d+)");
+    private static final Pattern CLASS_ITEM_CLASS_PATTERN = Pattern.compile(
+            "§e- §7Class: (§r)?(§c§l☠§r)?(§6§l❂§r)?(§3§l⛏§r)?(§5§l⚔§r)?(\\s)?(§r)?§f(?<name>.+)"); // todo: idk regex
+    private static final Pattern CLASS_ITEM_LEVEL_PATTERN = Pattern.compile("§e- §7Level: §f(\\d+)");
+    private static final Pattern CLASS_ITEM_XP_PATTERN = Pattern.compile("§e- §7XP: §f(\\d+)%");
+    private static final Pattern CLASS_ITEM_SOUL_POINTS_PATTERN = Pattern.compile("§e- §7Soul Points: §f(\\d+)");
     private static final Pattern CLASS_ITEM_FINISHED_QUESTS_PATTERN =
-            Pattern.compile("§e- §r§7Finished Quests: §r§f(\\d+)/\\d+");
+            Pattern.compile("§e- §7Finished Quests: §f(\\d+)/\\d+");
 
     private static final String DEFAULT_CLASS_NAME = "This Character";
 
     private static final int EDIT_BUTTON_SLOT = 8;
-    public static final CodedString CHARACTER_SELECTION_TITLE = CodedString.fromString("§8§lSelect a Character");
+    public static final StyledText CHARACTER_SELECTION_TITLE = StyledText.fromString("§8§lSelect a Character");
 
     private CharacterSelectorScreen currentScreen;
     private int containerId = -1;
@@ -61,7 +60,7 @@ public final class CharacterSelectionModel extends Model {
 
     @SubscribeEvent
     public void onMenuOpened(MenuEvent.MenuOpenedEvent event) {
-        if (!ComponentUtils.getCoded(event.getTitle()).equals(CHARACTER_SELECTION_TITLE)) {
+        if (!StyledText.fromComponent(event.getTitle()).equals(CHARACTER_SELECTION_TITLE)) {
             return;
         }
 
@@ -79,7 +78,7 @@ public final class CharacterSelectionModel extends Model {
         List<ItemStack> items = event.getItems();
         for (int i = 0; i < items.size(); i++) {
             ItemStack itemStack = items.get(i);
-            CodedString itemName = ComponentUtils.getCoded(itemStack.getHoverName());
+            StyledText itemName = StyledText.fromComponent(itemStack.getHoverName());
             Matcher classItemMatcher = itemName.getMatcher(CLASS_ITEM_NAME_PATTERN);
             if (classItemMatcher.matches()) {
                 ClassInfo classInfo = getClassInfoFromItem(itemStack, i, classItemMatcher.group(1));
@@ -87,8 +86,7 @@ public final class CharacterSelectionModel extends Model {
                 continue;
             }
 
-            if (firstNewCharacterSlot == -1
-                    && itemName.getMatcher(NEW_CLASS_ITEM_NAME_PATTERN).matches()) {
+            if (firstNewCharacterSlot == -1 && itemName.matches(NEW_CLASS_ITEM_NAME_PATTERN)) {
                 firstNewCharacterSlot = i;
             }
         }
@@ -105,7 +103,7 @@ public final class CharacterSelectionModel extends Model {
         int xp = 0;
         int soulPoints = 0;
         int finishedQuests = 0;
-        for (CodedString line : LoreUtils.getLore(itemStack)) {
+        for (StyledText line : LoreUtils.getLore(itemStack)) {
             Matcher matcher = line.getMatcher(CLASS_ITEM_CLASS_PATTERN);
 
             if (matcher.matches()) {

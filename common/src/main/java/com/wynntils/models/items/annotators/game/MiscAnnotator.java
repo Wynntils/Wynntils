@@ -4,22 +4,21 @@
  */
 package com.wynntils.models.items.annotators.game;
 
-import com.wynntils.core.text.CodedString;
+import com.wynntils.core.text.StyledText;
 import com.wynntils.handlers.item.ItemAnnotation;
 import com.wynntils.handlers.item.ItemAnnotator;
 import com.wynntils.models.items.items.game.MiscItem;
-import com.wynntils.utils.mc.ComponentUtils;
 import com.wynntils.utils.mc.LoreUtils;
 import net.minecraft.nbt.ListTag;
 import net.minecraft.nbt.Tag;
 import net.minecraft.world.item.ItemStack;
 
 public final class MiscAnnotator implements ItemAnnotator {
-    private static final CodedString UNTRADABLE = CodedString.fromString("§cUntradable Item");
-    private static final CodedString QUEST_ITEM = CodedString.fromString("§cQuest Item");
+    private static final StyledText UNTRADABLE = StyledText.fromString("§cUntradable Item");
+    private static final StyledText QUEST_ITEM = StyledText.fromString("§cQuest Item");
 
     @Override
-    public ItemAnnotation getAnnotation(ItemStack itemStack, CodedString name) {
+    public ItemAnnotation getAnnotation(ItemStack itemStack, StyledText name) {
         ListTag loreTag = LoreUtils.getLoreTag(itemStack);
         if (loreTag == null) return null;
 
@@ -27,7 +26,7 @@ public final class MiscAnnotator implements ItemAnnotator {
         boolean questItem = false;
 
         for (Tag line : loreTag) {
-            CodedString coded = ComponentUtils.getCoded(line.getAsString());
+            StyledText coded = StyledText.fromString(line.getAsString());
             if (coded.equals(UNTRADABLE)) {
                 untradable = true;
             }

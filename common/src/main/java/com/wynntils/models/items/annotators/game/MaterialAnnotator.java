@@ -5,7 +5,7 @@
 package com.wynntils.models.items.annotators.game;
 
 import com.wynntils.core.WynntilsMod;
-import com.wynntils.core.text.CodedString;
+import com.wynntils.core.text.StyledText;
 import com.wynntils.handlers.item.ItemAnnotation;
 import com.wynntils.handlers.item.ItemAnnotator;
 import com.wynntils.models.gathering.MaterialProfile;
@@ -18,7 +18,7 @@ public final class MaterialAnnotator implements ItemAnnotator {
     private static final Pattern MATERIAL_PATTERN = Pattern.compile("^§f(.*) ([^ ]+)§6 \\[§e✫((?:§8)?✫(?:§8)?)✫§6\\]$");
 
     @Override
-    public ItemAnnotation getAnnotation(ItemStack itemStack, CodedString name) {
+    public ItemAnnotation getAnnotation(ItemStack itemStack, StyledText name) {
         Matcher matcher = name.getMatcher(MATERIAL_PATTERN);
         if (!matcher.matches()) return null;
 
@@ -31,7 +31,7 @@ public final class MaterialAnnotator implements ItemAnnotator {
                     case "✫§8" -> 2;
                     case "✫" -> 3;
                     default -> {
-                        WynntilsMod.warn("Cannot parse tier from material: " + name);
+                        WynntilsMod.warn("Cannot parse tier from material: " + name.getString());
                         yield 1;
                     }
                 };

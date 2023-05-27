@@ -5,7 +5,7 @@
 package com.wynntils.models.quests;
 
 import com.wynntils.core.WynntilsMod;
-import com.wynntils.core.text.CodedString;
+import com.wynntils.core.text.StyledText;
 import com.wynntils.models.quests.type.QuestLength;
 import com.wynntils.models.quests.type.QuestStatus;
 import com.wynntils.utils.mc.LoreUtils;
@@ -21,16 +21,16 @@ public final class QuestInfoParser {
     private static final Pattern QUEST_NAME_MATCHER =
             Pattern.compile("^§.§l(Mini-Quest - )?([^֎À]*)[֎À]+ (§e\\[Tracked\\])?$");
     private static final Pattern STATUS_MATCHER = Pattern.compile("^§.(.*)(?:\\.\\.\\.|!)$");
-    private static final Pattern LENGTH_MATCHER = Pattern.compile("^§a-§r§7 Length: §r§f(.*)$");
-    private static final Pattern LEVEL_MATCHER = Pattern.compile("^§..§r§7 Combat Lv. Min: §r§f(\\d+)$");
-    private static final Pattern REQ_MATCHER = Pattern.compile("^§..§r§7 (.*) Lv. Min: §r§f(\\d+)$");
+    private static final Pattern LENGTH_MATCHER = Pattern.compile("^§a-§7 Length: §f(.*)$");
+    private static final Pattern LEVEL_MATCHER = Pattern.compile("^§..§7 Combat Lv. Min: §f(\\d+)$");
+    private static final Pattern REQ_MATCHER = Pattern.compile("^§..§7 (.*) Lv. Min: §f(\\d+)$");
 
     static QuestInfo parseItemStack(ItemStack itemStack, int pageNumber, boolean isMiniQuest) {
         try {
             String name = getQuestName(itemStack);
             if (name == null) return null;
 
-            LinkedList<CodedString> lore = LoreUtils.getLore(itemStack);
+            LinkedList<StyledText> lore = LoreUtils.getLore(itemStack);
 
             QuestStatus status = getQuestStatus(lore);
             if (status == null) return null;
@@ -45,7 +45,7 @@ public final class QuestInfoParser {
 
             if (!skipEmptyLine(lore)) return null;
 
-            CodedString description = getDescription(lore);
+            StyledText description = getDescription(lore);
             boolean tracked = isQuestTracked(itemStack);
 
             return new QuestInfo(
@@ -78,16 +78,15 @@ public final class QuestInfoParser {
     }
 
     private static boolean isQuestTracked(ItemStack itemStack) {
-        CodedString name =
-                CodedString.fromComponentIgnoringComponentStylesAndJustUsingFormattingCodes(itemStack.getHoverName());
+        StyledText name = StyledText.fromComponent(itemStack.getHoverName(), true);
         if (name.trim().isEmpty()) {
             return false;
         }
         return name.endsWith("§e[Tracked]");
     }
 
-    private static QuestStatus getQuestStatus(LinkedList<CodedString> lore) {
-        CodedString rawStatus = lore.pop();
+    private static QuestStatus getQuestStatus(LinkedList<StyledText> lore) {
+        StyledText rawStatus = lore.pop();
         Matcher m = rawStatus.getMatcher(STATUS_MATCHER);
         if (!m.find()) {
             WynntilsMod.warn("Non-matching status value: " + rawStatus);
@@ -96,8 +95,8 @@ public final class QuestInfoParser {
         return QuestStatus.fromString(m.group(1));
     }
 
-    private static boolean skipEmptyLine(LinkedList<CodedString> lore) {
-        CodedString loreLine = lore.pop();
+    private static boolean skipEmptyLine(LinkedList<StyledText> lore) {
+        StyledText loreLine = lore.pop();
         if (!loreLine.isEmpty()) {
             WynntilsMod.warn("Unexpected value in quest: " + loreLine);
             return false;
@@ -105,8 +104,8 @@ public final class QuestInfoParser {
         return true;
     }
 
-    private static int getLevel(LinkedList<CodedString> lore) {
-        CodedString rawLevel = lore.getFirst();
+    private static int getLevel(LinkedList<StyledText> lore) {
+        StyledText rawLevel = lore.getFirst();
         Matcher m = rawLevel.getMatcher(LEVEL_MATCHER);
         if (!m.find()) {
             // This can happen for the very first quests; accept without error
@@ -117,7 +116,7 @@ public final class QuestInfoParser {
         return Integer.parseInt(m.group(1));
     }
 
-    private static List<Pair<String, Integer>> getAdditionalRequirements(LinkedList<CodedString> lore) {
+    private static List<Pair<String, Integer>> getAdditionalRequirements(LinkedList<StyledText> lore) {
         List<Pair<String, Integer>> requirements = new LinkedList<>();
         Matcher m;
 
@@ -134,8 +133,8 @@ public final class QuestInfoParser {
         return requirements;
     }
 
-    private static QuestLength getQuestLength(LinkedList<CodedString> lore) {
-        CodedString lengthRaw = lore.pop();
+    private static QuestLength getQuestLength(LinkedList<StyledText> lore) {
+        StyledText lengthRaw = lore.pop();
 
         Matcher m = lengthRaw.getMatcher(LENGTH_MATCHER);
         if (!m.find()) {
@@ -145,22 +144,18 @@ public final class QuestInfoParser {
         return QuestLength.fromString(m.group(1));
     }
 
-    private static CodedString getDescription(List<CodedString> lore) {
+    private static StyledText getDescription(List<StyledText> lore) {
         // The last two lines is an empty line and "RIGHT-CLICK TO TRACK"; skip those
-        List<CodedString> descriptionLines = lore.subList(0, lore.size() - 2);
+        List<StyledText> descriptionLines = lore.subList(0, lore.size() - 2);
         // Every line begins with a format code of length 2 ("§7"), skip that
         // and join everything together, trying to avoid excess whitespace
 
-        // FIXME: We should really keep the rest of the formatting, apart from the
-        // initial §7.
-
-        String description = String.join(
+        return StyledText.join(
                         " ",
                         descriptionLines.stream()
-                                .map(CodedString::getUnformattedString)
+                                .map(styledText -> styledText.subtext(2))
                                 .toList())
                 .replaceAll("\\s+", " ")
                 .trim();
-        return CodedString.fromString(description);
     }
 }

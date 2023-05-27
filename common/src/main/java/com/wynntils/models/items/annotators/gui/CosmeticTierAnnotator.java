@@ -4,7 +4,7 @@
  */
 package com.wynntils.models.items.annotators.gui;
 
-import com.wynntils.core.text.CodedString;
+import com.wynntils.core.text.StyledText;
 import com.wynntils.handlers.item.ItemAnnotation;
 import com.wynntils.handlers.item.ItemAnnotator;
 import com.wynntils.models.items.items.gui.CosmeticItem;
@@ -20,11 +20,10 @@ public final class CosmeticTierAnnotator implements ItemAnnotator {
             Pattern.compile("(Common|Rare|Epic|Godly|\\|\\|\\| Black Market \\|\\|\\|) Reward");
 
     @Override
-    public ItemAnnotation getAnnotation(ItemStack itemStack, CodedString name) {
+    public ItemAnnotation getAnnotation(ItemStack itemStack, StyledText name) {
         if (!isCosmetic(itemStack)) return null;
 
-        ChatFormatting chatColor = ChatFormatting.getByCode(
-                name.getInternalCodedStringRepresentation().charAt(1));
+        ChatFormatting chatColor = ChatFormatting.getByCode(name.getString().charAt(1));
         if (chatColor == null) chatColor = ChatFormatting.WHITE;
 
         CustomColor highlightColor = CustomColor.fromChatFormatting(chatColor);
