@@ -6,9 +6,19 @@ package com.wynntils.core.text;
 
 import com.google.common.collect.Iterables;
 import com.wynntils.utils.mc.ComponentUtils;
+import com.wynntils.utils.mc.McUtils;
 import com.wynntils.utils.type.IterationDecision;
 import com.wynntils.utils.type.Pair;
+import net.minecraft.nbt.Tag;
+import net.minecraft.network.chat.ClickEvent;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.HoverEvent;
+import net.minecraft.network.chat.MutableComponent;
+import net.minecraft.network.chat.Style;
+import org.apache.commons.lang3.ArrayUtils;
+
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.Deque;
 import java.util.LinkedList;
@@ -18,12 +28,6 @@ import java.util.function.BiFunction;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
-import net.minecraft.network.chat.ClickEvent;
-import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.HoverEvent;
-import net.minecraft.network.chat.MutableComponent;
-import net.minecraft.network.chat.Style;
-import org.apache.commons.lang3.ArrayUtils;
 
 public final class StyledText {
     public static final StyledText EMPTY = new StyledText(List.of(), List.of(), List.of());
@@ -105,6 +109,10 @@ public final class StyledText {
         return new StyledText(parts, temporaryWorkaround, clickEvents, hoverEvents);
     }
 
+    public static StyledText fromComponent(Component component, boolean onlyCodes) {
+        return onlyCodes ? fromString(component.getString()) : fromComponent(component);
+    }
+
     public static StyledText fromString(String codedString) {
         return new StyledText(
                 StyledTextPart.fromCodedString(codedString, Style.EMPTY, null, Style.EMPTY), List.of(), List.of());
@@ -112,6 +120,10 @@ public final class StyledText {
 
     public static StyledText fromCodedString(CodedString codedString) {
         return fromString(codedString.getInternalCodedStringRepresentation());
+    }
+
+    public String getString() {
+        return getString(PartStyle.StyleType.DEFAULT);
     }
 
     // We don't want to expose the actual string to the outside world
@@ -235,7 +247,7 @@ public final class StyledText {
     }
 
     public boolean contains(StyledText styledText) {
-        return contains(styledText.getString(PartStyle.StyleType.DEFAULT), PartStyle.StyleType.DEFAULT);
+        return contains(styledText.getString(), PartStyle.StyleType.DEFAULT);
     }
 
     public boolean contains(String codedString, PartStyle.StyleType styleType) {
@@ -251,7 +263,7 @@ public final class StyledText {
     }
 
     public boolean startsWith(StyledText styledText) {
-        return startsWith(styledText.getString(PartStyle.StyleType.DEFAULT), PartStyle.StyleType.DEFAULT);
+        return startsWith(styledText.getString(), PartStyle.StyleType.DEFAULT);
     }
 
     public boolean startsWith(String codedString, PartStyle.StyleType styleType) {
@@ -267,7 +279,7 @@ public final class StyledText {
     }
 
     public boolean endsWith(StyledText styledText) {
-        return endsWith(styledText.getString(PartStyle.StyleType.DEFAULT), PartStyle.StyleType.DEFAULT);
+        return endsWith(styledText.getString(), PartStyle.StyleType.DEFAULT);
     }
 
     public boolean endsWith(String codedString, PartStyle.StyleType styleType) {
@@ -286,6 +298,13 @@ public final class StyledText {
         return pattern.matcher(getString(styleType));
     }
 
+    public boolean matches(Pattern pattern) {
+        return getMatcher(pattern).matches();
+    }
+
+    public boolean matches(Pattern pattern, PartStyle.StyleType styleType) {
+        return getMatcher(pattern, styleType).matches();
+    }
     public StyledText append(StyledText styledText) {
         return concat(this, styledText);
     }
@@ -355,6 +374,10 @@ public final class StyledText {
         return hoverEvents.size();
     }
 
+    public int getWidth() {
+        return McUtils.mc().font.width(getString(PartStyle.StyleType.NONE));
+    }
+
     private StyledTextPart getPartBefore(StyledTextPart part) {
         int index = parts.indexOf(part);
         if (index == 0) {
@@ -385,5 +408,9 @@ public final class StyledText {
     @Override
     public int hashCode() {
         return Objects.hash(parts, clickEvents, hoverEvents);
+    }
+
+    public StyledText[] split(String s) {
+        return Arrays.stream(getString().split(s)).map(StyledText::fromString).toArray(StyledText[]::new);
     }
 }
