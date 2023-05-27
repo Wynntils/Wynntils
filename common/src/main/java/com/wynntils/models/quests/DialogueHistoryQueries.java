@@ -6,6 +6,7 @@ package com.wynntils.models.quests;
 
 import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.components.Models;
+import com.wynntils.core.text.CodedString;
 import com.wynntils.core.text.StyledText;
 import com.wynntils.handlers.container.ScriptedContainerQuery;
 import com.wynntils.utils.mc.LoreUtils;
@@ -97,7 +98,11 @@ public class DialogueHistoryQueries {
                         newDialogueHistory.add(current);
 
                         if (page == pageCount) {
-                            Models.Quest.setDialogueHistory(newDialogueHistory);
+                            Models.Quest.setDialogueHistory(newDialogueHistory.stream()
+                                    .map(styledTexts -> styledTexts.stream()
+                                            .map(CodedString::fromStyledText)
+                                            .toList())
+                                    .toList());
                         }
                     });
         }

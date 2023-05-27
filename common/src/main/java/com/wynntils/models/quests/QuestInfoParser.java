@@ -5,6 +5,7 @@
 package com.wynntils.models.quests;
 
 import com.wynntils.core.WynntilsMod;
+import com.wynntils.core.text.CodedString;
 import com.wynntils.core.text.StyledText;
 import com.wynntils.models.quests.type.QuestLength;
 import com.wynntils.models.quests.type.QuestStatus;
@@ -53,7 +54,7 @@ public final class QuestInfoParser {
                     status,
                     questLength,
                     level,
-                    description,
+                    CodedString.fromStyledText(description),
                     additionalRequirements,
                     isMiniQuest,
                     pageNumber,

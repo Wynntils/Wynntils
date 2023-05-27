@@ -5,6 +5,7 @@
 package com.wynntils.models.profession;
 
 import com.wynntils.core.components.Model;
+import com.wynntils.core.text.CodedString;
 import com.wynntils.core.text.StyledText;
 import com.wynntils.handlers.chat.event.ChatMessageReceivedEvent;
 import com.wynntils.handlers.labels.event.EntityLabelChangedEvent;
@@ -64,7 +65,7 @@ public class ProfessionModel extends Model {
 
     @SubscribeEvent
     public void onChatMessage(ChatMessageReceivedEvent event) {
-        StyledText codedMessage = event.getOriginalCodedMessage();
+        CodedString codedMessage = event.getOriginalCodedMessage();
 
         Matcher matcher = codedMessage.getMatcher(PROFESSION_CRAFT_PATTERN);
 

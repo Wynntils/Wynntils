@@ -7,6 +7,7 @@ package com.wynntils.models.token;
 import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.components.Model;
 import com.wynntils.core.components.Models;
+import com.wynntils.core.text.CodedString;
 import com.wynntils.core.text.StyledText;
 import com.wynntils.handlers.labels.event.EntityLabelChangedEvent;
 import com.wynntils.handlers.labels.event.EntityLabelVisibilityEvent;
@@ -301,7 +302,7 @@ public class TokenModel extends Model {
             MiscItem miscItem = miscItemOpt.get();
             if (!miscItem.isUntradable()) return false;
 
-            return miscItem.getName().contains(tokenItemName);
+            return miscItem.getName().contains(CodedString.fromStyledText(tokenItemName));
         }
 
         @Override
