@@ -117,7 +117,6 @@ import com.wynntils.features.ui.CosmeticsPreviewFeature;
 import com.wynntils.features.ui.CustomCharacterSelectionScreenFeature;
 import com.wynntils.features.ui.CustomLoadingScreenFeature;
 import com.wynntils.features.ui.CustomSeaskipperScreenFeature;
-import com.wynntils.features.ui.ItemGuideListHotkeyFeature;
 import com.wynntils.features.ui.LobbyUptimeFeature;
 import com.wynntils.features.ui.SoulPointTimerFeature;
 import com.wynntils.features.ui.WynncraftButtonFeature;
@@ -213,7 +212,6 @@ public final class FeatureManager extends Manager {
         registerFeature(new IngredientPouchHotkeyFeature());
         registerFeature(new InventoryEmeraldCountFeature());
         registerFeature(new ItemFavoriteFeature());
-        registerFeature(new ItemGuideListHotkeyFeature());
         registerFeature(new ItemHighlightFeature());
         registerFeature(new ItemLockFeature());
         registerFeature(new ItemScreenshotFeature());
