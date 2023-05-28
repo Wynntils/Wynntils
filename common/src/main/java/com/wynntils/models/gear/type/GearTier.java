@@ -9,7 +9,6 @@ import com.wynntils.utils.StringUtils;
 import java.util.Arrays;
 import java.util.Locale;
 import java.util.Optional;
-
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
 
