@@ -4,6 +4,7 @@
  */
 package com.wynntils.core.text;
 
+import com.wynntils.utils.mc.McUtils;
 import com.wynntils.utils.wynn.WynnUtils;
 import java.util.ArrayList;
 import java.util.List;
@@ -15,6 +16,7 @@ import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.network.chat.Style;
 
 public final class StyledTextPart {
+    public static final StyledTextPart EMPTY = new StyledTextPart("", Style.EMPTY, StyledText.EMPTY, Style.EMPTY);
     private final String text;
     private final PartStyle style;
 
@@ -157,6 +159,14 @@ public final class StyledTextPart {
 
     boolean isBlank() {
         return text.isBlank();
+    }
+
+    public int length() {
+        return text.length();
+    }
+
+    public int width() {
+        return McUtils.mc().font.width(text);
     }
 
     @Override

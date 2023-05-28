@@ -7,10 +7,7 @@ package com.wynntils.utils.mc;
 import com.google.gson.JsonDeserializationContext;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
-import com.google.gson.JsonParser;
-import com.google.gson.JsonSyntaxException;
 import com.wynntils.core.text.StyledText;
-import com.wynntils.utils.StringUtils;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.LinkedList;
@@ -269,12 +266,6 @@ public final class LoreUtils {
      * This lore has a completely different format from the normal lore shown to the player
      */
     public static JsonObject getJsonFromIngameLore(ItemStack itemStack) {
-        String rawLore = StringUtils.substringBeforeLast(
-                        getStringLore(itemStack).getString(), "}") + "}"; // remove extra unnecessary info
-        try {
-            return JsonParser.parseString(rawLore).getAsJsonObject();
-        } catch (JsonSyntaxException e) {
-            return new JsonObject(); // invalid or empty itemData on item
-        }
+        return getStringLore(itemStack).toJsonObject().orElse(null);
     }
 }

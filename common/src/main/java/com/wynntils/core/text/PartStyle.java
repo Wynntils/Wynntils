@@ -15,6 +15,9 @@ import net.minecraft.network.chat.HoverEvent;
 import net.minecraft.network.chat.Style;
 
 public final class PartStyle {
+
+    public static final PartStyle NONE =
+            new PartStyle(StyledTextPart.EMPTY, CustomColor.NONE, false, false, false, false, false, null, null);
     private static final String STYLE_PREFIX = "§";
 
     private final StyledTextPart owner;
@@ -213,6 +216,10 @@ public final class PartStyle {
                 owner, newColor, obfuscated, bold, strikethrough, underlined, italic, clickEvent, hoverEvent);
     }
 
+    public PartStyle withColor(CustomColor color) {
+        return new PartStyle(owner, color, obfuscated, bold, strikethrough, underlined, italic, clickEvent, hoverEvent);
+    }
+
     public boolean isBold() {
         return bold;
     }
@@ -231,6 +238,10 @@ public final class PartStyle {
 
     public boolean isItalic() {
         return italic;
+    }
+
+    public CustomColor getColor() {
+        return color;
     }
 
     public PartStyle withBold(boolean bold) {

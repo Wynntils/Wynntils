@@ -5,8 +5,12 @@
 package com.wynntils.core.text;
 
 import com.google.common.collect.Iterables;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
+import com.google.gson.JsonSyntaxException;
+import com.wynntils.utils.StringUtils;
+import com.wynntils.utils.colors.CustomColor;
 import com.wynntils.utils.mc.ComponentUtils;
-import com.wynntils.utils.mc.McUtils;
 import com.wynntils.utils.type.IterationDecision;
 import com.wynntils.utils.type.Pair;
 import java.util.ArrayList;
@@ -16,6 +20,7 @@ import java.util.Deque;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Objects;
+import java.util.Optional;
 import java.util.function.BiFunction;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -373,19 +378,56 @@ public final class StyledText {
         return hoverEvents.size();
     }
 
-    public int getWidth() {
-        return McUtils.mc().font.width(getString(PartStyle.StyleType.NONE));
+    public int length() {
+        return parts.stream().mapToInt(StyledTextPart::length).sum();
     }
 
-    public StyledText[] split(String s) {
+    public Optional<JsonObject> toJsonObject() {
+        String json = StringUtils.substringBeforeLast(getString(), "}") + "}"; // remove extra unnecessary info
+        try {
+            return Optional.of(JsonParser.parseString(json).getAsJsonObject());
+        } catch (JsonSyntaxException e) {
+            return Optional.empty();
+        }
+    }
+
+    public PartStyle getStyleAt(int index) {
+        PartStyle style = PartStyle.NONE;
+        int i = 0;
+        for (; i < parts.size(); i++) {
+            StyledTextPart part = parts.get(i);
+            if ((index -= part.length()) < 0) {
+                style = part.getPartStyle();
+
+                break;
+            }
+        }
+        while (style == PartStyle.NONE && i-- > 0) style = parts.get(i).getPartStyle();
+        if (style.getColor() == CustomColor.NONE) {
+            CustomColor c = CustomColor.NONE;
+            while (c == CustomColor.NONE && i-- > 0)
+                c = parts.get(i).getPartStyle().getColor();
+            return style.withColor(c);
+        }
+        return style;
+    }
+
+    public int getWidth() {
+        return parts.stream().mapToInt(StyledTextPart::width).sum();
+    }
+
+    public StyledText[] split(
+            String s) { // todo: doesn't work with color codes because the parts don't keep their color
         return Arrays.stream(getString().split(s)).map(StyledText::fromString).toArray(StyledText[]::new);
     }
 
-    public StyledText subtext(int start, int end) {
+    public StyledText subtext(
+            int start, int end) { // todo: doesn't work with color codes because the parts don't keep their color
         return StyledText.fromString(getString().substring(start, end));
     }
 
-    public StyledText subtext(int start) {
+    public StyledText subtext(
+            int start) { // todo: doesn't work with color codes because the parts don't keep their color
         return StyledText.fromString(getString().substring(start));
     }
 

@@ -8,10 +8,8 @@ import com.wynntils.core.text.StyledText;
 import com.wynntils.handlers.item.ItemAnnotation;
 import com.wynntils.handlers.item.ItemAnnotator;
 import com.wynntils.models.items.items.gui.CosmeticItem;
-import com.wynntils.utils.colors.CustomColor;
 import com.wynntils.utils.mc.LoreUtils;
 import java.util.regex.Pattern;
-import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.ItemStack;
 
@@ -22,12 +20,7 @@ public final class CosmeticTierAnnotator implements ItemAnnotator {
     @Override
     public ItemAnnotation getAnnotation(ItemStack itemStack, StyledText name) {
         if (!isCosmetic(itemStack)) return null;
-
-        ChatFormatting chatColor = ChatFormatting.getByCode(name.getString().charAt(1));
-        if (chatColor == null) chatColor = ChatFormatting.WHITE;
-
-        CustomColor highlightColor = CustomColor.fromChatFormatting(chatColor);
-        return new CosmeticItem(highlightColor);
+        return new CosmeticItem(name.getStyleAt(0).getColor());
     }
 
     private static boolean isCosmetic(ItemStack itemStack) {

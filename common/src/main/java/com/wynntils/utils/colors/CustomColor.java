@@ -13,8 +13,10 @@ import com.google.gson.JsonSerializer;
 import com.wynntils.utils.MathUtils;
 import java.lang.reflect.Type;
 import java.nio.charset.StandardCharsets;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Optional;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.zip.CRC32;
@@ -187,6 +189,14 @@ public class CustomColor {
         hex = "#" + hex;
 
         return hex;
+    }
+
+    public Optional<ChatFormatting> toChatFormatting() {
+        int color = asInt();
+        return Arrays.stream(ChatFormatting.values())
+                .filter(ChatFormatting::isColor)
+                .filter(chatFormatting -> chatFormatting.getColor() == color)
+                .findAny();
     }
 
     @Override
