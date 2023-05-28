@@ -40,7 +40,7 @@ public final class LoreUtils {
         if (loreTag == null) return lore;
 
         for (int i = 0; i < loreTag.size(); ++i) {
-            lore.add(StyledText.fromString(loreTag.getString(i)));
+            lore.add(StyledText.fromJson(loreTag.getString(i)));
         }
 
         return lore;

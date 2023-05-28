@@ -121,6 +121,10 @@ public final class StyledText {
         return fromString(codedString.getInternalCodedStringRepresentation());
     }
 
+    public static StyledText fromJson(String json) {
+        return fromComponent(Component.Serializer.fromJson(json));
+    }
+
     public String getString() {
         return getString(PartStyle.StyleType.DEFAULT);
     }

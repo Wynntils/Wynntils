@@ -26,7 +26,7 @@ public final class MiscAnnotator implements ItemAnnotator {
         boolean questItem = false;
 
         for (Tag line : loreTag) {
-            StyledText coded = StyledText.fromString(line.getAsString());
+            StyledText coded = StyledText.fromJson(line.getAsString());
             if (coded.equals(UNTRADABLE)) {
                 untradable = true;
             }
