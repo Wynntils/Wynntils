@@ -26,8 +26,8 @@ import org.lwjgl.glfw.GLFW;
 public final class CharacterSelectionModel extends Model {
     private static final Pattern NEW_CLASS_ITEM_NAME_PATTERN = Pattern.compile("§l§a\\[\\+\\] Create a new character");
     private static final Pattern CLASS_ITEM_NAME_PATTERN = Pattern.compile("§6\\[>\\] Select (.+)");
-    private static final Pattern CLASS_ITEM_CLASS_PATTERN = Pattern.compile(
-            "§e- §7Class: (§c§l☠)?(§6§l❂)?(§3§l⛏)?(§5§l⚔)?(\\s)?§f(?<name>.+)");
+    private static final Pattern CLASS_ITEM_CLASS_PATTERN =
+            Pattern.compile("§e- §7Class: (§c§l☠)?(§6§l❂)?(§3§l⛏)?(§5§l⚔)?(\\s)?§f(?<name>.+)");
     private static final Pattern CLASS_ITEM_LEVEL_PATTERN = Pattern.compile("§e- §7Level: §f(\\d+)");
     private static final Pattern CLASS_ITEM_XP_PATTERN = Pattern.compile("§e- §7XP: §f(\\d+)%");
     private static final Pattern CLASS_ITEM_SOUL_POINTS_PATTERN = Pattern.compile("§e- §7Soul Points: §f(\\d+)");
