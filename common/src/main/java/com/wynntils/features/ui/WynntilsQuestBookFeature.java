@@ -24,7 +24,6 @@ import com.wynntils.screens.guides.powder.WynntilsPowderGuideScreen;
 import com.wynntils.screens.questbook.WynntilsQuestBookScreen;
 import com.wynntils.screens.wynntilsmenu.WynntilsMenuScreen;
 import com.wynntils.utils.mc.ComponentUtils;
-import com.wynntils.utils.mc.KeyboardUtils;
 import com.wynntils.utils.mc.McUtils;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.sounds.SoundEvent;
@@ -56,8 +55,39 @@ public class WynntilsQuestBookFeature extends Feature {
             () -> WynntilsMenuScreenBase.openBook(WynntilsMenuScreen.create()));
 
     @RegisterKeyBind
-    private final KeyBind openItemGuideList =
-            new KeyBind("Open Item Guide List", GLFW.GLFW_KEY_UNKNOWN, true, this::onItemGuideListKeyPress);
+    private final KeyBind openPowderGuide = new KeyBind(
+            "Open Powder Guide",
+            GLFW.GLFW_KEY_UNKNOWN,
+            true,
+            () -> WynntilsMenuScreenBase.openBook(WynntilsPowderGuideScreen.create()));
+
+    @RegisterKeyBind
+    private final KeyBind openItemGuide = new KeyBind(
+            "Open Item Guide",
+            GLFW.GLFW_KEY_UNKNOWN,
+            true,
+            () -> WynntilsMenuScreenBase.openBook(WynntilsItemGuideScreen.create()));
+
+    @RegisterKeyBind
+    private final KeyBind openIngredientGuide = new KeyBind(
+            "Open Ingredient Guide",
+            GLFW.GLFW_KEY_UNKNOWN,
+            true,
+            () -> WynntilsMenuScreenBase.openBook(WynntilsIngredientGuideScreen.create()));
+
+    @RegisterKeyBind
+    private final KeyBind openEmeraldPouchGuide = new KeyBind(
+            "Open Emerald Pouch Guide",
+            GLFW.GLFW_KEY_UNKNOWN,
+            true,
+            () -> WynntilsMenuScreenBase.openBook(WynntilsEmeraldPouchGuideScreen.create()));
+
+    @RegisterKeyBind
+    private final KeyBind openGuidesList = new KeyBind(
+            "Open Guides List",
+            GLFW.GLFW_KEY_UNKNOWN,
+            true,
+            () -> WynntilsMenuScreenBase.openBook(WynntilsGuidesListScreen.create()));
 
     @RegisterConfig
     public final Config<Boolean> replaceWynncraftQuestBook = new Config<>(true);
@@ -108,20 +138,6 @@ public class WynntilsQuestBookFeature extends Feature {
                     questBookShouldOpenWynntilsMenu.get()
                             ? WynntilsMenuScreen.create()
                             : WynntilsQuestBookScreen.create());
-        }
-    }
-
-    private void onItemGuideListKeyPress() {
-        if (KeyboardUtils.isKeyDown(GLFW.GLFW_KEY_LEFT_CONTROL) && KeyboardUtils.isKeyDown(GLFW.GLFW_KEY_LEFT_ALT)) {
-            WynntilsMenuScreenBase.openBook(WynntilsPowderGuideScreen.create());
-        } else if (KeyboardUtils.isKeyDown(GLFW.GLFW_KEY_LEFT_SHIFT)) {
-            WynntilsMenuScreenBase.openBook(WynntilsItemGuideScreen.create());
-        } else if (KeyboardUtils.isKeyDown(GLFW.GLFW_KEY_LEFT_CONTROL)) {
-            WynntilsMenuScreenBase.openBook(WynntilsIngredientGuideScreen.create());
-        } else if (KeyboardUtils.isKeyDown(GLFW.GLFW_KEY_LEFT_ALT)) {
-            WynntilsMenuScreenBase.openBook(WynntilsEmeraldPouchGuideScreen.create());
-        } else {
-            WynntilsMenuScreenBase.openBook(WynntilsGuidesListScreen.create());
         }
     }
 }
