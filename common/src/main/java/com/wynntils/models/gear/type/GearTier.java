@@ -8,6 +8,8 @@ import com.wynntils.core.text.StyledText;
 import com.wynntils.utils.StringUtils;
 import java.util.Arrays;
 import java.util.Locale;
+import java.util.Optional;
+
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
 
@@ -40,16 +42,12 @@ public enum GearTier {
     }
 
     public static GearTier fromFormattedString(StyledText name) {
-        String string = name.getString();
-        if (string.charAt(0) == '§') {
-            return fromChatFormatting(ChatFormatting.getByCode(string.charAt(1)));
-        }
-
-        return null;
+        Optional<ChatFormatting> chatFormatting = name.getStyleAt(0).getColor().toChatFormatting();
+        return chatFormatting.map(GearTier::fromChatFormatting).orElse(null);
     }
 
     public static GearTier fromComponent(Component component) {
-        return fromFormattedString(StyledText.fromComponent(component, true));
+        return fromFormattedString(StyledText.fromComponent(component));
     }
 
     public static GearTier fromChatFormatting(ChatFormatting formatting) {

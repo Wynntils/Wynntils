@@ -112,10 +112,6 @@ public final class StyledText {
         return new StyledText(parts, temporaryWorkaround, clickEvents, hoverEvents);
     }
 
-    public static StyledText fromComponent(Component component, boolean onlyCodes) {
-        return onlyCodes ? fromString(component.getString()) : fromComponent(component);
-    }
-
     public static StyledText fromString(String codedString) {
         return new StyledText(
                 StyledTextPart.fromCodedString(codedString, Style.EMPTY, null, Style.EMPTY), List.of(), List.of());
