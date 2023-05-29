@@ -9,6 +9,7 @@ import com.wynntils.utils.mc.ComponentUtils;
 import com.wynntils.utils.type.IterationDecision;
 import com.wynntils.utils.type.Pair;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.Deque;
 import java.util.Iterator;
@@ -354,16 +355,25 @@ public final class StyledText implements Iterable<StyledTextPart> {
     public StyledText[] split(String regex) {
         List<StyledText> splitParts = new ArrayList<>();
 
-        for (StyledTextPart part : parts) {
+        for (int i = 0; i < parts.size(); i++) {
+            StyledTextPart part = parts.get(i);
             String partString = part.getString(null, PartStyle.StyleType.NONE);
 
-            String[] stringParts = partString.split(regex);
+            // Avoid empty parts at the end of the list, but keep them otherwise
+            int maxSplit = i == parts.size() - 1 ? 0 : Integer.MAX_VALUE;
+
+            List<String> stringParts =
+                    Arrays.stream(partString.split(regex, maxSplit)).toList();
+
+            // Due to maxSplit, we might add an extra empty string at the end
+            if (stringParts.get(stringParts.size() - 1).isEmpty()) {
+                stringParts = stringParts.subList(0, stringParts.size() - 1);
+            }
 
             for (String stringPart : stringParts) {
                 splitParts.add(new StyledText(
                         List.of(new StyledTextPart(
                                 stringPart, part.getPartStyle().getStyle(), null, Style.EMPTY)),
-                        temporaryWorkaround,
                         clickEvents,
                         hoverEvents));
             }
