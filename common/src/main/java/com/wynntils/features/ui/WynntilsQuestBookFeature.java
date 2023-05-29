@@ -16,6 +16,11 @@ import com.wynntils.mc.event.PlayerInteractEvent;
 import com.wynntils.mc.event.UseItemEvent;
 import com.wynntils.models.quests.event.TrackedQuestUpdateEvent;
 import com.wynntils.screens.base.WynntilsMenuScreenBase;
+import com.wynntils.screens.guides.WynntilsGuidesListScreen;
+import com.wynntils.screens.guides.emeraldpouch.WynntilsEmeraldPouchGuideScreen;
+import com.wynntils.screens.guides.gear.WynntilsItemGuideScreen;
+import com.wynntils.screens.guides.ingredient.WynntilsIngredientGuideScreen;
+import com.wynntils.screens.guides.powder.WynntilsPowderGuideScreen;
 import com.wynntils.screens.questbook.WynntilsQuestBookScreen;
 import com.wynntils.screens.wynntilsmenu.WynntilsMenuScreen;
 import com.wynntils.utils.mc.ComponentUtils;
@@ -48,6 +53,41 @@ public class WynntilsQuestBookFeature extends Feature {
             GLFW.GLFW_KEY_UNKNOWN,
             true,
             () -> WynntilsMenuScreenBase.openBook(WynntilsMenuScreen.create()));
+
+    @RegisterKeyBind
+    private final KeyBind openPowderGuide = new KeyBind(
+            "Open Powder Guide",
+            GLFW.GLFW_KEY_UNKNOWN,
+            true,
+            () -> WynntilsMenuScreenBase.openBook(WynntilsPowderGuideScreen.create()));
+
+    @RegisterKeyBind
+    private final KeyBind openItemGuide = new KeyBind(
+            "Open Item Guide",
+            GLFW.GLFW_KEY_UNKNOWN,
+            true,
+            () -> WynntilsMenuScreenBase.openBook(WynntilsItemGuideScreen.create()));
+
+    @RegisterKeyBind
+    private final KeyBind openIngredientGuide = new KeyBind(
+            "Open Ingredient Guide",
+            GLFW.GLFW_KEY_UNKNOWN,
+            true,
+            () -> WynntilsMenuScreenBase.openBook(WynntilsIngredientGuideScreen.create()));
+
+    @RegisterKeyBind
+    private final KeyBind openEmeraldPouchGuide = new KeyBind(
+            "Open Emerald Pouch Guide",
+            GLFW.GLFW_KEY_UNKNOWN,
+            true,
+            () -> WynntilsMenuScreenBase.openBook(WynntilsEmeraldPouchGuideScreen.create()));
+
+    @RegisterKeyBind
+    private final KeyBind openGuidesList = new KeyBind(
+            "Open Guides List",
+            GLFW.GLFW_KEY_UNKNOWN,
+            true,
+            () -> WynntilsMenuScreenBase.openBook(WynntilsGuidesListScreen.create()));
 
     @RegisterConfig
     public final Config<Boolean> replaceWynncraftQuestBook = new Config<>(true);
