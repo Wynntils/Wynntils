@@ -457,7 +457,7 @@ public final class StyledText implements Iterable<StyledTextPart> {
 
     /**
      * Replaces all occurrences of the given regex with the given replacement.
-     * <p> Note that {@link PartStyle.StyleType.NONE} is used when matching replacing.
+     * <p> Note that {@link PartStyle.StyleType.NONE} is used when matching and replacing.
      * @param regex the regex to replace
      * @param replacement the replacement
      * @return the new {@link StyledText}
