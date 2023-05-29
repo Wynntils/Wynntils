@@ -33,7 +33,7 @@ public class ClientCommandSourceStack extends CommandSourceStack {
     public Collection<String> getOnlinePlayerNames() {
         return Minecraft.getInstance().getConnection().getOnlinePlayers().stream()
                 .map(e -> e.getProfile().getName())
-                .toList();
+                .collect(Collectors.toList());
     }
 
     @Override

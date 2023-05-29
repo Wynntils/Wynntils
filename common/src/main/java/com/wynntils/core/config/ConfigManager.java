@@ -79,12 +79,13 @@ public final class ConfigManager extends Manager {
     public void registerFeature(Feature feature) {
         registerConfigOptions(feature);
 
-        List<OverlayGroupHolder> featureOverlayGroups = Managers.Overlay.getFeatureOverlayGroups(feature);
-        Managers.Overlay.getFeatureOverlays(feature).stream()
-                .filter(overlay -> featureOverlayGroups.stream()
-                        .map(OverlayGroupHolder::getOverlays)
-                        .noneMatch(overlays -> overlays.contains(overlay)))
-                .forEach(this::registerConfigOptions);
+        for (Overlay overlay : Managers.Overlay.getFeatureOverlays(feature).stream()
+                .filter(overlay -> Managers.Overlay.getFeatureOverlayGroups(feature).stream()
+                        .noneMatch(overlayGroupHolder ->
+                                overlayGroupHolder.getOverlays().contains(overlay)))
+                .toList()) {
+            registerConfigOptions(overlay);
+        }
     }
 
     private <T extends Configurable & Translatable> void registerConfigOptions(T configurable) {
