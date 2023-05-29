@@ -392,24 +392,10 @@ public final class StyledText {
     }
 
     public PartStyle getStyleAt(int index) {
-        PartStyle style = PartStyle.NONE;
-        int i = 0;
-        for (; i < parts.size(); i++) {
-            StyledTextPart part = parts.get(i);
-            if ((index -= part.length()) < 0) {
-                style = part.getPartStyle();
-
-                break;
-            }
-        }
-        while (style == PartStyle.NONE && i-- > 0) style = parts.get(i).getPartStyle();
-        if (style.getColor() == CustomColor.NONE) {
-            CustomColor c = CustomColor.NONE;
-            while (c == CustomColor.NONE && i-- > 0)
-                c = parts.get(i).getPartStyle().getColor();
-            return style.withColor(c);
-        }
-        return style;
+        for (StyledTextPart part : parts)
+            if ((index -= part.length()) < 0)
+                return part.getPartStyle();
+        return PartStyle.NONE;
     }
 
     public int getWidth() {
