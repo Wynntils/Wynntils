@@ -5,10 +5,11 @@
 package com.wynntils.core.text;
 
 import com.wynntils.utils.wynn.WynnUtils;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Objects;
+
+import java.util.*;
 import java.util.function.Function;
+import java.util.stream.Collectors;
+
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
@@ -202,5 +203,11 @@ public final class StyledTextPart {
     @Override
     public int hashCode() {
         return Objects.hash(text, style);
+    }
+
+    public List<StyledTextPart> split(String regex) {
+        List<StyledTextPart> list = Arrays.stream(text.split(regex)).filter(s -> !s.isEmpty()).map(this::withText).toList();
+        if (list.size() == 1 && list.get(0).text.equals(text)) return Collections.emptyList();
+        return list;
     }
 }

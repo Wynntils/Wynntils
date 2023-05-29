@@ -394,19 +394,39 @@ public final class StyledText {
         return PartStyle.NONE;
     }
 
-    public StyledText[] split(String s) {
-        if (isEmpty()) return new StyledText[0];
-        int i = 0;
-        String[] split = getString(PartStyle.StyleType.NONE).split(s);
-        StyledText[] result = new StyledText[split.length];
-        for (int j = 0; j < split.length; j++) {
-            result[j] = subtext(i, split[j].length());
-            i += split[j].length();
+    /**
+     * Note: only matches the regions between color codes and does not contain empty strings
+     */
+    public List<StyledText> split(String regex) {
+        if (isEmpty()) return List.of();
+        List<StyledText> res = new ArrayList<>();
+        List<StyledTextPart> tmp = new ArrayList<>();
+        for (StyledTextPart part : parts) {
+            if (part.isEmpty()) continue;
+            List<StyledTextPart> textParts = part.split(regex);
+            for (int i = 1; i < textParts.size() - 1; i++) {
+                StyledTextPart textPart = textParts.get(0);
+                res.add(new StyledText(List.of(textPart), clickEvents, hoverEvents));
+            }
+            if (textParts.isEmpty()) {
+                tmp.add(part);
+            } else if (textParts.size() == 1) {
+                tmp.add(textParts.get(0));
+                res.add(new StyledText(tmp, clickEvents, hoverEvents));
+                tmp.clear();
+            } else {
+                tmp.add(textParts.get(0));
+                res.add(new StyledText(tmp, clickEvents, hoverEvents));
+                tmp.clear();
+                tmp.add(textParts.get(textParts.size() - 1));
+            }
         }
-        return result;
+        res.add(new StyledText(tmp, clickEvents, hoverEvents));
+        return res;
     }
 
     public StyledText subtext(int startInclusive, int endExclusive) {
+        if (startInclusive == endExclusive) return EMPTY;
         endExclusive--;
         int skipStartInclusive;
         int skipStartCharsInclusive = 0;
