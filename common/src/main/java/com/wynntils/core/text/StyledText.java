@@ -227,7 +227,6 @@ public final class StyledText implements Iterable<StyledTextPart> {
     public StyledText getNormalized() {
         return new StyledText(
                 parts.stream().map(StyledTextPart::asNormalized).collect(Collectors.toList()),
-                temporaryWorkaround,
                 clickEvents,
                 hoverEvents);
     }
@@ -243,7 +242,7 @@ public final class StyledText implements Iterable<StyledTextPart> {
         int lastIndex = newParts.size() - 1;
         newParts.set(lastIndex, newParts.get(lastIndex).stripTrailing());
 
-        return new StyledText(newParts, temporaryWorkaround, clickEvents, hoverEvents);
+        return new StyledText(newParts, clickEvents, hoverEvents);
     }
 
     public boolean isEmpty() {
@@ -329,7 +328,7 @@ public final class StyledText implements Iterable<StyledTextPart> {
     public StyledText appendPart(StyledTextPart part) {
         List<StyledTextPart> newParts = new ArrayList<>(parts);
         newParts.add(part);
-        return new StyledText(newParts, temporaryWorkaround, clickEvents, hoverEvents);
+        return new StyledText(newParts, clickEvents, hoverEvents);
     }
 
     public StyledText prepend(StyledText styledText) {
@@ -343,7 +342,7 @@ public final class StyledText implements Iterable<StyledTextPart> {
     public StyledText prependPart(StyledTextPart part) {
         List<StyledTextPart> newParts = new ArrayList<>(parts);
         newParts.add(0, part);
-        return new StyledText(newParts, temporaryWorkaround, clickEvents, hoverEvents);
+        return new StyledText(newParts, clickEvents, hoverEvents);
     }
 
     /**
@@ -513,7 +512,7 @@ public final class StyledText implements Iterable<StyledTextPart> {
             }
         }
 
-        return new StyledText(newParts, temporaryWorkaround, clickEvents, hoverEvents);
+        return new StyledText(newParts, clickEvents, hoverEvents);
     }
 
     public StyledText iterateBackwards(BiFunction<StyledTextPart, List<StyledTextPart>, IterationDecision> function) {
@@ -534,7 +533,7 @@ public final class StyledText implements Iterable<StyledTextPart> {
             }
         }
 
-        return new StyledText(newParts, temporaryWorkaround, clickEvents, hoverEvents);
+        return new StyledText(newParts, clickEvents, hoverEvents);
     }
 
     public StyledTextPart getFirstPart() {
