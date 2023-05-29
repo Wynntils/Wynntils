@@ -7,7 +7,7 @@ package com.wynntils.models.players;
 import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.components.Model;
 import com.wynntils.core.components.Models;
-import com.wynntils.core.text.CodedString;
+import com.wynntils.core.text.StyledText;
 import com.wynntils.handlers.chat.event.ChatMessageReceivedEvent;
 import com.wynntils.handlers.chat.type.MessageType;
 import com.wynntils.models.players.event.FriendsEvent;
@@ -16,7 +16,6 @@ import com.wynntils.models.players.hades.event.HadesEvent;
 import com.wynntils.models.worlds.WorldStateModel;
 import com.wynntils.models.worlds.event.WorldStateEvent;
 import com.wynntils.models.worlds.type.WorldState;
-import com.wynntils.utils.mc.ComponentUtils;
 import com.wynntils.utils.mc.McUtils;
 import java.util.Arrays;
 import java.util.HashSet;
@@ -80,40 +79,40 @@ public final class FriendsModel extends Model {
     public void onChatReceived(ChatMessageReceivedEvent event) {
         if (event.getMessageType() != MessageType.FOREGROUND) return;
 
-        CodedString coded = event.getOriginalCodedString();
-        String unformatted = ComponentUtils.stripFormatting(coded);
+        StyledText styledText = event.getOriginalStyledText();
+        String unformatted = styledText.getStringWithoutFormatting();
 
-        Matcher joinMatcher = coded.getMatcher(JOIN_PATTERN);
+        Matcher joinMatcher = styledText.getMatcher(JOIN_PATTERN);
         if (joinMatcher.matches()) {
             WynntilsMod.postEvent(new FriendsEvent.Joined(joinMatcher.group(1)));
         } else {
-            Matcher leaveMatcher = coded.getMatcher(LEAVE_PATTERN);
+            Matcher leaveMatcher = styledText.getMatcher(LEAVE_PATTERN);
             if (leaveMatcher.matches()) {
                 WynntilsMod.postEvent(new FriendsEvent.Left(leaveMatcher.group(1)));
             }
         }
 
-        if (tryParseFriendMessages(coded)) {
+        if (tryParseFriendMessages(styledText)) {
             return;
         }
 
         if (expectingFriendMessage) {
-            if (tryParseFriendList(unformatted) || tryParseNoFriendList(coded)) {
+            if (tryParseFriendList(unformatted) || tryParseNoFriendList(styledText)) {
                 event.setCanceled(true);
                 expectingFriendMessage = false;
                 return;
             }
 
             // Skip first message of two, but still expect more messages
-            if (coded.getMatcher(FRIEND_LIST_FAIL_1).matches()) {
+            if (styledText.getMatcher(FRIEND_LIST_FAIL_1).matches()) {
                 event.setCanceled(true);
                 return;
             }
         }
     }
 
-    private boolean tryParseNoFriendList(CodedString coded) {
-        if (coded.getMatcher(FRIEND_LIST_FAIL_2).matches()) {
+    private boolean tryParseNoFriendList(StyledText styledText) {
+        if (styledText.getMatcher(FRIEND_LIST_FAIL_2).matches()) {
             WynntilsMod.info("Friend list is empty.");
             return true;
         }
@@ -121,8 +120,8 @@ public final class FriendsModel extends Model {
         return false;
     }
 
-    private boolean tryParseFriendMessages(CodedString coded) {
-        Matcher matcher = coded.getMatcher(FRIEND_REMOVE_MESSAGE_PATTERN);
+    private boolean tryParseFriendMessages(StyledText styledText) {
+        Matcher matcher = styledText.getMatcher(FRIEND_REMOVE_MESSAGE_PATTERN);
         if (matcher.matches()) {
             String player = matcher.group(1);
 
@@ -135,7 +134,7 @@ public final class FriendsModel extends Model {
             return true;
         }
 
-        matcher = coded.getMatcher(FRIEND_ADD_MESSAGE_PATTERN);
+        matcher = styledText.getMatcher(FRIEND_ADD_MESSAGE_PATTERN);
         if (matcher.matches()) {
             String player = matcher.group(1);
 
