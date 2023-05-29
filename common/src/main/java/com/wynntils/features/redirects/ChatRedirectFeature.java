@@ -10,7 +10,7 @@ import com.wynntils.core.config.Config;
 import com.wynntils.core.config.ConfigCategory;
 import com.wynntils.core.config.RegisterConfig;
 import com.wynntils.core.features.Feature;
-import com.wynntils.core.text.CodedString;
+import com.wynntils.core.text.StyledText;
 import com.wynntils.handlers.chat.event.ChatMessageReceivedEvent;
 import com.wynntils.handlers.chat.type.MessageType;
 import com.wynntils.handlers.chat.type.RecipientType;
@@ -20,6 +20,7 @@ import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import net.minecraft.ChatFormatting;
+import net.minecraftforge.eventbus.api.EventPriority;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 
 @ConfigCategory(Category.REDIRECTS)
@@ -112,11 +113,11 @@ public class ChatRedirectFeature extends Feature {
         redirectors.add(redirector);
     }
 
-    @SubscribeEvent
+    @SubscribeEvent(priority = EventPriority.HIGH)
     public void onChatMessage(ChatMessageReceivedEvent e) {
         if (e.getRecipientType() != RecipientType.INFO) return;
 
-        CodedString message = e.getOriginalCodedString();
+        StyledText message = e.getOriginalStyledText();
         MessageType messageType = e.getMessageType();
 
         for (Redirector redirector : redirectors) {
@@ -132,7 +133,7 @@ public class ChatRedirectFeature extends Feature {
                 e.setCanceled(true);
                 if (redirector.getAction() == RedirectAction.HIDE) continue;
 
-                for (CodedString notification : redirector.getNotifications(matcher)) {
+                for (StyledText notification : redirector.getNotifications(matcher)) {
                     Managers.Notification.queueMessage(notification);
                 }
             }
@@ -150,7 +151,7 @@ public class ChatRedirectFeature extends Feature {
 
         ChatRedirectFeature.RedirectAction getAction();
 
-        List<CodedString> getNotifications(Matcher matcher);
+        List<StyledText> getNotifications(Matcher matcher);
     }
 
     public abstract static class SimpleRedirector implements Redirector {
@@ -171,11 +172,11 @@ public class ChatRedirectFeature extends Feature {
         }
 
         @Override
-        public List<CodedString> getNotifications(Matcher matcher) {
+        public List<StyledText> getNotifications(Matcher matcher) {
             return List.of(getNotification(matcher));
         }
 
-        protected abstract CodedString getNotification(Matcher matcher);
+        protected abstract StyledText getNotification(Matcher matcher);
     }
 
     private class CraftedDurabilityRedirector extends SimpleRedirector {
@@ -193,8 +194,8 @@ public class ChatRedirectFeature extends Feature {
         }
 
         @Override
-        protected CodedString getNotification(Matcher matcher) {
-            return CodedString.fromString(ChatFormatting.DARK_RED + "Your items are damaged.");
+        protected StyledText getNotification(Matcher matcher) {
+            return StyledText.fromString(ChatFormatting.DARK_RED + "Your items are damaged.");
         }
     }
 
@@ -220,12 +221,12 @@ public class ChatRedirectFeature extends Feature {
         }
 
         @Override
-        protected CodedString getNotification(Matcher matcher) {
+        protected StyledText getNotification(Matcher matcher) {
             String playerName = matcher.group("name");
             String server = matcher.group("server");
             String playerClass = matcher.group("class");
 
-            return CodedString.fromString(ChatFormatting.GREEN + "→ " + ChatFormatting.DARK_GREEN
+            return StyledText.fromString(ChatFormatting.GREEN + "→ " + ChatFormatting.DARK_GREEN
                     + playerName + " [" + ChatFormatting.GREEN
                     + server + "/" + playerClass + ChatFormatting.DARK_GREEN
                     + "]");
@@ -252,10 +253,10 @@ public class ChatRedirectFeature extends Feature {
         }
 
         @Override
-        protected CodedString getNotification(Matcher matcher) {
+        protected StyledText getNotification(Matcher matcher) {
             String playerName = matcher.group("name");
 
-            return CodedString.fromString(ChatFormatting.RED + "← " + ChatFormatting.DARK_GREEN + playerName);
+            return StyledText.fromString(ChatFormatting.RED + "← " + ChatFormatting.DARK_GREEN + playerName);
         }
     }
 
@@ -273,10 +274,10 @@ public class ChatRedirectFeature extends Feature {
         }
 
         @Override
-        protected CodedString getNotification(Matcher matcher) {
+        protected StyledText getNotification(Matcher matcher) {
             String amount = matcher.group(1);
 
-            return CodedString.fromString(ChatFormatting.DARK_RED + "[+" + amount + " ❤]");
+            return StyledText.fromString(ChatFormatting.DARK_RED + "[+" + amount + " ❤]");
         }
     }
 
@@ -300,10 +301,10 @@ public class ChatRedirectFeature extends Feature {
         }
 
         @Override
-        protected CodedString getNotification(Matcher matcher) {
+        protected StyledText getNotification(Matcher matcher) {
             String amount = matcher.group(1);
 
-            return CodedString.fromString(ChatFormatting.DARK_RED + "[+" + amount + " ❤]");
+            return StyledText.fromString(ChatFormatting.DARK_RED + "[+" + amount + " ❤]");
         }
     }
 
@@ -322,8 +323,8 @@ public class ChatRedirectFeature extends Feature {
         }
 
         @Override
-        protected CodedString getNotification(Matcher matcher) {
-            return CodedString.fromString(ChatFormatting.DARK_PURPLE + "Your horse has despawned.");
+        protected StyledText getNotification(Matcher matcher) {
+            return StyledText.fromString(ChatFormatting.DARK_PURPLE + "Your horse has despawned.");
         }
     }
 
@@ -342,8 +343,8 @@ public class ChatRedirectFeature extends Feature {
         }
 
         @Override
-        protected CodedString getNotification(Matcher matcher) {
-            return CodedString.fromString(ChatFormatting.DARK_RED + "Nearby mobs prevent horse spawning!");
+        protected StyledText getNotification(Matcher matcher) {
+            return StyledText.fromString(ChatFormatting.DARK_RED + "Nearby mobs prevent horse spawning!");
         }
     }
 
@@ -361,8 +362,8 @@ public class ChatRedirectFeature extends Feature {
         }
 
         @Override
-        protected CodedString getNotification(Matcher matcher) {
-            return CodedString.fromString(ChatFormatting.DARK_RED + "No room for a horse!");
+        protected StyledText getNotification(Matcher matcher) {
+            return StyledText.fromString(ChatFormatting.DARK_RED + "No room for a horse!");
         }
     }
 
@@ -380,8 +381,8 @@ public class ChatRedirectFeature extends Feature {
         }
 
         @Override
-        protected CodedString getNotification(Matcher matcher) {
-            return CodedString.fromString(ChatFormatting.GRAY + "→ Housing Island");
+        protected StyledText getNotification(Matcher matcher) {
+            return StyledText.fromString(ChatFormatting.GRAY + "→ Housing Island");
         }
     }
 
@@ -400,8 +401,8 @@ public class ChatRedirectFeature extends Feature {
         }
 
         @Override
-        protected CodedString getNotification(Matcher matcher) {
-            return CodedString.fromString(ChatFormatting.DARK_RED + "Housing teleport is on cooldown!");
+        protected StyledText getNotification(Matcher matcher) {
+            return StyledText.fromString(ChatFormatting.DARK_RED + "Housing teleport is on cooldown!");
         }
     }
 
@@ -420,8 +421,8 @@ public class ChatRedirectFeature extends Feature {
         }
 
         @Override
-        protected CodedString getNotification(Matcher matcher) {
-            return CodedString.fromString(ChatFormatting.GRAY + "← Housing Island");
+        protected StyledText getNotification(Matcher matcher) {
+            return StyledText.fromString(ChatFormatting.GRAY + "← Housing Island");
         }
     }
 
@@ -440,8 +441,8 @@ public class ChatRedirectFeature extends Feature {
         }
 
         @Override
-        protected CodedString getNotification(Matcher matcher) {
-            return CodedString.fromString(ChatFormatting.DARK_RED + "Housing teleport is on cooldown!");
+        protected StyledText getNotification(Matcher matcher) {
+            return StyledText.fromString(ChatFormatting.DARK_RED + "Housing teleport is on cooldown!");
         }
     }
 
@@ -460,14 +461,14 @@ public class ChatRedirectFeature extends Feature {
         }
 
         @Override
-        protected CodedString getNotification(Matcher matcher) {
+        protected StyledText getNotification(Matcher matcher) {
             int ingredientCount = Integer.parseInt(matcher.group(1));
-            CodedString ingredientString =
-                    CodedString.fromString(ingredientCount + " §dingredient" + (ingredientCount == 1 ? "" : "s"));
+            StyledText ingredientString =
+                    StyledText.fromString(ingredientCount + " §dingredient" + (ingredientCount == 1 ? "" : "s"));
 
             String emeraldString = matcher.group(2);
 
-            return CodedString.fromString(String.format(
+            return StyledText.fromString(String.format(
                     "§dSold §7%s §dfor §a%s§d.",
                     ingredientString.getInternalCodedStringRepresentation(), emeraldString));
         }
@@ -495,11 +496,11 @@ public class ChatRedirectFeature extends Feature {
         }
 
         @Override
-        protected CodedString getNotification(Matcher matcher) {
+        protected StyledText getNotification(Matcher matcher) {
             String rank = matcher.group("rank");
             String playerName = matcher.group("name");
 
-            return CodedString.fromString(
+            return StyledText.fromString(
                     ChatFormatting.GREEN + "→ " + WynnPlayerUtils.getFormattedRank(rank) + playerName);
         }
     }
@@ -519,8 +520,8 @@ public class ChatRedirectFeature extends Feature {
         }
 
         @Override
-        protected CodedString getNotification(Matcher matcher) {
-            return CodedString.fromString(ChatFormatting.DARK_RED + "Unable to teleport! Move away from blocks.");
+        protected StyledText getNotification(Matcher matcher) {
+            return StyledText.fromString(ChatFormatting.DARK_RED + "Unable to teleport! Move away from blocks.");
         }
     }
 
@@ -539,8 +540,8 @@ public class ChatRedirectFeature extends Feature {
         }
 
         @Override
-        protected CodedString getNotification(Matcher matcher) {
-            return CodedString.fromString(ChatFormatting.DARK_RED + "Not enough mana to do that spell!");
+        protected StyledText getNotification(Matcher matcher) {
+            return StyledText.fromString(ChatFormatting.DARK_RED + "Not enough mana to do that spell!");
         }
     }
 
@@ -558,8 +559,8 @@ public class ChatRedirectFeature extends Feature {
         }
 
         @Override
-        protected CodedString getNotification(Matcher matcher) {
-            return CodedString.fromString(ChatFormatting.DARK_RED + "No totems nearby!");
+        protected StyledText getNotification(Matcher matcher) {
+            return StyledText.fromString(ChatFormatting.DARK_RED + "No totems nearby!");
         }
     }
 
@@ -577,8 +578,8 @@ public class ChatRedirectFeature extends Feature {
         }
 
         @Override
-        protected CodedString getNotification(Matcher matcher) {
-            return CodedString.fromString(ChatFormatting.DARK_RED + "This potion is already active!");
+        protected StyledText getNotification(Matcher matcher) {
+            return StyledText.fromString(ChatFormatting.DARK_RED + "This potion is already active!");
         }
     }
 
@@ -597,8 +598,8 @@ public class ChatRedirectFeature extends Feature {
         }
 
         @Override
-        protected CodedString getNotification(Matcher matcher) {
-            return CodedString.fromString(ChatFormatting.DARK_RED + "At potion charge limit!");
+        protected StyledText getNotification(Matcher matcher) {
+            return StyledText.fromString(ChatFormatting.DARK_RED + "At potion charge limit!");
         }
     }
 
@@ -617,8 +618,8 @@ public class ChatRedirectFeature extends Feature {
         }
 
         @Override
-        protected CodedString getNotification(Matcher matcher) {
-            return CodedString.fromString(ChatFormatting.GRAY + "Moved excess healing items to bank.");
+        protected StyledText getNotification(Matcher matcher) {
+            return StyledText.fromString(ChatFormatting.GRAY + "Moved excess healing items to bank.");
         }
     }
 
@@ -637,8 +638,8 @@ public class ChatRedirectFeature extends Feature {
         }
 
         @Override
-        protected CodedString getNotification(Matcher matcher) {
-            return CodedString.fromString(ChatFormatting.GRAY + "Lesser potion replaced.");
+        protected StyledText getNotification(Matcher matcher) {
+            return StyledText.fromString(ChatFormatting.GRAY + "Lesser potion replaced.");
         }
     }
 
@@ -657,8 +658,8 @@ public class ChatRedirectFeature extends Feature {
         }
 
         @Override
-        protected CodedString getNotification(Matcher matcher) {
-            return CodedString.fromString(ChatFormatting.DARK_RED + "Can't teleport on a housing island!");
+        protected StyledText getNotification(Matcher matcher) {
+            return StyledText.fromString(ChatFormatting.DARK_RED + "Can't teleport on a housing island!");
         }
     }
 
@@ -676,8 +677,8 @@ public class ChatRedirectFeature extends Feature {
         }
 
         @Override
-        protected CodedString getNotification(Matcher matcher) {
-            return CodedString.fromString(ChatFormatting.DARK_RED + "Nearby mobs prevent scroll teleportation!");
+        protected StyledText getNotification(Matcher matcher) {
+            return StyledText.fromString(ChatFormatting.DARK_RED + "Nearby mobs prevent scroll teleportation!");
         }
     }
 
@@ -701,7 +702,7 @@ public class ChatRedirectFeature extends Feature {
         }
 
         @Override
-        public List<CodedString> getNotifications(Matcher matcher) {
+        public List<StyledText> getNotifications(Matcher matcher) {
             // Soul point messages comes in two lines. We just throw away the chatty one
             // if we have hide or redirect as action.
             return List.of();
@@ -728,9 +729,9 @@ public class ChatRedirectFeature extends Feature {
         }
 
         @Override
-        protected CodedString getNotification(Matcher matcher) {
+        protected StyledText getNotification(Matcher matcher) {
             // Send the matching part, which could be +1 Soul Point or +2 Soul Points, etc.
-            return CodedString.fromString(ChatFormatting.LIGHT_PURPLE + matcher.group(1));
+            return StyledText.fromString(ChatFormatting.LIGHT_PURPLE + matcher.group(1));
         }
     }
 
@@ -749,7 +750,7 @@ public class ChatRedirectFeature extends Feature {
         }
 
         @Override
-        protected CodedString getNotification(Matcher matcher) {
+        protected StyledText getNotification(Matcher matcher) {
             String numberString = matcher.group(1);
             String pluralizer = "";
 
@@ -758,7 +759,7 @@ public class ChatRedirectFeature extends Feature {
                 pluralizer = "s";
             }
 
-            return CodedString.fromString(String.format("§4-%s Soul Point%s", numberString, pluralizer));
+            return StyledText.fromString(String.format("§4-%s Soul Point%s", numberString, pluralizer));
         }
     }
 
@@ -776,9 +777,9 @@ public class ChatRedirectFeature extends Feature {
         }
 
         @Override
-        protected CodedString getNotification(Matcher matcher) {
+        protected StyledText getNotification(Matcher matcher) {
             String minutesString = String.format("+%s minutes", matcher.group(1));
-            return CodedString.fromString(ChatFormatting.AQUA + minutesString + ChatFormatting.GRAY + " speed boost");
+            return StyledText.fromString(ChatFormatting.AQUA + minutesString + ChatFormatting.GRAY + " speed boost");
         }
     }
 
@@ -797,8 +798,8 @@ public class ChatRedirectFeature extends Feature {
         }
 
         @Override
-        protected CodedString getNotification(Matcher matcher) {
-            return CodedString.fromString(ChatFormatting.DARK_RED + "Your tool has 0 durability!");
+        protected StyledText getNotification(Matcher matcher) {
+            return StyledText.fromString(ChatFormatting.DARK_RED + "Your tool has 0 durability!");
         }
     }
 
@@ -817,14 +818,14 @@ public class ChatRedirectFeature extends Feature {
         }
 
         @Override
-        protected CodedString getNotification(Matcher matcher) {
+        protected StyledText getNotification(Matcher matcher) {
             String unusedAbilityPoints = matcher.group(1);
 
             return getUnusedAbilityPointsMessage(unusedAbilityPoints);
         }
 
-        protected static CodedString getUnusedAbilityPointsMessage(String unusedAbilityPoints) {
-            return CodedString.fromString(ChatFormatting.DARK_AQUA + "You have " + ChatFormatting.BOLD
+        protected static StyledText getUnusedAbilityPointsMessage(String unusedAbilityPoints) {
+            return StyledText.fromString(ChatFormatting.DARK_AQUA + "You have " + ChatFormatting.BOLD
                     + unusedAbilityPoints + ChatFormatting.RESET + ChatFormatting.DARK_AQUA + " unused ability points");
         }
     }
@@ -848,7 +849,7 @@ public class ChatRedirectFeature extends Feature {
         }
 
         @Override
-        public List<CodedString> getNotifications(Matcher matcher) {
+        public List<StyledText> getNotifications(Matcher matcher) {
             String unusedSkillPoints = matcher.group(1);
             String unusedAbilityPoints = matcher.group(2);
 
@@ -873,15 +874,15 @@ public class ChatRedirectFeature extends Feature {
         }
 
         @Override
-        protected CodedString getNotification(Matcher matcher) {
+        protected StyledText getNotification(Matcher matcher) {
             String unusedSkillPoints = matcher.group(1);
 
             return getUnusedSkillPointsMessage(unusedSkillPoints);
         }
 
-        protected static CodedString getUnusedSkillPointsMessage(String unusedSkillPoints) {
-            return CodedString.fromString(ChatFormatting.DARK_RED + "You have " + ChatFormatting.BOLD
-                    + unusedSkillPoints + ChatFormatting.RESET + ChatFormatting.DARK_RED + " unused skill points");
+        protected static StyledText getUnusedSkillPointsMessage(String unusedSkillPoints) {
+            return StyledText.fromString(ChatFormatting.DARK_RED + "You have " + ChatFormatting.BOLD + unusedSkillPoints
+                    + ChatFormatting.RESET + ChatFormatting.DARK_RED + " unused skill points");
         }
     }
 }
