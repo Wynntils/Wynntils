@@ -159,6 +159,10 @@ public final class StyledText implements Iterable<StyledTextPart> {
         return component;
     }
 
+    public int length() {
+        return parts.stream().mapToInt(StyledTextPart::length).sum();
+    }
+
     // Only used for porting. To be removed.
     @Deprecated
     public String getInternalCodedStringRepresentation() {
@@ -366,6 +370,56 @@ public final class StyledText implements Iterable<StyledTextPart> {
         }
 
         return splitParts.toArray(new StyledText[0]);
+    }
+
+    public StyledText substring(int beginIndex) {
+        return substring(beginIndex, length());
+    }
+
+    /**
+     * Returns a new {@link StyledText} that is a substring of this {@link StyledText}.
+     * <p> Note that {@link PartStyle.StyleType.NONE} is used for calculating the index.
+     * @param beginIndex the beginning index, inclusive
+     * @param endIndex the ending index, exclusive
+     * @return the new {@link StyledText}
+     */
+    public StyledText substring(int beginIndex, int endIndex) {
+        if (endIndex < beginIndex) {
+            throw new IndexOutOfBoundsException("endIndex must be greater than beginIndex");
+        }
+        if (beginIndex < 0) {
+            throw new IndexOutOfBoundsException("beginIndex must be greater than or equal to 0");
+        }
+        if (endIndex > length()) {
+            throw new IndexOutOfBoundsException("endIndex must be less than or equal to length()");
+        }
+
+        List<StyledTextPart> includedParts = new ArrayList<>();
+
+        int currentIndex = 0;
+
+        for (StyledTextPart part : parts) {
+            if (currentIndex >= beginIndex && currentIndex + part.length() < endIndex) {
+                // 1. This full part is included
+
+                includedParts.add(part);
+            } else if (currentIndex + part.length() >= beginIndex || currentIndex + part.length() > endIndex) {
+                // 2. This part is partially included
+
+                int startIndexInPart = Math.max(0, beginIndex - currentIndex);
+                int endIndexInPart = Math.min(part.length(), endIndex - currentIndex);
+
+                String includedSubstring =
+                        part.getString(null, PartStyle.StyleType.NONE).substring(startIndexInPart, endIndexInPart);
+
+                includedParts.add(new StyledTextPart(
+                        includedSubstring, part.getPartStyle().getStyle(), null, Style.EMPTY));
+            }
+
+            currentIndex += part.length();
+        }
+
+        return new StyledText(includedParts, clickEvents, hoverEvents);
     }
 
     public StyledText iterate(BiFunction<StyledTextPart, List<StyledTextPart>, IterationDecision> function) {

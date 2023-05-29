@@ -155,6 +155,10 @@ public final class StyledTextPart {
         return text.isBlank();
     }
 
+    public int length() {
+        return text.length();
+    }
+
     @Override
     public String toString() {
         return "StyledTextPart[" + "text=" + text + ", " + "style=" + style + ']';

@@ -407,4 +407,40 @@ public class TestStyledText {
                 splitTexts[0].getString(PartStyle.StyleType.DEFAULT),
                 "StyledText.split() returned an unexpected value.");
     }
+
+    @Test
+    public void styledText_substringShouldSkipBeginningCorrectly() {
+        final Component component = Component.literal("This is a test string").withStyle(ChatFormatting.BOLD);
+
+        StyledText styledText = StyledText.fromComponent(component);
+
+        StyledText substringText = styledText.substring(5);
+
+        final String result = "§lis a test string";
+
+        Assertions.assertEquals(
+                result,
+                substringText.getString(PartStyle.StyleType.DEFAULT),
+                "StyledText.substring() returned an unexpected value.");
+    }
+
+    @Test
+    public void styledText_multipartSubstringShouldWork() {
+        final Component component = Component.literal("a")
+                .withStyle(ChatFormatting.BOLD)
+                .append(Component.literal("bb"))
+                .append(Component.literal("ccc"))
+                .append(Component.literal("dddd"));
+
+        StyledText styledText = StyledText.fromComponent(component);
+
+        StyledText substringText = styledText.substring(1, 8);
+
+        final String result = "§lbbcccdd";
+
+        Assertions.assertEquals(
+                result,
+                substringText.getString(PartStyle.StyleType.DEFAULT),
+                "StyledText.substring() returned an unexpected value.");
+    }
 }
