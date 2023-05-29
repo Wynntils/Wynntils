@@ -439,7 +439,7 @@ public final class StyledText implements Iterable<StyledTextPart> {
      * @param replacement the replacement
      * @return the new {@link StyledText}
      */
-    public StyledText replace(String regex, String replacement) {
+    public StyledText replaceFirst(String regex, String replacement) {
         final Pattern pattern = Pattern.compile(regex);
 
         List<StyledTextPart> newParts = new ArrayList<>();

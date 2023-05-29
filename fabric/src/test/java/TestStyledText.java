@@ -454,7 +454,7 @@ public class TestStyledText {
 
         StyledText styledText = StyledText.fromComponent(component);
 
-        StyledText replacedText = styledText.replace("b", "x");
+        StyledText replacedText = styledText.replaceFirst("b", "x");
 
         final String result = "§laxbcccdddd";
 
