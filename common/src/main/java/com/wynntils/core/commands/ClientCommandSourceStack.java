@@ -6,7 +6,6 @@ package com.wynntils.core.commands;
 
 import java.util.Collection;
 import java.util.Set;
-import java.util.stream.Collectors;
 import java.util.stream.Stream;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.player.LocalPlayer;
