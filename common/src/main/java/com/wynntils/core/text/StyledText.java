@@ -422,6 +422,69 @@ public final class StyledText implements Iterable<StyledTextPart> {
         return new StyledText(includedParts, clickEvents, hoverEvents);
     }
 
+    /**
+     * Replaces the first occurrence of the given regex with the given replacement.
+     * <p> Note that {@link PartStyle.StyleType.NONE} is used when replacing.
+     * @param regex the regex to replace
+     * @param replacement the replacement
+     * @return the new {@link StyledText}
+     */
+    public StyledText replace(String regex, String replacement) {
+        final Pattern pattern = Pattern.compile(regex);
+
+        List<StyledTextPart> newParts = new ArrayList<>();
+
+        for (StyledTextPart part : parts) {
+            String partString = part.getString(null, PartStyle.StyleType.NONE);
+
+            Matcher matcher = pattern.matcher(partString);
+
+            if (matcher.find()) {
+                String replacedString = matcher.replaceFirst(replacement);
+
+                newParts.add(
+                        new StyledTextPart(replacedString, part.getPartStyle().getStyle(), null, Style.EMPTY));
+
+                newParts.addAll(parts.subList(parts.indexOf(part) + 1, parts.size()));
+                break;
+            }
+
+            newParts.add(part);
+        }
+
+        return new StyledText(newParts, clickEvents, hoverEvents);
+    }
+
+    /**
+     * Replaces all occurrences of the given regex with the given replacement.
+     * <p> Note that {@link PartStyle.StyleType.NONE} is used when replacing.
+     * @param regex the regex to replace
+     * @param replacement the replacement
+     * @return the new {@link StyledText}
+     */
+    public StyledText replaceAll(String regex, String replacement) {
+        final Pattern pattern = Pattern.compile(regex);
+
+        List<StyledTextPart> newParts = new ArrayList<>();
+
+        for (StyledTextPart part : parts) {
+            String partString = part.getString(null, PartStyle.StyleType.NONE);
+
+            Matcher matcher = pattern.matcher(partString);
+
+            if (matcher.find()) {
+                String replacedString = matcher.replaceAll(replacement);
+
+                newParts.add(
+                        new StyledTextPart(replacedString, part.getPartStyle().getStyle(), null, Style.EMPTY));
+            } else {
+                newParts.add(part);
+            }
+        }
+
+        return new StyledText(newParts, clickEvents, hoverEvents);
+    }
+
     public StyledText iterate(BiFunction<StyledTextPart, List<StyledTextPart>, IterationDecision> function) {
         List<StyledTextPart> newParts = new ArrayList<>();
 

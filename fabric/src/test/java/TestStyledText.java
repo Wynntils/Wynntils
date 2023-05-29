@@ -443,4 +443,44 @@ public class TestStyledText {
                 substringText.getString(PartStyle.StyleType.DEFAULT),
                 "StyledText.substring() returned an unexpected value.");
     }
+
+    @Test
+    public void styledText_replaceShouldOnlyReplaceFirstOccurence() {
+        final Component component = Component.literal("a")
+                .withStyle(ChatFormatting.BOLD)
+                .append(Component.literal("bb"))
+                .append(Component.literal("ccc"))
+                .append(Component.literal("dddd"));
+
+        StyledText styledText = StyledText.fromComponent(component);
+
+        StyledText replacedText = styledText.replace("b", "x");
+
+        final String result = "§laxbcccdddd";
+
+        Assertions.assertEquals(
+                result,
+                replacedText.getString(PartStyle.StyleType.DEFAULT),
+                "StyledText.replace() returned an unexpected value.");
+    }
+
+    @Test
+    public void styledText_replaceAllShouldReplaceAllOccurences() {
+        final Component component = Component.literal("a")
+                .withStyle(ChatFormatting.BOLD)
+                .append(Component.literal("bb"))
+                .append(Component.literal("ccc"))
+                .append(Component.literal("dddd"));
+
+        StyledText styledText = StyledText.fromComponent(component);
+
+        StyledText replacedText = styledText.replaceAll("[b|c]", "x");
+
+        final String result = "§laxxxxxdddd";
+
+        Assertions.assertEquals(
+                result,
+                replacedText.getString(PartStyle.StyleType.DEFAULT),
+                "StyledText.replaceAll() returned an unexpected value.");
+    }
 }
