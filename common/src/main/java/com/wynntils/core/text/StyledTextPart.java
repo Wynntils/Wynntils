@@ -4,7 +4,6 @@
  */
 package com.wynntils.core.text;
 
-import com.wynntils.utils.mc.McUtils;
 import com.wynntils.utils.wynn.WynnUtils;
 import java.util.ArrayList;
 import java.util.List;
@@ -38,6 +37,12 @@ public final class StyledTextPart {
 
     StyledTextPart(StyledTextPart part, PartStyle style, StyledText parent) {
         this.text = part.text;
+        this.style = style;
+        this.parent = parent;
+    }
+
+    StyledTextPart(String text, PartStyle style, StyledText parent) {
+        this.text = text;
         this.style = style;
         this.parent = parent;
     }
@@ -131,6 +136,10 @@ public final class StyledTextPart {
         return new StyledTextPart(this, style, parent);
     }
 
+    private StyledTextPart withText(String text) {
+        return new StyledTextPart(text, style, parent);
+    }
+
     public StyledTextPart withStyle(Function<PartStyle, PartStyle> function) {
         return withStyle(function.apply(style));
     }
@@ -139,6 +148,18 @@ public final class StyledTextPart {
         MutableComponent component = Component.literal(text).withStyle(style.getStyle());
 
         return component;
+    }
+
+    public StyledTextPart replaceAll(String regex, String replacement) {
+        return withText(text.replaceAll(regex, replacement));
+    }
+
+    public StyledTextPart replace(String target, String replacement) {
+        return withText(text.replace(target, replacement));
+    }
+
+    public StyledTextPart subText(int start, int end) {
+        return withText(text.substring(start, end));
     }
 
     StyledTextPart asNormalized() {
@@ -163,10 +184,6 @@ public final class StyledTextPart {
 
     public int length() {
         return text.length();
-    }
-
-    public int width() {
-        return McUtils.mc().font.width(text);
     }
 
     @Override

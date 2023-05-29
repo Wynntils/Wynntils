@@ -13,7 +13,6 @@ import com.wynntils.utils.mc.ComponentUtils;
 import com.wynntils.utils.type.IterationDecision;
 import com.wynntils.utils.type.Pair;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.Deque;
 import java.util.LinkedList;
@@ -395,31 +394,68 @@ public final class StyledText {
         return PartStyle.NONE;
     }
 
-    public int getWidth() {
-        return parts.stream().mapToInt(StyledTextPart::width).sum();
+    public StyledText[] split(String s) {
+        if (isEmpty()) return new StyledText[0];
+        int i = 0;
+        String[] split = getString(PartStyle.StyleType.NONE).split(s);
+        StyledText[] result = new StyledText[split.length];
+        for (int j = 0; j < split.length; j++) {
+            result[j] = subtext(i, split[j].length());
+            i += split[j].length();
+        }
+        return result;
     }
 
-    public StyledText[] split(
-            String s) { // todo: doesn't work with color codes because the parts don't keep their color
-        return Arrays.stream(getString().split(s)).map(StyledText::fromString).toArray(StyledText[]::new);
+    public StyledText subtext(int startInclusive, int endExclusive) {
+        endExclusive--;
+        int skipStartInclusive;
+        int skipStartCharsInclusive = 0;
+        for (skipStartInclusive = 0; skipStartInclusive < parts.size(); skipStartInclusive++) {
+            int part = parts.get(skipStartInclusive).length();
+            if ((startInclusive -= part) < 0) {
+                skipStartCharsInclusive = startInclusive + part;
+                break;
+            }
+        }
+        int takeTillInclusive;
+        int takeEndCharsExclusive = 0;
+        for (takeTillInclusive = skipStartInclusive; takeTillInclusive < parts.size(); takeTillInclusive++) {
+            int part = parts.get(takeTillInclusive).length();
+            if ((endExclusive -= part) < 0) {
+                takeEndCharsExclusive = endExclusive + part + 1;
+                break;
+            }
+        }
+        List<StyledTextPart> newParts = parts.subList(skipStartInclusive, takeTillInclusive + 1);
+        StyledTextPart firstPart = newParts.get(0);
+        newParts.set(0, firstPart.subText(skipStartCharsInclusive, firstPart.length()));
+        StyledTextPart lastPart = newParts.get(newParts.size() - 1);
+        newParts.set(newParts.size() - 1, lastPart.subText(0, takeEndCharsExclusive));
+        return new StyledText(newParts, clickEvents, hoverEvents);
     }
 
-    public StyledText subtext(
-            int start, int end) { // todo: doesn't work with color codes because the parts don't keep their color
-        return StyledText.fromString(getString().substring(start, end));
+    public StyledText subtext(int start) {
+        return subtext(start, length());
     }
 
-    public StyledText subtext(
-            int start) { // todo: doesn't work with color codes because the parts don't keep their color
-        return StyledText.fromString(getString().substring(start));
-    }
-
+    /**
+     * Note: only matches the regions between color codes
+     */
     public StyledText replaceAll(String regex, String replacement) {
-        return StyledText.fromString(getString().replaceAll(regex, replacement));
+        List<StyledTextPart> newParts = parts.stream()
+                .map(styledTextPart -> styledTextPart.replaceAll(regex, replacement))
+                .toList();
+        return new StyledText(newParts, clickEvents, hoverEvents);
     }
 
+    /**
+     * Note: only matches the regions between color codes
+     */
     public StyledText replace(String target, String replacement) {
-        return StyledText.fromString(getString().replace(target, replacement));
+        List<StyledTextPart> newParts = parts.stream()
+                .map(styledTextPart -> styledTextPart.replace(target, replacement))
+                .toList();
+        return new StyledText(newParts, clickEvents, hoverEvents);
     }
 
     private StyledTextPart getPartBefore(StyledTextPart part) {
