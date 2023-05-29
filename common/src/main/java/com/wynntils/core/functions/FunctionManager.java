@@ -73,9 +73,13 @@ public final class FunctionManager extends Manager {
     }
 
     public Optional<Function<?>> forName(String functionName) {
-        return getFunctions().stream()
-                .filter(function -> hasName(function, functionName))
-                .findFirst();
+        for (Function<?> function : getFunctions()) {
+            if (hasName(function, functionName)) {
+                return Optional.of(function);
+            }
+        }
+
+        return Optional.empty();
     }
 
     private boolean hasName(Function<?> function, String name) {

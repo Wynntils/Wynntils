@@ -331,9 +331,15 @@ public final class OverlayManager extends Manager {
     // endregion
 
     private void addCrashCallbacks() {
-        Managers.CrashReport.registerCrashContext(
-                "Loaded Overlays",
-                () -> enabledOverlays.stream().map(Overlay::getTranslatedName).collect(Collectors.joining("\n\t\t")));
+        Managers.CrashReport.registerCrashContext("Loaded Overlays", () -> {
+            StringBuilder result = new StringBuilder();
+
+            for (Overlay overlay : enabledOverlays) {
+                result.append("\n\t\t").append(overlay.getTranslatedName());
+            }
+
+            return result.toString();
+        });
     }
 
     public SectionCoordinates getSection(OverlayPosition.AnchorSection section) {

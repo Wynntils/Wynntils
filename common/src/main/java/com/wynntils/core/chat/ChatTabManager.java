@@ -22,7 +22,6 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.concurrent.ConcurrentHashMap;
-import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Stream;
 import net.minecraft.ChatFormatting;
@@ -225,9 +224,10 @@ public final class ChatTabManager extends Manager {
                 && !chatTab.getFilteredTypes().contains(RecipientType.CLIENTSIDE)) {
             return false;
         }
-        return chatTab.getCustomRegex()
-                .map(pattern -> event.getOriginalCodedString().getMatcher(pattern))
-                .map(Matcher::matches)
-                .orElse(true);
+
+        Optional<Pattern> regex = chatTab.getCustomRegex();
+        if (regex.isEmpty()) return true;
+
+        return event.getOriginalCodedString().getMatcher(regex.get()).matches();
     }
 }

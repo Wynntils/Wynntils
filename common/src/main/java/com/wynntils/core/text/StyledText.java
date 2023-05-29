@@ -151,7 +151,10 @@ public final class StyledText implements Iterable<StyledTextPart> {
         }
 
         MutableComponent component = parts.get(0).getComponent();
-        parts.stream().skip(1).map(StyledTextPart::getComponent).forEach(component::append);
+
+        for (int i = 1; i < parts.size(); i++) {
+            component.append(parts.get(i).getComponent());
+        }
 
         return component;
     }

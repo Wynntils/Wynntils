@@ -36,11 +36,15 @@ public class ConstantExpression extends Expression {
     }
 
     public static ErrorOr<Optional<Expression>> tryParse(String rawExpression) {
-        return ErrorOr.of(CONSTANT_EXPRESSION_PARSERS.values().stream()
-                .map(value -> value.apply(rawExpression))
-                .flatMap(Optional::stream)
-                .findAny()
-                .map(parsedValue -> new ConstantExpression(rawExpression, parsedValue)));
+        for (Function<String, Optional<Object>> value : CONSTANT_EXPRESSION_PARSERS.values()) {
+            Optional<Object> parsedValue = value.apply(rawExpression);
+
+            if (parsedValue.isPresent()) {
+                return ErrorOr.of(Optional.of(new ConstantExpression(rawExpression, parsedValue.get())));
+            }
+        }
+
+        return ErrorOr.of(Optional.empty());
     }
 
     // region Parsers

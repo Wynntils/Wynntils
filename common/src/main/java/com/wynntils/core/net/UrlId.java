@@ -4,7 +4,6 @@
  */
 package com.wynntils.core.net;
 
-import java.util.Arrays;
 import java.util.Optional;
 
 /*
@@ -62,11 +61,17 @@ public enum UrlId {
         return id;
     }
 
-    public boolean matches(String str) {
-        return id.equals(str);
-    }
-
     public static Optional<UrlId> from(String str) {
-        return Arrays.stream(values()).filter(urlId -> urlId.matches(str)).findAny();
+        for (UrlId urlId : values()) {
+            if (urlId.getId().equals(str)) {
+                return Optional.of(urlId);
+            }
+        }
+
+        // We have not found an enum for this key.
+        // Don't consider this fatal, the user may have an outdated, or rather, a "too new" version of urls.json for
+        // this version of the mod
+
+        return Optional.empty();
     }
 }

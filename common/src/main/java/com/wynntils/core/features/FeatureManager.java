@@ -480,9 +480,16 @@ public final class FeatureManager extends Manager {
     }
 
     private void addCrashCallbacks() {
-        Managers.CrashReport.registerCrashContext("Loaded Features", () -> FEATURES.keySet().stream()
-                .filter(Feature::isEnabled)
-                .map(Feature::getTranslatedName)
-                .collect(Collectors.joining("\n\t\t")));
+        Managers.CrashReport.registerCrashContext("Loaded Features", () -> {
+            StringBuilder result = new StringBuilder();
+
+            for (Feature feature : FEATURES.keySet()) {
+                if (feature.isEnabled()) {
+                    result.append("\n\t\t").append(feature.getTranslatedName());
+                }
+            }
+
+            return result.toString();
+        });
     }
 }

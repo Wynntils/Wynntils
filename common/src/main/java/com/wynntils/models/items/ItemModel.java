@@ -101,15 +101,21 @@ public class ItemModel extends Model {
     }
 
     public <T extends WynnItem> Optional<T> asWynnItem(ItemStack itemStack, Class<T> clazz) {
-        return ItemHandler.getItemStackAnnotation(itemStack)
-                .filter(clazz::isInstance)
-                .map(clazz::cast);
+        Optional<ItemAnnotation> annotationOpt = ItemHandler.getItemStackAnnotation(itemStack);
+        if (annotationOpt.isEmpty()) return Optional.empty();
+        if (!(annotationOpt.get() instanceof WynnItem wynnItem)) return Optional.empty();
+        if (wynnItem.getClass() != clazz) return Optional.empty();
+
+        return Optional.of((T) wynnItem);
     }
 
     public <T> Optional<T> asWynnItemPropery(ItemStack itemStack, Class<T> clazz) {
-        return ItemHandler.getItemStackAnnotation(itemStack)
-                .filter(itemAnnotation -> clazz.isAssignableFrom(itemAnnotation.getClass()))
-                .map(clazz::cast);
+        Optional<ItemAnnotation> annotationOpt = ItemHandler.getItemStackAnnotation(itemStack);
+        if (annotationOpt.isEmpty()) return Optional.empty();
+        if (!(annotationOpt.get() instanceof WynnItem wynnItem)) return Optional.empty();
+        if (!clazz.isAssignableFrom(wynnItem.getClass())) return Optional.empty();
+
+        return Optional.of((T) wynnItem);
     }
 
     public static final class FallbackAnnotator implements ItemAnnotator {
