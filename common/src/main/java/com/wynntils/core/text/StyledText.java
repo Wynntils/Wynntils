@@ -357,7 +357,10 @@ public final class StyledText implements Iterable<StyledTextPart> {
             return new StyledText[] {StyledText.EMPTY};
         }
 
-        List<StyledText> splitParts = new ArrayList<>();
+        final Pattern pattern = Pattern.compile(regex);
+
+        List<StyledText> splitTexts = new ArrayList<>();
+        List<StyledTextPart> splitParts = new ArrayList<>();
 
         for (int i = 0; i < parts.size(); i++) {
             StyledTextPart part = parts.get(i);
@@ -367,7 +370,16 @@ public final class StyledText implements Iterable<StyledTextPart> {
             int maxSplit = i == parts.size() - 1 ? 0 : Integer.MAX_VALUE;
 
             List<String> stringParts =
-                    Arrays.stream(partString.split(regex, maxSplit)).toList();
+                    Arrays.stream(pattern.split(partString, maxSplit)).toList();
+
+            Matcher matcher = pattern.matcher(partString);
+            if (matcher.find()) {
+                // If the pattern matches, then we need to create a
+                // new styled text containing the parts before the match
+
+                // Add the parts before the match
+                // FIXME: ...
+            }
 
             // Due to maxSplit, we might add an extra empty string at the end
             if (stringParts.get(stringParts.size() - 1).isEmpty()) {
@@ -375,7 +387,7 @@ public final class StyledText implements Iterable<StyledTextPart> {
             }
 
             for (String stringPart : stringParts) {
-                splitParts.add(new StyledText(
+                splitTexts.add(new StyledText(
                         List.of(new StyledTextPart(
                                 stringPart, part.getPartStyle().getStyle(), null, Style.EMPTY)),
                         clickEvents,
@@ -383,7 +395,7 @@ public final class StyledText implements Iterable<StyledTextPart> {
             }
         }
 
-        return splitParts.toArray(new StyledText[0]);
+        return splitTexts.toArray(new StyledText[0]);
     }
 
     public StyledText substring(int beginIndex) {
