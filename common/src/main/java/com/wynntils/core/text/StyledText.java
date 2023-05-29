@@ -341,6 +341,33 @@ public final class StyledText implements Iterable<StyledTextPart> {
         return new StyledText(newParts, temporaryWorkaround, clickEvents, hoverEvents);
     }
 
+    /**
+     * Splits this {@link StyledText} into multiple {@link StyledText}s at the given index.
+     * <p> Note that {@link PartStyle.StyleType.NONE} is used when splitting.
+     * @param regex the regex to split at
+     * @return the split {@link StyledText}s
+     */
+    public StyledText[] split(String regex) {
+        List<StyledText> splitParts = new ArrayList<>();
+
+        for (StyledTextPart part : parts) {
+            String partString = part.getString(null, PartStyle.StyleType.NONE);
+
+            String[] stringParts = partString.split(regex);
+
+            for (String stringPart : stringParts) {
+                splitParts.add(new StyledText(
+                        List.of(new StyledTextPart(
+                                stringPart, part.getPartStyle().getStyle(), null, Style.EMPTY)),
+                        temporaryWorkaround,
+                        clickEvents,
+                        hoverEvents));
+            }
+        }
+
+        return splitParts.toArray(new StyledText[0]);
+    }
+
     public StyledText iterate(BiFunction<StyledTextPart, List<StyledTextPart>, IterationDecision> function) {
         List<StyledTextPart> newParts = new ArrayList<>();
 

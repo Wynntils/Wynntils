@@ -367,4 +367,44 @@ public class TestStyledText {
                 styledText.matches(unformattedPattern, PartStyle.StyleType.NONE),
                 "StyledText.matches(NONE) returned an unexpected value.");
     }
+
+    @Test
+    public void styledText_shouldSplitCorrectly() {
+        final Component component = Component.literal("This is a test string, where there are ")
+                .append(Component.literal("multiple").withStyle(ChatFormatting.BOLD))
+                .append(Component.literal(" components."));
+
+        StyledText styledText = StyledText.fromComponent(component);
+
+        StyledText[] splitTexts = styledText.split(",");
+
+        String[] results = {"This is a test string", " where there are ", "§lmultiple", " components."};
+
+        for (int i = 0; i < splitTexts.length; i++) {
+            StyledText result = splitTexts[i];
+
+            Assertions.assertEquals(
+                    results[i],
+                    result.getString(PartStyle.StyleType.DEFAULT),
+                    "StyledText.split() returned an unexpected value.");
+        }
+    }
+
+    @Test
+    public void styledText_shouldNotSplitColor() {
+        final Component component =
+                Component.literal("This is a formatted test string.").withStyle(ChatFormatting.BOLD);
+
+        StyledText styledText = StyledText.fromComponent(component);
+
+        StyledText[] splitTexts = styledText.split("§");
+
+        final String result = "§lThis is a formatted test string.";
+
+        Assertions.assertEquals(1, splitTexts.length, "StyledText.split() returned an unexpected value.");
+        Assertions.assertEquals(
+                result,
+                splitTexts[0].getString(PartStyle.StyleType.DEFAULT),
+                "StyledText.split() returned an unexpected value.");
+    }
 }
