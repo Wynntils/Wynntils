@@ -18,6 +18,7 @@ public final class PartStyle {
 
     public static final PartStyle NONE =
             new PartStyle(StyledTextPart.EMPTY, CustomColor.NONE, false, false, false, false, false, null, null);
+            
     private static final String STYLE_PREFIX = "§";
 
     private final StyledTextPart owner;
