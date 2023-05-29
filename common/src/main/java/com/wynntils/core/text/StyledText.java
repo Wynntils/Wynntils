@@ -352,6 +352,11 @@ public final class StyledText implements Iterable<StyledTextPart> {
      * @return the split {@link StyledText}s
      */
     public StyledText[] split(String regex) {
+        // If this is an empty text, return an array with a single empty text
+        if (parts.isEmpty()) {
+            return new StyledText[] {StyledText.EMPTY};
+        }
+
         List<StyledText> splitParts = new ArrayList<>();
 
         for (int i = 0; i < parts.size(); i++) {
