@@ -9,6 +9,7 @@ import com.wynntils.utils.mc.ComponentUtils;
 import com.wynntils.utils.type.IterationDecision;
 import com.wynntils.utils.type.Pair;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.Deque;
 import java.util.Iterator;
@@ -159,6 +160,10 @@ public final class StyledText implements Iterable<StyledTextPart> {
         return component;
     }
 
+    public int length() {
+        return parts.stream().mapToInt(StyledTextPart::length).sum();
+    }
+
     // Only used for porting. To be removed.
     @Deprecated
     public String getInternalCodedStringRepresentation() {
@@ -222,7 +227,6 @@ public final class StyledText implements Iterable<StyledTextPart> {
     public StyledText getNormalized() {
         return new StyledText(
                 parts.stream().map(StyledTextPart::asNormalized).collect(Collectors.toList()),
-                temporaryWorkaround,
                 clickEvents,
                 hoverEvents);
     }
@@ -238,7 +242,7 @@ public final class StyledText implements Iterable<StyledTextPart> {
         int lastIndex = newParts.size() - 1;
         newParts.set(lastIndex, newParts.get(lastIndex).stripTrailing());
 
-        return new StyledText(newParts, temporaryWorkaround, clickEvents, hoverEvents);
+        return new StyledText(newParts, clickEvents, hoverEvents);
     }
 
     public boolean isEmpty() {
@@ -305,6 +309,14 @@ public final class StyledText implements Iterable<StyledTextPart> {
         return pattern.matcher(getString(styleType));
     }
 
+    public boolean matches(Pattern pattern) {
+        return matches(pattern, PartStyle.StyleType.DEFAULT);
+    }
+
+    public boolean matches(Pattern pattern, PartStyle.StyleType styleType) {
+        return pattern.matcher(getString(styleType)).matches();
+    }
+
     public StyledText append(StyledText styledText) {
         return concat(this, styledText);
     }
@@ -316,7 +328,7 @@ public final class StyledText implements Iterable<StyledTextPart> {
     public StyledText appendPart(StyledTextPart part) {
         List<StyledTextPart> newParts = new ArrayList<>(parts);
         newParts.add(part);
-        return new StyledText(newParts, temporaryWorkaround, clickEvents, hoverEvents);
+        return new StyledText(newParts, clickEvents, hoverEvents);
     }
 
     public StyledText prepend(StyledText styledText) {
@@ -330,7 +342,156 @@ public final class StyledText implements Iterable<StyledTextPart> {
     public StyledText prependPart(StyledTextPart part) {
         List<StyledTextPart> newParts = new ArrayList<>(parts);
         newParts.add(0, part);
-        return new StyledText(newParts, temporaryWorkaround, clickEvents, hoverEvents);
+        return new StyledText(newParts, clickEvents, hoverEvents);
+    }
+
+    /**
+     * Splits this {@link StyledText} into multiple {@link StyledText}s at the given index.
+     * <p> Note that {@link PartStyle.StyleType.NONE} is used when splitting.
+     * @param regex the regex to split at
+     * @return the split {@link StyledText}s
+     */
+    public StyledText[] split(String regex) {
+        List<StyledText> splitParts = new ArrayList<>();
+
+        for (int i = 0; i < parts.size(); i++) {
+            StyledTextPart part = parts.get(i);
+            String partString = part.getString(null, PartStyle.StyleType.NONE);
+
+            // Avoid empty parts at the end of the list, but keep them otherwise
+            int maxSplit = i == parts.size() - 1 ? 0 : Integer.MAX_VALUE;
+
+            List<String> stringParts =
+                    Arrays.stream(partString.split(regex, maxSplit)).toList();
+
+            // Due to maxSplit, we might add an extra empty string at the end
+            if (stringParts.get(stringParts.size() - 1).isEmpty()) {
+                stringParts = stringParts.subList(0, stringParts.size() - 1);
+            }
+
+            for (String stringPart : stringParts) {
+                splitParts.add(new StyledText(
+                        List.of(new StyledTextPart(
+                                stringPart, part.getPartStyle().getStyle(), null, Style.EMPTY)),
+                        clickEvents,
+                        hoverEvents));
+            }
+        }
+
+        return splitParts.toArray(new StyledText[0]);
+    }
+
+    public StyledText substring(int beginIndex) {
+        return substring(beginIndex, length());
+    }
+
+    /**
+     * Returns a new {@link StyledText} that is a substring of this {@link StyledText}.
+     * <p> Note that {@link PartStyle.StyleType.NONE} is used for calculating the index.
+     * @param beginIndex the beginning index, inclusive
+     * @param endIndex the ending index, exclusive
+     * @return the new {@link StyledText}
+     */
+    public StyledText substring(int beginIndex, int endIndex) {
+        if (endIndex < beginIndex) {
+            throw new IndexOutOfBoundsException("endIndex must be greater than beginIndex");
+        }
+        if (beginIndex < 0) {
+            throw new IndexOutOfBoundsException("beginIndex must be greater than or equal to 0");
+        }
+        if (endIndex > length()) {
+            throw new IndexOutOfBoundsException("endIndex must be less than or equal to length()");
+        }
+
+        List<StyledTextPart> includedParts = new ArrayList<>();
+
+        int currentIndex = 0;
+
+        for (StyledTextPart part : parts) {
+            if (currentIndex >= beginIndex && currentIndex + part.length() < endIndex) {
+                // 1. This full part is included
+
+                includedParts.add(part);
+            } else if (currentIndex + part.length() >= beginIndex || currentIndex + part.length() > endIndex) {
+                // 2. This part is partially included
+
+                int startIndexInPart = Math.max(0, beginIndex - currentIndex);
+                int endIndexInPart = Math.min(part.length(), endIndex - currentIndex);
+
+                String includedSubstring =
+                        part.getString(null, PartStyle.StyleType.NONE).substring(startIndexInPart, endIndexInPart);
+
+                includedParts.add(new StyledTextPart(
+                        includedSubstring, part.getPartStyle().getStyle(), null, Style.EMPTY));
+            }
+
+            currentIndex += part.length();
+        }
+
+        return new StyledText(includedParts, clickEvents, hoverEvents);
+    }
+
+    /**
+     * Replaces the first occurrence of the given regex with the given replacement.
+     * <p> Note that {@link PartStyle.StyleType.NONE} is used when matching and replacing.
+     * @param regex the regex to replace
+     * @param replacement the replacement
+     * @return the new {@link StyledText}
+     */
+    public StyledText replaceFirst(String regex, String replacement) {
+        final Pattern pattern = Pattern.compile(regex);
+
+        List<StyledTextPart> newParts = new ArrayList<>();
+
+        for (StyledTextPart part : parts) {
+            String partString = part.getString(null, PartStyle.StyleType.NONE);
+
+            Matcher matcher = pattern.matcher(partString);
+
+            if (matcher.find()) {
+                String replacedString = matcher.replaceFirst(replacement);
+
+                newParts.add(
+                        new StyledTextPart(replacedString, part.getPartStyle().getStyle(), null, Style.EMPTY));
+
+                newParts.addAll(parts.subList(parts.indexOf(part) + 1, parts.size()));
+                break;
+            }
+
+            newParts.add(part);
+        }
+
+        return new StyledText(newParts, clickEvents, hoverEvents);
+    }
+
+    /**
+     * Replaces all occurrences of the given regex with the given replacement.
+     * <p> Note that {@link PartStyle.StyleType.NONE} is used when matching and replacing.
+     * @param regex the regex to replace
+     * @param replacement the replacement
+     * @return the new {@link StyledText}
+     */
+    public StyledText replaceAll(String regex, String replacement) {
+        final Pattern pattern = Pattern.compile(regex);
+
+        List<StyledTextPart> newParts = new ArrayList<>();
+
+        for (StyledTextPart part : parts) {
+            String partString = part.getString(null, PartStyle.StyleType.NONE);
+
+            Matcher matcher = pattern.matcher(partString);
+
+            if (matcher.find()) {
+                String replacedString = matcher.replaceAll(replacement);
+
+                newParts.add(
+                        new StyledTextPart(replacedString, part.getPartStyle().getStyle(), null, Style.EMPTY));
+            } else {
+                newParts.add(part);
+            }
+        }
+
+        return new StyledText(newParts, clickEvents, hoverEvents);
     }
 
     public StyledText iterate(BiFunction<StyledTextPart, List<StyledTextPart>, IterationDecision> function) {
@@ -351,7 +512,7 @@ public final class StyledText implements Iterable<StyledTextPart> {
             }
         }
 
-        return new StyledText(newParts, temporaryWorkaround, clickEvents, hoverEvents);
+        return new StyledText(newParts, clickEvents, hoverEvents);
     }
 
     public StyledText iterateBackwards(BiFunction<StyledTextPart, List<StyledTextPart>, IterationDecision> function) {
@@ -372,7 +533,7 @@ public final class StyledText implements Iterable<StyledTextPart> {
             }
         }
 
-        return new StyledText(newParts, temporaryWorkaround, clickEvents, hoverEvents);
+        return new StyledText(newParts, clickEvents, hoverEvents);
     }
 
     public StyledTextPart getFirstPart() {
