@@ -9,7 +9,6 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import com.google.gson.JsonSyntaxException;
 import com.wynntils.utils.StringUtils;
-import com.wynntils.utils.colors.CustomColor;
 import com.wynntils.utils.mc.ComponentUtils;
 import com.wynntils.utils.type.IterationDecision;
 import com.wynntils.utils.type.Pair;
@@ -392,9 +391,7 @@ public final class StyledText {
     }
 
     public PartStyle getStyleAt(int index) {
-        for (StyledTextPart part : parts)
-            if ((index -= part.length()) < 0)
-                return part.getPartStyle();
+        for (StyledTextPart part : parts) if ((index -= part.length()) < 0) return part.getPartStyle();
         return PartStyle.NONE;
     }
 
