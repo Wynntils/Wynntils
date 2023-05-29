@@ -6,7 +6,6 @@ package com.wynntils.models.containers;
 
 import com.wynntils.core.components.Model;
 import com.wynntils.core.components.Models;
-import com.wynntils.core.text.CodedString;
 import com.wynntils.core.text.StyledText;
 import com.wynntils.utils.mc.ComponentUtils;
 import com.wynntils.utils.type.Pair;
@@ -43,7 +42,7 @@ public final class ContainerModel extends Model {
     private static final Pair<Integer, Integer> GUILD_BANK_PREVIOUS_NEXT_SLOTS = new Pair<>(9, 27);
     private static final Pair<Integer, Integer> TRADE_MARKET_PREVIOUS_NEXT_SLOTS = new Pair<>(17, 26);
     private static final Pair<Integer, Integer> SCRAP_MENU_PREVIOUS_NEXT_SLOTS = new Pair<>(0, 8);
-    private static final CodedString LAST_BANK_PAGE_STRING = CodedString.fromString(">§4>§c>§4>§c>");
+    private static final StyledText LAST_BANK_PAGE_STRING = StyledText.fromString(">§4>§c>§4>§c>");
     private static final StyledText FIRST_TRADE_MARKET_PAGE_STRING = StyledText.fromString("§bReveal Item Names");
     private static final StyledText TRADE_MARKET_TITLE = StyledText.fromString("Trade Market");
     private static final StyledText SCRAP_MENU_TITLE = StyledText.fromString("Scrap Rewards");
@@ -71,7 +70,7 @@ public final class ContainerModel extends Model {
     public boolean isLastBankPage(Screen screen) {
         return (isBankScreen(screen) || isBlockBankScreen(screen) || isMiscBucketScreen(screen))
                 && screen instanceof ContainerScreen cs
-                && ComponentUtils.getCoded(cs.getMenu().getSlot(8).getItem().getHoverName())
+                && StyledText.fromComponent(cs.getMenu().getSlot(8).getItem().getHoverName())
                         .endsWith(LAST_BANK_PAGE_STRING);
     }
 
