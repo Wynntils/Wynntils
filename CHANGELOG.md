@@ -1,9 +1,21 @@
+## [0.0.3-alpha.40](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.39...v0.0.3-alpha.40) (2023-05-29)
+
+
+### New Features
+
+* Item Guide List Hotkey ([#1561](https://github.com/Wynntils/Artemis/issues/1561)) ([f641f95](https://github.com/Wynntils/Artemis/commit/f641f95aa2a7aa0e9f805d24a6da2c3b445421f2))
+
 ## [0.0.3-alpha.39](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.38...v0.0.3-alpha.39) (2023-05-26)
 
 
 ### New Features
 
 * Added toggle option for territories on map ([#1559](https://github.com/Wynntils/Artemis/issues/1559)) ([5072a27](https://github.com/Wynntils/Artemis/commit/5072a27aaa0e2ab038ed6f03b9d51ac947287b61)), closes [#1550](https://github.com/Wynntils/Artemis/issues/1550)
+
+
+### Miscellaneous Chores
+
+* **release:** v0.0.3-alpha.39 [skip ci] ([fc8b208](https://github.com/Wynntils/Artemis/commit/fc8b20846725781a0d3b0f1443b48bf206b32abd))
 
 ## [0.0.3-alpha.38](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.37...v0.0.3-alpha.38) (2023-05-25)
 
@@ -40,16 +52,4 @@
 ### Miscellaneous Chores
 
 * **release:** v0.0.3-alpha.36 [skip ci] ([ba91626](https://github.com/Wynntils/Artemis/commit/ba9162680ee135fe2b00867fb81231431f86f5df))
-
-## [0.0.3-alpha.35](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.34...v0.0.3-alpha.35) (2023-05-22)
-
-
-### New Features
-
-* Territory owner function ([#1556](https://github.com/Wynntils/Artemis/issues/1556)) ([c0c8d09](https://github.com/Wynntils/Artemis/commit/c0c8d094538bdeb404309e750a0ef27af75c998a))
-
-
-### Miscellaneous Chores
-
-* **release:** v0.0.3-alpha.35 [skip ci] ([7d0f066](https://github.com/Wynntils/Artemis/commit/7d0f066837b0ddb3924e12ddc9e1c70bc64e42ef))
 
