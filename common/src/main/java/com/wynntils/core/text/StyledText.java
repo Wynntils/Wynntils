@@ -305,6 +305,14 @@ public final class StyledText implements Iterable<StyledTextPart> {
         return pattern.matcher(getString(styleType));
     }
 
+    public boolean matches(Pattern pattern) {
+        return matches(pattern, PartStyle.StyleType.DEFAULT);
+    }
+
+    public boolean matches(Pattern pattern, PartStyle.StyleType styleType) {
+        return pattern.matcher(getString(styleType)).matches();
+    }
+
     public StyledText append(StyledText styledText) {
         return concat(this, styledText);
     }

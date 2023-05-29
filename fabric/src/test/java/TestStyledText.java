@@ -346,4 +346,25 @@ public class TestStyledText {
                 unformattedMatcher.group(1),
                 "StyledText.matches(NONE).group() returned an unexpected value.");
     }
+
+    @Test
+    public void styledText_shouldMatchCorrectly() {
+        final Component component = Component.literal("This is a test string, where there are ")
+                .append(Component.literal("multiple").withStyle(ChatFormatting.BOLD))
+                .append(Component.literal(" components."));
+
+        final Pattern unformattedPattern = Pattern.compile("This is a test string, where there are (.+) components\\.");
+        final Pattern formattedPattern =
+                Pattern.compile("This is a test string, where there are §l(.+)§r components\\.");
+
+        final String expectedMatch = "multiple";
+
+        StyledText styledText = StyledText.fromComponent(component);
+
+        Assertions.assertTrue(
+                styledText.matches(formattedPattern), "StyledText.matches(DEFAULT) returned an unexpected value.");
+        Assertions.assertTrue(
+                styledText.matches(unformattedPattern, PartStyle.StyleType.NONE),
+                "StyledText.matches(NONE) returned an unexpected value.");
+    }
 }
