@@ -1,9 +1,21 @@
+## [0.0.3-alpha.41](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.40...v0.0.3-alpha.41) (2023-05-30)
+
+
+### Bug Fixes
+
+* Fix StyledText#split logic ([#1567](https://github.com/Wynntils/Artemis/issues/1567)) ([6bdef34](https://github.com/Wynntils/Artemis/commit/6bdef345f9f1ec28a35721082130957bbdf30854))
+
 ## [0.0.3-alpha.40](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.39...v0.0.3-alpha.40) (2023-05-29)
 
 
 ### New Features
 
 * Item Guide List Hotkey ([#1561](https://github.com/Wynntils/Artemis/issues/1561)) ([f641f95](https://github.com/Wynntils/Artemis/commit/f641f95aa2a7aa0e9f805d24a6da2c3b445421f2))
+
+
+### Miscellaneous Chores
+
+* **release:** v0.0.3-alpha.40 [skip ci] ([1e9f28b](https://github.com/Wynntils/Artemis/commit/1e9f28b2be632d9c785f14c87e456b93599eaa36))
 
 ## [0.0.3-alpha.39](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.38...v0.0.3-alpha.39) (2023-05-26)
 
@@ -40,16 +52,4 @@
 ### Miscellaneous Chores
 
 * **release:** v0.0.3-alpha.37 [skip ci] ([fdb2469](https://github.com/Wynntils/Artemis/commit/fdb2469f43baedec277123a5914441604fa97d54))
-
-## [0.0.3-alpha.36](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.35...v0.0.3-alpha.36) (2023-05-22)
-
-
-### New Features
-
-* Scrollable scrap menu ([#1555](https://github.com/Wynntils/Artemis/issues/1555)) ([9e382e1](https://github.com/Wynntils/Artemis/commit/9e382e111943249752fafe1d7b56178e210c455d))
-
-
-### Miscellaneous Chores
-
-* **release:** v0.0.3-alpha.36 [skip ci] ([ba91626](https://github.com/Wynntils/Artemis/commit/ba9162680ee135fe2b00867fb81231431f86f5df))
 
