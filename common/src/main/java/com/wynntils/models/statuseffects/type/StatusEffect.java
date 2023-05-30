@@ -16,16 +16,8 @@ public class StatusEffect {
         this.name = name;
         this.displayedTime = displayedTime;
         this.prefix = prefix;
-        // Don't add extra spaces
-        // Sometimes, " §7" will be parsed as part of the prefix, in an attempt to keep the name field
-        // as a proper unformatted string
-        // The two differing examples I have for this are Archer's Windy Feet and Warrior's Boiling Blood cooldown
-        if (prefix.endsWith(" ") || prefix.endsWith(" §7")) {
-            this.fullName = StyledText.concat(prefix, name, StyledText.fromString(" "), displayedTime);
-        } else {
-            this.fullName = StyledText.concat(
-                    prefix, StyledText.fromString(" "), name, StyledText.fromString(" "), displayedTime);
-        }
+        this.fullName =
+                StyledText.concat(prefix, StyledText.fromString(" "), name, StyledText.fromString(" "), displayedTime);
     }
 
     /**

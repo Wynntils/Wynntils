@@ -12,6 +12,7 @@ import com.wynntils.models.statuseffects.event.StatusEffectsChangedEvent;
 import com.wynntils.models.statuseffects.type.StatusEffect;
 import com.wynntils.models.worlds.event.WorldStateEvent;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -78,10 +79,13 @@ public final class StatusEffectModel extends Model {
             Matcher m = trimmedEffect.getMatcher(STATUS_EFFECT_PATTERN);
             if (!m.find()) continue;
 
-            // See comment at STATUS_EFFECT_PATTERN definition for format description of these
-            StyledText prefix = StyledText.fromString(m.group(1));
-            StyledText name = StyledText.fromString(m.group(2));
-            StyledText displayedTime = StyledText.fromString(m.group(3));
+            List<StyledText> parts = Arrays.stream(trimmedEffect.getPartsAsTextArray())
+                    .map(StyledText::trim)
+                    .toList();
+
+            StyledText prefix = parts.get(0);
+            StyledText name = parts.get(1);
+            StyledText displayedTime = parts.get(2);
             newStatusEffects.add(new StatusEffect(name, displayedTime, prefix));
         }
 
