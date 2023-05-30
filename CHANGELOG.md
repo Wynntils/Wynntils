@@ -1,9 +1,21 @@
+## [0.0.3-alpha.45](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.44...v0.0.3-alpha.45) (2023-05-30)
+
+
+### Code Refactoring
+
+* Port MessageFilterFeature, EntityLabelChangedEvent to StyledText ([#1569](https://github.com/Wynntils/Artemis/issues/1569)) ([dc90c3c](https://github.com/Wynntils/Artemis/commit/dc90c3ceb34b92a407483036589c00ab54c65693))
+
 ## [0.0.3-alpha.44](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.43...v0.0.3-alpha.44) (2023-05-30)
 
 
 ### Bug Fixes
 
 * Fix up ChatRedirectFeature regexes for StyledText ([#1568](https://github.com/Wynntils/Artemis/issues/1568)) ([f5ffac3](https://github.com/Wynntils/Artemis/commit/f5ffac3dbb20a362174f27c2f8870f03070916f1))
+
+
+### Miscellaneous Chores
+
+* **release:** v0.0.3-alpha.44 [skip ci] ([b9762f7](https://github.com/Wynntils/Artemis/commit/b9762f7f541238e64f834e85721e6eb68cba951e))
 
 ## [0.0.3-alpha.43](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.42...v0.0.3-alpha.43) (2023-05-30)
 
@@ -36,16 +48,4 @@
 ### Miscellaneous Chores
 
 * **release:** v0.0.3-alpha.41 [skip ci] ([f266ffe](https://github.com/Wynntils/Artemis/commit/f266ffe717aa82b8d5f2644eb0db634c1c8856fd))
-
-## [0.0.3-alpha.40](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.39...v0.0.3-alpha.40) (2023-05-29)
-
-
-### New Features
-
-* Item Guide List Hotkey ([#1561](https://github.com/Wynntils/Artemis/issues/1561)) ([f641f95](https://github.com/Wynntils/Artemis/commit/f641f95aa2a7aa0e9f805d24a6da2c3b445421f2))
-
-
-### Miscellaneous Chores
-
-* **release:** v0.0.3-alpha.40 [skip ci] ([1e9f28b](https://github.com/Wynntils/Artemis/commit/1e9f28b2be632d9c785f14c87e456b93599eaa36))
 
