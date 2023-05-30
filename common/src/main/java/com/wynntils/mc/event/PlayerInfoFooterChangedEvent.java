@@ -4,18 +4,18 @@
  */
 package com.wynntils.mc.event;
 
-import com.wynntils.core.text.CodedString;
+import com.wynntils.core.text.StyledText;
 import net.minecraftforge.eventbus.api.Event;
 
 /** Fires on change to footer of scoreboard */
 public class PlayerInfoFooterChangedEvent extends Event {
-    private final CodedString footer;
+    private final StyledText footer;
 
-    public CodedString getFooter() {
+    public StyledText getFooter() {
         return footer;
     }
 
-    public PlayerInfoFooterChangedEvent(CodedString footer) {
+    public PlayerInfoFooterChangedEvent(StyledText footer) {
         this.footer = footer;
     }
 }
