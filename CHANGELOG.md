@@ -1,9 +1,21 @@
+## [0.0.3-alpha.46](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.45...v0.0.3-alpha.46) (2023-05-30)
+
+
+### Code Refactoring
+
+* Port redirect features to StyledText ([#1570](https://github.com/Wynntils/Artemis/issues/1570)) ([540a8d7](https://github.com/Wynntils/Artemis/commit/540a8d70335f718a3434c4b15da0757480f5abda))
+
 ## [0.0.3-alpha.45](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.44...v0.0.3-alpha.45) (2023-05-30)
 
 
 ### Code Refactoring
 
 * Port MessageFilterFeature, EntityLabelChangedEvent to StyledText ([#1569](https://github.com/Wynntils/Artemis/issues/1569)) ([dc90c3c](https://github.com/Wynntils/Artemis/commit/dc90c3ceb34b92a407483036589c00ab54c65693))
+
+
+### Miscellaneous Chores
+
+* **release:** v0.0.3-alpha.45 [skip ci] ([18e084b](https://github.com/Wynntils/Artemis/commit/18e084b7897ad73c039eca736394a5500e2e9f96))
 
 ## [0.0.3-alpha.44](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.43...v0.0.3-alpha.44) (2023-05-30)
 
@@ -36,16 +48,4 @@
 
 * Build with new ports ([5dc947b](https://github.com/Wynntils/Artemis/commit/5dc947b92623ae7a6a6787db09d11992b98880d8))
 * **release:** v0.0.3-alpha.42 [skip ci] ([766b493](https://github.com/Wynntils/Artemis/commit/766b49371fcd93d0ac92b1d7e8d2579958d21bef))
-
-## [0.0.3-alpha.41](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.40...v0.0.3-alpha.41) (2023-05-30)
-
-
-### Bug Fixes
-
-* Fix StyledText#split logic ([#1567](https://github.com/Wynntils/Artemis/issues/1567)) ([6bdef34](https://github.com/Wynntils/Artemis/commit/6bdef345f9f1ec28a35721082130957bbdf30854))
-
-
-### Miscellaneous Chores
-
-* **release:** v0.0.3-alpha.41 [skip ci] ([f266ffe](https://github.com/Wynntils/Artemis/commit/f266ffe717aa82b8d5f2644eb0db634c1c8856fd))
 
