@@ -352,33 +352,57 @@ public final class StyledText implements Iterable<StyledTextPart> {
      * @return the split {@link StyledText}s
      */
     public StyledText[] split(String regex) {
-        List<StyledText> splitParts = new ArrayList<>();
+        // If this is an empty text, return an array with a single empty text
+        if (parts.isEmpty()) {
+            return new StyledText[] {StyledText.EMPTY};
+        }
+
+        final Pattern pattern = Pattern.compile(regex);
+
+        List<StyledText> splitTexts = new ArrayList<>();
+        List<StyledTextPart> splitParts = new ArrayList<>();
 
         for (int i = 0; i < parts.size(); i++) {
             StyledTextPart part = parts.get(i);
             String partString = part.getString(null, PartStyle.StyleType.NONE);
 
             // Avoid empty parts at the end of the list, but keep them otherwise
-            int maxSplit = i == parts.size() - 1 ? 0 : Integer.MAX_VALUE;
+            int maxSplit = i == parts.size() - 1 ? 0 : -1;
 
             List<String> stringParts =
-                    Arrays.stream(partString.split(regex, maxSplit)).toList();
+                    Arrays.stream(pattern.split(partString, maxSplit)).toList();
 
-            // Due to maxSplit, we might add an extra empty string at the end
-            if (stringParts.get(stringParts.size() - 1).isEmpty()) {
-                stringParts = stringParts.subList(0, stringParts.size() - 1);
+            Matcher matcher = pattern.matcher(partString);
+            if (matcher.find()) {
+                // If the pattern matches, then we have a split
+                // Create the new styled texts
+
+                // Each part is a new text, but the first and last one connect to the previous/next text
+                for (int j = 0; j < stringParts.size(); j++) {
+                    String stringPart = stringParts.get(j);
+                    splitParts.add(
+                            new StyledTextPart(stringPart, part.getPartStyle().getStyle(), null, Style.EMPTY));
+
+                    // If this is the last part, then we might need to add other parts
+                    if (j != stringParts.size() - 1) {
+                        splitTexts.add(new StyledText(splitParts, clickEvents, hoverEvents));
+                        splitParts.clear();
+                    }
+                }
+
+                continue;
             }
 
-            for (String stringPart : stringParts) {
-                splitParts.add(new StyledText(
-                        List.of(new StyledTextPart(
-                                stringPart, part.getPartStyle().getStyle(), null, Style.EMPTY)),
-                        clickEvents,
-                        hoverEvents));
-            }
+            // If the pattern doesn't match, then we can just add the part to the list
+            splitParts.add(part);
         }
 
-        return splitParts.toArray(new StyledText[0]);
+        // Add the last text
+        if (!splitParts.isEmpty()) {
+            splitTexts.add(new StyledText(splitParts, clickEvents, hoverEvents));
+        }
+
+        return splitTexts.toArray(new StyledText[0]);
     }
 
     public StyledText substring(int beginIndex) {
