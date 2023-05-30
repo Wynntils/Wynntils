@@ -1,9 +1,21 @@
+## [0.0.3-alpha.42](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.41...v0.0.3-alpha.42) (2023-05-30)
+
+
+### Miscellaneous Chores
+
+* Build with new ports ([5dc947b](https://github.com/Wynntils/Artemis/commit/5dc947b92623ae7a6a6787db09d11992b98880d8))
+
 ## [0.0.3-alpha.41](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.40...v0.0.3-alpha.41) (2023-05-30)
 
 
 ### Bug Fixes
 
 * Fix StyledText#split logic ([#1567](https://github.com/Wynntils/Artemis/issues/1567)) ([6bdef34](https://github.com/Wynntils/Artemis/commit/6bdef345f9f1ec28a35721082130957bbdf30854))
+
+
+### Miscellaneous Chores
+
+* **release:** v0.0.3-alpha.41 [skip ci] ([f266ffe](https://github.com/Wynntils/Artemis/commit/f266ffe717aa82b8d5f2644eb0db634c1c8856fd))
 
 ## [0.0.3-alpha.40](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.39...v0.0.3-alpha.40) (2023-05-29)
 
@@ -40,16 +52,4 @@
 ### Miscellaneous Chores
 
 * **release:** v0.0.3-alpha.38 [skip ci] ([fa5b1f5](https://github.com/Wynntils/Artemis/commit/fa5b1f5d451600338eec0215428d68b26a23c709))
-
-## [0.0.3-alpha.37](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.36...v0.0.3-alpha.37) (2023-05-24)
-
-
-### Code Refactoring
-
-* FeatureManager categorization, typo fixes ([#1558](https://github.com/Wynntils/Artemis/issues/1558)) ([2757be5](https://github.com/Wynntils/Artemis/commit/2757be565004d5766e85ab07731a398b94106192))
-
-
-### Miscellaneous Chores
-
-* **release:** v0.0.3-alpha.37 [skip ci] ([fdb2469](https://github.com/Wynntils/Artemis/commit/fdb2469f43baedec277123a5914441604fa97d54))
 
