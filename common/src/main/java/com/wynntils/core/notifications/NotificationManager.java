@@ -108,6 +108,10 @@ public final class NotificationManager extends Manager {
         }
     }
 
+    public MessageContainer editMessage(MessageContainer msgContainer, StyledText newMessage) {
+        return editMessage(msgContainer, CodedString.fromStyledText(newMessage));
+    }
+
     private void sendToChatIfNeeded(MessageContainer container) {
         // Overlay is not enabled, send in chat
         if (!Managers.Feature.getFeatureInstance(GameNotificationOverlayFeature.class)
