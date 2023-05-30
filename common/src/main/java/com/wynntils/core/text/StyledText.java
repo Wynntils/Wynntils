@@ -518,6 +518,14 @@ public final class StyledText implements Iterable<StyledTextPart> {
         return new StyledText(newParts, clickEvents, hoverEvents);
     }
 
+    /**
+     * Returns the parts of this {@link StyledText} as a {@link StyledText} array.
+     * @return the array
+     */
+    public StyledText[] getPartsAsTextArray() {
+        return parts.stream().map(StyledText::fromPart).toArray(StyledText[]::new);
+    }
+
     public StyledText iterate(BiFunction<StyledTextPart, List<StyledTextPart>, IterationDecision> function) {
         List<StyledTextPart> newParts = new ArrayList<>();
 

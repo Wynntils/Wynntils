@@ -10,6 +10,7 @@ import com.mojang.brigadier.CommandDispatcher;
 import com.mojang.brigadier.tree.RootCommandNode;
 import com.wynntils.core.events.MixinHelper;
 import com.wynntils.core.text.CodedString;
+import com.wynntils.core.text.StyledText;
 import com.wynntils.mc.event.AddEntityEvent;
 import com.wynntils.mc.event.AdvancementUpdateEvent;
 import com.wynntils.mc.event.ChatPacketReceivedEvent;
@@ -200,8 +201,7 @@ public abstract class ClientPacketListenerMixin {
     private void handleTabListCustomisationPost(ClientboundTabListPacket packet, CallbackInfo ci) {
         if (!isRenderThread()) return;
 
-        MixinHelper.post(new PlayerInfoFooterChangedEvent(
-                CodedString.fromComponentIgnoringComponentStylesAndJustUsingFormattingCodes(packet.getFooter())));
+        MixinHelper.post(new PlayerInfoFooterChangedEvent(StyledText.fromComponent(packet.getFooter())));
     }
 
     @Inject(
