@@ -8,7 +8,7 @@ import com.wynntils.core.components.Managers;
 import com.wynntils.core.config.Category;
 import com.wynntils.core.config.ConfigCategory;
 import com.wynntils.core.features.Feature;
-import com.wynntils.core.text.CodedString;
+import com.wynntils.core.text.StyledText;
 import com.wynntils.handlers.chat.event.ChatMessageReceivedEvent;
 import com.wynntils.models.emeralds.type.EmeraldUnits;
 import com.wynntils.models.gear.type.GearTier;
@@ -24,12 +24,12 @@ import net.minecraftforge.eventbus.api.SubscribeEvent;
 @ConfigCategory(Category.REDIRECTS)
 public class BlacksmithRedirectFeature extends Feature {
     private static final Pattern BLACKSMITH_MESSAGE_PATTERN = Pattern.compile(
-            "§5Blacksmith: §r§dYou (.+): (.+) for a total of §r§e(\\d+)§r§d (emeralds|scrap). It was a pleasure doing business with you.");
+            "§5Blacksmith: §dYou (.+): (.+) for a total of §e(\\d+)§d (emeralds|scrap). It was a pleasure doing business with you.");
     private static final Pattern ITEM_PATTERN = Pattern.compile("§([fedacb53])([A-Z][a-zA-Z-'\\s]+)");
 
     @SubscribeEvent(priority = EventPriority.HIGH)
     public void onChat(ChatMessageReceivedEvent event) {
-        Matcher messageMatcher = event.getOriginalCodedString().getMatcher(BLACKSMITH_MESSAGE_PATTERN);
+        Matcher messageMatcher = event.getOriginalStyledText().getMatcher(BLACKSMITH_MESSAGE_PATTERN);
         if (!messageMatcher.matches()) return;
         event.setCanceled(true);
 
@@ -39,7 +39,7 @@ public class BlacksmithRedirectFeature extends Feature {
         String paymentString = messageMatcher.group(3);
 
         // Full message to send to the user.
-        CodedString sendableMessage;
+        StyledText sendableMessage;
 
         // Should we use item, or items?
         String itemPluralizer;
@@ -97,7 +97,7 @@ public class BlacksmithRedirectFeature extends Feature {
             String countByTierString = countByTier.toString();
 
             // Sold 1 (1/0/0/0/0/0/0/0) item for 4e.
-            sendableMessage = CodedString.fromString(String.format(
+            sendableMessage = StyledText.fromString(String.format(
                     "§dSold %d %s %s for §a%s%s§d.",
                     totalItemInteger,
                     itemPluralizer,
@@ -109,7 +109,7 @@ public class BlacksmithRedirectFeature extends Feature {
         else {
             itemPluralizer = totalItemInteger == 1 ? "item" : "items";
 
-            sendableMessage = CodedString.fromString(String.format(
+            sendableMessage = StyledText.fromString(String.format(
                     "§dScrapped %d %s for §a%s scrap§d.", totalItemInteger, itemPluralizer, paymentString));
         }
 
