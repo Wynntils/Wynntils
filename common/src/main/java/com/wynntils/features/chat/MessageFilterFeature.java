@@ -9,7 +9,7 @@ import com.wynntils.core.config.Config;
 import com.wynntils.core.config.ConfigCategory;
 import com.wynntils.core.config.RegisterConfig;
 import com.wynntils.core.features.Feature;
-import com.wynntils.core.text.CodedString;
+import com.wynntils.core.text.StyledText;
 import com.wynntils.handlers.chat.event.ChatMessageReceivedEvent;
 import com.wynntils.handlers.chat.type.MessageType;
 import com.wynntils.utils.type.Pair;
@@ -33,20 +33,19 @@ public class MessageFilterFeature extends Feature {
             Pair.of(Pattern.compile("^ +§fplay\\.wynncraft\\.com §7-/-§f wynncraft\\.com$"), null));
 
     private static final List<Pair<Pattern, Pattern>> SYSTEM_INFO =
-            List.of(Pair.of(Pattern.compile("^(§r)?§.\\[Info\\] .*$"), Pattern.compile("^(§r§8)?\\[Info\\] .*$")));
+            List.of(Pair.of(Pattern.compile("^(§r)?§.\\[Info\\] .*$"), Pattern.compile("^(§8)?\\[Info\\] .*$")));
 
     private static final List<Pair<Pattern, Pattern>> LEVEL_UP = List.of(
             Pair.of(
                     Pattern.compile("^§6.* is now (?:combat )?level .*(?: in §.*)?$"),
-                    Pattern.compile("^(?:§r§8)?.* is now (?:combat )?level .*(?: in §.*)?$")),
+                    Pattern.compile("^(?:§8)?.* is now (?:combat )?level .*(?: in §.*)?$")),
             Pair.of(
-                    Pattern.compile(
-                            "^§8\\[§r§7!§r§8\\] §r§7Congratulations to §r.* for reaching (combat )?§r§flevel .*!$"),
-                    Pattern.compile("^(§r§8)?\\[!\\] Congratulations to §r.* for reaching (combat )?§r§7level .*!$")));
+                    Pattern.compile("^§8\\[§7!§8\\] §7Congratulations to (§r)?.* for reaching (combat )?§flevel .*!$"),
+                    Pattern.compile("^(§8)?\\[!\\] Congratulations to (§r)?.* for reaching (combat )?§7level .*!$")));
 
     private static final List<Pair<Pattern, Pattern>> PARTY_FINDER = List.of(Pair.of(
             Pattern.compile(
-                    "^§5Party Finder:§r§d Hey [a-zA-Z0-9_]{2,16}, over here! Join the (?:[a-zA-Z'§ ]+) queue and match up with §r§e\\d+ other players§r§d!$"),
+                    "^§5Party Finder:§d Hey [a-zA-Z0-9_]{2,16}, over here! Join the (?:[a-zA-Z'§ ]+) queue and match up with §e\\d+ other players§d!$"),
             null));
 
     @RegisterConfig
@@ -63,7 +62,7 @@ public class MessageFilterFeature extends Feature {
 
     @SubscribeEvent
     public void onMessage(ChatMessageReceivedEvent e) {
-        CodedString msg = e.getOriginalCodedString();
+        StyledText msg = e.getOriginalStyledText();
         MessageType messageType = e.getMessageType();
 
         if (hideWelcome.get() && processFilter(msg, messageType, WELCOME)) {
@@ -87,7 +86,7 @@ public class MessageFilterFeature extends Feature {
         }
     }
 
-    private boolean processFilter(CodedString msg, MessageType messageType, List<Pair<Pattern, Pattern>> patternMap) {
+    private boolean processFilter(StyledText msg, MessageType messageType, List<Pair<Pattern, Pattern>> patternMap) {
         for (Pair<Pattern, Pattern> pair : patternMap) {
             Pattern pattern = getPattern(pair, messageType);
             if (pattern == null) {
