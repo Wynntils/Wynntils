@@ -10,25 +10,37 @@ import com.wynntils.core.config.Config;
 import com.wynntils.core.config.ConfigCategory;
 import com.wynntils.core.config.RegisterConfig;
 import com.wynntils.core.features.Feature;
+import com.wynntils.core.features.properties.RegisterKeyBind;
+import com.wynntils.core.keybinds.KeyBind;
 import com.wynntils.core.text.CodedString;
 import com.wynntils.mc.event.ItemTooltipRenderEvent;
 import com.wynntils.models.emeralds.type.EmeraldUnits;
 import com.wynntils.models.gear.type.GearInfo;
 import com.wynntils.models.gear.type.GearTier;
 import com.wynntils.models.items.items.game.GearBoxItem;
+import com.wynntils.screens.base.WynntilsListScreen;
+import com.wynntils.screens.base.WynntilsMenuScreenBase;
+import com.wynntils.screens.guides.gear.WynntilsItemGuideScreen;
+import com.wynntils.screens.questbook.widgets.QuestBookSearchWidget;
+import com.wynntils.utils.mc.KeyboardUtils;
 import com.wynntils.utils.mc.LoreUtils;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.TreeMap;
+import java.util.stream.Collectors;
+
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
+import org.lwjgl.glfw.GLFW;
 
 @ConfigCategory(Category.TOOLTIPS)
 public class ItemGuessFeature extends Feature {
+    private boolean displayed = false;
+
     @RegisterConfig
     public final Config<Boolean> showGuessesPrice = new Config<>(true);
 
@@ -40,6 +52,25 @@ public class ItemGuessFeature extends Feature {
         List<Component> tooltips = LoreUtils.appendTooltip(
                 event.getItemStack(), event.getTooltips(), getTooltipAddon(gearBoxItemOpt.get()));
         event.setTooltips(tooltips);
+
+        if (!displayed && KeyboardUtils.isKeyDown(GLFW.GLFW_KEY_LEFT_CONTROL)) {
+            showInItemGuide(gearBoxItemOpt.get());
+            System.out.println(loadPossibleGear(gearBoxItemOpt.get()));
+        }
+    }
+
+    private void showInItemGuide(GearBoxItem gearBoxItem) {
+        // Create a new instance of WynntilsItemGuideScreen with the gearNames
+        WynntilsItemGuideScreen guideScreen = new WynntilsItemGuideScreen(loadPossibleGear(gearBoxItem));
+        WynntilsMenuScreenBase.openBook(guideScreen);
+    }
+
+    private String loadPossibleGear(GearBoxItem gearBoxItem) {
+        List<GearInfo> possibleGear = Models.Gear.getPossibleGears(gearBoxItem);
+        String gearNames = possibleGear.stream()
+                .map(GearInfo::name)
+                .collect(Collectors.joining(", "));
+        return gearNames;
     }
 
     private List<Component> getTooltipAddon(GearBoxItem gearBoxItem) {

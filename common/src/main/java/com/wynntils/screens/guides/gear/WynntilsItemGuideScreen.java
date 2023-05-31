@@ -7,6 +7,8 @@ package com.wynntils.screens.guides.gear;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.wynntils.core.components.Models;
 import com.wynntils.core.text.CodedString;
+import com.wynntils.models.gear.type.GearInfo;
+import com.wynntils.models.items.items.game.GearBoxItem;
 import com.wynntils.screens.base.WynntilsListScreen;
 import com.wynntils.screens.base.widgets.BackButton;
 import com.wynntils.screens.base.widgets.PageSelectorButton;
@@ -32,6 +34,11 @@ public final class WynntilsItemGuideScreen extends WynntilsListScreen<GuideGearI
 
     private WynntilsItemGuideScreen() {
         super(Component.translatable("screens.wynntils.wynntilsGuides.itemGuide.name"));
+    }
+
+    public WynntilsItemGuideScreen(String searchTerm) {
+        super(Component.translatable("screens.wynntils.wynntilsGuides.itemGuide.name"));
+        reloadElementsList(searchTerm);
     }
 
     public static Screen create() {
