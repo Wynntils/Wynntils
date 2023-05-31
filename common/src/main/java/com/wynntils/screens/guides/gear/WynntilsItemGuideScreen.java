@@ -120,10 +120,22 @@ public final class WynntilsItemGuideScreen extends WynntilsListScreen<GuideGearI
 
     @Override
     protected void reloadElementsList(String searchTerm) {
-        elements.addAll(getAllGearItems().stream()
-                .filter(gearItemStack -> StringUtils.partialMatch(
-                        ComponentUtils.getUnformatted(gearItemStack.getHoverName()), searchTerm))
-                .toList());
+        String[] terms = searchTerm.split("[,;]");
+
+        getAllGearItems().stream()
+                .filter(gearItemStack -> {
+                    String hoverName = ComponentUtils.getUnformatted(gearItemStack.getHoverName());
+                    // Return true (i.e., keep the gear item) if any term matches.
+                    for (String term : terms) {
+                        // Trim leading and trailing whitespace from the term before using it.
+                        if (StringUtils.partialMatch(hoverName, term.trim())) {
+                            return true;
+                        }
+                    }
+                    // If none of the terms matched, return false (i.e., don't keep the gear item).
+                    return false;
+                })
+                .forEach(elements::add);
     }
 
     private List<GuideGearItemStack> getAllGearItems() {
