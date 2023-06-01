@@ -1,9 +1,21 @@
+## [0.0.3-alpha.47](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.46...v0.0.3-alpha.47) (2023-06-01)
+
+
+### Code Refactoring
+
+* Make more use of McUtils and other fixes ([#1560](https://github.com/Wynntils/Artemis/issues/1560)) ([e84aea4](https://github.com/Wynntils/Artemis/commit/e84aea40cf32888ca7f613f31e9ade9f4281a652))
+
 ## [0.0.3-alpha.46](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.45...v0.0.3-alpha.46) (2023-05-30)
 
 
 ### Code Refactoring
 
 * Port redirect features to StyledText ([#1570](https://github.com/Wynntils/Artemis/issues/1570)) ([540a8d7](https://github.com/Wynntils/Artemis/commit/540a8d70335f718a3434c4b15da0757480f5abda))
+
+
+### Miscellaneous Chores
+
+* **release:** v0.0.3-alpha.46 [skip ci] ([3f4ad04](https://github.com/Wynntils/Artemis/commit/3f4ad049ce0cc54b7c1b0a50bf780f0110c5ac05))
 
 ## [0.0.3-alpha.45](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.44...v0.0.3-alpha.45) (2023-05-30)
 
@@ -40,12 +52,4 @@
 ### Miscellaneous Chores
 
 * **release:** v0.0.3-alpha.43 [skip ci] ([7421972](https://github.com/Wynntils/Artemis/commit/7421972181e7193a734982d1f0f5468d07773411))
-
-## [0.0.3-alpha.42](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.41...v0.0.3-alpha.42) (2023-05-30)
-
-
-### Miscellaneous Chores
-
-* Build with new ports ([5dc947b](https://github.com/Wynntils/Artemis/commit/5dc947b92623ae7a6a6787db09d11992b98880d8))
-* **release:** v0.0.3-alpha.42 [skip ci] ([766b493](https://github.com/Wynntils/Artemis/commit/766b49371fcd93d0ac92b1d7e8d2579958d21bef))
 
