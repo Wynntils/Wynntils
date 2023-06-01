@@ -276,7 +276,7 @@ public abstract class ClientPacketListenerMixin {
                 McUtils.player()
                         .inventoryMenu
                         .initializeContents(packet.getStateId(), packet.getItems(), packet.getCarriedItem());
-            } else if (packet.getContainerId() == McUtils.player().containerMenu.containerId) {
+            } else if (packet.getContainerId() == McUtils.containerMenu().containerId) {
                 McUtils.player()
                         .containerMenu
                         .initializeContents(packet.getStateId(), packet.getItems(), packet.getCarriedItem());

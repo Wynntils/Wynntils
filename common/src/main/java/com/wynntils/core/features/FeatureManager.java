@@ -311,7 +311,7 @@ public final class FeatureManager extends Manager {
         // This is needed because we are late to register the keybinds,
         // but we cannot move it earlier to the init process because of I18n
         synchronized (McUtils.options()) {
-            McUtils.mc().options.load();
+            McUtils.options().load();
         }
 
         addCrashCallbacks();

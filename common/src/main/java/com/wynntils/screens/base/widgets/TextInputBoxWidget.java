@@ -18,6 +18,7 @@ import com.wynntils.utils.render.type.TextShadow;
 import com.wynntils.utils.render.type.VerticalAlignment;
 import com.wynntils.utils.type.Pair;
 import java.util.function.Consumer;
+import net.minecraft.client.KeyboardHandler;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.components.AbstractWidget;
@@ -346,27 +347,26 @@ public class TextInputBoxWidget extends AbstractWidget {
             return true;
         }
 
+        KeyboardHandler keyboardHandler = Minecraft.getInstance().keyboardHandler;
         if (Screen.isCopy(keyCode)) {
-            Minecraft.getInstance()
-                    .keyboardHandler
-                    .setClipboard(hasHighlighted() ? getHighlightedText() : getTextBoxInput());
+            keyboardHandler.setClipboard(hasHighlighted() ? getHighlightedText() : getTextBoxInput());
             return true;
         } else if (Screen.isPaste(keyCode)) {
             if (hasHighlighted()) {
-                replaceHighlighted(Minecraft.getInstance().keyboardHandler.getClipboard());
+                replaceHighlighted(keyboardHandler.getClipboard());
             } else {
                 this.setTextBoxInput((textBoxInput.substring(0, cursorPosition)
-                        + Minecraft.getInstance().keyboardHandler.getClipboard()
+                        + keyboardHandler.getClipboard()
                         + textBoxInput.substring(cursorPosition)));
             }
 
             return true;
         } else if (Screen.isCut(keyCode)) {
             if (hasHighlighted()) {
-                Minecraft.getInstance().keyboardHandler.setClipboard(getHighlightedText());
+                keyboardHandler.setClipboard(getHighlightedText());
                 replaceHighlighted("");
             } else {
-                Minecraft.getInstance().keyboardHandler.setClipboard(getTextBoxInput());
+                keyboardHandler.setClipboard(getTextBoxInput());
                 setTextBoxInput("");
             }
 

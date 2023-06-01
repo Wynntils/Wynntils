@@ -158,8 +158,8 @@ public class ChatTabsFeature extends Feature {
             // Reload chat tab buttons
             chatScreen.init(
                     McUtils.mc(),
-                    McUtils.mc().getWindow().getGuiScaledWidth(),
-                    McUtils.mc().getWindow().getGuiScaledHeight());
+                    McUtils.window().getGuiScaledWidth(),
+                    McUtils.window().getGuiScaledHeight());
         }
     }
 }
