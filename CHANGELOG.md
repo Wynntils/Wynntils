@@ -1,9 +1,21 @@
+## [0.0.3-alpha.48](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.47...v0.0.3-alpha.48) (2023-06-01)
+
+
+### Bug Fixes
+
+* Fix not being able to track mini-quests not on the first page ([#1571](https://github.com/Wynntils/Artemis/issues/1571)) ([af97f84](https://github.com/Wynntils/Artemis/commit/af97f8479512c70efa8b5ed725f6a5b4e3fb47bd))
+
 ## [0.0.3-alpha.47](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.46...v0.0.3-alpha.47) (2023-06-01)
 
 
 ### Code Refactoring
 
 * Make more use of McUtils and other fixes ([#1560](https://github.com/Wynntils/Artemis/issues/1560)) ([e84aea4](https://github.com/Wynntils/Artemis/commit/e84aea40cf32888ca7f613f31e9ade9f4281a652))
+
+
+### Miscellaneous Chores
+
+* **release:** v0.0.3-alpha.47 [skip ci] ([7e87c20](https://github.com/Wynntils/Artemis/commit/7e87c20602a866189b41dac9ce5d063d80e29c9a))
 
 ## [0.0.3-alpha.46](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.45...v0.0.3-alpha.46) (2023-05-30)
 
@@ -40,16 +52,4 @@
 ### Miscellaneous Chores
 
 * **release:** v0.0.3-alpha.44 [skip ci] ([b9762f7](https://github.com/Wynntils/Artemis/commit/b9762f7f541238e64f834e85721e6eb68cba951e))
-
-## [0.0.3-alpha.43](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.42...v0.0.3-alpha.43) (2023-05-30)
-
-
-### Bug Fixes
-
-* Fix upp ChatRedirectFeature regexes for StyledText ([#1568](https://github.com/Wynntils/Artemis/issues/1568)) ([3cad944](https://github.com/Wynntils/Artemis/commit/3cad944c3eee3b3982268b95681c0849347852df))
-
-
-### Miscellaneous Chores
-
-* **release:** v0.0.3-alpha.43 [skip ci] ([7421972](https://github.com/Wynntils/Artemis/commit/7421972181e7193a734982d1f0f5468d07773411))
 
