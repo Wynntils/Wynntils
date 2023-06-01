@@ -12,6 +12,7 @@ import com.wynntils.core.config.ConfigCategory;
 import com.wynntils.core.config.RegisterConfig;
 import com.wynntils.core.features.Feature;
 import com.wynntils.core.text.CodedString;
+import com.wynntils.core.text.StyledText;
 import com.wynntils.mc.event.ContainerCloseEvent;
 import com.wynntils.mc.event.ContainerSetContentEvent;
 import com.wynntils.mc.event.ContainerSetSlotEvent;
@@ -71,7 +72,7 @@ public class ContainerSearchFeature extends Feature {
     public void onScreenInit(ScreenInitEvent event) {
         if (!(event.getScreen() instanceof AbstractContainerScreen<?> screen)) return;
 
-        CodedString title = ComponentUtils.getCoded(screen.getTitle());
+        StyledText title = StyledText.fromComponent(screen.getTitle());
 
         // This is screen.topPos and screen.leftPos, but they are not calculated yet when this is called
         int renderX = (screen.width - screen.imageWidth) / 2;
@@ -164,7 +165,7 @@ public class ContainerSearchFeature extends Feature {
                 abstractContainerScreen.getMenu().getItems());
     }
 
-    private SearchableContainerType getCurrentSearchableContainerType(CodedString title) {
+    private SearchableContainerType getCurrentSearchableContainerType(StyledText title) {
         SearchableContainerType containerType = SearchableContainerType.getContainerType(title);
 
         if (containerType == SearchableContainerType.BANK && filterInBank.get()) {
