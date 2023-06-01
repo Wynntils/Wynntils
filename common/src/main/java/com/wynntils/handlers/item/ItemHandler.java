@@ -66,11 +66,11 @@ public class ItemHandler extends Handler {
         NonNullList<ItemStack> existingItems;
         if (event.getContainerId() == 0) {
             // Set all for inventory
-            existingItems = McUtils.player().inventoryMenu.getItems();
-        } else if (event.getContainerId() == McUtils.player().containerMenu.containerId) {
+            existingItems = McUtils.inventoryMenu().getItems();
+        } else if (event.getContainerId() == McUtils.containerMenu().containerId) {
             // Set all for the currently open container. Vanilla has copied inventory in the last
             // slots
-            existingItems = McUtils.player().containerMenu.getItems();
+            existingItems = McUtils.containerMenu().getItems();
         } else {
             // No matching container, just ignore this
             return;

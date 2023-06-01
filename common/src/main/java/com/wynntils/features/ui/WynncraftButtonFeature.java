@@ -21,7 +21,6 @@ import com.wynntils.utils.render.Texture;
 import java.io.IOException;
 import java.nio.ByteBuffer;
 import java.util.function.Consumer;
-import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.screens.ConnectScreen;
 import net.minecraft.client.gui.screens.Screen;
@@ -86,7 +85,7 @@ public class WynncraftButtonFeature extends Feature {
 
     private static void connectToServer(ServerData serverData) {
         ConnectScreen.startConnecting(
-                McUtils.mc().screen, Minecraft.getInstance(), ServerAddress.parseString(serverData.ip), serverData);
+                McUtils.mc().screen, McUtils.mc(), ServerAddress.parseString(serverData.ip), serverData);
     }
 
     private static class WynncraftButton extends Button {
@@ -152,7 +151,7 @@ public class WynncraftButtonFeature extends Feature {
             // If someone converts this to get the actual ServerData used by the gui, check
             // ServerData#pinged here and
             // set it later
-            if (allowStale && Minecraft.getInstance().getTextureManager().getTexture(destination, null) != null) {
+            if (allowStale && McUtils.mc().getTextureManager().getTexture(destination, null) != null) {
                 serverIconLocation = destination;
                 onDone();
                 return;
@@ -209,14 +208,12 @@ public class WynncraftButtonFeature extends Feature {
 
                 synchronized (this) {
                     RenderSystem.recordRenderCall(() -> {
-                        Minecraft.getInstance()
-                                .getTextureManager()
-                                .register(destination, new DynamicTexture(nativeImage));
+                        McUtils.mc().getTextureManager().register(destination, new DynamicTexture(nativeImage));
                         serverIconLocation = destination;
                     });
                 }
             } catch (IOException e) {
-                WynntilsMod.error("Unable to read server image: " + server, e);
+                WynntilsMod.error("Unable to read server image: " + server.name, e);
                 serverIconLocation = FALLBACK;
             }
         }
