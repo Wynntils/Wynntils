@@ -1,9 +1,21 @@
+## [0.0.3-alpha.50](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.49...v0.0.3-alpha.50) (2023-06-01)
+
+
+### Bug Fixes
+
+* Fix quest book not opening ([#1573](https://github.com/Wynntils/Artemis/issues/1573)) ([5a524f1](https://github.com/Wynntils/Artemis/commit/5a524f1946770ca48dcf6de01f6e2fc86171c58d))
+
 ## [0.0.3-alpha.49](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.48...v0.0.3-alpha.49) (2023-06-01)
 
 
 ### Code Refactoring
 
 * Port most CodedString usages in Feature to StyledText ([#1572](https://github.com/Wynntils/Artemis/issues/1572)) ([7352cc4](https://github.com/Wynntils/Artemis/commit/7352cc45db8dc4fd399d4ac4068b8ac41b26a3e8))
+
+
+### Miscellaneous Chores
+
+* **release:** v0.0.3-alpha.49 [skip ci] ([02680a3](https://github.com/Wynntils/Artemis/commit/02680a3a355911d1cbcba7c4448711ebfc18b272))
 
 ## [0.0.3-alpha.48](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.47...v0.0.3-alpha.48) (2023-06-01)
 
@@ -40,16 +52,4 @@
 ### Miscellaneous Chores
 
 * **release:** v0.0.3-alpha.46 [skip ci] ([3f4ad04](https://github.com/Wynntils/Artemis/commit/3f4ad049ce0cc54b7c1b0a50bf780f0110c5ac05))
-
-## [0.0.3-alpha.45](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.44...v0.0.3-alpha.45) (2023-05-30)
-
-
-### Code Refactoring
-
-* Port MessageFilterFeature, EntityLabelChangedEvent to StyledText ([#1569](https://github.com/Wynntils/Artemis/issues/1569)) ([dc90c3c](https://github.com/Wynntils/Artemis/commit/dc90c3ceb34b92a407483036589c00ab54c65693))
-
-
-### Miscellaneous Chores
-
-* **release:** v0.0.3-alpha.45 [skip ci] ([18e084b](https://github.com/Wynntils/Artemis/commit/18e084b7897ad73c039eca736394a5500e2e9f96))
 
