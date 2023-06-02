@@ -6,7 +6,7 @@ package com.wynntils.screens.settings.elements;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.wynntils.core.config.ConfigHolder;
-import com.wynntils.core.text.CodedString;
+import com.wynntils.core.text.StyledText;
 import com.wynntils.utils.colors.CommonColors;
 import com.wynntils.utils.colors.CustomColor;
 import com.wynntils.utils.render.FontRenderer;
@@ -59,7 +59,7 @@ public class BooleanConfigOptionElement extends ConfigOptionElement {
         FontRenderer.getInstance()
                 .renderAlignedTextInBox(
                         poseStack,
-                        CodedString.fromString(
+                        StyledText.fromString(
                                 value
                                         ? I18n.get("screens.wynntils.settingsScreen.booleanConfig.enabled")
                                         : I18n.get("screens.wynntils.settingsScreen.booleanConfig.disabled")),

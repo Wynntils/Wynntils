@@ -18,7 +18,7 @@ import com.wynntils.core.features.overlays.Overlay;
 import com.wynntils.core.features.overlays.OverlayPosition;
 import com.wynntils.core.features.overlays.OverlaySize;
 import com.wynntils.core.features.overlays.annotations.OverlayInfo;
-import com.wynntils.core.text.CodedString;
+import com.wynntils.core.text.StyledText;
 import com.wynntils.handlers.scoreboard.event.ScoreboardSegmentAdditionEvent;
 import com.wynntils.mc.event.RenderEvent;
 import com.wynntils.models.quests.QuestInfo;
@@ -110,7 +110,7 @@ public class QuestInfoOverlayFeature extends Feature {
             List<TextRenderTask> renderTaskList = new ArrayList<>(3);
             for (int i = 0; i < 3; i++) {
                 renderTaskList.add(new TextRenderTask(
-                        CodedString.EMPTY,
+                        StyledText.EMPTY,
                         TextRenderSetting.DEFAULT
                                 .withMaxWidth(this.getWidth())
                                 .withCustomColor(TEXT_COLORS.get(i))

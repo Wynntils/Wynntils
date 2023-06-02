@@ -8,11 +8,9 @@ import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.components.Manager;
 import com.wynntils.core.components.Managers;
 import com.wynntils.core.notifications.event.NotificationEvent;
-import com.wynntils.core.text.CodedString;
 import com.wynntils.core.text.StyledText;
 import com.wynntils.features.overlays.GameNotificationOverlayFeature;
 import com.wynntils.models.worlds.event.WorldStateEvent;
-import com.wynntils.utils.mc.ComponentUtils;
 import com.wynntils.utils.mc.McUtils;
 import com.wynntils.utils.render.TextRenderSetting;
 import com.wynntils.utils.render.TextRenderTask;
@@ -35,16 +33,12 @@ public final class NotificationManager extends Manager {
         cachedMessageSet.clear();
     }
 
-    public MessageContainer queueMessage(CodedString codedMessage) {
-        return queueMessage(new TextRenderTask(codedMessage, TextRenderSetting.DEFAULT));
-    }
-
     public MessageContainer queueMessage(StyledText styledText) {
-        return queueMessage(new TextRenderTask(CodedString.fromStyledText(styledText), TextRenderSetting.DEFAULT));
+        return queueMessage(new TextRenderTask(styledText, TextRenderSetting.DEFAULT));
     }
 
     public MessageContainer queueMessage(Component message) {
-        return queueMessage(new TextRenderTask(ComponentUtils.getCoded(message), TextRenderSetting.DEFAULT));
+        return queueMessage(new TextRenderTask(StyledText.fromComponent(message), TextRenderSetting.DEFAULT));
     }
 
     public MessageContainer queueMessage(TextRenderTask message) {
@@ -52,10 +46,10 @@ public final class NotificationManager extends Manager {
 
         WynntilsMod.info("Message Queued: " + message);
         MessageContainer msgContainer = new MessageContainer(message);
-        CodedString messageText = message.getText();
+        StyledText messageText = message.getText();
 
         for (MessageContainer cachedContainer : cachedMessageSet) {
-            CodedString checkableMessage = cachedContainer.getMessage();
+            StyledText checkableMessage = cachedContainer.getMessage();
             if (messageText.equals(checkableMessage)) {
                 cachedContainer.setMessageCount(cachedContainer.getMessageCount() + 1);
 
@@ -83,7 +77,7 @@ public final class NotificationManager extends Manager {
      * @param newMessage The new message
      * @return The message container that was edited. This may be the new message container.
      */
-    public MessageContainer editMessage(MessageContainer msgContainer, CodedString newMessage) {
+    public MessageContainer editMessage(MessageContainer msgContainer, StyledText newMessage) {
         WynntilsMod.info("Message Edited: " + msgContainer.getRenderTask() + " -> "
                 + newMessage.getInternalCodedStringRepresentation());
 
@@ -108,10 +102,6 @@ public final class NotificationManager extends Manager {
         }
     }
 
-    public MessageContainer editMessage(MessageContainer msgContainer, StyledText newMessage) {
-        return editMessage(msgContainer, CodedString.fromStyledText(newMessage));
-    }
-
     private void sendToChatIfNeeded(MessageContainer container) {
         // Overlay is not enabled, send in chat
         if (!Managers.Feature.getFeatureInstance(GameNotificationOverlayFeature.class)
@@ -124,6 +114,6 @@ public final class NotificationManager extends Manager {
         McUtils.mc()
                 .gui
                 .getChat()
-                .addMessage(msgContainer.getRenderTask().getText().asSingleLiteralComponentWithCodedString());
+                .addMessage(msgContainer.getRenderTask().getText().getComponent());
     }
 }

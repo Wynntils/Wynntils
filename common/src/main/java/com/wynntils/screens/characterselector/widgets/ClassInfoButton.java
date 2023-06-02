@@ -6,7 +6,7 @@ package com.wynntils.screens.characterselector.widgets;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.wynntils.core.components.Models;
-import com.wynntils.core.text.CodedString;
+import com.wynntils.core.text.StyledText;
 import com.wynntils.models.character.type.ClassInfo;
 import com.wynntils.screens.base.widgets.WynntilsButton;
 import com.wynntils.screens.characterselector.CharacterSelectorScreen;
@@ -64,7 +64,7 @@ public class ClassInfoButton extends WynntilsButton {
         FontRenderer.getInstance()
                 .renderText(
                         poseStack,
-                        CodedString.fromString(classInfo.name()),
+                        StyledText.fromString(classInfo.name()),
                         0,
                         0,
                         CommonColors.BLACK,
@@ -74,7 +74,7 @@ public class ClassInfoButton extends WynntilsButton {
         FontRenderer.getInstance()
                 .renderText(
                         poseStack,
-                        CodedString.fromString("Level " + classInfo.level()),
+                        StyledText.fromString("Level " + classInfo.level()),
                         0,
                         10f,
                         CommonColors.BLACK,

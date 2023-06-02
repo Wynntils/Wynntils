@@ -8,7 +8,7 @@ import com.google.common.collect.ImmutableList;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.wynntils.core.components.Managers;
 import com.wynntils.core.features.overlays.Overlay;
-import com.wynntils.core.text.CodedString;
+import com.wynntils.core.text.StyledText;
 import com.wynntils.screens.overlays.placement.OverlayManagementScreen;
 import com.wynntils.utils.colors.CommonColors;
 import com.wynntils.utils.colors.CustomColor;
@@ -73,7 +73,7 @@ public class OverlayEntry extends ContainerObjectSelectionList.Entry<OverlayEntr
         FontRenderer.getInstance()
                 .renderText(
                         poseStack,
-                        CodedString.fromString(translatedName),
+                        StyledText.fromString(translatedName),
                         3,
                         (OverlayList.getItemHeight() - renderHeightForOverlayName / 2f) / 2f - PADDING / 2f,
                         width - PADDING,
