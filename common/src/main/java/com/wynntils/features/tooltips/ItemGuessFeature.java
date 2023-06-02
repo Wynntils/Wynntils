@@ -4,7 +4,6 @@
  */
 package com.wynntils.features.tooltips;
 
-import com.wynntils.core.components.Managers;
 import com.wynntils.core.components.Models;
 import com.wynntils.core.config.Category;
 import com.wynntils.core.config.Config;
@@ -12,7 +11,6 @@ import com.wynntils.core.config.ConfigCategory;
 import com.wynntils.core.config.RegisterConfig;
 import com.wynntils.core.features.Feature;
 import com.wynntils.core.text.CodedString;
-import com.wynntils.features.ui.WynntilsQuestBookFeature;
 import com.wynntils.mc.event.ItemTooltipRenderEvent;
 import com.wynntils.models.emeralds.type.EmeraldUnits;
 import com.wynntils.models.gear.type.GearInfo;
@@ -20,7 +18,6 @@ import com.wynntils.models.gear.type.GearTier;
 import com.wynntils.models.items.items.game.GearBoxItem;
 import com.wynntils.screens.base.WynntilsMenuScreenBase;
 import com.wynntils.screens.guides.gear.WynntilsItemGuideScreen;
-import com.wynntils.utils.mc.KeyboardUtils;
 import com.wynntils.utils.mc.LoreUtils;
 import java.util.ArrayList;
 import java.util.List;
@@ -31,6 +28,7 @@ import java.util.stream.Collectors;
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
+import net.minecraft.world.inventory.Slot;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 
 @ConfigCategory(Category.TOOLTIPS)
@@ -47,19 +45,19 @@ public class ItemGuessFeature extends Feature {
         List<Component> tooltips = LoreUtils.appendTooltip(
                 event.getItemStack(), event.getTooltips(), getTooltipAddon(gearBoxItemOpt.get()));
         event.setTooltips(tooltips);
-
-        if (KeyboardUtils.isControlDown()) {
-            showInItemGuide(gearBoxItemOpt.get());
-        }
     }
 
-    public void showInItemGuide(GearBoxItem gearBoxItem) {
+    public void displayHoveredItemInGuide(Slot hoveredSlot) {
+        if (hoveredSlot == null) return;
+        Optional<GearBoxItem> gearBoxItemOpt = Models.Item.asWynnItem(hoveredSlot.getItem(), GearBoxItem.class);
+        if (gearBoxItemOpt.isEmpty()) return;
+
         WynntilsItemGuideScreen itemGuide = new WynntilsItemGuideScreen();
-        itemGuide.setTextBoxInput(getPossibleGear(gearBoxItem));
+        itemGuide.setTextBoxInput(getPossibleGearNames(gearBoxItemOpt.get()));
         WynntilsMenuScreenBase.openBook(itemGuide);
     }
 
-    private String getPossibleGear(GearBoxItem gearBoxItem) {
+    private String getPossibleGearNames(GearBoxItem gearBoxItem) {
         List<GearInfo> possibleGear = Models.Gear.getPossibleGears(gearBoxItem);
         return possibleGear.stream().map(GearInfo::name).collect(Collectors.joining(", "));
     }

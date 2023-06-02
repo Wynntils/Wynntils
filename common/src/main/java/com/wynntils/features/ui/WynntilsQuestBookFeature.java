@@ -4,6 +4,7 @@
  */
 package com.wynntils.features.ui;
 
+import com.wynntils.core.components.Managers;
 import com.wynntils.core.config.Category;
 import com.wynntils.core.config.Config;
 import com.wynntils.core.config.ConfigCategory;
@@ -12,22 +13,23 @@ import com.wynntils.core.features.Feature;
 import com.wynntils.core.features.properties.RegisterKeyBind;
 import com.wynntils.core.keybinds.KeyBind;
 import com.wynntils.core.text.CodedString;
+import com.wynntils.features.tooltips.ItemGuessFeature;
 import com.wynntils.mc.event.PlayerInteractEvent;
 import com.wynntils.mc.event.UseItemEvent;
 import com.wynntils.models.quests.event.TrackedQuestUpdateEvent;
 import com.wynntils.screens.base.WynntilsMenuScreenBase;
 import com.wynntils.screens.guides.WynntilsGuidesListScreen;
-import com.wynntils.screens.guides.emeraldpouch.WynntilsEmeraldPouchGuideScreen;
 import com.wynntils.screens.guides.gear.WynntilsItemGuideScreen;
 import com.wynntils.screens.guides.ingredient.WynntilsIngredientGuideScreen;
-import com.wynntils.screens.guides.powder.WynntilsPowderGuideScreen;
 import com.wynntils.screens.questbook.WynntilsQuestBookScreen;
+import com.wynntils.screens.questbook.history.WynntilsDialogueHistoryScreen;
 import com.wynntils.screens.wynntilsmenu.WynntilsMenuScreen;
 import com.wynntils.utils.mc.ComponentUtils;
 import com.wynntils.utils.mc.McUtils;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.world.InteractionHand;
+import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.eventbus.api.Event;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
@@ -55,11 +57,11 @@ public class WynntilsQuestBookFeature extends Feature {
             () -> WynntilsMenuScreenBase.openBook(WynntilsMenuScreen.create()));
 
     @RegisterKeyBind
-    private final KeyBind openPowderGuide = new KeyBind(
-            "Open Powder Guide",
+    private final KeyBind openDialogueHistory = new KeyBind(
+            "Open Dialogue History",
             GLFW.GLFW_KEY_UNKNOWN,
             true,
-            () -> WynntilsMenuScreenBase.openBook(WynntilsPowderGuideScreen.create()));
+            () -> WynntilsMenuScreenBase.openBook(WynntilsDialogueHistoryScreen.create()));
 
     @RegisterKeyBind
     private final KeyBind openItemGuide = new KeyBind(
@@ -76,18 +78,12 @@ public class WynntilsQuestBookFeature extends Feature {
             () -> WynntilsMenuScreenBase.openBook(WynntilsIngredientGuideScreen.create()));
 
     @RegisterKeyBind
-    private final KeyBind openEmeraldPouchGuide = new KeyBind(
-            "Open Emerald Pouch Guide",
-            GLFW.GLFW_KEY_UNKNOWN,
-            true,
-            () -> WynntilsMenuScreenBase.openBook(WynntilsEmeraldPouchGuideScreen.create()));
-
-    @RegisterKeyBind
     private final KeyBind openGuidesList = new KeyBind(
-            "Open Guides List",
-            GLFW.GLFW_KEY_UNKNOWN,
+            "Open (in) Guides List",
+            GLFW.GLFW_KEY_I,
             true,
-            () -> WynntilsMenuScreenBase.openBook(WynntilsGuidesListScreen.create()));
+            () -> WynntilsMenuScreenBase.openBook(WynntilsGuidesListScreen.create()),
+            this::onItemGuideListInventoryPress);
 
     @RegisterConfig
     public final Config<Boolean> replaceWynncraftQuestBook = new Config<>(true);
@@ -139,5 +135,9 @@ public class WynntilsQuestBookFeature extends Feature {
                             ? WynntilsMenuScreen.create()
                             : WynntilsQuestBookScreen.create());
         }
+    }
+
+    private void onItemGuideListInventoryPress(Slot hoveredslot) {
+        Managers.Feature.getFeatureInstance(ItemGuessFeature.class).displayHoveredItemInGuide(hoveredslot);
     }
 }
