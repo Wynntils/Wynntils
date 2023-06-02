@@ -21,7 +21,7 @@ import com.wynntils.core.features.overlays.OverlaySize;
 import com.wynntils.core.features.overlays.RenderState;
 import com.wynntils.core.features.overlays.TextOverlay;
 import com.wynntils.core.features.overlays.annotations.OverlayInfo;
-import com.wynntils.core.text.CodedString;
+import com.wynntils.core.text.StyledText;
 import com.wynntils.mc.event.RenderEvent;
 import com.wynntils.models.map.MapTexture;
 import com.wynntils.models.map.PoiLocation;
@@ -373,7 +373,7 @@ public class MinimapFeature extends Feature {
                     2 * h + 1);
             fontRenderer.renderText(
                     poseStack,
-                    CodedString.fromString(text),
+                    StyledText.fromString(text),
                     compassRenderX,
                     compassRenderZ - 3f,
                     CommonColors.WHITE,

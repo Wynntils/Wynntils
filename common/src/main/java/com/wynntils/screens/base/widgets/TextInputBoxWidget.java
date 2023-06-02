@@ -5,7 +5,7 @@
 package com.wynntils.screens.base.widgets;
 
 import com.mojang.blaze3d.vertex.PoseStack;
-import com.wynntils.core.text.CodedString;
+import com.wynntils.core.text.StyledText;
 import com.wynntils.screens.base.TextboxScreen;
 import com.wynntils.utils.MathUtils;
 import com.wynntils.utils.colors.CommonColors;
@@ -133,7 +133,7 @@ public class TextInputBoxWidget extends AbstractWidget {
         FontRenderer.getInstance()
                 .renderAlignedTextInBox(
                         poseStack,
-                        CodedString.fromString(firstPortion),
+                        StyledText.fromString(firstPortion),
                         textPadding,
                         this.width - lastWidth - highlightedWidth,
                         textPadding,
@@ -147,7 +147,7 @@ public class TextInputBoxWidget extends AbstractWidget {
         FontRenderer.getInstance()
                 .renderAlignedHighlightedTextInBox(
                         poseStack,
-                        CodedString.fromString(highlightedPortion),
+                        StyledText.fromString(highlightedPortion),
                         textPadding + firstWidth,
                         this.width - lastWidth,
                         textPadding,
@@ -161,7 +161,7 @@ public class TextInputBoxWidget extends AbstractWidget {
         FontRenderer.getInstance()
                 .renderAlignedTextInBox(
                         poseStack,
-                        CodedString.fromString(lastPortion),
+                        StyledText.fromString(lastPortion),
                         textPadding + firstWidth + highlightedWidth,
                         this.width,
                         textPadding,

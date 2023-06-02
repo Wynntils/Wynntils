@@ -18,7 +18,7 @@ import com.wynntils.core.features.overlays.Overlay;
 import com.wynntils.core.features.overlays.OverlayPosition;
 import com.wynntils.core.features.overlays.OverlaySize;
 import com.wynntils.core.features.overlays.annotations.OverlayInfo;
-import com.wynntils.core.text.CodedString;
+import com.wynntils.core.text.StyledText;
 import com.wynntils.mc.event.RenderEvent;
 import com.wynntils.models.players.event.HadesRelationsUpdateEvent;
 import com.wynntils.models.players.event.HadesUserAddedEvent;
@@ -97,7 +97,7 @@ public class HadesPartyOverlayFeature extends Feature {
                     .renderText(
                             poseStack,
                             bufferSource,
-                            CodedString.fromString(hadesUser.getName()),
+                            StyledText.fromString(hadesUser.getName()),
                             0,
                             0,
                             CommonColors.WHITE,

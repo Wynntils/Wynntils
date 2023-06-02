@@ -7,7 +7,7 @@ package com.wynntils.screens.wynntilsmenu;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.wynntils.core.components.Managers;
 import com.wynntils.core.components.Models;
-import com.wynntils.core.text.CodedString;
+import com.wynntils.core.text.StyledText;
 import com.wynntils.features.map.MapFeature;
 import com.wynntils.screens.base.WynntilsMenuScreenBase;
 import com.wynntils.screens.discoveries.WynntilsDiscoveriesScreen;
@@ -222,7 +222,7 @@ public final class WynntilsMenuScreen extends WynntilsMenuScreenBase {
         FontRenderer.getInstance()
                 .renderAlignedTextInBox(
                         poseStack,
-                        CodedString.fromString(
+                        StyledText.fromString(
                                 ComponentUtils.getUnformatted(McUtils.player().getDisplayName())),
                         Texture.QUEST_BOOK_BACKGROUND.width() / 2f,
                         Texture.QUEST_BOOK_BACKGROUND.width(),
@@ -234,7 +234,7 @@ public final class WynntilsMenuScreen extends WynntilsMenuScreenBase {
         FontRenderer.getInstance()
                 .renderAlignedTextInBox(
                         poseStack,
-                        CodedString.fromString(
+                        StyledText.fromString(
                                 Models.Character.getClassType().getName().toUpperCase(Locale.ROOT) + " Level "
                                         + Models.CombatXp.getCombatLevel().current()),
                         Texture.QUEST_BOOK_BACKGROUND.width() / 2f,
@@ -250,7 +250,7 @@ public final class WynntilsMenuScreen extends WynntilsMenuScreenBase {
         FontRenderer.getInstance()
                 .renderAlignedTextInBox(
                         poseStack,
-                        CodedString.fromString(currentSplash),
+                        StyledText.fromString(currentSplash),
                         Texture.QUEST_BOOK_BACKGROUND.width() / 2f,
                         Texture.QUEST_BOOK_BACKGROUND.width(),
                         Texture.QUEST_BOOK_BACKGROUND.height() - 45,

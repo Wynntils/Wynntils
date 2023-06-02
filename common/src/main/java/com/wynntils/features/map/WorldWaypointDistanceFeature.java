@@ -15,7 +15,7 @@ import com.wynntils.core.config.ConfigCategory;
 import com.wynntils.core.config.ConfigHolder;
 import com.wynntils.core.config.RegisterConfig;
 import com.wynntils.core.features.Feature;
-import com.wynntils.core.text.CodedString;
+import com.wynntils.core.text.StyledText;
 import com.wynntils.mc.event.RenderEvent;
 import com.wynntils.mc.event.RenderLevelEvent;
 import com.wynntils.models.map.pois.WaypointPoi;
@@ -161,7 +161,7 @@ public class WorldWaypointDistanceFeature extends Feature {
             FontRenderer.getInstance()
                     .renderAlignedTextInBox(
                             event.getPoseStack(),
-                            CodedString.fromString(distanceText),
+                            StyledText.fromString(distanceText),
                             displayPositionX - backgroundWidth,
                             displayPositionX + backgroundWidth,
                             displayPositionY - backgroundHeight,

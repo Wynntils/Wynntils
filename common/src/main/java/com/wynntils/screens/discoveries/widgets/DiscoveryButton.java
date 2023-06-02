@@ -6,7 +6,7 @@ package com.wynntils.screens.discoveries.widgets;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.wynntils.core.components.Models;
-import com.wynntils.core.text.CodedString;
+import com.wynntils.core.text.StyledText;
 import com.wynntils.models.discoveries.DiscoveryInfo;
 import com.wynntils.models.discoveries.type.DiscoveryType;
 import com.wynntils.screens.base.TooltipProvider;
@@ -47,7 +47,7 @@ public class DiscoveryButton extends WynntilsButton implements TooltipProvider {
         FontRenderer.getInstance()
                 .renderText(
                         poseStack,
-                        CodedString.fromString(RenderedStringUtils.getMaxFittingText(
+                        StyledText.fromString(RenderedStringUtils.getMaxFittingText(
                                 discoveryInfo.getName(),
                                 maxTextWidth,
                                 FontRenderer.getInstance().getFont())),

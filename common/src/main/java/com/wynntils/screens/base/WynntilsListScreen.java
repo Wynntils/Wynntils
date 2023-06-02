@@ -5,7 +5,7 @@
 package com.wynntils.screens.base;
 
 import com.mojang.blaze3d.vertex.PoseStack;
-import com.wynntils.core.text.CodedString;
+import com.wynntils.core.text.StyledText;
 import com.wynntils.screens.base.widgets.TextInputBoxWidget;
 import com.wynntils.screens.base.widgets.WynntilsButton;
 import com.wynntils.screens.questbook.widgets.QuestBookSearchWidget;
@@ -77,7 +77,7 @@ public abstract class WynntilsListScreen<E, B extends WynntilsButton> extends Wy
         FontRenderer.getInstance()
                 .renderAlignedTextInBox(
                         poseStack,
-                        CodedString.fromString((currentPage) + " / " + (maxPage)),
+                        StyledText.fromString((currentPage) + " / " + (maxPage)),
                         Texture.QUEST_BOOK_BACKGROUND.width() / 2f,
                         Texture.QUEST_BOOK_BACKGROUND.width(),
                         Texture.QUEST_BOOK_BACKGROUND.height() - 25,
@@ -91,7 +91,7 @@ public abstract class WynntilsListScreen<E, B extends WynntilsButton> extends Wy
         FontRenderer.getInstance()
                 .renderAlignedTextInBox(
                         poseStack,
-                        CodedString.fromString(key),
+                        StyledText.fromString(key),
                         Texture.QUEST_BOOK_BACKGROUND.width() / 2f + 15f,
                         Texture.QUEST_BOOK_BACKGROUND.width() - 15f,
                         0,

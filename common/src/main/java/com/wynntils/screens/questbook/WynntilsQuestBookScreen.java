@@ -7,7 +7,7 @@ package com.wynntils.screens.questbook;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.components.Models;
-import com.wynntils.core.text.CodedString;
+import com.wynntils.core.text.StyledText;
 import com.wynntils.mc.event.MenuEvent;
 import com.wynntils.models.quests.QuestInfo;
 import com.wynntils.models.quests.event.QuestBookReloadedEvent;
@@ -186,7 +186,7 @@ public final class WynntilsQuestBookScreen extends WynntilsListScreen<QuestInfo,
         FontRenderer.getInstance()
                 .renderAlignedTextInBox(
                         poseStack,
-                        CodedString.fromString(I18n.get("screens.wynntils.wynntilsQuestBook.tryReload")),
+                        StyledText.fromString(I18n.get("screens.wynntils.wynntilsQuestBook.tryReload")),
                         Texture.QUEST_BOOK_BACKGROUND.width() / 2f + 15f,
                         Texture.QUEST_BOOK_BACKGROUND.width() - 15f,
                         0,
@@ -345,7 +345,7 @@ public final class WynntilsQuestBookScreen extends WynntilsListScreen<QuestInfo,
         FontRenderer.getInstance()
                 .renderAlignedTextInBox(
                         poseStack,
-                        CodedString.fromString(I18n.get("screens.wynntils.wynntilsQuestBook.description1")),
+                        StyledText.fromString(I18n.get("screens.wynntils.wynntilsQuestBook.description1")),
                         20,
                         Texture.QUEST_BOOK_BACKGROUND.width() / 2f - 10,
                         80,
@@ -357,7 +357,7 @@ public final class WynntilsQuestBookScreen extends WynntilsListScreen<QuestInfo,
         FontRenderer.getInstance()
                 .renderAlignedTextInBox(
                         poseStack,
-                        CodedString.fromString(I18n.get("screens.wynntils.wynntilsQuestBook.description2")),
+                        StyledText.fromString(I18n.get("screens.wynntils.wynntilsQuestBook.description2")),
                         20,
                         Texture.QUEST_BOOK_BACKGROUND.width() / 2f - 10,
                         170,

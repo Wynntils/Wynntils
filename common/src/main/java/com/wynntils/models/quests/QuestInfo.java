@@ -5,12 +5,12 @@
 package com.wynntils.models.quests;
 
 import com.wynntils.core.components.Models;
-import com.wynntils.core.text.CodedString;
+import com.wynntils.core.text.PartStyle;
+import com.wynntils.core.text.StyledText;
 import com.wynntils.models.profession.type.ProfessionType;
 import com.wynntils.models.quests.type.QuestLength;
 import com.wynntils.models.quests.type.QuestStatus;
 import com.wynntils.utils.StringUtils;
-import com.wynntils.utils.mc.ComponentUtils;
 import com.wynntils.utils.mc.RenderedStringUtils;
 import com.wynntils.utils.mc.type.Location;
 import com.wynntils.utils.type.Pair;
@@ -42,7 +42,7 @@ public class QuestInfo {
 
     // Quest progress can change over time
     private final QuestStatus status;
-    private CodedString nextTask;
+    private StyledText nextTask;
     private final boolean tracked;
 
     protected QuestInfo(
@@ -50,7 +50,7 @@ public class QuestInfo {
             QuestStatus status,
             QuestLength length,
             int level,
-            CodedString nextTask,
+            StyledText nextTask,
             List<Pair<String, Integer>> additionalRequirements,
             boolean isMiniQuest,
             int pageNumber,
@@ -79,7 +79,7 @@ public class QuestInfo {
     }
 
     public Optional<Location> getNextLocation() {
-        Matcher matcher = COORDINATE_PATTERN.matcher(ComponentUtils.stripFormatting(nextTask));
+        Matcher matcher = nextTask.getMatcher(COORDINATE_PATTERN, PartStyle.StyleType.NONE);
         if (!matcher.matches()) return Optional.empty();
 
         return Optional.of(new Location(
@@ -102,11 +102,11 @@ public class QuestInfo {
                 : additionalRequirements.get(0).b();
     }
 
-    public CodedString getNextTask() {
+    public StyledText getNextTask() {
         return nextTask;
     }
 
-    public void setNextTask(CodedString nextTask) {
+    public void setNextTask(StyledText nextTask) {
         this.nextTask = nextTask;
     }
 
@@ -194,11 +194,11 @@ public class QuestInfo {
 
         if (questInfo.getStatus() != QuestStatus.COMPLETED) {
             tooltipLines.add(Component.literal(""));
-            CodedString nextTask = questInfo.getNextTask();
-            CodedString[] lines = RenderedStringUtils.wrapTextBySize(nextTask, NEXT_TASK_MAX_WIDTH);
+            StyledText nextTask = questInfo.getNextTask();
+            StyledText[] lines = RenderedStringUtils.wrapTextBySize(nextTask, NEXT_TASK_MAX_WIDTH);
 
-            for (CodedString line : lines) {
-                tooltipLines.add(line.asSingleLiteralComponentWithCodedString().withStyle(ChatFormatting.GRAY));
+            for (StyledText line : lines) {
+                tooltipLines.add(line.getComponent().withStyle(ChatFormatting.GRAY));
             }
         }
 

@@ -6,6 +6,7 @@ package com.wynntils.utils.mc;
 
 import com.wynntils.core.text.CodedString;
 import com.wynntils.core.text.StyledText;
+import com.wynntils.core.text.StyledTextPart;
 import com.wynntils.utils.MathUtils;
 import com.wynntils.utils.wynn.WynnUtils;
 import java.awt.Color;
@@ -164,31 +165,12 @@ public final class ComponentUtils {
         return text.getMatcher(COLOR_CODE_PATTERN).replaceAll("§r");
     }
 
-    public static CodedString getLastPartCodes(CodedString lastPart) {
-        if (!lastPart.contains("§")) return CodedString.EMPTY;
+    public static Style getLastPartCodes(StyledText lastPart) {
+        StyledTextPart lastTextPart = lastPart.getLastPart();
 
-        CodedString lastPartCodes = CodedString.EMPTY;
-        int index;
-        while ((index = lastPart.getInternalCodedStringRepresentation().lastIndexOf('§')) != -1) {
-            if (index >= lastPart.getInternalCodedStringRepresentation().length() - 1) {
-                // trailing §, no format code, skip it
-                lastPart = CodedString.fromString(
-                        lastPart.getInternalCodedStringRepresentation().substring(0, index));
-                continue;
-            }
-            String thisCode = lastPart.getInternalCodedStringRepresentation().substring(index, index + 2);
-            if (thisCode.charAt(1) == 'r') {
-                // it's a reset code, we can stop looking
-                break;
-            }
-            // prepend to codes since we're going backwards
-            lastPartCodes = lastPartCodes.prepend(thisCode);
+        if (lastTextPart == null) return Style.EMPTY;
 
-            lastPart = CodedString.fromString(
-                    lastPart.getInternalCodedStringRepresentation().substring(0, index));
-        }
-
-        return lastPartCodes;
+        return lastTextPart.getPartStyle().getStyle();
     }
 
     public static Component formattedTextToComponent(FormattedText formattedText) {

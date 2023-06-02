@@ -6,7 +6,7 @@ package com.wynntils.screens.maps.widgets;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.wynntils.core.components.Models;
-import com.wynntils.core.text.CodedString;
+import com.wynntils.core.text.StyledText;
 import com.wynntils.models.map.pois.SeaskipperDestinationPoi;
 import com.wynntils.screens.base.widgets.WynntilsButton;
 import com.wynntils.utils.colors.CommonColors;
@@ -61,7 +61,7 @@ public class SeaskipperDestinationButton extends WynntilsButton {
         FontRenderer.getInstance()
                 .renderText(
                         poseStack,
-                        CodedString.fromString(destinationName),
+                        StyledText.fromString(destinationName),
                         0,
                         0,
                         CommonColors.BLACK,
@@ -81,7 +81,7 @@ public class SeaskipperDestinationButton extends WynntilsButton {
         FontRenderer.getInstance()
                 .renderText(
                         poseStack,
-                        CodedString.fromString("Cost: %d²"
+                        StyledText.fromString("Cost: %d²"
                                 .formatted(destination.getDestination().item().getPrice())),
                         0,
                         10f,

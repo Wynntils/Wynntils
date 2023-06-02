@@ -6,6 +6,7 @@ package com.wynntils.models.quests;
 
 import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.text.CodedString;
+import com.wynntils.core.text.StyledText;
 import com.wynntils.models.quests.type.QuestLength;
 import com.wynntils.models.quests.type.QuestStatus;
 import com.wynntils.utils.mc.LoreUtils;
@@ -45,7 +46,10 @@ public final class QuestInfoParser {
 
             if (!skipEmptyLine(lore)) return null;
 
-            CodedString description = getDescription(lore);
+            // FIXME: Remove when LoreUtils is ported...
+            List<StyledText> styledTextLore =
+                    lore.stream().map(StyledText::fromCodedString).toList();
+            StyledText description = getDescription(styledTextLore);
             boolean tracked = isQuestTracked(itemStack);
 
             return new QuestInfo(
@@ -145,9 +149,9 @@ public final class QuestInfoParser {
         return QuestLength.fromString(m.group(1));
     }
 
-    private static CodedString getDescription(List<CodedString> lore) {
+    private static StyledText getDescription(List<StyledText> lore) {
         // The last two lines is an empty line and "RIGHT-CLICK TO TRACK"; skip those
-        List<CodedString> descriptionLines = lore.subList(0, lore.size() - 2);
+        List<StyledText> descriptionLines = lore.subList(0, lore.size() - 2);
         // Every line begins with a format code of length 2 ("§7"), skip that
         // and join everything together, trying to avoid excess whitespace
 
@@ -157,10 +161,10 @@ public final class QuestInfoParser {
         String description = String.join(
                         " ",
                         descriptionLines.stream()
-                                .map(CodedString::getUnformattedString)
+                                .map(StyledText::getStringWithoutFormatting)
                                 .toList())
                 .replaceAll("\\s+", " ")
                 .trim();
-        return CodedString.fromString(description);
+        return StyledText.fromString(description);
     }
 }
