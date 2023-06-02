@@ -65,8 +65,8 @@ public class StatusOverlayFeature extends Feature {
 
         private void recalculateRenderCache() {
             renderCache = Models.StatusEffect.getStatusEffects().stream()
-                    .map(statusTimer ->
-                            new TextRenderTask(statusTimer.asString(), statusOverlay.getTextRenderSetting()))
+                    .map(statusTimer -> new TextRenderTask(
+                            CodedString.fromStyledText(statusTimer.asString()), statusOverlay.getTextRenderSetting()))
                     .toList();
         }
 

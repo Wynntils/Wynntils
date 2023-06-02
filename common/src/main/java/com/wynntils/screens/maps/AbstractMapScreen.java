@@ -32,6 +32,7 @@ import com.wynntils.utils.type.BoundingBox;
 import java.util.ArrayList;
 import java.util.List;
 import net.minecraft.client.KeyMapping;
+import net.minecraft.client.Options;
 import net.minecraft.client.gui.components.Renderable;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.network.chat.Component;
@@ -86,24 +87,13 @@ public abstract class AbstractMapScreen extends WynntilsScreen {
     protected void doInit() {
         // FIXME: Figure out a way to not need this.
         //        At the moment, this is needed for Minecraft not to forget we hold keys when we open the GUI...
-        KeyMapping.set(
-                McUtils.mc().options.keyUp.key,
-                KeyboardUtils.isKeyDown(McUtils.mc().options.keyUp.key.getValue()));
-        KeyMapping.set(
-                McUtils.mc().options.keyDown.key,
-                KeyboardUtils.isKeyDown(McUtils.mc().options.keyDown.key.getValue()));
-        KeyMapping.set(
-                McUtils.mc().options.keyLeft.key,
-                KeyboardUtils.isKeyDown(McUtils.mc().options.keyLeft.key.getValue()));
-        KeyMapping.set(
-                McUtils.mc().options.keyRight.key,
-                KeyboardUtils.isKeyDown(McUtils.mc().options.keyRight.key.getValue()));
-        KeyMapping.set(
-                McUtils.mc().options.keyJump.key,
-                KeyboardUtils.isKeyDown(McUtils.mc().options.keyJump.key.getValue()));
-        KeyMapping.set(
-                McUtils.mc().options.keyShift.key,
-                KeyboardUtils.isKeyDown(McUtils.mc().options.keyShift.key.getValue()));
+        Options options = McUtils.options();
+        KeyMapping.set(options.keyUp.key, KeyboardUtils.isKeyDown(options.keyUp.key.getValue()));
+        KeyMapping.set(options.keyDown.key, KeyboardUtils.isKeyDown(options.keyDown.key.getValue()));
+        KeyMapping.set(options.keyLeft.key, KeyboardUtils.isKeyDown(options.keyLeft.key.getValue()));
+        KeyMapping.set(options.keyRight.key, KeyboardUtils.isKeyDown(options.keyRight.key.getValue()));
+        KeyMapping.set(options.keyJump.key, KeyboardUtils.isKeyDown(options.keyJump.key.getValue()));
+        KeyMapping.set(options.keyShift.key, KeyboardUtils.isKeyDown(options.keyShift.key.getValue()));
 
         renderWidth = this.width - SCREEN_SIDE_OFFSET * 2f;
         renderHeight = this.height - SCREEN_SIDE_OFFSET * 2f;

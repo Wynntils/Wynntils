@@ -12,6 +12,7 @@ import com.wynntils.core.config.ConfigCategory;
 import com.wynntils.core.config.RegisterConfig;
 import com.wynntils.core.features.Feature;
 import com.wynntils.core.text.CodedString;
+import com.wynntils.core.text.StyledText;
 import com.wynntils.mc.event.ContainerClickEvent;
 import com.wynntils.mc.event.ItemTooltipRenderEvent;
 import com.wynntils.utils.mc.ComponentUtils;
@@ -33,7 +34,7 @@ import net.minecraftforge.eventbus.api.SubscribeEvent;
 
 @ConfigCategory(Category.INVENTORY)
 public class BulkBuyFeature extends Feature {
-    public static final CodedString PRICE_STR = CodedString.fromString("§6Price:");
+    public static final StyledText PRICE_STR = StyledText.fromString("§6Price:");
 
     @RegisterConfig
     public final Config<Integer> bulkBuyAmount = new Config<>(4);
@@ -60,7 +61,7 @@ public class BulkBuyFeature extends Feature {
     // This needs to be low so it runs after weapon tooltips are generated (for weapon merchants)
     @SubscribeEvent(priority = EventPriority.LOW)
     public void onTooltipPre(ItemTooltipRenderEvent.Pre event) {
-        if (!isBulkBuyable(McUtils.player().containerMenu, event.getItemStack())) return;
+        if (!isBulkBuyable(McUtils.containerMenu(), event.getItemStack())) return;
 
         List<Component> tooltips = List.of(
                 Component.literal(""), // Empty line
@@ -109,6 +110,6 @@ public class BulkBuyFeature extends Feature {
 
         return title.startsWith(ChatFormatting.GREEN.toString())
                 && title.endsWith(" Shop")
-                && LoreUtils.getStringLore(toBuy).contains(PRICE_STR);
+                && StyledText.fromCodedString(LoreUtils.getStringLore(toBuy)).contains(PRICE_STR);
     }
 }
