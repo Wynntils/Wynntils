@@ -5,7 +5,7 @@
 package com.wynntils.utils.render.buffered;
 
 import com.mojang.blaze3d.vertex.PoseStack;
-import com.wynntils.core.text.CodedString;
+import com.wynntils.core.text.StyledText;
 import com.wynntils.mc.mixin.accessors.MinecraftAccessor;
 import com.wynntils.utils.colors.CommonColors;
 import com.wynntils.utils.colors.CustomColor;
@@ -19,6 +19,7 @@ import com.wynntils.utils.render.type.VerticalAlignment;
 import java.util.List;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.renderer.MultiBufferSource;
+import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.FormattedText;
 import net.minecraft.network.chat.Style;
 
@@ -44,7 +45,7 @@ public final class BufferedFontRenderer {
     public void renderText(
             PoseStack poseStack,
             MultiBufferSource bufferSource,
-            CodedString text,
+            StyledText text,
             float x,
             float y,
             CustomColor customColor,
@@ -61,8 +62,8 @@ public final class BufferedFontRenderer {
 
         renderX = switch (horizontalAlignment) {
             case LEFT -> x;
-            case CENTER -> x - (font.width(text.getUnformattedString()) / 2f * textScale);
-            case RIGHT -> x - font.width(text.getUnformattedString()) * textScale;};
+            case CENTER -> x - (font.width(text.getStringWithoutFormatting()) / 2f * textScale);
+            case RIGHT -> x - font.width(text.getStringWithoutFormatting()) * textScale;};
 
         renderY = switch (verticalAlignment) {
             case TOP -> y;
@@ -75,7 +76,7 @@ public final class BufferedFontRenderer {
 
         switch (shadow) {
             case NONE -> font.drawInBatch(
-                    text.getInternalCodedStringRepresentation(),
+                    text.getString(),
                     0,
                     0,
                     customColor.asInt(),
@@ -87,7 +88,7 @@ public final class BufferedFontRenderer {
                     0xF000F0,
                     font.isBidirectional());
             case NORMAL -> font.drawInBatch(
-                    text.getInternalCodedStringRepresentation(),
+                    text.getString(),
                     0,
                     0,
                     customColor.asInt(),
@@ -100,7 +101,7 @@ public final class BufferedFontRenderer {
                     font.isBidirectional());
             case OUTLINE -> {
                 int shadowColor = SHADOW_COLOR.withAlpha(customColor.a).asInt();
-                String strippedText = ComponentUtils.stripColorFormatting(text);
+                String strippedText = text.getStringWithoutFormatting();
 
                 font.drawInBatch(
                         strippedText,
@@ -152,7 +153,7 @@ public final class BufferedFontRenderer {
                         font.isBidirectional());
 
                 font.drawInBatch(
-                        text.getInternalCodedStringRepresentation(),
+                        text.getString(),
                         0,
                         0,
                         customColor.asInt(),
@@ -172,7 +173,7 @@ public final class BufferedFontRenderer {
     public void renderAlignedTextInBox(
             PoseStack poseStack,
             MultiBufferSource bufferSource,
-            CodedString text,
+            StyledText text,
             float x1,
             float x2,
             float y1,
@@ -214,7 +215,7 @@ public final class BufferedFontRenderer {
     public void renderAlignedTextInBox(
             PoseStack poseStack,
             MultiBufferSource bufferSource,
-            CodedString text,
+            StyledText text,
             float x1,
             float x2,
             float y1,
@@ -243,7 +244,7 @@ public final class BufferedFontRenderer {
     public void renderAlignedTextInBox(
             PoseStack poseStack,
             MultiBufferSource bufferSource,
-            CodedString text,
+            StyledText text,
             float x1,
             float x2,
             float y,
@@ -270,7 +271,7 @@ public final class BufferedFontRenderer {
     public void renderAlignedTextInBox(
             PoseStack poseStack,
             MultiBufferSource bufferSource,
-            CodedString text,
+            StyledText text,
             float x,
             float y1,
             float y2,
@@ -297,7 +298,7 @@ public final class BufferedFontRenderer {
     public void renderText(
             PoseStack poseStack,
             MultiBufferSource bufferSource,
-            CodedString text,
+            StyledText text,
             float x,
             float y,
             CustomColor customColor,
@@ -311,7 +312,7 @@ public final class BufferedFontRenderer {
     public void renderText(
             PoseStack poseStack,
             MultiBufferSource bufferSource,
-            CodedString text,
+            StyledText text,
             float x,
             float y,
             float maxWidth,
@@ -322,7 +323,7 @@ public final class BufferedFontRenderer {
             float textScale) {
         if (text == null) return;
 
-        if (maxWidth == 0 || font.width(text.getUnformattedString()) < maxWidth) {
+        if (maxWidth == 0 || font.width(text.getStringWithoutFormatting()) < maxWidth) {
             renderText(
                     poseStack,
                     bufferSource,
@@ -337,16 +338,17 @@ public final class BufferedFontRenderer {
             return;
         }
 
-        // FIXME..?
-        List<FormattedText> parts =
-                font.getSplitter().splitLines(text.getInternalCodedStringRepresentation(), (int) maxWidth, Style.EMPTY);
+        List<FormattedText> parts = font.getSplitter().splitLines(text.getComponent(), (int) maxWidth, Style.EMPTY);
 
-        CodedString lastPart = CodedString.EMPTY;
+        StyledText lastPart = StyledText.EMPTY;
         for (int i = 0; i < parts.size(); i++) {
             // copy the format codes to this part as well
-            CodedString part = CodedString.fromString(
-                    ComponentUtils.getLastPartCodes(lastPart) + parts.get(i).getString());
+            Style lastStyle = ComponentUtils.getLastPartCodes(lastPart);
+
+            StyledText part = StyledText.fromComponent(Component.literal("").withStyle(lastStyle))
+                    .append(StyledText.fromComponent(ComponentUtils.formattedTextToComponent(parts.get(i))));
             lastPart = part;
+
             renderText(
                     poseStack,
                     bufferSource,
@@ -420,7 +422,7 @@ public final class BufferedFontRenderer {
             // If we ask Mojang code the line height of an empty line we get 0 back so replace with space
             currentY += FontRenderer.getInstance()
                     .calculateRenderHeight(
-                            line.getText().isEmpty() ? CodedString.fromString(" ") : line.getText(),
+                            line.getText().isEmpty() ? StyledText.fromString(" ") : line.getText(),
                             line.getSetting().maxWidth());
         }
     }
@@ -463,7 +465,7 @@ public final class BufferedFontRenderer {
     public void renderText(
             PoseStack poseStack,
             MultiBufferSource bufferSource,
-            CodedString text,
+            StyledText text,
             float x,
             float y,
             float maxWidth,

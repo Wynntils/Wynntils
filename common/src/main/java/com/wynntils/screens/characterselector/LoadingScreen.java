@@ -6,7 +6,7 @@ package com.wynntils.screens.characterselector;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.wynntils.core.components.Managers;
-import com.wynntils.core.text.CodedString;
+import com.wynntils.core.text.StyledText;
 import com.wynntils.screens.base.WynntilsScreen;
 import com.wynntils.utils.colors.CommonColors;
 import com.wynntils.utils.colors.CustomColor;
@@ -69,7 +69,7 @@ public final class LoadingScreen extends WynntilsScreen {
         FontRenderer.getInstance()
                 .renderText(
                         poseStack,
-                        CodedString.fromString(logoString),
+                        StyledText.fromString(logoString),
                         centerX,
                         60,
                         CommonColors.WHITE,
@@ -81,7 +81,7 @@ public final class LoadingScreen extends WynntilsScreen {
         FontRenderer.getInstance()
                 .renderText(
                         poseStack,
-                        CodedString.fromString(message),
+                        StyledText.fromString(message),
                         centerX,
                         120,
                         MOSS_GREEN,

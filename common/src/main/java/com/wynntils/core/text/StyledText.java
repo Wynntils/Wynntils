@@ -576,6 +576,14 @@ public final class StyledText implements Iterable<StyledTextPart> {
         return parts.get(0);
     }
 
+    public StyledTextPart getLastPart() {
+        if (parts.isEmpty()) {
+            return null;
+        }
+
+        return parts.get(parts.size() - 1);
+    }
+
     public int getPartCount() {
         return parts.size();
     }

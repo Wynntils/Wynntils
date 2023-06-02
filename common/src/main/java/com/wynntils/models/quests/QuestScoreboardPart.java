@@ -7,6 +7,7 @@ package com.wynntils.models.quests;
 import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.components.Models;
 import com.wynntils.core.text.CodedString;
+import com.wynntils.core.text.StyledText;
 import com.wynntils.handlers.scoreboard.ScoreboardPart;
 import com.wynntils.handlers.scoreboard.ScoreboardSegment;
 import com.wynntils.handlers.scoreboard.type.SegmentMatcher;
@@ -46,8 +47,8 @@ public class QuestScoreboardPart extends ScoreboardPart {
         }
 
         String fixedName = WynnUtils.normalizeBadString(questName.toString().trim());
-        CodedString fixedNextTask =
-                CodedString.fromString(nextTask.toString().trim()).getNormalized();
+        StyledText fixedNextTask =
+                StyledText.fromString(nextTask.toString().trim()).getNormalized();
         Models.Quest.updateTrackedQuestFromScoreboard(fixedName, fixedNextTask);
     }
 
