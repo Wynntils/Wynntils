@@ -19,8 +19,7 @@ import net.minecraft.world.item.Items;
 
 public final class GearBoxAnnotator implements ItemAnnotator {
     private static final Pattern GEAR_BOX_PATTERN = Pattern.compile("^§[5abcdef]Unidentified (.*)$");
-    private static final Pattern LEVEL_RANGE_PATTERN =
-            Pattern.compile("^§a- (?:§r)?§7Lv\\. Range: (?:§r)?§f(\\d+)-(\\d+)$");
+    private static final Pattern LEVEL_RANGE_PATTERN = Pattern.compile("^§a- §7Lv\\. Range: §f(\\d+)-(\\d+)$");
 
     @Override
     public ItemAnnotation getAnnotation(ItemStack itemStack, StyledText name) {

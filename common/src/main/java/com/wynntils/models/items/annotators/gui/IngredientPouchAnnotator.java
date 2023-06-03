@@ -6,7 +6,6 @@ package com.wynntils.models.items.annotators.gui;
 
 import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.components.Models;
-import com.wynntils.core.text.CodedString;
 import com.wynntils.core.text.StyledText;
 import com.wynntils.handlers.item.ItemAnnotation;
 import com.wynntils.handlers.item.ItemAnnotator;
@@ -23,8 +22,8 @@ import net.minecraft.world.item.Items;
 
 public final class IngredientPouchAnnotator implements ItemAnnotator {
     private static final StyledText INGREDIENT_POUCH_NAME = StyledText.fromString("§6Ingredient Pouch");
-    private static final Pattern INGREDIENT_LORE_LINE_PATTERN = Pattern.compile(
-            "^§f(\\d+) x (?:§r)?§7([^§]*)(?:§r)?(?:§[3567])? \\[(?:§r)?§([8bde])✫(?:§r)?(§8)?✫(?:§r)?(§8)?✫(?:§r)?§[3567]\\]$");
+    private static final Pattern INGREDIENT_LORE_LINE_PATTERN =
+            Pattern.compile("^§f(\\d+) x §7([^§]*)(?:§[3567])? \\[§([8bde])✫(§8)?✫(§8)?✫§[3567]\\]$");
 
     @Override
     public ItemAnnotation getAnnotation(ItemStack itemStack, StyledText name) {
@@ -32,8 +31,8 @@ public final class IngredientPouchAnnotator implements ItemAnnotator {
         if (!name.equals(INGREDIENT_POUCH_NAME)) return null;
 
         List<Pair<IngredientInfo, Integer>> ingredients = new ArrayList<>();
-        List<CodedString> lore = LoreUtils.getLore(itemStack);
-        for (CodedString line : lore) {
+        List<StyledText> lore = LoreUtils.getLore(itemStack);
+        for (StyledText line : lore) {
             Matcher matcher = line.getMatcher(INGREDIENT_LORE_LINE_PATTERN);
             if (!matcher.matches()) continue;
 
