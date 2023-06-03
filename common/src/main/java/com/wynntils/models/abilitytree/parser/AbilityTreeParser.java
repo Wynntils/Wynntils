@@ -57,7 +57,7 @@ public final class AbilityTreeParser {
             state = AbilityTreeNodeState.UNLOCKABLE;
         }
 
-        List<StyledText> loreStyledText = LoreUtils.getLoreStyledText(itemStack);
+        List<StyledText> loreStyledText = LoreUtils.getLore(itemStack);
 
         int cost = 0;
         List<String> blocks = new ArrayList<>();

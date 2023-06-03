@@ -20,18 +20,18 @@ import net.minecraft.world.item.ItemStack;
 
 public final class QuestInfoParser {
     private static final Pattern QUEST_NAME_MATCHER =
-            Pattern.compile("^§.§l(Mini-Quest - )?([^֎À]*)[֎À]+ (§e\\[Tracked\\])?$");
+            Pattern.compile("^§l(Mini-Quest - )?([^֎À]*)[֎À]+ (§e\\[Tracked\\])?$");
     private static final Pattern STATUS_MATCHER = Pattern.compile("^§.(.*)(?:\\.\\.\\.|!)$");
-    private static final Pattern LENGTH_MATCHER = Pattern.compile("^§a-§r§7 Length: §r§f(.*)$");
-    private static final Pattern LEVEL_MATCHER = Pattern.compile("^§..§r§7 Combat Lv. Min: §r§f(\\d+)$");
-    private static final Pattern REQ_MATCHER = Pattern.compile("^§..§r§7 (.*) Lv. Min: §r§f(\\d+)$");
+    private static final Pattern LENGTH_MATCHER = Pattern.compile("^§a-§7 Length: §f(.*)$");
+    private static final Pattern LEVEL_MATCHER = Pattern.compile("^§..§7 Combat Lv. Min: §f(\\d+)$");
+    private static final Pattern REQ_MATCHER = Pattern.compile("^§..§7 (.*) Lv. Min: §f(\\d+)$");
 
     static QuestInfo parseItemStack(ItemStack itemStack, int pageNumber, boolean isMiniQuest) {
         try {
             String name = getQuestName(itemStack);
             if (name == null) return null;
 
-            LinkedList<CodedString> lore = LoreUtils.getLore(itemStack);
+            LinkedList<StyledText> lore = LoreUtils.getLore(itemStack);
 
             QuestStatus status = getQuestStatus(lore);
             if (status == null) return null;
@@ -46,10 +46,7 @@ public final class QuestInfoParser {
 
             if (!skipEmptyLine(lore)) return null;
 
-            // FIXME: Remove when LoreUtils is ported...
-            List<StyledText> styledTextLore =
-                    lore.stream().map(StyledText::fromCodedString).toList();
-            StyledText description = getDescription(styledTextLore);
+            StyledText description = getDescription(lore);
             boolean tracked = isQuestTracked(itemStack);
 
             return new QuestInfo(
@@ -90,8 +87,8 @@ public final class QuestInfoParser {
         return name.endsWith("§e[Tracked]");
     }
 
-    private static QuestStatus getQuestStatus(LinkedList<CodedString> lore) {
-        CodedString rawStatus = lore.pop();
+    private static QuestStatus getQuestStatus(LinkedList<StyledText> lore) {
+        StyledText rawStatus = lore.pop();
         Matcher m = rawStatus.getMatcher(STATUS_MATCHER);
         if (!m.find()) {
             WynntilsMod.warn("Non-matching status value: " + rawStatus);
@@ -100,8 +97,8 @@ public final class QuestInfoParser {
         return QuestStatus.fromString(m.group(1));
     }
 
-    private static boolean skipEmptyLine(LinkedList<CodedString> lore) {
-        CodedString loreLine = lore.pop();
+    private static boolean skipEmptyLine(LinkedList<StyledText> lore) {
+        StyledText loreLine = lore.pop();
         if (!loreLine.isEmpty()) {
             WynntilsMod.warn("Unexpected value in quest: " + loreLine);
             return false;
@@ -109,8 +106,8 @@ public final class QuestInfoParser {
         return true;
     }
 
-    private static int getLevel(LinkedList<CodedString> lore) {
-        CodedString rawLevel = lore.getFirst();
+    private static int getLevel(LinkedList<StyledText> lore) {
+        StyledText rawLevel = lore.getFirst();
         Matcher m = rawLevel.getMatcher(LEVEL_MATCHER);
         if (!m.find()) {
             // This can happen for the very first quests; accept without error
@@ -121,7 +118,7 @@ public final class QuestInfoParser {
         return Integer.parseInt(m.group(1));
     }
 
-    private static List<Pair<String, Integer>> getAdditionalRequirements(LinkedList<CodedString> lore) {
+    private static List<Pair<String, Integer>> getAdditionalRequirements(LinkedList<StyledText> lore) {
         List<Pair<String, Integer>> requirements = new LinkedList<>();
         Matcher m;
 
@@ -138,8 +135,8 @@ public final class QuestInfoParser {
         return requirements;
     }
 
-    private static QuestLength getQuestLength(LinkedList<CodedString> lore) {
-        CodedString lengthRaw = lore.pop();
+    private static QuestLength getQuestLength(LinkedList<StyledText> lore) {
+        StyledText lengthRaw = lore.pop();
 
         Matcher m = lengthRaw.getMatcher(LENGTH_MATCHER);
         if (!m.find()) {

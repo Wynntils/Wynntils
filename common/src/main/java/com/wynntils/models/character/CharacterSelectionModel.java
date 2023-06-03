@@ -104,7 +104,7 @@ public final class CharacterSelectionModel extends Model {
         int xp = 0;
         int soulPoints = 0;
         int finishedQuests = 0;
-        for (StyledText line : LoreUtils.getLoreAsStyledText(itemStack)) {
+        for (StyledText line : LoreUtils.getLore(itemStack)) {
             Matcher classMatcher = line.getMatcher(CLASS_ITEM_CLASS_PATTERN);
             if (classMatcher.matches()) {
                 String classTypeString = classMatcher.group("name");

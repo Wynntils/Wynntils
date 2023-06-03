@@ -19,7 +19,7 @@ import net.minecraft.world.item.ItemStack;
 
 public final class TeleportScrollAnnotator implements ItemAnnotator {
     private static final Pattern TELEPORT_SCROLL_PATTERN = Pattern.compile("^§b(.*) Teleport Scroll$");
-    private static final Pattern TELEPORT_LOCATION_PATTERN = Pattern.compile("§3- (?:§r)?§7Teleports to: (?:§r)§f(.*)");
+    private static final Pattern TELEPORT_LOCATION_PATTERN = Pattern.compile("§3- §7Teleports to: §f(.*)");
 
     @Override
     public ItemAnnotation getAnnotation(ItemStack itemStack, StyledText name) {
