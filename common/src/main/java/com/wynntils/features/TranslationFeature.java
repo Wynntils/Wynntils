@@ -13,12 +13,11 @@ import com.wynntils.core.config.RegisterConfig;
 import com.wynntils.core.features.Feature;
 import com.wynntils.core.features.properties.StartDisabled;
 import com.wynntils.core.net.translation.TranslationManager;
-import com.wynntils.core.text.CodedString;
+import com.wynntils.core.text.StyledText;
 import com.wynntils.handlers.chat.event.ChatMessageReceivedEvent;
 import com.wynntils.handlers.chat.event.NpcDialogEvent;
 import com.wynntils.handlers.chat.type.NpcDialogueType;
 import com.wynntils.handlers.chat.type.RecipientType;
-import com.wynntils.utils.mc.ComponentUtils;
 import com.wynntils.utils.mc.McUtils;
 import java.util.List;
 import net.minecraft.network.chat.Component;
@@ -55,11 +54,11 @@ public class TranslationFeature extends Feature {
         if (e.getRecipientType() != RecipientType.INFO && !translatePlayerChat.get()) return;
         if (e.getRecipientType() == RecipientType.INFO && !translateInfo.get()) return;
 
-        CodedString origCoded = e.getCodedMessage();
+        StyledText origCoded = e.getStyledText();
         String wrapped = wrapCoding(origCoded);
         Managers.Translation.getTranslator(translationService.get())
                 .translate(List.of(wrapped), languageName.get(), translatedMsgList -> {
-                    CodedString messageToSend;
+                    StyledText messageToSend;
                     if (!translatedMsgList.isEmpty()) {
                         String result = translatedMsgList.get(0);
                         messageToSend = unwrapCoding(result);
@@ -69,9 +68,7 @@ public class TranslationFeature extends Feature {
                         // We failed to get a translation; send the original message so it's not lost
                         messageToSend = origCoded;
                     }
-                    McUtils.mc()
-                            .doRunTask(() -> McUtils.sendMessageToClient(
-                                    messageToSend.asSingleLiteralComponentWithCodedString()));
+                    McUtils.mc().doRunTask(() -> McUtils.sendMessageToClient(messageToSend.getComponent()));
                 });
         if (!keepOriginal.get()) {
             e.setCanceled(true);
@@ -85,17 +82,13 @@ public class TranslationFeature extends Feature {
 
         if (!e.getChatMessage().isEmpty()) {
             List<String> wrapped = e.getChatMessage().stream()
-                    .map(component -> wrapCoding(ComponentUtils.getCoded(component)))
+                    .map(component -> wrapCoding(StyledText.fromComponent(component)))
                     .toList();
             Managers.Translation.getTranslator(translationService.get())
                     .translate(wrapped, languageName.get(), translatedMsgList -> {
-                        List<CodedString> unwrapped = translatedMsgList.stream()
+                        List<Component> translatedComponents = translatedMsgList.stream()
                                 .map(this::unwrapCoding)
-                                .toList();
-                        // FIXME: We need a ComponentUtils.componentFromCoded()...
-                        // This will currently remove all formatting :(
-                        List<Component> translatedComponents = unwrapped.stream()
-                                .map(s -> (Component) Component.literal(ComponentUtils.stripFormatting(s)))
+                                .map(s -> ((Component) s.getComponent()))
                                 .toList();
                         Managers.TickScheduler.scheduleNextTick(() -> {
                             NpcDialogEvent translatedEvent =
@@ -113,12 +106,12 @@ public class TranslationFeature extends Feature {
         }
     }
 
-    private CodedString unwrapCoding(String origCoded) {
-        return CodedString.fromString(origCoded.replaceAll("\\{ ?§ ?([0-9a-fklmnor]) ?\\}", "§$1"));
+    private StyledText unwrapCoding(String origCoded) {
+        return StyledText.fromString(origCoded.replaceAll("\\{ ?§ ?([0-9a-fklmnor]) ?\\}", "§$1"));
     }
 
-    private String wrapCoding(CodedString origCoded) {
-        return origCoded.getInternalCodedStringRepresentation().replaceAll("(§[0-9a-fklmnor])", "{$1}");
+    private String wrapCoding(StyledText origCoded) {
+        return origCoded.getString().replaceAll("(§[0-9a-fklmnor])", "{$1}");
     }
 
     private static class TranslatedNpcDialogEvent extends NpcDialogEvent {

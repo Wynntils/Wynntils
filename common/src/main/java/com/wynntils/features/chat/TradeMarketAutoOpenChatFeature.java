@@ -29,7 +29,7 @@ public class TradeMarketAutoOpenChatFeature extends Feature {
     public void onChatMessageReceive(ChatMessageReceivedEvent event) {
         if (!Models.WorldState.onWorld()) return;
 
-        if (event.getOriginalCodedString().getMatcher(TYPE_TO_CHAT_PATTERN).matches()) {
+        if (event.getOriginalStyledText().matches(TYPE_TO_CHAT_PATTERN)) {
             openChatWhenContainerClosed = true;
         }
     }
