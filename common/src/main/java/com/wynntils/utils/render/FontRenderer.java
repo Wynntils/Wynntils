@@ -187,7 +187,7 @@ public final class FontRenderer {
                 renderX,
                 cursorRenderY,
                 0,
-                font.width(text.getStringWithoutFormatting()),
+                font.width(text.getString()),
                 font.lineHeight + 2);
 
         renderAlignedTextInBox(
@@ -268,7 +268,7 @@ public final class FontRenderer {
             float textScale) {
         if (text == null) return;
 
-        if (maxWidth == 0 || font.width(text.getStringWithoutFormatting()) < maxWidth) {
+        if (maxWidth == 0 || font.width(text.getString()) < maxWidth) {
             renderText(poseStack, text, x, y, customColor, horizontalAlignment, verticalAlignment, shadow, textScale);
             return;
         }

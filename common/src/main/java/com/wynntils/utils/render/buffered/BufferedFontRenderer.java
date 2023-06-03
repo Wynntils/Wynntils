@@ -16,7 +16,9 @@ import com.wynntils.utils.render.TextRenderTask;
 import com.wynntils.utils.render.type.HorizontalAlignment;
 import com.wynntils.utils.render.type.TextShadow;
 import com.wynntils.utils.render.type.VerticalAlignment;
+import com.wynntils.utils.type.IterationDecision;
 import java.util.List;
+import net.minecraft.ChatFormatting;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.network.chat.Component;
@@ -62,8 +64,8 @@ public final class BufferedFontRenderer {
 
         renderX = switch (horizontalAlignment) {
             case LEFT -> x;
-            case CENTER -> x - (font.width(text.getStringWithoutFormatting()) / 2f * textScale);
-            case RIGHT -> x - font.width(text.getStringWithoutFormatting()) * textScale;};
+            case CENTER -> x - (font.width(text.getString()) / 2f * textScale);
+            case RIGHT -> x - font.width(text.getString()) * textScale;};
 
         renderY = switch (verticalAlignment) {
             case TOP -> y;
@@ -101,7 +103,12 @@ public final class BufferedFontRenderer {
                     font.isBidirectional());
             case OUTLINE -> {
                 int shadowColor = SHADOW_COLOR.withAlpha(customColor.a).asInt();
-                String strippedText = text.getStringWithoutFormatting();
+                String strippedText = text.iterate((part, changes) -> {
+                            changes.remove(part);
+                            changes.add(part.withStyle(partStyle -> partStyle.withColor(ChatFormatting.BLACK)));
+                            return IterationDecision.CONTINUE;
+                        })
+                        .getString();
 
                 font.drawInBatch(
                         strippedText,
@@ -323,7 +330,7 @@ public final class BufferedFontRenderer {
             float textScale) {
         if (text == null) return;
 
-        if (maxWidth == 0 || font.width(text.getStringWithoutFormatting()) < maxWidth) {
+        if (maxWidth == 0 || font.width(text.getString()) < maxWidth) {
             renderText(
                     poseStack,
                     bufferSource,
