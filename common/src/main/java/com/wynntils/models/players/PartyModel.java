@@ -9,7 +9,6 @@ import com.wynntils.core.components.Handlers;
 import com.wynntils.core.components.Managers;
 import com.wynntils.core.components.Model;
 import com.wynntils.core.components.Models;
-import com.wynntils.core.text.CodedString;
 import com.wynntils.core.text.StyledText;
 import com.wynntils.handlers.chat.event.ChatMessageReceivedEvent;
 import com.wynntils.handlers.chat.type.MessageType;
@@ -125,7 +124,7 @@ public final class PartyModel extends Model {
     public void onChatReceived(ChatMessageReceivedEvent event) {
         if (event.getMessageType() != MessageType.FOREGROUND) return;
 
-        CodedString coded = event.getOriginalCodedString();
+        StyledText coded = event.getOriginalStyledText();
 
         if (tryParsePartyMessages(coded)) {
             return;
@@ -140,8 +139,8 @@ public final class PartyModel extends Model {
         }
     }
 
-    private boolean tryParsePartyMessages(CodedString coded) {
-        if (coded.getMatcher(PARTY_CREATE_SELF).matches()) {
+    private boolean tryParsePartyMessages(StyledText coded) {
+        if (coded.matches(PARTY_CREATE_SELF)) {
             WynntilsMod.info("Player created a new party.");
 
             inParty = true;
@@ -153,17 +152,17 @@ public final class PartyModel extends Model {
             return true;
         }
 
-        if (coded.getMatcher(PARTY_DISBAND_ALL).matches()
-                || coded.getMatcher(PARTY_LEAVE_SELF_KICK).matches()
-                || coded.getMatcher(PARTY_LEAVE_SELF_ALREADYLEFT).matches()
-                || coded.getMatcher(PARTY_DISBAND_SELF).matches()) {
+        if (coded.matches(PARTY_DISBAND_ALL)
+                || coded.matches(PARTY_LEAVE_SELF_KICK)
+                || coded.matches(PARTY_LEAVE_SELF_ALREADYLEFT)
+                || coded.matches(PARTY_DISBAND_SELF)) {
             WynntilsMod.info("Player left the party.");
 
             resetData(); // (!) resetData() already posts events for both HadesRelationsUpdateEvent and PartyEvent
             return true;
         }
 
-        if (coded.getMatcher(PARTY_JOIN_SELF).matches()) {
+        if (coded.matches(PARTY_JOIN_SELF)) {
             WynntilsMod.info("Player joined a party.");
             requestData();
             return true;
@@ -265,8 +264,8 @@ public final class PartyModel extends Model {
         return false;
     }
 
-    private boolean tryParseNoPartyMessage(CodedString coded) {
-        if (coded.getMatcher(PARTY_LIST_SELF_FAILED).matches()) {
+    private boolean tryParseNoPartyMessage(StyledText coded) {
+        if (coded.matches(PARTY_LIST_SELF_FAILED)) {
             resetData();
             WynntilsMod.info("Player is not in a party.");
             return true;
@@ -275,7 +274,7 @@ public final class PartyModel extends Model {
         return false;
     }
 
-    private boolean tryParsePartyList(CodedString coded) {
+    private boolean tryParsePartyList(StyledText coded) {
         Matcher matcher = coded.getMatcher(PARTY_LIST_ALL);
         if (!matcher.matches()) return false;
 

@@ -5,10 +5,10 @@
 package com.wynntils.models.worlds;
 
 import com.wynntils.core.components.Model;
+import com.wynntils.core.text.PartStyle;
 import com.wynntils.handlers.chat.event.ChatMessageReceivedEvent;
 import com.wynntils.models.worlds.type.BombInfo;
 import com.wynntils.models.worlds.type.BombType;
-import com.wynntils.utils.mc.ComponentUtils;
 import java.util.List;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
@@ -29,9 +29,7 @@ public final class BombBellModel extends Model {
 
     @SubscribeEvent(priority = EventPriority.HIGHEST)
     public void onChat(ChatMessageReceivedEvent event) {
-        String unformatted = ComponentUtils.stripFormatting(event.getOriginalCodedString());
-
-        Matcher matcher = BOMB_BELL_PATTERN.matcher(unformatted);
+        Matcher matcher = event.getOriginalStyledText().getMatcher(BOMB_BELL_PATTERN, PartStyle.StyleType.NONE);
         if (matcher.matches()) {
             String user = matcher.group("user");
             String bomb = matcher.group("bomb");
