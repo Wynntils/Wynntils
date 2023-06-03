@@ -1,9 +1,21 @@
+## [0.0.3-alpha.54](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.53...v0.0.3-alpha.54) (2023-06-03)
+
+
+### Code Refactoring
+
+* Port LoreUtils to StyledText ([#1578](https://github.com/Wynntils/Artemis/issues/1578)) ([7c5dec2](https://github.com/Wynntils/Artemis/commit/7c5dec2e4d70a6c5200ba0d5672f110e885029dd))
+
 ## [0.0.3-alpha.53](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.52...v0.0.3-alpha.53) (2023-06-03)
 
 
 ### Code Refactoring
 
 * Port ChatMessageReceivedEvent to StyledText ([#1576](https://github.com/Wynntils/Artemis/issues/1576)) ([5dd1047](https://github.com/Wynntils/Artemis/commit/5dd1047141cd1a71a85b0db8c116530bd4368c28))
+
+
+### Miscellaneous Chores
+
+* **release:** v0.0.3-alpha.53 [skip ci] ([90aa475](https://github.com/Wynntils/Artemis/commit/90aa475d9ca607b305612786237ab12e4f309ec4))
 
 ## [0.0.3-alpha.52](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.51...v0.0.3-alpha.52) (2023-06-03)
 
@@ -40,16 +52,4 @@
 ### Miscellaneous Chores
 
 * **release:** v0.0.3-alpha.50 [skip ci] ([c98ca85](https://github.com/Wynntils/Artemis/commit/c98ca85f6b89d5da74910fd23c95fda75c6cb544))
-
-## [0.0.3-alpha.49](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.48...v0.0.3-alpha.49) (2023-06-01)
-
-
-### Code Refactoring
-
-* Port most CodedString usages in Feature to StyledText ([#1572](https://github.com/Wynntils/Artemis/issues/1572)) ([7352cc4](https://github.com/Wynntils/Artemis/commit/7352cc45db8dc4fd399d4ac4068b8ac41b26a3e8))
-
-
-### Miscellaneous Chores
-
-* **release:** v0.0.3-alpha.49 [skip ci] ([02680a3](https://github.com/Wynntils/Artemis/commit/02680a3a355911d1cbcba7c4448711ebfc18b272))
 
