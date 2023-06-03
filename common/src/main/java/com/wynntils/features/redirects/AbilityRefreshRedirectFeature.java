@@ -8,9 +8,8 @@ import com.wynntils.core.components.Managers;
 import com.wynntils.core.config.Category;
 import com.wynntils.core.config.ConfigCategory;
 import com.wynntils.core.features.Feature;
+import com.wynntils.core.text.PartStyle;
 import com.wynntils.handlers.chat.event.ChatMessageReceivedEvent;
-import com.wynntils.utils.mc.ComponentUtils;
-import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import net.minecraftforge.eventbus.api.EventPriority;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
@@ -21,10 +20,8 @@ public class AbilityRefreshRedirectFeature extends Feature {
 
     @SubscribeEvent(priority = EventPriority.HIGHEST)
     public void onChat(ChatMessageReceivedEvent event) {
-        Matcher matcher = REFRESH_PATTERN.matcher(ComponentUtils.stripFormatting(event.getOriginalCodedString()));
-        if (matcher.matches()) {
+        if (event.getOriginalStyledText().matches(REFRESH_PATTERN, PartStyle.StyleType.NONE)) {
             event.setCanceled(true);
-
             Managers.Notification.queueMessage(event.getOriginalMessage());
         }
     }
