@@ -6,12 +6,11 @@ package com.wynntils.models.quests;
 
 import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.components.Models;
-import com.wynntils.core.text.CodedString;
+import com.wynntils.core.text.PartStyle;
 import com.wynntils.core.text.StyledText;
 import com.wynntils.handlers.scoreboard.ScoreboardPart;
 import com.wynntils.handlers.scoreboard.ScoreboardSegment;
 import com.wynntils.handlers.scoreboard.type.SegmentMatcher;
-import com.wynntils.utils.mc.ComponentUtils;
 import com.wynntils.utils.wynn.WynnUtils;
 import java.util.List;
 import net.minecraft.ChatFormatting;
@@ -26,7 +25,7 @@ public class QuestScoreboardPart extends ScoreboardPart {
 
     @Override
     public void onSegmentChange(ScoreboardSegment newValue) {
-        List<CodedString> content = newValue.getContent();
+        List<StyledText> content = newValue.getContent();
 
         if (content.isEmpty()) {
             WynntilsMod.error("QuestHandler: content was empty.");
@@ -35,11 +34,11 @@ public class QuestScoreboardPart extends ScoreboardPart {
         StringBuilder questName = new StringBuilder();
         StringBuilder nextTask = new StringBuilder();
 
-        for (CodedString line : content) {
+        for (StyledText line : content) {
             if (line.startsWith("§e")) {
-                questName.append(ComponentUtils.stripFormatting(line)).append(" ");
+                questName.append(line.getString(PartStyle.StyleType.NONE)).append(" ");
             } else {
-                nextTask.append(line.getInternalCodedStringRepresentation()
+                nextTask.append(line.getString()
                                 .replaceAll(ChatFormatting.WHITE.toString(), ChatFormatting.AQUA.toString())
                                 .replaceAll(ChatFormatting.GRAY.toString(), ChatFormatting.RESET.toString()))
                         .append(" ");
