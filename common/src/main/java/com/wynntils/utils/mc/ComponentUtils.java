@@ -51,13 +51,6 @@ public final class ComponentUtils {
         return getCoded(component);
     }
 
-    public static StyledText getStyledTextFromJson(String jsonString) {
-        MutableComponent component = Component.Serializer.fromJson(jsonString);
-        if (component == null) return StyledText.EMPTY;
-
-        return StyledText.fromComponent(component);
-    }
-
     public static String getUnformatted(String jsonString) {
         MutableComponent component = Component.Serializer.fromJson(jsonString);
         if (component == null) return null;

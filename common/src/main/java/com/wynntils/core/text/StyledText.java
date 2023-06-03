@@ -120,6 +120,11 @@ public final class StyledText implements Iterable<StyledTextPart> {
         return fromString(codedString.getInternalCodedStringRepresentation());
     }
 
+    public static StyledText fromJson(String json) {
+        MutableComponent component = Component.Serializer.fromJson(json);
+        return component == null ? StyledText.EMPTY : StyledText.fromComponent(component);
+    }
+
     // We don't want to expose the actual string to the outside world
     // If you need to do an operation with this string, implement it as a method
     public String getString(PartStyle.StyleType type) {

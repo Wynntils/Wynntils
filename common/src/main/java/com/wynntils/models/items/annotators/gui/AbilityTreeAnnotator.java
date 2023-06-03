@@ -15,7 +15,7 @@ import net.minecraft.world.item.ItemStack;
 
 public final class AbilityTreeAnnotator implements ItemAnnotator {
     private static final StyledText ABILITY_TREE_NAME = StyledText.fromString("§b§lAbility Tree");
-    private static final Pattern ABILITY_POINTS_PATTERN = Pattern.compile("^§3✦ Unused Points: §r§f(\\d+)$");
+    private static final Pattern ABILITY_POINTS_PATTERN = Pattern.compile("^§3✦ Unused Points: §f(\\d+)$");
 
     @Override
     public ItemAnnotation getAnnotation(ItemStack itemStack, StyledText name) {

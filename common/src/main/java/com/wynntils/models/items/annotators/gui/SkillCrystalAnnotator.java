@@ -15,7 +15,7 @@ import net.minecraft.world.item.ItemStack;
 
 public final class SkillCrystalAnnotator implements ItemAnnotator {
     private static final StyledText SKILL_CRYSTAL_NAME = StyledText.fromString("§2§lSkill Crystal");
-    private static final Pattern SKILL_POINTS_PATTERN = Pattern.compile("^§7You have §r§a(\\d+)§r§7 skill points$");
+    private static final Pattern SKILL_POINTS_PATTERN = Pattern.compile("^§7You have §a(\\d+)§7 skill points$");
 
     @Override
     public ItemAnnotation getAnnotation(ItemStack itemStack, StyledText name) {

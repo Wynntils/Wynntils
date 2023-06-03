@@ -6,6 +6,7 @@ package com.wynntils.models.profession;
 
 import com.wynntils.core.components.Model;
 import com.wynntils.core.text.CodedString;
+import com.wynntils.core.text.StyledText;
 import com.wynntils.handlers.chat.event.ChatMessageReceivedEvent;
 import com.wynntils.handlers.labels.event.EntityLabelChangedEvent;
 import com.wynntils.models.character.CharacterModel;
@@ -38,7 +39,7 @@ public class ProfessionModel extends Model {
             Pattern.compile("§e\\s+You are now level (?<level>\\d+) in §r§f[ⓀⒸⒷⒿⒺⒹⓁⒶⒼⒻⒾⒽ]§r§e (?<name>.+)");
 
     private static final Pattern INFO_MENU_PROFESSION_LORE_PATTERN =
-            Pattern.compile("§6- §r§7[ⓀⒸⒷⒿⒺⒹⓁⒶⒼⒻⒾⒽ] Lv. (\\d+) (.+)§r§8 \\[([\\d.]+)%\\]");
+            Pattern.compile("§6- §7[ⓀⒸⒷⒿⒺⒹⓁⒶⒼⒻⒾⒽ] Lv. (\\d+) (.+)§8 \\[([\\d.]+)%\\]");
 
     private Map<ProfessionType, ProfessionProgress> professionProgressMap = new ConcurrentHashMap<>();
     private final Map<ProfessionType, TimedSet<Float>> rawXpGainInLastMinute = new HashMap<>();
@@ -85,8 +86,8 @@ public class ProfessionModel extends Model {
 
     public void resetValueFromItem(ItemStack professionInfoItem) {
         Map<ProfessionType, ProfessionProgress> levels = new ConcurrentHashMap<>();
-        List<CodedString> professionLore = LoreUtils.getLore(professionInfoItem);
-        for (CodedString line : professionLore) {
+        List<StyledText> professionLore = LoreUtils.getLore(professionInfoItem);
+        for (StyledText line : professionLore) {
             Matcher matcher = line.getMatcher(INFO_MENU_PROFESSION_LORE_PATTERN);
 
             if (matcher.matches()) {
