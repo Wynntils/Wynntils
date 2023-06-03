@@ -118,8 +118,6 @@ public final class ChatTabManager extends Manager {
             return;
         }
 
-        ChatTab oldFocused = focusedTab;
-
         focusedTab = focused;
 
         if (focusedTab == null) {
@@ -214,8 +212,7 @@ public final class ChatTabManager extends Manager {
         }
 
         Optional<Pattern> regex = chatTab.getCustomRegex();
-        return regex.isEmpty()
-                || event.getOriginalCodedString().getMatcher(regex.get()).matches();
+        return regex.isEmpty() || event.getStyledText().matches(regex.get());
     }
 
     private boolean matchMessageFromEvent(ChatTab chatTab, ClientsideMessageEvent event) {
@@ -228,6 +225,6 @@ public final class ChatTabManager extends Manager {
         Optional<Pattern> regex = chatTab.getCustomRegex();
         if (regex.isEmpty()) return true;
 
-        return event.getOriginalCodedString().getMatcher(regex.get()).matches();
+        return event.getOriginalStyledText().matches(regex.get());
     }
 }

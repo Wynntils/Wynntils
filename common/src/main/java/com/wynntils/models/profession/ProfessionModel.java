@@ -6,6 +6,7 @@ package com.wynntils.models.profession;
 
 import com.wynntils.core.components.Model;
 import com.wynntils.core.text.CodedString;
+import com.wynntils.core.text.StyledText;
 import com.wynntils.handlers.chat.event.ChatMessageReceivedEvent;
 import com.wynntils.handlers.labels.event.EntityLabelChangedEvent;
 import com.wynntils.models.character.CharacterModel;
@@ -32,10 +33,10 @@ public class ProfessionModel extends Model {
 
     // §dx2.0 §r§7[+§r§d28 §r§fⒺ §r§7Scribing XP] §r§6[56%]
     private static final Pattern PROFESSION_CRAFT_PATTERN = Pattern.compile(
-            "(§dx[\\d\\.]+ §r)?§7\\[\\+(§r§d)?(?<gain>\\d+) §r§f[ⓀⒸⒷⒿⒺⒹⓁⒶⒼⒻⒾⒽ] §r§7(?<name>.+) XP\\] §r§6\\[(?<current>\\d+)%\\]");
+            "(§dx[\\d\\.]+ )?§7\\[\\+(§d)?(?<gain>\\d+) §f[ⓀⒸⒷⒿⒺⒹⓁⒶⒼⒻⒾⒽ] §7(?<name>.+) XP\\] §6\\[(?<current>\\d+)%\\]");
 
     private static final Pattern PROFESSION_LEVELUP_PATTERN =
-            Pattern.compile("§e\\s+You are now level (?<level>\\d+) in §r§f[ⓀⒸⒷⒿⒺⒹⓁⒶⒼⒻⒾⒽ]§r§e (?<name>.+)");
+            Pattern.compile("§e\\s+You are now level (?<level>\\d+) in §f[ⓀⒸⒷⒿⒺⒹⓁⒶⒼⒻⒾⒽ]§e (?<name>.+)");
 
     private static final Pattern INFO_MENU_PROFESSION_LORE_PATTERN =
             Pattern.compile("§6- §r§7[ⓀⒸⒷⒿⒺⒹⓁⒶⒼⒻⒾⒽ] Lv. (\\d+) (.+)§r§8 \\[([\\d.]+)%\\]");
@@ -64,7 +65,7 @@ public class ProfessionModel extends Model {
 
     @SubscribeEvent
     public void onChatMessage(ChatMessageReceivedEvent event) {
-        CodedString codedMessage = event.getOriginalCodedString();
+        StyledText codedMessage = event.getOriginalStyledText();
 
         Matcher matcher = codedMessage.getMatcher(PROFESSION_CRAFT_PATTERN);
 
