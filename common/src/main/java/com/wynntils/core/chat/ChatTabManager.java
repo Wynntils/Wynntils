@@ -212,7 +212,7 @@ public final class ChatTabManager extends Manager {
         }
 
         Optional<Pattern> regex = chatTab.getCustomRegex();
-        return regex.isEmpty() || event.getStyledText().matches(regex.get());
+        return regex.isEmpty() || event.getOriginalStyledText().matches(regex.get());
     }
 
     private boolean matchMessageFromEvent(ChatTab chatTab, ClientsideMessageEvent event) {
