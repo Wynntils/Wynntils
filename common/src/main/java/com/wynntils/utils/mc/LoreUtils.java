@@ -80,7 +80,7 @@ public final class LoreUtils {
      * @return a {@link StyledText} representation of the lore
      */
     public static StyledText getStringLore(ItemStack itemStack) {
-        return StyledText.join("\n", getLore(itemStack));
+        return StyledText.concat(getLore(itemStack));
     }
 
     /** Get the lore NBT tag from an item, else return empty */
