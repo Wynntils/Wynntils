@@ -76,11 +76,10 @@ public final class LoreUtils {
     }
 
     /**
-     * Joins the lines of the lore of the given itemStack into a single one with new line characters.
-     * @return a {@link StyledText} representation of the lore
+     * Concatinates the lore of the given itemStack into a single StyledText
      */
     public static StyledText getStringLore(ItemStack itemStack) {
-        return StyledText.join("\n", getLore(itemStack));
+        return StyledText.concat(getLore(itemStack));
     }
 
     /** Get the lore NBT tag from an item, else return empty */
