@@ -8,7 +8,6 @@ import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.components.Handler;
 import com.wynntils.core.components.Managers;
 import com.wynntils.core.features.Feature;
-import com.wynntils.core.text.CodedString;
 import com.wynntils.core.text.PartStyle;
 import com.wynntils.core.text.StyledText;
 import com.wynntils.handlers.chat.event.ChatMessageReceivedEvent;
@@ -20,16 +19,17 @@ import com.wynntils.mc.event.ChatPacketReceivedEvent;
 import com.wynntils.mc.event.MobEffectEvent;
 import com.wynntils.utils.mc.ComponentUtils;
 import com.wynntils.utils.mc.McUtils;
+import net.minecraft.network.chat.Component;
+import net.minecraft.world.effect.MobEffects;
+import net.minecraftforge.eventbus.api.EventPriority;
+import net.minecraftforge.eventbus.api.SubscribeEvent;
+
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
 import java.util.regex.Pattern;
-import net.minecraft.network.chat.Component;
-import net.minecraft.world.effect.MobEffects;
-import net.minecraftforge.eventbus.api.EventPriority;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
 
 /**
  * The responsibility of this class is to act as the first gateway for incoming
@@ -197,8 +197,8 @@ public final class ChatHandler extends Handler {
         LinkedList<Component> dialogue = new LinkedList<>();
 
         StyledText firstLineCoded = StyledText.fromComponent(newLines.getFirst());
-        boolean isNpcConfirm = firstLineCoded.matches(NPC_CONFIRM_PATTERN);
-        boolean isNpcSelect = firstLineCoded.matches(NPC_SELECT_PATTERN);
+        boolean isNpcConfirm = firstLineCoded.find(NPC_CONFIRM_PATTERN);
+        boolean isNpcSelect = firstLineCoded.find(NPC_SELECT_PATTERN);
 
         if (isNpcConfirm || isNpcSelect) {
             // This is an NPC dialogue screen.
@@ -217,9 +217,9 @@ public final class ChatHandler extends Handler {
 
             // Separate the dialog part from any potential new "real" chat lines
             for (Component line : newLines) {
-                CodedString codedLine = ComponentUtils.getCoded(line);
+                StyledText codedLine = StyledText.fromComponent(line);
                 if (!dialogDone) {
-                    if (codedLine.getMatcher(EMPTY_LINE_PATTERN).find()) {
+                    if (codedLine.find(EMPTY_LINE_PATTERN)) {
                         if (!optionsFound) {
                             // First part of the dialogue found
                             optionsFound = true;
@@ -233,7 +233,7 @@ public final class ChatHandler extends Handler {
                     }
                 } else {
                     // If there is anything after the dialogue, it is new chat lines
-                    if (!codedLine.getMatcher(EMPTY_LINE_PATTERN).find()) {
+                    if (!codedLine.find(EMPTY_LINE_PATTERN)) {
                         newChatLines.push(line);
                     }
                 }
@@ -242,9 +242,9 @@ public final class ChatHandler extends Handler {
             // After a NPC dialog screen, Wynncraft sends a "clear screen" with line of ÀÀÀ...
             // We just ignore that part. Also, remove empty lines or lines with just the §r code
             while (!newLines.isEmpty()
-                    && ComponentUtils.getCoded(newLines.getFirst())
-                            .getMatcher(EMPTY_LINE_PATTERN)
-                            .find()) {
+                    && StyledText.fromComponent(newLines.getFirst())
+                            .find(EMPTY_LINE_PATTERN)
+                            ) {
                 newLines.removeFirst();
             }
 
