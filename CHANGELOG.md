@@ -1,9 +1,21 @@
+## [0.0.3-alpha.53](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.52...v0.0.3-alpha.53) (2023-06-03)
+
+
+### Code Refactoring
+
+* Port ChatMessageReceivedEvent to StyledText ([#1576](https://github.com/Wynntils/Artemis/issues/1576)) ([5dd1047](https://github.com/Wynntils/Artemis/commit/5dd1047141cd1a71a85b0db8c116530bd4368c28))
+
 ## [0.0.3-alpha.52](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.51...v0.0.3-alpha.52) (2023-06-03)
 
 
 ### Bug Fixes
 
 * Fix issues related to bold/italic text in (Buffered)FontRenderer ([#1577](https://github.com/Wynntils/Artemis/issues/1577)) ([ab91521](https://github.com/Wynntils/Artemis/commit/ab91521dfd231d81f62b5a0f190982f465d12191))
+
+
+### Miscellaneous Chores
+
+* **release:** v0.0.3-alpha.52 [skip ci] ([8cc52c3](https://github.com/Wynntils/Artemis/commit/8cc52c3502b93fb2c20e64357a11275f4084e1d1))
 
 ## [0.0.3-alpha.51](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.50...v0.0.3-alpha.51) (2023-06-02)
 
@@ -40,16 +52,4 @@
 ### Miscellaneous Chores
 
 * **release:** v0.0.3-alpha.49 [skip ci] ([02680a3](https://github.com/Wynntils/Artemis/commit/02680a3a355911d1cbcba7c4448711ebfc18b272))
-
-## [0.0.3-alpha.48](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.47...v0.0.3-alpha.48) (2023-06-01)
-
-
-### Bug Fixes
-
-* Fix not being able to track mini-quests not on the first page ([#1571](https://github.com/Wynntils/Artemis/issues/1571)) ([af97f84](https://github.com/Wynntils/Artemis/commit/af97f8479512c70efa8b5ed725f6a5b4e3fb47bd))
-
-
-### Miscellaneous Chores
-
-* **release:** v0.0.3-alpha.48 [skip ci] ([03fc048](https://github.com/Wynntils/Artemis/commit/03fc0480cb24608ae15ad3590cfbe337dc6c818b))
 
