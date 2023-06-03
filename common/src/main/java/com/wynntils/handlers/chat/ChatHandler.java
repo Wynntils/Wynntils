@@ -19,17 +19,16 @@ import com.wynntils.mc.event.ChatPacketReceivedEvent;
 import com.wynntils.mc.event.MobEffectEvent;
 import com.wynntils.utils.mc.ComponentUtils;
 import com.wynntils.utils.mc.McUtils;
-import net.minecraft.network.chat.Component;
-import net.minecraft.world.effect.MobEffects;
-import net.minecraftforge.eventbus.api.EventPriority;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
-
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
 import java.util.regex.Pattern;
+import net.minecraft.network.chat.Component;
+import net.minecraft.world.effect.MobEffects;
+import net.minecraftforge.eventbus.api.EventPriority;
+import net.minecraftforge.eventbus.api.SubscribeEvent;
 
 /**
  * The responsibility of this class is to act as the first gateway for incoming
@@ -242,9 +241,7 @@ public final class ChatHandler extends Handler {
             // After a NPC dialog screen, Wynncraft sends a "clear screen" with line of ÀÀÀ...
             // We just ignore that part. Also, remove empty lines or lines with just the §r code
             while (!newLines.isEmpty()
-                    && StyledText.fromComponent(newLines.getFirst())
-                            .find(EMPTY_LINE_PATTERN)
-                            ) {
+                    && StyledText.fromComponent(newLines.getFirst()).find(EMPTY_LINE_PATTERN)) {
                 newLines.removeFirst();
             }
 
