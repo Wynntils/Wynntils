@@ -5,7 +5,6 @@
 package com.wynntils.models.profession;
 
 import com.wynntils.core.components.Model;
-import com.wynntils.core.text.CodedString;
 import com.wynntils.core.text.StyledText;
 import com.wynntils.handlers.chat.event.ChatMessageReceivedEvent;
 import com.wynntils.handlers.labels.event.EntityLabelChangedEvent;
