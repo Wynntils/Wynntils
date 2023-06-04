@@ -6,6 +6,8 @@ package com.wynntils.models.discoveries;
 
 import com.wynntils.core.components.Models;
 import com.wynntils.core.text.CodedString;
+import com.wynntils.core.text.PartStyle;
+import com.wynntils.core.text.StyledText;
 import com.wynntils.models.discoveries.profile.DiscoveryProfile;
 import com.wynntils.models.discoveries.type.DiscoveryType;
 import com.wynntils.utils.mc.ComponentUtils;
@@ -48,7 +50,7 @@ public class DiscoveryInfo {
     }
 
     public static DiscoveryInfo parseFromItemStack(ItemStack itemStack) {
-        List<CodedString> lore = LoreUtils.getLore(itemStack);
+        List<StyledText> lore = LoreUtils.getLore(itemStack);
         if (lore.isEmpty()) {
             return null;
         }
@@ -63,7 +65,7 @@ public class DiscoveryInfo {
 
         StringBuilder descriptionBuilder = new StringBuilder();
         for (int i = 2; i < lore.size(); i++) {
-            descriptionBuilder.append(ComponentUtils.stripFormatting(lore.get(i)));
+            descriptionBuilder.append(lore.get(i).getString(PartStyle.StyleType.NONE));
         }
         String description = descriptionBuilder.toString();
 

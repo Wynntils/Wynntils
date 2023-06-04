@@ -15,7 +15,7 @@ import net.minecraft.world.item.ItemStack;
 
 public final class DailyRewardMultiplierAnnotator implements ItemAnnotator {
     private static final StyledText DAILY_REWARD_NAME = StyledText.fromString("§6§lDaily Reward");
-    private static final Pattern STREAK_PATTERN = Pattern.compile("^§e✦ Streak Multiplier: §r§f(\\d+)x$");
+    private static final Pattern STREAK_PATTERN = Pattern.compile("^§e✦ Streak Multiplier: §f(\\d+)x$");
 
     @Override
     public ItemAnnotation getAnnotation(ItemStack itemStack, StyledText name) {
