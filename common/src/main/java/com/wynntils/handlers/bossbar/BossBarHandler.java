@@ -9,10 +9,12 @@ import com.wynntils.core.components.Handler;
 import com.wynntils.core.text.StyledText;
 import com.wynntils.handlers.bossbar.event.BossBarAddedEvent;
 import com.wynntils.mc.event.BossHealthUpdateEvent;
+import com.wynntils.utils.type.Pair;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.UUID;
 import java.util.function.Consumer;
 import java.util.regex.Matcher;
@@ -56,17 +58,14 @@ public class BossBarHandler extends Handler {
                 boolean playMusic,
                 boolean createWorldFog) {
 
-            TrackedBar trackedBar = null;
-            Matcher matcher = null;
+            Optional<Pair<TrackedBar, Matcher>> trackedBarOpt = knownBars.stream()
+                    .map(bar -> new Pair<>(bar, StyledText.fromComponent(name).getMatcher(bar.pattern)))
+                    .filter(pair -> pair.b().matches())
+                    .findFirst();
+            if (trackedBarOpt.isEmpty()) return;
 
-            for (TrackedBar bar : knownBars) {
-                matcher = StyledText.fromComponent(name).getMatcher(bar.pattern);
-                if (matcher.matches()) {
-                    trackedBar = bar;
-                    break;
-                }
-            }
-            if (trackedBar == null) return;
+            TrackedBar trackedBar = trackedBarOpt.get().a();
+            Matcher matcher = trackedBarOpt.get().b();
 
             LerpingBossEvent bossEvent =
                     new LerpingBossEvent(id, name, progress, color, overlay, darkenScreen, playMusic, createWorldFog);
