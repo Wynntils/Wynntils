@@ -15,35 +15,26 @@ import net.minecraftforge.eventbus.api.Event;
 @Cancelable
 public class ClientsideMessageEvent extends Event {
     private final Component originalComponent;
-    private final CodedString originalCodedString;
     private final StyledText originalStyledText;
 
     private Component component;
-    private CodedString codedString;
     private StyledText styledText;
 
     public ClientsideMessageEvent(Component component) {
         this.originalComponent = component;
-        this.originalCodedString = ComponentUtils.getCoded(component);
         this.originalStyledText = StyledText.fromComponent(component);
 
         this.component = originalComponent;
-        this.codedString = originalCodedString;
         this.styledText = originalStyledText;
     }
 
     public void setMessage(Component component) {
         this.component = component;
-        this.codedString = ComponentUtils.getCoded(component);
         this.styledText = StyledText.fromComponent(component);
     }
 
     public Component getOriginalComponent() {
         return originalComponent;
-    }
-
-    public CodedString getOriginalCodedString() {
-        return originalCodedString;
     }
 
     public StyledText getOriginalStyledText() {
@@ -52,10 +43,6 @@ public class ClientsideMessageEvent extends Event {
 
     public Component getComponent() {
         return component;
-    }
-
-    public CodedString getCodedString() {
-        return codedString;
     }
 
     public StyledText getStyledText() {
