@@ -1,9 +1,21 @@
+## [0.0.3-alpha.59](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.58...v0.0.3-alpha.59) (2023-06-04)
+
+
+### Bug Fixes
+
+* Actually revert ComponentUtils#getUnformatted ([#1585](https://github.com/Wynntils/Artemis/issues/1585)) ([d5b713b](https://github.com/Wynntils/Artemis/commit/d5b713bdf31400dd0bec9bc01ac913c033fb5825))
+
 ## [0.0.3-alpha.58](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.57...v0.0.3-alpha.58) (2023-06-04)
 
 
 ### Code Refactoring
 
 * Port all direct CodedString usages to StyledText ([#1582](https://github.com/Wynntils/Artemis/issues/1582)) ([f1414a2](https://github.com/Wynntils/Artemis/commit/f1414a25c163138680f48487f035b81c0b1002a3))
+
+
+### Miscellaneous Chores
+
+* **release:** v0.0.3-alpha.58 [skip ci] ([cec87aa](https://github.com/Wynntils/Artemis/commit/cec87aa15e98b9ea64e645debb221e23d41f9137))
 
 ## [0.0.3-alpha.57](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.56...v0.0.3-alpha.57) (2023-06-04)
 
@@ -40,16 +52,4 @@
 ### Miscellaneous Chores
 
 * **release:** v0.0.3-alpha.55 [skip ci] ([345a2b4](https://github.com/Wynntils/Artemis/commit/345a2b409466a8633cb088f63fbba5fb93c5fb94))
-
-## [0.0.3-alpha.54](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.53...v0.0.3-alpha.54) (2023-06-03)
-
-
-### Code Refactoring
-
-* Port LoreUtils to StyledText ([#1578](https://github.com/Wynntils/Artemis/issues/1578)) ([7c5dec2](https://github.com/Wynntils/Artemis/commit/7c5dec2e4d70a6c5200ba0d5672f110e885029dd))
-
-
-### Miscellaneous Chores
-
-* **release:** v0.0.3-alpha.54 [skip ci] ([3f1e47c](https://github.com/Wynntils/Artemis/commit/3f1e47ccee0e4fb58f7c0f5f8a509cd14d69f0a2))
 
