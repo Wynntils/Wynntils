@@ -51,6 +51,8 @@ public class TranslationFeature extends Feature {
 
     @SubscribeEvent
     public void onChat(ChatMessageReceivedEvent e) {
+        if (languageName.get().isEmpty()) return;
+
         if (e.getRecipientType() != RecipientType.INFO && !translatePlayerChat.get()) return;
         if (e.getRecipientType() == RecipientType.INFO && !translateInfo.get()) return;
 
@@ -78,6 +80,8 @@ public class TranslationFeature extends Feature {
     @SubscribeEvent(priority = EventPriority.HIGHEST)
     public void onNpcDialgue(NpcDialogEvent e) {
         if (!translateNpc.get()) return;
+        if (languageName.get().isEmpty()) return;
+
         if (e instanceof TranslatedNpcDialogEvent) return;
 
         if (!e.getChatMessage().isEmpty()) {
