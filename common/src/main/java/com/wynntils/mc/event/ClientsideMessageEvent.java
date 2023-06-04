@@ -4,9 +4,7 @@
  */
 package com.wynntils.mc.event;
 
-import com.wynntils.core.text.CodedString;
 import com.wynntils.core.text.StyledText;
-import com.wynntils.utils.mc.ComponentUtils;
 import net.minecraft.network.chat.Component;
 import net.minecraftforge.eventbus.api.Cancelable;
 import net.minecraftforge.eventbus.api.Event;

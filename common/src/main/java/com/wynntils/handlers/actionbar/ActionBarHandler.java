@@ -7,7 +7,6 @@ package com.wynntils.handlers.actionbar;
 import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.components.Handler;
 import com.wynntils.core.components.Models;
-import com.wynntils.core.text.CodedString;
 import com.wynntils.core.text.StyledText;
 import com.wynntils.handlers.actionbar.type.ActionBarPosition;
 import com.wynntils.mc.event.ChatPacketReceivedEvent;
@@ -45,8 +44,7 @@ public final class ActionBarHandler extends Handler {
         // FIXME: Reverse dependency!
         if (!Models.WorldState.onWorld()) return;
 
-        StyledText content =
-                StyledText.fromComponent(event.getMessage());
+        StyledText content = StyledText.fromComponent(event.getMessage());
         if (content.equals(previousRawContent)) {
             // No changes, skip parsing
             if (!content.equals(previousProcessedContent)) {
