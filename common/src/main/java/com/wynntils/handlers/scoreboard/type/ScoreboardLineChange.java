@@ -4,7 +4,7 @@
  */
 package com.wynntils.handlers.scoreboard.type;
 
-import com.wynntils.core.text.CodedString;
+import com.wynntils.core.text.StyledText;
 import net.minecraft.server.ServerScoreboard;
 
-public record ScoreboardLineChange(CodedString lineText, ServerScoreboard.Method method, int lineIndex) {}
+public record ScoreboardLineChange(StyledText lineText, ServerScoreboard.Method method, int lineIndex) {}
