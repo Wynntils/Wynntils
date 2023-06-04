@@ -11,11 +11,9 @@ import com.wynntils.core.config.Config;
 import com.wynntils.core.config.ConfigCategory;
 import com.wynntils.core.config.RegisterConfig;
 import com.wynntils.core.features.Feature;
-import com.wynntils.core.text.CodedString;
 import com.wynntils.core.text.StyledText;
 import com.wynntils.mc.event.ContainerClickEvent;
 import com.wynntils.mc.event.ItemTooltipRenderEvent;
-import com.wynntils.utils.mc.ComponentUtils;
 import com.wynntils.utils.mc.KeyboardUtils;
 import com.wynntils.utils.mc.LoreUtils;
 import com.wynntils.utils.mc.McUtils;
@@ -39,8 +37,8 @@ public class BulkBuyFeature extends Feature {
     @RegisterConfig
     public final Config<Integer> bulkBuyAmount = new Config<>(4);
 
-    // Test suite: https://regexr.com/7998g
-    private static final Pattern PRICE_PATTERN = Pattern.compile("§6 - §r§(?:c✖|a✔) §r§f(\\d+)§r§7²");
+    // Test suite: https://regexr.com/7esio
+    private static final Pattern PRICE_PATTERN = Pattern.compile("§6 - §(?:c✖|a✔) §f(\\d+)§7²");
     private static final ChatFormatting BULK_BUY_ACTIVE_COLOR = ChatFormatting.GREEN;
 
     @SubscribeEvent
@@ -83,26 +81,27 @@ public class BulkBuyFeature extends Feature {
     private List<Component> replacePrices(List<Component> oldLore) {
         if (!KeyboardUtils.isShiftDown()) return oldLore;
 
-        CodedString priceLine = ComponentUtils.getCoded(oldLore.get(oldLore.size() - 1));
-        Matcher priceMatcher = priceLine.getMatcher(PRICE_PATTERN);
-        if (!priceMatcher.find()) {
-            WynntilsMod.warn("Could not find price for " + oldLore.get(0).getString() + " in " + priceLine);
-            return oldLore;
+        // iterate through lore to find the price, then replace it with the bulk buy price
+        // there is no better way to do this since we cannot tell which line is the price (user may or may not have nbt
+        // lines enabled/disabled)
+        for (Component line : oldLore) {
+            StyledText oldLine = StyledText.fromComponent(line);
+            Matcher priceMatcher = oldLine.getMatcher(PRICE_PATTERN);
+            if (!priceMatcher.find()) continue;
+
+            int newPrice = Integer.parseInt(priceMatcher.group(1)) * bulkBuyAmount.get();
+            StyledText newLine = StyledText.fromString(oldLine.getInternalCodedStringRepresentation()
+                    .replace(priceMatcher.group(1), BULK_BUY_ACTIVE_COLOR + Integer.toString(newPrice)));
+            if (newPrice > Models.Emerald.getAmountInInventory()) {
+                newLine = StyledText.fromString(newLine.getInternalCodedStringRepresentation()
+                        .replace("a✔", "c✖")); // Replace green checkmark with red x
+            }
+            List<Component> newLore = new ArrayList<>(oldLore);
+            newLore.set(newLore.indexOf(line), newLine.getComponent());
+            return newLore;
         }
-        int newPrice = Integer.parseInt(priceMatcher.group(1)) * bulkBuyAmount.get();
-
-        CodedString newLine = CodedString.fromString(priceLine
-                .getInternalCodedStringRepresentation()
-                .replace(priceMatcher.group(1), BULK_BUY_ACTIVE_COLOR + Integer.toString(newPrice)));
-
-        if (newPrice > Models.Emerald.getAmountInInventory()) {
-            newLine = CodedString.fromString(newLine.getInternalCodedStringRepresentation()
-                    .replace("a✔", "c✖")); // Replace green checkmark with red x
-        }
-
-        List<Component> newLore = new ArrayList<>(oldLore);
-        newLore.set(newLore.size() - 1, newLine.asSingleLiteralComponentWithCodedString());
-        return newLore;
+        WynntilsMod.warn("Could not find price for " + oldLore.get(0).getString());
+        return oldLore;
     }
 
     private boolean isBulkBuyable(AbstractContainerMenu menu, ItemStack toBuy) {
