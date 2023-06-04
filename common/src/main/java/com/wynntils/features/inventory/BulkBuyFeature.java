@@ -81,6 +81,8 @@ public class BulkBuyFeature extends Feature {
     private List<Component> replacePrices(List<Component> oldLore) {
         if (!KeyboardUtils.isShiftDown()) return oldLore;
 
+        List<Component> returnable = new ArrayList<>(oldLore);
+
         // iterate through lore to find the price, then replace it with the bulk buy price
         // there is no better way to do this since we cannot tell which line is the price (user may or may not have nbt
         // lines enabled/disabled)
@@ -96,12 +98,12 @@ public class BulkBuyFeature extends Feature {
                 newLine = StyledText.fromString(
                         newLine.getString().replace("a✔", "c✖")); // Replace green checkmark with red x
             }
-            List<Component> newLore = new ArrayList<>(oldLore);
-            newLore.set(newLore.indexOf(line), newLine.getComponent());
-            return newLore;
+            returnable.set(returnable.indexOf(line), newLine.getComponent());
         }
-        WynntilsMod.warn("Could not find price for " + oldLore.get(0).getString());
-        return oldLore;
+        if (returnable == oldLore) {
+            WynntilsMod.warn("Could not find price for " + oldLore.get(0).getString());
+        }
+        return returnable;
     }
 
     private boolean isBulkBuyable(AbstractContainerMenu menu, ItemStack toBuy) {
