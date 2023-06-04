@@ -40,9 +40,8 @@ public final class ComponentUtils {
 
     // Text without formatting codes "Test text"
     public static String getUnformatted(Component component) {
-        if (component == null) return null;
-
-        return getUnformatted(component);
+        return CodedString.fromComponentIgnoringComponentStylesAndJustUsingFormattingCodes(component)
+                .getUnformattedString();
     }
 
     private static StringBuilder tryConstructDifference(Style oldStyle, Style newStyle) {
