@@ -143,6 +143,9 @@ public final class StyledText implements Iterable<StyledTextPart> {
         return builder.toString();
     }
 
+    /**
+     * @return The string representation of this {@link StyledText} with default formatting codes.
+     */
     public String getString() {
         return getString(PartStyle.StyleType.DEFAULT);
     }
