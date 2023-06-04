@@ -11,7 +11,6 @@ import com.wynntils.core.config.Config;
 import com.wynntils.core.config.ConfigCategory;
 import com.wynntils.core.config.RegisterConfig;
 import com.wynntils.core.features.Feature;
-import com.wynntils.core.text.CodedString;
 import com.wynntils.core.text.StyledText;
 import com.wynntils.mc.event.ContainerCloseEvent;
 import com.wynntils.mc.event.ContainerSetContentEvent;
@@ -146,14 +145,13 @@ public class ContainerSearchFeature extends Feature {
             guildBankLastSearch = System.currentTimeMillis();
         }
 
-        CodedString name = ComponentUtils.getCoded(abstractContainerScreen
+        StyledText name = StyledText.fromComponent(abstractContainerScreen
                 .getMenu()
                 .getItems()
                 .get(currentSearchableContainerType.getNextItemSlot())
                 .getHoverName());
 
-        if (!name.getMatcher(currentSearchableContainerType.getNextItemPattern())
-                .matches()) {
+        if (!name.matches(currentSearchableContainerType.getNextItemPattern())) {
             autoSearching = false;
             return;
         }

@@ -40,19 +40,6 @@ public final class ComponentUtils {
 
     // Text without formatting codes "Test text"
     public static String getUnformatted(Component component) {
-        return CodedString.fromComponentIgnoringComponentStylesAndJustUsingFormattingCodes(component)
-                .getUnformattedString();
-    }
-
-    public static CodedString getCoded(String jsonString) {
-        MutableComponent component = Component.Serializer.fromJson(jsonString);
-        if (component == null) return CodedString.EMPTY;
-
-        return getCoded(component);
-    }
-
-    public static String getUnformatted(String jsonString) {
-        MutableComponent component = Component.Serializer.fromJson(jsonString);
         if (component == null) return null;
 
         return getUnformatted(component);
@@ -142,20 +129,6 @@ public final class ComponentUtils {
         }
 
         return newLore;
-    }
-
-    public static String stripFormatting(CodedString coded) {
-        return coded == null ? "" : coded.getUnformattedString();
-    }
-
-    public static String stripColorFormatting(CodedString text) {
-        if (text == null) {
-            return "";
-        }
-
-        // We replace color codes with a reset
-        // because color codes reset the non-color formatting codes
-        return text.getMatcher(COLOR_CODE_PATTERN).replaceAll("§r");
     }
 
     public static Style getLastPartCodes(StyledText lastPart) {

@@ -57,7 +57,7 @@ public final class ContainerModel extends Model {
     }
 
     public boolean isBankScreen(Screen screen) {
-        Matcher matcher = ComponentUtils.getCoded(screen.getTitle()).getMatcher(PERSONAL_STORAGE_PATTERN);
+        Matcher matcher = StyledText.fromComponent(screen.getTitle()).getMatcher(PERSONAL_STORAGE_PATTERN);
         if (!matcher.matches()) return false;
 
         String type = matcher.group(2);
@@ -75,9 +75,7 @@ public final class ContainerModel extends Model {
     }
 
     public boolean isGuildBankScreen(Screen screen) {
-        return ComponentUtils.getCoded(screen.getTitle())
-                .getMatcher(GUILD_BANK_PATTERN)
-                .matches();
+        return StyledText.fromComponent(screen.getTitle()).matches(GUILD_BANK_PATTERN);
     }
 
     public boolean isTradeMarketScreen(Screen screen) {
@@ -95,7 +93,7 @@ public final class ContainerModel extends Model {
     }
 
     public boolean isBlockBankScreen(Screen screen) {
-        Matcher matcher = ComponentUtils.getCoded(screen.getTitle()).getMatcher(PERSONAL_STORAGE_PATTERN);
+        Matcher matcher = StyledText.fromComponent(screen.getTitle()).getMatcher(PERSONAL_STORAGE_PATTERN);
         if (!matcher.matches()) return false;
 
         String type = matcher.group(2);
@@ -103,7 +101,7 @@ public final class ContainerModel extends Model {
     }
 
     public boolean isMiscBucketScreen(Screen screen) {
-        Matcher matcher = ComponentUtils.getCoded(screen.getTitle()).getMatcher(PERSONAL_STORAGE_PATTERN);
+        Matcher matcher = StyledText.fromComponent(screen.getTitle()).getMatcher(PERSONAL_STORAGE_PATTERN);
         if (!matcher.matches()) return false;
 
         String type = matcher.group(2);

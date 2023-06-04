@@ -10,6 +10,7 @@ import com.wynntils.core.config.Config;
 import com.wynntils.core.config.ConfigCategory;
 import com.wynntils.core.config.RegisterConfig;
 import com.wynntils.core.features.Feature;
+import com.wynntils.core.text.StyledText;
 import com.wynntils.handlers.chat.event.ChatMessageReceivedEvent;
 import com.wynntils.mc.event.ContainerSetSlotEvent;
 import com.wynntils.mc.event.ScreenOpenedEvent;
@@ -96,7 +97,7 @@ public class TradeMarketBulkSellFeature extends Feature {
         ItemStack is = cs.getMenu().getSlot(SELLABLE_ITEM_SLOT).getItem();
         if (is == ItemStack.EMPTY) return null;
         if (is.getHoverName().toString().contains("Click an Item to sell")) return null;
-        Matcher m = ComponentUtils.getCoded(is.getHoverName()).getMatcher(ITEM_NAME_PATTERN);
+        Matcher m = StyledText.fromComponent(is.getHoverName()).getMatcher(ITEM_NAME_PATTERN);
 
         if (!m.matches()) return null;
         return m.group(2);
