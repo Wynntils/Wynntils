@@ -20,7 +20,7 @@ import net.minecraft.world.item.ItemStack;
 
 public final class QuestInfoParser {
     private static final Pattern QUEST_NAME_MATCHER =
-            Pattern.compile("^§l(Mini-Quest - )?([^֎À]*)[֎À]+ (§e\\[Tracked\\])?$");
+            Pattern.compile("^§[2a64]§l(Mini-Quest - )?([^֎À]*)[֎À]+ (§e\\[Tracked\\])?$");
     private static final Pattern STATUS_MATCHER = Pattern.compile("^§.(.*)(?:\\.\\.\\.|!)$");
     private static final Pattern LENGTH_MATCHER = Pattern.compile("^§a-§7 Length: §f(.*)$");
     private static final Pattern LEVEL_MATCHER = Pattern.compile("^§..§7 Combat Lv. Min: §f(\\d+)$");

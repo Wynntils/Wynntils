@@ -76,7 +76,8 @@ public final class LoreUtils {
     }
 
     /**
-     * Concatinates the lore of the given itemStack into a single StyledText
+     * Concatinates the lore of the given itemStack into a single StyledText.
+     * To get the raw string, use {@link StyledText#getString()}.
      */
     public static StyledText getStringLore(ItemStack itemStack) {
         return StyledText.concat(getLore(itemStack));
