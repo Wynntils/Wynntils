@@ -93,8 +93,8 @@ public class BulkBuyFeature extends Feature {
             StyledText newLine = StyledText.fromString(oldLine.getString()
                     .replace(priceMatcher.group(1), BULK_BUY_ACTIVE_COLOR + Integer.toString(newPrice)));
             if (newPrice > Models.Emerald.getAmountInInventory()) {
-                newLine = StyledText.fromString(newLine.getString()
-                        .replace("a✔", "c✖")); // Replace green checkmark with red x
+                newLine = StyledText.fromString(
+                        newLine.getString().replace("a✔", "c✖")); // Replace green checkmark with red x
             }
             List<Component> newLore = new ArrayList<>(oldLore);
             newLore.set(newLore.indexOf(line), newLine.getComponent());
