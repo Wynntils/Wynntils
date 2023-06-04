@@ -1,9 +1,21 @@
+## [0.0.3-alpha.57](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.56...v0.0.3-alpha.57) (2023-06-04)
+
+
+### Bug Fixes
+
+* Don't "translate" (duplicate) messages if TranslationFeature is enabled, but  language is not set ([#1584](https://github.com/Wynntils/Artemis/issues/1584)) ([4ba9681](https://github.com/Wynntils/Artemis/commit/4ba9681a7695943fa17940aa332dc4fdc71f0b9c))
+
 ## [0.0.3-alpha.56](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.55...v0.0.3-alpha.56) (2023-06-04)
 
 
 ### Code Refactoring
 
 * Port ScoreboardHandler to StyledText ([#1579](https://github.com/Wynntils/Artemis/issues/1579)) ([6b456f8](https://github.com/Wynntils/Artemis/commit/6b456f8a29ab2e7885318a1fe3b5577f5a19725f))
+
+
+### Miscellaneous Chores
+
+* **release:** v0.0.3-alpha.56 [skip ci] ([5c73b15](https://github.com/Wynntils/Artemis/commit/5c73b15d771956a5693e664d568e38b49b292d94))
 
 ## [0.0.3-alpha.55](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.54...v0.0.3-alpha.55) (2023-06-04)
 
@@ -40,16 +52,4 @@
 ### Miscellaneous Chores
 
 * **release:** v0.0.3-alpha.53 [skip ci] ([90aa475](https://github.com/Wynntils/Artemis/commit/90aa475d9ca607b305612786237ab12e4f309ec4))
-
-## [0.0.3-alpha.52](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.51...v0.0.3-alpha.52) (2023-06-03)
-
-
-### Bug Fixes
-
-* Fix issues related to bold/italic text in (Buffered)FontRenderer ([#1577](https://github.com/Wynntils/Artemis/issues/1577)) ([ab91521](https://github.com/Wynntils/Artemis/commit/ab91521dfd231d81f62b5a0f190982f465d12191))
-
-
-### Miscellaneous Chores
-
-* **release:** v0.0.3-alpha.52 [skip ci] ([8cc52c3](https://github.com/Wynntils/Artemis/commit/8cc52c3502b93fb2c20e64357a11275f4084e1d1))
 
