@@ -8,6 +8,7 @@ import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.components.Handler;
 import com.wynntils.core.components.Models;
 import com.wynntils.core.text.CodedString;
+import com.wynntils.core.text.StyledText;
 import com.wynntils.handlers.actionbar.type.ActionBarPosition;
 import com.wynntils.mc.event.ChatPacketReceivedEvent;
 import java.util.ArrayList;
@@ -22,7 +23,7 @@ import net.minecraftforge.eventbus.api.SubscribeEvent;
 public final class ActionBarHandler extends Handler {
     // example: "§c❤ 218/218§0    §7502§f S§7 -1580    §b✺ 1/119"
     private static final Pattern ACTIONBAR_PATTERN = Pattern.compile("(?<LEFT>§[^§]+)(?<CENTER>.*)(?<RIGHT>§[^§]+)");
-    private static final CodedString CENTER_PADDING = CodedString.fromString("§0               ");
+    private static final StyledText CENTER_PADDING = StyledText.fromString("§0               ");
 
     private final Map<ActionBarPosition, List<ActionBarSegment>> allSegments = Map.of(
             ActionBarPosition.LEFT,
@@ -32,8 +33,8 @@ public final class ActionBarHandler extends Handler {
             ActionBarPosition.RIGHT,
             new ArrayList<>());
     private final Map<ActionBarPosition, ActionBarSegment> lastSegments = new HashMap<>();
-    private CodedString previousRawContent = null;
-    private CodedString previousProcessedContent;
+    private StyledText previousRawContent = null;
+    private StyledText previousProcessedContent;
 
     public void registerSegment(ActionBarSegment segment) {
         allSegments.get(segment.getPosition()).add(segment);
@@ -44,12 +45,12 @@ public final class ActionBarHandler extends Handler {
         // FIXME: Reverse dependency!
         if (!Models.WorldState.onWorld()) return;
 
-        CodedString content =
-                CodedString.fromComponentIgnoringComponentStylesAndJustUsingFormattingCodes(event.getMessage());
+        StyledText content =
+                StyledText.fromComponent(event.getMessage());
         if (content.equals(previousRawContent)) {
             // No changes, skip parsing
             if (!content.equals(previousProcessedContent)) {
-                event.setMessage(previousProcessedContent.asSingleLiteralComponentWithCodedString());
+                event.setMessage(previousProcessedContent.getComponent());
             }
             return;
         }
@@ -62,9 +63,9 @@ public final class ActionBarHandler extends Handler {
         }
 
         // Create map of position -> matching part of the content
-        Map<ActionBarPosition, CodedString> positionMatches = new HashMap<>();
+        Map<ActionBarPosition, StyledText> positionMatches = new HashMap<>();
         Arrays.stream(ActionBarPosition.values())
-                .forEach(pos -> positionMatches.put(pos, CodedString.fromString(matcher.group(pos.name()))));
+                .forEach(pos -> positionMatches.put(pos, StyledText.fromString(matcher.group(pos.name()))));
 
         Arrays.stream(ActionBarPosition.values()).forEach(pos -> processPosition(pos, positionMatches));
 
@@ -81,15 +82,15 @@ public final class ActionBarHandler extends Handler {
         if (!lastSegments.get(ActionBarPosition.RIGHT).isHidden()) {
             newContentBuilder.append(positionMatches.get(ActionBarPosition.RIGHT));
         }
-        CodedString newContent = CodedString.fromString(newContentBuilder.toString());
+        StyledText newContent = StyledText.fromString(newContentBuilder.toString());
         previousProcessedContent = newContent;
 
         if (!content.equals(newContent)) {
-            event.setMessage(newContent.asSingleLiteralComponentWithCodedString());
+            event.setMessage(newContent.getComponent());
         }
     }
 
-    private void processPosition(ActionBarPosition pos, Map<ActionBarPosition, CodedString> positionMatches) {
+    private void processPosition(ActionBarPosition pos, Map<ActionBarPosition, StyledText> positionMatches) {
         List<ActionBarSegment> potentialSegments = allSegments.get(pos);
         for (ActionBarSegment segment : potentialSegments) {
             Matcher m = positionMatches.get(pos).getMatcher(segment.getPattern());
