@@ -99,6 +99,7 @@ public class BulkBuyFeature extends Feature {
                         newLine.getString().replace("a✔", "c✖")); // Replace green checkmark with red x
             }
             returnable.set(returnable.indexOf(line), newLine.getComponent());
+            break;
         }
         if (returnable == oldLore) {
             WynntilsMod.warn("Could not find price for " + oldLore.get(0).getString());
