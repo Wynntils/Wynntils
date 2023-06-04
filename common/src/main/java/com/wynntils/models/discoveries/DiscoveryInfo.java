@@ -5,7 +5,6 @@
 package com.wynntils.models.discoveries;
 
 import com.wynntils.core.components.Models;
-import com.wynntils.core.text.CodedString;
 import com.wynntils.core.text.PartStyle;
 import com.wynntils.core.text.StyledText;
 import com.wynntils.models.discoveries.profile.DiscoveryProfile;
@@ -59,7 +58,7 @@ public class DiscoveryInfo {
         if (!m.matches()) return null;
         int minLevel = Integer.parseInt(m.group(1));
 
-        CodedString name = ComponentUtils.getCoded(itemStack.getHoverName()).getNormalized();
+        StyledText name = StyledText.fromComponent(itemStack.getHoverName()).getNormalized();
         DiscoveryType type = DiscoveryType.getDiscoveryTypeFromString(name);
         if (type == null) return null;
 
@@ -69,7 +68,7 @@ public class DiscoveryInfo {
         }
         String description = descriptionBuilder.toString();
 
-        return new DiscoveryInfo(ComponentUtils.stripFormatting(name), type, description, minLevel);
+        return new DiscoveryInfo(name.getString(PartStyle.StyleType.NONE), type, description, minLevel);
     }
 
     private List<Component> generateLore() {
