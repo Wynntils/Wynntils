@@ -78,6 +78,7 @@ public final class ChatHandler extends Handler {
     private static final Pattern NPC_CONFIRM_PATTERN =
             Pattern.compile("^ *§[47]Press §[cf](SNEAK|SHIFT) §[47]to continue$");
 
+    // Test suite: https://regexr.com/7esjd
     private static final Pattern NPC_SELECT_PATTERN =
             Pattern.compile("^ *§[47cf](Select|CLICK) §[47cf]an option (§[47])?to continue$");
 
