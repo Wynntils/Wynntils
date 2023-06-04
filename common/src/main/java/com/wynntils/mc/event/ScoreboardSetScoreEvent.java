@@ -4,26 +4,26 @@
  */
 package com.wynntils.mc.event;
 
-import com.wynntils.core.text.CodedString;
+import com.wynntils.core.text.StyledText;
 import net.minecraft.server.ServerScoreboard;
 import net.minecraftforge.eventbus.api.Cancelable;
 import net.minecraftforge.eventbus.api.Event;
 
 @Cancelable
 public class ScoreboardSetScoreEvent extends Event {
-    private final CodedString owner;
+    private final StyledText owner;
     private final String objectiveName;
     private final int score;
     private final ServerScoreboard.Method method;
 
-    public ScoreboardSetScoreEvent(CodedString owner, String objectiveName, int score, ServerScoreboard.Method method) {
+    public ScoreboardSetScoreEvent(StyledText owner, String objectiveName, int score, ServerScoreboard.Method method) {
         this.owner = owner;
         this.objectiveName = objectiveName;
         this.score = score;
         this.method = method;
     }
 
-    public CodedString getOwner() {
+    public StyledText getOwner() {
         return owner;
     }
 

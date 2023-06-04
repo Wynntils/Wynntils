@@ -7,7 +7,8 @@ package com.wynntils.handlers.scoreboard;
 import com.google.common.collect.ImmutableMap;
 import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.components.Handler;
-import com.wynntils.core.text.CodedString;
+import com.wynntils.core.text.PartStyle;
+import com.wynntils.core.text.StyledText;
 import com.wynntils.handlers.scoreboard.event.ScoreboardSegmentAdditionEvent;
 import com.wynntils.handlers.scoreboard.type.ScoreboardLine;
 import com.wynntils.mc.event.ScoreboardSetDisplayObjectiveEvent;
@@ -15,7 +16,6 @@ import com.wynntils.mc.event.ScoreboardSetObjectiveEvent;
 import com.wynntils.mc.event.ScoreboardSetScoreEvent;
 import com.wynntils.models.worlds.event.WorldStateEvent;
 import com.wynntils.models.worlds.type.WorldState;
-import com.wynntils.utils.mc.ComponentUtils;
 import com.wynntils.utils.mc.McUtils;
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -105,7 +105,7 @@ public final class ScoreboardHandler extends Handler {
         scoreboardNameCache = null;
     }
 
-    private void handleSetScore(CodedString owner, int score, ServerScoreboard.Method method) {
+    private void handleSetScore(StyledText owner, int score, ServerScoreboard.Method method) {
         // 1. Handle the current change
         switch (method) {
             case CHANGE -> handleScoreChange(owner, score);
@@ -122,7 +122,7 @@ public final class ScoreboardHandler extends Handler {
         createScoreboardFromSegments();
     }
 
-    private void handleScoreChange(CodedString owner, int score) {
+    private void handleScoreChange(StyledText owner, int score) {
         // A score change can mean two things:
         // 1. A new line was added to the scoreboard
         // 2. An existing line with the same score was changed
@@ -158,7 +158,7 @@ public final class ScoreboardHandler extends Handler {
         reconstructedScoreboard.add(new ScoreboardLine(owner, score));
     }
 
-    private void handleScoreRemove(CodedString owner) {
+    private void handleScoreRemove(StyledText owner) {
         // A score remove can mean two things:
         // 1. An existing line was removed
         // 2. The line to be removed was changed before, so it doesn't exist anymore
@@ -188,7 +188,7 @@ public final class ScoreboardHandler extends Handler {
         }
 
         // 1. Check for duplicate lines
-        List<CodedString> lines = new ArrayList<>();
+        List<StyledText> lines = new ArrayList<>();
         for (ScoreboardLine line : reconstructedScoreboard) {
             if (lines.contains(line.line())) {
                 return false;
@@ -214,8 +214,8 @@ public final class ScoreboardHandler extends Handler {
         if (!reconstructedScoreboard.stream()
                 .findFirst()
                 .map(ScoreboardLine::line)
-                .orElse(CodedString.EMPTY)
-                .equals(CodedString.fromString("À"))) {
+                .orElse(StyledText.EMPTY)
+                .equals(StyledText.fromString("À"))) {
             return false;
         }
 
@@ -286,7 +286,7 @@ public final class ScoreboardHandler extends Handler {
                 return;
             }
 
-            List<CodedString> contentLines = new ArrayList<>();
+            List<StyledText> contentLines = new ArrayList<>();
             for (currentIndex = currentIndex + 1; currentIndex < scoreboardLines.size(); currentIndex++) {
                 ScoreboardLine line = scoreboardLines.get(currentIndex);
 
@@ -355,14 +355,13 @@ public final class ScoreboardHandler extends Handler {
             if (!scoreboardSegment.isVisible()) continue;
 
             scoreboard
-                    .getOrCreatePlayerScore(
-                            scoreboardSegment.getHeader().getInternalCodedStringRepresentation(), wynntilsObjective)
+                    .getOrCreatePlayerScore(scoreboardSegment.getHeader().getString(), wynntilsObjective)
                     .setScore(currentScoreboardLine);
             currentScoreboardLine--;
 
-            for (CodedString line : scoreboardSegment.getContent()) {
+            for (StyledText line : scoreboardSegment.getContent()) {
                 scoreboard
-                        .getOrCreatePlayerScore(line.getInternalCodedStringRepresentation(), wynntilsObjective)
+                        .getOrCreatePlayerScore(line.getString(), wynntilsObjective)
                         .setScore(currentScoreboardLine);
                 currentScoreboardLine--;
             }
@@ -378,7 +377,7 @@ public final class ScoreboardHandler extends Handler {
     }
 
     private ScoreboardPart getScoreboardPartForHeader(ScoreboardLine scoreboardLine) {
-        String unformattedLine = ComponentUtils.stripFormatting(scoreboardLine.line());
+        String unformattedLine = scoreboardLine.line().getString(PartStyle.StyleType.NONE);
 
         for (ScoreboardPart part : scoreboardParts) {
             if (part.getSegmentMatcher()
