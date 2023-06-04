@@ -5,7 +5,6 @@
 package com.wynntils.models.quests;
 
 import com.wynntils.core.WynntilsMod;
-import com.wynntils.core.text.CodedString;
 import com.wynntils.core.text.StyledText;
 import com.wynntils.models.quests.type.QuestLength;
 import com.wynntils.models.quests.type.QuestStatus;
@@ -79,12 +78,7 @@ public final class QuestInfoParser {
     }
 
     private static boolean isQuestTracked(ItemStack itemStack) {
-        CodedString name =
-                CodedString.fromComponentIgnoringComponentStylesAndJustUsingFormattingCodes(itemStack.getHoverName());
-        if (name.trim().isEmpty()) {
-            return false;
-        }
-        return name.endsWith("§e[Tracked]");
+        return StyledText.fromComponent(itemStack.getHoverName()).endsWith("§e[Tracked]");
     }
 
     private static QuestStatus getQuestStatus(LinkedList<StyledText> lore) {

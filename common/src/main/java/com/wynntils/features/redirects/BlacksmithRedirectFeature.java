@@ -12,7 +12,6 @@ import com.wynntils.core.text.StyledText;
 import com.wynntils.handlers.chat.event.ChatMessageReceivedEvent;
 import com.wynntils.models.emeralds.type.EmeraldUnits;
 import com.wynntils.models.gear.type.GearTier;
-import com.wynntils.utils.mc.ComponentUtils;
 import java.util.EnumMap;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -63,7 +62,7 @@ public class BlacksmithRedirectFeature extends Feature {
             for (Component sibling : event.getOriginalMessage().getSiblings()) {
                 // Retrieve the color code of the item, and then match it to the item tier.
                 Matcher itemMatcher =
-                        ComponentUtils.getCoded(sibling).getMatcher(ITEM_PATTERN); // Second group contains the items.
+                        StyledText.fromComponent(sibling).getMatcher(ITEM_PATTERN); // Second group contains the items.
 
                 if (!itemMatcher.matches()) {
                     continue;

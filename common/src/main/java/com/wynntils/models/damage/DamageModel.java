@@ -27,7 +27,7 @@ public final class DamageModel extends Model {
     private static final Pattern DAMAGE_LABEL_PATTERN = Pattern.compile("(?:§[24bcef]-(\\d+) ([❤✦✤❉❋✹]) )");
 
     // https://regexr.com/7965g
-    private static final Pattern DAMAGE_BAR_PATTERN = Pattern.compile("^§[ac](.*)§r - §c(\\d+)§4❤(?:§r - §7(.*)§7)?$");
+    private static final Pattern DAMAGE_BAR_PATTERN = Pattern.compile("^§[ac](.*) - §c(\\d+)§4❤(?: - §7(.*)§7)?$");
 
     private final DamageBar damageBar = new DamageBar();
 
