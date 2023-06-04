@@ -1,9 +1,21 @@
+## [0.0.3-alpha.58](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.57...v0.0.3-alpha.58) (2023-06-04)
+
+
+### Code Refactoring
+
+* Port all direct CodedString usages to StyledText ([#1582](https://github.com/Wynntils/Artemis/issues/1582)) ([f1414a2](https://github.com/Wynntils/Artemis/commit/f1414a25c163138680f48487f035b81c0b1002a3))
+
 ## [0.0.3-alpha.57](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.56...v0.0.3-alpha.57) (2023-06-04)
 
 
 ### Bug Fixes
 
 * Don't "translate" (duplicate) messages if TranslationFeature is enabled, but  language is not set ([#1584](https://github.com/Wynntils/Artemis/issues/1584)) ([4ba9681](https://github.com/Wynntils/Artemis/commit/4ba9681a7695943fa17940aa332dc4fdc71f0b9c))
+
+
+### Miscellaneous Chores
+
+* **release:** v0.0.3-alpha.57 [skip ci] ([242c9bd](https://github.com/Wynntils/Artemis/commit/242c9bdffe3b79cbd7ddb29e1e0f9ce36f667508))
 
 ## [0.0.3-alpha.56](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.55...v0.0.3-alpha.56) (2023-06-04)
 
@@ -40,16 +52,4 @@
 ### Miscellaneous Chores
 
 * **release:** v0.0.3-alpha.54 [skip ci] ([3f1e47c](https://github.com/Wynntils/Artemis/commit/3f1e47ccee0e4fb58f7c0f5f8a509cd14d69f0a2))
-
-## [0.0.3-alpha.53](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.52...v0.0.3-alpha.53) (2023-06-03)
-
-
-### Code Refactoring
-
-* Port ChatMessageReceivedEvent to StyledText ([#1576](https://github.com/Wynntils/Artemis/issues/1576)) ([5dd1047](https://github.com/Wynntils/Artemis/commit/5dd1047141cd1a71a85b0db8c116530bd4368c28))
-
-
-### Miscellaneous Chores
-
-* **release:** v0.0.3-alpha.53 [skip ci] ([90aa475](https://github.com/Wynntils/Artemis/commit/90aa475d9ca607b305612786237ab12e4f309ec4))
 
