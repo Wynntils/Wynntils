@@ -22,7 +22,8 @@ public enum DiscoveryType {
 
     public static DiscoveryType getDiscoveryTypeFromString(StyledText name) {
         for (DiscoveryType type : values()) {
-            if (name.getString().charAt(1) == type.getColor().getChar()) {
+            if (name.getFirstPart().getPartStyle().getStyle().getColor().getValue()
+                    == type.getColor().getColor()) {
                 return type;
             }
         }

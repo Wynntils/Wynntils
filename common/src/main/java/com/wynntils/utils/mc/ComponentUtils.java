@@ -5,7 +5,6 @@
 package com.wynntils.utils.mc;
 
 import com.wynntils.core.text.CodedString;
-import com.wynntils.core.text.PartStyle;
 import com.wynntils.core.text.StyledText;
 import com.wynntils.core.text.StyledTextPart;
 import com.wynntils.utils.MathUtils;
@@ -41,7 +40,9 @@ public final class ComponentUtils {
 
     // Text without formatting codes "Test text"
     public static String getUnformatted(Component component) {
-        return StyledText.fromComponent(component).getString(PartStyle.StyleType.NONE);
+        if (component == null) return null;
+
+        return getUnformatted(component);
     }
 
     private static StringBuilder tryConstructDifference(Style oldStyle, Style newStyle) {
