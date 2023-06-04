@@ -6,15 +6,13 @@ package com.wynntils.handlers.bossbar;
 
 import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.components.Handler;
+import com.wynntils.core.text.StyledText;
 import com.wynntils.handlers.bossbar.event.BossBarAddedEvent;
 import com.wynntils.mc.event.BossHealthUpdateEvent;
-import com.wynntils.utils.mc.ComponentUtils;
-import com.wynntils.utils.type.Pair;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Optional;
 import java.util.UUID;
 import java.util.function.Consumer;
 import java.util.regex.Matcher;
@@ -57,14 +55,18 @@ public class BossBarHandler extends Handler {
                 boolean darkenScreen,
                 boolean playMusic,
                 boolean createWorldFog) {
-            Optional<Pair<TrackedBar, Matcher>> trackedBarOpt = knownBars.stream()
-                    .map(bar -> new Pair<>(bar, ComponentUtils.getCoded(name).getMatcher(bar.pattern)))
-                    .filter(pair -> pair.b().matches())
-                    .findFirst();
-            if (trackedBarOpt.isEmpty()) return;
 
-            TrackedBar trackedBar = trackedBarOpt.get().a();
-            Matcher matcher = trackedBarOpt.get().b();
+            TrackedBar trackedBar = null;
+            Matcher matcher = null;
+
+            for (TrackedBar bar : knownBars) {
+                matcher = StyledText.fromComponent(name).getMatcher(bar.pattern);
+                if (matcher.matches()) {
+                    trackedBar = bar;
+                    break;
+                }
+            }
+            if (trackedBar == null) return;
 
             LerpingBossEvent bossEvent =
                     new LerpingBossEvent(id, name, progress, color, overlay, darkenScreen, playMusic, createWorldFog);
@@ -118,7 +120,7 @@ public class BossBarHandler extends Handler {
         @Override
         public void updateName(UUID id, Component name) {
             handleBarUpdate(id, trackedBar -> {
-                Matcher matcher = ComponentUtils.getCoded(name).getMatcher(trackedBar.pattern);
+                Matcher matcher = StyledText.fromComponent(name).getMatcher(trackedBar.pattern);
                 if (!matcher.matches()) {
                     WynntilsMod.error("Failed to match already matched boss bar");
                     return;
