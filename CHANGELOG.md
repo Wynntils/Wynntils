@@ -1,9 +1,21 @@
+## [0.0.3-alpha.55](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.54...v0.0.3-alpha.55) (2023-06-04)
+
+
+### Bug Fixes
+
+* Misc StyledText fixes ([#1581](https://github.com/Wynntils/Artemis/issues/1581)) ([a8eb1f3](https://github.com/Wynntils/Artemis/commit/a8eb1f3b040ac9ba197147596ea450dacb245c38))
+
 ## [0.0.3-alpha.54](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.53...v0.0.3-alpha.54) (2023-06-03)
 
 
 ### Code Refactoring
 
 * Port LoreUtils to StyledText ([#1578](https://github.com/Wynntils/Artemis/issues/1578)) ([7c5dec2](https://github.com/Wynntils/Artemis/commit/7c5dec2e4d70a6c5200ba0d5672f110e885029dd))
+
+
+### Miscellaneous Chores
+
+* **release:** v0.0.3-alpha.54 [skip ci] ([3f1e47c](https://github.com/Wynntils/Artemis/commit/3f1e47ccee0e4fb58f7c0f5f8a509cd14d69f0a2))
 
 ## [0.0.3-alpha.53](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.52...v0.0.3-alpha.53) (2023-06-03)
 
@@ -40,16 +52,4 @@
 ### Miscellaneous Chores
 
 * **release:** v0.0.3-alpha.51 [skip ci] ([5a1d88c](https://github.com/Wynntils/Artemis/commit/5a1d88c59ec292af14882d738b586dd253063f9f))
-
-## [0.0.3-alpha.50](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.49...v0.0.3-alpha.50) (2023-06-01)
-
-
-### Bug Fixes
-
-* Fix quest book not opening ([#1573](https://github.com/Wynntils/Artemis/issues/1573)) ([5a524f1](https://github.com/Wynntils/Artemis/commit/5a524f1946770ca48dcf6de01f6e2fc86171c58d))
-
-
-### Miscellaneous Chores
-
-* **release:** v0.0.3-alpha.50 [skip ci] ([c98ca85](https://github.com/Wynntils/Artemis/commit/c98ca85f6b89d5da74910fd23c95fda75c6cb544))
 
