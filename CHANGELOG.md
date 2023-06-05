@@ -1,9 +1,21 @@
+## [0.0.3-alpha.62](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.61...v0.0.3-alpha.62) (2023-06-05)
+
+
+### New Features
+
+* add a config to hide party members on scoreboard ([#1588](https://github.com/Wynntils/Artemis/issues/1588)) ([b32fc32](https://github.com/Wynntils/Artemis/commit/b32fc3220c1ad30eec941392601115b020751c3a))
+
 ## [0.0.3-alpha.61](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.60...v0.0.3-alpha.61) (2023-06-05)
 
 
 ### Bug Fixes
 
 * Fix action bar not displaying at all ([#1587](https://github.com/Wynntils/Artemis/issues/1587)) ([1ff91cc](https://github.com/Wynntils/Artemis/commit/1ff91cc402cbe29e54a5d84df4f2c770ba6abc79))
+
+
+### Miscellaneous Chores
+
+* **release:** v0.0.3-alpha.61 [skip ci] ([5c69c1c](https://github.com/Wynntils/Artemis/commit/5c69c1cec94496f207ea99a14c62aa56f9bde7ad))
 
 ## [0.0.3-alpha.60](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.59...v0.0.3-alpha.60) (2023-06-05)
 
@@ -40,16 +52,4 @@
 ### Miscellaneous Chores
 
 * **release:** v0.0.3-alpha.58 [skip ci] ([cec87aa](https://github.com/Wynntils/Artemis/commit/cec87aa15e98b9ea64e645debb221e23d41f9137))
-
-## [0.0.3-alpha.57](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.56...v0.0.3-alpha.57) (2023-06-04)
-
-
-### Bug Fixes
-
-* Don't "translate" (duplicate) messages if TranslationFeature is enabled, but  language is not set ([#1584](https://github.com/Wynntils/Artemis/issues/1584)) ([4ba9681](https://github.com/Wynntils/Artemis/commit/4ba9681a7695943fa17940aa332dc4fdc71f0b9c))
-
-
-### Miscellaneous Chores
-
-* **release:** v0.0.3-alpha.57 [skip ci] ([242c9bd](https://github.com/Wynntils/Artemis/commit/242c9bdffe3b79cbd7ddb29e1e0f9ce36f667508))
 
