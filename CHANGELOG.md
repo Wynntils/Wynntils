@@ -1,9 +1,21 @@
+## [0.0.3-alpha.64](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.63...v0.0.3-alpha.64) (2023-06-05)
+
+
+### Code Refactoring
+
+* Port everything away from StyleType.FULL ([#1590](https://github.com/Wynntils/Artemis/issues/1590)) ([95d835e](https://github.com/Wynntils/Artemis/commit/95d835e7e7d2317f71b75d0d28b9c3f93cadbbd0))
+
 ## [0.0.3-alpha.63](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.62...v0.0.3-alpha.63) (2023-06-05)
 
 
 ### New Features
 
 * add a config to hide coordinates on action bar ([#1589](https://github.com/Wynntils/Artemis/issues/1589)) ([97fcd33](https://github.com/Wynntils/Artemis/commit/97fcd337efa32eec3022186744455fa3917c9d67))
+
+
+### Miscellaneous Chores
+
+* **release:** v0.0.3-alpha.63 [skip ci] ([9dcbc8b](https://github.com/Wynntils/Artemis/commit/9dcbc8bfcdfb38646a61f813fc90d25be6cd9fc4))
 
 ## [0.0.3-alpha.62](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.61...v0.0.3-alpha.62) (2023-06-05)
 
@@ -40,16 +52,4 @@
 ### Miscellaneous Chores
 
 * **release:** v0.0.3-alpha.60 [skip ci] ([7c7560b](https://github.com/Wynntils/Artemis/commit/7c7560b40c5affbd5c8e163bce2e638feb208955))
-
-## [0.0.3-alpha.59](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.58...v0.0.3-alpha.59) (2023-06-04)
-
-
-### Bug Fixes
-
-* Actually revert ComponentUtils#getUnformatted ([#1585](https://github.com/Wynntils/Artemis/issues/1585)) ([d5b713b](https://github.com/Wynntils/Artemis/commit/d5b713bdf31400dd0bec9bc01ac913c033fb5825))
-
-
-### Miscellaneous Chores
-
-* **release:** v0.0.3-alpha.59 [skip ci] ([8ebb6c0](https://github.com/Wynntils/Artemis/commit/8ebb6c01e9d4428c9150268d3e909adb6c04160b))
 
