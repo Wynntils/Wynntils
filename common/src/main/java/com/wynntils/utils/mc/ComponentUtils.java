@@ -29,15 +29,6 @@ public final class ComponentUtils {
     private static final int RAINBOW_CYCLE_TIME = 5000;
     private static final Pattern NEWLINE_PATTERN = Pattern.compile("\n");
 
-    // Text with formatting codes "§cTest §1Text"
-    public static CodedString getCoded(Component component) {
-        StringBuilder result = new StringBuilder();
-
-        component.visit(new CodedStringGenerator(result), Style.EMPTY);
-
-        return CodedString.fromString(result.toString());
-    }
-
     // Text without formatting codes "Test text"
     public static String getUnformatted(Component component) {
         return CodedString.fromComponentIgnoringComponentStylesAndJustUsingFormattingCodes(component)

@@ -67,11 +67,12 @@ public class ConfigButton extends WynntilsButton {
     public void renderWidget(PoseStack poseStack, int mouseX, int mouseY, float partialTick) {
         resetButton.render(poseStack, mouseX, mouseY, partialTick);
 
-        StyledText displayName = StyledText.fromString(configHolder.getDisplayName());
+        StyledText displayName;
 
         if (settingsScreen.configOptionContains(configHolder)) {
-            displayName = StyledText.fromString(
-                    ChatFormatting.UNDERLINE + displayName.getInternalCodedStringRepresentation());
+            displayName = StyledText.fromString(ChatFormatting.UNDERLINE + configHolder.getDisplayName());
+        } else {
+            displayName = StyledText.fromString(configHolder.getDisplayName());
         }
 
         poseStack.pushPose();
