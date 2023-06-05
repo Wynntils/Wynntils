@@ -9,6 +9,7 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import com.wynntils.core.config.ConfigHolder;
 import com.wynntils.core.features.Feature;
 import com.wynntils.core.features.overlays.DynamicOverlay;
+import com.wynntils.core.features.overlays.Overlay;
 import com.wynntils.core.features.overlays.OverlayPosition;
 import com.wynntils.core.features.overlays.annotations.OverlayInfo;
 import com.wynntils.core.text.StyledText;
@@ -32,7 +33,7 @@ public class PlayerInfoFeature extends Feature {
     @OverlayInfo(renderType = RenderEvent.ElementType.GUI)
     private final PlayerInfoOverlay arrowShieldTrackerOverlay = new PlayerInfoOverlay();
 
-    private static class PlayerInfoOverlay extends DynamicOverlay {
+    private static class PlayerInfoOverlay extends Overlay {
 
         private static final double OPENING_DURATION_MILLIS = 125;
         private double animationProgress = 0;
@@ -47,8 +48,8 @@ public class PlayerInfoFeature extends Feature {
                             HorizontalAlignment.CENTER,
                             OverlayPosition.AnchorSection.TOP_MIDDLE),
                     512,
-                    256,
-                    1);
+                    256
+                    );
         }
 
         private List<StyledText> lastPlayers = new ArrayList<>();
