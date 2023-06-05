@@ -6,6 +6,7 @@ package com.wynntils.features.overlays;
 
 import com.mojang.blaze3d.platform.Window;
 import com.mojang.blaze3d.vertex.PoseStack;
+import com.wynntils.core.components.Managers;
 import com.wynntils.core.components.Models;
 import com.wynntils.core.config.Category;
 import com.wynntils.core.config.Config;
@@ -19,11 +20,13 @@ import com.wynntils.core.features.overlays.OverlayPosition;
 import com.wynntils.core.features.overlays.OverlaySize;
 import com.wynntils.core.features.overlays.annotations.OverlayInfo;
 import com.wynntils.core.text.StyledText;
+import com.wynntils.handlers.scoreboard.event.ScoreboardSegmentAdditionEvent;
 import com.wynntils.mc.event.RenderEvent;
 import com.wynntils.models.players.event.HadesRelationsUpdateEvent;
 import com.wynntils.models.players.event.HadesUserAddedEvent;
 import com.wynntils.models.players.event.PartyEvent;
 import com.wynntils.models.players.hades.objects.HadesUser;
+import com.wynntils.models.players.scoreboard.PartyScoreboardPart;
 import com.wynntils.utils.colors.CommonColors;
 import com.wynntils.utils.mc.SkinUtils;
 import com.wynntils.utils.render.Texture;
@@ -40,10 +43,14 @@ import java.util.List;
 import java.util.stream.Collectors;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraftforge.eventbus.api.EventPriority;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 
 @ConfigCategory(Category.OVERLAYS)
 public class HadesPartyOverlayFeature extends Feature {
+    @RegisterConfig
+    public final Config<Boolean> disablePartyMembersOnScoreboard = new Config<>(false);
+
     @OverlayInfo(renderType = RenderEvent.ElementType.GUI)
     private final PartyMembersOverlay partyMembersOverlay = new PartyMembersOverlay(
             new OverlayPosition(
@@ -52,6 +59,15 @@ public class HadesPartyOverlayFeature extends Feature {
             ContainerOverlay.GrowDirection.DOWN,
             HorizontalAlignment.LEFT,
             VerticalAlignment.TOP);
+
+    @SubscribeEvent(priority = EventPriority.HIGHEST)
+    public void onScoreboardSegmentChange(ScoreboardSegmentAdditionEvent event) {
+        if (Managers.Overlay.isEnabled(partyMembersOverlay)
+                && disablePartyMembersOnScoreboard.get()
+                && event.getSegment().getScoreboardPart() instanceof PartyScoreboardPart) {
+            event.setCanceled(true);
+        }
+    }
 
     public class PartyMemberOverlay extends Overlay {
         private static final int HEAD_SIZE = 26;
