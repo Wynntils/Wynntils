@@ -296,6 +296,8 @@
   "feature.wynntils.hades.shareWithGuild.name": "Share Info With Guild",
   "feature.wynntils.hades.shareWithParty.description": "Do you want your data (location, health, mana) to be shared with party members?",
   "feature.wynntils.hades.shareWithParty.name": "Share Info With Party",
+  "feature.wynntils.hadesPartyOverlay.disablePartyMembersOnScoreboard.description": "Should party members be removed from the scoreboard? This option only works if Hades Party Overlays is turned on.",
+  "feature.wynntils.hadesPartyOverlay.disablePartyMembersOnScoreboard.name": "Disable Party Members on Scoreboard",
   "feature.wynntils.hadesPartyOverlay.name": "Hades Party Overlays",
   "feature.wynntils.hadesPartyOverlay.overlay.partyMembers.healthTexture.description": "What texture should be used for the health bar?",
   "feature.wynntils.hadesPartyOverlay.overlay.partyMembers.healthTexture.name": "Health Texture",
