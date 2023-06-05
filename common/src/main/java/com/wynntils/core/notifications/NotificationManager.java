@@ -78,8 +78,7 @@ public final class NotificationManager extends Manager {
      * @return The message container that was edited. This may be the new message container.
      */
     public MessageContainer editMessage(MessageContainer msgContainer, StyledText newMessage) {
-        WynntilsMod.info("Message Edited: " + msgContainer.getRenderTask() + " -> "
-                + newMessage.getInternalCodedStringRepresentation());
+        WynntilsMod.info("Message Edited: " + msgContainer.getRenderTask() + " -> " + newMessage.getString());
 
         // If we have multiple repeated messages, we want to only edit the last one.
         if (msgContainer.getMessageCount() > 1) {

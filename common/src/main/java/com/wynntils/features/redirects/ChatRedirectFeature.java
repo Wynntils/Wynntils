@@ -468,9 +468,8 @@ public class ChatRedirectFeature extends Feature {
 
             String emeraldString = matcher.group(2);
 
-            return StyledText.fromString(String.format(
-                    "§dSold §7%s §dfor §a%s§d.",
-                    ingredientString.getInternalCodedStringRepresentation(), emeraldString));
+            return StyledText.fromString(
+                    String.format("§dSold §7%s §dfor §a%s§d.", ingredientString.getString(), emeraldString));
         }
     }
 

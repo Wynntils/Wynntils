@@ -47,10 +47,6 @@ public class CodedString {
         return CodedString.fromString(component.getString());
     }
 
-    public static CodedString fromStyledText(StyledText styledText) {
-        return fromString(styledText.getString(PartStyle.StyleType.FULL));
-    }
-
     /**
      * This exposes the internal representation, and should be avoided.
      */
