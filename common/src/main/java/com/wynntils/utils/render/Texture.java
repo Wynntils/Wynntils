@@ -26,6 +26,7 @@ public enum Texture {
     UNIVERSAL_BAR("universal_bar.png", 81, 16),
     VIGNETTE("vignette.png", 512, 512),
     WYNNCRAFT_ICON("wynncraft_icon.png", 64, 64),
+    PLAYER_INFO_OVERLAY("tab_overlay.png", 512, 265),
 
     // Discovery Screen
     DISCOVERED_SECRET("discovered_secret.png", 19, 36),
