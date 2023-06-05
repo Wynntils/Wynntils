@@ -328,7 +328,6 @@ public final class PartStyle {
 
     public enum StyleType {
         INCLUDE_EVENTS, // Includes click and hover events
-        FULL, // This is how ComponentUtils does, this is to be removed
         DEFAULT, // The most minimal way to represent a style
         NONE // No styling
     }

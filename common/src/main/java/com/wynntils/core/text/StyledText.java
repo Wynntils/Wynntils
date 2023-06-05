@@ -5,7 +5,6 @@
 package com.wynntils.core.text;
 
 import com.google.common.collect.Iterables;
-import com.wynntils.utils.mc.ComponentUtils;
 import com.wynntils.utils.type.IterationDecision;
 import com.wynntils.utils.type.Pair;
 import java.util.ArrayList;
@@ -30,26 +29,10 @@ import org.apache.commons.lang3.ArrayUtils;
 public final class StyledText implements Iterable<StyledTextPart> {
     public static final StyledText EMPTY = new StyledText(List.of(), List.of(), List.of());
 
-    private final Component temporaryWorkaround;
-
     private final List<StyledTextPart> parts;
 
     private final List<ClickEvent> clickEvents;
     private final List<HoverEvent> hoverEvents;
-
-    private StyledText(
-            List<StyledTextPart> parts,
-            Component temporaryWorkaround,
-            List<ClickEvent> clickEvents,
-            List<HoverEvent> hoverEvents) {
-        this.parts = parts.stream()
-                .filter(styledTextPart -> !styledTextPart.isEmpty())
-                .map(styledTextPart -> new StyledTextPart(styledTextPart, this))
-                .collect(Collectors.toList());
-        this.temporaryWorkaround = temporaryWorkaround;
-        this.clickEvents = new ArrayList<>(clickEvents);
-        this.hoverEvents = new ArrayList<>(hoverEvents);
-    }
 
     private StyledText(List<StyledTextPart> parts, List<ClickEvent> clickEvents, List<HoverEvent> hoverEvents) {
         this.parts = parts.stream()
@@ -58,9 +41,6 @@ public final class StyledText implements Iterable<StyledTextPart> {
                 .collect(Collectors.toList());
         this.clickEvents = new ArrayList<>(clickEvents);
         this.hoverEvents = new ArrayList<>(hoverEvents);
-
-        // We can't know the component, just use our own representation
-        this.temporaryWorkaround = getComponent();
     }
 
     public static StyledText fromComponent(Component component) {
@@ -104,7 +84,7 @@ public final class StyledText implements Iterable<StyledTextPart> {
                     styledTextParts.stream().filter(part -> !part.isEmpty()).toList());
         }
 
-        return new StyledText(parts, temporaryWorkaround, clickEvents, hoverEvents);
+        return new StyledText(parts, clickEvents, hoverEvents);
     }
 
     public static StyledText fromString(String codedString) {
@@ -116,10 +96,6 @@ public final class StyledText implements Iterable<StyledTextPart> {
         return new StyledText(List.of(part), List.of(), List.of());
     }
 
-    public static StyledText fromCodedString(CodedString codedString) {
-        return fromString(codedString.getInternalCodedStringRepresentation());
-    }
-
     public static StyledText fromJson(String json) {
         MutableComponent component = Component.Serializer.fromJson(json);
         return component == null ? StyledText.EMPTY : StyledText.fromComponent(component);
@@ -128,10 +104,6 @@ public final class StyledText implements Iterable<StyledTextPart> {
     // We don't want to expose the actual string to the outside world
     // If you need to do an operation with this string, implement it as a method
     public String getString(PartStyle.StyleType type) {
-        if (type == PartStyle.StyleType.FULL) {
-            return ComponentUtils.getCoded(temporaryWorkaround).getInternalCodedStringRepresentation();
-        }
-
         StringBuilder builder = new StringBuilder();
 
         PartStyle previousStyle = null;
@@ -170,12 +142,6 @@ public final class StyledText implements Iterable<StyledTextPart> {
 
     public int length() {
         return parts.stream().mapToInt(StyledTextPart::length).sum();
-    }
-
-    // Only used for porting. To be removed.
-    @Deprecated
-    public String getInternalCodedStringRepresentation() {
-        return getString(PartStyle.StyleType.FULL);
     }
 
     public static StyledText join(StyledText styledTextSeparator, StyledText... texts) {

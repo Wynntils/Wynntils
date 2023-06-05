@@ -23,11 +23,10 @@ public final class CosmeticTierAnnotator implements ItemAnnotator {
     public ItemAnnotation getAnnotation(ItemStack itemStack, StyledText name) {
         if (!isCosmetic(itemStack)) return null;
 
-        ChatFormatting chatColor = ChatFormatting.getByCode(
-                name.getInternalCodedStringRepresentation().charAt(1));
-        if (chatColor == null) chatColor = ChatFormatting.WHITE;
+        int chatColor = name.getFirstPart().getPartStyle().getStyle().getColor().getValue();
+        if (chatColor == -1) chatColor = ChatFormatting.WHITE.getColor();
 
-        CustomColor highlightColor = CustomColor.fromChatFormatting(chatColor);
+        CustomColor highlightColor = CustomColor.fromInt(chatColor);
         return new CosmeticItem(highlightColor);
     }
 
