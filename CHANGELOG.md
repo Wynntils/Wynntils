@@ -1,9 +1,21 @@
+## [0.0.3-alpha.60](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.59...v0.0.3-alpha.60) (2023-06-05)
+
+
+### Bug Fixes
+
+* Fix PartyManagementScreen NPE for party leader ([#1586](https://github.com/Wynntils/Artemis/issues/1586)) ([3989ad0](https://github.com/Wynntils/Artemis/commit/3989ad0b72e807f6d66d695d2a71b440ddfc5eb8))
+
 ## [0.0.3-alpha.59](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.58...v0.0.3-alpha.59) (2023-06-04)
 
 
 ### Bug Fixes
 
 * Actually revert ComponentUtils#getUnformatted ([#1585](https://github.com/Wynntils/Artemis/issues/1585)) ([d5b713b](https://github.com/Wynntils/Artemis/commit/d5b713bdf31400dd0bec9bc01ac913c033fb5825))
+
+
+### Miscellaneous Chores
+
+* **release:** v0.0.3-alpha.59 [skip ci] ([8ebb6c0](https://github.com/Wynntils/Artemis/commit/8ebb6c01e9d4428c9150268d3e909adb6c04160b))
 
 ## [0.0.3-alpha.58](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.57...v0.0.3-alpha.58) (2023-06-04)
 
@@ -40,16 +52,4 @@
 ### Miscellaneous Chores
 
 * **release:** v0.0.3-alpha.56 [skip ci] ([5c73b15](https://github.com/Wynntils/Artemis/commit/5c73b15d771956a5693e664d568e38b49b292d94))
-
-## [0.0.3-alpha.55](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.54...v0.0.3-alpha.55) (2023-06-04)
-
-
-### Bug Fixes
-
-* Misc StyledText fixes ([#1581](https://github.com/Wynntils/Artemis/issues/1581)) ([a8eb1f3](https://github.com/Wynntils/Artemis/commit/a8eb1f3b040ac9ba197147596ea450dacb245c38))
-
-
-### Miscellaneous Chores
-
-* **release:** v0.0.3-alpha.55 [skip ci] ([345a2b4](https://github.com/Wynntils/Artemis/commit/345a2b409466a8633cb088f63fbba5fb93c5fb94))
 
