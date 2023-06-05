@@ -1,9 +1,21 @@
+## [0.0.3-alpha.61](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.60...v0.0.3-alpha.61) (2023-06-05)
+
+
+### Bug Fixes
+
+* Fix action bar not displaying at all ([#1587](https://github.com/Wynntils/Artemis/issues/1587)) ([1ff91cc](https://github.com/Wynntils/Artemis/commit/1ff91cc402cbe29e54a5d84df4f2c770ba6abc79))
+
 ## [0.0.3-alpha.60](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.59...v0.0.3-alpha.60) (2023-06-05)
 
 
 ### Bug Fixes
 
 * Fix PartyManagementScreen NPE for party leader ([#1586](https://github.com/Wynntils/Artemis/issues/1586)) ([3989ad0](https://github.com/Wynntils/Artemis/commit/3989ad0b72e807f6d66d695d2a71b440ddfc5eb8))
+
+
+### Miscellaneous Chores
+
+* **release:** v0.0.3-alpha.60 [skip ci] ([7c7560b](https://github.com/Wynntils/Artemis/commit/7c7560b40c5affbd5c8e163bce2e638feb208955))
 
 ## [0.0.3-alpha.59](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.58...v0.0.3-alpha.59) (2023-06-04)
 
@@ -40,16 +52,4 @@
 ### Miscellaneous Chores
 
 * **release:** v0.0.3-alpha.57 [skip ci] ([242c9bd](https://github.com/Wynntils/Artemis/commit/242c9bdffe3b79cbd7ddb29e1e0f9ce36f667508))
-
-## [0.0.3-alpha.56](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.55...v0.0.3-alpha.56) (2023-06-04)
-
-
-### Code Refactoring
-
-* Port ScoreboardHandler to StyledText ([#1579](https://github.com/Wynntils/Artemis/issues/1579)) ([6b456f8](https://github.com/Wynntils/Artemis/commit/6b456f8a29ab2e7885318a1fe3b5577f5a19725f))
-
-
-### Miscellaneous Chores
-
-* **release:** v0.0.3-alpha.56 [skip ci] ([5c73b15](https://github.com/Wynntils/Artemis/commit/5c73b15d771956a5693e664d568e38b49b292d94))
 
