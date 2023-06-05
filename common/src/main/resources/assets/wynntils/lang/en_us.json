@@ -626,6 +626,8 @@
   "feature.wynntils.messageFilter.name": "Message Filter",
   "feature.wynntils.minimap.name": "Minimaps",
   "feature.wynntils.minimap.overlay.coordinate.name": "Coordinates",
+  "feature.wynntils.minimap.overlay.coordinate.shouldDisplayOriginal.description": "Should the original coordinates be displayed?",
+  "feature.wynntils.minimap.overlay.coordinate.shouldDisplayOriginal.name": "Display Original Coordinates",
   "feature.wynntils.minimap.overlay.minimap.borderType.description": "What style should the minimap border have?",
   "feature.wynntils.minimap.overlay.minimap.borderType.name": "Minimap Border Type",
   "feature.wynntils.minimap.overlay.minimap.description": "Minimap that displays region surrounding player",

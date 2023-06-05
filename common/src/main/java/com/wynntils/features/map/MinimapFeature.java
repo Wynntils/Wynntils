@@ -500,6 +500,9 @@ public class MinimapFeature extends Feature {
     }
 
     public static class CoordinateOverlay extends TextOverlay {
+        @RegisterConfig
+        public final Config<Boolean> shouldDisplayOriginal = new Config<>(false);
+
         protected CoordinateOverlay() {
             super(
                     new OverlayPosition(
@@ -511,6 +514,11 @@ public class MinimapFeature extends Feature {
                     new OverlaySize(120, 20),
                     HorizontalAlignment.CENTER,
                     VerticalAlignment.MIDDLE);
+        }
+
+        @Override
+        protected void onConfigUpdate(ConfigHolder configHolder) {
+            Models.CharacterStats.hideCoordinates(!this.shouldDisplayOriginal.get());
         }
 
         @Override
