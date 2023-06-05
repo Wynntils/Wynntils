@@ -69,16 +69,16 @@ public final class ActionBarHandler extends Handler {
 
         StyledText newContentBuilder = StyledText.EMPTY;
         if (!lastSegments.get(ActionBarPosition.LEFT).isHidden()) {
-            newContentBuilder.append(positionMatches.get(ActionBarPosition.LEFT));
+            newContentBuilder = newContentBuilder.append(positionMatches.get(ActionBarPosition.LEFT));
         }
         if (!lastSegments.get(ActionBarPosition.CENTER).isHidden()) {
-            newContentBuilder.append(positionMatches.get(ActionBarPosition.CENTER));
+            newContentBuilder = newContentBuilder.append(positionMatches.get(ActionBarPosition.CENTER));
         } else {
             // Add padding
-            newContentBuilder.append(CENTER_PADDING);
+            newContentBuilder = newContentBuilder.append(CENTER_PADDING);
         }
         if (!lastSegments.get(ActionBarPosition.RIGHT).isHidden()) {
-            newContentBuilder.append(positionMatches.get(ActionBarPosition.RIGHT));
+            newContentBuilder = newContentBuilder.append(positionMatches.get(ActionBarPosition.RIGHT));
         }
         previousProcessedContent = newContentBuilder;
         if (!content.equals(newContentBuilder)) {
