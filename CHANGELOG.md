@@ -1,9 +1,21 @@
+## [0.0.3-alpha.63](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.62...v0.0.3-alpha.63) (2023-06-05)
+
+
+### New Features
+
+* add a config to hide coordinates on action bar ([#1589](https://github.com/Wynntils/Artemis/issues/1589)) ([97fcd33](https://github.com/Wynntils/Artemis/commit/97fcd337efa32eec3022186744455fa3917c9d67))
+
 ## [0.0.3-alpha.62](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.61...v0.0.3-alpha.62) (2023-06-05)
 
 
 ### New Features
 
 * add a config to hide party members on scoreboard ([#1588](https://github.com/Wynntils/Artemis/issues/1588)) ([b32fc32](https://github.com/Wynntils/Artemis/commit/b32fc3220c1ad30eec941392601115b020751c3a))
+
+
+### Miscellaneous Chores
+
+* **release:** v0.0.3-alpha.62 [skip ci] ([d3114df](https://github.com/Wynntils/Artemis/commit/d3114df9c4da4fdcfe3d0e7397ca4cdb39a057fc))
 
 ## [0.0.3-alpha.61](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.60...v0.0.3-alpha.61) (2023-06-05)
 
@@ -40,16 +52,4 @@
 ### Miscellaneous Chores
 
 * **release:** v0.0.3-alpha.59 [skip ci] ([8ebb6c0](https://github.com/Wynntils/Artemis/commit/8ebb6c01e9d4428c9150268d3e909adb6c04160b))
-
-## [0.0.3-alpha.58](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.57...v0.0.3-alpha.58) (2023-06-04)
-
-
-### Code Refactoring
-
-* Port all direct CodedString usages to StyledText ([#1582](https://github.com/Wynntils/Artemis/issues/1582)) ([f1414a2](https://github.com/Wynntils/Artemis/commit/f1414a25c163138680f48487f035b81c0b1002a3))
-
-
-### Miscellaneous Chores
-
-* **release:** v0.0.3-alpha.58 [skip ci] ([cec87aa](https://github.com/Wynntils/Artemis/commit/cec87aa15e98b9ea64e645debb221e23d41f9137))
 
