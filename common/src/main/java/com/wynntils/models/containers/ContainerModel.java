@@ -6,10 +6,9 @@ package com.wynntils.models.containers;
 
 import com.wynntils.core.components.Model;
 import com.wynntils.core.components.Models;
+import com.wynntils.core.text.PartStyle;
 import com.wynntils.core.text.StyledText;
-import com.wynntils.utils.mc.ComponentUtils;
 import com.wynntils.utils.type.Pair;
-import com.wynntils.utils.wynn.WynnUtils;
 import java.util.List;
 import java.util.Optional;
 import java.util.regex.Matcher;
@@ -134,8 +133,9 @@ public final class ContainerModel extends Model {
     }
 
     public Matcher lootChestMatcher(Screen screen) {
-        return LOOT_CHEST_PATTERN.matcher(
-                WynnUtils.normalizeBadString(ComponentUtils.getUnformatted(screen.getTitle())));
+        return StyledText.fromComponent(screen.getTitle())
+                .getNormalized()
+                .getMatcher(LOOT_CHEST_PATTERN, PartStyle.StyleType.NONE);
     }
 
     public Optional<Integer> getScrollSlot(AbstractContainerScreen<?> gui, boolean scrollUp) {

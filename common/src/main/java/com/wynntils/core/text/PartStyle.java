@@ -5,7 +5,6 @@
 package com.wynntils.core.text;
 
 import com.wynntils.utils.colors.CustomColor;
-import com.wynntils.utils.mc.ComponentUtils;
 import java.util.Arrays;
 import java.util.Objects;
 import java.util.Optional;
@@ -269,7 +268,10 @@ public final class PartStyle {
 
         if (oldColorInt == -1) {
             if (newColorInt != -1) {
-                ComponentUtils.getChatFormatting(newColorInt).ifPresent(add::append);
+                Arrays.stream(ChatFormatting.values())
+                        .filter(c -> c.isColor() && newColorInt == c.getColor())
+                        .findFirst()
+                        .ifPresent(add::append);
             }
         } else if (oldColorInt != newColorInt) {
             return null;
