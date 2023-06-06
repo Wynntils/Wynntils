@@ -122,8 +122,8 @@ public final class TerritoryModel extends Model {
             if (built.getDisplay() == null) continue;
 
             String territoryName = StyledText.fromComponent(built.getDisplay().getTitle())
-                    .replaceAll("[", "")
-                    .replaceAll("]", "")
+                    .replaceAll("\\[", "")
+                    .replaceAll("\\]", "")
                     .trim()
                     .getStringWithoutFormatting();
 
