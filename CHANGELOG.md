@@ -1,9 +1,21 @@
+## [0.0.3-alpha.65](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.64...v0.0.3-alpha.65) (2023-06-06)
+
+
+### Code Refactoring
+
+* Port everything to StyledText, remove CodedString, and deprecated ComponentUtils methods ([#1591](https://github.com/Wynntils/Artemis/issues/1591)) ([7411a81](https://github.com/Wynntils/Artemis/commit/7411a81dac6ced9ac3b040c51bc848f58eb1acb5))
+
 ## [0.0.3-alpha.64](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.63...v0.0.3-alpha.64) (2023-06-05)
 
 
 ### Code Refactoring
 
 * Port everything away from StyleType.FULL ([#1590](https://github.com/Wynntils/Artemis/issues/1590)) ([95d835e](https://github.com/Wynntils/Artemis/commit/95d835e7e7d2317f71b75d0d28b9c3f93cadbbd0))
+
+
+### Miscellaneous Chores
+
+* **release:** v0.0.3-alpha.64 [skip ci] ([0772107](https://github.com/Wynntils/Artemis/commit/0772107ec994db46cd48bb2de1977de43f9e2186))
 
 ## [0.0.3-alpha.63](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.62...v0.0.3-alpha.63) (2023-06-05)
 
@@ -40,16 +52,4 @@
 ### Miscellaneous Chores
 
 * **release:** v0.0.3-alpha.61 [skip ci] ([5c69c1c](https://github.com/Wynntils/Artemis/commit/5c69c1cec94496f207ea99a14c62aa56f9bde7ad))
-
-## [0.0.3-alpha.60](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.59...v0.0.3-alpha.60) (2023-06-05)
-
-
-### Bug Fixes
-
-* Fix PartyManagementScreen NPE for party leader ([#1586](https://github.com/Wynntils/Artemis/issues/1586)) ([3989ad0](https://github.com/Wynntils/Artemis/commit/3989ad0b72e807f6d66d695d2a71b440ddfc5eb8))
-
-
-### Miscellaneous Chores
-
-* **release:** v0.0.3-alpha.60 [skip ci] ([7c7560b](https://github.com/Wynntils/Artemis/commit/7c7560b40c5affbd5c8e163bce2e638feb208955))
 
