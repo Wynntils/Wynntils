@@ -12,7 +12,6 @@ import com.wynntils.core.config.ConfigCategory;
 import com.wynntils.core.config.RegisterConfig;
 import com.wynntils.core.features.Feature;
 import com.wynntils.core.notifications.MessageContainer;
-import com.wynntils.core.text.CodedString;
 import com.wynntils.core.text.StyledText;
 import com.wynntils.models.characterstats.event.CombatXpGainEvent;
 import com.wynntils.models.worlds.event.WorldStateEvent;
@@ -40,9 +39,9 @@ public class CombatXpGainMessageFeature extends Feature {
         if (lastMessage != null && System.currentTimeMillis() - lastXpDisplayTime < secondDelay.get() * 1000) {
             Managers.Notification.editMessage(
                     lastMessage,
-                    CodedString.fromStyledText(getXpGainMessage(
+                    getXpGainMessage(
                             lastRawXpGain + event.getGainedXpRaw(),
-                            lastPercentageXpGain + event.getGainedXpPercentage())));
+                            lastPercentageXpGain + event.getGainedXpPercentage()));
 
             lastRawXpGain += event.getGainedXpRaw();
             lastPercentageXpGain += event.getGainedXpPercentage();

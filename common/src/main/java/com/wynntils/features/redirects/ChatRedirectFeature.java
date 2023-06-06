@@ -200,10 +200,10 @@ public class ChatRedirectFeature extends Feature {
     }
 
     private class FriendJoinRedirector extends SimpleRedirector {
-        private static final Pattern FOREGROUND_PATTERN = Pattern.compile(
-                "§a(§o)?(?<name>.+)§r§2 has logged into server §r§a(?<server>.+)§r§2 as §r§aan? (?<class>.+)");
+        private static final Pattern FOREGROUND_PATTERN =
+                Pattern.compile("§a(§o)?(?<name>.+)§2 has logged into server §a(?<server>.+)§2 as §aan? (?<class>.+)");
         private static final Pattern BACKGROUND_PATTERN = Pattern.compile(
-                "§r§7(§o)?(?<name>.+)§r§8(§o)? has logged into server §r§7(§o)?(?<server>.+)§r§8(§o)? as §r§7(§o)?an? (?<class>.+)");
+                "§7(§o)?(?<name>.+)§8(§o)? has logged into server §7(§o)?(?<server>.+)§8(§o)? as §7(§o)?an? (?<class>.+)");
 
         @Override
         protected Pattern getForegroundPattern() {
@@ -235,7 +235,7 @@ public class ChatRedirectFeature extends Feature {
 
     private class FriendLeaveRedirector extends SimpleRedirector {
         private static final Pattern FOREGROUND_PATTERN = Pattern.compile("§a(?<name>.+) left the game.");
-        private static final Pattern BACKGROUND_PATTERN = Pattern.compile("§r§7(?<name>.+) left the game.");
+        private static final Pattern BACKGROUND_PATTERN = Pattern.compile("§7(?<name>.+) left the game.");
 
         @Override
         protected Pattern getForegroundPattern() {
@@ -282,8 +282,8 @@ public class ChatRedirectFeature extends Feature {
     }
 
     private class HealedByOtherRedirector extends SimpleRedirector {
-        private static final Pattern FOREGROUND_PATTERN = Pattern.compile("^.+ gave you §r§c\\[\\+(\\d+) ❤\\]$");
-        private static final Pattern BACKGROUND_PATTERN = Pattern.compile("^.+ gave you §r§7§o\\[\\+(\\d+) ❤\\]$");
+        private static final Pattern FOREGROUND_PATTERN = Pattern.compile("^.+ gave you §c\\[\\+(\\d+) ❤\\]$");
+        private static final Pattern BACKGROUND_PATTERN = Pattern.compile("^.+ gave you §7§o\\[\\+(\\d+) ❤\\]$");
 
         @Override
         protected Pattern getForegroundPattern() {
@@ -448,7 +448,7 @@ public class ChatRedirectFeature extends Feature {
 
     private class IngredientPouchSellRedirector extends SimpleRedirector {
         private static final Pattern FOREGROUND_PATTERN =
-                Pattern.compile("§dYou have sold §r§7(.+)§r§d ingredients for a total of §r§a(.+)§r§d\\.$");
+                Pattern.compile("§dYou have sold §7(.+)§d ingredients for a total of §a(.+)§d\\.$");
 
         @Override
         protected Pattern getForegroundPattern() {
@@ -476,9 +476,9 @@ public class ChatRedirectFeature extends Feature {
 
     private class LoginRedirector extends SimpleRedirector {
         private static final Pattern FOREGROUND_PATTERN = Pattern.compile(
-                "^§.\\[§r(§.)+\\|?(§.)*(?<rank>[a-zA-Z+]+)§r(§.)+\\|?(§.)*\\] §r§.(?<name>.*)§r§. has just logged in!$");
+                "^§.\\[(§.)+\\|?(§.)*(?<rank>[a-zA-Z+]+)(§.)+\\|?(§.)*\\] §.(?<name>.*)§. has just logged in!$");
         private static final Pattern BACKGROUND_PATTERN = Pattern.compile(
-                "^(?:§r§8)?\\[§r(§.)+\\|?(§.)*(?<rank>[a-zA-Z+]+)§r(§.)+\\|?(§.)*\\] §r§7(?<name>.*)§r§8 has just logged in!$");
+                "^(?:§8)?\\[(§.)+\\|?(§.)*(?<rank>[a-zA-Z+]+)(§.)+\\|?(§.)*\\] §7(?<name>.*)§8 has just logged in!$");
 
         @Override
         protected Pattern getForegroundPattern() {
@@ -686,7 +686,7 @@ public class ChatRedirectFeature extends Feature {
         private static final Pattern FOREGROUND_PATTERN =
                 Pattern.compile("^§5As the sun rises, you feel a little bit safer...$");
         private static final Pattern BACKGROUND_PATTERN =
-                Pattern.compile("^(§r§8)?As the sun rises, you feel a little bit safer...$");
+                Pattern.compile("^(§8)?As the sun rises, you feel a little bit safer...$");
 
         @Override
         public Pattern getPattern(MessageType messageType) {
@@ -710,7 +710,7 @@ public class ChatRedirectFeature extends Feature {
     }
 
     private class SoulPointGainRedirector extends SimpleRedirector {
-        private static final Pattern BACKGROUND_PATTERN = Pattern.compile("^§r§7\\[(\\+\\d+ Soul Points?)\\]$");
+        private static final Pattern BACKGROUND_PATTERN = Pattern.compile("^§7\\[(\\+\\d+ Soul Points?)\\]$");
         private static final Pattern FOREGROUND_PATTERN = Pattern.compile("^§d\\[(\\+\\d+ Soul Points?)\\]$");
 
         @Override
@@ -764,7 +764,7 @@ public class ChatRedirectFeature extends Feature {
     }
 
     private class SpeedBoostRedirector extends SimpleRedirector {
-        private static final Pattern FOREGROUND_PATTERN = Pattern.compile("^§b\\+([23]) minutes§r§7 speed boost.$");
+        private static final Pattern FOREGROUND_PATTERN = Pattern.compile("^§b\\+([23]) minutes§7 speed boost.$");
 
         @Override
         protected Pattern getForegroundPattern() {
@@ -805,7 +805,7 @@ public class ChatRedirectFeature extends Feature {
 
     private class UnusedAbilityPointsRedirector extends SimpleRedirector {
         private static final Pattern FOREGROUND_PATTERN = Pattern.compile(
-                "^§4You have §r§b§l(\\d+) unused Ability Points?! §r§4Right-Click while holding your compass to use them$");
+                "^§4You have §b§l(\\d+) unused Ability Points?! §4Right-Click while holding your compass to use them$");
 
         @Override
         protected Pattern getForegroundPattern() {
@@ -832,7 +832,7 @@ public class ChatRedirectFeature extends Feature {
 
     private class UnusedSkillAndAbilityPointsRedirector implements Redirector {
         private static final Pattern FOREGROUND_PATTERN = Pattern.compile(
-                "^§4You have §r§c§l(\\d+) unused Skill Points?§r§4 and §r§b§l(\\d+) unused Ability Points?! §r§4Right-Click while holding your compass to use them$");
+                "^§4You have §c§l(\\d+) unused Skill Points?§4 and §b§l(\\d+) unused Ability Points?! §4Right-Click while holding your compass to use them$");
 
         @Override
         public Pattern getPattern(MessageType messageType) {
@@ -861,7 +861,7 @@ public class ChatRedirectFeature extends Feature {
 
     private class UnusedSkillPointsRedirector extends SimpleRedirector {
         private static final Pattern FOREGROUND_PATTERN = Pattern.compile(
-                "^§4You have §r§c§l(\\d+) unused Skill Points?! §r§4Right-Click while holding your compass to use them$");
+                "^§4You have §c§l(\\d+) unused Skill Points?! §4Right-Click while holding your compass to use them$");
 
         @Override
         protected Pattern getForegroundPattern() {

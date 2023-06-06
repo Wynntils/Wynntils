@@ -12,7 +12,7 @@ import com.wynntils.core.config.RegisterConfig;
 import com.wynntils.core.features.Feature;
 import com.wynntils.core.features.properties.RegisterKeyBind;
 import com.wynntils.core.keybinds.KeyBind;
-import com.wynntils.core.text.CodedString;
+import com.wynntils.core.text.StyledText;
 import com.wynntils.features.tooltips.ItemGuessFeature;
 import com.wynntils.mc.event.PlayerInteractEvent;
 import com.wynntils.mc.event.UseItemEvent;
@@ -24,7 +24,6 @@ import com.wynntils.screens.guides.ingredient.WynntilsIngredientGuideScreen;
 import com.wynntils.screens.questbook.WynntilsQuestBookScreen;
 import com.wynntils.screens.questbook.history.WynntilsDialogueHistoryScreen;
 import com.wynntils.screens.wynntilsmenu.WynntilsMenuScreen;
-import com.wynntils.utils.mc.ComponentUtils;
 import com.wynntils.utils.mc.McUtils;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.sounds.SoundEvent;
@@ -40,7 +39,7 @@ public class WynntilsQuestBookFeature extends Feature {
     private static final ResourceLocation QUEST_UPDATE_ID = new ResourceLocation("wynntils:ui.quest.update");
     private static final SoundEvent QUEST_UPDATE_SOUND = SoundEvent.createVariableRangeEvent(QUEST_UPDATE_ID);
 
-    private static final CodedString QUEST_BOOK_NAME = CodedString.fromString("§dQuest Book");
+    private static final StyledText QUEST_BOOK_NAME = StyledText.fromString("§dQuest Book");
 
     @RegisterKeyBind
     private final KeyBind openQuestBook = new KeyBind(
@@ -128,7 +127,7 @@ public class WynntilsQuestBookFeature extends Feature {
         ItemStack itemInHand = McUtils.player().getItemInHand(InteractionHand.MAIN_HAND);
 
         if (itemInHand != null
-                && ComponentUtils.getCoded(itemInHand.getHoverName()).equals(QUEST_BOOK_NAME)) {
+                && StyledText.fromComponent(itemInHand.getHoverName()).equals(QUEST_BOOK_NAME)) {
             event.setCanceled(true);
             WynntilsMenuScreenBase.openBook(
                     questBookShouldOpenWynntilsMenu.get()

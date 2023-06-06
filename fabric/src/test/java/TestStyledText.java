@@ -376,9 +376,10 @@ public class TestStyledText {
 
         StyledText styledText = StyledText.fromComponent(component);
 
-        StyledText[] splitTexts = styledText.split(",");
+        // Split on the word "multiple" to check style inheritance
+        StyledText[] splitTexts = styledText.split("\\.|,|(tip)");
 
-        String[] results = {"This is a test string", " where there are ", "§lmultiple", " components."};
+        String[] results = {"This is a test string", " where there are §lmul", "§lle§r components"};
 
         for (int i = 0; i < splitTexts.length; i++) {
             StyledText result = splitTexts[i];

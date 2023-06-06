@@ -10,7 +10,7 @@ import com.wynntils.core.config.Config;
 import com.wynntils.core.config.ConfigCategory;
 import com.wynntils.core.config.RegisterConfig;
 import com.wynntils.core.features.Feature;
-import com.wynntils.core.text.CodedString;
+import com.wynntils.core.text.StyledText;
 import com.wynntils.mc.event.ItemTooltipRenderEvent;
 import com.wynntils.models.emeralds.type.EmeraldUnits;
 import com.wynntils.models.gear.type.GearInfo;
@@ -108,7 +108,7 @@ public class ItemGuessFeature extends Feature {
                         .withStyle(ChatFormatting.GRAY));
             }
 
-            guesses.append(CodedString.fromString("§7: ").asSingleLiteralComponentWithCodedString());
+            guesses.append(StyledText.fromString("§7: ").getComponent());
 
             Optional<MutableComponent> itemsComponent = itemsForLevel.stream()
                     .reduce((i, j) -> i.append(Component.literal(", ").withStyle(ChatFormatting.GRAY))
