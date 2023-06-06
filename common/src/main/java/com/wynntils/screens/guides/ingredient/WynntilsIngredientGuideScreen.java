@@ -13,7 +13,6 @@ import com.wynntils.screens.base.widgets.PageSelectorButton;
 import com.wynntils.screens.guides.WynntilsGuidesListScreen;
 import com.wynntils.utils.StringUtils;
 import com.wynntils.utils.colors.CommonColors;
-import com.wynntils.utils.mc.ComponentUtils;
 import com.wynntils.utils.render.FontRenderer;
 import com.wynntils.utils.render.RenderUtils;
 import com.wynntils.utils.render.Texture;
@@ -146,8 +145,8 @@ public final class WynntilsIngredientGuideScreen
     @Override
     protected void reloadElementsList(String searchTerm) {
         elements.addAll(getAllIngredientItems().stream()
-                .filter(itemStack ->
-                        StringUtils.partialMatch(ComponentUtils.getUnformatted(itemStack.getHoverName()), searchTerm))
+                .filter(itemStack -> StringUtils.partialMatch(
+                        StyledText.fromComponent(itemStack.getHoverName()).getStringWithoutFormatting(), searchTerm))
                 .toList());
     }
 

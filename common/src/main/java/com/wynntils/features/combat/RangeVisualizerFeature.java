@@ -12,6 +12,7 @@ import com.wynntils.core.components.Models;
 import com.wynntils.core.config.Category;
 import com.wynntils.core.config.ConfigCategory;
 import com.wynntils.core.features.Feature;
+import com.wynntils.core.text.StyledText;
 import com.wynntils.mc.event.PlayerRenderEvent;
 import com.wynntils.mc.event.TickEvent;
 import com.wynntils.models.gear.type.GearInfo;
@@ -19,7 +20,6 @@ import com.wynntils.screens.characterselector.CharacterSelectorScreen;
 import com.wynntils.screens.wynntilsmenu.WynntilsMenuScreen;
 import com.wynntils.utils.colors.CommonColors;
 import com.wynntils.utils.colors.CustomColor;
-import com.wynntils.utils.mc.ComponentUtils;
 import com.wynntils.utils.mc.McUtils;
 import com.wynntils.utils.render.buffered.CustomRenderType;
 import com.wynntils.utils.type.Pair;
@@ -94,7 +94,8 @@ public class RangeVisualizerFeature extends Feature {
             validGear = Models.CharacterStats.getWornGear();
         } else {
             // Other players must be in party
-            if (!Models.Party.getPartyMembers().contains(ComponentUtils.getUnformatted(player.getName()))) return;
+            if (!Models.Party.getPartyMembers()
+                    .contains(StyledText.fromComponent(player.getName()).getStringWithoutFormatting())) return;
 
             validGear = new ArrayList<>();
             // Check main hand
@@ -140,7 +141,7 @@ public class RangeVisualizerFeature extends Feature {
 
     private GearInfo getOtherPlayerGearInfo(ItemStack itemStack) {
         // This must specifically NOT be normalized; the ֎ is significant
-        String gearName = ComponentUtils.getUnformatted(itemStack.getHoverName());
+        String gearName = StyledText.fromComponent(itemStack.getHoverName()).getStringWithoutFormatting();
         return Models.Gear.getGearInfoFromApiName(gearName);
     }
 

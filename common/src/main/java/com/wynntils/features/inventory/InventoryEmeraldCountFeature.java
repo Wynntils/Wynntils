@@ -16,7 +16,6 @@ import com.wynntils.mc.event.ContainerRenderEvent;
 import com.wynntils.models.emeralds.type.EmeraldUnits;
 import com.wynntils.utils.StringUtils;
 import com.wynntils.utils.colors.CommonColors;
-import com.wynntils.utils.mc.ComponentUtils;
 import com.wynntils.utils.mc.KeyboardUtils;
 import com.wynntils.utils.mc.McUtils;
 import com.wynntils.utils.render.FontRenderer;
@@ -56,7 +55,9 @@ public class InventoryEmeraldCountFeature extends Feature {
         Screen screen = McUtils.mc().screen;
         if (!(screen instanceof AbstractContainerScreen<?> containerScreen)) return;
 
-        if (ComponentUtils.getUnformatted(screen.getTitle()).equals("Character Info")) return;
+        if (StyledText.fromComponent(screen.getTitle())
+                .getStringWithoutFormatting()
+                .equals("Character Info")) return;
 
         // Always draw top part, which is all there is if it is inventory,
         // and all there is if we combine them, otherwise it is just the
