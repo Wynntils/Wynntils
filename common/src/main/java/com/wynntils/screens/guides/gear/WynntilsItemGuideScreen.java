@@ -128,7 +128,15 @@ public final class WynntilsItemGuideScreen extends WynntilsListScreen<GuideGearI
                     // Return true (i.e., keep the gear item) if any term matches.
                     for (String term : terms) {
                         // Trim leading and trailing whitespace from the term before using it.
-                        if (StringUtils.partialMatch(hoverName, term.trim())) {
+                        term = term.trim();
+
+                        // Check for "strict mode" with '!'
+                        if (term.startsWith("!")) {
+                            // If the term after removing '!' matches exactly
+                            if (hoverName.equals(term.substring(1))) {
+                                return true;
+                            }
+                        } else if (StringUtils.partialMatch(hoverName, term)) {
                             return true;
                         }
                     }

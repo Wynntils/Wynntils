@@ -59,7 +59,7 @@ public class ItemGuessFeature extends Feature {
 
     private String getPossibleGearNames(GearBoxItem gearBoxItem) {
         List<GearInfo> possibleGear = Models.Gear.getPossibleGears(gearBoxItem);
-        return possibleGear.stream().map(GearInfo::name).collect(Collectors.joining(", "));
+        return possibleGear.stream().map(gearInfo -> "!" + gearInfo.name()).collect(Collectors.joining(", "));
     }
 
     private List<Component> getTooltipAddon(GearBoxItem gearBoxItem) {
