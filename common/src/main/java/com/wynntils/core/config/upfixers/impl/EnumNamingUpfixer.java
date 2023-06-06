@@ -68,7 +68,7 @@ public class EnumNamingUpfixer implements ConfigUpfixer {
         }
 
         @Override
-        public void write(JsonWriter out, T value) throws IOException {
+        public void write(JsonWriter out, T value) {
             throw new UnsupportedOperationException();
         }
 

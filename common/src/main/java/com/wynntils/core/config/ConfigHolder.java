@@ -53,7 +53,7 @@ public class ConfigHolder implements Comparable<ConfigHolder> {
 
     public Stream<String> getValidLiterals() {
         if (valueType instanceof Class clazz && clazz.isEnum()) {
-            return EnumUtils.getEnumConstants(clazz).stream().map(e -> EnumUtils.toJsonFormat(e));
+            return EnumUtils.getEnumConstants(clazz).stream().map(EnumUtils::toJsonFormat);
         }
         if (valueType.equals(Boolean.class)) {
             return Stream.of("true", "false");

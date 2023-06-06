@@ -229,7 +229,7 @@ public final class ConfigManager extends Manager {
                             "A non-Config class was marked with @RegisterConfig annotation: " + field);
                 }
             } catch (IllegalAccessException e) {
-                throw new RuntimeException("Failed to read @RegisterConfig annotated field: " + field);
+                throw new RuntimeException("Failed to read @RegisterConfig annotated field: " + field, e);
             }
         }
 
@@ -253,7 +253,7 @@ public final class ConfigManager extends Manager {
             try {
                 configObj = (Config) FieldUtils.readField(configField, parent, true);
             } catch (IllegalAccessException e) {
-                throw new RuntimeException("Cannot read Config field: " + configField);
+                throw new RuntimeException("Cannot read Config field: " + configField, e);
             }
             boolean visible = !(configObj instanceof HiddenConfig<?>);
 

@@ -68,26 +68,21 @@ public final class PoiManagementScreen extends WynntilsScreen {
                         .build());
 
         this.addRenderableWidget(
-                nextButton = new Button.Builder(Component.literal(">"), (button) -> {
-                            nextPage();
-                        })
+                nextButton = new Button.Builder(Component.literal(">"), (button) -> nextPage())
                         .pos(this.width / 2 + 2, this.height - 45)
                         .size(20, 20)
                         .build());
 
         this.addRenderableWidget(
-                previousButton = new Button.Builder(Component.literal("<"), (button) -> {
-                            previousPage();
-                        })
+                previousButton = new Button.Builder(Component.literal("<"), (button) -> previousPage())
                         .pos(this.width / 2 - 22, this.height - 45)
                         .size(20, 20)
                         .build());
 
         this.addRenderableWidget(
                 undoDeleteButton = new Button.Builder(
-                                Component.translatable("screens.wynntils.poiManagementGui.undo"), (button) -> {
-                                    undoDelete();
-                                })
+                                Component.translatable("screens.wynntils.poiManagementGui.undo"),
+                                (button) -> undoDelete())
                         .pos(
                                 this.width
                                         - 25

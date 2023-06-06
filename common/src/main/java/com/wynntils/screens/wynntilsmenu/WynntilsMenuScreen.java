@@ -213,7 +213,7 @@ public final class WynntilsMenuScreen extends WynntilsMenuScreenBase {
     }
 
     private static void renderPlayerInfo(PoseStack poseStack, int mouseX, int mouseY) {
-        int posX = (int) (Texture.QUEST_BOOK_BACKGROUND.width()) - 85;
+        int posX = Texture.QUEST_BOOK_BACKGROUND.width() - 85;
         int posY = (int) (Texture.QUEST_BOOK_BACKGROUND.height() / 2f) + 25;
         InventoryScreen.renderEntityInInventoryFollowsMouse(
                 poseStack, posX, posY, 30, posX + 45 - mouseX, posY - 40 - mouseY, McUtils.player());
