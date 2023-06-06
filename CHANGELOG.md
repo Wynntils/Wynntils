@@ -1,9 +1,21 @@
+## [0.0.3-alpha.66](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.65...v0.0.3-alpha.66) (2023-06-06)
+
+
+### Miscellaneous Chores
+
+* Update all dependecy versions ([#1592](https://github.com/Wynntils/Artemis/issues/1592)) ([2b83743](https://github.com/Wynntils/Artemis/commit/2b837432fdbd59c47df63d0b82623eec49d056b9))
+
 ## [0.0.3-alpha.65](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.64...v0.0.3-alpha.65) (2023-06-06)
 
 
 ### Code Refactoring
 
 * Port everything to StyledText, remove CodedString, and deprecated ComponentUtils methods ([#1591](https://github.com/Wynntils/Artemis/issues/1591)) ([7411a81](https://github.com/Wynntils/Artemis/commit/7411a81dac6ced9ac3b040c51bc848f58eb1acb5))
+
+
+### Miscellaneous Chores
+
+* **release:** v0.0.3-alpha.65 [skip ci] ([a6131d2](https://github.com/Wynntils/Artemis/commit/a6131d2c35cdbca7f191f9dff5764b206e5c7d79))
 
 ## [0.0.3-alpha.64](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.63...v0.0.3-alpha.64) (2023-06-05)
 
@@ -40,16 +52,4 @@
 ### Miscellaneous Chores
 
 * **release:** v0.0.3-alpha.62 [skip ci] ([d3114df](https://github.com/Wynntils/Artemis/commit/d3114df9c4da4fdcfe3d0e7397ca4cdb39a057fc))
-
-## [0.0.3-alpha.61](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.60...v0.0.3-alpha.61) (2023-06-05)
-
-
-### Bug Fixes
-
-* Fix action bar not displaying at all ([#1587](https://github.com/Wynntils/Artemis/issues/1587)) ([1ff91cc](https://github.com/Wynntils/Artemis/commit/1ff91cc402cbe29e54a5d84df4f2c770ba6abc79))
-
-
-### Miscellaneous Chores
-
-* **release:** v0.0.3-alpha.61 [skip ci] ([5c69c1c](https://github.com/Wynntils/Artemis/commit/5c69c1cec94496f207ea99a14c62aa56f9bde7ad))
 
