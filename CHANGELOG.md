@@ -1,8 +1,16 @@
+## [0.0.3-alpha.67](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.66...v0.0.3-alpha.67) (2023-06-06)
+
+
+### Bug Fixes
+
+* Fix replace pattern in territory model ([#1593](https://github.com/Wynntils/Artemis/issues/1593)) ([05f7814](https://github.com/Wynntils/Artemis/commit/05f781451364b727ce51d84cd344eadb103b1253))
+
 ## [0.0.3-alpha.66](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.65...v0.0.3-alpha.66) (2023-06-06)
 
 
 ### Miscellaneous Chores
 
+* **release:** v0.0.3-alpha.66 [skip ci] ([bc9aabb](https://github.com/Wynntils/Artemis/commit/bc9aabb58af8675fe6f98ca73e2983e04ca72363))
 * Update all dependecy versions ([#1592](https://github.com/Wynntils/Artemis/issues/1592)) ([2b83743](https://github.com/Wynntils/Artemis/commit/2b837432fdbd59c47df63d0b82623eec49d056b9))
 
 ## [0.0.3-alpha.65](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.64...v0.0.3-alpha.65) (2023-06-06)
@@ -40,16 +48,4 @@
 ### Miscellaneous Chores
 
 * **release:** v0.0.3-alpha.63 [skip ci] ([9dcbc8b](https://github.com/Wynntils/Artemis/commit/9dcbc8bfcdfb38646a61f813fc90d25be6cd9fc4))
-
-## [0.0.3-alpha.62](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.61...v0.0.3-alpha.62) (2023-06-05)
-
-
-### New Features
-
-* add a config to hide party members on scoreboard ([#1588](https://github.com/Wynntils/Artemis/issues/1588)) ([b32fc32](https://github.com/Wynntils/Artemis/commit/b32fc3220c1ad30eec941392601115b020751c3a))
-
-
-### Miscellaneous Chores
-
-* **release:** v0.0.3-alpha.62 [skip ci] ([d3114df](https://github.com/Wynntils/Artemis/commit/d3114df9c4da4fdcfe3d0e7397ca4cdb39a057fc))
 
