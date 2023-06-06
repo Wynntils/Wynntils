@@ -18,7 +18,6 @@ import com.wynntils.models.map.pois.Poi;
 import com.wynntils.models.map.pois.TerritoryPoi;
 import com.wynntils.models.map.type.TerritoryDefenseFilterType;
 import com.wynntils.models.territories.profile.TerritoryProfile;
-import com.wynntils.utils.mc.ComponentUtils;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -122,11 +121,11 @@ public final class TerritoryModel extends Model {
 
             if (built.getDisplay() == null) continue;
 
-            String territoryName = ComponentUtils.getUnformatted(
-                            built.getDisplay().getTitle())
-                    .replace("[", "")
-                    .replace("]", "")
-                    .trim();
+            String territoryName = StyledText.fromComponent(built.getDisplay().getTitle())
+                    .replaceAll("[", "")
+                    .replaceAll("]", "")
+                    .trim()
+                    .getStringWithoutFormatting();
 
             // Do not parse same thing twice
             if (tempMap.containsKey(territoryName)) continue;

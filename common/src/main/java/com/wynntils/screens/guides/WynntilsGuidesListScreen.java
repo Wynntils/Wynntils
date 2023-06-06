@@ -17,7 +17,6 @@ import com.wynntils.screens.guides.widgets.GuidesButton;
 import com.wynntils.screens.wynntilsmenu.WynntilsMenuScreen;
 import com.wynntils.utils.StringUtils;
 import com.wynntils.utils.colors.CommonColors;
-import com.wynntils.utils.mc.ComponentUtils;
 import com.wynntils.utils.render.FontRenderer;
 import com.wynntils.utils.render.Texture;
 import com.wynntils.utils.render.type.HorizontalAlignment;
@@ -121,8 +120,8 @@ public final class WynntilsGuidesListScreen extends WynntilsListScreen<Screen, G
     @Override
     protected void reloadElementsList(String searchTerm) {
         elements.addAll(GUIDES.stream()
-                .filter(screen ->
-                        StringUtils.partialMatch(ComponentUtils.getUnformatted(screen.getTitle()), searchTerm))
+                .filter(screen -> StringUtils.partialMatch(
+                        StyledText.fromComponent(screen.getTitle()).getStringWithoutFormatting(), searchTerm))
                 .toList());
     }
 }

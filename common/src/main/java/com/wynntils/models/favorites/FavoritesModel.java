@@ -7,6 +7,7 @@ package com.wynntils.models.favorites;
 import com.wynntils.core.components.Managers;
 import com.wynntils.core.components.Model;
 import com.wynntils.core.components.Models;
+import com.wynntils.core.text.StyledText;
 import com.wynntils.features.inventory.ItemFavoriteFeature;
 import com.wynntils.models.gear.type.GearInfo;
 import com.wynntils.models.ingredients.type.IngredientInfo;
@@ -14,9 +15,7 @@ import com.wynntils.models.items.WynnItem;
 import com.wynntils.models.items.items.game.GearBoxItem;
 import com.wynntils.models.items.items.game.IngredientItem;
 import com.wynntils.models.items.items.gui.IngredientPouchItem;
-import com.wynntils.utils.mc.ComponentUtils;
 import com.wynntils.utils.type.Pair;
-import com.wynntils.utils.wynn.WynnUtils;
 import java.util.List;
 import java.util.Set;
 import net.minecraft.network.chat.Component;
@@ -34,7 +33,7 @@ public final class FavoritesModel extends Model {
     }
 
     public boolean isFavorite(Component component) {
-        return isFavorite(ComponentUtils.getUnformatted(component));
+        return isFavorite(StyledText.fromComponent(component).getStringWithoutFormatting());
     }
 
     public boolean isFavorite(ItemStack itemStack) {
@@ -42,7 +41,9 @@ public final class FavoritesModel extends Model {
     }
 
     public boolean calculateFavorite(ItemStack itemStack, WynnItem wynnItem) {
-        String unformattedName = WynnUtils.normalizeBadString(ComponentUtils.getUnformatted(itemStack.getHoverName()));
+        String unformattedName = StyledText.fromComponent(itemStack.getHoverName())
+                .getNormalized()
+                .getStringWithoutFormatting();
 
         if (isFavorite(unformattedName)) {
             return true;

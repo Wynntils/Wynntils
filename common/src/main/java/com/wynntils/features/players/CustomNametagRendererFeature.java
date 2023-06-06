@@ -19,7 +19,6 @@ import com.wynntils.models.gear.type.GearInfo;
 import com.wynntils.models.players.WynntilsUser;
 import com.wynntils.models.players.type.AccountType;
 import com.wynntils.screens.gearviewer.GearViewerScreen;
-import com.wynntils.utils.mc.ComponentUtils;
 import com.wynntils.utils.mc.McUtils;
 import com.wynntils.utils.render.RenderUtils;
 import com.wynntils.utils.wynn.RaycastUtils;
@@ -131,7 +130,7 @@ public class CustomNametagRendererFeature extends Feature {
         if (itemStack == null || itemStack == ItemStack.EMPTY) return null;
 
         // This must specifically NOT be normalized; the ֎ is significant
-        String gearName = ComponentUtils.getUnformatted(itemStack.getHoverName());
+        String gearName = StyledText.fromComponent(itemStack.getHoverName()).getStringWithoutFormatting();
         MutableComponent description = WynnItemMatchers.getNonGearDescription(itemStack, gearName);
         if (description != null) return description;
 

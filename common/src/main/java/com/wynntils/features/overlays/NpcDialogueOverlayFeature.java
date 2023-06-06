@@ -29,7 +29,6 @@ import com.wynntils.mc.event.TickEvent;
 import com.wynntils.models.worlds.event.WorldStateEvent;
 import com.wynntils.utils.MathUtils;
 import com.wynntils.utils.colors.CommonColors;
-import com.wynntils.utils.mc.ComponentUtils;
 import com.wynntils.utils.mc.McUtils;
 import com.wynntils.utils.render.FontRenderer;
 import com.wynntils.utils.render.TextRenderSetting;
@@ -313,9 +312,10 @@ public class NpcDialogueOverlayFeature extends Feature {
                             ChatFormatting.GREEN + "Auto-progress: "
                                     + Math.max(0, Math.round(timeUntilProgress / 1000f))
                                     + " seconds (Press "
-                                    + ComponentUtils.getUnformatted(cancelAutoProgressKeybind
-                                            .getKeyMapping()
-                                            .getTranslatedKeyMessage())
+                                    + StyledText.fromComponent(cancelAutoProgressKeybind
+                                                    .getKeyMapping()
+                                                    .getTranslatedKeyMessage())
+                                            .getStringWithoutFormatting()
                                     + " to cancel)",
                             renderSetting);
                     renderTaskList.add(autoProgressMessage);

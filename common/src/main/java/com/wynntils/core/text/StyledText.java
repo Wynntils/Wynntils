@@ -550,6 +550,15 @@ public final class StyledText implements Iterable<StyledTextPart> {
         return new StyledText(newParts, clickEvents, hoverEvents);
     }
 
+    public StyledText withoutFormatting() {
+        return iterate((part, functionParts) -> {
+            functionParts.set(
+                    0,
+                    new StyledTextPart(part.getString(null, PartStyle.StyleType.NONE), Style.EMPTY, null, Style.EMPTY));
+            return IterationDecision.CONTINUE;
+        });
+    }
+
     public StyledTextPart getFirstPart() {
         if (parts.isEmpty()) {
             return null;
