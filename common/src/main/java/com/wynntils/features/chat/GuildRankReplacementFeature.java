@@ -14,6 +14,7 @@ import com.wynntils.core.text.PartStyle;
 import com.wynntils.core.text.StyledText;
 import com.wynntils.core.text.StyledTextPart;
 import com.wynntils.handlers.chat.event.ChatMessageReceivedEvent;
+import com.wynntils.handlers.chat.type.RecipientType;
 import com.wynntils.models.players.type.GuildRank;
 import com.wynntils.utils.type.IterationDecision;
 import java.util.regex.Matcher;
@@ -39,6 +40,8 @@ public class GuildRankReplacementFeature extends Feature {
 
     @SubscribeEvent(priority = EventPriority.HIGH)
     public void onChatMessageReceived(ChatMessageReceivedEvent e) {
+        if (e.getRecipientType() != RecipientType.GUILD) return;
+
         StyledText originalStyledText = e.getStyledText();
 
         Matcher m = originalStyledText.getMatcher(GUILD_MESSAGE_PATTERN);
