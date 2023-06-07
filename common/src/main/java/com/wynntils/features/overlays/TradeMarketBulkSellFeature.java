@@ -42,7 +42,8 @@ public class TradeMarketBulkSellFeature extends Feature {
     public Config<Integer> bulkSell3Amount = new Config<>(0);
 
     private static final Pattern ITEM_NAME_PATTERN =
-            Pattern.compile("§6Selling §f(\\d+|\\d+,\\d+) ([^À]*)À*§6 for §f[\\d,]*§7² Each");
+            Pattern.compile("§6Selling §f(\\d+|\\d+,\\d+) ([^À]*)À*(:?§6)? for §f[\\d,]*§7² Each");
+    private static final String CLICK_TO_SELL_ITEM = "§6Click an Item to Sell";
     private static final String SELL_DIALOGUE_TITLE = "What would you like to sell?";
     private static final int SELLABLE_ITEM_SLOT = 10;
     private static final int AMOUNT_ITEM_SLOT = 11;
@@ -102,7 +103,7 @@ public class TradeMarketBulkSellFeature extends Feature {
     private String getItemName(MenuAccess<ChestMenu> cs) {
         ItemStack is = cs.getMenu().getSlot(SELLABLE_ITEM_SLOT).getItem();
         if (is == ItemStack.EMPTY) return null;
-        if (is.getHoverName().toString().contains("Click an Item to sell")) return null;
+        if (StyledText.fromComponent(is.getHoverName()).getString().equals(CLICK_TO_SELL_ITEM)) return null;
         Matcher m = StyledText.fromComponent(is.getHoverName()).getMatcher(ITEM_NAME_PATTERN);
 
         if (!m.matches()) return null;
