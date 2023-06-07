@@ -1,9 +1,21 @@
+## [0.0.3-alpha.70](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.69...v0.0.3-alpha.70) (2023-06-07)
+
+
+### Bug Fixes
+
+* Fix bulk sell button in TM ([#1597](https://github.com/Wynntils/Artemis/issues/1597)) ([7375e82](https://github.com/Wynntils/Artemis/commit/7375e82dfd2300a38de84a8b408a94c838d23a03))
+
 ## [0.0.3-alpha.69](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.68...v0.0.3-alpha.69) (2023-06-07)
 
 
 ### Bug Fixes
 
 * Change events so chat tabs behave less weird ([#1583](https://github.com/Wynntils/Artemis/issues/1583)) ([78b8151](https://github.com/Wynntils/Artemis/commit/78b8151b252bd1e296af0d17d60c970045cbdfe3))
+
+
+### Miscellaneous Chores
+
+* **release:** v0.0.3-alpha.69 [skip ci] ([d7c33d4](https://github.com/Wynntils/Artemis/commit/d7c33d402f0ae98a0b8ba116f5112f845bcc0a20))
 
 ## [0.0.3-alpha.68](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.67...v0.0.3-alpha.68) (2023-06-07)
 
@@ -36,16 +48,4 @@
 
 * **release:** v0.0.3-alpha.66 [skip ci] ([bc9aabb](https://github.com/Wynntils/Artemis/commit/bc9aabb58af8675fe6f98ca73e2983e04ca72363))
 * Update all dependecy versions ([#1592](https://github.com/Wynntils/Artemis/issues/1592)) ([2b83743](https://github.com/Wynntils/Artemis/commit/2b837432fdbd59c47df63d0b82623eec49d056b9))
-
-## [0.0.3-alpha.65](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.64...v0.0.3-alpha.65) (2023-06-06)
-
-
-### Code Refactoring
-
-* Port everything to StyledText, remove CodedString, and deprecated ComponentUtils methods ([#1591](https://github.com/Wynntils/Artemis/issues/1591)) ([7411a81](https://github.com/Wynntils/Artemis/commit/7411a81dac6ced9ac3b040c51bc848f58eb1acb5))
-
-
-### Miscellaneous Chores
-
-* **release:** v0.0.3-alpha.65 [skip ci] ([a6131d2](https://github.com/Wynntils/Artemis/commit/a6131d2c35cdbca7f191f9dff5764b206e5c7d79))
 
