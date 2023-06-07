@@ -11,7 +11,6 @@ import com.wynntils.core.text.StyledText;
 import com.wynntils.features.chat.ChatTabsFeature;
 import com.wynntils.handlers.chat.event.ChatMessageReceivedEvent;
 import com.wynntils.handlers.chat.type.RecipientType;
-import com.wynntils.mc.event.ChatPacketReceivedEvent;
 import com.wynntils.mc.event.ClientsideMessageEvent;
 import com.wynntils.mc.event.TickEvent;
 import com.wynntils.models.worlds.event.WorldStateEvent;
@@ -19,7 +18,6 @@ import com.wynntils.models.worlds.type.WorldState;
 import com.wynntils.utils.mc.McUtils;
 import java.util.List;
 import java.util.Map;
-import java.util.Objects;
 import java.util.Optional;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.regex.Pattern;
@@ -28,10 +26,11 @@ import net.minecraft.ChatFormatting;
 import net.minecraft.client.gui.components.ChatComponent;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
-import net.minecraftforge.eventbus.api.EventPriority;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 
 public final class ChatTabManager extends Manager {
+    private final ChatComponent FALLBACK_CHAT = new ChatComponent(McUtils.mc());
+
     private ChatTab focusedTab = null;
 
     private final Map<ChatTab, ChatComponent> chatTabData = new ConcurrentHashMap<>();
@@ -79,10 +78,14 @@ public final class ChatTabManager extends Manager {
         return (getTabIndex(getFocusedTab()) + 1) % getTabCount();
     }
 
-    public void resetFocusedTab() {
+    public void refocusFirstTab() {
         if (!isTabListEmpty()) {
             setFocusedTab(0);
         }
+    }
+
+    public void resetFocusedTab() {
+        setFocusedTab(null);
     }
 
     @SubscribeEvent
@@ -90,7 +93,6 @@ public final class ChatTabManager extends Manager {
         if (event.getNewState() == WorldState.NOT_CONNECTED) {
             chatTabData.clear();
             unreadMessages.clear();
-            setFocusedTab(null);
         }
     }
 
@@ -99,29 +101,15 @@ public final class ChatTabManager extends Manager {
         chatTabData.values().forEach(ChatComponent::tick);
     }
 
-    @SubscribeEvent(priority = EventPriority.LOWEST)
-    public void onChatPacket(ChatPacketReceivedEvent.Player event) {
-        // FIXME: I don't believe this ever happens?
-        if (focusedTab == null) return;
-
-        // Cancel all remaining messages, if we have a focused tab, we will handle it.
-        event.setCanceled(true);
-    }
-
     public void setFocusedTab(int index) {
         setFocusedTab(getTab(index));
     }
 
     public void setFocusedTab(ChatTab focused) {
-        if (Objects.equals(focusedTab, focused)) {
-            // do not create new chat component if we are already focused on the tab
-            return;
-        }
-
         focusedTab = focused;
 
         if (focusedTab == null) {
-            McUtils.mc().gui.chat = new ChatComponent(McUtils.mc());
+            McUtils.mc().gui.chat = FALLBACK_CHAT;
         } else {
             chatTabData.putIfAbsent(focusedTab, new ChatComponent(McUtils.mc()));
             unreadMessages.put(focusedTab, false);
