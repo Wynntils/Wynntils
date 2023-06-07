@@ -87,7 +87,7 @@ public class ConfigHolder implements Comparable<ConfigHolder> {
         return CaseFormat.UPPER_CAMEL.to(CaseFormat.LOWER_CAMEL, name);
     }
 
-    public String getI18nKey() {
+    private String getI18nKey() {
         return i18nKey;
     }
 

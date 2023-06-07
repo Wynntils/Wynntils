@@ -20,7 +20,7 @@ public class ConstantExpression extends Expression {
 
     private final Object value;
 
-    protected ConstantExpression(String rawExpression, Object value) {
+    private ConstantExpression(String rawExpression, Object value) {
         super(rawExpression);
         this.value = value;
     }

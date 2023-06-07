@@ -32,8 +32,8 @@ public class DiscoveryContainerQueries {
     private static final Pattern DISCOVERY_COUNT_PATTERN = Pattern.compile("§6Total Discoveries: §e\\[(\\d+)/\\d+\\]");
     private static final Pattern SECRET_DISCOVERY_COUNT_PATTERN =
             Pattern.compile("§bTotal Secret Discoveries: §3\\[(\\d+)/\\d+\\]");
-    public static final StyledText DISCOVERIES_STRING = StyledText.fromString("§6§lDiscoveries");
-    public static final StyledText SECRET_DISCOVERIES_STRING = StyledText.fromString("§b§lSecret Discoveries");
+    private static final StyledText DISCOVERIES_STRING = StyledText.fromString("§6§lDiscoveries");
+    private static final StyledText SECRET_DISCOVERIES_STRING = StyledText.fromString("§b§lSecret Discoveries");
 
     private List<DiscoveryInfo> newDiscoveries;
 

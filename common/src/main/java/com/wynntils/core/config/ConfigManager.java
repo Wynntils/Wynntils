@@ -76,7 +76,7 @@ public final class ConfigManager extends Manager {
         Managers.Config.saveDefaultConfig();
     }
 
-    public void registerFeature(Feature feature) {
+    private void registerFeature(Feature feature) {
         registerConfigOptions(feature);
 
         for (Overlay overlay : Managers.Overlay.getFeatureOverlays(feature).stream()
@@ -203,7 +203,7 @@ public final class ConfigManager extends Manager {
         Managers.Json.savePreciousJson(userConfig, holderJson);
     }
 
-    public void saveDefaultConfig() {
+    private void saveDefaultConfig() {
         // create json object, with entry for each option of each container
         JsonObject holderJson = new JsonObject();
         for (ConfigHolder holder : getConfigHolderList()) {

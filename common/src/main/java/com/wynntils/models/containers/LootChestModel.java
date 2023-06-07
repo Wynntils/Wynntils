@@ -23,8 +23,8 @@ import net.minecraftforge.eventbus.api.SubscribeEvent;
 public final class LootChestModel extends Model {
     private static final int LOOT_CHEST_ITEM_COUNT = 27;
 
-    private Storage<Integer> dryCount = new Storage<>(0);
-    private Storage<Integer> dryBoxes = new Storage<>(0);
+    private final Storage<Integer> dryCount = new Storage<>(0);
+    private final Storage<Integer> dryBoxes = new Storage<>(0);
 
     private int nextExpectedLootContainerId = -2;
 

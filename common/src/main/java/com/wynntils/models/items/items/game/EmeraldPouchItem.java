@@ -15,7 +15,7 @@ public class EmeraldPouchItem extends GameItem implements NumberedTierItemProper
     private final int tier;
     private final int value;
 
-    private int capacity;
+    private final int capacity;
 
     public EmeraldPouchItem(int tier, int value) {
         this.tier = tier;

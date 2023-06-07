@@ -33,13 +33,13 @@ import net.minecraftforge.eventbus.api.SubscribeEvent;
 public class TradeMarketBulkSellFeature extends Feature {
 
     @RegisterConfig
-    public Config<Integer> bulkSell1Amount = new Config<>(64);
+    public final Config<Integer> bulkSell1Amount = new Config<>(64);
 
     @RegisterConfig
-    public Config<Integer> bulkSell2Amount = new Config<>(0);
+    public final Config<Integer> bulkSell2Amount = new Config<>(0);
 
     @RegisterConfig
-    public Config<Integer> bulkSell3Amount = new Config<>(0);
+    public final Config<Integer> bulkSell3Amount = new Config<>(0);
 
     private static final Pattern ITEM_NAME_PATTERN =
             Pattern.compile("§6Selling §f(\\d+|\\d+,\\d+) ([^À]*)À*§6 for §f[\\d,]*§7² Each");

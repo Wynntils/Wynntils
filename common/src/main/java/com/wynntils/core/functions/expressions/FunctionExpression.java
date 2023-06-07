@@ -30,7 +30,7 @@ public class FunctionExpression extends Expression {
     private final boolean formatted;
     private final int decimals;
 
-    protected FunctionExpression(
+    private FunctionExpression(
             String rawExpression, Function<?> function, FunctionArguments arguments, boolean formatted, int decimals) {
         super(rawExpression);
         this.function = function;

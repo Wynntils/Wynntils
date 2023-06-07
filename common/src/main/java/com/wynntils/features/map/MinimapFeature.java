@@ -560,19 +560,19 @@ public class MinimapFeature extends Feature {
             this.groovesSize = groovesSize;
         }
 
-        public Texture texture() {
+        protected Texture texture() {
             return texture;
         }
 
-        public int groovesSize() {
+        protected int groovesSize() {
             return groovesSize;
         }
 
-        public BorderInfo square() {
+        protected BorderInfo square() {
             return square;
         }
 
-        public BorderInfo circle() {
+        protected BorderInfo circle() {
             return circle;
         }
     }

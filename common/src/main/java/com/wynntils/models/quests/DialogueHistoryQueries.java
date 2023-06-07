@@ -18,7 +18,7 @@ import net.minecraft.world.item.ItemStack;
 
 public class DialogueHistoryQueries {
     private static final Pattern DIALOGUE_HISTORY_PAGE_PATTERN = Pattern.compile("§7Page \\[(\\d+)/(\\d+)\\]");
-    public static final StyledText DIALOGUE_HISTORY = StyledText.fromString("§bDialogue History");
+    private static final StyledText DIALOGUE_HISTORY = StyledText.fromString("§bDialogue History");
 
     private List<List<StyledText>> newDialogueHistory;
 

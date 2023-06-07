@@ -409,7 +409,7 @@ public final class FeatureManager extends Manager {
         Managers.KeyBind.disableFeatureKeyBinds(feature);
     }
 
-    public void crashFeature(Feature feature) {
+    private void crashFeature(Feature feature) {
         if (!FEATURES.containsKey(feature)) {
             throw new IllegalArgumentException("Tried to crash an unregistered feature: " + feature);
         }
@@ -419,7 +419,7 @@ public final class FeatureManager extends Manager {
         FEATURES.put(feature, FeatureState.CRASHED);
     }
 
-    public FeatureState getFeatureState(Feature feature) {
+    private FeatureState getFeatureState(Feature feature) {
         if (!FEATURES.containsKey(feature)) {
             throw new IllegalArgumentException(
                     "Feature " + feature + " is not registered, but was was queried for its state");

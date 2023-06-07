@@ -30,15 +30,15 @@ import net.minecraft.client.gui.narration.NarrationElementOutput;
 import net.minecraft.network.chat.Component;
 
 public class PoiManagerWidget extends AbstractWidget {
-    private CustomPoi poi;
-    private Button editButton;
-    private Button deleteButton;
-    private Button upButton;
-    private Button downButton;
-    private int row;
+    private final CustomPoi poi;
+    private final Button editButton;
+    private final Button deleteButton;
+    private final Button upButton;
+    private final Button downButton;
+    private final int row;
     private CustomColor color;
-    private PoiManagementScreen managementScreen;
-    private List<CustomPoi> pois;
+    private final PoiManagementScreen managementScreen;
+    private final List<CustomPoi> pois;
 
     public PoiManagerWidget(
             float x, float y, int width, int height, CustomPoi poi, int row, PoiManagementScreen managementScreen) {

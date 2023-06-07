@@ -38,8 +38,8 @@ public final class PoiManagementScreen extends WynntilsScreen {
     private List<CustomPoi> waypoints;
     private int pageHeight;
     private int currentPage;
-    private List<CustomPoi> deletedPois = new ArrayList<>();
-    private List<Integer> deletedIndexes = new ArrayList<>();
+    private final List<CustomPoi> deletedPois = new ArrayList<>();
+    private final List<Integer> deletedIndexes = new ArrayList<>();
     private final List<AbstractWidget> poiManagerWidgets = new ArrayList<>();
 
     private PoiManagementScreen(MainMapScreen oldMapScreen) {
