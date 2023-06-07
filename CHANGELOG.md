@@ -1,9 +1,21 @@
+## [0.0.3-alpha.71](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.70...v0.0.3-alpha.71) (2023-06-07)
+
+
+### Bug Fixes
+
+* Fix SpellSegment pattern so spells appear on the action bar ([#1596](https://github.com/Wynntils/Artemis/issues/1596)) ([f458580](https://github.com/Wynntils/Artemis/commit/f458580df84c33e196c3131e7fc2799b7df65ccc))
+
 ## [0.0.3-alpha.70](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.69...v0.0.3-alpha.70) (2023-06-07)
 
 
 ### Bug Fixes
 
 * Fix bulk sell button in TM ([#1597](https://github.com/Wynntils/Artemis/issues/1597)) ([7375e82](https://github.com/Wynntils/Artemis/commit/7375e82dfd2300a38de84a8b408a94c838d23a03))
+
+
+### Miscellaneous Chores
+
+* **release:** v0.0.3-alpha.70 [skip ci] ([6425971](https://github.com/Wynntils/Artemis/commit/6425971a5c802dcb7bf226eff79ab1992cc5f057))
 
 ## [0.0.3-alpha.69](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.68...v0.0.3-alpha.69) (2023-06-07)
 
@@ -40,12 +52,4 @@
 ### Miscellaneous Chores
 
 * **release:** v0.0.3-alpha.67 [skip ci] ([dbdc294](https://github.com/Wynntils/Artemis/commit/dbdc294a0091de3e38a260851272218d513e0036))
-
-## [0.0.3-alpha.66](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.65...v0.0.3-alpha.66) (2023-06-06)
-
-
-### Miscellaneous Chores
-
-* **release:** v0.0.3-alpha.66 [skip ci] ([bc9aabb](https://github.com/Wynntils/Artemis/commit/bc9aabb58af8675fe6f98ca73e2983e04ca72363))
-* Update all dependecy versions ([#1592](https://github.com/Wynntils/Artemis/issues/1592)) ([2b83743](https://github.com/Wynntils/Artemis/commit/2b837432fdbd59c47df63d0b82623eec49d056b9))
 
