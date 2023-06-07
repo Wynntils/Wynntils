@@ -102,6 +102,8 @@ public final class ActionBarHandler extends Handler {
                 } else {
                     segment.update(m);
                 }
+
+                break;
             }
         }
     }

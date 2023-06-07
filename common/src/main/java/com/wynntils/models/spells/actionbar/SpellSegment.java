@@ -13,7 +13,7 @@ import java.util.regex.Pattern;
 
 public class SpellSegment implements ActionBarSegment {
     private static final Pattern SPELL_PATTERN =
-            Pattern.compile("§0 +§a([RL])§7-(?:§[a7n])+([RL?])§7-(?:§[a7n])+([LR?]) +");
+            Pattern.compile("§0 +§a([RL])§7-(?:§[a7n])?([RL?])(?:§r)?§7-(?:§[a7n])?([LR?])(?:§r)? +");
 
     @Override
     public Pattern getPattern() {
