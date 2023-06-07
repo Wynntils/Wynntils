@@ -1,9 +1,21 @@
+## [0.0.3-alpha.68](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.67...v0.0.3-alpha.68) (2023-06-07)
+
+
+### Code Refactoring
+
+* Move knowledge about emerald values to EmeraldModel ([#1595](https://github.com/Wynntils/Artemis/issues/1595)) ([ea71d3a](https://github.com/Wynntils/Artemis/commit/ea71d3a5e5bf9352b26242bcff3c7ff5a09b6683))
+
 ## [0.0.3-alpha.67](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.66...v0.0.3-alpha.67) (2023-06-06)
 
 
 ### Bug Fixes
 
 * Fix replace pattern in territory model ([#1593](https://github.com/Wynntils/Artemis/issues/1593)) ([05f7814](https://github.com/Wynntils/Artemis/commit/05f781451364b727ce51d84cd344eadb103b1253))
+
+
+### Miscellaneous Chores
+
+* **release:** v0.0.3-alpha.67 [skip ci] ([dbdc294](https://github.com/Wynntils/Artemis/commit/dbdc294a0091de3e38a260851272218d513e0036))
 
 ## [0.0.3-alpha.66](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.65...v0.0.3-alpha.66) (2023-06-06)
 
@@ -36,16 +48,4 @@
 ### Miscellaneous Chores
 
 * **release:** v0.0.3-alpha.64 [skip ci] ([0772107](https://github.com/Wynntils/Artemis/commit/0772107ec994db46cd48bb2de1977de43f9e2186))
-
-## [0.0.3-alpha.63](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.62...v0.0.3-alpha.63) (2023-06-05)
-
-
-### New Features
-
-* add a config to hide coordinates on action bar ([#1589](https://github.com/Wynntils/Artemis/issues/1589)) ([97fcd33](https://github.com/Wynntils/Artemis/commit/97fcd337efa32eec3022186744455fa3917c9d67))
-
-
-### Miscellaneous Chores
-
-* **release:** v0.0.3-alpha.63 [skip ci] ([9dcbc8b](https://github.com/Wynntils/Artemis/commit/9dcbc8bfcdfb38646a61f813fc90d25be6cd9fc4))
 
