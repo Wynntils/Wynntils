@@ -1,9 +1,21 @@
+## [0.0.3-alpha.69](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.68...v0.0.3-alpha.69) (2023-06-07)
+
+
+### Bug Fixes
+
+* Change events so chat tabs behave less weird ([#1583](https://github.com/Wynntils/Artemis/issues/1583)) ([78b8151](https://github.com/Wynntils/Artemis/commit/78b8151b252bd1e296af0d17d60c970045cbdfe3))
+
 ## [0.0.3-alpha.68](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.67...v0.0.3-alpha.68) (2023-06-07)
 
 
 ### Code Refactoring
 
 * Move knowledge about emerald values to EmeraldModel ([#1595](https://github.com/Wynntils/Artemis/issues/1595)) ([ea71d3a](https://github.com/Wynntils/Artemis/commit/ea71d3a5e5bf9352b26242bcff3c7ff5a09b6683))
+
+
+### Miscellaneous Chores
+
+* **release:** v0.0.3-alpha.68 [skip ci] ([52fb1d4](https://github.com/Wynntils/Artemis/commit/52fb1d4da517f6f326cb184065d827d1c0743d24))
 
 ## [0.0.3-alpha.67](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.66...v0.0.3-alpha.67) (2023-06-06)
 
@@ -36,16 +48,4 @@
 ### Miscellaneous Chores
 
 * **release:** v0.0.3-alpha.65 [skip ci] ([a6131d2](https://github.com/Wynntils/Artemis/commit/a6131d2c35cdbca7f191f9dff5764b206e5c7d79))
-
-## [0.0.3-alpha.64](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.63...v0.0.3-alpha.64) (2023-06-05)
-
-
-### Code Refactoring
-
-* Port everything away from StyleType.FULL ([#1590](https://github.com/Wynntils/Artemis/issues/1590)) ([95d835e](https://github.com/Wynntils/Artemis/commit/95d835e7e7d2317f71b75d0d28b9c3f93cadbbd0))
-
-
-### Miscellaneous Chores
-
-* **release:** v0.0.3-alpha.64 [skip ci] ([0772107](https://github.com/Wynntils/Artemis/commit/0772107ec994db46cd48bb2de1977de43f9e2186))
 
