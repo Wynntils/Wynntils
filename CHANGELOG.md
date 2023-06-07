@@ -1,9 +1,21 @@
+## [0.0.3-alpha.72](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.71...v0.0.3-alpha.72) (2023-06-07)
+
+
+### Bug Fixes
+
+* Fix GuildRankReplacementFeature replacing info messages ([#1598](https://github.com/Wynntils/Artemis/issues/1598)) ([1ee4911](https://github.com/Wynntils/Artemis/commit/1ee4911a15c1542e321066f0b3785c69be699699))
+
 ## [0.0.3-alpha.71](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.70...v0.0.3-alpha.71) (2023-06-07)
 
 
 ### Bug Fixes
 
 * Fix SpellSegment pattern so spells appear on the action bar ([#1596](https://github.com/Wynntils/Artemis/issues/1596)) ([f458580](https://github.com/Wynntils/Artemis/commit/f458580df84c33e196c3131e7fc2799b7df65ccc))
+
+
+### Miscellaneous Chores
+
+* **release:** v0.0.3-alpha.71 [skip ci] ([38b3c45](https://github.com/Wynntils/Artemis/commit/38b3c453b7f98b97a992774cc9edcb12f16e4195))
 
 ## [0.0.3-alpha.70](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.69...v0.0.3-alpha.70) (2023-06-07)
 
@@ -40,16 +52,4 @@
 ### Miscellaneous Chores
 
 * **release:** v0.0.3-alpha.68 [skip ci] ([52fb1d4](https://github.com/Wynntils/Artemis/commit/52fb1d4da517f6f326cb184065d827d1c0743d24))
-
-## [0.0.3-alpha.67](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.66...v0.0.3-alpha.67) (2023-06-06)
-
-
-### Bug Fixes
-
-* Fix replace pattern in territory model ([#1593](https://github.com/Wynntils/Artemis/issues/1593)) ([05f7814](https://github.com/Wynntils/Artemis/commit/05f781451364b727ce51d84cd344eadb103b1253))
-
-
-### Miscellaneous Chores
-
-* **release:** v0.0.3-alpha.67 [skip ci] ([dbdc294](https://github.com/Wynntils/Artemis/commit/dbdc294a0091de3e38a260851272218d513e0036))
 
