@@ -1,9 +1,21 @@
+## [0.0.3-alpha.73](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.72...v0.0.3-alpha.73) (2023-06-08)
+
+
+### Bug Fixes
+
+* Fix profession percentage parsing ([#1599](https://github.com/Wynntils/Artemis/issues/1599)) ([cf3684b](https://github.com/Wynntils/Artemis/commit/cf3684b8e173ab67f69d94a686819198fc572b60))
+
 ## [0.0.3-alpha.72](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.71...v0.0.3-alpha.72) (2023-06-07)
 
 
 ### Bug Fixes
 
 * Fix GuildRankReplacementFeature replacing info messages ([#1598](https://github.com/Wynntils/Artemis/issues/1598)) ([1ee4911](https://github.com/Wynntils/Artemis/commit/1ee4911a15c1542e321066f0b3785c69be699699))
+
+
+### Miscellaneous Chores
+
+* **release:** v0.0.3-alpha.72 [skip ci] ([3027f2c](https://github.com/Wynntils/Artemis/commit/3027f2c12af6d7991c42f3823185ffb69812e0ea))
 
 ## [0.0.3-alpha.71](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.70...v0.0.3-alpha.71) (2023-06-07)
 
@@ -40,16 +52,4 @@
 ### Miscellaneous Chores
 
 * **release:** v0.0.3-alpha.69 [skip ci] ([d7c33d4](https://github.com/Wynntils/Artemis/commit/d7c33d402f0ae98a0b8ba116f5112f845bcc0a20))
-
-## [0.0.3-alpha.68](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.67...v0.0.3-alpha.68) (2023-06-07)
-
-
-### Code Refactoring
-
-* Move knowledge about emerald values to EmeraldModel ([#1595](https://github.com/Wynntils/Artemis/issues/1595)) ([ea71d3a](https://github.com/Wynntils/Artemis/commit/ea71d3a5e5bf9352b26242bcff3c7ff5a09b6683))
-
-
-### Miscellaneous Chores
-
-* **release:** v0.0.3-alpha.68 [skip ci] ([52fb1d4](https://github.com/Wynntils/Artemis/commit/52fb1d4da517f6f326cb184065d827d1c0743d24))
 
