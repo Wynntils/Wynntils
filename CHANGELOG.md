@@ -1,9 +1,21 @@
+## [0.0.3-alpha.74](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.73...v0.0.3-alpha.74) (2023-06-08)
+
+
+### New Features
+
+* Add SMALL_STARS setting to GuildRankReplacementFeature ([#1600](https://github.com/Wynntils/Artemis/issues/1600)) ([2bff0ba](https://github.com/Wynntils/Artemis/commit/2bff0ba53f0f74f440933e0115915f837c34eef3))
+
 ## [0.0.3-alpha.73](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.72...v0.0.3-alpha.73) (2023-06-08)
 
 
 ### Bug Fixes
 
 * Fix profession percentage parsing ([#1599](https://github.com/Wynntils/Artemis/issues/1599)) ([cf3684b](https://github.com/Wynntils/Artemis/commit/cf3684b8e173ab67f69d94a686819198fc572b60))
+
+
+### Miscellaneous Chores
+
+* **release:** v0.0.3-alpha.73 [skip ci] ([6377b09](https://github.com/Wynntils/Artemis/commit/6377b09d0e2e0f2cdc499ea900629c2bc3c8255d))
 
 ## [0.0.3-alpha.72](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.71...v0.0.3-alpha.72) (2023-06-07)
 
@@ -40,16 +52,4 @@
 ### Miscellaneous Chores
 
 * **release:** v0.0.3-alpha.70 [skip ci] ([6425971](https://github.com/Wynntils/Artemis/commit/6425971a5c802dcb7bf226eff79ab1992cc5f057))
-
-## [0.0.3-alpha.69](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.68...v0.0.3-alpha.69) (2023-06-07)
-
-
-### Bug Fixes
-
-* Change events so chat tabs behave less weird ([#1583](https://github.com/Wynntils/Artemis/issues/1583)) ([78b8151](https://github.com/Wynntils/Artemis/commit/78b8151b252bd1e296af0d17d60c970045cbdfe3))
-
-
-### Miscellaneous Chores
-
-* **release:** v0.0.3-alpha.69 [skip ci] ([d7c33d4](https://github.com/Wynntils/Artemis/commit/d7c33d402f0ae98a0b8ba116f5112f845bcc0a20))
 
