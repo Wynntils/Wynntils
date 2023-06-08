@@ -6,7 +6,7 @@ package com.wynntils.models.territories;
 
 import com.wynntils.core.components.Handlers;
 import com.wynntils.core.components.Model;
-import com.wynntils.core.text.CodedString;
+import com.wynntils.core.text.StyledText;
 import com.wynntils.handlers.chat.event.ChatMessageReceivedEvent;
 import com.wynntils.handlers.chat.type.RecipientType;
 import com.wynntils.handlers.scoreboard.ScoreboardPart;
@@ -23,7 +23,7 @@ import net.minecraftforge.eventbus.api.SubscribeEvent;
 
 public final class GuildAttackTimerModel extends Model {
     private static final Pattern GUILD_ATTACK_PATTERN = Pattern.compile("§b- (.+):(.+) §3(.+)");
-    private static final Pattern GUILD_DEFENSE_CHAT_PATTERN = Pattern.compile("§r§3.+§b (.+) defense is (.+)");
+    private static final Pattern GUILD_DEFENSE_CHAT_PATTERN = Pattern.compile("§3.+§b (.+) defense is (.+)");
     private static final ScoreboardPart GUILD_ATTACK_SCOREBOARD_PART = new GuildAttackScoreboardPart();
 
     private final TimedSet<Pair<String, String>> territoryDefenseSet = new TimedSet<>(5, TimeUnit.SECONDS, true);
@@ -40,7 +40,7 @@ public final class GuildAttackTimerModel extends Model {
     public void onMessage(ChatMessageReceivedEvent event) {
         if (event.getRecipientType() != RecipientType.GUILD) return;
 
-        Matcher matcher = event.getOriginalCodedString().getMatcher(GUILD_DEFENSE_CHAT_PATTERN);
+        Matcher matcher = event.getOriginalStyledText().getMatcher(GUILD_DEFENSE_CHAT_PATTERN);
         if (!matcher.matches()) return;
 
         Optional<TerritoryAttackTimer> territory = attackTimers.stream()
@@ -74,7 +74,7 @@ public final class GuildAttackTimerModel extends Model {
     void processChanges(ScoreboardSegment segment) {
         List<TerritoryAttackTimer> newList = new ArrayList<>();
 
-        for (CodedString line : segment.getContent()) {
+        for (StyledText line : segment.getContent()) {
             Matcher matcher = line.getMatcher(GUILD_ATTACK_PATTERN);
 
             if (matcher.matches()) {

@@ -4,13 +4,12 @@
  */
 package com.wynntils.utils.mc;
 
-import com.wynntils.core.text.CodedString;
 import com.wynntils.core.text.StyledText;
+import com.wynntils.core.text.StyledTextPart;
 import com.wynntils.utils.MathUtils;
 import com.wynntils.utils.wynn.WynnUtils;
 import java.awt.Color;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 import java.util.regex.Matcher;
@@ -21,94 +20,11 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.FormattedText;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.network.chat.Style;
-import net.minecraft.network.chat.TextColor;
 
 public final class ComponentUtils {
     private static final Pattern COLOR_CODE_PATTERN = Pattern.compile("(§[1-9a-f])+");
     private static final int RAINBOW_CYCLE_TIME = 5000;
     private static final Pattern NEWLINE_PATTERN = Pattern.compile("\n");
-
-    // Text with formatting codes "§cTest §1Text"
-    public static CodedString getCoded(Component component) {
-        StringBuilder result = new StringBuilder();
-
-        component.visit(new CodedStringGenerator(result), Style.EMPTY);
-
-        return CodedString.fromString(result.toString());
-    }
-
-    // Text without formatting codes "Test text"
-    public static String getUnformatted(Component component) {
-        return CodedString.fromComponentIgnoringComponentStylesAndJustUsingFormattingCodes(component)
-                .getUnformattedString();
-    }
-
-    public static CodedString getCoded(String jsonString) {
-        MutableComponent component = Component.Serializer.fromJson(jsonString);
-        if (component == null) return CodedString.EMPTY;
-
-        return getCoded(component);
-    }
-
-    public static StyledText getStyledTextFromJson(String jsonString) {
-        MutableComponent component = Component.Serializer.fromJson(jsonString);
-        if (component == null) return StyledText.EMPTY;
-
-        return StyledText.fromComponent(component);
-    }
-
-    public static String getUnformatted(String jsonString) {
-        MutableComponent component = Component.Serializer.fromJson(jsonString);
-        if (component == null) return null;
-
-        return getUnformatted(component);
-    }
-
-    private static StringBuilder tryConstructDifference(Style oldStyle, Style newStyle) {
-        StringBuilder add = new StringBuilder();
-
-        int oldColorInt = Optional.ofNullable(oldStyle.getColor())
-                .map(TextColor::getValue)
-                .orElse(-1);
-        int newColorInt = Optional.ofNullable(newStyle.getColor())
-                .map(TextColor::getValue)
-                .orElse(-1);
-
-        if (oldColorInt == -1) {
-            if (newColorInt != -1) {
-                getChatFormatting(newColorInt).ifPresent(add::append);
-            }
-        } else if (oldColorInt != newColorInt) {
-            return null;
-        }
-
-        if (oldStyle.isBold() && !newStyle.isBold()) return null;
-        if (!oldStyle.isBold() && newStyle.isBold()) add.append(ChatFormatting.BOLD);
-
-        if (oldStyle.isItalic() && !newStyle.isItalic()) return null;
-        if (!oldStyle.isItalic() && newStyle.isItalic()) add.append(ChatFormatting.ITALIC);
-
-        if (oldStyle.isUnderlined() && !newStyle.isUnderlined()) return null;
-        if (!oldStyle.isUnderlined() && newStyle.isUnderlined()) add.append(ChatFormatting.UNDERLINE);
-
-        if (oldStyle.isStrikethrough() && !newStyle.isStrikethrough()) return null;
-        if (!oldStyle.isStrikethrough() && newStyle.isStrikethrough()) add.append(ChatFormatting.STRIKETHROUGH);
-
-        if (oldStyle.isObfuscated() && !newStyle.isObfuscated()) return null;
-        if (!oldStyle.isObfuscated() && newStyle.isObfuscated()) add.append(ChatFormatting.OBFUSCATED);
-
-        return add;
-    }
-
-    public static Optional<ChatFormatting> getChatFormatting(TextColor textColor) {
-        return getChatFormatting(textColor.getValue());
-    }
-
-    public static Optional<ChatFormatting> getChatFormatting(int textColor) {
-        return Arrays.stream(ChatFormatting.values())
-                .filter(c -> c.isColor() && textColor == c.getColor())
-                .findFirst();
-    }
 
     public static List<Component> stripDuplicateBlank(List<Component> lore) {
         List<Component> newLore = new ArrayList<>(); // Used to remove duplicate blank lines
@@ -150,45 +66,12 @@ public final class ComponentUtils {
         return newLore;
     }
 
-    public static String stripFormatting(CodedString coded) {
-        return coded == null ? "" : coded.getUnformattedString();
-    }
+    public static Style getLastPartCodes(StyledText lastPart) {
+        StyledTextPart lastTextPart = lastPart.getLastPart();
 
-    public static String stripColorFormatting(CodedString text) {
-        if (text == null) {
-            return "";
-        }
+        if (lastTextPart == null) return Style.EMPTY;
 
-        // We replace color codes with a reset
-        // because color codes reset the non-color formatting codes
-        return text.getMatcher(COLOR_CODE_PATTERN).replaceAll("§r");
-    }
-
-    public static CodedString getLastPartCodes(CodedString lastPart) {
-        if (!lastPart.contains("§")) return CodedString.EMPTY;
-
-        CodedString lastPartCodes = CodedString.EMPTY;
-        int index;
-        while ((index = lastPart.getInternalCodedStringRepresentation().lastIndexOf('§')) != -1) {
-            if (index >= lastPart.getInternalCodedStringRepresentation().length() - 1) {
-                // trailing §, no format code, skip it
-                lastPart = CodedString.fromString(
-                        lastPart.getInternalCodedStringRepresentation().substring(0, index));
-                continue;
-            }
-            String thisCode = lastPart.getInternalCodedStringRepresentation().substring(index, index + 2);
-            if (thisCode.charAt(1) == 'r') {
-                // it's a reset code, we can stop looking
-                break;
-            }
-            // prepend to codes since we're going backwards
-            lastPartCodes = lastPartCodes.prepend(thisCode);
-
-            lastPart = CodedString.fromString(
-                    lastPart.getInternalCodedStringRepresentation().substring(0, index));
-        }
-
-        return lastPartCodes;
+        return lastTextPart.getPartStyle().getStyle();
     }
 
     public static Component formattedTextToComponent(FormattedText formattedText) {
@@ -287,27 +170,6 @@ public final class ComponentUtils {
         return newName;
     }
 
-    private static class ComponentListBuilder {
-        private final List<Component> lines = new ArrayList<>();
-        private MutableComponent currentLine = Component.literal("");
-
-        protected void appendSegment(String segment, Style style) {
-            currentLine.append(Component.literal(segment).withStyle(style));
-        }
-
-        protected void endLine() {
-            lines.add(currentLine);
-            currentLine = Component.literal("");
-        }
-
-        protected List<Component> extractLines() {
-            if (!currentLine.getString().isEmpty()) {
-                endLine();
-            }
-            return lines;
-        }
-    }
-
     public static List<Component> splitComponentInLines(Component message) {
         ComponentListBuilder builder = new ComponentListBuilder();
 
@@ -331,55 +193,24 @@ public final class ComponentUtils {
         return builder.extractLines();
     }
 
-    private static final class CodedStringGenerator implements FormattedText.StyledContentConsumer<Object> {
-        private final StringBuilder result;
-        Style oldStyle;
+    private static class ComponentListBuilder {
+        private final List<Component> lines = new ArrayList<>();
+        private MutableComponent currentLine = Component.literal("");
 
-        private CodedStringGenerator(StringBuilder result) {
-            this.result = result;
-            oldStyle = Style.EMPTY;
+        protected void appendSegment(String segment, Style style) {
+            currentLine.append(Component.literal(segment).withStyle(style));
         }
 
-        @Override
-        public Optional<Object> accept(Style style, String string) {
-            handleStyleDifference(oldStyle, style, result);
-            result.append(string);
-
-            oldStyle = style;
-
-            return Optional.empty();
+        protected void endLine() {
+            lines.add(currentLine);
+            currentLine = Component.literal("");
         }
 
-        /**
-         * This method handles the fact that the style likely has changed between 2 components
-         *
-         * <p>It tries to first generate a constructive way of adding color codes to get from the old
-         * style to the new style. If that does not succeed, it instead resets the format if the old style was not empty, and adds the
-         * color codes of the new style
-         */
-        private static void handleStyleDifference(Style oldStyle, Style newStyle, StringBuilder result) {
-            if (oldStyle.equals(newStyle)) return;
-
-            if (!oldStyle.isEmpty()) {
-                StringBuilder different = tryConstructDifference(oldStyle, newStyle);
-
-                if (different != null) {
-                    result.append(different);
-                    return;
-                }
-
-                result.append(ChatFormatting.RESET);
+        protected List<Component> extractLines() {
+            if (!currentLine.getString().isEmpty()) {
+                endLine();
             }
-
-            if (newStyle.getColor() != null) {
-                getChatFormatting(newStyle.getColor()).ifPresent(result::append);
-            }
-
-            if (newStyle.isBold()) result.append(ChatFormatting.BOLD);
-            if (newStyle.isItalic()) result.append(ChatFormatting.ITALIC);
-            if (newStyle.isUnderlined()) result.append(ChatFormatting.UNDERLINE);
-            if (newStyle.isStrikethrough()) result.append(ChatFormatting.STRIKETHROUGH);
-            if (newStyle.isObfuscated()) result.append(ChatFormatting.OBFUSCATED);
+            return lines;
         }
     }
 }

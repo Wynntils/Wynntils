@@ -12,13 +12,12 @@ import com.wynntils.core.components.Managers;
 import com.wynntils.core.components.Model;
 import com.wynntils.core.net.Download;
 import com.wynntils.core.net.UrlId;
-import com.wynntils.core.text.CodedString;
+import com.wynntils.core.text.StyledText;
 import com.wynntils.mc.event.AdvancementUpdateEvent;
 import com.wynntils.models.map.pois.Poi;
 import com.wynntils.models.map.pois.TerritoryPoi;
 import com.wynntils.models.map.type.TerritoryDefenseFilterType;
 import com.wynntils.models.territories.profile.TerritoryProfile;
-import com.wynntils.utils.mc.ComponentUtils;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -122,11 +121,11 @@ public final class TerritoryModel extends Model {
 
             if (built.getDisplay() == null) continue;
 
-            String territoryName = ComponentUtils.getUnformatted(
-                            built.getDisplay().getTitle())
-                    .replace("[", "")
-                    .replace("]", "")
-                    .trim();
+            String territoryName = StyledText.fromComponent(built.getDisplay().getTitle())
+                    .replaceAll("\\[", "")
+                    .replaceAll("\\]", "")
+                    .trim()
+                    .getStringWithoutFormatting();
 
             // Do not parse same thing twice
             if (tempMap.containsKey(territoryName)) continue;
@@ -138,9 +137,9 @@ public final class TerritoryModel extends Model {
             boolean headquarters = built.getDisplay().getFrame() == FrameType.CHALLENGE;
 
             // description is a raw string with \n, so we have to split
-            CodedString description = ComponentUtils.getCoded(built.getDisplay().getDescription());
-            CodedString[] colored = description.split("\n");
-            String[] raw = ComponentUtils.stripFormatting(description).split("\n");
+            StyledText description = StyledText.fromComponent(built.getDisplay().getDescription());
+            StyledText[] colored = description.split("\n");
+            String[] raw = description.getStringWithoutFormatting().split("\n");
 
             TerritoryInfo container = new TerritoryInfo(raw, colored, headquarters);
             tempMap.put(territoryName, container);

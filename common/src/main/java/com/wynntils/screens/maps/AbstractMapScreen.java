@@ -8,7 +8,7 @@ import com.mojang.blaze3d.platform.InputConstants;
 import com.mojang.blaze3d.vertex.BufferBuilder;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.wynntils.core.components.Models;
-import com.wynntils.core.text.CodedString;
+import com.wynntils.core.text.StyledText;
 import com.wynntils.models.map.MapTexture;
 import com.wynntils.models.map.PoiLocation;
 import com.wynntils.models.map.pois.IconPoi;
@@ -32,6 +32,7 @@ import com.wynntils.utils.type.BoundingBox;
 import java.util.ArrayList;
 import java.util.List;
 import net.minecraft.client.KeyMapping;
+import net.minecraft.client.Options;
 import net.minecraft.client.gui.components.Renderable;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.network.chat.Component;
@@ -48,7 +49,7 @@ public abstract class AbstractMapScreen extends WynntilsScreen {
 
     protected boolean holdingMapKey = false;
 
-    private float renderWidth;
+    protected float renderWidth;
     protected float renderHeight;
     protected float renderX;
     protected float renderY;
@@ -86,24 +87,13 @@ public abstract class AbstractMapScreen extends WynntilsScreen {
     protected void doInit() {
         // FIXME: Figure out a way to not need this.
         //        At the moment, this is needed for Minecraft not to forget we hold keys when we open the GUI...
-        KeyMapping.set(
-                McUtils.mc().options.keyUp.key,
-                KeyboardUtils.isKeyDown(McUtils.mc().options.keyUp.key.getValue()));
-        KeyMapping.set(
-                McUtils.mc().options.keyDown.key,
-                KeyboardUtils.isKeyDown(McUtils.mc().options.keyDown.key.getValue()));
-        KeyMapping.set(
-                McUtils.mc().options.keyLeft.key,
-                KeyboardUtils.isKeyDown(McUtils.mc().options.keyLeft.key.getValue()));
-        KeyMapping.set(
-                McUtils.mc().options.keyRight.key,
-                KeyboardUtils.isKeyDown(McUtils.mc().options.keyRight.key.getValue()));
-        KeyMapping.set(
-                McUtils.mc().options.keyJump.key,
-                KeyboardUtils.isKeyDown(McUtils.mc().options.keyJump.key.getValue()));
-        KeyMapping.set(
-                McUtils.mc().options.keyShift.key,
-                KeyboardUtils.isKeyDown(McUtils.mc().options.keyShift.key.getValue()));
+        Options options = McUtils.options();
+        KeyMapping.set(options.keyUp.key, KeyboardUtils.isKeyDown(options.keyUp.key.getValue()));
+        KeyMapping.set(options.keyDown.key, KeyboardUtils.isKeyDown(options.keyDown.key.getValue()));
+        KeyMapping.set(options.keyLeft.key, KeyboardUtils.isKeyDown(options.keyLeft.key.getValue()));
+        KeyMapping.set(options.keyRight.key, KeyboardUtils.isKeyDown(options.keyRight.key.getValue()));
+        KeyMapping.set(options.keyJump.key, KeyboardUtils.isKeyDown(options.keyJump.key.getValue()));
+        KeyMapping.set(options.keyShift.key, KeyboardUtils.isKeyDown(options.keyShift.key.getValue()));
 
         renderWidth = this.width - SCREEN_SIDE_OFFSET * 2f;
         renderHeight = this.height - SCREEN_SIDE_OFFSET * 2f;
@@ -134,6 +124,10 @@ public abstract class AbstractMapScreen extends WynntilsScreen {
                 renderHeight,
                 Texture.FULLSCREEN_MAP_BORDER.width(),
                 Texture.FULLSCREEN_MAP_BORDER.height());
+    }
+
+    protected void renderGradientBackground(PoseStack poseStack) {
+        super.renderBackground(poseStack);
     }
 
     protected void renderPois(
@@ -272,7 +266,7 @@ public abstract class AbstractMapScreen extends WynntilsScreen {
         FontRenderer.getInstance()
                 .renderText(
                         poseStack,
-                        CodedString.fromString(gameX + ", " + gameZ),
+                        StyledText.fromString(gameX + ", " + gameZ),
                         this.centerX,
                         this.renderHeight - this.renderedBorderYOffset - 40,
                         CommonColors.WHITE,

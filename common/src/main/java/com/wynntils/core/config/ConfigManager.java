@@ -132,11 +132,6 @@ public final class ConfigManager extends Manager {
                 }
             }
 
-            List<ConfigHolder> overlayHolders = holder.getOverlays().stream()
-                    .map(this::getConfigOptions)
-                    .flatMap(List::stream)
-                    .toList();
-
             holder.getOverlays().forEach(overlay -> overlay.addConfigOptions(this.getConfigOptions(overlay)));
         }
 

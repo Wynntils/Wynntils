@@ -11,7 +11,7 @@ import com.wynntils.core.config.Config;
 import com.wynntils.core.config.ConfigCategory;
 import com.wynntils.core.config.RegisterConfig;
 import com.wynntils.core.features.Feature;
-import com.wynntils.core.text.CodedString;
+import com.wynntils.core.text.StyledText;
 import com.wynntils.mc.event.ContainerCloseEvent;
 import com.wynntils.mc.event.ContainerSetContentEvent;
 import com.wynntils.mc.event.ContainerSetSlotEvent;
@@ -25,7 +25,6 @@ import com.wynntils.models.items.WynnItemCache;
 import com.wynntils.screens.base.widgets.SearchWidget;
 import com.wynntils.utils.colors.CommonColors;
 import com.wynntils.utils.colors.CustomColor;
-import com.wynntils.utils.mc.ComponentUtils;
 import com.wynntils.utils.mc.McUtils;
 import com.wynntils.utils.render.RenderUtils;
 import com.wynntils.utils.wynn.ContainerUtils;
@@ -71,7 +70,7 @@ public class ContainerSearchFeature extends Feature {
     public void onScreenInit(ScreenInitEvent event) {
         if (!(event.getScreen() instanceof AbstractContainerScreen<?> screen)) return;
 
-        CodedString title = ComponentUtils.getCoded(screen.getTitle());
+        StyledText title = StyledText.fromComponent(screen.getTitle());
 
         // This is screen.topPos and screen.leftPos, but they are not calculated yet when this is called
         int renderX = (screen.width - screen.imageWidth) / 2;
@@ -145,14 +144,13 @@ public class ContainerSearchFeature extends Feature {
             guildBankLastSearch = System.currentTimeMillis();
         }
 
-        CodedString name = ComponentUtils.getCoded(abstractContainerScreen
+        StyledText name = StyledText.fromComponent(abstractContainerScreen
                 .getMenu()
                 .getItems()
                 .get(currentSearchableContainerType.getNextItemSlot())
                 .getHoverName());
 
-        if (!name.getMatcher(currentSearchableContainerType.getNextItemPattern())
-                .matches()) {
+        if (!name.matches(currentSearchableContainerType.getNextItemPattern())) {
             autoSearching = false;
             return;
         }
@@ -164,7 +162,7 @@ public class ContainerSearchFeature extends Feature {
                 abstractContainerScreen.getMenu().getItems());
     }
 
-    private SearchableContainerType getCurrentSearchableContainerType(CodedString title) {
+    private SearchableContainerType getCurrentSearchableContainerType(StyledText title) {
         SearchableContainerType containerType = SearchableContainerType.getContainerType(title);
 
         if (containerType == SearchableContainerType.BANK && filterInBank.get()) {
@@ -209,8 +207,9 @@ public class ContainerSearchFeature extends Feature {
             if (wynnItemOpt.isEmpty()) return;
             if (playerItems.contains(itemStack)) continue;
 
-            String name =
-                    ComponentUtils.getUnformatted(itemStack.getHoverName()).toLowerCase(Locale.ROOT);
+            String name = StyledText.fromComponent(itemStack.getHoverName())
+                    .getStringWithoutFormatting()
+                    .toLowerCase(Locale.ROOT);
 
             boolean filtered = !search.isEmpty() && name.contains(search) && itemStack.getItem() != Items.AIR;
             wynnItemOpt.get().getCache().store(WynnItemCache.SEARCHED_KEY, filtered);

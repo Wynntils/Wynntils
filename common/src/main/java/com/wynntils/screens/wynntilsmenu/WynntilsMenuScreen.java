@@ -7,7 +7,7 @@ package com.wynntils.screens.wynntilsmenu;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.wynntils.core.components.Managers;
 import com.wynntils.core.components.Models;
-import com.wynntils.core.text.CodedString;
+import com.wynntils.core.text.StyledText;
 import com.wynntils.features.map.MapFeature;
 import com.wynntils.screens.base.WynntilsMenuScreenBase;
 import com.wynntils.screens.discoveries.WynntilsDiscoveriesScreen;
@@ -21,7 +21,6 @@ import com.wynntils.screens.settings.WynntilsBookSettingsScreen;
 import com.wynntils.screens.wynntilsmenu.widgets.WynntilsMenuButton;
 import com.wynntils.utils.colors.CommonColors;
 import com.wynntils.utils.colors.CustomColor;
-import com.wynntils.utils.mc.ComponentUtils;
 import com.wynntils.utils.mc.McUtils;
 import com.wynntils.utils.render.FontRenderer;
 import com.wynntils.utils.render.RenderUtils;
@@ -222,8 +221,8 @@ public final class WynntilsMenuScreen extends WynntilsMenuScreenBase {
         FontRenderer.getInstance()
                 .renderAlignedTextInBox(
                         poseStack,
-                        CodedString.fromString(
-                                ComponentUtils.getUnformatted(McUtils.player().getDisplayName())),
+                        StyledText.fromComponent(McUtils.player().getDisplayName())
+                                .withoutFormatting(),
                         Texture.QUEST_BOOK_BACKGROUND.width() / 2f,
                         Texture.QUEST_BOOK_BACKGROUND.width(),
                         60,
@@ -234,7 +233,7 @@ public final class WynntilsMenuScreen extends WynntilsMenuScreenBase {
         FontRenderer.getInstance()
                 .renderAlignedTextInBox(
                         poseStack,
-                        CodedString.fromString(
+                        StyledText.fromString(
                                 Models.Character.getClassType().getName().toUpperCase(Locale.ROOT) + " Level "
                                         + Models.CombatXp.getCombatLevel().current()),
                         Texture.QUEST_BOOK_BACKGROUND.width() / 2f,
@@ -250,7 +249,7 @@ public final class WynntilsMenuScreen extends WynntilsMenuScreenBase {
         FontRenderer.getInstance()
                 .renderAlignedTextInBox(
                         poseStack,
-                        CodedString.fromString(currentSplash),
+                        StyledText.fromString(currentSplash),
                         Texture.QUEST_BOOK_BACKGROUND.width() / 2f,
                         Texture.QUEST_BOOK_BACKGROUND.width(),
                         Texture.QUEST_BOOK_BACKGROUND.height() - 45,

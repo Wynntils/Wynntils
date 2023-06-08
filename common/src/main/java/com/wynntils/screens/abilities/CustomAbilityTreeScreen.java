@@ -7,7 +7,6 @@ package com.wynntils.screens.abilities;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.components.Models;
-import com.wynntils.core.text.CodedString;
 import com.wynntils.core.text.StyledText;
 import com.wynntils.models.abilitytree.type.AbilityTreeConnectionNode;
 import com.wynntils.models.abilitytree.type.AbilityTreeConnectionType;
@@ -127,7 +126,7 @@ public class CustomAbilityTreeScreen extends WynntilsScreen {
             FontRenderer.getInstance()
                     .renderAlignedTextInBox(
                             poseStack,
-                            CodedString.fromStyledText(StyledText.fromComponent(treeParseState.getText())),
+                            StyledText.fromComponent(treeParseState.getText()),
                             0,
                             backgroundWidth * textureScale,
                             0,

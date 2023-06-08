@@ -201,6 +201,6 @@
   },
   {
     "id": "dataStaticAbilities",
-    "url": "https://raw.githubusercontent.com/Wynntils/WynntilsWebsite-API/ability_tree/abilities.json"
+    "url": "https://raw.githubusercontent.com/Wynntils/WynntilsWebsite-API/master/abilities.json"
   }
 ]

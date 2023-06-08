@@ -17,7 +17,7 @@ import com.wynntils.core.features.overlays.Overlay;
 import com.wynntils.core.features.overlays.OverlayPosition;
 import com.wynntils.core.features.overlays.OverlaySize;
 import com.wynntils.core.features.overlays.annotations.OverlayInfo;
-import com.wynntils.core.text.CodedString;
+import com.wynntils.core.text.StyledText;
 import com.wynntils.mc.event.RenderEvent;
 import com.wynntils.models.elements.type.Powder;
 import com.wynntils.utils.colors.CommonColors;
@@ -98,13 +98,13 @@ public class PowderSpecialBarOverlayFeature extends Feature {
                     };
 
             CustomColor color;
-            CodedString text;
+            StyledText text;
             if (powderSpecialType == null) {
                 color = CommonColors.GRAY;
-                text = CodedString.fromString("Unknown");
+                text = StyledText.fromString("Unknown");
             } else {
                 color = powderSpecialType.getColor();
-                text = CodedString.fromString(
+                text = StyledText.fromString(
                         powderSpecialType.getColoredSymbol() + " " + (int) powderSpecialCharge + "%");
             }
 

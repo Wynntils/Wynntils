@@ -57,9 +57,9 @@ public class CompassCommand extends Command {
     }
 
     @Override
-    public LiteralArgumentBuilder<CommandSourceStack> getCommandBuilder() {
-        return Commands.literal(getCommandName())
-                .then(Commands.literal("at")
+    public LiteralArgumentBuilder<CommandSourceStack> getCommandBuilder(
+            LiteralArgumentBuilder<CommandSourceStack> base) {
+        return base.then(Commands.literal("at")
                         .then(Commands.argument("location", Vec3Argument.vec3()).executes(this::compassAtVec3)))
                 .then(Commands.literal("share")
                         .then(Commands.literal("location")

@@ -6,12 +6,13 @@ package com.wynntils.models.statuseffects;
 
 import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.components.Model;
-import com.wynntils.core.text.CodedString;
+import com.wynntils.core.text.StyledText;
 import com.wynntils.mc.event.PlayerInfoFooterChangedEvent;
 import com.wynntils.models.statuseffects.event.StatusEffectsChangedEvent;
 import com.wynntils.models.statuseffects.type.StatusEffect;
 import com.wynntils.models.worlds.event.WorldStateEvent;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -36,7 +37,7 @@ public final class StatusEffectModel extends Model {
     private static final Pattern STATUS_EFFECT_PATTERN =
             Pattern.compile("(.+?§7 ?(?:\\d+(?:\\.\\d+)?%)?) ?([%\\-+\\/\\da-zA-Z'\\s]+?) §[84a]\\((.+?)\\).*");
 
-    private static final CodedString STATUS_EFFECTS_TITLE = CodedString.fromString("§d§lStatus Effects");
+    private static final StyledText STATUS_EFFECTS_TITLE = StyledText.fromString("§d§lStatus Effects");
 
     private List<StatusEffect> statusEffects = List.of();
 
@@ -55,7 +56,7 @@ public final class StatusEffectModel extends Model {
 
     @SubscribeEvent
     public void onTabListCustomization(PlayerInfoFooterChangedEvent event) {
-        CodedString footer = event.getFooter();
+        StyledText footer = event.getFooter();
 
         if (footer.isEmpty()) {
             if (!statusEffects.isEmpty()) {
@@ -70,18 +71,21 @@ public final class StatusEffectModel extends Model {
 
         List<StatusEffect> newStatusEffects = new ArrayList<>();
 
-        CodedString[] effects = footer.split("\\s{2}"); // Effects are split up by 2 spaces
-        for (CodedString effect : effects) {
-            CodedString trimmedEffect = effect.trim();
+        StyledText[] effects = footer.split("\\s{2}"); // Effects are split up by 2 spaces
+        for (StyledText effect : effects) {
+            StyledText trimmedEffect = effect.trim();
             if (trimmedEffect.isEmpty()) continue;
 
             Matcher m = trimmedEffect.getMatcher(STATUS_EFFECT_PATTERN);
             if (!m.find()) continue;
 
-            // See comment at STATUS_EFFECT_PATTERN definition for format description of these
-            CodedString prefix = CodedString.fromString(m.group(1));
-            CodedString name = CodedString.fromString(m.group(2));
-            CodedString displayedTime = CodedString.fromString(m.group(3));
+            List<StyledText> parts = Arrays.stream(trimmedEffect.getPartsAsTextArray())
+                    .map(StyledText::trim)
+                    .toList();
+
+            StyledText prefix = parts.get(0);
+            StyledText name = parts.get(1);
+            StyledText displayedTime = parts.get(2);
             newStatusEffects.add(new StatusEffect(name, displayedTime, prefix));
         }
 

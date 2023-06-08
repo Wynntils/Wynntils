@@ -5,11 +5,10 @@
 package com.wynntils.screens.settings.widgets;
 
 import com.mojang.blaze3d.vertex.PoseStack;
-import com.wynntils.core.text.CodedString;
+import com.wynntils.core.text.StyledText;
 import com.wynntils.screens.base.widgets.WynntilsButton;
 import com.wynntils.utils.colors.CommonColors;
 import com.wynntils.utils.colors.CustomColor;
-import com.wynntils.utils.mc.ComponentUtils;
 import com.wynntils.utils.render.FontRenderer;
 import com.wynntils.utils.render.RenderUtils;
 import com.wynntils.utils.render.type.HorizontalAlignment;
@@ -29,7 +28,7 @@ public class GeneralSettingsButton extends WynntilsButton {
             int x, int y, int width, int height, Component title, Runnable onClick, List<Component> tooltip) {
         super(x, y, width, height, title);
         this.onClick = onClick;
-        this.title = ComponentUtils.getUnformatted(title);
+        this.title = StyledText.fromComponent(title).getStringWithoutFormatting();
         this.tooltip = tooltip;
     }
 
@@ -51,7 +50,7 @@ public class GeneralSettingsButton extends WynntilsButton {
         FontRenderer.getInstance()
                 .renderAlignedTextInBox(
                         poseStack,
-                        CodedString.fromString(title),
+                        StyledText.fromString(title),
                         this.getX(),
                         this.getX() + this.width,
                         this.getY(),

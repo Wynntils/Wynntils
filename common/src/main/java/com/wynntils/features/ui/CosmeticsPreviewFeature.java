@@ -8,8 +8,8 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import com.wynntils.core.config.Category;
 import com.wynntils.core.config.ConfigCategory;
 import com.wynntils.core.features.Feature;
+import com.wynntils.core.text.StyledText;
 import com.wynntils.mc.event.ContainerRenderEvent;
-import com.wynntils.utils.mc.ComponentUtils;
 import com.wynntils.utils.mc.McUtils;
 import com.wynntils.utils.render.RenderUtils;
 import com.wynntils.utils.render.Texture;
@@ -26,7 +26,7 @@ public class CosmeticsPreviewFeature extends Feature {
     @SubscribeEvent
     public void onContainerRender(ContainerRenderEvent event) {
         AbstractContainerScreen<?> screen = event.getScreen();
-        String title = ComponentUtils.getUnformatted(screen.getTitle());
+        String title = StyledText.fromComponent(screen.getTitle()).getStringWithoutFormatting();
 
         if (title.equals(WEAPON_COSMETICS_TITLE)
                 || title.equals(HELMET_COSMETICS_TITLE)

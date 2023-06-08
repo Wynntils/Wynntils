@@ -346,4 +346,165 @@ public class TestStyledText {
                 unformattedMatcher.group(1),
                 "StyledText.matches(NONE).group() returned an unexpected value.");
     }
+
+    @Test
+    public void styledText_shouldMatchCorrectly() {
+        final Component component = Component.literal("This is a test string, where there are ")
+                .append(Component.literal("multiple").withStyle(ChatFormatting.BOLD))
+                .append(Component.literal(" components."));
+
+        final Pattern unformattedPattern = Pattern.compile("This is a test string, where there are (.+) components\\.");
+        final Pattern formattedPattern =
+                Pattern.compile("This is a test string, where there are §l(.+)§r components\\.");
+
+        final String expectedMatch = "multiple";
+
+        StyledText styledText = StyledText.fromComponent(component);
+
+        Assertions.assertTrue(
+                styledText.matches(formattedPattern), "StyledText.matches(DEFAULT) returned an unexpected value.");
+        Assertions.assertTrue(
+                styledText.matches(unformattedPattern, PartStyle.StyleType.NONE),
+                "StyledText.matches(NONE) returned an unexpected value.");
+    }
+
+    @Test
+    public void styledText_shouldSplitCorrectly() {
+        final Component component = Component.literal("This is a test string, where there are ")
+                .append(Component.literal("multiple").withStyle(ChatFormatting.BOLD))
+                .append(Component.literal(" components."));
+
+        StyledText styledText = StyledText.fromComponent(component);
+
+        // Split on the word "multiple" to check style inheritance
+        StyledText[] splitTexts = styledText.split("\\.|,|(tip)");
+
+        String[] results = {"This is a test string", " where there are §lmul", "§lle§r components"};
+
+        for (int i = 0; i < splitTexts.length; i++) {
+            StyledText result = splitTexts[i];
+
+            Assertions.assertEquals(
+                    results[i],
+                    result.getString(PartStyle.StyleType.DEFAULT),
+                    "StyledText.split() returned an unexpected value.");
+        }
+    }
+
+    @Test
+    public void styledText_shouldNotSplitColor() {
+        final Component component =
+                Component.literal("This is a formatted test string.").withStyle(ChatFormatting.BOLD);
+
+        StyledText styledText = StyledText.fromComponent(component);
+
+        StyledText[] splitTexts = styledText.split("§");
+
+        final String result = "§lThis is a formatted test string.";
+
+        Assertions.assertEquals(1, splitTexts.length, "StyledText.split() returned an unexpected value.");
+        Assertions.assertEquals(
+                result,
+                splitTexts[0].getString(PartStyle.StyleType.DEFAULT),
+                "StyledText.split() returned an unexpected value.");
+    }
+
+    @Test
+    public void styledText_substringShouldSkipBeginningCorrectly() {
+        final Component component = Component.literal("This is a test string").withStyle(ChatFormatting.BOLD);
+
+        StyledText styledText = StyledText.fromComponent(component);
+
+        StyledText substringText = styledText.substring(5);
+
+        final String result = "§lis a test string";
+
+        Assertions.assertEquals(
+                result,
+                substringText.getString(PartStyle.StyleType.DEFAULT),
+                "StyledText.substring() returned an unexpected value.");
+    }
+
+    @Test
+    public void styledText_multipartSubstringShouldWork() {
+        final Component component = Component.literal("a")
+                .withStyle(ChatFormatting.BOLD)
+                .append(Component.literal("bb"))
+                .append(Component.literal("ccc"))
+                .append(Component.literal("dddd"));
+
+        StyledText styledText = StyledText.fromComponent(component);
+
+        StyledText substringText = styledText.substring(1, 8);
+
+        final String result = "§lbbcccdd";
+
+        Assertions.assertEquals(
+                result,
+                substringText.getString(PartStyle.StyleType.DEFAULT),
+                "StyledText.substring() returned an unexpected value.");
+    }
+
+    @Test
+    public void styledText_replaceShouldOnlyReplaceFirstOccurence() {
+        final Component component = Component.literal("a")
+                .withStyle(ChatFormatting.BOLD)
+                .append(Component.literal("bb"))
+                .append(Component.literal("ccc"))
+                .append(Component.literal("dddd"));
+
+        StyledText styledText = StyledText.fromComponent(component);
+
+        StyledText replacedText = styledText.replaceFirst("b", "x");
+
+        final String result = "§laxbcccdddd";
+
+        Assertions.assertEquals(
+                result,
+                replacedText.getString(PartStyle.StyleType.DEFAULT),
+                "StyledText.replace() returned an unexpected value.");
+    }
+
+    @Test
+    public void styledText_replaceAllShouldReplaceAllOccurences() {
+        final Component component = Component.literal("a")
+                .withStyle(ChatFormatting.BOLD)
+                .append(Component.literal("bb"))
+                .append(Component.literal("ccc"))
+                .append(Component.literal("dddd"));
+
+        StyledText styledText = StyledText.fromComponent(component);
+
+        StyledText replacedText = styledText.replaceAll("[b|c]", "x");
+
+        final String result = "§laxxxxxdddd";
+
+        Assertions.assertEquals(
+                result,
+                replacedText.getString(PartStyle.StyleType.DEFAULT),
+                "StyledText.replaceAll() returned an unexpected value.");
+    }
+
+    @Test
+    public void styledText_withoutFormattingShouldReplaceStripFormatting() {
+        final Component component = Component.literal("a")
+                .withStyle(ChatFormatting.BOLD)
+                .append(Component.literal("bb"))
+                .append(Component.literal("ccc").withStyle(ChatFormatting.RED).withStyle(ChatFormatting.ITALIC))
+                .append(Component.literal("dddd").withStyle(ChatFormatting.UNDERLINE));
+
+        StyledText styledText = StyledText.fromComponent(component).withoutFormatting();
+
+        final String result = "abbcccdddd";
+
+        Assertions.assertEquals(
+                result,
+                styledText.getString(PartStyle.StyleType.DEFAULT),
+                "StyledText.replaceAll() returned an unexpected value.");
+
+        Assertions.assertEquals(
+                result,
+                styledText.getString(PartStyle.StyleType.NONE),
+                "StyledText.replaceAll() returned an unexpected value.");
+    }
 }

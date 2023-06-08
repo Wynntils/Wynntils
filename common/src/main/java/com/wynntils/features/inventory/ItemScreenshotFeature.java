@@ -16,16 +16,15 @@ import com.wynntils.core.config.RegisterConfig;
 import com.wynntils.core.features.Feature;
 import com.wynntils.core.features.properties.RegisterKeyBind;
 import com.wynntils.core.keybinds.KeyBind;
-import com.wynntils.core.text.CodedString;
+import com.wynntils.core.text.PartStyle;
+import com.wynntils.core.text.StyledText;
 import com.wynntils.mc.event.ItemTooltipRenderEvent;
 import com.wynntils.models.items.items.game.GearItem;
 import com.wynntils.utils.SystemUtils;
-import com.wynntils.utils.mc.ComponentUtils;
 import com.wynntils.utils.mc.McUtils;
 import com.wynntils.utils.render.FontRenderer;
 import com.wynntils.utils.render.RenderUtils;
 import com.wynntils.utils.wynn.WynnItemMatchers;
-import com.wynntils.utils.wynn.WynnUtils;
 import java.awt.HeadlessException;
 import java.awt.image.BufferedImage;
 import java.io.File;
@@ -125,10 +124,11 @@ public class ItemScreenshotFeature extends Feature {
 
         if (saveToDisk.get()) {
             // First try to save it to disk
-            String itemNameForFile = WynnUtils.normalizeBadString(ComponentUtils.stripFormatting(
-                            CodedString.fromString(itemStack.getHoverName().getString())))
+            String itemNameForFile = StyledText.fromComponent(itemStack.getHoverName())
                     .trim()
-                    .replaceAll("[/ ]", "_");
+                    .replaceAll("[/ ]", "_")
+                    .getNormalized()
+                    .getString(PartStyle.StyleType.NONE);
             File screenshotDir = new File(McUtils.mc().gameDirectory, "screenshots");
             String filename = Util.getFilenameFormattedDateTime() + "-" + itemNameForFile + ".png";
             try {

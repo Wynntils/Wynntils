@@ -11,12 +11,11 @@ import com.wynntils.core.config.Config;
 import com.wynntils.core.config.ConfigCategory;
 import com.wynntils.core.config.RegisterConfig;
 import com.wynntils.core.features.Feature;
-import com.wynntils.core.text.CodedString;
+import com.wynntils.core.text.StyledText;
 import com.wynntils.mc.event.ContainerRenderEvent;
 import com.wynntils.models.emeralds.type.EmeraldUnits;
 import com.wynntils.utils.StringUtils;
 import com.wynntils.utils.colors.CommonColors;
-import com.wynntils.utils.mc.ComponentUtils;
 import com.wynntils.utils.mc.KeyboardUtils;
 import com.wynntils.utils.mc.McUtils;
 import com.wynntils.utils.render.FontRenderer;
@@ -56,7 +55,9 @@ public class InventoryEmeraldCountFeature extends Feature {
         Screen screen = McUtils.mc().screen;
         if (!(screen instanceof AbstractContainerScreen<?> containerScreen)) return;
 
-        if (ComponentUtils.getUnformatted(screen.getTitle()).equals("Character Info")) return;
+        if (StyledText.fromComponent(screen.getTitle())
+                .getStringWithoutFormatting()
+                .equals("Character Info")) return;
 
         // Always draw top part, which is all there is if it is inventory,
         // and all there is if we combine them, otherwise it is just the
@@ -111,7 +112,7 @@ public class InventoryEmeraldCountFeature extends Feature {
         FontRenderer.getInstance()
                 .renderText(
                         poseStack,
-                        CodedString.fromString(emeraldText),
+                        StyledText.fromString(emeraldText),
                         x + 1,
                         y - 10,
                         0,
@@ -170,7 +171,7 @@ public class InventoryEmeraldCountFeature extends Feature {
             FontRenderer.getInstance()
                     .renderAlignedTextInBox(
                             poseStack,
-                            CodedString.fromString(emeraldAmount),
+                            StyledText.fromString(emeraldAmount),
                             renderX,
                             renderX + TEXTURE_SIZE - 2,
                             renderY,

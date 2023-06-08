@@ -7,7 +7,7 @@ package com.wynntils.screens.maps;
 import com.google.gson.JsonSyntaxException;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.wynntils.core.components.Managers;
-import com.wynntils.core.text.CodedString;
+import com.wynntils.core.text.StyledText;
 import com.wynntils.features.map.MapFeature;
 import com.wynntils.models.map.pois.CustomPoi;
 import com.wynntils.screens.base.WynntilsScreen;
@@ -162,7 +162,7 @@ public final class PoiManagementScreen extends WynntilsScreen {
         FontRenderer.getInstance()
                 .renderText(
                         poseStack,
-                        CodedString.fromString(I18n.get("screens.wynntils.poiManagementGui.icon")),
+                        StyledText.fromString(I18n.get("screens.wynntils.poiManagementGui.icon")),
                         this.width / 2f - 165,
                         43,
                         CommonColors.WHITE,
@@ -173,7 +173,7 @@ public final class PoiManagementScreen extends WynntilsScreen {
         FontRenderer.getInstance()
                 .renderText(
                         poseStack,
-                        CodedString.fromString(I18n.get("screens.wynntils.poiManagementGui.name")),
+                        StyledText.fromString(I18n.get("screens.wynntils.poiManagementGui.name")),
                         this.width / 2f - 130,
                         43,
                         CommonColors.WHITE,
@@ -184,7 +184,7 @@ public final class PoiManagementScreen extends WynntilsScreen {
         FontRenderer.getInstance()
                 .renderText(
                         poseStack,
-                        CodedString.fromString("X"),
+                        StyledText.fromString("X"),
                         this.width / 2f - 15,
                         43,
                         CommonColors.WHITE,
@@ -195,7 +195,7 @@ public final class PoiManagementScreen extends WynntilsScreen {
         FontRenderer.getInstance()
                 .renderText(
                         poseStack,
-                        CodedString.fromString("Y"),
+                        StyledText.fromString("Y"),
                         this.width / 2f + 40,
                         43,
                         CommonColors.WHITE,
@@ -206,7 +206,7 @@ public final class PoiManagementScreen extends WynntilsScreen {
         FontRenderer.getInstance()
                 .renderText(
                         poseStack,
-                        CodedString.fromString("Z"),
+                        StyledText.fromString("Z"),
                         this.width / 2f + 80,
                         43,
                         CommonColors.WHITE,

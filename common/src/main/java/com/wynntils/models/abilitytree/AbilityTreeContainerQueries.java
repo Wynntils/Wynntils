@@ -135,9 +135,7 @@ public class AbilityTreeContainerQueries {
                 unprocessedTree.processItem(itemStack, page, slot, true);
             }
 
-            boolean lastPage = page == Models.AbilityTree.ABILITY_TREE_PAGES;
-
-            if (lastPage) {
+            if (page == Models.AbilityTree.ABILITY_TREE_PAGES) {
                 this.supplier.accept(unprocessedTree.getProcesssed());
             }
         }

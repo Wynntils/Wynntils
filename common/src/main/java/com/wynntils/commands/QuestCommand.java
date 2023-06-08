@@ -49,9 +49,9 @@ public class QuestCommand extends Command {
     }
 
     @Override
-    public LiteralArgumentBuilder<CommandSourceStack> getCommandBuilder() {
-        return Commands.literal(getCommandName())
-                .then(Commands.literal("list")
+    public LiteralArgumentBuilder<CommandSourceStack> getCommandBuilder(
+            LiteralArgumentBuilder<CommandSourceStack> base) {
+        return base.then(Commands.literal("list")
                         .executes((ctxt) -> listQuests(ctxt, "distance"))
                         .then(Commands.argument("sort", StringArgumentType.word())
                                 .suggests(SORT_SUGGESTION_PROVIDER)
@@ -123,7 +123,7 @@ public class QuestCommand extends Command {
 
         quests = Models.Quest.getQuestsRaw().stream()
                 .filter(quest -> StringUtils.initialMatch(quest.getName(), searchText)
-                        || StringUtils.initialMatch(quest.getNextTask().getUnformattedString(), searchText))
+                        || StringUtils.initialMatch(quest.getNextTask().getStringWithoutFormatting(), searchText))
                 .toList();
 
         if (quests.isEmpty()) {
@@ -187,9 +187,7 @@ public class QuestCommand extends Command {
                                 StringUtils.capitalized(quest.getLength().toString()))
                         .withStyle(ChatFormatting.YELLOW))
                 .append(Component.literal("\n - Next task: ").withStyle(ChatFormatting.WHITE))
-                .append(quest.getNextTask()
-                        .asSingleLiteralComponentWithCodedString()
-                        .withStyle(ChatFormatting.GRAY))
+                .append(quest.getNextTask().getComponent().withStyle(ChatFormatting.GRAY))
                 .append(Component.literal("\n"))
                 .append(Component.literal("[Track quest]")
                         .withStyle(style -> style.withClickEvent(new ClickEvent(

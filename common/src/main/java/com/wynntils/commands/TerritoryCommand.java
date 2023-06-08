@@ -24,7 +24,8 @@ public class TerritoryCommand extends Command {
     }
 
     @Override
-    public LiteralArgumentBuilder<CommandSourceStack> getCommandBuilder() {
+    public LiteralArgumentBuilder<CommandSourceStack> getCommandBuilder(
+            LiteralArgumentBuilder<CommandSourceStack> base) {
         return Commands.literal("territory")
                 .then(Commands.argument("territory", StringArgumentType.greedyString())
                         .suggests(CompassCommand.TERRITORY_SUGGESTION_PROVIDER)

@@ -9,7 +9,7 @@ import com.mojang.authlib.GameProfile;
 import com.mojang.brigadier.CommandDispatcher;
 import com.mojang.brigadier.tree.RootCommandNode;
 import com.wynntils.core.events.MixinHelper;
-import com.wynntils.core.text.CodedString;
+import com.wynntils.core.text.StyledText;
 import com.wynntils.mc.event.AddEntityEvent;
 import com.wynntils.mc.event.AdvancementUpdateEvent;
 import com.wynntils.mc.event.ChatPacketReceivedEvent;
@@ -200,8 +200,7 @@ public abstract class ClientPacketListenerMixin {
     private void handleTabListCustomisationPost(ClientboundTabListPacket packet, CallbackInfo ci) {
         if (!isRenderThread()) return;
 
-        MixinHelper.post(new PlayerInfoFooterChangedEvent(
-                CodedString.fromComponentIgnoringComponentStylesAndJustUsingFormattingCodes(packet.getFooter())));
+        MixinHelper.post(new PlayerInfoFooterChangedEvent(StyledText.fromComponent(packet.getFooter())));
     }
 
     @Inject(
@@ -276,7 +275,7 @@ public abstract class ClientPacketListenerMixin {
                 McUtils.player()
                         .inventoryMenu
                         .initializeContents(packet.getStateId(), packet.getItems(), packet.getCarriedItem());
-            } else if (packet.getContainerId() == McUtils.player().containerMenu.containerId) {
+            } else if (packet.getContainerId() == McUtils.containerMenu().containerId) {
                 McUtils.player()
                         .containerMenu
                         .initializeContents(packet.getStateId(), packet.getItems(), packet.getCarriedItem());
@@ -488,7 +487,7 @@ public abstract class ClientPacketListenerMixin {
         if (!isRenderThread()) return;
 
         ScoreboardSetScoreEvent event = new ScoreboardSetScoreEvent(
-                CodedString.fromString(packet.getOwner()),
+                StyledText.fromString(packet.getOwner()),
                 packet.getObjectiveName(),
                 packet.getScore(),
                 packet.getMethod());

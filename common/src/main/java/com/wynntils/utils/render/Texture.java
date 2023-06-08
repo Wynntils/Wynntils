@@ -166,7 +166,13 @@ public enum Texture {
     REMOVE_BUTTON("character_selection_ui/remove_button.png", 14, 28),
     CHARACTER_SELECTION_SCROLL_BUTTON("character_selection_ui/scroll_button.png", 7, 17),
     SOUL_POINT_ICON("character_selection_ui/soul_point.png", 10, 16),
-    XP_BAR("character_selection_ui/xp_bar.png", 100, 12);
+    XP_BAR("character_selection_ui/xp_bar.png", 100, 12),
+
+    // Seaskipper UI
+    BOAT_BUTTON("boat_button.png", 39, 76),
+    DESTINATION_BUTTON("destination_button.png", 66, 40),
+    DESTINATION_LIST("destination_list.png", 143, 205),
+    TRAVEL_BUTTON("travel_button.png", 100, 76);
 
     private final ResourceLocation resource;
     private final int width;

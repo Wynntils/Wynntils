@@ -11,10 +11,9 @@ import com.wynntils.core.config.Config;
 import com.wynntils.core.config.ConfigCategory;
 import com.wynntils.core.config.RegisterConfig;
 import com.wynntils.core.features.Feature;
-import com.wynntils.core.text.CodedString;
+import com.wynntils.core.text.StyledText;
 import com.wynntils.mc.event.ContainerClickEvent;
 import com.wynntils.mc.event.ItemTooltipRenderEvent;
-import com.wynntils.utils.mc.ComponentUtils;
 import com.wynntils.utils.mc.KeyboardUtils;
 import com.wynntils.utils.mc.LoreUtils;
 import com.wynntils.utils.mc.McUtils;
@@ -33,14 +32,14 @@ import net.minecraftforge.eventbus.api.SubscribeEvent;
 
 @ConfigCategory(Category.INVENTORY)
 public class BulkBuyFeature extends Feature {
-    public static final CodedString PRICE_STR = CodedString.fromString("§6Price:");
 
     @RegisterConfig
     public final Config<Integer> bulkBuyAmount = new Config<>(4);
 
-    // Test suite: https://regexr.com/7998g
-    private static final Pattern PRICE_PATTERN = Pattern.compile("§6 - §r§(?:c✖|a✔) §r§f(\\d+)§r§7²");
+    // Test suite: https://regexr.com/7esio
+    private static final Pattern PRICE_PATTERN = Pattern.compile("§6 - §(?:c✖|a✔) §f(\\d+)§7²");
     private static final ChatFormatting BULK_BUY_ACTIVE_COLOR = ChatFormatting.GREEN;
+    private static final StyledText PRICE_STR = StyledText.fromString("§6Price:");
 
     @SubscribeEvent
     public void onSlotClicked(ContainerClickEvent e) {
@@ -60,7 +59,7 @@ public class BulkBuyFeature extends Feature {
     // This needs to be low so it runs after weapon tooltips are generated (for weapon merchants)
     @SubscribeEvent(priority = EventPriority.LOW)
     public void onTooltipPre(ItemTooltipRenderEvent.Pre event) {
-        if (!isBulkBuyable(McUtils.player().containerMenu, event.getItemStack())) return;
+        if (!isBulkBuyable(McUtils.containerMenu(), event.getItemStack())) return;
 
         List<Component> tooltips = List.of(
                 Component.literal(""), // Empty line
@@ -82,26 +81,30 @@ public class BulkBuyFeature extends Feature {
     private List<Component> replacePrices(List<Component> oldLore) {
         if (!KeyboardUtils.isShiftDown()) return oldLore;
 
-        CodedString priceLine = ComponentUtils.getCoded(oldLore.get(oldLore.size() - 1));
-        Matcher priceMatcher = priceLine.getMatcher(PRICE_PATTERN);
-        if (!priceMatcher.find()) {
-            WynntilsMod.warn("Could not find price for " + oldLore.get(0).getString() + " in " + priceLine);
-            return oldLore;
+        List<Component> returnable = new ArrayList<>(oldLore);
+
+        // iterate through lore to find the price, then replace it with the bulk buy price
+        // there is no better way to do this since we cannot tell which line is the price (user may or may not have nbt
+        // lines enabled/disabled)
+        for (Component line : oldLore) {
+            StyledText oldLine = StyledText.fromComponent(line);
+            Matcher priceMatcher = oldLine.getMatcher(PRICE_PATTERN);
+            if (!priceMatcher.find()) continue;
+
+            int newPrice = Integer.parseInt(priceMatcher.group(1)) * bulkBuyAmount.get();
+            StyledText newLine = StyledText.fromString(oldLine.getString()
+                    .replace(priceMatcher.group(1), BULK_BUY_ACTIVE_COLOR + Integer.toString(newPrice)));
+            if (newPrice > Models.Emerald.getAmountInInventory()) {
+                newLine = StyledText.fromString(
+                        newLine.getString().replace("a✔", "c✖")); // Replace green checkmark with red x
+            }
+            returnable.set(returnable.indexOf(line), newLine.getComponent());
+            break;
         }
-        int newPrice = Integer.parseInt(priceMatcher.group(1)) * bulkBuyAmount.get();
-
-        CodedString newLine = CodedString.fromString(priceLine
-                .getInternalCodedStringRepresentation()
-                .replace(priceMatcher.group(1), BULK_BUY_ACTIVE_COLOR + Integer.toString(newPrice)));
-
-        if (newPrice > Models.Emerald.getAmountInInventory()) {
-            newLine = CodedString.fromString(newLine.getInternalCodedStringRepresentation()
-                    .replace("a✔", "c✖")); // Replace green checkmark with red x
+        if (returnable == oldLore) {
+            WynntilsMod.warn("Could not find price for " + oldLore.get(0).getString());
         }
-
-        List<Component> newLore = new ArrayList<>(oldLore);
-        newLore.set(newLore.size() - 1, newLine.asSingleLiteralComponentWithCodedString());
-        return newLore;
+        return returnable;
     }
 
     private boolean isBulkBuyable(AbstractContainerMenu menu, ItemStack toBuy) {

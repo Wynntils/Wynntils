@@ -11,14 +11,18 @@ import com.wynntils.core.config.RegisterConfig;
 import com.wynntils.core.features.Feature;
 import com.wynntils.core.features.properties.RegisterKeyBind;
 import com.wynntils.core.keybinds.KeyBind;
-import com.wynntils.core.text.CodedString;
+import com.wynntils.core.text.StyledText;
 import com.wynntils.mc.event.PlayerInteractEvent;
 import com.wynntils.mc.event.UseItemEvent;
 import com.wynntils.models.quests.event.TrackedQuestUpdateEvent;
 import com.wynntils.screens.base.WynntilsMenuScreenBase;
+import com.wynntils.screens.guides.WynntilsGuidesListScreen;
+import com.wynntils.screens.guides.emeraldpouch.WynntilsEmeraldPouchGuideScreen;
+import com.wynntils.screens.guides.gear.WynntilsItemGuideScreen;
+import com.wynntils.screens.guides.ingredient.WynntilsIngredientGuideScreen;
+import com.wynntils.screens.guides.powder.WynntilsPowderGuideScreen;
 import com.wynntils.screens.questbook.WynntilsQuestBookScreen;
 import com.wynntils.screens.wynntilsmenu.WynntilsMenuScreen;
-import com.wynntils.utils.mc.ComponentUtils;
 import com.wynntils.utils.mc.McUtils;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.sounds.SoundEvent;
@@ -33,7 +37,7 @@ public class WynntilsQuestBookFeature extends Feature {
     private static final ResourceLocation QUEST_UPDATE_ID = new ResourceLocation("wynntils:ui.quest.update");
     private static final SoundEvent QUEST_UPDATE_SOUND = SoundEvent.createVariableRangeEvent(QUEST_UPDATE_ID);
 
-    private static final CodedString QUEST_BOOK_NAME = CodedString.fromString("§dQuest Book");
+    private static final StyledText QUEST_BOOK_NAME = StyledText.fromString("§dQuest Book");
 
     @RegisterKeyBind
     private final KeyBind openQuestBook = new KeyBind(
@@ -48,6 +52,41 @@ public class WynntilsQuestBookFeature extends Feature {
             GLFW.GLFW_KEY_UNKNOWN,
             true,
             () -> WynntilsMenuScreenBase.openBook(WynntilsMenuScreen.create()));
+
+    @RegisterKeyBind
+    private final KeyBind openPowderGuide = new KeyBind(
+            "Open Powder Guide",
+            GLFW.GLFW_KEY_UNKNOWN,
+            true,
+            () -> WynntilsMenuScreenBase.openBook(WynntilsPowderGuideScreen.create()));
+
+    @RegisterKeyBind
+    private final KeyBind openItemGuide = new KeyBind(
+            "Open Item Guide",
+            GLFW.GLFW_KEY_UNKNOWN,
+            true,
+            () -> WynntilsMenuScreenBase.openBook(WynntilsItemGuideScreen.create()));
+
+    @RegisterKeyBind
+    private final KeyBind openIngredientGuide = new KeyBind(
+            "Open Ingredient Guide",
+            GLFW.GLFW_KEY_UNKNOWN,
+            true,
+            () -> WynntilsMenuScreenBase.openBook(WynntilsIngredientGuideScreen.create()));
+
+    @RegisterKeyBind
+    private final KeyBind openEmeraldPouchGuide = new KeyBind(
+            "Open Emerald Pouch Guide",
+            GLFW.GLFW_KEY_UNKNOWN,
+            true,
+            () -> WynntilsMenuScreenBase.openBook(WynntilsEmeraldPouchGuideScreen.create()));
+
+    @RegisterKeyBind
+    private final KeyBind openGuidesList = new KeyBind(
+            "Open Guides List",
+            GLFW.GLFW_KEY_UNKNOWN,
+            true,
+            () -> WynntilsMenuScreenBase.openBook(WynntilsGuidesListScreen.create()));
 
     @RegisterConfig
     public final Config<Boolean> replaceWynncraftQuestBook = new Config<>(true);
@@ -92,7 +131,7 @@ public class WynntilsQuestBookFeature extends Feature {
         ItemStack itemInHand = McUtils.player().getItemInHand(InteractionHand.MAIN_HAND);
 
         if (itemInHand != null
-                && ComponentUtils.getCoded(itemInHand.getHoverName()).equals(QUEST_BOOK_NAME)) {
+                && StyledText.fromComponent(itemInHand.getHoverName()).equals(QUEST_BOOK_NAME)) {
             event.setCanceled(true);
             WynntilsMenuScreenBase.openBook(
                     questBookShouldOpenWynntilsMenu.get()

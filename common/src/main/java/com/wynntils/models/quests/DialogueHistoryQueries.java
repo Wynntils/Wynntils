@@ -38,7 +38,7 @@ public class DialogueHistoryQueries {
                     if (!StyledText.fromComponent(dialogueHistoryItem.getHoverName())
                             .equals(DIALOGUE_HISTORY)) return;
 
-                    for (StyledText line : LoreUtils.getLoreAsStyledText(dialogueHistoryItem)) {
+                    for (StyledText line : LoreUtils.getLore(dialogueHistoryItem)) {
                         Matcher matcher = line.getMatcher(DIALOGUE_HISTORY_PAGE_PATTERN);
 
                         if (matcher.matches()) {
@@ -69,7 +69,7 @@ public class DialogueHistoryQueries {
 
                     newDialogueHistory = new ArrayList<>();
 
-                    List<StyledText> current = LoreUtils.getLoreAsStyledText(dialogueHistoryItem).stream()
+                    List<StyledText> current = LoreUtils.getLore(dialogueHistoryItem).stream()
                             .dropWhile(s -> s.isBlank())
                             .takeWhile(s -> !s.isBlank())
                             .toList();
@@ -89,7 +89,7 @@ public class DialogueHistoryQueries {
                         if (!StyledText.fromComponent(dialogueHistoryItem.getHoverName())
                                 .equals(DIALOGUE_HISTORY)) return;
 
-                        List<StyledText> current = LoreUtils.getLoreAsStyledText(dialogueHistoryItem).stream()
+                        List<StyledText> current = LoreUtils.getLore(dialogueHistoryItem).stream()
                                 .dropWhile(s -> s.isBlank())
                                 .takeWhile(s -> !s.isBlank())
                                 .toList();

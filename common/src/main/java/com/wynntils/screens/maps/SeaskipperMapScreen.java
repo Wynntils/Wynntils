@@ -8,7 +8,7 @@ import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.wynntils.core.components.Managers;
 import com.wynntils.core.components.Models;
-import com.wynntils.core.text.CodedString;
+import com.wynntils.core.text.StyledText;
 import com.wynntils.features.ui.CustomSeaskipperScreenFeature;
 import com.wynntils.models.map.PoiLocation;
 import com.wynntils.models.map.pois.SeaskipperDestinationPoi;
@@ -62,7 +62,7 @@ public final class SeaskipperMapScreen extends AbstractMapScreen {
     protected void doInit() {
         super.doInit();
 
-        reloadDestionationPois();
+        reloadDestinationPois();
 
         this.addRenderableWidget(new BasicTexturedButton(
                 width / 2 - Texture.MAP_BUTTONS_BACKGROUND.width() / 2 + 6 + 20 * 3,
@@ -300,7 +300,7 @@ public final class SeaskipperMapScreen extends AbstractMapScreen {
         FontRenderer.getInstance()
                 .renderText(
                         poseStack,
-                        CodedString.fromString("Level %d".formatted(hoveredPoi.getLevel())),
+                        StyledText.fromString("Level %d".formatted(hoveredPoi.getLevel())),
                         10,
                         10,
                         CommonColors.ORANGE,
@@ -320,7 +320,7 @@ public final class SeaskipperMapScreen extends AbstractMapScreen {
             FontRenderer.getInstance()
                     .renderText(
                             poseStack,
-                            CodedString.fromString("Cost: %d²".formatted(price)),
+                            StyledText.fromString("Cost: %d²".formatted(price)),
                             10,
                             10 + renderYOffset,
                             CommonColors.GREEN,
@@ -333,7 +333,7 @@ public final class SeaskipperMapScreen extends AbstractMapScreen {
             FontRenderer.getInstance()
                     .renderText(
                             poseStack,
-                            CodedString.fromString("Click to go here!"),
+                            StyledText.fromString("Click to go here!"),
                             10,
                             10 + renderYOffset,
                             CommonColors.LIGHT_BLUE,
@@ -346,7 +346,7 @@ public final class SeaskipperMapScreen extends AbstractMapScreen {
             FontRenderer.getInstance()
                     .renderText(
                             poseStack,
-                            CodedString.fromString("Origin"),
+                            StyledText.fromString("Origin"),
                             10,
                             10 + renderYOffset,
                             CommonColors.RED,
@@ -359,7 +359,7 @@ public final class SeaskipperMapScreen extends AbstractMapScreen {
             FontRenderer.getInstance()
                     .renderText(
                             poseStack,
-                            CodedString.fromString("Inaccessible"),
+                            StyledText.fromString("Inaccessible"),
                             10,
                             10 + renderYOffset,
                             CommonColors.GRAY,
@@ -371,7 +371,7 @@ public final class SeaskipperMapScreen extends AbstractMapScreen {
         FontRenderer.getInstance()
                 .renderAlignedTextInBox(
                         poseStack,
-                        CodedString.fromString(hoveredPoi.getName()),
+                        StyledText.fromString(hoveredPoi.getName()),
                         7,
                         textureWidth,
                         Texture.TERRITORY_TOOLTIP_TOP.height() + centerHeight,
@@ -407,7 +407,7 @@ public final class SeaskipperMapScreen extends AbstractMapScreen {
         return super.doMouseClicked(mouseX, mouseY, button);
     }
 
-    public void reloadDestionationPois() {
+    public void reloadDestinationPois() {
         destinationPois = new ArrayList<>();
 
         destinationPois.addAll(Models.Seaskipper.getPois(renderAllDestinations));
@@ -425,7 +425,7 @@ public final class SeaskipperMapScreen extends AbstractMapScreen {
     private void toggleDestinations() {
         renderAllDestinations = !renderAllDestinations;
 
-        reloadDestionationPois();
+        reloadDestinationPois();
     }
 
     private void toggleRoutes() {

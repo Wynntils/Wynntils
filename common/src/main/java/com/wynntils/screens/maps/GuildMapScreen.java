@@ -8,7 +8,7 @@ import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.wynntils.core.components.Managers;
 import com.wynntils.core.components.Models;
-import com.wynntils.core.text.CodedString;
+import com.wynntils.core.text.StyledText;
 import com.wynntils.features.map.GuildMapFeature;
 import com.wynntils.models.map.pois.Poi;
 import com.wynntils.models.map.pois.TerritoryPoi;
@@ -293,7 +293,7 @@ public final class GuildMapScreen extends AbstractMapScreen {
         FontRenderer.getInstance()
                 .renderText(
                         poseStack,
-                        CodedString.fromString(
+                        StyledText.fromString(
                                 "%s [%s]".formatted(territoryProfile.getGuild(), territoryProfile.getGuildPrefix())),
                         10,
                         10,
@@ -309,7 +309,7 @@ public final class GuildMapScreen extends AbstractMapScreen {
             TerritoryStorage storage = territoryInfo.getStorage(value);
 
             if (generation != 0) {
-                CodedString formattedGenerated = CodedString.fromString(
+                StyledText formattedGenerated = StyledText.fromString(
                         "%s+%d %s per Hour".formatted(value.getPrettySymbol(), generation, value.getName()));
 
                 FontRenderer.getInstance()
@@ -326,7 +326,7 @@ public final class GuildMapScreen extends AbstractMapScreen {
             }
 
             if (storage != null) {
-                CodedString formattedStored = CodedString.fromString("%s%d/%d %s stored"
+                StyledText formattedStored = StyledText.fromString("%s%d/%d %s stored"
                         .formatted(value.getPrettySymbol(), storage.current(), storage.max(), value.getName()));
 
                 FontRenderer.getInstance()
@@ -345,11 +345,11 @@ public final class GuildMapScreen extends AbstractMapScreen {
 
         renderYOffset += 10;
 
-        CodedString treasury = CodedString.fromString(ChatFormatting.GRAY
+        StyledText treasury = StyledText.fromString(ChatFormatting.GRAY
                 + "✦ Treasury: %s"
                         .formatted(territoryInfo.getTreasury().getTreasuryColor()
                                 + territoryInfo.getTreasury().getAsString()));
-        CodedString defences = CodedString.fromString(ChatFormatting.GRAY
+        StyledText defences = StyledText.fromString(ChatFormatting.GRAY
                 + "Territory Defences: %s"
                         .formatted(territoryInfo.getDefences().getDefenceColor()
                                 + territoryInfo.getDefences().getAsString()));
@@ -381,7 +381,7 @@ public final class GuildMapScreen extends AbstractMapScreen {
             FontRenderer.getInstance()
                     .renderText(
                             poseStack,
-                            CodedString.fromString("Guild Headquarters"),
+                            StyledText.fromString("Guild Headquarters"),
                             10,
                             10 + renderYOffset,
                             CommonColors.RED,
@@ -395,7 +395,7 @@ public final class GuildMapScreen extends AbstractMapScreen {
         FontRenderer.getInstance()
                 .renderText(
                         poseStack,
-                        CodedString.fromString(
+                        StyledText.fromString(
                                 ChatFormatting.GRAY + "Time Held: " + territoryProfile.getTimeAcquiredColor()
                                         + territoryProfile.getReadableRelativeTimeAcquired()),
                         10,
@@ -409,7 +409,7 @@ public final class GuildMapScreen extends AbstractMapScreen {
         FontRenderer.getInstance()
                 .renderAlignedTextInBox(
                         poseStack,
-                        CodedString.fromString(territoryPoi.getName()),
+                        StyledText.fromString(territoryPoi.getName()),
                         7,
                         textureWidth,
                         Texture.TERRITORY_TOOLTIP_TOP.height() + centerHeight,

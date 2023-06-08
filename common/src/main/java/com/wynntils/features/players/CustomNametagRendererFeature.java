@@ -19,7 +19,6 @@ import com.wynntils.models.gear.type.GearInfo;
 import com.wynntils.models.players.WynntilsUser;
 import com.wynntils.models.players.type.AccountType;
 import com.wynntils.screens.gearviewer.GearViewerScreen;
-import com.wynntils.utils.mc.ComponentUtils;
 import com.wynntils.utils.mc.McUtils;
 import com.wynntils.utils.render.RenderUtils;
 import com.wynntils.utils.wynn.RaycastUtils;
@@ -28,7 +27,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import net.minecraft.ChatFormatting;
-import net.minecraft.client.Minecraft;
 import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
@@ -132,7 +130,7 @@ public class CustomNametagRendererFeature extends Feature {
         if (itemStack == null || itemStack == ItemStack.EMPTY) return null;
 
         // This must specifically NOT be normalized; the ֎ is significant
-        String gearName = ComponentUtils.getUnformatted(itemStack.getHoverName());
+        String gearName = StyledText.fromComponent(itemStack.getHoverName()).getStringWithoutFormatting();
         MutableComponent description = WynnItemMatchers.getNonGearDescription(itemStack, gearName);
         if (description != null) return description;
 
@@ -180,9 +178,8 @@ public class CustomNametagRendererFeature extends Feature {
 
     private void drawNametags(PlayerNametagRenderEvent event, List<CustomNametag> nametags) {
         // calculate color of nametag box
-        int backgroundColor = hideNametagBackground.get()
-                ? 0
-                : ((int) (Minecraft.getInstance().options.getBackgroundOpacity(0.25F) * 255f) << 24);
+        int backgroundColor =
+                hideNametagBackground.get() ? 0 : ((int) (McUtils.options().getBackgroundOpacity(0.25F) * 255f) << 24);
 
         float yOffset = 0f;
         for (CustomNametag nametag : nametags) {

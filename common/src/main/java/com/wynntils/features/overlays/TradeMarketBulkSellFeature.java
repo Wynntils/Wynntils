@@ -10,11 +10,12 @@ import com.wynntils.core.config.Config;
 import com.wynntils.core.config.ConfigCategory;
 import com.wynntils.core.config.RegisterConfig;
 import com.wynntils.core.features.Feature;
+import com.wynntils.core.text.PartStyle;
+import com.wynntils.core.text.StyledText;
 import com.wynntils.handlers.chat.event.ChatMessageReceivedEvent;
 import com.wynntils.mc.event.ContainerSetSlotEvent;
 import com.wynntils.mc.event.ScreenOpenedEvent;
 import com.wynntils.screens.base.widgets.WynntilsButton;
-import com.wynntils.utils.mc.ComponentUtils;
 import com.wynntils.utils.mc.McUtils;
 import com.wynntils.utils.wynn.ContainerUtils;
 import java.util.ArrayList;
@@ -41,7 +42,8 @@ public class TradeMarketBulkSellFeature extends Feature {
     public Config<Integer> bulkSell3Amount = new Config<>(0);
 
     private static final Pattern ITEM_NAME_PATTERN =
-            Pattern.compile("§6Selling §f(\\d+|\\d+,\\d+) ([^À]*)À*§6 for §f[\\d,]*§7² Each");
+            Pattern.compile("§6Selling §f(\\d+|\\d+,\\d+) ([^À]*)À*(:?§6)? for §f[\\d,]*§7² Each");
+    private static final String CLICK_TO_SELL_ITEM = "§6Click an Item to Sell";
     private static final String SELL_DIALOGUE_TITLE = "What would you like to sell?";
     private static final int SELLABLE_ITEM_SLOT = 10;
     private static final int AMOUNT_ITEM_SLOT = 11;
@@ -55,16 +57,21 @@ public class TradeMarketBulkSellFeature extends Feature {
     @SubscribeEvent
     public void onScreenChanged(ScreenOpenedEvent e) {
         if (!(e.getScreen() instanceof ContainerScreen cs)) return;
-        if (!ComponentUtils.getUnformatted(cs.getTitle()).equals(SELL_DIALOGUE_TITLE)) return;
+        if (!StyledText.fromComponent(cs.getTitle())
+                .getStringWithoutFormatting()
+                .equals(SELL_DIALOGUE_TITLE)) return;
         buttonsAdded = false;
     }
 
     @SubscribeEvent
     public void onSellDialogueUpdated(ContainerSetSlotEvent.Pre e) {
         if (!(McUtils.mc().screen instanceof ContainerScreen cs)) return;
-        if (!ComponentUtils.getUnformatted(cs.getTitle()).equals(SELL_DIALOGUE_TITLE)) return;
-        if (!ComponentUtils.getUnformatted(
+        if (!StyledText.fromComponent(cs.getTitle())
+                .getStringWithoutFormatting()
+                .equals(SELL_DIALOGUE_TITLE)) return;
+        if (!StyledText.fromComponent(
                         cs.getMenu().getSlot(AMOUNT_ITEM_SLOT).getItem().getHoverName())
+                .getStringWithoutFormatting()
                 .equals("Click to Set Amount")) return;
         if (!buttonsAdded) {
             addSellButtons(cs);
@@ -84,8 +91,9 @@ public class TradeMarketBulkSellFeature extends Feature {
     @SubscribeEvent
     public void onChatMessage(ChatMessageReceivedEvent e) {
         if (!shouldSend) return;
-        if (!ComponentUtils.getUnformatted(e.getMessage())
-                .contains("Type the amount you wish to sell or type 'cancel' to cancel:")) return;
+        if (!StyledText.fromComponent(e.getMessage())
+                .contains("Type the amount you wish to sell or type 'cancel' to cancel:", PartStyle.StyleType.NONE))
+            return;
 
         WynntilsMod.info("Trying to bulk sell " + amountToSend + " items");
         McUtils.mc().getConnection().sendChat(String.valueOf(amountToSend));
@@ -95,8 +103,8 @@ public class TradeMarketBulkSellFeature extends Feature {
     private String getItemName(MenuAccess<ChestMenu> cs) {
         ItemStack is = cs.getMenu().getSlot(SELLABLE_ITEM_SLOT).getItem();
         if (is == ItemStack.EMPTY) return null;
-        if (is.getHoverName().toString().contains("Click an Item to sell")) return null;
-        Matcher m = ComponentUtils.getCoded(is.getHoverName()).getMatcher(ITEM_NAME_PATTERN);
+        if (StyledText.fromComponent(is.getHoverName()).getString().equals(CLICK_TO_SELL_ITEM)) return null;
+        Matcher m = StyledText.fromComponent(is.getHoverName()).getMatcher(ITEM_NAME_PATTERN);
 
         if (!m.matches()) return null;
         return m.group(2);

@@ -12,7 +12,6 @@ import com.wynntils.handlers.item.event.ItemRenamedEvent;
 import com.wynntils.mc.event.ContainerSetContentEvent;
 import com.wynntils.mc.event.SetSlotEvent;
 import com.wynntils.mc.extension.ItemStackExtension;
-import com.wynntils.utils.mc.ComponentUtils;
 import com.wynntils.utils.mc.LoreUtils;
 import com.wynntils.utils.mc.McUtils;
 import java.util.ArrayList;
@@ -66,11 +65,11 @@ public class ItemHandler extends Handler {
         NonNullList<ItemStack> existingItems;
         if (event.getContainerId() == 0) {
             // Set all for inventory
-            existingItems = McUtils.player().inventoryMenu.getItems();
-        } else if (event.getContainerId() == McUtils.player().containerMenu.containerId) {
+            existingItems = McUtils.inventoryMenu().getItems();
+        } else if (event.getContainerId() == McUtils.containerMenu().containerId) {
             // Set all for the currently open container. Vanilla has copied inventory in the last
             // slots
-            existingItems = McUtils.player().containerMenu.getItems();
+            existingItems = McUtils.containerMenu().getItems();
         } else {
             // No matching container, just ignore this
             return;
@@ -187,7 +186,7 @@ public class ItemHandler extends Handler {
                 WynntilsMod.reportCrash(annotator.getClass().getName(), annotatorName, CrashType.ANNOTATOR, t);
 
                 WynntilsMod.warn("Problematic item:" + itemStack);
-                WynntilsMod.warn("Problematic item name:" + ComponentUtils.getCoded(itemStack.getHoverName()));
+                WynntilsMod.warn("Problematic item name:" + StyledText.fromComponent(itemStack.getHoverName()));
                 WynntilsMod.warn("Problematic item tags:" + itemStack.getTag());
 
                 McUtils.sendMessageToClient(Component.literal("Not all items will be properly parsed.")

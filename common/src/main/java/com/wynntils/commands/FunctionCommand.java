@@ -13,7 +13,7 @@ import com.wynntils.core.components.Managers;
 import com.wynntils.core.functions.Function;
 import com.wynntils.core.functions.GenericFunction;
 import com.wynntils.core.functions.arguments.FunctionArguments;
-import com.wynntils.core.text.CodedString;
+import com.wynntils.core.text.StyledText;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Comparator;
@@ -66,9 +66,9 @@ public class FunctionCommand extends Command {
     }
 
     @Override
-    public LiteralArgumentBuilder<CommandSourceStack> getCommandBuilder() {
-        return Commands.literal(getCommandName())
-                .then(Commands.literal("list")
+    public LiteralArgumentBuilder<CommandSourceStack> getCommandBuilder(
+            LiteralArgumentBuilder<CommandSourceStack> base) {
+        return base.then(Commands.literal("list")
                         .executes(this::listFunctions)
                         .then(Commands.argument("type", StringArgumentType.word())
                                 .suggests(FUNCTION_LIST_TYPES_SUGGESTION_PROVIDER)
@@ -97,9 +97,9 @@ public class FunctionCommand extends Command {
     private int testExpression(CommandContext<CommandSourceStack> context) {
         String template = context.getArgument("template", String.class);
 
-        CodedString[] result = Managers.Function.doFormatLines(template);
+        StyledText[] result = Managers.Function.doFormatLines(template);
 
-        CodedString resultString = CodedString.join(", ", result);
+        StyledText resultString = StyledText.join(", ", result);
 
         context.getSource()
                 .sendSuccess(
