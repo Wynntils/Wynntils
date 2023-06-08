@@ -28,6 +28,7 @@ import net.minecraftforge.eventbus.api.SubscribeEvent;
 @ConfigCategory(Category.CHAT)
 public class GuildRankReplacementFeature extends Feature {
     private static final char STAR = '★';
+    private static final char REPLACEMENT_STAR = '*';
 
     @RegisterConfig
     public final Config<RankType> rankType = new Config<>(RankType.NAME);
@@ -51,6 +52,7 @@ public class GuildRankReplacementFeature extends Feature {
                 switch (rankType.get()) {
                     case NONE -> modifyByRemovingRank(originalStyledText);
                     case NAME -> modifyByAddingTextRank(originalStyledText);
+                    case SMALL_STARS -> modifyByAddingSmallStarsRank(originalStyledText);
                 };
 
         if (originalStyledText.equals(modified)) return; // no changes
@@ -119,8 +121,27 @@ public class GuildRankReplacementFeature extends Feature {
         return modified;
     }
 
+    private StyledText modifyByAddingSmallStarsRank(StyledText styledText) {
+        StyledText modified = styledText.iterate((part, changes) -> {
+            String partContent = part.getString(null, PartStyle.StyleType.NONE);
+            if (partContent.contains(String.valueOf(STAR))) {
+                changes.set(
+                        0,
+                        new StyledTextPart(
+                                partContent.replaceAll(String.valueOf(STAR), String.valueOf(REPLACEMENT_STAR)),
+                                part.getPartStyle().getStyle(),
+                                null,
+                                Style.EMPTY));
+                return IterationDecision.BREAK;
+            }
+            return IterationDecision.CONTINUE;
+        });
+        return modified;
+    }
+
     private enum RankType {
         NAME,
-        NONE
+        NONE,
+        SMALL_STARS
     }
 }
