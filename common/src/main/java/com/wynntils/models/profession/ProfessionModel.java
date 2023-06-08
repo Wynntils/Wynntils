@@ -25,12 +25,12 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 
 public class ProfessionModel extends Model {
-    // §7[+36§f Ⓙ§7 Farming§7 XP] §6[9%]
-    // §dx2.0 §7[+§d93§f Ⓙ§7 Farming§7 XP] §6[9%]
+    // §7[+36§f Ⓙ§7 Farming XP] §6[9%]
+    // §dx2.0 §7[+§d93§f Ⓙ§7 Farming XP] §6[9%]
     private static final Pattern PROFESSION_NODE_HARVERSTED_PATTERN = Pattern.compile(
-            "(§dx[\\d\\.]+ )?§7\\[\\+(§d)?(?<gain>\\d+)§f [ⓀⒸⒷⒿⒺⒹⓁⒶⒼⒻⒾⒽ]§7 (?<name>.+)§7 XP\\] §6\\[(?<current>\\d+)%\\]");
+            "(§dx[\\d\\.]+ )?§7\\[\\+(§d)?(?<gain>\\d+)§f [ⓀⒸⒷⒿⒺⒹⓁⒶⒼⒻⒾⒽ]§7 (?<name>.+) XP\\] §6\\[(?<current>\\d+)%\\]");
 
-    // §dx2.0 §r§7[+§r§d28 §r§fⒺ §r§7Scribing XP] §r§6[56%]
+    // §dx2.0 §7[+§d28 §fⒺ §7Scribing XP] §6[56%]
     private static final Pattern PROFESSION_CRAFT_PATTERN = Pattern.compile(
             "(§dx[\\d\\.]+ )?§7\\[\\+(§d)?(?<gain>\\d+) §f[ⓀⒸⒷⒿⒺⒹⓁⒶⒼⒻⒾⒽ] §7(?<name>.+) XP\\] §6\\[(?<current>\\d+)%\\]");
 
