@@ -14,7 +14,6 @@ import com.wynntils.core.net.Download;
 import com.wynntils.core.net.UrlId;
 import com.wynntils.core.text.StyledText;
 import com.wynntils.mc.event.AdvancementUpdateEvent;
-import com.wynntils.models.map.pois.Poi;
 import com.wynntils.models.map.pois.TerritoryPoi;
 import com.wynntils.models.map.type.TerritoryDefenseFilterType;
 import com.wynntils.models.territories.profile.TerritoryProfile;
@@ -77,11 +76,12 @@ public final class TerritoryModel extends Model {
         return allTerritoryPois;
     }
 
-    public List<Poi> getTerritoryPoisFromAdvancement() {
+    public List<TerritoryPoi> getTerritoryPoisFromAdvancement() {
         return new ArrayList<>(territoryPoiMap.values());
     }
 
-    public List<Poi> getFilteredTerritoryPoisFromAdvancement(int filterLevel, TerritoryDefenseFilterType filterType) {
+    public List<TerritoryPoi> getFilteredTerritoryPoisFromAdvancement(
+            int filterLevel, TerritoryDefenseFilterType filterType) {
         return switch (filterType) {
             case HIGHER -> territoryPoiMap.values().stream()
                     .filter(poi -> poi.getTerritoryInfo().getDefences().getLevel() >= filterLevel)
@@ -150,7 +150,8 @@ public final class TerritoryModel extends Model {
 
             if (territoryProfile == null) continue;
 
-            territoryPoiMap.put(entry.getKey(), new TerritoryPoi(territoryProfile, entry.getValue()));
+            territoryPoiMap.put(
+                    entry.getKey(), new TerritoryPoi(() -> getTerritoryProfile(entry.getKey()), entry.getValue()));
         }
     }
 
