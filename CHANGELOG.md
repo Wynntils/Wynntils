@@ -1,9 +1,21 @@
+## [0.0.3-alpha.76](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.75...v0.0.3-alpha.76) (2023-06-10)
+
+
+### New Features
+
+* Add hybrid mode to guild map ([#1603](https://github.com/Wynntils/Artemis/issues/1603)) ([e9bf36d](https://github.com/Wynntils/Artemis/commit/e9bf36ddd4b5e338b42836ed1d08a1f4c01590b9))
+
 ## [0.0.3-alpha.75](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.74...v0.0.3-alpha.75) (2023-06-10)
 
 
 ### Bug Fixes
 
 * Fix wynncraft join button appearing twice ([#1602](https://github.com/Wynntils/Artemis/issues/1602)) ([d075186](https://github.com/Wynntils/Artemis/commit/d07518667b41b48c08459b71bece1bca064bd14a))
+
+
+### Miscellaneous Chores
+
+* **release:** v0.0.3-alpha.75 [skip ci] ([e8738a8](https://github.com/Wynntils/Artemis/commit/e8738a8bfa4a1a7c83ba39bc764676dd0a6c0c09))
 
 ## [0.0.3-alpha.74](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.73...v0.0.3-alpha.74) (2023-06-08)
 
@@ -40,16 +52,4 @@
 ### Miscellaneous Chores
 
 * **release:** v0.0.3-alpha.72 [skip ci] ([3027f2c](https://github.com/Wynntils/Artemis/commit/3027f2c12af6d7991c42f3823185ffb69812e0ea))
-
-## [0.0.3-alpha.71](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.70...v0.0.3-alpha.71) (2023-06-07)
-
-
-### Bug Fixes
-
-* Fix SpellSegment pattern so spells appear on the action bar ([#1596](https://github.com/Wynntils/Artemis/issues/1596)) ([f458580](https://github.com/Wynntils/Artemis/commit/f458580df84c33e196c3131e7fc2799b7df65ccc))
-
-
-### Miscellaneous Chores
-
-* **release:** v0.0.3-alpha.71 [skip ci] ([38b3c45](https://github.com/Wynntils/Artemis/commit/38b3c453b7f98b97a992774cc9edcb12f16e4195))
 
