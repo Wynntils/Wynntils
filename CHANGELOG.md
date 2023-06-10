@@ -1,9 +1,21 @@
+## [0.0.3-alpha.75](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.74...v0.0.3-alpha.75) (2023-06-10)
+
+
+### Bug Fixes
+
+* Fix wynncraft join button appearing twice ([#1602](https://github.com/Wynntils/Artemis/issues/1602)) ([d075186](https://github.com/Wynntils/Artemis/commit/d07518667b41b48c08459b71bece1bca064bd14a))
+
 ## [0.0.3-alpha.74](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.73...v0.0.3-alpha.74) (2023-06-08)
 
 
 ### New Features
 
 * Add SMALL_STARS setting to GuildRankReplacementFeature ([#1600](https://github.com/Wynntils/Artemis/issues/1600)) ([2bff0ba](https://github.com/Wynntils/Artemis/commit/2bff0ba53f0f74f440933e0115915f837c34eef3))
+
+
+### Miscellaneous Chores
+
+* **release:** v0.0.3-alpha.74 [skip ci] ([ce53ba9](https://github.com/Wynntils/Artemis/commit/ce53ba9f016b8e62f5305e8c993fd469b0703249))
 
 ## [0.0.3-alpha.73](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.72...v0.0.3-alpha.73) (2023-06-08)
 
@@ -40,16 +52,4 @@
 ### Miscellaneous Chores
 
 * **release:** v0.0.3-alpha.71 [skip ci] ([38b3c45](https://github.com/Wynntils/Artemis/commit/38b3c453b7f98b97a992774cc9edcb12f16e4195))
-
-## [0.0.3-alpha.70](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.69...v0.0.3-alpha.70) (2023-06-07)
-
-
-### Bug Fixes
-
-* Fix bulk sell button in TM ([#1597](https://github.com/Wynntils/Artemis/issues/1597)) ([7375e82](https://github.com/Wynntils/Artemis/commit/7375e82dfd2300a38de84a8b408a94c838d23a03))
-
-
-### Miscellaneous Chores
-
-* **release:** v0.0.3-alpha.70 [skip ci] ([6425971](https://github.com/Wynntils/Artemis/commit/6425971a5c802dcb7bf226eff79ab1992cc5f057))
 
