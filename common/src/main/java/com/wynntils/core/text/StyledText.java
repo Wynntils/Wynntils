@@ -559,6 +559,14 @@ public final class StyledText implements Iterable<StyledTextPart> {
         });
     }
 
+    public boolean equalsString(String string) {
+        return equalsString(string, PartStyle.StyleType.DEFAULT);
+    }
+
+    public boolean equalsString(String string, PartStyle.StyleType styleType) {
+        return getString(styleType).equals(string);
+    }
+
     public StyledTextPart getFirstPart() {
         if (parts.isEmpty()) {
             return null;
