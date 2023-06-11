@@ -124,7 +124,7 @@ public class RangeVisualizerFeature extends Feature {
         // Offset the radius slightly so multiple circles can be shown for each player
         // Only a few major IDs can actually be applied at the same time, but we make this general
         List<Pair<CustomColor, Float>> circles = validGear.stream()
-                .flatMap(gearInfo -> gearInfo.fixedStats().majorIds().stream().map(majorId -> switch (majorId.name()) {
+                .flatMap(gearInfo -> gearInfo.fixedStats().majorIds().stream().map(majorId -> switch (majorId.id()) {
                     case "TAUNT" -> Pair.of(CommonColors.ORANGE.withAlpha(TRANSPARENCY), 12f);
                     case "HERO" -> Pair.of(CommonColors.WHITE.withAlpha(TRANSPARENCY), 8f);
                     case "ALTRUISM" -> Pair.of(CommonColors.PINK.withAlpha(TRANSPARENCY), 8.1f);
