@@ -1,9 +1,22 @@
+## [0.0.3-alpha.77](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.76...v0.0.3-alpha.77) (2023-06-11)
+
+
+### Bug Fixes
+
+* disable xp overlay when player hits max level ([#1605](https://github.com/Wynntils/Artemis/issues/1605)) ([095e78d](https://github.com/Wynntils/Artemis/commit/095e78d67354cfe22b9bfe25fb30419fc450d1ec))
+* Major id visualizer does not work ([#1604](https://github.com/Wynntils/Artemis/issues/1604)) ([acc2346](https://github.com/Wynntils/Artemis/commit/acc2346b1e5ff3d9cd6588ac9aa09a9bd0fd6f04))
+
 ## [0.0.3-alpha.76](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.75...v0.0.3-alpha.76) (2023-06-10)
 
 
 ### New Features
 
 * Add hybrid mode to guild map ([#1603](https://github.com/Wynntils/Artemis/issues/1603)) ([e9bf36d](https://github.com/Wynntils/Artemis/commit/e9bf36ddd4b5e338b42836ed1d08a1f4c01590b9))
+
+
+### Miscellaneous Chores
+
+* **release:** v0.0.3-alpha.76 [skip ci] ([12ba4ed](https://github.com/Wynntils/Artemis/commit/12ba4ed62ac1ec3f9850a8f18645d335843fd342))
 
 ## [0.0.3-alpha.75](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.74...v0.0.3-alpha.75) (2023-06-10)
 
@@ -40,16 +53,4 @@
 ### Miscellaneous Chores
 
 * **release:** v0.0.3-alpha.73 [skip ci] ([6377b09](https://github.com/Wynntils/Artemis/commit/6377b09d0e2e0f2cdc499ea900629c2bc3c8255d))
-
-## [0.0.3-alpha.72](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.71...v0.0.3-alpha.72) (2023-06-07)
-
-
-### Bug Fixes
-
-* Fix GuildRankReplacementFeature replacing info messages ([#1598](https://github.com/Wynntils/Artemis/issues/1598)) ([1ee4911](https://github.com/Wynntils/Artemis/commit/1ee4911a15c1542e321066f0b3785c69be699699))
-
-
-### Miscellaneous Chores
-
-* **release:** v0.0.3-alpha.72 [skip ci] ([3027f2c](https://github.com/Wynntils/Artemis/commit/3027f2c12af6d7991c42f3823185ffb69812e0ea))
 
