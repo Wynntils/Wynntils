@@ -1,9 +1,21 @@
+## [0.0.3-alpha.81](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.80...v0.0.3-alpha.81) (2023-06-11)
+
+
+### Bug Fixes
+
+* Fix TradeMarketBulkSellFeature not working with materials (+ full feature refactor) ([#1609](https://github.com/Wynntils/Artemis/issues/1609)) ([2fe7e1c](https://github.com/Wynntils/Artemis/commit/2fe7e1cdfff0869d07f52b5b97d03dadcc769d66))
+
 ## [0.0.3-alpha.80](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.79...v0.0.3-alpha.80) (2023-06-11)
 
 
 ### Bug Fixes
 
 * Fix guild message matcher for chat tabs + timestamp feature interacting weirdly with other features ([#1608](https://github.com/Wynntils/Artemis/issues/1608)) ([a79005b](https://github.com/Wynntils/Artemis/commit/a79005bc01f1471471b5d2669cbb365e9906c8a9))
+
+
+### Miscellaneous Chores
+
+* **release:** v0.0.3-alpha.80 [skip ci] ([1afe2b8](https://github.com/Wynntils/Artemis/commit/1afe2b80159f75255bc3fd1067f6538865328751))
 
 ## [0.0.3-alpha.79](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.78...v0.0.3-alpha.79) (2023-06-11)
 
@@ -41,16 +53,4 @@
 ### Miscellaneous Chores
 
 * **release:** v0.0.3-alpha.77 [skip ci] ([9a93ec3](https://github.com/Wynntils/Artemis/commit/9a93ec32218aa82ed59d446b78b8237daeb7a0b0))
-
-## [0.0.3-alpha.76](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.75...v0.0.3-alpha.76) (2023-06-10)
-
-
-### New Features
-
-* Add hybrid mode to guild map ([#1603](https://github.com/Wynntils/Artemis/issues/1603)) ([e9bf36d](https://github.com/Wynntils/Artemis/commit/e9bf36ddd4b5e338b42836ed1d08a1f4c01590b9))
-
-
-### Miscellaneous Chores
-
-* **release:** v0.0.3-alpha.76 [skip ci] ([12ba4ed](https://github.com/Wynntils/Artemis/commit/12ba4ed62ac1ec3f9850a8f18645d335843fd342))
 
