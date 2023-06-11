@@ -33,14 +33,14 @@ public class GuildRankReplacementFeature extends Feature {
     @RegisterConfig
     public final Config<RankType> rankType = new Config<>(RankType.NAME);
 
-    // Test suite: hhttps://regexr.com/7f8kh
+    // Test suite: https://regexr.com/7f8kh
     private static final Pattern GUILD_MESSAGE_PATTERN =
             Pattern.compile("§3\\[(?:§b)?★{0,5}(?:§3)?(?:§o)?.{1,16}(?:§r)?(?:§3)?\\]");
 
     // Test suite: https://regexr.com/7e66m
     private static final Pattern RECRUIT_USERNAME_PATTERN = Pattern.compile("§3\\[(.{1,16})");
 
-    @SubscribeEvent(priority = EventPriority.HIGH)
+    @SubscribeEvent(priority = EventPriority.HIGHEST)
     public void onChatMessageReceived(ChatMessageReceivedEvent e) {
         if (e.getRecipientType() != RecipientType.GUILD) return;
 
