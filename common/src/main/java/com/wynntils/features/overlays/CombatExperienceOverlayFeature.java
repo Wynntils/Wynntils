@@ -4,6 +4,7 @@
  */
 package com.wynntils.features.overlays;
 
+import com.wynntils.core.components.Models;
 import com.wynntils.core.config.Category;
 import com.wynntils.core.config.Config;
 import com.wynntils.core.config.ConfigCategory;
