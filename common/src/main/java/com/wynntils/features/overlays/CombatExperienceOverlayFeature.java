@@ -4,6 +4,7 @@
  */
 package com.wynntils.features.overlays;
 
+import com.wynntils.core.components.Models;
 import com.wynntils.core.config.Category;
 import com.wynntils.core.config.Config;
 import com.wynntils.core.config.ConfigCategory;
@@ -44,7 +45,7 @@ public class CombatExperienceOverlayFeature extends Feature {
         @Override
         public String getTemplate() {
             String xpFormat = useShortFormat.get() ? "format_capped(capped_xp)" : "capped_xp";
-            return "&2[&a{" + xpFormat + "} &6({xp_pct:1}%)&2]";
+            return Models.CombatXp.getCombatLevel().isAtCap() ? "" : "&2[&a{" + xpFormat + "} &6({xp_pct:1}%)&2]";
         }
 
         @Override
