@@ -1,9 +1,21 @@
+## [0.0.3-alpha.80](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.79...v0.0.3-alpha.80) (2023-06-11)
+
+
+### Bug Fixes
+
+* Fix guild message matcher for chat tabs + timestamp feature interacting weirdly with other features ([#1608](https://github.com/Wynntils/Artemis/issues/1608)) ([a79005b](https://github.com/Wynntils/Artemis/commit/a79005bc01f1471471b5d2669cbb365e9906c8a9))
+
 ## [0.0.3-alpha.79](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.78...v0.0.3-alpha.79) (2023-06-11)
 
 
 ### Bug Fixes
 
 * Fix GuildRankReplacementFeature not replacing every name correctly ([#1607](https://github.com/Wynntils/Artemis/issues/1607)) ([7a77a21](https://github.com/Wynntils/Artemis/commit/7a77a21d728e533ef2e5c6eb097ff62e130f5df0))
+
+
+### Miscellaneous Chores
+
+* **release:** v0.0.3-alpha.79 [skip ci] ([d7400a9](https://github.com/Wynntils/Artemis/commit/d7400a908710e0368644e275d6617d9b6d3bbc5c))
 
 ## [0.0.3-alpha.78](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.77...v0.0.3-alpha.78) (2023-06-11)
 
@@ -41,16 +53,4 @@
 ### Miscellaneous Chores
 
 * **release:** v0.0.3-alpha.76 [skip ci] ([12ba4ed](https://github.com/Wynntils/Artemis/commit/12ba4ed62ac1ec3f9850a8f18645d335843fd342))
-
-## [0.0.3-alpha.75](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.74...v0.0.3-alpha.75) (2023-06-10)
-
-
-### Bug Fixes
-
-* Fix wynncraft join button appearing twice ([#1602](https://github.com/Wynntils/Artemis/issues/1602)) ([d075186](https://github.com/Wynntils/Artemis/commit/d07518667b41b48c08459b71bece1bca064bd14a))
-
-
-### Miscellaneous Chores
-
-* **release:** v0.0.3-alpha.75 [skip ci] ([e8738a8](https://github.com/Wynntils/Artemis/commit/e8738a8bfa4a1a7c83ba39bc764676dd0a6c0c09))
 
