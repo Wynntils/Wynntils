@@ -1,9 +1,21 @@
+## [0.0.3-alpha.79](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.78...v0.0.3-alpha.79) (2023-06-11)
+
+
+### Bug Fixes
+
+* Fix GuildRankReplacementFeature not replacing every name correctly ([#1607](https://github.com/Wynntils/Artemis/issues/1607)) ([7a77a21](https://github.com/Wynntils/Artemis/commit/7a77a21d728e533ef2e5c6eb097ff62e130f5df0))
+
 ## [0.0.3-alpha.78](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.77...v0.0.3-alpha.78) (2023-06-11)
 
 
 ### Bug Fixes
 
 * Parse item levels correctly ([#1606](https://github.com/Wynntils/Artemis/issues/1606)) ([f0ef3ae](https://github.com/Wynntils/Artemis/commit/f0ef3ae5a174d466f0815e2ef21398640c7bcc66))
+
+
+### Miscellaneous Chores
+
+* **release:** v0.0.3-alpha.78 [skip ci] ([9002a7e](https://github.com/Wynntils/Artemis/commit/9002a7e6a6867bb2cb41a0e55673bd082ed3e0ff))
 
 ## [0.0.3-alpha.77](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.76...v0.0.3-alpha.77) (2023-06-11)
 
@@ -41,16 +53,4 @@
 ### Miscellaneous Chores
 
 * **release:** v0.0.3-alpha.75 [skip ci] ([e8738a8](https://github.com/Wynntils/Artemis/commit/e8738a8bfa4a1a7c83ba39bc764676dd0a6c0c09))
-
-## [0.0.3-alpha.74](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.73...v0.0.3-alpha.74) (2023-06-08)
-
-
-### New Features
-
-* Add SMALL_STARS setting to GuildRankReplacementFeature ([#1600](https://github.com/Wynntils/Artemis/issues/1600)) ([2bff0ba](https://github.com/Wynntils/Artemis/commit/2bff0ba53f0f74f440933e0115915f837c34eef3))
-
-
-### Miscellaneous Chores
-
-* **release:** v0.0.3-alpha.74 [skip ci] ([ce53ba9](https://github.com/Wynntils/Artemis/commit/ce53ba9f016b8e62f5305e8c993fd469b0703249))
 
