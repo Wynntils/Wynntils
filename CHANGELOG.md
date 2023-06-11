@@ -1,9 +1,21 @@
+## [0.0.3-alpha.82](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.81...v0.0.3-alpha.82) (2023-06-11)
+
+
+### Bug Fixes
+
+* Fix mana bank parsing ([#1610](https://github.com/Wynntils/Artemis/issues/1610)) ([b57dfa1](https://github.com/Wynntils/Artemis/commit/b57dfa163fed1ba0f38704f0952ce4d1575ab588))
+
 ## [0.0.3-alpha.81](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.80...v0.0.3-alpha.81) (2023-06-11)
 
 
 ### Bug Fixes
 
 * Fix TradeMarketBulkSellFeature not working with materials (+ full feature refactor) ([#1609](https://github.com/Wynntils/Artemis/issues/1609)) ([2fe7e1c](https://github.com/Wynntils/Artemis/commit/2fe7e1cdfff0869d07f52b5b97d03dadcc769d66))
+
+
+### Miscellaneous Chores
+
+* **release:** v0.0.3-alpha.81 [skip ci] ([d1f9bfa](https://github.com/Wynntils/Artemis/commit/d1f9bfa03e47751e1dadff1304cec1f48e0736ca))
 
 ## [0.0.3-alpha.80](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.79...v0.0.3-alpha.80) (2023-06-11)
 
@@ -40,17 +52,4 @@
 ### Miscellaneous Chores
 
 * **release:** v0.0.3-alpha.78 [skip ci] ([9002a7e](https://github.com/Wynntils/Artemis/commit/9002a7e6a6867bb2cb41a0e55673bd082ed3e0ff))
-
-## [0.0.3-alpha.77](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.76...v0.0.3-alpha.77) (2023-06-11)
-
-
-### Bug Fixes
-
-* disable xp overlay when player hits max level ([#1605](https://github.com/Wynntils/Artemis/issues/1605)) ([095e78d](https://github.com/Wynntils/Artemis/commit/095e78d67354cfe22b9bfe25fb30419fc450d1ec))
-* Major id visualizer does not work ([#1604](https://github.com/Wynntils/Artemis/issues/1604)) ([acc2346](https://github.com/Wynntils/Artemis/commit/acc2346b1e5ff3d9cd6588ac9aa09a9bd0fd6f04))
-
-
-### Miscellaneous Chores
-
-* **release:** v0.0.3-alpha.77 [skip ci] ([9a93ec3](https://github.com/Wynntils/Artemis/commit/9a93ec32218aa82ed59d446b78b8237daeb7a0b0))
 
