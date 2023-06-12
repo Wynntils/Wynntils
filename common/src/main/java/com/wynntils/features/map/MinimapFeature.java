@@ -59,16 +59,16 @@ public class MinimapFeature extends Feature {
     private final Overlay coordinatesOverlay = new CoordinateOverlay();
 
     public static class MinimapOverlay extends Overlay {
-        private static final int DEFAULT_SIZE = 150;
+        private static final int DEFAULT_SIZE = 130;
 
         @RegisterConfig
         public final Config<Float> scale = new Config<>(1f);
 
         @RegisterConfig
-        public final Config<Float> poiScale = new Config<>(0.8f);
+        public final Config<Float> poiScale = new Config<>(0.6f);
 
         @RegisterConfig
-        public final Config<Float> pointerScale = new Config<>(1f);
+        public final Config<Float> pointerScale = new Config<>(0.8f);
 
         @RegisterConfig
         public final Config<Boolean> followPlayerRotation = new Config<>(true);
@@ -77,7 +77,7 @@ public class MinimapFeature extends Feature {
         public final Config<CustomColor> pointerColor = new Config<>(new CustomColor(1f, 1f, 1f, 1f));
 
         @RegisterConfig
-        public final Config<MapMaskType> maskType = new Config<>(MapMaskType.CIRCLE);
+        public final Config<MapMaskType> maskType = new Config<>(MapMaskType.RECTANGULAR);
 
         @RegisterConfig
         public final Config<MapBorderType> borderType = new Config<>(MapBorderType.WYNN);
@@ -95,12 +95,12 @@ public class MinimapFeature extends Feature {
         public final Config<Boolean> renderRemotePartyPlayers = new Config<>(true);
 
         @RegisterConfig
-        public final Config<Float> remotePlayersHeadScale = new Config<>(0.6f);
+        public final Config<Float> remotePlayersHeadScale = new Config<>(0.4f);
 
         protected MinimapOverlay() {
             super(
                     new OverlayPosition(
-                            5,
+                            5.25f,
                             5,
                             VerticalAlignment.TOP,
                             HorizontalAlignment.LEFT,
@@ -506,12 +506,12 @@ public class MinimapFeature extends Feature {
         protected CoordinateOverlay() {
             super(
                     new OverlayPosition(
-                            160,
-                            20,
+                            136,
+                            6,
                             VerticalAlignment.TOP,
                             HorizontalAlignment.LEFT,
                             OverlayPosition.AnchorSection.TOP_LEFT),
-                    new OverlaySize(120, 20),
+                    new OverlaySize(130, 20),
                     HorizontalAlignment.CENTER,
                     VerticalAlignment.MIDDLE);
         }
