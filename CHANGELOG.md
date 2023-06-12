@@ -1,9 +1,21 @@
+## [0.0.3-alpha.83](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.82...v0.0.3-alpha.83) (2023-06-12)
+
+
+### Bug Fixes
+
+* Fix randomly occurring quest parsing issues ([#1611](https://github.com/Wynntils/Artemis/issues/1611)) ([ccc96da](https://github.com/Wynntils/Artemis/commit/ccc96da82d6b183f0d70477c17a327fc0d9055ee))
+
 ## [0.0.3-alpha.82](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.81...v0.0.3-alpha.82) (2023-06-11)
 
 
 ### Bug Fixes
 
 * Fix mana bank parsing ([#1610](https://github.com/Wynntils/Artemis/issues/1610)) ([b57dfa1](https://github.com/Wynntils/Artemis/commit/b57dfa163fed1ba0f38704f0952ce4d1575ab588))
+
+
+### Miscellaneous Chores
+
+* **release:** v0.0.3-alpha.82 [skip ci] ([15649b3](https://github.com/Wynntils/Artemis/commit/15649b32857614e4d123a031bd818155af06ce6a))
 
 ## [0.0.3-alpha.81](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.80...v0.0.3-alpha.81) (2023-06-11)
 
@@ -40,16 +52,4 @@
 ### Miscellaneous Chores
 
 * **release:** v0.0.3-alpha.79 [skip ci] ([d7400a9](https://github.com/Wynntils/Artemis/commit/d7400a908710e0368644e275d6617d9b6d3bbc5c))
-
-## [0.0.3-alpha.78](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.77...v0.0.3-alpha.78) (2023-06-11)
-
-
-### Bug Fixes
-
-* Parse item levels correctly ([#1606](https://github.com/Wynntils/Artemis/issues/1606)) ([f0ef3ae](https://github.com/Wynntils/Artemis/commit/f0ef3ae5a174d466f0815e2ef21398640c7bcc66))
-
-
-### Miscellaneous Chores
-
-* **release:** v0.0.3-alpha.78 [skip ci] ([9002a7e](https://github.com/Wynntils/Artemis/commit/9002a7e6a6867bb2cb41a0e55673bd082ed3e0ff))
 
