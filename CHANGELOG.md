@@ -1,9 +1,21 @@
+## [0.0.3-alpha.87](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.86...v0.0.3-alpha.87) (2023-06-13)
+
+
+### New Features
+
+* Add MaterialDryStreak function ([#1616](https://github.com/Wynntils/Artemis/issues/1616)) ([b4b9578](https://github.com/Wynntils/Artemis/commit/b4b9578f24093d9e9612e504b49c914e081d2109))
+
 ## [0.0.3-alpha.86](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.85...v0.0.3-alpha.86) (2023-06-13)
 
 
 ### New Features
 
 * Add LastHarvest* profession functions ([#1615](https://github.com/Wynntils/Artemis/issues/1615)) ([3dee2d3](https://github.com/Wynntils/Artemis/commit/3dee2d31c5e948a1b7b8869b54f02f41b0a844c9))
+
+
+### Miscellaneous Chores
+
+* **release:** v0.0.3-alpha.86 [skip ci] ([7f42e9b](https://github.com/Wynntils/Artemis/commit/7f42e9be52c48d73eea83d9e501ae73d4efef823))
 
 ## [0.0.3-alpha.85](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.84...v0.0.3-alpha.85) (2023-06-13)
 
@@ -40,16 +52,4 @@
 ### Miscellaneous Chores
 
 * **release:** v0.0.3-alpha.83 [skip ci] ([a4cebb3](https://github.com/Wynntils/Artemis/commit/a4cebb3a1f7debbb68ca01ed24999e9ac8333ade))
-
-## [0.0.3-alpha.82](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.81...v0.0.3-alpha.82) (2023-06-11)
-
-
-### Bug Fixes
-
-* Fix mana bank parsing ([#1610](https://github.com/Wynntils/Artemis/issues/1610)) ([b57dfa1](https://github.com/Wynntils/Artemis/commit/b57dfa163fed1ba0f38704f0952ce4d1575ab588))
-
-
-### Miscellaneous Chores
-
-* **release:** v0.0.3-alpha.82 [skip ci] ([15649b3](https://github.com/Wynntils/Artemis/commit/15649b32857614e4d123a031bd818155af06ce6a))
 
