@@ -1,9 +1,21 @@
+## [0.0.3-alpha.85](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.84...v0.0.3-alpha.85) (2023-06-13)
+
+
+### New Features
+
+* Enhance Default Settings ([#1612](https://github.com/Wynntils/Artemis/issues/1612)) ([9172358](https://github.com/Wynntils/Artemis/commit/91723582e3179ce6f9105f4d5e9752d4dd505dc1))
+
 ## [0.0.3-alpha.84](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.83...v0.0.3-alpha.84) (2023-06-13)
 
 
 ### Bug Fixes
 
 * Add missing info in Coordinates setting ([#1613](https://github.com/Wynntils/Artemis/issues/1613)) ([6ba2994](https://github.com/Wynntils/Artemis/commit/6ba29947ccbac039c65dbbf1fc51e5480963ae70))
+
+
+### Miscellaneous Chores
+
+* **release:** v0.0.3-alpha.84 [skip ci] ([0a04ba1](https://github.com/Wynntils/Artemis/commit/0a04ba10de94b2a78022c5e54edbe5e92dc812cd))
 
 ## [0.0.3-alpha.83](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.82...v0.0.3-alpha.83) (2023-06-12)
 
@@ -40,16 +52,4 @@
 ### Miscellaneous Chores
 
 * **release:** v0.0.3-alpha.81 [skip ci] ([d1f9bfa](https://github.com/Wynntils/Artemis/commit/d1f9bfa03e47751e1dadff1304cec1f48e0736ca))
-
-## [0.0.3-alpha.80](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.79...v0.0.3-alpha.80) (2023-06-11)
-
-
-### Bug Fixes
-
-* Fix guild message matcher for chat tabs + timestamp feature interacting weirdly with other features ([#1608](https://github.com/Wynntils/Artemis/issues/1608)) ([a79005b](https://github.com/Wynntils/Artemis/commit/a79005bc01f1471471b5d2669cbb365e9906c8a9))
-
-
-### Miscellaneous Chores
-
-* **release:** v0.0.3-alpha.80 [skip ci] ([1afe2b8](https://github.com/Wynntils/Artemis/commit/1afe2b80159f75255bc3fd1067f6538865328751))
 
