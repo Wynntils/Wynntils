@@ -500,6 +500,12 @@ public class MinimapFeature extends Feature {
     }
 
     public static class CoordinateOverlay extends TextOverlay {
+        private static final String TEMPLATE = "{x(my_loc):0} {y(my_loc):0} {z(my_loc):0}";
+        private static final String TEMPLATE_COLORED = "&c{x(my_loc):0} &a{y(my_loc):0} &9{z(my_loc):0}";
+
+        @RegisterConfig
+        public final Config<Boolean> shouldBeColored = new Config<>(false);
+
         @RegisterConfig
         public final Config<Boolean> shouldDisplayOriginal = new Config<>(false);
 
@@ -523,12 +529,12 @@ public class MinimapFeature extends Feature {
 
         @Override
         public String getTemplate() {
-            return "{x(my_loc):0} {y(my_loc):0} {z(my_loc):0}";
+            return this.shouldBeColored.get() ? TEMPLATE_COLORED : TEMPLATE;
         }
 
         @Override
         public String getPreviewTemplate() {
-            return "{x(my_loc):0} {y(my_loc):0} {z(my_loc):0}";
+            return this.shouldBeColored.get() ? TEMPLATE_COLORED : TEMPLATE;
         }
     }
 
