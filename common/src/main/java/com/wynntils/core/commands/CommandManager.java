@@ -13,7 +13,7 @@ import com.mojang.brigadier.suggestion.Suggestions;
 import com.mojang.brigadier.tree.CommandNode;
 import com.mojang.brigadier.tree.LiteralCommandNode;
 import com.mojang.brigadier.tree.RootCommandNode;
-import com.wynntils.commands.BombBellCommand;
+import com.wynntils.commands.BombCommand;
 import com.wynntils.commands.CompassCommand;
 import com.wynntils.commands.ConfigCommand;
 import com.wynntils.commands.FeatureCommand;
@@ -168,7 +168,7 @@ public final class CommandManager extends Manager {
     }
 
     private void registerAllCommands() {
-        registerCommand(new BombBellCommand());
+        registerCommand(new BombCommand());
         registerCommand(new CompassCommand());
         registerCommand(new ConfigCommand());
         registerCommand(new FeatureCommand());

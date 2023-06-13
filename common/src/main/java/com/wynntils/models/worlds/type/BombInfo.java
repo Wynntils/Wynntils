@@ -6,10 +6,10 @@ package com.wynntils.models.worlds.type;
 
 import java.util.concurrent.TimeUnit;
 
-public record BombInfo(String user, BombType bomb, String server, long startTime) {
+public record BombInfo(String user, BombType bomb, String server, long startTime, int length) {
     // mm:ss format
     public String getRemainingString() {
-        long millis = startTime + (bomb.getActiveMinutes() * 60000L) - System.currentTimeMillis();
+        long millis = startTime + getLength() - System.currentTimeMillis();
         return String.format(
                 "%02dm %02ds",
                 TimeUnit.MILLISECONDS.toMinutes(millis),
@@ -23,5 +23,13 @@ public record BombInfo(String user, BombType bomb, String server, long startTime
 
         // match user, bomb type, and server, ignoring time
         return user.equals(bombInfo.user()) && bomb == bombInfo.bomb() && server.equals(bombInfo.server());
+    }
+
+    public boolean isActive() {
+        return System.currentTimeMillis() < startTime + getLength();
+    }
+
+    public long getLength() {
+        return length * 60000L;
     }
 }

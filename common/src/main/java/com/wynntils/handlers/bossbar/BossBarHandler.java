@@ -18,6 +18,7 @@ import java.util.Optional;
 import java.util.UUID;
 import java.util.function.Consumer;
 import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import net.minecraft.client.gui.components.LerpingBossEvent;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.protocol.game.ClientboundBossEventPacket;
@@ -57,9 +58,10 @@ public class BossBarHandler extends Handler {
                 boolean darkenScreen,
                 boolean playMusic,
                 boolean createWorldFog) {
-
             Optional<Pair<TrackedBar, Matcher>> trackedBarOpt = knownBars.stream()
-                    .map(bar -> new Pair<>(bar, StyledText.fromComponent(name).getMatcher(bar.pattern)))
+                    .flatMap(trackedBar -> trackedBar.patterns.stream().map(pattern -> new Pair<>(trackedBar, pattern)))
+                    .map(pair ->
+                            new Pair<>(pair.a(), StyledText.fromComponent(name).getMatcher(pair.b())))
                     .filter(pair -> pair.b().matches())
                     .findFirst();
             if (trackedBarOpt.isEmpty()) return;
@@ -119,13 +121,18 @@ public class BossBarHandler extends Handler {
         @Override
         public void updateName(UUID id, Component name) {
             handleBarUpdate(id, trackedBar -> {
-                Matcher matcher = StyledText.fromComponent(name).getMatcher(trackedBar.pattern);
-                if (!matcher.matches()) {
-                    WynntilsMod.error("Failed to match already matched boss bar");
-                    return;
+                StyledText nameText = StyledText.fromComponent(name);
+
+                for (Pattern pattern : trackedBar.patterns) {
+                    Matcher matcher = nameText.getMatcher(pattern);
+                    if (matcher.matches()) {
+                        trackedBar.onUpdateName(matcher);
+                        return;
+                    }
                 }
 
-                trackedBar.onUpdateName(matcher);
+                WynntilsMod.error("Failed to match already matched boss bar");
+                return;
             });
         }
 

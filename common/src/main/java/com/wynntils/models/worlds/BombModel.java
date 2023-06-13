@@ -4,27 +4,39 @@
  */
 package com.wynntils.models.worlds;
 
+import com.wynntils.core.components.Handlers;
 import com.wynntils.core.components.Model;
 import com.wynntils.core.text.PartStyle;
+import com.wynntils.handlers.bossbar.TrackedBar;
 import com.wynntils.handlers.chat.event.ChatMessageReceivedEvent;
+import com.wynntils.models.worlds.bossbars.InfoBar;
+import com.wynntils.models.worlds.event.WorldStateEvent;
 import com.wynntils.models.worlds.type.BombInfo;
 import com.wynntils.models.worlds.type.BombType;
+import java.util.EnumMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.function.Predicate;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import net.minecraftforge.eventbus.api.EventPriority;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 
 public final class BombModel extends Model {
+    public static final TrackedBar InfoBar = new InfoBar();
+
     private static final Pattern BOMB_BELL_PATTERN =
             Pattern.compile("^\\[Bomb Bell\\] (?<user>.+) has thrown an? (?<bomb>.+) Bomb on (?<server>.+)$");
 
-    private static final Set<BombInfo> BOMB_BELLS = ConcurrentHashMap.newKeySet();
+    private static final Map<BombType, BombInfo> CURRENT_SERVER_BOMBS = new EnumMap<>(BombType.class);
 
-    public BombModel() {
-        super(List.of());
+    private static final ActiveBombContainer BOMBS = new ActiveBombContainer();
+
+    public BombModel(WorldStateModel worldState) {
+        super(List.of(worldState));
+        Handlers.BossBar.registerBar(InfoBar);
     }
 
     @SubscribeEvent(priority = EventPriority.HIGHEST)
@@ -38,17 +50,59 @@ public final class BombModel extends Model {
             // Better to do a bit of processing and clean up the set than leaking memory
             removeOldTimers();
 
-            BOMB_BELLS.add(new BombInfo(user, BombType.fromString(bomb), server, System.currentTimeMillis()));
+            BombType bombType = BombType.fromString(bomb);
+            if (bombType == null) return;
+
+            BOMBS.add(new BombInfo(user, bombType, server, System.currentTimeMillis(), bombType.getActiveMinutes()));
         }
     }
 
+    @SubscribeEvent
+    public void onWorldStateChange(WorldStateEvent event) {
+        CURRENT_SERVER_BOMBS.clear();
+    }
+
+    public void addBombInfo(BombType bombType, BombInfo bombInfo) {
+        BombInfo old = CURRENT_SERVER_BOMBS.put(bombType, bombInfo);
+
+        // Only add to the set if it's not already there
+        BOMBS.add(bombInfo);
+    }
+
+    public boolean isBombActive(BombType bombType) {
+        return CURRENT_SERVER_BOMBS.containsKey(bombType)
+                && CURRENT_SERVER_BOMBS.get(bombType).isActive();
+    }
+
     private void removeOldTimers() {
-        BOMB_BELLS.removeIf(bombInfo ->
-                bombInfo.startTime() + (bombInfo.bomb().getActiveMinutes() * 60000L) < System.currentTimeMillis());
+        BOMBS.removeIf(bombInfo -> !bombInfo.isActive());
     }
 
     public Set<BombInfo> getBombBells() {
         removeOldTimers();
-        return BOMB_BELLS;
+        return BOMBS.asSet();
+    }
+
+    private static final class ActiveBombContainer {
+        private Map<BombKey, BombInfo> bombs = new ConcurrentHashMap<>();
+
+        public void add(BombInfo bombInfo) {
+            BombKey key = new BombKey(bombInfo.server(), bombInfo.bomb());
+
+            // Ensure no duplicate bombs are added
+            if (bombs.containsKey(key) && bombs.get(key).isActive()) return;
+
+            bombs.put(key, bombInfo);
+        }
+
+        public Set<BombInfo> asSet() {
+            return Set.copyOf(bombs.values());
+        }
+
+        public void removeIf(Predicate<BombInfo> predicate) {
+            bombs.entrySet().removeIf(entry -> predicate.test(entry.getValue()));
+        }
+
+        private record BombKey(String server, BombType type) {}
     }
 }

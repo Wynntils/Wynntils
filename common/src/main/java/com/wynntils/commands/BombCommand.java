@@ -14,6 +14,7 @@ import com.wynntils.models.worlds.type.BombInfo;
 import com.wynntils.models.worlds.type.BombType;
 import java.util.Arrays;
 import java.util.Comparator;
+import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 import net.minecraft.ChatFormatting;
@@ -23,13 +24,18 @@ import net.minecraft.commands.SharedSuggestionProvider;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
 
-public class BombBellCommand extends Command {
+public class BombCommand extends Command {
     private static final SuggestionProvider<CommandSourceStack> BOMB_TYPE_SUGGESTION_PROVIDER = (context, builder) ->
             SharedSuggestionProvider.suggest(Arrays.stream(BombType.values()).map(Enum::name), builder);
 
     @Override
     public String getCommandName() {
-        return "bombbell";
+        return "bomb";
+    }
+
+    @Override
+    public List<String> getAliases() {
+        return List.of("bombbell");
     }
 
     @Override
@@ -81,14 +87,15 @@ public class BombBellCommand extends Command {
     }
 
     private static MutableComponent getBombListComponent(Set<BombInfo> bombBells) {
-        MutableComponent response = Component.literal("Bomb Bells: ").withStyle(ChatFormatting.GOLD);
+        MutableComponent response = Component.literal("Bombs: ").withStyle(ChatFormatting.GOLD);
 
         if (bombBells.isEmpty()) {
             response.append(Component.literal(
-                                    "There are no active bombs at the moment! This might be because you do not have the ")
+                                    "There are no active bombs at the moment! This might be because there are no bombs currently, or you do not have the ")
                             .withStyle(ChatFormatting.RED))
                     .append(Component.literal("CHAMPION").withStyle(ChatFormatting.YELLOW))
-                    .append(Component.literal(" rank on Wynncraft, which is necessary to use this feature.")
+                    .append(Component.literal(
+                                    " rank on Wynncraft, which is necessary to use recieve bomb alerts from other servers.")
                             .withStyle(ChatFormatting.RED));
             return response;
         }
