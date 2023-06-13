@@ -7,19 +7,25 @@ package com.wynntils.handlers.bossbar;
 import com.wynntils.handlers.bossbar.type.BossBarProgress;
 import com.wynntils.mc.mixin.accessors.LerpingBossEventAccessor;
 import com.wynntils.utils.type.CappedValue;
+import java.util.Collections;
+import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import net.minecraft.client.gui.components.LerpingBossEvent;
 
 public class TrackedBar {
-    public final Pattern pattern;
+    public final List<Pattern> patterns;
 
     private boolean rendered = true;
     private LerpingBossEvent event = null;
     private CappedValue value = CappedValue.EMPTY;
 
     public TrackedBar(Pattern pattern) {
-        this.pattern = pattern;
+        this.patterns = List.of(pattern);
+    }
+
+    public TrackedBar(List<Pattern> patterns) {
+        this.patterns = Collections.unmodifiableList(patterns);
     }
 
     public void onUpdateName(Matcher match) {}
