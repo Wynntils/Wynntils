@@ -7,20 +7,21 @@ package com.wynntils.functions;
 import com.wynntils.core.components.Models;
 import com.wynntils.core.functions.Function;
 import com.wynntils.core.functions.arguments.FunctionArguments;
+import com.wynntils.models.profession.type.HarvestInfo;
 import com.wynntils.models.profession.type.ProfessionType;
 import com.wynntils.utils.StringUtils;
 import java.util.List;
+import java.util.Optional;
 
 public class ProfessionFunctions {
-
     public static class ProfessionLevelFunction extends Function<Integer> {
         @Override
         public Integer getValue(FunctionArguments arguments) {
-            ProfessionType pt = ProfessionType.fromString(
+            ProfessionType professionType = ProfessionType.fromString(
                     arguments.getArgument("profession").getStringValue());
-            if (pt == null) return -1;
+            if (professionType == null) return -1;
 
-            return Models.Profession.getLevel(pt);
+            return Models.Profession.getLevel(professionType);
         }
 
         @Override
@@ -38,11 +39,11 @@ public class ProfessionFunctions {
     public static class ProfessionPercentageFunction extends Function<Double> {
         @Override
         public Double getValue(FunctionArguments arguments) {
-            ProfessionType pt = ProfessionType.fromString(
+            ProfessionType professionType = ProfessionType.fromString(
                     arguments.getArgument("profession").getStringValue());
-            if (pt == null) return -1.0;
+            if (professionType == null) return -1.0;
 
-            return Models.Profession.getProgress(pt);
+            return Models.Profession.getProgress(professionType);
         }
 
         @Override
@@ -60,12 +61,11 @@ public class ProfessionFunctions {
     public static class ProfessionXpPerMinuteRawFunction extends Function<Integer> {
         @Override
         public Integer getValue(FunctionArguments arguments) {
-
-            ProfessionType pt = ProfessionType.fromString(
+            ProfessionType professionType = ProfessionType.fromString(
                     arguments.getArgument("profession").getStringValue());
-            if (pt == null) return -1;
+            if (professionType == null) return -1;
 
-            return (int) Models.Profession.getRawXpGainInLastMinute().get(pt).stream()
+            return (int) Models.Profession.getRawXpGainInLastMinute().get(professionType).stream()
                     .mapToDouble(Float::doubleValue)
                     .sum();
         }
@@ -85,14 +85,14 @@ public class ProfessionFunctions {
     public static class ProfessionXpPerMinuteFunction extends Function<String> {
         @Override
         public String getValue(FunctionArguments arguments) {
-
-            ProfessionType pt = ProfessionType.fromString(
+            ProfessionType professionType = ProfessionType.fromString(
                     arguments.getArgument("profession").getStringValue());
-            if (pt == null) return "Invalid profession";
+            if (professionType == null) return "Invalid profession";
 
-            return StringUtils.integerToShortString((int) Models.Profession.getRawXpGainInLastMinute().get(pt).stream()
-                    .mapToDouble(Float::doubleValue)
-                    .sum());
+            return StringUtils.integerToShortString(
+                    (int) Models.Profession.getRawXpGainInLastMinute().get(professionType).stream()
+                            .mapToDouble(Float::doubleValue)
+                            .sum());
         }
 
         @Override
@@ -104,6 +104,66 @@ public class ProfessionFunctions {
         @Override
         public List<String> getAliases() {
             return List.of("prof_xpm");
+        }
+    }
+
+    public static class LastHarvestResourceTypeFunction extends Function<String> {
+        @Override
+        public String getValue(FunctionArguments arguments) {
+            Optional<HarvestInfo> lastHarvest = Models.Profession.getLastHarvest();
+
+            if (lastHarvest.isEmpty()) return null;
+
+            return lastHarvest.get().materialProfile().getResourceType().name();
+        }
+    }
+
+    public static class LastHarvestMaterialTypeFunction extends Function<String> {
+        @Override
+        public String getValue(FunctionArguments arguments) {
+            Optional<HarvestInfo> lastHarvest = Models.Profession.getLastHarvest();
+
+            if (lastHarvest.isEmpty()) return null;
+
+            return lastHarvest
+                    .get()
+                    .materialProfile()
+                    .getResourceType()
+                    .getMaterialType()
+                    .name();
+        }
+    }
+
+    public static class LastHarvestMaterialNameFunction extends Function<String> {
+        @Override
+        public String getValue(FunctionArguments arguments) {
+            Optional<HarvestInfo> lastHarvest = Models.Profession.getLastHarvest();
+
+            if (lastHarvest.isEmpty()) return null;
+
+            return lastHarvest.get().materialProfile().getSourceMaterial().name();
+        }
+    }
+
+    public static class LastHarvestMaterialLevelFunction extends Function<Integer> {
+        @Override
+        public Integer getValue(FunctionArguments arguments) {
+            Optional<HarvestInfo> lastHarvest = Models.Profession.getLastHarvest();
+
+            if (lastHarvest.isEmpty()) return null;
+
+            return lastHarvest.get().materialProfile().getSourceMaterial().level();
+        }
+    }
+
+    public static class LastHarvestMaterialTierFunction extends Function<Integer> {
+        @Override
+        public Integer getValue(FunctionArguments arguments) {
+            Optional<HarvestInfo> lastHarvest = Models.Profession.getLastHarvest();
+
+            if (lastHarvest.isEmpty()) return null;
+
+            return lastHarvest.get().materialProfile().getTier();
         }
     }
 }
