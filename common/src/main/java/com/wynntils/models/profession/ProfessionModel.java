@@ -11,15 +11,21 @@ import com.wynntils.core.text.StyledText;
 import com.wynntils.handlers.chat.event.ChatMessageReceivedEvent;
 import com.wynntils.handlers.labels.event.EntityLabelChangedEvent;
 import com.wynntils.mc.event.ContainerSetSlotEvent;
+import com.wynntils.mc.event.TickEvent;
 import com.wynntils.models.character.CharacterModel;
 import com.wynntils.models.items.items.game.MaterialItem;
 import com.wynntils.models.profession.type.HarvestInfo;
 import com.wynntils.models.profession.type.ProfessionProgress;
 import com.wynntils.models.profession.type.ProfessionType;
+import com.wynntils.models.worlds.WorldStateModel;
+import com.wynntils.models.worlds.event.WorldStateEvent;
 import com.wynntils.utils.mc.LoreUtils;
+import com.wynntils.utils.mc.McUtils;
 import com.wynntils.utils.type.TimedSet;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
@@ -27,6 +33,9 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.TimeUnit;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import net.minecraft.network.chat.Component;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 
@@ -60,8 +69,10 @@ public class ProfessionModel extends Model {
     private Map<ProfessionType, ProfessionProgress> professionProgressMap = new ConcurrentHashMap<>();
     private final Map<ProfessionType, TimedSet<Float>> rawXpGainInLastMinute = new HashMap<>();
 
-    public ProfessionModel(CharacterModel characterModel) {
-        super(List.of(characterModel));
+    private final List<ProfessionTimerArmorStand> professionTimerArmorStands = new LinkedList<>();
+
+    public ProfessionModel(CharacterModel characterModel, WorldStateModel worldStateModel) {
+        super(List.of(characterModel, worldStateModel));
         for (ProfessionType pt : ProfessionType.values()) {
             rawXpGainInLastMinute.put(pt, new TimedSet<>(1, TimeUnit.MINUTES, true));
         }
@@ -100,6 +111,9 @@ public class ProfessionModel extends Model {
         matcher = event.getName().getMatcher(PROFESSION_NODE_HARVEST_PATTERN);
         if (matcher.matches()) {
             lastHarvestLabel = System.currentTimeMillis();
+
+            // FIXME: Prof speed
+            professionTimerArmorStands.add(new ProfessionTimerArmorStand(event.getEntity(), 60));
         }
     }
 
@@ -122,6 +136,29 @@ public class ProfessionModel extends Model {
         if (matcher.matches()) {
             updateLevel(ProfessionType.fromString(matcher.group("name")), Integer.parseInt(matcher.group("level")));
         }
+    }
+
+    @SubscribeEvent
+    public void onWorldStateChange(WorldStateEvent event) {
+        professionTimerArmorStands.forEach(armorStand ->
+                McUtils.mc().level.removeEntity(armorStand.entity.getId(), Entity.RemovalReason.DISCARDED));
+
+        professionTimerArmorStands.clear();
+    }
+
+    @SubscribeEvent
+    public void onTick(TickEvent event) {
+        List<ProfessionTimerArmorStand> removedElements = new ArrayList<>();
+
+        for (ProfessionTimerArmorStand armorStand : professionTimerArmorStands) {
+            boolean toBeRemoved = armorStand.tick();
+
+            if (toBeRemoved) {
+                removedElements.add(armorStand);
+            }
+        }
+
+        professionTimerArmorStands.removeAll(removedElements);
     }
 
     public void resetValueFromItem(ItemStack professionInfoItem) {
@@ -188,5 +225,44 @@ public class ProfessionModel extends Model {
 
     public int getProfessionDryStreak() {
         return professionDryStreak.get();
+    }
+
+    private static final class ProfessionTimerArmorStand {
+        private final Entity entity;
+
+        private long startTime;
+        private long endTime;
+
+        private ProfessionTimerArmorStand(Entity positionBaseEntity, int length) {
+            this.entity = createArmorStandAt(positionBaseEntity);
+            this.startTime = System.currentTimeMillis();
+            this.endTime = startTime + length * 1000L;
+
+            McUtils.mc().level.putNonPlayerEntity(entity.getId(), entity);
+        }
+
+        public boolean tick() {
+            // FIXME: Too many ticks
+            int remaining = Math.round((endTime - System.currentTimeMillis()) / 1000L);
+            entity.setCustomName(Component.literal("§2[§a " + remaining + "s §2]"));
+
+            boolean toBeRemoved = remaining < 0;
+
+            if (toBeRemoved) {
+                McUtils.mc().level.removeEntity(entity.getId(), Entity.RemovalReason.DISCARDED);
+            }
+
+            return toBeRemoved;
+        }
+
+        private static Entity createArmorStandAt(Entity copiedEntity) {
+            Entity entity = EntityType.ARMOR_STAND.create(McUtils.mc().level);
+            entity.copyPosition(copiedEntity);
+            entity.setCustomNameVisible(true);
+            entity.setInvisible(true);
+            entity.setInvulnerable(true);
+
+            return entity;
+        }
     }
 }
