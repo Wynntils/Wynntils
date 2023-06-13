@@ -95,7 +95,7 @@ public class BombCommand extends Command {
                             .withStyle(ChatFormatting.RED))
                     .append(Component.literal("CHAMPION").withStyle(ChatFormatting.YELLOW))
                     .append(Component.literal(
-                                    " rank on Wynncraft, which is necessary to use recieve bomb alerts from other servers.")
+                                    " rank on Wynncraft, which is necessary to receive bomb alerts from other servers.")
                             .withStyle(ChatFormatting.RED));
             return response;
         }
