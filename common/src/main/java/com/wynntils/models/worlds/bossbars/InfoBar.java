@@ -25,6 +25,9 @@ public class InfoBar extends TrackedBar {
     private static final Pattern BOMB_INFO_PATTERN =
             Pattern.compile("§3(?:Double )?(?<bomb>.+) from §b(?<user>.+)§7 \\[§f(?<length>\\d+)§7 min\\]");
 
+    // Minute info is rounded, half a minute offset is a good compromise
+    private static final float BOMB_TIMER_OFFSET = 0.5f;
+
     public InfoBar() {
         super(List.of(TERRITORY_INFO_PATTERN, GUILD_INFO_PATTERN, BOMB_INFO_PATTERN));
     }
@@ -36,6 +39,7 @@ public class InfoBar extends TrackedBar {
 
             if (bombType == null) return;
 
+            float length = Integer.parseInt(matcher.group("length")) + BOMB_TIMER_OFFSET;
             Models.Bomb.addBombInfo(
                     bombType,
                     new BombInfo(
@@ -43,7 +47,7 @@ public class InfoBar extends TrackedBar {
                             bombType,
                             Models.WorldState.getCurrentWorldName(),
                             System.currentTimeMillis(),
-                            Integer.parseInt(matcher.group("length"))));
+                            length));
         }
     }
 }

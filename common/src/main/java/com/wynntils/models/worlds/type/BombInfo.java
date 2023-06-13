@@ -6,7 +6,7 @@ package com.wynntils.models.worlds.type;
 
 import java.util.concurrent.TimeUnit;
 
-public record BombInfo(String user, BombType bomb, String server, long startTime, int length) {
+public record BombInfo(String user, BombType bomb, String server, long startTime, float length) {
     // mm:ss format
     public String getRemainingString() {
         long millis = startTime + getLength() - System.currentTimeMillis();
@@ -30,6 +30,6 @@ public record BombInfo(String user, BombType bomb, String server, long startTime
     }
 
     public long getLength() {
-        return length * 60000L;
+        return (long) (length * 60000L);
     }
 }
