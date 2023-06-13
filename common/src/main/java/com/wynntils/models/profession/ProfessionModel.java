@@ -5,10 +5,14 @@
 package com.wynntils.models.profession;
 
 import com.wynntils.core.components.Model;
+import com.wynntils.core.components.Models;
 import com.wynntils.core.text.StyledText;
 import com.wynntils.handlers.chat.event.ChatMessageReceivedEvent;
 import com.wynntils.handlers.labels.event.EntityLabelChangedEvent;
+import com.wynntils.mc.event.ContainerSetSlotEvent;
 import com.wynntils.models.character.CharacterModel;
+import com.wynntils.models.items.items.game.MaterialItem;
+import com.wynntils.models.profession.type.HarvestInfo;
 import com.wynntils.models.profession.type.ProfessionProgress;
 import com.wynntils.models.profession.type.ProfessionType;
 import com.wynntils.utils.mc.LoreUtils;
@@ -17,6 +21,7 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.TimeUnit;
 import java.util.regex.Matcher;
@@ -27,8 +32,12 @@ import net.minecraftforge.eventbus.api.SubscribeEvent;
 public class ProfessionModel extends Model {
     // §7[+36§f Ⓙ§7 Farming XP] §6[9%]
     // §dx2.0 §7[+§d93§f Ⓙ§7 Farming XP] §6[9%]
-    private static final Pattern PROFESSION_NODE_HARVERSTED_PATTERN = Pattern.compile(
+    private static final Pattern PROFESSION_NODE_EXPERIENCE_PATTERN = Pattern.compile(
             "(§dx[\\d\\.]+ )?§7\\[\\+(§d)?(?<gain>\\d+)§f [ⓀⒸⒷⒿⒺⒹⓁⒶⒼⒻⒾⒽ]§7 (?<name>.+) XP\\] §6\\[(?<current>\\d+)%\\]");
+
+    // §2[§a+1§2 Oak Wood]
+    private static final Pattern PROFESSION_NODE_HARVEST_PATTERN =
+            Pattern.compile("§2\\[§a\\+\\d+§2 (?<type>.+) (?<material>.+)\\]");
 
     // §dx2.0 §7[+§d28 §fⒺ §7Scribing XP] §6[56%]
     private static final Pattern PROFESSION_CRAFT_PATTERN = Pattern.compile(
@@ -39,6 +48,11 @@ public class ProfessionModel extends Model {
 
     private static final Pattern INFO_MENU_PROFESSION_LORE_PATTERN =
             Pattern.compile("§6- §7[ⓀⒸⒷⒿⒺⒹⓁⒶⒼⒻⒾⒽ] Lv. (\\d+) (.+)§8 \\[([\\d.]+)%\\]");
+
+    private static final int MAX_HARVEST_LABEL_AGE = 1000;
+
+    private long lastHarvestLabel = 0;
+    private HarvestInfo lastHarvest;
 
     private Map<ProfessionType, ProfessionProgress> professionProgressMap = new ConcurrentHashMap<>();
     private final Map<ProfessionType, TimedSet<Float>> rawXpGainInLastMinute = new HashMap<>();
@@ -51,14 +65,32 @@ public class ProfessionModel extends Model {
     }
 
     @SubscribeEvent
+    public void onContainerSetSlot(ContainerSetSlotEvent.Post event) {
+        Optional<MaterialItem> materialItem = Models.Item.asWynnItem(event.getItemStack(), MaterialItem.class);
+
+        if (materialItem.isEmpty()) return;
+
+        if (lastHarvestLabel + MAX_HARVEST_LABEL_AGE >= System.currentTimeMillis()) {
+            lastHarvest = new HarvestInfo(lastHarvestLabel, materialItem.get().getMaterialProfile());
+            lastHarvestLabel = 0;
+        }
+    }
+
+    @SubscribeEvent
     public void onLabelSpawn(EntityLabelChangedEvent event) {
-        Matcher matcher = event.getName().getMatcher(PROFESSION_NODE_HARVERSTED_PATTERN);
+        Matcher matcher = event.getName().getMatcher(PROFESSION_NODE_EXPERIENCE_PATTERN);
 
         if (matcher.matches()) {
             updatePercentage(
                     ProfessionType.fromString(matcher.group("name")),
                     Float.parseFloat(matcher.group("current")),
                     Float.parseFloat(matcher.group("gain")));
+            return;
+        }
+
+        matcher = event.getName().getMatcher(PROFESSION_NODE_HARVEST_PATTERN);
+        if (matcher.matches()) {
+            lastHarvestLabel = System.currentTimeMillis();
         }
     }
 
@@ -135,6 +167,10 @@ public class ProfessionModel extends Model {
         return professionProgressMap
                 .getOrDefault(type, ProfessionProgress.NO_PROGRESS)
                 .progress();
+    }
+
+    public Optional<HarvestInfo> getLastHarvest() {
+        return Optional.ofNullable(lastHarvest);
     }
 
     public Map<ProfessionType, TimedSet<Float>> getRawXpGainInLastMinute() {

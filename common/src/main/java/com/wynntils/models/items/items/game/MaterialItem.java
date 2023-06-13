@@ -4,9 +4,9 @@
  */
 package com.wynntils.models.items.items.game;
 
-import com.wynntils.models.gathering.MaterialProfile;
 import com.wynntils.models.items.properties.LeveledItemProperty;
 import com.wynntils.models.items.properties.QualityTierItemProperty;
+import com.wynntils.models.profession.type.MaterialProfile;
 
 public class MaterialItem extends GameItem implements QualityTierItemProperty, LeveledItemProperty {
     private final MaterialProfile materialProfile;
