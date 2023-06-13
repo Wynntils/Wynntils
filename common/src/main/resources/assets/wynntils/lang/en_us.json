@@ -1209,6 +1209,8 @@
   "function.wynntils.manaMax.name": "Mana[max]",
   "function.wynntils.manaPct.description": "Your current mana as percentage of max",
   "function.wynntils.manaPct.name": "Mana[%%]",
+  "function.wynntils.materialDryStreak.description": "Returns the number of times a material was not a T3 in a row.",
+  "function.wynntils.materialDryStreak.name": "Material Dry Streak",
   "function.wynntils.memMax.description": "Maximum amount of memory available to the JVM",
   "function.wynntils.memMax.name": "Mem[max]",
   "function.wynntils.memPct.description": "Percentage of available memory that is currently being used",
