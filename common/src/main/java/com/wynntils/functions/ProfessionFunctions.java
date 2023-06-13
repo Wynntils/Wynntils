@@ -12,15 +12,14 @@ import com.wynntils.utils.StringUtils;
 import java.util.List;
 
 public class ProfessionFunctions {
-
     public static class ProfessionLevelFunction extends Function<Integer> {
         @Override
         public Integer getValue(FunctionArguments arguments) {
-            ProfessionType pt = ProfessionType.fromString(
+            ProfessionType professionType = ProfessionType.fromString(
                     arguments.getArgument("profession").getStringValue());
-            if (pt == null) return -1;
+            if (professionType == null) return -1;
 
-            return Models.Profession.getLevel(pt);
+            return Models.Profession.getLevel(professionType);
         }
 
         @Override
@@ -38,11 +37,11 @@ public class ProfessionFunctions {
     public static class ProfessionPercentageFunction extends Function<Double> {
         @Override
         public Double getValue(FunctionArguments arguments) {
-            ProfessionType pt = ProfessionType.fromString(
+            ProfessionType professionType = ProfessionType.fromString(
                     arguments.getArgument("profession").getStringValue());
-            if (pt == null) return -1.0;
+            if (professionType == null) return -1.0;
 
-            return Models.Profession.getProgress(pt);
+            return Models.Profession.getProgress(professionType);
         }
 
         @Override
@@ -60,12 +59,11 @@ public class ProfessionFunctions {
     public static class ProfessionXpPerMinuteRawFunction extends Function<Integer> {
         @Override
         public Integer getValue(FunctionArguments arguments) {
-
-            ProfessionType pt = ProfessionType.fromString(
+            ProfessionType professionType = ProfessionType.fromString(
                     arguments.getArgument("profession").getStringValue());
-            if (pt == null) return -1;
+            if (professionType == null) return -1;
 
-            return (int) Models.Profession.getRawXpGainInLastMinute().get(pt).stream()
+            return (int) Models.Profession.getRawXpGainInLastMinute().get(professionType).stream()
                     .mapToDouble(Float::doubleValue)
                     .sum();
         }
@@ -85,14 +83,14 @@ public class ProfessionFunctions {
     public static class ProfessionXpPerMinuteFunction extends Function<String> {
         @Override
         public String getValue(FunctionArguments arguments) {
-
-            ProfessionType pt = ProfessionType.fromString(
+            ProfessionType professionType = ProfessionType.fromString(
                     arguments.getArgument("profession").getStringValue());
-            if (pt == null) return "Invalid profession";
+            if (professionType == null) return "Invalid profession";
 
-            return StringUtils.integerToShortString((int) Models.Profession.getRawXpGainInLastMinute().get(pt).stream()
-                    .mapToDouble(Float::doubleValue)
-                    .sum());
+            return StringUtils.integerToShortString(
+                    (int) Models.Profession.getRawXpGainInLastMinute().get(professionType).stream()
+                            .mapToDouble(Float::doubleValue)
+                            .sum());
         }
 
         @Override
