@@ -32,7 +32,7 @@ public class CombatExperienceOverlayFeature extends Feature {
         protected CombatExperienceOverlay() {
             super(
                     new OverlayPosition(
-                            -73,
+                            -68,
                             0,
                             VerticalAlignment.BOTTOM,
                             HorizontalAlignment.CENTER,
