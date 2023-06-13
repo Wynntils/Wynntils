@@ -1,9 +1,21 @@
+## [0.0.3-alpha.88](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.87...v0.0.3-alpha.88) (2023-06-13)
+
+
+### New Features
+
+* Add local server bomb tracking, fix duplicate bombs showing up on /bombbell, rename to /bomb ([#1618](https://github.com/Wynntils/Artemis/issues/1618)) ([388b6c8](https://github.com/Wynntils/Artemis/commit/388b6c80f606d7ee840854e0e9babd9c4ef80545))
+
 ## [0.0.3-alpha.87](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.86...v0.0.3-alpha.87) (2023-06-13)
 
 
 ### New Features
 
 * Add MaterialDryStreak function ([#1616](https://github.com/Wynntils/Artemis/issues/1616)) ([b4b9578](https://github.com/Wynntils/Artemis/commit/b4b9578f24093d9e9612e504b49c914e081d2109))
+
+
+### Miscellaneous Chores
+
+* **release:** v0.0.3-alpha.87 [skip ci] ([45c9a39](https://github.com/Wynntils/Artemis/commit/45c9a398f7abde3876b40f2f7ce10dae982f7fa4))
 
 ## [0.0.3-alpha.86](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.85...v0.0.3-alpha.86) (2023-06-13)
 
@@ -40,16 +52,4 @@
 ### Miscellaneous Chores
 
 * **release:** v0.0.3-alpha.84 [skip ci] ([0a04ba1](https://github.com/Wynntils/Artemis/commit/0a04ba10de94b2a78022c5e54edbe5e92dc812cd))
-
-## [0.0.3-alpha.83](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.82...v0.0.3-alpha.83) (2023-06-12)
-
-
-### Bug Fixes
-
-* Fix randomly occurring quest parsing issues ([#1611](https://github.com/Wynntils/Artemis/issues/1611)) ([ccc96da](https://github.com/Wynntils/Artemis/commit/ccc96da82d6b183f0d70477c17a327fc0d9055ee))
-
-
-### Miscellaneous Chores
-
-* **release:** v0.0.3-alpha.83 [skip ci] ([a4cebb3](https://github.com/Wynntils/Artemis/commit/a4cebb3a1f7debbb68ca01ed24999e9ac8333ade))
 
