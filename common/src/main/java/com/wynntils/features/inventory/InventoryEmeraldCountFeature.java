@@ -45,7 +45,7 @@ public class InventoryEmeraldCountFeature extends Feature {
     public final Config<Boolean> showContainerEmeraldCount = new Config<>(true);
 
     @RegisterConfig
-    public final Config<Boolean> showZerosInEmeraldCount = new Config<>(false);
+    public final Config<Boolean> showZerosInEmeraldCount = new Config<>(true);
 
     @RegisterConfig
     public final Config<Boolean> combineInventoryAndContainer = new Config<>(false);

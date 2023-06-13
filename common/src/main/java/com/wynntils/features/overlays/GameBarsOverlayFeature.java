@@ -309,7 +309,7 @@ public class GameBarsOverlayFeature extends Feature {
         protected HealthBarOverlay() {
             this(
                     new OverlayPosition(
-                            -30,
+                            -29,
                             -52,
                             VerticalAlignment.BOTTOM,
                             HorizontalAlignment.CENTER,
@@ -408,7 +408,7 @@ public class GameBarsOverlayFeature extends Feature {
         protected ManaBarOverlay() {
             this(
                     new OverlayPosition(
-                            -30,
+                            -29,
                             52,
                             VerticalAlignment.BOTTOM,
                             HorizontalAlignment.CENTER,
