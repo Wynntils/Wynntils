@@ -65,7 +65,6 @@ public final class BombModel extends Model {
     public void addBombInfo(BombType bombType, BombInfo bombInfo) {
         BombInfo old = CURRENT_SERVER_BOMBS.put(bombType, bombInfo);
 
-        // Only add to the set if it's not already there
         BOMBS.add(bombInfo);
     }
 
