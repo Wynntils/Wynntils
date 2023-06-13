@@ -59,7 +59,7 @@ public class BombBellCommand extends Command {
             return 0;
         }
 
-        Set<BombInfo> bombBells = Models.BombBell.getBombBells().stream()
+        Set<BombInfo> bombBells = Models.Bomb.getBombBells().stream()
                 .filter(bombInfo -> bombInfo.bomb() == bombType)
                 .collect(Collectors.toSet());
 
@@ -71,7 +71,7 @@ public class BombBellCommand extends Command {
     }
 
     private int listBombs(CommandContext<CommandSourceStack> context) {
-        Set<BombInfo> bombBells = Models.BombBell.getBombBells();
+        Set<BombInfo> bombBells = Models.Bomb.getBombBells();
 
         MutableComponent component = getBombListComponent(bombBells);
 

@@ -17,13 +17,13 @@ import java.util.regex.Pattern;
 import net.minecraftforge.eventbus.api.EventPriority;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 
-public final class BombBellModel extends Model {
+public final class BombModel extends Model {
     private static final Pattern BOMB_BELL_PATTERN =
             Pattern.compile("^\\[Bomb Bell\\] (?<user>.+) has thrown an? (?<bomb>.+) Bomb on (?<server>.+)$");
 
     private static final Set<BombInfo> BOMB_BELLS = ConcurrentHashMap.newKeySet();
 
-    public BombBellModel() {
+    public BombModel() {
         super(List.of());
     }
 
