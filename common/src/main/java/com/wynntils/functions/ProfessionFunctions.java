@@ -7,9 +7,11 @@ package com.wynntils.functions;
 import com.wynntils.core.components.Models;
 import com.wynntils.core.functions.Function;
 import com.wynntils.core.functions.arguments.FunctionArguments;
+import com.wynntils.models.profession.type.HarvestInfo;
 import com.wynntils.models.profession.type.ProfessionType;
 import com.wynntils.utils.StringUtils;
 import java.util.List;
+import java.util.Optional;
 
 public class ProfessionFunctions {
     public static class ProfessionLevelFunction extends Function<Integer> {
@@ -102,6 +104,66 @@ public class ProfessionFunctions {
         @Override
         public List<String> getAliases() {
             return List.of("prof_xpm");
+        }
+    }
+
+    public static class LastHarvestResourceTypeFunction extends Function<String> {
+        @Override
+        public String getValue(FunctionArguments arguments) {
+            Optional<HarvestInfo> lastHarvest = Models.Profession.getLastHarvest();
+
+            if (lastHarvest.isEmpty()) return null;
+
+            return lastHarvest.get().materialProfile().getResourceType().name();
+        }
+    }
+
+    public static class LastHarvestMaterialTypeFunction extends Function<String> {
+        @Override
+        public String getValue(FunctionArguments arguments) {
+            Optional<HarvestInfo> lastHarvest = Models.Profession.getLastHarvest();
+
+            if (lastHarvest.isEmpty()) return null;
+
+            return lastHarvest
+                    .get()
+                    .materialProfile()
+                    .getResourceType()
+                    .getMaterialType()
+                    .name();
+        }
+    }
+
+    public static class LastHarvestMaterialNameFunction extends Function<String> {
+        @Override
+        public String getValue(FunctionArguments arguments) {
+            Optional<HarvestInfo> lastHarvest = Models.Profession.getLastHarvest();
+
+            if (lastHarvest.isEmpty()) return null;
+
+            return lastHarvest.get().materialProfile().getSourceMaterial().name();
+        }
+    }
+
+    public static class LastHarvestMaterialLevelFunction extends Function<Integer> {
+        @Override
+        public Integer getValue(FunctionArguments arguments) {
+            Optional<HarvestInfo> lastHarvest = Models.Profession.getLastHarvest();
+
+            if (lastHarvest.isEmpty()) return null;
+
+            return lastHarvest.get().materialProfile().getSourceMaterial().level();
+        }
+    }
+
+    public static class LastHarvestMaterialTierFunction extends Function<Integer> {
+        @Override
+        public Integer getValue(FunctionArguments arguments) {
+            Optional<HarvestInfo> lastHarvest = Models.Profession.getLastHarvest();
+
+            if (lastHarvest.isEmpty()) return null;
+
+            return lastHarvest.get().materialProfile().getTier();
         }
     }
 }
