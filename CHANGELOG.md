@@ -1,9 +1,21 @@
+## [0.0.3-alpha.86](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.85...v0.0.3-alpha.86) (2023-06-13)
+
+
+### New Features
+
+* Add LastHarvest* profession functions ([#1615](https://github.com/Wynntils/Artemis/issues/1615)) ([3dee2d3](https://github.com/Wynntils/Artemis/commit/3dee2d31c5e948a1b7b8869b54f02f41b0a844c9))
+
 ## [0.0.3-alpha.85](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.84...v0.0.3-alpha.85) (2023-06-13)
 
 
 ### New Features
 
 * Enhance Default Settings ([#1612](https://github.com/Wynntils/Artemis/issues/1612)) ([9172358](https://github.com/Wynntils/Artemis/commit/91723582e3179ce6f9105f4d5e9752d4dd505dc1))
+
+
+### Miscellaneous Chores
+
+* **release:** v0.0.3-alpha.85 [skip ci] ([74d0e3d](https://github.com/Wynntils/Artemis/commit/74d0e3d9c258aa71feff424d419f95362550d527))
 
 ## [0.0.3-alpha.84](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.83...v0.0.3-alpha.84) (2023-06-13)
 
@@ -40,16 +52,4 @@
 ### Miscellaneous Chores
 
 * **release:** v0.0.3-alpha.82 [skip ci] ([15649b3](https://github.com/Wynntils/Artemis/commit/15649b32857614e4d123a031bd818155af06ce6a))
-
-## [0.0.3-alpha.81](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.80...v0.0.3-alpha.81) (2023-06-11)
-
-
-### Bug Fixes
-
-* Fix TradeMarketBulkSellFeature not working with materials (+ full feature refactor) ([#1609](https://github.com/Wynntils/Artemis/issues/1609)) ([2fe7e1c](https://github.com/Wynntils/Artemis/commit/2fe7e1cdfff0869d07f52b5b97d03dadcc769d66))
-
-
-### Miscellaneous Chores
-
-* **release:** v0.0.3-alpha.81 [skip ci] ([d1f9bfa](https://github.com/Wynntils/Artemis/commit/d1f9bfa03e47751e1dadff1304cec1f48e0736ca))
 
