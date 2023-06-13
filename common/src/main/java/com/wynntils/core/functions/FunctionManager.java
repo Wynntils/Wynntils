@@ -467,6 +467,7 @@ public final class FunctionManager extends Manager {
         registerFunction(new ProfessionFunctions.LastHarvestMaterialTierFunction());
         registerFunction(new ProfessionFunctions.LastHarvestMaterialTypeFunction());
         registerFunction(new ProfessionFunctions.LastHarvestResourceTypeFunction());
+        registerFunction(new ProfessionFunctions.MaterialDryStreak());
         registerFunction(new ProfessionFunctions.ProfessionLevelFunction());
         registerFunction(new ProfessionFunctions.ProfessionPercentageFunction());
         registerFunction(new ProfessionFunctions.ProfessionXpPerMinuteFunction());

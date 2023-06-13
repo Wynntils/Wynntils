@@ -6,6 +6,7 @@ package com.wynntils.models.profession;
 
 import com.wynntils.core.components.Model;
 import com.wynntils.core.components.Models;
+import com.wynntils.core.storage.Storage;
 import com.wynntils.core.text.StyledText;
 import com.wynntils.handlers.chat.event.ChatMessageReceivedEvent;
 import com.wynntils.handlers.labels.event.EntityLabelChangedEvent;
@@ -51,6 +52,8 @@ public class ProfessionModel extends Model {
 
     private static final int MAX_HARVEST_LABEL_AGE = 1000;
 
+    private final Storage<Integer> professionDryStreak = new Storage<>(0);
+
     private long lastHarvestLabel = 0;
     private HarvestInfo lastHarvest;
 
@@ -73,6 +76,12 @@ public class ProfessionModel extends Model {
         if (lastHarvestLabel + MAX_HARVEST_LABEL_AGE >= System.currentTimeMillis()) {
             lastHarvest = new HarvestInfo(lastHarvestLabel, materialItem.get().getMaterialProfile());
             lastHarvestLabel = 0;
+
+            if (lastHarvest.materialProfile().getTier() == 3) {
+                professionDryStreak.store(0);
+            } else {
+                professionDryStreak.store(professionDryStreak.get() + 1);
+            }
         }
     }
 
@@ -175,5 +184,9 @@ public class ProfessionModel extends Model {
 
     public Map<ProfessionType, TimedSet<Float>> getRawXpGainInLastMinute() {
         return Collections.unmodifiableMap(rawXpGainInLastMinute);
+    }
+
+    public int getProfessionDryStreak() {
+        return professionDryStreak.get();
     }
 }
