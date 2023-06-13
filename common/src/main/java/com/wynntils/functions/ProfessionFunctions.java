@@ -166,4 +166,16 @@ public class ProfessionFunctions {
             return lastHarvest.get().materialProfile().getTier();
         }
     }
+
+    public static class MaterialDryStreak extends Function<Integer> {
+        @Override
+        public Integer getValue(FunctionArguments arguments) {
+            return Models.Profession.getProfessionDryStreak();
+        }
+
+        @Override
+        public List<String> getAliases() {
+            return List.of("mat_dry");
+        }
+    }
 }
