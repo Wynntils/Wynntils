@@ -272,6 +272,7 @@
   "feature.wynntils.gammabright.lastGamma.description": "Last gamma used by Minecraft",
   "feature.wynntils.gammabright.lastGamma.name": "Last Gamma",
   "feature.wynntils.gammabright.name": "Gammabright Keybind",
+  "feature.wynntils.gatheringNodeCooldown.name": "Gathering Node Cooldown",
   "feature.wynntils.gearViewer.name": "Gear Viewer",
   "feature.wynntils.guildAttackTimerOverlay.disableAttackTimersOnScoreboard.description": "Should guild attack timers be removed from the scoreboard? This option only works if Guild Attack Timers is turned on.",
   "feature.wynntils.guildAttackTimerOverlay.disableAttackTimersOnScoreboard.name": "Disable Guild Attack Timers on Scoreboard",
