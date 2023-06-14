@@ -68,6 +68,7 @@ import com.wynntils.features.inventory.ItemTextOverlayFeature;
 import com.wynntils.features.inventory.ReplaceRecipeBookFeature;
 import com.wynntils.features.inventory.UnidentifiedItemIconFeature;
 import com.wynntils.features.map.BeaconBeamFeature;
+import com.wynntils.features.map.GatheringNodeCooldownFeature;
 import com.wynntils.features.map.GuildMapFeature;
 import com.wynntils.features.map.MapFeature;
 import com.wynntils.features.map.MinimapFeature;
@@ -222,6 +223,7 @@ public final class FeatureManager extends Manager {
 
         // region map
         registerFeature(new BeaconBeamFeature());
+        registerFeature(new GatheringNodeCooldownFeature());
         registerFeature(new GuildMapFeature());
         registerFeature(new MapFeature());
         registerFeature(new MinimapFeature());
