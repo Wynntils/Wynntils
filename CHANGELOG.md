@@ -1,9 +1,21 @@
+## [0.0.3-alpha.89](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.88...v0.0.3-alpha.89) (2023-06-14)
+
+
+### New Features
+
+* Add profession gathering cooldown timers ([#1619](https://github.com/Wynntils/Artemis/issues/1619)) ([f01911b](https://github.com/Wynntils/Artemis/commit/f01911bc6c9f34de39c11dc34c6d53612b9da025))
+
 ## [0.0.3-alpha.88](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.87...v0.0.3-alpha.88) (2023-06-13)
 
 
 ### New Features
 
 * Add local server bomb tracking, fix duplicate bombs showing up on /bombbell, rename to /bomb ([#1618](https://github.com/Wynntils/Artemis/issues/1618)) ([388b6c8](https://github.com/Wynntils/Artemis/commit/388b6c80f606d7ee840854e0e9babd9c4ef80545))
+
+
+### Miscellaneous Chores
+
+* **release:** v0.0.3-alpha.88 [skip ci] ([4b6b98d](https://github.com/Wynntils/Artemis/commit/4b6b98d2fb79478b75acc1b92f648e7f277188b5))
 
 ## [0.0.3-alpha.87](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.86...v0.0.3-alpha.87) (2023-06-13)
 
@@ -40,16 +52,4 @@
 ### Miscellaneous Chores
 
 * **release:** v0.0.3-alpha.85 [skip ci] ([74d0e3d](https://github.com/Wynntils/Artemis/commit/74d0e3d9c258aa71feff424d419f95362550d527))
-
-## [0.0.3-alpha.84](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.83...v0.0.3-alpha.84) (2023-06-13)
-
-
-### Bug Fixes
-
-* Add missing info in Coordinates setting ([#1613](https://github.com/Wynntils/Artemis/issues/1613)) ([6ba2994](https://github.com/Wynntils/Artemis/commit/6ba29947ccbac039c65dbbf1fc51e5480963ae70))
-
-
-### Miscellaneous Chores
-
-* **release:** v0.0.3-alpha.84 [skip ci] ([0a04ba1](https://github.com/Wynntils/Artemis/commit/0a04ba10de94b2a78022c5e54edbe5e92dc812cd))
 
