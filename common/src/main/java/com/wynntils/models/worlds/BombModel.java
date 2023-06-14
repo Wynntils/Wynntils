@@ -30,6 +30,10 @@ public final class BombModel extends Model {
     private static final Pattern BOMB_BELL_PATTERN =
             Pattern.compile("^\\[Bomb Bell\\] (?<user>.+) has thrown an? (?<bomb>.+) Bomb on (?<server>.+)$");
 
+    // §buser's §3bomb has expired. You can buy Profession XP bombs at our website, §bwynncraft.com/store
+    private static final Pattern BOMB_EXPIRED_PATTERN = Pattern.compile(
+            "§b(?<user>.+)'s? §3bomb has expired. You can buy (?<bomb>.+) bombs at our website, §bwynncraft.com/store");
+
     private static final Map<BombType, BombInfo> CURRENT_SERVER_BOMBS = new EnumMap<>(BombType.class);
 
     private static final ActiveBombContainer BOMBS = new ActiveBombContainer();
@@ -54,6 +58,23 @@ public final class BombModel extends Model {
             if (bombType == null) return;
 
             BOMBS.add(new BombInfo(user, bombType, server, System.currentTimeMillis(), bombType.getActiveMinutes()));
+
+            return;
+        }
+
+        matcher = event.getOriginalStyledText().getMatcher(BOMB_EXPIRED_PATTERN);
+        if (matcher.matches()) {
+            String user = matcher.group("user");
+            String bomb = matcher.group("bomb");
+
+            // Better to do a bit of processing and clean up the set than leaking memory
+            removeOldTimers();
+
+            BombType bombType = BombType.fromString(bomb);
+            if (bombType == null) return;
+
+            BombInfo removed = CURRENT_SERVER_BOMBS.remove(bombType);
+            BOMBS.remove(removed);
         }
     }
 
@@ -100,6 +121,10 @@ public final class BombModel extends Model {
 
         public void removeIf(Predicate<BombInfo> predicate) {
             bombs.entrySet().removeIf(entry -> predicate.test(entry.getValue()));
+        }
+
+        public void remove(BombInfo removed) {
+            bombs.remove(new BombKey(removed.server(), removed.bomb()));
         }
 
         private record BombKey(String server, BombType type) {}
