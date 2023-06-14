@@ -25,6 +25,7 @@ import com.wynntils.screens.wynntilsmenu.WynntilsMenuScreen;
 import com.wynntils.utils.StringUtils;
 import com.wynntils.utils.colors.CommonColors;
 import com.wynntils.utils.mc.McUtils;
+import com.wynntils.utils.mc.RenderedStringUtils;
 import com.wynntils.utils.render.FontRenderer;
 import com.wynntils.utils.render.RenderUtils;
 import com.wynntils.utils.render.Texture;
@@ -273,7 +274,7 @@ public final class WynntilsQuestBookScreen extends WynntilsListScreen<QuestInfo,
                         .append(Component.literal(" [" + completedCount + "/" + count + "]")
                                 .withStyle(ChatFormatting.GRAY))
                         .append(" ")
-                        .append(getPercentageComponent((int) completedCount, (int) count, 5)));
+                        .append(RenderedStringUtils.getPercentageComponent((int) completedCount, (int) count, 5)));
             }
 
             long count = elements.stream()
@@ -290,7 +291,7 @@ public final class WynntilsQuestBookScreen extends WynntilsListScreen<QuestInfo,
                         .append(Component.literal(" [" + completedCount + "/" + count + "]")
                                 .withStyle(ChatFormatting.GRAY))
                         .append(" ")
-                        .append(getPercentageComponent((int) completedCount, (int) count, 5)));
+                        .append(RenderedStringUtils.getPercentageComponent((int) completedCount, (int) count, 5)));
             }
 
             count = elements.size();
@@ -303,7 +304,7 @@ public final class WynntilsQuestBookScreen extends WynntilsListScreen<QuestInfo,
                     .withStyle(ChatFormatting.AQUA)
                     .append(Component.literal("[" + completedCount + "/" + count + "]")
                             .withStyle(ChatFormatting.DARK_AQUA)));
-            tooltipLines.add(getPercentageComponent((int) completedCount, (int) count, 15));
+            tooltipLines.add(RenderedStringUtils.getPercentageComponent((int) completedCount, (int) count, 15));
             tooltipLines.add(Component.literal(""));
 
             if (!this.miniQuestMode) {
@@ -377,34 +378,6 @@ public final class WynntilsQuestBookScreen extends WynntilsListScreen<QuestInfo,
         this.maxPage = Math.max(
                 0,
                 (elements.size() / getElementsPerPage() + (elements.size() % getElementsPerPage() != 0 ? 1 : 0)) - 1);
-    }
-
-    private Component getPercentageComponent(int count, int totalCount, int tickCount) {
-        int percentage = Math.round((float) count / totalCount * 100);
-        ChatFormatting foregroundColor;
-        ChatFormatting braceColor;
-
-        if (percentage < 25) {
-            braceColor = ChatFormatting.DARK_RED;
-            foregroundColor = ChatFormatting.RED;
-        } else if (percentage < 75) {
-            braceColor = ChatFormatting.GOLD;
-            foregroundColor = ChatFormatting.YELLOW;
-        } else {
-            braceColor = ChatFormatting.DARK_GREEN;
-            foregroundColor = ChatFormatting.GREEN;
-        }
-
-        StringBuilder insideText = new StringBuilder(foregroundColor.toString());
-        insideText.append("|".repeat(tickCount)).append(percentage).append("%").append("|".repeat(tickCount));
-        int insertAt =
-                Math.min(insideText.length(), Math.round((insideText.length() - 2) * (float) count / totalCount) + 2);
-        insideText.insert(insertAt, ChatFormatting.DARK_GRAY);
-
-        return Component.literal("[")
-                .withStyle(braceColor)
-                .append(Component.literal(insideText.toString()))
-                .append(Component.literal("]").withStyle(braceColor));
     }
 
     private List<QuestInfo> getSortedQuests() {
