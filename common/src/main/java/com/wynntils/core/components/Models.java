@@ -100,7 +100,7 @@ public final class Models {
     public static final MobTotemModel MobTotem = new MobTotemModel(WorldState);
     public static final PartyModel Party = new PartyModel(WorldState);
     public static final PingModel Ping = new PingModel(WorldState);
-    public static final ProfessionModel Profession = new ProfessionModel(Character, WorldState);
+    public static final ProfessionModel Profession = new ProfessionModel(Character, WorldState, Bomb);
     public static final QuestModel Quest = new QuestModel(CombatXp);
     public static final SeaskipperModel Seaskipper = new SeaskipperModel(Item);
     public static final ShamanMaskModel ShamanMask = new ShamanMaskModel(WorldState);

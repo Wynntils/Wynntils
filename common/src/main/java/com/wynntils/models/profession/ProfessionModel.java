@@ -17,8 +17,10 @@ import com.wynntils.models.items.items.game.MaterialItem;
 import com.wynntils.models.profession.type.HarvestInfo;
 import com.wynntils.models.profession.type.ProfessionProgress;
 import com.wynntils.models.profession.type.ProfessionType;
+import com.wynntils.models.worlds.BombModel;
 import com.wynntils.models.worlds.WorldStateModel;
 import com.wynntils.models.worlds.event.WorldStateEvent;
+import com.wynntils.models.worlds.type.BombType;
 import com.wynntils.utils.mc.LoreUtils;
 import com.wynntils.utils.mc.McUtils;
 import com.wynntils.utils.type.TimedSet;
@@ -59,7 +61,9 @@ public class ProfessionModel extends Model {
     private static final Pattern INFO_MENU_PROFESSION_LORE_PATTERN =
             Pattern.compile("§6- §7[ⓀⒸⒷⒿⒺⒹⓁⒶⒼⒻⒾⒽ] Lv. (\\d+) (.+)§8 \\[([\\d.]+)%\\]");
 
+    private static final int PROFESSION_NODE_RESPAWN_TIME = 60;
     private static final int MAX_HARVEST_LABEL_AGE = 1000;
+    private static final int TICKS_PER_TIMER_UPDATE = 10;
 
     private final Storage<Integer> professionDryStreak = new Storage<>(0);
 
@@ -70,9 +74,10 @@ public class ProfessionModel extends Model {
     private final Map<ProfessionType, TimedSet<Float>> rawXpGainInLastMinute = new HashMap<>();
 
     private final List<ProfessionTimerArmorStand> professionTimerArmorStands = new LinkedList<>();
+    private int tickTimer = 0;
 
-    public ProfessionModel(CharacterModel characterModel, WorldStateModel worldStateModel) {
-        super(List.of(characterModel, worldStateModel));
+    public ProfessionModel(CharacterModel characterModel, WorldStateModel worldStateModel, BombModel bombModel) {
+        super(List.of(characterModel, worldStateModel, bombModel));
         for (ProfessionType pt : ProfessionType.values()) {
             rawXpGainInLastMinute.put(pt, new TimedSet<>(1, TimeUnit.MINUTES, true));
         }
@@ -112,8 +117,10 @@ public class ProfessionModel extends Model {
         if (matcher.matches()) {
             lastHarvestLabel = System.currentTimeMillis();
 
-            // FIXME: Prof speed
-            professionTimerArmorStands.add(new ProfessionTimerArmorStand(event.getEntity(), 60));
+            boolean professionSpeed = Models.Bomb.isBombActive(BombType.PROFESSION_SPEED);
+            professionTimerArmorStands.add(new ProfessionTimerArmorStand(
+                    event.getEntity(),
+                    professionSpeed ? PROFESSION_NODE_RESPAWN_TIME / 2 : PROFESSION_NODE_RESPAWN_TIME));
         }
     }
 
@@ -144,10 +151,18 @@ public class ProfessionModel extends Model {
                 McUtils.mc().level.removeEntity(armorStand.entity.getId(), Entity.RemovalReason.DISCARDED));
 
         professionTimerArmorStands.clear();
+        tickTimer = 0;
     }
 
     @SubscribeEvent
     public void onTick(TickEvent event) {
+        if (tickTimer % TICKS_PER_TIMER_UPDATE != 0) {
+            tickTimer++;
+            return;
+        }
+
+        tickTimer = 0;
+
         List<ProfessionTimerArmorStand> removedElements = new ArrayList<>();
 
         for (ProfessionTimerArmorStand armorStand : professionTimerArmorStands) {
@@ -242,11 +257,10 @@ public class ProfessionModel extends Model {
         }
 
         public boolean tick() {
-            // FIXME: Too many ticks
             int remaining = Math.round((endTime - System.currentTimeMillis()) / 1000L);
             entity.setCustomName(Component.literal("§2[§a " + remaining + "s §2]"));
 
-            boolean toBeRemoved = remaining < 0;
+            boolean toBeRemoved = remaining <= 0;
 
             if (toBeRemoved) {
                 McUtils.mc().level.removeEntity(entity.getId(), Entity.RemovalReason.DISCARDED);
