@@ -4,6 +4,7 @@
  */
 package com.wynntils.models.profession;
 
+import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.components.Model;
 import com.wynntils.core.components.Models;
 import com.wynntils.core.storage.Storage;
@@ -14,6 +15,7 @@ import com.wynntils.mc.event.ContainerSetSlotEvent;
 import com.wynntils.mc.event.TickEvent;
 import com.wynntils.models.character.CharacterModel;
 import com.wynntils.models.items.items.game.MaterialItem;
+import com.wynntils.models.profession.event.ProfessionNodeGatheredEvent;
 import com.wynntils.models.profession.type.HarvestInfo;
 import com.wynntils.models.profession.type.ProfessionProgress;
 import com.wynntils.models.profession.type.ProfessionType;
@@ -117,10 +119,14 @@ public class ProfessionModel extends Model {
         if (matcher.matches()) {
             lastHarvestLabel = System.currentTimeMillis();
 
-            boolean professionSpeed = Models.Bomb.isBombActive(BombType.PROFESSION_SPEED);
-            professionTimerArmorStands.add(new ProfessionTimerArmorStand(
-                    event.getEntity(),
-                    professionSpeed ? PROFESSION_NODE_RESPAWN_TIME / 2 : PROFESSION_NODE_RESPAWN_TIME));
+            ProfessionNodeGatheredEvent.LabelShown gatherEvent = new ProfessionNodeGatheredEvent.LabelShown();
+            WynntilsMod.postEvent(gatherEvent);
+            if (gatherEvent.shouldAddCooldownArmorstand()) {
+                boolean professionSpeed = Models.Bomb.isBombActive(BombType.PROFESSION_SPEED);
+                professionTimerArmorStands.add(new ProfessionTimerArmorStand(
+                        event.getEntity(),
+                        professionSpeed ? PROFESSION_NODE_RESPAWN_TIME / 2 : PROFESSION_NODE_RESPAWN_TIME));
+            }
         }
     }
 
@@ -272,6 +278,7 @@ public class ProfessionModel extends Model {
         private static Entity createArmorStandAt(Entity copiedEntity) {
             Entity entity = EntityType.ARMOR_STAND.create(McUtils.mc().level);
             entity.copyPosition(copiedEntity);
+            entity.setPos(entity.position().add(0, -1, 0));
             entity.setCustomNameVisible(true);
             entity.setInvisible(true);
             entity.setInvulnerable(true);
