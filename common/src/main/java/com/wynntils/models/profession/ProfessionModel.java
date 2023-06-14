@@ -25,6 +25,7 @@ import com.wynntils.models.worlds.event.WorldStateEvent;
 import com.wynntils.models.worlds.type.BombType;
 import com.wynntils.utils.mc.LoreUtils;
 import com.wynntils.utils.mc.McUtils;
+import com.wynntils.utils.mc.RenderedStringUtils;
 import com.wynntils.utils.type.TimedSet;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -37,7 +38,6 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.TimeUnit;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.item.ItemStack;
@@ -112,12 +112,6 @@ public class ProfessionModel extends Model {
                     ProfessionType.fromString(matcher.group("name")),
                     Float.parseFloat(matcher.group("current")),
                     Float.parseFloat(matcher.group("gain")));
-            return;
-        }
-
-        matcher = event.getName().getMatcher(PROFESSION_NODE_HARVEST_PATTERN);
-        if (matcher.matches()) {
-            lastHarvestLabel = System.currentTimeMillis();
 
             ProfessionNodeGatheredEvent.LabelShown gatherEvent = new ProfessionNodeGatheredEvent.LabelShown();
             WynntilsMod.postEvent(gatherEvent);
@@ -127,6 +121,13 @@ public class ProfessionModel extends Model {
                         event.getEntity(),
                         professionSpeed ? PROFESSION_NODE_RESPAWN_TIME / 2 : PROFESSION_NODE_RESPAWN_TIME));
             }
+
+            return;
+        }
+
+        matcher = event.getName().getMatcher(PROFESSION_NODE_HARVEST_PATTERN);
+        if (matcher.matches()) {
+            lastHarvestLabel = System.currentTimeMillis();
         }
     }
 
@@ -250,12 +251,14 @@ public class ProfessionModel extends Model {
 
     private static final class ProfessionTimerArmorStand {
         private final Entity entity;
+        private final int length;
 
         private long startTime;
         private long endTime;
 
         private ProfessionTimerArmorStand(Entity positionBaseEntity, int length) {
             this.entity = createArmorStandAt(positionBaseEntity);
+            this.length = length;
             this.startTime = System.currentTimeMillis();
             this.endTime = startTime + length * 1000L;
 
@@ -264,7 +267,7 @@ public class ProfessionModel extends Model {
 
         public boolean tick() {
             int remaining = Math.round((endTime - System.currentTimeMillis()) / 1000L);
-            entity.setCustomName(Component.literal("§2[§a " + remaining + "s §2]"));
+            entity.setCustomName(RenderedStringUtils.getPercentageComponent(length - remaining, length, 8, true, "s"));
 
             boolean toBeRemoved = remaining <= 0;
 
