@@ -38,8 +38,8 @@ public final class PoiManagementScreen extends WynntilsScreen {
     private List<CustomPoi> waypoints;
     private int pageHeight;
     private int currentPage;
-    private List<CustomPoi> deletedPois = new ArrayList<>();
-    private List<Integer> deletedIndexes = new ArrayList<>();
+    private final List<CustomPoi> deletedPois = new ArrayList<>();
+    private final List<Integer> deletedIndexes = new ArrayList<>();
     private final List<AbstractWidget> poiManagerWidgets = new ArrayList<>();
 
     private PoiManagementScreen(MainMapScreen oldMapScreen) {
@@ -68,26 +68,21 @@ public final class PoiManagementScreen extends WynntilsScreen {
                         .build());
 
         this.addRenderableWidget(
-                nextButton = new Button.Builder(Component.literal(">"), (button) -> {
-                            nextPage();
-                        })
+                nextButton = new Button.Builder(Component.literal(">"), (button) -> nextPage())
                         .pos(this.width / 2 + 2, this.height - 45)
                         .size(20, 20)
                         .build());
 
         this.addRenderableWidget(
-                previousButton = new Button.Builder(Component.literal("<"), (button) -> {
-                            previousPage();
-                        })
+                previousButton = new Button.Builder(Component.literal("<"), (button) -> previousPage())
                         .pos(this.width / 2 - 22, this.height - 45)
                         .size(20, 20)
                         .build());
 
         this.addRenderableWidget(
                 undoDeleteButton = new Button.Builder(
-                                Component.translatable("screens.wynntils.poiManagementGui.undo"), (button) -> {
-                                    undoDelete();
-                                })
+                                Component.translatable("screens.wynntils.poiManagementGui.undo"),
+                                (button) -> undoDelete())
                         .pos(
                                 this.width
                                         - 25

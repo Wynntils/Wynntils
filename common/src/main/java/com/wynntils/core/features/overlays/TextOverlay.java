@@ -33,7 +33,7 @@ public abstract class TextOverlay extends DynamicOverlay {
     @RegisterConfig("overlay.wynntils.textOverlay.fontScale")
     public final Config<Float> fontScale = new Config<>(1.0f);
 
-    protected StyledText[] cachedLines = new StyledText[0];
+    private StyledText[] cachedLines = new StyledText[0];
 
     protected TextOverlay(OverlayPosition position, float width, float height) {
         super(position, width, height, 1);
@@ -78,7 +78,7 @@ public abstract class TextOverlay extends DynamicOverlay {
         renderTemplate(poseStack, bufferSource, calculateTemplateValue(getPreviewTemplate()), getTextScale());
     }
 
-    protected void renderTemplate(
+    private void renderTemplate(
             PoseStack poseStack, MultiBufferSource bufferSource, StyledText[] lines, float textScale) {
         float renderX = this.getRenderX();
         float renderY = this.getRenderY();
@@ -114,17 +114,17 @@ public abstract class TextOverlay extends DynamicOverlay {
         return Managers.Function.doFormatLines(template);
     }
 
-    public CustomColor getRenderColor() {
+    protected CustomColor getRenderColor() {
         return CommonColors.WHITE;
     }
 
-    public float getTextScale() {
+    private float getTextScale() {
         return fontScale.get();
     }
 
-    public abstract String getTemplate();
+    protected abstract String getTemplate();
 
-    public abstract String getPreviewTemplate();
+    protected abstract String getPreviewTemplate();
 
     @Override
     protected void onConfigUpdate(ConfigHolder configHolder) {}

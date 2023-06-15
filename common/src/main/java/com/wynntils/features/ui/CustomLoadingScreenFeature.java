@@ -75,13 +75,7 @@ public class CustomLoadingScreenFeature extends Feature {
 
                 loadingScreen.setMessage("Joining Wynncraft world...");
             }
-            case WORLD -> {
-                if (loadingScreen == null) return;
-
-                loadingScreen = null;
-                McUtils.mc().setScreen(null);
-            }
-            case HUB -> {
+            case WORLD, HUB -> {
                 if (loadingScreen == null) return;
 
                 loadingScreen = null;

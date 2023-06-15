@@ -21,7 +21,6 @@ import org.lwjgl.glfw.GLFW;
 
 public class GuideIngredientItemStackButton extends WynntilsButton {
     private final GuideIngredientItemStack itemStack;
-    private final WynntilsIngredientGuideScreen screen;
 
     public GuideIngredientItemStackButton(
             int x,
@@ -32,7 +31,6 @@ public class GuideIngredientItemStackButton extends WynntilsButton {
             WynntilsIngredientGuideScreen screen) {
         super(x, y, width, height, Component.literal("Guide IngredientItemStack Button"));
         this.itemStack = itemStack;
-        this.screen = screen;
     }
 
     @Override

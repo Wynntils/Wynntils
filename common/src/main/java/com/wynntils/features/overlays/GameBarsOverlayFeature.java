@@ -209,7 +209,7 @@ public class GameBarsOverlayFeature extends Feature {
         }
     }
 
-    public abstract static class OverflowableBarOverlay extends BaseBarOverlay {
+    protected abstract static class OverflowableBarOverlay extends BaseBarOverlay {
         protected OverflowableBarOverlay(OverlayPosition position, OverlaySize size, CustomColor textColor) {
             super(position, size, textColor);
         }

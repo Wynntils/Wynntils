@@ -22,13 +22,11 @@ import org.lwjgl.glfw.GLFW;
 
 public class GuidePowderItemStackButton extends WynntilsButton {
     private final GuidePowderItemStack itemStack;
-    private final WynntilsPowderGuideScreen screen;
 
     public GuidePowderItemStackButton(
             int x, int y, int width, int height, GuidePowderItemStack itemStack, WynntilsPowderGuideScreen screen) {
         super(x, y, width, height, Component.literal("Guide PowderItemStack Button"));
         this.itemStack = itemStack;
-        this.screen = screen;
     }
 
     @Override

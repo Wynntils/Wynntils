@@ -346,11 +346,7 @@ public class ItemHighlightFeature extends Feature {
     }
 
     private final class EmeraldPouchHighlight implements HighlightInfo {
-        private final EmeraldPouchItem item;
-
-        private EmeraldPouchHighlight(EmeraldPouchItem item) {
-            this.item = item;
-        }
+        private EmeraldPouchHighlight(EmeraldPouchItem item) {}
 
         @Override
         public boolean isHighlightEnabled() {

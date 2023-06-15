@@ -70,9 +70,7 @@ public class ChatTabsFeature extends Feature {
             // It can happen that client-side messages are sent from some other thread
             // That will cause race conditions with vanilla ChatComponent code, so
             // schedule this update by the renderer thread instead
-            Managers.TickScheduler.scheduleNextTick(() -> {
-                Managers.ChatTab.matchMessage(event);
-            });
+            Managers.TickScheduler.scheduleNextTick(() -> Managers.ChatTab.matchMessage(event));
         }
     }
 

@@ -76,7 +76,7 @@ public final class PoiCreationScreen extends WynntilsScreen implements TextboxSc
         this.firstSetup = true;
     }
 
-    public PoiCreationScreen(PoiManagementScreen managementScreen, CustomPoi poi) {
+    private PoiCreationScreen(PoiManagementScreen managementScreen, CustomPoi poi) {
         super(Component.literal("Poi Edit Screen"));
         this.returnScreen = managementScreen;
 

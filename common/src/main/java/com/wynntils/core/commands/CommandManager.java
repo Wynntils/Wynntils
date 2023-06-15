@@ -103,7 +103,7 @@ public final class CommandManager extends Manager {
         event.setSuggestions(result);
     }
 
-    public ClientCommandSourceStack getSource() {
+    private ClientCommandSourceStack getSource() {
         LocalPlayer player = McUtils.player();
 
         if (player == null) return null;

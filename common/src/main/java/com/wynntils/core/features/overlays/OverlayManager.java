@@ -57,7 +57,7 @@ public final class OverlayManager extends Manager {
 
     // region Initialization and Registration
 
-    public void registerOverlay(
+    private void registerOverlay(
             Overlay overlay,
             Feature parent,
             RenderEvent.ElementType elementType,
@@ -69,7 +69,7 @@ public final class OverlayManager extends Manager {
         overlayInfoMap.put(overlay, new OverlayInfoContainer(parent, elementType, renderAt, enabledByDefault));
     }
 
-    public void unregisterOverlay(Overlay overlay) {
+    private void unregisterOverlay(Overlay overlay) {
         overlayParentMap.get(overlayInfoMap.get(overlay).parent()).remove(overlay);
 
         WynntilsMod.unregisterEventListener(overlay);

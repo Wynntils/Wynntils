@@ -62,9 +62,12 @@ public class TelemetryFeature extends Feature {
         if (crashReports.get() != ConfirmedBoolean.UNCONFIRMED) return;
 
         MutableComponent component = Component.literal("Wynntils Telemetry\n").withStyle(ChatFormatting.AQUA);
-        component.append(Component.literal("Wynntils can send telemetry data when a component fails.\n"
-                        + "This data does not contain any personal information,\n"
-                        + "but is helpful for developers for fixing bugs in Wynntils.\n")
+        component.append(Component.literal(
+                        """
+                        Wynntils can send telemetry data when a component fails.
+                        This data does not contain any personal information,
+                        but is helpful for developers for fixing bugs in Wynntils.
+                        """)
                 .withStyle(ChatFormatting.GRAY));
 
         component.append(Component.literal("Click here")

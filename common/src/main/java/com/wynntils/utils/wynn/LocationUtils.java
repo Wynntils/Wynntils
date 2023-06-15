@@ -45,8 +45,7 @@ public final class LocationUtils {
     }
 
     public static void shareCompass(String target, Location compass) {
-        String locationString =
-                "My compass is at [" + (int) compass.x + ", " + (int) compass.y + ", " + (int) compass.z + "]";
+        String locationString = "My compass is at [" + compass.x + ", " + compass.y + ", " + compass.z + "]";
 
         LocationUtils.sendShareMessage(target, locationString);
     }

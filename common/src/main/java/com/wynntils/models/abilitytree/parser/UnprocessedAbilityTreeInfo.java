@@ -26,7 +26,7 @@ public class UnprocessedAbilityTreeInfo {
     private final Map<AbilityTreeLocation, AbilityTreeSkillNode> nodeMap = new HashMap<>();
     private boolean processed = false;
 
-    public void addNodeFromItem(ItemStack itemStack, int page, int slot) {
+    private void addNodeFromItem(ItemStack itemStack, int page, int slot) {
         AbilityTreeSkillNode node = Models.AbilityTree.ABILITY_TREE_PARSER
                 .parseNodeFromItem(itemStack, page, slot, nodes.size() + 1)
                 .key();
@@ -35,7 +35,7 @@ public class UnprocessedAbilityTreeInfo {
         nodeMap.put(AbilityTreeLocation.fromSlot(slot, page), node);
     }
 
-    public void addConnectionFromItem(ItemStack itemStack, int page, int slot) {
+    private void addConnectionFromItem(ItemStack itemStack, int page, int slot) {
         connectionMap.put(
                 AbilityTreeLocation.fromSlot(slot, page),
                 AbilityTreeConnectionType.fromDamage(itemStack.getDamageValue()));
@@ -52,7 +52,7 @@ public class UnprocessedAbilityTreeInfo {
         }
     }
 
-    public void processConnections() {
+    private void processConnections() {
         AbilityTreeSkillNode firstNode = nodes.stream()
                 .filter(node -> node.id() == 1)
                 .findFirst()
@@ -203,6 +203,7 @@ public class UnprocessedAbilityTreeInfo {
     public AbilityTreeInfo getProcesssed() {
         if (!processed) {
             processConnections();
+            processed = true;
         }
 
         return new AbilityTreeInfo(nodes);

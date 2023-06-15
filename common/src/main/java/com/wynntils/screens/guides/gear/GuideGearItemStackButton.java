@@ -20,13 +20,11 @@ import org.lwjgl.glfw.GLFW;
 
 public class GuideGearItemStackButton extends WynntilsButton {
     private final GuideGearItemStack itemStack;
-    private final WynntilsItemGuideScreen screen;
 
     public GuideGearItemStackButton(
             int x, int y, int width, int height, GuideGearItemStack itemStack, WynntilsItemGuideScreen screen) {
         super(x, y, width, height, Component.literal("Guide GearItemStack Button"));
         this.itemStack = itemStack;
-        this.screen = screen;
         // Things like our current class, or other requirement fulfillments can have changed,
         // so we need to redo this even if it's already done
         itemStack.buildTooltip();

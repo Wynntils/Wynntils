@@ -34,7 +34,7 @@ public final class StyledTextPart {
         this.parent = parent;
     }
 
-    StyledTextPart(StyledTextPart part, PartStyle style, StyledText parent) {
+    private StyledTextPart(StyledTextPart part, PartStyle style, StyledText parent) {
         this.text = part.text;
         this.style = style;
         this.parent = parent;
@@ -130,9 +130,7 @@ public final class StyledTextPart {
     }
 
     public MutableComponent getComponent() {
-        MutableComponent component = Component.literal(text).withStyle(style.getStyle());
-
-        return component;
+        return Component.literal(text).withStyle(style.getStyle());
     }
 
     StyledTextPart asNormalized() {

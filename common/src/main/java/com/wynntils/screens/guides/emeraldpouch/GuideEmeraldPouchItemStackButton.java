@@ -23,7 +23,6 @@ import org.lwjgl.glfw.GLFW;
 
 public class GuideEmeraldPouchItemStackButton extends WynntilsButton {
     private final GuideEmeraldPouchItemStack itemStack;
-    private final WynntilsEmeraldPouchGuideScreen screen;
 
     public GuideEmeraldPouchItemStackButton(
             int x,
@@ -34,7 +33,6 @@ public class GuideEmeraldPouchItemStackButton extends WynntilsButton {
             WynntilsEmeraldPouchGuideScreen screen) {
         super(x, y, width, height, Component.literal("Guide EmeraldPouchItemStack Button"));
         this.itemStack = itemStack;
-        this.screen = screen;
     }
 
     @Override
