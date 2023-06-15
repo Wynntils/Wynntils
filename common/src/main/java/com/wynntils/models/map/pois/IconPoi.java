@@ -55,7 +55,7 @@ public abstract class IconPoi implements Poi {
                 1f);
     }
 
-    public CustomColor getIconColor() {
+    protected CustomColor getIconColor() {
         return CommonColors.WHITE;
     }
 

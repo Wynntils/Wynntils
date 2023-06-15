@@ -117,7 +117,7 @@ public class StatusOverlayFeature extends Feature {
                     .withTextShadow(textShadow.get());
         }
 
-        public TextRenderSetting getTextRenderSetting() {
+        protected TextRenderSetting getTextRenderSetting() {
             return textRenderSetting;
         }
     }

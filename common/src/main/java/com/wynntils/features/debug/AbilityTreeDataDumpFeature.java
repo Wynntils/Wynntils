@@ -50,7 +50,7 @@ public class AbilityTreeDataDumpFeature extends Feature {
                 () -> Models.AbilityTree.ABILITY_TREE_CONTAINER_QUERIES.dumpAbilityTree(this::saveToDisk));
     }
 
-    public void saveToDisk(AbilityTreeInfo abilityTreeInfo) {
+    private void saveToDisk(AbilityTreeInfo abilityTreeInfo) {
         // Save the dump to a file
         JsonElement element = Managers.Json.GSON.toJsonTree(abilityTreeInfo);
 

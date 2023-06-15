@@ -205,7 +205,7 @@ public class ProfessionModel extends Model {
         professionProgressMap = levels;
     }
 
-    public void updatePercentage(ProfessionType type, float newPercentage, float xpGain) {
+    private void updatePercentage(ProfessionType type, float newPercentage, float xpGain) {
         ProfessionProgress oldValue = professionProgressMap.getOrDefault(type, ProfessionProgress.NO_PROGRESS);
 
         // We leveled up, but we don't know how many times.
@@ -219,7 +219,7 @@ public class ProfessionModel extends Model {
         rawXpGainInLastMinute.get(type).put(xpGain);
     }
 
-    public void updateLevel(ProfessionType type, int newLevel) {
+    private void updateLevel(ProfessionType type, int newLevel) {
         ProfessionProgress oldValue = professionProgressMap.getOrDefault(type, ProfessionProgress.NO_PROGRESS);
 
         professionProgressMap.put(type, new ProfessionProgress(newLevel, oldValue.progress()));

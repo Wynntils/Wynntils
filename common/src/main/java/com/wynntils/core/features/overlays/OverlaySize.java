@@ -17,8 +17,8 @@ public class OverlaySize {
     private static final float MINIMUM_HEIGHT = 3f;
     private static final float MINIMUM_WIDTH = 3f;
 
-    protected float width;
-    protected float height;
+    private float width;
+    private float height;
 
     // For GSON
     public OverlaySize() {}

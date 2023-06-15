@@ -6,14 +6,10 @@ package com.wynntils.handlers.scoreboard.type;
 
 import com.wynntils.core.text.StyledText;
 
-public record ScoreboardLine(StyledText line, int score) implements Comparable {
+public record ScoreboardLine(StyledText line, int score) implements Comparable<ScoreboardLine> {
     @Override
-    public int compareTo(Object o) {
-        if (o instanceof ScoreboardLine other) {
-            // Negate the result because we want the highest score to be first
-            return -Integer.compare(score, other.score);
-        }
-
-        return 0;
+    public int compareTo(ScoreboardLine other) {
+        // Negate the result because we want the highest score to be first
+        return -Integer.compare(score, other.score);
     }
 }

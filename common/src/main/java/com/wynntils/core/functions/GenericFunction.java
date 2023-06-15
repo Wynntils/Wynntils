@@ -14,7 +14,7 @@ import net.minecraft.client.resources.language.I18n;
  * Generic functions should always have required arguments, and should never have optional arguments.
  */
 public abstract class GenericFunction<T> extends Function<T> {
-    public abstract FunctionArguments.RequiredArgumentBuilder getRequiredArgumentsBuilder();
+    protected abstract FunctionArguments.RequiredArgumentBuilder getRequiredArgumentsBuilder();
 
     @Override
     public final FunctionArguments.Builder getArgumentsBuilder() {

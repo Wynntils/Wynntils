@@ -25,7 +25,7 @@ import java.lang.reflect.Type;
 import java.util.Set;
 
 public class EnumNamingUpfixer implements ConfigUpfixer {
-    public static final Gson GSON = new GsonBuilder()
+    private static final Gson GSON = new GsonBuilder()
             .registerTypeAdapter(CustomColor.class, new CustomColor.CustomColorSerializer())
             .registerTypeAdapterFactory(new EnumConverterFactory())
             .setPrettyPrinting()
@@ -68,7 +68,7 @@ public class EnumNamingUpfixer implements ConfigUpfixer {
         }
 
         @Override
-        public void write(JsonWriter out, T value) throws IOException {
+        public void write(JsonWriter out, T value) {
             throw new UnsupportedOperationException();
         }
 

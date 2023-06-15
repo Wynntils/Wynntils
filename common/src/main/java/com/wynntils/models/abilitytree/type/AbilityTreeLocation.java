@@ -14,8 +14,8 @@ import com.google.common.collect.ComparisonChain;
  * @param col The column of the ability tree. Index starts at 0.
  */
 public record AbilityTreeLocation(int page, int row, int col) implements Comparable<AbilityTreeLocation> {
-    public static final int MAX_ROWS = 6;
-    public static final int MAX_COLS = 9;
+    private static final int MAX_ROWS = 6;
+    private static final int MAX_COLS = 9;
 
     public static AbilityTreeLocation fromSlot(int slot, int page) {
         int row = slot / MAX_COLS;

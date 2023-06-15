@@ -9,7 +9,7 @@ import com.wynntils.utils.render.type.VerticalAlignment;
 import net.minecraft.client.resources.language.I18n;
 
 public abstract class DynamicOverlay extends Overlay {
-    protected final int id;
+    private final int id;
 
     protected DynamicOverlay(OverlayPosition position, float width, float height, int id) {
         super(position, width, height);

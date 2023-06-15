@@ -45,10 +45,10 @@ public final class ScoreboardHandler extends Handler {
     private static final int MAX_SCOREBOARD_LINE = 16;
 
     private String scoreboardNameCache;
-    private Set<ScoreboardLine> reconstructedScoreboard = new TreeSet<>();
-    private Map<ScoreboardPart, ScoreboardSegment> scoreboardSegments = new LinkedHashMap<>();
+    private final Set<ScoreboardLine> reconstructedScoreboard = new TreeSet<>();
+    private final Map<ScoreboardPart, ScoreboardSegment> scoreboardSegments = new LinkedHashMap<>();
 
-    private List<ScoreboardPart> scoreboardParts = new ArrayList<>();
+    private final List<ScoreboardPart> scoreboardParts = new ArrayList<>();
 
     public void addPart(ScoreboardPart scoreboardPart) {
         scoreboardParts.add(scoreboardPart);

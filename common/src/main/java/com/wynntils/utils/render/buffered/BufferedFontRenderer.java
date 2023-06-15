@@ -316,7 +316,7 @@ public final class BufferedFontRenderer {
                 poseStack, bufferSource, text, x, y, customColor, horizontalAlignment, verticalAlignment, shadow, 1f);
     }
 
-    public void renderText(
+    private void renderText(
             PoseStack poseStack,
             MultiBufferSource bufferSource,
             StyledText text,
@@ -416,7 +416,7 @@ public final class BufferedFontRenderer {
         renderTexts(poseStack, bufferSource, x, y, lines, 1f);
     }
 
-    public void renderTexts(
+    private void renderTexts(
             PoseStack poseStack,
             MultiBufferSource bufferSource,
             float x,
@@ -448,7 +448,7 @@ public final class BufferedFontRenderer {
                 line.getSetting().shadow());
     }
 
-    public void renderText(
+    private void renderText(
             PoseStack poseStack,
             MultiBufferSource bufferSource,
             float x,
@@ -469,7 +469,7 @@ public final class BufferedFontRenderer {
                 textScale);
     }
 
-    public void renderText(
+    private void renderText(
             PoseStack poseStack,
             MultiBufferSource bufferSource,
             StyledText text,

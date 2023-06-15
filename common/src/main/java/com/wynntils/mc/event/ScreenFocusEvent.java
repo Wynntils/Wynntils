@@ -15,7 +15,7 @@ import net.minecraftforge.eventbus.api.Event;
 @Cancelable
 public class ScreenFocusEvent extends Event {
     private final Screen screen;
-    private GuiEventListener guiEventListener;
+    private final GuiEventListener guiEventListener;
 
     public ScreenFocusEvent(Screen screen, GuiEventListener guiEventListener) {
         this.screen = screen;

@@ -25,7 +25,7 @@ import net.minecraftforge.eventbus.api.SubscribeEvent;
 @ConfigCategory(Category.WYNNTILS)
 public class ChangelogFeature extends Feature {
     // "v0.0.2-alpha.2" is the first version with a changelog on GitHub
-    public Storage<String> lastShownVersion = new Storage<>("v0.0.2-alpha.2");
+    public final Storage<String> lastShownVersion = new Storage<>("v0.0.2-alpha.2");
 
     @RegisterConfig
     public final Config<Boolean> autoClassMenu = new Config<>(false);

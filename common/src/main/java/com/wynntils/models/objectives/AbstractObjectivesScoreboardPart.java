@@ -80,7 +80,7 @@ public abstract class AbstractObjectivesScoreboardPart extends ScoreboardPart {
         return parsedObjectives;
     }
 
-    public static boolean isSegmentAllDone(ScoreboardSegment segment) {
+    protected static boolean isSegmentAllDone(ScoreboardSegment segment) {
         return segment.getContent().size() == 1 && segment.getContent().get(0).equals(ALL_DONE);
     }
 

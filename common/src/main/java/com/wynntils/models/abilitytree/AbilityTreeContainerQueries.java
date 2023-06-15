@@ -116,7 +116,7 @@ public class AbilityTreeContainerQueries {
         private final Consumer<AbilityTreeInfo> supplier;
         private final UnprocessedAbilityTreeInfo unprocessedTree = new UnprocessedAbilityTreeInfo();
 
-        public AbilityPageDumper(Consumer<AbilityTreeInfo> supplier) {
+        protected AbilityPageDumper(Consumer<AbilityTreeInfo> supplier) {
             this.supplier = supplier;
         }
 
@@ -143,7 +143,7 @@ public class AbilityTreeContainerQueries {
         private final Map<AbilityTreeSkillNode, AbilityTreeNodeState> collectedInfo = new LinkedHashMap<>();
         private final Consumer<ParsedAbilityTree> callback;
 
-        public AbilityPageSoftProcessor(Consumer<ParsedAbilityTree> callback) {
+        protected AbilityPageSoftProcessor(Consumer<ParsedAbilityTree> callback) {
             this.callback = callback;
         }
 

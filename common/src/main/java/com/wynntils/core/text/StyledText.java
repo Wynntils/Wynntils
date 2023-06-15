@@ -44,8 +44,6 @@ public final class StyledText implements Iterable<StyledTextPart> {
     }
 
     public static StyledText fromComponent(Component component) {
-        Component temporaryWorkaround = component;
-
         List<StyledTextPart> parts = new ArrayList<>();
         List<ClickEvent> clickEvents = new ArrayList<>();
         List<HoverEvent> hoverEvents = new ArrayList<>();

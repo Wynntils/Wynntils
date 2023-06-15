@@ -40,7 +40,7 @@ public final class FontRenderer {
         return font;
     }
 
-    public void renderText(
+    private void renderText(
             PoseStack poseStack,
             StyledText text,
             float x,
@@ -81,7 +81,7 @@ public final class FontRenderer {
         renderText(poseStack, text, x, y, customColor, horizontalAlignment, verticalAlignment, shadow, 1f);
     }
 
-    public void renderAlignedTextInBox(
+    private void renderAlignedTextInBox(
             PoseStack poseStack,
             StyledText text,
             float x1,
@@ -255,7 +255,7 @@ public final class FontRenderer {
                 1f);
     }
 
-    public void renderText(
+    private void renderText(
             PoseStack poseStack,
             StyledText text,
             float x,

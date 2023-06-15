@@ -74,7 +74,7 @@ public class HadesPartyOverlayFeature extends Feature {
 
         private final HadesUser hadesUser;
 
-        public PartyMemberOverlay(HadesUser hadesUser) {
+        protected PartyMemberOverlay(HadesUser hadesUser) {
             super(
                     new OverlayPosition(
                             0,
@@ -167,22 +167,22 @@ public class HadesPartyOverlayFeature extends Feature {
         protected void onConfigUpdate(ConfigHolder configHolder) {}
     }
 
-    public class PartyMembersOverlay extends ContainerOverlay<PartyMemberOverlay> {
+    protected class PartyMembersOverlay extends ContainerOverlay<PartyMemberOverlay> {
         private static final HadesUser DUMMY_USER_1 =
                 new HadesUser("Player 1", new CappedValue(12432, 13120), new CappedValue(65, 123));
         private static final HadesUser DUMMY_USER_2 =
                 new HadesUser("Player 2", new CappedValue(4561, 9870), new CappedValue(98, 170));
 
         @RegisterConfig
-        public Config<Integer> maxPartyMembers = new Config<>(4);
+        public final Config<Integer> maxPartyMembers = new Config<>(4);
 
         @RegisterConfig
-        public Config<HealthTexture> healthTexture = new Config<>(HealthTexture.A);
+        public final Config<HealthTexture> healthTexture = new Config<>(HealthTexture.A);
 
         @RegisterConfig
-        public Config<ManaTexture> manaTexture = new Config<>(ManaTexture.A);
+        public final Config<ManaTexture> manaTexture = new Config<>(ManaTexture.A);
 
-        public PartyMembersOverlay(
+        protected PartyMembersOverlay(
                 OverlayPosition position,
                 OverlaySize size,
                 GrowDirection growDirection,

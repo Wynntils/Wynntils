@@ -40,7 +40,7 @@ public abstract class BarOverlay extends DynamicOverlay {
 
     private Pair<StyledText, ErrorOr<CappedValue>> templateCache;
 
-    protected float currentProgress = 0f;
+    private float currentProgress = 0f;
 
     protected BarOverlay(int id, OverlaySize overlaySize) {
         super(id);
@@ -88,7 +88,7 @@ public abstract class BarOverlay extends DynamicOverlay {
         render(poseStack, bufferSource, (float) valueOrError.getValue().getProgress(), calculatedTemplate.key());
     }
 
-    protected void render(
+    private void render(
             PoseStack poseStack, MultiBufferSource bufferSource, float renderedProgress, StyledText textValue) {
         float barHeight = getTextureHeight() * heightModifier.get();
         float renderY = getModifiedRenderY(barHeight + 10);
@@ -165,7 +165,7 @@ public abstract class BarOverlay extends DynamicOverlay {
         }
     }
 
-    protected void renderText(PoseStack poseStack, MultiBufferSource bufferSource, float renderY, StyledText text) {
+    private void renderText(PoseStack poseStack, MultiBufferSource bufferSource, float renderY, StyledText text) {
         BufferedFontRenderer.getInstance()
                 .renderAlignedTextInBox(
                         poseStack,
@@ -180,7 +180,7 @@ public abstract class BarOverlay extends DynamicOverlay {
                         textShadow.get());
     }
 
-    protected float getModifiedRenderY(float renderedHeight) {
+    private float getModifiedRenderY(float renderedHeight) {
         return switch (this.getRenderVerticalAlignment()) {
             case TOP -> this.getRenderY();
             case MIDDLE -> this.getRenderY() + (this.getHeight() - renderedHeight) / 2;
@@ -191,11 +191,11 @@ public abstract class BarOverlay extends DynamicOverlay {
     @Override
     protected void onConfigUpdate(ConfigHolder configHolder) {}
 
-    public abstract boolean isRendered();
+    protected abstract boolean isRendered();
 
-    public abstract Texture getTexture();
+    protected abstract Texture getTexture();
 
-    public CustomColor getRenderColor() {
+    protected CustomColor getRenderColor() {
         return CommonColors.WHITE;
     }
 
@@ -203,9 +203,9 @@ public abstract class BarOverlay extends DynamicOverlay {
         return 1f;
     }
 
-    public abstract BarOverlayTemplatePair getTemplate();
+    protected abstract BarOverlayTemplatePair getTemplate();
 
-    public abstract BarOverlayTemplatePair getPreviewTemplate();
+    protected abstract BarOverlayTemplatePair getPreviewTemplate();
 
     public record BarOverlayTemplatePair(String textTemplate, String valueTemplate) {}
 }

@@ -283,8 +283,7 @@ public final class WynntilsDialogueHistoryScreen extends WynntilsMenuScreenBase 
         final float maxPageHeight = LINES_PER_PAGE * 9f;
 
         for (List<StyledText> dialogueList : dialogues) {
-            for (StyledText dialogueLineAsStyledText : dialogueList) {
-                StyledText dialogueLine = dialogueLineAsStyledText;
+            for (StyledText dialogueLine : dialogueList) {
                 float renderHeight = FontRenderer.getInstance().calculateRenderHeight(List.of(dialogueLine), maxWidth);
 
                 if (currentHeight + renderHeight > maxPageHeight) {

@@ -156,11 +156,11 @@ public class ShamanTotemTrackingFeature extends Feature {
             this.previewTemplate = previewTemplate;
         }
 
-        public String getTemplate() {
+        protected String getTemplate() {
             return template;
         }
 
-        public String getPreviewTemplate() {
+        protected String getPreviewTemplate() {
             return previewTemplate;
         }
     }

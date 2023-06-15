@@ -12,7 +12,7 @@ import org.apache.commons.lang3.ArrayUtils;
 public final class ScoreboardSegment {
     private final ScoreboardPart scoreboardPart;
     private final StyledText header;
-    private List<StyledText> content;
+    private final List<StyledText> content;
     private boolean visible = true;
 
     public ScoreboardSegment(ScoreboardPart scoreboardPart, StyledText header, List<StyledText> content) {
