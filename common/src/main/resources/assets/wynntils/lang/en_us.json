@@ -626,7 +626,7 @@
   "feature.wynntils.messageFilter.name": "Message Filter",
   "feature.wynntils.minimap.name": "Minimaps",
   "feature.wynntils.minimap.overlay.coordinate.name": "Coordinates",
-  "feature.wynntils.minimap.overlay.coordinate.shouldBeColored.description": "Should the Coordinates be colored acording to Debug screen colors?",
+  "feature.wynntils.minimap.overlay.coordinate.shouldBeColored.description": "Should the Coordinates be colored acording to debug screen colors?",
   "feature.wynntils.minimap.overlay.coordinate.shouldBeColored.name": "Colored",
   "feature.wynntils.minimap.overlay.coordinate.shouldDisplayOriginal.description": "Should the original coordinates be displayed? This setting applies even if the Coordinates are disabled.",
   "feature.wynntils.minimap.overlay.coordinate.shouldDisplayOriginal.name": "Display Original Coordinates",
