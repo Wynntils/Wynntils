@@ -4,14 +4,11 @@
  */
 package com.wynntils.models.items.items.game;
 
+import com.wynntils.models.emeralds.EmeraldModel;
 import com.wynntils.models.items.properties.EmeraldValuedItemProperty;
 import com.wynntils.models.items.properties.NumberedTierItemProperty;
 
 public class EmeraldPouchItem extends GameItem implements NumberedTierItemProperty, EmeraldValuedItemProperty {
-    private static final int EMERALD_BLOCK = 64;
-    private static final int LIQUID_EMERALD = 4096;
-    private static final int LIQUID_EMERALD_STACK = 262144;
-
     private final int tier;
     private final int value;
 
@@ -30,11 +27,11 @@ public class EmeraldPouchItem extends GameItem implements NumberedTierItemProper
         }
 
         if (tier >= 7) {
-            capacity = (tier - 6) * LIQUID_EMERALD_STACK;
+            capacity = (tier - 6) * EmeraldModel.LIQUID_EMERALD_STACK_VALUE;
         } else if (tier >= 4) {
-            capacity = maxValue * LIQUID_EMERALD;
+            capacity = maxValue * EmeraldModel.LIQUID_EMERALD_VALUE;
         } else {
-            capacity = maxValue * EMERALD_BLOCK;
+            capacity = maxValue * EmeraldModel.EMERALD_BLOCK_VALUE;
         }
     }
 

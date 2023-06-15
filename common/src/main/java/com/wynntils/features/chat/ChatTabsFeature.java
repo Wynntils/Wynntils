@@ -15,6 +15,7 @@ import com.wynntils.core.config.RegisterConfig;
 import com.wynntils.core.features.Feature;
 import com.wynntils.handlers.chat.event.ChatMessageReceivedEvent;
 import com.wynntils.handlers.chat.type.RecipientType;
+import com.wynntils.mc.event.ChatPacketReceivedEvent;
 import com.wynntils.mc.event.ChatScreenKeyTypedEvent;
 import com.wynntils.mc.event.ChatSentEvent;
 import com.wynntils.mc.event.ClientsideMessageEvent;
@@ -48,7 +49,7 @@ public class ChatTabsFeature extends Feature {
             new ChatTab("Private", false, "/r  ", Sets.newHashSet(RecipientType.PRIVATE), null),
             new ChatTab("Shout", false, null, Sets.newHashSet(RecipientType.SHOUT), null))));
 
-    // We do this here, and not in Models.ChatTab to not introduce a feature-model dependency.
+    // We do this here, and not in Managers.ChatTab to not introduce a feature-model dependency.
     @SubscribeEvent(priority = EventPriority.LOWEST)
     public void onChatReceived(ChatMessageReceivedEvent event) {
         // We are already sending this message to every matching tab, so we can cancel it.
@@ -102,10 +103,14 @@ public class ChatTabsFeature extends Feature {
 
     @SubscribeEvent
     public void onWorldStateChange(WorldStateEvent event) {
-        if (event.getNewState() != WorldState.WORLD) return;
-        if (Managers.ChatTab.getFocusedTab() != null) return;
+        if (event.getNewState() == WorldState.NOT_CONNECTED) {
+            Managers.ChatTab.resetFocusedTab();
+            return;
+        }
 
-        Managers.ChatTab.resetFocusedTab();
+        if (event.getNewState() == WorldState.WORLD && Managers.ChatTab.getFocusedTab() == null) {
+            Managers.ChatTab.refocusFirstTab();
+        }
     }
 
     @SubscribeEvent
@@ -143,14 +148,35 @@ public class ChatTabsFeature extends Feature {
         }
     }
 
+    @SubscribeEvent(priority = EventPriority.LOWEST)
+    public void onChatPacket(ChatPacketReceivedEvent.Player event) {
+        if (Managers.ChatTab.getFocusedTab() == null) return;
+
+        // Cancel all remaining messages, if we have a focused tab, we will handle it.
+        event.setCanceled(true);
+    }
+
+    @SubscribeEvent(priority = EventPriority.LOWEST)
+    public void onChatPacket(ChatPacketReceivedEvent.System event) {
+        if (Managers.ChatTab.getFocusedTab() == null) return;
+
+        // Cancel all remaining messages, if we have a focused tab, we will handle it.
+        event.setCanceled(true);
+    }
+
     @Override
     public void onEnable() {
+        Managers.ChatTab.refocusFirstTab();
+    }
+
+    @Override
+    public void onDisable() {
         Managers.ChatTab.resetFocusedTab();
     }
 
     @Override
     protected void onConfigUpdate(ConfigHolder configHolder) {
-        Managers.ChatTab.resetFocusedTab();
+        Managers.ChatTab.refocusFirstTab();
 
         if ((McUtils.mc().screen instanceof ChatScreen chatScreen)) {
             // Reload chat tab buttons

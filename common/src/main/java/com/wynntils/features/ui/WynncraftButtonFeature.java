@@ -47,15 +47,15 @@ public class WynncraftButtonFeature extends Feature {
     public final Config<Boolean> autoConnect = new Config<>(false);
 
     @SubscribeEvent
-    public void onTitleScreenInit(TitleScreenInitEvent.Post e) {
-        TitleScreen titleScreen = e.getTitleScreen();
+    public void onTitleScreenInit(TitleScreenInitEvent.Post event) {
+        TitleScreen titleScreen = event.getTitleScreen();
 
         addWynncraftButton(titleScreen);
     }
 
     @SubscribeEvent
-    public void onTitleScreenInit(ScreenInitEvent e) {
-        if (!(e.getScreen() instanceof TitleScreen titleScreen)) return;
+    public void onScreenInit(ScreenInitEvent event) {
+        if (!(event.getScreen() instanceof TitleScreen titleScreen)) return;
 
         if (firstTitleScreenInit && autoConnect.get()) {
             firstTitleScreenInit = false;
@@ -68,6 +68,8 @@ public class WynncraftButtonFeature extends Feature {
     }
 
     private void addWynncraftButton(TitleScreen titleScreen) {
+        if (titleScreen.children.stream().anyMatch(child -> child instanceof WynncraftButton)) return;
+
         ServerData wynncraftServer = getWynncraftServer();
 
         WynncraftButton wynncraftButton = new WynncraftButton(

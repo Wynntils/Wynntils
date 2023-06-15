@@ -51,7 +51,7 @@ import com.wynntils.models.territories.TerritoryModel;
 import com.wynntils.models.territories.TowerAuraTimerModel;
 import com.wynntils.models.token.TokenModel;
 import com.wynntils.models.war.WarModel;
-import com.wynntils.models.worlds.BombBellModel;
+import com.wynntils.models.worlds.BombModel;
 import com.wynntils.models.worlds.ServerListModel;
 import com.wynntils.models.worlds.WorldStateModel;
 import com.wynntils.models.wynnitem.WynnItemModel;
@@ -59,7 +59,6 @@ import com.wynntils.models.wynnitem.WynnItemModel;
 public final class Models {
     public static final AbilityTreeModel AbilityTree = new AbilityTreeModel();
     public static final ArrowShieldModel ArrowShield = new ArrowShieldModel();
-    public static final BombBellModel BombBell = new BombBellModel();
     public static final BossBarModel BossBar = new BossBarModel();
     public static final CharacterModel Character = new CharacterModel();
     public static final CharacterSelectionModel CharacterSelection = new CharacterSelectionModel();
@@ -87,6 +86,7 @@ public final class Models {
     public static final WynnItemModel WynnItem = new WynnItemModel();
 
     // Models with dependencies, ordered alphabetically as far as possible
+    public static final BombModel Bomb = new BombModel(WorldState);
     public static final CombatXpModel CombatXp = new CombatXpModel(WorldState);
     public static final CharacterStatsModel CharacterStats = new CharacterStatsModel(CombatXp);
     public static final FriendsModel Friends = new FriendsModel(WorldState);
@@ -100,7 +100,7 @@ public final class Models {
     public static final MobTotemModel MobTotem = new MobTotemModel(WorldState);
     public static final PartyModel Party = new PartyModel(WorldState);
     public static final PingModel Ping = new PingModel(WorldState);
-    public static final ProfessionModel Profession = new ProfessionModel(Character);
+    public static final ProfessionModel Profession = new ProfessionModel(Character, WorldState, Bomb);
     public static final QuestModel Quest = new QuestModel(CombatXp);
     public static final SeaskipperModel Seaskipper = new SeaskipperModel(Item);
     public static final ShamanMaskModel ShamanMask = new ShamanMaskModel(WorldState);

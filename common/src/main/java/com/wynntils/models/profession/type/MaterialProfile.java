@@ -2,9 +2,8 @@
  * Copyright © Wynntils 2022.
  * This file is released under AGPLv3. See LICENSE for full license details.
  */
-package com.wynntils.models.gathering;
+package com.wynntils.models.profession.type;
 
-import com.wynntils.models.profession.type.ProfessionType;
 import java.util.Collection;
 import java.util.List;
 import java.util.Locale;
@@ -140,6 +139,10 @@ public final class MaterialProfile {
             } catch (IllegalArgumentException e) {
                 return null;
             }
+        }
+
+        public MaterialType getMaterialType() {
+            return materialType;
         }
     }
 

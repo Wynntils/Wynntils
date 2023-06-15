@@ -14,6 +14,7 @@ import com.wynntils.core.text.PartStyle;
 import com.wynntils.core.text.StyledText;
 import com.wynntils.core.text.StyledTextPart;
 import com.wynntils.handlers.chat.event.ChatMessageReceivedEvent;
+import com.wynntils.handlers.chat.type.RecipientType;
 import com.wynntils.models.players.type.GuildRank;
 import com.wynntils.utils.type.IterationDecision;
 import java.util.regex.Matcher;
@@ -27,18 +28,22 @@ import net.minecraftforge.eventbus.api.SubscribeEvent;
 @ConfigCategory(Category.CHAT)
 public class GuildRankReplacementFeature extends Feature {
     private static final char STAR = '★';
+    private static final char REPLACEMENT_STAR = '*';
 
     @RegisterConfig
     public final Config<RankType> rankType = new Config<>(RankType.NAME);
 
-    // Test suite: https://regexr.com/7e5gr
-    private static final Pattern GUILD_MESSAGE_PATTERN = Pattern.compile("§3\\[(?:§b)?★{0,5}(?:§3)?.{1,16}]§b");
+    // Test suite: https://regexr.com/7f8kh
+    private static final Pattern GUILD_MESSAGE_PATTERN =
+            Pattern.compile("§3\\[(?:§b)?★{0,5}(?:§3)?(?:§o)?.{1,16}(?:§r)?(?:§3)?\\]");
 
     // Test suite: https://regexr.com/7e66m
     private static final Pattern RECRUIT_USERNAME_PATTERN = Pattern.compile("§3\\[(.{1,16})");
 
-    @SubscribeEvent(priority = EventPriority.HIGH)
+    @SubscribeEvent(priority = EventPriority.HIGHEST)
     public void onChatMessageReceived(ChatMessageReceivedEvent e) {
+        if (e.getRecipientType() != RecipientType.GUILD) return;
+
         StyledText originalStyledText = e.getStyledText();
 
         Matcher m = originalStyledText.getMatcher(GUILD_MESSAGE_PATTERN);
@@ -48,6 +53,7 @@ public class GuildRankReplacementFeature extends Feature {
                 switch (rankType.get()) {
                     case NONE -> modifyByRemovingRank(originalStyledText);
                     case NAME -> modifyByAddingTextRank(originalStyledText);
+                    case SMALL_STARS -> modifyByAddingSmallStarsRank(originalStyledText);
                 };
 
         if (originalStyledText.equals(modified)) return; // no changes
@@ -116,8 +122,27 @@ public class GuildRankReplacementFeature extends Feature {
         return modified;
     }
 
+    private StyledText modifyByAddingSmallStarsRank(StyledText styledText) {
+        StyledText modified = styledText.iterate((part, changes) -> {
+            String partContent = part.getString(null, PartStyle.StyleType.NONE);
+            if (partContent.contains(String.valueOf(STAR))) {
+                changes.set(
+                        0,
+                        new StyledTextPart(
+                                partContent.replaceAll(String.valueOf(STAR), String.valueOf(REPLACEMENT_STAR)),
+                                part.getPartStyle().getStyle(),
+                                null,
+                                Style.EMPTY));
+                return IterationDecision.BREAK;
+            }
+            return IterationDecision.CONTINUE;
+        });
+        return modified;
+    }
+
     private enum RankType {
         NAME,
-        NONE
+        NONE,
+        SMALL_STARS
     }
 }

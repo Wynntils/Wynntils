@@ -77,10 +77,10 @@ public class GameNotificationOverlayFeature extends Feature {
 
     public static class GameNotificationOverlay extends Overlay {
         @RegisterConfig
-        public final Config<Float> messageTimeLimit = new Config<>(10f);
+        public final Config<Float> messageTimeLimit = new Config<>(12f);
 
         @RegisterConfig
-        public final Config<Integer> messageLimit = new Config<>(5);
+        public final Config<Integer> messageLimit = new Config<>(8);
 
         @RegisterConfig
         public final Config<Boolean> invertGrowth = new Config<>(true);
