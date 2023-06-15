@@ -36,9 +36,10 @@ public class PoiManagerWidget extends AbstractWidget {
     private final Button upButton;
     private final Button downButton;
     private final int row;
-    private CustomColor color;
     private final PoiManagementScreen managementScreen;
     private final List<CustomPoi> pois;
+
+    private CustomColor color;
 
     public PoiManagerWidget(
             float x, float y, int width, int height, CustomPoi poi, int row, PoiManagementScreen managementScreen) {

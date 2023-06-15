@@ -172,7 +172,7 @@ public abstract class ContainerOverlay<T extends Overlay> extends Overlay {
             }
         }
 
-        protected OverlayPosition getChildPosition(
+        private OverlayPosition getChildPosition(
                 float containerX,
                 float containerY,
                 OverlaySize containerSize,
