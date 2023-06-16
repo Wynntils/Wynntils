@@ -21,7 +21,7 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.ItemStack;
 
 public class DiscoveryInfo {
-    private static final Pattern COMBAT_LEVEL_PATTERN = Pattern.compile("§a✔§r§7 Combat Lv. Min: §r§f(\\d+)");
+    private static final Pattern COMBAT_LEVEL_PATTERN = Pattern.compile("§a✔§7 Combat Lv. Min: §f(\\d+)");
     private final String name;
     private final DiscoveryType type;
     private final String description;
