@@ -1,9 +1,21 @@
+## [0.0.3-alpha.92](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.91...v0.0.3-alpha.92) (2023-06-16)
+
+
+### Bug Fixes
+
+* Fix discoveries not parsing ([#1621](https://github.com/Wynntils/Artemis/issues/1621)) ([f5b6541](https://github.com/Wynntils/Artemis/commit/f5b654129b3d9ea5a2f33842dbdf14f9f6628b70))
+
 ## [0.0.3-alpha.91](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.90...v0.0.3-alpha.91) (2023-06-15)
 
 
 ### Code Refactoring
 
 * Update code according to IntelliJ analyze suggestions ([#1594](https://github.com/Wynntils/Artemis/issues/1594)) ([15c83f4](https://github.com/Wynntils/Artemis/commit/15c83f4a7278b700989ccf2bef49b31d21d0cbb6))
+
+
+### Miscellaneous Chores
+
+* **release:** v0.0.3-alpha.91 [skip ci] ([f99ca4a](https://github.com/Wynntils/Artemis/commit/f99ca4a380d0f61a88836b8385230a7bfe01d090))
 
 ## [0.0.3-alpha.90](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.89...v0.0.3-alpha.90) (2023-06-15)
 
@@ -40,16 +52,4 @@
 ### Miscellaneous Chores
 
 * **release:** v0.0.3-alpha.88 [skip ci] ([4b6b98d](https://github.com/Wynntils/Artemis/commit/4b6b98d2fb79478b75acc1b92f648e7f277188b5))
-
-## [0.0.3-alpha.87](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.86...v0.0.3-alpha.87) (2023-06-13)
-
-
-### New Features
-
-* Add MaterialDryStreak function ([#1616](https://github.com/Wynntils/Artemis/issues/1616)) ([b4b9578](https://github.com/Wynntils/Artemis/commit/b4b9578f24093d9e9612e504b49c914e081d2109))
-
-
-### Miscellaneous Chores
-
-* **release:** v0.0.3-alpha.87 [skip ci] ([45c9a39](https://github.com/Wynntils/Artemis/commit/45c9a398f7abde3876b40f2f7ce10dae982f7fa4))
 
