@@ -5,7 +5,6 @@
 package com.wynntils.models.containers;
 
 import com.wynntils.core.WynntilsMod;
-import com.wynntils.core.components.Managers;
 import com.wynntils.core.components.Model;
 import com.wynntils.core.components.Models;
 import com.wynntils.core.storage.Storage;
@@ -47,7 +46,6 @@ public final class LootChestModel extends Model {
             nextExpectedLootContainerId = event.getContainerId();
 
             dryCount.store(dryCount.get() + 1);
-            Managers.Config.saveConfig();
         }
     }
 
@@ -69,8 +67,6 @@ public final class LootChestModel extends Model {
         } else {
             dryBoxes.store(dryBoxes.get() + 1);
         }
-
-        Managers.Config.saveConfig();
     }
 
     @SubscribeEvent
