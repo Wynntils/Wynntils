@@ -1,9 +1,21 @@
+## [0.0.3-alpha.93](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.92...v0.0.3-alpha.93) (2023-06-17)
+
+
+### Miscellaneous Chores
+
+* remove left over config save calls ([#1629](https://github.com/Wynntils/Artemis/issues/1629)) ([9fa9531](https://github.com/Wynntils/Artemis/commit/9fa953171798822b279f650fc19bfa9922f64b06))
+
 ## [0.0.3-alpha.92](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.91...v0.0.3-alpha.92) (2023-06-16)
 
 
 ### Bug Fixes
 
 * Fix discoveries not parsing ([#1621](https://github.com/Wynntils/Artemis/issues/1621)) ([f5b6541](https://github.com/Wynntils/Artemis/commit/f5b654129b3d9ea5a2f33842dbdf14f9f6628b70))
+
+
+### Miscellaneous Chores
+
+* **release:** v0.0.3-alpha.92 [skip ci] ([60abab3](https://github.com/Wynntils/Artemis/commit/60abab391e15659512da4f14f7d22ad870d15dde))
 
 ## [0.0.3-alpha.91](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.90...v0.0.3-alpha.91) (2023-06-15)
 
@@ -40,16 +52,4 @@
 ### Miscellaneous Chores
 
 * **release:** v0.0.3-alpha.89 [skip ci] ([dea2597](https://github.com/Wynntils/Artemis/commit/dea25974311a17dd8a55cfd713e925d2dc91f464))
-
-## [0.0.3-alpha.88](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.87...v0.0.3-alpha.88) (2023-06-13)
-
-
-### New Features
-
-* Add local server bomb tracking, fix duplicate bombs showing up on /bombbell, rename to /bomb ([#1618](https://github.com/Wynntils/Artemis/issues/1618)) ([388b6c8](https://github.com/Wynntils/Artemis/commit/388b6c80f606d7ee840854e0e9babd9c4ef80545))
-
-
-### Miscellaneous Chores
-
-* **release:** v0.0.3-alpha.88 [skip ci] ([4b6b98d](https://github.com/Wynntils/Artemis/commit/4b6b98d2fb79478b75acc1b92f648e7f277188b5))
 
