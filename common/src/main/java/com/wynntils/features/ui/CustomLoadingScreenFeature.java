@@ -7,6 +7,8 @@ package com.wynntils.features.ui;
 import com.wynntils.core.config.Category;
 import com.wynntils.core.config.ConfigCategory;
 import com.wynntils.core.features.Feature;
+import com.wynntils.core.text.PartStyle;
+import com.wynntils.handlers.chat.event.ChatMessageReceivedEvent;
 import com.wynntils.mc.event.LoadingProgressEvent;
 import com.wynntils.mc.event.LocalSoundEvent;
 import com.wynntils.mc.event.ResourcePackEvent;
@@ -82,5 +84,11 @@ public class CustomLoadingScreenFeature extends Feature {
                 McUtils.mc().setScreen(null);
             }
         }
+    }
+
+    @SubscribeEvent
+    public void onRecieveMessage(ChatMessageReceivedEvent event) {
+        if (event.getOriginalStyledText().equalsString("Loading Resource Pack...", PartStyle.StyleType.NONE))
+            event.setCanceled(true);
     }
 }
