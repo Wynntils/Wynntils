@@ -58,6 +58,9 @@ public class MinimapFeature extends Feature {
     @OverlayInfo(renderAt = RenderState.PRE, renderType = RenderEvent.ElementType.GUI)
     private final Overlay coordinatesOverlay = new CoordinateOverlay();
 
+    @OverlayInfo(renderAt = RenderState.PRE, renderType = RenderEvent.ElementType.GUI)
+    private final Overlay terrOverlay = new TerrOverlay();
+
     public static class MinimapOverlay extends Overlay {
         private static final int DEFAULT_SIZE = 130;
 
@@ -535,6 +538,33 @@ public class MinimapFeature extends Feature {
         @Override
         public String getPreviewTemplate() {
             return this.shouldBeColored.get() ? TEMPLATE_COLORED : TEMPLATE;
+        }
+    }
+
+    public static class TerrOverlay extends TextOverlay {
+        private static final String TEMPLATE = "{territory}";
+
+        protected TerrOverlay() {
+            super(
+                    new OverlayPosition(
+                            136 + McUtils.mc().font.lineHeight,
+                            6,
+                            VerticalAlignment.TOP,
+                            HorizontalAlignment.LEFT,
+                            OverlayPosition.AnchorSection.TOP_LEFT),
+                    new OverlaySize(130, 20),
+                    HorizontalAlignment.CENTER,
+                    VerticalAlignment.MIDDLE);
+        }
+
+        @Override
+        public String getTemplate() {
+            return TEMPLATE;
+        }
+
+        @Override
+        public String getPreviewTemplate() {
+            return TEMPLATE;
         }
     }
 
