@@ -30,7 +30,6 @@ import net.minecraft.util.Mth;
 import org.lwjgl.glfw.GLFW;
 
 public class TextInputBoxWidget extends AbstractWidget {
-    private static final int CURSOR_PADDING = 3;
     private static final int CURSOR_TICK = 350;
 
     private final Consumer<String> onUpdateConsumer;
@@ -175,7 +174,7 @@ public class TextInputBoxWidget extends AbstractWidget {
         drawCursor(
                 poseStack,
                 font.width(renderedText.substring(0, Math.min(cursorPosition, renderedText.length()))),
-                (textPadding + this.height - textPadding) / 2,
+                this.height / 2,
                 VerticalAlignment.MIDDLE,
                 false);
 
@@ -505,14 +504,16 @@ public class TextInputBoxWidget extends AbstractWidget {
         if (isFocused() || forceUnfocusedCursor) {
             Font font = FontRenderer.getInstance().getFont();
 
+            int cursorHeight = font.lineHeight + 2;
+
             float cursorRenderY =
                     switch (verticalAlignment) {
-                        case TOP -> y - (CURSOR_PADDING - 1);
-                        case MIDDLE -> y - font.lineHeight + (CURSOR_PADDING - 1);
-                        case BOTTOM -> y - font.lineHeight - (CURSOR_PADDING - 1);
+                        case TOP -> y - 1 - cursorHeight;
+                        case MIDDLE -> y - 1 - cursorHeight / 2;
+                        case BOTTOM -> y - (font.lineHeight / 2);
                     };
 
-            RenderUtils.drawRect(poseStack, CommonColors.WHITE, x + 1, cursorRenderY, 0, 1, font.lineHeight + 3);
+            RenderUtils.drawRect(poseStack, CommonColors.WHITE, x + 1, cursorRenderY, 0, 1, cursorHeight);
         }
     }
 

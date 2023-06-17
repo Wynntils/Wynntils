@@ -178,7 +178,7 @@ public final class FontRenderer {
                 switch (verticalAlignment) {
                     case TOP -> renderY - 2;
                     case MIDDLE -> renderY - (font.lineHeight / 2f) - 2;
-                    case BOTTOM -> renderY - font.lineHeight + 2;
+                    case BOTTOM -> renderY - font.lineHeight - 2;
                 };
 
         RenderUtils.drawRect(

@@ -23,7 +23,6 @@ import net.minecraft.sounds.SoundEvents;
 public class SearchWidget extends TextInputBoxWidget {
     private static final Component DEFAULT_TEXT =
             Component.translatable("screens.wynntils.searchWidget.defaultSearchText");
-    private static final float VERTICAL_OFFSET = 6.5f;
 
     public SearchWidget(
             int x, int y, int width, int height, Consumer<String> onUpdateConsumer, TextboxScreen textboxScreen) {
@@ -76,10 +75,12 @@ public class SearchWidget extends TextInputBoxWidget {
                         StyledText.fromString(defaultText ? DEFAULT_TEXT.getString() : firstPortion),
                         this.getX() + textPadding,
                         this.getX() + this.width - textPadding - lastWidth - highlightedWidth,
-                        this.getY() + VERTICAL_OFFSET,
+                        this.getY() + this.getHeight() / 2,
+                        this.getY() + this.getHeight() / 2,
                         0,
                         defaultText ? CommonColors.LIGHT_GRAY : CommonColors.WHITE,
                         HorizontalAlignment.LEFT,
+                        VerticalAlignment.MIDDLE,
                         TextShadow.NORMAL);
 
         if (defaultText) return;
@@ -90,13 +91,13 @@ public class SearchWidget extends TextInputBoxWidget {
                         StyledText.fromString(highlightedPortion),
                         this.getX() + textPadding + firstWidth,
                         this.getX() + this.width - textPadding - lastWidth,
-                        this.getY() + VERTICAL_OFFSET,
-                        this.getY() + VERTICAL_OFFSET,
+                        this.getY() + this.getHeight() / 2,
+                        this.getY() + this.getHeight() / 2,
                         0,
                         CommonColors.BLUE,
                         CommonColors.WHITE,
                         HorizontalAlignment.LEFT,
-                        VerticalAlignment.TOP);
+                        VerticalAlignment.MIDDLE);
 
         FontRenderer.getInstance()
                 .renderAlignedTextInBox(
@@ -104,10 +105,12 @@ public class SearchWidget extends TextInputBoxWidget {
                         StyledText.fromString(lastPortion),
                         this.getX() + textPadding + firstWidth + highlightedWidth,
                         this.getX() + this.width - textPadding,
-                        this.getY() + VERTICAL_OFFSET,
+                        this.getY() + this.getHeight() / 2,
+                        this.getY() + this.getHeight() / 2,
                         0,
                         defaultText ? CommonColors.LIGHT_GRAY : CommonColors.WHITE,
                         HorizontalAlignment.LEFT,
+                        VerticalAlignment.MIDDLE,
                         TextShadow.NORMAL);
 
         drawCursor(
@@ -116,8 +119,8 @@ public class SearchWidget extends TextInputBoxWidget {
                         + font.width(renderedText.substring(0, Math.min(cursorPosition, renderedText.length())))
                         + textPadding
                         - 2,
-                this.getY() + VERTICAL_OFFSET,
-                VerticalAlignment.TOP,
+                this.getY() + this.getHeight() / 2,
+                VerticalAlignment.MIDDLE,
                 false);
     }
 
