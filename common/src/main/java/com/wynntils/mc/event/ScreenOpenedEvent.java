@@ -35,4 +35,11 @@ public abstract class ScreenOpenedEvent extends Event {
             super(screen);
         }
     }
+
+    @Cancelable
+    public static class AlwaysPre extends ScreenOpenedEvent {
+        public AlwaysPre(Screen screen) {
+            super(screen);
+        }
+    }
 }

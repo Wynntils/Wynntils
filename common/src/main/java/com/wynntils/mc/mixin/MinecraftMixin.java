@@ -33,8 +33,10 @@ public abstract class MinecraftMixin {
         if (screen == null) return;
 
         ScreenOpenedEvent.Pre event = new ScreenOpenedEvent.Pre(screen);
+        ScreenOpenedEvent.AlwaysPre alwaysEvent = new ScreenOpenedEvent.AlwaysPre(screen);
         MixinHelper.post(event);
-        if (event.isCanceled()) {
+        MixinHelper.postAlways(alwaysEvent);
+        if (event.isCanceled() || alwaysEvent.isCanceled()) {
             ci.cancel();
         }
     }

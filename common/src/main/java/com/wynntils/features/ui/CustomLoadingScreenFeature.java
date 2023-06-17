@@ -24,7 +24,7 @@ public class CustomLoadingScreenFeature extends Feature {
     private LoadingScreen loadingScreen;
 
     @SubscribeEvent(priority = EventPriority.HIGH)
-    public void onScreenOpenPre(ScreenOpenedEvent.Pre event) {
+    public void onScreenOpenPre(ScreenOpenedEvent.AlwaysPre event) {
         if (loadingScreen == null) return;
 
         if (event.getScreen() instanceof ProgressScreen) {
