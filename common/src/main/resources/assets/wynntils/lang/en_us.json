@@ -657,7 +657,7 @@
   "feature.wynntils.minimap.overlay.minimap.scale.name": "Minimap Scale",
   "feature.wynntils.minimap.overlay.minimap.showCompass.description": "How should the cardinal directions (N/E/S/W) be displayed on the minimap?",
   "feature.wynntils.minimap.overlay.minimap.showCompass.name": "Show Compass Directions",
-  "feature.wynntils.minimap.overlay.terr.name": "Show your current terretory",
+  "feature.wynntils.minimap.overlay.territory.name": "Show your current terretory",
   "feature.wynntils.mobTotemTracking.name": "Mob Totem Tracking",
   "feature.wynntils.mobTotemTracking.overlay.mobTotemTimer.name": "Mob Totem Timer",
   "feature.wynntils.mobTotemTracking.overlay.mobTotemTimer.textShadow.description": "What should the text shadow look like?",
