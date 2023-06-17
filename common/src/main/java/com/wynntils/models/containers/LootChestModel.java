@@ -15,8 +15,10 @@ import com.wynntils.mc.event.ContainerSetSlotEvent;
 import com.wynntils.mc.event.MenuEvent;
 import com.wynntils.models.containers.event.MythicFoundEvent;
 import com.wynntils.models.gear.type.GearTier;
-import com.wynntils.utils.wynn.WynnItemMatchers;
+import com.wynntils.models.gear.type.GearType;
+import com.wynntils.models.items.items.game.GearBoxItem;
 import java.util.List;
+import java.util.Optional;
 import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 
@@ -57,19 +59,18 @@ public final class LootChestModel extends Model {
         if (event.getSlot() >= LOOT_CHEST_ITEM_COUNT) return;
 
         ItemStack itemStack = event.getItemStack();
-
-        if (!WynnItemMatchers.isGearBox(itemStack)) return;
-
-        GearTier gearTier = GearTier.fromComponent(itemStack.getHoverName());
-
-        if (gearTier == GearTier.MYTHIC) {
-            dryBoxes.store(0);
-            dryCount.store(0);
+        Optional<GearBoxItem> wynnItem = Models.Item.asWynnItem(itemStack, GearBoxItem.class);
+        if (wynnItem.isEmpty()) return;
+        GearBoxItem gearBox = wynnItem.get();
+        if (gearBox.getGearTier() == GearTier.MYTHIC) {
+            if (gearBox.getGearType() != GearType.MASTERY_TOME) {
+                dryBoxes.store(0);
+                dryCount.store(0);
+            }
             WynntilsMod.postEvent(new MythicFoundEvent(itemStack));
         } else {
             dryBoxes.store(dryBoxes.get() + 1);
         }
-
         Managers.Config.saveConfig();
     }
 
