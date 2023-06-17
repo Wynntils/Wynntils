@@ -54,7 +54,7 @@ public final class LootChestModel extends Model {
     }
 
     @SubscribeEvent
-    public void onSetSlot(ContainerSetSlotEvent.Pre event) {
+    public void onSetSlot(ContainerSetSlotEvent.Post event) {
         if (event.getContainerId() != nextExpectedLootContainerId) return;
         if (event.getSlot() >= LOOT_CHEST_ITEM_COUNT) return;
 
