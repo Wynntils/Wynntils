@@ -68,8 +68,8 @@ public abstract class AbstractMapScreen extends WynntilsScreen {
     protected float currentZoom = 1f;
 
     private boolean dragging = false;
-    private double lastMouseX = 0;
-    private double lastMouseY = 0;
+    private int lastMouseX = 0;
+    private int lastMouseY = 0;
 
     protected Poi hovered = null;
 
@@ -213,8 +213,8 @@ public abstract class AbstractMapScreen extends WynntilsScreen {
             dragging = true;
         }
 
-        lastMouseX = mouseX;
-        lastMouseY = mouseY;
+        lastMouseX = (int) mouseX;
+        lastMouseY = (int) mouseY;
 
         return true;
     }
@@ -347,8 +347,8 @@ public abstract class AbstractMapScreen extends WynntilsScreen {
 
     protected void updateMapCenterIfDragging(int mouseX, int mouseY) {
         if (dragging) {
-            updateMapCenter((float) (mapCenterX + (lastMouseX - mouseX) / currentZoom), (float)
-                    (mapCenterZ + (lastMouseY - mouseY) / currentZoom));
+            updateMapCenter(
+                    mapCenterX + (lastMouseX - mouseX) / currentZoom, mapCenterZ + (lastMouseY - mouseY) / currentZoom);
         }
         lastMouseX = mouseX;
         lastMouseY = mouseY;
