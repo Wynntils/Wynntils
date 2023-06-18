@@ -1,9 +1,21 @@
+## [0.0.3-alpha.95](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.94...v0.0.3-alpha.95) (2023-06-18)
+
+
+### New Features
+
+* Add current territory overlay to minimap ([#1627](https://github.com/Wynntils/Artemis/issues/1627)) ([5142945](https://github.com/Wynntils/Artemis/commit/514294545a345ab9a9839397269593b32fc61933))
+
 ## [0.0.3-alpha.94](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.93...v0.0.3-alpha.94) (2023-06-18)
 
 
 ### Bug Fixes
 
 * Dry count resets when getting a mythic tome ([#1624](https://github.com/Wynntils/Artemis/issues/1624)) ([a79b621](https://github.com/Wynntils/Artemis/commit/a79b621d6068ab3acea20830869f30ca73fc7e19))
+
+
+### Miscellaneous Chores
+
+* **release:** v0.0.3-alpha.94 [skip ci] ([5e6dd4f](https://github.com/Wynntils/Artemis/commit/5e6dd4f2ec68ac0e8a936cbb6d5f8f5d72d758f6))
 
 ## [0.0.3-alpha.93](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.92...v0.0.3-alpha.93) (2023-06-17)
 
@@ -36,16 +48,4 @@
 ### Code Refactoring
 
 * Update code according to IntelliJ analyze suggestions ([#1594](https://github.com/Wynntils/Artemis/issues/1594)) ([15c83f4](https://github.com/Wynntils/Artemis/commit/15c83f4a7278b700989ccf2bef49b31d21d0cbb6))
-
-## [0.0.3-alpha.90](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.89...v0.0.3-alpha.90) (2023-06-15)
-
-
-### New Features
-
-* Colored Coordinates ([#1620](https://github.com/Wynntils/Artemis/issues/1620)) ([32bb79b](https://github.com/Wynntils/Artemis/commit/32bb79bc06b0e74135e7a22650f3607372a1a214))
-
-
-### Miscellaneous Chores
-
-* **release:** v0.0.3-alpha.90 [skip ci] ([d474527](https://github.com/Wynntils/Artemis/commit/d47452751b80ac28800033f7c033ff1219f6966c))
 
