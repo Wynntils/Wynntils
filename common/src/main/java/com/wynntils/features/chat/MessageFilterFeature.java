@@ -28,9 +28,7 @@ public class MessageFilterFeature extends Feature {
             Pair.of(
                     Pattern.compile(
                             "^§cSelect a character! Each character is saved individually across all servers, you can come back at any time with /class and select another character!$"),
-                    null),
-            Pair.of(Pattern.compile("^ +§6§lWelcome to Wynncraft!$"), null),
-            Pair.of(Pattern.compile("^ +§fplay\\.wynncraft\\.com §7-/-§f wynncraft\\.com$"), null));
+                    null));
 
     private static final List<Pair<Pattern, Pattern>> SYSTEM_INFO =
             List.of(Pair.of(Pattern.compile("^(§r)?§.\\[Info\\] .*$"), Pattern.compile("^(§8)?\\[Info\\] .*$")));
@@ -47,6 +45,7 @@ public class MessageFilterFeature extends Feature {
             Pattern.compile(
                     "^§5Party Finder:§d Hey [a-zA-Z0-9_]{2,16}, over here! Join the (?:[a-zA-Z'§ ]+) queue and match up with §e\\d+ other players§d!$"),
             null));
+    public static final Pattern WELCOME_MASSAGE_PATTERN = Pattern.compile("^ +§6§lWelcome to Wynncraft!$");
 
     @RegisterConfig
     public final Config<Boolean> hideWelcome = new Config<>(false);
@@ -60,13 +59,19 @@ public class MessageFilterFeature extends Feature {
     @RegisterConfig
     public final Config<Boolean> hidePartyFinder = new Config<>(false);
 
+    private int remainingWelcomeMessages = 0;
+
     @SubscribeEvent
     public void onMessage(ChatMessageReceivedEvent e) {
         StyledText msg = e.getOriginalStyledText();
         MessageType messageType = e.getMessageType();
 
-        if (hideWelcome.get() && processFilter(msg, messageType, WELCOME)) {
-            e.setCanceled(true);
+        if (hideWelcome.get()) {
+            if (remainingWelcomeMessages-- > 0 || processFilter(msg, messageType, WELCOME)) e.setCanceled(true);
+            else if (msg.matches(WELCOME_MASSAGE_PATTERN)) {
+                e.setCanceled(true);
+                remainingWelcomeMessages = 4;
+            }
             return;
         }
 
@@ -99,10 +104,6 @@ public class MessageFilterFeature extends Feature {
         return false; // Failed to match any patterns
     }
 
-    /**
-     * Returns the pattern by the given messageType. If that pattern does not exist (null), returns the pattern for the
-     * other messageType instead.
-     */
     private Pattern getPattern(Pair<Pattern, Pattern> p, MessageType messageType) {
         return switch (messageType) {
             case FOREGROUND -> p.a();
