@@ -59,7 +59,7 @@ public class MinimapFeature extends Feature {
     private final Overlay coordinatesOverlay = new CoordinateOverlay();
 
     @OverlayInfo(renderAt = RenderState.PRE, renderType = RenderEvent.ElementType.GUI)
-    private final Overlay terrOverlay = new TerritoryOverlay();
+    private final Overlay territoryOverlay = new TerritoryOverlay();
 
     public static class MinimapOverlay extends Overlay {
         private static final int DEFAULT_SIZE = 130;
