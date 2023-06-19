@@ -17,6 +17,9 @@ import com.wynntils.core.features.Feature;
 import com.wynntils.mc.event.TitleScreenInitEvent;
 import com.wynntils.utils.mc.McUtils;
 import com.wynntils.utils.render.Texture;
+import java.io.IOException;
+import java.nio.ByteBuffer;
+import java.util.function.Consumer;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.screens.ConnectScreen;
 import net.minecraft.client.gui.screens.Screen;
@@ -29,10 +32,6 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import org.apache.commons.lang3.Validate;
-
-import java.io.IOException;
-import java.nio.ByteBuffer;
-import java.util.function.Consumer;
 
 @ConfigCategory(Category.UI)
 public class WynncraftButtonFeature extends Feature {
