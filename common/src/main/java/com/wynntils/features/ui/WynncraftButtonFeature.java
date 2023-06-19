@@ -46,6 +46,9 @@ public class WynncraftButtonFeature extends Feature {
     @RegisterConfig
     public final Config<Boolean> autoConnect = new Config<>(false);
 
+    @RegisterConfig
+    public final Config<Boolean> autoLoadResourcePack = new Config<>(true);
+
     @SubscribeEvent
     public void onTitleScreenInit(TitleScreenInitEvent.Post event) {
         TitleScreen titleScreen = event.getTitleScreen();
@@ -80,7 +83,12 @@ public class WynncraftButtonFeature extends Feature {
     private ServerData getWynncraftServer() {
         ServerData wynncraftServer =
                 new ServerData("Wynncraft", connectToLobby.get() ? LOBBY_SERVER : GAME_SERVER, false);
-        wynncraftServer.setResourcePackStatus(ServerData.ServerPackStatus.ENABLED);
+
+        if (autoLoadResourcePack.get()) {
+            wynncraftServer.setResourcePackStatus(ServerData.ServerPackStatus.ENABLED);
+        } else {
+            wynncraftServer.setResourcePackStatus(ServerData.ServerPackStatus.DISABLED);
+        }
 
         return wynncraftServer;
     }

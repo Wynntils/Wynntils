@@ -892,6 +892,8 @@
   "feature.wynntils.wynncraftButton.autoConnect.name": "Auto-Connect on Startup",
   "feature.wynntils.wynncraftButton.connectToLobby.description": "Should the button connect to the lobby or the game server?",
   "feature.wynntils.wynncraftButton.connectToLobby.name": "Connect to Lobby",
+  "feature.wynntils.wynncraftButton.autoLoadResourcePack.name": "Auto load resource pack",
+  "feature.wynntils.wynncraftButton.autoLoadResourcePack.description": "Should the Wynncraft texture pack be auto loaded?",
   "feature.wynntils.wynncraftButton.name": "Wynncraft Button",
   "feature.wynntils.wynncraftPauseScreen.classSelectionButton.name": "Class Selection",
   "feature.wynntils.wynncraftPauseScreen.hubButton.name": "Back to Hub",
