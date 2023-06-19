@@ -85,7 +85,7 @@ public class WynncraftButtonFeature extends Feature {
                 new ServerData("Wynncraft", connectToLobby.get() ? LOBBY_SERVER : GAME_SERVER, false);
 
         wynncraftServer.setResourcePackStatus(
-                autoLoadResourcePack.get()
+                loadResourcePack.get()
                         ? ServerData.ServerPackStatus.ENABLED
                         : ServerData.ServerPackStatus.DISABLED);
 
