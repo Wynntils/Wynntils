@@ -47,7 +47,7 @@ public class WynncraftButtonFeature extends Feature {
     public final Config<Boolean> autoConnect = new Config<>(false);
 
     @RegisterConfig
-    public final Config<Boolean> autoLoadResourcePack = new Config<>(true);
+    public final Config<Boolean> loadResourcePack = new Config<>(true);
 
     @SubscribeEvent
     public void onTitleScreenInit(TitleScreenInitEvent.Post event) {
