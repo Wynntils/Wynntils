@@ -44,7 +44,35 @@ public class TextInputBoxWidget extends AbstractWidget {
 
     protected final TextboxScreen textboxScreen;
     protected int textPadding = 2;
+    private final HorizontalAlignment horizontalAlignment;
+    private final VerticalAlignment verticalAlignment;
 
+    public TextInputBoxWidget(
+            int x,
+            int y,
+            int width,
+            int height,
+            Component boxTitle,
+            Consumer<String> onUpdateConsumer,
+            TextboxScreen textboxScreen,
+            TextInputBoxWidget oldWidget,
+            HorizontalAlignment horizontalAlignment,
+            VerticalAlignment verticalAlignment) {
+        super(x, y, width, height, boxTitle);
+        this.onUpdateConsumer = onUpdateConsumer == null ? s -> {} : onUpdateConsumer;
+        this.textboxScreen = textboxScreen;
+        this.horizontalAlignment = horizontalAlignment;
+        this.verticalAlignment = verticalAlignment;
+        if (oldWidget != null) {
+            this.textBoxInput = oldWidget.textBoxInput;
+            setCursorAndHighlightPositions(oldWidget.cursorPosition);
+            this.renderColor = oldWidget.renderColor;
+        }
+    }
+
+    /**
+     * Constructor shortcut for HorizontalAlignment.LEFT and VerticalAlignment.MIDDLE
+     */
     protected TextInputBoxWidget(
             int x,
             int y,
@@ -53,11 +81,22 @@ public class TextInputBoxWidget extends AbstractWidget {
             Component boxTitle,
             Consumer<String> onUpdateConsumer,
             TextboxScreen textboxScreen) {
-        super(x, y, width, height, boxTitle);
-        this.onUpdateConsumer = onUpdateConsumer == null ? s -> {} : onUpdateConsumer;
-        this.textboxScreen = textboxScreen;
+        this(
+                x,
+                y,
+                width,
+                height,
+                boxTitle,
+                onUpdateConsumer,
+                textboxScreen,
+                null,
+                HorizontalAlignment.LEFT,
+                VerticalAlignment.MIDDLE);
     }
 
+    /**
+     * Constructor shortcut for HorizontalAlignment.LEFT and VerticalAlignment.MIDDLE with empty title and oldWidget
+     */
     public TextInputBoxWidget(
             int x,
             int y,
@@ -66,18 +105,17 @@ public class TextInputBoxWidget extends AbstractWidget {
             Consumer<String> onUpdateConsumer,
             TextboxScreen textboxScreen,
             TextInputBoxWidget oldWidget) {
-        this(x, y, width, height, Component.empty(), onUpdateConsumer, textboxScreen);
-
-        if (oldWidget != null) {
-            this.textBoxInput = oldWidget.textBoxInput;
-            setCursorAndHighlightPositions(oldWidget.cursorPosition);
-            this.renderColor = oldWidget.renderColor;
-        }
-    }
-
-    public TextInputBoxWidget(
-            int x, int y, int width, int height, Consumer<String> onUpdateConsumer, TextboxScreen textboxScreen) {
-        this(x, y, width, height, onUpdateConsumer, textboxScreen, null);
+        this(
+                x,
+                y,
+                width,
+                height,
+                Component.empty(),
+                onUpdateConsumer,
+                textboxScreen,
+                oldWidget,
+                HorizontalAlignment.LEFT,
+                VerticalAlignment.MIDDLE);
     }
 
     @Override
@@ -139,8 +177,8 @@ public class TextInputBoxWidget extends AbstractWidget {
                         this.height - textPadding,
                         0,
                         renderColor,
-                        HorizontalAlignment.LEFT,
-                        VerticalAlignment.MIDDLE,
+                        horizontalAlignment,
+                        verticalAlignment,
                         TextShadow.NORMAL);
 
         FontRenderer.getInstance()
@@ -154,8 +192,8 @@ public class TextInputBoxWidget extends AbstractWidget {
                         0,
                         CommonColors.BLUE,
                         CommonColors.WHITE,
-                        HorizontalAlignment.LEFT,
-                        VerticalAlignment.MIDDLE);
+                        horizontalAlignment,
+                        verticalAlignment);
 
         FontRenderer.getInstance()
                 .renderAlignedTextInBox(
@@ -167,15 +205,16 @@ public class TextInputBoxWidget extends AbstractWidget {
                         this.height - textPadding,
                         0,
                         renderColor,
-                        HorizontalAlignment.LEFT,
-                        VerticalAlignment.MIDDLE,
+                        horizontalAlignment,
+                        verticalAlignment,
                         TextShadow.NORMAL);
 
         drawCursor(
                 poseStack,
                 font.width(renderedText.substring(0, Math.min(cursorPosition, renderedText.length()))),
-                this.height / 2,
-                VerticalAlignment.MIDDLE,
+                textPadding,
+                this.height - textPadding,
+                verticalAlignment,
                 false);
 
         poseStack.popPose();
@@ -491,7 +530,12 @@ public class TextInputBoxWidget extends AbstractWidget {
     public void updateWidgetNarration(NarrationElementOutput narrationElementOutput) {}
 
     protected void drawCursor(
-            PoseStack poseStack, float x, float y, VerticalAlignment verticalAlignment, boolean forceUnfocusedCursor) {
+            PoseStack poseStack,
+            float x,
+            float y1,
+            float y2,
+            VerticalAlignment verticalAlignment,
+            boolean forceUnfocusedCursor) {
         if (isDragging || hasHighlighted()) return;
 
         if (System.currentTimeMillis() - lastCursorSwitch > CURSOR_TICK) {
@@ -504,13 +548,17 @@ public class TextInputBoxWidget extends AbstractWidget {
         if (isFocused() || forceUnfocusedCursor) {
             Font font = FontRenderer.getInstance().getFont();
 
-            int cursorHeight = font.lineHeight + 2;
+            /**
+             * See comment at link below for sizing
+             * {@link FontRenderer#renderAlignedHighlightedTextInBox(PoseStack, StyledText, float, float, float, float, float, CustomColor, CustomColor, HorizontalAlignment, VerticalAlignment)}
+             */
+            float cursorHeight = font.lineHeight + 2;
 
             float cursorRenderY =
                     switch (verticalAlignment) {
-                        case TOP -> y - 1 - cursorHeight;
-                        case MIDDLE -> y - 1 - cursorHeight / 2;
-                        case BOTTOM -> y - (font.lineHeight / 2);
+                        case TOP -> y1 - 1f;
+                        case MIDDLE -> (y1 + y2) / 2f - (cursorHeight / 2f);
+                        case BOTTOM -> y2 - cursorHeight + 1f;
                     };
 
             RenderUtils.drawRect(poseStack, CommonColors.WHITE, x + 1, cursorRenderY, 0, 1, cursorHeight);

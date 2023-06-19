@@ -22,8 +22,8 @@ public class TextConfigOptionElement extends ConfigOptionElement {
         super(configHolder);
 
         this.renderHeight = FontRenderer.getInstance().getFont().lineHeight + 8;
-        this.textInputBoxWidget =
-                new TextInputBoxWidget(0, 0, renderWidth, (int) this.renderHeight, this::onTextInputUpdate, screen);
+        this.textInputBoxWidget = new TextInputBoxWidget(
+                0, 0, renderWidth, (int) this.renderHeight, this::onTextInputUpdate, screen, null);
         this.textInputBoxWidget.setTextBoxInput(configHolder.getValue().toString());
     }
 

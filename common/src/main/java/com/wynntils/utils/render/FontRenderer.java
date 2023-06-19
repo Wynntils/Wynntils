@@ -174,20 +174,27 @@ public final class FontRenderer {
                     case BOTTOM -> y2;
                 };
 
-        float cursorRenderY =
+        float highlightRenderY =
                 switch (verticalAlignment) {
-                    case TOP -> renderY - 2;
-                    case MIDDLE -> renderY - (font.lineHeight / 2f) - 2;
-                    case BOTTOM -> renderY - font.lineHeight - 2;
+                    case TOP -> renderY;
+                    case MIDDLE -> renderY - (font.lineHeight / 2f);
+                    case BOTTOM -> renderY - font.lineHeight;
                 };
 
+        /**
+         * renderX-0.5f is so there is a 1px padding on both the left and right sides.
+         * Normally, the highlight starts on the same pixel as the text and has a 2px padding on the right side.
+         * {@link TextInputBoxWidget#drawCursor(PoseStack, float, float, float, VerticalAlignment, boolean)}
+         * The above linked drawCursor's cursor should match the vertical footprint of this highlight.
+         */
         RenderUtils.drawRect(
                 poseStack,
                 backgroundColor,
-                renderX,
-                cursorRenderY,
+                renderX - 0.5f,
+                highlightRenderY - 1,
                 0,
-                font.width(text.getString()),
+                (float) font.width(
+                        text.getString()), // do not remove float cast, extra 1px is added to the right if it's not here
                 font.lineHeight + 2);
 
         renderAlignedTextInBox(

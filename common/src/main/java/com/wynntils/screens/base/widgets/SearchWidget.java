@@ -120,6 +120,7 @@ public class SearchWidget extends TextInputBoxWidget {
                         + textPadding
                         - 2,
                 this.getY() + this.getHeight() / 2,
+                this.getY() + this.getHeight() / 2,
                 VerticalAlignment.MIDDLE,
                 false);
     }
