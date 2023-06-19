@@ -30,6 +30,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Set;
+import net.minecraft.client.gui.screens.inventory.ContainerScreen;
 import net.minecraft.client.gui.screens.inventory.InventoryScreen;
 import net.minecraft.client.player.AbstractClientPlayer;
 import net.minecraft.client.renderer.MultiBufferSource;
@@ -88,6 +89,7 @@ public class RangeVisualizerFeature extends Feature {
 
             // Don't render for preview in inventory or character selection screen
             if (McUtils.mc().screen instanceof InventoryScreen) return;
+            if (McUtils.mc().screen instanceof ContainerScreen) return;
             if (McUtils.mc().screen instanceof CharacterSelectorScreen) return;
             if (McUtils.mc().screen instanceof WynntilsMenuScreen) return;
 
