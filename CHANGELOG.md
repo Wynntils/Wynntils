@@ -1,9 +1,21 @@
+## [0.0.3-alpha.96](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.95...v0.0.3-alpha.96) (2023-06-19)
+
+
+### New Features
+
+* Add a config to disable automatic Wynncraft resource pack loading for the Wynncraft button ([#1635](https://github.com/Wynntils/Artemis/issues/1635)) ([e2629e9](https://github.com/Wynntils/Artemis/commit/e2629e95f9607b505d427b051559bba9e2442ce6))
+
 ## [0.0.3-alpha.95](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.94...v0.0.3-alpha.95) (2023-06-18)
 
 
 ### New Features
 
 * Add current territory overlay to minimap ([#1627](https://github.com/Wynntils/Artemis/issues/1627)) ([5142945](https://github.com/Wynntils/Artemis/commit/514294545a345ab9a9839397269593b32fc61933))
+
+
+### Miscellaneous Chores
+
+* **release:** v0.0.3-alpha.95 [skip ci] ([f021094](https://github.com/Wynntils/Artemis/commit/f021094caebc609dcc1dbb9f4101068e231261fc))
 
 ## [0.0.3-alpha.94](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.93...v0.0.3-alpha.94) (2023-06-18)
 
@@ -36,16 +48,4 @@
 ### Miscellaneous Chores
 
 * **release:** v0.0.3-alpha.92 [skip ci] ([60abab3](https://github.com/Wynntils/Artemis/commit/60abab391e15659512da4f14f7d22ad870d15dde))
-
-## [0.0.3-alpha.91](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.90...v0.0.3-alpha.91) (2023-06-15)
-
-
-### Miscellaneous Chores
-
-* **release:** v0.0.3-alpha.91 [skip ci] ([f99ca4a](https://github.com/Wynntils/Artemis/commit/f99ca4a380d0f61a88836b8385230a7bfe01d090))
-
-
-### Code Refactoring
-
-* Update code according to IntelliJ analyze suggestions ([#1594](https://github.com/Wynntils/Artemis/issues/1594)) ([15c83f4](https://github.com/Wynntils/Artemis/commit/15c83f4a7278b700989ccf2bef49b31d21d0cbb6))
 
