@@ -1,9 +1,21 @@
+## [0.0.3-alpha.98](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.97...v0.0.3-alpha.98) (2023-06-21)
+
+
+### Bug Fixes
+
+* Major ID range incorrectly renders in cosmetic preview ([#1633](https://github.com/Wynntils/Artemis/issues/1633)) ([c242ddd](https://github.com/Wynntils/Artemis/commit/c242ddd0b84d953a44a00c9efa77aa27463b0e5a))
+
 ## [0.0.3-alpha.97](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.96...v0.0.3-alpha.97) (2023-06-20)
 
 
 ### Bug Fixes
 
 * Tracked quests should be parsed correctly now ([#1637](https://github.com/Wynntils/Artemis/issues/1637)) ([4ab7be3](https://github.com/Wynntils/Artemis/commit/4ab7be3e5124ec6a4a0606e9c4299880ecc6aa8b))
+
+
+### Miscellaneous Chores
+
+* **release:** v0.0.3-alpha.97 [skip ci] ([f1ca263](https://github.com/Wynntils/Artemis/commit/f1ca263eaded5d10b6ff34a2f289ba4f0788fc74))
 
 ## [0.0.3-alpha.96](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.95...v0.0.3-alpha.96) (2023-06-19)
 
@@ -40,12 +52,4 @@
 ### Miscellaneous Chores
 
 * **release:** v0.0.3-alpha.94 [skip ci] ([5e6dd4f](https://github.com/Wynntils/Artemis/commit/5e6dd4f2ec68ac0e8a936cbb6d5f8f5d72d758f6))
-
-## [0.0.3-alpha.93](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.92...v0.0.3-alpha.93) (2023-06-17)
-
-
-### Miscellaneous Chores
-
-* **release:** v0.0.3-alpha.93 [skip ci] ([dec6202](https://github.com/Wynntils/Artemis/commit/dec620242c7226956ab872a7cfff4f48e40ec3bb))
-* remove left over config save calls ([#1629](https://github.com/Wynntils/Artemis/issues/1629)) ([9fa9531](https://github.com/Wynntils/Artemis/commit/9fa953171798822b279f650fc19bfa9922f64b06))
 
