@@ -42,7 +42,7 @@ public class ChatMentionFeature extends Feature {
     public final Config<String> aliases = new Config<>("");
 
     @RegisterConfig
-    public final Config<Boolean> suppressMentionsInInfo = new Config<>(true);
+    public final Config<Boolean> suppressMentionsInInfo = new Config<>(false);
 
     private Pattern mentionPattern;
 
