@@ -1,9 +1,21 @@
+## [0.0.3-alpha.99](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.98...v0.0.3-alpha.99) (2023-06-21)
+
+
+### Bug Fixes
+
+* Fix multiline objective parsing ([#1638](https://github.com/Wynntils/Artemis/issues/1638)) ([2039af0](https://github.com/Wynntils/Artemis/commit/2039af0fb6789bf4049507bf090c8f92efab6ab0))
+
 ## [0.0.3-alpha.98](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.97...v0.0.3-alpha.98) (2023-06-21)
 
 
 ### Bug Fixes
 
 * Major ID range incorrectly renders in cosmetic preview ([#1633](https://github.com/Wynntils/Artemis/issues/1633)) ([c242ddd](https://github.com/Wynntils/Artemis/commit/c242ddd0b84d953a44a00c9efa77aa27463b0e5a))
+
+
+### Miscellaneous Chores
+
+* **release:** v0.0.3-alpha.98 [skip ci] ([e097e68](https://github.com/Wynntils/Artemis/commit/e097e68cb47413da13a2e34a57980c51871d534e))
 
 ## [0.0.3-alpha.97](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.96...v0.0.3-alpha.97) (2023-06-20)
 
@@ -40,16 +52,4 @@
 ### Miscellaneous Chores
 
 * **release:** v0.0.3-alpha.95 [skip ci] ([f021094](https://github.com/Wynntils/Artemis/commit/f021094caebc609dcc1dbb9f4101068e231261fc))
-
-## [0.0.3-alpha.94](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.93...v0.0.3-alpha.94) (2023-06-18)
-
-
-### Bug Fixes
-
-* Dry count resets when getting a mythic tome ([#1624](https://github.com/Wynntils/Artemis/issues/1624)) ([a79b621](https://github.com/Wynntils/Artemis/commit/a79b621d6068ab3acea20830869f30ca73fc7e19))
-
-
-### Miscellaneous Chores
-
-* **release:** v0.0.3-alpha.94 [skip ci] ([5e6dd4f](https://github.com/Wynntils/Artemis/commit/5e6dd4f2ec68ac0e8a936cbb6d5f8f5d72d758f6))
 
