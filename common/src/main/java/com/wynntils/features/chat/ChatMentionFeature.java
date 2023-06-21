@@ -14,6 +14,7 @@ import com.wynntils.core.text.PartStyle;
 import com.wynntils.core.text.StyledText;
 import com.wynntils.core.text.StyledTextPart;
 import com.wynntils.handlers.chat.event.ChatMessageReceivedEvent;
+import com.wynntils.handlers.chat.type.RecipientType;
 import com.wynntils.utils.colors.ColorChatFormatting;
 import com.wynntils.utils.mc.McUtils;
 import com.wynntils.utils.type.IterationDecision;
@@ -40,6 +41,9 @@ public class ChatMentionFeature extends Feature {
     @RegisterConfig
     public final Config<String> aliases = new Config<>("");
 
+    @RegisterConfig
+    public final Config<Boolean> suppressMentionsInInfo = new Config<>(true);
+
     private Pattern mentionPattern;
 
     public ChatMentionFeature() {
@@ -62,6 +66,8 @@ public class ChatMentionFeature extends Feature {
     @SubscribeEvent(priority = EventPriority.HIGH)
     public void onChat(ChatMessageReceivedEvent e) {
         StyledText styledText = e.getStyledText();
+
+        if (e.getRecipientType() == RecipientType.INFO && suppressMentionsInInfo.get()) return;
 
         StyledText modified = styledText.iterateBackwards((part, changes) -> {
             // We have reached the end of the message content,
