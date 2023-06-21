@@ -65,10 +65,9 @@ public class ChatMentionFeature extends Feature {
 
     @SubscribeEvent(priority = EventPriority.HIGH)
     public void onChat(ChatMessageReceivedEvent e) {
-        StyledText styledText = e.getStyledText();
-
         if (e.getRecipientType() == RecipientType.INFO && suppressMentionsInInfo.get()) return;
-
+        
+        StyledText styledText = e.getStyledText();
         StyledText modified = styledText.iterateBackwards((part, changes) -> {
             // We have reached the end of the message content,
             // we don't want to highlight our own name in our own message
