@@ -50,7 +50,7 @@ public abstract class AbstractObjectivesScoreboardPart extends ScoreboardPart {
 
             // If we have started collecting a multiline, keep building it
             if (!multiLine.isEmpty()) {
-                multiLine.append(line);
+                multiLine.append(line.getString());
             }
 
             if (line.getMatcher(OBJECTIVE_PATTERN_MULTILINE_END).matches()) {
