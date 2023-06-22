@@ -1,9 +1,21 @@
+## [0.0.3-alpha.102](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.101...v0.0.3-alpha.102) (2023-06-22)
+
+
+### Bug Fixes
+
+* Fix npc dialogues getting stuck after completing quests and quest started messages not parsing ([#1644](https://github.com/Wynntils/Artemis/issues/1644)) ([3b13bd5](https://github.com/Wynntils/Artemis/commit/3b13bd5bf29ef1c9895e74d830bbd2be2aed464c))
+
 ## [0.0.3-alpha.101](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.100...v0.0.3-alpha.101) (2023-06-22)
 
 
 ### Bug Fixes
 
 * Horse hotkey breaks when no space or too many mobs ([#1641](https://github.com/Wynntils/Artemis/issues/1641)) ([9c3a6f4](https://github.com/Wynntils/Artemis/commit/9c3a6f473987df5df6e37379c7bca7d67002112a))
+
+
+### Miscellaneous Chores
+
+* **release:** v0.0.3-alpha.101 [skip ci] ([168501b](https://github.com/Wynntils/Artemis/commit/168501b7ed23638b8a05b96d9b33dade030394cf))
 
 ## [0.0.3-alpha.100](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.99...v0.0.3-alpha.100) (2023-06-22)
 
@@ -40,16 +52,4 @@
 ### Miscellaneous Chores
 
 * **release:** v0.0.3-alpha.98 [skip ci] ([e097e68](https://github.com/Wynntils/Artemis/commit/e097e68cb47413da13a2e34a57980c51871d534e))
-
-## [0.0.3-alpha.97](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.96...v0.0.3-alpha.97) (2023-06-20)
-
-
-### Bug Fixes
-
-* Tracked quests should be parsed correctly now ([#1637](https://github.com/Wynntils/Artemis/issues/1637)) ([4ab7be3](https://github.com/Wynntils/Artemis/commit/4ab7be3e5124ec6a4a0606e9c4299880ecc6aa8b))
-
-
-### Miscellaneous Chores
-
-* **release:** v0.0.3-alpha.97 [skip ci] ([f1ca263](https://github.com/Wynntils/Artemis/commit/f1ca263eaded5d10b6ff34a2f289ba4f0788fc74))
 
