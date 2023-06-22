@@ -1,9 +1,21 @@
+## [0.0.3-alpha.101](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.100...v0.0.3-alpha.101) (2023-06-22)
+
+
+### Bug Fixes
+
+* Horse hotkey breaks when no space or too many mobs ([#1641](https://github.com/Wynntils/Artemis/issues/1641)) ([9c3a6f4](https://github.com/Wynntils/Artemis/commit/9c3a6f473987df5df6e37379c7bca7d67002112a))
+
 ## [0.0.3-alpha.100](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.99...v0.0.3-alpha.100) (2023-06-22)
 
 
 ### New Features
 
 * Add a config to disable mentions in info messages ([#1640](https://github.com/Wynntils/Artemis/issues/1640)) ([e90675d](https://github.com/Wynntils/Artemis/commit/e90675da0edae2a3d77a30f531d419747e483991))
+
+
+### Miscellaneous Chores
+
+* **release:** v0.0.3-alpha.100 [skip ci] ([21a0885](https://github.com/Wynntils/Artemis/commit/21a088595f5942fc30f2217d7faa51ad3753b892))
 
 ## [0.0.3-alpha.99](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.98...v0.0.3-alpha.99) (2023-06-21)
 
@@ -40,16 +52,4 @@
 ### Miscellaneous Chores
 
 * **release:** v0.0.3-alpha.97 [skip ci] ([f1ca263](https://github.com/Wynntils/Artemis/commit/f1ca263eaded5d10b6ff34a2f289ba4f0788fc74))
-
-## [0.0.3-alpha.96](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.95...v0.0.3-alpha.96) (2023-06-19)
-
-
-### New Features
-
-* Add a config to disable automatic Wynncraft resource pack loading for the Wynncraft button ([#1635](https://github.com/Wynntils/Artemis/issues/1635)) ([e2629e9](https://github.com/Wynntils/Artemis/commit/e2629e95f9607b505d427b051559bba9e2442ce6))
-
-
-### Miscellaneous Chores
-
-* **release:** v0.0.3-alpha.96 [skip ci] ([e92dc6c](https://github.com/Wynntils/Artemis/commit/e92dc6c47fc7ef5f04f57622881c10a8fe120710))
 
