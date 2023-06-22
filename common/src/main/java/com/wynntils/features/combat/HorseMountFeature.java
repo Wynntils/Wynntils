@@ -75,13 +75,14 @@ public class HorseMountFeature extends Feature {
     }
 
     @SubscribeEvent
-    public void onChatReceived(ChatMessageReceivedEvent e) {;
+    public void onChatReceived(ChatMessageReceivedEvent e) {
+        // fixme: consider e.originalStyledText()
         StyledText message = StyledText.fromComponent(e.getMessage());
 
         if (message.equals(MSG_NO_SPACE)) {
-
+            cancelMountingHorse = new Pair<>(true, MountHorseStatus.NO_SPACE);
         } else if (message.equals(MSG_TOO_MANY_MOBS)) {
-
+            cancelMountingHorse = new Pair<>(true, MountHorseStatus.TOO_MANY_MOBS);
         }
     }
 
@@ -125,6 +126,7 @@ public class HorseMountFeature extends Feature {
             postHorseErrorMessage(MountHorseStatus.NO_HORSE);
             return;
         } else if (cancelMountingHorse.a()) {
+            McUtils.sendPacket(new ServerboundSetCarriedItemPacket(prevItem));
             postHorseErrorMessage(cancelMountingHorse.b());
             cancelMountingHorse = new Pair<>(false, null);
             return;
