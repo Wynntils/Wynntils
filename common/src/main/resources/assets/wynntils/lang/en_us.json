@@ -75,6 +75,8 @@
   "feature.wynntils.chatMention.mentionColor.description": "What color should be used for highlighting?",
   "feature.wynntils.chatMention.mentionColor.name": "Highlight color",
   "feature.wynntils.chatMention.name": "Chat Mentions",
+  "feature.wynntils.chatMention.suppressMentionsInInfo.description": "Should mentions in informational system messages be ignored?",
+  "feature.wynntils.chatMention.suppressMentionsInInfo.name": "Suppress Mentions in Info Messages",
   "feature.wynntils.chatRedirect.craftedDurability.description": "How should crafted item durability messages appear?",
   "feature.wynntils.chatRedirect.craftedDurability.name": "Crafted Durability Filtering",
   "feature.wynntils.chatRedirect.friendJoin.description": "How should friend join messages appear?",
