@@ -17,6 +17,7 @@ import com.wynntils.core.mod.CrashReportManager;
 import com.wynntils.core.mod.type.CrashType;
 import com.wynntils.features.GammabrightFeature;
 import com.wynntils.features.LootrunFeature;
+import com.wynntils.features.SilencerFeature;
 import com.wynntils.features.TerritoryDefenseMessageFeature;
 import com.wynntils.features.TranslationFeature;
 import com.wynntils.features.chat.ChatCoordinatesFeature;
@@ -307,6 +308,7 @@ public final class FeatureManager extends Manager {
         registerFeature(new GammabrightFeature());
         registerFeature(new TerritoryDefenseMessageFeature());
         registerFeature(new TranslationFeature());
+        registerFeature(new SilencerFeature());
         // endregion
 
         // Reload Minecraft's config files so our own keybinds get loaded
