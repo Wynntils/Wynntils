@@ -1,9 +1,21 @@
+## [0.0.3-alpha.100](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.99...v0.0.3-alpha.100) (2023-06-22)
+
+
+### New Features
+
+* Add a config to disable mentions in info messages ([#1640](https://github.com/Wynntils/Artemis/issues/1640)) ([e90675d](https://github.com/Wynntils/Artemis/commit/e90675da0edae2a3d77a30f531d419747e483991))
+
 ## [0.0.3-alpha.99](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.98...v0.0.3-alpha.99) (2023-06-21)
 
 
 ### Bug Fixes
 
 * Fix multiline objective parsing ([#1638](https://github.com/Wynntils/Artemis/issues/1638)) ([2039af0](https://github.com/Wynntils/Artemis/commit/2039af0fb6789bf4049507bf090c8f92efab6ab0))
+
+
+### Miscellaneous Chores
+
+* **release:** v0.0.3-alpha.99 [skip ci] ([30b4ce8](https://github.com/Wynntils/Artemis/commit/30b4ce84bbd443f9c1e72bdbec81d1bde3011439))
 
 ## [0.0.3-alpha.98](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.97...v0.0.3-alpha.98) (2023-06-21)
 
@@ -40,16 +52,4 @@
 ### Miscellaneous Chores
 
 * **release:** v0.0.3-alpha.96 [skip ci] ([e92dc6c](https://github.com/Wynntils/Artemis/commit/e92dc6c47fc7ef5f04f57622881c10a8fe120710))
-
-## [0.0.3-alpha.95](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.94...v0.0.3-alpha.95) (2023-06-18)
-
-
-### New Features
-
-* Add current territory overlay to minimap ([#1627](https://github.com/Wynntils/Artemis/issues/1627)) ([5142945](https://github.com/Wynntils/Artemis/commit/514294545a345ab9a9839397269593b32fc61933))
-
-
-### Miscellaneous Chores
-
-* **release:** v0.0.3-alpha.95 [skip ci] ([f021094](https://github.com/Wynntils/Artemis/commit/f021094caebc609dcc1dbb9f4101068e231261fc))
 
