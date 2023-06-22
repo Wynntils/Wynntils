@@ -16,8 +16,6 @@ import com.wynntils.core.text.StyledText;
 import com.wynntils.mc.event.PlayerRenderEvent;
 import com.wynntils.mc.event.TickEvent;
 import com.wynntils.models.gear.type.GearInfo;
-import com.wynntils.screens.characterselector.CharacterSelectorScreen;
-import com.wynntils.screens.wynntilsmenu.WynntilsMenuScreen;
 import com.wynntils.utils.colors.CommonColors;
 import com.wynntils.utils.colors.CustomColor;
 import com.wynntils.utils.mc.McUtils;
@@ -30,7 +28,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Set;
-import net.minecraft.client.gui.screens.inventory.InventoryScreen;
+import net.minecraft.client.gui.screens.ChatScreen;
 import net.minecraft.client.player.AbstractClientPlayer;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.core.Position;
@@ -87,9 +85,7 @@ public class RangeVisualizerFeature extends Feature {
             // This is ourselves, rendered from outside
 
             // Don't render for preview in inventory or character selection screen
-            if (McUtils.mc().screen instanceof InventoryScreen) return;
-            if (McUtils.mc().screen instanceof CharacterSelectorScreen) return;
-            if (McUtils.mc().screen instanceof WynntilsMenuScreen) return;
+            if (McUtils.mc().screen != null && !(McUtils.mc().screen instanceof ChatScreen)) return;
 
             validGear = Models.CharacterStats.getWornGear();
         } else {
