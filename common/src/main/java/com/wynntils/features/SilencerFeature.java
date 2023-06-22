@@ -6,7 +6,9 @@ package com.wynntils.features;
 
 import com.wynntils.core.components.Managers;
 import com.wynntils.core.components.Models;
+import com.wynntils.core.config.Category;
 import com.wynntils.core.config.Config;
+import com.wynntils.core.config.ConfigCategory;
 import com.wynntils.core.config.RegisterConfig;
 import com.wynntils.core.features.Feature;
 import com.wynntils.core.features.properties.RegisterKeyBind;
@@ -20,12 +22,14 @@ import net.minecraft.sounds.SoundSource;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import org.lwjgl.glfw.GLFW;
 
+@ConfigCategory(Category.UNCATEGORIZED)
 public class SilencerFeature extends Feature {
     @RegisterConfig
     public final Config<Double> silencerVolume = new Config<>(0.01);
 
     @RegisterKeyBind
-    private final KeyBind silencerKeyBind = new KeyBind("Toggle Silencer", GLFW.GLFW_KEY_UNKNOWN, true, this::toggleSilencer);
+    private final KeyBind silencerKeyBind =
+            new KeyBind("Toggle Silencer", GLFW.GLFW_KEY_UNKNOWN, true, this::toggleSilencer);
 
     private final Storage<Double> lastVolume = new Storage<>(1.0);
     private boolean isSilencerEnabled = false;
