@@ -13,9 +13,12 @@ import com.wynntils.core.config.RegisterConfig;
 import com.wynntils.core.features.Feature;
 import com.wynntils.core.features.properties.RegisterKeyBind;
 import com.wynntils.core.keybinds.KeyBind;
+import com.wynntils.core.text.StyledText;
+import com.wynntils.handlers.chat.event.ChatMessageReceivedEvent;
 import com.wynntils.mc.event.UseItemEvent;
 import com.wynntils.models.items.items.game.HorseItem;
 import com.wynntils.utils.mc.McUtils;
+import com.wynntils.utils.type.Pair;
 import com.wynntils.utils.wynn.InventoryUtils;
 import java.util.Optional;
 import net.minecraft.ChatFormatting;
@@ -42,8 +45,13 @@ public class HorseMountFeature extends Feature {
     private static final int SUMMON_ATTEMPTS = 8;
     private static final int SUMMON_DELAY_TICKS = 6;
 
+    // FIXME: match messages to game
+    private static final StyledText NO_SPACE = StyledText.fromString(ChatFormatting.RED + "No space to summon horse");
+    private static final StyledText TOO_MANY_MOBS = StyledText.fromString(ChatFormatting.RED + "Too many mobs nearby");
+
     private int prevItem = -1;
     private boolean alreadySetPrevItem = false;
+    private Pair<Boolean, String> cancelMountingHorse = new Pair<>(false, "");
 
     @RegisterKeyBind
     private final KeyBind mountHorseKeyBind = new KeyBind("Mount Horse", GLFW.GLFW_KEY_R, true, this::mountHorse);
@@ -64,6 +72,17 @@ public class HorseMountFeature extends Feature {
 
         mountHorse();
         event.setCanceled(true);
+    }
+
+    @SubscribeEvent
+    public void onChatReceived(ChatMessageReceivedEvent e) {;
+        StyledText message = StyledText.fromComponent(e.getMessage());
+
+        if (message.equals(NO_SPACE)) {
+
+        } else if (message.equals(TOO_MANY_MOBS)) {
+
+        }
     }
 
     private void mountHorse() {
@@ -118,6 +137,13 @@ public class HorseMountFeature extends Feature {
                 () -> {
                     LocalPlayer player = McUtils.player();
                     if (player == null) return;
+
+                    if (cancelMountingHorse.a()) {
+                        // FIXME: figure out how to cancel this with error message
+                        postHorseErrorMessage(cancelMountingHorse.b());
+                        cancelMountingHorse = new Pair<>(false, "");
+                        return;
+                    }
 
                     AbstractHorse horse = Models.Horse.searchForHorseNearby(player, SEARCH_RADIUS);
                     if (horse != null) { // Horse successfully summoned
