@@ -15,7 +15,6 @@ import com.wynntils.core.features.properties.RegisterKeyBind;
 import com.wynntils.core.keybinds.KeyBind;
 import com.wynntils.core.text.StyledText;
 import com.wynntils.handlers.chat.event.ChatMessageReceivedEvent;
-import com.wynntils.mc.event.ChatPacketReceivedEvent;
 import com.wynntils.mc.event.UseItemEvent;
 import com.wynntils.models.items.items.game.HorseItem;
 import com.wynntils.utils.mc.McUtils;
@@ -48,7 +47,8 @@ public class HorseMountFeature extends Feature {
     private static final int SUMMON_DELAY_TICKS = 6;
 
     private static final StyledText MSG_NO_SPACE = StyledText.fromString("§4There is no room for a horse.");
-    private static final StyledText MSG_TOO_MANY_MOBS = StyledText.fromString("§dYour horse is scared to come out right now, too many mobs are nearby.");
+    private static final StyledText MSG_TOO_MANY_MOBS =
+            StyledText.fromString("§dYour horse is scared to come out right now, too many mobs are nearby.");
 
     private int prevItem = -1;
     private boolean alreadySetPrevItem = false;
