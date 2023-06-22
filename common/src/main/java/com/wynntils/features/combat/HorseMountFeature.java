@@ -103,6 +103,8 @@ public class HorseMountFeature extends Feature {
 
     private void trySummonAndMountHorse(int horseInventorySlot, int attempts) {
         if (attempts <= 0) {
+            // FIXME: this incorrectly triggers when the horse cannot be spawned (due to mobs, no space, etc)
+            // probably need some thing that checks chat messages
             postHorseErrorMessage(MountHorseStatus.NO_HORSE);
             return;
         }
