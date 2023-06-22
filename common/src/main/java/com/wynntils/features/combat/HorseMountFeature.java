@@ -52,7 +52,7 @@ public class HorseMountFeature extends Feature {
 
     private int prevItem = -1;
     private boolean alreadySetPrevItem = false;
-    private Pair<Boolean, MountHorseStatus> cancelMountingHorse = new Pair<>(false, null);
+    private MountHorseStatus cancelMountingHorse = null;
 
     @RegisterKeyBind
     private final KeyBind mountHorseKeyBind = new KeyBind("Mount Horse", GLFW.GLFW_KEY_R, true, this::mountHorse);
@@ -80,9 +80,9 @@ public class HorseMountFeature extends Feature {
         StyledText message = e.getOriginalStyledText();
 
         if (message.equals(MSG_NO_SPACE)) {
-            cancelMountingHorse = new Pair<>(true, MountHorseStatus.NO_SPACE);
+            cancelMountingHorse = MountHorseStatus.NO_SPACE;
         } else if (message.equals(MSG_TOO_MANY_MOBS)) {
-            cancelMountingHorse = new Pair<>(true, MountHorseStatus.TOO_MANY_MOBS);
+            cancelMountingHorse = MountHorseStatus.TOO_MANY_MOBS;
         }
     }
 
@@ -125,10 +125,10 @@ public class HorseMountFeature extends Feature {
         if (attempts <= 0) {
             postHorseErrorMessage(MountHorseStatus.NO_HORSE);
             return;
-        } else if (cancelMountingHorse.a()) {
+        } else if (cancelMountingHorse != null) {
             McUtils.sendPacket(new ServerboundSetCarriedItemPacket(prevItem));
-            postHorseErrorMessage(cancelMountingHorse.b());
-            cancelMountingHorse = new Pair<>(false, null);
+            postHorseErrorMessage(cancelMountingHorse);
+            cancelMountingHorse = null;
             return;
         }
 
