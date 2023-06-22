@@ -18,7 +18,6 @@ import com.wynntils.handlers.chat.event.ChatMessageReceivedEvent;
 import com.wynntils.mc.event.UseItemEvent;
 import com.wynntils.models.items.items.game.HorseItem;
 import com.wynntils.utils.mc.McUtils;
-import com.wynntils.utils.type.Pair;
 import com.wynntils.utils.wynn.InventoryUtils;
 import java.util.Optional;
 import net.minecraft.ChatFormatting;
