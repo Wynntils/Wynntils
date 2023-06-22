@@ -46,12 +46,12 @@ public class HorseMountFeature extends Feature {
     private static final int SUMMON_DELAY_TICKS = 6;
 
     // FIXME: match messages to game
-    private static final StyledText NO_SPACE = StyledText.fromString(ChatFormatting.RED + "No space to summon horse");
-    private static final StyledText TOO_MANY_MOBS = StyledText.fromString(ChatFormatting.RED + "Too many mobs nearby");
+    private static final StyledText MSG_NO_SPACE = StyledText.fromString(ChatFormatting.RED + "No space to summon horse");
+    private static final StyledText MSG_TOO_MANY_MOBS = StyledText.fromString(ChatFormatting.RED + "Too many mobs nearby");
 
     private int prevItem = -1;
     private boolean alreadySetPrevItem = false;
-    private Pair<Boolean, String> cancelMountingHorse = new Pair<>(false, "");
+    private Pair<Boolean, MountHorseStatus> cancelMountingHorse = new Pair<>(false, null);
 
     @RegisterKeyBind
     private final KeyBind mountHorseKeyBind = new KeyBind("Mount Horse", GLFW.GLFW_KEY_R, true, this::mountHorse);
@@ -78,9 +78,9 @@ public class HorseMountFeature extends Feature {
     public void onChatReceived(ChatMessageReceivedEvent e) {;
         StyledText message = StyledText.fromComponent(e.getMessage());
 
-        if (message.equals(NO_SPACE)) {
+        if (message.equals(MSG_NO_SPACE)) {
 
-        } else if (message.equals(TOO_MANY_MOBS)) {
+        } else if (message.equals(MSG_TOO_MANY_MOBS)) {
 
         }
     }
@@ -122,9 +122,11 @@ public class HorseMountFeature extends Feature {
 
     private void trySummonAndMountHorse(int horseInventorySlot, int attempts) {
         if (attempts <= 0) {
-            // FIXME: this incorrectly triggers when the horse cannot be spawned (due to mobs, no space, etc)
-            // probably need some thing that checks chat messages
             postHorseErrorMessage(MountHorseStatus.NO_HORSE);
+            return;
+        } else if (cancelMountingHorse.a()) {
+            postHorseErrorMessage(cancelMountingHorse.b());
+            cancelMountingHorse = new Pair<>(false, null);
             return;
         }
 
@@ -137,13 +139,6 @@ public class HorseMountFeature extends Feature {
                 () -> {
                     LocalPlayer player = McUtils.player();
                     if (player == null) return;
-
-                    if (cancelMountingHorse.a()) {
-                        // FIXME: figure out how to cancel this with error message
-                        postHorseErrorMessage(cancelMountingHorse.b());
-                        cancelMountingHorse = new Pair<>(false, "");
-                        return;
-                    }
 
                     AbstractHorse horse = Models.Horse.searchForHorseNearby(player, SEARCH_RADIUS);
                     if (horse != null) { // Horse successfully summoned
@@ -167,7 +162,9 @@ public class HorseMountFeature extends Feature {
 
     private enum MountHorseStatus {
         NO_HORSE("feature.wynntils.horseMount.noHorse"),
-        ALREADY_RIDING("feature.wynntils.horseMount.alreadyRiding");
+        ALREADY_RIDING("feature.wynntils.horseMount.alreadyRiding"),
+        NO_SPACE("feature.wynntils.horseMount.noSpace"),
+        TOO_MANY_MOBS("feature.wynntils.horseMount.tooManyMobs");
 
         private final String tcString;
 
