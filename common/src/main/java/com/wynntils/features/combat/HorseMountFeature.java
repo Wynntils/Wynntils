@@ -51,7 +51,7 @@ public class HorseMountFeature extends Feature {
 
     private int prevItem = -1;
     private boolean alreadySetPrevItem = false;
-    private MountHorseStatus cancelMountingHorse = null;
+    private boolean cancelMountingHorse = false;
 
     @RegisterKeyBind
     private final KeyBind mountHorseKeyBind = new KeyBind("Mount Horse", GLFW.GLFW_KEY_R, true, this::mountHorse);
@@ -78,10 +78,8 @@ public class HorseMountFeature extends Feature {
     public void onChatReceived(ChatMessageReceivedEvent e) {
         StyledText message = e.getOriginalStyledText();
 
-        if (message.equals(MSG_NO_SPACE)) {
-            cancelMountingHorse = MountHorseStatus.NO_SPACE;
-        } else if (message.equals(MSG_TOO_MANY_MOBS)) {
-            cancelMountingHorse = MountHorseStatus.TOO_MANY_MOBS;
+        if (message.equals(MSG_NO_SPACE) || message.equals(MSG_TOO_MANY_MOBS)) {
+            cancelMountingHorse = true;
         }
     }
 
@@ -124,10 +122,11 @@ public class HorseMountFeature extends Feature {
         if (attempts <= 0) {
             postHorseErrorMessage(MountHorseStatus.NO_HORSE);
             return;
-        } else if (cancelMountingHorse != null) {
+        }
+
+        if (cancelMountingHorse) {
             McUtils.sendPacket(new ServerboundSetCarriedItemPacket(prevItem));
-            postHorseErrorMessage(cancelMountingHorse);
-            cancelMountingHorse = null;
+            cancelMountingHorse = false;
             return;
         }
 
@@ -163,9 +162,7 @@ public class HorseMountFeature extends Feature {
 
     private enum MountHorseStatus {
         NO_HORSE("feature.wynntils.horseMount.noHorse"),
-        ALREADY_RIDING("feature.wynntils.horseMount.alreadyRiding"),
-        NO_SPACE("feature.wynntils.horseMount.noSpace"),
-        TOO_MANY_MOBS("feature.wynntils.horseMount.tooManyMobs");
+        ALREADY_RIDING("feature.wynntils.horseMount.alreadyRiding");
 
         private final String tcString;
 
