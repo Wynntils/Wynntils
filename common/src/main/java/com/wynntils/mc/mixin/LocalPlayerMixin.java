@@ -13,21 +13,11 @@ import com.wynntils.utils.mc.McUtils;
 import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.network.chat.Component;
 import net.minecraft.sounds.SoundEvent;
-import org.objectweb.asm.Opcodes;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
-import org.spongepowered.asm.mixin.injection.InjectionPoint;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
-import org.spongepowered.asm.mixin.injection.points.BeforeNew;
-import org.spongepowered.asm.mixin.injection.struct.InjectionPointData;
-
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-
-import static org.spongepowered.asm.mixin.injection.InjectionPoint.or;
 
 @Mixin(LocalPlayer.class)
 public abstract class LocalPlayerMixin {
@@ -61,10 +51,17 @@ public abstract class LocalPlayerMixin {
         }
     }
 
-    @Inject(method = "Lnet/minecraft/client/player/LocalPlayer;sendPosition()V", at = {
-            @At(value = "NEW", target="(DDDFFZ)Lnet/minecraft/network/protocol/game/ServerboundMovePlayerPacket$PosRot;"),
-            @At(value = "NEW", target="(DDDFF)Lnet/minecraft/network/protocol/game/ServerboundMovePlayerPacket$Pos;"),
-    }, cancellable = true)
+    @Inject(
+            method = "Lnet/minecraft/client/player/LocalPlayer;sendPosition()V",
+            at = {
+                @At(
+                        value = "NEW",
+                        target = "(DDDFFZ)Lnet/minecraft/network/protocol/game/ServerboundMovePlayerPacket$PosRot;"),
+                @At(
+                        value = "NEW",
+                        target = "(DDDFF)Lnet/minecraft/network/protocol/game/ServerboundMovePlayerPacket$Pos;"),
+            },
+            cancellable = true)
     private void sendPositionPre(CallbackInfo ci) {
         PlayerMoveEvent event = new PlayerMoveEvent();
         MixinHelper.post(event);

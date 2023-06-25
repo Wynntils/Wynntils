@@ -1,3 +1,7 @@
+/*
+ * Copyright © Wynntils 2023.
+ * This file is released under AGPLv3. See LICENSE for full license details.
+ */
 package com.wynntils.features;
 
 import com.wynntils.core.components.Managers;
@@ -18,7 +22,6 @@ import com.wynntils.models.worlds.type.WorldState;
 import com.wynntils.utils.mc.McUtils;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 
-
 public class DiscordRichPresenceFeature extends Feature {
 
     @RegisterConfig
@@ -34,7 +37,8 @@ public class DiscordRichPresenceFeature extends Feature {
 
     private void handleLocationChange() {
         if (displayLocation.get()) {
-            TerritoryProfile territoryProfile = Models.Territory.getTerritoryProfileForPosition(McUtils.player().position());
+            TerritoryProfile territoryProfile = Models.Territory.getTerritoryProfileForPosition(
+                    McUtils.player().position());
             if (territoryProfile == null || territoryProfile == lastTerritoryProfile) return;
             lastTerritoryProfile = territoryProfile;
             String location = territoryProfile.getName();

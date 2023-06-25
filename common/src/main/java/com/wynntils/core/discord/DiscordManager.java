@@ -1,5 +1,8 @@
+/*
+ * Copyright © Wynntils 2023.
+ * This file is released under AGPLv3. See LICENSE for full license details.
+ */
 package com.wynntils.core.discord;
-
 
 import com.wynntils.antiope.core.DiscordGameSDKCore;
 import com.wynntils.antiope.core.type.CreateParams;
@@ -7,13 +10,11 @@ import com.wynntils.antiope.manager.activity.type.Activity;
 import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.components.Manager;
 import com.wynntils.mc.event.TickAlwaysEvent;
-import com.wynntils.mc.event.TickEvent;
 import com.wynntils.models.character.type.ClassType;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
-
 import java.time.Instant;
 import java.util.List;
 import java.util.Locale;
+import net.minecraftforge.eventbus.api.SubscribeEvent;
 
 public class DiscordManager extends Manager {
 
