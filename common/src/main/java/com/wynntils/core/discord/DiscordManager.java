@@ -11,7 +11,6 @@ import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.components.Manager;
 import com.wynntils.core.text.PartStyle;
 import com.wynntils.core.text.StyledText;
-import com.wynntils.mc.event.TickAlwaysEvent;
 import com.wynntils.mc.event.TickEvent;
 import com.wynntils.models.character.type.ClassType;
 import com.wynntils.utils.mc.McUtils;
@@ -92,7 +91,6 @@ public class DiscordManager extends Manager {
         DiscordGameSDKCore tempCore = new DiscordGameSDKCore(tempParams);
         core.close();
         tempCore.activityManager().updateActivity(new Activity());
-
     }
 
     @SubscribeEvent
