@@ -73,6 +73,7 @@ dependencies {
 
     // Hades Protocol
     shadowImplementation("com.wynntils.hades:hades:${hades_version}") { transitive false }
+    shadowImplementation("com.wynntils:antiope:${antiope_version}") { transitive false }
 
     include(implementation(annotationProcessor("com.github.llamalad7.mixinextras:mixinextras-fabric:${mixinextras_version}"))) { transitive false }
 
