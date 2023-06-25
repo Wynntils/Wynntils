@@ -21,7 +21,6 @@ import com.wynntils.utils.mc.McUtils;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 
 public class DiscordRichPresenceFeature extends Feature {
-
     @RegisterConfig
     public final Config<Boolean> displayLocation = new Config<>(true);
 
