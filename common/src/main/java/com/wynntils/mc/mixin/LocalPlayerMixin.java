@@ -59,7 +59,7 @@ public abstract class LocalPlayerMixin {
                         target = "(DDDFFZ)Lnet/minecraft/network/protocol/game/ServerboundMovePlayerPacket$PosRot;"),
                 @At(
                         value = "NEW",
-                        target = "(DDDFF)Lnet/minecraft/network/protocol/game/ServerboundMovePlayerPacket$Pos;"),
+                        target = "(DDDZ)Lnet/minecraft/network/protocol/game/ServerboundMovePlayerPacket$Pos;"),
             },
             cancellable = true)
     private void sendPositionPre(CallbackInfo ci) {
