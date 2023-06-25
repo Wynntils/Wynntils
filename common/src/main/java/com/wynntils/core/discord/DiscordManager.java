@@ -12,6 +12,7 @@ import com.wynntils.core.components.Manager;
 import com.wynntils.core.text.PartStyle;
 import com.wynntils.core.text.StyledText;
 import com.wynntils.mc.event.TickAlwaysEvent;
+import com.wynntils.mc.event.TickEvent;
 import com.wynntils.models.character.type.ClassType;
 import com.wynntils.utils.mc.McUtils;
 import java.time.Instant;
@@ -31,6 +32,10 @@ public class DiscordManager extends Manager {
         super(List.of());
 
         DiscordGameSDKCore.loadLibrary();
+        createCore();
+    }
+
+    private void createCore() {
         CreateParams params = new CreateParams();
         try {
             params.setClientID(387266678607577088L);
@@ -81,12 +86,20 @@ public class DiscordManager extends Manager {
     }
 
     public void clearAll() {
-        core.activityManager().clearActivity();
+        CreateParams tempParams = new CreateParams();
+        tempParams.setClientID(0L);
+        tempParams.setFlags(CreateParams.getDefaultFlags());
+        DiscordGameSDKCore tempCore = new DiscordGameSDKCore(tempParams);
+        core.close();
+        tempCore.activityManager().updateActivity(new Activity());
+
     }
 
     @SubscribeEvent
-    public void onTick(TickAlwaysEvent event) {
-        // TickAlwaysEvent is used otherwise we can't clear the activity when the player disconnects
+    public void onTick(TickEvent event) {
+        if (!core.isOpen()) {
+            createCore();
+        }
         core.runCallbacks();
     }
 }
