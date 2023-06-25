@@ -13,6 +13,8 @@ import com.wynntils.core.config.RegisterConfig;
 import com.wynntils.core.features.Feature;
 import com.wynntils.core.features.properties.RegisterKeyBind;
 import com.wynntils.core.keybinds.KeyBind;
+import com.wynntils.core.text.StyledText;
+import com.wynntils.handlers.chat.event.ChatMessageReceivedEvent;
 import com.wynntils.mc.event.UseItemEvent;
 import com.wynntils.models.items.items.game.HorseItem;
 import com.wynntils.utils.mc.McUtils;
@@ -30,6 +32,7 @@ import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.animal.horse.AbstractHorse;
 import net.minecraft.world.item.ItemStack;
+import net.minecraftforge.eventbus.api.EventPriority;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import org.lwjgl.glfw.GLFW;
 
@@ -42,8 +45,13 @@ public class HorseMountFeature extends Feature {
     private static final int SUMMON_ATTEMPTS = 8;
     private static final int SUMMON_DELAY_TICKS = 6;
 
+    private static final StyledText MSG_NO_SPACE = StyledText.fromString("§4There is no room for a horse.");
+    private static final StyledText MSG_TOO_MANY_MOBS =
+            StyledText.fromString("§dYour horse is scared to come out right now, too many mobs are nearby.");
+
     private int prevItem = -1;
     private boolean alreadySetPrevItem = false;
+    private boolean cancelMountingHorse = false;
 
     @RegisterKeyBind
     private final KeyBind mountHorseKeyBind = new KeyBind("Mount Horse", GLFW.GLFW_KEY_R, true, this::mountHorse);
@@ -64,6 +72,15 @@ public class HorseMountFeature extends Feature {
 
         mountHorse();
         event.setCanceled(true);
+    }
+
+    @SubscribeEvent(priority = EventPriority.HIGHEST) // this needs to run before ChatRedirectFeature cancels the event
+    public void onChatReceived(ChatMessageReceivedEvent e) {
+        StyledText message = e.getOriginalStyledText();
+
+        if (message.equals(MSG_NO_SPACE) || message.equals(MSG_TOO_MANY_MOBS)) {
+            cancelMountingHorse = true;
+        }
     }
 
     private void mountHorse() {
@@ -104,6 +121,12 @@ public class HorseMountFeature extends Feature {
     private void trySummonAndMountHorse(int horseInventorySlot, int attempts) {
         if (attempts <= 0) {
             postHorseErrorMessage(MountHorseStatus.NO_HORSE);
+            return;
+        }
+
+        if (cancelMountingHorse) {
+            McUtils.sendPacket(new ServerboundSetCarriedItemPacket(prevItem));
+            cancelMountingHorse = false;
             return;
         }
 
