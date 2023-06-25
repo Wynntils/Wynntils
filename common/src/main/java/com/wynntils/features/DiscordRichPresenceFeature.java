@@ -7,6 +7,7 @@ package com.wynntils.features;
 import com.wynntils.core.components.Managers;
 import com.wynntils.core.components.Models;
 import com.wynntils.core.config.Config;
+import com.wynntils.core.config.ConfigHolder;
 import com.wynntils.core.config.RegisterConfig;
 import com.wynntils.core.features.Feature;
 import com.wynntils.mc.event.ConnectionEvent;
@@ -16,7 +17,6 @@ import com.wynntils.mc.event.SetXpEvent;
 import com.wynntils.models.character.event.CharacterUpdateEvent;
 import com.wynntils.models.territories.profile.TerritoryProfile;
 import com.wynntils.models.worlds.event.WorldStateEvent;
-import com.wynntils.models.worlds.type.WorldState;
 import com.wynntils.utils.mc.McUtils;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 
@@ -96,5 +96,37 @@ public class DiscordRichPresenceFeature extends Feature {
     @SubscribeEvent
     public void onDisconnect(ConnectionEvent.DisconnectedEvent e) {
         Managers.Discord.clearAll();
+    }
+
+    @Override
+    protected void onConfigUpdate(ConfigHolder configHolder) {
+        if (this.isEnabled()) {
+            Managers.Discord.load();
+
+            if (!Models.WorldState.onWorld() && Managers.Discord.isReady()) return;
+
+            if (displayLocation.get()) {
+                handleLocationChange();
+            } else {
+                Managers.Discord.setLocation("");
+                lastTerritoryProfile = null;
+            }
+
+            if (displayCharacterInfo.get()) {
+                Managers.Discord.setClassType(Models.Character.getClassType());
+                Managers.Discord.setLevel(Models.CombatXp.getCombatLevel().current());
+            } else {
+                Managers.Discord.setClassType(null);
+                Managers.Discord.setLevel(0);
+            }
+
+            if (displayWorld.get()) {
+                Managers.Discord.setWorld(Models.WorldState.getCurrentWorldName());
+            } else {
+                Managers.Discord.setWorld("");
+            }
+        } else {
+            Managers.Discord.unload();
+        }
     }
 }

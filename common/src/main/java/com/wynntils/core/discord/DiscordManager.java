@@ -20,7 +20,10 @@ import java.util.Locale;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 
 public class DiscordManager extends Manager {
+    private static final long DISCORD_APPLICATION_ID = 387266678607577088L;
+    private boolean libraryLoaded = false;
 
+    private CreateParams params;
     private DiscordGameSDKCore core;
     private Activity activity;
 
@@ -29,30 +32,48 @@ public class DiscordManager extends Manager {
 
     public DiscordManager() {
         super(List.of());
+    }
 
-        DiscordGameSDKCore.loadLibrary();
-        createCore();
+    public void load() {
+        if (!libraryLoaded) {
+            DiscordGameSDKCore.loadLibrary();
+            libraryLoaded = true;
+        }
+        if (!isReady()) {
+            createCore();
+        }
+    }
+
+    public boolean isReady() {
+        return core != null && core.isOpen() && activity != null;
+    }
+
+    public void unload() {
+        clearAll(); // core and activity are closed in clearAll()
+        params.close();
     }
 
     private void createCore() {
-        CreateParams params = new CreateParams();
+        params = new CreateParams();
         try {
-            params.setClientID(387266678607577088L);
+            params.setClientID(DISCORD_APPLICATION_ID);
             params.setFlags(CreateParams.getDefaultFlags());
             core = new DiscordGameSDKCore(params);
             activity = new Activity();
             activity.timestamps().setStart(Instant.now());
-        } catch (RuntimeException e) {
+        } catch (Throwable e) {
             WynntilsMod.error("Could not initialize Discord Game SDK", e);
         }
     }
 
     public void setLocation(String location) {
+        if (!isReady()) return;
         activity.setDetails(location);
         core.activityManager().updateActivity(activity);
     }
 
     private void updateCharacterInfo() {
+        if (!isReady()) return;
         String name = StyledText.fromComponent(McUtils.player().getName()).getString(PartStyle.StyleType.NONE);
         if (classType == null) {
             setWynncraftLogo();
@@ -74,17 +95,22 @@ public class DiscordManager extends Manager {
     }
 
     public void setWynncraftLogo() {
+        if (!isReady()) return;
         activity.assets().setLargeImage("wynn");
         activity.assets().setLargeText("play.wynncraft.com");
         core.activityManager().updateActivity(activity);
     }
 
     public void setWorld(String world) {
+        if (!isReady()) return;
         activity.setState(world);
         core.activityManager().updateActivity(activity);
     }
 
     public void clearAll() {
+        if (!isReady()) return;
+        activity.close();
+        activity = null;
         CreateParams tempParams = new CreateParams();
         tempParams.setClientID(0L);
         tempParams.setFlags(CreateParams.getDefaultFlags());
@@ -95,9 +121,8 @@ public class DiscordManager extends Manager {
 
     @SubscribeEvent
     public void onTick(TickEvent event) {
-        if (!core.isOpen()) {
-            createCore();
+        if (isReady()) {
+            core.runCallbacks();
         }
-        core.runCallbacks();
     }
 }
