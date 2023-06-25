@@ -49,8 +49,13 @@ public class DiscordManager extends Manager {
     }
 
     public void unload() {
-        clearAll(); // core and activity are closed in clearAll()
+        if (!isReady()) return;
+        activity.close();
+        activity = null;
+        core.close();
+        core = null;
         params.close();
+        params = null;
     }
 
     private void createCore() {
@@ -105,18 +110,6 @@ public class DiscordManager extends Manager {
         if (!isReady()) return;
         activity.setState(world);
         core.activityManager().updateActivity(activity);
-    }
-
-    public void clearAll() {
-        if (!isReady()) return;
-        activity.close();
-        activity = null;
-        CreateParams tempParams = new CreateParams();
-        tempParams.setClientID(0L);
-        tempParams.setFlags(CreateParams.getDefaultFlags());
-        DiscordGameSDKCore tempCore = new DiscordGameSDKCore(tempParams);
-        core.close();
-        tempCore.activityManager().updateActivity(new Activity());
     }
 
     @SubscribeEvent

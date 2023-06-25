@@ -95,7 +95,7 @@ public class DiscordRichPresenceFeature extends Feature {
 
     @SubscribeEvent
     public void onDisconnect(ConnectionEvent.DisconnectedEvent e) {
-        Managers.Discord.clearAll();
+        Managers.Discord.unload();
     }
 
     @Override
