@@ -73,23 +73,23 @@ public class DiscordRichPresenceFeature extends Feature {
     @SubscribeEvent
     public void onWorldChange(WorldStateEvent event) {
         if (displayWorld.get()) {
-            if (event.getNewState() == WorldState.WORLD) {
-                Managers.Discord.setWorld(Models.WorldState.getCurrentWorldName());
-            } else if (event.getNewState() == WorldState.HUB || event.getNewState() == WorldState.CONNECTING) {
-                Managers.Discord.setLocation("");
-                Managers.Discord.setWorld("In Hub");
-                Managers.Discord.setWynncraftLogo();
+            switch (event.getNewState()) {
+                case WORLD -> Managers.Discord.setWorld(Models.WorldState.getCurrentWorldName());
+                case HUB, CONNECTING -> {
+                    Managers.Discord.setLocation("");
+                    Managers.Discord.setWorld("In Hub");
+                    Managers.Discord.setWynncraftLogo();
+                }
+                case CHARACTER_SELECTION -> {
+                    if (displayLocation.get()) {
+                        Managers.Discord.setLocation("Selecting a character");
+                    }
+                    Managers.Discord.setClassType(null);
+                    Managers.Discord.setWynncraftLogo();
+                }
             }
         } else {
             Managers.Discord.setWorld("");
-        }
-
-        if (event.getNewState() == WorldState.CHARACTER_SELECTION) {
-            if (displayLocation.get()) {
-                Managers.Discord.setLocation("Selecting a character");
-            }
-            Managers.Discord.setClassType(null);
-            Managers.Discord.setWynncraftLogo();
         }
     }
 
