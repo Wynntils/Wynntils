@@ -55,8 +55,7 @@ public class InventoryEmeraldCountFeature extends Feature {
     public void onContainerRender(ContainerRenderEvent event) {
         Screen screen = McUtils.mc().screen;
         if (!(screen instanceof AbstractContainerScreen<?> containerScreen)) return;
-        if (screen instanceof GearViewerScreen)
-            return; // prevent confusing displayed emeralds with viewed player's emeralds
+        if (screen instanceof GearViewerScreen) return;
 
         if (StyledText.fromComponent(screen.getTitle())
                 .getStringWithoutFormatting()
