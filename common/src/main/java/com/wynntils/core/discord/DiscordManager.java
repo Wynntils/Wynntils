@@ -9,8 +9,11 @@ import com.wynntils.antiope.core.type.CreateParams;
 import com.wynntils.antiope.manager.activity.type.Activity;
 import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.components.Manager;
+import com.wynntils.core.text.PartStyle;
+import com.wynntils.core.text.StyledText;
 import com.wynntils.mc.event.TickAlwaysEvent;
 import com.wynntils.models.character.type.ClassType;
+import com.wynntils.utils.mc.McUtils;
 import java.time.Instant;
 import java.util.List;
 import java.util.Locale;
@@ -20,6 +23,9 @@ public class DiscordManager extends Manager {
 
     private DiscordGameSDKCore core;
     private Activity activity;
+
+    private int level = 0;
+    private ClassType classType = null;
 
     public DiscordManager() {
         super(List.of());
@@ -42,10 +48,25 @@ public class DiscordManager extends Manager {
         core.activityManager().updateActivity(activity);
     }
 
-    public void setCharacterInfo(String name, int level, ClassType classType) {
-        activity.assets().setLargeImage(classType.getActualName(false).toLowerCase(Locale.ROOT));
-        activity.assets().setLargeText(name + " - Level " + level + " " + classType.getName());
+    private void updateCharacterInfo() {
+        String name = StyledText.fromComponent(McUtils.player().getName()).getString(PartStyle.StyleType.NONE);
+        if (classType == null) {
+            setWynncraftLogo();
+        } else {
+            activity.assets().setLargeImage(classType.getActualName(false).toLowerCase(Locale.ROOT));
+            activity.assets().setLargeText(name + " - Level " + level + " " + classType.getName());
+        }
         core.activityManager().updateActivity(activity);
+    }
+
+    public void setLevel(int level) {
+        this.level = level;
+        updateCharacterInfo();
+    }
+
+    public void setClassType(ClassType classType) {
+        this.classType = classType;
+        updateCharacterInfo();
     }
 
     public void setWynncraftLogo() {

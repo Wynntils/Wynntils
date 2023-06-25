@@ -9,13 +9,11 @@ import com.wynntils.core.components.Models;
 import com.wynntils.core.config.Config;
 import com.wynntils.core.config.RegisterConfig;
 import com.wynntils.core.features.Feature;
-import com.wynntils.core.text.PartStyle;
-import com.wynntils.core.text.StyledText;
 import com.wynntils.mc.event.ConnectionEvent;
 import com.wynntils.mc.event.PlayerMoveEvent;
 import com.wynntils.mc.event.PlayerTeleportEvent;
+import com.wynntils.mc.event.SetXpEvent;
 import com.wynntils.models.character.event.CharacterUpdateEvent;
-import com.wynntils.models.character.type.ClassType;
 import com.wynntils.models.territories.profile.TerritoryProfile;
 import com.wynntils.models.worlds.event.WorldStateEvent;
 import com.wynntils.models.worlds.type.WorldState;
@@ -45,6 +43,7 @@ public class DiscordRichPresenceFeature extends Feature {
             Managers.Discord.setLocation(location);
         } else {
             Managers.Discord.setLocation("");
+            lastTerritoryProfile = null;
         }
     }
 
@@ -61,12 +60,14 @@ public class DiscordRichPresenceFeature extends Feature {
     @SubscribeEvent
     public void onCharacterUpdate(CharacterUpdateEvent event) {
         if (displayCharacterInfo.get()) {
-            String name = StyledText.fromComponent(McUtils.player().getName()).getString(PartStyle.StyleType.NONE);
-            int level = Models.CombatXp.getCombatLevel().current();
-            ClassType classType = Models.Character.getClassType();
-            Managers.Discord.setCharacterInfo(name, level, classType);
-        } else {
-            Managers.Discord.setWynncraftLogo();
+            Managers.Discord.setClassType(Models.Character.getClassType());
+        }
+    }
+
+    @SubscribeEvent
+    public void onXpChange(SetXpEvent event) {
+        if (displayCharacterInfo.get()) {
+            Managers.Discord.setLevel(event.getExperienceLevel());
         }
     }
 
@@ -83,11 +84,18 @@ public class DiscordRichPresenceFeature extends Feature {
         } else {
             Managers.Discord.setWorld("");
         }
+
+        if (event.getNewState() == WorldState.CHARACTER_SELECTION) {
+            if (displayLocation.get()) {
+                Managers.Discord.setLocation("Selecting a character");
+            }
+            Managers.Discord.setClassType(null);
+            Managers.Discord.setWynncraftLogo();
+        }
     }
 
     @SubscribeEvent
     public void onDisconnect(ConnectionEvent.DisconnectedEvent e) {
-        System.out.println("Disconnecting from Discord");
         Managers.Discord.clearAll();
     }
 }
