@@ -39,14 +39,14 @@ public final class FriendsModel extends Model {
      */
     private static final Pattern FRIEND_LIST = Pattern.compile(".+'s? friends \\(.+\\): (.*)");
     private static final Pattern FRIEND_LIST_FAIL_1 = Pattern.compile("§eWe couldn't find any friends\\.");
-    private static final Pattern FRIEND_LIST_FAIL_2 = Pattern.compile("§eTry typing §r§6/friend add Username§r§e!");
+    private static final Pattern FRIEND_LIST_FAIL_2 = Pattern.compile("§eTry typing §6/friend add Username§e!");
     private static final Pattern FRIEND_REMOVE_MESSAGE_PATTERN =
             Pattern.compile("§e(.+) has been removed from your friends!");
     private static final Pattern FRIEND_ADD_MESSAGE_PATTERN = Pattern.compile("§e(.+) has been added to your friends!");
 
     private static final Pattern JOIN_PATTERN = Pattern.compile(
-            "(?:§a|§r§7)(?:§o)?(.+)§r(?:§2|§8(?:§o)?) has logged into server §r(?:§a|§7(?:§o)?)(?<server>.+)§r(?:§2|§8(?:§o)?) as (?:§r§a|§r§7(?:§o)?)an? (?<class>.+)");
-    private static final Pattern LEAVE_PATTERN = Pattern.compile("(?:§a|§r§7)(.+) left the game\\.");
+            "(?:§a|§7)(?:§o)?(.+)(?:§r)?(?:§2|§8(?:§o)?) has logged into server (?:§r)?(?:§a|§7(?:§o)?)(?<server>.+)(?:§r)?(?:§2|§8(?:§o)?) as (?:§a|§7(?:§o)?)an? (?<class>.+)");
+    private static final Pattern LEAVE_PATTERN = Pattern.compile("(?:§a|§7)(.+) left the game\\.");
     // endregion
 
     private boolean expectingFriendMessage = false;
