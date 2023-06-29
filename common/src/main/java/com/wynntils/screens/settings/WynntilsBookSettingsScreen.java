@@ -343,6 +343,7 @@ public final class WynntilsBookSettingsScreen extends WynntilsScreen implements 
     @Override
     public void onClose() {
         Managers.Config.reloadConfiguration();
+        searchWidget.onClose();
         super.onClose();
     }
 
