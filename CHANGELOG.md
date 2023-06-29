@@ -1,9 +1,21 @@
+## [0.0.3-alpha.103](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.102...v0.0.3-alpha.103) (2023-06-29)
+
+
+### Bug Fixes
+
+* Emerald count renders in GearViewerScreen ([#1642](https://github.com/Wynntils/Artemis/issues/1642)) ([89453a5](https://github.com/Wynntils/Artemis/commit/89453a5e6d3549028d0636317ff7fea71400a522))
+
 ## [0.0.3-alpha.102](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.101...v0.0.3-alpha.102) (2023-06-22)
 
 
 ### Bug Fixes
 
 * Fix npc dialogues getting stuck after completing quests and quest started messages not parsing ([#1644](https://github.com/Wynntils/Artemis/issues/1644)) ([3b13bd5](https://github.com/Wynntils/Artemis/commit/3b13bd5bf29ef1c9895e74d830bbd2be2aed464c))
+
+
+### Miscellaneous Chores
+
+* **release:** v0.0.3-alpha.102 [skip ci] ([527f678](https://github.com/Wynntils/Artemis/commit/527f678bc3e783ac76438d608badf5a5d0209322))
 
 ## [0.0.3-alpha.101](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.100...v0.0.3-alpha.101) (2023-06-22)
 
@@ -40,16 +52,4 @@
 ### Miscellaneous Chores
 
 * **release:** v0.0.3-alpha.99 [skip ci] ([30b4ce8](https://github.com/Wynntils/Artemis/commit/30b4ce84bbd443f9c1e72bdbec81d1bde3011439))
-
-## [0.0.3-alpha.98](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.97...v0.0.3-alpha.98) (2023-06-21)
-
-
-### Bug Fixes
-
-* Major ID range incorrectly renders in cosmetic preview ([#1633](https://github.com/Wynntils/Artemis/issues/1633)) ([c242ddd](https://github.com/Wynntils/Artemis/commit/c242ddd0b84d953a44a00c9efa77aa27463b0e5a))
-
-
-### Miscellaneous Chores
-
-* **release:** v0.0.3-alpha.98 [skip ci] ([e097e68](https://github.com/Wynntils/Artemis/commit/e097e68cb47413da13a2e34a57980c51871d534e))
 
