@@ -14,6 +14,7 @@ import com.wynntils.core.features.Feature;
 import com.wynntils.core.text.StyledText;
 import com.wynntils.mc.event.ContainerRenderEvent;
 import com.wynntils.models.emeralds.type.EmeraldUnits;
+import com.wynntils.screens.gearviewer.GearViewerScreen;
 import com.wynntils.utils.StringUtils;
 import com.wynntils.utils.colors.CommonColors;
 import com.wynntils.utils.mc.KeyboardUtils;
@@ -54,6 +55,7 @@ public class InventoryEmeraldCountFeature extends Feature {
     public void onContainerRender(ContainerRenderEvent event) {
         Screen screen = McUtils.mc().screen;
         if (!(screen instanceof AbstractContainerScreen<?> containerScreen)) return;
+        if (screen instanceof GearViewerScreen) return;
 
         if (StyledText.fromComponent(screen.getTitle())
                 .getStringWithoutFormatting()
