@@ -54,6 +54,7 @@
   "feature.wynntils.beaconBeam.name": "Beacon Beam",
   "feature.wynntils.beaconBeam.waypointBeamColor.description": "What color should the beacon beam have?",
   "feature.wynntils.beaconBeam.waypointBeamColor.name": "Beacon Beam Color",
+  "feature.wynntils.betaWarning.name": "Beta Warning",
   "feature.wynntils.blacksmithRedirect.name": "Blacksmith Messages",
   "feature.wynntils.bombBellTracking.name": "Bomb Bell Tracking",
   "feature.wynntils.bulkBuy.bulkBuyActive": "Shift-Click to buy %d times",

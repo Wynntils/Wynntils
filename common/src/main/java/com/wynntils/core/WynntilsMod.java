@@ -112,6 +112,10 @@ public final class WynntilsMod {
         return version;
     }
 
+    public static boolean isPreAlpha() {
+        return version.contains("pre-alpha");
+    }
+
     public static boolean isDevelopmentBuild() {
         return developmentBuild;
     }
