@@ -712,7 +712,7 @@
   "feature.wynntils.playerInfo.name": "Player Info Overlay",
   "feature.wynntils.playerInfo.overlay.playerInfo.name": "Player Info Overlay",
   "feature.wynntils.playerInfo.overlay.playerInfo.openingDuration.description": "How long should it take to open the player info overlay?",
-  "feature.wynntils.playerInfo.overlay.playerInfo.openingDuration.name" : "Opening Duration",
+  "feature.wynntils.playerInfo.overlay.playerInfo.openingDuration.name": "Opening Duration",
   "feature.wynntils.powderSpecialBarOverlay.name": "Powder Specials Bars",
   "feature.wynntils.powderSpecialBarOverlay.overlay.powderSpecialBar.flip.description": "Should the filling of the bar be flipped?",
   "feature.wynntils.powderSpecialBarOverlay.overlay.powderSpecialBar.flip.name": "Flip",
