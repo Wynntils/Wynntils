@@ -7,10 +7,8 @@ package com.wynntils.models.character;
 import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.components.Model;
 import com.wynntils.core.components.Models;
-import com.wynntils.core.features.Feature;
 import com.wynntils.core.text.PartStyle;
 import com.wynntils.core.text.StyledText;
-import com.wynntils.features.chat.GuildRankReplacementFeature;
 import com.wynntils.handlers.chat.event.ChatMessageReceivedEvent;
 import com.wynntils.handlers.container.ScriptedContainerQuery;
 import com.wynntils.mc.event.ContainerClickEvent;
@@ -93,6 +91,7 @@ public final class CharacterModel extends Model {
     public String getGuild() {
         return guild;
     }
+
     public String getGuildRank() {
         return guildRank;
     }
