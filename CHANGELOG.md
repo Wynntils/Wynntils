@@ -1,9 +1,21 @@
+## [0.0.3-alpha.104](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.103...v0.0.3-alpha.104) (2023-06-30)
+
+
+### New Features
+
+* Create pre-alpha version stream for Wynncraft Beta ([#1654](https://github.com/Wynntils/Artemis/issues/1654)) ([51d13fd](https://github.com/Wynntils/Artemis/commit/51d13fd6b2547cacf8b222465c36a96a438a4088))
+
 ## [0.0.3-alpha.103](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.102...v0.0.3-alpha.103) (2023-06-29)
 
 
 ### Bug Fixes
 
 * Emerald count renders in GearViewerScreen ([#1642](https://github.com/Wynntils/Artemis/issues/1642)) ([89453a5](https://github.com/Wynntils/Artemis/commit/89453a5e6d3549028d0636317ff7fea71400a522))
+
+
+### Miscellaneous Chores
+
+* **release:** v0.0.3-alpha.103 [skip ci] ([9f7540b](https://github.com/Wynntils/Artemis/commit/9f7540b6f2fb43b463b2b9b8677b9d5f069cbf9c))
 
 ## [0.0.3-alpha.102](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.101...v0.0.3-alpha.102) (2023-06-22)
 
@@ -40,16 +52,4 @@
 ### Miscellaneous Chores
 
 * **release:** v0.0.3-alpha.100 [skip ci] ([21a0885](https://github.com/Wynntils/Artemis/commit/21a088595f5942fc30f2217d7faa51ad3753b892))
-
-## [0.0.3-alpha.99](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.98...v0.0.3-alpha.99) (2023-06-21)
-
-
-### Bug Fixes
-
-* Fix multiline objective parsing ([#1638](https://github.com/Wynntils/Artemis/issues/1638)) ([2039af0](https://github.com/Wynntils/Artemis/commit/2039af0fb6789bf4049507bf090c8f92efab6ab0))
-
-
-### Miscellaneous Chores
-
-* **release:** v0.0.3-alpha.99 [skip ci] ([30b4ce8](https://github.com/Wynntils/Artemis/commit/30b4ce84bbd443f9c1e72bdbec81d1bde3011439))
 
