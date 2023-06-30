@@ -9,11 +9,8 @@ import com.wynntils.core.components.Models;
 import com.wynntils.core.text.StyledText;
 import com.wynntils.models.character.type.ClassInfo;
 import com.wynntils.screens.base.WynntilsScreen;
-import com.wynntils.screens.characterselector.widgets.ClassInfoButton;
-import com.wynntils.screens.characterselector.widgets.ClassSelectionAddButton;
-import com.wynntils.screens.characterselector.widgets.ClassSelectionDeleteButton;
-import com.wynntils.screens.characterselector.widgets.ClassSelectionEditButton;
-import com.wynntils.screens.characterselector.widgets.PlayButton;
+import com.wynntils.screens.base.widgets.TextWidget;
+import com.wynntils.screens.characterselector.widgets.*;
 import com.wynntils.utils.MathUtils;
 import com.wynntils.utils.colors.CommonColors;
 import com.wynntils.utils.mc.McUtils;
@@ -110,6 +107,24 @@ public final class CharacterSelectorScreen extends WynntilsScreen {
                 (int) (this.height * 0.915f),
                 (int) addButtonWidth,
                 (int) addButtonHeight,
+                this));
+
+        float disconnectButtonWidth = Texture.DISCONNECT_BUTTON.width() * currentTextureScale;
+        float disconnectButtonHeight = Texture.DISCONNECT_BUTTON.height() / 2f * currentTextureScale;
+        this.addRenderableWidget(new DisconnectButton(
+                (int) (this.width - disconnectButtonWidth - 10f),
+                (int) (10f),
+                (int) disconnectButtonWidth,
+                (int) disconnectButtonHeight,
+                this));
+
+        float changeWorldButtonWidth = Texture.CHANGE_WORLD_BUTTON.width() * currentTextureScale;
+        float changeWorldButtonHeight = Texture.CHANGE_WORLD_BUTTON.height() / 2f * currentTextureScale;
+        this.addRenderableWidget(new ChangeWorldButton(
+                (int) (this.width - changeWorldButtonWidth - 10f),
+                (int) (15f + changeWorldButtonHeight),
+                (int) changeWorldButtonWidth,
+                (int) changeWorldButtonHeight,
                 this));
 
         reloadButtons();
@@ -383,7 +398,6 @@ public final class CharacterSelectorScreen extends WynntilsScreen {
         InventoryScreen.renderEntityInInventoryFollowsMouse(
                 poseStack, (int) (this.width * 0.6f), (int) (this.height * 0.85f), scale, 0, 0, McUtils.player());
     }
-
     private void setScrollOffset(int delta) {
         scrollOffset =
                 MathUtils.clamp(scrollOffset - delta, 0, Math.max(0, classInfoList.size() - CHARACTER_INFO_PER_PAGE));
