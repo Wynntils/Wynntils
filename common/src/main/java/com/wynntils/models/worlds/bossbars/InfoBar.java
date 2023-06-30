@@ -48,8 +48,6 @@ public class InfoBar extends TrackedBar {
                             Models.WorldState.getCurrentWorldName(),
                             System.currentTimeMillis(),
                             length));
-        } else if (matcher.pattern().equals(GUILD_INFO_PATTERN)) {
-            Models.Character.setGuild(matcher.group("guild"));
         }
     }
 }

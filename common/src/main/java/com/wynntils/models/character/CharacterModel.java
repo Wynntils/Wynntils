@@ -7,8 +7,10 @@ package com.wynntils.models.character;
 import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.components.Model;
 import com.wynntils.core.components.Models;
+import com.wynntils.core.features.Feature;
 import com.wynntils.core.text.PartStyle;
 import com.wynntils.core.text.StyledText;
+import com.wynntils.features.chat.GuildRankReplacementFeature;
 import com.wynntils.handlers.chat.event.ChatMessageReceivedEvent;
 import com.wynntils.handlers.container.ScriptedContainerQuery;
 import com.wynntils.mc.event.ContainerClickEvent;
@@ -36,12 +38,15 @@ import net.minecraftforge.eventbus.api.SubscribeEvent;
 public final class CharacterModel extends Model {
     private static final Pattern CLASS_MENU_CLASS_PATTERN = Pattern.compile("§e- §7Class: §f(.+)");
     private static final Pattern CLASS_MENU_LEVEL_PATTERN = Pattern.compile("§e- §7Level: §f(\\d+)");
+    private static final Pattern GUILD_NAME_MATCHER = Pattern.compile("§3(.*?)§b.*");
+    private static final Pattern GUILD_RANK_MATCHER = Pattern.compile("§7Rank: §f(.*)");
     private static final Pattern INFO_MENU_CLASS_PATTERN = Pattern.compile("§7Class: §f(.+)");
     private static final Pattern INFO_MENU_LEVEL_PATTERN = Pattern.compile("§7Combat Lv: §f(\\d+)");
 
     private static final int CHARACTER_INFO_SLOT = 7;
     private static final int SOUL_POINT_SLOT = 8;
     private static final int PROFESSION_INFO_SLOT = 17;
+    private static final int GUILD_INFO_SLOT = 26;
 
     // we need a .* in front because the message may have a custom timestamp prefix (or some other mod could do
     // something weird)
@@ -56,6 +61,7 @@ public final class CharacterModel extends Model {
     private boolean reskinned;
     private int level;
     private String guild = "";
+    private String guildRank = "";
 
     // This field is basically the slot id of the class,
     // meaning that if a class changes slots, the ID will not be persistent.
@@ -84,12 +90,11 @@ public final class CharacterModel extends Model {
         return getClassType().getActualName(isReskinned());
     }
 
-    public void setGuild(String guild) {
-        this.guild = guild;
-    }
-
     public String getGuild() {
         return guild;
+    }
+    public String getGuildRank() {
+        return guildRank;
     }
 
     public String getId() {
@@ -136,10 +141,12 @@ public final class CharacterModel extends Model {
                 .processContainer(container -> {
                     ItemStack characterInfoItem = container.items().get(CHARACTER_INFO_SLOT);
                     ItemStack professionInfoItem = container.items().get(PROFESSION_INFO_SLOT);
+                    ItemStack guildInfoItem = container.items().get(GUILD_INFO_SLOT);
 
                     Models.Profession.resetValueFromItem(professionInfoItem);
 
                     parseCharacterFromCharacterMenu(characterInfoItem);
+                    parseGuildInfoFromGuildMenu(guildInfoItem);
                     hasCharacter = true;
                     WynntilsMod.postEvent(new CharacterUpdateEvent());
                     WynntilsMod.info("Deducing character " + getCharacterString());
@@ -197,6 +204,30 @@ public final class CharacterModel extends Model {
         ClassType classType = ClassType.fromName(className);
 
         updateCharacterInfo(classType, classType != null && ClassType.isReskinned(className), level);
+    }
+
+    private void parseGuildInfoFromGuildMenu(ItemStack guildInfoItem) {
+        List<StyledText> lore = LoreUtils.getLore(guildInfoItem);
+
+        for (StyledText line : lore) {
+            Matcher guildNameMatcher = line.getMatcher(GUILD_NAME_MATCHER);
+            if (guildNameMatcher.matches()) {
+                guild = guildNameMatcher.group(1);
+                System.out.println("Got guild " + guild);
+                continue;
+            } else {
+                System.out.println(line.getString() + " did not match " + GUILD_NAME_MATCHER);
+            }
+
+            Matcher rankMatcher = line.getMatcher(GUILD_RANK_MATCHER);
+
+            if (rankMatcher.matches()) {
+                guildRank = rankMatcher.group(1);
+                System.out.println("Got guild rank " + guildRank);
+            } else {
+                System.out.println(line.getString() + " did not match " + GUILD_RANK_MATCHER);
+            }
+        }
     }
 
     @SubscribeEvent
