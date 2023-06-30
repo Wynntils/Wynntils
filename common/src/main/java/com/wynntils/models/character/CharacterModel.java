@@ -55,6 +55,7 @@ public final class CharacterModel extends Model {
     private ClassType classType;
     private boolean reskinned;
     private int level;
+    private String guild = "";
 
     // This field is basically the slot id of the class,
     // meaning that if a class changes slots, the ID will not be persistent.
@@ -81,6 +82,14 @@ public final class CharacterModel extends Model {
      */
     public String getActualName() {
         return getClassType().getActualName(isReskinned());
+    }
+
+    public void setGuild(String guild) {
+        this.guild = guild;
+    }
+
+    public String getGuild() {
+        return guild;
     }
 
     public String getId() {

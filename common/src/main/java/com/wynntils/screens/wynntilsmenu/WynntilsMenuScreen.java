@@ -221,6 +221,18 @@ public final class WynntilsMenuScreen extends WynntilsMenuScreenBase {
         FontRenderer.getInstance()
                 .renderAlignedTextInBox(
                         poseStack,
+                        StyledText.fromString(Models.Character.getGuild()),
+                        Texture.QUEST_BOOK_BACKGROUND.width() / 2f,
+                        Texture.QUEST_BOOK_BACKGROUND.width(),
+                        50,
+                        0,
+                        CommonColors.CYAN,
+                        HorizontalAlignment.CENTER,
+                        TextShadow.NONE);
+
+        FontRenderer.getInstance()
+                .renderAlignedTextInBox(
+                        poseStack,
                         StyledText.fromComponent(McUtils.player().getDisplayName())
                                 .withoutFormatting(),
                         Texture.QUEST_BOOK_BACKGROUND.width() / 2f,

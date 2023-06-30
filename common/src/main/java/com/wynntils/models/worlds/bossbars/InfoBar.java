@@ -6,6 +6,7 @@ package com.wynntils.models.worlds.bossbars;
 
 import com.wynntils.core.components.Models;
 import com.wynntils.handlers.bossbar.TrackedBar;
+import com.wynntils.models.character.CharacterModel;
 import com.wynntils.models.worlds.type.BombInfo;
 import com.wynntils.models.worlds.type.BombType;
 import java.util.List;
@@ -48,6 +49,8 @@ public class InfoBar extends TrackedBar {
                             Models.WorldState.getCurrentWorldName(),
                             System.currentTimeMillis(),
                             length));
+        } else if (matcher.pattern().equals(GUILD_INFO_PATTERN)) {
+            Models.Character.setGuild(matcher.group("guild"));
         }
     }
 }
