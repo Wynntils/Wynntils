@@ -212,19 +212,13 @@ public final class CharacterModel extends Model {
             Matcher guildNameMatcher = line.getMatcher(GUILD_NAME_MATCHER);
             if (guildNameMatcher.matches()) {
                 guild = guildNameMatcher.group(1);
-                System.out.println("Got guild " + guild);
                 continue;
-            } else {
-                System.out.println(line.getString() + " did not match " + GUILD_NAME_MATCHER);
             }
 
             Matcher rankMatcher = line.getMatcher(GUILD_RANK_MATCHER);
 
             if (rankMatcher.matches()) {
                 guildRank = rankMatcher.group(1);
-                System.out.println("Got guild rank " + guildRank);
-            } else {
-                System.out.println(line.getString() + " did not match " + GUILD_RANK_MATCHER);
             }
         }
     }
