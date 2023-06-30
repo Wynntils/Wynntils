@@ -401,6 +401,7 @@ public final class CharacterSelectorScreen extends WynntilsScreen {
         InventoryScreen.renderEntityInInventoryFollowsMouse(
                 poseStack, (int) (this.width * 0.6f), (int) (this.height * 0.85f), scale, 0, 0, McUtils.player());
     }
+
     private void setScrollOffset(int delta) {
         scrollOffset =
                 MathUtils.clamp(scrollOffset - delta, 0, Math.max(0, classInfoList.size() - CHARACTER_INFO_PER_PAGE));

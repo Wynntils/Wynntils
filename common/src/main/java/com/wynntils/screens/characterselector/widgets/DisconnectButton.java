@@ -12,12 +12,11 @@ import com.wynntils.utils.mc.TooltipUtils;
 import com.wynntils.utils.render.FontRenderer;
 import com.wynntils.utils.render.RenderUtils;
 import com.wynntils.utils.render.Texture;
+import java.util.List;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.gui.screens.TitleScreen;
 import net.minecraft.client.gui.screens.inventory.tooltip.ClientTooltipComponent;
 import net.minecraft.network.chat.Component;
-
-import java.util.List;
 
 public class DisconnectButton extends WynntilsButton {
     private static final List<Component> TOOLTIP = List.of(

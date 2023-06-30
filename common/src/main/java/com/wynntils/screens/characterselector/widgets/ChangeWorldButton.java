@@ -5,7 +5,6 @@
 package com.wynntils.screens.characterselector.widgets;
 
 import com.mojang.blaze3d.vertex.PoseStack;
-import com.wynntils.core.components.Models;
 import com.wynntils.screens.base.widgets.WynntilsButton;
 import com.wynntils.screens.characterselector.CharacterSelectorScreen;
 import com.wynntils.utils.mc.McUtils;
@@ -13,14 +12,10 @@ import com.wynntils.utils.mc.TooltipUtils;
 import com.wynntils.utils.render.FontRenderer;
 import com.wynntils.utils.render.RenderUtils;
 import com.wynntils.utils.render.Texture;
-import net.minecraft.ChatFormatting;
-import net.minecraft.client.gui.screens.ConnectScreen;
-import net.minecraft.client.gui.screens.inventory.tooltip.ClientTooltipComponent;
-import net.minecraft.client.multiplayer.ServerData;
-import net.minecraft.client.multiplayer.resolver.ServerAddress;
-import net.minecraft.network.chat.Component;
-
 import java.util.List;
+import net.minecraft.ChatFormatting;
+import net.minecraft.client.gui.screens.inventory.tooltip.ClientTooltipComponent;
+import net.minecraft.network.chat.Component;
 
 public class ChangeWorldButton extends WynntilsButton {
 
@@ -67,8 +62,8 @@ public class ChangeWorldButton extends WynntilsButton {
             poseStack.translate(
                     mouseX
                             - TooltipUtils.getToolTipWidth(
-                            clientTooltipComponents,
-                            FontRenderer.getInstance().getFont()),
+                                    clientTooltipComponents,
+                                    FontRenderer.getInstance().getFont()),
                     mouseY - TooltipUtils.getToolTipHeight(clientTooltipComponents),
                     100);
             RenderUtils.drawTooltip(
