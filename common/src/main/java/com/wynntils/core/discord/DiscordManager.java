@@ -21,7 +21,6 @@ import net.minecraftforge.eventbus.api.SubscribeEvent;
 
 public class DiscordManager extends Manager {
     private static final long DISCORD_APPLICATION_ID = 387266678607577088L;
-    private boolean libraryLoaded = false;
 
     private CreateParams params;
     private DiscordGameSDKCore core;
@@ -35,10 +34,7 @@ public class DiscordManager extends Manager {
     }
 
     public void load() {
-        if (!libraryLoaded) {
-            DiscordGameSDKCore.loadLibrary();
-            libraryLoaded = true;
-        }
+        DiscordGameSDKCore.loadLibrary();
         if (!isReady()) {
             createCore();
         }
