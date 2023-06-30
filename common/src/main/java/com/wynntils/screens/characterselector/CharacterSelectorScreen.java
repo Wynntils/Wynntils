@@ -14,6 +14,8 @@ import com.wynntils.screens.characterselector.widgets.ClassSelectionAddButton;
 import com.wynntils.screens.characterselector.widgets.ClassSelectionDeleteButton;
 import com.wynntils.screens.characterselector.widgets.ClassSelectionEditButton;
 import com.wynntils.screens.characterselector.widgets.PlayButton;
+import com.wynntils.screens.characterselector.widgets.ChangeWorldButton;
+import com.wynntils.screens.characterselector.widgets.DisconnectButton;
 import com.wynntils.utils.MathUtils;
 import com.wynntils.utils.colors.CommonColors;
 import com.wynntils.utils.mc.McUtils;
