@@ -20,6 +20,7 @@ import com.wynntils.models.territories.profile.TerritoryProfile;
 import com.wynntils.models.worlds.event.WorldStateEvent;
 import com.wynntils.utils.mc.McUtils;
 import java.util.Locale;
+import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 
 public class DiscordRichPresenceFeature extends Feature {
@@ -99,12 +100,15 @@ public class DiscordRichPresenceFeature extends Feature {
             return;
         }
 
-        TerritoryProfile territoryProfile =
-                Models.Territory.getTerritoryProfileForPosition(McUtils.player().position());
-        if (territoryProfile != null && territoryProfile != lastTerritoryProfile) {
-            lastTerritoryProfile = territoryProfile;
-            String location = territoryProfile.getName();
-            Managers.Discord.setDetails(location);
+        Vec3 position = McUtils.player().position();
+        if (position != null) {
+            TerritoryProfile territoryProfile = Models.Territory.getTerritoryProfileForPosition(
+                    McUtils.player().position());
+            if (territoryProfile != null && territoryProfile != lastTerritoryProfile) {
+                lastTerritoryProfile = territoryProfile;
+                String location = territoryProfile.getName();
+                Managers.Discord.setDetails(location);
+            }
         }
 
         Managers.TickScheduler.scheduleLater(this::checkTerritory, 10);
