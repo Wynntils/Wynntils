@@ -123,6 +123,7 @@ import com.wynntils.features.ui.SoulPointTimerFeature;
 import com.wynntils.features.ui.WynncraftButtonFeature;
 import com.wynntils.features.ui.WynncraftPauseScreenFeature;
 import com.wynntils.features.ui.WynntilsQuestBookFeature;
+import com.wynntils.features.wynntils.BetaWarningFeature;
 import com.wynntils.features.wynntils.ChangelogFeature;
 import com.wynntils.features.wynntils.CommandsFeature;
 import com.wynntils.features.wynntils.FixPacketBugsFeature;
@@ -296,6 +297,7 @@ public final class FeatureManager extends Manager {
         // endregion
 
         // region wynntils
+        registerFeature(new BetaWarningFeature());
         registerFeature(new ChangelogFeature());
         registerFeature(new CommandsFeature());
         registerFeature(new FixPacketBugsFeature());
