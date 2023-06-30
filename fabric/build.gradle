@@ -127,7 +127,7 @@ remapJar {
     injectAccessWidener = true
     input.set applyEventBus.archiveFile
     dependsOn applyEventBus
-    classifier "fabric"
+    classifier "fabric+MC-${minecraft_version}"
 }
 
 sourcesJar {
