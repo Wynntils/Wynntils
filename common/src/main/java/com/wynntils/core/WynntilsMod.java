@@ -26,7 +26,7 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import net.minecraft.ChatFormatting;
-import net.minecraft.client.Minecraft;
+import net.minecraft.SharedConstants;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraftforge.eventbus.api.Event;
@@ -178,7 +178,7 @@ public final class WynntilsMod {
                 "Wynntils: Starting version {} (using {} on Minecraft {})",
                 version,
                 modLoader,
-                Minecraft.getInstance().getLaunchedVersion());
+                SharedConstants.getCurrentVersion().getName());
 
         WynntilsMod.eventBus = EventBusWrapper.createEventBus();
 
@@ -212,7 +212,7 @@ public final class WynntilsMod {
     }
 
     private static void parseVersion(String modVersion) {
-        if (modVersion.equals("DEV")) {
+        if (modVersion.equals("SNAPSHOT")) {
             version = modVersion;
             developmentBuild = true;
         } else {
