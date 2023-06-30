@@ -11,7 +11,9 @@ import static com.wynntils.utils.render.type.VerticalAlignment.MIDDLE;
 import com.mojang.blaze3d.platform.Window;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.wynntils.core.components.Models;
+import com.wynntils.core.config.Category;
 import com.wynntils.core.config.Config;
+import com.wynntils.core.config.ConfigCategory;
 import com.wynntils.core.config.ConfigHolder;
 import com.wynntils.core.config.RegisterConfig;
 import com.wynntils.core.features.Feature;
@@ -36,6 +38,7 @@ import net.minecraft.client.multiplayer.PlayerInfo;
 import net.minecraft.client.renderer.MultiBufferSource;
 import org.joml.Math;
 
+@ConfigCategory(Category.OVERLAYS)
 public class PlayerInfoFeature extends Feature {
     private static final Comparator<PlayerInfo> PLAYER_INFO_COMPARATOR =
             Comparator.comparing(playerInfo -> playerInfo.getProfile().getName(), String::compareToIgnoreCase);
@@ -52,15 +55,13 @@ public class PlayerInfoFeature extends Feature {
 
     public static final int MAX_LENGTH = 73;
 
-    @RegisterConfig
-    public final Config<Integer> openingDuration = new Config<>(125);
-
     @OverlayInfo(renderType = RenderEvent.ElementType.GUI)
-    public final PlayerInfoOverlay arrowShieldTrackerOverlay = new PlayerInfoOverlay();
+    public final PlayerInfoOverlay playerInfoOverlay = new PlayerInfoOverlay();
 
     private class PlayerInfoOverlay extends Overlay {
+        @RegisterConfig
+        public final Config<Integer> openingDuration = new Config<>(125);
 
-        private static final double OPENING_DURATION_MILLIS = 125;
         private double animationProgress = 0;
         private long lastTime = -1;
 
@@ -111,19 +112,13 @@ public class PlayerInfoFeature extends Feature {
         @Override
         public void render(PoseStack poseStack, MultiBufferSource bufferSource, float partialTicks, Window window) {
             if (!McUtils.options().keyPlayerList.isDown() && animationProgress <= 0.0) return;
-            double animation = 1;
-            if (openingDuration.get() > 0) { // Animation Detection
-                animation = getAnimation();
-                if (openingDuration.get() == 0 && animationProgress <= 0.0) return;
-            }
+            double animation = getAnimation();
 
-            //            animation = 0.5;
             RenderUtils.enableScissor(
                     (int) (getRenderX() + ROLL_WIDTH + HALF_WIDTH - HALF_WIDTH * animation),
                     0,
                     (int) (WIDTH * animation),
                     McUtils.mc().getWindow().getScreenHeight());
-            FontRenderer fontRenderer = FontRenderer.getInstance();
 
             RenderUtils.drawTexturedRect(
                     poseStack,
@@ -140,8 +135,9 @@ public class PlayerInfoFeature extends Feature {
                     Texture.PLAYER_INFO_OVERLAY.width(),
                     Texture.PLAYER_INFO_OVERLAY.height());
 
+            FontRenderer fontRenderer = FontRenderer.getInstance();
             CustomColor customColor = CustomColor.fromChatFormatting(ChatFormatting.BLACK);
-            float currentDist = getRenderX() + DISTANCE_BETWEEN_CATEGORIES - 5;
+            float currentDist = getRenderX() + ROLL_WIDTH + 55;
             float categoryStart = getRenderY() + 18;
             fontRenderer.renderText(
                     poseStack,
@@ -215,7 +211,7 @@ public class PlayerInfoFeature extends Feature {
                     Texture.PLAYER_INFO_OVERLAY.height(),
                     0,
                     0,
-                    27,
+                    ROLL_WIDTH,
                     Texture.PLAYER_INFO_OVERLAY.height(),
                     Texture.PLAYER_INFO_OVERLAY.width(),
                     Texture.PLAYER_INFO_OVERLAY.height());
@@ -229,15 +225,15 @@ public class PlayerInfoFeature extends Feature {
                     Texture.PLAYER_INFO_OVERLAY.height(),
                     0,
                     0,
-                    27,
+                    ROLL_WIDTH,
                     Texture.PLAYER_INFO_OVERLAY.height(),
                     Texture.PLAYER_INFO_OVERLAY.width(),
                     Texture.PLAYER_INFO_OVERLAY.height());
         }
 
         private double getAnimation() {
-            double animation;
-            if (lastTime == -1) lastTime += System.currentTimeMillis();
+            if (openingDuration.get() <= 0) return 1;
+            if (lastTime == -1) lastTime = System.currentTimeMillis() - 1;
 
             if (McUtils.options().keyPlayerList.isDown()) {
                 animationProgress += (System.currentTimeMillis() - lastTime) / (double) openingDuration.get();
@@ -246,10 +242,8 @@ public class PlayerInfoFeature extends Feature {
                 animationProgress -= (System.currentTimeMillis() - lastTime) / (double) openingDuration.get();
                 animationProgress = Math.max(0, animationProgress);
             }
-            animation = Math.sin((float) (animationProgress * 1f / 2f * Math.PI));
-
             lastTime = animationProgress <= 0.0 ? -1 : System.currentTimeMillis();
-            return animation;
+            return Math.sin((float) (animationProgress * 1f / 2f * Math.PI));
         }
 
         @Override
