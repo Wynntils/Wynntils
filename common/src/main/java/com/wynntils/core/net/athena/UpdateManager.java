@@ -11,6 +11,10 @@ import com.wynntils.core.net.ApiResponse;
 import com.wynntils.core.net.NetManager;
 import com.wynntils.core.net.UrlId;
 import com.wynntils.utils.FileUtils;
+import net.minecraft.ChatFormatting;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.MutableComponent;
+
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
@@ -18,11 +22,9 @@ import java.net.URL;
 import java.nio.file.Files;
 import java.nio.file.StandardCopyOption;
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
 import java.util.concurrent.CompletableFuture;
-import net.minecraft.ChatFormatting;
-import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.MutableComponent;
 
 public final class UpdateManager extends Manager {
     private static final String WYNTILLS_UPDATE_FOLDER = "updates";
@@ -36,7 +38,9 @@ public final class UpdateManager extends Manager {
     public CompletableFuture<String> getLatestBuild() {
         CompletableFuture<String> future = new CompletableFuture<>();
 
-        ApiResponse apiResponse = Managers.Net.callApi(UrlId.API_ATHENA_UPDATE_CHECK);
+        WynntilsMod.info("Checking for update for stream " + getStream() + ".");
+
+        ApiResponse apiResponse = Managers.Net.callApi(UrlId.API_ATHENA_UPDATE_CHECK, Map.of("stream", getStream()));
         apiResponse.handleJsonObject(
                 json -> {
                     String version = json.getAsJsonPrimitive("version").getAsString();
@@ -47,6 +51,25 @@ public final class UpdateManager extends Manager {
                     future.complete(null);
                 });
         return future;
+    }
+
+    private String getStream() {
+        // TODO: Replace with config option for the user to select their preferred stream.
+        String version = WynntilsMod.getVersion();
+        // Format: 0.0.3-pre-alpha.103 -> pre-alpha
+        // Format: 0.0.3-alpha.103 -> alpha
+        // Format: 0.0.3 -> release
+        // Regex to get the stream: \d+\.\d+\.\d+-(?<stream>[a-z\-]+)\.\d+|\d+\.\d+\.\d+
+
+        if (WynntilsMod.isDevelopmentBuild()) {
+            return "alpha";
+        }
+
+        String stream = version.replaceAll("\\d+\\.\\d+\\.\\d+-(?<stream>[a-z\\-]+)\\.\\d+|\\d+\\.\\d+\\.\\d+", "${stream}");
+        if (stream.isEmpty()) {
+            stream = "release";
+        }
+        return stream;
     }
 
     public CompletableFuture<UpdateResult> tryUpdate() {

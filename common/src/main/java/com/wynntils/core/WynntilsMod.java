@@ -17,6 +17,16 @@ import com.wynntils.core.events.EventBusWrapper;
 import com.wynntils.core.mod.event.WynntilsCrashEvent;
 import com.wynntils.core.mod.type.CrashType;
 import com.wynntils.utils.mc.McUtils;
+import net.minecraft.ChatFormatting;
+import net.minecraft.SharedConstants;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.MutableComponent;
+import net.minecraftforge.eventbus.api.Event;
+import net.minecraftforge.eventbus.api.IEventBus;
+import org.apache.commons.lang3.reflect.FieldUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.io.File;
 import java.io.InputStream;
 import java.util.ArrayList;
@@ -25,15 +35,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
-import net.minecraft.ChatFormatting;
-import net.minecraft.client.Minecraft;
-import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.MutableComponent;
-import net.minecraftforge.eventbus.api.Event;
-import net.minecraftforge.eventbus.api.IEventBus;
-import org.apache.commons.lang3.reflect.FieldUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 /** The common implementation of Wynntils */
 public final class WynntilsMod {
@@ -178,7 +179,7 @@ public final class WynntilsMod {
                 "Wynntils: Starting version {} (using {} on Minecraft {})",
                 version,
                 modLoader,
-                Minecraft.getInstance().getLaunchedVersion());
+                SharedConstants.getCurrentVersion().getName());
 
         WynntilsMod.eventBus = EventBusWrapper.createEventBus();
 
@@ -212,7 +213,7 @@ public final class WynntilsMod {
     }
 
     private static void parseVersion(String modVersion) {
-        if (modVersion.equals("DEV")) {
+        if (modVersion.equals("SNAPSHOT")) {
             version = modVersion;
             developmentBuild = true;
         } else {
