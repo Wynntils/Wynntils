@@ -10,14 +10,16 @@ import com.wynntils.core.config.Config;
 import com.wynntils.core.config.ConfigHolder;
 import com.wynntils.core.config.RegisterConfig;
 import com.wynntils.core.features.Feature;
+import com.wynntils.core.text.PartStyle;
+import com.wynntils.core.text.StyledText;
 import com.wynntils.mc.event.ConnectionEvent;
-import com.wynntils.mc.event.PlayerMoveEvent;
-import com.wynntils.mc.event.PlayerTeleportEvent;
 import com.wynntils.mc.event.SetXpEvent;
 import com.wynntils.models.character.event.CharacterUpdateEvent;
+import com.wynntils.models.character.type.ClassType;
 import com.wynntils.models.territories.profile.TerritoryProfile;
 import com.wynntils.models.worlds.event.WorldStateEvent;
 import com.wynntils.utils.mc.McUtils;
+import java.util.Locale;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 
 public class DiscordRichPresenceFeature extends Feature {
@@ -30,43 +32,37 @@ public class DiscordRichPresenceFeature extends Feature {
     @RegisterConfig
     public final Config<Boolean> displayWorld = new Config<>(true);
 
+    private boolean stopTerritoryCheck = false;
     private TerritoryProfile lastTerritoryProfile = null;
+    private ClassType classType = null;
+    private int level = 0;
 
-    private void handleLocationChange() {
-        if (displayLocation.get()) {
-            TerritoryProfile territoryProfile = Models.Territory.getTerritoryProfileForPosition(
-                    McUtils.player().position());
-            if (territoryProfile == null || territoryProfile == lastTerritoryProfile) return;
-            lastTerritoryProfile = territoryProfile;
-            String location = territoryProfile.getName();
-            Managers.Discord.setLocation(location);
-        } else {
-            Managers.Discord.setLocation("");
-            lastTerritoryProfile = null;
-        }
-    }
-
-    @SubscribeEvent
-    public void onPlayerMove(PlayerMoveEvent event) {
-        handleLocationChange();
-    }
-
-    @SubscribeEvent
-    public void onPlayerTeleport(PlayerTeleportEvent event) {
-        handleLocationChange();
+    private void setCharacterDetails() {
+        if (classType == null) return;
+        String name = StyledText.fromComponent(McUtils.player().getName()).getString(PartStyle.StyleType.NONE);
+        Managers.Discord.setImageText(name + " - Level " + level + " " + classType.getName());
+        Managers.Discord.setImage(classType.getActualName(false).toLowerCase(Locale.ROOT));
     }
 
     @SubscribeEvent
     public void onCharacterUpdate(CharacterUpdateEvent event) {
+        if (!Models.WorldState.onWorld()) return;
+
+        // classType needs to be set even when config is disabled so if the config is enabled later, it will not require
+        // a relog
+        classType = Models.Character.getClassType();
         if (displayCharacterInfo.get()) {
-            Managers.Discord.setClassType(Models.Character.getClassType());
+            setCharacterDetails();
         }
     }
 
     @SubscribeEvent
     public void onXpChange(SetXpEvent event) {
+        if (!Models.WorldState.onWorld()) return;
+
+        level = event.getExperienceLevel();
         if (displayCharacterInfo.get()) {
-            Managers.Discord.setLevel(event.getExperienceLevel());
+            setCharacterDetails();
         }
     }
 
@@ -74,23 +70,44 @@ public class DiscordRichPresenceFeature extends Feature {
     public void onWorldChange(WorldStateEvent event) {
         if (displayWorld.get()) {
             switch (event.getNewState()) {
-                case WORLD -> Managers.Discord.setWorld(Models.WorldState.getCurrentWorldName());
+                case WORLD -> {
+                    Managers.Discord.setState(Models.WorldState.getCurrentWorldName());
+                    checkTerritory();
+                }
                 case HUB, CONNECTING -> {
-                    Managers.Discord.setLocation("");
-                    Managers.Discord.setWorld("In Hub");
+                    Managers.Discord.setDetails("");
+                    Managers.Discord.setState("In Hub");
                     Managers.Discord.setWynncraftLogo();
                 }
                 case CHARACTER_SELECTION -> {
                     if (displayLocation.get()) {
-                        Managers.Discord.setLocation("Selecting a character");
+                        Managers.Discord.setDetails("Selecting a character");
                     }
-                    Managers.Discord.setClassType(null);
+                    Managers.Discord.setState("");
                     Managers.Discord.setWynncraftLogo();
                 }
             }
         } else {
-            Managers.Discord.setWorld("");
+            Managers.Discord.setState("");
         }
+    }
+
+    private void checkTerritory() {
+        if (stopTerritoryCheck) {
+            lastTerritoryProfile = null;
+            stopTerritoryCheck = false;
+            return;
+        }
+
+        TerritoryProfile territoryProfile =
+                Models.Territory.getTerritoryProfileForPosition(McUtils.player().position());
+        if (territoryProfile != null && territoryProfile != lastTerritoryProfile) {
+            lastTerritoryProfile = territoryProfile;
+            String location = territoryProfile.getName();
+            Managers.Discord.setDetails(location);
+        }
+
+        Managers.TickScheduler.scheduleLater(this::checkTerritory, 10);
     }
 
     @SubscribeEvent
@@ -106,24 +123,25 @@ public class DiscordRichPresenceFeature extends Feature {
             if (!Models.WorldState.onWorld() && Managers.Discord.isReady()) return;
 
             if (displayLocation.get()) {
-                handleLocationChange();
+                if (lastTerritoryProfile == null) {
+                    stopTerritoryCheck = false;
+                    checkTerritory();
+                }
             } else {
-                Managers.Discord.setLocation("");
-                lastTerritoryProfile = null;
+                stopTerritoryCheck = true;
+                Managers.Discord.setDetails("");
             }
 
             if (displayCharacterInfo.get()) {
-                Managers.Discord.setClassType(Models.Character.getClassType());
-                Managers.Discord.setLevel(Models.CombatXp.getCombatLevel().current());
+                setCharacterDetails();
             } else {
-                Managers.Discord.setClassType(null);
-                Managers.Discord.setLevel(0);
+                Managers.Discord.setWynncraftLogo();
             }
 
             if (displayWorld.get()) {
-                Managers.Discord.setWorld(Models.WorldState.getCurrentWorldName());
+                Managers.Discord.setState(Models.WorldState.getCurrentWorldName());
             } else {
-                Managers.Discord.setWorld("");
+                Managers.Discord.setState("");
             }
         } else {
             Managers.Discord.unload();

@@ -9,14 +9,9 @@ import com.wynntils.antiope.core.type.CreateParams;
 import com.wynntils.antiope.manager.activity.type.Activity;
 import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.components.Manager;
-import com.wynntils.core.text.PartStyle;
-import com.wynntils.core.text.StyledText;
 import com.wynntils.mc.event.TickEvent;
-import com.wynntils.models.character.type.ClassType;
-import com.wynntils.utils.mc.McUtils;
 import java.time.Instant;
 import java.util.List;
-import java.util.Locale;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 
 public class DiscordManager extends Manager {
@@ -25,9 +20,6 @@ public class DiscordManager extends Manager {
     private CreateParams params;
     private DiscordGameSDKCore core;
     private Activity activity;
-
-    private int level = 0;
-    private ClassType classType = null;
 
     public DiscordManager() {
         super(List.of());
@@ -67,32 +59,22 @@ public class DiscordManager extends Manager {
         }
     }
 
-    public void setLocation(String location) {
+    public void setDetails(String details) {
         if (!isReady()) return;
-        activity.setDetails(location);
+        activity.setDetails(details);
         core.activityManager().updateActivity(activity);
     }
 
-    private void updateCharacterInfo() {
+    public void setImage(String imageId) {
         if (!isReady()) return;
-        String name = StyledText.fromComponent(McUtils.player().getName()).getString(PartStyle.StyleType.NONE);
-        if (classType == null) {
-            setWynncraftLogo();
-        } else {
-            activity.assets().setLargeImage(classType.getActualName(false).toLowerCase(Locale.ROOT));
-            activity.assets().setLargeText(name + " - Level " + level + " " + classType.getName());
-        }
+        activity.assets().setLargeImage(imageId);
         core.activityManager().updateActivity(activity);
     }
 
-    public void setLevel(int level) {
-        this.level = level;
-        updateCharacterInfo();
-    }
-
-    public void setClassType(ClassType classType) {
-        this.classType = classType;
-        updateCharacterInfo();
+    public void setImageText(String text) {
+        if (!isReady()) return;
+        activity.assets().setLargeText(text);
+        core.activityManager().updateActivity(activity);
     }
 
     public void setWynncraftLogo() {
@@ -102,9 +84,9 @@ public class DiscordManager extends Manager {
         core.activityManager().updateActivity(activity);
     }
 
-    public void setWorld(String world) {
+    public void setState(String state) {
         if (!isReady()) return;
-        activity.setState(world);
+        activity.setState(state);
         core.activityManager().updateActivity(activity);
     }
 
