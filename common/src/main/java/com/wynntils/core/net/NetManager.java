@@ -9,10 +9,6 @@ import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.components.Manager;
 import com.wynntils.core.components.Managers;
 import com.wynntils.core.net.event.NetResultProcessedEvent;
-import net.minecraft.SharedConstants;
-import net.minecraft.Util;
-import org.apache.commons.codec.digest.DigestUtils;
-
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
@@ -23,6 +19,9 @@ import java.nio.file.Files;
 import java.time.Duration;
 import java.util.List;
 import java.util.Map;
+import net.minecraft.SharedConstants;
+import net.minecraft.Util;
+import org.apache.commons.codec.digest.DigestUtils;
 
 public final class NetManager extends Manager {
     static final HttpClient HTTP_CLIENT = HttpClient.newHttpClient();
