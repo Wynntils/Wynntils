@@ -6,9 +6,10 @@ package com.wynntils.models.players;
 
 import com.wynntils.core.components.Model;
 import com.wynntils.core.text.StyledText;
+import com.wynntils.models.character.CharacterModel;
+import com.wynntils.models.players.type.GuildRank;
 import com.wynntils.utils.mc.LoreUtils;
 import java.util.List;
-import java.util.Locale;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import net.minecraft.world.item.ItemStack;
@@ -18,11 +19,10 @@ public class GuildModel extends Model {
     private static final Pattern GUILD_RANK_MATCHER = Pattern.compile("§7Rank: §f(.*)");
 
     private String name = "";
-    private String rank = "";
-    private String rankStars = "";
+    private GuildRank rank;
 
-    public GuildModel() {
-        super(List.of());
+    public GuildModel(CharacterModel characterModel) {
+        super(List.of(characterModel));
     }
 
     public void parseGuildInfoFromGuildMenu(ItemStack guildInfoItem) {
@@ -38,15 +38,10 @@ public class GuildModel extends Model {
             Matcher rankMatcher = line.getMatcher(GUILD_RANK_MATCHER);
 
             if (rankMatcher.matches()) {
-                rank = rankMatcher.group(1);
-
-                switch (rank.toLowerCase(Locale.ROOT)) {
-                    case "owner" -> rankStars = "★★★★★";
-                    case "chief" -> rankStars = "★★★★";
-                    case "strategist" -> rankStars = "★★★";
-                    case "captain" -> rankStars = "★★";
-                    case "recruiter" -> rankStars = "★";
-                    default -> rankStars = "";
+                for (GuildRank guildRank : GuildRank.values()) {
+                    if (guildRank.getName().equals(rankMatcher.group(1))) {
+                        rank = guildRank;
+                    }
                 }
             }
         }
@@ -56,11 +51,7 @@ public class GuildModel extends Model {
         return name;
     }
 
-    public String getGuildRank() {
+    public GuildRank getGuildRank() {
         return rank;
-    }
-
-    public String getGuildRankStars() {
-        return rankStars;
     }
 }

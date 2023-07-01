@@ -69,7 +69,6 @@ public final class Models {
     public static final DamageModel Damage = new DamageModel();
     public static final ElementModel Element = new ElementModel();
     public static final FavoritesModel Favorites = new FavoritesModel();
-    public static final GuildModel Guild = new GuildModel();
     public static final GuildAttackTimerModel GuildAttackTimer = new GuildAttackTimerModel();
     public static final ObjectivesModel Objectives = new ObjectivesModel();
     public static final PlayerInventoryModel PlayerInventory = new PlayerInventoryModel();
@@ -93,6 +92,7 @@ public final class Models {
     public static final CharacterStatsModel CharacterStats = new CharacterStatsModel(CombatXp);
     public static final FriendsModel Friends = new FriendsModel(WorldState);
     public static final GearModel Gear = new GearModel(Element, Stat, WynnItem);
+    public static final GuildModel Guild = new GuildModel(Character);
     public static final HadesModel Hades = new HadesModel(Character, WorldState);
     public static final IngredientModel Ingredient = new IngredientModel(Stat);
     public static final ItemModel Item = new ItemModel(Element, Gear, Rewards, Ingredient);
