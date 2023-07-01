@@ -785,7 +785,7 @@
   "feature.wynntils.silencer.disabled": "Silencer disabled",
   "feature.wynntils.silencer.enabled": "Silencer enabled",
   "feature.wynntils.silencer.name": "Silencer",
-  "feature.wynntils.silencer.silencerVolume.description": "How loud should the game be",
+  "feature.wynntils.silencer.silencerVolume.description": "How loud should the game be when the silencer is enabled?",
   "feature.wynntils.silencer.silencerVolume.name": "Silencer Volume",
   "feature.wynntils.soulPointTimer.lore": "Time until next soul point: %s",
   "feature.wynntils.soulPointTimer.name": "Soul Point Timer",
