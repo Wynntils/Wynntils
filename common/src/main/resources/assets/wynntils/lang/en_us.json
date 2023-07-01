@@ -337,6 +337,8 @@
   "feature.wynntils.inventoryEmeraldCount.showInventoryEmeraldCount.name": "Show Emerald Count in Inventory",
   "feature.wynntils.inventoryEmeraldCount.showZerosInEmeraldCount.description": "Should your emerald count display zero values instead of hiding them?",
   "feature.wynntils.inventoryEmeraldCount.showZerosInEmeraldCount.name": "Show Zero Values in Emerald Count",
+  "feature.wynntils.inventoryEmeraldCount.textDisplaySide.description": "Should the text be displayed on the right or left side of the inventory if it's enabled?",
+  "feature.wynntils.inventoryEmeraldCount.textDisplaySide.name": "Text Display Side",
   "feature.wynntils.inventoryRedirect.name": "Pouch Messages",
   "feature.wynntils.inventoryRedirect.redirectEmeraldPouch.description": "Should messages about emeralds being added to your pouch be redirected to the game update ticker?",
   "feature.wynntils.inventoryRedirect.redirectEmeraldPouch.name": "Redirect Emerald Pouch Messages",
