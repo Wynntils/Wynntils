@@ -1,9 +1,21 @@
+## [0.0.3-pre-alpha.4](https://github.com/Wynntils/Artemis/compare/v0.0.3-pre-alpha.3...v0.0.3-pre-alpha.4) (2023-07-01)
+
+
+### Bug Fixes
+
+* 💚fix version replacer ([3991730](https://github.com/Wynntils/Artemis/commit/39917302a1da0ad9731c36024258dcb35d7985f6))
+
 ## [0.0.3-pre-alpha.3](https://github.com/Wynntils/Artemis/compare/v0.0.3-pre-alpha.2...v0.0.3-pre-alpha.3) (2023-07-01)
 
 
 ### Bug Fixes
 
 * fix version check ([#1657](https://github.com/Wynntils/Artemis/issues/1657)) ([07e36a6](https://github.com/Wynntils/Artemis/commit/07e36a6ee056bdf7a2ee900bc5b7f5dd9f692317))
+
+
+### Miscellaneous Chores
+
+* **release:** v0.0.3-pre-alpha.3 [skip ci] ([dfe3127](https://github.com/Wynntils/Artemis/commit/dfe3127ac34ee0b7b139eb2f9de77e6b3786ccc0))
 
 ## [0.0.3-pre-alpha.2](https://github.com/Wynntils/Artemis/compare/v0.0.3-pre-alpha.1...v0.0.3-pre-alpha.2) (2023-07-01)
 
@@ -982,6 +994,4 @@ Co-authored-by: Kristof Kovacs <49001742+kristofbolyai@users.noreply.github.com>
 ### Build System
 
 * **gradle:** ignore changelog file from spotless [skip ci] ([8d532f4](https://github.com/Wynntils/Artemis/commit/8d532f4ad2864d4c11959688fd78cecdc927c374))
-
-## 0.0.0 (2021-12-09)
 
