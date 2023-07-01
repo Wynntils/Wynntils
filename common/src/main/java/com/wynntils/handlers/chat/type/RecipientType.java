@@ -27,7 +27,7 @@ public enum RecipientType {
             "Guild"),
     PARTY("^§7\\[§e[^➤]*§7\\] §f.*$", "^(§8)?\\[§7[^➤]*§8\\] §7[^§]*$", "Party"),
     PRIVATE("^§7\\[.* ➤ .*\\] §f.*$", "^(§8)?\\[.* ➤ .*\\] §7.*$", "Private"),
-    SHOUT("^§3.* \\[[A-Z0-9]+\\] shouts: §b.*$", "^(§8)?.* \\[[A-Z0-9]+\\] shouts: §7.*$", "Shout"),
+    SHOUT("^§5.* \\[[A-Z0-9]+\\] shouts: §d.*$", "^(§8)?.* \\[[A-Z0-9]+\\] shouts: §7.*$", "Shout"),
     PETS("^§2(.*): §a(.*)$", "^§8(.*): §7(.*)$", "Pets");
 
     private final Pattern foregroundPattern;
