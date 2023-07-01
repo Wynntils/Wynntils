@@ -81,7 +81,9 @@ public class InventoryEmeraldCountFeature extends Feature {
         }
 
         int textureX = containerScreen.leftPos;
-        int textX = (textDisplaySide.get() == TextDisplaySide.LEFT) ? containerScreen.leftPos + 2 : screen.width - containerScreen.leftPos - 2;
+        int textX = (textDisplaySide.get() == TextDisplaySide.LEFT)
+                ? containerScreen.leftPos + 2
+                : screen.width - containerScreen.leftPos - 2;
 
         if (topEmeralds != 0) {
             int y = containerScreen.topPos;
@@ -99,7 +101,11 @@ public class InventoryEmeraldCountFeature extends Feature {
                 switch (emeraldCountType.get()) {
                     case TEXT -> renderTextCount(event.getPoseStack(), textX, y + 11, bottomEmeralds);
                     case TEXTURE -> renderTexturedCount(
-                            event.getPoseStack(), textureX, y - 28 * 3 - 2, bottomEmeralds, showZerosInEmeraldCount.get());
+                            event.getPoseStack(),
+                            textureX,
+                            y - 28 * 3 - 2,
+                            bottomEmeralds,
+                            showZerosInEmeraldCount.get());
                 }
             }
         }
@@ -107,7 +113,8 @@ public class InventoryEmeraldCountFeature extends Feature {
 
     private void renderTextCount(PoseStack poseStack, int x, int y, int emeralds) {
 
-        final HorizontalAlignment emeraldTextAlignment = textDisplaySide.get() == TextDisplaySide.LEFT ? HorizontalAlignment.LEFT : HorizontalAlignment.RIGHT;
+        final HorizontalAlignment emeraldTextAlignment =
+                textDisplaySide.get() == TextDisplaySide.LEFT ? HorizontalAlignment.LEFT : HorizontalAlignment.RIGHT;
         final int emeraldTextOffsetX = textDisplaySide.get() == TextDisplaySide.LEFT ? 1 : -1;
 
         poseStack.pushPose();
