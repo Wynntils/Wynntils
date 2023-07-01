@@ -11,6 +11,10 @@ import com.wynntils.core.net.ApiResponse;
 import com.wynntils.core.net.NetManager;
 import com.wynntils.core.net.UrlId;
 import com.wynntils.utils.FileUtils;
+import net.minecraft.ChatFormatting;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.MutableComponent;
+
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
@@ -21,9 +25,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.concurrent.CompletableFuture;
-import net.minecraft.ChatFormatting;
-import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.MutableComponent;
 
 public final class UpdateManager extends Manager {
     private static final String WYNTILLS_UPDATE_FOLDER = "updates";
@@ -55,17 +56,18 @@ public final class UpdateManager extends Manager {
     private String getStream() {
         // TODO: Replace with config option for the user to select their preferred stream.
         String version = WynntilsMod.getVersion();
-        // Format: 0.0.3-pre-alpha.103 -> pre-alpha
-        // Format: 0.0.3-alpha.103 -> alpha
-        // Format: 0.0.3 -> release
-        // Regex to get the stream: \d+\.\d+\.\d+-(?<stream>[a-z\-]+)\.\d+|\d+\.\d+\.\d+
+        // Format: v0.0.3-pre-alpha.103+MC-1.19.4 -> pre-alpha
+        // Format: v0.0.3-alpha.103+MC-1.19.4 -> alpha
+        // Format: v0.0.3+MC-1.19.4 -> release
+        // Regex to get the stream:  v\d+\.\d+\.\d+(-(?<stream>[a-z\-]+)\.\d+)?(\+MC-\d\.\d+\.\d+)?
 
         if (WynntilsMod.isDevelopmentBuild()) {
             return "alpha";
         }
 
-        String stream =
-                version.replaceAll("\\d+\\.\\d+\\.\\d+-(?<stream>[a-z\\-]+)\\.\\d+|\\d+\\.\\d+\\.\\d+", "${stream}");
+        String stream = version.replaceAll(
+                "v\\d+\\.\\d+\\.\\d+(-(?<stream>[a-z\\-]+)\\.\\d+)?(\\+MC-\\d\\.\\d+\\.\\d+)?", "${stream}");
+
         if (stream.isEmpty()) {
             stream = "release";
         }
