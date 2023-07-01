@@ -20,7 +20,7 @@ import com.wynntils.models.territories.profile.TerritoryProfile;
 import com.wynntils.models.worlds.event.WorldStateEvent;
 import com.wynntils.utils.mc.McUtils;
 import java.util.Locale;
-import net.minecraft.world.phys.Vec3;
+import net.minecraft.core.Position;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 
 public class DiscordRichPresenceFeature extends Feature {
@@ -100,7 +100,7 @@ public class DiscordRichPresenceFeature extends Feature {
             return;
         }
 
-        Vec3 position = McUtils.player().position();
+        Position position = McUtils.player().position();
         if (position != null) {
             TerritoryProfile territoryProfile = Models.Territory.getTerritoryProfileForPosition(
                     McUtils.player().position());
