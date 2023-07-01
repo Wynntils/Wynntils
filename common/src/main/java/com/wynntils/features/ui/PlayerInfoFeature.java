@@ -4,10 +4,6 @@
  */
 package com.wynntils.features.ui;
 
-import static com.wynntils.utils.render.type.HorizontalAlignment.CENTER;
-import static com.wynntils.utils.render.type.HorizontalAlignment.LEFT;
-import static com.wynntils.utils.render.type.VerticalAlignment.MIDDLE;
-
 import com.mojang.blaze3d.platform.Window;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.wynntils.core.components.Models;
@@ -22,11 +18,13 @@ import com.wynntils.core.features.overlays.OverlayPosition;
 import com.wynntils.core.features.overlays.annotations.OverlayInfo;
 import com.wynntils.core.text.StyledText;
 import com.wynntils.mc.event.RenderEvent;
+import com.wynntils.utils.StringUtils;
 import com.wynntils.utils.colors.CustomColor;
 import com.wynntils.utils.mc.McUtils;
 import com.wynntils.utils.render.FontRenderer;
 import com.wynntils.utils.render.RenderUtils;
 import com.wynntils.utils.render.Texture;
+import com.wynntils.utils.render.type.HorizontalAlignment;
 import com.wynntils.utils.render.type.TextShadow;
 import com.wynntils.utils.render.type.VerticalAlignment;
 import java.util.ArrayList;
@@ -42,23 +40,17 @@ import org.joml.Math;
 public class PlayerInfoFeature extends Feature {
     private static final Comparator<PlayerInfo> PLAYER_INFO_COMPARATOR =
             Comparator.comparing(playerInfo -> playerInfo.getProfile().getName(), String::compareToIgnoreCase);
-
-    public static final int DISTANCE_BETWEEN_CATEGORIES = 87;
-
-    public static final int ROLL_WIDTH = 27;
-
-    public static final int HALF_WIDTH = 178;
-
-    public static final int WIDTH = HALF_WIDTH * 2;
-
-    public static final int TOTAL_WIDTH = WIDTH + ROLL_WIDTH * 2;
-
-    public static final int MAX_LENGTH = 73;
+    private static final int DISTANCE_BETWEEN_CATEGORIES = 87;
+    private static final int ROLL_WIDTH = 27;
+    private static final int HALF_WIDTH = 178;
+    private static final int WIDTH = HALF_WIDTH * 2;
+    private static final int TOTAL_WIDTH = WIDTH + ROLL_WIDTH * 2;
+    private static final int MAX_WIDTH = 73;
 
     @OverlayInfo(renderType = RenderEvent.ElementType.GUI)
     public final PlayerInfoOverlay playerInfoOverlay = new PlayerInfoOverlay();
 
-    private class PlayerInfoOverlay extends Overlay {
+    private static class PlayerInfoOverlay extends Overlay {
         @RegisterConfig
         public final Config<Integer> openingDuration = new Config<>(125);
 
@@ -67,7 +59,12 @@ public class PlayerInfoFeature extends Feature {
 
         protected PlayerInfoOverlay() {
             super(
-                    new OverlayPosition(0, 0, VerticalAlignment.TOP, LEFT, OverlayPosition.AnchorSection.TOP_MIDDLE),
+                    new OverlayPosition(
+                            0,
+                            0,
+                            VerticalAlignment.TOP,
+                            HorizontalAlignment.LEFT,
+                            OverlayPosition.AnchorSection.TOP_MIDDLE),
                     TOTAL_WIDTH,
                     Texture.PLAYER_INFO_OVERLAY.height());
         }
@@ -87,26 +84,15 @@ public class PlayerInfoFeature extends Feature {
                     .limit(80)
                     .map(defaultTabList::getNameForDisplay)
                     .map(StyledText::fromComponent)
-                    .filter(styledText -> !styledText.contains("§l"))
+                    .filter(styledText -> !styledText.contains(ChatFormatting.BOLD.toString()))
                     .map(StyledText::getString)
-                    .map(styledText -> wrapText(styledText, MAX_LENGTH))
-                    .map(styledText -> styledText.replace("§7", "§0"))
+                    .map(styledText -> StringUtils.cut(styledText, MAX_WIDTH))
+                    .map(styledText ->
+                            styledText.replace(ChatFormatting.GRAY.toString(), ChatFormatting.BLACK.toString()))
                     .map(StyledText::fromString)
                     .toList();
 
             return lastPlayers;
-        }
-
-        private static String wrapText(String input, int maxLength) {
-            if (McUtils.mc().font.width(input) <= maxLength) return input;
-
-            StringBuilder builder = new StringBuilder();
-            for (char c : input.toCharArray()) {
-                if (McUtils.mc().font.width(builder.toString() + c) > maxLength) break;
-                builder.append(c);
-            }
-
-            return builder.toString();
         }
 
         @Override
@@ -120,64 +106,45 @@ public class PlayerInfoFeature extends Feature {
                     (int) (WIDTH * animation),
                     McUtils.mc().getWindow().getScreenHeight());
 
+            renderBackground(poseStack);
+
+            float currentDist = getRenderX() + ROLL_WIDTH + 55;
+            float categoryStart = getRenderY() + 18;
+            renderCategoryTitle(poseStack, "Friends", currentDist, categoryStart);
+            currentDist += DISTANCE_BETWEEN_CATEGORIES;
+            renderCategoryTitle(poseStack, Models.WorldState.getCurrentWorldName(), currentDist, categoryStart);
+            currentDist += DISTANCE_BETWEEN_CATEGORIES;
+            renderCategoryTitle(poseStack, "Party", currentDist, categoryStart);
+            currentDist += DISTANCE_BETWEEN_CATEGORIES;
+            renderCategoryTitle(poseStack, "Guild", currentDist, categoryStart);
+
+            renderPlayerNames(poseStack, categoryStart);
+
+            RenderUtils.disableScissor();
+
+            float middle = getRenderX() + HALF_WIDTH + ROLL_WIDTH;
+            renderRoll(poseStack, (float) (middle - ROLL_WIDTH + 2 - HALF_WIDTH * animation));
+            renderRoll(poseStack, (float) (middle + HALF_WIDTH * animation));
+        }
+
+        private void renderRoll(PoseStack poseStack, float middle) {
             RenderUtils.drawTexturedRect(
                     poseStack,
                     Texture.PLAYER_INFO_OVERLAY.resource(),
-                    getRenderX() + ROLL_WIDTH,
+                    middle,
                     getRenderY(),
                     0,
-                    Texture.PLAYER_INFO_OVERLAY.width(),
-                    Texture.PLAYER_INFO_OVERLAY.height(),
                     ROLL_WIDTH,
+                    Texture.PLAYER_INFO_OVERLAY.height(),
                     0,
-                    Texture.PLAYER_INFO_OVERLAY.width(),
+                    0,
+                    ROLL_WIDTH,
                     Texture.PLAYER_INFO_OVERLAY.height(),
                     Texture.PLAYER_INFO_OVERLAY.width(),
                     Texture.PLAYER_INFO_OVERLAY.height());
+        }
 
-            FontRenderer fontRenderer = FontRenderer.getInstance();
-            CustomColor customColor = CustomColor.fromChatFormatting(ChatFormatting.BLACK);
-            float currentDist = getRenderX() + ROLL_WIDTH + 55;
-            float categoryStart = getRenderY() + 18;
-            fontRenderer.renderText(
-                    poseStack,
-                    StyledText.fromString("Friends"),
-                    currentDist,
-                    categoryStart,
-                    customColor,
-                    CENTER,
-                    MIDDLE,
-                    TextShadow.NONE);
-            currentDist += DISTANCE_BETWEEN_CATEGORIES;
-            fontRenderer.renderText(
-                    poseStack,
-                    StyledText.fromString(Models.WorldState.getCurrentWorldName()),
-                    currentDist,
-                    categoryStart,
-                    customColor,
-                    CENTER,
-                    MIDDLE,
-                    TextShadow.NONE);
-            currentDist += DISTANCE_BETWEEN_CATEGORIES;
-            fontRenderer.renderText(
-                    poseStack,
-                    StyledText.fromString("Party"),
-                    currentDist,
-                    categoryStart,
-                    customColor,
-                    CENTER,
-                    MIDDLE,
-                    TextShadow.NONE);
-            currentDist += DISTANCE_BETWEEN_CATEGORIES;
-            fontRenderer.renderText(
-                    poseStack,
-                    StyledText.fromString("Guild"),
-                    currentDist,
-                    categoryStart,
-                    customColor,
-                    CENTER,
-                    MIDDLE,
-                    TextShadow.NONE);
+        private void renderPlayerNames(PoseStack poseStack, float categoryStart) {
             List<StyledText> players = getAvailablePlayers();
 
             for (int i = 0; i < players.size(); i++) {
@@ -193,39 +160,37 @@ public class PlayerInfoFeature extends Feature {
                                 xPos,
                                 yPos,
                                 CustomColor.fromChatFormatting(ChatFormatting.BLACK),
-                                LEFT,
-                                MIDDLE,
+                                HorizontalAlignment.LEFT,
+                                VerticalAlignment.MIDDLE,
                                 TextShadow.NONE);
             }
+        }
 
-            RenderUtils.disableScissor();
+        private void renderCategoryTitle(PoseStack poseStack, String name, float currentDist, float categoryStart) {
+            FontRenderer.getInstance()
+                    .renderText(
+                            poseStack,
+                            StyledText.fromString(name),
+                            currentDist,
+                            categoryStart,
+                            CustomColor.fromChatFormatting(ChatFormatting.BLACK),
+                            HorizontalAlignment.CENTER,
+                            VerticalAlignment.MIDDLE,
+                            TextShadow.NONE);
+        }
 
-            float middle = getRenderX() + HALF_WIDTH + ROLL_WIDTH;
+        private void renderBackground(PoseStack poseStack) {
             RenderUtils.drawTexturedRect(
                     poseStack,
                     Texture.PLAYER_INFO_OVERLAY.resource(),
-                    (float) (middle - ROLL_WIDTH + 2 - HALF_WIDTH * animation),
+                    getRenderX() + ROLL_WIDTH,
                     getRenderY(),
                     0,
-                    ROLL_WIDTH,
-                    Texture.PLAYER_INFO_OVERLAY.height(),
-                    0,
-                    0,
-                    ROLL_WIDTH,
-                    Texture.PLAYER_INFO_OVERLAY.height(),
                     Texture.PLAYER_INFO_OVERLAY.width(),
-                    Texture.PLAYER_INFO_OVERLAY.height());
-            RenderUtils.drawTexturedRect(
-                    poseStack,
-                    Texture.PLAYER_INFO_OVERLAY.resource(),
-                    (float) (middle + HALF_WIDTH * animation),
-                    getRenderY(),
-                    0,
-                    ROLL_WIDTH,
                     Texture.PLAYER_INFO_OVERLAY.height(),
-                    0,
-                    0,
                     ROLL_WIDTH,
+                    0,
+                    Texture.PLAYER_INFO_OVERLAY.width(),
                     Texture.PLAYER_INFO_OVERLAY.height(),
                     Texture.PLAYER_INFO_OVERLAY.width(),
                     Texture.PLAYER_INFO_OVERLAY.height());
