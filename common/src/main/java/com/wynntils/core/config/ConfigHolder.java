@@ -29,6 +29,7 @@ public class ConfigHolder implements Comparable<ConfigHolder> {
 
     private final Object defaultValue;
 
+    private boolean editedSinceEquals = false;
     private boolean userEdited = false;
 
     public <T extends Configurable & Translatable> ConfigHolder(
@@ -140,25 +141,30 @@ public class ConfigHolder implements Comparable<ConfigHolder> {
 
         configObj.updateConfig(value);
         parent.updateConfigOption(this);
-        userEdited = true;
+        editedSinceEquals = true;
     }
 
     public boolean valueChanged() {
-        if (this.userEdited) {
-            return true;
+        if (!editedSinceEquals) {
+            return userEdited;
         }
+        this.editedSinceEquals = false;
 
         boolean deepEquals = Objects.deepEquals(getValue(), defaultValue);
 
         if (deepEquals) {
+            userEdited = false;
             return false;
         }
 
         try {
-            return !EqualsBuilder.reflectionEquals(getValue(), defaultValue);
+            boolean reflectionEquals = !EqualsBuilder.reflectionEquals(getValue(), defaultValue);
+            userEdited = reflectionEquals;
+            return reflectionEquals;
         } catch (RuntimeException ignored) {
             // Reflection equals does not always work, use deepEquals instead of assuming no change
             // Since deepEquals is already false when we reach this, we can assume change
+            userEdited = true;
             return true;
         }
     }
@@ -169,6 +175,7 @@ public class ConfigHolder implements Comparable<ConfigHolder> {
         setValue(Managers.Json.deepCopy(defaultValue, this.valueType));
         // reset this flag so option is no longer saved to file
         userEdited = false;
+        editedSinceEquals = false;
     }
 
     public Object tryParseStringValue(String value) {
