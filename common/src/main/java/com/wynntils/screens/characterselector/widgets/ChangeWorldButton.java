@@ -18,7 +18,6 @@ import net.minecraft.client.gui.screens.inventory.tooltip.ClientTooltipComponent
 import net.minecraft.network.chat.Component;
 
 public class ChangeWorldButton extends WynntilsButton {
-
     private static final List<Component> TOOLTIP = List.of(
             Component.translatable("screens.wynntils.characterSelection.changeWorldButton.changeWorld")
                     .withStyle(ChatFormatting.GREEN),
