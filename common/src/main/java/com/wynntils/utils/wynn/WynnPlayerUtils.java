@@ -40,6 +40,10 @@ public final class WynnPlayerUtils {
                 primaryColor = ChatFormatting.AQUA;
                 secondaryColor = ChatFormatting.DARK_AQUA;
             }
+            case "Admin" -> {
+                primaryColor = ChatFormatting.RED;
+                secondaryColor = ChatFormatting.DARK_RED;
+            }
             default -> {
                 // Should not happen
                 primaryColor = ChatFormatting.DARK_GRAY;
