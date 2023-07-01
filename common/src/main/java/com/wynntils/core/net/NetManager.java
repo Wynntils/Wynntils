@@ -19,6 +19,7 @@ import java.nio.file.Files;
 import java.time.Duration;
 import java.util.List;
 import java.util.Map;
+import net.minecraft.SharedConstants;
 import net.minecraft.Util;
 import org.apache.commons.codec.digest.DigestUtils;
 
@@ -28,8 +29,9 @@ public final class NetManager extends Manager {
     private static final int REQUEST_TIMEOUT_MILLIS = 10000;
     private static final File CACHE_DIR = WynntilsMod.getModStorageDir("cache");
     private static final String USER_AGENT = String.format(
-            "Wynntils Artemis\\%s (%s) %s",
+            "Wynntils Artemis\\%s+MC-%s (%s) %s",
             WynntilsMod.getVersion(),
+            SharedConstants.getCurrentVersion().getName(),
             WynntilsMod.isDevelopmentEnvironment() ? "dev" : "client",
             WynntilsMod.getModLoader());
 

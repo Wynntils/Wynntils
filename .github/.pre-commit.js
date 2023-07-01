@@ -10,7 +10,8 @@ exports.preCommit = (props) => {
     };
 
     // replace only the version string example:
-    // version = "0.0.1-alpha.1" + (System.getenv("CI") ? "" : "-dev")
-    replace("./build.gradle", /(?<=version = ")\d+\.\d+\.\d+(-\w+\.\d+)?(?=")/g, props.version);
+    // version = "0.0.3-alpha.2"
+    // version = "0.0.3-alpha.103+MC-1.19.4"
+    replace("./build.gradle", /(?<=version = ")\d+\.\d+\.\d+(-\w+\.\d+)?(\+MC-\d\.\d+\.\d+)?(?=")/g, props.version);
     // Regex provided by Github Copilot
 };
