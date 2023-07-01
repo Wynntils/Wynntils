@@ -1,9 +1,21 @@
+## [0.0.3-alpha.106](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.105...v0.0.3-alpha.106) (2023-07-01)
+
+
+### Bug Fixes
+
+* Fix map moving when left-clicking ([#1632](https://github.com/Wynntils/Artemis/issues/1632)) ([6042f18](https://github.com/Wynntils/Artemis/commit/6042f18263de3b8e5f76a9ba6e038ac1d878b48e))
+
 ## [0.0.3-alpha.105](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.104...v0.0.3-alpha.105) (2023-06-30)
 
 
 ### New Features
 
 * Add a feature to warn users to use pre-alpha for beta wynncraft… ([#1655](https://github.com/Wynntils/Artemis/issues/1655)) ([1dea4dd](https://github.com/Wynntils/Artemis/commit/1dea4dd0bc22dced279056ef54bcdc5dc663ba49)), closes [#1653](https://github.com/Wynntils/Artemis/issues/1653)
+
+
+### Miscellaneous Chores
+
+* **release:** v0.0.3-alpha.105 [skip ci] ([67750d9](https://github.com/Wynntils/Artemis/commit/67750d91fb3965efb6aa845419acd439db377d8c))
 
 ## [0.0.3-alpha.104](https://github.com/Wynntils/Artemis/compare/v0.0.3-pre-alpha.0...v0.0.3-alpha.104) (2023-06-30)
 
@@ -6200,16 +6212,4 @@
 ### Miscellaneous Chores
 
 * **release:** v0.0.3-alpha.103 [skip ci] ([9f7540b](https://github.com/Wynntils/Artemis/commit/9f7540b6f2fb43b463b2b9b8677b9d5f069cbf9c))
-
-## [0.0.3-alpha.102](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.101...v0.0.3-alpha.102) (2023-06-22)
-
-
-### Bug Fixes
-
-* Fix npc dialogues getting stuck after completing quests and quest started messages not parsing ([#1644](https://github.com/Wynntils/Artemis/issues/1644)) ([3b13bd5](https://github.com/Wynntils/Artemis/commit/3b13bd5bf29ef1c9895e74d830bbd2be2aed464c))
-
-
-### Miscellaneous Chores
-
-* **release:** v0.0.3-alpha.102 [skip ci] ([527f678](https://github.com/Wynntils/Artemis/commit/527f678bc3e783ac76438d608badf5a5d0209322))
 
