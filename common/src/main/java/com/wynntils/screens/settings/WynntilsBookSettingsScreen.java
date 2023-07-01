@@ -341,9 +341,14 @@ public final class WynntilsBookSettingsScreen extends WynntilsScreen implements 
     // endregion
 
     @Override
+    public void added() {
+        searchWidget.opened();
+        super.added();
+    }
+
+    @Override
     public void onClose() {
         Managers.Config.reloadConfiguration();
-        searchWidget.onClose();
         super.onClose();
     }
 

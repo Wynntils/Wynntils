@@ -163,7 +163,7 @@ public class SearchWidget extends TextInputBoxWidget {
         super.removeFocus();
     }
 
-    public void onClose() {
+    public void opened() {
         setCursorPosition(textBoxInput.length());
         setHighlightPosition(0);
     }

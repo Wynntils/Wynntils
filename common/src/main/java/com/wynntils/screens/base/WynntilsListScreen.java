@@ -249,8 +249,8 @@ public abstract class WynntilsListScreen<E, B extends WynntilsButton> extends Wy
     }
 
     @Override
-    public void onClose() {
-        searchWidget.onClose();
-        super.onClose();
+    public void added() {
+        searchWidget.opened();
+        super.added();
     }
 }
