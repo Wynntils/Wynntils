@@ -1,3 +1,10 @@
+## [0.0.3-pre-alpha.2](https://github.com/Wynntils/Artemis/compare/v0.0.3-pre-alpha.1...v0.0.3-pre-alpha.2) (2023-07-01)
+
+
+### Bug Fixes
+
+* Fix lootrun scoreboard part not showing up ([#1656](https://github.com/Wynntils/Artemis/issues/1656)) ([9d2f381](https://github.com/Wynntils/Artemis/commit/9d2f3819c83852e9ce9d56c222ef4911a5412c8a))
+
 ## [0.0.3-pre-alpha.1](https://github.com/Wynntils/Artemis/compare/v0.0.3-pre-alpha.0...v0.0.3-pre-alpha.1) (2023-06-30)
 
 
@@ -9,6 +16,11 @@
 ### Bug Fixes
 
 * fix snapshot jar name ([8fbd427](https://github.com/Wynntils/Artemis/commit/8fbd4277d47e47bc7e1a42cba19f3cfadb23cc94))
+
+
+### Miscellaneous Chores
+
+* **release:** v0.0.3-pre-alpha.1 [skip ci] ([12db71e](https://github.com/Wynntils/Artemis/commit/12db71ed6299cd5596305c75f4ff99e1d5e52fb5))
 
 ## [0.0.3-pre-alpha.0](https://github.com/Wynntils/Artemis/compare/v0.0.0...v0.0.3-pre-alpha.0) (2023-06-30)
 
