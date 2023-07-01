@@ -1,9 +1,21 @@
+## [0.0.3-pre-alpha.6](https://github.com/Wynntils/Artemis/compare/v0.0.3-pre-alpha.5...v0.0.3-pre-alpha.6) (2023-07-01)
+
+
+### Bug Fixes
+
+* Fix shout recipient type parsing ([#1661](https://github.com/Wynntils/Artemis/issues/1661)) ([0a74c32](https://github.com/Wynntils/Artemis/commit/0a74c324226e4fee6c6dcfa9996814bdb60a2bae))
+
 ## [0.0.3-pre-alpha.5](https://github.com/Wynntils/Artemis/compare/v0.0.3-pre-alpha.4...v0.0.3-pre-alpha.5) (2023-07-01)
 
 
 ### Bug Fixes
 
 * Support admin rank in login redirect ([#1660](https://github.com/Wynntils/Artemis/issues/1660)) ([dcaf3b3](https://github.com/Wynntils/Artemis/commit/dcaf3b3d3d503d45758f2c29549dba31a7ac901f))
+
+
+### Miscellaneous Chores
+
+* **release:** v0.0.3-pre-alpha.5 [skip ci] ([35cb404](https://github.com/Wynntils/Artemis/commit/35cb404ab9999b2e7c3b99df8fa0e217766f920f))
 
 ## [0.0.3-pre-alpha.4](https://github.com/Wynntils/Artemis/compare/v0.0.3-pre-alpha.3...v0.0.3-pre-alpha.4) (2023-07-01)
 
@@ -40,21 +52,4 @@
 ### Miscellaneous Chores
 
 * **release:** v0.0.3-pre-alpha.2 [skip ci] ([d649589](https://github.com/Wynntils/Artemis/commit/d649589a614d2298c8c41ca09ef0dabb72f99616))
-
-## [0.0.3-pre-alpha.1](https://github.com/Wynntils/Artemis/compare/v0.0.3-pre-alpha.0...v0.0.3-pre-alpha.1) (2023-06-30)
-
-
-### New Features
-
-* Add a feature to warn users to use pre-alpha for beta wynncraft ([#1653](https://github.com/Wynntils/Artemis/issues/1653)) ([6981a62](https://github.com/Wynntils/Artemis/commit/6981a62d8f00391cc5bcd1bc677cba1536af9700))
-
-
-### Bug Fixes
-
-* fix snapshot jar name ([8fbd427](https://github.com/Wynntils/Artemis/commit/8fbd4277d47e47bc7e1a42cba19f3cfadb23cc94))
-
-
-### Miscellaneous Chores
-
-* **release:** v0.0.3-pre-alpha.1 [skip ci] ([12db71e](https://github.com/Wynntils/Artemis/commit/12db71ed6299cd5596305c75f4ff99e1d5e52fb5))
 
