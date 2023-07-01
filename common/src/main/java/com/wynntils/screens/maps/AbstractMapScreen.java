@@ -67,10 +67,6 @@ public abstract class AbstractMapScreen extends WynntilsScreen {
 
     protected float currentZoom = 1f;
 
-    private boolean dragging = false;
-    private double lastMouseX = 0;
-    private double lastMouseY = 0;
-
     protected Poi hovered = null;
 
     protected AbstractMapScreen() {
@@ -208,30 +204,9 @@ public abstract class AbstractMapScreen extends WynntilsScreen {
     }
 
     @Override
-    public boolean doMouseClicked(double mouseX, double mouseY, int button) {
-        if (button == GLFW.GLFW_MOUSE_BUTTON_LEFT) {
-            dragging = true;
-        }
-
-        lastMouseX = mouseX;
-        lastMouseY = mouseY;
-
-        return true;
-    }
-
-    @Override
     public boolean mouseScrolled(double mouseX, double mouseY, double delta) {
         double newZoom = currentZoom + delta * MOUSE_SCROLL_ZOOM_FACTOR * currentZoom;
         setZoom((float) newZoom);
-
-        return true;
-    }
-
-    @Override
-    public boolean mouseReleased(double mouseX, double mouseY, int button) {
-        if (button == GLFW.GLFW_MOUSE_BUTTON_LEFT) {
-            dragging = false;
-        }
 
         return true;
     }
@@ -257,6 +232,14 @@ public abstract class AbstractMapScreen extends WynntilsScreen {
         KeyMapping.set(key, false);
 
         return false;
+    }
+
+    @Override
+    public boolean mouseDragged(double mouseX, double mouseY, int button, double dragX, double dragY) {
+        if (button == 0) {
+            updateMapCenter((float) (mapCenterX - dragX / currentZoom), (float) (mapCenterZ - dragY / currentZoom));
+        }
+        return super.mouseDragged(mouseX, mouseY, button, dragX, dragY);
     }
 
     protected void renderCoordinates(PoseStack poseStack, int mouseX, int mouseY) {
@@ -343,15 +326,6 @@ public abstract class AbstractMapScreen extends WynntilsScreen {
         bufferSource.endBatch();
 
         RenderUtils.disableScissor();
-    }
-
-    protected void updateMapCenterIfDragging(int mouseX, int mouseY) {
-        if (dragging) {
-            updateMapCenter((float) (mapCenterX + (lastMouseX - mouseX) / currentZoom), (float)
-                    (mapCenterZ + (lastMouseY - mouseY) / currentZoom));
-        }
-        lastMouseX = mouseX;
-        lastMouseY = mouseY;
     }
 
     protected void centerMapAroundPlayer() {
