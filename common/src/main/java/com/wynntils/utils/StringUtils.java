@@ -4,7 +4,6 @@
  */
 package com.wynntils.utils;
 
-import com.wynntils.utils.mc.McUtils;
 import java.net.URLEncoder;
 import java.nio.ByteBuffer;
 import java.nio.charset.StandardCharsets;
@@ -15,7 +14,6 @@ import java.util.List;
 import java.util.Locale;
 import java.util.regex.Pattern;
 import net.minecraft.ChatFormatting;
-import net.minecraft.client.gui.Font;
 
 public final class StringUtils {
     private static final String[] SUFFIXES = {"", "k", "m", "b", "t"}; // kilo, million, billion, trillion (short scale)
@@ -145,18 +143,5 @@ public final class StringUtils {
 
         return Base64.getDecoder()
                 .decode(ByteBuffer.wrap(base64.replaceAll("\n", "").getBytes(StandardCharsets.UTF_8)));
-    }
-
-    public static String cut(String input, int maxWidth) {
-        Font font = McUtils.mc().font;
-        if (font.width(input) <= maxWidth) return input;
-
-        StringBuilder builder = new StringBuilder();
-        for (char c : input.toCharArray()) {
-            if (font.width(builder.toString() + c) > maxWidth) break;
-            builder.append(c);
-        }
-
-        return builder.toString();
     }
 }

@@ -5,8 +5,9 @@
 package com.wynntils.mc.mixin;
 
 import com.mojang.blaze3d.vertex.PoseStack;
-import com.wynntils.core.components.Managers;
-import com.wynntils.features.ui.PlayerInfoFeature;
+import com.wynntils.core.events.MixinHelper;
+import com.wynntils.mc.event.RenderEvent;
+import com.wynntils.utils.mc.McUtils;
 import net.minecraft.client.gui.components.PlayerTabOverlay;
 import net.minecraft.world.scores.Objective;
 import net.minecraft.world.scores.Scoreboard;
@@ -20,6 +21,9 @@ public class PlayerTabOverlayMixin {
 
     @Inject(method = "render", at = @At("HEAD"), cancellable = true)
     private void render(PoseStack poseStack, int width, Scoreboard scoreboard, Objective objective, CallbackInfo ci) {
-        if (Managers.Feature.getFeatureInstance(PlayerInfoFeature.class).isEnabled()) ci.cancel();
+        RenderEvent.Pre renderEvent =
+                new RenderEvent.Pre(poseStack, 0, McUtils.window(), RenderEvent.ElementType.PLAYER_TAB_LIST);
+        MixinHelper.post(renderEvent);
+        if (renderEvent.isCancelable()) ci.cancel();
     }
 }

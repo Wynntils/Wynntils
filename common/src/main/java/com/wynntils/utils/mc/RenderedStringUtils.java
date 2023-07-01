@@ -90,4 +90,17 @@ public final class RenderedStringUtils {
             return line;
         }
     }
+
+    public static String cut(String input, int maxWidth) {
+        Font font = McUtils.mc().font;
+        if (font.width(input) <= maxWidth) return input;
+
+        StringBuilder builder = new StringBuilder();
+        for (char c : input.toCharArray()) {
+            if (font.width(builder.toString() + c) > maxWidth) break;
+            builder.append(c);
+        }
+
+        return builder.toString();
+    }
 }

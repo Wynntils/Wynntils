@@ -18,9 +18,9 @@ import com.wynntils.core.features.overlays.OverlayPosition;
 import com.wynntils.core.features.overlays.annotations.OverlayInfo;
 import com.wynntils.core.text.StyledText;
 import com.wynntils.mc.event.RenderEvent;
-import com.wynntils.utils.StringUtils;
 import com.wynntils.utils.colors.CustomColor;
 import com.wynntils.utils.mc.McUtils;
+import com.wynntils.utils.mc.RenderedStringUtils;
 import com.wynntils.utils.render.FontRenderer;
 import com.wynntils.utils.render.RenderUtils;
 import com.wynntils.utils.render.Texture;
@@ -34,23 +34,30 @@ import net.minecraft.ChatFormatting;
 import net.minecraft.client.gui.components.PlayerTabOverlay;
 import net.minecraft.client.multiplayer.PlayerInfo;
 import net.minecraft.client.renderer.MultiBufferSource;
+import net.minecraftforge.eventbus.api.SubscribeEvent;
 import org.joml.Math;
 
 @ConfigCategory(Category.OVERLAYS)
 public class PlayerInfoFeature extends Feature {
-    private static final Comparator<PlayerInfo> PLAYER_INFO_COMPARATOR =
-            Comparator.comparing(playerInfo -> playerInfo.getProfile().getName(), String::compareToIgnoreCase);
-    private static final int DISTANCE_BETWEEN_CATEGORIES = 87;
-    private static final int ROLL_WIDTH = 27;
-    private static final int HALF_WIDTH = 178;
-    private static final int WIDTH = HALF_WIDTH * 2;
-    private static final int TOTAL_WIDTH = WIDTH + ROLL_WIDTH * 2;
-    private static final int MAX_WIDTH = 73;
 
     @OverlayInfo(renderType = RenderEvent.ElementType.GUI)
     public final PlayerInfoOverlay playerInfoOverlay = new PlayerInfoOverlay();
 
+    @SubscribeEvent
+    public void onRender(RenderEvent.Pre event) {
+        if (event.getType() == RenderEvent.ElementType.GUI) event.setCanceled(true);
+    }
+
     private static class PlayerInfoOverlay extends Overlay {
+        private static final Comparator<PlayerInfo> PLAYER_INFO_COMPARATOR =
+                Comparator.comparing(playerInfo -> playerInfo.getProfile().getName(), String::compareToIgnoreCase);
+        private static final int DISTANCE_BETWEEN_CATEGORIES = 87;
+        private static final int ROLL_WIDTH = 27;
+        private static final int HALF_WIDTH = 178;
+        private static final int WIDTH = HALF_WIDTH * 2;
+        private static final int TOTAL_WIDTH = WIDTH + ROLL_WIDTH * 2;
+        private static final int MAX_WIDTH = 73;
+
         @RegisterConfig
         public final Config<Integer> openingDuration = new Config<>(125);
 
@@ -86,7 +93,7 @@ public class PlayerInfoFeature extends Feature {
                     .map(StyledText::fromComponent)
                     .filter(styledText -> !styledText.contains(ChatFormatting.BOLD.toString()))
                     .map(StyledText::getString)
-                    .map(styledText -> StringUtils.cut(styledText, MAX_WIDTH))
+                    .map(styledText -> RenderedStringUtils.cut(styledText, MAX_WIDTH))
                     .map(styledText ->
                             styledText.replace(ChatFormatting.GRAY.toString(), ChatFormatting.BLACK.toString()))
                     .map(StyledText::fromString)
@@ -152,7 +159,7 @@ public class PlayerInfoFeature extends Feature {
                 int y = i % 19;
 
                 float xPos = getRenderX() + ROLL_WIDTH + 12 + (DISTANCE_BETWEEN_CATEGORIES * x);
-                float yPos = (float) (categoryStart + 15 + (10.35 * y));
+                float yPos = categoryStart + 14 + (10 * y);
                 FontRenderer.getInstance()
                         .renderText(
                                 poseStack,

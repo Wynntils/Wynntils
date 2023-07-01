@@ -42,7 +42,8 @@ public abstract class RenderEvent extends Event {
         GUI, // This is called before and after Gui#render
         CROSSHAIR,
         HEALTH_BAR,
-        FOOD_BAR
+        FOOD_BAR,
+        PLAYER_TAB_LIST
     }
 
     @Cancelable
