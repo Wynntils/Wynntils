@@ -35,6 +35,7 @@ import com.wynntils.models.mobtotem.MobTotemModel;
 import com.wynntils.models.objectives.ObjectivesModel;
 import com.wynntils.models.ping.PingModel;
 import com.wynntils.models.players.FriendsModel;
+import com.wynntils.models.players.GuildModel;
 import com.wynntils.models.players.PartyModel;
 import com.wynntils.models.players.PlayerModel;
 import com.wynntils.models.players.hades.HadesModel;
@@ -68,6 +69,7 @@ public final class Models {
     public static final DamageModel Damage = new DamageModel();
     public static final ElementModel Element = new ElementModel();
     public static final FavoritesModel Favorites = new FavoritesModel();
+    public static final GuildModel Guild = new GuildModel();
     public static final GuildAttackTimerModel GuildAttackTimer = new GuildAttackTimerModel();
     public static final ObjectivesModel Objectives = new ObjectivesModel();
     public static final PlayerInventoryModel PlayerInventory = new PlayerInventoryModel();

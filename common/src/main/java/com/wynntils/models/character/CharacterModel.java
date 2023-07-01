@@ -36,8 +36,6 @@ import net.minecraftforge.eventbus.api.SubscribeEvent;
 public final class CharacterModel extends Model {
     private static final Pattern CLASS_MENU_CLASS_PATTERN = Pattern.compile("§e- §7Class: §f(.+)");
     private static final Pattern CLASS_MENU_LEVEL_PATTERN = Pattern.compile("§e- §7Level: §f(\\d+)");
-    private static final Pattern GUILD_NAME_MATCHER = Pattern.compile("§3(.*?)§b.*");
-    private static final Pattern GUILD_RANK_MATCHER = Pattern.compile("§7Rank: §f(.*)");
     private static final Pattern INFO_MENU_CLASS_PATTERN = Pattern.compile("§7Class: §f(.+)");
     private static final Pattern INFO_MENU_LEVEL_PATTERN = Pattern.compile("§7Combat Lv: §f(\\d+)");
 
@@ -58,8 +56,6 @@ public final class CharacterModel extends Model {
     private ClassType classType;
     private boolean reskinned;
     private int level;
-    private String guild = "";
-    private String guildRank = "";
 
     // This field is basically the slot id of the class,
     // meaning that if a class changes slots, the ID will not be persistent.
@@ -86,14 +82,6 @@ public final class CharacterModel extends Model {
      */
     public String getActualName() {
         return getClassType().getActualName(isReskinned());
-    }
-
-    public String getGuild() {
-        return guild;
-    }
-
-    public String getGuildRank() {
-        return guildRank;
     }
 
     public String getId() {
@@ -143,9 +131,9 @@ public final class CharacterModel extends Model {
                     ItemStack guildInfoItem = container.items().get(GUILD_INFO_SLOT);
 
                     Models.Profession.resetValueFromItem(professionInfoItem);
+                    Models.Guild.parseGuildInfoFromGuildMenu(guildInfoItem);
 
                     parseCharacterFromCharacterMenu(characterInfoItem);
-                    parseGuildInfoFromGuildMenu(guildInfoItem);
                     hasCharacter = true;
                     WynntilsMod.postEvent(new CharacterUpdateEvent());
                     WynntilsMod.info("Deducing character " + getCharacterString());
@@ -203,24 +191,6 @@ public final class CharacterModel extends Model {
         ClassType classType = ClassType.fromName(className);
 
         updateCharacterInfo(classType, classType != null && ClassType.isReskinned(className), level);
-    }
-
-    private void parseGuildInfoFromGuildMenu(ItemStack guildInfoItem) {
-        List<StyledText> lore = LoreUtils.getLore(guildInfoItem);
-
-        for (StyledText line : lore) {
-            Matcher guildNameMatcher = line.getMatcher(GUILD_NAME_MATCHER);
-            if (guildNameMatcher.matches()) {
-                guild = guildNameMatcher.group(1);
-                continue;
-            }
-
-            Matcher rankMatcher = line.getMatcher(GUILD_RANK_MATCHER);
-
-            if (rankMatcher.matches()) {
-                guildRank = rankMatcher.group(1);
-            }
-        }
     }
 
     @SubscribeEvent

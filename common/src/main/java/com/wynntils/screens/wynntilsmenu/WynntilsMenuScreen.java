@@ -218,18 +218,37 @@ public final class WynntilsMenuScreen extends WynntilsMenuScreenBase {
         InventoryScreen.renderEntityInInventoryFollowsMouse(
                 poseStack, posX, posY, 30, posX + 45 - mouseX, posY - 40 - mouseY, McUtils.player());
 
-        FontRenderer.getInstance()
-                .renderAlignedTextInBox(
-                        poseStack,
-                        StyledText.fromString(
-                                String.format("%s %s", Models.Character.getGuild(), Models.Character.getGuildRank())),
-                        Texture.QUEST_BOOK_BACKGROUND.width() / 2f,
-                        Texture.QUEST_BOOK_BACKGROUND.width(),
-                        50,
-                        0,
-                        CommonColors.CYAN,
-                        HorizontalAlignment.CENTER,
-                        TextShadow.NONE);
+        if (!Models.Guild.getGuildName().isEmpty()) {
+            String rank = Models.Guild.getGuildRank();
+
+            if (!rank.equalsIgnoreCase("recruit")) {
+                rank += " (" + Models.Guild.getGuildRankStars() + ")";
+            }
+
+            FontRenderer.getInstance()
+                    .renderAlignedTextInBox(
+                            poseStack,
+                            StyledText.fromString(rank + " of"),
+                            Texture.QUEST_BOOK_BACKGROUND.width() / 2f,
+                            Texture.QUEST_BOOK_BACKGROUND.width(),
+                            40,
+                            0,
+                            CommonColors.CYAN,
+                            HorizontalAlignment.CENTER,
+                            TextShadow.NONE);
+
+            FontRenderer.getInstance()
+                    .renderAlignedTextInBox(
+                            poseStack,
+                            StyledText.fromString(Models.Guild.getGuildName()),
+                            Texture.QUEST_BOOK_BACKGROUND.width() / 2f,
+                            Texture.QUEST_BOOK_BACKGROUND.width(),
+                            50,
+                            0,
+                            CommonColors.CYAN,
+                            HorizontalAlignment.CENTER,
+                            TextShadow.NONE);
+        }
 
         FontRenderer.getInstance()
                 .renderAlignedTextInBox(
