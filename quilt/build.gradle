@@ -119,7 +119,7 @@ remapJar {
     injectAccessWidener = true
     input.set applyEventBus.archiveFile
     dependsOn applyEventBus
-    classifier "quilt"
+    classifier "quilt+MC-${minecraft_version}"
 }
 
 jar {

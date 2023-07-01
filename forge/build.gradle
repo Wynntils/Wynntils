@@ -60,7 +60,7 @@ shadowJar {
 remapJar {
     input.set shadowJar.archiveFile
     dependsOn shadowJar
-    classifier "forge"
+    classifier "forge+MC-${minecraft_version}"
 }
 
 jar {
