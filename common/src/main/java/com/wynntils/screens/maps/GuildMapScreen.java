@@ -169,8 +169,6 @@ public final class GuildMapScreen extends AbstractMapScreen {
             return;
         }
 
-        updateMapCenterIfDragging(mouseX, mouseY);
-
         RenderSystem.setShaderColor(1f, 1f, 1f, 1f);
 
         RenderSystem.enableDepthTest();
