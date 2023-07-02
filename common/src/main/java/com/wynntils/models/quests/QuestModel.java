@@ -244,7 +244,7 @@ public final class QuestModel extends Model {
 
     /** Shared between the container query classes */
     public String getQuestBookTitleRegex(int pageNum) {
-        return "^§0\\[Pg. " + pageNum + "\\] §8.*§0 (Mini-)?Quests$";
+        return "§f\uE000\uE072";
     }
 
     private static class LocationComparator implements Comparator<QuestInfo> {
