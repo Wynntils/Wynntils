@@ -1,9 +1,21 @@
+## [0.0.3-alpha.110](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.109...v0.0.3-alpha.110) (2023-07-02)
+
+
+### Bug Fixes
+
+* fix updater and version checking ([#1665](https://github.com/Wynntils/Artemis/issues/1665)) ([2a105bc](https://github.com/Wynntils/Artemis/commit/2a105bcddd01f58a9fc6caa45cac0e1d0df9c047)), closes [#1657](https://github.com/Wynntils/Artemis/issues/1657)
+
 ## [0.0.3-alpha.109](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.108...v0.0.3-alpha.109) (2023-07-02)
 
 
 ### New Features
 
 * Highlight search when reopening screen ([#1649](https://github.com/Wynntils/Artemis/issues/1649)) ([4ed305b](https://github.com/Wynntils/Artemis/commit/4ed305b587f016fb998b7df15b406737489b28b1))
+
+
+### Miscellaneous Chores
+
+* **release:** v0.0.3-alpha.109 [skip ci] ([2b96976](https://github.com/Wynntils/Artemis/commit/2b96976a1aaaf8d4a58d24e35c62b8e71fb60f1e))
 
 ## [0.0.3-alpha.108](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.107...v0.0.3-alpha.108) (2023-07-02)
 
@@ -40,16 +52,4 @@
 ### Miscellaneous Chores
 
 * **release:** v0.0.3-alpha.106 [skip ci] ([b5de119](https://github.com/Wynntils/Artemis/commit/b5de119dea5be41beae187d87a511e1de449926e))
-
-## [0.0.3-alpha.105](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.104...v0.0.3-alpha.105) (2023-06-30)
-
-
-### New Features
-
-* Add a feature to warn users to use pre-alpha for beta wynncraft… ([#1655](https://github.com/Wynntils/Artemis/issues/1655)) ([1dea4dd](https://github.com/Wynntils/Artemis/commit/1dea4dd0bc22dced279056ef54bcdc5dc663ba49)), closes [#1653](https://github.com/Wynntils/Artemis/issues/1653)
-
-
-### Miscellaneous Chores
-
-* **release:** v0.0.3-alpha.105 [skip ci] ([67750d9](https://github.com/Wynntils/Artemis/commit/67750d91fb3965efb6aa845419acd439db377d8c))
 
