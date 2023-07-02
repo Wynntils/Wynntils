@@ -81,8 +81,8 @@ public final class CharacterSelectorScreen extends WynntilsScreen {
         float playButtonWidth = Texture.PLAY_BUTTON.width() * currentTextureScale;
         float playButtonHeight = Texture.PLAY_BUTTON.height() / 2f * currentTextureScale;
         this.addRenderableWidget(new PlayButton(
-                (int) (this.width - playButtonWidth - 10f),
-                (int) (this.height - playButtonHeight - 10f),
+                (int) (this.width - playButtonWidth - (10f * currentTextureScale)),
+                (int) (this.height - playButtonHeight - (10f * currentTextureScale)),
                 (int) playButtonWidth,
                 (int) playButtonHeight,
                 this));
@@ -117,8 +117,8 @@ public final class CharacterSelectorScreen extends WynntilsScreen {
         float disconnectButtonWidth = Texture.DISCONNECT_BUTTON.width() * currentTextureScale;
         float disconnectButtonHeight = Texture.DISCONNECT_BUTTON.height() / 2f * currentTextureScale;
         this.addRenderableWidget(new DisconnectButton(
-                (int) (this.width - disconnectButtonWidth - 10f),
-                (int) (10f),
+                (int) (this.width - disconnectButtonWidth - (10f * currentTextureScale)),
+                (int) (10f * currentTextureScale),
                 (int) disconnectButtonWidth,
                 (int) disconnectButtonHeight,
                 this));
@@ -126,8 +126,8 @@ public final class CharacterSelectorScreen extends WynntilsScreen {
         float changeWorldButtonWidth = Texture.CHANGE_WORLD_BUTTON.width() * currentTextureScale;
         float changeWorldButtonHeight = Texture.CHANGE_WORLD_BUTTON.height() / 2f * currentTextureScale;
         this.addRenderableWidget(new ChangeWorldButton(
-                (int) (this.width - changeWorldButtonWidth - 10f),
-                (int) (15f + changeWorldButtonHeight),
+                (int) (this.width - changeWorldButtonWidth - (10f * currentTextureScale)),
+                (int) ((15f * currentTextureScale) + changeWorldButtonHeight),
                 (int) changeWorldButtonWidth,
                 (int) changeWorldButtonHeight,
                 this));
