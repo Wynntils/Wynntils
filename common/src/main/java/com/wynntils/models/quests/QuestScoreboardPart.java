@@ -35,7 +35,7 @@ public class QuestScoreboardPart extends ScoreboardPart {
         StringBuilder nextTask = new StringBuilder();
 
         for (StyledText line : content) {
-            if (line.startsWith("§e")) {
+            if (line.startsWith("§f")) {
                 questName.append(line.getString(PartStyle.StyleType.NONE)).append(" ");
             } else {
                 nextTask.append(line.getString()
