@@ -1,9 +1,21 @@
+## [0.0.3-alpha.107](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.106...v0.0.3-alpha.107) (2023-07-02)
+
+
+### Bug Fixes
+
+* Changing class does not clear status overlay ([#1663](https://github.com/Wynntils/Artemis/issues/1663)) ([392498b](https://github.com/Wynntils/Artemis/commit/392498b85f6cf2f5a2a38a4aef540ddd8b73feee))
+
 ## [0.0.3-alpha.106](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.105...v0.0.3-alpha.106) (2023-07-01)
 
 
 ### Bug Fixes
 
 * Fix map moving when left-clicking ([#1632](https://github.com/Wynntils/Artemis/issues/1632)) ([6042f18](https://github.com/Wynntils/Artemis/commit/6042f18263de3b8e5f76a9ba6e038ac1d878b48e))
+
+
+### Miscellaneous Chores
+
+* **release:** v0.0.3-alpha.106 [skip ci] ([b5de119](https://github.com/Wynntils/Artemis/commit/b5de119dea5be41beae187d87a511e1de449926e))
 
 ## [0.0.3-alpha.105](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.104...v0.0.3-alpha.105) (2023-06-30)
 
@@ -6200,16 +6212,4 @@
 ### New Features
 
 * Create pre-alpha version stream for Wynncraft Beta ([#1654](https://github.com/Wynntils/Artemis/issues/1654)) ([51d13fd](https://github.com/Wynntils/Artemis/commit/51d13fd6b2547cacf8b222465c36a96a438a4088))
-
-## [0.0.3-alpha.103](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.102...v0.0.3-alpha.103) (2023-06-29)
-
-
-### Bug Fixes
-
-* Emerald count renders in GearViewerScreen ([#1642](https://github.com/Wynntils/Artemis/issues/1642)) ([89453a5](https://github.com/Wynntils/Artemis/commit/89453a5e6d3549028d0636317ff7fea71400a522))
-
-
-### Miscellaneous Chores
-
-* **release:** v0.0.3-alpha.103 [skip ci] ([9f7540b](https://github.com/Wynntils/Artemis/commit/9f7540b6f2fb43b463b2b9b8677b9d5f069cbf9c))
 
