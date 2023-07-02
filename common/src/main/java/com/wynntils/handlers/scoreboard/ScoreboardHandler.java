@@ -402,16 +402,13 @@ public final class ScoreboardHandler extends Handler {
         }
 
         @Override
-        public void onSegmentChange(ScoreboardSegment newValue) {
-        }
+        public void onSegmentChange(ScoreboardSegment newValue) {}
 
         @Override
-        public void onSegmentRemove(ScoreboardSegment segment) {
-        }
+        public void onSegmentRemove(ScoreboardSegment segment) {}
 
         @Override
-        public void reset() {
-        }
+        public void reset() {}
 
         @Override
         public String toString() {
