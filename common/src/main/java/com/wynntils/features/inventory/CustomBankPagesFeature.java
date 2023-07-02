@@ -19,6 +19,9 @@ import com.wynntils.utils.mc.McUtils;
 import com.wynntils.utils.render.RenderUtils;
 import com.wynntils.utils.render.Texture;
 import com.wynntils.utils.wynn.ContainerUtils;
+import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.inventory.Slot;
@@ -26,10 +29,6 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import org.lwjgl.glfw.GLFW;
-
-import java.util.List;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 @ConfigCategory(Category.INVENTORY)
 public class CustomBankPagesFeature extends Feature {
@@ -77,7 +76,13 @@ public class CustomBankPagesFeature extends Feature {
             containerId = screen.getMenu().containerId;
             currentPage = Integer.parseInt(pageMatcher.group(1));
 
-            customJumpDestinations = List.of(buttonOnePage.get(), buttonTwoPage.get(), buttonThreePage.get(), buttonFourPage.get(), buttonFivePage.get(), buttonSixPage.get());
+            customJumpDestinations = List.of(
+                    buttonOnePage.get(),
+                    buttonTwoPage.get(),
+                    buttonThreePage.get(),
+                    buttonFourPage.get(),
+                    buttonFivePage.get(),
+                    buttonSixPage.get());
 
             if (currentPage != pageDestination && quickJumping) {
                 goToPage();
@@ -130,7 +135,9 @@ public class CustomBankPagesFeature extends Feature {
         }
 
         // Prevent buying a new page
-        if (e.getSlot().index == NEXT_PAGE_SLOT && e.getSlot().getItem().getHoverName().getString().contains("§c") && pageDestination > currentPage) {
+        if (e.getSlot().index == NEXT_PAGE_SLOT
+                && e.getSlot().getItem().getHoverName().getString().contains("§c")
+                && pageDestination > currentPage) {
             pageDestination = currentPage;
             quickJumping = false;
         }
