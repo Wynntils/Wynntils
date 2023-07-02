@@ -1,9 +1,21 @@
+## [0.0.3-pre-alpha.7](https://github.com/Wynntils/Artemis/compare/v0.0.3-pre-alpha.6...v0.0.3-pre-alpha.7) (2023-07-02)
+
+
+### Bug Fixes
+
+* Fix NEW stats being calculated in overall quality (and displaying as perfect) ([#1664](https://github.com/Wynntils/Artemis/issues/1664)) ([07ff5d6](https://github.com/Wynntils/Artemis/commit/07ff5d69041319d8e011d2d52c5379f527f1d51d))
+
 ## [0.0.3-pre-alpha.6](https://github.com/Wynntils/Artemis/compare/v0.0.3-pre-alpha.5...v0.0.3-pre-alpha.6) (2023-07-01)
 
 
 ### Bug Fixes
 
 * Fix shout recipient type parsing ([#1661](https://github.com/Wynntils/Artemis/issues/1661)) ([0a74c32](https://github.com/Wynntils/Artemis/commit/0a74c324226e4fee6c6dcfa9996814bdb60a2bae))
+
+
+### Miscellaneous Chores
+
+* **release:** v0.0.3-pre-alpha.6 [skip ci] ([8f83d50](https://github.com/Wynntils/Artemis/commit/8f83d50c602477ef6bb2e4960964f42e8d76ba85))
 
 ## [0.0.3-pre-alpha.5](https://github.com/Wynntils/Artemis/compare/v0.0.3-pre-alpha.4...v0.0.3-pre-alpha.5) (2023-07-01)
 
@@ -40,16 +52,4 @@
 ### Miscellaneous Chores
 
 * **release:** v0.0.3-pre-alpha.3 [skip ci] ([dfe3127](https://github.com/Wynntils/Artemis/commit/dfe3127ac34ee0b7b139eb2f9de77e6b3786ccc0))
-
-## [0.0.3-pre-alpha.2](https://github.com/Wynntils/Artemis/compare/v0.0.3-pre-alpha.1...v0.0.3-pre-alpha.2) (2023-07-01)
-
-
-### Bug Fixes
-
-* Fix lootrun scoreboard part not showing up ([#1656](https://github.com/Wynntils/Artemis/issues/1656)) ([9d2f381](https://github.com/Wynntils/Artemis/commit/9d2f3819c83852e9ce9d56c222ef4911a5412c8a))
-
-
-### Miscellaneous Chores
-
-* **release:** v0.0.3-pre-alpha.2 [skip ci] ([d649589](https://github.com/Wynntils/Artemis/commit/d649589a614d2298c8c41ca09ef0dabb72f99616))
 
