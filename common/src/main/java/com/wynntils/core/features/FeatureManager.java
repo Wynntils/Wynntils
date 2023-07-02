@@ -41,6 +41,7 @@ import com.wynntils.features.combat.MythicBoxScalerFeature;
 import com.wynntils.features.combat.PreventTradesDuelsFeature;
 import com.wynntils.features.combat.QuickCastFeature;
 import com.wynntils.features.combat.RangeVisualizerFeature;
+import com.wynntils.features.combat.TrackerFeature;
 import com.wynntils.features.commands.AddCommandExpansionFeature;
 import com.wynntils.features.commands.CommandAliasesFeature;
 import com.wynntils.features.commands.CustomCommandKeybindsFeature;
@@ -86,13 +87,13 @@ import com.wynntils.features.overlays.MobTotemTrackingFeature;
 import com.wynntils.features.overlays.NpcDialogueOverlayFeature;
 import com.wynntils.features.overlays.ObjectivesOverlayFeature;
 import com.wynntils.features.overlays.PowderSpecialBarOverlayFeature;
-import com.wynntils.features.overlays.QuestInfoOverlayFeature;
 import com.wynntils.features.overlays.ShamanMasksOverlayFeature;
 import com.wynntils.features.overlays.ShamanTotemTrackingFeature;
 import com.wynntils.features.overlays.SpellCastRenderFeature;
 import com.wynntils.features.overlays.StatusOverlayFeature;
 import com.wynntils.features.overlays.StopwatchFeature;
 import com.wynntils.features.overlays.TokenTrackerFeature;
+import com.wynntils.features.overlays.TrackerOverlayFeature;
 import com.wynntils.features.overlays.TradeMarketBulkSellFeature;
 import com.wynntils.features.players.AutoJoinPartyFeature;
 import com.wynntils.features.players.CustomNametagRendererFeature;
@@ -190,6 +191,7 @@ public final class FeatureManager extends Manager {
         registerFeature(new PreventTradesDuelsFeature());
         registerFeature(new QuickCastFeature());
         registerFeature(new RangeVisualizerFeature());
+        registerFeature(new TrackerFeature());
         // endregion
 
         // region commands
@@ -245,13 +247,13 @@ public final class FeatureManager extends Manager {
         registerFeature(new NpcDialogueOverlayFeature());
         registerFeature(new ObjectivesOverlayFeature());
         registerFeature(new PowderSpecialBarOverlayFeature());
-        registerFeature(new QuestInfoOverlayFeature());
         registerFeature(new ShamanMasksOverlayFeature());
         registerFeature(new ShamanTotemTrackingFeature());
         registerFeature(new SpellCastRenderFeature());
         registerFeature(new StatusOverlayFeature());
         registerFeature(new StopwatchFeature());
         registerFeature(new TokenTrackerFeature());
+        registerFeature(new TrackerOverlayFeature());
         registerFeature(new TradeMarketBulkSellFeature());
         // endregion
 

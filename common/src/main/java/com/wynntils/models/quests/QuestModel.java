@@ -15,8 +15,9 @@ import com.wynntils.core.text.StyledText;
 import com.wynntils.handlers.scoreboard.ScoreboardPart;
 import com.wynntils.models.characterstats.CombatXpModel;
 import com.wynntils.models.quests.event.QuestBookReloadedEvent;
-import com.wynntils.models.quests.event.TrackedQuestUpdateEvent;
 import com.wynntils.models.quests.type.QuestSortOrder;
+import com.wynntils.models.tracker.TrackerScoreboardPart;
+import com.wynntils.models.tracker.event.TrackerUpdatedEvent;
 import com.wynntils.models.worlds.event.WorldStateEvent;
 import com.wynntils.utils.mc.McUtils;
 import com.wynntils.utils.mc.type.Location;
@@ -30,7 +31,7 @@ import net.minecraftforge.eventbus.api.SubscribeEvent;
 import org.apache.commons.lang3.StringUtils;
 
 public final class QuestModel extends Model {
-    private static final ScoreboardPart QUEST_SCOREBOARD_PART = new QuestScoreboardPart();
+    private static final ScoreboardPart QUEST_SCOREBOARD_PART = new TrackerScoreboardPart();
     private static final QuestContainerQueries CONTAINER_QUERIES = new QuestContainerQueries();
     private static final DialogueHistoryQueries DIALOGUE_HISTORY_QUERIES = new DialogueHistoryQueries();
     private static final String MINI_QUEST_PREFIX = "Mini-Quest - ";
@@ -181,7 +182,7 @@ public final class QuestModel extends Model {
 
     private void updateTrackedQuest(QuestInfo questInfo) {
         trackedQuest = questInfo;
-        WynntilsMod.postEvent(new TrackedQuestUpdateEvent(trackedQuest));
+        WynntilsMod.postEvent(new TrackerUpdatedEvent(trackedQuest));
     }
 
     private Optional<QuestInfo> getQuestInfoFromName(String name) {

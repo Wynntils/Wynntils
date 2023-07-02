@@ -2,7 +2,7 @@
  * Copyright © Wynntils 2022.
  * This file is released under AGPLv3. See LICENSE for full license details.
  */
-package com.wynntils.models.quests;
+package com.wynntils.models.tracker;
 
 import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.components.Models;
@@ -15,12 +15,12 @@ import com.wynntils.utils.wynn.WynnUtils;
 import java.util.List;
 import net.minecraft.ChatFormatting;
 
-public class QuestScoreboardPart extends ScoreboardPart {
-    private static final SegmentMatcher QUEST_MATCHER = SegmentMatcher.fromPattern("Tracked Quest:");
+public class TrackerScoreboardPart extends ScoreboardPart {
+    private static final SegmentMatcher TRACKER_MATCHER = SegmentMatcher.fromPattern("Tracked .*:");
 
     @Override
     public SegmentMatcher getSegmentMatcher() {
-        return QUEST_MATCHER;
+        return TRACKER_MATCHER;
     }
 
     @Override
@@ -28,7 +28,7 @@ public class QuestScoreboardPart extends ScoreboardPart {
         List<StyledText> content = newValue.getContent();
 
         if (content.isEmpty()) {
-            WynntilsMod.error("QuestHandler: content was empty.");
+            WynntilsMod.error("TrackerScoreboardPart: content was empty.");
         }
 
         StringBuilder questName = new StringBuilder();
@@ -63,6 +63,6 @@ public class QuestScoreboardPart extends ScoreboardPart {
 
     @Override
     public String toString() {
-        return "QuestScoreboardPart{}";
+        return "TrackerScoreboardPart{}";
     }
 }
