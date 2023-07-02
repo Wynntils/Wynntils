@@ -15,6 +15,7 @@ import com.wynntils.core.features.properties.RegisterKeyBind;
 import com.wynntils.core.keybinds.KeyBind;
 import com.wynntils.core.mod.event.WynncraftConnectionEvent;
 import com.wynntils.core.storage.Storage;
+import com.wynntils.mc.event.TitleScreenInitEvent;
 import com.wynntils.utils.mc.McUtils;
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
@@ -32,6 +33,7 @@ public class SilencerFeature extends Feature {
             new KeyBind("Toggle Silencer", GLFW.GLFW_KEY_UNKNOWN, true, this::toggleSilencer);
 
     private final Storage<Double> lastVolume = new Storage<>(1.0);
+
     private boolean isSilencerEnabled = false;
 
     @SubscribeEvent
@@ -40,6 +42,11 @@ public class SilencerFeature extends Feature {
             resetVolume();
             isSilencerEnabled = false;
         }
+    }
+
+    @SubscribeEvent
+    public void onTitleScreenInit(TitleScreenInitEvent.Pre event) {
+        resetVolume();
     }
 
     private void toggleSilencer() {
