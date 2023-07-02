@@ -18,7 +18,7 @@ import net.minecraftforge.eventbus.api.SubscribeEvent;
 
 @ConfigCategory(Category.COMBAT)
 public class TrackerFeature extends Feature {
-    private static final ResourceLocation TRACKER_UPDATE_ID = new ResourceLocation("wynntils:ui.quest.update");
+    private static final ResourceLocation TRACKER_UPDATE_ID = new ResourceLocation("wynntils:ui.tracker.update");
     private static final SoundEvent TRACKER_UPDATE_SOUND = SoundEvent.createVariableRangeEvent(TRACKER_UPDATE_ID);
 
     @RegisterConfig
