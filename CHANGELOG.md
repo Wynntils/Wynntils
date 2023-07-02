@@ -1,9 +1,21 @@
+## [0.0.3-pre-alpha.8](https://github.com/Wynntils/Artemis/compare/v0.0.3-pre-alpha.7...v0.0.3-pre-alpha.8) (2023-07-02)
+
+
+### Bug Fixes
+
+* Do not crash on chat encoding for mismatched stats ([#1669](https://github.com/Wynntils/Artemis/issues/1669)) ([aa3570a](https://github.com/Wynntils/Artemis/commit/aa3570a3ac9c3d807a0d9b7a07af980ca4a01422))
+
 ## [0.0.3-pre-alpha.7](https://github.com/Wynntils/Artemis/compare/v0.0.3-pre-alpha.6...v0.0.3-pre-alpha.7) (2023-07-02)
 
 
 ### Bug Fixes
 
 * Fix NEW stats being calculated in overall quality (and displaying as perfect) ([#1664](https://github.com/Wynntils/Artemis/issues/1664)) ([07ff5d6](https://github.com/Wynntils/Artemis/commit/07ff5d69041319d8e011d2d52c5379f527f1d51d))
+
+
+### Miscellaneous Chores
+
+* **release:** v0.0.3-pre-alpha.7 [skip ci] ([33ce63d](https://github.com/Wynntils/Artemis/commit/33ce63dde0fce276466d35901e364ba711840a9d))
 
 ## [0.0.3-pre-alpha.6](https://github.com/Wynntils/Artemis/compare/v0.0.3-pre-alpha.5...v0.0.3-pre-alpha.6) (2023-07-01)
 
@@ -40,16 +52,4 @@
 ### Miscellaneous Chores
 
 * **release:** v0.0.3-pre-alpha.4 [skip ci] ([6a68b21](https://github.com/Wynntils/Artemis/commit/6a68b211b5aa4bf5eecb17806228d9301eb7132e))
-
-## [0.0.3-pre-alpha.3](https://github.com/Wynntils/Artemis/compare/v0.0.3-pre-alpha.2...v0.0.3-pre-alpha.3) (2023-07-01)
-
-
-### Bug Fixes
-
-* fix version check ([#1657](https://github.com/Wynntils/Artemis/issues/1657)) ([07e36a6](https://github.com/Wynntils/Artemis/commit/07e36a6ee056bdf7a2ee900bc5b7f5dd9f692317))
-
-
-### Miscellaneous Chores
-
-* **release:** v0.0.3-pre-alpha.3 [skip ci] ([dfe3127](https://github.com/Wynntils/Artemis/commit/dfe3127ac34ee0b7b139eb2f9de77e6b3786ccc0))
 
