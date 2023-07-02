@@ -10,6 +10,7 @@ public enum Texture {
     BUBBLE_BAR("bars_bubbles.png", 256, 256),
     CHANGELOG_BACKGROUND("changelog.png", 294, 198),
     COSMETIC_VIEWER_BACKGROUND("cosmetics_viewer_background.png", 72, 92),
+    COLUMN_ARROW_RIGHT("column_arrow_right.png", 32, 32),
     EMERALD_COUNT_BACKGROUND("emerald_count_background.png", 24, 24),
     EXPERIENCE_BAR("bars_exp.png", 256, 256),
     FAVORITE("favorite.png", 18, 18),
