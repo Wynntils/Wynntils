@@ -34,7 +34,7 @@ public final class TrackerModel extends Model {
 
     @SubscribeEvent(priority = EventPriority.HIGH)
     public void onWorldStateChanged(WorldStateEvent e) {
-        reset();
+        resetTracker();
     }
 
     public String getTrackedName() {
@@ -59,7 +59,7 @@ public final class TrackerModel extends Model {
         return Models.Quest.getQuestInfoFromName(trackedName).orElse(null);
     }
 
-    void updateTrackerFromScoreboard(String type, String name, StyledText nextTask) {
+    void updateTracker(String type, String name, StyledText nextTask) {
         trackedType = type;
         trackedName = name;
         trackedTask = nextTask;
@@ -67,10 +67,7 @@ public final class TrackerModel extends Model {
         WynntilsMod.postEvent(new TrackerUpdatedEvent(trackedType, trackedName, trackedTask));
     }
 
-    private void reset() {
-        trackedName = null;
-        trackedType = null;
-        trackedTask = null;
+    void resetTracker() {
+        updateTracker(null, null, null);
     }
-
 }

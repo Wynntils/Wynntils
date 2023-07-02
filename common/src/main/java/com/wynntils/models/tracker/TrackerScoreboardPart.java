@@ -46,7 +46,8 @@ public class TrackerScoreboardPart extends ScoreboardPart {
             }
         }
 
-        Matcher matcher = newValue.getHeader().getMatcher(TRACKER_MATCHER.headerPattern());
+        String unformattedHeader = newValue.getHeader().getString(PartStyle.StyleType.NONE);
+        Matcher matcher = TRACKER_MATCHER.headerPattern().matcher(unformattedHeader);
 
         assert matcher.matches();
         String type = matcher.group(1);
@@ -54,17 +55,18 @@ public class TrackerScoreboardPart extends ScoreboardPart {
         String fixedName = WynnUtils.normalizeBadString(questName.toString().trim());
         StyledText fixedNextTask =
                 StyledText.fromString(nextTask.toString().trim()).getNormalized();
-        Models.Tracker.updateTrackerFromScoreboard(type, fixedName, fixedNextTask);
+
+        Models.Tracker.updateTracker(type, fixedName, fixedNextTask);
     }
 
     @Override
     public void onSegmentRemove(ScoreboardSegment segment) {
-        Models.Tracker.updateTrackerFromScoreboard(null, null, null);
+        Models.Tracker.resetTracker();
     }
 
     @Override
     public void reset() {
-        Models.Tracker.updateTrackerFromScoreboard(null, null, null);
+        Models.Tracker.resetTracker();
     }
 
     @Override

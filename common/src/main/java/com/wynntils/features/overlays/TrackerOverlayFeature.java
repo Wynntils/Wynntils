@@ -21,7 +21,6 @@ import com.wynntils.core.features.overlays.annotations.OverlayInfo;
 import com.wynntils.core.text.StyledText;
 import com.wynntils.handlers.scoreboard.event.ScoreboardSegmentAdditionEvent;
 import com.wynntils.mc.event.RenderEvent;
-import com.wynntils.models.quests.QuestInfo;
 import com.wynntils.models.tracker.TrackerScoreboardPart;
 import com.wynntils.utils.colors.CommonColors;
 import com.wynntils.utils.colors.CustomColor;
