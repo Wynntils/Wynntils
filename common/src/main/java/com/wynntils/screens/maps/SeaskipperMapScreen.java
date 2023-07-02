@@ -143,8 +143,6 @@ public final class SeaskipperMapScreen extends AbstractMapScreen {
 
     @Override
     public void doRender(PoseStack poseStack, int mouseX, int mouseY, float partialTick) {
-        updateMapCenterIfDragging(mouseX, mouseY);
-
         RenderSystem.setShaderColor(1f, 1f, 1f, 1f);
 
         RenderSystem.enableDepthTest();
