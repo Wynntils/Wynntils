@@ -247,4 +247,10 @@ public abstract class WynntilsListScreen<E, B extends WynntilsButton> extends Wy
     protected int getElementsPerPage() {
         return 13;
     }
+
+    @Override
+    public void added() {
+        searchWidget.opened();
+        super.added();
+    }
 }
