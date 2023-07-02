@@ -896,6 +896,8 @@
   "feature.wynntils.wybelSound.name": "Wybel Sounds",
   "feature.wynntils.wynncraftButton.autoConnect.description": "Should the mod auto-connect to Wynncraft on startup?",
   "feature.wynntils.wynncraftButton.autoConnect.name": "Auto-Connect on Startup",
+  "feature.wynntils.wynncraftButton.connectToBetaServer.description": "Should the button connect to the beta server instead of the normal game server? This has no meaning if Connect to Lobby is enabled",
+  "feature.wynntils.wynncraftButton.connectToBetaServer.name": "Connect to Beta",
   "feature.wynntils.wynncraftButton.connectToLobby.description": "Should the button connect to the lobby or the game server?",
   "feature.wynntils.wynncraftButton.connectToLobby.name": "Connect to Lobby",
   "feature.wynntils.wynncraftButton.loadResourcePack.description": "Should the Wynncraft resource pack be loaded?",
