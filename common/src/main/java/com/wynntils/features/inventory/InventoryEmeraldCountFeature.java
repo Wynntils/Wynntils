@@ -112,7 +112,6 @@ public class InventoryEmeraldCountFeature extends Feature {
     }
 
     private void renderTextCount(PoseStack poseStack, int x, int y, int emeralds) {
-
         final HorizontalAlignment emeraldTextAlignment =
                 textDisplaySide.get() == TextDisplaySide.LEFT ? HorizontalAlignment.LEFT : HorizontalAlignment.RIGHT;
         final int emeraldTextOffsetX = textDisplaySide.get() == TextDisplaySide.LEFT ? 1 : -1;
