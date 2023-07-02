@@ -85,6 +85,9 @@ public class GearChatEncoding {
         for (StatType statType : sortedStats) {
             StatActualValue actualValue = gearInstance.getActualValue(statType);
             StatPossibleValues possibleValues = gearItem.getGearInfo().getPossibleValues(statType);
+            if (actualValue == null || possibleValues == null) {
+                return "<mismatched stats: cannot encode item>";
+            }
 
             if (possibleValues.isPreIdentified()) continue;
 
