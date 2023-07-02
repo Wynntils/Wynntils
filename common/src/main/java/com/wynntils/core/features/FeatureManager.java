@@ -306,9 +306,9 @@ public final class FeatureManager extends Manager {
 
         // region uncategorized
         registerFeature(new GammabrightFeature());
+        registerFeature(new SilencerFeature());
         registerFeature(new TerritoryDefenseMessageFeature());
         registerFeature(new TranslationFeature());
-        registerFeature(new SilencerFeature());
         // endregion
 
         // Reload Minecraft's config files so our own keybinds get loaded
