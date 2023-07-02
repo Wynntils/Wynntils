@@ -36,12 +36,17 @@ import org.apache.commons.lang3.Validate;
 
 @ConfigCategory(Category.UI)
 public class WynncraftButtonFeature extends Feature {
-    private static final String GAME_SERVER = "play.wynncraft.com";
-    private static final String LOBBY_SERVER = "lobby.wynncraft.com";
+    private static final String GAME_SERVER = "play";
+    private static final String BETA_SERVER = "beta";
+    private static final String LOBBY_SERVER = "lobby";
+    private static final String WYNNCRAFT_DOMAIN = ".wynncraft.com";
     private boolean firstTitleScreenInit = true;
 
     @RegisterConfig
     public final Config<Boolean> connectToLobby = new Config<>(false);
+
+    @RegisterConfig
+    public final Config<Boolean> connectToBetaServer = new Config<>(false);
 
     @RegisterConfig
     public final Config<Boolean> autoConnect = new Config<>(false);
@@ -81,8 +86,11 @@ public class WynncraftButtonFeature extends Feature {
     }
 
     private ServerData getWynncraftServer() {
-        ServerData wynncraftServer =
-                new ServerData("Wynncraft", connectToLobby.get() ? LOBBY_SERVER : GAME_SERVER, false);
+        ServerData wynncraftServer = new ServerData(
+                "Wynncraft",
+                (connectToLobby.get() ? LOBBY_SERVER : connectToBetaServer.get() ? BETA_SERVER : GAME_SERVER)
+                        + WYNNCRAFT_DOMAIN,
+                false);
         wynncraftServer.setResourcePackStatus(
                 loadResourcePack.get() ? ServerData.ServerPackStatus.ENABLED : ServerData.ServerPackStatus.DISABLED);
 

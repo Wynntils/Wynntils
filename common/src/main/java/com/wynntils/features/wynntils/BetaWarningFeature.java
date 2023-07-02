@@ -17,7 +17,7 @@ public class BetaWarningFeature extends Feature {
 
     @SubscribeEvent
     public void onConnect(WynncraftConnectionEvent.Connected event) {
-        if (event.getHost().equals("beta") && !WynntilsMod.isPreAlpha()) {
+        if (event.getHost().equals("beta") != WynntilsMod.isPreAlpha()) {
             warn = true;
         }
     }
@@ -30,6 +30,6 @@ public class BetaWarningFeature extends Feature {
         warn = false;
         McUtils.sendMessageToClient(
                 Component.literal(
-                        "You are using a non pre-alpha version of Wynntils. This version is not supported on Wynncraft Beta. Please use the pre-alpha version instead."));
+                        "You are using a pre-alpha version of Wynntils. This version is only supported on Wynncraft Beta. Please use the normal alpha version, or connect to the beta server instead."));
     }
 }
