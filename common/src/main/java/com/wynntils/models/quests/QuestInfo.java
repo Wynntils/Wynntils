@@ -5,13 +5,13 @@
 package com.wynntils.models.quests;
 
 import com.wynntils.core.components.Models;
-import com.wynntils.core.text.PartStyle;
 import com.wynntils.core.text.StyledText;
 import com.wynntils.models.profession.type.ProfessionType;
 import com.wynntils.models.quests.type.QuestLength;
 import com.wynntils.models.quests.type.QuestStatus;
 import com.wynntils.utils.StringUtils;
 import com.wynntils.utils.mc.RenderedStringUtils;
+import com.wynntils.utils.mc.StyledTextUtils;
 import com.wynntils.utils.mc.type.Location;
 import com.wynntils.utils.type.Pair;
 import java.util.ArrayList;
@@ -19,16 +19,12 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Objects;
 import java.util.Optional;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
 
 public class QuestInfo {
     private static final int NEXT_TASK_MAX_WIDTH = 200;
-    private static final Pattern COORDINATE_PATTERN =
-            Pattern.compile(".*\\[(-?\\d+)(?:.\\d+)?, ?(-?\\d+)(?:.\\d+)?, ?(-?\\d+)(?:.\\d+)?\\].*");
 
     // Quest metadata is forever constant
     private final String name;
@@ -40,9 +36,8 @@ public class QuestInfo {
     private final boolean isMiniQuest;
     private final int pageNumber;
 
-    // Quest progress can change over time
     private final QuestStatus status;
-    private StyledText nextTask;
+    private final StyledText nextTask;
     private final boolean tracked;
 
     protected QuestInfo(
@@ -79,13 +74,7 @@ public class QuestInfo {
     }
 
     public Optional<Location> getNextLocation() {
-        Matcher matcher = nextTask.getMatcher(COORDINATE_PATTERN, PartStyle.StyleType.NONE);
-        if (!matcher.matches()) return Optional.empty();
-
-        return Optional.of(new Location(
-                Integer.parseInt(matcher.group(1)),
-                Integer.parseInt(matcher.group(2)),
-                Integer.parseInt(matcher.group(3))));
+        return StyledTextUtils.extractLocation(nextTask);
     }
 
     public QuestLength getLength() {
@@ -104,10 +93,6 @@ public class QuestInfo {
 
     public StyledText getNextTask() {
         return nextTask;
-    }
-
-    public void setNextTask(StyledText nextTask) {
-        this.nextTask = nextTask;
     }
 
     public List<Pair<String, Integer>> getAdditionalRequirements() {

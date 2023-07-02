@@ -50,17 +50,13 @@ public final class CompassModel extends Model {
     }
 
     public Optional<WaypointPoi> getCompassWaypoint() {
-        if (locationSupplier != null && locationSupplier.get() != null) {
-            WaypointPoi waypointPoi = new WaypointPoi(() -> {
-                Location location = locationSupplier.get();
+        if (locationSupplier == null) return Optional.empty();
 
-                return PoiLocation.fromLocation(location);
-            });
+        Location location = locationSupplier.get();
+        if (location == null) return Optional.empty();
 
-            return Optional.of(waypointPoi);
-        }
-
-        return Optional.empty();
+        WaypointPoi waypointPoi = new WaypointPoi(() -> PoiLocation.fromLocation(location));
+        return Optional.of(waypointPoi);
     }
 
     public Texture getTargetIcon() {

@@ -29,10 +29,10 @@ public class TrackerFeature extends Feature {
 
     @SubscribeEvent
     public void onTrackerUpdate(TrackerUpdatedEvent event) {
-        if (event.getQuestInfo() == null) return;
+        if (event.getName() == null) return;
 
         if (autoTrackCoordinates.get()) {
-            Models.Compass.setDynamicCompassLocation(Models.Quest::getTrackedQuestNextLocation);
+            Models.Compass.setDynamicCompassLocation(Models.Tracker::getTrackedLocation);
         }
 
         if (playSoundOnUpdate.get()) {

@@ -4,17 +4,29 @@
  */
 package com.wynntils.models.tracker.event;
 
-import com.wynntils.models.quests.QuestInfo;
+import com.wynntils.core.text.StyledText;
 import net.minecraftforge.eventbus.api.Event;
 
 public class TrackerUpdatedEvent extends Event {
-    private final QuestInfo questInfo;
+    private final String type;
+    private final String name;
+    private final StyledText task;
 
-    public TrackerUpdatedEvent(QuestInfo questInfo) {
-        this.questInfo = questInfo;
+    public TrackerUpdatedEvent(String type, String name, StyledText task) {
+        this.type = type;
+        this.name = name;
+        this.task = task;
     }
 
-    public QuestInfo getQuestInfo() {
-        return questInfo;
+    public String getType() {
+        return type;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public StyledText getTask() {
+        return task;
     }
 }

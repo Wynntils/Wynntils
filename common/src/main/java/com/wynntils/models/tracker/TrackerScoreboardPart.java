@@ -13,10 +13,11 @@ import com.wynntils.handlers.scoreboard.ScoreboardSegment;
 import com.wynntils.handlers.scoreboard.type.SegmentMatcher;
 import com.wynntils.utils.wynn.WynnUtils;
 import java.util.List;
+import java.util.regex.Matcher;
 import net.minecraft.ChatFormatting;
 
 public class TrackerScoreboardPart extends ScoreboardPart {
-    private static final SegmentMatcher TRACKER_MATCHER = SegmentMatcher.fromPattern("Tracked .*:");
+    private static final SegmentMatcher TRACKER_MATCHER = SegmentMatcher.fromPattern("Tracked (.*):");
 
     @Override
     public SegmentMatcher getSegmentMatcher() {
@@ -45,20 +46,25 @@ public class TrackerScoreboardPart extends ScoreboardPart {
             }
         }
 
+        Matcher matcher = newValue.getHeader().getMatcher(TRACKER_MATCHER.headerPattern());
+
+        assert matcher.matches();
+        String type = matcher.group(1);
+
         String fixedName = WynnUtils.normalizeBadString(questName.toString().trim());
         StyledText fixedNextTask =
                 StyledText.fromString(nextTask.toString().trim()).getNormalized();
-        Models.Quest.updateTrackedQuestFromScoreboard(fixedName, fixedNextTask);
+        Models.Tracker.updateTrackerFromScoreboard(type, fixedName, fixedNextTask);
     }
 
     @Override
     public void onSegmentRemove(ScoreboardSegment segment) {
-        Models.Quest.clearTrackedQuestFromScoreBoard();
+        Models.Tracker.updateTrackerFromScoreboard(null, null, null);
     }
 
     @Override
     public void reset() {
-        Models.Quest.clearTrackedQuestFromScoreBoard();
+        Models.Tracker.updateTrackerFromScoreboard(null, null, null);
     }
 
     @Override

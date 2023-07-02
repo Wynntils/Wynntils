@@ -5,19 +5,14 @@
 package com.wynntils.models.quests;
 
 import com.wynntils.core.WynntilsMod;
-import com.wynntils.core.components.Handlers;
 import com.wynntils.core.components.Managers;
 import com.wynntils.core.components.Model;
-import com.wynntils.core.components.Models;
 import com.wynntils.core.net.ApiResponse;
 import com.wynntils.core.net.UrlId;
 import com.wynntils.core.text.StyledText;
-import com.wynntils.handlers.scoreboard.ScoreboardPart;
 import com.wynntils.models.characterstats.CombatXpModel;
 import com.wynntils.models.quests.event.QuestBookReloadedEvent;
 import com.wynntils.models.quests.type.QuestSortOrder;
-import com.wynntils.models.tracker.TrackerScoreboardPart;
-import com.wynntils.models.tracker.event.TrackerUpdatedEvent;
 import com.wynntils.models.worlds.event.WorldStateEvent;
 import com.wynntils.utils.mc.McUtils;
 import com.wynntils.utils.mc.type.Location;
@@ -31,7 +26,6 @@ import net.minecraftforge.eventbus.api.SubscribeEvent;
 import org.apache.commons.lang3.StringUtils;
 
 public final class QuestModel extends Model {
-    private static final ScoreboardPart QUEST_SCOREBOARD_PART = new TrackerScoreboardPart();
     private static final QuestContainerQueries CONTAINER_QUERIES = new QuestContainerQueries();
     private static final DialogueHistoryQueries DIALOGUE_HISTORY_QUERIES = new DialogueHistoryQueries();
     private static final String MINI_QUEST_PREFIX = "Mini-Quest - ";
@@ -39,14 +33,9 @@ public final class QuestModel extends Model {
     private List<QuestInfo> quests = List.of();
     private List<QuestInfo> miniQuests = List.of();
     private List<List<StyledText>> dialogueHistory = List.of();
-    private QuestInfo trackedQuest = null;
-    private String afterRescanName;
-    private StyledText afterRescanTask;
 
     public QuestModel(CombatXpModel combatXpModel) {
         super(List.of(combatXpModel));
-
-        Handlers.Scoreboard.addPart(QUEST_SCOREBOARD_PART);
     }
 
     @SubscribeEvent(priority = EventPriority.HIGH)
@@ -58,9 +47,6 @@ public final class QuestModel extends Model {
         quests = List.of();
         miniQuests = List.of();
         dialogueHistory = List.of();
-        trackedQuest = null;
-        afterRescanName = null;
-        afterRescanTask = null;
     }
 
     public void rescanQuestBook(boolean includeQuests, boolean includeMiniQuests) {
@@ -145,47 +131,7 @@ public final class QuestModel extends Model {
         });
     }
 
-    public QuestInfo getTrackedQuest() {
-        return trackedQuest;
-    }
-
-    public Location getTrackedQuestNextLocation() {
-        QuestInfo questInfo = getTrackedQuest();
-
-        if (questInfo == null) return null;
-
-        Optional<Location> location = questInfo.getNextLocation();
-
-        return location.orElse(null);
-    }
-
-    public void clearTrackedQuestFromScoreBoard() {
-        updateTrackedQuest(null);
-    }
-
-    public void updateTrackedQuestFromScoreboard(String name, StyledText nextTask) {
-        // If our quest book has not yet been scanned, we can't update now
-        // but will do after scanning is complete
-        if (updateAfterRescan(name, nextTask)) return;
-
-        Optional<QuestInfo> questInfoOpt = getQuestInfoFromName(name);
-        if (questInfoOpt.isEmpty()) {
-            WynntilsMod.warn("Cannot match quest from scoreboard to actual quest: " + name);
-            return;
-        }
-
-        QuestInfo questInfo = questInfoOpt.get();
-        questInfo.setNextTask(nextTask);
-
-        updateTrackedQuest(questInfo);
-    }
-
-    private void updateTrackedQuest(QuestInfo questInfo) {
-        trackedQuest = questInfo;
-        WynntilsMod.postEvent(new TrackerUpdatedEvent(trackedQuest));
-    }
-
-    private Optional<QuestInfo> getQuestInfoFromName(String name) {
+    public Optional<QuestInfo> getQuestInfoFromName(String name) {
         List<QuestInfo> questInfoList = name.startsWith(MINI_QUEST_PREFIX) ? miniQuests : quests;
 
         return questInfoList.stream()
@@ -193,49 +139,18 @@ public final class QuestModel extends Model {
                 .findFirst();
     }
 
-    private boolean updateAfterRescan(String name, StyledText nextTask) {
-        boolean isMiniQuest = name.startsWith(MINI_QUEST_PREFIX);
-        List<QuestInfo> questInfoList = isMiniQuest ? miniQuests : quests;
-
-        if (questInfoList.isEmpty()) {
-            afterRescanTask = nextTask;
-            afterRescanName = stripPrefix(name);
-            rescanQuestBook(!isMiniQuest, isMiniQuest);
-            return true;
-        }
-
-        return false;
-    }
-
     private String stripPrefix(String name) {
         return StringUtils.replaceOnce(name, MINI_QUEST_PREFIX, "");
     }
 
-    void updateQuestsFromQuery(List<QuestInfo> newQuests, QuestInfo trackedQuest) {
+    void updateQuestsFromQuery(List<QuestInfo> newQuests) {
         quests = newQuests;
-        maybeUpdateTrackedQuest(trackedQuest);
         WynntilsMod.postEvent(new QuestBookReloadedEvent.QuestsReloaded());
     }
 
-    void updateMiniQuestsFromQuery(List<QuestInfo> newMiniQuests, QuestInfo trackedQuest) {
+    void updateMiniQuestsFromQuery(List<QuestInfo> newMiniQuests) {
         miniQuests = newMiniQuests;
-        maybeUpdateTrackedQuest(trackedQuest);
         WynntilsMod.postEvent(new QuestBookReloadedEvent.MiniQuestsReloaded());
-    }
-
-    private void maybeUpdateTrackedQuest(QuestInfo trackedQuest) {
-        if (trackedQuest != this.trackedQuest) {
-            if (trackedQuest != null && trackedQuest.getName().equals(afterRescanName)) {
-                // We have stored the current task from last scoreboard update,
-                // now we can finally present it
-                trackedQuest.setNextTask(afterRescanTask);
-                afterRescanName = null;
-                afterRescanTask = null;
-                Models.Quest.updateTrackedQuest(trackedQuest);
-            }
-            WynntilsMod.warn("Tracked Quest according to scoreboard is " + this.trackedQuest + " but query says "
-                    + trackedQuest);
-        }
     }
 
     void setDialogueHistory(List<List<StyledText>> newDialogueHistory) {

@@ -160,7 +160,7 @@ public class QuestCommand extends Command {
                         .withStyle(ChatFormatting.DARK_GREEN));
             }
 
-            if (quest.equals(Models.Quest.getTrackedQuest())) {
+            if (quest.equals(Models.Tracker.getTrackedQuestInfo())) {
                 response.append(Component.literal(" [Tracked]")
                         .withStyle(ChatFormatting.DARK_AQUA)
                         .withStyle(style ->
@@ -221,7 +221,7 @@ public class QuestCommand extends Command {
     }
 
     private int untrackQuest(CommandContext<CommandSourceStack> context) {
-        QuestInfo trackedQuest = Models.Quest.getTrackedQuest();
+        QuestInfo trackedQuest = Models.Tracker.getTrackedQuestInfo();
         if (trackedQuest == null) {
             context.getSource()
                     .sendFailure(Component.literal("No quest currently tracked").withStyle(ChatFormatting.RED));

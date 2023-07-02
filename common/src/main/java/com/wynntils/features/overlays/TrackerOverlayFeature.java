@@ -126,18 +126,15 @@ public class TrackerOverlayFeature extends Feature {
 
         @Override
         public void render(PoseStack poseStack, MultiBufferSource bufferSource, float partialTicks, Window window) {
-            QuestInfo trackedQuest = Models.Quest.getTrackedQuest();
-
-            if (trackedQuest == null) {
+            if (Models.Tracker.getTrackedName() == null) {
                 return;
             }
 
-            // FIXME: Should be type instead of name!
             toRender.get(0)
                     .setText(I18n.get("feature.wynntils.trackerOverlay.overlay.tracker.title") + " "
-                            + trackedQuest.getName() + ":");
-            toRender.get(1).setText(trackedQuest.getName());
-            toRender.get(2).setText(trackedQuest.getNextTask());
+                            + Models.Tracker.getTrackedType() + ":");
+            toRender.get(1).setText(Models.Tracker.getTrackedName());
+            toRender.get(2).setText(Models.Tracker.getTrackedTask());
 
             BufferedFontRenderer.getInstance()
                     .renderTextsWithAlignment(
