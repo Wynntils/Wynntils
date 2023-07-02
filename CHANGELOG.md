@@ -1,9 +1,21 @@
+## [0.0.3-alpha.108](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.107...v0.0.3-alpha.108) (2023-07-02)
+
+
+### New Features
+
+* Option to change emerald count text display side ([#1658](https://github.com/Wynntils/Artemis/issues/1658)) ([58831f6](https://github.com/Wynntils/Artemis/commit/58831f6d295feedbb397a4ccd23718a3d1b73392))
+
 ## [0.0.3-alpha.107](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.106...v0.0.3-alpha.107) (2023-07-02)
 
 
 ### Bug Fixes
 
 * Changing class does not clear status overlay ([#1663](https://github.com/Wynntils/Artemis/issues/1663)) ([392498b](https://github.com/Wynntils/Artemis/commit/392498b85f6cf2f5a2a38a4aef540ddd8b73feee))
+
+
+### Miscellaneous Chores
+
+* **release:** v0.0.3-alpha.107 [skip ci] ([e8f9600](https://github.com/Wynntils/Artemis/commit/e8f9600e5f0e547901ccadcfb0795017bfb17ea3))
 
 ## [0.0.3-alpha.106](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.105...v0.0.3-alpha.106) (2023-07-01)
 
@@ -6205,11 +6217,4 @@
 ### Miscellaneous Chores
 
 * **release:** v0.0.1-alpha.0 [skip ci] ([7076250](https://github.com/Wynntils/Artemis/commit/70762508451342d5395ad456ba555140f12348ec))
-
-## [0.0.3-pre-alpha.0](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.103...v0.0.3-pre-alpha.0) (2023-06-30)
-
-
-### New Features
-
-* Create pre-alpha version stream for Wynncraft Beta ([#1654](https://github.com/Wynntils/Artemis/issues/1654)) ([51d13fd](https://github.com/Wynntils/Artemis/commit/51d13fd6b2547cacf8b222465c36a96a438a4088))
 
