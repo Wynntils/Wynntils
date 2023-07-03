@@ -125,8 +125,7 @@ public class CustomBankPagesFeature extends Feature {
 
         // Prevent buying a new page
         if (e.getSlot().index == NEXT_PAGE_SLOT) {
-            onLastPage = pageDestination > currentPage
-                    && Models.Container.isLastBankPage(screen);
+            onLastPage = pageDestination > currentPage && Models.Container.isLastBankPage(screen);
         }
     }
 
@@ -146,7 +145,7 @@ public class CustomBankPagesFeature extends Feature {
 
         int buttonIndex = BUTTON_SLOTS.indexOf(buttonSlot.index);
         int buttonDestination = customJumpDestinations.get(buttonIndex);
-        
+
         buttonSlot.getItem().setHoverName(Component.literal("§7Jump to Page " + buttonDestination));
     }
 
@@ -193,7 +192,7 @@ public class CustomBankPagesFeature extends Feature {
                         McUtils.containerMenu().containerId,
                         GLFW.GLFW_MOUSE_BUTTON_LEFT,
                         McUtils.containerMenu().getItems());
-            } else if (!onLastPage){
+            } else if (!onLastPage) {
                 ContainerUtils.clickOnSlot(
                         NEXT_PAGE_SLOT,
                         McUtils.containerMenu().containerId,
@@ -206,7 +205,12 @@ public class CustomBankPagesFeature extends Feature {
     @Override
     protected void onConfigUpdate(ConfigHolder configHolder) {
         switch (configHolder.getFieldName()) {
-            case "buttonOnePage", "buttonFourPage", "buttonFivePage", "buttonSixPage", "buttonThreePage", "buttonTwoPage" -> {
+            case "buttonOnePage",
+                    "buttonFourPage",
+                    "buttonFivePage",
+                    "buttonSixPage",
+                    "buttonThreePage",
+                    "buttonTwoPage" -> {
                 if ((int) configHolder.getValue() < 1) {
                     configHolder.setValue(1);
                 } else if ((int) configHolder.getValue() > MAX_BANK_PAGES) {
