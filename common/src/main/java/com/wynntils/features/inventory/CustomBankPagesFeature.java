@@ -56,6 +56,7 @@ public class CustomBankPagesFeature extends Feature {
     private static final List<Integer> BUTTON_SLOTS = List.of(7, 16, 25, 34, 43, 52);
     private static final List<Integer> QUICK_JUMP_DESTINATIONS = List.of(1, 5, 9, 13, 17, 21);
 
+    private boolean isBankScreen = false;
     private boolean onLastPage = false;
     private boolean quickJumping = false;
     private int containerId;
@@ -67,6 +68,8 @@ public class CustomBankPagesFeature extends Feature {
     public void onScreenInit(ScreenInitEvent e) {
         if (!(e.getScreen() instanceof AbstractContainerScreen<?> screen)) return;
         if (!Models.Container.isBankScreen(screen)) return;
+
+        isBankScreen = true;
 
         containerId = screen.getMenu().containerId;
         currentPage = Models.Container.getCurrentBankPage(screen);
@@ -91,6 +94,7 @@ public class CustomBankPagesFeature extends Feature {
 
     @SubscribeEvent
     public void onContainerClose(ContainerCloseEvent.Post e) {
+        isBankScreen = false;
         currentPage = 1;
         pageDestination = 1;
     }
@@ -116,10 +120,9 @@ public class CustomBankPagesFeature extends Feature {
     @SubscribeEvent
     public void onRenderSlot(SlotRenderEvent.Pre e) {
         if (!(e.getScreen() instanceof AbstractContainerScreen<?> screen)) return;
+        if (!isBankScreen) return;
 
         if (BUTTON_SLOTS.contains(e.getSlot().index)) {
-            if (!Models.Container.isBankScreen(screen)) return;
-
             renderQuickJumpButton(e.getPoseStack(), e.getSlot());
         }
 
