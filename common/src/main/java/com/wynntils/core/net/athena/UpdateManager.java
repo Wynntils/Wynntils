@@ -18,6 +18,7 @@ import java.net.URL;
 import java.nio.file.Files;
 import java.nio.file.StandardCopyOption;
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
 import java.util.concurrent.CompletableFuture;
 import net.minecraft.ChatFormatting;
@@ -36,7 +37,9 @@ public final class UpdateManager extends Manager {
     public CompletableFuture<String> getLatestBuild() {
         CompletableFuture<String> future = new CompletableFuture<>();
 
-        ApiResponse apiResponse = Managers.Net.callApi(UrlId.API_ATHENA_UPDATE_CHECK);
+        WynntilsMod.info("Checking for update for stream " + getStream() + ".");
+
+        ApiResponse apiResponse = Managers.Net.callApi(UrlId.API_ATHENA_UPDATE_CHECK, Map.of("stream", getStream()));
         apiResponse.handleJsonObject(
                 json -> {
                     String version = json.getAsJsonPrimitive("version").getAsString();
@@ -47,6 +50,27 @@ public final class UpdateManager extends Manager {
                     future.complete(null);
                 });
         return future;
+    }
+
+    private String getStream() {
+        // TODO: Replace with config option for the user to select their preferred stream.
+        String version = WynntilsMod.getVersion();
+        // Format: v0.0.3-pre-alpha.103+MC-1.19.4 -> pre-alpha
+        // Format: v0.0.3-alpha.103+MC-1.19.4 -> alpha
+        // Format: v0.0.3+MC-1.19.4 -> release
+        // Regex to get the stream:  v\d+\.\d+\.\d+(-(?<stream>[a-z\-]+)\.\d+)?(\+MC-\d\.\d+\.\d+)?
+
+        if (WynntilsMod.isDevelopmentBuild()) {
+            return "alpha";
+        }
+
+        String stream = version.replaceAll(
+                "v\\d+\\.\\d+\\.\\d+(-(?<stream>[a-z\\-]+)\\.\\d+)?(\\+MC-\\d\\.\\d+\\.\\d+)?", "${stream}");
+
+        if (stream.isEmpty()) {
+            stream = "release";
+        }
+        return stream;
     }
 
     public CompletableFuture<UpdateResult> tryUpdate() {
