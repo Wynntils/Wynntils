@@ -1,9 +1,21 @@
+## [0.0.3-pre-alpha.11](https://github.com/Wynntils/Artemis/compare/v0.0.3-pre-alpha.10...v0.0.3-pre-alpha.11) (2023-07-03)
+
+
+### Code Refactoring
+
+* Make party leader in PartyModel safer to use ([#1675](https://github.com/Wynntils/Artemis/issues/1675)) ([93581ae](https://github.com/Wynntils/Artemis/commit/93581ae4ad37e93c9334fab431939f76083db789))
+
 ## [0.0.3-pre-alpha.10](https://github.com/Wynntils/Artemis/compare/v0.0.3-pre-alpha.9...v0.0.3-pre-alpha.10) (2023-07-03)
 
 
 ### Bug Fixes
 
 * Make shiny items parse as gear ([#1677](https://github.com/Wynntils/Artemis/issues/1677)) ([bccb1b7](https://github.com/Wynntils/Artemis/commit/bccb1b7a778c396e0686e356611ef6e653ab86f1))
+
+
+### Miscellaneous Chores
+
+* **release:** v0.0.3-pre-alpha.10 [skip ci] ([38d42cc](https://github.com/Wynntils/Artemis/commit/38d42cc1569651b74b60a332d65a1fbb646ad14a))
 
 ## [0.0.3-pre-alpha.9](https://github.com/Wynntils/Artemis/compare/v0.0.3-pre-alpha.8...v0.0.3-pre-alpha.9) (2023-07-02)
 
@@ -40,16 +52,4 @@
 ### Miscellaneous Chores
 
 * **release:** v0.0.3-pre-alpha.7 [skip ci] ([33ce63d](https://github.com/Wynntils/Artemis/commit/33ce63dde0fce276466d35901e364ba711840a9d))
-
-## [0.0.3-pre-alpha.6](https://github.com/Wynntils/Artemis/compare/v0.0.3-pre-alpha.5...v0.0.3-pre-alpha.6) (2023-07-01)
-
-
-### Bug Fixes
-
-* Fix shout recipient type parsing ([#1661](https://github.com/Wynntils/Artemis/issues/1661)) ([0a74c32](https://github.com/Wynntils/Artemis/commit/0a74c324226e4fee6c6dcfa9996814bdb60a2bae))
-
-
-### Miscellaneous Chores
-
-* **release:** v0.0.3-pre-alpha.6 [skip ci] ([8f83d50](https://github.com/Wynntils/Artemis/commit/8f83d50c602477ef6bb2e4960964f42e8d76ba85))
 
