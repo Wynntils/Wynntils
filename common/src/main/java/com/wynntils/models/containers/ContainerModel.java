@@ -41,11 +41,13 @@ public final class ContainerModel extends Model {
     private static final Pair<Integer, Integer> GUILD_BANK_PREVIOUS_NEXT_SLOTS = new Pair<>(9, 27);
     private static final Pair<Integer, Integer> TRADE_MARKET_PREVIOUS_NEXT_SLOTS = new Pair<>(17, 26);
     private static final Pair<Integer, Integer> SCRAP_MENU_PREVIOUS_NEXT_SLOTS = new Pair<>(0, 8);
+    private static final Pair<Integer, Integer> CONTENT_BOOK_PREVIOUS_NEXT_SLOTS = new Pair<>(65, 69);
     private static final StyledText LAST_BANK_PAGE_STRING = StyledText.fromString(">§4>§c>§4>§c>");
     private static final StyledText FIRST_TRADE_MARKET_PAGE_STRING = StyledText.fromString("§bReveal Item Names");
     private static final StyledText TRADE_MARKET_TITLE = StyledText.fromString("Trade Market");
     private static final StyledText SCRAP_MENU_TITLE = StyledText.fromString("Scrap Rewards");
     private static final StyledText SEASKIPPER_TITLE = StyledText.fromString("V.S.S. Seaskipper");
+    private static final StyledText CONTENT_BOOK_TITLE = StyledText.fromString("§f\uE000\uE072");
 
     public ContainerModel() {
         super(List.of());
@@ -113,6 +115,11 @@ public final class ContainerModel extends Model {
                 && StyledText.fromComponent(screen.getTitle()).equals(SCRAP_MENU_TITLE);
     }
 
+    public boolean isContentBook(Screen screen) {
+        if (!(screen instanceof ContainerScreen cs)) return false;
+        return StyledText.fromComponent(cs.getTitle()).equals(CONTENT_BOOK_TITLE);
+    }
+
     public boolean isLootChest(Screen screen) {
         return screen instanceof ContainerScreen && lootChestMatcher(screen).matches();
     }
@@ -170,6 +177,10 @@ public final class ContainerModel extends Model {
 
         if (Models.Container.isScrapMenuScreen(gui)) {
             return SCRAP_MENU_PREVIOUS_NEXT_SLOTS;
+        }
+
+        if (Models.Container.isContentBook(gui)) {
+            return CONTENT_BOOK_PREVIOUS_NEXT_SLOTS;
         }
 
         return null;
