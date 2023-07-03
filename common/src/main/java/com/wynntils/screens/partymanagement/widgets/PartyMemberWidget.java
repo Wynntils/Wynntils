@@ -142,7 +142,7 @@ public class PartyMemberWidget extends AbstractWidget {
         String prefix = "";
         if (isOffline) {
             prefix = ChatFormatting.STRIKETHROUGH.toString();
-        } else if (playerName.equals(McUtils.player().getName().getString())) {
+        } else if (playerName.equals(McUtils.playerName())) {
             prefix = ChatFormatting.BOLD.toString();
         }
 
@@ -163,7 +163,7 @@ public class PartyMemberWidget extends AbstractWidget {
         moveDownButton.render(poseStack, mouseX, mouseY, partialTick);
 
         // only leader can promote/kick
-        if (!Models.Party.isPartyLeader(McUtils.player().getName().getString())) return;
+        if (!Models.Party.isPartyLeader(McUtils.playerName())) return;
 
         if (Models.Party.isPartyLeader(playerName)) {
             disbandButton.render(poseStack, mouseX, mouseY, partialTick);
@@ -179,7 +179,7 @@ public class PartyMemberWidget extends AbstractWidget {
             return true;
         }
 
-        if (!Models.Party.isPartyLeader(McUtils.player().getName().getString())) return false;
+        if (!Models.Party.isPartyLeader(McUtils.playerName())) return false;
 
         return promoteButton.mouseClicked(mouseX, mouseY, button)
                 || kickButton.mouseClicked(mouseX, mouseY, button)

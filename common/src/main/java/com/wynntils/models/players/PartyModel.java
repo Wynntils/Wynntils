@@ -145,7 +145,7 @@ public final class PartyModel extends Model {
             WynntilsMod.info("Player created a new party.");
 
             inParty = true;
-            partyLeader = McUtils.player().getName().getString();
+            partyLeader = McUtils.playerName();
             partyMembers = new ArrayList<>(List.of(partyLeader));
             WynntilsMod.postEvent(new HadesRelationsUpdateEvent.PartyList(
                     Set.copyOf(partyMembers), HadesRelationsUpdateEvent.ChangeType.RELOAD));
@@ -222,7 +222,7 @@ public final class PartyModel extends Model {
         if (matcher.matches()) {
             WynntilsMod.info("Player has been promoted to party leader.");
 
-            partyLeader = McUtils.player().getName().getString();
+            partyLeader = McUtils.playerName();
             return true;
         }
 

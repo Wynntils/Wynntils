@@ -144,7 +144,7 @@ public final class PartyManagementScreen extends WynntilsScreen implements Textb
         createLeaveButton.render(poseStack, mouseX, mouseY, partialTick);
         kickOfflineButton.active = inParty
                 && !Models.Party.getOfflineMembers().isEmpty()
-                && Models.Party.isPartyLeader(McUtils.player().getName().getString());
+                && Models.Party.isPartyLeader(McUtils.playerName());
         inviteButton.active = !inviteInput
                 .getTextBoxInput()
                 .isBlank(); // inParty check not required as button automatically makes new party if not in one

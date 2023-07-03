@@ -31,6 +31,10 @@ public final class McUtils {
         return mc().player;
     }
 
+    public static String playerName() {
+        return player().getName().getString();
+    }
+
     public static Options options() {
         return mc().options;
     }
