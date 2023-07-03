@@ -8,7 +8,6 @@ import com.wynntils.core.components.Models;
 import com.wynntils.core.functions.Function;
 import com.wynntils.core.functions.arguments.FunctionArguments;
 import java.util.List;
-import java.util.Objects;
 
 public class SocialFunctions {
     public static class FriendsFunction extends Function<Integer> {
@@ -39,7 +38,7 @@ public class SocialFunctions {
     public static class PartyLeaderFunction extends Function<String> {
         @Override
         public String getValue(FunctionArguments arguments) {
-            return Objects.requireNonNullElse(Models.Party.getPartyLeader(), "");
+            return Models.Party.getPartyLeader().orElse("");
         }
     }
 }
