@@ -47,8 +47,6 @@ import net.minecraftforge.eventbus.api.SubscribeEvent;
 public final class LootrunModel extends Model {
     public static final File LOOTRUNS = WynntilsMod.getModStorageDir("lootruns");
 
-    private static final LootrunScoreboardPart LOOTRUN_SCOREBOARD_PART = new LootrunScoreboardPart();
-
     private List<LootrunInstance> lootrunInstanceCache = new ArrayList<>();
 
     private LootrunUncompiled uncompiled = null;
@@ -65,8 +63,6 @@ public final class LootrunModel extends Model {
         super(List.of(containerModel));
 
         FileUtils.mkdir(Models.Lootrun.LOOTRUNS);
-
-        Handlers.Scoreboard.addPart(LOOTRUN_SCOREBOARD_PART);
     }
 
     public LootrunState getState() {
