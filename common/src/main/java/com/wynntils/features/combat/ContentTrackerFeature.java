@@ -10,14 +10,14 @@ import com.wynntils.core.config.Config;
 import com.wynntils.core.config.ConfigCategory;
 import com.wynntils.core.config.RegisterConfig;
 import com.wynntils.core.features.Feature;
-import com.wynntils.models.tracker.event.TrackerUpdatedEvent;
+import com.wynntils.models.contenttracker.event.ContentTrackerUpdatedEvent;
 import com.wynntils.utils.mc.McUtils;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 
 @ConfigCategory(Category.COMBAT)
-public class TrackerFeature extends Feature {
+public class ContentTrackerFeature extends Feature {
     private static final ResourceLocation TRACKER_UPDATE_ID = new ResourceLocation("wynntils:ui.tracker.update");
     private static final SoundEvent TRACKER_UPDATE_SOUND = SoundEvent.createVariableRangeEvent(TRACKER_UPDATE_ID);
 
@@ -28,11 +28,11 @@ public class TrackerFeature extends Feature {
     public final Config<Boolean> playSoundOnUpdate = new Config<>(true);
 
     @SubscribeEvent
-    public void onTrackerUpdate(TrackerUpdatedEvent event) {
+    public void onTrackerUpdate(ContentTrackerUpdatedEvent event) {
         if (event.getName() == null) return;
 
         if (autoTrackCoordinates.get()) {
-            Models.Compass.setDynamicCompassLocation(Models.Tracker::getTrackedLocation);
+            Models.Compass.setDynamicCompassLocation(Models.ContentTracker::getTrackedLocation);
         }
 
         if (playSoundOnUpdate.get()) {

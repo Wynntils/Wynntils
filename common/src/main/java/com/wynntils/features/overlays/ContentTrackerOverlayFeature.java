@@ -21,7 +21,7 @@ import com.wynntils.core.features.overlays.annotations.OverlayInfo;
 import com.wynntils.core.text.StyledText;
 import com.wynntils.handlers.scoreboard.event.ScoreboardSegmentAdditionEvent;
 import com.wynntils.mc.event.RenderEvent;
-import com.wynntils.models.tracker.TrackerScoreboardPart;
+import com.wynntils.models.contenttracker.ContentTrackerScoreboardPart;
 import com.wynntils.utils.colors.CommonColors;
 import com.wynntils.utils.colors.CustomColor;
 import com.wynntils.utils.render.TextRenderSetting;
@@ -38,7 +38,7 @@ import net.minecraftforge.eventbus.api.EventPriority;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 
 @ConfigCategory(Category.OVERLAYS)
-public class TrackerOverlayFeature extends Feature {
+public class ContentTrackerOverlayFeature extends Feature {
     @RegisterConfig
     public final Config<Boolean> disableTrackerOnScoreboard = new Config<>(true);
 
@@ -46,15 +46,15 @@ public class TrackerOverlayFeature extends Feature {
     public void onScoreboardSegmentChange(ScoreboardSegmentAdditionEvent event) {
         if (Managers.Overlay.isEnabled(trackerOverlay)
                 && disableTrackerOnScoreboard.get()
-                && event.getSegment().getScoreboardPart() instanceof TrackerScoreboardPart) {
+                && event.getSegment().getScoreboardPart() instanceof ContentTrackerScoreboardPart) {
             event.setCanceled(true);
         }
     }
 
     @OverlayInfo(renderType = RenderEvent.ElementType.GUI)
-    private final Overlay trackerOverlay = new TrackerOverlay();
+    private final Overlay trackerOverlay = new ContentTrackerOverlay();
 
-    public static class TrackerOverlay extends Overlay {
+    public static class ContentTrackerOverlay extends Overlay {
         @RegisterConfig
         public final Config<TextShadow> textShadow = new Config<>(TextShadow.OUTLINE);
 
@@ -64,7 +64,7 @@ public class TrackerOverlayFeature extends Feature {
         private final List<TextRenderTask> toRender = createRenderTaskList();
         private final List<TextRenderTask> toRenderPreview = createRenderTaskList();
 
-        protected TrackerOverlay() {
+        protected ContentTrackerOverlay() {
             super(
                     new OverlayPosition(
                             5,
@@ -125,15 +125,15 @@ public class TrackerOverlayFeature extends Feature {
 
         @Override
         public void render(PoseStack poseStack, MultiBufferSource bufferSource, float partialTicks, Window window) {
-            if (Models.Tracker.getTrackedName() == null) {
+            if (Models.ContentTracker.getTrackedName() == null) {
                 return;
             }
 
             toRender.get(0)
                     .setText(I18n.get("feature.wynntils.trackerOverlay.overlay.tracker.title") + " "
-                            + Models.Tracker.getTrackedType() + ":");
-            toRender.get(1).setText(Models.Tracker.getTrackedName());
-            toRender.get(2).setText(Models.Tracker.getTrackedTask());
+                            + Models.ContentTracker.getTrackedType() + ":");
+            toRender.get(1).setText(Models.ContentTracker.getTrackedName());
+            toRender.get(2).setText(Models.ContentTracker.getTrackedTask());
 
             BufferedFontRenderer.getInstance()
                     .renderTextsWithAlignment(

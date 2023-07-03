@@ -2,7 +2,7 @@
  * Copyright © Wynntils 2022.
  * This file is released under AGPLv3. See LICENSE for full license details.
  */
-package com.wynntils.models.tracker;
+package com.wynntils.models.contenttracker;
 
 import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.components.Handlers;
@@ -11,7 +11,7 @@ import com.wynntils.core.components.Models;
 import com.wynntils.core.text.StyledText;
 import com.wynntils.handlers.scoreboard.ScoreboardPart;
 import com.wynntils.models.quests.QuestInfo;
-import com.wynntils.models.tracker.event.TrackerUpdatedEvent;
+import com.wynntils.models.contenttracker.event.ContentTrackerUpdatedEvent;
 import com.wynntils.models.worlds.event.WorldStateEvent;
 import com.wynntils.utils.mc.StyledTextUtils;
 import com.wynntils.utils.mc.type.Location;
@@ -19,14 +19,14 @@ import java.util.List;
 import net.minecraftforge.eventbus.api.EventPriority;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 
-public final class TrackerModel extends Model {
-    private static final ScoreboardPart TRACKER_SCOREBOARD_PART = new TrackerScoreboardPart();
+public final class ContentTrackerModel extends Model {
+    private static final ScoreboardPart TRACKER_SCOREBOARD_PART = new ContentTrackerScoreboardPart();
 
     private String trackedName;
     private String trackedType;
     private StyledText trackedTask;
 
-    public TrackerModel() {
+    public ContentTrackerModel() {
         super(List.of());
 
         Handlers.Scoreboard.addPart(TRACKER_SCOREBOARD_PART);
@@ -64,7 +64,7 @@ public final class TrackerModel extends Model {
         trackedName = name;
         trackedTask = nextTask;
 
-        WynntilsMod.postEvent(new TrackerUpdatedEvent(trackedType, trackedName, trackedTask));
+        WynntilsMod.postEvent(new ContentTrackerUpdatedEvent(trackedType, trackedName, trackedTask));
     }
 
     void resetTracker() {

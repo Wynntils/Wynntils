@@ -50,7 +50,7 @@ import com.wynntils.models.territories.GuildAttackTimerModel;
 import com.wynntils.models.territories.TerritoryModel;
 import com.wynntils.models.territories.TowerAuraTimerModel;
 import com.wynntils.models.token.TokenModel;
-import com.wynntils.models.tracker.TrackerModel;
+import com.wynntils.models.contenttracker.ContentTrackerModel;
 import com.wynntils.models.war.WarModel;
 import com.wynntils.models.worlds.BombModel;
 import com.wynntils.models.worlds.ServerListModel;
@@ -65,6 +65,7 @@ public final class Models {
     public static final CharacterSelectionModel CharacterSelection = new CharacterSelectionModel();
     public static final CompassModel Compass = new CompassModel();
     public static final ContainerModel Container = new ContainerModel();
+    public static final ContentTrackerModel ContentTracker = new ContentTrackerModel();
     public static final CosmeticsModel Cosmetics = new CosmeticsModel();
     public static final DamageModel Damage = new DamageModel();
     public static final ElementModel Element = new ElementModel();
@@ -82,7 +83,6 @@ public final class Models {
     public static final TerritoryModel Territory = new TerritoryModel();
     public static final TokenModel Token = new TokenModel();
     public static final TowerAuraTimerModel TowerAuraTimer = new TowerAuraTimerModel();
-    public static final TrackerModel Tracker = new TrackerModel();
     public static final WarModel War = new WarModel();
     public static final WorldStateModel WorldState = new WorldStateModel();
     public static final WynnItemModel WynnItem = new WynnItemModel();

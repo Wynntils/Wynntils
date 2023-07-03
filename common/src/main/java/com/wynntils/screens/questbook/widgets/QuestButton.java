@@ -87,7 +87,7 @@ public class QuestButton extends WynntilsButton {
     private CustomColor getBackgroundColor() {
         Pair<CustomColor, CustomColor> colors;
 
-        if (this.questInfo.equals(Models.Tracker.getTrackedQuestInfo())) {
+        if (this.questInfo.equals(Models.ContentTracker.getTrackedQuestInfo())) {
             colors = TRACKED_BUTTON_COLOR;
         } else if (this.questInfo.equals(questBookScreen.getTrackingRequested())) {
             colors = TRACKING_REQUESTED_BUTTON_COLOR;
@@ -120,7 +120,7 @@ public class QuestButton extends WynntilsButton {
     private void trackQuest() {
         if (this.questInfo.isTrackable()) {
             McUtils.playSoundUI(SoundEvents.ANVIL_LAND);
-            if (this.questInfo.equals(Models.Tracker.getTrackedQuestInfo())) {
+            if (this.questInfo.equals(Models.ContentTracker.getTrackedQuestInfo())) {
                 Models.Quest.stopTracking();
                 questBookScreen.setTrackingRequested(null);
             } else {

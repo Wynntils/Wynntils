@@ -41,7 +41,7 @@ import com.wynntils.features.combat.MythicBoxScalerFeature;
 import com.wynntils.features.combat.PreventTradesDuelsFeature;
 import com.wynntils.features.combat.QuickCastFeature;
 import com.wynntils.features.combat.RangeVisualizerFeature;
-import com.wynntils.features.combat.TrackerFeature;
+import com.wynntils.features.combat.ContentTrackerFeature;
 import com.wynntils.features.commands.AddCommandExpansionFeature;
 import com.wynntils.features.commands.CommandAliasesFeature;
 import com.wynntils.features.commands.CustomCommandKeybindsFeature;
@@ -93,7 +93,7 @@ import com.wynntils.features.overlays.SpellCastRenderFeature;
 import com.wynntils.features.overlays.StatusOverlayFeature;
 import com.wynntils.features.overlays.StopwatchFeature;
 import com.wynntils.features.overlays.TokenTrackerFeature;
-import com.wynntils.features.overlays.TrackerOverlayFeature;
+import com.wynntils.features.overlays.ContentTrackerOverlayFeature;
 import com.wynntils.features.overlays.TradeMarketBulkSellFeature;
 import com.wynntils.features.players.AutoJoinPartyFeature;
 import com.wynntils.features.players.CustomNametagRendererFeature;
@@ -182,6 +182,7 @@ public final class FeatureManager extends Manager {
         // region combat
         registerFeature(new AbbreviateMobHealthFeature());
         registerFeature(new CombatXpGainMessageFeature());
+        registerFeature(new ContentTrackerFeature());
         registerFeature(new FixCastingSpellsFromInventoryFeature());
         registerFeature(new HealthPotionBlockerFeature());
         registerFeature(new HorseMountFeature());
@@ -191,7 +192,6 @@ public final class FeatureManager extends Manager {
         registerFeature(new PreventTradesDuelsFeature());
         registerFeature(new QuickCastFeature());
         registerFeature(new RangeVisualizerFeature());
-        registerFeature(new TrackerFeature());
         // endregion
 
         // region commands
@@ -237,6 +237,7 @@ public final class FeatureManager extends Manager {
         registerFeature(new ArrowShieldTrackingFeature());
         registerFeature(new AuraTimerOverlayFeature());
         registerFeature(new CombatExperienceOverlayFeature());
+        registerFeature(new ContentTrackerOverlayFeature());
         registerFeature(new CustomBarsOverlayFeature());
         registerFeature(new GameBarsOverlayFeature());
         registerFeature(new GameNotificationOverlayFeature());
@@ -253,7 +254,6 @@ public final class FeatureManager extends Manager {
         registerFeature(new StatusOverlayFeature());
         registerFeature(new StopwatchFeature());
         registerFeature(new TokenTrackerFeature());
-        registerFeature(new TrackerOverlayFeature());
         registerFeature(new TradeMarketBulkSellFeature());
         // endregion
 

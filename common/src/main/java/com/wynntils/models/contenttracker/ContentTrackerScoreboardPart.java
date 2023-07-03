@@ -2,7 +2,7 @@
  * Copyright © Wynntils 2022.
  * This file is released under AGPLv3. See LICENSE for full license details.
  */
-package com.wynntils.models.tracker;
+package com.wynntils.models.contenttracker;
 
 import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.components.Models;
@@ -16,7 +16,7 @@ import java.util.List;
 import java.util.regex.Matcher;
 import net.minecraft.ChatFormatting;
 
-public class TrackerScoreboardPart extends ScoreboardPart {
+public class ContentTrackerScoreboardPart extends ScoreboardPart {
     private static final SegmentMatcher TRACKER_MATCHER = SegmentMatcher.fromPattern("Tracked (.*):");
 
     @Override
@@ -56,17 +56,17 @@ public class TrackerScoreboardPart extends ScoreboardPart {
         StyledText fixedNextTask =
                 StyledText.fromString(nextTask.toString().trim()).getNormalized();
 
-        Models.Tracker.updateTracker(type, fixedName, fixedNextTask);
+        Models.ContentTracker.updateTracker(type, fixedName, fixedNextTask);
     }
 
     @Override
     public void onSegmentRemove(ScoreboardSegment segment) {
-        Models.Tracker.resetTracker();
+        Models.ContentTracker.resetTracker();
     }
 
     @Override
     public void reset() {
-        Models.Tracker.resetTracker();
+        Models.ContentTracker.resetTracker();
     }
 
     @Override
