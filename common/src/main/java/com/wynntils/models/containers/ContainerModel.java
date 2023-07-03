@@ -63,6 +63,13 @@ public final class ContainerModel extends Model {
         return type.equals(BANK_NAME);
     }
 
+    public int getCurrentBankPage(Screen screen) {
+        Matcher matcher = StyledText.fromComponent(screen.getTitle()).getMatcher(PERSONAL_STORAGE_PATTERN);
+        if (!matcher.matches()) return 0;
+
+        return Integer.parseInt(matcher.group(1));
+    }
+
     /**
      * @return True if the page is the last page in a Bank, Block Bank, or Misc Bucket
      */

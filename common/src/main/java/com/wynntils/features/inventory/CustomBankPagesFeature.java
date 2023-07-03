@@ -5,12 +5,13 @@
 package com.wynntils.features.inventory;
 
 import com.mojang.blaze3d.vertex.PoseStack;
+import com.wynntils.core.components.Models;
 import com.wynntils.core.config.Category;
 import com.wynntils.core.config.Config;
 import com.wynntils.core.config.ConfigCategory;
+import com.wynntils.core.config.ConfigHolder;
 import com.wynntils.core.config.RegisterConfig;
 import com.wynntils.core.features.Feature;
-import com.wynntils.core.text.StyledText;
 import com.wynntils.mc.event.ContainerClickEvent;
 import com.wynntils.mc.event.ContainerCloseEvent;
 import com.wynntils.mc.event.ScreenInitEvent;
@@ -20,8 +21,6 @@ import com.wynntils.utils.render.RenderUtils;
 import com.wynntils.utils.render.Texture;
 import com.wynntils.utils.wynn.ContainerUtils;
 import java.util.List;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.inventory.Slot;
@@ -32,7 +31,7 @@ import org.lwjgl.glfw.GLFW;
 
 @ConfigCategory(Category.INVENTORY)
 public class CustomBankPagesFeature extends Feature {
-    // If possible, lock these to only allow between 1-21
+    // Change to ranged integer when implemented
     @RegisterConfig
     public final Config<Integer> buttonOnePage = new Config<>(1);
 
@@ -56,8 +55,8 @@ public class CustomBankPagesFeature extends Feature {
     private static final int PREVIOUS_PAGE_SLOT = 17;
     private static final List<Integer> BUTTON_SLOTS = List.of(7, 16, 25, 34, 43, 52);
     private static final List<Integer> QUICK_JUMP_DESTINATIONS = List.of(1, 5, 9, 13, 17, 21);
-    private static final Pattern BANK_PAGE_MATCHER = Pattern.compile("§0\\[Pg\\. (\\d{1,2})\\] §8\\w+'s§0 Bank");
 
+    private boolean onLastPage = false;
     private boolean quickJumping = false;
     private int containerId;
     private int currentPage = 1;
@@ -67,30 +66,26 @@ public class CustomBankPagesFeature extends Feature {
     @SubscribeEvent
     public void onScreenInit(ScreenInitEvent e) {
         if (!(e.getScreen() instanceof AbstractContainerScreen<?> screen)) return;
+        if (!Models.Container.isBankScreen(screen)) return;
 
-        StyledText title = StyledText.fromComponent(screen.getTitle());
+        containerId = screen.getMenu().containerId;
+        currentPage = Models.Container.getCurrentBankPage(screen);
 
-        Matcher pageMatcher = title.getMatcher(BANK_PAGE_MATCHER);
+        customJumpDestinations = List.of(
+                buttonOnePage.get(),
+                buttonTwoPage.get(),
+                buttonThreePage.get(),
+                buttonFourPage.get(),
+                buttonFivePage.get(),
+                buttonSixPage.get());
 
-        if (pageMatcher.matches()) {
-            containerId = screen.getMenu().containerId;
-            currentPage = Integer.parseInt(pageMatcher.group(1));
-
-            customJumpDestinations = List.of(
-                    buttonOnePage.get(),
-                    buttonTwoPage.get(),
-                    buttonThreePage.get(),
-                    buttonFourPage.get(),
-                    buttonFivePage.get(),
-                    buttonSixPage.get());
-
-            if (currentPage != pageDestination && quickJumping) {
-                goToPage();
-            } else if (quickJumping) {
-                quickJumping = false;
-            }
-        } else {
-            return;
+        if (onLastPage) {
+            quickJumping = false;
+            pageDestination = currentPage;
+        } else if (currentPage != pageDestination && quickJumping) {
+            goToPage();
+        } else if (quickJumping) {
+            quickJumping = false;
         }
     }
 
@@ -102,15 +97,13 @@ public class CustomBankPagesFeature extends Feature {
 
     @SubscribeEvent
     public void onSlotClicked(ContainerClickEvent e) {
-        if (e.getContainerMenu().containerId != containerId) {
-            return;
-        }
+        if (e.getContainerMenu().containerId != containerId) return;
 
         int slotIndex = e.getSlotNum();
 
         if (BUTTON_SLOTS.contains(slotIndex)) {
             int buttonIndex = BUTTON_SLOTS.indexOf(slotIndex);
-            pageDestination = Math.max(1, Math.min(MAX_BANK_PAGES, customJumpDestinations.get(buttonIndex)));
+            pageDestination = customJumpDestinations.get(buttonIndex);
             e.setCanceled(true);
             goToPage();
         } else if (slotIndex == NEXT_PAGE_SLOT) {
@@ -124,22 +117,16 @@ public class CustomBankPagesFeature extends Feature {
     public void onRenderSlot(SlotRenderEvent.Pre e) {
         if (!(e.getScreen() instanceof AbstractContainerScreen<?> screen)) return;
 
-        StyledText title = StyledText.fromComponent(screen.getTitle());
+        if (BUTTON_SLOTS.contains(e.getSlot().index)) {
+            if (!Models.Container.isBankScreen(screen)) return;
 
-        Matcher pageMatcher = title.getMatcher(BANK_PAGE_MATCHER);
-
-        if (pageMatcher.matches()) {
-            if (BUTTON_SLOTS.contains(e.getSlot().index)) {
-                renderQuickJumpButton(e.getPoseStack(), e.getSlot());
-            }
+            renderQuickJumpButton(e.getPoseStack(), e.getSlot());
         }
 
         // Prevent buying a new page
-        if (e.getSlot().index == NEXT_PAGE_SLOT
-                && e.getSlot().getItem().getHoverName().getString().contains("§c")
-                && pageDestination > currentPage) {
-            pageDestination = currentPage;
-            quickJumping = false;
+        if (e.getSlot().index == NEXT_PAGE_SLOT) {
+            onLastPage = pageDestination > currentPage
+                    && Models.Container.isLastBankPage(screen);
         }
     }
 
@@ -158,20 +145,17 @@ public class CustomBankPagesFeature extends Feature {
         buttonSlot.set(new ItemStack(Items.SNOW));
 
         int buttonIndex = BUTTON_SLOTS.indexOf(buttonSlot.index);
-        // When config limits 1-21, change to just customJumpDestinations.get(buttonIndex)
-        int buttonDestination = Math.max(1, Math.min(MAX_BANK_PAGES, customJumpDestinations.get(buttonIndex)));
-
+        int buttonDestination = customJumpDestinations.get(buttonIndex);
+        
         buttonSlot.getItem().setHoverName(Component.literal("§7Jump to Page " + buttonDestination));
     }
 
     private void goToPage() {
         quickJumping = true;
 
-        if (currentPage == pageDestination) {
-            return;
-        }
+        if (currentPage == pageDestination) return;
 
-        if (currentPage + 1 == pageDestination) {
+        if (currentPage + 1 == pageDestination && !onLastPage) {
             ContainerUtils.clickOnSlot(
                     NEXT_PAGE_SLOT,
                     McUtils.containerMenu().containerId,
@@ -209,12 +193,25 @@ public class CustomBankPagesFeature extends Feature {
                         McUtils.containerMenu().containerId,
                         GLFW.GLFW_MOUSE_BUTTON_LEFT,
                         McUtils.containerMenu().getItems());
-            } else {
+            } else if (!onLastPage){
                 ContainerUtils.clickOnSlot(
                         NEXT_PAGE_SLOT,
                         McUtils.containerMenu().containerId,
                         GLFW.GLFW_MOUSE_BUTTON_LEFT,
                         McUtils.containerMenu().getItems());
+            }
+        }
+    }
+
+    @Override
+    protected void onConfigUpdate(ConfigHolder configHolder) {
+        switch (configHolder.getFieldName()) {
+            case "buttonOnePage", "buttonFourPage", "buttonFivePage", "buttonSixPage", "buttonThreePage", "buttonTwoPage" -> {
+                if ((int) configHolder.getValue() < 1) {
+                    configHolder.setValue(1);
+                } else if ((int) configHolder.getValue() > MAX_BANK_PAGES) {
+                    configHolder.setValue(MAX_BANK_PAGES);
+                }
             }
         }
     }
