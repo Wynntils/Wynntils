@@ -15,6 +15,7 @@ import com.wynntils.core.config.upfixers.impl.CustomPoiIconEnumBugUpfixer;
 import com.wynntils.core.config.upfixers.impl.CustomPoiVisbilityUpfixer;
 import com.wynntils.core.config.upfixers.impl.EnumNamingUpfixer;
 import com.wynntils.core.config.upfixers.impl.GameBarOverlayMoveUpfixer;
+import com.wynntils.core.config.upfixers.impl.RenamedConfigsUpfixer;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
@@ -33,6 +34,7 @@ public class ConfigUpfixerManager extends Manager {
         registerUpfixer(new GameBarOverlayMoveUpfixer());
         registerUpfixer(new EnumNamingUpfixer());
         registerUpfixer(new CustomPoiIconEnumBugUpfixer());
+        registerUpfixer(new RenamedConfigsUpfixer());
     }
 
     private void registerUpfixer(ConfigUpfixer upfixer) {
