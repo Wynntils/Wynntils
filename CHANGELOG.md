@@ -1,9 +1,21 @@
+## [0.0.3-pre-alpha.10](https://github.com/Wynntils/Artemis/compare/v0.0.3-pre-alpha.9...v0.0.3-pre-alpha.10) (2023-07-03)
+
+
+### Bug Fixes
+
+* Make shiny items parse as gear ([#1677](https://github.com/Wynntils/Artemis/issues/1677)) ([bccb1b7](https://github.com/Wynntils/Artemis/commit/bccb1b7a778c396e0686e356611ef6e653ab86f1))
+
 ## [0.0.3-pre-alpha.9](https://github.com/Wynntils/Artemis/compare/v0.0.3-pre-alpha.8...v0.0.3-pre-alpha.9) (2023-07-02)
 
 
 ### Bug Fixes
 
 * Beta/pre-alpha usability fixes ([#1667](https://github.com/Wynntils/Artemis/issues/1667)) ([658ceca](https://github.com/Wynntils/Artemis/commit/658cecaad948ba601892a72f0d3c260d4505f45b))
+
+
+### Miscellaneous Chores
+
+* **release:** v0.0.3-pre-alpha.9 [skip ci] ([681c8f0](https://github.com/Wynntils/Artemis/commit/681c8f06ba187c1b8745426c0bd2be1801d5bd9b))
 
 ## [0.0.3-pre-alpha.8](https://github.com/Wynntils/Artemis/compare/v0.0.3-pre-alpha.7...v0.0.3-pre-alpha.8) (2023-07-02)
 
@@ -40,16 +52,4 @@
 ### Miscellaneous Chores
 
 * **release:** v0.0.3-pre-alpha.6 [skip ci] ([8f83d50](https://github.com/Wynntils/Artemis/commit/8f83d50c602477ef6bb2e4960964f42e8d76ba85))
-
-## [0.0.3-pre-alpha.5](https://github.com/Wynntils/Artemis/compare/v0.0.3-pre-alpha.4...v0.0.3-pre-alpha.5) (2023-07-01)
-
-
-### Bug Fixes
-
-* Support admin rank in login redirect ([#1660](https://github.com/Wynntils/Artemis/issues/1660)) ([dcaf3b3](https://github.com/Wynntils/Artemis/commit/dcaf3b3d3d503d45758f2c29549dba31a7ac901f))
-
-
-### Miscellaneous Chores
-
-* **release:** v0.0.3-pre-alpha.5 [skip ci] ([35cb404](https://github.com/Wynntils/Artemis/commit/35cb404ab9999b2e7c3b99df8fa0e217766f920f))
 
