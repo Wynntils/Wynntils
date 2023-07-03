@@ -28,6 +28,7 @@ import java.util.Collection;
 import java.util.Comparator;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Optional;
 import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -381,8 +382,12 @@ public final class PartyModel extends Model {
         return inParty;
     }
 
-    public String getPartyLeader() {
-        return partyLeader;
+    public boolean isPartyLeader(String userName) {
+        return userName.equals(partyLeader);
+    }
+
+    public Optional<String> getPartyLeader() {
+        return Optional.ofNullable(partyLeader);
     }
 
     public List<String> getPartyMembers() {
