@@ -49,7 +49,9 @@ public class ContentTrackerScoreboardPart extends ScoreboardPart {
         String unformattedHeader = newValue.getHeader().getString(PartStyle.StyleType.NONE);
         Matcher matcher = TRACKER_MATCHER.headerPattern().matcher(unformattedHeader);
 
-        assert matcher.matches();
+        // This should never happens, since the handler matched this before calling us
+        if (!matcher.matches()) return;
+
         String type = matcher.group(1);
 
         String fixedName = WynnUtils.normalizeBadString(questName.toString().trim());
