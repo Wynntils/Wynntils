@@ -1,9 +1,21 @@
+## [0.0.3-alpha.111](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.110...v0.0.3-alpha.111) (2023-07-03)
+
+
+### Bug Fixes
+
+* LoadingScreen doesn't show up when joining world ([#1628](https://github.com/Wynntils/Artemis/issues/1628)) ([ad3c262](https://github.com/Wynntils/Artemis/commit/ad3c2621cc9c80610a91962609af2859742de8c6))
+
 ## [0.0.3-alpha.110](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.109...v0.0.3-alpha.110) (2023-07-02)
 
 
 ### Bug Fixes
 
 * fix updater and version checking ([#1665](https://github.com/Wynntils/Artemis/issues/1665)) ([2a105bc](https://github.com/Wynntils/Artemis/commit/2a105bcddd01f58a9fc6caa45cac0e1d0df9c047)), closes [#1657](https://github.com/Wynntils/Artemis/issues/1657)
+
+
+### Miscellaneous Chores
+
+* **release:** v0.0.3-alpha.110 [skip ci] ([e7ce291](https://github.com/Wynntils/Artemis/commit/e7ce291b59089311d13c5ae8add6459abace1645))
 
 ## [0.0.3-alpha.109](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.108...v0.0.3-alpha.109) (2023-07-02)
 
@@ -40,16 +52,4 @@
 ### Miscellaneous Chores
 
 * **release:** v0.0.3-alpha.107 [skip ci] ([e8f9600](https://github.com/Wynntils/Artemis/commit/e8f9600e5f0e547901ccadcfb0795017bfb17ea3))
-
-## [0.0.3-alpha.106](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.105...v0.0.3-alpha.106) (2023-07-01)
-
-
-### Bug Fixes
-
-* Fix map moving when left-clicking ([#1632](https://github.com/Wynntils/Artemis/issues/1632)) ([6042f18](https://github.com/Wynntils/Artemis/commit/6042f18263de3b8e5f76a9ba6e038ac1d878b48e))
-
-
-### Miscellaneous Chores
-
-* **release:** v0.0.3-alpha.106 [skip ci] ([b5de119](https://github.com/Wynntils/Artemis/commit/b5de119dea5be41beae187d87a511e1de449926e))
 
