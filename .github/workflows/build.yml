@@ -29,7 +29,7 @@ jobs:
         uses: actions/cache@v3
         with:
           path: .gradle
-          key: ${{ runner.os }}-gradle--${{ hashFiles('**/build.gradle', '**/settings.gradle', '**/gradle.properties') }}
+          key: ${{ runner.os }}-gradle--${{ hashFiles('**/settings.gradle', '**/gradle.properties') }}
 
       - name: Format with spotless
         uses: gradle/gradle-build-action@v2

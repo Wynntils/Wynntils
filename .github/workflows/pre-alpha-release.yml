@@ -67,7 +67,7 @@ jobs:
         uses: actions/cache@v3
         with:
           path: .gradle
-          key: ${{ runner.os }}-gradle--${{ hashFiles('**/build.gradle', '**/settings.gradle', '**/gradle.properties') }}
+          key: ${{ runner.os }}-gradle--${{ hashFiles('**/settings.gradle', '**/gradle.properties') }}
 
       - uses: actions/download-artifact@v3 # Download version information from changelog
         with:
