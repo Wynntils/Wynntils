@@ -81,7 +81,7 @@ public class QuestContainerQueries {
 
         if (page == 4) {
             // Last page finished
-            Models.Quest.updateQuestsFromQuery(newQuests, trackedQuest);
+            Models.Quest.updateQuestsFromQuery(newQuests);
         }
     }
 
@@ -137,7 +137,7 @@ public class QuestContainerQueries {
 
         if (page == 3) {
             // Last page finished
-            Models.Quest.updateMiniQuestsFromQuery(newMiniQuests, trackedQuest);
+            Models.Quest.updateMiniQuestsFromQuery(newMiniQuests);
         }
     }
 
