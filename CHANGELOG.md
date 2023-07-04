@@ -1,9 +1,21 @@
+## [0.0.3-pre-alpha.13](https://github.com/Wynntils/Artemis/compare/v0.0.3-pre-alpha.12...v0.0.3-pre-alpha.13) (2023-07-04)
+
+
+### New Features
+
+* Show queue position in loading screen ([#1679](https://github.com/Wynntils/Artemis/issues/1679)) ([96fc786](https://github.com/Wynntils/Artemis/commit/96fc786f7426e3c69ada9256c71cdd860b4706c8))
+
 ## [0.0.3-pre-alpha.12](https://github.com/Wynntils/Artemis/compare/v0.0.3-pre-alpha.11...v0.0.3-pre-alpha.12) (2023-07-04)
 
 
 ### New Features
 
 * Content book scrolling ([#1678](https://github.com/Wynntils/Artemis/issues/1678)) ([dcd1b4d](https://github.com/Wynntils/Artemis/commit/dcd1b4d07ed76eaedd2f2e4c9e7c15d8969f704e))
+
+
+### Miscellaneous Chores
+
+* **release:** v0.0.3-pre-alpha.12 [skip ci] ([814e461](https://github.com/Wynntils/Artemis/commit/814e461e386d44e6a7c459b008cb705f7291db5b))
 
 ## [0.0.3-pre-alpha.11](https://github.com/Wynntils/Artemis/compare/v0.0.3-pre-alpha.10...v0.0.3-pre-alpha.11) (2023-07-03)
 
@@ -40,16 +52,4 @@
 ### Miscellaneous Chores
 
 * **release:** v0.0.3-pre-alpha.9 [skip ci] ([681c8f0](https://github.com/Wynntils/Artemis/commit/681c8f06ba187c1b8745426c0bd2be1801d5bd9b))
-
-## [0.0.3-pre-alpha.8](https://github.com/Wynntils/Artemis/compare/v0.0.3-pre-alpha.7...v0.0.3-pre-alpha.8) (2023-07-02)
-
-
-### Bug Fixes
-
-* Do not crash on chat encoding for mismatched stats ([#1669](https://github.com/Wynntils/Artemis/issues/1669)) ([aa3570a](https://github.com/Wynntils/Artemis/commit/aa3570a3ac9c3d807a0d9b7a07af980ca4a01422))
-
-
-### Miscellaneous Chores
-
-* **release:** v0.0.3-pre-alpha.8 [skip ci] ([b057796](https://github.com/Wynntils/Artemis/commit/b057796e637496d6ccd1dafcb22c5f1498a6fc39))
 
