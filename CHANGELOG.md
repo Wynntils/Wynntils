@@ -1,9 +1,21 @@
+## [0.0.3-pre-alpha.14](https://github.com/Wynntils/Artemis/compare/v0.0.3-pre-alpha.13...v0.0.3-pre-alpha.14) (2023-07-04)
+
+
+### Bug Fixes
+
+* Add fallback handler to scoreboard handler ([#1671](https://github.com/Wynntils/Artemis/issues/1671)) ([debc725](https://github.com/Wynntils/Artemis/commit/debc725318921739ea577135d2aba37f2500b74c))
+
 ## [0.0.3-pre-alpha.13](https://github.com/Wynntils/Artemis/compare/v0.0.3-pre-alpha.12...v0.0.3-pre-alpha.13) (2023-07-04)
 
 
 ### New Features
 
 * Show queue position in loading screen ([#1679](https://github.com/Wynntils/Artemis/issues/1679)) ([96fc786](https://github.com/Wynntils/Artemis/commit/96fc786f7426e3c69ada9256c71cdd860b4706c8))
+
+
+### Miscellaneous Chores
+
+* **release:** v0.0.3-pre-alpha.13 [skip ci] ([d2aed61](https://github.com/Wynntils/Artemis/commit/d2aed61766b0746c45fa96c519f00e2762720995))
 
 ## [0.0.3-pre-alpha.12](https://github.com/Wynntils/Artemis/compare/v0.0.3-pre-alpha.11...v0.0.3-pre-alpha.12) (2023-07-04)
 
@@ -40,16 +52,4 @@
 ### Miscellaneous Chores
 
 * **release:** v0.0.3-pre-alpha.10 [skip ci] ([38d42cc](https://github.com/Wynntils/Artemis/commit/38d42cc1569651b74b60a332d65a1fbb646ad14a))
-
-## [0.0.3-pre-alpha.9](https://github.com/Wynntils/Artemis/compare/v0.0.3-pre-alpha.8...v0.0.3-pre-alpha.9) (2023-07-02)
-
-
-### Bug Fixes
-
-* Beta/pre-alpha usability fixes ([#1667](https://github.com/Wynntils/Artemis/issues/1667)) ([658ceca](https://github.com/Wynntils/Artemis/commit/658cecaad948ba601892a72f0d3c260d4505f45b))
-
-
-### Miscellaneous Chores
-
-* **release:** v0.0.3-pre-alpha.9 [skip ci] ([681c8f0](https://github.com/Wynntils/Artemis/commit/681c8f06ba187c1b8745426c0bd2be1801d5bd9b))
 
