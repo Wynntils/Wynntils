@@ -1,9 +1,21 @@
+## [0.0.3-pre-alpha.15](https://github.com/Wynntils/Artemis/compare/v0.0.3-pre-alpha.14...v0.0.3-pre-alpha.15) (2023-07-04)
+
+
+### New Features
+
+* New Tracker Model, separated from QuestModel ([#1672](https://github.com/Wynntils/Artemis/issues/1672)) ([a64fd50](https://github.com/Wynntils/Artemis/commit/a64fd50f6a01905410521e6b63f29710a3f00dd9))
+
 ## [0.0.3-pre-alpha.14](https://github.com/Wynntils/Artemis/compare/v0.0.3-pre-alpha.13...v0.0.3-pre-alpha.14) (2023-07-04)
 
 
 ### Bug Fixes
 
 * Add fallback handler to scoreboard handler ([#1671](https://github.com/Wynntils/Artemis/issues/1671)) ([debc725](https://github.com/Wynntils/Artemis/commit/debc725318921739ea577135d2aba37f2500b74c))
+
+
+### Miscellaneous Chores
+
+* **release:** v0.0.3-pre-alpha.14 [skip ci] ([52fed88](https://github.com/Wynntils/Artemis/commit/52fed88c661098aea9460725ad7a1b92102bfc87))
 
 ## [0.0.3-pre-alpha.13](https://github.com/Wynntils/Artemis/compare/v0.0.3-pre-alpha.12...v0.0.3-pre-alpha.13) (2023-07-04)
 
@@ -40,16 +52,4 @@
 ### Code Refactoring
 
 * Make party leader in PartyModel safer to use ([#1675](https://github.com/Wynntils/Artemis/issues/1675)) ([93581ae](https://github.com/Wynntils/Artemis/commit/93581ae4ad37e93c9334fab431939f76083db789))
-
-## [0.0.3-pre-alpha.10](https://github.com/Wynntils/Artemis/compare/v0.0.3-pre-alpha.9...v0.0.3-pre-alpha.10) (2023-07-03)
-
-
-### Bug Fixes
-
-* Make shiny items parse as gear ([#1677](https://github.com/Wynntils/Artemis/issues/1677)) ([bccb1b7](https://github.com/Wynntils/Artemis/commit/bccb1b7a778c396e0686e356611ef6e653ab86f1))
-
-
-### Miscellaneous Chores
-
-* **release:** v0.0.3-pre-alpha.10 [skip ci] ([38d42cc](https://github.com/Wynntils/Artemis/commit/38d42cc1569651b74b60a332d65a1fbb646ad14a))
 
