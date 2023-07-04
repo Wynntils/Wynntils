@@ -1,9 +1,21 @@
+## [0.0.3-alpha.112](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.111...v0.0.3-alpha.112) (2023-07-04)
+
+
+### Bug Fixes
+
+* Fix auto update not working on any stream ([#1681](https://github.com/Wynntils/Artemis/issues/1681)) ([473ff61](https://github.com/Wynntils/Artemis/commit/473ff619d99ad9103c1937350a2e985df46ddda2))
+
 ## [0.0.3-alpha.111](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.110...v0.0.3-alpha.111) (2023-07-03)
 
 
 ### Bug Fixes
 
 * LoadingScreen doesn't show up when joining world ([#1628](https://github.com/Wynntils/Artemis/issues/1628)) ([ad3c262](https://github.com/Wynntils/Artemis/commit/ad3c2621cc9c80610a91962609af2859742de8c6))
+
+
+### Miscellaneous Chores
+
+* **release:** v0.0.3-alpha.111 [skip ci] ([f4e9d6d](https://github.com/Wynntils/Artemis/commit/f4e9d6d379a08c655f506397e04b314a11e5f9d6))
 
 ## [0.0.3-alpha.110](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.109...v0.0.3-alpha.110) (2023-07-02)
 
@@ -40,16 +52,4 @@
 ### Miscellaneous Chores
 
 * **release:** v0.0.3-alpha.108 [skip ci] ([d4786c7](https://github.com/Wynntils/Artemis/commit/d4786c70bdff3c3ca310e741158c6725a23edda3))
-
-## [0.0.3-alpha.107](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.106...v0.0.3-alpha.107) (2023-07-02)
-
-
-### Bug Fixes
-
-* Changing class does not clear status overlay ([#1663](https://github.com/Wynntils/Artemis/issues/1663)) ([392498b](https://github.com/Wynntils/Artemis/commit/392498b85f6cf2f5a2a38a4aef540ddd8b73feee))
-
-
-### Miscellaneous Chores
-
-* **release:** v0.0.3-alpha.107 [skip ci] ([e8f9600](https://github.com/Wynntils/Artemis/commit/e8f9600e5f0e547901ccadcfb0795017bfb17ea3))
 
