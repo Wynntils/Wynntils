@@ -12,7 +12,7 @@ import com.wynntils.utils.type.Pair;
 import java.util.List;
 import java.util.Set;
 
-public class RenamedConfigsUpfixer implements ConfigUpfixer {
+public class QuestBookToContentRenamedConfigsUpfixer implements ConfigUpfixer {
     private static final List<Pair<String, String>> RENAMED_KEYS = List.of(
             Pair.of("questInfoOverlayFeature.autoTrackQuestCoordinates", "contentTrackerFeature.autoTrackCoordinates"),
             Pair.of(
