@@ -1,4 +1,16 @@
+## [0.0.3-pre-alpha.12](https://github.com/Wynntils/Artemis/compare/v0.0.3-pre-alpha.11...v0.0.3-pre-alpha.12) (2023-07-04)
+
+
+### New Features
+
+* Content book scrolling ([#1678](https://github.com/Wynntils/Artemis/issues/1678)) ([dcd1b4d](https://github.com/Wynntils/Artemis/commit/dcd1b4d07ed76eaedd2f2e4c9e7c15d8969f704e))
+
 ## [0.0.3-pre-alpha.11](https://github.com/Wynntils/Artemis/compare/v0.0.3-pre-alpha.10...v0.0.3-pre-alpha.11) (2023-07-03)
+
+
+### Miscellaneous Chores
+
+* **release:** v0.0.3-pre-alpha.11 [skip ci] ([0220554](https://github.com/Wynntils/Artemis/commit/022055443b07744c4bb44323b659dcf838579fb5))
 
 
 ### Code Refactoring
@@ -40,16 +52,4 @@
 ### Miscellaneous Chores
 
 * **release:** v0.0.3-pre-alpha.8 [skip ci] ([b057796](https://github.com/Wynntils/Artemis/commit/b057796e637496d6ccd1dafcb22c5f1498a6fc39))
-
-## [0.0.3-pre-alpha.7](https://github.com/Wynntils/Artemis/compare/v0.0.3-pre-alpha.6...v0.0.3-pre-alpha.7) (2023-07-02)
-
-
-### Bug Fixes
-
-* Fix NEW stats being calculated in overall quality (and displaying as perfect) ([#1664](https://github.com/Wynntils/Artemis/issues/1664)) ([07ff5d6](https://github.com/Wynntils/Artemis/commit/07ff5d69041319d8e011d2d52c5379f527f1d51d))
-
-
-### Miscellaneous Chores
-
-* **release:** v0.0.3-pre-alpha.7 [skip ci] ([33ce63d](https://github.com/Wynntils/Artemis/commit/33ce63dde0fce276466d35901e364ba711840a9d))
 
