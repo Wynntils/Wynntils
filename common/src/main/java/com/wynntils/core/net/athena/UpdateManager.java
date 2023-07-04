@@ -37,9 +37,10 @@ public final class UpdateManager extends Manager {
     public CompletableFuture<String> getLatestBuild() {
         CompletableFuture<String> future = new CompletableFuture<>();
 
-        WynntilsMod.info("Checking for update for stream " + getStream() + ".");
+        String stream = getStream();
+        WynntilsMod.info("Checking for update for stream " + stream + ".");
 
-        ApiResponse apiResponse = Managers.Net.callApi(UrlId.API_ATHENA_UPDATE_CHECK, Map.of("stream", getStream()));
+        ApiResponse apiResponse = Managers.Net.callApi(UrlId.API_ATHENA_UPDATE_CHECK, Map.of("stream", stream));
         apiResponse.handleJsonObject(
                 json -> {
                     String version = json.getAsJsonPrimitive("version").getAsString();
@@ -68,15 +69,19 @@ public final class UpdateManager extends Manager {
                 "v\\d+\\.\\d+\\.\\d+(-(?<stream>[a-z\\-]+)\\.\\d+)?(\\+MC-\\d\\.\\d+\\.\\d+)?", "${stream}");
 
         if (stream.isEmpty()) {
-            stream = "release";
+            return "release";
         }
+
         return stream;
     }
 
     public CompletableFuture<UpdateResult> tryUpdate() {
         CompletableFuture<UpdateResult> future = new CompletableFuture<>();
 
-        ApiResponse apiResponse = Managers.Net.callApi(UrlId.API_ATHENA_UPDATE_CHECK);
+        String stream = getStream();
+        WynntilsMod.info("Attempting to download update for stream " + stream + ".");
+
+        ApiResponse apiResponse = Managers.Net.callApi(UrlId.API_ATHENA_UPDATE_CHECK, Map.of("stream", stream));
         apiResponse.handleJsonObject(
                 json -> {
                     String latestMd5 = json.getAsJsonPrimitive("md5").getAsString();
