@@ -1,9 +1,21 @@
+## [0.0.3-pre-alpha.16](https://github.com/Wynntils/Artemis/compare/v0.0.3-pre-alpha.15...v0.0.3-pre-alpha.16) (2023-07-04)
+
+
+### Bug Fixes
+
+* Fix auto update not working on any stream ([#1680](https://github.com/Wynntils/Artemis/issues/1680)) ([f1db1d0](https://github.com/Wynntils/Artemis/commit/f1db1d0696217a1066f7f4de81b2c1192ad225a8))
+
 ## [0.0.3-pre-alpha.15](https://github.com/Wynntils/Artemis/compare/v0.0.3-pre-alpha.14...v0.0.3-pre-alpha.15) (2023-07-04)
 
 
 ### New Features
 
 * New Tracker Model, separated from QuestModel ([#1672](https://github.com/Wynntils/Artemis/issues/1672)) ([a64fd50](https://github.com/Wynntils/Artemis/commit/a64fd50f6a01905410521e6b63f29710a3f00dd9))
+
+
+### Miscellaneous Chores
+
+* **release:** v0.0.3-pre-alpha.15 [skip ci] ([87b79f6](https://github.com/Wynntils/Artemis/commit/87b79f68d778823dbef36c1ad8b64aea21ef1308))
 
 ## [0.0.3-pre-alpha.14](https://github.com/Wynntils/Artemis/compare/v0.0.3-pre-alpha.13...v0.0.3-pre-alpha.14) (2023-07-04)
 
@@ -40,16 +52,4 @@
 ### Miscellaneous Chores
 
 * **release:** v0.0.3-pre-alpha.12 [skip ci] ([814e461](https://github.com/Wynntils/Artemis/commit/814e461e386d44e6a7c459b008cb705f7291db5b))
-
-## [0.0.3-pre-alpha.11](https://github.com/Wynntils/Artemis/compare/v0.0.3-pre-alpha.10...v0.0.3-pre-alpha.11) (2023-07-03)
-
-
-### Miscellaneous Chores
-
-* **release:** v0.0.3-pre-alpha.11 [skip ci] ([0220554](https://github.com/Wynntils/Artemis/commit/022055443b07744c4bb44323b659dcf838579fb5))
-
-
-### Code Refactoring
-
-* Make party leader in PartyModel safer to use ([#1675](https://github.com/Wynntils/Artemis/issues/1675)) ([93581ae](https://github.com/Wynntils/Artemis/commit/93581ae4ad37e93c9334fab431939f76083db789))
 
