@@ -22,6 +22,7 @@ import java.util.Optional;
 import net.minecraft.ChatFormatting;
 import net.minecraft.core.NonNullList;
 import net.minecraft.network.chat.Component;
+import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
@@ -71,7 +72,14 @@ public class ItemHandler extends Handler {
             // slots
             existingItems = McUtils.containerMenu().getItems();
         } else {
-            // No matching container, just ignore this
+            // No matching container found. This can be due to a ContainerQuery, so
+            // annotate all items
+            List<ItemStack> newItems = event.getItems();
+
+            for (int i = 0; i < newItems.size(); i++) {
+                annotate(newItems.get(i));
+            }
+
             return;
         }
 
