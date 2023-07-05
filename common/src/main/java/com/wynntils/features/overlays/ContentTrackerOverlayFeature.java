@@ -21,9 +21,7 @@ import com.wynntils.core.features.overlays.annotations.OverlayInfo;
 import com.wynntils.core.text.StyledText;
 import com.wynntils.handlers.scoreboard.event.ScoreboardSegmentAdditionEvent;
 import com.wynntils.mc.event.RenderEvent;
-import com.wynntils.models.quests.QuestInfo;
-import com.wynntils.models.quests.QuestScoreboardPart;
-import com.wynntils.models.quests.event.TrackedQuestUpdateEvent;
+import com.wynntils.models.contenttracker.ContentTrackerScoreboardPart;
 import com.wynntils.utils.colors.CommonColors;
 import com.wynntils.utils.colors.CustomColor;
 import com.wynntils.utils.render.TextRenderSetting;
@@ -40,35 +38,23 @@ import net.minecraftforge.eventbus.api.EventPriority;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 
 @ConfigCategory(Category.OVERLAYS)
-public class QuestInfoOverlayFeature extends Feature {
+public class ContentTrackerOverlayFeature extends Feature {
     @RegisterConfig
-    public final Config<Boolean> disableQuestTrackingOnScoreboard = new Config<>(true);
-
-    @RegisterConfig
-    public final Config<Boolean> autoTrackQuestCoordinates = new Config<>(true);
+    public final Config<Boolean> disableTrackerOnScoreboard = new Config<>(true);
 
     @SubscribeEvent(priority = EventPriority.HIGHEST)
     public void onScoreboardSegmentChange(ScoreboardSegmentAdditionEvent event) {
-        if (Managers.Overlay.isEnabled(questInfoOverlay)
-                && disableQuestTrackingOnScoreboard.get()
-                && event.getSegment().getScoreboardPart() instanceof QuestScoreboardPart) {
+        if (Managers.Overlay.isEnabled(trackerOverlay)
+                && disableTrackerOnScoreboard.get()
+                && event.getSegment().getScoreboardPart() instanceof ContentTrackerScoreboardPart) {
             event.setCanceled(true);
         }
     }
 
-    @SubscribeEvent
-    public void onTrackedQuestUpdate(TrackedQuestUpdateEvent event) {
-        if (!autoTrackQuestCoordinates.get()) return;
-        if (event.getQuestInfo() == null) return;
-
-        // set if valid
-        Models.Compass.setDynamicCompassLocation(Models.Quest::getTrackedQuestNextLocation);
-    }
-
     @OverlayInfo(renderType = RenderEvent.ElementType.GUI)
-    private final Overlay questInfoOverlay = new QuestInfoOverlay();
+    private final Overlay trackerOverlay = new ContentTrackerOverlay();
 
-    public static class QuestInfoOverlay extends Overlay {
+    public static class ContentTrackerOverlay extends Overlay {
         @RegisterConfig
         public final Config<TextShadow> textShadow = new Config<>(TextShadow.OUTLINE);
 
@@ -78,7 +64,7 @@ public class QuestInfoOverlayFeature extends Feature {
         private final List<TextRenderTask> toRender = createRenderTaskList();
         private final List<TextRenderTask> toRenderPreview = createRenderTaskList();
 
-        protected QuestInfoOverlay() {
+        protected ContentTrackerOverlay() {
             super(
                     new OverlayPosition(
                             5,
@@ -90,12 +76,12 @@ public class QuestInfoOverlayFeature extends Feature {
                     HorizontalAlignment.LEFT,
                     VerticalAlignment.MIDDLE);
 
-            toRender.get(0).setText(I18n.get("feature.wynntils.questInfoOverlay.overlay.questInfo.title") + ":");
-
-            toRenderPreview.get(0).setText(I18n.get("feature.wynntils.questInfoOverlay.overlay.questInfo.title") + ":");
+            toRenderPreview
+                    .get(0)
+                    .setText(I18n.get("feature.wynntils.contentTrackerOverlay.overlay.tracker.title") + " Quest:");
             toRenderPreview
                     .get(1)
-                    .setText(I18n.get("feature.wynntils.questInfoOverlay.overlay.questInfo.testQuestName") + ":");
+                    .setText(I18n.get("feature.wynntils.contentTrackerOverlay.overlay.tracker.testQuestName") + ":");
             toRenderPreview
                     .get(2)
                     .setText(
@@ -139,14 +125,15 @@ public class QuestInfoOverlayFeature extends Feature {
 
         @Override
         public void render(PoseStack poseStack, MultiBufferSource bufferSource, float partialTicks, Window window) {
-            QuestInfo trackedQuest = Models.Quest.getTrackedQuest();
-
-            if (trackedQuest == null) {
+            if (Models.ContentTracker.getTrackedName() == null) {
                 return;
             }
 
-            toRender.get(1).setText(trackedQuest.getName());
-            toRender.get(2).setText(trackedQuest.getNextTask());
+            toRender.get(0)
+                    .setText(I18n.get("feature.wynntils.contentTrackerOverlay.overlay.tracker.title") + " "
+                            + Models.ContentTracker.getTrackedType() + ":");
+            toRender.get(1).setText(Models.ContentTracker.getTrackedName());
+            toRender.get(2).setText(Models.ContentTracker.getTrackedTask());
 
             BufferedFontRenderer.getInstance()
                     .renderTextsWithAlignment(
