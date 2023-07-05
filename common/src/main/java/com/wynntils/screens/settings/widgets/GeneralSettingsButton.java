@@ -17,18 +17,13 @@ import com.wynntils.utils.render.type.VerticalAlignment;
 import java.util.List;
 import net.minecraft.network.chat.Component;
 
-public class GeneralSettingsButton extends WynntilsButton {
-    private static final CustomColor BACKGROUND_COLOR = new CustomColor(98, 34, 8);
-    private static final CustomColor HOVER_BACKGROUND_COLOR = new CustomColor(158, 52, 16);
-    private final Runnable onClick;
-    private final String title;
+public abstract class GeneralSettingsButton extends WynntilsButton {
+    public static final CustomColor BACKGROUND_COLOR = new CustomColor(98, 34, 8);
+    public static final CustomColor HOVER_BACKGROUND_COLOR = new CustomColor(158, 52, 16);
     private final List<Component> tooltip;
 
-    public GeneralSettingsButton(
-            int x, int y, int width, int height, Component title, Runnable onClick, List<Component> tooltip) {
+    protected GeneralSettingsButton(int x, int y, int width, int height, Component title, List<Component> tooltip) {
         super(x, y, width, height, title);
-        this.onClick = onClick;
-        this.title = StyledText.fromComponent(title).getStringWithoutFormatting();
         this.tooltip = tooltip;
     }
 
@@ -37,7 +32,7 @@ public class GeneralSettingsButton extends WynntilsButton {
         RenderUtils.drawRoundedRectWithBorder(
                 poseStack,
                 CommonColors.BLACK,
-                isHovered ? HOVER_BACKGROUND_COLOR : BACKGROUND_COLOR,
+                getBackgroundColor(),
                 this.getX(),
                 this.getY(),
                 0,
@@ -50,13 +45,13 @@ public class GeneralSettingsButton extends WynntilsButton {
         FontRenderer.getInstance()
                 .renderAlignedTextInBox(
                         poseStack,
-                        StyledText.fromString(title),
+                        StyledText.fromComponent(getMessage()),
                         this.getX(),
                         this.getX() + this.width,
                         this.getY(),
                         this.getY() + this.height,
                         0,
-                        getTextColor(isHovered),
+                        getTextColor(),
                         HorizontalAlignment.CENTER,
                         VerticalAlignment.MIDDLE,
                         TextShadow.OUTLINE);
@@ -73,12 +68,11 @@ public class GeneralSettingsButton extends WynntilsButton {
         }
     }
 
-    protected CustomColor getTextColor(boolean isHovered) {
-        return isHovered ? CommonColors.YELLOW : CommonColors.WHITE;
+    protected CustomColor getBackgroundColor() {
+        return isHovered ? HOVER_BACKGROUND_COLOR : BACKGROUND_COLOR;
     }
 
-    @Override
-    public void onPress() {
-        onClick.run();
+    protected CustomColor getTextColor() {
+        return isHovered ? CommonColors.YELLOW : CommonColors.WHITE;
     }
 }
