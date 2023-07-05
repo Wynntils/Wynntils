@@ -42,8 +42,10 @@ public class ItemDebugTooltipsFeature extends Feature {
     private List<Component> getTooltipAddon(WynnItem wynnItem) {
         List<Component> addon = new ArrayList<>();
 
-        List<StyledText> wrappedDescription = Arrays.stream(
-                        RenderedStringUtils.wrapTextBySize(StyledText.fromString(wynnItem.toString()), 150))
+        // We do not want to treat § in the text as formatting codes later on
+        StyledText rawString =
+                StyledText.fromUnformattedString(wynnItem.toString()).replaceAll("§", "%");
+        List<StyledText> wrappedDescription = Arrays.stream(RenderedStringUtils.wrapTextBySize(rawString, 150))
                 .toList();
         if (!KeyboardUtils.isKeyDown(GLFW.GLFW_KEY_RIGHT_SHIFT) && wrappedDescription.size() > 4) {
             wrappedDescription = new ArrayList<>(wrappedDescription.subList(0, 3));

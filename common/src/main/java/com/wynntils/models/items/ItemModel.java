@@ -35,6 +35,7 @@ import com.wynntils.models.items.annotators.game.TomeAnnotator;
 import com.wynntils.models.items.annotators.game.TrinketAnnotator;
 import com.wynntils.models.items.annotators.game.UnknownGearAnnotator;
 import com.wynntils.models.items.annotators.gui.AbilityTreeAnnotator;
+import com.wynntils.models.items.annotators.gui.ContentAnnotator;
 import com.wynntils.models.items.annotators.gui.CosmeticTierAnnotator;
 import com.wynntils.models.items.annotators.gui.DailyRewardMultiplierAnnotator;
 import com.wynntils.models.items.annotators.gui.IngredientPouchAnnotator;
@@ -81,6 +82,7 @@ public class ItemModel extends Model {
 
         // GUI handlers
         Handlers.Item.registerAnnotator(new AbilityTreeAnnotator());
+        Handlers.Item.registerAnnotator(new ContentAnnotator());
         Handlers.Item.registerAnnotator(new CosmeticTierAnnotator());
         Handlers.Item.registerAnnotator(new DailyRewardMultiplierAnnotator());
         Handlers.Item.registerAnnotator(new IngredientPouchAnnotator());
