@@ -23,6 +23,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import net.minecraft.ChatFormatting;
 import net.minecraft.world.item.ItemStack;
 
 public class ContentModel extends Model {
@@ -72,7 +73,7 @@ public class ContentModel extends Model {
             // Must be tested before profession requirement pattern
             Matcher levelReqMatcher = line.getMatcher(LEVEL_REQ_PATTERN);
             if (levelReqMatcher.matches()) {
-                boolean fulfilled = levelReqMatcher.group(1).equals("a");
+                boolean fulfilled = isFulfilled(levelReqMatcher);
                 int level = Integer.parseInt(levelReqMatcher.group(2));
                 levelReq = Pair.of(level, fulfilled);
                 continue;
@@ -80,7 +81,7 @@ public class ContentModel extends Model {
 
             Matcher professionReqMatcher = line.getMatcher(PROFESSION_REQ_PATTERN);
             if (professionReqMatcher.matches()) {
-                boolean fulfilled = professionReqMatcher.group(1).equals("a");
+                boolean fulfilled = isFulfilled(professionReqMatcher);
                 ProfessionType profession = ProfessionType.fromString(professionReqMatcher.group(2));
                 int level = Integer.parseInt(professionReqMatcher.group(3));
                 professionLevels.add(Pair.of(Pair.of(profession, level), fulfilled));
@@ -89,7 +90,7 @@ public class ContentModel extends Model {
 
             Matcher questReqMatcher = line.getMatcher(QUEST_REQ_PATTERN);
             if (questReqMatcher.matches()) {
-                boolean fulfilled = questReqMatcher.group(1).equals("a");
+                boolean fulfilled = isFulfilled(questReqMatcher);
                 String quest = questReqMatcher.group(2);
                 quests.add(Pair.of(quest, fulfilled));
                 continue;
@@ -158,5 +159,10 @@ public class ContentModel extends Model {
                 requirements,
                 rewards,
                 trackingState);
+    }
+
+    private boolean isFulfilled(Matcher colorCodeMatcher) {
+        // Check if the requirement is colored green
+        return colorCodeMatcher.group(1).charAt(0) == ChatFormatting.GREEN.getChar();
     }
 }
