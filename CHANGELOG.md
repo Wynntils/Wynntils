@@ -1,9 +1,21 @@
+## [0.0.3-pre-alpha.20](https://github.com/Wynntils/Artemis/compare/v0.0.3-pre-alpha.19...v0.0.3-pre-alpha.20) (2023-07-05)
+
+
+### Bug Fixes
+
+* Container Queries did not get properly annotated with WynnItems ([#1689](https://github.com/Wynntils/Artemis/issues/1689)) ([8eaaa9f](https://github.com/Wynntils/Artemis/commit/8eaaa9fbac52de3fd2436e240feef7af345edaa8))
+
 ## [0.0.3-pre-alpha.19](https://github.com/Wynntils/Artemis/compare/v0.0.3-pre-alpha.18...v0.0.3-pre-alpha.19) (2023-07-05)
 
 
 ### Bug Fixes
 
 * i18n problems with content tracker title etc ([#1686](https://github.com/Wynntils/Artemis/issues/1686)) ([23a110e](https://github.com/Wynntils/Artemis/commit/23a110e0914bbbbc1b2bf3b907e23516d9540f03))
+
+
+### Miscellaneous Chores
+
+* **release:** v0.0.3-pre-alpha.19 [skip ci] ([9c7b889](https://github.com/Wynntils/Artemis/commit/9c7b88966b4a35f5789799881f784666a115ea76))
 
 ## [0.0.3-pre-alpha.18](https://github.com/Wynntils/Artemis/compare/v0.0.3-pre-alpha.17...v0.0.3-pre-alpha.18) (2023-07-05)
 
@@ -40,16 +52,4 @@
 ### Miscellaneous Chores
 
 * **release:** v0.0.3-pre-alpha.16 [skip ci] ([f117490](https://github.com/Wynntils/Artemis/commit/f117490f6937952fa979fc4795a009a14f3a1458))
-
-## [0.0.3-pre-alpha.15](https://github.com/Wynntils/Artemis/compare/v0.0.3-pre-alpha.14...v0.0.3-pre-alpha.15) (2023-07-04)
-
-
-### New Features
-
-* New Tracker Model, separated from QuestModel ([#1672](https://github.com/Wynntils/Artemis/issues/1672)) ([a64fd50](https://github.com/Wynntils/Artemis/commit/a64fd50f6a01905410521e6b63f29710a3f00dd9))
-
-
-### Miscellaneous Chores
-
-* **release:** v0.0.3-pre-alpha.15 [skip ci] ([87b79f6](https://github.com/Wynntils/Artemis/commit/87b79f68d778823dbef36c1ad8b64aea21ef1308))
 
