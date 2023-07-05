@@ -142,7 +142,7 @@ public class ContentModel extends Model {
             descriptionLines.add(line);
         }
 
-        StyledText description = StyledTextUtils.joinLines(descriptionLines);
+        StyledText description = StyledTextUtils.joinLines(descriptionLines).getNormalized();
 
         ContentRequirements requirements = new ContentRequirements(levelReq, professionLevels, quests);
         return new ContentInfo(
