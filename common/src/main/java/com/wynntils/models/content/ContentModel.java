@@ -50,7 +50,9 @@ public class ContentModel extends Model {
         ContentStatus status = ContentStatus.from(statusLine.substring(1, 2), itemStack.getItem());
         int specialInfoEnd = statusLine.indexOf(" - ");
         // If we have a specialInfo, skip the §x marker in the beginning, and keep everything
-        // until the " - " comes.
+        // until the " - " comes. Examples of specialInfo can be "Unlocks Dungeon" or
+        // "Storyline" (on most, but not all (!) storyline quests), or "Wynn Plains" (for
+        // discoveries).
         String specialInfo = specialInfoEnd != -1 ? statusLine.substring(2, specialInfoEnd) : null;
         if (!lore.pop().isEmpty()) return null;
 
