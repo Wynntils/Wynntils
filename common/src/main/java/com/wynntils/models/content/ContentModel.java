@@ -21,6 +21,7 @@ import com.wynntils.utils.type.Pair;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Optional;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import net.minecraft.ChatFormatting;
@@ -143,19 +144,22 @@ public class ContentModel extends Model {
         }
 
         StyledText description = StyledTextUtils.joinLines(descriptionLines).getNormalized();
+        if (description.isEmpty()) {
+            description = null;
+        }
 
         ContentRequirements requirements = new ContentRequirements(levelReq, professionLevels, quests);
         return new ContentInfo(
                 type,
                 name,
                 status,
-                specialInfo,
-                description,
-                length,
-                lengthInfo,
-                distance,
-                distanceInfo,
-                difficulty,
+                Optional.ofNullable(specialInfo),
+                Optional.ofNullable(description),
+                Optional.ofNullable(length),
+                Optional.ofNullable(lengthInfo),
+                Optional.ofNullable(distance),
+                Optional.ofNullable(distanceInfo),
+                Optional.ofNullable(difficulty),
                 requirements,
                 rewards,
                 trackingState);
