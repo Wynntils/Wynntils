@@ -17,7 +17,6 @@ import com.wynntils.models.containers.ContainerModel;
 import com.wynntils.models.containers.LootChestModel;
 import com.wynntils.models.containers.PlayerInventoryModel;
 import com.wynntils.models.content.ContentModel;
-import com.wynntils.models.contenttracker.ContentTrackerModel;
 import com.wynntils.models.cosmetics.CosmeticsModel;
 import com.wynntils.models.damage.DamageModel;
 import com.wynntils.models.discoveries.DiscoveryModel;
@@ -67,7 +66,6 @@ public final class Models {
     public static final CompassModel Compass = new CompassModel();
     public static final ContainerModel Container = new ContainerModel();
     public static final ContentModel Content = new ContentModel();
-    public static final ContentTrackerModel ContentTracker = new ContentTrackerModel();
     public static final CosmeticsModel Cosmetics = new CosmeticsModel();
     public static final DamageModel Damage = new DamageModel();
     public static final ElementModel Element = new ElementModel();

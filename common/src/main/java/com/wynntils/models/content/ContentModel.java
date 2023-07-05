@@ -1,11 +1,16 @@
 /*
- * Copyright © Wynntils 2023.
+ * Copyright © Wynntils 2022.
  * This file is released under AGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.models.content;
 
+import com.wynntils.core.WynntilsMod;
+import com.wynntils.core.components.Handlers;
 import com.wynntils.core.components.Model;
+import com.wynntils.core.components.Models;
 import com.wynntils.core.text.StyledText;
+import com.wynntils.handlers.scoreboard.ScoreboardPart;
+import com.wynntils.models.content.event.ContentTrackerUpdatedEvent;
 import com.wynntils.models.content.type.ContentDifficulty;
 import com.wynntils.models.content.type.ContentDistance;
 import com.wynntils.models.content.type.ContentInfo;
@@ -15,8 +20,11 @@ import com.wynntils.models.content.type.ContentStatus;
 import com.wynntils.models.content.type.ContentTrackingState;
 import com.wynntils.models.content.type.ContentType;
 import com.wynntils.models.profession.type.ProfessionType;
+import com.wynntils.models.quests.QuestInfo;
+import com.wynntils.models.worlds.event.WorldStateEvent;
 import com.wynntils.utils.mc.LoreUtils;
 import com.wynntils.utils.mc.StyledTextUtils;
+import com.wynntils.utils.mc.type.Location;
 import com.wynntils.utils.type.Pair;
 import java.util.ArrayList;
 import java.util.LinkedList;
@@ -26,8 +34,10 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import net.minecraft.ChatFormatting;
 import net.minecraft.world.item.ItemStack;
+import net.minecraftforge.eventbus.api.EventPriority;
+import net.minecraftforge.eventbus.api.SubscribeEvent;
 
-public class ContentModel extends Model {
+public final class ContentModel extends Model {
     private static final Pattern LEVEL_REQ_PATTERN =
             Pattern.compile("^§(.).À?§7(?: Recommended)? Combat Lv(?:\\. Min)?: (\\d+)$");
     private static final Pattern PROFESSION_REQ_PATTERN = Pattern.compile("^§(.).À?§7 (\\w+)? Lv\\. Min: (\\d+)$");
@@ -38,9 +48,16 @@ public class ContentModel extends Model {
     private static final Pattern REWARD_HEADER_PATTERN = Pattern.compile("^   §dRewards:$");
     private static final Pattern REWARD_PATTERN = Pattern.compile("^   §d- §7\\+?(.*)$");
     private static final Pattern TRACKING_PATTERN = Pattern.compile("^ *À*§.§lCLICK TO (UN)?TRACK$");
+    private static final ScoreboardPart TRACKER_SCOREBOARD_PART = new ContentTrackerScoreboardPart();
+
+    private String trackedName;
+    private String trackedType;
+    private StyledText trackedTask;
 
     public ContentModel() {
         super(List.of());
+
+        Handlers.Scoreboard.addPart(TRACKER_SCOREBOARD_PART);
     }
 
     public ContentInfo parseItem(String name, ContentType type, ItemStack itemStack) {
@@ -168,5 +185,44 @@ public class ContentModel extends Model {
     private boolean isFulfilled(Matcher colorCodeMatcher) {
         // Check if the requirement is colored green
         return colorCodeMatcher.group(1).charAt(0) == ChatFormatting.GREEN.getChar();
+    }
+
+    @SubscribeEvent(priority = EventPriority.HIGH)
+    public void onWorldStateChanged(WorldStateEvent e) {
+        resetTracker();
+    }
+
+    public String getTrackedName() {
+        return trackedName;
+    }
+
+    public String getTrackedType() {
+        return trackedType;
+    }
+
+    public StyledText getTrackedTask() {
+        return trackedTask;
+    }
+
+    public Location getTrackedLocation() {
+        if (trackedName == null) return null;
+
+        return StyledTextUtils.extractLocation(trackedTask).orElse(null);
+    }
+
+    public QuestInfo getTrackedQuestInfo() {
+        return Models.Quest.getQuestInfoFromName(trackedName).orElse(null);
+    }
+
+    void updateTracker(String type, String name, StyledText nextTask) {
+        trackedType = type;
+        trackedName = name;
+        trackedTask = nextTask;
+
+        WynntilsMod.postEvent(new ContentTrackerUpdatedEvent(trackedType, trackedName, trackedTask));
+    }
+
+    void resetTracker() {
+        updateTracker(null, null, null);
     }
 }
