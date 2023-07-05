@@ -2,7 +2,7 @@
  * Copyright © Wynntils 2022.
  * This file is released under AGPLv3. See LICENSE for full license details.
  */
-package com.wynntils.models.contenttracker;
+package com.wynntils.models.content;
 
 import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.components.Models;
@@ -58,17 +58,17 @@ public class ContentTrackerScoreboardPart extends ScoreboardPart {
         StyledText fixedNextTask =
                 StyledText.fromString(nextTask.toString().trim()).getNormalized();
 
-        Models.ContentTracker.updateTracker(type, fixedName, fixedNextTask);
+        Models.Content.updateTracker(type, fixedName, fixedNextTask);
     }
 
     @Override
     public void onSegmentRemove(ScoreboardSegment segment) {
-        Models.ContentTracker.resetTracker();
+        Models.Content.resetTracker();
     }
 
     @Override
     public void reset() {
-        Models.ContentTracker.resetTracker();
+        Models.Content.resetTracker();
     }
 
     @Override

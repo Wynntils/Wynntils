@@ -2,7 +2,7 @@
  * Copyright © Wynntils 2022.
  * This file is released under AGPLv3. See LICENSE for full license details.
  */
-package com.wynntils.models.contenttracker.event;
+package com.wynntils.models.content.event;
 
 import com.wynntils.core.text.StyledText;
 import net.minecraftforge.eventbus.api.Event;

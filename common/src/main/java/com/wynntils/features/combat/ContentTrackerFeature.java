@@ -10,7 +10,7 @@ import com.wynntils.core.config.Config;
 import com.wynntils.core.config.ConfigCategory;
 import com.wynntils.core.config.RegisterConfig;
 import com.wynntils.core.features.Feature;
-import com.wynntils.models.contenttracker.event.ContentTrackerUpdatedEvent;
+import com.wynntils.models.content.event.ContentTrackerUpdatedEvent;
 import com.wynntils.utils.mc.McUtils;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.sounds.SoundEvent;
@@ -32,7 +32,7 @@ public class ContentTrackerFeature extends Feature {
         if (event.getName() == null) return;
 
         if (autoTrackCoordinates.get()) {
-            Models.Compass.setDynamicCompassLocation(Models.ContentTracker::getTrackedLocation);
+            Models.Compass.setDynamicCompassLocation(Models.Content::getTrackedLocation);
         }
 
         if (playSoundOnUpdate.get()) {
