@@ -48,7 +48,7 @@ public class ContentModel extends Model {
         String statusLine = lore.pop().getString();
         if (!statusLine.substring(0, 1).equals("§")) return null;
 
-        ContentStatus status = ContentStatus.from(statusLine.substring(1, 2), itemStack.getItem());
+        ContentStatus status = ContentStatus.from(statusLine.charAt(1), itemStack.getItem());
         int specialInfoEnd = statusLine.indexOf(" - ");
         // If we have a specialInfo, skip the §x marker in the beginning, and keep everything
         // until the " - " comes. Examples of specialInfo can be "Unlocks Dungeon" or
