@@ -11,10 +11,12 @@ import it.unimi.dsi.fastutil.longs.Long2ObjectMap;
 import java.util.List;
 import java.util.Set;
 import net.minecraft.core.BlockPos;
+import org.joml.Vector3f;
 
 public record LootrunInstance(
         String name,
         LootrunPath path,
+        List<Vector3f> simplifiedPath,
         Long2ObjectMap<List<ColoredPath>> points,
         Long2ObjectMap<Set<BlockPos>> chests,
         Long2ObjectMap<List<LootrunNote>> notes) {}
