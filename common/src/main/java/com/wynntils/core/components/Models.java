@@ -17,7 +17,7 @@ import com.wynntils.models.containers.ContainerModel;
 import com.wynntils.models.containers.LootChestModel;
 import com.wynntils.models.containers.PlayerInventoryModel;
 import com.wynntils.models.content.ContentModel;
-import com.wynntils.models.contenttracker.ContentTrackerModel;
+import com.wynntils.models.content.ContentTrackerModel;
 import com.wynntils.models.cosmetics.CosmeticsModel;
 import com.wynntils.models.damage.DamageModel;
 import com.wynntils.models.discoveries.DiscoveryModel;

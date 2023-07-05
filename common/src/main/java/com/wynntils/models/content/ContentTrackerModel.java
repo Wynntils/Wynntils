@@ -2,7 +2,7 @@
  * Copyright © Wynntils 2022.
  * This file is released under AGPLv3. See LICENSE for full license details.
  */
-package com.wynntils.models.contenttracker;
+package com.wynntils.models.content;
 
 import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.components.Handlers;
@@ -10,7 +10,7 @@ import com.wynntils.core.components.Model;
 import com.wynntils.core.components.Models;
 import com.wynntils.core.text.StyledText;
 import com.wynntils.handlers.scoreboard.ScoreboardPart;
-import com.wynntils.models.contenttracker.event.ContentTrackerUpdatedEvent;
+import com.wynntils.models.content.event.ContentTrackerUpdatedEvent;
 import com.wynntils.models.quests.QuestInfo;
 import com.wynntils.models.worlds.event.WorldStateEvent;
 import com.wynntils.utils.mc.StyledTextUtils;
