@@ -1,4 +1,16 @@
+## [0.0.3-pre-alpha.19](https://github.com/Wynntils/Artemis/compare/v0.0.3-pre-alpha.18...v0.0.3-pre-alpha.19) (2023-07-05)
+
+
+### Bug Fixes
+
+* i18n problems with content tracker title etc ([#1686](https://github.com/Wynntils/Artemis/issues/1686)) ([23a110e](https://github.com/Wynntils/Artemis/commit/23a110e0914bbbbc1b2bf3b907e23516d9540f03))
+
 ## [0.0.3-pre-alpha.18](https://github.com/Wynntils/Artemis/compare/v0.0.3-pre-alpha.17...v0.0.3-pre-alpha.18) (2023-07-05)
+
+
+### Miscellaneous Chores
+
+* **release:** v0.0.3-pre-alpha.18 [skip ci] ([501e309](https://github.com/Wynntils/Artemis/commit/501e30998d6c301456ad60005ce6d735b6db2603))
 
 
 ### Code Refactoring
@@ -40,16 +52,4 @@
 ### Miscellaneous Chores
 
 * **release:** v0.0.3-pre-alpha.15 [skip ci] ([87b79f6](https://github.com/Wynntils/Artemis/commit/87b79f68d778823dbef36c1ad8b64aea21ef1308))
-
-## [0.0.3-pre-alpha.14](https://github.com/Wynntils/Artemis/compare/v0.0.3-pre-alpha.13...v0.0.3-pre-alpha.14) (2023-07-04)
-
-
-### Bug Fixes
-
-* Add fallback handler to scoreboard handler ([#1671](https://github.com/Wynntils/Artemis/issues/1671)) ([debc725](https://github.com/Wynntils/Artemis/commit/debc725318921739ea577135d2aba37f2500b74c))
-
-
-### Miscellaneous Chores
-
-* **release:** v0.0.3-pre-alpha.14 [skip ci] ([52fed88](https://github.com/Wynntils/Artemis/commit/52fed88c661098aea9460725ad7a1b92102bfc87))
 
