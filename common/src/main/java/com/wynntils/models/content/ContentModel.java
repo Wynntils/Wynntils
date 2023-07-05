@@ -10,11 +10,14 @@ import com.wynntils.models.content.type.ContentDifficulty;
 import com.wynntils.models.content.type.ContentDistance;
 import com.wynntils.models.content.type.ContentInfo;
 import com.wynntils.models.content.type.ContentLength;
+import com.wynntils.models.content.type.ContentRequirements;
 import com.wynntils.models.content.type.ContentStatus;
 import com.wynntils.models.content.type.ContentTrackingState;
 import com.wynntils.models.content.type.ContentType;
+import com.wynntils.models.profession.type.ProfessionType;
 import com.wynntils.utils.mc.LoreUtils;
 import com.wynntils.utils.mc.StyledTextUtils;
+import com.wynntils.utils.type.Pair;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
@@ -23,21 +26,16 @@ import java.util.regex.Pattern;
 import net.minecraft.world.item.ItemStack;
 
 public class ContentModel extends Model {
-    private static final Pattern LEVEL_PATTERN =
-            Pattern.compile("^§..À?§7(?: Recommended)? Combat Lv(?:\\. Min)?: (\\d+)$");
-    // FIXME: keep additional distance info?
-    private static final Pattern DISTANCE_PATTERN = Pattern.compile("^   §7Distance: §.(\\w*)(?:§.*)?$");
+    private static final Pattern LEVEL_REQ_PATTERN =
+            Pattern.compile("^§(.).À?§7(?: Recommended)? Combat Lv(?:\\. Min)?: (\\d+)$");
+    private static final Pattern PROFESSION_REQ_PATTERN = Pattern.compile("^§(.).À?§7 (\\w+)? Lv\\. Min: (\\d+)$");
+    private static final Pattern QUEST_REQ_PATTERN = Pattern.compile("^§(.).À?§7 Quest Req: (.+)$");
+    private static final Pattern DISTANCE_PATTERN = Pattern.compile("^   §7Distance: §.(\\w*)(?:§8 \\((.+)\\))?$");
+    private static final Pattern LENGTH_PATTERN = Pattern.compile("^   §7Length: (\\w*)(?:§8 \\((.+)\\))?$");
     private static final Pattern DIFFICULTY_PATTERN = Pattern.compile("^   §7Difficulty: (\\w*)$");
-    // FIXME: keep additional length info?
-    private static final Pattern LENGTH_PATTERN = Pattern.compile("^   §7Length: (\\w*)(?:§.*)?$");
     private static final Pattern REWARD_HEADER_PATTERN = Pattern.compile("^   §dRewards:$");
-    private static final Pattern REWARD_PATTERN = Pattern.compile("^   §d- §7\\+(.*)$");
+    private static final Pattern REWARD_PATTERN = Pattern.compile("^   §d- §7\\+?(.*)$");
     private static final Pattern TRACKING_PATTERN = Pattern.compile("^ *À*§.§lCLICK TO (UN)?TRACK$");
-    /*
-    Missing:
-    quest req
-    profession req
-     */
 
     public ContentModel() {
         super(List.of());
@@ -56,36 +54,62 @@ public class ContentModel extends Model {
         String specialInfo = specialInfoEnd != -1 ? statusLine.substring(2, specialInfoEnd) : null;
         if (!lore.pop().isEmpty()) return null;
 
-        int level = 0;
+        Pair<Integer, Boolean> levelReq = Pair.of(0, true);
         ContentDistance distance = null;
-        ContentDifficulty difficulty = null;
+        String distanceInfo = null;
         ContentLength length = null;
+        String lengthInfo = null;
+        ContentDifficulty difficulty = null;
         ContentTrackingState trackingState = ContentTrackingState.UNTRACKABLE;
+        List<Pair<Pair<ProfessionType, Integer>, Boolean>> professionLevels = new ArrayList<>();
+        List<Pair<String, Boolean>> quests = new ArrayList<>();
         List<String> rewards = new ArrayList<>();
         List<StyledText> descriptionLines = new ArrayList<>();
 
         for (StyledText line : lore) {
-            Matcher levelMatcher = line.getMatcher(LEVEL_PATTERN);
-            if (levelMatcher.matches()) {
-                level = Integer.parseInt(levelMatcher.group(1));
+            // Must be tested before profession requirement pattern
+            Matcher levelReqMatcher = line.getMatcher(LEVEL_REQ_PATTERN);
+            if (levelReqMatcher.matches()) {
+                boolean fulfilled = levelReqMatcher.group(1).equals("a");
+                int level = Integer.parseInt(levelReqMatcher.group(2));
+                levelReq = Pair.of(level, fulfilled);
+                continue;
+            }
+
+            Matcher professionReqMatcher = line.getMatcher(PROFESSION_REQ_PATTERN);
+            if (professionReqMatcher.matches()) {
+                boolean fulfilled = professionReqMatcher.group(1).equals("a");
+                ProfessionType profession = ProfessionType.fromString(professionReqMatcher.group(2));
+                int level = Integer.parseInt(professionReqMatcher.group(3));
+                professionLevels.add(Pair.of(Pair.of(profession, level), fulfilled));
+                continue;
+            }
+
+            Matcher questReqMatcher = line.getMatcher(QUEST_REQ_PATTERN);
+            if (questReqMatcher.matches()) {
+                boolean fulfilled = questReqMatcher.group(1).equals("a");
+                String quest = questReqMatcher.group(2);
+                quests.add(Pair.of(quest, fulfilled));
                 continue;
             }
 
             Matcher distanceMatcher = line.getMatcher(DISTANCE_PATTERN);
             if (distanceMatcher.matches()) {
                 distance = ContentDistance.from(distanceMatcher.group(1));
-                continue;
-            }
-
-            Matcher difficultyMatcher = line.getMatcher(DIFFICULTY_PATTERN);
-            if (difficultyMatcher.matches()) {
-                difficulty = ContentDifficulty.from(difficultyMatcher.group(1));
+                distanceInfo = distanceMatcher.group(2);
                 continue;
             }
 
             Matcher lengthMatcher = line.getMatcher(LENGTH_PATTERN);
             if (lengthMatcher.matches()) {
                 length = ContentLength.from(lengthMatcher.group(1));
+                lengthInfo = lengthMatcher.group(2);
+                continue;
+            }
+
+            Matcher difficultyMatcher = line.getMatcher(DIFFICULTY_PATTERN);
+            if (difficultyMatcher.matches()) {
+                difficulty = ContentDifficulty.from(difficultyMatcher.group(1));
                 continue;
             }
 
@@ -117,18 +141,20 @@ public class ContentModel extends Model {
 
         StyledText description = StyledTextUtils.joinLines(descriptionLines);
 
+        ContentRequirements requirements = new ContentRequirements(levelReq, professionLevels, quests);
         return new ContentInfo(
                 type,
                 name,
                 status,
                 specialInfo,
                 description,
-                level,
-                distance,
-                difficulty,
                 length,
+                lengthInfo,
+                distance,
+                distanceInfo,
+                difficulty,
+                requirements,
                 rewards,
-                List.of(),
                 trackingState);
     }
 }
