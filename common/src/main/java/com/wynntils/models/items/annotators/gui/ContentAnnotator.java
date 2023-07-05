@@ -22,7 +22,7 @@ public final class ContentAnnotator implements ItemAnnotator {
 
     @Override
     public ItemAnnotation getAnnotation(ItemStack itemStack, StyledText name) {
-        if (itemStack.getItem() != Items.GOLDEN_AXE) return null;
+        if (itemStack.getItem() != Items.GOLDEN_AXE && itemStack.getItem() != Items.GOLDEN_PICKAXE) return null;
 
         Matcher matcher = name.getMatcher(CONTENT_PATTERN);
         if (!matcher.matches()) return null;

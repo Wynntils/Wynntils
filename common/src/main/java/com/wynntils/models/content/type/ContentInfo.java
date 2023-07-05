@@ -15,8 +15,8 @@ public record ContentInfo(
         StyledText description,
         int level,
         ContentDistance distance,
-        List<StyledText> requirements,
         ContentDifficulty difficulty,
         ContentLength length,
         List<String> rewards,
-        boolean trackable) {}
+        List<StyledText> requirements,
+        ContentTrackingState trackingState) {}

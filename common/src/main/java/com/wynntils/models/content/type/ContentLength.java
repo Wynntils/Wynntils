@@ -5,7 +5,25 @@
 package com.wynntils.models.content.type;
 
 public enum ContentLength {
-    SHORT,
-    MEDIUM,
-    LONG
+    SHORT("Short"),
+    MEDIUM("Medium"),
+    LONG("Long");
+
+    private final String displayName;
+
+    ContentLength(String displayName) {
+        this.displayName = displayName;
+    }
+
+    public static ContentLength from(String displayName) {
+        for (ContentLength length : values()) {
+            if (length.getDisplayName().equals(displayName)) return length;
+        }
+
+        return null;
+    }
+
+    public String getDisplayName() {
+        return displayName;
+    }
 }
