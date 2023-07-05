@@ -21,7 +21,7 @@ import com.wynntils.core.features.overlays.annotations.OverlayInfo;
 import com.wynntils.core.text.StyledText;
 import com.wynntils.handlers.scoreboard.event.ScoreboardSegmentAdditionEvent;
 import com.wynntils.mc.event.RenderEvent;
-import com.wynntils.models.contenttracker.ContentTrackerScoreboardPart;
+import com.wynntils.models.content.ContentTrackerScoreboardPart;
 import com.wynntils.utils.colors.CommonColors;
 import com.wynntils.utils.colors.CustomColor;
 import com.wynntils.utils.render.TextRenderSetting;
@@ -125,15 +125,15 @@ public class ContentTrackerOverlayFeature extends Feature {
 
         @Override
         public void render(PoseStack poseStack, MultiBufferSource bufferSource, float partialTicks, Window window) {
-            if (Models.ContentTracker.getTrackedName() == null) {
+            if (Models.Content.getTrackedName() == null) {
                 return;
             }
 
             toRender.get(0)
                     .setText(I18n.get("feature.wynntils.contentTrackerOverlay.overlay.tracker.title") + " "
-                            + Models.ContentTracker.getTrackedType() + ":");
-            toRender.get(1).setText(Models.ContentTracker.getTrackedName());
-            toRender.get(2).setText(Models.ContentTracker.getTrackedTask());
+                            + Models.Content.getTrackedType() + ":");
+            toRender.get(1).setText(Models.Content.getTrackedName());
+            toRender.get(2).setText(Models.Content.getTrackedTask());
 
             BufferedFontRenderer.getInstance()
                     .renderTextsWithAlignment(
