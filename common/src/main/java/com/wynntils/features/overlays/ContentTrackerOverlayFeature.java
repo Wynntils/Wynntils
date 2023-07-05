@@ -78,10 +78,12 @@ public class ContentTrackerOverlayFeature extends Feature {
 
             toRenderPreview
                     .get(0)
-                    .setText(I18n.get("feature.wynntils.contentTrackerOverlay.overlay.contentTracker.title") + " Quest:");
+                    .setText(I18n.get("feature.wynntils.contentTrackerOverlay.overlay.contentTracker.title")
+                            + " Quest:");
             toRenderPreview
                     .get(1)
-                    .setText(I18n.get("feature.wynntils.contentTrackerOverlay.overlay.contentTracker.testQuestName") + ":");
+                    .setText(I18n.get("feature.wynntils.contentTrackerOverlay.overlay.contentTracker.testQuestName")
+                            + ":");
             toRenderPreview
                     .get(2)
                     .setText(
