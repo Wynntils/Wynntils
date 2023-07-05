@@ -1,9 +1,21 @@
+## [0.0.3-pre-alpha.17](https://github.com/Wynntils/Artemis/compare/v0.0.3-pre-alpha.16...v0.0.3-pre-alpha.17) (2023-07-05)
+
+
+### New Features
+
+* Parse Content Book items ([#1683](https://github.com/Wynntils/Artemis/issues/1683)) ([4d2f31c](https://github.com/Wynntils/Artemis/commit/4d2f31cf42bcd82dfcee327c61847a6f3202b44b))
+
 ## [0.0.3-pre-alpha.16](https://github.com/Wynntils/Artemis/compare/v0.0.3-pre-alpha.15...v0.0.3-pre-alpha.16) (2023-07-04)
 
 
 ### Bug Fixes
 
 * Fix auto update not working on any stream ([#1680](https://github.com/Wynntils/Artemis/issues/1680)) ([f1db1d0](https://github.com/Wynntils/Artemis/commit/f1db1d0696217a1066f7f4de81b2c1192ad225a8))
+
+
+### Miscellaneous Chores
+
+* **release:** v0.0.3-pre-alpha.16 [skip ci] ([f117490](https://github.com/Wynntils/Artemis/commit/f117490f6937952fa979fc4795a009a14f3a1458))
 
 ## [0.0.3-pre-alpha.15](https://github.com/Wynntils/Artemis/compare/v0.0.3-pre-alpha.14...v0.0.3-pre-alpha.15) (2023-07-04)
 
@@ -40,16 +52,4 @@
 ### Miscellaneous Chores
 
 * **release:** v0.0.3-pre-alpha.13 [skip ci] ([d2aed61](https://github.com/Wynntils/Artemis/commit/d2aed61766b0746c45fa96c519f00e2762720995))
-
-## [0.0.3-pre-alpha.12](https://github.com/Wynntils/Artemis/compare/v0.0.3-pre-alpha.11...v0.0.3-pre-alpha.12) (2023-07-04)
-
-
-### New Features
-
-* Content book scrolling ([#1678](https://github.com/Wynntils/Artemis/issues/1678)) ([dcd1b4d](https://github.com/Wynntils/Artemis/commit/dcd1b4d07ed76eaedd2f2e4c9e7c15d8969f704e))
-
-
-### Miscellaneous Chores
-
-* **release:** v0.0.3-pre-alpha.12 [skip ci] ([814e461](https://github.com/Wynntils/Artemis/commit/814e461e386d44e6a7c459b008cb705f7291db5b))
 
