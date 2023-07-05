@@ -9,7 +9,7 @@ import org.apache.commons.lang3.StringUtils;
 public final class WynnUtils {
     /**
      * Removes the characters 'À' ('\u00c0') and ֎ ('\u058e') that is sometimes added in Wynn APIs and
-     * replaces '’' ('\u2019') (RIGHT SINGLE QUOTATION MARK) with '\'' (And trims)
+     * replaces '’' ('\u2019') (RIGHT SINGLE QUOTATION MARK) with '\''
      *
      * @param input string
      * @return the string without these two chars

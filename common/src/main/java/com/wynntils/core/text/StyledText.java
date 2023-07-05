@@ -24,7 +24,6 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.HoverEvent;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.network.chat.Style;
-import org.apache.commons.lang3.ArrayUtils;
 
 public final class StyledText implements Iterable<StyledTextPart> {
     public static final StyledText EMPTY = new StyledText(List.of(), List.of(), List.of());
@@ -88,6 +87,11 @@ public final class StyledText implements Iterable<StyledTextPart> {
     public static StyledText fromString(String codedString) {
         return new StyledText(
                 StyledTextPart.fromCodedString(codedString, Style.EMPTY, null, Style.EMPTY), List.of(), List.of());
+    }
+
+    public static StyledText fromUnformattedString(String unformattedString) {
+        StyledTextPart part = new StyledTextPart(unformattedString, Style.EMPTY, null, Style.EMPTY);
+        return new StyledText(List.of(part), List.of(), List.of());
     }
 
     public static StyledText fromPart(StyledTextPart part) {
@@ -629,10 +633,7 @@ public final class StyledText implements Iterable<StyledTextPart> {
 
     @Override
     public String toString() {
-        return "StyledText{'" + getString() + "', parts="
-                + ArrayUtils.toString(parts) + ", clickEvents="
-                + ArrayUtils.toString(clickEvents) + ", hoverEvents="
-                + ArrayUtils.toString(hoverEvents) + '}';
+        return "StyledText{'" + getString(PartStyle.StyleType.INCLUDE_EVENTS) + "'}";
     }
 
     @Override
