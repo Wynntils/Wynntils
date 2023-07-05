@@ -4,8 +4,10 @@
  */
 package com.wynntils.utils.mc;
 
+import com.wynntils.core.text.StyledText;
 import com.wynntils.core.text.StyledTextPart;
 import com.wynntils.utils.mc.type.Location;
+import java.util.List;
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.ClickEvent;
 import net.minecraft.network.chat.Component;
@@ -23,5 +25,13 @@ public final class StyledTextUtils {
                 HoverEvent.Action.SHOW_TEXT, Component.translatable("utils.wynntils.component.clickToSetCompass")));
 
         return new StyledTextPart(locationString, style, null, Style.EMPTY);
+    }
+
+    public static StyledText joinLines(List<StyledText> lines) {
+        String description = String.join(
+                        " ", lines.stream().map(StyledText::getString).toList())
+                .replaceAll("\\s+", " ")
+                .trim();
+        return StyledText.fromString(description).getNormalized();
     }
 }
