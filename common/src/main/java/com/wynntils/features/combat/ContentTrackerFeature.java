@@ -32,7 +32,7 @@ public class ContentTrackerFeature extends Feature {
         if (event.getName() == null) return;
 
         if (autoTrackCoordinates.get()) {
-            Models.Compass.setDynamicCompassLocation(Models.ContentTracker::getTrackedLocation);
+            Models.Compass.setDynamicCompassLocation(Models.Content::getTrackedLocation);
         }
 
         if (playSoundOnUpdate.get()) {

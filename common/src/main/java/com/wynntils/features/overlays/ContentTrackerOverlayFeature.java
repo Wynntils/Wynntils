@@ -125,15 +125,15 @@ public class ContentTrackerOverlayFeature extends Feature {
 
         @Override
         public void render(PoseStack poseStack, MultiBufferSource bufferSource, float partialTicks, Window window) {
-            if (Models.ContentTracker.getTrackedName() == null) {
+            if (Models.Content.getTrackedName() == null) {
                 return;
             }
 
             toRender.get(0)
                     .setText(I18n.get("feature.wynntils.contentTrackerOverlay.overlay.tracker.title") + " "
-                            + Models.ContentTracker.getTrackedType() + ":");
-            toRender.get(1).setText(Models.ContentTracker.getTrackedName());
-            toRender.get(2).setText(Models.ContentTracker.getTrackedTask());
+                            + Models.Content.getTrackedType() + ":");
+            toRender.get(1).setText(Models.Content.getTrackedName());
+            toRender.get(2).setText(Models.Content.getTrackedTask());
 
             BufferedFontRenderer.getInstance()
                     .renderTextsWithAlignment(

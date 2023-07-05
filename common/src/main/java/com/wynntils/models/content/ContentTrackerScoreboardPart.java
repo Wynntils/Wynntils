@@ -58,17 +58,17 @@ public class ContentTrackerScoreboardPart extends ScoreboardPart {
         StyledText fixedNextTask =
                 StyledText.fromString(nextTask.toString().trim()).getNormalized();
 
-        Models.ContentTracker.updateTracker(type, fixedName, fixedNextTask);
+        Models.Content.updateTracker(type, fixedName, fixedNextTask);
     }
 
     @Override
     public void onSegmentRemove(ScoreboardSegment segment) {
-        Models.ContentTracker.resetTracker();
+        Models.Content.resetTracker();
     }
 
     @Override
     public void reset() {
-        Models.ContentTracker.resetTracker();
+        Models.Content.resetTracker();
     }
 
     @Override
