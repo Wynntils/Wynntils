@@ -8,6 +8,7 @@ import com.wynntils.core.text.PartStyle;
 import com.wynntils.core.text.StyledText;
 import com.wynntils.core.text.StyledTextPart;
 import com.wynntils.utils.mc.type.Location;
+import java.util.List;
 import java.util.Optional;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -41,5 +42,13 @@ public final class StyledTextUtils {
                 Integer.parseInt(matcher.group(1)),
                 Integer.parseInt(matcher.group(2)),
                 Integer.parseInt(matcher.group(3))));
+    }
+
+    public static StyledText joinLines(List<StyledText> lines) {
+        String description = String.join(
+                        " ", lines.stream().map(StyledText::getString).toList())
+                .replaceAll("\\s+", " ")
+                .trim();
+        return StyledText.fromString(description);
     }
 }
