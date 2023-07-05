@@ -4,32 +4,33 @@
  */
 package com.wynntils.models.content.type;
 
+import net.minecraft.ChatFormatting;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.Items;
 
 public enum ContentStatus {
-    STARTED("a", Items.GOLDEN_AXE),
-    AVAILABLE("e", Items.GOLDEN_AXE),
-    UNAVAILABLE("c", Items.GOLDEN_AXE),
-    COMPLETED("a", Items.GOLDEN_PICKAXE);
+    STARTED(ChatFormatting.GREEN.getChar(), Items.GOLDEN_AXE),
+    AVAILABLE(ChatFormatting.YELLOW.getChar(), Items.GOLDEN_AXE),
+    UNAVAILABLE(ChatFormatting.RED.getChar(), Items.GOLDEN_AXE),
+    COMPLETED(ChatFormatting.GREEN.getChar(), Items.GOLDEN_PICKAXE);
 
-    private final String colorCode;
+    private final char colorCode;
     private final Item item;
 
-    ContentStatus(String colorCode, Item item) {
+    ContentStatus(char colorCode, Item item) {
         this.colorCode = colorCode;
         this.item = item;
     }
 
-    public static ContentStatus from(String colorCode, Item item) {
+    public static ContentStatus from(char colorCode, Item item) {
         for (ContentStatus status : values()) {
-            if (status.getColorCode().equals(colorCode) && status.getItem().equals(item)) return status;
+            if ((status.getColorCode() == colorCode) && status.getItem().equals(item)) return status;
         }
 
         return null;
     }
 
-    public String getColorCode() {
+    public char getColorCode() {
         return colorCode;
     }
 

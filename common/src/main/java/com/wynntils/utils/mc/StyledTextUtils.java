@@ -49,6 +49,6 @@ public final class StyledTextUtils {
                         " ", lines.stream().map(StyledText::getString).toList())
                 .replaceAll("\\s+", " ")
                 .trim();
-        return StyledText.fromString(description).getNormalized();
+        return StyledText.fromString(description);
     }
 }

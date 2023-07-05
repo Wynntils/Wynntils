@@ -633,7 +633,7 @@ public final class StyledText implements Iterable<StyledTextPart> {
 
     @Override
     public String toString() {
-        return "StyledText{'" + getString() + "'}";
+        return "StyledText{'" + getString(PartStyle.StyleType.INCLUDE_EVENTS) + "'}";
     }
 
     @Override
