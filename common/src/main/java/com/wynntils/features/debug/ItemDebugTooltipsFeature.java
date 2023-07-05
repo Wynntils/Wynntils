@@ -21,7 +21,6 @@ import java.util.List;
 import java.util.Optional;
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.MutableComponent;
 import net.minecraftforge.eventbus.api.EventPriority;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import org.lwjgl.glfw.GLFW;
@@ -44,7 +43,8 @@ public class ItemDebugTooltipsFeature extends Feature {
         List<Component> addon = new ArrayList<>();
 
         // We do not want to treat § in the text as formatting codes later on
-        StyledText rawString = StyledText.fromUnformattedString(wynnItem.toString()).replaceAll("§", "%");
+        StyledText rawString =
+                StyledText.fromUnformattedString(wynnItem.toString()).replaceAll("§", "%");
         List<StyledText> wrappedDescription = Arrays.stream(RenderedStringUtils.wrapTextBySize(rawString, 150))
                 .toList();
         if (!KeyboardUtils.isKeyDown(GLFW.GLFW_KEY_RIGHT_SHIFT) && wrappedDescription.size() > 4) {
