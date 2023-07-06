@@ -21,6 +21,8 @@ import com.wynntils.utils.render.RenderUtils;
 import com.wynntils.utils.render.Texture;
 import com.wynntils.utils.wynn.ContainerUtils;
 import java.util.List;
+
+import net.minecraft.ChatFormatting;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.inventory.Slot;
@@ -149,7 +151,7 @@ public class CustomBankPagesFeature extends Feature {
         int buttonIndex = BUTTON_SLOTS.indexOf(buttonSlot.index);
         int buttonDestination = customJumpDestinations.get(buttonIndex);
 
-        buttonSlot.getItem().setHoverName(Component.literal("§7Jump to Page " + buttonDestination));
+        buttonSlot.getItem().setHoverName(Component.literal(ChatFormatting.GRAY + "Jump to Page " + buttonDestination));
     }
 
     private void goToPage() {
