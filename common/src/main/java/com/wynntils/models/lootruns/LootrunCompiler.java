@@ -255,9 +255,8 @@ public final class LootrunCompiler {
             List<Vector2d> right = simplify(points.subList(index, end + 1), epsilon);
             simplified.addAll(left.subList(0, left.size() - 1));
             simplified.addAll(right);
-
-            // return both end of the simplified line otherwise
         } else {
+            // return both end of the simplified line otherwise
             simplified.add(points.get(0));
             simplified.add(points.get(end));
         }

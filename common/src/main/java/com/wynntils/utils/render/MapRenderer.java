@@ -4,6 +4,9 @@
  */
 package com.wynntils.utils.render;
 
+import static com.wynntils.utils.MathUtils.signedArea;
+import static com.wynntils.utils.VectorUtils.lineIntersection;
+
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.BufferBuilder;
 import com.mojang.blaze3d.vertex.BufferUploader;
@@ -381,32 +384,6 @@ public final class MapRenderer {
                 .vertex(poseStack.last().pose(), pos.x(), pos.y(), pos.z())
                 .color(color)
                 .endVertex();
-    }
-
-    private static float signedArea(Vector3f p0, Vector3f p1, Vector3f p2) {
-        return (p1.x() - p0.x()) * (p2.y() - p0.y()) - (p2.x() - p0.x()) * (p1.y() - p0.y());
-    }
-
-    private static Vector3f lineIntersection(Vector3f p0, Vector3f p1, Vector3f p2, Vector3f p3) {
-        float epsilon = 0.001f;
-
-        float a0 = p1.y() - p0.y();
-        float b0 = p0.x() - p1.x();
-
-        float a1 = p3.y() - p2.y();
-        float b1 = p2.x() - p3.x();
-
-        var det = a0 * b1 - a1 * b0;
-        if (det > -epsilon && det < epsilon) {
-            return null;
-        } else {
-            var c0 = a0 * p0.x + b0 * p0.y;
-            var c1 = a1 * p2.x + b1 * p2.y;
-
-            var x = (b1 * c0 - b0 * c1) / det;
-            var y = (a0 * c1 - a1 * c0) / det;
-            return new Vector3f(x, y, 0);
-        }
     }
 
     /**
