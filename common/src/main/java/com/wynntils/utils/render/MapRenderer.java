@@ -181,6 +181,7 @@ public final class MapRenderer {
                     getRenderZ((int) point.z(), mapTextureZ, centerZ, currentZoom),
                     0));
         }
+
         Vector3f last = null;
         List<Vector3f> filteredPoints = new ArrayList<>();
         for (Vector3f point : points) {
