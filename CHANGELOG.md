@@ -1,9 +1,21 @@
+## [0.0.3-pre-alpha.24](https://github.com/Wynntils/Artemis/compare/v0.0.3-pre-alpha.23...v0.0.3-pre-alpha.24) (2023-07-07)
+
+
+### Bug Fixes
+
+* Parse loot chests correctly ([#1698](https://github.com/Wynntils/Artemis/issues/1698)) ([9ba31af](https://github.com/Wynntils/Artemis/commit/9ba31af959882d8b083653334106a75f2ef9e9b7))
+
 ## [0.0.3-pre-alpha.23](https://github.com/Wynntils/Artemis/compare/v0.0.3-pre-alpha.22...v0.0.3-pre-alpha.23) (2023-07-07)
 
 
 ### New Features
 
 * Refactor WynncraftButtonFeature connectTo* configs to an enum ([#1694](https://github.com/Wynntils/Artemis/issues/1694)) ([db178ad](https://github.com/Wynntils/Artemis/commit/db178adabdc076cedc8dbc630af08bfca28008b2))
+
+
+### Miscellaneous Chores
+
+* **release:** v0.0.3-pre-alpha.23 [skip ci] ([e451fae](https://github.com/Wynntils/Artemis/commit/e451fae19b11c4bb396a85bd428ce68323662ba5))
 
 ## [0.0.3-pre-alpha.22](https://github.com/Wynntils/Artemis/compare/v0.0.3-pre-alpha.21...v0.0.3-pre-alpha.22) (2023-07-07)
 
@@ -41,16 +53,4 @@
 ### Miscellaneous Chores
 
 * **release:** v0.0.3-pre-alpha.20 [skip ci] ([d1ffaa4](https://github.com/Wynntils/Artemis/commit/d1ffaa4c0242e1f28574d019d786661ea2c2e937))
-
-## [0.0.3-pre-alpha.19](https://github.com/Wynntils/Artemis/compare/v0.0.3-pre-alpha.18...v0.0.3-pre-alpha.19) (2023-07-05)
-
-
-### Bug Fixes
-
-* i18n problems with content tracker title etc ([#1686](https://github.com/Wynntils/Artemis/issues/1686)) ([23a110e](https://github.com/Wynntils/Artemis/commit/23a110e0914bbbbc1b2bf3b907e23516d9540f03))
-
-
-### Miscellaneous Chores
-
-* **release:** v0.0.3-pre-alpha.19 [skip ci] ([9c7b889](https://github.com/Wynntils/Artemis/commit/9c7b88966b4a35f5789799881f784666a115ea76))
 
