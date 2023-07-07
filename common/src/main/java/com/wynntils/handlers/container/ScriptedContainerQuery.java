@@ -71,17 +71,17 @@ public final class ScriptedContainerQuery {
         final StartAction startAction;
         final ContainerVerification verification;
         final ContainerAction handleContent;
-        final boolean waitForMenuReopen;
+        final boolean acceptNoOp;
 
         private ScriptedQueryStep(
                 StartAction startAction,
                 ContainerVerification verification,
                 ContainerAction handleContent,
-                boolean waitForMenuReopen) {
+                boolean acceptNoOp) {
             this.startAction = startAction;
             this.verification = verification;
             this.handleContent = handleContent;
-            this.waitForMenuReopen = waitForMenuReopen;
+            this.acceptNoOp = acceptNoOp;
         }
 
         @Override
@@ -124,8 +124,8 @@ public final class ScriptedContainerQuery {
         }
 
         @Override
-        public boolean shouldWaitForMenuReopen() {
-            return this.waitForMenuReopen;
+        public boolean acceptNoOp() {
+            return this.acceptNoOp;
         }
     }
 
@@ -143,7 +143,7 @@ public final class ScriptedContainerQuery {
         private StartAction startAction;
         private ContainerVerification verification;
         private ContainerAction handleContent;
-        private boolean waitForMenuReopen = true;
+        private boolean acceptNoOp = false;
 
         private final ScriptedContainerQuery query;
 
@@ -151,8 +151,8 @@ public final class ScriptedContainerQuery {
             query = scriptedContainerQuery;
         }
 
-        public QueryBuilder setWaitForMenuReopen(boolean wait) {
-            this.waitForMenuReopen = wait;
+        public QueryBuilder setAcceptNoOp(boolean acceptNoOp) {
+            this.acceptNoOp = acceptNoOp;
             return this;
         }
 
@@ -256,11 +256,12 @@ public final class ScriptedContainerQuery {
         private void checkForCompletion() {
             if (startAction != null && verification != null && handleContent != null) {
                 ScriptedQueryStep nextStep =
-                        query.new ScriptedQueryStep(startAction, verification, handleContent, waitForMenuReopen);
+                        query.new ScriptedQueryStep(startAction, verification, handleContent, acceptNoOp);
                 query.steps.add(nextStep);
                 startAction = null;
                 verification = null;
                 handleContent = null;
+                acceptNoOp = false;
             }
         }
     }
