@@ -11,7 +11,6 @@ import com.wynntils.core.text.StyledText;
 import com.wynntils.handlers.scoreboard.ScoreboardPart;
 import com.wynntils.handlers.scoreboard.ScoreboardSegment;
 import com.wynntils.handlers.scoreboard.type.SegmentMatcher;
-import com.wynntils.utils.wynn.WynnUtils;
 import java.util.List;
 import java.util.regex.Matcher;
 import net.minecraft.ChatFormatting;
@@ -32,33 +31,29 @@ public class ContentTrackerScoreboardPart extends ScoreboardPart {
             WynntilsMod.error("TrackerScoreboardPart: content was empty.");
         }
 
-        StringBuilder questName = new StringBuilder();
-        StringBuilder nextTask = new StringBuilder();
-
-        for (StyledText line : content) {
-            if (line.startsWith("§f")) {
-                questName.append(line.getString(PartStyle.StyleType.NONE)).append(" ");
-            } else {
-                nextTask.append(line.getString()
-                                .replaceAll(ChatFormatting.WHITE.toString(), ChatFormatting.AQUA.toString())
-                                .replaceAll(ChatFormatting.GRAY.toString(), ChatFormatting.RESET.toString()))
-                        .append(" ");
-            }
-        }
-
-        String unformattedHeader = newValue.getHeader().getString(PartStyle.StyleType.NONE);
-        Matcher matcher = TRACKER_MATCHER.headerPattern().matcher(unformattedHeader);
+        Matcher matcher = newValue.getHeader().getMatcher(TRACKER_MATCHER.headerPattern(), PartStyle.StyleType.NONE);
 
         // This should never happens, since the handler matched this before calling us
         if (!matcher.matches()) return;
 
+        String questName = content.get(0).getNormalized().trim().getStringWithoutFormatting();
+
+        StringBuilder nextTask = new StringBuilder();
+        List<StyledText> taskLines = content.subList(1, content.size());
+
+        for (StyledText line : taskLines) {
+            nextTask.append(line.getString()
+                            .replaceAll(ChatFormatting.WHITE.toString(), ChatFormatting.AQUA.toString())
+                            .replaceAll(ChatFormatting.GRAY.toString(), ChatFormatting.RESET.toString()))
+                    .append(" ");
+        }
+
         String type = matcher.group(1);
 
-        String fixedName = WynnUtils.normalizeBadString(questName.toString().trim());
         StyledText fixedNextTask =
                 StyledText.fromString(nextTask.toString().trim()).getNormalized();
 
-        Models.Content.updateTracker(type, fixedName, fixedNextTask);
+        Models.Content.updateTracker(type, questName, fixedNextTask);
     }
 
     @Override
