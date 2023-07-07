@@ -11,12 +11,15 @@ import com.wynntils.mc.event.ContainerSetContentEvent;
 import com.wynntils.mc.event.MenuEvent;
 import com.wynntils.mc.event.TickEvent;
 import com.wynntils.utils.mc.McUtils;
+import com.wynntils.utils.wynn.InventoryUtils;
 import java.util.LinkedList;
+import java.util.List;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.protocol.game.ServerboundContainerClosePacket;
 import net.minecraft.world.inventory.MenuType;
+import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 
 public final class ContainerQueryHandler extends Handler {
@@ -33,6 +36,7 @@ public final class ContainerQueryHandler extends Handler {
     private MenuType<?> currentMenuType;
     private int containerId = NO_CONTAINER;
     private int lastHandledContentId = NO_CONTAINER;
+    private List<ItemStack> lastHandledItems = List.of();
     private int ticksRemaining;
 
     public void runQuery(ContainerQueryStep firstStep) {
@@ -119,14 +123,19 @@ public final class ContainerQueryHandler extends Handler {
             return;
         }
 
-        if (containerId == lastHandledContentId && currentStep.shouldWaitForMenuReopen()) {
-            // Wynncraft sometimes sends contents twice; just drop this silently
-            e.setCanceled(true);
-            resetTimer();
-            return;
+        if (containerId == lastHandledContentId && InventoryUtils.isItemListsEqual(e.getItems(), lastHandledItems)) {
+            if (!currentStep.acceptNoOp()) {
+                // After opening a new container, Wynncraft sometimes sends contents twice.
+                // Normally we just filter out this second copy, but some cases need to
+                // have items returned, even though they are unchanged
+                e.setCanceled(true);
+                resetTimer();
+                return;
+            }
         }
 
         lastHandledContentId = containerId;
+        lastHandledItems = e.getItems();
         ContainerContent currentContainer =
                 new ContainerContent(e.getItems(), currentTitle, currentMenuType, containerId);
         resetTimer();
@@ -179,6 +188,7 @@ public final class ContainerQueryHandler extends Handler {
     private void endQuery() {
         containerId = NO_CONTAINER;
         lastHandledContentId = NO_CONTAINER;
+        lastHandledItems = List.of();
         currentStep = null;
     }
 

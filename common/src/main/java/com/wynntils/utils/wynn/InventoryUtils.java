@@ -60,6 +60,22 @@ public final class InventoryUtils {
         return accessories;
     }
 
+    public static boolean isItemListsEqual(List<ItemStack> firstItems, List<ItemStack> secondItems) {
+        if (firstItems.size() != secondItems.size()) return false;
+
+        for (int i = 0; i < firstItems.size(); i++) {
+            var newItem = firstItems.get(i);
+            var oldItem = secondItems.get(i);
+            if (!newItem.getItem().equals(oldItem.getItem())
+                    || newItem.getDamageValue() != oldItem.getDamageValue()
+                    || newItem.getCount() != oldItem.getCount()
+                    || !ItemStack.tagMatches(oldItem, newItem)) {
+                return false;
+            }
+        }
+        return true;
+    }
+
     public enum MouseClickType {
         LEFT_CLICK,
         RIGHT_CLICK
