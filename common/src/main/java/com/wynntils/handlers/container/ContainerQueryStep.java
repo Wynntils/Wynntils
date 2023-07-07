@@ -47,11 +47,8 @@ public interface ContainerQueryStep {
     /** A way to identify this query. It is used to help avoid queueing the same query twice. */
     String getName();
 
-    // FIXME: This might not be the best way to handle this
-    /** Some gui's do not reopen the menu, they just refresh the content (pressing dialogue history in quest book).
-     * Use this to indicate that a content refresh is enough for us, and we do not need to wait for opening a menu
-     */
-    default boolean shouldWaitForMenuReopen() {
-        return true;
+    /** If this is true, a resent screen with no changed values will be accepted, and not filtered. */
+    default boolean acceptNoOp() {
+        return false;
     }
 }
