@@ -6,7 +6,6 @@ package com.wynntils.models.containers;
 
 import com.wynntils.core.components.Model;
 import com.wynntils.core.components.Models;
-import com.wynntils.core.text.PartStyle;
 import com.wynntils.core.text.StyledText;
 import com.wynntils.utils.type.Pair;
 import java.util.List;
@@ -26,7 +25,7 @@ public final class ContainerModel extends Model {
     private static final Pattern GUILD_BANK_PATTERN =
             Pattern.compile("[a-zA-Z ]+: Bank \\((?:Everyone|High Ranked)\\)");
 
-    private static final Pattern LOOT_CHEST_PATTERN = Pattern.compile("Loot Chest (.+)");
+    private static final Pattern LOOT_CHEST_PATTERN = Pattern.compile("Loot Chest (§.)\\[.+\\]");
 
     // Test suite: https://regexr.com/7c4qc
     private static final Pattern PERSONAL_STORAGE_PATTERN =
@@ -140,9 +139,7 @@ public final class ContainerModel extends Model {
     }
 
     public Matcher lootChestMatcher(Screen screen) {
-        return StyledText.fromComponent(screen.getTitle())
-                .getNormalized()
-                .getMatcher(LOOT_CHEST_PATTERN, PartStyle.StyleType.NONE);
+        return StyledText.fromComponent(screen.getTitle()).getNormalized().getMatcher(LOOT_CHEST_PATTERN);
     }
 
     public Optional<Integer> getScrollSlot(AbstractContainerScreen<?> gui, boolean scrollUp) {
