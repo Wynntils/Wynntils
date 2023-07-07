@@ -1,9 +1,21 @@
+## [0.0.3-pre-alpha.23](https://github.com/Wynntils/Artemis/compare/v0.0.3-pre-alpha.22...v0.0.3-pre-alpha.23) (2023-07-07)
+
+
+### New Features
+
+* Refactor WynncraftButtonFeature connectTo* configs to an enum ([#1694](https://github.com/Wynntils/Artemis/issues/1694)) ([db178ad](https://github.com/Wynntils/Artemis/commit/db178adabdc076cedc8dbc630af08bfca28008b2))
+
 ## [0.0.3-pre-alpha.22](https://github.com/Wynntils/Artemis/compare/v0.0.3-pre-alpha.21...v0.0.3-pre-alpha.22) (2023-07-07)
 
 
 ### Bug Fixes
 
 * Proper fix for duplicated container content events ([#1696](https://github.com/Wynntils/Artemis/issues/1696)) ([56cbfe2](https://github.com/Wynntils/Artemis/commit/56cbfe2fc923584be318d23ef410c6b553c6ba18))
+
+
+### Miscellaneous Chores
+
+* **release:** v0.0.3-pre-alpha.22 [skip ci] ([e78fb30](https://github.com/Wynntils/Artemis/commit/e78fb3075a16c6dd8acf1f52c2bd245bf47b1401))
 
 ## [0.0.3-pre-alpha.21](https://github.com/Wynntils/Artemis/compare/v0.0.3-pre-alpha.20...v0.0.3-pre-alpha.21) (2023-07-07)
 
@@ -41,16 +53,4 @@
 ### Miscellaneous Chores
 
 * **release:** v0.0.3-pre-alpha.19 [skip ci] ([9c7b889](https://github.com/Wynntils/Artemis/commit/9c7b88966b4a35f5789799881f784666a115ea76))
-
-## [0.0.3-pre-alpha.18](https://github.com/Wynntils/Artemis/compare/v0.0.3-pre-alpha.17...v0.0.3-pre-alpha.18) (2023-07-05)
-
-
-### Miscellaneous Chores
-
-* **release:** v0.0.3-pre-alpha.18 [skip ci] ([501e309](https://github.com/Wynntils/Artemis/commit/501e30998d6c301456ad60005ce6d735b6db2603))
-
-
-### Code Refactoring
-
-* Merge ContentModel and ContentTrackerModel ([#1684](https://github.com/Wynntils/Artemis/issues/1684)) ([06aa46c](https://github.com/Wynntils/Artemis/commit/06aa46cfb2d9f5fd7d1b0445225a6a36c1f882a7))
 
