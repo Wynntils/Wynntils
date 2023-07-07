@@ -226,7 +226,7 @@ public class WynncraftButtonFeature extends Feature {
 
     private enum ServerType {
         LOBBY("lobby"),
-        GAME("game"),
+        GAME("play"),
         MEDIA("media"),
         BETA("beta");
 
