@@ -1,3 +1,10 @@
+## [0.0.3-pre-alpha.22](https://github.com/Wynntils/Artemis/compare/v0.0.3-pre-alpha.21...v0.0.3-pre-alpha.22) (2023-07-07)
+
+
+### Bug Fixes
+
+* Proper fix for duplicated container content events ([#1696](https://github.com/Wynntils/Artemis/issues/1696)) ([56cbfe2](https://github.com/Wynntils/Artemis/commit/56cbfe2fc923584be318d23ef410c6b553c6ba18))
+
 ## [0.0.3-pre-alpha.21](https://github.com/Wynntils/Artemis/compare/v0.0.3-pre-alpha.20...v0.0.3-pre-alpha.21) (2023-07-07)
 
 
@@ -5,6 +12,11 @@
 
 * Fix content tracker overlay parsing being broken ([#1693](https://github.com/Wynntils/Artemis/issues/1693)) ([85f3d70](https://github.com/Wynntils/Artemis/commit/85f3d70e9a0873313e141881cecef9c6fb290d73))
 * Fix info bar not matching ([#1695](https://github.com/Wynntils/Artemis/issues/1695)) ([9223e42](https://github.com/Wynntils/Artemis/commit/9223e429e1f59357d413e82531cabda544099be5))
+
+
+### Miscellaneous Chores
+
+* **release:** v0.0.3-pre-alpha.21 [skip ci] ([b156c10](https://github.com/Wynntils/Artemis/commit/b156c1004bbc6d5ed48bf8158811a69da784fd0a))
 
 ## [0.0.3-pre-alpha.20](https://github.com/Wynntils/Artemis/compare/v0.0.3-pre-alpha.19...v0.0.3-pre-alpha.20) (2023-07-05)
 
@@ -41,16 +53,4 @@
 ### Code Refactoring
 
 * Merge ContentModel and ContentTrackerModel ([#1684](https://github.com/Wynntils/Artemis/issues/1684)) ([06aa46c](https://github.com/Wynntils/Artemis/commit/06aa46cfb2d9f5fd7d1b0445225a6a36c1f882a7))
-
-## [0.0.3-pre-alpha.17](https://github.com/Wynntils/Artemis/compare/v0.0.3-pre-alpha.16...v0.0.3-pre-alpha.17) (2023-07-05)
-
-
-### New Features
-
-* Parse Content Book items ([#1683](https://github.com/Wynntils/Artemis/issues/1683)) ([4d2f31c](https://github.com/Wynntils/Artemis/commit/4d2f31cf42bcd82dfcee327c61847a6f3202b44b))
-
-
-### Miscellaneous Chores
-
-* **release:** v0.0.3-pre-alpha.17 [skip ci] ([90755f9](https://github.com/Wynntils/Artemis/commit/90755f9f7485ed59fa2b7fcc11d6c64c3f734b3a))
 
