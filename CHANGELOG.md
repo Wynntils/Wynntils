@@ -1,9 +1,22 @@
+## [0.0.3-pre-alpha.21](https://github.com/Wynntils/Artemis/compare/v0.0.3-pre-alpha.20...v0.0.3-pre-alpha.21) (2023-07-07)
+
+
+### Bug Fixes
+
+* Fix content tracker overlay parsing being broken ([#1693](https://github.com/Wynntils/Artemis/issues/1693)) ([85f3d70](https://github.com/Wynntils/Artemis/commit/85f3d70e9a0873313e141881cecef9c6fb290d73))
+* Fix info bar not matching ([#1695](https://github.com/Wynntils/Artemis/issues/1695)) ([9223e42](https://github.com/Wynntils/Artemis/commit/9223e429e1f59357d413e82531cabda544099be5))
+
 ## [0.0.3-pre-alpha.20](https://github.com/Wynntils/Artemis/compare/v0.0.3-pre-alpha.19...v0.0.3-pre-alpha.20) (2023-07-05)
 
 
 ### Bug Fixes
 
 * Container Queries did not get properly annotated with WynnItems ([#1689](https://github.com/Wynntils/Artemis/issues/1689)) ([8eaaa9f](https://github.com/Wynntils/Artemis/commit/8eaaa9fbac52de3fd2436e240feef7af345edaa8))
+
+
+### Miscellaneous Chores
+
+* **release:** v0.0.3-pre-alpha.20 [skip ci] ([d1ffaa4](https://github.com/Wynntils/Artemis/commit/d1ffaa4c0242e1f28574d019d786661ea2c2e937))
 
 ## [0.0.3-pre-alpha.19](https://github.com/Wynntils/Artemis/compare/v0.0.3-pre-alpha.18...v0.0.3-pre-alpha.19) (2023-07-05)
 
@@ -40,16 +53,4 @@
 ### Miscellaneous Chores
 
 * **release:** v0.0.3-pre-alpha.17 [skip ci] ([90755f9](https://github.com/Wynntils/Artemis/commit/90755f9f7485ed59fa2b7fcc11d6c64c3f734b3a))
-
-## [0.0.3-pre-alpha.16](https://github.com/Wynntils/Artemis/compare/v0.0.3-pre-alpha.15...v0.0.3-pre-alpha.16) (2023-07-04)
-
-
-### Bug Fixes
-
-* Fix auto update not working on any stream ([#1680](https://github.com/Wynntils/Artemis/issues/1680)) ([f1db1d0](https://github.com/Wynntils/Artemis/commit/f1db1d0696217a1066f7f4de81b2c1192ad225a8))
-
-
-### Miscellaneous Chores
-
-* **release:** v0.0.3-pre-alpha.16 [skip ci] ([f117490](https://github.com/Wynntils/Artemis/commit/f117490f6937952fa979fc4795a009a14f3a1458))
 
