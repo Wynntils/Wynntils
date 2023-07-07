@@ -60,7 +60,6 @@ public class DialogueHistoryQueries {
                 .onError(msg -> WynntilsMod.warn("Problem getting dialogue history (2) in Quest Book: " + msg))
                 .useItemInHotbar(InventoryUtils.QUEST_BOOK_SLOT_NUM)
                 .matchTitle(Models.Quest.getQuestBookTitleRegex(1))
-                .setWaitForMenuReopen(false)
                 .processContainer((c) -> {
                     ItemStack dialogueHistoryItem = c.items().get(0);
 
@@ -82,7 +81,6 @@ public class DialogueHistoryQueries {
             queryBuilder
                     .clickOnSlot(0)
                     .matchTitle(Models.Quest.getQuestBookTitleRegex(1))
-                    .setWaitForMenuReopen(false)
                     .processContainer((c) -> {
                         ItemStack dialogueHistoryItem = c.items().get(0);
 

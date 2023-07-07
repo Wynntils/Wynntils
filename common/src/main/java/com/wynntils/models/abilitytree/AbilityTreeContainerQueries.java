@@ -57,7 +57,6 @@ public class AbilityTreeContainerQueries {
                 .useItemInHotbar(InventoryUtils.COMPASS_SLOT_NUM)
                 .matchTitle("Character Info")
                 .processContainer(container -> {})
-                .setWaitForMenuReopen(false)
                 .clickOnSlot(ABILITY_TREE_SLOT)
                 .matchTitle(Models.Container.ABILITY_TREE_PATTERN.pattern())
                 .processContainer(c -> {});
@@ -68,32 +67,21 @@ public class AbilityTreeContainerQueries {
             queryBuilder
                     .clickOnSlotIfExists(PREVIOUS_PAGE_SLOT, DUMMY_SLOT)
                     .matchTitle(Models.Container.ABILITY_TREE_PATTERN.pattern())
+                    .setAcceptNoOp(true)
                     .processContainer(c -> {});
         }
 
         // endregion
 
-        // We are on the first page now
+        // We are on the first page now. Re-read it by clicking a dummy slot,
+        // and accepting no-op changes.
         queryBuilder
                 .clickOnSlot(DUMMY_SLOT)
+                .setAcceptNoOp(true)
                 .matchTitle(Models.Container.ABILITY_TREE_PATTERN.pattern())
                 .processContainer(c -> processor.processPage(c, 1));
 
-        // region Hack for setWaitForMenuReopen to work with page 2
-        // Going from first page to second adds a new button, "previous". This triggers processContainer prematurely.
-
-        queryBuilder
-                .clickOnSlotWithName(NEXT_PAGE_SLOT, Items.STONE_AXE, NEXT_PAGE_ITEM_NAME)
-                .matchTitle(Models.Container.ABILITY_TREE_PATTERN.pattern())
-                .processContainer(c -> {});
-        queryBuilder
-                .clickOnSlot(DUMMY_SLOT)
-                .matchTitle(Models.Container.ABILITY_TREE_PATTERN.pattern())
-                .processContainer(c -> processor.processPage(c, 2));
-
-        // endregion
-
-        for (int i = 3; i <= Models.AbilityTree.ABILITY_TREE_PAGES; i++) {
+        for (int i = 2; i <= Models.AbilityTree.ABILITY_TREE_PAGES; i++) {
             final int page = i; // Lambdas need final variables
             queryBuilder
                     .clickOnSlotWithName(NEXT_PAGE_SLOT, Items.STONE_AXE, NEXT_PAGE_ITEM_NAME)
