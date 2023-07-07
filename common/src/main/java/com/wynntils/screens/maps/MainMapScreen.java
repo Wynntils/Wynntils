@@ -205,8 +205,6 @@ public final class MainMapScreen extends AbstractMapScreen {
             return;
         }
 
-        updateMapCenterIfDragging(mouseX, mouseY);
-
         RenderSystem.setShaderColor(1f, 1f, 1f, 1f);
 
         RenderSystem.enableDepthTest();
