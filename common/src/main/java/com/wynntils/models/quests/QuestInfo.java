@@ -40,7 +40,7 @@ public class QuestInfo {
     private final StyledText nextTask;
     private final boolean tracked;
 
-    protected QuestInfo(
+    public QuestInfo(
             String name,
             QuestStatus status,
             QuestLength length,

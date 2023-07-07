@@ -21,4 +21,9 @@ public record ContentInfo(
         Optional<ContentDifficulty> difficulty,
         ContentRequirements requirements,
         List<String> rewards,
-        ContentTrackingState trackingState) {}
+        ContentTrackingState trackingState) {
+
+    public boolean isTracked() {
+        return trackingState == ContentTrackingState.TRACKED;
+    }
+}

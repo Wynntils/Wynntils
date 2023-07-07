@@ -4,6 +4,8 @@
  */
 package com.wynntils.models.quests.type;
 
+import com.wynntils.models.content.type.ContentLength;
+import com.wynntils.models.content.type.ContentStatus;
 import java.util.Locale;
 
 public enum QuestLength {
@@ -19,4 +21,13 @@ public enum QuestLength {
             return SHORT;
         }
     }
+
+    public static QuestLength fromContentLength(ContentLength contentLength) {
+        return switch (contentLength) {
+            case SHORT -> SHORT;
+            case MEDIUM -> MEDIUM;
+            case LONG -> LONG;
+        };
+    }
+
 }

@@ -4,6 +4,7 @@
  */
 package com.wynntils.models.quests.type;
 
+import com.wynntils.models.content.type.ContentStatus;
 import com.wynntils.screens.questbook.WynntilsQuestBookScreen;
 import java.util.Locale;
 import net.minecraft.ChatFormatting;
@@ -21,6 +22,15 @@ public enum QuestStatus {
 
     QuestStatus(Component component) {
         this.questBookComponent = component;
+    }
+
+    public static QuestStatus fromContentStatus(ContentStatus contentStatus) {
+        return switch (contentStatus) {
+            case STARTED -> STARTED;
+            case AVAILABLE -> CAN_START;
+            case UNAVAILABLE -> CANNOT_START;
+            case COMPLETED -> COMPLETED;
+        };
     }
 
     public Component getQuestBookComponent() {

@@ -21,6 +21,8 @@ import com.wynntils.models.content.type.ContentTrackingState;
 import com.wynntils.models.content.type.ContentType;
 import com.wynntils.models.profession.type.ProfessionType;
 import com.wynntils.models.quests.QuestInfo;
+import com.wynntils.models.quests.type.QuestLength;
+import com.wynntils.models.quests.type.QuestStatus;
 import com.wynntils.models.worlds.event.WorldStateEvent;
 import com.wynntils.utils.mc.LoreUtils;
 import com.wynntils.utils.mc.StyledTextUtils;
@@ -48,7 +50,9 @@ public final class ContentModel extends Model {
     private static final Pattern REWARD_HEADER_PATTERN = Pattern.compile("^   §dRewards:$");
     private static final Pattern REWARD_PATTERN = Pattern.compile("^   §d- §7\\+?(.*)$");
     private static final Pattern TRACKING_PATTERN = Pattern.compile("^ *À*§.§lCLICK TO (UN)?TRACK$");
+
     private static final ScoreboardPart TRACKER_SCOREBOARD_PART = new ContentTrackerScoreboardPart();
+    private static final ContentBookQueries CONTAINER_QUERIES = new ContentBookQueries();
 
     private String trackedName;
     private String trackedType;
@@ -211,6 +215,8 @@ public final class ContentModel extends Model {
     }
 
     public QuestInfo getTrackedQuestInfo() {
+        if (trackedName == null) return null;
+
         return Models.Quest.getQuestInfoFromName(trackedName).orElse(null);
     }
 
@@ -224,5 +230,27 @@ public final class ContentModel extends Model {
 
     void resetTracker() {
         updateTracker(null, null, null);
+    }
+
+    public void updateFromBookQuery(List<ContentInfo> newContent) {
+        System.out.println("NEW QUESTS");
+        List<QuestInfo> newQuests = new ArrayList<>();
+        for (ContentInfo content : newContent) {
+            System.out.println("New quest: " + content);
+            if (content.type() != ContentType.QUEST && content.type() != ContentType.STORYLINE_QUEST) continue;
+            QuestInfo questInfo = new QuestInfo(content.name(), QuestStatus.fromContentStatus(content.status()),
+                    QuestLength.fromContentLength(content.length().get()), content.requirements().level().key(),
+                    content.description().orElse(StyledText.EMPTY), List.of(), false, 0, content.isTracked());
+            newQuests.add(questInfo);
+        }
+        Models.Quest.updateQuestsFromQuery(newQuests);
+    }
+
+    public void updateMiniQuestsFromQuery(List<ContentInfo> newMiniQuests) {
+        System.out.println("New mini-quests: " + newMiniQuests);
+    }
+
+    public void rescanContentBook() {
+        CONTAINER_QUERIES.queryQuestBook();
     }
 }

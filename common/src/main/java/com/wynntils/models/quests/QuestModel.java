@@ -7,6 +7,7 @@ package com.wynntils.models.quests;
 import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.components.Managers;
 import com.wynntils.core.components.Model;
+import com.wynntils.core.components.Models;
 import com.wynntils.core.net.ApiResponse;
 import com.wynntils.core.net.UrlId;
 import com.wynntils.core.text.StyledText;
@@ -50,13 +51,8 @@ public final class QuestModel extends Model {
     }
 
     public void rescanQuestBook(boolean includeQuests, boolean includeMiniQuests) {
-        WynntilsMod.info("Requesting rescan of Quest Book");
-        if (includeQuests) {
-            CONTAINER_QUERIES.queryQuestBook();
-        }
-        if (includeMiniQuests) {
-            CONTAINER_QUERIES.queryMiniQuests();
-        }
+        WynntilsMod.info("Requesting rescan of Content Book");
+        Models.Content.rescanContentBook();
     }
 
     public void rescanDialogueHistory() {
@@ -143,7 +139,7 @@ public final class QuestModel extends Model {
         return StringUtils.replaceOnce(name, MINI_QUEST_PREFIX, "");
     }
 
-    void updateQuestsFromQuery(List<QuestInfo> newQuests) {
+    public void updateQuestsFromQuery(List<QuestInfo> newQuests) {
         quests = newQuests;
         WynntilsMod.postEvent(new QuestBookReloadedEvent.QuestsReloaded());
     }
