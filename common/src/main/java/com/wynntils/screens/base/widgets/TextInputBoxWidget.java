@@ -581,7 +581,7 @@ public class TextInputBoxWidget extends AbstractWidget {
      * Accepts values outside the bounds of the text box, it will clamp them.
      * @param cursorPosition
      */
-    private void setCursorPosition(int cursorPosition) {
+    protected void setCursorPosition(int cursorPosition) {
         this.cursorPosition = MathUtils.clamp(cursorPosition, 0, textBoxInput.length());
     }
 
@@ -614,7 +614,7 @@ public class TextInputBoxWidget extends AbstractWidget {
         return this.cursorPosition != this.highlightPosition;
     }
 
-    private void setHighlightPosition(int position) {
+    protected void setHighlightPosition(int position) {
         int length = this.textBoxInput.length();
         this.highlightPosition = Mth.clamp(position, 0, length);
     }

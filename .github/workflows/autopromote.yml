@@ -1,12 +1,29 @@
-name: Autopromote main to alpha
+name: Autopromote branches
 
 on:
   push:
     branches:
       - main
+      - development
 
 jobs:
+  update-pre-alpha:
+    if: github.ref == 'refs/heads/development'
+    name: Merge development into pre-alpha after a PR is merged
+    runs-on: ubuntu-latest
+    steps:
+      - name: checkout
+        uses: actions/checkout@v2
+      - name: merge
+        uses: mtanzi/action-automerge@v1
+        id: merge
+        with:
+          github_token: ${{ secrets.PRIVATE_TOKEN }}
+          source: 'development'
+          target: 'pre-alpha'
+
   update-alpha:
+    if: github.ref == 'refs/heads/main'
     name: Merge main into alpha after a PR is merged
     runs-on: ubuntu-latest
     steps:
