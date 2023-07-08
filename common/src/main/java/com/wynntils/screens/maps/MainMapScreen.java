@@ -238,6 +238,7 @@ public final class MainMapScreen extends AbstractMapScreen {
         if (currentLootrun != null) {
             MapRenderer.renderLootrunLine(
                     currentLootrun,
+                    2f,
                     3f,
                     poseStack,
                     centerX,
@@ -245,17 +246,8 @@ public final class MainMapScreen extends AbstractMapScreen {
                     mapCenterX,
                     mapCenterZ,
                     currentZoom,
+                    CommonColors.LIGHT_BLUE.asInt(),
                     CommonColors.BLACK.asInt());
-            MapRenderer.renderLootrunLine(
-                    currentLootrun,
-                    2f,
-                    poseStack,
-                    centerX,
-                    centerZ,
-                    mapCenterX,
-                    mapCenterZ,
-                    currentZoom,
-                    CommonColors.LIGHT_BLUE.asInt());
         }
 
         RenderUtils.disableScissor();

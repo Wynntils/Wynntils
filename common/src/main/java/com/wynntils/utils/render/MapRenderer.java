@@ -4,9 +4,6 @@
  */
 package com.wynntils.utils.render;
 
-import static com.wynntils.utils.MathUtils.signedArea;
-import static com.wynntils.utils.VectorUtils.lineIntersection;
-
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.BufferBuilder;
 import com.mojang.blaze3d.vertex.BufferUploader;
@@ -18,6 +15,8 @@ import com.mojang.blaze3d.vertex.VertexFormat;
 import com.wynntils.models.lootruns.LootrunInstance;
 import com.wynntils.models.map.MapTexture;
 import com.wynntils.models.map.pois.Poi;
+import com.wynntils.utils.MathUtils;
+import com.wynntils.utils.VectorUtils;
 import com.wynntils.utils.colors.CustomColor;
 import com.wynntils.utils.mc.McUtils;
 import com.wynntils.utils.render.buffered.CustomRenderType;
@@ -156,13 +155,15 @@ public final class MapRenderer {
     public static void renderLootrunLine(
             LootrunInstance lootrun,
             float lootrunWidth,
+            float outlineWidth,
             PoseStack poseStack,
             float centerX,
             float centerZ,
             float mapTextureX,
             float mapTextureZ,
             float currentZoom,
-            int color) {
+            int lootrunColor,
+            int outlineColor) {
         if (lootrun.simplifiedPath().size() < 3) return;
 
         BufferBuilder bufferBuilder = Tesselator.getInstance().getBuilder();
@@ -217,7 +218,15 @@ public final class MapRenderer {
                     middlePoints.get(i - 1),
                     points.get(i),
                     middlePoints.get(i),
-                    color,
+                    outlineColor,
+                    outlineWidth);
+            drawTriangles(
+                    bufferBuilder,
+                    poseStack,
+                    middlePoints.get(i - 1),
+                    points.get(i),
+                    middlePoints.get(i),
+                    lootrunColor,
                     lootrunWidth);
         }
 
@@ -241,7 +250,7 @@ public final class MapRenderer {
         t0 = new Vector3f(-t0.y(), t0.x(), 0);
         t2 = new Vector3f(-t2.y(), t2.x(), 0);
 
-        if (signedArea(p0, p1, p2) > 0) {
+        if (MathUtils.signedArea(p0, p1, p2) > 0) {
             t0.mul(-1);
             t2.mul(-1);
         }
@@ -251,7 +260,7 @@ public final class MapRenderer {
         t0.mul(lineWidth);
         t2.mul(lineWidth);
 
-        Vector3f lineIntersection = lineIntersection(
+        Vector3f lineIntersection = VectorUtils.lineIntersection(
                 new Vector3f(p0).add(t0), new Vector3f(p1).add(t0), new Vector3f(p2).add(t2), new Vector3f(p1).add(t2));
 
         Vector3f anchor = new Vector3f();
