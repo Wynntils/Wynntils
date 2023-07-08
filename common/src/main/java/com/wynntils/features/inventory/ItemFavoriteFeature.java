@@ -6,11 +6,13 @@ package com.wynntils.features.inventory;
 
 import com.wynntils.core.components.Models;
 import com.wynntils.core.config.Category;
+import com.wynntils.core.config.Config;
 import com.wynntils.core.config.ConfigCategory;
 import com.wynntils.core.config.HiddenConfig;
 import com.wynntils.core.config.RegisterConfig;
 import com.wynntils.core.features.Feature;
 import com.wynntils.mc.event.ContainerCloseEvent;
+import com.wynntils.mc.event.ScreenOpenedEvent;
 import com.wynntils.mc.event.SlotRenderEvent;
 import com.wynntils.models.items.WynnItem;
 import com.wynntils.models.items.WynnItemCache;
@@ -33,22 +35,49 @@ public class ItemFavoriteFeature extends Feature {
     @RegisterConfig
     public final HiddenConfig<Set<String>> favoriteItems = new HiddenConfig<>(new TreeSet<>());
 
+    @RegisterConfig
+    public final Config<Integer> lootChestCloseOverride = new Config<>(3);
+
+    private int lootChestCloseOverrideCounter = 0;
+
     @SubscribeEvent
     public void onChestCloseAttempt(ContainerCloseEvent.Pre e) {
         if (!Models.WorldState.onWorld()) return;
         if (!Models.Container.isLootOrRewardChest(McUtils.mc().screen)) return;
 
+        boolean containsFavorite = false;
         NonNullList<ItemStack> items = ContainerUtils.getItems(McUtils.mc().screen);
         for (int i = 0; i < 27; i++) {
             ItemStack itemStack = items.get(i);
 
             if (isFavorited(itemStack)) {
-                McUtils.sendMessageToClient(Component.translatable("feature.wynntils.itemFavorite.closingBlocked")
-                        .withStyle(ChatFormatting.RED));
-                e.setCanceled(true);
-                return;
+                containsFavorite = true;
+                break;
             }
         }
+
+        if (!containsFavorite) return;
+
+        if (lootChestCloseOverride.get() == 0) {
+            McUtils.sendMessageToClient(Component.translatable("feature.wynntils.itemFavorite.closingBlocked")
+                    .withStyle(ChatFormatting.RED));
+            e.setCanceled(true);
+            return;
+        }
+
+        if (lootChestCloseOverride.get() < lootChestCloseOverrideCounter) return;
+        lootChestCloseOverrideCounter++;
+
+        McUtils.sendMessageToClient(Component.translatable(
+                        "feature.wynntils.itemFavorite.closingBlockedOverride",
+                        lootChestCloseOverride.get() - lootChestCloseOverrideCounter)
+                .withStyle(ChatFormatting.RED));
+        e.setCanceled(true);
+    }
+
+    @SubscribeEvent
+    public void onScreenOpen(ScreenOpenedEvent.Post event) {
+        lootChestCloseOverrideCounter = 0;
     }
 
     @SubscribeEvent
