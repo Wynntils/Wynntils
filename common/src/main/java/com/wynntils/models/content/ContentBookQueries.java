@@ -51,7 +51,7 @@ public class ContentBookQueries {
 /*                .processContainer(c -> { // ignore before we have fixed the filter
                 })
                 .clickOnSlotWithName(CHANGE_VIEW, Items.GOLDEN_PICKAXE, StyledText.fromString("§eFilter"))
-                .matchTitle(CONTENT_BOOK_TITLE)
+                .expectSameContainer()
 
  */
                 .processContainer(c -> processQuestBookPage(c, 1));
@@ -60,7 +60,7 @@ public class ContentBookQueries {
             final int page = i; // Lambdas need final variables
             queryBuilder
                     .clickOnSlotWithName(NEXT_PAGE_SLOT, Items.GOLDEN_SHOVEL, SCROLL_DOWN_TEXT)
-                    .matchTitle(CONTENT_BOOK_TITLE)
+                    .expectSameContainer()
                     .processContainer(c -> processQuestBookPage(c, page));
         }
 
