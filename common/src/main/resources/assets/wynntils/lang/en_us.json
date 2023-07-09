@@ -168,7 +168,7 @@
   "feature.wynntils.containerSearch.name": "Container Search Highlight",
   "feature.wynntils.contentTracker.autoTrackCoordinates.description": "Should waypoints automatically be set for tracker coordinates?",
   "feature.wynntils.contentTracker.autoTrackCoordinates.name": "Auto Track Coordinates",
-  "feature.wynntils.contentTracker.description": "Adds abilities to handle current tracked content.",
+  "feature.wynntils.contentTracker.description": "Adds the ability to handle current tracked content.",
   "feature.wynntils.contentTracker.name": "Tracked Content",
   "feature.wynntils.contentTracker.playSoundOnUpdate.description": "Should a sound be played when the tracker gets updated with a new task?",
   "feature.wynntils.contentTracker.playSoundOnUpdate.name": "Play Sound on Tracker Updates",
