@@ -1,9 +1,21 @@
+## [0.0.3-alpha.117](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.116...v0.0.3-alpha.117) (2023-07-09)
+
+
+### Bug Fixes
+
+* TM filter and search did not work with scroll ([#1702](https://github.com/Wynntils/Artemis/issues/1702)) ([34d3d71](https://github.com/Wynntils/Artemis/commit/34d3d712b4251e78a234c9e801ec571159451e65))
+
 ## [0.0.3-alpha.116](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.115...v0.0.3-alpha.116) (2023-07-09)
 
 
 ### New Features
 
 * Add feature descriptions in config screen ([#1704](https://github.com/Wynntils/Artemis/issues/1704)) ([5ec75f4](https://github.com/Wynntils/Artemis/commit/5ec75f4427d8999e35167409eec36f34b93bee0d))
+
+
+### Miscellaneous Chores
+
+* **release:** v0.0.3-alpha.116 [skip ci] ([395c7cb](https://github.com/Wynntils/Artemis/commit/395c7cb0fc301826fdd4656b5dbf3e92e9bddcb2))
 
 ## [0.0.3-alpha.115](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.114...v0.0.3-alpha.115) (2023-07-09)
 
@@ -40,16 +52,4 @@
 ### Miscellaneous Chores
 
 * **release:** v0.0.3-alpha.113 [skip ci] ([d3c46c7](https://github.com/Wynntils/Artemis/commit/d3c46c7ed0821779a4c4a51d7db946074320ff41))
-
-## [0.0.3-alpha.112](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.111...v0.0.3-alpha.112) (2023-07-04)
-
-
-### Bug Fixes
-
-* Fix auto update not working on any stream ([#1681](https://github.com/Wynntils/Artemis/issues/1681)) ([473ff61](https://github.com/Wynntils/Artemis/commit/473ff619d99ad9103c1937350a2e985df46ddda2))
-
-
-### Miscellaneous Chores
-
-* **release:** v0.0.3-alpha.112 [skip ci] ([b1c0625](https://github.com/Wynntils/Artemis/commit/b1c0625aeb0769b3cf8a3a7136ee84a84457779b))
 
