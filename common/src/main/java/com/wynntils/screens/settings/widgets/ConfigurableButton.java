@@ -6,6 +6,7 @@ package com.wynntils.screens.settings.widgets;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.wynntils.core.features.Configurable;
+import com.wynntils.core.features.Feature;
 import com.wynntils.core.features.Translatable;
 import com.wynntils.core.features.overlays.Overlay;
 import com.wynntils.core.text.StyledText;
@@ -14,18 +15,34 @@ import com.wynntils.screens.settings.WynntilsBookSettingsScreen;
 import com.wynntils.utils.colors.CommonColors;
 import com.wynntils.utils.colors.CustomColor;
 import com.wynntils.utils.mc.McUtils;
+import com.wynntils.utils.mc.RenderedStringUtils;
 import com.wynntils.utils.render.FontRenderer;
+import com.wynntils.utils.render.RenderUtils;
 import com.wynntils.utils.render.type.HorizontalAlignment;
 import com.wynntils.utils.render.type.TextShadow;
 import com.wynntils.utils.render.type.VerticalAlignment;
+import java.util.Arrays;
+import java.util.List;
 import net.minecraft.network.chat.Component;
 
 public class ConfigurableButton extends WynntilsButton {
     private final Configurable configurable;
 
+    private final List<Component> descriptionTooltip;
+
     public ConfigurableButton(int x, int y, int width, int height, Configurable configurable) {
         super(x, y, width, height, Component.literal(((Translatable) configurable).getTranslatedName()));
         this.configurable = configurable;
+
+        if (configurable instanceof Feature feature) {
+            descriptionTooltip = Arrays.stream(RenderedStringUtils.wrapTextBySize(
+                            StyledText.fromString(feature.getTranslatedDescription()), 150))
+                    .map(StyledText::getComponent)
+                    .map(c -> (Component) c)
+                    .toList();
+        } else {
+            descriptionTooltip = List.of();
+        }
     }
 
     @Override
@@ -51,6 +68,17 @@ public class ConfigurableButton extends WynntilsButton {
                         HorizontalAlignment.LEFT,
                         VerticalAlignment.TOP,
                         TextShadow.NORMAL);
+
+        if (isHovered && configurable instanceof Feature feature) {
+            RenderUtils.drawTooltipAt(
+                    poseStack,
+                    mouseX,
+                    mouseY,
+                    0,
+                    descriptionTooltip,
+                    FontRenderer.getInstance().getFont(),
+                    false);
+        }
     }
 
     @Override
