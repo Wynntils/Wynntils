@@ -26,7 +26,8 @@ import java.util.List;
 import net.minecraft.client.renderer.GameRenderer;
 import net.minecraft.client.renderer.MultiBufferSource;
 import org.joml.Matrix4f;
-import org.joml.Vector3f;
+import org.joml.Vector2d;
+import org.joml.Vector2f;
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL13;
 
@@ -172,33 +173,27 @@ public final class MapRenderer {
         RenderSystem.setShaderColor(1.0f, 1.0f, 1.0f, 1.0f);
         RenderSystem.disableCull();
 
-        List<Vector3f> points = new ArrayList<>();
+        List<Vector2f> points = new ArrayList<>();
 
-        List<Vector3f> middlePoints = new ArrayList<>();
+        List<Vector2f> middlePoints = new ArrayList<>();
 
-        for (Vector3f point : lootrun.simplifiedPath()) {
-            points.add(new Vector3f(
+        Vector2f last = null;
+        for (Vector2d point : lootrun.simplifiedPath()) {
+            Vector2f screenPos = new Vector2f(
                     getRenderX((int) point.x(), mapTextureX, centerX, currentZoom),
-                    getRenderZ((int) point.z(), mapTextureZ, centerZ, currentZoom),
-                    0));
-        }
+                    getRenderZ((int) point.y(), mapTextureZ, centerZ, currentZoom));
 
-        Vector3f last = null;
-        List<Vector3f> filteredPoints = new ArrayList<>();
-        for (Vector3f point : points) {
             if (last == null) {
-                last = point;
-                filteredPoints.add(point);
+                last = screenPos;
+                points.add(screenPos);
                 continue;
             }
 
-            if (new Vector3f(last).sub(point).length() > 2) {
-                last = point;
-                filteredPoints.add(point);
+            if (new Vector2f(last).sub(screenPos).length() > 2) {
+                last = screenPos;
+                points.add(screenPos);
             }
         }
-
-        points = filteredPoints;
 
         for (int i = 0; i < points.size() - 1; i++) {
             if (i == 0) {
@@ -207,7 +202,7 @@ public final class MapRenderer {
                 middlePoints.add(points.get(points.size() - 1));
             } else {
                 middlePoints.add(
-                        new Vector3f(points.get(i)).add(points.get(i + 1)).mul(0.5f));
+                        new Vector2f(points.get(i)).add(points.get(i + 1)).mul(0.5f));
             }
         }
 
@@ -237,18 +232,19 @@ public final class MapRenderer {
     private static void drawTriangles(
             BufferBuilder bufferBuilder,
             PoseStack poseStack,
-            Vector3f p0,
-            Vector3f p1,
-            Vector3f p2,
+            Vector2f p0,
+            Vector2f p1,
+            Vector2f p2,
             int color,
             float lineWidth) {
-        Vector3f t0 = new Vector3f();
-        Vector3f t2 = new Vector3f();
+        Vector2f t0 = new Vector2f();
+        Vector2f t2 = new Vector2f();
 
         p1.sub(p0, t0);
         p2.sub(p1, t2);
-        t0 = new Vector3f(-t0.y(), t0.x(), 0);
-        t2 = new Vector3f(-t2.y(), t2.x(), 0);
+
+        t0 = new Vector2f(-t0.y(), t0.x());
+        t2 = new Vector2f(-t2.y(), t2.x());
 
         if (MathUtils.signedArea(p0, p1, p2) > 0) {
             t0.mul(-1);
@@ -260,10 +256,10 @@ public final class MapRenderer {
         t0.mul(lineWidth);
         t2.mul(lineWidth);
 
-        Vector3f lineIntersection = VectorUtils.lineIntersection(
-                new Vector3f(p0).add(t0), new Vector3f(p1).add(t0), new Vector3f(p2).add(t2), new Vector3f(p1).add(t2));
+        Vector2f lineIntersection = VectorUtils.lineIntersection(
+                new Vector2f(p0).add(t0), new Vector2f(p1).add(t0), new Vector2f(p2).add(t2), new Vector2f(p1).add(t2));
 
-        Vector3f anchor = new Vector3f();
+        Vector2f anchor = new Vector2f();
         float anchorLength = Float.MAX_VALUE;
 
         if (lineIntersection != null) {
@@ -271,39 +267,39 @@ public final class MapRenderer {
             anchorLength = lineIntersection.length();
         }
 
-        Vector3f p0p1 = new Vector3f(p0).sub(p1);
-        Vector3f p1p2 = new Vector3f(p1).sub(p2);
+        Vector2f p0p1 = new Vector2f(p0).sub(p1);
+        Vector2f p1p2 = new Vector2f(p1).sub(p2);
 
         if (anchorLength > p0p1.length() || anchorLength > p1p2.length()) {
-            addVertex(bufferBuilder, new Vector3f(p0).add(t0), color, poseStack);
-            addVertex(bufferBuilder, new Vector3f(p0).sub(t0), color, poseStack);
-            addVertex(bufferBuilder, new Vector3f(p1).add(t0), color, poseStack);
+            addVertex(bufferBuilder, new Vector2f(p0).add(t0), color, poseStack);
+            addVertex(bufferBuilder, new Vector2f(p0).sub(t0), color, poseStack);
+            addVertex(bufferBuilder, new Vector2f(p1).add(t0), color, poseStack);
 
-            addVertex(bufferBuilder, new Vector3f(p0).sub(t0), color, poseStack);
-            addVertex(bufferBuilder, new Vector3f(p1).add(t0), color, poseStack);
-            addVertex(bufferBuilder, new Vector3f(p1).sub(t0), color, poseStack);
+            addVertex(bufferBuilder, new Vector2f(p0).sub(t0), color, poseStack);
+            addVertex(bufferBuilder, new Vector2f(p1).add(t0), color, poseStack);
+            addVertex(bufferBuilder, new Vector2f(p1).sub(t0), color, poseStack);
 
-            drawRoundJoint(p1, new Vector3f(p1).add(t0), new Vector3f(p1).add(t2), p2, bufferBuilder, color, poseStack);
+            drawRoundJoint(p1, new Vector2f(p1).add(t0), new Vector2f(p1).add(t2), p2, bufferBuilder, color, poseStack);
 
-            addVertex(bufferBuilder, new Vector3f(p2).add(t2), color, poseStack);
-            addVertex(bufferBuilder, new Vector3f(p1).sub(t2), color, poseStack);
-            addVertex(bufferBuilder, new Vector3f(p1).add(t2), color, poseStack);
+            addVertex(bufferBuilder, new Vector2f(p2).add(t2), color, poseStack);
+            addVertex(bufferBuilder, new Vector2f(p1).sub(t2), color, poseStack);
+            addVertex(bufferBuilder, new Vector2f(p1).add(t2), color, poseStack);
 
-            addVertex(bufferBuilder, new Vector3f(p2).add(t2), color, poseStack);
-            addVertex(bufferBuilder, new Vector3f(p1).sub(t2), color, poseStack);
-            addVertex(bufferBuilder, new Vector3f(p2).sub(t2), color, poseStack);
+            addVertex(bufferBuilder, new Vector2f(p2).add(t2), color, poseStack);
+            addVertex(bufferBuilder, new Vector2f(p1).sub(t2), color, poseStack);
+            addVertex(bufferBuilder, new Vector2f(p2).sub(t2), color, poseStack);
         } else {
-            addVertex(bufferBuilder, new Vector3f(p0).add(t0), color, poseStack);
-            addVertex(bufferBuilder, new Vector3f(p0).sub(t0), color, poseStack);
-            addVertex(bufferBuilder, new Vector3f(p1).sub(anchor), color, poseStack);
+            addVertex(bufferBuilder, new Vector2f(p0).add(t0), color, poseStack);
+            addVertex(bufferBuilder, new Vector2f(p0).sub(t0), color, poseStack);
+            addVertex(bufferBuilder, new Vector2f(p1).sub(anchor), color, poseStack);
 
-            addVertex(bufferBuilder, new Vector3f(p0).add(t0), color, poseStack);
-            addVertex(bufferBuilder, new Vector3f(p1).sub(anchor), color, poseStack);
-            addVertex(bufferBuilder, new Vector3f(p1).add(t0), color, poseStack);
+            addVertex(bufferBuilder, new Vector2f(p0).add(t0), color, poseStack);
+            addVertex(bufferBuilder, new Vector2f(p1).sub(anchor), color, poseStack);
+            addVertex(bufferBuilder, new Vector2f(p1).add(t0), color, poseStack);
 
-            Vector3f _p0 = new Vector3f(p1).add(t0);
-            Vector3f _p1 = new Vector3f(p1).add(t2);
-            Vector3f _p2 = new Vector3f(p1).sub(anchor);
+            Vector2f _p0 = new Vector2f(p1).add(t0);
+            Vector2f _p1 = new Vector2f(p1).add(t2);
+            Vector2f _p2 = new Vector2f(p1).sub(anchor);
 
             addVertex(bufferBuilder, _p0, color, poseStack);
             addVertex(bufferBuilder, p1, color, poseStack);
@@ -315,25 +311,25 @@ public final class MapRenderer {
             addVertex(bufferBuilder, _p1, color, poseStack);
             addVertex(bufferBuilder, _p2, color, poseStack);
 
-            addVertex(bufferBuilder, new Vector3f(p2).add(t2), color, poseStack);
-            addVertex(bufferBuilder, new Vector3f(p1).sub(anchor), color, poseStack);
-            addVertex(bufferBuilder, new Vector3f(p1).add(t2), color, poseStack);
+            addVertex(bufferBuilder, new Vector2f(p2).add(t2), color, poseStack);
+            addVertex(bufferBuilder, new Vector2f(p1).sub(anchor), color, poseStack);
+            addVertex(bufferBuilder, new Vector2f(p1).add(t2), color, poseStack);
 
-            addVertex(bufferBuilder, new Vector3f(p2).add(t2), color, poseStack);
-            addVertex(bufferBuilder, new Vector3f(p1).sub(anchor), color, poseStack);
-            addVertex(bufferBuilder, new Vector3f(p2).sub(t2), color, poseStack);
+            addVertex(bufferBuilder, new Vector2f(p2).add(t2), color, poseStack);
+            addVertex(bufferBuilder, new Vector2f(p1).sub(anchor), color, poseStack);
+            addVertex(bufferBuilder, new Vector2f(p2).sub(t2), color, poseStack);
         }
     }
 
     private static void drawRoundJoint(
-            Vector3f center,
-            Vector3f p0,
-            Vector3f p1,
-            Vector3f nextPointInLine,
+            Vector2f center,
+            Vector2f p0,
+            Vector2f p1,
+            Vector2f nextPointInLine,
             BufferBuilder bufferBuilder,
             int color,
             PoseStack poseStack) {
-        float radius = new Vector3f(center).sub(p0).length();
+        float radius = new Vector2f(center).sub(p0).length();
 
         float angle0 = (float) Math.atan2((p1.y() - center.y()), (p1.x() - center.x()));
         float angle1 = (float) Math.atan2((p0.y() - center.y()), (p0.x() - center.x()));
@@ -352,7 +348,7 @@ public final class MapRenderer {
         float angleDiff = angle1 - angle0;
 
         if (Math.abs(angleDiff) >= Math.PI - 0.001f && Math.abs(angleDiff) <= Math.PI + 0.001f) {
-            Vector3f r1 = new Vector3f(center).sub(nextPointInLine);
+            Vector2f r1 = new Vector2f(center).sub(nextPointInLine);
 
             if (r1.x() == 0) {
                 if (r1.y() > 0) {
@@ -372,26 +368,22 @@ public final class MapRenderer {
             addVertex(bufferBuilder, center, color, poseStack);
             addVertex(
                     bufferBuilder,
-                    new Vector3f(
-                            (float) (center.x() + radius * Math.cos(orgAngle0 + angleInc * i)),
-                            (float) (center.y() + radius * Math.sin(orgAngle0 + angleInc * i)),
-                            0),
+                    new Vector2f((float) (center.x() + radius * Math.cos(orgAngle0 + angleInc * i)), (float)
+                            (center.y() + radius * Math.sin(orgAngle0 + angleInc * i))),
                     color,
                     poseStack);
             addVertex(
                     bufferBuilder,
-                    new Vector3f(
-                            (float) (center.x() + radius * Math.cos(orgAngle0 + angleInc * (1 + i))),
-                            (float) (center.y() + radius * Math.sin(orgAngle0 + angleInc * (1 + i))),
-                            0),
+                    new Vector2f((float) (center.x() + radius * Math.cos(orgAngle0 + angleInc * (1 + i))), (float)
+                            (center.y() + radius * Math.sin(orgAngle0 + angleInc * (1 + i)))),
                     color,
                     poseStack);
         }
     }
 
-    private static void addVertex(BufferBuilder bufferBuilder, Vector3f pos, int color, PoseStack poseStack) {
+    private static void addVertex(BufferBuilder bufferBuilder, Vector2f pos, int color, PoseStack poseStack) {
         bufferBuilder
-                .vertex(poseStack.last().pose(), pos.x(), pos.y(), pos.z())
+                .vertex(poseStack.last().pose(), pos.x(), pos.y(), 0)
                 .color(color)
                 .endVertex();
     }

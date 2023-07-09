@@ -4,10 +4,10 @@
  */
 package com.wynntils.utils;
 
-import org.joml.Vector3f;
+import org.joml.Vector2f;
 
 public final class VectorUtils {
-    public static Vector3f lineIntersection(Vector3f p0, Vector3f p1, Vector3f p2, Vector3f p3) {
+    public static Vector2f lineIntersection(Vector2f p0, Vector2f p1, Vector2f p2, Vector2f p3) {
         float epsilon = 0.001f;
 
         float a0 = p1.y() - p0.y();
@@ -25,7 +25,7 @@ public final class VectorUtils {
 
             var x = (b1 * c0 - b0 * c1) / det;
             var y = (a0 * c1 - a1 * c0) / det;
-            return new Vector3f(x, y, 0);
+            return new Vector2f(x, y);
         }
     }
 }

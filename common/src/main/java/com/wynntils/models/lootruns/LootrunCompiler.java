@@ -27,7 +27,6 @@ import net.minecraft.util.ToFloatFunction;
 import net.minecraft.world.level.ChunkPos;
 import net.minecraft.world.phys.Vec3;
 import org.joml.Vector2d;
-import org.joml.Vector3f;
 
 public final class LootrunCompiler {
     private static final List<Integer> COLORS = List.of(
@@ -209,7 +208,7 @@ public final class LootrunCompiler {
         return sampleByChunk;
     }
 
-    private static List<Vector3f> generateSimplifiedPoints(LootrunPath raw, double tolerance) {
+    private static List<Vector2d> generateSimplifiedPoints(LootrunPath raw, double tolerance) {
         List<Vector2d> points = new ArrayList<>();
 
         // y is discarded in the process, as map doesn't show height info
@@ -217,14 +216,7 @@ public final class LootrunCompiler {
             points.add(new Vector2d(point.x, point.z));
         }
 
-        List<Vector2d> intermediate = simplify(points, tolerance);
-        List<Vector3f> result = new ArrayList<>();
-
-        for (Vector2d vec : intermediate) {
-            result.add(new Vector3f((float) vec.x, (float) 0, (float) vec.y));
-        }
-
-        return result;
+        return simplify(points, tolerance);
     }
 
     // Douglas-Peucker implementation for shape simplification
