@@ -179,6 +179,16 @@ public final class ScriptedContainerQuery {
             return this;
         }
 
+        public QueryBuilder expectSameContainer() {
+            if (verification != null) {
+                throw new IllegalStateException("Set verification twice");
+            }
+            // We should never get to MenuOpenedEvent
+            this.verification = (title, type) -> false;
+            checkForCompletion();
+            return this;
+        }
+
         public QueryBuilder processContainer(ContainerAction action) {
             if (handleContent != null) {
                 throw new IllegalStateException("Set handleContent twice");
