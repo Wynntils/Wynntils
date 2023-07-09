@@ -65,7 +65,7 @@ public class ItemFavoriteFeature extends Feature {
             return;
         }
 
-        if (lootChestCloseOverride.get() < lootChestCloseOverrideCounter) return;
+        if (lootChestCloseOverrideCounter > lootChestCloseOverride.get()) return;
         lootChestCloseOverrideCounter++;
 
         McUtils.sendMessageToClient(Component.translatable(
