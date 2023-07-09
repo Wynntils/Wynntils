@@ -114,6 +114,17 @@ public final class ChangelogScreen extends WynntilsScreen implements WynntilsPag
         return super.doMouseClicked(adjustedMouseX, adjustedMouseY, button);
     }
 
+    @Override
+    public boolean mouseScrolled(double mouseX, double mouseY, double delta) {
+        if (delta > 0) {
+            setCurrentPage(getCurrentPage() - 1);
+        } else if (delta < 0) {
+            setCurrentPage(getCurrentPage() + 1);
+        }
+
+        return super.mouseScrolled(mouseX, mouseY, delta);
+    }
+
     private void calculateRenderTasks() {
         TextRenderSetting setting = TextRenderSetting.DEFAULT
                 .withMaxWidth(Texture.CHANGELOG_BACKGROUND.width() - 85)
@@ -127,7 +138,7 @@ public final class ChangelogScreen extends WynntilsScreen implements WynntilsPag
 
         this.changelogTasks = new ArrayList<>();
 
-        final int maxHeight = Texture.CHANGELOG_BACKGROUND.height() - 35;
+        final int maxHeight = Texture.CHANGELOG_BACKGROUND.height() - 55;
 
         float currentHeight = 0;
         List<TextRenderTask> currentPage = new ArrayList<>();
