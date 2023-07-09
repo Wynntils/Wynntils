@@ -221,9 +221,7 @@ public final class WynntilsMenuScreen extends WynntilsMenuScreenBase {
         if (!Models.Guild.getGuildName().isEmpty()) {
             String rank = Models.Guild.getGuildRank().getName();
 
-            if (!rank.equals("Recruit")) {
-                rank += " (" + Models.Guild.getGuildRank().getStars() + ")";
-            }
+            rank += Models.Guild.getGuildRank().getGuildDescription();
 
             FontRenderer.getInstance()
                     .renderAlignedTextInBox(
