@@ -219,9 +219,7 @@ public final class WynntilsMenuScreen extends WynntilsMenuScreenBase {
                 poseStack, posX, posY, 30, posX + 45 - mouseX, posY - 40 - mouseY, McUtils.player());
 
         if (!Models.Guild.getGuildName().isEmpty()) {
-            String rank = Models.Guild.getGuildRank().getName();
-
-            rank += Models.Guild.getGuildRank().getGuildDescription();
+            String rank = Models.Guild.getGuildRank().getGuildDescription();
 
             FontRenderer.getInstance()
                     .renderAlignedTextInBox(
