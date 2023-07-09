@@ -45,7 +45,7 @@ public final class ContainerModel extends Model {
     private static final StyledText LAST_BANK_PAGE_STRING = StyledText.fromString(">§4>§c>§4>§c>");
     private static final StyledText FIRST_TRADE_MARKET_PAGE_STRING = StyledText.fromString("§bReveal Item Names");
     private static final StyledText TRADE_MARKET_TITLE = StyledText.fromString("Trade Market");
-    private static final StyledText TRADE_MARKET_FILTER_TITLE = StyledText.fromString("] Filter Items");
+    private static final Pattern TRADE_MARKET_FILTER_TITLE = Pattern.compile("\\[Pg\\. \\d] Filter Items");
     private static final StyledText TRADE_MARKET_SEARCH_TITLE = StyledText.fromString("Search Results");
     private static final StyledText SCRAP_MENU_TITLE = StyledText.fromString("Scrap Rewards");
     private static final StyledText SEASKIPPER_TITLE = StyledText.fromString("V.S.S. Seaskipper");
@@ -91,7 +91,7 @@ public final class ContainerModel extends Model {
         if (!(screen instanceof ContainerScreen cs)) return false;
         if (cs.getMenu().getRowCount() != 6) return false;
 
-        return StyledText.fromComponent(cs.getTitle()).endsWith(TRADE_MARKET_FILTER_TITLE)
+        return StyledText.fromComponent(cs.getTitle()).matches(TRADE_MARKET_FILTER_TITLE)
                 || StyledText.fromComponent(cs.getTitle()).equals(TRADE_MARKET_SEARCH_TITLE);
     }
 
