@@ -1,9 +1,21 @@
+## [0.0.3-pre-alpha.26](https://github.com/Wynntils/Artemis/compare/v0.0.3-pre-alpha.25...v0.0.3-pre-alpha.26) (2023-07-09)
+
+
+### Miscellaneous Chores
+
+* Rebuild with changes from main ([62ec6df](https://github.com/Wynntils/Artemis/commit/62ec6dfdd892a632d76a65bb6f21f28b947d689c))
+
 ## [0.0.3-pre-alpha.25](https://github.com/Wynntils/Artemis/compare/v0.0.3-pre-alpha.24...v0.0.3-pre-alpha.25) (2023-07-09)
 
 
 ### New Features
 
 * Add support for new Dialogue History ([#1705](https://github.com/Wynntils/Artemis/issues/1705)) ([c6cc873](https://github.com/Wynntils/Artemis/commit/c6cc87325173a442f5b6b2cd03325b1c15e704b1))
+
+
+### Miscellaneous Chores
+
+* **release:** v0.0.3-pre-alpha.25 [skip ci] ([1e9982a](https://github.com/Wynntils/Artemis/commit/1e9982a46e2b0add1a21c881dda6a4a499034724))
 
 ## [0.0.3-pre-alpha.24](https://github.com/Wynntils/Artemis/compare/v0.0.3-pre-alpha.23...v0.0.3-pre-alpha.24) (2023-07-07)
 
@@ -40,17 +52,4 @@
 ### Miscellaneous Chores
 
 * **release:** v0.0.3-pre-alpha.22 [skip ci] ([e78fb30](https://github.com/Wynntils/Artemis/commit/e78fb3075a16c6dd8acf1f52c2bd245bf47b1401))
-
-## [0.0.3-pre-alpha.21](https://github.com/Wynntils/Artemis/compare/v0.0.3-pre-alpha.20...v0.0.3-pre-alpha.21) (2023-07-07)
-
-
-### Bug Fixes
-
-* Fix content tracker overlay parsing being broken ([#1693](https://github.com/Wynntils/Artemis/issues/1693)) ([85f3d70](https://github.com/Wynntils/Artemis/commit/85f3d70e9a0873313e141881cecef9c6fb290d73))
-* Fix info bar not matching ([#1695](https://github.com/Wynntils/Artemis/issues/1695)) ([9223e42](https://github.com/Wynntils/Artemis/commit/9223e429e1f59357d413e82531cabda544099be5))
-
-
-### Miscellaneous Chores
-
-* **release:** v0.0.3-pre-alpha.21 [skip ci] ([b156c10](https://github.com/Wynntils/Artemis/commit/b156c1004bbc6d5ed48bf8158811a69da784fd0a))
 
