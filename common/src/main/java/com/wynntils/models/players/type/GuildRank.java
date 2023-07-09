@@ -26,9 +26,9 @@ public enum GuildRank {
 
     public String getGuildDescription() {
         if (this == RECRUIT) {
-            return name();
+            return name;
         } else {
-            return name() + " (" + stars + ")";
+            return name + " (" + stars + ")";
         }
     }
 }
