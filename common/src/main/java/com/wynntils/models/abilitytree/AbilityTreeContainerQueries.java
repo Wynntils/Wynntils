@@ -66,7 +66,7 @@ public class AbilityTreeContainerQueries {
         for (int i = Models.AbilityTree.ABILITY_TREE_PAGES - 1; i > 0; i--) {
             queryBuilder
                     .clickOnSlotIfExists(PREVIOUS_PAGE_SLOT, DUMMY_SLOT)
-                    .matchTitle(Models.Container.ABILITY_TREE_PATTERN.pattern())
+                    .expectSameContainer()
                     .setAcceptNoOp(true)
                     .processContainer(c -> {});
         }
@@ -78,14 +78,14 @@ public class AbilityTreeContainerQueries {
         queryBuilder
                 .clickOnSlot(DUMMY_SLOT)
                 .setAcceptNoOp(true)
-                .matchTitle(Models.Container.ABILITY_TREE_PATTERN.pattern())
+                .expectSameContainer()
                 .processContainer(c -> processor.processPage(c, 1));
 
         for (int i = 2; i <= Models.AbilityTree.ABILITY_TREE_PAGES; i++) {
             final int page = i; // Lambdas need final variables
             queryBuilder
                     .clickOnSlotWithName(NEXT_PAGE_SLOT, Items.STONE_AXE, NEXT_PAGE_ITEM_NAME)
-                    .matchTitle(Models.Container.ABILITY_TREE_PATTERN.pattern())
+                    .expectSameContainer()
                     .processContainer(c -> processor.processPage(c, page));
         }
 
