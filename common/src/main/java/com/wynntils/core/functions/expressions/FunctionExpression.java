@@ -22,8 +22,9 @@ public class FunctionExpression extends Expression {
     //   :F2
     //   :2
     //   :F
-    private static final Pattern FUNCTION_EXPRESSION_PATTERN =
-            Pattern.compile("(?<function>.+?)(\\((?<argument>.*)\\))?(\\:(?<formatted>F)?(?<decimals>[0-9]+)?)?");
+    private static final Pattern FUNCTION_EXPRESSION_PATTERN = Pattern.compile(
+            "(?<function>[a-zA-Z_]+)(\\((?<argument>.*)\\))?(\\:(?<formatted>F)?(?<decimals>[0-9]+)?)?",
+            Pattern.DOTALL);
 
     private final Function<?> function;
     private final FunctionArguments arguments;
