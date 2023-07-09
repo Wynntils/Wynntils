@@ -1,9 +1,21 @@
+## [0.0.3-pre-alpha.25](https://github.com/Wynntils/Artemis/compare/v0.0.3-pre-alpha.24...v0.0.3-pre-alpha.25) (2023-07-09)
+
+
+### New Features
+
+* Add support for new Dialogue History ([#1705](https://github.com/Wynntils/Artemis/issues/1705)) ([c6cc873](https://github.com/Wynntils/Artemis/commit/c6cc87325173a442f5b6b2cd03325b1c15e704b1))
+
 ## [0.0.3-pre-alpha.24](https://github.com/Wynntils/Artemis/compare/v0.0.3-pre-alpha.23...v0.0.3-pre-alpha.24) (2023-07-07)
 
 
 ### Bug Fixes
 
 * Parse loot chests correctly ([#1698](https://github.com/Wynntils/Artemis/issues/1698)) ([9ba31af](https://github.com/Wynntils/Artemis/commit/9ba31af959882d8b083653334106a75f2ef9e9b7))
+
+
+### Miscellaneous Chores
+
+* **release:** v0.0.3-pre-alpha.24 [skip ci] ([9024c7a](https://github.com/Wynntils/Artemis/commit/9024c7aee391c4f379b201c5062371d0ecfbd630))
 
 ## [0.0.3-pre-alpha.23](https://github.com/Wynntils/Artemis/compare/v0.0.3-pre-alpha.22...v0.0.3-pre-alpha.23) (2023-07-07)
 
@@ -41,16 +53,4 @@
 ### Miscellaneous Chores
 
 * **release:** v0.0.3-pre-alpha.21 [skip ci] ([b156c10](https://github.com/Wynntils/Artemis/commit/b156c1004bbc6d5ed48bf8158811a69da784fd0a))
-
-## [0.0.3-pre-alpha.20](https://github.com/Wynntils/Artemis/compare/v0.0.3-pre-alpha.19...v0.0.3-pre-alpha.20) (2023-07-05)
-
-
-### Bug Fixes
-
-* Container Queries did not get properly annotated with WynnItems ([#1689](https://github.com/Wynntils/Artemis/issues/1689)) ([8eaaa9f](https://github.com/Wynntils/Artemis/commit/8eaaa9fbac52de3fd2436e240feef7af345edaa8))
-
-
-### Miscellaneous Chores
-
-* **release:** v0.0.3-pre-alpha.20 [skip ci] ([d1ffaa4](https://github.com/Wynntils/Artemis/commit/d1ffaa4c0242e1f28574d019d786661ea2c2e937))
 
