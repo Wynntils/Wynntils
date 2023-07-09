@@ -1,9 +1,21 @@
+## [0.0.3-alpha.116](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.115...v0.0.3-alpha.116) (2023-07-09)
+
+
+### New Features
+
+* Add feature descriptions in config screen ([#1704](https://github.com/Wynntils/Artemis/issues/1704)) ([5ec75f4](https://github.com/Wynntils/Artemis/commit/5ec75f4427d8999e35167409eec36f34b93bee0d))
+
 ## [0.0.3-alpha.115](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.114...v0.0.3-alpha.115) (2023-07-09)
 
 
 ### Bug Fixes
 
 * Function names can contain '_' ([#1703](https://github.com/Wynntils/Artemis/issues/1703)) ([3040159](https://github.com/Wynntils/Artemis/commit/3040159b77161981fcc261c380e570e814a54b37))
+
+
+### Miscellaneous Chores
+
+* **release:** v0.0.3-alpha.115 [skip ci] ([b77df52](https://github.com/Wynntils/Artemis/commit/b77df52d46a7d342411e2ba8411f9f1a607a1a52))
 
 ## [0.0.3-alpha.114](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.113...v0.0.3-alpha.114) (2023-07-09)
 
@@ -40,16 +52,4 @@
 ### Miscellaneous Chores
 
 * **release:** v0.0.3-alpha.112 [skip ci] ([b1c0625](https://github.com/Wynntils/Artemis/commit/b1c0625aeb0769b3cf8a3a7136ee84a84457779b))
-
-## [0.0.3-alpha.111](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.110...v0.0.3-alpha.111) (2023-07-03)
-
-
-### Bug Fixes
-
-* LoadingScreen doesn't show up when joining world ([#1628](https://github.com/Wynntils/Artemis/issues/1628)) ([ad3c262](https://github.com/Wynntils/Artemis/commit/ad3c2621cc9c80610a91962609af2859742de8c6))
-
-
-### Miscellaneous Chores
-
-* **release:** v0.0.3-alpha.111 [skip ci] ([f4e9d6d](https://github.com/Wynntils/Artemis/commit/f4e9d6d379a08c655f506397e04b314a11e5f9d6))
 
