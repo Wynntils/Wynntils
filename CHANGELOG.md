@@ -1,9 +1,21 @@
+## [0.0.3-alpha.118](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.117...v0.0.3-alpha.118) (2023-07-09)
+
+
+### Bug Fixes
+
+* Fix objective scoreboard part showing incorrectly when either objective overlay is disabled ([#1707](https://github.com/Wynntils/Artemis/issues/1707)) ([0bcc92b](https://github.com/Wynntils/Artemis/commit/0bcc92bd74876f9535e974c1a6e1ca5d1426d678))
+
 ## [0.0.3-alpha.117](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.116...v0.0.3-alpha.117) (2023-07-09)
 
 
 ### Bug Fixes
 
 * TM filter and search did not work with scroll ([#1702](https://github.com/Wynntils/Artemis/issues/1702)) ([34d3d71](https://github.com/Wynntils/Artemis/commit/34d3d712b4251e78a234c9e801ec571159451e65))
+
+
+### Miscellaneous Chores
+
+* **release:** v0.0.3-alpha.117 [skip ci] ([303323b](https://github.com/Wynntils/Artemis/commit/303323bf1e5ef8564210d293039f457ae9ff6298))
 
 ## [0.0.3-alpha.116](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.115...v0.0.3-alpha.116) (2023-07-09)
 
@@ -40,16 +52,4 @@
 ### Miscellaneous Chores
 
 * **release:** v0.0.3-alpha.114 [skip ci] ([b188ca9](https://github.com/Wynntils/Artemis/commit/b188ca9a8d9fd4cacb2a61e5ac6ab8a3467f6b94))
-
-## [0.0.3-alpha.113](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.112...v0.0.3-alpha.113) (2023-07-09)
-
-
-### Bug Fixes
-
-* Fix function parsing handling newline (and other cases) weirdly + fix /function test output ([#1701](https://github.com/Wynntils/Artemis/issues/1701)) ([3563901](https://github.com/Wynntils/Artemis/commit/3563901d515ea10ef1346591ed7e229d2dd0b2bf))
-
-
-### Miscellaneous Chores
-
-* **release:** v0.0.3-alpha.113 [skip ci] ([d3c46c7](https://github.com/Wynntils/Artemis/commit/d3c46c7ed0821779a4c4a51d7db946074320ff41))
 
