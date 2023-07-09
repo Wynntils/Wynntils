@@ -76,7 +76,6 @@
   "feature.wynntils.chatTimestamp.formatPattern.name": "聊天室时间轴的格式",
   "feature.wynntils.chatTimestamp.invalidFormatMsg": "未有好的时间轴格式！直到您修，时间轴会被禁止",
   "feature.wynntils.chatTimestamp.name": "聊天室时间轴",
-  "feature.wynntils.combatXpGainMessage.description": "您想把经验附加放进叠加层吗？",
   "feature.wynntils.combatXpGainMessage.name": "战鬥经验附加讯",
   "feature.wynntils.commandAliases.name": "命令替代",
   "feature.wynntils.commands.name": "Wynntils 命令",
