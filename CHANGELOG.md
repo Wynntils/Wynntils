@@ -1,9 +1,21 @@
+## [0.0.3-alpha.114](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.113...v0.0.3-alpha.114) (2023-07-09)
+
+
+### New Features
+
+* Add an option to override item favorite blocker ([#1700](https://github.com/Wynntils/Artemis/issues/1700)) ([cdf4618](https://github.com/Wynntils/Artemis/commit/cdf4618a6403fe03df54686fc4e618b0b280a631))
+
 ## [0.0.3-alpha.113](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.112...v0.0.3-alpha.113) (2023-07-09)
 
 
 ### Bug Fixes
 
 * Fix function parsing handling newline (and other cases) weirdly + fix /function test output ([#1701](https://github.com/Wynntils/Artemis/issues/1701)) ([3563901](https://github.com/Wynntils/Artemis/commit/3563901d515ea10ef1346591ed7e229d2dd0b2bf))
+
+
+### Miscellaneous Chores
+
+* **release:** v0.0.3-alpha.113 [skip ci] ([d3c46c7](https://github.com/Wynntils/Artemis/commit/d3c46c7ed0821779a4c4a51d7db946074320ff41))
 
 ## [0.0.3-alpha.112](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.111...v0.0.3-alpha.112) (2023-07-04)
 
@@ -40,16 +52,4 @@
 ### Miscellaneous Chores
 
 * **release:** v0.0.3-alpha.110 [skip ci] ([e7ce291](https://github.com/Wynntils/Artemis/commit/e7ce291b59089311d13c5ae8add6459abace1645))
-
-## [0.0.3-alpha.109](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.108...v0.0.3-alpha.109) (2023-07-02)
-
-
-### New Features
-
-* Highlight search when reopening screen ([#1649](https://github.com/Wynntils/Artemis/issues/1649)) ([4ed305b](https://github.com/Wynntils/Artemis/commit/4ed305b587f016fb998b7df15b406737489b28b1))
-
-
-### Miscellaneous Chores
-
-* **release:** v0.0.3-alpha.109 [skip ci] ([2b96976](https://github.com/Wynntils/Artemis/commit/2b96976a1aaaf8d4a58d24e35c62b8e71fb60f1e))
 
