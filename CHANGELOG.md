@@ -1,9 +1,21 @@
+## [0.0.3-alpha.115](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.114...v0.0.3-alpha.115) (2023-07-09)
+
+
+### Bug Fixes
+
+* Function names can contain '_' ([#1703](https://github.com/Wynntils/Artemis/issues/1703)) ([3040159](https://github.com/Wynntils/Artemis/commit/3040159b77161981fcc261c380e570e814a54b37))
+
 ## [0.0.3-alpha.114](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.113...v0.0.3-alpha.114) (2023-07-09)
 
 
 ### New Features
 
 * Add an option to override item favorite blocker ([#1700](https://github.com/Wynntils/Artemis/issues/1700)) ([cdf4618](https://github.com/Wynntils/Artemis/commit/cdf4618a6403fe03df54686fc4e618b0b280a631))
+
+
+### Miscellaneous Chores
+
+* **release:** v0.0.3-alpha.114 [skip ci] ([b188ca9](https://github.com/Wynntils/Artemis/commit/b188ca9a8d9fd4cacb2a61e5ac6ab8a3467f6b94))
 
 ## [0.0.3-alpha.113](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.112...v0.0.3-alpha.113) (2023-07-09)
 
@@ -40,16 +52,4 @@
 ### Miscellaneous Chores
 
 * **release:** v0.0.3-alpha.111 [skip ci] ([f4e9d6d](https://github.com/Wynntils/Artemis/commit/f4e9d6d379a08c655f506397e04b314a11e5f9d6))
-
-## [0.0.3-alpha.110](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.109...v0.0.3-alpha.110) (2023-07-02)
-
-
-### Bug Fixes
-
-* fix updater and version checking ([#1665](https://github.com/Wynntils/Artemis/issues/1665)) ([2a105bc](https://github.com/Wynntils/Artemis/commit/2a105bcddd01f58a9fc6caa45cac0e1d0df9c047)), closes [#1657](https://github.com/Wynntils/Artemis/issues/1657)
-
-
-### Miscellaneous Chores
-
-* **release:** v0.0.3-alpha.110 [skip ci] ([e7ce291](https://github.com/Wynntils/Artemis/commit/e7ce291b59089311d13c5ae8add6459abace1645))
 
