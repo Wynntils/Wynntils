@@ -17,8 +17,9 @@ import java.util.regex.Pattern;
 import net.minecraft.world.item.ItemStack;
 
 public class DialogueHistoryQueries {
-    private static final Pattern DIALOGUE_HISTORY_PAGE_PATTERN = Pattern.compile("§7Page \\[(\\d+)/(\\d+)\\]");
-    private static final StyledText DIALOGUE_HISTORY = StyledText.fromString("§bDialogue History");
+    private static final int DIALOGUE_HISTORY_SLOT = 58;
+    private static final Pattern DIALOGUE_HISTORY_PAGE_PATTERN = Pattern.compile("§8Page (\\d+) of (\\d+)");
+    private static final StyledText DIALOGUE_HISTORY = StyledText.fromString("§2Dialogue History");
 
     private List<List<StyledText>> newDialogueHistory;
 
@@ -33,7 +34,7 @@ public class DialogueHistoryQueries {
                 .useItemInHotbar(InventoryUtils.QUEST_BOOK_SLOT_NUM)
                 .matchTitle(Models.Quest.getQuestBookTitleRegex(1))
                 .processContainer((c) -> {
-                    ItemStack dialogueHistoryItem = c.items().get(0);
+                    ItemStack dialogueHistoryItem = c.items().get(DIALOGUE_HISTORY_SLOT);
 
                     if (!StyledText.fromComponent(dialogueHistoryItem.getHoverName())
                             .equals(DIALOGUE_HISTORY)) return;
@@ -61,7 +62,7 @@ public class DialogueHistoryQueries {
                 .useItemInHotbar(InventoryUtils.QUEST_BOOK_SLOT_NUM)
                 .matchTitle(Models.Quest.getQuestBookTitleRegex(1))
                 .processContainer((c) -> {
-                    ItemStack dialogueHistoryItem = c.items().get(0);
+                    ItemStack dialogueHistoryItem = c.items().get(DIALOGUE_HISTORY_SLOT);
 
                     if (!StyledText.fromComponent(dialogueHistoryItem.getHoverName())
                             .equals(DIALOGUE_HISTORY)) return;
@@ -79,10 +80,10 @@ public class DialogueHistoryQueries {
         for (int i = 2; i <= pageCount; i++) {
             int page = i;
             queryBuilder
-                    .clickOnSlot(0)
-                    .matchTitle(Models.Quest.getQuestBookTitleRegex(1))
+                    .clickOnSlot(DIALOGUE_HISTORY_SLOT)
+                    .expectSameContainer()
                     .processContainer((c) -> {
-                        ItemStack dialogueHistoryItem = c.items().get(0);
+                        ItemStack dialogueHistoryItem = c.items().get(DIALOGUE_HISTORY_SLOT);
 
                         if (!StyledText.fromComponent(dialogueHistoryItem.getHoverName())
                                 .equals(DIALOGUE_HISTORY)) return;
