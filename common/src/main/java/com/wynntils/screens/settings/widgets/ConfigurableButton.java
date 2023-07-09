@@ -69,7 +69,7 @@ public class ConfigurableButton extends WynntilsButton {
                         VerticalAlignment.TOP,
                         TextShadow.NORMAL);
 
-        if (isHovered && configurable instanceof Feature feature) {
+        if (isHovered && configurable instanceof Feature) {
             RenderUtils.drawTooltipAt(
                     poseStack,
                     mouseX,
