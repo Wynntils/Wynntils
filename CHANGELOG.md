@@ -1,9 +1,21 @@
+## [0.0.3-alpha.113](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.112...v0.0.3-alpha.113) (2023-07-09)
+
+
+### Bug Fixes
+
+* Fix function parsing handling newline (and other cases) weirdly + fix /function test output ([#1701](https://github.com/Wynntils/Artemis/issues/1701)) ([3563901](https://github.com/Wynntils/Artemis/commit/3563901d515ea10ef1346591ed7e229d2dd0b2bf))
+
 ## [0.0.3-alpha.112](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.111...v0.0.3-alpha.112) (2023-07-04)
 
 
 ### Bug Fixes
 
 * Fix auto update not working on any stream ([#1681](https://github.com/Wynntils/Artemis/issues/1681)) ([473ff61](https://github.com/Wynntils/Artemis/commit/473ff619d99ad9103c1937350a2e985df46ddda2))
+
+
+### Miscellaneous Chores
+
+* **release:** v0.0.3-alpha.112 [skip ci] ([b1c0625](https://github.com/Wynntils/Artemis/commit/b1c0625aeb0769b3cf8a3a7136ee84a84457779b))
 
 ## [0.0.3-alpha.111](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.110...v0.0.3-alpha.111) (2023-07-03)
 
@@ -40,16 +52,4 @@
 ### Miscellaneous Chores
 
 * **release:** v0.0.3-alpha.109 [skip ci] ([2b96976](https://github.com/Wynntils/Artemis/commit/2b96976a1aaaf8d4a58d24e35c62b8e71fb60f1e))
-
-## [0.0.3-alpha.108](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.107...v0.0.3-alpha.108) (2023-07-02)
-
-
-### New Features
-
-* Option to change emerald count text display side ([#1658](https://github.com/Wynntils/Artemis/issues/1658)) ([58831f6](https://github.com/Wynntils/Artemis/commit/58831f6d295feedbb397a4ccd23718a3d1b73392))
-
-
-### Miscellaneous Chores
-
-* **release:** v0.0.3-alpha.108 [skip ci] ([d4786c7](https://github.com/Wynntils/Artemis/commit/d4786c70bdff3c3ca310e741158c6725a23edda3))
 
