@@ -28,7 +28,7 @@ public enum GuildRank {
         if (this == RECRUIT) {
             return name();
         } else {
-            return " (" + stars + ")";
+            return name() + " (" + stars + ")";
         }
     }
 }
