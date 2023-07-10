@@ -9,7 +9,7 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import com.wynntils.core.components.Managers;
 import com.wynntils.core.components.Models;
 import com.wynntils.core.text.StyledText;
-import com.wynntils.features.ui.CustomSeaskipperScreenFeature;
+import com.wynntils.features.screens.CustomSeaskipperScreenFeature;
 import com.wynntils.models.map.PoiLocation;
 import com.wynntils.models.map.pois.SeaskipperDestinationPoi;
 import com.wynntils.screens.base.widgets.BasicTexturedButton;

@@ -2,7 +2,7 @@
  * Copyright © Wynntils 2022.
  * This file is released under AGPLv3. See LICENSE for full license details.
  */
-package com.wynntils.features.combat;
+package com.wynntils.features.inventory;
 
 import com.wynntils.core.components.Managers;
 import com.wynntils.core.components.Models;
@@ -36,7 +36,7 @@ import net.minecraftforge.eventbus.api.EventPriority;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import org.lwjgl.glfw.GLFW;
 
-@ConfigCategory(Category.COMBAT)
+@ConfigCategory(Category.INVENTORY)
 public class HorseMountFeature extends Feature {
     private static final ResourceLocation HORSE_WHISTLE_ID = new ResourceLocation("wynntils:horse.whistle");
     private static final SoundEvent HORSE_WHISTLE_SOUND = SoundEvent.createVariableRangeEvent(HORSE_WHISTLE_ID);

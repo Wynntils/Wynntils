@@ -2,7 +2,7 @@
  * Copyright © Wynntils 2022.
  * This file is released under AGPLv3. See LICENSE for full license details.
  */
-package com.wynntils.features.tooltips;
+package com.wynntils.features.inventory;
 
 import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.components.Models;
@@ -39,7 +39,7 @@ import net.minecraft.network.chat.MutableComponent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import org.lwjgl.glfw.GLFW;
 
-@ConfigCategory(Category.TOOLTIPS)
+@ConfigCategory(Category.INVENTORY)
 public class ItemStatInfoFeature extends Feature {
     private final Set<GearItem> brokenItems = new HashSet<>();
 

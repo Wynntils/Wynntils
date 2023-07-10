@@ -2,7 +2,7 @@
  * Copyright © Wynntils 2023.
  * This file is released under AGPLv3. See LICENSE for full license details.
  */
-package com.wynntils.features.overlays;
+package com.wynntils.features.trademarket;
 
 import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.config.Category;
@@ -27,7 +27,7 @@ import net.minecraft.world.inventory.ChestMenu;
 import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 
-@ConfigCategory(Category.OVERLAYS)
+@ConfigCategory(Category.TRADEMARKET)
 public class TradeMarketBulkSellFeature extends Feature {
     private static final Pattern ITEM_NAME_PATTERN =
             Pattern.compile("§6Selling §f(\\d+|\\d+,\\d+) ([^À]*)À*(:?§6)? for §f[\\d,]*§7² Each");

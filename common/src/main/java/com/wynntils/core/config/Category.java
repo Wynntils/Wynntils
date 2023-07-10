@@ -19,8 +19,10 @@ public enum Category {
     OVERLAYS,
     PLAYERS,
     REDIRECTS,
-    TOOLTIPS,
+    SCREENS,
+    TRADEMARKET,
     UI,
+    UTILITIES,
     WYNNTILS;
 
     Category() {

@@ -2,7 +2,7 @@
  * Copyright © Wynntils 2022.
  * This file is released under AGPLv3. See LICENSE for full license details.
  */
-package com.wynntils.features.combat;
+package com.wynntils.features.inventory;
 
 import com.wynntils.core.components.Models;
 import com.wynntils.core.config.Category;
@@ -18,7 +18,7 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 
-@ConfigCategory(Category.COMBAT)
+@ConfigCategory(Category.INVENTORY)
 public class MythicBlockerFeature extends Feature {
     @SubscribeEvent
     public void onChestCloseAttempt(ContainerCloseEvent.Pre e) {

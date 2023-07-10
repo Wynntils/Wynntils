@@ -2,7 +2,7 @@
  * Copyright © Wynntils 2023.
  * This file is released under AGPLv3. See LICENSE for full license details.
  */
-package com.wynntils.features.ui;
+package com.wynntils.features.screens;
 
 import com.wynntils.core.config.Category;
 import com.wynntils.core.config.ConfigCategory;
@@ -19,7 +19,7 @@ import net.minecraft.client.gui.screens.ReceivingLevelScreen;
 import net.minecraftforge.eventbus.api.EventPriority;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 
-@ConfigCategory(Category.UI)
+@ConfigCategory(Category.SCREENS)
 public class CustomLoadingScreenFeature extends Feature {
     private LoadingScreen loadingScreen;
 

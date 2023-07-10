@@ -2,7 +2,7 @@
  * Copyright © Wynntils 2022.
  * This file is released under AGPLv3. See LICENSE for full license details.
  */
-package com.wynntils.features.tooltips;
+package com.wynntils.features.inventory;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.wynntils.core.components.Models;
@@ -28,7 +28,7 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import org.lwjgl.glfw.GLFW;
 
-@ConfigCategory(Category.TOOLTIPS)
+@ConfigCategory(Category.INVENTORY)
 public class ItemCompareFeature extends Feature {
     @RegisterKeyBind
     private final KeyBind toggleCompareModeKeyBind =

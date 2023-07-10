@@ -2,7 +2,7 @@
  * Copyright © Wynntils 2022.
  * This file is released under AGPLv3. See LICENSE for full license details.
  */
-package com.wynntils.features.ui;
+package com.wynntils.features.screens;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.wynntils.core.config.Category;
@@ -17,7 +17,7 @@ import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
 import net.minecraft.client.gui.screens.inventory.InventoryScreen;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 
-@ConfigCategory(Category.UI)
+@ConfigCategory(Category.SCREENS)
 public class CosmeticsPreviewFeature extends Feature {
     private static final String WEAPON_COSMETICS_TITLE = "Weapon Cosmetics";
     private static final String HELMET_COSMETICS_TITLE = "Helmet Cosmetics";

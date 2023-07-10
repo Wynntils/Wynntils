@@ -2,7 +2,7 @@
  * Copyright © Wynntils 2021-2022.
  * This file is released under AGPLv3. See LICENSE for full license details.
  */
-package com.wynntils.features.ui;
+package com.wynntils.features.screens;
 
 import com.google.common.hash.Hashing;
 import com.mojang.blaze3d.platform.NativeImage;
@@ -34,7 +34,7 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import org.apache.commons.lang3.Validate;
 
-@ConfigCategory(Category.UI)
+@ConfigCategory(Category.SCREENS)
 public class WynncraftButtonFeature extends Feature {
     private static final String GAME_SERVER = "play.wynncraft.com";
     private static final String LOBBY_SERVER = "lobby.wynncraft.com";

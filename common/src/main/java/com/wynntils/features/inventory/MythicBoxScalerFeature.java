@@ -2,7 +2,7 @@
  * Copyright © Wynntils 2022.
  * This file is released under AGPLv3. See LICENSE for full license details.
  */
-package com.wynntils.features.combat;
+package com.wynntils.features.inventory;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.wynntils.core.config.Category;
@@ -14,7 +14,7 @@ import com.wynntils.mc.event.GroundItemEntityTransformEvent;
 import com.wynntils.utils.wynn.WynnItemMatchers;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 
-@ConfigCategory(Category.COMBAT)
+@ConfigCategory(Category.INVENTORY)
 public class MythicBoxScalerFeature extends Feature {
     @RegisterConfig
     public final Config<Float> scale = new Config<>(1.5f);

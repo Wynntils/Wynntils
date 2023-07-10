@@ -2,7 +2,7 @@
  * Copyright © Wynntils 2023.
  * This file is released under AGPLv3. See LICENSE for full license details.
  */
-package com.wynntils.features.ui;
+package com.wynntils.features.screens;
 
 import com.wynntils.core.components.Models;
 import com.wynntils.core.config.Category;
@@ -19,7 +19,7 @@ import com.wynntils.utils.render.type.PointerType;
 import net.minecraft.network.chat.Component;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 
-@ConfigCategory(Category.UI)
+@ConfigCategory(Category.SCREENS)
 public class CustomSeaskipperScreenFeature extends Feature {
 
     @RegisterConfig
