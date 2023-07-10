@@ -52,12 +52,12 @@ public class ObjectivesOverlayFeature extends Feature {
         if (disableObjectiveTrackingOnScoreboard.get()) {
             ScoreboardSegment segment = event.getSegment();
             if (segment.getScoreboardPart() instanceof DailyObjectiveScoreboardPart
-                    && Managers.Overlay.isEnabled(guildObjectiveOverlay)) {
+                    && Managers.Overlay.isEnabled(dailyObjectiveOverlay)) {
                 event.setCanceled(true);
                 return;
             }
             if (segment.getScoreboardPart() instanceof GuildObjectiveScoreboardPart
-                    && Managers.Overlay.isEnabled(dailyObjectiveOverlay)) {
+                    && Managers.Overlay.isEnabled(guildObjectiveOverlay)) {
                 event.setCanceled(true);
                 return;
             }

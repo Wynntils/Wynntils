@@ -35,6 +35,7 @@ import com.wynntils.models.mobtotem.MobTotemModel;
 import com.wynntils.models.objectives.ObjectivesModel;
 import com.wynntils.models.ping.PingModel;
 import com.wynntils.models.players.FriendsModel;
+import com.wynntils.models.players.GuildModel;
 import com.wynntils.models.players.PartyModel;
 import com.wynntils.models.players.PlayerModel;
 import com.wynntils.models.players.hades.HadesModel;
@@ -91,6 +92,7 @@ public final class Models {
     public static final CharacterStatsModel CharacterStats = new CharacterStatsModel(CombatXp);
     public static final FriendsModel Friends = new FriendsModel(WorldState);
     public static final GearModel Gear = new GearModel(Element, Stat, WynnItem);
+    public static final GuildModel Guild = new GuildModel(Character);
     public static final HadesModel Hades = new HadesModel(Character, WorldState);
     public static final IngredientModel Ingredient = new IngredientModel(Stat);
     public static final ItemModel Item = new ItemModel(Element, Gear, Rewards, Ingredient);

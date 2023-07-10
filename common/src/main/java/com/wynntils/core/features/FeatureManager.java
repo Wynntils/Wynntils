@@ -370,6 +370,10 @@ public final class FeatureManager extends Manager {
         assert !feature.getTranslatedName().startsWith("feature.wynntils.")
                 : "Fix i18n for " + feature.getTranslatedName();
 
+        // Assert that the feature description is properly translated
+        assert !feature.getTranslatedDescription().startsWith("feature.wynntils.")
+                : "Fix i18n for " + feature.getTranslatedDescription();
+
         if (!feature.userEnabled.get()) return; // not enabled by user
 
         enableFeature(feature);
