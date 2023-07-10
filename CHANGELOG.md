@@ -1,9 +1,21 @@
+## [0.0.3-alpha.120](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.119...v0.0.3-alpha.120) (2023-07-10)
+
+
+### New Features
+
+* Add guild name and rank to book above player ([#1652](https://github.com/Wynntils/Artemis/issues/1652)) ([36c4028](https://github.com/Wynntils/Artemis/commit/36c4028efd18cdb414e467fd868907f127daa72a))
+
 ## [0.0.3-alpha.119](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.118...v0.0.3-alpha.119) (2023-07-09)
 
 
 ### Bug Fixes
 
 * Fix changelog showing when first installing, bad changelog spacing, and add scrolling ([#1706](https://github.com/Wynntils/Artemis/issues/1706)) ([94d6065](https://github.com/Wynntils/Artemis/commit/94d606553d3395aeeca7224cabd6dec454c8dced))
+
+
+### Miscellaneous Chores
+
+* **release:** v0.0.3-alpha.119 [skip ci] ([0a45497](https://github.com/Wynntils/Artemis/commit/0a45497ea6aa5d423cb31dfe445dcaf4e751fff5))
 
 ## [0.0.3-alpha.118](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.117...v0.0.3-alpha.118) (2023-07-09)
 
@@ -40,16 +52,4 @@
 ### Miscellaneous Chores
 
 * **release:** v0.0.3-alpha.116 [skip ci] ([395c7cb](https://github.com/Wynntils/Artemis/commit/395c7cb0fc301826fdd4656b5dbf3e92e9bddcb2))
-
-## [0.0.3-alpha.115](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.114...v0.0.3-alpha.115) (2023-07-09)
-
-
-### Bug Fixes
-
-* Function names can contain '_' ([#1703](https://github.com/Wynntils/Artemis/issues/1703)) ([3040159](https://github.com/Wynntils/Artemis/commit/3040159b77161981fcc261c380e570e814a54b37))
-
-
-### Miscellaneous Chores
-
-* **release:** v0.0.3-alpha.115 [skip ci] ([b77df52](https://github.com/Wynntils/Artemis/commit/b77df52d46a7d342411e2ba8411f9f1a607a1a52))
 
