@@ -11,7 +11,7 @@ import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.components.Managers;
 import com.wynntils.core.components.Model;
 import com.wynntils.core.components.Models;
-import com.wynntils.features.LootrunFeature;
+import com.wynntils.features.commands.LootrunFeature;
 import com.wynntils.mc.event.PlayerInteractEvent;
 import com.wynntils.mc.event.RenderLevelEvent;
 import com.wynntils.mc.event.ScreenOpenedEvent;

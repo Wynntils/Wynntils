@@ -9,7 +9,7 @@ import com.mojang.blaze3d.vertex.BufferBuilder;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.wynntils.core.components.Managers;
-import com.wynntils.features.LootrunFeature;
+import com.wynntils.features.commands.LootrunFeature;
 import com.wynntils.models.lootruns.type.BlockValidness;
 import com.wynntils.models.lootruns.type.ColoredPath;
 import com.wynntils.models.lootruns.type.ColoredPosition;

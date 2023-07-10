@@ -5,7 +5,7 @@
 package com.wynntils.models.lootruns;
 
 import com.wynntils.core.components.Managers;
-import com.wynntils.features.LootrunFeature;
+import com.wynntils.features.commands.LootrunFeature;
 import com.wynntils.models.lootruns.type.ColoredPath;
 import com.wynntils.models.lootruns.type.ColoredPosition;
 import com.wynntils.models.lootruns.type.LootrunNote;
