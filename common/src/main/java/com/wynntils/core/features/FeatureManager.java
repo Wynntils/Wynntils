@@ -174,8 +174,7 @@ public final class FeatureManager extends Manager {
         registerFeature(new DialogueOptionOverrideFeature());
         registerFeature(new GuildRankReplacementFeature());
         registerFeature(new MessageFilterFeature());
-        registerFeature(new TradeMarketAutoOpenChatFeature());
-        registerFeature(new TradeMarketPriceConversionFeature());
+        registerFeature(new TerritoryDefenseMessageFeature());
         // endregion
 
         // region combat
@@ -183,10 +182,7 @@ public final class FeatureManager extends Manager {
         registerFeature(new CombatXpGainMessageFeature());
         registerFeature(new FixCastingSpellsFromInventoryFeature());
         registerFeature(new HealthPotionBlockerFeature());
-        registerFeature(new HorseMountFeature());
         registerFeature(new LowHealthVignetteFeature());
-        registerFeature(new MythicBlockerFeature());
-        registerFeature(new MythicBoxScalerFeature());
         registerFeature(new PreventTradesDuelsFeature());
         registerFeature(new QuickCastFeature());
         registerFeature(new RangeVisualizerFeature());
@@ -200,25 +196,32 @@ public final class FeatureManager extends Manager {
         // endregion
 
         // region embellishments
-        registerFeature(new MythicFoundSoundFeature());
         registerFeature(new WybelSoundFeature());
+        registerFeature(new WynntilsCosmeticsFeature());
         // endregion
 
         // region inventory
-        registerFeature(new BulkBuyFeature());
         registerFeature(new ContainerSearchFeature());
         registerFeature(new DurabilityArcFeature());
         registerFeature(new EmeraldPouchFillArcFeature());
         registerFeature(new EmeraldPouchHotkeyFeature());
         registerFeature(new ExtendedItemCountFeature());
+        registerFeature(new HorseMountFeature());
         registerFeature(new IngredientPouchHotkeyFeature());
         registerFeature(new InventoryEmeraldCountFeature());
         registerFeature(new ItemFavoriteFeature());
+        registerFeature(new ItemGuessFeature());
         registerFeature(new ItemHighlightFeature());
         registerFeature(new ItemLockFeature());
         registerFeature(new ItemScreenshotFeature());
+        registerFeature(new ItemStatInfoFeature());
         registerFeature(new ItemTextOverlayFeature());
+        registerFeature(new MythicBlockerFeature());
+        registerFeature(new MythicBoxScalerFeature());
+        registerFeature(new MythicFoundSoundFeature());
         registerFeature(new ReplaceRecipeBookFeature());
+        registerFeature(new TooltipFittingFeature());
+        registerFeature(new TooltipVanillaHideFeature());
         registerFeature(new UnidentifiedItemIconFeature());
         // endregion
 
@@ -252,7 +255,6 @@ public final class FeatureManager extends Manager {
         registerFeature(new StatusOverlayFeature());
         registerFeature(new StopwatchFeature());
         registerFeature(new TokenTrackerFeature());
-        registerFeature(new TradeMarketBulkSellFeature());
         // endregion
 
         // region players
@@ -263,7 +265,6 @@ public final class FeatureManager extends Manager {
         registerFeature(new PartyManagementScreenFeature());
         registerFeature(new PlayerArmorHidingFeature());
         registerFeature(new PlayerGhostTransparencyFeature());
-        registerFeature(new WynntilsCosmeticsFeature());
         // endregion
 
         // region redirects
@@ -274,26 +275,33 @@ public final class FeatureManager extends Manager {
         registerFeature(new TerritoryMessageRedirectFeature());
         // endregion
 
-        // region tooltips
-        registerFeature(new ItemCompareFeature());
-        registerFeature(new ItemGuessFeature());
-        registerFeature(new ItemStatInfoFeature());
-        registerFeature(new TooltipFittingFeature());
-        registerFeature(new TooltipVanillaHideFeature());
-        // endregion
-
-        // region ui
-        registerFeature(new AutoApplyResourcePackFeature());
-        registerFeature(new ContainerScrollFeature());
+        // region screens
         registerFeature(new CosmeticsPreviewFeature());
         registerFeature(new CustomCharacterSelectionScreenFeature());
         registerFeature(new CustomLoadingScreenFeature());
         registerFeature(new CustomSeaskipperScreenFeature());
-        registerFeature(new LobbyUptimeFeature());
-        registerFeature(new SoulPointTimerFeature());
         registerFeature(new WynncraftButtonFeature());
         registerFeature(new WynncraftPauseScreenFeature());
         registerFeature(new WynntilsQuestBookFeature());
+        // endregion
+
+        // region trademarket
+        registerFeature(new TradeMarketAutoOpenChatFeature());
+        registerFeature(new TradeMarketBulkSellFeature());
+        registerFeature(new TradeMarketPriceConversionFeature());
+        // endregion
+
+        // region ui
+        registerFeature(new BulkBuyFeature());
+        registerFeature(new ContainerScrollFeature());
+        registerFeature(new LobbyUptimeFeature());
+        registerFeature(new SoulPointTimerFeature());
+        // endregion
+
+        // region utilities
+        registerFeature(new AutoApplyResourcePackFeature());
+        registerFeature(new GammabrightFeature());
+        registerFeature(new TranslationFeature());
         // endregion
 
         // region wynntils
@@ -303,12 +311,6 @@ public final class FeatureManager extends Manager {
         registerFeature(new FixPacketBugsFeature());
         registerFeature(new TelemetryFeature());
         registerFeature(new UpdatesFeature());
-        // endregion
-
-        // region uncategorized
-        registerFeature(new GammabrightFeature());
-        registerFeature(new TerritoryDefenseMessageFeature());
-        registerFeature(new TranslationFeature());
         // endregion
 
         // Reload Minecraft's config files so our own keybinds get loaded
