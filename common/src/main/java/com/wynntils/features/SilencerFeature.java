@@ -18,11 +18,20 @@ import com.wynntils.core.storage.Storage;
 import com.wynntils.mc.event.TitleScreenInitEvent;
 import com.wynntils.utils.mc.McUtils;
 import net.minecraft.ChatFormatting;
+import net.minecraft.client.OptionInstance;
 import net.minecraft.network.chat.Component;
 import net.minecraft.sounds.SoundSource;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import org.lwjgl.glfw.GLFW;
 
+/**
+ * "Silencer" modifies the game's masterVolume setting when toggled.
+ * This is intended as a "session-only" feature, so the modification persists until "Silencer" -
+ * is either toggled again or the "session ends" (i.e. disconnect or game exit).
+ *
+ * <p>The volume is restored to the original state on "game boot".
+ * Note that the initial value of isSilencerEnabled is 'false' and is not explicitly set on "game boot".
+ */
 @ConfigCategory(Category.UNCATEGORIZED)
 public class SilencerFeature extends Feature {
     @RegisterConfig
@@ -32,21 +41,25 @@ public class SilencerFeature extends Feature {
     private final KeyBind silencerKeyBind =
             new KeyBind("Toggle Silencer", GLFW.GLFW_KEY_UNKNOWN, true, this::toggleSilencer);
 
-    private final Storage<Double> lastVolume = new Storage<>(1.0);
+    private final Storage<Double> originalVolume = new Storage<>(1.0);
 
     private boolean isSilencerEnabled = false;
+
+    private boolean firstTitleScreenInit = true;
 
     @SubscribeEvent
     public void onDisconnect(WynncraftConnectionEvent.Disconnected event) {
         if (isSilencerEnabled) {
-            resetVolume();
+            restoreOriginalVolume();
             isSilencerEnabled = false;
         }
     }
 
     @SubscribeEvent
     public void onTitleScreenInit(TitleScreenInitEvent.Pre event) {
-        resetVolume();
+        if (!firstTitleScreenInit) return;
+        restoreOriginalVolume();
+        firstTitleScreenInit = false;
     }
 
     private void toggleSilencer() {
@@ -58,20 +71,22 @@ public class SilencerFeature extends Feature {
             Managers.Notification.queueMessage(
                     Component.translatable("feature.wynntils.silencer.enabled").withStyle(ChatFormatting.GREEN));
         } else {
-            resetVolume();
+            restoreOriginalVolume();
             Managers.Notification.queueMessage(
                     Component.translatable("feature.wynntils.silencer.disabled").withStyle(ChatFormatting.RED));
         }
     }
 
-    private void resetVolume() {
-        McUtils.options().getSoundSourceOptionInstance(SoundSource.MASTER).set(lastVolume.get());
+    private void restoreOriginalVolume() {
+        masterVolume().set(originalVolume.get());
     }
 
     private void enableSilencer() {
-        lastVolume.store(McUtils.options()
-                .getSoundSourceOptionInstance(SoundSource.MASTER)
-                .get());
-        McUtils.options().getSoundSourceOptionInstance(SoundSource.MASTER).set(silencerVolume.get());
+        originalVolume.store(masterVolume().get());
+        masterVolume().set(silencerVolume.get());
+    }
+
+    private OptionInstance<Double> masterVolume() {
+        return McUtils.options().getSoundSourceOptionInstance(SoundSource.MASTER);
     }
 }
