@@ -166,7 +166,6 @@ public class CustomBankPagesFeature extends Feature {
         }
     }
 
-
     private boolean tryUsingJumpButtons() {
         int closest = QUICK_JUMP_DESTINATIONS.get(0);
         int closestDistance = Math.abs(closest - pageDestination);
