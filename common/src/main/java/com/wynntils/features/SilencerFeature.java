@@ -58,6 +58,7 @@ public class SilencerFeature extends Feature {
     @SubscribeEvent
     public void onTitleScreenInit(TitleScreenInitEvent.Pre event) {
         if (!firstTitleScreenInit) return;
+        if (!masterVolume().get().equals(silencerVolume.get())) return;
         restoreOriginalVolume();
         firstTitleScreenInit = false;
     }
