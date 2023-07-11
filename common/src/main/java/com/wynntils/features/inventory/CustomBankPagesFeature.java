@@ -180,7 +180,7 @@ public class CustomBankPagesFeature extends Feature {
                     McUtils.containerMenu().containerId,
                     GLFW.GLFW_MOUSE_BUTTON_LEFT,
                     McUtils.containerMenu().getItems());
-            
+
             return true;
         }
 
