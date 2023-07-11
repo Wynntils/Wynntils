@@ -5,6 +5,7 @@
 package com.wynntils.core.config.upfixers.impl;
 
 import com.google.gson.JsonArray;
+import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.wynntils.core.config.ConfigHolder;
 import com.wynntils.core.config.upfixers.ConfigUpfixer;
@@ -21,7 +22,10 @@ public class CustomPoiIconEnumBugUpfixer implements ConfigUpfixer {
         for (ConfigHolder configHolder : configHolders) {
             if (!configHolder.getJsonName().equals(POI_LIST_KEY)) continue;
 
-            JsonArray array = configObject.get(POI_LIST_KEY).getAsJsonArray();
+            JsonElement obj = configObject.get(POI_LIST_KEY);
+            if (obj == null) return true;
+
+            JsonArray array = obj.getAsJsonArray();
 
             for (int i = 0; i < array.size(); i++) {
                 JsonObject poi = array.get(i).getAsJsonObject();
