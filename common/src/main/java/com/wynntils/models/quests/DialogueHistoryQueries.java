@@ -7,7 +7,8 @@ package com.wynntils.models.quests;
 import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.components.Models;
 import com.wynntils.core.text.StyledText;
-import com.wynntils.handlers.container.ScriptedContainerQuery;
+import com.wynntils.handlers.container.scriptedquery.QueryStep;
+import com.wynntils.handlers.container.scriptedquery.ScriptedContainerQuery;
 import com.wynntils.handlers.container.type.ContainerContent;
 import com.wynntils.models.content.ContentBookQueries;
 import com.wynntils.utils.mc.LoreUtils;
@@ -26,27 +27,24 @@ public class DialogueHistoryQueries {
     private List<List<StyledText>> newDialogueHistory;
 
     protected void scanDialogueHistory() {
+        if (newDialogueHistory != null) return;
+
+        newDialogueHistory = new ArrayList<>();
+
         ScriptedContainerQuery query = ScriptedContainerQuery.builder("Quest Book Dialogue History Query")
                 .onError(msg -> WynntilsMod.warn("Problem getting dialogue history in Quest Book: " + msg))
 
                 // Open content book
-                .then(ScriptedContainerQuery.QueryStep.useItemInHotbar(InventoryUtils.QUEST_BOOK_SLOT_NUM)
-                        .matchTitle(ContentBookQueries.CONTENT_BOOK_TITLE)
-                        .ignoreIncomingContainer())
-                .execute(() -> {
-                    newDialogueHistory = new ArrayList<>();
-                })
+                .then(QueryStep.useItemInHotbar(InventoryUtils.QUEST_BOOK_SLOT_NUM)
+                        .expectContainerTitle(ContentBookQueries.CONTENT_BOOK_TITLE))
 
                 // Repeatedly read the dialogue history from the lore of the history item,
                 // and if it is on the last page, stop repeating, otherwise click the slot
                 // to get to the next page
-                .repeat(
-                        this::checkDialoguePage,
-                        ScriptedContainerQuery.QueryStep.clickOnSlot(DIALOGUE_HISTORY_SLOT)
-                                .expectSameMenu()
-                                .ignoreIncomingContainer())
+                .repeat(this::checkDialoguePage, QueryStep.clickOnSlot(DIALOGUE_HISTORY_SLOT))
                 .execute(() -> {
                     Models.Quest.setDialogueHistory(newDialogueHistory);
+                    newDialogueHistory = null;
                 })
                 .build();
 

@@ -7,7 +7,8 @@ package com.wynntils.models.content;
 import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.components.Models;
 import com.wynntils.core.text.StyledText;
-import com.wynntils.handlers.container.ScriptedContainerQuery;
+import com.wynntils.handlers.container.scriptedquery.QueryStep;
+import com.wynntils.handlers.container.scriptedquery.ScriptedContainerQuery;
 import com.wynntils.handlers.container.type.ContainerContent;
 import com.wynntils.models.content.type.ContentInfo;
 import com.wynntils.models.items.items.gui.ContentItem;
@@ -32,14 +33,16 @@ public class ContentBookQueries {
     private static final StyledText SCROLL_DOWN_TEXT = StyledText.fromString("§7Scroll Down");
 
     private List<ContentInfo> newQuests;
-    private List<ContentInfo> newMiniQuests;
-    private ContentInfo trackedQuest;
 
     /**
      * Trigger a rescan of the quest book. When the rescan is done, a QuestBookReloadedEvent will
      * be sent. The available quests are then available using getQuests.
      */
     protected void queryQuestBook() {
+        if (newQuests != null) return;
+
+        newQuests = new ArrayList<>();
+
         ScriptedContainerQuery query = ScriptedContainerQuery.builder("Quest Book Query")
                 .onError(msg -> {
                     WynntilsMod.warn("Problem querying Quest Book: " + msg);
@@ -48,9 +51,8 @@ public class ContentBookQueries {
                 })
 
                 // Open content book
-                .then(ScriptedContainerQuery.QueryStep.useItemInHotbar(InventoryUtils.QUEST_BOOK_SLOT_NUM)
-                        .matchTitle(CONTENT_BOOK_TITLE)
-                        .ignoreIncomingContainer())
+                .then(QueryStep.useItemInHotbar(InventoryUtils.QUEST_BOOK_SLOT_NUM)
+                        .expectContainerTitle(CONTENT_BOOK_TITLE))
 
                 // Save filter state, and set it correctly
                 .repeat(
@@ -61,21 +63,16 @@ public class ContentBookQueries {
                             // if not return true
                             return false;
                         },
-                        ScriptedContainerQuery.QueryStep.clickOnSlot(CHANGE_VIEW).expectSameMenu().ignoreIncomingContainer())
+                        QueryStep.clickOnSlot(CHANGE_VIEW))
 
                 // Process first page
-                .execute(() -> {
-                    newQuests = new ArrayList<>();
-                })
-                .reprocess(c -> processQuestBookPage(c))
+                .reprocess(this::processQuestBookPage)
 
                 // Repeatedly click next page, if available, and process the following page
                 .repeat(
                         c -> ScriptedContainerQuery.containerHasSlot(
                                 c, NEXT_PAGE_SLOT, Items.GOLDEN_SHOVEL, SCROLL_DOWN_TEXT),
-                        ScriptedContainerQuery.QueryStep.clickOnSlot(NEXT_PAGE_SLOT)
-                                .expectSameMenu()
-                                .processIncomingContainer(c -> processQuestBookPage(c)))
+                        QueryStep.clickOnSlot(NEXT_PAGE_SLOT).processIncomingContainer(this::processQuestBookPage))
 
                 // Restore filter to original value
                 .repeat(
@@ -83,11 +80,12 @@ public class ContentBookQueries {
                             // is filter the same as the one we saved?
                             return false;
                         },
-                        ScriptedContainerQuery.QueryStep.clickOnSlot(CHANGE_VIEW).expectSameMenu().ignoreIncomingContainer())
+                        QueryStep.clickOnSlot(CHANGE_VIEW))
 
                 // Finally signal we're done
                 .execute(() -> {
                     Models.Content.updateFromBookQuery(newQuests);
+                    newQuests = null;
                 })
                 //
                 .build();
@@ -117,9 +115,6 @@ public class ContentBookQueries {
             ContentInfo contentInfo = contentItemOpt.get().getContentInfo();
 
             newQuests.add(contentInfo);
-            if (contentInfo.isTracked()) {
-                trackedQuest = contentInfo;
-            }
         }
     }
 
@@ -134,9 +129,8 @@ public class ContentBookQueries {
                 })
 
                 // Open compass/character menu
-                .then(ScriptedContainerQuery.QueryStep.useItemInHotbar(InventoryUtils.QUEST_BOOK_SLOT_NUM)
-                        .matchTitle(CONTENT_BOOK_TITLE)
-                        .ignoreIncomingContainer())
+                .then(QueryStep.useItemInHotbar(InventoryUtils.QUEST_BOOK_SLOT_NUM)
+                        .expectContainerTitle(CONTENT_BOOK_TITLE))
 
                 // Repeatedly check if the requested task is on this page,
                 // if so, click it, otherwise click on next slot (if available)
@@ -150,7 +144,7 @@ public class ContentBookQueries {
 
                             return false;
                         },
-                        ScriptedContainerQuery.QueryStep.clickOnSlot(NEXT_PAGE_SLOT).expectSameMenu().ignoreIncomingContainer())
+                        QueryStep.clickOnMatchingSlot(NEXT_PAGE_SLOT, Items.GOLDEN_SHOVEL, SCROLL_DOWN_TEXT))
                 //
                 .build();
 

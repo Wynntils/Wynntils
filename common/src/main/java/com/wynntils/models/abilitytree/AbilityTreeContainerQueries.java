@@ -9,7 +9,8 @@ import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.components.Managers;
 import com.wynntils.core.components.Models;
 import com.wynntils.core.text.StyledText;
-import com.wynntils.handlers.container.ScriptedContainerQuery;
+import com.wynntils.handlers.container.scriptedquery.QueryStep;
+import com.wynntils.handlers.container.scriptedquery.ScriptedContainerQuery;
 import com.wynntils.handlers.container.type.ContainerContent;
 import com.wynntils.models.abilitytree.parser.UnprocessedAbilityTreeInfo;
 import com.wynntils.models.abilitytree.type.AbilityTreeInfo;
@@ -57,26 +58,21 @@ public class AbilityTreeContainerQueries {
                 })
 
                 // Open character/compass menu
-                .then(ScriptedContainerQuery.QueryStep.useItemInHotbar(InventoryUtils.COMPASS_SLOT_NUM)
-                        .matchTitle("Character Info")
-                        .ignoreIncomingContainer())
+                .then(QueryStep.useItemInHotbar(InventoryUtils.COMPASS_SLOT_NUM).expectContainerTitle("Character Info"))
 
                 // Open ability menu
-                .then(ScriptedContainerQuery.QueryStep.clickOnSlot(ABILITY_TREE_SLOT)
-                        .matchTitle(Models.Container.ABILITY_TREE_PATTERN.pattern())
-                        .ignoreIncomingContainer())
+                .then(QueryStep.clickOnSlot(ABILITY_TREE_SLOT)
+                        .expectContainerTitle(Models.Container.ABILITY_TREE_PATTERN.pattern()))
 
                 // Go to first page, and save current page number
                 .repeat(
                         c -> ScriptedContainerQuery.containerHasSlot(
                                 c, PREVIOUS_PAGE_SLOT, Items.STONE_AXE, PREVIOUS_PAGE_ITEM_NAME),
-                        ScriptedContainerQuery.QueryStep.clickOnSlot(PREVIOUS_PAGE_SLOT)
-                                .expectSameMenu()
-                                .processIncomingContainer(c -> {
-                                    // count how many times this is done, and
-                                    // save loop variable to be able to restore proper page
-                                    // if not even entered here, we were already on first page
-                                }))
+                        QueryStep.clickOnSlot(PREVIOUS_PAGE_SLOT).processIncomingContainer(c -> {
+                            // count how many times this is done, and
+                            // save loop variable to be able to restore proper page
+                            // if not even entered here, we were already on first page
+                        }))
 
                 // Process first page
                 .reprocess(processor::processPage)
@@ -85,9 +81,7 @@ public class AbilityTreeContainerQueries {
                 .repeat(
                         c -> ScriptedContainerQuery.containerHasSlot(
                                 c, NEXT_PAGE_SLOT, Items.STONE_AXE, NEXT_PAGE_ITEM_NAME),
-                        ScriptedContainerQuery.QueryStep.clickOnSlot(NEXT_PAGE_SLOT)
-                                .expectSameMenu()
-                                .processIncomingContainer(processor::processPage))
+                        QueryStep.clickOnSlot(NEXT_PAGE_SLOT).processIncomingContainer(processor::processPage))
 
                 // Go back to initial page
                 .repeat(
@@ -95,9 +89,7 @@ public class AbilityTreeContainerQueries {
                             // check if global loop/page variable means we need to step back more
                             return false;
                         },
-                        ScriptedContainerQuery.QueryStep.clickOnSlot(PREVIOUS_PAGE_SLOT)
-                                .expectSameMenu()
-                                .ignoreIncomingContainer())
+                        QueryStep.clickOnSlot(PREVIOUS_PAGE_SLOT))
                 //
                 .build();
 

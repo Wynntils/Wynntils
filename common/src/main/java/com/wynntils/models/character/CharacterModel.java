@@ -10,7 +10,8 @@ import com.wynntils.core.components.Models;
 import com.wynntils.core.text.PartStyle;
 import com.wynntils.core.text.StyledText;
 import com.wynntils.handlers.chat.event.ChatMessageReceivedEvent;
-import com.wynntils.handlers.container.ScriptedContainerQuery;
+import com.wynntils.handlers.container.scriptedquery.QueryStep;
+import com.wynntils.handlers.container.scriptedquery.ScriptedContainerQuery;
 import com.wynntils.mc.event.ContainerClickEvent;
 import com.wynntils.mc.event.MenuEvent.MenuClosedEvent;
 import com.wynntils.mc.event.PlayerTeleportEvent;
@@ -126,8 +127,8 @@ public final class CharacterModel extends Model {
                 .onError(msg -> WynntilsMod.warn("Error querying Character Info:" + msg))
 
                 // Open compass/character menu
-                .then(ScriptedContainerQuery.QueryStep.useItemInHotbar(InventoryUtils.COMPASS_SLOT_NUM)
-                        .matchTitle("Character Info")
+                .then(QueryStep.useItemInHotbar(InventoryUtils.COMPASS_SLOT_NUM)
+                        .expectContainerTitle("Character Info")
                         .processIncomingContainer(container -> {
                             ItemStack characterInfoItem = container.items().get(CHARACTER_INFO_SLOT);
                             ItemStack professionInfoItem = container.items().get(PROFESSION_INFO_SLOT);
