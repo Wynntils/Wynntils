@@ -1,9 +1,21 @@
+## [0.0.3-alpha.122](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.121...v0.0.3-alpha.122) (2023-07-11)
+
+
+### New Features
+
+* Silencer - hotkey-toggleable assignable Master Volume ([#1643](https://github.com/Wynntils/Artemis/issues/1643)) ([ad09d91](https://github.com/Wynntils/Artemis/commit/ad09d917a616c62f252a2f8824cb9eb0d47e2202))
+
 ## [0.0.3-alpha.121](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.120...v0.0.3-alpha.121) (2023-07-11)
 
 
 ### New Features
 
 * render lootrun path on map ([#1688](https://github.com/Wynntils/Artemis/issues/1688)) ([6e9735c](https://github.com/Wynntils/Artemis/commit/6e9735ccf75fb209ec6530702f2d40309d47de0e))
+
+
+### Miscellaneous Chores
+
+* **release:** v0.0.3-alpha.121 [skip ci] ([3d79377](https://github.com/Wynntils/Artemis/commit/3d79377dce784cd19c5ea5902e6985babf6e9cb7))
 
 ## [0.0.3-alpha.120](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.119...v0.0.3-alpha.120) (2023-07-10)
 
@@ -40,16 +52,4 @@
 ### Miscellaneous Chores
 
 * **release:** v0.0.3-alpha.118 [skip ci] ([3282f33](https://github.com/Wynntils/Artemis/commit/3282f33ea4f8531e6d8478decf868e716225e18b))
-
-## [0.0.3-alpha.117](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.116...v0.0.3-alpha.117) (2023-07-09)
-
-
-### Bug Fixes
-
-* TM filter and search did not work with scroll ([#1702](https://github.com/Wynntils/Artemis/issues/1702)) ([34d3d71](https://github.com/Wynntils/Artemis/commit/34d3d712b4251e78a234c9e801ec571159451e65))
-
-
-### Miscellaneous Chores
-
-* **release:** v0.0.3-alpha.117 [skip ci] ([303323b](https://github.com/Wynntils/Artemis/commit/303323bf1e5ef8564210d293039f457ae9ff6298))
 
