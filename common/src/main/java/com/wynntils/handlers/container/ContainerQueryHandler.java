@@ -124,14 +124,10 @@ public final class ContainerQueryHandler extends Handler {
         }
 
         if (containerId == lastHandledContentId && InventoryUtils.isItemListsEqual(e.getItems(), lastHandledItems)) {
-            if (!currentStep.acceptNoOp()) {
-                // After opening a new container, Wynncraft sometimes sends contents twice.
-                // Normally we just filter out this second copy, but some cases need to
-                // have items returned, even though they are unchanged
-                e.setCanceled(true);
-                resetTimer();
-                return;
-            }
+            // After opening a new container, Wynncraft sometimes sends contents twice. Ignore this.
+            e.setCanceled(true);
+            resetTimer();
+            return;
         }
 
         lastHandledContentId = containerId;
