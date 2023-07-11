@@ -40,31 +40,59 @@ public class ContentBookQueries {
      * be sent. The available quests are then available using getQuests.
      */
     protected void queryQuestBook() {
-        ScriptedContainerQuery.QueryBuilder queryBuilder = ScriptedContainerQuery.builder("Quest Book Query")
+        ScriptedContainerQuery query = ScriptedContainerQuery.builder("Quest Book Query")
                 .onError(msg -> {
                     WynntilsMod.warn("Problem querying Quest Book: " + msg);
                     McUtils.sendMessageToClient(
                             Component.literal("Error updating quest book.").withStyle(ChatFormatting.RED));
                 })
+                // Open content book
                 .useItemInHotbar(InventoryUtils.QUEST_BOOK_SLOT_NUM)
                 .matchTitle(CONTENT_BOOK_TITLE)
-/*                .processContainer(c -> { // ignore before we have fixed the filter
+                .ignoreIncomingContainer()
+                // Save filter state, and set it correctly
+                .repeat()
+                .checkCurrentContainer(c -> {
+                    // if first time around, save current filter state
+
+                    // check if our filter is of the requested type,
+                    // if not return true
+                    return false;
                 })
-                .clickOnSlotWithName(CHANGE_VIEW, Items.GOLDEN_PICKAXE, StyledText.fromString("§eFilter"))
-                .expectSameContainer()
+                .clickOnSlot(CHANGE_VIEW)
+                .expectSameMenu()
+                .ignoreIncomingContainer()
+                .endRepeat()
+                // Process first page
+                .execute(() -> {
+                    newQuests = new ArrayList<>();
+                })
+                .reprocessCurrentContainer(c -> processQuestBookPage(c))
+                // Repeatedly click next page, if available, and process the following page
+                .repeat()
+                .checkIfCurrentContainerHasSlotWithName(NEXT_PAGE_SLOT, Items.GOLDEN_SHOVEL, SCROLL_DOWN_TEXT)
+                .clickOnSlot(NEXT_PAGE_SLOT)
+                .expectSameMenu()
+                .processIncomingContainer(c -> processQuestBookPage(c))
+                .endRepeat()
+                // Restore filter to original value
+                .repeat()
+                .checkCurrentContainer(c -> {
+                    // is filter the same as the one we saved?
+                    return false;
+                })
+                .clickOnSlot(CHANGE_VIEW)
+                .expectSameMenu()
+                .ignoreIncomingContainer()
+                .endRepeat()
+                // Finally signal we're done
+                .execute(() -> {
+                    Models.Content.updateFromBookQuery(newQuests);
+                })
+                //
+                .build();
 
- */
-                .processContainer(c -> processQuestBookPage(c, 1));
-
-        for (int i = 2; i < 21; i++) {
-            final int page = i; // Lambdas need final variables
-            queryBuilder
-                    .clickOnSlotWithName(NEXT_PAGE_SLOT, Items.GOLDEN_SHOVEL, SCROLL_DOWN_TEXT)
-                    .expectSameContainer()
-                    .processContainer(c -> processQuestBookPage(c, page));
-        }
-
-        queryBuilder.build().executeQuery();
+        query.executeQuery();
     }
 
     private String getItemDesc(List<ItemStack> items) {
@@ -76,17 +104,11 @@ public class ContentBookQueries {
         return sb.toString();
     }
 
+    private void processQuestBookPage(ContainerContent container) {
 
-
-    private void processQuestBookPage(ContainerContent container, int page) {
-
-        System.out.println("items in PROCESS PAGE " + page + " :" + getItemDesc(container.items()));
+        System.out.println("items in PROCESS PAGE:" + getItemDesc(container.items()));
 
         // Quests are in the top-left container area
-        if (page == 1) {
-            // Build new set of quests without disturbing current set
-            newQuests = new ArrayList<>();
-        }
         for (int slot = 0; slot < 54; slot++) {
             ItemStack itemStack = container.items().get(slot);
             Optional<ContentItem> contentItemOpt = Models.Item.asWynnItem(itemStack, ContentItem.class);
@@ -98,36 +120,42 @@ public class ContentBookQueries {
             if (contentInfo.isTracked()) {
                 trackedQuest = contentInfo;
             }
-
-        }
-
-        // FIXME
-        if (page == 20) {
-            // Last page finished
-            Models.Content.updateFromBookQuery(newQuests);
         }
     }
 
-
     protected void toggleTracking(QuestInfo questInfo) {
-        ScriptedContainerQuery.QueryBuilder queryBuilder = ScriptedContainerQuery.builder("Quest Book Quest Pin Query")
-                .onError(msg -> WynntilsMod.warn("Problem pinning quest in Quest Book: " + msg))
+        // We do not want to change filtering when tracking, since we get
+        // no chance to reset it
+        ScriptedContainerQuery query = ScriptedContainerQuery.builder("Toggle Content Tracking Query")
+                .onError(msg -> {
+                    WynntilsMod.warn("Problem querying Content Book: " + msg);
+                    McUtils.sendMessageToClient(
+                            Component.literal("Error tracking content book.").withStyle(ChatFormatting.RED));
+                })
+                // Open compass/character menu
                 .useItemInHotbar(InventoryUtils.QUEST_BOOK_SLOT_NUM)
-                .matchTitle(CONTENT_BOOK_TITLE);
+                .matchTitle(CONTENT_BOOK_TITLE)
+                .ignoreIncomingContainer()
+                // Repeatedly check if the requested task is on this page,
+                // if so, click it, otherwise click on next slot (if available)
+                .repeat()
+                .checkCurrentContainer(c -> {
+                    // is any of our new items the requested one?
+                    // if so, click on it's slot and return false,
+                    // otherwise return true to continue to next page
+                // also, .checkIfPreviousSlotWithName(NEXT_PAGE_SLOT, Items.GOLDEN_SHOVEL, SCROLL_DOWN_TEXT)
+                    // otherwise return failure
 
+                    return false;
+                })
+                .clickOnSlot(NEXT_PAGE_SLOT)
+                .expectSameMenu()
+                .ignoreIncomingContainer()
+                .endRepeat()
+                //
+                .build();
 
-        if (questInfo.getPageNumber() > 1) {
-            for (int i = 2; i <= questInfo.getPageNumber(); i++) {
-                queryBuilder
-                        .processContainer(container -> {}) // we ignore this because this is not the correct page
-                        .clickOnSlotWithName(NEXT_PAGE_SLOT, Items.GOLDEN_SHOVEL, SCROLL_DOWN_TEXT)
-                        .matchTitle(CONTENT_BOOK_TITLE);
-            }
-        }
-        queryBuilder
-                .processContainer(c -> findQuestForTracking(c, questInfo, questInfo.isMiniQuest()))
-                .build()
-                .executeQuery();
+        query.executeQuery();
     }
 
     private void findQuestForTracking(ContainerContent container, QuestInfo questInfo, boolean isMiniQuest) {

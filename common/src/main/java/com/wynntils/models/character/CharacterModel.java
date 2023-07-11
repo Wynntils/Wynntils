@@ -123,9 +123,11 @@ public final class CharacterModel extends Model {
 
     private void scanCharacterInfoPage() {
         ScriptedContainerQuery query = ScriptedContainerQuery.builder("Character Info Query")
+                .onError(msg -> WynntilsMod.warn("Error querying Character Info:" + msg))
+                // Open compass/character menu
                 .useItemInHotbar(InventoryUtils.COMPASS_SLOT_NUM)
                 .matchTitle("Character Info")
-                .processContainer(container -> {
+                .processIncomingContainer(container -> {
                     ItemStack characterInfoItem = container.items().get(CHARACTER_INFO_SLOT);
                     ItemStack professionInfoItem = container.items().get(PROFESSION_INFO_SLOT);
                     ItemStack guildInfoItem = container.items().get(GUILD_INFO_SLOT);
@@ -138,7 +140,6 @@ public final class CharacterModel extends Model {
                     WynntilsMod.postEvent(new CharacterUpdateEvent());
                     WynntilsMod.info("Deducing character " + getCharacterString());
                 })
-                .onError(msg -> WynntilsMod.warn("Error querying Character Info:" + msg))
                 .build();
         query.executeQuery();
     }
