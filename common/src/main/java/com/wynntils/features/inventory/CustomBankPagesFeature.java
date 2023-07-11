@@ -14,6 +14,7 @@ import com.wynntils.core.features.Feature;
 import com.wynntils.mc.event.ContainerClickEvent;
 import com.wynntils.mc.event.ContainerCloseEvent;
 import com.wynntils.mc.event.ScreenInitEvent;
+import com.wynntils.mc.event.SetSlotEvent;
 import com.wynntils.mc.event.SlotRenderEvent;
 import com.wynntils.utils.mc.McUtils;
 import com.wynntils.utils.wynn.ContainerUtils;
@@ -56,6 +57,7 @@ public class CustomBankPagesFeature extends Feature {
 
     private boolean isBankScreen = false;
     private boolean quickJumping = false;
+    private int containerId;
     private int currentPage = 1;
     private int lastPage = MAX_BANK_PAGES;
     private int pageDestination = 1;
@@ -67,6 +69,8 @@ public class CustomBankPagesFeature extends Feature {
         if (!Models.Container.isBankScreen(screen)) return;
 
         isBankScreen = true;
+
+        containerId = ((AbstractContainerScreen<?>) e.getScreen()).getMenu().containerId;
 
         currentPage = Models.Container.getCurrentBankPage(screen);
 
@@ -112,11 +116,10 @@ public class CustomBankPagesFeature extends Feature {
     }
 
     @SubscribeEvent
-    public void onRenderSlot(SlotRenderEvent.Pre e) {
-        if (!(e.getScreen() instanceof AbstractContainerScreen<?> screen)) return;
+    public void onSetSlot(SetSlotEvent.Pre e) {
         if (!isBankScreen) return;
 
-        if (BUTTON_SLOTS.contains(e.getSlot().index)) {
+        if (BUTTON_SLOTS.contains(e.getSlot())) {
             ItemStack jumpButton = new ItemStack(Items.DIAMOND_AXE);
             jumpButton.setDamageValue(92);
 
@@ -125,15 +128,21 @@ public class CustomBankPagesFeature extends Feature {
             jumpTag.putBoolean("Unbreakable", true);
             jumpButton.setTag(jumpTag);
 
-            int buttonIndex = BUTTON_SLOTS.indexOf(e.getSlot().index);
+            int buttonIndex = BUTTON_SLOTS.indexOf(e.getSlot());
             int buttonDestination = customJumpDestinations.get(buttonIndex);
 
             jumpButton.setCount(buttonDestination);
 
             jumpButton.setHoverName(Component.literal(ChatFormatting.GRAY + "Jump to Page " + buttonDestination));
 
-            e.getSlot().set(jumpButton);
+            e.setItemStack(jumpButton);
         }
+    }
+
+    @SubscribeEvent
+    public void onRenderSlot(SlotRenderEvent.Pre e) {
+        if (!(e.getScreen() instanceof AbstractContainerScreen<?> screen)) return;
+        if (!isBankScreen) return;
 
         if (e.getSlot().index == NEXT_PAGE_SLOT && Models.Container.isLastBankPage(screen)) {
             lastPage = currentPage;
