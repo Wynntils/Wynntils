@@ -42,6 +42,7 @@ public final class CharacterModel extends Model {
     private static final int CHARACTER_INFO_SLOT = 7;
     private static final int SOUL_POINT_SLOT = 8;
     private static final int PROFESSION_INFO_SLOT = 17;
+    private static final int GUILD_INFO_SLOT = 26;
 
     // we need a .* in front because the message may have a custom timestamp prefix (or some other mod could do
     // something weird)
@@ -127,8 +128,10 @@ public final class CharacterModel extends Model {
                 .processContainer(container -> {
                     ItemStack characterInfoItem = container.items().get(CHARACTER_INFO_SLOT);
                     ItemStack professionInfoItem = container.items().get(PROFESSION_INFO_SLOT);
+                    ItemStack guildInfoItem = container.items().get(GUILD_INFO_SLOT);
 
                     Models.Profession.resetValueFromItem(professionInfoItem);
+                    Models.Guild.parseGuildInfoFromGuildMenu(guildInfoItem);
 
                     parseCharacterFromCharacterMenu(characterInfoItem);
                     hasCharacter = true;
