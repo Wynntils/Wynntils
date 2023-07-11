@@ -238,9 +238,16 @@ public final class ContentModel extends Model {
         for (ContentInfo content : newContent) {
             System.out.println("New quest: " + content);
             if (content.type() != ContentType.QUEST && content.type() != ContentType.STORYLINE_QUEST) continue;
-            QuestInfo questInfo = new QuestInfo(content.name(), QuestStatus.fromContentStatus(content.status()),
-                    QuestLength.fromContentLength(content.length().get()), content.requirements().level().key(),
-                    content.description().orElse(StyledText.EMPTY), List.of(), false, 0, content.isTracked());
+            QuestInfo questInfo = new QuestInfo(
+                    content.name(),
+                    QuestStatus.fromContentStatus(content.status()),
+                    QuestLength.fromContentLength(content.length().get()),
+                    content.requirements().level().key(),
+                    content.description().orElse(StyledText.EMPTY),
+                    List.of(),
+                    false,
+                    0,
+                    content.isTracked());
             newQuests.add(questInfo);
         }
         Models.Quest.updateQuestsFromQuery(newQuests);
