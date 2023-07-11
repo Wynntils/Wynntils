@@ -17,6 +17,7 @@ import com.wynntils.core.mod.CrashReportManager;
 import com.wynntils.core.mod.type.CrashType;
 import com.wynntils.features.GammabrightFeature;
 import com.wynntils.features.LootrunFeature;
+import com.wynntils.features.SilencerFeature;
 import com.wynntils.features.TerritoryDefenseMessageFeature;
 import com.wynntils.features.TranslationFeature;
 import com.wynntils.features.chat.ChatCoordinatesFeature;
@@ -309,6 +310,7 @@ public final class FeatureManager extends Manager {
 
         // region uncategorized
         registerFeature(new GammabrightFeature());
+        registerFeature(new SilencerFeature());
         registerFeature(new TerritoryDefenseMessageFeature());
         registerFeature(new TranslationFeature());
         // endregion
@@ -369,6 +371,10 @@ public final class FeatureManager extends Manager {
         // Assert that the feature name is properly translated
         assert !feature.getTranslatedName().startsWith("feature.wynntils.")
                 : "Fix i18n for " + feature.getTranslatedName();
+
+        // Assert that the feature description is properly translated
+        assert !feature.getTranslatedDescription().startsWith("feature.wynntils.")
+                : "Fix i18n for " + feature.getTranslatedDescription();
 
         if (!feature.userEnabled.get()) return; // not enabled by user
 

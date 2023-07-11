@@ -40,10 +40,13 @@ public final class ContainerModel extends Model {
     private static final Pair<Integer, Integer> BANK_PREVIOUS_NEXT_SLOTS = new Pair<>(17, 8);
     private static final Pair<Integer, Integer> GUILD_BANK_PREVIOUS_NEXT_SLOTS = new Pair<>(9, 27);
     private static final Pair<Integer, Integer> TRADE_MARKET_PREVIOUS_NEXT_SLOTS = new Pair<>(17, 26);
+    private static final Pair<Integer, Integer> TRADE_MARKET_SECONDARY_PREVIOUS_NEXT_SLOTS = new Pair<>(26, 35);
     private static final Pair<Integer, Integer> SCRAP_MENU_PREVIOUS_NEXT_SLOTS = new Pair<>(0, 8);
     private static final StyledText LAST_BANK_PAGE_STRING = StyledText.fromString(">§4>§c>§4>§c>");
     private static final StyledText FIRST_TRADE_MARKET_PAGE_STRING = StyledText.fromString("§bReveal Item Names");
     private static final StyledText TRADE_MARKET_TITLE = StyledText.fromString("Trade Market");
+    private static final Pattern TRADE_MARKET_FILTER_TITLE = Pattern.compile("\\[Pg\\. \\d] Filter Items");
+    private static final StyledText TRADE_MARKET_SEARCH_TITLE = StyledText.fromString("Search Results");
     private static final StyledText SCRAP_MENU_TITLE = StyledText.fromString("Scrap Rewards");
     private static final StyledText SEASKIPPER_TITLE = StyledText.fromString("V.S.S. Seaskipper");
 
@@ -86,9 +89,17 @@ public final class ContainerModel extends Model {
 
     public boolean isTradeMarketScreen(Screen screen) {
         if (!(screen instanceof ContainerScreen cs)) return false;
-        // No regex required, title is very simple and can be checked with .equals()
-        return cs.getMenu().getRowCount() == 6
-                && StyledText.fromComponent(screen.getTitle()).equals(TRADE_MARKET_TITLE);
+        if (cs.getMenu().getRowCount() != 6) return false;
+
+        return StyledText.fromComponent(cs.getTitle()).equals(TRADE_MARKET_TITLE);
+    }
+
+    public boolean isSecondaryTradeMarketScreen(Screen screen) {
+        if (!(screen instanceof ContainerScreen cs)) return false;
+        if (cs.getMenu().getRowCount() != 6) return false;
+
+        return StyledText.fromComponent(cs.getTitle()).matches(TRADE_MARKET_FILTER_TITLE)
+                || StyledText.fromComponent(cs.getTitle()).equals(TRADE_MARKET_SEARCH_TITLE);
     }
 
     public boolean isFirstTradeMarketPage(Screen screen) {
@@ -173,6 +184,10 @@ public final class ContainerModel extends Model {
             if (scrollUp && Models.Container.isFirstTradeMarketPage(gui)) return null;
 
             return TRADE_MARKET_PREVIOUS_NEXT_SLOTS;
+        }
+
+        if (Models.Container.isSecondaryTradeMarketScreen(gui)) {
+            return TRADE_MARKET_SECONDARY_PREVIOUS_NEXT_SLOTS;
         }
 
         if (Models.Container.isScrapMenuScreen(gui)) {
