@@ -39,11 +39,6 @@ public interface ContainerQueryStep {
      */
     void onError(String errorMsg);
 
-    /**
-     * This will be called after query competition, after the inventory was closed.
-     */
-    void onComplete();
-
     /** A way to identify this query. It is used to help avoid queueing the same query twice. */
     String getName();
 }

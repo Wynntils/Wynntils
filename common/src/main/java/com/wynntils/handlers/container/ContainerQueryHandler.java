@@ -148,10 +148,8 @@ public final class ContainerQueryHandler extends Handler {
             }
         } else {
             // We're done
-            ContainerQueryStep lastStep = currentStep;
             endQuery();
             McUtils.sendPacket(new ServerboundContainerClosePacket(id));
-            lastStep.onComplete();
             if (!queuedQueries.isEmpty()) {
                 runQuery(queuedQueries.pop());
             }
