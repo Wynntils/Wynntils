@@ -145,20 +145,27 @@ public class CustomBankPagesFeature extends Feature {
 
         if (currentPage == pageDestination) return;
 
-        if (currentPage + 1 == pageDestination && lastPage != currentPage) {
-            clickNextPage();
-        } else if (currentPage - 1 == pageDestination) {
-            clickPreviousPage();
-        } else {
-            if (!tryUsingJumpButtons()) {
-                if (pageDestination < currentPage) {
-                    clickPreviousPage();
-                } else if (lastPage != currentPage) {
+        int pageDifference = pageDestination - currentPage;
+
+        switch (pageDifference) {
+            case 1 -> {
+                if (lastPage != currentPage) {
                     clickNextPage();
+                }
+            }
+            case -1 -> clickPreviousPage();
+            default -> {
+                if (!tryUsingJumpButtons()) {
+                    if (pageDestination < currentPage && lastPage != currentPage) {
+                        clickPreviousPage();
+                    } else if (lastPage != currentPage) {
+                        clickNextPage();
+                    }
                 }
             }
         }
     }
+
 
     private boolean tryUsingJumpButtons() {
         int closest = QUICK_JUMP_DESTINATIONS.get(0);
@@ -180,7 +187,7 @@ public class CustomBankPagesFeature extends Feature {
                     McUtils.containerMenu().containerId,
                     GLFW.GLFW_MOUSE_BUTTON_LEFT,
                     McUtils.containerMenu().getItems());
-            
+
             return true;
         }
 
