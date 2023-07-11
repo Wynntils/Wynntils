@@ -23,6 +23,7 @@ import net.minecraft.ChatFormatting;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
+import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
@@ -118,6 +119,7 @@ public class CustomBankPagesFeature extends Feature {
     @SubscribeEvent
     public void onSetSlot(SetSlotEvent.Pre e) {
         if (!isBankScreen) return;
+        if (e.getContainer() instanceof Inventory) return;
 
         if (BUTTON_SLOTS.contains(e.getSlot())) {
             ItemStack jumpButton = new ItemStack(Items.DIAMOND_AXE);
