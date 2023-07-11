@@ -232,7 +232,7 @@ public final class ContentModel extends Model {
         updateTracker(null, null, null);
     }
 
-    public void updateFromBookQuery(List<ContentInfo> newContent) {
+    public void updateFromContentBookQuery(List<ContentInfo> newContent) {
         System.out.println("NEW QUESTS");
         List<QuestInfo> newQuests = new ArrayList<>();
         for (ContentInfo content : newContent) {
@@ -251,13 +251,20 @@ public final class ContentModel extends Model {
             newQuests.add(questInfo);
         }
         Models.Quest.updateQuestsFromQuery(newQuests);
+
+        //Models.Discovery.setDiscoveries(newContent);
+        //Models.Discovery.setSecretDiscoveries(newContent);
     }
 
-    public void updateMiniQuestsFromQuery(List<ContentInfo> newMiniQuests) {
-        System.out.println("New mini-quests: " + newMiniQuests);
+    public void rescanContentBook(String filterName) {
+        CONTAINER_QUERIES.queryQuestBook(filterName);
     }
 
-    public void rescanContentBook() {
-        CONTAINER_QUERIES.queryQuestBook();
+    public void startTracking(String name, ContentType contentType) {
+        CONTAINER_QUERIES.toggleTracking(name, contentType);
+    }
+
+    public void stopTracking() {
+//        McUtils.sendCommand("tracking");
     }
 }

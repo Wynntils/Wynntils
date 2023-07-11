@@ -11,6 +11,7 @@ import com.wynntils.handlers.container.scriptedquery.QueryStep;
 import com.wynntils.handlers.container.scriptedquery.ScriptedContainerQuery;
 import com.wynntils.handlers.container.type.ContainerContent;
 import com.wynntils.models.content.type.ContentInfo;
+import com.wynntils.models.content.type.ContentType;
 import com.wynntils.models.items.items.gui.ContentItem;
 import com.wynntils.models.quests.QuestInfo;
 import com.wynntils.utils.mc.McUtils;
@@ -38,7 +39,7 @@ public class ContentBookQueries {
      * Trigger a rescan of the quest book. When the rescan is done, a QuestBookReloadedEvent will
      * be sent. The available quests are then available using getQuests.
      */
-    protected void queryQuestBook() {
+    protected void queryQuestBook(String filterName) {
         if (newQuests != null) return;
 
         newQuests = new ArrayList<>();
@@ -84,7 +85,7 @@ public class ContentBookQueries {
 
                 // Finally signal we're done
                 .execute(() -> {
-                    Models.Content.updateFromBookQuery(newQuests);
+                    Models.Content.updateFromContentBookQuery(newQuests);
                     newQuests = null;
                 })
                 //
@@ -103,7 +104,6 @@ public class ContentBookQueries {
     }
 
     private void processQuestBookPage(ContainerContent container) {
-
         System.out.println("items in PROCESS PAGE:" + getItemDesc(container.items()));
 
         // Quests are in the top-left container area
@@ -118,7 +118,7 @@ public class ContentBookQueries {
         }
     }
 
-    protected void toggleTracking(QuestInfo questInfo) {
+    protected void toggleTracking(String name, ContentType contentType) {
         // We do not want to change filtering when tracking, since we get
         // no chance to reset it
         ScriptedContainerQuery query = ScriptedContainerQuery.builder("Toggle Content Tracking Query")

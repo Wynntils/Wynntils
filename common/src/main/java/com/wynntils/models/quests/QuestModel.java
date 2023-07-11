@@ -12,6 +12,7 @@ import com.wynntils.core.net.ApiResponse;
 import com.wynntils.core.net.UrlId;
 import com.wynntils.core.text.StyledText;
 import com.wynntils.models.characterstats.CombatXpModel;
+import com.wynntils.models.content.type.ContentType;
 import com.wynntils.models.quests.event.QuestBookReloadedEvent;
 import com.wynntils.models.quests.type.QuestSortOrder;
 import com.wynntils.models.worlds.event.WorldStateEvent;
@@ -27,7 +28,6 @@ import net.minecraftforge.eventbus.api.SubscribeEvent;
 import org.apache.commons.lang3.StringUtils;
 
 public final class QuestModel extends Model {
-    private static final QuestContainerQueries CONTAINER_QUERIES = new QuestContainerQueries();
     private static final DialogueHistoryQueries DIALOGUE_HISTORY_QUERIES = new DialogueHistoryQueries();
     private static final String MINI_QUEST_PREFIX = "Mini-Quest - ";
 
@@ -52,7 +52,7 @@ public final class QuestModel extends Model {
 
     public void rescanQuestBook(boolean includeQuests, boolean includeMiniQuests) {
         WynntilsMod.info("Requesting rescan of Content Book");
-        Models.Content.rescanContentBook();
+        Models.Content.rescanContentBook("Quests");
     }
 
     public void rescanDialogueHistory() {
@@ -102,11 +102,11 @@ public final class QuestModel extends Model {
     }
 
     public void startTracking(QuestInfo questInfo) {
-        CONTAINER_QUERIES.toggleTracking(questInfo);
+        Models.Content.startTracking(questInfo.getName(), ContentType.QUEST);
     }
 
     public void stopTracking() {
-        McUtils.sendCommand("tracking");
+        Models.Content.stopTracking();
     }
 
     public void openQuestOnWiki(QuestInfo questInfo) {

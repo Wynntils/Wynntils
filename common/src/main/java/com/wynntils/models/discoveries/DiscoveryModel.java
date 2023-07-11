@@ -13,6 +13,7 @@ import com.wynntils.core.net.ApiResponse;
 import com.wynntils.core.net.Download;
 import com.wynntils.core.net.UrlId;
 import com.wynntils.models.characterstats.CombatXpModel;
+import com.wynntils.models.content.type.ContentInfo;
 import com.wynntils.models.discoveries.event.DiscoveriesUpdatedEvent;
 import com.wynntils.models.discoveries.profile.DiscoveryProfile;
 import com.wynntils.models.discoveries.type.DiscoveryType;
@@ -35,8 +36,6 @@ import net.minecraftforge.eventbus.api.EventPriority;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 
 public final class DiscoveryModel extends Model {
-    private static final DiscoveryContainerQueries CONTAINER_QUERIES = new DiscoveryContainerQueries();
-
     private List<DiscoveryInfo> discoveries = List.of();
     private List<DiscoveryInfo> secretDiscoveries = List.of();
     private List<DiscoveryInfo> discoveryInfoList = new ArrayList<>();
@@ -98,7 +97,7 @@ public final class DiscoveryModel extends Model {
     }
 
     private void queryDiscoveries() {
-        CONTAINER_QUERIES.queryDiscoveries();
+        Models.Content.rescanContentBook("Discoveries");
     }
 
     public void setDiscoveries(List<DiscoveryInfo> newDiscoveries) {
