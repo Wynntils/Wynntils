@@ -124,6 +124,7 @@ import com.wynntils.features.ui.SoulPointTimerFeature;
 import com.wynntils.features.ui.WynncraftButtonFeature;
 import com.wynntils.features.ui.WynncraftPauseScreenFeature;
 import com.wynntils.features.ui.WynntilsQuestBookFeature;
+import com.wynntils.features.wynntils.BetaWarningFeature;
 import com.wynntils.features.wynntils.ChangelogFeature;
 import com.wynntils.features.wynntils.CommandsFeature;
 import com.wynntils.features.wynntils.FixPacketBugsFeature;
@@ -297,6 +298,7 @@ public final class FeatureManager extends Manager {
         // endregion
 
         // region wynntils
+        registerFeature(new BetaWarningFeature());
         registerFeature(new ChangelogFeature());
         registerFeature(new CommandsFeature());
         registerFeature(new FixPacketBugsFeature());
@@ -367,6 +369,10 @@ public final class FeatureManager extends Manager {
         // Assert that the feature name is properly translated
         assert !feature.getTranslatedName().startsWith("feature.wynntils.")
                 : "Fix i18n for " + feature.getTranslatedName();
+
+        // Assert that the feature description is properly translated
+        assert !feature.getTranslatedDescription().startsWith("feature.wynntils.")
+                : "Fix i18n for " + feature.getTranslatedDescription();
 
         if (!feature.userEnabled.get()) return; // not enabled by user
 

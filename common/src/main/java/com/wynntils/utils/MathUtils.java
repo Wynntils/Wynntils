@@ -7,6 +7,7 @@ package com.wynntils.utils;
 import java.util.Locale;
 import java.util.Map;
 import java.util.TreeMap;
+import org.joml.Vector2f;
 
 public final class MathUtils {
     private static final Map<Character, Integer> ROMAN_NUMERALS_MAP =
@@ -118,5 +119,9 @@ public final class MathUtils {
         boolean xIntersects = aX1 < bX2 && bX1 < aX2;
         boolean zIntersects = aZ1 < bZ2 && bZ1 < aZ2;
         return xIntersects && zIntersects;
+    }
+
+    public static float signedArea(Vector2f p0, Vector2f p1, Vector2f p2) {
+        return (p1.x() - p0.x()) * (p2.y() - p0.y()) - (p2.x() - p0.x()) * (p1.y() - p0.y());
     }
 }
