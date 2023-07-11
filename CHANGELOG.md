@@ -1,9 +1,21 @@
+## [0.0.3-alpha.123](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.122...v0.0.3-alpha.123) (2023-07-11)
+
+
+### Bug Fixes
+
+* NPE in upfixer ([#1710](https://github.com/Wynntils/Artemis/issues/1710)) ([04723fe](https://github.com/Wynntils/Artemis/commit/04723fe607c91c7cab0629fecbf9c6cf12e4719e))
+
 ## [0.0.3-alpha.122](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.121...v0.0.3-alpha.122) (2023-07-11)
 
 
 ### New Features
 
 * Silencer - hotkey-toggleable assignable Master Volume ([#1643](https://github.com/Wynntils/Artemis/issues/1643)) ([ad09d91](https://github.com/Wynntils/Artemis/commit/ad09d917a616c62f252a2f8824cb9eb0d47e2202))
+
+
+### Miscellaneous Chores
+
+* **release:** v0.0.3-alpha.122 [skip ci] ([eb2bddc](https://github.com/Wynntils/Artemis/commit/eb2bddcef160c3426d87c3a605278d7aabe091f0))
 
 ## [0.0.3-alpha.121](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.120...v0.0.3-alpha.121) (2023-07-11)
 
@@ -40,16 +52,4 @@
 ### Miscellaneous Chores
 
 * **release:** v0.0.3-alpha.119 [skip ci] ([0a45497](https://github.com/Wynntils/Artemis/commit/0a45497ea6aa5d423cb31dfe445dcaf4e751fff5))
-
-## [0.0.3-alpha.118](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.117...v0.0.3-alpha.118) (2023-07-09)
-
-
-### Bug Fixes
-
-* Fix objective scoreboard part showing incorrectly when either objective overlay is disabled ([#1707](https://github.com/Wynntils/Artemis/issues/1707)) ([0bcc92b](https://github.com/Wynntils/Artemis/commit/0bcc92bd74876f9535e974c1a6e1ca5d1426d678))
-
-
-### Miscellaneous Chores
-
-* **release:** v0.0.3-alpha.118 [skip ci] ([3282f33](https://github.com/Wynntils/Artemis/commit/3282f33ea4f8531e6d8478decf868e716225e18b))
 
