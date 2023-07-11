@@ -35,7 +35,7 @@ public class DialogueHistoryQueries {
                 .onError(msg -> WynntilsMod.warn("Problem getting dialogue history in Quest Book: " + msg))
 
                 // Open content book
-                .then(QueryStep.useItemInHotbar(InventoryUtils.QUEST_BOOK_SLOT_NUM)
+                .then(QueryStep.useItemInHotbar(InventoryUtils.CONTENT_BOOK_SLOT_NUM)
                         .expectContainerTitle(ContentBookQueries.CONTENT_BOOK_TITLE))
 
                 // Repeatedly read the dialogue history from the lore of the history item,

@@ -13,13 +13,11 @@ import com.wynntils.handlers.container.type.ContainerContent;
 import com.wynntils.models.content.type.ContentInfo;
 import com.wynntils.models.content.type.ContentType;
 import com.wynntils.models.items.items.gui.ContentItem;
-import com.wynntils.models.quests.QuestInfo;
 import com.wynntils.utils.mc.McUtils;
 import com.wynntils.utils.wynn.ContainerUtils;
 import com.wynntils.utils.wynn.InventoryUtils;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
 import java.util.Optional;
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
@@ -33,31 +31,32 @@ public class ContentBookQueries {
     public static final String CONTENT_BOOK_TITLE = "§f\uE000\uE072";
     private static final StyledText SCROLL_DOWN_TEXT = StyledText.fromString("§7Scroll Down");
 
-    private List<ContentInfo> newQuests;
+    private List<ContentInfo> newContent;
 
     /**
-     * Trigger a rescan of the quest book. When the rescan is done, a QuestBookReloadedEvent will
-     * be sent. The available quests are then available using getQuests.
+     * Trigger a rescan of the content book. When the rescan is done, Models.Content.updateFromContentBookQuery
+     * will be called.
      */
-    protected void queryQuestBook(String filterName) {
-        if (newQuests != null) return;
+    protected void queryContentBook(String filterName) {
+        if (newContent != null) return;
 
-        newQuests = new ArrayList<>();
+        newContent = new ArrayList<>();
 
-        ScriptedContainerQuery query = ScriptedContainerQuery.builder("Quest Book Query")
+        ScriptedContainerQuery query = ScriptedContainerQuery.builder("Content Book Query")
                 .onError(msg -> {
-                    WynntilsMod.warn("Problem querying Quest Book: " + msg);
+                    WynntilsMod.warn("Problem querying Content Book: " + msg);
                     McUtils.sendMessageToClient(
-                            Component.literal("Error updating quest book.").withStyle(ChatFormatting.RED));
+                            Component.literal("Error updating content book.").withStyle(ChatFormatting.RED));
                 })
 
                 // Open content book
-                .then(QueryStep.useItemInHotbar(InventoryUtils.QUEST_BOOK_SLOT_NUM)
+                .then(QueryStep.useItemInHotbar(InventoryUtils.CONTENT_BOOK_SLOT_NUM)
                         .expectContainerTitle(CONTENT_BOOK_TITLE))
 
                 // Save filter state, and set it correctly
                 .repeat(
                         c -> {
+                            // FIXME
                             // if first time around, save current filter state
 
                             // check if our filter is of the requested type,
@@ -67,17 +66,18 @@ public class ContentBookQueries {
                         QueryStep.clickOnSlot(CHANGE_VIEW))
 
                 // Process first page
-                .reprocess(this::processQuestBookPage)
+                .reprocess(this::processContentBookPage)
 
                 // Repeatedly click next page, if available, and process the following page
                 .repeat(
                         c -> ScriptedContainerQuery.containerHasSlot(
                                 c, NEXT_PAGE_SLOT, Items.GOLDEN_SHOVEL, SCROLL_DOWN_TEXT),
-                        QueryStep.clickOnSlot(NEXT_PAGE_SLOT).processIncomingContainer(this::processQuestBookPage))
+                        QueryStep.clickOnSlot(NEXT_PAGE_SLOT).processIncomingContainer(this::processContentBookPage))
 
                 // Restore filter to original value
                 .repeat(
                         c -> {
+                            // FIXME
                             // is filter the same as the one we saved?
                             return false;
                         },
@@ -85,8 +85,8 @@ public class ContentBookQueries {
 
                 // Finally signal we're done
                 .execute(() -> {
-                    Models.Content.updateFromContentBookQuery(newQuests);
-                    newQuests = null;
+                    Models.Content.updateFromContentBookQuery(newContent);
+                    newContent = null;
                 })
                 //
                 .build();
@@ -94,19 +94,7 @@ public class ContentBookQueries {
         query.executeQuery();
     }
 
-    private String getItemDesc(List<ItemStack> items) {
-        StringBuilder sb = new StringBuilder();
-        for (var item : items) {
-            sb.append(StyledText.fromComponent(item.getHoverName()));
-            sb.append(", ");
-        }
-        return sb.toString();
-    }
-
-    private void processQuestBookPage(ContainerContent container) {
-        System.out.println("items in PROCESS PAGE:" + getItemDesc(container.items()));
-
-        // Quests are in the top-left container area
+    private void processContentBookPage(ContainerContent container) {
         for (int slot = 0; slot < 54; slot++) {
             ItemStack itemStack = container.items().get(slot);
             Optional<ContentItem> contentItemOpt = Models.Item.asWynnItem(itemStack, ContentItem.class);
@@ -114,7 +102,7 @@ public class ContentBookQueries {
 
             ContentInfo contentInfo = contentItemOpt.get().getContentInfo();
 
-            newQuests.add(contentInfo);
+            newContent.add(contentInfo);
         }
     }
 
@@ -129,19 +117,19 @@ public class ContentBookQueries {
                 })
 
                 // Open compass/character menu
-                .then(QueryStep.useItemInHotbar(InventoryUtils.QUEST_BOOK_SLOT_NUM)
+                .then(QueryStep.useItemInHotbar(InventoryUtils.CONTENT_BOOK_SLOT_NUM)
                         .expectContainerTitle(CONTENT_BOOK_TITLE))
 
                 // Repeatedly check if the requested task is on this page,
                 // if so, click it, otherwise click on next slot (if available)
                 .repeat(
                         c -> {
-                            // is any of our new items the requested one?
-                            // if so, click on it's slot and return false,
-                            // otherwise return true to continue to next page
-                            // also, .checkIfPreviousSlotWithName(NEXT_PAGE_SLOT, Items.GOLDEN_SHOVEL, SCROLL_DOWN_TEXT)
-                            // otherwise return failure
+                            int slot = findTrackedContent(c, name, contentType);
+                            // Not found, try to go to next page
+                            if (slot == -1) return true;
 
+                            // Found it, now click it
+                            ContainerUtils.clickOnSlot(slot, c.containerId(), GLFW.GLFW_MOUSE_BUTTON_LEFT, c.items());
                             return false;
                         },
                         QueryStep.clickOnMatchingSlot(NEXT_PAGE_SLOT, Items.GOLDEN_SHOVEL, SCROLL_DOWN_TEXT))
@@ -151,23 +139,19 @@ public class ContentBookQueries {
         query.executeQuery();
     }
 
-    private void findQuestForTracking(ContainerContent container, QuestInfo questInfo, boolean isMiniQuest) {
-        for (int row = 0; row < 6; row++) {
-            for (int col = 0; col < 7; col++) {
-                int slot = row * 9 + col;
+    private int findTrackedContent(ContainerContent container, String name, ContentType contentType) {
+        for (int slot = 0; slot < 54; slot++) {
+            ItemStack itemStack = container.items().get(slot);
+            Optional<ContentItem> contentItemOpt = Models.Item.asWynnItem(itemStack, ContentItem.class);
+            if (contentItemOpt.isEmpty()) continue;
 
-                // Very first slot is chat history, but only in the main quests page
-                if (!isMiniQuest && slot == 0) continue;
-
-                ItemStack itemStack = container.items().get(slot);
-
-                String questName = "FIXME"; // QuestInfoParser.getQuestName(itemStack);
-                if (Objects.equals(questName, questInfo.getName())) {
-                    ContainerUtils.clickOnSlot(
-                            slot, container.containerId(), GLFW.GLFW_MOUSE_BUTTON_LEFT, container.items());
-                    return;
-                }
+            ContentInfo contentInfo = contentItemOpt.get().getContentInfo();
+            if (contentInfo.type() == contentType && contentInfo.name().equals(name)) {
+                // Found it!
+                return slot;
             }
         }
+
+        return -1;
     }
 }

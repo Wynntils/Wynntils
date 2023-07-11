@@ -257,7 +257,7 @@ public final class ContentModel extends Model {
     }
 
     public void rescanContentBook(String filterName) {
-        CONTAINER_QUERIES.queryQuestBook(filterName);
+        CONTAINER_QUERIES.queryContentBook(filterName);
     }
 
     public void startTracking(String name, ContentType contentType) {
