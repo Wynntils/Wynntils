@@ -78,7 +78,10 @@ public final class ScriptedContainerQuery implements ContainerQueryStep {
     }
 
     boolean popOneStep() {
-        if (steps.isEmpty()) return false;
+        if (steps.isEmpty()) {
+            currentStep = null;
+            return false;
+        }
 
         this.currentStep = steps.pop();
         return true;
