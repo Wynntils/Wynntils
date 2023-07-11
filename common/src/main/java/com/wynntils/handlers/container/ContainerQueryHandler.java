@@ -144,7 +144,15 @@ public final class ContainerQueryHandler extends Handler {
             // Go on and query another container
             currentStep = nextStep;
             if (!currentStep.startStep(currentContainer)) {
-                raiseError("Cannot execute chained start step");
+//                raiseError("Cannot execute chained start step");
+                // FIXME:
+                // We're done
+                endQuery();
+                McUtils.sendPacket(new ServerboundContainerClosePacket(id));
+                if (!queuedQueries.isEmpty()) {
+                    runQuery(queuedQueries.pop());
+                }
+
             }
         } else {
             // We're done
