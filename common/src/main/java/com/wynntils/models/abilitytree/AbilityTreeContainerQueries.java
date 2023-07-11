@@ -35,7 +35,8 @@ public class AbilityTreeContainerQueries {
     private static final int NEXT_PAGE_SLOT = 59;
     private static final int DUMMY_SLOT = 76; // This is the second archetype icon
     private static final StyledText NEXT_PAGE_ITEM_NAME = StyledText.fromString("§7Next Page");
-    private static final StyledText PREVIOUS_PAGE_ITEM_NAME = StyledText.fromString("§7Prev Page");
+    private static final StyledText PREVIOUS_PAGE_ITEM_NAME = StyledText.fromString("§7Previous Page");
+    private int pageCount;
 
     public void dumpAbilityTree(Consumer<AbilityTreeInfo> supplier) {
         queryAbilityTree(new AbilityTreeContainerQueries.AbilityPageDumper(supplier));
@@ -65,13 +66,16 @@ public class AbilityTreeContainerQueries {
                         .expectContainerTitle(Models.Container.ABILITY_TREE_PATTERN.pattern()))
 
                 // Go to first page, and save current page number
+                .execute(() -> {
+                    this.pageCount = 0;
+                })
                 .repeat(
                         c -> ScriptedContainerQuery.containerHasSlot(
                                 c, PREVIOUS_PAGE_SLOT, Items.STONE_AXE, PREVIOUS_PAGE_ITEM_NAME),
                         QueryStep.clickOnSlot(PREVIOUS_PAGE_SLOT).processIncomingContainer(c -> {
-                            // count how many times this is done, and
-                            // save loop variable to be able to restore proper page
-                            // if not even entered here, we were already on first page
+                            // Count how many times this is done, and save this value.
+                            // If we did not even enter here, we were already on first page.
+                            this.pageCount++;
                         }))
 
                 // Process first page
@@ -86,8 +90,9 @@ public class AbilityTreeContainerQueries {
                 // Go back to initial page
                 .repeat(
                         c -> {
-                            // check if global loop/page variable means we need to step back more
-                            return false;
+                            // Go back as many pages as the original count was from the end
+                            this.pageCount++;
+                            return this.pageCount != Models.AbilityTree.ABILITY_TREE_PAGES;
                         },
                         QueryStep.clickOnSlot(PREVIOUS_PAGE_SLOT))
                 //
