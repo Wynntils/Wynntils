@@ -78,10 +78,12 @@ public class CustomBankPagesFeature extends Feature {
                 buttonFivePage.get(),
                 buttonSixPage.get());
 
-        if (quickJumping && pageDestination > lastPage) {
+        if (!quickJumping) return;
+
+        if (pageDestination > lastPage) {
             quickJumping = false;
             pageDestination = currentPage;
-        } else if (pageDestination != currentPage && quickJumping) {
+        } else if (pageDestination != currentPage) {
             jumpToDestination();
         } else {
             quickJumping = false;
