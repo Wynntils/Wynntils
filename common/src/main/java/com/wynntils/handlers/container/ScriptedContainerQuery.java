@@ -11,11 +11,11 @@ import com.wynntils.handlers.container.type.ContainerContent;
 import com.wynntils.utils.wynn.ContainerUtils;
 import java.util.LinkedList;
 import java.util.function.Consumer;
+import java.util.function.Predicate;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.inventory.MenuType;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.Items;
 import org.lwjgl.glfw.GLFW;
 
 public final class ScriptedContainerQuery {
@@ -53,7 +53,7 @@ public final class ScriptedContainerQuery {
     }
 
     @FunctionalInterface
-    private interface StartAction {
+    public interface StartAction {
         boolean execute(ContainerContent container);
     }
 
@@ -67,21 +67,16 @@ public final class ScriptedContainerQuery {
         void processContainer(ContainerContent container);
     }
 
-    private final class ScriptedQueryStep implements ContainerQueryStep {
+    private class ScriptedQueryStep implements ContainerQueryStep {
         final StartAction startAction;
         final ContainerVerification verification;
         final ContainerAction handleContent;
-        final boolean acceptNoOp;
 
         private ScriptedQueryStep(
-                StartAction startAction,
-                ContainerVerification verification,
-                ContainerAction handleContent,
-                boolean acceptNoOp) {
+                StartAction startAction, ContainerVerification verification, ContainerAction handleContent) {
             this.startAction = startAction;
             this.verification = verification;
             this.handleContent = handleContent;
-            this.acceptNoOp = acceptNoOp;
         }
 
         @Override
@@ -103,6 +98,12 @@ public final class ScriptedContainerQuery {
         public ContainerQueryStep getNextStep(ContainerContent container) {
             if (ScriptedContainerQuery.this.steps.isEmpty()) return null;
 
+            if (ScriptedContainerQuery.this.steps.getFirst() instanceof RepeatedQueryStep repeatedQueryStep) {
+                if (repeatedQueryStep.shouldRepeat(container)) {
+                    return ScriptedContainerQuery.this.steps.getFirst();
+                }
+            }
+
             return ScriptedContainerQuery.this.steps.pop();
         }
 
@@ -122,10 +123,62 @@ public final class ScriptedContainerQuery {
         public String getName() {
             return ScriptedContainerQuery.this.name;
         }
+    }
 
-        @Override
-        public boolean acceptNoOp() {
-            return this.acceptNoOp;
+    public static class QueryStep {
+        public QueryStep(StartAction startAction) {}
+
+        public ScriptedQueryStep toScriptedQueryStep(ScriptedContainerQuery query) {
+            return query.new ScriptedQueryStep(null, null, null);
+        }
+
+        public static QueryStep useItemInHotbar(int slotNum) {
+            return new QueryStep((container) -> ContainerUtils.openInventory(slotNum));
+        }
+
+        public static QueryStep clickOnSlot(int slotNum) {
+            return new QueryStep(container -> {
+                ContainerUtils.clickOnSlot(
+                        slotNum, container.containerId(), GLFW.GLFW_MOUSE_BUTTON_LEFT, container.items());
+                return true;
+            });
+        }
+
+        public QueryStep matchTitle(String regExp) {
+            if (verification != null) {
+                throw new IllegalStateException("Set verification twice");
+            }
+            this.verification = (title, type) -> title.getString().matches(regExp);
+            checkForCompletion();
+            return this;
+        }
+
+        public QueryStep expectSameMenu() {
+            if (verification != null) {
+                throw new IllegalStateException("Set verification twice");
+            }
+            // We should never get to MenuOpenedEvent
+            this.verification = (title, type) -> false;
+            checkForCompletion();
+            return this;
+        }
+
+        public QueryStep processIncomingContainer(ContainerAction action) {
+            if (handleContent != null) {
+                throw new IllegalStateException("Set handleContent twice");
+            }
+            this.handleContent = action;
+            checkForCompletion();
+            return this;
+        }
+
+        public QueryStep ignoreIncomingContainer() {
+            if (handleContent != null) {
+                throw new IllegalStateException("Set handleContent twice");
+            }
+            this.handleContent = c -> {};
+            checkForCompletion();
+            return this;
         }
     }
 
@@ -140,20 +193,10 @@ public final class ScriptedContainerQuery {
      * such triplet. It will not allow the creation of a step where one of them are missing.
      */
     public static final class QueryBuilder {
-        private StartAction startAction;
-        private ContainerVerification verification;
-        private ContainerAction handleContent;
-        private boolean acceptNoOp = false;
-
         private final ScriptedContainerQuery query;
 
         private QueryBuilder(ScriptedContainerQuery scriptedContainerQuery) {
             query = scriptedContainerQuery;
-        }
-
-        public QueryBuilder setAcceptNoOp(boolean acceptNoOp) {
-            this.acceptNoOp = acceptNoOp;
-            return this;
         }
 
         public QueryBuilder onError(Consumer<String> errorHandler) {
@@ -161,118 +204,52 @@ public final class ScriptedContainerQuery {
             return this;
         }
 
-        public QueryBuilder expectTitle(String expectedTitle) {
-            if (verification != null) {
-                throw new IllegalStateException("Set verification twice");
-            }
-            this.verification = (title, type) -> title.getString().equals(expectedTitle);
-            checkForCompletion();
-            return this;
-        }
-
-        public QueryBuilder matchTitle(String regExp) {
-            if (verification != null) {
-                throw new IllegalStateException("Set verification twice");
-            }
-            this.verification = (title, type) -> title.getString().matches(regExp);
-            checkForCompletion();
-            return this;
-        }
-
-        public QueryBuilder expectSameContainer() {
-            if (verification != null) {
-                throw new IllegalStateException("Set verification twice");
-            }
-            // We should never get to MenuOpenedEvent
-            this.verification = (title, type) -> false;
-            checkForCompletion();
-            return this;
-        }
-
-        public QueryBuilder processContainer(ContainerAction action) {
-            if (handleContent != null) {
-                throw new IllegalStateException("Set handleContent twice");
-            }
-            this.handleContent = action;
-            checkForCompletion();
-            return this;
-        }
-
-        public QueryBuilder clickOnSlot(int slotNum) {
-            if (startAction != null) {
-                throw new IllegalStateException("Set startAction twice");
-            }
-            this.startAction = (container) -> {
-                ContainerUtils.clickOnSlot(
-                        slotNum, container.containerId(), GLFW.GLFW_MOUSE_BUTTON_LEFT, container.items());
-                return true;
-            };
-            checkForCompletion();
-            return this;
-        }
-
-        public QueryBuilder clickOnSlotIfExists(int slotNum, int secondarySlotNum) {
-            if (startAction != null) {
-                throw new IllegalStateException("Set startAction twice");
-            }
-            this.startAction = (container) -> {
-                ItemStack itemStack = container.items().get(slotNum);
-                if (itemStack.isEmpty() || itemStack.getItem() == Items.AIR) {
-                    ContainerUtils.clickOnSlot(
-                            secondarySlotNum, container.containerId(), GLFW.GLFW_MOUSE_BUTTON_LEFT, container.items());
-                } else {
-                    ContainerUtils.clickOnSlot(
-                            slotNum, container.containerId(), GLFW.GLFW_MOUSE_BUTTON_LEFT, container.items());
-                }
-                return true;
-            };
-            checkForCompletion();
-            return this;
-        }
-
-        public QueryBuilder clickOnSlotWithName(int slotNum, Item expectedItemType, StyledText expectedItemName) {
-            if (startAction != null) {
-                throw new IllegalStateException("Set startAction twice");
-            }
-            this.startAction = (container) -> {
-                ItemStack itemStack = container.items().get(slotNum);
-                if (!itemStack.is(expectedItemType)
-                        || !StyledText.fromComponent(itemStack.getHoverName()).equals(expectedItemName)) return false;
-
-                ContainerUtils.clickOnSlot(
-                        slotNum, container.containerId(), GLFW.GLFW_MOUSE_BUTTON_LEFT, container.items());
-                return true;
-            };
-            checkForCompletion();
-            return this;
-        }
-
-        public QueryBuilder useItemInHotbar(int slotNum) {
-            if (startAction != null) {
-                throw new IllegalStateException("Set startAction twice");
-            }
-            this.startAction = (container) -> ContainerUtils.openInventory(slotNum);
-            checkForCompletion();
-            return this;
-        }
-
         public ScriptedContainerQuery build() {
-            if (startAction != null || handleContent != null || verification != null) {
-                throw new IllegalStateException("Partial contents only for last step");
-            }
             return query;
         }
 
-        private void checkForCompletion() {
-            if (startAction != null && verification != null && handleContent != null) {
-                ScriptedQueryStep nextStep =
-                        query.new ScriptedQueryStep(startAction, verification, handleContent, acceptNoOp);
-                query.steps.add(nextStep);
-                startAction = null;
-                verification = null;
-                handleContent = null;
-                acceptNoOp = false;
-            }
+        public QueryBuilder reprocess(ContainerAction action) {
+            // FIXME
+            query.steps.add(null);
+            return this;
+        }
+
+        public QueryBuilder execute(Runnable r) {
+            // FIXME
+            query.steps.add(null);
+            return this;
+        }
+
+        public QueryBuilder then(QueryStep step) {
+            query.steps.add(step.toScriptedQueryStep(query));
+            return this;
+        }
+
+        public QueryBuilder repeat(Predicate<ContainerContent> containerCheck, QueryStep step) {
+            // FIXME
+            query.steps.add(null);
+            return this;
+        }
+    }
+
+    public static boolean containerHasSlot(
+            ContainerContent container, int slotNum, Item expectedItemType, StyledText expectedItemName) {
+        ItemStack itemStack = container.items().get(slotNum);
+        if (!itemStack.is(expectedItemType)
+                || !StyledText.fromComponent(itemStack.getHoverName()).equals(expectedItemName)) return false;
+
+        return true;
+    }
+
+    private class RepeatedQueryStep extends ScriptedQueryStep {
+        private RepeatedQueryStep(StartAction startAction, ContainerVerification verification, ContainerAction handleContent) {
+            super(startAction, verification, handleContent);
+        }
+
+        public boolean shouldRepeat(ContainerContent container) {
+        }
+
+        public ContainerQueryStep getRepeatStep() {
         }
     }
 }

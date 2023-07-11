@@ -8,8 +8,11 @@ import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.components.Models;
 import com.wynntils.core.text.StyledText;
 import com.wynntils.handlers.container.ScriptedContainerQuery;
+import com.wynntils.handlers.container.type.ContainerContent;
+import com.wynntils.models.content.ContentBookQueries;
 import com.wynntils.utils.mc.LoreUtils;
 import com.wynntils.utils.wynn.InventoryUtils;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -23,50 +26,57 @@ public class DialogueHistoryQueries {
     private List<List<StyledText>> newDialogueHistory;
 
     protected void scanDialogueHistory() {
-        ScriptedContainerQuery query = ScriptedContainerQuery.builder(
-                        "Quest Book Dialogue History Query")
+        ScriptedContainerQuery query = ScriptedContainerQuery.builder("Quest Book Dialogue History Query")
                 .onError(msg -> WynntilsMod.warn("Problem getting dialogue history in Quest Book: " + msg))
+
                 // Open content book
-                .useItemInHotbar(InventoryUtils.QUEST_BOOK_SLOT_NUM)
-                .matchTitle(Models.Quest.getQuestBookTitleRegex(1))
-                .ignoreIncomingContainer()
+                .then(ScriptedContainerQuery.QueryStep.useItemInHotbar(InventoryUtils.QUEST_BOOK_SLOT_NUM)
+                        .matchTitle(ContentBookQueries.CONTENT_BOOK_TITLE)
+                        .ignoreIncomingContainer())
+                .execute(() -> {
+                    newDialogueHistory = new ArrayList<>();
+                })
+
                 // Repeatedly read the dialogue history from the lore of the history item,
                 // and if it is on the last page, stop repeating, otherwise click the slot
                 // to get to the next page
-                .repeat()
-                .checkCurrentContainer((c) -> {
-                    ItemStack dialogueHistoryItem = c.items().get(DIALOGUE_HISTORY_SLOT);
-
-                    if (!StyledText.fromComponent(dialogueHistoryItem.getHoverName())
-                            .equals(DIALOGUE_HISTORY)) return false;
-
-                    List<StyledText> current = LoreUtils.getLore(dialogueHistoryItem).stream()
-                            .dropWhile(s -> s.isBlank())
-                            .takeWhile(s -> !s.isBlank())
-                            .toList();
-
-                    newDialogueHistory.add(current);
-
-                    for (StyledText line : LoreUtils.getLore(dialogueHistoryItem)) {
-                        Matcher matcher = line.getMatcher(DIALOGUE_HISTORY_PAGE_PATTERN);
-                        if (matcher.matches()) {
-                            int currentPage = Integer.parseInt(matcher.group(1));
-                            int maxPage = Integer.parseInt(matcher.group(2));
-
-                            // Continue with the processing loop until we are at the last page
-                            return currentPage != maxPage;
-                        }
-                    }
-
-                    return false;
+                .repeat(
+                        this::checkDialoguePage,
+                        ScriptedContainerQuery.QueryStep.clickOnSlot(DIALOGUE_HISTORY_SLOT)
+                                .expectSameMenu()
+                                .ignoreIncomingContainer())
+                .execute(() -> {
+                    Models.Quest.setDialogueHistory(newDialogueHistory);
                 })
-                .clickOnSlot(DIALOGUE_HISTORY_SLOT)
-                .expectSameMenu()
-                .ignoreIncomingContainer()
-                .endRepeat()
-                //
                 .build();
 
         query.executeQuery();
+    }
+
+    private boolean checkDialoguePage(ContainerContent c) {
+        ItemStack dialogueHistoryItem = c.items().get(DIALOGUE_HISTORY_SLOT);
+
+        if (!StyledText.fromComponent(dialogueHistoryItem.getHoverName()).equals(DIALOGUE_HISTORY)) return false;
+
+        List<StyledText> current = LoreUtils.getLore(dialogueHistoryItem).stream()
+                .dropWhile(s -> s.isBlank())
+                .takeWhile(s -> !s.isBlank())
+                .toList();
+
+        newDialogueHistory.add(current);
+
+        for (StyledText line : LoreUtils.getLore(dialogueHistoryItem)) {
+            Matcher matcher = line.getMatcher(DIALOGUE_HISTORY_PAGE_PATTERN);
+            if (matcher.matches()) {
+                int currentPage = Integer.parseInt(matcher.group(1));
+                int maxPage = Integer.parseInt(matcher.group(2));
+
+                // Continue with the processing loop until we are at the last page
+                return currentPage != maxPage;
+            }
+        }
+
+        // Fallback: If we failed to find the page line, stop looping
+        return false;
     }
 }

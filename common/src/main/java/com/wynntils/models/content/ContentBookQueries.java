@@ -28,7 +28,7 @@ import org.lwjgl.glfw.GLFW;
 public class ContentBookQueries {
     private static final int NEXT_PAGE_SLOT = 69;
     private static final int CHANGE_VIEW = 66;
-    private static final String CONTENT_BOOK_TITLE = "§f\uE000\uE072";
+    public static final String CONTENT_BOOK_TITLE = "§f\uE000\uE072";
     private static final StyledText SCROLL_DOWN_TEXT = StyledText.fromString("§7Scroll Down");
 
     private List<ContentInfo> newQuests;
@@ -46,45 +46,45 @@ public class ContentBookQueries {
                     McUtils.sendMessageToClient(
                             Component.literal("Error updating quest book.").withStyle(ChatFormatting.RED));
                 })
-                // Open content book
-                .useItemInHotbar(InventoryUtils.QUEST_BOOK_SLOT_NUM)
-                .matchTitle(CONTENT_BOOK_TITLE)
-                .ignoreIncomingContainer()
-                // Save filter state, and set it correctly
-                .repeat()
-                .checkCurrentContainer(c -> {
-                    // if first time around, save current filter state
 
-                    // check if our filter is of the requested type,
-                    // if not return true
-                    return false;
-                })
-                .clickOnSlot(CHANGE_VIEW)
-                .expectSameMenu()
-                .ignoreIncomingContainer()
-                .endRepeat()
+                // Open content book
+                .then(ScriptedContainerQuery.QueryStep.useItemInHotbar(InventoryUtils.QUEST_BOOK_SLOT_NUM)
+                        .matchTitle(CONTENT_BOOK_TITLE)
+                        .ignoreIncomingContainer())
+
+                // Save filter state, and set it correctly
+                .repeat(
+                        c -> {
+                            // if first time around, save current filter state
+
+                            // check if our filter is of the requested type,
+                            // if not return true
+                            return false;
+                        },
+                        ScriptedContainerQuery.QueryStep.clickOnSlot(CHANGE_VIEW).expectSameMenu().ignoreIncomingContainer())
+
                 // Process first page
                 .execute(() -> {
                     newQuests = new ArrayList<>();
                 })
-                .reprocessCurrentContainer(c -> processQuestBookPage(c))
+                .reprocess(c -> processQuestBookPage(c))
+
                 // Repeatedly click next page, if available, and process the following page
-                .repeat()
-                .checkIfCurrentContainerHasSlotWithName(NEXT_PAGE_SLOT, Items.GOLDEN_SHOVEL, SCROLL_DOWN_TEXT)
-                .clickOnSlot(NEXT_PAGE_SLOT)
-                .expectSameMenu()
-                .processIncomingContainer(c -> processQuestBookPage(c))
-                .endRepeat()
+                .repeat(
+                        c -> ScriptedContainerQuery.containerHasSlot(
+                                c, NEXT_PAGE_SLOT, Items.GOLDEN_SHOVEL, SCROLL_DOWN_TEXT),
+                        ScriptedContainerQuery.QueryStep.clickOnSlot(NEXT_PAGE_SLOT)
+                                .expectSameMenu()
+                                .processIncomingContainer(c -> processQuestBookPage(c)))
+
                 // Restore filter to original value
-                .repeat()
-                .checkCurrentContainer(c -> {
-                    // is filter the same as the one we saved?
-                    return false;
-                })
-                .clickOnSlot(CHANGE_VIEW)
-                .expectSameMenu()
-                .ignoreIncomingContainer()
-                .endRepeat()
+                .repeat(
+                        c -> {
+                            // is filter the same as the one we saved?
+                            return false;
+                        },
+                        ScriptedContainerQuery.QueryStep.clickOnSlot(CHANGE_VIEW).expectSameMenu().ignoreIncomingContainer())
+
                 // Finally signal we're done
                 .execute(() -> {
                     Models.Content.updateFromBookQuery(newQuests);
@@ -132,26 +132,25 @@ public class ContentBookQueries {
                     McUtils.sendMessageToClient(
                             Component.literal("Error tracking content book.").withStyle(ChatFormatting.RED));
                 })
+
                 // Open compass/character menu
-                .useItemInHotbar(InventoryUtils.QUEST_BOOK_SLOT_NUM)
-                .matchTitle(CONTENT_BOOK_TITLE)
-                .ignoreIncomingContainer()
+                .then(ScriptedContainerQuery.QueryStep.useItemInHotbar(InventoryUtils.QUEST_BOOK_SLOT_NUM)
+                        .matchTitle(CONTENT_BOOK_TITLE)
+                        .ignoreIncomingContainer())
+
                 // Repeatedly check if the requested task is on this page,
                 // if so, click it, otherwise click on next slot (if available)
-                .repeat()
-                .checkCurrentContainer(c -> {
-                    // is any of our new items the requested one?
-                    // if so, click on it's slot and return false,
-                    // otherwise return true to continue to next page
-                // also, .checkIfPreviousSlotWithName(NEXT_PAGE_SLOT, Items.GOLDEN_SHOVEL, SCROLL_DOWN_TEXT)
-                    // otherwise return failure
+                .repeat(
+                        c -> {
+                            // is any of our new items the requested one?
+                            // if so, click on it's slot and return false,
+                            // otherwise return true to continue to next page
+                            // also, .checkIfPreviousSlotWithName(NEXT_PAGE_SLOT, Items.GOLDEN_SHOVEL, SCROLL_DOWN_TEXT)
+                            // otherwise return failure
 
-                    return false;
-                })
-                .clickOnSlot(NEXT_PAGE_SLOT)
-                .expectSameMenu()
-                .ignoreIncomingContainer()
-                .endRepeat()
+                            return false;
+                        },
+                        ScriptedContainerQuery.QueryStep.clickOnSlot(NEXT_PAGE_SLOT).expectSameMenu().ignoreIncomingContainer())
                 //
                 .build();
 

@@ -55,44 +55,49 @@ public class AbilityTreeContainerQueries {
                     McUtils.sendMessageToClient(
                             Component.literal("Error dumping ability tree.").withStyle(ChatFormatting.RED));
                 })
+
                 // Open character/compass menu
-                .useItemInHotbar(InventoryUtils.COMPASS_SLOT_NUM)
-                .matchTitle("Character Info")
-                .ignoreIncomingContainer()
+                .then(ScriptedContainerQuery.QueryStep.useItemInHotbar(InventoryUtils.COMPASS_SLOT_NUM)
+                        .matchTitle("Character Info")
+                        .ignoreIncomingContainer())
+
                 // Open ability menu
-                .clickOnSlot(ABILITY_TREE_SLOT)
-                .matchTitle(Models.Container.ABILITY_TREE_PATTERN.pattern())
-                .ignoreIncomingContainer()
+                .then(ScriptedContainerQuery.QueryStep.clickOnSlot(ABILITY_TREE_SLOT)
+                        .matchTitle(Models.Container.ABILITY_TREE_PATTERN.pattern())
+                        .ignoreIncomingContainer())
+
                 // Go to first page, and save current page number
-                .repeat()
-                .checkIfCurrentContainerHasSlotWithName(PREVIOUS_PAGE_SLOT, Items.STONE_AXE, PREVIOUS_PAGE_ITEM_NAME)
-                .clickOnSlot(PREVIOUS_PAGE_SLOT)
-                .expectSameMenu()
-                .processIncomingContainer(c -> {
-                    // count how many times this is done, and
-                    // save loop variable to be able to restore proper page
-                    // if not even entered here, we were already on first page
-                })
-                .endRepeat()
+                .repeat(
+                        c -> ScriptedContainerQuery.containerHasSlot(
+                                c, PREVIOUS_PAGE_SLOT, Items.STONE_AXE, PREVIOUS_PAGE_ITEM_NAME),
+                        ScriptedContainerQuery.QueryStep.clickOnSlot(PREVIOUS_PAGE_SLOT)
+                                .expectSameMenu()
+                                .processIncomingContainer(c -> {
+                                    // count how many times this is done, and
+                                    // save loop variable to be able to restore proper page
+                                    // if not even entered here, we were already on first page
+                                }))
+
                 // Process first page
-                .reprocessCurrentContainer(c -> processor.processPage(c))
+                .reprocess(processor::processPage)
+
                 // Repeatedly go to next page, if any, and process it
-                .repeat()
-                .checkIfCurrentContainerHasSlotWithName(NEXT_PAGE_SLOT, Items.STONE_AXE, NEXT_PAGE_ITEM_NAME)
-                .clickOnSlot(NEXT_PAGE_SLOT)
-                .expectSameMenu()
-                .processIncomingContainer(c -> processor.processPage(c))
-                .endRepeat()
+                .repeat(
+                        c -> ScriptedContainerQuery.containerHasSlot(
+                                c, NEXT_PAGE_SLOT, Items.STONE_AXE, NEXT_PAGE_ITEM_NAME),
+                        ScriptedContainerQuery.QueryStep.clickOnSlot(NEXT_PAGE_SLOT)
+                                .expectSameMenu()
+                                .processIncomingContainer(processor::processPage))
+
                 // Go back to initial page
-                .repeat()
-                .checkCurrentContainer(c -> {
-                    // check if global loop/page variable means we need to step back more
-                    return false;
-                })
-                .clickOnSlot(PREVIOUS_PAGE_SLOT)
-                .expectSameMenu()
-                .ignoreIncomingContainer()
-                .endRepeat()
+                .repeat(
+                        c -> {
+                            // check if global loop/page variable means we need to step back more
+                            return false;
+                        },
+                        ScriptedContainerQuery.QueryStep.clickOnSlot(PREVIOUS_PAGE_SLOT)
+                                .expectSameMenu()
+                                .ignoreIncomingContainer())
                 //
                 .build();
 

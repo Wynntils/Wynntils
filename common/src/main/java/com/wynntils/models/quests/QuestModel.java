@@ -154,11 +154,6 @@ public final class QuestModel extends Model {
         WynntilsMod.postEvent(new QuestBookReloadedEvent.DialogueHistoryReloaded());
     }
 
-    /** Shared between the container query classes */
-    public String getQuestBookTitleRegex(int pageNum) {
-        return "§f\uE000\uE072";
-    }
-
     private static class LocationComparator implements Comparator<QuestInfo> {
         private final Vec3 playerLocation = McUtils.player().position();
 

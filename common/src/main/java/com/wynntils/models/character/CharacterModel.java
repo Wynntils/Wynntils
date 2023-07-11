@@ -124,23 +124,25 @@ public final class CharacterModel extends Model {
     private void scanCharacterInfoPage() {
         ScriptedContainerQuery query = ScriptedContainerQuery.builder("Character Info Query")
                 .onError(msg -> WynntilsMod.warn("Error querying Character Info:" + msg))
+
                 // Open compass/character menu
-                .useItemInHotbar(InventoryUtils.COMPASS_SLOT_NUM)
-                .matchTitle("Character Info")
-                .processIncomingContainer(container -> {
-                    ItemStack characterInfoItem = container.items().get(CHARACTER_INFO_SLOT);
-                    ItemStack professionInfoItem = container.items().get(PROFESSION_INFO_SLOT);
-                    ItemStack guildInfoItem = container.items().get(GUILD_INFO_SLOT);
+                .then(ScriptedContainerQuery.QueryStep.useItemInHotbar(InventoryUtils.COMPASS_SLOT_NUM)
+                        .matchTitle("Character Info")
+                        .processIncomingContainer(container -> {
+                            ItemStack characterInfoItem = container.items().get(CHARACTER_INFO_SLOT);
+                            ItemStack professionInfoItem = container.items().get(PROFESSION_INFO_SLOT);
+                            ItemStack guildInfoItem = container.items().get(GUILD_INFO_SLOT);
 
-                    Models.Profession.resetValueFromItem(professionInfoItem);
-                    Models.Guild.parseGuildInfoFromGuildMenu(guildInfoItem);
+                            Models.Profession.resetValueFromItem(professionInfoItem);
+                            Models.Guild.parseGuildInfoFromGuildMenu(guildInfoItem);
 
-                    parseCharacterFromCharacterMenu(characterInfoItem);
-                    hasCharacter = true;
-                    WynntilsMod.postEvent(new CharacterUpdateEvent());
-                    WynntilsMod.info("Deducing character " + getCharacterString());
-                })
+                            parseCharacterFromCharacterMenu(characterInfoItem);
+                            hasCharacter = true;
+                            WynntilsMod.postEvent(new CharacterUpdateEvent());
+                            WynntilsMod.info("Deducing character " + getCharacterString());
+                        }))
                 .build();
+
         query.executeQuery();
     }
 
