@@ -38,6 +38,7 @@ public class DiscoveryContainerQueries {
     private List<DiscoveryInfo> newDiscoveries;
 
     public void queryDiscoveries() {
+        /*
         ScriptedContainerQuery.QueryBuilder queryBuilder = ScriptedContainerQuery.builder("Discovery Count Query")
                 .onError(msg -> WynntilsMod.warn("Problem getting discovery count in Quest Book: " + msg))
                 .useItemInHotbar(InventoryUtils.QUEST_BOOK_SLOT_NUM)
@@ -98,9 +99,12 @@ public class DiscoveryContainerQueries {
                 });
 
         queryBuilder.build().executeQuery();
+
+         */
     }
 
     private void buildDiscoveryQuery(int discoveryPages, int secretDiscoveryPages) {
+        /*
         ScriptedContainerQuery.QueryBuilder queryBuilder = ScriptedContainerQuery.builder("Discovery Query")
                 .onError(msg -> {
                     WynntilsMod.warn("Problem querying discoveries: " + msg);
@@ -136,6 +140,8 @@ public class DiscoveryContainerQueries {
         }
 
         queryBuilder.build().executeQuery();
+
+         */
     }
 
     private void processDiscoveryPage(ContainerContent container, int page, int lastPage, boolean secretDiscovery) {

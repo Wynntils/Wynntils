@@ -34,6 +34,7 @@ public class QuestContainerQueries {
      * be sent. The available quests are then available using getQuests.
      */
     protected void queryQuestBook() {
+        /*
         ScriptedContainerQuery.QueryBuilder queryBuilder = ScriptedContainerQuery.builder("Quest Book Query")
                 .onError(msg -> {
                     WynntilsMod.warn("Problem querying Quest Book: " + msg);
@@ -53,6 +54,8 @@ public class QuestContainerQueries {
         }
 
         queryBuilder.build().executeQuery();
+
+         */
     }
 
     private void processQuestBookPage(ContainerContent container, int page) {
@@ -90,6 +93,7 @@ public class QuestContainerQueries {
     }
 
     protected void queryMiniQuests() {
+        /*
         ScriptedContainerQuery.QueryBuilder queryBuilder = ScriptedContainerQuery.builder("Quest Book Mini Quest Query")
                 .onError(msg -> {
                     WynntilsMod.warn("Problem querying Quest Book for mini quests: " + msg);
@@ -112,6 +116,8 @@ public class QuestContainerQueries {
         }
 
         queryBuilder.build().executeQuery();
+
+         */
     }
 
     private void processMiniQuestBookPage(ContainerContent container, int page) {
@@ -146,6 +152,7 @@ public class QuestContainerQueries {
     }
 
     protected void toggleTracking(QuestInfo questInfo) {
+        /*
         ScriptedContainerQuery.QueryBuilder queryBuilder = ScriptedContainerQuery.builder("Quest Book Quest Pin Query")
                 .onError(msg -> WynntilsMod.warn("Problem pinning quest in Quest Book: " + msg))
                 .useItemInHotbar(InventoryUtils.QUEST_BOOK_SLOT_NUM)
@@ -170,6 +177,8 @@ public class QuestContainerQueries {
                 .processContainer(c -> findQuestForTracking(c, questInfo, questInfo.isMiniQuest()))
                 .build()
                 .executeQuery();
+
+         */
     }
 
     private void findQuestForTracking(ContainerContent container, QuestInfo questInfo, boolean isMiniQuest) {
