@@ -1,9 +1,21 @@
+## [0.0.3-alpha.121](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.120...v0.0.3-alpha.121) (2023-07-11)
+
+
+### New Features
+
+* render lootrun path on map ([#1688](https://github.com/Wynntils/Artemis/issues/1688)) ([6e9735c](https://github.com/Wynntils/Artemis/commit/6e9735ccf75fb209ec6530702f2d40309d47de0e))
+
 ## [0.0.3-alpha.120](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.119...v0.0.3-alpha.120) (2023-07-10)
 
 
 ### New Features
 
 * Add guild name and rank to book above player ([#1652](https://github.com/Wynntils/Artemis/issues/1652)) ([36c4028](https://github.com/Wynntils/Artemis/commit/36c4028efd18cdb414e467fd868907f127daa72a))
+
+
+### Miscellaneous Chores
+
+* **release:** v0.0.3-alpha.120 [skip ci] ([422ede2](https://github.com/Wynntils/Artemis/commit/422ede2e20dd208eed5f5e3918db864b72b7a8dd))
 
 ## [0.0.3-alpha.119](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.118...v0.0.3-alpha.119) (2023-07-09)
 
@@ -40,16 +52,4 @@
 ### Miscellaneous Chores
 
 * **release:** v0.0.3-alpha.117 [skip ci] ([303323b](https://github.com/Wynntils/Artemis/commit/303323bf1e5ef8564210d293039f457ae9ff6298))
-
-## [0.0.3-alpha.116](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.115...v0.0.3-alpha.116) (2023-07-09)
-
-
-### New Features
-
-* Add feature descriptions in config screen ([#1704](https://github.com/Wynntils/Artemis/issues/1704)) ([5ec75f4](https://github.com/Wynntils/Artemis/commit/5ec75f4427d8999e35167409eec36f34b93bee0d))
-
-
-### Miscellaneous Chores
-
-* **release:** v0.0.3-alpha.116 [skip ci] ([395c7cb](https://github.com/Wynntils/Artemis/commit/395c7cb0fc301826fdd4656b5dbf3e92e9bddcb2))
 
