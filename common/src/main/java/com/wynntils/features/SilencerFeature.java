@@ -59,6 +59,7 @@ public class SilencerFeature extends Feature {
     public void onTitleScreenInit(TitleScreenInitEvent.Pre event) {
         if (!firstTitleScreenInit) return;
         if (!masterVolume().get().equals(silencerVolume.get())) return;
+        // If the previous game crashed with the silencer enabled, restore normal volume now
         restoreOriginalVolume();
         firstTitleScreenInit = false;
     }
