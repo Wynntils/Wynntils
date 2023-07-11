@@ -4,7 +4,6 @@
  */
 package com.wynntils.features.inventory;
 
-import com.mojang.blaze3d.vertex.PoseStack;
 import com.wynntils.core.components.Models;
 import com.wynntils.core.config.Category;
 import com.wynntils.core.config.Config;
@@ -17,14 +16,12 @@ import com.wynntils.mc.event.ContainerCloseEvent;
 import com.wynntils.mc.event.ScreenInitEvent;
 import com.wynntils.mc.event.SlotRenderEvent;
 import com.wynntils.utils.mc.McUtils;
-import com.wynntils.utils.render.RenderUtils;
-import com.wynntils.utils.render.Texture;
 import com.wynntils.utils.wynn.ContainerUtils;
 import java.util.List;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
+import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
-import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
@@ -58,10 +55,9 @@ public class CustomBankPagesFeature extends Feature {
     private static final List<Integer> QUICK_JUMP_DESTINATIONS = List.of(1, 5, 9, 13, 17, 21);
 
     private boolean isBankScreen = false;
-    private boolean onLastPage = false;
     private boolean quickJumping = false;
-    private int containerId;
     private int currentPage = 1;
+    private int lastPage = MAX_BANK_PAGES;
     private int pageDestination = 1;
     private List<Integer> customJumpDestinations;
 
@@ -72,7 +68,6 @@ public class CustomBankPagesFeature extends Feature {
 
         isBankScreen = true;
 
-        containerId = screen.getMenu().containerId;
         currentPage = Models.Container.getCurrentBankPage(screen);
 
         customJumpDestinations = List.of(
@@ -83,12 +78,12 @@ public class CustomBankPagesFeature extends Feature {
                 buttonFivePage.get(),
                 buttonSixPage.get());
 
-        if (onLastPage) {
+        if (quickJumping && pageDestination > lastPage) {
             quickJumping = false;
             pageDestination = currentPage;
-        } else if (currentPage != pageDestination && quickJumping) {
-            goToPage();
-        } else if (quickJumping) {
+        } else if (pageDestination != currentPage && quickJumping) {
+            jumpToDestination();
+        } else {
             quickJumping = false;
         }
     }
@@ -102,7 +97,7 @@ public class CustomBankPagesFeature extends Feature {
 
     @SubscribeEvent
     public void onSlotClicked(ContainerClickEvent e) {
-        if (e.getContainerMenu().containerId != containerId) return;
+        if (!isBankScreen) return;
 
         int slotIndex = e.getSlotNum();
 
@@ -110,11 +105,7 @@ public class CustomBankPagesFeature extends Feature {
             int buttonIndex = BUTTON_SLOTS.indexOf(slotIndex);
             pageDestination = customJumpDestinations.get(buttonIndex);
             e.setCanceled(true);
-            goToPage();
-        } else if (slotIndex == NEXT_PAGE_SLOT) {
-            pageDestination++;
-        } else if (slotIndex == PREVIOUS_PAGE_SLOT) {
-            pageDestination--;
+            jumpToDestination();
         }
     }
 
@@ -124,52 +115,38 @@ public class CustomBankPagesFeature extends Feature {
         if (!isBankScreen) return;
 
         if (BUTTON_SLOTS.contains(e.getSlot().index)) {
-            renderQuickJumpButton(e.getPoseStack(), e.getSlot());
+            ItemStack jumpButton = new ItemStack(Items.DIAMOND_AXE);
+            jumpButton.setDamageValue(92);
+
+            CompoundTag jumpTag = jumpButton.getOrCreateTag();
+            jumpTag.putInt("HideFlags", 6);
+            jumpTag.putBoolean("Unbreakable", true);
+            jumpButton.setTag(jumpTag);
+
+            int buttonIndex = BUTTON_SLOTS.indexOf(e.getSlot().index);
+            int buttonDestination = customJumpDestinations.get(buttonIndex);
+
+            jumpButton.setCount(buttonDestination);
+
+            jumpButton.setHoverName(Component.literal(ChatFormatting.GRAY + "Jump to Page " + buttonDestination));
+
+            e.getSlot().set(jumpButton);
         }
 
-        // Prevent buying a new page
-        if (e.getSlot().index == NEXT_PAGE_SLOT) {
-            onLastPage = pageDestination > currentPage && Models.Container.isLastBankPage(screen);
+        if (e.getSlot().index == NEXT_PAGE_SLOT && Models.Container.isLastBankPage(screen)) {
+            lastPage = currentPage;
         }
     }
 
-    private void renderQuickJumpButton(PoseStack poseStack, Slot buttonSlot) {
-        RenderUtils.drawTexturedRect(
-                poseStack,
-                Texture.COLUMN_ARROW_RIGHT.resource(),
-                buttonSlot.x - 8,
-                buttonSlot.y - 8,
-                300,
-                32,
-                32,
-                Texture.COLUMN_ARROW_RIGHT.width(),
-                Texture.COLUMN_ARROW_RIGHT.height());
-
-        buttonSlot.set(new ItemStack(Items.SNOW));
-
-        int buttonIndex = BUTTON_SLOTS.indexOf(buttonSlot.index);
-        int buttonDestination = customJumpDestinations.get(buttonIndex);
-
-        buttonSlot.getItem().setHoverName(Component.literal(ChatFormatting.GRAY + "Jump to Page " + buttonDestination));
-    }
-
-    private void goToPage() {
+    private void jumpToDestination() {
         quickJumping = true;
 
         if (currentPage == pageDestination) return;
 
-        if (currentPage + 1 == pageDestination && !onLastPage) {
-            ContainerUtils.clickOnSlot(
-                    NEXT_PAGE_SLOT,
-                    McUtils.containerMenu().containerId,
-                    GLFW.GLFW_MOUSE_BUTTON_LEFT,
-                    McUtils.containerMenu().getItems());
+        if (currentPage + 1 == pageDestination && lastPage != currentPage) {
+            clickNextPage();
         } else if (currentPage - 1 == pageDestination) {
-            ContainerUtils.clickOnSlot(
-                    PREVIOUS_PAGE_SLOT,
-                    McUtils.containerMenu().containerId,
-                    GLFW.GLFW_MOUSE_BUTTON_LEFT,
-                    McUtils.containerMenu().getItems());
+            clickPreviousPage();
         } else {
             int closest = QUICK_JUMP_DESTINATIONS.get(0);
             int closestDistance = Math.abs(closest - pageDestination);
@@ -185,25 +162,37 @@ public class CustomBankPagesFeature extends Feature {
             }
 
             if (closestDistance < currentDistance) {
-                ContainerUtils.clickOnSlot(
-                        BUTTON_SLOTS.get(QUICK_JUMP_DESTINATIONS.indexOf(closest)),
-                        McUtils.containerMenu().containerId,
-                        GLFW.GLFW_MOUSE_BUTTON_LEFT,
-                        McUtils.containerMenu().getItems());
+                clickJumpButton(QUICK_JUMP_DESTINATIONS.indexOf(closest));
             } else if (closest > pageDestination) {
-                ContainerUtils.clickOnSlot(
-                        PREVIOUS_PAGE_SLOT,
-                        McUtils.containerMenu().containerId,
-                        GLFW.GLFW_MOUSE_BUTTON_LEFT,
-                        McUtils.containerMenu().getItems());
-            } else if (!onLastPage) {
-                ContainerUtils.clickOnSlot(
-                        NEXT_PAGE_SLOT,
-                        McUtils.containerMenu().containerId,
-                        GLFW.GLFW_MOUSE_BUTTON_LEFT,
-                        McUtils.containerMenu().getItems());
+                clickPreviousPage();
+            } else if (lastPage != currentPage) {
+                clickNextPage();
             }
         }
+    }
+
+    private void clickJumpButton(int index) {
+        ContainerUtils.clickOnSlot(
+                BUTTON_SLOTS.get(index),
+                McUtils.containerMenu().containerId,
+                GLFW.GLFW_MOUSE_BUTTON_LEFT,
+                McUtils.containerMenu().getItems());
+    }
+
+    private void clickNextPage() {
+        ContainerUtils.clickOnSlot(
+                NEXT_PAGE_SLOT,
+                McUtils.containerMenu().containerId,
+                GLFW.GLFW_MOUSE_BUTTON_LEFT,
+                McUtils.containerMenu().getItems());
+    }
+
+    private void clickPreviousPage() {
+        ContainerUtils.clickOnSlot(
+                PREVIOUS_PAGE_SLOT,
+                McUtils.containerMenu().containerId,
+                GLFW.GLFW_MOUSE_BUTTON_LEFT,
+                McUtils.containerMenu().getItems());
     }
 
     @Override
