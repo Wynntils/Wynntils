@@ -150,35 +150,41 @@ public class CustomBankPagesFeature extends Feature {
         } else if (currentPage - 1 == pageDestination) {
             clickPreviousPage();
         } else {
-            int closest = QUICK_JUMP_DESTINATIONS.get(0);
-            int closestDistance = Math.abs(closest - pageDestination);
-            int currentDistance = Math.abs(currentPage - pageDestination);
-
-            for (int jumpDestination : QUICK_JUMP_DESTINATIONS) {
-                int jumpDistance = Math.abs(jumpDestination - pageDestination);
-
-                if (jumpDistance < closestDistance) {
-                    closest = jumpDestination;
-                    closestDistance = jumpDistance;
+            if (!tryUsingJumpButtons()) {
+                if (pageDestination < currentPage) {
+                    clickPreviousPage();
+                } else if (lastPage != currentPage) {
+                    clickNextPage();
                 }
-            }
-
-            if (closestDistance < currentDistance) {
-                clickJumpButton(QUICK_JUMP_DESTINATIONS.indexOf(closest));
-            } else if (closest > pageDestination) {
-                clickPreviousPage();
-            } else if (lastPage != currentPage) {
-                clickNextPage();
             }
         }
     }
 
-    private void clickJumpButton(int index) {
-        ContainerUtils.clickOnSlot(
-                BUTTON_SLOTS.get(index),
-                McUtils.containerMenu().containerId,
-                GLFW.GLFW_MOUSE_BUTTON_LEFT,
-                McUtils.containerMenu().getItems());
+    private boolean tryUsingJumpButtons() {
+        int closest = QUICK_JUMP_DESTINATIONS.get(0);
+        int closestDistance = Math.abs(closest - pageDestination);
+        int currentDistance = Math.abs(currentPage - pageDestination);
+
+        for (int jumpDestination : QUICK_JUMP_DESTINATIONS) {
+            int jumpDistance = Math.abs(jumpDestination - pageDestination);
+
+            if (jumpDistance < closestDistance) {
+                closest = jumpDestination;
+                closestDistance = jumpDistance;
+            }
+        }
+
+        if (closestDistance < currentDistance) {
+            ContainerUtils.clickOnSlot(
+                    BUTTON_SLOTS.get(QUICK_JUMP_DESTINATIONS.indexOf(closest)),
+                    McUtils.containerMenu().containerId,
+                    GLFW.GLFW_MOUSE_BUTTON_LEFT,
+                    McUtils.containerMenu().getItems());
+            
+            return true;
+        }
+
+        return false;
     }
 
     private void clickNextPage() {
