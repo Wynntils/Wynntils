@@ -252,8 +252,8 @@ public final class ContentModel extends Model {
         }
         Models.Quest.updateQuestsFromQuery(newQuests);
 
-        //Models.Discovery.setDiscoveries(newContent);
-        //Models.Discovery.setSecretDiscoveries(newContent);
+        // Models.Discovery.setDiscoveries(newContent);
+        // Models.Discovery.setSecretDiscoveries(newContent);
     }
 
     public void rescanContentBook(String filterName) {
@@ -265,6 +265,6 @@ public final class ContentModel extends Model {
     }
 
     public void stopTracking() {
-//        McUtils.sendCommand("tracking");
+        //        McUtils.sendCommand("tracking");
     }
 }

@@ -46,7 +46,7 @@ public class ContentBookQueries {
                 .onError(msg -> {
                     WynntilsMod.warn("Problem querying Content Book: " + msg);
                     McUtils.sendMessageToClient(
-                            Component.literal("Error updating content book.").withStyle(ChatFormatting.RED));
+                            Component.literal("Dumping Content Book failed").withStyle(ChatFormatting.RED));
                 })
 
                 // Open content book
@@ -88,7 +88,6 @@ public class ContentBookQueries {
                     Models.Content.updateFromContentBookQuery(newContent);
                     newContent = null;
                 })
-                //
                 .build();
 
         query.executeQuery();
@@ -111,9 +110,9 @@ public class ContentBookQueries {
         // no chance to reset it
         ScriptedContainerQuery query = ScriptedContainerQuery.builder("Toggle Content Tracking Query")
                 .onError(msg -> {
-                    WynntilsMod.warn("Problem querying Content Book: " + msg);
-                    McUtils.sendMessageToClient(
-                            Component.literal("Error tracking content book.").withStyle(ChatFormatting.RED));
+                    WynntilsMod.warn("Problem querying Content Book for tracking: " + msg);
+                    McUtils.sendMessageToClient(Component.literal("Setting tracking in Content Book failed")
+                            .withStyle(ChatFormatting.RED));
                 })
 
                 // Open compass/character menu
@@ -133,7 +132,6 @@ public class ContentBookQueries {
                             return false;
                         },
                         QueryStep.clickOnMatchingSlot(NEXT_PAGE_SLOT, Items.GOLDEN_SHOVEL, SCROLL_DOWN_TEXT))
-                //
                 .build();
 
         query.executeQuery();

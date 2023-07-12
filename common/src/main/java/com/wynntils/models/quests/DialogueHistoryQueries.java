@@ -12,11 +12,14 @@ import com.wynntils.handlers.container.scriptedquery.ScriptedContainerQuery;
 import com.wynntils.handlers.container.type.ContainerContent;
 import com.wynntils.models.content.ContentBookQueries;
 import com.wynntils.utils.mc.LoreUtils;
+import com.wynntils.utils.mc.McUtils;
 import com.wynntils.utils.wynn.InventoryUtils;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import net.minecraft.ChatFormatting;
+import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.ItemStack;
 
 public class DialogueHistoryQueries {
@@ -27,12 +30,17 @@ public class DialogueHistoryQueries {
     private List<List<StyledText>> newDialogueHistory;
 
     protected void scanDialogueHistory() {
+        // Check if a scan is already underway
         if (newDialogueHistory != null) return;
 
         newDialogueHistory = new ArrayList<>();
 
-        ScriptedContainerQuery query = ScriptedContainerQuery.builder("Quest Book Dialogue History Query")
-                .onError(msg -> WynntilsMod.warn("Problem getting dialogue history in Quest Book: " + msg))
+        ScriptedContainerQuery query = ScriptedContainerQuery.builder("Dialogue History Query")
+                .onError(msg -> {
+                    WynntilsMod.warn("Problem getting dialogue history: " + msg);
+                    McUtils.sendMessageToClient(
+                            Component.literal("Dumping Dialogue History failed").withStyle(ChatFormatting.RED));
+                })
 
                 // Open content book
                 .then(QueryStep.useItemInHotbar(InventoryUtils.CONTENT_BOOK_SLOT_NUM)

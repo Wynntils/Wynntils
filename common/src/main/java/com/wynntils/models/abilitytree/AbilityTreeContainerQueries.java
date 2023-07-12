@@ -51,11 +51,11 @@ public class AbilityTreeContainerQueries {
     }
 
     private void queryAbilityTree(AbilityTreeProcessor processor) {
-        ScriptedContainerQuery query = ScriptedContainerQuery.builder("Ability Tree Dump Query")
+        ScriptedContainerQuery query = ScriptedContainerQuery.builder("Ability Tree Query")
                 .onError(msg -> {
                     WynntilsMod.warn("Problem querying Ability Tree: " + msg);
                     McUtils.sendMessageToClient(
-                            Component.literal("Error dumping ability tree.").withStyle(ChatFormatting.RED));
+                            Component.literal("Dumping Ability Tree failed").withStyle(ChatFormatting.RED));
                 })
 
                 // Open character/compass menu
@@ -95,7 +95,6 @@ public class AbilityTreeContainerQueries {
                             return this.pageCount != Models.AbilityTree.ABILITY_TREE_PAGES;
                         },
                         QueryStep.clickOnSlot(PREVIOUS_PAGE_SLOT))
-                //
                 .build();
 
         query.executeQuery();
