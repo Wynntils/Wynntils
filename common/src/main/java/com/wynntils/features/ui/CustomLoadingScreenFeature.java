@@ -64,7 +64,7 @@ public class CustomLoadingScreenFeature extends Feature {
     }
 
     @SubscribeEvent
-    public void onSuntitleSetText(SubtitleSetTextEvent e) {
+    public void onSubtitleSetText(SubtitleSetTextEvent e) {
         if (loadingScreen == null) return;
 
         loadingScreen.setSubtitle(e.getComponent().getString());

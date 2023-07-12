@@ -24,8 +24,8 @@ import net.minecraftforge.eventbus.api.SubscribeEvent;
 
 @ConfigCategory(Category.WYNNTILS)
 public class ChangelogFeature extends Feature {
-    // "v0.0.2-alpha.2" is the first version with a changelog on GitHub
-    public final Storage<String> lastShownVersion = new Storage<>("v0.0.2-alpha.2");
+    // If we don't know the last version, assume we just downloaded the mod, so don't show the changelog
+    public final Storage<String> lastShownVersion = new Storage<>(WynntilsMod.getVersion());
 
     @RegisterConfig
     public final Config<Boolean> autoClassMenu = new Config<>(false);
