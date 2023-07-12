@@ -9,10 +9,12 @@ import com.wynntils.core.components.Models;
 import com.wynntils.core.text.StyledText;
 import com.wynntils.models.character.type.ClassInfo;
 import com.wynntils.screens.base.WynntilsScreen;
+import com.wynntils.screens.characterselector.widgets.ChangeWorldButton;
 import com.wynntils.screens.characterselector.widgets.ClassInfoButton;
 import com.wynntils.screens.characterselector.widgets.ClassSelectionAddButton;
 import com.wynntils.screens.characterselector.widgets.ClassSelectionDeleteButton;
 import com.wynntils.screens.characterselector.widgets.ClassSelectionEditButton;
+import com.wynntils.screens.characterselector.widgets.DisconnectButton;
 import com.wynntils.screens.characterselector.widgets.PlayButton;
 import com.wynntils.utils.MathUtils;
 import com.wynntils.utils.colors.CommonColors;
@@ -79,8 +81,8 @@ public final class CharacterSelectorScreen extends WynntilsScreen {
         float playButtonWidth = Texture.PLAY_BUTTON.width() * currentTextureScale;
         float playButtonHeight = Texture.PLAY_BUTTON.height() / 2f * currentTextureScale;
         this.addRenderableWidget(new PlayButton(
-                (int) (this.width - playButtonWidth - 10f),
-                (int) (this.height - playButtonHeight - 10f),
+                (int) (this.width - playButtonWidth - (10f * currentTextureScale)),
+                (int) (this.height - playButtonHeight - (10f * currentTextureScale)),
                 (int) playButtonWidth,
                 (int) playButtonHeight,
                 this));
@@ -110,6 +112,24 @@ public final class CharacterSelectorScreen extends WynntilsScreen {
                 (int) (this.height * 0.915f),
                 (int) addButtonWidth,
                 (int) addButtonHeight,
+                this));
+
+        float disconnectButtonWidth = Texture.DISCONNECT_BUTTON.width() * currentTextureScale;
+        float disconnectButtonHeight = Texture.DISCONNECT_BUTTON.height() / 2f * currentTextureScale;
+        this.addRenderableWidget(new DisconnectButton(
+                (int) (this.width - disconnectButtonWidth - (10f * currentTextureScale)),
+                (int) (10f * currentTextureScale),
+                (int) disconnectButtonWidth,
+                (int) disconnectButtonHeight,
+                this));
+
+        float changeWorldButtonWidth = Texture.CHANGE_WORLD_BUTTON.width() * currentTextureScale;
+        float changeWorldButtonHeight = Texture.CHANGE_WORLD_BUTTON.height() / 2f * currentTextureScale;
+        this.addRenderableWidget(new ChangeWorldButton(
+                (int) (this.width - changeWorldButtonWidth - (10f * currentTextureScale)),
+                (int) ((15f * currentTextureScale) + changeWorldButtonHeight),
+                (int) changeWorldButtonWidth,
+                (int) changeWorldButtonHeight,
                 this));
 
         reloadButtons();
