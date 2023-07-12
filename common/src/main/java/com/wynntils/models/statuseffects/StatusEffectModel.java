@@ -52,6 +52,7 @@ public final class StatusEffectModel extends Model {
     @SubscribeEvent(priority = EventPriority.HIGHEST)
     public void onWorldStateChanged(WorldStateEvent e) {
         statusEffects = List.of();
+        WynntilsMod.postEvent(new StatusEffectsChangedEvent());
     }
 
     @SubscribeEvent

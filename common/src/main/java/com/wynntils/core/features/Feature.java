@@ -38,6 +38,10 @@ public abstract class Feature extends AbstractConfigurable implements Storageabl
         return getTranslation("name");
     }
 
+    public String getTranslatedDescription() {
+        return getTranslation("description");
+    }
+
     @Override
     public String getTranslation(String keySuffix) {
         return I18n.get("feature.wynntils." + getNameCamelCase() + "." + keySuffix);
