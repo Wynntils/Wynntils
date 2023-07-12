@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2022.
+ * Copyright © Wynntils 2022-2023.
  * This file is released under AGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.handlers.container.scriptedquery;
@@ -51,12 +51,12 @@ public final class ScriptedContainerQuery implements ContainerQueryStep {
 
     @Override
     public boolean verifyContainer(Component title, MenuType<?> menuType) {
-        return currentStep.verification.verify(title, menuType);
+        return currentStep.getVerification().verify(title, menuType);
     }
 
     @Override
     public void handleContent(ContainerContent container) {
-        currentStep.handleContent.processContainer(container);
+        currentStep.getHandleContent().processContainer(container);
     }
 
     @Override

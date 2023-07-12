@@ -33,7 +33,6 @@ public class AbilityTreeContainerQueries {
     private static final int ABILITY_TREE_SLOT = 9;
     private static final int PREVIOUS_PAGE_SLOT = 57;
     private static final int NEXT_PAGE_SLOT = 59;
-    private static final int DUMMY_SLOT = 76; // This is the second archetype icon
     private static final StyledText NEXT_PAGE_ITEM_NAME = StyledText.fromString("§7Next Page");
     private static final StyledText PREVIOUS_PAGE_ITEM_NAME = StyledText.fromString("§7Previous Page");
     private int pageCount;
@@ -66,9 +65,7 @@ public class AbilityTreeContainerQueries {
                         .expectContainerTitle(Models.Container.ABILITY_TREE_PATTERN.pattern()))
 
                 // Go to first page, and save current page number
-                .execute(() -> {
-                    this.pageCount = 0;
-                })
+                .execute(() -> this.pageCount = 0)
                 .repeat(
                         c -> ScriptedContainerQuery.containerHasSlot(
                                 c, PREVIOUS_PAGE_SLOT, Items.STONE_AXE, PREVIOUS_PAGE_ITEM_NAME),
@@ -100,7 +97,7 @@ public class AbilityTreeContainerQueries {
         query.executeQuery();
     }
 
-    public abstract static class AbilityTreeProcessor {
+    private abstract static class AbilityTreeProcessor {
         private int page = 1;
 
         public void processPage(ContainerContent content) {
@@ -114,7 +111,7 @@ public class AbilityTreeContainerQueries {
     /**
      * Parses the whole ability tree and saves it to disk.
      */
-    public static class AbilityPageDumper extends AbilityTreeProcessor {
+    private static class AbilityPageDumper extends AbilityTreeProcessor {
         private final Consumer<AbilityTreeInfo> supplier;
         private final UnprocessedAbilityTreeInfo unprocessedTree = new UnprocessedAbilityTreeInfo();
 
@@ -141,7 +138,7 @@ public class AbilityTreeContainerQueries {
     /**
      * Only parses nodes of an ability tree, and stores it.
      */
-    public static class AbilityPageSoftProcessor extends AbilityTreeProcessor {
+    private static class AbilityPageSoftProcessor extends AbilityTreeProcessor {
         private final Map<AbilityTreeSkillNode, AbilityTreeNodeState> collectedInfo = new LinkedHashMap<>();
         private final Consumer<ParsedAbilityTree> callback;
 

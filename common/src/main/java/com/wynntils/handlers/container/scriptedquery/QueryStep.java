@@ -19,9 +19,9 @@ public class QueryStep {
     private static final ContainerVerification EXPECT_SAME_MENU = (title, type) -> false;
     private static final ContainerAction IGNORE_INCOMING_CONTAINER = c -> {};
 
-    final StartAction startAction;
-    ContainerVerification verification = EXPECT_SAME_MENU;
-    ContainerAction handleContent = IGNORE_INCOMING_CONTAINER;
+    private final StartAction startAction;
+    private ContainerVerification verification = EXPECT_SAME_MENU;
+    private ContainerAction handleContent = IGNORE_INCOMING_CONTAINER;
 
     protected QueryStep(StartAction startAction) {
         this.startAction = startAction;
@@ -32,6 +32,8 @@ public class QueryStep {
         this.verification = queryStep.verification;
         this.handleContent = queryStep.handleContent;
     }
+
+    // region Builder API actions
 
     public static QueryStep useItemInHotbar(int slotNum) {
         return new QueryStep((container) -> ContainerUtils.openInventory(slotNum));
@@ -66,6 +68,18 @@ public class QueryStep {
         return this;
     }
 
+    // endregion
+
+    // region ScriptedContainerQuery support
+
+    ContainerVerification getVerification() {
+        return verification;
+    }
+
+    ContainerAction getHandleContent() {
+        return handleContent;
+    }
+
     boolean startStep(ScriptedContainerQuery query, ContainerContent container) {
         return startAction.execute(container);
     }
@@ -76,4 +90,6 @@ public class QueryStep {
 
         return query;
     }
+
+    // endregion
 }

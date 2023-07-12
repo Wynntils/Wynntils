@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2022.
+ * Copyright © Wynntils 2022-2023.
  * This file is released under AGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.handlers.container;
@@ -35,7 +35,7 @@ public interface ContainerQueryStep {
 
     /**
      * This will be called by ContainerQueryManager if an error occurs. If that happens,
-     * no furhter methods will be called on this step.
+     * no further methods will be called on this step.
      */
     void onError(String errorMsg);
 

@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2022.
+ * Copyright © Wynntils 2022-2023.
  * This file is released under AGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.models.content;
@@ -28,7 +28,6 @@ import org.lwjgl.glfw.GLFW;
 public class ContentBookQueries {
     private static final int NEXT_PAGE_SLOT = 69;
     private static final int CHANGE_VIEW = 66;
-    public static final String CONTENT_BOOK_TITLE = "§f\uE000\uE072";
     private static final StyledText SCROLL_DOWN_TEXT = StyledText.fromString("§7Scroll Down");
 
     private List<ContentInfo> newContent;
@@ -51,7 +50,7 @@ public class ContentBookQueries {
 
                 // Open content book
                 .then(QueryStep.useItemInHotbar(InventoryUtils.CONTENT_BOOK_SLOT_NUM)
-                        .expectContainerTitle(CONTENT_BOOK_TITLE))
+                        .expectContainerTitle(Models.Content.CONTENT_BOOK_TITLE))
 
                 // Save filter state, and set it correctly
                 .repeat(
@@ -117,7 +116,7 @@ public class ContentBookQueries {
 
                 // Open compass/character menu
                 .then(QueryStep.useItemInHotbar(InventoryUtils.CONTENT_BOOK_SLOT_NUM)
-                        .expectContainerTitle(CONTENT_BOOK_TITLE))
+                        .expectContainerTitle(Models.Content.CONTENT_BOOK_TITLE))
 
                 // Repeatedly check if the requested task is on this page,
                 // if so, click it, otherwise click on next slot (if available)

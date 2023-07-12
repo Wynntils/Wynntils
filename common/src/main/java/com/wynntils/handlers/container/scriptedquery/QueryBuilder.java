@@ -25,9 +25,9 @@ public final class QueryBuilder {
     private static final Consumer<String> DEFAULT_ERROR_HANDLER =
             (errorMsg) -> WynntilsMod.warn("Error in ScriptedContainerQuery");
 
-    Consumer<String> errorHandler = DEFAULT_ERROR_HANDLER;
-    final LinkedList<QueryStep> steps = new LinkedList<>();
-    final String name;
+    private final String name;
+    private final LinkedList<QueryStep> steps = new LinkedList<>();
+    private Consumer<String> errorHandler = DEFAULT_ERROR_HANDLER;
 
     QueryBuilder(String name) {
         this.name = name;
@@ -38,21 +38,6 @@ public final class QueryBuilder {
         return this;
     }
 
-    public ScriptedContainerQuery build() {
-        return new ScriptedContainerQuery(name, steps, errorHandler);
-    }
-
-    public QueryBuilder reprocess(ContainerAction action) {
-        steps.add(new FixedQueryStep().processIncomingContainer(action));
-        return this;
-    }
-
-    public QueryBuilder execute(Runnable r) {
-        return reprocess(c -> {
-            r.run();
-        });
-    }
-
     public QueryBuilder then(QueryStep step) {
         steps.add(step);
         return this;
@@ -61,5 +46,18 @@ public final class QueryBuilder {
     public QueryBuilder repeat(Predicate<ContainerContent> containerCheck, QueryStep step) {
         steps.add(new RepeatedQueryStep(containerCheck, step));
         return this;
+    }
+
+    public QueryBuilder reprocess(ContainerAction action) {
+        steps.add(new FixedQueryStep().processIncomingContainer(action));
+        return this;
+    }
+
+    public QueryBuilder execute(Runnable r) {
+        return reprocess(c -> r.run());
+    }
+
+    public ScriptedContainerQuery build() {
+        return new ScriptedContainerQuery(name, steps, errorHandler);
     }
 }
