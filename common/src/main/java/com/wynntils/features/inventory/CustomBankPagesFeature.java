@@ -58,7 +58,6 @@ public class CustomBankPagesFeature extends Feature {
 
     private boolean isBankScreen = false;
     private boolean quickJumping = false;
-    private int containerId;
     private int currentPage = 1;
     private int lastPage = MAX_BANK_PAGES;
     private int pageDestination = 1;
@@ -70,8 +69,6 @@ public class CustomBankPagesFeature extends Feature {
         if (!Models.Container.isBankScreen(screen)) return;
 
         isBankScreen = true;
-
-        containerId = ((AbstractContainerScreen<?>) e.getScreen()).getMenu().containerId;
 
         currentPage = Models.Container.getCurrentBankPage(screen);
 
