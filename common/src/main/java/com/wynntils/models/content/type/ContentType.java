@@ -14,7 +14,8 @@ public enum ContentType {
     TERRITORIAL_DISCOVERY("Territorial Discovery", "f"),
     DUNGEON("Dungeon", "c"),
     RAID("Raid", "e"),
-    BOSS_ALTAR("Boss Altar", "d");
+    BOSS_ALTAR("Boss Altar", "d"),
+    LOOTRUN_CAMP("Lootrun Camp", "9");
 
     private final String displayName;
     private final String colorCode;
