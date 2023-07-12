@@ -13,6 +13,7 @@ import com.wynntils.handlers.container.type.ContainerContent;
 import com.wynntils.models.content.type.ContentInfo;
 import com.wynntils.models.content.type.ContentType;
 import com.wynntils.models.items.items.gui.ContentItem;
+import com.wynntils.utils.mc.LoreUtils;
 import com.wynntils.utils.mc.McUtils;
 import com.wynntils.utils.wynn.ContainerUtils;
 import com.wynntils.utils.wynn.InventoryUtils;
@@ -20,6 +21,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.function.Consumer;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.ItemStack;
@@ -30,6 +33,10 @@ public class ContentBookQueries {
     private static final int NEXT_PAGE_SLOT = 69;
     private static final int CHANGE_VIEW = 66;
     private static final StyledText SCROLL_DOWN_TEXT = StyledText.fromString("§7Scroll Down");
+    private static final Pattern ACTIVE_FILTER = Pattern.compile("^§f- §7(.*)$");
+    private static final int MAX_FILTERS = 11; // FIXME
+    private String selectedFilter;
+    private int filterLoopCount;
 
     /**
      * Trigger a rescan of the content book. When the rescan is done, Models.Content.updateFromContentBookQuery
@@ -50,14 +57,28 @@ public class ContentBookQueries {
                         .expectContainerTitle(Models.Content.CONTENT_BOOK_TITLE))
 
                 // Save filter state, and set it correctly
+                .execute(() -> {
+                    filterLoopCount = 0;
+                    selectedFilter = null;
+                })
                 .repeat(
                         c -> {
-                            // FIXME
-                            // if first time around, save current filter state
+                            filterLoopCount++;
+                            if (filterLoopCount > MAX_FILTERS)
+                                // FIXME: exception
+                                return false;
 
-                            // check if our filter is of the requested type,
-                            // if not return true
-                            return false;
+                            String activeFilter = getActiveFilter(c.items().get(CHANGE_VIEW));
+
+                            // FIXME: exception
+                            if (activeFilter == null) return false;
+
+                            if (selectedFilter == null) {
+                                selectedFilter = activeFilter;
+                            }
+
+                            // Continue looping until filter matches
+                            return !activeFilter.equals(filterName);
                         },
                         QueryStep.clickOnSlot(CHANGE_VIEW))
 
@@ -72,11 +93,21 @@ public class ContentBookQueries {
                                 .processIncomingContainer(c -> processContentBookPage(c, newContent)))
 
                 // Restore filter to original value
+                .execute(() -> filterLoopCount = 0)
                 .repeat(
                         c -> {
-                            // FIXME
-                            // is filter the same as the one we saved?
-                            return false;
+                            filterLoopCount++;
+                            if (filterLoopCount > MAX_FILTERS)
+                                // FIXME: exception
+                                return false;
+
+                            String activeFilter = getActiveFilter(c.items().get(CHANGE_VIEW));
+
+                            // FIXME: exception
+                            if (activeFilter == null) return false;
+
+                            // Continue looping until filter matches original value
+                            return !activeFilter.equals(selectedFilter);
                         },
                         QueryStep.clickOnSlot(CHANGE_VIEW))
 
@@ -87,6 +118,21 @@ public class ContentBookQueries {
                 .build();
 
         query.executeQuery();
+    }
+
+    private String getActiveFilter(ItemStack itemStack) {
+        StyledText itemName = InventoryUtils.getItemName(itemStack);
+        if (!itemName.equals(StyledText.fromString("§eFilter"))) return null;
+
+        List<StyledText> lore = LoreUtils.getLore(itemStack);
+        for (StyledText line : lore) {
+            Matcher m = line.getMatcher(ACTIVE_FILTER);
+            if (m.matches()) {
+                return m.group(1);
+            }
+        }
+
+        return null;
     }
 
     private void processContentBookPage(ContainerContent container, List<ContentInfo> newContent) {

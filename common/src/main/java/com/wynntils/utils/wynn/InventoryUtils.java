@@ -5,6 +5,7 @@
 package com.wynntils.utils.wynn;
 
 import com.wynntils.core.components.Models;
+import com.wynntils.core.text.StyledText;
 import com.wynntils.models.items.properties.GearTypeItemProperty;
 import com.wynntils.utils.mc.McUtils;
 import it.unimi.dsi.fastutil.ints.Int2ObjectMap;
@@ -74,6 +75,10 @@ public final class InventoryUtils {
             }
         }
         return true;
+    }
+
+    public static StyledText getItemName(ItemStack itemStack) {
+        return StyledText.fromComponent(itemStack.getHoverName());
     }
 
     public enum MouseClickType {

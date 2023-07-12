@@ -58,10 +58,10 @@ public final class QuestModel extends Model {
     public void rescanQuestBook(boolean includeQuests, boolean includeMiniQuests) {
         WynntilsMod.info("Requesting rescan of Quests in Content Book");
         if (includeQuests) {
-            Models.Content.scanContentBook("Quests", this::updateQuestsFromQuery);
+            Models.Content.scanContentBook("Quest", this::updateQuestsFromQuery);
         }
         if (includeMiniQuests) {
-            Models.Content.scanContentBook("Mini-Quests", this::updateMiniQuestsFromQuery);
+            Models.Content.scanContentBook("Mini-Quest", this::updateMiniQuestsFromQuery);
         }
     }
 

@@ -101,9 +101,9 @@ public final class DiscoveryModel extends Model {
 
     private void queryDiscoveries() {
         WynntilsMod.info("Requesting rescan of discoveries in Content Book");
-        Models.Content.scanContentBook("Territory Discoveries", this::updateTerritoryDiscoveriesFromQuery);
-        Models.Content.scanContentBook("World Discoveries", this::updateWorldDiscoveriesFromQuery);
-        Models.Content.scanContentBook("Secret Discoveries", this::updateSecretDiscoveriesFromQuery);
+        Models.Content.scanContentBook("Territorial Discovery", this::updateTerritoryDiscoveriesFromQuery);
+        Models.Content.scanContentBook("World Discovery", this::updateWorldDiscoveriesFromQuery);
+        Models.Content.scanContentBook("Secret Discovery", this::updateSecretDiscoveriesFromQuery);
     }
 
     private void updateTerritoryDiscoveriesFromQuery(List<ContentInfo> newContent) {

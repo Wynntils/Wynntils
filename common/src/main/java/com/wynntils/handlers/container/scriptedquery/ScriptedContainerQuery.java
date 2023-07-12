@@ -8,6 +8,7 @@ import com.wynntils.core.components.Handlers;
 import com.wynntils.core.text.StyledText;
 import com.wynntils.handlers.container.ContainerQueryStep;
 import com.wynntils.handlers.container.type.ContainerContent;
+import com.wynntils.utils.wynn.InventoryUtils;
 import java.util.LinkedList;
 import java.util.function.Consumer;
 import net.minecraft.network.chat.Component;
@@ -35,7 +36,7 @@ public final class ScriptedContainerQuery implements ContainerQueryStep {
             ContainerContent container, int slotNum, Item expectedItemType, StyledText expectedItemName) {
         ItemStack itemStack = container.items().get(slotNum);
         return itemStack.is(expectedItemType)
-                && StyledText.fromComponent(itemStack.getHoverName()).equals(expectedItemName);
+                && InventoryUtils.getItemName(itemStack).equals(expectedItemName);
     }
 
     public void executeQuery() {
