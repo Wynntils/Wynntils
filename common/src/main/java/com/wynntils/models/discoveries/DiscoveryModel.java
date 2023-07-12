@@ -13,6 +13,8 @@ import com.wynntils.core.net.ApiResponse;
 import com.wynntils.core.net.Download;
 import com.wynntils.core.net.UrlId;
 import com.wynntils.models.characterstats.CombatXpModel;
+import com.wynntils.models.content.type.ContentInfo;
+import com.wynntils.models.content.type.ContentType;
 import com.wynntils.models.discoveries.event.DiscoveriesUpdatedEvent;
 import com.wynntils.models.discoveries.profile.DiscoveryProfile;
 import com.wynntils.models.discoveries.type.DiscoveryType;
@@ -96,17 +98,46 @@ public final class DiscoveryModel extends Model {
     }
 
     private void queryDiscoveries() {
-        Models.Content.rescanContentBook("Discoveries");
+        WynntilsMod.info("Requesting rescan of discoveries in Content Book");
+        Models.Content.scanContentBook("World Discoveries", this::updateDiscoveriesFromQuery);
+        Models.Content.scanContentBook("Secret Discoveries", this::updateSecretDiscoveriesFromQuery);
     }
 
-    public void setDiscoveries(List<DiscoveryInfo> newDiscoveries) {
+    private void updateDiscoveriesFromQuery(List<ContentInfo> newContent) {
+        List<DiscoveryInfo> newDiscoveries = new ArrayList<>();
+        for (ContentInfo content : newContent) {
+            System.out.println("New discovery: " + content);
+            if (content.type() != ContentType.WORLD_DISCOVERY) {
+                WynntilsMod.warn("Incorrect discovery content type recieved: " + content);
+                continue;
+            }
+            DiscoveryInfo discoveryInfo = getDiscoveryInfoFromContent(content);
+            newDiscoveries.add(discoveryInfo);
+        }
+
         discoveries = newDiscoveries;
         WynntilsMod.postEvent(new DiscoveriesUpdatedEvent.Normal());
     }
 
-    public void setSecretDiscoveries(List<DiscoveryInfo> newDiscoveries) {
+    private void updateSecretDiscoveriesFromQuery(List<ContentInfo> newContent) {
+        List<DiscoveryInfo> newDiscoveries = new ArrayList<>();
+        for (ContentInfo content : newContent) {
+            System.out.println("New secret discovery: " + content);
+            if (content.type() != ContentType.SECRET_DISCOVERY) {
+                WynntilsMod.warn("Incorrect secret discovery content type recieved: " + content);
+                continue;
+            }
+            DiscoveryInfo discoveryInfo = getDiscoveryInfoFromContent(content);
+            newDiscoveries.add(discoveryInfo);
+        }
+
         secretDiscoveries = newDiscoveries;
         WynntilsMod.postEvent(new DiscoveriesUpdatedEvent.Secret());
+    }
+
+    private DiscoveryInfo getDiscoveryInfoFromContent(ContentInfo content) {
+        // FIXME
+        return null;
     }
 
     public void setDiscoveriesTooltip(List<Component> newTooltip) {

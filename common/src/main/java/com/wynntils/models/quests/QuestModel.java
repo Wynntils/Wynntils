@@ -12,12 +12,17 @@ import com.wynntils.core.net.ApiResponse;
 import com.wynntils.core.net.UrlId;
 import com.wynntils.core.text.StyledText;
 import com.wynntils.models.characterstats.CombatXpModel;
+import com.wynntils.models.content.type.ContentInfo;
+import com.wynntils.models.content.type.ContentLength;
 import com.wynntils.models.content.type.ContentType;
 import com.wynntils.models.quests.event.QuestBookReloadedEvent;
+import com.wynntils.models.quests.type.QuestLength;
 import com.wynntils.models.quests.type.QuestSortOrder;
+import com.wynntils.models.quests.type.QuestStatus;
 import com.wynntils.models.worlds.event.WorldStateEvent;
 import com.wynntils.utils.mc.McUtils;
 import com.wynntils.utils.mc.type.Location;
+import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
@@ -51,8 +56,13 @@ public final class QuestModel extends Model {
     }
 
     public void rescanQuestBook(boolean includeQuests, boolean includeMiniQuests) {
-        WynntilsMod.info("Requesting rescan of Content Book");
-        Models.Content.rescanContentBook("Quests");
+        WynntilsMod.info("Requesting rescan of Quests in Content Book");
+        if (includeQuests) {
+            Models.Content.scanContentBook("Quests", this::updateQuestsFromQuery);
+        }
+        if (includeMiniQuests) {
+            Models.Content.scanContentBook("Mini-Quests", this::updateMiniQuestsFromQuery);
+        }
     }
 
     public void rescanDialogueHistory() {
@@ -139,14 +149,54 @@ public final class QuestModel extends Model {
         return StringUtils.replaceOnce(name, MINI_QUEST_PREFIX, "");
     }
 
-    public void updateQuestsFromQuery(List<QuestInfo> newQuests) {
+    private void updateQuestsFromQuery(List<ContentInfo> newContent) {
+        List<QuestInfo> newQuests = new ArrayList<>();
+
+        for (ContentInfo content : newContent) {
+            System.out.println("New quest: " + content);
+            if (content.type() != ContentType.QUEST && content.type() != ContentType.STORYLINE_QUEST) {
+                WynntilsMod.warn("Incorrect quest content type recieved: " + content);
+                continue;
+            }
+            QuestInfo questInfo = getQuestInfoFromContent(content);
+            newQuests.add(questInfo);
+        }
         quests = newQuests;
         WynntilsMod.postEvent(new QuestBookReloadedEvent.QuestsReloaded());
     }
 
-    void updateMiniQuestsFromQuery(List<QuestInfo> newMiniQuests) {
+    private void updateMiniQuestsFromQuery(List<ContentInfo> newContent) {
+        List<QuestInfo> newMiniQuests = new ArrayList<>();
+
+        for (ContentInfo content : newContent) {
+            System.out.println("New mini-quest: " + content);
+            if (content.type() != ContentType.MINI_QUEST) {
+                WynntilsMod.warn("Incorrect mini-quest content type recieved: " + content);
+                continue;
+            }
+            QuestInfo questInfo = getQuestInfoFromContent(content);
+            newMiniQuests.add(questInfo);
+        }
+
         miniQuests = newMiniQuests;
         WynntilsMod.postEvent(new QuestBookReloadedEvent.MiniQuestsReloaded());
+    }
+
+    private static QuestInfo getQuestInfoFromContent(ContentInfo content) {
+        // We should always have a length, but if not, better fake one than crashing
+        ContentLength contentLength = content.length().orElse(ContentLength.SHORT);
+
+        return new QuestInfo(
+                content.name(),
+                QuestStatus.fromContentStatus(content.status()),
+                QuestLength.fromContentLength(contentLength),
+                content.requirements().level().key(),
+                content.description().orElse(StyledText.EMPTY),
+                // FIXME! Additional requirements missing
+                List.of(),
+                content.type() == ContentType.MINI_QUEST,
+                0,
+                content.isTracked());
     }
 
     void setDialogueHistory(List<List<StyledText>> newDialogueHistory) {

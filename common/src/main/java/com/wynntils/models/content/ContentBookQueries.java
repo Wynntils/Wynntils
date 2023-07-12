@@ -19,6 +19,7 @@ import com.wynntils.utils.wynn.InventoryUtils;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.function.Consumer;
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.ItemStack;
@@ -36,7 +37,7 @@ public class ContentBookQueries {
      * Trigger a rescan of the content book. When the rescan is done, Models.Content.updateFromContentBookQuery
      * will be called.
      */
-    protected void queryContentBook(String filterName) {
+    protected void queryContentBook(String filterName, Consumer<List<ContentInfo>> processResult) {
         if (newContent != null) return;
 
         newContent = new ArrayList<>();
@@ -84,7 +85,7 @@ public class ContentBookQueries {
 
                 // Finally signal we're done
                 .execute(() -> {
-                    Models.Content.updateFromContentBookQuery(newContent);
+                    processResult.accept(newContent);
                     newContent = null;
                 })
                 .build();

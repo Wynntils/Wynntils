@@ -21,8 +21,6 @@ import com.wynntils.models.content.type.ContentTrackingState;
 import com.wynntils.models.content.type.ContentType;
 import com.wynntils.models.profession.type.ProfessionType;
 import com.wynntils.models.quests.QuestInfo;
-import com.wynntils.models.quests.type.QuestLength;
-import com.wynntils.models.quests.type.QuestStatus;
 import com.wynntils.models.worlds.event.WorldStateEvent;
 import com.wynntils.utils.mc.LoreUtils;
 import com.wynntils.utils.mc.StyledTextUtils;
@@ -32,6 +30,7 @@ import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Optional;
+import java.util.function.Consumer;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import net.minecraft.ChatFormatting;
@@ -234,32 +233,8 @@ public final class ContentModel extends Model {
         updateTracker(null, null, null);
     }
 
-    public void updateFromContentBookQuery(List<ContentInfo> newContent) {
-        System.out.println("NEW QUESTS");
-        List<QuestInfo> newQuests = new ArrayList<>();
-        for (ContentInfo content : newContent) {
-            System.out.println("New quest: " + content);
-            if (content.type() != ContentType.QUEST && content.type() != ContentType.STORYLINE_QUEST) continue;
-            QuestInfo questInfo = new QuestInfo(
-                    content.name(),
-                    QuestStatus.fromContentStatus(content.status()),
-                    QuestLength.fromContentLength(content.length().get()),
-                    content.requirements().level().key(),
-                    content.description().orElse(StyledText.EMPTY),
-                    List.of(),
-                    false,
-                    0,
-                    content.isTracked());
-            newQuests.add(questInfo);
-        }
-        Models.Quest.updateQuestsFromQuery(newQuests);
-
-        // Models.Discovery.setDiscoveries(newContent);
-        // Models.Discovery.setSecretDiscoveries(newContent);
-    }
-
-    public void rescanContentBook(String filterName) {
-        CONTAINER_QUERIES.queryContentBook(filterName);
+    public void scanContentBook(String filterName, Consumer<List<ContentInfo>> processResult) {
+        CONTAINER_QUERIES.queryContentBook(filterName, processResult);
     }
 
     public void startTracking(String name, ContentType contentType) {
