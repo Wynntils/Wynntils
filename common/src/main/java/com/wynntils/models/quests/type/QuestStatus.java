@@ -6,7 +6,6 @@ package com.wynntils.models.quests.type;
 
 import com.wynntils.models.content.type.ContentStatus;
 import com.wynntils.screens.questbook.WynntilsQuestBookScreen;
-import java.util.Locale;
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
 
@@ -35,14 +34,5 @@ public enum QuestStatus {
 
     public Component getQuestBookComponent() {
         return questBookComponent;
-    }
-
-    public static QuestStatus fromString(String str) {
-        try {
-            return QuestStatus.valueOf(str.toUpperCase(Locale.ROOT).replace(" ", "_"));
-        } catch (IllegalArgumentException e) {
-            // Use CANNOT_START as fallback... it's as good as any
-            return CANNOT_START;
-        }
     }
 }

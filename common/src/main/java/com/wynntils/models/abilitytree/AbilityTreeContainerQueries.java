@@ -100,12 +100,12 @@ public class AbilityTreeContainerQueries {
     private abstract static class AbilityTreeProcessor {
         private int page = 1;
 
-        public void processPage(ContainerContent content) {
+        protected void processPage(ContainerContent content) {
             processPage(content, page);
             page++;
         }
 
-        public abstract void processPage(ContainerContent content, int page);
+        protected abstract void processPage(ContainerContent content, int page);
     }
 
     /**
@@ -120,7 +120,7 @@ public class AbilityTreeContainerQueries {
         }
 
         @Override
-        public void processPage(ContainerContent content, int page) {
+        protected void processPage(ContainerContent content, int page) {
             List<ItemStack> items = content.items();
 
             for (int slot = 0; slot < items.size(); slot++) {
@@ -147,7 +147,7 @@ public class AbilityTreeContainerQueries {
         }
 
         @Override
-        public void processPage(ContainerContent content, int page) {
+        protected void processPage(ContainerContent content, int page) {
             List<ItemStack> items = content.items();
 
             for (int slot = 0; slot < items.size(); slot++) {

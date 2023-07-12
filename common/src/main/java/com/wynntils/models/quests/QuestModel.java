@@ -13,7 +13,6 @@ import com.wynntils.core.net.UrlId;
 import com.wynntils.core.text.StyledText;
 import com.wynntils.models.characterstats.CombatXpModel;
 import com.wynntils.models.content.type.ContentInfo;
-import com.wynntils.models.content.type.ContentLength;
 import com.wynntils.models.content.type.ContentType;
 import com.wynntils.models.quests.event.QuestBookReloadedEvent;
 import com.wynntils.models.quests.type.QuestLength;
@@ -183,19 +182,16 @@ public final class QuestModel extends Model {
 
     private static QuestInfo getQuestInfoFromContent(ContentInfo content) {
         // We should always have a length, but if not, better fake one than crashing
-        ContentLength contentLength = content.length().orElse(ContentLength.SHORT);
 
         return new QuestInfo(
                 content.name(),
                 QuestStatus.fromContentStatus(content.status()),
-                QuestLength.fromContentLength(contentLength),
+                QuestLength.fromContentLength(content.length()),
                 content.requirements().level().key(),
                 content.description().orElse(StyledText.EMPTY),
                 // FIXME! Additional requirements missing
                 List.of(),
-                content.type() == ContentType.MINI_QUEST,
-                0,
-                content.isTracked());
+                content.type() == ContentType.MINI_QUEST);
     }
 
     void setDialogueHistory(List<List<StyledText>> newDialogueHistory) {

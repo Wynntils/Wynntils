@@ -204,14 +204,14 @@ public final class CharacterModel extends Model {
     public void onContainerClick(ContainerClickEvent e) {
         if (inCharacterSelection) {
             if (e.getItemStack().getItem() == Items.AIR) return;
-            parseCharacter(e.getItemStack(), e.getSlotNum());
+            parseCharacter(e.getItemStack());
             hasCharacter = true;
             WynntilsMod.postEvent(new CharacterUpdateEvent());
             WynntilsMod.info("Selected character " + getCharacterString());
         }
     }
 
-    private void parseCharacter(ItemStack itemStack, int id) {
+    private void parseCharacter(ItemStack itemStack) {
         List<StyledText> lore = LoreUtils.getLore(itemStack);
 
         int level = 0;

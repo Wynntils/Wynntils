@@ -73,7 +73,6 @@ public class ContentBookQueries {
                             if (activeFilter == null) {
                                 throw new ContainerQueryException("Cannot determine active filter");
                             }
-                            ;
 
                             if (selectedFilter == null) {
                                 selectedFilter = activeFilter;
@@ -107,7 +106,6 @@ public class ContentBookQueries {
                             if (activeFilter == null) {
                                 throw new ContainerQueryException("Cannot determine active filter");
                             }
-                            ;
 
                             // Continue looping until filter matches original value
                             return !activeFilter.equals(selectedFilter);
@@ -115,9 +113,7 @@ public class ContentBookQueries {
                         QueryStep.clickOnSlot(CHANGE_VIEW))
 
                 // Finally signal we're done
-                .execute(() -> {
-                    processResult.accept(newContent);
-                })
+                .execute(() -> processResult.accept(newContent))
                 .build();
 
         query.executeQuery();
