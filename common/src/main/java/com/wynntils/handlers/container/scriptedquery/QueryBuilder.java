@@ -23,7 +23,7 @@ import java.util.function.Consumer;
  */
 public final class QueryBuilder {
     private static final Consumer<String> DEFAULT_ERROR_HANDLER =
-            (errorMsg) -> WynntilsMod.warn("Error in ScriptedContainerQuery");
+            (errorMsg) -> WynntilsMod.warn("Error in ScriptedContainerQuery: " + errorMsg);
 
     private final String name;
     private final LinkedList<QueryStep> steps = new LinkedList<>();
