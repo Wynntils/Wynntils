@@ -12,14 +12,15 @@ import java.util.function.Consumer;
 import java.util.function.Predicate;
 
 /**
- * The QueryBuilder builds a ScriptedContainerQuery, which is a sequence of ContainerQueryStep,
- * which are executed one after another. Each step requires three parts:
+ * The QueryBuilder builds a ScriptedContainerQuery, which is basically a sequence of QueryStep,
+ * which are executed one after another. To enable more complex processing, additional subtypes
+ * of QuerySteps can be created. Each normal QueryStep consists of three parts:
  * 1) a startAction (to open the container)
- * 2) a verification (to check that we got the right container)
+ * 2) a verification (to check the container that opened, if any)
  * 3) a handleContent (to actually consume the content of the container)
- * <p>
- * The builder will accept these three in any order, and create a ContainerQueryStep for each
- * such triplet. It will not allow the creation of a step where one of them are missing.
+ *
+ * A QueryStep with no verification will assume no new container is opened.
+ * A QueryStep with no handleContent will just perform a no-op for consuming the content.
  */
 public final class QueryBuilder {
     private static final Consumer<String> DEFAULT_ERROR_HANDLER =
