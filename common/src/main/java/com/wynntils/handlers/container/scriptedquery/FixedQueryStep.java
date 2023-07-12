@@ -4,6 +4,7 @@
  */
 package com.wynntils.handlers.container.scriptedquery;
 
+import com.wynntils.handlers.container.ContainerQueryException;
 import com.wynntils.handlers.container.type.ContainerContent;
 
 class FixedQueryStep extends QueryStep {
@@ -13,7 +14,7 @@ class FixedQueryStep extends QueryStep {
     }
 
     @Override
-    public boolean startStep(ScriptedContainerQuery query, ContainerContent container) {
+    public boolean startStep(ScriptedContainerQuery query, ContainerContent container) throws ContainerQueryException {
         // A FixedQueryStep always gets it handleContent called
         getHandleContent().processContainer(container);
 

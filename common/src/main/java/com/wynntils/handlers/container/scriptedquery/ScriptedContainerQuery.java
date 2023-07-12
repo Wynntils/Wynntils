@@ -6,6 +6,7 @@ package com.wynntils.handlers.container.scriptedquery;
 
 import com.wynntils.core.components.Handlers;
 import com.wynntils.core.text.StyledText;
+import com.wynntils.handlers.container.ContainerQueryException;
 import com.wynntils.handlers.container.ContainerQueryStep;
 import com.wynntils.handlers.container.type.ContainerContent;
 import com.wynntils.utils.wynn.InventoryUtils;
@@ -46,7 +47,7 @@ public final class ScriptedContainerQuery implements ContainerQueryStep {
     }
 
     @Override
-    public boolean startStep(ContainerContent container) {
+    public boolean startStep(ContainerContent container) throws ContainerQueryException {
         return currentStep.startStep(this, container);
     }
 
@@ -56,7 +57,7 @@ public final class ScriptedContainerQuery implements ContainerQueryStep {
     }
 
     @Override
-    public void handleContent(ContainerContent container) {
+    public void handleContent(ContainerContent container) throws ContainerQueryException {
         currentStep.getHandleContent().processContainer(container);
     }
 

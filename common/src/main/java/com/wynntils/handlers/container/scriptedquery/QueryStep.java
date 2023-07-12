@@ -5,11 +5,12 @@
 package com.wynntils.handlers.container.scriptedquery;
 
 import com.wynntils.core.text.StyledText;
+import com.wynntils.handlers.container.ContainerQueryException;
 import com.wynntils.handlers.container.ContainerQueryStep;
 import com.wynntils.handlers.container.type.ContainerAction;
 import com.wynntils.handlers.container.type.ContainerContent;
+import com.wynntils.handlers.container.type.ContainerPredicate;
 import com.wynntils.handlers.container.type.ContainerVerification;
-import com.wynntils.handlers.container.type.StartAction;
 import com.wynntils.utils.wynn.ContainerUtils;
 import net.minecraft.world.item.Item;
 import org.lwjgl.glfw.GLFW;
@@ -19,11 +20,11 @@ public class QueryStep {
     private static final ContainerVerification EXPECT_SAME_MENU = (title, type) -> false;
     private static final ContainerAction IGNORE_INCOMING_CONTAINER = c -> {};
 
-    private final StartAction startAction;
+    private final ContainerPredicate startAction;
     private ContainerVerification verification = EXPECT_SAME_MENU;
     private ContainerAction handleContent = IGNORE_INCOMING_CONTAINER;
 
-    protected QueryStep(StartAction startAction) {
+    protected QueryStep(ContainerPredicate startAction) {
         this.startAction = startAction;
     }
 
@@ -50,7 +51,7 @@ public class QueryStep {
     public static QueryStep clickOnMatchingSlot(int slotNum, Item expectedItemType, StyledText expectedItemName) {
         return new QueryStep(container -> {
             if (!ScriptedContainerQuery.containerHasSlot(container, slotNum, expectedItemType, expectedItemName))
-                return false;
+                throw new ContainerQueryException("Cannot find matching slot");
 
             ContainerUtils.clickOnSlot(
                     slotNum, container.containerId(), GLFW.GLFW_MOUSE_BUTTON_LEFT, container.items());
@@ -80,7 +81,7 @@ public class QueryStep {
         return handleContent;
     }
 
-    boolean startStep(ScriptedContainerQuery query, ContainerContent container) {
+    boolean startStep(ScriptedContainerQuery query, ContainerContent container) throws ContainerQueryException {
         return startAction.execute(container);
     }
 

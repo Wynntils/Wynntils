@@ -14,7 +14,7 @@ public interface ContainerQueryStep {
      * is null. Otherwise, it will be the currently open container that the next step
      * will be taken on.
      */
-    boolean startStep(ContainerContent container);
+    boolean startStep(ContainerContent container) throws ContainerQueryException;
 
     /**
      * Verify that the container that has just opened has the expected type and
@@ -25,13 +25,13 @@ public interface ContainerQueryStep {
     /**
      * Process the actual content of the container that this step has opened up.
      */
-    void handleContent(ContainerContent container);
+    void handleContent(ContainerContent container) throws ContainerQueryException;
 
     /**
      * Return a chained ContainerQueryStep, if another step is needed for the
      * currently open container. If the query session is finished, return null.
      */
-    ContainerQueryStep getNextStep(ContainerContent container);
+    ContainerQueryStep getNextStep(ContainerContent container) throws ContainerQueryException;
 
     /**
      * This will be called by ContainerQueryManager if an error occurs. If that happens,

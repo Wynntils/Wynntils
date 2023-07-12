@@ -7,6 +7,7 @@ package com.wynntils.models.content;
 import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.components.Models;
 import com.wynntils.core.text.StyledText;
+import com.wynntils.handlers.container.ContainerQueryException;
 import com.wynntils.handlers.container.scriptedquery.QueryStep;
 import com.wynntils.handlers.container.scriptedquery.ScriptedContainerQuery;
 import com.wynntils.handlers.container.type.ContainerContent;
@@ -64,14 +65,15 @@ public class ContentBookQueries {
                 .repeat(
                         c -> {
                             filterLoopCount++;
-                            if (filterLoopCount > MAX_FILTERS)
-                                // FIXME: exception
-                                return false;
+                            if (filterLoopCount > MAX_FILTERS) {
+                                throw new ContainerQueryException("Filter setting has exceeded max loops");
+                            }
 
                             String activeFilter = getActiveFilter(c.items().get(CHANGE_VIEW));
-
-                            // FIXME: exception
-                            if (activeFilter == null) return false;
+                            if (activeFilter == null) {
+                                throw new ContainerQueryException("Cannot determine active filter");
+                            }
+                            ;
 
                             if (selectedFilter == null) {
                                 selectedFilter = activeFilter;
@@ -97,14 +99,15 @@ public class ContentBookQueries {
                 .repeat(
                         c -> {
                             filterLoopCount++;
-                            if (filterLoopCount > MAX_FILTERS)
-                                // FIXME: exception
-                                return false;
+                            if (filterLoopCount > MAX_FILTERS) {
+                                throw new ContainerQueryException("Filter setting has exceeded max loops");
+                            }
 
                             String activeFilter = getActiveFilter(c.items().get(CHANGE_VIEW));
-
-                            // FIXME: exception
-                            if (activeFilter == null) return false;
+                            if (activeFilter == null) {
+                                throw new ContainerQueryException("Cannot determine active filter");
+                            }
+                            ;
 
                             // Continue looping until filter matches original value
                             return !activeFilter.equals(selectedFilter);

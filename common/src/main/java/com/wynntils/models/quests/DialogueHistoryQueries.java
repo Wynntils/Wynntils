@@ -7,6 +7,7 @@ package com.wynntils.models.quests;
 import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.components.Models;
 import com.wynntils.core.text.StyledText;
+import com.wynntils.handlers.container.ContainerQueryException;
 import com.wynntils.handlers.container.scriptedquery.QueryStep;
 import com.wynntils.handlers.container.scriptedquery.ScriptedContainerQuery;
 import com.wynntils.handlers.container.type.ContainerContent;
@@ -58,10 +59,12 @@ public class DialogueHistoryQueries {
         query.executeQuery();
     }
 
-    private boolean checkDialoguePage(ContainerContent c) {
+    private boolean checkDialoguePage(ContainerContent c) throws ContainerQueryException {
         ItemStack dialogueHistoryItem = c.items().get(DIALOGUE_HISTORY_SLOT);
 
-        if (!StyledText.fromComponent(dialogueHistoryItem.getHoverName()).equals(DIALOGUE_HISTORY)) return false;
+        if (!StyledText.fromComponent(dialogueHistoryItem.getHoverName()).equals(DIALOGUE_HISTORY)) {
+            throw new ContainerQueryException("Could not find dialogue history item");
+        }
 
         List<StyledText> dialogue = new ArrayList<>();
 
@@ -82,7 +85,6 @@ public class DialogueHistoryQueries {
             }
         }
 
-        // Fallback: If we failed to find the page line, stop looping
-        return false;
+        throw new ContainerQueryException("Could not find page line");
     }
 }

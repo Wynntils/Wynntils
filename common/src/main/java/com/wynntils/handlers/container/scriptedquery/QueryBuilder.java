@@ -6,10 +6,9 @@ package com.wynntils.handlers.container.scriptedquery;
 
 import com.wynntils.core.WynntilsMod;
 import com.wynntils.handlers.container.type.ContainerAction;
-import com.wynntils.handlers.container.type.ContainerContent;
+import com.wynntils.handlers.container.type.ContainerPredicate;
 import java.util.LinkedList;
 import java.util.function.Consumer;
-import java.util.function.Predicate;
 
 /**
  * The QueryBuilder builds a ScriptedContainerQuery, which is basically a sequence of QueryStep,
@@ -44,7 +43,7 @@ public final class QueryBuilder {
         return this;
     }
 
-    public QueryBuilder repeat(Predicate<ContainerContent> containerCheck, QueryStep step) {
+    public QueryBuilder repeat(ContainerPredicate containerCheck, QueryStep step) {
         steps.add(new RepeatedQueryStep(containerCheck, step));
         return this;
     }

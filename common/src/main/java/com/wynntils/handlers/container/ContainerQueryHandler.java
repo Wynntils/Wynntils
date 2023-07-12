@@ -71,8 +71,12 @@ public final class ContainerQueryHandler extends Handler {
         firstStepName = firstStep.getName();
         lastStep = null;
         resetTimer();
-        if (!firstStep.startStep(null)) {
-            raiseError("Cannot execute first step");
+        try {
+            if (!firstStep.startStep(null)) {
+                endQuery();
+            }
+        } catch (ContainerQueryException e) {
+            raiseError("Cannot execute first step: " + e.getMessage());
         }
     }
 
@@ -88,18 +92,38 @@ public final class ContainerQueryHandler extends Handler {
     }
 
     @SubscribeEvent
+    public void onTick(TickEvent event) {
+        if (currentStep == null) return;
+
+        ticksRemaining--;
+
+        if (ticksRemaining <= 0) {
+            raiseError("Container reply timed out");
+        }
+    }
+
+    @SubscribeEvent
     public void onMenuOpened(MenuEvent.MenuOpenedEvent e) {
-        if (currentStep == null) {
-            if (lastStep != null) {
-                // We're in a possibly bad state. We have failed a previous call, but
-                // we might still get the menu opened (perhaps after a lag spike).
-                handleFailedOpen(e);
+        if (currentStep == null && lastStep != null) {
+            // We're in a possibly bad state. We have failed a previous call, but
+            // we might still get the menu opened (perhaps after a lag spike).
+            if (lastStep.verifyContainer(e.getTitle(), e.getMenuType())) {
+                // This was the container we were supposed to be looking for
+                WynntilsMod.warn("Closing container '" + e.getTitle().getString()
+                        + "' due to previously aborted container query");
+                e.setCanceled(true);
+            } else {
+                // This is some other container. Ignore it.
             }
+            // Now say we're completely finished with the last query
+            lastStep = null;
             return;
         }
 
-        boolean matches = currentStep.verifyContainer(e.getTitle(), e.getMenuType());
-        if (matches) {
+        // Are we processing a query?
+        if (currentStep == null) return;
+
+        if (currentStep.verifyContainer(e.getTitle(), e.getMenuType())) {
             containerId = e.getContainerId();
             currentTitle = e.getTitle();
             currentMenuType = e.getMenuType();
@@ -150,43 +174,36 @@ public final class ContainerQueryHandler extends Handler {
                 new ContainerContent(e.getItems(), currentTitle, currentMenuType, containerId);
         resetTimer();
 
-        // Now actually process this container
+        try {
+            // Now actually process this container
+            boolean hasMoreSteps = processContainer(currentContainer);
+            e.setCanceled(true);
+
+            if (!hasMoreSteps) {
+                endQuery();
+                McUtils.sendPacket(new ServerboundContainerClosePacket(id));
+                // Start next query in queue, if any
+                if (!queuedQueries.isEmpty()) {
+                    runQuery(queuedQueries.pop());
+                }
+            }
+        } catch (ContainerQueryException ex) {
+            raiseError("Error while processing content for " + firstStepName + ": " + ex.getMessage());
+        }
+    }
+
+    private boolean processContainer(ContainerContent currentContainer) throws ContainerQueryException {
         currentStep.handleContent(currentContainer);
 
         ContainerQueryStep nextStep = currentStep.getNextStep(currentContainer);
         if (nextStep != null) {
             // Go on and query another container
             currentStep = nextStep;
-            if (!currentStep.startStep(currentContainer)) {
-                //                raiseError("Cannot execute chained start step");
-                // FIXME:
-                // We're done
-                endQuery();
-                McUtils.sendPacket(new ServerboundContainerClosePacket(id));
-                if (!queuedQueries.isEmpty()) {
-                    runQuery(queuedQueries.pop());
-                }
-            }
+            // Return true iff taking the next step succeeded
+            return currentStep.startStep(currentContainer);
         } else {
             // We're done
-            endQuery();
-            McUtils.sendPacket(new ServerboundContainerClosePacket(id));
-            if (!queuedQueries.isEmpty()) {
-                runQuery(queuedQueries.pop());
-            }
-        }
-
-        e.setCanceled(true);
-    }
-
-    @SubscribeEvent
-    public void onTick(TickEvent event) {
-        if (currentStep == null) return;
-
-        ticksRemaining--;
-
-        if (ticksRemaining <= 0) {
-            raiseError("Container reply timed out");
+            return false;
         }
     }
 
@@ -209,19 +226,5 @@ public final class ContainerQueryHandler extends Handler {
 
     private void resetTimer() {
         ticksRemaining = OPERATION_TIMEOUT_TICKS;
-    }
-
-    private void handleFailedOpen(MenuEvent.MenuOpenedEvent e) {
-        boolean matches = lastStep.verifyContainer(e.getTitle(), e.getMenuType());
-        if (matches) {
-            // This was the container we were supposed to be looking for
-            WynntilsMod.warn(
-                    "Closing container '" + e.getTitle().getString() + "' due to previously aborted container query");
-            lastStep = null;
-            e.setCanceled(true);
-        } else {
-            // Not the one we were looking for, stop looking
-            lastStep = null;
-        }
     }
 }

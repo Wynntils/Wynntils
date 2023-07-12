@@ -4,7 +4,9 @@
  */
 package com.wynntils.handlers.container.type;
 
+import com.wynntils.handlers.container.ContainerQueryException;
+
 @FunctionalInterface
-public interface StartAction {
-    boolean execute(ContainerContent container);
+public interface ContainerPredicate {
+    boolean execute(ContainerContent container) throws ContainerQueryException;
 }

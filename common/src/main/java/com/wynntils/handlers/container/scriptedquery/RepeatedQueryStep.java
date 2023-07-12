@@ -4,21 +4,22 @@
  */
 package com.wynntils.handlers.container.scriptedquery;
 
+import com.wynntils.handlers.container.ContainerQueryException;
 import com.wynntils.handlers.container.ContainerQueryStep;
 import com.wynntils.handlers.container.type.ContainerContent;
-import java.util.function.Predicate;
+import com.wynntils.handlers.container.type.ContainerPredicate;
 
 class RepeatedQueryStep extends QueryStep {
-    private final Predicate<ContainerContent> checkRepeat;
+    private final ContainerPredicate checkRepeat;
 
-    RepeatedQueryStep(Predicate<ContainerContent> checkRepeat, QueryStep queryStep) {
+    RepeatedQueryStep(ContainerPredicate checkRepeat, QueryStep queryStep) {
         super(queryStep);
         this.checkRepeat = checkRepeat;
     }
 
     @Override
-    boolean startStep(ScriptedContainerQuery query, ContainerContent container) {
-        if (!checkRepeat.test(container)) {
+    boolean startStep(ScriptedContainerQuery query, ContainerContent container) throws ContainerQueryException {
+        if (!checkRepeat.execute(container)) {
             // Skip this, and retry with next step from query
             if (!query.popOneStep()) return false;
             return query.startStep(container);
