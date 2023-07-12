@@ -176,7 +176,9 @@ public final class DiscoveryModel extends Model {
 
     public Stream<DiscoveryInfo> getAllCompletedDiscoveries() {
         return Stream.concat(
-                Stream.concat(territoryDiscoveries.stream(), worldDiscoveries.stream()), secretDiscoveries.stream()).filter(DiscoveryInfo::isDiscovered);
+                        Stream.concat(territoryDiscoveries.stream(), worldDiscoveries.stream()),
+                        secretDiscoveries.stream())
+                .filter(DiscoveryInfo::isDiscovered);
     }
 
     public List<DiscoveryInfo> getDiscoveryInfoList() {

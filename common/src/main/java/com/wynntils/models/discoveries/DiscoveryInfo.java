@@ -14,7 +14,6 @@ import com.wynntils.utils.mc.ComponentUtils;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
-import java.util.regex.Pattern;
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
 

@@ -336,11 +336,12 @@ public final class WynntilsDiscoveriesScreen extends WynntilsListScreen<Discover
                                 .filter(discoveryInfo -> Models.Discovery.getAllCompletedDiscoveries()
                                         .noneMatch(
                                                 discovery -> discovery.getName().equals(discoveryInfo.getName()))),
-                        Models.Discovery.getAllCompletedDiscoveries().filter(discoveryInfo -> switch (discoveryInfo.getType()) {
-                            case TERRITORY -> showFoundTerritory;
-                            case WORLD -> showFoundWorld;
-                            case SECRET -> showFoundSecrets;
-                        }))
+                        Models.Discovery.getAllCompletedDiscoveries()
+                                .filter(discoveryInfo -> switch (discoveryInfo.getType()) {
+                                    case TERRITORY -> showFoundTerritory;
+                                    case WORLD -> showFoundWorld;
+                                    case SECRET -> showFoundSecrets;
+                                }))
                 .filter(info -> StringUtils.partialMatch(info.getName(), searchTerm))
                 .sorted(Comparator.comparing(DiscoveryInfo::getMinLevel).thenComparing(DiscoveryInfo::getType))
                 .toList());
