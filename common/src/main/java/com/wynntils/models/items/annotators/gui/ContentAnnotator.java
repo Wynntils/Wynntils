@@ -17,12 +17,13 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 
 public final class ContentAnnotator implements ItemAnnotator {
-    private static final Pattern CONTENT_PATTERN =
-            Pattern.compile("^§(?<color>[56abcdef])(?<name>.+)§7 \\[(?<type>.+)\\]$");
+    private static final Pattern CONTENT_PATTERN = Pattern.compile("^§(?<color>.)(?<name>.+)§7 \\[(?<type>.+)\\]$");
 
     @Override
     public ItemAnnotation getAnnotation(ItemStack itemStack, StyledText name) {
-        if (itemStack.getItem() != Items.GOLDEN_AXE && itemStack.getItem() != Items.GOLDEN_PICKAXE) return null;
+        if (itemStack.getItem() != Items.GOLDEN_AXE
+                && itemStack.getItem() != Items.GOLDEN_PICKAXE
+                && itemStack.getItem() != Items.GOLDEN_HOE) return null;
 
         Matcher matcher = name.getMatcher(CONTENT_PATTERN);
         if (!matcher.matches()) return null;
