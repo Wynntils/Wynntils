@@ -113,7 +113,6 @@ public final class DiscoveryModel extends Model {
                 WynntilsMod.warn("Incorrect territory discovery content type recieved: " + content);
                 continue;
             }
-            System.out.println("New territory discovery: " + content);
             DiscoveryInfo discoveryInfo = getDiscoveryInfoFromContent(content);
             newDiscoveries.add(discoveryInfo);
         }
@@ -129,7 +128,6 @@ public final class DiscoveryModel extends Model {
                 WynntilsMod.warn("Incorrect discovery content type recieved: " + content);
                 continue;
             }
-            System.out.println("New world discovery: " + content);
             DiscoveryInfo discoveryInfo = getDiscoveryInfoFromContent(content);
             newDiscoveries.add(discoveryInfo);
         }
@@ -145,7 +143,6 @@ public final class DiscoveryModel extends Model {
                 WynntilsMod.warn("Incorrect secret discovery content type recieved: " + content);
                 continue;
             }
-            System.out.println("New secret discovery: " + content);
             DiscoveryInfo discoveryInfo = getDiscoveryInfoFromContent(content);
             newDiscoveries.add(discoveryInfo);
         }

@@ -158,7 +158,6 @@ public final class QuestModel extends Model {
                 WynntilsMod.warn("Incorrect quest content type recieved: " + content);
                 continue;
             }
-            System.out.println("New quest: " + content);
             QuestInfo questInfo = getQuestInfoFromContent(content);
             newQuests.add(questInfo);
         }
@@ -174,7 +173,6 @@ public final class QuestModel extends Model {
                 WynntilsMod.warn("Incorrect mini-quest content type recieved: " + content);
                 continue;
             }
-            System.out.println("New mini-quest: " + content);
             QuestInfo questInfo = getQuestInfoFromContent(content);
             newMiniQuests.add(questInfo);
         }
