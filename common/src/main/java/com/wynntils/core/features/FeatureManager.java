@@ -17,7 +17,6 @@ import com.wynntils.core.mod.CrashReportManager;
 import com.wynntils.core.mod.type.CrashType;
 import com.wynntils.features.GammabrightFeature;
 import com.wynntils.features.LootrunFeature;
-import com.wynntils.features.SilencerFeature;
 import com.wynntils.features.TerritoryDefenseMessageFeature;
 import com.wynntils.features.TranslationFeature;
 import com.wynntils.features.chat.ChatCoordinatesFeature;
@@ -126,6 +125,7 @@ import com.wynntils.features.screens.WynncraftButtonFeature;
 import com.wynntils.features.screens.WynncraftPauseScreenFeature;
 import com.wynntils.features.screens.WynntilsQuestBookFeature;
 import com.wynntils.features.utilities.GammabrightFeature;
+import com.wynntils.features.utilities.SilencerFeature;
 import com.wynntils.features.utilities.TranslationFeature;
 import com.wynntils.features.wynntils.BetaWarningFeature;
 import com.wynntils.features.wynntils.ChangelogFeature;
@@ -305,6 +305,7 @@ public final class FeatureManager extends Manager {
         // region utilities
         registerFeature(new AutoApplyResourcePackFeature());
         registerFeature(new GammabrightFeature());
+        registerFeature(new SilencerFeature());
         registerFeature(new TranslationFeature());
         // endregion
 
