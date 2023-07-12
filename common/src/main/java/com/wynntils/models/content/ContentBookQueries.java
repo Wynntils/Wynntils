@@ -31,18 +31,14 @@ public class ContentBookQueries {
     private static final int CHANGE_VIEW = 66;
     private static final StyledText SCROLL_DOWN_TEXT = StyledText.fromString("§7Scroll Down");
 
-    private List<ContentInfo> newContent;
-
     /**
      * Trigger a rescan of the content book. When the rescan is done, Models.Content.updateFromContentBookQuery
      * will be called.
      */
     protected void queryContentBook(String filterName, Consumer<List<ContentInfo>> processResult) {
-        if (newContent != null) return;
+        List<ContentInfo> newContent = new ArrayList<>();
 
-        newContent = new ArrayList<>();
-
-        ScriptedContainerQuery query = ScriptedContainerQuery.builder("Content Book Query")
+        ScriptedContainerQuery query = ScriptedContainerQuery.builder("Content Book Query for " + filterName)
                 .onError(msg -> {
                     WynntilsMod.warn("Problem querying Content Book: " + msg);
                     McUtils.sendMessageToClient(
@@ -66,13 +62,14 @@ public class ContentBookQueries {
                         QueryStep.clickOnSlot(CHANGE_VIEW))
 
                 // Process first page
-                .reprocess(this::processContentBookPage)
+                .reprocess(c -> processContentBookPage(c, newContent))
 
                 // Repeatedly click next page, if available, and process the following page
                 .repeat(
                         c -> ScriptedContainerQuery.containerHasSlot(
                                 c, NEXT_PAGE_SLOT, Items.GOLDEN_SHOVEL, SCROLL_DOWN_TEXT),
-                        QueryStep.clickOnSlot(NEXT_PAGE_SLOT).processIncomingContainer(this::processContentBookPage))
+                        QueryStep.clickOnSlot(NEXT_PAGE_SLOT)
+                                .processIncomingContainer(c -> processContentBookPage(c, newContent)))
 
                 // Restore filter to original value
                 .repeat(
@@ -86,14 +83,13 @@ public class ContentBookQueries {
                 // Finally signal we're done
                 .execute(() -> {
                     processResult.accept(newContent);
-                    newContent = null;
                 })
                 .build();
 
         query.executeQuery();
     }
 
-    private void processContentBookPage(ContainerContent container) {
+    private void processContentBookPage(ContainerContent container, List<ContentInfo> newContent) {
         for (int slot = 0; slot < 54; slot++) {
             ItemStack itemStack = container.items().get(slot);
             Optional<ContentItem> contentItemOpt = Models.Item.asWynnItem(itemStack, ContentItem.class);

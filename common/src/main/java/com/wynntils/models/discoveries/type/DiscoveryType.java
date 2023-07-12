@@ -4,7 +4,7 @@
  */
 package com.wynntils.models.discoveries.type;
 
-import com.wynntils.core.text.StyledText;
+import com.wynntils.models.content.type.ContentType;
 import net.minecraft.ChatFormatting;
 
 public enum DiscoveryType {
@@ -20,14 +20,13 @@ public enum DiscoveryType {
         this.color = color;
     }
 
-    public static DiscoveryType getDiscoveryTypeFromString(StyledText name) {
-        for (DiscoveryType type : values()) {
-            if (name.getFirstPart().getPartStyle().getStyle().getColor().getValue()
-                    == type.getColor().getColor()) {
-                return type;
-            }
-        }
-        return null;
+    public static DiscoveryType fromContentType(ContentType contentType) {
+        return switch (contentType) {
+            case WORLD_DISCOVERY -> WORLD;
+            case TERRITORIAL_DISCOVERY -> TERRITORY;
+            case SECRET_DISCOVERY -> SECRET;
+            default -> throw new IllegalStateException("Unexpected value: " + contentType);
+        };
     }
 
     public int getOrder() {

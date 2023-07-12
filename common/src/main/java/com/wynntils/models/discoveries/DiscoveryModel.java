@@ -37,7 +37,8 @@ import net.minecraftforge.eventbus.api.EventPriority;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 
 public final class DiscoveryModel extends Model {
-    private List<DiscoveryInfo> discoveries = List.of();
+    private List<DiscoveryInfo> territoryDiscoveries = List.of();
+    private List<DiscoveryInfo> worldDiscoveries = List.of();
     private List<DiscoveryInfo> secretDiscoveries = List.of();
     private List<DiscoveryInfo> discoveryInfoList = new ArrayList<>();
 
@@ -59,7 +60,8 @@ public final class DiscoveryModel extends Model {
 
     @SubscribeEvent(priority = EventPriority.HIGH)
     public void onWorldStateChanged(WorldStateEvent e) {
-        discoveries = List.of();
+        territoryDiscoveries = List.of();
+        worldDiscoveries = List.of();
         secretDiscoveries = List.of();
     }
 
@@ -99,34 +101,51 @@ public final class DiscoveryModel extends Model {
 
     private void queryDiscoveries() {
         WynntilsMod.info("Requesting rescan of discoveries in Content Book");
-        Models.Content.scanContentBook("World Discoveries", this::updateDiscoveriesFromQuery);
+        Models.Content.scanContentBook("Territory Discoveries", this::updateTerritoryDiscoveriesFromQuery);
+        Models.Content.scanContentBook("World Discoveries", this::updateWorldDiscoveriesFromQuery);
         Models.Content.scanContentBook("Secret Discoveries", this::updateSecretDiscoveriesFromQuery);
     }
 
-    private void updateDiscoveriesFromQuery(List<ContentInfo> newContent) {
+    private void updateTerritoryDiscoveriesFromQuery(List<ContentInfo> newContent) {
         List<DiscoveryInfo> newDiscoveries = new ArrayList<>();
         for (ContentInfo content : newContent) {
-            System.out.println("New discovery: " + content);
-            if (content.type() != ContentType.WORLD_DISCOVERY) {
-                WynntilsMod.warn("Incorrect discovery content type recieved: " + content);
+            if (content.type() != ContentType.TERRITORIAL_DISCOVERY) {
+                WynntilsMod.warn("Incorrect territory discovery content type recieved: " + content);
                 continue;
             }
+            System.out.println("New territory discovery: " + content);
             DiscoveryInfo discoveryInfo = getDiscoveryInfoFromContent(content);
             newDiscoveries.add(discoveryInfo);
         }
 
-        discoveries = newDiscoveries;
-        WynntilsMod.postEvent(new DiscoveriesUpdatedEvent.Normal());
+        territoryDiscoveries = newDiscoveries;
+        WynntilsMod.postEvent(new DiscoveriesUpdatedEvent.Territory());
+    }
+
+    private void updateWorldDiscoveriesFromQuery(List<ContentInfo> newContent) {
+        List<DiscoveryInfo> newDiscoveries = new ArrayList<>();
+        for (ContentInfo content : newContent) {
+            if (content.type() != ContentType.WORLD_DISCOVERY) {
+                WynntilsMod.warn("Incorrect discovery content type recieved: " + content);
+                continue;
+            }
+            System.out.println("New world discovery: " + content);
+            DiscoveryInfo discoveryInfo = getDiscoveryInfoFromContent(content);
+            newDiscoveries.add(discoveryInfo);
+        }
+
+        worldDiscoveries = newDiscoveries;
+        WynntilsMod.postEvent(new DiscoveriesUpdatedEvent.World());
     }
 
     private void updateSecretDiscoveriesFromQuery(List<ContentInfo> newContent) {
         List<DiscoveryInfo> newDiscoveries = new ArrayList<>();
         for (ContentInfo content : newContent) {
-            System.out.println("New secret discovery: " + content);
             if (content.type() != ContentType.SECRET_DISCOVERY) {
                 WynntilsMod.warn("Incorrect secret discovery content type recieved: " + content);
                 continue;
             }
+            System.out.println("New secret discovery: " + content);
             DiscoveryInfo discoveryInfo = getDiscoveryInfoFromContent(content);
             newDiscoveries.add(discoveryInfo);
         }
@@ -136,8 +155,7 @@ public final class DiscoveryModel extends Model {
     }
 
     private DiscoveryInfo getDiscoveryInfoFromContent(ContentInfo content) {
-        // FIXME
-        return null;
+        return DiscoveryInfo.fromContentInfo(content);
     }
 
     public void setDiscoveriesTooltip(List<Component> newTooltip) {
@@ -156,8 +174,9 @@ public final class DiscoveryModel extends Model {
         return secretDiscoveriesTooltip;
     }
 
-    public Stream<DiscoveryInfo> getAllDiscoveries() {
-        return Stream.concat(discoveries.stream(), secretDiscoveries.stream());
+    public Stream<DiscoveryInfo> getAllCompletedDiscoveries() {
+        return Stream.concat(
+                Stream.concat(territoryDiscoveries.stream(), worldDiscoveries.stream()), secretDiscoveries.stream()).filter(DiscoveryInfo::isDiscovered);
     }
 
     public List<DiscoveryInfo> getDiscoveryInfoList() {

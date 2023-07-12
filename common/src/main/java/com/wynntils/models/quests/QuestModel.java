@@ -112,7 +112,8 @@ public final class QuestModel extends Model {
     }
 
     public void startTracking(QuestInfo questInfo) {
-        Models.Content.startTracking(questInfo.getName(), questInfo.isMiniQuest() ? ContentType.MINI_QUEST : ContentType.QUEST);
+        Models.Content.startTracking(
+                questInfo.getName(), questInfo.isMiniQuest() ? ContentType.MINI_QUEST : ContentType.QUEST);
     }
 
     public void stopTracking() {
@@ -153,11 +154,11 @@ public final class QuestModel extends Model {
         List<QuestInfo> newQuests = new ArrayList<>();
 
         for (ContentInfo content : newContent) {
-            System.out.println("New quest: " + content);
             if (content.type() != ContentType.QUEST && content.type() != ContentType.STORYLINE_QUEST) {
                 WynntilsMod.warn("Incorrect quest content type recieved: " + content);
                 continue;
             }
+            System.out.println("New quest: " + content);
             QuestInfo questInfo = getQuestInfoFromContent(content);
             newQuests.add(questInfo);
         }
@@ -169,11 +170,11 @@ public final class QuestModel extends Model {
         List<QuestInfo> newMiniQuests = new ArrayList<>();
 
         for (ContentInfo content : newContent) {
-            System.out.println("New mini-quest: " + content);
             if (content.type() != ContentType.MINI_QUEST) {
                 WynntilsMod.warn("Incorrect mini-quest content type recieved: " + content);
                 continue;
             }
+            System.out.println("New mini-quest: " + content);
             QuestInfo questInfo = getQuestInfoFromContent(content);
             newMiniQuests.add(questInfo);
         }
