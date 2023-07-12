@@ -56,7 +56,7 @@ public final class ContentModel extends Model {
     private static final ContentBookQueries CONTAINER_QUERIES = new ContentBookQueries();
 
     private String trackedName;
-    private String trackedType;
+    private ContentType trackedType;
     private StyledText trackedTask;
 
     public ContentModel() {
@@ -201,7 +201,7 @@ public final class ContentModel extends Model {
         return trackedName;
     }
 
-    public String getTrackedType() {
+    public ContentType getTrackedType() {
         return trackedType;
     }
 
@@ -222,7 +222,7 @@ public final class ContentModel extends Model {
     }
 
     void updateTracker(String type, String name, StyledText nextTask) {
-        trackedType = type;
+        trackedType = ContentType.from(type);
         trackedName = name;
         trackedTask = nextTask;
 
@@ -242,7 +242,6 @@ public final class ContentModel extends Model {
     }
 
     public void stopTracking() {
-        // FIXME!!
-        //        McUtils.sendCommand("tracking");
+        CONTAINER_QUERIES.toggleTracking(trackedName, trackedType);
     }
 }

@@ -32,11 +32,29 @@ public enum ContentType {
         return null;
     }
 
+    /** This version cannot distinguish between QUEST and STORYLINE_QUEST */
+    public static ContentType from(String displayName) {
+        for (ContentType type : values()) {
+            if (type.getDisplayName().equals(displayName)) return type;
+        }
+
+        return null;
+    }
+
     public String getDisplayName() {
         return displayName;
     }
 
     public String getColorCode() {
         return colorCode;
+    }
+
+    public boolean matchesTracking(ContentType contentType) {
+        // When tracking content, storyline quests and mini-quests cannot
+        // be distinguished from quests
+        return switch (this) {
+            case STORYLINE_QUEST, MINI_QUEST -> contentType == this || contentType == QUEST;
+            default -> contentType == this;
+        };
     }
 }

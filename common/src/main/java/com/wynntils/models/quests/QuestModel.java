@@ -26,6 +26,7 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.stream.Stream;
 import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.eventbus.api.EventPriority;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
@@ -138,9 +139,7 @@ public final class QuestModel extends Model {
     }
 
     public Optional<QuestInfo> getQuestInfoFromName(String name) {
-        List<QuestInfo> questInfoList = name.startsWith(MINI_QUEST_PREFIX) ? miniQuests : quests;
-
-        return questInfoList.stream()
+        return Stream.concat(quests.stream(), miniQuests.stream())
                 .filter(quest -> quest.getName().equals(stripPrefix(name)))
                 .findFirst();
     }
