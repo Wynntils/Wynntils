@@ -103,7 +103,7 @@ public final class LoadingScreen extends WynntilsScreen {
         FontRenderer.getInstance()
                 .renderText(
                         poseStack,
-                        StyledText.fromString(""),
+                        StyledText.fromString(title),
                         centerX,
                         120,
                         MOSS_GREEN,
@@ -113,7 +113,7 @@ public final class LoadingScreen extends WynntilsScreen {
         FontRenderer.getInstance()
                 .renderText(
                         poseStack,
-                        StyledText.fromString(""),
+                        StyledText.fromString(subtitle),
                         centerX,
                         130,
                         MOSS_GREEN,
