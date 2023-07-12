@@ -8,6 +8,7 @@ import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.components.Handler;
 import com.wynntils.handlers.container.type.ContainerContent;
 import com.wynntils.mc.event.ContainerSetContentEvent;
+import com.wynntils.mc.event.LocalSoundEvent;
 import com.wynntils.mc.event.MenuEvent;
 import com.wynntils.mc.event.TickEvent;
 import com.wynntils.utils.mc.McUtils;
@@ -18,6 +19,7 @@ import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.protocol.game.ServerboundContainerClosePacket;
+import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.inventory.MenuType;
 import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
@@ -25,6 +27,7 @@ import net.minecraftforge.eventbus.api.SubscribeEvent;
 public final class ContainerQueryHandler extends Handler {
     private static final int NO_CONTAINER = -2;
     private static final int OPERATION_TIMEOUT_TICKS = 60; // normal operation is ~10 ticks
+    private static final String MENU_CLICK_SOUND = "minecraft.block.wooden_pressure_plate.click_on";
 
     private final LinkedList<ContainerQueryStep> queuedQueries = new LinkedList<>();
 
@@ -71,6 +74,17 @@ public final class ContainerQueryHandler extends Handler {
         if (!firstStep.startStep(null)) {
             raiseError("Cannot execute first step");
         }
+    }
+
+    @SubscribeEvent
+    public void onSound(LocalSoundEvent.Client e) {
+        // Silence the menu click sound when we are processing query
+        if (currentStep == null) return;
+        if (e.getSource() != SoundSource.BLOCKS) return;
+        if (!e.getSound().getLocation().toLanguageKey().equals(MENU_CLICK_SOUND)) return;
+
+        e.setCanceled(true);
+        return;
     }
 
     @SubscribeEvent
