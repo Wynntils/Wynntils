@@ -1,9 +1,21 @@
+## [0.0.3-pre-alpha.30](https://github.com/Wynntils/Artemis/compare/v0.0.3-pre-alpha.29...v0.0.3-pre-alpha.30) (2023-07-12)
+
+
+### Code Refactoring
+
+* Use named colors instead of hard-coded color codes ([#1723](https://github.com/Wynntils/Artemis/issues/1723)) ([3fef50a](https://github.com/Wynntils/Artemis/commit/3fef50aa9e93054dc2572b1cbc1d111fb964fda8))
+
 ## [0.0.3-pre-alpha.29](https://github.com/Wynntils/Artemis/compare/v0.0.3-pre-alpha.28...v0.0.3-pre-alpha.29) (2023-07-12)
 
 
 ### New Features
 
 * Add support for the new lootrun camp content type ([#1721](https://github.com/Wynntils/Artemis/issues/1721)) ([2e51eff](https://github.com/Wynntils/Artemis/commit/2e51effeb79cd4d308051ba4c1425484c5781581))
+
+
+### Miscellaneous Chores
+
+* **release:** v0.0.3-pre-alpha.29 [skip ci] ([093e348](https://github.com/Wynntils/Artemis/commit/093e348402715bfe67d5670ed1fe16052b9453fb))
 
 ## [0.0.3-pre-alpha.28](https://github.com/Wynntils/Artemis/compare/v0.0.3-pre-alpha.27...v0.0.3-pre-alpha.28) (2023-07-12)
 
@@ -36,16 +48,4 @@
 
 * Rebuild with changes from main ([62ec6df](https://github.com/Wynntils/Artemis/commit/62ec6dfdd892a632d76a65bb6f21f28b947d689c))
 * **release:** v0.0.3-pre-alpha.26 [skip ci] ([8357c91](https://github.com/Wynntils/Artemis/commit/8357c916f26498c6b7cded78dccbe07e50d3f402))
-
-## [0.0.3-pre-alpha.25](https://github.com/Wynntils/Artemis/compare/v0.0.3-pre-alpha.24...v0.0.3-pre-alpha.25) (2023-07-09)
-
-
-### New Features
-
-* Add support for new Dialogue History ([#1705](https://github.com/Wynntils/Artemis/issues/1705)) ([c6cc873](https://github.com/Wynntils/Artemis/commit/c6cc87325173a442f5b6b2cd03325b1c15e704b1))
-
-
-### Miscellaneous Chores
-
-* **release:** v0.0.3-pre-alpha.25 [skip ci] ([1e9982a](https://github.com/Wynntils/Artemis/commit/1e9982a46e2b0add1a21c881dda6a4a499034724))
 
