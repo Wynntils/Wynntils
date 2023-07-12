@@ -8,15 +8,13 @@ import com.wynntils.models.content.type.ContentType;
 import net.minecraft.ChatFormatting;
 
 public enum DiscoveryType {
-    TERRITORY(0, ChatFormatting.WHITE),
-    WORLD(1, ChatFormatting.YELLOW),
-    SECRET(2, ChatFormatting.AQUA);
+    TERRITORY(ChatFormatting.WHITE),
+    WORLD(ChatFormatting.YELLOW),
+    SECRET(ChatFormatting.AQUA);
 
-    private final int order;
     private final ChatFormatting color;
 
-    DiscoveryType(int order, ChatFormatting color) {
-        this.order = order;
+    DiscoveryType(ChatFormatting color) {
         this.color = color;
     }
 
@@ -27,10 +25,6 @@ public enum DiscoveryType {
             case SECRET_DISCOVERY -> SECRET;
             default -> throw new IllegalStateException("Unexpected value: " + contentType);
         };
-    }
-
-    public int getOrder() {
-        return order;
     }
 
     public ChatFormatting getColor() {
