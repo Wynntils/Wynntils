@@ -1,4 +1,16 @@
+## [0.0.3-alpha.125](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.124...v0.0.3-alpha.125) (2023-07-12)
+
+
+### New Features
+
+* Add the disconnect and change world buttons to the character selection screen ([#1685](https://github.com/Wynntils/Artemis/issues/1685)) ([56ae74c](https://github.com/Wynntils/Artemis/commit/56ae74cc2d6bcb5147f430057420acc58475986c))
+
 ## [0.0.3-alpha.124](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.123...v0.0.3-alpha.124) (2023-07-11)
+
+
+### Miscellaneous Chores
+
+* **release:** v0.0.3-alpha.124 [skip ci] ([0a1a2d6](https://github.com/Wynntils/Artemis/commit/0a1a2d6d916f77afefec71b47337cbe0bf9b0046))
 
 
 ### Code Refactoring
@@ -40,16 +52,4 @@
 ### Miscellaneous Chores
 
 * **release:** v0.0.3-alpha.121 [skip ci] ([3d79377](https://github.com/Wynntils/Artemis/commit/3d79377dce784cd19c5ea5902e6985babf6e9cb7))
-
-## [0.0.3-alpha.120](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.119...v0.0.3-alpha.120) (2023-07-10)
-
-
-### New Features
-
-* Add guild name and rank to book above player ([#1652](https://github.com/Wynntils/Artemis/issues/1652)) ([36c4028](https://github.com/Wynntils/Artemis/commit/36c4028efd18cdb414e467fd868907f127daa72a))
-
-
-### Miscellaneous Chores
-
-* **release:** v0.0.3-alpha.120 [skip ci] ([422ede2](https://github.com/Wynntils/Artemis/commit/422ede2e20dd208eed5f5e3918db864b72b7a8dd))
 
