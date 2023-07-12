@@ -194,7 +194,8 @@ public class ContentBookQueries {
             if (contentItemOpt.isEmpty()) continue;
 
             ContentInfo contentInfo = contentItemOpt.get().getContentInfo();
-            if (contentInfo.type().matchesTracking(contentType) && contentInfo.name().equals(name)) {
+            if (contentInfo.type().matchesTracking(contentType)
+                    && contentInfo.name().equals(name)) {
                 // Found it!
                 return slot;
             }
