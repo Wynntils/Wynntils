@@ -112,7 +112,7 @@ public final class QuestModel extends Model {
     }
 
     public void startTracking(QuestInfo questInfo) {
-        Models.Content.startTracking(questInfo.getName(), ContentType.QUEST);
+        Models.Content.startTracking(questInfo.getName(), questInfo.isMiniQuest() ? ContentType.MINI_QUEST : ContentType.QUEST);
     }
 
     public void stopTracking() {
