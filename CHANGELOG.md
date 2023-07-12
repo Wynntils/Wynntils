@@ -1,9 +1,17 @@
+## [0.0.3-pre-alpha.27](https://github.com/Wynntils/Artemis/compare/v0.0.3-pre-alpha.26...v0.0.3-pre-alpha.27) (2023-07-12)
+
+
+### Bug Fixes
+
+* typo ([#1719](https://github.com/Wynntils/Artemis/issues/1719)) ([4f487e8](https://github.com/Wynntils/Artemis/commit/4f487e8455a1d4c8d2a8323a7bb35a685ee2dbb8))
+
 ## [0.0.3-pre-alpha.26](https://github.com/Wynntils/Artemis/compare/v0.0.3-pre-alpha.25...v0.0.3-pre-alpha.26) (2023-07-09)
 
 
 ### Miscellaneous Chores
 
 * Rebuild with changes from main ([62ec6df](https://github.com/Wynntils/Artemis/commit/62ec6dfdd892a632d76a65bb6f21f28b947d689c))
+* **release:** v0.0.3-pre-alpha.26 [skip ci] ([8357c91](https://github.com/Wynntils/Artemis/commit/8357c916f26498c6b7cded78dccbe07e50d3f402))
 
 ## [0.0.3-pre-alpha.25](https://github.com/Wynntils/Artemis/compare/v0.0.3-pre-alpha.24...v0.0.3-pre-alpha.25) (2023-07-09)
 
@@ -40,16 +48,4 @@
 ### Miscellaneous Chores
 
 * **release:** v0.0.3-pre-alpha.23 [skip ci] ([e451fae](https://github.com/Wynntils/Artemis/commit/e451fae19b11c4bb396a85bd428ce68323662ba5))
-
-## [0.0.3-pre-alpha.22](https://github.com/Wynntils/Artemis/compare/v0.0.3-pre-alpha.21...v0.0.3-pre-alpha.22) (2023-07-07)
-
-
-### Bug Fixes
-
-* Proper fix for duplicated container content events ([#1696](https://github.com/Wynntils/Artemis/issues/1696)) ([56cbfe2](https://github.com/Wynntils/Artemis/commit/56cbfe2fc923584be318d23ef410c6b553c6ba18))
-
-
-### Miscellaneous Chores
-
-* **release:** v0.0.3-pre-alpha.22 [skip ci] ([e78fb30](https://github.com/Wynntils/Artemis/commit/e78fb3075a16c6dd8acf1f52c2bd245bf47b1401))
 
