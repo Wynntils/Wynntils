@@ -21,7 +21,7 @@ import com.wynntils.utils.wynn.InventoryUtils;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
-import java.util.function.Consumer;
+import java.util.function.BiConsumer;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import net.minecraft.ChatFormatting;
@@ -31,11 +31,14 @@ import net.minecraft.world.item.Items;
 import org.lwjgl.glfw.GLFW;
 
 public class ContentBookQueries {
+    private static final int CHANGE_VIEW_SLOT = 66;
+    private static final int PROGRESS_SLOT = 68;
     private static final int NEXT_PAGE_SLOT = 69;
-    private static final int CHANGE_VIEW = 66;
+
     private static final StyledText SCROLL_DOWN_TEXT = StyledText.fromString("§7Scroll Down");
     private static final Pattern ACTIVE_FILTER = Pattern.compile("^§f- §7(.*)$");
-    private static final int MAX_FILTERS = 11; // FIXME
+    private static final int MAX_FILTERS = 11;
+
     private String selectedFilter;
     private int filterLoopCount;
 
@@ -43,8 +46,9 @@ public class ContentBookQueries {
      * Trigger a rescan of the content book. When the rescan is done, Models.Content.updateFromContentBookQuery
      * will be called.
      */
-    protected void queryContentBook(String filterName, Consumer<List<ContentInfo>> processResult) {
+    protected void queryContentBook(String filterName, BiConsumer<List<ContentInfo>, List<StyledText>> processResult) {
         List<ContentInfo> newContent = new ArrayList<>();
+        List<StyledText> progress = new ArrayList<>();
 
         ScriptedContainerQuery query = ScriptedContainerQuery.builder("Content Book Query for " + filterName)
                 .onError(msg -> {
@@ -69,7 +73,7 @@ public class ContentBookQueries {
                                 throw new ContainerQueryException("Filter setting has exceeded max loops");
                             }
 
-                            String activeFilter = getActiveFilter(c.items().get(CHANGE_VIEW));
+                            String activeFilter = getActiveFilter(c.items().get(CHANGE_VIEW_SLOT));
                             if (activeFilter == null) {
                                 throw new ContainerQueryException("Cannot determine active filter");
                             }
@@ -81,10 +85,15 @@ public class ContentBookQueries {
                             // Continue looping until filter matches
                             return !activeFilter.equals(filterName);
                         },
-                        QueryStep.clickOnSlot(CHANGE_VIEW))
+                        QueryStep.clickOnSlot(CHANGE_VIEW_SLOT))
 
                 // Process first page
-                .reprocess(c -> processContentBookPage(c, newContent))
+                .reprocess(c -> {
+                    processContentBookPage(c, newContent);
+                    ItemStack itemStack = c.items().get(PROGRESS_SLOT);
+                    progress.add(InventoryUtils.getItemName(itemStack));
+                    progress.addAll(LoreUtils.getLore(itemStack));
+                })
 
                 // Repeatedly click next page, if available, and process the following page
                 .repeat(
@@ -102,7 +111,7 @@ public class ContentBookQueries {
                                 throw new ContainerQueryException("Filter setting has exceeded max loops");
                             }
 
-                            String activeFilter = getActiveFilter(c.items().get(CHANGE_VIEW));
+                            String activeFilter = getActiveFilter(c.items().get(CHANGE_VIEW_SLOT));
                             if (activeFilter == null) {
                                 throw new ContainerQueryException("Cannot determine active filter");
                             }
@@ -110,10 +119,10 @@ public class ContentBookQueries {
                             // Continue looping until filter matches original value
                             return !activeFilter.equals(selectedFilter);
                         },
-                        QueryStep.clickOnSlot(CHANGE_VIEW))
+                        QueryStep.clickOnSlot(CHANGE_VIEW_SLOT))
 
                 // Finally signal we're done
-                .execute(() -> processResult.accept(newContent))
+                .execute(() -> processResult.accept(newContent, progress))
                 .build();
 
         query.executeQuery();

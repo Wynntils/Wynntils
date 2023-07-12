@@ -30,7 +30,7 @@ import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Optional;
-import java.util.function.Consumer;
+import java.util.function.BiConsumer;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import net.minecraft.ChatFormatting;
@@ -233,7 +233,7 @@ public final class ContentModel extends Model {
         updateTracker(null, null, null);
     }
 
-    public void scanContentBook(String filterName, Consumer<List<ContentInfo>> processResult) {
+    public void scanContentBook(String filterName, BiConsumer<List<ContentInfo>, List<StyledText>> processResult) {
         CONTAINER_QUERIES.queryContentBook(filterName, processResult);
     }
 
@@ -242,6 +242,7 @@ public final class ContentModel extends Model {
     }
 
     public void stopTracking() {
+        // FIXME!!
         //        McUtils.sendCommand("tracking");
     }
 }

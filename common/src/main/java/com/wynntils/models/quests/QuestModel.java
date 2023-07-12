@@ -149,7 +149,7 @@ public final class QuestModel extends Model {
         return StringUtils.replaceOnce(name, MINI_QUEST_PREFIX, "");
     }
 
-    private void updateQuestsFromQuery(List<ContentInfo> newContent) {
+    private void updateQuestsFromQuery(List<ContentInfo> newContent, List<StyledText> progress) {
         List<QuestInfo> newQuests = new ArrayList<>();
 
         for (ContentInfo content : newContent) {
@@ -164,7 +164,7 @@ public final class QuestModel extends Model {
         WynntilsMod.postEvent(new QuestBookReloadedEvent.QuestsReloaded());
     }
 
-    private void updateMiniQuestsFromQuery(List<ContentInfo> newContent) {
+    private void updateMiniQuestsFromQuery(List<ContentInfo> newContent, List<StyledText> progress) {
         List<QuestInfo> newMiniQuests = new ArrayList<>();
 
         for (ContentInfo content : newContent) {
