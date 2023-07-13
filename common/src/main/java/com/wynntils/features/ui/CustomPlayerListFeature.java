@@ -38,17 +38,17 @@ import net.minecraftforge.eventbus.api.SubscribeEvent;
 import org.joml.Math;
 
 @ConfigCategory(Category.OVERLAYS)
-public class PlayerInfoFeature extends Feature {
+public class CustomPlayerListFeature extends Feature {
 
     @OverlayInfo(renderType = RenderEvent.ElementType.GUI)
-    public final PlayerInfoOverlay playerInfoOverlay = new PlayerInfoOverlay();
+    public final CustomPlayerListOverlay customPlayerListOverlay = new CustomPlayerListOverlay();
 
     @SubscribeEvent
     public void onRender(RenderEvent.Pre event) {
         if (event.getType() == RenderEvent.ElementType.GUI) event.setCanceled(true);
     }
 
-    private static class PlayerInfoOverlay extends Overlay {
+    private static class CustomPlayerListOverlay extends Overlay {
         private static final Comparator<PlayerInfo> PLAYER_INFO_COMPARATOR =
                 Comparator.comparing(playerInfo -> playerInfo.getProfile().getName(), String::compareToIgnoreCase);
         private static final int DISTANCE_BETWEEN_CATEGORIES = 87;
@@ -64,7 +64,7 @@ public class PlayerInfoFeature extends Feature {
         private double animationProgress = 0;
         private long lastTime = -1;
 
-        protected PlayerInfoOverlay() {
+        protected CustomPlayerListOverlay() {
             super(
                     new OverlayPosition(
                             0,

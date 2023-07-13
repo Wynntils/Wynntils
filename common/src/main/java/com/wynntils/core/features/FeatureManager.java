@@ -118,7 +118,7 @@ import com.wynntils.features.ui.CustomCharacterSelectionScreenFeature;
 import com.wynntils.features.ui.CustomLoadingScreenFeature;
 import com.wynntils.features.ui.CustomSeaskipperScreenFeature;
 import com.wynntils.features.ui.LobbyUptimeFeature;
-import com.wynntils.features.ui.PlayerInfoFeature;
+import com.wynntils.features.ui.CustomPlayerListFeature;
 import com.wynntils.features.ui.SoulPointTimerFeature;
 import com.wynntils.features.ui.WynncraftButtonFeature;
 import com.wynntils.features.ui.WynncraftPauseScreenFeature;
@@ -288,7 +288,7 @@ public final class FeatureManager extends Manager {
         registerFeature(new CustomLoadingScreenFeature());
         registerFeature(new CustomSeaskipperScreenFeature());
         registerFeature(new LobbyUptimeFeature());
-        registerFeature(new PlayerInfoFeature());
+        registerFeature(new CustomPlayerListFeature());
         registerFeature(new SoulPointTimerFeature());
         registerFeature(new WynncraftButtonFeature());
         registerFeature(new WynncraftPauseScreenFeature());
