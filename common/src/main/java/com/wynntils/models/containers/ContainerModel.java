@@ -33,6 +33,7 @@ public final class ContainerModel extends Model {
 
     private static final String BANK_NAME = "Bank";
     private static final String BLOCK_BANK_NAME = "Block Bank";
+    private static final String BOOKSHELF_NAME = "Bookshelf";
     private static final String MISC_BUCKET_NAME = "Misc. Bucket";
 
     private static final Pair<Integer, Integer> ABILITY_TREE_PREVIOUS_NEXT_SLOTS = new Pair<>(57, 59);
@@ -71,7 +72,10 @@ public final class ContainerModel extends Model {
      * @return True if the page is the last page in a Bank, Block Bank, or Misc Bucket
      */
     public boolean isLastBankPage(Screen screen) {
-        return (isBankScreen(screen) || isBlockBankScreen(screen) || isMiscBucketScreen(screen))
+        return (isBankScreen(screen)
+                        || isBlockBankScreen(screen)
+                        || isMiscBucketScreen(screen)
+                        || isBookshelfScreen(screen))
                 && screen instanceof ContainerScreen cs
                 && StyledText.fromComponent(cs.getMenu().getSlot(8).getItem().getHoverName())
                         .endsWith(LAST_BANK_PAGE_STRING);
@@ -117,6 +121,14 @@ public final class ContainerModel extends Model {
 
         String type = matcher.group(2);
         return type.equals(MISC_BUCKET_NAME);
+    }
+
+    public boolean isBookshelfScreen(Screen screen) {
+        Matcher matcher = StyledText.fromComponent(screen.getTitle()).getMatcher(PERSONAL_STORAGE_PATTERN);
+        if (!matcher.matches()) return false;
+
+        String type = matcher.group(2);
+        return type.equals(BOOKSHELF_NAME);
     }
 
     public boolean isScrapMenuScreen(Screen screen) {
@@ -167,7 +179,8 @@ public final class ContainerModel extends Model {
 
         if (Models.Container.isBankScreen(gui)
                 || Models.Container.isMiscBucketScreen(gui)
-                || Models.Container.isBlockBankScreen(gui)) {
+                || Models.Container.isBlockBankScreen(gui)
+                || Models.Container.isBookshelfScreen(gui)) {
             if (!scrollUp && Models.Container.isLastBankPage(gui)) return null;
 
             return BANK_PREVIOUS_NEXT_SLOTS;
