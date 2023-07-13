@@ -124,7 +124,7 @@ import com.wynntils.features.ui.LobbyUptimeFeature;
 import com.wynntils.features.ui.SoulPointTimerFeature;
 import com.wynntils.features.ui.WynncraftButtonFeature;
 import com.wynntils.features.ui.WynncraftPauseScreenFeature;
-import com.wynntils.features.ui.WynntilsQuestBookFeature;
+import com.wynntils.features.ui.WynntilsContentBookFeature;
 import com.wynntils.features.wynntils.BetaWarningFeature;
 import com.wynntils.features.wynntils.ChangelogFeature;
 import com.wynntils.features.wynntils.CommandsFeature;
@@ -296,7 +296,7 @@ public final class FeatureManager extends Manager {
         registerFeature(new SoulPointTimerFeature());
         registerFeature(new WynncraftButtonFeature());
         registerFeature(new WynncraftPauseScreenFeature());
-        registerFeature(new WynntilsQuestBookFeature());
+        registerFeature(new WynntilsContentBookFeature());
         // endregion
 
         // region wynntils
