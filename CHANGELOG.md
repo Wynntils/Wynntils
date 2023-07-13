@@ -1,9 +1,21 @@
+## [0.0.3-alpha.129](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.128...v0.0.3-alpha.129) (2023-07-13)
+
+
+### New Features
+
+* Add scrolling support for Bookshelf ([#1734](https://github.com/Wynntils/Artemis/issues/1734)) ([d0241a9](https://github.com/Wynntils/Artemis/commit/d0241a93339f0d2007d653dd0e2cad79c210c407))
+
 ## [0.0.3-alpha.128](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.127...v0.0.3-alpha.128) (2023-07-13)
 
 
 ### Bug Fixes
 
 * Fix tracking not being able to work if the wrong filter was set ([#1731](https://github.com/Wynntils/Artemis/issues/1731)) ([13ccfb5](https://github.com/Wynntils/Artemis/commit/13ccfb5252d57a2e3878fb00eacf46d6bbc604d8))
+
+
+### Miscellaneous Chores
+
+* **release:** v0.0.3-alpha.128 [skip ci] ([229c70a](https://github.com/Wynntils/Artemis/commit/229c70ae5bcc70ae63097a3a5b7225ed1eee971d))
 
 ## [0.0.3-alpha.127](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.126...v0.0.3-alpha.127) (2023-07-13)
 
@@ -40,16 +52,4 @@
 ### Miscellaneous Chores
 
 * **release:** v0.0.3-alpha.125 [skip ci] ([518323c](https://github.com/Wynntils/Artemis/commit/518323c8870128cdb8fcfd98db610fe0750bab2e))
-
-## [0.0.3-alpha.124](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.123...v0.0.3-alpha.124) (2023-07-11)
-
-
-### Miscellaneous Chores
-
-* **release:** v0.0.3-alpha.124 [skip ci] ([0a1a2d6](https://github.com/Wynntils/Artemis/commit/0a1a2d6d916f77afefec71b47337cbe0bf9b0046))
-
-
-### Code Refactoring
-
-* Change some feature descriptions ([#1713](https://github.com/Wynntils/Artemis/issues/1713)) ([097c410](https://github.com/Wynntils/Artemis/commit/097c4103f0d8a1d8854788df660240d5a78ab715))
 
