@@ -1,9 +1,21 @@
+## [0.0.3-alpha.130](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.129...v0.0.3-alpha.130) (2023-07-13)
+
+
+### Bug Fixes
+
+* Speed up content book parsing by disabling filter resetting ([#1736](https://github.com/Wynntils/Artemis/issues/1736)) ([b472fff](https://github.com/Wynntils/Artemis/commit/b472fff2122735c2f17b39cf2a838a6cdde845e2))
+
 ## [0.0.3-alpha.129](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.128...v0.0.3-alpha.129) (2023-07-13)
 
 
 ### New Features
 
 * Add scrolling support for Bookshelf ([#1734](https://github.com/Wynntils/Artemis/issues/1734)) ([d0241a9](https://github.com/Wynntils/Artemis/commit/d0241a93339f0d2007d653dd0e2cad79c210c407))
+
+
+### Miscellaneous Chores
+
+* **release:** v0.0.3-alpha.129 [skip ci] ([4f35763](https://github.com/Wynntils/Artemis/commit/4f357638afda3ebd431a8eb7c415eab03e937c4a))
 
 ## [0.0.3-alpha.128](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.127...v0.0.3-alpha.128) (2023-07-13)
 
@@ -40,16 +52,4 @@
 ### Miscellaneous Chores
 
 * **release:** v0.0.3-alpha.126 [skip ci] ([05fea16](https://github.com/Wynntils/Artemis/commit/05fea16bc3dd32677c99378dd5513a90b9e430cb))
-
-## [0.0.3-alpha.125](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.124...v0.0.3-alpha.125) (2023-07-12)
-
-
-### New Features
-
-* Add the disconnect and change world buttons to the character selection screen ([#1685](https://github.com/Wynntils/Artemis/issues/1685)) ([56ae74c](https://github.com/Wynntils/Artemis/commit/56ae74cc2d6bcb5147f430057420acc58475986c))
-
-
-### Miscellaneous Chores
-
-* **release:** v0.0.3-alpha.125 [skip ci] ([518323c](https://github.com/Wynntils/Artemis/commit/518323c8870128cdb8fcfd98db610fe0750bab2e))
 
