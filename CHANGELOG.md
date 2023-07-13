@@ -1,9 +1,21 @@
+## [0.0.3-alpha.127](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.126...v0.0.3-alpha.127) (2023-07-13)
+
+
+### New Features
+
+* Use the new ingredient data ([#1725](https://github.com/Wynntils/Artemis/issues/1725)) ([75083c5](https://github.com/Wynntils/Artemis/commit/75083c547ceafc573b7d0052328107fe1030b5d7))
+
 ## [0.0.3-alpha.126](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.125...v0.0.3-alpha.126) (2023-07-13)
 
 
 ### New Features
 
 * Integrate 2.0.3 beta changes from development into main ([#1722](https://github.com/Wynntils/Artemis/issues/1722)) ([97867e3](https://github.com/Wynntils/Artemis/commit/97867e3dcb4299441bc864a2368b589498e23f4f)), closes [#1653](https://github.com/Wynntils/Artemis/issues/1653) [#1656](https://github.com/Wynntils/Artemis/issues/1656) [#1657](https://github.com/Wynntils/Artemis/issues/1657)
+
+
+### Miscellaneous Chores
+
+* **release:** v0.0.3-alpha.126 [skip ci] ([05fea16](https://github.com/Wynntils/Artemis/commit/05fea16bc3dd32677c99378dd5513a90b9e430cb))
 
 ## [0.0.3-alpha.125](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.124...v0.0.3-alpha.125) (2023-07-12)
 
@@ -40,16 +52,4 @@
 ### Miscellaneous Chores
 
 * **release:** v0.0.3-alpha.123 [skip ci] ([b646755](https://github.com/Wynntils/Artemis/commit/b6467552105d423f239e80282f45d339c3fab244))
-
-## [0.0.3-alpha.122](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.121...v0.0.3-alpha.122) (2023-07-11)
-
-
-### New Features
-
-* Silencer - hotkey-toggleable assignable Master Volume ([#1643](https://github.com/Wynntils/Artemis/issues/1643)) ([ad09d91](https://github.com/Wynntils/Artemis/commit/ad09d917a616c62f252a2f8824cb9eb0d47e2202))
-
-
-### Miscellaneous Chores
-
-* **release:** v0.0.3-alpha.122 [skip ci] ([eb2bddc](https://github.com/Wynntils/Artemis/commit/eb2bddcef160c3426d87c3a605278d7aabe091f0))
 
