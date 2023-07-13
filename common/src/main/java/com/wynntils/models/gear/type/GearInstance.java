@@ -32,7 +32,8 @@ public record GearInstance(
                                 + actualValue.statType());
                         return false;
                     }
-                    return !possibleValues.range().isFixed();
+                    return !possibleValues.range().isFixed()
+                            && possibleValues.range().inRange(actualValue.value());
                 })
                 .mapToDouble(actualValue -> {
                     StatPossibleValues possibleValues = gearInfo.getPossibleValues(actualValue.statType());

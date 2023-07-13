@@ -15,7 +15,7 @@ import java.util.regex.Pattern;
 public class InfoBar extends TrackedBar {
     // §cDetlas§4 [AVO]
     private static final Pattern TERRITORY_INFO_PATTERN =
-            Pattern.compile("§.(?<territory>.+)§. \\[(?<tag>[A-Z]{3,4})\\]");
+            Pattern.compile("§.(?<territory>.+)§. \\[(?<tag>[A-Za-z]{3,4})\\]");
 
     // §7Lv. 92§f - §bKingdom Foxes§f - §762% XP
     private static final Pattern GUILD_INFO_PATTERN =

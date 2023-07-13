@@ -71,7 +71,14 @@ public class ItemHandler extends Handler {
             // slots
             existingItems = McUtils.containerMenu().getItems();
         } else {
-            // No matching container, just ignore this
+            // No matching container found. This can be due to a ContainerQuery, so
+            // annotate all items
+            List<ItemStack> newItems = event.getItems();
+
+            for (int i = 0; i < newItems.size(); i++) {
+                annotate(newItems.get(i));
+            }
+
             return;
         }
 

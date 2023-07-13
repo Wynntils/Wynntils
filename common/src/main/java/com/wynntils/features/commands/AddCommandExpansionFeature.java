@@ -43,9 +43,7 @@ public class AddCommandExpansionFeature extends Feature {
 
     private static final SuggestionProvider<CommandSourceStack> PARTY_NAME_SUGGESTION_PROVIDER =
             (context, builder) -> SharedSuggestionProvider.suggest(
-                    Models.Party.getPartyMembers().stream()
-                            .filter(p -> !p.equals(McUtils.player().getName().getString())),
-                    builder);
+                    Models.Party.getPartyMembers().stream().filter(p -> !p.equals(McUtils.playerName())), builder);
 
     @RegisterConfig
     public final Config<Boolean> includeDeprecatedCommands = new Config<>(false);
