@@ -113,8 +113,7 @@ public final class WynntilsMod {
     }
 
     public static boolean isPreAlpha() {
-        // This is hard-coded in the development branch
-        return true;
+        return version.contains("pre-alpha");
     }
 
     public static boolean isDevelopmentBuild() {
