@@ -72,7 +72,10 @@ public final class ContainerModel extends Model {
      * @return True if the page is the last page in a Bank, Block Bank, or Misc Bucket
      */
     public boolean isLastBankPage(Screen screen) {
-        return (isBankScreen(screen) || isBlockBankScreen(screen) || isMiscBucketScreen(screen) || isBookshelfScreen(screen))
+        return (isBankScreen(screen)
+                        || isBlockBankScreen(screen)
+                        || isMiscBucketScreen(screen)
+                        || isBookshelfScreen(screen))
                 && screen instanceof ContainerScreen cs
                 && StyledText.fromComponent(cs.getMenu().getSlot(8).getItem().getHoverName())
                         .endsWith(LAST_BANK_PAGE_STRING);
