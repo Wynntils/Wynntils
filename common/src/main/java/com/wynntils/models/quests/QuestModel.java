@@ -161,6 +161,7 @@ public final class QuestModel extends Model {
         }
         quests = newQuests;
         WynntilsMod.postEvent(new QuestBookReloadedEvent.QuestsReloaded());
+        WynntilsMod.info("Updated quests from query, got " + quests.size() + " quests.");
     }
 
     private void updateMiniQuestsFromQuery(List<ContentInfo> newContent, List<StyledText> progress) {
@@ -177,6 +178,7 @@ public final class QuestModel extends Model {
 
         miniQuests = newMiniQuests;
         WynntilsMod.postEvent(new QuestBookReloadedEvent.MiniQuestsReloaded());
+        WynntilsMod.info("Updated mini-quests from query, got " + miniQuests.size() + " mini-quests.");
     }
 
     private static QuestInfo getQuestInfoFromContent(ContentInfo content) {

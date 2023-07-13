@@ -169,6 +169,32 @@ public class ContentBookQueries {
                 .then(QueryStep.useItemInHotbar(InventoryUtils.CONTENT_BOOK_SLOT_NUM)
                         .expectContainerTitle(Models.Content.CONTENT_BOOK_TITLE))
 
+                // Save filter state, and set it correctly
+                .execute(() -> {
+                    filterLoopCount = 0;
+                    selectedFilter = null;
+                })
+                .repeat(
+                        c -> {
+                            filterLoopCount++;
+                            if (filterLoopCount > MAX_FILTERS) {
+                                throw new ContainerQueryException("Filter setting has exceeded max loops");
+                            }
+
+                            String activeFilter = getActiveFilter(c.items().get(CHANGE_VIEW_SLOT));
+                            if (activeFilter == null) {
+                                throw new ContainerQueryException("Cannot determine active filter");
+                            }
+
+                            if (selectedFilter == null) {
+                                selectedFilter = activeFilter;
+                            }
+
+                            // Continue looping until filter matches
+                            return !activeFilter.equals(contentType.getDisplayName());
+                        },
+                        QueryStep.clickOnSlot(CHANGE_VIEW_SLOT))
+
                 // Repeatedly check if the requested task is on this page,
                 // if so, click it, otherwise click on next slot (if available)
                 .repeat(
@@ -182,6 +208,25 @@ public class ContentBookQueries {
                             return false;
                         },
                         QueryStep.clickOnMatchingSlot(NEXT_PAGE_SLOT, Items.GOLDEN_SHOVEL, SCROLL_DOWN_TEXT))
+
+                // Restore filter to original value
+                .execute(() -> filterLoopCount = 0)
+                .repeat(
+                        c -> {
+                            filterLoopCount++;
+                            if (filterLoopCount > MAX_FILTERS) {
+                                throw new ContainerQueryException("Filter setting has exceeded max loops");
+                            }
+
+                            String activeFilter = getActiveFilter(c.items().get(CHANGE_VIEW_SLOT));
+                            if (activeFilter == null) {
+                                throw new ContainerQueryException("Cannot determine active filter");
+                            }
+
+                            // Continue looping until filter matches original value
+                            return !activeFilter.equals(selectedFilter);
+                        },
+                        QueryStep.clickOnSlot(CHANGE_VIEW_SLOT))
                 .build();
 
         query.executeQuery();
