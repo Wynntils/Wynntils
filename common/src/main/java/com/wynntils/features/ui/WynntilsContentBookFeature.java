@@ -30,8 +30,8 @@ import net.minecraftforge.eventbus.api.SubscribeEvent;
 import org.lwjgl.glfw.GLFW;
 
 @ConfigCategory(Category.UI)
-public class WynntilsQuestBookFeature extends Feature {
-    private static final StyledText QUEST_BOOK_NAME = StyledText.fromString("§dQuest Book");
+public class WynntilsContentBookFeature extends Feature {
+    private static final StyledText CONTENT_BOOK_NAME = StyledText.fromString("§dContent Book");
 
     @RegisterKeyBind
     private final KeyBind openQuestBook = new KeyBind(
@@ -83,28 +83,28 @@ public class WynntilsQuestBookFeature extends Feature {
             () -> WynntilsMenuScreenBase.openBook(WynntilsGuidesListScreen.create()));
 
     @RegisterConfig
-    public final Config<Boolean> replaceWynncraftQuestBook = new Config<>(true);
+    public final Config<Boolean> replaceWynncraftContentBook = new Config<>(true);
 
     @RegisterConfig
-    public final Config<Boolean> questBookShouldOpenWynntilsMenu = new Config<>(false);
+    public final Config<Boolean> contentBookShouldOpenWynntilsMenu = new Config<>(false);
 
     @SubscribeEvent
     public void onUseItem(UseItemEvent event) {
-        if (McUtils.player().isShiftKeyDown() || !replaceWynncraftQuestBook.get()) return;
+        if (McUtils.player().isShiftKeyDown() || !replaceWynncraftContentBook.get()) return;
 
         tryCancelQuestBookOpen(event);
     }
 
     @SubscribeEvent
     public void onUseItemOn(PlayerInteractEvent.RightClickBlock event) {
-        if (McUtils.player().isShiftKeyDown() || !replaceWynncraftQuestBook.get()) return;
+        if (McUtils.player().isShiftKeyDown() || !replaceWynncraftContentBook.get()) return;
 
         tryCancelQuestBookOpen(event);
     }
 
     @SubscribeEvent
     public void onInteract(PlayerInteractEvent.Interact event) {
-        if (McUtils.player().isShiftKeyDown() || !replaceWynncraftQuestBook.get()) return;
+        if (McUtils.player().isShiftKeyDown() || !replaceWynncraftContentBook.get()) return;
 
         tryCancelQuestBookOpen(event);
     }
@@ -113,10 +113,10 @@ public class WynntilsQuestBookFeature extends Feature {
         ItemStack itemInHand = McUtils.player().getItemInHand(InteractionHand.MAIN_HAND);
 
         if (itemInHand != null
-                && StyledText.fromComponent(itemInHand.getHoverName()).equals(QUEST_BOOK_NAME)) {
+                && StyledText.fromComponent(itemInHand.getHoverName()).equals(CONTENT_BOOK_NAME)) {
             event.setCanceled(true);
             WynntilsMenuScreenBase.openBook(
-                    questBookShouldOpenWynntilsMenu.get()
+                    contentBookShouldOpenWynntilsMenu.get()
                             ? WynntilsMenuScreen.create()
                             : WynntilsQuestBookScreen.create());
         }
