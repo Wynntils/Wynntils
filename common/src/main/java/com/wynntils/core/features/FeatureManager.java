@@ -18,6 +18,7 @@ import com.wynntils.core.mod.type.CrashType;
 import com.wynntils.features.DiscordRichPresenceFeature;
 import com.wynntils.features.GammabrightFeature;
 import com.wynntils.features.LootrunFeature;
+import com.wynntils.features.SilencerFeature;
 import com.wynntils.features.TerritoryDefenseMessageFeature;
 import com.wynntils.features.TranslationFeature;
 import com.wynntils.features.chat.ChatCoordinatesFeature;
@@ -309,6 +310,7 @@ public final class FeatureManager extends Manager {
         // region uncategorized
         registerFeature(new DiscordRichPresenceFeature());
         registerFeature(new GammabrightFeature());
+        registerFeature(new SilencerFeature());
         registerFeature(new TerritoryDefenseMessageFeature());
         registerFeature(new TranslationFeature());
         // endregion
