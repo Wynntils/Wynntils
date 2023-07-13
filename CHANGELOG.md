@@ -1,9 +1,21 @@
+## [0.0.3-alpha.128](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.127...v0.0.3-alpha.128) (2023-07-13)
+
+
+### Bug Fixes
+
+* Fix tracking not being able to work if the wrong filter was set ([#1731](https://github.com/Wynntils/Artemis/issues/1731)) ([13ccfb5](https://github.com/Wynntils/Artemis/commit/13ccfb5252d57a2e3878fb00eacf46d6bbc604d8))
+
 ## [0.0.3-alpha.127](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.126...v0.0.3-alpha.127) (2023-07-13)
 
 
 ### New Features
 
 * Use the new ingredient data ([#1725](https://github.com/Wynntils/Artemis/issues/1725)) ([75083c5](https://github.com/Wynntils/Artemis/commit/75083c547ceafc573b7d0052328107fe1030b5d7))
+
+
+### Miscellaneous Chores
+
+* **release:** v0.0.3-alpha.127 [skip ci] ([bec7873](https://github.com/Wynntils/Artemis/commit/bec7873cc06605dd5bc38170cfa75b86b16237c8))
 
 ## [0.0.3-alpha.126](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.125...v0.0.3-alpha.126) (2023-07-13)
 
@@ -40,16 +52,4 @@
 ### Code Refactoring
 
 * Change some feature descriptions ([#1713](https://github.com/Wynntils/Artemis/issues/1713)) ([097c410](https://github.com/Wynntils/Artemis/commit/097c4103f0d8a1d8854788df660240d5a78ab715))
-
-## [0.0.3-alpha.123](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.122...v0.0.3-alpha.123) (2023-07-11)
-
-
-### Bug Fixes
-
-* NPE in upfixer ([#1710](https://github.com/Wynntils/Artemis/issues/1710)) ([04723fe](https://github.com/Wynntils/Artemis/commit/04723fe607c91c7cab0629fecbf9c6cf12e4719e))
-
-
-### Miscellaneous Chores
-
-* **release:** v0.0.3-alpha.123 [skip ci] ([b646755](https://github.com/Wynntils/Artemis/commit/b6467552105d423f239e80282f45d339c3fab244))
 
