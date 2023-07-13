@@ -1,9 +1,21 @@
+## [0.0.3-alpha.131](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.130...v0.0.3-alpha.131) (2023-07-13)
+
+
+### Bug Fixes
+
+* Fix fallback code for closing bad container queries ([#1733](https://github.com/Wynntils/Artemis/issues/1733)) ([666e40d](https://github.com/Wynntils/Artemis/commit/666e40db9861d1376a220b1b54ae0badf768578e))
+
 ## [0.0.3-alpha.130](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.129...v0.0.3-alpha.130) (2023-07-13)
 
 
 ### Bug Fixes
 
 * Speed up content book parsing by disabling filter resetting ([#1736](https://github.com/Wynntils/Artemis/issues/1736)) ([b472fff](https://github.com/Wynntils/Artemis/commit/b472fff2122735c2f17b39cf2a838a6cdde845e2))
+
+
+### Miscellaneous Chores
+
+* **release:** v0.0.3-alpha.130 [skip ci] ([5fdb172](https://github.com/Wynntils/Artemis/commit/5fdb17213934a213e8c13d730acf669087b7bcf2))
 
 ## [0.0.3-alpha.129](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.128...v0.0.3-alpha.129) (2023-07-13)
 
@@ -40,16 +52,4 @@
 ### Miscellaneous Chores
 
 * **release:** v0.0.3-alpha.127 [skip ci] ([bec7873](https://github.com/Wynntils/Artemis/commit/bec7873cc06605dd5bc38170cfa75b86b16237c8))
-
-## [0.0.3-alpha.126](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.125...v0.0.3-alpha.126) (2023-07-13)
-
-
-### New Features
-
-* Integrate 2.0.3 beta changes from development into main ([#1722](https://github.com/Wynntils/Artemis/issues/1722)) ([97867e3](https://github.com/Wynntils/Artemis/commit/97867e3dcb4299441bc864a2368b589498e23f4f)), closes [#1653](https://github.com/Wynntils/Artemis/issues/1653) [#1656](https://github.com/Wynntils/Artemis/issues/1656) [#1657](https://github.com/Wynntils/Artemis/issues/1657)
-
-
-### Miscellaneous Chores
-
-* **release:** v0.0.3-alpha.126 [skip ci] ([05fea16](https://github.com/Wynntils/Artemis/commit/05fea16bc3dd32677c99378dd5513a90b9e430cb))
 
