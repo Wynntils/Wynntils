@@ -34,11 +34,9 @@ public class QuestInfo {
     private final List<Pair<String, Integer>> additionalRequirements;
 
     private final boolean isMiniQuest;
-    private final int pageNumber;
 
     private final QuestStatus status;
     private final StyledText nextTask;
-    private final boolean tracked;
 
     protected QuestInfo(
             String name,
@@ -47,9 +45,7 @@ public class QuestInfo {
             int level,
             StyledText nextTask,
             List<Pair<String, Integer>> additionalRequirements,
-            boolean isMiniQuest,
-            int pageNumber,
-            boolean tracked) {
+            boolean isMiniQuest) {
         this.name = name;
         this.status = status;
         this.length = length;
@@ -57,8 +53,6 @@ public class QuestInfo {
         this.nextTask = nextTask;
         this.additionalRequirements = additionalRequirements;
         this.isMiniQuest = isMiniQuest;
-        this.pageNumber = pageNumber;
-        this.tracked = tracked;
     }
 
     public String getName() {
@@ -97,14 +91,6 @@ public class QuestInfo {
 
     public List<Pair<String, Integer>> getAdditionalRequirements() {
         return additionalRequirements;
-    }
-
-    public int getPageNumber() {
-        return pageNumber;
-    }
-
-    public boolean isTracked() {
-        return tracked;
     }
 
     public boolean isMiniQuest() {

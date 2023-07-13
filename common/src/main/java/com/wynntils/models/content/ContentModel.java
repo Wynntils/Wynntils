@@ -30,6 +30,7 @@ import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Optional;
+import java.util.function.BiConsumer;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import net.minecraft.ChatFormatting;
@@ -38,6 +39,8 @@ import net.minecraftforge.eventbus.api.EventPriority;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 
 public final class ContentModel extends Model {
+    public static final String CONTENT_BOOK_TITLE = "§f\uE000\uE072";
+
     private static final Pattern LEVEL_REQ_PATTERN =
             Pattern.compile("^§(.).À?§7(?: Recommended)? Combat Lv(?:\\. Min)?: (\\d+)$");
     private static final Pattern PROFESSION_REQ_PATTERN = Pattern.compile("^§(.).À?§7 (\\w+)? Lv\\. Min: (\\d+)$");
@@ -48,10 +51,12 @@ public final class ContentModel extends Model {
     private static final Pattern REWARD_HEADER_PATTERN = Pattern.compile("^   §dRewards:$");
     private static final Pattern REWARD_PATTERN = Pattern.compile("^   §d- §7\\+?(.*)$");
     private static final Pattern TRACKING_PATTERN = Pattern.compile("^ *À*§.§lCLICK TO (UN)?TRACK$");
+
     private static final ScoreboardPart TRACKER_SCOREBOARD_PART = new ContentTrackerScoreboardPart();
+    private static final ContentBookQueries CONTAINER_QUERIES = new ContentBookQueries();
 
     private String trackedName;
-    private String trackedType;
+    private ContentType trackedType;
     private StyledText trackedTask;
 
     public ContentModel() {
@@ -196,7 +201,7 @@ public final class ContentModel extends Model {
         return trackedName;
     }
 
-    public String getTrackedType() {
+    public ContentType getTrackedType() {
         return trackedType;
     }
 
@@ -211,11 +216,13 @@ public final class ContentModel extends Model {
     }
 
     public QuestInfo getTrackedQuestInfo() {
+        if (trackedName == null) return null;
+
         return Models.Quest.getQuestInfoFromName(trackedName).orElse(null);
     }
 
     void updateTracker(String type, String name, StyledText nextTask) {
-        trackedType = type;
+        trackedType = ContentType.from(type);
         trackedName = name;
         trackedTask = nextTask;
 
@@ -224,5 +231,17 @@ public final class ContentModel extends Model {
 
     void resetTracker() {
         updateTracker(null, null, null);
+    }
+
+    public void scanContentBook(String filterName, BiConsumer<List<ContentInfo>, List<StyledText>> processResult) {
+        CONTAINER_QUERIES.queryContentBook(filterName, processResult);
+    }
+
+    public void startTracking(String name, ContentType contentType) {
+        CONTAINER_QUERIES.toggleTracking(name, contentType);
+    }
+
+    public void stopTracking() {
+        CONTAINER_QUERIES.toggleTracking(trackedName, trackedType);
     }
 }

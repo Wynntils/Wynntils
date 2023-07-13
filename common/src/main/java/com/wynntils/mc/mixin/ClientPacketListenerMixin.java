@@ -19,6 +19,7 @@ import com.wynntils.mc.event.CommandsAddedEvent;
 import com.wynntils.mc.event.ConnectionEvent;
 import com.wynntils.mc.event.ContainerSetContentEvent;
 import com.wynntils.mc.event.ContainerSetSlotEvent;
+import com.wynntils.mc.event.LocalSoundEvent;
 import com.wynntils.mc.event.MenuEvent;
 import com.wynntils.mc.event.MobEffectEvent;
 import com.wynntils.mc.event.PlayerInfoEvent;
@@ -74,6 +75,7 @@ import net.minecraft.network.protocol.game.ClientboundSetPlayerTeamPacket;
 import net.minecraft.network.protocol.game.ClientboundSetScorePacket;
 import net.minecraft.network.protocol.game.ClientboundSetSubtitleTextPacket;
 import net.minecraft.network.protocol.game.ClientboundSetTitleTextPacket;
+import net.minecraft.network.protocol.game.ClientboundSoundPacket;
 import net.minecraft.network.protocol.game.ClientboundSystemChatPacket;
 import net.minecraft.network.protocol.game.ClientboundTabListPacket;
 import net.minecraft.network.protocol.game.ClientboundUpdateAdvancementsPacket;
@@ -578,5 +580,21 @@ public abstract class ClientPacketListenerMixin {
         if (!isRenderThread()) return;
 
         MixinHelper.post(new RemoveEntitiesEvent(packet));
+    }
+
+    @Inject(
+            method = "handleSoundEvent(Lnet/minecraft/network/protocol/game/ClientboundSoundPacket;)V",
+            at = @At("HEAD"),
+            cancellable = true)
+    private void handleSoundEventPre(ClientboundSoundPacket packet, CallbackInfo ci) {
+        if (!isRenderThread()) return;
+
+        LocalSoundEvent.Client event =
+                new LocalSoundEvent.Client(packet.getSound().value(), packet.getSource());
+
+        MixinHelper.post(event);
+        if (event.isCanceled()) {
+            ci.cancel();
+        }
     }
 }

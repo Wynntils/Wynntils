@@ -9,7 +9,8 @@ import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.components.Managers;
 import com.wynntils.core.components.Models;
 import com.wynntils.core.text.StyledText;
-import com.wynntils.handlers.container.ScriptedContainerQuery;
+import com.wynntils.handlers.container.scriptedquery.QueryStep;
+import com.wynntils.handlers.container.scriptedquery.ScriptedContainerQuery;
 import com.wynntils.handlers.container.type.ContainerContent;
 import com.wynntils.models.abilitytree.parser.UnprocessedAbilityTreeInfo;
 import com.wynntils.models.abilitytree.type.AbilityTreeInfo;
@@ -32,8 +33,9 @@ public class AbilityTreeContainerQueries {
     private static final int ABILITY_TREE_SLOT = 9;
     private static final int PREVIOUS_PAGE_SLOT = 57;
     private static final int NEXT_PAGE_SLOT = 59;
-    private static final int DUMMY_SLOT = 76; // This is the second archetype icon
     private static final StyledText NEXT_PAGE_ITEM_NAME = StyledText.fromString("§7Next Page");
+    private static final StyledText PREVIOUS_PAGE_ITEM_NAME = StyledText.fromString("§7Previous Page");
+    private int pageCount;
 
     public void dumpAbilityTree(Consumer<AbilityTreeInfo> supplier) {
         queryAbilityTree(new AbilityTreeContainerQueries.AbilityPageDumper(supplier));
@@ -48,59 +50,68 @@ public class AbilityTreeContainerQueries {
     }
 
     private void queryAbilityTree(AbilityTreeProcessor processor) {
-        ScriptedContainerQuery.QueryBuilder queryBuilder = ScriptedContainerQuery.builder("Ability Tree Dump Query")
+        ScriptedContainerQuery query = ScriptedContainerQuery.builder("Ability Tree Query")
                 .onError(msg -> {
                     WynntilsMod.warn("Problem querying Ability Tree: " + msg);
                     McUtils.sendMessageToClient(
-                            Component.literal("Error dumping ability tree.").withStyle(ChatFormatting.RED));
+                            Component.literal("Dumping Ability Tree failed").withStyle(ChatFormatting.RED));
                 })
-                .useItemInHotbar(InventoryUtils.COMPASS_SLOT_NUM)
-                .matchTitle("Character Info")
-                .processContainer(container -> {})
-                .clickOnSlot(ABILITY_TREE_SLOT)
-                .matchTitle(Models.Container.ABILITY_TREE_PATTERN.pattern())
-                .processContainer(c -> {});
 
-        // region Hack for going back to first page without knowing our current page
+                // Open character/compass menu
+                .then(QueryStep.useItemInHotbar(InventoryUtils.COMPASS_SLOT_NUM).expectContainerTitle("Character Info"))
 
-        for (int i = Models.AbilityTree.ABILITY_TREE_PAGES - 1; i > 0; i--) {
-            queryBuilder
-                    .clickOnSlotIfExists(PREVIOUS_PAGE_SLOT, DUMMY_SLOT)
-                    .expectSameContainer()
-                    .setAcceptNoOp(true)
-                    .processContainer(c -> {});
-        }
+                // Open ability menu
+                .then(QueryStep.clickOnSlot(ABILITY_TREE_SLOT)
+                        .expectContainerTitle(Models.Container.ABILITY_TREE_PATTERN.pattern()))
 
-        // endregion
+                // Go to first page, and save current page number
+                .execute(() -> this.pageCount = 0)
+                .repeat(
+                        c -> ScriptedContainerQuery.containerHasSlot(
+                                c, PREVIOUS_PAGE_SLOT, Items.STONE_AXE, PREVIOUS_PAGE_ITEM_NAME),
+                        QueryStep.clickOnSlot(PREVIOUS_PAGE_SLOT).processIncomingContainer(c -> {
+                            // Count how many times this is done, and save this value.
+                            // If we did not even enter here, we were already on first page.
+                            this.pageCount++;
+                        }))
 
-        // We are on the first page now. Re-read it by clicking a dummy slot,
-        // and accepting no-op changes.
-        queryBuilder
-                .clickOnSlot(DUMMY_SLOT)
-                .setAcceptNoOp(true)
-                .expectSameContainer()
-                .processContainer(c -> processor.processPage(c, 1));
+                // Process first page
+                .reprocess(processor::processPage)
 
-        for (int i = 2; i <= Models.AbilityTree.ABILITY_TREE_PAGES; i++) {
-            final int page = i; // Lambdas need final variables
-            queryBuilder
-                    .clickOnSlotWithName(NEXT_PAGE_SLOT, Items.STONE_AXE, NEXT_PAGE_ITEM_NAME)
-                    .expectSameContainer()
-                    .processContainer(c -> processor.processPage(c, page));
-        }
+                // Repeatedly go to next page, if any, and process it
+                .repeat(
+                        c -> ScriptedContainerQuery.containerHasSlot(
+                                c, NEXT_PAGE_SLOT, Items.STONE_AXE, NEXT_PAGE_ITEM_NAME),
+                        QueryStep.clickOnSlot(NEXT_PAGE_SLOT).processIncomingContainer(processor::processPage))
 
-        queryBuilder.build().executeQuery();
+                // Go back to initial page
+                .repeat(
+                        c -> {
+                            // Go back as many pages as the original count was from the end
+                            this.pageCount++;
+                            return this.pageCount != Models.AbilityTree.ABILITY_TREE_PAGES;
+                        },
+                        QueryStep.clickOnSlot(PREVIOUS_PAGE_SLOT))
+                .build();
+
+        query.executeQuery();
     }
 
-    @FunctionalInterface
-    public interface AbilityTreeProcessor {
-        void processPage(ContainerContent content, int page);
+    private abstract static class AbilityTreeProcessor {
+        private int page = 1;
+
+        protected void processPage(ContainerContent content) {
+            processPage(content, page);
+            page++;
+        }
+
+        protected abstract void processPage(ContainerContent content, int page);
     }
 
     /**
      * Parses the whole ability tree and saves it to disk.
      */
-    public static class AbilityPageDumper implements AbilityTreeProcessor {
+    private static class AbilityPageDumper extends AbilityTreeProcessor {
         private final Consumer<AbilityTreeInfo> supplier;
         private final UnprocessedAbilityTreeInfo unprocessedTree = new UnprocessedAbilityTreeInfo();
 
@@ -109,7 +120,7 @@ public class AbilityTreeContainerQueries {
         }
 
         @Override
-        public void processPage(ContainerContent content, int page) {
+        protected void processPage(ContainerContent content, int page) {
             List<ItemStack> items = content.items();
 
             for (int slot = 0; slot < items.size(); slot++) {
@@ -127,7 +138,7 @@ public class AbilityTreeContainerQueries {
     /**
      * Only parses nodes of an ability tree, and stores it.
      */
-    public static class AbilityPageSoftProcessor implements AbilityTreeProcessor {
+    private static class AbilityPageSoftProcessor extends AbilityTreeProcessor {
         private final Map<AbilityTreeSkillNode, AbilityTreeNodeState> collectedInfo = new LinkedHashMap<>();
         private final Consumer<ParsedAbilityTree> callback;
 
@@ -136,7 +147,7 @@ public class AbilityTreeContainerQueries {
         }
 
         @Override
-        public void processPage(ContainerContent content, int page) {
+        protected void processPage(ContainerContent content, int page) {
             List<ItemStack> items = content.items();
 
             for (int slot = 0; slot < items.size(); slot++) {

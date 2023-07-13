@@ -10,7 +10,9 @@ import com.wynntils.core.components.Models;
 import com.wynntils.core.text.PartStyle;
 import com.wynntils.core.text.StyledText;
 import com.wynntils.handlers.chat.event.ChatMessageReceivedEvent;
-import com.wynntils.handlers.container.ScriptedContainerQuery;
+import com.wynntils.handlers.container.scriptedquery.QueryStep;
+import com.wynntils.handlers.container.scriptedquery.ScriptedContainerQuery;
+import com.wynntils.handlers.container.type.ContainerContent;
 import com.wynntils.mc.event.ContainerClickEvent;
 import com.wynntils.mc.event.MenuEvent.MenuClosedEvent;
 import com.wynntils.mc.event.PlayerTeleportEvent;
@@ -123,24 +125,29 @@ public final class CharacterModel extends Model {
 
     private void scanCharacterInfoPage() {
         ScriptedContainerQuery query = ScriptedContainerQuery.builder("Character Info Query")
-                .useItemInHotbar(InventoryUtils.COMPASS_SLOT_NUM)
-                .matchTitle("Character Info")
-                .processContainer(container -> {
-                    ItemStack characterInfoItem = container.items().get(CHARACTER_INFO_SLOT);
-                    ItemStack professionInfoItem = container.items().get(PROFESSION_INFO_SLOT);
-                    ItemStack guildInfoItem = container.items().get(GUILD_INFO_SLOT);
+                .onError(msg -> WynntilsMod.warn("Error querying Character Info: " + msg))
 
-                    Models.Profession.resetValueFromItem(professionInfoItem);
-                    Models.Guild.parseGuildInfoFromGuildMenu(guildInfoItem);
-
-                    parseCharacterFromCharacterMenu(characterInfoItem);
-                    hasCharacter = true;
-                    WynntilsMod.postEvent(new CharacterUpdateEvent());
-                    WynntilsMod.info("Deducing character " + getCharacterString());
-                })
-                .onError(msg -> WynntilsMod.warn("Error querying Character Info:" + msg))
+                // Open compass/character menu
+                .then(QueryStep.useItemInHotbar(InventoryUtils.COMPASS_SLOT_NUM)
+                        .expectContainerTitle("Character Info")
+                        .processIncomingContainer(this::parseCharacterContainer))
                 .build();
+
         query.executeQuery();
+    }
+
+    private void parseCharacterContainer(ContainerContent container) {
+        ItemStack characterInfoItem = container.items().get(CHARACTER_INFO_SLOT);
+        ItemStack professionInfoItem = container.items().get(PROFESSION_INFO_SLOT);
+        ItemStack guildInfoItem = container.items().get(GUILD_INFO_SLOT);
+
+        Models.Profession.resetValueFromItem(professionInfoItem);
+        Models.Guild.parseGuildInfoFromGuildMenu(guildInfoItem);
+
+        parseCharacterFromCharacterMenu(characterInfoItem);
+        hasCharacter = true;
+        WynntilsMod.postEvent(new CharacterUpdateEvent());
+        WynntilsMod.info("Deducing character " + getCharacterString());
     }
 
     private void updateCharacterId() {
@@ -197,14 +204,14 @@ public final class CharacterModel extends Model {
     public void onContainerClick(ContainerClickEvent e) {
         if (inCharacterSelection) {
             if (e.getItemStack().getItem() == Items.AIR) return;
-            parseCharacter(e.getItemStack(), e.getSlotNum());
+            parseCharacter(e.getItemStack());
             hasCharacter = true;
             WynntilsMod.postEvent(new CharacterUpdateEvent());
             WynntilsMod.info("Selected character " + getCharacterString());
         }
     }
 
-    private void parseCharacter(ItemStack itemStack, int id) {
+    private void parseCharacter(ItemStack itemStack) {
         List<StyledText> lore = LoreUtils.getLore(itemStack);
 
         int level = 0;

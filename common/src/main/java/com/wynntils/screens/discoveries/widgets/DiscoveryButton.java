@@ -106,7 +106,7 @@ public class DiscoveryButton extends WynntilsButton implements TooltipProvider {
         // We need to inject requirements into lore here, as we only have updated discovery info here.
         if (!discoveryInfo.getRequirements().isEmpty()) {
             List<String> unmet = discoveryInfo.getRequirements().stream()
-                    .filter(requirement -> Models.Discovery.getAllDiscoveries()
+                    .filter(requirement -> Models.Discovery.getAllCompletedDiscoveries()
                             .noneMatch(discovery -> discovery.getName().equals(requirement)))
                     .toList();
 

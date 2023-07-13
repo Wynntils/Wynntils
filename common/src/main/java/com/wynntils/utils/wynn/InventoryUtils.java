@@ -5,6 +5,7 @@
 package com.wynntils.utils.wynn;
 
 import com.wynntils.core.components.Models;
+import com.wynntils.core.text.StyledText;
 import com.wynntils.models.items.properties.GearTypeItemProperty;
 import com.wynntils.utils.mc.McUtils;
 import it.unimi.dsi.fastutil.ints.Int2ObjectMap;
@@ -19,7 +20,7 @@ import net.minecraft.world.item.ItemStack;
 
 public final class InventoryUtils {
     public static final int COMPASS_SLOT_NUM = 6;
-    public static final int QUEST_BOOK_SLOT_NUM = 7;
+    public static final int CONTENT_BOOK_SLOT_NUM = 7;
     public static final int SOUL_POINTS_SLOT_NUM = 8;
     public static final int INGREDIENT_POUCH_SLOT_NUM = 13;
 
@@ -74,6 +75,10 @@ public final class InventoryUtils {
             }
         }
         return true;
+    }
+
+    public static StyledText getItemName(ItemStack itemStack) {
+        return StyledText.fromComponent(itemStack.getHoverName());
     }
 
     public enum MouseClickType {
