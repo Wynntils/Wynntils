@@ -31,6 +31,9 @@ import net.minecraft.world.item.Items;
 import org.lwjgl.glfw.GLFW;
 
 public class ContentBookQueries {
+    // A config in the future, turned off for performance for now
+    private static final boolean RESET_FILTERS = false;
+
     private static final int CHANGE_VIEW_SLOT = 66;
     private static final int PROGRESS_SLOT = 68;
     private static final int NEXT_PAGE_SLOT = 69;
@@ -106,6 +109,10 @@ public class ContentBookQueries {
                 .execute(() -> filterLoopCount = 0)
                 .repeat(
                         c -> {
+                            if (!RESET_FILTERS) {
+                                return false;
+                            }
+
                             filterLoopCount++;
                             if (filterLoopCount > MAX_FILTERS) {
                                 throw new ContainerQueryException("Filter setting has exceeded max loops");
@@ -213,6 +220,10 @@ public class ContentBookQueries {
                 .execute(() -> filterLoopCount = 0)
                 .repeat(
                         c -> {
+                            if (!RESET_FILTERS) {
+                                return false;
+                            }
+
                             filterLoopCount++;
                             if (filterLoopCount > MAX_FILTERS) {
                                 throw new ContainerQueryException("Filter setting has exceeded max loops");
