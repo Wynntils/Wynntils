@@ -6,6 +6,8 @@ package com.wynntils.core.discord;
 
 import com.wynntils.antiope.core.DiscordGameSDKCore;
 import com.wynntils.antiope.core.type.CreateParams;
+import com.wynntils.antiope.core.type.GameSDKException;
+import com.wynntils.antiope.core.type.Result;
 import com.wynntils.antiope.manager.activity.type.Activity;
 import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.components.Manager;
@@ -38,22 +40,36 @@ public class DiscordManager extends Manager {
 
     public void unload() {
         if (!isReady()) return;
-        activity.close();
-        activity = null;
-        core.close();
-        core = null;
-        params.close();
-        params = null;
+        try {
+            activity.close();
+            activity = null;
+            core.close();
+            core = null;
+            params.close();
+            params = null;
+        } catch (GameSDKException e) {
+            if (e.getResult() == Result.TRANSACTION_ABORTED) {
+                // This occurs when player closes game and JVM exits before we can close the core
+                return;
+            }
+            WynntilsMod.error("Could not unload Discord Game SDK", e);
+        }
     }
 
     private void createCore() {
         params = new CreateParams();
         try {
             params.setClientID(DISCORD_APPLICATION_ID);
-            params.setFlags(CreateParams.getDefaultFlags());
+            params.setFlags(CreateParams.getNoRequireDiscordFlags());
             core = new DiscordGameSDKCore(params);
             activity = new Activity();
             activity.timestamps().setStart(Instant.now());
+        } catch (GameSDKException e) {
+            if (e.getResult() == Result.INTERNAL_ERROR) {
+                // Occurs when player launches game without Discord open
+                return;
+            }
+            WynntilsMod.error("Could not initialize Discord Game SDK", e);
         } catch (Throwable e) {
             WynntilsMod.error("Could not initialize Discord Game SDK", e);
         }

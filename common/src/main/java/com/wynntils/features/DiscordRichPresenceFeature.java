@@ -94,7 +94,7 @@ public class DiscordRichPresenceFeature extends Feature {
     }
 
     private void checkTerritory() {
-        if (stopTerritoryCheck) {
+        if (stopTerritoryCheck || !Models.WorldState.onWorld()) {
             lastTerritoryProfile = null;
             stopTerritoryCheck = false;
             return;
