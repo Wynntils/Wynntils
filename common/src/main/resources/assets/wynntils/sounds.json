@@ -22,9 +22,9 @@
       "wynntils:book-turn-page-3"
     ]
   },
-  "ui.quest.update": {
+  "ui.tracker.update": {
     "sounds": [
-      "wynntils:quest-update"
+      "wynntils:tracker-update"
     ]
   },
   "wybel.purr": {

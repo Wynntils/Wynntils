@@ -20,7 +20,6 @@ import com.wynntils.models.map.PoiLocation;
 import com.wynntils.models.map.pois.CustomPoi;
 import com.wynntils.screens.maps.MainMapScreen;
 import com.wynntils.screens.maps.PoiCreationScreen;
-import com.wynntils.utils.MathUtils;
 import com.wynntils.utils.colors.CommonColors;
 import com.wynntils.utils.colors.CustomColor;
 import com.wynntils.utils.mc.McUtils;
@@ -35,8 +34,8 @@ import net.minecraft.ChatFormatting;
 import net.minecraft.client.gui.screens.inventory.ContainerScreen;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;
-import net.minecraft.world.level.block.entity.BlockEntity;
-import net.minecraft.world.level.block.entity.BlockEntityType;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.EntityType;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import org.lwjgl.glfw.GLFW;
 
@@ -138,12 +137,13 @@ public class MapFeature extends Feature {
     }
 
     @SubscribeEvent
-    public void onRightClick(PlayerInteractEvent.RightClickBlock event) {
+    public void onRightClick(PlayerInteractEvent.InteractAt event) {
         if (!autoWaypointChests.get()) return;
 
-        BlockEntity blockEntity = McUtils.mc().level.getBlockEntity(event.getPos());
-        if (blockEntity != null && blockEntity.getType() == BlockEntityType.CHEST) {
-            lastChestPos = event.getPos();
+        Entity entity = event.getEntityHitResult().getEntity();
+        if (entity != null && entity.getType() == EntityType.SLIME) {
+            // We don't actually know if this is a chest, but it's a good enough guess.
+            lastChestPos = entity.blockPosition();
         }
     }
 
@@ -154,11 +154,16 @@ public class MapFeature extends Feature {
         if (!(event.getScreen() instanceof ContainerScreen)) return;
 
         Matcher matcher = Models.Container.lootChestMatcher(event.getScreen());
-        if (!matcher.matches()) return;
+        if (!matcher.matches()) {
+            lastChestPos = null;
+            return;
+        }
 
-        ChestTier tier = ChestTier.fromString(matcher.group(1));
-
-        if (tier.ordinal() < minTierForAutoWaypoint.get().ordinal()) return;
+        ChestTier tier = ChestTier.fromColorChar(matcher.group(1).charAt(1));
+        if (tier.ordinal() < minTierForAutoWaypoint.get().ordinal()) {
+            lastChestPos = null;
+            return;
+        }
 
         PoiLocation location = new PoiLocation(lastChestPos.getX(), lastChestPos.getY(), lastChestPos.getZ());
         CustomPoi newPoi = new CustomPoi(
@@ -180,17 +185,19 @@ public class MapFeature extends Feature {
     }
 
     public enum ChestTier {
-        TIER_1(Texture.CHEST_T1, "Loot Chest 1"),
-        TIER_2(Texture.CHEST_T2, "Loot Chest 2"),
-        TIER_3(Texture.CHEST_T3, "Loot Chest 3"),
-        TIER_4(Texture.CHEST_T4, "Loot Chest 4");
+        TIER_1(Texture.CHEST_T1, "Loot Chest 1", ChatFormatting.GRAY),
+        TIER_2(Texture.CHEST_T2, "Loot Chest 2", ChatFormatting.YELLOW),
+        TIER_3(Texture.CHEST_T3, "Loot Chest 3", ChatFormatting.DARK_PURPLE),
+        TIER_4(Texture.CHEST_T4, "Loot Chest 4", ChatFormatting.DARK_AQUA);
 
         private final Texture waypointTexture;
         private final String waypointName;
+        private final ChatFormatting color;
 
-        ChestTier(Texture waypointTexture, String waypointName) {
+        ChestTier(Texture waypointTexture, String waypointName, ChatFormatting color) {
             this.waypointTexture = waypointTexture;
             this.waypointName = waypointName;
+            this.color = color;
         }
 
         private Texture getWaypointTexture() {
@@ -201,8 +208,14 @@ public class MapFeature extends Feature {
             return waypointName;
         }
 
-        private static ChestTier fromString(String s) {
-            return values()[MathUtils.integerFromRoman(s) - 1];
+        private static ChestTier fromColorChar(char c) {
+            for (ChestTier tier : values()) {
+                if (tier.color.getChar() == c) {
+                    return tier;
+                }
+            }
+
+            return null;
         }
     }
 }

@@ -17,7 +17,6 @@ import com.wynntils.mc.event.SetPlayerTeamEvent;
 import com.wynntils.models.players.event.HadesRelationsUpdateEvent;
 import com.wynntils.models.players.event.PartyEvent;
 import com.wynntils.models.players.hades.event.HadesEvent;
-import com.wynntils.models.players.scoreboard.PartyFinderScoreboardPart;
 import com.wynntils.models.players.scoreboard.PartyScoreboardPart;
 import com.wynntils.models.worlds.WorldStateModel;
 import com.wynntils.models.worlds.event.WorldStateEvent;
@@ -28,6 +27,7 @@ import java.util.Collection;
 import java.util.Comparator;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Optional;
 import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -84,7 +84,6 @@ public final class PartyModel extends Model {
     // endregion
 
     private static final ScoreboardPart PARTY_SCOREBOARD_PART = new PartyScoreboardPart();
-    private static final ScoreboardPart PARTY_FINDER_SCOREBOARD_PART = new PartyFinderScoreboardPart();
 
     private boolean expectingPartyMessage = false; // Whether the client is expecting a response from "/party list"
     private long lastPartyRequest = 0; // The last time the client requested party data
@@ -101,7 +100,6 @@ public final class PartyModel extends Model {
         resetData();
 
         Handlers.Scoreboard.addPart(PARTY_SCOREBOARD_PART);
-        Handlers.Scoreboard.addPart(PARTY_FINDER_SCOREBOARD_PART);
     }
 
     @SubscribeEvent
@@ -144,7 +142,7 @@ public final class PartyModel extends Model {
             WynntilsMod.info("Player created a new party.");
 
             inParty = true;
-            partyLeader = McUtils.player().getName().getString();
+            partyLeader = McUtils.playerName();
             partyMembers = new ArrayList<>(List.of(partyLeader));
             WynntilsMod.postEvent(new HadesRelationsUpdateEvent.PartyList(
                     Set.copyOf(partyMembers), HadesRelationsUpdateEvent.ChangeType.RELOAD));
@@ -221,7 +219,7 @@ public final class PartyModel extends Model {
         if (matcher.matches()) {
             WynntilsMod.info("Player has been promoted to party leader.");
 
-            partyLeader = McUtils.player().getName().getString();
+            partyLeader = McUtils.playerName();
             return true;
         }
 
@@ -381,8 +379,12 @@ public final class PartyModel extends Model {
         return inParty;
     }
 
-    public String getPartyLeader() {
-        return partyLeader;
+    public boolean isPartyLeader(String userName) {
+        return userName.equals(partyLeader);
+    }
+
+    public Optional<String> getPartyLeader() {
+        return Optional.ofNullable(partyLeader);
     }
 
     public List<String> getPartyMembers() {

@@ -11,6 +11,8 @@ import com.wynntils.mc.event.LoadingProgressEvent;
 import com.wynntils.mc.event.LocalSoundEvent;
 import com.wynntils.mc.event.ResourcePackEvent;
 import com.wynntils.mc.event.ScreenOpenedEvent;
+import com.wynntils.mc.event.SubtitleSetTextEvent;
+import com.wynntils.mc.event.TitleSetTextEvent;
 import com.wynntils.models.worlds.event.WorldStateEvent;
 import com.wynntils.screens.characterselector.LoadingScreen;
 import com.wynntils.utils.mc.McUtils;
@@ -52,6 +54,20 @@ public class CustomLoadingScreenFeature extends Feature {
         if (loadingScreen == null) return;
 
         loadingScreen.setMessage("Downloading resource pack...");
+    }
+
+    @SubscribeEvent
+    public void onTitleSetText(TitleSetTextEvent e) {
+        if (loadingScreen == null) return;
+
+        loadingScreen.setTitle(e.getComponent().getString());
+    }
+
+    @SubscribeEvent
+    public void onSubtitleSetText(SubtitleSetTextEvent e) {
+        if (loadingScreen == null) return;
+
+        loadingScreen.setSubtitle(e.getComponent().getString());
     }
 
     @SubscribeEvent

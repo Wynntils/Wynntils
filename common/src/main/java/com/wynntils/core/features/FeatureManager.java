@@ -34,6 +34,7 @@ import com.wynntils.features.chat.TradeMarketAutoOpenChatFeature;
 import com.wynntils.features.chat.TradeMarketPriceConversionFeature;
 import com.wynntils.features.combat.AbbreviateMobHealthFeature;
 import com.wynntils.features.combat.CombatXpGainMessageFeature;
+import com.wynntils.features.combat.ContentTrackerFeature;
 import com.wynntils.features.combat.FixCastingSpellsFromInventoryFeature;
 import com.wynntils.features.combat.HealthPotionBlockerFeature;
 import com.wynntils.features.combat.HorseMountFeature;
@@ -78,6 +79,7 @@ import com.wynntils.features.map.WorldWaypointDistanceFeature;
 import com.wynntils.features.overlays.ArrowShieldTrackingFeature;
 import com.wynntils.features.overlays.AuraTimerOverlayFeature;
 import com.wynntils.features.overlays.CombatExperienceOverlayFeature;
+import com.wynntils.features.overlays.ContentTrackerOverlayFeature;
 import com.wynntils.features.overlays.CustomBarsOverlayFeature;
 import com.wynntils.features.overlays.GameBarsOverlayFeature;
 import com.wynntils.features.overlays.GameNotificationOverlayFeature;
@@ -88,7 +90,6 @@ import com.wynntils.features.overlays.MobTotemTrackingFeature;
 import com.wynntils.features.overlays.NpcDialogueOverlayFeature;
 import com.wynntils.features.overlays.ObjectivesOverlayFeature;
 import com.wynntils.features.overlays.PowderSpecialBarOverlayFeature;
-import com.wynntils.features.overlays.QuestInfoOverlayFeature;
 import com.wynntils.features.overlays.ShamanMasksOverlayFeature;
 import com.wynntils.features.overlays.ShamanTotemTrackingFeature;
 import com.wynntils.features.overlays.SpellCastRenderFeature;
@@ -124,7 +125,7 @@ import com.wynntils.features.ui.LobbyUptimeFeature;
 import com.wynntils.features.ui.SoulPointTimerFeature;
 import com.wynntils.features.ui.WynncraftButtonFeature;
 import com.wynntils.features.ui.WynncraftPauseScreenFeature;
-import com.wynntils.features.ui.WynntilsQuestBookFeature;
+import com.wynntils.features.ui.WynntilsContentBookFeature;
 import com.wynntils.features.wynntils.BetaWarningFeature;
 import com.wynntils.features.wynntils.ChangelogFeature;
 import com.wynntils.features.wynntils.CommandsFeature;
@@ -183,6 +184,7 @@ public final class FeatureManager extends Manager {
         // region combat
         registerFeature(new AbbreviateMobHealthFeature());
         registerFeature(new CombatXpGainMessageFeature());
+        registerFeature(new ContentTrackerFeature());
         registerFeature(new FixCastingSpellsFromInventoryFeature());
         registerFeature(new HealthPotionBlockerFeature());
         registerFeature(new HorseMountFeature());
@@ -237,6 +239,7 @@ public final class FeatureManager extends Manager {
         registerFeature(new ArrowShieldTrackingFeature());
         registerFeature(new AuraTimerOverlayFeature());
         registerFeature(new CombatExperienceOverlayFeature());
+        registerFeature(new ContentTrackerOverlayFeature());
         registerFeature(new CustomBarsOverlayFeature());
         registerFeature(new GameBarsOverlayFeature());
         registerFeature(new GameNotificationOverlayFeature());
@@ -247,7 +250,6 @@ public final class FeatureManager extends Manager {
         registerFeature(new NpcDialogueOverlayFeature());
         registerFeature(new ObjectivesOverlayFeature());
         registerFeature(new PowderSpecialBarOverlayFeature());
-        registerFeature(new QuestInfoOverlayFeature());
         registerFeature(new ShamanMasksOverlayFeature());
         registerFeature(new ShamanTotemTrackingFeature());
         registerFeature(new SpellCastRenderFeature());
@@ -295,7 +297,7 @@ public final class FeatureManager extends Manager {
         registerFeature(new SoulPointTimerFeature());
         registerFeature(new WynncraftButtonFeature());
         registerFeature(new WynncraftPauseScreenFeature());
-        registerFeature(new WynntilsQuestBookFeature());
+        registerFeature(new WynntilsContentBookFeature());
         // endregion
 
         // region wynntils

@@ -14,7 +14,6 @@ import com.wynntils.core.keybinds.KeyBind;
 import com.wynntils.core.text.StyledText;
 import com.wynntils.mc.event.PlayerInteractEvent;
 import com.wynntils.mc.event.UseItemEvent;
-import com.wynntils.models.quests.event.TrackedQuestUpdateEvent;
 import com.wynntils.screens.base.WynntilsMenuScreenBase;
 import com.wynntils.screens.guides.WynntilsGuidesListScreen;
 import com.wynntils.screens.guides.emeraldpouch.WynntilsEmeraldPouchGuideScreen;
@@ -24,8 +23,6 @@ import com.wynntils.screens.guides.powder.WynntilsPowderGuideScreen;
 import com.wynntils.screens.questbook.WynntilsQuestBookScreen;
 import com.wynntils.screens.wynntilsmenu.WynntilsMenuScreen;
 import com.wynntils.utils.mc.McUtils;
-import net.minecraft.resources.ResourceLocation;
-import net.minecraft.sounds.SoundEvent;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.eventbus.api.Event;
@@ -33,11 +30,8 @@ import net.minecraftforge.eventbus.api.SubscribeEvent;
 import org.lwjgl.glfw.GLFW;
 
 @ConfigCategory(Category.UI)
-public class WynntilsQuestBookFeature extends Feature {
-    private static final ResourceLocation QUEST_UPDATE_ID = new ResourceLocation("wynntils:ui.quest.update");
-    private static final SoundEvent QUEST_UPDATE_SOUND = SoundEvent.createVariableRangeEvent(QUEST_UPDATE_ID);
-
-    private static final StyledText QUEST_BOOK_NAME = StyledText.fromString("§dQuest Book");
+public class WynntilsContentBookFeature extends Feature {
+    private static final StyledText CONTENT_BOOK_NAME = StyledText.fromString("§dContent Book");
 
     @RegisterKeyBind
     private final KeyBind openQuestBook = new KeyBind(
@@ -89,40 +83,28 @@ public class WynntilsQuestBookFeature extends Feature {
             () -> WynntilsMenuScreenBase.openBook(WynntilsGuidesListScreen.create()));
 
     @RegisterConfig
-    public final Config<Boolean> replaceWynncraftQuestBook = new Config<>(true);
+    public final Config<Boolean> replaceWynncraftContentBook = new Config<>(true);
 
     @RegisterConfig
-    public final Config<Boolean> questBookShouldOpenWynntilsMenu = new Config<>(false);
-
-    @RegisterConfig
-    public final Config<Boolean> playSoundOnUpdate = new Config<>(true);
-
-    @SubscribeEvent
-    public void onQuestUpdate(TrackedQuestUpdateEvent event) {
-        if (event.getQuestInfo() == null) return;
-
-        if (playSoundOnUpdate.get()) {
-            McUtils.playSoundUI(QUEST_UPDATE_SOUND);
-        }
-    }
+    public final Config<Boolean> contentBookShouldOpenWynntilsMenu = new Config<>(false);
 
     @SubscribeEvent
     public void onUseItem(UseItemEvent event) {
-        if (McUtils.player().isShiftKeyDown() || !replaceWynncraftQuestBook.get()) return;
+        if (McUtils.player().isShiftKeyDown() || !replaceWynncraftContentBook.get()) return;
 
         tryCancelQuestBookOpen(event);
     }
 
     @SubscribeEvent
     public void onUseItemOn(PlayerInteractEvent.RightClickBlock event) {
-        if (McUtils.player().isShiftKeyDown() || !replaceWynncraftQuestBook.get()) return;
+        if (McUtils.player().isShiftKeyDown() || !replaceWynncraftContentBook.get()) return;
 
         tryCancelQuestBookOpen(event);
     }
 
     @SubscribeEvent
     public void onInteract(PlayerInteractEvent.Interact event) {
-        if (McUtils.player().isShiftKeyDown() || !replaceWynncraftQuestBook.get()) return;
+        if (McUtils.player().isShiftKeyDown() || !replaceWynncraftContentBook.get()) return;
 
         tryCancelQuestBookOpen(event);
     }
@@ -131,10 +113,10 @@ public class WynntilsQuestBookFeature extends Feature {
         ItemStack itemInHand = McUtils.player().getItemInHand(InteractionHand.MAIN_HAND);
 
         if (itemInHand != null
-                && StyledText.fromComponent(itemInHand.getHoverName()).equals(QUEST_BOOK_NAME)) {
+                && StyledText.fromComponent(itemInHand.getHoverName()).equals(CONTENT_BOOK_NAME)) {
             event.setCanceled(true);
             WynntilsMenuScreenBase.openBook(
-                    questBookShouldOpenWynntilsMenu.get()
+                    contentBookShouldOpenWynntilsMenu.get()
                             ? WynntilsMenuScreen.create()
                             : WynntilsQuestBookScreen.create());
         }
