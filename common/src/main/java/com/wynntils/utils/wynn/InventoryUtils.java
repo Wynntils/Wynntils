@@ -5,6 +5,7 @@
 package com.wynntils.utils.wynn;
 
 import com.wynntils.core.components.Models;
+import com.wynntils.core.text.StyledText;
 import com.wynntils.models.items.properties.GearTypeItemProperty;
 import com.wynntils.utils.mc.McUtils;
 import it.unimi.dsi.fastutil.ints.Int2ObjectMap;
@@ -19,7 +20,7 @@ import net.minecraft.world.item.ItemStack;
 
 public final class InventoryUtils {
     public static final int COMPASS_SLOT_NUM = 6;
-    public static final int QUEST_BOOK_SLOT_NUM = 7;
+    public static final int CONTENT_BOOK_SLOT_NUM = 7;
     public static final int SOUL_POINTS_SLOT_NUM = 8;
     public static final int INGREDIENT_POUCH_SLOT_NUM = 13;
 
@@ -58,6 +59,26 @@ public final class InventoryUtils {
         ACCESSORY_SLOTS.forEach(
                 slot -> accessories.add(player.getInventory().items.get(slot)));
         return accessories;
+    }
+
+    public static boolean isItemListsEqual(List<ItemStack> firstItems, List<ItemStack> secondItems) {
+        if (firstItems.size() != secondItems.size()) return false;
+
+        for (int i = 0; i < firstItems.size(); i++) {
+            var newItem = firstItems.get(i);
+            var oldItem = secondItems.get(i);
+            if (!newItem.getItem().equals(oldItem.getItem())
+                    || newItem.getDamageValue() != oldItem.getDamageValue()
+                    || newItem.getCount() != oldItem.getCount()
+                    || !ItemStack.tagMatches(oldItem, newItem)) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    public static StyledText getItemName(ItemStack itemStack) {
+        return StyledText.fromComponent(itemStack.getHoverName());
     }
 
     public enum MouseClickType {

@@ -4,7 +4,9 @@
  */
 package com.wynntils.models.quests.type;
 
+import com.wynntils.models.content.type.ContentLength;
 import java.util.Locale;
+import java.util.Optional;
 
 public enum QuestLength {
     SHORT,
@@ -18,5 +20,18 @@ public enum QuestLength {
             // Use SHORT as fallback... it's as good as any
             return SHORT;
         }
+    }
+
+    public static QuestLength fromContentLength(Optional<ContentLength> contentLength) {
+        if (contentLength.isEmpty()) {
+            // Use SHORT as fallback... it's as good as any
+            return SHORT;
+        }
+
+        return switch (contentLength.get()) {
+            case SHORT -> SHORT;
+            case MEDIUM -> MEDIUM;
+            case LONG -> LONG;
+        };
     }
 }
