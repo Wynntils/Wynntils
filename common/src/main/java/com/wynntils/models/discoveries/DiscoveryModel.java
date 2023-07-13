@@ -12,7 +12,10 @@ import com.wynntils.core.components.Models;
 import com.wynntils.core.net.ApiResponse;
 import com.wynntils.core.net.Download;
 import com.wynntils.core.net.UrlId;
+import com.wynntils.core.text.StyledText;
 import com.wynntils.models.characterstats.CombatXpModel;
+import com.wynntils.models.content.type.ContentInfo;
+import com.wynntils.models.content.type.ContentType;
 import com.wynntils.models.discoveries.event.DiscoveriesUpdatedEvent;
 import com.wynntils.models.discoveries.profile.DiscoveryProfile;
 import com.wynntils.models.discoveries.type.DiscoveryType;
@@ -28,6 +31,7 @@ import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 import java.util.stream.Stream;
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
@@ -35,14 +39,16 @@ import net.minecraftforge.eventbus.api.EventPriority;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 
 public final class DiscoveryModel extends Model {
-    private static final DiscoveryContainerQueries CONTAINER_QUERIES = new DiscoveryContainerQueries();
-
-    private List<DiscoveryInfo> discoveries = List.of();
-    private List<DiscoveryInfo> secretDiscoveries = List.of();
+    // From json
     private List<DiscoveryInfo> discoveryInfoList = new ArrayList<>();
 
-    private List<Component> discoveriesTooltip = List.of();
-    private List<Component> secretDiscoveriesTooltip = List.of();
+    // From container query updates
+    private List<DiscoveryInfo> territoryDiscoveries = List.of();
+    private List<DiscoveryInfo> worldDiscoveries = List.of();
+    private List<DiscoveryInfo> secretDiscoveries = List.of();
+    private List<StyledText> territoryDiscoveriesTooltip = List.of();
+    private List<StyledText> worldDiscoveriesTooltip = List.of();
+    private List<StyledText> secretDiscoveriesTooltip = List.of();
 
     public DiscoveryModel(
             CombatXpModel combatXpModel,
@@ -59,7 +65,8 @@ public final class DiscoveryModel extends Model {
 
     @SubscribeEvent(priority = EventPriority.HIGH)
     public void onWorldStateChanged(WorldStateEvent e) {
-        discoveries = List.of();
+        territoryDiscoveries = List.of();
+        worldDiscoveries = List.of();
         secretDiscoveries = List.of();
     }
 
@@ -98,37 +105,80 @@ public final class DiscoveryModel extends Model {
     }
 
     private void queryDiscoveries() {
-        CONTAINER_QUERIES.queryDiscoveries();
+        WynntilsMod.info("Requesting rescan of discoveries in Content Book");
+        Models.Content.scanContentBook("Territorial Discovery", this::updateTerritoryDiscoveriesFromQuery);
+        Models.Content.scanContentBook("World Discovery", this::updateWorldDiscoveriesFromQuery);
+        Models.Content.scanContentBook("Secret Discovery", this::updateSecretDiscoveriesFromQuery);
     }
 
-    public void setDiscoveries(List<DiscoveryInfo> newDiscoveries) {
-        discoveries = newDiscoveries;
-        WynntilsMod.postEvent(new DiscoveriesUpdatedEvent.Normal());
+    private void updateTerritoryDiscoveriesFromQuery(List<ContentInfo> newContent, List<StyledText> progress) {
+        List<DiscoveryInfo> newDiscoveries = new ArrayList<>();
+        for (ContentInfo content : newContent) {
+            if (content.type() != ContentType.TERRITORIAL_DISCOVERY) {
+                WynntilsMod.warn("Incorrect territory discovery content type recieved: " + content);
+                continue;
+            }
+            DiscoveryInfo discoveryInfo = getDiscoveryInfoFromContent(content);
+            newDiscoveries.add(discoveryInfo);
+        }
+
+        territoryDiscoveries = newDiscoveries;
+        territoryDiscoveriesTooltip = progress;
+        WynntilsMod.postEvent(new DiscoveriesUpdatedEvent.Territory());
     }
 
-    public void setSecretDiscoveries(List<DiscoveryInfo> newDiscoveries) {
+    private void updateWorldDiscoveriesFromQuery(List<ContentInfo> newContent, List<StyledText> progress) {
+        List<DiscoveryInfo> newDiscoveries = new ArrayList<>();
+        for (ContentInfo content : newContent) {
+            if (content.type() != ContentType.WORLD_DISCOVERY) {
+                WynntilsMod.warn("Incorrect discovery content type recieved: " + content);
+                continue;
+            }
+            DiscoveryInfo discoveryInfo = getDiscoveryInfoFromContent(content);
+            newDiscoveries.add(discoveryInfo);
+        }
+
+        worldDiscoveries = newDiscoveries;
+        worldDiscoveriesTooltip = progress;
+        WynntilsMod.postEvent(new DiscoveriesUpdatedEvent.World());
+    }
+
+    private void updateSecretDiscoveriesFromQuery(List<ContentInfo> newContent, List<StyledText> progress) {
+        List<DiscoveryInfo> newDiscoveries = new ArrayList<>();
+        for (ContentInfo content : newContent) {
+            if (content.type() != ContentType.SECRET_DISCOVERY) {
+                WynntilsMod.warn("Incorrect secret discovery content type recieved: " + content);
+                continue;
+            }
+            DiscoveryInfo discoveryInfo = getDiscoveryInfoFromContent(content);
+            newDiscoveries.add(discoveryInfo);
+        }
+
         secretDiscoveries = newDiscoveries;
+        secretDiscoveriesTooltip = progress;
         WynntilsMod.postEvent(new DiscoveriesUpdatedEvent.Secret());
     }
 
-    public void setDiscoveriesTooltip(List<Component> newTooltip) {
-        discoveriesTooltip = newTooltip;
-    }
-
-    public void setSecretDiscoveriesTooltip(List<Component> newTooltip) {
-        secretDiscoveriesTooltip = newTooltip;
+    private DiscoveryInfo getDiscoveryInfoFromContent(ContentInfo content) {
+        return DiscoveryInfo.fromContentInfo(content);
     }
 
     public List<Component> getDiscoveriesTooltip() {
-        return discoveriesTooltip;
+        return Stream.concat(
+                        territoryDiscoveriesTooltip.stream().map(StyledText::getComponent),
+                        worldDiscoveriesTooltip.stream().map(StyledText::getComponent))
+                .collect(Collectors.toList());
     }
 
     public List<Component> getSecretDiscoveriesTooltip() {
-        return secretDiscoveriesTooltip;
+        return secretDiscoveriesTooltip.stream().map(StyledText::getComponent).collect(Collectors.toList());
     }
 
-    public Stream<DiscoveryInfo> getAllDiscoveries() {
-        return Stream.concat(discoveries.stream(), secretDiscoveries.stream());
+    public Stream<DiscoveryInfo> getAllCompletedDiscoveries() {
+        return Stream.concat(
+                        Stream.concat(territoryDiscoveries.stream(), worldDiscoveries.stream()),
+                        secretDiscoveries.stream())
+                .filter(DiscoveryInfo::isDiscovered);
     }
 
     public List<DiscoveryInfo> getDiscoveryInfoList() {

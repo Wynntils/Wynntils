@@ -22,6 +22,9 @@ public class MessageFilterFeature extends Feature {
     // List of Pair<Foreground, Background>
     // Ensures we only try relevant regexes for any given message
 
+    // By policy, we should never filter out any promotional messages from Wynncraft.
+    // We do not want to harm their ability to make money and sustain the site.
+
     private static final List<Pair<Pattern, Pattern>> WELCOME = List.of(
             Pair.of(Pattern.compile("^§7Loading Resource Pack\\.\\.\\.$"), null),
             Pair.of(Pattern.compile("^§6Thank you for using the WynnPack\\. Enjoy the game!$"), null),

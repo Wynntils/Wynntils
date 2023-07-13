@@ -87,7 +87,7 @@ public class PartyMemberWidget extends AbstractWidget {
                                 - 2,
                         20)
                 .build();
-        if (playerName.equals(Models.Party.getPartyLeader())) {
+        if (Models.Party.isPartyLeader(playerName)) {
             this.promoteButton.active = false;
             this.kickButton.active = false;
         } else {
@@ -134,7 +134,7 @@ public class PartyMemberWidget extends AbstractWidget {
 
         // name rendering
         CustomColor color = CommonColors.WHITE;
-        if (playerName.equals(Models.Party.getPartyLeader())) {
+        if (Models.Party.isPartyLeader(playerName)) {
             color = CommonColors.YELLOW;
         } else if (Models.Friends.getFriends().contains(playerName)) {
             color = CommonColors.GREEN;
@@ -142,7 +142,7 @@ public class PartyMemberWidget extends AbstractWidget {
         String prefix = "";
         if (isOffline) {
             prefix = ChatFormatting.STRIKETHROUGH.toString();
-        } else if (playerName.equals(McUtils.player().getName().getString())) {
+        } else if (playerName.equals(McUtils.playerName())) {
             prefix = ChatFormatting.BOLD.toString();
         }
 
@@ -163,9 +163,9 @@ public class PartyMemberWidget extends AbstractWidget {
         moveDownButton.render(poseStack, mouseX, mouseY, partialTick);
 
         // only leader can promote/kick
-        if (!McUtils.player().getName().getString().equals(Models.Party.getPartyLeader())) return;
+        if (!Models.Party.isPartyLeader(McUtils.playerName())) return;
 
-        if (playerName.equals(Models.Party.getPartyLeader())) {
+        if (Models.Party.isPartyLeader(playerName)) {
             disbandButton.render(poseStack, mouseX, mouseY, partialTick);
         } else {
             promoteButton.render(poseStack, mouseX, mouseY, partialTick);
@@ -179,7 +179,7 @@ public class PartyMemberWidget extends AbstractWidget {
             return true;
         }
 
-        if (!McUtils.player().getName().getString().equals(Models.Party.getPartyLeader())) return false;
+        if (!Models.Party.isPartyLeader(McUtils.playerName())) return false;
 
         return promoteButton.mouseClicked(mouseX, mouseY, button)
                 || kickButton.mouseClicked(mouseX, mouseY, button)
