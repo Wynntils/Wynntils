@@ -112,6 +112,7 @@ public final class ContainerQueryHandler extends Handler {
                 WynntilsMod.warn("Closing container '" + e.getTitle().getString()
                         + "' due to previously aborted container query");
                 e.setCanceled(true);
+                McUtils.sendPacket(new ServerboundContainerClosePacket(e.getContainerId()));
             } else {
                 // This is some other container. Ignore it.
             }
