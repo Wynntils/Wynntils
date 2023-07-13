@@ -1,9 +1,21 @@
+## [0.0.3-alpha.126](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.125...v0.0.3-alpha.126) (2023-07-13)
+
+
+### New Features
+
+* Integrate 2.0.3 beta changes from development into main ([#1722](https://github.com/Wynntils/Artemis/issues/1722)) ([97867e3](https://github.com/Wynntils/Artemis/commit/97867e3dcb4299441bc864a2368b589498e23f4f)), closes [#1653](https://github.com/Wynntils/Artemis/issues/1653) [#1656](https://github.com/Wynntils/Artemis/issues/1656) [#1657](https://github.com/Wynntils/Artemis/issues/1657)
+
 ## [0.0.3-alpha.125](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.124...v0.0.3-alpha.125) (2023-07-12)
 
 
 ### New Features
 
 * Add the disconnect and change world buttons to the character selection screen ([#1685](https://github.com/Wynntils/Artemis/issues/1685)) ([56ae74c](https://github.com/Wynntils/Artemis/commit/56ae74cc2d6bcb5147f430057420acc58475986c))
+
+
+### Miscellaneous Chores
+
+* **release:** v0.0.3-alpha.125 [skip ci] ([518323c](https://github.com/Wynntils/Artemis/commit/518323c8870128cdb8fcfd98db610fe0750bab2e))
 
 ## [0.0.3-alpha.124](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.123...v0.0.3-alpha.124) (2023-07-11)
 
@@ -40,16 +52,4 @@
 ### Miscellaneous Chores
 
 * **release:** v0.0.3-alpha.122 [skip ci] ([eb2bddc](https://github.com/Wynntils/Artemis/commit/eb2bddcef160c3426d87c3a605278d7aabe091f0))
-
-## [0.0.3-alpha.121](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.120...v0.0.3-alpha.121) (2023-07-11)
-
-
-### New Features
-
-* render lootrun path on map ([#1688](https://github.com/Wynntils/Artemis/issues/1688)) ([6e9735c](https://github.com/Wynntils/Artemis/commit/6e9735ccf75fb209ec6530702f2d40309d47de0e))
-
-
-### Miscellaneous Chores
-
-* **release:** v0.0.3-alpha.121 [skip ci] ([3d79377](https://github.com/Wynntils/Artemis/commit/3d79377dce784cd19c5ea5902e6985babf6e9cb7))
 
