@@ -6,7 +6,6 @@ package com.wynntils.models.containers;
 
 import com.wynntils.core.components.Model;
 import com.wynntils.core.components.Models;
-import com.wynntils.core.text.PartStyle;
 import com.wynntils.core.text.StyledText;
 import com.wynntils.utils.type.Pair;
 import java.util.List;
@@ -26,7 +25,7 @@ public final class ContainerModel extends Model {
     private static final Pattern GUILD_BANK_PATTERN =
             Pattern.compile("[a-zA-Z ]+: Bank \\((?:Everyone|High Ranked)\\)");
 
-    private static final Pattern LOOT_CHEST_PATTERN = Pattern.compile("Loot Chest (.+)");
+    private static final Pattern LOOT_CHEST_PATTERN = Pattern.compile("Loot Chest (§.)\\[.+\\]");
 
     // Test suite: https://regexr.com/7c4qc
     private static final Pattern PERSONAL_STORAGE_PATTERN =
@@ -34,6 +33,7 @@ public final class ContainerModel extends Model {
 
     private static final String BANK_NAME = "Bank";
     private static final String BLOCK_BANK_NAME = "Block Bank";
+    private static final String BOOKSHELF_NAME = "Bookshelf";
     private static final String MISC_BUCKET_NAME = "Misc. Bucket";
 
     private static final Pair<Integer, Integer> ABILITY_TREE_PREVIOUS_NEXT_SLOTS = new Pair<>(57, 59);
@@ -42,6 +42,7 @@ public final class ContainerModel extends Model {
     private static final Pair<Integer, Integer> TRADE_MARKET_PREVIOUS_NEXT_SLOTS = new Pair<>(17, 26);
     private static final Pair<Integer, Integer> TRADE_MARKET_SECONDARY_PREVIOUS_NEXT_SLOTS = new Pair<>(26, 35);
     private static final Pair<Integer, Integer> SCRAP_MENU_PREVIOUS_NEXT_SLOTS = new Pair<>(0, 8);
+    private static final Pair<Integer, Integer> CONTENT_BOOK_PREVIOUS_NEXT_SLOTS = new Pair<>(65, 69);
     private static final StyledText LAST_BANK_PAGE_STRING = StyledText.fromString(">§4>§c>§4>§c>");
     private static final StyledText FIRST_TRADE_MARKET_PAGE_STRING = StyledText.fromString("§bReveal Item Names");
     private static final StyledText TRADE_MARKET_TITLE = StyledText.fromString("Trade Market");
@@ -49,6 +50,7 @@ public final class ContainerModel extends Model {
     private static final StyledText TRADE_MARKET_SEARCH_TITLE = StyledText.fromString("Search Results");
     private static final StyledText SCRAP_MENU_TITLE = StyledText.fromString("Scrap Rewards");
     private static final StyledText SEASKIPPER_TITLE = StyledText.fromString("V.S.S. Seaskipper");
+    private static final StyledText CONTENT_BOOK_TITLE = StyledText.fromString("§f\uE000\uE072");
 
     public ContainerModel() {
         super(List.of());
@@ -77,7 +79,10 @@ public final class ContainerModel extends Model {
      * @return True if the page is the last page in a Bank, Block Bank, or Misc Bucket
      */
     public boolean isLastBankPage(Screen screen) {
-        return (isBankScreen(screen) || isBlockBankScreen(screen) || isMiscBucketScreen(screen))
+        return (isBankScreen(screen)
+                        || isBlockBankScreen(screen)
+                        || isMiscBucketScreen(screen)
+                        || isBookshelfScreen(screen))
                 && screen instanceof ContainerScreen cs
                 && StyledText.fromComponent(cs.getMenu().getSlot(8).getItem().getHoverName())
                         .endsWith(LAST_BANK_PAGE_STRING);
@@ -125,10 +130,23 @@ public final class ContainerModel extends Model {
         return type.equals(MISC_BUCKET_NAME);
     }
 
+    public boolean isBookshelfScreen(Screen screen) {
+        Matcher matcher = StyledText.fromComponent(screen.getTitle()).getMatcher(PERSONAL_STORAGE_PATTERN);
+        if (!matcher.matches()) return false;
+
+        String type = matcher.group(2);
+        return type.equals(BOOKSHELF_NAME);
+    }
+
     public boolean isScrapMenuScreen(Screen screen) {
         if (!(screen instanceof ContainerScreen cs)) return false;
         return cs.getMenu().getRowCount() == 6
                 && StyledText.fromComponent(screen.getTitle()).equals(SCRAP_MENU_TITLE);
+    }
+
+    public boolean isContentBook(Screen screen) {
+        if (!(screen instanceof ContainerScreen cs)) return false;
+        return StyledText.fromComponent(cs.getTitle()).equals(CONTENT_BOOK_TITLE);
     }
 
     public boolean isLootChest(Screen screen) {
@@ -151,9 +169,7 @@ public final class ContainerModel extends Model {
     }
 
     public Matcher lootChestMatcher(Screen screen) {
-        return StyledText.fromComponent(screen.getTitle())
-                .getNormalized()
-                .getMatcher(LOOT_CHEST_PATTERN, PartStyle.StyleType.NONE);
+        return StyledText.fromComponent(screen.getTitle()).getNormalized().getMatcher(LOOT_CHEST_PATTERN);
     }
 
     public Optional<Integer> getScrollSlot(AbstractContainerScreen<?> gui, boolean scrollUp) {
@@ -170,7 +186,8 @@ public final class ContainerModel extends Model {
 
         if (Models.Container.isBankScreen(gui)
                 || Models.Container.isMiscBucketScreen(gui)
-                || Models.Container.isBlockBankScreen(gui)) {
+                || Models.Container.isBlockBankScreen(gui)
+                || Models.Container.isBookshelfScreen(gui)) {
             if (!scrollUp && Models.Container.isLastBankPage(gui)) return null;
 
             return BANK_PREVIOUS_NEXT_SLOTS;
@@ -192,6 +209,10 @@ public final class ContainerModel extends Model {
 
         if (Models.Container.isScrapMenuScreen(gui)) {
             return SCRAP_MENU_PREVIOUS_NEXT_SLOTS;
+        }
+
+        if (Models.Container.isContentBook(gui)) {
+            return CONTENT_BOOK_PREVIOUS_NEXT_SLOTS;
         }
 
         return null;
