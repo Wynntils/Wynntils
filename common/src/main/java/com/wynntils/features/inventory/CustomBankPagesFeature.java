@@ -72,6 +72,8 @@ public class CustomBankPagesFeature extends Feature {
 
         currentPage = Models.Container.getCurrentBankPage(screen);
 
+        lastPage = Models.Container.getFinalBankPage();
+
         customJumpDestinations = List.of(
                 buttonOnePage.get(),
                 buttonTwoPage.get(),
@@ -141,7 +143,8 @@ public class CustomBankPagesFeature extends Feature {
     @SubscribeEvent
     public void onContainerSetEvent(ContainerSetContentEvent.Post e) {
         if (Models.Container.isItemIndicatingLastBankPage(e.getItems().get(Models.Container.LAST_BANK_PAGE_SLOT))) {
-            lastPage = Models.Container.updateFinalBankPage(currentPage);
+            Models.Container.updateFinalBankPage(currentPage);
+            lastPage = currentPage;
         }
     }
 

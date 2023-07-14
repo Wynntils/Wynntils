@@ -98,9 +98,11 @@ public final class ContainerModel extends Model {
         return StyledText.fromComponent(item.getHoverName()).endsWith(LAST_BANK_PAGE_STRING);
     }
 
-    public int updateFinalBankPage(int newFinalPage) {
+    public void updateFinalBankPage(int newFinalPage) {
         finalBankPage.store(newFinalPage);
+    }
 
+    public int getFinalBankPage() {
         return finalBankPage.get();
     }
 
