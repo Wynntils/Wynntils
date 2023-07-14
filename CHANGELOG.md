@@ -1,8 +1,16 @@
+## [0.0.3-alpha.136](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.135...v0.0.3-alpha.136) (2023-07-14)
+
+
+### Bug Fixes
+
+* Skill points annotator did not parse properly ([#1737](https://github.com/Wynntils/Artemis/issues/1737)) ([85b7a3c](https://github.com/Wynntils/Artemis/commit/85b7a3cca90451aff679d827204c6acda008b2d8))
+
 ## [0.0.3-alpha.135](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.134...v0.0.3-alpha.135) (2023-07-14)
 
 
 ### Miscellaneous Chores
 
+* **release:** v0.0.3-alpha.135 [skip ci] ([5d80b30](https://github.com/Wynntils/Artemis/commit/5d80b30d09b5946e7a8a5eb26a837284ae656b07))
 * Update item data MD5 ([#1746](https://github.com/Wynntils/Artemis/issues/1746)) ([d6a87d1](https://github.com/Wynntils/Artemis/commit/d6a87d1589bc76cf08b2d255c80b5762a75240f8))
 
 ## [0.0.3-alpha.134](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.133...v0.0.3-alpha.134) (2023-07-14)
@@ -40,16 +48,4 @@
 ### Miscellaneous Chores
 
 * **release:** v0.0.3-alpha.132 [skip ci] ([0ac1a6a](https://github.com/Wynntils/Artemis/commit/0ac1a6aec6dee831685f67acf10266435b551296))
-
-## [0.0.3-alpha.131](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.130...v0.0.3-alpha.131) (2023-07-13)
-
-
-### Bug Fixes
-
-* Fix fallback code for closing bad container queries ([#1733](https://github.com/Wynntils/Artemis/issues/1733)) ([666e40d](https://github.com/Wynntils/Artemis/commit/666e40db9861d1376a220b1b54ae0badf768578e))
-
-
-### Miscellaneous Chores
-
-* **release:** v0.0.3-alpha.131 [skip ci] ([238f653](https://github.com/Wynntils/Artemis/commit/238f6538fa5157ce627a4907c8b38695656b7eb0))
 
