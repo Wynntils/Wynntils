@@ -33,7 +33,6 @@ public final class ContainerQueryHandler extends Handler {
 
     private ContainerQueryStep currentStep;
     private String firstStepName;
-    private ContainerQueryStep lastStep;
 
     private Component currentTitle;
     private MenuType<?> currentMenuType;
@@ -69,7 +68,6 @@ public final class ContainerQueryHandler extends Handler {
 
         currentStep = firstStep;
         firstStepName = firstStep.getName();
-        lastStep = null;
         resetTimer();
         try {
             if (!firstStep.startStep(null)) {
@@ -104,23 +102,6 @@ public final class ContainerQueryHandler extends Handler {
 
     @SubscribeEvent
     public void onMenuOpened(MenuEvent.MenuOpenedEvent e) {
-        if (currentStep == null && lastStep != null) {
-            // We're in a possibly bad state. We have failed a previous call, but
-            // we might still get the menu opened (perhaps after a lag spike).
-            if (lastStep.verifyContainer(e.getTitle(), e.getMenuType())) {
-                // This was the container we were supposed to be looking for
-                WynntilsMod.warn("Closing container '" + e.getTitle().getString()
-                        + "' due to previously aborted container query");
-                e.setCanceled(true);
-                McUtils.sendPacket(new ServerboundContainerClosePacket(e.getContainerId()));
-            } else {
-                // This is some other container. Ignore it.
-            }
-            // Now say we're completely finished with the last query
-            lastStep = null;
-            return;
-        }
-
         // Are we processing a query?
         if (currentStep == null) return;
 
@@ -214,7 +195,6 @@ public final class ContainerQueryHandler extends Handler {
             return;
         }
         currentStep.onError(errorMsg);
-        lastStep = currentStep;
         endQuery();
     }
 
