@@ -40,13 +40,6 @@ public class DiscordRichPresenceFeature extends Feature {
     private ClassType classType = null;
     private int level = 0;
 
-    private void displayCharacterDetails() {
-        if (classType == null) return;
-        String name = StyledText.fromComponent(McUtils.player().getName()).getString(PartStyle.StyleType.NONE);
-        Managers.Discord.setImageText(name + " - Level " + level + " " + classType.getName());
-        Managers.Discord.setImage(classType.getActualName(false).toLowerCase(Locale.ROOT));
-    }
-
     @SubscribeEvent
     public void onCharacterUpdate(CharacterUpdateEvent event) {
         if (!Models.WorldState.onWorld()) return;
@@ -96,6 +89,18 @@ public class DiscordRichPresenceFeature extends Feature {
         }
     }
 
+    @SubscribeEvent
+    public void onDisconnect(ConnectionEvent.DisconnectedEvent e) {
+        Managers.Discord.unload();
+    }
+
+    private void displayCharacterDetails() {
+        if (classType == null) return;
+        String name = StyledText.fromComponent(McUtils.player().getName()).getString(PartStyle.StyleType.NONE);
+        Managers.Discord.setImageText(name + " - Level " + level + " " + classType.getName());
+        Managers.Discord.setImage(classType.getActualName(false).toLowerCase(Locale.ROOT));
+    }
+
     private void checkTerritory() {
         if (stopTerritoryCheck || !Models.WorldState.onWorld()) {
             lastTerritoryProfile = null;
@@ -115,11 +120,6 @@ public class DiscordRichPresenceFeature extends Feature {
         }
 
         Managers.TickScheduler.scheduleLater(this::checkTerritory, TERRITORY_TICKS_DELAY);
-    }
-
-    @SubscribeEvent
-    public void onDisconnect(ConnectionEvent.DisconnectedEvent e) {
-        Managers.Discord.unload();
     }
 
     @Override
