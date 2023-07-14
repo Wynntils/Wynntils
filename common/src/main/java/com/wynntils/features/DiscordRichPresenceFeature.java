@@ -32,7 +32,7 @@ public class DiscordRichPresenceFeature extends Feature {
 
     @RegisterConfig
     public final Config<Boolean> displayWorld = new Config<>(true);
-    
+
     private static final int TERRITORY_TICKS_DELAY = 10;
 
     private boolean stopTerritoryCheck = false;

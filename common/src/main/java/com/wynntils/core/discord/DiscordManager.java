@@ -110,7 +110,11 @@ public class DiscordManager extends Manager {
 
     @SubscribeEvent
     public void onTick(TickEvent event) {
-        if (!isReady() || ticksUntilUpdate > 0) return;
+        if (ticksUntilUpdate > 0) {
+            ticksUntilUpdate--;
+            return;
+        }
+        if (!isReady()) return;
 
         core.runCallbacks();
         ticksUntilUpdate = TICKS_PER_UPDATE;
