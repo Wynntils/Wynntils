@@ -205,7 +205,9 @@ public class CustomPlayerListFeature extends Feature {
 
         private double getAnimation() {
             if (openingDuration.get() <= 0) return 1;
-            if (lastTime == -1) lastTime = System.currentTimeMillis() - 1;
+            if (lastTime == -1) {
+                lastTime = System.currentTimeMillis() - 1;
+            }
 
             if (McUtils.options().keyPlayerList.isDown()) {
                 animationProgress += (System.currentTimeMillis() - lastTime) / (double) openingDuration.get();
