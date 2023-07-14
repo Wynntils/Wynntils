@@ -26,6 +26,7 @@ import net.minecraft.util.FastColor;
 import net.minecraft.util.ToFloatFunction;
 import net.minecraft.world.level.ChunkPos;
 import net.minecraft.world.phys.Vec3;
+import org.joml.Vector2d;
 
 public final class LootrunCompiler {
     private static final List<Integer> COLORS = List.of(
@@ -43,7 +44,13 @@ public final class LootrunCompiler {
         Long2ObjectMap<List<LootrunNote>> notes = getNotes(uncompiled.notes());
 
         String lootrunName = getLootrunName(uncompiled, recording);
-        return new LootrunInstance(lootrunName, uncompiled.path(), points, chests, notes);
+        return new LootrunInstance(
+                lootrunName,
+                uncompiled.path(),
+                generateSimplifiedPoints(uncompiled.path(), 0.5),
+                points,
+                chests,
+                notes);
     }
 
     private static String getLootrunName(LootrunUncompiled uncompiled, boolean recording) {
@@ -199,6 +206,72 @@ public final class LootrunCompiler {
             lastLocationList.points().add(locationsList.points().get(i));
         }
         return sampleByChunk;
+    }
+
+    private static List<Vector2d> generateSimplifiedPoints(LootrunPath raw, double tolerance) {
+        List<Vector2d> points = new ArrayList<>();
+
+        // y is discarded in the process, as map doesn't show height info
+        for (Vec3 point : raw.points()) {
+            points.add(new Vector2d(point.x, point.z));
+        }
+
+        return simplify(points, tolerance);
+    }
+
+    // Douglas-Peucker implementation for shape simplification
+    private static List<Vector2d> simplify(List<Vector2d> points, double epsilon) {
+        // can't simplify the shape when having too few points, so return it as it is
+        if (points.size() < 3) {
+            return points;
+        }
+
+        int end = points.size() - 1;
+        int index = -1;
+        double dist = 0.0;
+
+        // find the farthest point for splitting
+        for (int i = 1; i < end; i++) {
+            double d = pointLineDistance(points.get(i), points.get(0), points.get(end));
+            if (d > dist) {
+                dist = d;
+                index = i;
+            }
+        }
+
+        List<Vector2d> simplified = new ArrayList<>();
+
+        // split list with the farthest point and simplify both sublist recursively if distance is greater than epsilon
+        if (dist > epsilon) {
+            List<Vector2d> left = simplify(points.subList(0, index + 1), epsilon);
+            List<Vector2d> right = simplify(points.subList(index, end + 1), epsilon);
+            simplified.addAll(left.subList(0, left.size() - 1));
+            simplified.addAll(right);
+        } else {
+            // return both end of the simplified line otherwise
+            simplified.add(points.get(0));
+            simplified.add(points.get(end));
+        }
+
+        return simplified;
+    }
+
+    private static double pointLineDistance(Vector2d point, Vector2d lineStart, Vector2d lineEnd) {
+        Vector2d delta = new Vector2d(point).sub(lineStart);
+        Vector2d lineDelta = new Vector2d(lineEnd).sub(lineStart);
+
+        double param = delta.dot(lineDelta) / lineDelta.lengthSquared();
+
+        Vector2d closestPoint;
+        if (param < 0) {
+            closestPoint = new Vector2d(lineStart);
+        } else if (param > 1) {
+            closestPoint = new Vector2d(lineEnd);
+        } else {
+            closestPoint = new Vector2d(lineStart).add(lineDelta.mul(param));
+        }
+
+        return closestPoint.distance(point);
     }
 
     private static Long2ObjectMap<Set<BlockPos>> getChests(Set<BlockPos> chests) {

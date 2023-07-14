@@ -151,7 +151,7 @@ public final class FunctionArguments {
         }
 
         @SuppressWarnings("unchecked")
-        public void setValue(Object value) {
+        protected void setValue(Object value) {
             if (this.value != null) {
                 throw new IllegalStateException("Tried setting argument value twice.");
             }
@@ -218,7 +218,7 @@ public final class FunctionArguments {
         }
 
         @SuppressWarnings("unchecked")
-        public void setValues(List<Object> values) {
+        protected void setValues(List<Object> values) {
             this.setValue(values.stream().map(value -> (T) value).collect(Collectors.toList()));
         }
 

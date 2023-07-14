@@ -9,7 +9,6 @@ import com.wynntils.core.text.StyledText;
 import com.wynntils.screens.base.widgets.WynntilsButton;
 import com.wynntils.utils.colors.CommonColors;
 import com.wynntils.utils.colors.CustomColor;
-import com.wynntils.utils.mc.ComponentUtils;
 import com.wynntils.utils.mc.McUtils;
 import com.wynntils.utils.mc.RenderedStringUtils;
 import com.wynntils.utils.render.FontRenderer;
@@ -41,7 +40,7 @@ public class GuidesButton extends WynntilsButton {
                 .renderText(
                         poseStack,
                         StyledText.fromString(RenderedStringUtils.getMaxFittingText(
-                                ComponentUtils.getUnformatted(guideScreen.getTitle()),
+                                StyledText.fromComponent(guideScreen.getTitle()).getStringWithoutFormatting(),
                                 maxTextWidth,
                                 FontRenderer.getInstance().getFont())),
                         this.getX() + 14,

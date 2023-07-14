@@ -77,10 +77,10 @@ public class GameNotificationOverlayFeature extends Feature {
 
     public static class GameNotificationOverlay extends Overlay {
         @RegisterConfig
-        public final Config<Float> messageTimeLimit = new Config<>(10f);
+        public final Config<Float> messageTimeLimit = new Config<>(12f);
 
         @RegisterConfig
-        public final Config<Integer> messageLimit = new Config<>(5);
+        public final Config<Integer> messageLimit = new Config<>(8);
 
         @RegisterConfig
         public final Config<Boolean> invertGrowth = new Config<>(true);
@@ -125,24 +125,16 @@ public class GameNotificationOverlayFeature extends Feature {
                 TextRenderTask messageTask = message.getRenderTask();
 
                 if (messageMaxLength.get() == 0
-                        || messageTask
-                                        .getText()
-                                        .getInternalCodedStringRepresentation()
-                                        .length()
-                                < messageMaxLength.get()) {
+                        || messageTask.getText().getString().length() < messageMaxLength.get()) {
                     toRender.add(message);
                 } else {
                     TimedMessageContainer first = new TimedMessageContainer(
-                            new MessageContainer(messageTask
-                                    .getText()
-                                    .getInternalCodedStringRepresentation()
-                                    .substring(0, messageMaxLength.get())),
+                            new MessageContainer(
+                                    messageTask.getText().getString().substring(0, messageMaxLength.get())),
                             message.getEndTime());
                     TimedMessageContainer second = new TimedMessageContainer(
-                            new MessageContainer(messageTask
-                                    .getText()
-                                    .getInternalCodedStringRepresentation()
-                                    .substring(messageMaxLength.get())),
+                            new MessageContainer(
+                                    messageTask.getText().getString().substring(messageMaxLength.get())),
                             message.getEndTime());
                     if (this.invertGrowth.get()) {
                         toRender.add(first);

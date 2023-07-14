@@ -47,7 +47,7 @@ public final class WynnItemParser {
     private static final Pattern EFFECT_LINE_PATTERN = Pattern.compile("^§(.)- §7(.*): §f([+-]?\\d+)(?:§.§.)? ?(.*)$");
 
     // Test suite: https://regexr.com/798o0
-    public static final Pattern MIN_LEVEL_PATTERN = Pattern.compile("^§..§r§7 Combat Lv. Min: (\\d+)$");
+    private static final Pattern MIN_LEVEL_PATTERN = Pattern.compile("^§..§7 Combat Lv. Min: (\\d+)$");
 
     private static final Pattern EFFECT_HEADER_PATTERN = Pattern.compile("^§(.)Effect:$");
 

@@ -71,6 +71,10 @@ public final class CharacterStatsModel extends Model {
         manaSegment.setHidden(shouldHide);
     }
 
+    public void hideCoordinates(boolean shouldHide) {
+        coordinatesSegment.setHidden(shouldHide);
+    }
+
     /**
      * Return the maximum number of soul points the character can currently have
      */

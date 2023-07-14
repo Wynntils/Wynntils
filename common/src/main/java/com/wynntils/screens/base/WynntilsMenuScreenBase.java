@@ -104,11 +104,11 @@ public abstract class WynntilsMenuScreenBase extends WynntilsScreen {
                         TextShadow.NONE);
     }
 
-    public float getTranslationX() {
+    protected float getTranslationX() {
         return (this.width - Texture.QUEST_BOOK_BACKGROUND.width()) / 2f;
     }
 
-    public float getTranslationY() {
+    protected float getTranslationY() {
         return (this.height - Texture.QUEST_BOOK_BACKGROUND.height()) / 2f;
     }
 }

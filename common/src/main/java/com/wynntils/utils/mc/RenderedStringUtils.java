@@ -7,7 +7,9 @@ package com.wynntils.utils.mc;
 import com.wynntils.core.text.StyledText;
 import com.wynntils.utils.render.FontRenderer;
 import java.util.Arrays;
+import net.minecraft.ChatFormatting;
 import net.minecraft.client.gui.Font;
+import net.minecraft.network.chat.Component;
 
 public final class RenderedStringUtils {
     public static StyledText[] wrapTextBySize(StyledText s, int maxPixels) {
@@ -102,5 +104,50 @@ public final class RenderedStringUtils {
         }
 
         return builder.toString();
+    }
+
+    public static Component getPercentageComponent(int count, int totalCount, int tickCount) {
+        return getPercentageComponent(count, totalCount, tickCount, false, "");
+    }
+
+    public static Component getPercentageComponent(
+            int count, int totalCount, int tickCount, boolean displayRawCount, String amountSuffix) {
+        int percentage = Math.round((float) count / totalCount * 100);
+        ChatFormatting foregroundColor;
+        ChatFormatting braceColor;
+
+        if (percentage < 25) {
+            braceColor = ChatFormatting.DARK_RED;
+            foregroundColor = ChatFormatting.RED;
+        } else if (percentage < 75) {
+            braceColor = ChatFormatting.GOLD;
+            foregroundColor = ChatFormatting.YELLOW;
+        } else {
+            braceColor = ChatFormatting.DARK_GREEN;
+            foregroundColor = ChatFormatting.GREEN;
+        }
+
+        StringBuilder insideText = new StringBuilder(foregroundColor.toString());
+        if (displayRawCount) {
+            insideText
+                    .append("|".repeat(tickCount))
+                    .append(count)
+                    .append(amountSuffix)
+                    .append("|".repeat(tickCount));
+        } else {
+            insideText
+                    .append("|".repeat(tickCount))
+                    .append(percentage)
+                    .append("%")
+                    .append("|".repeat(tickCount));
+        }
+        int insertAt =
+                Math.min(insideText.length(), Math.round((insideText.length() - 2) * (float) count / totalCount) + 2);
+        insideText.insert(insertAt, ChatFormatting.DARK_GRAY);
+
+        return Component.literal("[")
+                .withStyle(braceColor)
+                .append(Component.literal(insideText.toString()))
+                .append(Component.literal("]").withStyle(braceColor));
     }
 }

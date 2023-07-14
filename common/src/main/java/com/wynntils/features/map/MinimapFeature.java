@@ -58,17 +58,20 @@ public class MinimapFeature extends Feature {
     @OverlayInfo(renderAt = RenderState.PRE, renderType = RenderEvent.ElementType.GUI)
     private final Overlay coordinatesOverlay = new CoordinateOverlay();
 
+    @OverlayInfo(renderAt = RenderState.PRE, renderType = RenderEvent.ElementType.GUI)
+    private final Overlay territoryOverlay = new TerritoryOverlay();
+
     public static class MinimapOverlay extends Overlay {
-        private static final int DEFAULT_SIZE = 150;
+        private static final int DEFAULT_SIZE = 130;
 
         @RegisterConfig
         public final Config<Float> scale = new Config<>(1f);
 
         @RegisterConfig
-        public final Config<Float> poiScale = new Config<>(0.8f);
+        public final Config<Float> poiScale = new Config<>(0.6f);
 
         @RegisterConfig
-        public final Config<Float> pointerScale = new Config<>(1f);
+        public final Config<Float> pointerScale = new Config<>(0.8f);
 
         @RegisterConfig
         public final Config<Boolean> followPlayerRotation = new Config<>(true);
@@ -77,7 +80,7 @@ public class MinimapFeature extends Feature {
         public final Config<CustomColor> pointerColor = new Config<>(new CustomColor(1f, 1f, 1f, 1f));
 
         @RegisterConfig
-        public final Config<MapMaskType> maskType = new Config<>(MapMaskType.CIRCLE);
+        public final Config<MapMaskType> maskType = new Config<>(MapMaskType.RECTANGULAR);
 
         @RegisterConfig
         public final Config<MapBorderType> borderType = new Config<>(MapBorderType.WYNN);
@@ -95,12 +98,12 @@ public class MinimapFeature extends Feature {
         public final Config<Boolean> renderRemotePartyPlayers = new Config<>(true);
 
         @RegisterConfig
-        public final Config<Float> remotePlayersHeadScale = new Config<>(0.6f);
+        public final Config<Float> remotePlayersHeadScale = new Config<>(0.4f);
 
         protected MinimapOverlay() {
             super(
                     new OverlayPosition(
-                            5,
+                            5.25f,
                             5,
                             VerticalAlignment.TOP,
                             HorizontalAlignment.LEFT,
@@ -500,27 +503,68 @@ public class MinimapFeature extends Feature {
     }
 
     public static class CoordinateOverlay extends TextOverlay {
+        private static final String TEMPLATE = "{x(my_loc):0} {y(my_loc):0} {z(my_loc):0}";
+        private static final String TEMPLATE_COLORED = "&c{x(my_loc):0} &a{y(my_loc):0} &9{z(my_loc):0}";
+
+        @RegisterConfig
+        public final Config<Boolean> shouldBeColored = new Config<>(false);
+
+        @RegisterConfig
+        public final Config<Boolean> shouldDisplayOriginal = new Config<>(false);
+
         protected CoordinateOverlay() {
             super(
                     new OverlayPosition(
-                            160,
-                            20,
+                            136,
+                            6,
                             VerticalAlignment.TOP,
                             HorizontalAlignment.LEFT,
                             OverlayPosition.AnchorSection.TOP_LEFT),
-                    new OverlaySize(120, 20),
+                    new OverlaySize(130, 20),
+                    HorizontalAlignment.CENTER,
+                    VerticalAlignment.MIDDLE);
+        }
+
+        @Override
+        protected void onConfigUpdate(ConfigHolder configHolder) {
+            Models.CharacterStats.hideCoordinates(!this.shouldDisplayOriginal.get());
+        }
+
+        @Override
+        public String getTemplate() {
+            return this.shouldBeColored.get() ? TEMPLATE_COLORED : TEMPLATE;
+        }
+
+        @Override
+        public String getPreviewTemplate() {
+            return this.shouldBeColored.get() ? TEMPLATE_COLORED : TEMPLATE;
+        }
+    }
+
+    public static class TerritoryOverlay extends TextOverlay {
+        private static final String TEMPLATE = "{territory}";
+
+        protected TerritoryOverlay() {
+            super(
+                    new OverlayPosition(
+                            136 + McUtils.mc().font.lineHeight,
+                            6,
+                            VerticalAlignment.TOP,
+                            HorizontalAlignment.LEFT,
+                            OverlayPosition.AnchorSection.TOP_LEFT),
+                    new OverlaySize(130, 20),
                     HorizontalAlignment.CENTER,
                     VerticalAlignment.MIDDLE);
         }
 
         @Override
         public String getTemplate() {
-            return "{x(my_loc):0} {y(my_loc):0} {z(my_loc):0}";
+            return TEMPLATE;
         }
 
         @Override
         public String getPreviewTemplate() {
-            return "{x(my_loc):0} {y(my_loc):0} {z(my_loc):0}";
+            return TEMPLATE;
         }
     }
 
@@ -552,19 +596,19 @@ public class MinimapFeature extends Feature {
             this.groovesSize = groovesSize;
         }
 
-        public Texture texture() {
+        private Texture texture() {
             return texture;
         }
 
-        public int groovesSize() {
+        private int groovesSize() {
             return groovesSize;
         }
 
-        public BorderInfo square() {
+        private BorderInfo square() {
             return square;
         }
 
-        public BorderInfo circle() {
+        private BorderInfo circle() {
             return circle;
         }
     }

@@ -14,6 +14,7 @@ import com.wynntils.core.text.PartStyle;
 import com.wynntils.core.text.StyledText;
 import com.wynntils.core.text.StyledTextPart;
 import com.wynntils.handlers.chat.event.ChatMessageReceivedEvent;
+import com.wynntils.handlers.chat.type.RecipientType;
 import com.wynntils.utils.colors.ColorChatFormatting;
 import com.wynntils.utils.mc.McUtils;
 import com.wynntils.utils.type.IterationDecision;
@@ -21,6 +22,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import net.minecraft.network.chat.Style;
 import net.minecraft.sounds.SoundEvents;
+import net.minecraftforge.eventbus.api.EventPriority;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 
 @ConfigCategory(Category.CHAT)
@@ -38,6 +40,9 @@ public class ChatMentionFeature extends Feature {
 
     @RegisterConfig
     public final Config<String> aliases = new Config<>("");
+
+    @RegisterConfig
+    public final Config<Boolean> suppressMentionsInInfo = new Config<>(false);
 
     private Pattern mentionPattern;
 
@@ -58,10 +63,11 @@ public class ChatMentionFeature extends Feature {
                 Pattern.CASE_INSENSITIVE);
     }
 
-    @SubscribeEvent
+    @SubscribeEvent(priority = EventPriority.HIGH)
     public void onChat(ChatMessageReceivedEvent e) {
-        StyledText styledText = e.getStyledText();
+        if (e.getRecipientType() == RecipientType.INFO && suppressMentionsInInfo.get()) return;
 
+        StyledText styledText = e.getStyledText();
         StyledText modified = styledText.iterateBackwards((part, changes) -> {
             // We have reached the end of the message content,
             // we don't want to highlight our own name in our own message

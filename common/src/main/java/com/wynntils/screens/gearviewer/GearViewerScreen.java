@@ -7,13 +7,13 @@ package com.wynntils.screens.gearviewer;
 import com.google.gson.JsonObject;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.wynntils.core.components.Models;
+import com.wynntils.core.text.StyledText;
 import com.wynntils.models.gear.type.GearInfo;
 import com.wynntils.models.gear.type.GearInstance;
 import com.wynntils.models.items.FakeItemStack;
 import com.wynntils.models.items.items.game.GearItem;
 import com.wynntils.screens.base.WynntilsContainerScreen;
 import com.wynntils.screens.gearviewer.widgets.ViewPlayerStatsButton;
-import com.wynntils.utils.mc.ComponentUtils;
 import com.wynntils.utils.mc.LoreUtils;
 import com.wynntils.utils.mc.McUtils;
 import com.wynntils.utils.render.RenderUtils;
@@ -80,7 +80,7 @@ public final class GearViewerScreen extends WynntilsContainerScreen<GearViewerMe
         }
 
         // This must specifically NOT be normalized; the ֎ is significant
-        String gearName = ComponentUtils.getUnformatted(itemStack.getHoverName());
+        String gearName = StyledText.fromComponent(itemStack.getHoverName()).getStringWithoutFormatting();
         MutableComponent description = WynnItemMatchers.getNonGearDescription(itemStack, gearName);
         if (description != null) {
             itemStack.setHoverName(description);
@@ -107,7 +107,7 @@ public final class GearViewerScreen extends WynntilsContainerScreen<GearViewerMe
                 topPos + (Texture.GEAR_VIEWER_BACKGROUND.height() / 4),
                 18,
                 20,
-                ComponentUtils.getUnformatted(player.getName()));
+                StyledText.fromComponent(player.getName()).getStringWithoutFormatting());
     }
 
     @Override

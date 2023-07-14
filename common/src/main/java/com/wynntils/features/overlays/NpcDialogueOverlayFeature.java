@@ -29,7 +29,6 @@ import com.wynntils.mc.event.TickEvent;
 import com.wynntils.models.worlds.event.WorldStateEvent;
 import com.wynntils.utils.MathUtils;
 import com.wynntils.utils.colors.CommonColors;
-import com.wynntils.utils.mc.ComponentUtils;
 import com.wynntils.utils.mc.McUtils;
 import com.wynntils.utils.render.FontRenderer;
 import com.wynntils.utils.render.TextRenderSetting;
@@ -58,7 +57,8 @@ import org.lwjgl.glfw.GLFW;
 
 @ConfigCategory(Category.OVERLAYS)
 public class NpcDialogueOverlayFeature extends Feature {
-    private static final Pattern NEW_QUEST_STARTED = Pattern.compile("^§r§6§lNew Quest Started: §r§e§l(.*)§r$");
+    // §6§lNew Quest Started: §e§lEnzan's Brother
+    private static final Pattern NEW_QUEST_STARTED = Pattern.compile("^§6§lNew Quest Started: §e§l(.*)$");
     private static final StyledText PRESS_SNEAK_TO_CONTINUE = StyledText.fromString("§cPress SNEAK to continue");
 
     private final ScheduledExecutorService autoProgressExecutor = Executors.newSingleThreadScheduledExecutor();
@@ -313,9 +313,10 @@ public class NpcDialogueOverlayFeature extends Feature {
                             ChatFormatting.GREEN + "Auto-progress: "
                                     + Math.max(0, Math.round(timeUntilProgress / 1000f))
                                     + " seconds (Press "
-                                    + ComponentUtils.getUnformatted(cancelAutoProgressKeybind
-                                            .getKeyMapping()
-                                            .getTranslatedKeyMessage())
+                                    + StyledText.fromComponent(cancelAutoProgressKeybind
+                                                    .getKeyMapping()
+                                                    .getTranslatedKeyMessage())
+                                            .getStringWithoutFormatting()
                                     + " to cancel)",
                             renderSetting);
                     renderTaskList.add(autoProgressMessage);

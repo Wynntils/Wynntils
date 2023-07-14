@@ -6,6 +6,7 @@ package com.wynntils.features.overlays;
 
 import com.mojang.blaze3d.platform.Window;
 import com.mojang.blaze3d.vertex.PoseStack;
+import com.wynntils.core.components.Managers;
 import com.wynntils.core.components.Models;
 import com.wynntils.core.config.Category;
 import com.wynntils.core.config.Config;
@@ -19,11 +20,13 @@ import com.wynntils.core.features.overlays.OverlayPosition;
 import com.wynntils.core.features.overlays.OverlaySize;
 import com.wynntils.core.features.overlays.annotations.OverlayInfo;
 import com.wynntils.core.text.StyledText;
+import com.wynntils.handlers.scoreboard.event.ScoreboardSegmentAdditionEvent;
 import com.wynntils.mc.event.RenderEvent;
 import com.wynntils.models.players.event.HadesRelationsUpdateEvent;
 import com.wynntils.models.players.event.HadesUserAddedEvent;
 import com.wynntils.models.players.event.PartyEvent;
 import com.wynntils.models.players.hades.objects.HadesUser;
+import com.wynntils.models.players.scoreboard.PartyScoreboardPart;
 import com.wynntils.utils.colors.CommonColors;
 import com.wynntils.utils.mc.SkinUtils;
 import com.wynntils.utils.render.Texture;
@@ -40,10 +43,14 @@ import java.util.List;
 import java.util.stream.Collectors;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraftforge.eventbus.api.EventPriority;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 
 @ConfigCategory(Category.OVERLAYS)
 public class HadesPartyOverlayFeature extends Feature {
+    @RegisterConfig
+    public final Config<Boolean> disablePartyMembersOnScoreboard = new Config<>(false);
+
     @OverlayInfo(renderType = RenderEvent.ElementType.GUI)
     private final PartyMembersOverlay partyMembersOverlay = new PartyMembersOverlay(
             new OverlayPosition(
@@ -53,12 +60,21 @@ public class HadesPartyOverlayFeature extends Feature {
             HorizontalAlignment.LEFT,
             VerticalAlignment.TOP);
 
+    @SubscribeEvent(priority = EventPriority.HIGHEST)
+    public void onScoreboardSegmentChange(ScoreboardSegmentAdditionEvent event) {
+        if (Managers.Overlay.isEnabled(partyMembersOverlay)
+                && disablePartyMembersOnScoreboard.get()
+                && event.getSegment().getScoreboardPart() instanceof PartyScoreboardPart) {
+            event.setCanceled(true);
+        }
+    }
+
     public class PartyMemberOverlay extends Overlay {
         private static final int HEAD_SIZE = 26;
 
         private final HadesUser hadesUser;
 
-        public PartyMemberOverlay(HadesUser hadesUser) {
+        protected PartyMemberOverlay(HadesUser hadesUser) {
             super(
                     new OverlayPosition(
                             0,
@@ -151,22 +167,22 @@ public class HadesPartyOverlayFeature extends Feature {
         protected void onConfigUpdate(ConfigHolder configHolder) {}
     }
 
-    public class PartyMembersOverlay extends ContainerOverlay<PartyMemberOverlay> {
+    protected class PartyMembersOverlay extends ContainerOverlay<PartyMemberOverlay> {
         private static final HadesUser DUMMY_USER_1 =
                 new HadesUser("Player 1", new CappedValue(12432, 13120), new CappedValue(65, 123));
         private static final HadesUser DUMMY_USER_2 =
                 new HadesUser("Player 2", new CappedValue(4561, 9870), new CappedValue(98, 170));
 
         @RegisterConfig
-        public Config<Integer> maxPartyMembers = new Config<>(4);
+        public final Config<Integer> maxPartyMembers = new Config<>(4);
 
         @RegisterConfig
-        public Config<HealthTexture> healthTexture = new Config<>(HealthTexture.A);
+        public final Config<HealthTexture> healthTexture = new Config<>(HealthTexture.A);
 
         @RegisterConfig
-        public Config<ManaTexture> manaTexture = new Config<>(ManaTexture.A);
+        public final Config<ManaTexture> manaTexture = new Config<>(ManaTexture.A);
 
-        public PartyMembersOverlay(
+        protected PartyMembersOverlay(
                 OverlayPosition position,
                 OverlaySize size,
                 GrowDirection growDirection,

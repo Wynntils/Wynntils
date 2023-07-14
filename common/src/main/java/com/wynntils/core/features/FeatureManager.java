@@ -17,6 +17,7 @@ import com.wynntils.core.mod.CrashReportManager;
 import com.wynntils.core.mod.type.CrashType;
 import com.wynntils.features.GammabrightFeature;
 import com.wynntils.features.LootrunFeature;
+import com.wynntils.features.SilencerFeature;
 import com.wynntils.features.TerritoryDefenseMessageFeature;
 import com.wynntils.features.TranslationFeature;
 import com.wynntils.features.chat.ChatCoordinatesFeature;
@@ -32,6 +33,7 @@ import com.wynntils.features.chat.TradeMarketAutoOpenChatFeature;
 import com.wynntils.features.chat.TradeMarketPriceConversionFeature;
 import com.wynntils.features.combat.AbbreviateMobHealthFeature;
 import com.wynntils.features.combat.CombatXpGainMessageFeature;
+import com.wynntils.features.combat.ContentTrackerFeature;
 import com.wynntils.features.combat.FixCastingSpellsFromInventoryFeature;
 import com.wynntils.features.combat.HealthPotionBlockerFeature;
 import com.wynntils.features.combat.HorseMountFeature;
@@ -68,6 +70,7 @@ import com.wynntils.features.inventory.ItemTextOverlayFeature;
 import com.wynntils.features.inventory.ReplaceRecipeBookFeature;
 import com.wynntils.features.inventory.UnidentifiedItemIconFeature;
 import com.wynntils.features.map.BeaconBeamFeature;
+import com.wynntils.features.map.GatheringNodeCooldownFeature;
 import com.wynntils.features.map.GuildMapFeature;
 import com.wynntils.features.map.MapFeature;
 import com.wynntils.features.map.MinimapFeature;
@@ -75,6 +78,7 @@ import com.wynntils.features.map.WorldWaypointDistanceFeature;
 import com.wynntils.features.overlays.ArrowShieldTrackingFeature;
 import com.wynntils.features.overlays.AuraTimerOverlayFeature;
 import com.wynntils.features.overlays.CombatExperienceOverlayFeature;
+import com.wynntils.features.overlays.ContentTrackerOverlayFeature;
 import com.wynntils.features.overlays.CustomBarsOverlayFeature;
 import com.wynntils.features.overlays.GameBarsOverlayFeature;
 import com.wynntils.features.overlays.GameNotificationOverlayFeature;
@@ -85,7 +89,6 @@ import com.wynntils.features.overlays.MobTotemTrackingFeature;
 import com.wynntils.features.overlays.NpcDialogueOverlayFeature;
 import com.wynntils.features.overlays.ObjectivesOverlayFeature;
 import com.wynntils.features.overlays.PowderSpecialBarOverlayFeature;
-import com.wynntils.features.overlays.QuestInfoOverlayFeature;
 import com.wynntils.features.overlays.ShamanMasksOverlayFeature;
 import com.wynntils.features.overlays.ShamanTotemTrackingFeature;
 import com.wynntils.features.overlays.SpellCastRenderFeature;
@@ -122,7 +125,8 @@ import com.wynntils.features.ui.LobbyUptimeFeature;
 import com.wynntils.features.ui.SoulPointTimerFeature;
 import com.wynntils.features.ui.WynncraftButtonFeature;
 import com.wynntils.features.ui.WynncraftPauseScreenFeature;
-import com.wynntils.features.ui.WynntilsQuestBookFeature;
+import com.wynntils.features.ui.WynntilsContentBookFeature;
+import com.wynntils.features.wynntils.BetaWarningFeature;
 import com.wynntils.features.wynntils.ChangelogFeature;
 import com.wynntils.features.wynntils.CommandsFeature;
 import com.wynntils.features.wynntils.FixPacketBugsFeature;
@@ -180,6 +184,7 @@ public final class FeatureManager extends Manager {
         // region combat
         registerFeature(new AbbreviateMobHealthFeature());
         registerFeature(new CombatXpGainMessageFeature());
+        registerFeature(new ContentTrackerFeature());
         registerFeature(new FixCastingSpellsFromInventoryFeature());
         registerFeature(new HealthPotionBlockerFeature());
         registerFeature(new HorseMountFeature());
@@ -223,6 +228,7 @@ public final class FeatureManager extends Manager {
 
         // region map
         registerFeature(new BeaconBeamFeature());
+        registerFeature(new GatheringNodeCooldownFeature());
         registerFeature(new GuildMapFeature());
         registerFeature(new MapFeature());
         registerFeature(new MinimapFeature());
@@ -233,6 +239,7 @@ public final class FeatureManager extends Manager {
         registerFeature(new ArrowShieldTrackingFeature());
         registerFeature(new AuraTimerOverlayFeature());
         registerFeature(new CombatExperienceOverlayFeature());
+        registerFeature(new ContentTrackerOverlayFeature());
         registerFeature(new CustomBarsOverlayFeature());
         registerFeature(new GameBarsOverlayFeature());
         registerFeature(new GameNotificationOverlayFeature());
@@ -243,7 +250,6 @@ public final class FeatureManager extends Manager {
         registerFeature(new NpcDialogueOverlayFeature());
         registerFeature(new ObjectivesOverlayFeature());
         registerFeature(new PowderSpecialBarOverlayFeature());
-        registerFeature(new QuestInfoOverlayFeature());
         registerFeature(new ShamanMasksOverlayFeature());
         registerFeature(new ShamanTotemTrackingFeature());
         registerFeature(new SpellCastRenderFeature());
@@ -292,10 +298,11 @@ public final class FeatureManager extends Manager {
         registerFeature(new SoulPointTimerFeature());
         registerFeature(new WynncraftButtonFeature());
         registerFeature(new WynncraftPauseScreenFeature());
-        registerFeature(new WynntilsQuestBookFeature());
+        registerFeature(new WynntilsContentBookFeature());
         // endregion
 
         // region wynntils
+        registerFeature(new BetaWarningFeature());
         registerFeature(new ChangelogFeature());
         registerFeature(new CommandsFeature());
         registerFeature(new FixPacketBugsFeature());
@@ -305,6 +312,7 @@ public final class FeatureManager extends Manager {
 
         // region uncategorized
         registerFeature(new GammabrightFeature());
+        registerFeature(new SilencerFeature());
         registerFeature(new TerritoryDefenseMessageFeature());
         registerFeature(new TranslationFeature());
         // endregion
@@ -366,6 +374,10 @@ public final class FeatureManager extends Manager {
         assert !feature.getTranslatedName().startsWith("feature.wynntils.")
                 : "Fix i18n for " + feature.getTranslatedName();
 
+        // Assert that the feature description is properly translated
+        assert !feature.getTranslatedDescription().startsWith("feature.wynntils.")
+                : "Fix i18n for " + feature.getTranslatedDescription();
+
         if (!feature.userEnabled.get()) return; // not enabled by user
 
         enableFeature(feature);
@@ -411,7 +423,7 @@ public final class FeatureManager extends Manager {
         Managers.KeyBind.disableFeatureKeyBinds(feature);
     }
 
-    public void crashFeature(Feature feature) {
+    private void crashFeature(Feature feature) {
         if (!FEATURES.containsKey(feature)) {
             throw new IllegalArgumentException("Tried to crash an unregistered feature: " + feature);
         }
@@ -421,7 +433,7 @@ public final class FeatureManager extends Manager {
         FEATURES.put(feature, FeatureState.CRASHED);
     }
 
-    public FeatureState getFeatureState(Feature feature) {
+    private FeatureState getFeatureState(Feature feature) {
         if (!FEATURES.containsKey(feature)) {
             throw new IllegalArgumentException(
                     "Feature " + feature + " is not registered, but was was queried for its state");

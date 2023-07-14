@@ -13,6 +13,7 @@ public class CoordinatesSegment implements ActionBarSegment {
     private static final Pattern COORDINATES_PATTERN = Pattern.compile("(§0 *)§7 ?(-?\\d+)§f ?(.+)§7 ?(-?\\d+)( *)");
 
     private final Runnable onSegmentCleared;
+    private boolean hidden;
 
     public CoordinatesSegment(Runnable onSegmentCleared) {
         this.onSegmentCleared = onSegmentCleared;
@@ -49,6 +50,10 @@ public class CoordinatesSegment implements ActionBarSegment {
 
     @Override
     public boolean isHidden() {
-        return false;
+        return hidden;
+    }
+
+    public void setHidden(boolean hidden) {
+        this.hidden = hidden;
     }
 }

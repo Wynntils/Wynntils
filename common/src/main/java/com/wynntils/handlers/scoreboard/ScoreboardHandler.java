@@ -11,6 +11,7 @@ import com.wynntils.core.text.PartStyle;
 import com.wynntils.core.text.StyledText;
 import com.wynntils.handlers.scoreboard.event.ScoreboardSegmentAdditionEvent;
 import com.wynntils.handlers.scoreboard.type.ScoreboardLine;
+import com.wynntils.handlers.scoreboard.type.SegmentMatcher;
 import com.wynntils.mc.event.ScoreboardSetDisplayObjectiveEvent;
 import com.wynntils.mc.event.ScoreboardSetObjectiveEvent;
 import com.wynntils.mc.event.ScoreboardSetScoreEvent;
@@ -43,12 +44,13 @@ public final class ScoreboardHandler extends Handler {
             .withStyle(ChatFormatting.BOLD)
             .withStyle(ChatFormatting.GOLD);
     private static final int MAX_SCOREBOARD_LINE = 16;
+    private static final ScoreboardPart FALLBACK_SCOREBOARD_PART = new FallbackScoreboardPart();
 
     private String scoreboardNameCache;
-    private Set<ScoreboardLine> reconstructedScoreboard = new TreeSet<>();
-    private Map<ScoreboardPart, ScoreboardSegment> scoreboardSegments = new LinkedHashMap<>();
+    private final Set<ScoreboardLine> reconstructedScoreboard = new TreeSet<>();
+    private final Map<ScoreboardPart, ScoreboardSegment> scoreboardSegments = new LinkedHashMap<>();
 
-    private List<ScoreboardPart> scoreboardParts = new ArrayList<>();
+    private final List<ScoreboardPart> scoreboardParts = new ArrayList<>();
 
     public void addPart(ScoreboardPart scoreboardPart) {
         scoreboardParts.add(scoreboardPart);
@@ -388,6 +390,29 @@ public final class ScoreboardHandler extends Handler {
             }
         }
 
-        return null;
+        return FALLBACK_SCOREBOARD_PART;
+    }
+
+    private static final class FallbackScoreboardPart extends ScoreboardPart {
+        private static final SegmentMatcher FALLBACK_MATCHER = SegmentMatcher.fromPattern(".*");
+
+        @Override
+        public SegmentMatcher getSegmentMatcher() {
+            return FALLBACK_MATCHER;
+        }
+
+        @Override
+        public void onSegmentChange(ScoreboardSegment newValue) {}
+
+        @Override
+        public void onSegmentRemove(ScoreboardSegment segment) {}
+
+        @Override
+        public void reset() {}
+
+        @Override
+        public String toString() {
+            return "FallbackScoreboardPart{}";
+        }
     }
 }

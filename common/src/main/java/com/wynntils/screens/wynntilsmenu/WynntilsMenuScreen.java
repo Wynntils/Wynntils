@@ -21,7 +21,6 @@ import com.wynntils.screens.settings.WynntilsBookSettingsScreen;
 import com.wynntils.screens.wynntilsmenu.widgets.WynntilsMenuButton;
 import com.wynntils.utils.colors.CommonColors;
 import com.wynntils.utils.colors.CustomColor;
-import com.wynntils.utils.mc.ComponentUtils;
 import com.wynntils.utils.mc.McUtils;
 import com.wynntils.utils.render.FontRenderer;
 import com.wynntils.utils.render.RenderUtils;
@@ -214,16 +213,44 @@ public final class WynntilsMenuScreen extends WynntilsMenuScreenBase {
     }
 
     private static void renderPlayerInfo(PoseStack poseStack, int mouseX, int mouseY) {
-        int posX = (int) (Texture.QUEST_BOOK_BACKGROUND.width()) - 85;
+        int posX = Texture.QUEST_BOOK_BACKGROUND.width() - 85;
         int posY = (int) (Texture.QUEST_BOOK_BACKGROUND.height() / 2f) + 25;
         InventoryScreen.renderEntityInInventoryFollowsMouse(
                 poseStack, posX, posY, 30, posX + 45 - mouseX, posY - 40 - mouseY, McUtils.player());
 
+        if (!Models.Guild.getGuildName().isEmpty()) {
+            String rank = Models.Guild.getGuildRank().getGuildDescription();
+
+            FontRenderer.getInstance()
+                    .renderAlignedTextInBox(
+                            poseStack,
+                            StyledText.fromString(rank + " of"),
+                            Texture.QUEST_BOOK_BACKGROUND.width() / 2f,
+                            Texture.QUEST_BOOK_BACKGROUND.width(),
+                            40,
+                            0,
+                            CommonColors.CYAN,
+                            HorizontalAlignment.CENTER,
+                            TextShadow.NONE);
+
+            FontRenderer.getInstance()
+                    .renderAlignedTextInBox(
+                            poseStack,
+                            StyledText.fromString(Models.Guild.getGuildName()),
+                            Texture.QUEST_BOOK_BACKGROUND.width() / 2f,
+                            Texture.QUEST_BOOK_BACKGROUND.width(),
+                            50,
+                            0,
+                            CommonColors.CYAN,
+                            HorizontalAlignment.CENTER,
+                            TextShadow.NONE);
+        }
+
         FontRenderer.getInstance()
                 .renderAlignedTextInBox(
                         poseStack,
-                        StyledText.fromString(
-                                ComponentUtils.getUnformatted(McUtils.player().getDisplayName())),
+                        StyledText.fromComponent(McUtils.player().getDisplayName())
+                                .withoutFormatting(),
                         Texture.QUEST_BOOK_BACKGROUND.width() / 2f,
                         Texture.QUEST_BOOK_BACKGROUND.width(),
                         60,

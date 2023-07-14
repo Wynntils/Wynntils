@@ -25,7 +25,6 @@ import com.wynntils.models.items.WynnItemCache;
 import com.wynntils.screens.base.widgets.SearchWidget;
 import com.wynntils.utils.colors.CommonColors;
 import com.wynntils.utils.colors.CustomColor;
-import com.wynntils.utils.mc.ComponentUtils;
 import com.wynntils.utils.mc.McUtils;
 import com.wynntils.utils.render.RenderUtils;
 import com.wynntils.utils.wynn.ContainerUtils;
@@ -208,8 +207,9 @@ public class ContainerSearchFeature extends Feature {
             if (wynnItemOpt.isEmpty()) return;
             if (playerItems.contains(itemStack)) continue;
 
-            String name =
-                    ComponentUtils.getUnformatted(itemStack.getHoverName()).toLowerCase(Locale.ROOT);
+            String name = StyledText.fromComponent(itemStack.getHoverName())
+                    .getStringWithoutFormatting()
+                    .toLowerCase(Locale.ROOT);
 
             boolean filtered = !search.isEmpty() && name.contains(search) && itemStack.getItem() != Items.AIR;
             wynnItemOpt.get().getCache().store(WynnItemCache.SEARCHED_KEY, filtered);

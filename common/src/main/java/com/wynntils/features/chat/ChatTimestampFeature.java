@@ -44,7 +44,7 @@ public class ChatTimestampFeature extends Feature {
         }
     }
 
-    @SubscribeEvent(priority = EventPriority.HIGH)
+    @SubscribeEvent(priority = EventPriority.LOW)
     public void onChat(ChatMessageReceivedEvent event) {
         if (formatter == null) return;
 

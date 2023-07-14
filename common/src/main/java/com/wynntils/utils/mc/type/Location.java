@@ -70,7 +70,7 @@ public class Location implements Comparable<Location> {
     }
 
     public String toString() {
-        return "[" + (int) Math.round(this.x) + ", " + (int) Math.round(this.y) + ", " + (int) Math.round(this.z) + "]";
+        return "[" + this.x + ", " + this.y + ", " + this.z + "]";
     }
 
     public int x() {

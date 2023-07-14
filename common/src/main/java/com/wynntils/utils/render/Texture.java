@@ -155,6 +155,8 @@ public enum Texture {
     CHALLENGES_ICON("character_selection_ui/challenges.png", 9, 14),
     CHARACTER_BUTTON("character_selection_ui/character_button.png", 104, 64),
     CHARACTER_INFO("character_selection_ui/character_info.png", 123, 38),
+    CHANGE_WORLD_BUTTON("character_selection_ui/change_world_button.png", 26, 52),
+    DISCONNECT_BUTTON("character_selection_ui/disconnect_button.png", 26, 52),
     EDIT_BUTTON("character_selection_ui/edit_button.png", 6, 16),
     LIST_BACKGROUND("character_selection_ui/list_background.png", 118, 254),
     PLAY_BUTTON("character_selection_ui/play_button.png", 79, 76),

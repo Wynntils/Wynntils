@@ -5,23 +5,19 @@
 package com.wynntils.models.discoveries;
 
 import com.wynntils.core.components.Models;
-import com.wynntils.core.text.PartStyle;
 import com.wynntils.core.text.StyledText;
+import com.wynntils.models.content.type.ContentInfo;
+import com.wynntils.models.content.type.ContentStatus;
 import com.wynntils.models.discoveries.profile.DiscoveryProfile;
 import com.wynntils.models.discoveries.type.DiscoveryType;
 import com.wynntils.utils.mc.ComponentUtils;
-import com.wynntils.utils.mc.LoreUtils;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
-import net.minecraft.world.item.ItemStack;
 
 public class DiscoveryInfo {
-    private static final Pattern COMBAT_LEVEL_PATTERN = Pattern.compile("§a✔§r§7 Combat Lv. Min: §r§f(\\d+)");
     private final String name;
     private final DiscoveryType type;
     private final String description;
@@ -39,36 +35,22 @@ public class DiscoveryInfo {
         this.requirements = discoveryProfile.getRequirements();
     }
 
-    private DiscoveryInfo(String name, DiscoveryType type, String description, int minLevel) {
+    private DiscoveryInfo(String name, DiscoveryType type, String description, int minLevel, boolean discovered) {
         this.name = name;
         this.type = type;
         this.description = description;
         this.minLevel = minLevel;
-        this.discovered = true;
+        this.discovered = discovered;
         this.requirements = List.of();
     }
 
-    public static DiscoveryInfo parseFromItemStack(ItemStack itemStack) {
-        List<StyledText> lore = LoreUtils.getLore(itemStack);
-        if (lore.isEmpty()) {
-            return null;
-        }
-
-        Matcher m = lore.get(0).getMatcher(COMBAT_LEVEL_PATTERN);
-        if (!m.matches()) return null;
-        int minLevel = Integer.parseInt(m.group(1));
-
-        StyledText name = StyledText.fromComponent(itemStack.getHoverName()).getNormalized();
-        DiscoveryType type = DiscoveryType.getDiscoveryTypeFromString(name);
-        if (type == null) return null;
-
-        StringBuilder descriptionBuilder = new StringBuilder();
-        for (int i = 2; i < lore.size(); i++) {
-            descriptionBuilder.append(lore.get(i).getString(PartStyle.StyleType.NONE));
-        }
-        String description = descriptionBuilder.toString();
-
-        return new DiscoveryInfo(name.getString(PartStyle.StyleType.NONE), type, description, minLevel);
+    public static DiscoveryInfo fromContentInfo(ContentInfo contentInfo) {
+        return new DiscoveryInfo(
+                contentInfo.name(),
+                DiscoveryType.fromContentType(contentInfo.type()),
+                contentInfo.description().orElse(StyledText.EMPTY).getString(),
+                contentInfo.requirements().level().key(),
+                contentInfo.status() == ContentStatus.COMPLETED);
     }
 
     private List<Component> generateLore() {

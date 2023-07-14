@@ -50,7 +50,7 @@ public abstract class AbstractObjectivesScoreboardPart extends ScoreboardPart {
 
             // If we have started collecting a multiline, keep building it
             if (!multiLine.isEmpty()) {
-                multiLine.append(line);
+                multiLine.append(line.getString());
             }
 
             if (line.getMatcher(OBJECTIVE_PATTERN_MULTILINE_END).matches()) {
@@ -80,7 +80,7 @@ public abstract class AbstractObjectivesScoreboardPart extends ScoreboardPart {
         return parsedObjectives;
     }
 
-    public static boolean isSegmentAllDone(ScoreboardSegment segment) {
+    protected static boolean isSegmentAllDone(ScoreboardSegment segment) {
         return segment.getContent().size() == 1 && segment.getContent().get(0).equals(ALL_DONE);
     }
 

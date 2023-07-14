@@ -11,6 +11,8 @@ import com.wynntils.mc.event.LoadingProgressEvent;
 import com.wynntils.mc.event.LocalSoundEvent;
 import com.wynntils.mc.event.ResourcePackEvent;
 import com.wynntils.mc.event.ScreenOpenedEvent;
+import com.wynntils.mc.event.SubtitleSetTextEvent;
+import com.wynntils.mc.event.TitleSetTextEvent;
 import com.wynntils.models.worlds.event.WorldStateEvent;
 import com.wynntils.screens.characterselector.LoadingScreen;
 import com.wynntils.utils.mc.McUtils;
@@ -55,6 +57,20 @@ public class CustomLoadingScreenFeature extends Feature {
     }
 
     @SubscribeEvent
+    public void onTitleSetText(TitleSetTextEvent e) {
+        if (loadingScreen == null) return;
+
+        loadingScreen.setTitle(e.getComponent().getString());
+    }
+
+    @SubscribeEvent
+    public void onSubtitleSetText(SubtitleSetTextEvent e) {
+        if (loadingScreen == null) return;
+
+        loadingScreen.setSubtitle(e.getComponent().getString());
+    }
+
+    @SubscribeEvent
     public void onPlayerSound(LocalSoundEvent event) {
         if (loadingScreen == null) return;
 
@@ -75,13 +91,7 @@ public class CustomLoadingScreenFeature extends Feature {
 
                 loadingScreen.setMessage("Joining Wynncraft world...");
             }
-            case WORLD -> {
-                if (loadingScreen == null) return;
-
-                loadingScreen = null;
-                McUtils.mc().setScreen(null);
-            }
-            case HUB -> {
+            case WORLD, HUB -> {
                 if (loadingScreen == null) return;
 
                 loadingScreen = null;

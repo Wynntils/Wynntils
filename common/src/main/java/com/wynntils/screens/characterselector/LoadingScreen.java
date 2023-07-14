@@ -23,9 +23,11 @@ public final class LoadingScreen extends WynntilsScreen {
     private static final String LOGO_STRING = "\u2060\u2064\u2061";
     private static final String TEXT_LOGO_STRING = "Wynncraft";
     private static final CustomColor MOSS_GREEN = CustomColor.fromInt(0x527529).withAlpha(255);
-    public static final int SPINNER_SPEED = 1200;
+    private static final int SPINNER_SPEED = 1200;
 
-    private String message;
+    private String message = "";
+    private String title = "";
+    private String subtitle = "";
 
     private LoadingScreen() {
         super(Component.translatable("screens.wynntils.characterSelection.name"));
@@ -37,6 +39,14 @@ public final class LoadingScreen extends WynntilsScreen {
 
     public void setMessage(String message) {
         this.message = message;
+    }
+
+    public void setTitle(String title) {
+        this.title = title;
+    }
+
+    public void setSubtitle(String subtitle) {
+        this.subtitle = subtitle;
     }
 
     @Override
@@ -83,7 +93,29 @@ public final class LoadingScreen extends WynntilsScreen {
                         poseStack,
                         StyledText.fromString(message),
                         centerX,
+                        100,
+                        MOSS_GREEN,
+                        HorizontalAlignment.CENTER,
+                        VerticalAlignment.TOP,
+                        TextShadow.NONE);
+
+        // Draw additional messages (typically about queue position)
+        FontRenderer.getInstance()
+                .renderText(
+                        poseStack,
+                        StyledText.fromString(title),
+                        centerX,
                         120,
+                        MOSS_GREEN,
+                        HorizontalAlignment.CENTER,
+                        VerticalAlignment.TOP,
+                        TextShadow.NONE);
+        FontRenderer.getInstance()
+                .renderText(
+                        poseStack,
+                        StyledText.fromString(subtitle),
+                        centerX,
+                        130,
                         MOSS_GREEN,
                         HorizontalAlignment.CENTER,
                         VerticalAlignment.TOP,

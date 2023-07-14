@@ -10,16 +10,14 @@ import com.wynntils.core.config.Config;
 import com.wynntils.core.config.ConfigCategory;
 import com.wynntils.core.config.RegisterConfig;
 import com.wynntils.core.features.Feature;
+import com.wynntils.core.text.PartStyle;
 import com.wynntils.core.text.StyledText;
 import com.wynntils.handlers.chat.event.ChatMessageReceivedEvent;
 import com.wynntils.mc.event.ContainerSetSlotEvent;
-import com.wynntils.mc.event.ScreenOpenedEvent;
 import com.wynntils.screens.base.widgets.WynntilsButton;
-import com.wynntils.utils.mc.ComponentUtils;
 import com.wynntils.utils.mc.McUtils;
 import com.wynntils.utils.wynn.ContainerUtils;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.function.Supplier;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import net.minecraft.client.gui.screens.inventory.ContainerScreen;
@@ -31,133 +29,155 @@ import net.minecraftforge.eventbus.api.SubscribeEvent;
 
 @ConfigCategory(Category.OVERLAYS)
 public class TradeMarketBulkSellFeature extends Feature {
-
-    @RegisterConfig
-    public Config<Integer> bulkSell1Amount = new Config<>(64);
-
-    @RegisterConfig
-    public Config<Integer> bulkSell2Amount = new Config<>(0);
-
-    @RegisterConfig
-    public Config<Integer> bulkSell3Amount = new Config<>(0);
-
     private static final Pattern ITEM_NAME_PATTERN =
-            Pattern.compile("§6Selling §f(\\d+|\\d+,\\d+) ([^À]*)À*§6 for §f[\\d,]*§7² Each");
+            Pattern.compile("§6Selling §f(\\d+|\\d+,\\d+) ([^À]*)À*(:?§6)? for §f[\\d,]*§7² Each");
+    private static final String CLICK_TO_SELL_ITEM = "§6Click an Item to Sell";
+    private static final String CLICK_TO_SET_AMOUNT = "Click to Set Amount";
     private static final String SELL_DIALOGUE_TITLE = "What would you like to sell?";
+    private static final String TYPE_SELL_AMOUNT = "Type the amount you wish to sell or type 'cancel' to cancel:";
+
     private static final int SELLABLE_ITEM_SLOT = 10;
     private static final int AMOUNT_ITEM_SLOT = 11;
-    private static final List<SellButton> sellButtons = new ArrayList<>();
-    private static final int BUTTON_WIDTH = 60;
 
-    private boolean buttonsAdded = false;
-    private boolean shouldSend = false;
+    @RegisterConfig
+    public final Config<Integer> bulkSell1Amount = new Config<>(64);
+
+    @RegisterConfig
+    public final Config<Integer> bulkSell2Amount = new Config<>(0);
+
+    @RegisterConfig
+    public final Config<Integer> bulkSell3Amount = new Config<>(0);
+
+    private boolean sendAmountMessage = false;
     private int amountToSend = 0;
 
     @SubscribeEvent
-    public void onScreenChanged(ScreenOpenedEvent e) {
-        if (!(e.getScreen() instanceof ContainerScreen cs)) return;
-        if (!ComponentUtils.getUnformatted(cs.getTitle()).equals(SELL_DIALOGUE_TITLE)) return;
-        buttonsAdded = false;
-    }
-
-    @SubscribeEvent
     public void onSellDialogueUpdated(ContainerSetSlotEvent.Pre e) {
-        if (!(McUtils.mc().screen instanceof ContainerScreen cs)) return;
-        if (!ComponentUtils.getUnformatted(cs.getTitle()).equals(SELL_DIALOGUE_TITLE)) return;
-        if (!ComponentUtils.getUnformatted(
-                        cs.getMenu().getSlot(AMOUNT_ITEM_SLOT).getItem().getHoverName())
-                .equals("Click to Set Amount")) return;
-        if (!buttonsAdded) {
-            addSellButtons(cs);
-            buttonsAdded = true;
-        }
+        if (!(McUtils.mc().screen instanceof ContainerScreen containerScreen)) return;
 
-        String itemName = getItemName(cs);
-        if (itemName == null) {
-            sellButtons.forEach(b -> b.active = false);
-            return;
-        }
+        StyledText title = StyledText.fromComponent(containerScreen.getTitle());
+        if (!title.equalsString(SELL_DIALOGUE_TITLE, PartStyle.StyleType.NONE)) return;
 
-        sellButtons.get(0).setAmount(getAmount(itemName));
-        sellButtons.forEach(b -> b.active = true);
+        StyledText amountItemName = StyledText.fromComponent(
+                containerScreen.getMenu().getSlot(AMOUNT_ITEM_SLOT).getItem().getHoverName());
+        if (!amountItemName.equalsString(CLICK_TO_SET_AMOUNT, PartStyle.StyleType.NONE)) return;
+
+        String soldItemName = getSoldItemName(containerScreen);
+
+        removeSellButtons(containerScreen);
+
+        if (soldItemName == null) return;
+
+        addSellButtons(containerScreen, soldItemName);
     }
 
     @SubscribeEvent
     public void onChatMessage(ChatMessageReceivedEvent e) {
-        if (!shouldSend) return;
-        if (!ComponentUtils.getUnformatted(e.getMessage())
-                .contains("Type the amount you wish to sell or type 'cancel' to cancel:")) return;
+        if (!sendAmountMessage) return;
+        if (!e.getOriginalStyledText().equalsString(TYPE_SELL_AMOUNT, PartStyle.StyleType.NONE)) return;
 
         WynntilsMod.info("Trying to bulk sell " + amountToSend + " items");
+
         McUtils.mc().getConnection().sendChat(String.valueOf(amountToSend));
-        shouldSend = false;
+
+        sendAmountMessage = false;
     }
 
-    private String getItemName(MenuAccess<ChestMenu> cs) {
-        ItemStack is = cs.getMenu().getSlot(SELLABLE_ITEM_SLOT).getItem();
-        if (is == ItemStack.EMPTY) return null;
-        if (is.getHoverName().toString().contains("Click an Item to sell")) return null;
-        Matcher m = StyledText.fromComponent(is.getHoverName()).getMatcher(ITEM_NAME_PATTERN);
+    private String getSoldItemName(MenuAccess<ChestMenu> cs) {
+        ItemStack itemStack = cs.getMenu().getSlot(SELLABLE_ITEM_SLOT).getItem();
+        if (itemStack == ItemStack.EMPTY) return null;
 
+        StyledText itemStackName = StyledText.fromComponent(itemStack.getHoverName());
+        if (itemStackName.getString().equals(CLICK_TO_SELL_ITEM)) return null;
+
+        Matcher m = itemStackName.getMatcher(ITEM_NAME_PATTERN);
         if (!m.matches()) return null;
+
         return m.group(2);
     }
 
-    private int getAmount(String name) {
+    private int getAmountInInventory(String name) {
         int amount = 0;
-        for (ItemStack is : McUtils.inventory().items) {
-            if (is.getHoverName().getString().trim().equals(name)) {
-                amount += is.getCount();
+
+        for (ItemStack itemStack : McUtils.inventory().items) {
+            StyledText itemName = StyledText.fromComponent(itemStack.getHoverName())
+                    .getNormalized()
+                    .trim();
+            if (itemName.getString().endsWith(name)) {
+                amount += itemStack.getCount();
             }
         }
+
         return amount;
     }
 
-    private void addSellButtons(ContainerScreen cs) {
-        sellButtons.clear();
-        sellButtons.add(new SellButton(cs.leftPos - BUTTON_WIDTH, cs.topPos, 0, true));
+    private void addSellButtons(ContainerScreen containerScreen, String soldItemName) {
+        containerScreen.addRenderableWidget(new SellButton(
+                containerScreen.leftPos - SellButton.BUTTON_WIDTH,
+                containerScreen.topPos,
+                () -> getAmountInInventory(soldItemName),
+                true));
+
         if (bulkSell1Amount.get() > 0) {
-            sellButtons.add(new SellButton(cs.leftPos - BUTTON_WIDTH, cs.topPos + 21, bulkSell1Amount.get(), false));
+            containerScreen.addRenderableWidget(new SellButton(
+                    containerScreen.leftPos - SellButton.BUTTON_WIDTH,
+                    containerScreen.topPos + 21,
+                    () -> bulkSell1Amount.get(),
+                    false));
         }
         if (bulkSell2Amount.get() > 0) {
-            sellButtons.add(new SellButton(cs.leftPos - BUTTON_WIDTH, cs.topPos + 42, bulkSell2Amount.get(), false));
+            containerScreen.addRenderableWidget(new SellButton(
+                    containerScreen.leftPos - SellButton.BUTTON_WIDTH,
+                    containerScreen.topPos + 42,
+                    () -> bulkSell2Amount.get(),
+                    false));
         }
         if (bulkSell3Amount.get() > 0) {
-            sellButtons.add(new SellButton(cs.leftPos - BUTTON_WIDTH, cs.topPos + 63, bulkSell3Amount.get(), false));
+            containerScreen.addRenderableWidget(new SellButton(
+                    containerScreen.leftPos - SellButton.BUTTON_WIDTH,
+                    containerScreen.topPos + 63,
+                    () -> bulkSell3Amount.get(),
+                    false));
         }
-        sellButtons.forEach(b -> b.active = false);
-        sellButtons.forEach(cs::addRenderableWidget);
+    }
+
+    private void removeSellButtons(ContainerScreen containerScreen) {
+        containerScreen.children.stream()
+                .filter(child -> child instanceof SellButton)
+                .toList()
+                .forEach(containerScreen::removeWidget);
     }
 
     private final class SellButton extends WynntilsButton {
+        private static final int BUTTON_WIDTH = 60;
+        private static final int BUTTON_HEIGHT = 20;
 
-        private int amount;
+        private Supplier<Integer> amountSupplier;
 
-        private SellButton(int x, int y, int amount, boolean isAll) {
+        private SellButton(int x, int y, Supplier<Integer> amountSupplier, boolean isAll) {
             super(
                     x,
                     y,
                     BUTTON_WIDTH,
-                    20,
+                    BUTTON_HEIGHT,
                     isAll
                             ? Component.translatable("feature.wynntils.tradeMarketBulkSell.sellAll")
-                            : Component.translatable("feature.wynntils.tradeMarketBulkSell.sell", amount));
-            this.amount = amount;
+                            : Component.translatable(
+                                    "feature.wynntils.tradeMarketBulkSell.sell", amountSupplier.get()));
+
+            this.amountSupplier = amountSupplier;
         }
 
         @Override
         public void onPress() {
-            shouldSend = true;
-            amountToSend = amount;
+            amountToSend = amountSupplier.get();
+            sendAmountMessage = true;
+
             ContainerUtils.clickOnSlot(
                     AMOUNT_ITEM_SLOT,
                     McUtils.containerMenu().containerId,
                     0,
                     McUtils.containerMenu().getItems());
-        }
-
-        private void setAmount(int amount) {
-            this.amount = amount;
         }
     }
 }

@@ -99,9 +99,9 @@ public class TimedSet<T> implements Iterable<T> {
     }
 
     public final class TimedEntry {
-        final T entry;
-        final long creation;
-        final long duration;
+        private final T entry;
+        private final long creation;
+        private final long duration;
 
         private TimedEntry(T entry, long creation, long duration) {
             this.entry = entry;

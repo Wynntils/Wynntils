@@ -2,9 +2,8 @@
  * Copyright © Wynntils 2022.
  * This file is released under AGPLv3. See LICENSE for full license details.
  */
-package com.wynntils.models.gathering;
+package com.wynntils.models.profession.type;
 
-import com.wynntils.models.profession.type.ProfessionType;
 import java.util.Locale;
 
 public record ToolProfile(ToolProfile.ToolType toolType, int tier) {
@@ -36,7 +35,7 @@ public record ToolProfile(ToolProfile.ToolType toolType, int tier) {
             this.professionType = professionType;
         }
 
-        public static ToolType fromString(String str) {
+        protected static ToolType fromString(String str) {
             try {
                 return ToolType.valueOf(str.toUpperCase(Locale.ROOT));
             } catch (IllegalArgumentException e) {

@@ -36,9 +36,9 @@ public class TextInputBoxWidget extends AbstractWidget {
     private final Consumer<String> onUpdateConsumer;
     protected String textBoxInput = "";
     protected int cursorPosition = 0;
-    protected int highlightPosition = 0;
+    private int highlightPosition = 0;
     private long lastCursorSwitch = 0;
-    protected boolean renderCursor = true;
+    private boolean renderCursor = true;
     private CustomColor renderColor = CommonColors.WHITE;
 
     protected boolean isDragging = false;
@@ -190,7 +190,7 @@ public class TextInputBoxWidget extends AbstractWidget {
      * Determines the text to render based on cursor position and maxTextWidth
      * @return The text to render, and the starting position of the text within the entire text
      */
-    protected Pair<String, Integer> getRenderedText(float maxTextWidth) {
+    private Pair<String, Integer> getRenderedText(float maxTextWidth) {
         Font font = FontRenderer.getInstance().getFont();
 
         if (font.width(textBoxInput) < maxTextWidth) {
@@ -228,7 +228,7 @@ public class TextInputBoxWidget extends AbstractWidget {
      * This interval is zero indexed.
      * This does NOT represent the *entire* highlighted portion, just the VISIBLE part!
      */
-    protected Pair<Integer, Integer> getRenderedHighlighedInterval(String renderedText) {
+    private Pair<Integer, Integer> getRenderedHighlighedInterval(String renderedText) {
         if (renderedText.isEmpty()) {
             return Pair.of(0, 0);
         }
@@ -532,7 +532,7 @@ public class TextInputBoxWidget extends AbstractWidget {
      * Accepts values outside the bounds of the text box, it will clamp them.
      * @param cursorPosition
      */
-    public void setCursorPosition(int cursorPosition) {
+    protected void setCursorPosition(int cursorPosition) {
         this.cursorPosition = MathUtils.clamp(cursorPosition, 0, textBoxInput.length());
     }
 
@@ -541,7 +541,7 @@ public class TextInputBoxWidget extends AbstractWidget {
      * This means there will be no highlight.
      * Accepts values outside the bounds of the text box, it will clamp them.
      */
-    public void setCursorAndHighlightPositions(int pos) {
+    protected void setCursorAndHighlightPositions(int pos) {
         this.cursorPosition = MathUtils.clamp(pos, 0, textBoxInput.length());
         this.highlightPosition = this.cursorPosition;
     }
@@ -550,7 +550,7 @@ public class TextInputBoxWidget extends AbstractWidget {
         return textBoxInput;
     }
 
-    public String getHighlightedText() {
+    private String getHighlightedText() {
         int startIndex = Math.min(this.cursorPosition, this.highlightPosition);
         int endIndex = Math.max(this.cursorPosition, this.highlightPosition);
 
@@ -561,16 +561,16 @@ public class TextInputBoxWidget extends AbstractWidget {
         this.renderColor = renderColor;
     }
 
-    public boolean hasHighlighted() {
+    private boolean hasHighlighted() {
         return this.cursorPosition != this.highlightPosition;
     }
 
-    public void setHighlightPosition(int position) {
+    protected void setHighlightPosition(int position) {
         int length = this.textBoxInput.length();
         this.highlightPosition = Mth.clamp(position, 0, length);
     }
 
-    public void replaceHighlighted(String text) {
+    private void replaceHighlighted(String text) {
         int startIndex = Math.min(this.cursorPosition, this.highlightPosition);
         int endIndex = Math.max(this.cursorPosition, this.highlightPosition);
 

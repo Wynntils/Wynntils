@@ -26,7 +26,7 @@ public class GammabrightFeature extends Feature {
     @RegisterConfig
     public final Config<Boolean> gammabrightEnabled = new Config<>(false);
 
-    private Storage<Double> lastGamma = new Storage<>(1.0);
+    private final Storage<Double> lastGamma = new Storage<>(1.0);
 
     @RegisterKeyBind
     private final KeyBind gammabrightKeyBind =

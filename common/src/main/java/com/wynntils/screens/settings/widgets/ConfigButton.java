@@ -39,27 +39,7 @@ public class ConfigButton extends WynntilsButton {
         super(x, y, width, height, Component.literal(configHolder.getJsonName()));
         this.settingsScreen = settingsScreen;
         this.configHolder = configHolder;
-        this.resetButton =
-                new GeneralSettingsButton(
-                        this.getX() + this.width - 40,
-                        this.getY() + 13,
-                        35,
-                        12,
-                        Component.translatable("screens.wynntils.settingsScreen.reset.name"),
-                        () -> {
-                            if (!configHolder.valueChanged()) return;
-
-                            configHolder.reset();
-                            this.configOptionElement = getWidgetFromConfigHolder(configHolder);
-                        },
-                        List.of(Component.translatable("screens.wynntils.settingsScreen.reset.description"))) {
-                    @Override
-                    protected CustomColor getTextColor(boolean isHovered) {
-                        if (!configHolder.valueChanged()) return CommonColors.GRAY;
-
-                        return super.getTextColor(isHovered);
-                    }
-                };
+        this.resetButton = new ResetButton(configHolder);
         this.configOptionElement = getWidgetFromConfigHolder(configHolder);
     }
 
@@ -67,11 +47,12 @@ public class ConfigButton extends WynntilsButton {
     public void renderWidget(PoseStack poseStack, int mouseX, int mouseY, float partialTick) {
         resetButton.render(poseStack, mouseX, mouseY, partialTick);
 
-        StyledText displayName = StyledText.fromString(configHolder.getDisplayName());
+        StyledText displayName;
 
         if (settingsScreen.configOptionContains(configHolder)) {
-            displayName = StyledText.fromString(
-                    ChatFormatting.UNDERLINE + displayName.getInternalCodedStringRepresentation());
+            displayName = StyledText.fromString(ChatFormatting.UNDERLINE + configHolder.getDisplayName());
+        } else {
+            displayName = StyledText.fromString(configHolder.getDisplayName());
         }
 
         poseStack.pushPose();
@@ -172,6 +153,36 @@ public class ConfigButton extends WynntilsButton {
             return new CustomColorConfigOptionElement(configOption, settingsScreen);
         } else {
             return new TextConfigOptionElement(configOption, settingsScreen);
+        }
+    }
+
+    private void onResetClicked(ConfigHolder configHolder) {
+        if (!configHolder.valueChanged()) return;
+
+        configHolder.reset();
+        this.configOptionElement = this.getWidgetFromConfigHolder(configHolder);
+    }
+
+    private class ResetButton extends GeneralSettingsButton {
+        private final ConfigHolder configHolder;
+
+        public ResetButton(ConfigHolder configHolder) {
+            super(
+                    ConfigButton.this.getX() + ConfigButton.this.width - 40,
+                    ConfigButton.this.getY() + 13,
+                    35,
+                    12,
+                    Component.translatable("screens.wynntils.settingsScreen.reset.name"),
+                    () -> ConfigButton.this.onResetClicked(configHolder),
+                    List.of(Component.translatable("screens.wynntils.settingsScreen.reset.description")));
+            this.configHolder = configHolder;
+        }
+
+        @Override
+        protected CustomColor getTextColor(boolean isHovered) {
+            if (!configHolder.valueChanged()) return CommonColors.GRAY;
+
+            return super.getTextColor(isHovered);
         }
     }
 }

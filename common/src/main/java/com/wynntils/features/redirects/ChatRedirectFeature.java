@@ -330,7 +330,7 @@ public class ChatRedirectFeature extends Feature {
 
     private class HorseScaredRedirector extends SimpleRedirector {
         private static final Pattern FOREGROUND_PATTERN =
-                Pattern.compile("§dYour horse is scared to come out right now, too many mobs are nearby.");
+                Pattern.compile("§dYour horse is scared to come out right now, too many mobs are nearby\\.");
 
         @Override
         protected Pattern getForegroundPattern() {
@@ -349,7 +349,7 @@ public class ChatRedirectFeature extends Feature {
     }
 
     private class HorseSpawnFailRedirector extends SimpleRedirector {
-        private static final Pattern FOREGROUND_PATTERN = Pattern.compile("§4There is no room for a horse.");
+        private static final Pattern FOREGROUND_PATTERN = Pattern.compile("§4There is no room for a horse\\.");
 
         @Override
         protected Pattern getForegroundPattern() {
@@ -468,9 +468,8 @@ public class ChatRedirectFeature extends Feature {
 
             String emeraldString = matcher.group(2);
 
-            return StyledText.fromString(String.format(
-                    "§dSold §7%s §dfor §a%s§d.",
-                    ingredientString.getInternalCodedStringRepresentation(), emeraldString));
+            return StyledText.fromString(
+                    String.format("§dSold §7%s §dfor §a%s§d.", ingredientString.getString(), emeraldString));
         }
     }
 

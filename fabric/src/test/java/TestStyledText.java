@@ -484,4 +484,27 @@ public class TestStyledText {
                 replacedText.getString(PartStyle.StyleType.DEFAULT),
                 "StyledText.replaceAll() returned an unexpected value.");
     }
+
+    @Test
+    public void styledText_withoutFormattingShouldReplaceStripFormatting() {
+        final Component component = Component.literal("a")
+                .withStyle(ChatFormatting.BOLD)
+                .append(Component.literal("bb"))
+                .append(Component.literal("ccc").withStyle(ChatFormatting.RED).withStyle(ChatFormatting.ITALIC))
+                .append(Component.literal("dddd").withStyle(ChatFormatting.UNDERLINE));
+
+        StyledText styledText = StyledText.fromComponent(component).withoutFormatting();
+
+        final String result = "abbcccdddd";
+
+        Assertions.assertEquals(
+                result,
+                styledText.getString(PartStyle.StyleType.DEFAULT),
+                "StyledText.replaceAll() returned an unexpected value.");
+
+        Assertions.assertEquals(
+                result,
+                styledText.getString(PartStyle.StyleType.NONE),
+                "StyledText.replaceAll() returned an unexpected value.");
+    }
 }

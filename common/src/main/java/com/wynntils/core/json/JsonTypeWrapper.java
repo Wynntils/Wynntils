@@ -14,7 +14,7 @@ import java.util.Set;
 import java.util.TreeMap;
 import java.util.TreeSet;
 
-public class JsonTypeWrapper implements ParameterizedType {
+public final class JsonTypeWrapper implements ParameterizedType {
     private final ParameterizedType type;
 
     public static Type wrap(Type type) {

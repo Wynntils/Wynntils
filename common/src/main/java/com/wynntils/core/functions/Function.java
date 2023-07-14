@@ -12,8 +12,8 @@ import java.util.List;
 import net.minecraft.client.resources.language.I18n;
 
 public abstract class Function<T> implements Translatable {
-    protected final String name;
-    protected final String translationName;
+    private final String name;
+    private final String translationName;
 
     protected Function() {
         String name = this.getClass().getSimpleName().replace("Function", "");

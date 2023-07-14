@@ -23,7 +23,7 @@ import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 
 public abstract class ContainerOverlay<T extends Overlay> extends Overlay {
-    public static final int DEFAULT_SPACING = 3;
+    private static final int DEFAULT_SPACING = 3;
 
     @RegisterConfig("overlay.wynntils.overlay.growDirection")
     protected final Config<GrowDirection> growDirection = new Config<>(GrowDirection.DOWN);
@@ -34,7 +34,7 @@ public abstract class ContainerOverlay<T extends Overlay> extends Overlay {
     private final List<T> children = new ArrayList<>();
     private final Map<T, OverlaySize> inherentSize = new HashMap<>();
 
-    protected ContainerOverlay(
+    private ContainerOverlay(
             OverlayPosition position,
             OverlaySize size,
             GrowDirection growDirection,
@@ -159,7 +159,7 @@ public abstract class ContainerOverlay<T extends Overlay> extends Overlay {
             this.horizontalMultiplier = horizontalMultiplier;
         }
 
-        public void updateSize(Overlay overlay, OverlaySize containerSize, OverlaySize inherentSize) {
+        protected void updateSize(Overlay overlay, OverlaySize containerSize, OverlaySize inherentSize) {
             OverlaySize size = overlay.getSize();
 
             if (verticalMultiplier != 0) {
@@ -172,7 +172,7 @@ public abstract class ContainerOverlay<T extends Overlay> extends Overlay {
             }
         }
 
-        public OverlayPosition getChildPosition(
+        private OverlayPosition getChildPosition(
                 float containerX,
                 float containerY,
                 OverlaySize containerSize,

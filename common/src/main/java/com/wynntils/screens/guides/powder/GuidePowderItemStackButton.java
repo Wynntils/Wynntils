@@ -11,7 +11,6 @@ import com.wynntils.core.text.StyledText;
 import com.wynntils.screens.base.widgets.WynntilsButton;
 import com.wynntils.utils.MathUtils;
 import com.wynntils.utils.colors.CustomColor;
-import com.wynntils.utils.mc.ComponentUtils;
 import com.wynntils.utils.mc.KeyboardUtils;
 import com.wynntils.utils.render.FontRenderer;
 import com.wynntils.utils.render.RenderUtils;
@@ -23,13 +22,11 @@ import org.lwjgl.glfw.GLFW;
 
 public class GuidePowderItemStackButton extends WynntilsButton {
     private final GuidePowderItemStack itemStack;
-    private final WynntilsPowderGuideScreen screen;
 
     public GuidePowderItemStackButton(
             int x, int y, int width, int height, GuidePowderItemStack itemStack, WynntilsPowderGuideScreen screen) {
         super(x, y, width, height, Component.literal("Guide PowderItemStack Button"));
         this.itemStack = itemStack;
-        this.screen = screen;
     }
 
     @Override
@@ -85,7 +82,8 @@ public class GuidePowderItemStackButton extends WynntilsButton {
             return false;
         }
 
-        String unformattedName = ComponentUtils.getUnformatted(itemStack.getHoverName());
+        String unformattedName =
+                StyledText.fromComponent(itemStack.getHoverName()).getStringWithoutFormatting();
         if (button == GLFW.GLFW_MOUSE_BUTTON_LEFT) {
             Models.Favorites.toggleFavorite(unformattedName);
             Managers.Config.saveConfig();

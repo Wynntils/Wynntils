@@ -36,26 +36,28 @@ import org.apache.commons.lang3.Validate;
 
 @ConfigCategory(Category.UI)
 public class WynncraftButtonFeature extends Feature {
-    private static final String GAME_SERVER = "play.wynncraft.com";
-    private static final String LOBBY_SERVER = "lobby.wynncraft.com";
+    private static final String WYNNCRAFT_DOMAIN = ".wynncraft.com";
     private boolean firstTitleScreenInit = true;
 
     @RegisterConfig
-    public final Config<Boolean> connectToLobby = new Config<>(false);
+    public final Config<ServerType> serverType = new Config<>(ServerType.GAME);
 
     @RegisterConfig
     public final Config<Boolean> autoConnect = new Config<>(false);
 
+    @RegisterConfig
+    public final Config<Boolean> loadResourcePack = new Config<>(true);
+
     @SubscribeEvent
-    public void onTitleScreenInit(TitleScreenInitEvent.Post e) {
-        TitleScreen titleScreen = e.getTitleScreen();
+    public void onTitleScreenInit(TitleScreenInitEvent.Post event) {
+        TitleScreen titleScreen = event.getTitleScreen();
 
         addWynncraftButton(titleScreen);
     }
 
     @SubscribeEvent
-    public void onTitleScreenInit(ScreenInitEvent e) {
-        if (!(e.getScreen() instanceof TitleScreen titleScreen)) return;
+    public void onScreenInit(ScreenInitEvent event) {
+        if (!(event.getScreen() instanceof TitleScreen titleScreen)) return;
 
         if (firstTitleScreenInit && autoConnect.get()) {
             firstTitleScreenInit = false;
@@ -68,6 +70,8 @@ public class WynncraftButtonFeature extends Feature {
     }
 
     private void addWynncraftButton(TitleScreen titleScreen) {
+        if (titleScreen.children.stream().anyMatch(child -> child instanceof WynncraftButton)) return;
+
         ServerData wynncraftServer = getWynncraftServer();
 
         WynncraftButton wynncraftButton = new WynncraftButton(
@@ -77,8 +81,9 @@ public class WynncraftButtonFeature extends Feature {
 
     private ServerData getWynncraftServer() {
         ServerData wynncraftServer =
-                new ServerData("Wynncraft", connectToLobby.get() ? LOBBY_SERVER : GAME_SERVER, false);
-        wynncraftServer.setResourcePackStatus(ServerData.ServerPackStatus.ENABLED);
+                new ServerData("Wynncraft", serverType.get().serverAddressPrefix + WYNNCRAFT_DOMAIN, false);
+        wynncraftServer.setResourcePackStatus(
+                loadResourcePack.get() ? ServerData.ServerPackStatus.ENABLED : ServerData.ServerPackStatus.DISABLED);
 
         return wynncraftServer;
     }
@@ -94,7 +99,7 @@ public class WynncraftButtonFeature extends Feature {
 
         // TODO tooltip
         WynncraftButton(Screen backScreen, ServerData serverData, int x, int y) {
-            super(x, y, 20, 20, Component.translatable(""), WynncraftButton::onPress, Button.DEFAULT_NARRATION);
+            super(x, y, 20, 20, Component.literal(""), WynncraftButton::onPress, Button.DEFAULT_NARRATION);
             this.serverData = serverData;
 
             this.serverIcon = new ServerIcon(serverData);
@@ -216,6 +221,19 @@ public class WynncraftButtonFeature extends Feature {
                 WynntilsMod.error("Unable to read server image: " + server.name, e);
                 serverIconLocation = FALLBACK;
             }
+        }
+    }
+
+    private enum ServerType {
+        LOBBY("lobby"),
+        GAME("play"),
+        MEDIA("media"),
+        BETA("beta");
+
+        private final String serverAddressPrefix;
+
+        ServerType(String serverAddressPrefix) {
+            this.serverAddressPrefix = serverAddressPrefix;
         }
     }
 }

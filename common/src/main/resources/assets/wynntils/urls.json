@@ -1,6 +1,6 @@
 [
   {
-    "version": 8
+    "version": 9
   },
   {
     "id": "apiAthenaAuthPublicKey",
@@ -25,8 +25,11 @@
     "url": "https://athena.wynntils.com/crash/report"
   },
   {
+    "arguments": [
+      "stream"
+    ],
     "id": "apiAthenaUpdateCheck",
-    "url": "https://athena.wynntils.com/version/latest/ce"
+    "url": "https://athena.wynntils.com/version/latest/%{stream}"
   },
   {
     "arguments": [
@@ -96,7 +99,7 @@
   },
   {
     "id": "dataStaticGear",
-    "md5": "08ad22a9fcda25e82673d1b9ec8cda6b",
+    "md5": "af36dfc10779d29768d710197485020a",
     "url": "https://raw.githubusercontent.com/Wynntils/WynntilsWebsite-API/master/gear.json"
   },
   {
@@ -106,7 +109,7 @@
   },
   {
     "id": "dataStaticIngredients",
-    "md5": "a7aa8bcf7b682f31d343eb47fc4ec821",
+    "md5": "e80aa5df4b6ed36f86d68d970df5f1fd",
     "url": "https://raw.githubusercontent.com/Wynntils/WynntilsWebsite-API/master/ingredients.json"
   },
   {
@@ -126,7 +129,7 @@
   },
   {
     "id": "dataStaticMaps",
-    "md5": "ce8fa555b856dce76b285a606c422aad",
+    "md5": "9b3e41ff749b39630ee5c042d90991a8",
     "url": "https://raw.githubusercontent.com/Wynntils/WynntilsWebsite-API/master/maps/maps.json"
   },
   {

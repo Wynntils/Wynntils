@@ -18,8 +18,6 @@ import net.minecraft.network.chat.Component;
 public class SeaskipperTravelButton extends WynntilsButton {
     private final SeaskipperDepartureBoardScreen departureBoardScreen;
 
-    private List<Component> tooltip;
-
     public SeaskipperTravelButton(
             int x, int y, int width, int height, SeaskipperDepartureBoardScreen departureBoardScreen) {
         super(x, y, width, height, Component.literal("Travel Button"));
@@ -49,8 +47,9 @@ public class SeaskipperTravelButton extends WynntilsButton {
                 Texture.TRAVEL_BUTTON.height());
 
         if (isHovered && departureBoardScreen.hasSelectedDestination()) {
-            tooltip = List.of(Component.translatable("screens.wynntils.seaskipperMapGui.travelToDestination")
-                    .withStyle(ChatFormatting.GRAY));
+            List<Component> tooltip =
+                    List.of(Component.translatable("screens.wynntils.seaskipperMapGui.travelToDestination")
+                            .withStyle(ChatFormatting.GRAY));
 
             RenderUtils.drawTooltipAt(
                     poseStack,

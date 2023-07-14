@@ -54,7 +54,7 @@ public class PoiModel extends Model {
     private final Set<CombatPoi> combatPois = new HashSet<>();
     private final Map<CustomPoiProvider, List<CustomPoi>> providedCustomPois = new ConcurrentHashMap<>();
 
-    private Storage<List<CustomPoiProvider>> customPoiProviders = new Storage<>(new ArrayList<>());
+    private final Storage<List<CustomPoiProvider>> customPoiProviders = new Storage<>(new ArrayList<>());
 
     public PoiModel() {
         super(List.of());
