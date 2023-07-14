@@ -1,4 +1,16 @@
+## [0.0.3-alpha.135](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.134...v0.0.3-alpha.135) (2023-07-14)
+
+
+### Miscellaneous Chores
+
+* Update item data MD5 ([#1746](https://github.com/Wynntils/Artemis/issues/1746)) ([d6a87d1](https://github.com/Wynntils/Artemis/commit/d6a87d1589bc76cf08b2d255c80b5762a75240f8))
+
 ## [0.0.3-alpha.134](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.133...v0.0.3-alpha.134) (2023-07-14)
+
+
+### Miscellaneous Chores
+
+* **release:** v0.0.3-alpha.134 [skip ci] ([a9e73e3](https://github.com/Wynntils/Artemis/commit/a9e73e3a4706882311e4d6b465a4a4c2e4c70531))
 
 
 ### Code Refactoring
@@ -40,16 +52,4 @@
 ### Miscellaneous Chores
 
 * **release:** v0.0.3-alpha.131 [skip ci] ([238f653](https://github.com/Wynntils/Artemis/commit/238f6538fa5157ce627a4907c8b38695656b7eb0))
-
-## [0.0.3-alpha.130](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.129...v0.0.3-alpha.130) (2023-07-13)
-
-
-### Bug Fixes
-
-* Speed up content book parsing by disabling filter resetting ([#1736](https://github.com/Wynntils/Artemis/issues/1736)) ([b472fff](https://github.com/Wynntils/Artemis/commit/b472fff2122735c2f17b39cf2a838a6cdde845e2))
-
-
-### Miscellaneous Chores
-
-* **release:** v0.0.3-alpha.130 [skip ci] ([5fdb172](https://github.com/Wynntils/Artemis/commit/5fdb17213934a213e8c13d730acf669087b7bcf2))
 
