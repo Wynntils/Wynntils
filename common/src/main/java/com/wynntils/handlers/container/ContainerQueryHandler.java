@@ -122,7 +122,11 @@ public final class ContainerQueryHandler extends Handler {
 
         // Server closed our container window. This should not happen
         // but if it do, report failure
-        raiseError("Server closed container");
+        if (e.getContainerId() == containerId) {
+            raiseError("Server closed container");
+        } else {
+            WynntilsMod.warn("Server closed container " + e.getContainerId() + " but we are querying " + containerId);
+        }
     }
 
     @SubscribeEvent
