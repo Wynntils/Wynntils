@@ -142,6 +142,8 @@ public class CustomBankPagesFeature extends Feature {
 
     @SubscribeEvent
     public void onContainerSetEvent(ContainerSetContentEvent.Post e) {
+        if (!isBankScreen) return;
+
         if (Models.Container.isItemIndicatingLastBankPage(e.getItems().get(Models.Container.LAST_BANK_PAGE_SLOT))) {
             Models.Container.updateFinalBankPage(currentPage);
             lastPage = currentPage;
