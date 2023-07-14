@@ -13,9 +13,9 @@ import com.wynntils.core.config.RegisterConfig;
 import com.wynntils.core.features.Feature;
 import com.wynntils.mc.event.ContainerClickEvent;
 import com.wynntils.mc.event.ContainerCloseEvent;
+import com.wynntils.mc.event.ContainerSetContentEvent;
 import com.wynntils.mc.event.ScreenInitEvent;
 import com.wynntils.mc.event.SetSlotEvent;
-import com.wynntils.mc.event.SlotRenderEvent;
 import com.wynntils.utils.mc.McUtils;
 import com.wynntils.utils.wynn.ContainerUtils;
 import java.util.List;
@@ -139,12 +139,9 @@ public class CustomBankPagesFeature extends Feature {
     }
 
     @SubscribeEvent
-    public void onRenderSlot(SlotRenderEvent.Pre e) {
-        if (!(e.getScreen() instanceof AbstractContainerScreen<?> screen)) return;
-        if (!isBankScreen) return;
-
-        if (e.getSlot().index == NEXT_PAGE_SLOT && Models.Container.isLastBankPage(screen)) {
-            lastPage = currentPage;
+    public void onContainerSetEvent(ContainerSetContentEvent.Post e) {
+        if (Models.Container.isItemIndicatingLastBankPage(e.getItems().get(Models.Container.LAST_BANK_PAGE_SLOT))) {
+            lastPage = Models.Container.updateFinalBankPage(currentPage);
         }
     }
 
@@ -164,9 +161,9 @@ public class CustomBankPagesFeature extends Feature {
             case -1 -> clickPreviousPage();
             default -> {
                 if (!tryUsingJumpButtons()) {
-                    if (pageDestination < currentPage && lastPage != currentPage) {
+                    if (currentPage > pageDestination) {
                         clickPreviousPage();
-                    } else if (lastPage != currentPage) {
+                    } else if (currentPage != lastPage) {
                         clickNextPage();
                     }
                 }
@@ -182,7 +179,7 @@ public class CustomBankPagesFeature extends Feature {
         for (int jumpDestination : QUICK_JUMP_DESTINATIONS) {
             int jumpDistance = Math.abs(jumpDestination - pageDestination);
 
-            if (jumpDistance < closestDistance) {
+            if (jumpDistance < closestDistance && jumpDestination < lastPage) {
                 closest = jumpDestination;
                 closestDistance = jumpDistance;
             }
