@@ -15,8 +15,10 @@ import java.util.regex.Pattern;
 import net.minecraft.world.item.ItemStack;
 
 public final class SkillPointAnnotator implements ItemAnnotator {
+    // Test suite: https://regexr.com/7h0tl
     private static final Pattern SKILL_POINT_PATTERN = Pattern.compile("^§dUpgrade your §[2ebcf][✤✦❉✹❋] (.*)§d skill$");
-    private static final Pattern LORE_PATTERN = Pattern.compile("^§7[ À]+(-?\\d+) points?[ À]+§6-?\\d+ points?$");
+    // Test suite: https://regexr.com/7h0to
+    private static final Pattern LORE_PATTERN = Pattern.compile("^[ À]+§7(-?\\d+) points?§r[ À]+§6-?\\d+ points?$");
 
     @Override
     public ItemAnnotation getAnnotation(ItemStack itemStack, StyledText name) {
@@ -26,7 +28,8 @@ public final class SkillPointAnnotator implements ItemAnnotator {
         String skillName = matcher.group(1);
         Skill skill = Skill.fromString(skillName);
 
-        Matcher m = LoreUtils.matchLoreLine(itemStack, 3, LORE_PATTERN);
+        // intelligence skill points has an extra % line so it will be on line 4
+        Matcher m = LoreUtils.matchLoreLine(itemStack, skill == Skill.INTELLIGENCE ? 4 : 3, LORE_PATTERN);
         if (!m.matches()) return null;
 
         int skillPoints = Integer.parseInt(m.group(1));
