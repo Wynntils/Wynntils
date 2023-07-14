@@ -32,6 +32,8 @@ public class DiscordRichPresenceFeature extends Feature {
 
     @RegisterConfig
     public final Config<Boolean> displayWorld = new Config<>(true);
+    
+    private static final int TERRITORY_TICKS_DELAY = 10;
 
     private boolean stopTerritoryCheck = false;
     private TerritoryProfile lastTerritoryProfile = null;
@@ -111,7 +113,7 @@ public class DiscordRichPresenceFeature extends Feature {
             }
         }
 
-        Managers.TickScheduler.scheduleLater(this::checkTerritory, 10);
+        Managers.TickScheduler.scheduleLater(this::checkTerritory, TERRITORY_TICKS_DELAY);
     }
 
     @SubscribeEvent
