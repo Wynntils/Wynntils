@@ -68,7 +68,8 @@ public class DiscordManager extends Manager {
             activity = new Activity();
             activity.timestamps().setStart(Instant.now());
         } catch (Throwable e) {
-            if (e instanceof GameSDKException gameSDKException && gameSDKException.getResult() == Result.INTERNAL_ERROR) {
+            if (e instanceof GameSDKException gameSDKException
+                    && gameSDKException.getResult() == Result.INTERNAL_ERROR) {
                 // This occurs when player closes game and JVM exits before we can close the core
                 return;
             }
