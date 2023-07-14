@@ -45,7 +45,7 @@ public final class ContainerQueryHandler extends Handler {
         if (currentStep != null) {
             // Only add if it is not already enqueued
             if (queuedQueries.stream()
-                    .filter(query -> query.getName().equals(firstStepName))
+                    .filter(query -> query.getName().equals(firstStep.getName()))
                     .findAny()
                     .isEmpty()) {
                 queuedQueries.add(firstStep);
