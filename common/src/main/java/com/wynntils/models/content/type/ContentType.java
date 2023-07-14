@@ -32,6 +32,9 @@ public enum ContentType {
             if (type.getColorCode().equals(colorCode) && type.getDisplayName().equals(displayName)) return type;
         }
 
+        // FIXME: Workaround to stop crashes
+        if (displayName.equals("Discovery")) return WORLD_DISCOVERY;
+
         return null;
     }
 

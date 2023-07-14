@@ -33,7 +33,6 @@ public final class ContainerQueryHandler extends Handler {
 
     private ContainerQueryStep currentStep;
     private String firstStepName;
-    private ContainerQueryStep lastStep;
 
     private Component currentTitle;
     private MenuType<?> currentMenuType;
@@ -46,7 +45,7 @@ public final class ContainerQueryHandler extends Handler {
         if (currentStep != null) {
             // Only add if it is not already enqueued
             if (queuedQueries.stream()
-                    .filter(query -> query.getName().equals(firstStepName))
+                    .filter(query -> query.getName().equals(firstStep.getName()))
                     .findAny()
                     .isEmpty()) {
                 queuedQueries.add(firstStep);
@@ -69,7 +68,6 @@ public final class ContainerQueryHandler extends Handler {
 
         currentStep = firstStep;
         firstStepName = firstStep.getName();
-        lastStep = null;
         resetTimer();
         try {
             if (!firstStep.startStep(null)) {
@@ -104,22 +102,6 @@ public final class ContainerQueryHandler extends Handler {
 
     @SubscribeEvent
     public void onMenuOpened(MenuEvent.MenuOpenedEvent e) {
-        if (currentStep == null && lastStep != null) {
-            // We're in a possibly bad state. We have failed a previous call, but
-            // we might still get the menu opened (perhaps after a lag spike).
-            if (lastStep.verifyContainer(e.getTitle(), e.getMenuType())) {
-                // This was the container we were supposed to be looking for
-                WynntilsMod.warn("Closing container '" + e.getTitle().getString()
-                        + "' due to previously aborted container query");
-                e.setCanceled(true);
-            } else {
-                // This is some other container. Ignore it.
-            }
-            // Now say we're completely finished with the last query
-            lastStep = null;
-            return;
-        }
-
         // Are we processing a query?
         if (currentStep == null) return;
 
@@ -140,7 +122,11 @@ public final class ContainerQueryHandler extends Handler {
 
         // Server closed our container window. This should not happen
         // but if it do, report failure
-        raiseError("Server closed container");
+        if (e.getContainerId() == containerId) {
+            raiseError("Server closed container");
+        } else {
+            WynntilsMod.warn("Server closed container " + e.getContainerId() + " but we are querying " + containerId);
+        }
     }
 
     @SubscribeEvent
@@ -213,7 +199,6 @@ public final class ContainerQueryHandler extends Handler {
             return;
         }
         currentStep.onError(errorMsg);
-        lastStep = currentStep;
         endQuery();
     }
 
