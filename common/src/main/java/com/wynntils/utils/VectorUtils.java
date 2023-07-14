@@ -16,15 +16,15 @@ public final class VectorUtils {
         float a1 = p3.y() - p2.y();
         float b1 = p2.x() - p3.x();
 
-        var det = a0 * b1 - a1 * b0;
+        float det = a0 * b1 - a1 * b0;
         if (det > -epsilon && det < epsilon) {
             return null;
         } else {
-            var c0 = a0 * p0.x + b0 * p0.y;
-            var c1 = a1 * p2.x + b1 * p2.y;
+            float c0 = a0 * p0.x + b0 * p0.y;
+            float c1 = a1 * p2.x + b1 * p2.y;
 
-            var x = (b1 * c0 - b0 * c1) / det;
-            var y = (a0 * c1 - a1 * c0) / det;
+            float x = (b1 * c0 - b0 * c1) / det;
+            float y = (a0 * c1 - a1 * c0) / det;
             return new Vector2f(x, y);
         }
     }
