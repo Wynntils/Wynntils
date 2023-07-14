@@ -1,9 +1,21 @@
+## [0.0.3-alpha.138](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.137...v0.0.3-alpha.138) (2023-07-14)
+
+
+### Bug Fixes
+
+* Ugly workaround to stop Discovery tracking crashes ([#1747](https://github.com/Wynntils/Artemis/issues/1747)) ([849bd95](https://github.com/Wynntils/Artemis/commit/849bd95ba1e6b077cf56805c31fdb9eddf3baa2a))
+
 ## [0.0.3-alpha.137](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.136...v0.0.3-alpha.137) (2023-07-14)
 
 
 ### New Features
 
 * Archetype/point counts in ability tree screen ([#1738](https://github.com/Wynntils/Artemis/issues/1738)) ([d38e7cb](https://github.com/Wynntils/Artemis/commit/d38e7cb21da1b2c5b3463e3e87a36e0b9ca4019e))
+
+
+### Miscellaneous Chores
+
+* **release:** v0.0.3-alpha.137 [skip ci] ([2ff9ca3](https://github.com/Wynntils/Artemis/commit/2ff9ca34341ce027e67c36caf1d807de4d80917f))
 
 ## [0.0.3-alpha.136](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.135...v0.0.3-alpha.136) (2023-07-14)
 
@@ -36,16 +48,4 @@
 ### Code Refactoring
 
 * Extract string literal to constant ([#1744](https://github.com/Wynntils/Artemis/issues/1744)) ([ddd2093](https://github.com/Wynntils/Artemis/commit/ddd20932583657b30ff04812cdbd5e0dd0e894b6))
-
-## [0.0.3-alpha.133](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.132...v0.0.3-alpha.133) (2023-07-14)
-
-
-### Bug Fixes
-
-* Do not open custom content book in tutorial ([#1742](https://github.com/Wynntils/Artemis/issues/1742)) ([1a50b6c](https://github.com/Wynntils/Artemis/commit/1a50b6ce608f0440ef745d453b7af3f277be1fcd))
-
-
-### Miscellaneous Chores
-
-* **release:** v0.0.3-alpha.133 [skip ci] ([3f7d7ae](https://github.com/Wynntils/Artemis/commit/3f7d7ae3dcca5cdf82bdfbf364365762c868a3f5))
 
