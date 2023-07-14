@@ -18,10 +18,13 @@ import net.minecraftforge.eventbus.api.SubscribeEvent;
 
 public class DiscordManager extends Manager {
     private static final long DISCORD_APPLICATION_ID = 387266678607577088L;
+    private static final int TICKS_PER_UPDATE = 5;
 
     private CreateParams params;
     private DiscordGameSDKCore core;
     private Activity activity;
+
+    private int ticksUntilUpdate = 0;
 
     public DiscordManager() {
         super(List.of());
@@ -106,8 +109,9 @@ public class DiscordManager extends Manager {
 
     @SubscribeEvent
     public void onTick(TickEvent event) {
-        if (isReady()) {
-            core.runCallbacks();
-        }
+        if (!isReady() || ticksUntilUpdate > 0) return;
+
+        core.runCallbacks();
+        ticksUntilUpdate = TICKS_PER_UPDATE;
     }
 }
