@@ -45,7 +45,7 @@ public class CustomPlayerListFeature extends Feature {
 
     @SubscribeEvent
     public void onRender(RenderEvent.Pre event) {
-        if (event.getType() == RenderEvent.ElementType.GUI) event.setCanceled(true);
+        if (event.getType() == RenderEvent.ElementType.PLAYER_TAB_LIST) event.setCanceled(true);
     }
 
     private static class CustomPlayerListOverlay extends Overlay {
