@@ -10,7 +10,6 @@ import com.wynntils.screens.base.TextboxScreen;
 import com.wynntils.screens.base.widgets.TextInputBoxWidget;
 import com.wynntils.utils.colors.CommonColors;
 import com.wynntils.utils.render.FontRenderer;
-import java.util.Objects;
 
 public class TextInputBoxSettingsWidget extends TextInputBoxWidget {
 
@@ -37,7 +36,9 @@ public class TextInputBoxSettingsWidget extends TextInputBoxWidget {
     protected void onUpdate(String text) {
         Object parsedValue = configHolder.tryParseStringValue(text);
         if (parsedValue != null) {
-            if (!Objects.equals(parsedValue, configHolder.getValue())) configHolder.setValue(parsedValue);
+            if (!parsedValue.equals(configHolder.getValue())) {
+                configHolder.setValue(parsedValue);
+            }
 
             setRenderColor(CommonColors.GREEN);
         } else {

@@ -39,7 +39,8 @@ final class ResetButton extends GeneralSettingsButton {
 
     @Override
     public void playDownSound(SoundManager handler) {
-        if (configHolder.valueChanged()) super.playDownSound(handler);
+        if (!configHolder.valueChanged()) return;
+        super.playDownSound(handler);
     }
 
     @Override
