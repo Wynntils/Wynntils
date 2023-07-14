@@ -31,11 +31,15 @@ import net.minecraft.world.item.Items;
 import org.lwjgl.glfw.GLFW;
 
 public class ContentBookQueries {
+    // A config in the future, turned off for performance for now
+    private static final boolean RESET_FILTERS = false;
+
     private static final int CHANGE_VIEW_SLOT = 66;
     private static final int PROGRESS_SLOT = 68;
     private static final int NEXT_PAGE_SLOT = 69;
 
     private static final StyledText SCROLL_DOWN_TEXT = StyledText.fromString("§7Scroll Down");
+    private static final String FILTER_ITEM_TITLE = "§eFilter";
     private static final Pattern ACTIVE_FILTER = Pattern.compile("^§f- §7(.*)$");
     private static final int MAX_FILTERS = 11;
 
@@ -106,6 +110,10 @@ public class ContentBookQueries {
                 .execute(() -> filterLoopCount = 0)
                 .repeat(
                         c -> {
+                            if (!RESET_FILTERS) {
+                                return false;
+                            }
+
                             filterLoopCount++;
                             if (filterLoopCount > MAX_FILTERS) {
                                 throw new ContainerQueryException("Filter setting has exceeded max loops");
@@ -130,7 +138,7 @@ public class ContentBookQueries {
 
     private String getActiveFilter(ItemStack itemStack) {
         StyledText itemName = InventoryUtils.getItemName(itemStack);
-        if (!itemName.equals(StyledText.fromString("§eFilter"))) return null;
+        if (!itemName.equals(StyledText.fromString(FILTER_ITEM_TITLE))) return null;
 
         List<StyledText> lore = LoreUtils.getLore(itemStack);
         for (StyledText line : lore) {
@@ -158,7 +166,7 @@ public class ContentBookQueries {
     protected void toggleTracking(String name, ContentType contentType) {
         // We do not want to change filtering when tracking, since we get
         // no chance to reset it
-        ScriptedContainerQuery query = ScriptedContainerQuery.builder("Toggle Content Tracking Query")
+        ScriptedContainerQuery query = ScriptedContainerQuery.builder("Toggle Content Tracking Query: " + name)
                 .onError(msg -> {
                     WynntilsMod.warn("Problem querying Content Book for tracking: " + msg);
                     McUtils.sendMessageToClient(Component.literal("Setting tracking in Content Book failed")
@@ -213,6 +221,10 @@ public class ContentBookQueries {
                 .execute(() -> filterLoopCount = 0)
                 .repeat(
                         c -> {
+                            if (!RESET_FILTERS) {
+                                return false;
+                            }
+
                             filterLoopCount++;
                             if (filterLoopCount > MAX_FILTERS) {
                                 throw new ContainerQueryException("Filter setting has exceeded max loops");
