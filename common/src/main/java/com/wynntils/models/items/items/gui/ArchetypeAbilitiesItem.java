@@ -5,25 +5,30 @@
 package com.wynntils.models.items.items.gui;
 
 import com.wynntils.models.items.properties.CountedItemProperty;
+import com.wynntils.utils.type.CappedValue;
 import net.minecraft.ChatFormatting;
 
-public class ArchetypeItem extends GuiItem implements CountedItemProperty {
-    private final int count;
+public class ArchetypeAbilitiesItem extends GuiItem implements CountedItemProperty {
+    private final CappedValue count;
     private final ChatFormatting color;
 
-    public ArchetypeItem(int count, char colorCode) {
+    public ArchetypeAbilitiesItem(CappedValue count, char colorCode) {
         this.count = count;
         this.color = ChatFormatting.getByCode(colorCode);
     }
 
     @Override
     public int getCount() {
-        return count;
+        return count.current();
     }
 
     @Override
     public boolean hasCount() {
-        return count != 0;
+        return count.current() != 0;
+    }
+
+    public int getMax() {
+        return count.max();
     }
 
     public ChatFormatting getColor() {

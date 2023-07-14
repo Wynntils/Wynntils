@@ -7,17 +7,18 @@ package com.wynntils.models.items.annotators.gui;
 import com.wynntils.core.text.StyledText;
 import com.wynntils.handlers.item.ItemAnnotation;
 import com.wynntils.handlers.item.ItemAnnotator;
-import com.wynntils.models.items.items.gui.ArchetypeItem;
+import com.wynntils.models.items.items.gui.ArchetypeAbilitiesItem;
 import com.wynntils.utils.mc.LoreUtils;
+import com.wynntils.utils.type.CappedValue;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import net.minecraft.world.item.ItemStack;
 
-public final class ArchetypeAnnotator implements ItemAnnotator {
+public final class ArchetypeAbilitiesAnnotator implements ItemAnnotator {
     // Test suite: https://regexr.com/7h12h
     private static final Pattern ARCHETYPE_NAME = Pattern.compile("^§([a-r0-9])§l[A-Za-z ]+ Archetype$");
     // Test suite: https://regexr.com/7h133
-    private static final Pattern ARCHETYPE_PATTERN = Pattern.compile("^§a✔ §7Unlocked Abilities: §f(\\d+)§7/1[56]$");
+    private static final Pattern ARCHETYPE_PATTERN = Pattern.compile("^§a✔ §7Unlocked Abilities: §f(\\d+)§7/(\\d+)$");
 
     @Override
     public ItemAnnotation getAnnotation(ItemStack itemStack, StyledText name) {
@@ -25,12 +26,12 @@ public final class ArchetypeAnnotator implements ItemAnnotator {
         if (!nameMatcher.matches()) return null;
 
         // certain archetypes like Shadestepper have an extra line of description
-        int matchLine = LoreUtils.getLoreLine(itemStack, 5) == StyledText.EMPTY ? 6 : 5;
-        Matcher loreMatcher = LoreUtils.matchLoreLine(itemStack, matchLine, ARCHETYPE_PATTERN);
+        Matcher loreMatcher = LoreUtils.matchLoreLine(itemStack, 5, ARCHETYPE_PATTERN);
         if (!loreMatcher.matches()) return null;
 
         int count = Integer.parseInt(loreMatcher.group(1));
+        int max = Integer.parseInt(loreMatcher.group(2));
         char colorCode = nameMatcher.group(1).charAt(0);
-        return new ArchetypeItem(count, colorCode);
+        return new ArchetypeAbilitiesItem(new CappedValue(count, max), colorCode);
     }
 }
