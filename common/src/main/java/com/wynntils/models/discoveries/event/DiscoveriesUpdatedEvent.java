@@ -7,7 +7,9 @@ package com.wynntils.models.discoveries.event;
 import net.minecraftforge.eventbus.api.Event;
 
 public abstract class DiscoveriesUpdatedEvent extends Event {
-    public static class Normal extends DiscoveriesUpdatedEvent {}
+    public static class Territory extends DiscoveriesUpdatedEvent {}
+
+    public static class World extends DiscoveriesUpdatedEvent {}
 
     public static class Secret extends DiscoveriesUpdatedEvent {}
 }

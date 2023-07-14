@@ -99,7 +99,7 @@
   },
   {
     "id": "dataStaticGear",
-    "md5": "af36dfc10779d29768d710197485020a",
+    "md5": "b2f2f994db124d3d2078fbcaf6178f8b",
     "url": "https://raw.githubusercontent.com/Wynntils/WynntilsWebsite-API/master/gear.json"
   },
   {
@@ -109,7 +109,7 @@
   },
   {
     "id": "dataStaticIngredients",
-    "md5": "4cad1a53475c36c2163cc68ea345609a",
+    "md5": "e80aa5df4b6ed36f86d68d970df5f1fd",
     "url": "https://raw.githubusercontent.com/Wynntils/WynntilsWebsite-API/master/ingredients.json"
   },
   {

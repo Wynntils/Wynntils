@@ -214,7 +214,7 @@ public final class WynntilsQuestBookScreen extends WynntilsListScreen<QuestInfo,
             tooltipLines.add(Component.literal(""));
 
             if (questInfo.isTrackable()) {
-                if (questInfo.equals(Models.Quest.getTrackedQuest())) {
+                if (questInfo.equals(Models.Content.getTrackedQuestInfo())) {
                     tooltipLines.add(Component.literal("Left click to stop tracking it!")
                             .withStyle(ChatFormatting.RED)
                             .withStyle(ChatFormatting.BOLD));
