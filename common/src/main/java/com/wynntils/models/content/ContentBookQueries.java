@@ -165,7 +165,7 @@ public class ContentBookQueries {
     protected void toggleTracking(String name, ContentType contentType) {
         // We do not want to change filtering when tracking, since we get
         // no chance to reset it
-        ScriptedContainerQuery query = ScriptedContainerQuery.builder("Toggle Content Tracking Query")
+        ScriptedContainerQuery query = ScriptedContainerQuery.builder("Toggle Content Tracking Query: " + name)
                 .onError(msg -> {
                     WynntilsMod.warn("Problem querying Content Book for tracking: " + msg);
                     McUtils.sendMessageToClient(Component.literal("Setting tracking in Content Book failed")
