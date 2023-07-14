@@ -1,9 +1,21 @@
+## [0.0.3-alpha.139](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.138...v0.0.3-alpha.139) (2023-07-14)
+
+
+### Code Refactoring
+
+* Do not use "var" ([#1751](https://github.com/Wynntils/Artemis/issues/1751)) ([bd3f664](https://github.com/Wynntils/Artemis/commit/bd3f6648c6428794ee4c91bac54d554eab16341c))
+
 ## [0.0.3-alpha.138](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.137...v0.0.3-alpha.138) (2023-07-14)
 
 
 ### Bug Fixes
 
 * Ugly workaround to stop Discovery tracking crashes ([#1747](https://github.com/Wynntils/Artemis/issues/1747)) ([849bd95](https://github.com/Wynntils/Artemis/commit/849bd95ba1e6b077cf56805c31fdb9eddf3baa2a))
+
+
+### Miscellaneous Chores
+
+* **release:** v0.0.3-alpha.138 [skip ci] ([13b3e7d](https://github.com/Wynntils/Artemis/commit/13b3e7d22e2009c065048f83680ef98053ffc346))
 
 ## [0.0.3-alpha.137](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.136...v0.0.3-alpha.137) (2023-07-14)
 
@@ -36,16 +48,4 @@
 
 * **release:** v0.0.3-alpha.135 [skip ci] ([5d80b30](https://github.com/Wynntils/Artemis/commit/5d80b30d09b5946e7a8a5eb26a837284ae656b07))
 * Update item data MD5 ([#1746](https://github.com/Wynntils/Artemis/issues/1746)) ([d6a87d1](https://github.com/Wynntils/Artemis/commit/d6a87d1589bc76cf08b2d255c80b5762a75240f8))
-
-## [0.0.3-alpha.134](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.133...v0.0.3-alpha.134) (2023-07-14)
-
-
-### Miscellaneous Chores
-
-* **release:** v0.0.3-alpha.134 [skip ci] ([a9e73e3](https://github.com/Wynntils/Artemis/commit/a9e73e3a4706882311e4d6b465a4a4c2e4c70531))
-
-
-### Code Refactoring
-
-* Extract string literal to constant ([#1744](https://github.com/Wynntils/Artemis/issues/1744)) ([ddd2093](https://github.com/Wynntils/Artemis/commit/ddd20932583657b30ff04812cdbd5e0dd0e894b6))
 
