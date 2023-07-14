@@ -24,6 +24,8 @@ public class PlayerTabOverlayMixin {
         RenderEvent.Pre renderEvent =
                 new RenderEvent.Pre(poseStack, 0, McUtils.window(), RenderEvent.ElementType.PLAYER_TAB_LIST);
         MixinHelper.post(renderEvent);
-        if (renderEvent.isCancelable()) ci.cancel();
+        if (renderEvent.isCancelable()) {
+            ci.cancel();
+        }
     }
 }
