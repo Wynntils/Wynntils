@@ -252,7 +252,7 @@ public class WynntilsCommand extends Command {
         result.handleInputStream(
                 is -> {
                     try (InputStreamReader isReader = new InputStreamReader(is, StandardCharsets.UTF_8);
-                         BufferedReader reader = new BufferedReader(isReader)) {
+                            BufferedReader reader = new BufferedReader(isReader)) {
                         String line;
                         while ((line = reader.readLine()) != null) {
                             Matcher m = STATUS_HEADING.matcher(line);
