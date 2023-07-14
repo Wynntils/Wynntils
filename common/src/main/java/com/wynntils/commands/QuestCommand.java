@@ -268,7 +268,7 @@ public class QuestCommand extends Command {
         } else if (matchingQuests.size() > 1) {
             MutableComponent error = Component.literal("Quest '" + questName + "' match several quests:")
                     .withStyle(ChatFormatting.RED);
-            for (var quest : matchingQuests) {
+            for (QuestInfo quest : matchingQuests) {
                 error.append(Component.literal("\n - ").withStyle(ChatFormatting.GRAY))
                         .append(Component.literal(quest.getName()).withStyle(ChatFormatting.WHITE));
             }

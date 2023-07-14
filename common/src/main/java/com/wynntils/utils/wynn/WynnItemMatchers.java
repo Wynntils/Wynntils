@@ -73,8 +73,8 @@ public final class WynnItemMatchers {
             Matcher durabilityMatcher = durabilityLineMatcher(line);
             if (!durabilityMatcher.find()) continue;
 
-            var currentDurability = Integer.parseInt(durabilityMatcher.group(1));
-            var maxDurability = Integer.parseInt(durabilityMatcher.group(2));
+            int currentDurability = Integer.parseInt(durabilityMatcher.group(1));
+            int maxDurability = Integer.parseInt(durabilityMatcher.group(2));
             return new CappedValue(currentDurability, maxDurability);
         }
 
