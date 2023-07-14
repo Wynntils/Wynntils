@@ -157,7 +157,7 @@ public class CustomBankPagesFeature extends Feature {
 
         switch (pageDifference) {
             case 1 -> {
-                if (lastPage != currentPage) {
+                if (currentPage != lastPage) {
                     clickNextPage();
                 }
             }
