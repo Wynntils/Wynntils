@@ -39,6 +39,7 @@ public class ContentBookQueries {
     private static final int NEXT_PAGE_SLOT = 69;
 
     private static final StyledText SCROLL_DOWN_TEXT = StyledText.fromString("§7Scroll Down");
+    private static final String FILTER_ITEM_TITLE = "§eFilter";
     private static final Pattern ACTIVE_FILTER = Pattern.compile("^§f- §7(.*)$");
     private static final int MAX_FILTERS = 11;
 
@@ -137,7 +138,7 @@ public class ContentBookQueries {
 
     private String getActiveFilter(ItemStack itemStack) {
         StyledText itemName = InventoryUtils.getItemName(itemStack);
-        if (!itemName.equals(StyledText.fromString("§eFilter"))) return null;
+        if (!itemName.equals(StyledText.fromString(FILTER_ITEM_TITLE))) return null;
 
         List<StyledText> lore = LoreUtils.getLore(itemStack);
         for (StyledText line : lore) {
