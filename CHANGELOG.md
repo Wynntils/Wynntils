@@ -1,9 +1,21 @@
+## [0.0.3-alpha.141](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.140...v0.0.3-alpha.141) (2023-07-14)
+
+
+### Bug Fixes
+
+* Use hopefully improved method of opening e.g. content book for queries ([#1752](https://github.com/Wynntils/Artemis/issues/1752)) ([da25876](https://github.com/Wynntils/Artemis/commit/da258764f035dbf4984de677f43e8a507e149484))
+
 ## [0.0.3-alpha.140](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.139...v0.0.3-alpha.140) (2023-07-14)
 
 
 ### New Features
 
 * Custom bank quick jump pages ([#1670](https://github.com/Wynntils/Artemis/issues/1670)) ([3c8b5fd](https://github.com/Wynntils/Artemis/commit/3c8b5fd536ae1ad739be4130b6b6e42692783867))
+
+
+### Miscellaneous Chores
+
+* **release:** v0.0.3-alpha.140 [skip ci] ([adcad5b](https://github.com/Wynntils/Artemis/commit/adcad5b9f06b939918ef7298ff18356fd0a94e9a))
 
 ## [0.0.3-alpha.139](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.138...v0.0.3-alpha.139) (2023-07-14)
 
@@ -40,16 +52,4 @@
 ### Miscellaneous Chores
 
 * **release:** v0.0.3-alpha.137 [skip ci] ([2ff9ca3](https://github.com/Wynntils/Artemis/commit/2ff9ca34341ce027e67c36caf1d807de4d80917f))
-
-## [0.0.3-alpha.136](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.135...v0.0.3-alpha.136) (2023-07-14)
-
-
-### Bug Fixes
-
-* Skill points annotator did not parse properly ([#1737](https://github.com/Wynntils/Artemis/issues/1737)) ([85b7a3c](https://github.com/Wynntils/Artemis/commit/85b7a3cca90451aff679d827204c6acda008b2d8))
-
-
-### Miscellaneous Chores
-
-* **release:** v0.0.3-alpha.136 [skip ci] ([671f402](https://github.com/Wynntils/Artemis/commit/671f4020e7ab4bf5f4e962698e638dda2e2f47ed))
 
