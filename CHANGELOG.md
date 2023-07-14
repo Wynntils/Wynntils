@@ -1,9 +1,21 @@
+## [0.0.3-alpha.132](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.131...v0.0.3-alpha.132) (2023-07-14)
+
+
+### Bug Fixes
+
+* Fix multiple problems related to content book queries and tracking ([#1741](https://github.com/Wynntils/Artemis/issues/1741)) ([8a15b23](https://github.com/Wynntils/Artemis/commit/8a15b23f8e3e683af639cc547e78e4db74a2926c))
+
 ## [0.0.3-alpha.131](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.130...v0.0.3-alpha.131) (2023-07-13)
 
 
 ### Bug Fixes
 
 * Fix fallback code for closing bad container queries ([#1733](https://github.com/Wynntils/Artemis/issues/1733)) ([666e40d](https://github.com/Wynntils/Artemis/commit/666e40db9861d1376a220b1b54ae0badf768578e))
+
+
+### Miscellaneous Chores
+
+* **release:** v0.0.3-alpha.131 [skip ci] ([238f653](https://github.com/Wynntils/Artemis/commit/238f6538fa5157ce627a4907c8b38695656b7eb0))
 
 ## [0.0.3-alpha.130](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.129...v0.0.3-alpha.130) (2023-07-13)
 
@@ -40,16 +52,4 @@
 ### Miscellaneous Chores
 
 * **release:** v0.0.3-alpha.128 [skip ci] ([229c70a](https://github.com/Wynntils/Artemis/commit/229c70ae5bcc70ae63097a3a5b7225ed1eee971d))
-
-## [0.0.3-alpha.127](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.126...v0.0.3-alpha.127) (2023-07-13)
-
-
-### New Features
-
-* Use the new ingredient data ([#1725](https://github.com/Wynntils/Artemis/issues/1725)) ([75083c5](https://github.com/Wynntils/Artemis/commit/75083c547ceafc573b7d0052328107fe1030b5d7))
-
-
-### Miscellaneous Chores
-
-* **release:** v0.0.3-alpha.127 [skip ci] ([bec7873](https://github.com/Wynntils/Artemis/commit/bec7873cc06605dd5bc38170cfa75b86b16237c8))
 
