@@ -1,9 +1,21 @@
+## [0.0.3-alpha.137](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.136...v0.0.3-alpha.137) (2023-07-14)
+
+
+### New Features
+
+* Archetype/point counts in ability tree screen ([#1738](https://github.com/Wynntils/Artemis/issues/1738)) ([d38e7cb](https://github.com/Wynntils/Artemis/commit/d38e7cb21da1b2c5b3463e3e87a36e0b9ca4019e))
+
 ## [0.0.3-alpha.136](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.135...v0.0.3-alpha.136) (2023-07-14)
 
 
 ### Bug Fixes
 
 * Skill points annotator did not parse properly ([#1737](https://github.com/Wynntils/Artemis/issues/1737)) ([85b7a3c](https://github.com/Wynntils/Artemis/commit/85b7a3cca90451aff679d827204c6acda008b2d8))
+
+
+### Miscellaneous Chores
+
+* **release:** v0.0.3-alpha.136 [skip ci] ([671f402](https://github.com/Wynntils/Artemis/commit/671f4020e7ab4bf5f4e962698e638dda2e2f47ed))
 
 ## [0.0.3-alpha.135](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.134...v0.0.3-alpha.135) (2023-07-14)
 
@@ -36,16 +48,4 @@
 ### Miscellaneous Chores
 
 * **release:** v0.0.3-alpha.133 [skip ci] ([3f7d7ae](https://github.com/Wynntils/Artemis/commit/3f7d7ae3dcca5cdf82bdfbf364365762c868a3f5))
-
-## [0.0.3-alpha.132](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.131...v0.0.3-alpha.132) (2023-07-14)
-
-
-### Bug Fixes
-
-* Fix multiple problems related to content book queries and tracking ([#1741](https://github.com/Wynntils/Artemis/issues/1741)) ([8a15b23](https://github.com/Wynntils/Artemis/commit/8a15b23f8e3e683af639cc547e78e4db74a2926c))
-
-
-### Miscellaneous Chores
-
-* **release:** v0.0.3-alpha.132 [skip ci] ([0ac1a6a](https://github.com/Wynntils/Artemis/commit/0ac1a6aec6dee831685f67acf10266435b551296))
 
