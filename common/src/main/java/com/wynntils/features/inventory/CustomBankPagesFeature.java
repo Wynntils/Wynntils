@@ -182,7 +182,7 @@ public class CustomBankPagesFeature extends Feature {
         for (int jumpDestination : QUICK_JUMP_DESTINATIONS) {
             int jumpDistance = Math.abs(jumpDestination - pageDestination);
 
-            if (jumpDistance < closestDistance && jumpDestination < lastPage) {
+            if (jumpDistance < closestDistance && jumpDestination <= lastPage) {
                 closest = jumpDestination;
                 closestDistance = jumpDistance;
             }
