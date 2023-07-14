@@ -28,8 +28,7 @@ public final class SkillPointAnnotator implements ItemAnnotator {
         String skillName = matcher.group(1);
         Skill skill = Skill.fromString(skillName);
 
-        // intelligence skill points has an extra % line so it will be on line 4
-        Matcher m = LoreUtils.matchLoreLine(itemStack, skill == Skill.INTELLIGENCE ? 4 : 3, LORE_PATTERN);
+        Matcher m = LoreUtils.matchLoreLine(itemStack, 3, LORE_PATTERN);
         if (!m.matches()) return null;
 
         int skillPoints = Integer.parseInt(m.group(1));
