@@ -2,7 +2,7 @@
  * Copyright © Wynntils 2023.
  * This file is released under AGPLv3. See LICENSE for full license details.
  */
-package com.wynntils.features.ui;
+package com.wynntils.features.overlays;
 
 import com.mojang.blaze3d.platform.Window;
 import com.mojang.blaze3d.vertex.PoseStack;
@@ -82,7 +82,7 @@ public class CustomPlayerListFeature extends Feature {
         private long nextExecution = 0;
 
         private List<StyledText> getAvailablePlayers() {
-            if (System.currentTimeMillis() < nextExecution && !lastPlayers.isEmpty()) return lastPlayers;
+            if (System.currentTimeMillis() < nextExecution) return lastPlayers;
 
             nextExecution = System.currentTimeMillis() + 250;
 
@@ -133,7 +133,7 @@ public class CustomPlayerListFeature extends Feature {
             currentDist += DISTANCE_BETWEEN_CATEGORIES;
             renderCategoryTitle(poseStack, "Guild", currentDist, categoryStart);
 
-            renderPlayerNames(poseStack, categoryStart);
+            renderPlayerNames(poseStack, categoryStart, getAvailablePlayers());
 
             if (animation < 1) {
                 RenderUtils.disableScissor();
@@ -167,9 +167,7 @@ public class CustomPlayerListFeature extends Feature {
                     Texture.PLAYER_INFO_OVERLAY.height());
         }
 
-        private void renderPlayerNames(PoseStack poseStack, float categoryStart) {
-            List<StyledText> players = getAvailablePlayers();
-
+        private void renderPlayerNames(PoseStack poseStack, float categoryStart, List<StyledText> players) {
             for (int i = 0; i < players.size(); i++) {
                 int x = i / 19;
                 int y = i % 19;
