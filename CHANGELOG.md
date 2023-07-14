@@ -1,9 +1,21 @@
+## [0.0.3-alpha.134](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.133...v0.0.3-alpha.134) (2023-07-14)
+
+
+### Code Refactoring
+
+* Extract string literal to constant ([#1744](https://github.com/Wynntils/Artemis/issues/1744)) ([ddd2093](https://github.com/Wynntils/Artemis/commit/ddd20932583657b30ff04812cdbd5e0dd0e894b6))
+
 ## [0.0.3-alpha.133](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.132...v0.0.3-alpha.133) (2023-07-14)
 
 
 ### Bug Fixes
 
 * Do not open custom content book in tutorial ([#1742](https://github.com/Wynntils/Artemis/issues/1742)) ([1a50b6c](https://github.com/Wynntils/Artemis/commit/1a50b6ce608f0440ef745d453b7af3f277be1fcd))
+
+
+### Miscellaneous Chores
+
+* **release:** v0.0.3-alpha.133 [skip ci] ([3f7d7ae](https://github.com/Wynntils/Artemis/commit/3f7d7ae3dcca5cdf82bdfbf364365762c868a3f5))
 
 ## [0.0.3-alpha.132](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.131...v0.0.3-alpha.132) (2023-07-14)
 
@@ -40,16 +52,4 @@
 ### Miscellaneous Chores
 
 * **release:** v0.0.3-alpha.130 [skip ci] ([5fdb172](https://github.com/Wynntils/Artemis/commit/5fdb17213934a213e8c13d730acf669087b7bcf2))
-
-## [0.0.3-alpha.129](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.128...v0.0.3-alpha.129) (2023-07-13)
-
-
-### New Features
-
-* Add scrolling support for Bookshelf ([#1734](https://github.com/Wynntils/Artemis/issues/1734)) ([d0241a9](https://github.com/Wynntils/Artemis/commit/d0241a93339f0d2007d653dd0e2cad79c210c407))
-
-
-### Miscellaneous Chores
-
-* **release:** v0.0.3-alpha.129 [skip ci] ([4f35763](https://github.com/Wynntils/Artemis/commit/4f357638afda3ebd431a8eb7c415eab03e937c4a))
 
