@@ -57,6 +57,8 @@ import com.wynntils.features.embellishments.WybelSoundFeature;
 import com.wynntils.features.inventory.BulkBuyFeature;
 import com.wynntils.features.inventory.ContainerSearchFeature;
 import com.wynntils.features.inventory.CustomBankPagesFeature;
+import com.wynntils.features.inventory.CustomBookshelfPagesFeature;
+import com.wynntils.features.inventory.CustomMiscBucketPagesFeature;
 import com.wynntils.features.inventory.DurabilityArcFeature;
 import com.wynntils.features.inventory.EmeraldPouchFillArcFeature;
 import com.wynntils.features.inventory.EmeraldPouchHotkeyFeature;
@@ -212,6 +214,8 @@ public final class FeatureManager extends Manager {
         registerFeature(new BulkBuyFeature());
         registerFeature(new ContainerSearchFeature());
         registerFeature(new CustomBankPagesFeature());
+        registerFeature(new CustomBookshelfPagesFeature());
+        registerFeature(new CustomMiscBucketPagesFeature());
         registerFeature(new DurabilityArcFeature());
         registerFeature(new EmeraldPouchFillArcFeature());
         registerFeature(new EmeraldPouchHotkeyFeature());

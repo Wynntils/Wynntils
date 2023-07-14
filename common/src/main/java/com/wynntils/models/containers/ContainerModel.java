@@ -55,6 +55,8 @@ public final class ContainerModel extends Model {
     private static final StyledText CONTENT_BOOK_TITLE = StyledText.fromString("§f\uE000\uE072");
 
     private final Storage<Integer> finalBankPage = new Storage<>(21);
+    private final Storage<Integer> finalBookshelfPage = new Storage<>(10);
+    private final Storage<Integer> finalMiscBucketPage = new Storage<>(10);
 
     public static final int LAST_BANK_PAGE_SLOT = 8;
 
@@ -104,6 +106,22 @@ public final class ContainerModel extends Model {
 
     public int getFinalBankPage() {
         return finalBankPage.get();
+    }
+
+    public void updateFinalBookshelfPage(int newFinalPage) {
+        finalBookshelfPage.store(newFinalPage);
+    }
+
+    public int getFinalBookshelfPage() {
+        return finalBookshelfPage.get();
+    }
+
+    public void updateFinalMiscBucketPage(int newFinalPage) {
+        finalMiscBucketPage.store(newFinalPage);
+    }
+
+    public int getFinalMiscBucketPage() {
+        return finalMiscBucketPage.get();
     }
 
     public boolean isGuildBankScreen(Screen screen) {
