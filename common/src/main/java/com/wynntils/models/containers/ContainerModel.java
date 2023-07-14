@@ -6,6 +6,7 @@ package com.wynntils.models.containers;
 
 import com.wynntils.core.components.Model;
 import com.wynntils.core.components.Models;
+import com.wynntils.core.storage.Storage;
 import com.wynntils.core.text.StyledText;
 import com.wynntils.utils.type.Pair;
 import java.util.List;
@@ -16,6 +17,7 @@ import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
 import net.minecraft.client.gui.screens.inventory.ContainerScreen;
 import net.minecraft.network.chat.Component;
+import net.minecraft.world.item.ItemStack;
 
 public final class ContainerModel extends Model {
     public static final Pattern ABILITY_TREE_PATTERN =
@@ -52,6 +54,10 @@ public final class ContainerModel extends Model {
     private static final StyledText SEASKIPPER_TITLE = StyledText.fromString("V.S.S. Seaskipper");
     private static final StyledText CONTENT_BOOK_TITLE = StyledText.fromString("§f\uE000\uE072");
 
+    private final Storage<Integer> finalBankPage = new Storage<>(21);
+
+    public static final int LAST_BANK_PAGE_SLOT = 8;
+
     public ContainerModel() {
         super(List.of());
     }
@@ -68,17 +74,36 @@ public final class ContainerModel extends Model {
         return type.equals(BANK_NAME);
     }
 
+    public int getCurrentBankPage(Screen screen) {
+        Matcher matcher = StyledText.fromComponent(screen.getTitle()).getMatcher(PERSONAL_STORAGE_PATTERN);
+        if (!matcher.matches()) return 0;
+
+        return Integer.parseInt(matcher.group(1));
+    }
+
     /**
      * @return True if the page is the last page in a Bank, Block Bank, or Misc Bucket
      */
     public boolean isLastBankPage(Screen screen) {
         return (isBankScreen(screen)
                         || isBlockBankScreen(screen)
-                        || isMiscBucketScreen(screen)
-                        || isBookshelfScreen(screen))
+                        || isBookshelfScreen(screen)
+                        || isMiscBucketScreen(screen))
                 && screen instanceof ContainerScreen cs
-                && StyledText.fromComponent(cs.getMenu().getSlot(8).getItem().getHoverName())
-                        .endsWith(LAST_BANK_PAGE_STRING);
+                && isItemIndicatingLastBankPage(
+                        cs.getMenu().getSlot(LAST_BANK_PAGE_SLOT).getItem());
+    }
+
+    public boolean isItemIndicatingLastBankPage(ItemStack item) {
+        return StyledText.fromComponent(item.getHoverName()).endsWith(LAST_BANK_PAGE_STRING);
+    }
+
+    public void updateFinalBankPage(int newFinalPage) {
+        finalBankPage.store(newFinalPage);
+    }
+
+    public int getFinalBankPage() {
+        return finalBankPage.get();
     }
 
     public boolean isGuildBankScreen(Screen screen) {
@@ -115,20 +140,20 @@ public final class ContainerModel extends Model {
         return type.equals(BLOCK_BANK_NAME);
     }
 
-    public boolean isMiscBucketScreen(Screen screen) {
-        Matcher matcher = StyledText.fromComponent(screen.getTitle()).getMatcher(PERSONAL_STORAGE_PATTERN);
-        if (!matcher.matches()) return false;
-
-        String type = matcher.group(2);
-        return type.equals(MISC_BUCKET_NAME);
-    }
-
     public boolean isBookshelfScreen(Screen screen) {
         Matcher matcher = StyledText.fromComponent(screen.getTitle()).getMatcher(PERSONAL_STORAGE_PATTERN);
         if (!matcher.matches()) return false;
 
         String type = matcher.group(2);
         return type.equals(BOOKSHELF_NAME);
+    }
+
+    public boolean isMiscBucketScreen(Screen screen) {
+        Matcher matcher = StyledText.fromComponent(screen.getTitle()).getMatcher(PERSONAL_STORAGE_PATTERN);
+        if (!matcher.matches()) return false;
+
+        String type = matcher.group(2);
+        return type.equals(MISC_BUCKET_NAME);
     }
 
     public boolean isScrapMenuScreen(Screen screen) {
@@ -178,9 +203,9 @@ public final class ContainerModel extends Model {
         }
 
         if (Models.Container.isBankScreen(gui)
-                || Models.Container.isMiscBucketScreen(gui)
                 || Models.Container.isBlockBankScreen(gui)
-                || Models.Container.isBookshelfScreen(gui)) {
+                || Models.Container.isBookshelfScreen(gui)
+                || Models.Container.isMiscBucketScreen(gui)) {
             if (!scrollUp && Models.Container.isLastBankPage(gui)) return null;
 
             return BANK_PREVIOUS_NEXT_SLOTS;
