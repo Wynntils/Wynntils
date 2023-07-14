@@ -40,7 +40,7 @@ public class DiscordRichPresenceFeature extends Feature {
     private ClassType classType = null;
     private int level = 0;
 
-    private void setCharacterDetails() {
+    private void displayCharacterDetails() {
         if (classType == null) return;
         String name = StyledText.fromComponent(McUtils.player().getName()).getString(PartStyle.StyleType.NONE);
         Managers.Discord.setImageText(name + " - Level " + level + " " + classType.getName());
@@ -52,10 +52,10 @@ public class DiscordRichPresenceFeature extends Feature {
         if (!Models.WorldState.onWorld()) return;
 
         // classType needs to be set even when config is disabled so if the config is enabled later, it will not require
-        // a relog
+        // a relog or class change
         classType = Models.Character.getClassType();
         if (displayCharacterInfo.get()) {
-            setCharacterDetails();
+            displayCharacterDetails();
         }
     }
 
@@ -63,9 +63,10 @@ public class DiscordRichPresenceFeature extends Feature {
     public void onXpChange(SetXpEvent event) {
         if (!Models.WorldState.onWorld()) return;
 
+        // same as above, level needs to be set even when config is disabled
         level = event.getExperienceLevel();
         if (displayCharacterInfo.get()) {
-            setCharacterDetails();
+            displayCharacterDetails();
         }
     }
 
@@ -139,7 +140,7 @@ public class DiscordRichPresenceFeature extends Feature {
             }
 
             if (displayCharacterInfo.get()) {
-                setCharacterDetails();
+                displayCharacterDetails();
             } else {
                 Managers.Discord.setWynncraftLogo();
             }
