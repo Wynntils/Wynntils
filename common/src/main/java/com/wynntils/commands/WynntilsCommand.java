@@ -251,7 +251,7 @@ public class WynntilsCommand extends Command {
         ApiResponse result = Managers.Net.callApi(UrlId.LINK_WYNNTILS_STATUS);
         result.handleInputStream(
                 is -> {
-                    try (var isReader = new InputStreamReader(is, StandardCharsets.UTF_8);
+                    try (InputStreamReader isReader = new InputStreamReader(is, StandardCharsets.UTF_8);
                             BufferedReader reader = new BufferedReader(isReader)) {
                         String line;
                         while ((line = reader.readLine()) != null) {

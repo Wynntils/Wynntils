@@ -60,7 +60,7 @@ public final class LootrunRenderer {
 
         poseStack.translate(-camera.getPosition().x, -camera.getPosition().y, -camera.getPosition().z);
 
-        var points = lootrun.points();
+        Long2ObjectMap<List<ColoredPath>> points = lootrun.points();
         int renderDistance = McUtils.options().renderDistance().get();
         BlockPos pos = camera.getBlockPosition();
         ChunkPos origin = new ChunkPos(pos);
