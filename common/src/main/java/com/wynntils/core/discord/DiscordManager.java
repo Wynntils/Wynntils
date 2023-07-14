@@ -64,13 +64,11 @@ public class DiscordManager extends Manager {
             core = new DiscordGameSDKCore(params);
             activity = new Activity();
             activity.timestamps().setStart(Instant.now());
-        } catch (GameSDKException e) {
-            if (e.getResult() == Result.INTERNAL_ERROR) {
-                // Occurs when player launches game without Discord open
+        } catch (Throwable e) {
+            if (e instanceof GameSDKException gameSDKException && gameSDKException.getResult() == Result.INTERNAL_ERROR) {
+                // This occurs when player closes game and JVM exits before we can close the core
                 return;
             }
-            WynntilsMod.error("Could not initialize Discord Game SDK", e);
-        } catch (Throwable e) {
             WynntilsMod.error("Could not initialize Discord Game SDK", e);
         }
     }
