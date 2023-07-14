@@ -238,7 +238,7 @@ public class LootrunCommand extends Command {
 
     private int deleteLootrunNote(CommandContext<CommandSourceStack> context) throws CommandSyntaxException {
         BlockPos pos = BlockPosArgument.getSpawnablePos(context, "pos");
-        var removedNote = Models.Lootrun.deleteNoteAt(pos);
+        LootrunNote removedNote = Models.Lootrun.deleteNoteAt(pos);
 
         if (removedNote != null) {
             context.getSource()
