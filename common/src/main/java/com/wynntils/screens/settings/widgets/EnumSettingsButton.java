@@ -65,10 +65,10 @@ public class EnumSettingsButton<E extends Enum<E>> extends GeneralSettingsButton
 
     private static <E extends Enum<E>> int getWidth(Type type) {
         Font font = FontRenderer.getInstance().getFont();
-        return EnumSet.allOf((Class<E>) type).stream()
-                        .mapToInt(enumValue -> font.width(EnumUtils.toNiceString(enumValue)))
-                        .max()
-                        .orElse(0)
-                + 8;
+        int maxWidth = EnumSet.allOf((Class<E>) type).stream()
+                .mapToInt(enumValue -> font.width(EnumUtils.toNiceString(enumValue)))
+                .max()
+                .orElse(0);
+        return maxWidth + 8;
     }
 }
