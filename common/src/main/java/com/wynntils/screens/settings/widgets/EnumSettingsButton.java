@@ -23,7 +23,7 @@ public class EnumSettingsButton<E extends Enum<E>> extends GeneralSettingsButton
     public EnumSettingsButton(ConfigHolder configHolder) {
         super(
                 0,
-                0,
+                7,
                 getWidth(configHolder.getType()),
                 FontRenderer.getInstance().getFont().lineHeight + 8,
                 Component.literal(configHolder.getValueString()),

@@ -19,7 +19,7 @@ public class BooleanSettingsButton extends GeneralSettingsButton {
     public BooleanSettingsButton(ConfigHolder configHolder) {
         super(
                 0,
-                0,
+                7,
                 50,
                 FontRenderer.getInstance().getFont().lineHeight + 8,
                 getTitle(configHolder),

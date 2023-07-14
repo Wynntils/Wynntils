@@ -8,7 +8,6 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import com.wynntils.core.config.ConfigHolder;
 import com.wynntils.screens.base.TextboxScreen;
 import com.wynntils.utils.colors.CustomColor;
-import com.wynntils.utils.render.FontRenderer;
 import com.wynntils.utils.render.RenderUtils;
 
 public class CustomColorSettingsButton extends TextInputBoxSettingsWidget {
@@ -20,13 +19,6 @@ public class CustomColorSettingsButton extends TextInputBoxSettingsWidget {
     public void renderWidget(PoseStack poseStack, int mouseX, int mouseY, float partialTick) {
         super.renderWidget(poseStack, mouseX, mouseY, partialTick);
         CustomColor value = (CustomColor) configHolder.getValue();
-        RenderUtils.drawRect(
-                poseStack,
-                value,
-                85,
-                0,
-                0,
-                FontRenderer.getInstance().getFont().lineHeight + 8,
-                FontRenderer.getInstance().getFont().lineHeight + 8);
+        RenderUtils.drawRect(poseStack, value, width + 5, 6, 0, height, height);
     }
 }
