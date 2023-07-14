@@ -1,4 +1,16 @@
+## [0.0.3-alpha.140](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.139...v0.0.3-alpha.140) (2023-07-14)
+
+
+### New Features
+
+* Custom bank quick jump pages ([#1670](https://github.com/Wynntils/Artemis/issues/1670)) ([3c8b5fd](https://github.com/Wynntils/Artemis/commit/3c8b5fd536ae1ad739be4130b6b6e42692783867))
+
 ## [0.0.3-alpha.139](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.138...v0.0.3-alpha.139) (2023-07-14)
+
+
+### Miscellaneous Chores
+
+* **release:** v0.0.3-alpha.139 [skip ci] ([c33c1de](https://github.com/Wynntils/Artemis/commit/c33c1de1450bb8fa7ec674343a0fddb432109a1f))
 
 
 ### Code Refactoring
@@ -40,12 +52,4 @@
 ### Miscellaneous Chores
 
 * **release:** v0.0.3-alpha.136 [skip ci] ([671f402](https://github.com/Wynntils/Artemis/commit/671f4020e7ab4bf5f4e962698e638dda2e2f47ed))
-
-## [0.0.3-alpha.135](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.134...v0.0.3-alpha.135) (2023-07-14)
-
-
-### Miscellaneous Chores
-
-* **release:** v0.0.3-alpha.135 [skip ci] ([5d80b30](https://github.com/Wynntils/Artemis/commit/5d80b30d09b5946e7a8a5eb26a837284ae656b07))
-* Update item data MD5 ([#1746](https://github.com/Wynntils/Artemis/issues/1746)) ([d6a87d1](https://github.com/Wynntils/Artemis/commit/d6a87d1589bc76cf08b2d255c80b5762a75240f8))
 
