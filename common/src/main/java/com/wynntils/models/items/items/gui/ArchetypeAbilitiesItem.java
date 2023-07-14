@@ -9,26 +9,26 @@ import com.wynntils.utils.type.CappedValue;
 import net.minecraft.ChatFormatting;
 
 public class ArchetypeAbilitiesItem extends GuiItem implements CountedItemProperty {
-    private final CappedValue count;
+    private final CappedValue abilitiesCount;
     private final ChatFormatting color;
 
-    public ArchetypeAbilitiesItem(CappedValue count, char colorCode) {
-        this.count = count;
+    public ArchetypeAbilitiesItem(CappedValue cappedValue, char colorCode) {
+        this.abilitiesCount = cappedValue;
         this.color = ChatFormatting.getByCode(colorCode);
     }
 
     @Override
     public int getCount() {
-        return count.current();
+        return abilitiesCount.current();
     }
 
     @Override
     public boolean hasCount() {
-        return count.current() != 0;
+        return abilitiesCount.current() != 0;
     }
 
-    public int getMax() {
-        return count.max();
+    public CappedValue getAbilitiesCount() {
+        return abilitiesCount;
     }
 
     public ChatFormatting getColor() {
@@ -37,6 +37,6 @@ public class ArchetypeAbilitiesItem extends GuiItem implements CountedItemProper
 
     @Override
     public String toString() {
-        return "ArchetypeItem{" + "count=" + count + ", color=" + color.getName() + '}';
+        return "ArchetypeItem{" + "count=" + abilitiesCount + ", color=" + color.getName() + '}';
     }
 }
