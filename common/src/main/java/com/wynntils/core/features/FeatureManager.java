@@ -292,9 +292,9 @@ public final class FeatureManager extends Manager {
         registerFeature(new CosmeticsPreviewFeature());
         registerFeature(new CustomCharacterSelectionScreenFeature());
         registerFeature(new CustomLoadingScreenFeature());
+        registerFeature(new CustomPlayerListFeature());
         registerFeature(new CustomSeaskipperScreenFeature());
         registerFeature(new LobbyUptimeFeature());
-        registerFeature(new CustomPlayerListFeature());
         registerFeature(new SoulPointTimerFeature());
         registerFeature(new WynncraftButtonFeature());
         registerFeature(new WynncraftPauseScreenFeature());
