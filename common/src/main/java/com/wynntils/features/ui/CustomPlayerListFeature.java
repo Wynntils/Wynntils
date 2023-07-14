@@ -145,7 +145,8 @@ public class CustomPlayerListFeature extends Feature {
         }
 
         @Override
-        public void renderPreview(PoseStack poseStack, MultiBufferSource bufferSource, float partialTicks, Window window) {
+        public void renderPreview(
+                PoseStack poseStack, MultiBufferSource bufferSource, float partialTicks, Window window) {
             renderPlayerList(poseStack, 1);
         }
 
