@@ -109,11 +109,17 @@ public class CustomPlayerListFeature extends Feature {
             if (!McUtils.options().keyPlayerList.isDown() && animationProgress <= 0.0) return;
             double animation = getAnimation();
 
-            RenderUtils.enableScissor(
-                    (int) (getRenderX() + ROLL_WIDTH + HALF_WIDTH - HALF_WIDTH * animation),
-                    0,
-                    (int) (WIDTH * animation),
-                    McUtils.mc().getWindow().getScreenHeight());
+            renderPlayerList(poseStack, animation);
+        }
+
+        private void renderPlayerList(PoseStack poseStack, double animation) {
+            if (animation < 1) {
+                RenderUtils.enableScissor(
+                        (int) (getRenderX() + ROLL_WIDTH + HALF_WIDTH - HALF_WIDTH * animation),
+                        0,
+                        (int) (WIDTH * animation),
+                        McUtils.mc().getWindow().getScreenHeight());
+            }
 
             renderBackground(poseStack);
 
@@ -129,11 +135,18 @@ public class CustomPlayerListFeature extends Feature {
 
             renderPlayerNames(poseStack, categoryStart);
 
-            RenderUtils.disableScissor();
+            if (animation < 1) {
+                RenderUtils.disableScissor();
+            }
 
             float middle = getRenderX() + HALF_WIDTH + ROLL_WIDTH;
             renderRoll(poseStack, (float) (middle - ROLL_WIDTH + 2 - HALF_WIDTH * animation));
             renderRoll(poseStack, (float) (middle + HALF_WIDTH * animation));
+        }
+
+        @Override
+        public void renderPreview(PoseStack poseStack, MultiBufferSource bufferSource, float partialTicks, Window window) {
+            renderPlayerList(poseStack, 1);
         }
 
         private void renderRoll(PoseStack poseStack, float middle) {
