@@ -1,9 +1,21 @@
+## [0.0.3-alpha.133](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.132...v0.0.3-alpha.133) (2023-07-14)
+
+
+### Bug Fixes
+
+* Do not open custom content book in tutorial ([#1742](https://github.com/Wynntils/Artemis/issues/1742)) ([1a50b6c](https://github.com/Wynntils/Artemis/commit/1a50b6ce608f0440ef745d453b7af3f277be1fcd))
+
 ## [0.0.3-alpha.132](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.131...v0.0.3-alpha.132) (2023-07-14)
 
 
 ### Bug Fixes
 
 * Fix multiple problems related to content book queries and tracking ([#1741](https://github.com/Wynntils/Artemis/issues/1741)) ([8a15b23](https://github.com/Wynntils/Artemis/commit/8a15b23f8e3e683af639cc547e78e4db74a2926c))
+
+
+### Miscellaneous Chores
+
+* **release:** v0.0.3-alpha.132 [skip ci] ([0ac1a6a](https://github.com/Wynntils/Artemis/commit/0ac1a6aec6dee831685f67acf10266435b551296))
 
 ## [0.0.3-alpha.131](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.130...v0.0.3-alpha.131) (2023-07-13)
 
@@ -40,16 +52,4 @@
 ### Miscellaneous Chores
 
 * **release:** v0.0.3-alpha.129 [skip ci] ([4f35763](https://github.com/Wynntils/Artemis/commit/4f357638afda3ebd431a8eb7c415eab03e937c4a))
-
-## [0.0.3-alpha.128](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.127...v0.0.3-alpha.128) (2023-07-13)
-
-
-### Bug Fixes
-
-* Fix tracking not being able to work if the wrong filter was set ([#1731](https://github.com/Wynntils/Artemis/issues/1731)) ([13ccfb5](https://github.com/Wynntils/Artemis/commit/13ccfb5252d57a2e3878fb00eacf46d6bbc604d8))
-
-
-### Miscellaneous Chores
-
-* **release:** v0.0.3-alpha.128 [skip ci] ([229c70a](https://github.com/Wynntils/Artemis/commit/229c70ae5bcc70ae63097a3a5b7225ed1eee971d))
 
