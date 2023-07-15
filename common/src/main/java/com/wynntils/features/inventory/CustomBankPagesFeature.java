@@ -4,6 +4,10 @@
  */
 package com.wynntils.features.inventory;
 
+import static com.wynntils.models.containers.type.SearchableContainerType.BANK;
+import static com.wynntils.models.containers.type.SearchableContainerType.BOOKSHELF;
+import static com.wynntils.models.containers.type.SearchableContainerType.MISC_BUCKET;
+
 import com.wynntils.core.components.Models;
 import com.wynntils.core.config.Category;
 import com.wynntils.core.config.Config;
@@ -16,9 +20,12 @@ import com.wynntils.mc.event.ContainerCloseEvent;
 import com.wynntils.mc.event.ContainerSetContentEvent;
 import com.wynntils.mc.event.ScreenInitEvent;
 import com.wynntils.mc.event.SetSlotEvent;
+import com.wynntils.models.containers.type.SearchableContainerType;
 import com.wynntils.utils.mc.McUtils;
 import com.wynntils.utils.wynn.ContainerUtils;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
 import net.minecraft.nbt.CompoundTag;
@@ -31,32 +38,24 @@ import org.lwjgl.glfw.GLFW;
 
 @ConfigCategory(Category.INVENTORY)
 public class CustomBankPagesFeature extends Feature {
-    // Change to ranged integer when implemented
+    // Change to ranged integer/integer list when implemented
     @RegisterConfig
-    public final Config<Integer> buttonOnePage = new Config<>(1);
+    public final Config<String> bankDestinations = new Config<>("1,5,9,13,17,21");
 
     @RegisterConfig
-    public final Config<Integer> buttonTwoPage = new Config<>(5);
+    public final Config<String> bookshelfDestinations = new Config<>("1,3,4,6,8,10");
 
     @RegisterConfig
-    public final Config<Integer> buttonThreePage = new Config<>(9);
-
-    @RegisterConfig
-    public final Config<Integer> buttonFourPage = new Config<>(13);
-
-    @RegisterConfig
-    public final Config<Integer> buttonFivePage = new Config<>(17);
-
-    @RegisterConfig
-    public final Config<Integer> buttonSixPage = new Config<>(21);
+    public final Config<String> miscBucketDestinations = new Config<>("1,3,4,6,8,10");
 
     private static final int MAX_BANK_PAGES = 21;
+    private static final int MAX_HOUSING_CONTAINER_PAGES = 10;
     private static final int NEXT_PAGE_SLOT = 8;
     private static final int PREVIOUS_PAGE_SLOT = 17;
     private static final List<Integer> BUTTON_SLOTS = List.of(7, 16, 25, 34, 43, 52);
     private static final List<Integer> QUICK_JUMP_DESTINATIONS = List.of(1, 5, 9, 13, 17, 21);
 
-    private boolean isBankScreen = false;
+    private SearchableContainerType currentContainer;
     private boolean quickJumping = false;
     private int currentPage = 1;
     private int lastPage = MAX_BANK_PAGES;
@@ -66,21 +65,23 @@ public class CustomBankPagesFeature extends Feature {
     @SubscribeEvent
     public void onScreenInit(ScreenInitEvent e) {
         if (!(e.getScreen() instanceof AbstractContainerScreen<?> screen)) return;
-        if (!Models.Container.isBankScreen(screen)) return;
 
-        isBankScreen = true;
+        if (Models.Container.isBankScreen(screen)) {
+            currentContainer = BANK;
+            lastPage = Models.Container.getFinalBankPage();
+        } else if (Models.Container.isBookshelfScreen(screen)) {
+            currentContainer = BOOKSHELF;
+            lastPage = Models.Container.getFinalBookshelfPage();
+        } else if (Models.Container.isMiscBucketScreen(screen)) {
+            currentContainer = MISC_BUCKET;
+            lastPage = Models.Container.getFinalMiscBucketPage();
+        } else {
+            return;
+        }
+
+        getCustomJumpDestinations();
 
         currentPage = Models.Container.getCurrentBankPage(screen);
-
-        lastPage = Models.Container.getFinalBankPage();
-
-        customJumpDestinations = List.of(
-                buttonOnePage.get(),
-                buttonTwoPage.get(),
-                buttonThreePage.get(),
-                buttonFourPage.get(),
-                buttonFivePage.get(),
-                buttonSixPage.get());
 
         if (!quickJumping) return;
 
@@ -94,16 +95,53 @@ public class CustomBankPagesFeature extends Feature {
         }
     }
 
+    private void getCustomJumpDestinations() {
+        String configDestinations;
+
+        switch (currentContainer) {
+            case BANK -> configDestinations = bankDestinations.get();
+            case BOOKSHELF -> configDestinations = bookshelfDestinations.get();
+            case MISC_BUCKET -> configDestinations = miscBucketDestinations.get();
+            default -> {
+                return;
+            }
+        }
+
+        if (!parseStringToDestinations(configDestinations)) {
+            customJumpDestinations = QUICK_JUMP_DESTINATIONS;
+        }
+    }
+
+    private boolean parseStringToDestinations(String destinationsStr) {
+        String[] numberStrings = destinationsStr.split(",");
+
+        if (numberStrings.length != 6) return false;
+
+        List<Integer> destinations = new ArrayList<>();
+
+        try {
+            for (String numberString : numberStrings) {
+                int num = Integer.parseInt(numberString);
+                destinations.add(num);
+            }
+
+            customJumpDestinations = destinations;
+            return true;
+        } catch (NumberFormatException ex) {
+            return false;
+        }
+    }
+
     @SubscribeEvent
     public void onContainerClose(ContainerCloseEvent.Post e) {
-        isBankScreen = false;
+        currentContainer = null;
         currentPage = 1;
         pageDestination = 1;
     }
 
     @SubscribeEvent
     public void onSlotClicked(ContainerClickEvent e) {
-        if (!isBankScreen) return;
+        if (currentContainer == null) return;
 
         int slotIndex = e.getSlotNum();
 
@@ -117,7 +155,7 @@ public class CustomBankPagesFeature extends Feature {
 
     @SubscribeEvent
     public void onSetSlot(SetSlotEvent.Pre e) {
-        if (!isBankScreen) return;
+        if (currentContainer == null) return;
         if (e.getContainer() instanceof Inventory) return;
 
         if (BUTTON_SLOTS.contains(e.getSlot())) {
@@ -143,7 +181,12 @@ public class CustomBankPagesFeature extends Feature {
     @SubscribeEvent
     public void onContainerSetEvent(ContainerSetContentEvent.Post e) {
         if (Models.Container.isItemIndicatingLastBankPage(e.getItems().get(Models.Container.LAST_BANK_PAGE_SLOT))) {
-            Models.Container.updateFinalBankPage(currentPage);
+            switch (currentContainer) {
+                case BANK -> Models.Container.updateFinalBankPage(currentPage);
+                case BOOKSHELF -> Models.Container.updateFinalBookshelfPage(currentPage);
+                case MISC_BUCKET -> Models.Container.updateFinalMiscBucketPage(currentPage);
+            }
+
             lastPage = currentPage;
         }
     }
@@ -151,7 +194,7 @@ public class CustomBankPagesFeature extends Feature {
     private void jumpToDestination() {
         quickJumping = true;
 
-        if (currentPage == pageDestination) return;
+        if (currentPage == pageDestination || pageDestination > lastPage) return;
 
         int pageDifference = pageDestination - currentPage;
 
@@ -219,19 +262,52 @@ public class CustomBankPagesFeature extends Feature {
 
     @Override
     protected void onConfigUpdate(ConfigHolder configHolder) {
-        switch (configHolder.getFieldName()) {
-            case "buttonOnePage",
-                    "buttonFourPage",
-                    "buttonFivePage",
-                    "buttonSixPage",
-                    "buttonThreePage",
-                    "buttonTwoPage" -> {
-                if ((int) configHolder.getValue() < 1) {
-                    configHolder.setValue(1);
-                } else if ((int) configHolder.getValue() > MAX_BANK_PAGES) {
-                    configHolder.setValue(MAX_BANK_PAGES);
-                }
+        String valueString = (String) configHolder.getValue();
+
+        if (!parseStringToDestinations(valueString)) {
+            configHolder.setValue(configHolder.getDefaultValue());
+        } else {
+            List<Integer> originalValues = getDestinations(valueString);
+            List<Integer> newValues = modifyJumpValues(
+                    originalValues,
+                    configHolder.getFieldName().equals("bankDestinations")
+                            ? MAX_BANK_PAGES
+                            : MAX_HOUSING_CONTAINER_PAGES);
+
+            if (!newValues.equals(originalValues)) {
+                String formattedConfig =
+                        newValues.stream().map(Object::toString).collect(Collectors.joining(","));
+
+                configHolder.setValue(formattedConfig);
             }
         }
+    }
+
+    private List<Integer> modifyJumpValues(List<Integer> originalValues, int maxValue) {
+        List<Integer> newValues = new ArrayList<>(originalValues);
+
+        for (int i = 0; i < newValues.size(); i++) {
+            int value = newValues.get(i);
+
+            if (value <= 0) {
+                newValues.set(i, 1);
+            } else if (value > maxValue) {
+                newValues.set(i, maxValue);
+            }
+        }
+
+        return newValues;
+    }
+
+    private List<Integer> getDestinations(String destinationsStr) {
+        String[] numberStrings = destinationsStr.split(",");
+        List<Integer> destinations = new ArrayList<>();
+
+        for (String numberString : numberStrings) {
+            int num = Integer.parseInt(numberString);
+            destinations.add(num);
+        }
+
+        return destinations;
     }
 }
