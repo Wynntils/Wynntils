@@ -12,6 +12,7 @@ import com.wynntils.antiope.manager.activity.type.Activity;
 import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.components.Manager;
 import com.wynntils.mc.event.TickEvent;
+import com.wynntils.utils.mc.McUtils;
 import java.time.Instant;
 import java.util.List;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
@@ -67,6 +68,10 @@ public class DiscordManager extends Manager {
             core = new DiscordGameSDKCore(params);
             activity = new Activity();
             activity.timestamps().setStart(Instant.now());
+            activity.assets().setSmallImage("wynntils");
+            activity.assets()
+                    .setSmallText("Wynntils " + WynntilsMod.getVersion() + " ("
+                            + McUtils.mc().getLaunchedVersion() + ")");
         } catch (Throwable e) {
             if (e instanceof GameSDKException gameSDKException
                     && gameSDKException.getResult() == Result.INTERNAL_ERROR) {
