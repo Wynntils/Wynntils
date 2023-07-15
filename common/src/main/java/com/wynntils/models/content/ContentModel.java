@@ -227,7 +227,8 @@ public final class ContentModel extends Model {
     void updateTracker(String name, String type, StyledText nextTask) {
         trackedContent = new TrackedContent(name, ContentType.from(type), nextTask);
 
-        WynntilsMod.postEvent(new ContentTrackerUpdatedEvent(trackedContent.trackedType(), trackedContent.trackedName(), trackedContent.trackedTask()));
+        WynntilsMod.postEvent(new ContentTrackerUpdatedEvent(
+                trackedContent.trackedType(), trackedContent.trackedName(), trackedContent.trackedTask()));
     }
 
     void resetTracker() {
@@ -248,9 +249,7 @@ public final class ContentModel extends Model {
 
     public boolean isTracking() {
         return trackedContent != null;
-
     }
 
-    private record TrackedContent(String trackedName, ContentType trackedType, StyledText trackedTask) {
-    }
+    private record TrackedContent(String trackedName, ContentType trackedType, StyledText trackedTask) {}
 }
