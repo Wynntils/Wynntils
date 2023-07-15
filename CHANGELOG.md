@@ -1,8 +1,16 @@
+## [0.0.3-alpha.144](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.143...v0.0.3-alpha.144) (2023-07-15)
+
+
+### Bug Fixes
+
+* Now really fix the discovery tracking ([#1759](https://github.com/Wynntils/Artemis/issues/1759)) ([7bfe70b](https://github.com/Wynntils/Artemis/commit/7bfe70b67a320a443eaaa40ed729d2fe519fc01d))
+
 ## [0.0.3-alpha.143](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.142...v0.0.3-alpha.143) (2023-07-15)
 
 
 ### Miscellaneous Chores
 
+* **release:** v0.0.3-alpha.143 [skip ci] ([8b60ba2](https://github.com/Wynntils/Artemis/commit/8b60ba28359de7ff6774293670f79d063e4791bc))
 * Update to Gradle 8.2.1, Loom 1.2 ([#1756](https://github.com/Wynntils/Artemis/issues/1756)) ([551590e](https://github.com/Wynntils/Artemis/commit/551590ef3b1d786289de2bb84c01622c903ed656))
 
 ## [0.0.3-alpha.142](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.141...v0.0.3-alpha.142) (2023-07-14)
@@ -40,16 +48,4 @@
 ### Miscellaneous Chores
 
 * **release:** v0.0.3-alpha.140 [skip ci] ([adcad5b](https://github.com/Wynntils/Artemis/commit/adcad5b9f06b939918ef7298ff18356fd0a94e9a))
-
-## [0.0.3-alpha.139](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.138...v0.0.3-alpha.139) (2023-07-14)
-
-
-### Miscellaneous Chores
-
-* **release:** v0.0.3-alpha.139 [skip ci] ([c33c1de](https://github.com/Wynntils/Artemis/commit/c33c1de1450bb8fa7ec674343a0fddb432109a1f))
-
-
-### Code Refactoring
-
-* Do not use "var" ([#1751](https://github.com/Wynntils/Artemis/issues/1751)) ([bd3f664](https://github.com/Wynntils/Artemis/commit/bd3f6648c6428794ee4c91bac54d554eab16341c))
 
