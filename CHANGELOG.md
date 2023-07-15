@@ -1,9 +1,21 @@
+## [0.0.3-alpha.143](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.142...v0.0.3-alpha.143) (2023-07-15)
+
+
+### Miscellaneous Chores
+
+* Update to Gradle 8.2.1, Loom 1.2 ([#1756](https://github.com/Wynntils/Artemis/issues/1756)) ([551590e](https://github.com/Wynntils/Artemis/commit/551590ef3b1d786289de2bb84c01622c903ed656))
+
 ## [0.0.3-alpha.142](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.141...v0.0.3-alpha.142) (2023-07-14)
 
 
 ### Bug Fixes
 
 * Bank final page being reset ([#1753](https://github.com/Wynntils/Artemis/issues/1753)) ([b585996](https://github.com/Wynntils/Artemis/commit/b5859961f0ccb54abdef7673eff71a4db317c0e3))
+
+
+### Miscellaneous Chores
+
+* **release:** v0.0.3-alpha.142 [skip ci] ([ce4181f](https://github.com/Wynntils/Artemis/commit/ce4181f3801cb48a1e15ae16b063fc3664a54488))
 
 ## [0.0.3-alpha.141](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.140...v0.0.3-alpha.141) (2023-07-14)
 
@@ -40,16 +52,4 @@
 ### Code Refactoring
 
 * Do not use "var" ([#1751](https://github.com/Wynntils/Artemis/issues/1751)) ([bd3f664](https://github.com/Wynntils/Artemis/commit/bd3f6648c6428794ee4c91bac54d554eab16341c))
-
-## [0.0.3-alpha.138](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.137...v0.0.3-alpha.138) (2023-07-14)
-
-
-### Bug Fixes
-
-* Ugly workaround to stop Discovery tracking crashes ([#1747](https://github.com/Wynntils/Artemis/issues/1747)) ([849bd95](https://github.com/Wynntils/Artemis/commit/849bd95ba1e6b077cf56805c31fdb9eddf3baa2a))
-
-
-### Miscellaneous Chores
-
-* **release:** v0.0.3-alpha.138 [skip ci] ([13b3e7d](https://github.com/Wynntils/Artemis/commit/13b3e7d22e2009c065048f83680ef98053ffc346))
 
