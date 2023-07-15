@@ -53,7 +53,7 @@ public class ContentTrackerScoreboardPart extends ScoreboardPart {
         StyledText fixedNextTask =
                 StyledText.fromString(nextTask.toString().trim()).getNormalized();
 
-        Models.Content.updateTracker(type, questName, fixedNextTask);
+        Models.Content.updateTracker(questName, type, fixedNextTask);
     }
 
     @Override
