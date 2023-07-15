@@ -64,7 +64,7 @@ public class ItemFavoriteFeature extends Feature {
             e.setCanceled(true);
             return;
         }
-        
+
         lootChestCloseOverrideCounter++;
         if (lootChestCloseOverrideCounter >= lootChestCloseOverride.get()) return;
 
