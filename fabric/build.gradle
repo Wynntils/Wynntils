@@ -100,18 +100,18 @@ components.java {
 }
 
 jar {
-    classifier "dev"
+    archiveClassifier = "dev"
 }
 
 shadowJar {
     configurations = [project.configurations.shadowCommon, project.configurations.shadowImplementation]
 
-    classifier "dev-shadow"
+    archiveClassifier = "dev-shadow"
 }
 
 tasks.register("applyEventBus", Jar) {
     inputs.file shadowJar.archiveFile
-    classifier "transformed-eventbus"
+    archiveClassifier = "transformed-eventbus"
     dependsOn shadowJar
     doLast {
         javaexec {
@@ -127,7 +127,7 @@ remapJar {
     injectAccessWidener = true
     input.set applyEventBus.archiveFile
     dependsOn applyEventBus
-    classifier "fabric+MC-${minecraft_version}"
+    archiveClassifier = "fabric+MC-${minecraft_version}"
 }
 
 sourcesJar {
