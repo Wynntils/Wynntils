@@ -28,11 +28,11 @@ import com.wynntils.utils.colors.CustomColor;
 import com.wynntils.utils.mc.McUtils;
 import com.wynntils.utils.render.RenderUtils;
 import com.wynntils.utils.wynn.ContainerUtils;
+import java.util.List;
 import java.util.Locale;
 import java.util.Optional;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
-import net.minecraft.core.NonNullList;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
@@ -57,7 +57,8 @@ public class ContainerSearchFeature extends Feature {
 
     // If the guild bank has lots of custom (crafted) items, it can take multiple packets and a decent amount of time
     // for Wynn to send us the entire updated inventory. During this, the inventory will be in a weird state where
-    // some items are updated and some are not. We will assume that after SEARCH_DELAY_MS milliseconds, the inventory
+    // some items are updated and some are not. We will assume that after GUILD_BANK_SEARCH_DELAY milliseconds, the
+    // inventory
     // is fully updated.
     private static final int GUILD_BANK_SEARCH_DELAY = 500;
     private long guildBankLastSearch = 0;
@@ -201,11 +202,13 @@ public class ContainerSearchFeature extends Feature {
     private void matchItems(String searchStr, AbstractContainerScreen<?> screen) {
         String search = searchStr.toLowerCase(Locale.ROOT);
 
-        NonNullList<ItemStack> playerItems = McUtils.inventory().items;
-        for (ItemStack itemStack : screen.getMenu().getItems()) {
+        List<ItemStack> containerItems = screen.getMenu().getItems().stream()
+                .filter(itemStack -> !McUtils.inventory().items.contains(itemStack))
+                .toList();
+
+        for (ItemStack itemStack : containerItems) {
             Optional<WynnItem> wynnItemOpt = Models.Item.getWynnItem(itemStack);
-            if (wynnItemOpt.isEmpty()) return;
-            if (playerItems.contains(itemStack)) continue;
+            if (wynnItemOpt.isEmpty()) continue;
 
             String name = StyledText.fromComponent(itemStack.getHoverName())
                     .getStringWithoutFormatting()
