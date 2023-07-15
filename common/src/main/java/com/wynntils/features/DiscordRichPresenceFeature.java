@@ -37,16 +37,11 @@ public class DiscordRichPresenceFeature extends Feature {
 
     private boolean stopTerritoryCheck = false;
     private TerritoryProfile lastTerritoryProfile = null;
-    private ClassType classType = null;
-    private int level = 0;
 
     @SubscribeEvent
     public void onCharacterUpdate(CharacterUpdateEvent event) {
         if (!Models.WorldState.onWorld()) return;
 
-        // classType needs to be set even when config is disabled so if the config is enabled later, it will not require
-        // a relog or class change
-        classType = Models.Character.getClassType();
         if (displayCharacterInfo.get()) {
             displayCharacterDetails();
         }
@@ -57,7 +52,6 @@ public class DiscordRichPresenceFeature extends Feature {
         if (!Models.WorldState.onWorld()) return;
 
         // same as above, level needs to be set even when config is disabled
-        level = event.getExperienceLevel();
         if (displayCharacterInfo.get()) {
             displayCharacterDetails();
         }
@@ -95,6 +89,9 @@ public class DiscordRichPresenceFeature extends Feature {
     }
 
     private void displayCharacterDetails() {
+        int level = Models.CombatXp.getCombatLevel().current();
+        ClassType classType = Models.Character.getClassType();
+
         if (classType == null) return;
         String name = StyledText.fromComponent(McUtils.player().getName()).getString(PartStyle.StyleType.NONE);
         Managers.Discord.setImageText(name + " - Level " + level + " " + classType.getName());
