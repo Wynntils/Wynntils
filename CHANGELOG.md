@@ -1,9 +1,21 @@
+## [0.0.3-alpha.145](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.144...v0.0.3-alpha.145) (2023-07-15)
+
+
+### Bug Fixes
+
+* Auto mount horse fails slowly in lootruns ([#1760](https://github.com/Wynntils/Artemis/issues/1760)) ([0e145f3](https://github.com/Wynntils/Artemis/commit/0e145f3ee1e6f0d0121a23136b80b4943d0d4bd4))
+
 ## [0.0.3-alpha.144](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.143...v0.0.3-alpha.144) (2023-07-15)
 
 
 ### Bug Fixes
 
 * Now really fix the discovery tracking ([#1759](https://github.com/Wynntils/Artemis/issues/1759)) ([7bfe70b](https://github.com/Wynntils/Artemis/commit/7bfe70b67a320a443eaaa40ed729d2fe519fc01d))
+
+
+### Miscellaneous Chores
+
+* **release:** v0.0.3-alpha.144 [skip ci] ([f8eb515](https://github.com/Wynntils/Artemis/commit/f8eb515d1d1fbaf567096ab6348f52817122102e))
 
 ## [0.0.3-alpha.143](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.142...v0.0.3-alpha.143) (2023-07-15)
 
@@ -36,16 +48,4 @@
 ### Miscellaneous Chores
 
 * **release:** v0.0.3-alpha.141 [skip ci] ([3ba5b77](https://github.com/Wynntils/Artemis/commit/3ba5b77e6e1fee0198c1b0d296a1b62c4ca407e6))
-
-## [0.0.3-alpha.140](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.139...v0.0.3-alpha.140) (2023-07-14)
-
-
-### New Features
-
-* Custom bank quick jump pages ([#1670](https://github.com/Wynntils/Artemis/issues/1670)) ([3c8b5fd](https://github.com/Wynntils/Artemis/commit/3c8b5fd536ae1ad739be4130b6b6e42692783867))
-
-
-### Miscellaneous Chores
-
-* **release:** v0.0.3-alpha.140 [skip ci] ([adcad5b](https://github.com/Wynntils/Artemis/commit/adcad5b9f06b939918ef7298ff18356fd0a94e9a))
 
