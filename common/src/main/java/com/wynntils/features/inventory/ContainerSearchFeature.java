@@ -58,8 +58,7 @@ public class ContainerSearchFeature extends Feature {
     // If the guild bank has lots of custom (crafted) items, it can take multiple packets and a decent amount of time
     // for Wynn to send us the entire updated inventory. During this, the inventory will be in a weird state where
     // some items are updated and some are not. We will assume that after GUILD_BANK_SEARCH_DELAY milliseconds, the
-    // inventory
-    // is fully updated.
+    // inventory is fully updated.
     private static final int GUILD_BANK_SEARCH_DELAY = 500;
     private long guildBankLastSearch = 0;
 
