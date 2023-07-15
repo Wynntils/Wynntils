@@ -114,9 +114,9 @@ public class DiscordManager extends Manager {
             ticksUntilUpdate--;
             return;
         }
+        ticksUntilUpdate = TICKS_PER_UPDATE;
         if (!isReady()) return;
 
         core.runCallbacks();
-        ticksUntilUpdate = TICKS_PER_UPDATE;
     }
 }
