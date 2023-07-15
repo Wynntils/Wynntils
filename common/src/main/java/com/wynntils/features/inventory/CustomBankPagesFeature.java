@@ -14,6 +14,7 @@ import com.wynntils.core.features.Feature;
 import com.wynntils.mc.event.ContainerClickEvent;
 import com.wynntils.mc.event.ContainerCloseEvent;
 import com.wynntils.mc.event.ContainerSetContentEvent;
+import com.wynntils.mc.event.ScreenClosedEvent;
 import com.wynntils.mc.event.ScreenInitEvent;
 import com.wynntils.mc.event.SetSlotEvent;
 import com.wynntils.utils.mc.McUtils;
@@ -95,7 +96,7 @@ public class CustomBankPagesFeature extends Feature {
     }
 
     @SubscribeEvent
-    public void onContainerClose(ContainerCloseEvent.Post e) {
+    public void onScreenClose(ScreenClosedEvent e) {
         isBankScreen = false;
         currentPage = 1;
         pageDestination = 1;
