@@ -1,9 +1,26 @@
+## [0.0.3-alpha.148](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.147...v0.0.3-alpha.148) (2023-07-16)
+
+
+### New Features
+
+* Discord rich presence ([#1645](https://github.com/Wynntils/Artemis/issues/1645)) ([83f51a3](https://github.com/Wynntils/Artemis/commit/83f51a39644d0fc392f8d8bd02a3789401dd55df)), closes [#1722](https://github.com/Wynntils/Artemis/issues/1722) [#1653](https://github.com/Wynntils/Artemis/issues/1653) [#1656](https://github.com/Wynntils/Artemis/issues/1656) [#1657](https://github.com/Wynntils/Artemis/issues/1657)
+
+
+### Bug Fixes
+
+* Force closing favourite item count goes negative ([#1762](https://github.com/Wynntils/Artemis/issues/1762)) ([43642a5](https://github.com/Wynntils/Artemis/commit/43642a580d19f12dcf2d8299e134e901d20c095e))
+
 ## [0.0.3-alpha.147](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.146...v0.0.3-alpha.147) (2023-07-16)
 
 
 ### Bug Fixes
 
 * Fix container search not working properly ([#1767](https://github.com/Wynntils/Artemis/issues/1767)) ([1a933d3](https://github.com/Wynntils/Artemis/commit/1a933d30342d162b243671981267335bfe7f7586))
+
+
+### Miscellaneous Chores
+
+* **release:** v0.0.3-alpha.147 [skip ci] ([b25ee2e](https://github.com/Wynntils/Artemis/commit/b25ee2e9cf46dde30c27bd78978ab6bfdbeeb8d7))
 
 ## [0.0.3-alpha.146](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.145...v0.0.3-alpha.146) (2023-07-16)
 
@@ -40,12 +57,4 @@
 ### Miscellaneous Chores
 
 * **release:** v0.0.3-alpha.144 [skip ci] ([f8eb515](https://github.com/Wynntils/Artemis/commit/f8eb515d1d1fbaf567096ab6348f52817122102e))
-
-## [0.0.3-alpha.143](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.142...v0.0.3-alpha.143) (2023-07-15)
-
-
-### Miscellaneous Chores
-
-* **release:** v0.0.3-alpha.143 [skip ci] ([8b60ba2](https://github.com/Wynntils/Artemis/commit/8b60ba28359de7ff6774293670f79d063e4791bc))
-* Update to Gradle 8.2.1, Loom 1.2 ([#1756](https://github.com/Wynntils/Artemis/issues/1756)) ([551590e](https://github.com/Wynntils/Artemis/commit/551590ef3b1d786289de2bb84c01622c903ed656))
 
