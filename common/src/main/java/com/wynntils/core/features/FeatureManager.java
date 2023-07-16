@@ -15,6 +15,7 @@ import com.wynntils.core.features.properties.StartDisabled;
 import com.wynntils.core.keybinds.KeyBindManager;
 import com.wynntils.core.mod.CrashReportManager;
 import com.wynntils.core.mod.type.CrashType;
+import com.wynntils.features.DiscordRichPresenceFeature;
 import com.wynntils.features.GammabrightFeature;
 import com.wynntils.features.LootrunFeature;
 import com.wynntils.features.SilencerFeature;
@@ -311,6 +312,7 @@ public final class FeatureManager extends Manager {
         // endregion
 
         // region uncategorized
+        registerFeature(new DiscordRichPresenceFeature());
         registerFeature(new GammabrightFeature());
         registerFeature(new SilencerFeature());
         registerFeature(new TerritoryDefenseMessageFeature());

@@ -35,6 +35,7 @@ dependencies {
 
     // Hades Protocol
     include(forgeRuntimeLibrary("com.wynntils.hades:hades:${hades_version}"))
+    include(forgeRuntimeLibrary("com.wynntils:antiope:${antiope_version}"))
 
     implementation(annotationProcessor("com.github.llamalad7.mixinextras:mixinextras-common:${mixinextras_version}"))
     implementation(include("com.github.llamalad7.mixinextras:mixinextras-forge:${mixinextras_version}"))
