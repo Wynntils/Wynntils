@@ -91,7 +91,15 @@ public class ContentBookQueries {
                             // Continue looping until filter matches
                             return !activeFilter.equals(filterName);
                         },
-                        QueryStep.clickOnSlot(CHANGE_VIEW_SLOT))
+                        QueryStep.clickOnSlot(CHANGE_VIEW_SLOT)
+                                .expectContainerContentUpdate((container, updatedItems) -> {
+                                    if (updatedItems.size() != 1 || !updatedItems.containsKey(CHANGE_VIEW_SLOT)) {
+                                        return false;
+                                    }
+
+                                    // Assume it updated correctly, we are here to check for the packet
+                                    return true;
+                                }))
 
                 // Process first page
                 .reprocess(c -> {
@@ -145,7 +153,15 @@ public class ContentBookQueries {
                             // Continue looping until filter matches original value
                             return !activeFilter.equals(selectedFilter);
                         },
-                        QueryStep.clickOnSlot(CHANGE_VIEW_SLOT))
+                        QueryStep.clickOnSlot(CHANGE_VIEW_SLOT)
+                                .expectContainerContentUpdate((container, updatedItems) -> {
+                                    if (updatedItems.size() != 1 || !updatedItems.containsKey(CHANGE_VIEW_SLOT)) {
+                                        return false;
+                                    }
+
+                                    // Assume it updated correctly, we are here to check for the packet
+                                    return true;
+                                }))
 
                 // Finally signal we're done
                 .execute(() -> processResult.accept(newContent, progress))
@@ -219,7 +235,15 @@ public class ContentBookQueries {
                             // Continue looping until filter matches
                             return !activeFilter.equals(contentType.getDisplayName());
                         },
-                        QueryStep.clickOnSlot(CHANGE_VIEW_SLOT))
+                        QueryStep.clickOnSlot(CHANGE_VIEW_SLOT)
+                                .expectContainerContentUpdate((container, updatedItems) -> {
+                                    if (updatedItems.size() != 1 || !updatedItems.containsKey(CHANGE_VIEW_SLOT)) {
+                                        return false;
+                                    }
+
+                                    // Assume it updated correctly, we are here to check for the packet
+                                    return true;
+                                }))
 
                 // Repeatedly check if the requested task is on this page,
                 // if so, click it, otherwise click on next slot (if available)
@@ -272,7 +296,15 @@ public class ContentBookQueries {
                             // Continue looping until filter matches original value
                             return !activeFilter.equals(selectedFilter);
                         },
-                        QueryStep.clickOnSlot(CHANGE_VIEW_SLOT))
+                        QueryStep.clickOnSlot(CHANGE_VIEW_SLOT)
+                                .expectContainerContentUpdate((container, updatedItems) -> {
+                                    if (updatedItems.size() != 1 || !updatedItems.containsKey(CHANGE_VIEW_SLOT)) {
+                                        return false;
+                                    }
+
+                                    // Assume it updated correctly, we are here to check for the packet
+                                    return true;
+                                }))
                 .build();
 
         query.executeQuery();
