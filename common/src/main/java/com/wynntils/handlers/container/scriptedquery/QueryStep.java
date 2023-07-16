@@ -9,6 +9,7 @@ import com.wynntils.handlers.container.ContainerQueryException;
 import com.wynntils.handlers.container.ContainerQueryStep;
 import com.wynntils.handlers.container.type.ContainerAction;
 import com.wynntils.handlers.container.type.ContainerContent;
+import com.wynntils.handlers.container.type.ContainerContentUpdatePredicate;
 import com.wynntils.handlers.container.type.ContainerPredicate;
 import com.wynntils.handlers.container.type.ContainerVerification;
 import com.wynntils.utils.wynn.ContainerUtils;
@@ -18,10 +19,12 @@ import org.lwjgl.glfw.GLFW;
 public class QueryStep {
     // We should never get to MenuOpenedEvent
     private static final ContainerVerification EXPECT_SAME_MENU = (title, type) -> false;
+    private static final ContainerContentUpdatePredicate NO_SPECIAL_UPDATE_VERIFICATION = (c, i) -> true;
     private static final ContainerAction IGNORE_INCOMING_CONTAINER = c -> {};
 
     private final ContainerPredicate startAction;
     private ContainerVerification verification = EXPECT_SAME_MENU;
+    private ContainerContentUpdatePredicate updateVerification = NO_SPECIAL_UPDATE_VERIFICATION;
     private ContainerAction handleContent = IGNORE_INCOMING_CONTAINER;
 
     protected QueryStep(ContainerPredicate startAction) {
@@ -31,6 +34,7 @@ public class QueryStep {
     protected QueryStep(QueryStep queryStep) {
         this.startAction = queryStep.startAction;
         this.verification = queryStep.verification;
+        this.updateVerification = queryStep.updateVerification;
         this.handleContent = queryStep.handleContent;
     }
 
@@ -69,12 +73,21 @@ public class QueryStep {
         return this;
     }
 
+    public QueryStep expectContainerContentUpdate(ContainerContentUpdatePredicate predicate) {
+        this.updateVerification = predicate;
+        return this;
+    }
+
     // endregion
 
     // region ScriptedContainerQuery support
 
     ContainerVerification getVerification() {
         return verification;
+    }
+
+    ContainerContentUpdatePredicate getUpdateVerification() {
+        return updateVerification;
     }
 
     ContainerAction getHandleContent() {

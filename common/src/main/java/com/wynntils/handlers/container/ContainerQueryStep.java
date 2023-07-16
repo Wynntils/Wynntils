@@ -5,8 +5,10 @@
 package com.wynntils.handlers.container;
 
 import com.wynntils.handlers.container.type.ContainerContent;
+import it.unimi.dsi.fastutil.ints.Int2ObjectArrayMap;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.inventory.MenuType;
+import net.minecraft.world.item.ItemStack;
 
 public interface ContainerQueryStep {
     /**
@@ -21,6 +23,15 @@ public interface ContainerQueryStep {
      * title. To ensure robustness, make this test as tight as possible.
      */
     boolean verifyContainer(Component title, MenuType<?> menuType);
+
+    /**
+     * Verify that the container recieved all vital update packets. Usually this
+     * does not need to be manually implemented.
+     * <p>Note: This method may be called multiple times, if the container is updated via multiple packets.
+     * <p>{@code updatedItems} is a list of all items that were updated in the <b>current</b> packet.
+     */
+    boolean verifyContentUpdate(ContainerContent container, Int2ObjectArrayMap<ItemStack> updatedItems)
+            throws ContainerQueryException;
 
     /**
      * Process the actual content of the container that this step has opened up.

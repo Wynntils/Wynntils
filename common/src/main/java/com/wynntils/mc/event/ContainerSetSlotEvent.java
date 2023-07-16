@@ -5,6 +5,7 @@
 package com.wynntils.mc.event;
 
 import net.minecraft.world.item.ItemStack;
+import net.minecraftforge.eventbus.api.Cancelable;
 import net.minecraftforge.eventbus.api.Event;
 
 public abstract class ContainerSetSlotEvent extends Event {
@@ -41,6 +42,7 @@ public abstract class ContainerSetSlotEvent extends Event {
      *       so you cannot use it to get {@link com.wynntils.models.items.WynnItem}s.
      *       Use {@link Post} instead.
      */
+    @Cancelable
     public static class Pre extends ContainerSetSlotEvent {
         public Pre(int containerId, int stateId, int slot, ItemStack itemStack) {
             super(containerId, stateId, slot, itemStack);

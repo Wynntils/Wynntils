@@ -300,12 +300,18 @@ public abstract class ClientPacketListenerMixin {
 
     @Inject(
             method = "handleContainerSetSlot(Lnet/minecraft/network/protocol/game/ClientboundContainerSetSlotPacket;)V",
-            at = @At("HEAD"))
+            at = @At("HEAD"),
+            cancellable = true)
     private void handleContainerSetSlotPre(ClientboundContainerSetSlotPacket packet, CallbackInfo ci) {
         if (!isRenderThread()) return;
 
-        MixinHelper.post(new ContainerSetSlotEvent.Pre(
-                packet.getContainerId(), packet.getStateId(), packet.getSlot(), packet.getItem()));
+        ContainerSetSlotEvent.Pre event = new ContainerSetSlotEvent.Pre(
+                packet.getContainerId(), packet.getStateId(), packet.getSlot(), packet.getItem());
+        MixinHelper.post(event);
+
+        if (event.isCanceled()) {
+            ci.cancel();
+        }
     }
 
     @Inject(

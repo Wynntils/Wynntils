@@ -37,8 +37,10 @@ public class ContentBookQueries {
     private static final int CHANGE_VIEW_SLOT = 66;
     private static final int PROGRESS_SLOT = 68;
     private static final int NEXT_PAGE_SLOT = 69;
+    private static final int PREVIOUS_PAGE_SLOT = 65;
 
     private static final StyledText SCROLL_DOWN_TEXT = StyledText.fromString("§7Scroll Down");
+    private static final StyledText SCROLL_UP_TEXT = StyledText.fromString("§7Scroll Up");
     private static final String FILTER_ITEM_TITLE = "§eFilter";
     private static final Pattern ACTIVE_FILTER = Pattern.compile("^§f- §7(.*)$");
     private static final int MAX_FILTERS = 11;
@@ -104,6 +106,22 @@ public class ContentBookQueries {
                         c -> ScriptedContainerQuery.containerHasSlot(
                                 c, NEXT_PAGE_SLOT, Items.GOLDEN_SHOVEL, SCROLL_DOWN_TEXT),
                         QueryStep.clickOnSlot(NEXT_PAGE_SLOT)
+                                .expectContainerContentUpdate((container, updatedItems) -> {
+                                    // This checks for ContainerSetSlot, which seems to be vital for this working
+                                    // reliably
+                                    if (updatedItems.size() != 1) return false;
+                                    if (!updatedItems.containsKey(PREVIOUS_PAGE_SLOT)
+                                            && !updatedItems.containsKey(NEXT_PAGE_SLOT)) return false;
+
+                                    ItemStack itemStack = updatedItems.getOrDefault(
+                                            NEXT_PAGE_SLOT, updatedItems.get(PREVIOUS_PAGE_SLOT));
+
+                                    // We are on last page
+                                    if (itemStack.getItem() == Items.AIR) return true;
+
+                                    StyledText itemName = InventoryUtils.getItemName(itemStack);
+                                    return itemName.equals(SCROLL_DOWN_TEXT) || itemName.equals(SCROLL_UP_TEXT);
+                                })
                                 .processIncomingContainer(c -> processContentBookPage(c, newContent)))
 
                 // Restore filter to original value
@@ -215,7 +233,23 @@ public class ContentBookQueries {
                             ContainerUtils.clickOnSlot(slot, c.containerId(), GLFW.GLFW_MOUSE_BUTTON_LEFT, c.items());
                             return false;
                         },
-                        QueryStep.clickOnMatchingSlot(NEXT_PAGE_SLOT, Items.GOLDEN_SHOVEL, SCROLL_DOWN_TEXT))
+                        QueryStep.clickOnMatchingSlot(NEXT_PAGE_SLOT, Items.GOLDEN_SHOVEL, SCROLL_DOWN_TEXT)
+                                .expectContainerContentUpdate((container, updatedItems) -> {
+                                    // This checks for ContainerSetSlot, which seems to be vital for this working
+                                    // reliably
+                                    if (updatedItems.size() != 1) return false;
+                                    if (!updatedItems.containsKey(PREVIOUS_PAGE_SLOT)
+                                            && !updatedItems.containsKey(NEXT_PAGE_SLOT)) return false;
+
+                                    ItemStack itemStack = updatedItems.getOrDefault(
+                                            NEXT_PAGE_SLOT, updatedItems.get(PREVIOUS_PAGE_SLOT));
+
+                                    // We are on last page
+                                    if (itemStack.getItem() == Items.AIR) return true;
+
+                                    StyledText itemName = InventoryUtils.getItemName(itemStack);
+                                    return itemName.equals(SCROLL_DOWN_TEXT) || itemName.equals(SCROLL_UP_TEXT);
+                                }))
 
                 // Restore filter to original value
                 .execute(() -> filterLoopCount = 0)

@@ -8,11 +8,14 @@ import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.components.Handler;
 import com.wynntils.handlers.container.type.ContainerContent;
 import com.wynntils.mc.event.ContainerSetContentEvent;
+import com.wynntils.mc.event.ContainerSetSlotEvent;
 import com.wynntils.mc.event.LocalSoundEvent;
 import com.wynntils.mc.event.MenuEvent;
 import com.wynntils.mc.event.TickEvent;
 import com.wynntils.utils.mc.McUtils;
 import com.wynntils.utils.wynn.InventoryUtils;
+import it.unimi.dsi.fastutil.ints.Int2ObjectArrayMap;
+import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 import net.minecraft.client.gui.screens.Screen;
@@ -37,8 +40,13 @@ public final class ContainerQueryHandler extends Handler {
     private Component currentTitle;
     private MenuType<?> currentMenuType;
     private int containerId = NO_CONTAINER;
+    private List<ItemStack> containerItems = new ArrayList<>();
+    private ContainerQueryStep lastVerifiedStep;
+    private ContainerQueryStep lastStepWithContentSet;
+
     private int lastHandledContentId = NO_CONTAINER;
     private List<ItemStack> lastHandledItems = List.of();
+
     private int ticksRemaining;
 
     public void runQuery(ContainerQueryStep firstStep) {
@@ -154,42 +162,120 @@ public final class ContainerQueryHandler extends Handler {
             return;
         }
 
+        if (lastStepWithContentSet == currentStep) {
+            // This is a bad edge case. If this happens, it means the server sent 2 set content packets, but with
+            // different content.
+            WynntilsMod.warn("Container " + containerId + " sent set content after being verified, ignoring.");
+            resetTimer();
+            return;
+        }
+
         lastHandledContentId = containerId;
         lastHandledItems = e.getItems();
+        containerItems = e.getItems();
+        lastStepWithContentSet = currentStep;
+
         ContainerContent currentContainer =
-                new ContainerContent(e.getItems(), currentTitle, currentMenuType, containerId);
+                new ContainerContent(containerItems, currentTitle, currentMenuType, containerId);
         resetTimer();
 
         try {
-            // Now actually process this container
-            boolean hasMoreSteps = processContainer(currentContainer);
-            e.setCanceled(true);
-
-            if (!hasMoreSteps) {
-                endQuery();
-                McUtils.sendPacket(new ServerboundContainerClosePacket(id));
-                // Start next query in queue, if any
-                if (!queuedQueries.isEmpty()) {
-                    runQuery(queuedQueries.pop());
-                }
+            // Verify that the content update is what we expect
+            Int2ObjectArrayMap<ItemStack> changes = new Int2ObjectArrayMap<>();
+            for (ItemStack itemStack : e.getItems()) {
+                changes.put(changes.size(), itemStack);
             }
+
+            if (lastVerifiedStep == currentStep || currentStep.verifyContentUpdate(currentContainer, changes)) {
+                // Now we can process the content
+                processContainer(currentContainer);
+            }
+            // or else, we just wait for the next updates using set slot
+
+            e.setCanceled(true);
         } catch (ContainerQueryException ex) {
             raiseError("Error while processing content for " + firstStepName + ": " + ex.getMessage());
         }
     }
 
-    private boolean processContainer(ContainerContent currentContainer) throws ContainerQueryException {
+    @SubscribeEvent
+    public void onContainerSetSlot(ContainerSetSlotEvent.Pre event) {
+        if (currentStep == null) return;
+        // We got an inventory update, can happen all the time
+        if (event.getContainerId() == 0 || event.getContainerId() == -1) return;
+
+        // We already verified this step, ignore
+        if (lastVerifiedStep == currentStep) {
+            return;
+        }
+
+        if (containerId == NO_CONTAINER) {
+            // We have not registered a MenuOpenedEvent. Assume this means that this is the
+            // content of another container, so just pass it on
+            return;
+        }
+
+        int id = event.getContainerId();
+        if (id != containerId) {
+            raiseError("Another container opened in set slot");
+            return;
+        }
+
+        resetTimer();
+
+        event.setCanceled(true);
+
+        if (containerItems.size() < event.getSlot()) {
+            // This couldn't possibly happen, we don't set contentUpdateVerified until we have the full content set
+            // packet at least once
+            WynntilsMod.warn("Container sent set slot for slot " + event.getSlot() + " but we only have "
+                    + containerItems.size() + " slots");
+            return;
+        }
+
+        // Note: We purposefully don't update the containerItems here, because we just want to verify the content update
+        //        containerItems.set(event.getSlot(), event.getItemStack());
+
+        ContainerContent currentContainer =
+                new ContainerContent(containerItems, currentTitle, currentMenuType, containerId);
+
+        try {
+            // Verify that the content update is what we expect
+            Int2ObjectArrayMap<ItemStack> changes = new Int2ObjectArrayMap<>();
+            changes.put(event.getSlot(), event.getItemStack());
+            if (currentStep.verifyContentUpdate(currentContainer, changes)) {
+                // Now we can process the content
+                lastVerifiedStep = currentStep;
+
+                if (lastStepWithContentSet == currentStep) {
+                    processContainer(currentContainer);
+                }
+            }
+        } catch (ContainerQueryException ex) {
+            raiseError("Error while processing set slot for " + firstStepName + ": " + ex.getMessage());
+        }
+    }
+
+    private void processContainer(ContainerContent currentContainer) throws ContainerQueryException {
         currentStep.handleContent(currentContainer);
 
         ContainerQueryStep nextStep = currentStep.getNextStep(currentContainer);
+
         if (nextStep != null) {
             // Go on and query another container
             currentStep = nextStep;
             // Return true iff taking the next step succeeded
-            return currentStep.startStep(currentContainer);
-        } else {
-            // We're done
-            return false;
+            lastVerifiedStep = null;
+            lastStepWithContentSet = null;
+            if (currentStep.startStep(currentContainer)) return;
+        }
+
+        // We're done
+        endQuery();
+        McUtils.sendPacket(new ServerboundContainerClosePacket(containerId));
+        // Start next query in queue, if any
+        if (!queuedQueries.isEmpty()) {
+            runQuery(queuedQueries.pop());
         }
     }
 
@@ -205,6 +291,9 @@ public final class ContainerQueryHandler extends Handler {
     private void endQuery() {
         containerId = NO_CONTAINER;
         lastHandledContentId = NO_CONTAINER;
+        containerItems = List.of();
+        lastVerifiedStep = null;
+        lastStepWithContentSet = null;
         lastHandledItems = List.of();
         currentStep = null;
     }
