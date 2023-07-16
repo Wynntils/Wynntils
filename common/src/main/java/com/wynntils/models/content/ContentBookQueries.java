@@ -178,6 +178,7 @@ public class ContentBookQueries {
         for (StyledText line : lore) {
             Matcher m = line.getMatcher(ACTIVE_FILTER);
             if (m.matches()) {
+                McUtils.sendMessageToClient(Component.literal("Active filter: " + m.group(1)));
                 return m.group(1);
             }
         }

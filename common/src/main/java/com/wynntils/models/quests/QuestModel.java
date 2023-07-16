@@ -27,6 +27,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Stream;
+import net.minecraft.network.chat.Component;
 import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.eventbus.api.EventPriority;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
@@ -57,7 +58,11 @@ public final class QuestModel extends Model {
 
     public void rescanQuestBook(boolean includeQuests, boolean includeMiniQuests) {
         WynntilsMod.info("Requesting rescan of Quests in Content Book");
+        McUtils.sendMessageToClient(Component.literal(
+                "Requesting rescan of Quests in Content Book" + (includeQuests ? " (including quests)" : "")
+                        + (includeMiniQuests ? " (including mini-quests)" : "")));
         if (includeQuests) {
+            McUtils.sendMessageToClient(Component.literal(""));
             Models.Content.scanContentBook("Quest", this::updateQuestsFromQuery);
         }
         if (includeMiniQuests) {
@@ -162,6 +167,7 @@ public final class QuestModel extends Model {
         quests = newQuests;
         WynntilsMod.postEvent(new QuestBookReloadedEvent.QuestsReloaded());
         WynntilsMod.info("Updated quests from query, got " + quests.size() + " quests.");
+        McUtils.sendMessageToClient(Component.literal("Updated quests from query, got " + quests.size() + " quests."));
     }
 
     private void updateMiniQuestsFromQuery(List<ContentInfo> newContent, List<StyledText> progress) {
@@ -179,6 +185,8 @@ public final class QuestModel extends Model {
         miniQuests = newMiniQuests;
         WynntilsMod.postEvent(new QuestBookReloadedEvent.MiniQuestsReloaded());
         WynntilsMod.info("Updated mini-quests from query, got " + miniQuests.size() + " mini-quests.");
+        McUtils.sendMessageToClient(
+                Component.literal("Updated mini-quests from query, got " + miniQuests.size() + " mini-quests."));
     }
 
     private static QuestInfo getQuestInfoFromContent(ContentInfo content) {
