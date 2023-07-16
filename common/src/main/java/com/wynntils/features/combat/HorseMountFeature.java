@@ -48,6 +48,8 @@ public class HorseMountFeature extends Feature {
     private static final StyledText MSG_NO_SPACE = StyledText.fromString("§4There is no room for a horse.");
     private static final StyledText MSG_TOO_MANY_MOBS =
             StyledText.fromString("§dYour horse is scared to come out right now, too many mobs are nearby.");
+    private static final StyledText MSG_HORSE_UNAVAILABLE =
+            StyledText.fromString("§4You cannot interact with your horse at the moment.");
 
     private int prevItem = -1;
     private boolean alreadySetPrevItem = false;
@@ -78,7 +80,9 @@ public class HorseMountFeature extends Feature {
     public void onChatReceived(ChatMessageReceivedEvent e) {
         StyledText message = e.getOriginalStyledText();
 
-        if (message.equals(MSG_NO_SPACE) || message.equals(MSG_TOO_MANY_MOBS)) {
+        if (message.equals(MSG_NO_SPACE)
+                || message.equals(MSG_TOO_MANY_MOBS)
+                || message.equals(MSG_HORSE_UNAVAILABLE)) {
             cancelMountingHorse = true;
         }
     }
