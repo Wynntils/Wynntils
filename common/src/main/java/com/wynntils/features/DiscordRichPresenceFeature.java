@@ -51,7 +51,6 @@ public class DiscordRichPresenceFeature extends Feature {
     public void onXpChange(SetXpEvent event) {
         if (!Models.WorldState.onWorld()) return;
 
-        // same as above, level needs to be set even when config is disabled
         if (displayCharacterInfo.get()) {
             displayCharacterDetails();
         }
