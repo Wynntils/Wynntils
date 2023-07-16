@@ -1,9 +1,21 @@
+## [0.0.3-alpha.147](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.146...v0.0.3-alpha.147) (2023-07-16)
+
+
+### Bug Fixes
+
+* Fix container search not working properly ([#1767](https://github.com/Wynntils/Artemis/issues/1767)) ([1a933d3](https://github.com/Wynntils/Artemis/commit/1a933d30342d162b243671981267335bfe7f7586))
+
 ## [0.0.3-alpha.146](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.145...v0.0.3-alpha.146) (2023-07-16)
 
 
 ### Bug Fixes
 
 * Clicking on ingredient pouch does not reset bank status ([#1761](https://github.com/Wynntils/Artemis/issues/1761)) ([d8fcff8](https://github.com/Wynntils/Artemis/commit/d8fcff89bad849a27229d8fca06c28b168b09ca9))
+
+
+### Miscellaneous Chores
+
+* **release:** v0.0.3-alpha.146 [skip ci] ([d79d3d4](https://github.com/Wynntils/Artemis/commit/d79d3d4666f80826e83b49c150872f3a727ef723))
 
 ## [0.0.3-alpha.145](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.144...v0.0.3-alpha.145) (2023-07-15)
 
@@ -36,16 +48,4 @@
 
 * **release:** v0.0.3-alpha.143 [skip ci] ([8b60ba2](https://github.com/Wynntils/Artemis/commit/8b60ba28359de7ff6774293670f79d063e4791bc))
 * Update to Gradle 8.2.1, Loom 1.2 ([#1756](https://github.com/Wynntils/Artemis/issues/1756)) ([551590e](https://github.com/Wynntils/Artemis/commit/551590ef3b1d786289de2bb84c01622c903ed656))
-
-## [0.0.3-alpha.142](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.141...v0.0.3-alpha.142) (2023-07-14)
-
-
-### Bug Fixes
-
-* Bank final page being reset ([#1753](https://github.com/Wynntils/Artemis/issues/1753)) ([b585996](https://github.com/Wynntils/Artemis/commit/b5859961f0ccb54abdef7673eff71a4db317c0e3))
-
-
-### Miscellaneous Chores
-
-* **release:** v0.0.3-alpha.142 [skip ci] ([ce4181f](https://github.com/Wynntils/Artemis/commit/ce4181f3801cb48a1e15ae16b063fc3664a54488))
 
