@@ -234,7 +234,6 @@ public final class ContainerQueryHandler extends Handler {
         }
 
         // Note: We purposefully don't update the containerItems here, because we just want to verify the content update
-        //        containerItems.set(event.getSlot(), event.getItemStack());
 
         ContainerContent currentContainer =
                 new ContainerContent(containerItems, currentTitle, currentMenuType, containerId);
