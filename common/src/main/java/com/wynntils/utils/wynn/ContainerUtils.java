@@ -64,6 +64,18 @@ public final class ContainerUtils {
                 ClickType.PICKUP,
                 items.get(clickedSlot),
                 changedSlots));
+
+        changedSlots = new Int2ObjectOpenHashMap<>();
+        changedSlots.put(clickedSlot, items.get(clickedSlot));
+
+        McUtils.sendPacket(new ServerboundContainerClickPacket(
+                containerId,
+                transactionId,
+                clickedSlot,
+                mouseButton,
+                ClickType.PICKUP,
+                new ItemStack(Items.AIR),
+                changedSlots));
     }
 
     public static void closeContainer(int containerId) {
