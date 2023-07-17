@@ -89,8 +89,10 @@ public class DiscordRichPresenceFeature extends Feature {
     }
 
     private void displayCharacterDetails() {
+        if (McUtils.player() == null) return;
+
         CappedValue combatLevel = Models.CombatXp.getCombatLevel();
-        int level = combatLevel == null ? 0 : combatLevel.current();
+        int level = combatLevel.current();
         ClassType classType = Models.Character.getClassType();
 
         if (classType == null) return;
