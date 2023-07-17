@@ -19,9 +19,8 @@ import com.wynntils.models.character.type.ClassType;
 import com.wynntils.models.territories.profile.TerritoryProfile;
 import com.wynntils.models.worlds.event.WorldStateEvent;
 import com.wynntils.utils.mc.McUtils;
-import java.util.Locale;
-
 import com.wynntils.utils.type.CappedValue;
+import java.util.Locale;
 import net.minecraft.core.Position;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 
