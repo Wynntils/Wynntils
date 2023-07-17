@@ -80,7 +80,6 @@ public class TradeMarketPriceMatchFeature extends Feature {
         a = highestBuyMatcher.matches() ? Integer.parseInt(highestBuyMatcher.group(1)) : null;
         Matcher lowestSellMatcher = LoreUtils.matchLoreLine(priceInfoItem, 6, LOWEST_SELL_PATTERN);
         b = lowestSellMatcher.matches() ? Integer.parseInt(lowestSellMatcher.group(1)) : null;
-        System.out.println(a + " " + b);
 
         return Pair.of(a, b);
     }
