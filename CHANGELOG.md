@@ -1,9 +1,21 @@
+## [0.0.3-alpha.150](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.149...v0.0.3-alpha.150) (2023-07-17)
+
+
+### Bug Fixes
+
+* Fix unreliable container queries by adding a tick delay ([#1770](https://github.com/Wynntils/Artemis/issues/1770)) ([8611872](https://github.com/Wynntils/Artemis/commit/86118728c7ac70effad44349005cfa7b99ec14db))
+
 ## [0.0.3-alpha.149](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.148...v0.0.3-alpha.149) (2023-07-17)
 
 
 ### Bug Fixes
 
 * Linux instances crash when changing any setting with rich presence settings ([#1769](https://github.com/Wynntils/Artemis/issues/1769)) ([bafc378](https://github.com/Wynntils/Artemis/commit/bafc378b333ef0aa4bf9528841f50deb5fa31f62))
+
+
+### Miscellaneous Chores
+
+* **release:** v0.0.3-alpha.149 [skip ci] ([70da032](https://github.com/Wynntils/Artemis/commit/70da03261f1605c10c3f78e95f0a1966622c04a7))
 
 ## [0.0.3-alpha.148](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.147...v0.0.3-alpha.148) (2023-07-16)
 
@@ -45,16 +57,4 @@
 ### Miscellaneous Chores
 
 * **release:** v0.0.3-alpha.146 [skip ci] ([d79d3d4](https://github.com/Wynntils/Artemis/commit/d79d3d4666f80826e83b49c150872f3a727ef723))
-
-## [0.0.3-alpha.145](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.144...v0.0.3-alpha.145) (2023-07-15)
-
-
-### Bug Fixes
-
-* Auto mount horse fails slowly in lootruns ([#1760](https://github.com/Wynntils/Artemis/issues/1760)) ([0e145f3](https://github.com/Wynntils/Artemis/commit/0e145f3ee1e6f0d0121a23136b80b4943d0d4bd4))
-
-
-### Miscellaneous Chores
-
-* **release:** v0.0.3-alpha.145 [skip ci] ([35dcdbb](https://github.com/Wynntils/Artemis/commit/35dcdbbdc4bdcd55968c6c09afc3f2e2e61a3b13))
 
