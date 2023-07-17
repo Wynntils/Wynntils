@@ -11,6 +11,7 @@ import com.wynntils.models.mobtotem.MobTotem;
 import com.wynntils.models.territories.profile.TerritoryProfile;
 import com.wynntils.models.token.type.TokenGatekeeper;
 import com.wynntils.models.worlds.profile.ServerProfile;
+import com.wynntils.models.worlds.type.BombType;
 import com.wynntils.utils.mc.McUtils;
 import com.wynntils.utils.mc.type.Location;
 import com.wynntils.utils.type.CappedValue;
@@ -287,6 +288,19 @@ public class WorldFunctions {
         public FunctionArguments.Builder getArgumentsBuilder() {
             return new FunctionArguments.OptionalArgumentBuilder(
                     List.of(new FunctionArguments.Argument<>("prefixOnly", Boolean.class, false)));
+        }
+    }
+
+    public static class GatheringCooldownFunction extends Function<Integer> {
+        @Override
+        public Integer getValue(FunctionArguments arguments) {
+            int cooldownLength = Models.Bomb.isBombActive(BombType.PROFESSION_SPEED) ? 30 : 60;
+            long gatherCooldownEndTimestamp = Models.WorldState.getServerJoinTimestamp() + cooldownLength * 1000;
+            int gatherCooldownSeconds = (int) ((gatherCooldownEndTimestamp - System.currentTimeMillis()) / 1000);
+
+            if (gatherCooldownSeconds > cooldownLength || gatherCooldownSeconds < 0) return 0;
+
+            return gatherCooldownSeconds;
         }
     }
 }
