@@ -20,6 +20,8 @@ import com.wynntils.models.territories.profile.TerritoryProfile;
 import com.wynntils.models.worlds.event.WorldStateEvent;
 import com.wynntils.utils.mc.McUtils;
 import java.util.Locale;
+
+import com.wynntils.utils.type.CappedValue;
 import net.minecraft.core.Position;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 
@@ -88,8 +90,8 @@ public class DiscordRichPresenceFeature extends Feature {
     }
 
     private void displayCharacterDetails() {
-        if (!Models.WorldState.onWorld()) return;
-        int level = Models.CombatXp.getCombatLevel().current();
+        CappedValue combatLevel = Models.CombatXp.getCombatLevel();
+        int level = combatLevel == null ? 0 : combatLevel.current();
         ClassType classType = Models.Character.getClassType();
 
         if (classType == null) return;
