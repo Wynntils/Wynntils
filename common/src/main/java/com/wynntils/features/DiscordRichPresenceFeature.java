@@ -19,6 +19,7 @@ import com.wynntils.models.character.type.ClassType;
 import com.wynntils.models.territories.profile.TerritoryProfile;
 import com.wynntils.models.worlds.event.WorldStateEvent;
 import com.wynntils.utils.mc.McUtils;
+import com.wynntils.utils.type.CappedValue;
 import java.util.Locale;
 import net.minecraft.core.Position;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
@@ -88,7 +89,8 @@ public class DiscordRichPresenceFeature extends Feature {
     }
 
     private void displayCharacterDetails() {
-        int level = Models.CombatXp.getCombatLevel().current();
+        CappedValue combatLevel = Models.CombatXp.getCombatLevel();
+        int level = combatLevel == null ? 0 : combatLevel.current();
         ClassType classType = Models.Character.getClassType();
 
         if (classType == null) return;
@@ -121,7 +123,11 @@ public class DiscordRichPresenceFeature extends Feature {
     @Override
     protected void onConfigUpdate(ConfigHolder configHolder) {
         if (this.isEnabled()) {
-            Managers.Discord.load();
+            // This isReady() check is required for Linux to not crash on config change.
+            if (!Managers.Discord.isReady()) {
+                // Even though this is in the onConfigUpdate method, it is how the library is first loaded on launch
+                Managers.Discord.load();
+            }
 
             if (!Models.WorldState.onWorld() && Managers.Discord.isReady()) return;
 
