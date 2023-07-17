@@ -97,7 +97,7 @@ import com.wynntils.features.overlays.SpellCastRenderFeature;
 import com.wynntils.features.overlays.StatusOverlayFeature;
 import com.wynntils.features.overlays.StopwatchFeature;
 import com.wynntils.features.overlays.TokenTrackerFeature;
-import com.wynntils.features.overlays.TradeMarketBulkSellFeature;
+import com.wynntils.features.ui.TradeMarketBulkSellFeature;
 import com.wynntils.features.players.AutoJoinPartyFeature;
 import com.wynntils.features.players.CustomNametagRendererFeature;
 import com.wynntils.features.players.GearViewerFeature;
@@ -258,7 +258,6 @@ public final class FeatureManager extends Manager {
         registerFeature(new StatusOverlayFeature());
         registerFeature(new StopwatchFeature());
         registerFeature(new TokenTrackerFeature());
-        registerFeature(new TradeMarketBulkSellFeature());
         // endregion
 
         // region players
@@ -297,6 +296,7 @@ public final class FeatureManager extends Manager {
         registerFeature(new CustomSeaskipperScreenFeature());
         registerFeature(new LobbyUptimeFeature());
         registerFeature(new SoulPointTimerFeature());
+        registerFeature(new TradeMarketBulkSellFeature());
         registerFeature(new WynncraftButtonFeature());
         registerFeature(new WynncraftPauseScreenFeature());
         registerFeature(new WynntilsContentBookFeature());
