@@ -88,6 +88,7 @@ public class DiscordRichPresenceFeature extends Feature {
     }
 
     private void displayCharacterDetails() {
+        if (!Models.WorldState.onWorld()) return;
         int level = Models.CombatXp.getCombatLevel().current();
         ClassType classType = Models.Character.getClassType();
 
@@ -121,7 +122,10 @@ public class DiscordRichPresenceFeature extends Feature {
     @Override
     protected void onConfigUpdate(ConfigHolder configHolder) {
         if (this.isEnabled()) {
-            Managers.Discord.load();
+            if (!Managers.Discord.isReady()) {
+                // Even though this is in the onConfigUpdate method, it is how the library is first loaded on launch
+                Managers.Discord.load();
+            }
 
             if (!Models.WorldState.onWorld() && Managers.Discord.isReady()) return;
 
