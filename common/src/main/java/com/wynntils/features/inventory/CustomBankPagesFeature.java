@@ -12,8 +12,8 @@ import com.wynntils.core.config.ConfigHolder;
 import com.wynntils.core.config.RegisterConfig;
 import com.wynntils.core.features.Feature;
 import com.wynntils.mc.event.ContainerClickEvent;
-import com.wynntils.mc.event.ContainerCloseEvent;
 import com.wynntils.mc.event.ContainerSetContentEvent;
+import com.wynntils.mc.event.ScreenClosedEvent;
 import com.wynntils.mc.event.ScreenInitEvent;
 import com.wynntils.mc.event.SetSlotEvent;
 import com.wynntils.utils.mc.McUtils;
@@ -95,7 +95,7 @@ public class CustomBankPagesFeature extends Feature {
     }
 
     @SubscribeEvent
-    public void onContainerClose(ContainerCloseEvent.Post e) {
+    public void onScreenClose(ScreenClosedEvent e) {
         isBankScreen = false;
         currentPage = 1;
         pageDestination = 1;
@@ -142,6 +142,8 @@ public class CustomBankPagesFeature extends Feature {
 
     @SubscribeEvent
     public void onContainerSetEvent(ContainerSetContentEvent.Post e) {
+        if (!isBankScreen) return;
+
         if (Models.Container.isItemIndicatingLastBankPage(e.getItems().get(Models.Container.LAST_BANK_PAGE_SLOT))) {
             Models.Container.updateFinalBankPage(currentPage);
             lastPage = currentPage;
