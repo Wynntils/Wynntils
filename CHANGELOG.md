@@ -1,3 +1,10 @@
+## [0.0.3-alpha.149](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.148...v0.0.3-alpha.149) (2023-07-17)
+
+
+### Bug Fixes
+
+* Linux instances crash when changing any setting with rich presence settings ([#1769](https://github.com/Wynntils/Artemis/issues/1769)) ([bafc378](https://github.com/Wynntils/Artemis/commit/bafc378b333ef0aa4bf9528841f50deb5fa31f62))
+
 ## [0.0.3-alpha.148](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.147...v0.0.3-alpha.148) (2023-07-16)
 
 
@@ -9,6 +16,11 @@
 ### Bug Fixes
 
 * Force closing favourite item count goes negative ([#1762](https://github.com/Wynntils/Artemis/issues/1762)) ([43642a5](https://github.com/Wynntils/Artemis/commit/43642a580d19f12dcf2d8299e134e901d20c095e))
+
+
+### Miscellaneous Chores
+
+* **release:** v0.0.3-alpha.148 [skip ci] ([0a3ab7d](https://github.com/Wynntils/Artemis/commit/0a3ab7dd36819d2ed5b9c5b8c4ead87dd1f855bb))
 
 ## [0.0.3-alpha.147](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.146...v0.0.3-alpha.147) (2023-07-16)
 
@@ -45,16 +57,4 @@
 ### Miscellaneous Chores
 
 * **release:** v0.0.3-alpha.145 [skip ci] ([35dcdbb](https://github.com/Wynntils/Artemis/commit/35dcdbbdc4bdcd55968c6c09afc3f2e2e61a3b13))
-
-## [0.0.3-alpha.144](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.143...v0.0.3-alpha.144) (2023-07-15)
-
-
-### Bug Fixes
-
-* Now really fix the discovery tracking ([#1759](https://github.com/Wynntils/Artemis/issues/1759)) ([7bfe70b](https://github.com/Wynntils/Artemis/commit/7bfe70b67a320a443eaaa40ed729d2fe519fc01d))
-
-
-### Miscellaneous Chores
-
-* **release:** v0.0.3-alpha.144 [skip ci] ([f8eb515](https://github.com/Wynntils/Artemis/commit/f8eb515d1d1fbaf567096ab6348f52817122102e))
 
