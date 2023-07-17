@@ -55,12 +55,12 @@ public class CustomBankPagesFeature extends Feature {
     private static final List<Integer> BUTTON_SLOTS = List.of(7, 16, 25, 34, 43, 52);
     private static final List<Integer> QUICK_JUMP_DESTINATIONS = List.of(1, 5, 9, 13, 17, 21);
 
-    private SearchableContainerType currentContainer;
     private boolean quickJumping = false;
     private int currentPage = 1;
     private int lastPage = MAX_BANK_PAGES;
     private int pageDestination = 1;
     private List<Integer> customJumpDestinations;
+    private SearchableContainerType currentContainer;
 
     @SubscribeEvent
     public void onScreenInit(ScreenInitEvent e) {
@@ -107,28 +107,10 @@ public class CustomBankPagesFeature extends Feature {
             }
         }
 
-        if (!parseStringToDestinations(configDestinations)) {
+        customJumpDestinations = parseStringToDestinations(configDestinations);
+
+        if (customJumpDestinations == null) {
             customJumpDestinations = QUICK_JUMP_DESTINATIONS;
-        }
-    }
-
-    private boolean parseStringToDestinations(String destinationsStr) {
-        String[] numberStrings = destinationsStr.split(",");
-
-        if (numberStrings.length != 6) return false;
-
-        List<Integer> destinations = new ArrayList<>();
-
-        try {
-            for (String numberString : numberStrings) {
-                int num = Integer.parseInt(numberString);
-                destinations.add(num);
-            }
-
-            customJumpDestinations = destinations;
-            return true;
-        } catch (NumberFormatException ex) {
-            return false;
         }
     }
 
@@ -264,23 +246,44 @@ public class CustomBankPagesFeature extends Feature {
     protected void onConfigUpdate(ConfigHolder configHolder) {
         String valueString = (String) configHolder.getValue();
 
-        if (!parseStringToDestinations(valueString)) {
+        List<Integer> originalValues = parseStringToDestinations(valueString);
+
+        if (originalValues == null) {
             configHolder.setValue(configHolder.getDefaultValue());
-        } else {
-            List<Integer> originalValues = getDestinations(valueString);
-            List<Integer> newValues = modifyJumpValues(
-                    originalValues,
-                    configHolder.getFieldName().equals("bankDestinations")
-                            ? MAX_BANK_PAGES
-                            : MAX_HOUSING_CONTAINER_PAGES);
+            return;
+        }
 
-            if (!newValues.equals(originalValues)) {
-                String formattedConfig =
-                        newValues.stream().map(Object::toString).collect(Collectors.joining(","));
+        int maxValue = configHolder.getFieldName().equals("bankDestinations") ? MAX_BANK_PAGES : MAX_HOUSING_CONTAINER_PAGES;
 
-                configHolder.setValue(formattedConfig);
+        List<Integer> newValues = modifyJumpValues(originalValues, maxValue);
+
+        if (!newValues.equals(originalValues)) {
+            String formattedConfig =
+                    newValues.stream().map(Object::toString).collect(Collectors.joining(","));
+
+            configHolder.setValue(formattedConfig);
+        }
+    }
+
+    private List<Integer> parseStringToDestinations(String destinationsStr) {
+        String[] destinationStrings = destinationsStr.split(",");
+
+        if (destinationStrings.length != 6) {
+            return null;
+        }
+
+        List<Integer> destinations = new ArrayList<>();
+
+        for (String destinationString : destinationStrings) {
+            try {
+                int destination = Integer.parseInt(destinationString);
+                destinations.add(destination);
+            } catch (NumberFormatException ex) {
+                return null;
             }
         }
+
+        return destinations;
     }
 
     private List<Integer> modifyJumpValues(List<Integer> originalValues, int maxValue) {
@@ -297,17 +300,5 @@ public class CustomBankPagesFeature extends Feature {
         }
 
         return newValues;
-    }
-
-    private List<Integer> getDestinations(String destinationsStr) {
-        String[] numberStrings = destinationsStr.split(",");
-        List<Integer> destinations = new ArrayList<>();
-
-        for (String numberString : numberStrings) {
-            int num = Integer.parseInt(numberString);
-            destinations.add(num);
-        }
-
-        return destinations;
     }
 }
