@@ -4,7 +4,7 @@
  */
 package com.wynntils.models.mapdata.providers;
 
-import com.wynntils.models.mapdata.MapFeature;
+import com.wynntils.models.mapdata.type.MapFeature;
 import java.util.Collection;
 
 public interface MapDataProvider {
