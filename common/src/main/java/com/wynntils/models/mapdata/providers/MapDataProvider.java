@@ -5,8 +5,8 @@
 package com.wynntils.models.mapdata.providers;
 
 import com.wynntils.models.mapdata.type.MapFeature;
-import java.util.Collection;
+import java.util.stream.Stream;
 
 public interface MapDataProvider {
-    Collection<MapFeature> getFeatures();
+    Stream<MapFeature> getFeatures();
 }

@@ -6,7 +6,7 @@ package com.wynntils.models.mapdata.providers;
 
 import com.wynntils.models.mapdata.type.MapFeature;
 import java.net.URI;
-import java.util.Collection;
+import java.util.stream.Stream;
 
 public class DynamicNetProvider implements MapDataProvider {
     private final URI uri;
@@ -20,7 +20,7 @@ public class DynamicNetProvider implements MapDataProvider {
     }
 
     @Override
-    public Collection<MapFeature> getFeatures() {
+    public Stream<MapFeature> getFeatures() {
         return null;
     }
 }
