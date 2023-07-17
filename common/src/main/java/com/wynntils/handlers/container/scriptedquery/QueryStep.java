@@ -12,7 +12,10 @@ import com.wynntils.handlers.container.type.ContainerContent;
 import com.wynntils.handlers.container.type.ContainerContentUpdatePredicate;
 import com.wynntils.handlers.container.type.ContainerPredicate;
 import com.wynntils.handlers.container.type.ContainerVerification;
+import com.wynntils.models.content.ContentBookQueries;
+import com.wynntils.utils.mc.McUtils;
 import com.wynntils.utils.wynn.ContainerUtils;
+import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.Item;
 import org.lwjgl.glfw.GLFW;
 
@@ -46,6 +49,11 @@ public class QueryStep {
 
     public static QueryStep clickOnSlot(int slotNum) {
         return new QueryStep(container -> {
+            if (slotNum == 69) {
+                McUtils.sendMessageToClient(Component.literal("Page is previously " + ContentBookQueries.page));
+                ContentBookQueries.addPage();
+                McUtils.sendMessageToClient(Component.literal("Clicking, Page is now " + ContentBookQueries.page));
+            }
             ContainerUtils.clickOnSlot(
                     slotNum, container.containerId(), GLFW.GLFW_MOUSE_BUTTON_LEFT, container.items());
             return true;

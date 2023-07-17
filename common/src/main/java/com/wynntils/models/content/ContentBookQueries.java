@@ -21,6 +21,7 @@ import com.wynntils.utils.wynn.InventoryUtils;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.BiConsumer;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -47,6 +48,7 @@ public class ContentBookQueries {
 
     private String selectedFilter;
     private int filterLoopCount;
+    public static AtomicInteger page = new AtomicInteger(1);
 
     /**
      * Trigger a rescan of the content book. When the rescan is done, Models.Content.updateFromContentBookQuery
@@ -125,7 +127,12 @@ public class ContentBookQueries {
                                             NEXT_PAGE_SLOT, updatedItems.get(PREVIOUS_PAGE_SLOT));
 
                                     // We are on last page
-                                    if (itemStack.getItem() == Items.AIR) return true;
+                                    if (itemStack.getItem() == Items.AIR) {
+                                        McUtils.sendMessageToClient(
+                                                Component.literal("Reached last page, resetting page counter"));
+                                        page.set(1);
+                                        return true;
+                                    }
 
                                     StyledText itemName = InventoryUtils.getItemName(itemStack);
                                     return itemName.equals(SCROLL_DOWN_TEXT) || itemName.equals(SCROLL_UP_TEXT);
@@ -170,6 +177,10 @@ public class ContentBookQueries {
         query.executeQuery();
     }
 
+    public static void addPage() {
+        page.getAndIncrement();
+    }
+
     private String getActiveFilter(ItemStack itemStack) {
         StyledText itemName = InventoryUtils.getItemName(itemStack);
         if (!itemName.equals(StyledText.fromString(FILTER_ITEM_TITLE))) return null;
@@ -178,6 +189,7 @@ public class ContentBookQueries {
         for (StyledText line : lore) {
             Matcher m = line.getMatcher(ACTIVE_FILTER);
             if (m.matches()) {
+                page.set(1);
                 McUtils.sendMessageToClient(Component.literal("Active filter: " + m.group(1)));
                 return m.group(1);
             }
