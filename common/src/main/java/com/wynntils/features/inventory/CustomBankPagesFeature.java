@@ -253,13 +253,13 @@ public class CustomBankPagesFeature extends Feature {
             return;
         }
 
-        int maxValue = configHolder.getFieldName().equals("bankDestinations") ? MAX_BANK_PAGES : MAX_HOUSING_CONTAINER_PAGES;
+        int maxValue =
+                configHolder.getFieldName().equals("bankDestinations") ? MAX_BANK_PAGES : MAX_HOUSING_CONTAINER_PAGES;
 
         List<Integer> newValues = modifyJumpValues(originalValues, maxValue);
 
         if (!newValues.equals(originalValues)) {
-            String formattedConfig =
-                    newValues.stream().map(Object::toString).collect(Collectors.joining(","));
+            String formattedConfig = newValues.stream().map(Object::toString).collect(Collectors.joining(","));
 
             configHolder.setValue(formattedConfig);
         }
