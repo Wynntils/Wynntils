@@ -16,6 +16,8 @@ import com.wynntils.utils.mc.LoreUtils;
 import com.wynntils.utils.mc.McUtils;
 import com.wynntils.utils.type.Pair;
 import com.wynntils.utils.wynn.ContainerUtils;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import net.minecraft.client.gui.screens.inventory.ContainerScreen;
 import net.minecraft.client.gui.screens.inventory.MenuAccess;
 import net.minecraft.network.chat.Component;
@@ -23,14 +25,12 @@ import net.minecraft.world.inventory.ChestMenu;
 import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-
 @ConfigCategory(Category.UI)
 public class TradeMarketPriceMatchFeature extends Feature {
     private static final StyledText CLICK_TO_SET_PRICE = StyledText.fromString("§aClick to Set Price");
     private static final StyledText SELL_DIALOGUE_TITLE = StyledText.fromString("What would you like to sell?");
-    private static final StyledText TYPE_SELL_PRICE = StyledText.fromString("§6Type the price in emeralds or type 'cancel' to cancel:");
+    private static final StyledText TYPE_SELL_PRICE =
+            StyledText.fromString("§6Type the price in emeralds or type 'cancel' to cancel:");
 
     // Test suite: https://regexr.com/7h631
     private static final Pattern HIGHEST_BUY_PATTERN = Pattern.compile("§7Highest Buy Offer: §a(\\d+)²§8 \\(.+\\)");
@@ -54,7 +54,6 @@ public class TradeMarketPriceMatchFeature extends Feature {
                 containerScreen.getMenu().getSlot(PRICE_SET_ITEM_SLOT).getItem().getHoverName());
         if (!amountItemName.equals(CLICK_TO_SET_PRICE)) return;
 
-
         removePriceButtons(containerScreen);
 
         addPriceButtons(containerScreen);
@@ -73,7 +72,8 @@ public class TradeMarketPriceMatchFeature extends Feature {
     }
 
     private Pair<Integer, Integer> getBuySellOffers(MenuAccess<ChestMenu> containerScreen) {
-        ItemStack priceInfoItem = containerScreen.getMenu().getSlot(PRICE_INFO_ITEM_SLOT).getItem();
+        ItemStack priceInfoItem =
+                containerScreen.getMenu().getSlot(PRICE_INFO_ITEM_SLOT).getItem();
         Integer a, b;
 
         Matcher highestBuyMatcher = LoreUtils.matchLoreLine(priceInfoItem, 6, HIGHEST_BUY_PATTERN);
@@ -120,12 +120,7 @@ public class TradeMarketPriceMatchFeature extends Feature {
         private final int price;
 
         private PriceButton(int x, int y, int price, Component name) {
-            super(
-                    x,
-                    y,
-                    BUTTON_WIDTH,
-                    BUTTON_HEIGHT,
-                    name);
+            super(x, y, BUTTON_WIDTH, BUTTON_HEIGHT, name);
 
             this.price = price;
         }
