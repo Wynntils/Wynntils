@@ -122,6 +122,7 @@ public class DiscordRichPresenceFeature extends Feature {
     @Override
     protected void onConfigUpdate(ConfigHolder configHolder) {
         if (this.isEnabled()) {
+            // This isReady() check is required for Linux to not crash on config change.
             if (!Managers.Discord.isReady()) {
                 // Even though this is in the onConfigUpdate method, it is how the library is first loaded on launch
                 Managers.Discord.load();
