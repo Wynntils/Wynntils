@@ -4,10 +4,6 @@
  */
 package com.wynntils.features.inventory;
 
-import static com.wynntils.models.containers.type.SearchableContainerType.BANK;
-import static com.wynntils.models.containers.type.SearchableContainerType.BOOKSHELF;
-import static com.wynntils.models.containers.type.SearchableContainerType.MISC_BUCKET;
-
 import com.wynntils.core.components.Models;
 import com.wynntils.core.config.Category;
 import com.wynntils.core.config.Config;
@@ -24,6 +20,7 @@ import com.wynntils.models.containers.type.SearchableContainerType;
 import com.wynntils.utils.mc.McUtils;
 import com.wynntils.utils.wynn.ContainerUtils;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 import net.minecraft.ChatFormatting;
@@ -67,13 +64,13 @@ public class CustomBankPagesFeature extends Feature {
         if (!(e.getScreen() instanceof AbstractContainerScreen<?> screen)) return;
 
         if (Models.Container.isBankScreen(screen)) {
-            currentContainer = BANK;
+            currentContainer = SearchableContainerType.BANK;
             lastPage = Models.Container.getFinalBankPage();
         } else if (Models.Container.isBookshelfScreen(screen)) {
-            currentContainer = BOOKSHELF;
+            currentContainer = SearchableContainerType.BOOKSHELF;
             lastPage = Models.Container.getFinalBookshelfPage();
         } else if (Models.Container.isMiscBucketScreen(screen)) {
-            currentContainer = MISC_BUCKET;
+            currentContainer = SearchableContainerType.BOOKSHELF;
             lastPage = Models.Container.getFinalMiscBucketPage();
         } else {
             return;
@@ -272,18 +269,7 @@ public class CustomBankPagesFeature extends Feature {
             return null;
         }
 
-        List<Integer> destinations = new ArrayList<>();
-
-        for (String destinationString : destinationStrings) {
-            try {
-                int destination = Integer.parseInt(destinationString);
-                destinations.add(destination);
-            } catch (NumberFormatException ex) {
-                return null;
-            }
-        }
-
-        return destinations;
+        return Arrays.stream(destinationStrings).map(Integer::parseInt).collect(Collectors.toList());
     }
 
     private List<Integer> modifyJumpValues(List<Integer> originalValues, int maxValue) {
