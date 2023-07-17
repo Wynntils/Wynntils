@@ -1,9 +1,21 @@
+## [0.0.3-alpha.151](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.150...v0.0.3-alpha.151) (2023-07-17)
+
+
+### Bug Fixes
+
+* Characters with modifiers show up as "This Character" in list ([#1771](https://github.com/Wynntils/Artemis/issues/1771)) ([e5774d9](https://github.com/Wynntils/Artemis/commit/e5774d9685307e8ff5a136eef4a7e59ad4a345ca))
+
 ## [0.0.3-alpha.150](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.149...v0.0.3-alpha.150) (2023-07-17)
 
 
 ### Bug Fixes
 
 * Fix unreliable container queries by adding a tick delay ([#1770](https://github.com/Wynntils/Artemis/issues/1770)) ([8611872](https://github.com/Wynntils/Artemis/commit/86118728c7ac70effad44349005cfa7b99ec14db))
+
+
+### Miscellaneous Chores
+
+* **release:** v0.0.3-alpha.150 [skip ci] ([1dbec14](https://github.com/Wynntils/Artemis/commit/1dbec149a6aafa5ff94b6eede00dc326b10d3298))
 
 ## [0.0.3-alpha.149](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.148...v0.0.3-alpha.149) (2023-07-17)
 
@@ -45,16 +57,4 @@
 ### Miscellaneous Chores
 
 * **release:** v0.0.3-alpha.147 [skip ci] ([b25ee2e](https://github.com/Wynntils/Artemis/commit/b25ee2e9cf46dde30c27bd78978ab6bfdbeeb8d7))
-
-## [0.0.3-alpha.146](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.145...v0.0.3-alpha.146) (2023-07-16)
-
-
-### Bug Fixes
-
-* Clicking on ingredient pouch does not reset bank status ([#1761](https://github.com/Wynntils/Artemis/issues/1761)) ([d8fcff8](https://github.com/Wynntils/Artemis/commit/d8fcff89bad849a27229d8fca06c28b168b09ca9))
-
-
-### Miscellaneous Chores
-
-* **release:** v0.0.3-alpha.146 [skip ci] ([d79d3d4](https://github.com/Wynntils/Artemis/commit/d79d3d4666f80826e83b49c150872f3a727ef723))
 
