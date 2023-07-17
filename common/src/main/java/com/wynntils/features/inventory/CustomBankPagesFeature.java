@@ -269,7 +269,11 @@ public class CustomBankPagesFeature extends Feature {
             return null;
         }
 
-        return Arrays.stream(destinationStrings).map(Integer::parseInt).collect(Collectors.toList());
+        try {
+            return Arrays.stream(destinationStrings).map(Integer::parseInt).collect(Collectors.toList());
+        } catch (NumberFormatException ex) {
+            return null;
+        }
     }
 
     private List<Integer> modifyJumpValues(List<Integer> originalValues, int maxValue) {
