@@ -1,9 +1,21 @@
+## [0.0.3-alpha.152](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.151...v0.0.3-alpha.152) (2023-07-17)
+
+
+### Bug Fixes
+
+* Pressing esc in character list does nothing ([#1772](https://github.com/Wynntils/Artemis/issues/1772)) ([0fa75b6](https://github.com/Wynntils/Artemis/commit/0fa75b647c0aab2b9e5f6b66c52cdde40921bc79))
+
 ## [0.0.3-alpha.151](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.150...v0.0.3-alpha.151) (2023-07-17)
 
 
 ### Bug Fixes
 
 * Characters with modifiers show up as "This Character" in list ([#1771](https://github.com/Wynntils/Artemis/issues/1771)) ([e5774d9](https://github.com/Wynntils/Artemis/commit/e5774d9685307e8ff5a136eef4a7e59ad4a345ca))
+
+
+### Miscellaneous Chores
+
+* **release:** v0.0.3-alpha.151 [skip ci] ([d6ffd0a](https://github.com/Wynntils/Artemis/commit/d6ffd0a57895960c9407d8e5fea16c854be28386))
 
 ## [0.0.3-alpha.150](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.149...v0.0.3-alpha.150) (2023-07-17)
 
@@ -45,16 +57,4 @@
 ### Miscellaneous Chores
 
 * **release:** v0.0.3-alpha.148 [skip ci] ([0a3ab7d](https://github.com/Wynntils/Artemis/commit/0a3ab7dd36819d2ed5b9c5b8c4ead87dd1f855bb))
-
-## [0.0.3-alpha.147](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.146...v0.0.3-alpha.147) (2023-07-16)
-
-
-### Bug Fixes
-
-* Fix container search not working properly ([#1767](https://github.com/Wynntils/Artemis/issues/1767)) ([1a933d3](https://github.com/Wynntils/Artemis/commit/1a933d30342d162b243671981267335bfe7f7586))
-
-
-### Miscellaneous Chores
-
-* **release:** v0.0.3-alpha.147 [skip ci] ([b25ee2e](https://github.com/Wynntils/Artemis/commit/b25ee2e9cf46dde30c27bd78978ab6bfdbeeb8d7))
 
