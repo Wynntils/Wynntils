@@ -1,9 +1,21 @@
+## [0.0.3-alpha.153](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.152...v0.0.3-alpha.153) (2023-07-17)
+
+
+### Bug Fixes
+
+* Fix trying to set discord status before joining server ([#1773](https://github.com/Wynntils/Artemis/issues/1773)) ([2639372](https://github.com/Wynntils/Artemis/commit/263937258e37419890b6d85c804572edff5f768a))
+
 ## [0.0.3-alpha.152](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.151...v0.0.3-alpha.152) (2023-07-17)
 
 
 ### Bug Fixes
 
 * Pressing esc in character list does nothing ([#1772](https://github.com/Wynntils/Artemis/issues/1772)) ([0fa75b6](https://github.com/Wynntils/Artemis/commit/0fa75b647c0aab2b9e5f6b66c52cdde40921bc79))
+
+
+### Miscellaneous Chores
+
+* **release:** v0.0.3-alpha.152 [skip ci] ([5fb68b3](https://github.com/Wynntils/Artemis/commit/5fb68b346c5fc6c30ba4c1842d71b2888966cd54))
 
 ## [0.0.3-alpha.151](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.150...v0.0.3-alpha.151) (2023-07-17)
 
@@ -40,21 +52,4 @@
 ### Miscellaneous Chores
 
 * **release:** v0.0.3-alpha.149 [skip ci] ([70da032](https://github.com/Wynntils/Artemis/commit/70da03261f1605c10c3f78e95f0a1966622c04a7))
-
-## [0.0.3-alpha.148](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.147...v0.0.3-alpha.148) (2023-07-16)
-
-
-### New Features
-
-* Discord rich presence ([#1645](https://github.com/Wynntils/Artemis/issues/1645)) ([83f51a3](https://github.com/Wynntils/Artemis/commit/83f51a39644d0fc392f8d8bd02a3789401dd55df)), closes [#1722](https://github.com/Wynntils/Artemis/issues/1722) [#1653](https://github.com/Wynntils/Artemis/issues/1653) [#1656](https://github.com/Wynntils/Artemis/issues/1656) [#1657](https://github.com/Wynntils/Artemis/issues/1657)
-
-
-### Bug Fixes
-
-* Force closing favourite item count goes negative ([#1762](https://github.com/Wynntils/Artemis/issues/1762)) ([43642a5](https://github.com/Wynntils/Artemis/commit/43642a580d19f12dcf2d8299e134e901d20c095e))
-
-
-### Miscellaneous Chores
-
-* **release:** v0.0.3-alpha.148 [skip ci] ([0a3ab7d](https://github.com/Wynntils/Artemis/commit/0a3ab7dd36819d2ed5b9c5b8c4ead87dd1f855bb))
 
