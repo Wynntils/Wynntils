@@ -124,6 +124,7 @@ import com.wynntils.features.ui.CustomLoadingScreenFeature;
 import com.wynntils.features.ui.CustomSeaskipperScreenFeature;
 import com.wynntils.features.ui.LobbyUptimeFeature;
 import com.wynntils.features.ui.SoulPointTimerFeature;
+import com.wynntils.features.ui.TradeMarketPriceMatchFeature;
 import com.wynntils.features.ui.WynncraftButtonFeature;
 import com.wynntils.features.ui.WynncraftPauseScreenFeature;
 import com.wynntils.features.ui.WynntilsContentBookFeature;
@@ -297,6 +298,7 @@ public final class FeatureManager extends Manager {
         registerFeature(new LobbyUptimeFeature());
         registerFeature(new SoulPointTimerFeature());
         registerFeature(new TradeMarketBulkSellFeature());
+        registerFeature(new TradeMarketPriceMatchFeature());
         registerFeature(new WynncraftButtonFeature());
         registerFeature(new WynncraftPauseScreenFeature());
         registerFeature(new WynntilsContentBookFeature());
