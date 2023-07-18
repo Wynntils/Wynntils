@@ -38,7 +38,7 @@ public final class EmeraldModel extends Model {
     private static final Pattern M_PATTERN = Pattern.compile("(\\.?\\d+\\.?\\d*)\\s*(m|million)");
     private static final Pattern E_PATTERN = Pattern.compile("(\\d+)($|\\s|\\s*e|\\s*em)(?![^\\d\\s-])");
     private static final Pattern RAW_PRICE_PATTERN = Pattern.compile("\\d+");
-    private static final double TAX_AMOUNT = 1.05;
+    public static final double TAX_AMOUNT = 1.05;
 
     private int inventoryEmeralds = 0;
     private int containerEmeralds = 0;
