@@ -10,7 +10,7 @@ public enum ContentType {
     QUEST("Quest", "quests", ChatFormatting.AQUA.getChar()),
     STORYLINE_QUEST("Quest", "quests", ChatFormatting.GREEN.getChar()),
     MINI_QUEST("Mini-Quest", "mini-quests", ChatFormatting.DARK_PURPLE.getChar()),
-    CAVE("Cave", "cabes", ChatFormatting.GOLD.getChar()),
+    CAVE("Cave", "caves", ChatFormatting.GOLD.getChar()),
     SECRET_DISCOVERY("Secret Discovery", "secret discoveries", ChatFormatting.AQUA.getChar()),
     WORLD_DISCOVERY("World Discovery", "world discoveries", ChatFormatting.YELLOW.getChar()),
     TERRITORIAL_DISCOVERY("Territorial Discovery", "territorial discoveries", ChatFormatting.WHITE.getChar()),
