@@ -17,7 +17,7 @@ public enum ContentType {
     DUNGEON("Dungeon", "dungeons", ChatFormatting.RED.getChar()),
     RAID("Raid", "raids", ChatFormatting.YELLOW.getChar()),
     BOSS_ALTAR("Boss Altar", "boss altars", ChatFormatting.LIGHT_PURPLE.getChar()),
-    LOOTRUN_CAMP("Lootrun Camp", "lootrun cmaps", ChatFormatting.BLUE.getChar());
+    LOOTRUN_CAMP("Lootrun Camp", "lootrun camps", ChatFormatting.BLUE.getChar());
 
     private final String displayName;
     private final String groupName;
