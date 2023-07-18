@@ -7,24 +7,44 @@ package com.wynntils.features.overlays;
 import com.wynntils.core.config.Category;
 import com.wynntils.core.config.ConfigCategory;
 import com.wynntils.core.features.Feature;
-import com.wynntils.core.features.overlays.Overlay;
 import com.wynntils.core.features.overlays.OverlayPosition;
 import com.wynntils.core.features.overlays.OverlaySize;
 import com.wynntils.core.features.overlays.RenderState;
 import com.wynntils.core.features.overlays.TextOverlay;
 import com.wynntils.core.features.overlays.annotations.OverlayInfo;
+import com.wynntils.handlers.chat.event.ChatMessageReceivedEvent;
 import com.wynntils.mc.event.RenderEvent;
+import com.wynntils.models.worlds.event.WorldStateEvent;
 import com.wynntils.utils.render.type.HorizontalAlignment;
 import com.wynntils.utils.render.type.VerticalAlignment;
+import java.util.regex.Pattern;
+import net.minecraftforge.eventbus.api.SubscribeEvent;
 
 @ConfigCategory(Category.OVERLAYS)
 public class GatheringCooldownOverlayFeature extends Feature {
+    private static final Pattern GATHERING_COOLDOWN_MESSAGE =
+            Pattern.compile("§4You need to wait §c\\d+ seconds§4 after logging in to gather from this resource!");
+
     @OverlayInfo(renderAt = RenderState.PRE, renderType = RenderEvent.ElementType.GUI)
-    private final Overlay gatheringCooldownOverlay = new GatheringCooldownOverlay();
+    private final GatheringCooldownOverlay gatheringCooldownOverlay = new GatheringCooldownOverlay();
+
+    @SubscribeEvent
+    public void onChat(ChatMessageReceivedEvent event) {
+        if (event.getStyledText().matches(GATHERING_COOLDOWN_MESSAGE)) {
+            gatheringCooldownOverlay.showGatheringCooldown = true;
+        }
+    }
+
+    @SubscribeEvent
+    public void onWorldStateChange(WorldStateEvent event) {
+        gatheringCooldownOverlay.showGatheringCooldown = false;
+    }
 
     public static class GatheringCooldownOverlay extends TextOverlay {
         private static final String TEMPLATE =
-                "{if_str(gt(gathering_cooldown; 0);string(gathering_cooldown);\"\")}s gathering cooldown";
+                "{if_str(gt(gathering_cooldown; 0);concat(string(gathering_cooldown); \"s gathering cooldown\");\"\")}";
+
+        private boolean showGatheringCooldown = false;
 
         protected GatheringCooldownOverlay() {
             super(
@@ -41,12 +61,12 @@ public class GatheringCooldownOverlayFeature extends Feature {
 
         @Override
         public String getTemplate() {
-            return TEMPLATE;
+            return showGatheringCooldown ? TEMPLATE : "";
         }
 
         @Override
         public String getPreviewTemplate() {
-            return TEMPLATE;
+            return "10s gathering cooldown";
         }
     }
 }

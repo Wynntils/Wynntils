@@ -294,7 +294,9 @@ public class WorldFunctions {
     public static class GatheringCooldownFunction extends Function<Integer> {
         @Override
         public Integer getValue(FunctionArguments arguments) {
-            int cooldownLength = Models.Bomb.isBombActive(BombType.PROFESSION_SPEED) ? 30 : 60;
+            int cooldownLength = Models.Bomb.isBombActive(BombType.PROFESSION_SPEED)
+                    ? Models.Profession.GATHER_COOLDOWN_TIME / 2
+                    : Models.Profession.GATHER_COOLDOWN_TIME;
             long gatherCooldownEndTimestamp = Models.WorldState.getServerJoinTimestamp() + cooldownLength * 1000;
             int gatherCooldownSeconds = (int) ((gatherCooldownEndTimestamp - System.currentTimeMillis()) / 1000);
 
