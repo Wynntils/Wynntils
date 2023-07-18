@@ -150,11 +150,11 @@ public class CustomPlayerListFeature extends Feature {
             renderPlayerList(poseStack, 1);
         }
 
-        private void renderRoll(PoseStack poseStack, float middle) {
+        private void renderRoll(PoseStack poseStack, float xPos) {
             RenderUtils.drawTexturedRect(
                     poseStack,
                     Texture.PLAYER_INFO_OVERLAY.resource(),
-                    middle,
+                    xPos,
                     getRenderY(),
                     0,
                     ROLL_WIDTH,
