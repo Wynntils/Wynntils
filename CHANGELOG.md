@@ -1,9 +1,21 @@
+## [0.0.3-alpha.154](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.153...v0.0.3-alpha.154) (2023-07-18)
+
+
+### New Features
+
+* Lobby server list scrolling ([#1776](https://github.com/Wynntils/Artemis/issues/1776)) ([7866c16](https://github.com/Wynntils/Artemis/commit/7866c163cca85cf3f1993dea2e322a9db31119d8))
+
 ## [0.0.3-alpha.153](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.152...v0.0.3-alpha.153) (2023-07-17)
 
 
 ### Bug Fixes
 
 * Fix trying to set discord status before joining server ([#1773](https://github.com/Wynntils/Artemis/issues/1773)) ([2639372](https://github.com/Wynntils/Artemis/commit/263937258e37419890b6d85c804572edff5f768a))
+
+
+### Miscellaneous Chores
+
+* **release:** v0.0.3-alpha.153 [skip ci] ([5e09652](https://github.com/Wynntils/Artemis/commit/5e0965287a2fe516934e5c3bd92fadcc60e9a6cb))
 
 ## [0.0.3-alpha.152](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.151...v0.0.3-alpha.152) (2023-07-17)
 
@@ -40,16 +52,4 @@
 ### Miscellaneous Chores
 
 * **release:** v0.0.3-alpha.150 [skip ci] ([1dbec14](https://github.com/Wynntils/Artemis/commit/1dbec149a6aafa5ff94b6eede00dc326b10d3298))
-
-## [0.0.3-alpha.149](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.148...v0.0.3-alpha.149) (2023-07-17)
-
-
-### Bug Fixes
-
-* Linux instances crash when changing any setting with rich presence settings ([#1769](https://github.com/Wynntils/Artemis/issues/1769)) ([bafc378](https://github.com/Wynntils/Artemis/commit/bafc378b333ef0aa4bf9528841f50deb5fa31f62))
-
-
-### Miscellaneous Chores
-
-* **release:** v0.0.3-alpha.149 [skip ci] ([70da032](https://github.com/Wynntils/Artemis/commit/70da03261f1605c10c3f78e95f0a1966622c04a7))
 
