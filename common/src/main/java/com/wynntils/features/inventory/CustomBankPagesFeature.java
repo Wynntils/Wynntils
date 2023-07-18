@@ -274,7 +274,6 @@ public class CustomBankPagesFeature extends Feature {
         }
 
         try {
-
             return Arrays.stream(destinationStrings).map(Integer::parseInt).collect(Collectors.toList());
         } catch (NumberFormatException ex) {
             return null;
