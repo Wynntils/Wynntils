@@ -1,9 +1,21 @@
+## [0.0.3-alpha.155](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.154...v0.0.3-alpha.155) (2023-07-18)
+
+
+### New Features
+
+* Add content book parsing notifications ([#1777](https://github.com/Wynntils/Artemis/issues/1777)) ([203e300](https://github.com/Wynntils/Artemis/commit/203e300f4c3b6fed571a3bab711eec2c5b1cbb89))
+
 ## [0.0.3-alpha.154](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.153...v0.0.3-alpha.154) (2023-07-18)
 
 
 ### New Features
 
 * Lobby server list scrolling ([#1776](https://github.com/Wynntils/Artemis/issues/1776)) ([7866c16](https://github.com/Wynntils/Artemis/commit/7866c163cca85cf3f1993dea2e322a9db31119d8))
+
+
+### Miscellaneous Chores
+
+* **release:** v0.0.3-alpha.154 [skip ci] ([c527f24](https://github.com/Wynntils/Artemis/commit/c527f24de4aacef46574709cf9307f9fd7f2cf8d))
 
 ## [0.0.3-alpha.153](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.152...v0.0.3-alpha.153) (2023-07-17)
 
@@ -40,16 +52,4 @@
 ### Miscellaneous Chores
 
 * **release:** v0.0.3-alpha.151 [skip ci] ([d6ffd0a](https://github.com/Wynntils/Artemis/commit/d6ffd0a57895960c9407d8e5fea16c854be28386))
-
-## [0.0.3-alpha.150](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.149...v0.0.3-alpha.150) (2023-07-17)
-
-
-### Bug Fixes
-
-* Fix unreliable container queries by adding a tick delay ([#1770](https://github.com/Wynntils/Artemis/issues/1770)) ([8611872](https://github.com/Wynntils/Artemis/commit/86118728c7ac70effad44349005cfa7b99ec14db))
-
-
-### Miscellaneous Chores
-
-* **release:** v0.0.3-alpha.150 [skip ci] ([1dbec14](https://github.com/Wynntils/Artemis/commit/1dbec149a6aafa5ff94b6eede00dc326b10d3298))
 
