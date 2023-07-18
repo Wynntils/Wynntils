@@ -6,9 +6,11 @@ package com.wynntils.models.content;
 
 import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.components.Handlers;
+import com.wynntils.core.components.Managers;
 import com.wynntils.core.components.Model;
 import com.wynntils.core.components.Models;
 import com.wynntils.core.text.StyledText;
+import com.wynntils.features.ui.WynntilsContentBookFeature;
 import com.wynntils.handlers.scoreboard.ScoreboardPart;
 import com.wynntils.models.content.event.ContentTrackerUpdatedEvent;
 import com.wynntils.models.content.type.ContentDifficulty;
@@ -235,8 +237,13 @@ public final class ContentModel extends Model {
         trackedContent = null;
     }
 
-    public void scanContentBook(String filterName, BiConsumer<List<ContentInfo>, List<StyledText>> processResult) {
-        CONTAINER_QUERIES.queryContentBook(filterName, processResult);
+    public void scanContentBook(
+            ContentType contentType, BiConsumer<List<ContentInfo>, List<StyledText>> processResult) {
+        // Feature dependency until Model configs
+        boolean showUpdates = Managers.Feature.getFeatureInstance(WynntilsContentBookFeature.class)
+                .showContentBookLoadingUpdates
+                .get();
+        CONTAINER_QUERIES.queryContentBook(contentType, processResult, showUpdates);
     }
 
     public void startTracking(String name, ContentType contentType) {
