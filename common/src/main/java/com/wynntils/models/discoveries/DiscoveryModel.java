@@ -15,6 +15,7 @@ import com.wynntils.core.net.UrlId;
 import com.wynntils.core.text.StyledText;
 import com.wynntils.models.characterstats.CombatXpModel;
 import com.wynntils.models.content.type.ContentInfo;
+import com.wynntils.models.content.type.ContentSortOrder;
 import com.wynntils.models.content.type.ContentType;
 import com.wynntils.models.discoveries.event.DiscoveriesUpdatedEvent;
 import com.wynntils.models.discoveries.profile.DiscoveryProfile;
@@ -29,6 +30,7 @@ import com.wynntils.utils.mc.McUtils;
 import com.wynntils.utils.mc.type.Location;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -174,11 +176,29 @@ public final class DiscoveryModel extends Model {
         return secretDiscoveriesTooltip.stream().map(StyledText::getComponent).collect(Collectors.toList());
     }
 
-    public Stream<DiscoveryInfo> getAllCompletedDiscoveries() {
-        return Stream.concat(
-                        Stream.concat(territoryDiscoveries.stream(), worldDiscoveries.stream()),
-                        secretDiscoveries.stream())
-                .filter(DiscoveryInfo::isDiscovered);
+    public Stream<DiscoveryInfo> getAllDiscoveries(ContentSortOrder sortOrder) {
+        if (sortOrder == ContentSortOrder.DISTANCE) {
+            throw new IllegalArgumentException("Cannot sort discoveries by distance");
+        }
+
+        // All quests are always sorted by status (available then unavailable), and then
+        // the given sort order, and finally a third way if the given sort order is equal.
+        Stream<DiscoveryInfo> baseStream = Stream.concat(
+                Stream.concat(territoryDiscoveries.stream(), worldDiscoveries.stream()), secretDiscoveries.stream());
+
+        return switch (sortOrder) {
+            case LEVEL -> baseStream.sorted(Comparator.comparing(DiscoveryInfo::isDiscovered)
+                    .thenComparing(DiscoveryInfo::getMinLevel)
+                    .thenComparing(DiscoveryInfo::getName));
+            case ALPHABETIC -> baseStream.sorted(Comparator.comparing(DiscoveryInfo::isDiscovered)
+                    .thenComparing(DiscoveryInfo::getName)
+                    .thenComparing(DiscoveryInfo::getMinLevel));
+            case DISTANCE -> null;
+        };
+    }
+
+    public Stream<DiscoveryInfo> getAllCompletedDiscoveries(ContentSortOrder sortOrder) {
+        return getAllDiscoveries(sortOrder).filter(DiscoveryInfo::isDiscovered);
     }
 
     public List<DiscoveryInfo> getDiscoveryInfoList() {

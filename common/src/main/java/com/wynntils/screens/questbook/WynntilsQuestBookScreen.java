@@ -9,18 +9,19 @@ import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.components.Models;
 import com.wynntils.core.text.StyledText;
 import com.wynntils.mc.event.MenuEvent;
+import com.wynntils.models.content.type.ContentSortOrder;
 import com.wynntils.models.quests.QuestInfo;
 import com.wynntils.models.quests.event.QuestBookReloadedEvent;
-import com.wynntils.models.quests.type.QuestSortOrder;
 import com.wynntils.models.quests.type.QuestStatus;
 import com.wynntils.screens.base.WynntilsListScreen;
 import com.wynntils.screens.base.widgets.BackButton;
 import com.wynntils.screens.base.widgets.PageSelectorButton;
 import com.wynntils.screens.base.widgets.ReloadButton;
+import com.wynntils.screens.base.widgets.SortOrderWidget;
+import com.wynntils.screens.base.widgets.SortableContentScreen;
 import com.wynntils.screens.questbook.history.widgets.DialogueHistoryButton;
 import com.wynntils.screens.questbook.widgets.QuestButton;
 import com.wynntils.screens.questbook.widgets.QuestInfoButton;
-import com.wynntils.screens.questbook.widgets.SortOrderWidget;
 import com.wynntils.screens.wynntilsmenu.WynntilsMenuScreen;
 import com.wynntils.utils.StringUtils;
 import com.wynntils.utils.colors.CommonColors;
@@ -42,7 +43,8 @@ import net.minecraft.network.chat.Component;
 import net.minecraftforge.eventbus.api.EventPriority;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 
-public final class WynntilsQuestBookScreen extends WynntilsListScreen<QuestInfo, QuestButton> {
+public final class WynntilsQuestBookScreen extends WynntilsListScreen<QuestInfo, QuestButton>
+        implements SortableContentScreen {
     private static final List<Component> RELOAD_TOOLTIP = List.of(
             Component.translatable("screens.wynntils.wynntilsQuestBook.reload.name")
                     .withStyle(ChatFormatting.WHITE),
@@ -51,7 +53,7 @@ public final class WynntilsQuestBookScreen extends WynntilsListScreen<QuestInfo,
 
     private QuestInfo trackingRequested = null;
     private boolean miniQuestMode = false;
-    private QuestSortOrder questSortOrder = QuestSortOrder.LEVEL;
+    private ContentSortOrder contentSortOrder = ContentSortOrder.LEVEL;
 
     private WynntilsQuestBookScreen() {
         super(Component.translatable("screens.wynntils.wynntilsQuestBook.name"));
@@ -317,7 +319,7 @@ public final class WynntilsQuestBookScreen extends WynntilsListScreen<QuestInfo,
         }
 
         if (this.hovered instanceof SortOrderWidget) {
-            switch (questSortOrder) {
+            switch (contentSortOrder) {
                 case LEVEL -> tooltipLines = List.of(
                         Component.translatable("screens.wynntils.wynntilsQuestBook.sort.level.name"),
                         Component.translatable("screens.wynntils.wynntilsQuestBook.sort.level.description"));
@@ -381,7 +383,7 @@ public final class WynntilsQuestBookScreen extends WynntilsListScreen<QuestInfo,
     }
 
     private List<QuestInfo> getSortedQuests() {
-        return miniQuestMode ? Models.Quest.getMiniQuests(questSortOrder) : Models.Quest.getQuests(questSortOrder);
+        return miniQuestMode ? Models.Quest.getMiniQuests(contentSortOrder) : Models.Quest.getQuests(contentSortOrder);
     }
 
     private void setQuests(List<QuestInfo> quests) {
@@ -424,16 +426,18 @@ public final class WynntilsQuestBookScreen extends WynntilsListScreen<QuestInfo,
         Models.Quest.rescanQuestBook(!this.miniQuestMode, this.miniQuestMode);
     }
 
-    public QuestSortOrder getQuestSortOrder() {
-        return questSortOrder;
+    @Override
+    public ContentSortOrder getQuestSortOrder() {
+        return contentSortOrder;
     }
 
-    public void setQuestSortOrder(QuestSortOrder newSortOrder) {
+    @Override
+    public void setQuestSortOrder(ContentSortOrder newSortOrder) {
         if (newSortOrder == null) {
-            throw new IllegalStateException("Tried to set quest order to null");
+            throw new IllegalStateException("Tried to set null content sort order");
         }
 
-        this.questSortOrder = newSortOrder;
+        this.contentSortOrder = newSortOrder;
         setQuests(getSortedQuests());
         this.setCurrentPage(0);
     }

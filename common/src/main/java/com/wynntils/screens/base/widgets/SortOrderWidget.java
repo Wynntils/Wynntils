@@ -2,39 +2,37 @@
  * Copyright © Wynntils 2022.
  * This file is released under AGPLv3. See LICENSE for full license details.
  */
-package com.wynntils.screens.questbook.widgets;
+package com.wynntils.screens.base.widgets;
 
 import com.mojang.blaze3d.vertex.PoseStack;
-import com.wynntils.models.quests.type.QuestSortOrder;
-import com.wynntils.screens.base.widgets.WynntilsButton;
-import com.wynntils.screens.questbook.WynntilsQuestBookScreen;
+import com.wynntils.models.content.type.ContentSortOrder;
 import com.wynntils.utils.render.RenderUtils;
 import com.wynntils.utils.render.Texture;
 import net.minecraft.network.chat.Component;
 
 public class SortOrderWidget extends WynntilsButton {
-    private final WynntilsQuestBookScreen questBookScreen;
+    private final SortableContentScreen sortableContentScreen;
 
-    public SortOrderWidget(int x, int y, int width, int height, WynntilsQuestBookScreen questBookScreen) {
+    public SortOrderWidget(int x, int y, int width, int height, SortableContentScreen sortableContentScreen) {
         super(x, y, width, height, Component.literal("Sort Order Button"));
-        this.questBookScreen = questBookScreen;
+        this.sortableContentScreen = sortableContentScreen;
     }
 
     @Override
     public void onPress() {
-        QuestSortOrder questSortOrder = questBookScreen.getQuestSortOrder();
+        ContentSortOrder contentSortOrder = sortableContentScreen.getQuestSortOrder();
 
-        QuestSortOrder[] questSortOrders = QuestSortOrder.values();
+        ContentSortOrder[] contentSortOrders = ContentSortOrder.values();
 
-        QuestSortOrder newSort = questSortOrders[(questSortOrder.ordinal() + 1) % questSortOrders.length];
+        ContentSortOrder newSort = contentSortOrders[(contentSortOrder.ordinal() + 1) % contentSortOrders.length];
 
-        questBookScreen.setQuestSortOrder(newSort);
+        sortableContentScreen.setQuestSortOrder(newSort);
     }
 
     @Override
     public void renderWidget(PoseStack poseStack, int mouseX, int mouseY, float partialTick) {
         Texture sortTexture =
-                switch (questBookScreen.getQuestSortOrder()) {
+                switch (sortableContentScreen.getQuestSortOrder()) {
                     case LEVEL -> Texture.SORT_LEVEL;
                     case DISTANCE -> Texture.SORT_DISTANCE;
                     case ALPHABETIC -> Texture.SORT_ALPHABETICALLY;
