@@ -50,6 +50,7 @@ public class CustomBankPagesFeature extends Feature {
     private static final int NEXT_PAGE_SLOT = 8;
     private static final int PREVIOUS_PAGE_SLOT = 17;
     private static final List<Integer> BUTTON_SLOTS = List.of(7, 16, 25, 34, 43, 52);
+    private static final List<Integer> HOUSING_DEFAULT_DESTINATIONS = List.of(1, 3, 4, 6, 8, 10);
     private static final List<Integer> QUICK_JUMP_DESTINATIONS = List.of(1, 5, 9, 13, 17, 21);
 
     private boolean quickJumping = false;
@@ -107,7 +108,10 @@ public class CustomBankPagesFeature extends Feature {
         customJumpDestinations = parseStringToDestinations(configDestinations);
 
         if (customJumpDestinations == null) {
-            customJumpDestinations = QUICK_JUMP_DESTINATIONS;
+            switch (currentContainer) {
+                case BANK -> customJumpDestinations = QUICK_JUMP_DESTINATIONS;
+                case BOOKSHELF, MISC_BUCKET -> customJumpDestinations = HOUSING_DEFAULT_DESTINATIONS;
+            }
         }
     }
 
@@ -270,6 +274,7 @@ public class CustomBankPagesFeature extends Feature {
         }
 
         try {
+
             return Arrays.stream(destinationStrings).map(Integer::parseInt).collect(Collectors.toList());
         } catch (NumberFormatException ex) {
             return null;
