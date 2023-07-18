@@ -179,7 +179,6 @@ public abstract class ContainerOverlay<T extends Overlay> extends Overlay {
                 OverlaySize childSize,
                 int accumulatedWidth,
                 int accumulatedHeight) {
-
             // If the multiplier is negative, we must add the corresponding size to the base
             // position. If it is zero or positive, use the original position
             float heightOffset = verticalMultiplier < 0 ? containerSize.getHeight() - childSize.getHeight() : 0;

@@ -32,7 +32,6 @@ import net.minecraftforge.eventbus.api.SubscribeEvent;
 
 @ConfigCategory(Category.INVENTORY)
 public class BulkBuyFeature extends Feature {
-
     @RegisterConfig
     public final Config<Integer> bulkBuyAmount = new Config<>(4);
 
