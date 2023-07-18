@@ -1056,6 +1056,8 @@
   "feature.wynntils.wynntilsContentBook.name": "Wynntils Content Book",
   "feature.wynntils.wynntilsContentBook.replaceWynncraftContentBook.description": "Should the Wynncraft content book be replaced with the mod's custom one?",
   "feature.wynntils.wynntilsContentBook.replaceWynncraftContentBook.name": "Replace Wynncraft Content Book",
+  "feature.wynntils.wynntilsContentBook.showContentBookLoadingUpdates.description": "Should game notification overlay show when the content book is loading?",
+  "feature.wynntils.wynntilsContentBook.showContentBookLoadingUpdates.name": "Show Content Book Loading Updates",
   "feature.wynntils.wynntilsCosmetics.description": "Adds the ability to see Wynntils cosmetics.",
   "feature.wynntils.wynntilsCosmetics.name": "Wynntils Cosmetics",
   "feature.wynntils.wynntilsCosmetics.renderOwnCape.description": "Should your custom Wynntils cape/elytra be shown on your own screen?",
