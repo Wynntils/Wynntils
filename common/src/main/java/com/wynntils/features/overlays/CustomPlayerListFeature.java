@@ -27,6 +27,7 @@ import com.wynntils.utils.render.Texture;
 import com.wynntils.utils.render.type.HorizontalAlignment;
 import com.wynntils.utils.render.type.TextShadow;
 import com.wynntils.utils.render.type.VerticalAlignment;
+import com.wynntils.utils.type.ThrottledSupplier;
 import java.time.Duration;
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
@@ -67,8 +68,8 @@ public class CustomPlayerListFeature extends Feature {
 
         private final AnimationPercentage animationPercentage = new AnimationPercentage(
                 McUtils.options().keyPlayerList::isDown, Duration.of(openingDuration.get(), ChronoUnit.MILLIS));
-        private final TimelimitedExecutioner<List<StyledText>> availablePlayers =
-                new TimelimitedExecutioner<>(CustomPlayerListOverlay::getAvailablePlayers, Duration.ofMillis(250));
+        private final ThrottledSupplier<List<StyledText>> availablePlayers =
+                new ThrottledSupplier<>(CustomPlayerListOverlay::getAvailablePlayers, Duration.ofMillis(250));
 
         protected CustomPlayerListOverlay() {
             super(
@@ -263,25 +264,6 @@ public class CustomPlayerListFeature extends Feature {
 
         public boolean finishedClosingAnimation() {
             return openingProgress == 0;
-        }
-    }
-
-    private static final class TimelimitedExecutioner<T> {
-        private final Supplier<T> method;
-        private final Duration cooldown;
-        private T current;
-        private Instant lastExecutionTime = Instant.EPOCH;
-
-        private TimelimitedExecutioner(Supplier<T> method, Duration cooldown) {
-            this.method = method;
-            this.cooldown = cooldown;
-        }
-
-        public T get() {
-            Duration difference = Duration.between(lastExecutionTime, Instant.now());
-            if (difference.minus(cooldown).isNegative()) return current;
-            lastExecutionTime = Instant.now();
-            return current = method.get();
         }
     }
 }
