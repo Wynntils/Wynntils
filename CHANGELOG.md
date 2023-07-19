@@ -1,9 +1,17 @@
+## [0.0.3-alpha.158](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.157...v0.0.3-alpha.158) (2023-07-19)
+
+
+### Bug Fixes
+
+* Do not register clicks outside displayed config button ([#1687](https://github.com/Wynntils/Artemis/issues/1687)) ([34b9bf2](https://github.com/Wynntils/Artemis/commit/34b9bf25da50eb2aef6b7a61ef79757bb222c349))
+
 ## [0.0.3-alpha.157](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.156...v0.0.3-alpha.157) (2023-07-19)
 
 
 ### Miscellaneous Chores
 
 * Add missing @Override annotations ([#1781](https://github.com/Wynntils/Artemis/issues/1781)) ([43255ae](https://github.com/Wynntils/Artemis/commit/43255ae5ae6e5b6f8ea1b3348432f51ff017e448))
+* **release:** v0.0.3-alpha.157 [skip ci] ([75a0410](https://github.com/Wynntils/Artemis/commit/75a04106ad6a79a7b6a0afce6e7118c81bdcaad7))
 
 ## [0.0.3-alpha.156](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.155...v0.0.3-alpha.156) (2023-07-19)
 
@@ -36,16 +44,4 @@
 ### Miscellaneous Chores
 
 * **release:** v0.0.3-alpha.154 [skip ci] ([c527f24](https://github.com/Wynntils/Artemis/commit/c527f24de4aacef46574709cf9307f9fd7f2cf8d))
-
-## [0.0.3-alpha.153](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.152...v0.0.3-alpha.153) (2023-07-17)
-
-
-### Bug Fixes
-
-* Fix trying to set discord status before joining server ([#1773](https://github.com/Wynntils/Artemis/issues/1773)) ([2639372](https://github.com/Wynntils/Artemis/commit/263937258e37419890b6d85c804572edff5f768a))
-
-
-### Miscellaneous Chores
-
-* **release:** v0.0.3-alpha.153 [skip ci] ([5e09652](https://github.com/Wynntils/Artemis/commit/5e0965287a2fe516934e5c3bd92fadcc60e9a6cb))
 
