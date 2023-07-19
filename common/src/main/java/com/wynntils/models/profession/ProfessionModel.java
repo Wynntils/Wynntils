@@ -251,6 +251,10 @@ public class ProfessionModel extends Model {
         return professionDryStreak.get();
     }
 
+    public int getGatherCooldownTime() {
+        return Models.Bomb.isBombActive(BombType.PROFESSION_SPEED) ? GATHER_COOLDOWN_TIME / 2 : GATHER_COOLDOWN_TIME;
+    }
+
     private static final class ProfessionTimerArmorStand {
         private final Entity entity;
         private final int length;
