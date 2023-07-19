@@ -27,7 +27,7 @@ import com.wynntils.utils.render.Texture;
 import com.wynntils.utils.render.type.HorizontalAlignment;
 import com.wynntils.utils.render.type.TextShadow;
 import com.wynntils.utils.render.type.VerticalAlignment;
-import com.wynntils.utils.type.AnimationPercentage;
+import com.wynntils.utils.render.type.AnimationPercentage;
 import com.wynntils.utils.type.ThrottledSupplier;
 import java.time.Duration;
 import java.time.temporal.ChronoUnit;

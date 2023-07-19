@@ -2,7 +2,7 @@
  * Copyright © Wynntils 2023.
  * This file is released under AGPLv3. See LICENSE for full license details.
  */
-package com.wynntils.utils.type;
+package com.wynntils.utils.render.type;
 
 import java.time.Duration;
 import java.time.Instant;
