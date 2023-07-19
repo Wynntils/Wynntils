@@ -27,19 +27,17 @@ import com.wynntils.utils.render.Texture;
 import com.wynntils.utils.render.type.HorizontalAlignment;
 import com.wynntils.utils.render.type.TextShadow;
 import com.wynntils.utils.render.type.VerticalAlignment;
+import com.wynntils.utils.type.AnimationPercentage;
 import com.wynntils.utils.type.ThrottledSupplier;
 import java.time.Duration;
-import java.time.Instant;
 import java.time.temporal.ChronoUnit;
 import java.util.Comparator;
 import java.util.List;
-import java.util.function.Supplier;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.gui.components.PlayerTabOverlay;
 import net.minecraft.client.multiplayer.PlayerInfo;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
-import org.joml.Math;
 
 @ConfigCategory(Category.OVERLAYS)
 public class CustomPlayerListFeature extends Feature {
@@ -214,56 +212,6 @@ public class CustomPlayerListFeature extends Feature {
         @Override
         protected void onConfigUpdate(ConfigHolder configHolder) {
             animationPercentage.setOpeningDuration(Duration.of(openingDuration.get(), ChronoUnit.MILLIS));
-        }
-    }
-
-    private static final class AnimationPercentage {
-        private final Supplier<Boolean> openingContitions;
-        private Duration openingDuration;
-        private Instant lastTime = Instant.EPOCH;
-
-        private double openingProgress;
-
-        private AnimationPercentage(Supplier<Boolean> openingContitions, Duration openingDuration) {
-            this.openingContitions = openingContitions;
-            this.openingDuration = openingDuration;
-        }
-
-        private double getAnimation() {
-            if (openingDuration.isZero() || openingDuration.isNegative()) return 1;
-            if (openingProgress == 0) {
-                lastTime = Instant.now().minus(1, ChronoUnit.MILLIS);
-            }
-
-            if (openingContitions.get()) {
-                addOpeningProgress(
-                        Duration.between(lastTime, Instant.now()).toMillis() / ((double) openingDuration.toMillis()));
-            } else if (openingProgress > 0) {
-                addOpeningProgress(
-                        -Duration.between(lastTime, Instant.now()).toMillis() / ((double) openingDuration.toMillis()));
-            }
-            lastTime = Instant.now();
-            return applyTransformation(openingProgress);
-        }
-
-        public void addOpeningProgress(double openingProgress) {
-            setOpeningProgress(this.openingProgress + openingProgress);
-        }
-
-        public void setOpeningProgress(double openingProgress) {
-            this.openingProgress = Math.clamp(0, 1, openingProgress);
-        }
-
-        private static double applyTransformation(double openingProgress) {
-            return java.lang.Math.sin((float) (openingProgress / 2f * java.lang.Math.PI));
-        }
-
-        public void setOpeningDuration(Duration openingDuration) {
-            this.openingDuration = openingDuration;
-        }
-
-        public boolean finishedClosingAnimation() {
-            return openingProgress == 0;
         }
     }
 }
