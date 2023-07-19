@@ -6,11 +6,13 @@ package com.wynntils.screens.base.widgets;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.wynntils.models.content.type.ContentSortOrder;
+import com.wynntils.screens.base.TooltipProvider;
 import com.wynntils.utils.render.RenderUtils;
 import com.wynntils.utils.render.Texture;
+import java.util.List;
 import net.minecraft.network.chat.Component;
 
-public class SortOrderWidget extends WynntilsButton {
+public class SortOrderWidget extends WynntilsButton implements TooltipProvider {
     private final SortableContentScreen sortableContentScreen;
 
     public SortOrderWidget(int x, int y, int width, int height, SortableContentScreen sortableContentScreen) {
@@ -72,5 +74,20 @@ public class SortOrderWidget extends WynntilsButton {
                     sortTexture.width(),
                     sortTexture.height());
         }
+    }
+
+    @Override
+    public List<Component> getTooltipLines() {
+        return switch (sortableContentScreen.getContentSortOrder()) {
+            case LEVEL -> List.of(
+                    Component.translatable("screens.wynntils.wynntilsContentBook.sort.level.name"),
+                    Component.translatable("screens.wynntils.wynntilsContentBook.sort.level.description"));
+            case DISTANCE -> List.of(
+                    Component.translatable("screens.wynntils.wynntilsContentBook.sort.distance.name"),
+                    Component.translatable("screens.wynntils.wynntilsContentBook.sort.distance.description"));
+            case ALPHABETIC -> List.of(
+                    Component.translatable("screens.wynntils.wynntilsContentBook.sort.alphabetical.name"),
+                    Component.translatable("screens.wynntils.wynntilsContentBook.sort.alphabetical.description"));
+        };
     }
 }

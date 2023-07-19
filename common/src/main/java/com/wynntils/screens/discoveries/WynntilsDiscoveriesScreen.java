@@ -269,20 +269,6 @@ public final class WynntilsDiscoveriesScreen extends WynntilsListScreen<Discover
     private void renderTooltip(PoseStack poseStack, int mouseX, int mouseY) {
         List<Component> tooltipLines = new ArrayList<>();
 
-        if (this.hovered instanceof SortOrderWidget) {
-            switch (contentSortOrder) {
-                case LEVEL -> tooltipLines = List.of(
-                        Component.translatable("screens.wynntils.wynntilsQuestBook.sort.level.name"),
-                        Component.translatable("screens.wynntils.wynntilsQuestBook.sort.level.description"));
-                case DISTANCE -> tooltipLines = List.of(
-                        Component.translatable("screens.wynntils.wynntilsQuestBook.sort.distance.name"),
-                        Component.translatable("screens.wynntils.wynntilsQuestBook.sort.distance.description"));
-                case ALPHABETIC -> tooltipLines = List.of(
-                        Component.translatable("screens.wynntils.wynntilsQuestBook.sort.alphabetical.name"),
-                        Component.translatable("screens.wynntils.wynntilsQuestBook.sort.alphabetical.description"));
-            }
-        }
-
         if (this.hovered instanceof TooltipProvider tooltipWidget) {
             tooltipLines = tooltipWidget.getTooltipLines();
         }
