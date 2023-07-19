@@ -93,7 +93,7 @@ public class CustomPlayerListFeature extends Feature {
                     .map(StyledText::fromComponent)
                     .filter(styledText -> !styledText.contains(ChatFormatting.BOLD.toString()))
                     .map(StyledText::getString)
-                    .map(styledText -> RenderedStringUtils.cut(styledText, MAX_WIDTH))
+                    .map(styledText -> RenderedStringUtils.substringMaxWidth(styledText, MAX_WIDTH))
                     .map(styledText ->
                             styledText.replace(ChatFormatting.GRAY.toString(), ChatFormatting.BLACK.toString()))
                     .map(StyledText::fromString)

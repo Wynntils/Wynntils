@@ -93,7 +93,7 @@ public final class RenderedStringUtils {
         }
     }
 
-    public static String cut(String input, int maxWidth) {
+    public static String substringMaxWidth(String input, int maxWidth) {
         Font font = McUtils.mc().font;
         if (font.width(input) <= maxWidth) return input;
 
