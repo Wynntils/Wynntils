@@ -19,6 +19,7 @@ public class IngredientItem extends GameItem implements QualityTierItemProperty,
         return ingredientInfo;
     }
 
+    @Override
     public int getQualityTier() {
         return ingredientInfo.tier();
     }

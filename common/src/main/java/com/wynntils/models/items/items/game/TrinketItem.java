@@ -30,6 +30,7 @@ public class TrinketItem extends GameItem implements GearTierItemProperty, UsesI
         return trinketName;
     }
 
+    @Override
     public CappedValue getUses() {
         return uses;
     }
