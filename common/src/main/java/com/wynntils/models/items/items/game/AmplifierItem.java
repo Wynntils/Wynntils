@@ -15,10 +15,12 @@ public class AmplifierItem extends GameItem implements NumberedTierItemProperty,
         this.tier = tier;
     }
 
+    @Override
     public int getTier() {
         return tier;
     }
 
+    @Override
     public GearTier getGearTier() {
         return GearTier.LEGENDARY;
     }
