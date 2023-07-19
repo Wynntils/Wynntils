@@ -16,6 +16,7 @@ import com.wynntils.services.map.pois.Poi;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.function.Function;
 import java.util.stream.Stream;
 
@@ -81,11 +82,13 @@ public class MapDataModel extends Model {
 
     private MapFeatureAttributes getAttributeForCategoryId(String categoryId) {
         Stream<MapFeatureCategory> allCategories = providers.stream().flatMap(MapDataProvider::getCategories);
-        MapFeatureCategory category = allCategories
+        MapFeatureAttributes attributes = allCategories
                 .filter(c -> c.getCategoryId().equals(categoryId))
+                .map(MapFeatureCategory::getAttributes)
+                .filter(Objects::nonNull)
                 .findFirst()
                 .orElse(null);
-        return category.getAttributes();
+        return attributes;
     }
 
     public String getCategoryName(String categoryId) {
