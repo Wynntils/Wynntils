@@ -4,7 +4,7 @@
  */
 package com.wynntils.models.mapdata.type;
 
-import com.wynntils.models.mapdata.style.MapFeatureStyle;
+import com.wynntils.models.mapdata.style.MapFeatureAttributes;
 
 // wynntils:lootrun:chest:tier1
 // wynntils:service:profession:scribing
@@ -15,7 +15,7 @@ import com.wynntils.models.mapdata.style.MapFeatureStyle;
 // wynntils:personal:discovery:territory
 // wynntils:personal:saved_bookmarks_poi ???
 
-public record MapCategory(MapCategory parent, String name, String displayName, MapFeatureStyle style) {
+public record MapCategory(MapCategory parent, String name, String displayName, MapFeatureAttributes attributes) {
     public String getPath() {
         return (parent != null ? parent.getPath() + ":" : "") + name;
     }

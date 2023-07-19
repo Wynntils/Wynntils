@@ -5,14 +5,12 @@
 package com.wynntils.models.mapdata.style;
 
 import com.wynntils.utils.colors.CustomColor;
-import com.wynntils.utils.render.type.TextShadow;
+import java.util.Optional;
 
-public interface MapFeatureLabel {
-    String getLabel();
-
+public interface MapFeatureIconStyle {
     MapVisibility getVisibility();
 
     CustomColor getColor();
 
-    TextShadow getShadow();
+    Optional<MapIconDecoration> getIconDecoration();
 }

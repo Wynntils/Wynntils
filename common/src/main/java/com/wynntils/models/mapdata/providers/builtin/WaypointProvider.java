@@ -5,7 +5,7 @@
 package com.wynntils.models.mapdata.providers.builtin;
 
 import com.wynntils.models.mapdata.providers.BuiltInProvider;
-import com.wynntils.models.mapdata.style.MapFeatureStyle;
+import com.wynntils.models.mapdata.style.MapFeatureAttributes;
 import com.wynntils.models.mapdata.type.MapCategory;
 import com.wynntils.models.mapdata.type.MapFeature;
 import com.wynntils.models.mapdata.type.MapLocation;
@@ -31,7 +31,7 @@ public class WaypointProvider extends BuiltInProvider {
         }
 
         @Override
-        public MapFeatureStyle getStyle() {
+        public MapFeatureAttributes getAttributes() {
             return null;
         }
 

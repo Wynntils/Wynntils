@@ -4,7 +4,7 @@
  */
 package com.wynntils.models.mapdata.type;
 
-import com.wynntils.models.mapdata.style.MapFeatureStyle;
+import com.wynntils.models.mapdata.style.MapFeatureAttributes;
 import java.util.List;
 
 public interface MapFeature {
@@ -12,7 +12,7 @@ public interface MapFeature {
 
     MapCategory getCategory();
 
-    MapFeatureStyle getStyle();
+    MapFeatureAttributes getAttributes();
 
     List<String> getTags();
 }
