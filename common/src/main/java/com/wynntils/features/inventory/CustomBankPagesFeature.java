@@ -72,7 +72,7 @@ public class CustomBankPagesFeature extends Feature {
             currentContainer = SearchableContainerType.BOOKSHELF;
             lastPage = Models.Container.getFinalBookshelfPage();
         } else if (Models.Container.isMiscBucketScreen(screen)) {
-            currentContainer = SearchableContainerType.BOOKSHELF;
+            currentContainer = SearchableContainerType.MISC_BUCKET;
             lastPage = Models.Container.getFinalMiscBucketPage();
         } else {
             return;
