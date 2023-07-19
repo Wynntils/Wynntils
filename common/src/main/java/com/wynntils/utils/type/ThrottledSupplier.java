@@ -24,6 +24,7 @@ public final class ThrottledSupplier<T> implements Supplier<T> {
         Duration difference = Duration.between(lastExecutionTime, Instant.now());
         if (difference.minus(cooldown).isNegative()) return current;
         lastExecutionTime = Instant.now();
-        return current = method.get();
+        current = method.get();
+        return current;
     }
 }
