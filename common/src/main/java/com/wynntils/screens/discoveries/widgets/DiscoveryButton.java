@@ -7,6 +7,7 @@ package com.wynntils.screens.discoveries.widgets;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.wynntils.core.components.Models;
 import com.wynntils.core.text.StyledText;
+import com.wynntils.models.content.type.ContentSortOrder;
 import com.wynntils.models.discoveries.DiscoveryInfo;
 import com.wynntils.models.discoveries.type.DiscoveryType;
 import com.wynntils.screens.base.TooltipProvider;
@@ -106,7 +107,7 @@ public class DiscoveryButton extends WynntilsButton implements TooltipProvider {
         // We need to inject requirements into lore here, as we only have updated discovery info here.
         if (!discoveryInfo.getRequirements().isEmpty()) {
             List<String> unmet = discoveryInfo.getRequirements().stream()
-                    .filter(requirement -> Models.Discovery.getAllCompletedDiscoveries()
+                    .filter(requirement -> Models.Discovery.getAllCompletedDiscoveries(ContentSortOrder.ALPHABETIC)
                             .noneMatch(discovery -> discovery.getName().equals(requirement)))
                     .toList();
 

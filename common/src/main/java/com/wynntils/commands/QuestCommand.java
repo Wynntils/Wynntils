@@ -10,8 +10,8 @@ import com.mojang.brigadier.context.CommandContext;
 import com.mojang.brigadier.suggestion.SuggestionProvider;
 import com.wynntils.core.commands.Command;
 import com.wynntils.core.components.Models;
+import com.wynntils.models.content.type.ContentSortOrder;
 import com.wynntils.models.quests.QuestInfo;
-import com.wynntils.models.quests.type.QuestSortOrder;
 import com.wynntils.utils.StringUtils;
 import com.wynntils.utils.mc.McUtils;
 import java.util.Arrays;
@@ -30,11 +30,11 @@ import net.minecraft.world.phys.Vec3;
 public class QuestCommand extends Command {
     private static final SuggestionProvider<CommandSourceStack> QUEST_SUGGESTION_PROVIDER =
             (context, builder) -> SharedSuggestionProvider.suggest(
-                    Models.Quest.getQuests(QuestSortOrder.ALPHABETIC).stream().map(QuestInfo::getName), builder);
+                    Models.Quest.getQuests(ContentSortOrder.ALPHABETIC).stream().map(QuestInfo::getName), builder);
 
     private static final SuggestionProvider<CommandSourceStack> SORT_SUGGESTION_PROVIDER =
             (context, builder) -> SharedSuggestionProvider.suggest(
-                    Arrays.stream(QuestSortOrder.values())
+                    Arrays.stream(ContentSortOrder.values())
                             .map(order -> order.name().toLowerCase(Locale.ROOT)),
                     builder);
 
@@ -76,7 +76,7 @@ public class QuestCommand extends Command {
     }
 
     private int listQuests(CommandContext<CommandSourceStack> context, String sort) {
-        QuestSortOrder order = QuestSortOrder.fromString(sort);
+        ContentSortOrder order = ContentSortOrder.fromString(sort);
 
         Models.Quest.rescanQuestBook(true, false);
 
