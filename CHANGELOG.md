@@ -1,9 +1,17 @@
+## [0.0.3-alpha.157](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.156...v0.0.3-alpha.157) (2023-07-19)
+
+
+### Miscellaneous Chores
+
+* Add missing @Override annotations ([#1781](https://github.com/Wynntils/Artemis/issues/1781)) ([43255ae](https://github.com/Wynntils/Artemis/commit/43255ae5ae6e5b6f8ea1b3348432f51ff017e448))
+
 ## [0.0.3-alpha.156](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.155...v0.0.3-alpha.156) (2023-07-19)
 
 
 ### Miscellaneous Chores
 
 * Partial feature recategorization ([#1780](https://github.com/Wynntils/Artemis/issues/1780)) ([5a93d23](https://github.com/Wynntils/Artemis/commit/5a93d23be58532947d873a5cefadadef75efd9f0))
+* **release:** v0.0.3-alpha.156 [skip ci] ([eddeb40](https://github.com/Wynntils/Artemis/commit/eddeb40b590d66e73330bb2ec5585ae95782a888))
 
 ## [0.0.3-alpha.155](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.154...v0.0.3-alpha.155) (2023-07-18)
 
@@ -40,16 +48,4 @@
 ### Miscellaneous Chores
 
 * **release:** v0.0.3-alpha.153 [skip ci] ([5e09652](https://github.com/Wynntils/Artemis/commit/5e0965287a2fe516934e5c3bd92fadcc60e9a6cb))
-
-## [0.0.3-alpha.152](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.151...v0.0.3-alpha.152) (2023-07-17)
-
-
-### Bug Fixes
-
-* Pressing esc in character list does nothing ([#1772](https://github.com/Wynntils/Artemis/issues/1772)) ([0fa75b6](https://github.com/Wynntils/Artemis/commit/0fa75b647c0aab2b9e5f6b66c52cdde40921bc79))
-
-
-### Miscellaneous Chores
-
-* **release:** v0.0.3-alpha.152 [skip ci] ([5fb68b3](https://github.com/Wynntils/Artemis/commit/5fb68b346c5fc6c30ba4c1842d71b2888966cd54))
 
