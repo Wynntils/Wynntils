@@ -585,7 +585,7 @@ public class TextInputBoxWidget extends AbstractWidget {
     }
 
     /**
-     * if there is no on update consumer given in the constructor this method gets called instead.
+     * If there is no on update consumer given in the constructor, this method gets called instead.
      */
     protected void onUpdate(String text) {}
 }

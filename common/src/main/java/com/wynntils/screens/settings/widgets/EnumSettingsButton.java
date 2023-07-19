@@ -60,7 +60,7 @@ public class EnumSettingsButton<E extends Enum<E>> extends GeneralSettingsButton
 
     @Override
     public void onPress() {
-        // we use instead AbstractWidget#mouseClicked because we also want to have an action on the right mouse button
+        // We use instead AbstractWidget#mouseClicked, because we also want to have an action on the right mouse button
     }
 
     private static <E extends Enum<E>> int getWidth(Type type) {
