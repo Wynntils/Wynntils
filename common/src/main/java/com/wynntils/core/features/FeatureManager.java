@@ -121,7 +121,6 @@ import com.wynntils.features.ui.CustomLoadingScreenFeature;
 import com.wynntils.features.ui.CustomSeaskipperScreenFeature;
 import com.wynntils.features.ui.LobbyUptimeFeature;
 import com.wynntils.features.ui.SoulPointTimerFeature;
-import com.wynntils.features.ui.TradeMarketBulkSellFeature;
 import com.wynntils.features.ui.WynncraftButtonFeature;
 import com.wynntils.features.ui.WynncraftPauseScreenFeature;
 import com.wynntils.features.ui.WynntilsContentBookFeature;
