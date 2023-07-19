@@ -122,21 +122,21 @@ public class TradeMarketBulkSellFeature extends Feature {
             containerScreen.addRenderableWidget(new SellButton(
                     containerScreen.leftPos - SellButton.BUTTON_WIDTH,
                     containerScreen.topPos + 21,
-                    () -> bulkSell1Amount.get(),
+                    bulkSell1Amount::get,
                     false));
         }
         if (bulkSell2Amount.get() > 0) {
             containerScreen.addRenderableWidget(new SellButton(
                     containerScreen.leftPos - SellButton.BUTTON_WIDTH,
                     containerScreen.topPos + 42,
-                    () -> bulkSell2Amount.get(),
+                    bulkSell2Amount::get,
                     false));
         }
         if (bulkSell3Amount.get() > 0) {
             containerScreen.addRenderableWidget(new SellButton(
                     containerScreen.leftPos - SellButton.BUTTON_WIDTH,
                     containerScreen.topPos + 63,
-                    () -> bulkSell3Amount.get(),
+                    bulkSell3Amount::get,
                     false));
         }
     }

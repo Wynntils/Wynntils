@@ -75,8 +75,8 @@ public class ItemHandler extends Handler {
             // annotate all items
             List<ItemStack> newItems = event.getItems();
 
-            for (int i = 0; i < newItems.size(); i++) {
-                annotate(newItems.get(i));
+            for (ItemStack newItem : newItems) {
+                annotate(newItem);
             }
 
             return;
