@@ -856,11 +856,5 @@
   "screens.wynntils.wynntilsQuestBook.quests": "任務",
   "screens.wynntils.wynntilsQuestBook.reload.description": "重新加載任務數據",
   "screens.wynntils.wynntilsQuestBook.reload.name": "重新加載按鈕",
-  "screens.wynntils.wynntilsQuestBook.sort.alphabetical.description": "任務是以字母順序安排的。",
-  "screens.wynntils.wynntilsQuestBook.sort.alphabetical.name": "安排以字母順序",
-  "screens.wynntils.wynntilsQuestBook.sort.distance.description": "任務是以距離安排的，最近的先。",
-  "screens.wynntils.wynntilsQuestBook.sort.distance.name": "安排以距離",
-  "screens.wynntils.wynntilsQuestBook.sort.level.description": "任務是以等級安排的，最低的先。",
-  "screens.wynntils.wynntilsQuestBook.sort.level.name": "安排以等級",
   "screens.wynntils.wynntilsQuestBook.tryReload": "沒有找到任何任務！經過右上的按鈕嘗試重新加載。"
 }
