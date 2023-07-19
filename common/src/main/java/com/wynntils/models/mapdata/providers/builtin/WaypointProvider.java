@@ -6,6 +6,7 @@ package com.wynntils.models.mapdata.providers.builtin;
 
 import com.wynntils.models.mapdata.providers.BuiltInProvider;
 import com.wynntils.models.mapdata.style.MapFeatureAttributes;
+import com.wynntils.models.mapdata.style.MapIcon;
 import com.wynntils.models.mapdata.type.MapCategory;
 import com.wynntils.models.mapdata.type.MapFeature;
 import com.wynntils.models.mapdata.type.MapLocation;
@@ -16,6 +17,16 @@ import java.util.stream.Stream;
 public class WaypointProvider extends BuiltInProvider {
     @Override
     public Stream<MapFeature> getFeatures() {
+        return null;
+    }
+
+    @Override
+    public Stream<MapCategory> getCategories() {
+        return null;
+    }
+
+    @Override
+    public Stream<MapIcon> getIcons() {
         return null;
     }
 

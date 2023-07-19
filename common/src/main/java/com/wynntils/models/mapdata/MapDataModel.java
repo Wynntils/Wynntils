@@ -8,10 +8,13 @@ import com.wynntils.core.components.Model;
 import com.wynntils.models.mapdata.providers.MapDataProvider;
 import com.wynntils.models.mapdata.providers.builtin.WaypointProvider;
 import com.wynntils.models.mapdata.style.MapFeatureAttributes;
+import com.wynntils.models.mapdata.style.MapFeatureConcreteAttributes;
+import com.wynntils.models.mapdata.type.MapCategory;
 import com.wynntils.models.mapdata.type.MapFeature;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.function.Function;
 import java.util.stream.Stream;
 
 public class MapDataModel extends Model {
@@ -33,9 +36,41 @@ public class MapDataModel extends Model {
         }
     }
 
-    public String getDisplayName(MapFeature feature) {
-        return null;
+    public MapFeatureAttributes getAttributes(MapFeature feature) {
+        return new MapFeatureConcreteAttributes(feature);
     }
+
+    public <T> T getFeatureAttribute(MapFeature feature, Function<MapFeatureAttributes, T> getter) {
+        MapFeatureAttributes attributes = feature.getAttributes();
+        if (attributes != null) {
+            T attribute = getter.apply(attributes);
+            if (attribute != null) {
+                return attribute;
+            }
+        }
+
+        return getCategoryAttribute(feature.getCategory(), getter);
+    }
+
+    public <T> T getCategoryAttribute(MapCategory category, Function<MapFeatureAttributes, T> getter) {
+        if (category == null) {
+            // FIXME: proper detection for root, proper root style
+            return null;
+        }
+
+        MapFeatureAttributes attributes = category.getAttributes();
+        if (attributes != null) {
+            T attribute = getter.apply(attributes);
+            if (attribute != null) {
+                return attribute;
+            }
+        }
+
+        MapCategory parent = getParent(category);
+        return getCategoryAttribute(parent, getter);
+    }
+
+    private MapCategory getParent(MapCategory category) {}
 
     private MapFeatureAttributes getParentStyle(String categoryId) {
         String parentCategoryId = getParentCategoryId(categoryId);

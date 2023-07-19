@@ -8,6 +8,7 @@ import com.wynntils.models.mapdata.style.MapFeatureAttributes;
 import java.util.List;
 
 public interface MapFeature {
+    // The id should be unique, and track the provinence of the feature
     String getId();
 
     MapCategory getCategory();
@@ -25,6 +26,5 @@ style application:
 json files can contain:
 features == list of concrete map features (locations, paths or areas)
 categories == list of category definitions
-styles == list of named styles
 icons == icon name -> base64 png representation
  */

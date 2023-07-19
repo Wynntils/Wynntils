@@ -4,6 +4,8 @@
  */
 package com.wynntils.models.mapdata.providers;
 
+import com.wynntils.models.mapdata.style.MapIcon;
+import com.wynntils.models.mapdata.type.MapCategory;
 import com.wynntils.models.mapdata.type.MapFeature;
 import java.util.stream.Stream;
 
@@ -13,6 +15,16 @@ public class LocalProvider implements MapDataProvider {
 
     @Override
     public Stream<MapFeature> getFeatures() {
+        return null;
+    }
+
+    @Override
+    public Stream<MapCategory> getCategories() {
+        return null;
+    }
+
+    @Override
+    public Stream<MapIcon> getIcons() {
         return null;
     }
 }

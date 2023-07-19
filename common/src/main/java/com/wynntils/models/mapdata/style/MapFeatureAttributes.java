@@ -4,25 +4,26 @@
  */
 package com.wynntils.models.mapdata.style;
 
-import java.util.Optional;
+import com.wynntils.utils.colors.CustomColor;
+import com.wynntils.utils.render.type.TextShadow;
 
 public interface MapFeatureAttributes {
-    Optional<String> getLabel();
+    String getLabel();
 
-    Optional<MapIcon> getIcon();
-
-    Optional<MapFeatureAttributes> getParent();
-
-    Optional<MapFeatureLabelStyle> getLabelStyle();
-
-    Optional<MapFeatureIconStyle> getIconStyle();
+    MapIcon getIcon();
 
     // 0-1000, 1000 is highest priority (drawn on top of everything else)
-    Optional<Integer> getPriority();
+    Integer getPriority();
 
-    /// =====
+    MapVisibility getLabelVisibility();
 
-    MapFeatureAttributes EMPTY = null;
+    CustomColor getLabelColor();
 
-    MapFeatureAttributes overriddenBy(MapFeatureAttributes style);
+    TextShadow getLabelShadow();
+
+    MapVisibility getIconVisibility();
+
+    CustomColor getIconColor();
+
+    MapIconDecoration getIconDecoration();
 }
