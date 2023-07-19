@@ -8,7 +8,6 @@ import com.wynntils.utils.mc.type.Location;
 import net.minecraftforge.eventbus.api.Event;
 
 public class CharacterDeathEvent extends Event {
-
     private final Location location;
 
     public CharacterDeathEvent(Location location) {

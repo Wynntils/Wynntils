@@ -2,7 +2,7 @@
  * Copyright © Wynntils 2022.
  * This file is released under AGPLv3. See LICENSE for full license details.
  */
-package com.wynntils.features;
+package com.wynntils.features.utilities;
 
 import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.components.Managers;
@@ -25,7 +25,7 @@ import net.minecraftforge.eventbus.api.EventPriority;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 
 @StartDisabled
-@ConfigCategory(Category.UNCATEGORIZED)
+@ConfigCategory(Category.UTILITIES)
 public class TranslationFeature extends Feature {
     @RegisterConfig
     public final Config<String> languageName = new Config<>("");
