@@ -1,9 +1,21 @@
+## [0.0.3-alpha.159](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.158...v0.0.3-alpha.159) (2023-07-19)
+
+
+### Bug Fixes
+
+* Fix tooltip Z levels in settings screen ([#1783](https://github.com/Wynntils/Artemis/issues/1783)) ([10742cf](https://github.com/Wynntils/Artemis/commit/10742cf5f6147a462e59ea8f4c0f527532ad94ff))
+
 ## [0.0.3-alpha.158](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.157...v0.0.3-alpha.158) (2023-07-19)
 
 
 ### Bug Fixes
 
 * Do not register clicks outside displayed config button ([#1687](https://github.com/Wynntils/Artemis/issues/1687)) ([34b9bf2](https://github.com/Wynntils/Artemis/commit/34b9bf25da50eb2aef6b7a61ef79757bb222c349))
+
+
+### Miscellaneous Chores
+
+* **release:** v0.0.3-alpha.158 [skip ci] ([b99871d](https://github.com/Wynntils/Artemis/commit/b99871dad536efa5136fd106872e77b8784d4af1))
 
 ## [0.0.3-alpha.157](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.156...v0.0.3-alpha.157) (2023-07-19)
 
@@ -32,16 +44,4 @@
 ### Miscellaneous Chores
 
 * **release:** v0.0.3-alpha.155 [skip ci] ([d300da2](https://github.com/Wynntils/Artemis/commit/d300da26b58f0d1254b39ffa4a537a608d64d2b7))
-
-## [0.0.3-alpha.154](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.153...v0.0.3-alpha.154) (2023-07-18)
-
-
-### New Features
-
-* Lobby server list scrolling ([#1776](https://github.com/Wynntils/Artemis/issues/1776)) ([7866c16](https://github.com/Wynntils/Artemis/commit/7866c163cca85cf3f1993dea2e322a9db31119d8))
-
-
-### Miscellaneous Chores
-
-* **release:** v0.0.3-alpha.154 [skip ci] ([c527f24](https://github.com/Wynntils/Artemis/commit/c527f24de4aacef46574709cf9307f9fd7f2cf8d))
 
