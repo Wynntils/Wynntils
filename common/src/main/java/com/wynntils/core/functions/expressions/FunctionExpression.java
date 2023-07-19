@@ -13,7 +13,7 @@ import java.util.Optional;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-public class FunctionExpression extends Expression {
+public final class FunctionExpression extends Expression {
     // Function format:
     //   function_name(argument1; argument2; ...)
     //   function_name()

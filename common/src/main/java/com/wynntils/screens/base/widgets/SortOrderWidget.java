@@ -10,6 +10,7 @@ import com.wynntils.screens.base.TooltipProvider;
 import com.wynntils.utils.render.RenderUtils;
 import com.wynntils.utils.render.Texture;
 import java.util.List;
+import java.util.Locale;
 import net.minecraft.network.chat.Component;
 
 public class SortOrderWidget extends WynntilsButton implements TooltipProvider {
@@ -78,16 +79,11 @@ public class SortOrderWidget extends WynntilsButton implements TooltipProvider {
 
     @Override
     public List<Component> getTooltipLines() {
-        return switch (sortableContentScreen.getContentSortOrder()) {
-            case LEVEL -> List.of(
-                    Component.translatable("screens.wynntils.wynntilsContentBook.sort.level.name"),
-                    Component.translatable("screens.wynntils.wynntilsContentBook.sort.level.description"));
-            case DISTANCE -> List.of(
-                    Component.translatable("screens.wynntils.wynntilsContentBook.sort.distance.name"),
-                    Component.translatable("screens.wynntils.wynntilsContentBook.sort.distance.description"));
-            case ALPHABETIC -> List.of(
-                    Component.translatable("screens.wynntils.wynntilsContentBook.sort.alphabetical.name"),
-                    Component.translatable("screens.wynntils.wynntilsContentBook.sort.alphabetical.description"));
-        };
+        ContentSortOrder contentSortOrder = sortableContentScreen.getContentSortOrder();
+        return List.of(
+                Component.translatable("screens.wynntils.wynntilsContentBook.sort.%s.name"
+                        .formatted(contentSortOrder.name().toLowerCase(Locale.ROOT))),
+                Component.translatable("screens.wynntils.wynntilsContentBook.sort.%s.description"
+                        .formatted(contentSortOrder.name().toLowerCase(Locale.ROOT))));
     }
 }

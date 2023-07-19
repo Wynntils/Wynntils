@@ -133,7 +133,7 @@ public final class MaterialProfile {
             this.materialType = materialType;
         }
 
-        protected static ResourceType fromString(String str) {
+        private static ResourceType fromString(String str) {
             try {
                 return ResourceType.valueOf(str.toUpperCase(Locale.ROOT));
             } catch (IllegalArgumentException e) {

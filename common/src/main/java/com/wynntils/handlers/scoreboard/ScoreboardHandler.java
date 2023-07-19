@@ -170,7 +170,7 @@ public final class ScoreboardHandler extends Handler {
         reconstructedScoreboard.stream()
                 .filter(line -> line.line().equals(owner))
                 .findFirst()
-                .ifPresent(existingLine -> reconstructedScoreboard.remove(existingLine));
+                .ifPresent(reconstructedScoreboard::remove);
     }
 
     private boolean isScoreboardValid() {
