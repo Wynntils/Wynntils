@@ -24,6 +24,7 @@ public class TextInputBoxSettingsWidget extends TextInputBoxWidget {
         this(configHolder, textboxScreen, 100);
     }
 
+    @Override
     protected void onUpdate(String text) {
         Object parsedValue = configHolder.tryParseStringValue(text);
         if (parsedValue != null) {
