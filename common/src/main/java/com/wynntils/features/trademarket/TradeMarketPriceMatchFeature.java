@@ -2,7 +2,7 @@
  * Copyright © Wynntils 2023.
  * This file is released under AGPLv3. See LICENSE for full license details.
  */
-package com.wynntils.features.ui;
+package com.wynntils.features.trademarket;
 
 import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.components.Models;
@@ -29,7 +29,7 @@ import net.minecraft.world.inventory.ChestMenu;
 import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 
-@ConfigCategory(Category.UI)
+@ConfigCategory(Category.TRADEMARKET)
 public class TradeMarketPriceMatchFeature extends Feature {
     private static final StyledText CLICK_TO_SET_PRICE = StyledText.fromString("§aClick to Set Price");
     private static final StyledText SELL_DIALOGUE_TITLE = StyledText.fromString("What would you like to sell?");
