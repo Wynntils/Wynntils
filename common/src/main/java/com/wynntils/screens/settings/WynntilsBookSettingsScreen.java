@@ -151,14 +151,6 @@ public final class WynntilsBookSettingsScreen extends WynntilsScreen implements 
 
         configurableListScrollButton.renderWidget(poseStack, adjustedMouseX, adjustedMouseY, partialTick);
 
-        // Reverse iteration for so tooltip Z levels are correct when rendering
-        for (int i = Math.min(configurables.size(), (configurableScrollOffset + 1) * CONFIGURABLES_PER_PAGE) - 1;
-                i >= configurableScrollOffset * CONFIGURABLES_PER_PAGE;
-                i--) {
-            WynntilsButton featureButton = configurables.get(i);
-            featureButton.render(poseStack, adjustedMouseX, adjustedMouseY, partialTick);
-        }
-
         if (configListScrollButton != null) {
             configListScrollButton.renderWidget(poseStack, adjustedMouseX, adjustedMouseY, partialTick);
         }
@@ -169,6 +161,15 @@ public final class WynntilsBookSettingsScreen extends WynntilsScreen implements 
                 i--) {
             WynntilsButton configButton = configs.get(i);
             configButton.render(poseStack, adjustedMouseX, adjustedMouseY, partialTick);
+        }
+
+        // Render configurable's after configs so tooltip Z levels are correct
+        // Reverse iteration for so tooltip Z levels are correct when rendering
+        for (int i = Math.min(configurables.size(), (configurableScrollOffset + 1) * CONFIGURABLES_PER_PAGE) - 1;
+                i >= configurableScrollOffset * CONFIGURABLES_PER_PAGE;
+                i--) {
+            WynntilsButton featureButton = configurables.get(i);
+            featureButton.render(poseStack, adjustedMouseX, adjustedMouseY, partialTick);
         }
     }
 
