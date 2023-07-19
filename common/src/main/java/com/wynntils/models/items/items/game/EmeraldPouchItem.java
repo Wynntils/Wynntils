@@ -39,6 +39,7 @@ public class EmeraldPouchItem extends GameItem implements NumberedTierItemProper
         return capacity;
     }
 
+    @Override
     public int getTier() {
         return tier;
     }

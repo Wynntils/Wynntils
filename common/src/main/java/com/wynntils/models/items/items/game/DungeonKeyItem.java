@@ -23,6 +23,7 @@ public class DungeonKeyItem extends GameItem implements TargetedItemProperty {
         return corrupted;
     }
 
+    @Override
     public String getTarget() {
         return dungeon;
     }
