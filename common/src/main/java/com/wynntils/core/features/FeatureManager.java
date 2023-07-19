@@ -79,6 +79,7 @@ import com.wynntils.features.overlays.ContentTrackerOverlayFeature;
 import com.wynntils.features.overlays.CustomBarsOverlayFeature;
 import com.wynntils.features.overlays.GameBarsOverlayFeature;
 import com.wynntils.features.overlays.GameNotificationOverlayFeature;
+import com.wynntils.features.overlays.GatheringCooldownOverlayFeature;
 import com.wynntils.features.overlays.GuildAttackTimerOverlayFeature;
 import com.wynntils.features.overlays.HadesPartyOverlayFeature;
 import com.wynntils.features.overlays.InfoBoxFeature;
@@ -243,6 +244,7 @@ public final class FeatureManager extends Manager {
         registerFeature(new CustomBarsOverlayFeature());
         registerFeature(new GameBarsOverlayFeature());
         registerFeature(new GameNotificationOverlayFeature());
+        registerFeature(new GatheringCooldownOverlayFeature());
         registerFeature(new GuildAttackTimerOverlayFeature());
         registerFeature(new HadesPartyOverlayFeature());
         registerFeature(new InfoBoxFeature());

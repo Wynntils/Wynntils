@@ -33,7 +33,7 @@ public abstract class WynntilsListScreen<E, B extends WynntilsButton> extends Wy
     protected List<E> elements = new ArrayList<>();
 
     private final List<B> elementButtons = new ArrayList<>();
-    private final QuestBookSearchWidget searchWidget;
+    protected final QuestBookSearchWidget searchWidget;
     protected Renderable hovered = null;
 
     @Override

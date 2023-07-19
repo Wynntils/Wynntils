@@ -8,15 +8,18 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.components.Models;
 import com.wynntils.core.text.StyledText;
+import com.wynntils.models.content.type.ContentSortOrder;
 import com.wynntils.models.discoveries.DiscoveryInfo;
 import com.wynntils.models.discoveries.event.DiscoveriesUpdatedEvent;
 import com.wynntils.screens.base.TooltipProvider;
 import com.wynntils.screens.base.WynntilsListScreen;
 import com.wynntils.screens.base.widgets.BackButton;
+import com.wynntils.screens.base.widgets.FilterButton;
 import com.wynntils.screens.base.widgets.PageSelectorButton;
 import com.wynntils.screens.base.widgets.ReloadButton;
+import com.wynntils.screens.base.widgets.SortOrderWidget;
+import com.wynntils.screens.base.widgets.SortableContentScreen;
 import com.wynntils.screens.discoveries.widgets.DiscoveryButton;
-import com.wynntils.screens.discoveries.widgets.DiscoveryFilterButton;
 import com.wynntils.screens.discoveries.widgets.DiscoveryProgressButton;
 import com.wynntils.screens.wynntilsmenu.WynntilsMenuScreen;
 import com.wynntils.utils.StringUtils;
@@ -29,7 +32,6 @@ import com.wynntils.utils.render.type.HorizontalAlignment;
 import com.wynntils.utils.render.type.TextShadow;
 import com.wynntils.utils.render.type.VerticalAlignment;
 import java.util.ArrayList;
-import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Stream;
 import net.minecraft.ChatFormatting;
@@ -38,8 +40,9 @@ import net.minecraft.client.resources.language.I18n;
 import net.minecraft.network.chat.Component;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 
-public final class WynntilsDiscoveriesScreen extends WynntilsListScreen<DiscoveryInfo, DiscoveryButton> {
-    private final List<DiscoveryFilterButton> filterButtons = new ArrayList<>();
+public final class WynntilsDiscoveriesScreen extends WynntilsListScreen<DiscoveryInfo, DiscoveryButton>
+        implements SortableContentScreen {
+    private final List<FilterButton> filterButtons = new ArrayList<>();
 
     // Filters
     private boolean showFoundSecrets = true;
@@ -48,6 +51,8 @@ public final class WynntilsDiscoveriesScreen extends WynntilsListScreen<Discover
     private boolean showUndiscoveredWorld = false;
     private boolean showFoundTerritory = true;
     private boolean showUndiscoveredTerritory = false;
+
+    private ContentSortOrder contentSortOrder = ContentSortOrder.LEVEL;
 
     private WynntilsDiscoveriesScreen() {
         super(Component.translatable("screens.wynntils.wynntilsDiscoveries.name"));
@@ -82,7 +87,7 @@ public final class WynntilsDiscoveriesScreen extends WynntilsListScreen<Discover
 
         filterButtons.clear();
 
-        filterButtons.add(new DiscoveryFilterButton(
+        filterButtons.add(new FilterButton(
                 35,
                 125,
                 30,
@@ -99,7 +104,7 @@ public final class WynntilsDiscoveriesScreen extends WynntilsListScreen<Discover
                     reloadElements();
                 },
                 () -> showFoundTerritory));
-        filterButtons.add(new DiscoveryFilterButton(
+        filterButtons.add(new FilterButton(
                 70,
                 125,
                 30,
@@ -116,7 +121,7 @@ public final class WynntilsDiscoveriesScreen extends WynntilsListScreen<Discover
                     reloadElements();
                 },
                 () -> showFoundWorld));
-        filterButtons.add(new DiscoveryFilterButton(
+        filterButtons.add(new FilterButton(
                 105,
                 125,
                 30,
@@ -133,7 +138,7 @@ public final class WynntilsDiscoveriesScreen extends WynntilsListScreen<Discover
                     reloadElements();
                 },
                 () -> showFoundSecrets));
-        filterButtons.add(new DiscoveryFilterButton(
+        filterButtons.add(new FilterButton(
                 35,
                 160,
                 30,
@@ -150,7 +155,7 @@ public final class WynntilsDiscoveriesScreen extends WynntilsListScreen<Discover
                     reloadElements();
                 },
                 () -> showUndiscoveredTerritory));
-        filterButtons.add(new DiscoveryFilterButton(
+        filterButtons.add(new FilterButton(
                 70,
                 160,
                 30,
@@ -167,7 +172,7 @@ public final class WynntilsDiscoveriesScreen extends WynntilsListScreen<Discover
                     reloadElements();
                 },
                 () -> showUndiscoveredWorld));
-        filterButtons.add(new DiscoveryFilterButton(
+        filterButtons.add(new FilterButton(
                 105,
                 160,
                 30,
@@ -199,6 +204,13 @@ public final class WynntilsDiscoveriesScreen extends WynntilsListScreen<Discover
                 (int) (Texture.RELOAD_BUTTON.height() / 1.7f),
                 Models.Discovery::reloadDiscoveries));
 
+        this.addRenderableWidget(new SortOrderWidget(
+                Texture.QUEST_BOOK_BACKGROUND.width() / 2 + 1,
+                11,
+                (int) (Texture.SORT_DISTANCE.width() / 1.7f),
+                (int) (Texture.SORT_DISTANCE.height() / 2 / 1.7f),
+                this));
+
         this.addRenderableWidget(new PageSelectorButton(
                 Texture.QUEST_BOOK_BACKGROUND.width() / 2 + 50 - Texture.FORWARD_ARROW.width() / 2,
                 Texture.QUEST_BOOK_BACKGROUND.height() - 25,
@@ -214,7 +226,7 @@ public final class WynntilsDiscoveriesScreen extends WynntilsListScreen<Discover
                 true,
                 this));
 
-        for (DiscoveryFilterButton filterButton : filterButtons) {
+        for (FilterButton filterButton : filterButtons) {
             this.addRenderableWidget(filterButton);
         }
 
@@ -255,9 +267,12 @@ public final class WynntilsDiscoveriesScreen extends WynntilsListScreen<Discover
     }
 
     private void renderTooltip(PoseStack poseStack, int mouseX, int mouseY) {
-        if (!(this.hovered instanceof TooltipProvider tooltipWidget)) return;
+        List<Component> tooltipLines = new ArrayList<>();
 
-        List<Component> tooltipLines = tooltipWidget.getTooltipLines();
+        if (this.hovered instanceof TooltipProvider tooltipWidget) {
+            tooltipLines = tooltipWidget.getTooltipLines();
+        }
+
         if (tooltipLines.isEmpty()) return;
 
         RenderUtils.drawTooltipAt(
@@ -327,23 +342,40 @@ public final class WynntilsDiscoveriesScreen extends WynntilsListScreen<Discover
     protected void reloadElementsList(String searchTerm) {
         // We need to filter duplicates
         elements.addAll(Stream.concat(
-                        Models.Discovery.getDiscoveryInfoList().stream()
+                        Models.Discovery.getAllDiscoveries(contentSortOrder)
+                                .filter(discoveryInfo -> !discoveryInfo.isDiscovered())
                                 .filter(discoveryInfo -> switch (discoveryInfo.getType()) {
                                     case TERRITORY -> showUndiscoveredTerritory;
                                     case WORLD -> showUndiscoveredWorld;
                                     case SECRET -> showUndiscoveredSecrets;
-                                })
-                                .filter(discoveryInfo -> Models.Discovery.getAllCompletedDiscoveries()
-                                        .noneMatch(
-                                                discovery -> discovery.getName().equals(discoveryInfo.getName()))),
-                        Models.Discovery.getAllCompletedDiscoveries()
+                                }),
+                        Models.Discovery.getAllCompletedDiscoveries(contentSortOrder)
                                 .filter(discoveryInfo -> switch (discoveryInfo.getType()) {
                                     case TERRITORY -> showFoundTerritory;
                                     case WORLD -> showFoundWorld;
                                     case SECRET -> showFoundSecrets;
                                 }))
                 .filter(info -> StringUtils.partialMatch(info.getName(), searchTerm))
-                .sorted(Comparator.comparing(DiscoveryInfo::getMinLevel).thenComparing(DiscoveryInfo::getType))
                 .toList());
+    }
+
+    @Override
+    public ContentSortOrder getContentSortOrder() {
+        return contentSortOrder;
+    }
+
+    @Override
+    public void setContentSortOrder(ContentSortOrder newSortOrder) {
+        if (newSortOrder == null) {
+            throw new IllegalStateException("Tried to set null content sort order");
+        }
+
+        // Disable DISTANCE sorting for discoveries
+        if (newSortOrder == ContentSortOrder.DISTANCE) {
+            newSortOrder = ContentSortOrder.ALPHABETIC;
+        }
+
+        this.contentSortOrder = newSortOrder;
+        this.setCurrentPage(0);
     }
 }
