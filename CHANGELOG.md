@@ -1,9 +1,21 @@
+## [0.0.3-alpha.161](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.160...v0.0.3-alpha.161) (2023-07-19)
+
+
+### Code Refactoring
+
+* Cleanups suggested by IntelliJ ([#1782](https://github.com/Wynntils/Artemis/issues/1782)) ([1eb47ae](https://github.com/Wynntils/Artemis/commit/1eb47aefa2696ef13cc266d0f8867ac2938cdee8))
+
 ## [0.0.3-alpha.160](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.159...v0.0.3-alpha.160) (2023-07-19)
 
 
 ### New Features
 
 * Custom jump pages for bookshelf and misc bucket ([#1754](https://github.com/Wynntils/Artemis/issues/1754)) ([749e771](https://github.com/Wynntils/Artemis/commit/749e771dbbb376597545c179c19d14d0e53f5fe5))
+
+
+### Miscellaneous Chores
+
+* **release:** v0.0.3-alpha.160 [skip ci] ([785e797](https://github.com/Wynntils/Artemis/commit/785e797ac6d0f8b3a997cbaef8a90a978c2550f7))
 
 ## [0.0.3-alpha.159](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.158...v0.0.3-alpha.159) (2023-07-19)
 
@@ -36,12 +48,4 @@
 
 * Add missing @Override annotations ([#1781](https://github.com/Wynntils/Artemis/issues/1781)) ([43255ae](https://github.com/Wynntils/Artemis/commit/43255ae5ae6e5b6f8ea1b3348432f51ff017e448))
 * **release:** v0.0.3-alpha.157 [skip ci] ([75a0410](https://github.com/Wynntils/Artemis/commit/75a04106ad6a79a7b6a0afce6e7118c81bdcaad7))
-
-## [0.0.3-alpha.156](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.155...v0.0.3-alpha.156) (2023-07-19)
-
-
-### Miscellaneous Chores
-
-* Partial feature recategorization ([#1780](https://github.com/Wynntils/Artemis/issues/1780)) ([5a93d23](https://github.com/Wynntils/Artemis/commit/5a93d23be58532947d873a5cefadadef75efd9f0))
-* **release:** v0.0.3-alpha.156 [skip ci] ([eddeb40](https://github.com/Wynntils/Artemis/commit/eddeb40b590d66e73330bb2ec5585ae95782a888))
 
