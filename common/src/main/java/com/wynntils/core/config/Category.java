@@ -20,7 +20,9 @@ public enum Category {
     PLAYERS,
     REDIRECTS,
     TOOLTIPS,
+    TRADEMARKET,
     UI,
+    UTILITIES,
     WYNNTILS;
 
     Category() {

@@ -90,6 +90,9 @@ public class WynntilsContentBookFeature extends Feature {
     @RegisterConfig
     public final Config<Boolean> contentBookShouldOpenWynntilsMenu = new Config<>(false);
 
+    @RegisterConfig
+    public final Config<Boolean> showContentBookLoadingUpdates = new Config<>(true);
+
     @SubscribeEvent
     public void onUseItem(UseItemEvent event) {
         if (McUtils.player().isShiftKeyDown() || !replaceWynncraftContentBook.get()) return;

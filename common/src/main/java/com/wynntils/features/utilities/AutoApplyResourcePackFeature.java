@@ -2,7 +2,7 @@
  * Copyright © Wynntils 2022.
  * This file is released under AGPLv3. See LICENSE for full license details.
  */
-package com.wynntils.features.ui;
+package com.wynntils.features.utilities;
 
 import com.wynntils.core.components.Managers;
 import com.wynntils.core.config.Category;
@@ -11,7 +11,7 @@ import com.wynntils.core.features.Feature;
 import com.wynntils.mc.event.ResourcePackEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 
-@ConfigCategory(Category.UI)
+@ConfigCategory(Category.UTILITIES)
 public class AutoApplyResourcePackFeature extends Feature {
     @Override
     public void onDisable() {
