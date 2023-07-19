@@ -58,15 +58,15 @@ public class ItemFavoriteFeature extends Feature {
 
         if (!containsFavorite) return;
 
-        if (lootChestCloseOverride.get() == 0) {
+        if (lootChestCloseOverride.get() == 0) { // never allow user to close
             McUtils.sendMessageToClient(Component.translatable("feature.wynntils.itemFavorite.closingBlocked")
                     .withStyle(ChatFormatting.RED));
             e.setCanceled(true);
             return;
         }
 
-        if (lootChestCloseOverrideCounter > lootChestCloseOverride.get()) return;
         lootChestCloseOverrideCounter++;
+        if (lootChestCloseOverrideCounter >= lootChestCloseOverride.get()) return;
 
         McUtils.sendMessageToClient(Component.translatable(
                         "feature.wynntils.itemFavorite.closingBlockedOverride",

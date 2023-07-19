@@ -27,6 +27,7 @@ import net.minecraftforge.eventbus.api.SubscribeEvent;
 public final class ContainerQueryHandler extends Handler {
     private static final int NO_CONTAINER = -2;
     private static final int OPERATION_TIMEOUT_TICKS = 60; // normal operation is ~10 ticks
+    private static final int NEXT_OPERATION_DELAY_TICKS = 5; // normal operation is ~10 ticks
     private static final String MENU_CLICK_SOUND = "minecraft.block.wooden_pressure_plate.click_on";
 
     private final LinkedList<ContainerQueryStep> queuedQueries = new LinkedList<>();
@@ -40,6 +41,7 @@ public final class ContainerQueryHandler extends Handler {
     private int lastHandledContentId = NO_CONTAINER;
     private List<ItemStack> lastHandledItems = List.of();
     private int ticksRemaining;
+    private int ticksUntilNextOperation;
 
     public void runQuery(ContainerQueryStep firstStep) {
         if (currentStep != null) {
@@ -92,6 +94,33 @@ public final class ContainerQueryHandler extends Handler {
     @SubscribeEvent
     public void onTick(TickEvent event) {
         if (currentStep == null) return;
+
+        if (ticksUntilNextOperation >= 0) {
+            ticksUntilNextOperation--;
+
+            if (ticksUntilNextOperation == 0) {
+                ContainerContent containerContent =
+                        new ContainerContent(lastHandledItems, currentTitle, currentMenuType, containerId);
+
+                try {
+                    // Return true iff taking the next step succeeded
+                    if (currentStep.startStep(containerContent)) return;
+                } catch (ContainerQueryException ex) {
+                    raiseError("Error while processing content for " + firstStepName + ": " + ex.getMessage());
+                    return;
+                }
+
+                // We're done
+                endQuery();
+                McUtils.sendPacket(new ServerboundContainerClosePacket(containerId));
+                // Start next query in queue, if any
+                if (!queuedQueries.isEmpty()) {
+                    runQuery(queuedQueries.pop());
+                }
+            }
+
+            return;
+        }
 
         ticksRemaining--;
 
@@ -162,34 +191,30 @@ public final class ContainerQueryHandler extends Handler {
 
         try {
             // Now actually process this container
-            boolean hasMoreSteps = processContainer(currentContainer);
+            processContainer(currentContainer);
             e.setCanceled(true);
-
-            if (!hasMoreSteps) {
-                endQuery();
-                McUtils.sendPacket(new ServerboundContainerClosePacket(id));
-                // Start next query in queue, if any
-                if (!queuedQueries.isEmpty()) {
-                    runQuery(queuedQueries.pop());
-                }
-            }
         } catch (ContainerQueryException ex) {
             raiseError("Error while processing content for " + firstStepName + ": " + ex.getMessage());
         }
     }
 
-    private boolean processContainer(ContainerContent currentContainer) throws ContainerQueryException {
+    private void processContainer(ContainerContent currentContainer) throws ContainerQueryException {
         currentStep.handleContent(currentContainer);
 
         ContainerQueryStep nextStep = currentStep.getNextStep(currentContainer);
+
         if (nextStep != null) {
             // Go on and query another container
             currentStep = nextStep;
-            // Return true iff taking the next step succeeded
-            return currentStep.startStep(currentContainer);
+            ticksUntilNextOperation = NEXT_OPERATION_DELAY_TICKS;
         } else {
             // We're done
-            return false;
+            endQuery();
+            McUtils.sendPacket(new ServerboundContainerClosePacket(containerId));
+            // Start next query in queue, if any
+            if (!queuedQueries.isEmpty()) {
+                runQuery(queuedQueries.pop());
+            }
         }
     }
 

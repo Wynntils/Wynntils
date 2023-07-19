@@ -2,7 +2,7 @@
  * Copyright © Wynntils 2023.
  * This file is released under AGPLv3. See LICENSE for full license details.
  */
-package com.wynntils.features.players;
+package com.wynntils.features.embellishments;
 
 import com.wynntils.core.components.Managers;
 import com.wynntils.core.components.Models;
@@ -15,7 +15,7 @@ import com.wynntils.mc.event.PlayerRenderLayerEvent;
 import com.wynntils.utils.mc.McUtils;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 
-@ConfigCategory(Category.PLAYERS)
+@ConfigCategory(Category.EMBELLISHMENTS)
 public class WynntilsCosmeticsFeature extends Feature {
     @RegisterConfig
     public final Config<Boolean> renderOwnCape = new Config<>(true);

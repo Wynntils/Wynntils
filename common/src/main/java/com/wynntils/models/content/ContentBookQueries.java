@@ -5,7 +5,9 @@
 package com.wynntils.models.content;
 
 import com.wynntils.core.WynntilsMod;
+import com.wynntils.core.components.Managers;
 import com.wynntils.core.components.Models;
+import com.wynntils.core.notifications.MessageContainer;
 import com.wynntils.core.text.StyledText;
 import com.wynntils.handlers.container.ContainerQueryException;
 import com.wynntils.handlers.container.scriptedquery.QueryStep;
@@ -46,19 +48,37 @@ public class ContentBookQueries {
     private String selectedFilter;
     private int filterLoopCount;
 
+    private MessageContainer stateMessageContainer;
+
     /**
      * Trigger a rescan of the content book. When the rescan is done, Models.Content.updateFromContentBookQuery
      * will be called.
      */
-    protected void queryContentBook(String filterName, BiConsumer<List<ContentInfo>, List<StyledText>> processResult) {
+    protected void queryContentBook(
+            ContentType contentType,
+            BiConsumer<List<ContentInfo>, List<StyledText>> processResult,
+            boolean showUpdates) {
         List<ContentInfo> newContent = new ArrayList<>();
         List<StyledText> progress = new ArrayList<>();
 
-        ScriptedContainerQuery query = ScriptedContainerQuery.builder("Content Book Query for " + filterName)
+        ScriptedContainerQuery query = ScriptedContainerQuery.builder(
+                        "Content Book Query for " + contentType.getDisplayName())
                 .onError(msg -> {
                     WynntilsMod.warn("Problem querying Content Book: " + msg);
-                    McUtils.sendMessageToClient(
-                            Component.literal("Dumping Content Book failed").withStyle(ChatFormatting.RED));
+                    if (showUpdates) {
+                        Managers.Notification.editMessage(
+                                stateMessageContainer,
+                                StyledText.fromComponent(Component.literal(
+                                                "Error loading " + contentType.getGroupName() + " from content book")
+                                        .withStyle(ChatFormatting.RED)));
+                    }
+                })
+                .execute(() -> {
+                    if (showUpdates) {
+                        stateMessageContainer = Managers.Notification.queueMessage(
+                                Component.literal("Loading " + contentType.getGroupName() + " from content book...")
+                                        .withStyle(ChatFormatting.YELLOW));
+                    }
                 })
 
                 // Open content book
@@ -87,7 +107,7 @@ public class ContentBookQueries {
                             }
 
                             // Continue looping until filter matches
-                            return !activeFilter.equals(filterName);
+                            return !activeFilter.equals(contentType.getDisplayName());
                         },
                         QueryStep.clickOnSlot(CHANGE_VIEW_SLOT))
 
@@ -131,6 +151,15 @@ public class ContentBookQueries {
 
                 // Finally signal we're done
                 .execute(() -> processResult.accept(newContent, progress))
+                .execute(() -> {
+                    if (showUpdates) {
+                        Managers.Notification.editMessage(
+                                stateMessageContainer,
+                                StyledText.fromComponent(
+                                        Component.literal("Loaded " + contentType.getGroupName() + " from content book")
+                                                .withStyle(ChatFormatting.GREEN)));
+                    }
+                })
                 .build();
 
         query.executeQuery();

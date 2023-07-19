@@ -44,6 +44,9 @@ public class ContainerSearchFeature extends Feature {
     public final Config<Boolean> filterInBank = new Config<>(true);
 
     @RegisterConfig
+    public final Config<Boolean> filterInBookshelf = new Config<>(true);
+
+    @RegisterConfig
     public final Config<Boolean> filterInMiscBucket = new Config<>(true);
 
     @RegisterConfig
@@ -169,6 +172,10 @@ public class ContainerSearchFeature extends Feature {
             return SearchableContainerType.BANK;
         }
 
+        if (containerType == SearchableContainerType.BOOKSHELF && filterInBookshelf.get()) {
+            return SearchableContainerType.BOOKSHELF;
+        }
+
         if (containerType == SearchableContainerType.MISC_BUCKET && filterInMiscBucket.get()) {
             return SearchableContainerType.MISC_BUCKET;
         }
@@ -204,7 +211,7 @@ public class ContainerSearchFeature extends Feature {
         NonNullList<ItemStack> playerItems = McUtils.inventory().items;
         for (ItemStack itemStack : screen.getMenu().getItems()) {
             Optional<WynnItem> wynnItemOpt = Models.Item.getWynnItem(itemStack);
-            if (wynnItemOpt.isEmpty()) return;
+            if (wynnItemOpt.isEmpty()) continue;
             if (playerItems.contains(itemStack)) continue;
 
             String name = StyledText.fromComponent(itemStack.getHoverName())
