@@ -19,10 +19,11 @@ import com.wynntils.screens.base.WynntilsScreen;
 import com.wynntils.screens.base.widgets.SearchWidget;
 import com.wynntils.screens.base.widgets.TextInputBoxWidget;
 import com.wynntils.screens.base.widgets.WynntilsButton;
+import com.wynntils.screens.settings.widgets.ApplyButton;
 import com.wynntils.screens.settings.widgets.CategoryButton;
-import com.wynntils.screens.settings.widgets.ConfigButton;
+import com.wynntils.screens.settings.widgets.CloseButton;
+import com.wynntils.screens.settings.widgets.ConfigTile;
 import com.wynntils.screens.settings.widgets.ConfigurableButton;
-import com.wynntils.screens.settings.widgets.GeneralSettingsButton;
 import com.wynntils.screens.settings.widgets.ScrollButton;
 import com.wynntils.utils.MathUtils;
 import com.wynntils.utils.StringUtils;
@@ -83,28 +84,9 @@ public final class WynntilsBookSettingsScreen extends WynntilsScreen implements 
 
         this.addRenderableWidget(searchWidget);
 
-        this.addRenderableWidget(new GeneralSettingsButton(
-                55,
-                Texture.SETTING_BACKGROUND.height() - 30,
-                35,
-                14,
-                Component.translatable("screens.wynntils.settingsScreen.apply"),
-                () -> {
-                    Managers.Config.saveConfig();
-                    this.onClose();
-                },
-                List.of(Component.translatable("screens.wynntils.settingsScreen.apply.description")
-                        .withStyle(ChatFormatting.GREEN))));
+        this.addRenderableWidget(new ApplyButton(this));
 
-        this.addRenderableWidget(new GeneralSettingsButton(
-                15,
-                Texture.SETTING_BACKGROUND.height() - 30,
-                35,
-                14,
-                Component.translatable("screens.wynntils.settingsScreen.close"),
-                this::onClose,
-                List.of(Component.translatable("screens.wynntils.settingsScreen.close.description")
-                        .withStyle(ChatFormatting.DARK_RED))));
+        this.addRenderableWidget(new CloseButton(this));
     }
 
     // region Render
@@ -473,7 +455,7 @@ public final class WynntilsBookSettingsScreen extends WynntilsScreen implements 
 
             int renderIndex = i % CONFIGS_PER_PAGE;
 
-            configs.add(new ConfigButton(
+            configs.add(new ConfigTile(
                     Texture.SETTING_BACKGROUND.width() / 2 + 10, 21 + renderIndex * 46, 160, 45, this, config));
         }
 

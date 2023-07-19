@@ -55,7 +55,7 @@ public class TextInputBoxWidget extends AbstractWidget {
             Consumer<String> onUpdateConsumer,
             TextboxScreen textboxScreen) {
         super(x, y, width, height, boxTitle);
-        this.onUpdateConsumer = onUpdateConsumer == null ? s -> {} : onUpdateConsumer;
+        this.onUpdateConsumer = onUpdateConsumer == null ? this::onUpdate : onUpdateConsumer;
         this.textboxScreen = textboxScreen;
     }
 
@@ -583,4 +583,9 @@ public class TextInputBoxWidget extends AbstractWidget {
         this.setHighlightPosition(this.cursorPosition);
         this.onUpdateConsumer.accept(this.textBoxInput);
     }
+
+    /**
+     * If there is no on update consumer given in the constructor, this method gets called instead.
+     */
+    protected void onUpdate(String text) {}
 }
