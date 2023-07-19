@@ -20,11 +20,9 @@ public interface MapFeatureAttributes {
     // 0-1000, 1000 is highest priority (drawn on top of everything else)
     Optional<Integer> getPriority();
 
-
     /// =====
 
     MapFeatureAttributes EMPTY = null;
-
 
     MapFeatureAttributes overriddenBy(MapFeatureAttributes style);
 }

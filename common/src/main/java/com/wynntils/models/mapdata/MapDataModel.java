@@ -22,6 +22,7 @@ public class MapDataModel extends Model {
 
     public MapDataModel() {
         super(List.of());
+    }
 
     public void updateCategory(String categoryId, String displayName, MapFeatureAttributes attributes) {
         if (displayName != null) {
