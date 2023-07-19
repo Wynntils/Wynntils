@@ -29,7 +29,7 @@ public class ResetButton extends GeneralSettingsButton {
 
     @Override
     protected CustomColor getTextColor() {
-        return !configHolder.valueChanged() ? CommonColors.GRAY : CommonColors.WHITE;
+        return configHolder.valueChanged() ? CommonColors.WHITE : CommonColors.GRAY;
     }
 
     @Override
