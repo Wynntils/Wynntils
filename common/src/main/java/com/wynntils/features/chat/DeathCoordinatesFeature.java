@@ -17,7 +17,6 @@ import net.minecraftforge.eventbus.api.SubscribeEvent;
 
 @ConfigCategory(Category.CHAT)
 public class DeathCoordinatesFeature extends Feature {
-
     @SubscribeEvent
     public void onCharacterDeath(CharacterDeathEvent e) {
         StyledText deathMessage =
