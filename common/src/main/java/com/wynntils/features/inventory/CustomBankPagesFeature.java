@@ -249,7 +249,8 @@ public class CustomBankPagesFeature extends Feature {
         String valueString = (String) configHolder.getValue();
         String fieldName = configHolder.getFieldName();
 
-        SearchableContainerType containerType = fieldName.equals("bankDestinations") ? SearchableContainerType.BANK : SearchableContainerType.BOOKSHELF;
+        SearchableContainerType containerType =
+                fieldName.equals("bankDestinations") ? SearchableContainerType.BANK : SearchableContainerType.BOOKSHELF;
 
         List<Integer> originalValues = parseStringToDestinations(valueString, containerType);
 
@@ -262,7 +263,8 @@ public class CustomBankPagesFeature extends Feature {
 
         List<Integer> newValues = modifyJumpValues(originalValues, maxValue);
 
-        String formattedConfig = newValues.stream().limit(MAX_DESTINATIONS).map(Object::toString).collect(Collectors.joining(","));
+        String formattedConfig =
+                newValues.stream().limit(MAX_DESTINATIONS).map(Object::toString).collect(Collectors.joining(","));
 
         if (!formattedConfig.equals(valueString)) {
             configHolder.setValue(formattedConfig);
@@ -280,7 +282,9 @@ public class CustomBankPagesFeature extends Feature {
 
             if (destinations.size() != MAX_DESTINATIONS) {
                 int startIndex = destinations.size();
-                List<Integer> defaultValues = containerType == SearchableContainerType.BANK ? QUICK_JUMP_DESTINATIONS : HOUSING_DEFAULT_DESTINATIONS;
+                List<Integer> defaultValues = containerType == SearchableContainerType.BANK
+                        ? QUICK_JUMP_DESTINATIONS
+                        : HOUSING_DEFAULT_DESTINATIONS;
 
                 for (int i = startIndex; i < MAX_DESTINATIONS; i++) {
                     destinations.add(defaultValues.get(i));
