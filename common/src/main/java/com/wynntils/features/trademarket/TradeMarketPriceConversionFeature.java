@@ -2,7 +2,7 @@
  * Copyright © Wynntils 2022.
  * This file is released under AGPLv3. See LICENSE for full license details.
  */
-package com.wynntils.features.chat;
+package com.wynntils.features.trademarket;
 
 import com.wynntils.core.components.Models;
 import com.wynntils.core.config.Category;
@@ -15,7 +15,7 @@ import com.wynntils.utils.mc.McUtils;
 import java.util.regex.Pattern;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 
-@ConfigCategory(Category.CHAT)
+@ConfigCategory(Category.TRADEMARKET)
 public class TradeMarketPriceConversionFeature extends Feature {
     private static final Pattern PRICE_PATTERN =
             Pattern.compile("^§6Type the price in emeralds or type 'cancel' to cancel:$");

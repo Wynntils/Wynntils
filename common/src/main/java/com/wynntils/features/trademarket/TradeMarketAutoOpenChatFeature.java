@@ -2,7 +2,7 @@
  * Copyright © Wynntils 2022.
  * This file is released under AGPLv3. See LICENSE for full license details.
  */
-package com.wynntils.features.chat;
+package com.wynntils.features.trademarket;
 
 import com.wynntils.core.components.Models;
 import com.wynntils.core.config.Category;
@@ -16,7 +16,7 @@ import java.util.regex.Pattern;
 import net.minecraft.client.gui.screens.ChatScreen;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 
-@ConfigCategory(Category.CHAT)
+@ConfigCategory(Category.TRADEMARKET)
 public class TradeMarketAutoOpenChatFeature extends Feature {
     // Type the price in emeralds or type 'cancel' to cancel:
     // Type the amount you wish to buy or type 'cancel' to cancel:

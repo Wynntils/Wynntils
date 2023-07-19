@@ -9,7 +9,7 @@ import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.mojang.math.Axis;
 import com.wynntils.core.components.Managers;
 import com.wynntils.core.components.Models;
-import com.wynntils.features.players.WynntilsCosmeticsFeature;
+import com.wynntils.features.embellishments.WynntilsCosmeticsFeature;
 import com.wynntils.utils.MathUtils;
 import net.minecraft.client.model.PlayerModel;
 import net.minecraft.client.player.AbstractClientPlayer;
