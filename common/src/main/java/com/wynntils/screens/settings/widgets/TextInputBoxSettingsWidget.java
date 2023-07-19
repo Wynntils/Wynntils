@@ -11,7 +11,6 @@ import com.wynntils.utils.colors.CommonColors;
 import com.wynntils.utils.render.FontRenderer;
 
 public class TextInputBoxSettingsWidget extends TextInputBoxWidget {
-
     protected final ConfigHolder configHolder;
 
     protected TextInputBoxSettingsWidget(ConfigHolder configHolder, TextboxScreen textboxScreen, int width) {

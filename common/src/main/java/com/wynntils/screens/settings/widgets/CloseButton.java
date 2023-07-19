@@ -11,7 +11,6 @@ import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
 
 public class CloseButton extends GeneralSettingsButton {
-
     private final WynntilsBookSettingsScreen screen;
 
     public CloseButton(WynntilsBookSettingsScreen screen) {

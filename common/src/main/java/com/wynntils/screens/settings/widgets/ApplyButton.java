@@ -12,7 +12,6 @@ import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
 
 public class ApplyButton extends GeneralSettingsButton {
-
     private final WynntilsBookSettingsScreen screen;
 
     public ApplyButton(WynntilsBookSettingsScreen screen) {

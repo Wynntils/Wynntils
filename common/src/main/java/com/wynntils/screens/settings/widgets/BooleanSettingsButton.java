@@ -13,7 +13,6 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
 
 public class BooleanSettingsButton extends GeneralSettingsButton {
-
     private final ConfigHolder configHolder;
 
     public BooleanSettingsButton(ConfigHolder configHolder) {

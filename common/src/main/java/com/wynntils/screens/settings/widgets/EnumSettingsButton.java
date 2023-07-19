@@ -16,7 +16,6 @@ import net.minecraft.network.chat.Component;
 import org.lwjgl.glfw.GLFW;
 
 public class EnumSettingsButton<E extends Enum<E>> extends GeneralSettingsButton {
-
     private final ConfigHolder configHolder;
     private final List<E> enumConstants;
 
