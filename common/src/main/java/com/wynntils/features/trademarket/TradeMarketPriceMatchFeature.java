@@ -11,7 +11,7 @@ import com.wynntils.core.config.ConfigCategory;
 import com.wynntils.core.features.Feature;
 import com.wynntils.core.text.StyledText;
 import com.wynntils.handlers.chat.event.ChatMessageReceivedEvent;
-import com.wynntils.mc.event.ContainerSetSlotEvent;
+import com.wynntils.mc.event.ContainerSetContentEvent;
 import com.wynntils.models.emeralds.EmeraldModel;
 import com.wynntils.screens.base.widgets.WynntilsButton;
 import com.wynntils.utils.mc.LoreUtils;
@@ -48,7 +48,7 @@ public class TradeMarketPriceMatchFeature extends Feature {
     private long priceToSend = 0;
 
     @SubscribeEvent
-    public void onSellDialogueUpdated(ContainerSetSlotEvent.Pre e) {
+    public void onSellDialogueUpdated(ContainerSetContentEvent.Post e) {
         if (!(McUtils.mc().screen instanceof ContainerScreen containerScreen)) return;
 
         StyledText title = StyledText.fromComponent(containerScreen.getTitle());
