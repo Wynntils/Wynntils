@@ -77,7 +77,7 @@ public class CustomPlayerListFeature extends Feature {
                             0,
                             0,
                             VerticalAlignment.TOP,
-                            HorizontalAlignment.LEFT,
+                            HorizontalAlignment.CENTER,
                             OverlayPosition.AnchorSection.TOP_MIDDLE),
                     TOTAL_WIDTH,
                     Texture.PLAYER_INFO_OVERLAY.height());
