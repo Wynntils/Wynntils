@@ -65,7 +65,10 @@ public final class EmeraldModel extends Model {
     }
 
     public int[] emeraldsPerUnit(int emeralds) {
-        return new int[] {emeralds % 64, (emeralds / 64) % 64, emeralds / 4096};
+        return new int[] {emeralds % EMERALD_BLOCK_VALUE,
+                (emeralds / EMERALD_BLOCK_VALUE) % 64,
+                (emeralds / LIQUID_EMERALD_VALUE) % 64,
+                emeralds / LIQUID_EMERALD_STACK_VALUE};
     }
 
     public boolean isEmeraldPouch(ItemStack itemStack) {
