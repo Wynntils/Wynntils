@@ -978,7 +978,7 @@
   "feature.wynntils.tradeMarketPriceConversion.name": "Market Price Conversion",
   "feature.wynntils.tradeMarketPriceMatch.description": "Adds buttons to match lowest sell offer and highest buy offer in the trade market UI",
   "feature.wynntils.tradeMarketPriceMatch.highestBuyOffer": "Highest Buy Offer",
-  "feature.wynntils.tradeMarketPriceMatch.highestBuyOfferTooltip": "Quick sells the item for the highest buy offer.",
+  "feature.wynntils.tradeMarketPriceMatch.highestBuyOfferTooltip": "Matches the price of the current highest buy offer.",
   "feature.wynntils.tradeMarketPriceMatch.lowestSellOffer": "Lowest Sell Offer",
   "feature.wynntils.tradeMarketPriceMatch.lowestSellOfferTooltip": "Matches the price of the current lowest sell offer.",
   "feature.wynntils.tradeMarketPriceMatch.name": "Trade Market Price Match Buttons",
