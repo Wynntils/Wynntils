@@ -211,7 +211,7 @@ public class ContainerSearchFeature extends Feature {
         NonNullList<ItemStack> playerItems = McUtils.inventory().items;
         for (ItemStack itemStack : screen.getMenu().getItems()) {
             Optional<WynnItem> wynnItemOpt = Models.Item.getWynnItem(itemStack);
-            if (wynnItemOpt.isEmpty()) return;
+            if (wynnItemOpt.isEmpty()) continue;
             if (playerItems.contains(itemStack)) continue;
 
             String name = StyledText.fromComponent(itemStack.getHoverName())

@@ -127,7 +127,7 @@ public class ContentTrackerOverlayFeature extends Feature {
 
         @Override
         public void render(PoseStack poseStack, MultiBufferSource bufferSource, float partialTicks, Window window) {
-            if (Models.Content.getTrackedName() == null) {
+            if (!Models.Content.isTracking()) {
                 return;
             }
 

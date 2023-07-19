@@ -45,6 +45,7 @@ public final class ContainerModel extends Model {
     private static final Pair<Integer, Integer> TRADE_MARKET_SECONDARY_PREVIOUS_NEXT_SLOTS = new Pair<>(26, 35);
     private static final Pair<Integer, Integer> SCRAP_MENU_PREVIOUS_NEXT_SLOTS = new Pair<>(0, 8);
     private static final Pair<Integer, Integer> CONTENT_BOOK_PREVIOUS_NEXT_SLOTS = new Pair<>(65, 69);
+    private static final Pair<Integer, Integer> LOBBY_PREVIOUS_NEXT_SLOTS = new Pair<>(36, 44);
     private static final StyledText LAST_BANK_PAGE_STRING = StyledText.fromString(">§4>§c>§4>§c>");
     private static final StyledText FIRST_TRADE_MARKET_PAGE_STRING = StyledText.fromString("§bReveal Item Names");
     private static final StyledText TRADE_MARKET_TITLE = StyledText.fromString("Trade Market");
@@ -53,6 +54,7 @@ public final class ContainerModel extends Model {
     private static final StyledText SCRAP_MENU_TITLE = StyledText.fromString("Scrap Rewards");
     private static final StyledText SEASKIPPER_TITLE = StyledText.fromString("V.S.S. Seaskipper");
     private static final StyledText CONTENT_BOOK_TITLE = StyledText.fromString("§f\uE000\uE072");
+    private static final StyledText LOBBY_TITLE = StyledText.fromString("Wynncraft Servers");
 
     private final Storage<Integer> finalBankPage = new Storage<>(21);
     private final Storage<Integer> finalBookshelfPage = new Storage<>(10);
@@ -185,6 +187,11 @@ public final class ContainerModel extends Model {
         return StyledText.fromComponent(cs.getTitle()).equals(CONTENT_BOOK_TITLE);
     }
 
+    public boolean isLobbyScreen(Screen screen) {
+        if (!(screen instanceof ContainerScreen cs)) return false;
+        return StyledText.fromComponent(cs.getTitle()).equals(LOBBY_TITLE);
+    }
+
     public boolean isLootChest(Screen screen) {
         return screen instanceof ContainerScreen && lootChestMatcher(screen).matches();
     }
@@ -249,6 +256,10 @@ public final class ContainerModel extends Model {
 
         if (Models.Container.isContentBook(gui)) {
             return CONTENT_BOOK_PREVIOUS_NEXT_SLOTS;
+        }
+
+        if (Models.Container.isLobbyScreen(gui)) {
+            return LOBBY_PREVIOUS_NEXT_SLOTS;
         }
 
         return null;

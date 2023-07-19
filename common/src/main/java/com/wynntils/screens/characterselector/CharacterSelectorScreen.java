@@ -35,6 +35,7 @@ import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
 import net.minecraft.client.gui.screens.inventory.InventoryScreen;
 import net.minecraft.network.chat.Component;
+import org.lwjgl.glfw.GLFW;
 
 public final class CharacterSelectorScreen extends WynntilsScreen {
     private static final int CHARACTER_INFO_PER_PAGE = 7;
@@ -240,6 +241,11 @@ public final class CharacterSelectorScreen extends WynntilsScreen {
 
     @Override
     public boolean keyPressed(int keyCode, int scanCode, int modifiers) {
+        if (keyCode == GLFW.GLFW_KEY_ESCAPE) {
+            this.onClose();
+            return true;
+        }
+
         KeyMapping[] keyHotbarSlots = McUtils.options().keyHotbarSlots;
 
         for (int i = 0; i < Math.min(keyHotbarSlots.length, classInfoList.size()); i++) {

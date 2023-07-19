@@ -21,7 +21,6 @@ import net.minecraftforge.eventbus.api.SubscribeEvent;
 
 @ConfigCategory(Category.UI)
 public class CustomSeaskipperScreenFeature extends Feature {
-
     @RegisterConfig
     public final Config<SeaskipperScreenType> screenType = new Config<>(SeaskipperScreenType.DEPARTURE_BOARD);
 

@@ -2,7 +2,7 @@
  * Copyright © Wynntils 2022.
  * This file is released under AGPLv3. See LICENSE for full license details.
  */
-package com.wynntils.features;
+package com.wynntils.features.utilities;
 
 import com.wynntils.core.components.Managers;
 import com.wynntils.core.config.Category;
@@ -21,7 +21,7 @@ import com.wynntils.utils.mc.McUtils;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import org.lwjgl.glfw.GLFW;
 
-@ConfigCategory(Category.UNCATEGORIZED)
+@ConfigCategory(Category.UTILITIES)
 public class GammabrightFeature extends Feature {
     @RegisterConfig
     public final Config<Boolean> gammabrightEnabled = new Config<>(false);
