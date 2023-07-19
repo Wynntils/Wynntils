@@ -51,6 +51,7 @@ public class PowderSpecialSegment implements ActionBarSegment {
         return powderSpecialType;
     }
 
+    @Override
     public boolean isHidden() {
         return hidden;
     }

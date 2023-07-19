@@ -5,6 +5,8 @@
 package com.wynntils.features.wynntils;
 
 import com.wynntils.core.WynntilsMod;
+import com.wynntils.core.config.Category;
+import com.wynntils.core.config.ConfigCategory;
 import com.wynntils.core.features.Feature;
 import com.wynntils.core.mod.event.WynncraftConnectionEvent;
 import com.wynntils.mc.event.PlayerInfoEvent;
@@ -12,6 +14,7 @@ import com.wynntils.utils.mc.McUtils;
 import net.minecraft.network.chat.Component;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 
+@ConfigCategory(Category.WYNNTILS)
 public class BetaWarningFeature extends Feature {
     private boolean warn = false;
 

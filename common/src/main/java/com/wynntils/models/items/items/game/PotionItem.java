@@ -37,6 +37,7 @@ public class PotionItem extends GameItem implements UsesItemPropery, LeveledItem
         return effects;
     }
 
+    @Override
     public CappedValue getUses() {
         return uses;
     }
