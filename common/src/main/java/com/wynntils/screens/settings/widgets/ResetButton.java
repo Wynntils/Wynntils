@@ -11,7 +11,7 @@ import java.util.List;
 import net.minecraft.client.sounds.SoundManager;
 import net.minecraft.network.chat.Component;
 
-final class ResetButton extends GeneralSettingsButton {
+public class ResetButton extends GeneralSettingsButton {
     private final ConfigHolder configHolder;
     private final Runnable onClick;
 
