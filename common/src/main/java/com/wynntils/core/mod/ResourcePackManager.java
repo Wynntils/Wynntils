@@ -147,7 +147,7 @@ public final class ResourcePackManager extends Manager {
             this.hash = hash;
         }
 
-        protected String getHash() {
+        private String getHash() {
             return hash;
         }
     }

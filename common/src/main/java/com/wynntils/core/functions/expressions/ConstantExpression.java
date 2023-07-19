@@ -10,7 +10,7 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.function.Function;
 
-public class ConstantExpression extends Expression {
+public final class ConstantExpression extends Expression {
     private static final Map<Class<?>, Function<String, Optional<Object>>> CONSTANT_EXPRESSION_PARSERS =
             ImmutableMap.of(
                     String.class, ConstantExpression::markedStringParser,

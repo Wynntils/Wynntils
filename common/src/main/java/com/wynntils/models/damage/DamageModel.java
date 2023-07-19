@@ -88,8 +88,8 @@ public final class DamageModel extends Model {
                 / (double) seconds;
     }
 
-    protected final class DamageBar extends TrackedBar {
-        protected DamageBar() {
+    private final class DamageBar extends TrackedBar {
+        private DamageBar() {
             super(DAMAGE_BAR_PATTERN);
         }
 

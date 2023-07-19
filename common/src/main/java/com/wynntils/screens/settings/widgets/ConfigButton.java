@@ -166,7 +166,7 @@ public class ConfigButton extends WynntilsButton {
     private class ResetButton extends GeneralSettingsButton {
         private final ConfigHolder configHolder;
 
-        public ResetButton(ConfigHolder configHolder) {
+        private ResetButton(ConfigHolder configHolder) {
             super(
                     ConfigButton.this.getX() + ConfigButton.this.width - 40,
                     ConfigButton.this.getY() + 13,
