@@ -42,7 +42,6 @@ import org.joml.Math;
 
 @ConfigCategory(Category.OVERLAYS)
 public class CustomPlayerListFeature extends Feature {
-
     @OverlayInfo(renderType = RenderEvent.ElementType.GUI)
     public final CustomPlayerListOverlay customPlayerListOverlay = new CustomPlayerListOverlay();
 
@@ -268,7 +267,6 @@ public class CustomPlayerListFeature extends Feature {
     }
 
     private static final class TimelimitedExecutioner<T> {
-
         private final Supplier<T> method;
         private final Duration cooldown;
         private T current;
