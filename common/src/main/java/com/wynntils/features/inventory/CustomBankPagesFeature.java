@@ -47,6 +47,7 @@ public class CustomBankPagesFeature extends Feature {
 
     private static final int MAX_BANK_PAGES = 21;
     private static final int MAX_HOUSING_CONTAINER_PAGES = 10;
+    private static final int MAX_DESTINATIONS = 6;
     private static final int NEXT_PAGE_SLOT = 8;
     private static final int PREVIOUS_PAGE_SLOT = 17;
     private static final List<Integer> BUTTON_SLOTS = List.of(7, 16, 25, 34, 43, 52);
@@ -105,7 +106,7 @@ public class CustomBankPagesFeature extends Feature {
             }
         }
 
-        customJumpDestinations = parseStringToDestinations(configDestinations);
+        customJumpDestinations = parseStringToDestinations(configDestinations, currentContainer);
 
         if (customJumpDestinations == null) {
             switch (currentContainer) {
@@ -246,35 +247,47 @@ public class CustomBankPagesFeature extends Feature {
     @Override
     protected void onConfigUpdate(ConfigHolder configHolder) {
         String valueString = (String) configHolder.getValue();
+        String fieldName = configHolder.getFieldName();
 
-        List<Integer> originalValues = parseStringToDestinations(valueString);
+        SearchableContainerType containerType = fieldName.equals("bankDestinations") ? SearchableContainerType.BANK : SearchableContainerType.BOOKSHELF;
+
+        List<Integer> originalValues = parseStringToDestinations(valueString, containerType);
 
         if (originalValues == null) {
             configHolder.setValue(configHolder.getDefaultValue());
             return;
         }
 
-        int maxValue =
-                configHolder.getFieldName().equals("bankDestinations") ? MAX_BANK_PAGES : MAX_HOUSING_CONTAINER_PAGES;
+        int maxValue = fieldName.equals("bankDestinations") ? MAX_BANK_PAGES : MAX_HOUSING_CONTAINER_PAGES;
 
         List<Integer> newValues = modifyJumpValues(originalValues, maxValue);
 
-        if (!newValues.equals(originalValues)) {
-            String formattedConfig = newValues.stream().map(Object::toString).collect(Collectors.joining(","));
+        String formattedConfig = newValues.stream().limit(MAX_DESTINATIONS).map(Object::toString).collect(Collectors.joining(","));
 
+        if (!formattedConfig.equals(valueString)) {
             configHolder.setValue(formattedConfig);
         }
     }
 
-    private List<Integer> parseStringToDestinations(String destinationsStr) {
+    private List<Integer> parseStringToDestinations(String destinationsStr, SearchableContainerType containerType) {
         String[] destinationStrings = destinationsStr.split(",");
 
-        if (destinationStrings.length != 6) {
-            return null;
-        }
-
         try {
-            return Arrays.stream(destinationStrings).map(Integer::parseInt).collect(Collectors.toList());
+            List<Integer> destinations = Arrays.stream(destinationStrings)
+                    .limit(MAX_DESTINATIONS)
+                    .map(Integer::parseInt)
+                    .collect(Collectors.toCollection(ArrayList::new));
+
+            if (destinations.size() != MAX_DESTINATIONS) {
+                int startIndex = destinations.size();
+                List<Integer> defaultValues = containerType == SearchableContainerType.BANK ? QUICK_JUMP_DESTINATIONS : HOUSING_DEFAULT_DESTINATIONS;
+
+                for (int i = startIndex; i < MAX_DESTINATIONS; i++) {
+                    destinations.add(defaultValues.get(i));
+                }
+            }
+
+            return destinations;
         } catch (NumberFormatException ex) {
             return null;
         }
