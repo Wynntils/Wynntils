@@ -1,9 +1,21 @@
+## [0.0.3-alpha.156](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.155...v0.0.3-alpha.156) (2023-07-19)
+
+
+### Miscellaneous Chores
+
+* Partial feature recategorization ([#1780](https://github.com/Wynntils/Artemis/issues/1780)) ([5a93d23](https://github.com/Wynntils/Artemis/commit/5a93d23be58532947d873a5cefadadef75efd9f0))
+
 ## [0.0.3-alpha.155](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.154...v0.0.3-alpha.155) (2023-07-18)
 
 
 ### New Features
 
 * Add content book parsing notifications ([#1777](https://github.com/Wynntils/Artemis/issues/1777)) ([203e300](https://github.com/Wynntils/Artemis/commit/203e300f4c3b6fed571a3bab711eec2c5b1cbb89))
+
+
+### Miscellaneous Chores
+
+* **release:** v0.0.3-alpha.155 [skip ci] ([d300da2](https://github.com/Wynntils/Artemis/commit/d300da26b58f0d1254b39ffa4a537a608d64d2b7))
 
 ## [0.0.3-alpha.154](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.153...v0.0.3-alpha.154) (2023-07-18)
 
@@ -40,16 +52,4 @@
 ### Miscellaneous Chores
 
 * **release:** v0.0.3-alpha.152 [skip ci] ([5fb68b3](https://github.com/Wynntils/Artemis/commit/5fb68b346c5fc6c30ba4c1842d71b2888966cd54))
-
-## [0.0.3-alpha.151](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.150...v0.0.3-alpha.151) (2023-07-17)
-
-
-### Bug Fixes
-
-* Characters with modifiers show up as "This Character" in list ([#1771](https://github.com/Wynntils/Artemis/issues/1771)) ([e5774d9](https://github.com/Wynntils/Artemis/commit/e5774d9685307e8ff5a136eef4a7e59ad4a345ca))
-
-
-### Miscellaneous Chores
-
-* **release:** v0.0.3-alpha.151 [skip ci] ([d6ffd0a](https://github.com/Wynntils/Artemis/commit/d6ffd0a57895960c9407d8e5fea16c854be28386))
 
