@@ -7,7 +7,7 @@ package com.wynntils.screens.base.widgets;
 import com.wynntils.models.content.type.ContentSortOrder;
 
 public interface SortableContentScreen {
-    ContentSortOrder getQuestSortOrder();
+    ContentSortOrder getContentSortOrder();
 
-    void setQuestSortOrder(ContentSortOrder newSortOrder);
+    void setContentSortOrder(ContentSortOrder newSortOrder);
 }

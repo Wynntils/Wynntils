@@ -20,19 +20,19 @@ public class SortOrderWidget extends WynntilsButton {
 
     @Override
     public void onPress() {
-        ContentSortOrder contentSortOrder = sortableContentScreen.getQuestSortOrder();
+        ContentSortOrder contentSortOrder = sortableContentScreen.getContentSortOrder();
 
         ContentSortOrder[] contentSortOrders = ContentSortOrder.values();
 
         ContentSortOrder newSort = contentSortOrders[(contentSortOrder.ordinal() + 1) % contentSortOrders.length];
 
-        sortableContentScreen.setQuestSortOrder(newSort);
+        sortableContentScreen.setContentSortOrder(newSort);
     }
 
     @Override
     public void renderWidget(PoseStack poseStack, int mouseX, int mouseY, float partialTick) {
         Texture sortTexture =
-                switch (sortableContentScreen.getQuestSortOrder()) {
+                switch (sortableContentScreen.getContentSortOrder()) {
                     case LEVEL -> Texture.SORT_LEVEL;
                     case DISTANCE -> Texture.SORT_DISTANCE;
                     case ALPHABETIC -> Texture.SORT_ALPHABETICALLY;

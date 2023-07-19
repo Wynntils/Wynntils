@@ -374,12 +374,12 @@ public final class WynntilsDiscoveriesScreen extends WynntilsListScreen<Discover
     }
 
     @Override
-    public ContentSortOrder getQuestSortOrder() {
+    public ContentSortOrder getContentSortOrder() {
         return contentSortOrder;
     }
 
     @Override
-    public void setQuestSortOrder(ContentSortOrder newSortOrder) {
+    public void setContentSortOrder(ContentSortOrder newSortOrder) {
         if (newSortOrder == null) {
             throw new IllegalStateException("Tried to set null content sort order");
         }
