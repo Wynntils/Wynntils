@@ -19,7 +19,6 @@ import org.lwjgl.glfw.GLFW;
 
 @ConfigCategory(Category.MAP)
 public class GuildMapFeature extends Feature {
-
     @RegisterConfig
     public final Config<PointerType> pointerType = new Config<>(PointerType.ARROW);
 
