@@ -35,7 +35,7 @@ public record ToolProfile(ToolProfile.ToolType toolType, int tier) {
             this.professionType = professionType;
         }
 
-        protected static ToolType fromString(String str) {
+        private static ToolType fromString(String str) {
             try {
                 return ToolType.valueOf(str.toUpperCase(Locale.ROOT));
             } catch (IllegalArgumentException e) {

@@ -88,7 +88,7 @@ public class UnidentifiedItemIconFeature extends Feature {
             this.yOffset = yOffset;
         }
 
-        protected int getTextureYOffset() {
+        private int getTextureYOffset() {
             return yOffset;
         }
     }

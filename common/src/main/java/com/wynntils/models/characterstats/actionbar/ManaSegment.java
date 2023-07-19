@@ -47,6 +47,7 @@ public class ManaSegment implements ActionBarSegment {
         return ActionBarPosition.RIGHT;
     }
 
+    @Override
     public boolean isHidden() {
         return hidden;
     }
