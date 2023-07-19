@@ -2,7 +2,7 @@
  * Copyright © Wynntils 2023.
  * This file is released under AGPLv3. See LICENSE for full license details.
  */
-package com.wynntils.features;
+package com.wynntils.features.utilities;
 
 import com.wynntils.core.components.Managers;
 import com.wynntils.core.components.Models;
@@ -32,7 +32,7 @@ import org.lwjgl.glfw.GLFW;
  * <p>The volume is restored to the original state on "game boot".
  * Note that the initial value of isSilencerEnabled is 'false' and is not explicitly set on "game boot".
  */
-@ConfigCategory(Category.UNCATEGORIZED)
+@ConfigCategory(Category.UTILITIES)
 public class SilencerFeature extends Feature {
     @RegisterConfig
     public final Config<Double> silencerVolume = new Config<>(0.01);
