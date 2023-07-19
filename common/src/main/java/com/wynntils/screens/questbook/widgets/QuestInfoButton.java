@@ -11,7 +11,6 @@ import com.wynntils.utils.render.Texture;
 import net.minecraft.network.chat.Component;
 
 public class QuestInfoButton extends WynntilsButton {
-
     public QuestInfoButton(int x, int y, int width, int height) {
         super(x, y, width, height, Component.literal("Quest Info / Mini Quest info"));
     }
