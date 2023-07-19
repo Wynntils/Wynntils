@@ -9,38 +9,29 @@ import com.wynntils.models.mapdata.type.MapFeatureCategory;
 import com.wynntils.models.mapdata.type.attributes.MapFeatureAttributes;
 import com.wynntils.models.mapdata.type.attributes.MapFeatureDecoration;
 import com.wynntils.models.mapdata.type.attributes.MapFeatureVisibility;
-import com.wynntils.models.mapdata.type.features.MapFeature;
-import com.wynntils.models.mapdata.type.features.MapLocation;
+import com.wynntils.utils.colors.CommonColors;
 import com.wynntils.utils.colors.CustomColor;
-import com.wynntils.utils.mc.McUtils;
-import com.wynntils.utils.mc.type.Location;
 import com.wynntils.utils.render.type.TextShadow;
 import java.util.List;
 import java.util.stream.Stream;
 
-public class CharacterProvider extends BuiltInProvider {
-    private static final List<MapFeature> PROVIDED_FEATURES = List.of(new CharacterLocation());
-    private static final List<MapFeatureCategory> PROVIDED_CATEGORIES = List.of(new PlayersCategory());
-
-    @Override
-    public Stream<MapFeature> getFeatures() {
-        return PROVIDED_FEATURES.stream();
-    }
+public class CategoriesProvider extends BuiltInProvider {
+    private static final List<MapFeatureCategory> PROVIDED_CATEGORIES = List.of(new WynntilsCategory());
 
     @Override
     public Stream<MapFeatureCategory> getCategories() {
         return PROVIDED_CATEGORIES.stream();
     }
 
-    private static final class PlayersCategory implements MapFeatureCategory {
+    private static final class WynntilsCategory implements MapFeatureCategory {
         @Override
         public String getCategoryId() {
-            return "wynntils:players";
+            return "wynntils";
         }
 
         @Override
         public String getDisplayName() {
-            return "Your position";
+            return "Wynntils Map Feature";
         }
 
         @Override
@@ -48,7 +39,7 @@ public class CharacterProvider extends BuiltInProvider {
             return new MapFeatureAttributes() {
                 @Override
                 public String getLabel() {
-                    return "Player position";
+                    return null;
                 }
 
                 @Override
@@ -68,12 +59,12 @@ public class CharacterProvider extends BuiltInProvider {
 
                 @Override
                 public CustomColor getLabelColor() {
-                    return null;
+                    return CommonColors.LIGHT_BLUE;
                 }
 
                 @Override
                 public TextShadow getLabelShadow() {
-                    return null;
+                    return TextShadow.OUTLINE;
                 }
 
                 @Override
@@ -83,7 +74,7 @@ public class CharacterProvider extends BuiltInProvider {
 
                 @Override
                 public CustomColor getIconColor() {
-                    return null;
+                    return CommonColors.BLUE;
                 }
 
                 @Override
@@ -91,33 +82,6 @@ public class CharacterProvider extends BuiltInProvider {
                     return null;
                 }
             };
-        }
-    }
-
-    private static final class CharacterLocation implements MapLocation {
-        @Override
-        public String getFeatureId() {
-            return "built-in:character:marker";
-        }
-
-        @Override
-        public String getCategoryId() {
-            return "wynntils:players:you";
-        }
-
-        @Override
-        public MapFeatureAttributes getAttributes() {
-            return null;
-        }
-
-        @Override
-        public List<String> getTags() {
-            return List.of();
-        }
-
-        @Override
-        public Location getLocation() {
-            return new Location(McUtils.player().blockPosition());
         }
     }
 }

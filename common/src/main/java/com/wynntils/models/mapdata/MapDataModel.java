@@ -6,6 +6,7 @@ package com.wynntils.models.mapdata;
 
 import com.wynntils.core.components.Model;
 import com.wynntils.models.mapdata.providers.MapDataProvider;
+import com.wynntils.models.mapdata.providers.builtin.CategoriesProvider;
 import com.wynntils.models.mapdata.providers.builtin.CharacterProvider;
 import com.wynntils.models.mapdata.providers.builtin.MapIconsProvider;
 import com.wynntils.models.mapdata.type.MapFeatureCategory;
@@ -13,37 +14,17 @@ import com.wynntils.models.mapdata.type.attributes.MapFeatureAttributes;
 import com.wynntils.models.mapdata.type.attributes.MapFeatureIcon;
 import com.wynntils.models.mapdata.type.features.MapFeature;
 import com.wynntils.services.map.pois.Poi;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.Objects;
 import java.util.function.Function;
 import java.util.stream.Stream;
 
 public class MapDataModel extends Model {
-    public static final String ROOT_CATEGORY_NAME = "ROOT CATEGORY";
-    private final List<MapDataProvider> providers = List.of(new CharacterProvider(), new MapIconsProvider());
-    private Map<String, String> categoryDisplayNames = new HashMap<>();
-    private Map<String, MapFeatureAttributes> categoryAttributes = new HashMap<>();
-    private Map<String, MapFeatureIcon> icons = new HashMap<>();
+    private final List<MapDataProvider> providers =
+            List.of(new CategoriesProvider(), new CharacterProvider(), new MapIconsProvider());
 
     public MapDataModel() {
         super(List.of());
-    }
-
-    public void updateCategory(String categoryId, String displayName, MapFeatureAttributes attributes) {
-        if (displayName != null) {
-            categoryDisplayNames.put(categoryId, displayName);
-        }
-        if (attributes != null) {
-            categoryAttributes.put(categoryId, attributes);
-        }
-    }
-
-    public void updateIcon(String iconId, MapFeatureIcon icon) {
-        if (icon != null) {
-            icons.put(iconId, icon);
-        }
     }
 
     public MapFeatureAttributes getAttributes(MapFeature feature) {
@@ -92,12 +73,14 @@ public class MapDataModel extends Model {
     }
 
     public String getCategoryName(String categoryId) {
-        if (categoryId == null) return ROOT_CATEGORY_NAME;
-
-        String name = categoryDisplayNames.get(categoryId);
-        if (name != null) return name;
-
-        return "NAMELESS CATEGORY";
+        Stream<MapFeatureCategory> allCategories = providers.stream().flatMap(MapDataProvider::getCategories);
+        String displayName = allCategories
+                .filter(c -> c.getCategoryId().equals(categoryId))
+                .map(MapFeatureCategory::getDisplayName)
+                .filter(Objects::nonNull)
+                .findFirst()
+                .orElse("NAMELESS CATEGORY");
+        return displayName;
     }
 
     private String getParentCategoryId(String categoryId) {

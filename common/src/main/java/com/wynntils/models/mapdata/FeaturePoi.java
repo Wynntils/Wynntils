@@ -13,12 +13,10 @@ import com.wynntils.models.mapdata.type.features.MapFeature;
 import com.wynntils.models.mapdata.type.features.MapLocation;
 import com.wynntils.services.map.pois.Poi;
 import com.wynntils.services.map.type.DisplayPriority;
-import com.wynntils.utils.colors.CommonColors;
 import com.wynntils.utils.mc.type.PoiLocation;
 import com.wynntils.utils.render.FontRenderer;
 import com.wynntils.utils.render.buffered.BufferedRenderUtils;
 import com.wynntils.utils.render.type.HorizontalAlignment;
-import com.wynntils.utils.render.type.TextShadow;
 import com.wynntils.utils.render.type.VerticalAlignment;
 import net.minecraft.client.renderer.MultiBufferSource;
 
@@ -82,7 +80,7 @@ public class FeaturePoi implements Poi {
                 width,
                 height);
 
-        if (hovered) {
+        if (hovered && attributes.getLabel() != null) {
             // Render name if hovered
 
             poseStack.pushPose();
@@ -90,13 +88,13 @@ public class FeaturePoi implements Poi {
             FontRenderer.getInstance()
                     .renderText(
                             poseStack,
-                            StyledText.fromString(getName()),
+                            StyledText.fromString(attributes.getLabel()),
                             renderX,
                             15 + renderY,
-                            CommonColors.GREEN,
+                            attributes.getLabelColor(),
                             HorizontalAlignment.CENTER,
                             VerticalAlignment.MIDDLE,
-                            TextShadow.OUTLINE);
+                            attributes.getLabelShadow());
 
             poseStack.popPose();
         }
@@ -123,6 +121,6 @@ public class FeaturePoi implements Poi {
 
     @Override
     public String getName() {
-        return "Wrapped MapFeature " + feature.getFeatureId();
+        return "Wrapped MapFeature [" + feature.getFeatureId() + "]";
     }
 }
