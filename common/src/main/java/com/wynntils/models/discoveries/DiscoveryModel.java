@@ -181,7 +181,7 @@ public final class DiscoveryModel extends Model {
             throw new IllegalArgumentException("Cannot sort discoveries by distance");
         }
 
-        // All quests are always sorted by status (available then unavailable), and then
+        // All discoveries are always sorted by status (available then unavailable), and then
         // the given sort order, and finally a third way if the given sort order is equal.
         Stream<DiscoveryInfo> baseStream = Stream.concat(
                 Stream.concat(territoryDiscoveries.stream(), worldDiscoveries.stream()), secretDiscoveries.stream());
