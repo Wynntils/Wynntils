@@ -157,7 +157,6 @@ public final class SeaskipperDepartureBoardScreen extends AbstractMapScreen {
 
     private void renderDestinations(
             PoseStack poseStack, BoundingBox textureBoundingBox, float poiScale, int mouseX, int mouseY) {
-
         List<SeaskipperDestinationPoi> filteredPois =
                 getRenderedDestinations(textureBoundingBox, poiScale, mouseX, mouseY);
 
