@@ -10,4 +10,8 @@ public interface MapFeatureIcon {
     String getIconId();
 
     ResourceLocation getResourceLocation();
+
+    int width();
+
+    int height();
 }

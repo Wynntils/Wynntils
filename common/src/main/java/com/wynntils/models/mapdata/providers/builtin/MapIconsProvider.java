@@ -38,5 +38,15 @@ public class MapIconsProvider extends BuiltInProvider {
         public ResourceLocation getResourceLocation() {
             return texture.resource();
         }
+
+        @Override
+        public int width() {
+            return texture.width();
+        }
+
+        @Override
+        public int height() {
+            return texture.height();
+        }
     }
 }

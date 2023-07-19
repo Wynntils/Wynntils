@@ -8,9 +8,11 @@ import com.wynntils.core.components.Model;
 import com.wynntils.models.mapdata.providers.MapDataProvider;
 import com.wynntils.models.mapdata.providers.builtin.CharacterProvider;
 import com.wynntils.models.mapdata.providers.builtin.MapIconsProvider;
+import com.wynntils.models.mapdata.type.MapFeatureCategory;
 import com.wynntils.models.mapdata.type.attributes.MapFeatureAttributes;
+import com.wynntils.models.mapdata.type.attributes.MapFeatureIcon;
 import com.wynntils.models.mapdata.type.features.MapFeature;
-import com.wynntils.utils.render.Texture;
+import com.wynntils.services.map.pois.Poi;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -22,7 +24,7 @@ public class MapDataModel extends Model {
     private final List<MapDataProvider> providers = List.of(new CharacterProvider(), new MapIconsProvider());
     private Map<String, String> categoryDisplayNames = new HashMap<>();
     private Map<String, MapFeatureAttributes> categoryAttributes = new HashMap<>();
-    private Map<String, Texture> iconTextures = new HashMap<>();
+    private Map<String, MapFeatureIcon> icons = new HashMap<>();
 
     public MapDataModel() {
         super(List.of());
@@ -37,9 +39,9 @@ public class MapDataModel extends Model {
         }
     }
 
-    public void updateIcon(String iconId, Texture texture) {
-        if (texture != null) {
-            iconTextures.put(iconId, texture);
+    public void updateIcon(String iconId, MapFeatureIcon icon) {
+        if (icon != null) {
+            icons.put(iconId, icon);
         }
     }
 
@@ -59,7 +61,7 @@ public class MapDataModel extends Model {
         return getCategoryAttribute(feature.getCategoryId(), getter);
     }
 
-    public <T> T getCategoryAttribute(String categoryId, Function<MapFeatureAttributes, T> getter) {
+    private <T> T getCategoryAttribute(String categoryId, Function<MapFeatureAttributes, T> getter) {
         if (categoryId == null) {
             // FIXME: proper detection for root, proper root style
             return null;
@@ -78,7 +80,12 @@ public class MapDataModel extends Model {
     }
 
     private MapFeatureAttributes getAttributeForCategoryId(String categoryId) {
-        return categoryAttributes.get(categoryId);
+        Stream<MapFeatureCategory> allCategories = providers.stream().flatMap(MapDataProvider::getCategories);
+        MapFeatureCategory category = allCategories
+                .filter(c -> c.getCategoryId().equals(categoryId))
+                .findFirst()
+                .orElse(null);
+        return category.getAttributes();
     }
 
     public String getCategoryName(String categoryId) {
@@ -99,5 +106,16 @@ public class MapDataModel extends Model {
     public Stream<MapFeature> getFeatures() {
         Stream<MapFeature> allFeatures = providers.stream().flatMap(MapDataProvider::getFeatures);
         return allFeatures;
+    }
+
+    public Stream<Poi> getFeaturesAsPois() {
+        return getFeatures().map(FeaturePoi::new);
+    }
+
+    public MapFeatureIcon getIcon(String iconId) {
+        Stream<MapFeatureIcon> allIcons = providers.stream().flatMap(MapDataProvider::getIcons);
+        MapFeatureIcon icon =
+                allIcons.filter(i -> i.getIconId().equals(iconId)).findFirst().orElse(null);
+        return icon;
     }
 }

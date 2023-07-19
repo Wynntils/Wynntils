@@ -301,6 +301,10 @@ public final class MainMapScreen extends AbstractMapScreen {
         if (showTerrs) {
             pois = Stream.concat(pois, Models.Territory.getTerritoryPois().stream());
         }
+        pois = Stream.concat(pois, Models.MapData.getFeaturesAsPois());
+
+        // FIXME
+        pois = Models.MapData.getFeaturesAsPois();
 
         renderPois(
                 pois.collect(Collectors.toList()),
