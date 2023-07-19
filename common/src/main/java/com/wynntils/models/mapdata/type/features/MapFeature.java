@@ -2,19 +2,22 @@
  * Copyright © Wynntils 2023.
  * This file is released under AGPLv3. See LICENSE for full license details.
  */
-package com.wynntils.models.mapdata.type;
+package com.wynntils.models.mapdata.type.features;
 
-import com.wynntils.models.mapdata.style.MapFeatureAttributes;
+import com.wynntils.models.mapdata.type.attributes.MapFeatureAttributes;
 import java.util.List;
 
 public interface MapFeature {
-    // The id should be unique, and track the provinence of the feature
-    String getId();
+    // Required. The id should be unique, and track the provenance of the feature
+    String getFeatureId();
 
-    MapCategory getCategory();
+    // Required.
+    String getCategoryId();
 
+    // Optional
     MapFeatureAttributes getAttributes();
 
+    // Optional
     List<String> getTags();
 }
 /*
@@ -28,3 +31,12 @@ features == list of concrete map features (locations, paths or areas)
 categories == list of category definitions
 icons == icon name -> base64 png representation
  */
+
+// wynntils:lootrun:chest:tier1
+// wynntils:service:profession:scribing
+// wynntils:service:identifier
+// wynntils:npc:quest
+// wynntils:personal:lootrunpath
+// wynntils:personal:openedchest:tier3
+// wynntils:personal:discovery:territory
+// wynntils:personal:saved_bookmarks_poi ???

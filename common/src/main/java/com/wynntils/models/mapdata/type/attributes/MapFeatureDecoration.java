@@ -2,11 +2,11 @@
  * Copyright © Wynntils 2023.
  * This file is released under AGPLv3. See LICENSE for full license details.
  */
-package com.wynntils.models.mapdata.style;
+package com.wynntils.models.mapdata.type.attributes;
 
 // Currently only for player health bar, but can be extended to more types of
 // overlays
-public interface MapIconDecoration {
+public interface MapFeatureDecoration {
     boolean isVisible();
 
     int getBarPercentage();

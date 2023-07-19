@@ -2,10 +2,13 @@
  * Copyright © Wynntils 2023.
  * This file is released under AGPLv3. See LICENSE for full license details.
  */
-package com.wynntils.models.mapdata.style;
+package com.wynntils.models.mapdata;
 
 import com.wynntils.core.components.Models;
-import com.wynntils.models.mapdata.type.MapFeature;
+import com.wynntils.models.mapdata.type.attributes.MapFeatureAttributes;
+import com.wynntils.models.mapdata.type.attributes.MapFeatureDecoration;
+import com.wynntils.models.mapdata.type.attributes.MapFeatureVisibility;
+import com.wynntils.models.mapdata.type.features.MapFeature;
 import com.wynntils.utils.colors.CustomColor;
 import com.wynntils.utils.render.type.TextShadow;
 
@@ -22,8 +25,8 @@ public class MapFeatureConcreteAttributes implements MapFeatureAttributes {
     }
 
     @Override
-    public MapIcon getIcon() {
-        return Models.MapData.getFeatureAttribute(feature, MapFeatureAttributes::getIcon);
+    public String getIconId() {
+        return Models.MapData.getFeatureAttribute(feature, MapFeatureAttributes::getIconId);
     }
 
     @Override
@@ -32,7 +35,7 @@ public class MapFeatureConcreteAttributes implements MapFeatureAttributes {
     }
 
     @Override
-    public MapVisibility getLabelVisibility() {
+    public MapFeatureVisibility getLabelVisibility() {
         return Models.MapData.getFeatureAttribute(feature, MapFeatureAttributes::getLabelVisibility);
     }
 
@@ -47,7 +50,7 @@ public class MapFeatureConcreteAttributes implements MapFeatureAttributes {
     }
 
     @Override
-    public MapVisibility getIconVisibility() {
+    public MapFeatureVisibility getIconVisibility() {
         return Models.MapData.getFeatureAttribute(feature, MapFeatureAttributes::getIconVisibility);
     }
 
@@ -57,7 +60,7 @@ public class MapFeatureConcreteAttributes implements MapFeatureAttributes {
     }
 
     @Override
-    public MapIconDecoration getIconDecoration() {
+    public MapFeatureDecoration getIconDecoration() {
         return Models.MapData.getFeatureAttribute(feature, MapFeatureAttributes::getIconDecoration);
     }
 }

@@ -6,11 +6,11 @@ package com.wynntils.models.mapdata;
 
 import com.wynntils.core.components.Model;
 import com.wynntils.models.mapdata.providers.MapDataProvider;
-import com.wynntils.models.mapdata.providers.builtin.WaypointProvider;
-import com.wynntils.models.mapdata.style.MapFeatureAttributes;
-import com.wynntils.models.mapdata.style.MapFeatureConcreteAttributes;
-import com.wynntils.models.mapdata.type.MapCategory;
-import com.wynntils.models.mapdata.type.MapFeature;
+import com.wynntils.models.mapdata.providers.builtin.CharacterProvider;
+import com.wynntils.models.mapdata.providers.builtin.MapIconsProvider;
+import com.wynntils.models.mapdata.type.attributes.MapFeatureAttributes;
+import com.wynntils.models.mapdata.type.features.MapFeature;
+import com.wynntils.utils.render.Texture;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -19,9 +19,10 @@ import java.util.stream.Stream;
 
 public class MapDataModel extends Model {
     public static final String ROOT_CATEGORY_NAME = "ROOT CATEGORY";
-    private final List<MapDataProvider> providers = List.of(new WaypointProvider());
+    private final List<MapDataProvider> providers = List.of(new CharacterProvider(), new MapIconsProvider());
     private Map<String, String> categoryDisplayNames = new HashMap<>();
-    private Map<String, MapFeatureAttributes> categoryStyles = new HashMap<>();
+    private Map<String, MapFeatureAttributes> categoryAttributes = new HashMap<>();
+    private Map<String, Texture> iconTextures = new HashMap<>();
 
     public MapDataModel() {
         super(List.of());
@@ -32,7 +33,13 @@ public class MapDataModel extends Model {
             categoryDisplayNames.put(categoryId, displayName);
         }
         if (attributes != null) {
-            categoryStyles.put(categoryId, attributes);
+            categoryAttributes.put(categoryId, attributes);
+        }
+    }
+
+    public void updateIcon(String iconId, Texture texture) {
+        if (texture != null) {
+            iconTextures.put(iconId, texture);
         }
     }
 
@@ -49,16 +56,16 @@ public class MapDataModel extends Model {
             }
         }
 
-        return getCategoryAttribute(feature.getCategory(), getter);
+        return getCategoryAttribute(feature.getCategoryId(), getter);
     }
 
-    public <T> T getCategoryAttribute(MapCategory category, Function<MapFeatureAttributes, T> getter) {
-        if (category == null) {
+    public <T> T getCategoryAttribute(String categoryId, Function<MapFeatureAttributes, T> getter) {
+        if (categoryId == null) {
             // FIXME: proper detection for root, proper root style
             return null;
         }
 
-        MapFeatureAttributes attributes = category.getAttributes();
+        MapFeatureAttributes attributes = getAttributeForCategoryId(categoryId);
         if (attributes != null) {
             T attribute = getter.apply(attributes);
             if (attribute != null) {
@@ -66,27 +73,12 @@ public class MapDataModel extends Model {
             }
         }
 
-        MapCategory parent = getParent(category);
-        return getCategoryAttribute(parent, getter);
+        String parentId = getParentCategoryId(categoryId);
+        return getCategoryAttribute(parentId, getter);
     }
 
-    private MapCategory getParent(MapCategory category) {}
-
-    private MapFeatureAttributes getParentStyle(String categoryId) {
-        String parentCategoryId = getParentCategoryId(categoryId);
-        if (parentCategoryId == null) return MapFeatureAttributes.EMPTY;
-
-        return getCategoryStyle(parentCategoryId);
-    }
-
-    private MapFeatureAttributes getCategoryStyle(String categoryId) {
-        if (categoryId == null) return MapFeatureAttributes.EMPTY;
-
-        MapFeatureAttributes style = categoryStyles.get(categoryId);
-        if (style != null) return style;
-
-        // Recursively check the parent
-        return getCategoryStyle(getParentCategoryId(categoryId));
+    private MapFeatureAttributes getAttributeForCategoryId(String categoryId) {
+        return categoryAttributes.get(categoryId);
     }
 
     public String getCategoryName(String categoryId) {
@@ -95,8 +87,7 @@ public class MapDataModel extends Model {
         String name = categoryDisplayNames.get(categoryId);
         if (name != null) return name;
 
-        // Recursively check the parent
-        return getCategoryName(getParentCategoryId(categoryId));
+        return "NAMELESS CATEGORY";
     }
 
     private String getParentCategoryId(String categoryId) {

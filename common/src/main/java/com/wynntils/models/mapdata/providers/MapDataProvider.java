@@ -4,15 +4,15 @@
  */
 package com.wynntils.models.mapdata.providers;
 
-import com.wynntils.models.mapdata.style.MapIcon;
-import com.wynntils.models.mapdata.type.MapCategory;
-import com.wynntils.models.mapdata.type.MapFeature;
+import com.wynntils.models.mapdata.type.MapFeatureCategory;
+import com.wynntils.models.mapdata.type.attributes.MapFeatureIcon;
+import com.wynntils.models.mapdata.type.features.MapFeature;
 import java.util.stream.Stream;
 
 public interface MapDataProvider {
     Stream<MapFeature> getFeatures();
 
-    Stream<MapCategory> getCategories();
+    Stream<MapFeatureCategory> getCategories();
 
-    Stream<MapIcon> getIcons();
+    Stream<MapFeatureIcon> getIcons();
 }

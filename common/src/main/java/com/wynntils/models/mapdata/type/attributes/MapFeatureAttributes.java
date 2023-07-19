@@ -2,7 +2,7 @@
  * Copyright © Wynntils 2023.
  * This file is released under AGPLv3. See LICENSE for full license details.
  */
-package com.wynntils.models.mapdata.style;
+package com.wynntils.models.mapdata.type.attributes;
 
 import com.wynntils.utils.colors.CustomColor;
 import com.wynntils.utils.render.type.TextShadow;
@@ -10,20 +10,20 @@ import com.wynntils.utils.render.type.TextShadow;
 public interface MapFeatureAttributes {
     String getLabel();
 
-    MapIcon getIcon();
+    String getIconId();
 
     // 0-1000, 1000 is highest priority (drawn on top of everything else)
     Integer getPriority();
 
-    MapVisibility getLabelVisibility();
+    MapFeatureVisibility getLabelVisibility();
 
     CustomColor getLabelColor();
 
     TextShadow getLabelShadow();
 
-    MapVisibility getIconVisibility();
+    MapFeatureVisibility getIconVisibility();
 
     CustomColor getIconColor();
 
-    MapIconDecoration getIconDecoration();
+    MapFeatureDecoration getIconDecoration();
 }
