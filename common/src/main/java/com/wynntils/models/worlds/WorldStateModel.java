@@ -37,6 +37,7 @@ public final class WorldStateModel extends Model {
 
     private StyledText currentTabListFooter = StyledText.EMPTY;
     private String currentWorldName = "";
+    private long serverJoinTimestamp = 0;
     private boolean onBetaServer;
     private boolean hasJoinedAnyWorld = false;
 
@@ -69,6 +70,9 @@ public final class WorldStateModel extends Model {
         // Switch state before sending event
         currentState = newState;
         currentWorldName = newWorldName;
+        if (newState == WorldState.WORLD) {
+            serverJoinTimestamp = System.currentTimeMillis();
+        }
         WynntilsMod.postEvent(new WorldStateEvent(newState, oldState, newWorldName, isFirstJoinWorld));
     }
 
@@ -152,5 +156,9 @@ public final class WorldStateModel extends Model {
 
     public String getCurrentWorldName() {
         return currentWorldName;
+    }
+
+    public long getServerJoinTimestamp() {
+        return serverJoinTimestamp;
     }
 }
