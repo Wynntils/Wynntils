@@ -2,11 +2,10 @@
  * Copyright © Wynntils 2022.
  * This file is released under AGPLv3. See LICENSE for full license details.
  */
-package com.wynntils.screens.discoveries.widgets;
+package com.wynntils.screens.base.widgets;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.wynntils.screens.base.TooltipProvider;
-import com.wynntils.screens.base.widgets.WynntilsButton;
 import com.wynntils.utils.colors.CustomColor;
 import com.wynntils.utils.render.RenderUtils;
 import com.wynntils.utils.render.Texture;
@@ -16,7 +15,7 @@ import java.util.function.Supplier;
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
 
-public class DiscoveryFilterButton extends WynntilsButton implements TooltipProvider {
+public class FilterButton extends WynntilsButton implements TooltipProvider {
     private static final CustomColor BUTTON_COLOR = new CustomColor(181, 174, 151);
     private static final CustomColor BUTTON_COLOR_HOVERED = new CustomColor(121, 116, 101);
     private static final CustomColor BUTTON_COLOR_ENABLED = new CustomColor(164, 212, 142);
@@ -27,7 +26,7 @@ public class DiscoveryFilterButton extends WynntilsButton implements TooltipProv
     private final Runnable onPress;
     private final Supplier<Boolean> isEnabled;
 
-    public DiscoveryFilterButton(
+    public FilterButton(
             int x,
             int y,
             int width,
@@ -37,7 +36,7 @@ public class DiscoveryFilterButton extends WynntilsButton implements TooltipProv
             List<Component> tooltipList,
             Runnable onPress,
             Supplier<Boolean> isEnabled) {
-        super(x, y, width, height, Component.literal("Discovery Filter Button"));
+        super(x, y, width, height, Component.literal("Filter Button"));
 
         this.texture = texture;
         this.dynamicTexture = dynamicTexture;
