@@ -358,7 +358,5 @@
   "screens.wynntils.lootruns.noLootruns": "Nem találtunk lootrunokat! Próbáld megváltoztatni a keresett kifejezést vagy töltsd újra a lootrunokat a jobb felső sarokban lévő gomb megnyomásával..",
   "screens.wynntils.overlaySelection.overlays": "Képernyőrátétek",
   "screens.wynntils.wynntilsQuestBook.lootruns.description": "Kattints ide hogy megnézd a lootrunjaid.",
-  "screens.wynntils.wynntilsQuestBook.lootruns.name": "Lootrunok",
-  "screens.wynntils.wynntilsQuestBook.sort.level.description": "A küldetések szinttől függően vannak rendezve, a legalacsonyabb az első",
-  "screens.wynntils.wynntilsQuestBook.sort.level.name": "Szint Szerinti Rendezés"
+  "screens.wynntils.wynntilsQuestBook.lootruns.name": "Lootrunok"
 }
