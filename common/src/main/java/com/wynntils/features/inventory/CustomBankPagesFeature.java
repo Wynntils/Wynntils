@@ -280,7 +280,7 @@ public class CustomBankPagesFeature extends Feature {
                     .map(Integer::parseInt)
                     .collect(Collectors.toCollection(ArrayList::new));
 
-            if (destinations.size() != MAX_DESTINATIONS) {
+            if (destinations.size() < MAX_DESTINATIONS) {
                 int startIndex = destinations.size();
                 List<Integer> defaultValues = containerType == SearchableContainerType.BANK
                         ? QUICK_JUMP_DESTINATIONS
