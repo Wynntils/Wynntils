@@ -81,9 +81,9 @@ public class EnumNamingUpfixer implements ConfigUpfixer {
 
             String jsonString = in.nextString();
 
-            // The double casting is needed, or javac will complain...
             Enum<?> value;
             try {
+                // The double casting is needed, or javac will complain...
                 value = Enum.valueOf((Class<Enum>) (Type) enumClazz, jsonString);
             } catch (IllegalArgumentException e) {
                 // Maybe it is already converted?

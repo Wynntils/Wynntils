@@ -75,7 +75,7 @@ public class TokenTrackerFeature extends Feature {
         @RegisterConfig
         public final Config<ColorChatFormatting> color = new Config<>(ColorChatFormatting.GOLD);
 
-        protected TokenBarOverlay(int id) {
+        private TokenBarOverlay(int id) {
             super(id, new OverlaySize(81, 21));
             horizontalAlignmentOverride.updateConfig(HorizontalAlignment.RIGHT);
             verticalAlignmentOverride.updateConfig(VerticalAlignment.TOP);

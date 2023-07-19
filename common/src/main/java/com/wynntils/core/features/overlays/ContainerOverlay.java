@@ -133,7 +133,7 @@ public abstract class ContainerOverlay<T extends Overlay> extends Overlay {
         int currentWidth = 0;
         GrowDirection direction = growDirection.get();
 
-        for (Overlay overlay : children) {
+        for (T overlay : children) {
             overlay.setPosition(direction.getChildPosition(
                     getRenderX(), getRenderY(), getSize(), overlay.getSize(), currentWidth, currentHeight));
             direction.updateSize(overlay, this.getSize(), inherentSize.get(overlay));
@@ -159,7 +159,7 @@ public abstract class ContainerOverlay<T extends Overlay> extends Overlay {
             this.horizontalMultiplier = horizontalMultiplier;
         }
 
-        protected void updateSize(Overlay overlay, OverlaySize containerSize, OverlaySize inherentSize) {
+        private void updateSize(Overlay overlay, OverlaySize containerSize, OverlaySize inherentSize) {
             OverlaySize size = overlay.getSize();
 
             if (verticalMultiplier != 0) {
