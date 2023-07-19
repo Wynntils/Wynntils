@@ -1,4 +1,16 @@
+## [0.0.3-alpha.162](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.161...v0.0.3-alpha.162) (2023-07-19)
+
+
+### New Features
+
+* Add GatheringCooldownOverlayFeature and GatheringCooldownFunction ([#1774](https://github.com/Wynntils/Artemis/issues/1774)) ([693c118](https://github.com/Wynntils/Artemis/commit/693c1186fcc0c27d9e94c8b6777b46e0855a592b))
+
 ## [0.0.3-alpha.161](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.160...v0.0.3-alpha.161) (2023-07-19)
+
+
+### Miscellaneous Chores
+
+* **release:** v0.0.3-alpha.161 [skip ci] ([5c4270a](https://github.com/Wynntils/Artemis/commit/5c4270a92667e836c36fe350e48328440e23ebda))
 
 
 ### Code Refactoring
@@ -40,12 +52,4 @@
 ### Miscellaneous Chores
 
 * **release:** v0.0.3-alpha.158 [skip ci] ([b99871d](https://github.com/Wynntils/Artemis/commit/b99871dad536efa5136fd106872e77b8784d4af1))
-
-## [0.0.3-alpha.157](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.156...v0.0.3-alpha.157) (2023-07-19)
-
-
-### Miscellaneous Chores
-
-* Add missing @Override annotations ([#1781](https://github.com/Wynntils/Artemis/issues/1781)) ([43255ae](https://github.com/Wynntils/Artemis/commit/43255ae5ae6e5b6f8ea1b3348432f51ff017e448))
-* **release:** v0.0.3-alpha.157 [skip ci] ([75a0410](https://github.com/Wynntils/Artemis/commit/75a04106ad6a79a7b6a0afce6e7118c81bdcaad7))
 
