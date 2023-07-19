@@ -6,9 +6,11 @@ package com.wynntils.models.content;
 
 import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.components.Handlers;
+import com.wynntils.core.components.Managers;
 import com.wynntils.core.components.Model;
 import com.wynntils.core.components.Models;
 import com.wynntils.core.text.StyledText;
+import com.wynntils.features.ui.WynntilsContentBookFeature;
 import com.wynntils.handlers.scoreboard.ScoreboardPart;
 import com.wynntils.models.content.event.ContentTrackerUpdatedEvent;
 import com.wynntils.models.content.type.ContentDifficulty;
@@ -55,9 +57,7 @@ public final class ContentModel extends Model {
     private static final ScoreboardPart TRACKER_SCOREBOARD_PART = new ContentTrackerScoreboardPart();
     private static final ContentBookQueries CONTAINER_QUERIES = new ContentBookQueries();
 
-    private String trackedName;
-    private ContentType trackedType;
-    private StyledText trackedTask;
+    private TrackedContent trackedContent;
 
     public ContentModel() {
         super(List.of());
@@ -198,43 +198,52 @@ public final class ContentModel extends Model {
     }
 
     public String getTrackedName() {
-        return trackedName;
+        if (trackedContent == null) return "";
+
+        return trackedContent.trackedName();
     }
 
     public ContentType getTrackedType() {
-        return trackedType;
+        if (trackedContent == null) return null;
+        return trackedContent.trackedType();
     }
 
     public StyledText getTrackedTask() {
-        return trackedTask;
+        if (trackedContent == null) return StyledText.EMPTY;
+
+        return trackedContent.trackedTask();
     }
 
     public Location getTrackedLocation() {
-        if (trackedName == null) return null;
+        if (trackedContent == null) return null;
 
-        return StyledTextUtils.extractLocation(trackedTask).orElse(null);
+        return StyledTextUtils.extractLocation(trackedContent.trackedTask()).orElse(null);
     }
 
     public QuestInfo getTrackedQuestInfo() {
-        if (trackedName == null) return null;
+        if (trackedContent == null) return null;
 
-        return Models.Quest.getQuestInfoFromName(trackedName).orElse(null);
+        return Models.Quest.getQuestInfoFromName(trackedContent.trackedName()).orElse(null);
     }
 
-    void updateTracker(String type, String name, StyledText nextTask) {
-        trackedType = ContentType.from(type);
-        trackedName = name;
-        trackedTask = nextTask;
+    void updateTracker(String name, String type, StyledText nextTask) {
+        trackedContent = new TrackedContent(name, ContentType.from(type), nextTask);
 
-        WynntilsMod.postEvent(new ContentTrackerUpdatedEvent(trackedType, trackedName, trackedTask));
+        WynntilsMod.postEvent(new ContentTrackerUpdatedEvent(
+                trackedContent.trackedType(), trackedContent.trackedName(), trackedContent.trackedTask()));
     }
 
     void resetTracker() {
-        updateTracker(null, null, null);
+        trackedContent = null;
     }
 
-    public void scanContentBook(String filterName, BiConsumer<List<ContentInfo>, List<StyledText>> processResult) {
-        CONTAINER_QUERIES.queryContentBook(filterName, processResult);
+    public void scanContentBook(
+            ContentType contentType, BiConsumer<List<ContentInfo>, List<StyledText>> processResult) {
+        // Feature dependency until Model configs
+        boolean showUpdates = Managers.Feature.getFeatureInstance(WynntilsContentBookFeature.class)
+                .showContentBookLoadingUpdates
+                .get();
+        CONTAINER_QUERIES.queryContentBook(contentType, processResult, showUpdates);
     }
 
     public void startTracking(String name, ContentType contentType) {
@@ -242,6 +251,12 @@ public final class ContentModel extends Model {
     }
 
     public void stopTracking() {
-        CONTAINER_QUERIES.toggleTracking(trackedName, trackedType);
+        CONTAINER_QUERIES.toggleTracking(trackedContent.trackedName(), trackedContent.trackedType());
     }
+
+    public boolean isTracking() {
+        return trackedContent != null;
+    }
+
+    private record TrackedContent(String trackedName, ContentType trackedType, StyledText trackedTask) {}
 }

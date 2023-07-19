@@ -23,10 +23,11 @@ public abstract class SlotMixin {
                             value = "INVOKE",
                             target = "Lnet/minecraft/world/Container;setItem(ILnet/minecraft/world/item/ItemStack;)V"))
     private void onSetItem(Container container, int slot, ItemStack itemStack, Operation<Void> original) {
-        MixinHelper.post(new SetSlotEvent.Pre(container, slot, itemStack));
+        SetSlotEvent.Pre event = new SetSlotEvent.Pre(container, slot, itemStack);
+        MixinHelper.post(event);
 
         ItemStack oldItemStack = container.getItem(slot);
-        original.call(container, slot, itemStack);
+        original.call(container, slot, event.getItemStack());
 
         MixinHelper.post(new SetSlotEvent.Post(container, slot, itemStack, oldItemStack));
     }

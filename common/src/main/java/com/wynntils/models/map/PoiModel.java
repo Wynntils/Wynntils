@@ -163,7 +163,7 @@ public class PoiModel extends Model {
             Type type = new TypeToken<List<ServiceProfile>>() {}.getType();
 
             List<ServiceProfile> serviceList = WynntilsMod.GSON.fromJson(reader, type);
-            for (var service : serviceList) {
+            for (ServiceProfile service : serviceList) {
                 ServiceKind kind = ServiceKind.fromString(service.type);
                 if (kind != null) {
                     for (PoiLocation location : service.locations) {
@@ -182,7 +182,7 @@ public class PoiModel extends Model {
             Type type = new TypeToken<List<CombatProfileList>>() {}.getType();
 
             List<CombatProfileList> combatProfileLists = WynntilsMod.GSON.fromJson(reader, type);
-            for (var combatList : combatProfileLists) {
+            for (CombatProfileList combatList : combatProfileLists) {
                 CombatKind kind = CombatKind.fromString(combatList.type);
                 if (kind != null) {
                     for (CombatProfile profile : combatList.locations) {

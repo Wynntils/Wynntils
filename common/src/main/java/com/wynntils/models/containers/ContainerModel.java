@@ -6,6 +6,7 @@ package com.wynntils.models.containers;
 
 import com.wynntils.core.components.Model;
 import com.wynntils.core.components.Models;
+import com.wynntils.core.storage.Storage;
 import com.wynntils.core.text.StyledText;
 import com.wynntils.utils.type.Pair;
 import java.util.List;
@@ -16,6 +17,7 @@ import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
 import net.minecraft.client.gui.screens.inventory.ContainerScreen;
 import net.minecraft.network.chat.Component;
+import net.minecraft.world.item.ItemStack;
 
 public final class ContainerModel extends Model {
     public static final Pattern ABILITY_TREE_PATTERN =
@@ -43,6 +45,7 @@ public final class ContainerModel extends Model {
     private static final Pair<Integer, Integer> TRADE_MARKET_SECONDARY_PREVIOUS_NEXT_SLOTS = new Pair<>(26, 35);
     private static final Pair<Integer, Integer> SCRAP_MENU_PREVIOUS_NEXT_SLOTS = new Pair<>(0, 8);
     private static final Pair<Integer, Integer> CONTENT_BOOK_PREVIOUS_NEXT_SLOTS = new Pair<>(65, 69);
+    private static final Pair<Integer, Integer> LOBBY_PREVIOUS_NEXT_SLOTS = new Pair<>(36, 44);
     private static final StyledText LAST_BANK_PAGE_STRING = StyledText.fromString(">§4>§c>§4>§c>");
     private static final StyledText FIRST_TRADE_MARKET_PAGE_STRING = StyledText.fromString("§bReveal Item Names");
     private static final StyledText TRADE_MARKET_TITLE = StyledText.fromString("Trade Market");
@@ -51,6 +54,11 @@ public final class ContainerModel extends Model {
     private static final StyledText SCRAP_MENU_TITLE = StyledText.fromString("Scrap Rewards");
     private static final StyledText SEASKIPPER_TITLE = StyledText.fromString("V.S.S. Seaskipper");
     private static final StyledText CONTENT_BOOK_TITLE = StyledText.fromString("§f\uE000\uE072");
+    private static final StyledText LOBBY_TITLE = StyledText.fromString("Wynncraft Servers");
+
+    private final Storage<Integer> finalBankPage = new Storage<>(21);
+
+    public static final int LAST_BANK_PAGE_SLOT = 8;
 
     public ContainerModel() {
         super(List.of());
@@ -68,17 +76,36 @@ public final class ContainerModel extends Model {
         return type.equals(BANK_NAME);
     }
 
+    public int getCurrentBankPage(Screen screen) {
+        Matcher matcher = StyledText.fromComponent(screen.getTitle()).getMatcher(PERSONAL_STORAGE_PATTERN);
+        if (!matcher.matches()) return 0;
+
+        return Integer.parseInt(matcher.group(1));
+    }
+
     /**
      * @return True if the page is the last page in a Bank, Block Bank, or Misc Bucket
      */
     public boolean isLastBankPage(Screen screen) {
         return (isBankScreen(screen)
                         || isBlockBankScreen(screen)
-                        || isMiscBucketScreen(screen)
-                        || isBookshelfScreen(screen))
+                        || isBookshelfScreen(screen)
+                        || isMiscBucketScreen(screen))
                 && screen instanceof ContainerScreen cs
-                && StyledText.fromComponent(cs.getMenu().getSlot(8).getItem().getHoverName())
-                        .endsWith(LAST_BANK_PAGE_STRING);
+                && isItemIndicatingLastBankPage(
+                        cs.getMenu().getSlot(LAST_BANK_PAGE_SLOT).getItem());
+    }
+
+    public boolean isItemIndicatingLastBankPage(ItemStack item) {
+        return StyledText.fromComponent(item.getHoverName()).endsWith(LAST_BANK_PAGE_STRING);
+    }
+
+    public void updateFinalBankPage(int newFinalPage) {
+        finalBankPage.store(newFinalPage);
+    }
+
+    public int getFinalBankPage() {
+        return finalBankPage.get();
     }
 
     public boolean isGuildBankScreen(Screen screen) {
@@ -115,20 +142,20 @@ public final class ContainerModel extends Model {
         return type.equals(BLOCK_BANK_NAME);
     }
 
-    public boolean isMiscBucketScreen(Screen screen) {
-        Matcher matcher = StyledText.fromComponent(screen.getTitle()).getMatcher(PERSONAL_STORAGE_PATTERN);
-        if (!matcher.matches()) return false;
-
-        String type = matcher.group(2);
-        return type.equals(MISC_BUCKET_NAME);
-    }
-
     public boolean isBookshelfScreen(Screen screen) {
         Matcher matcher = StyledText.fromComponent(screen.getTitle()).getMatcher(PERSONAL_STORAGE_PATTERN);
         if (!matcher.matches()) return false;
 
         String type = matcher.group(2);
         return type.equals(BOOKSHELF_NAME);
+    }
+
+    public boolean isMiscBucketScreen(Screen screen) {
+        Matcher matcher = StyledText.fromComponent(screen.getTitle()).getMatcher(PERSONAL_STORAGE_PATTERN);
+        if (!matcher.matches()) return false;
+
+        String type = matcher.group(2);
+        return type.equals(MISC_BUCKET_NAME);
     }
 
     public boolean isScrapMenuScreen(Screen screen) {
@@ -140,6 +167,11 @@ public final class ContainerModel extends Model {
     public boolean isContentBook(Screen screen) {
         if (!(screen instanceof ContainerScreen cs)) return false;
         return StyledText.fromComponent(cs.getTitle()).equals(CONTENT_BOOK_TITLE);
+    }
+
+    public boolean isLobbyScreen(Screen screen) {
+        if (!(screen instanceof ContainerScreen cs)) return false;
+        return StyledText.fromComponent(cs.getTitle()).equals(LOBBY_TITLE);
     }
 
     public boolean isLootChest(Screen screen) {
@@ -178,9 +210,9 @@ public final class ContainerModel extends Model {
         }
 
         if (Models.Container.isBankScreen(gui)
-                || Models.Container.isMiscBucketScreen(gui)
                 || Models.Container.isBlockBankScreen(gui)
-                || Models.Container.isBookshelfScreen(gui)) {
+                || Models.Container.isBookshelfScreen(gui)
+                || Models.Container.isMiscBucketScreen(gui)) {
             if (!scrollUp && Models.Container.isLastBankPage(gui)) return null;
 
             return BANK_PREVIOUS_NEXT_SLOTS;
@@ -206,6 +238,10 @@ public final class ContainerModel extends Model {
 
         if (Models.Container.isContentBook(gui)) {
             return CONTENT_BOOK_PREVIOUS_NEXT_SLOTS;
+        }
+
+        if (Models.Container.isLobbyScreen(gui)) {
+            return LOBBY_PREVIOUS_NEXT_SLOTS;
         }
 
         return null;

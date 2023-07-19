@@ -1,7 +1,7 @@
 plugins {
     id "architectury-plugin" version "${architectury_plugin_version}"
     id "dev.architectury.loom" version "${architectury_loom_version}" apply false
-    id "io.github.juuxel.loom-quiltflower" version "${loom_quiltflower_version}" apply false
+    id "io.github.juuxel.loom-vineflower" version "${loom_vineflower_version}" apply false
     id "com.diffplug.spotless" version "${spotless_version}"
 }
 
@@ -20,7 +20,7 @@ version = "0.0.3-SNAPSHOT"
 
 subprojects {
     apply plugin: "dev.architectury.loom"
-    apply plugin: "io.github.juuxel.loom-quiltflower"
+    apply plugin: "io.github.juuxel.loom-vineflower"
 
     repositories {
         maven { url = "https://pkgs.dev.azure.com/djtheredstoner/DevAuth/_packaging/public/maven/v1" }
@@ -106,6 +106,9 @@ allprojects {
                 if (it =~ /\nimport org\.jetbrains\.annotations\./) {
                     throw new AssertionError("Do not use IntelliJ annotations. 'spotlessApply' cannot resolve this issue.")
                 }
+            }
+            custom "No empty line after opening curly brace", {
+                it.replaceAll(/\{\n\n/, '{\n')
             }
             licenseHeader "/*\n" +
                     " * Copyright © Wynntils \$YEAR.\n" +

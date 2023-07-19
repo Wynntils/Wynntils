@@ -15,6 +15,7 @@ import com.wynntils.core.features.properties.StartDisabled;
 import com.wynntils.core.keybinds.KeyBindManager;
 import com.wynntils.core.mod.CrashReportManager;
 import com.wynntils.core.mod.type.CrashType;
+import com.wynntils.features.DiscordRichPresenceFeature;
 import com.wynntils.features.GammabrightFeature;
 import com.wynntils.features.LootrunFeature;
 import com.wynntils.features.SilencerFeature;
@@ -56,6 +57,7 @@ import com.wynntils.features.embellishments.MythicFoundSoundFeature;
 import com.wynntils.features.embellishments.WybelSoundFeature;
 import com.wynntils.features.inventory.BulkBuyFeature;
 import com.wynntils.features.inventory.ContainerSearchFeature;
+import com.wynntils.features.inventory.CustomBankPagesFeature;
 import com.wynntils.features.inventory.DurabilityArcFeature;
 import com.wynntils.features.inventory.EmeraldPouchFillArcFeature;
 import com.wynntils.features.inventory.EmeraldPouchHotkeyFeature;
@@ -210,6 +212,7 @@ public final class FeatureManager extends Manager {
         // region inventory
         registerFeature(new BulkBuyFeature());
         registerFeature(new ContainerSearchFeature());
+        registerFeature(new CustomBankPagesFeature());
         registerFeature(new DurabilityArcFeature());
         registerFeature(new EmeraldPouchFillArcFeature());
         registerFeature(new EmeraldPouchHotkeyFeature());
@@ -309,6 +312,7 @@ public final class FeatureManager extends Manager {
         // endregion
 
         // region uncategorized
+        registerFeature(new DiscordRichPresenceFeature());
         registerFeature(new GammabrightFeature());
         registerFeature(new SilencerFeature());
         registerFeature(new TerritoryDefenseMessageFeature());

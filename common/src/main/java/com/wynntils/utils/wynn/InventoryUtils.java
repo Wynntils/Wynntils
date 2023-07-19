@@ -65,8 +65,8 @@ public final class InventoryUtils {
         if (firstItems.size() != secondItems.size()) return false;
 
         for (int i = 0; i < firstItems.size(); i++) {
-            var newItem = firstItems.get(i);
-            var oldItem = secondItems.get(i);
+            ItemStack newItem = firstItems.get(i);
+            ItemStack oldItem = secondItems.get(i);
             if (!newItem.getItem().equals(oldItem.getItem())
                     || newItem.getDamageValue() != oldItem.getDamageValue()
                     || newItem.getCount() != oldItem.getCount()
