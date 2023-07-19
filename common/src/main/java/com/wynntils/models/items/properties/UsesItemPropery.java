@@ -9,6 +9,7 @@ import com.wynntils.utils.type.CappedValue;
 public interface UsesItemPropery extends CountedItemProperty {
     CappedValue getUses();
 
+    @Override
     default int getCount() {
         CappedValue value = getUses();
         if (value == null) return 0;

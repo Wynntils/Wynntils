@@ -47,6 +47,7 @@ public class HealthSegment implements ActionBarSegment {
         return health;
     }
 
+    @Override
     public boolean isHidden() {
         return hidden;
     }
