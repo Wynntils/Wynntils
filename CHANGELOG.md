@@ -1,9 +1,21 @@
+## [0.0.3-alpha.164](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.163...v0.0.3-alpha.164) (2023-07-19)
+
+
+### New Features
+
+* TM price match buttons ([#1775](https://github.com/Wynntils/Artemis/issues/1775)) ([ce73568](https://github.com/Wynntils/Artemis/commit/ce735683127a6080b850dc25629ea7b856e0aedf))
+
 ## [0.0.3-alpha.163](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.162...v0.0.3-alpha.163) (2023-07-19)
 
 
 ### New Features
 
 * Add sort button to discoveries, prepare quest book redesign ([#1778](https://github.com/Wynntils/Artemis/issues/1778)) ([a46d00f](https://github.com/Wynntils/Artemis/commit/a46d00fd8c5e521382445f6ba5e5bedb185ac372))
+
+
+### Miscellaneous Chores
+
+* **release:** v0.0.3-alpha.163 [skip ci] ([01716a0](https://github.com/Wynntils/Artemis/commit/01716a0d5b1430f527a31e8bf9649d0c121867f3))
 
 ## [0.0.3-alpha.162](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.161...v0.0.3-alpha.162) (2023-07-19)
 
@@ -40,16 +52,4 @@
 ### Miscellaneous Chores
 
 * **release:** v0.0.3-alpha.160 [skip ci] ([785e797](https://github.com/Wynntils/Artemis/commit/785e797ac6d0f8b3a997cbaef8a90a978c2550f7))
-
-## [0.0.3-alpha.159](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.158...v0.0.3-alpha.159) (2023-07-19)
-
-
-### Bug Fixes
-
-* Fix tooltip Z levels in settings screen ([#1783](https://github.com/Wynntils/Artemis/issues/1783)) ([10742cf](https://github.com/Wynntils/Artemis/commit/10742cf5f6147a462e59ea8f4c0f527532ad94ff))
-
-
-### Miscellaneous Chores
-
-* **release:** v0.0.3-alpha.159 [skip ci] ([6103066](https://github.com/Wynntils/Artemis/commit/61030663cd5a37173086234a70afb11de0e526f3))
 
