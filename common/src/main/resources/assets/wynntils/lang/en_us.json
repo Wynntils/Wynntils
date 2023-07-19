@@ -1695,7 +1695,6 @@
   "screens.wynntils.wynntilsGuides.screenDescription": "Here you can see all the guides Wynntils has. These guides usually show all the items of a specific category.",
   "screens.wynntils.wynntilsMenu.configs.description": "Change the settings the way you want.",
   "screens.wynntils.wynntilsMenu.configs.name": "Configuration",
-  "screens.wynntils.wynntilsMenu.description": "Welcome to Wynntils! You can see your statistics on the right or select one of the options above for more features.",
   "screens.wynntils.wynntilsMenu.leftClickToSelect": "Left click to select",
   "screens.wynntils.wynntilsMenu.name": "Wynntils Menu",
   "screens.wynntils.wynntilsMenu.overlayConfig.description": "Enable or disable and change the positions and sizes of various Wynntils overlays.",
