@@ -1,9 +1,21 @@
+## [0.0.3-alpha.163](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.162...v0.0.3-alpha.163) (2023-07-19)
+
+
+### New Features
+
+* Add sort button to discoveries, prepare quest book redesign ([#1778](https://github.com/Wynntils/Artemis/issues/1778)) ([a46d00f](https://github.com/Wynntils/Artemis/commit/a46d00fd8c5e521382445f6ba5e5bedb185ac372))
+
 ## [0.0.3-alpha.162](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.161...v0.0.3-alpha.162) (2023-07-19)
 
 
 ### New Features
 
 * Add GatheringCooldownOverlayFeature and GatheringCooldownFunction ([#1774](https://github.com/Wynntils/Artemis/issues/1774)) ([693c118](https://github.com/Wynntils/Artemis/commit/693c1186fcc0c27d9e94c8b6777b46e0855a592b))
+
+
+### Miscellaneous Chores
+
+* **release:** v0.0.3-alpha.162 [skip ci] ([7ded532](https://github.com/Wynntils/Artemis/commit/7ded532038ce8b878ef64a50586c253e9c45e5f3))
 
 ## [0.0.3-alpha.161](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.160...v0.0.3-alpha.161) (2023-07-19)
 
@@ -40,16 +52,4 @@
 ### Miscellaneous Chores
 
 * **release:** v0.0.3-alpha.159 [skip ci] ([6103066](https://github.com/Wynntils/Artemis/commit/61030663cd5a37173086234a70afb11de0e526f3))
-
-## [0.0.3-alpha.158](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.157...v0.0.3-alpha.158) (2023-07-19)
-
-
-### Bug Fixes
-
-* Do not register clicks outside displayed config button ([#1687](https://github.com/Wynntils/Artemis/issues/1687)) ([34b9bf2](https://github.com/Wynntils/Artemis/commit/34b9bf25da50eb2aef6b7a61ef79757bb222c349))
-
-
-### Miscellaneous Chores
-
-* **release:** v0.0.3-alpha.158 [skip ci] ([b99871d](https://github.com/Wynntils/Artemis/commit/b99871dad536efa5136fd106872e77b8784d4af1))
 
