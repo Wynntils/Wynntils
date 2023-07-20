@@ -5,6 +5,7 @@
 package com.wynntils.models.mapdata;
 
 import com.wynntils.core.components.Model;
+import com.wynntils.models.mapdata.providers.LocalProvider;
 import com.wynntils.models.mapdata.providers.MapDataProvider;
 import com.wynntils.models.mapdata.providers.builtin.CategoriesProvider;
 import com.wynntils.models.mapdata.providers.builtin.CharacterProvider;
@@ -21,7 +22,7 @@ import java.util.stream.Stream;
 
 public class MapDataModel extends Model {
     private final List<MapDataProvider> providers =
-            List.of(new CategoriesProvider(), new CharacterProvider(), new MapIconsProvider());
+            List.of(new CategoriesProvider(), new CharacterProvider(), new MapIconsProvider(), new LocalProvider());
 
     public MapDataModel() {
         super(List.of());

@@ -7,26 +7,26 @@ package com.wynntils.models.mapdata.providers;
 import com.wynntils.models.mapdata.type.MapFeatureCategory;
 import com.wynntils.models.mapdata.type.attributes.MapFeatureIcon;
 import com.wynntils.models.mapdata.type.features.MapFeature;
+import java.util.List;
 import java.util.stream.Stream;
 
-public class LocalProvider implements MapDataProvider {
-    // per-account, per-character or shared
-    // can be added just from disk, or downloaded from an url
-
-    JsonProviderLoader providerLoader = new JsonProviderLoader();
+public class JsonProvider implements MapDataProvider {
+    private List<MapFeature> features;
+    private List<MapFeatureCategory> categories;
+    private List<MapFeatureIcon> icons;
 
     @Override
     public Stream<MapFeature> getFeatures() {
-        return providerLoader.provider.getFeatures();
+        return features.stream();
     }
 
     @Override
     public Stream<MapFeatureCategory> getCategories() {
-        return providerLoader.provider.getCategories();
+        return categories.stream();
     }
 
     @Override
     public Stream<MapFeatureIcon> getIcons() {
-        return providerLoader.provider.getIcons();
+        return icons.stream();
     }
 }
