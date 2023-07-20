@@ -2,8 +2,9 @@
  * Copyright © Wynntils 2023.
  * This file is released under AGPLv3. See LICENSE for full license details.
  */
-package com.wynntils.models.mapdata.providers;
+package com.wynntils.models.mapdata.providers.json;
 
+import com.wynntils.models.mapdata.providers.MapDataProvider;
 import com.wynntils.models.mapdata.type.MapFeatureCategory;
 import com.wynntils.models.mapdata.type.attributes.MapFeatureIcon;
 import com.wynntils.models.mapdata.type.features.MapFeature;

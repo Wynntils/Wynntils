@@ -2,7 +2,7 @@
  * Copyright © Wynntils 2023.
  * This file is released under AGPLv3. See LICENSE for full license details.
  */
-package com.wynntils.models.mapdata.providers;
+package com.wynntils.models.mapdata.providers.json;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -45,7 +45,7 @@ public class JsonProviderLoader {
             .registerTypeHierarchyAdapter(CustomColor.class, new CustomColor.CustomColorSerializer())
             .registerTypeAdapterFactory(new JsonManager.EnumTypeAdapterFactory())
             .create();
-    JsonProvider provider;
+    private JsonProvider provider;
 
     public JsonProviderLoader() {
         loadTest();
@@ -66,6 +66,10 @@ public class JsonProviderLoader {
 
     public void loadTest() {
         loadLocalResource("mapdata.json");
+    }
+
+    public JsonProvider getProvider() {
+        return provider;
     }
 
     private static final class CategoryDeserializer implements JsonDeserializer<MapFeatureCategory> {

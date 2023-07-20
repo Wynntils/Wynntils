@@ -1,4 +1,4 @@
-package com.wynntils.models.mapdata.providers;
+package com.wynntils.models.mapdata.providers.json;
 
 import com.wynntils.models.mapdata.type.attributes.MapFeatureIcon;
 import net.minecraft.resources.ResourceLocation;
