@@ -40,17 +40,22 @@ public class CustomBankPagesFeature extends Feature {
     public final Config<String> bankDestinations = new Config<>("1,5,9,13,17,21");
 
     @RegisterConfig
+    public final Config<String> blockBankDestinations = new Config<>("1,3,5,8,10,12");
+
+    @RegisterConfig
     public final Config<String> bookshelfDestinations = new Config<>("1,3,4,6,8,10");
 
     @RegisterConfig
     public final Config<String> miscBucketDestinations = new Config<>("1,3,4,6,8,10");
 
     private static final int MAX_BANK_PAGES = 21;
+    private static final int MAX_BLOCK_BANK_PAGES = 12;
     private static final int MAX_HOUSING_CONTAINER_PAGES = 10;
     private static final int MAX_DESTINATIONS = 6;
     private static final int NEXT_PAGE_SLOT = 8;
     private static final int PREVIOUS_PAGE_SLOT = 17;
     private static final List<Integer> BUTTON_SLOTS = List.of(7, 16, 25, 34, 43, 52);
+    private static final List<Integer> BLOCK_BANK_DESTINATIONS = List.of(1, 3, 5, 8, 10, 12);
     private static final List<Integer> HOUSING_DEFAULT_DESTINATIONS = List.of(1, 3, 4, 6, 8, 10);
     private static final List<Integer> QUICK_JUMP_DESTINATIONS = List.of(1, 5, 9, 13, 17, 21);
 
@@ -68,6 +73,9 @@ public class CustomBankPagesFeature extends Feature {
         if (Models.Container.isBankScreen(screen)) {
             currentContainer = SearchableContainerType.BANK;
             lastPage = Models.Container.getFinalBankPage();
+        } else if (Models.Container.isBlockBankScreen(screen)) {
+            currentContainer = SearchableContainerType.BLOCK_BANK;
+            lastPage = Models.Container.getFinalBlockBankPage();
         } else if (Models.Container.isBookshelfScreen(screen)) {
             currentContainer = SearchableContainerType.BOOKSHELF;
             lastPage = Models.Container.getFinalBookshelfPage();
@@ -99,6 +107,7 @@ public class CustomBankPagesFeature extends Feature {
 
         switch (currentContainer) {
             case BANK -> configDestinations = bankDestinations.get();
+            case BLOCK_BANK -> configDestinations = blockBankDestinations.get();
             case BOOKSHELF -> configDestinations = bookshelfDestinations.get();
             case MISC_BUCKET -> configDestinations = miscBucketDestinations.get();
             default -> {
@@ -111,6 +120,7 @@ public class CustomBankPagesFeature extends Feature {
         if (customJumpDestinations == null) {
             switch (currentContainer) {
                 case BANK -> customJumpDestinations = QUICK_JUMP_DESTINATIONS;
+                case BLOCK_BANK -> customJumpDestinations = BLOCK_BANK_DESTINATIONS;
                 case BOOKSHELF, MISC_BUCKET -> customJumpDestinations = HOUSING_DEFAULT_DESTINATIONS;
             }
         }
@@ -169,6 +179,7 @@ public class CustomBankPagesFeature extends Feature {
         if (Models.Container.isItemIndicatingLastBankPage(e.getItems().get(Models.Container.LAST_BANK_PAGE_SLOT))) {
             switch (currentContainer) {
                 case BANK -> Models.Container.updateFinalBankPage(currentPage);
+                case BLOCK_BANK -> Models.Container.updateFinalBlockBankPage(currentPage);
                 case BOOKSHELF -> Models.Container.updateFinalBookshelfPage(currentPage);
                 case MISC_BUCKET -> Models.Container.updateFinalMiscBucketPage(currentPage);
             }
@@ -251,8 +262,26 @@ public class CustomBankPagesFeature extends Feature {
         String valueString = (String) configHolder.getValue();
         String fieldName = configHolder.getFieldName();
 
-        SearchableContainerType containerType =
-                fieldName.equals("bankDestinations") ? SearchableContainerType.BANK : SearchableContainerType.BOOKSHELF;
+        SearchableContainerType containerType = null;
+        int maxValue = MAX_BANK_PAGES;
+
+        switch (fieldName) {
+            case "bankDestinations" -> {
+                containerType = SearchableContainerType.BANK;
+                maxValue = MAX_BANK_PAGES;
+            }
+            case "blockBankDestinations" -> {
+                containerType = SearchableContainerType.BLOCK_BANK;
+                maxValue = MAX_BLOCK_BANK_PAGES;
+            }
+            case "bookshelfDestinations", "miscBucketDestinations" -> {
+                containerType = SearchableContainerType.BOOKSHELF;
+                maxValue = MAX_HOUSING_CONTAINER_PAGES;
+            }
+            default -> {
+                return;
+            }
+        }
 
         List<Integer> originalValues = parseStringToDestinations(valueString, containerType);
 
@@ -260,8 +289,6 @@ public class CustomBankPagesFeature extends Feature {
             configHolder.setValue(configHolder.getDefaultValue());
             return;
         }
-
-        int maxValue = fieldName.equals("bankDestinations") ? MAX_BANK_PAGES : MAX_HOUSING_CONTAINER_PAGES;
 
         List<Integer> newValues = modifyJumpValues(originalValues, maxValue);
 
@@ -284,9 +311,16 @@ public class CustomBankPagesFeature extends Feature {
 
             if (destinations.size() < MAX_DESTINATIONS) {
                 int startIndex = destinations.size();
-                List<Integer> defaultValues = containerType == SearchableContainerType.BANK
-                        ? QUICK_JUMP_DESTINATIONS
-                        : HOUSING_DEFAULT_DESTINATIONS;
+                List<Integer> defaultValues = null;
+
+                switch (containerType) {
+                    case BANK -> defaultValues = QUICK_JUMP_DESTINATIONS;
+                    case BLOCK_BANK -> defaultValues = BLOCK_BANK_DESTINATIONS;
+                    case BOOKSHELF, MISC_BUCKET -> defaultValues = HOUSING_DEFAULT_DESTINATIONS;
+                    default -> {
+                        return null;
+                    }
+                }
 
                 for (int i = startIndex; i < MAX_DESTINATIONS; i++) {
                     destinations.add(defaultValues.get(i));

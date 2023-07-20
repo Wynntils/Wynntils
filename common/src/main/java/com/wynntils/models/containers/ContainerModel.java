@@ -29,9 +29,9 @@ public final class ContainerModel extends Model {
 
     private static final Pattern LOOT_CHEST_PATTERN = Pattern.compile("Loot Chest (§.)\\[.+\\]");
 
-    // Test suite: https://regexr.com/7c4qc
+    // Test suite: https://regexr.com/7hcl7
     private static final Pattern PERSONAL_STORAGE_PATTERN =
-            Pattern.compile("^§0\\[Pg\\. (\\d+)\\] §8[a-zA-Z0-9_]+'s?§0 (.*)$");
+            Pattern.compile("^§0\\[Pg\\. (\\d+)\\] §8[a-zA-Z0-9_ ]+'s?§0 (.*)$");
 
     private static final String BANK_NAME = "Bank";
     private static final String BLOCK_BANK_NAME = "Block Bank";
@@ -57,6 +57,7 @@ public final class ContainerModel extends Model {
     private static final StyledText LOBBY_TITLE = StyledText.fromString("Wynncraft Servers");
 
     private final Storage<Integer> finalBankPage = new Storage<>(21);
+    private final Storage<Integer> finalBlockBankPage = new Storage<>(12);
     private final Storage<Integer> finalBookshelfPage = new Storage<>(10);
     private final Storage<Integer> finalMiscBucketPage = new Storage<>(10);
 
@@ -91,6 +92,7 @@ public final class ContainerModel extends Model {
     public boolean isLastBankPage(Screen screen) {
         return (isBankScreen(screen)
                         || isBlockBankScreen(screen)
+                        || isBlockBankScreen(screen)
                         || isBookshelfScreen(screen)
                         || isMiscBucketScreen(screen))
                 && screen instanceof ContainerScreen cs
@@ -99,7 +101,8 @@ public final class ContainerModel extends Model {
     }
 
     public boolean isItemIndicatingLastBankPage(ItemStack item) {
-        return StyledText.fromComponent(item.getHoverName()).endsWith(LAST_BANK_PAGE_STRING);
+        return StyledText.fromComponent(item.getHoverName()).endsWith(LAST_BANK_PAGE_STRING)
+                || item.getHoverName().getString().equals(" ");
     }
 
     public void updateFinalBankPage(int newFinalPage) {
@@ -108,6 +111,16 @@ public final class ContainerModel extends Model {
 
     public int getFinalBankPage() {
         return finalBankPage.get();
+    }
+
+    public void updateFinalBlockBankPage(int newFinalPage) {
+        if (newFinalPage > finalBlockBankPage.get()) {
+            finalBlockBankPage.store(newFinalPage);
+        }
+    }
+
+    public int getFinalBlockBankPage() {
+        return finalBlockBankPage.get();
     }
 
     public void updateFinalBookshelfPage(int newFinalPage) {
