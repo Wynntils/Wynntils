@@ -17,7 +17,7 @@
   ],
   "features": [
     {
-      "category": "magicus.demo.local",
+      "category": "magicus:demo:local",
       "id": "loot-chest-1",
       "location": {
         "x": -577,
@@ -31,7 +31,7 @@
         "label": "Loot Chest #2 overridden red",
         "labelColor": "#ff0000"
       },
-      "category": "magicus.demo.local",
+      "category": "magicus:demo:local",
       "id": "loot-chest-2",
       "location": {
         "x": -588,
@@ -45,7 +45,7 @@
         "label": "Player Added #1 overridden red, shorter category",
         "labelColor": "#ff0000"
       },
-      "category": "magicus.demo",
+      "category": "magicus:demo",
       "id": "player-added-1",
       "location": {
         "x": 542,
@@ -60,7 +60,7 @@
         "labelColor": "#0000ff",
         "priority": 500
       },
-      "category": "magicus.demo.local",
+      "category": "magicus:demo:local",
       "id": "player-added-2",
       "location": {
         "x": 336,
@@ -74,7 +74,7 @@
         "labelColor": "#00ffff",
         "priority": 500
       },
-      "category": "magicus.demo.local",
+      "category": "magicus:demo:local",
       "id": "player-added-3-no-label-aqua",
       "location": {
         "x": 724,
