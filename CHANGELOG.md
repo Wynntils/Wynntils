@@ -1,9 +1,21 @@
+## [0.0.3-alpha.165](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.164...v0.0.3-alpha.165) (2023-07-20)
+
+
+### Bug Fixes
+
+* Highest buy offer tooltip ([#1786](https://github.com/Wynntils/Artemis/issues/1786)) ([70ab410](https://github.com/Wynntils/Artemis/commit/70ab41087142ec01be44b56627405f5c1d91931f))
+
 ## [0.0.3-alpha.164](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.163...v0.0.3-alpha.164) (2023-07-19)
 
 
 ### New Features
 
 * TM price match buttons ([#1775](https://github.com/Wynntils/Artemis/issues/1775)) ([ce73568](https://github.com/Wynntils/Artemis/commit/ce735683127a6080b850dc25629ea7b856e0aedf))
+
+
+### Miscellaneous Chores
+
+* **release:** v0.0.3-alpha.164 [skip ci] ([5993f35](https://github.com/Wynntils/Artemis/commit/5993f3531c789a9682210fe3b7c0e777f95e64d0))
 
 ## [0.0.3-alpha.163](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.162...v0.0.3-alpha.163) (2023-07-19)
 
@@ -40,16 +52,4 @@
 ### Code Refactoring
 
 * Cleanups suggested by IntelliJ ([#1782](https://github.com/Wynntils/Artemis/issues/1782)) ([1eb47ae](https://github.com/Wynntils/Artemis/commit/1eb47aefa2696ef13cc266d0f8867ac2938cdee8))
-
-## [0.0.3-alpha.160](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.159...v0.0.3-alpha.160) (2023-07-19)
-
-
-### New Features
-
-* Custom jump pages for bookshelf and misc bucket ([#1754](https://github.com/Wynntils/Artemis/issues/1754)) ([749e771](https://github.com/Wynntils/Artemis/commit/749e771dbbb376597545c179c19d14d0e53f5fe5))
-
-
-### Miscellaneous Chores
-
-* **release:** v0.0.3-alpha.160 [skip ci] ([785e797](https://github.com/Wynntils/Artemis/commit/785e797ac6d0f8b3a997cbaef8a90a978c2550f7))
 
