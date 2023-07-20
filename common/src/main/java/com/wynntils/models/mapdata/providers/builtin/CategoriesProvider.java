@@ -48,7 +48,7 @@ public class CategoriesProvider extends BuiltInProvider {
                 }
 
                 @Override
-                public Integer getPriority() {
+                public int getPriority() {
                     return 900;
                 }
 

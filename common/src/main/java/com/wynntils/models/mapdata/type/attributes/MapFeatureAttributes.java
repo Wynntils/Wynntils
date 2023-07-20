@@ -13,7 +13,7 @@ public interface MapFeatureAttributes {
     String getIconId();
 
     // 0-1000, 1000 is highest priority (drawn on top of everything else)
-    Integer getPriority();
+    int getPriority();
 
     MapFeatureVisibility getLabelVisibility();
 

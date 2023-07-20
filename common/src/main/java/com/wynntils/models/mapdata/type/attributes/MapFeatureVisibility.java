@@ -4,7 +4,11 @@
  */
 package com.wynntils.models.mapdata.type.attributes;
 
-public class MapFeatureVisibility {
+public enum MapFeatureVisibility {
+    ALWAYS,
+    NEVER
+
+    // FIXME: This needs to be more complex, and contain (at least):
     // always
     // never
     // below zoom: first visible at, fully visible at

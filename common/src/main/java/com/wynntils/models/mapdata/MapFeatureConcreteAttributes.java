@@ -30,7 +30,7 @@ public class MapFeatureConcreteAttributes implements MapFeatureAttributes {
     }
 
     @Override
-    public Integer getPriority() {
+    public int getPriority() {
         return Models.MapData.getFeatureAttribute(feature, MapFeatureAttributes::getPriority);
     }
 
