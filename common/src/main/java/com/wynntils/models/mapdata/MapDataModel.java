@@ -100,9 +100,26 @@ public class MapDataModel extends Model {
     }
 
     public MapFeatureIcon getIcon(String iconId) {
+        if (iconId.equals(MapFeatureIcon.NO_ICON_ID)) {
+            // should return null but we cant handle that
+            // FIXME
+            Stream<MapFeatureIcon> allIcons = providers.stream().flatMap(MapDataProvider::getIcons);
+            MapFeatureIcon icon = allIcons.filter(i -> i.getIconId().equals("wynntils:icon:waypoint"))
+                    .findFirst()
+                    .orElse(null);
+            return icon;
+        }
+
         Stream<MapFeatureIcon> allIcons = providers.stream().flatMap(MapDataProvider::getIcons);
         MapFeatureIcon icon =
                 allIcons.filter(i -> i.getIconId().equals(iconId)).findFirst().orElse(null);
+
+        if (icon == null) {
+            icon = allIcons.filter(i -> i.getIconId().equals("wynntils:icon:waypoint"))
+                    .findFirst()
+                    .orElse(null);
+            return icon;
+        }
         return icon;
     }
 }

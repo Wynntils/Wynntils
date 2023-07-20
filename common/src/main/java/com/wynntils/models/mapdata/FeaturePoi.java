@@ -13,14 +13,18 @@ import com.wynntils.models.mapdata.type.features.MapFeature;
 import com.wynntils.models.mapdata.type.features.MapLocation;
 import com.wynntils.services.map.pois.Poi;
 import com.wynntils.services.map.type.DisplayPriority;
+import com.wynntils.utils.colors.CommonColors;
+import com.wynntils.utils.colors.CustomColor;
 import com.wynntils.utils.mc.type.PoiLocation;
 import com.wynntils.utils.render.FontRenderer;
 import com.wynntils.utils.render.buffered.BufferedRenderUtils;
 import com.wynntils.utils.render.type.HorizontalAlignment;
+import com.wynntils.utils.render.type.TextShadow;
 import com.wynntils.utils.render.type.VerticalAlignment;
 import net.minecraft.client.renderer.MultiBufferSource;
 
 public class FeaturePoi implements Poi {
+    public static final String FALLBACK_ICON_ID = "wynntils:icon:waypoint";
     private final MapFeature feature;
     private final MapFeatureAttributes attributes;
 
@@ -63,16 +67,26 @@ public class FeaturePoi implements Poi {
             modifier *= 1.05;
         }
 
-        MapFeatureIcon icon = Models.MapData.getIcon(attributes.getIconId());
+        String iconId = attributes.getIconId();
+        if (iconId == null) {
+            iconId = FALLBACK_ICON_ID;
+        }
+        ;
+
+        MapFeatureIcon icon = Models.MapData.getIcon(iconId);
 
         float width = icon.width() * modifier;
         float height = icon.height() * modifier;
 
+        CustomColor iconColor = attributes.getIconColor();
+        if (iconColor == null) {
+            iconColor = CommonColors.GRAY;
+        }
         BufferedRenderUtils.drawColoredTexturedRect(
                 poseStack,
                 bufferSource,
                 icon.getResourceLocation(),
-                attributes.getIconColor(),
+                iconColor,
                 this.getIconAlpha(mapZoom),
                 renderX - width / 2,
                 renderY - height / 2,
@@ -85,16 +99,24 @@ public class FeaturePoi implements Poi {
 
             poseStack.pushPose();
 
+            CustomColor labelColor = attributes.getLabelColor();
+            if (labelColor == null) {
+                labelColor = CommonColors.GRAY;
+            }
+            TextShadow labelShadow = attributes.getLabelShadow();
+            if (labelShadow == null) {
+                labelShadow = TextShadow.NONE;
+            }
             FontRenderer.getInstance()
                     .renderText(
                             poseStack,
                             StyledText.fromString(attributes.getLabel()),
                             renderX,
                             15 + renderY,
-                            attributes.getLabelColor(),
+                            labelColor,
                             HorizontalAlignment.CENTER,
                             VerticalAlignment.MIDDLE,
-                            attributes.getLabelShadow());
+                            labelShadow);
 
             poseStack.popPose();
         }
@@ -107,14 +129,20 @@ public class FeaturePoi implements Poi {
 
     @Override
     public int getWidth(float mapZoom, float scale) {
-        MapFeatureIcon icon = Models.MapData.getIcon(attributes.getIconId());
+        String iconId = attributes.getIconId();
+        if (iconId == null) return 32;
+
+        MapFeatureIcon icon = Models.MapData.getIcon(iconId);
 
         return (int) (icon.width() * scale);
     }
 
     @Override
     public int getHeight(float mapZoom, float scale) {
-        MapFeatureIcon icon = Models.MapData.getIcon(attributes.getIconId());
+        String iconId = attributes.getIconId();
+        if (iconId == null) return 32;
+
+        MapFeatureIcon icon = Models.MapData.getIcon(iconId);
 
         return (int) (icon.height() * scale);
     }
