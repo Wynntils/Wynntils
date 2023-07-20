@@ -14,7 +14,7 @@ public class LocalProvider implements MapDataProvider {
     // per-account, per-character or shared
     // can be added just from disk, or downloaded from an url
 
-    JsonProviderLoader providerLoader = new JsonProviderLoader();
+    JsonProviderLoader providerLoader = new JsonProviderLoader("mapdata.json");
 
     @Override
     public Stream<MapFeature> getFeatures() {

@@ -12,10 +12,10 @@ import com.wynntils.models.mapdata.type.features.MapFeature;
 import com.wynntils.utils.colors.CustomColor;
 import com.wynntils.utils.render.type.TextShadow;
 
-public class MapFeatureConcreteAttributes implements MapFeatureAttributes {
+public class MapFeatureInheritedAttributes implements MapFeatureAttributes {
     private final MapFeature feature;
 
-    public MapFeatureConcreteAttributes(MapFeature feature) {
+    public MapFeatureInheritedAttributes(MapFeature feature) {
         this.feature = feature;
     }
 

@@ -13,6 +13,20 @@
       },
       "id": "magicus:demo:local",
       "name": "magicus demo of local json"
+    },
+    {
+      "attributes": {
+        "icon": "magicus",
+        "iconColor": "#000000",
+        "iconVisibility": "never",
+        "label": "Local Demo",
+        "labelColor": "#000000",
+        "labelShadow": "outline",
+        "labelVisibility": "never",
+        "priority": 250
+      },
+      "id": "magicus",
+      "name": "magicus top level"
     }
   ],
   "features": [

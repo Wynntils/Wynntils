@@ -29,7 +29,7 @@ public class MapDataModel extends Model {
     }
 
     public MapFeatureAttributes getAttributes(MapFeature feature) {
-        return new MapFeatureConcreteAttributes(feature);
+        return new MapFeatureInheritedAttributes(feature);
     }
 
     public <T> T getFeatureAttribute(MapFeature feature, Function<MapFeatureAttributes, T> getter) {
@@ -115,6 +115,7 @@ public class MapDataModel extends Model {
                 allIcons.filter(i -> i.getIconId().equals(iconId)).findFirst().orElse(null);
 
         if (icon == null) {
+            allIcons = providers.stream().flatMap(MapDataProvider::getIcons);
             icon = allIcons.filter(i -> i.getIconId().equals("wynntils:icon:waypoint"))
                     .findFirst()
                     .orElse(null);
