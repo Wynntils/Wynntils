@@ -7,7 +7,7 @@
         "iconVisibility": "always",
         "label": "Local Demo",
         "labelColor": "#ffffff",
-        "labelShadow": "OUTLINE",
+        "labelShadow": "outline",
         "labelVisibility": "always",
         "priority": 500
       },

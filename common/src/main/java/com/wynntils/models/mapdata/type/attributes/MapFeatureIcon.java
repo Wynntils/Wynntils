@@ -7,6 +7,8 @@ package com.wynntils.models.mapdata.type.attributes;
 import net.minecraft.resources.ResourceLocation;
 
 public interface MapFeatureIcon {
+    String NO_ICON_ID = "none";
+
     String getIconId();
 
     ResourceLocation getResourceLocation();
