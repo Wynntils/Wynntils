@@ -17,7 +17,7 @@ import com.wynntils.core.mod.CrashReportManager;
 import com.wynntils.core.mod.type.CrashType;
 import com.wynntils.features.DiscordRichPresenceFeature;
 import com.wynntils.features.LootrunFeature;
-import com.wynntils.features.MythicFoundSoundFeature;
+import com.wynntils.features.MythicFoundFeature;
 import com.wynntils.features.TerritoryDefenseMessageFeature;
 import com.wynntils.features.chat.ChatCoordinatesFeature;
 import com.wynntils.features.chat.ChatItemFeature;
@@ -325,7 +325,7 @@ public final class FeatureManager extends Manager {
 
         // region uncategorized
         registerFeature(new DiscordRichPresenceFeature());
-        registerFeature(new MythicFoundSoundFeature());
+        registerFeature(new MythicFoundFeature());
         registerFeature(new TerritoryDefenseMessageFeature());
         // endregion
 

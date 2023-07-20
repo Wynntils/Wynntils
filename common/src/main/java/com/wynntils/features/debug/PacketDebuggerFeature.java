@@ -16,6 +16,8 @@ import java.util.List;
 import net.minecraft.network.protocol.Packet;
 import net.minecraft.network.protocol.game.ClientboundAddEntityPacket;
 import net.minecraft.network.protocol.game.ClientboundBlockUpdatePacket;
+import net.minecraft.network.protocol.game.ClientboundContainerSetContentPacket;
+import net.minecraft.network.protocol.game.ClientboundContainerSetSlotPacket;
 import net.minecraft.network.protocol.game.ClientboundForgetLevelChunkPacket;
 import net.minecraft.network.protocol.game.ClientboundKeepAlivePacket;
 import net.minecraft.network.protocol.game.ClientboundLevelChunkWithLightPacket;
@@ -33,6 +35,7 @@ import net.minecraft.network.protocol.game.ClientboundSetTimePacket;
 import net.minecraft.network.protocol.game.ClientboundTeleportEntityPacket;
 import net.minecraft.network.protocol.game.ClientboundUpdateAdvancementsPacket;
 import net.minecraft.network.protocol.game.ClientboundUpdateAttributesPacket;
+import net.minecraft.network.protocol.game.ServerboundContainerClickPacket;
 import net.minecraft.network.protocol.game.ServerboundKeepAlivePacket;
 import net.minecraft.network.protocol.game.ServerboundMovePlayerPacket;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
@@ -83,6 +86,7 @@ public class PacketDebuggerFeature extends Feature {
     public void onPacketSent(PacketSentEvent<?> e) {
         Packet<?> packet = e.getPacket();
         if (IGNORE_LIST.contains(packet.getClass())) return;
+        if (!(packet instanceof ServerboundContainerClickPacket)) return;
 
         WynntilsMod.info("SENT packet: " + describePacket(packet));
     }
@@ -91,6 +95,8 @@ public class PacketDebuggerFeature extends Feature {
     public void onPacketReceived(PacketReceivedEvent<?> e) {
         Packet<?> packet = e.getPacket();
         if (IGNORE_LIST.contains(packet.getClass())) return;
+        if (!(packet instanceof ClientboundContainerSetContentPacket)
+                && !(packet instanceof ClientboundContainerSetSlotPacket)) return;
 
         WynntilsMod.info("RECV packet: " + describePacket(packet));
     }
