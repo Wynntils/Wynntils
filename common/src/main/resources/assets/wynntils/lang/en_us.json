@@ -1714,7 +1714,6 @@
   "screens.wynntils.wynntilsGuides.screenDescription": "Here you can see all the guides Wynntils has. These guides usually show all the items of a specific category.",
   "screens.wynntils.wynntilsMenu.configs.description": "Change the settings the way you want.",
   "screens.wynntils.wynntilsMenu.configs.name": "Configuration",
-  "screens.wynntils.wynntilsMenu.description": "Welcome to Wynntils! You can see your statistics on the right or select one of the options above for more features.",
   "screens.wynntils.wynntilsMenu.leftClickToSelect": "Left click to select",
   "screens.wynntils.wynntilsMenu.name": "Wynntils Menu",
   "screens.wynntils.wynntilsMenu.overlayConfig.description": "Enable or disable and change the positions and sizes of various Wynntils overlays.",
@@ -1722,7 +1721,7 @@
   "screens.wynntils.wynntilsMenu.questBook.description": "See and pin all your currently available quests.",
   "screens.wynntils.wynntilsMenu.questBook.name": "Quest Book",
   "screens.wynntils.wynntilsMenu.userProfile": "User Profile",
-  "screens.wynntils.wynntilsQuestBook.description1": "Here you can see all quests available for you. You can also search for specific quests just by typing its name. You can go to the next page by clicking the two buttons or scrolling your mouse.",
+  "screens.wynntils.wynntilsQuestBook.description1": "Here you can see all quests available for you.",
   "screens.wynntils.wynntilsQuestBook.description2": "You can pin and unpin a quest by clicking on it.",
   "screens.wynntils.wynntilsQuestBook.dialogueHistory.description": "Click here to view your dialogue history",
   "screens.wynntils.wynntilsQuestBook.dialogueHistory.name": "Dialogue History",
@@ -1738,6 +1737,8 @@
   "screens.wynntils.wynntilsQuestBook.quests": "Quests",
   "screens.wynntils.wynntilsQuestBook.reload.description": "Reloads all quest data.",
   "screens.wynntils.wynntilsQuestBook.reload.name": "Reload Button",
+  "screens.wynntils.wynntilsQuestBook.showMiniQuests.name": "Show Mini Quests",
+  "screens.wynntils.wynntilsQuestBook.showQuests.name": "Show Quests",
   "screens.wynntils.wynntilsQuestBook.tryReload": "No quests found! Try reloading quests by pressing the button in the top right corner.",
   "utils.wynntils.component.clickToSetCompass": "Click here to set your compass to this location"
 }
