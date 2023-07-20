@@ -116,47 +116,10 @@ public final class WynntilsMenuScreen extends WynntilsMenuScreenBase {
 
         // endregion
 
-        // region Row 2: Wynntils
-        buttons.get(1)
-                .add(new WynntilsMenuButton(
-                        Texture.SETTINGS_ICON,
-                        true,
-                        settingsScreenInstance,
-                        List.of(
-                                Component.literal("[>] ")
-                                        .withStyle(ChatFormatting.GOLD)
-                                        .append(Component.translatable("screens.wynntils.wynntilsMenu.configs.name")
-                                                .withStyle(ChatFormatting.BOLD)
-                                                .withStyle(ChatFormatting.GOLD)),
-                                Component.translatable("screens.wynntils.wynntilsMenu.configs.description")
-                                        .withStyle(ChatFormatting.GRAY),
-                                Component.literal(""),
-                                Component.translatable("screens.wynntils.wynntilsMenu.leftClickToSelect")
-                                        .withStyle(ChatFormatting.GREEN))));
-        buttons.get(1)
-                .add(new WynntilsMenuButton(
-                        Texture.OVERLAYS_ICON,
-                        true,
-                        OverlaySelectionScreen.create(),
-                        List.of(
-                                Component.literal("[>] ")
-                                        .withStyle(ChatFormatting.GOLD)
-                                        .append(Component.translatable(
-                                                        "screens.wynntils.wynntilsMenu.overlayConfig.name")
-                                                .withStyle(ChatFormatting.BOLD)
-                                                .withStyle(ChatFormatting.GOLD)),
-                                Component.translatable("screens.wynntils.wynntilsMenu.overlayConfig.description")
-                                        .withStyle(ChatFormatting.GRAY),
-                                Component.literal(""),
-                                Component.translatable("screens.wynntils.wynntilsMenu.leftClickToSelect")
-                                        .withStyle(ChatFormatting.GREEN))));
-
-        // endregion
-
-        // region Row 3: Map
+        // region Row 2: Map
 
         if (Managers.Feature.getFeatureInstance(MapFeature.class).isEnabled()) {
-            buttons.get(2)
+            buttons.get(1)
                     .add(new WynntilsMenuButton(
                             Texture.MAP_ICON,
                             true,
@@ -174,7 +137,7 @@ public final class WynntilsMenuScreen extends WynntilsMenuScreenBase {
                                     Component.translatable("screens.wynntils.wynntilsMenu.leftClickToSelect")
                                             .withStyle(ChatFormatting.GREEN))));
         }
-        buttons.get(2)
+        buttons.get(1)
                 .add(new WynntilsMenuButton(
                         Texture.LOOTRUN_ICON,
                         true,
@@ -194,8 +157,8 @@ public final class WynntilsMenuScreen extends WynntilsMenuScreenBase {
 
         // endregion
 
-        // region Row 4: Guides
-        buttons.get(3)
+        // region Row 3: Guides
+        buttons.get(2)
                 .add(new WynntilsMenuButton(
                         Texture.GUIDES_ICON,
                         true,
@@ -207,6 +170,43 @@ public final class WynntilsMenuScreen extends WynntilsMenuScreenBase {
                                                 .withStyle(ChatFormatting.BOLD)
                                                 .withStyle(ChatFormatting.GOLD)),
                                 Component.translatable("screens.wynntils.wynntilsGuides.description")
+                                        .withStyle(ChatFormatting.GRAY),
+                                Component.literal(""),
+                                Component.translatable("screens.wynntils.wynntilsMenu.leftClickToSelect")
+                                        .withStyle(ChatFormatting.GREEN))));
+
+        // endregion
+
+        // region Row 4: Wynntils
+        buttons.get(3)
+                .add(new WynntilsMenuButton(
+                        Texture.SETTINGS_ICON,
+                        true,
+                        settingsScreenInstance,
+                        List.of(
+                                Component.literal("[>] ")
+                                        .withStyle(ChatFormatting.GOLD)
+                                        .append(Component.translatable("screens.wynntils.wynntilsMenu.configs.name")
+                                                .withStyle(ChatFormatting.BOLD)
+                                                .withStyle(ChatFormatting.GOLD)),
+                                Component.translatable("screens.wynntils.wynntilsMenu.configs.description")
+                                        .withStyle(ChatFormatting.GRAY),
+                                Component.literal(""),
+                                Component.translatable("screens.wynntils.wynntilsMenu.leftClickToSelect")
+                                        .withStyle(ChatFormatting.GREEN))));
+        buttons.get(3)
+                .add(new WynntilsMenuButton(
+                        Texture.OVERLAYS_ICON,
+                        true,
+                        OverlaySelectionScreen.create(),
+                        List.of(
+                                Component.literal("[>] ")
+                                        .withStyle(ChatFormatting.GOLD)
+                                        .append(Component.translatable(
+                                                        "screens.wynntils.wynntilsMenu.overlayConfig.name")
+                                                .withStyle(ChatFormatting.BOLD)
+                                                .withStyle(ChatFormatting.GOLD)),
+                                Component.translatable("screens.wynntils.wynntilsMenu.overlayConfig.description")
                                         .withStyle(ChatFormatting.GRAY),
                                 Component.literal(""),
                                 Component.translatable("screens.wynntils.wynntilsMenu.leftClickToSelect")
