@@ -38,7 +38,6 @@ import com.wynntils.utils.render.type.VerticalAlignment;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.resources.language.I18n;
@@ -359,9 +358,7 @@ public final class WynntilsQuestBookScreen extends WynntilsListScreen<QuestInfo,
     }
 
     private List<QuestInfo> getSortedQuests() {
-        List<QuestInfo> quests = showQuests ? Models.Quest.getQuests(contentSortOrder) : List.of();
-        List<QuestInfo> miniQuests = showMiniQuests ? Models.Quest.getMiniQuests(contentSortOrder) : List.of();
-        return Stream.concat(quests.stream(), miniQuests.stream()).toList();
+        return Models.Quest.getSortedQuests(contentSortOrder, showQuests, showMiniQuests);
     }
 
     private void setQuests(List<QuestInfo> quests) {

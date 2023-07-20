@@ -85,6 +85,15 @@ public final class QuestModel extends Model {
         return sortQuestInfoList(sortOrder, miniQuests);
     }
 
+    public List<QuestInfo> getSortedQuests(
+            ContentSortOrder sortOrder, boolean includeQuests, boolean includeMiniQuests) {
+        List<QuestInfo> quests = includeQuests ? this.quests : List.of();
+        List<QuestInfo> miniQuests = includeMiniQuests ? this.miniQuests : List.of();
+
+        return sortQuestInfoList(
+                sortOrder, Stream.concat(quests.stream(), miniQuests.stream()).toList());
+    }
+
     private List<QuestInfo> sortQuestInfoList(ContentSortOrder sortOrder, List<QuestInfo> questList) {
         // All quests are always sorted by status (available then unavailable), and then
         // the given sort order, and finally a third way if the given sort order is equal.
