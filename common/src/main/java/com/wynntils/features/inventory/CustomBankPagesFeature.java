@@ -262,8 +262,8 @@ public class CustomBankPagesFeature extends Feature {
         String valueString = (String) configHolder.getValue();
         String fieldName = configHolder.getFieldName();
 
-        SearchableContainerType containerType = null;
-        int maxValue = MAX_BANK_PAGES;
+        SearchableContainerType containerType;
+        int maxValue;
 
         switch (fieldName) {
             case "bankDestinations" -> {
@@ -311,7 +311,7 @@ public class CustomBankPagesFeature extends Feature {
 
             if (destinations.size() < MAX_DESTINATIONS) {
                 int startIndex = destinations.size();
-                List<Integer> defaultValues = null;
+                List<Integer> defaultValues;
 
                 switch (containerType) {
                     case BANK -> defaultValues = QUICK_JUMP_DESTINATIONS;
