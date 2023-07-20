@@ -67,11 +67,11 @@ public final class LootChestModel extends Model {
         if (wynnItem.isEmpty()) return;
         GearBoxItem gearBox = wynnItem.get();
         if (gearBox.getGearTier() == GearTier.MYTHIC) {
+            WynntilsMod.postEvent(new MythicFoundEvent(itemStack));
             if (gearBox.getGearType() != GearType.MASTERY_TOME) {
                 dryBoxes.store(0);
                 dryCount.store(0);
             }
-            WynntilsMod.postEvent(new MythicFoundEvent(itemStack));
         } else {
             dryBoxes.store(dryBoxes.get() + 1);
         }

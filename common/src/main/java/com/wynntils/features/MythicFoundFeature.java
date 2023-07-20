@@ -6,21 +6,29 @@ package com.wynntils.features;
 
 import com.wynntils.core.components.Models;
 import com.wynntils.core.config.Config;
+import com.wynntils.core.config.RegisterConfig;
 import com.wynntils.core.features.Feature;
 import com.wynntils.models.containers.event.MythicFoundEvent;
+import com.wynntils.models.gear.type.GearType;
+import com.wynntils.models.items.items.game.GearBoxItem;
 import com.wynntils.utils.mc.McUtils;
+import java.util.Optional;
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.sounds.SoundEvent;
+import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 
 public class MythicFoundFeature extends Feature {
     private static final ResourceLocation MYTHIC_FOUND_ID = new ResourceLocation("wynntils:misc.mythic-found");
     private static final SoundEvent MYTHIC_FOUND_SOUND = SoundEvent.createVariableRangeEvent(MYTHIC_FOUND_ID);
 
-    private final Config<Boolean> playSound = new Config<>(true);
-    private final Config<Boolean> showDryStreakMessage = new Config<>(true);
+    @RegisterConfig
+    public final Config<Boolean> playSound = new Config<>(true);
+
+    @RegisterConfig
+    public final Config<Boolean> showDryStreakMessage = new Config<>(true);
 
     @SubscribeEvent
     public void onMythicFound(MythicFoundEvent event) {
@@ -28,7 +36,11 @@ public class MythicFoundFeature extends Feature {
             McUtils.playSoundAmbient(MYTHIC_FOUND_SOUND);
         }
 
-        if (showDryStreakMessage.get()) {
+        ItemStack itemStack = event.getMythicBoxItem();
+        Optional<GearBoxItem> wynnItem = Models.Item.asWynnItem(itemStack, GearBoxItem.class);
+        if (wynnItem.isEmpty()) return;
+
+        if (showDryStreakMessage.get() && wynnItem.get().getGearType() != GearType.MASTERY_TOME) {
             McUtils.sendMessageToClient(Component.literal("Dry streak broken! Found a ")
                     .withStyle(ChatFormatting.LIGHT_PURPLE)
                     .append(event.getMythicBoxItem().getHoverName())
