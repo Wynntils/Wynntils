@@ -100,7 +100,7 @@ public class TradeMarketPriceMatchFeature extends Feature {
                     containerScreen.topPos,
                     buySellOffers.a(),
                     Component.translatable("feature.wynntils.tradeMarketPriceMatch.highestBuyOffer"),
-                    Component.translatable("feature.wynntils.tradeMarketPriceMatch.lowestSellOfferTooltip")
+                    Component.translatable("feature.wynntils.tradeMarketPriceMatch.highestBuyOfferTooltip")
                             .append(Component.literal("\n\n"))
                             .append(Component.translatable("feature.wynntils.tradeMarketPriceMatch.youReceive")
                                     .withStyle(ChatFormatting.GREEN))
