@@ -1,9 +1,21 @@
+## [0.0.3-alpha.173](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.172...v0.0.3-alpha.173) (2023-07-21)
+
+
+### Bug Fixes
+
+* Button clicks in ChatTabEditingScreen even though there isn't any button selected ([#1797](https://github.com/Wynntils/Artemis/issues/1797)) ([c8911bd](https://github.com/Wynntils/Artemis/commit/c8911bdbd23228b93419803b8d9c2d492360c322))
+
 ## [0.0.3-alpha.172](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.171...v0.0.3-alpha.172) (2023-07-21)
 
 
 ### Bug Fixes
 
 * Parse discoveries faster with a "hack" ([#1794](https://github.com/Wynntils/Artemis/issues/1794)) ([32ddede](https://github.com/Wynntils/Artemis/commit/32ddede4b9650b6acfed62d827aecf359bd9a6f7))
+
+
+### Miscellaneous Chores
+
+* **release:** v0.0.3-alpha.172 [skip ci] ([d667f83](https://github.com/Wynntils/Artemis/commit/d667f83a85ec19335541676e6afd3cf1266cc8c2))
 
 ## [0.0.3-alpha.171](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.170...v0.0.3-alpha.171) (2023-07-21)
 
@@ -40,16 +52,4 @@
 ### Miscellaneous Chores
 
 * **release:** v0.0.3-alpha.169 [skip ci] ([c1a289b](https://github.com/Wynntils/Artemis/commit/c1a289b7a8c34328d97b4d2827dbded33b9abf92))
-
-## [0.0.3-alpha.168](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.167...v0.0.3-alpha.168) (2023-07-21)
-
-
-### New Features
-
-* Add dry streak message ([#1787](https://github.com/Wynntils/Artemis/issues/1787)) ([d12c9b5](https://github.com/Wynntils/Artemis/commit/d12c9b560e7f5cf6f721a8b9dfb0704667f9a792))
-
-
-### Miscellaneous Chores
-
-* **release:** v0.0.3-alpha.168 [skip ci] ([bc5fb24](https://github.com/Wynntils/Artemis/commit/bc5fb2453eae186a1bea32b77cc67bcdcd8a6299))
 
