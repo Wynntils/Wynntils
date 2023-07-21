@@ -19,9 +19,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
-import net.minecraft.ChatFormatting;
 import net.minecraft.core.NonNullList;
-import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
@@ -196,8 +194,7 @@ public class ItemHandler extends Handler {
                 WynntilsMod.warn("Problematic item name:" + StyledText.fromComponent(itemStack.getHoverName()));
                 WynntilsMod.warn("Problematic item tags:" + itemStack.getTag());
 
-                McUtils.sendMessageToClient(Component.literal("Not all items will be properly parsed.")
-                        .withStyle(ChatFormatting.RED));
+                McUtils.sendErrorToClient("Not all items will be properly parsed.");
             }
         }
 

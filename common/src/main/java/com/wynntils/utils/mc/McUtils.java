@@ -6,6 +6,7 @@ package com.wynntils.utils.mc;
 
 import com.mojang.blaze3d.platform.Window;
 import com.wynntils.core.WynntilsMod;
+import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.Options;
 import net.minecraft.client.multiplayer.prediction.PredictiveAction;
@@ -74,6 +75,11 @@ public final class McUtils {
             return;
         }
         player().sendSystemMessage(component);
+    }
+
+    public static void sendErrorToClient(String errorMsg) {
+        WynntilsMod.warn("Chat error message sent: " + errorMsg);
+        McUtils.sendMessageToClient(Component.literal(errorMsg).withStyle(ChatFormatting.RED));
     }
 
     public static void sendPacket(Packet<?> packet) {

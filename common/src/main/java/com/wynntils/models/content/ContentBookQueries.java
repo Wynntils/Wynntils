@@ -198,8 +198,7 @@ public class ContentBookQueries {
         ScriptedContainerQuery query = ScriptedContainerQuery.builder("Toggle Content Tracking Query: " + name)
                 .onError(msg -> {
                     WynntilsMod.warn("Problem querying Content Book for tracking: " + msg);
-                    McUtils.sendMessageToClient(Component.literal("Setting tracking in Content Book failed")
-                            .withStyle(ChatFormatting.RED));
+                    McUtils.sendErrorToClient("Setting tracking in Content Book failed");
                 })
 
                 // Open compass/character menu
