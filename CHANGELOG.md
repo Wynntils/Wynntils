@@ -1,9 +1,21 @@
+## [0.0.3-alpha.172](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.171...v0.0.3-alpha.172) (2023-07-21)
+
+
+### Bug Fixes
+
+* Parse discoveries faster with a "hack" ([#1794](https://github.com/Wynntils/Artemis/issues/1794)) ([32ddede](https://github.com/Wynntils/Artemis/commit/32ddede4b9650b6acfed62d827aecf359bd9a6f7))
+
 ## [0.0.3-alpha.171](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.170...v0.0.3-alpha.171) (2023-07-21)
 
 
 ### Bug Fixes
 
 * Fix player list not rendering when overlay is disabled ([#1796](https://github.com/Wynntils/Artemis/issues/1796)) ([e4e35a3](https://github.com/Wynntils/Artemis/commit/e4e35a3614043bd8b4769fd83a5e850d888f2d15))
+
+
+### Miscellaneous Chores
+
+* **release:** v0.0.3-alpha.171 [skip ci] ([efbd00c](https://github.com/Wynntils/Artemis/commit/efbd00c0f95bfcd2d0ffb1a1741b95baa6b6a2e5))
 
 ## [0.0.3-alpha.170](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.169...v0.0.3-alpha.170) (2023-07-21)
 
@@ -40,16 +52,4 @@
 ### Miscellaneous Chores
 
 * **release:** v0.0.3-alpha.168 [skip ci] ([bc5fb24](https://github.com/Wynntils/Artemis/commit/bc5fb2453eae186a1bea32b77cc67bcdcd8a6299))
-
-## [0.0.3-alpha.167](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.166...v0.0.3-alpha.167) (2023-07-21)
-
-
-### New Features
-
-* Add custom player list overlay ([#1651](https://github.com/Wynntils/Artemis/issues/1651)) ([cb28656](https://github.com/Wynntils/Artemis/commit/cb28656da2929b0cb3f9f8eeb9a0e98acf71dab1))
-
-
-### Miscellaneous Chores
-
-* **release:** v0.0.3-alpha.167 [skip ci] ([37a668c](https://github.com/Wynntils/Artemis/commit/37a668cc5877d1843a5ddc6c19bfb7e809246325))
 
