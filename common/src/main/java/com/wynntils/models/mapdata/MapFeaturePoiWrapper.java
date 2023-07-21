@@ -24,7 +24,7 @@ import com.wynntils.utils.render.type.VerticalAlignment;
 import net.minecraft.client.renderer.MultiBufferSource;
 
 public class MapFeaturePoiWrapper implements Poi {
-    public static final String FALLBACK_ICON_ID = "wynntils:icon:waypoint";
+    public static final String FALLBACK_ICON_ID = "wynntils:icon:symbols:waypoint";
     private final MapFeature feature;
     private final MapAttributes attributes;
 

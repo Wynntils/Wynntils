@@ -43,7 +43,7 @@ public class CategoriesProvider extends AbstractMapDataProvider {
 
                 @Override
                 public String getIconId() {
-                    return "wynntils:icon:waypoint";
+                    return "wynntils:icon:symbols:waypoint";
                 }
 
                 @Override

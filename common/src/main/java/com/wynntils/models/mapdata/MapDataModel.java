@@ -99,7 +99,7 @@ public class MapDataModel extends Model {
             // should return null but we cant handle that
             // FIXME
             Stream<MapIcon> allIcons = providers.getProviders().flatMap(MapDataProvider::getIcons);
-            MapIcon icon = allIcons.filter(i -> i.getIconId().equals("wynntils:icon:waypoint"))
+            MapIcon icon = allIcons.filter(i -> i.getIconId().equals("wynntils:icon:symbols:waypoint"))
                     .findFirst()
                     .orElse(null);
             return icon;
@@ -111,7 +111,7 @@ public class MapDataModel extends Model {
 
         if (icon == null) {
             allIcons = providers.getProviders().flatMap(MapDataProvider::getIcons);
-            icon = allIcons.filter(i -> i.getIconId().equals("wynntils:icon:waypoint"))
+            icon = allIcons.filter(i -> i.getIconId().equals("wynntils:icon:symbols:waypoint"))
                     .findFirst()
                     .orElse(null);
             return icon;
