@@ -44,6 +44,9 @@ public class ContainerSearchFeature extends Feature {
     public final Config<Boolean> filterInBank = new Config<>(true);
 
     @RegisterConfig
+    public final Config<Boolean> filterInBlockBank = new Config<>(true);
+
+    @RegisterConfig
     public final Config<Boolean> filterInBookshelf = new Config<>(true);
 
     @RegisterConfig
@@ -170,6 +173,10 @@ public class ContainerSearchFeature extends Feature {
 
         if (containerType == SearchableContainerType.BANK && filterInBank.get()) {
             return SearchableContainerType.BANK;
+        }
+
+        if (containerType == SearchableContainerType.BLOCK_BANK && filterInBlockBank.get()) {
+            return SearchableContainerType.BLOCK_BANK;
         }
 
         if (containerType == SearchableContainerType.BOOKSHELF && filterInBookshelf.get()) {
