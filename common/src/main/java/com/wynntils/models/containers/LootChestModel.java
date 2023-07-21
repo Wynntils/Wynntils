@@ -24,6 +24,7 @@ import net.minecraftforge.eventbus.api.SubscribeEvent;
 public final class LootChestModel extends Model {
     private static final int LOOT_CHEST_ITEM_COUNT = 27;
 
+    private final Storage<Integer> openedChestCount = new Storage<>(0);
     private final Storage<Integer> dryCount = new Storage<>(0);
     private final Storage<Integer> dryBoxes = new Storage<>(0);
 
@@ -37,8 +38,12 @@ public final class LootChestModel extends Model {
         return dryCount.get();
     }
 
-    public Integer getDryBoxes() {
+    public int getDryBoxes() {
         return dryBoxes.get();
+    }
+
+    public int getOpenedChestCount() {
+        return openedChestCount.get();
     }
 
     @SubscribeEvent
@@ -47,6 +52,7 @@ public final class LootChestModel extends Model {
                 StyledText.fromComponent(event.getTitle()).getStringWithoutFormatting())) {
             nextExpectedLootContainerId = event.getContainerId();
 
+            openedChestCount.store(openedChestCount.get() + 1);
             dryCount.store(dryCount.get() + 1);
         }
     }
@@ -61,11 +67,11 @@ public final class LootChestModel extends Model {
         if (wynnItem.isEmpty()) return;
         GearBoxItem gearBox = wynnItem.get();
         if (gearBox.getGearTier() == GearTier.MYTHIC) {
+            WynntilsMod.postEvent(new MythicFoundEvent(itemStack));
             if (gearBox.getGearType() != GearType.MASTERY_TOME) {
                 dryBoxes.store(0);
                 dryCount.store(0);
             }
-            WynntilsMod.postEvent(new MythicFoundEvent(itemStack));
         } else {
             dryBoxes.store(dryBoxes.get() + 1);
         }
