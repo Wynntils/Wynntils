@@ -4,15 +4,15 @@
  */
 package com.wynntils.models.mapdata.type;
 
-import com.wynntils.models.mapdata.type.attributes.MapFeatureAttributes;
+import com.wynntils.models.mapdata.type.attributes.MapAttributes;
 
-public interface MapFeatureCategory {
+public interface MapCategory {
     // Required
     String getCategoryId();
 
     // Optional
-    String getDisplayName();
+    String getName();
 
     // Optional
-    MapFeatureAttributes getAttributes();
+    MapAttributes getAttributes();
 }

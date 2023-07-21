@@ -4,7 +4,7 @@
  */
 package com.wynntils.models.mapdata.providers.json;
 
-import com.wynntils.models.mapdata.type.attributes.MapFeatureAttributes;
+import com.wynntils.models.mapdata.type.attributes.MapAttributes;
 import com.wynntils.models.mapdata.type.features.MapLocation;
 import com.wynntils.utils.mc.type.Location;
 import java.util.List;
@@ -12,10 +12,10 @@ import java.util.List;
 public class JsonMapLocation implements MapLocation {
     private final String id;
     private final String category;
-    private final MapFeatureAttributes attributes;
+    private final MapAttributes attributes;
     private final Location location;
 
-    public JsonMapLocation(String id, String category, MapFeatureAttributes attributes, Location location) {
+    public JsonMapLocation(String id, String category, MapAttributes attributes, Location location) {
         this.id = id;
         this.category = category;
         this.attributes = attributes;
@@ -33,7 +33,7 @@ public class JsonMapLocation implements MapLocation {
     }
 
     @Override
-    public MapFeatureAttributes getAttributes() {
+    public MapAttributes getAttributes() {
         return attributes;
     }
 

@@ -4,11 +4,10 @@
  */
 package com.wynntils.models.mapdata.providers.builtin;
 
-import com.wynntils.models.mapdata.providers.AbstractMapDataProvider;
-import com.wynntils.models.mapdata.type.MapFeatureCategory;
-import com.wynntils.models.mapdata.type.attributes.MapFeatureAttributes;
-import com.wynntils.models.mapdata.type.attributes.MapFeatureDecoration;
-import com.wynntils.models.mapdata.type.attributes.MapFeatureVisibility;
+import com.wynntils.models.mapdata.type.MapCategory;
+import com.wynntils.models.mapdata.type.attributes.MapAttributes;
+import com.wynntils.models.mapdata.type.attributes.MapDecoration;
+import com.wynntils.models.mapdata.type.attributes.MapVisibility;
 import com.wynntils.models.mapdata.type.features.MapFeature;
 import com.wynntils.models.mapdata.type.features.MapLocation;
 import com.wynntils.utils.colors.CustomColor;
@@ -20,7 +19,7 @@ import java.util.stream.Stream;
 
 public class CharacterProvider extends AbstractMapDataProvider {
     private static final List<MapFeature> PROVIDED_FEATURES = List.of(new CharacterLocation());
-    private static final List<MapFeatureCategory> PROVIDED_CATEGORIES = List.of(new PlayersCategory());
+    private static final List<MapCategory> PROVIDED_CATEGORIES = List.of(new PlayersCategory());
 
     @Override
     public Stream<MapFeature> getFeatures() {
@@ -28,24 +27,24 @@ public class CharacterProvider extends AbstractMapDataProvider {
     }
 
     @Override
-    public Stream<MapFeatureCategory> getCategories() {
+    public Stream<MapCategory> getCategories() {
         return PROVIDED_CATEGORIES.stream();
     }
 
-    private static final class PlayersCategory implements MapFeatureCategory {
+    private static final class PlayersCategory implements MapCategory {
         @Override
         public String getCategoryId() {
             return "wynntils:players";
         }
 
         @Override
-        public String getDisplayName() {
+        public String getName() {
             return "Your position";
         }
 
         @Override
-        public MapFeatureAttributes getAttributes() {
-            return new MapFeatureAttributes() {
+        public MapAttributes getAttributes() {
+            return new MapAttributes() {
                 @Override
                 public String getLabel() {
                     return "Player position";
@@ -62,7 +61,7 @@ public class CharacterProvider extends AbstractMapDataProvider {
                 }
 
                 @Override
-                public MapFeatureVisibility getLabelVisibility() {
+                public MapVisibility getLabelVisibility() {
                     return null;
                 }
 
@@ -77,7 +76,7 @@ public class CharacterProvider extends AbstractMapDataProvider {
                 }
 
                 @Override
-                public MapFeatureVisibility getIconVisibility() {
+                public MapVisibility getIconVisibility() {
                     return null;
                 }
 
@@ -87,7 +86,7 @@ public class CharacterProvider extends AbstractMapDataProvider {
                 }
 
                 @Override
-                public MapFeatureDecoration getIconDecoration() {
+                public MapDecoration getIconDecoration() {
                     return null;
                 }
             };
@@ -106,7 +105,7 @@ public class CharacterProvider extends AbstractMapDataProvider {
         }
 
         @Override
-        public MapFeatureAttributes getAttributes() {
+        public MapAttributes getAttributes() {
             return null;
         }
 

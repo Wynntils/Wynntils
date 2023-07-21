@@ -5,13 +5,13 @@
 package com.wynntils.models.mapdata.providers.json;
 
 import com.mojang.blaze3d.platform.NativeImage;
-import com.wynntils.models.mapdata.type.attributes.MapFeatureIcon;
+import com.wynntils.models.mapdata.type.attributes.MapIcon;
 import com.wynntils.utils.mc.McUtils;
 import java.io.IOException;
 import net.minecraft.client.renderer.texture.DynamicTexture;
 import net.minecraft.resources.ResourceLocation;
 
-public class JsonIcon implements MapFeatureIcon {
+public class JsonIcon implements MapIcon {
     private final String id;
     private final NativeImage nativeImage;
     private final int width;

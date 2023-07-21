@@ -6,7 +6,7 @@ package com.wynntils.models.mapdata.type.attributes;
 
 // Currently only for player health bar, but can be extended to more types of
 // overlays
-public interface MapFeatureDecoration {
+public interface MapDecoration {
     boolean isVisible();
 
     int getBarPercentage();

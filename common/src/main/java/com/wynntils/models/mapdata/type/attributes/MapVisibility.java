@@ -4,7 +4,7 @@
  */
 package com.wynntils.models.mapdata.type.attributes;
 
-public enum MapFeatureVisibility {
+public enum MapVisibility {
     ALWAYS,
     NEVER
 

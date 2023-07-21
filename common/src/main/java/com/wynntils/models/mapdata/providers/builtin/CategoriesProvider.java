@@ -4,11 +4,10 @@
  */
 package com.wynntils.models.mapdata.providers.builtin;
 
-import com.wynntils.models.mapdata.providers.AbstractMapDataProvider;
-import com.wynntils.models.mapdata.type.MapFeatureCategory;
-import com.wynntils.models.mapdata.type.attributes.MapFeatureAttributes;
-import com.wynntils.models.mapdata.type.attributes.MapFeatureDecoration;
-import com.wynntils.models.mapdata.type.attributes.MapFeatureVisibility;
+import com.wynntils.models.mapdata.type.MapCategory;
+import com.wynntils.models.mapdata.type.attributes.MapAttributes;
+import com.wynntils.models.mapdata.type.attributes.MapDecoration;
+import com.wynntils.models.mapdata.type.attributes.MapVisibility;
 import com.wynntils.utils.colors.CommonColors;
 import com.wynntils.utils.colors.CustomColor;
 import com.wynntils.utils.render.type.TextShadow;
@@ -16,27 +15,27 @@ import java.util.List;
 import java.util.stream.Stream;
 
 public class CategoriesProvider extends AbstractMapDataProvider {
-    private static final List<MapFeatureCategory> PROVIDED_CATEGORIES = List.of(new WynntilsCategory());
+    private static final List<MapCategory> PROVIDED_CATEGORIES = List.of(new WynntilsCategory());
 
     @Override
-    public Stream<MapFeatureCategory> getCategories() {
+    public Stream<MapCategory> getCategories() {
         return PROVIDED_CATEGORIES.stream();
     }
 
-    private static final class WynntilsCategory implements MapFeatureCategory {
+    private static final class WynntilsCategory implements MapCategory {
         @Override
         public String getCategoryId() {
             return "wynntils";
         }
 
         @Override
-        public String getDisplayName() {
+        public String getName() {
             return "Wynntils Map Feature";
         }
 
         @Override
-        public MapFeatureAttributes getAttributes() {
-            return new MapFeatureAttributes() {
+        public MapAttributes getAttributes() {
+            return new MapAttributes() {
                 @Override
                 public String getLabel() {
                     return null;
@@ -53,7 +52,7 @@ public class CategoriesProvider extends AbstractMapDataProvider {
                 }
 
                 @Override
-                public MapFeatureVisibility getLabelVisibility() {
+                public MapVisibility getLabelVisibility() {
                     return null;
                 }
 
@@ -68,7 +67,7 @@ public class CategoriesProvider extends AbstractMapDataProvider {
                 }
 
                 @Override
-                public MapFeatureVisibility getIconVisibility() {
+                public MapVisibility getIconVisibility() {
                     return null;
                 }
 
@@ -78,7 +77,7 @@ public class CategoriesProvider extends AbstractMapDataProvider {
                 }
 
                 @Override
-                public MapFeatureDecoration getIconDecoration() {
+                public MapDecoration getIconDecoration() {
                     return null;
                 }
             };

@@ -4,15 +4,15 @@
  */
 package com.wynntils.models.mapdata.providers.json;
 
-import com.wynntils.models.mapdata.type.MapFeatureCategory;
-import com.wynntils.models.mapdata.type.attributes.MapFeatureAttributes;
+import com.wynntils.models.mapdata.type.MapCategory;
+import com.wynntils.models.mapdata.type.attributes.MapAttributes;
 
-public class JsonCategory implements MapFeatureCategory {
+public class JsonCategory implements MapCategory {
     private final String id;
     private final String name;
-    private final MapFeatureAttributes attributes;
+    private final MapAttributes attributes;
 
-    public JsonCategory(String id, String name, MapFeatureAttributes attributes) {
+    public JsonCategory(String id, String name, MapAttributes attributes) {
         this.id = id;
         this.name = name;
         this.attributes = attributes;
@@ -24,12 +24,12 @@ public class JsonCategory implements MapFeatureCategory {
     }
 
     @Override
-    public String getDisplayName() {
+    public String getName() {
         return name;
     }
 
     @Override
-    public MapFeatureAttributes getAttributes() {
+    public MapAttributes getAttributes() {
         return attributes;
     }
 }

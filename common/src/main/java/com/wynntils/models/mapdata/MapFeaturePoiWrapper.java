@@ -7,8 +7,8 @@ package com.wynntils.models.mapdata;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.wynntils.core.components.Models;
 import com.wynntils.core.text.StyledText;
-import com.wynntils.models.mapdata.type.attributes.MapFeatureAttributes;
-import com.wynntils.models.mapdata.type.attributes.MapFeatureIcon;
+import com.wynntils.models.mapdata.type.attributes.MapAttributes;
+import com.wynntils.models.mapdata.type.attributes.MapIcon;
 import com.wynntils.models.mapdata.type.features.MapFeature;
 import com.wynntils.models.mapdata.type.features.MapLocation;
 import com.wynntils.services.map.pois.Poi;
@@ -26,7 +26,7 @@ import net.minecraft.client.renderer.MultiBufferSource;
 public class MapFeaturePoiWrapper implements Poi {
     public static final String FALLBACK_ICON_ID = "wynntils:icon:waypoint";
     private final MapFeature feature;
-    private final MapFeatureAttributes attributes;
+    private final MapAttributes attributes;
 
     public MapFeaturePoiWrapper(MapFeature feature) {
         this.feature = feature;
@@ -73,7 +73,7 @@ public class MapFeaturePoiWrapper implements Poi {
         }
         ;
 
-        MapFeatureIcon icon = Models.MapData.getIcon(iconId);
+        MapIcon icon = Models.MapData.getIcon(iconId);
 
         float width = icon.width() * modifier;
         float height = icon.height() * modifier;
@@ -132,7 +132,7 @@ public class MapFeaturePoiWrapper implements Poi {
         String iconId = attributes.getIconId();
         if (iconId == null) return 32;
 
-        MapFeatureIcon icon = Models.MapData.getIcon(iconId);
+        MapIcon icon = Models.MapData.getIcon(iconId);
 
         return (int) (icon.width() * scale);
     }
@@ -142,7 +142,7 @@ public class MapFeaturePoiWrapper implements Poi {
         String iconId = attributes.getIconId();
         if (iconId == null) return 32;
 
-        MapFeatureIcon icon = Models.MapData.getIcon(iconId);
+        MapIcon icon = Models.MapData.getIcon(iconId);
 
         return (int) (icon.height() * scale);
     }

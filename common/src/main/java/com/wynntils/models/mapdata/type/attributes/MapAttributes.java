@@ -7,7 +7,7 @@ package com.wynntils.models.mapdata.type.attributes;
 import com.wynntils.utils.colors.CustomColor;
 import com.wynntils.utils.render.type.TextShadow;
 
-public interface MapFeatureAttributes {
+public interface MapAttributes {
     // If this is the empty string (""), then no label will be displayed
     // null means inherit
     String getLabel();
@@ -20,15 +20,15 @@ public interface MapFeatureAttributes {
     // 0 means no value specified; inherit
     int getPriority();
 
-    MapFeatureVisibility getLabelVisibility();
+    MapVisibility getLabelVisibility();
 
     CustomColor getLabelColor();
 
     TextShadow getLabelShadow();
 
-    MapFeatureVisibility getIconVisibility();
+    MapVisibility getIconVisibility();
 
     CustomColor getIconColor();
 
-    MapFeatureDecoration getIconDecoration();
+    MapDecoration getIconDecoration();
 }

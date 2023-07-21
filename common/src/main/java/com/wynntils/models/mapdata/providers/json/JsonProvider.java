@@ -16,9 +16,9 @@ import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.components.Managers;
 import com.wynntils.core.net.Download;
 import com.wynntils.models.mapdata.providers.MapDataProvider;
-import com.wynntils.models.mapdata.type.MapFeatureCategory;
-import com.wynntils.models.mapdata.type.attributes.MapFeatureAttributes;
-import com.wynntils.models.mapdata.type.attributes.MapFeatureIcon;
+import com.wynntils.models.mapdata.type.MapCategory;
+import com.wynntils.models.mapdata.type.attributes.MapAttributes;
+import com.wynntils.models.mapdata.type.attributes.MapIcon;
 import com.wynntils.models.mapdata.type.features.MapFeature;
 import com.wynntils.utils.EnumUtils;
 import com.wynntils.utils.JsonUtils;
@@ -38,18 +38,18 @@ import java.util.stream.Stream;
 
 public class JsonProvider implements MapDataProvider {
     private static final Gson GSON = new GsonBuilder()
-            .registerTypeHierarchyAdapter(MapFeatureCategory.class, new CategoryDeserializer())
+            .registerTypeHierarchyAdapter(MapCategory.class, new CategoryDeserializer())
             .registerTypeHierarchyAdapter(MapFeature.class, new FeatureDeserializer())
-            .registerTypeHierarchyAdapter(MapFeatureIcon.class, new IconDeserializer())
+            .registerTypeHierarchyAdapter(MapIcon.class, new IconDeserializer())
             .registerTypeHierarchyAdapter(CustomColor.class, new CustomColor.CustomColorSerializer())
             .registerTypeAdapterFactory(new EnumUtils.EnumTypeAdapterFactory<>())
             .create();
 
     private final List<MapFeature> features;
-    private final List<MapFeatureCategory> categories;
-    private final List<MapFeatureIcon> icons;
+    private final List<MapCategory> categories;
+    private final List<MapIcon> icons;
 
-    private JsonProvider(List<MapFeature> features, List<MapFeatureCategory> categories, List<MapFeatureIcon> icons) {
+    private JsonProvider(List<MapFeature> features, List<MapCategory> categories, List<MapIcon> icons) {
         this.features = features;
         this.categories = categories;
         this.icons = icons;
@@ -85,25 +85,25 @@ public class JsonProvider implements MapDataProvider {
     }
 
     @Override
-    public Stream<MapFeatureCategory> getCategories() {
+    public Stream<MapCategory> getCategories() {
         return categories.stream();
     }
 
     @Override
-    public Stream<MapFeatureIcon> getIcons() {
+    public Stream<MapIcon> getIcons() {
         return icons.stream();
     }
 
-    private static final class CategoryDeserializer implements JsonDeserializer<MapFeatureCategory> {
+    private static final class CategoryDeserializer implements JsonDeserializer<MapCategory> {
         @Override
-        public MapFeatureCategory deserialize(
-                JsonElement jsonElement, Type jsonType, JsonDeserializationContext context) throws JsonParseException {
+        public MapCategory deserialize(JsonElement jsonElement, Type jsonType, JsonDeserializationContext context)
+                throws JsonParseException {
             JsonObject json = jsonElement.getAsJsonObject();
 
             String id = json.get("id").getAsString();
             String name = JsonUtils.getNullableJsonString(json, "name");
             JsonElement attributesJson = json.get("attributes");
-            MapFeatureAttributes attributes = GSON.fromJson(attributesJson, JsonAttributes.class);
+            MapAttributes attributes = GSON.fromJson(attributesJson, JsonAttributes.class);
 
             return new JsonCategory(id, name, attributes);
         }
@@ -120,15 +120,15 @@ public class JsonProvider implements MapDataProvider {
             JsonElement locationJson = json.get("location");
             Location location = GSON.fromJson(locationJson, Location.class);
             JsonElement attributesJson = json.get("attributes");
-            MapFeatureAttributes attributes = GSON.fromJson(attributesJson, JsonAttributes.class);
+            MapAttributes attributes = GSON.fromJson(attributesJson, JsonAttributes.class);
 
             return new JsonMapLocation(id, category, attributes, location);
         }
     }
 
-    private static final class IconDeserializer implements JsonDeserializer<MapFeatureIcon> {
+    private static final class IconDeserializer implements JsonDeserializer<MapIcon> {
         @Override
-        public MapFeatureIcon deserialize(JsonElement jsonElement, Type jsonType, JsonDeserializationContext context)
+        public MapIcon deserialize(JsonElement jsonElement, Type jsonType, JsonDeserializationContext context)
                 throws JsonParseException {
             JsonObject json = jsonElement.getAsJsonObject();
 

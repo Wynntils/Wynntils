@@ -4,21 +4,21 @@
  */
 package com.wynntils.models.mapdata.providers.json;
 
-import com.wynntils.models.mapdata.type.attributes.MapFeatureAttributes;
-import com.wynntils.models.mapdata.type.attributes.MapFeatureDecoration;
-import com.wynntils.models.mapdata.type.attributes.MapFeatureVisibility;
+import com.wynntils.models.mapdata.type.attributes.MapAttributes;
+import com.wynntils.models.mapdata.type.attributes.MapDecoration;
+import com.wynntils.models.mapdata.type.attributes.MapVisibility;
 import com.wynntils.utils.colors.CustomColor;
 import com.wynntils.utils.render.type.TextShadow;
 
-public class JsonAttributes implements MapFeatureAttributes {
+public class JsonAttributes implements MapAttributes {
     private final String label;
     private final String icon;
     private final int priority;
     private final CustomColor labelColor;
     private final TextShadow labelShadow;
-    private final MapFeatureVisibility labelVisibility;
+    private final MapVisibility labelVisibility;
     private final CustomColor iconColor;
-    private final MapFeatureVisibility iconVisibility;
+    private final MapVisibility iconVisibility;
 
     public JsonAttributes(
             String label,
@@ -26,9 +26,9 @@ public class JsonAttributes implements MapFeatureAttributes {
             int priority,
             CustomColor labelColor,
             TextShadow labelShadow,
-            MapFeatureVisibility labelVisibility,
+            MapVisibility labelVisibility,
             CustomColor iconColor,
-            MapFeatureVisibility iconVisibility) {
+            MapVisibility iconVisibility) {
         this.label = label;
         this.icon = icon;
         this.priority = priority;
@@ -55,7 +55,7 @@ public class JsonAttributes implements MapFeatureAttributes {
     }
 
     @Override
-    public MapFeatureVisibility getLabelVisibility() {
+    public MapVisibility getLabelVisibility() {
         return labelVisibility;
     }
 
@@ -70,7 +70,7 @@ public class JsonAttributes implements MapFeatureAttributes {
     }
 
     @Override
-    public MapFeatureVisibility getIconVisibility() {
+    public MapVisibility getIconVisibility() {
         return iconVisibility;
     }
 
@@ -80,7 +80,7 @@ public class JsonAttributes implements MapFeatureAttributes {
     }
 
     @Override
-    public MapFeatureDecoration getIconDecoration() {
+    public MapDecoration getIconDecoration() {
         // json files can never provide icon decorations; those are only for dynamic features
         return null;
     }

@@ -6,9 +6,9 @@ package com.wynntils.models.mapdata;
 
 import com.wynntils.core.components.Model;
 import com.wynntils.models.mapdata.providers.MapDataProvider;
-import com.wynntils.models.mapdata.type.MapFeatureCategory;
-import com.wynntils.models.mapdata.type.attributes.MapFeatureAttributes;
-import com.wynntils.models.mapdata.type.attributes.MapFeatureIcon;
+import com.wynntils.models.mapdata.type.MapCategory;
+import com.wynntils.models.mapdata.type.attributes.MapAttributes;
+import com.wynntils.models.mapdata.type.attributes.MapIcon;
 import com.wynntils.models.mapdata.type.features.MapFeature;
 import com.wynntils.services.map.pois.Poi;
 import java.util.List;
@@ -23,12 +23,12 @@ public class MapDataModel extends Model {
         super(List.of());
     }
 
-    public MapFeatureAttributes getAttributes(MapFeature feature) {
-        return new MapFeatureInheritedAttributes(feature);
+    public MapAttributes getAttributes(MapFeature feature) {
+        return new MapInheritedAttributes(feature);
     }
 
-    public <T> T getFeatureAttribute(MapFeature feature, Function<MapFeatureAttributes, T> getter) {
-        MapFeatureAttributes attributes = feature.getAttributes();
+    public <T> T getFeatureAttribute(MapFeature feature, Function<MapAttributes, T> getter) {
+        MapAttributes attributes = feature.getAttributes();
         if (attributes != null) {
             T attribute = getter.apply(attributes);
             if (attribute != null) {
@@ -39,13 +39,13 @@ public class MapDataModel extends Model {
         return getCategoryAttribute(feature.getCategoryId(), getter);
     }
 
-    private <T> T getCategoryAttribute(String categoryId, Function<MapFeatureAttributes, T> getter) {
+    private <T> T getCategoryAttribute(String categoryId, Function<MapAttributes, T> getter) {
         if (categoryId == null) {
             // FIXME: proper detection for root, proper root style
             return null;
         }
 
-        MapFeatureAttributes attributes = getAttributeForCategoryId(categoryId);
+        MapAttributes attributes = getAttributeForCategoryId(categoryId);
         if (attributes != null) {
             T attribute = getter.apply(attributes);
             if (attribute != null) {
@@ -57,11 +57,11 @@ public class MapDataModel extends Model {
         return getCategoryAttribute(parentId, getter);
     }
 
-    private MapFeatureAttributes getAttributeForCategoryId(String categoryId) {
-        Stream<MapFeatureCategory> allCategories = providers.getProviders().flatMap(MapDataProvider::getCategories);
-        MapFeatureAttributes attributes = allCategories
+    private MapAttributes getAttributeForCategoryId(String categoryId) {
+        Stream<MapCategory> allCategories = providers.getProviders().flatMap(MapDataProvider::getCategories);
+        MapAttributes attributes = allCategories
                 .filter(c -> c.getCategoryId().equals(categoryId))
-                .map(MapFeatureCategory::getAttributes)
+                .map(MapCategory::getAttributes)
                 .filter(Objects::nonNull)
                 .findFirst()
                 .orElse(null);
@@ -69,10 +69,10 @@ public class MapDataModel extends Model {
     }
 
     public String getCategoryName(String categoryId) {
-        Stream<MapFeatureCategory> allCategories = providers.getProviders().flatMap(MapDataProvider::getCategories);
+        Stream<MapCategory> allCategories = providers.getProviders().flatMap(MapDataProvider::getCategories);
         String displayName = allCategories
                 .filter(c -> c.getCategoryId().equals(categoryId))
-                .map(MapFeatureCategory::getDisplayName)
+                .map(MapCategory::getName)
                 .filter(Objects::nonNull)
                 .findFirst()
                 .orElse("NAMELESS CATEGORY");
@@ -94,19 +94,19 @@ public class MapDataModel extends Model {
         return getFeatures().map(MapFeaturePoiWrapper::new);
     }
 
-    public MapFeatureIcon getIcon(String iconId) {
-        if (iconId.equals(MapFeatureIcon.NO_ICON_ID)) {
+    public MapIcon getIcon(String iconId) {
+        if (iconId.equals(MapIcon.NO_ICON_ID)) {
             // should return null but we cant handle that
             // FIXME
-            Stream<MapFeatureIcon> allIcons = providers.getProviders().flatMap(MapDataProvider::getIcons);
-            MapFeatureIcon icon = allIcons.filter(i -> i.getIconId().equals("wynntils:icon:waypoint"))
+            Stream<MapIcon> allIcons = providers.getProviders().flatMap(MapDataProvider::getIcons);
+            MapIcon icon = allIcons.filter(i -> i.getIconId().equals("wynntils:icon:waypoint"))
                     .findFirst()
                     .orElse(null);
             return icon;
         }
 
-        Stream<MapFeatureIcon> allIcons = providers.getProviders().flatMap(MapDataProvider::getIcons);
-        MapFeatureIcon icon =
+        Stream<MapIcon> allIcons = providers.getProviders().flatMap(MapDataProvider::getIcons);
+        MapIcon icon =
                 allIcons.filter(i -> i.getIconId().equals(iconId)).findFirst().orElse(null);
 
         if (icon == null) {
