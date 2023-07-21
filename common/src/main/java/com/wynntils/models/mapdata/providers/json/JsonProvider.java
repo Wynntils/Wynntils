@@ -13,12 +13,14 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonParseException;
 import com.google.gson.stream.MalformedJsonException;
 import com.wynntils.core.WynntilsMod;
-import com.wynntils.core.json.JsonManager;
+import com.wynntils.core.components.Managers;
+import com.wynntils.core.net.Download;
 import com.wynntils.models.mapdata.providers.MapDataProvider;
 import com.wynntils.models.mapdata.type.MapFeatureCategory;
 import com.wynntils.models.mapdata.type.attributes.MapFeatureAttributes;
 import com.wynntils.models.mapdata.type.attributes.MapFeatureIcon;
 import com.wynntils.models.mapdata.type.features.MapFeature;
+import com.wynntils.utils.EnumUtils;
 import com.wynntils.utils.JsonUtils;
 import com.wynntils.utils.colors.CustomColor;
 import com.wynntils.utils.mc.type.Location;
@@ -27,22 +29,31 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.Reader;
 import java.lang.reflect.Type;
+import java.net.URI;
 import java.nio.charset.StandardCharsets;
 import java.util.Base64;
 import java.util.List;
+import java.util.function.BiConsumer;
 import java.util.stream.Stream;
 
 public class JsonProvider implements MapDataProvider {
-    public static final Gson GSON = new GsonBuilder()
+    private static final Gson GSON = new GsonBuilder()
             .registerTypeHierarchyAdapter(MapFeatureCategory.class, new CategoryDeserializer())
-            .registerTypeHierarchyAdapter(MapFeatureIcon.class, new IconDeserializer())
             .registerTypeHierarchyAdapter(MapFeature.class, new FeatureDeserializer())
+            .registerTypeHierarchyAdapter(MapFeatureIcon.class, new IconDeserializer())
             .registerTypeHierarchyAdapter(CustomColor.class, new CustomColor.CustomColorSerializer())
-            .registerTypeAdapterFactory(new JsonManager.EnumTypeAdapterFactory())
+            .registerTypeAdapterFactory(new EnumUtils.EnumTypeAdapterFactory<>())
             .create();
-    private List<MapFeature> features;
-    private List<MapFeatureCategory> categories;
-    private List<MapFeatureIcon> icons;
+
+    private final List<MapFeature> features;
+    private final List<MapFeatureCategory> categories;
+    private final List<MapFeatureIcon> icons;
+
+    private JsonProvider(List<MapFeature> features, List<MapFeatureCategory> categories, List<MapFeatureIcon> icons) {
+        this.features = features;
+        this.categories = categories;
+        this.icons = icons;
+    }
 
     public static JsonProvider loadLocalResource(String filename) {
         try (InputStream inputStream = WynntilsMod.getModResourceAsStream(filename);
@@ -55,6 +66,17 @@ public class JsonProvider implements MapDataProvider {
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
+    }
+
+    public static void loadOnlineResource(String id, String url, BiConsumer<String, MapDataProvider> registerCallback) {
+        Download dl = Managers.Net.download(URI.create(url), id);
+        dl.handleReader(
+                reader -> {
+                    JsonProvider provider = GSON.fromJson(reader, JsonProvider.class);
+                    System.out.println("online provider:" + provider);
+                    registerCallback.accept(id, provider);
+                },
+                onError -> WynntilsMod.warn("Error occurred while downloading map data " + id, onError));
     }
 
     @Override
@@ -87,6 +109,23 @@ public class JsonProvider implements MapDataProvider {
         }
     }
 
+    private static final class FeatureDeserializer implements JsonDeserializer<MapFeature> {
+        @Override
+        public MapFeature deserialize(JsonElement jsonElement, Type jsonType, JsonDeserializationContext context)
+                throws JsonParseException {
+            JsonObject json = jsonElement.getAsJsonObject();
+
+            String id = JsonUtils.getNullableJsonString(json, "id");
+            String category = JsonUtils.getNullableJsonString(json, "category");
+            JsonElement locationJson = json.get("location");
+            Location location = GSON.fromJson(locationJson, Location.class);
+            JsonElement attributesJson = json.get("attributes");
+            MapFeatureAttributes attributes = GSON.fromJson(attributesJson, JsonAttributes.class);
+
+            return new JsonMapLocation(id, category, attributes, location);
+        }
+    }
+
     private static final class IconDeserializer implements JsonDeserializer<MapFeatureIcon> {
         @Override
         public MapFeatureIcon deserialize(JsonElement jsonElement, Type jsonType, JsonDeserializationContext context)
@@ -103,23 +142,6 @@ public class JsonProvider implements MapDataProvider {
                 WynntilsMod.warn("Bad icon texture for " + id, e);
                 return null;
             }
-        }
-    }
-
-    private static final class FeatureDeserializer implements JsonDeserializer<MapFeature> {
-        @Override
-        public MapFeature deserialize(JsonElement jsonElement, Type jsonType, JsonDeserializationContext context)
-                throws JsonParseException {
-            JsonObject json = jsonElement.getAsJsonObject();
-
-            String id = JsonUtils.getNullableJsonString(json, "id");
-            String category = JsonUtils.getNullableJsonString(json, "category");
-            JsonElement locationJson = json.get("location");
-            Location location = GSON.fromJson(locationJson, Location.class);
-            JsonElement attributesJson = json.get("attributes");
-            MapFeatureAttributes attributes = GSON.fromJson(attributesJson, JsonAttributes.class);
-
-            return new JsonMapLocation(id, category, attributes, location);
         }
     }
 }

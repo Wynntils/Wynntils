@@ -10,7 +10,9 @@ import com.wynntils.models.mapdata.providers.builtin.CharacterProvider;
 import com.wynntils.models.mapdata.providers.builtin.MapIconsProvider;
 import com.wynntils.models.mapdata.providers.json.JsonProvider;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Stream;
 
 public class MapDataProviders {
@@ -18,10 +20,14 @@ public class MapDataProviders {
             List.of(new CategoriesProvider(), new CharacterProvider(), new MapIconsProvider());
 
     private final List<MapDataProvider> providers = new ArrayList<>();
+    private final Map<String, MapDataProvider> onlineProviders = new HashMap<>();
 
     public MapDataProviders() {
         providers.addAll(BUILT_IN_PROVIDERS);
-        providers.add(createLocalProvider("mapdata.json"));
+        //   providers.add(createLocalProvider("mapdata.json"));
+        createOnlineProvider(
+                "online-1",
+                "https://raw.githubusercontent.com/magicus/Artemis/map-data-rewrite/common/src/main/resources/assets/wynntils/mapdata.json");
     }
 
     Stream<MapDataProvider> getProviders() {
@@ -33,4 +39,16 @@ public class MapDataProviders {
     MapDataProvider createLocalProvider(String filename) {
         return JsonProvider.loadLocalResource(filename);
     }
+
+    void createOnlineProvider(String id, String url) {
+        JsonProvider.loadOnlineResource(id, url, this::registerOnlineProvider);
+    }
+
+    private void registerOnlineProvider(String id, MapDataProvider provider) {
+        System.out.println("REGISTERING provider for " + id);
+        onlineProviders.put(id, provider);
+        providers.add(provider);
+    }
+
+    //
 }
