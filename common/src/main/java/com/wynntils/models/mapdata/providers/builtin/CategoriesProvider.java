@@ -8,9 +8,6 @@ import com.wynntils.models.map.type.ServiceKind;
 import com.wynntils.models.mapdata.attributes.AbstractMapAttributes;
 import com.wynntils.models.mapdata.attributes.type.MapAttributes;
 import com.wynntils.models.mapdata.type.MapCategory;
-import com.wynntils.utils.colors.CommonColors;
-import com.wynntils.utils.colors.CustomColor;
-import com.wynntils.utils.render.type.TextShadow;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Stream;
@@ -43,7 +40,7 @@ public class CategoriesProvider extends BuiltInProvider {
 
         @Override
         public String getName() {
-            return "Basic Wynntils Map Feature";
+            return "All Wynntils Map Features";
         }
 
         @Override
@@ -58,21 +55,6 @@ public class CategoriesProvider extends BuiltInProvider {
                 public int getPriority() {
                     return 500;
                 }
-
-                @Override
-                public CustomColor getLabelColor() {
-                    return CommonColors.WHITE;
-                }
-
-                @Override
-                public TextShadow getLabelShadow() {
-                    return TextShadow.OUTLINE;
-                }
-
-                @Override
-                public CustomColor getIconColor() {
-                    return CommonColors.WHITE;
-                }
             };
         }
     }
@@ -86,7 +68,7 @@ public class CategoriesProvider extends BuiltInProvider {
 
         @Override
         public String getCategoryId() {
-            return kind.getCategoryId();
+            return "wynntils:service:" + kind.getServiceId();
         }
 
         @Override
@@ -104,7 +86,7 @@ public class CategoriesProvider extends BuiltInProvider {
 
                 @Override
                 public String getIconId() {
-                    return kind.getCategoryId().replace("wynntils:", "wynntils:icon:");
+                    return "wynntils:icon:service:" + kind.getServiceId();
                 }
 
                 @Override

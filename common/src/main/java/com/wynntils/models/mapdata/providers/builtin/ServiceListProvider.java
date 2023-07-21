@@ -4,6 +4,7 @@
  */
 package com.wynntils.models.mapdata.providers.builtin;
 
+import com.wynntils.models.map.type.ServiceKind;
 import com.wynntils.models.mapdata.attributes.type.MapAttributes;
 import com.wynntils.models.mapdata.type.MapFeature;
 import com.wynntils.models.mapdata.type.MapLocation;
@@ -26,29 +27,29 @@ public class ServiceListProvider extends BuiltInProvider {
         return PROVIDED_FEATURES.stream();
     }
 
-    public static void registerFeature(Location location, String categoryId) {
-        PROVIDED_FEATURES.add(new ServiceLocation(location, categoryId));
+    public static void registerFeature(Location location, ServiceKind kind) {
+        PROVIDED_FEATURES.add(new ServiceLocation(location, kind));
     }
 
     private static final class ServiceLocation implements MapLocation {
         private final Location location;
-        private final String categoryId;
+        private final ServiceKind kind;
         private final int number;
 
-        private ServiceLocation(Location location, String categoryId) {
+        private ServiceLocation(Location location, ServiceKind kind) {
             this.location = location;
-            this.categoryId = categoryId;
+            this.kind = kind;
             this.number = ServiceListProvider.counter++;
         }
 
         @Override
         public String getFeatureId() {
-            return categoryId + "-" + number;
+            return kind.getServiceId() + "-" + number;
         }
 
         @Override
         public String getCategoryId() {
-            return categoryId;
+            return "wynntils:service:" + kind.getServiceId();
         }
 
         @Override

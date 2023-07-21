@@ -79,7 +79,7 @@ public class MapFeaturePoiWrapper implements Poi {
 
         CustomColor iconColor = attributes.getIconColor();
         if (iconColor == null) {
-            iconColor = CommonColors.GRAY;
+            iconColor = CommonColors.WHITE;
         }
         BufferedRenderUtils.drawColoredTexturedRect(
                 poseStack,
@@ -100,11 +100,11 @@ public class MapFeaturePoiWrapper implements Poi {
 
             CustomColor labelColor = attributes.getLabelColor();
             if (labelColor == null) {
-                labelColor = CommonColors.GRAY;
+                labelColor = CommonColors.WHITE;
             }
             TextShadow labelShadow = attributes.getLabelShadow();
             if (labelShadow == null) {
-                labelShadow = TextShadow.NONE;
+                labelShadow = TextShadow.OUTLINE;
             }
             FontRenderer.getInstance()
                     .renderText(

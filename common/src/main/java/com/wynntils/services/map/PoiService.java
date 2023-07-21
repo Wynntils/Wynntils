@@ -195,7 +195,7 @@ public class PoiService extends Service {
                 if (kind != null) {
                     for (PoiLocation location : service.locations) {
                         servicePois.add(new ServicePoi(location, kind));
-                        ServiceListProvider.registerFeature(new Location(location), kind.getCategoryId());
+                        ServiceListProvider.registerFeature(new Location(location), kind);
                     }
                 } else {
                     WynntilsMod.warn("Unknown service type in services.json: " + service.type);
