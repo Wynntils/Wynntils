@@ -10,6 +10,7 @@ import com.wynntils.models.mapdata.providers.builtin.BuiltInProvider;
 import com.wynntils.models.mapdata.providers.builtin.CategoriesProvider;
 import com.wynntils.models.mapdata.providers.builtin.CharacterProvider;
 import com.wynntils.models.mapdata.providers.builtin.MapIconsProvider;
+import com.wynntils.models.mapdata.providers.builtin.ServiceListProvider;
 import com.wynntils.models.mapdata.providers.json.JsonProvider;
 import com.wynntils.models.mapdata.type.MapCategory;
 import com.wynntils.models.mapdata.type.MapFeature;
@@ -60,6 +61,7 @@ public class MapDataProviders {
         registerBuiltInProvider(new MapIconsProvider());
 
         // Locations
+        registerBuiltInProvider(new ServiceListProvider());
         registerBuiltInProvider(new CharacterProvider());
     }
 

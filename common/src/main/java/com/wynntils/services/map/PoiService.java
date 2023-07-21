@@ -22,6 +22,7 @@ import com.wynntils.services.map.pois.ServicePoi;
 import com.wynntils.services.map.type.CombatKind;
 import com.wynntils.services.map.type.CustomPoiProvider;
 import com.wynntils.services.map.type.ServiceKind;
+import com.wynntils.models.mapdata.providers.builtin.ServiceListProvider;
 import com.wynntils.utils.mc.type.Location;
 import com.wynntils.utils.mc.type.PoiLocation;
 import com.wynntils.utils.render.Texture;
@@ -194,6 +195,7 @@ public class PoiService extends Service {
                 if (kind != null) {
                     for (PoiLocation location : service.locations) {
                         servicePois.add(new ServicePoi(location, kind));
+                        ServiceListProvider.registerFeature(new Location(location), kind.getCategoryId());
                     }
                 } else {
                     WynntilsMod.warn("Unknown service type in services.json: " + service.type);

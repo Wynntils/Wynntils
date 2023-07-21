@@ -4,18 +4,26 @@
  */
 package com.wynntils.models.mapdata.providers.builtin;
 
+import com.wynntils.models.map.type.ServiceKind;
+import com.wynntils.models.mapdata.attributes.AbstractMapAttributes;
 import com.wynntils.models.mapdata.attributes.type.MapAttributes;
-import com.wynntils.models.mapdata.attributes.type.MapDecoration;
-import com.wynntils.models.mapdata.attributes.type.MapVisibility;
 import com.wynntils.models.mapdata.type.MapCategory;
 import com.wynntils.utils.colors.CommonColors;
 import com.wynntils.utils.colors.CustomColor;
 import com.wynntils.utils.render.type.TextShadow;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Stream;
 
 public class CategoriesProvider extends BuiltInProvider {
-    private static final List<MapCategory> PROVIDED_CATEGORIES = List.of(new WynntilsCategory());
+    private static final List<MapCategory> PROVIDED_CATEGORIES = new ArrayList<>();
+
+    public CategoriesProvider() {
+        for (ServiceKind kind : ServiceKind.values()) {
+            PROVIDED_CATEGORIES.add(new ServiceCategory(kind));
+        }
+        PROVIDED_CATEGORIES.add(new WynntilsCategory());
+    }
 
     @Override
     public String getProviderId() {
@@ -35,17 +43,12 @@ public class CategoriesProvider extends BuiltInProvider {
 
         @Override
         public String getName() {
-            return "Wynntils Map Feature";
+            return "Basic Wynntils Map Feature";
         }
 
         @Override
         public MapAttributes getAttributes() {
-            return new MapAttributes() {
-                @Override
-                public String getLabel() {
-                    return null;
-                }
-
+            return new AbstractMapAttributes() {
                 @Override
                 public String getIconId() {
                     return "wynntils:icon:symbols:waypoint";
@@ -53,17 +56,12 @@ public class CategoriesProvider extends BuiltInProvider {
 
                 @Override
                 public int getPriority() {
-                    return 900;
-                }
-
-                @Override
-                public MapVisibility getLabelVisibility() {
-                    return null;
+                    return 500;
                 }
 
                 @Override
                 public CustomColor getLabelColor() {
-                    return CommonColors.LIGHT_BLUE;
+                    return CommonColors.WHITE;
                 }
 
                 @Override
@@ -72,18 +70,46 @@ public class CategoriesProvider extends BuiltInProvider {
                 }
 
                 @Override
-                public MapVisibility getIconVisibility() {
-                    return null;
-                }
-
-                @Override
                 public CustomColor getIconColor() {
-                    return CommonColors.BLUE;
+                    return CommonColors.WHITE;
+                }
+            };
+        }
+    }
+
+    private static final class ServiceCategory implements MapCategory {
+        private final ServiceKind kind;
+
+        private ServiceCategory(ServiceKind kind) {
+            this.kind = kind;
+        }
+
+        @Override
+        public String getCategoryId() {
+            return kind.getCategoryId();
+        }
+
+        @Override
+        public String getName() {
+            return kind.getName();
+        }
+
+        @Override
+        public MapAttributes getAttributes() {
+            return new AbstractMapAttributes() {
+                @Override
+                public String getLabel() {
+                    return kind.getName();
                 }
 
                 @Override
-                public MapDecoration getIconDecoration() {
-                    return null;
+                public String getIconId() {
+                    return kind.getCategoryId().replace("wynntils:", "wynntils:icon:");
+                }
+
+                @Override
+                public int getPriority() {
+                    return 500;
                 }
             };
         }
