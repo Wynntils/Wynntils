@@ -48,6 +48,10 @@ public final class PoiManagementScreen extends WynntilsScreen {
         this.oldMapScreen = oldMapScreen;
     }
 
+    public static Screen create() {
+        return new PoiManagementScreen(null);
+    }
+
     public static Screen create(MainMapScreen oldMapScreen) {
         return new PoiManagementScreen(oldMapScreen);
     }
