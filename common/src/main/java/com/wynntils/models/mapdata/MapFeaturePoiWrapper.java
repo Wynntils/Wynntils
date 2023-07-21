@@ -23,12 +23,12 @@ import com.wynntils.utils.render.type.TextShadow;
 import com.wynntils.utils.render.type.VerticalAlignment;
 import net.minecraft.client.renderer.MultiBufferSource;
 
-public class FeaturePoi implements Poi {
+public class MapFeaturePoiWrapper implements Poi {
     public static final String FALLBACK_ICON_ID = "wynntils:icon:waypoint";
     private final MapFeature feature;
     private final MapFeatureAttributes attributes;
 
-    public FeaturePoi(MapFeature feature) {
+    public MapFeaturePoiWrapper(MapFeature feature) {
         this.feature = feature;
         attributes = Models.MapData.getAttributes(this.feature);
     }

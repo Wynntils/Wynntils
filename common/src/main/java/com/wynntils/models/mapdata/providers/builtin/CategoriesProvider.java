@@ -4,7 +4,7 @@
  */
 package com.wynntils.models.mapdata.providers.builtin;
 
-import com.wynntils.models.mapdata.providers.BuiltInProvider;
+import com.wynntils.models.mapdata.providers.AbstractMapDataProvider;
 import com.wynntils.models.mapdata.type.MapFeatureCategory;
 import com.wynntils.models.mapdata.type.attributes.MapFeatureAttributes;
 import com.wynntils.models.mapdata.type.attributes.MapFeatureDecoration;
@@ -15,7 +15,7 @@ import com.wynntils.utils.render.type.TextShadow;
 import java.util.List;
 import java.util.stream.Stream;
 
-public class CategoriesProvider extends BuiltInProvider {
+public class CategoriesProvider extends AbstractMapDataProvider {
     private static final List<MapFeatureCategory> PROVIDED_CATEGORIES = List.of(new WynntilsCategory());
 
     @Override

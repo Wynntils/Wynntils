@@ -4,7 +4,7 @@
  */
 package com.wynntils.models.mapdata.providers.builtin;
 
-import com.wynntils.models.mapdata.providers.BuiltInProvider;
+import com.wynntils.models.mapdata.providers.AbstractMapDataProvider;
 import com.wynntils.models.mapdata.type.MapFeatureCategory;
 import com.wynntils.models.mapdata.type.attributes.MapFeatureAttributes;
 import com.wynntils.models.mapdata.type.attributes.MapFeatureDecoration;
@@ -18,7 +18,7 @@ import com.wynntils.utils.render.type.TextShadow;
 import java.util.List;
 import java.util.stream.Stream;
 
-public class CharacterProvider extends BuiltInProvider {
+public class CharacterProvider extends AbstractMapDataProvider {
     private static final List<MapFeature> PROVIDED_FEATURES = List.of(new CharacterLocation());
     private static final List<MapFeatureCategory> PROVIDED_CATEGORIES = List.of(new PlayersCategory());
 
