@@ -1,4 +1,16 @@
+## [0.0.3-alpha.171](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.170...v0.0.3-alpha.171) (2023-07-21)
+
+
+### Bug Fixes
+
+* Fix player list not rendering when overlay is disabled ([#1796](https://github.com/Wynntils/Artemis/issues/1796)) ([e4e35a3](https://github.com/Wynntils/Artemis/commit/e4e35a3614043bd8b4769fd83a5e850d888f2d15))
+
 ## [0.0.3-alpha.170](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.169...v0.0.3-alpha.170) (2023-07-21)
+
+
+### Miscellaneous Chores
+
+* **release:** v0.0.3-alpha.170 [skip ci] ([8fe9b28](https://github.com/Wynntils/Artemis/commit/8fe9b2816d449d402fa9ba46ca57a1f4e19397f3))
 
 
 ### Code Refactoring
@@ -40,17 +52,4 @@
 ### Miscellaneous Chores
 
 * **release:** v0.0.3-alpha.167 [skip ci] ([37a668c](https://github.com/Wynntils/Artemis/commit/37a668cc5877d1843a5ddc6c19bfb7e809246325))
-
-## [0.0.3-alpha.166](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.165...v0.0.3-alpha.166) (2023-07-20)
-
-
-### New Features
-
-* Redesign quest book page to look similarly to discovery page ([#1784](https://github.com/Wynntils/Artemis/issues/1784)) ([3513266](https://github.com/Wynntils/Artemis/commit/3513266e63c1e92d2ae722597e83bb2fcfdb9d52))
-* Refactor the main Wynntils menu page ([#1785](https://github.com/Wynntils/Artemis/issues/1785)) ([5b96a23](https://github.com/Wynntils/Artemis/commit/5b96a23c1626ffad82dc250285f20d92945ae184))
-
-
-### Miscellaneous Chores
-
-* **release:** v0.0.3-alpha.166 [skip ci] ([4c51171](https://github.com/Wynntils/Artemis/commit/4c511714d88c1353a75b79af2b7a1e572e696b9f))
 
