@@ -1688,6 +1688,7 @@
   "screens.wynntils.settingsScreen.name": "Wynntils Settings",
   "screens.wynntils.settingsScreen.reset.description": "Reset config to default value.",
   "screens.wynntils.settingsScreen.reset.name": "Reset",
+  "screens.wynntils.wynntilsCaveBook.name": "Wynntils Cave Book",
   "screens.wynntils.wynntilsContentBook.sort.alphabetic.description": "Quests are sorted alphabetically",
   "screens.wynntils.wynntilsContentBook.sort.alphabetic.name": "Sort Alphabetically",
   "screens.wynntils.wynntilsContentBook.sort.distance.description": "Quests are sorted by distance, closest first",

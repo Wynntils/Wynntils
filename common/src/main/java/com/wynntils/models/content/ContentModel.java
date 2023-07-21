@@ -226,6 +226,12 @@ public final class ContentModel extends Model {
         return Models.Quest.getQuestInfoFromName(trackedContent.trackedName()).orElse(null);
     }
 
+    public CaveInfo getTrackedCaveInfo() {
+        if (trackedContent == null) return null;
+
+        return Models.Cave.getCaveInfoFromName(trackedContent.trackedName()).orElse(null);
+    }
+
     void updateTracker(String name, String type, StyledText nextTask) {
         trackedContent = new TrackedContent(name, ContentType.from(type), nextTask);
 
