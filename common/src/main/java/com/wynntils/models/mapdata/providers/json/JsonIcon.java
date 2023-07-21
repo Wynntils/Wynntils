@@ -12,32 +12,30 @@ import net.minecraft.client.renderer.texture.DynamicTexture;
 import net.minecraft.resources.ResourceLocation;
 
 public class JsonIcon implements MapIcon {
-    private final String id;
+    private final String iconId;
     private final NativeImage nativeImage;
     private final int width;
     private final int height;
     private boolean registered;
     private ResourceLocation resource;
 
-    public JsonIcon(String id, byte[] texture) throws IOException {
-        this.id = id;
+    public JsonIcon(String iconId, byte[] texture) throws IOException {
+        this.iconId = iconId;
         this.nativeImage = NativeImage.read(texture);
         this.width = nativeImage.getWidth();
-        ;
         this.height = nativeImage.getHeight();
-        ;
-        this.resource = new ResourceLocation("wynntils", "icons/" + id.replaceAll(":", "."));
+        this.resource = new ResourceLocation("wynntils", "icons/" + iconId.replaceAll(":", "."));
     }
 
     @Override
     public String getIconId() {
-        return id;
+        return iconId;
     }
 
     @Override
     public ResourceLocation getResourceLocation() {
         if (!registered) {
-            // We canot do this in the constructor since GL is not initiated by then
+            // We canot do this in the constructor since GL is not initiated at that time
             registered = true;
             McUtils.mc().getTextureManager().register(resource, new DynamicTexture(nativeImage));
         }

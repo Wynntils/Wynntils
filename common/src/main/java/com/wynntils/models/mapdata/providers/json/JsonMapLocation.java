@@ -10,26 +10,26 @@ import com.wynntils.utils.mc.type.Location;
 import java.util.List;
 
 public class JsonMapLocation implements MapLocation {
-    private final String id;
-    private final String category;
+    private final String featureId;
+    private final String categoryId;
     private final MapAttributes attributes;
     private final Location location;
 
-    public JsonMapLocation(String id, String category, MapAttributes attributes, Location location) {
-        this.id = id;
-        this.category = category;
+    public JsonMapLocation(String featureId, String categoryId, MapAttributes attributes, Location location) {
+        this.featureId = featureId;
+        this.categoryId = categoryId;
         this.attributes = attributes;
         this.location = location;
     }
 
     @Override
     public String getFeatureId() {
-        return id;
+        return featureId;
     }
 
     @Override
     public String getCategoryId() {
-        return category;
+        return categoryId;
     }
 
     @Override

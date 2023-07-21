@@ -58,9 +58,7 @@ public class JsonProvider implements MapDataProvider {
     public static JsonProvider loadLocalResource(String filename) {
         try (InputStream inputStream = WynntilsMod.getModResourceAsStream(filename);
                 Reader targetReader = new InputStreamReader(inputStream, StandardCharsets.UTF_8)) {
-            JsonProvider provider = GSON.fromJson(targetReader, JsonProvider.class);
-            System.out.println("provider:" + provider);
-            return provider;
+            return GSON.fromJson(targetReader, JsonProvider.class);
         } catch (MalformedJsonException e) {
             throw new RuntimeException(e);
         } catch (IOException e) {
@@ -72,11 +70,9 @@ public class JsonProvider implements MapDataProvider {
         Download dl = Managers.Net.download(URI.create(url), id);
         dl.handleReader(
                 reader -> {
-                    JsonProvider provider = GSON.fromJson(reader, JsonProvider.class);
-                    System.out.println("online provider:" + provider);
-                    registerCallback.accept(id, provider);
+                    registerCallback.accept(id, GSON.fromJson(reader, JsonProvider.class));
                 },
-                onError -> WynntilsMod.warn("Error occurred while downloading map data " + id, onError));
+                onError -> WynntilsMod.warn("Error occurred while downloading map data '" + id + "'", onError));
     }
 
     @Override

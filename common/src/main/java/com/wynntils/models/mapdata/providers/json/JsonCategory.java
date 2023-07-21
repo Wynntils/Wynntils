@@ -8,19 +8,19 @@ import com.wynntils.models.mapdata.type.MapCategory;
 import com.wynntils.models.mapdata.type.attributes.MapAttributes;
 
 public class JsonCategory implements MapCategory {
-    private final String id;
+    private final String categoryId;
     private final String name;
     private final MapAttributes attributes;
 
-    public JsonCategory(String id, String name, MapAttributes attributes) {
-        this.id = id;
+    public JsonCategory(String categoryId, String name, MapAttributes attributes) {
+        this.categoryId = categoryId;
         this.name = name;
         this.attributes = attributes;
     }
 
     @Override
     public String getCategoryId() {
-        return id;
+        return categoryId;
     }
 
     @Override

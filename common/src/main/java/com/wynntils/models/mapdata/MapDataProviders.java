@@ -36,19 +36,16 @@ public class MapDataProviders {
 
     // per-account, per-character or shared
     // can be added just from disk, or downloaded from an url
-    MapDataProvider createLocalProvider(String filename) {
+    public MapDataProvider createLocalProvider(String filename) {
         return JsonProvider.loadLocalResource(filename);
     }
 
-    void createOnlineProvider(String id, String url) {
+    public void createOnlineProvider(String id, String url) {
         JsonProvider.loadOnlineResource(id, url, this::registerOnlineProvider);
     }
 
     private void registerOnlineProvider(String id, MapDataProvider provider) {
-        System.out.println("REGISTERING provider for " + id);
         onlineProviders.put(id, provider);
         providers.add(provider);
     }
-
-    //
 }
