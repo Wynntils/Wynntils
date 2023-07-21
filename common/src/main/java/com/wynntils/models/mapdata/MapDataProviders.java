@@ -4,6 +4,7 @@
  */
 package com.wynntils.models.mapdata;
 
+import com.wynntils.models.mapdata.attributes.type.MapIcon;
 import com.wynntils.models.mapdata.providers.MapDataProvider;
 import com.wynntils.models.mapdata.providers.builtin.BuiltInProvider;
 import com.wynntils.models.mapdata.providers.builtin.CategoriesProvider;
@@ -11,8 +12,7 @@ import com.wynntils.models.mapdata.providers.builtin.CharacterProvider;
 import com.wynntils.models.mapdata.providers.builtin.MapIconsProvider;
 import com.wynntils.models.mapdata.providers.json.JsonProvider;
 import com.wynntils.models.mapdata.type.MapCategory;
-import com.wynntils.models.mapdata.type.attributes.MapIcon;
-import com.wynntils.models.mapdata.type.features.MapFeature;
+import com.wynntils.models.mapdata.type.MapFeature;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;

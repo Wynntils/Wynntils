@@ -4,8 +4,8 @@
  */
 package com.wynntils.models.mapdata.providers.json;
 
+import com.wynntils.models.mapdata.attributes.type.MapAttributes;
 import com.wynntils.models.mapdata.type.MapCategory;
-import com.wynntils.models.mapdata.type.attributes.MapAttributes;
 
 public class JsonCategory implements MapCategory {
     private final String id;

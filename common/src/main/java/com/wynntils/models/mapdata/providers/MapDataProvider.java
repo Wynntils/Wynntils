@@ -4,9 +4,9 @@
  */
 package com.wynntils.models.mapdata.providers;
 
+import com.wynntils.models.mapdata.attributes.type.MapIcon;
 import com.wynntils.models.mapdata.type.MapCategory;
-import com.wynntils.models.mapdata.type.attributes.MapIcon;
-import com.wynntils.models.mapdata.type.features.MapFeature;
+import com.wynntils.models.mapdata.type.MapFeature;
 import java.util.stream.Stream;
 
 public interface MapDataProvider {

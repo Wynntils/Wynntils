@@ -4,8 +4,8 @@
  */
 package com.wynntils.models.mapdata.providers.json;
 
-import com.wynntils.models.mapdata.type.attributes.MapAttributes;
-import com.wynntils.models.mapdata.type.features.MapLocation;
+import com.wynntils.models.mapdata.attributes.type.MapAttributes;
+import com.wynntils.models.mapdata.type.MapLocation;
 import com.wynntils.utils.mc.type.Location;
 import java.util.List;
 

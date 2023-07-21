@@ -4,10 +4,10 @@
  */
 package com.wynntils.models.mapdata.providers.builtin;
 
+import com.wynntils.models.mapdata.attributes.type.MapIcon;
 import com.wynntils.models.mapdata.providers.MapDataProvider;
 import com.wynntils.models.mapdata.type.MapCategory;
-import com.wynntils.models.mapdata.type.attributes.MapIcon;
-import com.wynntils.models.mapdata.type.features.MapFeature;
+import com.wynntils.models.mapdata.type.MapFeature;
 import java.util.stream.Stream;
 
 public abstract class BuiltInProvider implements MapDataProvider {

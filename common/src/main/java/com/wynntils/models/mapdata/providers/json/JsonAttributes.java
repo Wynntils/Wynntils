@@ -4,9 +4,9 @@
  */
 package com.wynntils.models.mapdata.providers.json;
 
-import com.wynntils.models.mapdata.type.attributes.MapAttributes;
-import com.wynntils.models.mapdata.type.attributes.MapDecoration;
-import com.wynntils.models.mapdata.type.attributes.MapVisibility;
+import com.wynntils.models.mapdata.attributes.type.MapAttributes;
+import com.wynntils.models.mapdata.attributes.type.MapDecoration;
+import com.wynntils.models.mapdata.attributes.type.MapVisibility;
 import com.wynntils.utils.colors.CustomColor;
 import com.wynntils.utils.render.type.TextShadow;
 

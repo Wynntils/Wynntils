@@ -5,7 +5,7 @@
 package com.wynntils.models.mapdata.providers.json;
 
 import com.mojang.blaze3d.platform.NativeImage;
-import com.wynntils.models.mapdata.type.attributes.MapIcon;
+import com.wynntils.models.mapdata.attributes.type.MapIcon;
 import com.wynntils.utils.mc.McUtils;
 import java.io.IOException;
 import net.minecraft.client.renderer.texture.DynamicTexture;

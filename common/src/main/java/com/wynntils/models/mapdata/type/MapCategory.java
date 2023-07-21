@@ -4,7 +4,7 @@
  */
 package com.wynntils.models.mapdata.type;
 
-import com.wynntils.models.mapdata.type.attributes.MapAttributes;
+import com.wynntils.models.mapdata.attributes.type.MapAttributes;
 
 public interface MapCategory {
     // Required

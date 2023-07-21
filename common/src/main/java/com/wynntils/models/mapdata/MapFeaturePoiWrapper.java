@@ -7,10 +7,10 @@ package com.wynntils.models.mapdata;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.wynntils.core.components.Models;
 import com.wynntils.core.text.StyledText;
-import com.wynntils.models.mapdata.type.attributes.MapAttributes;
-import com.wynntils.models.mapdata.type.attributes.MapIcon;
-import com.wynntils.models.mapdata.type.features.MapFeature;
-import com.wynntils.models.mapdata.type.features.MapLocation;
+import com.wynntils.models.mapdata.attributes.type.MapAttributes;
+import com.wynntils.models.mapdata.attributes.type.MapIcon;
+import com.wynntils.models.mapdata.type.MapFeature;
+import com.wynntils.models.mapdata.type.MapLocation;
 import com.wynntils.services.map.pois.Poi;
 import com.wynntils.services.map.type.DisplayPriority;
 import com.wynntils.utils.colors.CommonColors;
@@ -30,7 +30,7 @@ public class MapFeaturePoiWrapper implements Poi {
 
     public MapFeaturePoiWrapper(MapFeature feature) {
         this.feature = feature;
-        attributes = Models.MapData.getInheritedAttributes(this.feature);
+        attributes = Models.MapData.getFullFeatureAttributes(this.feature);
     }
 
     @Override
