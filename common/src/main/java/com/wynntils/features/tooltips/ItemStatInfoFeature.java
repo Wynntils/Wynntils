@@ -123,9 +123,7 @@ public class ItemStatInfoFeature extends Feature {
             brokenItems.add(gearItem);
             WynntilsMod.error("Exception when creating tooltips for item " + gearInfo.name(), e);
             WynntilsMod.warn("This item has been disabled from ItemStatInfoFeature: " + gearItem);
-            McUtils.sendMessageToClient(
-                    Component.literal("Wynntils error: Problem showing tooltip for item " + gearInfo.name())
-                            .withStyle(ChatFormatting.RED));
+            McUtils.sendErrorToClient("Wynntils error: Problem showing tooltip for item " + gearInfo.name());
 
             if (brokenItems.size() > 10) {
                 // Give up and disable feature

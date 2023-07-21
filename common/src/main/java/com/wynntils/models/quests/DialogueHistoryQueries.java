@@ -18,8 +18,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-import net.minecraft.ChatFormatting;
-import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.ItemStack;
 
 public class DialogueHistoryQueries {
@@ -38,8 +36,7 @@ public class DialogueHistoryQueries {
         ScriptedContainerQuery query = ScriptedContainerQuery.builder("Dialogue History Query")
                 .onError(msg -> {
                     WynntilsMod.warn("Problem getting dialogue history: " + msg);
-                    McUtils.sendMessageToClient(
-                            Component.literal("Dumping Dialogue History failed").withStyle(ChatFormatting.RED));
+                    McUtils.sendErrorToClient("Dumping Dialogue History failed");
                 })
 
                 // Open content book

@@ -17,7 +17,7 @@ import com.wynntils.utils.mc.McUtils;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.Locale;
-import net.minecraft.ChatFormatting;
+import net.minecraft.client.resources.language.I18n;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraftforge.eventbus.api.EventPriority;
@@ -39,8 +39,7 @@ public class ChatTimestampFeature extends Feature {
         } catch (Exception e) {
             formatter = null;
 
-            McUtils.sendMessageToClient(Component.translatable("feature.wynntils.chatTimestamp.invalidFormatMsg")
-                    .withStyle(ChatFormatting.DARK_RED));
+            McUtils.sendErrorToClient(I18n.get("feature.wynntils.chatTimestamp.invalidFormatMsg"));
         }
     }
 

@@ -38,6 +38,7 @@ import net.minecraft.Util;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
+import net.minecraft.client.resources.language.I18n;
 import net.minecraft.network.chat.ClickEvent;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.HoverEvent;
@@ -145,9 +146,8 @@ public class ItemScreenshotFeature extends Feature {
                         .withStyle(ChatFormatting.GREEN));
             } catch (IOException e) {
                 WynntilsMod.error("Failed to save image to disk", e);
-                McUtils.sendMessageToClient(Component.translatable(
-                                "feature.wynntils.itemScreenshot.save.error", itemStack.getHoverName(), filename)
-                        .withStyle(ChatFormatting.RED));
+                McUtils.sendErrorToClient(
+                        I18n.get("feature.wynntils.itemScreenshot.save.error", itemStack.getHoverName(), filename));
             }
 
             if (SystemUtils.isMac()) {
@@ -173,8 +173,7 @@ public class ItemScreenshotFeature extends Feature {
                     .withStyle(ChatFormatting.GREEN));
         } catch (HeadlessException ex) {
             WynntilsMod.error("Failed to copy image to clipboard", ex);
-            McUtils.sendMessageToClient(Component.translatable("feature.wynntils.itemScreenshot.copy.error")
-                    .withStyle(ChatFormatting.RED));
+            McUtils.sendErrorToClient(I18n.get("feature.wynntils.itemScreenshot.copy.error"));
         }
     }
 
@@ -187,8 +186,7 @@ public class ItemScreenshotFeature extends Feature {
         if (gearItem.isUnidentified()) {
             // We can only send chat encoded gear of identified gear
             WynntilsMod.warn("Cannot make chat link of unidentified gear");
-            McUtils.sendMessageToClient(Component.translatable("feature.wynntils.itemScreenshot.chatItemError")
-                    .withStyle(ChatFormatting.RED));
+            McUtils.sendErrorToClient(I18n.get("feature.wynntils.itemScreenshot.chatItemError"));
             return;
         }
         String encoded = Models.Gear.toEncodedString(gearItem);

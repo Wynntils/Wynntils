@@ -25,10 +25,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
-import net.minecraft.ChatFormatting;
 import net.minecraft.SharedConstants;
-import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.MutableComponent;
 import net.minecraftforge.eventbus.api.Event;
 import net.minecraftforge.eventbus.api.IEventBus;
 import org.apache.commons.lang3.reflect.FieldUtils;
@@ -260,10 +257,8 @@ public final class WynntilsMod {
         WynntilsMod.error("Exception thrown by " + fullName, throwable);
 
         if (shouldSendChat) {
-            MutableComponent component = Component.literal("Wynntils error: " + type.getName() + " '" + niceName
-                            + "' has crashed" + (isDisabled ? " and has been disabled" : ""))
-                    .withStyle(ChatFormatting.RED);
-            McUtils.sendMessageToClient(component);
+            McUtils.sendErrorToClient("Wynntils error: " + type.getName() + " '" + niceName + "' has crashed"
+                    + (isDisabled ? " and has been disabled" : ""));
         }
 
         postEvent(new WynntilsCrashEvent(fullName, type, throwable));
