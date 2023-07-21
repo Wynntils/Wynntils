@@ -23,6 +23,7 @@ import com.wynntils.models.mapdata.type.features.MapFeature;
 import com.wynntils.utils.EnumUtils;
 import com.wynntils.utils.JsonUtils;
 import com.wynntils.utils.colors.CustomColor;
+import com.wynntils.utils.mc.McUtils;
 import com.wynntils.utils.mc.type.Location;
 import java.io.IOException;
 import java.io.InputStream;
@@ -60,12 +61,15 @@ public class JsonProvider implements MapDataProvider {
                 Reader targetReader = new InputStreamReader(inputStream, StandardCharsets.UTF_8)) {
             return GSON.fromJson(targetReader, JsonProvider.class);
         } catch (MalformedJsonException e) {
-            WynntilsMod.warn("Error parsing map data '" + id + "'", e);
+            McUtils.sendErrorToClient("Error parsing map data for '" + id + "'");
+            WynntilsMod.warn("Error parsing map data for '" + id + "'", e);
         } catch (IOException e) {
-            WynntilsMod.warn("Error reading map data '" + id + "'", e);
+            McUtils.sendErrorToClient("Error reading map data for '" + id + "'");
+            WynntilsMod.warn("Error reading map data for '" + id + "'", e);
         } catch (Throwable e) {
             // This is typically a NPE in GSON parsing
-            WynntilsMod.warn("Error parsing map data '" + id + "'", e);
+            McUtils.sendErrorToClient("Error parsing map data for '" + id + "'");
+            WynntilsMod.warn("Error parsing map data for '" + id + "'", e);
         }
         return null;
     }
@@ -78,10 +82,14 @@ public class JsonProvider implements MapDataProvider {
                         registerCallback.accept(id, GSON.fromJson(reader, JsonProvider.class));
                     } catch (Throwable e) {
                         // This is either a json parse error or a NPE in GSON parsing
-                        WynntilsMod.warn("Error parsing map data '" + id + "'", e);
+                        McUtils.sendErrorToClient("Error parsing map data for '" + id + "'");
+                        WynntilsMod.warn("Error parsing map data for '" + id + "'", e);
                     }
                 },
-                onError -> WynntilsMod.warn("Error occurred while downloading map data '" + id + "'", onError));
+                onError -> {
+                    McUtils.sendErrorToClient("Error downloading map data for '" + id + "'");
+                    WynntilsMod.warn("Error occurred while downloading map data for '" + id + "'", onError);
+                });
     }
 
     @Override
