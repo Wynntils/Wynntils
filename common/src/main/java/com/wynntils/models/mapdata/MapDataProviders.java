@@ -5,10 +5,14 @@
 package com.wynntils.models.mapdata;
 
 import com.wynntils.models.mapdata.providers.MapDataProvider;
+import com.wynntils.models.mapdata.providers.builtin.BuiltInProvider;
 import com.wynntils.models.mapdata.providers.builtin.CategoriesProvider;
 import com.wynntils.models.mapdata.providers.builtin.CharacterProvider;
 import com.wynntils.models.mapdata.providers.builtin.MapIconsProvider;
 import com.wynntils.models.mapdata.providers.json.JsonProvider;
+import com.wynntils.models.mapdata.type.MapCategory;
+import com.wynntils.models.mapdata.type.attributes.MapIcon;
+import com.wynntils.models.mapdata.type.features.MapFeature;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -16,36 +20,76 @@ import java.util.Map;
 import java.util.stream.Stream;
 
 public class MapDataProviders {
-    private static final List<MapDataProvider> BUILT_IN_PROVIDERS =
-            List.of(new CategoriesProvider(), new CharacterProvider(), new MapIconsProvider());
+    private static final MapDataProvider ONLINE_PLACEHOLDER_PROVIDER = new PlaceholderProvider();
 
-    private final List<MapDataProvider> providers = new ArrayList<>();
-    private final Map<String, MapDataProvider> onlineProviders = new HashMap<>();
+    private final List<String> providerOrder = new ArrayList<>();
+    private final Map<String, MapDataProvider> allProviders = new HashMap<>();
 
     public MapDataProviders() {
-        providers.addAll(BUILT_IN_PROVIDERS);
-        //   providers.add(createLocalProvider("mapdata.json"));
+        createBuiltInProviders();
+
+        // FIXME: demo
+        createLocalProvider("local-1", "mapdata.json");
         createOnlineProvider(
                 "online-1",
-                "https://raw.githubusercontent.com/magicus/Artemis/map-data-rewrite/common/src/main/resources/assets/wynntils/mapdata.json");
+                "https://gist.githubusercontent.com/magicus/a2c810380a34a7474a2651400d36d72c/raw/6451288fcf261b62bff50c00a079535d3b2ef3d6/online-mapdata.json");
     }
 
     Stream<MapDataProvider> getProviders() {
-        return providers.stream();
+        return providerOrder.stream().map(allProviders::get);
     }
 
     // per-account, per-character or shared
     // can be added just from disk, or downloaded from an url
-    public MapDataProvider createLocalProvider(String filename) {
-        return JsonProvider.loadLocalResource(filename);
+    public void createLocalProvider(String id, String filename) {
+        String completeId = "local:" + id;
+        JsonProvider provider = JsonProvider.loadLocalResource(filename);
+        registerProvider(completeId, provider);
     }
 
     public void createOnlineProvider(String id, String url) {
-        JsonProvider.loadOnlineResource(id, url, this::registerOnlineProvider);
+        String completeId = "online:" + id;
+        JsonProvider.loadOnlineResource(completeId, url, this::registerProvider);
+        // Register a dummy provider; this will be replaced once loading has finished
+        registerProvider(completeId, ONLINE_PLACEHOLDER_PROVIDER);
     }
 
-    private void registerOnlineProvider(String id, MapDataProvider provider) {
-        onlineProviders.put(id, provider);
-        providers.add(provider);
+    private void createBuiltInProviders() {
+        // Metadata
+        registerBuiltInProvider(new CategoriesProvider());
+        registerBuiltInProvider(new MapIconsProvider());
+
+        // Locations
+        registerBuiltInProvider(new CharacterProvider());
+    }
+
+    private void registerBuiltInProvider(BuiltInProvider provider) {
+        registerProvider("built-in:" + provider.getProviderId(), provider);
+    }
+
+    private void registerProvider(String providerId, MapDataProvider provider) {
+        if (!allProviders.containsKey(providerId)) {
+            // It is not previously known, so add it last
+            providerOrder.add(providerId);
+        }
+        // Add or update the provider
+        allProviders.put(providerId, provider);
+    }
+
+    private static class PlaceholderProvider implements MapDataProvider {
+        @Override
+        public Stream<MapFeature> getFeatures() {
+            return Stream.empty();
+        }
+
+        @Override
+        public Stream<MapCategory> getCategories() {
+            return Stream.empty();
+        }
+
+        @Override
+        public Stream<MapIcon> getIcons() {
+            return Stream.empty();
+        }
     }
 }

@@ -10,7 +10,9 @@ import com.wynntils.models.mapdata.type.attributes.MapIcon;
 import com.wynntils.models.mapdata.type.features.MapFeature;
 import java.util.stream.Stream;
 
-public abstract class AbstractMapDataProvider implements MapDataProvider {
+public abstract class BuiltInProvider implements MapDataProvider {
+    public abstract String getProviderId();
+
     @Override
     public Stream<MapFeature> getFeatures() {
         return Stream.empty();

@@ -14,8 +14,13 @@ import com.wynntils.utils.render.type.TextShadow;
 import java.util.List;
 import java.util.stream.Stream;
 
-public class CategoriesProvider extends AbstractMapDataProvider {
+public class CategoriesProvider extends BuiltInProvider {
     private static final List<MapCategory> PROVIDED_CATEGORIES = List.of(new WynntilsCategory());
+
+    @Override
+    public String getProviderId() {
+        return "categories";
+    }
 
     @Override
     public Stream<MapCategory> getCategories() {

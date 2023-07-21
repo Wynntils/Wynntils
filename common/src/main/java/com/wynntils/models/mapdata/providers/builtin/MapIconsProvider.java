@@ -10,7 +10,7 @@ import java.util.List;
 import java.util.stream.Stream;
 import net.minecraft.resources.ResourceLocation;
 
-public class MapIconsProvider extends AbstractMapDataProvider {
+public class MapIconsProvider extends BuiltInProvider {
     private static final List<MapIcon> PROVIDED_ICONS = List.of(
             new BuiltInIcon("wynntils:icon:content:boss-altar", Texture.BOSS_ALTAR),
             new BuiltInIcon("wynntils:icon:content:cave", Texture.CAVE),
@@ -59,6 +59,11 @@ public class MapIconsProvider extends AbstractMapDataProvider {
             new BuiltInIcon("wynntils:icon:symbols:star", Texture.STAR),
             new BuiltInIcon("wynntils:icon:symbols:wall", Texture.WALL),
             new BuiltInIcon("wynntils:icon:symbols:waypoint", Texture.WAYPOINT));
+
+    @Override
+    public String getProviderId() {
+        return "icons";
+    }
 
     @Override
     public Stream<MapIcon> getIcons() {

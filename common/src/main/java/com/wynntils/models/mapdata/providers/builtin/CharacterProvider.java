@@ -17,9 +17,14 @@ import com.wynntils.utils.render.type.TextShadow;
 import java.util.List;
 import java.util.stream.Stream;
 
-public class CharacterProvider extends AbstractMapDataProvider {
+public class CharacterProvider extends BuiltInProvider {
     private static final List<MapFeature> PROVIDED_FEATURES = List.of(new CharacterLocation());
     private static final List<MapCategory> PROVIDED_CATEGORIES = List.of(new PlayersCategory());
+
+    @Override
+    public String getProviderId() {
+        return "character";
+    }
 
     @Override
     public Stream<MapFeature> getFeatures() {
