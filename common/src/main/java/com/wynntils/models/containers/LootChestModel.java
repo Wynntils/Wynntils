@@ -13,9 +13,12 @@ import com.wynntils.mc.event.ChestMenuQuickMoveEvent;
 import com.wynntils.mc.event.ContainerSetSlotEvent;
 import com.wynntils.mc.event.MenuEvent;
 import com.wynntils.models.containers.event.MythicFoundEvent;
+import com.wynntils.models.containers.type.MythicFind;
 import com.wynntils.models.gear.type.GearTier;
 import com.wynntils.models.gear.type.GearType;
 import com.wynntils.models.items.items.game.GearBoxItem;
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 import net.minecraft.world.item.ItemStack;
@@ -24,6 +27,7 @@ import net.minecraftforge.eventbus.api.SubscribeEvent;
 public final class LootChestModel extends Model {
     private static final int LOOT_CHEST_ITEM_COUNT = 27;
 
+    private final Storage<List<MythicFind>> mythicFinds = new Storage<>(new ArrayList<>());
     private final Storage<Integer> openedChestCount = new Storage<>(0);
     private final Storage<Integer> dryCount = new Storage<>(0);
     private final Storage<Integer> dryBoxes = new Storage<>(0);
@@ -44,6 +48,10 @@ public final class LootChestModel extends Model {
 
     public int getOpenedChestCount() {
         return openedChestCount.get();
+    }
+
+    public List<MythicFind> getMythicFinds() {
+        return Collections.unmodifiableList(mythicFinds.get());
     }
 
     @SubscribeEvent
@@ -69,6 +77,16 @@ public final class LootChestModel extends Model {
         if (gearBox.getGearTier() == GearTier.MYTHIC) {
             WynntilsMod.postEvent(new MythicFoundEvent(itemStack));
             if (gearBox.getGearType() != GearType.MASTERY_TOME) {
+                mythicFinds
+                        .get()
+                        .add(new MythicFind(
+                                StyledText.fromComponent(itemStack.getHoverName())
+                                        .getStringWithoutFormatting(),
+                                openedChestCount.get(),
+                                dryCount.get(),
+                                dryBoxes.get()));
+                mythicFinds.touched();
+
                 dryBoxes.store(0);
                 dryCount.store(0);
             }
