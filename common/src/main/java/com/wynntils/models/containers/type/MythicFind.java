@@ -4,4 +4,7 @@
  */
 package com.wynntils.models.containers.type;
 
-public record MythicFind(String itemName, int chestCount, int dryCount, int dryBoxes) {}
+import com.wynntils.utils.mc.type.Location;
+
+public record MythicFind(
+        String itemName, int chestCount, int dryCount, int dryBoxes, long timestamp, Location chestCoordinate) {}

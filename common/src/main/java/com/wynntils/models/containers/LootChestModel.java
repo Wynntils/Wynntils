@@ -12,15 +12,20 @@ import com.wynntils.core.text.StyledText;
 import com.wynntils.mc.event.ChestMenuQuickMoveEvent;
 import com.wynntils.mc.event.ContainerSetSlotEvent;
 import com.wynntils.mc.event.MenuEvent;
+import com.wynntils.mc.event.PlayerInteractEvent;
 import com.wynntils.models.containers.event.MythicFoundEvent;
 import com.wynntils.models.containers.type.MythicFind;
 import com.wynntils.models.gear.type.GearTier;
 import com.wynntils.models.gear.type.GearType;
 import com.wynntils.models.items.items.game.GearBoxItem;
+import com.wynntils.utils.mc.type.Location;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 
@@ -32,6 +37,7 @@ public final class LootChestModel extends Model {
     private final Storage<Integer> dryCount = new Storage<>(0);
     private final Storage<Integer> dryBoxes = new Storage<>(0);
 
+    private BlockPos lastChestPos;
     private int nextExpectedLootContainerId = -2;
 
     public LootChestModel(ContainerModel containerModel) {
@@ -55,6 +61,15 @@ public final class LootChestModel extends Model {
     }
 
     @SubscribeEvent
+    public void onRightClick(PlayerInteractEvent.InteractAt event) {
+        Entity entity = event.getEntityHitResult().getEntity();
+        if (entity != null && entity.getType() == EntityType.SLIME) {
+            // We don't actually know if this is a chest, but it's a good enough guess.
+            lastChestPos = entity.blockPosition();
+        }
+    }
+
+    @SubscribeEvent
     public void onMenuOpened(MenuEvent.MenuOpenedEvent event) {
         if (Models.Container.isLootChest(
                 StyledText.fromComponent(event.getTitle()).getStringWithoutFormatting())) {
@@ -62,6 +77,8 @@ public final class LootChestModel extends Model {
 
             openedChestCount.store(openedChestCount.get() + 1);
             dryCount.store(dryCount.get() + 1);
+        } else {
+            lastChestPos = null;
         }
     }
 
@@ -84,7 +101,9 @@ public final class LootChestModel extends Model {
                                         .getStringWithoutFormatting(),
                                 openedChestCount.get(),
                                 dryCount.get(),
-                                dryBoxes.get()));
+                                dryBoxes.get(),
+                                System.currentTimeMillis(),
+                                new Location(lastChestPos)));
                 mythicFinds.touched();
 
                 dryBoxes.store(0);
