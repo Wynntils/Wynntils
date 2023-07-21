@@ -180,8 +180,6 @@ public final class ChatHandler extends Handler {
             // No new lines has appeared since last registered chat line.
             // We could just have a dialog that disappeared, so we must signal this
             postNpcDialogue(List.of(), NpcDialogueType.NONE, false);
-            // Ignore any delayed dialogues, since they are now obsolete
-            delayedDialogue = null;
             return;
         }
 
@@ -352,6 +350,11 @@ public final class ChatHandler extends Handler {
             if (lastScreenNpcDialog.equals(dialogue)) return;
 
             lastScreenNpcDialog = dialogue;
+        }
+
+        if (type == NpcDialogueType.NONE) {
+            // Ignore any delayed dialogues, since they are now obsolete
+            delayedDialogue = null;
         }
 
         NpcDialogEvent event = new NpcDialogEvent(dialogue, type, isProtected);
