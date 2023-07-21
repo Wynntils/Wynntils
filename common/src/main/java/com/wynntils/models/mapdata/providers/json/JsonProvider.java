@@ -55,22 +55,31 @@ public class JsonProvider implements MapDataProvider {
         this.icons = icons;
     }
 
-    public static JsonProvider loadLocalResource(String filename) {
+    public static JsonProvider loadLocalResource(String id, String filename) {
         try (InputStream inputStream = WynntilsMod.getModResourceAsStream(filename);
                 Reader targetReader = new InputStreamReader(inputStream, StandardCharsets.UTF_8)) {
             return GSON.fromJson(targetReader, JsonProvider.class);
         } catch (MalformedJsonException e) {
-            throw new RuntimeException(e);
+            WynntilsMod.warn("Error parsing map data '" + id + "'", e);
         } catch (IOException e) {
-            throw new RuntimeException(e);
+            WynntilsMod.warn("Error reading map data '" + id + "'", e);
+        } catch (Throwable e) {
+            // This is typically a NPE in GSON parsing
+            WynntilsMod.warn("Error parsing map data '" + id + "'", e);
         }
+        return null;
     }
 
     public static void loadOnlineResource(String id, String url, BiConsumer<String, MapDataProvider> registerCallback) {
         Download dl = Managers.Net.download(URI.create(url), id);
         dl.handleReader(
                 reader -> {
-                    registerCallback.accept(id, GSON.fromJson(reader, JsonProvider.class));
+                    try {
+                        registerCallback.accept(id, GSON.fromJson(reader, JsonProvider.class));
+                    } catch (Throwable e) {
+                        // This is either a json parse error or a NPE in GSON parsing
+                        WynntilsMod.warn("Error parsing map data '" + id + "'", e);
+                    }
                 },
                 onError -> WynntilsMod.warn("Error occurred while downloading map data '" + id + "'", onError));
     }

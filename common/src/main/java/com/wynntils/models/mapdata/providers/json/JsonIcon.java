@@ -28,11 +28,6 @@ public class JsonIcon implements MapIcon {
     }
 
     @Override
-    public String getIconId() {
-        return iconId;
-    }
-
-    @Override
     public ResourceLocation getResourceLocation() {
         if (!registered) {
             // We canot do this in the constructor since GL is not initiated at that time
@@ -41,6 +36,11 @@ public class JsonIcon implements MapIcon {
         }
 
         return resource;
+    }
+
+    @Override
+    public String getIconId() {
+        return iconId;
     }
 
     @Override
