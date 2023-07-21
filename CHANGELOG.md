@@ -1,9 +1,21 @@
+## [0.0.3-alpha.168](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.167...v0.0.3-alpha.168) (2023-07-21)
+
+
+### New Features
+
+* Add dry streak message ([#1787](https://github.com/Wynntils/Artemis/issues/1787)) ([d12c9b5](https://github.com/Wynntils/Artemis/commit/d12c9b560e7f5cf6f721a8b9dfb0704667f9a792))
+
 ## [0.0.3-alpha.167](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.166...v0.0.3-alpha.167) (2023-07-21)
 
 
 ### New Features
 
 * Add custom player list overlay ([#1651](https://github.com/Wynntils/Artemis/issues/1651)) ([cb28656](https://github.com/Wynntils/Artemis/commit/cb28656da2929b0cb3f9f8eeb9a0e98acf71dab1))
+
+
+### Miscellaneous Chores
+
+* **release:** v0.0.3-alpha.167 [skip ci] ([37a668c](https://github.com/Wynntils/Artemis/commit/37a668cc5877d1843a5ddc6c19bfb7e809246325))
 
 ## [0.0.3-alpha.166](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.165...v0.0.3-alpha.166) (2023-07-20)
 
@@ -41,16 +53,4 @@
 ### Miscellaneous Chores
 
 * **release:** v0.0.3-alpha.164 [skip ci] ([5993f35](https://github.com/Wynntils/Artemis/commit/5993f3531c789a9682210fe3b7c0e777f95e64d0))
-
-## [0.0.3-alpha.163](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.162...v0.0.3-alpha.163) (2023-07-19)
-
-
-### New Features
-
-* Add sort button to discoveries, prepare quest book redesign ([#1778](https://github.com/Wynntils/Artemis/issues/1778)) ([a46d00f](https://github.com/Wynntils/Artemis/commit/a46d00fd8c5e521382445f6ba5e5bedb185ac372))
-
-
-### Miscellaneous Chores
-
-* **release:** v0.0.3-alpha.163 [skip ci] ([01716a0](https://github.com/Wynntils/Artemis/commit/01716a0d5b1430f527a31e8bf9649d0c121867f3))
 
