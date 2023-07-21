@@ -13,17 +13,19 @@ import net.minecraft.resources.ResourceLocation;
 
 public class JsonIcon implements MapFeatureIcon {
     private final String id;
-    private final byte[] texture;
+    private final NativeImage nativeImage;
     private final int width;
     private final int height;
     private boolean registered;
     private ResourceLocation resource;
 
-    public JsonIcon(String id, byte[] texture, int width, int height) {
+    public JsonIcon(String id, byte[] texture) throws IOException {
         this.id = id;
-        this.texture = texture;
-        this.width = width;
-        this.height = height;
+        this.nativeImage = NativeImage.read(texture);
+        this.width = nativeImage.getWidth();
+        ;
+        this.height = nativeImage.getHeight();
+        ;
         this.resource = new ResourceLocation("wynntils", "icons/" + id.replaceAll(":", "."));
     }
 
@@ -35,14 +37,9 @@ public class JsonIcon implements MapFeatureIcon {
     @Override
     public ResourceLocation getResourceLocation() {
         if (!registered) {
-            // Needed
+            // We canot do this in the constructor since GL is not initiated by then
             registered = true;
-            try {
-                NativeImage nativeImage = NativeImage.read(texture);
-                McUtils.mc().getTextureManager().register(resource, new DynamicTexture(nativeImage));
-            } catch (IOException e) {
-                throw new RuntimeException(e);
-            }
+            McUtils.mc().getTextureManager().register(resource, new DynamicTexture(nativeImage));
         }
 
         return resource;

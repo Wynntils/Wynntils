@@ -83,10 +83,13 @@ public class JsonProviderLoader {
             String id = json.get("id").getAsString();
             String base64Texture = json.get("texture").getAsString();
             byte[] texture = Base64.getDecoder().decode(base64Texture);
-            int width = json.get("width").getAsInt();
-            int height = json.get("height").getAsInt();
 
-            return new JsonIcon(id, texture, width, height);
+            try {
+                return new JsonIcon(id, texture);
+            } catch (IOException e) {
+                WynntilsMod.warn("Bad icon texture for " + id, e);
+                return null;
+            }
         }
     }
 
