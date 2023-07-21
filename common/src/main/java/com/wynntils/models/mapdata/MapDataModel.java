@@ -37,7 +37,7 @@ public class MapDataModel extends Model {
     }
 
     public String getCategoryName(String categoryId) {
-        return getCategories(categoryId)
+        return getCategoryDefinitions(categoryId)
                 .map(MapCategory::getName)
                 .filter(Objects::nonNull)
                 .findFirst()
@@ -69,12 +69,16 @@ public class MapDataModel extends Model {
         return icon;
     }
 
+    // region Support for FullFeatureAttributes and FullCategoryAttributes
+
     public MapAttributes getFullCategoryAttributes(String categoryId) {
         return new FullCategoryAttributes(categoryId);
     }
 
-    public Stream<MapCategory> getCategories(String categoryId) {
+    public Stream<MapCategory> getCategoryDefinitions(String categoryId) {
         return providers.getProviders().flatMap(MapDataProvider::getCategories).filter(p -> p.getCategoryId()
                 .equals(categoryId));
     }
+
+    // endregion
 }
