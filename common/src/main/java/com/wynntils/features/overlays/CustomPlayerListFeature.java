@@ -6,6 +6,7 @@ package com.wynntils.features.overlays;
 
 import com.mojang.blaze3d.platform.Window;
 import com.mojang.blaze3d.vertex.PoseStack;
+import com.wynntils.core.components.Managers;
 import com.wynntils.core.components.Models;
 import com.wynntils.core.config.Category;
 import com.wynntils.core.config.Config;
@@ -46,7 +47,8 @@ public class CustomPlayerListFeature extends Feature {
 
     @SubscribeEvent
     public void onRender(RenderEvent.Pre event) {
-        if (event.getType() == RenderEvent.ElementType.PLAYER_TAB_LIST) {
+        if (event.getType() == RenderEvent.ElementType.PLAYER_TAB_LIST
+                && Managers.Overlay.isEnabled(customPlayerListOverlay)) {
             event.setCanceled(true);
         }
     }
