@@ -257,15 +257,16 @@ public class TextInputBoxWidget extends AbstractWidget {
 
     @Override
     public boolean mouseClicked(double mouseX, double mouseY, int button) {
-        McUtils.playSoundUI(SoundEvents.UI_BUTTON_CLICK.value());
-
         if (this.isHovered) {
+            McUtils.playSoundUI(SoundEvents.UI_BUTTON_CLICK.value());
             setCursorAndHighlightPositions(getIndexAtPosition(mouseX));
             isDragging = true;
             textboxScreen.setFocusedTextInput(this);
             this.setFocused(true);
             return true;
-        } else {
+        }
+        if (isFocused()) {
+            McUtils.playSoundUI(SoundEvents.UI_BUTTON_CLICK.value());
             setCursorAndHighlightPositions(cursorPosition); // remove highlights when clicking off
             this.setFocused(false);
             textboxScreen.setFocusedTextInput(null);
