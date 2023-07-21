@@ -1,9 +1,21 @@
+## [0.0.3-alpha.174](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.173...v0.0.3-alpha.174) (2023-07-21)
+
+
+### New Features
+
+* Add button to poi management in wynntils menu ([#1795](https://github.com/Wynntils/Artemis/issues/1795)) ([dce20a1](https://github.com/Wynntils/Artemis/commit/dce20a1bf67e1471cf50954ae9c0a94855205a4c))
+
 ## [0.0.3-alpha.173](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.172...v0.0.3-alpha.173) (2023-07-21)
 
 
 ### Bug Fixes
 
 * Button clicks in ChatTabEditingScreen even though there isn't any button selected ([#1797](https://github.com/Wynntils/Artemis/issues/1797)) ([c8911bd](https://github.com/Wynntils/Artemis/commit/c8911bdbd23228b93419803b8d9c2d492360c322))
+
+
+### Miscellaneous Chores
+
+* **release:** v0.0.3-alpha.173 [skip ci] ([4e85133](https://github.com/Wynntils/Artemis/commit/4e851336b8286c258adcb66e1b41c592196297b7))
 
 ## [0.0.3-alpha.172](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.171...v0.0.3-alpha.172) (2023-07-21)
 
@@ -40,16 +52,4 @@
 ### Code Refactoring
 
 * Create sendErrorToClient() convenience method ([#1792](https://github.com/Wynntils/Artemis/issues/1792)) ([d627686](https://github.com/Wynntils/Artemis/commit/d627686eb3cbb37326e721bc540dd3aa144d497d))
-
-## [0.0.3-alpha.169](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.168...v0.0.3-alpha.169) (2023-07-21)
-
-
-### New Features
-
-* Add HighestDryStreakFunction, LastDryStreakFunction, LastMythicFunction (and store all mythic finds) ([#1793](https://github.com/Wynntils/Artemis/issues/1793)) ([f83bf71](https://github.com/Wynntils/Artemis/commit/f83bf711d63a17aab1e2553372090fc81ce1f8f1))
-
-
-### Miscellaneous Chores
-
-* **release:** v0.0.3-alpha.169 [skip ci] ([c1a289b](https://github.com/Wynntils/Artemis/commit/c1a289b7a8c34328d97b4d2827dbded33b9abf92))
 
