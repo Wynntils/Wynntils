@@ -12,9 +12,8 @@ import com.wynntils.mc.event.ContainerCloseEvent;
 import com.wynntils.utils.mc.McUtils;
 import com.wynntils.utils.wynn.ContainerUtils;
 import com.wynntils.utils.wynn.WynnItemMatchers;
-import net.minecraft.ChatFormatting;
+import net.minecraft.client.resources.language.I18n;
 import net.minecraft.core.NonNullList;
-import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 
@@ -29,8 +28,7 @@ public class MythicBlockerFeature extends Feature {
         for (int i = 0; i < 27; i++) {
             ItemStack itemStack = items.get(i);
             if (WynnItemMatchers.isMythic(itemStack)) {
-                McUtils.sendMessageToClient(Component.translatable("feature.wynntils.mythicBlocker.closingBlocked")
-                        .withStyle(ChatFormatting.RED));
+                McUtils.sendErrorToClient(I18n.get("feature.wynntils.mythicBlocker.closingBlocked"));
                 e.setCanceled(true);
                 return;
             }

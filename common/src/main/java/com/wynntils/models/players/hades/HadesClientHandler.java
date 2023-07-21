@@ -43,9 +43,7 @@ public class HadesClientHandler implements IHadesClientAdapter {
             hadesConnection.disconnect();
 
             if (Managers.Connection.onServer()) {
-                McUtils.sendMessageToClient(
-                        Component.literal("Could not connect to HadesServer because you are not logged in on Athena.")
-                                .withStyle(ChatFormatting.RED));
+                McUtils.sendErrorToClient("Could not connect to HadesServer because you are not logged in on Athena.");
             }
 
             throw new IllegalStateException("Tried to auth to HadesServer without being logged in on Athena.");
@@ -59,8 +57,7 @@ public class HadesClientHandler implements IHadesClientAdapter {
         WynntilsMod.postEvent(new HadesEvent.Disconnected());
 
         if (Managers.Connection.onServer()) {
-            McUtils.sendMessageToClient(
-                    Component.literal("Disconnected from HadesServer").withStyle(ChatFormatting.RED));
+            McUtils.sendErrorToClient("Disconnected from HadesServer");
         }
 
         WynntilsMod.info("Disconnected from HadesServer.");

@@ -35,7 +35,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
-import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
 import net.minecraftforge.eventbus.api.EventPriority;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
@@ -209,8 +208,7 @@ public final class DiscoveryModel extends Model {
         ApiResponse apiResponse = Managers.Net.callApi(UrlId.API_WIKI_DISCOVERY_QUERY, Map.of("name", name));
         apiResponse.handleJsonObject(json -> {
             if (json.has("error")) { // Returns error if page does not exist
-                McUtils.sendMessageToClient(Component.literal(
-                        ChatFormatting.RED + "Unable to find discovery coordinates. (Wiki page not found)"));
+                McUtils.sendErrorToClient("Unable to find discovery coordinates. (Wiki page not found)");
                 return;
             }
 
@@ -236,14 +234,12 @@ public final class DiscoveryModel extends Model {
                 x = Integer.parseInt(xLocation.substring(12, xEnd));
                 z = Integer.parseInt(zLocation.substring(12, zEnd));
             } catch (NumberFormatException e) {
-                McUtils.sendMessageToClient(Component.literal(
-                        ChatFormatting.RED + "Unable to find discovery coordinates. (Wiki template not located)"));
+                McUtils.sendErrorToClient("Unable to find discovery coordinates. (Wiki template not located)");
                 return;
             }
 
             if (x == 0 && z == 0) {
-                McUtils.sendMessageToClient(Component.literal(
-                        ChatFormatting.RED + "Unable to find discovery coordinates. (Wiki coordinates not located)"));
+                McUtils.sendErrorToClient("Unable to find discovery coordinates. (Wiki coordinates not located)");
                 return;
             }
 

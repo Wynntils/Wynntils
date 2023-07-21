@@ -23,9 +23,8 @@ import com.wynntils.utils.wynn.ContainerUtils;
 import java.util.Optional;
 import java.util.Set;
 import java.util.TreeSet;
-import net.minecraft.ChatFormatting;
+import net.minecraft.client.resources.language.I18n;
 import net.minecraft.core.NonNullList;
-import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 
@@ -59,8 +58,7 @@ public class ItemFavoriteFeature extends Feature {
         if (!containsFavorite) return;
 
         if (lootChestCloseOverride.get() == 0) { // never allow user to close
-            McUtils.sendMessageToClient(Component.translatable("feature.wynntils.itemFavorite.closingBlocked")
-                    .withStyle(ChatFormatting.RED));
+            McUtils.sendErrorToClient(I18n.get("feature.wynntils.itemFavorite.closingBlocked"));
             e.setCanceled(true);
             return;
         }
@@ -68,10 +66,9 @@ public class ItemFavoriteFeature extends Feature {
         lootChestCloseOverrideCounter++;
         if (lootChestCloseOverrideCounter >= lootChestCloseOverride.get()) return;
 
-        McUtils.sendMessageToClient(Component.translatable(
-                        "feature.wynntils.itemFavorite.closingBlockedOverride",
-                        lootChestCloseOverride.get() - lootChestCloseOverrideCounter)
-                .withStyle(ChatFormatting.RED));
+        McUtils.sendErrorToClient(I18n.get(
+                "feature.wynntils.itemFavorite.closingBlockedOverride",
+                lootChestCloseOverride.get() - lootChestCloseOverrideCounter));
         e.setCanceled(true);
     }
 
