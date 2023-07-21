@@ -1,9 +1,21 @@
+## [0.0.3-alpha.170](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.169...v0.0.3-alpha.170) (2023-07-21)
+
+
+### Code Refactoring
+
+* Create sendErrorToClient() convenience method ([#1792](https://github.com/Wynntils/Artemis/issues/1792)) ([d627686](https://github.com/Wynntils/Artemis/commit/d627686eb3cbb37326e721bc540dd3aa144d497d))
+
 ## [0.0.3-alpha.169](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.168...v0.0.3-alpha.169) (2023-07-21)
 
 
 ### New Features
 
 * Add HighestDryStreakFunction, LastDryStreakFunction, LastMythicFunction (and store all mythic finds) ([#1793](https://github.com/Wynntils/Artemis/issues/1793)) ([f83bf71](https://github.com/Wynntils/Artemis/commit/f83bf711d63a17aab1e2553372090fc81ce1f8f1))
+
+
+### Miscellaneous Chores
+
+* **release:** v0.0.3-alpha.169 [skip ci] ([c1a289b](https://github.com/Wynntils/Artemis/commit/c1a289b7a8c34328d97b4d2827dbded33b9abf92))
 
 ## [0.0.3-alpha.168](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.167...v0.0.3-alpha.168) (2023-07-21)
 
@@ -41,16 +53,4 @@
 ### Miscellaneous Chores
 
 * **release:** v0.0.3-alpha.166 [skip ci] ([4c51171](https://github.com/Wynntils/Artemis/commit/4c511714d88c1353a75b79af2b7a1e572e696b9f))
-
-## [0.0.3-alpha.165](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.164...v0.0.3-alpha.165) (2023-07-20)
-
-
-### Bug Fixes
-
-* Highest buy offer tooltip ([#1786](https://github.com/Wynntils/Artemis/issues/1786)) ([70ab410](https://github.com/Wynntils/Artemis/commit/70ab41087142ec01be44b56627405f5c1d91931f))
-
-
-### Miscellaneous Chores
-
-* **release:** v0.0.3-alpha.165 [skip ci] ([7ec29b8](https://github.com/Wynntils/Artemis/commit/7ec29b8e5def7397fbfd61d896279ee4197d5c67))
 
