@@ -24,7 +24,7 @@ import net.minecraftforge.eventbus.api.SubscribeEvent;
 public final class LootChestModel extends Model {
     private static final int LOOT_CHEST_ITEM_COUNT = 27;
 
-    private final Storage<Integer> chestCount = new Storage<>(0);
+    private final Storage<Integer> openedChestCount = new Storage<>(0);
     private final Storage<Integer> dryCount = new Storage<>(0);
     private final Storage<Integer> dryBoxes = new Storage<>(0);
 
@@ -42,8 +42,8 @@ public final class LootChestModel extends Model {
         return dryBoxes.get();
     }
 
-    public int getChestCount() {
-        return chestCount.get();
+    public int getOpenedChestCount() {
+        return openedChestCount.get();
     }
 
     @SubscribeEvent
@@ -52,7 +52,7 @@ public final class LootChestModel extends Model {
                 StyledText.fromComponent(event.getTitle()).getStringWithoutFormatting())) {
             nextExpectedLootContainerId = event.getContainerId();
 
-            chestCount.store(chestCount.get() + 1);
+            openedChestCount.store(openedChestCount.get() + 1);
             dryCount.store(dryCount.get() + 1);
         }
     }

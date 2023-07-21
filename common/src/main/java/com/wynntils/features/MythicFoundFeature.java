@@ -46,7 +46,7 @@ public class MythicFoundFeature extends Feature {
                     .append(event.getMythicBoxItem().getHoverName())
                     .append(Component.literal(" in chest ")
                             .withStyle(ChatFormatting.LIGHT_PURPLE)
-                            .append(Component.literal("#" + Models.LootChest.getChestCount())
+                            .append(Component.literal("#" + Models.LootChest.getOpenedChestCount())
                                     .withStyle(ChatFormatting.GOLD)))
                     .append(Component.literal(" after ")
                             .withStyle(ChatFormatting.LIGHT_PURPLE)
