@@ -30,7 +30,7 @@ public class MapFeaturePoiWrapper implements Poi {
 
     public MapFeaturePoiWrapper(MapFeature feature) {
         this.feature = feature;
-        attributes = Models.MapData.getAttributes(this.feature);
+        attributes = Models.MapData.getInheritedAttributes(this.feature);
     }
 
     @Override

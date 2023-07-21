@@ -13,7 +13,6 @@ import com.wynntils.models.mapdata.type.features.MapFeature;
 import com.wynntils.services.map.pois.Poi;
 import java.util.List;
 import java.util.Objects;
-import java.util.function.Function;
 import java.util.stream.Stream;
 
 public class MapDataModel extends Model {
@@ -23,41 +22,11 @@ public class MapDataModel extends Model {
         super(List.of());
     }
 
-    public MapAttributes getAttributes(MapFeature feature) {
+    public MapAttributes getInheritedAttributes(MapFeature feature) {
         return new MapInheritedAttributes(feature);
     }
 
-    public <T> T getFeatureAttribute(MapFeature feature, Function<MapAttributes, T> getter) {
-        MapAttributes attributes = feature.getAttributes();
-        if (attributes != null) {
-            T attribute = getter.apply(attributes);
-            if (attribute != null) {
-                return attribute;
-            }
-        }
-
-        return getCategoryAttribute(feature.getCategoryId(), getter);
-    }
-
-    private <T> T getCategoryAttribute(String categoryId, Function<MapAttributes, T> getter) {
-        if (categoryId == null) {
-            // FIXME: proper detection for root, proper root style
-            return null;
-        }
-
-        MapAttributes attributes = getAttributeForCategoryId(categoryId);
-        if (attributes != null) {
-            T attribute = getter.apply(attributes);
-            if (attribute != null) {
-                return attribute;
-            }
-        }
-
-        String parentId = getParentCategoryId(categoryId);
-        return getCategoryAttribute(parentId, getter);
-    }
-
-    private MapAttributes getAttributeForCategoryId(String categoryId) {
+    public MapAttributes getCategoryAttributes(String categoryId) {
         Stream<MapCategory> allCategories = providers.getProviders().flatMap(MapDataProvider::getCategories);
         MapAttributes attributes = allCategories
                 .filter(c -> c.getCategoryId().equals(categoryId))
@@ -77,12 +46,6 @@ public class MapDataModel extends Model {
                 .findFirst()
                 .orElse("NAMELESS CATEGORY");
         return displayName;
-    }
-
-    private String getParentCategoryId(String categoryId) {
-        int index = categoryId.lastIndexOf(':');
-        if (index == -1) return null;
-        return categoryId.substring(0, index);
     }
 
     public Stream<MapFeature> getFeatures() {
