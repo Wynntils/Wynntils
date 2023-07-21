@@ -21,7 +21,7 @@ public class FullCategoryAttributes extends DerivedAttributes {
 
     protected <T> T getAttribute(Function<MapAttributes, T> getter) {
         for (String id = categoryId; id != null; id = getParentCategoryId(id)) {
-            Stream<MapAttributes> allAttributes = Models.MapData.getCategories(categoryId)
+            Stream<MapAttributes> allAttributes = Models.MapData.getCategories(id)
                     .map(MapCategory::getAttributes)
                     .filter(Objects::nonNull);
             Optional<T> attribute =
