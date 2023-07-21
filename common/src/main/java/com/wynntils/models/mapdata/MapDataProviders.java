@@ -32,7 +32,7 @@ public class MapDataProviders {
         createLocalProvider("local-1", "mapdata.json");
         createOnlineProvider(
                 "online-1",
-                "https://gist.githubusercontent.com/magicus/a2c810380a34a7474a2651400d36d72c/raw/6451288fcf261b62bff50c00a079535d3b2ef3d6/online-mapdata.json");
+                "https://gist.githubusercontent.com/magicus/a2c810380a34a7474a2651400d36d72c/raw/online-mapdata.json");
     }
 
     Stream<MapDataProvider> getProviders() {

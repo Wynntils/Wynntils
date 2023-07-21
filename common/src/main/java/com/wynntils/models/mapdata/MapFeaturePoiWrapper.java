@@ -71,7 +71,6 @@ public class MapFeaturePoiWrapper implements Poi {
         if (iconId == null) {
             iconId = FALLBACK_ICON_ID;
         }
-        ;
 
         MapIcon icon = Models.MapData.getIcon(iconId);
 
