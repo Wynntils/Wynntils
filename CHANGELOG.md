@@ -1,3 +1,10 @@
+## [0.0.3-alpha.167](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.166...v0.0.3-alpha.167) (2023-07-21)
+
+
+### New Features
+
+* Add custom player list overlay ([#1651](https://github.com/Wynntils/Artemis/issues/1651)) ([cb28656](https://github.com/Wynntils/Artemis/commit/cb28656da2929b0cb3f9f8eeb9a0e98acf71dab1))
+
 ## [0.0.3-alpha.166](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.165...v0.0.3-alpha.166) (2023-07-20)
 
 
@@ -5,6 +12,11 @@
 
 * Redesign quest book page to look similarly to discovery page ([#1784](https://github.com/Wynntils/Artemis/issues/1784)) ([3513266](https://github.com/Wynntils/Artemis/commit/3513266e63c1e92d2ae722597e83bb2fcfdb9d52))
 * Refactor the main Wynntils menu page ([#1785](https://github.com/Wynntils/Artemis/issues/1785)) ([5b96a23](https://github.com/Wynntils/Artemis/commit/5b96a23c1626ffad82dc250285f20d92945ae184))
+
+
+### Miscellaneous Chores
+
+* **release:** v0.0.3-alpha.166 [skip ci] ([4c51171](https://github.com/Wynntils/Artemis/commit/4c511714d88c1353a75b79af2b7a1e572e696b9f))
 
 ## [0.0.3-alpha.165](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.164...v0.0.3-alpha.165) (2023-07-20)
 
@@ -41,16 +53,4 @@
 ### Miscellaneous Chores
 
 * **release:** v0.0.3-alpha.163 [skip ci] ([01716a0](https://github.com/Wynntils/Artemis/commit/01716a0d5b1430f527a31e8bf9649d0c121867f3))
-
-## [0.0.3-alpha.162](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.161...v0.0.3-alpha.162) (2023-07-19)
-
-
-### New Features
-
-* Add GatheringCooldownOverlayFeature and GatheringCooldownFunction ([#1774](https://github.com/Wynntils/Artemis/issues/1774)) ([693c118](https://github.com/Wynntils/Artemis/commit/693c1186fcc0c27d9e94c8b6777b46e0855a592b))
-
-
-### Miscellaneous Chores
-
-* **release:** v0.0.3-alpha.162 [skip ci] ([7ded532](https://github.com/Wynntils/Artemis/commit/7ded532038ce8b878ef64a50586c253e9c45e5f3))
 
