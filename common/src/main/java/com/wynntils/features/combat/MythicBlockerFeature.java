@@ -28,7 +28,8 @@ public class MythicBlockerFeature extends Feature {
         for (int i = 0; i < 27; i++) {
             ItemStack itemStack = items.get(i);
             if (WynnItemMatchers.isMythic(itemStack)) {
-                McUtils.sendErrorToClient(I18n.get("feature.wynntils.mythicBlocker.closingBlocked"));
+                McUtils.sendMessageToClient(Component.translatable("feature.wynntils.mythicBlocker.closingBlocked")
+                        .withStyle(ChatFormatting.RED));
                 e.setCanceled(true);
                 return;
             }
