@@ -12,7 +12,7 @@ import com.wynntils.utils.render.type.TextShadow;
 
 public class JsonAttributes implements MapAttributes {
     private final String label;
-    private final String iconId;
+    private final String icon;
     private final int priority;
     private final CustomColor labelColor;
     private final TextShadow labelShadow;
@@ -22,7 +22,7 @@ public class JsonAttributes implements MapAttributes {
 
     public JsonAttributes(
             String label,
-            String iconId,
+            String icon,
             int priority,
             CustomColor labelColor,
             TextShadow labelShadow,
@@ -30,7 +30,7 @@ public class JsonAttributes implements MapAttributes {
             CustomColor iconColor,
             MapVisibility iconVisibility) {
         this.label = label;
-        this.iconId = iconId;
+        this.icon = icon;
         this.priority = priority;
         this.labelColor = labelColor;
         this.labelShadow = labelShadow;
@@ -46,7 +46,7 @@ public class JsonAttributes implements MapAttributes {
 
     @Override
     public String getIconId() {
-        return iconId;
+        return icon;
     }
 
     @Override
