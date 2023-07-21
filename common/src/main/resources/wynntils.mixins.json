@@ -33,6 +33,7 @@
     "MultiPlayerGameModeMixin",
     "PlayerMixin",
     "PlayerRendererMixin",
+    "PlayerTabOverlayMixin",
     "ProgressScreenMixin",
     "ResourceLoadStateTrackerMixin",
     "ScoreboardMixin",
