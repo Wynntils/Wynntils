@@ -1,9 +1,21 @@
+## [0.0.3-alpha.176](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.175...v0.0.3-alpha.176) (2023-07-22)
+
+
+### Bug Fixes
+
+* Compass/waypoint now properly follows tracked content ([#1801](https://github.com/Wynntils/Artemis/issues/1801)) ([d6ac07d](https://github.com/Wynntils/Artemis/commit/d6ac07deed206ba9b8b8807b2fae972d5e13e096))
+
 ## [0.0.3-alpha.175](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.174...v0.0.3-alpha.175) (2023-07-22)
 
 
 ### Bug Fixes
 
 * Fix quest dialogue getting stuck, a Salted special ([#1799](https://github.com/Wynntils/Artemis/issues/1799)) ([7242a4b](https://github.com/Wynntils/Artemis/commit/7242a4b0126e2eef0e44240ecfda54dec684159b))
+
+
+### Miscellaneous Chores
+
+* **release:** v0.0.3-alpha.175 [skip ci] ([f8b15c2](https://github.com/Wynntils/Artemis/commit/f8b15c2eaddb4c6cb3c56eb89c8b9243c4448f08))
 
 ## [0.0.3-alpha.174](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.173...v0.0.3-alpha.174) (2023-07-21)
 
@@ -40,16 +52,4 @@
 ### Miscellaneous Chores
 
 * **release:** v0.0.3-alpha.172 [skip ci] ([d667f83](https://github.com/Wynntils/Artemis/commit/d667f83a85ec19335541676e6afd3cf1266cc8c2))
-
-## [0.0.3-alpha.171](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.170...v0.0.3-alpha.171) (2023-07-21)
-
-
-### Bug Fixes
-
-* Fix player list not rendering when overlay is disabled ([#1796](https://github.com/Wynntils/Artemis/issues/1796)) ([e4e35a3](https://github.com/Wynntils/Artemis/commit/e4e35a3614043bd8b4769fd83a5e850d888f2d15))
-
-
-### Miscellaneous Chores
-
-* **release:** v0.0.3-alpha.171 [skip ci] ([efbd00c](https://github.com/Wynntils/Artemis/commit/efbd00c0f95bfcd2d0ffb1a1741b95baa6b6a2e5))
 
