@@ -64,9 +64,9 @@ public class QuickCastFeature extends Feature {
 
     private static final Queue<SpellDirection> SPELL_PACKET_QUEUE = new LinkedList<>();
 
-    private final Queue<SpellDirection> currentSpell = new LinkedList<>();
-    private final Queue<Spell> spells = new LinkedList<>();
-    private Spell spell = null;
+    private final Queue<SpellDirection> currentSpellProgress = new LinkedList<>();
+    private final Queue<Spell> scheduledSpells = new LinkedList<>();
+    private Spell currentSpell = null;
     private int packetCountdown = 0;
     private int spellCountdown = 0;
     private int lastSelectedSlot = 0;
@@ -113,30 +113,30 @@ public class QuickCastFeature extends Feature {
         }
 
         Spell spell = new Spell(b, c, Models.Character.getClassType() == ClassType.ARCHER);
-        if (spells.contains(spell)) {
+        if (scheduledSpells.contains(spell)) {
             return;
         }
 
-        spells.offer(spell);
+        scheduledSpells.offer(spell);
         lastSelectedSlot = McUtils.inventory().selected;
     }
 
     @SubscribeEvent
     public void onTick(TickEvent e) {
         if (--packetCountdown > 0) return;
-        if (currentSpell.isEmpty() && !pollSpell()) return;
+        if (currentSpellProgress.isEmpty() && !pollSpell()) return;
 
         int currSelectedSlot = McUtils.inventory().selected;
         boolean slotChanged = currSelectedSlot != lastSelectedSlot;
         if (slotChanged) McUtils.sendPacket(new ServerboundSetCarriedItemPacket(lastSelectedSlot));
         if (safeCasting.get()) {
-            currentSpell.poll().getSendPacketRunnable().run();
+            currentSpellProgress.poll().getSendPacketRunnable().run();
         } else {
             do {
-                currentSpell.peek().getSendPacketRunnable().run();
-            } while (currentSpell.poll() == SpellDirection.LEFT && !currentSpell.isEmpty());
-            while (currentSpell.peek() == SpellDirection.LEFT) {
-                currentSpell.poll().getSendPacketRunnable().run();
+                currentSpellProgress.peek().getSendPacketRunnable().run();
+            } while (currentSpellProgress.poll() == SpellDirection.LEFT && !currentSpellProgress.isEmpty());
+            while (currentSpellProgress.peek() == SpellDirection.LEFT) {
+                currentSpellProgress.poll().getSendPacketRunnable().run();
             }
         }
         if (slotChanged) McUtils.sendPacket(new ServerboundSetCarriedItemPacket(currSelectedSlot));
@@ -146,27 +146,32 @@ public class QuickCastFeature extends Feature {
     }
 
     private boolean pollSpell() {
-        spells.remove(spell);
-        spell = null;
+        removeLastSpell();
         if (--spellCountdown > 0) return false;
-        if (spells.isEmpty()) return false;
+        if (scheduledSpells.isEmpty()) return false;
         SpellDirection[] progress = Models.Spell.getLastSpell();
         SpellDirection[] currentProgress =
                 progress.length != 3 && Models.Spell.isLastSpellStillValid() ? progress : SpellDirection.NO_SPELL;
-        Optional<Spell> first = spells.stream()
-                .filter(s -> s.poll(currentSpell, currentProgress))
+        Optional<Spell> appropriateSpell = scheduledSpells.stream()
+                .filter(s -> s.poll(currentSpellProgress, currentProgress))
                 .findFirst();
-        if (first.isEmpty()) return false;
-        spell = first.get();
+        if (appropriateSpell.isEmpty()) return false;
+        currentSpell = appropriateSpell.get();
         spellCountdown = spellCooldown.get();
         return true;
     }
 
+    private void removeLastSpell() {
+        scheduledSpells.remove(currentSpell);
+        currentSpell = null;
+        currentSpellProgress.clear();
+    }
+
     @SubscribeEvent
     public void onWorldChange(WorldStateEvent e) {
-        currentSpell.clear();
-        spells.clear();
-        spell = null;
+        currentSpellProgress.clear();
+        scheduledSpells.clear();
+        currentSpell = null;
     }
 
     private static void sendCancelReason(MutableComponent reason) {
