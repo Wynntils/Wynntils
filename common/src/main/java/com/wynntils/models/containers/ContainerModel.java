@@ -213,11 +213,21 @@ public final class ContainerModel extends Model {
         return title.startsWith("Loot Chest");
     }
 
+    public boolean isRewardChest(String title) {
+        return title.startsWith("Daily Rewards")
+                || title.contains("Objective Rewards")
+                || title.contains("Challenge Rewards");
+    }
+
     public boolean isLootOrRewardChest(Screen screen) {
         if (!(screen instanceof AbstractContainerScreen<?>)) return false;
 
         String title = screen.getTitle().getString();
-        return isLootChest(title) || title.startsWith("Daily Rewards") || title.contains("Objective Rewards");
+        return isLootOrRewardChest(title);
+    }
+
+    public boolean isLootOrRewardChest(String title) {
+        return isLootChest(title) || isRewardChest(title);
     }
 
     public boolean isSeaskipper(Component component) {
