@@ -4,22 +4,23 @@
  */
 package com.wynntils.models.mapdata.providers.builtin;
 
+import com.wynntils.models.mapdata.attributes.AbstractMapAttributes;
 import com.wynntils.models.mapdata.attributes.type.MapAttributes;
 import com.wynntils.models.mapdata.type.MapFeature;
 import com.wynntils.models.mapdata.type.MapLocation;
-import com.wynntils.services.map.type.ServiceKind;
+import com.wynntils.services.map.type.CombatKind;
 import com.wynntils.utils.mc.type.Location;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Stream;
 
-public class ServiceListProvider extends BuiltInProvider {
+public class CombatListProvider extends BuiltInProvider {
     private static final List<MapFeature> PROVIDED_FEATURES = new ArrayList<>();
     private static int counter;
 
     @Override
     public String getProviderId() {
-        return "service-list";
+        return "combat-list";
     }
 
     @Override
@@ -27,19 +28,21 @@ public class ServiceListProvider extends BuiltInProvider {
         return PROVIDED_FEATURES.stream();
     }
 
-    public static void registerFeature(Location location, ServiceKind kind) {
-        PROVIDED_FEATURES.add(new ServiceLocation(location, kind));
+    public static void registerFeature(Location location, CombatKind kind, String name) {
+        PROVIDED_FEATURES.add(new CombatLocation(location, kind, name));
     }
 
-    private static final class ServiceLocation implements MapLocation {
+    private static final class CombatLocation implements MapLocation {
         private final Location location;
-        private final ServiceKind kind;
+        private final CombatKind kind;
+        private final String name;
         private final int number;
 
-        private ServiceLocation(Location location, ServiceKind kind) {
+        private CombatLocation(Location location, CombatKind kind, String name) {
             this.location = location;
             this.kind = kind;
-            this.number = ServiceListProvider.counter++;
+            this.name = name;
+            this.number = CombatListProvider.counter++;
         }
 
         @Override
@@ -49,12 +52,17 @@ public class ServiceListProvider extends BuiltInProvider {
 
         @Override
         public String getCategoryId() {
-            return "wynntils:service:" + kind.getServiceId();
+            return "wynntils:content:" + kind.getServiceId();
         }
 
         @Override
         public MapAttributes getAttributes() {
-            return null;
+            return new AbstractMapAttributes() {
+                @Override
+                public String getLabel() {
+                    return name;
+                }
+            };
         }
 
         @Override

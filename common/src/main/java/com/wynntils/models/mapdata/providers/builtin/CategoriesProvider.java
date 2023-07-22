@@ -4,10 +4,11 @@
  */
 package com.wynntils.models.mapdata.providers.builtin;
 
-import com.wynntils.models.map.type.ServiceKind;
 import com.wynntils.models.mapdata.attributes.AbstractMapAttributes;
 import com.wynntils.models.mapdata.attributes.type.MapAttributes;
 import com.wynntils.models.mapdata.type.MapCategory;
+import com.wynntils.services.map.type.CombatKind;
+import com.wynntils.services.map.type.ServiceKind;
 import com.wynntils.utils.colors.CommonColors;
 import com.wynntils.utils.colors.CustomColor;
 import java.util.ArrayList;
@@ -20,6 +21,9 @@ public class CategoriesProvider extends BuiltInProvider {
     public CategoriesProvider() {
         for (ServiceKind kind : ServiceKind.values()) {
             PROVIDED_CATEGORIES.add(new ServiceCategory(kind));
+        }
+        for (CombatKind kind : CombatKind.values()) {
+            PROVIDED_CATEGORIES.add(new CombatCategory(kind));
         }
         PROVIDED_CATEGORIES.add(new WynntilsCategory());
     }
@@ -89,6 +93,49 @@ public class CategoriesProvider extends BuiltInProvider {
                 @Override
                 public String getIconId() {
                     return "wynntils:icon:service:" + kind.getServiceId();
+                }
+
+                @Override
+                public int getPriority() {
+                    return 100;
+                }
+
+                @Override
+                public CustomColor getLabelColor() {
+                    return CommonColors.GREEN;
+                }
+            };
+        }
+    }
+
+    private static final class CombatCategory implements MapCategory {
+        private final CombatKind kind;
+
+        private CombatCategory(CombatKind kind) {
+            this.kind = kind;
+        }
+
+        @Override
+        public String getCategoryId() {
+            return "wynntils:content:" + kind.getServiceId();
+        }
+
+        @Override
+        public String getName() {
+            return kind.getName();
+        }
+
+        @Override
+        public MapAttributes getAttributes() {
+            return new AbstractMapAttributes() {
+                @Override
+                public String getLabel() {
+                    return kind.getName();
+                }
+
+                @Override
+                public String getIconId() {
+                    return "wynntils:icon:content:" + kind.getServiceId();
                 }
 
                 @Override

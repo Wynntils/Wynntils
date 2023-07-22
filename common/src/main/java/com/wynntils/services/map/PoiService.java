@@ -15,6 +15,8 @@ import com.wynntils.core.net.UrlId;
 import com.wynntils.core.net.event.NetResultProcessedEvent;
 import com.wynntils.core.persisted.Persisted;
 import com.wynntils.core.persisted.storage.Storage;
+import com.wynntils.models.mapdata.providers.builtin.CombatListProvider;
+import com.wynntils.models.mapdata.providers.builtin.ServiceListProvider;
 import com.wynntils.services.map.pois.CombatPoi;
 import com.wynntils.services.map.pois.CustomPoi;
 import com.wynntils.services.map.pois.LabelPoi;
@@ -22,7 +24,6 @@ import com.wynntils.services.map.pois.ServicePoi;
 import com.wynntils.services.map.type.CombatKind;
 import com.wynntils.services.map.type.CustomPoiProvider;
 import com.wynntils.services.map.type.ServiceKind;
-import com.wynntils.models.mapdata.providers.builtin.ServiceListProvider;
 import com.wynntils.utils.mc.type.Location;
 import com.wynntils.utils.mc.type.PoiLocation;
 import com.wynntils.utils.render.Texture;
@@ -216,6 +217,7 @@ public class PoiService extends Service {
                 if (kind != null && kind != CombatKind.CAVES) {
                     for (CombatProfile profile : combatList.locations) {
                         combatPois.add(new CombatPoi(profile.coordinates, profile.name, kind));
+                        CombatListProvider.registerFeature(new Location(profile.coordinates), kind, profile.name);
                     }
                 } else {
                     WynntilsMod.warn("Unknown combat type in combat.json: " + combatList.type);

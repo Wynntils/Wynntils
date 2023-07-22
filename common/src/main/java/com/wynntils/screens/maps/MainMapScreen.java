@@ -305,6 +305,8 @@ public final class MainMapScreen extends AbstractMapScreen {
 
         // FIXME
         pois = Models.MapData.getFeaturesAsPois();
+        // pois = Stream.concat(pois, Services.Poi.getServicePois());
+        pois = Stream.concat(pois, Services.Poi.getCombatPois());
 
         renderPois(
                 pois.collect(Collectors.toList()),
