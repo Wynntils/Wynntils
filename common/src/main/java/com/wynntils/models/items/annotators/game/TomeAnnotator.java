@@ -17,7 +17,7 @@ import net.minecraft.world.item.Items;
 
 public final class TomeAnnotator implements ItemAnnotator {
     private static final Pattern TOME_PATTERN = Pattern.compile(
-            "^§[5abcdef]((?<Variant>[\\w']+)? ?Tome of (?<Type>\\w+)" + "(?:| Mastery (?<Tier>[IVX]{1,4})))$");
+            "§[5abcdef]((?<Variant>[\\w']+)? ?Tome of (?<Type>\\w+))(?:( Mastery( (?<Tier>[IVX]{1,4}))?))?");
 
     @Override
     public ItemAnnotation getAnnotation(ItemStack itemStack, StyledText name) {
