@@ -10,13 +10,14 @@ import com.wynntils.core.text.StyledText;
 import com.wynntils.screens.base.TooltipProvider;
 import com.wynntils.screens.base.WynntilsListScreen;
 import com.wynntils.screens.base.widgets.BackButton;
-import com.wynntils.screens.base.widgets.ImportButton;
 import com.wynntils.screens.base.widgets.PageSelectorButton;
 import com.wynntils.screens.guides.emeraldpouch.WynntilsEmeraldPouchGuideScreen;
 import com.wynntils.screens.guides.gear.WynntilsItemGuideScreen;
 import com.wynntils.screens.guides.ingredient.WynntilsIngredientGuideScreen;
 import com.wynntils.screens.guides.powder.WynntilsPowderGuideScreen;
+import com.wynntils.screens.guides.widgets.ExportButton;
 import com.wynntils.screens.guides.widgets.GuidesButton;
+import com.wynntils.screens.guides.widgets.ImportButton;
 import com.wynntils.screens.wynntilsmenu.WynntilsMenuScreen;
 import com.wynntils.utils.StringUtils;
 import com.wynntils.utils.colors.CommonColors;
@@ -66,6 +67,13 @@ public final class WynntilsGuidesListScreen extends WynntilsListScreen<Screen, G
                 (int) (Texture.ADD_BUTTON.width() / 1.5f),
                 (int) (Texture.ADD_BUTTON.height() / 2.0f / 1.5f),
                 this::importFavorites));
+        this.addRenderableWidget(new ExportButton(
+                Texture.QUEST_BOOK_BACKGROUND.width() - 21,
+                5 + (int) (Texture.ADD_BUTTON.height() / 1.5f),
+                (int) (Texture.MAP_SHARE_BUTTON.width() / 1.5f),
+                (int) (Texture.MAP_SHARE_BUTTON.height() / 1.5f),
+                this::exportFavorites));
+
         this.addRenderableWidget(new PageSelectorButton(
                 Texture.QUEST_BOOK_BACKGROUND.width() / 2 + 50 - Texture.FORWARD_ARROW.width() / 2,
                 Texture.QUEST_BOOK_BACKGROUND.height() - 25,
@@ -99,6 +107,16 @@ public final class WynntilsGuidesListScreen extends WynntilsListScreen<Screen, G
         McUtils.sendMessageToClient(
                 Component.translatable("screens.wynntils.wynntilsGuides.importedFavorites", names.size())
                         .withStyle(ChatFormatting.GREEN));
+    }
+
+    private void exportFavorites() {
+        McUtils.mc()
+                .keyboardHandler
+                .setClipboard("wynntilsFavorites" + String.join(",", Models.Favorites.getFavoriteItems()));
+        McUtils.sendMessageToClient(Component.translatable(
+                        "screens.wynntils.wynntilsGuides.exportedFavorites",
+                        Models.Favorites.getFavoriteItems().size())
+                .withStyle(ChatFormatting.GREEN));
     }
 
     @Override
