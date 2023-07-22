@@ -1,9 +1,21 @@
+## [0.0.3-alpha.179](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.178...v0.0.3-alpha.179) (2023-07-22)
+
+
+### Bug Fixes
+
+* Jump buttons appear in emerald pouch/potions ([#1805](https://github.com/Wynntils/Artemis/issues/1805)) ([d7afafc](https://github.com/Wynntils/Artemis/commit/d7afafc553894311355aa8a01b60783846833fc5))
+
 ## [0.0.3-alpha.178](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.177...v0.0.3-alpha.178) (2023-07-22)
 
 
 ### Bug Fixes
 
 * No %s parameter for lr message ([#1806](https://github.com/Wynntils/Artemis/issues/1806)) ([5393cbc](https://github.com/Wynntils/Artemis/commit/5393cbca160b4731cc9bf134414e7656bece338f))
+
+
+### Miscellaneous Chores
+
+* **release:** v0.0.3-alpha.178 [skip ci] ([902c72d](https://github.com/Wynntils/Artemis/commit/902c72d277c268ecfbff77904af85fd70d563fd0))
 
 ## [0.0.3-alpha.177](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.176...v0.0.3-alpha.177) (2023-07-22)
 
@@ -40,16 +52,4 @@
 ### Miscellaneous Chores
 
 * **release:** v0.0.3-alpha.175 [skip ci] ([f8b15c2](https://github.com/Wynntils/Artemis/commit/f8b15c2eaddb4c6cb3c56eb89c8b9243c4448f08))
-
-## [0.0.3-alpha.174](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.173...v0.0.3-alpha.174) (2023-07-21)
-
-
-### New Features
-
-* Add button to poi management in wynntils menu ([#1795](https://github.com/Wynntils/Artemis/issues/1795)) ([dce20a1](https://github.com/Wynntils/Artemis/commit/dce20a1bf67e1471cf50954ae9c0a94855205a4c))
-
-
-### Miscellaneous Chores
-
-* **release:** v0.0.3-alpha.174 [skip ci] ([2a22a26](https://github.com/Wynntils/Artemis/commit/2a22a262d13c15f10b53c15de5a53a9bf9677aa4))
 
