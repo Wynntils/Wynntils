@@ -15,6 +15,7 @@ import com.wynntils.screens.discoveries.WynntilsDiscoveriesScreen;
 import com.wynntils.screens.guides.WynntilsGuidesListScreen;
 import com.wynntils.screens.lootrun.WynntilsLootrunsScreen;
 import com.wynntils.screens.maps.MainMapScreen;
+import com.wynntils.screens.maps.PoiManagementScreen;
 import com.wynntils.screens.overlays.selection.OverlaySelectionScreen;
 import com.wynntils.screens.questbook.WynntilsQuestBookScreen;
 import com.wynntils.screens.questbook.history.WynntilsDialogueHistoryScreen;
@@ -150,6 +151,21 @@ public final class WynntilsMenuScreen extends WynntilsMenuScreenBase {
                                                 .withStyle(ChatFormatting.BOLD)
                                                 .withStyle(ChatFormatting.GOLD)),
                                 Component.translatable("screens.wynntils.wynntilsQuestBook.lootruns.description")
+                                        .withStyle(ChatFormatting.GRAY),
+                                Component.literal(""),
+                                Component.translatable("screens.wynntils.wynntilsMenu.leftClickToSelect")
+                                        .withStyle(ChatFormatting.GREEN))));
+        buttons.get(1)
+                .add(new WynntilsMenuButton(
+                        Texture.MAP_MANAGER_BUTTON,
+                        false,
+                        PoiManagementScreen.create(),
+                        List.of(
+                                Component.literal("[>] ")
+                                        .withStyle(ChatFormatting.GOLD)
+                                        .withStyle(ChatFormatting.BOLD)
+                                        .append(Component.translatable("screens.wynntils.map.manager.name")),
+                                Component.translatable("screens.wynntils.map.manager.description")
                                         .withStyle(ChatFormatting.GRAY),
                                 Component.literal(""),
                                 Component.translatable("screens.wynntils.wynntilsMenu.leftClickToSelect")

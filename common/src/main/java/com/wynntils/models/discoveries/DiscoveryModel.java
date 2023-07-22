@@ -107,9 +107,12 @@ public final class DiscoveryModel extends Model {
 
     private void queryDiscoveries() {
         WynntilsMod.info("Requesting rescan of discoveries in Content Book");
-        Models.Content.scanContentBook(ContentType.TERRITORIAL_DISCOVERY, this::updateTerritoryDiscoveriesFromQuery);
-        Models.Content.scanContentBook(ContentType.WORLD_DISCOVERY, this::updateWorldDiscoveriesFromQuery);
+
+        // This order is a bit arbitrary, but it's the order they appear in the Content Book,
+        // so we can use this as a workaround to parse them faster.
         Models.Content.scanContentBook(ContentType.SECRET_DISCOVERY, this::updateSecretDiscoveriesFromQuery);
+        Models.Content.scanContentBook(ContentType.WORLD_DISCOVERY, this::updateWorldDiscoveriesFromQuery);
+        Models.Content.scanContentBook(ContentType.TERRITORIAL_DISCOVERY, this::updateTerritoryDiscoveriesFromQuery);
     }
 
     private void updateTerritoryDiscoveriesFromQuery(List<ContentInfo> newContent, List<StyledText> progress) {
