@@ -1,9 +1,21 @@
+## [0.0.3-alpha.178](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.177...v0.0.3-alpha.178) (2023-07-22)
+
+
+### Bug Fixes
+
+* No %s parameter for lr message ([#1806](https://github.com/Wynntils/Artemis/issues/1806)) ([5393cbc](https://github.com/Wynntils/Artemis/commit/5393cbca160b4731cc9bf134414e7656bece338f))
+
 ## [0.0.3-alpha.177](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.176...v0.0.3-alpha.177) (2023-07-22)
 
 
 ### Bug Fixes
 
 * Challenge rewards does not block mythics or favourites ([#1803](https://github.com/Wynntils/Artemis/issues/1803)) ([bbfeda7](https://github.com/Wynntils/Artemis/commit/bbfeda750ff31ce8b22b40dd058360deb19b6234))
+
+
+### Miscellaneous Chores
+
+* **release:** v0.0.3-alpha.177 [skip ci] ([9acdf4d](https://github.com/Wynntils/Artemis/commit/9acdf4d1870e2dbf2ce532d49fe996be50b6d427))
 
 ## [0.0.3-alpha.176](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.175...v0.0.3-alpha.176) (2023-07-22)
 
@@ -40,16 +52,4 @@
 ### Miscellaneous Chores
 
 * **release:** v0.0.3-alpha.174 [skip ci] ([2a22a26](https://github.com/Wynntils/Artemis/commit/2a22a262d13c15f10b53c15de5a53a9bf9677aa4))
-
-## [0.0.3-alpha.173](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.172...v0.0.3-alpha.173) (2023-07-21)
-
-
-### Bug Fixes
-
-* Button clicks in ChatTabEditingScreen even though there isn't any button selected ([#1797](https://github.com/Wynntils/Artemis/issues/1797)) ([c8911bd](https://github.com/Wynntils/Artemis/commit/c8911bdbd23228b93419803b8d9c2d492360c322))
-
-
-### Miscellaneous Chores
-
-* **release:** v0.0.3-alpha.173 [skip ci] ([4e85133](https://github.com/Wynntils/Artemis/commit/4e851336b8286c258adcb66e1b41c592196297b7))
 
