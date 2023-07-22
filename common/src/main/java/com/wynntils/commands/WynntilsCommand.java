@@ -267,13 +267,11 @@ public class WynntilsCommand extends Command {
                     } catch (IOException e) {
                         WynntilsMod.warn("Failed to read status page", e);
                     }
-                    McUtils.sendMessageToClient(
-                            Component.literal("Failed to read status page").withStyle(ChatFormatting.RED));
+                    McUtils.sendErrorToClient("Failed to read status page");
                 },
                 onError -> {
                     WynntilsMod.warn("Failed to read status page", onError);
-                    McUtils.sendMessageToClient(
-                            Component.literal("Failed to read status page").withStyle(ChatFormatting.RED));
+                    McUtils.sendErrorToClient("Failed to read status page");
                 });
         return 1;
     }

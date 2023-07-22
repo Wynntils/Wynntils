@@ -17,7 +17,7 @@ import com.wynntils.core.mod.CrashReportManager;
 import com.wynntils.core.mod.type.CrashType;
 import com.wynntils.features.DiscordRichPresenceFeature;
 import com.wynntils.features.LootrunFeature;
-import com.wynntils.features.MythicFoundSoundFeature;
+import com.wynntils.features.MythicFoundFeature;
 import com.wynntils.features.TerritoryDefenseMessageFeature;
 import com.wynntils.features.chat.ChatCoordinatesFeature;
 import com.wynntils.features.chat.ChatItemFeature;
@@ -77,8 +77,10 @@ import com.wynntils.features.overlays.AuraTimerOverlayFeature;
 import com.wynntils.features.overlays.CombatExperienceOverlayFeature;
 import com.wynntils.features.overlays.ContentTrackerOverlayFeature;
 import com.wynntils.features.overlays.CustomBarsOverlayFeature;
+import com.wynntils.features.overlays.CustomPlayerListFeature;
 import com.wynntils.features.overlays.GameBarsOverlayFeature;
 import com.wynntils.features.overlays.GameNotificationOverlayFeature;
+import com.wynntils.features.overlays.GatheringCooldownOverlayFeature;
 import com.wynntils.features.overlays.GuildAttackTimerOverlayFeature;
 import com.wynntils.features.overlays.HadesPartyOverlayFeature;
 import com.wynntils.features.overlays.InfoBoxFeature;
@@ -112,6 +114,7 @@ import com.wynntils.features.tooltips.TooltipVanillaHideFeature;
 import com.wynntils.features.trademarket.TradeMarketAutoOpenChatFeature;
 import com.wynntils.features.trademarket.TradeMarketBulkSellFeature;
 import com.wynntils.features.trademarket.TradeMarketPriceConversionFeature;
+import com.wynntils.features.trademarket.TradeMarketPriceMatchFeature;
 import com.wynntils.features.ui.BulkBuyFeature;
 import com.wynntils.features.ui.ContainerScrollFeature;
 import com.wynntils.features.ui.CosmeticsPreviewFeature;
@@ -240,8 +243,10 @@ public final class FeatureManager extends Manager {
         registerFeature(new CombatExperienceOverlayFeature());
         registerFeature(new ContentTrackerOverlayFeature());
         registerFeature(new CustomBarsOverlayFeature());
+        registerFeature(new CustomPlayerListFeature());
         registerFeature(new GameBarsOverlayFeature());
         registerFeature(new GameNotificationOverlayFeature());
+        registerFeature(new GatheringCooldownOverlayFeature());
         registerFeature(new GuildAttackTimerOverlayFeature());
         registerFeature(new HadesPartyOverlayFeature());
         registerFeature(new InfoBoxFeature());
@@ -287,6 +292,7 @@ public final class FeatureManager extends Manager {
         registerFeature(new TradeMarketAutoOpenChatFeature());
         registerFeature(new TradeMarketBulkSellFeature());
         registerFeature(new TradeMarketPriceConversionFeature());
+        registerFeature(new TradeMarketPriceMatchFeature());
         // endregion
 
         // region ui
@@ -321,7 +327,7 @@ public final class FeatureManager extends Manager {
 
         // region uncategorized
         registerFeature(new DiscordRichPresenceFeature());
-        registerFeature(new MythicFoundSoundFeature());
+        registerFeature(new MythicFoundFeature());
         registerFeature(new TerritoryDefenseMessageFeature());
         // endregion
 

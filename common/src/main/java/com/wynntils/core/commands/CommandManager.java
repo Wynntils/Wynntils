@@ -127,9 +127,9 @@ public final class CommandManager extends Manager {
         try {
             clientDispatcher.execute(parse);
         } catch (CommandRuntimeException e) {
-            sendError(Component.literal(e.getMessage()));
+            McUtils.sendErrorToClient(e.getMessage());
         } catch (CommandSyntaxException e) {
-            sendError(Component.literal(e.getRawMessage().getString()));
+            McUtils.sendErrorToClient(e.getRawMessage().getString());
             if (e.getInput() != null && e.getCursor() >= 0) {
                 int cursor = Math.min(e.getCursor(), e.getInput().length());
                 MutableComponent text = Component.literal("")

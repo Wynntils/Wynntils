@@ -34,6 +34,7 @@ import java.util.HashSet;
 import java.util.List;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.player.LocalPlayer;
+import net.minecraft.client.resources.language.I18n;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Position;
 import net.minecraft.network.chat.Component;
@@ -187,8 +188,7 @@ public final class LootrunModel extends Model {
                             "feature.wynntils.lootrunUtils.lootrunStart", start.getX(), start.getY(), start.getZ())
                     .withStyle(ChatFormatting.GREEN));
         } else {
-            McUtils.sendMessageToClient(
-                    Component.translatable("feature.wynntils.lootrunUtils.lootrunCouldNotBeLoaded"));
+            McUtils.sendErrorToClient(I18n.get("feature.wynntils.lootrunUtils.lootrunCouldNotBeLoaded"));
         }
     }
 

@@ -9,18 +9,21 @@ import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.components.Models;
 import com.wynntils.core.text.StyledText;
 import com.wynntils.mc.event.MenuEvent;
+import com.wynntils.models.content.type.ContentSortOrder;
 import com.wynntils.models.quests.QuestInfo;
 import com.wynntils.models.quests.event.QuestBookReloadedEvent;
-import com.wynntils.models.quests.type.QuestSortOrder;
 import com.wynntils.models.quests.type.QuestStatus;
+import com.wynntils.screens.base.TooltipProvider;
 import com.wynntils.screens.base.WynntilsListScreen;
 import com.wynntils.screens.base.widgets.BackButton;
+import com.wynntils.screens.base.widgets.FilterButton;
 import com.wynntils.screens.base.widgets.PageSelectorButton;
 import com.wynntils.screens.base.widgets.ReloadButton;
+import com.wynntils.screens.base.widgets.SortOrderWidget;
+import com.wynntils.screens.base.widgets.SortableContentScreen;
 import com.wynntils.screens.questbook.history.widgets.DialogueHistoryButton;
 import com.wynntils.screens.questbook.widgets.QuestButton;
 import com.wynntils.screens.questbook.widgets.QuestInfoButton;
-import com.wynntils.screens.questbook.widgets.SortOrderWidget;
 import com.wynntils.screens.wynntilsmenu.WynntilsMenuScreen;
 import com.wynntils.utils.StringUtils;
 import com.wynntils.utils.colors.CommonColors;
@@ -42,7 +45,8 @@ import net.minecraft.network.chat.Component;
 import net.minecraftforge.eventbus.api.EventPriority;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 
-public final class WynntilsQuestBookScreen extends WynntilsListScreen<QuestInfo, QuestButton> {
+public final class WynntilsQuestBookScreen extends WynntilsListScreen<QuestInfo, QuestButton>
+        implements SortableContentScreen {
     private static final List<Component> RELOAD_TOOLTIP = List.of(
             Component.translatable("screens.wynntils.wynntilsQuestBook.reload.name")
                     .withStyle(ChatFormatting.WHITE),
@@ -50,8 +54,11 @@ public final class WynntilsQuestBookScreen extends WynntilsListScreen<QuestInfo,
                     .withStyle(ChatFormatting.GRAY));
 
     private QuestInfo trackingRequested = null;
-    private boolean miniQuestMode = false;
-    private QuestSortOrder questSortOrder = QuestSortOrder.LEVEL;
+    private boolean showQuests = true;
+    private boolean showMiniQuests = false;
+    private ContentSortOrder contentSortOrder = ContentSortOrder.LEVEL;
+
+    private final List<FilterButton> filterButtons = new ArrayList<>();
 
     private WynntilsQuestBookScreen() {
         super(Component.translatable("screens.wynntils.wynntilsQuestBook.name"));
@@ -76,6 +83,8 @@ public final class WynntilsQuestBookScreen extends WynntilsListScreen<QuestInfo,
     protected void doInit() {
         Models.Quest.rescanQuestBook(true, true);
 
+        filterButtons.clear();
+
         super.doInit();
 
         this.addRenderableWidget(new BackButton(
@@ -85,12 +94,51 @@ public final class WynntilsQuestBookScreen extends WynntilsListScreen<QuestInfo,
                 Texture.BACK_ARROW.height(),
                 WynntilsMenuScreen.create()));
 
+        filterButtons.add(new FilterButton(
+                55,
+                142,
+                30,
+                30,
+                Texture.QUESTS_ICON,
+                false,
+                List.of(Component.literal("[>] ")
+                        .withStyle(ChatFormatting.GREEN)
+                        .append(Component.translatable("screens.wynntils.wynntilsQuestBook.showQuests.name")
+                                .withStyle(ChatFormatting.BOLD)
+                                .withStyle(ChatFormatting.GREEN))),
+                () -> {
+                    showQuests = !showQuests;
+                    reloadElements();
+                },
+                () -> showQuests));
+        filterButtons.add(new FilterButton(
+                90,
+                142,
+                30,
+                30,
+                Texture.SIGN,
+                false,
+                List.of(Component.literal("[>] ")
+                        .withStyle(ChatFormatting.GREEN)
+                        .append(Component.translatable("screens.wynntils.wynntilsQuestBook.showMiniQuests.name")
+                                .withStyle(ChatFormatting.BOLD)
+                                .withStyle(ChatFormatting.GREEN))),
+                () -> {
+                    showMiniQuests = !showMiniQuests;
+                    reloadElements();
+                },
+                () -> showMiniQuests));
+
+        for (FilterButton filterButton : filterButtons) {
+            this.addRenderableWidget(filterButton);
+        }
+
         this.addRenderableWidget(new ReloadButton(
                 Texture.QUEST_BOOK_BACKGROUND.width() - 21,
                 11,
                 (int) (Texture.RELOAD_BUTTON.width() / 2 / 1.7f),
                 (int) (Texture.RELOAD_BUTTON.height() / 1.7f),
-                () -> Models.Quest.rescanQuestBook(!miniQuestMode, miniQuestMode)));
+                () -> Models.Quest.rescanQuestBook(showQuests, showMiniQuests)));
         this.addRenderableWidget(new PageSelectorButton(
                 Texture.QUEST_BOOK_BACKGROUND.width() / 2 + 50 - Texture.FORWARD_ARROW.width() / 2,
                 Texture.QUEST_BOOK_BACKGROUND.height() - 25,
@@ -114,8 +162,7 @@ public final class WynntilsQuestBookScreen extends WynntilsListScreen<QuestInfo,
                 (int) (Texture.QUEST_BOOK_BACKGROUND.width() / 4f),
                 12,
                 Texture.QUESTS_BUTTON.width(),
-                Texture.QUESTS_BUTTON.height(),
-                this));
+                Texture.QUESTS_BUTTON.height()));
 
         this.addRenderableWidget(new SortOrderWidget(
                 Texture.QUEST_BOOK_BACKGROUND.width() / 2 + 1,
@@ -158,8 +205,6 @@ public final class WynntilsQuestBookScreen extends WynntilsListScreen<QuestInfo,
 
     @SubscribeEvent
     public void onQuestsReloaded(QuestBookReloadedEvent.QuestsReloaded event) {
-        if (miniQuestMode) return;
-
         this.setQuests(getSortedQuests());
         setTrackingRequested(null);
         reloadElements();
@@ -167,8 +212,6 @@ public final class WynntilsQuestBookScreen extends WynntilsListScreen<QuestInfo,
 
     @SubscribeEvent
     public void onMiniQuestsReloaded(QuestBookReloadedEvent.MiniQuestsReloaded event) {
-        if (!miniQuestMode) return;
-
         this.setQuests(getSortedQuests());
         setTrackingRequested(null);
         reloadElements();
@@ -250,84 +293,18 @@ public final class WynntilsQuestBookScreen extends WynntilsListScreen<QuestInfo,
         if (this.hovered instanceof QuestInfoButton) {
             tooltipLines = new ArrayList<>();
 
-            if (miniQuestMode) {
-                tooltipLines.add(Component.translatable("screens.wynntils.wynntilsQuestBook.miniQuestInfo.name"));
-            } else {
-                tooltipLines.add(Component.translatable("screens.wynntils.wynntilsQuestBook.questInfo.name"));
-            }
+            tooltipLines.add(Component.translatable("screens.wynntils.wynntilsQuestBook.questInfo.name"));
 
-            for (int i = 1; i <= 100; i += 25) {
-                int minLevel = i;
-                int maxLevel = i + 24;
-
-                long count = elements.stream()
-                        .filter(questInfo ->
-                                questInfo.getSortLevel() >= minLevel && questInfo.getSortLevel() <= maxLevel)
-                        .count();
-                long completedCount = elements.stream()
-                        .filter(questInfo -> questInfo.getStatus() == QuestStatus.COMPLETED
-                                && questInfo.getSortLevel() >= minLevel
-                                && questInfo.getSortLevel() <= maxLevel)
-                        .count();
-
-                tooltipLines.add(Component.literal("- Lv. " + minLevel + "-" + maxLevel)
-                        .append(Component.literal(" [" + completedCount + "/" + count + "]")
-                                .withStyle(ChatFormatting.GRAY))
-                        .append(" ")
-                        .append(RenderedStringUtils.getPercentageComponent((int) completedCount, (int) count, 5)));
-            }
-
-            long count = elements.stream()
-                    .filter(questInfo -> questInfo.getSortLevel() >= 101)
-                    .count();
-            long completedCount;
-
-            if (count > 0) {
-                completedCount = elements.stream()
-                        .filter(questInfo ->
-                                questInfo.getStatus() == QuestStatus.COMPLETED && questInfo.getSortLevel() >= 101)
-                        .count();
-                tooltipLines.add(Component.literal("- Lv. 101+")
-                        .append(Component.literal(" [" + completedCount + "/" + count + "]")
-                                .withStyle(ChatFormatting.GRAY))
-                        .append(" ")
-                        .append(RenderedStringUtils.getPercentageComponent((int) completedCount, (int) count, 5)));
-            }
-
-            count = elements.size();
-            completedCount = elements.stream()
-                    .filter(questInfo -> questInfo.getStatus() == QuestStatus.COMPLETED)
-                    .count();
+            addQuestProgressTooltipLines(tooltipLines, false);
 
             tooltipLines.add(Component.literal(""));
-            tooltipLines.add(Component.literal(this.miniQuestMode ? "Total Mini-Quests: " : "Total Quests: ")
-                    .withStyle(ChatFormatting.AQUA)
-                    .append(Component.literal("[" + completedCount + "/" + count + "]")
-                            .withStyle(ChatFormatting.DARK_AQUA)));
-            tooltipLines.add(RenderedStringUtils.getPercentageComponent((int) completedCount, (int) count, 15));
-            tooltipLines.add(Component.literal(""));
+            tooltipLines.add(Component.translatable("screens.wynntils.wynntilsQuestBook.miniQuestInfo.name"));
 
-            if (!this.miniQuestMode) {
-                tooltipLines.add(Component.translatable("screens.wynntils.wynntilsQuestBook.questInfo.click")
-                        .withStyle(ChatFormatting.GREEN));
-            } else {
-                tooltipLines.add(Component.translatable("screens.wynntils.wynntilsQuestBook.miniQuestInfo.click")
-                        .withStyle(ChatFormatting.GREEN));
-            }
+            addQuestProgressTooltipLines(tooltipLines, true);
         }
 
-        if (this.hovered instanceof SortOrderWidget) {
-            switch (questSortOrder) {
-                case LEVEL -> tooltipLines = List.of(
-                        Component.translatable("screens.wynntils.wynntilsQuestBook.sort.level.name"),
-                        Component.translatable("screens.wynntils.wynntilsQuestBook.sort.level.description"));
-                case DISTANCE -> tooltipLines = List.of(
-                        Component.translatable("screens.wynntils.wynntilsQuestBook.sort.distance.name"),
-                        Component.translatable("screens.wynntils.wynntilsQuestBook.sort.distance.description"));
-                case ALPHABETIC -> tooltipLines = List.of(
-                        Component.translatable("screens.wynntils.wynntilsQuestBook.sort.alphabetical.name"),
-                        Component.translatable("screens.wynntils.wynntilsQuestBook.sort.alphabetical.description"));
-            }
+        if (this.hovered instanceof TooltipProvider tooltipWidget) {
+            tooltipLines = tooltipWidget.getTooltipLines();
         }
 
         if (tooltipLines.isEmpty()) return;
@@ -361,7 +338,7 @@ public final class WynntilsQuestBookScreen extends WynntilsListScreen<QuestInfo,
                         StyledText.fromString(I18n.get("screens.wynntils.wynntilsQuestBook.description2")),
                         20,
                         Texture.QUEST_BOOK_BACKGROUND.width() / 2f - 10,
-                        170,
+                        105,
                         Texture.QUEST_BOOK_BACKGROUND.width() / 2f - 30,
                         CommonColors.BLACK,
                         HorizontalAlignment.LEFT,
@@ -381,7 +358,7 @@ public final class WynntilsQuestBookScreen extends WynntilsListScreen<QuestInfo,
     }
 
     private List<QuestInfo> getSortedQuests() {
-        return miniQuestMode ? Models.Quest.getMiniQuests(questSortOrder) : Models.Quest.getQuests(questSortOrder);
+        return Models.Quest.getSortedQuests(contentSortOrder, showQuests, showMiniQuests);
     }
 
     private void setQuests(List<QuestInfo> quests) {
@@ -411,30 +388,74 @@ public final class WynntilsQuestBookScreen extends WynntilsListScreen<QuestInfo,
                 this);
     }
 
-    public boolean isMiniQuestMode() {
-        return miniQuestMode;
+    @Override
+    public ContentSortOrder getContentSortOrder() {
+        return contentSortOrder;
     }
 
-    public void setMiniQuestMode(boolean miniQuestMode) {
-        this.miniQuestMode = miniQuestMode;
-
-        this.setQuests(getSortedQuests());
-        this.setCurrentPage(0);
-
-        Models.Quest.rescanQuestBook(!this.miniQuestMode, this.miniQuestMode);
-    }
-
-    public QuestSortOrder getQuestSortOrder() {
-        return questSortOrder;
-    }
-
-    public void setQuestSortOrder(QuestSortOrder newSortOrder) {
+    @Override
+    public void setContentSortOrder(ContentSortOrder newSortOrder) {
         if (newSortOrder == null) {
-            throw new IllegalStateException("Tried to set quest order to null");
+            throw new IllegalStateException("Tried to set null content sort order");
         }
 
-        this.questSortOrder = newSortOrder;
+        this.contentSortOrder = newSortOrder;
         setQuests(getSortedQuests());
         this.setCurrentPage(0);
+    }
+
+    private void addQuestProgressTooltipLines(List<Component> tooltipLines, boolean miniQuestMode) {
+        List<QuestInfo> elements = this.elements.stream()
+                .filter(questInfo -> questInfo.isMiniQuest() == miniQuestMode)
+                .toList();
+
+        for (int i = 1; i <= 100; i += 25) {
+            int minLevel = i;
+            int maxLevel = i + 24;
+
+            long count = elements.stream()
+                    .filter(questInfo -> questInfo.getSortLevel() >= minLevel && questInfo.getSortLevel() <= maxLevel)
+                    .count();
+            long completedCount = elements.stream()
+                    .filter(questInfo -> questInfo.getStatus() == QuestStatus.COMPLETED
+                            && questInfo.getSortLevel() >= minLevel
+                            && questInfo.getSortLevel() <= maxLevel)
+                    .count();
+
+            tooltipLines.add(Component.literal("- Lv. " + minLevel + "-" + maxLevel)
+                    .append(Component.literal(" [" + completedCount + "/" + count + "]")
+                            .withStyle(ChatFormatting.GRAY))
+                    .append(" ")
+                    .append(RenderedStringUtils.getPercentageComponent((int) completedCount, (int) count, 5)));
+        }
+
+        long count = elements.stream()
+                .filter(questInfo -> questInfo.getSortLevel() >= 101)
+                .count();
+        long completedCount;
+
+        if (count > 0) {
+            completedCount = elements.stream()
+                    .filter(questInfo ->
+                            questInfo.getStatus() == QuestStatus.COMPLETED && questInfo.getSortLevel() >= 101)
+                    .count();
+            tooltipLines.add(Component.literal("- Lv. 101+")
+                    .append(Component.literal(" [" + completedCount + "/" + count + "]")
+                            .withStyle(ChatFormatting.GRAY))
+                    .append(" ")
+                    .append(RenderedStringUtils.getPercentageComponent((int) completedCount, (int) count, 5)));
+        }
+
+        count = elements.size();
+        completedCount = elements.stream()
+                .filter(questInfo -> questInfo.getStatus() == QuestStatus.COMPLETED)
+                .count();
+
+        tooltipLines.add(Component.literal(""));
+        tooltipLines.add(Component.literal(miniQuestMode ? "Total Mini-Quests: " : "Total Quests: ")
+                .withStyle(ChatFormatting.AQUA)
+                .append(Component.literal("[" + completedCount + "/" + count + "]")
+                        .withStyle(ChatFormatting.DARK_AQUA)));
+        tooltipLines.add(RenderedStringUtils.getPercentageComponent((int) completedCount, (int) count, 15));
     }
 }

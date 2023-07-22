@@ -16,7 +16,7 @@ import com.wynntils.screens.maps.SeaskipperMapScreen;
 import com.wynntils.utils.colors.CustomColor;
 import com.wynntils.utils.mc.McUtils;
 import com.wynntils.utils.render.type.PointerType;
-import net.minecraft.network.chat.Component;
+import net.minecraft.client.resources.language.I18n;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 
 @ConfigCategory(Category.UI)
@@ -35,8 +35,7 @@ public class CustomSeaskipperScreenFeature extends Feature {
         if (!Models.Container.isSeaskipper(event.getScreen().getTitle())) return;
 
         if (!Models.Seaskipper.isProfileLoaded()) {
-            McUtils.sendMessageToClient(
-                    Component.translatable("feature.wynntils.customSeaskipperScreen.error.noProfile"));
+            McUtils.sendErrorToClient(I18n.get("feature.wynntils.customSeaskipperScreen.error.noProfile"));
             return;
         }
 

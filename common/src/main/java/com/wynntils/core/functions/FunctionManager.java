@@ -370,6 +370,7 @@ public final class FunctionManager extends Manager {
         registerFunction(new WorldFunctions.CurrentTerritoryOwnerFunction());
         registerFunction(new WorldFunctions.CurrentWorldFunction());
         registerFunction(new WorldFunctions.CurrentWorldUptimeFunction());
+        registerFunction(new WorldFunctions.GatheringCooldownFunction());
         registerFunction(new WorldFunctions.MobTotemCountFunction());
         registerFunction(new WorldFunctions.MobTotemDistanceFunction());
         registerFunction(new WorldFunctions.MobTotemFunction());
@@ -457,6 +458,9 @@ public final class FunctionManager extends Manager {
 
         registerFunction(new LootrunFunctions.DryBoxesFunction());
         registerFunction(new LootrunFunctions.DryStreakFunction());
+        registerFunction(new LootrunFunctions.HighestDryStreakFunction());
+        registerFunction(new LootrunFunctions.LastDryStreakFunction());
+        registerFunction(new LootrunFunctions.LastMythicFunction());
 
         registerFunction(new MinecraftFunctions.DirFunction());
         registerFunction(new MinecraftFunctions.FpsFunction());

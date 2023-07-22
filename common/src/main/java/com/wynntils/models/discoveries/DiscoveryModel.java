@@ -15,6 +15,7 @@ import com.wynntils.core.net.UrlId;
 import com.wynntils.core.text.StyledText;
 import com.wynntils.models.characterstats.CombatXpModel;
 import com.wynntils.models.content.type.ContentInfo;
+import com.wynntils.models.content.type.ContentSortOrder;
 import com.wynntils.models.content.type.ContentType;
 import com.wynntils.models.discoveries.event.DiscoveriesUpdatedEvent;
 import com.wynntils.models.discoveries.profile.DiscoveryProfile;
@@ -29,11 +30,11 @@ import com.wynntils.utils.mc.McUtils;
 import com.wynntils.utils.mc.type.Location;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
-import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
 import net.minecraftforge.eventbus.api.EventPriority;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
@@ -106,9 +107,12 @@ public final class DiscoveryModel extends Model {
 
     private void queryDiscoveries() {
         WynntilsMod.info("Requesting rescan of discoveries in Content Book");
-        Models.Content.scanContentBook(ContentType.TERRITORIAL_DISCOVERY, this::updateTerritoryDiscoveriesFromQuery);
-        Models.Content.scanContentBook(ContentType.WORLD_DISCOVERY, this::updateWorldDiscoveriesFromQuery);
+
+        // This order is a bit arbitrary, but it's the order they appear in the Content Book,
+        // so we can use this as a workaround to parse them faster.
         Models.Content.scanContentBook(ContentType.SECRET_DISCOVERY, this::updateSecretDiscoveriesFromQuery);
+        Models.Content.scanContentBook(ContentType.WORLD_DISCOVERY, this::updateWorldDiscoveriesFromQuery);
+        Models.Content.scanContentBook(ContentType.TERRITORIAL_DISCOVERY, this::updateTerritoryDiscoveriesFromQuery);
     }
 
     private void updateTerritoryDiscoveriesFromQuery(List<ContentInfo> newContent, List<StyledText> progress) {
@@ -174,11 +178,29 @@ public final class DiscoveryModel extends Model {
         return secretDiscoveriesTooltip.stream().map(StyledText::getComponent).collect(Collectors.toList());
     }
 
-    public Stream<DiscoveryInfo> getAllCompletedDiscoveries() {
-        return Stream.concat(
-                        Stream.concat(territoryDiscoveries.stream(), worldDiscoveries.stream()),
-                        secretDiscoveries.stream())
-                .filter(DiscoveryInfo::isDiscovered);
+    public Stream<DiscoveryInfo> getAllDiscoveries(ContentSortOrder sortOrder) {
+        if (sortOrder == ContentSortOrder.DISTANCE) {
+            throw new IllegalArgumentException("Cannot sort discoveries by distance");
+        }
+
+        // All discoveries are always sorted by status (available then unavailable), and then
+        // the given sort order, and finally a third way if the given sort order is equal.
+        Stream<DiscoveryInfo> baseStream = Stream.concat(
+                Stream.concat(territoryDiscoveries.stream(), worldDiscoveries.stream()), secretDiscoveries.stream());
+
+        return switch (sortOrder) {
+            case LEVEL -> baseStream.sorted(Comparator.comparing(DiscoveryInfo::isDiscovered)
+                    .thenComparing(DiscoveryInfo::getMinLevel)
+                    .thenComparing(DiscoveryInfo::getName));
+            case ALPHABETIC -> baseStream.sorted(Comparator.comparing(DiscoveryInfo::isDiscovered)
+                    .thenComparing(DiscoveryInfo::getName)
+                    .thenComparing(DiscoveryInfo::getMinLevel));
+            case DISTANCE -> null;
+        };
+    }
+
+    public Stream<DiscoveryInfo> getAllCompletedDiscoveries(ContentSortOrder sortOrder) {
+        return getAllDiscoveries(sortOrder).filter(DiscoveryInfo::isDiscovered);
     }
 
     public List<DiscoveryInfo> getDiscoveryInfoList() {
@@ -189,8 +211,7 @@ public final class DiscoveryModel extends Model {
         ApiResponse apiResponse = Managers.Net.callApi(UrlId.API_WIKI_DISCOVERY_QUERY, Map.of("name", name));
         apiResponse.handleJsonObject(json -> {
             if (json.has("error")) { // Returns error if page does not exist
-                McUtils.sendMessageToClient(Component.literal(
-                        ChatFormatting.RED + "Unable to find discovery coordinates. (Wiki page not found)"));
+                McUtils.sendErrorToClient("Unable to find discovery coordinates. (Wiki page not found)");
                 return;
             }
 
@@ -216,14 +237,12 @@ public final class DiscoveryModel extends Model {
                 x = Integer.parseInt(xLocation.substring(12, xEnd));
                 z = Integer.parseInt(zLocation.substring(12, zEnd));
             } catch (NumberFormatException e) {
-                McUtils.sendMessageToClient(Component.literal(
-                        ChatFormatting.RED + "Unable to find discovery coordinates. (Wiki template not located)"));
+                McUtils.sendErrorToClient("Unable to find discovery coordinates. (Wiki template not located)");
                 return;
             }
 
             if (x == 0 && z == 0) {
-                McUtils.sendMessageToClient(Component.literal(
-                        ChatFormatting.RED + "Unable to find discovery coordinates. (Wiki coordinates not located)"));
+                McUtils.sendErrorToClient("Unable to find discovery coordinates. (Wiki coordinates not located)");
                 return;
             }
 

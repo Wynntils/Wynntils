@@ -13,10 +13,10 @@ import com.wynntils.core.net.UrlId;
 import com.wynntils.core.text.StyledText;
 import com.wynntils.models.characterstats.CombatXpModel;
 import com.wynntils.models.content.type.ContentInfo;
+import com.wynntils.models.content.type.ContentSortOrder;
 import com.wynntils.models.content.type.ContentType;
 import com.wynntils.models.quests.event.QuestBookReloadedEvent;
 import com.wynntils.models.quests.type.QuestLength;
-import com.wynntils.models.quests.type.QuestSortOrder;
 import com.wynntils.models.quests.type.QuestStatus;
 import com.wynntils.models.worlds.event.WorldStateEvent;
 import com.wynntils.utils.mc.McUtils;
@@ -77,15 +77,24 @@ public final class QuestModel extends Model {
         return quests;
     }
 
-    public List<QuestInfo> getQuests(QuestSortOrder sortOrder) {
+    public List<QuestInfo> getQuests(ContentSortOrder sortOrder) {
         return sortQuestInfoList(sortOrder, quests);
     }
 
-    public List<QuestInfo> getMiniQuests(QuestSortOrder sortOrder) {
+    public List<QuestInfo> getMiniQuests(ContentSortOrder sortOrder) {
         return sortQuestInfoList(sortOrder, miniQuests);
     }
 
-    private List<QuestInfo> sortQuestInfoList(QuestSortOrder sortOrder, List<QuestInfo> questList) {
+    public List<QuestInfo> getSortedQuests(
+            ContentSortOrder sortOrder, boolean includeQuests, boolean includeMiniQuests) {
+        List<QuestInfo> quests = includeQuests ? this.quests : List.of();
+        List<QuestInfo> miniQuests = includeMiniQuests ? this.miniQuests : List.of();
+
+        return sortQuestInfoList(
+                sortOrder, Stream.concat(quests.stream(), miniQuests.stream()).toList());
+    }
+
+    private List<QuestInfo> sortQuestInfoList(ContentSortOrder sortOrder, List<QuestInfo> questList) {
         // All quests are always sorted by status (available then unavailable), and then
         // the given sort order, and finally a third way if the given sort order is equal.
         return switch (sortOrder) {

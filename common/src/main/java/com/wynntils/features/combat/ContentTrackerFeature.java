@@ -10,8 +10,10 @@ import com.wynntils.core.config.Config;
 import com.wynntils.core.config.ConfigCategory;
 import com.wynntils.core.config.RegisterConfig;
 import com.wynntils.core.features.Feature;
+import com.wynntils.mc.event.SetSpawnEvent;
 import com.wynntils.models.content.event.ContentTrackerUpdatedEvent;
 import com.wynntils.utils.mc.McUtils;
+import com.wynntils.utils.mc.type.Location;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
@@ -29,14 +31,28 @@ public class ContentTrackerFeature extends Feature {
 
     @SubscribeEvent
     public void onTrackerUpdate(ContentTrackerUpdatedEvent event) {
-        if (event.getName() == null) return;
-
         if (autoTrackCoordinates.get()) {
-            Models.Compass.setDynamicCompassLocation(Models.Content::getTrackedLocation);
+            Location trackedLocation = Models.Content.getTrackedLocation();
+
+            // Ideally, we would clear the compass if we do not have a
+            // tracked location. However, the event is not reliable, since
+            // it is sent multiple times with partial lore. So
+            // trackedLocation == null might also just indicate that we
+            // failed to parse, not that the quest is missing a location.
+            if (trackedLocation != null) {
+                Models.Compass.setCompassLocation(trackedLocation);
+            }
         }
 
         if (playSoundOnUpdate.get()) {
             McUtils.playSoundUI(TRACKER_UPDATE_SOUND);
         }
+    }
+
+    @SubscribeEvent
+    public void onSetSpawn(SetSpawnEvent e) {
+        if (!autoTrackCoordinates.get()) return;
+
+        Models.Compass.setCompassToSpawnTracker();
     }
 }

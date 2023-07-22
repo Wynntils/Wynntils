@@ -8,7 +8,6 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.mod.type.CrashType;
 import com.wynntils.utils.mc.McUtils;
-import net.minecraft.ChatFormatting;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.network.chat.Component;
 
@@ -27,8 +26,7 @@ public abstract class WynntilsScreen extends Screen {
                 throwable,
                 true,
                 false);
-        McUtils.sendMessageToClient(
-                Component.literal("Screen was forcefully closed.").withStyle(ChatFormatting.RED));
+        McUtils.sendErrorToClient("Screen was forcefully closed.");
     }
 
     @Override

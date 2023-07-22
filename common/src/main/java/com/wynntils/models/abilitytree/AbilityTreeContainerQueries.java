@@ -24,8 +24,6 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.function.Consumer;
-import net.minecraft.ChatFormatting;
-import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 
@@ -53,8 +51,7 @@ public class AbilityTreeContainerQueries {
         ScriptedContainerQuery query = ScriptedContainerQuery.builder("Ability Tree Query")
                 .onError(msg -> {
                     WynntilsMod.warn("Problem querying Ability Tree: " + msg);
-                    McUtils.sendMessageToClient(
-                            Component.literal("Dumping Ability Tree failed").withStyle(ChatFormatting.RED));
+                    McUtils.sendErrorToClient("Dumping Ability Tree failed");
                 })
 
                 // Open character/compass menu
