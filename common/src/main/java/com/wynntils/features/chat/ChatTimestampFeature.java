@@ -51,11 +51,9 @@ public class ChatTimestampFeature extends Feature {
 
         LocalDateTime date = LocalDateTime.now();
         MutableComponent timestamp = Component.empty()
-                .append(Component.literal("[")
-                        .withStyle(ChatFormatting.DARK_GRAY)
-                        .append(Component.literal(date.format(formatter)).withStyle(ChatFormatting.GRAY))
-                        .append(Component.literal("] "))
-                        .withStyle(ChatFormatting.DARK_GRAY));
+                .append(Component.literal("[").withStyle(ChatFormatting.DARK_GRAY))
+                .append(Component.literal(date.format(formatter)).withStyle(ChatFormatting.GRAY))
+                .append(Component.literal("] ").withStyle(ChatFormatting.DARK_GRAY));
 
         timestamp.append(message);
 
