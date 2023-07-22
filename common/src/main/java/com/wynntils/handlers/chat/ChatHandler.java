@@ -352,6 +352,11 @@ public final class ChatHandler extends Handler {
             lastScreenNpcDialog = dialogue;
         }
 
+        if (type == NpcDialogueType.NONE) {
+            // Ignore any delayed dialogues, since they are now obsolete
+            delayedDialogue = null;
+        }
+
         NpcDialogEvent event = new NpcDialogEvent(dialogue, type, isProtected);
         WynntilsMod.postEvent(event);
     }
