@@ -18,7 +18,7 @@ import com.wynntils.models.spells.type.PartialSpellSource;
 import com.wynntils.models.spells.type.SpellDirection;
 import com.wynntils.models.spells.type.SpellFailureReason;
 import com.wynntils.models.spells.type.SpellType;
-
+import com.wynntils.models.worlds.event.WorldStateEvent;
 import java.time.Duration;
 import java.time.Instant;
 import java.util.Arrays;
@@ -26,8 +26,6 @@ import java.util.List;
 import java.util.regex.MatchResult;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-
-import com.wynntils.models.worlds.event.WorldStateEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 
 public class SpellModel extends Model {
@@ -78,7 +76,8 @@ public class SpellModel extends Model {
         if (!matcher.matches()) return;
 
         SpellDirection[] spell = getSpellFromMatcher(e.getMatcher());
-        if (Duration.between(lastSpellUpdate, Instant.now()).toSeconds() < 3 && Arrays.equals(spell, lastSpell)) return; // Wynn sometimes sends duplicate packets, skip those
+        if (Duration.between(lastSpellUpdate, Instant.now()).toSeconds() < 3 && Arrays.equals(spell, lastSpell))
+            return; // Wynn sometimes sends duplicate packets, skip those
         setLastSpell(spell);
 
         WynntilsMod.postEvent(new SpellEvent.Partial(spell, PartialSpellSource.HOTBAR));
@@ -95,7 +94,8 @@ public class SpellModel extends Model {
         if (!matcher.matches()) return;
 
         SpellDirection[] spell = getSpellFromMatcher(matcher);
-        if (Duration.between(lastSpellUpdate, Instant.now()).toSeconds() < 3 && Arrays.equals(spell, lastSpell)) return; // Wynn sometimes sends duplicate packets, skip those
+        if (Duration.between(lastSpellUpdate, Instant.now()).toSeconds() < 3 && Arrays.equals(spell, lastSpell))
+            return; // Wynn sometimes sends duplicate packets, skip those
         setLastSpell(spell);
 
         // This check looks for the "t" in Right and Left, that do not exist in L and R, to set the source

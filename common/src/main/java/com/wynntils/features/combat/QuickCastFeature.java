@@ -21,15 +21,6 @@ import com.wynntils.models.worlds.event.WorldStateEvent;
 import com.wynntils.utils.mc.LoreUtils;
 import com.wynntils.utils.mc.McUtils;
 import com.wynntils.utils.wynn.WynnItemMatchers;
-import net.minecraft.ChatFormatting;
-import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.MutableComponent;
-import net.minecraft.network.protocol.game.ServerboundSetCarriedItemPacket;
-import net.minecraft.world.InteractionHand;
-import net.minecraft.world.item.ItemStack;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
-import org.lwjgl.glfw.GLFW;
-
 import java.time.Duration;
 import java.time.Instant;
 import java.util.LinkedList;
@@ -38,6 +29,14 @@ import java.util.Optional;
 import java.util.Queue;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import net.minecraft.ChatFormatting;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.MutableComponent;
+import net.minecraft.network.protocol.game.ServerboundSetCarriedItemPacket;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.world.item.ItemStack;
+import net.minecraftforge.eventbus.api.SubscribeEvent;
+import org.lwjgl.glfw.GLFW;
 
 @ConfigCategory(Category.COMBAT)
 public class QuickCastFeature extends Feature {
@@ -153,10 +152,14 @@ public class QuickCastFeature extends Feature {
         spell = null;
         if (--spellCountdown > 0) return false;
         if (spells.isEmpty()) return false;
-        SpellDirection[] current = Models.Spell.getLastSpell().length != 3 && Duration.between(Models.Spell.getLastSpellUpdate(), Instant.now()).toSeconds() < 3
+        SpellDirection[] current = Models.Spell.getLastSpell().length != 3
+                        && Duration.between(Models.Spell.getLastSpellUpdate(), Instant.now())
+                                        .toSeconds()
+                                < 3
                 ? Models.Spell.getLastSpell()
                 : SpellDirection.NO_SPELL;
-        Optional<Spell> first = spells.stream().filter(s -> s.poll(currentSpell, current)).findFirst();
+        Optional<Spell> first =
+                spells.stream().filter(s -> s.poll(currentSpell, current)).findFirst();
         if (first.isEmpty()) return false;
         spell = first.get();
         spellCountdown = spellCooldown.get();
@@ -187,7 +190,10 @@ public class QuickCastFeature extends Feature {
 
     private record Spell(SpellUnit a, SpellUnit b, boolean isInverted) {
         private boolean poll(Queue<SpellDirection> queue, SpellDirection[] current) {
-            List<SpellDirection> spellDirection = List.of(SpellUnit.PRIMARY.toSpellDirection(isInverted), a.toSpellDirection(isInverted), b.toSpellDirection(isInverted));
+            List<SpellDirection> spellDirection = List.of(
+                    SpellUnit.PRIMARY.toSpellDirection(isInverted),
+                    a.toSpellDirection(isInverted),
+                    b.toSpellDirection(isInverted));
             for (int i = 0; i < current.length; i++) {
                 if (current[i] != spellDirection.get(i)) return false;
             }
