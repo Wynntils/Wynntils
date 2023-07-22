@@ -83,6 +83,9 @@ public class CustomBankPagesFeature extends Feature {
             currentContainer = SearchableContainerType.MISC_BUCKET;
             lastPage = Models.Container.getFinalMiscBucketPage();
         } else {
+            currentContainer = null;
+            currentPage = 1;
+            pageDestination = 1;
             return;
         }
 
