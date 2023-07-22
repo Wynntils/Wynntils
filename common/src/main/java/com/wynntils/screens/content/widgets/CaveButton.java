@@ -115,7 +115,7 @@ public class CaveButton extends WynntilsButton implements TooltipProvider {
     @Override
     public boolean mouseClicked(double mouseX, double mouseY, int button) {
         if (button == GLFW.GLFW_MOUSE_BUTTON_LEFT) {
-            trackQuest();
+            trackCave();
         } else if (button == GLFW.GLFW_MOUSE_BUTTON_MIDDLE) {
             Optional<Location> nextLocation = this.caveInfo.getNextLocation();
 
@@ -125,7 +125,7 @@ public class CaveButton extends WynntilsButton implements TooltipProvider {
         return true;
     }
 
-    private void trackQuest() {
+    private void trackCave() {
         if (this.caveInfo.isTrackable()) {
             McUtils.playSoundUI(SoundEvents.ANVIL_LAND);
             if (this.caveInfo.equals(Models.Content.getTrackedCaveInfo())) {
