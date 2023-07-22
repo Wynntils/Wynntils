@@ -79,6 +79,27 @@ public abstract class IconPoi implements Poi {
         float width = icon.width() * modifier;
         float height = icon.height() * modifier;
 
+        // zoom 3 (max zoomed in) up until 0.8 will keep service poi at 100% alpha (1.0f)
+        // fading until we get to zoom 0.540, at which point it goes to 0.1f and disappears.
+        // and finally at zoom 0.4727, it goes to 0.0f
+
+        // fast travel is at 100% until 0.1667, and disappareas with 0.1f at:
+        // 0.10858048, or possibly 0.11261813, and completely with 0.0f at 0.1,
+        // which is max zoomed out
+
+        // these happense since:
+        // public final Config<Float> servicePoiMinZoom = new Config<>(0.8f);
+        // public final Config<Float> fastTravelPoiMinZoom = new Config<>(0.166f);
+
+        // so this point shows when it starts to fade, but we want to specify
+        // the opposite, when it should be totally gone.
+        // and then also possibly a fading speed...
+
+        // we also have
+        // public final Config<Float> poiFadeAdjustment = new Config<>(0.4f);
+        // which is used to calculate where the item is completely faded out:
+        // minZoom * (1 - poiFadeAdjustment),
+
         BufferedRenderUtils.drawColoredTexturedRect(
                 poseStack,
                 bufferSource,
