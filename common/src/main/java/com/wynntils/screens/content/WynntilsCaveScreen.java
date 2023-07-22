@@ -21,8 +21,6 @@ import com.wynntils.screens.base.widgets.ReloadButton;
 import com.wynntils.screens.base.widgets.SortOrderWidget;
 import com.wynntils.screens.base.widgets.SortableContentScreen;
 import com.wynntils.screens.content.widgets.CaveButton;
-import com.wynntils.screens.questbook.history.widgets.DialogueHistoryButton;
-import com.wynntils.screens.questbook.widgets.QuestInfoButton;
 import com.wynntils.screens.wynntilsmenu.WynntilsMenuScreen;
 import com.wynntils.utils.StringUtils;
 import com.wynntils.utils.colors.CommonColors;
@@ -118,16 +116,6 @@ public final class WynntilsCaveScreen extends WynntilsListScreen<CaveInfo, CaveB
                 Texture.FORWARD_ARROW.height(),
                 true,
                 this));
-        this.addRenderableWidget(new DialogueHistoryButton(
-                (int) (Texture.QUEST_BOOK_BACKGROUND.width() / 2f - 30),
-                15,
-                Texture.DIALOGUE_BUTTON.width(),
-                Texture.DIALOGUE_BUTTON.height()));
-        this.addRenderableWidget(new QuestInfoButton(
-                (int) (Texture.QUEST_BOOK_BACKGROUND.width() / 4f),
-                12,
-                Texture.QUESTS_BUTTON.width(),
-                Texture.QUESTS_BUTTON.height()));
 
         this.addRenderableWidget(new SortOrderWidget(
                 Texture.QUEST_BOOK_BACKGROUND.width() / 2 + 1,

@@ -76,4 +76,12 @@ public class CaveInfo {
     public ContentDifficulty getDifficulty() {
         return difficulty;
     }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public List<String> getRewards() {
+        return rewards;
+    }
 }

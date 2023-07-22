@@ -9,11 +9,14 @@ import com.wynntils.core.components.Models;
 import com.wynntils.core.text.StyledText;
 import com.wynntils.models.content.CaveInfo;
 import com.wynntils.models.content.type.ContentType;
+import com.wynntils.screens.base.TooltipProvider;
 import com.wynntils.screens.base.widgets.WynntilsButton;
 import com.wynntils.screens.content.WynntilsCaveScreen;
 import com.wynntils.screens.maps.MainMapScreen;
+import com.wynntils.utils.EnumUtils;
 import com.wynntils.utils.colors.CommonColors;
 import com.wynntils.utils.colors.CustomColor;
+import com.wynntils.utils.mc.ComponentUtils;
 import com.wynntils.utils.mc.McUtils;
 import com.wynntils.utils.mc.RenderedStringUtils;
 import com.wynntils.utils.mc.type.Location;
@@ -24,12 +27,15 @@ import com.wynntils.utils.render.type.HorizontalAlignment;
 import com.wynntils.utils.render.type.TextShadow;
 import com.wynntils.utils.render.type.VerticalAlignment;
 import com.wynntils.utils.type.Pair;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
+import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
 import net.minecraft.sounds.SoundEvents;
 import org.lwjgl.glfw.GLFW;
 
-public class CaveButton extends WynntilsButton {
+public class CaveButton extends WynntilsButton implements TooltipProvider {
     private static final Pair<CustomColor, CustomColor> BUTTON_COLOR =
             Pair.of(new CustomColor(181, 174, 151), new CustomColor(121, 116, 101));
     private static final Pair<CustomColor, CustomColor> TRACKED_BUTTON_COLOR =
@@ -39,6 +45,8 @@ public class CaveButton extends WynntilsButton {
 
     private final CaveInfo caveInfo;
     private final WynntilsCaveScreen caveScreen;
+
+    private List<Component> tooltipLines;
 
     public CaveButton(int x, int y, int width, int height, CaveInfo caveInfo, WynntilsCaveScreen screen) {
         super(x, y, width, height, Component.literal("Cave Button"));
@@ -132,5 +140,92 @@ public class CaveButton extends WynntilsButton {
 
     public CaveInfo getCaveInfo() {
         return caveInfo;
+    }
+
+    @Override
+    public List<Component> getTooltipLines() {
+        if (tooltipLines == null) {
+            tooltipLines = generateTooltipLines();
+        }
+
+        List<Component> lines = new ArrayList<>(tooltipLines);
+
+        lines.add(Component.literal(""));
+
+        if (caveInfo.isTrackable()) {
+            if (caveInfo.equals(Models.Content.getTrackedCaveInfo())) {
+                lines.add(Component.literal("Left click to stop tracking it!")
+                        .withStyle(ChatFormatting.RED)
+                        .withStyle(ChatFormatting.BOLD));
+            } else {
+                lines.add(Component.literal("Left click to track it!")
+                        .withStyle(ChatFormatting.GREEN)
+                        .withStyle(ChatFormatting.BOLD));
+            }
+        }
+
+        lines.add(Component.literal("Middle click to view on map!")
+                .withStyle(ChatFormatting.YELLOW)
+                .withStyle(ChatFormatting.BOLD));
+
+        return lines;
+    }
+
+    private List<Component> generateTooltipLines() {
+        List<Component> tooltipLines = new ArrayList<>();
+
+        tooltipLines.add(Component.literal(caveInfo.getName())
+                .withStyle(ChatFormatting.BOLD)
+                .withStyle(ChatFormatting.GOLD));
+        tooltipLines.add(
+                switch (caveInfo.getStatus()) {
+                    case AVAILABLE, STARTED -> Component.literal("Can be explored")
+                            .withStyle(ChatFormatting.YELLOW);
+                    case UNAVAILABLE -> Component.literal("Cannot be explored").withStyle(ChatFormatting.RED);
+                    case COMPLETED -> Component.literal("Completed").withStyle(ChatFormatting.GREEN);
+                });
+        tooltipLines.add(Component.literal(""));
+
+        tooltipLines.add((Models.CombatXp.getCombatLevel().current() >= caveInfo.getRecommendedLevel()
+                        ? Component.literal("✔").withStyle(ChatFormatting.GREEN)
+                        : Component.literal("✖").withStyle(ChatFormatting.RED))
+                .append(Component.literal(" Recommended Combat Lv. Min: ").withStyle(ChatFormatting.GRAY))
+                .append(Component.literal(String.valueOf(caveInfo.getRecommendedLevel()))
+                        .withStyle(ChatFormatting.WHITE)));
+
+        tooltipLines.add(Component.literal("-")
+                .withStyle(ChatFormatting.GREEN)
+                .append(Component.literal(" Length: ").withStyle(ChatFormatting.GRAY))
+                .append(Component.literal(EnumUtils.toNiceString(caveInfo.getLength()))
+                        .withStyle(ChatFormatting.WHITE)));
+
+        tooltipLines.add(Component.literal("-")
+                .withStyle(ChatFormatting.GREEN)
+                .append(Component.literal(" Difficulty: ").withStyle(ChatFormatting.GRAY))
+                .append(Component.literal(EnumUtils.toNiceString(caveInfo.getDifficulty()))
+                        .withStyle(ChatFormatting.WHITE)));
+
+        tooltipLines.add(Component.literal("-")
+                .withStyle(ChatFormatting.GREEN)
+                .append(Component.literal(" Distance: ").withStyle(ChatFormatting.GRAY))
+                .append(Component.literal(EnumUtils.toNiceString(caveInfo.getDistance()))
+                        .withStyle(ChatFormatting.WHITE)));
+
+        tooltipLines.add(Component.literal(""));
+
+        tooltipLines.addAll(ComponentUtils.splitComponent(
+                Component.literal(caveInfo.getDescription()).withStyle(ChatFormatting.GRAY), 150));
+
+        tooltipLines.add(Component.literal(""));
+
+        // rewards
+        tooltipLines.add(Component.literal("Rewards:").withStyle(ChatFormatting.LIGHT_PURPLE));
+        for (String reward : caveInfo.getRewards()) {
+            tooltipLines.add(Component.literal("- ")
+                    .withStyle(ChatFormatting.LIGHT_PURPLE)
+                    .append(Component.literal(reward).withStyle(ChatFormatting.GRAY)));
+        }
+
+        return tooltipLines;
     }
 }
