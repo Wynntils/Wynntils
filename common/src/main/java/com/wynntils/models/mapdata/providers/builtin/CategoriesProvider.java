@@ -8,6 +8,8 @@ import com.wynntils.models.map.type.ServiceKind;
 import com.wynntils.models.mapdata.attributes.AbstractMapAttributes;
 import com.wynntils.models.mapdata.attributes.type.MapAttributes;
 import com.wynntils.models.mapdata.type.MapCategory;
+import com.wynntils.utils.colors.CommonColors;
+import com.wynntils.utils.colors.CustomColor;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Stream;
@@ -91,7 +93,12 @@ public class CategoriesProvider extends BuiltInProvider {
 
                 @Override
                 public int getPriority() {
-                    return 500;
+                    return 100;
+                }
+
+                @Override
+                public CustomColor getLabelColor() {
+                    return CommonColors.GREEN;
                 }
             };
         }
