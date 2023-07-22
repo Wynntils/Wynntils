@@ -15,14 +15,16 @@ import com.wynntils.utils.render.Texture;
 import java.util.List;
 import java.util.Optional;
 import java.util.function.Supplier;
-import net.minecraft.core.BlockPos;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 
 public final class CompassModel extends Model {
+    public static final Location WORLD_SPAWN = new Location(-1572, 41, -1668);
+    public static final Location HUB_SPAWN = new Location(295, 34, 321);
     private Supplier<Location> locationSupplier = null;
     private Location compassLocation = null; // this field acts as a cache for the supplier
     private Texture targetIcon = null;
     private CustomColor targetColor = null;
+    private Location spawnTracker;
 
     public CompassModel() {
         super(List.of());
@@ -65,6 +67,10 @@ public final class CompassModel extends Model {
 
     public CustomColor getTargetColor() {
         return targetColor;
+    }
+
+    public void setCompassToSpawnTracker() {
+        setDynamicCompassLocation(() -> spawnTracker, Texture.WAYPOINT);
     }
 
     public void setDynamicCompassLocation(Supplier<Location> compassSupplier) {
@@ -114,19 +120,21 @@ public final class CompassModel extends Model {
 
     @SubscribeEvent
     public void onSetSpawn(SetSpawnEvent e) {
-        BlockPos spawnPos = e.getSpawnPos();
-
-        if (McUtils.player() == null) {
-            // Reset compass
-            compassLocation = null;
-            locationSupplier = null;
-
-            if (McUtils.mc().level != null) {
-                McUtils.mc().level.setDefaultSpawnPos(spawnPos, 0);
-            }
-        } else if (locationSupplier != null) {
-            // If we have a set location, do not update our spawn point
-            e.setCanceled(true);
+        Location spawn = new Location(e.getSpawnPos());
+        if (spawn.equals(WORLD_SPAWN) || spawn.equals(HUB_SPAWN)) {
+            spawnTracker = null;
+            return;
         }
+
+        var player = Location.containing(McUtils.player().position());
+        if (spawn.equals(player)) {
+            // Wynncraft "resets" tracking by setting the compass to your current
+            // location. In theory, this can fail if you happen to be standing on
+            // the spot that is the target of the content you start tracking...
+            spawnTracker = null;
+            return;
+        }
+
+        spawnTracker = spawn;
     }
 }
