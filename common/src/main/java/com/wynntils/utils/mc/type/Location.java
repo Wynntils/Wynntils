@@ -8,10 +8,10 @@ import com.wynntils.models.map.PoiLocation;
 import com.wynntils.utils.MathUtils;
 import com.wynntils.utils.mc.PosUtils;
 import java.util.Comparator;
+import java.util.Objects;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Position;
 import net.minecraft.world.phys.Vec3;
-import org.joml.Vector3d;
 
 public class Location implements Comparable<Location> {
     // Compare first x, then z, and finally y
@@ -60,15 +60,19 @@ public class Location implements Comparable<Location> {
     }
 
     @Override
-    public boolean equals(Object obj) {
-        if (this == obj) return true;
-
-        if (obj instanceof Vector3d) {
-            return super.equals(obj);
-        }
-        return false;
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Location location = (Location) o;
+        return x == location.x && y == location.y && z == location.z;
     }
 
+    @Override
+    public int hashCode() {
+        return Objects.hash(x, y, z);
+    }
+
+    @Override
     public String toString() {
         return "[" + this.x + ", " + this.y + ", " + this.z + "]";
     }
