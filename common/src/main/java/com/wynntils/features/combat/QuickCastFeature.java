@@ -21,8 +21,6 @@ import com.wynntils.models.worlds.event.WorldStateEvent;
 import com.wynntils.utils.mc.LoreUtils;
 import com.wynntils.utils.mc.McUtils;
 import com.wynntils.utils.wynn.WynnItemMatchers;
-import java.time.Duration;
-import java.time.Instant;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Optional;
@@ -74,22 +72,22 @@ public class QuickCastFeature extends Feature {
     private int lastSelectedSlot = 0;
 
     private void castFirstSpell() {
-        tryCastSpell(SpellUnit.SECONDARY, SpellUnit.PRIMARY);
+        tryCastSpell(SpellUnit.PRIMARY, SpellUnit.SECONDARY, SpellUnit.PRIMARY);
     }
 
     private void castSecondSpell() {
-        tryCastSpell(SpellUnit.PRIMARY, SpellUnit.PRIMARY);
+        tryCastSpell(SpellUnit.PRIMARY, SpellUnit.PRIMARY, SpellUnit.PRIMARY);
     }
 
     private void castThirdSpell() {
-        tryCastSpell(SpellUnit.SECONDARY, SpellUnit.SECONDARY);
+        tryCastSpell(SpellUnit.PRIMARY, SpellUnit.SECONDARY, SpellUnit.SECONDARY);
     }
 
     private void castFourthSpell() {
-        tryCastSpell(SpellUnit.PRIMARY, SpellUnit.SECONDARY);
+        tryCastSpell(SpellUnit.PRIMARY, SpellUnit.PRIMARY, SpellUnit.SECONDARY);
     }
 
-    private void tryCastSpell(SpellUnit a, SpellUnit b) {
+    private void tryCastSpell(SpellUnit a, SpellUnit b, SpellUnit c) {
         ItemStack heldItem = McUtils.player().getItemInHand(InteractionHand.MAIN_HAND);
 
         if (!WynnItemMatchers.isWeapon(heldItem)) {
@@ -114,7 +112,7 @@ public class QuickCastFeature extends Feature {
             return;
         }
 
-        Spell spell = new Spell(a, b, Models.Character.getClassType() == ClassType.ARCHER);
+        Spell spell = new Spell(b, c, Models.Character.getClassType() == ClassType.ARCHER);
         if (spells.contains(spell)) {
             return;
         }
@@ -136,7 +134,7 @@ public class QuickCastFeature extends Feature {
         } else {
             do {
                 currentSpell.peek().getSendPacketRunnable().run();
-            } while (currentSpell.poll() == SpellDirection.LEFT && !SPELL_PACKET_QUEUE.isEmpty());
+            } while (currentSpell.poll() == SpellDirection.LEFT && !currentSpell.isEmpty());
             while (currentSpell.peek() == SpellDirection.LEFT) {
                 currentSpell.poll().getSendPacketRunnable().run();
             }
@@ -152,14 +150,12 @@ public class QuickCastFeature extends Feature {
         spell = null;
         if (--spellCountdown > 0) return false;
         if (spells.isEmpty()) return false;
-        SpellDirection[] current = Models.Spell.getLastSpell().length != 3
-                        && Duration.between(Models.Spell.getLastSpellUpdate(), Instant.now())
-                                        .toSeconds()
-                                < 3
-                ? Models.Spell.getLastSpell()
-                : SpellDirection.NO_SPELL;
-        Optional<Spell> first =
-                spells.stream().filter(s -> s.poll(currentSpell, current)).findFirst();
+        SpellDirection[] progress = Models.Spell.getLastSpell();
+        SpellDirection[] currentProgress =
+                progress.length != 3 && Models.Spell.isLastSpellStillValid() ? progress : SpellDirection.NO_SPELL;
+        Optional<Spell> first = spells.stream()
+                .filter(s -> s.poll(currentSpell, currentProgress))
+                .findFirst();
         if (first.isEmpty()) return false;
         spell = first.get();
         spellCountdown = spellCooldown.get();
@@ -168,7 +164,9 @@ public class QuickCastFeature extends Feature {
 
     @SubscribeEvent
     public void onWorldChange(WorldStateEvent e) {
-        SPELL_PACKET_QUEUE.clear();
+        currentSpell.clear();
+        spells.clear();
+        spell = null;
     }
 
     private static void sendCancelReason(MutableComponent reason) {

@@ -76,8 +76,8 @@ public class SpellModel extends Model {
         if (!matcher.matches()) return;
 
         SpellDirection[] spell = getSpellFromMatcher(e.getMatcher());
-        if (Duration.between(lastSpellUpdate, Instant.now()).toSeconds() < 3 && Arrays.equals(spell, lastSpell))
-            return; // Wynn sometimes sends duplicate packets, skip those
+        // Wynn sometimes sends duplicate packets, skip those
+        if (isLastSpellStillValid() && Arrays.equals(spell, lastSpell)) return;
         setLastSpell(spell);
 
         WynntilsMod.postEvent(new SpellEvent.Partial(spell, PartialSpellSource.HOTBAR));
@@ -94,8 +94,8 @@ public class SpellModel extends Model {
         if (!matcher.matches()) return;
 
         SpellDirection[] spell = getSpellFromMatcher(matcher);
-        if (Duration.between(lastSpellUpdate, Instant.now()).toSeconds() < 3 && Arrays.equals(spell, lastSpell))
-            return; // Wynn sometimes sends duplicate packets, skip those
+        // Wynn sometimes sends duplicate packets, skip those
+        if (isLastSpellStillValid() && Arrays.equals(spell, lastSpell)) return;
         setLastSpell(spell);
 
         // This check looks for the "t" in Right and Left, that do not exist in L and R, to set the source
@@ -108,6 +108,10 @@ public class SpellModel extends Model {
             WynntilsMod.postEvent(
                     new SpellEvent.Completed(spell, partialSpellSource, SpellType.fromSpellDirectionArray(spell)));
         }
+    }
+
+    public boolean isLastSpellStillValid() {
+        return Duration.between(lastSpellUpdate, Instant.now()).toSeconds() < 3;
     }
 
     private static SpellDirection[] getSpellFromMatcher(MatchResult spellMatcher) {
@@ -131,9 +135,5 @@ public class SpellModel extends Model {
 
     public SpellDirection[] getLastSpell() {
         return lastSpell;
-    }
-
-    public Instant getLastSpellUpdate() {
-        return lastSpellUpdate;
     }
 }
