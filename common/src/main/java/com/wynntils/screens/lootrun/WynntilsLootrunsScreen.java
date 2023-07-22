@@ -74,6 +74,7 @@ public final class WynntilsLootrunsScreen extends WynntilsListScreen<LootrunInst
                 11,
                 (int) (Texture.RELOAD_BUTTON.width() / 2 / 1.7f),
                 (int) (Texture.RELOAD_BUTTON.height() / 1.7f),
+                "lootrun",
                 () -> TaskUtils.runAsync(Models.Lootrun::refreshLootrunCache)));
 
         this.addRenderableWidget(new PageSelectorButton(
@@ -92,7 +93,8 @@ public final class WynntilsLootrunsScreen extends WynntilsListScreen<LootrunInst
                 this));
     }
 
-    private void renderTooltip(PoseStack poseStack, int mouseX, int mouseY) {
+    @Override
+    protected void renderTooltip(PoseStack poseStack, int mouseX, int mouseY) {
         if (hovered instanceof LootrunButton lootrunButton) {
             List<Component> tooltipLines;
 
@@ -130,7 +132,10 @@ public final class WynntilsLootrunsScreen extends WynntilsListScreen<LootrunInst
                     tooltipLines,
                     FontRenderer.getInstance().getFont(),
                     true);
+            return;
         }
+
+        super.renderTooltip(poseStack, mouseX, mouseY);
     }
 
     @Override

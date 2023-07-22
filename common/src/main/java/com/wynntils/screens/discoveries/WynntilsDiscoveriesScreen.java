@@ -8,10 +8,9 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.components.Models;
 import com.wynntils.core.text.StyledText;
+import com.wynntils.models.content.event.ContentUpdatedEvent;
 import com.wynntils.models.content.type.ContentSortOrder;
 import com.wynntils.models.discoveries.DiscoveryInfo;
-import com.wynntils.models.discoveries.event.DiscoveriesUpdatedEvent;
-import com.wynntils.screens.base.TooltipProvider;
 import com.wynntils.screens.base.WynntilsListScreen;
 import com.wynntils.screens.base.widgets.BackButton;
 import com.wynntils.screens.base.widgets.FilterButton;
@@ -26,7 +25,6 @@ import com.wynntils.utils.StringUtils;
 import com.wynntils.utils.colors.CommonColors;
 import com.wynntils.utils.mc.McUtils;
 import com.wynntils.utils.render.FontRenderer;
-import com.wynntils.utils.render.RenderUtils;
 import com.wynntils.utils.render.Texture;
 import com.wynntils.utils.render.type.HorizontalAlignment;
 import com.wynntils.utils.render.type.TextShadow;
@@ -66,8 +64,8 @@ public final class WynntilsDiscoveriesScreen extends WynntilsListScreen<Discover
     }
 
     @SubscribeEvent
-    public void onDiscoveryUpdate(DiscoveriesUpdatedEvent event) {
-        if (McUtils.mc().screen == this) {
+    public void onDiscoveryUpdate(ContentUpdatedEvent event) {
+        if (event.getContentType().isDiscovery() && McUtils.mc().screen == this) {
             this.reloadElements();
         }
     }
@@ -202,6 +200,7 @@ public final class WynntilsDiscoveriesScreen extends WynntilsListScreen<Discover
                 11,
                 (int) (Texture.RELOAD_BUTTON.width() / 2 / 1.7f),
                 (int) (Texture.RELOAD_BUTTON.height() / 1.7f),
+                "discovery",
                 Models.Discovery::reloadDiscoveries));
 
         this.addRenderableWidget(new SortOrderWidget(
@@ -257,32 +256,13 @@ public final class WynntilsDiscoveriesScreen extends WynntilsListScreen<Discover
         renderDescription(
                 poseStack,
                 I18n.get("screens.wynntils.wynntilsDiscoveries.screenDescription"),
-                I18n.get("screens.wynntils.wynntilsDiscoveries.filterHelper"));
+                I18n.get("screens.wynntils.wynntilsContent.filterHelper"));
 
         renderPageInfo(poseStack, currentPage + 1, maxPage + 1);
 
         poseStack.popPose();
 
         renderTooltip(poseStack, mouseX, mouseY);
-    }
-
-    private void renderTooltip(PoseStack poseStack, int mouseX, int mouseY) {
-        List<Component> tooltipLines = new ArrayList<>();
-
-        if (this.hovered instanceof TooltipProvider tooltipWidget) {
-            tooltipLines = tooltipWidget.getTooltipLines();
-        }
-
-        if (tooltipLines.isEmpty()) return;
-
-        RenderUtils.drawTooltipAt(
-                poseStack,
-                mouseX,
-                mouseY,
-                100,
-                tooltipLines,
-                FontRenderer.getInstance().getFont(),
-                true);
     }
 
     private static void renderNoDiscoveries(PoseStack poseStack) {
@@ -298,32 +278,6 @@ public final class WynntilsDiscoveriesScreen extends WynntilsListScreen<Discover
                         CommonColors.BLACK,
                         HorizontalAlignment.CENTER,
                         VerticalAlignment.MIDDLE,
-                        TextShadow.NONE);
-    }
-
-    private void renderDescription(PoseStack poseStack, String description, String filterHelper) {
-        FontRenderer.getInstance()
-                .renderAlignedTextInBox(
-                        poseStack,
-                        StyledText.fromString(description),
-                        20,
-                        Texture.QUEST_BOOK_BACKGROUND.width() / 2f - 10,
-                        80,
-                        Texture.QUEST_BOOK_BACKGROUND.width() / 2f - 30,
-                        CommonColors.BLACK,
-                        HorizontalAlignment.LEFT,
-                        TextShadow.NONE);
-
-        FontRenderer.getInstance()
-                .renderAlignedTextInBox(
-                        poseStack,
-                        StyledText.fromString(filterHelper),
-                        20,
-                        Texture.QUEST_BOOK_BACKGROUND.width() / 2f - 10,
-                        105,
-                        Texture.QUEST_BOOK_BACKGROUND.width() / 2f - 30,
-                        CommonColors.BLACK,
-                        HorizontalAlignment.LEFT,
                         TextShadow.NONE);
     }
 

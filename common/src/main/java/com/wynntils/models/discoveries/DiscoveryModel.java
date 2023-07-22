@@ -14,10 +14,10 @@ import com.wynntils.core.net.Download;
 import com.wynntils.core.net.UrlId;
 import com.wynntils.core.text.StyledText;
 import com.wynntils.models.characterstats.CombatXpModel;
+import com.wynntils.models.content.event.ContentUpdatedEvent;
 import com.wynntils.models.content.type.ContentInfo;
 import com.wynntils.models.content.type.ContentSortOrder;
 import com.wynntils.models.content.type.ContentType;
-import com.wynntils.models.discoveries.event.DiscoveriesUpdatedEvent;
 import com.wynntils.models.discoveries.profile.DiscoveryProfile;
 import com.wynntils.models.discoveries.type.DiscoveryType;
 import com.wynntils.models.map.CompassModel;
@@ -125,7 +125,7 @@ public final class DiscoveryModel extends Model {
 
         territoryDiscoveries = newDiscoveries;
         territoryDiscoveriesTooltip = progress;
-        WynntilsMod.postEvent(new DiscoveriesUpdatedEvent.Territory());
+        WynntilsMod.postEvent(new ContentUpdatedEvent(ContentType.TERRITORIAL_DISCOVERY));
     }
 
     private void updateWorldDiscoveriesFromQuery(List<ContentInfo> newContent, List<StyledText> progress) {
@@ -141,7 +141,7 @@ public final class DiscoveryModel extends Model {
 
         worldDiscoveries = newDiscoveries;
         worldDiscoveriesTooltip = progress;
-        WynntilsMod.postEvent(new DiscoveriesUpdatedEvent.World());
+        WynntilsMod.postEvent(new ContentUpdatedEvent(ContentType.WORLD_DISCOVERY));
     }
 
     private void updateSecretDiscoveriesFromQuery(List<ContentInfo> newContent, List<StyledText> progress) {
@@ -157,7 +157,7 @@ public final class DiscoveryModel extends Model {
 
         secretDiscoveries = newDiscoveries;
         secretDiscoveriesTooltip = progress;
-        WynntilsMod.postEvent(new DiscoveriesUpdatedEvent.Secret());
+        WynntilsMod.postEvent(new ContentUpdatedEvent(ContentType.SECRET_DISCOVERY));
     }
 
     private DiscoveryInfo getDiscoveryInfoFromContent(ContentInfo content) {

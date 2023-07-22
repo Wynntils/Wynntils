@@ -12,10 +12,11 @@ import com.wynntils.core.net.ApiResponse;
 import com.wynntils.core.net.UrlId;
 import com.wynntils.core.text.StyledText;
 import com.wynntils.models.characterstats.CombatXpModel;
+import com.wynntils.models.content.event.ContentUpdatedEvent;
 import com.wynntils.models.content.type.ContentInfo;
 import com.wynntils.models.content.type.ContentSortOrder;
 import com.wynntils.models.content.type.ContentType;
-import com.wynntils.models.quests.event.QuestBookReloadedEvent;
+import com.wynntils.models.quests.event.DialogueHistoryReloadedEvent;
 import com.wynntils.models.quests.type.QuestLength;
 import com.wynntils.models.quests.type.QuestStatus;
 import com.wynntils.models.worlds.event.WorldStateEvent;
@@ -97,19 +98,27 @@ public final class QuestModel extends Model {
     private List<QuestInfo> sortQuestInfoList(ContentSortOrder sortOrder, List<QuestInfo> questList) {
         // All quests are always sorted by status (available then unavailable), and then
         // the given sort order, and finally a third way if the given sort order is equal.
+
+        QuestInfo trackedQuestInfo = Models.Content.getTrackedQuestInfo();
+        String trackedQuestName = trackedQuestInfo != null ? trackedQuestInfo.getName() : "";
+        Comparator<QuestInfo> baseComparator =
+                Comparator.comparing(questInfo -> !questInfo.getName().equals(trackedQuestName));
         return switch (sortOrder) {
             case LEVEL -> questList.stream()
-                    .sorted(Comparator.comparing(QuestInfo::getStatus)
+                    .sorted(baseComparator
+                            .thenComparing(QuestInfo::getStatus)
                             .thenComparing(QuestInfo::getSortLevel)
                             .thenComparing(QuestInfo::getName))
                     .toList();
             case DISTANCE -> questList.stream()
-                    .sorted(Comparator.comparing(QuestInfo::getStatus)
+                    .sorted(baseComparator
+                            .thenComparing(QuestInfo::getStatus)
                             .thenComparing(new LocationComparator())
                             .thenComparing(QuestInfo::getName))
                     .toList();
             case ALPHABETIC -> questList.stream()
-                    .sorted(Comparator.comparing(QuestInfo::getStatus)
+                    .sorted(baseComparator
+                            .thenComparing(QuestInfo::getStatus)
                             .thenComparing(QuestInfo::getName)
                             .thenComparing(QuestInfo::getSortLevel))
                     .toList();
@@ -169,7 +178,7 @@ public final class QuestModel extends Model {
             newQuests.add(questInfo);
         }
         quests = newQuests;
-        WynntilsMod.postEvent(new QuestBookReloadedEvent.QuestsReloaded());
+        WynntilsMod.postEvent(new ContentUpdatedEvent(ContentType.QUEST));
         WynntilsMod.info("Updated quests from query, got " + quests.size() + " quests.");
     }
 
@@ -186,7 +195,7 @@ public final class QuestModel extends Model {
         }
 
         miniQuests = newMiniQuests;
-        WynntilsMod.postEvent(new QuestBookReloadedEvent.MiniQuestsReloaded());
+        WynntilsMod.postEvent(new ContentUpdatedEvent(ContentType.MINI_QUEST));
         WynntilsMod.info("Updated mini-quests from query, got " + miniQuests.size() + " mini-quests.");
     }
 
@@ -206,7 +215,7 @@ public final class QuestModel extends Model {
 
     void setDialogueHistory(List<List<StyledText>> newDialogueHistory) {
         dialogueHistory = newDialogueHistory;
-        WynntilsMod.postEvent(new QuestBookReloadedEvent.DialogueHistoryReloaded());
+        WynntilsMod.postEvent(new DialogueHistoryReloadedEvent());
     }
 
     private static class LocationComparator implements Comparator<QuestInfo> {
