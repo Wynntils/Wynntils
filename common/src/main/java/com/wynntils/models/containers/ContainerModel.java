@@ -221,7 +221,10 @@ public final class ContainerModel extends Model {
     }
 
     public boolean isLootOrRewardChest(String title) {
-        return isLootChest(title) || title.startsWith("Daily Rewards") || title.contains("Objective Rewards")  || title.contains("Challenge Rewards");
+        return isLootChest(title)
+                || title.startsWith("Daily Rewards")
+                || title.contains("Objective Rewards")
+                || title.contains("Challenge Rewards");
     }
 
     public boolean isSeaskipper(Component component) {
