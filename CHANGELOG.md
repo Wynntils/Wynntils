@@ -1,9 +1,21 @@
+## [0.0.3-alpha.177](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.176...v0.0.3-alpha.177) (2023-07-22)
+
+
+### Bug Fixes
+
+* Challenge rewards does not block mythics or favourites ([#1803](https://github.com/Wynntils/Artemis/issues/1803)) ([bbfeda7](https://github.com/Wynntils/Artemis/commit/bbfeda750ff31ce8b22b40dd058360deb19b6234))
+
 ## [0.0.3-alpha.176](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.175...v0.0.3-alpha.176) (2023-07-22)
 
 
 ### Bug Fixes
 
 * Compass/waypoint now properly follows tracked content ([#1801](https://github.com/Wynntils/Artemis/issues/1801)) ([d6ac07d](https://github.com/Wynntils/Artemis/commit/d6ac07deed206ba9b8b8807b2fae972d5e13e096))
+
+
+### Miscellaneous Chores
+
+* **release:** v0.0.3-alpha.176 [skip ci] ([30412ec](https://github.com/Wynntils/Artemis/commit/30412ecef3c2b3d6b4a551753d9432ae4063707a))
 
 ## [0.0.3-alpha.175](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.174...v0.0.3-alpha.175) (2023-07-22)
 
@@ -40,16 +52,4 @@
 ### Miscellaneous Chores
 
 * **release:** v0.0.3-alpha.173 [skip ci] ([4e85133](https://github.com/Wynntils/Artemis/commit/4e851336b8286c258adcb66e1b41c592196297b7))
-
-## [0.0.3-alpha.172](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.171...v0.0.3-alpha.172) (2023-07-21)
-
-
-### Bug Fixes
-
-* Parse discoveries faster with a "hack" ([#1794](https://github.com/Wynntils/Artemis/issues/1794)) ([32ddede](https://github.com/Wynntils/Artemis/commit/32ddede4b9650b6acfed62d827aecf359bd9a6f7))
-
-
-### Miscellaneous Chores
-
-* **release:** v0.0.3-alpha.172 [skip ci] ([d667f83](https://github.com/Wynntils/Artemis/commit/d667f83a85ec19335541676e6afd3cf1266cc8c2))
 
