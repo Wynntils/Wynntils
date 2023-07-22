@@ -5,9 +5,9 @@
 package com.wynntils.services.map.type;
 
 public enum DisplayPriority {
-    LOWEST,
-    LOW,
-    NORMAL,
-    HIGH,
-    HIGHEST
+    LOWEST, // 100
+    LOW,    // 300
+    NORMAL, // 500
+    HIGH,   // 700
+    HIGHEST // 900
 }
