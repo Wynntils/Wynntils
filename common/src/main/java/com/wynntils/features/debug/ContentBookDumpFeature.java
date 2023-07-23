@@ -166,7 +166,7 @@ public class ContentBookDumpFeature extends Feature {
         // Save the dump to a file
         Map<ActivityType, List<DumpableActivityInfo>> mappedActivities = getMappedDumpedActivities();
 
-        JsonElement element = Managers.Json.GSON.toJsonTree(mappedActivities);
+        JsonElement element = GSON.toJsonTree(mappedActivities);
 
         String fileName = "content_book_dump.json";
         File jsonFile = new File(SAVE_FOLDER, fileName);
