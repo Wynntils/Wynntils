@@ -40,6 +40,13 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.eventbus.api.EventPriority;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 
+/* An "Activity" is the name we've given to the kind of stuff that appears in the Wynncraft
+ * "Content Book". In user fronting text, it could be referred to as a "Content Activity",
+ * to make the connection to the Content Book clear.
+ *
+ * Examples of activities are quests, caves, dungeons and raids, but also the various
+ * discoveries.
+ */
 public final class ActivityModel extends Model {
     public static final String CONTENT_BOOK_TITLE = "§f\uE000\uE072";
 
