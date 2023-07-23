@@ -8,8 +8,8 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.components.Models;
 import com.wynntils.core.text.StyledText;
-import com.wynntils.models.content.event.ContentUpdatedEvent;
-import com.wynntils.models.content.type.ContentSortOrder;
+import com.wynntils.models.activities.event.ActivityUpdatedEvent;
+import com.wynntils.models.activities.type.ActivitySortOrder;
 import com.wynntils.models.discoveries.DiscoveryInfo;
 import com.wynntils.screens.base.WynntilsListScreen;
 import com.wynntils.screens.base.widgets.BackButton;
@@ -17,7 +17,7 @@ import com.wynntils.screens.base.widgets.FilterButton;
 import com.wynntils.screens.base.widgets.PageSelectorButton;
 import com.wynntils.screens.base.widgets.ReloadButton;
 import com.wynntils.screens.base.widgets.SortOrderWidget;
-import com.wynntils.screens.base.widgets.SortableContentScreen;
+import com.wynntils.screens.base.widgets.SortableActivityScreen;
 import com.wynntils.screens.discoveries.widgets.DiscoveryButton;
 import com.wynntils.screens.discoveries.widgets.DiscoveryProgressButton;
 import com.wynntils.screens.wynntilsmenu.WynntilsMenuScreen;
@@ -39,7 +39,7 @@ import net.minecraft.network.chat.Component;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 
 public final class WynntilsDiscoveriesScreen extends WynntilsListScreen<DiscoveryInfo, DiscoveryButton>
-        implements SortableContentScreen {
+        implements SortableActivityScreen {
     private final List<FilterButton> filterButtons = new ArrayList<>();
 
     // Filters
@@ -50,7 +50,7 @@ public final class WynntilsDiscoveriesScreen extends WynntilsListScreen<Discover
     private boolean showFoundTerritory = true;
     private boolean showUndiscoveredTerritory = false;
 
-    private ContentSortOrder contentSortOrder = ContentSortOrder.LEVEL;
+    private ActivitySortOrder activitySortOrder = ActivitySortOrder.LEVEL;
 
     private WynntilsDiscoveriesScreen() {
         super(Component.translatable("screens.wynntils.wynntilsDiscoveries.name"));
@@ -64,8 +64,8 @@ public final class WynntilsDiscoveriesScreen extends WynntilsListScreen<Discover
     }
 
     @SubscribeEvent
-    public void onDiscoveryUpdate(ContentUpdatedEvent event) {
-        if (event.getContentType().isDiscovery() && McUtils.mc().screen == this) {
+    public void onDiscoveryUpdate(ActivityUpdatedEvent event) {
+        if (event.getActivityType().isDiscovery() && McUtils.mc().screen == this) {
             this.reloadElements();
         }
     }
@@ -256,7 +256,7 @@ public final class WynntilsDiscoveriesScreen extends WynntilsListScreen<Discover
         renderDescription(
                 poseStack,
                 I18n.get("screens.wynntils.wynntilsDiscoveries.screenDescription"),
-                I18n.get("screens.wynntils.wynntilsContent.filterHelper"));
+                I18n.get("screens.wynntils.wynntilsActivities.filterHelper"));
 
         renderPageInfo(poseStack, currentPage + 1, maxPage + 1);
 
@@ -296,14 +296,14 @@ public final class WynntilsDiscoveriesScreen extends WynntilsListScreen<Discover
     protected void reloadElementsList(String searchTerm) {
         // We need to filter duplicates
         elements.addAll(Stream.concat(
-                        Models.Discovery.getAllDiscoveries(contentSortOrder)
+                        Models.Discovery.getAllDiscoveries(activitySortOrder)
                                 .filter(discoveryInfo -> !discoveryInfo.isDiscovered())
                                 .filter(discoveryInfo -> switch (discoveryInfo.getType()) {
                                     case TERRITORY -> showUndiscoveredTerritory;
                                     case WORLD -> showUndiscoveredWorld;
                                     case SECRET -> showUndiscoveredSecrets;
                                 }),
-                        Models.Discovery.getAllCompletedDiscoveries(contentSortOrder)
+                        Models.Discovery.getAllCompletedDiscoveries(activitySortOrder)
                                 .filter(discoveryInfo -> switch (discoveryInfo.getType()) {
                                     case TERRITORY -> showFoundTerritory;
                                     case WORLD -> showFoundWorld;
@@ -314,22 +314,22 @@ public final class WynntilsDiscoveriesScreen extends WynntilsListScreen<Discover
     }
 
     @Override
-    public ContentSortOrder getContentSortOrder() {
-        return contentSortOrder;
+    public ActivitySortOrder getActivitySortOrder() {
+        return activitySortOrder;
     }
 
     @Override
-    public void setContentSortOrder(ContentSortOrder newSortOrder) {
+    public void setActivitySortOrder(ActivitySortOrder newSortOrder) {
         if (newSortOrder == null) {
-            throw new IllegalStateException("Tried to set null content sort order");
+            throw new IllegalStateException("Tried to set null activity sort order");
         }
 
         // Disable DISTANCE sorting for discoveries
-        if (newSortOrder == ContentSortOrder.DISTANCE) {
-            newSortOrder = ContentSortOrder.ALPHABETIC;
+        if (newSortOrder == ActivitySortOrder.DISTANCE) {
+            newSortOrder = ActivitySortOrder.ALPHABETIC;
         }
 
-        this.contentSortOrder = newSortOrder;
+        this.activitySortOrder = newSortOrder;
         this.setCurrentPage(0);
     }
 }

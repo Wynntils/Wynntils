@@ -2,21 +2,21 @@
  * Copyright © Wynntils 2023.
  * This file is released under AGPLv3. See LICENSE for full license details.
  */
-package com.wynntils.models.content.type;
+package com.wynntils.models.activities.type;
 
-public enum ContentDistance {
+public enum ActivityDistance {
     NEAR("Near"),
     MEDIUM("Medium"),
     FAR("Far");
 
     private final String displayName;
 
-    ContentDistance(String displayName) {
+    ActivityDistance(String displayName) {
         this.displayName = displayName;
     }
 
-    public static ContentDistance from(String displayName) {
-        for (ContentDistance distance : values()) {
+    public static ActivityDistance from(String displayName) {
+        for (ActivityDistance distance : values()) {
             if (distance.getDisplayName().equals(displayName)) return distance;
         }
 

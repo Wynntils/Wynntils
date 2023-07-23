@@ -130,7 +130,7 @@ public final class CompassModel extends Model {
         if (spawn.equals(player)) {
             // Wynncraft "resets" tracking by setting the compass to your current
             // location. In theory, this can fail if you happen to be standing on
-            // the spot that is the target of the content you start tracking...
+            // the spot that is the target of the activity you start tracking...
             spawnTracker = null;
             return;
         }

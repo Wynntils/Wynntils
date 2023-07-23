@@ -2,23 +2,23 @@
  * Copyright © Wynntils 2023.
  * This file is released under AGPLv3. See LICENSE for full license details.
  */
-package com.wynntils.models.content.type;
+package com.wynntils.models.activities.type;
 
 import com.wynntils.core.text.StyledText;
 import java.util.List;
 import java.util.Optional;
 
-public record ContentInfo(
-        ContentType type,
+public record ActivityInfo(
+        ActivityType type,
         String name,
-        ContentStatus status,
+        ActivityStatus status,
         Optional<String> specialInfo,
         Optional<StyledText> description,
-        Optional<ContentLength> length,
+        Optional<ActivityLength> length,
         Optional<String> lengthInfo,
-        Optional<ContentDistance> distance,
+        Optional<ActivityDistance> distance,
         Optional<String> distanceInfo,
-        Optional<ContentDifficulty> difficulty,
-        ContentRequirements requirements,
+        Optional<ActivityDifficulty> difficulty,
+        ActivityRequirements requirements,
         List<String> rewards,
-        ContentTrackingState trackingState) {}
+        ActivityTrackingState trackingState) {}

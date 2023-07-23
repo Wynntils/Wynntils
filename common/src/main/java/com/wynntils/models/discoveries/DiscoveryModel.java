@@ -13,11 +13,11 @@ import com.wynntils.core.net.ApiResponse;
 import com.wynntils.core.net.Download;
 import com.wynntils.core.net.UrlId;
 import com.wynntils.core.text.StyledText;
+import com.wynntils.models.activities.event.ActivityUpdatedEvent;
+import com.wynntils.models.activities.type.ActivityInfo;
+import com.wynntils.models.activities.type.ActivitySortOrder;
+import com.wynntils.models.activities.type.ActivityType;
 import com.wynntils.models.characterstats.CombatXpModel;
-import com.wynntils.models.content.event.ContentUpdatedEvent;
-import com.wynntils.models.content.type.ContentInfo;
-import com.wynntils.models.content.type.ContentSortOrder;
-import com.wynntils.models.content.type.ContentType;
 import com.wynntils.models.discoveries.profile.DiscoveryProfile;
 import com.wynntils.models.discoveries.type.DiscoveryType;
 import com.wynntils.models.map.CompassModel;
@@ -110,61 +110,61 @@ public final class DiscoveryModel extends Model {
 
         // This order is a bit arbitrary, but it's the order they appear in the Content Book,
         // so we can use this as a workaround to parse them faster.
-        Models.Content.scanContentBook(ContentType.SECRET_DISCOVERY, this::updateSecretDiscoveriesFromQuery);
-        Models.Content.scanContentBook(ContentType.WORLD_DISCOVERY, this::updateWorldDiscoveriesFromQuery);
-        Models.Content.scanContentBook(ContentType.TERRITORIAL_DISCOVERY, this::updateTerritoryDiscoveriesFromQuery);
+        Models.Activity.scanContentBook(ActivityType.SECRET_DISCOVERY, this::updateSecretDiscoveriesFromQuery);
+        Models.Activity.scanContentBook(ActivityType.WORLD_DISCOVERY, this::updateWorldDiscoveriesFromQuery);
+        Models.Activity.scanContentBook(ActivityType.TERRITORIAL_DISCOVERY, this::updateTerritoryDiscoveriesFromQuery);
     }
 
-    private void updateTerritoryDiscoveriesFromQuery(List<ContentInfo> newContent, List<StyledText> progress) {
+    private void updateTerritoryDiscoveriesFromQuery(List<ActivityInfo> newActivities, List<StyledText> progress) {
         List<DiscoveryInfo> newDiscoveries = new ArrayList<>();
-        for (ContentInfo content : newContent) {
-            if (content.type() != ContentType.TERRITORIAL_DISCOVERY) {
-                WynntilsMod.warn("Incorrect territory discovery content type recieved: " + content);
+        for (ActivityInfo activity : newActivities) {
+            if (activity.type() != ActivityType.TERRITORIAL_DISCOVERY) {
+                WynntilsMod.warn("Incorrect territory discovery activity type recieved: " + activity);
                 continue;
             }
-            DiscoveryInfo discoveryInfo = getDiscoveryInfoFromContent(content);
+            DiscoveryInfo discoveryInfo = getDiscoveryInfoFromActivity(activity);
             newDiscoveries.add(discoveryInfo);
         }
 
         territoryDiscoveries = newDiscoveries;
         territoryDiscoveriesTooltip = progress;
-        WynntilsMod.postEvent(new ContentUpdatedEvent(ContentType.TERRITORIAL_DISCOVERY));
+        WynntilsMod.postEvent(new ActivityUpdatedEvent(ActivityType.TERRITORIAL_DISCOVERY));
     }
 
-    private void updateWorldDiscoveriesFromQuery(List<ContentInfo> newContent, List<StyledText> progress) {
+    private void updateWorldDiscoveriesFromQuery(List<ActivityInfo> newActivities, List<StyledText> progress) {
         List<DiscoveryInfo> newDiscoveries = new ArrayList<>();
-        for (ContentInfo content : newContent) {
-            if (content.type() != ContentType.WORLD_DISCOVERY) {
-                WynntilsMod.warn("Incorrect discovery content type recieved: " + content);
+        for (ActivityInfo activity : newActivities) {
+            if (activity.type() != ActivityType.WORLD_DISCOVERY) {
+                WynntilsMod.warn("Incorrect discovery activity type recieved: " + activity);
                 continue;
             }
-            DiscoveryInfo discoveryInfo = getDiscoveryInfoFromContent(content);
+            DiscoveryInfo discoveryInfo = getDiscoveryInfoFromActivity(activity);
             newDiscoveries.add(discoveryInfo);
         }
 
         worldDiscoveries = newDiscoveries;
         worldDiscoveriesTooltip = progress;
-        WynntilsMod.postEvent(new ContentUpdatedEvent(ContentType.WORLD_DISCOVERY));
+        WynntilsMod.postEvent(new ActivityUpdatedEvent(ActivityType.WORLD_DISCOVERY));
     }
 
-    private void updateSecretDiscoveriesFromQuery(List<ContentInfo> newContent, List<StyledText> progress) {
+    private void updateSecretDiscoveriesFromQuery(List<ActivityInfo> newActivities, List<StyledText> progress) {
         List<DiscoveryInfo> newDiscoveries = new ArrayList<>();
-        for (ContentInfo content : newContent) {
-            if (content.type() != ContentType.SECRET_DISCOVERY) {
-                WynntilsMod.warn("Incorrect secret discovery content type recieved: " + content);
+        for (ActivityInfo activity : newActivities) {
+            if (activity.type() != ActivityType.SECRET_DISCOVERY) {
+                WynntilsMod.warn("Incorrect secret discovery activity type recieved: " + activity);
                 continue;
             }
-            DiscoveryInfo discoveryInfo = getDiscoveryInfoFromContent(content);
+            DiscoveryInfo discoveryInfo = getDiscoveryInfoFromActivity(activity);
             newDiscoveries.add(discoveryInfo);
         }
 
         secretDiscoveries = newDiscoveries;
         secretDiscoveriesTooltip = progress;
-        WynntilsMod.postEvent(new ContentUpdatedEvent(ContentType.SECRET_DISCOVERY));
+        WynntilsMod.postEvent(new ActivityUpdatedEvent(ActivityType.SECRET_DISCOVERY));
     }
 
-    private DiscoveryInfo getDiscoveryInfoFromContent(ContentInfo content) {
-        return DiscoveryInfo.fromContentInfo(content);
+    private DiscoveryInfo getDiscoveryInfoFromActivity(ActivityInfo activity) {
+        return DiscoveryInfo.fromActivityInfo(activity);
     }
 
     public List<Component> getDiscoveriesTooltip() {
@@ -178,8 +178,8 @@ public final class DiscoveryModel extends Model {
         return secretDiscoveriesTooltip.stream().map(StyledText::getComponent).collect(Collectors.toList());
     }
 
-    public Stream<DiscoveryInfo> getAllDiscoveries(ContentSortOrder sortOrder) {
-        if (sortOrder == ContentSortOrder.DISTANCE) {
+    public Stream<DiscoveryInfo> getAllDiscoveries(ActivitySortOrder sortOrder) {
+        if (sortOrder == ActivitySortOrder.DISTANCE) {
             throw new IllegalArgumentException("Cannot sort discoveries by distance");
         }
 
@@ -199,7 +199,7 @@ public final class DiscoveryModel extends Model {
         };
     }
 
-    public Stream<DiscoveryInfo> getAllCompletedDiscoveries(ContentSortOrder sortOrder) {
+    public Stream<DiscoveryInfo> getAllCompletedDiscoveries(ActivitySortOrder sortOrder) {
         return getAllDiscoveries(sortOrder).filter(DiscoveryInfo::isDiscovered);
     }
 

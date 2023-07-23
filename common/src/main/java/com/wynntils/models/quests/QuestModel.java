@@ -11,11 +11,11 @@ import com.wynntils.core.components.Models;
 import com.wynntils.core.net.ApiResponse;
 import com.wynntils.core.net.UrlId;
 import com.wynntils.core.text.StyledText;
+import com.wynntils.models.activities.event.ActivityUpdatedEvent;
+import com.wynntils.models.activities.type.ActivityInfo;
+import com.wynntils.models.activities.type.ActivitySortOrder;
+import com.wynntils.models.activities.type.ActivityType;
 import com.wynntils.models.characterstats.CombatXpModel;
-import com.wynntils.models.content.event.ContentUpdatedEvent;
-import com.wynntils.models.content.type.ContentInfo;
-import com.wynntils.models.content.type.ContentSortOrder;
-import com.wynntils.models.content.type.ContentType;
 import com.wynntils.models.quests.event.DialogueHistoryReloadedEvent;
 import com.wynntils.models.quests.type.QuestLength;
 import com.wynntils.models.quests.type.QuestStatus;
@@ -59,10 +59,10 @@ public final class QuestModel extends Model {
     public void rescanQuestBook(boolean includeQuests, boolean includeMiniQuests) {
         WynntilsMod.info("Requesting rescan of Quests in Content Book");
         if (includeQuests) {
-            Models.Content.scanContentBook(ContentType.QUEST, this::updateQuestsFromQuery);
+            Models.Activity.scanContentBook(ActivityType.QUEST, this::updateQuestsFromQuery);
         }
         if (includeMiniQuests) {
-            Models.Content.scanContentBook(ContentType.MINI_QUEST, this::updateMiniQuestsFromQuery);
+            Models.Activity.scanContentBook(ActivityType.MINI_QUEST, this::updateMiniQuestsFromQuery);
         }
     }
 
@@ -78,16 +78,16 @@ public final class QuestModel extends Model {
         return quests;
     }
 
-    public List<QuestInfo> getQuests(ContentSortOrder sortOrder) {
+    public List<QuestInfo> getQuests(ActivitySortOrder sortOrder) {
         return sortQuestInfoList(sortOrder, quests);
     }
 
-    public List<QuestInfo> getMiniQuests(ContentSortOrder sortOrder) {
+    public List<QuestInfo> getMiniQuests(ActivitySortOrder sortOrder) {
         return sortQuestInfoList(sortOrder, miniQuests);
     }
 
     public List<QuestInfo> getSortedQuests(
-            ContentSortOrder sortOrder, boolean includeQuests, boolean includeMiniQuests) {
+            ActivitySortOrder sortOrder, boolean includeQuests, boolean includeMiniQuests) {
         List<QuestInfo> quests = includeQuests ? this.quests : List.of();
         List<QuestInfo> miniQuests = includeMiniQuests ? this.miniQuests : List.of();
 
@@ -95,11 +95,11 @@ public final class QuestModel extends Model {
                 sortOrder, Stream.concat(quests.stream(), miniQuests.stream()).toList());
     }
 
-    private List<QuestInfo> sortQuestInfoList(ContentSortOrder sortOrder, List<QuestInfo> questList) {
+    private List<QuestInfo> sortQuestInfoList(ActivitySortOrder sortOrder, List<QuestInfo> questList) {
         // All quests are always sorted by status (available then unavailable), and then
         // the given sort order, and finally a third way if the given sort order is equal.
 
-        QuestInfo trackedQuestInfo = Models.Content.getTrackedQuestInfo();
+        QuestInfo trackedQuestInfo = Models.Activity.getTrackedQuestInfo();
         String trackedQuestName = trackedQuestInfo != null ? trackedQuestInfo.getName() : "";
         Comparator<QuestInfo> baseComparator =
                 Comparator.comparing(questInfo -> !questInfo.getName().equals(trackedQuestName));
@@ -130,12 +130,12 @@ public final class QuestModel extends Model {
     }
 
     public void startTracking(QuestInfo questInfo) {
-        Models.Content.startTracking(
-                questInfo.getName(), questInfo.isMiniQuest() ? ContentType.MINI_QUEST : ContentType.QUEST);
+        Models.Activity.startTracking(
+                questInfo.getName(), questInfo.isMiniQuest() ? ActivityType.MINI_QUEST : ActivityType.QUEST);
     }
 
     public void stopTracking() {
-        Models.Content.stopTracking();
+        Models.Activity.stopTracking();
     }
 
     public void openQuestOnWiki(QuestInfo questInfo) {
@@ -166,51 +166,51 @@ public final class QuestModel extends Model {
         return StringUtils.replaceOnce(name, MINI_QUEST_PREFIX, "");
     }
 
-    private void updateQuestsFromQuery(List<ContentInfo> newContent, List<StyledText> progress) {
+    private void updateQuestsFromQuery(List<ActivityInfo> newActivities, List<StyledText> progress) {
         List<QuestInfo> newQuests = new ArrayList<>();
 
-        for (ContentInfo content : newContent) {
-            if (content.type() != ContentType.QUEST && content.type() != ContentType.STORYLINE_QUEST) {
-                WynntilsMod.warn("Incorrect quest content type recieved: " + content);
+        for (ActivityInfo activity : newActivities) {
+            if (activity.type() != ActivityType.QUEST && activity.type() != ActivityType.STORYLINE_QUEST) {
+                WynntilsMod.warn("Incorrect quest activity type recieved: " + activity);
                 continue;
             }
-            QuestInfo questInfo = getQuestInfoFromContent(content);
+            QuestInfo questInfo = getQuestInfoFromActivity(activity);
             newQuests.add(questInfo);
         }
         quests = newQuests;
-        WynntilsMod.postEvent(new ContentUpdatedEvent(ContentType.QUEST));
+        WynntilsMod.postEvent(new ActivityUpdatedEvent(ActivityType.QUEST));
         WynntilsMod.info("Updated quests from query, got " + quests.size() + " quests.");
     }
 
-    private void updateMiniQuestsFromQuery(List<ContentInfo> newContent, List<StyledText> progress) {
+    private void updateMiniQuestsFromQuery(List<ActivityInfo> newActivities, List<StyledText> progress) {
         List<QuestInfo> newMiniQuests = new ArrayList<>();
 
-        for (ContentInfo content : newContent) {
-            if (content.type() != ContentType.MINI_QUEST) {
-                WynntilsMod.warn("Incorrect mini-quest content type recieved: " + content);
+        for (ActivityInfo activity : newActivities) {
+            if (activity.type() != ActivityType.MINI_QUEST) {
+                WynntilsMod.warn("Incorrect mini-quest activity type recieved: " + activity);
                 continue;
             }
-            QuestInfo questInfo = getQuestInfoFromContent(content);
+            QuestInfo questInfo = getQuestInfoFromActivity(activity);
             newMiniQuests.add(questInfo);
         }
 
         miniQuests = newMiniQuests;
-        WynntilsMod.postEvent(new ContentUpdatedEvent(ContentType.MINI_QUEST));
+        WynntilsMod.postEvent(new ActivityUpdatedEvent(ActivityType.MINI_QUEST));
         WynntilsMod.info("Updated mini-quests from query, got " + miniQuests.size() + " mini-quests.");
     }
 
-    private static QuestInfo getQuestInfoFromContent(ContentInfo content) {
+    private static QuestInfo getQuestInfoFromActivity(ActivityInfo activity) {
         // We should always have a length, but if not, better fake one than crashing
 
         return new QuestInfo(
-                content.name(),
-                QuestStatus.fromContentStatus(content.status()),
-                QuestLength.fromContentLength(content.length()),
-                content.requirements().level().key(),
-                content.description().orElse(StyledText.EMPTY),
+                activity.name(),
+                QuestStatus.fromActivityStatus(activity.status()),
+                QuestLength.fromActivityLength(activity.length()),
+                activity.requirements().level().key(),
+                activity.description().orElse(StyledText.EMPTY),
                 // FIXME! Additional requirements missing
                 List.of(),
-                content.type() == ContentType.MINI_QUEST);
+                activity.type() == ActivityType.MINI_QUEST);
     }
 
     void setDialogueHistory(List<List<StyledText>> newDialogueHistory) {

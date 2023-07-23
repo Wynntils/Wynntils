@@ -2,16 +2,16 @@
  * Copyright © Wynntils 2023.
  * This file is released under AGPLv3. See LICENSE for full license details.
  */
-package com.wynntils.models.content;
+package com.wynntils.models.activities;
 
 import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.components.Model;
 import com.wynntils.core.components.Models;
 import com.wynntils.core.text.StyledText;
-import com.wynntils.models.content.event.ContentUpdatedEvent;
-import com.wynntils.models.content.type.ContentInfo;
-import com.wynntils.models.content.type.ContentSortOrder;
-import com.wynntils.models.content.type.ContentType;
+import com.wynntils.models.activities.event.ActivityUpdatedEvent;
+import com.wynntils.models.activities.type.ActivityInfo;
+import com.wynntils.models.activities.type.ActivitySortOrder;
+import com.wynntils.models.activities.type.ActivityType;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
@@ -22,29 +22,29 @@ public class CaveModel extends Model {
     private List<CaveInfo> caves = new ArrayList<>();
     private List<StyledText> caveProgress = List.of();
 
-    public CaveModel(ContentModel contentModel) {
-        super(List.of(contentModel));
+    public CaveModel(ActivityModel activityModel) {
+        super(List.of(activityModel));
     }
 
     public void reloadCaves() {
-        WynntilsMod.info("Requesting rescan of caves in Content Book");
-        Models.Content.scanContentBook(ContentType.CAVE, this::updateCavesFromQuery);
+        WynntilsMod.info("Requesting rescan of caves in Activity Book");
+        Models.Activity.scanContentBook(ActivityType.CAVE, this::updateCavesFromQuery);
     }
 
-    private void updateCavesFromQuery(List<ContentInfo> newContent, List<StyledText> progress) {
+    private void updateCavesFromQuery(List<ActivityInfo> newActivities, List<StyledText> progress) {
         List<CaveInfo> newCaves = new ArrayList<>();
 
-        for (ContentInfo content : newContent) {
-            if (content.type() != ContentType.CAVE) {
-                WynntilsMod.warn("Incorrect cave content type recieved: " + content);
+        for (ActivityInfo activity : newActivities) {
+            if (activity.type() != ActivityType.CAVE) {
+                WynntilsMod.warn("Incorrect cave activity type recieved: " + activity);
                 continue;
             }
-            CaveInfo caveInfo = getCaveInfoFromContent(content);
+            CaveInfo caveInfo = getCaveInfoFromActivity(activity);
             newCaves.add(caveInfo);
         }
         caves = newCaves;
         caveProgress = progress;
-        WynntilsMod.postEvent(new ContentUpdatedEvent(ContentType.CAVE));
+        WynntilsMod.postEvent(new ActivityUpdatedEvent(ActivityType.CAVE));
         WynntilsMod.info("Updated caves from query, got " + caves.size() + " caves.");
     }
 
@@ -52,15 +52,15 @@ public class CaveModel extends Model {
         return caves.stream().filter(cave -> cave.getName().equals(name)).findFirst();
     }
 
-    public List<CaveInfo> getSortedCaves(ContentSortOrder sortOrder) {
+    public List<CaveInfo> getSortedCaves(ActivitySortOrder sortOrder) {
         return sortCaveInfoList(sortOrder, caves);
     }
 
-    private List<CaveInfo> sortCaveInfoList(ContentSortOrder sortOrder, List<CaveInfo> caveList) {
+    private List<CaveInfo> sortCaveInfoList(ActivitySortOrder sortOrder, List<CaveInfo> caveList) {
         // All caves are always sorted by status (available then unavailable), and then
         // the given sort order, and finally a third way if the given sort order is equal.
 
-        CaveInfo trackedCaveInfo = Models.Content.getTrackedCaveInfo();
+        CaveInfo trackedCaveInfo = Models.Activity.getTrackedCaveInfo();
         String trackedCaveName = trackedCaveInfo != null ? trackedCaveInfo.getName() : "";
         Comparator<CaveInfo> baseComparator =
                 Comparator.comparing(caveInfo -> !caveInfo.getName().equals(trackedCaveName));
@@ -90,15 +90,15 @@ public class CaveModel extends Model {
         return Collections.unmodifiableList(caveProgress);
     }
 
-    private CaveInfo getCaveInfoFromContent(ContentInfo content) {
+    private CaveInfo getCaveInfoFromActivity(ActivityInfo activity) {
         return new CaveInfo(
-                content.name(),
-                content.status(),
-                content.description().orElse(StyledText.EMPTY).getString(),
-                content.requirements().level().key(),
-                content.distance().get(),
-                content.length().get(),
-                content.difficulty().get(),
-                content.rewards());
+                activity.name(),
+                activity.status(),
+                activity.description().orElse(StyledText.EMPTY).getString(),
+                activity.requirements().level().key(),
+                activity.distance().get(),
+                activity.length().get(),
+                activity.difficulty().get(),
+                activity.rewards());
     }
 }

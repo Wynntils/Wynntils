@@ -41,7 +41,7 @@ public class DialogueHistoryQueries {
 
                 // Open content book
                 .then(QueryStep.useItemInHotbar(InventoryUtils.CONTENT_BOOK_SLOT_NUM)
-                        .expectContainerTitle(Models.Content.CONTENT_BOOK_TITLE))
+                        .expectContainerTitle(Models.Activity.CONTENT_BOOK_TITLE))
 
                 // Repeatedly read the dialogue history from the lore of the history item,
                 // and if it is on the last page, stop repeating, otherwise click the slot

@@ -2,26 +2,26 @@
  * Copyright © Wynntils 2023.
  * This file is released under AGPLv3. See LICENSE for full license details.
  */
-package com.wynntils.screens.content;
+package com.wynntils.screens.activities;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.components.Models;
 import com.wynntils.core.text.StyledText;
 import com.wynntils.mc.event.MenuEvent;
-import com.wynntils.models.content.CaveInfo;
-import com.wynntils.models.content.event.ContentTrackerUpdatedEvent;
-import com.wynntils.models.content.event.ContentUpdatedEvent;
-import com.wynntils.models.content.type.ContentSortOrder;
-import com.wynntils.models.content.type.ContentType;
+import com.wynntils.models.activities.CaveInfo;
+import com.wynntils.models.activities.event.ActivityTrackerUpdatedEvent;
+import com.wynntils.models.activities.event.ActivityUpdatedEvent;
+import com.wynntils.models.activities.type.ActivitySortOrder;
+import com.wynntils.models.activities.type.ActivityType;
+import com.wynntils.screens.activities.widgets.CaveButton;
+import com.wynntils.screens.activities.widgets.CaveProgressButton;
 import com.wynntils.screens.base.WynntilsListScreen;
 import com.wynntils.screens.base.widgets.BackButton;
 import com.wynntils.screens.base.widgets.PageSelectorButton;
 import com.wynntils.screens.base.widgets.ReloadButton;
 import com.wynntils.screens.base.widgets.SortOrderWidget;
-import com.wynntils.screens.base.widgets.SortableContentScreen;
-import com.wynntils.screens.content.widgets.CaveButton;
-import com.wynntils.screens.content.widgets.CaveProgressButton;
+import com.wynntils.screens.base.widgets.SortableActivityScreen;
 import com.wynntils.screens.wynntilsmenu.WynntilsMenuScreen;
 import com.wynntils.utils.StringUtils;
 import com.wynntils.utils.colors.CommonColors;
@@ -37,8 +37,8 @@ import net.minecraftforge.eventbus.api.EventPriority;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 
 public final class WynntilsCaveScreen extends WynntilsListScreen<CaveInfo, CaveButton>
-        implements SortableContentScreen {
-    private ContentSortOrder contentSortOrder = ContentSortOrder.LEVEL;
+        implements SortableActivityScreen {
+    private ActivitySortOrder activitySortOrder = ActivitySortOrder.LEVEL;
     private CaveInfo trackingRequested = null;
 
     private WynntilsCaveScreen() {
@@ -49,14 +49,14 @@ public final class WynntilsCaveScreen extends WynntilsListScreen<CaveInfo, CaveB
     }
 
     @SubscribeEvent
-    public void onCaveUpdate(ContentUpdatedEvent event) {
-        if (event.getContentType() == ContentType.CAVE && McUtils.mc().screen == this) {
+    public void onCaveUpdate(ActivityUpdatedEvent event) {
+        if (event.getActivityType() == ActivityType.CAVE && McUtils.mc().screen == this) {
             this.reloadElements();
         }
     }
 
     @SubscribeEvent
-    public void onTrackedContentUpdate(ContentTrackerUpdatedEvent event) {
+    public void onTrackedActivityUpdate(ActivityTrackerUpdatedEvent event) {
         // Reload so we have the proper order
         if (McUtils.mc().screen == this) {
             this.reloadElements();
@@ -189,23 +189,23 @@ public final class WynntilsCaveScreen extends WynntilsListScreen<CaveInfo, CaveB
 
     @Override
     protected void reloadElementsList(String searchTerm) {
-        elements.addAll(Models.Cave.getSortedCaves(contentSortOrder).stream()
+        elements.addAll(Models.Cave.getSortedCaves(activitySortOrder).stream()
                 .filter(info -> StringUtils.partialMatch(info.getName(), searchTerm))
                 .toList());
     }
 
     @Override
-    public ContentSortOrder getContentSortOrder() {
-        return contentSortOrder;
+    public ActivitySortOrder getActivitySortOrder() {
+        return activitySortOrder;
     }
 
     @Override
-    public void setContentSortOrder(ContentSortOrder newSortOrder) {
+    public void setActivitySortOrder(ActivitySortOrder newSortOrder) {
         if (newSortOrder == null) {
-            throw new IllegalStateException("Tried to set null content sort order");
+            throw new IllegalStateException("Tried to set null activity sort order");
         }
 
-        this.contentSortOrder = newSortOrder;
+        this.activitySortOrder = newSortOrder;
         this.setCurrentPage(0);
     }
 

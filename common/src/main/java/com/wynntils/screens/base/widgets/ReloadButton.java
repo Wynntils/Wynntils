@@ -16,14 +16,14 @@ public class ReloadButton extends WynntilsButton implements TooltipProvider {
     private final List<Component> RELOAD_TOOLTIP;
     private final Runnable onClickRunnable;
 
-    public ReloadButton(int x, int y, int width, int height, String contentType, Runnable onClickRunnable) {
+    public ReloadButton(int x, int y, int width, int height, String activityType, Runnable onClickRunnable) {
         super(x, y, width, height, Component.literal("Reload Button"));
         this.onClickRunnable = onClickRunnable;
 
         RELOAD_TOOLTIP = List.of(
-                Component.translatable("screens.wynntils.wynntilsContent.reload.name")
+                Component.translatable("screens.wynntils.wynntilsActivities.reload.name")
                         .withStyle(ChatFormatting.WHITE),
-                Component.translatable("screens.wynntils.wynntilsContent.reload.description", contentType)
+                Component.translatable("screens.wynntils.wynntilsActivities.reload.description", activityType)
                         .withStyle(ChatFormatting.GRAY));
     }
 

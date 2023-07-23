@@ -9,8 +9,8 @@ import com.wynntils.core.components.Managers;
 import com.wynntils.core.components.Models;
 import com.wynntils.core.text.StyledText;
 import com.wynntils.features.map.MapFeature;
+import com.wynntils.screens.activities.WynntilsCaveScreen;
 import com.wynntils.screens.base.WynntilsMenuScreenBase;
-import com.wynntils.screens.content.WynntilsCaveScreen;
 import com.wynntils.screens.discoveries.WynntilsDiscoveriesScreen;
 import com.wynntils.screens.guides.WynntilsGuidesListScreen;
 import com.wynntils.screens.lootrun.WynntilsLootrunsScreen;
@@ -65,7 +65,7 @@ public final class WynntilsMenuScreen extends WynntilsMenuScreenBase {
             buttons.add(new ArrayList<>());
         }
 
-        // region Row 1: Content
+        // region Row 1: Content / Activities
         buttons.get(0)
                 .add(new WynntilsMenuButton(
                         Texture.QUEST_BOOK_ICON,

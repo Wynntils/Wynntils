@@ -2,16 +2,16 @@
  * Copyright © Wynntils 2023.
  * This file is released under AGPLv3. See LICENSE for full license details.
  */
-package com.wynntils.screens.content.widgets;
+package com.wynntils.screens.activities.widgets;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.wynntils.core.components.Models;
 import com.wynntils.core.text.StyledText;
-import com.wynntils.models.content.CaveInfo;
-import com.wynntils.models.content.type.ContentType;
+import com.wynntils.models.activities.CaveInfo;
+import com.wynntils.models.activities.type.ActivityType;
+import com.wynntils.screens.activities.WynntilsCaveScreen;
 import com.wynntils.screens.base.TooltipProvider;
 import com.wynntils.screens.base.widgets.WynntilsButton;
-import com.wynntils.screens.content.WynntilsCaveScreen;
 import com.wynntils.screens.maps.MainMapScreen;
 import com.wynntils.utils.EnumUtils;
 import com.wynntils.utils.colors.CommonColors;
@@ -97,7 +97,7 @@ public class CaveButton extends WynntilsButton implements TooltipProvider {
     private CustomColor getBackgroundColor() {
         Pair<CustomColor, CustomColor> colors;
 
-        if (this.caveInfo.equals(Models.Content.getTrackedCaveInfo())) {
+        if (this.caveInfo.equals(Models.Activity.getTrackedCaveInfo())) {
             colors = TRACKED_BUTTON_COLOR;
         } else if (this.caveInfo.equals(caveScreen.getTrackingRequested())) {
             colors = TRACKING_REQUESTED_BUTTON_COLOR;
@@ -128,11 +128,11 @@ public class CaveButton extends WynntilsButton implements TooltipProvider {
     private void trackCave() {
         if (this.caveInfo.isTrackable()) {
             McUtils.playSoundUI(SoundEvents.ANVIL_LAND);
-            if (this.caveInfo.equals(Models.Content.getTrackedCaveInfo())) {
-                Models.Content.stopTracking();
+            if (this.caveInfo.equals(Models.Activity.getTrackedCaveInfo())) {
+                Models.Activity.stopTracking();
                 caveScreen.setTrackingRequested(null);
             } else {
-                Models.Content.startTracking(this.caveInfo.getName(), ContentType.CAVE);
+                Models.Activity.startTracking(this.caveInfo.getName(), ActivityType.CAVE);
                 caveScreen.setTrackingRequested(this.caveInfo);
             }
         }
@@ -153,7 +153,7 @@ public class CaveButton extends WynntilsButton implements TooltipProvider {
         lines.add(Component.literal(""));
 
         if (caveInfo.isTrackable()) {
-            if (caveInfo.equals(Models.Content.getTrackedCaveInfo())) {
+            if (caveInfo.equals(Models.Activity.getTrackedCaveInfo())) {
                 lines.add(Component.literal("Left click to stop tracking it!")
                         .withStyle(ChatFormatting.RED)
                         .withStyle(ChatFormatting.BOLD));

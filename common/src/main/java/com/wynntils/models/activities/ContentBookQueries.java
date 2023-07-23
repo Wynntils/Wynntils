@@ -2,7 +2,7 @@
  * Copyright © Wynntils 2022-2023.
  * This file is released under AGPLv3. See LICENSE for full license details.
  */
-package com.wynntils.models.content;
+package com.wynntils.models.activities;
 
 import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.components.Managers;
@@ -13,9 +13,9 @@ import com.wynntils.handlers.container.ContainerQueryException;
 import com.wynntils.handlers.container.scriptedquery.QueryStep;
 import com.wynntils.handlers.container.scriptedquery.ScriptedContainerQuery;
 import com.wynntils.handlers.container.type.ContainerContent;
-import com.wynntils.models.content.type.ContentInfo;
-import com.wynntils.models.content.type.ContentType;
-import com.wynntils.models.items.items.gui.ContentItem;
+import com.wynntils.models.activities.type.ActivityInfo;
+import com.wynntils.models.activities.type.ActivityType;
+import com.wynntils.models.items.items.gui.ActivityItem;
 import com.wynntils.utils.mc.LoreUtils;
 import com.wynntils.utils.mc.McUtils;
 import com.wynntils.utils.wynn.ContainerUtils;
@@ -55,35 +55,35 @@ public class ContentBookQueries {
      * will be called.
      */
     protected void queryContentBook(
-            ContentType contentType,
-            BiConsumer<List<ContentInfo>, List<StyledText>> processResult,
+            ActivityType activityType,
+            BiConsumer<List<ActivityInfo>, List<StyledText>> processResult,
             boolean showUpdates) {
-        List<ContentInfo> newContent = new ArrayList<>();
+        List<ActivityInfo> newActivity = new ArrayList<>();
         List<StyledText> progress = new ArrayList<>();
 
         ScriptedContainerQuery query = ScriptedContainerQuery.builder(
-                        "Content Book Query for " + contentType.getDisplayName())
+                        "Content Book Query for " + activityType.getDisplayName())
                 .onError(msg -> {
                     WynntilsMod.warn("Problem querying Content Book: " + msg);
                     if (showUpdates) {
                         Managers.Notification.editMessage(
                                 stateMessageContainer,
                                 StyledText.fromComponent(Component.literal(
-                                                "Error loading " + contentType.getGroupName() + " from content book")
+                                                "Error loading " + activityType.getGroupName() + " from content book")
                                         .withStyle(ChatFormatting.RED)));
                     }
                 })
                 .execute(() -> {
                     if (showUpdates) {
                         stateMessageContainer = Managers.Notification.queueMessage(
-                                Component.literal("Loading " + contentType.getGroupName() + " from content book...")
+                                Component.literal("Loading " + activityType.getGroupName() + " from content book...")
                                         .withStyle(ChatFormatting.YELLOW));
                     }
                 })
 
                 // Open content book
                 .then(QueryStep.useItemInHotbar(InventoryUtils.CONTENT_BOOK_SLOT_NUM)
-                        .expectContainerTitle(Models.Content.CONTENT_BOOK_TITLE))
+                        .expectContainerTitle(Models.Activity.CONTENT_BOOK_TITLE))
 
                 // Save filter state, and set it correctly
                 .execute(() -> {
@@ -107,13 +107,13 @@ public class ContentBookQueries {
                             }
 
                             // Continue looping until filter matches
-                            return !activeFilter.equals(contentType.getDisplayName());
+                            return !activeFilter.equals(activityType.getDisplayName());
                         },
                         QueryStep.clickOnSlot(CHANGE_VIEW_SLOT))
 
                 // Process first page
                 .reprocess(c -> {
-                    processContentBookPage(c, newContent);
+                    processContentBookPage(c, newActivity);
                     ItemStack itemStack = c.items().get(PROGRESS_SLOT);
                     progress.add(InventoryUtils.getItemName(itemStack));
                     progress.addAll(LoreUtils.getLore(itemStack));
@@ -124,7 +124,7 @@ public class ContentBookQueries {
                         c -> ScriptedContainerQuery.containerHasSlot(
                                 c, NEXT_PAGE_SLOT, Items.GOLDEN_SHOVEL, SCROLL_DOWN_TEXT),
                         QueryStep.clickOnSlot(NEXT_PAGE_SLOT)
-                                .processIncomingContainer(c -> processContentBookPage(c, newContent)))
+                                .processIncomingContainer(c -> processContentBookPage(c, newActivity)))
 
                 // Restore filter to original value
                 .execute(() -> filterLoopCount = 0)
@@ -150,14 +150,14 @@ public class ContentBookQueries {
                         QueryStep.clickOnSlot(CHANGE_VIEW_SLOT))
 
                 // Finally signal we're done
-                .execute(() -> processResult.accept(newContent, progress))
+                .execute(() -> processResult.accept(newActivity, progress))
                 .execute(() -> {
                     if (showUpdates) {
                         Managers.Notification.editMessage(
                                 stateMessageContainer,
-                                StyledText.fromComponent(
-                                        Component.literal("Loaded " + contentType.getGroupName() + " from content book")
-                                                .withStyle(ChatFormatting.GREEN)));
+                                StyledText.fromComponent(Component.literal(
+                                                "Loaded " + activityType.getGroupName() + " from content book")
+                                        .withStyle(ChatFormatting.GREEN)));
                     }
                 })
                 .build();
@@ -180,22 +180,22 @@ public class ContentBookQueries {
         return null;
     }
 
-    private void processContentBookPage(ContainerContent container, List<ContentInfo> newContent) {
+    private void processContentBookPage(ContainerContent container, List<ActivityInfo> newActivities) {
         for (int slot = 0; slot < 54; slot++) {
             ItemStack itemStack = container.items().get(slot);
-            Optional<ContentItem> contentItemOpt = Models.Item.asWynnItem(itemStack, ContentItem.class);
-            if (contentItemOpt.isEmpty()) continue;
+            Optional<ActivityItem> activityItemOpt = Models.Item.asWynnItem(itemStack, ActivityItem.class);
+            if (activityItemOpt.isEmpty()) continue;
 
-            ContentInfo contentInfo = contentItemOpt.get().getContentInfo();
+            ActivityInfo activityInfo = activityItemOpt.get().getActivityInfo();
 
-            newContent.add(contentInfo);
+            newActivities.add(activityInfo);
         }
     }
 
-    protected void toggleTracking(String name, ContentType contentType) {
+    protected void toggleTracking(String name, ActivityType activityType) {
         // We do not want to change filtering when tracking, since we get
         // no chance to reset it
-        ScriptedContainerQuery query = ScriptedContainerQuery.builder("Toggle Content Tracking Query: " + name)
+        ScriptedContainerQuery query = ScriptedContainerQuery.builder("Toggle Activity Tracking Query: " + name)
                 .onError(msg -> {
                     WynntilsMod.warn("Problem querying Content Book for tracking: " + msg);
                     McUtils.sendErrorToClient("Setting tracking in Content Book failed");
@@ -203,7 +203,7 @@ public class ContentBookQueries {
 
                 // Open compass/character menu
                 .then(QueryStep.useItemInHotbar(InventoryUtils.CONTENT_BOOK_SLOT_NUM)
-                        .expectContainerTitle(Models.Content.CONTENT_BOOK_TITLE))
+                        .expectContainerTitle(Models.Activity.CONTENT_BOOK_TITLE))
 
                 // Save filter state, and set it correctly
                 .execute(() -> {
@@ -227,7 +227,7 @@ public class ContentBookQueries {
                             }
 
                             // Continue looping until filter matches
-                            return !activeFilter.equals(contentType.getDisplayName());
+                            return !activeFilter.equals(activityType.getDisplayName());
                         },
                         QueryStep.clickOnSlot(CHANGE_VIEW_SLOT))
 
@@ -235,7 +235,7 @@ public class ContentBookQueries {
                 // if so, click it, otherwise click on next slot (if available)
                 .repeat(
                         c -> {
-                            int slot = findTrackedContent(c, name, contentType);
+                            int slot = findTrackedActivity(c, name, activityType);
                             // Not found, try to go to next page
                             if (slot == -1) return true;
 
@@ -272,15 +272,15 @@ public class ContentBookQueries {
         query.executeQuery();
     }
 
-    private int findTrackedContent(ContainerContent container, String name, ContentType contentType) {
+    private int findTrackedActivity(ContainerContent container, String name, ActivityType activityType) {
         for (int slot = 0; slot < 54; slot++) {
             ItemStack itemStack = container.items().get(slot);
-            Optional<ContentItem> contentItemOpt = Models.Item.asWynnItem(itemStack, ContentItem.class);
-            if (contentItemOpt.isEmpty()) continue;
+            Optional<ActivityItem> activityItemOpt = Models.Item.asWynnItem(itemStack, ActivityItem.class);
+            if (activityItemOpt.isEmpty()) continue;
 
-            ContentInfo contentInfo = contentItemOpt.get().getContentInfo();
-            if (contentInfo.type().matchesTracking(contentType)
-                    && contentInfo.name().equals(name)) {
+            ActivityInfo activityInfo = activityItemOpt.get().getActivityInfo();
+            if (activityInfo.type().matchesTracking(activityType)
+                    && activityInfo.name().equals(name)) {
                 // Found it!
                 return slot;
             }
