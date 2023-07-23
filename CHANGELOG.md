@@ -1,9 +1,21 @@
+## [0.0.3-alpha.187](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.186...v0.0.3-alpha.187) (2023-07-23)
+
+
+### New Features
+
+* Add a debug feature to dump content book data ([#1813](https://github.com/Wynntils/Artemis/issues/1813)) ([cb53659](https://github.com/Wynntils/Artemis/commit/cb53659e276bc725367558e3c06967451d417e00))
+
 ## [0.0.3-alpha.186](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.185...v0.0.3-alpha.186) (2023-07-23)
 
 
 ### New Features
 
 * Show 2.0.3 caves on the map ([#1815](https://github.com/Wynntils/Artemis/issues/1815)) ([19bd19a](https://github.com/Wynntils/Artemis/commit/19bd19a94f4a8779b948f5e7537f410c9c97bcbd))
+
+
+### Miscellaneous Chores
+
+* **release:** v0.0.3-alpha.186 [skip ci] ([5a854bc](https://github.com/Wynntils/Artemis/commit/5a854bc5fba428bad0d5b58b7cb97b274ab42cfb))
 
 ## [0.0.3-alpha.185](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.184...v0.0.3-alpha.185) (2023-07-23)
 
@@ -40,16 +52,4 @@
 ### Code Refactoring
 
 * Rename "Content" to "Activity" ([#1811](https://github.com/Wynntils/Artemis/issues/1811)) ([0132ef8](https://github.com/Wynntils/Artemis/commit/0132ef89ef46ec53ade0845580d4a143d82e4459))
-
-## [0.0.3-alpha.182](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.181...v0.0.3-alpha.182) (2023-07-23)
-
-
-### New Features
-
-* Add cave support to Wynntils book ([#1798](https://github.com/Wynntils/Artemis/issues/1798)) ([36b1472](https://github.com/Wynntils/Artemis/commit/36b147267434faa6904ec34c4ac7f5cace596dfa))
-
-
-### Miscellaneous Chores
-
-* **release:** v0.0.3-alpha.182 [skip ci] ([483f4b2](https://github.com/Wynntils/Artemis/commit/483f4b2ebe14bb5f20b585e1f83fe6c5a11ab602))
 
