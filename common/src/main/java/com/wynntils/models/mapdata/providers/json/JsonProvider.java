@@ -44,6 +44,7 @@ public class JsonProvider implements MapDataProvider {
             .registerTypeHierarchyAdapter(MapIcon.class, new IconDeserializer())
             .registerTypeHierarchyAdapter(CustomColor.class, new CustomColor.CustomColorSerializer())
             .registerTypeAdapterFactory(new EnumUtils.EnumTypeAdapterFactory<>())
+            .enableComplexMapKeySerialization()
             .create();
 
     private final List<MapFeature> features;
