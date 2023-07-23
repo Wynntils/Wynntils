@@ -2,7 +2,7 @@
  * Copyright © Wynntils 2022.
  * This file is released under AGPLv3. See LICENSE for full license details.
  */
-package com.wynntils.models.quests;
+package com.wynntils.models.activities.quests;
 
 import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.components.Managers;
@@ -15,10 +15,9 @@ import com.wynntils.models.activities.event.ActivityUpdatedEvent;
 import com.wynntils.models.activities.type.ActivityInfo;
 import com.wynntils.models.activities.type.ActivitySortOrder;
 import com.wynntils.models.activities.type.ActivityType;
+import com.wynntils.models.activities.type.QuestLength;
+import com.wynntils.models.activities.type.QuestStatus;
 import com.wynntils.models.characterstats.CombatXpModel;
-import com.wynntils.models.quests.event.DialogueHistoryReloadedEvent;
-import com.wynntils.models.quests.type.QuestLength;
-import com.wynntils.models.quests.type.QuestStatus;
 import com.wynntils.models.worlds.event.WorldStateEvent;
 import com.wynntils.utils.mc.McUtils;
 import com.wynntils.utils.mc.type.Location;
@@ -34,12 +33,10 @@ import net.minecraftforge.eventbus.api.SubscribeEvent;
 import org.apache.commons.lang3.StringUtils;
 
 public final class QuestModel extends Model {
-    private static final DialogueHistoryQueries DIALOGUE_HISTORY_QUERIES = new DialogueHistoryQueries();
     private static final String MINI_QUEST_PREFIX = "Mini-Quest - ";
 
     private List<QuestInfo> quests = List.of();
     private List<QuestInfo> miniQuests = List.of();
-    private List<List<StyledText>> dialogueHistory = List.of();
 
     public QuestModel(CombatXpModel combatXpModel) {
         super(List.of(combatXpModel));
@@ -53,7 +50,6 @@ public final class QuestModel extends Model {
     private void reset() {
         quests = List.of();
         miniQuests = List.of();
-        dialogueHistory = List.of();
     }
 
     public void rescanQuestBook(boolean includeQuests, boolean includeMiniQuests) {
@@ -64,10 +60,6 @@ public final class QuestModel extends Model {
         if (includeMiniQuests) {
             Models.Activity.scanContentBook(ActivityType.MINI_QUEST, this::updateMiniQuestsFromQuery);
         }
-    }
-
-    public void rescanDialogueHistory() {
-        DIALOGUE_HISTORY_QUERIES.scanDialogueHistory();
     }
 
     public Optional<QuestInfo> getQuestFromName(String name) {
@@ -123,10 +115,6 @@ public final class QuestModel extends Model {
                             .thenComparing(QuestInfo::getSortLevel))
                     .toList();
         };
-    }
-
-    public List<List<StyledText>> getDialogueHistory() {
-        return dialogueHistory;
     }
 
     public void startTracking(QuestInfo questInfo) {
@@ -211,11 +199,6 @@ public final class QuestModel extends Model {
                 // FIXME! Additional requirements missing
                 List.of(),
                 activity.type() == ActivityType.MINI_QUEST);
-    }
-
-    void setDialogueHistory(List<List<StyledText>> newDialogueHistory) {
-        dialogueHistory = newDialogueHistory;
-        WynntilsMod.postEvent(new DialogueHistoryReloadedEvent());
     }
 
     private static class LocationComparator implements Comparator<QuestInfo> {
