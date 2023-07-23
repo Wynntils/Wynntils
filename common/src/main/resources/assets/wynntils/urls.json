@@ -93,6 +93,11 @@
     "url": "https://raw.githubusercontent.com/Wynntils/WynntilsWebsite-API/master/combatlocations.json"
   },
   {
+    "id": "dataStaticCaveInfo",
+    "md5": "ac509a4e620ac65718a6b0816e848db5",
+    "url": "https://raw.githubusercontent.com/Wynntils/Reference/main/content/cave.json"
+  },
+  {
     "id": "dataStaticDiscoveries",
     "md5": "a61038978cc3e26b4f3a80bf42b207b3",
     "url": "https://raw.githubusercontent.com/Wynntils/WynntilsWebsite-API/master/discoveries.json"
