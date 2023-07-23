@@ -65,8 +65,7 @@ public class QuickCastFeature extends Feature {
     private static final Queue<SpellDirection> SPELL_PACKET_QUEUE = new LinkedList<>();
 
     private final Queue<SpellDirection> currentSpellProgress = new LinkedList<>();
-    private final Queue<Spell> scheduledSpells = new LinkedList<>();
-    private Spell currentSpell = null;
+    private final Queue<Spell> spellBuffer = new LinkedList<>();
     private int packetCountdown = 0;
     private int spellCountdown = 0;
     private int lastSelectedSlot = 0;
@@ -113,11 +112,11 @@ public class QuickCastFeature extends Feature {
         }
 
         Spell spell = new Spell(b, c, Models.Character.getClassType() == ClassType.ARCHER);
-        if (scheduledSpells.contains(spell)) {
+        if (!currentSpellProgress.isEmpty()) {
             return;
         }
 
-        scheduledSpells.offer(spell);
+        spellBuffer.offer(spell);
         lastSelectedSlot = McUtils.inventory().selected;
     }
 
@@ -146,32 +145,24 @@ public class QuickCastFeature extends Feature {
     }
 
     private boolean pollSpell() {
-        removeLastSpell();
         if (--spellCountdown > 0) return false;
-        if (scheduledSpells.isEmpty()) return false;
+        if (spellBuffer.isEmpty()) return false;
         SpellDirection[] progress = Models.Spell.getLastSpell();
         SpellDirection[] currentProgress =
                 progress.length != 3 && Models.Spell.isLastSpellStillValid() ? progress : SpellDirection.NO_SPELL;
-        Optional<Spell> appropriateSpell = scheduledSpells.stream()
+        Optional<Spell> appropriateSpell = spellBuffer.stream()
                 .filter(s -> s.poll(currentSpellProgress, currentProgress))
                 .findFirst();
         if (appropriateSpell.isEmpty()) return false;
-        currentSpell = appropriateSpell.get();
         spellCountdown = spellCooldown.get();
+        spellBuffer.clear();
         return true;
-    }
-
-    private void removeLastSpell() {
-        scheduledSpells.remove(currentSpell);
-        currentSpell = null;
-        currentSpellProgress.clear();
     }
 
     @SubscribeEvent
     public void onWorldChange(WorldStateEvent e) {
         currentSpellProgress.clear();
-        scheduledSpells.clear();
-        currentSpell = null;
+        spellBuffer.clear();
     }
 
     private static void sendCancelReason(MutableComponent reason) {
