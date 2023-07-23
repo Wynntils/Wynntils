@@ -8,7 +8,6 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonElement;
 import com.wynntils.core.WynntilsMod;
-import com.wynntils.core.components.Managers;
 import com.wynntils.core.components.Models;
 import com.wynntils.core.config.Category;
 import com.wynntils.core.config.ConfigCategory;
@@ -55,7 +54,7 @@ import org.lwjgl.glfw.GLFW;
 @ConfigCategory(Category.DEBUG)
 public class ContentBookDumpFeature extends Feature {
     // Temporary hack...
-    public static final Gson GSON = new GsonBuilder()
+    private static final Gson GSON = new GsonBuilder()
             .registerTypeAdapter(CustomColor.class, new CustomColor.CustomColorSerializer())
             .registerTypeAdapterFactory(new JsonManager.EnumTypeAdapterFactory())
             .enableComplexMapKeySerialization()
@@ -166,7 +165,7 @@ public class ContentBookDumpFeature extends Feature {
         // Save the dump to a file
         Map<ActivityType, List<DumpableActivityInfo>> mappedActivities = getMappedDumpedActivities();
 
-        JsonElement element = Managers.Json.GSON.toJsonTree(mappedActivities);
+        JsonElement element = GSON.toJsonTree(mappedActivities);
 
         String fileName = "content_book_dump.json";
         File jsonFile = new File(SAVE_FOLDER, fileName);
