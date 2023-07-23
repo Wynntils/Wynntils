@@ -33,7 +33,7 @@ public class LocateCommand extends Command {
             SharedSuggestionProvider.suggest(Arrays.stream(ServiceKind.values()).map(ServiceKind::getName), builder);
 
     public static final SuggestionProvider<CommandSourceStack> PLACES_SUGGESTION_PROVIDER = (context, builder) ->
-            SharedSuggestionProvider.suggest(Models.Poi.getLabelPois().stream().map(Poi::getName), builder);
+            SharedSuggestionProvider.suggest(Models.Poi.getLabelPois().map(Poi::getName), builder);
 
     @Override
     public String getCommandName() {
@@ -106,7 +106,7 @@ public class LocateCommand extends Command {
         ServiceKind selectedKind = LocateCommand.getServiceKind(context, searchedName);
         if (selectedKind == null) return 0;
 
-        List<Poi> services = new ArrayList<>(Models.Poi.getServicePois().stream()
+        List<Poi> services = new ArrayList<>(Models.Poi.getServicePois()
                 .filter(poi -> poi.getKind() == selectedKind)
                 .toList());
 
@@ -145,7 +145,7 @@ public class LocateCommand extends Command {
     private int locatePlace(CommandContext<CommandSourceStack> context) {
         String searchedName = context.getArgument("name", String.class);
 
-        List<Poi> places = new ArrayList<>(Models.Poi.getLabelPois().stream()
+        List<Poi> places = new ArrayList<>(Models.Poi.getLabelPois()
                 .filter(poi -> StringUtils.partialMatch(poi.getName(), searchedName))
                 .toList());
 
