@@ -4,29 +4,31 @@
  */
 package com.wynntils.models.activities.type;
 
+import java.util.Optional;
 import net.minecraft.ChatFormatting;
 
 public enum ActivityType {
-    QUEST("Quest", "quests", ChatFormatting.AQUA.getChar()),
-    STORYLINE_QUEST("Quest", "quests", ChatFormatting.GREEN.getChar()),
-    MINI_QUEST("Mini-Quest", "mini-quests", ChatFormatting.DARK_PURPLE.getChar()),
-    CAVE("Cave", "caves", ChatFormatting.GOLD.getChar()),
-    SECRET_DISCOVERY("Secret Discovery", "secret discoveries", ChatFormatting.AQUA.getChar()),
-    WORLD_DISCOVERY("World Discovery", "world discoveries", ChatFormatting.YELLOW.getChar()),
-    TERRITORIAL_DISCOVERY("Territorial Discovery", "territorial discoveries", ChatFormatting.WHITE.getChar()),
-    DUNGEON("Dungeon", "dungeons", ChatFormatting.RED.getChar()),
-    RAID("Raid", "raids", ChatFormatting.YELLOW.getChar()),
-    BOSS_ALTAR("Boss Altar", "boss altars", ChatFormatting.LIGHT_PURPLE.getChar()),
-    LOOTRUN_CAMP("Lootrun Camp", "lootrun camps", ChatFormatting.BLUE.getChar());
+    ALL("Show All", "all", null),
+    QUEST("Quest", "quests", ChatFormatting.AQUA),
+    STORYLINE_QUEST("Quest", "quests", ChatFormatting.GREEN),
+    MINI_QUEST("Mini-Quest", "mini-quests", ChatFormatting.DARK_PURPLE),
+    CAVE("Cave", "caves", ChatFormatting.GOLD),
+    SECRET_DISCOVERY("Secret Discovery", "secret discoveries", ChatFormatting.AQUA),
+    WORLD_DISCOVERY("World Discovery", "world discoveries", ChatFormatting.YELLOW),
+    TERRITORIAL_DISCOVERY("Territorial Discovery", "territorial discoveries", ChatFormatting.WHITE),
+    DUNGEON("Dungeon", "dungeons", ChatFormatting.RED),
+    RAID("Raid", "raids", ChatFormatting.YELLOW),
+    BOSS_ALTAR("Boss Altar", "boss altars", ChatFormatting.LIGHT_PURPLE),
+    LOOTRUN_CAMP("Lootrun Camp", "lootrun camps", ChatFormatting.BLUE);
 
     private final String displayName;
     private final String groupName;
-    private final char colorCode;
+    private final Optional<ChatFormatting> color;
 
-    ActivityType(String displayName, String groupName, char colorCode) {
+    ActivityType(String displayName, String groupName, ChatFormatting color) {
         this.displayName = displayName;
         this.groupName = groupName;
-        this.colorCode = colorCode;
+        this.color = Optional.ofNullable(color);
     }
 
     public static ActivityType from(String colorCode, String displayName) {
@@ -58,7 +60,7 @@ public enum ActivityType {
     }
 
     public String getColorCode() {
-        return String.valueOf(colorCode);
+        return color.isEmpty() ? "" : String.valueOf(color.get().getChar());
     }
 
     public boolean isQuest() {
