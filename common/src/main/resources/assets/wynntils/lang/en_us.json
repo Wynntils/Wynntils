@@ -172,6 +172,8 @@
   "feature.wynntils.containerSearch.highlightColor.description": "What color should the highlight circles be?",
   "feature.wynntils.containerSearch.highlightColor.name": "Highlight color",
   "feature.wynntils.containerSearch.name": "Container Search Highlight",
+  "feature.wynntils.contentBookDump.description": "Adds the ability to dump the contents of your content book to a file.",
+  "feature.wynntils.contentBookDump.name": "Content Book Dump",
   "feature.wynntils.contentTracker.autoTrackCoordinates.description": "Should waypoints automatically be set for tracker coordinates?",
   "feature.wynntils.contentTracker.autoTrackCoordinates.name": "Auto Track Coordinates",
   "feature.wynntils.contentTracker.description": "Adds the ability to handle current tracked content.",
