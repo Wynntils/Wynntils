@@ -1,4 +1,16 @@
+## [0.0.3-alpha.185](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.184...v0.0.3-alpha.185) (2023-07-23)
+
+
+### New Features
+
+* Cave icon for book entries ([#1816](https://github.com/Wynntils/Artemis/issues/1816)) ([ed500e3](https://github.com/Wynntils/Artemis/commit/ed500e393e21a7aa4d250808efdb5c03d8a538eb))
+
 ## [0.0.3-alpha.184](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.183...v0.0.3-alpha.184) (2023-07-23)
+
+
+### Miscellaneous Chores
+
+* **release:** v0.0.3-alpha.184 [skip ci] ([56f6f53](https://github.com/Wynntils/Artemis/commit/56f6f53cff2d5440bde13d779770a96fa324d759))
 
 
 ### Code Refactoring
@@ -40,16 +52,4 @@
 ### Miscellaneous Chores
 
 * **release:** v0.0.3-alpha.181 [skip ci] ([90ba22d](https://github.com/Wynntils/Artemis/commit/90ba22d7e74ca5bf6ef2757c87745baee0c638e4))
-
-## [0.0.3-alpha.180](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.179...v0.0.3-alpha.180) (2023-07-23)
-
-
-### Bug Fixes
-
-* Fix chat time stamps making ranks appear gray ([#1807](https://github.com/Wynntils/Artemis/issues/1807)) ([bed7669](https://github.com/Wynntils/Artemis/commit/bed7669a86d6f25d32d8133a6f44a2b8b21b96fa))
-
-
-### Miscellaneous Chores
-
-* **release:** v0.0.3-alpha.180 [skip ci] ([1f1a1a7](https://github.com/Wynntils/Artemis/commit/1f1a1a75830ab610a83f0cf1a6803773de511e24))
 
