@@ -13,7 +13,8 @@ public enum TomeType {
     GUILD("Allegiance", true, false),
     SLAYING(false, true),
     GATHERING(false, true),
-    DUNGEONEERING(false, true);
+    DUNGEONEERING(false, true),
+    LOOTRUN(true, false);
 
     private final String typeString;
     private final boolean hasVariants;
