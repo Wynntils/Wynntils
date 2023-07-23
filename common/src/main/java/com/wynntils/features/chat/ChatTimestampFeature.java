@@ -11,12 +11,12 @@ import com.wynntils.core.config.ConfigHolder;
 import com.wynntils.core.config.RegisterConfig;
 import com.wynntils.core.features.Feature;
 import com.wynntils.core.features.properties.StartDisabled;
-import com.wynntils.core.text.StyledText;
 import com.wynntils.handlers.chat.event.ChatMessageReceivedEvent;
 import com.wynntils.utils.mc.McUtils;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.Locale;
+import net.minecraft.ChatFormatting;
 import net.minecraft.client.resources.language.I18n;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
@@ -50,8 +50,10 @@ public class ChatTimestampFeature extends Feature {
         Component message = event.getMessage();
 
         LocalDateTime date = LocalDateTime.now();
-        MutableComponent timestamp = StyledText.fromString("§8[§7" + date.format(formatter) + "§8]§r ")
-                .getComponent();
+        MutableComponent timestamp = Component.empty()
+                .append(Component.literal("[").withStyle(ChatFormatting.DARK_GRAY))
+                .append(Component.literal(date.format(formatter)).withStyle(ChatFormatting.GRAY))
+                .append(Component.literal("] ").withStyle(ChatFormatting.DARK_GRAY));
 
         timestamp.append(message);
 
