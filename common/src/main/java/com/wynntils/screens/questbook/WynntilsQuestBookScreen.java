@@ -9,11 +9,11 @@ import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.components.Models;
 import com.wynntils.core.text.StyledText;
 import com.wynntils.mc.event.MenuEvent;
+import com.wynntils.models.content.event.ContentTrackerUpdatedEvent;
+import com.wynntils.models.content.event.ContentUpdatedEvent;
 import com.wynntils.models.content.type.ContentSortOrder;
 import com.wynntils.models.quests.QuestInfo;
-import com.wynntils.models.quests.event.QuestBookReloadedEvent;
 import com.wynntils.models.quests.type.QuestStatus;
-import com.wynntils.screens.base.TooltipProvider;
 import com.wynntils.screens.base.WynntilsListScreen;
 import com.wynntils.screens.base.widgets.BackButton;
 import com.wynntils.screens.base.widgets.FilterButton;
@@ -47,12 +47,6 @@ import net.minecraftforge.eventbus.api.SubscribeEvent;
 
 public final class WynntilsQuestBookScreen extends WynntilsListScreen<QuestInfo, QuestButton>
         implements SortableContentScreen {
-    private static final List<Component> RELOAD_TOOLTIP = List.of(
-            Component.translatable("screens.wynntils.wynntilsQuestBook.reload.name")
-                    .withStyle(ChatFormatting.WHITE),
-            Component.translatable("screens.wynntils.wynntilsQuestBook.reload.description")
-                    .withStyle(ChatFormatting.GRAY));
-
     private QuestInfo trackingRequested = null;
     private boolean showQuests = true;
     private boolean showMiniQuests = false;
@@ -138,6 +132,7 @@ public final class WynntilsQuestBookScreen extends WynntilsListScreen<QuestInfo,
                 11,
                 (int) (Texture.RELOAD_BUTTON.width() / 2 / 1.7f),
                 (int) (Texture.RELOAD_BUTTON.height() / 1.7f),
+                "quest",
                 () -> Models.Quest.rescanQuestBook(showQuests, showMiniQuests)));
         this.addRenderableWidget(new PageSelectorButton(
                 Texture.QUEST_BOOK_BACKGROUND.width() / 2 + 50 - Texture.FORWARD_ARROW.width() / 2,
@@ -204,17 +199,20 @@ public final class WynntilsQuestBookScreen extends WynntilsListScreen<QuestInfo,
     }
 
     @SubscribeEvent
-    public void onQuestsReloaded(QuestBookReloadedEvent.QuestsReloaded event) {
+    public void onQuestsReloaded(ContentUpdatedEvent event) {
+        if (!event.getContentType().isQuest()) return;
+
         this.setQuests(getSortedQuests());
         setTrackingRequested(null);
         reloadElements();
     }
 
     @SubscribeEvent
-    public void onMiniQuestsReloaded(QuestBookReloadedEvent.MiniQuestsReloaded event) {
-        this.setQuests(getSortedQuests());
-        setTrackingRequested(null);
-        reloadElements();
+    public void onTrackedContentUpdate(ContentTrackerUpdatedEvent event) {
+        // Reload so we have the proper order
+        if (McUtils.mc().screen == this) {
+            this.reloadElements();
+        }
     }
 
     // FIXME: We only need this hack to stop the screen from closing when tracking Quest.
@@ -242,12 +240,9 @@ public final class WynntilsQuestBookScreen extends WynntilsListScreen<QuestInfo,
                         TextShadow.NONE);
     }
 
-    private void renderTooltip(PoseStack poseStack, int mouseX, int mouseY) {
+    @Override
+    protected void renderTooltip(PoseStack poseStack, int mouseX, int mouseY) {
         List<Component> tooltipLines = List.of();
-
-        if (this.hovered instanceof ReloadButton) {
-            tooltipLines = RELOAD_TOOLTIP;
-        }
 
         if (this.hovered instanceof QuestButton questButton) {
             QuestInfo questInfo = questButton.getQuestInfo();
@@ -303,11 +298,10 @@ public final class WynntilsQuestBookScreen extends WynntilsListScreen<QuestInfo,
             addQuestProgressTooltipLines(tooltipLines, true);
         }
 
-        if (this.hovered instanceof TooltipProvider tooltipWidget) {
-            tooltipLines = tooltipWidget.getTooltipLines();
+        if (tooltipLines.isEmpty()) {
+            super.renderTooltip(poseStack, mouseX, mouseY);
+            return;
         }
-
-        if (tooltipLines.isEmpty()) return;
 
         RenderUtils.drawTooltipAt(
                 poseStack,
