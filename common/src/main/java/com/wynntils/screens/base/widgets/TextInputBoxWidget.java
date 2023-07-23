@@ -199,15 +199,13 @@ public class TextInputBoxWidget extends AbstractWidget {
 
         StringBuilder builder = new StringBuilder();
 
-        // First append to the left of the cursor
-        int stringPosition = cursorPosition - 1;
-        while (font.width(builder.toString()) < maxTextWidth && stringPosition >= 0) {
-            builder.append(textBoxInput.charAt(stringPosition));
-
+        int stringPosition = cursorPosition;
+        while (font.width(builder.toString()) < maxTextWidth && stringPosition > 0) {
             stringPosition--;
+            builder.append(textBoxInput.charAt(stringPosition));
         }
 
-        final int startingAt = Math.max(stringPosition, 0); // If we went too far, start at the beginning
+        final int startingAt = stringPosition;
 
         // Now reverse so it's actually to the left
         builder.reverse();
