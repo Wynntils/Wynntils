@@ -508,6 +508,7 @@
   "feature.wynntils.itemTextOverlay.teleportScrollShadow.name": "Teleport Scroll Text Shadow",
   "feature.wynntils.lobbyUptime.name": "Lobby Uptime",
   "feature.wynntils.logItemInfo.name": "Log Item Info",
+  "feature.wynntils.lootChestStats.name": "Lootrun Statistics",
   "feature.wynntils.lootrun.activePathColor.description": "What should the color of displayed paths be? If rainbow line color is enabled, this config option is ignored.",
   "feature.wynntils.lootrun.activePathColor.name": "Path Color",
   "feature.wynntils.lootrun.cycleDistance.description": "How many blocks should paths be shown in a color before transitioning to a different color?",
