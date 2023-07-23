@@ -2,16 +2,16 @@
  * Copyright © Wynntils 2023.
  * This file is released under AGPLv3. See LICENSE for full license details.
  */
-package com.wynntils.screens.content.widgets;
+package com.wynntils.screens.activities.widgets;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.wynntils.core.components.Models;
 import com.wynntils.core.text.StyledText;
 import com.wynntils.models.activities.CaveInfo;
 import com.wynntils.models.activities.type.ActivityType;
+import com.wynntils.screens.activities.WynntilsCaveScreen;
 import com.wynntils.screens.base.TooltipProvider;
 import com.wynntils.screens.base.widgets.WynntilsButton;
-import com.wynntils.screens.content.WynntilsCaveScreen;
 import com.wynntils.screens.maps.MainMapScreen;
 import com.wynntils.utils.EnumUtils;
 import com.wynntils.utils.colors.CommonColors;
