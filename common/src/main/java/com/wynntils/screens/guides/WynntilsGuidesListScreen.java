@@ -112,7 +112,7 @@ public final class WynntilsGuidesListScreen extends WynntilsListScreen<Screen, G
     private void exportFavorites() {
         McUtils.mc()
                 .keyboardHandler
-                .setClipboard("wynntilsFavorites" + String.join(",", Models.Favorites.getFavoriteItems()));
+                .setClipboard("wynntilsFavorites," + String.join(",", Models.Favorites.getFavoriteItems()));
         McUtils.sendMessageToClient(Component.translatable(
                         "screens.wynntils.wynntilsGuides.exportedFavorites",
                         Models.Favorites.getFavoriteItems().size())
