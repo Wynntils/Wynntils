@@ -66,6 +66,11 @@ public class CharacterProvider extends BuiltInProvider {
                 }
 
                 @Override
+                public int getLevel() {
+                    return 0;
+                }
+
+                @Override
                 public MapVisibility getLabelVisibility() {
                     return null;
                 }

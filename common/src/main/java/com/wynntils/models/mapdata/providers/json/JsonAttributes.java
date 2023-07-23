@@ -14,6 +14,7 @@ public class JsonAttributes implements MapAttributes {
     private final String label;
     private final String icon;
     private final int priority;
+    private final int level;
     private final CustomColor labelColor;
     private final TextShadow labelShadow;
     private final MapVisibility labelVisibility;
@@ -24,6 +25,7 @@ public class JsonAttributes implements MapAttributes {
             String label,
             String icon,
             int priority,
+            int level,
             CustomColor labelColor,
             TextShadow labelShadow,
             MapVisibility labelVisibility,
@@ -32,6 +34,7 @@ public class JsonAttributes implements MapAttributes {
         this.label = label;
         this.icon = icon;
         this.priority = priority;
+        this.level = level;
         this.labelColor = labelColor;
         this.labelShadow = labelShadow;
         this.labelVisibility = labelVisibility;
@@ -52,6 +55,11 @@ public class JsonAttributes implements MapAttributes {
     @Override
     public int getPriority() {
         return priority;
+    }
+
+    @Override
+    public int getLevel() {
+        return level;
     }
 
     @Override

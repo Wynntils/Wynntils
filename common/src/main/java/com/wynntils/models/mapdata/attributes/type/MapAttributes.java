@@ -20,6 +20,9 @@ public interface MapAttributes {
     // 0 means no value specified; inherit
     int getPriority();
 
+    // 0 means no information is available, or suitable for all combat levels
+    int getLevel();
+
     MapVisibility getLabelVisibility();
 
     CustomColor getLabelColor();

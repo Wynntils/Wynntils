@@ -27,6 +27,11 @@ public abstract class AbstractMapAttributes implements MapAttributes {
     }
 
     @Override
+    public int getLevel() {
+        return 0;
+    }
+
+    @Override
     public MapVisibility getLabelVisibility() {
         return null;
     }

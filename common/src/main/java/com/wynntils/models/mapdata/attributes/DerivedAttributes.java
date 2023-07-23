@@ -30,6 +30,11 @@ public abstract class DerivedAttributes implements MapAttributes {
     }
 
     @Override
+    public int getLevel() {
+        return getAttribute(MapAttributes::getLevel);
+    }
+
+    @Override
     public MapVisibility getLabelVisibility() {
         return getAttribute(MapAttributes::getLabelVisibility);
     }

@@ -16,6 +16,7 @@ import com.wynntils.core.net.event.NetResultProcessedEvent;
 import com.wynntils.core.persisted.Persisted;
 import com.wynntils.core.persisted.storage.Storage;
 import com.wynntils.models.mapdata.providers.builtin.CombatListProvider;
+import com.wynntils.models.mapdata.providers.builtin.PlaceListProvider;
 import com.wynntils.models.mapdata.providers.builtin.ServiceListProvider;
 import com.wynntils.services.map.pois.CombatPoi;
 import com.wynntils.services.map.pois.CustomPoi;
@@ -181,6 +182,7 @@ public class PoiService extends Service {
             PlacesProfile places = WynntilsMod.GSON.fromJson(reader, PlacesProfile.class);
             for (Label label : places.labels) {
                 labelPois.add(new LabelPoi(label));
+                PlaceListProvider.registerFeature(label);
             }
         });
     }
