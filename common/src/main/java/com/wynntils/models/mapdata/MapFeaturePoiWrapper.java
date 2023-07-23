@@ -71,10 +71,7 @@ public class MapFeaturePoiWrapper implements Poi {
         }
 
         String iconId = attributes.getIconId();
-        if (iconId.equals(MapIcon.NO_ICON_ID)) {
-            iconId = null;
-        }
-        if (iconId != null) {
+        if (hasIcon(iconId)) {
             MapIcon icon = Models.MapData.getIcon(iconId);
 
             float width = icon.width() * modifier;
@@ -99,9 +96,9 @@ public class MapFeaturePoiWrapper implements Poi {
 
         String label = attributes.getLabel();
 
-        if (label != null) {
+        if (hasLabel(label)) {
             // If we have an icon, draw label below
-            int yOffset = iconId != null ? 15 : 0;
+            int yOffset = hasIcon(iconId) ? 15 : 0;
 
             poseStack.pushPose();
             poseStack.translate(renderX, renderY + yOffset, getDisplayPriority().ordinal());
@@ -151,6 +148,14 @@ public class MapFeaturePoiWrapper implements Poi {
         }
     }
 
+    private boolean hasIcon(String iconId) {
+        return !(iconId == null || iconId.equals(MapIcon.NO_ICON_ID));
+    }
+
+    private boolean hasLabel(String label) {
+        return label != null && !label.isEmpty();
+    }
+
     private float getIconAlpha(float mapZoom) {
         // FIXME: Depend on icon visibility
         return 1f;
@@ -159,14 +164,15 @@ public class MapFeaturePoiWrapper implements Poi {
     @Override
     public int getWidth(float mapZoom, float scale) {
         String iconId = attributes.getIconId();
-        if (iconId == null && attributes.getLabel() != null) {
+        String label = attributes.getLabel();
+
+        if (!hasIcon(iconId) && hasLabel(label)) {
             // Use label for measurements
             return (int) (FontRenderer.getInstance().getFont().width(attributes.getLabel()) * scale);
         }
 
-        if (iconId == null) return 32;
-
         MapIcon icon = Models.MapData.getIcon(iconId);
+        if (icon == null) return 32;
 
         return (int) (icon.width() * scale);
     }
@@ -174,13 +180,15 @@ public class MapFeaturePoiWrapper implements Poi {
     @Override
     public int getHeight(float mapZoom, float scale) {
         String iconId = attributes.getIconId();
-        if (iconId == null && attributes.getLabel() != null) {
+        String label = attributes.getLabel();
+
+        if (!hasIcon(iconId) && hasLabel(label)) {
             // Use label for measurements
             return (int) (FontRenderer.getInstance().getFont().lineHeight * scale);
         }
-        if (iconId == null) return 32;
 
         MapIcon icon = Models.MapData.getIcon(iconId);
+        if (icon == null) return 32;
 
         return (int) (icon.height() * scale);
     }
