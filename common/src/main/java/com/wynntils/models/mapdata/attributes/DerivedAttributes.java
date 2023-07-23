@@ -26,12 +26,14 @@ public abstract class DerivedAttributes implements MapAttributes {
 
     @Override
     public int getPriority() {
-        return getAttribute(MapAttributes::getPriority);
+        Integer integer = getAttribute(MapAttributes::getPriority);
+        return integer == null ? 0 : integer;
     }
 
     @Override
     public int getLevel() {
-        return getAttribute(MapAttributes::getLevel);
+        Integer integer = getAttribute(MapAttributes::getLevel);
+        return integer == null ? 0 : integer;
     }
 
     @Override
