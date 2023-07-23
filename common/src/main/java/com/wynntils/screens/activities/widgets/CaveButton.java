@@ -7,7 +7,7 @@ package com.wynntils.screens.activities.widgets;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.wynntils.core.components.Models;
 import com.wynntils.core.text.StyledText;
-import com.wynntils.models.activities.CaveInfo;
+import com.wynntils.models.activities.caves.CaveInfo;
 import com.wynntils.models.activities.type.ActivityType;
 import com.wynntils.screens.activities.WynntilsCaveScreen;
 import com.wynntils.screens.base.TooltipProvider;

@@ -8,7 +8,7 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.components.Models;
 import com.wynntils.core.text.StyledText;
-import com.wynntils.models.quests.event.DialogueHistoryReloadedEvent;
+import com.wynntils.models.activities.event.DialogueHistoryReloadedEvent;
 import com.wynntils.screens.activities.widgets.QuestsPageButton;
 import com.wynntils.screens.base.WynntilsMenuScreenBase;
 import com.wynntils.screens.base.WynntilsPagedScreen;
@@ -69,7 +69,7 @@ public final class WynntilsDialogueHistoryScreen extends WynntilsMenuScreenBase 
 
     @Override
     protected void doInit() {
-        Models.Quest.rescanDialogueHistory();
+        Models.Activity.rescanDialogueHistory();
 
         this.addRenderableWidget(new BackButton(
                 (int) ((Texture.QUEST_BOOK_BACKGROUND.width() / 2f - 16) / 2f),
@@ -83,7 +83,7 @@ public final class WynntilsDialogueHistoryScreen extends WynntilsMenuScreenBase 
                 (int) (Texture.RELOAD_BUTTON.width() / 2 / 1.7f),
                 (int) (Texture.RELOAD_BUTTON.height() / 1.7f),
                 "dialogue",
-                Models.Quest::rescanDialogueHistory));
+                Models.Activity::rescanDialogueHistory));
         this.addRenderableWidget(new PageSelectorButton(
                 Texture.QUEST_BOOK_BACKGROUND.width() / 2 + 50 - Texture.FORWARD_ARROW.width() / 2,
                 Texture.QUEST_BOOK_BACKGROUND.height() - 25,
@@ -200,7 +200,7 @@ public final class WynntilsDialogueHistoryScreen extends WynntilsMenuScreenBase 
 
     @SubscribeEvent
     public void onDialogueReloaded(DialogueHistoryReloadedEvent event) {
-        this.setDialogues(Models.Quest.getDialogueHistory());
+        this.setDialogues(Models.Activity.getDialogueHistory());
     }
 
     private void renderTooltip(PoseStack poseStack, int mouseX, int mouseY) {

@@ -7,7 +7,7 @@ package com.wynntils.screens.activities.widgets;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.wynntils.core.components.Models;
 import com.wynntils.core.text.StyledText;
-import com.wynntils.models.quests.QuestInfo;
+import com.wynntils.models.activities.quests.QuestInfo;
 import com.wynntils.screens.activities.WynntilsQuestBookScreen;
 import com.wynntils.screens.base.widgets.WynntilsButton;
 import com.wynntils.screens.maps.MainMapScreen;

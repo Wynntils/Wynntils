@@ -9,7 +9,7 @@ import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.components.Models;
 import com.wynntils.core.text.StyledText;
 import com.wynntils.mc.event.MenuEvent;
-import com.wynntils.models.activities.CaveInfo;
+import com.wynntils.models.activities.caves.CaveInfo;
 import com.wynntils.models.activities.event.ActivityTrackerUpdatedEvent;
 import com.wynntils.models.activities.event.ActivityUpdatedEvent;
 import com.wynntils.models.activities.type.ActivitySortOrder;
