@@ -2,7 +2,7 @@
  * Copyright © Wynntils 2022.
  * This file is released under AGPLv3. See LICENSE for full license details.
  */
-package com.wynntils.screens.questbook.widgets;
+package com.wynntils.screens.activities.widgets;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.wynntils.screens.base.TextboxScreen;

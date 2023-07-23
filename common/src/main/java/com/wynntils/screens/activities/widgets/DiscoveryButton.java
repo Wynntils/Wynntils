@@ -2,14 +2,14 @@
  * Copyright © Wynntils 2022.
  * This file is released under AGPLv3. See LICENSE for full license details.
  */
-package com.wynntils.screens.discoveries.widgets;
+package com.wynntils.screens.activities.widgets;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.wynntils.core.components.Models;
 import com.wynntils.core.text.StyledText;
+import com.wynntils.models.activities.discoveries.DiscoveryInfo;
 import com.wynntils.models.activities.type.ActivitySortOrder;
-import com.wynntils.models.discoveries.DiscoveryInfo;
-import com.wynntils.models.discoveries.type.DiscoveryType;
+import com.wynntils.models.activities.type.DiscoveryType;
 import com.wynntils.screens.base.TooltipProvider;
 import com.wynntils.screens.base.widgets.WynntilsButton;
 import com.wynntils.utils.colors.CommonColors;
