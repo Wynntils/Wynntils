@@ -1,9 +1,21 @@
+## [0.0.3-alpha.182](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.181...v0.0.3-alpha.182) (2023-07-23)
+
+
+### New Features
+
+* Add cave support to Wynntils book ([#1798](https://github.com/Wynntils/Artemis/issues/1798)) ([36b1472](https://github.com/Wynntils/Artemis/commit/36b147267434faa6904ec34c4ac7f5cace596dfa))
+
 ## [0.0.3-alpha.181](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.180...v0.0.3-alpha.181) (2023-07-23)
 
 
 ### Bug Fixes
 
 * Annotate lootrun tomes correctly ([#1804](https://github.com/Wynntils/Artemis/issues/1804)) ([51ca7a7](https://github.com/Wynntils/Artemis/commit/51ca7a768d54126203f7fc6cf9b2d53e8e40d3f2))
+
+
+### Miscellaneous Chores
+
+* **release:** v0.0.3-alpha.181 [skip ci] ([90ba22d](https://github.com/Wynntils/Artemis/commit/90ba22d7e74ca5bf6ef2757c87745baee0c638e4))
 
 ## [0.0.3-alpha.180](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.179...v0.0.3-alpha.180) (2023-07-23)
 
@@ -40,16 +52,4 @@
 ### Miscellaneous Chores
 
 * **release:** v0.0.3-alpha.178 [skip ci] ([902c72d](https://github.com/Wynntils/Artemis/commit/902c72d277c268ecfbff77904af85fd70d563fd0))
-
-## [0.0.3-alpha.177](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.176...v0.0.3-alpha.177) (2023-07-22)
-
-
-### Bug Fixes
-
-* Challenge rewards does not block mythics or favourites ([#1803](https://github.com/Wynntils/Artemis/issues/1803)) ([bbfeda7](https://github.com/Wynntils/Artemis/commit/bbfeda750ff31ce8b22b40dd058360deb19b6234))
-
-
-### Miscellaneous Chores
-
-* **release:** v0.0.3-alpha.177 [skip ci] ([9acdf4d](https://github.com/Wynntils/Artemis/commit/9acdf4d1870e2dbf2ce532d49fe996be50b6d427))
 
