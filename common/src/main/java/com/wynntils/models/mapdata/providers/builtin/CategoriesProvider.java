@@ -6,7 +6,9 @@ package com.wynntils.models.mapdata.providers.builtin;
 
 import com.wynntils.models.mapdata.attributes.AbstractMapAttributes;
 import com.wynntils.models.mapdata.attributes.type.MapAttributes;
+import com.wynntils.models.mapdata.attributes.type.MapIcon;
 import com.wynntils.models.mapdata.type.MapCategory;
+import com.wynntils.services.map.Label;
 import com.wynntils.services.map.type.CombatKind;
 import com.wynntils.services.map.type.ServiceKind;
 import com.wynntils.utils.colors.CommonColors;
@@ -24,6 +26,10 @@ public class CategoriesProvider extends BuiltInProvider {
         }
         for (CombatKind kind : CombatKind.values()) {
             PROVIDED_CATEGORIES.add(new CombatCategory(kind));
+        }
+
+        for (Label.LabelLayer layer : Label.LabelLayer.values()) {
+            PROVIDED_CATEGORIES.add(new PlaceCategory(layer));
         }
         PROVIDED_CATEGORIES.add(new WynntilsCategory());
     }
@@ -146,6 +152,48 @@ public class CategoriesProvider extends BuiltInProvider {
                 @Override
                 public CustomColor getLabelColor() {
                     return CommonColors.GREEN;
+                }
+            };
+        }
+    }
+
+    private static final class PlaceCategory implements MapCategory {
+        private final Label.LabelLayer layer;
+
+        private PlaceCategory(Label.LabelLayer layer) {
+            this.layer = layer;
+        }
+
+        @Override
+        public String getCategoryId() {
+            return "wynntils:place:" + layer.getId();
+        }
+
+        @Override
+        public String getName() {
+            return layer.getName();
+        }
+
+        @Override
+        public MapAttributes getAttributes() {
+            return new AbstractMapAttributes() {
+                @Override
+                public String getIconId() {
+                    return MapIcon.NO_ICON_ID;
+                }
+
+                @Override
+                public CustomColor getLabelColor() {
+                    return switch (layer) {
+                        case PROVINCE -> CommonColors.AQUA;
+                        case CITY -> CommonColors.YELLOW;
+                        case TOWN_OR_PLACE -> CommonColors.WHITE;
+                    };
+                }
+
+                @Override
+                public int getPriority() {
+                    return 700;
                 }
             };
         }

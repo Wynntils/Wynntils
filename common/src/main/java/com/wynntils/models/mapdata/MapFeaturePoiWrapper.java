@@ -17,6 +17,7 @@ import com.wynntils.utils.colors.CommonColors;
 import com.wynntils.utils.colors.CustomColor;
 import com.wynntils.utils.mc.type.PoiLocation;
 import com.wynntils.utils.render.FontRenderer;
+import com.wynntils.utils.render.buffered.BufferedFontRenderer;
 import com.wynntils.utils.render.buffered.BufferedRenderUtils;
 import com.wynntils.utils.render.type.HorizontalAlignment;
 import com.wynntils.utils.render.type.TextShadow;
@@ -62,41 +63,49 @@ public class MapFeaturePoiWrapper implements Poi {
             float scale,
             float mapZoom) {
         float modifier = scale;
+        float labelAlpha = 0.9f;
 
         if (hovered) {
             modifier *= 1.05;
+            labelAlpha = 1.0f;
         }
 
         String iconId = attributes.getIconId();
-        if (iconId == null) {
-            iconId = FALLBACK_ICON_ID;
+        if (iconId.equals(MapIcon.NO_ICON_ID)) {
+            iconId = null;
+        }
+        if (iconId != null) {
+            MapIcon icon = Models.MapData.getIcon(iconId);
+
+            float width = icon.width() * modifier;
+            float height = icon.height() * modifier;
+
+            CustomColor iconColor = attributes.getIconColor();
+            if (iconColor == null) {
+                iconColor = CommonColors.WHITE;
+            }
+            BufferedRenderUtils.drawColoredTexturedRect(
+                    poseStack,
+                    bufferSource,
+                    icon.getResourceLocation(),
+                    iconColor,
+                    this.getIconAlpha(mapZoom),
+                    renderX - width / 2,
+                    renderY - height / 2,
+                    getDisplayPriority().ordinal(), // z-index for rendering
+                    width,
+                    height);
         }
 
-        MapIcon icon = Models.MapData.getIcon(iconId);
+        String label = attributes.getLabel();
 
-        float width = icon.width() * modifier;
-        float height = icon.height() * modifier;
-
-        CustomColor iconColor = attributes.getIconColor();
-        if (iconColor == null) {
-            iconColor = CommonColors.WHITE;
-        }
-        BufferedRenderUtils.drawColoredTexturedRect(
-                poseStack,
-                bufferSource,
-                icon.getResourceLocation(),
-                iconColor,
-                this.getIconAlpha(mapZoom),
-                renderX - width / 2,
-                renderY - height / 2,
-                getDisplayPriority().ordinal(), // z-index for rendering
-                width,
-                height);
-
-        if (hovered && attributes.getLabel() != null) {
-            // Render name if hovered
+        if (label != null) {
+            // If we have an icon, draw label below
+            int yOffset = iconId != null ? 15 : 0;
 
             poseStack.pushPose();
+            poseStack.translate(renderX, renderY + yOffset, getDisplayPriority().ordinal());
+            poseStack.scale(modifier, modifier, modifier);
 
             CustomColor labelColor = attributes.getLabelColor();
             if (labelColor == null) {
@@ -106,16 +115,37 @@ public class MapFeaturePoiWrapper implements Poi {
             if (labelShadow == null) {
                 labelShadow = TextShadow.OUTLINE;
             }
-            FontRenderer.getInstance()
+            CustomColor color = labelColor.withAlpha(labelAlpha);
+
+            BufferedFontRenderer.getInstance()
                     .renderText(
                             poseStack,
-                            StyledText.fromString(attributes.getLabel()),
-                            renderX,
-                            15 + renderY,
-                            labelColor,
+                            bufferSource,
+                            StyledText.fromString(label),
+                            0,
+                            0,
+                            color,
                             HorizontalAlignment.CENTER,
                             VerticalAlignment.MIDDLE,
-                            labelShadow);
+                            labelShadow,
+                            1f);
+            if (hovered) {
+                int cLevel = attributes.getLevel();
+                if (cLevel != 0) {
+                    BufferedFontRenderer.getInstance()
+                            .renderText(
+                                    poseStack,
+                                    bufferSource,
+                                    StyledText.fromString("[Lv " + cLevel + "]"),
+                                    0,
+                                    10,
+                                    color,
+                                    HorizontalAlignment.CENTER,
+                                    VerticalAlignment.MIDDLE,
+                                    labelShadow,
+                                    1f);
+                }
+            }
 
             poseStack.popPose();
         }
@@ -129,6 +159,11 @@ public class MapFeaturePoiWrapper implements Poi {
     @Override
     public int getWidth(float mapZoom, float scale) {
         String iconId = attributes.getIconId();
+        if (iconId == null && attributes.getLabel() != null) {
+            // Use label for measurements
+            return (int) (FontRenderer.getInstance().getFont().width(attributes.getLabel()) * scale);
+        }
+
         if (iconId == null) return 32;
 
         MapIcon icon = Models.MapData.getIcon(iconId);
@@ -139,6 +174,10 @@ public class MapFeaturePoiWrapper implements Poi {
     @Override
     public int getHeight(float mapZoom, float scale) {
         String iconId = attributes.getIconId();
+        if (iconId == null && attributes.getLabel() != null) {
+            // Use label for measurements
+            return (int) (FontRenderer.getInstance().getFont().lineHeight * scale);
+        }
         if (iconId == null) return 32;
 
         MapIcon icon = Models.MapData.getIcon(iconId);
