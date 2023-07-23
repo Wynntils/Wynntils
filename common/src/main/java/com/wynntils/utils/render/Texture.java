@@ -67,6 +67,9 @@ public enum Texture {
     QUEST_FINISHED("quest_finished_icon.png", 11, 7),
     QUEST_STARTED("quest_started_icon.png", 7, 7),
 
+    // Caves screen
+    CAVE_AVALIABLE("cave_avaliable.png", 7, 7),
+
     // Icons
     DISCOVERIES_ICON("discoveries_icon.png", 16, 32),
     GUIDES_ICON("guides_icon.png", 18, 34),
