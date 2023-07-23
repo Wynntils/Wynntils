@@ -26,6 +26,8 @@ import net.minecraft.client.renderer.MultiBufferSource;
 
 public class MapFeaturePoiWrapper implements Poi {
     public static final String FALLBACK_ICON_ID = "wynntils:icon:symbols:waypoint";
+    public static final int SPACING = 2;
+    public static final float TEXT_SCALE = 1f;
     private final MapFeature feature;
     private final MapAttributes attributes;
 
@@ -62,47 +64,47 @@ public class MapFeaturePoiWrapper implements Poi {
             boolean hovered,
             float scale,
             float mapZoom) {
-        float modifier = scale;
-        float labelAlpha = 0.9f;
+        float renderScale = hovered ? scale * 1.05f : scale;
+        // this is the default alpha for labels
+        float alpha = hovered ? 1f : 0.9f;
+        int labelHeight = getLabelHeight(renderScale);
 
-        if (hovered) {
-            modifier *= 1.05;
-            labelAlpha = 1.0f;
-        }
+        String iconId = attributes.getIconId();
+        String label = attributes.getLabel();
+        int level = attributes.getLevel();
 
         int yOffset = 0;
 
         poseStack.pushPose();
         // z-index for rendering
         poseStack.translate(renderX, renderY, getDisplayPriority().ordinal());
-        poseStack.scale(modifier, modifier, modifier);
+        poseStack.scale(renderScale, renderScale, renderScale);
 
-        String iconId = attributes.getIconId();
         if (hasIcon(iconId)) {
             MapIcon icon = Models.MapData.getIcon(iconId);
 
-            float width = icon.width();
-            float height = icon.height();
+            float iconWidth = icon.width();
+            float iconHeight = icon.height();
 
             CustomColor iconColor = attributes.getIconColor();
             if (iconColor == null) {
                 iconColor = CommonColors.WHITE;
             }
+            CustomColor color = iconColor.withAlpha(alpha);
+
             BufferedRenderUtils.drawColoredTexturedRect(
                     poseStack,
                     bufferSource,
                     icon.getResourceLocation(),
-                    iconColor,
+                    color,
                     this.getIconAlpha(mapZoom),
-                    0 - width / 2,
-                    yOffset - height / 2,
+                    0 - iconWidth / 2,
+                    yOffset - iconHeight / 2,
                     0,
-                    width,
-                    height);
-            yOffset += height / 2 + getLabelHeight(modifier) / 2 + 2;
+                    iconWidth,
+                    iconHeight);
+            yOffset += (iconHeight + labelHeight) / 2 + SPACING;
         }
-
-        String label = attributes.getLabel();
 
         if (hasLabel(label)) {
             CustomColor labelColor = attributes.getLabelColor();
@@ -113,9 +115,7 @@ public class MapFeaturePoiWrapper implements Poi {
             if (labelShadow == null) {
                 labelShadow = TextShadow.OUTLINE;
             }
-            CustomColor color = labelColor.withAlpha(labelAlpha);
-
-            float height = getLabelHeight(modifier);
+            CustomColor color = labelColor.withAlpha(alpha);
 
             BufferedFontRenderer.getInstance()
                     .renderText(
@@ -128,12 +128,11 @@ public class MapFeaturePoiWrapper implements Poi {
                             HorizontalAlignment.CENTER,
                             VerticalAlignment.MIDDLE,
                             labelShadow,
-                            1f);
-            yOffset += height / 2 + getLabelHeight(modifier) / 2 + 2;
+                            TEXT_SCALE);
+            yOffset += labelHeight + SPACING;
         }
 
-        if (hovered && attributes.getLevel() != 0) {
-            int cLevel = attributes.getLevel();
+        if (hovered && level != 0) {
             CustomColor labelColor = attributes.getLabelColor();
             if (labelColor == null) {
                 labelColor = CommonColors.WHITE;
@@ -142,20 +141,20 @@ public class MapFeaturePoiWrapper implements Poi {
             if (labelShadow == null) {
                 labelShadow = TextShadow.OUTLINE;
             }
-            CustomColor color = labelColor.withAlpha(labelAlpha);
+            CustomColor color = labelColor.withAlpha(alpha);
 
             BufferedFontRenderer.getInstance()
                     .renderText(
                             poseStack,
                             bufferSource,
-                            StyledText.fromString("[Lv " + cLevel + "]"),
+                            StyledText.fromString("[Lv " + level + "]"),
                             0,
                             yOffset,
                             color,
                             HorizontalAlignment.CENTER,
                             VerticalAlignment.MIDDLE,
                             labelShadow,
-                            1f);
+                            TEXT_SCALE);
         }
 
         poseStack.popPose();
@@ -207,7 +206,7 @@ public class MapFeaturePoiWrapper implements Poi {
     }
 
     private int getLabelHeight(float scale) {
-        return (int) (FontRenderer.getInstance().getFont().lineHeight * scale);
+        return (int) (FontRenderer.getInstance().getFont().lineHeight * scale * TEXT_SCALE);
     }
 
     @Override
