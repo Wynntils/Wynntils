@@ -89,10 +89,13 @@ public final class WynntilsItemGuideScreen extends WynntilsListScreen<GuideGearI
         renderTooltip(poseStack, mouseX, mouseY);
     }
 
-    private void renderTooltip(PoseStack poseStack, int mouseX, int mouseY) {
+    @Override
+    protected void renderTooltip(PoseStack poseStack, int mouseX, int mouseY) {
         if (hovered instanceof GuideGearItemStackButton guideGearItemStackButton) {
             this.renderTooltip(poseStack, guideGearItemStackButton.getItemStack(), mouseX, mouseY);
         }
+
+        super.renderTooltip(poseStack, mouseX, mouseY);
     }
 
     private void renderItemsHeader(PoseStack poseStack) {

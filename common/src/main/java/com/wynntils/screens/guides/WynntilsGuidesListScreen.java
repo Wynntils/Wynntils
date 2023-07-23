@@ -16,11 +16,7 @@ import com.wynntils.screens.guides.powder.WynntilsPowderGuideScreen;
 import com.wynntils.screens.guides.widgets.GuidesButton;
 import com.wynntils.screens.wynntilsmenu.WynntilsMenuScreen;
 import com.wynntils.utils.StringUtils;
-import com.wynntils.utils.colors.CommonColors;
-import com.wynntils.utils.render.FontRenderer;
 import com.wynntils.utils.render.Texture;
-import com.wynntils.utils.render.type.HorizontalAlignment;
-import com.wynntils.utils.render.type.TextShadow;
 import java.util.List;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.resources.language.I18n;
@@ -84,26 +80,11 @@ public final class WynntilsGuidesListScreen extends WynntilsListScreen<Screen, G
 
         renderWidgets(poseStack, mouseX, mouseY, partialTick);
 
-        renderDescription(poseStack, I18n.get("screens.wynntils.wynntilsGuides.screenDescription"));
+        renderDescription(poseStack, I18n.get("screens.wynntils.wynntilsGuides.screenDescription"), "");
 
         renderPageInfo(poseStack, currentPage + 1, maxPage + 1);
 
         poseStack.popPose();
-    }
-
-    @Override
-    protected void renderDescription(PoseStack poseStack, String description) {
-        FontRenderer.getInstance()
-                .renderAlignedTextInBox(
-                        poseStack,
-                        StyledText.fromString(description),
-                        20,
-                        Texture.QUEST_BOOK_BACKGROUND.width() / 2f - 10,
-                        80,
-                        Texture.QUEST_BOOK_BACKGROUND.width() / 2f - 30,
-                        CommonColors.BLACK,
-                        HorizontalAlignment.LEFT,
-                        TextShadow.NONE);
     }
 
     @Override

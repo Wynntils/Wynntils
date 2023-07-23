@@ -90,14 +90,26 @@ public abstract class WynntilsMenuScreenBase extends WynntilsScreen {
         poseStack.popPose();
     }
 
-    protected void renderDescription(PoseStack poseStack, String description) {
+    protected void renderDescription(PoseStack poseStack, String description, String filterHelper) {
         FontRenderer.getInstance()
                 .renderAlignedTextInBox(
                         poseStack,
                         StyledText.fromString(description),
                         20,
                         Texture.QUEST_BOOK_BACKGROUND.width() / 2f - 10,
-                        140,
+                        80,
+                        Texture.QUEST_BOOK_BACKGROUND.width() / 2f - 30,
+                        CommonColors.BLACK,
+                        HorizontalAlignment.LEFT,
+                        TextShadow.NONE);
+
+        FontRenderer.getInstance()
+                .renderAlignedTextInBox(
+                        poseStack,
+                        StyledText.fromString(filterHelper),
+                        20,
+                        Texture.QUEST_BOOK_BACKGROUND.width() / 2f - 10,
+                        105,
                         Texture.QUEST_BOOK_BACKGROUND.width() / 2f - 30,
                         CommonColors.BLACK,
                         HorizontalAlignment.LEFT,

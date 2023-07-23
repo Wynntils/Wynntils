@@ -8,7 +8,7 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.components.Models;
 import com.wynntils.core.text.StyledText;
-import com.wynntils.models.quests.event.QuestBookReloadedEvent;
+import com.wynntils.models.quests.event.DialogueHistoryReloadedEvent;
 import com.wynntils.screens.base.WynntilsMenuScreenBase;
 import com.wynntils.screens.base.WynntilsPagedScreen;
 import com.wynntils.screens.base.widgets.BackButton;
@@ -82,6 +82,7 @@ public final class WynntilsDialogueHistoryScreen extends WynntilsMenuScreenBase 
                 11,
                 (int) (Texture.RELOAD_BUTTON.width() / 2 / 1.7f),
                 (int) (Texture.RELOAD_BUTTON.height() / 1.7f),
+                "dialogue",
                 Models.Quest::rescanDialogueHistory));
         this.addRenderableWidget(new PageSelectorButton(
                 Texture.QUEST_BOOK_BACKGROUND.width() / 2 + 50 - Texture.FORWARD_ARROW.width() / 2,
@@ -140,7 +141,7 @@ public final class WynntilsDialogueHistoryScreen extends WynntilsMenuScreenBase 
             renderCurrentPage(poseStack);
         }
 
-        renderDescription(poseStack, I18n.get("screens.wynntils.wynntilsDialogueHistory.description"));
+        renderDescription(poseStack, I18n.get("screens.wynntils.wynntilsDialogueHistory.description"), "");
 
         renderPageInfo(poseStack, getCurrentPage() + 1, getMaxPage() + 1);
 
@@ -198,7 +199,7 @@ public final class WynntilsDialogueHistoryScreen extends WynntilsMenuScreenBase 
     }
 
     @SubscribeEvent
-    public void onQuestsReloaded(QuestBookReloadedEvent.DialogueHistoryReloaded event) {
+    public void onDialogueReloaded(DialogueHistoryReloadedEvent event) {
         this.setDialogues(Models.Quest.getDialogueHistory());
     }
 
