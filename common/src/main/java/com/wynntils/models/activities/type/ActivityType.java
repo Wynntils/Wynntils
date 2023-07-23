@@ -33,7 +33,7 @@ public enum ActivityType {
 
     public static ActivityType from(String colorCode, String displayName) {
         for (ActivityType type : values()) {
-            if (type.getColor().equals(colorCode) && type.getDisplayName().equals(displayName)) return type;
+            if (type.getColorCode().equals(colorCode) && type.getDisplayName().equals(displayName)) return type;
         }
 
         return null;
@@ -59,7 +59,7 @@ public enum ActivityType {
         return groupName;
     }
 
-    public String getColor() {
+    public String getColorCode() {
         return color.isEmpty() ? "" : String.valueOf(color.get().getChar());
     }
 
