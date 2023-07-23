@@ -1,4 +1,16 @@
+## [0.0.3-alpha.184](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.183...v0.0.3-alpha.184) (2023-07-23)
+
+
+### Code Refactoring
+
+* Consolidate different activities in one place ([#1812](https://github.com/Wynntils/Artemis/issues/1812)) ([48a98c0](https://github.com/Wynntils/Artemis/commit/48a98c011ea5dfdff044d6c8dd1efcf64048ec80))
+
 ## [0.0.3-alpha.183](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.182...v0.0.3-alpha.183) (2023-07-23)
+
+
+### Miscellaneous Chores
+
+* **release:** v0.0.3-alpha.183 [skip ci] ([136ff30](https://github.com/Wynntils/Artemis/commit/136ff30cfe23da9ab0502dc6d9ed89cfdb26cdea))
 
 
 ### Code Refactoring
@@ -40,16 +52,4 @@
 ### Miscellaneous Chores
 
 * **release:** v0.0.3-alpha.180 [skip ci] ([1f1a1a7](https://github.com/Wynntils/Artemis/commit/1f1a1a75830ab610a83f0cf1a6803773de511e24))
-
-## [0.0.3-alpha.179](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.178...v0.0.3-alpha.179) (2023-07-22)
-
-
-### Bug Fixes
-
-* Jump buttons appear in emerald pouch/potions ([#1805](https://github.com/Wynntils/Artemis/issues/1805)) ([d7afafc](https://github.com/Wynntils/Artemis/commit/d7afafc553894311355aa8a01b60783846833fc5))
-
-
-### Miscellaneous Chores
-
-* **release:** v0.0.3-alpha.179 [skip ci] ([5da096c](https://github.com/Wynntils/Artemis/commit/5da096c4930e9340923278d3462468369ea2a95a))
 
