@@ -122,10 +122,13 @@ public final class WynntilsEmeraldPouchGuideScreen
         poseStack.popPose();
     }
 
-    private void renderTooltip(PoseStack poseStack, int mouseX, int mouseY) {
+    @Override
+    protected void renderTooltip(PoseStack poseStack, int mouseX, int mouseY) {
         if (hovered instanceof GuideEmeraldPouchItemStackButton guideEmeraldPouchItemStack) {
             this.renderTooltip(poseStack, guideEmeraldPouchItemStack.getItemStack(), mouseX, mouseY);
         }
+
+        super.renderTooltip(poseStack, mouseX, mouseY);
     }
 
     private void renderItemsHeader(PoseStack poseStack) {

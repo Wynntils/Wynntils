@@ -114,10 +114,13 @@ public final class WynntilsIngredientGuideScreen
         poseStack.popPose();
     }
 
-    private void renderTooltip(PoseStack poseStack, int mouseX, int mouseY) {
+    @Override
+    protected void renderTooltip(PoseStack poseStack, int mouseX, int mouseY) {
         if (hovered instanceof GuideIngredientItemStackButton guideGearItemStack) {
             this.renderTooltip(poseStack, guideGearItemStack.getItemStack(), mouseX, mouseY);
         }
+
+        super.renderTooltip(poseStack, mouseX, mouseY);
     }
 
     private void renderItemsHeader(PoseStack poseStack) {

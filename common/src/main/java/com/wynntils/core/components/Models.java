@@ -10,6 +10,7 @@ import com.wynntils.models.abilities.ShamanMaskModel;
 import com.wynntils.models.abilities.ShamanTotemModel;
 import com.wynntils.models.abilitytree.AbilityTreeModel;
 import com.wynntils.models.activities.ActivityModel;
+import com.wynntils.models.activities.CaveModel;
 import com.wynntils.models.character.CharacterModel;
 import com.wynntils.models.character.CharacterSelectionModel;
 import com.wynntils.models.characterstats.CharacterStatsModel;
@@ -90,6 +91,7 @@ public final class Models {
 
     // Models with dependencies, ordered alphabetically as far as possible
     public static final BombModel Bomb = new BombModel(WorldState);
+    public static final CaveModel Cave = new CaveModel(Activity);
     public static final CombatXpModel CombatXp = new CombatXpModel(WorldState);
     public static final CharacterStatsModel CharacterStats = new CharacterStatsModel(CombatXp);
     public static final FriendsModel Friends = new FriendsModel(WorldState);

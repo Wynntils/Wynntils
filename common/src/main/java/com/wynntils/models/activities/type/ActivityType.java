@@ -61,6 +61,14 @@ public enum ActivityType {
         return String.valueOf(colorCode);
     }
 
+    public boolean isQuest() {
+        return this == QUEST || this == STORYLINE_QUEST || this == MINI_QUEST;
+    }
+
+    public boolean isDiscovery() {
+        return this == SECRET_DISCOVERY || this == WORLD_DISCOVERY || this == TERRITORIAL_DISCOVERY;
+    }
+
     public boolean matchesTracking(ActivityType activityType) {
         // When tracking activities, storyline quests and mini-quests cannot
         // be distinguished from quests

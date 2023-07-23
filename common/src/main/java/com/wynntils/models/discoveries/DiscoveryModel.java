@@ -13,11 +13,11 @@ import com.wynntils.core.net.ApiResponse;
 import com.wynntils.core.net.Download;
 import com.wynntils.core.net.UrlId;
 import com.wynntils.core.text.StyledText;
+import com.wynntils.models.activities.event.ActivityUpdatedEvent;
 import com.wynntils.models.activities.type.ActivityInfo;
 import com.wynntils.models.activities.type.ActivitySortOrder;
 import com.wynntils.models.activities.type.ActivityType;
 import com.wynntils.models.characterstats.CombatXpModel;
-import com.wynntils.models.discoveries.event.DiscoveriesUpdatedEvent;
 import com.wynntils.models.discoveries.profile.DiscoveryProfile;
 import com.wynntils.models.discoveries.type.DiscoveryType;
 import com.wynntils.models.map.CompassModel;
@@ -128,7 +128,7 @@ public final class DiscoveryModel extends Model {
 
         territoryDiscoveries = newDiscoveries;
         territoryDiscoveriesTooltip = progress;
-        WynntilsMod.postEvent(new DiscoveriesUpdatedEvent.Territory());
+        WynntilsMod.postEvent(new ActivityUpdatedEvent(ActivityType.TERRITORIAL_DISCOVERY));
     }
 
     private void updateWorldDiscoveriesFromQuery(List<ActivityInfo> newActivities, List<StyledText> progress) {
@@ -144,7 +144,7 @@ public final class DiscoveryModel extends Model {
 
         worldDiscoveries = newDiscoveries;
         worldDiscoveriesTooltip = progress;
-        WynntilsMod.postEvent(new DiscoveriesUpdatedEvent.World());
+        WynntilsMod.postEvent(new ActivityUpdatedEvent(ActivityType.WORLD_DISCOVERY));
     }
 
     private void updateSecretDiscoveriesFromQuery(List<ActivityInfo> newActivities, List<StyledText> progress) {
@@ -160,7 +160,7 @@ public final class DiscoveryModel extends Model {
 
         secretDiscoveries = newDiscoveries;
         secretDiscoveriesTooltip = progress;
-        WynntilsMod.postEvent(new DiscoveriesUpdatedEvent.Secret());
+        WynntilsMod.postEvent(new ActivityUpdatedEvent(ActivityType.SECRET_DISCOVERY));
     }
 
     private DiscoveryInfo getDiscoveryInfoFromActivity(ActivityInfo activity) {

@@ -233,6 +233,12 @@ public final class ActivityModel extends Model {
         return Models.Quest.getQuestInfoFromName(trackedActivity.trackedName()).orElse(null);
     }
 
+    public CaveInfo getTrackedCaveInfo() {
+        if (trackedActivity == null) return null;
+
+        return Models.Cave.getCaveInfoFromName(trackedActivity.trackedName()).orElse(null);
+    }
+
     void updateTracker(String name, String type, StyledText nextTask) {
         trackedActivity = new TrackedActivity(name, ActivityType.from(type), nextTask);
 
