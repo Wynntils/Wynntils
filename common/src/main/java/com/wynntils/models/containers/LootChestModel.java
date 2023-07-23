@@ -21,12 +21,16 @@ import com.wynntils.models.items.items.game.GearBoxItem;
 import com.wynntils.utils.mc.type.Location;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.EnumMap;
 import java.util.List;
 import java.util.Optional;
+
+import com.wynntils.utils.wynn.WynnItemMatchers;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 
 public final class LootChestModel extends Model {
@@ -36,6 +40,8 @@ public final class LootChestModel extends Model {
     private final Storage<Integer> openedChestCount = new Storage<>(0);
     private final Storage<Integer> dryCount = new Storage<>(0);
     private final Storage<Integer> dryBoxes = new Storage<>(0);
+    private Storage<Integer> dryEmeralds = new Storage<>(0);
+    private Storage<EnumMap<GearTier, Integer>> dryItemTiers = new Storage<>(new EnumMap<>(GearTier.class));
 
     private BlockPos lastChestPos;
     private int nextExpectedLootContainerId = -2;
@@ -87,6 +93,8 @@ public final class LootChestModel extends Model {
         if (event.getContainerId() != nextExpectedLootContainerId) return;
         if (event.getSlot() >= LOOT_CHEST_ITEM_COUNT) return;
 
+        progressItemFound(event, lastChestPos);
+
         ItemStack itemStack = event.getItemStack();
         Optional<GearBoxItem> wynnItem = Models.Item.asWynnItem(itemStack, GearBoxItem.class);
         if (wynnItem.isEmpty()) return;
@@ -102,15 +110,39 @@ public final class LootChestModel extends Model {
                                 openedChestCount.get(),
                                 dryCount.get(),
                                 dryBoxes.get(),
+                                dryEmeralds.get(),
+                                dryItemTiers.get(),
                                 System.currentTimeMillis(),
                                 new Location(lastChestPos)));
                 mythicFinds.touched();
 
                 dryBoxes.store(0);
                 dryCount.store(0);
+                dryEmeralds.store(0);
+                dryItemTiers.store(new EnumMap<>(GearTier.class));
             }
         } else {
             dryBoxes.store(dryBoxes.get() + 1);
+        }
+    }
+
+    private void progressItemFound(ContainerSetSlotEvent event, BlockPos chestPos) {
+        ItemStack itemStack = event.getItemStack();
+        if (itemStack.is(Items.EMERALD)) {
+            dryEmeralds.store(dryEmeralds.get() + itemStack.getCount());
+        }
+        if (WynnItemMatchers.isGearBox(itemStack)) {
+            GearTier gearBoxTier = GearTier.fromComponent(itemStack.getHoverName());
+            if (gearBoxTier == GearTier.MYTHIC) {
+                // we don't store the actual "MYTHIC" in the dry data
+                return;
+            }
+            dryItemTiers.get().merge(gearBoxTier, 1, Integer::sum);
+            dryItemTiers.touched();
+        }
+        if (WynnItemMatchers.isGear(itemStack)) {
+            dryItemTiers.get().merge(GearTier.NORMAL, 1, Integer::sum);
+            dryItemTiers.touched();
         }
     }
 
