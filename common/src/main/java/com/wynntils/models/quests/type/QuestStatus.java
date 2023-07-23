@@ -5,7 +5,7 @@
 package com.wynntils.models.quests.type;
 
 import com.wynntils.models.activities.type.ActivityStatus;
-import com.wynntils.screens.questbook.WynntilsQuestBookScreen;
+import com.wynntils.screens.activities.WynntilsQuestBookScreen;
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
 

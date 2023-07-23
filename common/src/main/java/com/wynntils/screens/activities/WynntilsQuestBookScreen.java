@@ -2,7 +2,7 @@
  * Copyright © Wynntils 2022.
  * This file is released under AGPLv3. See LICENSE for full license details.
  */
-package com.wynntils.screens.questbook;
+package com.wynntils.screens.activities;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.wynntils.core.WynntilsMod;
@@ -14,6 +14,9 @@ import com.wynntils.models.activities.event.ActivityUpdatedEvent;
 import com.wynntils.models.activities.type.ActivitySortOrder;
 import com.wynntils.models.quests.QuestInfo;
 import com.wynntils.models.quests.type.QuestStatus;
+import com.wynntils.screens.activities.widgets.DialogueHistoryButton;
+import com.wynntils.screens.activities.widgets.QuestButton;
+import com.wynntils.screens.activities.widgets.QuestInfoButton;
 import com.wynntils.screens.base.WynntilsListScreen;
 import com.wynntils.screens.base.widgets.BackButton;
 import com.wynntils.screens.base.widgets.FilterButton;
@@ -21,9 +24,6 @@ import com.wynntils.screens.base.widgets.PageSelectorButton;
 import com.wynntils.screens.base.widgets.ReloadButton;
 import com.wynntils.screens.base.widgets.SortOrderWidget;
 import com.wynntils.screens.base.widgets.SortableActivityScreen;
-import com.wynntils.screens.questbook.history.widgets.DialogueHistoryButton;
-import com.wynntils.screens.questbook.widgets.QuestButton;
-import com.wynntils.screens.questbook.widgets.QuestInfoButton;
 import com.wynntils.screens.wynntilsmenu.WynntilsMenuScreen;
 import com.wynntils.utils.StringUtils;
 import com.wynntils.utils.colors.CommonColors;

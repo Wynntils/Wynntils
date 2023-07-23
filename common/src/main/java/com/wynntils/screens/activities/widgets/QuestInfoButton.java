@@ -2,19 +2,17 @@
  * Copyright © Wynntils 2022.
  * This file is released under AGPLv3. See LICENSE for full license details.
  */
-package com.wynntils.screens.questbook.widgets;
+package com.wynntils.screens.activities.widgets;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.wynntils.screens.base.widgets.WynntilsButton;
-import com.wynntils.screens.questbook.WynntilsQuestBookScreen;
-import com.wynntils.utils.mc.McUtils;
 import com.wynntils.utils.render.RenderUtils;
 import com.wynntils.utils.render.Texture;
 import net.minecraft.network.chat.Component;
 
-public class QuestsPageButton extends WynntilsButton {
-    public QuestsPageButton(int x, int y, int width, int height) {
-        super(x, y, width, height, Component.literal("Quests Page Button"));
+public class QuestInfoButton extends WynntilsButton {
+    public QuestInfoButton(int x, int y, int width, int height) {
+        super(x, y, width, height, Component.literal("Quest Info / Mini Quest info"));
     }
 
     @Override
@@ -31,7 +29,5 @@ public class QuestsPageButton extends WynntilsButton {
     }
 
     @Override
-    public void onPress() {
-        McUtils.mc().setScreen(WynntilsQuestBookScreen.create());
-    }
+    public void onPress() {}
 }
