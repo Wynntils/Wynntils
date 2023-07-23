@@ -22,7 +22,7 @@ public class FullFeatureAttributes extends DerivedAttributes {
         // Check if the feature has overridden this attribute
         if (attributes != null) {
             T attribute = getter.apply(attributes);
-            if (attribute != null) {
+            if (attribute != null && !(attribute instanceof Integer i && i == 0)) {
                 return attribute;
             }
         }

@@ -26,7 +26,9 @@ public class FullCategoryAttributes extends DerivedAttributes {
                     .filter(Objects::nonNull);
             Optional<T> attribute =
                     allAttributes.map(getter).filter(Objects::nonNull).findFirst();
-            if (attribute.isPresent()) return attribute.get();
+            if (attribute.isPresent() && !(attribute.get() instanceof Integer i && i == 0)) {
+                return attribute.get();
+            }
         }
 
         return null;
