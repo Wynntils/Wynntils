@@ -44,10 +44,10 @@ public class DiscoveryInfo {
         this.requirements = List.of();
     }
 
-    public static DiscoveryInfo fromContentInfo(ActivityInfo activityInfo) {
+    public static DiscoveryInfo fromActivityInfo(ActivityInfo activityInfo) {
         return new DiscoveryInfo(
                 activityInfo.name(),
-                DiscoveryType.fromContentType(activityInfo.type()),
+                DiscoveryType.fromActivityType(activityInfo.type()),
                 activityInfo.description().orElse(StyledText.EMPTY).getString(),
                 activityInfo.requirements().level().key(),
                 activityInfo.status() == ActivityStatus.COMPLETED);

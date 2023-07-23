@@ -115,14 +115,14 @@ public final class DiscoveryModel extends Model {
         Models.Activity.scanContentBook(ActivityType.TERRITORIAL_DISCOVERY, this::updateTerritoryDiscoveriesFromQuery);
     }
 
-    private void updateTerritoryDiscoveriesFromQuery(List<ActivityInfo> newContent, List<StyledText> progress) {
+    private void updateTerritoryDiscoveriesFromQuery(List<ActivityInfo> newActivities, List<StyledText> progress) {
         List<DiscoveryInfo> newDiscoveries = new ArrayList<>();
-        for (ActivityInfo content : newContent) {
-            if (content.type() != ActivityType.TERRITORIAL_DISCOVERY) {
-                WynntilsMod.warn("Incorrect territory discovery content type recieved: " + content);
+        for (ActivityInfo activity : newActivities) {
+            if (activity.type() != ActivityType.TERRITORIAL_DISCOVERY) {
+                WynntilsMod.warn("Incorrect territory discovery activity type recieved: " + activity);
                 continue;
             }
-            DiscoveryInfo discoveryInfo = getDiscoveryInfoFromContent(content);
+            DiscoveryInfo discoveryInfo = getDiscoveryInfoFromActivity(activity);
             newDiscoveries.add(discoveryInfo);
         }
 
@@ -131,14 +131,14 @@ public final class DiscoveryModel extends Model {
         WynntilsMod.postEvent(new DiscoveriesUpdatedEvent.Territory());
     }
 
-    private void updateWorldDiscoveriesFromQuery(List<ActivityInfo> newContent, List<StyledText> progress) {
+    private void updateWorldDiscoveriesFromQuery(List<ActivityInfo> newActivities, List<StyledText> progress) {
         List<DiscoveryInfo> newDiscoveries = new ArrayList<>();
-        for (ActivityInfo content : newContent) {
-            if (content.type() != ActivityType.WORLD_DISCOVERY) {
-                WynntilsMod.warn("Incorrect discovery content type recieved: " + content);
+        for (ActivityInfo activity : newActivities) {
+            if (activity.type() != ActivityType.WORLD_DISCOVERY) {
+                WynntilsMod.warn("Incorrect discovery activity type recieved: " + activity);
                 continue;
             }
-            DiscoveryInfo discoveryInfo = getDiscoveryInfoFromContent(content);
+            DiscoveryInfo discoveryInfo = getDiscoveryInfoFromActivity(activity);
             newDiscoveries.add(discoveryInfo);
         }
 
@@ -147,14 +147,14 @@ public final class DiscoveryModel extends Model {
         WynntilsMod.postEvent(new DiscoveriesUpdatedEvent.World());
     }
 
-    private void updateSecretDiscoveriesFromQuery(List<ActivityInfo> newContent, List<StyledText> progress) {
+    private void updateSecretDiscoveriesFromQuery(List<ActivityInfo> newActivities, List<StyledText> progress) {
         List<DiscoveryInfo> newDiscoveries = new ArrayList<>();
-        for (ActivityInfo content : newContent) {
-            if (content.type() != ActivityType.SECRET_DISCOVERY) {
-                WynntilsMod.warn("Incorrect secret discovery content type recieved: " + content);
+        for (ActivityInfo activity : newActivities) {
+            if (activity.type() != ActivityType.SECRET_DISCOVERY) {
+                WynntilsMod.warn("Incorrect secret discovery activity type recieved: " + activity);
                 continue;
             }
-            DiscoveryInfo discoveryInfo = getDiscoveryInfoFromContent(content);
+            DiscoveryInfo discoveryInfo = getDiscoveryInfoFromActivity(activity);
             newDiscoveries.add(discoveryInfo);
         }
 
@@ -163,8 +163,8 @@ public final class DiscoveryModel extends Model {
         WynntilsMod.postEvent(new DiscoveriesUpdatedEvent.Secret());
     }
 
-    private DiscoveryInfo getDiscoveryInfoFromContent(ActivityInfo content) {
-        return DiscoveryInfo.fromContentInfo(content);
+    private DiscoveryInfo getDiscoveryInfoFromActivity(ActivityInfo activity) {
+        return DiscoveryInfo.fromActivityInfo(activity);
     }
 
     public List<Component> getDiscoveriesTooltip() {

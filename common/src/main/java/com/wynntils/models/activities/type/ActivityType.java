@@ -62,7 +62,7 @@ public enum ActivityType {
     }
 
     public boolean matchesTracking(ActivityType activityType) {
-        // When tracking content, storyline quests and mini-quests cannot
+        // When tracking activities, storyline quests and mini-quests cannot
         // be distinguished from quests
         return switch (this) {
             case STORYLINE_QUEST, MINI_QUEST -> activityType == this || activityType == QUEST;

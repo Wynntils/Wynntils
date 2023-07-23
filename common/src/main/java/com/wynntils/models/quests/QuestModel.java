@@ -157,15 +157,15 @@ public final class QuestModel extends Model {
         return StringUtils.replaceOnce(name, MINI_QUEST_PREFIX, "");
     }
 
-    private void updateQuestsFromQuery(List<ActivityInfo> newContent, List<StyledText> progress) {
+    private void updateQuestsFromQuery(List<ActivityInfo> newActivities, List<StyledText> progress) {
         List<QuestInfo> newQuests = new ArrayList<>();
 
-        for (ActivityInfo content : newContent) {
-            if (content.type() != ActivityType.QUEST && content.type() != ActivityType.STORYLINE_QUEST) {
-                WynntilsMod.warn("Incorrect quest content type recieved: " + content);
+        for (ActivityInfo activity : newActivities) {
+            if (activity.type() != ActivityType.QUEST && activity.type() != ActivityType.STORYLINE_QUEST) {
+                WynntilsMod.warn("Incorrect quest activity type recieved: " + activity);
                 continue;
             }
-            QuestInfo questInfo = getQuestInfoFromContent(content);
+            QuestInfo questInfo = getQuestInfoFromActivity(activity);
             newQuests.add(questInfo);
         }
         quests = newQuests;
@@ -173,15 +173,15 @@ public final class QuestModel extends Model {
         WynntilsMod.info("Updated quests from query, got " + quests.size() + " quests.");
     }
 
-    private void updateMiniQuestsFromQuery(List<ActivityInfo> newContent, List<StyledText> progress) {
+    private void updateMiniQuestsFromQuery(List<ActivityInfo> newActivities, List<StyledText> progress) {
         List<QuestInfo> newMiniQuests = new ArrayList<>();
 
-        for (ActivityInfo content : newContent) {
-            if (content.type() != ActivityType.MINI_QUEST) {
-                WynntilsMod.warn("Incorrect mini-quest content type recieved: " + content);
+        for (ActivityInfo activity : newActivities) {
+            if (activity.type() != ActivityType.MINI_QUEST) {
+                WynntilsMod.warn("Incorrect mini-quest activity type recieved: " + activity);
                 continue;
             }
-            QuestInfo questInfo = getQuestInfoFromContent(content);
+            QuestInfo questInfo = getQuestInfoFromActivity(activity);
             newMiniQuests.add(questInfo);
         }
 
@@ -190,18 +190,18 @@ public final class QuestModel extends Model {
         WynntilsMod.info("Updated mini-quests from query, got " + miniQuests.size() + " mini-quests.");
     }
 
-    private static QuestInfo getQuestInfoFromContent(ActivityInfo content) {
+    private static QuestInfo getQuestInfoFromActivity(ActivityInfo activity) {
         // We should always have a length, but if not, better fake one than crashing
 
         return new QuestInfo(
-                content.name(),
-                QuestStatus.fromContentStatus(content.status()),
-                QuestLength.fromContentLength(content.length()),
-                content.requirements().level().key(),
-                content.description().orElse(StyledText.EMPTY),
+                activity.name(),
+                QuestStatus.fromActivityStatus(activity.status()),
+                QuestLength.fromActivityLength(activity.length()),
+                activity.requirements().level().key(),
+                activity.description().orElse(StyledText.EMPTY),
                 // FIXME! Additional requirements missing
                 List.of(),
-                content.type() == ActivityType.MINI_QUEST);
+                activity.type() == ActivityType.MINI_QUEST);
     }
 
     void setDialogueHistory(List<List<StyledText>> newDialogueHistory) {

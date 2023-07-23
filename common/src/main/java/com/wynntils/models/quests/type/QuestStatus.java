@@ -23,7 +23,7 @@ public enum QuestStatus {
         this.questBookComponent = component;
     }
 
-    public static QuestStatus fromContentStatus(ActivityStatus activityStatus) {
+    public static QuestStatus fromActivityStatus(ActivityStatus activityStatus) {
         return switch (activityStatus) {
             case STARTED -> STARTED;
             case AVAILABLE -> CAN_START;

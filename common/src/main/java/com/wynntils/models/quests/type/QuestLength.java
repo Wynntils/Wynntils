@@ -22,13 +22,13 @@ public enum QuestLength {
         }
     }
 
-    public static QuestLength fromContentLength(Optional<ActivityLength> contentLength) {
-        if (contentLength.isEmpty()) {
+    public static QuestLength fromActivityLength(Optional<ActivityLength> activityLength) {
+        if (activityLength.isEmpty()) {
             // Use SHORT as fallback... it's as good as any
             return SHORT;
         }
 
-        return switch (contentLength.get()) {
+        return switch (activityLength.get()) {
             case SHORT -> SHORT;
             case MEDIUM -> MEDIUM;
             case LONG -> LONG;

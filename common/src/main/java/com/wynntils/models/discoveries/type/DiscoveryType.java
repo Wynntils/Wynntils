@@ -18,7 +18,7 @@ public enum DiscoveryType {
         this.color = color;
     }
 
-    public static DiscoveryType fromContentType(ActivityType activityType) {
+    public static DiscoveryType fromActivityType(ActivityType activityType) {
         return switch (activityType) {
             case WORLD_DISCOVERY -> WORLD;
             case TERRITORIAL_DISCOVERY -> TERRITORY;

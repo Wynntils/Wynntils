@@ -15,7 +15,7 @@ import com.wynntils.handlers.container.scriptedquery.ScriptedContainerQuery;
 import com.wynntils.handlers.container.type.ContainerContent;
 import com.wynntils.models.activities.type.ActivityInfo;
 import com.wynntils.models.activities.type.ActivityType;
-import com.wynntils.models.items.items.gui.ContentItem;
+import com.wynntils.models.items.items.gui.ActivityItem;
 import com.wynntils.utils.mc.LoreUtils;
 import com.wynntils.utils.mc.McUtils;
 import com.wynntils.utils.wynn.ContainerUtils;
@@ -58,7 +58,7 @@ public class ContentBookQueries {
             ActivityType activityType,
             BiConsumer<List<ActivityInfo>, List<StyledText>> processResult,
             boolean showUpdates) {
-        List<ActivityInfo> newContent = new ArrayList<>();
+        List<ActivityInfo> newActivity = new ArrayList<>();
         List<StyledText> progress = new ArrayList<>();
 
         ScriptedContainerQuery query = ScriptedContainerQuery.builder(
@@ -113,7 +113,7 @@ public class ContentBookQueries {
 
                 // Process first page
                 .reprocess(c -> {
-                    processContentBookPage(c, newContent);
+                    processContentBookPage(c, newActivity);
                     ItemStack itemStack = c.items().get(PROGRESS_SLOT);
                     progress.add(InventoryUtils.getItemName(itemStack));
                     progress.addAll(LoreUtils.getLore(itemStack));
@@ -124,7 +124,7 @@ public class ContentBookQueries {
                         c -> ScriptedContainerQuery.containerHasSlot(
                                 c, NEXT_PAGE_SLOT, Items.GOLDEN_SHOVEL, SCROLL_DOWN_TEXT),
                         QueryStep.clickOnSlot(NEXT_PAGE_SLOT)
-                                .processIncomingContainer(c -> processContentBookPage(c, newContent)))
+                                .processIncomingContainer(c -> processContentBookPage(c, newActivity)))
 
                 // Restore filter to original value
                 .execute(() -> filterLoopCount = 0)
@@ -150,7 +150,7 @@ public class ContentBookQueries {
                         QueryStep.clickOnSlot(CHANGE_VIEW_SLOT))
 
                 // Finally signal we're done
-                .execute(() -> processResult.accept(newContent, progress))
+                .execute(() -> processResult.accept(newActivity, progress))
                 .execute(() -> {
                     if (showUpdates) {
                         Managers.Notification.editMessage(
@@ -180,22 +180,22 @@ public class ContentBookQueries {
         return null;
     }
 
-    private void processContentBookPage(ContainerContent container, List<ActivityInfo> newContent) {
+    private void processContentBookPage(ContainerContent container, List<ActivityInfo> newActivities) {
         for (int slot = 0; slot < 54; slot++) {
             ItemStack itemStack = container.items().get(slot);
-            Optional<ContentItem> contentItemOpt = Models.Item.asWynnItem(itemStack, ContentItem.class);
-            if (contentItemOpt.isEmpty()) continue;
+            Optional<ActivityItem> activityItemOpt = Models.Item.asWynnItem(itemStack, ActivityItem.class);
+            if (activityItemOpt.isEmpty()) continue;
 
-            ActivityInfo activityInfo = contentItemOpt.get().getContentInfo();
+            ActivityInfo activityInfo = activityItemOpt.get().getActivityInfo();
 
-            newContent.add(activityInfo);
+            newActivities.add(activityInfo);
         }
     }
 
     protected void toggleTracking(String name, ActivityType activityType) {
         // We do not want to change filtering when tracking, since we get
         // no chance to reset it
-        ScriptedContainerQuery query = ScriptedContainerQuery.builder("Toggle Content Tracking Query: " + name)
+        ScriptedContainerQuery query = ScriptedContainerQuery.builder("Toggle Activity Tracking Query: " + name)
                 .onError(msg -> {
                     WynntilsMod.warn("Problem querying Content Book for tracking: " + msg);
                     McUtils.sendErrorToClient("Setting tracking in Content Book failed");
@@ -235,7 +235,7 @@ public class ContentBookQueries {
                 // if so, click it, otherwise click on next slot (if available)
                 .repeat(
                         c -> {
-                            int slot = findTrackedContent(c, name, activityType);
+                            int slot = findTrackedActivity(c, name, activityType);
                             // Not found, try to go to next page
                             if (slot == -1) return true;
 
@@ -272,13 +272,13 @@ public class ContentBookQueries {
         query.executeQuery();
     }
 
-    private int findTrackedContent(ContainerContent container, String name, ActivityType activityType) {
+    private int findTrackedActivity(ContainerContent container, String name, ActivityType activityType) {
         for (int slot = 0; slot < 54; slot++) {
             ItemStack itemStack = container.items().get(slot);
-            Optional<ContentItem> contentItemOpt = Models.Item.asWynnItem(itemStack, ContentItem.class);
-            if (contentItemOpt.isEmpty()) continue;
+            Optional<ActivityItem> activityItemOpt = Models.Item.asWynnItem(itemStack, ActivityItem.class);
+            if (activityItemOpt.isEmpty()) continue;
 
-            ActivityInfo activityInfo = contentItemOpt.get().getContentInfo();
+            ActivityInfo activityInfo = activityItemOpt.get().getActivityInfo();
             if (activityInfo.type().matchesTracking(activityType)
                     && activityInfo.name().equals(name)) {
                 // Found it!

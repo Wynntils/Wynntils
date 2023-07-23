@@ -6,19 +6,19 @@ package com.wynntils.models.items.items.gui;
 
 import com.wynntils.models.activities.type.ActivityInfo;
 
-public class ContentItem extends GuiItem {
+public class ActivityItem extends GuiItem {
     private final ActivityInfo activityInfo;
 
-    public ContentItem(ActivityInfo activityInfo) {
+    public ActivityItem(ActivityInfo activityInfo) {
         this.activityInfo = activityInfo;
     }
 
-    public ActivityInfo getContentInfo() {
+    public ActivityInfo getActivityInfo() {
         return activityInfo;
     }
 
     @Override
     public String toString() {
-        return "ContentItem{" + "contentInfo=" + activityInfo + '}';
+        return "ActivityItem{" + "activityInfo=" + activityInfo + '}';
     }
 }

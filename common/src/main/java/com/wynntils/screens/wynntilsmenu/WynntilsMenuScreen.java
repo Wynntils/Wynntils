@@ -64,7 +64,7 @@ public final class WynntilsMenuScreen extends WynntilsMenuScreenBase {
             buttons.add(new ArrayList<>());
         }
 
-        // region Row 1: Content
+        // region Row 1: Content / Activities
         buttons.get(0)
                 .add(new WynntilsMenuButton(
                         Texture.QUEST_BOOK_ICON,
