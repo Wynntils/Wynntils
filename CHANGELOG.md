@@ -1,9 +1,21 @@
+## [0.0.3-alpha.180](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.179...v0.0.3-alpha.180) (2023-07-23)
+
+
+### Bug Fixes
+
+* Fix chat time stamps making ranks appear gray ([#1807](https://github.com/Wynntils/Artemis/issues/1807)) ([bed7669](https://github.com/Wynntils/Artemis/commit/bed7669a86d6f25d32d8133a6f44a2b8b21b96fa))
+
 ## [0.0.3-alpha.179](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.178...v0.0.3-alpha.179) (2023-07-22)
 
 
 ### Bug Fixes
 
 * Jump buttons appear in emerald pouch/potions ([#1805](https://github.com/Wynntils/Artemis/issues/1805)) ([d7afafc](https://github.com/Wynntils/Artemis/commit/d7afafc553894311355aa8a01b60783846833fc5))
+
+
+### Miscellaneous Chores
+
+* **release:** v0.0.3-alpha.179 [skip ci] ([5da096c](https://github.com/Wynntils/Artemis/commit/5da096c4930e9340923278d3462468369ea2a95a))
 
 ## [0.0.3-alpha.178](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.177...v0.0.3-alpha.178) (2023-07-22)
 
@@ -40,16 +52,4 @@
 ### Miscellaneous Chores
 
 * **release:** v0.0.3-alpha.176 [skip ci] ([30412ec](https://github.com/Wynntils/Artemis/commit/30412ecef3c2b3d6b4a551753d9432ae4063707a))
-
-## [0.0.3-alpha.175](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.174...v0.0.3-alpha.175) (2023-07-22)
-
-
-### Bug Fixes
-
-* Fix quest dialogue getting stuck, a Salted special ([#1799](https://github.com/Wynntils/Artemis/issues/1799)) ([7242a4b](https://github.com/Wynntils/Artemis/commit/7242a4b0126e2eef0e44240ecfda54dec684159b))
-
-
-### Miscellaneous Chores
-
-* **release:** v0.0.3-alpha.175 [skip ci] ([f8b15c2](https://github.com/Wynntils/Artemis/commit/f8b15c2eaddb4c6cb3c56eb89c8b9243c4448f08))
 
