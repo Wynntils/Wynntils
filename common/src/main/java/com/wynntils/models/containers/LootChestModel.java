@@ -71,7 +71,7 @@ public final class LootChestModel extends Model {
 
     @SubscribeEvent
     public void onMenuOpened(MenuEvent.MenuOpenedEvent event) {
-        if (Models.Container.isLootChest(
+        if (Models.Container.isLootOrRewardChest(
                 StyledText.fromComponent(event.getTitle()).getStringWithoutFormatting())) {
             nextExpectedLootContainerId = event.getContainerId();
 
