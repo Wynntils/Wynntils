@@ -91,8 +91,7 @@ public final class WynntilsGuidesListScreen extends WynntilsListScreen<Screen, G
         String clipboard = McUtils.mc().keyboardHandler.getClipboard();
 
         if (clipboard == null || !clipboard.startsWith("wynntilsFavorites,")) {
-            McUtils.sendMessageToClient(Component.translatable("screens.wynntils.wynntilsGuides.invalidClipboard")
-                    .withStyle(ChatFormatting.RED));
+            McUtils.sendErrorToClient(I18n.get("screens.wynntils.wynntilsGuides.invalidClipboard"));
         }
 
         ArrayList<String> names = new ArrayList<>(Arrays.asList(clipboard.split(",")));
