@@ -5,12 +5,12 @@
 package com.wynntils.models.gear;
 
 import com.wynntils.core.components.Model;
+import com.wynntils.models.activities.quests.QuestModel;
 import com.wynntils.models.character.CharacterModel;
 import com.wynntils.models.gear.tooltip.GearTooltipBuilder;
 import com.wynntils.models.gear.type.GearInfo;
 import com.wynntils.models.gear.type.GearInstance;
 import com.wynntils.models.items.items.game.GearItem;
-import com.wynntils.models.quests.QuestModel;
 import java.util.List;
 import net.minecraft.world.item.ItemStack;
 

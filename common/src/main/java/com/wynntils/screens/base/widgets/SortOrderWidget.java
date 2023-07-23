@@ -5,7 +5,7 @@
 package com.wynntils.screens.base.widgets;
 
 import com.mojang.blaze3d.vertex.PoseStack;
-import com.wynntils.models.content.type.ContentSortOrder;
+import com.wynntils.models.activities.type.ActivitySortOrder;
 import com.wynntils.screens.base.TooltipProvider;
 import com.wynntils.utils.render.RenderUtils;
 import com.wynntils.utils.render.Texture;
@@ -14,28 +14,28 @@ import java.util.Locale;
 import net.minecraft.network.chat.Component;
 
 public class SortOrderWidget extends WynntilsButton implements TooltipProvider {
-    private final SortableContentScreen sortableContentScreen;
+    private final SortableActivityScreen sortableActivityScreen;
 
-    public SortOrderWidget(int x, int y, int width, int height, SortableContentScreen sortableContentScreen) {
+    public SortOrderWidget(int x, int y, int width, int height, SortableActivityScreen sortableActivityScreen) {
         super(x, y, width, height, Component.literal("Sort Order Button"));
-        this.sortableContentScreen = sortableContentScreen;
+        this.sortableActivityScreen = sortableActivityScreen;
     }
 
     @Override
     public void onPress() {
-        ContentSortOrder contentSortOrder = sortableContentScreen.getContentSortOrder();
+        ActivitySortOrder activitySortOrder = sortableActivityScreen.getActivitySortOrder();
 
-        ContentSortOrder[] contentSortOrders = ContentSortOrder.values();
+        ActivitySortOrder[] activitySortOrders = ActivitySortOrder.values();
 
-        ContentSortOrder newSort = contentSortOrders[(contentSortOrder.ordinal() + 1) % contentSortOrders.length];
+        ActivitySortOrder newSort = activitySortOrders[(activitySortOrder.ordinal() + 1) % activitySortOrders.length];
 
-        sortableContentScreen.setContentSortOrder(newSort);
+        sortableActivityScreen.setActivitySortOrder(newSort);
     }
 
     @Override
     public void renderWidget(PoseStack poseStack, int mouseX, int mouseY, float partialTick) {
         Texture sortTexture =
-                switch (sortableContentScreen.getContentSortOrder()) {
+                switch (sortableActivityScreen.getActivitySortOrder()) {
                     case LEVEL -> Texture.SORT_LEVEL;
                     case DISTANCE -> Texture.SORT_DISTANCE;
                     case ALPHABETIC -> Texture.SORT_ALPHABETICALLY;
@@ -79,11 +79,11 @@ public class SortOrderWidget extends WynntilsButton implements TooltipProvider {
 
     @Override
     public List<Component> getTooltipLines() {
-        ContentSortOrder contentSortOrder = sortableContentScreen.getContentSortOrder();
+        ActivitySortOrder activitySortOrder = sortableActivityScreen.getActivitySortOrder();
         return List.of(
                 Component.translatable("screens.wynntils.wynntilsContentBook.sort.%s.name"
-                        .formatted(contentSortOrder.name().toLowerCase(Locale.ROOT))),
+                        .formatted(activitySortOrder.name().toLowerCase(Locale.ROOT))),
                 Component.translatable("screens.wynntils.wynntilsContentBook.sort.%s.description"
-                        .formatted(contentSortOrder.name().toLowerCase(Locale.ROOT))));
+                        .formatted(activitySortOrder.name().toLowerCase(Locale.ROOT))));
     }
 }

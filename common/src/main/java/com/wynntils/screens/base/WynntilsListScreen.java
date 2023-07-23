@@ -6,13 +6,14 @@ package com.wynntils.screens.base;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.wynntils.core.text.StyledText;
+import com.wynntils.screens.activities.widgets.QuestBookSearchWidget;
 import com.wynntils.screens.base.widgets.TextInputBoxWidget;
 import com.wynntils.screens.base.widgets.WynntilsButton;
-import com.wynntils.screens.questbook.widgets.QuestBookSearchWidget;
 import com.wynntils.utils.MathUtils;
 import com.wynntils.utils.colors.CommonColors;
 import com.wynntils.utils.mc.McUtils;
 import com.wynntils.utils.render.FontRenderer;
+import com.wynntils.utils.render.RenderUtils;
 import com.wynntils.utils.render.Texture;
 import com.wynntils.utils.render.type.HorizontalAlignment;
 import com.wynntils.utils.render.type.TextShadow;
@@ -101,6 +102,25 @@ public abstract class WynntilsListScreen<E, B extends WynntilsButton> extends Wy
                         HorizontalAlignment.CENTER,
                         VerticalAlignment.MIDDLE,
                         TextShadow.NONE);
+    }
+
+    protected void renderTooltip(PoseStack poseStack, int mouseX, int mouseY) {
+        List<Component> tooltipLines = List.of();
+
+        if (this.hovered instanceof TooltipProvider tooltipWidget) {
+            tooltipLines = tooltipWidget.getTooltipLines();
+        }
+
+        if (tooltipLines.isEmpty()) return;
+
+        RenderUtils.drawTooltipAt(
+                poseStack,
+                mouseX,
+                mouseY,
+                100,
+                tooltipLines,
+                FontRenderer.getInstance().getFont(),
+                true);
     }
 
     @Override

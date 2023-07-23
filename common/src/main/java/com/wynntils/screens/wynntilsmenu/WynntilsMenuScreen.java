@@ -9,15 +9,16 @@ import com.wynntils.core.components.Managers;
 import com.wynntils.core.components.Models;
 import com.wynntils.core.text.StyledText;
 import com.wynntils.features.map.MapFeature;
+import com.wynntils.screens.activities.WynntilsCaveScreen;
+import com.wynntils.screens.activities.WynntilsDialogueHistoryScreen;
+import com.wynntils.screens.activities.WynntilsDiscoveriesScreen;
+import com.wynntils.screens.activities.WynntilsQuestBookScreen;
 import com.wynntils.screens.base.WynntilsMenuScreenBase;
-import com.wynntils.screens.discoveries.WynntilsDiscoveriesScreen;
 import com.wynntils.screens.guides.WynntilsGuidesListScreen;
 import com.wynntils.screens.lootrun.WynntilsLootrunsScreen;
 import com.wynntils.screens.maps.MainMapScreen;
 import com.wynntils.screens.maps.PoiManagementScreen;
 import com.wynntils.screens.overlays.selection.OverlaySelectionScreen;
-import com.wynntils.screens.questbook.WynntilsQuestBookScreen;
-import com.wynntils.screens.questbook.history.WynntilsDialogueHistoryScreen;
 import com.wynntils.screens.settings.WynntilsBookSettingsScreen;
 import com.wynntils.screens.wynntilsmenu.widgets.WynntilsMenuButton;
 import com.wynntils.utils.colors.CommonColors;
@@ -64,7 +65,7 @@ public final class WynntilsMenuScreen extends WynntilsMenuScreenBase {
             buttons.add(new ArrayList<>());
         }
 
-        // region Row 1: Content
+        // region Row 1: Content / Activities
         buttons.get(0)
                 .add(new WynntilsMenuButton(
                         Texture.QUEST_BOOK_ICON,
@@ -99,17 +100,16 @@ public final class WynntilsMenuScreen extends WynntilsMenuScreenBase {
                                         .withStyle(ChatFormatting.GREEN))));
         buttons.get(0)
                 .add(new WynntilsMenuButton(
-                        Texture.DIALOGUE_BUTTON,
+                        Texture.CAVE,
                         false,
-                        WynntilsDialogueHistoryScreen.create(),
+                        WynntilsCaveScreen.create(),
                         List.of(
                                 Component.literal("[>] ")
                                         .withStyle(ChatFormatting.GOLD)
-                                        .append(Component.translatable(
-                                                        "screens.wynntils.wynntilsQuestBook.dialogueHistory.name")
+                                        .append(Component.translatable("screens.wynntils.wynntilsCaves.name")
                                                 .withStyle(ChatFormatting.BOLD)
                                                 .withStyle(ChatFormatting.GOLD)),
-                                Component.translatable("screens.wynntils.wynntilsQuestBook.dialogueHistory.description")
+                                Component.translatable("screens.wynntils.wynntilsCaves.description")
                                         .withStyle(ChatFormatting.GRAY),
                                 Component.literal(""),
                                 Component.translatable("screens.wynntils.wynntilsMenu.leftClickToSelect")
@@ -186,6 +186,24 @@ public final class WynntilsMenuScreen extends WynntilsMenuScreenBase {
                                                 .withStyle(ChatFormatting.BOLD)
                                                 .withStyle(ChatFormatting.GOLD)),
                                 Component.translatable("screens.wynntils.wynntilsGuides.description")
+                                        .withStyle(ChatFormatting.GRAY),
+                                Component.literal(""),
+                                Component.translatable("screens.wynntils.wynntilsMenu.leftClickToSelect")
+                                        .withStyle(ChatFormatting.GREEN))));
+
+        buttons.get(2)
+                .add(new WynntilsMenuButton(
+                        Texture.DIALOGUE_BUTTON,
+                        false,
+                        WynntilsDialogueHistoryScreen.create(),
+                        List.of(
+                                Component.literal("[>] ")
+                                        .withStyle(ChatFormatting.GOLD)
+                                        .append(Component.translatable(
+                                                        "screens.wynntils.wynntilsQuestBook.dialogueHistory.name")
+                                                .withStyle(ChatFormatting.BOLD)
+                                                .withStyle(ChatFormatting.GOLD)),
+                                Component.translatable("screens.wynntils.wynntilsQuestBook.dialogueHistory.description")
                                         .withStyle(ChatFormatting.GRAY),
                                 Component.literal(""),
                                 Component.translatable("screens.wynntils.wynntilsMenu.leftClickToSelect")

@@ -10,8 +10,8 @@ import com.mojang.brigadier.context.CommandContext;
 import com.mojang.brigadier.suggestion.SuggestionProvider;
 import com.wynntils.core.commands.Command;
 import com.wynntils.core.components.Models;
-import com.wynntils.models.content.type.ContentSortOrder;
-import com.wynntils.models.quests.QuestInfo;
+import com.wynntils.models.activities.quests.QuestInfo;
+import com.wynntils.models.activities.type.ActivitySortOrder;
 import com.wynntils.utils.StringUtils;
 import com.wynntils.utils.mc.McUtils;
 import java.util.Arrays;
@@ -30,11 +30,13 @@ import net.minecraft.world.phys.Vec3;
 public class QuestCommand extends Command {
     private static final SuggestionProvider<CommandSourceStack> QUEST_SUGGESTION_PROVIDER =
             (context, builder) -> SharedSuggestionProvider.suggest(
-                    Models.Quest.getQuests(ContentSortOrder.ALPHABETIC).stream().map(QuestInfo::getName), builder);
+                    Models.Quest.getQuests(ActivitySortOrder.ALPHABETIC).stream()
+                            .map(QuestInfo::getName),
+                    builder);
 
     private static final SuggestionProvider<CommandSourceStack> SORT_SUGGESTION_PROVIDER =
             (context, builder) -> SharedSuggestionProvider.suggest(
-                    Arrays.stream(ContentSortOrder.values())
+                    Arrays.stream(ActivitySortOrder.values())
                             .map(order -> order.name().toLowerCase(Locale.ROOT)),
                     builder);
 
@@ -76,7 +78,7 @@ public class QuestCommand extends Command {
     }
 
     private int listQuests(CommandContext<CommandSourceStack> context, String sort) {
-        ContentSortOrder order = ContentSortOrder.fromString(sort);
+        ActivitySortOrder order = ActivitySortOrder.fromString(sort);
 
         Models.Quest.rescanQuestBook(true, false);
 
@@ -160,7 +162,7 @@ public class QuestCommand extends Command {
                         .withStyle(ChatFormatting.DARK_GREEN));
             }
 
-            if (quest.equals(Models.Content.getTrackedQuestInfo())) {
+            if (quest.equals(Models.Activity.getTrackedQuestInfo())) {
                 response.append(Component.literal(" [Tracked]")
                         .withStyle(ChatFormatting.DARK_AQUA)
                         .withStyle(style ->
@@ -221,7 +223,7 @@ public class QuestCommand extends Command {
     }
 
     private int untrackQuest(CommandContext<CommandSourceStack> context) {
-        QuestInfo trackedQuest = Models.Content.getTrackedQuestInfo();
+        QuestInfo trackedQuest = Models.Activity.getTrackedQuestInfo();
         if (trackedQuest == null) {
             context.getSource()
                     .sendFailure(Component.literal("No quest currently tracked").withStyle(ChatFormatting.RED));
