@@ -69,6 +69,10 @@ public final class CompassModel extends Model {
         return targetColor;
     }
 
+    public Location getSpawnTracker() {
+        return spawnTracker;
+    }
+
     public void setCompassToSpawnTracker() {
         setDynamicCompassLocation(() -> spawnTracker, Texture.WAYPOINT);
     }
