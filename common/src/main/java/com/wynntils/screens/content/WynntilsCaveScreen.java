@@ -21,6 +21,7 @@ import com.wynntils.screens.base.widgets.ReloadButton;
 import com.wynntils.screens.base.widgets.SortOrderWidget;
 import com.wynntils.screens.base.widgets.SortableContentScreen;
 import com.wynntils.screens.content.widgets.CaveButton;
+import com.wynntils.screens.content.widgets.CaveProgressButton;
 import com.wynntils.screens.wynntilsmenu.WynntilsMenuScreen;
 import com.wynntils.utils.StringUtils;
 import com.wynntils.utils.colors.CommonColors;
@@ -123,6 +124,8 @@ public final class WynntilsCaveScreen extends WynntilsListScreen<CaveInfo, CaveB
                 (int) (Texture.SORT_DISTANCE.width() / 1.7f),
                 (int) (Texture.SORT_DISTANCE.height() / 2 / 1.7f),
                 this));
+        this.addRenderableWidget(new CaveProgressButton(
+                (int) (Texture.QUEST_BOOK_BACKGROUND.width() / 4f), 10, Texture.CAVE.width(), Texture.CAVE.height()));
 
         reloadElements();
     }

@@ -13,12 +13,14 @@ import com.wynntils.models.content.type.ContentInfo;
 import com.wynntils.models.content.type.ContentSortOrder;
 import com.wynntils.models.content.type.ContentType;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
 
 public class CaveModel extends Model {
     private List<CaveInfo> caves = new ArrayList<>();
+    private List<StyledText> caveProgress = List.of();
 
     public CaveModel(ContentModel contentModel) {
         super(List.of(contentModel));
@@ -41,6 +43,7 @@ public class CaveModel extends Model {
             newCaves.add(caveInfo);
         }
         caves = newCaves;
+        caveProgress = progress;
         WynntilsMod.postEvent(new ContentUpdatedEvent(ContentType.CAVE));
         WynntilsMod.info("Updated caves from query, got " + caves.size() + " caves.");
     }
@@ -81,6 +84,10 @@ public class CaveModel extends Model {
                             .thenComparing(CaveInfo::getRecommendedLevel))
                     .toList();
         };
+    }
+
+    public List<StyledText> getCaveProgress() {
+        return Collections.unmodifiableList(caveProgress);
     }
 
     private CaveInfo getCaveInfoFromContent(ContentInfo content) {
