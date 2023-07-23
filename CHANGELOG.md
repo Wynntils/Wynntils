@@ -1,9 +1,21 @@
+## [0.0.3-alpha.186](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.185...v0.0.3-alpha.186) (2023-07-23)
+
+
+### New Features
+
+* Show 2.0.3 caves on the map ([#1815](https://github.com/Wynntils/Artemis/issues/1815)) ([19bd19a](https://github.com/Wynntils/Artemis/commit/19bd19a94f4a8779b948f5e7537f410c9c97bcbd))
+
 ## [0.0.3-alpha.185](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.184...v0.0.3-alpha.185) (2023-07-23)
 
 
 ### New Features
 
 * Cave icon for book entries ([#1816](https://github.com/Wynntils/Artemis/issues/1816)) ([ed500e3](https://github.com/Wynntils/Artemis/commit/ed500e393e21a7aa4d250808efdb5c03d8a538eb))
+
+
+### Miscellaneous Chores
+
+* **release:** v0.0.3-alpha.185 [skip ci] ([a56e1ac](https://github.com/Wynntils/Artemis/commit/a56e1acf3a1c8646ea6f425d122667752f97f636))
 
 ## [0.0.3-alpha.184](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.183...v0.0.3-alpha.184) (2023-07-23)
 
@@ -40,16 +52,4 @@
 ### Miscellaneous Chores
 
 * **release:** v0.0.3-alpha.182 [skip ci] ([483f4b2](https://github.com/Wynntils/Artemis/commit/483f4b2ebe14bb5f20b585e1f83fe6c5a11ab602))
-
-## [0.0.3-alpha.181](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.180...v0.0.3-alpha.181) (2023-07-23)
-
-
-### Bug Fixes
-
-* Annotate lootrun tomes correctly ([#1804](https://github.com/Wynntils/Artemis/issues/1804)) ([51ca7a7](https://github.com/Wynntils/Artemis/commit/51ca7a768d54126203f7fc6cf9b2d53e8e40d3f2))
-
-
-### Miscellaneous Chores
-
-* **release:** v0.0.3-alpha.181 [skip ci] ([90ba22d](https://github.com/Wynntils/Artemis/commit/90ba22d7e74ca5bf6ef2757c87745baee0c638e4))
 
