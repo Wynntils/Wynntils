@@ -21,6 +21,7 @@ import com.wynntils.models.map.pois.ServicePoi;
 import com.wynntils.models.map.type.CombatKind;
 import com.wynntils.models.map.type.CustomPoiProvider;
 import com.wynntils.models.map.type.ServiceKind;
+import com.wynntils.utils.mc.type.Location;
 import com.wynntils.utils.render.Texture;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
@@ -30,6 +31,8 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 
 public class PoiModel extends Model {
@@ -52,6 +55,7 @@ public class PoiModel extends Model {
     private final Set<LabelPoi> labelPois = new HashSet<>();
     private final Set<ServicePoi> servicePois = new HashSet<>();
     private final Set<CombatPoi> combatPois = new HashSet<>();
+    private final Set<CombatPoi> cavePois = new HashSet<>();
     private final Map<CustomPoiProvider, List<CustomPoi>> providedCustomPois = new ConcurrentHashMap<>();
 
     private final Storage<List<CustomPoiProvider>> customPoiProviders = new Storage<>(new ArrayList<>());
@@ -78,9 +82,24 @@ public class PoiModel extends Model {
         // These are loaded serially after places instad
         if (WynntilsMod.isDevelopmentEnvironment()) return;
 
+        loadCaves();
         loadServices();
         loadCombat();
         loadCustomPoiProviders();
+    }
+
+    private void loadCaves() {
+        Download dl = Managers.Net.download(UrlId.DATA_STATIC_CAVE_INFO);
+        dl.handleReader(reader -> {
+            Type type = new TypeToken<List<CaveProfile>>() {}.getType();
+
+            List<CaveProfile> profiles = WynntilsMod.GSON.fromJson(reader, type);
+
+            cavePois.addAll(profiles.stream()
+                    .map(profile ->
+                            new CombatPoi(PoiLocation.fromLocation(profile.location), profile.name, CombatKind.CAVES))
+                    .collect(Collectors.toUnmodifiableSet()));
+        });
     }
 
     public void loadCustomPoiProviders() {
@@ -104,6 +123,10 @@ public class PoiModel extends Model {
         // Serialize loading of POIs when on dev env
 
         if (event.getUrlId() == UrlId.DATA_STATIC_PLACES) {
+            loadCaves();
+            return;
+        }
+        if (event.getUrlId() == UrlId.DATA_STATIC_CAVE_INFO) {
             loadServices();
             return;
         }
@@ -117,16 +140,16 @@ public class PoiModel extends Model {
         }
     }
 
-    public Set<LabelPoi> getLabelPois() {
-        return labelPois;
+    public Stream<LabelPoi> getLabelPois() {
+        return labelPois.stream();
     }
 
-    public Set<ServicePoi> getServicePois() {
-        return servicePois;
+    public Stream<ServicePoi> getServicePois() {
+        return servicePois.stream();
     }
 
-    public Set<CombatPoi> getCombatPois() {
-        return combatPois;
+    public Stream<CombatPoi> getCombatPois() {
+        return Stream.concat(combatPois.stream(), cavePois.stream());
     }
 
     public List<CustomPoi> getProvidedCustomPois() {
@@ -184,7 +207,8 @@ public class PoiModel extends Model {
             List<CombatProfileList> combatProfileLists = WynntilsMod.GSON.fromJson(reader, type);
             for (CombatProfileList combatList : combatProfileLists) {
                 CombatKind kind = CombatKind.fromString(combatList.type);
-                if (kind != null) {
+                // We load caves separately... until the refactor
+                if (kind != null && kind != CombatKind.CAVES) {
                     for (CombatProfile profile : combatList.locations) {
                         combatPois.add(new CombatPoi(profile.coordinates, profile.name, kind));
                     }
@@ -226,4 +250,16 @@ public class PoiModel extends Model {
         String type;
         List<CombatProfile> locations;
     }
+
+    private record CaveProfile(
+            String type,
+            String name,
+            String specialInfo,
+            String description,
+            String length,
+            String lengthInfo,
+            String difficulty,
+            int requirements,
+            List<String> rewards,
+            Location location) {}
 }

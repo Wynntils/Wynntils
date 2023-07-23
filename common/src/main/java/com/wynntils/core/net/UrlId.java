@@ -29,6 +29,7 @@ public enum UrlId {
     DATA_ATHENA_SERVER_LIST("dataAthenaServerList"),
     DATA_ATHENA_TERRITORY_LIST("dataAthenaTerritoryList"),
     DATA_STATIC_ABILITIES("dataStaticAbilities"),
+    DATA_STATIC_CAVE_INFO("dataStaticCaveInfo"),
     DATA_STATIC_COMBAT_LOCATIONS("dataStaticCombatLocations"),
     DATA_STATIC_DISCOVERIES("dataStaticDiscoveries"),
     DATA_STATIC_GEAR("dataStaticGear"),
