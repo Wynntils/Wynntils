@@ -8,8 +8,8 @@ import com.wynntils.core.components.Models;
 import com.wynntils.core.text.StyledText;
 import com.wynntils.handlers.item.ItemAnnotation;
 import com.wynntils.handlers.item.ItemAnnotator;
-import com.wynntils.models.content.type.ContentInfo;
-import com.wynntils.models.content.type.ContentType;
+import com.wynntils.models.activities.type.ActivityInfo;
+import com.wynntils.models.activities.type.ActivityType;
 import com.wynntils.models.items.items.gui.ContentItem;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -28,13 +28,13 @@ public final class ContentAnnotator implements ItemAnnotator {
         Matcher matcher = name.getMatcher(CONTENT_PATTERN);
         if (!matcher.matches()) return null;
 
-        ContentType contentType = ContentType.from(matcher.group("color"), matcher.group("type"));
-        if (contentType == null) return null;
+        ActivityType activityType = ActivityType.from(matcher.group("color"), matcher.group("type"));
+        if (activityType == null) return null;
 
         String contentName = matcher.group("name");
-        ContentInfo contentInfo = Models.Content.parseItem(contentName, contentType, itemStack);
-        if (contentInfo == null) return null;
+        ActivityInfo activityInfo = Models.Activity.parseItem(contentName, activityType, itemStack);
+        if (activityInfo == null) return null;
 
-        return new ContentItem(contentInfo);
+        return new ContentItem(activityInfo);
     }
 }

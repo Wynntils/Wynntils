@@ -4,7 +4,7 @@
  */
 package com.wynntils.models.quests.type;
 
-import com.wynntils.models.content.type.ContentLength;
+import com.wynntils.models.activities.type.ActivityLength;
 import java.util.Locale;
 import java.util.Optional;
 
@@ -22,7 +22,7 @@ public enum QuestLength {
         }
     }
 
-    public static QuestLength fromContentLength(Optional<ContentLength> contentLength) {
+    public static QuestLength fromContentLength(Optional<ActivityLength> contentLength) {
         if (contentLength.isEmpty()) {
             // Use SHORT as fallback... it's as good as any
             return SHORT;

@@ -2,7 +2,7 @@
  * Copyright © Wynntils 2022-2023.
  * This file is released under AGPLv3. See LICENSE for full license details.
  */
-package com.wynntils.models.content;
+package com.wynntils.models.activities;
 
 import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.components.Managers;
@@ -13,8 +13,8 @@ import com.wynntils.handlers.container.ContainerQueryException;
 import com.wynntils.handlers.container.scriptedquery.QueryStep;
 import com.wynntils.handlers.container.scriptedquery.ScriptedContainerQuery;
 import com.wynntils.handlers.container.type.ContainerContent;
-import com.wynntils.models.content.type.ContentInfo;
-import com.wynntils.models.content.type.ContentType;
+import com.wynntils.models.activities.type.ActivityInfo;
+import com.wynntils.models.activities.type.ActivityType;
 import com.wynntils.models.items.items.gui.ContentItem;
 import com.wynntils.utils.mc.LoreUtils;
 import com.wynntils.utils.mc.McUtils;
@@ -55,35 +55,35 @@ public class ContentBookQueries {
      * will be called.
      */
     protected void queryContentBook(
-            ContentType contentType,
-            BiConsumer<List<ContentInfo>, List<StyledText>> processResult,
+            ActivityType activityType,
+            BiConsumer<List<ActivityInfo>, List<StyledText>> processResult,
             boolean showUpdates) {
-        List<ContentInfo> newContent = new ArrayList<>();
+        List<ActivityInfo> newContent = new ArrayList<>();
         List<StyledText> progress = new ArrayList<>();
 
         ScriptedContainerQuery query = ScriptedContainerQuery.builder(
-                        "Content Book Query for " + contentType.getDisplayName())
+                        "Content Book Query for " + activityType.getDisplayName())
                 .onError(msg -> {
                     WynntilsMod.warn("Problem querying Content Book: " + msg);
                     if (showUpdates) {
                         Managers.Notification.editMessage(
                                 stateMessageContainer,
                                 StyledText.fromComponent(Component.literal(
-                                                "Error loading " + contentType.getGroupName() + " from content book")
+                                                "Error loading " + activityType.getGroupName() + " from content book")
                                         .withStyle(ChatFormatting.RED)));
                     }
                 })
                 .execute(() -> {
                     if (showUpdates) {
                         stateMessageContainer = Managers.Notification.queueMessage(
-                                Component.literal("Loading " + contentType.getGroupName() + " from content book...")
+                                Component.literal("Loading " + activityType.getGroupName() + " from content book...")
                                         .withStyle(ChatFormatting.YELLOW));
                     }
                 })
 
                 // Open content book
                 .then(QueryStep.useItemInHotbar(InventoryUtils.CONTENT_BOOK_SLOT_NUM)
-                        .expectContainerTitle(Models.Content.CONTENT_BOOK_TITLE))
+                        .expectContainerTitle(Models.Activity.CONTENT_BOOK_TITLE))
 
                 // Save filter state, and set it correctly
                 .execute(() -> {
@@ -107,7 +107,7 @@ public class ContentBookQueries {
                             }
 
                             // Continue looping until filter matches
-                            return !activeFilter.equals(contentType.getDisplayName());
+                            return !activeFilter.equals(activityType.getDisplayName());
                         },
                         QueryStep.clickOnSlot(CHANGE_VIEW_SLOT))
 
@@ -155,9 +155,9 @@ public class ContentBookQueries {
                     if (showUpdates) {
                         Managers.Notification.editMessage(
                                 stateMessageContainer,
-                                StyledText.fromComponent(
-                                        Component.literal("Loaded " + contentType.getGroupName() + " from content book")
-                                                .withStyle(ChatFormatting.GREEN)));
+                                StyledText.fromComponent(Component.literal(
+                                                "Loaded " + activityType.getGroupName() + " from content book")
+                                        .withStyle(ChatFormatting.GREEN)));
                     }
                 })
                 .build();
@@ -180,19 +180,19 @@ public class ContentBookQueries {
         return null;
     }
 
-    private void processContentBookPage(ContainerContent container, List<ContentInfo> newContent) {
+    private void processContentBookPage(ContainerContent container, List<ActivityInfo> newContent) {
         for (int slot = 0; slot < 54; slot++) {
             ItemStack itemStack = container.items().get(slot);
             Optional<ContentItem> contentItemOpt = Models.Item.asWynnItem(itemStack, ContentItem.class);
             if (contentItemOpt.isEmpty()) continue;
 
-            ContentInfo contentInfo = contentItemOpt.get().getContentInfo();
+            ActivityInfo activityInfo = contentItemOpt.get().getContentInfo();
 
-            newContent.add(contentInfo);
+            newContent.add(activityInfo);
         }
     }
 
-    protected void toggleTracking(String name, ContentType contentType) {
+    protected void toggleTracking(String name, ActivityType activityType) {
         // We do not want to change filtering when tracking, since we get
         // no chance to reset it
         ScriptedContainerQuery query = ScriptedContainerQuery.builder("Toggle Content Tracking Query: " + name)
@@ -203,7 +203,7 @@ public class ContentBookQueries {
 
                 // Open compass/character menu
                 .then(QueryStep.useItemInHotbar(InventoryUtils.CONTENT_BOOK_SLOT_NUM)
-                        .expectContainerTitle(Models.Content.CONTENT_BOOK_TITLE))
+                        .expectContainerTitle(Models.Activity.CONTENT_BOOK_TITLE))
 
                 // Save filter state, and set it correctly
                 .execute(() -> {
@@ -227,7 +227,7 @@ public class ContentBookQueries {
                             }
 
                             // Continue looping until filter matches
-                            return !activeFilter.equals(contentType.getDisplayName());
+                            return !activeFilter.equals(activityType.getDisplayName());
                         },
                         QueryStep.clickOnSlot(CHANGE_VIEW_SLOT))
 
@@ -235,7 +235,7 @@ public class ContentBookQueries {
                 // if so, click it, otherwise click on next slot (if available)
                 .repeat(
                         c -> {
-                            int slot = findTrackedContent(c, name, contentType);
+                            int slot = findTrackedContent(c, name, activityType);
                             // Not found, try to go to next page
                             if (slot == -1) return true;
 
@@ -272,15 +272,15 @@ public class ContentBookQueries {
         query.executeQuery();
     }
 
-    private int findTrackedContent(ContainerContent container, String name, ContentType contentType) {
+    private int findTrackedContent(ContainerContent container, String name, ActivityType activityType) {
         for (int slot = 0; slot < 54; slot++) {
             ItemStack itemStack = container.items().get(slot);
             Optional<ContentItem> contentItemOpt = Models.Item.asWynnItem(itemStack, ContentItem.class);
             if (contentItemOpt.isEmpty()) continue;
 
-            ContentInfo contentInfo = contentItemOpt.get().getContentInfo();
-            if (contentInfo.type().matchesTracking(contentType)
-                    && contentInfo.name().equals(name)) {
+            ActivityInfo activityInfo = contentItemOpt.get().getContentInfo();
+            if (activityInfo.type().matchesTracking(activityType)
+                    && activityInfo.name().equals(name)) {
                 // Found it!
                 return slot;
             }

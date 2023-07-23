@@ -6,8 +6,8 @@ package com.wynntils.models.discoveries;
 
 import com.wynntils.core.components.Models;
 import com.wynntils.core.text.StyledText;
-import com.wynntils.models.content.type.ContentInfo;
-import com.wynntils.models.content.type.ContentStatus;
+import com.wynntils.models.activities.type.ActivityInfo;
+import com.wynntils.models.activities.type.ActivityStatus;
 import com.wynntils.models.discoveries.profile.DiscoveryProfile;
 import com.wynntils.models.discoveries.type.DiscoveryType;
 import com.wynntils.utils.mc.ComponentUtils;
@@ -44,13 +44,13 @@ public class DiscoveryInfo {
         this.requirements = List.of();
     }
 
-    public static DiscoveryInfo fromContentInfo(ContentInfo contentInfo) {
+    public static DiscoveryInfo fromContentInfo(ActivityInfo activityInfo) {
         return new DiscoveryInfo(
-                contentInfo.name(),
-                DiscoveryType.fromContentType(contentInfo.type()),
-                contentInfo.description().orElse(StyledText.EMPTY).getString(),
-                contentInfo.requirements().level().key(),
-                contentInfo.status() == ContentStatus.COMPLETED);
+                activityInfo.name(),
+                DiscoveryType.fromContentType(activityInfo.type()),
+                activityInfo.description().orElse(StyledText.EMPTY).getString(),
+                activityInfo.requirements().level().key(),
+                activityInfo.status() == ActivityStatus.COMPLETED);
     }
 
     private List<Component> generateLore() {

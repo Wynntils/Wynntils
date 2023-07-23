@@ -2,7 +2,7 @@
  * Copyright © Wynntils 2022.
  * This file is released under AGPLv3. See LICENSE for full license details.
  */
-package com.wynntils.models.content;
+package com.wynntils.models.activities;
 
 import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.components.Handlers;
@@ -12,15 +12,15 @@ import com.wynntils.core.components.Models;
 import com.wynntils.core.text.StyledText;
 import com.wynntils.features.ui.WynntilsContentBookFeature;
 import com.wynntils.handlers.scoreboard.ScoreboardPart;
-import com.wynntils.models.content.event.ContentTrackerUpdatedEvent;
-import com.wynntils.models.content.type.ContentDifficulty;
-import com.wynntils.models.content.type.ContentDistance;
-import com.wynntils.models.content.type.ContentInfo;
-import com.wynntils.models.content.type.ContentLength;
-import com.wynntils.models.content.type.ContentRequirements;
-import com.wynntils.models.content.type.ContentStatus;
-import com.wynntils.models.content.type.ContentTrackingState;
-import com.wynntils.models.content.type.ContentType;
+import com.wynntils.models.activities.event.ActivityTrackerUpdatedEvent;
+import com.wynntils.models.activities.type.ActivityDifficulty;
+import com.wynntils.models.activities.type.ActivityDistance;
+import com.wynntils.models.activities.type.ActivityInfo;
+import com.wynntils.models.activities.type.ActivityLength;
+import com.wynntils.models.activities.type.ActivityRequirements;
+import com.wynntils.models.activities.type.ActivityStatus;
+import com.wynntils.models.activities.type.ActivityTrackingState;
+import com.wynntils.models.activities.type.ActivityType;
 import com.wynntils.models.profession.type.ProfessionType;
 import com.wynntils.models.quests.QuestInfo;
 import com.wynntils.models.worlds.event.WorldStateEvent;
@@ -40,7 +40,7 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.eventbus.api.EventPriority;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 
-public final class ContentModel extends Model {
+public final class ActivityModel extends Model {
     public static final String CONTENT_BOOK_TITLE = "§f\uE000\uE072";
 
     private static final Pattern LEVEL_REQ_PATTERN =
@@ -54,24 +54,24 @@ public final class ContentModel extends Model {
     private static final Pattern REWARD_PATTERN = Pattern.compile("^   §d- §7\\+?(.*)$");
     private static final Pattern TRACKING_PATTERN = Pattern.compile("^ *À*§.§lCLICK TO (UN)?TRACK$");
 
-    private static final ScoreboardPart TRACKER_SCOREBOARD_PART = new ContentTrackerScoreboardPart();
+    private static final ScoreboardPart TRACKER_SCOREBOARD_PART = new ActivityTrackerScoreboardPart();
     private static final ContentBookQueries CONTAINER_QUERIES = new ContentBookQueries();
 
-    private TrackedContent trackedContent;
+    private TrackedActivity trackedActivity;
 
-    public ContentModel() {
+    public ActivityModel() {
         super(List.of());
 
         Handlers.Scoreboard.addPart(TRACKER_SCOREBOARD_PART);
     }
 
-    public ContentInfo parseItem(String name, ContentType type, ItemStack itemStack) {
+    public ActivityInfo parseItem(String name, ActivityType type, ItemStack itemStack) {
         LinkedList<StyledText> lore = LoreUtils.getLore(itemStack);
 
         String statusLine = lore.pop().getString();
         if (statusLine.charAt(0) != '§') return null;
 
-        ContentStatus status = ContentStatus.from(statusLine.charAt(1), itemStack.getItem());
+        ActivityStatus status = ActivityStatus.from(statusLine.charAt(1), itemStack.getItem());
         int specialInfoEnd = statusLine.indexOf(" - ");
         // If we have a specialInfo, skip the §x marker in the beginning, and keep everything
         // until the " - " comes. Examples of specialInfo can be "Unlocks Dungeon" or
@@ -81,12 +81,12 @@ public final class ContentModel extends Model {
         if (!lore.pop().isEmpty()) return null;
 
         Pair<Integer, Boolean> levelReq = Pair.of(0, true);
-        ContentDistance distance = null;
+        ActivityDistance distance = null;
         String distanceInfo = null;
-        ContentLength length = null;
+        ActivityLength length = null;
         String lengthInfo = null;
-        ContentDifficulty difficulty = null;
-        ContentTrackingState trackingState = ContentTrackingState.UNTRACKABLE;
+        ActivityDifficulty difficulty = null;
+        ActivityTrackingState trackingState = ActivityTrackingState.UNTRACKABLE;
         List<Pair<Pair<ProfessionType, Integer>, Boolean>> professionLevels = new ArrayList<>();
         List<Pair<String, Boolean>> quests = new ArrayList<>();
         List<String> rewards = new ArrayList<>();
@@ -121,21 +121,21 @@ public final class ContentModel extends Model {
 
             Matcher distanceMatcher = line.getMatcher(DISTANCE_PATTERN);
             if (distanceMatcher.matches()) {
-                distance = ContentDistance.from(distanceMatcher.group(1));
+                distance = ActivityDistance.from(distanceMatcher.group(1));
                 distanceInfo = distanceMatcher.group(2);
                 continue;
             }
 
             Matcher lengthMatcher = line.getMatcher(LENGTH_PATTERN);
             if (lengthMatcher.matches()) {
-                length = ContentLength.from(lengthMatcher.group(1));
+                length = ActivityLength.from(lengthMatcher.group(1));
                 lengthInfo = lengthMatcher.group(2);
                 continue;
             }
 
             Matcher difficultyMatcher = line.getMatcher(DIFFICULTY_PATTERN);
             if (difficultyMatcher.matches()) {
-                difficulty = ContentDifficulty.from(difficultyMatcher.group(1));
+                difficulty = ActivityDifficulty.from(difficultyMatcher.group(1));
                 continue;
             }
 
@@ -154,8 +154,8 @@ public final class ContentModel extends Model {
             Matcher trackingMatcher = line.getMatcher(TRACKING_PATTERN);
             if (trackingMatcher.matches()) {
                 trackingState = trackingMatcher.group(1) == null
-                        ? ContentTrackingState.TRACKABLE
-                        : ContentTrackingState.TRACKED;
+                        ? ActivityTrackingState.TRACKABLE
+                        : ActivityTrackingState.TRACKED;
                 continue;
             }
 
@@ -170,8 +170,8 @@ public final class ContentModel extends Model {
             description = null;
         }
 
-        ContentRequirements requirements = new ContentRequirements(levelReq, professionLevels, quests);
-        return new ContentInfo(
+        ActivityRequirements requirements = new ActivityRequirements(levelReq, professionLevels, quests);
+        return new ActivityInfo(
                 type,
                 name,
                 status,
@@ -198,65 +198,65 @@ public final class ContentModel extends Model {
     }
 
     public String getTrackedName() {
-        if (trackedContent == null) return "";
+        if (trackedActivity == null) return "";
 
-        return trackedContent.trackedName();
+        return trackedActivity.trackedName();
     }
 
-    public ContentType getTrackedType() {
-        if (trackedContent == null) return null;
-        return trackedContent.trackedType();
+    public ActivityType getTrackedType() {
+        if (trackedActivity == null) return null;
+        return trackedActivity.trackedType();
     }
 
     public StyledText getTrackedTask() {
-        if (trackedContent == null) return StyledText.EMPTY;
+        if (trackedActivity == null) return StyledText.EMPTY;
 
-        return trackedContent.trackedTask();
+        return trackedActivity.trackedTask();
     }
 
     public Location getTrackedLocation() {
-        if (trackedContent == null) return null;
+        if (trackedActivity == null) return null;
 
-        return StyledTextUtils.extractLocation(trackedContent.trackedTask()).orElse(null);
+        return StyledTextUtils.extractLocation(trackedActivity.trackedTask()).orElse(null);
     }
 
     public QuestInfo getTrackedQuestInfo() {
-        if (trackedContent == null) return null;
+        if (trackedActivity == null) return null;
 
-        return Models.Quest.getQuestInfoFromName(trackedContent.trackedName()).orElse(null);
+        return Models.Quest.getQuestInfoFromName(trackedActivity.trackedName()).orElse(null);
     }
 
     void updateTracker(String name, String type, StyledText nextTask) {
-        trackedContent = new TrackedContent(name, ContentType.from(type), nextTask);
+        trackedActivity = new TrackedActivity(name, ActivityType.from(type), nextTask);
 
-        WynntilsMod.postEvent(new ContentTrackerUpdatedEvent(
-                trackedContent.trackedType(), trackedContent.trackedName(), trackedContent.trackedTask()));
+        WynntilsMod.postEvent(new ActivityTrackerUpdatedEvent(
+                trackedActivity.trackedType(), trackedActivity.trackedName(), trackedActivity.trackedTask()));
     }
 
     void resetTracker() {
-        trackedContent = null;
+        trackedActivity = null;
     }
 
     public void scanContentBook(
-            ContentType contentType, BiConsumer<List<ContentInfo>, List<StyledText>> processResult) {
+            ActivityType activityType, BiConsumer<List<ActivityInfo>, List<StyledText>> processResult) {
         // Feature dependency until Model configs
         boolean showUpdates = Managers.Feature.getFeatureInstance(WynntilsContentBookFeature.class)
                 .showContentBookLoadingUpdates
                 .get();
-        CONTAINER_QUERIES.queryContentBook(contentType, processResult, showUpdates);
+        CONTAINER_QUERIES.queryContentBook(activityType, processResult, showUpdates);
     }
 
-    public void startTracking(String name, ContentType contentType) {
-        CONTAINER_QUERIES.toggleTracking(name, contentType);
+    public void startTracking(String name, ActivityType activityType) {
+        CONTAINER_QUERIES.toggleTracking(name, activityType);
     }
 
     public void stopTracking() {
-        CONTAINER_QUERIES.toggleTracking(trackedContent.trackedName(), trackedContent.trackedType());
+        CONTAINER_QUERIES.toggleTracking(trackedActivity.trackedName(), trackedActivity.trackedType());
     }
 
     public boolean isTracking() {
-        return trackedContent != null;
+        return trackedActivity != null;
     }
 
-    private record TrackedContent(String trackedName, ContentType trackedType, StyledText trackedTask) {}
+    private record TrackedActivity(String trackedName, ActivityType trackedType, StyledText trackedTask) {}
 }

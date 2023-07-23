@@ -4,21 +4,21 @@
  */
 package com.wynntils.models.items.items.gui;
 
-import com.wynntils.models.content.type.ContentInfo;
+import com.wynntils.models.activities.type.ActivityInfo;
 
 public class ContentItem extends GuiItem {
-    private final ContentInfo contentInfo;
+    private final ActivityInfo activityInfo;
 
-    public ContentItem(ContentInfo contentInfo) {
-        this.contentInfo = contentInfo;
+    public ContentItem(ActivityInfo activityInfo) {
+        this.activityInfo = activityInfo;
     }
 
-    public ContentInfo getContentInfo() {
-        return contentInfo;
+    public ActivityInfo getContentInfo() {
+        return activityInfo;
     }
 
     @Override
     public String toString() {
-        return "ContentItem{" + "contentInfo=" + contentInfo + '}';
+        return "ContentItem{" + "contentInfo=" + activityInfo + '}';
     }
 }

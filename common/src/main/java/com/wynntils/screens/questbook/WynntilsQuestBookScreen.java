@@ -9,7 +9,7 @@ import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.components.Models;
 import com.wynntils.core.text.StyledText;
 import com.wynntils.mc.event.MenuEvent;
-import com.wynntils.models.content.type.ContentSortOrder;
+import com.wynntils.models.activities.type.ActivitySortOrder;
 import com.wynntils.models.quests.QuestInfo;
 import com.wynntils.models.quests.event.QuestBookReloadedEvent;
 import com.wynntils.models.quests.type.QuestStatus;
@@ -20,7 +20,7 @@ import com.wynntils.screens.base.widgets.FilterButton;
 import com.wynntils.screens.base.widgets.PageSelectorButton;
 import com.wynntils.screens.base.widgets.ReloadButton;
 import com.wynntils.screens.base.widgets.SortOrderWidget;
-import com.wynntils.screens.base.widgets.SortableContentScreen;
+import com.wynntils.screens.base.widgets.SortableActivityScreen;
 import com.wynntils.screens.questbook.history.widgets.DialogueHistoryButton;
 import com.wynntils.screens.questbook.widgets.QuestButton;
 import com.wynntils.screens.questbook.widgets.QuestInfoButton;
@@ -46,7 +46,7 @@ import net.minecraftforge.eventbus.api.EventPriority;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 
 public final class WynntilsQuestBookScreen extends WynntilsListScreen<QuestInfo, QuestButton>
-        implements SortableContentScreen {
+        implements SortableActivityScreen {
     private static final List<Component> RELOAD_TOOLTIP = List.of(
             Component.translatable("screens.wynntils.wynntilsQuestBook.reload.name")
                     .withStyle(ChatFormatting.WHITE),
@@ -56,7 +56,7 @@ public final class WynntilsQuestBookScreen extends WynntilsListScreen<QuestInfo,
     private QuestInfo trackingRequested = null;
     private boolean showQuests = true;
     private boolean showMiniQuests = false;
-    private ContentSortOrder contentSortOrder = ContentSortOrder.LEVEL;
+    private ActivitySortOrder activitySortOrder = ActivitySortOrder.LEVEL;
 
     private final List<FilterButton> filterButtons = new ArrayList<>();
 
@@ -257,7 +257,7 @@ public final class WynntilsQuestBookScreen extends WynntilsListScreen<QuestInfo,
             tooltipLines.add(Component.literal(""));
 
             if (questInfo.isTrackable()) {
-                if (questInfo.equals(Models.Content.getTrackedQuestInfo())) {
+                if (questInfo.equals(Models.Activity.getTrackedQuestInfo())) {
                     tooltipLines.add(Component.literal("Left click to stop tracking it!")
                             .withStyle(ChatFormatting.RED)
                             .withStyle(ChatFormatting.BOLD));
@@ -358,7 +358,7 @@ public final class WynntilsQuestBookScreen extends WynntilsListScreen<QuestInfo,
     }
 
     private List<QuestInfo> getSortedQuests() {
-        return Models.Quest.getSortedQuests(contentSortOrder, showQuests, showMiniQuests);
+        return Models.Quest.getSortedQuests(activitySortOrder, showQuests, showMiniQuests);
     }
 
     private void setQuests(List<QuestInfo> quests) {
@@ -389,17 +389,17 @@ public final class WynntilsQuestBookScreen extends WynntilsListScreen<QuestInfo,
     }
 
     @Override
-    public ContentSortOrder getContentSortOrder() {
-        return contentSortOrder;
+    public ActivitySortOrder getActivitySortOrder() {
+        return activitySortOrder;
     }
 
     @Override
-    public void setContentSortOrder(ContentSortOrder newSortOrder) {
+    public void setActivitySortOrder(ActivitySortOrder newSortOrder) {
         if (newSortOrder == null) {
-            throw new IllegalStateException("Tried to set null content sort order");
+            throw new IllegalStateException("Tried to set null activity sort order");
         }
 
-        this.contentSortOrder = newSortOrder;
+        this.activitySortOrder = newSortOrder;
         setQuests(getSortedQuests());
         this.setCurrentPage(0);
     }

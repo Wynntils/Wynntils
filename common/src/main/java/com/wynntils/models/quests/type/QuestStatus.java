@@ -4,7 +4,7 @@
  */
 package com.wynntils.models.quests.type;
 
-import com.wynntils.models.content.type.ContentStatus;
+import com.wynntils.models.activities.type.ActivityStatus;
 import com.wynntils.screens.questbook.WynntilsQuestBookScreen;
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
@@ -23,8 +23,8 @@ public enum QuestStatus {
         this.questBookComponent = component;
     }
 
-    public static QuestStatus fromContentStatus(ContentStatus contentStatus) {
-        return switch (contentStatus) {
+    public static QuestStatus fromContentStatus(ActivityStatus activityStatus) {
+        return switch (activityStatus) {
             case STARTED -> STARTED;
             case AVAILABLE -> CAN_START;
             case UNAVAILABLE -> CANNOT_START;

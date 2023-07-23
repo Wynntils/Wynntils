@@ -11,7 +11,7 @@ import com.wynntils.core.config.ConfigCategory;
 import com.wynntils.core.config.RegisterConfig;
 import com.wynntils.core.features.Feature;
 import com.wynntils.mc.event.SetSpawnEvent;
-import com.wynntils.models.content.event.ContentTrackerUpdatedEvent;
+import com.wynntils.models.activities.event.ActivityTrackerUpdatedEvent;
 import com.wynntils.utils.mc.McUtils;
 import com.wynntils.utils.mc.type.Location;
 import net.minecraft.resources.ResourceLocation;
@@ -30,9 +30,9 @@ public class ContentTrackerFeature extends Feature {
     public final Config<Boolean> playSoundOnUpdate = new Config<>(true);
 
     @SubscribeEvent
-    public void onTrackerUpdate(ContentTrackerUpdatedEvent event) {
+    public void onTrackerUpdate(ActivityTrackerUpdatedEvent event) {
         if (autoTrackCoordinates.get()) {
-            Location trackedLocation = Models.Content.getTrackedLocation();
+            Location trackedLocation = Models.Activity.getTrackedLocation();
 
             // Ideally, we would clear the compass if we do not have a
             // tracked location. However, the event is not reliable, since

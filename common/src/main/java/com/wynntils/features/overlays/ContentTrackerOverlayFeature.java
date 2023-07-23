@@ -21,7 +21,7 @@ import com.wynntils.core.features.overlays.annotations.OverlayInfo;
 import com.wynntils.core.text.StyledText;
 import com.wynntils.handlers.scoreboard.event.ScoreboardSegmentAdditionEvent;
 import com.wynntils.mc.event.RenderEvent;
-import com.wynntils.models.content.ContentTrackerScoreboardPart;
+import com.wynntils.models.activities.ActivityTrackerScoreboardPart;
 import com.wynntils.utils.colors.CommonColors;
 import com.wynntils.utils.colors.CustomColor;
 import com.wynntils.utils.render.TextRenderSetting;
@@ -46,7 +46,7 @@ public class ContentTrackerOverlayFeature extends Feature {
     public void onScoreboardSegmentChange(ScoreboardSegmentAdditionEvent event) {
         if (Managers.Overlay.isEnabled(trackerOverlay)
                 && disableTrackerOnScoreboard.get()
-                && event.getSegment().getScoreboardPart() instanceof ContentTrackerScoreboardPart) {
+                && event.getSegment().getScoreboardPart() instanceof ActivityTrackerScoreboardPart) {
             event.setCanceled(true);
         }
     }
@@ -127,15 +127,15 @@ public class ContentTrackerOverlayFeature extends Feature {
 
         @Override
         public void render(PoseStack poseStack, MultiBufferSource bufferSource, float partialTicks, Window window) {
-            if (!Models.Content.isTracking()) {
+            if (!Models.Activity.isTracking()) {
                 return;
             }
 
             toRender.get(0)
                     .setText(I18n.get("feature.wynntils.contentTrackerOverlay.overlay.contentTracker.title") + " "
-                            + Models.Content.getTrackedType().getDisplayName() + ":");
-            toRender.get(1).setText(Models.Content.getTrackedName());
-            toRender.get(2).setText(Models.Content.getTrackedTask());
+                            + Models.Activity.getTrackedType().getDisplayName() + ":");
+            toRender.get(1).setText(Models.Activity.getTrackedName());
+            toRender.get(2).setText(Models.Activity.getTrackedTask());
 
             BufferedFontRenderer.getInstance()
                     .renderTextsWithAlignment(
