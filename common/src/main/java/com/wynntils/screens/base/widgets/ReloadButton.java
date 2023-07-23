@@ -21,9 +21,9 @@ public class ReloadButton extends WynntilsButton implements TooltipProvider {
         this.onClickRunnable = onClickRunnable;
 
         RELOAD_TOOLTIP = List.of(
-                Component.translatable("screens.wynntils.wynntilsContent.reload.name")
+                Component.translatable("screens.wynntils.wynntilsActivities.reload.name")
                         .withStyle(ChatFormatting.WHITE),
-                Component.translatable("screens.wynntils.wynntilsContent.reload.description", activityType)
+                Component.translatable("screens.wynntils.wynntilsActivities.reload.description", activityType)
                         .withStyle(ChatFormatting.GRAY));
     }
 
