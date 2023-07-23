@@ -12,7 +12,10 @@ import com.wynntils.core.components.Models;
 import com.wynntils.core.text.StyledText;
 import com.wynntils.features.ui.WynntilsContentBookFeature;
 import com.wynntils.handlers.scoreboard.ScoreboardPart;
+import com.wynntils.models.activities.caves.CaveInfo;
 import com.wynntils.models.activities.event.ActivityTrackerUpdatedEvent;
+import com.wynntils.models.activities.event.DialogueHistoryReloadedEvent;
+import com.wynntils.models.activities.quests.QuestInfo;
 import com.wynntils.models.activities.type.ActivityDifficulty;
 import com.wynntils.models.activities.type.ActivityDistance;
 import com.wynntils.models.activities.type.ActivityInfo;
@@ -22,7 +25,6 @@ import com.wynntils.models.activities.type.ActivityStatus;
 import com.wynntils.models.activities.type.ActivityTrackingState;
 import com.wynntils.models.activities.type.ActivityType;
 import com.wynntils.models.profession.type.ProfessionType;
-import com.wynntils.models.quests.QuestInfo;
 import com.wynntils.models.worlds.event.WorldStateEvent;
 import com.wynntils.utils.mc.LoreUtils;
 import com.wynntils.utils.mc.StyledTextUtils;
@@ -63,8 +65,10 @@ public final class ActivityModel extends Model {
 
     private static final ScoreboardPart TRACKER_SCOREBOARD_PART = new ActivityTrackerScoreboardPart();
     private static final ContentBookQueries CONTAINER_QUERIES = new ContentBookQueries();
+    private static final DialogueHistoryQueries DIALOGUE_HISTORY_QUERIES = new DialogueHistoryQueries();
 
     private TrackedActivity trackedActivity;
+    private List<List<StyledText>> dialogueHistory = List.of();
 
     public ActivityModel() {
         super(List.of());
@@ -269,6 +273,19 @@ public final class ActivityModel extends Model {
 
     public boolean isTracking() {
         return trackedActivity != null;
+    }
+
+    public List<List<StyledText>> getDialogueHistory() {
+        return dialogueHistory;
+    }
+
+    public void rescanDialogueHistory() {
+        DIALOGUE_HISTORY_QUERIES.scanDialogueHistory();
+    }
+
+    void setDialogueHistory(List<List<StyledText>> newDialogueHistory) {
+        dialogueHistory = newDialogueHistory;
+        WynntilsMod.postEvent(new DialogueHistoryReloadedEvent());
     }
 
     private record TrackedActivity(String trackedName, ActivityType trackedType, StyledText trackedTask) {}

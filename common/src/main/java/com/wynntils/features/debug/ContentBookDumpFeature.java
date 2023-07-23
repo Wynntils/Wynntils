@@ -182,7 +182,7 @@ public class ContentBookDumpFeature extends Feature {
         McUtils.sendMessageToClient(Component.literal("Saved content book dump to " + jsonFile.getAbsolutePath()));
     }
 
-    // This method creates a consisnent mapping and ordering for the dumped activities
+    // This method creates a consistent mapping and ordering for the dumped activities
     private Map<ActivityType, List<DumpableActivityInfo>> getMappedDumpedActivities() {
         Map<ActivityType, List<DumpableActivityInfo>> mappedDumpedActivities = new EnumMap<>(ActivityType.class);
         for (ActivityType value : ActivityType.values()) {
