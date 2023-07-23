@@ -4,6 +4,7 @@
  */
 package com.wynntils.services.map;
 
+import com.wynntils.utils.StringUtils;
 import com.wynntils.utils.mc.type.Location;
 
 public class Label {
@@ -76,6 +77,10 @@ public class Label {
 
         public String getId() {
             return id;
+        }
+
+        public String getName() {
+            return StringUtils.capitalized(id);
         }
     }
 }
