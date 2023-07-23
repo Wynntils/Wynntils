@@ -2,7 +2,7 @@
  * Copyright © Wynntils 2023.
  * This file is released under AGPLv3. See LICENSE for full license details.
  */
-package com.wynntils.models.activities;
+package com.wynntils.models.activities.caves;
 
 import com.wynntils.core.text.StyledText;
 import com.wynntils.models.activities.type.ActivityDifficulty;

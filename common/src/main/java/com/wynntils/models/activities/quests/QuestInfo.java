@@ -2,13 +2,13 @@
  * Copyright © Wynntils 2022.
  * This file is released under AGPLv3. See LICENSE for full license details.
  */
-package com.wynntils.models.quests;
+package com.wynntils.models.activities.quests;
 
 import com.wynntils.core.components.Models;
 import com.wynntils.core.text.StyledText;
+import com.wynntils.models.activities.type.QuestLength;
+import com.wynntils.models.activities.type.QuestStatus;
 import com.wynntils.models.profession.type.ProfessionType;
-import com.wynntils.models.quests.type.QuestLength;
-import com.wynntils.models.quests.type.QuestStatus;
 import com.wynntils.utils.StringUtils;
 import com.wynntils.utils.mc.RenderedStringUtils;
 import com.wynntils.utils.mc.StyledTextUtils;

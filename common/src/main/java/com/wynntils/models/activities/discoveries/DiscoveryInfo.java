@@ -2,14 +2,14 @@
  * Copyright © Wynntils 2022.
  * This file is released under AGPLv3. See LICENSE for full license details.
  */
-package com.wynntils.models.discoveries;
+package com.wynntils.models.activities.discoveries;
 
 import com.wynntils.core.components.Models;
 import com.wynntils.core.text.StyledText;
+import com.wynntils.models.activities.profile.DiscoveryProfile;
 import com.wynntils.models.activities.type.ActivityInfo;
 import com.wynntils.models.activities.type.ActivityStatus;
-import com.wynntils.models.discoveries.profile.DiscoveryProfile;
-import com.wynntils.models.discoveries.type.DiscoveryType;
+import com.wynntils.models.activities.type.DiscoveryType;
 import com.wynntils.utils.mc.ComponentUtils;
 import java.util.ArrayList;
 import java.util.List;

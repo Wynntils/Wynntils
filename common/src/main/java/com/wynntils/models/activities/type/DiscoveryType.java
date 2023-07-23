@@ -2,9 +2,8 @@
  * Copyright © Wynntils 2022.
  * This file is released under AGPLv3. See LICENSE for full license details.
  */
-package com.wynntils.models.discoveries.type;
+package com.wynntils.models.activities.type;
 
-import com.wynntils.models.activities.type.ActivityType;
 import net.minecraft.ChatFormatting;
 
 public enum DiscoveryType {

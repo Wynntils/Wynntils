@@ -2,7 +2,7 @@
  * Copyright © Wynntils 2022-2023.
  * This file is released under AGPLv3. See LICENSE for full license details.
  */
-package com.wynntils.models.quests;
+package com.wynntils.models.activities;
 
 import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.components.Models;
@@ -48,7 +48,7 @@ public class DialogueHistoryQueries {
                 // to get to the next page
                 .repeat(this::checkDialoguePage, QueryStep.clickOnSlot(DIALOGUE_HISTORY_SLOT))
                 .execute(() -> {
-                    Models.Quest.setDialogueHistory(newDialogueHistory);
+                    Models.Activity.setDialogueHistory(newDialogueHistory);
                     newDialogueHistory = null;
                 })
                 .build();
