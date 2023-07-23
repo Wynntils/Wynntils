@@ -9,6 +9,8 @@ import com.wynntils.models.abilities.BossBarModel;
 import com.wynntils.models.abilities.ShamanMaskModel;
 import com.wynntils.models.abilities.ShamanTotemModel;
 import com.wynntils.models.abilitytree.AbilityTreeModel;
+import com.wynntils.models.activities.ActivityModel;
+import com.wynntils.models.activities.CaveModel;
 import com.wynntils.models.character.CharacterModel;
 import com.wynntils.models.character.CharacterSelectionModel;
 import com.wynntils.models.characterstats.CharacterStatsModel;
@@ -16,8 +18,6 @@ import com.wynntils.models.characterstats.CombatXpModel;
 import com.wynntils.models.containers.ContainerModel;
 import com.wynntils.models.containers.LootChestModel;
 import com.wynntils.models.containers.PlayerInventoryModel;
-import com.wynntils.models.content.CaveModel;
-import com.wynntils.models.content.ContentModel;
 import com.wynntils.models.cosmetics.CosmeticsModel;
 import com.wynntils.models.damage.DamageModel;
 import com.wynntils.models.discoveries.DiscoveryModel;
@@ -61,13 +61,13 @@ import com.wynntils.models.wynnitem.WynnItemModel;
 
 public final class Models {
     public static final AbilityTreeModel AbilityTree = new AbilityTreeModel();
+    public static final ActivityModel Activity = new ActivityModel();
     public static final ArrowShieldModel ArrowShield = new ArrowShieldModel();
     public static final BossBarModel BossBar = new BossBarModel();
     public static final CharacterModel Character = new CharacterModel();
     public static final CharacterSelectionModel CharacterSelection = new CharacterSelectionModel();
     public static final CompassModel Compass = new CompassModel();
     public static final ContainerModel Container = new ContainerModel();
-    public static final ContentModel Content = new ContentModel();
     public static final CosmeticsModel Cosmetics = new CosmeticsModel();
     public static final DamageModel Damage = new DamageModel();
     public static final ElementModel Element = new ElementModel();
@@ -91,7 +91,7 @@ public final class Models {
 
     // Models with dependencies, ordered alphabetically as far as possible
     public static final BombModel Bomb = new BombModel(WorldState);
-    public static final CaveModel Cave = new CaveModel(Content);
+    public static final CaveModel Cave = new CaveModel(Activity);
     public static final CombatXpModel CombatXp = new CombatXpModel(WorldState);
     public static final CharacterStatsModel CharacterStats = new CharacterStatsModel(CombatXp);
     public static final FriendsModel Friends = new FriendsModel(WorldState);

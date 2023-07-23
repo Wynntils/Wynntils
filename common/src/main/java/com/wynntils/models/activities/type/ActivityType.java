@@ -2,11 +2,11 @@
  * Copyright © Wynntils 2023.
  * This file is released under AGPLv3. See LICENSE for full license details.
  */
-package com.wynntils.models.content.type;
+package com.wynntils.models.activities.type;
 
 import net.minecraft.ChatFormatting;
 
-public enum ContentType {
+public enum ActivityType {
     QUEST("Quest", "quests", ChatFormatting.AQUA.getChar()),
     STORYLINE_QUEST("Quest", "quests", ChatFormatting.GREEN.getChar()),
     MINI_QUEST("Mini-Quest", "mini-quests", ChatFormatting.DARK_PURPLE.getChar()),
@@ -23,14 +23,14 @@ public enum ContentType {
     private final String groupName;
     private final char colorCode;
 
-    ContentType(String displayName, String groupName, char colorCode) {
+    ActivityType(String displayName, String groupName, char colorCode) {
         this.displayName = displayName;
         this.groupName = groupName;
         this.colorCode = colorCode;
     }
 
-    public static ContentType from(String colorCode, String displayName) {
-        for (ContentType type : values()) {
+    public static ActivityType from(String colorCode, String displayName) {
+        for (ActivityType type : values()) {
             if (type.getColorCode().equals(colorCode) && type.getDisplayName().equals(displayName)) return type;
         }
 
@@ -38,8 +38,8 @@ public enum ContentType {
     }
 
     /** This version cannot distinguish between QUEST and STORYLINE_QUEST */
-    public static ContentType from(String displayName) {
-        for (ContentType type : values()) {
+    public static ActivityType from(String displayName) {
+        for (ActivityType type : values()) {
             if (type.getDisplayName().equals(displayName)) return type;
         }
 
@@ -69,12 +69,12 @@ public enum ContentType {
         return this == SECRET_DISCOVERY || this == WORLD_DISCOVERY || this == TERRITORIAL_DISCOVERY;
     }
 
-    public boolean matchesTracking(ContentType contentType) {
-        // When tracking content, storyline quests and mini-quests cannot
+    public boolean matchesTracking(ActivityType activityType) {
+        // When tracking activities, storyline quests and mini-quests cannot
         // be distinguished from quests
         return switch (this) {
-            case STORYLINE_QUEST, MINI_QUEST -> contentType == this || contentType == QUEST;
-            default -> contentType == this;
+            case STORYLINE_QUEST, MINI_QUEST -> activityType == this || activityType == QUEST;
+            default -> activityType == this;
         };
     }
 }

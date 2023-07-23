@@ -2,13 +2,13 @@
  * Copyright © Wynntils 2023.
  * This file is released under AGPLv3. See LICENSE for full license details.
  */
-package com.wynntils.models.content;
+package com.wynntils.models.activities;
 
 import com.wynntils.core.text.StyledText;
-import com.wynntils.models.content.type.ContentDifficulty;
-import com.wynntils.models.content.type.ContentDistance;
-import com.wynntils.models.content.type.ContentLength;
-import com.wynntils.models.content.type.ContentStatus;
+import com.wynntils.models.activities.type.ActivityDifficulty;
+import com.wynntils.models.activities.type.ActivityDistance;
+import com.wynntils.models.activities.type.ActivityLength;
+import com.wynntils.models.activities.type.ActivityStatus;
 import com.wynntils.utils.mc.StyledTextUtils;
 import com.wynntils.utils.mc.type.Location;
 import java.util.List;
@@ -17,23 +17,23 @@ import net.minecraft.network.chat.Component;
 
 public class CaveInfo {
     private final String name;
-    private final ContentStatus status;
+    private final ActivityStatus status;
     private final String description;
     private final int recommendedLevel;
-    private final ContentDistance distance;
-    private final ContentLength length;
-    private final ContentDifficulty difficulty;
+    private final ActivityDistance distance;
+    private final ActivityLength length;
+    private final ActivityDifficulty difficulty;
     private final List<String> rewards;
     private List<Component> displayLore = null;
 
     public CaveInfo(
             String name,
-            ContentStatus status,
+            ActivityStatus status,
             String description,
             int recommendedLevel,
-            ContentDistance distance,
-            ContentLength length,
-            ContentDifficulty difficulty,
+            ActivityDistance distance,
+            ActivityLength length,
+            ActivityDifficulty difficulty,
             List<String> rewards) {
         this.name = name;
         this.status = status;
@@ -50,7 +50,7 @@ public class CaveInfo {
     }
 
     public boolean isTrackable() {
-        return status == ContentStatus.AVAILABLE || status == ContentStatus.STARTED;
+        return status == ActivityStatus.AVAILABLE || status == ActivityStatus.STARTED;
     }
 
     public String getName() {
@@ -61,19 +61,19 @@ public class CaveInfo {
         return recommendedLevel;
     }
 
-    public ContentStatus getStatus() {
+    public ActivityStatus getStatus() {
         return status;
     }
 
-    public ContentDistance getDistance() {
+    public ActivityDistance getDistance() {
         return distance;
     }
 
-    public ContentLength getLength() {
+    public ActivityLength getLength() {
         return length;
     }
 
-    public ContentDifficulty getDifficulty() {
+    public ActivityDifficulty getDifficulty() {
         return difficulty;
     }
 

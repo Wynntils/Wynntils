@@ -4,7 +4,7 @@
  */
 package com.wynntils.models.discoveries.type;
 
-import com.wynntils.models.content.type.ContentType;
+import com.wynntils.models.activities.type.ActivityType;
 import net.minecraft.ChatFormatting;
 
 public enum DiscoveryType {
@@ -18,12 +18,12 @@ public enum DiscoveryType {
         this.color = color;
     }
 
-    public static DiscoveryType fromContentType(ContentType contentType) {
-        return switch (contentType) {
+    public static DiscoveryType fromActivityType(ActivityType activityType) {
+        return switch (activityType) {
             case WORLD_DISCOVERY -> WORLD;
             case TERRITORIAL_DISCOVERY -> TERRITORY;
             case SECRET_DISCOVERY -> SECRET;
-            default -> throw new IllegalStateException("Unexpected value: " + contentType);
+            default -> throw new IllegalStateException("Unexpected value: " + activityType);
         };
     }
 
