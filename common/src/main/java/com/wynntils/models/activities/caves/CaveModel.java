@@ -10,7 +10,10 @@ import com.wynntils.core.components.Models;
 import com.wynntils.core.text.StyledText;
 import com.wynntils.models.activities.ActivityModel;
 import com.wynntils.models.activities.event.ActivityUpdatedEvent;
+import com.wynntils.models.activities.type.ActivityDifficulty;
+import com.wynntils.models.activities.type.ActivityDistance;
 import com.wynntils.models.activities.type.ActivityInfo;
+import com.wynntils.models.activities.type.ActivityLength;
 import com.wynntils.models.activities.type.ActivitySortOrder;
 import com.wynntils.models.activities.type.ActivityType;
 import java.util.ArrayList;
@@ -97,9 +100,9 @@ public class CaveModel extends Model {
                 activity.status(),
                 activity.description().orElse(StyledText.EMPTY).getString(),
                 activity.requirements().level().key(),
-                activity.distance().get(),
-                activity.length().get(),
-                activity.difficulty().get(),
+                activity.distance().orElse(ActivityDistance.NEAR),
+                activity.length().orElse(ActivityLength.SHORT),
+                activity.difficulty().orElse(ActivityDifficulty.EASY),
                 activity.rewards());
     }
 }
