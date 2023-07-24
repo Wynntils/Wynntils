@@ -5,20 +5,46 @@
 package com.wynntils.core.statistics;
 
 import com.wynntils.core.components.Manager;
+import com.wynntils.core.components.Models;
+import com.wynntils.core.storage.Storage;
+import com.wynntils.models.character.event.CharacterUpdateEvent;
 import com.wynntils.models.damage.type.DamageDealtEvent;
 import com.wynntils.models.spells.event.SpellEvent;
 import com.wynntils.models.stats.type.DamageType;
+import com.wynntils.models.worlds.event.WorldStateEvent;
 import java.util.EnumMap;
 import java.util.List;
 import java.util.Map;
+import java.util.TreeMap;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 
 // This should really be an "ExternalModel"...
 public final class StatisticsManager extends Manager {
-    private final Map<StatisticKind, Integer> statistics = new EnumMap<>(StatisticKind.class);
+    // All statistics, per character
+    private final Storage<Map<String, Map<StatisticKind, Integer>>> statistics = new Storage<>(new TreeMap<>());
+
+    // The currently active statistics
+    private Map<StatisticKind, Integer> currentStatistics = new EnumMap<>(StatisticKind.class);
 
     public StatisticsManager() {
         super(List.of());
+    }
+
+    @SubscribeEvent
+    public void onWorldChange(WorldStateEvent event) {
+        // If we do not have a proper character, set up a fake statistics map so we always
+        // have a valid map.
+        if (!Models.Character.hasCharacter()) {
+            currentStatistics = new EnumMap<>(StatisticKind.class);
+            return;
+        }
+
+        setCurrentStatistics(Models.Character.getId());
+    }
+
+    @SubscribeEvent
+    public void onCharacterUpdated(CharacterUpdateEvent event) {
+        setCurrentStatistics(Models.Character.getId());
     }
 
     public void increaseStatistics(StatisticKind kind) {
@@ -26,16 +52,27 @@ public final class StatisticsManager extends Manager {
     }
 
     public void addToStatistics(StatisticKind kind, int amount) {
-        statistics.put(kind, statistics.getOrDefault(kind, 0) + amount);
+        currentStatistics.put(kind, currentStatistics.getOrDefault(kind, 0) + amount);
+        statistics.touched();
     }
 
     public int getStatistic(StatisticKind statistic) {
-        return statistics.getOrDefault(statistic, 0);
+        return currentStatistics.getOrDefault(statistic, 0);
     }
 
     public void resetStatistics() {
-        statistics.clear();
+        currentStatistics.clear();
+        statistics.touched();
     }
+
+    private void setCurrentStatistics(String id) {
+        // Make sure our statistics is based on the correct character, and that it is persisted
+        statistics.get().putIfAbsent(id, new EnumMap<>(StatisticKind.class));
+        currentStatistics = statistics.get().get(id);
+        statistics.touched();
+    }
+
+    // region Statistics collectors
 
     @SubscribeEvent
     public void onDamageDealtEvent(DamageDealtEvent event) {
@@ -47,4 +84,6 @@ public final class StatisticsManager extends Manager {
     public void onSpellEvent(SpellEvent.Completed event) {
         increaseStatistics(StatisticKind.SPELLS_CAST);
     }
+
+    // endregion
 }
