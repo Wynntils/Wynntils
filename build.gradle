@@ -124,6 +124,12 @@ allprojects {
             trimTrailingWhitespace()
             endWithNewline()
         }
+        format "lang", {
+            target "src/main/resources/assets/wynntils/lang/*.json"
+            custom "No empty language json files", {
+                it.replaceAll(/^\{\}\n$/, '')
+            }
+        }
         format "misc", {
             // define the files to apply `misc` to
             target "*.gradle", "*.md", ".gitignore", "*.properties"
