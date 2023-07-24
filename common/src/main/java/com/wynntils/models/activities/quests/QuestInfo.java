@@ -6,8 +6,8 @@ package com.wynntils.models.activities.quests;
 
 import com.wynntils.core.components.Models;
 import com.wynntils.core.text.StyledText;
-import com.wynntils.models.activities.type.QuestLength;
-import com.wynntils.models.activities.type.QuestStatus;
+import com.wynntils.models.activities.type.ActivityLength;
+import com.wynntils.models.activities.type.ActivityStatus;
 import com.wynntils.models.profession.type.ProfessionType;
 import com.wynntils.utils.StringUtils;
 import com.wynntils.utils.mc.RenderedStringUtils;
@@ -28,20 +28,20 @@ public class QuestInfo {
 
     // Quest metadata is forever constant
     private final String name;
-    private final QuestLength length;
+    private final ActivityLength length;
     private final int level;
     /** Additional requirements as pairs of <"profession name", minLevel> */
     private final List<Pair<String, Integer>> additionalRequirements;
 
     private final boolean isMiniQuest;
 
-    private final QuestStatus status;
+    private final ActivityStatus status;
     private final StyledText nextTask;
 
     protected QuestInfo(
             String name,
-            QuestStatus status,
-            QuestLength length,
+            ActivityStatus status,
+            ActivityLength length,
             int level,
             StyledText nextTask,
             List<Pair<String, Integer>> additionalRequirements,
@@ -59,19 +59,19 @@ public class QuestInfo {
         return name;
     }
 
-    public QuestStatus getStatus() {
+    public ActivityStatus getStatus() {
         return status;
     }
 
     public boolean isTrackable() {
-        return status == QuestStatus.CAN_START || status == QuestStatus.STARTED;
+        return status == ActivityStatus.AVAILABLE || status == ActivityStatus.STARTED;
     }
 
     public Optional<Location> getNextLocation() {
         return StyledTextUtils.extractLocation(nextTask);
     }
 
-    public QuestLength getLength() {
+    public ActivityLength getLength() {
         return length;
     }
 
@@ -132,7 +132,7 @@ public class QuestInfo {
         tooltipLines.add(Component.literal(questInfo.getName())
                 .withStyle(ChatFormatting.BOLD)
                 .withStyle(ChatFormatting.WHITE));
-        tooltipLines.add(questInfo.getStatus().getQuestBookComponent());
+        tooltipLines.add(questInfo.getStatus().getQuestStateComponent());
         tooltipLines.add(Component.literal(""));
         // We always parse level as one, so check if this mini-quest does not have a min combat level
         if (!questInfo.isMiniQuest || questInfo.additionalRequirements.isEmpty()) {
@@ -163,7 +163,7 @@ public class QuestInfo {
                                 questInfo.getLength().toString().toLowerCase(Locale.ROOT)))
                         .withStyle(ChatFormatting.WHITE)));
 
-        if (questInfo.getStatus() != QuestStatus.COMPLETED) {
+        if (questInfo.getStatus() != ActivityStatus.COMPLETED) {
             tooltipLines.add(Component.literal(""));
             StyledText nextTask = questInfo.getNextTask();
             StyledText[] lines = RenderedStringUtils.wrapTextBySize(nextTask, NEXT_TASK_MAX_WIDTH);
