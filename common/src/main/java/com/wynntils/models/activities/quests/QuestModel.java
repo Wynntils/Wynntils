@@ -190,13 +190,15 @@ public final class QuestModel extends Model {
 
         return new QuestInfo(
                 activity.name(),
+                activity.specialInfo().orElse(null),
+                activity.difficulty().get(),
                 activity.status(),
                 activity.length().get(),
                 activity.requirements().level().key(),
                 activity.description().orElse(StyledText.EMPTY),
-                // FIXME! Additional requirements missing
-                List.of(),
-                activity.type() == ActivityType.MINI_QUEST);
+                activity.requirements(),
+                activity.type() == ActivityType.MINI_QUEST,
+                activity.rewards());
     }
 
     private static class LocationComparator implements Comparator<QuestInfo> {
