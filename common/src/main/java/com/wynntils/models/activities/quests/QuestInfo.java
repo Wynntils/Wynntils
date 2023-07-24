@@ -97,7 +97,7 @@ public class QuestInfo {
     }
 
     public int getSortLevel() {
-        return !isMiniQuest || additionalRequirements.isEmpty()
+        return !isMiniQuest || additionalRequirements.level().a() != 0
                 ? level
                 : additionalRequirements.professionLevels().get(0).a().b();
     }
@@ -179,7 +179,8 @@ public class QuestInfo {
 
         tooltipLines.add(Component.literal(""));
         // We always parse level as one, so check if this mini-quest does not have a min combat level
-        if (!questInfo.isMiniQuest() || questInfo.getAdditionalRequirements().isEmpty()) {
+        if (!questInfo.isMiniQuest()
+                || questInfo.getAdditionalRequirements().level().a() != 0) {
             tooltipLines.add((Models.CombatXp.getCombatLevel().current() >= questInfo.getLevel()
                             ? Component.literal("✔").withStyle(ChatFormatting.GREEN)
                             : Component.literal("✖").withStyle(ChatFormatting.RED))
