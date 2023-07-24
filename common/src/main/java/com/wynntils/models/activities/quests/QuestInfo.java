@@ -236,7 +236,9 @@ public class QuestInfo {
             StyledText[] lines = RenderedStringUtils.wrapTextBySize(nextTask, NEXT_TASK_MAX_WIDTH);
 
             for (StyledText line : lines) {
-                tooltipLines.add(line.getComponent().withStyle(ChatFormatting.GRAY));
+                // We use component color inheritance to make sure we don't overwrite colored quest description parts.
+                tooltipLines.add(
+                        Component.empty().withStyle(ChatFormatting.GRAY).append(line.getComponent()));
             }
         }
 
