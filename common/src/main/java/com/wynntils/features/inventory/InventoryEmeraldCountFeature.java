@@ -145,11 +145,12 @@ public class InventoryEmeraldCountFeature extends Feature {
         poseStack.pushPose();
         poseStack.translate(x, y, 0);
 
-        String[] emeraldAmounts = new String[3];
+        String[] emeraldAmounts = new String[4];
         if (KeyboardUtils.isKeyDown(GLFW.GLFW_KEY_LEFT_SHIFT)) {
             emeraldAmounts[0] = StringUtils.formatAmount(emeralds);
             emeraldAmounts[1] = StringUtils.formatAmount(emeralds / 64d);
             emeraldAmounts[2] = StringUtils.formatAmount(emeralds / 4096d);
+            emeraldAmounts[3] = StringUtils.formatAmount(emeralds / 262144d);
         } else {
             emeraldAmounts = Arrays.stream(Models.Emerald.emeraldsPerUnit(emeralds))
                     .mapToObj(String::valueOf)
@@ -182,6 +183,23 @@ public class InventoryEmeraldCountFeature extends Feature {
             McUtils.mc()
                     .getItemRenderer()
                     .renderGuiItem(poseStack, EmeraldUnits.values()[i].getItemStack(), renderX + 6, renderY + 6);
+
+            if (EmeraldUnits.values()[i].getSymbol().equals("stx")) { // Make stx not look like normal LE
+                McUtils.mc()
+                        .getItemRenderer()
+                        .renderGuiItem(poseStack, EmeraldUnits.values()[i].getItemStack(), renderX + 3, renderY + 4);
+                McUtils.mc()
+                        .getItemRenderer()
+                        .renderGuiItem(poseStack, EmeraldUnits.values()[i].getItemStack(), renderX + 6, renderY + 6);
+                McUtils.mc()
+                        .getItemRenderer()
+                        .renderGuiItem(poseStack, EmeraldUnits.values()[i].getItemStack(), renderX + 9, renderY + 8);
+            } else {
+                // This needs to be separate since Z levels are determined by order here
+                McUtils.mc()
+                        .getItemRenderer()
+                        .renderGuiItem(poseStack, EmeraldUnits.values()[i].getItemStack(), renderX + 6, renderY + 6);
+            }
 
             poseStack.pushPose();
             poseStack.translate(0, 0, 200);
