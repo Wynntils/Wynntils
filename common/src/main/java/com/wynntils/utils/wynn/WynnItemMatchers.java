@@ -41,7 +41,7 @@ public final class WynnItemMatchers {
     /**
      * Returns true if the passed item is a Wynncraft item (armor, weapon, accessory)
      */
-    public static boolean isGear(ItemStack itemStack) {
+    private static boolean isGear(ItemStack itemStack) {
         for (Component line : LoreUtils.getTooltipLines(itemStack)) {
             if (rarityLineMatcher(line).find()) return true;
         }

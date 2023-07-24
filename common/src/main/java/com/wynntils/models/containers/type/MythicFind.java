@@ -6,14 +6,14 @@ package com.wynntils.models.containers.type;
 
 import com.wynntils.models.gear.type.GearTier;
 import com.wynntils.utils.mc.type.Location;
-import java.util.EnumMap;
+import java.util.Map;
 
 public record MythicFind(
         String itemName,
         int chestCount,
         int dryCount,
         int dryBoxes,
-        int dryEmeralds,
-        EnumMap<GearTier, Integer> dryItemTiers,
+        int dryEmeralds, // Added in later patch
+        Map<GearTier, Integer> dryItemTiers, // Added in later patch
         long timestamp,
         Location chestCoordinate) {}

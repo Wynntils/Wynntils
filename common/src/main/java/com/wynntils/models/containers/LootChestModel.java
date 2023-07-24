@@ -17,19 +17,20 @@ import com.wynntils.models.containers.event.MythicFoundEvent;
 import com.wynntils.models.containers.type.MythicFind;
 import com.wynntils.models.gear.type.GearTier;
 import com.wynntils.models.gear.type.GearType;
+import com.wynntils.models.items.items.game.EmeraldItem;
 import com.wynntils.models.items.items.game.GearBoxItem;
+import com.wynntils.models.items.items.game.GearItem;
 import com.wynntils.utils.mc.type.Location;
-import com.wynntils.utils.wynn.WynnItemMatchers;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.EnumMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.Items;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 
 public final class LootChestModel extends Model {
@@ -40,7 +41,7 @@ public final class LootChestModel extends Model {
     private final Storage<Integer> dryCount = new Storage<>(0);
     private final Storage<Integer> dryBoxes = new Storage<>(0);
     private Storage<Integer> dryEmeralds = new Storage<>(0);
-    private Storage<EnumMap<GearTier, Integer>> dryItemTiers = new Storage<>(new EnumMap<>(GearTier.class));
+    private Storage<Map<GearTier, Integer>> dryItemTiers = new Storage<>(new EnumMap<>(GearTier.class));
 
     private BlockPos lastChestPos;
     private int nextExpectedLootContainerId = -2;
@@ -63,6 +64,13 @@ public final class LootChestModel extends Model {
 
     public List<MythicFind> getMythicFinds() {
         return Collections.unmodifiableList(mythicFinds.get());
+    }
+
+    @SubscribeEvent
+    public void onQuickMove(ChestMenuQuickMoveEvent event) {
+        if (event.getContainerId() == nextExpectedLootContainerId) {
+            nextExpectedLootContainerId = -2;
+        }
     }
 
     @SubscribeEvent
@@ -92,63 +100,73 @@ public final class LootChestModel extends Model {
         if (event.getContainerId() != nextExpectedLootContainerId) return;
         if (event.getSlot() >= LOOT_CHEST_ITEM_COUNT) return;
 
-        progressItemFound(event, lastChestPos);
-
         ItemStack itemStack = event.getItemStack();
-        Optional<GearBoxItem> wynnItem = Models.Item.asWynnItem(itemStack, GearBoxItem.class);
-        if (wynnItem.isEmpty()) return;
-        GearBoxItem gearBox = wynnItem.get();
+
+        processItemFind(itemStack);
+
+        Optional<GearBoxItem> gearBoxItem = Models.Item.asWynnItem(itemStack, GearBoxItem.class);
+        if (gearBoxItem.isEmpty()) return;
+
+        GearBoxItem gearBox = gearBoxItem.get();
         if (gearBox.getGearTier() == GearTier.MYTHIC) {
             WynntilsMod.postEvent(new MythicFoundEvent(itemStack));
-            if (gearBox.getGearType() != GearType.MASTERY_TOME) {
-                mythicFinds
-                        .get()
-                        .add(new MythicFind(
-                                StyledText.fromComponent(itemStack.getHoverName())
-                                        .getStringWithoutFormatting(),
-                                openedChestCount.get(),
-                                dryCount.get(),
-                                dryBoxes.get(),
-                                dryEmeralds.get(),
-                                dryItemTiers.get(),
-                                System.currentTimeMillis(),
-                                new Location(lastChestPos)));
-                mythicFinds.touched();
 
-                dryBoxes.store(0);
-                dryCount.store(0);
-                dryEmeralds.store(0);
-                dryItemTiers.store(new EnumMap<>(GearTier.class));
+            if (gearBox.getGearType() != GearType.MASTERY_TOME) {
+                storeMythicFind(itemStack);
+                resetDryStatistics();
             }
-        } else {
-            dryBoxes.store(dryBoxes.get() + 1);
         }
     }
 
-    private void progressItemFound(ContainerSetSlotEvent event, BlockPos chestPos) {
-        ItemStack itemStack = event.getItemStack();
-        if (itemStack.is(Items.EMERALD)) {
-            dryEmeralds.store(dryEmeralds.get() + itemStack.getCount());
+    private void processItemFind(ItemStack itemStack) {
+        Optional<EmeraldItem> emeraldOptional = Models.Item.asWynnItem(itemStack, EmeraldItem.class);
+        if (emeraldOptional.isPresent()) {
+            dryEmeralds.store(dryEmeralds.get() + emeraldOptional.get().getEmeraldValue());
         }
-        if (WynnItemMatchers.isGearBox(itemStack)) {
-            GearTier gearBoxTier = GearTier.fromComponent(itemStack.getHoverName());
+
+        Optional<GearBoxItem> gearBoxOptional = Models.Item.asWynnItem(itemStack, GearBoxItem.class);
+        if (gearBoxOptional.isPresent()) {
+            GearTier gearBoxTier = gearBoxOptional.get().getGearTier();
+
             if (gearBoxTier == GearTier.MYTHIC) {
                 // we don't store the actual "MYTHIC" in the dry data
                 return;
             }
+
+            dryBoxes.store(dryBoxes.get() + 1);
             dryItemTiers.get().merge(gearBoxTier, 1, Integer::sum);
             dryItemTiers.touched();
         }
-        if (WynnItemMatchers.isGear(itemStack)) {
-            dryItemTiers.get().merge(GearTier.NORMAL, 1, Integer::sum);
+
+        Optional<GearItem> gearOptional = Models.Item.asWynnItem(itemStack, GearItem.class);
+        if (gearOptional.isPresent()) {
+            // Technically we can only find identified Normal tier gear, but we'll check anyway
+            GearTier gearTier = gearOptional.get().getGearTier();
+            dryItemTiers.get().merge(gearTier, 1, Integer::sum);
             dryItemTiers.touched();
         }
     }
 
-    @SubscribeEvent
-    public void onQuickMove(ChestMenuQuickMoveEvent event) {
-        if (event.getContainerId() == nextExpectedLootContainerId) {
-            nextExpectedLootContainerId = -2;
-        }
+    private void storeMythicFind(ItemStack itemStack) {
+        mythicFinds
+                .get()
+                .add(new MythicFind(
+                        StyledText.fromComponent(itemStack.getHoverName()).getStringWithoutFormatting(),
+                        openedChestCount.get(),
+                        dryCount.get(),
+                        dryBoxes.get(),
+                        dryEmeralds.get(),
+                        dryItemTiers.get(),
+                        System.currentTimeMillis(),
+                        new Location(lastChestPos)));
+
+        mythicFinds.touched();
+    }
+
+    private void resetDryStatistics() {
+        dryBoxes.store(0);
+        dryCount.store(0);
+        dryEmeralds.store(0);
+        dryItemTiers.store(new EnumMap<>(GearTier.class));
     }
 }
