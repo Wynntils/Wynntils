@@ -1,9 +1,21 @@
+## [0.0.3-alpha.190](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.189...v0.0.3-alpha.190) (2023-07-24)
+
+
+### New Features
+
+* Initial page setting for custom book ([#1819](https://github.com/Wynntils/Artemis/issues/1819)) ([1136d9b](https://github.com/Wynntils/Artemis/commit/1136d9b8393dc3177678f294710eaa5be95fc674))
+
 ## [0.0.3-alpha.189](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.188...v0.0.3-alpha.189) (2023-07-24)
 
 
 ### New Features
 
 * Import favorites from legacy ([#1765](https://github.com/Wynntils/Artemis/issues/1765)) ([beabe75](https://github.com/Wynntils/Artemis/commit/beabe7511f80cd58bc5a711f37222306f32c6dc0))
+
+
+### Miscellaneous Chores
+
+* **release:** v0.0.3-alpha.189 [skip ci] ([fbb20bf](https://github.com/Wynntils/Artemis/commit/fbb20bf8be9f45f3d40800c76870f11085ed1615))
 
 ## [0.0.3-alpha.188](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.187...v0.0.3-alpha.188) (2023-07-23)
 
@@ -36,16 +48,4 @@
 ### Miscellaneous Chores
 
 * **release:** v0.0.3-alpha.186 [skip ci] ([5a854bc](https://github.com/Wynntils/Artemis/commit/5a854bc5fba428bad0d5b58b7cb97b274ab42cfb))
-
-## [0.0.3-alpha.185](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.184...v0.0.3-alpha.185) (2023-07-23)
-
-
-### New Features
-
-* Cave icon for book entries ([#1816](https://github.com/Wynntils/Artemis/issues/1816)) ([ed500e3](https://github.com/Wynntils/Artemis/commit/ed500e393e21a7aa4d250808efdb5c03d8a538eb))
-
-
-### Miscellaneous Chores
-
-* **release:** v0.0.3-alpha.185 [skip ci] ([a56e1ac](https://github.com/Wynntils/Artemis/commit/a56e1acf3a1c8646ea6f425d122667752f97f636))
 
