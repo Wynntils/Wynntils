@@ -28,8 +28,6 @@
   "feature.wynntils.auraTimerOverlay.vignetteOnAura.description": "Legyen átfedés alkalmazva, ha egy aura aktív?",
   "feature.wynntils.auraTimerOverlay.vignetteOnAura.name": "Átfedés Képernyőrátéte",
   "feature.wynntils.autoApplyResourcePack.name": "Forráscsomag Automatikus Betöltése",
-  "feature.wynntils.autoApplyResourcePack.packHash.description": "Utolsó Wynncraft Csomag Hash",
-  "feature.wynntils.autoApplyResourcePack.packHash.name": "Csomag Hash",
   "feature.wynntils.beaconBeam.name": "Jelzőfény",
   "feature.wynntils.beaconBeam.waypointBeamColor.description": "Milyen legyen a jelzőfény színe?",
   "feature.wynntils.beaconBeam.waypointBeamColor.name": "Jelzőfény Fényének Színe",
