@@ -6,7 +6,7 @@ package com.wynntils.models.players.hades;
 
 import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.components.Managers;
-import com.wynntils.features.user.players.HadesFeature;
+import com.wynntils.features.players.HadesFeature;
 import com.wynntils.hades.objects.HadesConnection;
 import com.wynntils.hades.protocol.interfaces.adapters.IHadesClientAdapter;
 import com.wynntils.hades.protocol.packets.client.HCPacketAuthenticate;
@@ -16,6 +16,7 @@ import com.wynntils.hades.protocol.packets.server.HSPacketDisconnect;
 import com.wynntils.hades.protocol.packets.server.HSPacketDiscordLobbyServer;
 import com.wynntils.hades.protocol.packets.server.HSPacketPong;
 import com.wynntils.hades.protocol.packets.server.HSPacketUpdateMutual;
+import com.wynntils.models.players.event.HadesUserAddedEvent;
 import com.wynntils.models.players.hades.event.HadesEvent;
 import com.wynntils.models.players.hades.objects.HadesUser;
 import com.wynntils.utils.mc.McUtils;
@@ -42,9 +43,7 @@ public class HadesClientHandler implements IHadesClientAdapter {
             hadesConnection.disconnect();
 
             if (Managers.Connection.onServer()) {
-                McUtils.sendMessageToClient(
-                        Component.literal("Could not connect to HadesServer because you are not logged in on Athena.")
-                                .withStyle(ChatFormatting.RED));
+                McUtils.sendErrorToClient("Could not connect to HadesServer because you are not logged in on Athena.");
             }
 
             throw new IllegalStateException("Tried to auth to HadesServer without being logged in on Athena.");
@@ -58,8 +57,7 @@ public class HadesClientHandler implements IHadesClientAdapter {
         WynntilsMod.postEvent(new HadesEvent.Disconnected());
 
         if (Managers.Connection.onServer()) {
-            McUtils.sendMessageToClient(
-                    Component.literal("Disconnected from HadesServer").withStyle(ChatFormatting.RED));
+            McUtils.sendErrorToClient("Disconnected from HadesServer");
         }
 
         WynntilsMod.info("Disconnected from HadesServer.");
@@ -104,13 +102,17 @@ public class HadesClientHandler implements IHadesClientAdapter {
 
     @Override
     public void handleUpdateMutual(HSPacketUpdateMutual packet) {
-        if (!HadesFeature.INSTANCE.getOtherPlayerInfo) return;
+        if (!Managers.Feature.getFeatureInstance(HadesFeature.class)
+                .getOtherPlayerInfo
+                .get()) return;
 
         Optional<HadesUser> userOptional = userRegistry.getUser(packet.getUser());
         if (userOptional.isPresent()) {
             userOptional.get().updateFromPacket(packet);
         } else {
-            userRegistry.putUser(packet.getUser(), new HadesUser(packet));
+            HadesUser hadesUser = new HadesUser(packet);
+            userRegistry.putUser(packet.getUser(), hadesUser);
+            WynntilsMod.postEventOnMainThread(new HadesUserAddedEvent(hadesUser));
         }
     }
 

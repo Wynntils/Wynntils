@@ -4,8 +4,11 @@
  */
 package com.wynntils.utils.type;
 
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.HashSet;
 import java.util.Iterator;
+import java.util.Optional;
 import java.util.Set;
 import java.util.concurrent.TimeUnit;
 import java.util.stream.Stream;
@@ -37,7 +40,14 @@ public class TimedSet<T> implements Iterable<T> {
     }
 
     public void put(T entry) {
-        entries.add(new TimedEntry(entry, System.currentTimeMillis() + timeJump));
+        entries.add(new TimedEntry(entry, System.currentTimeMillis(), timeJump));
+    }
+
+    public long getLastAddedTimestamp() {
+        Optional<TimedEntry> latest = entries.stream().max(Comparator.comparing(TimedEntry::getExpiration));
+        if (latest.isEmpty()) return 0;
+
+        return latest.get().getExpiration() - timeJump;
     }
 
     public void clear() {
@@ -63,6 +73,12 @@ public class TimedSet<T> implements Iterable<T> {
         return StreamSupport.stream(this.spliterator(), false);
     }
 
+    public Set<TimedEntry> getEntries() {
+        if (autoClear) releaseEntries();
+
+        return Collections.unmodifiableSet(entries);
+    }
+
     private class TimedSetIterator implements Iterator<T> {
         private final Iterator<TimedEntry> original = entries.iterator();
 
@@ -75,27 +91,38 @@ public class TimedSet<T> implements Iterable<T> {
         public T next() {
             return original.next().getEntry();
         }
+
+        @Override
+        public void remove() {
+            original.remove();
+        }
     }
 
-    private final class TimedEntry {
-        final T entry;
-        final long expiration;
+    public final class TimedEntry {
+        private final T entry;
+        private final long creation;
+        private final long duration;
 
-        private TimedEntry(T entry, long expiration) {
+        private TimedEntry(T entry, long creation, long duration) {
             this.entry = entry;
-            this.expiration = expiration;
+            this.creation = creation;
+            this.duration = duration;
         }
 
         public long getExpiration() {
-            return expiration;
+            return creation + duration;
         }
 
-        private T getEntry() {
+        public long getCreation() {
+            return creation;
+        }
+
+        public T getEntry() {
             return entry;
         }
 
         private boolean shouldRelease() {
-            return System.currentTimeMillis() >= expiration;
+            return System.currentTimeMillis() >= getExpiration();
         }
     }
 }

@@ -4,15 +4,24 @@
  */
 package com.wynntils.models.containers.type;
 
+import com.wynntils.core.text.StyledText;
 import java.util.regex.Pattern;
 
 public enum SearchableContainerType {
     BANK(Pattern.compile("§0\\[Pg. (\\d+)\\] §8(.*)'s?§0 Bank"), Pattern.compile("§f§lPage \\d+§a >§2>§a>§2>§a>"), 8),
+    BLOCK_BANK(
+            Pattern.compile("§0\\[Pg. (\\d+)\\] §8(.*)'s?§0 Block Bank"),
+            Pattern.compile("§f§lPage \\d+§a >§2>§a>§2>§a>"),
+            8),
+    BOOKSHELF(
+            Pattern.compile("§0\\[Pg. (\\d+)\\] §8(.*)'s?§0 Bookshelf"),
+            Pattern.compile("§f§lPage \\d+§a >§2>§a>§2>§a>"),
+            8),
     MISC_BUCKET(
             Pattern.compile("§0\\[Pg. (\\d+)\\] §8(.*)'s?§0 Misc. Bucket"),
             Pattern.compile("§f§lPage \\d+§a >§2>§a>§2>§a>"),
             8),
-    GUILD_BANK(Pattern.compile(".+: Bank \\(.+\\)"), null, -1),
+    GUILD_BANK(Pattern.compile(".+: Bank \\(.+\\)"), Pattern.compile("§a§lNext Page"), 27),
     MEMBER_LIST(Pattern.compile(".+: Members"), Pattern.compile("§a§lNext Page"), 28);
 
     private final Pattern titlePattern;
@@ -33,9 +42,9 @@ public enum SearchableContainerType {
         return nextItemPattern;
     }
 
-    public static SearchableContainerType getContainerType(String title) {
+    public static SearchableContainerType getContainerType(StyledText title) {
         for (SearchableContainerType type : SearchableContainerType.values()) {
-            if (type.titlePattern.matcher(title).matches()) {
+            if (title.getMatcher(type.titlePattern).matches()) {
                 return type;
             }
         }

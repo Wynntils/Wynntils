@@ -4,6 +4,7 @@
  */
 package com.wynntils.models.gear.tooltip;
 
+import com.wynntils.core.text.StyledText;
 import com.wynntils.models.character.type.ClassType;
 import com.wynntils.models.elements.type.Skill;
 import com.wynntils.models.gear.type.GearInfo;
@@ -11,10 +12,8 @@ import com.wynntils.models.gear.type.GearInstance;
 import com.wynntils.models.items.items.game.GearItem;
 import com.wynntils.models.stats.type.StatListOrdering;
 import com.wynntils.models.wynnitem.parsing.WynnItemParser;
-import com.wynntils.utils.mc.ComponentUtils;
 import com.wynntils.utils.mc.LoreUtils;
 import com.wynntils.utils.type.Pair;
-import com.wynntils.utils.wynn.WynnUtils;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.Matcher;
@@ -107,15 +106,14 @@ public final class GearTooltipBuilder {
         boolean headerEnded = false;
         boolean footerStarted = false;
         for (Component loreLine : lore) {
-            String codedLine = WynnUtils.normalizeBadString(ComponentUtils.getCoded(loreLine));
+            StyledText codedLine = StyledText.fromComponent(loreLine).getNormalized();
 
             if (!footerStarted) {
-                Matcher setBonusMatcher = WynnItemParser.SET_BONUS_PATTEN.matcher(codedLine);
-                if (setBonusMatcher.matches()) {
+                if (codedLine.matches(WynnItemParser.SET_BONUS_PATTEN)) {
                     headerEnded = true;
                     footerStarted = true;
                 } else {
-                    Matcher matcher = WynnItemParser.IDENTIFICATION_STAT_PATTERN.matcher(codedLine);
+                    Matcher matcher = codedLine.getMatcher(WynnItemParser.IDENTIFICATION_STAT_PATTERN);
                     if (matcher.matches()) {
                         String statName = matcher.group(6);
 

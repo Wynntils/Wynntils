@@ -4,87 +4,66 @@
  */
 package com.wynntils.handlers.scoreboard;
 
-import java.util.ArrayList;
+import com.wynntils.core.text.StyledText;
 import java.util.List;
+import java.util.Objects;
+import org.apache.commons.lang3.ArrayUtils;
 
 public final class ScoreboardSegment {
-    private final SegmentMatcher matcher;
-    private final String header;
-    private final int startIndex;
+    private final ScoreboardPart scoreboardPart;
+    private final StyledText header;
+    private final List<StyledText> content;
+    private boolean visible = true;
 
-    private String end;
-    private List<String> content = null;
-    private int endIndex = -1;
-    private boolean changed;
-
-    public ScoreboardSegment(SegmentMatcher matcher, String header, int startIndex) {
-        this.matcher = matcher;
+    public ScoreboardSegment(ScoreboardPart scoreboardPart, StyledText header, List<StyledText> content) {
+        this.scoreboardPart = scoreboardPart;
         this.header = header;
-        this.startIndex = startIndex;
-        this.changed = false;
+        this.content = content;
+    }
+
+    public ScoreboardPart getScoreboardPart() {
+        return scoreboardPart;
+    }
+
+    public StyledText getHeader() {
+        return header;
+    }
+
+    public List<StyledText> getContent() {
+        return content;
+    }
+
+    public boolean isVisible() {
+        return visible;
+    }
+
+    public void setVisibility(boolean visible) {
+        this.visible = visible;
     }
 
     @Override
     public String toString() {
-        return "Segment[" + "matcher="
-                + matcher + ", " + "header="
-                + header + ", " + "content="
-                + content + ", " + "startIndex="
-                + startIndex + ", " + "endIndex="
-                + endIndex + ']';
+        return "ScoreboardSegment{" + "scoreboardPart="
+                + scoreboardPart + ", header='"
+                + header + '\'' + ", content="
+                + ArrayUtils.toString(content.toArray()) + ", visible="
+                + visible + '}';
     }
 
-    public List<String> getContent() {
-        return content;
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        ScoreboardSegment segment = (ScoreboardSegment) o;
+        return visible == segment.visible
+                && Objects.equals(scoreboardPart, segment.scoreboardPart)
+                && Objects.equals(header, segment.header)
+                && Objects.deepEquals(content, segment.content);
     }
 
-    public int getStartIndex() {
-        return startIndex;
-    }
-
-    public int getEndIndex() {
-        return endIndex;
-    }
-
-    public SegmentMatcher getMatcher() {
-        return matcher;
-    }
-
-    public String getHeader() {
-        return header;
-    }
-
-    public String getEnd() {
-        return end;
-    }
-
-    public List<String> getScoreboardLines() {
-        List<String> lines = new ArrayList<>(this.content);
-        lines.add(this.header);
-        if (this.end != null) {
-            lines.add(this.end);
-        }
-
-        return lines;
-    }
-
-    public boolean isChanged() {
-        return changed;
-    }
-
-    public void setContent(List<String> content) {
-        this.content = content;
-    }
-
-    public void setEndIndex(int endIndex) {
-        this.endIndex = endIndex;
-    }
-
-    public void setChanged(boolean changed) {
-        this.changed = changed;
-    }
-
-    public void setEnd(String end) {
-        this.end = end;
+    @Override
+    public int hashCode() {
+        return Objects.hash(scoreboardPart, header, content, visible);
     }
 }

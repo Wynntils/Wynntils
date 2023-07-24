@@ -1,26 +1,26 @@
 plugins {
-    id "architectury-plugin" version "3.4-SNAPSHOT"
-    id "dev.architectury.loom" version "1.0-SNAPSHOT" apply false
-    id 'io.github.juuxel.loom-quiltflower' version '1.8.0' apply false
-    id "com.diffplug.spotless" version "6.3.0"
+    id "architectury-plugin" version "${architectury_plugin_version}"
+    id "dev.architectury.loom" version "${architectury_loom_version}" apply false
+    id "io.github.juuxel.loom-vineflower" version "${loom_vineflower_version}" apply false
+    id "com.diffplug.spotless" version "${spotless_version}"
 }
 
 architectury {
-    minecraft = rootProject.minecraft_version
+    minecraft = minecraft_version
 }
 
 // Add "wynntils.hotswap=true" to your personal gradle properties file to use hotswap.
 // By default, this is C:\Users\<your username>\.gradle\gradle.properties on Windows
 // or ~/.gradle/gradle.properties on Linux/MacOS.
-def usingHotswapAgent = project.hasProperty('wynntils.hotswap') ? project.getProperty('wynntils.hotswap') == "true" : false
+def usingHotswapAgent = project.hasProperty("wynntils.hotswap") ? project.getProperty("wynntils.hotswap") == "true" : false
 
 // On the release branches, this string will be automatically updated by the bots
 // Do not change this in the main branch!
-version = "0.0.2-SNAPSHOT"
+version = "0.0.3-SNAPSHOT"
 
 subprojects {
     apply plugin: "dev.architectury.loom"
-    apply plugin: "io.github.juuxel.loom-quiltflower"
+    apply plugin: "io.github.juuxel.loom-vineflower"
 
     repositories {
         maven { url = "https://pkgs.dev.azure.com/djtheredstoner/DevAuth/_packaging/public/maven/v1" }
@@ -39,7 +39,6 @@ subprojects {
 
     loom {
         silentMojangMappingsLicense()
-        clientOnlyMinecraftJar()
 
         accessWidenerPath = file("src/main/resources/wynntils.accessWidener")
 
@@ -57,10 +56,10 @@ subprojects {
     }
 
     dependencies {
-        minecraft "com.mojang:minecraft:${rootProject.minecraft_version}"
+        minecraft "com.mojang:minecraft:${minecraft_version}"
         mappings loom.layered() {
             officialMojangMappings()
-            parchment("org.parchmentmc.data:parchment-${rootProject.minecraft_version}:${rootProject.parchment_version}@zip")
+            parchment("org.parchmentmc.data:parchment-${parchment_version}@zip")
         }
     }
 }
@@ -70,7 +69,7 @@ allprojects {
     apply plugin: "architectury-plugin"
     apply plugin: "com.diffplug.spotless"
 
-    archivesBaseName = rootProject.archives_base_name
+    archivesBaseName = archives_base_name
     version = rootProject.version
 
     repositories {
@@ -84,7 +83,7 @@ allprojects {
 
     java {
         toolchain {
-            languageVersion.set(JavaLanguageVersion.of(rootProject.java_version))
+            languageVersion.set(JavaLanguageVersion.of(java_version))
         }
         withSourcesJar()
     }
@@ -94,38 +93,41 @@ allprojects {
             // define the steps to apply to Java source code
             importOrder()
             removeUnusedImports()
-            palantirJavaFormat('2.26.0')
+            palantirJavaFormat(spotless_palantir_version)
             trimTrailingWhitespace()
             endWithNewline()
             // Custom rule from https://github.com/apache/geode
-            custom 'Refuse wildcard imports', {
+            custom "Refuse wildcard imports", {
                 if (it =~ /\nimport .*\*;/) {
-                    throw new AssertionError("Do not use wildcard imports.  'spotlessApply' cannot resolve this issue.")
+                    throw new AssertionError("Do not use wildcard imports. 'spotlessApply' cannot resolve this issue.")
                 }
             }
-            custom 'Refuse IntelliJ annotations', {
+            custom "Refuse IntelliJ annotations", {
                 if (it =~ /\nimport org\.jetbrains\.annotations\./) {
-                    throw new AssertionError("Do not use IntelliJ annotations.  'spotlessApply' cannot resolve this issue.")
+                    throw new AssertionError("Do not use IntelliJ annotations. 'spotlessApply' cannot resolve this issue.")
                 }
             }
-            licenseHeader '/*\n' +
-                    ' * Copyright © Wynntils $YEAR.\n' +
-                    ' * This file is released under AGPLv3. See LICENSE for full license details.\n' +
-                    ' */'
+            custom "No empty line after opening curly brace", {
+                it.replaceAll(/\{\n\n/, '{\n')
+            }
+            licenseHeader "/*\n" +
+                    " * Copyright © Wynntils \$YEAR.\n" +
+                    " * This file is released under AGPLv3. See LICENSE for full license details.\n" +
+                    " */"
         }
         json {
-            target 'src/**/*.json'
+            target "src/**/*.json"
             gson()
                     .indentWithSpaces(2)
                     .sortByKeys()
-                    .version('2.8.1')
+                    .version(spotless_gson_version)
             trimTrailingWhitespace()
             endWithNewline()
         }
-        format 'misc', {
+        format "misc", {
             // define the files to apply `misc` to
-            target '*.gradle', '*.md', '.gitignore', '*.properties'
-            targetExclude('CHANGELOG.md')
+            target "*.gradle", "*.md", ".gitignore", "*.properties"
+            targetExclude("CHANGELOG.md")
 
             // define the steps to apply to those files
             trimTrailingWhitespace()

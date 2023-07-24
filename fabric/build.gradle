@@ -11,20 +11,20 @@ buildscript {
 
     Architectury fabric transformer
     - Transforms relevant classes in dev environment at runtime
-    - class EventBusTransform in com.github.coehlrich:EventBusTransformer dependency
+    - class EventBusTransform in com.github.wynntils:EventBusTransformer dependency
 
     GradleTask applyEventBus
     - Transforms relevant classes after shadowing jar for use in final jar
-    - class Main in com.github.coehlrich:EventBusTransformer dependency
+    - class Main in com.github.wynntils:EventBusTransformer dependency
      */
 
     dependencies {
-        classpath "com.github.wynntils:EventBusTransformer:${rootProject.event_bus_transformer_version}"
+        classpath "com.github.wynntils:EventBusTransformer:${event_bus_transformer_version}"
     }
 }
 
 plugins {
-    id "com.github.johnrengelman.shadow" version "7.1.2"
+    id "com.github.johnrengelman.shadow" version "${shadow_version}"
 }
 
 import com.wynntils.eventbustransformer.EventBusTransform
@@ -55,27 +55,35 @@ repositories {
 }
 
 dependencies {
-    modImplementation "net.fabricmc:fabric-loader:${rootProject.fabric_loader_version}"
-    include(modImplementation(fabricApi.module("fabric-resource-loader-v0", rootProject.fabric_version)))
+    modImplementation "net.fabricmc:fabric-loader:${fabric_loader_version}"
+    include(modImplementation(fabricApi.module("fabric-resource-loader-v0", fabric_version)))
 
-    common(project(path: ":common", configuration: "namedElements")) { transitive false }
+    testImplementation(common(project(path: ":common", configuration: "namedElements"))) { transitive false }
     shadowCommon(project(path: ":common", configuration: "transformProductionFabric")) { transitive false }
 
-    shadowImplementation("net.minecraftforge:eventbus:${rootProject.forge_eventbus_version}") {
-        exclude group: 'org.ow2.asm'
-        exclude group: 'org.apache.logging.log4j'
-        exclude group: 'cpw.mods', module: 'modlauncher'
+    shadowImplementation("net.minecraftforge:eventbus:${forge_eventbus_version}") {
+        exclude group: "org.ow2.asm"
+        exclude group: "org.apache.logging.log4j"
+        exclude group: "cpw.mods", module: "modlauncher"
     }
 
     // Hades Protocol
-    shadowImplementation("com.wynntils.hades:hades:${rootProject.hades_version}") { transitive false }
+    shadowImplementation("com.wynntils.hades:hades:${hades_version}") { transitive false }
+    shadowImplementation("com.wynntils:antiope:${antiope_version}") { transitive false }
 
-    shadowImplementation("com.github.LlamaLad7:MixinExtras:${rootProject.mixinextras_version}") { transitive false }
+    include(implementation(annotationProcessor("com.github.llamalad7.mixinextras:mixinextras-fabric:${mixinextras_version}")))
 
     // EventBusTransform needs to only be available for the dev env at runtime and
     // does not need to be shadowed
-    runtimeOnly "com.github.wynntils:EventBusTransformer:${rootProject.event_bus_transformer_version}"
-    modRuntimeOnly "me.djtheredstoner:DevAuth-fabric:${rootProject.devauth_version}"
+    runtimeOnly "com.github.wynntils:EventBusTransformer:${event_bus_transformer_version}"
+    modRuntimeOnly "me.djtheredstoner:DevAuth-fabric:${devauth_version}"
+
+    testImplementation("net.fabricmc:fabric-loader-junit:${fabric_loader_version}")
+    testImplementation("org.junit.jupiter:junit-jupiter:${junit_version}")
+}
+
+test {
+    useJUnitPlatform()
 }
 
 processResources {
@@ -93,23 +101,18 @@ components.java {
 }
 
 jar {
-    classifier "dev"
+    archiveClassifier = "dev"
 }
 
 shadowJar {
     configurations = [project.configurations.shadowCommon, project.configurations.shadowImplementation]
 
-    relocate("com.llamalad7.mixinextras", "com.wynntils.mixinextras.shadow")
-    // If we do not exclude this file, we get a module conflict with a mod that does not relocate MixinExtras
-    // I couldn't confirm this, but Forge Discord warned me about it. I will leave this here just in case.
-    exclude 'META-INF/services/javax.*'
-
-    classifier "dev-shadow"
+    archiveClassifier = "dev-shadow"
 }
 
-tasks.register('applyEventBus', Jar) {
+tasks.register("applyEventBus", Jar) {
     inputs.file shadowJar.archiveFile
-    classifier "transformed-eventbus"
+    archiveClassifier = "transformed-eventbus"
     dependsOn shadowJar
     doLast {
         javaexec {
@@ -125,7 +128,7 @@ remapJar {
     injectAccessWidener = true
     input.set applyEventBus.archiveFile
     dependsOn applyEventBus
-    classifier "fabric"
+    archiveClassifier = "fabric+MC-${minecraft_version}"
 }
 
 sourcesJar {

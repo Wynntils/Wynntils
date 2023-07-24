@@ -4,7 +4,8 @@
  */
 package com.wynntils.models.map.pois;
 
-import com.wynntils.features.user.map.MapFeature;
+import com.wynntils.core.components.Managers;
+import com.wynntils.features.map.MapFeature;
 import com.wynntils.models.map.PoiLocation;
 import com.wynntils.models.map.type.DisplayPriority;
 import com.wynntils.utils.colors.CustomColor;
@@ -37,11 +38,21 @@ public class CustomPoi extends StaticIconPoi {
             case ALWAYS -> -1;
             case HIDDEN -> Integer.MAX_VALUE;
             case DEFAULT -> switch (getIcon()) {
-                case CHEST_T1 -> MapFeature.INSTANCE.lootChestTier1PoiMinZoom;
-                case CHEST_T2 -> MapFeature.INSTANCE.lootChestTier2PoiMinZoom;
-                case CHEST_T3 -> MapFeature.INSTANCE.lootChestTier3PoiMinZoom;
-                case CHEST_T4 -> MapFeature.INSTANCE.lootChestTier4PoiMinZoom;
-                default -> MapFeature.INSTANCE.customPoiMinZoom;
+                case CHEST_T1 -> Managers.Feature.getFeatureInstance(MapFeature.class)
+                        .lootChestTier1PoiMinZoom
+                        .get();
+                case CHEST_T2 -> Managers.Feature.getFeatureInstance(MapFeature.class)
+                        .lootChestTier2PoiMinZoom
+                        .get();
+                case CHEST_T3 -> Managers.Feature.getFeatureInstance(MapFeature.class)
+                        .lootChestTier3PoiMinZoom
+                        .get();
+                case CHEST_T4 -> Managers.Feature.getFeatureInstance(MapFeature.class)
+                        .lootChestTier4PoiMinZoom
+                        .get();
+                default -> Managers.Feature.getFeatureInstance(MapFeature.class)
+                        .customPoiMinZoom
+                        .get();
             };
         };
     }

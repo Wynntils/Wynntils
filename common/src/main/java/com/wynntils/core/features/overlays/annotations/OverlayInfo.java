@@ -4,6 +4,7 @@
  */
 package com.wynntils.core.features.overlays.annotations;
 
+import com.wynntils.core.features.overlays.RenderState;
 import com.wynntils.mc.event.RenderEvent;
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;
@@ -18,11 +19,5 @@ public @interface OverlayInfo {
 
     RenderEvent.ElementType renderType();
 
-    RenderState renderAt() default RenderState.Post;
-
-    enum RenderState {
-        Pre,
-        Post,
-        Replace // This is Pre, but the event is cancelled
-    }
+    RenderState renderAt() default RenderState.POST;
 }

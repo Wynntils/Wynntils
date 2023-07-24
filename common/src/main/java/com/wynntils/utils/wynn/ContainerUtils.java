@@ -13,14 +13,14 @@ import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
 import net.minecraft.core.NonNullList;
 import net.minecraft.network.protocol.game.ServerboundContainerClickPacket;
 import net.minecraft.network.protocol.game.ServerboundContainerClosePacket;
-import net.minecraft.network.protocol.game.ServerboundSetCarriedItemPacket;
-import net.minecraft.network.protocol.game.ServerboundUseItemPacket;
-import net.minecraft.world.InteractionHand;
 import net.minecraft.world.inventory.ClickType;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
+import org.lwjgl.glfw.GLFW;
 
 public final class ContainerUtils {
+    private static final int INVENTORY_SLOTS = 36;
+
     public static NonNullList<ItemStack> getItems(Screen screen) {
         if (screen instanceof AbstractContainerScreen<?> containerScreen) {
             return containerScreen.getMenu().getItems();
@@ -36,13 +36,18 @@ public final class ContainerUtils {
             // Another inventory is already open, cannot do this
             return false;
         }
-        int prevItem = McUtils.inventory().selected;
-        McUtils.sendPacket(new ServerboundSetCarriedItemPacket(slotNum));
-        McUtils.sendSequencedPacket(id -> new ServerboundUseItemPacket(InteractionHand.MAIN_HAND, id));
-        McUtils.sendPacket(new ServerboundSetCarriedItemPacket(prevItem));
+
+        NonNullList<ItemStack> items = McUtils.containerMenu().getItems();
+        // We need to offset the slot number so that it corresponds to the correct slot in the inventory
+        clickOnSlot(INVENTORY_SLOTS + slotNum, containerId, GLFW.GLFW_MOUSE_BUTTON_LEFT, items);
+
         return true;
     }
 
+    /**
+     * Clicks on a slot in the specified container. containerId and the list of items should correspond to the
+     * same container!
+     */
     public static void clickOnSlot(int clickedSlot, int containerId, int mouseButton, List<ItemStack> items) {
         Int2ObjectMap<ItemStack> changedSlots = new Int2ObjectOpenHashMap<>();
         changedSlots.put(clickedSlot, new ItemStack(Items.AIR));

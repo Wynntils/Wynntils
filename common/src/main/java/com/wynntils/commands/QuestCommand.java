@@ -10,8 +10,8 @@ import com.mojang.brigadier.context.CommandContext;
 import com.mojang.brigadier.suggestion.SuggestionProvider;
 import com.wynntils.core.commands.Command;
 import com.wynntils.core.components.Models;
-import com.wynntils.models.quests.QuestInfo;
-import com.wynntils.models.quests.type.QuestSortOrder;
+import com.wynntils.models.activities.quests.QuestInfo;
+import com.wynntils.models.activities.type.ActivitySortOrder;
 import com.wynntils.utils.StringUtils;
 import com.wynntils.utils.mc.McUtils;
 import java.util.Arrays;
@@ -30,11 +30,13 @@ import net.minecraft.world.phys.Vec3;
 public class QuestCommand extends Command {
     private static final SuggestionProvider<CommandSourceStack> QUEST_SUGGESTION_PROVIDER =
             (context, builder) -> SharedSuggestionProvider.suggest(
-                    Models.Quest.getQuests(QuestSortOrder.ALPHABETIC).stream().map(QuestInfo::getName), builder);
+                    Models.Quest.getQuests(ActivitySortOrder.ALPHABETIC).stream()
+                            .map(QuestInfo::getName),
+                    builder);
 
     private static final SuggestionProvider<CommandSourceStack> SORT_SUGGESTION_PROVIDER =
             (context, builder) -> SharedSuggestionProvider.suggest(
-                    Arrays.stream(QuestSortOrder.values())
+                    Arrays.stream(ActivitySortOrder.values())
                             .map(order -> order.name().toLowerCase(Locale.ROOT)),
                     builder);
 
@@ -49,9 +51,9 @@ public class QuestCommand extends Command {
     }
 
     @Override
-    public LiteralArgumentBuilder<CommandSourceStack> getCommandBuilder() {
-        return Commands.literal(getCommandName())
-                .then(Commands.literal("list")
+    public LiteralArgumentBuilder<CommandSourceStack> getCommandBuilder(
+            LiteralArgumentBuilder<CommandSourceStack> base) {
+        return base.then(Commands.literal("list")
                         .executes((ctxt) -> listQuests(ctxt, "distance"))
                         .then(Commands.argument("sort", StringArgumentType.word())
                                 .suggests(SORT_SUGGESTION_PROVIDER)
@@ -76,7 +78,7 @@ public class QuestCommand extends Command {
     }
 
     private int listQuests(CommandContext<CommandSourceStack> context, String sort) {
-        QuestSortOrder order = QuestSortOrder.fromString(sort);
+        ActivitySortOrder order = ActivitySortOrder.fromString(sort);
 
         Models.Quest.rescanQuestBook(true, false);
 
@@ -123,7 +125,7 @@ public class QuestCommand extends Command {
 
         quests = Models.Quest.getQuestsRaw().stream()
                 .filter(quest -> StringUtils.initialMatch(quest.getName(), searchText)
-                        || StringUtils.initialMatch(quest.getNextTask(), searchText))
+                        || StringUtils.initialMatch(quest.getNextTask().getStringWithoutFormatting(), searchText))
                 .toList();
 
         if (quests.isEmpty()) {
@@ -160,7 +162,7 @@ public class QuestCommand extends Command {
                         .withStyle(ChatFormatting.DARK_GREEN));
             }
 
-            if (quest.equals(Models.Quest.getTrackedQuest())) {
+            if (quest.equals(Models.Activity.getTrackedQuestInfo())) {
                 response.append(Component.literal(" [Tracked]")
                         .withStyle(ChatFormatting.DARK_AQUA)
                         .withStyle(style ->
@@ -187,7 +189,7 @@ public class QuestCommand extends Command {
                                 StringUtils.capitalized(quest.getLength().toString()))
                         .withStyle(ChatFormatting.YELLOW))
                 .append(Component.literal("\n - Next task: ").withStyle(ChatFormatting.WHITE))
-                .append(Component.literal(quest.getNextTask()).withStyle(ChatFormatting.GRAY))
+                .append(quest.getNextTask().getComponent().withStyle(ChatFormatting.GRAY))
                 .append(Component.literal("\n"))
                 .append(Component.literal("[Track quest]")
                         .withStyle(style -> style.withClickEvent(new ClickEvent(
@@ -221,7 +223,7 @@ public class QuestCommand extends Command {
     }
 
     private int untrackQuest(CommandContext<CommandSourceStack> context) {
-        QuestInfo trackedQuest = Models.Quest.getTrackedQuest();
+        QuestInfo trackedQuest = Models.Activity.getTrackedQuestInfo();
         if (trackedQuest == null) {
             context.getSource()
                     .sendFailure(Component.literal("No quest currently tracked").withStyle(ChatFormatting.RED));
@@ -268,7 +270,7 @@ public class QuestCommand extends Command {
         } else if (matchingQuests.size() > 1) {
             MutableComponent error = Component.literal("Quest '" + questName + "' match several quests:")
                     .withStyle(ChatFormatting.RED);
-            for (var quest : matchingQuests) {
+            for (QuestInfo quest : matchingQuests) {
                 error.append(Component.literal("\n - ").withStyle(ChatFormatting.GRAY))
                         .append(Component.literal(quest.getName()).withStyle(ChatFormatting.WHITE));
             }

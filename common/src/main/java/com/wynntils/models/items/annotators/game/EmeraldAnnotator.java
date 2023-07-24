@@ -4,6 +4,7 @@
  */
 package com.wynntils.models.items.annotators.game;
 
+import com.wynntils.core.text.StyledText;
 import com.wynntils.handlers.item.ItemAnnotation;
 import com.wynntils.handlers.item.ItemAnnotator;
 import com.wynntils.models.emeralds.type.EmeraldUnits;
@@ -16,12 +17,12 @@ public final class EmeraldAnnotator implements ItemAnnotator {
     private static final Pattern EMERALD_PATTERN = Pattern.compile("^§a(Liquid )?Emerald( Block)?$");
 
     @Override
-    public ItemAnnotation getAnnotation(ItemStack itemStack, String name) {
+    public ItemAnnotation getAnnotation(ItemStack itemStack, StyledText name) {
         EmeraldUnits unit = EmeraldUnits.fromItemType(itemStack.getItem());
         if (unit == null) return null;
 
         // Verify that name is correct
-        Matcher matcher = EMERALD_PATTERN.matcher(name);
+        Matcher matcher = name.getMatcher(EMERALD_PATTERN);
         if (!matcher.matches()) return null;
 
         return new EmeraldItem(itemStack.getCount(), unit);

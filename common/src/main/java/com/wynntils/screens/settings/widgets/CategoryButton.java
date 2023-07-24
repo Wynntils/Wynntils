@@ -5,7 +5,8 @@
 package com.wynntils.screens.settings.widgets;
 
 import com.mojang.blaze3d.vertex.PoseStack;
-import com.wynntils.core.features.properties.FeatureCategory;
+import com.wynntils.core.config.Category;
+import com.wynntils.core.text.StyledText;
 import com.wynntils.screens.base.widgets.WynntilsButton;
 import com.wynntils.utils.colors.CommonColors;
 import com.wynntils.utils.render.FontRenderer;
@@ -15,25 +16,25 @@ import net.minecraft.client.resources.language.I18n;
 import net.minecraft.network.chat.Component;
 
 public class CategoryButton extends WynntilsButton {
-    private final FeatureCategory featureCategory;
+    private final Category category;
 
-    public CategoryButton(int x, int y, int width, int height, FeatureCategory featureCategory) {
-        super(x, y, width, height, Component.translatable(featureCategory.toString()));
-        this.featureCategory = featureCategory;
+    public CategoryButton(int x, int y, int width, int height, Category category) {
+        super(x, y, width, height, Component.translatable(category.toString()));
+        this.category = category;
     }
 
     @Override
-    public void renderButton(PoseStack poseStack, int mouseX, int mouseY, float partialTick) {
+    public void renderWidget(PoseStack poseStack, int mouseX, int mouseY, float partialTick) {
         FontRenderer.getInstance()
                 .renderAlignedTextInBox(
                         poseStack,
-                        I18n.get(featureCategory.toString()),
+                        StyledText.fromString(I18n.get(category.toString())),
                         this.getX(),
                         this.getX() + this.width,
                         this.getY(),
                         0,
                         CommonColors.CYAN,
-                        HorizontalAlignment.Center,
+                        HorizontalAlignment.CENTER,
                         TextShadow.NORMAL);
     }
 

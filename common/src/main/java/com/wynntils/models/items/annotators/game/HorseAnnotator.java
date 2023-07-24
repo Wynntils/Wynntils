@@ -4,6 +4,7 @@
  */
 package com.wynntils.models.items.annotators.game;
 
+import com.wynntils.core.text.StyledText;
 import com.wynntils.handlers.item.ItemAnnotation;
 import com.wynntils.handlers.item.ItemAnnotator;
 import com.wynntils.models.items.items.game.HorseItem;
@@ -22,9 +23,9 @@ public final class HorseAnnotator implements ItemAnnotator {
     private static final Pattern HORSE_NAME_PATTERN = Pattern.compile("^§7Name: (.+)$");
 
     @Override
-    public ItemAnnotation getAnnotation(ItemStack itemStack, String name) {
+    public ItemAnnotation getAnnotation(ItemStack itemStack, StyledText name) {
         if (itemStack.getItem() != Items.SADDLE) return null;
-        Matcher matcher = HORSE_PATTERN.matcher(name);
+        Matcher matcher = name.getMatcher(HORSE_PATTERN);
         if (!matcher.matches()) return null;
 
         Matcher tierMatcher = LoreUtils.matchLoreLine(itemStack, 0, HORSE_TIER_PATTERN);
@@ -43,6 +44,6 @@ public final class HorseAnnotator implements ItemAnnotator {
         Matcher nameMatcher = LoreUtils.matchLoreLine(itemStack, 5, HORSE_NAME_PATTERN);
         String horseName = nameMatcher.matches() ? nameMatcher.group(1) : null;
 
-        return new HorseItem(tier, new CappedValue(level, maxLevel), xp, horseName);
+        return new HorseItem(tier, new CappedValue(level, maxLevel), new CappedValue(xp, 100), horseName);
     }
 }

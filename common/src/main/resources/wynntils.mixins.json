@@ -1,6 +1,5 @@
 {
   "client": [
-    "EntityMixin",
     "AbstractContainerScreenMixin",
     "BossHealthOverlayMixin",
     "CapeLayerMixin",
@@ -9,19 +8,22 @@
     "ClientLevelMixin",
     "ClientPacketListenerMixin",
     "CommandSuggestionsMixin",
-    "ConnectionMixin",
     "ConnectScreenMixin",
+    "ConnectionMixin",
     "CrashReportMixin",
     "CustomHeadLayerMixin",
     "DownloadedPackSourceMixin",
     "ElytraLayerMixin",
     "EntityLookupMixin",
+    "EntityMixin",
+    "EntityRendererMixin",
     "GuiMixin",
     "HumanoidArmorLayerMixin",
+    "InventoryScreenMixin",
     "ItemRendererMixin",
     "ItemStackMixin",
-    "KeyboardHandlerMixin",
     "KeyMappingMixin",
+    "KeyboardHandlerMixin",
     "LevelRendererMixin",
     "LivingEntityRendererMixin",
     "LocalPlayerMixin",
@@ -31,7 +33,8 @@
     "MultiPlayerGameModeMixin",
     "PlayerMixin",
     "PlayerRendererMixin",
-    "PotionItemMixin",
+    "PlayerTabOverlayMixin",
+    "ProgressScreenMixin",
     "ResourceLoadStateTrackerMixin",
     "ScoreboardMixin",
     "ScreenMixin",
@@ -42,8 +45,7 @@
     "accessors.ItemStackInfoAccessor",
     "accessors.LerpingBossEventAccessor",
     "accessors.MinecraftAccessor",
-    "accessors.OptionsAccessor",
-    "invokers.ChatScreenInvoker"
+    "accessors.OptionsAccessor"
   ],
   "compatibilityLevel": "JAVA_17",
   "injectors": {
@@ -52,6 +54,5 @@
   "minVersion": "0.8.5",
   "mixins": [],
   "package": "com.wynntils.mc.mixin",
-  "plugin": "com.wynntils.core.mod.WynntilsMixinPlugin",
   "required": true
 }

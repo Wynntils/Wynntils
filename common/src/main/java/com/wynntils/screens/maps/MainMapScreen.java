@@ -8,7 +8,8 @@ import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.wynntils.core.components.Managers;
 import com.wynntils.core.components.Models;
-import com.wynntils.features.user.map.MapFeature;
+import com.wynntils.features.map.MapFeature;
+import com.wynntils.models.lootruns.LootrunInstance;
 import com.wynntils.models.map.PoiLocation;
 import com.wynntils.models.map.pois.CustomPoi;
 import com.wynntils.models.map.pois.IconPoi;
@@ -17,9 +18,11 @@ import com.wynntils.models.map.pois.Poi;
 import com.wynntils.models.map.pois.TerritoryPoi;
 import com.wynntils.models.map.pois.WaypointPoi;
 import com.wynntils.screens.base.widgets.BasicTexturedButton;
+import com.wynntils.utils.colors.CommonColors;
 import com.wynntils.utils.mc.KeyboardUtils;
 import com.wynntils.utils.mc.McUtils;
 import com.wynntils.utils.mc.type.Location;
+import com.wynntils.utils.render.MapRenderer;
 import com.wynntils.utils.render.RenderUtils;
 import com.wynntils.utils.render.Texture;
 import com.wynntils.utils.type.BoundingBox;
@@ -52,6 +55,8 @@ public final class MainMapScreen extends AbstractMapScreen {
     public static Screen create(float mapCenterX, float mapCenterZ) {
         return new MainMapScreen(mapCenterX, mapCenterZ);
     }
+
+    private boolean showTerrs = false;
 
     @Override
     protected void doInit() {
@@ -100,6 +105,23 @@ public final class MainMapScreen extends AbstractMapScreen {
                                 .append(Component.translatable("screens.wynntils.map.help.description9")))));
 
         this.addRenderableWidget(new BasicTexturedButton(
+                width / 2 - Texture.MAP_BUTTONS_BACKGROUND.width() / 2 + 6 + 20 * 3,
+                (int) (this.renderHeight
+                        - this.renderedBorderYOffset
+                        - Texture.MAP_BUTTONS_BACKGROUND.height() / 2
+                        - 6),
+                16,
+                16,
+                Texture.MAP_MANAGER_BUTTON,
+                (b) -> McUtils.mc().setScreen(PoiManagementScreen.create(this)),
+                List.of(
+                        Component.literal("[>] ")
+                                .withStyle(ChatFormatting.RED)
+                                .append(Component.translatable("screens.wynntils.map.manager.name")),
+                        Component.translatable("screens.wynntils.map.manager.description")
+                                .withStyle(ChatFormatting.GRAY))));
+
+        this.addRenderableWidget(new BasicTexturedButton(
                 width / 2 - Texture.MAP_BUTTONS_BACKGROUND.width() / 2 + 6 + 20 * 2,
                 (int) (this.renderHeight
                         - this.renderedBorderYOffset
@@ -143,7 +165,7 @@ public final class MainMapScreen extends AbstractMapScreen {
 
                     if (Models.Compass.getCompassLocation().isPresent()) {
                         Location location = Models.Compass.getCompassLocation().get();
-                        updateMapCenter((float) location.x, (float) location.z);
+                        updateMapCenter(location.x, location.z);
                     }
                 },
                 List.of(
@@ -177,18 +199,20 @@ public final class MainMapScreen extends AbstractMapScreen {
 
     @Override
     public void doRender(PoseStack poseStack, int mouseX, int mouseY, float partialTick) {
-        if (holdingMapKey && !MapFeature.INSTANCE.openMapKeybind.getKeyMapping().isDown()) {
+        if (holdingMapKey
+                && !Managers.Feature.getFeatureInstance(MapFeature.class)
+                        .openMapKeybind
+                        .getKeyMapping()
+                        .isDown()) {
             this.onClose();
             return;
         }
-
-        updateMapCenterIfDragging(mouseX, mouseY);
 
         RenderSystem.setShaderColor(1f, 1f, 1f, 1f);
 
         RenderSystem.enableDepthTest();
 
-        renderMap(poseStack, MapFeature.INSTANCE.renderUsingLinear);
+        renderMap(poseStack);
 
         RenderUtils.enableScissor(
                 (int) (renderX + renderedBorderXOffset), (int) (renderY + renderedBorderYOffset), (int) mapWidth, (int)
@@ -199,11 +223,34 @@ public final class MainMapScreen extends AbstractMapScreen {
         // Cursor
         renderCursor(
                 poseStack,
-                MapFeature.INSTANCE.playerPointerScale,
-                MapFeature.INSTANCE.pointerColor,
-                MapFeature.INSTANCE.pointerType);
+                Managers.Feature.getFeatureInstance(MapFeature.class)
+                        .playerPointerScale
+                        .get(),
+                Managers.Feature.getFeatureInstance(MapFeature.class)
+                        .pointerColor
+                        .get(),
+                Managers.Feature.getFeatureInstance(MapFeature.class)
+                        .pointerType
+                        .get());
 
-        RenderSystem.disableScissor();
+        LootrunInstance currentLootrun = Models.Lootrun.getCurrentLootrun();
+
+        if (currentLootrun != null) {
+            MapRenderer.renderLootrunLine(
+                    currentLootrun,
+                    2f,
+                    3f,
+                    poseStack,
+                    centerX,
+                    centerZ,
+                    mapCenterX,
+                    mapCenterZ,
+                    currentZoom,
+                    CommonColors.LIGHT_BLUE.asInt(),
+                    CommonColors.BLACK.asInt());
+        }
+
+        RenderUtils.disableScissor();
 
         renderBackground(poseStack);
 
@@ -213,22 +260,29 @@ public final class MainMapScreen extends AbstractMapScreen {
     }
 
     private void renderPois(PoseStack poseStack, int mouseX, int mouseY) {
-        Stream<? extends Poi> pois = Models.Map.getServicePois().stream();
+        Stream<? extends Poi> pois = Models.Poi.getServicePois();
 
-        pois = Stream.concat(pois, Models.Map.getCombatPois().stream());
-        pois = Stream.concat(pois, Models.Map.getLabelPois().stream());
-        pois = Stream.concat(pois, MapFeature.INSTANCE.customPois.stream());
+        pois = Stream.concat(pois, Models.Poi.getCombatPois());
+        pois = Stream.concat(pois, Models.Poi.getLabelPois());
+        pois = Stream.concat(pois, Managers.Feature.getFeatureInstance(MapFeature.class).customPois.get().stream());
+        pois = Stream.concat(pois, Models.Poi.getProvidedCustomPois().stream());
         pois = Stream.concat(pois, Models.Compass.getCompassWaypoint().stream());
         pois = Stream.concat(
                 pois,
                 Models.Hades.getHadesUsers()
                         .filter(
-                                hadesUser -> (hadesUser.isPartyMember() && MapFeature.INSTANCE.renderRemotePartyPlayers)
-                                        || (hadesUser.isMutualFriend() && MapFeature.INSTANCE.renderRemoteFriendPlayers)
-                                /*|| (hadesUser.isGuildMember() && MapFeature.INSTANCE.renderRemoteGuildPlayers)*/ )
+                                hadesUser -> (hadesUser.isPartyMember()
+                                                && Managers.Feature.getFeatureInstance(MapFeature.class)
+                                                        .renderRemotePartyPlayers
+                                                        .get())
+                                        || (hadesUser.isMutualFriend()
+                                                && Managers.Feature.getFeatureInstance(MapFeature.class)
+                                                        .renderRemoteFriendPlayers
+                                                        .get())
+                                /*|| (hadesUser.isGuildMember() && Managers.Feature.getFeatureInstance(MapFeature.class).renderRemoteGuildPlayers)*/ )
                         .map(PlayerMainMapPoi::new));
 
-        if (KeyboardUtils.isControlDown()) {
+        if (showTerrs) {
             pois = Stream.concat(pois, Models.Territory.getTerritoryPois().stream());
         }
 
@@ -236,13 +290,41 @@ public final class MainMapScreen extends AbstractMapScreen {
                 pois.collect(Collectors.toList()),
                 poseStack,
                 BoundingBox.centered(mapCenterX, mapCenterZ, width / currentZoom, height / currentZoom),
-                MapFeature.INSTANCE.poiScale,
+                Managers.Feature.getFeatureInstance(MapFeature.class).poiScale.get(),
                 mouseX,
                 mouseY);
     }
 
     @Override
-    public boolean mouseClicked(double mouseX, double mouseY, int button) {
+    public boolean keyPressed(int keyCode, int scanCode, int modifiers) {
+        if (keyCode == GLFW.GLFW_KEY_LEFT_CONTROL) {
+            if (Managers.Feature.getFeatureInstance(MapFeature.class)
+                    .holdGuildMapOpen
+                    .get()) {
+                showTerrs = true;
+            } else {
+                showTerrs = !showTerrs;
+            }
+        }
+
+        return super.keyPressed(keyCode, scanCode, modifiers);
+    }
+
+    @Override
+    public boolean keyReleased(int keyCode, int scanCode, int modifiers) {
+        if (keyCode == GLFW.GLFW_KEY_LEFT_CONTROL) {
+            if (Managers.Feature.getFeatureInstance(MapFeature.class)
+                    .holdGuildMapOpen
+                    .get()) {
+                showTerrs = false;
+            }
+        }
+
+        return super.keyReleased(keyCode, scanCode, modifiers);
+    }
+
+    @Override
+    public boolean doMouseClicked(double mouseX, double mouseY, int button) {
         for (GuiEventListener child : children()) {
             if (child.isMouseOver(mouseX, mouseY)) {
                 child.mouseClicked(mouseX, mouseY, button);
@@ -251,10 +333,10 @@ public final class MainMapScreen extends AbstractMapScreen {
         }
 
         if (button == GLFW.GLFW_MOUSE_BUTTON_RIGHT) {
-            if (McUtils.mc().player.isShiftKeyDown()
+            if (McUtils.player().isShiftKeyDown()
                     && Models.Compass.getCompassLocation().isPresent()) {
                 Location location = Models.Compass.getCompassLocation().get();
-                updateMapCenter((float) location.x, (float) location.z);
+                updateMapCenter(location.x, location.z);
                 return true;
             }
 
@@ -266,7 +348,7 @@ public final class MainMapScreen extends AbstractMapScreen {
             }
 
             if (hovered != null && !(hovered instanceof TerritoryPoi)) {
-                McUtils.playSound(SoundEvents.EXPERIENCE_ORB_PICKUP);
+                McUtils.playSoundUI(SoundEvents.EXPERIENCE_ORB_PICKUP);
                 if (hovered.hasStaticLocation()) {
                     if (hovered instanceof IconPoi iconPoi) {
                         if (iconPoi instanceof CustomPoi customPoi) {
@@ -297,7 +379,10 @@ public final class MainMapScreen extends AbstractMapScreen {
                 }
             } else if (KeyboardUtils.isAltDown()) {
                 if (hovered instanceof CustomPoi customPoi) {
-                    MapFeature.INSTANCE.customPois.remove(customPoi);
+                    Managers.Feature.getFeatureInstance(MapFeature.class)
+                            .customPois
+                            .get()
+                            .remove(customPoi);
                     Managers.Config.saveConfig();
                 }
             } else {
@@ -305,16 +390,16 @@ public final class MainMapScreen extends AbstractMapScreen {
             }
         }
 
-        return super.mouseClicked(mouseX, mouseY, button);
+        return super.doMouseClicked(mouseX, mouseY, button);
     }
 
     private void setCompassToMouseCoords(double mouseX, double mouseY) {
         double gameX = (mouseX - centerX) / currentZoom + mapCenterX;
         double gameZ = (mouseY - centerZ) / currentZoom + mapCenterZ;
-        Location compassLocation = new Location(gameX, 0, gameZ);
+        Location compassLocation = Location.containing(gameX, 0, gameZ);
         Models.Compass.setCompassLocation(compassLocation);
 
-        McUtils.playSound(SoundEvents.EXPERIENCE_ORB_PICKUP);
+        McUtils.playSoundUI(SoundEvents.EXPERIENCE_ORB_PICKUP);
     }
 
     private void shareLocationOrCompass(int button) {

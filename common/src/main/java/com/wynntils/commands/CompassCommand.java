@@ -57,9 +57,9 @@ public class CompassCommand extends Command {
     }
 
     @Override
-    public LiteralArgumentBuilder<CommandSourceStack> getCommandBuilder() {
-        return Commands.literal(getCommandName())
-                .then(Commands.literal("at")
+    public LiteralArgumentBuilder<CommandSourceStack> getCommandBuilder(
+            LiteralArgumentBuilder<CommandSourceStack> base) {
+        return base.then(Commands.literal("at")
                         .then(Commands.argument("location", Vec3Argument.vec3()).executes(this::compassAtVec3)))
                 .then(Commands.literal("share")
                         .then(Commands.literal("location")
@@ -152,7 +152,7 @@ public class CompassCommand extends Command {
         if (selectedKind == null) return 0;
 
         Vec3 currentLocation = McUtils.player().position();
-        Optional<ServicePoi> closestServiceOptional = Models.Map.getServicePois().stream()
+        Optional<ServicePoi> closestServiceOptional = Models.Poi.getServicePois()
                 .filter(poi -> poi.getKind() == selectedKind)
                 .min(Comparator.comparingDouble(poi -> currentLocation.distanceToSqr(
                         poi.getLocation().getX(),
@@ -181,7 +181,7 @@ public class CompassCommand extends Command {
     private int compassPlace(CommandContext<CommandSourceStack> context) {
         String searchedName = context.getArgument("name", String.class);
 
-        List<Poi> places = new ArrayList<>(Models.Map.getLabelPois().stream()
+        List<Poi> places = new ArrayList<>(Models.Poi.getLabelPois()
                 .filter(poi -> StringUtils.partialMatch(poi.getName(), searchedName))
                 .toList());
 

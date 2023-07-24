@@ -18,7 +18,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 @Mixin(Main.class)
 public abstract class MainMixin {
     // Inject as early as possible (but after Main statics execute), and disable java.awt.headless on non-macOS systems
-    @Inject(method = "main", at = @At("HEAD"), remap = false)
+    @Inject(method = "main([Ljava/lang/String;)V", at = @At("HEAD"), remap = false)
     private static void awtHack(CallbackInfo ci) {
         // A bit dangerous, but shouldn't technically cause any issues on most platforms - headless mode just disables
         // the awt API

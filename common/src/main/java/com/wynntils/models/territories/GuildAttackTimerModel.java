@@ -6,8 +6,9 @@ package com.wynntils.models.territories;
 
 import com.wynntils.core.components.Handlers;
 import com.wynntils.core.components.Model;
-import com.wynntils.handlers.chat.RecipientType;
+import com.wynntils.core.text.StyledText;
 import com.wynntils.handlers.chat.event.ChatMessageReceivedEvent;
+import com.wynntils.handlers.chat.type.RecipientType;
 import com.wynntils.handlers.scoreboard.ScoreboardPart;
 import com.wynntils.handlers.scoreboard.ScoreboardSegment;
 import com.wynntils.utils.type.Pair;
@@ -22,7 +23,7 @@ import net.minecraftforge.eventbus.api.SubscribeEvent;
 
 public final class GuildAttackTimerModel extends Model {
     private static final Pattern GUILD_ATTACK_PATTERN = Pattern.compile("§b- (.+):(.+) §3(.+)");
-    private static final Pattern GUILD_DEFENSE_CHAT_PATTERN = Pattern.compile("§r§3.+§b (.+) defense is (.+)");
+    private static final Pattern GUILD_DEFENSE_CHAT_PATTERN = Pattern.compile("§3.+§b (.+) defense is (.+)");
     private static final ScoreboardPart GUILD_ATTACK_SCOREBOARD_PART = new GuildAttackScoreboardPart();
 
     private final TimedSet<Pair<String, String>> territoryDefenseSet = new TimedSet<>(5, TimeUnit.SECONDS, true);
@@ -39,7 +40,7 @@ public final class GuildAttackTimerModel extends Model {
     public void onMessage(ChatMessageReceivedEvent event) {
         if (event.getRecipientType() != RecipientType.GUILD) return;
 
-        Matcher matcher = GUILD_DEFENSE_CHAT_PATTERN.matcher(event.getOriginalCodedMessage());
+        Matcher matcher = event.getOriginalStyledText().getMatcher(GUILD_DEFENSE_CHAT_PATTERN);
         if (!matcher.matches()) return;
 
         Optional<TerritoryAttackTimer> territory = attackTimers.stream()
@@ -70,15 +71,11 @@ public final class GuildAttackTimerModel extends Model {
                 .findFirst();
     }
 
-    public boolean isGuildAttackSegment(ScoreboardSegment segment) {
-        return segment.getMatcher() == GuildAttackScoreboardPart.GUILD_ATTACK_MATCHER;
-    }
-
     void processChanges(ScoreboardSegment segment) {
         List<TerritoryAttackTimer> newList = new ArrayList<>();
 
-        for (String line : segment.getContent()) {
-            Matcher matcher = GUILD_ATTACK_PATTERN.matcher(line);
+        for (StyledText line : segment.getContent()) {
+            Matcher matcher = line.getMatcher(GUILD_ATTACK_PATTERN);
 
             if (matcher.matches()) {
                 TerritoryAttackTimer timer = new TerritoryAttackTimer(

@@ -39,6 +39,10 @@ public enum ProfessionType {
     }
 
     public static ProfessionType fromString(String type) {
-        return ProfessionType.valueOf(type.toUpperCase(Locale.ROOT));
+        try {
+            return valueOf(type.toUpperCase(Locale.ROOT));
+        } catch (IllegalArgumentException e) {
+            return null;
+        }
     }
 }

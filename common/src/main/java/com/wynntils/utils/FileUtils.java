@@ -67,6 +67,22 @@ public final class FileUtils {
         }
     }
 
+    public static void moveFile(File sourceFile, File destFile) {
+        try {
+            org.apache.commons.io.FileUtils.moveFile(sourceFile, destFile);
+        } catch (IOException exception) {
+            WynntilsMod.error("Move file " + sourceFile + " to " + destFile + " failed");
+        }
+    }
+
+    public static void tryCopyFile(File sourceFile, File destFile) {
+        try {
+            copyFile(sourceFile, destFile);
+        } catch (IOException e) {
+            WynntilsMod.error("Copy file " + sourceFile + " to " + destFile + " failed");
+        }
+    }
+
     public static void copyFile(File sourceFile, File destFile) throws IOException {
         if (sourceFile == null || destFile == null) {
             throw new IllegalArgumentException("Argument files should not be null.");

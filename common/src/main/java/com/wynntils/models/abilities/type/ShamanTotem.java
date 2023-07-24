@@ -4,7 +4,7 @@
  */
 package com.wynntils.models.abilities.type;
 
-import com.wynntils.utils.mc.type.Location;
+import net.minecraft.core.Position;
 
 public class ShamanTotem {
     private final int totemNumber;
@@ -12,7 +12,7 @@ public class ShamanTotem {
     private int timerEntityId;
     private int time;
     private TotemState state;
-    private Location location;
+    private Position position;
 
     public ShamanTotem(
             int totemNumber,
@@ -20,13 +20,13 @@ public class ShamanTotem {
             int visibleEntityId,
             int time,
             TotemState totemState,
-            Location location) {
+            Position position) {
         this.totemNumber = totemNumber;
         this.timerEntityId = timerEntityId;
         this.visibleEntityId = visibleEntityId;
         this.time = time;
         this.state = totemState;
-        this.location = location;
+        this.position = position;
     }
 
     public int getTotemNumber() {
@@ -61,12 +61,12 @@ public class ShamanTotem {
         this.state = state;
     }
 
-    public Location getLocation() {
-        return location;
+    public Position getPosition() {
+        return position;
     }
 
-    public void setLocation(Location location) {
-        this.location = location;
+    public void setPosition(Position position) {
+        this.position = position;
     }
 
     public enum TotemState {

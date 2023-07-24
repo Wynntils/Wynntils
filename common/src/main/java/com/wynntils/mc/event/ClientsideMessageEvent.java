@@ -4,7 +4,7 @@
  */
 package com.wynntils.mc.event;
 
-import com.wynntils.utils.mc.ComponentUtils;
+import com.wynntils.core.text.StyledText;
 import net.minecraft.network.chat.Component;
 import net.minecraftforge.eventbus.api.Cancelable;
 import net.minecraftforge.eventbus.api.Event;
@@ -13,37 +13,37 @@ import net.minecraftforge.eventbus.api.Event;
 @Cancelable
 public class ClientsideMessageEvent extends Event {
     private final Component originalComponent;
-    private final String originalCodedMessage;
+    private final StyledText originalStyledText;
 
     private Component component;
-    private String codedMessage;
+    private StyledText styledText;
 
     public ClientsideMessageEvent(Component component) {
         this.originalComponent = component;
-        this.originalCodedMessage = ComponentUtils.getCoded(component);
+        this.originalStyledText = StyledText.fromComponent(component);
 
         this.component = originalComponent;
-        this.codedMessage = originalCodedMessage;
+        this.styledText = originalStyledText;
     }
 
     public void setMessage(Component component) {
         this.component = component;
-        this.codedMessage = ComponentUtils.getCoded(component);
+        this.styledText = StyledText.fromComponent(component);
     }
 
     public Component getOriginalComponent() {
         return originalComponent;
     }
 
-    public String getOriginalCodedMessage() {
-        return originalCodedMessage;
+    public StyledText getOriginalStyledText() {
+        return originalStyledText;
     }
 
     public Component getComponent() {
         return component;
     }
 
-    public String getCodedMessage() {
-        return codedMessage;
+    public StyledText getStyledText() {
+        return styledText;
     }
 }

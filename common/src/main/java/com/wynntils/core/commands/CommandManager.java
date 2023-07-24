@@ -7,21 +7,27 @@ package com.wynntils.core.commands;
 import com.mojang.brigadier.CommandDispatcher;
 import com.mojang.brigadier.ParseResults;
 import com.mojang.brigadier.StringReader;
+import com.mojang.brigadier.builder.LiteralArgumentBuilder;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import com.mojang.brigadier.suggestion.Suggestions;
-import com.wynntils.commands.BombBellCommand;
+import com.mojang.brigadier.tree.CommandNode;
+import com.mojang.brigadier.tree.LiteralCommandNode;
+import com.mojang.brigadier.tree.RootCommandNode;
+import com.wynntils.commands.BombCommand;
 import com.wynntils.commands.CompassCommand;
 import com.wynntils.commands.ConfigCommand;
 import com.wynntils.commands.FeatureCommand;
 import com.wynntils.commands.FunctionCommand;
 import com.wynntils.commands.LocateCommand;
 import com.wynntils.commands.LootrunCommand;
+import com.wynntils.commands.MapCommand;
 import com.wynntils.commands.QuestCommand;
 import com.wynntils.commands.ServersCommand;
 import com.wynntils.commands.TerritoryCommand;
 import com.wynntils.commands.WynntilsCommand;
 import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.components.Manager;
+import com.wynntils.mc.event.CommandSuggestionsEvent;
 import com.wynntils.utils.mc.McUtils;
 import java.util.ArrayList;
 import java.util.List;
@@ -36,6 +42,7 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.HoverEvent;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.network.chat.Style;
+import net.minecraftforge.eventbus.api.SubscribeEvent;
 
 // Credits to Earthcomputer and Forge
 // Parts of this code originates from https://github.com/Earthcomputer/clientcommands, and other
@@ -50,13 +57,19 @@ public final class CommandManager extends Manager {
         registerAllCommands();
     }
 
-    public CommandDispatcher<CommandSourceStack> getClientDispatcher() {
-        return clientDispatcher;
+    @SuppressWarnings("unchecked")
+    public void addNode(
+            RootCommandNode<SharedSuggestionProvider> root, CommandNode<? extends SharedSuggestionProvider> node) {
+        root.addChild((LiteralCommandNode<SharedSuggestionProvider>) node);
+    }
+
+    public LiteralCommandNode<CommandSourceStack> registerCommand(LiteralArgumentBuilder<CommandSourceStack> command) {
+        return clientDispatcher.register(command);
     }
 
     private void registerCommand(Command command) {
         commandInstanceSet.add(command);
-        clientDispatcher.register(command.getCommandBuilder());
+        command.getCommandBuilders().forEach(clientDispatcher::register);
     }
 
     private void registerCommandWithCommandSet(WynntilsCommand command) {
@@ -69,21 +82,14 @@ public final class CommandManager extends Manager {
         return executeCommand(reader, message);
     }
 
-    public CompletableFuture<Suggestions> getCompletionSuggestions(
-            String cmd,
-            CommandDispatcher<SharedSuggestionProvider> serverDispatcher,
-            ParseResults<CommandSourceStack> clientParse,
-            ParseResults<SharedSuggestionProvider> serverParse,
-            int cursor) {
-        StringReader stringReader = new StringReader(cmd);
-        if (stringReader.canRead() && stringReader.peek() == '/') {
-            stringReader.skip();
-        }
+    @SubscribeEvent
+    public void onCommandSuggestions(CommandSuggestionsEvent event) {
+        CompletableFuture<Suggestions> serverSuggestions = event.getSuggestions();
+        StringReader command = event.getCommand();
 
+        ParseResults<CommandSourceStack> clientParse = clientDispatcher.parse(command, getSource());
         CompletableFuture<Suggestions> clientSuggestions =
-                clientDispatcher.getCompletionSuggestions(clientParse, cursor);
-        CompletableFuture<Suggestions> serverSuggestions =
-                serverDispatcher.getCompletionSuggestions(serverParse, cursor);
+                clientDispatcher.getCompletionSuggestions(clientParse, event.getCursor());
 
         CompletableFuture<Suggestions> result = new CompletableFuture<>();
 
@@ -91,13 +97,13 @@ public final class CommandManager extends Manager {
             final List<Suggestions> suggestions = new ArrayList<>();
             suggestions.add(clientSuggestions.join());
             suggestions.add(serverSuggestions.join());
-            result.complete(Suggestions.merge(stringReader.getString(), suggestions));
+            result.complete(Suggestions.merge(command.getString(), suggestions));
         });
 
-        return result;
+        event.setSuggestions(result);
     }
 
-    public ClientCommandSourceStack getSource() {
+    private ClientCommandSourceStack getSource() {
         LocalPlayer player = McUtils.player();
 
         if (player == null) return null;
@@ -121,9 +127,9 @@ public final class CommandManager extends Manager {
         try {
             clientDispatcher.execute(parse);
         } catch (CommandRuntimeException e) {
-            sendError(Component.literal(e.getMessage()));
+            McUtils.sendErrorToClient(e.getMessage());
         } catch (CommandSyntaxException e) {
-            sendError(Component.literal(e.getRawMessage().getString()));
+            McUtils.sendErrorToClient(e.getRawMessage().getString());
             if (e.getInput() != null && e.getCursor() >= 0) {
                 int cursor = Math.min(e.getCursor(), e.getInput().length());
                 MutableComponent text = Component.literal("")
@@ -162,13 +168,14 @@ public final class CommandManager extends Manager {
     }
 
     private void registerAllCommands() {
-        registerCommand(new BombBellCommand());
+        registerCommand(new BombCommand());
         registerCommand(new CompassCommand());
         registerCommand(new ConfigCommand());
         registerCommand(new FeatureCommand());
         registerCommand(new FunctionCommand());
         registerCommand(new LocateCommand());
         registerCommand(new LootrunCommand());
+        registerCommand(new MapCommand());
         registerCommand(new QuestCommand());
         registerCommand(new ServersCommand());
         registerCommand(new TerritoryCommand());

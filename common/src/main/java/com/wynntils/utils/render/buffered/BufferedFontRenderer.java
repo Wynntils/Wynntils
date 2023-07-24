@@ -5,6 +5,7 @@
 package com.wynntils.utils.render.buffered;
 
 import com.mojang.blaze3d.vertex.PoseStack;
+import com.wynntils.core.text.StyledText;
 import com.wynntils.mc.mixin.accessors.MinecraftAccessor;
 import com.wynntils.utils.colors.CommonColors;
 import com.wynntils.utils.colors.CustomColor;
@@ -15,9 +16,12 @@ import com.wynntils.utils.render.TextRenderTask;
 import com.wynntils.utils.render.type.HorizontalAlignment;
 import com.wynntils.utils.render.type.TextShadow;
 import com.wynntils.utils.render.type.VerticalAlignment;
+import com.wynntils.utils.type.IterationDecision;
 import java.util.List;
+import net.minecraft.ChatFormatting;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.renderer.MultiBufferSource;
+import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.FormattedText;
 import net.minecraft.network.chat.Style;
 
@@ -43,7 +47,7 @@ public final class BufferedFontRenderer {
     public void renderText(
             PoseStack poseStack,
             MultiBufferSource bufferSource,
-            String text,
+            StyledText text,
             float x,
             float y,
             CustomColor customColor,
@@ -59,14 +63,14 @@ public final class BufferedFontRenderer {
         // TODO: Add rainbow color support
 
         renderX = switch (horizontalAlignment) {
-            case Left -> x;
-            case Center -> x - (font.width(text) / 2f * textScale);
-            case Right -> x - font.width(text) * textScale;};
+            case LEFT -> x;
+            case CENTER -> x - (font.width(text.getString()) / 2f * textScale);
+            case RIGHT -> x - font.width(text.getString()) * textScale;};
 
         renderY = switch (verticalAlignment) {
-            case Top -> y;
-            case Middle -> y - (font.lineHeight / 2f * textScale);
-            case Bottom -> y - font.lineHeight * textScale;};
+            case TOP -> y;
+            case MIDDLE -> y - (font.lineHeight / 2f * textScale);
+            case BOTTOM -> y - font.lineHeight * textScale;};
 
         poseStack.pushPose();
         poseStack.translate(renderX, renderY, 0);
@@ -74,32 +78,37 @@ public final class BufferedFontRenderer {
 
         switch (shadow) {
             case NONE -> font.drawInBatch(
-                    text,
+                    text.getString(),
                     0,
                     0,
                     customColor.asInt(),
                     false,
                     poseStack.last().pose(),
                     bufferSource,
-                    true,
+                    Font.DisplayMode.SEE_THROUGH,
                     0,
                     0xF000F0,
                     font.isBidirectional());
             case NORMAL -> font.drawInBatch(
-                    text,
+                    text.getString(),
                     0,
                     0,
                     customColor.asInt(),
                     true,
                     poseStack.last().pose(),
                     bufferSource,
-                    true,
+                    Font.DisplayMode.SEE_THROUGH,
                     0,
                     0xF000F0,
                     font.isBidirectional());
             case OUTLINE -> {
                 int shadowColor = SHADOW_COLOR.withAlpha(customColor.a).asInt();
-                String strippedText = ComponentUtils.stripColorFormatting(text);
+                String strippedText = text.iterate((part, changes) -> {
+                            changes.remove(part);
+                            changes.add(part.withStyle(partStyle -> partStyle.withColor(ChatFormatting.BLACK)));
+                            return IterationDecision.CONTINUE;
+                        })
+                        .getString();
 
                 font.drawInBatch(
                         strippedText,
@@ -109,7 +118,7 @@ public final class BufferedFontRenderer {
                         false,
                         poseStack.last().pose(),
                         bufferSource,
-                        false,
+                        Font.DisplayMode.NORMAL,
                         0,
                         0xF000F0,
                         font.isBidirectional());
@@ -121,7 +130,7 @@ public final class BufferedFontRenderer {
                         false,
                         poseStack.last().pose(),
                         bufferSource,
-                        false,
+                        Font.DisplayMode.NORMAL,
                         0,
                         0xF000F0,
                         font.isBidirectional());
@@ -133,7 +142,7 @@ public final class BufferedFontRenderer {
                         false,
                         poseStack.last().pose(),
                         bufferSource,
-                        false,
+                        Font.DisplayMode.NORMAL,
                         0,
                         0xF000F0,
                         font.isBidirectional());
@@ -145,20 +154,20 @@ public final class BufferedFontRenderer {
                         false,
                         poseStack.last().pose(),
                         bufferSource,
-                        false,
+                        Font.DisplayMode.NORMAL,
                         0,
                         0xF000F0,
                         font.isBidirectional());
 
                 font.drawInBatch(
-                        text,
+                        text.getString(),
                         0,
                         0,
                         customColor.asInt(),
                         false,
                         poseStack.last().pose(),
                         bufferSource,
-                        true,
+                        Font.DisplayMode.SEE_THROUGH,
                         0,
                         0xF000F0,
                         font.isBidirectional());
@@ -170,8 +179,8 @@ public final class BufferedFontRenderer {
 
     public void renderAlignedTextInBox(
             PoseStack poseStack,
-            MultiBufferSource.BufferSource bufferSource,
-            String text,
+            MultiBufferSource bufferSource,
+            StyledText text,
             float x1,
             float x2,
             float y1,
@@ -182,19 +191,18 @@ public final class BufferedFontRenderer {
             VerticalAlignment verticalAlignment,
             TextShadow textShadow,
             float textScale) {
-
         float renderX =
                 switch (horizontalAlignment) {
-                    case Left -> x1;
-                    case Center -> (x1 + x2) / 2f;
-                    case Right -> x2;
+                    case LEFT -> x1;
+                    case CENTER -> (x1 + x2) / 2f;
+                    case RIGHT -> x2;
                 };
 
         float renderY =
                 switch (verticalAlignment) {
-                    case Top -> y1;
-                    case Middle -> (y1 + y2) / 2f;
-                    case Bottom -> y2;
+                    case TOP -> y1;
+                    case MIDDLE -> (y1 + y2) / 2f;
+                    case BOTTOM -> y2;
                 };
 
         renderText(
@@ -213,8 +221,8 @@ public final class BufferedFontRenderer {
 
     public void renderAlignedTextInBox(
             PoseStack poseStack,
-            MultiBufferSource.BufferSource bufferSource,
-            String text,
+            MultiBufferSource bufferSource,
+            StyledText text,
             float x1,
             float x2,
             float y1,
@@ -242,8 +250,8 @@ public final class BufferedFontRenderer {
 
     public void renderAlignedTextInBox(
             PoseStack poseStack,
-            MultiBufferSource.BufferSource bufferSource,
-            String text,
+            MultiBufferSource bufferSource,
+            StyledText text,
             float x1,
             float x2,
             float y,
@@ -262,15 +270,15 @@ public final class BufferedFontRenderer {
                 maxWidth,
                 customColor,
                 horizontalAlignment,
-                VerticalAlignment.Top,
+                VerticalAlignment.TOP,
                 textShadow,
                 1f);
     }
 
     public void renderAlignedTextInBox(
             PoseStack poseStack,
-            MultiBufferSource.BufferSource bufferSource,
-            String text,
+            MultiBufferSource bufferSource,
+            StyledText text,
             float x,
             float y1,
             float y2,
@@ -288,7 +296,7 @@ public final class BufferedFontRenderer {
                 y2,
                 maxWidth,
                 customColor,
-                HorizontalAlignment.Left,
+                HorizontalAlignment.LEFT,
                 verticalAlignment,
                 textShadow,
                 1f);
@@ -296,8 +304,8 @@ public final class BufferedFontRenderer {
 
     public void renderText(
             PoseStack poseStack,
-            MultiBufferSource.BufferSource bufferSource,
-            String text,
+            MultiBufferSource bufferSource,
+            StyledText text,
             float x,
             float y,
             CustomColor customColor,
@@ -308,10 +316,10 @@ public final class BufferedFontRenderer {
                 poseStack, bufferSource, text, x, y, customColor, horizontalAlignment, verticalAlignment, shadow, 1f);
     }
 
-    public void renderText(
+    private void renderText(
             PoseStack poseStack,
-            MultiBufferSource.BufferSource bufferSource,
-            String text,
+            MultiBufferSource bufferSource,
+            StyledText text,
             float x,
             float y,
             float maxWidth,
@@ -322,7 +330,7 @@ public final class BufferedFontRenderer {
             float textScale) {
         if (text == null) return;
 
-        if (maxWidth == 0 || font.width(text) < maxWidth) {
+        if (maxWidth == 0 || font.width(text.getString()) < maxWidth) {
             renderText(
                     poseStack,
                     bufferSource,
@@ -337,14 +345,17 @@ public final class BufferedFontRenderer {
             return;
         }
 
-        List<FormattedText> parts = font.getSplitter().splitLines(text, (int) maxWidth, Style.EMPTY);
+        List<FormattedText> parts = font.getSplitter().splitLines(text.getComponent(), (int) maxWidth, Style.EMPTY);
 
-        String lastPart = "";
+        StyledText lastPart = StyledText.EMPTY;
         for (int i = 0; i < parts.size(); i++) {
             // copy the format codes to this part as well
-            String part =
-                    ComponentUtils.getLastPartCodes(lastPart) + parts.get(i).getString();
+            Style lastStyle = ComponentUtils.getLastPartCodes(lastPart);
+
+            StyledText part = StyledText.fromComponent(Component.literal("").withStyle(lastStyle))
+                    .append(StyledText.fromComponent(ComponentUtils.formattedTextToComponent(parts.get(i))));
             lastPart = part;
+
             renderText(
                     poseStack,
                     bufferSource,
@@ -360,7 +371,7 @@ public final class BufferedFontRenderer {
 
     public void renderTextsWithAlignment(
             PoseStack poseStack,
-            MultiBufferSource.BufferSource bufferSource,
+            MultiBufferSource bufferSource,
             float x,
             float y,
             List<TextRenderTask> toRender,
@@ -368,42 +379,62 @@ public final class BufferedFontRenderer {
             float height,
             HorizontalAlignment horizontalAlignment,
             VerticalAlignment verticalAlignment) {
+        renderTextsWithAlignment(
+                poseStack, bufferSource, x, y, toRender, width, height, horizontalAlignment, verticalAlignment, 1f);
+    }
+
+    public void renderTextsWithAlignment(
+            PoseStack poseStack,
+            MultiBufferSource bufferSource,
+            float x,
+            float y,
+            List<TextRenderTask> toRender,
+            float width,
+            float height,
+            HorizontalAlignment horizontalAlignment,
+            VerticalAlignment verticalAlignment,
+            float textScale) {
         float renderX =
                 switch (horizontalAlignment) {
-                    case Left -> x;
-                    case Center -> x + width / 2;
-                    case Right -> x + width;
+                    case LEFT -> x;
+                    case CENTER -> x + width / 2;
+                    case RIGHT -> x + width;
                 };
 
         float renderY =
                 switch (verticalAlignment) {
-                    case Top -> y;
-                    case Middle -> y + (height - FontRenderer.getInstance().calculateRenderHeight(toRender)) / 2;
-                    case Bottom -> y + (height - FontRenderer.getInstance().calculateRenderHeight(toRender));
+                    case TOP -> y;
+                    case MIDDLE -> y + (height - FontRenderer.getInstance().calculateRenderHeight(toRender)) / 2;
+                    case BOTTOM -> y + (height - FontRenderer.getInstance().calculateRenderHeight(toRender));
                 };
 
-        renderTexts(poseStack, bufferSource, renderX, renderY, toRender);
+        renderTexts(poseStack, bufferSource, renderX, renderY, toRender, textScale);
     }
 
     public void renderTexts(
+            PoseStack poseStack, MultiBufferSource bufferSource, float x, float y, List<TextRenderTask> lines) {
+        renderTexts(poseStack, bufferSource, x, y, lines, 1f);
+    }
+
+    private void renderTexts(
             PoseStack poseStack,
-            MultiBufferSource.BufferSource bufferSource,
+            MultiBufferSource bufferSource,
             float x,
             float y,
-            List<TextRenderTask> lines) {
+            List<TextRenderTask> lines,
+            float textScale) {
         float currentY = y;
         for (TextRenderTask line : lines) {
-            renderText(poseStack, bufferSource, x, currentY, line);
+            renderText(poseStack, bufferSource, x, currentY, line, textScale);
             // If we ask Mojang code the line height of an empty line we get 0 back so replace with space
             currentY += FontRenderer.getInstance()
                     .calculateRenderHeight(
-                            line.getText().isEmpty() ? " " : line.getText(),
+                            line.getText().isEmpty() ? StyledText.fromString(" ") : line.getText(),
                             line.getSetting().maxWidth());
         }
     }
 
-    public void renderText(
-            PoseStack poseStack, MultiBufferSource.BufferSource bufferSource, float x, float y, TextRenderTask line) {
+    public void renderText(PoseStack poseStack, MultiBufferSource bufferSource, float x, float y, TextRenderTask line) {
         renderText(
                 poseStack,
                 bufferSource,
@@ -417,10 +448,31 @@ public final class BufferedFontRenderer {
                 line.getSetting().shadow());
     }
 
-    public void renderText(
+    private void renderText(
             PoseStack poseStack,
-            MultiBufferSource.BufferSource bufferSource,
-            String text,
+            MultiBufferSource bufferSource,
+            float x,
+            float y,
+            TextRenderTask line,
+            float textScale) {
+        renderText(
+                poseStack,
+                bufferSource,
+                line.getText(),
+                x,
+                y,
+                line.getSetting().maxWidth(),
+                line.getSetting().customColor(),
+                line.getSetting().horizontalAlignment(),
+                line.getSetting().verticalAlignment(),
+                line.getSetting().shadow(),
+                textScale);
+    }
+
+    private void renderText(
+            PoseStack poseStack,
+            MultiBufferSource bufferSource,
+            StyledText text,
             float x,
             float y,
             float maxWidth,
@@ -444,7 +496,7 @@ public final class BufferedFontRenderer {
 
     public void renderTextWithAlignment(
             PoseStack poseStack,
-            MultiBufferSource.BufferSource bufferSource,
+            MultiBufferSource bufferSource,
             float renderX,
             float renderY,
             TextRenderTask toRender,

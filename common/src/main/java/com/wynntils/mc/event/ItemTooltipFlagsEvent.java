@@ -15,6 +15,10 @@ public abstract class ItemTooltipFlagsEvent extends Event {
         this.itemStack = itemStack;
     }
 
+    public ItemStack getItemStack() {
+        return itemStack;
+    }
+
     public static final class Advanced extends ItemTooltipFlagsEvent {
         private TooltipFlag flags;
 

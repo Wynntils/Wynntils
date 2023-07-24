@@ -4,6 +4,7 @@
  */
 package com.wynntils.utils.wynn;
 
+import com.wynntils.core.text.StyledText;
 import com.wynntils.models.gear.type.GearTier;
 import com.wynntils.utils.mc.LoreUtils;
 import com.wynntils.utils.type.CappedValue;
@@ -33,7 +34,7 @@ public final class WynnItemMatchers {
      * Returns true if the passed item has an attack speed
      */
     public static boolean isWeapon(ItemStack itemStack) {
-        String lore = LoreUtils.getStringLore(itemStack);
+        StyledText lore = LoreUtils.getStringLore(itemStack);
         return lore.contains("Attack Speed") && lore.contains("§7");
     }
 
@@ -72,8 +73,8 @@ public final class WynnItemMatchers {
             Matcher durabilityMatcher = durabilityLineMatcher(line);
             if (!durabilityMatcher.find()) continue;
 
-            var currentDurability = Integer.parseInt(durabilityMatcher.group(1));
-            var maxDurability = Integer.parseInt(durabilityMatcher.group(2));
+            int currentDurability = Integer.parseInt(durabilityMatcher.group(1));
+            int maxDurability = Integer.parseInt(durabilityMatcher.group(2));
             return new CappedValue(currentDurability, maxDurability);
         }
 

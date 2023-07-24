@@ -10,7 +10,6 @@ import net.minecraftforge.eventbus.api.Event;
  * These events correspond to data from PartyModel
  */
 public abstract class PartyEvent extends Event {
-
     /**
      * Fired upon obtaining a new party list.
      * Get the party list from the party model manually if required.
@@ -93,6 +92,24 @@ public abstract class PartyEvent extends Event {
 
         public String getPlayerName() {
             return playerName;
+        }
+    }
+
+    public static class PriorityChanged extends PartyEvent {
+        private final String playerName;
+        private final int priority;
+
+        public PriorityChanged(String playerName, int priority) {
+            this.playerName = playerName;
+            this.priority = priority;
+        }
+
+        public String getPlayerName() {
+            return playerName;
+        }
+
+        public int getPriority() {
+            return priority;
         }
     }
 }

@@ -6,6 +6,7 @@ package com.wynntils.screens.partymanagement.widgets;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.wynntils.core.components.Models;
+import com.wynntils.core.text.StyledText;
 import com.wynntils.utils.colors.CommonColors;
 import com.wynntils.utils.mc.McUtils;
 import com.wynntils.utils.render.FontRenderer;
@@ -21,29 +22,28 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 
 public class SuggestionPlayerWidget extends AbstractWidget {
-
     private final String playerName;
     private final Button inviteButton;
-    private final float GRID_DIVISIONS;
+    private final float gridDivisions;
 
     public SuggestionPlayerWidget(float x, float y, int width, int height, String playerName, float gridDivisions) {
         super((int) x, (int) y, width, height, Component.literal(playerName));
         this.playerName = playerName;
-        this.GRID_DIVISIONS = gridDivisions;
+        this.gridDivisions = gridDivisions;
         this.inviteButton = new Button.Builder(
                         Component.translatable("screens.wynntils.partyManagementGui.invite"),
                         (button) -> Models.Party.partyInvite(playerName))
-                .pos((int) (this.getX() + (this.width / GRID_DIVISIONS * 20)) + 1, this.getY())
+                .pos((int) (this.getX() + (this.width / this.gridDivisions * 20)) + 1, this.getY())
                 .size(
-                        (int) ((this.getX() + (this.width / GRID_DIVISIONS * 24))
-                                        - (this.getX() + (this.width / GRID_DIVISIONS * 20)))
+                        (int) ((this.getX() + (this.width / this.gridDivisions * 24))
+                                        - (this.getX() + (this.width / this.gridDivisions * 20)))
                                 - 2,
                         20)
                 .build();
     }
 
     @Override
-    public void render(PoseStack poseStack, int mouseX, int mouseY, float partialTick) {
+    public void renderWidget(PoseStack poseStack, int mouseX, int mouseY, float partialTick) {
         PlayerInfo playerInfo =
                 McUtils.mc().getConnection().getPlayerInfo(playerName); // Disconnected players will just be steves
         ResourceLocation skin =
@@ -52,7 +52,7 @@ public class SuggestionPlayerWidget extends AbstractWidget {
         RenderUtils.drawTexturedRect(
                 poseStack,
                 skin,
-                this.getX() + (this.width / GRID_DIVISIONS) - 8,
+                this.getX() + (this.width / gridDivisions) - 8,
                 this.getY() + (this.height / 2) - 8,
                 8,
                 16,
@@ -66,7 +66,7 @@ public class SuggestionPlayerWidget extends AbstractWidget {
         RenderUtils.drawTexturedRect(
                 poseStack,
                 skin,
-                this.getX() + (this.width / GRID_DIVISIONS) - 8,
+                this.getX() + (this.width / gridDivisions) - 8,
                 this.getY() + (this.height / 2) - 8,
                 8,
                 16,
@@ -82,12 +82,12 @@ public class SuggestionPlayerWidget extends AbstractWidget {
         FontRenderer.getInstance()
                 .renderText(
                         poseStack,
-                        playerName,
-                        this.getX() + (this.width / GRID_DIVISIONS * 3),
+                        StyledText.fromString(playerName),
+                        this.getX() + (this.width / gridDivisions * 3),
                         this.getY() + this.height / 2,
                         CommonColors.GREEN,
-                        HorizontalAlignment.Left,
-                        VerticalAlignment.Middle,
+                        HorizontalAlignment.LEFT,
+                        VerticalAlignment.MIDDLE,
                         TextShadow.NORMAL);
 
         if (Models.Party.getPartyMembers().contains(playerName)) return;

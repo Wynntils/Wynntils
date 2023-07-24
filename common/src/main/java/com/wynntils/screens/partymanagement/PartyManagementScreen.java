@@ -6,6 +6,7 @@ package com.wynntils.screens.partymanagement;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.wynntils.core.components.Models;
+import com.wynntils.core.text.StyledText;
 import com.wynntils.screens.base.TextboxScreen;
 import com.wynntils.screens.base.WynntilsScreen;
 import com.wynntils.screens.base.widgets.TextInputBoxWidget;
@@ -143,8 +144,7 @@ public final class PartyManagementScreen extends WynntilsScreen implements Textb
         createLeaveButton.render(poseStack, mouseX, mouseY, partialTick);
         kickOfflineButton.active = inParty
                 && !Models.Party.getOfflineMembers().isEmpty()
-                && Models.Party.getPartyLeader()
-                        .equals(McUtils.player().getName().getString());
+                && Models.Party.isPartyLeader(McUtils.playerName());
         inviteButton.active = !inviteInput
                 .getTextBoxInput()
                 .isBlank(); // inParty check not required as button automatically makes new party if not in one
@@ -161,14 +161,14 @@ public final class PartyManagementScreen extends WynntilsScreen implements Textb
                         // Yes this is kind of abusive of the formatting system, and I should probably do
                         // another .renderText call, but this makes aligning these two texts significantly easier
                         // (especially with changing gui scales and resolutions)
-                        I18n.get("screens.wynntils.partyManagementGui.inviteFieldHeader1")
+                        StyledText.fromString(I18n.get("screens.wynntils.partyManagementGui.inviteFieldHeader1")
                                 + ChatFormatting.GRAY
-                                + I18n.get("screens.wynntils.partyManagementGui.inviteFieldHeader2"),
+                                + I18n.get("screens.wynntils.partyManagementGui.inviteFieldHeader2")),
                         dividedWidth * 36,
                         dividedHeight * PARTY_LIST_DIV_HEIGHT, // should be lined up with the party list header
                         CommonColors.WHITE,
-                        HorizontalAlignment.Left,
-                        VerticalAlignment.Bottom,
+                        HorizontalAlignment.LEFT,
+                        VerticalAlignment.BOTTOM,
                         TextShadow.NORMAL);
         // endregion
 
@@ -181,47 +181,57 @@ public final class PartyManagementScreen extends WynntilsScreen implements Textb
                 dividedWidth * 4,
                 dividedHeight * PARTY_LIST_DIV_HEIGHT,
                 0,
-                dividedWidth * 28 - dividedWidth * 4,
+                dividedWidth * 30 - dividedWidth * 4,
                 1);
         FontRenderer.getInstance()
                 .renderText(
                         poseStack,
-                        I18n.get("screens.wynntils.partyManagementGui.head"),
+                        StyledText.fromString(I18n.get("screens.wynntils.partyManagementGui.head")),
                         dividedWidth * 5,
                         dividedHeight * PARTY_LIST_DIV_HEIGHT,
                         CommonColors.WHITE,
-                        HorizontalAlignment.Center,
-                        VerticalAlignment.Bottom,
+                        HorizontalAlignment.CENTER,
+                        VerticalAlignment.BOTTOM,
                         TextShadow.NORMAL);
         FontRenderer.getInstance()
                 .renderText(
                         poseStack,
-                        I18n.get("screens.wynntils.partyManagementGui.name"),
+                        StyledText.fromString(I18n.get("screens.wynntils.partyManagementGui.name")),
                         dividedWidth * 7,
                         dividedHeight * PARTY_LIST_DIV_HEIGHT,
                         CommonColors.WHITE,
-                        HorizontalAlignment.Left,
-                        VerticalAlignment.Bottom,
+                        HorizontalAlignment.LEFT,
+                        VerticalAlignment.BOTTOM,
                         TextShadow.NORMAL);
         FontRenderer.getInstance()
                 .renderText(
                         poseStack,
-                        I18n.get("screens.wynntils.partyManagementGui.promote"),
+                        StyledText.fromString(I18n.get("screens.wynntils.partyManagementGui.promote")),
                         dividedWidth * 22,
                         dividedHeight * PARTY_LIST_DIV_HEIGHT,
                         CommonColors.WHITE,
-                        HorizontalAlignment.Center, // (!) center as the button spans 2 columns
-                        VerticalAlignment.Bottom,
+                        HorizontalAlignment.CENTER, // (!) center as the button spans 2 columns
+                        VerticalAlignment.BOTTOM,
                         TextShadow.NORMAL);
         FontRenderer.getInstance()
                 .renderText(
                         poseStack,
-                        I18n.get("screens.wynntils.partyManagementGui.kick"),
+                        StyledText.fromString(I18n.get("screens.wynntils.partyManagementGui.kick")),
                         dividedWidth * 26,
                         dividedHeight * PARTY_LIST_DIV_HEIGHT,
                         CommonColors.WHITE,
-                        HorizontalAlignment.Center, // (!) center as the button spans 2 columns
-                        VerticalAlignment.Bottom,
+                        HorizontalAlignment.CENTER, // (!) center as the button spans 2 columns
+                        VerticalAlignment.BOTTOM,
+                        TextShadow.NORMAL);
+        FontRenderer.getInstance()
+                .renderText(
+                        poseStack,
+                        StyledText.fromString(I18n.get("screens.wynntils.partyManagementGui.priority")),
+                        dividedWidth * 28,
+                        dividedHeight * PARTY_LIST_DIV_HEIGHT,
+                        CommonColors.WHITE,
+                        HorizontalAlignment.LEFT,
+                        VerticalAlignment.BOTTOM,
                         TextShadow.NORMAL);
 
         partyMembersWidgets.forEach(widget -> widget.render(poseStack, mouseX, mouseY, partialTick));
@@ -239,32 +249,32 @@ public final class PartyManagementScreen extends WynntilsScreen implements Textb
         FontRenderer.getInstance()
                 .renderText(
                         poseStack,
-                        I18n.get("screens.wynntils.partyManagementGui.head"),
+                        StyledText.fromString(I18n.get("screens.wynntils.partyManagementGui.head")),
                         dividedWidth * 37,
                         dividedHeight * SUGGESTION_LIST_DIV_HEIGHT,
                         CommonColors.WHITE,
-                        HorizontalAlignment.Center,
-                        VerticalAlignment.Bottom,
+                        HorizontalAlignment.CENTER,
+                        VerticalAlignment.BOTTOM,
                         TextShadow.NORMAL);
         FontRenderer.getInstance()
                 .renderText(
                         poseStack,
-                        I18n.get("screens.wynntils.partyManagementGui.suggestions"),
+                        StyledText.fromString(I18n.get("screens.wynntils.partyManagementGui.suggestions")),
                         dividedWidth * 39,
                         dividedHeight * SUGGESTION_LIST_DIV_HEIGHT,
                         CommonColors.WHITE,
-                        HorizontalAlignment.Left,
-                        VerticalAlignment.Bottom,
+                        HorizontalAlignment.LEFT,
+                        VerticalAlignment.BOTTOM,
                         TextShadow.NORMAL);
         FontRenderer.getInstance()
                 .renderText(
                         poseStack,
-                        I18n.get("screens.wynntils.partyManagementGui.invite"),
+                        StyledText.fromString(I18n.get("screens.wynntils.partyManagementGui.invite")),
                         dividedWidth * 58,
                         dividedHeight * SUGGESTION_LIST_DIV_HEIGHT,
                         CommonColors.WHITE,
-                        HorizontalAlignment.Center, // (!) center as the button spans 2 columns
-                        VerticalAlignment.Bottom,
+                        HorizontalAlignment.CENTER, // (!) center as the button spans 2 columns
+                        VerticalAlignment.BOTTOM,
                         TextShadow.NORMAL);
 
         suggestedPlayersWidgets.forEach(widget -> widget.render(poseStack, mouseX, mouseY, partialTick));
@@ -272,7 +282,7 @@ public final class PartyManagementScreen extends WynntilsScreen implements Textb
     }
 
     @Override
-    public boolean mouseClicked(double mouseX, double mouseY, int button) {
+    public boolean doMouseClicked(double mouseX, double mouseY, int button) {
         if (createLeaveButton.isMouseOver(mouseX, mouseY)) {
             return createLeaveButton.mouseClicked(mouseX, mouseY, button);
         }
@@ -289,7 +299,7 @@ public final class PartyManagementScreen extends WynntilsScreen implements Textb
             }
         }
 
-        return super.mouseClicked(mouseX, mouseY, button);
+        return super.doMouseClicked(mouseX, mouseY, button);
     }
 
     @Override
@@ -334,11 +344,11 @@ public final class PartyManagementScreen extends WynntilsScreen implements Textb
             partyMembersWidgets.add(new PartyMemberWidget(
                     dividedWidth * 4,
                     dividedHeight * (9 + i * 3),
-                    (int) (dividedWidth * 28) - (int) (dividedWidth * 4),
+                    (int) (dividedWidth * 28) - (int) (dividedWidth * 2),
                     20,
                     playerName,
                     Models.Party.getOfflineMembers().contains(playerName),
-                    28 - 4));
+                    28 - 2));
         }
     }
 
@@ -412,22 +422,22 @@ public final class PartyManagementScreen extends WynntilsScreen implements Textb
             FontRenderer.getInstance()
                     .renderText(
                             poseStack,
-                            String.valueOf(i),
+                            StyledText.fromString(String.valueOf(i)),
                             (float) x,
                             this.height / 2,
                             CommonColors.RED,
-                            HorizontalAlignment.Center,
-                            VerticalAlignment.Middle,
+                            HorizontalAlignment.CENTER,
+                            VerticalAlignment.MIDDLE,
                             TextShadow.NORMAL);
             FontRenderer.getInstance()
                     .renderText(
                             poseStack,
-                            String.valueOf(i),
+                            StyledText.fromString(String.valueOf(i)),
                             this.width / 2,
                             (float) y,
                             CommonColors.CYAN,
-                            HorizontalAlignment.Center,
-                            VerticalAlignment.Middle,
+                            HorizontalAlignment.CENTER,
+                            VerticalAlignment.MIDDLE,
                             TextShadow.NORMAL);
         }
     }

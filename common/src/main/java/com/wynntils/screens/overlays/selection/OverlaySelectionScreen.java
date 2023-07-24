@@ -6,6 +6,8 @@ package com.wynntils.screens.overlays.selection;
 
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
+import com.wynntils.core.text.StyledText;
+import com.wynntils.screens.base.WynntilsMenuScreenBase;
 import com.wynntils.screens.base.WynntilsScreen;
 import com.wynntils.screens.overlays.placement.OverlayManagementScreen;
 import com.wynntils.screens.wynntilsmenu.WynntilsMenuScreen;
@@ -43,7 +45,7 @@ public final class OverlaySelectionScreen extends WynntilsScreen {
         overlayList = new OverlayList(this);
         this.addRenderableWidget(new Button.Builder(
                         Component.translatable("screens.wynntils.overlaySelection.close"),
-                        button -> McUtils.mc().setScreen(WynntilsMenuScreen.create()))
+                        button -> WynntilsMenuScreenBase.openBook(WynntilsMenuScreen.create()))
                 .pos(
                         (int) (this.width / 2 - BUTTON_WIDTH * 1.5f),
                         this.height / 10 + Texture.OVERLAY_SELECTION_GUI.height() + 20)
@@ -88,12 +90,12 @@ public final class OverlaySelectionScreen extends WynntilsScreen {
         FontRenderer.getInstance()
                 .renderText(
                         poseStack,
-                        I18n.get("screens.wynntils.overlaySelection.overlays"),
+                        StyledText.fromString(I18n.get("screens.wynntils.overlaySelection.overlays")),
                         5,
                         4,
                         CommonColors.WHITE,
-                        HorizontalAlignment.Left,
-                        VerticalAlignment.Top,
+                        HorizontalAlignment.LEFT,
+                        VerticalAlignment.TOP,
                         TextShadow.NORMAL);
 
         poseStack.popPose();
@@ -120,8 +122,8 @@ public final class OverlaySelectionScreen extends WynntilsScreen {
     }
 
     @Override
-    public boolean mouseClicked(double mouseX, double mouseY, int button) {
-        super.mouseClicked(mouseX, mouseY, button);
+    public boolean doMouseClicked(double mouseX, double mouseY, int button) {
+        super.doMouseClicked(mouseX, mouseY, button);
         return overlayList.mouseClicked(mouseX, mouseY, button);
     }
 

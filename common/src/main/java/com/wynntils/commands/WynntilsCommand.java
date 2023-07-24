@@ -12,13 +12,20 @@ import com.wynntils.core.commands.Command;
 import com.wynntils.core.components.Handlers;
 import com.wynntils.core.components.Managers;
 import com.wynntils.core.components.Models;
+import com.wynntils.core.net.ApiResponse;
 import com.wynntils.core.net.UrlId;
 import com.wynntils.core.net.athena.UpdateManager;
 import com.wynntils.utils.FileUtils;
 import com.wynntils.utils.mc.McUtils;
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.nio.charset.StandardCharsets;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.CompletableFuture;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import net.minecraft.ChatFormatting;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.commands.Commands;
@@ -29,17 +36,21 @@ import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.network.chat.Style;
 
 public class WynntilsCommand extends Command {
+    private static final Pattern STATUS_HEADING = Pattern.compile("<h1 class='status-page__title'>(.*)</h1>");
+
     public void registerWithCommands(CommandDispatcher<CommandSourceStack> dispatcher, List<Command> commands) {
-        LiteralArgumentBuilder<CommandSourceStack> builder = getCommandBuilder();
+        List<LiteralArgumentBuilder<CommandSourceStack>> commandBuilders = getCommandBuilders();
 
-        // Also register all our commands as subcommands under the wynntils command
-        for (Command commandInstance : commands) {
-            if (commandInstance == this) continue;
+        // Also register all our commands as subcommands under the wynntils command and it's aliases
+        for (LiteralArgumentBuilder<CommandSourceStack> builder : commandBuilders) {
+            for (Command commandInstance : commands) {
+                if (commandInstance == this) continue;
 
-            builder.then(commandInstance.getCommandBuilder());
+                commandInstance.getCommandBuilders().forEach(builder::then);
+            }
+
+            dispatcher.register(builder);
         }
-
-        dispatcher.register(builder);
     }
 
     @Override
@@ -53,9 +64,9 @@ public class WynntilsCommand extends Command {
     }
 
     @Override
-    public LiteralArgumentBuilder<CommandSourceStack> getCommandBuilder() {
-        return Commands.literal(getCommandName())
-                .then(Commands.literal("clearcaches")
+    public LiteralArgumentBuilder<CommandSourceStack> getCommandBuilder(
+            LiteralArgumentBuilder<CommandSourceStack> base) {
+        return base.then(Commands.literal("clearcaches")
                         .then(Commands.literal("run").executes(this::doClearCaches))
                         .executes(this::clearCaches))
                 .then(Commands.literal("debug")
@@ -223,8 +234,8 @@ public class WynntilsCommand extends Command {
     }
 
     private int status(CommandContext<CommandSourceStack> context) {
-        MutableComponent c = Component.literal("You can check status of Wynntils services at: ")
-                .withStyle(ChatFormatting.AQUA);
+        MutableComponent component =
+                Component.literal("Reading status of Wynntils services from ").withStyle(ChatFormatting.WHITE);
         MutableComponent url = Component.literal(Managers.Url.getUrl(UrlId.LINK_WYNNTILS_STATUS))
                 .withStyle(Style.EMPTY
                         .withColor(ChatFormatting.LIGHT_PURPLE)
@@ -235,7 +246,33 @@ public class WynntilsCommand extends Command {
                                 HoverEvent.Action.SHOW_TEXT,
                                 Component.literal("Click here to open in your browser."))));
 
-        context.getSource().sendSuccess(c.append(url), false);
+        context.getSource().sendSuccess(component.append(url), false);
+
+        ApiResponse result = Managers.Net.callApi(UrlId.LINK_WYNNTILS_STATUS);
+        result.handleInputStream(
+                is -> {
+                    try (InputStreamReader isReader = new InputStreamReader(is, StandardCharsets.UTF_8);
+                            BufferedReader reader = new BufferedReader(isReader)) {
+                        String line;
+                        while ((line = reader.readLine()) != null) {
+                            Matcher m = STATUS_HEADING.matcher(line);
+                            if (m.matches()) {
+                                String status = m.group(1);
+                                McUtils.sendMessageToClient(Component.literal("Wynntils status: ")
+                                        .withStyle(ChatFormatting.WHITE)
+                                        .append(Component.literal(status).withStyle(ChatFormatting.AQUA)));
+                                return;
+                            }
+                        }
+                    } catch (IOException e) {
+                        WynntilsMod.warn("Failed to read status page", e);
+                    }
+                    McUtils.sendErrorToClient("Failed to read status page");
+                },
+                onError -> {
+                    WynntilsMod.warn("Failed to read status page", onError);
+                    McUtils.sendErrorToClient("Failed to read status page");
+                });
         return 1;
     }
 
@@ -316,22 +353,7 @@ public class WynntilsCommand extends Command {
             WynntilsMod.info("Attempting to fetch Wynntils update.");
             CompletableFuture<UpdateManager.UpdateResult> completableFuture = Managers.Update.tryUpdate();
 
-            completableFuture.whenComplete((result, throwable) -> {
-                switch (result) {
-                    case SUCCESSFUL -> McUtils.sendMessageToClient(
-                            Component.translatable("feature.wynntils.updates.result.successful")
-                                    .withStyle(ChatFormatting.DARK_GREEN));
-                    case ERROR -> McUtils.sendMessageToClient(
-                            Component.translatable("feature.wynntils.updates.result.error")
-                                    .withStyle(ChatFormatting.DARK_RED));
-                    case ALREADY_ON_LATEST -> McUtils.sendMessageToClient(
-                            Component.translatable("feature.wynntils.updates.result.latest")
-                                    .withStyle(ChatFormatting.YELLOW));
-                    case UPDATE_PENDING -> McUtils.sendMessageToClient(
-                            Component.translatable("feature.wynntils.updates.result.pending")
-                                    .withStyle(ChatFormatting.YELLOW));
-                }
-            });
+            completableFuture.whenComplete((result, throwable) -> McUtils.sendMessageToClient(result.getMessage()));
         });
 
         context.getSource()

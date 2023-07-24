@@ -5,9 +5,10 @@
 package com.wynntils.models.items.items.game;
 
 import com.wynntils.models.ingredients.type.IngredientInfo;
+import com.wynntils.models.items.properties.LeveledItemProperty;
 import com.wynntils.models.items.properties.QualityTierItemProperty;
 
-public class IngredientItem extends GameItem implements QualityTierItemProperty {
+public class IngredientItem extends GameItem implements QualityTierItemProperty, LeveledItemProperty {
     private final IngredientInfo ingredientInfo;
 
     public IngredientItem(IngredientInfo ingredientInfo) {
@@ -18,8 +19,14 @@ public class IngredientItem extends GameItem implements QualityTierItemProperty 
         return ingredientInfo;
     }
 
+    @Override
     public int getQualityTier() {
         return ingredientInfo.tier();
+    }
+
+    @Override
+    public int getLevel() {
+        return ingredientInfo.level();
     }
 
     @Override

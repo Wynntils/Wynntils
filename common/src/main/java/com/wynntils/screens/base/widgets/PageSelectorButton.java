@@ -6,11 +6,17 @@ package com.wynntils.screens.base.widgets;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.wynntils.screens.base.WynntilsPagedScreen;
+import com.wynntils.utils.mc.McUtils;
 import com.wynntils.utils.render.RenderUtils;
 import com.wynntils.utils.render.Texture;
 import net.minecraft.network.chat.Component;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.sounds.SoundEvent;
 
 public class PageSelectorButton extends WynntilsButton {
+    private static final ResourceLocation BOOK_TURN_PAGE_ID = new ResourceLocation("wynntils:ui.book.turn-page");
+    private static final SoundEvent BOOK_TURN_PAGE_SOUND = SoundEvent.createVariableRangeEvent(BOOK_TURN_PAGE_ID);
+
     private final boolean forward;
     private final WynntilsPagedScreen screen;
 
@@ -22,6 +28,10 @@ public class PageSelectorButton extends WynntilsButton {
 
     @Override
     public void onPress() {
+        if (!isValid()) return;
+
+        McUtils.playSoundUI(BOOK_TURN_PAGE_SOUND);
+
         if (forward) {
             screen.setCurrentPage(screen.getCurrentPage() + 1);
         } else {
@@ -30,39 +40,34 @@ public class PageSelectorButton extends WynntilsButton {
     }
 
     @Override
-    public void renderButton(PoseStack poseStack, int mouseX, int mouseY, float partialTick) {
-        Texture backArrow = this.forward ? Texture.FORWARD_ARROW : Texture.BACKWARD_ARROW;
+    public void renderWidget(PoseStack poseStack, int mouseX, int mouseY, float partialTick) {
+        Texture arrowTexture = this.forward ? Texture.FORWARD_ARROW : Texture.BACKWARD_ARROW;
 
-        if ((forward && screen.getCurrentPage() != screen.getMaxPage()) || (!forward && screen.getCurrentPage() != 0)) {
-            RenderUtils.drawTexturedRect(
-                    poseStack,
-                    backArrow.resource(),
-                    this.getX(),
-                    this.getY(),
-                    0,
-                    this.width,
-                    this.height,
-                    backArrow.width() / 2,
-                    0,
-                    backArrow.width() / 2,
-                    backArrow.height(),
-                    backArrow.width(),
-                    backArrow.height());
+        if (isValid()) {
+            drawTexture(poseStack, arrowTexture, arrowTexture.width() / 2);
         } else {
-            RenderUtils.drawTexturedRect(
-                    poseStack,
-                    backArrow.resource(),
-                    this.getX(),
-                    this.getY(),
-                    0,
-                    this.width,
-                    this.height,
-                    0,
-                    0,
-                    backArrow.width() / 2,
-                    backArrow.height(),
-                    backArrow.width(),
-                    backArrow.height());
+            drawTexture(poseStack, arrowTexture, 0);
         }
+    }
+
+    private void drawTexture(PoseStack poseStack, Texture texture, int uOffset) {
+        RenderUtils.drawTexturedRect(
+                poseStack,
+                texture.resource(),
+                this.getX(),
+                this.getY(),
+                0,
+                this.width,
+                this.height,
+                uOffset,
+                0,
+                texture.width() / 2,
+                texture.height(),
+                texture.width(),
+                texture.height());
+    }
+
+    private boolean isValid() {
+        return forward ? screen.getCurrentPage() < screen.getMaxPage() : screen.getCurrentPage() > 0;
     }
 }

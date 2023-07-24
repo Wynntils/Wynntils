@@ -5,6 +5,7 @@
 package com.wynntils.screens.chattabs.widgets;
 
 import com.mojang.blaze3d.vertex.PoseStack;
+import com.wynntils.core.text.StyledText;
 import com.wynntils.screens.base.widgets.WynntilsButton;
 import com.wynntils.screens.chattabs.ChatTabEditingScreen;
 import com.wynntils.utils.colors.CommonColors;
@@ -22,22 +23,22 @@ public class ChatTabAddButton extends WynntilsButton {
     }
 
     @Override
-    public void renderButton(PoseStack poseStack, int mouseX, int mouseY, float partialTick) {
+    public void renderWidget(PoseStack poseStack, int mouseX, int mouseY, float partialTick) {
         RenderUtils.drawRect(
                 poseStack, CommonColors.BLACK.withAlpha(isHovered ? 0.7f : 0.5f), getX(), getY(), 0, width, height);
 
         FontRenderer.getInstance()
                 .renderAlignedTextInBox(
                         poseStack,
-                        "+",
+                        StyledText.fromString("+"),
                         getX() + 1,
                         getX() + width,
                         getY() + 1,
                         getY() + height,
                         0,
                         CommonColors.ORANGE,
-                        HorizontalAlignment.Center,
-                        VerticalAlignment.Middle,
+                        HorizontalAlignment.CENTER,
+                        VerticalAlignment.MIDDLE,
                         TextShadow.OUTLINE);
     }
 

@@ -5,6 +5,7 @@
 package com.wynntils.screens.changelog;
 
 import com.mojang.blaze3d.vertex.PoseStack;
+import com.wynntils.core.text.StyledText;
 import com.wynntils.screens.base.WynntilsPagedScreen;
 import com.wynntils.screens.base.WynntilsScreen;
 import com.wynntils.screens.base.widgets.PageSelectorButton;
@@ -95,22 +96,33 @@ public final class ChangelogScreen extends WynntilsScreen implements WynntilsPag
         FontRenderer.getInstance()
                 .renderAlignedTextInBox(
                         poseStack,
-                        (currentPage) + " / " + (maxPage),
+                        StyledText.fromString((currentPage) + " / " + (maxPage)),
                         80,
                         Texture.CHANGELOG_BACKGROUND.width() - 80,
                         Texture.CHANGELOG_BACKGROUND.height() - 17,
                         0,
                         CommonColors.WHITE,
-                        HorizontalAlignment.Center,
+                        HorizontalAlignment.CENTER,
                         TextShadow.OUTLINE);
     }
 
     @Override
-    public boolean mouseClicked(double mouseX, double mouseY, int button) {
+    public boolean doMouseClicked(double mouseX, double mouseY, int button) {
         double adjustedMouseX = mouseX - (this.width - Texture.CHANGELOG_BACKGROUND.width()) / 2f;
         double adjustedMouseY = mouseY - (this.height - Texture.CHANGELOG_BACKGROUND.height()) / 2f;
 
-        return super.mouseClicked(adjustedMouseX, adjustedMouseY, button);
+        return super.doMouseClicked(adjustedMouseX, adjustedMouseY, button);
+    }
+
+    @Override
+    public boolean mouseScrolled(double mouseX, double mouseY, double delta) {
+        if (delta > 0) {
+            setCurrentPage(getCurrentPage() - 1);
+        } else if (delta < 0) {
+            setCurrentPage(getCurrentPage() + 1);
+        }
+
+        return super.mouseScrolled(mouseX, mouseY, delta);
     }
 
     private void calculateRenderTasks() {
@@ -126,7 +138,7 @@ public final class ChangelogScreen extends WynntilsScreen implements WynntilsPag
 
         this.changelogTasks = new ArrayList<>();
 
-        final int maxHeight = Texture.CHANGELOG_BACKGROUND.height() - 35;
+        final int maxHeight = Texture.CHANGELOG_BACKGROUND.height() - 55;
 
         float currentHeight = 0;
         List<TextRenderTask> currentPage = new ArrayList<>();

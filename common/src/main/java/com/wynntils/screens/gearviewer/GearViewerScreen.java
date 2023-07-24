@@ -7,13 +7,13 @@ package com.wynntils.screens.gearviewer;
 import com.google.gson.JsonObject;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.wynntils.core.components.Models;
+import com.wynntils.core.text.StyledText;
 import com.wynntils.models.gear.type.GearInfo;
 import com.wynntils.models.gear.type.GearInstance;
 import com.wynntils.models.items.FakeItemStack;
 import com.wynntils.models.items.items.game.GearItem;
 import com.wynntils.screens.base.WynntilsContainerScreen;
 import com.wynntils.screens.gearviewer.widgets.ViewPlayerStatsButton;
-import com.wynntils.utils.mc.ComponentUtils;
 import com.wynntils.utils.mc.LoreUtils;
 import com.wynntils.utils.mc.McUtils;
 import com.wynntils.utils.render.RenderUtils;
@@ -40,8 +40,8 @@ public final class GearViewerScreen extends WynntilsContainerScreen<GearViewerMe
 
     private final Player player;
     private final Scoreboard scoreboard;
-    private PlayerTeam gearViewerTeam;
-    private PlayerTeam oldTeam;
+    private final PlayerTeam gearViewerTeam;
+    private final PlayerTeam oldTeam;
     private ViewPlayerStatsButton viewPlayerStatsButton;
 
     private GearViewerScreen(Player player, GearViewerMenu menu) {
@@ -80,7 +80,7 @@ public final class GearViewerScreen extends WynntilsContainerScreen<GearViewerMe
         }
 
         // This must specifically NOT be normalized; the ֎ is significant
-        String gearName = ComponentUtils.getUnformatted(itemStack.getHoverName());
+        String gearName = StyledText.fromComponent(itemStack.getHoverName()).getStringWithoutFormatting();
         MutableComponent description = WynnItemMatchers.getNonGearDescription(itemStack, gearName);
         if (description != null) {
             itemStack.setHoverName(description);
@@ -107,7 +107,7 @@ public final class GearViewerScreen extends WynntilsContainerScreen<GearViewerMe
                 topPos + (Texture.GEAR_VIEWER_BACKGROUND.height() / 4),
                 18,
                 20,
-                ComponentUtils.getUnformatted(player.getName()));
+                StyledText.fromComponent(player.getName()).getStringWithoutFormatting());
     }
 
     @Override
@@ -115,16 +115,17 @@ public final class GearViewerScreen extends WynntilsContainerScreen<GearViewerMe
         super.doRender(poseStack, mouseX, mouseY, partialTick);
         this.renderTooltip(poseStack, mouseX, mouseY);
 
-        renderPlayerModel();
+        renderPlayerModel(poseStack, mouseX, mouseY);
 
         viewPlayerStatsButton.render(poseStack, mouseX, mouseY, partialTick);
     }
 
-    private void renderPlayerModel() {
-        float posX = this.width / 2f;
-        float posY = this.height / 2f;
+    private void renderPlayerModel(PoseStack poseStack, int mouseX, int mouseY) {
+        int posX = (int) (this.width / 2f);
+        int posY = (int) (this.height / 2f) + 32;
 
-        InventoryScreen.renderEntityInInventory((int) posX, (int) posY + 32, 30, 0, 0, player);
+        InventoryScreen.renderEntityInInventoryFollowsMouse(
+                poseStack, posX, posY, 30, posX - mouseX, posY - 50 - mouseY, player);
     }
 
     @Override

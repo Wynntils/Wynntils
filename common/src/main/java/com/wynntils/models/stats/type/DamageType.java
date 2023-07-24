@@ -9,7 +9,7 @@ import java.util.Optional;
 import net.minecraft.ChatFormatting;
 
 public enum DamageType {
-    ALL(""),
+    ALL("", "❤", ChatFormatting.DARK_RED),
     NEUTRAL("Neutral", "✣", ChatFormatting.GOLD),
     FIRE(Element.FIRE),
     WATER(Element.WATER),
@@ -55,6 +55,13 @@ public enum DamageType {
     public static DamageType fromElement(Element element) {
         for (DamageType type : values()) {
             if (type.element == element) return type;
+        }
+        return null;
+    }
+
+    public static DamageType fromSymbol(String symbol) {
+        for (DamageType type : values()) {
+            if (type.symbol.equals(symbol)) return type;
         }
         return null;
     }

@@ -9,7 +9,7 @@ import com.wynntils.core.components.Managers;
 import com.wynntils.core.components.Model;
 import com.wynntils.core.components.Models;
 import com.wynntils.core.net.athena.event.AthenaLoginEvent;
-import com.wynntils.features.user.players.HadesFeature;
+import com.wynntils.features.players.HadesFeature;
 import com.wynntils.hades.objects.HadesConnection;
 import com.wynntils.hades.protocol.builders.HadesNetworkBuilder;
 import com.wynntils.hades.protocol.enums.PacketAction;
@@ -47,7 +47,7 @@ import net.minecraft.world.effect.MobEffects;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 
 public final class HadesModel extends Model {
-    private static final int TICKS_PER_UPDATE = 5;
+    private static final int TICKS_PER_UPDATE = 2;
     private static final int MS_PER_PING = 1000;
 
     private final HadesUserRegistry userRegistry = new HadesUserRegistry();
@@ -123,7 +123,9 @@ public final class HadesModel extends Model {
     @SubscribeEvent
     public void onFriendListUpdate(HadesRelationsUpdateEvent.FriendList event) {
         if (!isConnected()) return;
-        if (!HadesFeature.INSTANCE.shareWithFriends) return;
+        if (!Managers.Feature.getFeatureInstance(HadesFeature.class)
+                .shareWithFriends
+                .get()) return;
 
         hadesConnection.sendPacket(new HCPacketSocialUpdate(
                 event.getChangedPlayers().stream().toList(),
@@ -134,7 +136,9 @@ public final class HadesModel extends Model {
     @SubscribeEvent
     public void onPartyListUpdate(HadesRelationsUpdateEvent.PartyList event) {
         if (!isConnected()) return;
-        if (!HadesFeature.INSTANCE.shareWithParty) return;
+        if (!Managers.Feature.getFeatureInstance(HadesFeature.class)
+                .shareWithParty
+                .get()) return;
 
         hadesConnection.sendPacket(new HCPacketSocialUpdate(
                 event.getChangedPlayers().stream().toList(),
@@ -188,9 +192,15 @@ public final class HadesModel extends Model {
     public void onTick(TickEvent event) {
         if (!isConnected()) return;
         if (!Models.WorldState.onWorld() || McUtils.player().hasEffect(MobEffects.NIGHT_VISION)) return;
-        if (!HadesFeature.INSTANCE.shareWithParty
-                && !HadesFeature.INSTANCE.shareWithGuild
-                && !HadesFeature.INSTANCE.shareWithFriends) return;
+        if (!Managers.Feature.getFeatureInstance(HadesFeature.class)
+                        .shareWithParty
+                        .get()
+                && !Managers.Feature.getFeatureInstance(HadesFeature.class)
+                        .shareWithGuild
+                        .get()
+                && !Managers.Feature.getFeatureInstance(HadesFeature.class)
+                        .shareWithFriends
+                        .get()) return;
 
         tickCountUntilUpdate--;
 
@@ -201,38 +211,26 @@ public final class HadesModel extends Model {
             float pY = (float) player.getY();
             float pZ = (float) player.getZ();
 
-            if (lastSentStatus != null
-                    && lastSentStatus.equals(
-                            pX,
-                            pY,
-                            pZ,
-                            Models.Character.getCurrentHealth(),
-                            Models.Character.getMaxHealth(),
-                            Models.Character.getCurrentMana(),
-                            Models.Character.getMaxMana())) {
+            PlayerStatus newStatus =
+                    new PlayerStatus(pX, pY, pZ, Models.CharacterStats.getHealth(), Models.CharacterStats.getMana());
+
+            if (newStatus.equals(lastSentStatus)) {
                 tickCountUntilUpdate = 1;
                 return;
             }
 
             tickCountUntilUpdate = TICKS_PER_UPDATE;
 
-            lastSentStatus = new PlayerStatus(
-                    pX,
-                    pY,
-                    pZ,
-                    Models.Character.getCurrentHealth(),
-                    Models.Character.getMaxHealth(),
-                    Models.Character.getCurrentMana(),
-                    Models.Character.getMaxMana());
+            lastSentStatus = newStatus;
 
             hadesConnection.sendPacketAndFlush(new HCPacketUpdateStatus(
                     lastSentStatus.x(),
                     lastSentStatus.y(),
                     lastSentStatus.z(),
-                    lastSentStatus.health(),
-                    lastSentStatus.maxHealth(),
-                    lastSentStatus.mana(),
-                    lastSentStatus.maxMana()));
+                    lastSentStatus.health().current(),
+                    lastSentStatus.health().max(),
+                    lastSentStatus.mana().current(),
+                    lastSentStatus.mana().max()));
         }
     }
 

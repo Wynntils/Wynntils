@@ -5,9 +5,11 @@
 package com.wynntils.utils;
 
 import java.net.URLEncoder;
+import java.nio.ByteBuffer;
 import java.nio.charset.StandardCharsets;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
+import java.util.Base64;
 import java.util.List;
 import java.util.Locale;
 import java.util.regex.Pattern;
@@ -134,5 +136,12 @@ public final class StringUtils {
 
     public static String convertMarkdownToColorCode(String input) {
         return ChatFormatting.RESET + input.replaceFirst("#+\\s+", String.valueOf(ChatFormatting.BOLD));
+    }
+
+    public static ByteBuffer decodeBase64(String base64) {
+        if (base64 == null) return null;
+
+        return Base64.getDecoder()
+                .decode(ByteBuffer.wrap(base64.replaceAll("\n", "").getBytes(StandardCharsets.UTF_8)));
     }
 }

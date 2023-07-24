@@ -10,15 +10,18 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public final class CorruptedBar extends TrackedBar {
+    private static final Pattern CORRUPTED_PATTERN = Pattern.compile("§cCorrupted §4\\[§c(\\d+)%§4]");
+
     public CorruptedBar() {
-        super(Pattern.compile("§cCorrupted §4\\[§c(\\d+)%§4]"));
+        super(CORRUPTED_PATTERN);
     }
 
     @Override
     public void onUpdateName(Matcher match) {
         try {
-            current = Integer.parseInt(match.group(1));
-            max = 100;
+            int current = Integer.parseInt(match.group(1));
+            int max = 100;
+            updateValue(current, max);
         } catch (NumberFormatException e) {
             WynntilsMod.error(String.format(
                     "Failed to parse current and max for corrupted bar (%s out of %s)",

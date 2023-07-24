@@ -6,6 +6,7 @@ package com.wynntils.screens.lootrun.widgets;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.wynntils.core.components.Models;
+import com.wynntils.core.text.StyledText;
 import com.wynntils.models.lootruns.LootrunInstance;
 import com.wynntils.models.lootruns.type.LootrunPath;
 import com.wynntils.screens.base.widgets.WynntilsButton;
@@ -24,8 +25,8 @@ import com.wynntils.utils.render.type.VerticalAlignment;
 import java.io.File;
 import java.util.Objects;
 import net.minecraft.Util;
+import net.minecraft.core.Position;
 import net.minecraft.network.chat.Component;
-import net.minecraft.world.phys.Vec3;
 import org.lwjgl.glfw.GLFW;
 
 public class LootrunButton extends WynntilsButton {
@@ -44,7 +45,7 @@ public class LootrunButton extends WynntilsButton {
     }
 
     @Override
-    public void renderButton(PoseStack poseStack, int mouseX, int mouseY, float partialTick) {
+    public void renderWidget(PoseStack poseStack, int mouseX, int mouseY, float partialTick) {
         CustomColor backgroundColor = getButtonBackgroundColor();
         RenderUtils.drawRect(poseStack, backgroundColor, this.getX(), this.getY(), 0, this.width, this.height);
 
@@ -52,16 +53,16 @@ public class LootrunButton extends WynntilsButton {
         FontRenderer.getInstance()
                 .renderText(
                         poseStack,
-                        RenderedStringUtils.getMaxFittingText(
+                        StyledText.fromString(RenderedStringUtils.getMaxFittingText(
                                 lootrun.name(),
                                 maxTextWidth,
-                                FontRenderer.getInstance().getFont()),
+                                FontRenderer.getInstance().getFont())),
                         this.getX() + 14,
                         this.getY() + 1,
                         0,
                         CommonColors.BLACK,
-                        HorizontalAlignment.Left,
-                        VerticalAlignment.Top,
+                        HorizontalAlignment.LEFT,
+                        VerticalAlignment.TOP,
                         TextShadow.NONE);
     }
 
@@ -79,7 +80,7 @@ public class LootrunButton extends WynntilsButton {
             if (isLoaded()) {
                 Models.Lootrun.clearCurrentLootrun();
             } else {
-                Models.Lootrun.loadFile(lootrun.name());
+                Models.Lootrun.tryLoadLootrun(lootrun.name());
             }
             return true;
         }
@@ -98,9 +99,9 @@ public class LootrunButton extends WynntilsButton {
             }
 
             LootrunPath path = lootrun.path();
-            Vec3 start = path.points().get(0);
+            Position start = path.points().get(0);
 
-            McUtils.mc().setScreen(MainMapScreen.create((float) start.x, (float) start.z));
+            McUtils.mc().setScreen(MainMapScreen.create((float) start.x(), (float) start.z()));
             return true;
         }
 

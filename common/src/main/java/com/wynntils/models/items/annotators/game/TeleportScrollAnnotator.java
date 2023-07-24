@@ -4,6 +4,7 @@
  */
 package com.wynntils.models.items.annotators.game;
 
+import com.wynntils.core.text.StyledText;
 import com.wynntils.handlers.item.ItemAnnotation;
 import com.wynntils.handlers.item.ItemAnnotator;
 import com.wynntils.models.items.items.game.TeleportScrollItem;
@@ -18,11 +19,11 @@ import net.minecraft.world.item.ItemStack;
 
 public final class TeleportScrollAnnotator implements ItemAnnotator {
     private static final Pattern TELEPORT_SCROLL_PATTERN = Pattern.compile("^§b(.*) Teleport Scroll$");
-    private static final Pattern TELEPORT_LOCATION_PATTERN = Pattern.compile("§3- (?:§r)?§7Teleports to: (?:§r)§f(.*)");
+    private static final Pattern TELEPORT_LOCATION_PATTERN = Pattern.compile("§3- §7Teleports to: §f(.*)");
 
     @Override
-    public ItemAnnotation getAnnotation(ItemStack itemStack, String name) {
-        Matcher nameMatcher = TELEPORT_SCROLL_PATTERN.matcher(name);
+    public ItemAnnotation getAnnotation(ItemStack itemStack, StyledText name) {
+        Matcher nameMatcher = name.getMatcher(TELEPORT_SCROLL_PATTERN);
         if (!nameMatcher.matches()) return null;
 
         String scrollName = nameMatcher.group(1);

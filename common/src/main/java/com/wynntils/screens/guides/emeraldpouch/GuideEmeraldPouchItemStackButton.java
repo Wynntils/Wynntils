@@ -7,10 +7,10 @@ package com.wynntils.screens.guides.emeraldpouch;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.wynntils.core.components.Managers;
 import com.wynntils.core.components.Models;
+import com.wynntils.core.text.StyledText;
 import com.wynntils.screens.base.widgets.WynntilsButton;
 import com.wynntils.utils.MathUtils;
 import com.wynntils.utils.colors.CustomColor;
-import com.wynntils.utils.mc.ComponentUtils;
 import com.wynntils.utils.mc.KeyboardUtils;
 import com.wynntils.utils.render.FontRenderer;
 import com.wynntils.utils.render.RenderUtils;
@@ -23,7 +23,6 @@ import org.lwjgl.glfw.GLFW;
 
 public class GuideEmeraldPouchItemStackButton extends WynntilsButton {
     private final GuideEmeraldPouchItemStack itemStack;
-    private final WynntilsEmeraldPouchGuideScreen screen;
 
     public GuideEmeraldPouchItemStackButton(
             int x,
@@ -34,41 +33,38 @@ public class GuideEmeraldPouchItemStackButton extends WynntilsButton {
             WynntilsEmeraldPouchGuideScreen screen) {
         super(x, y, width, height, Component.literal("Guide EmeraldPouchItemStack Button"));
         this.itemStack = itemStack;
-        this.screen = screen;
     }
 
     @Override
-    public void renderButton(PoseStack poseStack, int mouseX, int mouseY, float partialTick) {
+    public void renderWidget(PoseStack poseStack, int mouseX, int mouseY, float partialTick) {
         CustomColor color = CustomColor.fromChatFormatting(ChatFormatting.GREEN);
 
-        float actualX = screen.getTranslationX() + getX();
-        float actualY = screen.getTranslationY() + getY();
-
         RenderUtils.drawTexturedRectWithColor(
+                poseStack,
                 Texture.HIGHLIGHT.resource(),
                 color.withAlpha(1f),
-                actualX - 1,
-                actualY - 1,
+                getX() - 1,
+                getY() - 1,
                 0,
                 18,
                 18,
                 Texture.HIGHLIGHT.width(),
                 Texture.HIGHLIGHT.height());
 
-        RenderUtils.renderGuiItem(itemStack, (int) (actualX), (int) (actualY), 1f);
+        RenderUtils.renderItem(poseStack, itemStack, getX(), getY());
 
         poseStack.pushPose();
         poseStack.translate(0, 0, 200);
         FontRenderer.getInstance()
                 .renderAlignedTextInBox(
                         poseStack,
-                        MathUtils.toRoman(itemStack.getTier()),
+                        StyledText.fromString(MathUtils.toRoman(itemStack.getTier())),
                         getX() + 2,
                         getX() + 14,
                         getY() + 8,
                         0,
                         color,
-                        HorizontalAlignment.Center,
+                        HorizontalAlignment.CENTER,
                         TextShadow.OUTLINE);
         poseStack.popPose();
 
@@ -92,7 +88,8 @@ public class GuideEmeraldPouchItemStackButton extends WynntilsButton {
             return false;
         }
 
-        String unformattedName = ComponentUtils.getUnformatted(itemStack.getHoverName());
+        String unformattedName =
+                StyledText.fromComponent(itemStack.getHoverName()).getStringWithoutFormatting();
         if (button == GLFW.GLFW_MOUSE_BUTTON_LEFT) {
             Models.Favorites.toggleFavorite(unformattedName);
             Managers.Config.saveConfig();

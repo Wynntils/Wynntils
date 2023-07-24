@@ -16,12 +16,11 @@ public record TextRenderSetting(
         HorizontalAlignment horizontalAlignment,
         VerticalAlignment verticalAlignment,
         TextShadow shadow) {
-
     public static final TextRenderSetting DEFAULT = new TextRenderSetting(
-            0, CommonColors.WHITE, HorizontalAlignment.Left, VerticalAlignment.Top, TextShadow.NORMAL);
+            0, CommonColors.WHITE, HorizontalAlignment.LEFT, VerticalAlignment.TOP, TextShadow.NORMAL);
 
     public static final TextRenderSetting CENTERED = new TextRenderSetting(
-            0, CommonColors.WHITE, HorizontalAlignment.Center, VerticalAlignment.Middle, TextShadow.NORMAL);
+            0, CommonColors.WHITE, HorizontalAlignment.CENTER, VerticalAlignment.MIDDLE, TextShadow.NORMAL);
 
     public TextRenderSetting withMaxWidth(float maxWidth) {
         return new TextRenderSetting(

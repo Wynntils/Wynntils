@@ -9,10 +9,16 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.components.Manager;
+import com.wynntils.core.config.ConfigHolder;
 import com.wynntils.core.config.upfixers.impl.CustomCommandKeybindSlashStartUpfixer;
+import com.wynntils.core.config.upfixers.impl.CustomPoiIconEnumBugUpfixer;
 import com.wynntils.core.config.upfixers.impl.CustomPoiVisbilityUpfixer;
+import com.wynntils.core.config.upfixers.impl.EnumNamingUpfixer;
+import com.wynntils.core.config.upfixers.impl.GameBarOverlayMoveUpfixer;
+import com.wynntils.core.config.upfixers.impl.QuestBookToContentRenamedConfigsUpfixer;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 
 public class ConfigUpfixerManager extends Manager {
     public static final String UPFIXER_JSON_MEMBER_NAME = "wynntils.upfixers";
@@ -25,6 +31,10 @@ public class ConfigUpfixerManager extends Manager {
         // Register upfixers here, in order of run priority
         registerUpfixer(new CustomPoiVisbilityUpfixer());
         registerUpfixer(new CustomCommandKeybindSlashStartUpfixer());
+        registerUpfixer(new GameBarOverlayMoveUpfixer());
+        registerUpfixer(new EnumNamingUpfixer());
+        registerUpfixer(new CustomPoiIconEnumBugUpfixer());
+        registerUpfixer(new QuestBookToContentRenamedConfigsUpfixer());
     }
 
     private void registerUpfixer(ConfigUpfixer upfixer) {
@@ -33,16 +43,18 @@ public class ConfigUpfixerManager extends Manager {
 
     /**
      * Runs all registered upfixers on the given config object.
-     * @param configObject The config object to run upfixers on.
+     *
+     * @param configObject  The config object to run upfixers on.
+     * @param configHolders All registered configHolders
      */
-    public boolean runUpfixers(JsonObject configObject) {
+    public boolean runUpfixers(JsonObject configObject, Set<ConfigHolder> configHolders) {
         List<ConfigUpfixer> missingUpfixers = getMissingUpfixers(configObject);
 
         boolean anyChange = false;
 
         for (ConfigUpfixer upfixer : missingUpfixers) {
             try {
-                if (upfixer.apply(configObject)) {
+                if (upfixer.apply(configObject, configHolders)) {
                     anyChange = true;
                     addUpfixerToConfig(configObject, upfixer);
                     WynntilsMod.info("Applied upfixer \"" + upfixer.getUpfixerName() + "\" to config.");

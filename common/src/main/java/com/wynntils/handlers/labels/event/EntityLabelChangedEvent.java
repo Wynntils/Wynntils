@@ -4,15 +4,16 @@
  */
 package com.wynntils.handlers.labels.event;
 
+import com.wynntils.core.text.StyledText;
 import net.minecraft.world.entity.Entity;
 import net.minecraftforge.eventbus.api.Event;
 
 public class EntityLabelChangedEvent extends Event {
     private final Entity entity;
-    private final String name;
-    private final String oldName;
+    private final StyledText name;
+    private final StyledText oldName;
 
-    public EntityLabelChangedEvent(Entity entity, String name, String oldName) {
+    public EntityLabelChangedEvent(Entity entity, StyledText name, StyledText oldName) {
         this.entity = entity;
         this.name = name;
         this.oldName = oldName;
@@ -22,11 +23,11 @@ public class EntityLabelChangedEvent extends Event {
         return entity;
     }
 
-    public String getName() {
+    public StyledText getName() {
         return name;
     }
 
-    public String getOldName() {
+    public StyledText getOldName() {
         return oldName;
     }
 }

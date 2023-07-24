@@ -9,33 +9,48 @@ import com.wynntils.core.features.Configurable;
 import com.wynntils.core.features.Feature;
 import com.wynntils.core.features.Translatable;
 import com.wynntils.core.features.overlays.Overlay;
+import com.wynntils.core.text.StyledText;
 import com.wynntils.screens.base.widgets.WynntilsButton;
 import com.wynntils.screens.settings.WynntilsBookSettingsScreen;
 import com.wynntils.utils.colors.CommonColors;
 import com.wynntils.utils.colors.CustomColor;
 import com.wynntils.utils.mc.McUtils;
+import com.wynntils.utils.mc.RenderedStringUtils;
 import com.wynntils.utils.render.FontRenderer;
+import com.wynntils.utils.render.RenderUtils;
 import com.wynntils.utils.render.type.HorizontalAlignment;
 import com.wynntils.utils.render.type.TextShadow;
 import com.wynntils.utils.render.type.VerticalAlignment;
+import java.util.Arrays;
+import java.util.List;
 import net.minecraft.network.chat.Component;
 
 public class ConfigurableButton extends WynntilsButton {
     private final Configurable configurable;
 
+    private final List<Component> descriptionTooltip;
+
     public ConfigurableButton(int x, int y, int width, int height, Configurable configurable) {
         super(x, y, width, height, Component.literal(((Translatable) configurable).getTranslatedName()));
         this.configurable = configurable;
+
+        if (configurable instanceof Feature feature) {
+            descriptionTooltip = Arrays.stream(RenderedStringUtils.wrapTextBySize(
+                            StyledText.fromString(feature.getTranslatedDescription()), 150))
+                    .map(StyledText::getComponent)
+                    .map(c -> (Component) c)
+                    .toList();
+        } else {
+            descriptionTooltip = List.of();
+        }
     }
 
     @Override
-    public void renderButton(PoseStack poseStack, int mouseX, int mouseY, float partialTick) {
+    public void renderWidget(PoseStack poseStack, int mouseX, int mouseY, float partialTick) {
         CustomColor color = isHovered ? CommonColors.YELLOW : CommonColors.WHITE;
 
         if (McUtils.mc().screen instanceof WynntilsBookSettingsScreen bookSettingsScreen) {
-            if (bookSettingsScreen.getSelectedFeature() == configurable) {
-                color = CommonColors.GRAY;
-            } else if (bookSettingsScreen.getSelectedOverlay() == configurable) {
+            if (bookSettingsScreen.getSelected() == configurable) {
                 color = CommonColors.GRAY;
             }
         }
@@ -45,23 +60,31 @@ public class ConfigurableButton extends WynntilsButton {
         FontRenderer.getInstance()
                 .renderText(
                         poseStack,
-                        (isOverlay ? "   " : "") + ((Translatable) configurable).getTranslatedName(),
+                        StyledText.fromString(
+                                (isOverlay ? "   " : "") + ((Translatable) configurable).getTranslatedName()),
                         this.getX(),
                         this.getY(),
                         color,
-                        HorizontalAlignment.Left,
-                        VerticalAlignment.Top,
+                        HorizontalAlignment.LEFT,
+                        VerticalAlignment.TOP,
                         TextShadow.NORMAL);
+
+        if (isHovered && configurable instanceof Feature) {
+            RenderUtils.drawTooltipAt(
+                    poseStack,
+                    mouseX,
+                    mouseY,
+                    0,
+                    descriptionTooltip,
+                    FontRenderer.getInstance().getFont(),
+                    false);
+        }
     }
 
     @Override
     public void onPress() {
         if (McUtils.mc().screen instanceof WynntilsBookSettingsScreen bookSettingsScreen) {
-            if (configurable instanceof Feature feature) {
-                bookSettingsScreen.setSelectedFeature(feature);
-            } else if (configurable instanceof Overlay overlay) {
-                bookSettingsScreen.setSelectedOverlay(overlay);
-            }
+            bookSettingsScreen.setSelected(configurable);
         }
     }
 }

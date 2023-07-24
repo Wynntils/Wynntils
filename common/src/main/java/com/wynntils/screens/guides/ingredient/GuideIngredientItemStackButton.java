@@ -21,7 +21,6 @@ import org.lwjgl.glfw.GLFW;
 
 public class GuideIngredientItemStackButton extends WynntilsButton {
     private final GuideIngredientItemStack itemStack;
-    private final WynntilsIngredientGuideScreen screen;
 
     public GuideIngredientItemStackButton(
             int x,
@@ -32,28 +31,25 @@ public class GuideIngredientItemStackButton extends WynntilsButton {
             WynntilsIngredientGuideScreen screen) {
         super(x, y, width, height, Component.literal("Guide IngredientItemStack Button"));
         this.itemStack = itemStack;
-        this.screen = screen;
     }
 
     @Override
-    public void renderButton(PoseStack poseStack, int mouseX, int mouseY, float partialTick) {
+    public void renderWidget(PoseStack poseStack, int mouseX, int mouseY, float partialTick) {
         CustomColor color = getHighlightColor(itemStack.getIngredientInfo().tier());
 
-        float actualX = screen.getTranslationX() + getX();
-        float actualY = screen.getTranslationY() + getY();
-
         RenderUtils.drawTexturedRectWithColor(
+                poseStack,
                 Texture.HIGHLIGHT.resource(),
                 color.withAlpha(1f),
-                actualX - 1,
-                actualY - 1,
+                getX() - 1,
+                getY() - 1,
                 0,
                 18,
                 18,
                 Texture.HIGHLIGHT.width(),
                 Texture.HIGHLIGHT.height());
 
-        RenderUtils.renderGuiItem(itemStack, (int) (actualX), (int) (actualY), 1f);
+        RenderUtils.renderItem(poseStack, itemStack, getX(), getY());
 
         String unformattedName = itemStack.getIngredientInfo().name();
         if (Models.Favorites.isFavorite(unformattedName)) {

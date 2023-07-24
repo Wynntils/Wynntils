@@ -39,7 +39,7 @@ public class ClassSelectionEditButton extends WynntilsButton {
     }
 
     @Override
-    public void renderButton(PoseStack poseStack, int mouseX, int mouseY, float partialTick) {
+    public void renderWidget(PoseStack poseStack, int mouseX, int mouseY, float partialTick) {
         RenderUtils.drawScalingTexturedRect(
                 poseStack,
                 Texture.EDIT_BUTTON.resource(),

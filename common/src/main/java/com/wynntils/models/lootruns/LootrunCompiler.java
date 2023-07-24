@@ -4,11 +4,14 @@
  */
 package com.wynntils.models.lootruns;
 
-import com.wynntils.features.statemanaged.LootrunFeature;
+import com.wynntils.core.components.Managers;
+import com.wynntils.features.LootrunFeature;
 import com.wynntils.models.lootruns.type.ColoredPath;
-import com.wynntils.models.lootruns.type.ColoredPoint;
+import com.wynntils.models.lootruns.type.ColoredPosition;
 import com.wynntils.models.lootruns.type.LootrunNote;
 import com.wynntils.models.lootruns.type.LootrunPath;
+import com.wynntils.utils.MathUtils;
+import com.wynntils.utils.mc.PosUtils;
 import it.unimi.dsi.fastutil.longs.Long2ObjectMap;
 import it.unimi.dsi.fastutil.longs.Long2ObjectOpenHashMap;
 import java.util.ArrayList;
@@ -20,10 +23,10 @@ import net.minecraft.ChatFormatting;
 import net.minecraft.core.BlockPos;
 import net.minecraft.util.CubicSpline;
 import net.minecraft.util.FastColor;
-import net.minecraft.util.Mth;
 import net.minecraft.util.ToFloatFunction;
 import net.minecraft.world.level.ChunkPos;
 import net.minecraft.world.phys.Vec3;
+import org.joml.Vector2d;
 
 public final class LootrunCompiler {
     private static final List<Integer> COLORS = List.of(
@@ -41,7 +44,13 @@ public final class LootrunCompiler {
         Long2ObjectMap<List<LootrunNote>> notes = getNotes(uncompiled.notes());
 
         String lootrunName = getLootrunName(uncompiled, recording);
-        return new LootrunInstance(lootrunName, uncompiled.path(), points, chests, notes);
+        return new LootrunInstance(
+                lootrunName,
+                uncompiled.path(),
+                generateSimplifiedPoints(uncompiled.path(), 0.5),
+                points,
+                chests,
+                notes);
     }
 
     private static String getLootrunName(LootrunUncompiled uncompiled, boolean recording) {
@@ -52,32 +61,32 @@ public final class LootrunCompiler {
     }
 
     private static List<LootrunPath> sample(LootrunPath raw, float sampleRate) {
-        List<LootrunPath> vec3s = new ArrayList<>();
-        LootrunPath currentVec3s = new LootrunPath(new ArrayList<>());
-        vec3s.add(currentVec3s);
+        List<LootrunPath> positions = new ArrayList<>();
+        LootrunPath currentPositions = new LootrunPath(new ArrayList<>());
+        positions.add(currentPositions);
         for (Vec3 element : raw.points()) {
-            if (!currentVec3s.points().isEmpty()
-                    && currentVec3s
+            if (!currentPositions.points().isEmpty()
+                    && currentPositions
                                     .points()
-                                    .get(currentVec3s.points().size() - 1)
+                                    .get(currentPositions.points().size() - 1)
                                     .distanceTo(element)
                             >= 32) {
-                currentVec3s = new LootrunPath(new ArrayList<>());
-                vec3s.add(currentVec3s);
+                currentPositions = new LootrunPath(new ArrayList<>());
+                positions.add(currentPositions);
             }
-            currentVec3s.points().add(element);
+            currentPositions.points().add(element);
         }
 
         List<LootrunPath> result = new ArrayList<>();
-        for (LootrunPath current : vec3s) {
+        for (LootrunPath current : positions) {
             float distance = 0f;
             CubicSpline.Builder<Float, ToFloatFunction<Float>> builderX = CubicSpline.builder(ToFloatFunction.IDENTITY);
             CubicSpline.Builder<Float, ToFloatFunction<Float>> builderY = CubicSpline.builder(ToFloatFunction.IDENTITY);
             CubicSpline.Builder<Float, ToFloatFunction<Float>> builderZ = CubicSpline.builder(ToFloatFunction.IDENTITY);
             for (int i = 0; i < current.points().size(); i++) {
-                Vec3 vec3 = current.points().get(i);
+                Vec3 position = current.points().get(i);
                 if (i > 0) {
-                    distance += current.points().get(i - 1).distanceTo(vec3);
+                    distance += current.points().get(i - 1).distanceTo(position);
                 }
 
                 float slopeX = 0f;
@@ -85,13 +94,13 @@ public final class LootrunCompiler {
                 float slopeZ = 0f;
                 if (i < current.points().size() - 1) {
                     Vec3 next = current.points().get(i + 1);
-                    slopeX = (float) ((next.x - vec3.x) / vec3.distanceTo(next));
-                    slopeY = (float) ((next.y - vec3.y) / vec3.distanceTo(next));
-                    slopeZ = (float) ((next.z - vec3.z) / vec3.distanceTo(next));
+                    slopeX = (float) ((next.x - position.x) / position.distanceTo(next));
+                    slopeY = (float) ((next.y - position.y) / position.distanceTo(next));
+                    slopeZ = (float) ((next.z - position.z) / position.distanceTo(next));
                 }
-                builderX.addPoint(distance, (float) vec3.x, slopeX);
-                builderY.addPoint(distance, (float) vec3.y, slopeY);
-                builderZ.addPoint(distance, (float) vec3.z, slopeZ);
+                builderX.addPoint(distance, (float) position.x, slopeX);
+                builderY.addPoint(distance, (float) position.y, slopeY);
+                builderZ.addPoint(distance, (float) position.z, slopeZ);
             }
             CubicSpline<Float, ToFloatFunction<Float>> splineX = builderX.build();
             CubicSpline<Float, ToFloatFunction<Float>> splineY = builderY.build();
@@ -111,7 +120,7 @@ public final class LootrunCompiler {
 
         List<List<Vec3>> sampled =
                 sample(raw, sampleRate).stream().map(LootrunPath::points).toList();
-        List<Vec3> vec3s = sampled.stream().flatMap(List::stream).toList();
+        List<Vec3> positions = sampled.stream().flatMap(List::stream).toList();
 
         ColoredPath locationsList = new ColoredPath(new ArrayList<>());
 
@@ -123,11 +132,16 @@ public final class LootrunCompiler {
         float differenceGreen = 0;
         float differenceBlue = 0;
 
-        for (int i = 0; i < vec3s.size(); i++) {
-            Vec3 location = vec3s.get(i);
+        for (int i = 0; i < positions.size(); i++) {
+            Vec3 position = positions.get(i);
 
-            if (LootrunFeature.INSTANCE.rainbowLootRun && !recording) {
-                int cycleDistance = LootrunFeature.INSTANCE.cycleDistance;
+            if (Managers.Feature.getFeatureInstance(LootrunFeature.class)
+                            .rainbowLootRun
+                            .get()
+                    && !recording) {
+                int cycleDistance = Managers.Feature.getFeatureInstance(LootrunFeature.class)
+                        .cycleDistance
+                        .get();
                 int cycle = 10 * cycleDistance;
                 int parts = i % cycle;
                 float done = (float) parts / (float) cycle;
@@ -151,15 +165,21 @@ public final class LootrunCompiler {
                     usedColor += (int) (differenceBlue * done);
                 }
 
-                locationsList.points().add(new ColoredPoint(location, usedColor | 0xff000000));
+                locationsList.points().add(new ColoredPosition(position, usedColor | 0xff000000));
             } else {
                 locationsList
                         .points()
-                        .add(new ColoredPoint(
-                                location,
+                        .add(new ColoredPosition(
+                                position,
                                 recording
-                                        ? LootrunFeature.INSTANCE.recordingPathColor.asInt()
-                                        : LootrunFeature.INSTANCE.activePathColor.asInt()));
+                                        ? Managers.Feature.getFeatureInstance(LootrunFeature.class)
+                                                .recordingPathColor
+                                                .get()
+                                                .asInt()
+                                        : Managers.Feature.getFeatureInstance(LootrunFeature.class)
+                                                .activePathColor
+                                                .get()
+                                                .asInt()));
             }
         }
 
@@ -167,11 +187,12 @@ public final class LootrunCompiler {
         Long2ObjectMap<List<ColoredPath>> sampleByChunk = new Long2ObjectOpenHashMap<>();
         ChunkPos lastChunkPos = null;
         for (int i = 0; i < locationsList.points().size(); i++) {
-            Vec3 location = locationsList.points().get(i).vec3();
-            ChunkPos currentChunkPos = new ChunkPos(Mth.fastFloor(location.x()) >> 4, Mth.fastFloor(location.z()) >> 4);
+            Vec3 position = locationsList.points().get(i).position();
+            ChunkPos currentChunkPos =
+                    new ChunkPos(MathUtils.floor(position.x()) >> 4, MathUtils.floor(position.z()) >> 4);
             if (!currentChunkPos.equals(lastChunkPos)) {
                 if (lastChunkPos != null
-                        && location.distanceTo(locationsList.points().get(i - 1).vec3()) < 32) {
+                        && position.distanceTo(locationsList.points().get(i - 1).position()) < 32) {
                     lastLocationList.points().add(locationsList.points().get(i));
                 }
 
@@ -187,6 +208,72 @@ public final class LootrunCompiler {
         return sampleByChunk;
     }
 
+    private static List<Vector2d> generateSimplifiedPoints(LootrunPath raw, double tolerance) {
+        List<Vector2d> points = new ArrayList<>();
+
+        // y is discarded in the process, as map doesn't show height info
+        for (Vec3 point : raw.points()) {
+            points.add(new Vector2d(point.x, point.z));
+        }
+
+        return simplify(points, tolerance);
+    }
+
+    // Douglas-Peucker implementation for shape simplification
+    private static List<Vector2d> simplify(List<Vector2d> points, double epsilon) {
+        // can't simplify the shape when having too few points, so return it as it is
+        if (points.size() < 3) {
+            return points;
+        }
+
+        int end = points.size() - 1;
+        int index = -1;
+        double dist = 0.0;
+
+        // find the farthest point for splitting
+        for (int i = 1; i < end; i++) {
+            double d = pointLineDistance(points.get(i), points.get(0), points.get(end));
+            if (d > dist) {
+                dist = d;
+                index = i;
+            }
+        }
+
+        List<Vector2d> simplified = new ArrayList<>();
+
+        // split list with the farthest point and simplify both sublist recursively if distance is greater than epsilon
+        if (dist > epsilon) {
+            List<Vector2d> left = simplify(points.subList(0, index + 1), epsilon);
+            List<Vector2d> right = simplify(points.subList(index, end + 1), epsilon);
+            simplified.addAll(left.subList(0, left.size() - 1));
+            simplified.addAll(right);
+        } else {
+            // return both end of the simplified line otherwise
+            simplified.add(points.get(0));
+            simplified.add(points.get(end));
+        }
+
+        return simplified;
+    }
+
+    private static double pointLineDistance(Vector2d point, Vector2d lineStart, Vector2d lineEnd) {
+        Vector2d delta = new Vector2d(point).sub(lineStart);
+        Vector2d lineDelta = new Vector2d(lineEnd).sub(lineStart);
+
+        double param = delta.dot(lineDelta) / lineDelta.lengthSquared();
+
+        Vector2d closestPoint;
+        if (param < 0) {
+            closestPoint = new Vector2d(lineStart);
+        } else if (param > 1) {
+            closestPoint = new Vector2d(lineEnd);
+        } else {
+            closestPoint = new Vector2d(lineStart).add(lineDelta.mul(param));
+        }
+
+        return closestPoint.distance(point);
+    }
+
     private static Long2ObjectMap<Set<BlockPos>> getChests(Set<BlockPos> chests) {
         Long2ObjectMap<Set<BlockPos>> result = new Long2ObjectOpenHashMap<>();
         for (BlockPos pos : chests) {
@@ -199,7 +286,7 @@ public final class LootrunCompiler {
     private static Long2ObjectMap<List<LootrunNote>> getNotes(List<LootrunNote> notes) {
         Long2ObjectMap<List<LootrunNote>> result = new Long2ObjectOpenHashMap<>();
         for (LootrunNote note : notes) {
-            ChunkPos chunk = new ChunkPos(new BlockPos(note.position()));
+            ChunkPos chunk = new ChunkPos(PosUtils.newBlockPos(note.position()));
             List<LootrunNote> notesChunk = result.computeIfAbsent(chunk.toLong(), (chunkPos) -> new ArrayList<>());
             notesChunk.add(note);
         }

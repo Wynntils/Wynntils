@@ -4,26 +4,28 @@
  */
 package com.wynntils.handlers.bossbar;
 
+import com.wynntils.handlers.bossbar.type.BossBarProgress;
 import com.wynntils.mc.mixin.accessors.LerpingBossEventAccessor;
-import java.util.UUID;
+import com.wynntils.utils.type.CappedValue;
+import java.util.Collections;
+import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import net.minecraft.client.gui.components.LerpingBossEvent;
 
 public class TrackedBar {
-    public final Pattern pattern;
+    public final List<Pattern> patterns;
 
     private boolean rendered = true;
-
     private LerpingBossEvent event = null;
-
-    protected int current = 0;
-    protected int max = 0;
-
-    protected UUID uuid = null;
+    private CappedValue value = CappedValue.EMPTY;
 
     public TrackedBar(Pattern pattern) {
-        this.pattern = pattern;
+        this.patterns = List.of(pattern);
+    }
+
+    public TrackedBar(List<Pattern> patterns) {
+        this.patterns = Collections.unmodifiableList(patterns);
     }
 
     public void onUpdateName(Matcher match) {}
@@ -50,13 +52,8 @@ public class TrackedBar {
         return event;
     }
 
-    public UUID getUuid() {
-        return event.getId();
-    }
-
     void reset() {
-        current = 0;
-        max = 0;
+        value = CappedValue.EMPTY;
         event = null;
         rendered = true;
     }
@@ -66,6 +63,10 @@ public class TrackedBar {
     }
 
     public BossBarProgress getBarProgress() {
-        return isActive() ? new BossBarProgress(current, max, event.getProgress()) : null;
+        return isActive() ? new BossBarProgress(value, event.getProgress()) : null;
+    }
+
+    protected void updateValue(int current, int max) {
+        value = new CappedValue(current, max);
     }
 }

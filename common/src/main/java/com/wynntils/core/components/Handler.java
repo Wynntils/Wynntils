@@ -13,4 +13,9 @@ package com.wynntils.core.components;
  */
 public abstract class Handler extends CoreComponent {
     protected Handler() {}
+
+    @Override
+    protected String getComponentType() {
+        return "Handler";
+    }
 }

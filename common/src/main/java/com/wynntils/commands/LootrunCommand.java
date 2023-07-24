@@ -16,8 +16,10 @@ import com.wynntils.models.lootruns.type.LootrunNote;
 import com.wynntils.models.lootruns.type.LootrunSaveResult;
 import com.wynntils.models.lootruns.type.LootrunState;
 import com.wynntils.models.lootruns.type.LootrunUndoResult;
+import com.wynntils.screens.base.WynntilsMenuScreenBase;
 import com.wynntils.screens.lootrun.WynntilsLootrunsScreen;
 import com.wynntils.utils.mc.McUtils;
+import com.wynntils.utils.mc.PosUtils;
 import java.io.File;
 import java.util.List;
 import java.util.stream.Stream;
@@ -34,7 +36,6 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.HoverEvent;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.world.entity.Entity;
-import net.minecraft.world.phys.Vec3;
 
 public class LootrunCommand extends Command {
     private static final SuggestionProvider<CommandSourceStack> LOOTRUN_SUGGESTION_PROVIDER =
@@ -50,14 +51,19 @@ public class LootrunCommand extends Command {
     }
 
     @Override
+    public List<String> getAliases() {
+        return List.of("lr");
+    }
+
+    @Override
     public String getDescription() {
         return "Load, record and manage lootruns";
     }
 
     @Override
-    public LiteralArgumentBuilder<CommandSourceStack> getCommandBuilder() {
-        return Commands.literal(getCommandName())
-                .then(Commands.literal("load")
+    public LiteralArgumentBuilder<CommandSourceStack> getCommandBuilder(
+            LiteralArgumentBuilder<CommandSourceStack> base) {
+        return base.then(Commands.literal("load")
                         .then(Commands.argument("lootrun", StringArgumentType.string())
                                 .suggests(LOOTRUN_SUGGESTION_PROVIDER)
                                 .executes(this::loadLootrun)))
@@ -103,26 +109,8 @@ public class LootrunCommand extends Command {
     private int loadLootrun(CommandContext<CommandSourceStack> context) {
         String fileName = StringArgumentType.getString(context, "lootrun");
 
-        boolean successful = Models.Lootrun.loadFile(fileName);
-        Vec3 startingPoint = Models.Lootrun.getStartingPoint();
+        Models.Lootrun.tryLoadLootrun(fileName);
 
-        if (!successful || startingPoint == null) {
-            context.getSource()
-                    .sendFailure(Component.translatable("feature.wynntils.lootrunUtils.lootrunCouldNotBeLoaded")
-                            .withStyle(ChatFormatting.RED));
-            return 0;
-        }
-
-        BlockPos start = new BlockPos(startingPoint);
-        context.getSource()
-                .sendSuccess(
-                        Component.translatable(
-                                        "feature.wynntils.lootrunUtils.lootrunStart",
-                                        start.getX(),
-                                        start.getY(),
-                                        start.getZ())
-                                .withStyle(ChatFormatting.GREEN),
-                        false);
         return 1;
     }
 
@@ -228,7 +216,7 @@ public class LootrunCommand extends Command {
         } else {
             MutableComponent component = Component.translatable("feature.wynntils.lootrunUtils.listNoteHeader");
             for (LootrunNote note : notes) {
-                BlockPos pos = new BlockPos(note.position());
+                BlockPos pos = PosUtils.newBlockPos(note.position());
                 String posString = pos.toShortString();
 
                 component
@@ -250,7 +238,7 @@ public class LootrunCommand extends Command {
 
     private int deleteLootrunNote(CommandContext<CommandSourceStack> context) throws CommandSyntaxException {
         BlockPos pos = BlockPosArgument.getSpawnablePos(context, "pos");
-        var removedNote = Models.Lootrun.deleteNoteAt(pos);
+        LootrunNote removedNote = Models.Lootrun.deleteNoteAt(pos);
 
         if (removedNote != null) {
             context.getSource()
@@ -406,7 +394,7 @@ public class LootrunCommand extends Command {
 
     private int screenLootrun(CommandContext<CommandSourceStack> context) {
         // Delay is needed to prevent chat screen overwriting the lootrun screen
-        Managers.TickScheduler.scheduleLater(() -> McUtils.mc().setScreen(WynntilsLootrunsScreen.create()), 2);
+        Managers.TickScheduler.scheduleLater(() -> WynntilsMenuScreenBase.openBook(WynntilsLootrunsScreen.create()), 2);
         return 1;
     }
 }

@@ -32,7 +32,6 @@ public abstract class HadesRelationsUpdateEvent extends Event {
     }
 
     public static class PartyList extends HadesRelationsUpdateEvent {
-
         public PartyList(Set<String> changedPlayers, ChangeType changeType) {
             super(changedPlayers, changeType);
         }

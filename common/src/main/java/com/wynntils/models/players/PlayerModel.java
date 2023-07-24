@@ -4,21 +4,19 @@
  */
 package com.wynntils.models.players;
 
-import com.mojang.blaze3d.platform.NativeImage;
+import com.mojang.blaze3d.systems.RenderSystem;
 import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.components.Managers;
 import com.wynntils.core.components.Model;
+import com.wynntils.core.components.Models;
 import com.wynntils.core.net.ApiResponse;
 import com.wynntils.core.net.UrlId;
+import com.wynntils.core.text.StyledText;
 import com.wynntils.mc.event.PlayerJoinedWorldEvent;
 import com.wynntils.mc.event.PlayerTeamEvent;
 import com.wynntils.models.worlds.event.WorldStateEvent;
 import com.wynntils.models.worlds.type.WorldState;
 import com.wynntils.utils.mc.McUtils;
-import java.io.ByteArrayInputStream;
-import java.io.IOException;
-import java.util.Arrays;
-import java.util.Base64;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -28,8 +26,6 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import java.util.stream.Stream;
 import net.minecraft.client.multiplayer.PlayerInfo;
-import net.minecraft.client.renderer.texture.DynamicTexture;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.scores.PlayerTeam;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
@@ -39,11 +35,10 @@ public final class PlayerModel extends Model {
     private static final int MAX_ERRORS = 5;
 
     private final Map<UUID, WynntilsUser> users = new ConcurrentHashMap<>();
-    private final Map<UUID, ResourceLocation[]> cosmeticTextures = new ConcurrentHashMap<>();
     private final Set<UUID> fetching = ConcurrentHashMap.newKeySet();
     private final Map<UUID, Integer> ghosts = new ConcurrentHashMap<>();
     private int errorCount;
-    private Map<UUID, String> nameMap = new ConcurrentHashMap<>();
+    private final Map<UUID, String> nameMap = new ConcurrentHashMap<>();
 
     public PlayerModel() {
         super(List.of());
@@ -57,7 +52,7 @@ public final class PlayerModel extends Model {
     }
 
     public boolean isNpc(Player player) {
-        String scoreboardName = player.getScoreboardName();
+        StyledText scoreboardName = StyledText.fromString(player.getScoreboardName());
         return isNpc(scoreboardName);
     }
 
@@ -67,10 +62,6 @@ public final class PlayerModel extends Model {
 
     public WynntilsUser getUser(UUID uuid) {
         return users.getOrDefault(uuid, null);
-    }
-
-    public ResourceLocation[] getUserCosmeticTexture(UUID uuid) {
-        return cosmeticTextures.getOrDefault(uuid, null);
     }
 
     public Stream<String> getAllPlayerNames() {
@@ -84,7 +75,6 @@ public final class PlayerModel extends Model {
     @SubscribeEvent
     public void onWorldStateChange(WorldStateEvent event) {
         if (event.getNewState() == WorldState.NOT_CONNECTED) {
-            clearTextureCache();
             clearUserCache();
         }
         if (event.getNewState() == WorldState.WORLD) {
@@ -96,10 +86,10 @@ public final class PlayerModel extends Model {
     public void onPlayerJoin(PlayerJoinedWorldEvent event) {
         Player player = event.getPlayer();
         if (player == null || player.getUUID() == null) return;
-        String name = player.getGameProfile().getName();
+        StyledText name = StyledText.fromString(player.getGameProfile().getName());
         if (isNpc(name)) return; // avoid player npcs
 
-        loadUser(player.getUUID(), name);
+        loadUser(player.getUUID(), name.getString());
     }
 
     @SubscribeEvent
@@ -123,7 +113,7 @@ public final class PlayerModel extends Model {
         ghosts.put(uuid, world);
     }
 
-    private void loadUser(UUID uuid, String name) {
+    private void loadUser(UUID uuid, String userName) {
         if (fetching.contains(uuid)) return;
         if (errorCount >= MAX_ERRORS) {
             // Athena is having problems, skip this
@@ -131,7 +121,7 @@ public final class PlayerModel extends Model {
         }
 
         fetching.add(uuid); // temporary, avoid extra loads
-        nameMap.put(uuid, name);
+        nameMap.put(uuid, userName);
 
         ApiResponse apiResponse = Managers.Net.callApi(UrlId.API_ATHENA_USER_INFO, Map.of("uuid", uuid.toString()));
         apiResponse.handleJsonObject(
@@ -143,8 +133,8 @@ public final class PlayerModel extends Model {
                     users.put(uuid, user);
                     fetching.remove(uuid);
 
-                    // Make sure texture loading is done on client thread
-                    Managers.TickScheduler.scheduleNextTick(() -> loadCosmeticTextures(uuid, user));
+                    // Schedule cape loading for next render tick
+                    RenderSystem.recordRenderCall(() -> Models.Cosmetics.loadCosmeticTextures(uuid, user));
                 },
                 onError -> {
                     errorCount++;
@@ -154,61 +144,17 @@ public final class PlayerModel extends Model {
                 });
     }
 
-    private void loadCosmeticTextures(UUID uuid, WynntilsUser user) {
-        try {
-            if (user.cosmetics().texture() == null || user.cosmetics().texture().isEmpty()) return;
-            if (cosmeticTextures.containsKey(uuid)) return;
-
-            byte[] textureBytes = Base64.getDecoder().decode(user.cosmetics().texture());
-            ByteArrayInputStream byteStream = new ByteArrayInputStream(textureBytes);
-            NativeImage image = NativeImage.read(byteStream);
-
-            int frames = (image.getHeight() * 2) / image.getWidth();
-            int frameHeight = image.getHeight() / frames;
-
-            ResourceLocation[] locations = new ResourceLocation[frames];
-            String baseLocation = "wynntils:capes/" + uuid.toString().replace("-", "");
-
-            if (frames == 1) { // not animated
-                locations[0] = new ResourceLocation(baseLocation);
-                McUtils.mc().getTextureManager().register(locations[0], new DynamicTexture(image));
-            } else { // animated
-                for (int i = 0; i < frames; i++) {
-                    NativeImage frame = new NativeImage(frameHeight * 2, frameHeight, false);
-                    image.copyRect(frame, 0, frameHeight * i, 0, 0, frameHeight * 2, frameHeight, false, false);
-
-                    locations[i] = new ResourceLocation(baseLocation + "/" + i);
-                    McUtils.mc().getTextureManager().register(locations[i], new DynamicTexture(frame));
-                }
-            }
-
-            cosmeticTextures.put(uuid, locations);
-        } catch (IOException e) {
-            WynntilsMod.warn("IOException occurred while loading cosmetics for user " + uuid, e);
-        }
-    }
-
     private void clearUserCache() {
         users.clear();
         nameMap.clear();
-    }
-
-    private void clearTextureCache() {
-        for (ResourceLocation[] locations : cosmeticTextures.values()) {
-            // Make sure texture unloading is done on client thread
-            Managers.TickScheduler.scheduleNextTick(() -> {
-                Arrays.stream(locations)
-                        .forEach(l -> McUtils.mc().getTextureManager().release(l));
-            });
-        }
-        cosmeticTextures.clear();
     }
 
     private void clearGhostCache() {
         ghosts.clear();
     }
 
-    private boolean isNpc(String name) {
+    private boolean isNpc(StyledText name) {
+        // FIXME: Maybe make a better check using more native StyledText operations?
         return name.contains("\u0001") || name.contains("§");
     }
 }

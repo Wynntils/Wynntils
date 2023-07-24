@@ -6,6 +6,7 @@ package com.wynntils.models.horse;
 
 import com.wynntils.core.components.Model;
 import com.wynntils.core.components.Models;
+import com.wynntils.core.text.StyledText;
 import com.wynntils.models.items.ItemModel;
 import com.wynntils.models.items.items.game.HorseItem;
 import com.wynntils.utils.mc.McUtils;
@@ -23,31 +24,25 @@ public class HorseModel extends Model {
         super(List.of(itemModel));
     }
 
-    public HorseItem getHorse() {
+    public Optional<HorseItem> getHorse() {
         int horseSlot = findHorseSlotNum();
-        if (horseSlot == -1) return null;
+        if (horseSlot == -1) return Optional.empty();
 
-        return getHorseItem(McUtils.inventory().getItem(horseSlot));
+        return Models.Item.asWynnItem(McUtils.inventory().getItem(horseSlot), HorseItem.class);
     }
 
     public int findHorseSlotNum() {
         Inventory inventory = McUtils.inventory();
-        for (int slotNum = 0; slotNum <= 44; slotNum++) {
+        for (int slotNum = 0; slotNum < Inventory.INVENTORY_SIZE; slotNum++) {
             ItemStack itemStack = inventory.getItem(slotNum);
-            if (getHorseItem(itemStack) != null) {
+            if (Models.Item.asWynnItem(itemStack, HorseItem.class).isPresent()) {
                 return slotNum;
             }
         }
         return -1;
     }
 
-    public HorseItem getHorseItem(ItemStack itemStack) {
-        Optional<HorseItem> horseOpt = Models.Item.asWynnItem(itemStack, HorseItem.class);
-        return horseOpt.orElse(null);
-    }
-
-    public AbstractHorse searchForHorseNearby(int searchRadius) {
-        Player player = McUtils.player();
+    public AbstractHorse searchForHorseNearby(Player player, int searchRadius) {
         List<AbstractHorse> horses = McUtils.mc()
                 .level
                 .getEntitiesOfClass(
@@ -72,9 +67,8 @@ public class HorseModel extends Model {
         if (horseName == null) return false;
 
         String playerName = player.getName().getString();
-        String defaultName = "§f" + playerName + "§7" + "'s horse";
-        String customNameSuffix = "§7" + " [" + playerName + "]";
-        return defaultName.equals(horseName.getString())
-                || horseName.getString().endsWith(customNameSuffix);
+        StyledText defaultName = StyledText.fromString("§f" + playerName + "§7" + "'s horse");
+        StyledText codedHorseName = StyledText.fromComponent(horseName);
+        return defaultName.equals(codedHorseName) || codedHorseName.endsWith("§7" + " [" + playerName + "]");
     }
 }

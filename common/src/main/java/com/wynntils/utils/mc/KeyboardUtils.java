@@ -8,7 +8,7 @@ import org.lwjgl.glfw.GLFW;
 
 public final class KeyboardUtils {
     public static boolean isKeyDown(int keyCode) {
-        return GLFW.glfwGetKey(McUtils.mc().getWindow().getWindow(), keyCode) == 1;
+        return GLFW.glfwGetKey(McUtils.window().getWindow(), keyCode) == 1;
     }
 
     public static boolean isShiftDown() {

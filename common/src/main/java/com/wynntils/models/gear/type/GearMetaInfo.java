@@ -4,6 +4,7 @@
  */
 package com.wynntils.models.gear.type;
 
+import com.wynntils.core.text.StyledText;
 import com.wynntils.models.wynnitem.type.ItemMaterial;
 import com.wynntils.models.wynnitem.type.ItemObtainInfo;
 import java.util.List;
@@ -15,6 +16,6 @@ public record GearMetaInfo(
         GearRestrictions restrictions,
         ItemMaterial material,
         List<ItemObtainInfo> obtainInfo,
-        Optional<String> lore,
+        Optional<StyledText> lore,
         Optional<String> apiName,
         boolean allowCraftsman) {}

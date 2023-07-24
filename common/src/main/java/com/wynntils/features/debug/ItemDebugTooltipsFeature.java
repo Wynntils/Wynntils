@@ -5,8 +5,11 @@
 package com.wynntils.features.debug;
 
 import com.wynntils.core.components.Models;
-import com.wynntils.core.features.DebugFeature;
+import com.wynntils.core.config.Category;
+import com.wynntils.core.config.ConfigCategory;
+import com.wynntils.core.features.Feature;
 import com.wynntils.core.features.properties.StartDisabled;
+import com.wynntils.core.text.StyledText;
 import com.wynntils.mc.event.ItemTooltipRenderEvent;
 import com.wynntils.models.items.WynnItem;
 import com.wynntils.utils.mc.KeyboardUtils;
@@ -23,7 +26,8 @@ import net.minecraftforge.eventbus.api.SubscribeEvent;
 import org.lwjgl.glfw.GLFW;
 
 @StartDisabled
-public class ItemDebugTooltipsFeature extends DebugFeature {
+@ConfigCategory(Category.DEBUG)
+public class ItemDebugTooltipsFeature extends Feature {
     @SubscribeEvent(priority = EventPriority.LOWEST)
     public void onTooltipPre(ItemTooltipRenderEvent.Pre event) {
         Optional<WynnItem> wynnItemOpt = Models.Item.getWynnItem(event.getItemStack());
@@ -38,16 +42,19 @@ public class ItemDebugTooltipsFeature extends DebugFeature {
     private List<Component> getTooltipAddon(WynnItem wynnItem) {
         List<Component> addon = new ArrayList<>();
 
-        List<String> wrappedDescription = Arrays.stream(RenderedStringUtils.wrapTextBySize(wynnItem.toString(), 150))
+        // We do not want to treat § in the text as formatting codes later on
+        StyledText rawString =
+                StyledText.fromUnformattedString(wynnItem.toString()).replaceAll("§", "%");
+        List<StyledText> wrappedDescription = Arrays.stream(RenderedStringUtils.wrapTextBySize(rawString, 150))
                 .toList();
         if (!KeyboardUtils.isKeyDown(GLFW.GLFW_KEY_RIGHT_SHIFT) && wrappedDescription.size() > 4) {
             wrappedDescription = new ArrayList<>(wrappedDescription.subList(0, 3));
-            wrappedDescription.add("...");
-            wrappedDescription.add("Press Right Shift for all");
+            wrappedDescription.add(StyledText.fromString("..."));
+            wrappedDescription.add(StyledText.fromString("Press Right Shift for all"));
         }
 
-        for (String line : wrappedDescription) {
-            addon.add(Component.literal(line).withStyle(ChatFormatting.DARK_GREEN));
+        for (StyledText line : wrappedDescription) {
+            addon.add(line.getComponent().withStyle(ChatFormatting.DARK_GREEN));
         }
 
         return addon;

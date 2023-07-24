@@ -4,12 +4,13 @@
  */
 package com.wynntils.core.chat;
 
-import com.wynntils.handlers.chat.RecipientType;
-import com.wynntils.handlers.chat.event.ChatMessageReceivedEvent;
-import com.wynntils.mc.event.ClientsideMessageEvent;
+import com.wynntils.core.WynntilsMod;
+import com.wynntils.handlers.chat.type.RecipientType;
 import java.util.Objects;
+import java.util.Optional;
 import java.util.Set;
 import java.util.regex.Pattern;
+import java.util.regex.PatternSyntaxException;
 
 public class ChatTab {
     private final String name;
@@ -19,7 +20,6 @@ public class ChatTab {
     // Filters
     private final Set<RecipientType> filteredTypes;
     private final String customRegexString;
-
     private transient Pattern customRegex;
 
     public ChatTab(
@@ -35,28 +35,6 @@ public class ChatTab {
         this.customRegexString = customRegexString;
     }
 
-    public boolean matchMessageFromEvent(ChatMessageReceivedEvent event) {
-        if (filteredTypes != null && !filteredTypes.isEmpty() && !filteredTypes.contains(event.getRecipientType())) {
-            return false;
-        }
-
-        return customRegexString == null
-                || customRegexString.isBlank()
-                || getCustomRegex().matcher(event.getOriginalCodedMessage()).matches();
-    }
-
-    public boolean matchMessageFromEvent(ClientsideMessageEvent event) {
-        if (filteredTypes != null && !filteredTypes.isEmpty() && !filteredTypes.contains(RecipientType.CLIENTSIDE)) {
-            return false;
-        }
-
-        if (customRegexString == null) {
-            return true;
-        }
-
-        return getCustomRegex().matcher(event.getOriginalCodedMessage()).matches();
-    }
-
     public String getName() {
         return name;
     }
@@ -69,15 +47,12 @@ public class ChatTab {
         return autoCommand;
     }
 
-    /** This is only allowed to be called if customRegexString != null.
-     */
-    private Pattern getCustomRegex() {
-        assert (customRegexString != null);
-
+    public Optional<Pattern> getCustomRegex() {
         if (customRegex == null) {
-            customRegex = Pattern.compile(customRegexString, Pattern.DOTALL);
+            customRegex = compileRegex(customRegexString);
         }
-        return customRegex;
+
+        return Optional.ofNullable(customRegex);
     }
 
     public String getCustomRegexString() {
@@ -103,5 +78,17 @@ public class ChatTab {
     @Override
     public int hashCode() {
         return Objects.hash(name, consuming, filteredTypes, customRegexString);
+    }
+
+    private Pattern compileRegex(String customRegexString) {
+        if (customRegexString != null && !customRegexString.isBlank()) {
+            try {
+                return Pattern.compile(customRegexString, Pattern.DOTALL);
+            } catch (PatternSyntaxException e) {
+                WynntilsMod.warn("Got a saved invalid chat tab regex: " + customRegexString);
+                return null;
+            }
+        }
+        return null;
     }
 }

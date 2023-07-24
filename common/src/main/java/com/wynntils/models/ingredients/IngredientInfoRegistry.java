@@ -287,6 +287,6 @@ public class IngredientInfoRegistry {
     }
 
     protected static class WynncraftIngredientInfoResponse {
-        List<IngredientInfo> ingredients;
+        protected List<IngredientInfo> ingredients;
     }
 }

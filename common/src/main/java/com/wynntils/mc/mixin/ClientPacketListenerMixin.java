@@ -5,15 +5,40 @@
 package com.wynntils.mc.mixin;
 
 import com.llamalad7.mixinextras.sugar.Local;
+import com.mojang.authlib.GameProfile;
 import com.mojang.brigadier.CommandDispatcher;
 import com.mojang.brigadier.tree.RootCommandNode;
-import com.wynntils.mc.EventFactory;
+import com.wynntils.core.events.MixinHelper;
+import com.wynntils.core.text.StyledText;
+import com.wynntils.mc.event.AddEntityEvent;
+import com.wynntils.mc.event.AdvancementUpdateEvent;
 import com.wynntils.mc.event.ChatPacketReceivedEvent;
 import com.wynntils.mc.event.ChatSentEvent;
-import com.wynntils.mc.event.CommandsPacketEvent;
+import com.wynntils.mc.event.CommandSentEvent;
+import com.wynntils.mc.event.CommandsAddedEvent;
+import com.wynntils.mc.event.ConnectionEvent;
 import com.wynntils.mc.event.ContainerSetContentEvent;
+import com.wynntils.mc.event.ContainerSetSlotEvent;
+import com.wynntils.mc.event.LocalSoundEvent;
+import com.wynntils.mc.event.MenuEvent;
+import com.wynntils.mc.event.MobEffectEvent;
+import com.wynntils.mc.event.PlayerInfoEvent;
+import com.wynntils.mc.event.PlayerInfoFooterChangedEvent;
+import com.wynntils.mc.event.PlayerTeleportEvent;
+import com.wynntils.mc.event.RemoveEntitiesEvent;
+import com.wynntils.mc.event.ResourcePackEvent;
+import com.wynntils.mc.event.ScoreboardSetDisplayObjectiveEvent;
+import com.wynntils.mc.event.ScoreboardSetObjectiveEvent;
+import com.wynntils.mc.event.ScoreboardSetScoreEvent;
+import com.wynntils.mc.event.SetEntityDataEvent;
+import com.wynntils.mc.event.SetEntityPassengersEvent;
+import com.wynntils.mc.event.SetPlayerTeamEvent;
+import com.wynntils.mc.event.SetSpawnEvent;
+import com.wynntils.mc.event.SetXpEvent;
+import com.wynntils.mc.event.SubtitleSetTextEvent;
+import com.wynntils.mc.event.TitleSetTextEvent;
+import com.wynntils.mc.mixin.accessors.ClientboundSetPlayerTeamPacketAccessor;
 import com.wynntils.utils.mc.McUtils;
-import java.util.Objects;
 import java.util.UUID;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screens.ReceivingLevelScreen;
@@ -22,6 +47,7 @@ import net.minecraft.client.multiplayer.ClientRegistryLayer;
 import net.minecraft.client.multiplayer.PlayerInfo;
 import net.minecraft.commands.SharedSuggestionProvider;
 import net.minecraft.core.LayeredRegistryAccess;
+import net.minecraft.core.PositionImpl;
 import net.minecraft.network.chat.ChatType;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MessageSignatureCache;
@@ -40,13 +66,16 @@ import net.minecraft.network.protocol.game.ClientboundRemoveEntitiesPacket;
 import net.minecraft.network.protocol.game.ClientboundRemoveMobEffectPacket;
 import net.minecraft.network.protocol.game.ClientboundResourcePackPacket;
 import net.minecraft.network.protocol.game.ClientboundSetDefaultSpawnPositionPacket;
+import net.minecraft.network.protocol.game.ClientboundSetDisplayObjectivePacket;
 import net.minecraft.network.protocol.game.ClientboundSetEntityDataPacket;
 import net.minecraft.network.protocol.game.ClientboundSetExperiencePacket;
+import net.minecraft.network.protocol.game.ClientboundSetObjectivePacket;
 import net.minecraft.network.protocol.game.ClientboundSetPassengersPacket;
 import net.minecraft.network.protocol.game.ClientboundSetPlayerTeamPacket;
 import net.minecraft.network.protocol.game.ClientboundSetScorePacket;
 import net.minecraft.network.protocol.game.ClientboundSetSubtitleTextPacket;
 import net.minecraft.network.protocol.game.ClientboundSetTitleTextPacket;
+import net.minecraft.network.protocol.game.ClientboundSoundPacket;
 import net.minecraft.network.protocol.game.ClientboundSystemChatPacket;
 import net.minecraft.network.protocol.game.ClientboundTabListPacket;
 import net.minecraft.network.protocol.game.ClientboundUpdateAdvancementsPacket;
@@ -55,6 +84,7 @@ import net.minecraft.network.protocol.game.ServerboundResourcePackPacket;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
+import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
@@ -81,28 +111,34 @@ public abstract class ClientPacketListenerMixin {
     @Shadow
     private MessageSignatureCache messageSignatureCache;
 
+    @Unique
     private static boolean isRenderThread() {
         return McUtils.mc().isSameThread();
     }
 
-    @Inject(method = "sendChat", at = @At("HEAD"), cancellable = true)
+    @Inject(method = "sendChat(Ljava/lang/String;)V", at = @At("HEAD"), cancellable = true)
     private void onChatPre(String string, CallbackInfo ci) {
-        ChatSentEvent result = EventFactory.onChatSent(string);
-        if (result.isCanceled()) {
+        ChatSentEvent event = new ChatSentEvent(string);
+        MixinHelper.post(event);
+        if (event.isCanceled()) {
             ci.cancel();
         }
     }
 
-    @Inject(method = "sendCommand", at = @At("HEAD"), cancellable = true)
+    @Inject(method = "sendCommand(Ljava/lang/String;)V", at = @At("HEAD"), cancellable = true)
     private void onSignedCommandPre(String string, CallbackInfo ci) {
-        if (EventFactory.onCommandSent(string, true).isCanceled()) {
+        CommandSentEvent event = new CommandSentEvent(string, true);
+        MixinHelper.post(event);
+        if (event.isCanceled()) {
             ci.cancel();
         }
     }
 
-    @Inject(method = "sendUnsignedCommand", at = @At("HEAD"), cancellable = true)
+    @Inject(method = "sendUnsignedCommand(Ljava/lang/String;)Z", at = @At("HEAD"), cancellable = true)
     private void onUnsignedCommandPre(String command, CallbackInfoReturnable<Boolean> cir) {
-        if (EventFactory.onCommandSent(command, false).isCanceled()) {
+        CommandSentEvent event = new CommandSentEvent(command, false);
+        MixinHelper.post(event);
+        if (event.isCanceled()) {
             // Return true here, to signal to MC that we handled the command.
             cir.setReturnValue(true);
             cir.cancel();
@@ -117,7 +153,8 @@ public abstract class ClientPacketListenerMixin {
         // We need to read the root from the CommandDispatcher, not the packet,
         // due to interop with other mods
         RootCommandNode<SharedSuggestionProvider> root = this.commands.getRoot();
-        CommandsPacketEvent event = EventFactory.onCommandsPacket(root);
+        CommandsAddedEvent event = new CommandsAddedEvent(root);
+        MixinHelper.post(event);
 
         if (event.getRoot() != root) {
             // If we changed the root, replace the CommandDispatcher
@@ -125,16 +162,40 @@ public abstract class ClientPacketListenerMixin {
         }
     }
 
-    @Inject(method = "handlePlayerInfoUpdate", at = @At("RETURN"))
+    @Inject(
+            method = "handlePlayerInfoUpdate(Lnet/minecraft/network/protocol/game/ClientboundPlayerInfoUpdatePacket;)V",
+            at = @At("RETURN"))
     private void handlePlayerInfoUpdatePost(ClientboundPlayerInfoUpdatePacket packet, CallbackInfo ci) {
         if (!isRenderThread()) return;
-        EventFactory.onPlayerInfoUpdatePacket(packet);
+        if (!MixinHelper.onWynncraft()) return;
+
+        for (ClientboundPlayerInfoUpdatePacket.Entry entry : packet.newEntries()) {
+            GameProfile profile = entry.profile();
+            MixinHelper.post(new PlayerInfoEvent.PlayerLogInEvent(profile.getId(), profile.getName()));
+        }
+
+        for (ClientboundPlayerInfoUpdatePacket.Entry entry : packet.entries()) {
+            for (ClientboundPlayerInfoUpdatePacket.Action action : packet.actions()) {
+                if (action == ClientboundPlayerInfoUpdatePacket.Action.UPDATE_DISPLAY_NAME) {
+                    GameProfile profile = entry.profile();
+                    if (entry.displayName() == null) continue;
+                    MixinHelper.post(
+                            new PlayerInfoEvent.PlayerDisplayNameChangeEvent(profile.getId(), entry.displayName()));
+                }
+            }
+        }
     }
 
-    @Inject(method = "handlePlayerInfoRemove", at = @At("RETURN"))
+    @Inject(
+            method = "handlePlayerInfoRemove(Lnet/minecraft/network/protocol/game/ClientboundPlayerInfoRemovePacket;)V",
+            at = @At("RETURN"))
     private void handlePlayerInfoRemovePost(ClientboundPlayerInfoRemovePacket packet, CallbackInfo ci) {
         if (!isRenderThread()) return;
-        EventFactory.onPlayerInfoRemovePacket(packet);
+        if (!MixinHelper.onWynncraft()) return;
+
+        for (UUID uuid : packet.profileIds()) {
+            MixinHelper.post(new PlayerInfoEvent.PlayerLogOutEvent(uuid));
+        }
     }
 
     @Inject(
@@ -142,7 +203,8 @@ public abstract class ClientPacketListenerMixin {
             at = @At("RETURN"))
     private void handleTabListCustomisationPost(ClientboundTabListPacket packet, CallbackInfo ci) {
         if (!isRenderThread()) return;
-        EventFactory.onTabListCustomisation(packet);
+
+        MixinHelper.post(new PlayerInfoFooterChangedEvent(StyledText.fromComponent(packet.getFooter())));
     }
 
     @Inject(
@@ -150,7 +212,9 @@ public abstract class ClientPacketListenerMixin {
             at = @At("HEAD"),
             cancellable = true)
     private void handleResourcePackPre(ClientboundResourcePackPacket packet, CallbackInfo ci) {
-        if (EventFactory.onResourcePack(packet).isCanceled()) {
+        ResourcePackEvent event = new ResourcePackEvent(packet.getUrl(), packet.getHash(), packet.isRequired());
+        MixinHelper.post(event);
+        if (event.isCanceled()) {
             this.send(ServerboundResourcePackPacket.Action.SUCCESSFULLY_LOADED);
             ci.cancel();
         }
@@ -158,10 +222,12 @@ public abstract class ClientPacketListenerMixin {
 
     @Inject(
             method = "handleMovePlayer(Lnet/minecraft/network/protocol/game/ClientboundPlayerPositionPacket;)V",
-            at = @At("RETURN"))
+            at = @At("HEAD"))
     private void handleMovePlayerPost(ClientboundPlayerPositionPacket packet, CallbackInfo ci) {
         if (!isRenderThread()) return;
-        EventFactory.onPlayerMove(packet);
+        if (!packet.getRelativeArguments().isEmpty()) return;
+
+        MixinHelper.post(new PlayerTeleportEvent(new PositionImpl(packet.getX(), packet.getY(), packet.getZ())));
     }
 
     @Inject(
@@ -170,7 +236,11 @@ public abstract class ClientPacketListenerMixin {
             cancellable = true)
     private void handleOpenScreenPre(ClientboundOpenScreenPacket packet, CallbackInfo ci) {
         if (!isRenderThread()) return;
-        if (EventFactory.onOpenScreen(packet).isCanceled()) {
+
+        MenuEvent.MenuOpenedEvent event =
+                new MenuEvent.MenuOpenedEvent(packet.getType(), packet.getTitle(), packet.getContainerId());
+        MixinHelper.post(event);
+        if (event.isCanceled()) {
             ci.cancel();
         }
     }
@@ -181,8 +251,10 @@ public abstract class ClientPacketListenerMixin {
             cancellable = true)
     private void handleContainerClosePre(ClientboundContainerClosePacket packet, CallbackInfo ci) {
         if (!isRenderThread()) return;
-        if (EventFactory.onClientboundContainerClosePacket(packet.getContainerId())
-                .isCanceled()) {
+
+        MenuEvent.MenuClosedEvent event = new MenuEvent.MenuClosedEvent(packet.getContainerId());
+        MixinHelper.post(event);
+        if (event.isCanceled()) {
             ci.cancel();
         }
     }
@@ -194,7 +266,10 @@ public abstract class ClientPacketListenerMixin {
             cancellable = true)
     private void handleContainerContentPre(ClientboundContainerSetContentPacket packet, CallbackInfo ci) {
         if (!isRenderThread()) return;
-        ContainerSetContentEvent event = EventFactory.onContainerSetContentPre(packet);
+
+        ContainerSetContentEvent event = new ContainerSetContentEvent.Pre(
+                packet.getItems(), packet.getCarriedItem(), packet.getContainerId(), packet.getStateId());
+        MixinHelper.post(event);
         if (event.isCanceled()) {
             ci.cancel();
         }
@@ -204,7 +279,7 @@ public abstract class ClientPacketListenerMixin {
                 McUtils.player()
                         .inventoryMenu
                         .initializeContents(packet.getStateId(), packet.getItems(), packet.getCarriedItem());
-            } else if (packet.getContainerId() == McUtils.player().containerMenu.containerId) {
+            } else if (packet.getContainerId() == McUtils.containerMenu().containerId) {
                 McUtils.player()
                         .containerMenu
                         .initializeContents(packet.getStateId(), packet.getItems(), packet.getCarriedItem());
@@ -220,13 +295,29 @@ public abstract class ClientPacketListenerMixin {
             at = @At("RETURN"))
     private void handleContainerContentPost(ClientboundContainerSetContentPacket packet, CallbackInfo ci) {
         if (!isRenderThread()) return;
-        EventFactory.onContainerSetContentPost(packet);
+
+        MixinHelper.post(new ContainerSetContentEvent.Post(
+                packet.getItems(), packet.getCarriedItem(), packet.getContainerId(), packet.getStateId()));
     }
 
-    @Inject(method = "handleContainerSetSlot", at = @At("HEAD"))
-    private void handleContainerSetSlot(ClientboundContainerSetSlotPacket packet, CallbackInfo ci) {
+    @Inject(
+            method = "handleContainerSetSlot(Lnet/minecraft/network/protocol/game/ClientboundContainerSetSlotPacket;)V",
+            at = @At("HEAD"))
+    private void handleContainerSetSlotPre(ClientboundContainerSetSlotPacket packet, CallbackInfo ci) {
         if (!isRenderThread()) return;
-        EventFactory.onContainerSetSlot(packet);
+
+        MixinHelper.post(new ContainerSetSlotEvent.Pre(
+                packet.getContainerId(), packet.getStateId(), packet.getSlot(), packet.getItem()));
+    }
+
+    @Inject(
+            method = "handleContainerSetSlot(Lnet/minecraft/network/protocol/game/ClientboundContainerSetSlotPacket;)V",
+            at = @At("RETURN"))
+    private void handleContainerSetSlotPost(ClientboundContainerSetSlotPacket packet, CallbackInfo ci) {
+        if (!isRenderThread()) return;
+
+        MixinHelper.post(new ContainerSetSlotEvent.Post(
+                packet.getContainerId(), packet.getStateId(), packet.getSlot(), packet.getItem()));
     }
 
     @Inject(
@@ -235,15 +326,23 @@ public abstract class ClientPacketListenerMixin {
             cancellable = true)
     private void handleSetPlayerTeamPacketPre(ClientboundSetPlayerTeamPacket packet, CallbackInfo ci) {
         if (!isRenderThread()) return;
-        if (EventFactory.onSetPlayerTeam(packet).isCanceled()) {
+
+        SetPlayerTeamEvent event =
+                new SetPlayerTeamEvent(((ClientboundSetPlayerTeamPacketAccessor) packet).getMethod(), packet.getName());
+        MixinHelper.post(event);
+        if (event.isCanceled()) {
             ci.cancel();
         }
     }
 
-    @Inject(method = "handleSetExperience", at = @At("RETURN"))
+    @Inject(
+            method = "handleSetExperience(Lnet/minecraft/network/protocol/game/ClientboundSetExperiencePacket;)V",
+            at = @At("RETURN"))
     private void handleSetExperiencePost(ClientboundSetExperiencePacket packet, CallbackInfo ci) {
         if (!isRenderThread()) return;
-        EventFactory.onSetXp(packet);
+
+        MixinHelper.post(new SetXpEvent(
+                packet.getExperienceProgress(), packet.getTotalExperience(), packet.getExperienceLevel()));
     }
 
     @Inject(
@@ -253,15 +352,24 @@ public abstract class ClientPacketListenerMixin {
             cancellable = true)
     private void handleSetEntityPassengersPacketPre(ClientboundSetPassengersPacket packet, CallbackInfo ci) {
         if (!isRenderThread()) return;
-        if (EventFactory.onSetEntityPassengers(packet).isCanceled()) {
+
+        SetEntityPassengersEvent event = new SetEntityPassengersEvent(packet.getVehicle());
+        MixinHelper.post(event);
+        if (event.isCanceled()) {
             ci.cancel();
         }
     }
 
-    @Inject(method = "handleSetSpawn", at = @At("HEAD"), cancellable = true)
+    @Inject(
+            method = "handleSetSpawn(Lnet/minecraft/network/protocol/game/ClientboundSetDefaultSpawnPositionPacket;)V",
+            at = @At("HEAD"),
+            cancellable = true)
     private void handleSetSpawnPre(ClientboundSetDefaultSpawnPositionPacket packet, CallbackInfo ci) {
         if (!isRenderThread()) return;
-        if (EventFactory.onSetSpawn(packet.getPos()).isCanceled()) {
+
+        SetSpawnEvent event = new SetSpawnEvent(packet.getPos());
+        MixinHelper.post(event);
+        if (event.isCanceled()) {
             ci.cancel();
 
             // Signal loading complete to the loading screen,
@@ -278,7 +386,10 @@ public abstract class ClientPacketListenerMixin {
             cancellable = true)
     private void setTitleTextPre(ClientboundSetTitleTextPacket packet, CallbackInfo ci) {
         if (!isRenderThread()) return;
-        if (EventFactory.onTitleSetText(packet).isCanceled()) {
+
+        TitleSetTextEvent event = new TitleSetTextEvent(packet.getText());
+        MixinHelper.post(event);
+        if (event.isCanceled()) {
             ci.cancel();
         }
     }
@@ -289,13 +400,16 @@ public abstract class ClientPacketListenerMixin {
             cancellable = true)
     private void setSubtitleTextPre(ClientboundSetSubtitleTextPacket packet, CallbackInfo ci) {
         if (!isRenderThread()) return;
-        if (EventFactory.onSubtitleSetText(packet).isCanceled()) {
+
+        SubtitleSetTextEvent event = new SubtitleSetTextEvent(packet.getText());
+        MixinHelper.post(event);
+        if (event.isCanceled()) {
             ci.cancel();
         }
     }
 
     @Inject(
-            method = "handlePlayerChat",
+            method = "handlePlayerChat(Lnet/minecraft/network/protocol/game/ClientboundPlayerChatPacket;)V",
             at =
                     @At(
                             value = "INVOKE",
@@ -308,13 +422,17 @@ public abstract class ClientPacketListenerMixin {
             @Local PlayerChatMessage playerChatMessage,
             @Local PlayerInfo playerInfo) {
         if (!isRenderThread()) return;
-        ChatPacketReceivedEvent result = EventFactory.onPlayerChatReceived(packet.unsignedContent());
-        if (result.isCanceled()) {
+
+        // Currently, Wynncraft does not have any Player chat messages so this code
+        // is not really used
+        ChatPacketReceivedEvent event = new ChatPacketReceivedEvent.Player(packet.unsignedContent());
+        MixinHelper.post(event);
+        if (event.isCanceled()) {
             ci.cancel();
             return;
         }
 
-        if (!Objects.equals(result.getMessage(), packet.unsignedContent())) {
+        if (event.isMessageChanged()) {
             // We know this is present because of the injection point
             ChatType.Bound bound = packet.chatType()
                     .resolve(this.registryAccess.compositeAccess())
@@ -328,7 +446,7 @@ public abstract class ClientPacketListenerMixin {
     }
 
     @Inject(
-            method = "handleSystemChat",
+            method = "handleSystemChat(Lnet/minecraft/network/protocol/game/ClientboundSystemChatPacket;)V",
             at =
                     @At(
                             value = "INVOKE",
@@ -337,22 +455,64 @@ public abstract class ClientPacketListenerMixin {
             cancellable = true)
     private void handleSystemChat(ClientboundSystemChatPacket packet, CallbackInfo ci) {
         if (!isRenderThread()) return;
-        ChatPacketReceivedEvent result = EventFactory.onSystemChatReceived(packet.content(), packet.overlay());
-        if (result.isCanceled()) {
+
+        Component message = packet.content();
+        ChatPacketReceivedEvent event = packet.overlay()
+                ? new ChatPacketReceivedEvent.GameInfo(message)
+                : new ChatPacketReceivedEvent.System(message);
+        MixinHelper.post(event);
+        if (event.isCanceled()) {
             ci.cancel();
             return;
         }
 
-        if (!Objects.equals(result.getMessage(), packet.content())) {
-            this.minecraft.getChatListener().handleSystemMessage(result.getMessage(), packet.overlay());
+        if (event.isMessageChanged()) {
+            this.minecraft.getChatListener().handleSystemMessage(event.getMessage(), packet.overlay());
             ci.cancel();
         }
     }
 
-    @Inject(method = "handleSetScore", at = @At("HEAD"), cancellable = true)
+    @Inject(
+            method = "handleAddObjective(Lnet/minecraft/network/protocol/game/ClientboundSetObjectivePacket;)V",
+            at = @At("HEAD"))
+    private void handleAddObjective(ClientboundSetObjectivePacket packet, CallbackInfo ci) {
+        if (!isRenderThread()) return;
+
+        ScoreboardSetObjectiveEvent event = new ScoreboardSetObjectiveEvent(
+                packet.getObjectiveName(), packet.getDisplayName(), packet.getRenderType(), packet.getMethod());
+        MixinHelper.post(event);
+    }
+
+    @Inject(
+            method = "handleSetScore(Lnet/minecraft/network/protocol/game/ClientboundSetScorePacket;)V",
+            at = @At("HEAD"),
+            cancellable = true)
     private void handleSetScore(ClientboundSetScorePacket packet, CallbackInfo ci) {
         if (!isRenderThread()) return;
-        if (EventFactory.onSetScore(packet).isCanceled()) {
+
+        ScoreboardSetScoreEvent event = new ScoreboardSetScoreEvent(
+                StyledText.fromString(packet.getOwner()),
+                packet.getObjectiveName(),
+                packet.getScore(),
+                packet.getMethod());
+        MixinHelper.post(event);
+        if (event.isCanceled()) {
+            ci.cancel();
+        }
+    }
+
+    @Inject(
+            method =
+                    "handleSetDisplayObjective(Lnet/minecraft/network/protocol/game/ClientboundSetDisplayObjectivePacket;)V",
+            at = @At("HEAD"),
+            cancellable = true)
+    private void handleSetDisplayObjective(ClientboundSetDisplayObjectivePacket packet, CallbackInfo ci) {
+        if (!isRenderThread()) return;
+
+        ScoreboardSetDisplayObjectiveEvent event =
+                new ScoreboardSetDisplayObjectiveEvent(packet.getSlot(), packet.getObjectiveName());
+        MixinHelper.post(event);
+        if (event.isCanceled()) {
             ci.cancel();
         }
     }
@@ -360,13 +520,18 @@ public abstract class ClientPacketListenerMixin {
     @Inject(method = "onDisconnect(Lnet/minecraft/network/chat/Component;)V", at = @At("HEAD"))
     private void onDisconnectPre(Component reason, CallbackInfo ci) {
         // Unexpected disconnect
-        EventFactory.onDisconnect();
+        MixinHelper.post(new ConnectionEvent.DisconnectedEvent());
     }
 
-    @Inject(method = "handleUpdateAdvancementsPacket", at = @At("RETURN"))
+    @Inject(
+            method =
+                    "handleUpdateAdvancementsPacket(Lnet/minecraft/network/protocol/game/ClientboundUpdateAdvancementsPacket;)V",
+            at = @At("RETURN"))
     private void handleUpdateAdvancementsPacket(ClientboundUpdateAdvancementsPacket packet, CallbackInfo ci) {
         if (!isRenderThread()) return;
-        EventFactory.onUpdateAdvancements(packet);
+
+        MixinHelper.post(new AdvancementUpdateEvent(
+                packet.shouldReset(), packet.getAdded(), packet.getRemoved(), packet.getProgress()));
     }
 
     @Inject(
@@ -374,7 +539,13 @@ public abstract class ClientPacketListenerMixin {
             at = @At("RETURN"))
     private void handleUpdateMobEffectPost(ClientboundUpdateMobEffectPacket packet, CallbackInfo ci) {
         if (!isRenderThread()) return;
-        EventFactory.onUpdateMobEffect(packet);
+        if (!MixinHelper.onWynncraft()) return;
+
+        MixinHelper.post(new MobEffectEvent.Update(
+                McUtils.mc().level.getEntity(packet.getEntityId()),
+                packet.getEffect(),
+                packet.getEffectAmplifier(),
+                packet.getEffectDurationTicks()));
     }
 
     @Inject(
@@ -382,7 +553,8 @@ public abstract class ClientPacketListenerMixin {
             at = @At("RETURN"))
     private void handleRemoveMobEffectPost(ClientboundRemoveMobEffectPacket packet, CallbackInfo ci) {
         if (!isRenderThread()) return;
-        EventFactory.onRemoveMobEffect(packet);
+
+        MixinHelper.post(new MobEffectEvent.Remove(packet.getEntity(McUtils.mc().level), packet.getEffect()));
     }
 
     @Inject(
@@ -390,7 +562,8 @@ public abstract class ClientPacketListenerMixin {
             at = @At("RETURN"))
     private void handleAddEntity(ClientboundAddEntityPacket packet, CallbackInfo ci) {
         if (!isRenderThread()) return;
-        EventFactory.onAddEntity(packet);
+
+        MixinHelper.post(new AddEntityEvent(packet));
     }
 
     @Inject(
@@ -398,7 +571,8 @@ public abstract class ClientPacketListenerMixin {
             at = @At("HEAD"))
     private void handleSetEntityDataPre(ClientboundSetEntityDataPacket packet, CallbackInfo ci) {
         if (!isRenderThread()) return;
-        EventFactory.onSetEntityData(packet);
+
+        MixinHelper.post(new SetEntityDataEvent(packet));
     }
 
     @Inject(
@@ -406,6 +580,23 @@ public abstract class ClientPacketListenerMixin {
             at = @At("RETURN"))
     private void handleRemoveEntities(ClientboundRemoveEntitiesPacket packet, CallbackInfo ci) {
         if (!isRenderThread()) return;
-        EventFactory.onRemoveEntities(packet);
+
+        MixinHelper.post(new RemoveEntitiesEvent(packet));
+    }
+
+    @Inject(
+            method = "handleSoundEvent(Lnet/minecraft/network/protocol/game/ClientboundSoundPacket;)V",
+            at = @At("HEAD"),
+            cancellable = true)
+    private void handleSoundEventPre(ClientboundSoundPacket packet, CallbackInfo ci) {
+        if (!isRenderThread()) return;
+
+        LocalSoundEvent.Client event =
+                new LocalSoundEvent.Client(packet.getSound().value(), packet.getSource());
+
+        MixinHelper.post(event);
+        if (event.isCanceled()) {
+            ci.cancel();
+        }
     }
 }

@@ -4,21 +4,23 @@
  */
 package com.wynntils.models.gear.type;
 
+import com.wynntils.core.text.StyledText;
 import com.wynntils.utils.StringUtils;
 import java.util.Arrays;
 import java.util.Locale;
+import java.util.Optional;
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
 
 public enum GearTier {
-    NORMAL(ChatFormatting.WHITE, -1, 0),
+    NORMAL(ChatFormatting.WHITE, 0, 0.0f),
     UNIQUE(ChatFormatting.YELLOW, 3, 0.5f),
     RARE(ChatFormatting.LIGHT_PURPLE, 8, 1.2f),
     SET(ChatFormatting.GREEN, 8, 1.2f),
-    FABLED(ChatFormatting.RED, 12, 4.5f),
-    LEGENDARY(ChatFormatting.AQUA, 16, 8.0f),
+    LEGENDARY(ChatFormatting.AQUA, 12, 4.5f),
+    FABLED(ChatFormatting.RED, 16, 8.0f),
     MYTHIC(ChatFormatting.DARK_PURPLE, 90, 18.0f),
-    CRAFTED(ChatFormatting.DARK_AQUA, -1, 0);
+    CRAFTED(ChatFormatting.DARK_AQUA, 0, 0.0f);
 
     private final ChatFormatting chatFormatting;
     private final int baseCost;
@@ -38,16 +40,26 @@ public enum GearTier {
         }
     }
 
-    public static GearTier fromFormattedString(String name) {
-        if (name.charAt(0) == '§') {
-            return fromChatFormatting(ChatFormatting.getByCode(name.charAt(1)));
+    public static GearTier fromStyledText(StyledText text) {
+        Optional<ChatFormatting> chatFormatting = Arrays.stream(ChatFormatting.values())
+                .filter(ChatFormatting::isColor)
+                .filter(c -> c.getColor()
+                        == text.getFirstPart()
+                                .getPartStyle()
+                                .getStyle()
+                                .getColor()
+                                .getValue())
+                .findFirst();
+
+        if (chatFormatting.isPresent()) {
+            return fromChatFormatting(chatFormatting.get());
         }
 
         return null;
     }
 
     public static GearTier fromComponent(Component component) {
-        return fromFormattedString(component.getString());
+        return fromStyledText(StyledText.fromComponent(component));
     }
 
     public static GearTier fromChatFormatting(ChatFormatting formatting) {

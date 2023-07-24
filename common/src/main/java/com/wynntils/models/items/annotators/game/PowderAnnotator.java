@@ -5,6 +5,7 @@
 package com.wynntils.models.items.annotators.game;
 
 import com.wynntils.core.components.Models;
+import com.wynntils.core.text.StyledText;
 import com.wynntils.handlers.item.ItemAnnotation;
 import com.wynntils.handlers.item.ItemAnnotator;
 import com.wynntils.models.elements.type.Powder;
@@ -21,8 +22,8 @@ public final class PowderAnnotator implements ItemAnnotator {
             Pattern.compile("^§[2ebcf8].? ?(Earth|Thunder|Water|Fire|Air) Powder ([IV]{1,3})$");
 
     @Override
-    public ItemAnnotation getAnnotation(ItemStack itemStack, String name) {
-        Matcher matcher = POWDER_PATTERN.matcher(name);
+    public ItemAnnotation getAnnotation(ItemStack itemStack, StyledText name) {
+        Matcher matcher = name.getMatcher(POWDER_PATTERN);
         if (!matcher.matches()) return null;
 
         Powder element = Powder.valueOf(matcher.group(1).toUpperCase(Locale.ROOT));

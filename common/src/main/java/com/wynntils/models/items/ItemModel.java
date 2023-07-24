@@ -6,6 +6,7 @@ package com.wynntils.models.items;
 
 import com.wynntils.core.components.Handlers;
 import com.wynntils.core.components.Model;
+import com.wynntils.core.text.StyledText;
 import com.wynntils.handlers.item.ItemAnnotation;
 import com.wynntils.handlers.item.ItemAnnotator;
 import com.wynntils.handlers.item.ItemHandler;
@@ -25,16 +26,23 @@ import com.wynntils.models.items.annotators.game.GearBoxAnnotator;
 import com.wynntils.models.items.annotators.game.HorseAnnotator;
 import com.wynntils.models.items.annotators.game.IngredientAnnotator;
 import com.wynntils.models.items.annotators.game.MaterialAnnotator;
+import com.wynntils.models.items.annotators.game.MiscAnnotator;
 import com.wynntils.models.items.annotators.game.MultiHealthPotionAnnotator;
 import com.wynntils.models.items.annotators.game.PotionAnnotator;
 import com.wynntils.models.items.annotators.game.PowderAnnotator;
 import com.wynntils.models.items.annotators.game.TeleportScrollAnnotator;
 import com.wynntils.models.items.annotators.game.TomeAnnotator;
 import com.wynntils.models.items.annotators.game.TrinketAnnotator;
+import com.wynntils.models.items.annotators.game.UnknownGearAnnotator;
+import com.wynntils.models.items.annotators.gui.AbilityTreeAnnotator;
+import com.wynntils.models.items.annotators.gui.ActivityAnnotator;
+import com.wynntils.models.items.annotators.gui.ArchetypeAbilitiesAnnotator;
 import com.wynntils.models.items.annotators.gui.CosmeticTierAnnotator;
 import com.wynntils.models.items.annotators.gui.DailyRewardMultiplierAnnotator;
 import com.wynntils.models.items.annotators.gui.IngredientPouchAnnotator;
+import com.wynntils.models.items.annotators.gui.SeaskipperDestinationAnnotator;
 import com.wynntils.models.items.annotators.gui.ServerAnnotator;
+import com.wynntils.models.items.annotators.gui.SkillCrystalAnnotator;
 import com.wynntils.models.items.annotators.gui.SkillPointAnnotator;
 import com.wynntils.models.items.annotators.gui.SoulPointAnnotator;
 import com.wynntils.models.rewards.RewardsModel;
@@ -74,14 +82,21 @@ public class ItemModel extends Model {
         Handlers.Item.registerAnnotator(new TrinketAnnotator());
 
         // GUI handlers
+        Handlers.Item.registerAnnotator(new AbilityTreeAnnotator());
+        Handlers.Item.registerAnnotator(new ActivityAnnotator());
+        Handlers.Item.registerAnnotator(new ArchetypeAbilitiesAnnotator());
         Handlers.Item.registerAnnotator(new CosmeticTierAnnotator());
         Handlers.Item.registerAnnotator(new DailyRewardMultiplierAnnotator());
         Handlers.Item.registerAnnotator(new IngredientPouchAnnotator());
+        Handlers.Item.registerAnnotator(new SeaskipperDestinationAnnotator());
         Handlers.Item.registerAnnotator(new ServerAnnotator());
+        Handlers.Item.registerAnnotator(new SkillCrystalAnnotator());
         Handlers.Item.registerAnnotator(new SkillPointAnnotator());
         Handlers.Item.registerAnnotator(new SoulPointAnnotator());
 
         // This must be done last
+        Handlers.Item.registerAnnotator(new UnknownGearAnnotator());
+        Handlers.Item.registerAnnotator(new MiscAnnotator());
         Handlers.Item.registerAnnotator(new FallbackAnnotator());
     }
 
@@ -102,9 +117,18 @@ public class ItemModel extends Model {
         return Optional.of((T) wynnItem);
     }
 
+    public <T> Optional<T> asWynnItemPropery(ItemStack itemStack, Class<T> clazz) {
+        Optional<ItemAnnotation> annotationOpt = ItemHandler.getItemStackAnnotation(itemStack);
+        if (annotationOpt.isEmpty()) return Optional.empty();
+        if (!(annotationOpt.get() instanceof WynnItem wynnItem)) return Optional.empty();
+        if (!clazz.isAssignableFrom(wynnItem.getClass())) return Optional.empty();
+
+        return Optional.of((T) wynnItem);
+    }
+
     public static final class FallbackAnnotator implements ItemAnnotator {
         @Override
-        public ItemAnnotation getAnnotation(ItemStack itemStack, String name) {
+        public ItemAnnotation getAnnotation(ItemStack itemStack, StyledText name) {
             return new WynnItem();
         }
     }

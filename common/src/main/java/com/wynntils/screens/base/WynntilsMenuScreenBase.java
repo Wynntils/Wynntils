@@ -6,18 +6,31 @@ package com.wynntils.screens.base;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.wynntils.core.WynntilsMod;
+import com.wynntils.core.text.StyledText;
 import com.wynntils.utils.colors.CommonColors;
+import com.wynntils.utils.mc.McUtils;
 import com.wynntils.utils.render.FontRenderer;
 import com.wynntils.utils.render.RenderUtils;
 import com.wynntils.utils.render.Texture;
 import com.wynntils.utils.render.type.HorizontalAlignment;
 import com.wynntils.utils.render.type.TextShadow;
 import com.wynntils.utils.render.type.VerticalAlignment;
+import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.network.chat.Component;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.sounds.SoundEvent;
 
 public abstract class WynntilsMenuScreenBase extends WynntilsScreen {
+    private static final ResourceLocation BOOK_OPEN_ID = new ResourceLocation("wynntils:ui.book.open");
+    private static final SoundEvent BOOK_OPEN_SOUND = SoundEvent.createVariableRangeEvent(BOOK_OPEN_ID);
+
     protected WynntilsMenuScreenBase(Component component) {
         super(component);
+    }
+
+    public static void openBook(Screen screen) {
+        McUtils.mc().setScreen(screen);
+        McUtils.playSoundUI(BOOK_OPEN_SOUND);
     }
 
     protected void renderBackgroundTexture(PoseStack poseStack) {
@@ -45,13 +58,13 @@ public abstract class WynntilsMenuScreenBase extends WynntilsScreen {
         FontRenderer.getInstance()
                 .renderAlignedTextInBox(
                         poseStack,
-                        version,
+                        StyledText.fromString(version),
                         59f * 1.3f,
                         (Texture.QUEST_BOOK_BACKGROUND.width() / 2f - 30f) * 1.3f,
                         Texture.QUEST_BOOK_BACKGROUND.height() * 1.3f - 6f,
                         0,
                         CommonColors.YELLOW,
-                        HorizontalAlignment.Center,
+                        HorizontalAlignment.CENTER,
                         TextShadow.NORMAL);
         poseStack.popPose();
     }
@@ -67,35 +80,47 @@ public abstract class WynntilsMenuScreenBase extends WynntilsScreen {
         FontRenderer.getInstance()
                 .renderText(
                         poseStack,
-                        titleString,
+                        StyledText.fromString(titleString),
                         5,
                         18,
                         CommonColors.YELLOW,
-                        HorizontalAlignment.Left,
-                        VerticalAlignment.Top,
+                        HorizontalAlignment.LEFT,
+                        VerticalAlignment.TOP,
                         TextShadow.NORMAL);
         poseStack.popPose();
     }
 
-    protected void renderDescription(PoseStack poseStack, String description) {
+    protected void renderDescription(PoseStack poseStack, String description, String filterHelper) {
         FontRenderer.getInstance()
                 .renderAlignedTextInBox(
                         poseStack,
-                        description,
+                        StyledText.fromString(description),
                         20,
                         Texture.QUEST_BOOK_BACKGROUND.width() / 2f - 10,
-                        140,
+                        80,
                         Texture.QUEST_BOOK_BACKGROUND.width() / 2f - 30,
                         CommonColors.BLACK,
-                        HorizontalAlignment.Left,
+                        HorizontalAlignment.LEFT,
+                        TextShadow.NONE);
+
+        FontRenderer.getInstance()
+                .renderAlignedTextInBox(
+                        poseStack,
+                        StyledText.fromString(filterHelper),
+                        20,
+                        Texture.QUEST_BOOK_BACKGROUND.width() / 2f - 10,
+                        105,
+                        Texture.QUEST_BOOK_BACKGROUND.width() / 2f - 30,
+                        CommonColors.BLACK,
+                        HorizontalAlignment.LEFT,
                         TextShadow.NONE);
     }
 
-    public float getTranslationX() {
+    protected float getTranslationX() {
         return (this.width - Texture.QUEST_BOOK_BACKGROUND.width()) / 2f;
     }
 
-    public float getTranslationY() {
+    protected float getTranslationY() {
         return (this.height - Texture.QUEST_BOOK_BACKGROUND.height()) / 2f;
     }
 }

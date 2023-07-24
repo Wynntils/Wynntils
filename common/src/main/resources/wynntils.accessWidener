@@ -1,6 +1,5 @@
 accessWidener v2 named
 
-accessible class net/minecraft/client/gui/components/GridWidget$CellInhabitant
 accessible class net/minecraft/network/protocol/game/ClientboundBossEventPacket$AddOperation
 accessible class net/minecraft/network/protocol/game/ClientboundBossEventPacket$Operation
 accessible class net/minecraft/network/protocol/game/ClientboundBossEventPacket$OperationType
@@ -12,10 +11,6 @@ accessible field net/minecraft/client/gui/Gui chat Lnet/minecraft/client/gui/com
 accessible field net/minecraft/client/gui/components/AbstractSelectionList hovered Lnet/minecraft/client/gui/components/AbstractSelectionList$Entry;
 accessible field net/minecraft/client/gui/components/BossHealthOverlay events Ljava/util/Map;
 accessible field net/minecraft/client/gui/components/Checkbox selected Z
-accessible field net/minecraft/client/gui/components/GridWidget cellInhabitants Ljava/util/List;
-accessible field net/minecraft/client/gui/components/GridWidget children Ljava/util/List;
-accessible field net/minecraft/client/gui/components/GridWidget$CellInhabitant column I
-accessible field net/minecraft/client/gui/components/GridWidget$CellInhabitant row I
 accessible field net/minecraft/client/gui/screens/ChatScreen commandSuggestions Lnet/minecraft/client/gui/components/CommandSuggestions;
 accessible field net/minecraft/client/gui/screens/ChatScreen input Lnet/minecraft/client/gui/components/EditBox;
 accessible field net/minecraft/client/gui/screens/Screen children Ljava/util/List;
@@ -28,6 +23,7 @@ accessible field net/minecraft/client/gui/screens/inventory/AbstractContainerScr
 accessible field net/minecraft/client/gui/screens/inventory/AbstractContainerScreen leftPos I
 accessible field net/minecraft/client/gui/screens/inventory/AbstractContainerScreen topPos I
 accessible field net/minecraft/client/renderer/entity/ItemRenderer textureManager Lnet/minecraft/client/renderer/texture/TextureManager;
+accessible field net/minecraft/client/resources/DownloadedPackSource serverPack Lnet/minecraft/server/packs/repository/Pack;
 accessible field net/minecraft/network/protocol/game/ClientboundBossEventPacket$AddOperation name Lnet/minecraft/network/chat/Component;
 accessible field net/minecraft/network/protocol/game/ClientboundBossEventPacket$UpdateNameOperation name Lnet/minecraft/network/chat/Component;
 accessible field net/minecraft/server/packs/FilePackResources file Ljava/io/File;
@@ -47,14 +43,15 @@ accessible method net/minecraft/client/renderer/RenderType create (Ljava/lang/St
 accessible method net/minecraft/client/renderer/RenderType create (Ljava/lang/String;Lcom/mojang/blaze3d/vertex/VertexFormat;Lcom/mojang/blaze3d/vertex/VertexFormat$Mode;IZZLnet/minecraft/client/renderer/RenderType$CompositeState;)Lnet/minecraft/client/renderer/RenderType$CompositeRenderType;
 accessible method net/minecraft/client/renderer/blockentity/BeaconRenderer renderPart (Lcom/mojang/blaze3d/vertex/PoseStack;Lcom/mojang/blaze3d/vertex/VertexConsumer;FFFFIIFFFFFFFFFFFF)V
 accessible method net/minecraft/client/renderer/entity/EntityRenderer renderNameTag (Lnet/minecraft/world/entity/Entity;Lnet/minecraft/network/chat/Component;Lcom/mojang/blaze3d/vertex/PoseStack;Lnet/minecraft/client/renderer/MultiBufferSource;I)V
+accessible method net/minecraft/client/renderer/entity/ItemRenderer renderGuiItem (Lcom/mojang/blaze3d/vertex/PoseStack;Lnet/minecraft/world/item/ItemStack;IILnet/minecraft/client/resources/model/BakedModel;)V
 accessible method net/minecraft/client/resources/DownloadedPackSource checkHash (Ljava/lang/String;Ljava/io/File;)Z
+accessible method net/minecraft/server/packs/repository/Pack <init> (Ljava/lang/String;ZLnet/minecraft/server/packs/repository/Pack$ResourcesSupplier;Lnet/minecraft/network/chat/Component;Lnet/minecraft/server/packs/repository/Pack$Info;Lnet/minecraft/server/packs/repository/PackCompatibility;Lnet/minecraft/server/packs/repository/Pack$Position;ZLnet/minecraft/server/packs/repository/PackSource;)V
 accessible method net/minecraft/world/entity/Entity setSharedFlag (IZ)V
 accessible method net/minecraft/world/item/ItemStack getHideFlags ()I
 extendable class net/minecraft/world/item/ItemStack
 extendable method net/minecraft/client/gui/components/AbstractSelectionList getEntryAtPosition (DD)Lnet/minecraft/client/gui/components/AbstractSelectionList$Entry;
 extendable method net/minecraft/client/gui/screens/Screen init (Lnet/minecraft/client/Minecraft;II)V
 mutable field net/minecraft/client/gui/Gui chat Lnet/minecraft/client/gui/components/ChatComponent;
-mutable field net/minecraft/client/gui/components/BossHealthOverlay events Ljava/util/Map;
 mutable field net/minecraft/network/protocol/game/ClientboundBossEventPacket$AddOperation name Lnet/minecraft/network/chat/Component;
 mutable field net/minecraft/network/protocol/game/ClientboundBossEventPacket$UpdateNameOperation name Lnet/minecraft/network/chat/Component;
 mutable field net/minecraft/world/scores/Scoreboard playerScores Ljava/util/Map;

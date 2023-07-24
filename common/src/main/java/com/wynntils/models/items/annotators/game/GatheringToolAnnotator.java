@@ -4,10 +4,11 @@
  */
 package com.wynntils.models.items.annotators.game;
 
+import com.wynntils.core.text.StyledText;
 import com.wynntils.handlers.item.ItemAnnotation;
 import com.wynntils.handlers.item.ItemAnnotator;
-import com.wynntils.models.gathering.ToolProfile;
 import com.wynntils.models.items.items.game.GatheringToolItem;
+import com.wynntils.models.profession.type.ToolProfile;
 import com.wynntils.utils.type.CappedValue;
 import com.wynntils.utils.wynn.WynnItemMatchers;
 import java.util.regex.Matcher;
@@ -19,8 +20,8 @@ public final class GatheringToolAnnotator implements ItemAnnotator {
             Pattern.compile("^§f[ⒸⒷⓀⒿ] Gathering (Axe|Rod|Scythe|Pickaxe) T(\\d+)$");
 
     @Override
-    public ItemAnnotation getAnnotation(ItemStack itemStack, String name) {
-        Matcher matcher = GATHERING_TOOL_PATTERN.matcher(name);
+    public ItemAnnotation getAnnotation(ItemStack itemStack, StyledText name) {
+        Matcher matcher = name.getMatcher(GATHERING_TOOL_PATTERN);
         if (!matcher.matches()) return null;
 
         String toolType = matcher.group(1);

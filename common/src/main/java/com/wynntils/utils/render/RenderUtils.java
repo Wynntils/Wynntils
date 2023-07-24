@@ -5,7 +5,6 @@
 package com.wynntils.utils.render;
 
 import com.mojang.blaze3d.platform.GlStateManager;
-import com.mojang.blaze3d.platform.Lighting;
 import com.mojang.blaze3d.platform.Window;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.BufferBuilder;
@@ -18,20 +17,15 @@ import com.wynntils.utils.colors.CustomColor;
 import com.wynntils.utils.mc.McUtils;
 import com.wynntils.utils.mc.TooltipUtils;
 import java.util.List;
-import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.screens.inventory.tooltip.ClientTooltipComponent;
 import net.minecraft.client.renderer.GameRenderer;
 import net.minecraft.client.renderer.MultiBufferSource;
-import net.minecraft.client.renderer.block.model.ItemTransforms;
 import net.minecraft.client.renderer.entity.EntityRenderDispatcher;
-import net.minecraft.client.renderer.texture.OverlayTexture;
-import net.minecraft.client.resources.model.BakedModel;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.Entity;
-import net.minecraft.world.inventory.InventoryMenu;
 import net.minecraft.world.item.ItemStack;
 import org.joml.Matrix4f;
 import org.joml.Quaternionf;
@@ -180,10 +174,6 @@ public final class RenderUtils {
         drawLine(poseStack, color, x1, y2, x1, y1, z, lineWidth);
     }
 
-    public static void drawRect(CustomColor color, float x, float y, float z, float width, float height) {
-        drawRect(new PoseStack(), color, x, y, z, width, height);
-    }
-
     public static void drawRect(
             PoseStack poseStack, CustomColor color, float x, float y, float z, float width, float height) {
         Matrix4f matrix = poseStack.last().pose();
@@ -328,6 +318,7 @@ public final class RenderUtils {
     }
 
     public static void drawTexturedRectWithColor(
+            PoseStack poseStack,
             ResourceLocation tex,
             CustomColor color,
             float x,
@@ -338,7 +329,7 @@ public final class RenderUtils {
             int textureWidth,
             int textureHeight) {
         drawTexturedRectWithColor(
-                new PoseStack(),
+                poseStack,
                 tex,
                 color,
                 x,
@@ -405,8 +396,15 @@ public final class RenderUtils {
     }
 
     public static void drawArc(
-            CustomColor color, float x, float y, float z, float fill, int innerRadius, int outerRadius) {
-        drawArc(new PoseStack(), color, x, y, z, fill, innerRadius, outerRadius, 0);
+            PoseStack poseStack,
+            CustomColor color,
+            float x,
+            float y,
+            float z,
+            float fill,
+            int innerRadius,
+            int outerRadius) {
+        drawArc(poseStack, color, x, y, z, fill, innerRadius, outerRadius, 0);
     }
 
     public static void drawArc(
@@ -466,7 +464,6 @@ public final class RenderUtils {
             float lineWidth,
             int innerRadius,
             int outerRadius) {
-
         float x2 = x + width;
         float y2 = y + height;
 
@@ -497,9 +494,9 @@ public final class RenderUtils {
         poseStack.pushPose();
         poseStack.translate(-1, -1, 0);
         drawRoundedCorner(poseStack, borderColor, x, y, z, innerRadius, outerRadius, Mth.HALF_PI * 3);
-        drawRoundedCorner(poseStack, borderColor, x, y2 - offset * 2, z, innerRadius, outerRadius, Mth.HALF_PI * 2);
+        drawRoundedCorner(poseStack, borderColor, x, y2 - offset * 2, z, innerRadius, outerRadius, (float) Math.PI);
         drawRoundedCorner(
-                poseStack, borderColor, x2 - offset * 2, y2 - offset * 2, z, innerRadius, outerRadius, Mth.HALF_PI * 1);
+                poseStack, borderColor, x2 - offset * 2, y2 - offset * 2, z, innerRadius, outerRadius, Mth.HALF_PI);
         drawRoundedCorner(poseStack, borderColor, x2 - offset * 2, y, z, innerRadius, outerRadius, 0);
         poseStack.popPose();
     }
@@ -624,12 +621,10 @@ public final class RenderUtils {
                 BORDER_END,
                 BORDER_END);
         RenderSystem.enableDepthTest();
-        RenderSystem.disableTexture();
         RenderSystem.enableBlend();
         RenderSystem.defaultBlendFunc();
         BufferUploader.drawWithShader(bufferBuilder.end());
         RenderSystem.disableBlend();
-        RenderSystem.enableTexture();
 
         // text
         MultiBufferSource.BufferSource bufferSource =
@@ -692,7 +687,6 @@ public final class RenderUtils {
             int textureX2,
             int textureY2,
             float progress) {
-
         int half = (textureY1 + textureY2) / 2 + (textureY2 - textureY1) % 2;
         drawProgressBarBackground(poseStack, texture, x1, y1, x2, y2, textureX1, textureY1, textureX2, half);
         drawProgressBarForegroundWithColor(
@@ -738,7 +732,6 @@ public final class RenderUtils {
             int textureX2,
             int textureY2,
             float progress) {
-
         int half = (textureY1 + textureY2) / 2 + (textureY2 - textureY1) % 2;
         drawProgressBarBackground(poseStack, texture, x1, y1, x2, y2, textureX1, textureY1, textureX2, half);
         drawProgressBarForeground(
@@ -773,7 +766,6 @@ public final class RenderUtils {
 
         Matrix4f matrix = poseStack.last().pose();
 
-        RenderSystem.enableTexture();
         RenderSystem.setShader(GameRenderer::getPositionTexShader);
         RenderSystem.setShaderTexture(0, texture.resource());
         BufferBuilder bufferBuilder = Tesselator.getInstance().getBuilder();
@@ -823,7 +815,6 @@ public final class RenderUtils {
 
         Matrix4f matrix = poseStack.last().pose();
 
-        RenderSystem.enableTexture();
         RenderSystem.enableBlend();
         RenderSystem.defaultBlendFunc();
         RenderSystem.setShader(GameRenderer::getPositionTexColorShader);
@@ -885,7 +876,6 @@ public final class RenderUtils {
             int textureY2) {
         Matrix4f matrix = poseStack.last().pose();
 
-        RenderSystem.enableTexture();
         RenderSystem.setShader(GameRenderer::getPositionTexShader);
         RenderSystem.setShaderTexture(0, texture.resource());
         BufferBuilder bufferBuilder = Tesselator.getInstance().getBuilder();
@@ -942,6 +932,10 @@ public final class RenderUtils {
                         (height * scale));
     }
 
+    public static void disableScissor() {
+        RenderSystem.disableScissor();
+    }
+
     public static void rotatePose(PoseStack poseStack, float centerX, float centerZ, float angle) {
         poseStack.translate(centerX, centerZ, 0);
         // See Quaternion#fromXYZ
@@ -950,59 +944,8 @@ public final class RenderUtils {
         poseStack.translate(-centerX, -centerZ, 0);
     }
 
-    // Basically this is ItemRenderer#renderGuiItem, but we can modify the poseStack
-    public static void renderGuiItem(ItemStack itemStack, int x, int y, float scale) {
-        BakedModel bakedModel = McUtils.mc().getItemRenderer().getModel(itemStack, null, null, 0);
-
-        McUtils.mc()
-                .getItemRenderer()
-                .textureManager
-                .getTexture(InventoryMenu.BLOCK_ATLAS)
-                .setFilter(false, false);
-        RenderSystem.setShaderTexture(0, InventoryMenu.BLOCK_ATLAS);
-        RenderSystem.enableBlend();
-        RenderSystem.blendFunc(GlStateManager.SourceFactor.SRC_ALPHA, GlStateManager.DestFactor.ONE_MINUS_SRC_ALPHA);
-        RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
-
-        PoseStack poseStack = RenderSystem.getModelViewStack();
-        poseStack.pushPose();
-        poseStack.translate(x, y, (100.0F + McUtils.mc().getItemRenderer().blitOffset));
-        poseStack.translate(8.0, 8.0, 0.0);
-        poseStack.scale(1.0F, -1.0F, 1.0F);
-        poseStack.scale(16.0F, 16.0F, 16.0F);
-        poseStack.scale(scale, scale, 0);
-
-        RenderSystem.applyModelViewMatrix();
-        PoseStack poseStack2 = new PoseStack();
-        MultiBufferSource.BufferSource bufferSource =
-                Minecraft.getInstance().renderBuffers().bufferSource();
-        boolean modelUsesBlockLighting = bakedModel.usesBlockLight();
-
-        if (!modelUsesBlockLighting) {
-            Lighting.setupForFlatItems();
-        }
-
-        McUtils.mc()
-                .getItemRenderer()
-                .render(
-                        itemStack,
-                        ItemTransforms.TransformType.GUI,
-                        false,
-                        poseStack2,
-                        bufferSource,
-                        15728880,
-                        OverlayTexture.NO_OVERLAY,
-                        bakedModel);
-
-        bufferSource.endBatch();
-        RenderSystem.enableDepthTest();
-
-        if (!modelUsesBlockLighting) {
-            Lighting.setupFor3DItems();
-        }
-
-        poseStack.popPose();
-        RenderSystem.applyModelViewMatrix();
+    public static void renderItem(PoseStack poseStack, ItemStack itemStack, int x, int y) {
+        McUtils.mc().getItemRenderer().renderGuiItem(poseStack, itemStack, x, y);
     }
 
     public static void renderVignetteOverlay(PoseStack poseStack, CustomColor color, float alpha) {
@@ -1068,11 +1011,12 @@ public final class RenderUtils {
                     false,
                     matrix4f,
                     buffer,
-                    !sneaking,
+                    sneaking ? Font.DisplayMode.SEE_THROUGH : Font.DisplayMode.NORMAL,
                     backgroundColor,
                     packedLight);
             if (!sneaking) {
-                font.drawInBatch(nametag, xOffset, 0f, -1, false, matrix4f, buffer, false, 0, packedLight);
+                font.drawInBatch(
+                        nametag, xOffset, 0f, -1, false, matrix4f, buffer, Font.DisplayMode.NORMAL, 0, packedLight);
             }
 
             matrixStack.popPose();

@@ -5,10 +5,10 @@
 package com.wynntils.screens.settings.widgets;
 
 import com.mojang.blaze3d.vertex.PoseStack;
+import com.wynntils.core.text.StyledText;
 import com.wynntils.screens.base.widgets.WynntilsButton;
 import com.wynntils.utils.colors.CommonColors;
 import com.wynntils.utils.colors.CustomColor;
-import com.wynntils.utils.mc.ComponentUtils;
 import com.wynntils.utils.render.FontRenderer;
 import com.wynntils.utils.render.RenderUtils;
 import com.wynntils.utils.render.type.HorizontalAlignment;
@@ -17,27 +17,22 @@ import com.wynntils.utils.render.type.VerticalAlignment;
 import java.util.List;
 import net.minecraft.network.chat.Component;
 
-public class GeneralSettingsButton extends WynntilsButton {
-    private static final CustomColor BACKGROUND_COLOR = new CustomColor(98, 34, 8);
-    private static final CustomColor HOVER_BACKGROUND_COLOR = new CustomColor(158, 52, 16);
-    private final Runnable onClick;
-    private final String title;
+public abstract class GeneralSettingsButton extends WynntilsButton {
+    public static final CustomColor BACKGROUND_COLOR = new CustomColor(98, 34, 8);
+    public static final CustomColor HOVER_BACKGROUND_COLOR = new CustomColor(158, 52, 16);
     private final List<Component> tooltip;
 
-    public GeneralSettingsButton(
-            int x, int y, int width, int height, Component title, Runnable onClick, List<Component> tooltip) {
+    protected GeneralSettingsButton(int x, int y, int width, int height, Component title, List<Component> tooltip) {
         super(x, y, width, height, title);
-        this.onClick = onClick;
-        this.title = ComponentUtils.getUnformatted(title);
         this.tooltip = tooltip;
     }
 
     @Override
-    public void renderButton(PoseStack poseStack, int mouseX, int mouseY, float partialTick) {
+    public void renderWidget(PoseStack poseStack, int mouseX, int mouseY, float partialTick) {
         RenderUtils.drawRoundedRectWithBorder(
                 poseStack,
                 CommonColors.BLACK,
-                isHovered ? HOVER_BACKGROUND_COLOR : BACKGROUND_COLOR,
+                getBackgroundColor(),
                 this.getX(),
                 this.getY(),
                 0,
@@ -50,15 +45,15 @@ public class GeneralSettingsButton extends WynntilsButton {
         FontRenderer.getInstance()
                 .renderAlignedTextInBox(
                         poseStack,
-                        title,
+                        StyledText.fromComponent(getMessage()),
                         this.getX(),
                         this.getX() + this.width,
                         this.getY(),
                         this.getY() + this.height,
                         0,
-                        isHovered ? CommonColors.YELLOW : CommonColors.WHITE,
-                        HorizontalAlignment.Center,
-                        VerticalAlignment.Middle,
+                        getTextColor(),
+                        HorizontalAlignment.CENTER,
+                        VerticalAlignment.MIDDLE,
                         TextShadow.OUTLINE);
 
         if (isHovered) {
@@ -73,8 +68,11 @@ public class GeneralSettingsButton extends WynntilsButton {
         }
     }
 
-    @Override
-    public void onPress() {
-        onClick.run();
+    protected CustomColor getBackgroundColor() {
+        return isHovered ? HOVER_BACKGROUND_COLOR : BACKGROUND_COLOR;
+    }
+
+    protected CustomColor getTextColor() {
+        return isHovered ? CommonColors.YELLOW : CommonColors.WHITE;
     }
 }

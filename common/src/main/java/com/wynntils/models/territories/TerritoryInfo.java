@@ -4,6 +4,7 @@
  */
 package com.wynntils.models.territories;
 
+import com.wynntils.core.text.StyledText;
 import com.wynntils.models.territories.type.GuildResource;
 import com.wynntils.models.territories.type.GuildResourceValues;
 import com.wynntils.models.territories.type.TerritoryStorage;
@@ -16,11 +17,15 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class TerritoryInfo {
+    private static final Pattern NAME_PATTERN = Pattern.compile("(.+) \\[(.+)\\]\\s*");
     private static final Pattern GENERATOR_PATTERN =
             Pattern.compile("(.\\s)?\\+([0-9]*) (Emeralds|Ore|Wood|Fish|Crops) per Hour");
     private static final Pattern STORAGE_PATTERN = Pattern.compile("(.\\s)?([0-9]+)\\/([0-9]+) stored");
     private static final Pattern DEFENSE_PATTERN = Pattern.compile("Territory Defences: (.+)");
     private static final Pattern TREASURY_PATTERN = Pattern.compile("✦ Treasury: (.+)");
+
+    private String guildName;
+    private String guildPrefix;
 
     private final HashMap<GuildResource, TerritoryStorage> storage = new HashMap<>();
     private final HashMap<GuildResource, Integer> generators = new HashMap<>();
@@ -57,16 +62,24 @@ public class TerritoryInfo {
      * @param raw the input achievement description without colors
      * @param colored the input achievement description with colors
      */
-    public TerritoryInfo(String[] raw, String[] colored, boolean headquarters) {
+    public TerritoryInfo(String[] raw, StyledText[] colored, boolean headquarters) {
         this.headquarters = headquarters;
 
         for (int i = 0; i < raw.length; i++) {
             String unformatted = raw[i];
-            String formatted = colored[i];
+            StyledText formatted = colored[i];
 
             // initial trading route parsing
             if (unformatted.startsWith("-")) {
                 tradingRoutes.add(unformatted.substring(2));
+                continue;
+            }
+
+            // name parsing
+            Matcher nameMatcher = NAME_PATTERN.matcher(unformatted);
+            if (nameMatcher.matches()) {
+                guildName = nameMatcher.group(1);
+                guildPrefix = nameMatcher.group(2);
                 continue;
             }
 
@@ -144,6 +157,14 @@ public class TerritoryInfo {
         color = CustomColor.fromHSV(h / 360f, s, v, 1);
     }
 
+    public String getGuildName() {
+        return guildName;
+    }
+
+    public String getGuildPrefix() {
+        return guildPrefix;
+    }
+
     public Map<GuildResource, Integer> getGenerators() {
         return generators;
     }
@@ -172,7 +193,7 @@ public class TerritoryInfo {
         return defences;
     }
 
-    public CustomColor getColor() {
+    public CustomColor getResourceColor() {
         return color;
     }
 

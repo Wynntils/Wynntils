@@ -5,15 +5,15 @@
 package com.wynntils.models.spells.actionbar;
 
 import com.wynntils.core.WynntilsMod;
-import com.wynntils.handlers.actionbar.ActionBarPosition;
 import com.wynntils.handlers.actionbar.ActionBarSegment;
+import com.wynntils.handlers.actionbar.type.ActionBarPosition;
 import com.wynntils.models.spells.event.SpellSegmentUpdateEvent;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class SpellSegment implements ActionBarSegment {
     private static final Pattern SPELL_PATTERN =
-            Pattern.compile("§0 +§a([RL])§7-(?:§[a7n])+([RL?])§7-§r(?:§[a7n])+([LR?])§r +");
+            Pattern.compile("§0 +§a([RL])§7-(?:§[a7n])?([RL?])(?:§r)?§7-(?:§[a7n])?([LR?])(?:§r)? +");
 
     @Override
     public Pattern getPattern() {

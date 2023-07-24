@@ -10,15 +10,18 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public final class AwakenedBar extends TrackedBar {
+    private static final Pattern AWAKENED_PATTERN = Pattern.compile("§fAwakening §7\\[§f(\\d+)/(\\d+)§7]");
+
     public AwakenedBar() {
-        super(Pattern.compile("§fAwakening §7\\[§f(\\d+)/(\\d+)§7]"));
+        super(AWAKENED_PATTERN);
     }
 
     @Override
     public void onUpdateName(Matcher match) {
         try {
-            current = Integer.parseInt(match.group(1));
-            max = Integer.parseInt(match.group(2));
+            int current = Integer.parseInt(match.group(1));
+            int max = Integer.parseInt(match.group(2));
+            updateValue(current, max);
         } catch (NumberFormatException e) {
             WynntilsMod.error(String.format(
                     "Failed to parse current and max for awakened bar (%s out of %s)", match.group(1), match.group(2)));

@@ -5,13 +5,15 @@
 package com.wynntils.screens.base;
 
 import com.mojang.blaze3d.vertex.PoseStack;
+import com.wynntils.core.text.StyledText;
+import com.wynntils.screens.activities.widgets.QuestBookSearchWidget;
 import com.wynntils.screens.base.widgets.TextInputBoxWidget;
 import com.wynntils.screens.base.widgets.WynntilsButton;
-import com.wynntils.screens.questbook.widgets.QuestBookSearchWidget;
 import com.wynntils.utils.MathUtils;
 import com.wynntils.utils.colors.CommonColors;
 import com.wynntils.utils.mc.McUtils;
 import com.wynntils.utils.render.FontRenderer;
+import com.wynntils.utils.render.RenderUtils;
 import com.wynntils.utils.render.Texture;
 import com.wynntils.utils.render.type.HorizontalAlignment;
 import com.wynntils.utils.render.type.TextShadow;
@@ -32,7 +34,7 @@ public abstract class WynntilsListScreen<E, B extends WynntilsButton> extends Wy
     protected List<E> elements = new ArrayList<>();
 
     private final List<B> elementButtons = new ArrayList<>();
-    private final QuestBookSearchWidget searchWidget;
+    protected final QuestBookSearchWidget searchWidget;
     protected Renderable hovered = null;
 
     @Override
@@ -55,7 +57,7 @@ public abstract class WynntilsListScreen<E, B extends WynntilsButton> extends Wy
                 this);
     }
 
-    protected void renderButtons(PoseStack poseStack, int mouseX, int mouseY, float partialTick) {
+    protected void renderWidgets(PoseStack poseStack, int mouseX, int mouseY, float partialTick) {
         this.hovered = null;
 
         final float translationX = getTranslationX();
@@ -76,13 +78,13 @@ public abstract class WynntilsListScreen<E, B extends WynntilsButton> extends Wy
         FontRenderer.getInstance()
                 .renderAlignedTextInBox(
                         poseStack,
-                        (currentPage) + " / " + (maxPage),
+                        StyledText.fromString((currentPage) + " / " + (maxPage)),
                         Texture.QUEST_BOOK_BACKGROUND.width() / 2f,
                         Texture.QUEST_BOOK_BACKGROUND.width(),
                         Texture.QUEST_BOOK_BACKGROUND.height() - 25,
                         0,
                         CommonColors.BLACK,
-                        HorizontalAlignment.Center,
+                        HorizontalAlignment.CENTER,
                         TextShadow.NONE);
     }
 
@@ -90,20 +92,39 @@ public abstract class WynntilsListScreen<E, B extends WynntilsButton> extends Wy
         FontRenderer.getInstance()
                 .renderAlignedTextInBox(
                         poseStack,
-                        key,
+                        StyledText.fromString(key),
                         Texture.QUEST_BOOK_BACKGROUND.width() / 2f + 15f,
                         Texture.QUEST_BOOK_BACKGROUND.width() - 15f,
                         0,
                         Texture.QUEST_BOOK_BACKGROUND.height(),
                         Texture.QUEST_BOOK_BACKGROUND.width() / 2f - 30f,
                         CommonColors.BLACK,
-                        HorizontalAlignment.Center,
-                        VerticalAlignment.Middle,
+                        HorizontalAlignment.CENTER,
+                        VerticalAlignment.MIDDLE,
                         TextShadow.NONE);
     }
 
+    protected void renderTooltip(PoseStack poseStack, int mouseX, int mouseY) {
+        List<Component> tooltipLines = List.of();
+
+        if (this.hovered instanceof TooltipProvider tooltipWidget) {
+            tooltipLines = tooltipWidget.getTooltipLines();
+        }
+
+        if (tooltipLines.isEmpty()) return;
+
+        RenderUtils.drawTooltipAt(
+                poseStack,
+                mouseX,
+                mouseY,
+                100,
+                tooltipLines,
+                FontRenderer.getInstance().getFont(),
+                true);
+    }
+
     @Override
-    public boolean mouseClicked(double mouseX, double mouseY, int button) {
+    public boolean doMouseClicked(double mouseX, double mouseY, int button) {
         final float translationX = getTranslationX();
         final float translationY = getTranslationY();
 
@@ -111,6 +132,30 @@ public abstract class WynntilsListScreen<E, B extends WynntilsButton> extends Wy
             if (child.isMouseOver(mouseX - translationX, mouseY - translationY)) {
                 child.mouseClicked(mouseX - translationX, mouseY - translationY, button);
             }
+        }
+
+        return true;
+    }
+
+    @Override
+    public boolean mouseDragged(double mouseX, double mouseY, int button, double dragX, double dragY) {
+        final float translationX = getTranslationX();
+        final float translationY = getTranslationY();
+
+        for (GuiEventListener child : new ArrayList<>(this.children())) {
+            child.mouseDragged(mouseX - translationX, mouseY - translationY, button, dragX, dragY);
+        }
+
+        return true;
+    }
+
+    @Override
+    public boolean mouseReleased(double mouseX, double mouseY, int button) {
+        final float translationX = getTranslationX();
+        final float translationY = getTranslationY();
+
+        for (GuiEventListener child : new ArrayList<>(this.children())) {
+            child.mouseReleased(mouseX - translationX, mouseY - translationY, button);
         }
 
         return true;
@@ -221,5 +266,11 @@ public abstract class WynntilsListScreen<E, B extends WynntilsButton> extends Wy
 
     protected int getElementsPerPage() {
         return 13;
+    }
+
+    @Override
+    public void added() {
+        searchWidget.opened();
+        super.added();
     }
 }

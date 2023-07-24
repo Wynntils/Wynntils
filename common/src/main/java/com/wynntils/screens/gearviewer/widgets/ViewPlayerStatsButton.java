@@ -29,13 +29,13 @@ public class ViewPlayerStatsButton extends WynntilsButton {
 
     @Override
     public void onPress() {
-        McUtils.playSound(SoundEvents.UI_BUTTON_CLICK.value());
+        McUtils.playSoundUI(SoundEvents.UI_BUTTON_CLICK.value());
         Managers.Net.openLink(UrlId.LINK_WYNNCRAFT_PLAYER_STATS, Map.of("username", playerName));
     }
 
     @Override
-    public void renderButton(PoseStack poseStack, int mouseX, int mouseY, float partialTick) {
-        super.renderButton(poseStack, mouseX, mouseY, partialTick);
+    public void renderWidget(PoseStack poseStack, int mouseX, int mouseY, float partialTick) {
+        super.renderWidget(poseStack, mouseX, mouseY, partialTick);
 
         if (isHovered) {
             RenderUtils.drawTooltipAt(

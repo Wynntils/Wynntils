@@ -7,6 +7,7 @@ package com.wynntils.screens.chattabs.widgets;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.wynntils.core.chat.ChatTab;
 import com.wynntils.core.components.Managers;
+import com.wynntils.core.text.StyledText;
 import com.wynntils.screens.base.widgets.WynntilsButton;
 import com.wynntils.screens.chattabs.ChatTabEditingScreen;
 import com.wynntils.utils.colors.CommonColors;
@@ -29,7 +30,7 @@ public class ChatTabButton extends WynntilsButton {
     }
 
     @Override
-    public void renderButton(PoseStack poseStack, int mouseX, int mouseY, float partialTick) {
+    public void renderWidget(PoseStack poseStack, int mouseX, int mouseY, float partialTick) {
         if (tab == null) return;
 
         RenderUtils.drawRect(
@@ -39,15 +40,15 @@ public class ChatTabButton extends WynntilsButton {
         FontRenderer.getInstance()
                 .renderAlignedTextInBox(
                         poseStack,
-                        tab.getName(),
+                        StyledText.fromString(tab.getName()),
                         getX() + 1,
                         getX() + width,
                         getY() + 1,
                         getY() + height,
                         0,
                         color,
-                        HorizontalAlignment.Center,
-                        VerticalAlignment.Middle,
+                        HorizontalAlignment.CENTER,
+                        VerticalAlignment.MIDDLE,
                         TextShadow.OUTLINE);
     }
 
@@ -66,7 +67,10 @@ public class ChatTabButton extends WynntilsButton {
         } else if (button == GLFW.GLFW_MOUSE_BUTTON_RIGHT) {
             McUtils.mc().setScreen(ChatTabEditingScreen.create(tab));
         }
-        return true;
+
+        // Hack: We should return true here,
+        //       but we don't want this button to be focused
+        return false;
     }
 
     // unused

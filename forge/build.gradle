@@ -1,5 +1,5 @@
 plugins {
-    id "com.github.johnrengelman.shadow" version "7.1.2"
+    id "com.github.johnrengelman.shadow" version "${shadow_version}"
 }
 
 loom {
@@ -27,23 +27,25 @@ configurations {
 }
 
 dependencies {
-    forge "net.minecraftforge:forge:${rootProject.forge_version}"
-    modRuntimeOnly "me.djtheredstoner:DevAuth-forge-latest:${rootProject.devauth_version}"
+    forge "net.minecraftforge:forge:${forge_version}"
+    modRuntimeOnly "me.djtheredstoner:DevAuth-forge-latest:${devauth_version}"
 
     common(project(path: ":common", configuration: "namedElements")) { transitive false }
     shadowCommon(project(path: ":common", configuration: "transformProductionForge")) { transitive = false }
 
     // Hades Protocol
-    include(forgeRuntimeLibrary("com.wynntils.hades:hades:${rootProject.hades_version}"))
+    include(forgeRuntimeLibrary("com.wynntils.hades:hades:${hades_version}"))
+    include(forgeRuntimeLibrary("com.wynntils:antiope:${antiope_version}"))
 
-    include(forgeRuntimeLibrary("com.github.LlamaLad7:MixinExtras:${rootProject.mixinextras_version}"))
+    implementation(annotationProcessor("com.github.llamalad7.mixinextras:mixinextras-common:${mixinextras_version}"))
+    implementation(include("com.github.llamalad7.mixinextras:mixinextras-forge:${mixinextras_version}"))
 }
 
 processResources {
-    inputs.property "version", project.version
+    inputs.property "version", rootProject.version
 
     filesMatching("META-INF/mods.toml") {
-        expand "version": project.version
+        expand "version": rootProject.version
     }
 }
 
@@ -52,17 +54,17 @@ shadowJar {
 
     configurations = [project.configurations.shadowCommon]
 
-    classifier "dev-shadow"
+    archiveClassifier = "dev-shadow"
 }
 
 remapJar {
     input.set shadowJar.archiveFile
     dependsOn shadowJar
-    classifier "forge"
+    archiveClassifier = "forge+MC-${minecraft_version}"
 }
 
 jar {
-    classifier "dev"
+    archiveClassifier = "dev"
 }
 
 sourcesJar {

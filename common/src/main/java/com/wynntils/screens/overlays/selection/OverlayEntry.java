@@ -8,6 +8,7 @@ import com.google.common.collect.ImmutableList;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.wynntils.core.components.Managers;
 import com.wynntils.core.features.overlays.Overlay;
+import com.wynntils.core.text.StyledText;
 import com.wynntils.screens.overlays.placement.OverlayManagementScreen;
 import com.wynntils.utils.colors.CommonColors;
 import com.wynntils.utils.colors.CustomColor;
@@ -68,18 +69,17 @@ public class OverlayEntry extends ContainerObjectSelectionList.Entry<OverlayEntr
 
         poseStack.translate(0, 0, 1);
         String translatedName = this.overlay.getTranslatedName();
-        float renderHeightForOverlayName =
-                FontRenderer.getInstance().calculateRenderHeight(List.of(translatedName), width);
+        float renderHeightForOverlayName = FontRenderer.getInstance().calculateRenderHeight(translatedName, width);
         FontRenderer.getInstance()
                 .renderText(
                         poseStack,
-                        translatedName,
+                        StyledText.fromString(translatedName),
                         3,
                         (OverlayList.getItemHeight() - renderHeightForOverlayName / 2f) / 2f - PADDING / 2f,
                         width - PADDING,
                         CommonColors.WHITE,
-                        HorizontalAlignment.Left,
-                        VerticalAlignment.Top,
+                        HorizontalAlignment.LEFT,
+                        VerticalAlignment.TOP,
                         TextShadow.NORMAL);
 
         poseStack.popPose();
@@ -116,12 +116,12 @@ public class OverlayEntry extends ContainerObjectSelectionList.Entry<OverlayEntr
                     .filter(configHolder -> configHolder.getParent() == overlay
                             && configHolder.getFieldName().equals("userEnabled"))
                     .findFirst()
-                    .ifPresent(configHolder -> configHolder.setValue(!overlay.isEnabled()));
+                    .ifPresent(configHolder -> configHolder.setValue(!Managers.Overlay.isEnabled(overlay)));
             Managers.Config.saveConfig();
             return true;
         }
 
-        if (!overlay.isEnabled()) return false;
+        if (!Managers.Overlay.isEnabled(overlay)) return false;
 
         McUtils.mc().setScreen(OverlayManagementScreen.create(this.overlay));
         return true;

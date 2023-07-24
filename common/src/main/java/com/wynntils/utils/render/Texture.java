@@ -9,6 +9,7 @@ import net.minecraft.resources.ResourceLocation;
 public enum Texture {
     BUBBLE_BAR("bars_bubbles.png", 256, 256),
     CHANGELOG_BACKGROUND("changelog.png", 294, 198),
+    COSMETIC_VIEWER_BACKGROUND("cosmetics_viewer_background.png", 72, 92),
     EMERALD_COUNT_BACKGROUND("emerald_count_background.png", 24, 24),
     EXPERIENCE_BAR("bars_exp.png", 256, 256),
     FAVORITE("favorite.png", 18, 18),
@@ -25,6 +26,7 @@ public enum Texture {
     UNIVERSAL_BAR("universal_bar.png", 81, 16),
     VIGNETTE("vignette.png", 512, 512),
     WYNNCRAFT_ICON("wynncraft_icon.png", 64, 64),
+    PLAYER_INFO_OVERLAY("tab_overlay.png", 385, 229),
 
     // Discovery Screen
     DISCOVERED_SECRET("discovered_secret.png", 19, 36),
@@ -65,6 +67,9 @@ public enum Texture {
     QUEST_FINISHED("quest_finished_icon.png", 11, 7),
     QUEST_STARTED("quest_started_icon.png", 7, 7),
 
+    // Caves screen
+    CAVE_AVALIABLE("cave_avaliable.png", 7, 7),
+
     // Icons
     DISCOVERIES_ICON("discoveries_icon.png", 16, 32),
     GUIDES_ICON("guides_icon.png", 18, 34),
@@ -80,9 +85,12 @@ public enum Texture {
     FULLSCREEN_MAP_BORDER("map/map_border/full_map_border.png", 510, 254),
     GILDED_MAP_TEXTURES("map/map_border/gilded_map_textures.png", 262, 524),
     MAP_ADD_BUTTON("map/map_add_button.png", 14, 14),
-    MAP_DEFENSE_FILTER_BUTTON("map/map_defense_filter_button.png", 16, 16),
+    MAP_BOAT_BUTTON("map/map_boat_button.png", 15, 14),
     MAP_BUTTONS_BACKGROUND("map/map_buttons_background.png", 144, 26),
+    MAP_DEFENSE_FILTER_BUTTON("map/map_defense_filter_button.png", 16, 16),
     MAP_HELP_BUTTON("map/map_help_button.png", 10, 16),
+    MAP_MANAGER_BUTTON("map/map_manager_button.png", 12, 16),
+    MAP_OVERLAY_BUTTON("map/map_overlay_button.png", 16, 16),
     MAP_POINTERS("map/map_pointers.png", 256, 256),
     MAP_SHARE_BUTTON("map/map_share_button.png", 16, 14),
     MAP_WAYPOINT_FOCUS_BUTTON("map/map_waypoint_focus_button.png", 12, 16),
@@ -150,6 +158,8 @@ public enum Texture {
     CHALLENGES_ICON("character_selection_ui/challenges.png", 9, 14),
     CHARACTER_BUTTON("character_selection_ui/character_button.png", 104, 64),
     CHARACTER_INFO("character_selection_ui/character_info.png", 123, 38),
+    CHANGE_WORLD_BUTTON("character_selection_ui/change_world_button.png", 26, 52),
+    DISCONNECT_BUTTON("character_selection_ui/disconnect_button.png", 26, 52),
     EDIT_BUTTON("character_selection_ui/edit_button.png", 6, 16),
     LIST_BACKGROUND("character_selection_ui/list_background.png", 118, 254),
     PLAY_BUTTON("character_selection_ui/play_button.png", 79, 76),
@@ -157,7 +167,13 @@ public enum Texture {
     REMOVE_BUTTON("character_selection_ui/remove_button.png", 14, 28),
     CHARACTER_SELECTION_SCROLL_BUTTON("character_selection_ui/scroll_button.png", 7, 17),
     SOUL_POINT_ICON("character_selection_ui/soul_point.png", 10, 16),
-    XP_BAR("character_selection_ui/xp_bar.png", 100, 12);
+    XP_BAR("character_selection_ui/xp_bar.png", 100, 12),
+
+    // Seaskipper UI
+    BOAT_BUTTON("boat_button.png", 39, 76),
+    DESTINATION_BUTTON("destination_button.png", 66, 40),
+    DESTINATION_LIST("destination_list.png", 143, 205),
+    TRAVEL_BUTTON("travel_button.png", 100, 76);
 
     private final ResourceLocation resource;
     private final int width;

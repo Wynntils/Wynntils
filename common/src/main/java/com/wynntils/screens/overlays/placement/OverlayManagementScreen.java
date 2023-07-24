@@ -11,8 +11,9 @@ import com.wynntils.core.features.overlays.Corner;
 import com.wynntils.core.features.overlays.Edge;
 import com.wynntils.core.features.overlays.Overlay;
 import com.wynntils.core.features.overlays.OverlayPosition;
+import com.wynntils.core.features.overlays.OverlaySize;
 import com.wynntils.core.features.overlays.SectionCoordinates;
-import com.wynntils.core.features.overlays.sizes.OverlaySize;
+import com.wynntils.core.text.StyledText;
 import com.wynntils.screens.base.WynntilsScreen;
 import com.wynntils.screens.overlays.selection.OverlaySelectionScreen;
 import com.wynntils.utils.MathUtils;
@@ -83,7 +84,7 @@ public final class OverlayManagementScreen extends WynntilsScreen {
     private final Map<Edge, Double> edgeAlignmentSnapMap = new EnumMap<>(Edge.class);
     private final Map<Edge, Float> alignmentLinesToRender = new EnumMap<>(Edge.class);
 
-    private SelectionMode selectionMode = SelectionMode.None;
+    private SelectionMode selectionMode = SelectionMode.NONE;
     private Overlay selectedOverlay;
     private final boolean fixedSelection;
     private Corner selectedCorner = null;
@@ -148,12 +149,12 @@ public final class OverlayManagementScreen extends WynntilsScreen {
                     new TextRenderSetting(
                             0,
                             CommonColors.WHITE,
-                            HorizontalAlignment.Center,
-                            VerticalAlignment.Top,
+                            HorizontalAlignment.CENTER,
+                            VerticalAlignment.TOP,
                             TextShadow.NORMAL));
             FontRenderer.getInstance().renderText(poseStack, this.width / 2f, this.height - 160, renderTask);
         } else {
-            if (selectionMode != SelectionMode.None) {
+            if (selectionMode != SelectionMode.NONE) {
                 renderAlignmentLines(poseStack);
             } else {
                 renderSections(poseStack);
@@ -188,16 +189,16 @@ public final class OverlayManagementScreen extends WynntilsScreen {
 
                 float yOffset =
                         switch (overlay.getRenderVerticalAlignment()) {
-                            case Top -> 1.8f;
-                            case Middle -> 0f;
-                            case Bottom -> -1.8f;
+                            case TOP -> 1.8f;
+                            case MIDDLE -> 0f;
+                            case BOTTOM -> -1.8f;
                         };
 
                 float xOffset =
                         switch (overlay.getRenderHorizontalAlignment()) {
-                            case Left -> 1.8f;
-                            case Center -> 0f;
-                            case Right -> -1.8f;
+                            case LEFT -> 1.8f;
+                            case CENTER -> 0f;
+                            case RIGHT -> -1.8f;
                         };
 
                 float renderX = overlay.getRenderX() + xOffset;
@@ -205,7 +206,7 @@ public final class OverlayManagementScreen extends WynntilsScreen {
                 FontRenderer.getInstance()
                         .renderAlignedTextInBox(
                                 poseStack,
-                                overlay.getTranslatedName(),
+                                StyledText.fromString(overlay.getTranslatedName()),
                                 renderX,
                                 renderX + overlay.getWidth(),
                                 renderY,
@@ -217,7 +218,7 @@ public final class OverlayManagementScreen extends WynntilsScreen {
                                 TextShadow.OUTLINE);
             }
 
-            if (isMouseHoveringOverlay(selectedOverlay, mouseX, mouseY) && selectionMode == SelectionMode.None) {
+            if (isMouseHoveringOverlay(selectedOverlay, mouseX, mouseY) && selectionMode == SelectionMode.NONE) {
                 List<ClientTooltipComponent> clientTooltipComponents =
                         TooltipUtils.componentToClientTooltipComponent(HELP_TOOLTIP_LINES);
                 int tooltipWidth = TooltipUtils.getToolTipWidth(
@@ -253,9 +254,9 @@ public final class OverlayManagementScreen extends WynntilsScreen {
     }
 
     @Override
-    public boolean mouseClicked(double mouseX, double mouseY, int button) {
+    public boolean doMouseClicked(double mouseX, double mouseY, int button) {
         // Let the buttons of the Screen have priority
-        if (super.mouseClicked(mouseX, mouseY, button)) return true;
+        if (super.doMouseClicked(mouseX, mouseY, button)) return true;
         if (testMode) return false;
 
         userInteracted = true;
@@ -305,7 +306,7 @@ public final class OverlayManagementScreen extends WynntilsScreen {
             float distance = selected.getCornerPoints(corner).distanceToSqr(mousePos);
             if (distance < MAX_CLICK_DISTANCE) {
                 selectedCorner = corner;
-                selectionMode = SelectionMode.Corner;
+                selectionMode = SelectionMode.CORNER;
 
                 return false;
             }
@@ -315,25 +316,25 @@ public final class OverlayManagementScreen extends WynntilsScreen {
             float minX, maxX, minY, maxY;
 
             switch (value) {
-                case Top -> {
+                case TOP -> {
                     minX = selected.getRenderX();
                     maxX = selected.getRenderX() + selected.getWidth();
                     minY = selected.getRenderY() - MAX_CLICK_DISTANCE / 2f;
                     maxY = selected.getRenderY() + MAX_CLICK_DISTANCE / 2f;
                 }
-                case Left -> {
+                case LEFT -> {
                     minX = selected.getRenderX() - MAX_CLICK_DISTANCE / 2f;
                     maxX = selected.getRenderX() + MAX_CLICK_DISTANCE / 2f;
                     minY = selected.getRenderY();
                     maxY = selected.getRenderY() + selected.getHeight();
                 }
-                case Right -> {
+                case RIGHT -> {
                     minX = selected.getRenderX() + selected.getWidth() - MAX_CLICK_DISTANCE / 2f;
                     maxX = selected.getRenderX() + selected.getWidth() + MAX_CLICK_DISTANCE / 2f;
                     minY = selected.getRenderY();
                     maxY = selected.getRenderY() + selected.getHeight();
                 }
-                case Bottom -> {
+                case BOTTOM -> {
                     minX = selected.getRenderX();
                     maxX = selected.getRenderX() + selected.getWidth();
                     minY = selected.getRenderY() + selected.getHeight() - MAX_CLICK_DISTANCE / 2f;
@@ -347,14 +348,14 @@ public final class OverlayManagementScreen extends WynntilsScreen {
 
             if (mouseX >= minX && mouseX <= maxX && mouseY >= minY && mouseY <= maxY) {
                 selectedEdge = value;
-                selectionMode = SelectionMode.Edge;
+                selectionMode = SelectionMode.EDGE;
 
                 return false;
             }
         }
 
         if (isMouseHoveringOverlay(selectedOverlay, mouseX, mouseY)) {
-            selectionMode = SelectionMode.Area;
+            selectionMode = SelectionMode.AREA;
 
             return false;
         }
@@ -387,12 +388,12 @@ public final class OverlayManagementScreen extends WynntilsScreen {
 
         if (keyCode == GLFW.GLFW_KEY_ENTER) {
             Managers.Config.saveConfig();
-            McUtils.mc().setScreen(OverlaySelectionScreen.create());
             onClose();
+            McUtils.mc().setScreen(OverlaySelectionScreen.create());
             return true;
         } else if (keyCode == GLFW.GLFW_KEY_ESCAPE) {
-            McUtils.mc().setScreen(OverlaySelectionScreen.create());
             onClose();
+            McUtils.mc().setScreen(OverlaySelectionScreen.create());
             return true;
         }
 
@@ -482,9 +483,9 @@ public final class OverlayManagementScreen extends WynntilsScreen {
         if (selectedOverlay == null) return false;
 
         switch (selectionMode) {
-            case Corner -> handleOverlayCornerDrag(dragX, dragY);
-            case Edge -> handleOverlayEdgeDrag(dragX, dragY);
-            case Area -> handleOverlayBodyDrag(dragX, dragY);
+            case CORNER -> handleOverlayCornerDrag(dragX, dragY);
+            case EDGE -> handleOverlayEdgeDrag(dragX, dragY);
+            case AREA -> handleOverlayBodyDrag(dragX, dragY);
             default -> {}
         }
 
@@ -501,8 +502,7 @@ public final class OverlayManagementScreen extends WynntilsScreen {
     }
 
     private void reloadConfigForOverlay() {
-        Managers.Config.loadConfigFile();
-        Managers.Config.loadAllConfigOptions();
+        Managers.Config.reloadConfiguration();
     }
 
     private void handleOverlayEdgeDrag(double dragX, double dragY) {
@@ -523,23 +523,23 @@ public final class OverlayManagementScreen extends WynntilsScreen {
         final float renderY = overlay.getRenderY();
 
         switch (edge) {
-            case Top -> {
-                overlaySize.setHeight((float) (overlaySize.getHeight() - dragY));
+            case TOP -> {
+                overlay.setHeight((float) (overlaySize.getHeight() - dragY));
                 overlay.setPosition(
                         OverlayPosition.getBestPositionFor(overlay, renderX, renderY, (float) 0, (float) dragY));
             }
-            case Left -> {
-                overlaySize.setWidth((float) (overlaySize.getWidth() - dragX));
+            case LEFT -> {
+                overlay.setWidth((float) (overlaySize.getWidth() - dragX));
                 overlay.setPosition(
                         OverlayPosition.getBestPositionFor(overlay, renderX, renderY, (float) dragX, (float) 0));
             }
-            case Right -> {
-                overlaySize.setWidth((float) (overlaySize.getWidth() + dragX));
+            case RIGHT -> {
+                overlay.setWidth((float) (overlaySize.getWidth() + dragX));
                 overlay.setPosition(
                         OverlayPosition.getBestPositionFor(overlay, renderX, renderY, (float) 0, (float) 0));
             }
-            case Bottom -> {
-                overlaySize.setHeight((float) (overlaySize.getHeight() + dragY));
+            case BOTTOM -> {
+                overlay.setHeight((float) (overlaySize.getHeight() + dragY));
                 overlay.setPosition(
                         OverlayPosition.getBestPositionFor(overlay, renderX, renderY, (float) 0, (float) 0));
             }
@@ -579,27 +579,27 @@ public final class OverlayManagementScreen extends WynntilsScreen {
         final float renderY = overlay.getRenderY();
 
         switch (corner) {
-            case TopLeft -> {
-                overlaySize.setWidth((float) (overlaySize.getWidth() - dragX));
-                overlaySize.setHeight((float) (overlaySize.getHeight() - dragY));
+            case TOP_LEFT -> {
+                overlay.setWidth((float) (overlaySize.getWidth() - dragX));
+                overlay.setHeight((float) (overlaySize.getHeight() - dragY));
                 overlay.setPosition(
                         OverlayPosition.getBestPositionFor(overlay, renderX, renderY, (float) dragX, (float) dragY));
             }
-            case TopRight -> {
-                overlaySize.setWidth((float) (overlaySize.getWidth() + dragX));
-                overlaySize.setHeight((float) (overlaySize.getHeight() - dragY));
+            case TOP_RIGHT -> {
+                overlay.setWidth((float) (overlaySize.getWidth() + dragX));
+                overlay.setHeight((float) (overlaySize.getHeight() - dragY));
                 overlay.setPosition(
                         OverlayPosition.getBestPositionFor(overlay, renderX, renderY, (float) 0, (float) dragY));
             }
-            case BottomLeft -> {
-                overlaySize.setWidth((float) (overlaySize.getWidth() - dragX));
-                overlaySize.setHeight((float) (overlaySize.getHeight() + dragY));
+            case BOTTOM_LEFT -> {
+                overlay.setWidth((float) (overlaySize.getWidth() - dragX));
+                overlay.setHeight((float) (overlaySize.getHeight() + dragY));
                 overlay.setPosition(
                         OverlayPosition.getBestPositionFor(overlay, renderX, renderY, (float) dragX, (float) 0));
             }
-            case BottomRight -> {
-                overlaySize.setWidth((float) (overlaySize.getWidth() + dragX));
-                overlaySize.setHeight((float) (overlaySize.getHeight() + dragY));
+            case BOTTOM_RIGHT -> {
+                overlay.setWidth((float) (overlaySize.getWidth() + dragX));
+                overlay.setHeight((float) (overlaySize.getHeight() + dragY));
                 overlay.setPosition(
                         OverlayPosition.getBestPositionFor(overlay, renderX, renderY, (float) 0, (float) 0));
             }
@@ -614,10 +614,10 @@ public final class OverlayManagementScreen extends WynntilsScreen {
 
         List<Edge> edgesToSnapTo =
                 switch (this.selectionMode) {
-                    case None -> List.of();
-                    case Corner -> this.selectedCorner.getEdges();
-                    case Edge -> List.of(this.selectedEdge);
-                    case Area -> Arrays.stream(Edge.values()).toList();
+                    case NONE -> List.of();
+                    case CORNER -> this.selectedCorner.getEdges();
+                    case EDGE -> List.of(this.selectedEdge);
+                    case AREA -> Arrays.stream(Edge.values()).toList();
                 };
 
         double originalX = dragX;
@@ -729,7 +729,7 @@ public final class OverlayManagementScreen extends WynntilsScreen {
         }
 
         for (Overlay overlay : Managers.Overlay.getOverlays().stream()
-                .filter(Overlay::isEnabled)
+                .filter(Managers.Overlay::isEnabled)
                 .toList()) {
             if (overlay == selectedOverlay) continue;
 
@@ -748,8 +748,8 @@ public final class OverlayManagementScreen extends WynntilsScreen {
     private void setupButtons() {
         this.addRenderableWidget(new Button.Builder(
                         Component.translatable("screens.wynntils.overlayManagement.closeSettingsScreen"), button -> {
-                            McUtils.mc().setScreen(OverlaySelectionScreen.create());
                             onClose();
+                            McUtils.mc().setScreen(OverlaySelectionScreen.create());
                         })
                 .pos(this.width / 2 - BUTTON_WIDTH * 2, this.height - 150)
                 .size(BUTTON_WIDTH, BUTTON_HEIGHT)
@@ -767,8 +767,8 @@ public final class OverlayManagementScreen extends WynntilsScreen {
         this.addRenderableWidget(new Button.Builder(
                         Component.translatable("screens.wynntils.overlayManagement.applySettings"), button -> {
                             Managers.Config.saveConfig();
-                            McUtils.mc().setScreen(OverlaySelectionScreen.create());
                             onClose();
+                            McUtils.mc().setScreen(OverlaySelectionScreen.create());
                         })
                 .pos(this.width / 2 + BUTTON_WIDTH, this.height - 150)
                 .size(BUTTON_WIDTH, BUTTON_HEIGHT)
@@ -777,7 +777,7 @@ public final class OverlayManagementScreen extends WynntilsScreen {
     }
 
     private void resetSelection() {
-        selectionMode = SelectionMode.None;
+        selectionMode = SelectionMode.NONE;
         selectedCorner = null;
         selectedEdge = null;
     }
@@ -787,9 +787,9 @@ public final class OverlayManagementScreen extends WynntilsScreen {
     }
 
     private enum SelectionMode {
-        None,
-        Corner,
-        Edge,
-        Area
+        NONE,
+        CORNER,
+        EDGE,
+        AREA
     }
 }

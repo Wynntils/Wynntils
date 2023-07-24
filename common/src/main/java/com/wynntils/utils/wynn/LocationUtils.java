@@ -12,10 +12,10 @@ import java.util.regex.Pattern;
 
 public final class LocationUtils {
     private static final Pattern COORDINATE_PATTERN = Pattern.compile(
-            "(?<x>[-+]?\\d+)(?:.\\d+)?([^0-9+-]{1,5}(?<y>[-+]?\\d+)(?:.\\d+)?)?[^0-9+-]{1,5}(?<z>[-+]?\\d+)(?:.\\d+)?");
+            "(?<x>[-+]?\\d{1,6})(?:.\\d+)?([^0-9.+-]{1,5}(?<y>[-+]?\\d{1,3})(?:.\\d+)?)?[^0-9.+-]{1,5}(?<z>[-+]?\\d{1,6})(?:.\\d+)?");
 
     private static final Pattern STRICT_COORDINATE_PATTERN = Pattern.compile(
-            "([-+]?\\d{1,5})(?:.\\d+)?([,\\s]{1,2}([-+]?\\d{1,4})(?:.\\d+)?)?[,\\s]{1,2}([-+]?\\d{1,5})(?:.\\d+)?");
+            "([-+]?\\d{1,6})(?:.\\d+)?([,\\s]{1,2}([-+]?\\d{1,3})(?:.\\d+)?)?[,\\s]{1,2}([-+]?\\d{1,6})(?:.\\d+)?");
 
     public static Optional<Location> parseFromString(String locString) {
         Matcher matcher = COORDINATE_PATTERN.matcher(locString);
@@ -32,8 +32,8 @@ public final class LocationUtils {
         return Optional.empty();
     }
 
-    public static Matcher strictCoordinateMatcher(String string) {
-        return STRICT_COORDINATE_PATTERN.matcher(string);
+    public static Matcher strictCoordinateMatcher(String str) {
+        return STRICT_COORDINATE_PATTERN.matcher(str);
     }
 
     public static void shareLocation(String target) {
@@ -45,8 +45,7 @@ public final class LocationUtils {
     }
 
     public static void shareCompass(String target, Location compass) {
-        String locationString =
-                "My compass is at [" + (int) compass.x + ", " + (int) compass.y + ", " + (int) compass.z + "]";
+        String locationString = "My compass is at [" + compass.x + ", " + compass.y + ", " + compass.z + "]";
 
         LocationUtils.sendShareMessage(target, locationString);
     }

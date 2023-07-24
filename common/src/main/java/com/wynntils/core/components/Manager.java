@@ -19,5 +19,10 @@ public abstract class Manager extends CoreComponent {
         // those listed in the dependencies, due to bootstrapping ordering
     }
 
+    @Override
+    protected String getComponentType() {
+        return "Manager";
+    }
+
     public void reloadData() {}
 }

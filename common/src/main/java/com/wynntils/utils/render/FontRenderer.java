@@ -6,8 +6,8 @@ package com.wynntils.utils.render;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.Tesselator;
+import com.wynntils.core.text.StyledText;
 import com.wynntils.mc.mixin.accessors.MinecraftAccessor;
-import com.wynntils.utils.colors.CommonColors;
 import com.wynntils.utils.colors.CustomColor;
 import com.wynntils.utils.mc.ComponentUtils;
 import com.wynntils.utils.mc.McUtils;
@@ -18,6 +18,7 @@ import com.wynntils.utils.render.type.VerticalAlignment;
 import java.util.List;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.renderer.MultiBufferSource;
+import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.FormattedText;
 import net.minecraft.network.chat.Style;
 
@@ -26,7 +27,6 @@ public final class FontRenderer {
     private final Font font;
 
     private static final int NEWLINE_OFFSET = 10;
-    private static final CustomColor SHADOW_COLOR = CommonColors.BLACK;
 
     private FontRenderer() {
         this.font = ((MinecraftAccessor) McUtils.mc()).getFont();
@@ -40,9 +40,9 @@ public final class FontRenderer {
         return font;
     }
 
-    public void renderText(
+    private void renderText(
             PoseStack poseStack,
-            String text,
+            StyledText text,
             float x,
             float y,
             CustomColor customColor,
@@ -71,7 +71,7 @@ public final class FontRenderer {
 
     public void renderText(
             PoseStack poseStack,
-            String text,
+            StyledText text,
             float x,
             float y,
             CustomColor customColor,
@@ -81,9 +81,9 @@ public final class FontRenderer {
         renderText(poseStack, text, x, y, customColor, horizontalAlignment, verticalAlignment, shadow, 1f);
     }
 
-    public void renderAlignedTextInBox(
+    private void renderAlignedTextInBox(
             PoseStack poseStack,
-            String text,
+            StyledText text,
             float x1,
             float x2,
             float y1,
@@ -94,19 +94,18 @@ public final class FontRenderer {
             VerticalAlignment verticalAlignment,
             TextShadow textShadow,
             float textScale) {
-
         float renderX =
                 switch (horizontalAlignment) {
-                    case Left -> x1;
-                    case Center -> (x1 + x2) / 2f;
-                    case Right -> x2;
+                    case LEFT -> x1;
+                    case CENTER -> (x1 + x2) / 2f;
+                    case RIGHT -> x2;
                 };
 
         float renderY =
                 switch (verticalAlignment) {
-                    case Top -> y1;
-                    case Middle -> (y1 + y2) / 2f;
-                    case Bottom -> y2;
+                    case TOP -> y1;
+                    case MIDDLE -> (y1 + y2) / 2f;
+                    case BOTTOM -> y2;
                 };
 
         renderText(
@@ -124,7 +123,7 @@ public final class FontRenderer {
 
     public void renderAlignedTextInBox(
             PoseStack poseStack,
-            String text,
+            StyledText text,
             float x1,
             float x2,
             float y1,
@@ -149,9 +148,66 @@ public final class FontRenderer {
                 1f);
     }
 
+    public void renderAlignedHighlightedTextInBox(
+            PoseStack poseStack,
+            StyledText text,
+            float x1,
+            float x2,
+            float y1,
+            float y2,
+            float maxWidth,
+            CustomColor textColor,
+            CustomColor backgroundColor,
+            HorizontalAlignment horizontalAlignment,
+            VerticalAlignment verticalAlignment) {
+        float renderX =
+                switch (horizontalAlignment) {
+                    case LEFT -> x1;
+                    case CENTER -> (x1 + x2) / 2f;
+                    case RIGHT -> x2;
+                };
+
+        float renderY =
+                switch (verticalAlignment) {
+                    case TOP -> y1;
+                    case MIDDLE -> (y1 + y2) / 2f;
+                    case BOTTOM -> y2;
+                };
+
+        float cursorRenderY =
+                switch (verticalAlignment) {
+                    case TOP -> renderY - 2;
+                    case MIDDLE -> renderY - (font.lineHeight / 2f) - 2;
+                    case BOTTOM -> renderY - font.lineHeight + 2;
+                };
+
+        RenderUtils.drawRect(
+                poseStack,
+                backgroundColor,
+                renderX,
+                cursorRenderY,
+                0,
+                font.width(text.getString()),
+                font.lineHeight + 2);
+
+        renderAlignedTextInBox(
+                poseStack,
+                text,
+                x1,
+                x2,
+                y1,
+                y2,
+                maxWidth,
+                textColor,
+                horizontalAlignment,
+                verticalAlignment,
+                TextShadow.NONE,
+                1f);
+    }
+
     public void renderAlignedTextInBox(
             PoseStack poseStack,
-            String text,
+            StyledText text,
             float x1,
             float x2,
             float y,
@@ -169,14 +225,14 @@ public final class FontRenderer {
                 maxWidth,
                 customColor,
                 horizontalAlignment,
-                VerticalAlignment.Top,
+                VerticalAlignment.TOP,
                 textShadow,
                 1f);
     }
 
     public void renderAlignedTextInBox(
             PoseStack poseStack,
-            String text,
+            StyledText text,
             float x,
             float y1,
             float y2,
@@ -193,15 +249,15 @@ public final class FontRenderer {
                 y2,
                 maxWidth,
                 customColor,
-                HorizontalAlignment.Left,
+                HorizontalAlignment.LEFT,
                 verticalAlignment,
                 textShadow,
                 1f);
     }
 
-    public void renderText(
+    private void renderText(
             PoseStack poseStack,
-            String text,
+            StyledText text,
             float x,
             float y,
             float maxWidth,
@@ -212,19 +268,22 @@ public final class FontRenderer {
             float textScale) {
         if (text == null) return;
 
-        if (maxWidth == 0 || font.width(text) < maxWidth) {
+        if (maxWidth == 0 || font.width(text.getString()) < maxWidth) {
             renderText(poseStack, text, x, y, customColor, horizontalAlignment, verticalAlignment, shadow, textScale);
             return;
         }
 
-        List<FormattedText> parts = font.getSplitter().splitLines(text, (int) maxWidth, Style.EMPTY);
+        List<FormattedText> parts = font.getSplitter().splitLines(text.getComponent(), (int) maxWidth, Style.EMPTY);
 
-        String lastPart = "";
+        StyledText lastPart = StyledText.EMPTY;
         for (int i = 0; i < parts.size(); i++) {
             // copy the format codes to this part as well
-            String part =
-                    ComponentUtils.getLastPartCodes(lastPart) + parts.get(i).getString();
+            Style lastStyle = ComponentUtils.getLastPartCodes(lastPart);
+
+            StyledText part = StyledText.fromComponent(Component.literal("").withStyle(lastStyle))
+                    .append(StyledText.fromComponent(ComponentUtils.formattedTextToComponent(parts.get(i))));
             lastPart = part;
+
             renderText(
                     poseStack,
                     part,
@@ -239,7 +298,7 @@ public final class FontRenderer {
 
     public void renderText(
             PoseStack poseStack,
-            String text,
+            StyledText text,
             float x,
             float y,
             float maxWidth,
@@ -269,7 +328,7 @@ public final class FontRenderer {
             renderText(poseStack, x, currentY, line);
             // If we ask Mojang code the line height of an empty line we get 0 back so replace with space
             currentY += calculateRenderHeight(
-                    line.getText().isEmpty() ? " " : line.getText(),
+                    line.getText().isEmpty() ? StyledText.fromString(" ") : line.getText(),
                     line.getSetting().maxWidth());
         }
     }
@@ -287,16 +346,16 @@ public final class FontRenderer {
             VerticalAlignment verticalAlignment) {
         float renderX =
                 switch (horizontalAlignment) {
-                    case Left -> x;
-                    case Center -> x + width / 2;
-                    case Right -> x + width;
+                    case LEFT -> x;
+                    case CENTER -> x + width / 2;
+                    case RIGHT -> x + width;
                 };
 
         float renderY =
                 switch (verticalAlignment) {
-                    case Top -> y;
-                    case Middle -> y + (height - calculateRenderHeight(toRender)) / 2;
-                    case Bottom -> y + (height - calculateRenderHeight(toRender));
+                    case TOP -> y;
+                    case MIDDLE -> y + (height - calculateRenderHeight(toRender)) / 2;
+                    case BOTTOM -> y + (height - calculateRenderHeight(toRender));
                 };
 
         renderTexts(poseStack, renderX, renderY, toRender);
@@ -325,7 +384,7 @@ public final class FontRenderer {
             if (textRenderTask.getSetting().maxWidth() == 0) {
                 height += font.lineHeight;
             } else {
-                height += font.wordWrapHeight(textRenderTask.getText(), (int)
+                height += font.wordWrapHeight(textRenderTask.getText().getString(), (int)
                         textRenderTask.getSetting().maxWidth());
             }
             totalLineCount++;
@@ -337,12 +396,16 @@ public final class FontRenderer {
         return height;
     }
 
-    public float calculateRenderHeight(List<String> lines, float maxWidth) {
+    public float calculateRenderHeight(List<StyledText> lines, float maxWidth) {
         int sum = 0;
-        for (String line : lines) {
-            sum += font.wordWrapHeight(line, (int) maxWidth);
+        for (StyledText line : lines) {
+            sum += font.wordWrapHeight(line.getString(), (int) maxWidth);
         }
         return sum;
+    }
+
+    public float calculateRenderHeight(StyledText line, float maxWidth) {
+        return font.wordWrapHeight(line.getString(), maxWidth == 0 ? Integer.MAX_VALUE : (int) maxWidth);
     }
 
     public float calculateRenderHeight(String line, float maxWidth) {

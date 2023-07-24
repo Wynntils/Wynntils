@@ -33,7 +33,7 @@ public class LocateCommand extends Command {
             SharedSuggestionProvider.suggest(Arrays.stream(ServiceKind.values()).map(ServiceKind::getName), builder);
 
     public static final SuggestionProvider<CommandSourceStack> PLACES_SUGGESTION_PROVIDER = (context, builder) ->
-            SharedSuggestionProvider.suggest(Models.Map.getLabelPois().stream().map(Poi::getName), builder);
+            SharedSuggestionProvider.suggest(Models.Poi.getLabelPois().map(Poi::getName), builder);
 
     @Override
     public String getCommandName() {
@@ -46,9 +46,9 @@ public class LocateCommand extends Command {
     }
 
     @Override
-    public LiteralArgumentBuilder<CommandSourceStack> getCommandBuilder() {
-        return Commands.literal(getCommandName())
-                .then(Commands.literal("service")
+    public LiteralArgumentBuilder<CommandSourceStack> getCommandBuilder(
+            LiteralArgumentBuilder<CommandSourceStack> base) {
+        return base.then(Commands.literal("service")
                         .then(Commands.argument("name", StringArgumentType.greedyString())
                                 .suggests(LocateCommand.SERVICE_SUGGESTION_PROVIDER)
                                 .executes(this::locateService)))
@@ -106,7 +106,7 @@ public class LocateCommand extends Command {
         ServiceKind selectedKind = LocateCommand.getServiceKind(context, searchedName);
         if (selectedKind == null) return 0;
 
-        List<Poi> services = new ArrayList<>(Models.Map.getServicePois().stream()
+        List<Poi> services = new ArrayList<>(Models.Poi.getServicePois()
                 .filter(poi -> poi.getKind() == selectedKind)
                 .toList());
 
@@ -145,7 +145,7 @@ public class LocateCommand extends Command {
     private int locatePlace(CommandContext<CommandSourceStack> context) {
         String searchedName = context.getArgument("name", String.class);
 
-        List<Poi> places = new ArrayList<>(Models.Map.getLabelPois().stream()
+        List<Poi> places = new ArrayList<>(Models.Poi.getLabelPois()
                 .filter(poi -> StringUtils.partialMatch(poi.getName(), searchedName))
                 .toList());
 

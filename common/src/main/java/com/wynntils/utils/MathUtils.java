@@ -7,6 +7,7 @@ package com.wynntils.utils;
 import java.util.Locale;
 import java.util.Map;
 import java.util.TreeMap;
+import org.joml.Vector2f;
 
 public final class MathUtils {
     private static final Map<Character, Integer> ROMAN_NUMERALS_MAP =
@@ -27,20 +28,34 @@ public final class MathUtils {
             Map.entry(4, "IV"),
             Map.entry(1, "I")));
 
-    public static float lerp(float a, float b, float t) {
-        return a + (b - a) * t;
+    public static int floor(float value) {
+        int i = (int) value;
+        return value < (float) i ? i - 1 : i;
     }
 
-    public static double lerp(double a, double b, double t) {
-        return a + (b - a) * t;
+    public static int floor(double value) {
+        int i = (int) value;
+        return value < (double) i ? i - 1 : i;
     }
 
-    public static float inverseLerp(float a, float b, float value) {
-        return (value - a) / (b - a);
+    public static float frac(float number) {
+        return number - (float) floor(number);
     }
 
-    public static double inverseLerp(double a, double b, double value) {
-        return (value - a) / (b - a);
+    public static float lerp(float start, float end, float delta) {
+        return start + (end - start) * delta;
+    }
+
+    public static double lerp(double start, double end, double delta) {
+        return start + (end - start) * delta;
+    }
+
+    public static float inverseLerp(float start, float end, float value) {
+        return (value - start) / (end - start);
+    }
+
+    public static double inverseLerp(double start, double end, double value) {
+        return (value - start) / (end - start);
     }
 
     public static int clamp(int num, int min, int max) {
@@ -104,5 +119,9 @@ public final class MathUtils {
         boolean xIntersects = aX1 < bX2 && bX1 < aX2;
         boolean zIntersects = aZ1 < bZ2 && bZ1 < aZ2;
         return xIntersects && zIntersects;
+    }
+
+    public static float signedArea(Vector2f p0, Vector2f p1, Vector2f p2) {
+        return (p1.x() - p0.x()) * (p2.y() - p0.y()) - (p2.x() - p0.x()) * (p1.y() - p0.y());
     }
 }

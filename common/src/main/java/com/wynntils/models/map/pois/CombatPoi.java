@@ -4,7 +4,8 @@
  */
 package com.wynntils.models.map.pois;
 
-import com.wynntils.features.user.map.MapFeature;
+import com.wynntils.core.components.Managers;
+import com.wynntils.features.map.MapFeature;
 import com.wynntils.models.map.PoiLocation;
 import com.wynntils.models.map.type.CombatKind;
 import com.wynntils.models.map.type.DisplayPriority;
@@ -28,9 +29,13 @@ public class CombatPoi extends StaticIconPoi {
     @Override
     public float getMinZoomForRender() {
         if (kind == CombatKind.CAVES) {
-            return MapFeature.INSTANCE.cavePoiMinZoom;
+            return Managers.Feature.getFeatureInstance(MapFeature.class)
+                    .cavePoiMinZoom
+                    .get();
         }
-        return MapFeature.INSTANCE.combatPoiMinZoom;
+        return Managers.Feature.getFeatureInstance(MapFeature.class)
+                .combatPoiMinZoom
+                .get();
     }
 
     @Override

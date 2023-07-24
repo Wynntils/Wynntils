@@ -4,7 +4,7 @@
  */
 package com.wynntils.models.gear.type;
 
-import com.wynntils.models.stats.FixedStats;
+import com.wynntils.models.stats.type.FixedStats;
 import com.wynntils.models.stats.type.StatPossibleValues;
 import com.wynntils.models.stats.type.StatType;
 import com.wynntils.utils.type.Pair;
@@ -19,7 +19,6 @@ public record GearInfo(
         GearRequirements requirements,
         FixedStats fixedStats,
         List<Pair<StatType, StatPossibleValues>> variableStats) {
-
     public StatPossibleValues getPossibleValues(StatType statType) {
         return this.variableStats().stream()
                 .filter(p -> p.key().equals(statType))

@@ -6,6 +6,7 @@ package com.wynntils.utils.mc;
 
 import com.mojang.blaze3d.platform.Window;
 import com.wynntils.core.WynntilsMod;
+import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.Options;
 import net.minecraft.client.multiplayer.prediction.PredictiveAction;
@@ -29,6 +30,10 @@ public final class McUtils {
 
     public static LocalPlayer player() {
         return mc().player;
+    }
+
+    public static String playerName() {
+        return player().getName().getString();
     }
 
     public static Options options() {
@@ -55,8 +60,12 @@ public final class McUtils {
         return window().getGuiScale();
     }
 
-    public static void playSound(SoundEvent sound) {
+    public static void playSoundUI(SoundEvent sound) {
         mc().getSoundManager().play(SimpleSoundInstance.forUI(sound, 1.0F));
+    }
+
+    public static void playSoundAmbient(SoundEvent sound) {
+        mc().getSoundManager().play(SimpleSoundInstance.forLocalAmbience(sound, 1.0F, 1.0F));
     }
 
     public static void sendMessageToClient(Component component) {
@@ -66,6 +75,11 @@ public final class McUtils {
             return;
         }
         player().sendSystemMessage(component);
+    }
+
+    public static void sendErrorToClient(String errorMsg) {
+        WynntilsMod.warn("Chat error message sent: " + errorMsg);
+        McUtils.sendMessageToClient(Component.literal(errorMsg).withStyle(ChatFormatting.RED));
     }
 
     public static void sendPacket(Packet<?> packet) {

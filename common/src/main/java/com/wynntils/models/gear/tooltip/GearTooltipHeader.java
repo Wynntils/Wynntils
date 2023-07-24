@@ -5,14 +5,14 @@
 package com.wynntils.models.gear.tooltip;
 
 import com.wynntils.core.components.Models;
+import com.wynntils.models.activities.quests.QuestInfo;
+import com.wynntils.models.activities.type.QuestStatus;
 import com.wynntils.models.character.type.ClassType;
 import com.wynntils.models.elements.type.Element;
 import com.wynntils.models.elements.type.Skill;
 import com.wynntils.models.gear.type.GearInfo;
 import com.wynntils.models.gear.type.GearInstance;
 import com.wynntils.models.gear.type.GearRequirements;
-import com.wynntils.models.quests.QuestInfo;
-import com.wynntils.models.quests.type.QuestStatus;
 import com.wynntils.models.stats.type.DamageType;
 import com.wynntils.utils.StringUtils;
 import com.wynntils.utils.type.Pair;
@@ -100,7 +100,7 @@ public final class GearTooltipHeader {
         }
         int level = requirements.level();
         if (level != 0) {
-            boolean fulfilled = Models.CombatXp.getXpLevel() >= level;
+            boolean fulfilled = Models.CombatXp.getCombatLevel().current() >= level;
             header.add(buildRequirementLine("Combat Lv. Min: " + level, fulfilled));
             requirementsCount++;
         }

@@ -4,16 +4,23 @@
  */
 package com.wynntils.utils.render;
 
+import com.wynntils.core.text.StyledText;
+
 public final class TextRenderTask {
-    private String text;
+    private StyledText text;
     private TextRenderSetting setting;
 
-    public TextRenderTask(String text, TextRenderSetting setting) {
-        this.text = text;
+    public TextRenderTask(StyledText codedText, TextRenderSetting setting) {
+        this.text = codedText;
         this.setting = setting;
     }
 
-    public String getText() {
+    public TextRenderTask(String text, TextRenderSetting setting) {
+        this.text = StyledText.fromString(text);
+        this.setting = setting;
+    }
+
+    public StyledText getText() {
         return text;
     }
 
@@ -26,8 +33,12 @@ public final class TextRenderTask {
         return this;
     }
 
+    public void setText(StyledText codedText) {
+        this.text = codedText;
+    }
+
     public void setText(String text) {
-        this.text = text;
+        this.text = StyledText.fromString(text);
     }
 
     @Override

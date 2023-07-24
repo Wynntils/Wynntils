@@ -4,6 +4,7 @@
  */
 package com.wynntils.models.items.annotators.gui;
 
+import com.wynntils.core.text.StyledText;
 import com.wynntils.handlers.item.ItemAnnotation;
 import com.wynntils.handlers.item.ItemAnnotator;
 import com.wynntils.models.elements.type.Skill;
@@ -14,12 +15,14 @@ import java.util.regex.Pattern;
 import net.minecraft.world.item.ItemStack;
 
 public final class SkillPointAnnotator implements ItemAnnotator {
+    // Test suite: https://regexr.com/7h0tl
     private static final Pattern SKILL_POINT_PATTERN = Pattern.compile("^§dUpgrade your §[2ebcf][✤✦❉✹❋] (.*)§d skill$");
-    private static final Pattern LORE_PATTERN = Pattern.compile("^§7[ À]+(-?\\d+) points?[ À]+§r§6-?\\d+ points?$");
+    // Test suite: https://regexr.com/7h0to
+    private static final Pattern LORE_PATTERN = Pattern.compile("^[ À]+§7(-?\\d+) points?§r[ À]+§6-?\\d+ points?$");
 
     @Override
-    public ItemAnnotation getAnnotation(ItemStack itemStack, String name) {
-        Matcher matcher = SKILL_POINT_PATTERN.matcher(name);
+    public ItemAnnotation getAnnotation(ItemStack itemStack, StyledText name) {
+        Matcher matcher = name.getMatcher(SKILL_POINT_PATTERN);
         if (!matcher.matches()) return null;
 
         String skillName = matcher.group(1);

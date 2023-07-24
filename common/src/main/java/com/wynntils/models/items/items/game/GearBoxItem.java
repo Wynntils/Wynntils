@@ -7,10 +7,11 @@ package com.wynntils.models.items.items.game;
 import com.wynntils.models.gear.type.GearTier;
 import com.wynntils.models.gear.type.GearType;
 import com.wynntils.models.items.properties.GearTierItemProperty;
+import com.wynntils.models.items.properties.LeveledItemProperty;
 import com.wynntils.utils.type.RangedValue;
 import java.util.Objects;
 
-public class GearBoxItem extends GameItem implements GearTierItemProperty {
+public class GearBoxItem extends GameItem implements GearTierItemProperty, LeveledItemProperty {
     private final GearType gearType;
     private final GearTier gearTier;
     private final RangedValue levelRange;
@@ -32,6 +33,12 @@ public class GearBoxItem extends GameItem implements GearTierItemProperty {
 
     public RangedValue getLevelRange() {
         return levelRange;
+    }
+
+    @Override
+    public int getLevel() {
+        // We use the max possible level to represent this range
+        return levelRange.high();
     }
 
     @Override

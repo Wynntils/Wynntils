@@ -6,6 +6,7 @@ package com.wynntils.models.map.pois;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.wynntils.core.components.Models;
+import com.wynntils.core.text.StyledText;
 import com.wynntils.models.map.PoiLocation;
 import com.wynntils.models.map.type.DisplayPriority;
 import com.wynntils.models.territories.TerritoryInfo;
@@ -20,40 +21,58 @@ import com.wynntils.utils.render.buffered.BufferedRenderUtils;
 import com.wynntils.utils.render.type.HorizontalAlignment;
 import com.wynntils.utils.render.type.TextShadow;
 import com.wynntils.utils.render.type.VerticalAlignment;
+import java.util.function.Supplier;
 import net.minecraft.client.renderer.MultiBufferSource;
 
 public class TerritoryPoi implements Poi {
-    private final TerritoryProfile territoryProfile;
+    private final Supplier<TerritoryProfile> territoryProfileSupplier;
     private final PoiLocation territoryCenter;
     private final int width;
     private final int height;
 
     private final TerritoryInfo territoryInfo;
+    private final boolean fakeTerritoryInfo;
+
+    private TerritoryProfile territoryProfileCache;
 
     public TerritoryPoi(TerritoryProfile territoryProfile) {
-        this(territoryProfile, null);
+        this(() -> territoryProfile, null);
     }
 
+    public TerritoryPoi(Supplier<TerritoryProfile> territoryProfileSupplier, TerritoryInfo territoryInfo) {
+        this(territoryProfileSupplier, territoryInfo, false);
+    }
+
+    // Note: This constructor is used to create a TerritoryPoi based on both the API and advancement data
     public TerritoryPoi(TerritoryProfile territoryProfile, TerritoryInfo territoryInfo) {
-        this.territoryProfile = territoryProfile;
+        this(() -> territoryProfile, territoryInfo, true);
+    }
+
+    private TerritoryPoi(
+            Supplier<TerritoryProfile> territoryProfileSupplier,
+            TerritoryInfo territoryInfo,
+            boolean fakeTerritoryInfo) {
+        this.territoryProfileSupplier = territoryProfileSupplier;
+
+        TerritoryProfile territoryProfile = getTerritoryProfile();
         this.width = territoryProfile.getEndX() - territoryProfile.getStartX();
         this.height = territoryProfile.getEndZ() - territoryProfile.getStartZ();
         this.territoryCenter = new PoiLocation(
                 territoryProfile.getStartX() + width / 2, null, territoryProfile.getStartZ() + height / 2);
 
         this.territoryInfo = territoryInfo;
+        this.fakeTerritoryInfo = fakeTerritoryInfo;
     }
 
     @Override
     public void renderAt(
             PoseStack poseStack,
-            MultiBufferSource.BufferSource bufferSource,
+            MultiBufferSource bufferSource,
             float renderX,
             float renderY,
             boolean hovered,
             float scale,
             float mapZoom) {
-
         poseStack.pushPose();
         poseStack.translate(0, 0, 100);
 
@@ -62,13 +81,20 @@ public class TerritoryPoi implements Poi {
         final float actualRenderX = renderX - renderWidth / 2f;
         final float actualRenderZ = renderY - renderHeight / 2f;
 
+        TerritoryProfile territoryProfile = getTerritoryProfile();
+
         CustomColor color;
-        if (territoryInfo != null
+        if (isTerritoryInfoUsable()
                 && McUtils.mc().screen instanceof GuildMapScreen guildMapScreen
                 && guildMapScreen.isResourceMode()) {
-            color = territoryInfo.getColor();
-        } else {
+            color = territoryInfo.getResourceColor();
+        } else if (!isTerritoryInfoUsable() || territoryInfo.getGuildName().equals(territoryProfile.getGuild())) {
+            // We know the guild name with it's color
             color = territoryProfile.getGuildColor();
+        } else {
+            // We don't know the holding guild's color
+            // FIXME: Will be fixed when Athena API is added
+            color = CommonColors.WHITE;
         }
 
         BufferedRenderUtils.drawRect(
@@ -91,7 +117,7 @@ public class TerritoryPoi implements Poi {
                 0,
                 1.5f);
 
-        if (territoryInfo != null && territoryInfo.isHeadquarters()) {
+        if (isTerritoryInfoUsable() && territoryInfo.isHeadquarters()) {
             BufferedRenderUtils.drawTexturedRect(
                     poseStack,
                     bufferSource,
@@ -99,60 +125,66 @@ public class TerritoryPoi implements Poi {
                     actualRenderX + renderWidth / 2f - Texture.GUILD_HEADQUARTERS_ICON.width() / 2f,
                     actualRenderZ + renderHeight / 2f - Texture.GUILD_HEADQUARTERS_ICON.height() / 2f);
         } else {
+            String guildPrefix =
+                    isTerritoryInfoUsable() ? territoryInfo.getGuildPrefix() : territoryProfile.getGuildPrefix();
             BufferedFontRenderer.getInstance()
                     .renderAlignedTextInBox(
                             poseStack,
                             bufferSource,
-                            territoryProfile.getGuildPrefix(),
+                            StyledText.fromString(guildPrefix),
                             actualRenderX,
                             actualRenderX + renderWidth,
                             actualRenderZ,
                             actualRenderZ + renderHeight,
                             0,
                             color,
-                            HorizontalAlignment.Center,
-                            VerticalAlignment.Middle,
+                            HorizontalAlignment.CENTER,
+                            VerticalAlignment.MIDDLE,
                             TextShadow.OUTLINE);
         }
 
-        Models.GuildAttackTimer.getAttackTimerForTerritory(territoryProfile.getFriendlyName())
-                .ifPresent(attackTimer -> {
-                    final String timeLeft = attackTimer.timerString();
+        String guildName = isTerritoryInfoUsable() ? territoryInfo.getGuildName() : territoryProfile.getFriendlyName();
+        Models.GuildAttackTimer.getAttackTimerForTerritory(guildName).ifPresent(attackTimer -> {
+            final String timeLeft = attackTimer.timerString();
 
-                    BufferedFontRenderer.getInstance()
-                            .renderAlignedTextInBox(
-                                    poseStack,
-                                    bufferSource,
-                                    timeLeft,
-                                    actualRenderX,
-                                    actualRenderX + renderWidth,
-                                    actualRenderZ,
-                                    actualRenderZ + renderHeight,
-                                    0,
-                                    CommonColors.WHITE,
-                                    HorizontalAlignment.Center,
-                                    VerticalAlignment.Bottom,
-                                    TextShadow.OUTLINE);
-                });
-
-        if (hovered) {
             BufferedFontRenderer.getInstance()
                     .renderAlignedTextInBox(
                             poseStack,
                             bufferSource,
-                            territoryProfile.getFriendlyName(),
+                            StyledText.fromString(timeLeft),
                             actualRenderX,
                             actualRenderX + renderWidth,
                             actualRenderZ,
                             actualRenderZ + renderHeight,
                             0,
                             CommonColors.WHITE,
-                            HorizontalAlignment.Center,
-                            VerticalAlignment.Top,
+                            HorizontalAlignment.CENTER,
+                            VerticalAlignment.BOTTOM,
+                            TextShadow.OUTLINE);
+        });
+
+        if (hovered) {
+            BufferedFontRenderer.getInstance()
+                    .renderAlignedTextInBox(
+                            poseStack,
+                            bufferSource,
+                            StyledText.fromString(guildName),
+                            actualRenderX,
+                            actualRenderX + renderWidth,
+                            actualRenderZ,
+                            actualRenderZ + renderHeight,
+                            0,
+                            CommonColors.WHITE,
+                            HorizontalAlignment.CENTER,
+                            VerticalAlignment.TOP,
                             TextShadow.OUTLINE);
         }
 
         poseStack.popPose();
+    }
+
+    private boolean isTerritoryInfoUsable() {
+        return !fakeTerritoryInfo && territoryInfo != null;
     }
 
     @Override
@@ -177,7 +209,7 @@ public class TerritoryPoi implements Poi {
 
     @Override
     public String getName() {
-        return territoryProfile.getName();
+        return getTerritoryProfile().getName();
     }
 
     @Override
@@ -189,7 +221,16 @@ public class TerritoryPoi implements Poi {
         return territoryInfo;
     }
 
+    public boolean isFakeTerritoryInfo() {
+        return fakeTerritoryInfo;
+    }
+
     public TerritoryProfile getTerritoryProfile() {
-        return territoryProfile;
+        return tryGetUpdatedTerritoryProfile();
+    }
+
+    private TerritoryProfile tryGetUpdatedTerritoryProfile() {
+        TerritoryProfile territoryProfile = territoryProfileSupplier.get();
+        return territoryProfile != null ? territoryProfileCache = territoryProfile : territoryProfileCache;
     }
 }

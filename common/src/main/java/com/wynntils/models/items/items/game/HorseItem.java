@@ -5,14 +5,15 @@
 package com.wynntils.models.items.items.game;
 
 import com.wynntils.utils.type.CappedValue;
+import java.util.Optional;
 
 public class HorseItem extends GameItem {
     private final int tier;
     private final CappedValue level;
-    private final int xp;
+    private final CappedValue xp;
     private final String name;
 
-    public HorseItem(int tier, CappedValue level, int xp, String name) {
+    public HorseItem(int tier, CappedValue level, CappedValue xp, String name) {
         this.tier = tier;
         this.level = level;
         this.xp = xp;
@@ -27,12 +28,13 @@ public class HorseItem extends GameItem {
         return level;
     }
 
-    public int getXp() {
+    public CappedValue getXp() {
         return xp;
     }
 
-    public String getName() {
-        return name;
+    public Optional<String> getName() {
+        // Name is only set if the horse is named
+        return Optional.ofNullable(name);
     }
 
     @Override

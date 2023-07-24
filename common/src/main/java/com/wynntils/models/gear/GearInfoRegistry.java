@@ -18,6 +18,7 @@ import com.wynntils.core.components.Models;
 import com.wynntils.core.net.Download;
 import com.wynntils.core.net.UrlId;
 import com.wynntils.core.net.event.NetResultProcessedEvent;
+import com.wynntils.core.text.StyledText;
 import com.wynntils.models.character.type.ClassType;
 import com.wynntils.models.elements.type.Element;
 import com.wynntils.models.elements.type.Skill;
@@ -29,9 +30,9 @@ import com.wynntils.models.gear.type.GearRequirements;
 import com.wynntils.models.gear.type.GearRestrictions;
 import com.wynntils.models.gear.type.GearTier;
 import com.wynntils.models.gear.type.GearType;
-import com.wynntils.models.stats.FixedStats;
 import com.wynntils.models.stats.StatCalculator;
 import com.wynntils.models.stats.type.DamageType;
+import com.wynntils.models.stats.type.FixedStats;
 import com.wynntils.models.stats.type.StatPossibleValues;
 import com.wynntils.models.stats.type.StatType;
 import com.wynntils.models.wynnitem.type.ItemMaterial;
@@ -155,7 +156,7 @@ public class GearInfoRegistry {
             return new GearMajorId(
                     JsonUtils.getNullableJsonString(json, "id"),
                     JsonUtils.getNullableJsonString(json, "name"),
-                    JsonUtils.getNullableJsonString(json, "lore"));
+                    StyledText.fromString(JsonUtils.getNullableJsonString(json, "lore")));
         }
     }
 
@@ -198,6 +199,9 @@ public class GearInfoRegistry {
             }
 
             GearType type = parseType(json);
+            if (type == null) {
+                throw new RuntimeException("Invalid Wynncraft data: item has no gear type");
+            }
             GearTier tier = GearTier.fromString(json.get("tier").getAsString());
             int powderSlots = JsonUtils.getNullableJsonInt(json, "sockets");
 
@@ -257,7 +261,7 @@ public class GearInfoRegistry {
                 obtainInfo.add(new ItemObtainInfo(ItemObtainType.UNKNOWN, Optional.empty()));
             }
 
-            Optional<String> loreOpt = parseLore(json);
+            Optional<StyledText> loreOpt = parseLore(json);
             Optional<String> apiNameOpt = Optional.ofNullable(apiName);
 
             boolean allowCraftsman = JsonUtils.getNullableJsonBoolean(json, "allowCraftsman");
@@ -265,12 +269,13 @@ public class GearInfoRegistry {
             return new GearMetaInfo(restrictions, material, obtainInfo, loreOpt, apiNameOpt, allowCraftsman);
         }
 
-        private Optional<String> parseLore(JsonObject json) {
+        private Optional<StyledText> parseLore(JsonObject json) {
             String lore = JsonUtils.getNullableJsonString(json, "addedLore");
             if (lore == null) return Optional.empty();
 
             // Some lore contain like "\\[Community Event Winner\\]", fix that
-            return Optional.of(StringUtils.replaceEach(lore, new String[] {"\\[", "\\]"}, new String[] {"[", "]"}));
+            return Optional.of(StyledText.fromString(
+                    StringUtils.replaceEach(lore, new String[] {"\\[", "\\]"}, new String[] {"[", "]"})));
         }
 
         private GearRestrictions parseRestrictions(JsonObject json) {
@@ -281,7 +286,7 @@ public class GearInfoRegistry {
         }
 
         private ItemMaterial parseMaterial(JsonObject json, GearType type) {
-            return type.isArmour() ? parseArmorType(json, type) : parseOtherMaterial(json, type);
+            return type.isArmor() ? parseArmorType(json, type) : parseOtherMaterial(json, type);
         }
 
         private ItemMaterial parseArmorType(JsonObject json, GearType gearType) {

@@ -12,9 +12,11 @@ import com.wynntils.handlers.labels.event.EntityLabelChangedEvent;
 import com.wynntils.models.damage.type.DamageDealtEvent;
 import com.wynntils.models.damage.type.FocusedDamageEvent;
 import com.wynntils.models.stats.type.DamageType;
+import com.wynntils.utils.type.TimedSet;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.TimeUnit;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import net.minecraft.world.entity.decoration.ArmorStand;
@@ -22,21 +24,14 @@ import net.minecraftforge.eventbus.api.SubscribeEvent;
 
 public final class DamageModel extends Model {
     // https://regexr.com/7968a
-    private static final Pattern DAMAGE_LABEL_PATTERN = Pattern.compile(
-            "^(?:§4-(\\d+) ❤ )?(?:§e-(\\d+) ✦ )?(?:§2-(\\d+) ✤ )?(?:§b-(\\d+) ❉ )?(?:§f-(\\d+) ❋ )?(?:§c-(\\d+) ✹ )?$");
+    private static final Pattern DAMAGE_LABEL_PATTERN = Pattern.compile("(?:§[24bcef]-(\\d+) ([❤✦✤❉❋✹]) )");
 
     // https://regexr.com/7965g
-    private static final Pattern DAMAGE_BAR_PATTERN = Pattern.compile("^§[ac](.*)§r - §c(\\d+)§4❤(?:§r - §7(.*)§7)?$");
-
-    private static final List<DamageType> LABEL_ELEMENT_ORDER = List.of(
-            DamageType.NEUTRAL,
-            DamageType.THUNDER,
-            DamageType.EARTH,
-            DamageType.WATER,
-            DamageType.AIR,
-            DamageType.FIRE);
+    private static final Pattern DAMAGE_BAR_PATTERN = Pattern.compile("^§[ac](.*) - §c(\\d+)§4❤(?: - §7(.*)§7)?$");
 
     private final DamageBar damageBar = new DamageBar();
+
+    private final TimedSet<Integer> areaDamageSet = new TimedSet<>(60, TimeUnit.SECONDS, true);
 
     private String focusedMobName;
     private String focusedMobElementals;
@@ -56,24 +51,45 @@ public final class DamageModel extends Model {
     public void onLabelChange(EntityLabelChangedEvent event) {
         if (!(event.getEntity() instanceof ArmorStand)) return;
 
-        Matcher matcher = DAMAGE_LABEL_PATTERN.matcher(event.getName());
-        if (!matcher.matches()) return;
+        Matcher matcher = event.getName().getMatcher(DAMAGE_LABEL_PATTERN);
+        if (!matcher.find()) return;
 
         Map<DamageType, Integer> damages = new HashMap<>();
-        for (int i = 0; i < LABEL_ELEMENT_ORDER.size(); i++) {
-            String damageStr = matcher.group(i + 1);
-            if (damageStr == null) continue;
+        // Restart finding from the beginning
+        matcher.reset();
+        while (matcher.find()) {
+            int damage = Integer.parseInt(matcher.group(1));
+            DamageType damageType = DamageType.fromSymbol(matcher.group(2));
 
-            int damage = Integer.parseInt(damageStr);
-            damages.put(LABEL_ELEMENT_ORDER.get(i), damage);
+            damages.put(damageType, damage);
         }
 
         WynntilsMod.postEvent(new DamageDealtEvent(damages));
+
+        int damageSum = damages.values().stream().mapToInt(Integer::intValue).sum();
+        areaDamageSet.put(damageSum);
+
         lastDamageDealtTimestamp = System.currentTimeMillis();
     }
 
-    public final class DamageBar extends TrackedBar {
-        public DamageBar() {
+    public int getAreaDamagePerSecond() {
+        return areaDamageSet.getEntries().stream()
+                .filter(timedEntry -> (System.currentTimeMillis() - timedEntry.getCreation()) <= 1000L)
+                .mapToInt(TimedSet.TimedEntry::getEntry)
+                .sum();
+    }
+
+    public double getAverageAreaDamagePerSecond(int seconds) {
+        return areaDamageSet.getEntries().stream()
+                        .filter(timedEntry ->
+                                (System.currentTimeMillis() - timedEntry.getCreation()) <= seconds * 1000L)
+                        .mapToInt(TimedSet.TimedEntry::getEntry)
+                        .sum()
+                / (double) seconds;
+    }
+
+    private final class DamageBar extends TrackedBar {
+        private DamageBar() {
             super(DAMAGE_BAR_PATTERN);
         }
 

@@ -5,6 +5,7 @@
 package com.wynntils.models.map.pois;
 
 import com.mojang.blaze3d.vertex.PoseStack;
+import com.wynntils.core.text.StyledText;
 import com.wynntils.models.map.Label;
 import com.wynntils.models.map.PoiLocation;
 import com.wynntils.models.map.type.DisplayPriority;
@@ -92,7 +93,7 @@ public class LabelPoi implements Poi {
     @Override
     public void renderAt(
             PoseStack poseStack,
-            MultiBufferSource.BufferSource bufferSource,
+            MultiBufferSource bufferSource,
             float renderX,
             float renderY,
             boolean hovered,
@@ -117,12 +118,12 @@ public class LabelPoi implements Poi {
                 .renderText(
                         poseStack,
                         bufferSource,
-                        label.getName(),
+                        StyledText.fromString(label.getName()),
                         0,
                         0,
                         color,
-                        HorizontalAlignment.Center,
-                        VerticalAlignment.Middle,
+                        HorizontalAlignment.CENTER,
+                        VerticalAlignment.MIDDLE,
                         getTextShadow(),
                         1f);
         if (hovered) {
@@ -132,12 +133,12 @@ public class LabelPoi implements Poi {
                         .renderText(
                                 poseStack,
                                 bufferSource,
-                                "[Lv " + level + "]",
+                                StyledText.fromString("[Lv " + level + "]"),
                                 0,
                                 10,
                                 color,
-                                HorizontalAlignment.Center,
-                                VerticalAlignment.Middle,
+                                HorizontalAlignment.CENTER,
+                                VerticalAlignment.MIDDLE,
                                 getTextShadow(),
                                 1f);
             }

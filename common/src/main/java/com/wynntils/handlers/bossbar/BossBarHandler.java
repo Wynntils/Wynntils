@@ -6,10 +6,9 @@ package com.wynntils.handlers.bossbar;
 
 import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.components.Handler;
+import com.wynntils.core.text.StyledText;
 import com.wynntils.handlers.bossbar.event.BossBarAddedEvent;
 import com.wynntils.mc.event.BossHealthUpdateEvent;
-import com.wynntils.utils.mc.ComponentUtils;
-import com.wynntils.utils.mc.McUtils;
 import com.wynntils.utils.type.Pair;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -19,6 +18,7 @@ import java.util.Optional;
 import java.util.UUID;
 import java.util.function.Consumer;
 import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import net.minecraft.client.gui.components.LerpingBossEvent;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.protocol.game.ClientboundBossEventPacket;
@@ -59,15 +59,15 @@ public class BossBarHandler extends Handler {
                 boolean playMusic,
                 boolean createWorldFog) {
             Optional<Pair<TrackedBar, Matcher>> trackedBarOpt = knownBars.stream()
-                    .map(bar -> new Pair<>(bar, bar.pattern.matcher(ComponentUtils.getCoded(name))))
+                    .flatMap(trackedBar -> trackedBar.patterns.stream().map(pattern -> new Pair<>(trackedBar, pattern)))
+                    .map(pair ->
+                            new Pair<>(pair.a(), StyledText.fromComponent(name).getMatcher(pair.b())))
                     .filter(pair -> pair.b().matches())
                     .findFirst();
             if (trackedBarOpt.isEmpty()) return;
 
             TrackedBar trackedBar = trackedBarOpt.get().a();
             Matcher matcher = trackedBarOpt.get().b();
-
-            event.setCanceled(true);
 
             LerpingBossEvent bossEvent =
                     new LerpingBossEvent(id, name, progress, color, overlay, darkenScreen, playMusic, createWorldFog);
@@ -79,9 +79,9 @@ public class BossBarHandler extends Handler {
 
             if (barAddEvent.isCanceled()) {
                 trackedBar.setRendered(false);
+                event.setCanceled(true);
             } else {
                 trackedBar.setRendered(true);
-                McUtils.mc().gui.getBossOverlay().events.put(id, bossEvent);
             }
 
             trackedBar.onUpdateName(matcher);
@@ -121,13 +121,18 @@ public class BossBarHandler extends Handler {
         @Override
         public void updateName(UUID id, Component name) {
             handleBarUpdate(id, trackedBar -> {
-                Matcher matcher = trackedBar.pattern.matcher(ComponentUtils.getCoded(name));
-                if (!matcher.matches()) {
-                    WynntilsMod.error("Failed to match already matched boss bar");
-                    return;
+                StyledText nameText = StyledText.fromComponent(name);
+
+                for (Pattern pattern : trackedBar.patterns) {
+                    Matcher matcher = nameText.getMatcher(pattern);
+                    if (matcher.matches()) {
+                        trackedBar.onUpdateName(matcher);
+                        return;
+                    }
                 }
 
-                trackedBar.onUpdateName(matcher);
+                WynntilsMod.error("Failed to match already matched boss bar");
+                return;
             });
         }
 

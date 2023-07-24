@@ -5,10 +5,12 @@
 package com.wynntils.screens.maps;
 
 import com.mojang.blaze3d.platform.InputConstants;
-import com.mojang.blaze3d.systems.RenderSystem;
+import com.mojang.blaze3d.vertex.BufferBuilder;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.wynntils.core.components.Models;
+import com.wynntils.core.text.StyledText;
 import com.wynntils.models.map.MapTexture;
+import com.wynntils.models.map.PoiLocation;
 import com.wynntils.models.map.pois.IconPoi;
 import com.wynntils.models.map.pois.LabelPoi;
 import com.wynntils.models.map.pois.Poi;
@@ -30,6 +32,7 @@ import com.wynntils.utils.type.BoundingBox;
 import java.util.ArrayList;
 import java.util.List;
 import net.minecraft.client.KeyMapping;
+import net.minecraft.client.Options;
 import net.minecraft.client.gui.components.Renderable;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.network.chat.Component;
@@ -46,7 +49,7 @@ public abstract class AbstractMapScreen extends WynntilsScreen {
 
     protected boolean holdingMapKey = false;
 
-    private float renderWidth;
+    protected float renderWidth;
     protected float renderHeight;
     protected float renderX;
     protected float renderY;
@@ -64,10 +67,6 @@ public abstract class AbstractMapScreen extends WynntilsScreen {
 
     protected float currentZoom = 1f;
 
-    private boolean dragging = false;
-    private double lastMouseX = 0;
-    private double lastMouseY = 0;
-
     protected Poi hovered = null;
 
     protected AbstractMapScreen() {
@@ -84,24 +83,13 @@ public abstract class AbstractMapScreen extends WynntilsScreen {
     protected void doInit() {
         // FIXME: Figure out a way to not need this.
         //        At the moment, this is needed for Minecraft not to forget we hold keys when we open the GUI...
-        KeyMapping.set(
-                McUtils.mc().options.keyUp.key,
-                KeyboardUtils.isKeyDown(McUtils.mc().options.keyUp.key.getValue()));
-        KeyMapping.set(
-                McUtils.mc().options.keyDown.key,
-                KeyboardUtils.isKeyDown(McUtils.mc().options.keyDown.key.getValue()));
-        KeyMapping.set(
-                McUtils.mc().options.keyLeft.key,
-                KeyboardUtils.isKeyDown(McUtils.mc().options.keyLeft.key.getValue()));
-        KeyMapping.set(
-                McUtils.mc().options.keyRight.key,
-                KeyboardUtils.isKeyDown(McUtils.mc().options.keyRight.key.getValue()));
-        KeyMapping.set(
-                McUtils.mc().options.keyJump.key,
-                KeyboardUtils.isKeyDown(McUtils.mc().options.keyJump.key.getValue()));
-        KeyMapping.set(
-                McUtils.mc().options.keyShift.key,
-                KeyboardUtils.isKeyDown(McUtils.mc().options.keyShift.key.getValue()));
+        Options options = McUtils.options();
+        KeyMapping.set(options.keyUp.key, KeyboardUtils.isKeyDown(options.keyUp.key.getValue()));
+        KeyMapping.set(options.keyDown.key, KeyboardUtils.isKeyDown(options.keyDown.key.getValue()));
+        KeyMapping.set(options.keyLeft.key, KeyboardUtils.isKeyDown(options.keyLeft.key.getValue()));
+        KeyMapping.set(options.keyRight.key, KeyboardUtils.isKeyDown(options.keyRight.key.getValue()));
+        KeyMapping.set(options.keyJump.key, KeyboardUtils.isKeyDown(options.keyJump.key.getValue()));
+        KeyMapping.set(options.keyShift.key, KeyboardUtils.isKeyDown(options.keyShift.key.getValue()));
 
         renderWidth = this.width - SCREEN_SIDE_OFFSET * 2f;
         renderHeight = this.height - SCREEN_SIDE_OFFSET * 2f;
@@ -132,6 +120,10 @@ public abstract class AbstractMapScreen extends WynntilsScreen {
                 renderHeight,
                 Texture.FULLSCREEN_MAP_BORDER.width(),
                 Texture.FULLSCREEN_MAP_BORDER.height());
+    }
+
+    protected void renderGradientBackground(PoseStack poseStack) {
+        super.renderBackground(poseStack);
     }
 
     protected void renderPois(
@@ -168,6 +160,10 @@ public abstract class AbstractMapScreen extends WynntilsScreen {
         // Filter and find hovered
         for (int i = pois.size() - 1; i >= 0; i--) {
             Poi poi = pois.get(i);
+            PoiLocation location = poi.getLocation();
+            // This is due to bad design of the compass dynamic waypoint provider,
+            // once that is fixed this can be removed
+            if (location == null) continue;
 
             if (poi instanceof IconPoi iconPoi) {
                 // Check if the poi is visible
@@ -187,8 +183,7 @@ public abstract class AbstractMapScreen extends WynntilsScreen {
             float poiWidth = poi.getWidth(currentZoom, poiScale);
             float poiHeight = poi.getHeight(currentZoom, poiScale);
 
-            BoundingBox filterBox = BoundingBox.centered(
-                    poi.getLocation().getX(), poi.getLocation().getZ(), poiWidth, poiHeight);
+            BoundingBox filterBox = BoundingBox.centered(location.getX(), location.getZ(), poiWidth, poiHeight);
             BoundingBox mouseBox = BoundingBox.centered(poiRenderX, poiRenderZ, poiWidth, poiHeight);
 
             if (filterBox.intersects(textureBoundingBox)) {
@@ -209,30 +204,9 @@ public abstract class AbstractMapScreen extends WynntilsScreen {
     }
 
     @Override
-    public boolean mouseClicked(double mouseX, double mouseY, int button) {
-        if (button == GLFW.GLFW_MOUSE_BUTTON_LEFT) {
-            dragging = true;
-        }
-
-        lastMouseX = mouseX;
-        lastMouseY = mouseY;
-
-        return true;
-    }
-
-    @Override
     public boolean mouseScrolled(double mouseX, double mouseY, double delta) {
         double newZoom = currentZoom + delta * MOUSE_SCROLL_ZOOM_FACTOR * currentZoom;
         setZoom((float) newZoom);
-
-        return true;
-    }
-
-    @Override
-    public boolean mouseReleased(double mouseX, double mouseY, int button) {
-        if (button == GLFW.GLFW_MOUSE_BUTTON_LEFT) {
-            dragging = false;
-        }
 
         return true;
     }
@@ -260,6 +234,14 @@ public abstract class AbstractMapScreen extends WynntilsScreen {
         return false;
     }
 
+    @Override
+    public boolean mouseDragged(double mouseX, double mouseY, int button, double dragX, double dragY) {
+        if (button == 0) {
+            updateMapCenter((float) (mapCenterX - dragX / currentZoom), (float) (mapCenterZ - dragY / currentZoom));
+        }
+        return super.mouseDragged(mouseX, mouseY, button, dragX, dragY);
+    }
+
     protected void renderCoordinates(PoseStack poseStack, int mouseX, int mouseY) {
         int gameX = (int) ((mouseX - centerX) / currentZoom + mapCenterX);
         int gameZ = (int) ((mouseY - centerZ) / currentZoom + mapCenterZ);
@@ -267,12 +249,12 @@ public abstract class AbstractMapScreen extends WynntilsScreen {
         FontRenderer.getInstance()
                 .renderText(
                         poseStack,
-                        gameX + ", " + gameZ,
+                        StyledText.fromString(gameX + ", " + gameZ),
                         this.centerX,
                         this.renderHeight - this.renderedBorderYOffset - 40,
                         CommonColors.WHITE,
-                        HorizontalAlignment.Center,
-                        VerticalAlignment.Top,
+                        HorizontalAlignment.CENTER,
+                        VerticalAlignment.TOP,
                         TextShadow.OUTLINE);
     }
 
@@ -302,7 +284,7 @@ public abstract class AbstractMapScreen extends WynntilsScreen {
         MapRenderer.renderCursor(poseStack, cursorX, cursorZ, pointerScale, pointerColor, pointerType, false);
     }
 
-    protected void renderMap(PoseStack poseStack, boolean renderUsingLinear) {
+    protected void renderMap(PoseStack poseStack) {
         RenderUtils.enableScissor(
                 (int) (renderX + renderedBorderXOffset), (int) (renderY + renderedBorderYOffset), (int) mapWidth, (int)
                         mapHeight);
@@ -321,6 +303,9 @@ public abstract class AbstractMapScreen extends WynntilsScreen {
                 BoundingBox.centered(mapCenterX, mapCenterZ, width / currentZoom, height / currentZoom);
 
         List<MapTexture> maps = Models.Map.getMapsForBoundingBox(textureBoundingBox);
+
+        MultiBufferSource.BufferSource bufferSource = MultiBufferSource.immediate(new BufferBuilder(256));
+
         for (MapTexture map : maps) {
             float textureX = map.getTextureXPosition(mapCenterX);
             float textureZ = map.getTextureZPosition(mapCenterZ);
@@ -328,26 +313,19 @@ public abstract class AbstractMapScreen extends WynntilsScreen {
             MapRenderer.renderMapQuad(
                     map,
                     poseStack,
+                    bufferSource,
                     centerX,
                     centerZ,
                     textureX,
                     textureZ,
                     mapWidth,
                     mapHeight,
-                    1f / currentZoom,
-                    renderUsingLinear);
+                    1f / currentZoom);
         }
 
-        RenderSystem.disableScissor();
-    }
+        bufferSource.endBatch();
 
-    protected void updateMapCenterIfDragging(int mouseX, int mouseY) {
-        if (dragging) {
-            updateMapCenter((float) (mapCenterX + (lastMouseX - mouseX) / currentZoom), (float)
-                    (mapCenterZ + (lastMouseY - mouseY) / currentZoom));
-        }
-        lastMouseX = mouseX;
-        lastMouseY = mouseY;
+        RenderUtils.disableScissor();
     }
 
     protected void centerMapAroundPlayer() {
@@ -355,7 +333,7 @@ public abstract class AbstractMapScreen extends WynntilsScreen {
                 (float) McUtils.player().getX(), (float) McUtils.player().getZ());
     }
 
-    private void setZoom(float zoomTargetDelta) {
+    protected void setZoom(float zoomTargetDelta) {
         this.currentZoom = MathUtils.clamp(zoomTargetDelta, MIN_ZOOM, MAX_ZOOM);
     }
 

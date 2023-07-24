@@ -38,7 +38,7 @@ public class ClassSelectionDeleteButton extends WynntilsButton {
     }
 
     @Override
-    public void renderButton(PoseStack poseStack, int mouseX, int mouseY, float partialTick) {
+    public void renderWidget(PoseStack poseStack, int mouseX, int mouseY, float partialTick) {
         RenderUtils.drawTexturedRect(
                 poseStack,
                 Texture.REMOVE_BUTTON.resource(),

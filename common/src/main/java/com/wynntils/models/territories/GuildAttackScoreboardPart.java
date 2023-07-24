@@ -7,29 +7,33 @@ package com.wynntils.models.territories;
 import com.wynntils.core.components.Models;
 import com.wynntils.handlers.scoreboard.ScoreboardPart;
 import com.wynntils.handlers.scoreboard.ScoreboardSegment;
-import com.wynntils.handlers.scoreboard.SegmentMatcher;
-import java.util.Set;
+import com.wynntils.handlers.scoreboard.type.SegmentMatcher;
 
-public class GuildAttackScoreboardPart implements ScoreboardPart {
-    static final SegmentMatcher GUILD_ATTACK_MATCHER = SegmentMatcher.fromPattern("Upcoming Attacks:");
+public class GuildAttackScoreboardPart extends ScoreboardPart {
+    private static final SegmentMatcher GUILD_ATTACK_MATCHER = SegmentMatcher.fromPattern("Upcoming Attacks:");
 
     @Override
-    public Set<SegmentMatcher> getSegmentMatchers() {
-        return Set.of(GUILD_ATTACK_MATCHER);
+    public SegmentMatcher getSegmentMatcher() {
+        return GUILD_ATTACK_MATCHER;
     }
 
     @Override
-    public void onSegmentChange(ScoreboardSegment newValue, SegmentMatcher segmentMatcher) {
+    public void onSegmentChange(ScoreboardSegment newValue) {
         Models.GuildAttackTimer.processChanges(newValue);
     }
 
     @Override
-    public void onSegmentRemove(ScoreboardSegment segment, SegmentMatcher segmentMatcher) {
+    public void onSegmentRemove(ScoreboardSegment segment) {
         Models.GuildAttackTimer.resetTimers();
     }
 
     @Override
     public void reset() {
         Models.GuildAttackTimer.resetTimers();
+    }
+
+    @Override
+    public String toString() {
+        return "GuildAttackScoreboardPart{}";
     }
 }

@@ -6,295 +6,176 @@ package com.wynntils.functions;
 
 import com.wynntils.core.components.Models;
 import com.wynntils.core.functions.Function;
+import com.wynntils.core.functions.arguments.FunctionArguments;
+import com.wynntils.models.profession.type.HarvestInfo;
 import com.wynntils.models.profession.type.ProfessionType;
+import com.wynntils.utils.StringUtils;
 import java.util.List;
+import java.util.Optional;
 
 public class ProfessionFunctions {
-    public static class WoodcuttingLevelFunction extends Function<Integer> {
+    public static class ProfessionLevelFunction extends Function<Integer> {
         @Override
-        public Integer getValue(String argument) {
-            return Models.Profession.getLevel(ProfessionType.WOODCUTTING);
+        public Integer getValue(FunctionArguments arguments) {
+            ProfessionType professionType = ProfessionType.fromString(
+                    arguments.getArgument("profession").getStringValue());
+            if (professionType == null) return -1;
+
+            return Models.Profession.getLevel(professionType);
+        }
+
+        @Override
+        public FunctionArguments.Builder getArgumentsBuilder() {
+            return new FunctionArguments.RequiredArgumentBuilder(
+                    List.of(new FunctionArguments.Argument<>("profession", String.class, null)));
         }
 
         @Override
         public List<String> getAliases() {
-            return List.of("woodcutting");
+            return List.of("prof_lvl");
         }
     }
 
-    public static class MiningLevelFunction extends Function<Integer> {
+    public static class ProfessionPercentageFunction extends Function<Double> {
         @Override
-        public Integer getValue(String argument) {
-            return Models.Profession.getLevel(ProfessionType.MINING);
+        public Double getValue(FunctionArguments arguments) {
+            ProfessionType professionType = ProfessionType.fromString(
+                    arguments.getArgument("profession").getStringValue());
+            if (professionType == null) return -1.0;
+
+            return Models.Profession.getProgress(professionType);
+        }
+
+        @Override
+        public FunctionArguments.Builder getArgumentsBuilder() {
+            return new FunctionArguments.RequiredArgumentBuilder(
+                    List.of(new FunctionArguments.Argument<>("profession", String.class, null)));
         }
 
         @Override
         public List<String> getAliases() {
-            return List.of("mining");
+            return List.of("prof_pct");
         }
     }
 
-    public static class FishingLevelFunction extends Function<Integer> {
+    public static class ProfessionXpPerMinuteRawFunction extends Function<Integer> {
         @Override
-        public Integer getValue(String argument) {
-            return Models.Profession.getLevel(ProfessionType.FISHING);
+        public Integer getValue(FunctionArguments arguments) {
+            ProfessionType professionType = ProfessionType.fromString(
+                    arguments.getArgument("profession").getStringValue());
+            if (professionType == null) return -1;
+
+            return (int) Models.Profession.getRawXpGainInLastMinute().get(professionType).stream()
+                    .mapToDouble(Float::doubleValue)
+                    .sum();
+        }
+
+        @Override
+        public FunctionArguments.Builder getArgumentsBuilder() {
+            return new FunctionArguments.RequiredArgumentBuilder(
+                    List.of(new FunctionArguments.Argument<>("profession", String.class, null)));
         }
 
         @Override
         public List<String> getAliases() {
-            return List.of("fishing");
+            return List.of("prof_xpm_raw");
         }
     }
 
-    public static class FarmingLevelFunction extends Function<Integer> {
+    public static class ProfessionXpPerMinuteFunction extends Function<String> {
         @Override
-        public Integer getValue(String argument) {
-            return Models.Profession.getLevel(ProfessionType.FARMING);
+        public String getValue(FunctionArguments arguments) {
+            ProfessionType professionType = ProfessionType.fromString(
+                    arguments.getArgument("profession").getStringValue());
+            if (professionType == null) return "Invalid profession";
+
+            return StringUtils.integerToShortString(
+                    (int) Models.Profession.getRawXpGainInLastMinute().get(professionType).stream()
+                            .mapToDouble(Float::doubleValue)
+                            .sum());
+        }
+
+        @Override
+        public FunctionArguments.Builder getArgumentsBuilder() {
+            return new FunctionArguments.RequiredArgumentBuilder(
+                    List.of(new FunctionArguments.Argument<>("profession", String.class, null)));
         }
 
         @Override
         public List<String> getAliases() {
-            return List.of("farming");
+            return List.of("prof_xpm");
         }
     }
 
-    public static class AlchemismLevelFunction extends Function<Integer> {
+    public static class LastHarvestResourceTypeFunction extends Function<String> {
         @Override
-        public Integer getValue(String argument) {
-            return Models.Profession.getLevel(ProfessionType.ALCHEMISM);
-        }
+        public String getValue(FunctionArguments arguments) {
+            Optional<HarvestInfo> lastHarvest = Models.Profession.getLastHarvest();
 
-        @Override
-        public List<String> getAliases() {
-            return List.of("alchemism");
-        }
-    }
+            if (lastHarvest.isEmpty()) return null;
 
-    public static class ArmouringLevelFunction extends Function<Integer> {
-        @Override
-        public Integer getValue(String argument) {
-            return Models.Profession.getLevel(ProfessionType.ARMOURING);
-        }
-
-        @Override
-        public List<String> getAliases() {
-            return List.of("armouring");
+            return lastHarvest.get().materialProfile().getResourceType().name();
         }
     }
 
-    public static class CookingLevelFunction extends Function<Integer> {
+    public static class LastHarvestMaterialTypeFunction extends Function<String> {
         @Override
-        public Integer getValue(String argument) {
-            return Models.Profession.getLevel(ProfessionType.COOKING);
-        }
+        public String getValue(FunctionArguments arguments) {
+            Optional<HarvestInfo> lastHarvest = Models.Profession.getLastHarvest();
 
-        @Override
-        public List<String> getAliases() {
-            return List.of("cooking");
-        }
-    }
+            if (lastHarvest.isEmpty()) return null;
 
-    public static class JewelingLevelFunction extends Function<Integer> {
-        @Override
-        public Integer getValue(String argument) {
-            return Models.Profession.getLevel(ProfessionType.JEWELING);
-        }
-
-        @Override
-        public List<String> getAliases() {
-            return List.of("jeweling");
+            return lastHarvest
+                    .get()
+                    .materialProfile()
+                    .getResourceType()
+                    .getMaterialType()
+                    .name();
         }
     }
 
-    public static class ScribingLevelFunction extends Function<Integer> {
+    public static class LastHarvestMaterialNameFunction extends Function<String> {
         @Override
-        public Integer getValue(String argument) {
-            return Models.Profession.getLevel(ProfessionType.SCRIBING);
-        }
+        public String getValue(FunctionArguments arguments) {
+            Optional<HarvestInfo> lastHarvest = Models.Profession.getLastHarvest();
 
-        @Override
-        public List<String> getAliases() {
-            return List.of("scribing");
-        }
-    }
+            if (lastHarvest.isEmpty()) return null;
 
-    public static class TailoringLevelFunction extends Function<Integer> {
-        @Override
-        public Integer getValue(String argument) {
-            return Models.Profession.getLevel(ProfessionType.TAILORING);
-        }
-
-        @Override
-        public List<String> getAliases() {
-            return List.of("tailoring");
+            return lastHarvest.get().materialProfile().getSourceMaterial().name();
         }
     }
 
-    public static class WeaponsmithingLevelFunction extends Function<Integer> {
+    public static class LastHarvestMaterialLevelFunction extends Function<Integer> {
         @Override
-        public Integer getValue(String argument) {
-            return Models.Profession.getLevel(ProfessionType.WEAPONSMITHING);
-        }
+        public Integer getValue(FunctionArguments arguments) {
+            Optional<HarvestInfo> lastHarvest = Models.Profession.getLastHarvest();
 
-        @Override
-        public List<String> getAliases() {
-            return List.of("weaponsmithing");
-        }
-    }
+            if (lastHarvest.isEmpty()) return null;
 
-    public static class WoodworkingLevelFunction extends Function<Integer> {
-        @Override
-        public Integer getValue(String argument) {
-            return Models.Profession.getLevel(ProfessionType.WOODWORKING);
-        }
-
-        @Override
-        public List<String> getAliases() {
-            return List.of("woodworking");
+            return lastHarvest.get().materialProfile().getSourceMaterial().level();
         }
     }
 
-    public static class WoodcuttingPercentageFunction extends Function<Float> {
+    public static class LastHarvestMaterialTierFunction extends Function<Integer> {
         @Override
-        public Float getValue(String argument) {
-            return Models.Profession.getProgress(ProfessionType.WOODCUTTING);
-        }
+        public Integer getValue(FunctionArguments arguments) {
+            Optional<HarvestInfo> lastHarvest = Models.Profession.getLastHarvest();
 
-        @Override
-        public List<String> getAliases() {
-            return List.of("woodcutting_pct");
-        }
-    }
+            if (lastHarvest.isEmpty()) return null;
 
-    public static class MiningPercentageFunction extends Function<Float> {
-        @Override
-        public Float getValue(String argument) {
-            return Models.Profession.getProgress(ProfessionType.MINING);
-        }
-
-        @Override
-        public List<String> getAliases() {
-            return List.of("mining_pct");
+            return lastHarvest.get().materialProfile().getTier();
         }
     }
 
-    public static class FishingPercentageFunction extends Function<Float> {
+    public static class MaterialDryStreak extends Function<Integer> {
         @Override
-        public Float getValue(String argument) {
-            return Models.Profession.getProgress(ProfessionType.FISHING);
+        public Integer getValue(FunctionArguments arguments) {
+            return Models.Profession.getProfessionDryStreak();
         }
 
         @Override
         public List<String> getAliases() {
-            return List.of("fishing_pct");
-        }
-    }
-
-    public static class FarmingPercentageFunction extends Function<Float> {
-        @Override
-        public Float getValue(String argument) {
-            return Models.Profession.getProgress(ProfessionType.FARMING);
-        }
-
-        @Override
-        public List<String> getAliases() {
-            return List.of("farming_pct");
-        }
-    }
-
-    public static class AlchemismPercentageFunction extends Function<Float> {
-        @Override
-        public Float getValue(String argument) {
-            return Models.Profession.getProgress(ProfessionType.ALCHEMISM);
-        }
-
-        @Override
-        public List<String> getAliases() {
-            return List.of("alchemism_pct");
-        }
-    }
-
-    public static class ArmouringPercentageFunction extends Function<Float> {
-        @Override
-        public Float getValue(String argument) {
-            return Models.Profession.getProgress(ProfessionType.ARMOURING);
-        }
-
-        @Override
-        public List<String> getAliases() {
-            return List.of("armouring_pct");
-        }
-    }
-
-    public static class CookingPercentageFunction extends Function<Float> {
-        @Override
-        public Float getValue(String argument) {
-            return Models.Profession.getProgress(ProfessionType.COOKING);
-        }
-
-        @Override
-        public List<String> getAliases() {
-            return List.of("cooking_pct");
-        }
-    }
-
-    public static class JewelingPercentageFunction extends Function<Float> {
-        @Override
-        public Float getValue(String argument) {
-            return Models.Profession.getProgress(ProfessionType.JEWELING);
-        }
-
-        @Override
-        public List<String> getAliases() {
-            return List.of("jeweling_pct");
-        }
-    }
-
-    public static class ScribingPercentageFunction extends Function<Float> {
-        @Override
-        public Float getValue(String argument) {
-            return Models.Profession.getProgress(ProfessionType.SCRIBING);
-        }
-
-        @Override
-        public List<String> getAliases() {
-            return List.of("scribing_pct");
-        }
-    }
-
-    public static class TailoringPercentageFunction extends Function<Float> {
-        @Override
-        public Float getValue(String argument) {
-            return Models.Profession.getProgress(ProfessionType.TAILORING);
-        }
-
-        @Override
-        public List<String> getAliases() {
-            return List.of("tailoring_pct");
-        }
-    }
-
-    public static class WeaponsmithingPercentageFunction extends Function<Float> {
-        @Override
-        public Float getValue(String argument) {
-            return Models.Profession.getProgress(ProfessionType.WEAPONSMITHING);
-        }
-
-        @Override
-        public List<String> getAliases() {
-            return List.of("weaponsmithing_pct");
-        }
-    }
-
-    public static class WoodworkingPercentageFunction extends Function<Float> {
-        @Override
-        public Float getValue(String argument) {
-            return Models.Profession.getProgress(ProfessionType.WOODWORKING);
-        }
-
-        @Override
-        public List<String> getAliases() {
-            return List.of("woodworking_pct");
+            return List.of("mat_dry");
         }
     }
 }

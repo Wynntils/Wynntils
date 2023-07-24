@@ -6,8 +6,8 @@ package com.wynntils.screens.base;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.wynntils.core.WynntilsMod;
+import com.wynntils.core.mod.type.CrashType;
 import com.wynntils.utils.mc.McUtils;
-import net.minecraft.ChatFormatting;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.network.chat.Component;
 
@@ -16,12 +16,17 @@ public abstract class WynntilsScreen extends Screen {
         super(component);
     }
 
-    private void failure(String method, Throwable e) {
-        WynntilsMod.error("Failure in " + this.getClass().getSimpleName() + "." + method + "()", e);
-        McUtils.sendMessageToClient(Component.literal("Wynntils: Failure in "
-                        + this.getClass().getSimpleName() + " during " + method + ". Screen forcefully closed.")
-                .withStyle(ChatFormatting.RED));
+    private void failure(String method, Throwable throwable) {
         McUtils.mc().setScreen(null);
+
+        WynntilsMod.reportCrash(
+                this.getClass().getName() + "." + method + "()",
+                this.getClass().getSimpleName() + " during " + method,
+                CrashType.SCREEN,
+                throwable,
+                true,
+                false);
+        McUtils.sendErrorToClient("Screen was forcefully closed.");
     }
 
     @Override
@@ -48,5 +53,20 @@ public abstract class WynntilsScreen extends Screen {
 
     public void doRender(PoseStack poseStack, int mouseX, int mouseY, float partialTick) {
         super.render(poseStack, mouseX, mouseY, partialTick);
+    }
+
+    @Override
+    public final boolean mouseClicked(double mouseX, double mouseY, int button) {
+        try {
+            return doMouseClicked(mouseX, mouseY, button);
+        } catch (Throwable t) {
+            failure("mouseClicked", t);
+        }
+
+        return false;
+    }
+
+    public boolean doMouseClicked(double mouseX, double mouseY, int button) {
+        return super.mouseClicked(mouseX, mouseY, button);
     }
 }

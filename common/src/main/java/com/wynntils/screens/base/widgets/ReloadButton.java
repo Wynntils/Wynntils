@@ -13,21 +13,22 @@ import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
 
 public class ReloadButton extends WynntilsButton implements TooltipProvider {
-    private static final List<Component> RELOAD_TOOLTIP = List.of(
-            Component.translatable("screens.wynntils.wynntilsDiscoveries.reload.name")
-                    .withStyle(ChatFormatting.WHITE),
-            Component.translatable("screens.wynntils.wynntilsDiscoveries.reload.description")
-                    .withStyle(ChatFormatting.GRAY));
-
+    private final List<Component> RELOAD_TOOLTIP;
     private final Runnable onClickRunnable;
 
-    public ReloadButton(int x, int y, int width, int height, Runnable onClickRunnable) {
+    public ReloadButton(int x, int y, int width, int height, String activityType, Runnable onClickRunnable) {
         super(x, y, width, height, Component.literal("Reload Button"));
         this.onClickRunnable = onClickRunnable;
+
+        RELOAD_TOOLTIP = List.of(
+                Component.translatable("screens.wynntils.wynntilsActivities.reload.name")
+                        .withStyle(ChatFormatting.WHITE),
+                Component.translatable("screens.wynntils.wynntilsActivities.reload.description", activityType)
+                        .withStyle(ChatFormatting.GRAY));
     }
 
     @Override
-    public void renderButton(PoseStack poseStack, int mouseX, int mouseY, float partialTick) {
+    public void renderWidget(PoseStack poseStack, int mouseX, int mouseY, float partialTick) {
         Texture reloadButton = Texture.RELOAD_BUTTON;
         if (this.isHovered) {
             RenderUtils.drawTexturedRect(

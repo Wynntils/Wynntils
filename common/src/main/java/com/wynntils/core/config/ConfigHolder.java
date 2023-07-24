@@ -5,78 +5,68 @@
 package com.wynntils.core.config;
 
 import com.google.common.base.CaseFormat;
-import com.google.gson.reflect.TypeToken;
 import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.components.Managers;
 import com.wynntils.core.features.Configurable;
 import com.wynntils.core.features.Translatable;
 import com.wynntils.core.features.overlays.Overlay;
-import java.lang.reflect.Field;
+import com.wynntils.utils.EnumUtils;
 import java.lang.reflect.Type;
 import java.util.Objects;
+import java.util.stream.Stream;
 import net.minecraft.client.resources.language.I18n;
 import org.apache.commons.lang3.ClassUtils;
 import org.apache.commons.lang3.builder.EqualsBuilder;
-import org.apache.commons.lang3.reflect.FieldUtils;
 
-public class ConfigHolder {
+public class ConfigHolder implements Comparable<ConfigHolder> {
     private final Configurable parent;
-    private final Field field;
-    private final Type fieldType;
-
-    private final Config metadata;
+    private final Config configObj;
+    private final String fieldName;
+    private final String i18nKey;
+    private final boolean visible;
+    private final Type valueType;
+    private final boolean allowNull;
 
     private final Object defaultValue;
 
     private boolean userEdited = false;
 
-    public ConfigHolder(Configurable parent, Field field, Config metadata, Type typeOverride) {
-        if (!(parent instanceof Translatable)) {
-            throw new RuntimeException("Parent must implement Translatable interface.");
-        }
-
+    public <T extends Configurable & Translatable> ConfigHolder(
+            T parent, Config configObj, String fieldName, String i18nKey, boolean visible, Type valueType) {
         this.parent = parent;
-        this.field = field;
-        this.metadata = metadata;
-
-        // This is done so the last subclass gets saved (so tryParseStringValue) works
-        // TODO: This is still not perfect. If the config field is an abstract class,
-        //       and is not instantiated by default, we cannot get it's actual class easily,
-        //       making tryParseStringValue fail.
-        //       Use TypeOverride to fix this
-        this.fieldType = calculateType(typeOverride, getValue(), field);
+        this.configObj = configObj;
+        this.fieldName = fieldName;
+        this.i18nKey = i18nKey;
+        this.visible = visible;
+        this.valueType = valueType;
 
         // save default value to enable easy resetting
         // We have to deep copy the value, so it is guaranteed that we detect changes
-        this.defaultValue = Managers.Config.deepCopy(getValue(), this.fieldType);
+        this.defaultValue = Managers.Json.deepCopy(getValue(), valueType);
+
+        this.allowNull = valueType instanceof Class<?> clazz && NullableConfig.class.isAssignableFrom(clazz);
+        if (configObj.get() == null && !allowNull) {
+            throw new RuntimeException(
+                    "Default config value is null in " + parent.getConfigJsonName() + "." + fieldName);
+        }
     }
 
-    private Type calculateType(Type typeOverride, Object value, Field field) {
-        if (typeOverride != null) {
-            return typeOverride;
+    public Stream<String> getValidLiterals() {
+        if (valueType instanceof Class clazz && clazz.isEnum()) {
+            return EnumUtils.getEnumConstants(clazz).stream().map(EnumUtils::toJsonFormat);
         }
-
-        if (value != null) {
-            return value.getClass();
+        if (valueType.equals(Boolean.class)) {
+            return Stream.of("true", "false");
         }
-
-        return field.getType();
+        return Stream.of();
     }
 
     public Type getType() {
-        return fieldType;
-    }
-
-    public Class<?> getClassOfConfigField() {
-        return TypeToken.get(this.getType()).getRawType();
-    }
-
-    public Field getField() {
-        return field;
+        return valueType;
     }
 
     public String getFieldName() {
-        return field.getName();
+        return fieldName;
     }
 
     public Configurable getParent() {
@@ -86,15 +76,10 @@ public class ConfigHolder {
     public String getJsonName() {
         if (parent instanceof Overlay) {
             // "featureName.overlayName.settingName"
-            return getDeclaringFeatureNameCamelCase() + "." + parent.getConfigJsonName() + "." + field.getName();
+            return getDeclaringFeatureNameCamelCase() + "." + parent.getConfigJsonName() + "." + getFieldName();
         }
         // "featureName.settingName"
-        return parent.getConfigJsonName() + "." + field.getName();
-    }
-
-    private String getNameCamelCase() {
-        String name = parent.getClass().getSimpleName();
-        return CaseFormat.UPPER_CAMEL.to(CaseFormat.LOWER_CAMEL, name);
+        return parent.getConfigJsonName() + "." + getFieldName();
     }
 
     private String getDeclaringFeatureNameCamelCase() {
@@ -102,47 +87,60 @@ public class ConfigHolder {
         return CaseFormat.UPPER_CAMEL.to(CaseFormat.LOWER_CAMEL, name);
     }
 
-    public Config getMetadata() {
-        return metadata;
+    private String getI18nKey() {
+        return i18nKey;
+    }
+
+    public boolean isVisible() {
+        return visible;
     }
 
     public String getDisplayName() {
-        if (!getMetadata().key().isEmpty()) {
-            return I18n.get(getMetadata().key() + ".name");
+        if (!getI18nKey().isEmpty()) {
+            return I18n.get(getI18nKey() + ".name");
         }
-        return ((Translatable) parent).getTranslation(field.getName() + ".name");
+        return ((Translatable) parent).getTranslation(getFieldName() + ".name");
     }
 
     public String getDescription() {
-        if (!getMetadata().key().isEmpty()) {
-            return I18n.get(getMetadata().key() + ".description");
+        if (!getI18nKey().isEmpty()) {
+            return I18n.get(getI18nKey() + ".description");
         }
-        return ((Translatable) parent).getTranslation(field.getName() + ".description");
+        return ((Translatable) parent).getTranslation(getFieldName() + ".description");
     }
 
     public Object getValue() {
-        try {
-            return FieldUtils.readField(field, parent, true);
-        } catch (IllegalAccessException e) {
-            WynntilsMod.error("Unable to get field " + getJsonName(), e);
-            return null;
+        return configObj.get();
+    }
+
+    public String getValueString() {
+        if (configObj.get() == null) return "(null)";
+
+        if (isEnum()) {
+            return EnumUtils.toNiceString((Enum) this.getValue());
         }
+
+        return configObj.get().toString();
+    }
+
+    public boolean isEnum() {
+        return valueType instanceof Class clazz && clazz.isEnum();
     }
 
     public Object getDefaultValue() {
         return defaultValue;
     }
 
-    public boolean setValue(Object value) {
-        try {
-            FieldUtils.writeField(field, parent, value, true);
-            parent.updateConfigOption(this);
-            userEdited = true;
-            return true;
-        } catch (IllegalAccessException e) {
-            WynntilsMod.error("Unable to set field " + getJsonName(), e);
-            return false;
+    public void setValue(Object value) {
+        if (value == null && !allowNull) {
+            WynntilsMod.warn("Trying to set null to config " + getJsonName() + ". Will be replaced by default.");
+            reset();
+            return;
         }
+
+        configObj.updateConfig(value);
+        parent.updateConfigOption(this);
+        userEdited = true;
     }
 
     public boolean valueChanged() {
@@ -168,22 +166,28 @@ public class ConfigHolder {
     public void reset() {
         // deep copy because writeField set's the field to be our default value instance when resetting, making default
         // value change with the field's actual value
-        setValue(Managers.Config.deepCopy(defaultValue, this.fieldType));
+        setValue(Managers.Json.deepCopy(defaultValue, this.valueType));
         // reset this flag so option is no longer saved to file
         userEdited = false;
     }
 
     public Object tryParseStringValue(String value) {
+        if (isEnum()) {
+            return EnumUtils.fromJsonFormat((Class<? extends Enum<?>>) getType(), value);
+        }
+
         try {
-            Class<?> wrapped = ClassUtils.primitiveToWrapper(((Class<?>) fieldType));
-            if (wrapped.isEnum()) {
-                return Enum.valueOf((Class<? extends Enum>) wrapped, value);
-            }
+            Class<?> wrapped = ClassUtils.primitiveToWrapper(((Class<?>) valueType));
             return wrapped.getConstructor(String.class).newInstance(value);
         } catch (Exception ignored) {
         }
 
         // couldn't parse value
         return null;
+    }
+
+    @Override
+    public int compareTo(ConfigHolder other) {
+        return getJsonName().compareTo(other.getJsonName());
     }
 }

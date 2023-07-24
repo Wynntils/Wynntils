@@ -1,25 +1,30 @@
+# Build directories by various build systems
 build/
-*.ipr
-run/
-*.iws
 out/
-*.iml
-.gradle/
 output/
 bin/
 libs/
+classes/
+.gradle/
+.architectury-transformer/
+
+# Data generated while running Minecraft
+run/
 .devauth/microsoft_accounts.json
 
+# IDEs
+.idea/
 .classpath
 .project
-.idea/
-classes/
 .metadata
 .vscode
 .settings
+*.ipr
+*.iws
+*.iml
 *.launch
 
-.architectury-transformer/
+# macOS junk
 .DS_Store
 
 # Files generated during github actions

@@ -8,8 +8,13 @@ import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.components.Handler;
 import com.wynntils.core.components.Managers;
 import com.wynntils.core.features.Feature;
+import com.wynntils.core.text.PartStyle;
+import com.wynntils.core.text.StyledText;
 import com.wynntils.handlers.chat.event.ChatMessageReceivedEvent;
 import com.wynntils.handlers.chat.event.NpcDialogEvent;
+import com.wynntils.handlers.chat.type.MessageType;
+import com.wynntils.handlers.chat.type.NpcDialogueType;
+import com.wynntils.handlers.chat.type.RecipientType;
 import com.wynntils.mc.event.ChatPacketReceivedEvent;
 import com.wynntils.mc.event.MobEffectEvent;
 import com.wynntils.utils.mc.ComponentUtils;
@@ -69,10 +74,13 @@ import net.minecraftforge.eventbus.api.SubscribeEvent;
  * importantly, a way to update already printed chat lines.
  */
 public final class ChatHandler extends Handler {
+    // Test suite: https://regexr.com/7esj7
     private static final Pattern NPC_CONFIRM_PATTERN =
-            Pattern.compile("^ +§[47]Press §r§[cf](SNEAK|SHIFT) §r§[47]to continue§r$");
+            Pattern.compile("^ *§[47]Press §[cf](SNEAK|SHIFT) §[47]to continue$");
+
+    // Test suite: https://regexr.com/7esjd
     private static final Pattern NPC_SELECT_PATTERN =
-            Pattern.compile("^ +§[47cf](Select|CLICK) §r§[47cf]an option (§r§[47])?to continue§r$");
+            Pattern.compile("^ *§[47cf](Select|CLICK) §[47cf]an option (§[47])?to continue$");
 
     private static final Pattern EMPTY_LINE_PATTERN = Pattern.compile("^\\s*(§r|À+)?\\s*$");
     private static final long SLOWDOWN_PACKET_DIFF_MS = 500;
@@ -97,11 +105,12 @@ public final class ChatHandler extends Handler {
         if (e instanceof ChatPacketReceivedEvent.GameInfo) return;
 
         Component message = e.getMessage();
-        String codedMessage = ComponentUtils.getCoded(message);
+        StyledText styledText = StyledText.fromComponent(message);
+        String plainMessage = styledText.getString(PartStyle.StyleType.NONE);
 
         // Sometimes there is just a trailing newline; that does not
         // make it a multiline message
-        if (codedMessage.contains("\n") && codedMessage.indexOf('\n') != (codedMessage.length() - 1)) {
+        if (styledText.contains("\n") && plainMessage.indexOf('\n') != plainMessage.length() - 1) {
             // This is a "chat screen"
             if (shouldSeparateNPC()) {
                 handleIncomingChatScreen(message);
@@ -111,7 +120,7 @@ public final class ChatHandler extends Handler {
             // nothing about it.
         } else {
             // No, it's a normal one line chat
-            Component updatedMessage = postChatLine(message, codedMessage, MessageType.FOREGROUND);
+            Component updatedMessage = postChatLine(message, styledText, MessageType.FOREGROUND);
 
             if (updatedMessage == null) {
                 e.setCanceled(true);
@@ -189,9 +198,9 @@ public final class ChatHandler extends Handler {
         LinkedList<Component> newChatLines = new LinkedList<>();
         LinkedList<Component> dialogue = new LinkedList<>();
 
-        String firstLineCoded = ComponentUtils.getCoded(newLines.getFirst());
-        boolean isNpcConfirm = NPC_CONFIRM_PATTERN.matcher(firstLineCoded).find();
-        boolean isNpcSelect = NPC_SELECT_PATTERN.matcher(firstLineCoded).find();
+        StyledText firstLineCoded = StyledText.fromComponent(newLines.getFirst());
+        boolean isNpcConfirm = firstLineCoded.find(NPC_CONFIRM_PATTERN);
+        boolean isNpcSelect = firstLineCoded.find(NPC_SELECT_PATTERN);
 
         if (isNpcConfirm || isNpcSelect) {
             // This is an NPC dialogue screen.
@@ -210,9 +219,9 @@ public final class ChatHandler extends Handler {
 
             // Separate the dialog part from any potential new "real" chat lines
             for (Component line : newLines) {
-                String codedLine = ComponentUtils.getCoded(line);
+                StyledText codedLine = StyledText.fromComponent(line);
                 if (!dialogDone) {
-                    if (EMPTY_LINE_PATTERN.matcher(codedLine).find()) {
+                    if (codedLine.find(EMPTY_LINE_PATTERN)) {
                         if (!optionsFound) {
                             // First part of the dialogue found
                             optionsFound = true;
@@ -226,7 +235,7 @@ public final class ChatHandler extends Handler {
                     }
                 } else {
                     // If there is anything after the dialogue, it is new chat lines
-                    if (!EMPTY_LINE_PATTERN.matcher(codedLine).find()) {
+                    if (!codedLine.find(EMPTY_LINE_PATTERN)) {
                         newChatLines.push(line);
                     }
                 }
@@ -235,9 +244,7 @@ public final class ChatHandler extends Handler {
             // After a NPC dialog screen, Wynncraft sends a "clear screen" with line of ÀÀÀ...
             // We just ignore that part. Also, remove empty lines or lines with just the §r code
             while (!newLines.isEmpty()
-                    && EMPTY_LINE_PATTERN
-                            .matcher(ComponentUtils.getCoded(newLines.getFirst()))
-                            .find()) {
+                    && StyledText.fromComponent(newLines.getFirst()).find(EMPTY_LINE_PATTERN)) {
                 newLines.removeFirst();
             }
 
@@ -285,17 +292,17 @@ public final class ChatHandler extends Handler {
 
     private void handleFakeChatLine(Component message) {
         // This is a normal, single line chat, sent in the background
+        StyledText styledText = StyledText.fromComponent(message);
 
         // But it can weirdly enough actually also be a foreground NPC chat message...
-        if (getRecipientType(message, MessageType.FOREGROUND) == RecipientType.NPC) {
+        if (getRecipientType(styledText, MessageType.FOREGROUND) == RecipientType.NPC) {
             // In this case, do *not* save this as last chat, since it will soon disappear
             // from history!
             postNpcDialogue(List.of(message), NpcDialogueType.CONFIRMATIONLESS, false);
             return;
         }
 
-        String coded = ComponentUtils.getCoded(message);
-        Component updatedMessage = postChatLine(message, coded, MessageType.BACKGROUND);
+        Component updatedMessage = postChatLine(message, styledText, MessageType.BACKGROUND);
         // If the message is canceled, we do not need to cancel any packets,
         // just don't send out the chat message
         if (updatedMessage == null) return;
@@ -308,16 +315,17 @@ public final class ChatHandler extends Handler {
      * Return a "massaged" version of the message, or null if we should cancel the
      * message entirely.
      */
-    private Component postChatLine(Component message, String codedMessage, MessageType messageType) {
-
-        String plainText = message.getString();
+    private Component postChatLine(Component message, StyledText styledText, MessageType messageType) {
+        String plainText = styledText.getStringWithoutFormatting();
         if (!plainText.isBlank()) {
             // We store the unformatted string version to be able to compare between
             // foreground and background versions
             lastRealChat = plainText;
         }
 
-        RecipientType recipientType = getRecipientType(message, messageType);
+        // Normally § codes are stripped from the log; need this to be able to debug chat formatting
+        WynntilsMod.info("[CHAT] " + styledText.getString().replace("§", "&"));
+        RecipientType recipientType = getRecipientType(styledText, messageType);
 
         if (recipientType == RecipientType.NPC) {
             if (shouldSeparateNPC()) {
@@ -330,8 +338,7 @@ public final class ChatHandler extends Handler {
             }
         }
 
-        ChatMessageReceivedEvent event =
-                new ChatMessageReceivedEvent(message, codedMessage, messageType, recipientType);
+        ChatMessageReceivedEvent event = new ChatMessageReceivedEvent(message, styledText, messageType, recipientType);
         WynntilsMod.postEvent(event);
         if (event.isCanceled()) return null;
         return event.getMessage();
@@ -345,16 +352,19 @@ public final class ChatHandler extends Handler {
             lastScreenNpcDialog = dialogue;
         }
 
+        if (type == NpcDialogueType.NONE) {
+            // Ignore any delayed dialogues, since they are now obsolete
+            delayedDialogue = null;
+        }
+
         NpcDialogEvent event = new NpcDialogEvent(dialogue, type, isProtected);
         WynntilsMod.postEvent(event);
     }
 
-    private RecipientType getRecipientType(Component message, MessageType messageType) {
-        String msg = ComponentUtils.getCoded(message);
-
+    private RecipientType getRecipientType(StyledText codedMessage, MessageType messageType) {
         // Check if message match a recipient category
         for (RecipientType recipientType : RecipientType.values()) {
-            if (recipientType.matchPattern(msg, messageType)) {
+            if (recipientType.matchPattern(codedMessage, messageType)) {
                 return recipientType;
             }
         }

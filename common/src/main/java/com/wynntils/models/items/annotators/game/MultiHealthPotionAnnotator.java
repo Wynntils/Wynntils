@@ -4,6 +4,7 @@
  */
 package com.wynntils.models.items.annotators.game;
 
+import com.wynntils.core.text.StyledText;
 import com.wynntils.handlers.item.ItemAnnotation;
 import com.wynntils.handlers.item.ItemAnnotator;
 import com.wynntils.models.items.items.game.MultiHealthPotionItem;
@@ -17,8 +18,8 @@ public final class MultiHealthPotionAnnotator implements ItemAnnotator {
             Pattern.compile("^§c\\[\\+(\\d+) ❤\\] §dPotions of Healing §4\\[(\\d+)/(\\d+)\\]$");
 
     @Override
-    public ItemAnnotation getAnnotation(ItemStack itemStack, String name) {
-        Matcher matcher = MULTI_HEALTH_POTION_PATTERN.matcher(name);
+    public ItemAnnotation getAnnotation(ItemStack itemStack, StyledText name) {
+        Matcher matcher = name.getMatcher(MULTI_HEALTH_POTION_PATTERN);
         if (!matcher.matches()) return null;
 
         int hearts = Integer.parseInt(matcher.group(1));

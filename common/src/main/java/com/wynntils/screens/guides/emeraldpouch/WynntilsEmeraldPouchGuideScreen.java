@@ -5,13 +5,13 @@
 package com.wynntils.screens.guides.emeraldpouch;
 
 import com.mojang.blaze3d.vertex.PoseStack;
+import com.wynntils.core.text.StyledText;
 import com.wynntils.screens.base.WynntilsListScreen;
 import com.wynntils.screens.base.widgets.BackButton;
 import com.wynntils.screens.base.widgets.PageSelectorButton;
 import com.wynntils.screens.guides.WynntilsGuidesListScreen;
 import com.wynntils.utils.StringUtils;
 import com.wynntils.utils.colors.CommonColors;
-import com.wynntils.utils.mc.ComponentUtils;
 import com.wynntils.utils.render.FontRenderer;
 import com.wynntils.utils.render.RenderUtils;
 import com.wynntils.utils.render.Texture;
@@ -90,7 +90,7 @@ public final class WynntilsEmeraldPouchGuideScreen
 
         renderItemsHeader(poseStack);
 
-        renderButtons(poseStack, mouseX, mouseY, partialTick);
+        renderWidgets(poseStack, mouseX, mouseY, partialTick);
 
         renderPageInfo(poseStack, currentPage + 1, maxPage + 1);
 
@@ -112,32 +112,35 @@ public final class WynntilsEmeraldPouchGuideScreen
         FontRenderer.getInstance()
                 .renderText(
                         poseStack,
-                        titleString,
+                        StyledText.fromString(titleString),
                         0,
                         0,
                         CommonColors.YELLOW,
-                        HorizontalAlignment.Left,
-                        VerticalAlignment.Top,
+                        HorizontalAlignment.LEFT,
+                        VerticalAlignment.TOP,
                         TextShadow.NORMAL);
         poseStack.popPose();
     }
 
-    private void renderTooltip(PoseStack poseStack, int mouseX, int mouseY) {
+    @Override
+    protected void renderTooltip(PoseStack poseStack, int mouseX, int mouseY) {
         if (hovered instanceof GuideEmeraldPouchItemStackButton guideEmeraldPouchItemStack) {
             this.renderTooltip(poseStack, guideEmeraldPouchItemStack.getItemStack(), mouseX, mouseY);
         }
+
+        super.renderTooltip(poseStack, mouseX, mouseY);
     }
 
     private void renderItemsHeader(PoseStack poseStack) {
         FontRenderer.getInstance()
                 .renderText(
                         poseStack,
-                        I18n.get("screens.wynntils.wynntilsGuides.itemGuide.available"),
+                        StyledText.fromString(I18n.get("screens.wynntils.wynntilsGuides.itemGuide.available")),
                         Texture.QUEST_BOOK_BACKGROUND.width() * 0.75f,
                         30,
                         CommonColors.BLACK,
-                        HorizontalAlignment.Center,
-                        VerticalAlignment.Top,
+                        HorizontalAlignment.CENTER,
+                        VerticalAlignment.TOP,
                         TextShadow.NONE);
     }
 
@@ -153,8 +156,8 @@ public final class WynntilsEmeraldPouchGuideScreen
     @Override
     protected void reloadElementsList(String searchTerm) {
         elements.addAll(parsedItemCache.stream()
-                .filter(itemStack ->
-                        StringUtils.partialMatch(ComponentUtils.getUnformatted(itemStack.getHoverName()), searchTerm))
+                .filter(itemStack -> StringUtils.partialMatch(
+                        StyledText.fromComponent(itemStack.getHoverName()).getStringWithoutFormatting(), searchTerm))
                 .toList());
     }
 

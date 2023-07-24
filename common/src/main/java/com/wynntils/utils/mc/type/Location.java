@@ -5,19 +5,29 @@
 package com.wynntils.utils.mc.type;
 
 import com.wynntils.models.map.PoiLocation;
+import com.wynntils.utils.MathUtils;
+import com.wynntils.utils.mc.PosUtils;
+import java.util.Comparator;
+import java.util.Objects;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Position;
-import net.minecraft.world.entity.Entity;
 import net.minecraft.world.phys.Vec3;
-import org.joml.Vector3d;
 
-public class Location extends Vector3d implements Position {
-    public Location(double x, double y, double z) {
-        super(x, y, z);
-    }
+public class Location implements Comparable<Location> {
+    // Compare first x, then z, and finally y
+    private static final Comparator<Location> LOCATION_COMPARATOR = Comparator.comparing(
+                    Location::x, Integer::compareTo)
+            .thenComparing(Location::z, Integer::compareTo)
+            .thenComparing(Location::y, Integer::compareTo);
 
-    public Location(Entity entity) {
-        this(entity.getX(), entity.getY(), entity.getZ());
+    public final int x;
+    public final int y;
+    public final int z;
+
+    public Location(int x, int y, int z) {
+        this.x = x;
+        this.y = y;
+        this.z = z;
     }
 
     public Location(BlockPos pos) {
@@ -28,72 +38,21 @@ public class Location extends Vector3d implements Position {
         this(location.getX(), location.getY().orElse(0), location.getZ());
     }
 
-    public Location(Position location) {
-        this(location.x(), location.y(), location.z());
+    public static Location containing(Position position) {
+        return new Location(
+                MathUtils.floor(position.x()), MathUtils.floor(position.y()), MathUtils.floor(position.z()));
     }
 
-    public Location add(double x, double y, double z) {
-        this.x += x;
-        this.y += y;
-        this.z += z;
-
-        return this;
+    public static Location containing(double x, double y, double z) {
+        return new Location(MathUtils.floor(x), MathUtils.floor(y), MathUtils.floor(z));
     }
 
-    // An egregious circumvention of the type system; Should have two signatures:
-    // public void subtract(Vector3d) and public Vector3d subtract(Point3d), but that would
-    // be confusing for method chaining, so just subtract *anything*, and this location might become
-    // a vector if we subtracted another location.
-    public Location subtract(Vector3d loc) {
-        x -= loc.x;
-        y -= loc.y;
-        z -= loc.z;
-
-        return this;
-    }
-
-    public Location subtract(double x, double y, double z) {
-        this.x -= x;
-        this.y -= y;
-        this.z -= z;
-
-        return this;
-    }
-
-    public Location subtract(double amount) {
-        this.x -= amount;
-        this.y -= amount;
-        this.z -= amount;
-
-        return this;
-    }
-
-    public Location multiply(Vector3d loc) {
-        x *= loc.x;
-        y *= loc.y;
-        z *= loc.z;
-
-        return this;
-    }
-
-    public Location multiply(double x, double y, double z) {
-        this.x *= x;
-        this.y *= y;
-        this.z *= z;
-
-        return this;
-    }
-
-    public Location multiply(double amount) {
-        this.x *= amount;
-        this.y *= amount;
-        this.z *= amount;
-
-        return this;
+    public Location offset(int dx, int dy, int dz) {
+        return new Location(this.x() + dx, this.y() + dy, this.z() + dz);
     }
 
     public BlockPos toBlockPos() {
-        return new BlockPos(x, y, z);
+        return PosUtils.newBlockPos(x, y, z);
     }
 
     public Vec3 toVec3() {
@@ -101,42 +60,37 @@ public class Location extends Vector3d implements Position {
     }
 
     @Override
-    public Location clone() throws CloneNotSupportedException {
-        super.clone();
-        return new Location(x, y, z);
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        Location location = (Location) o;
+        return x == location.x && y == location.y && z == location.z;
     }
 
     @Override
-    public boolean equals(Object obj) {
-        if (this == obj) return true;
-
-        if (obj instanceof Vector3d) {
-            return super.equals(obj);
-        }
-        return false;
+    public int hashCode() {
+        return Objects.hash(x, y, z);
     }
 
-    public boolean equals(Vector3d other) {
-        if (other == null) return false;
-        return x == other.x && y == other.y && z == other.z;
-    }
-
+    @Override
     public String toString() {
-        return "[" + (int) Math.round(this.x) + ", " + (int) Math.round(this.y) + ", " + (int) Math.round(this.z) + "]";
+        return "[" + this.x + ", " + this.y + ", " + this.z + "]";
     }
 
-    @Override
-    public double x() {
+    public int x() {
         return x;
     }
 
-    @Override
-    public double y() {
+    public int y() {
         return y;
     }
 
-    @Override
-    public double z() {
+    public int z() {
         return z;
+    }
+
+    @Override
+    public int compareTo(Location that) {
+        return LOCATION_COMPARATOR.compare(this, that);
     }
 }

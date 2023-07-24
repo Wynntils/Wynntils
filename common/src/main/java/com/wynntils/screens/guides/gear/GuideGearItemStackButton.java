@@ -8,9 +8,9 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import com.wynntils.core.components.Managers;
 import com.wynntils.core.components.Models;
 import com.wynntils.core.net.UrlId;
+import com.wynntils.core.text.StyledText;
 import com.wynntils.screens.base.widgets.WynntilsButton;
 import com.wynntils.utils.colors.CustomColor;
-import com.wynntils.utils.mc.ComponentUtils;
 import com.wynntils.utils.mc.KeyboardUtils;
 import com.wynntils.utils.render.RenderUtils;
 import com.wynntils.utils.render.Texture;
@@ -20,38 +20,34 @@ import org.lwjgl.glfw.GLFW;
 
 public class GuideGearItemStackButton extends WynntilsButton {
     private final GuideGearItemStack itemStack;
-    private final WynntilsItemGuideScreen screen;
 
     public GuideGearItemStackButton(
             int x, int y, int width, int height, GuideGearItemStack itemStack, WynntilsItemGuideScreen screen) {
         super(x, y, width, height, Component.literal("Guide GearItemStack Button"));
         this.itemStack = itemStack;
-        this.screen = screen;
         // Things like our current class, or other requirement fulfillments can have changed,
         // so we need to redo this even if it's already done
         itemStack.buildTooltip();
     }
 
     @Override
-    public void renderButton(PoseStack poseStack, int mouseX, int mouseY, float partialTick) {
+    public void renderWidget(PoseStack poseStack, int mouseX, int mouseY, float partialTick) {
         CustomColor color =
                 CustomColor.fromChatFormatting(itemStack.getGearInfo().tier().getChatFormatting());
 
-        float actualX = screen.getTranslationX() + getX();
-        float actualY = screen.getTranslationY() + getY();
-
         RenderUtils.drawTexturedRectWithColor(
+                poseStack,
                 Texture.HIGHLIGHT.resource(),
                 color.withAlpha(1f),
-                actualX - 1,
-                actualY - 1,
+                getX() - 1,
+                getY() - 1,
                 0,
                 18,
                 18,
                 Texture.HIGHLIGHT.width(),
                 Texture.HIGHLIGHT.height());
 
-        RenderUtils.renderGuiItem(itemStack, (int) (actualX), (int) (actualY), 1f);
+        RenderUtils.renderItem(poseStack, itemStack, getX(), getY());
 
         if (Models.Favorites.isFavorite(itemStack)) {
             RenderUtils.drawScalingTexturedRect(
@@ -73,7 +69,8 @@ public class GuideGearItemStackButton extends WynntilsButton {
             return false;
         }
 
-        String unformattedName = ComponentUtils.getUnformatted(itemStack.getHoverName());
+        String unformattedName =
+                StyledText.fromComponent(itemStack.getHoverName()).getStringWithoutFormatting();
         if (button == GLFW.GLFW_MOUSE_BUTTON_RIGHT) {
             Managers.Net.openLink(UrlId.LINK_WYNNDATA_ITEM_LOOKUP, Map.of("itemname", unformattedName));
             return true;

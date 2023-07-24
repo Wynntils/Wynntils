@@ -6,6 +6,7 @@ package com.wynntils.models.items.annotators.game;
 
 import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.components.Models;
+import com.wynntils.core.text.StyledText;
 import com.wynntils.handlers.item.ItemAnnotation;
 import com.wynntils.handlers.item.ItemAnnotator;
 import com.wynntils.models.ingredients.type.IngredientInfo;
@@ -15,12 +16,13 @@ import java.util.regex.Pattern;
 import net.minecraft.world.item.ItemStack;
 
 public final class IngredientAnnotator implements ItemAnnotator {
+    // Test suite: https://regexr.com/7co3b
     private static final Pattern INGREDIENT_PATTERN =
-            Pattern.compile("^§7(.*)§[3567] \\[§([8bde])✫(§8)?✫(§8)?✫§[3567]\\]$");
+            Pattern.compile("^§7(.+?)(?:§[3567])? \\[§([8bde])✫(§8)?✫(§8)?✫§[3567]\\]$");
 
     @Override
-    public ItemAnnotation getAnnotation(ItemStack itemStack, String name) {
-        Matcher matcher = INGREDIENT_PATTERN.matcher(name);
+    public ItemAnnotation getAnnotation(ItemStack itemStack, StyledText name) {
+        Matcher matcher = name.getMatcher(INGREDIENT_PATTERN);
         if (!matcher.matches()) return null;
 
         String ingredientName = matcher.group(1);

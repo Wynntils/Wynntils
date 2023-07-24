@@ -8,12 +8,13 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.components.Models;
+import com.wynntils.core.text.StyledText;
 import com.wynntils.models.elements.type.Powder;
 import com.wynntils.models.elements.type.Skill;
 import com.wynntils.models.gear.type.GearInfo;
 import com.wynntils.models.gear.type.GearTier;
-import com.wynntils.models.gear.type.GearType;
 import com.wynntils.models.stats.StatCalculator;
+import com.wynntils.models.stats.type.SkillStatType;
 import com.wynntils.models.stats.type.StatActualValue;
 import com.wynntils.models.stats.type.StatPossibleValues;
 import com.wynntils.models.stats.type.StatType;
@@ -21,7 +22,6 @@ import com.wynntils.models.wynnitem.type.ItemEffect;
 import com.wynntils.utils.mc.ComponentUtils;
 import com.wynntils.utils.mc.LoreUtils;
 import com.wynntils.utils.type.RangedValue;
-import com.wynntils.utils.wynn.WynnUtils;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
@@ -33,19 +33,21 @@ import net.minecraft.world.item.ItemStack;
 public final class WynnItemParser {
     // Test suite: https://regexr.com/776qt
     public static final Pattern IDENTIFICATION_STAT_PATTERN = Pattern.compile(
-            "^§[ac]([-+]\\d+)(?:§r§[24] to §r§[ac](-?\\d+))?(%| tier|/[35]s)?(?:§r§8/(\\d+)(?:%| tier|/[35]s)?)?(?:§r§2(\\*{1,3}))? ?§r§7 ?(.*)$");
+            "^§[ac]([-+]\\d+)(?:§[24] to §[ac](-?\\d+))?(%| tier|/[35]s)?(?:§8/(\\d+)(?:%| tier|/[35]s)?)?(?:§2(\\*{1,3}))? ?§7 ?(.*)$");
 
     // Test suite: https://regexr.com/782rk
     private static final Pattern TIER_AND_REROLL_PATTERN = Pattern.compile(
-            "^(§fNormal|§eUnique|§dRare|§bLegendary|§cFabled|§5Mythic|§aSet|§3Crafted) [A-Za-z\\d _]+(?:§r§8)?(?: \\[(\\d+)(?:\\/(\\d+) Durability)?\\])?$");
+            "^(§fNormal|§eUnique|§dRare|§bLegendary|§cFabled|§5Mythic|§aSet|§3Crafted) ([A-Za-z\\d _]+)(?:§8)?(?: \\[(\\d+)(?:\\/(\\d+) Durability)?\\])?$");
 
     // Test suite: https://regexr.com/778gk
     private static final Pattern POWDER_PATTERN =
-            Pattern.compile("^§7\\[(\\d+)/(\\d+)\\] Powder Slots(?: \\[§r§(.*)§r§7\\])?$");
+            Pattern.compile("^§7\\[(\\d+)/(\\d+)\\] Powder Slots(?: \\[§(.*)§7\\])?$");
 
     // Test suite: https://regexr.com/79atu
-    private static final Pattern EFFECT_LINE_PATTERN =
-            Pattern.compile("^§(.)- §r§7(.*): §r§f([+-]?\\d+)(?:§.§.)? ?(.*)$");
+    private static final Pattern EFFECT_LINE_PATTERN = Pattern.compile("^§(.)- §7(.*): §f([+-]?\\d+)(?:§.§.)? ?(.*)$");
+
+    // Test suite: https://regexr.com/798o0
+    private static final Pattern MIN_LEVEL_PATTERN = Pattern.compile("^§..§7 Combat Lv. Min: (\\d+)$");
 
     private static final Pattern EFFECT_HEADER_PATTERN = Pattern.compile("^§(.)Effect:$");
 
@@ -57,10 +59,11 @@ public final class WynnItemParser {
         List<StatActualValue> identifications = new ArrayList<>();
         List<ItemEffect> effects = new ArrayList<>();
         List<Powder> powders = new ArrayList<>();
+        int level = 0;
         int tierCount = 0;
         int durabilityMax = 0;
         GearTier tier = null;
-        GearType gearType = null;
+        String itemType = "";
         boolean setBonusStats = false;
         boolean parsingEffects = false;
         String effectsColorCode = "";
@@ -70,12 +73,11 @@ public final class WynnItemParser {
         lore.remove(0); // remove item name
 
         for (Component loreLine : lore) {
-            String unformattedLoreLine = WynnUtils.normalizeBadString(loreLine.getString());
-            String coded = ComponentUtils.getCoded(loreLine);
-            String normalizedCoded = WynnUtils.normalizeBadString(coded);
+            StyledText coded = StyledText.fromComponent(loreLine);
+            StyledText normalizedCoded = coded.getNormalized();
 
             // Look for powder
-            Matcher powderMatcher = POWDER_PATTERN.matcher(normalizedCoded);
+            Matcher powderMatcher = normalizedCoded.getMatcher(POWDER_PATTERN);
             if (powderMatcher.matches()) {
                 int usedSlots = Integer.parseInt(powderMatcher.group(1));
                 String codedPowders = powderMatcher.group(3);
@@ -99,23 +101,31 @@ public final class WynnItemParser {
             }
 
             // Look for tier and rerolls
-            Matcher tierMatcher = TIER_AND_REROLL_PATTERN.matcher(normalizedCoded);
+            Matcher tierMatcher = normalizedCoded.getMatcher(TIER_AND_REROLL_PATTERN);
             if (tierMatcher.matches()) {
                 String tierString = tierMatcher.group(1);
-                tier = GearTier.fromFormattedString(tierString);
+                tier = GearTier.fromStyledText(StyledText.fromString(tierString));
+                itemType = tierMatcher.group(2);
 
                 // This is either the rerolls (for re-identified gear), or the
                 // current durability (for crafted gear)
-                String tierCountString = tierMatcher.group(2);
+                String tierCountString = tierMatcher.group(3);
                 tierCount = tierCountString != null ? Integer.parseInt(tierCountString) : 0;
 
                 // If we have a crafted gear, we also have a durability max
-                String durabilityMaxString = tierMatcher.group(3);
+                String durabilityMaxString = tierMatcher.group(4);
                 durabilityMax = durabilityMaxString != null ? Integer.parseInt(durabilityMaxString) : 0;
                 continue;
             }
 
-            Matcher setBonusMatcher = SET_BONUS_PATTEN.matcher(normalizedCoded);
+            // Look for level requirements
+            Matcher levelMatcher = normalizedCoded.getMatcher(MIN_LEVEL_PATTERN);
+            if (levelMatcher.matches()) {
+                level = Integer.parseInt(levelMatcher.group(1));
+                continue;
+            }
+
+            Matcher setBonusMatcher = normalizedCoded.getMatcher(SET_BONUS_PATTEN);
             if (setBonusMatcher.matches()) {
                 // Any stat lines that follow from now on belongs to the Set Bonus
                 // Maybe these could be collected separately, but for now, ignore them
@@ -123,14 +133,14 @@ public final class WynnItemParser {
             }
 
             // Look for effects (only on consumables)
-            Matcher effectHeaderMatcher = EFFECT_HEADER_PATTERN.matcher(normalizedCoded);
+            Matcher effectHeaderMatcher = normalizedCoded.getMatcher(EFFECT_HEADER_PATTERN);
             if (effectHeaderMatcher.matches()) {
                 effectsColorCode = effectHeaderMatcher.group(1);
                 parsingEffects = true;
                 continue;
             }
             if (parsingEffects) {
-                Matcher effectMatcher = EFFECT_LINE_PATTERN.matcher(normalizedCoded);
+                Matcher effectMatcher = normalizedCoded.getMatcher(EFFECT_LINE_PATTERN);
                 if (effectMatcher.matches()) {
                     String colorCode = effectMatcher.group(1);
                     String type = effectMatcher.group(2);
@@ -154,7 +164,7 @@ public final class WynnItemParser {
             }
 
             // Look for identifications
-            Matcher statMatcher = IDENTIFICATION_STAT_PATTERN.matcher(normalizedCoded);
+            Matcher statMatcher = normalizedCoded.getMatcher(IDENTIFICATION_STAT_PATTERN);
             if (statMatcher.matches() && !setBonusStats) {
                 int value = Integer.parseInt(statMatcher.group(1));
                 // group 2 is only present for unidentified gears, as the to-part of the range
@@ -186,7 +196,7 @@ public final class WynnItemParser {
         }
 
         return new WynnItemParseResult(
-                tier, gearType, identifications, effects, powders, tierCount, tierCount, durabilityMax);
+                tier, itemType, level, identifications, effects, powders, tierCount, tierCount, durabilityMax);
     }
 
     public static WynnItemParseResult parseInternalRolls(GearInfo gearInfo, JsonObject itemData) {
@@ -233,13 +243,16 @@ public final class WynnItemParser {
                 ? itemData.get("identification_rolls").getAsInt()
                 : 0;
 
-        return new WynnItemParseResult(gearInfo.tier(), null, identifications, List.of(), powders, rerolls, 0, 0);
+        return new WynnItemParseResult(gearInfo.tier(), "", 0, identifications, List.of(), powders, rerolls, 0, 0);
     }
 
     private static StatActualValue getStatActualValue(GearInfo gearInfo, StatType statType, int internalRoll) {
         StatPossibleValues possibleValue = gearInfo.getPossibleValues(statType);
         if (possibleValue == null) {
-            WynntilsMod.warn("Remote player's " + gearInfo.name() + " claims to have " + statType);
+            if (!(statType instanceof SkillStatType)) {
+                // We know Wynncraft send skill stats as 100%; don't complain about that
+                WynntilsMod.warn("Remote player's " + gearInfo.name() + " claims to have " + statType);
+            }
             return null;
         }
         int value = Math.round(possibleValue.baseValue() * (internalRoll / 100f));

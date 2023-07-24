@@ -5,10 +5,10 @@
 package com.wynntils.screens.guides.widgets;
 
 import com.mojang.blaze3d.vertex.PoseStack;
+import com.wynntils.core.text.StyledText;
 import com.wynntils.screens.base.widgets.WynntilsButton;
 import com.wynntils.utils.colors.CommonColors;
 import com.wynntils.utils.colors.CustomColor;
-import com.wynntils.utils.mc.ComponentUtils;
 import com.wynntils.utils.mc.McUtils;
 import com.wynntils.utils.mc.RenderedStringUtils;
 import com.wynntils.utils.render.FontRenderer;
@@ -31,7 +31,7 @@ public class GuidesButton extends WynntilsButton {
     }
 
     @Override
-    public void renderButton(PoseStack poseStack, int mouseX, int mouseY, float partialTick) {
+    public void renderWidget(PoseStack poseStack, int mouseX, int mouseY, float partialTick) {
         CustomColor backgroundColor = this.isHovered ? BUTTON_COLOR_HOVERED : BUTTON_COLOR;
         RenderUtils.drawRect(poseStack, backgroundColor, this.getX(), this.getY(), 0, this.width, this.height);
 
@@ -39,16 +39,16 @@ public class GuidesButton extends WynntilsButton {
         FontRenderer.getInstance()
                 .renderText(
                         poseStack,
-                        RenderedStringUtils.getMaxFittingText(
-                                ComponentUtils.getUnformatted(guideScreen.getTitle()),
+                        StyledText.fromString(RenderedStringUtils.getMaxFittingText(
+                                StyledText.fromComponent(guideScreen.getTitle()).getStringWithoutFormatting(),
                                 maxTextWidth,
-                                FontRenderer.getInstance().getFont()),
+                                FontRenderer.getInstance().getFont())),
                         this.getX() + 14,
                         this.getY() + 1,
                         0,
                         CommonColors.BLACK,
-                        HorizontalAlignment.Left,
-                        VerticalAlignment.Top,
+                        HorizontalAlignment.LEFT,
+                        VerticalAlignment.TOP,
                         TextShadow.NONE);
     }
 

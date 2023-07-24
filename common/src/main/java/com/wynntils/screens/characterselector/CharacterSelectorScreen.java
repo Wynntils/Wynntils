@@ -5,12 +5,16 @@
 package com.wynntils.screens.characterselector;
 
 import com.mojang.blaze3d.vertex.PoseStack;
+import com.wynntils.core.components.Models;
+import com.wynntils.core.text.StyledText;
 import com.wynntils.models.character.type.ClassInfo;
 import com.wynntils.screens.base.WynntilsScreen;
+import com.wynntils.screens.characterselector.widgets.ChangeWorldButton;
 import com.wynntils.screens.characterselector.widgets.ClassInfoButton;
 import com.wynntils.screens.characterselector.widgets.ClassSelectionAddButton;
 import com.wynntils.screens.characterselector.widgets.ClassSelectionDeleteButton;
 import com.wynntils.screens.characterselector.widgets.ClassSelectionEditButton;
+import com.wynntils.screens.characterselector.widgets.DisconnectButton;
 import com.wynntils.screens.characterselector.widgets.PlayButton;
 import com.wynntils.utils.MathUtils;
 import com.wynntils.utils.colors.CommonColors;
@@ -24,12 +28,14 @@ import com.wynntils.utils.render.type.VerticalAlignment;
 import com.wynntils.utils.wynn.ContainerUtils;
 import java.util.ArrayList;
 import java.util.List;
+import net.minecraft.client.KeyMapping;
 import net.minecraft.client.gui.components.Renderable;
 import net.minecraft.client.gui.components.events.GuiEventListener;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
 import net.minecraft.client.gui.screens.inventory.InventoryScreen;
 import net.minecraft.network.chat.Component;
+import org.lwjgl.glfw.GLFW;
 
 public final class CharacterSelectorScreen extends WynntilsScreen {
     private static final int CHARACTER_INFO_PER_PAGE = 7;
@@ -43,6 +49,7 @@ public final class CharacterSelectorScreen extends WynntilsScreen {
     private int scrollOffset = 0;
     private boolean draggingScroll = false;
     private double lastMouseY = 0;
+    private double mouseDrag = 0;
     private ClassInfoButton selected = null;
 
     private CharacterSelectorScreen() {
@@ -75,8 +82,8 @@ public final class CharacterSelectorScreen extends WynntilsScreen {
         float playButtonWidth = Texture.PLAY_BUTTON.width() * currentTextureScale;
         float playButtonHeight = Texture.PLAY_BUTTON.height() / 2f * currentTextureScale;
         this.addRenderableWidget(new PlayButton(
-                (int) (this.width - playButtonWidth - 10f),
-                (int) (this.height - playButtonHeight - 10f),
+                (int) (this.width - playButtonWidth - (10f * currentTextureScale)),
+                (int) (this.height - playButtonHeight - (10f * currentTextureScale)),
                 (int) playButtonWidth,
                 (int) playButtonHeight,
                 this));
@@ -108,14 +115,39 @@ public final class CharacterSelectorScreen extends WynntilsScreen {
                 (int) addButtonHeight,
                 this));
 
+        float disconnectButtonWidth = Texture.DISCONNECT_BUTTON.width() * currentTextureScale;
+        float disconnectButtonHeight = Texture.DISCONNECT_BUTTON.height() / 2f * currentTextureScale;
+        this.addRenderableWidget(new DisconnectButton(
+                (int) (this.width - disconnectButtonWidth - (10f * currentTextureScale)),
+                (int) (10f * currentTextureScale),
+                (int) disconnectButtonWidth,
+                (int) disconnectButtonHeight,
+                this));
+
+        float changeWorldButtonWidth = Texture.CHANGE_WORLD_BUTTON.width() * currentTextureScale;
+        float changeWorldButtonHeight = Texture.CHANGE_WORLD_BUTTON.height() / 2f * currentTextureScale;
+        this.addRenderableWidget(new ChangeWorldButton(
+                (int) (this.width - changeWorldButtonWidth - (10f * currentTextureScale)),
+                (int) ((15f * currentTextureScale) + changeWorldButtonHeight),
+                (int) changeWorldButtonWidth,
+                (int) changeWorldButtonHeight,
+                this));
+
         reloadButtons();
     }
 
     @Override
     public void doRender(PoseStack poseStack, int mouseX, int mouseY, float partialTick) {
-        if (Math.abs(lastMouseY - mouseY) > 20f && draggingScroll) {
-            setScrollOffset(lastMouseY > mouseY ? 1 : -1);
+        if (draggingScroll) {
+            mouseDrag += mouseY - lastMouseY;
             lastMouseY = mouseY;
+
+            if (Math.abs(mouseDrag) > this.height / CHARACTER_INFO_PER_PAGE) {
+                boolean positive = mouseDrag > 0;
+
+                mouseDrag += (positive ? -1 : 1) * this.height / CHARACTER_INFO_PER_PAGE;
+                setScrollOffset(positive ? -1 : 1);
+            }
         }
 
         this.renderBackground(poseStack);
@@ -131,11 +163,11 @@ public final class CharacterSelectorScreen extends WynntilsScreen {
                 Texture.LIST_BACKGROUND.width(),
                 Texture.LIST_BACKGROUND.height());
 
-        renderButtons(poseStack, mouseX, mouseY, partialTick);
+        renderWidgets(poseStack, mouseX, mouseY, partialTick);
 
         renderScrollButton(poseStack);
 
-        renderPlayer();
+        renderPlayer(poseStack);
 
         if (selected == null) return;
 
@@ -157,13 +189,12 @@ public final class CharacterSelectorScreen extends WynntilsScreen {
     }
 
     @Override
-    public boolean mouseClicked(double mouseX, double mouseY, int button) {
+    public boolean doMouseClicked(double mouseX, double mouseY, int button) {
         for (GuiEventListener child : children()) {
             child.mouseClicked(mouseX, mouseY, button);
         }
 
-        for (int i = scrollOffset; i < Math.min(classInfoButtons.size(), scrollOffset + CHARACTER_INFO_PER_PAGE); i++) {
-            ClassInfoButton classInfoButton = classInfoButtons.get(i);
+        for (ClassInfoButton classInfoButton : classInfoButtons) {
             if (classInfoButton.isMouseOver(mouseX, mouseY)) {
                 classInfoButton.mouseClicked(mouseX, mouseY, button);
                 this.selected = classInfoButton;
@@ -175,7 +206,7 @@ public final class CharacterSelectorScreen extends WynntilsScreen {
             float scrollButtonRenderY = MathUtils.map(
                     scrollOffset,
                     0,
-                    classInfoButtons.size() - CHARACTER_INFO_PER_PAGE,
+                    classInfoList.size() - CHARACTER_INFO_PER_PAGE,
                     Texture.LIST_BACKGROUND.height() * currentTextureScale * 0.01f,
                     Texture.LIST_BACKGROUND.height() * currentTextureScale * 0.92f);
 
@@ -205,6 +236,25 @@ public final class CharacterSelectorScreen extends WynntilsScreen {
     @Override
     public boolean mouseReleased(double mouseX, double mouseY, int button) {
         draggingScroll = false;
+        return true;
+    }
+
+    @Override
+    public boolean keyPressed(int keyCode, int scanCode, int modifiers) {
+        if (keyCode == GLFW.GLFW_KEY_ESCAPE) {
+            this.onClose();
+            return true;
+        }
+
+        KeyMapping[] keyHotbarSlots = McUtils.options().keyHotbarSlots;
+
+        for (int i = 0; i < Math.min(keyHotbarSlots.length, classInfoList.size()); i++) {
+            if (!keyHotbarSlots[i].matches(keyCode, scanCode)) continue;
+            int slot = classInfoList.get(i).slot();
+            Models.CharacterSelection.playWithCharacter(slot);
+            return true;
+        }
+
         return true;
     }
 
@@ -266,12 +316,13 @@ public final class CharacterSelectorScreen extends WynntilsScreen {
         FontRenderer.getInstance()
                 .renderText(
                         poseStack,
-                        String.valueOf(this.selected.getClassInfo().soulPoints()),
+                        StyledText.fromString(
+                                String.valueOf(this.selected.getClassInfo().soulPoints())),
                         0,
                         0,
                         CommonColors.BLACK,
-                        HorizontalAlignment.Left,
-                        VerticalAlignment.Top,
+                        HorizontalAlignment.LEFT,
+                        VerticalAlignment.TOP,
                         TextShadow.NONE);
         poseStack.popPose();
 
@@ -293,12 +344,13 @@ public final class CharacterSelectorScreen extends WynntilsScreen {
         FontRenderer.getInstance()
                 .renderText(
                         poseStack,
-                        String.valueOf(this.selected.getClassInfo().completedQuests()),
+                        StyledText.fromString(
+                                String.valueOf(this.selected.getClassInfo().completedQuests())),
                         0,
                         0,
                         CommonColors.BLACK,
-                        HorizontalAlignment.Left,
-                        VerticalAlignment.Top,
+                        HorizontalAlignment.LEFT,
+                        VerticalAlignment.TOP,
                         TextShadow.NONE);
         poseStack.popPose();
 
@@ -327,7 +379,7 @@ public final class CharacterSelectorScreen extends WynntilsScreen {
                 MathUtils.map(
                         scrollOffset,
                         0,
-                        classInfoButtons.size() - CHARACTER_INFO_PER_PAGE,
+                        classInfoList.size() - CHARACTER_INFO_PER_PAGE,
                         Texture.LIST_BACKGROUND.height() * currentTextureScale * 0.01f,
                         Texture.LIST_BACKGROUND.height() * currentTextureScale * 0.92f),
                 0,
@@ -337,45 +389,48 @@ public final class CharacterSelectorScreen extends WynntilsScreen {
                 Texture.CHARACTER_SELECTION_SCROLL_BUTTON.height());
     }
 
-    private void renderButtons(PoseStack poseStack, int mouseX, int mouseY, float partialTick) {
+    private void renderWidgets(PoseStack poseStack, int mouseX, int mouseY, float partialTick) {
         for (Renderable renderable : this.renderables) {
             renderable.render(poseStack, mouseX, mouseY, partialTick);
         }
 
-        for (int i = scrollOffset; i < Math.min(classInfoButtons.size(), scrollOffset + CHARACTER_INFO_PER_PAGE); i++) {
-            classInfoButtons.get(i).render(poseStack, mouseX, mouseY, partialTick);
+        for (ClassInfoButton classInfoButton : classInfoButtons) {
+            classInfoButton.render(poseStack, mouseX, mouseY, partialTick);
         }
     }
 
-    private void renderPlayer() {
+    private void renderPlayer(PoseStack poseStack) {
         McUtils.player().setInvisible(false);
         // This is actually needed...
         McUtils.player().resetFallDistance();
         McUtils.player().setSwimming(false);
 
         int scale = this.height / 4;
-        InventoryScreen.renderEntityInInventory(
-                (int) (this.width * 0.6f), (int) (this.height * 0.85f), scale, 0, 0, McUtils.player());
+        InventoryScreen.renderEntityInInventoryFollowsMouse(
+                poseStack, (int) (this.width * 0.6f), (int) (this.height * 0.85f), scale, 0, 0, McUtils.player());
     }
 
     private void setScrollOffset(int delta) {
-        scrollOffset = MathUtils.clamp(
-                scrollOffset - delta * CHARACTER_INFO_PER_PAGE,
-                0,
-                Math.max(0, classInfoButtons.size() - CHARACTER_INFO_PER_PAGE));
+        scrollOffset =
+                MathUtils.clamp(scrollOffset - delta, 0, Math.max(0, classInfoList.size() - CHARACTER_INFO_PER_PAGE));
+
+        reloadButtons();
     }
 
     private void reloadButtons() {
-        this.selected = null;
-        this.scrollOffset = 0;
         classInfoButtons.clear();
 
         final float width = Texture.LIST_BACKGROUND.width() * currentTextureScale * 0.9f - 3;
         final int height = Math.round(Texture.LIST_BACKGROUND.height() * currentTextureScale / 8f);
-        for (int i = 0; i < classInfoList.size(); i++) {
+        for (int i = scrollOffset; i < Math.min(classInfoList.size(), scrollOffset + CHARACTER_INFO_PER_PAGE); i++) {
             ClassInfo classInfo = classInfoList.get(i);
-            classInfoButtons.add(new ClassInfoButton(
-                    5, (5 + ((i % CHARACTER_INFO_PER_PAGE) * height)), (int) width, height, classInfo, this));
+            ClassInfoButton newButton = new ClassInfoButton(
+                    5, (5 + (classInfoButtons.size() * height)), (int) width, height, classInfo, this);
+            classInfoButtons.add(newButton);
+
+            if (selected != null && selected.getClassInfo() == classInfo) {
+                selected = newButton;
+            }
         }
     }
 

@@ -12,12 +12,11 @@ import com.wynntils.core.components.Managers;
 import com.wynntils.core.components.Model;
 import com.wynntils.core.net.Download;
 import com.wynntils.core.net.UrlId;
+import com.wynntils.core.text.StyledText;
 import com.wynntils.mc.event.AdvancementUpdateEvent;
-import com.wynntils.models.map.pois.Poi;
 import com.wynntils.models.map.pois.TerritoryPoi;
 import com.wynntils.models.map.type.TerritoryDefenseFilterType;
 import com.wynntils.models.territories.profile.TerritoryProfile;
-import com.wynntils.utils.mc.ComponentUtils;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -34,6 +33,7 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 import net.minecraft.advancements.Advancement;
 import net.minecraft.advancements.FrameType;
+import net.minecraft.core.Position;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 
@@ -76,11 +76,12 @@ public final class TerritoryModel extends Model {
         return allTerritoryPois;
     }
 
-    public List<Poi> getTerritoryPoisFromAdvancement() {
+    public List<TerritoryPoi> getTerritoryPoisFromAdvancement() {
         return new ArrayList<>(territoryPoiMap.values());
     }
 
-    public List<Poi> getFilteredTerritoryPoisFromAdvancement(int filterLevel, TerritoryDefenseFilterType filterType) {
+    public List<TerritoryPoi> getFilteredTerritoryPoisFromAdvancement(
+            int filterLevel, TerritoryDefenseFilterType filterType) {
         return switch (filterType) {
             case HIGHER -> territoryPoiMap.values().stream()
                     .filter(poi -> poi.getTerritoryInfo().getDefences().getLevel() >= filterLevel)
@@ -98,6 +99,13 @@ public final class TerritoryModel extends Model {
         return territoryPoiMap.get(name);
     }
 
+    public TerritoryProfile getTerritoryProfileForPosition(Position position) {
+        return territoryProfileMap.values().stream()
+                .filter(profile -> profile.insideArea(position))
+                .findFirst()
+                .orElse(null);
+    }
+
     public void reset() {
         errorCount = 0;
     }
@@ -113,11 +121,11 @@ public final class TerritoryModel extends Model {
 
             if (built.getDisplay() == null) continue;
 
-            String territoryName = ComponentUtils.getUnformatted(
-                            built.getDisplay().getTitle())
-                    .replace("[", "")
-                    .replace("]", "")
-                    .trim();
+            String territoryName = StyledText.fromComponent(built.getDisplay().getTitle())
+                    .replaceAll("\\[", "")
+                    .replaceAll("\\]", "")
+                    .trim()
+                    .getStringWithoutFormatting();
 
             // Do not parse same thing twice
             if (tempMap.containsKey(territoryName)) continue;
@@ -129,9 +137,9 @@ public final class TerritoryModel extends Model {
             boolean headquarters = built.getDisplay().getFrame() == FrameType.CHALLENGE;
 
             // description is a raw string with \n, so we have to split
-            String description = ComponentUtils.getCoded(built.getDisplay().getDescription());
-            String[] colored = description.split("\n");
-            String[] raw = ComponentUtils.stripFormatting(description).split("\n");
+            StyledText description = StyledText.fromComponent(built.getDisplay().getDescription());
+            StyledText[] colored = description.split("\n");
+            String[] raw = description.getStringWithoutFormatting().split("\n");
 
             TerritoryInfo container = new TerritoryInfo(raw, colored, headquarters);
             tempMap.put(territoryName, container);
@@ -142,7 +150,8 @@ public final class TerritoryModel extends Model {
 
             if (territoryProfile == null) continue;
 
-            territoryPoiMap.put(entry.getKey(), new TerritoryPoi(territoryProfile, entry.getValue()));
+            territoryPoiMap.put(
+                    entry.getKey(), new TerritoryPoi(() -> getTerritoryProfile(entry.getKey()), entry.getValue()));
         }
     }
 

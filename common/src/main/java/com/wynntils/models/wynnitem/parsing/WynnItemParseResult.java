@@ -6,7 +6,6 @@ package com.wynntils.models.wynnitem.parsing;
 
 import com.wynntils.models.elements.type.Powder;
 import com.wynntils.models.gear.type.GearTier;
-import com.wynntils.models.gear.type.GearType;
 import com.wynntils.models.stats.type.StatActualValue;
 import com.wynntils.models.wynnitem.type.ItemEffect;
 import java.util.List;
@@ -15,7 +14,8 @@ import java.util.List;
 // Its interpretation is determined what kind of item where parsed.
 public record WynnItemParseResult(
         GearTier tier,
-        GearType gearType,
+        String itemType,
+        int level,
         List<StatActualValue> identifications,
         List<ItemEffect> effects,
         List<Powder> powders,

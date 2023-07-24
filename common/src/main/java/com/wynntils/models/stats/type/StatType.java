@@ -53,7 +53,7 @@ public abstract class StatType {
     public boolean equals(Object obj) {
         if (obj == this) return true;
         if (obj == null || obj.getClass() != this.getClass()) return false;
-        var that = (StatType) obj;
+        StatType that = (StatType) obj;
         return Objects.equals(this.key, that.key)
                 && Objects.equals(this.displayName, that.displayName)
                 && Objects.equals(this.apiName, that.apiName)

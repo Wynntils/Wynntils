@@ -4,6 +4,7 @@
  */
 package com.wynntils.models.items.annotators.game;
 
+import com.wynntils.core.text.StyledText;
 import com.wynntils.handlers.item.ItemAnnotation;
 import com.wynntils.handlers.item.ItemAnnotator;
 import com.wynntils.models.gear.type.GearTier;
@@ -16,12 +17,12 @@ import java.util.regex.Pattern;
 import net.minecraft.world.item.ItemStack;
 
 public final class TrinketAnnotator implements ItemAnnotator {
-    private static final Pattern TRINKET_PATTERN = Pattern.compile("^§[5abcdef]([^\\[]*)( \\[(\\d+)/(\\d+)\\])?$");
+    private static final Pattern TRINKET_PATTERN = Pattern.compile("^§[5abcdef](.*?)(?: \\[(\\d+)/(\\d+)\\])?$");
     private static final Pattern TRINKET_LORE_PATTERN = Pattern.compile("^§7Right-Click to (use|toggle)$");
 
     @Override
-    public ItemAnnotation getAnnotation(ItemStack itemStack, String name) {
-        Matcher matcher = TRINKET_PATTERN.matcher(name);
+    public ItemAnnotation getAnnotation(ItemStack itemStack, StyledText name) {
+        Matcher matcher = name.getMatcher(TRINKET_PATTERN);
         if (!matcher.matches()) return null;
 
         try {
@@ -30,10 +31,10 @@ public final class TrinketAnnotator implements ItemAnnotator {
             if (!loreMatcher.matches()) return null;
 
             String trinketName = matcher.group(1);
-            GearTier gearTier = GearTier.fromFormattedString(name);
-            if (matcher.group(3) != null) {
+            GearTier gearTier = GearTier.fromStyledText(name);
+            if (matcher.group(2) != null) {
                 CappedValue uses =
-                        new CappedValue(Integer.parseInt(matcher.group(3)), Integer.parseInt(matcher.group(4)));
+                        new CappedValue(Integer.parseInt(matcher.group(2)), Integer.parseInt(matcher.group(3)));
                 return new TrinketItem(trinketName, gearTier, uses);
             } else {
                 return new TrinketItem(trinketName, gearTier);
