@@ -4,16 +4,17 @@
  */
 package com.wynntils.core.statistics;
 
+import java.util.Locale;
 import net.minecraft.client.resources.language.I18n;
 
 public enum StatisticKind {
-    DAMAGE_DEALT("damage_dealt"),
-    SPELLS_CAST("spells_cast");
+    DAMAGE_DEALT,
+    SPELLS_CAST;
 
     private final String id;
 
-    StatisticKind(String id) {
-        this.id = id;
+    StatisticKind() {
+        this.id = this.getName().toLowerCase(Locale.ROOT);
     }
 
     public static StatisticKind from(String statisticId) {
