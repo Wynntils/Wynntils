@@ -35,7 +35,7 @@ public enum StatisticKind {
     }
 
     public String getName() {
-        return I18n.get("statistics.wynntils." + id);
+        return I18n.get("statistics.wynntils." + id + ".name");
     }
 
     public String getFormattedValue(int value) {
