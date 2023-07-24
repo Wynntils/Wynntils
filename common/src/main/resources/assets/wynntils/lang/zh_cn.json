@@ -28,8 +28,6 @@
   "feature.wynntils.auraTimerOverlay.vignetteOnAura.description": "是否在有光环将发生前显示一位晕影层？",
   "feature.wynntils.auraTimerOverlay.vignetteOnAura.name": "晕影叠加层",
   "feature.wynntils.autoApplyResourcePack.name": "自动地使用 Wynncraft 的资源包",
-  "feature.wynntils.autoApplyResourcePack.packHash.description": "去次的 Wynncraft 资源包散列",
-  "feature.wynntils.autoApplyResourcePack.packHash.name": "资源包散列",
   "feature.wynntils.beaconBeam.name": "信示光柱",
   "feature.wynntils.beaconBeam.waypointBeamColor.description": "信示光柱应该儅什麽顔色呢？",
   "feature.wynntils.beaconBeam.waypointBeamColor.name": "光柱顔色",
