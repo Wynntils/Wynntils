@@ -29,6 +29,7 @@ import com.wynntils.utils.render.RenderUtils;
 import com.wynntils.utils.render.Texture;
 import com.wynntils.utils.render.type.HorizontalAlignment;
 import com.wynntils.utils.render.type.TextShadow;
+import com.wynntils.utils.type.CappedValue;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
@@ -53,6 +54,7 @@ public final class WynntilsMenuScreen extends WynntilsMenuScreenBase {
     private WynntilsMenuScreen() {
         super(Component.translatable("screens.wynntils.wynntilsMenu.name"));
         setup();
+        Models.Activity.scanOverallProgress();
     }
 
     public static Screen create() {
@@ -336,6 +338,20 @@ public final class WynntilsMenuScreen extends WynntilsMenuScreenBase {
                         145,
                         0,
                         CommonColors.PURPLE,
+                        HorizontalAlignment.CENTER,
+                        TextShadow.NONE);
+        CappedValue progress = Models.Activity.getOverallProgress();
+        FontRenderer.getInstance()
+                .renderAlignedTextInBox(
+                        poseStack,
+                        StyledText.fromString(ChatFormatting.BLACK + "Progress: " + ChatFormatting.DARK_AQUA
+                                + progress.getPercentageInt() + "%" + ChatFormatting.BLACK + " ["
+                                + ChatFormatting.DARK_AQUA + progress + ChatFormatting.BLACK + "]"),
+                        Texture.QUEST_BOOK_BACKGROUND.width() / 2f,
+                        Texture.QUEST_BOOK_BACKGROUND.width(),
+                        160,
+                        0,
+                        CommonColors.BLACK,
                         HorizontalAlignment.CENTER,
                         TextShadow.NONE);
 
