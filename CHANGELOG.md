@@ -1,8 +1,16 @@
+## [0.0.3-alpha.189](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.188...v0.0.3-alpha.189) (2023-07-24)
+
+
+### New Features
+
+* Import favorites from legacy ([#1765](https://github.com/Wynntils/Artemis/issues/1765)) ([beabe75](https://github.com/Wynntils/Artemis/commit/beabe7511f80cd58bc5a711f37222306f32c6dc0))
+
 ## [0.0.3-alpha.188](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.187...v0.0.3-alpha.188) (2023-07-23)
 
 
 ### Miscellaneous Chores
 
+* **release:** v0.0.3-alpha.188 [skip ci] ([2b7c1fe](https://github.com/Wynntils/Artemis/commit/2b7c1fef66efc34d8d26b24d169f73bd388758cb))
 * Skip stack trace for timeouts in log ([#1820](https://github.com/Wynntils/Artemis/issues/1820)) ([438ba77](https://github.com/Wynntils/Artemis/commit/438ba772e4806259376aad7f3461ac2208689cfc))
 
 ## [0.0.3-alpha.187](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.186...v0.0.3-alpha.187) (2023-07-23)
@@ -40,16 +48,4 @@
 ### Miscellaneous Chores
 
 * **release:** v0.0.3-alpha.185 [skip ci] ([a56e1ac](https://github.com/Wynntils/Artemis/commit/a56e1acf3a1c8646ea6f425d122667752f97f636))
-
-## [0.0.3-alpha.184](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.183...v0.0.3-alpha.184) (2023-07-23)
-
-
-### Miscellaneous Chores
-
-* **release:** v0.0.3-alpha.184 [skip ci] ([56f6f53](https://github.com/Wynntils/Artemis/commit/56f6f53cff2d5440bde13d779770a96fa324d759))
-
-
-### Code Refactoring
-
-* Consolidate different activities in one place ([#1812](https://github.com/Wynntils/Artemis/issues/1812)) ([48a98c0](https://github.com/Wynntils/Artemis/commit/48a98c011ea5dfdff044d6c8dd1efcf64048ec80))
 
