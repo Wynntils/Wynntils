@@ -14,6 +14,8 @@ import com.wynntils.core.keybinds.KeyBind;
 import com.wynntils.core.text.StyledText;
 import com.wynntils.mc.event.PlayerInteractEvent;
 import com.wynntils.mc.event.UseItemEvent;
+import com.wynntils.screens.activities.WynntilsCaveScreen;
+import com.wynntils.screens.activities.WynntilsDiscoveriesScreen;
 import com.wynntils.screens.activities.WynntilsQuestBookScreen;
 import com.wynntils.screens.base.WynntilsMenuScreenBase;
 import com.wynntils.screens.guides.WynntilsGuidesListScreen;
@@ -88,7 +90,7 @@ public class WynntilsContentBookFeature extends Feature {
     public final Config<Boolean> replaceWynncraftContentBook = new Config<>(true);
 
     @RegisterConfig
-    public final Config<Boolean> contentBookShouldOpenWynntilsMenu = new Config<>(false);
+    public final Config<InitialPage> initialPage = new Config<>(InitialPage.USER_PROFILE);
 
     @RegisterConfig
     public final Config<Boolean> showContentBookLoadingUpdates = new Config<>(true);
@@ -124,9 +126,19 @@ public class WynntilsContentBookFeature extends Feature {
                 && StyledText.fromComponent(itemInHand.getHoverName()).equals(CONTENT_BOOK_NAME)) {
             event.setCanceled(true);
             WynntilsMenuScreenBase.openBook(
-                    contentBookShouldOpenWynntilsMenu.get()
-                            ? WynntilsMenuScreen.create()
-                            : WynntilsQuestBookScreen.create());
+                    switch (initialPage.get()) {
+                        case USER_PROFILE -> WynntilsMenuScreen.create();
+                        case QUEST_BOOK -> WynntilsQuestBookScreen.create();
+                        case DISCOVERIES -> WynntilsDiscoveriesScreen.create();
+                        case CAVES -> WynntilsCaveScreen.create();
+                    });
         }
+    }
+
+    private enum InitialPage {
+        USER_PROFILE,
+        QUEST_BOOK,
+        DISCOVERIES,
+        CAVES
     }
 }
