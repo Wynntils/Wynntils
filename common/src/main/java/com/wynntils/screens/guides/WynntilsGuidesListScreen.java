@@ -5,7 +5,9 @@
 package com.wynntils.screens.guides;
 
 import com.mojang.blaze3d.vertex.PoseStack;
+import com.wynntils.core.components.Models;
 import com.wynntils.core.text.StyledText;
+import com.wynntils.screens.base.TooltipProvider;
 import com.wynntils.screens.base.WynntilsListScreen;
 import com.wynntils.screens.base.widgets.BackButton;
 import com.wynntils.screens.base.widgets.PageSelectorButton;
@@ -13,11 +15,19 @@ import com.wynntils.screens.guides.emeraldpouch.WynntilsEmeraldPouchGuideScreen;
 import com.wynntils.screens.guides.gear.WynntilsItemGuideScreen;
 import com.wynntils.screens.guides.ingredient.WynntilsIngredientGuideScreen;
 import com.wynntils.screens.guides.powder.WynntilsPowderGuideScreen;
+import com.wynntils.screens.guides.widgets.ExportButton;
 import com.wynntils.screens.guides.widgets.GuidesButton;
+import com.wynntils.screens.guides.widgets.ImportButton;
 import com.wynntils.screens.wynntilsmenu.WynntilsMenuScreen;
 import com.wynntils.utils.StringUtils;
+import com.wynntils.utils.mc.McUtils;
+import com.wynntils.utils.render.FontRenderer;
+import com.wynntils.utils.render.RenderUtils;
 import com.wynntils.utils.render.Texture;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
+import net.minecraft.ChatFormatting;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.resources.language.I18n;
 import net.minecraft.network.chat.Component;
@@ -48,6 +58,19 @@ public final class WynntilsGuidesListScreen extends WynntilsListScreen<Screen, G
                 Texture.BACK_ARROW.height(),
                 WynntilsMenuScreen.create()));
 
+        this.addRenderableWidget(new ImportButton(
+                Texture.QUEST_BOOK_BACKGROUND.width() - 21,
+                11,
+                (int) (Texture.ADD_BUTTON.width() / 1.5f),
+                (int) (Texture.ADD_BUTTON.height() / 2.0f / 1.5f),
+                this::importFavorites));
+        this.addRenderableWidget(new ExportButton(
+                Texture.QUEST_BOOK_BACKGROUND.width() - 21,
+                5 + (int) (Texture.ADD_BUTTON.height() / 1.5f),
+                (int) (Texture.MAP_SHARE_BUTTON.width() / 1.5f),
+                (int) (Texture.MAP_SHARE_BUTTON.height() / 1.5f),
+                this::exportFavorites));
+
         this.addRenderableWidget(new PageSelectorButton(
                 Texture.QUEST_BOOK_BACKGROUND.width() / 2 + 50 - Texture.FORWARD_ARROW.width() / 2,
                 Texture.QUEST_BOOK_BACKGROUND.height() - 25,
@@ -62,6 +85,34 @@ public final class WynntilsGuidesListScreen extends WynntilsListScreen<Screen, G
                 Texture.FORWARD_ARROW.height(),
                 true,
                 this));
+    }
+
+    private void importFavorites() {
+        String clipboard = McUtils.mc().keyboardHandler.getClipboard();
+
+        if (clipboard == null || !clipboard.startsWith("wynntilsFavorites,")) {
+            McUtils.sendErrorToClient(I18n.get("screens.wynntils.wynntilsGuides.invalidClipboard"));
+        }
+
+        ArrayList<String> names = new ArrayList<>(Arrays.asList(clipboard.split(",")));
+        names.remove(0); // Remove the "wynntilsFavorites," part
+        names.forEach(name -> {
+            if (name.isBlank() || name.isEmpty()) return;
+            Models.Favorites.addFavorite(name);
+        });
+        McUtils.sendMessageToClient(
+                Component.translatable("screens.wynntils.wynntilsGuides.importedFavorites", names.size())
+                        .withStyle(ChatFormatting.GREEN));
+    }
+
+    private void exportFavorites() {
+        McUtils.mc()
+                .keyboardHandler
+                .setClipboard("wynntilsFavorites," + String.join(",", Models.Favorites.getFavoriteItems()));
+        McUtils.sendMessageToClient(Component.translatable(
+                        "screens.wynntils.wynntilsGuides.exportedFavorites",
+                        Models.Favorites.getFavoriteItems().size())
+                .withStyle(ChatFormatting.GREEN));
     }
 
     @Override
@@ -85,6 +136,24 @@ public final class WynntilsGuidesListScreen extends WynntilsListScreen<Screen, G
         renderPageInfo(poseStack, currentPage + 1, maxPage + 1);
 
         poseStack.popPose();
+
+        renderTooltip(poseStack, mouseX, mouseY);
+    }
+
+    protected void renderTooltip(PoseStack poseStack, int mouseX, int mouseY) {
+        if (!(this.hovered instanceof TooltipProvider tooltipWidget)) return;
+
+        List<Component> tooltipLines = tooltipWidget.getTooltipLines();
+        if (tooltipLines.isEmpty()) return;
+
+        RenderUtils.drawTooltipAt(
+                poseStack,
+                mouseX,
+                mouseY,
+                100,
+                tooltipLines,
+                FontRenderer.getInstance().getFont(),
+                true);
     }
 
     @Override
