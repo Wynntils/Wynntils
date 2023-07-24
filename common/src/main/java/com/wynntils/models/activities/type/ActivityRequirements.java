@@ -13,4 +13,10 @@ import java.util.List;
 public record ActivityRequirements(
         Pair<Integer, Boolean> level,
         List<Pair<Pair<ProfessionType, Integer>, Boolean>> professionLevels,
-        List<Pair<String, Boolean>> quests) {}
+        List<Pair<String, Boolean>> quests) {
+    public boolean isEmpty() {
+        return level.b()
+                && professionLevels.stream().allMatch(Pair::b)
+                && quests.stream().allMatch(Pair::b);
+    }
+}
