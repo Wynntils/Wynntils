@@ -1,9 +1,21 @@
+## [0.0.3-alpha.198](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.197...v0.0.3-alpha.198) (2023-07-24)
+
+
+### New Features
+
+* Collect item type/emerald dry count ([#1818](https://github.com/Wynntils/Artemis/issues/1818)) ([61b26d5](https://github.com/Wynntils/Artemis/commit/61b26d5b313b5dd45c2a9aec943548d4ef9caaad))
+
 ## [0.0.3-alpha.197](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.196...v0.0.3-alpha.197) (2023-07-24)
 
 
 ### Bug Fixes
 
 * Fix weird/uncommon issues with caves/quests not parsing ([#1831](https://github.com/Wynntils/Artemis/issues/1831)) ([f85e1ca](https://github.com/Wynntils/Artemis/commit/f85e1caa977a4fd5ca7f3c8f0e4423c717e5527b))
+
+
+### Miscellaneous Chores
+
+* **release:** v0.0.3-alpha.197 [skip ci] ([4287a51](https://github.com/Wynntils/Artemis/commit/4287a51eb55d0c851c03a8d32c1503e88f1a8387))
 
 ## [0.0.3-alpha.196](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.195...v0.0.3-alpha.196) (2023-07-24)
 
@@ -40,16 +52,4 @@
 ### Code Refactoring
 
 * Move away from old quest enums ([#1829](https://github.com/Wynntils/Artemis/issues/1829)) ([1a2a7c4](https://github.com/Wynntils/Artemis/commit/1a2a7c4f618f3b38be773c7022c1d66911457e06))
-
-## [0.0.3-alpha.193](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.192...v0.0.3-alpha.193) (2023-07-24)
-
-
-### Bug Fixes
-
-* Damage detection was broken, and missed poison ([#1824](https://github.com/Wynntils/Artemis/issues/1824)) ([549c73e](https://github.com/Wynntils/Artemis/commit/549c73e5613605196fdcd1ad0f599961f46211fa))
-
-
-### Miscellaneous Chores
-
-* **release:** v0.0.3-alpha.193 [skip ci] ([52adbf6](https://github.com/Wynntils/Artemis/commit/52adbf69b50429c061f02878645825ae3b4ca6e9))
 
