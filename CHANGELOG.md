@@ -1,4 +1,16 @@
+## [0.0.3-alpha.195](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.194...v0.0.3-alpha.195) (2023-07-24)
+
+
+### New Features
+
+* Display full quest info ([#1830](https://github.com/Wynntils/Artemis/issues/1830)) ([72141cd](https://github.com/Wynntils/Artemis/commit/72141cd863ed88dfc8e85e921e1927c0c7a92594))
+
 ## [0.0.3-alpha.194](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.193...v0.0.3-alpha.194) (2023-07-24)
+
+
+### Miscellaneous Chores
+
+* **release:** v0.0.3-alpha.194 [skip ci] ([22d160b](https://github.com/Wynntils/Artemis/commit/22d160b8f2f916b4f78e809eb8e0e922064606d7))
 
 
 ### Code Refactoring
@@ -36,16 +48,4 @@
 
 * Make storage/config json use proper enums in collections ([#1823](https://github.com/Wynntils/Artemis/issues/1823)) ([db5d13f](https://github.com/Wynntils/Artemis/commit/db5d13fd9eed08f5a764ca07e4be73f67c6eab8e))
 * **release:** v0.0.3-alpha.191 [skip ci] ([02d863c](https://github.com/Wynntils/Artemis/commit/02d863c74dcf504860d23d2782c8730260125e64))
-
-## [0.0.3-alpha.190](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.189...v0.0.3-alpha.190) (2023-07-24)
-
-
-### New Features
-
-* Initial page setting for custom book ([#1819](https://github.com/Wynntils/Artemis/issues/1819)) ([1136d9b](https://github.com/Wynntils/Artemis/commit/1136d9b8393dc3177678f294710eaa5be95fc674))
-
-
-### Miscellaneous Chores
-
-* **release:** v0.0.3-alpha.190 [skip ci] ([1a01d82](https://github.com/Wynntils/Artemis/commit/1a01d82cb912c333b1844b1a46f80945458f1663))
 
