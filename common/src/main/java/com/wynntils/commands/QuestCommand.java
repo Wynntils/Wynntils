@@ -181,7 +181,7 @@ public class QuestCommand extends Command {
         MutableComponent response =
                 Component.literal("Info for quest: " + quest.getName()).withStyle(ChatFormatting.AQUA);
         response.append(Component.literal("\n - Status: ").withStyle(ChatFormatting.WHITE))
-                .append(quest.getStatus().getQuestBookComponent())
+                .append(quest.getStatus().getQuestStateComponent())
                 .append(Component.literal("\n - Level: ").withStyle(ChatFormatting.WHITE))
                 .append(Component.literal(Integer.toString(quest.getLevel())).withStyle(ChatFormatting.YELLOW))
                 .append(Component.literal("\n - Length: ").withStyle(ChatFormatting.WHITE))

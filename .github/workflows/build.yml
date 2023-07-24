@@ -36,6 +36,9 @@ jobs:
         with:
           arguments: spotlessApply
 
+      - name: Delete empty files
+        run: find $(git ls-files -m) -size 0 -delete
+
       - uses: stefanzweifel/git-auto-commit-action@v4
         with:
           commit_user_name: 'WynntilsBot'
