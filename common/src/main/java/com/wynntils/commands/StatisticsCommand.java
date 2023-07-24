@@ -12,6 +12,7 @@ import com.wynntils.core.commands.Command;
 import com.wynntils.core.components.Managers;
 import com.wynntils.core.statistics.StatisticKind;
 import java.util.Arrays;
+import java.util.Comparator;
 import java.util.List;
 import net.minecraft.ChatFormatting;
 import net.minecraft.commands.CommandSourceStack;
@@ -60,7 +61,7 @@ public class StatisticsCommand extends Command {
     private int showStatistics(CommandContext<CommandSourceStack> context) {
         MutableComponent response = Component.literal("Statistics:").withStyle(ChatFormatting.AQUA);
 
-        for (StatisticKind statistic : StatisticKind.values()) {
+        for (StatisticKind statistic : Arrays.stream(StatisticKind.values()).sorted(Comparator.comparing(StatisticKind::getName)).toList()) {
             int value = Managers.Statistics.getStatistic(statistic);
 
             response.append(Component.literal("\n - ").withStyle(ChatFormatting.GRAY))
@@ -77,7 +78,7 @@ public class StatisticsCommand extends Command {
         MutableComponent response =
                 Component.literal("Available kinds of statistics:").withStyle(ChatFormatting.AQUA);
 
-        for (StatisticKind statistic : StatisticKind.values()) {
+        for (StatisticKind statistic : Arrays.stream(StatisticKind.values()).sorted(Comparator.comparing(StatisticKind::getId)).toList()) {
             response.append(Component.literal("\n - ").withStyle(ChatFormatting.GRAY))
                     .append(Component.literal(statistic.getId()).withStyle(ChatFormatting.WHITE))
                     .append(Component.literal(" (" + statistic.getName() + ")").withStyle(ChatFormatting.DARK_GREEN));
