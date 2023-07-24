@@ -56,7 +56,8 @@ public enum DamageType {
     }
 
     public static List<DamageType> statValues() {
-        return Arrays.stream(values()).filter(d -> d == POISON).toList();
+        // Poison is only used in damage labels, not stats
+        return Arrays.stream(values()).filter(type -> type != POISON).toList();
     }
 
     public static DamageType fromElement(Element element) {
