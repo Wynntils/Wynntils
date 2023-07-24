@@ -15,7 +15,7 @@ public final class DamageStatBuilder extends StatBuilder<DamageStatType> {
     @Override
     public void buildStats(Consumer<DamageStatType> callback) {
         for (AttackType attackType : AttackType.values()) {
-            for (DamageType damageType : DamageType.values()) {
+            for (DamageType damageType : DamageType.statValues()) {
                 DamageStatType percentType = buildDamageStat(attackType, damageType, StatUnit.PERCENT);
                 callback.accept(percentType);
 
