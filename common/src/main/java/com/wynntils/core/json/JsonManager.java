@@ -41,6 +41,7 @@ public final class JsonManager extends Manager {
     public static final Gson GSON = new GsonBuilder()
             .registerTypeAdapter(CustomColor.class, new CustomColor.CustomColorSerializer())
             .registerTypeAdapterFactory(new EnumTypeAdapterFactory())
+            .enableComplexMapKeySerialization()
             .setPrettyPrinting()
             .serializeNulls()
             .create();
