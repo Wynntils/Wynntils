@@ -14,7 +14,7 @@ public enum StatisticKind {
     private final String id;
 
     StatisticKind() {
-        this.id = this.getName().toLowerCase(Locale.ROOT);
+        this.id = name().toLowerCase(Locale.ROOT);
     }
 
     public static StatisticKind from(String statisticId) {
