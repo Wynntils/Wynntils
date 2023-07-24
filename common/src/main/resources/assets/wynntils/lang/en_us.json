@@ -1763,5 +1763,7 @@
   "screens.wynntils.wynntilsQuestBook.showMiniQuests.name": "Show Mini Quests",
   "screens.wynntils.wynntilsQuestBook.showQuests.name": "Show Quests",
   "screens.wynntils.wynntilsQuestBook.tryReload": "No quests found! Try reloading quests by pressing the button in the top right corner.",
+  "statistics.wynntils.damage_dealt": "Damage dealt",
+  "statistics.wynntils.spells_cast": "Spells cast",
   "utils.wynntils.component.clickToSetCompass": "Click here to set your compass to this location"
 }

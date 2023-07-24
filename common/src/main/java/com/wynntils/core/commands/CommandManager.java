@@ -23,6 +23,7 @@ import com.wynntils.commands.LootrunCommand;
 import com.wynntils.commands.MapCommand;
 import com.wynntils.commands.QuestCommand;
 import com.wynntils.commands.ServersCommand;
+import com.wynntils.commands.StatisticsCommand;
 import com.wynntils.commands.TerritoryCommand;
 import com.wynntils.commands.WynntilsCommand;
 import com.wynntils.core.WynntilsMod;
@@ -178,6 +179,7 @@ public final class CommandManager extends Manager {
         registerCommand(new MapCommand());
         registerCommand(new QuestCommand());
         registerCommand(new ServersCommand());
+        registerCommand(new StatisticsCommand());
         registerCommand(new TerritoryCommand());
 
         // The WynntilsCommand must be registered last, since it
