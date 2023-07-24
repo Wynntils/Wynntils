@@ -1,8 +1,16 @@
+## [0.0.3-alpha.200](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.199...v0.0.3-alpha.200) (2023-07-24)
+
+
+### Miscellaneous Chores
+
+* Automatically delete empty language files ([#1828](https://github.com/Wynntils/Artemis/issues/1828)) ([66b0e73](https://github.com/Wynntils/Artemis/commit/66b0e734975018b14d3d2fa486108e67f98aadea))
+
 ## [0.0.3-alpha.199](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.198...v0.0.3-alpha.199) (2023-07-24)
 
 
 ### Miscellaneous Chores
 
+* **release:** v0.0.3-alpha.199 [skip ci] ([bc5d88b](https://github.com/Wynntils/Artemis/commit/bc5d88b09bcf2df5e772dbce24ef85595e905a39))
 * Remove unused i18n ([#1832](https://github.com/Wynntils/Artemis/issues/1832)) ([1d00ef2](https://github.com/Wynntils/Artemis/commit/1d00ef2c5a877df76f7f356ad65aad28efcd061a))
 
 ## [0.0.3-alpha.198](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.197...v0.0.3-alpha.198) (2023-07-24)
@@ -40,16 +48,4 @@
 ### Miscellaneous Chores
 
 * **release:** v0.0.3-alpha.196 [skip ci] ([14ef1da](https://github.com/Wynntils/Artemis/commit/14ef1da88b5c6772ec29a3935431a86ec75dd3c1))
-
-## [0.0.3-alpha.195](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.194...v0.0.3-alpha.195) (2023-07-24)
-
-
-### New Features
-
-* Display full quest info ([#1830](https://github.com/Wynntils/Artemis/issues/1830)) ([72141cd](https://github.com/Wynntils/Artemis/commit/72141cd863ed88dfc8e85e921e1927c0c7a92594))
-
-
-### Miscellaneous Chores
-
-* **release:** v0.0.3-alpha.195 [skip ci] ([8e84d48](https://github.com/Wynntils/Artemis/commit/8e84d48d368d5ce265dc3aa229629b7d1e0336ce))
 
