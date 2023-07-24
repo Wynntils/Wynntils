@@ -6,7 +6,7 @@ package com.wynntils.models.gear.tooltip;
 
 import com.wynntils.core.components.Models;
 import com.wynntils.models.activities.quests.QuestInfo;
-import com.wynntils.models.activities.type.QuestStatus;
+import com.wynntils.models.activities.type.ActivityStatus;
 import com.wynntils.models.character.type.ClassType;
 import com.wynntils.models.elements.type.Element;
 import com.wynntils.models.elements.type.Skill;
@@ -94,7 +94,7 @@ public final class GearTooltipHeader {
         if (requirements.quest().isPresent()) {
             String questName = requirements.quest().get();
             Optional<QuestInfo> quest = Models.Quest.getQuestFromName(questName);
-            boolean fulfilled = quest.isPresent() && quest.get().getStatus() == QuestStatus.COMPLETED;
+            boolean fulfilled = quest.isPresent() && quest.get().getStatus() == ActivityStatus.COMPLETED;
             header.add(buildRequirementLine("Quest Req: " + questName, fulfilled));
             requirementsCount++;
         }
