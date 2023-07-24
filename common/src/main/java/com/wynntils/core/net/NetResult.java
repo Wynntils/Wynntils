@@ -91,7 +91,8 @@ public abstract class NetResult {
                 .exceptionally(t -> {
                     if (t instanceof CompletionException ce && ce.getCause() instanceof HttpTimeoutException hte) {
                         // Don't spam the log with stack traces for timeouts
-                        WynntilsMod.warn("Failure in net manager [doHandle], processing " + desc + ", HttpTimeoutException: " + hte.getMessage());
+                        WynntilsMod.warn("Failure in net manager [doHandle], processing " + desc
+                                + ", HttpTimeoutException: " + hte.getMessage());
                     } else {
                         WynntilsMod.warn("Failure in net manager [doHandle], processing " + desc, t);
                     }
