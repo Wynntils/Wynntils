@@ -69,7 +69,7 @@ public class StatisticsCommand extends Command {
             response.append(Component.literal("\n - ").withStyle(ChatFormatting.GRAY))
                     .append(Component.literal(statistic.getName()).withStyle(ChatFormatting.WHITE))
                     .append(Component.literal(": ").withStyle(ChatFormatting.GRAY))
-                    .append(Component.literal(String.valueOf(value)).withStyle(ChatFormatting.DARK_GREEN));
+                    .append(Component.literal(statistic.getFormattedValue(value)).withStyle(ChatFormatting.DARK_GREEN));
         }
 
         context.getSource().sendSuccess(response, false);
@@ -106,7 +106,7 @@ public class StatisticsCommand extends Command {
         MutableComponent response = Component.literal(statistic.getName())
                 .withStyle(ChatFormatting.WHITE)
                 .append(Component.literal(": ").withStyle(ChatFormatting.GRAY))
-                .append(Component.literal(String.valueOf(value)).withStyle(ChatFormatting.DARK_GREEN));
+                .append(Component.literal(statistic.getFormattedValue(value)).withStyle(ChatFormatting.DARK_GREEN));
 
         context.getSource().sendSuccess(response, false);
         return 1;
