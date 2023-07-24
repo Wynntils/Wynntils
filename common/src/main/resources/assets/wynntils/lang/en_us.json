@@ -7,6 +7,8 @@
   "commands.wynntils.debug.profile.total": "Total time spent: %d ms; total number of calls: %d",
   "commands.wynntils.reauth.tryReauth": "Disconnecting from Hades, and trying to reauthenticate...",
   "commands.wynntils.reloadCaches.reloading": "Reloading caches...",
+  "commands.wynntils.statistics.clickHere": "Click here to confirm",
+  "commands.wynntils.statistics.warnReset": "This will reset all your collected statistics for this character. Are you sure you want to continue?",
   "core.wynntils.category.chat": "Chat",
   "core.wynntils.category.combat": "Combat",
   "core.wynntils.category.commands": "Commands",

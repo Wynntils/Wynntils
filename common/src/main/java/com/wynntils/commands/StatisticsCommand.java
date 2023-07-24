@@ -17,6 +17,7 @@ import net.minecraft.ChatFormatting;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.commands.Commands;
 import net.minecraft.commands.SharedSuggestionProvider;
+import net.minecraft.network.chat.ClickEvent;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
 
@@ -50,6 +51,9 @@ public class StatisticsCommand extends Command {
                                 .suggests(STATISTIC_SUGGESTION_PROVIDER)
                                 .executes(this::getStatistic)))
                 .then(Commands.literal("reset").executes(this::resetStatistics))
+                .then(Commands.literal("reset")
+                        .then(Commands.literal("confirmed").executes(this::doResetStatistics))
+                        .executes(this::resetStatistics))
                 .executes(this::syntaxError);
     }
 
@@ -104,9 +108,28 @@ public class StatisticsCommand extends Command {
     }
 
     private int resetStatistics(CommandContext<CommandSourceStack> context) {
+        context.getSource()
+                .sendSuccess(
+                        Component.translatable("commands.wynntils.statistics.warnReset")
+                                .withStyle(ChatFormatting.AQUA),
+                        false);
+        context.getSource()
+                .sendSuccess(
+                        Component.translatable("commands.wynntils.statistics.clickHere")
+                                .withStyle(ChatFormatting.RED)
+                                .withStyle(ChatFormatting.UNDERLINE)
+                                .withStyle(style -> style.withClickEvent(
+                                        new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/statistics reset confirmed"))),
+                        false);
+
+        return 1;
+    }
+
+    private int doResetStatistics(CommandContext<CommandSourceStack> context) {
         Managers.Statistics.resetStatistics();
 
-        MutableComponent response = Component.literal("All statistics reset").withStyle(ChatFormatting.AQUA);
+        MutableComponent response = Component.literal("All statistics for this character has been reset")
+                .withStyle(ChatFormatting.AQUA);
         context.getSource().sendSuccess(response, false);
         return 1;
     }
