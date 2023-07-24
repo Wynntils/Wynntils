@@ -1,9 +1,21 @@
+## [0.0.3-alpha.194](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.193...v0.0.3-alpha.194) (2023-07-24)
+
+
+### Code Refactoring
+
+* Move away from old quest enums ([#1829](https://github.com/Wynntils/Artemis/issues/1829)) ([1a2a7c4](https://github.com/Wynntils/Artemis/commit/1a2a7c4f618f3b38be773c7022c1d66911457e06))
+
 ## [0.0.3-alpha.193](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.192...v0.0.3-alpha.193) (2023-07-24)
 
 
 ### Bug Fixes
 
 * Damage detection was broken, and missed poison ([#1824](https://github.com/Wynntils/Artemis/issues/1824)) ([549c73e](https://github.com/Wynntils/Artemis/commit/549c73e5613605196fdcd1ad0f599961f46211fa))
+
+
+### Miscellaneous Chores
+
+* **release:** v0.0.3-alpha.193 [skip ci] ([52adbf6](https://github.com/Wynntils/Artemis/commit/52adbf69b50429c061f02878645825ae3b4ca6e9))
 
 ## [0.0.3-alpha.192](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.191...v0.0.3-alpha.192) (2023-07-24)
 
@@ -36,16 +48,4 @@
 ### Miscellaneous Chores
 
 * **release:** v0.0.3-alpha.190 [skip ci] ([1a01d82](https://github.com/Wynntils/Artemis/commit/1a01d82cb912c333b1844b1a46f80945458f1663))
-
-## [0.0.3-alpha.189](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.188...v0.0.3-alpha.189) (2023-07-24)
-
-
-### New Features
-
-* Import favorites from legacy ([#1765](https://github.com/Wynntils/Artemis/issues/1765)) ([beabe75](https://github.com/Wynntils/Artemis/commit/beabe7511f80cd58bc5a711f37222306f32c6dc0))
-
-
-### Miscellaneous Chores
-
-* **release:** v0.0.3-alpha.189 [skip ci] ([fbb20bf](https://github.com/Wynntils/Artemis/commit/fbb20bf8be9f45f3d40800c76870f11085ed1615))
 
