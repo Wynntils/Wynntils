@@ -25,7 +25,6 @@ import com.wynntils.core.net.athena.WynntilsAccountManager;
 import com.wynntils.core.net.translation.TranslationManager;
 import com.wynntils.core.notifications.NotificationManager;
 import com.wynntils.core.splashes.SplashManager;
-import com.wynntils.core.statistics.StatisticsManager;
 import com.wynntils.core.storage.StorageManager;
 
 public final class Managers {
@@ -45,7 +44,6 @@ public final class Managers {
     public static final KeyBindManager KeyBind = new KeyBindManager();
     public static final NotificationManager Notification = new NotificationManager();
     public static final ResourcePackManager ResourcePack = new ResourcePackManager();
-    public static final StatisticsManager Statistics = new StatisticsManager();
     public static final TranslationManager Translation = new TranslationManager();
 
     // Managers with dependencies, ordered alphabetically as far as possible

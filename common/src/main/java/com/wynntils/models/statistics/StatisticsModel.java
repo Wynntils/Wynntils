@@ -2,10 +2,10 @@
  * Copyright © Wynntils 2023.
  * This file is released under AGPLv3. See LICENSE for full license details.
  */
-package com.wynntils.core.statistics;
+package com.wynntils.models.statistics;
 
 import com.wynntils.core.WynntilsMod;
-import com.wynntils.core.components.Manager;
+import com.wynntils.core.components.Model;
 import com.wynntils.core.components.Models;
 import com.wynntils.core.storage.Storage;
 import com.wynntils.models.character.event.CharacterUpdateEvent;
@@ -17,7 +17,7 @@ import java.util.TreeMap;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 
 // This should really be an "ExternalModel"...
-public final class StatisticsManager extends Manager {
+public final class StatisticsModel extends Model {
     private final StatisticsCollectors collectors = new StatisticsCollectors();
 
     // All statistics, per character
@@ -26,7 +26,7 @@ public final class StatisticsManager extends Manager {
     // The currently active statistics
     private Map<StatisticKind, Integer> currentStatistics = new EnumMap<>(StatisticKind.class);
 
-    public StatisticsManager() {
+    public StatisticsModel() {
         super(List.of());
         WynntilsMod.registerEventListener(collectors);
     }

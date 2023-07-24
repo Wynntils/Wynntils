@@ -46,6 +46,7 @@ import com.wynntils.models.profession.ProfessionModel;
 import com.wynntils.models.rewards.RewardsModel;
 import com.wynntils.models.seaskipper.SeaskipperModel;
 import com.wynntils.models.spells.SpellModel;
+import com.wynntils.models.statistics.StatisticsModel;
 import com.wynntils.models.stats.StatModel;
 import com.wynntils.models.statuseffects.StatusEffectModel;
 import com.wynntils.models.stopwatch.StopwatchModel;
@@ -80,6 +81,7 @@ public final class Models {
     public static final RewardsModel Rewards = new RewardsModel();
     public static final ServerListModel ServerList = new ServerListModel();
     public static final StatModel Stat = new StatModel();
+    public static final StatisticsModel Statistics = new StatisticsModel();
     public static final StatusEffectModel StatusEffect = new StatusEffectModel();
     public static final StopwatchModel Stopwatch = new StopwatchModel();
     public static final TerritoryModel Territory = new TerritoryModel();

@@ -9,8 +9,8 @@ import com.mojang.brigadier.builder.LiteralArgumentBuilder;
 import com.mojang.brigadier.context.CommandContext;
 import com.mojang.brigadier.suggestion.SuggestionProvider;
 import com.wynntils.core.commands.Command;
-import com.wynntils.core.components.Managers;
-import com.wynntils.core.statistics.StatisticKind;
+import com.wynntils.core.components.Models;
+import com.wynntils.models.statistics.StatisticKind;
 import java.util.Arrays;
 import java.util.Comparator;
 import java.util.List;
@@ -63,7 +63,7 @@ public class StatisticsCommand extends Command {
         for (StatisticKind statistic : Arrays.stream(StatisticKind.values())
                 .sorted(Comparator.comparing(StatisticKind::getName))
                 .toList()) {
-            int value = Managers.Statistics.getStatistic(statistic);
+            int value = Models.Statistics.getStatistic(statistic);
 
             response.append(Component.literal("\n - ").withStyle(ChatFormatting.GRAY))
                     .append(Component.literal(statistic.getName()).withStyle(ChatFormatting.WHITE))
@@ -101,7 +101,7 @@ public class StatisticsCommand extends Command {
             return 0;
         }
 
-        int value = Managers.Statistics.getStatistic(statistic);
+        int value = Models.Statistics.getStatistic(statistic);
 
         MutableComponent response = Component.literal(statistic.getName())
                 .withStyle(ChatFormatting.WHITE)
@@ -131,7 +131,7 @@ public class StatisticsCommand extends Command {
     }
 
     private int doResetStatistics(CommandContext<CommandSourceStack> context) {
-        Managers.Statistics.resetStatistics();
+        Models.Statistics.resetStatistics();
 
         MutableComponent response = Component.literal("All statistics for this character has been reset")
                 .withStyle(ChatFormatting.AQUA);
