@@ -5,6 +5,8 @@
 package com.wynntils.models.stats.type;
 
 import com.wynntils.models.elements.type.Element;
+import java.util.Arrays;
+import java.util.List;
 import java.util.Optional;
 import net.minecraft.ChatFormatting;
 
@@ -16,7 +18,8 @@ public enum DamageType {
     AIR(Element.AIR),
     THUNDER(Element.THUNDER),
     EARTH(Element.EARTH),
-    RAINBOW("Elemental");
+    RAINBOW("Elemental"),
+    POISON("Poison", "☠", ChatFormatting.DARK_PURPLE);
 
     private final Element element;
     private final String displayName;
@@ -50,6 +53,10 @@ public enum DamageType {
         this.apiName = element.getDisplayName();
         this.symbol = element.getSymbol();
         this.colorCode = element.getColorCode();
+    }
+
+    public static List<DamageType> statValues() {
+        return Arrays.stream(values()).filter(d -> d == POISON).toList();
     }
 
     public static DamageType fromElement(Element element) {
