@@ -124,7 +124,7 @@ allprojects {
             trimTrailingWhitespace()
             endWithNewline()
         }
-        format "lang/json", {
+        format "lang", {
             target "src/main/resources/assets/wynntils/lang/*.json"
             custom "No empty json files", {
                 it.replaceAll(/^\{\}\n$/, '')
