@@ -12,7 +12,9 @@ import com.wynntils.core.net.ApiResponse;
 import com.wynntils.core.net.UrlId;
 import com.wynntils.core.text.StyledText;
 import com.wynntils.models.activities.event.ActivityUpdatedEvent;
+import com.wynntils.models.activities.type.ActivityDifficulty;
 import com.wynntils.models.activities.type.ActivityInfo;
+import com.wynntils.models.activities.type.ActivityLength;
 import com.wynntils.models.activities.type.ActivitySortOrder;
 import com.wynntils.models.activities.type.ActivityType;
 import com.wynntils.models.characterstats.CombatXpModel;
@@ -191,9 +193,9 @@ public final class QuestModel extends Model {
         return new QuestInfo(
                 activity.name(),
                 activity.specialInfo().orElse(null),
-                activity.difficulty().get(),
+                activity.difficulty().orElse(ActivityDifficulty.EASY),
                 activity.status(),
-                activity.length().get(),
+                activity.length().orElse(ActivityLength.SHORT),
                 activity.requirements().level().key(),
                 activity.description().orElse(StyledText.EMPTY),
                 activity.requirements(),
