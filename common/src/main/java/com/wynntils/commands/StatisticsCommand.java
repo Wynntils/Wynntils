@@ -51,7 +51,6 @@ public class StatisticsCommand extends Command {
                         .then(Commands.argument("statistic", StringArgumentType.greedyString())
                                 .suggests(STATISTIC_SUGGESTION_PROVIDER)
                                 .executes(this::getStatistic)))
-                .then(Commands.literal("reset").executes(this::resetStatistics))
                 .then(Commands.literal("reset")
                         .then(Commands.literal("confirmed").executes(this::doResetStatistics))
                         .executes(this::resetStatistics))
