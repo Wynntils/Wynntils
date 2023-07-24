@@ -1,9 +1,21 @@
+## [0.0.3-alpha.196](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.195...v0.0.3-alpha.196) (2023-07-24)
+
+
+### New Features
+
+* LE stx in inventory has nicer symbol ([#1821](https://github.com/Wynntils/Artemis/issues/1821)) ([06d1162](https://github.com/Wynntils/Artemis/commit/06d11622db9604877d1a50952949f788a08e9b98))
+
 ## [0.0.3-alpha.195](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.194...v0.0.3-alpha.195) (2023-07-24)
 
 
 ### New Features
 
 * Display full quest info ([#1830](https://github.com/Wynntils/Artemis/issues/1830)) ([72141cd](https://github.com/Wynntils/Artemis/commit/72141cd863ed88dfc8e85e921e1927c0c7a92594))
+
+
+### Miscellaneous Chores
+
+* **release:** v0.0.3-alpha.195 [skip ci] ([8e84d48](https://github.com/Wynntils/Artemis/commit/8e84d48d368d5ce265dc3aa229629b7d1e0336ce))
 
 ## [0.0.3-alpha.194](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.193...v0.0.3-alpha.194) (2023-07-24)
 
@@ -40,12 +52,4 @@
 ### Miscellaneous Chores
 
 * **release:** v0.0.3-alpha.192 [skip ci] ([73e7df7](https://github.com/Wynntils/Artemis/commit/73e7df7be30823e33f8dabf22cd335ce499020c1))
-
-## [0.0.3-alpha.191](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.190...v0.0.3-alpha.191) (2023-07-24)
-
-
-### Miscellaneous Chores
-
-* Make storage/config json use proper enums in collections ([#1823](https://github.com/Wynntils/Artemis/issues/1823)) ([db5d13f](https://github.com/Wynntils/Artemis/commit/db5d13fd9eed08f5a764ca07e4be73f67c6eab8e))
-* **release:** v0.0.3-alpha.191 [skip ci] ([02d863c](https://github.com/Wynntils/Artemis/commit/02d863c74dcf504860d23d2782c8730260125e64))
 
