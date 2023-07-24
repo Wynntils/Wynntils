@@ -1,9 +1,21 @@
+## [0.0.3-alpha.199](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.198...v0.0.3-alpha.199) (2023-07-24)
+
+
+### Miscellaneous Chores
+
+* Remove unused i18n ([#1832](https://github.com/Wynntils/Artemis/issues/1832)) ([1d00ef2](https://github.com/Wynntils/Artemis/commit/1d00ef2c5a877df76f7f356ad65aad28efcd061a))
+
 ## [0.0.3-alpha.198](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.197...v0.0.3-alpha.198) (2023-07-24)
 
 
 ### New Features
 
 * Collect item type/emerald dry count ([#1818](https://github.com/Wynntils/Artemis/issues/1818)) ([61b26d5](https://github.com/Wynntils/Artemis/commit/61b26d5b313b5dd45c2a9aec943548d4ef9caaad))
+
+
+### Miscellaneous Chores
+
+* **release:** v0.0.3-alpha.198 [skip ci] ([b212592](https://github.com/Wynntils/Artemis/commit/b212592e2ccb6a125640428e83d1bc4c0b05aca9))
 
 ## [0.0.3-alpha.197](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.196...v0.0.3-alpha.197) (2023-07-24)
 
@@ -40,16 +52,4 @@
 ### Miscellaneous Chores
 
 * **release:** v0.0.3-alpha.195 [skip ci] ([8e84d48](https://github.com/Wynntils/Artemis/commit/8e84d48d368d5ce265dc3aa229629b7d1e0336ce))
-
-## [0.0.3-alpha.194](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.193...v0.0.3-alpha.194) (2023-07-24)
-
-
-### Miscellaneous Chores
-
-* **release:** v0.0.3-alpha.194 [skip ci] ([22d160b](https://github.com/Wynntils/Artemis/commit/22d160b8f2f916b4f78e809eb8e0e922064606d7))
-
-
-### Code Refactoring
-
-* Move away from old quest enums ([#1829](https://github.com/Wynntils/Artemis/issues/1829)) ([1a2a7c4](https://github.com/Wynntils/Artemis/commit/1a2a7c4f618f3b38be773c7022c1d66911457e06))
 
