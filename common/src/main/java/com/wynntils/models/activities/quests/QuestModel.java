@@ -15,8 +15,6 @@ import com.wynntils.models.activities.event.ActivityUpdatedEvent;
 import com.wynntils.models.activities.type.ActivityInfo;
 import com.wynntils.models.activities.type.ActivitySortOrder;
 import com.wynntils.models.activities.type.ActivityType;
-import com.wynntils.models.activities.type.QuestLength;
-import com.wynntils.models.activities.type.QuestStatus;
 import com.wynntils.models.characterstats.CombatXpModel;
 import com.wynntils.models.worlds.event.WorldStateEvent;
 import com.wynntils.utils.mc.McUtils;
@@ -192,13 +190,15 @@ public final class QuestModel extends Model {
 
         return new QuestInfo(
                 activity.name(),
-                QuestStatus.fromActivityStatus(activity.status()),
-                QuestLength.fromActivityLength(activity.length()),
+                activity.specialInfo().orElse(null),
+                activity.difficulty().get(),
+                activity.status(),
+                activity.length().get(),
                 activity.requirements().level().key(),
                 activity.description().orElse(StyledText.EMPTY),
-                // FIXME! Additional requirements missing
-                List.of(),
-                activity.type() == ActivityType.MINI_QUEST);
+                activity.requirements(),
+                activity.type() == ActivityType.MINI_QUEST,
+                activity.rewards());
     }
 
     private static class LocationComparator implements Comparator<QuestInfo> {

@@ -24,7 +24,7 @@ import net.minecraftforge.eventbus.api.SubscribeEvent;
 
 public final class DamageModel extends Model {
     // https://regexr.com/7968a
-    private static final Pattern DAMAGE_LABEL_PATTERN = Pattern.compile("(?:§[24bcef]-(\\d+) ([❤✦✤❉❋✹]) )");
+    private static final Pattern DAMAGE_LABEL_PATTERN = Pattern.compile("(?:§[245bcef](?:§l)?-(\\d+) ([❤✦✤❉❋✹☠]) )");
 
     // https://regexr.com/7965g
     private static final Pattern DAMAGE_BAR_PATTERN = Pattern.compile("^§[ac](.*) - §c(\\d+)§4❤(?: - §7(.*)§7)?$");

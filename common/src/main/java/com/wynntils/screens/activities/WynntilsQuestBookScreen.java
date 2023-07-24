@@ -13,7 +13,7 @@ import com.wynntils.models.activities.event.ActivityTrackerUpdatedEvent;
 import com.wynntils.models.activities.event.ActivityUpdatedEvent;
 import com.wynntils.models.activities.quests.QuestInfo;
 import com.wynntils.models.activities.type.ActivitySortOrder;
-import com.wynntils.models.activities.type.QuestStatus;
+import com.wynntils.models.activities.type.ActivityStatus;
 import com.wynntils.screens.activities.widgets.DialogueHistoryButton;
 import com.wynntils.screens.activities.widgets.QuestButton;
 import com.wynntils.screens.activities.widgets.QuestInfoButton;
@@ -411,7 +411,7 @@ public final class WynntilsQuestBookScreen extends WynntilsListScreen<QuestInfo,
                     .filter(questInfo -> questInfo.getSortLevel() >= minLevel && questInfo.getSortLevel() <= maxLevel)
                     .count();
             long completedCount = elements.stream()
-                    .filter(questInfo -> questInfo.getStatus() == QuestStatus.COMPLETED
+                    .filter(questInfo -> questInfo.getStatus() == ActivityStatus.COMPLETED
                             && questInfo.getSortLevel() >= minLevel
                             && questInfo.getSortLevel() <= maxLevel)
                     .count();
@@ -431,7 +431,7 @@ public final class WynntilsQuestBookScreen extends WynntilsListScreen<QuestInfo,
         if (count > 0) {
             completedCount = elements.stream()
                     .filter(questInfo ->
-                            questInfo.getStatus() == QuestStatus.COMPLETED && questInfo.getSortLevel() >= 101)
+                            questInfo.getStatus() == ActivityStatus.COMPLETED && questInfo.getSortLevel() >= 101)
                     .count();
             tooltipLines.add(Component.literal("- Lv. 101+")
                     .append(Component.literal(" [" + completedCount + "/" + count + "]")
@@ -442,7 +442,7 @@ public final class WynntilsQuestBookScreen extends WynntilsListScreen<QuestInfo,
 
         count = elements.size();
         completedCount = elements.stream()
-                .filter(questInfo -> questInfo.getStatus() == QuestStatus.COMPLETED)
+                .filter(questInfo -> questInfo.getStatus() == ActivityStatus.COMPLETED)
                 .count();
 
         tooltipLines.add(Component.literal(""));
