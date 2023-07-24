@@ -69,8 +69,8 @@ public class QuestButton extends WynntilsButton {
                 switch (questInfo.getStatus()) {
                     case STARTED -> Texture.QUEST_STARTED;
                     case COMPLETED -> Texture.QUEST_FINISHED;
-                    case CAN_START -> Texture.QUEST_CAN_START;
-                    case CANNOT_START -> Texture.QUEST_CANNOT_START;
+                    case AVAILABLE -> Texture.QUEST_CAN_START;
+                    case UNAVAILABLE -> Texture.QUEST_CANNOT_START;
                 };
 
         RenderUtils.drawTexturedRect(
