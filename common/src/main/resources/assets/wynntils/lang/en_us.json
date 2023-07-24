@@ -55,8 +55,6 @@
   "feature.wynntils.auraTimerOverlay.vignetteOnAura.name": "Vignette Overlay",
   "feature.wynntils.autoApplyResourcePack.description": "Adds the ability to automatically apply the Wynntils resource pack on startup.",
   "feature.wynntils.autoApplyResourcePack.name": "Auto Apply Resource Pack",
-  "feature.wynntils.autoApplyResourcePack.packHash.description": "Last Wynncraft Pack Hash",
-  "feature.wynntils.autoApplyResourcePack.packHash.name": "Pack Hash",
   "feature.wynntils.autoJoinParty.description": "Adds the ability to automatically join a party when a friend invites you.",
   "feature.wynntils.autoJoinParty.name": "Auto Join Parties",
   "feature.wynntils.autoJoinParty.onlyFriends.description": "Should we only auto join party invites from friends?",
