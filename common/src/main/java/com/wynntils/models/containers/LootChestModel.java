@@ -122,6 +122,7 @@ public final class LootChestModel extends Model {
         Optional<EmeraldItem> emeraldOptional = Models.Item.asWynnItem(itemStack, EmeraldItem.class);
         if (emeraldOptional.isPresent()) {
             dryEmeralds.store(dryEmeralds.get() + emeraldOptional.get().getEmeraldValue());
+            return;
         }
 
         Optional<GearBoxItem> gearBoxOptional = Models.Item.asWynnItem(itemStack, GearBoxItem.class);
@@ -136,6 +137,7 @@ public final class LootChestModel extends Model {
             dryBoxes.store(dryBoxes.get() + 1);
             dryItemTiers.get().merge(gearBoxTier, 1, Integer::sum);
             dryItemTiers.touched();
+            return;
         }
 
         Optional<GearItem> gearOptional = Models.Item.asWynnItem(itemStack, GearItem.class);
@@ -144,6 +146,7 @@ public final class LootChestModel extends Model {
             GearTier gearTier = gearOptional.get().getGearTier();
             dryItemTiers.get().merge(gearTier, 1, Integer::sum);
             dryItemTiers.touched();
+            return;
         }
     }
 
