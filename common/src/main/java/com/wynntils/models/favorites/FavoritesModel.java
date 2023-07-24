@@ -96,7 +96,7 @@ public final class FavoritesModel extends Model {
         return revision;
     }
 
-    private Set<String> getFavoriteItems() {
+    public Set<String> getFavoriteItems() {
         // This is a hack to allow saving of favorites in the config
         return Managers.Feature.getFeatureInstance(ItemFavoriteFeature.class)
                 .favoriteItems
