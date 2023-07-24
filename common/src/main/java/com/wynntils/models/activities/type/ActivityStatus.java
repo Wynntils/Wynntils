@@ -5,6 +5,7 @@
 package com.wynntils.models.activities.type;
 
 import net.minecraft.ChatFormatting;
+import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.Items;
 
@@ -36,5 +37,14 @@ public enum ActivityStatus {
 
     public Item getItem() {
         return item;
+    }
+
+    public Component getQuestStateComponent() {
+        return switch (this) {
+            case STARTED -> Component.literal("Started...").withStyle(ChatFormatting.YELLOW);
+            case AVAILABLE -> Component.literal("Can start...").withStyle(ChatFormatting.YELLOW);
+            case UNAVAILABLE -> Component.literal("Cannot start...").withStyle(ChatFormatting.RED);
+            case COMPLETED -> Component.literal("Completed!").withStyle(ChatFormatting.GREEN);
+        };
     }
 }
