@@ -21,10 +21,10 @@ public final class StatisticsModel extends Model {
     private final StatisticsCollectors collectors = new StatisticsCollectors();
 
     // All statistics, per character
-    private final Storage<Map<String, Map<StatisticKind, Integer>>> statistics = new Storage<>(new TreeMap<>());
+    private final Storage<Map<String, Map<StatisticKind, StatisticEntry>>> statistics = new Storage<>(new TreeMap<>());
 
     // The currently active statistics
-    private Map<StatisticKind, Integer> currentStatistics = new EnumMap<>(StatisticKind.class);
+    private Map<StatisticKind, StatisticEntry> currentStatistics = new EnumMap<>(StatisticKind.class);
 
     public StatisticsModel() {
         super(List.of());
@@ -54,12 +54,15 @@ public final class StatisticsModel extends Model {
     }
 
     public void addToStatistics(StatisticKind kind, int amount) {
-        currentStatistics.put(kind, currentStatistics.getOrDefault(kind, 0) + amount);
+        StatisticEntry newValue = currentStatistics.containsKey(kind)
+                ? currentStatistics.get(kind).getUpdatedEntry(amount)
+                : new StatisticEntry(amount, 1, amount, amount);
+        currentStatistics.put(kind, newValue);
         statistics.touched();
     }
 
-    public int getStatistic(StatisticKind statistic) {
-        return currentStatistics.getOrDefault(statistic, 0);
+    public StatisticEntry getStatistic(StatisticKind statistic) {
+        return currentStatistics.getOrDefault(statistic, StatisticEntry.EMPTY);
     }
 
     public void resetStatistics() {

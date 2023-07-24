@@ -10,6 +10,7 @@ import com.mojang.brigadier.context.CommandContext;
 import com.mojang.brigadier.suggestion.SuggestionProvider;
 import com.wynntils.core.commands.Command;
 import com.wynntils.core.components.Models;
+import com.wynntils.models.statistics.StatisticEntry;
 import com.wynntils.models.statistics.StatisticKind;
 import java.util.Arrays;
 import java.util.Comparator;
@@ -63,7 +64,7 @@ public class StatisticsCommand extends Command {
         for (StatisticKind statistic : Arrays.stream(StatisticKind.values())
                 .sorted(Comparator.comparing(StatisticKind::getName))
                 .toList()) {
-            int value = Models.Statistics.getStatistic(statistic);
+            int value = Models.Statistics.getStatistic(statistic).total();
 
             response.append(Component.literal("\n - ").withStyle(ChatFormatting.GRAY))
                     .append(Component.literal(statistic.getName()).withStyle(ChatFormatting.WHITE))
@@ -101,12 +102,25 @@ public class StatisticsCommand extends Command {
             return 0;
         }
 
-        int value = Models.Statistics.getStatistic(statistic);
+        StatisticEntry value = Models.Statistics.getStatistic(statistic);
 
         MutableComponent response = Component.literal(statistic.getName())
                 .withStyle(ChatFormatting.WHITE)
-                .append(Component.literal(": ").withStyle(ChatFormatting.GRAY))
-                .append(Component.literal(statistic.getFormattedValue(value)).withStyle(ChatFormatting.DARK_GREEN));
+                .append(Component.literal(":\nTotal: ").withStyle(ChatFormatting.GRAY))
+                .append(Component.literal(statistic.getFormattedValue(value.total()))
+                        .withStyle(ChatFormatting.DARK_GREEN))
+                .append(Component.literal("\nCount: ").withStyle(ChatFormatting.GRAY))
+                .append(Component.literal(statistic.getFormattedValue(value.count()))
+                        .withStyle(ChatFormatting.DARK_GREEN))
+                .append(Component.literal("\nMin: ").withStyle(ChatFormatting.GRAY))
+                .append(Component.literal(statistic.getFormattedValue(value.min()))
+                        .withStyle(ChatFormatting.DARK_GREEN))
+                .append(Component.literal("\nMax: ").withStyle(ChatFormatting.GRAY))
+                .append(Component.literal(statistic.getFormattedValue(value.max()))
+                        .withStyle(ChatFormatting.DARK_GREEN))
+                .append(Component.literal("\nAverage: ").withStyle(ChatFormatting.GRAY))
+                .append(Component.literal(statistic.getFormattedValue(value.total() / value.count()))
+                        .withStyle(ChatFormatting.DARK_GREEN));
 
         context.getSource().sendSuccess(response, false);
         return 1;
