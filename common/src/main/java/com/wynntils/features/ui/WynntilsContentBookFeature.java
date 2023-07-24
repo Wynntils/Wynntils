@@ -47,7 +47,7 @@ public class WynntilsContentBookFeature extends Feature {
     @RegisterKeyBind
     private final KeyBind openWynntilsMenu = new KeyBind(
             "Open Wynntils Menu",
-            GLFW.GLFW_KEY_UNKNOWN,
+            GLFW.GLFW_KEY_I,
             true,
             () -> WynntilsMenuScreenBase.openBook(WynntilsMenuScreen.create()));
 
