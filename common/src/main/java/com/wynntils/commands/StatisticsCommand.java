@@ -52,7 +52,7 @@ public class StatisticsCommand extends Command {
                                 .suggests(STATISTIC_SUGGESTION_PROVIDER)
                                 .executes(this::getStatistic)))
                 .then(Commands.literal("reset")
-                        .then(Commands.literal("confirmed").executes(this::doResetStatistics))
+                        .then(Commands.literal("confirm").executes(this::doResetStatistics))
                         .executes(this::resetStatistics))
                 .executes(this::syntaxError);
     }

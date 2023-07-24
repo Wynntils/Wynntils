@@ -32,9 +32,10 @@ public final class StatisticsManager extends Manager {
 
     @SubscribeEvent
     public void onWorldChange(WorldStateEvent event) {
-        // If we do not have a proper character, set up a fake statistics map so we always
-        // have a valid map.
         if (!Models.Character.hasCharacter()) {
+            // If we do not have a proper character, set up a fake statistics map so we always
+            // have a valid map, otherwise we will crash when trying to set statistics.
+            // These values will not be persisted.
             currentStatistics = new EnumMap<>(StatisticKind.class);
             return;
         }
