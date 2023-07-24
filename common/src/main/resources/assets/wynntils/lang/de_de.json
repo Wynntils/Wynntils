@@ -28,8 +28,6 @@
   "feature.wynntils.auraTimerOverlay.vignetteOnAura.description": "Soll ein Vignetten-Overlay angewendet werden, wenn eine Aura aktiv ist?",
   "feature.wynntils.auraTimerOverlay.vignetteOnAura.name": "Vignetten Overlay",
   "feature.wynntils.autoApplyResourcePack.name": "Ressourcenpaket automatisch anwenden",
-  "feature.wynntils.autoApplyResourcePack.packHash.description": "Letzter Wynncraft Pack-Hash",
-  "feature.wynntils.autoApplyResourcePack.packHash.name": "Paket Hash",
   "feature.wynntils.beaconBeam.name": "Leuchtfeuerstrahl",
   "feature.wynntils.beaconBeam.waypointBeamColor.description": "Welche Farbe soll der Leuchtfeuerstrahl haben?",
   "feature.wynntils.beaconBeam.waypointBeamColor.name": "Farbe des Leuchtfeuerstrahls",
