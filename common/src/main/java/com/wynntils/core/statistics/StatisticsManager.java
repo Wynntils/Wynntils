@@ -4,13 +4,11 @@
  */
 package com.wynntils.core.statistics;
 
+import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.components.Manager;
 import com.wynntils.core.components.Models;
 import com.wynntils.core.storage.Storage;
 import com.wynntils.models.character.event.CharacterUpdateEvent;
-import com.wynntils.models.damage.type.DamageDealtEvent;
-import com.wynntils.models.spells.event.SpellEvent;
-import com.wynntils.models.stats.type.DamageType;
 import com.wynntils.models.worlds.event.WorldStateEvent;
 import java.util.EnumMap;
 import java.util.List;
@@ -20,6 +18,8 @@ import net.minecraftforge.eventbus.api.SubscribeEvent;
 
 // This should really be an "ExternalModel"...
 public final class StatisticsManager extends Manager {
+    private final StatisticsCollectors collectors = new StatisticsCollectors();
+
     // All statistics, per character
     private final Storage<Map<String, Map<StatisticKind, Integer>>> statistics = new Storage<>(new TreeMap<>());
 
@@ -28,6 +28,7 @@ public final class StatisticsManager extends Manager {
 
     public StatisticsManager() {
         super(List.of());
+        WynntilsMod.registerEventListener(collectors);
     }
 
     @SubscribeEvent
@@ -72,19 +73,4 @@ public final class StatisticsManager extends Manager {
         currentStatistics = statistics.get().get(id);
         statistics.touched();
     }
-
-    // region Statistics collectors
-
-    @SubscribeEvent
-    public void onDamageDealtEvent(DamageDealtEvent event) {
-        int neutralDamage = event.getDamages().getOrDefault(DamageType.ALL, 0);
-        addToStatistics(StatisticKind.DAMAGE_DEALT, neutralDamage);
-    }
-
-    @SubscribeEvent
-    public void onSpellEvent(SpellEvent.Completed event) {
-        increaseStatistics(StatisticKind.SPELLS_CAST);
-    }
-
-    // endregion
 }
