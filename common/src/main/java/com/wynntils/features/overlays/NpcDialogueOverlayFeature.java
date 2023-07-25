@@ -144,7 +144,7 @@ public class NpcDialogueOverlayFeature extends Feature {
                 // Remove the initial blank line in that case
                 allDialogues.removeFirst();
             }
-            
+
             renderDialogue(poseStack, bufferSource, allDialogues, dialogueType);
         }
 
