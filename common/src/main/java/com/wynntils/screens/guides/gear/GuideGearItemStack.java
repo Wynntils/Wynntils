@@ -5,6 +5,7 @@
 package com.wynntils.screens.guides.gear;
 
 import com.wynntils.core.components.Models;
+import com.wynntils.core.components.Services;
 import com.wynntils.models.gear.tooltip.GearTooltipBuilder;
 import com.wynntils.models.gear.type.GearInfo;
 import com.wynntils.models.items.WynnItemCache;
@@ -44,7 +45,7 @@ public final class GuideGearItemStack extends GuideItemStack {
         appendObtainInfo(tooltipLines, gearInfo.metaInfo().obtainInfo());
 
         tooltipLines.add(Component.empty());
-        if (Models.Favorites.isFavorite(this)) {
+        if (Services.Favorites.isFavorite(this)) {
             tooltipLines.add(Component.translatable("screens.wynntils.wynntilsGuides.itemGuide.unfavorite")
                     .withStyle(ChatFormatting.YELLOW));
         } else {

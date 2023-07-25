@@ -5,7 +5,7 @@
 package com.wynntils.features.overlays;
 
 import com.mojang.brigadier.tree.LiteralCommandNode;
-import com.wynntils.core.components.Models;
+import com.wynntils.core.components.Services;
 import com.wynntils.core.config.Category;
 import com.wynntils.core.config.ConfigCategory;
 import com.wynntils.core.features.Feature;
@@ -32,12 +32,12 @@ public class StopwatchFeature extends Feature {
 
     @RegisterKeyBind
     private final KeyBind resetStopwatchKeybind =
-            new KeyBind("Reset Stopwatch", GLFW.GLFW_KEY_KP_DECIMAL, true, Models.Stopwatch::reset);
+            new KeyBind("Reset Stopwatch", GLFW.GLFW_KEY_KP_DECIMAL, true, Services.Stopwatch::reset);
 
     @RegisterCommand
     private final LiteralCommandNode<CommandSourceStack> startCommand = Commands.literal("start")
             .executes(ctx -> {
-                Models.Stopwatch.start();
+                Services.Stopwatch.start();
                 return 0;
             })
             .build();
@@ -45,8 +45,8 @@ public class StopwatchFeature extends Feature {
     @RegisterCommand
     private final LiteralCommandNode<CommandSourceStack> pauseCommand = Commands.literal("pause")
             .executes(ctx -> {
-                if (Models.Stopwatch.isRunning()) {
-                    Models.Stopwatch.pause();
+                if (Services.Stopwatch.isRunning()) {
+                    Services.Stopwatch.pause();
                 }
                 return 0;
             })
@@ -55,7 +55,7 @@ public class StopwatchFeature extends Feature {
     @RegisterCommand
     private final LiteralCommandNode<CommandSourceStack> resetCommand = Commands.literal("reset")
             .executes(ctx -> {
-                Models.Stopwatch.reset();
+                Services.Stopwatch.reset();
                 return 0;
             })
             .build();
@@ -64,10 +64,10 @@ public class StopwatchFeature extends Feature {
     private final Overlay stopwatchOverlay = new StopwatchOverlay();
 
     private void toggleStopwatch() {
-        if (Models.Stopwatch.isRunning()) {
-            Models.Stopwatch.pause();
+        if (Services.Stopwatch.isRunning()) {
+            Services.Stopwatch.pause();
         } else {
-            Models.Stopwatch.start();
+            Services.Stopwatch.start();
         }
     }
 

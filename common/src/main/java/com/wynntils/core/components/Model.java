@@ -7,7 +7,12 @@ package com.wynntils.core.components;
 import java.util.List;
 
 /**
- * Models are like managers that can be dependent upon by features / functions.
+ * Models are our representation of the Wynncraft world, game state and Wynncraft
+ * metadata. In general, any non-trivial interesting aspect of Wynncraft that is
+ * provided through vanilla Minecraft elements, should be parsed and provided by
+ * a Model.
+ *
+ * Models are created as singletons in the {@link Models} holding class.
  */
 public abstract class Model extends CoreComponent {
     protected Model(List<Model> dependencies) {

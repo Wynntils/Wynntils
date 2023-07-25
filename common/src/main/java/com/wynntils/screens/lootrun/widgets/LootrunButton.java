@@ -5,13 +5,13 @@
 package com.wynntils.screens.lootrun.widgets;
 
 import com.mojang.blaze3d.vertex.PoseStack;
-import com.wynntils.core.components.Models;
+import com.wynntils.core.components.Services;
 import com.wynntils.core.text.StyledText;
-import com.wynntils.models.lootruns.LootrunInstance;
-import com.wynntils.models.lootruns.type.LootrunPath;
 import com.wynntils.screens.base.widgets.WynntilsButton;
 import com.wynntils.screens.lootrun.WynntilsLootrunsScreen;
 import com.wynntils.screens.maps.MainMapScreen;
+import com.wynntils.services.lootruns.LootrunInstance;
+import com.wynntils.services.lootruns.type.LootrunPath;
 import com.wynntils.utils.colors.CommonColors;
 import com.wynntils.utils.colors.CustomColor;
 import com.wynntils.utils.mc.KeyboardUtils;
@@ -78,15 +78,15 @@ public class LootrunButton extends WynntilsButton {
     public boolean mouseClicked(double mouseX, double mouseY, int button) {
         if (button == GLFW.GLFW_MOUSE_BUTTON_LEFT) {
             if (isLoaded()) {
-                Models.Lootrun.clearCurrentLootrun();
+                Services.Lootrun.clearCurrentLootrun();
             } else {
-                Models.Lootrun.tryLoadLootrun(lootrun.name());
+                Services.Lootrun.tryLoadLootrun(lootrun.name());
             }
             return true;
         }
 
         if (button == GLFW.GLFW_MOUSE_BUTTON_MIDDLE) {
-            Util.getPlatform().openFile(Models.Lootrun.LOOTRUNS);
+            Util.getPlatform().openFile(Services.Lootrun.LOOTRUNS);
             return true;
         }
 
@@ -113,13 +113,13 @@ public class LootrunButton extends WynntilsButton {
     public void onPress() {}
 
     private void tryDeleteLootrun() {
-        File file = new File(Models.Lootrun.LOOTRUNS, lootrun.name() + ".json");
+        File file = new File(Services.Lootrun.LOOTRUNS, lootrun.name() + ".json");
         file.delete();
         screen.reloadElements();
     }
 
     private boolean isLoaded() {
-        LootrunInstance currentLootrun = Models.Lootrun.getCurrentLootrun();
+        LootrunInstance currentLootrun = Services.Lootrun.getCurrentLootrun();
         return currentLootrun != null && Objects.equals(currentLootrun.name(), lootrun.name());
     }
 

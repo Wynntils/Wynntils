@@ -18,7 +18,7 @@ import com.wynntils.core.features.Feature;
 import com.wynntils.core.text.StyledText;
 import com.wynntils.mc.event.RenderEvent;
 import com.wynntils.mc.event.RenderLevelEvent;
-import com.wynntils.models.map.pois.WaypointPoi;
+import com.wynntils.services.map.pois.WaypointPoi;
 import com.wynntils.utils.colors.CommonColors;
 import com.wynntils.utils.colors.CustomColor;
 import com.wynntils.utils.mc.McUtils;
