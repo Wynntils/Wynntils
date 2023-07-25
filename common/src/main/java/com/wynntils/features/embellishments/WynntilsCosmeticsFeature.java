@@ -5,7 +5,7 @@
 package com.wynntils.features.embellishments;
 
 import com.wynntils.core.components.Managers;
-import com.wynntils.core.components.Models;
+import com.wynntils.core.components.Services;
 import com.wynntils.core.config.Category;
 import com.wynntils.core.config.Config;
 import com.wynntils.core.config.ConfigCategory;
@@ -25,7 +25,7 @@ public class WynntilsCosmeticsFeature extends Feature {
         if (!isEnabled() || !Managers.Connection.onServer()) return;
         if (McUtils.player().is(event.getPlayer()) && !renderOwnCape.get()) return;
 
-        if (Models.Cosmetics.shouldRenderCape(event.getPlayer(), false)) {
+        if (Services.Cosmetics.shouldRenderCape(event.getPlayer(), false)) {
             // Cancel default cape rendering, so ours doesn't cause a double up of capes
             event.setCanceled(true);
         }
@@ -36,7 +36,7 @@ public class WynntilsCosmeticsFeature extends Feature {
         if (!isEnabled() || !Managers.Connection.onServer()) return;
         if (McUtils.player().is(event.getPlayer()) && !renderOwnCape.get()) return;
 
-        if (Models.Cosmetics.shouldRenderCape(event.getPlayer(), true)) {
+        if (Services.Cosmetics.shouldRenderCape(event.getPlayer(), true)) {
             // This might not be necessary?
             event.setCanceled(true);
         }

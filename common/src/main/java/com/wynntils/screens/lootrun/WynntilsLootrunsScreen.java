@@ -6,16 +6,16 @@ package com.wynntils.screens.lootrun;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.wynntils.core.WynntilsMod;
-import com.wynntils.core.components.Models;
+import com.wynntils.core.components.Services;
 import com.wynntils.core.text.StyledText;
-import com.wynntils.models.lootruns.LootrunInstance;
-import com.wynntils.models.lootruns.event.LootrunCacheRefreshEvent;
 import com.wynntils.screens.base.WynntilsListScreen;
 import com.wynntils.screens.base.widgets.BackButton;
 import com.wynntils.screens.base.widgets.PageSelectorButton;
 import com.wynntils.screens.base.widgets.ReloadButton;
 import com.wynntils.screens.lootrun.widgets.LootrunButton;
 import com.wynntils.screens.wynntilsmenu.WynntilsMenuScreen;
+import com.wynntils.services.lootruns.LootrunInstance;
+import com.wynntils.services.lootruns.event.LootrunCacheRefreshEvent;
 import com.wynntils.utils.StringUtils;
 import com.wynntils.utils.TaskUtils;
 import com.wynntils.utils.colors.CommonColors;
@@ -60,7 +60,7 @@ public final class WynntilsLootrunsScreen extends WynntilsListScreen<LootrunInst
     protected void doInit() {
         super.doInit();
 
-        TaskUtils.runAsync(Models.Lootrun::refreshLootrunCache);
+        TaskUtils.runAsync(Services.Lootrun::refreshLootrunCache);
 
         this.addRenderableWidget(new BackButton(
                 (int) ((Texture.QUEST_BOOK_BACKGROUND.width() / 2f - 16) / 2f),
@@ -75,7 +75,7 @@ public final class WynntilsLootrunsScreen extends WynntilsListScreen<LootrunInst
                 (int) (Texture.RELOAD_BUTTON.width() / 2 / 1.7f),
                 (int) (Texture.RELOAD_BUTTON.height() / 1.7f),
                 "lootrun",
-                () -> TaskUtils.runAsync(Models.Lootrun::refreshLootrunCache)));
+                () -> TaskUtils.runAsync(Services.Lootrun::refreshLootrunCache)));
 
         this.addRenderableWidget(new PageSelectorButton(
                 Texture.QUEST_BOOK_BACKGROUND.width() / 2 + 50 - Texture.FORWARD_ARROW.width() / 2,
@@ -98,7 +98,7 @@ public final class WynntilsLootrunsScreen extends WynntilsListScreen<LootrunInst
         if (hovered instanceof LootrunButton lootrunButton) {
             List<Component> tooltipLines;
 
-            LootrunInstance currentLootrun = Models.Lootrun.getCurrentLootrun();
+            LootrunInstance currentLootrun = Services.Lootrun.getCurrentLootrun();
             if (currentLootrun != null
                     && Objects.equals(lootrunButton.getLootrun().name(), currentLootrun.name())) {
                 tooltipLines = List.of(
@@ -168,7 +168,7 @@ public final class WynntilsLootrunsScreen extends WynntilsListScreen<LootrunInst
     }
 
     private void renderDescription(PoseStack poseStack) {
-        LootrunInstance currentLootrun = Models.Lootrun.getCurrentLootrun();
+        LootrunInstance currentLootrun = Services.Lootrun.getCurrentLootrun();
         if (currentLootrun != null) {
             poseStack.pushPose();
             poseStack.translate(20, 80, 0);
@@ -282,7 +282,7 @@ public final class WynntilsLootrunsScreen extends WynntilsListScreen<LootrunInst
 
     @Override
     protected void reloadElementsList(String searchTerm) {
-        elements.addAll(Models.Lootrun.getLootruns().stream()
+        elements.addAll(Services.Lootrun.getLootruns().stream()
                 .filter(lootrunInstance -> StringUtils.partialMatch(lootrunInstance.name(), searchTerm))
                 .toList());
     }

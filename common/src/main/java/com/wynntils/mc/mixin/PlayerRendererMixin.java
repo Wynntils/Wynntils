@@ -8,7 +8,7 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import com.wynntils.core.events.MixinHelper;
 import com.wynntils.mc.event.PlayerNametagRenderEvent;
 import com.wynntils.mc.event.PlayerRenderEvent;
-import com.wynntils.models.cosmetics.CosmeticsModel;
+import com.wynntils.services.cosmetics.CosmeticsService;
 import net.minecraft.client.model.PlayerModel;
 import net.minecraft.client.player.AbstractClientPlayer;
 import net.minecraft.client.renderer.MultiBufferSource;
@@ -35,7 +35,7 @@ public abstract class PlayerRendererMixin
     private void onCtor(EntityRendererProvider.Context context, boolean bl, CallbackInfo ci) {
         // Note: This is needed because constructor is called in a static context, where class loading is unpredictable.
         //       This makes it so events can't be used here, since this might happen before initalizing features.
-        CosmeticsModel.getRegisteredLayers()
+        CosmeticsService.getRegisteredLayers()
                 .forEach(layerProvider -> this.addLayer(layerProvider.apply(this, context.getModelSet())));
     }
 

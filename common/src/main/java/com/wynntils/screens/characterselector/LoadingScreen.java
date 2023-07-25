@@ -5,7 +5,7 @@
 package com.wynntils.screens.characterselector;
 
 import com.mojang.blaze3d.vertex.PoseStack;
-import com.wynntils.core.components.Managers;
+import com.wynntils.core.components.Services;
 import com.wynntils.core.text.StyledText;
 import com.wynntils.screens.base.WynntilsScreen;
 import com.wynntils.utils.colors.CommonColors;
@@ -75,7 +75,7 @@ public final class LoadingScreen extends WynntilsScreen {
 
         // Draw logo
         int centerX = Texture.CHANGELOG_BACKGROUND.width() / 2 + 15;
-        String logoString = Managers.ResourcePack.hasCustomResourcePack() ? LOGO_STRING : TEXT_LOGO_STRING;
+        String logoString = Services.ResourcePack.hasCustomResourcePack() ? LOGO_STRING : TEXT_LOGO_STRING;
         FontRenderer.getInstance()
                 .renderText(
                         poseStack,
