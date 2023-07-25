@@ -11,7 +11,7 @@ import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.wynntils.core.components.Models;
 import com.wynntils.core.config.Category;
 import com.wynntils.core.config.ConfigCategory;
-import com.wynntils.core.features.Feature;
+import com.wynntils.core.consumers.features.Feature;
 import com.wynntils.core.text.StyledText;
 import com.wynntils.mc.event.PlayerRenderEvent;
 import com.wynntils.mc.event.TickEvent;

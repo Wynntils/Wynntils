@@ -7,7 +7,7 @@ package com.wynntils.features.combat;
 import com.wynntils.core.components.Models;
 import com.wynntils.core.config.Category;
 import com.wynntils.core.config.ConfigCategory;
-import com.wynntils.core.features.Feature;
+import com.wynntils.core.consumers.features.Feature;
 import com.wynntils.mc.event.ContainerCloseEvent;
 import com.wynntils.utils.mc.McUtils;
 import com.wynntils.utils.wynn.ContainerUtils;

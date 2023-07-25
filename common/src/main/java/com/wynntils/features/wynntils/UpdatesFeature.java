@@ -11,7 +11,7 @@ import com.wynntils.core.config.Category;
 import com.wynntils.core.config.Config;
 import com.wynntils.core.config.ConfigCategory;
 import com.wynntils.core.config.RegisterConfig;
-import com.wynntils.core.features.Feature;
+import com.wynntils.core.consumers.features.Feature;
 import com.wynntils.models.worlds.event.WorldStateEvent;
 import com.wynntils.services.athena.UpdateService;
 import com.wynntils.utils.mc.McUtils;

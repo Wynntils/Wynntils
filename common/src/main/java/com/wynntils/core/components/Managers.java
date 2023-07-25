@@ -4,12 +4,12 @@
  */
 package com.wynntils.core.components;
 
-import com.wynntils.core.commands.CommandManager;
 import com.wynntils.core.config.ConfigManager;
 import com.wynntils.core.config.upfixers.ConfigUpfixerManager;
-import com.wynntils.core.features.FeatureManager;
-import com.wynntils.core.features.overlays.OverlayManager;
-import com.wynntils.core.functions.FunctionManager;
+import com.wynntils.core.consumers.commands.CommandManager;
+import com.wynntils.core.consumers.features.FeatureManager;
+import com.wynntils.core.consumers.features.overlays.OverlayManager;
+import com.wynntils.core.consumers.functions.FunctionManager;
 import com.wynntils.core.json.JsonManager;
 import com.wynntils.core.keybinds.KeyBindManager;
 import com.wynntils.core.mod.ConnectionManager;

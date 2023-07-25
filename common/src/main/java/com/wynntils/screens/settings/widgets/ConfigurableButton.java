@@ -5,10 +5,10 @@
 package com.wynntils.screens.settings.widgets;
 
 import com.mojang.blaze3d.vertex.PoseStack;
-import com.wynntils.core.features.Configurable;
-import com.wynntils.core.features.Feature;
-import com.wynntils.core.features.Translatable;
-import com.wynntils.core.features.overlays.Overlay;
+import com.wynntils.core.consumers.features.Configurable;
+import com.wynntils.core.consumers.features.Feature;
+import com.wynntils.core.consumers.features.Translatable;
+import com.wynntils.core.consumers.features.overlays.Overlay;
 import com.wynntils.core.text.StyledText;
 import com.wynntils.screens.base.widgets.WynntilsButton;
 import com.wynntils.screens.settings.WynntilsBookSettingsScreen;

@@ -12,7 +12,7 @@ import com.wynntils.core.config.ConfigCategory;
 import com.wynntils.core.config.ConfigHolder;
 import com.wynntils.core.config.HiddenConfig;
 import com.wynntils.core.config.RegisterConfig;
-import com.wynntils.core.features.Feature;
+import com.wynntils.core.consumers.features.Feature;
 import com.wynntils.handlers.chat.event.ChatMessageReceivedEvent;
 import com.wynntils.handlers.chat.type.RecipientType;
 import com.wynntils.mc.event.ChatPacketReceivedEvent;

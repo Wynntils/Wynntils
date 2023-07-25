@@ -4,8 +4,8 @@
  */
 package com.wynntils.functions;
 
-import com.wynntils.core.functions.Function;
-import com.wynntils.core.functions.arguments.FunctionArguments;
+import com.wynntils.core.consumers.functions.Function;
+import com.wynntils.core.consumers.functions.arguments.FunctionArguments;
 import com.wynntils.mc.mixin.accessors.MinecraftAccessor;
 import com.wynntils.utils.mc.McUtils;
 import com.wynntils.utils.mc.type.Location;
