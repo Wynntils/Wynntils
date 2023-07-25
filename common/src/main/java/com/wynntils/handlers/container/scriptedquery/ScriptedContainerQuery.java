@@ -9,7 +9,7 @@ import com.wynntils.core.text.StyledText;
 import com.wynntils.handlers.container.ContainerQueryException;
 import com.wynntils.handlers.container.ContainerQueryStep;
 import com.wynntils.handlers.container.type.ContainerContent;
-import com.wynntils.utils.wynn.InventoryUtils;
+import com.wynntils.utils.wynn.ItemUtils;
 import java.util.LinkedList;
 import java.util.function.Consumer;
 import net.minecraft.network.chat.Component;
@@ -37,7 +37,7 @@ public final class ScriptedContainerQuery implements ContainerQueryStep {
             ContainerContent container, int slotNum, Item expectedItemType, StyledText expectedItemName) {
         ItemStack itemStack = container.items().get(slotNum);
         return itemStack.is(expectedItemType)
-                && InventoryUtils.getItemName(itemStack).equals(expectedItemName);
+                && ItemUtils.getItemName(itemStack).equals(expectedItemName);
     }
 
     public void executeQuery() {
