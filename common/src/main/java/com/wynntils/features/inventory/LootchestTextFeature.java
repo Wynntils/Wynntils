@@ -20,35 +20,36 @@ import java.text.NumberFormat;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 
 @ConfigCategory(Category.INVENTORY)
-public class LootChestStatsFeature extends Feature {
+public class LootchestTextFeature extends Feature {
     @SubscribeEvent
     public void onRenderLootChest(ContainerRenderEvent event) {
-        if (!Models.Container.isLootChest(
-                StyledText.fromComponent(event.getScreen().getTitle()).getStringWithoutFormatting())) {
-            return;
-        }
-        PoseStack poseStack = event.getPoseStack();
+        if (!Models.Container.isLootChest(event.getScreen())) return;
+
         int startX = event.getScreen().leftPos;
         int startY = event.getScreen().topPos;
-        poseStack.pushPose();
-        poseStack.translate(startX, startY, 0);
         int width = event.getScreen().imageWidth;
         int titleLabelX = event.getScreen().titleLabelX;
         int titleLabelY = event.getScreen().titleLabelY;
         int inventoryLabelX = event.getScreen().inventoryLabelX;
         int inventoryLabelY = event.getScreen().inventoryLabelY;
+
+        PoseStack poseStack = event.getPoseStack();
+
+        poseStack.pushPose();
+        poseStack.translate(startX, startY, 200);
+
         renderTotalChestCount(
                 event.getPoseStack(), width - titleLabelX, titleLabelY, Models.LootChest.getOpenedChestCount());
         renderDryChestCount(
                 event.getPoseStack(), width - inventoryLabelX, inventoryLabelY, Models.LootChest.getDryCount());
+
         poseStack.popPose();
     }
 
     private void renderTotalChestCount(PoseStack poseStack, int x, int y, int totalChests) {
-        poseStack.pushPose();
-        poseStack.translate(0, 0, 200);
         NumberFormat numberFormat = NumberFormat.getNumberInstance();
         String totalChestCountStats = "Total: " + numberFormat.format(totalChests);
+
         FontRenderer.getInstance()
                 .renderText(
                         poseStack,
@@ -60,14 +61,12 @@ public class LootChestStatsFeature extends Feature {
                         HorizontalAlignment.RIGHT,
                         VerticalAlignment.TOP,
                         TextShadow.NONE);
-        poseStack.popPose();
     }
 
     private void renderDryChestCount(PoseStack poseStack, int x, int y, int dryChests) {
-        poseStack.pushPose();
-        poseStack.translate(0, 0, 200);
         NumberFormat numberFormat = NumberFormat.getNumberInstance();
         String totalChestCountStats = "Dry: " + numberFormat.format(dryChests);
+
         FontRenderer.getInstance()
                 .renderText(
                         poseStack,
@@ -79,6 +78,5 @@ public class LootChestStatsFeature extends Feature {
                         HorizontalAlignment.RIGHT,
                         VerticalAlignment.TOP,
                         TextShadow.NONE);
-        poseStack.popPose();
     }
 }
