@@ -6,7 +6,7 @@ package com.wynntils.commands;
 
 import com.mojang.brigadier.arguments.StringArgumentType;
 import com.mojang.brigadier.builder.LiteralArgumentBuilder;
-import com.wynntils.core.commands.Command;
+import com.wynntils.core.consumers.commands.Command;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.commands.Commands;
 

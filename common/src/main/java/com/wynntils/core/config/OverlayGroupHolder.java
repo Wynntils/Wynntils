@@ -6,9 +6,9 @@ package com.wynntils.core.config;
 
 import com.google.gson.reflect.TypeToken;
 import com.wynntils.core.WynntilsMod;
-import com.wynntils.core.features.Feature;
-import com.wynntils.core.features.overlays.Overlay;
-import com.wynntils.core.features.overlays.RenderState;
+import com.wynntils.core.consumers.features.Feature;
+import com.wynntils.core.consumers.features.overlays.Overlay;
+import com.wynntils.core.consumers.features.overlays.RenderState;
 import com.wynntils.mc.event.RenderEvent;
 import java.lang.reflect.Field;
 import java.lang.reflect.ParameterizedType;

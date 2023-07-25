@@ -8,17 +8,17 @@ import com.mojang.blaze3d.platform.GlStateManager;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.wynntils.core.components.Managers;
-import com.wynntils.core.components.Models;
+import com.wynntils.core.components.Services;
+import com.wynntils.core.consumers.screens.WynntilsScreen;
 import com.wynntils.core.text.StyledText;
 import com.wynntils.features.map.MapFeature;
-import com.wynntils.models.map.PoiLocation;
-import com.wynntils.models.map.pois.CustomPoi;
 import com.wynntils.screens.base.TextboxScreen;
-import com.wynntils.screens.base.WynntilsScreen;
 import com.wynntils.screens.base.widgets.TextInputBoxWidget;
+import com.wynntils.services.map.pois.CustomPoi;
 import com.wynntils.utils.colors.CommonColors;
 import com.wynntils.utils.colors.CustomColor;
 import com.wynntils.utils.mc.McUtils;
+import com.wynntils.utils.mc.type.PoiLocation;
 import com.wynntils.utils.render.FontRenderer;
 import com.wynntils.utils.render.RenderUtils;
 import com.wynntils.utils.render.type.HorizontalAlignment;
@@ -182,7 +182,7 @@ public final class PoiCreationScreen extends WynntilsScreen implements TextboxSc
         // region Icon
         this.addRenderableWidget(new Button.Builder(Component.literal("<"), (button) -> {
                     if (selectedIconIndex - 1 < 0) {
-                        selectedIconIndex = Models.Poi.POI_ICONS.size() - 1;
+                        selectedIconIndex = Services.Poi.POI_ICONS.size() - 1;
                     } else {
                         selectedIconIndex--;
                     }
@@ -191,7 +191,7 @@ public final class PoiCreationScreen extends WynntilsScreen implements TextboxSc
                 .size(20, 20)
                 .build());
         this.addRenderableWidget(new Button.Builder(Component.literal(">"), (button) -> {
-                    if (selectedIconIndex + 1 >= Models.Poi.POI_ICONS.size()) {
+                    if (selectedIconIndex + 1 >= Services.Poi.POI_ICONS.size()) {
                         selectedIconIndex = 0;
                     } else {
                         selectedIconIndex++;
@@ -201,7 +201,7 @@ public final class PoiCreationScreen extends WynntilsScreen implements TextboxSc
                 .size(20, 20)
                 .build());
         if (oldPoi != null && firstSetup) {
-            int index = Models.Poi.POI_ICONS.indexOf(oldPoi.getIcon());
+            int index = Services.Poi.POI_ICONS.indexOf(oldPoi.getIcon());
             selectedIconIndex = index == -1 ? 0 : index;
         }
         // endregion
@@ -393,7 +393,7 @@ public final class PoiCreationScreen extends WynntilsScreen implements TextboxSc
         RenderSystem.setShaderColor(color[0], color[1], color[2], 1);
 
         RenderUtils.drawTexturedRect(
-                poseStack, Models.Poi.POI_ICONS.get(selectedIconIndex), this.width / 2f - 70, this.height / 2f + 40);
+                poseStack, Services.Poi.POI_ICONS.get(selectedIconIndex), this.width / 2f - 70, this.height / 2f + 40);
 
         RenderSystem.disableBlend();
         RenderSystem.defaultBlendFunc();
@@ -469,7 +469,7 @@ public final class PoiCreationScreen extends WynntilsScreen implements TextboxSc
                         Integer.parseInt(zInput.getTextBoxInput())),
                 nameInput.getTextBoxInput(),
                 CustomColor.fromHexString(colorInput.getTextBoxInput()),
-                Models.Poi.POI_ICONS.get(selectedIconIndex),
+                Services.Poi.POI_ICONS.get(selectedIconIndex),
                 selectedVisiblity);
 
         if (oldPoi != null) {

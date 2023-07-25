@@ -5,7 +5,7 @@
 package com.wynntils.screens.guides;
 
 import com.mojang.blaze3d.vertex.PoseStack;
-import com.wynntils.core.components.Models;
+import com.wynntils.core.components.Services;
 import com.wynntils.core.text.StyledText;
 import com.wynntils.screens.base.TooltipProvider;
 import com.wynntils.screens.base.WynntilsListScreen;
@@ -98,7 +98,7 @@ public final class WynntilsGuidesListScreen extends WynntilsListScreen<Screen, G
         names.remove(0); // Remove the "wynntilsFavorites," part
         names.forEach(name -> {
             if (name.isBlank() || name.isEmpty()) return;
-            Models.Favorites.addFavorite(name);
+            Services.Favorites.addFavorite(name);
         });
         McUtils.sendMessageToClient(
                 Component.translatable("screens.wynntils.wynntilsGuides.importedFavorites", names.size())
@@ -108,10 +108,10 @@ public final class WynntilsGuidesListScreen extends WynntilsListScreen<Screen, G
     private void exportFavorites() {
         McUtils.mc()
                 .keyboardHandler
-                .setClipboard("wynntilsFavorites," + String.join(",", Models.Favorites.getFavoriteItems()));
+                .setClipboard("wynntilsFavorites," + String.join(",", Services.Favorites.getFavoriteItems()));
         McUtils.sendMessageToClient(Component.translatable(
                         "screens.wynntils.wynntilsGuides.exportedFavorites",
-                        Models.Favorites.getFavoriteItems().size())
+                        Services.Favorites.getFavoriteItems().size())
                 .withStyle(ChatFormatting.GREEN));
     }
 

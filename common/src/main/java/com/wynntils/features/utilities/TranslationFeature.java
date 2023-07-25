@@ -6,18 +6,19 @@ package com.wynntils.features.utilities;
 
 import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.components.Managers;
+import com.wynntils.core.components.Services;
 import com.wynntils.core.config.Category;
 import com.wynntils.core.config.Config;
 import com.wynntils.core.config.ConfigCategory;
 import com.wynntils.core.config.RegisterConfig;
-import com.wynntils.core.features.Feature;
-import com.wynntils.core.features.properties.StartDisabled;
-import com.wynntils.core.net.translation.TranslationManager;
+import com.wynntils.core.consumers.features.Feature;
+import com.wynntils.core.consumers.features.properties.StartDisabled;
 import com.wynntils.core.text.StyledText;
 import com.wynntils.handlers.chat.event.ChatMessageReceivedEvent;
 import com.wynntils.handlers.chat.event.NpcDialogEvent;
 import com.wynntils.handlers.chat.type.NpcDialogueType;
 import com.wynntils.handlers.chat.type.RecipientType;
+import com.wynntils.services.translation.TranslationService;
 import com.wynntils.utils.mc.McUtils;
 import java.util.List;
 import net.minecraft.network.chat.Component;
@@ -46,8 +47,8 @@ public class TranslationFeature extends Feature {
     public final Config<Boolean> keepOriginal = new Config<>(true);
 
     @RegisterConfig
-    public final Config<TranslationManager.TranslationServices> translationService =
-            new Config<>(TranslationManager.TranslationServices.GOOGLEAPI);
+    public final Config<TranslationService.TranslationServices> translationService =
+            new Config<>(TranslationService.TranslationServices.GOOGLEAPI);
 
     @SubscribeEvent
     public void onChat(ChatMessageReceivedEvent e) {
@@ -58,7 +59,7 @@ public class TranslationFeature extends Feature {
 
         StyledText origCoded = e.getStyledText();
         String wrapped = wrapCoding(origCoded);
-        Managers.Translation.getTranslator(translationService.get())
+        Services.Translation.getTranslator(translationService.get())
                 .translate(List.of(wrapped), languageName.get(), translatedMsgList -> {
                     StyledText messageToSend;
                     if (!translatedMsgList.isEmpty()) {
@@ -88,7 +89,7 @@ public class TranslationFeature extends Feature {
             List<String> wrapped = e.getChatMessage().stream()
                     .map(component -> wrapCoding(StyledText.fromComponent(component)))
                     .toList();
-            Managers.Translation.getTranslator(translationService.get())
+            Services.Translation.getTranslator(translationService.get())
                     .translate(wrapped, languageName.get(), translatedMsgList -> {
                         List<Component> translatedComponents = translatedMsgList.stream()
                                 .map(this::unwrapCoding)

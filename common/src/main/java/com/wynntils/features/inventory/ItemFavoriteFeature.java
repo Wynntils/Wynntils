@@ -5,12 +5,13 @@
 package com.wynntils.features.inventory;
 
 import com.wynntils.core.components.Models;
+import com.wynntils.core.components.Services;
 import com.wynntils.core.config.Category;
 import com.wynntils.core.config.Config;
 import com.wynntils.core.config.ConfigCategory;
 import com.wynntils.core.config.HiddenConfig;
 import com.wynntils.core.config.RegisterConfig;
-import com.wynntils.core.features.Feature;
+import com.wynntils.core.consumers.features.Feature;
 import com.wynntils.mc.event.ContainerCloseEvent;
 import com.wynntils.mc.event.ScreenOpenedEvent;
 import com.wynntils.mc.event.SlotRenderEvent;
@@ -91,7 +92,7 @@ public class ItemFavoriteFeature extends Feature {
         if (wynnItemOpt.isEmpty()) return false;
 
         WynnItem wynnItem = wynnItemOpt.get();
-        int currentRevision = Models.Favorites.getRevision();
+        int currentRevision = Services.Favorites.getRevision();
         Integer revision = wynnItem.getCache().get(WynnItemCache.FAVORITE_KEY);
         if (revision != null && (revision == currentRevision || revision == -currentRevision)) {
             // The cache is up to date; positive value means it is a favorite
@@ -99,7 +100,7 @@ public class ItemFavoriteFeature extends Feature {
         }
 
         // Cache is missing or outdated
-        boolean isFavorite = Models.Favorites.calculateFavorite(itemStack, wynnItem);
+        boolean isFavorite = Services.Favorites.calculateFavorite(itemStack, wynnItem);
         wynnItem.getCache().store(WynnItemCache.FAVORITE_KEY, isFavorite ? currentRevision : -currentRevision);
         return isFavorite;
     }

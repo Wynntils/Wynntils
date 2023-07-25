@@ -8,16 +8,17 @@ import com.mojang.brigadier.arguments.StringArgumentType;
 import com.mojang.brigadier.builder.LiteralArgumentBuilder;
 import com.mojang.brigadier.context.CommandContext;
 import com.mojang.brigadier.suggestion.SuggestionProvider;
-import com.wynntils.core.commands.Command;
 import com.wynntils.core.components.Models;
-import com.wynntils.models.map.PoiLocation;
-import com.wynntils.models.map.pois.Poi;
-import com.wynntils.models.map.pois.ServicePoi;
-import com.wynntils.models.map.type.ServiceKind;
+import com.wynntils.core.components.Services;
+import com.wynntils.core.consumers.commands.Command;
 import com.wynntils.models.territories.profile.TerritoryProfile;
+import com.wynntils.services.map.pois.Poi;
+import com.wynntils.services.map.pois.ServicePoi;
+import com.wynntils.services.map.type.ServiceKind;
 import com.wynntils.utils.StringUtils;
 import com.wynntils.utils.mc.McUtils;
 import com.wynntils.utils.mc.type.Location;
+import com.wynntils.utils.mc.type.PoiLocation;
 import com.wynntils.utils.wynn.LocationUtils;
 import java.util.ArrayList;
 import java.util.Comparator;
@@ -152,7 +153,7 @@ public class CompassCommand extends Command {
         if (selectedKind == null) return 0;
 
         Vec3 currentLocation = McUtils.player().position();
-        Optional<ServicePoi> closestServiceOptional = Models.Poi.getServicePois()
+        Optional<ServicePoi> closestServiceOptional = Services.Poi.getServicePois()
                 .filter(poi -> poi.getKind() == selectedKind)
                 .min(Comparator.comparingDouble(poi -> currentLocation.distanceToSqr(
                         poi.getLocation().getX(),
@@ -181,7 +182,7 @@ public class CompassCommand extends Command {
     private int compassPlace(CommandContext<CommandSourceStack> context) {
         String searchedName = context.getArgument("name", String.class);
 
-        List<Poi> places = new ArrayList<>(Models.Poi.getLabelPois()
+        List<Poi> places = new ArrayList<>(Services.Poi.getLabelPois()
                 .filter(poi -> StringUtils.partialMatch(poi.getName(), searchedName))
                 .toList());
 

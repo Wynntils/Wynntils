@@ -5,6 +5,7 @@
 package com.wynntils.screens.guides.powder;
 
 import com.wynntils.core.components.Models;
+import com.wynntils.core.components.Services;
 import com.wynntils.models.elements.type.Powder;
 import com.wynntils.models.elements.type.PowderTierInfo;
 import com.wynntils.models.items.items.game.PowderItem;
@@ -52,7 +53,7 @@ public final class GuidePowderItemStack extends GuideItemStack {
         tooltip.addAll(generatedTooltip);
 
         tooltip.add(Component.empty());
-        if (Models.Favorites.isFavorite(this)) {
+        if (Services.Favorites.isFavorite(this)) {
             tooltip.add(Component.translatable("screens.wynntils.wynntilsGuides.itemGuide.unfavorite")
                     .withStyle(ChatFormatting.YELLOW));
         } else {

@@ -6,7 +6,7 @@ package com.wynntils.features.map;
 
 import com.wynntils.core.config.Category;
 import com.wynntils.core.config.ConfigCategory;
-import com.wynntils.core.features.Feature;
+import com.wynntils.core.consumers.features.Feature;
 import com.wynntils.models.profession.event.ProfessionNodeGatheredEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 

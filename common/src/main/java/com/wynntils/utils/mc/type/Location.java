@@ -4,7 +4,6 @@
  */
 package com.wynntils.utils.mc.type;
 
-import com.wynntils.models.map.PoiLocation;
 import com.wynntils.utils.MathUtils;
 import com.wynntils.utils.mc.PosUtils;
 import java.util.Comparator;

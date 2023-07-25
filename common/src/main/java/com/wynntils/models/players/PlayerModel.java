@@ -8,7 +8,7 @@ import com.mojang.blaze3d.systems.RenderSystem;
 import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.components.Managers;
 import com.wynntils.core.components.Model;
-import com.wynntils.core.components.Models;
+import com.wynntils.core.components.Services;
 import com.wynntils.core.net.ApiResponse;
 import com.wynntils.core.net.UrlId;
 import com.wynntils.core.text.StyledText;
@@ -134,7 +134,7 @@ public final class PlayerModel extends Model {
                     fetching.remove(uuid);
 
                     // Schedule cape loading for next render tick
-                    RenderSystem.recordRenderCall(() -> Models.Cosmetics.loadCosmeticTextures(uuid, user));
+                    RenderSystem.recordRenderCall(() -> Services.Cosmetics.loadCosmeticTextures(uuid, user));
                 },
                 onError -> {
                     errorCount++;

@@ -9,30 +9,31 @@ import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.wynntils.core.components.Managers;
 import com.wynntils.core.components.Models;
+import com.wynntils.core.components.Services;
 import com.wynntils.core.config.Category;
 import com.wynntils.core.config.Config;
 import com.wynntils.core.config.ConfigCategory;
 import com.wynntils.core.config.ConfigHolder;
 import com.wynntils.core.config.RegisterConfig;
-import com.wynntils.core.features.Feature;
-import com.wynntils.core.features.overlays.Overlay;
-import com.wynntils.core.features.overlays.OverlayPosition;
-import com.wynntils.core.features.overlays.OverlaySize;
-import com.wynntils.core.features.overlays.RenderState;
-import com.wynntils.core.features.overlays.TextOverlay;
-import com.wynntils.core.features.overlays.annotations.OverlayInfo;
+import com.wynntils.core.consumers.features.Feature;
+import com.wynntils.core.consumers.features.overlays.Overlay;
+import com.wynntils.core.consumers.features.overlays.OverlayPosition;
+import com.wynntils.core.consumers.features.overlays.OverlaySize;
+import com.wynntils.core.consumers.features.overlays.RenderState;
+import com.wynntils.core.consumers.features.overlays.TextOverlay;
+import com.wynntils.core.consumers.features.overlays.annotations.OverlayInfo;
 import com.wynntils.core.text.StyledText;
 import com.wynntils.mc.event.RenderEvent;
-import com.wynntils.models.map.MapTexture;
-import com.wynntils.models.map.PoiLocation;
-import com.wynntils.models.map.pois.PlayerMiniMapPoi;
-import com.wynntils.models.map.pois.Poi;
-import com.wynntils.models.map.pois.WaypointPoi;
+import com.wynntils.services.map.MapTexture;
+import com.wynntils.services.map.pois.PlayerMiniMapPoi;
+import com.wynntils.services.map.pois.Poi;
+import com.wynntils.services.map.pois.WaypointPoi;
 import com.wynntils.utils.MathUtils;
 import com.wynntils.utils.StringUtils;
 import com.wynntils.utils.colors.CommonColors;
 import com.wynntils.utils.colors.CustomColor;
 import com.wynntils.utils.mc.McUtils;
+import com.wynntils.utils.mc.type.PoiLocation;
 import com.wynntils.utils.render.FontRenderer;
 import com.wynntils.utils.render.MapRenderer;
 import com.wynntils.utils.render.RenderUtils;
@@ -165,7 +166,7 @@ public class MinimapFeature extends Feature {
                 }
             }
 
-            List<MapTexture> maps = Models.Map.getMapsForBoundingBox(textureBoundingBox);
+            List<MapTexture> maps = Services.Map.getMapsForBoundingBox(textureBoundingBox);
             for (MapTexture map : maps) {
                 float textureX = map.getTextureXPosition(playerX);
                 float textureZ = map.getTextureZPosition(playerZ);
@@ -234,19 +235,19 @@ public class MinimapFeature extends Feature {
 
             float currentZoom = 1f / scale.get();
 
-            Stream<? extends Poi> poisToRender = Models.Poi.getServicePois();
+            Stream<? extends Poi> poisToRender = Services.Poi.getServicePois();
 
             poisToRender = Stream.concat(
                     poisToRender,
-                    Models.Hades.getHadesUsers()
+                    Services.Hades.getHadesUsers()
                             .filter(user -> (user.isPartyMember() && renderRemotePartyPlayers.get())
                                     || (user.isMutualFriend() && renderRemoteFriendPlayers.get()))
                             .map(PlayerMiniMapPoi::new));
 
-            poisToRender = Stream.concat(poisToRender, Models.Poi.getCombatPois());
+            poisToRender = Stream.concat(poisToRender, Services.Poi.getCombatPois());
             poisToRender = Stream.concat(
                     poisToRender, Managers.Feature.getFeatureInstance(MapFeature.class).customPois.get().stream());
-            poisToRender = Stream.concat(poisToRender, Models.Poi.getProvidedCustomPois().stream());
+            poisToRender = Stream.concat(poisToRender, Services.Poi.getProvidedCustomPois().stream());
 
             MultiBufferSource.BufferSource bufferSource =
                     McUtils.mc().renderBuffers().bufferSource();

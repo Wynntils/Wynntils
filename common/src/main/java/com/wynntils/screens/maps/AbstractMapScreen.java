@@ -7,19 +7,19 @@ package com.wynntils.screens.maps;
 import com.mojang.blaze3d.platform.InputConstants;
 import com.mojang.blaze3d.vertex.BufferBuilder;
 import com.mojang.blaze3d.vertex.PoseStack;
-import com.wynntils.core.components.Models;
+import com.wynntils.core.components.Services;
+import com.wynntils.core.consumers.screens.WynntilsScreen;
 import com.wynntils.core.text.StyledText;
-import com.wynntils.models.map.MapTexture;
-import com.wynntils.models.map.PoiLocation;
-import com.wynntils.models.map.pois.IconPoi;
-import com.wynntils.models.map.pois.LabelPoi;
-import com.wynntils.models.map.pois.Poi;
-import com.wynntils.screens.base.WynntilsScreen;
+import com.wynntils.services.map.MapTexture;
+import com.wynntils.services.map.pois.IconPoi;
+import com.wynntils.services.map.pois.LabelPoi;
+import com.wynntils.services.map.pois.Poi;
 import com.wynntils.utils.MathUtils;
 import com.wynntils.utils.colors.CommonColors;
 import com.wynntils.utils.colors.CustomColor;
 import com.wynntils.utils.mc.KeyboardUtils;
 import com.wynntils.utils.mc.McUtils;
+import com.wynntils.utils.mc.type.PoiLocation;
 import com.wynntils.utils.render.FontRenderer;
 import com.wynntils.utils.render.MapRenderer;
 import com.wynntils.utils.render.RenderUtils;
@@ -302,7 +302,7 @@ public abstract class AbstractMapScreen extends WynntilsScreen {
         BoundingBox textureBoundingBox =
                 BoundingBox.centered(mapCenterX, mapCenterZ, width / currentZoom, height / currentZoom);
 
-        List<MapTexture> maps = Models.Map.getMapsForBoundingBox(textureBoundingBox);
+        List<MapTexture> maps = Services.Map.getMapsForBoundingBox(textureBoundingBox);
 
         MultiBufferSource.BufferSource bufferSource = MultiBufferSource.immediate(new BufferBuilder(256));
 
