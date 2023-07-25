@@ -7,8 +7,11 @@ package com.wynntils.core.components;
 import java.util.List;
 
 /**
- * Managers constitute the core functionality of Wynntils. They are created
- * as singletons in the {@link Managers} holding class.
+ * Managers constitute the core functionality of Wynntils. They provide the framework
+ * of the entire mod, but does not have any knowledge about Wynncraft specific details
+ * nor any specialized services.
+ *
+ * Managers are created as singletons in the {@link Managers} holding class.
  */
 public abstract class Manager extends CoreComponent {
     protected Manager(List<Manager> dependencies) {

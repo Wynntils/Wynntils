@@ -9,12 +9,12 @@ import com.wynntils.core.config.Category;
 import com.wynntils.core.config.Config;
 import com.wynntils.core.config.ConfigCategory;
 import com.wynntils.core.config.RegisterConfig;
-import com.wynntils.core.features.Feature;
+import com.wynntils.core.consumers.features.Feature;
 import com.wynntils.core.text.StyledText;
 import com.wynntils.handlers.chat.event.ChatMessageReceivedEvent;
 import com.wynntils.handlers.chat.type.MessageType;
 import com.wynntils.handlers.chat.type.RecipientType;
-import com.wynntils.utils.wynn.WynnPlayerUtils;
+import com.wynntils.models.players.type.PlayerRank;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.regex.Matcher;
@@ -496,11 +496,11 @@ public class ChatRedirectFeature extends Feature {
 
         @Override
         protected StyledText getNotification(Matcher matcher) {
-            String rank = matcher.group("rank");
+            String rankString = matcher.group("rank");
             String playerName = matcher.group("name");
+            PlayerRank rank = PlayerRank.fromString(rankString);
 
-            return StyledText.fromString(
-                    ChatFormatting.GREEN + "→ " + WynnPlayerUtils.getFormattedRank(rank) + playerName);
+            return StyledText.fromString(ChatFormatting.GREEN + "→ " + rank.getFormattedRank() + playerName);
         }
     }
 

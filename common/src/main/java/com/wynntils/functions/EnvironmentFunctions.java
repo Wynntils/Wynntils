@@ -4,9 +4,9 @@
  */
 package com.wynntils.functions;
 
-import com.wynntils.core.components.Models;
-import com.wynntils.core.functions.Function;
-import com.wynntils.core.functions.arguments.FunctionArguments;
+import com.wynntils.core.components.Services;
+import com.wynntils.core.consumers.functions.Function;
+import com.wynntils.core.consumers.functions.arguments.FunctionArguments;
 import com.wynntils.utils.SystemUtils;
 import com.wynntils.utils.type.CappedValue;
 import java.time.LocalDateTime;
@@ -50,7 +50,7 @@ public class EnvironmentFunctions {
     public static class StopwatchZero extends Function<Boolean> {
         @Override
         public Boolean getValue(FunctionArguments arguments) {
-            return Models.Stopwatch.isZero();
+            return Services.Stopwatch.isZero();
         }
 
         @Override
@@ -62,35 +62,35 @@ public class EnvironmentFunctions {
     public static class StopwatchRunningFunction extends Function<Boolean> {
         @Override
         public Boolean getValue(FunctionArguments arguments) {
-            return Models.Stopwatch.isRunning();
+            return Services.Stopwatch.isRunning();
         }
     }
 
     public static class StopwatchHoursFunction extends Function<Integer> {
         @Override
         public Integer getValue(FunctionArguments arguments) {
-            return Models.Stopwatch.getHours();
+            return Services.Stopwatch.getHours();
         }
     }
 
     public static class StopwatchMinutesFunction extends Function<Integer> {
         @Override
         public Integer getValue(FunctionArguments arguments) {
-            return Models.Stopwatch.getMinutes();
+            return Services.Stopwatch.getMinutes();
         }
     }
 
     public static class StopwatchSecondsFunction extends Function<Integer> {
         @Override
         public Integer getValue(FunctionArguments arguments) {
-            return Models.Stopwatch.getSeconds();
+            return Services.Stopwatch.getSeconds();
         }
     }
 
     public static class StopwatchMillisecondsFunction extends Function<Integer> {
         @Override
         public Integer getValue(FunctionArguments arguments) {
-            return Models.Stopwatch.getMilliseconds();
+            return Services.Stopwatch.getMilliseconds();
         }
     }
 

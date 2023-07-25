@@ -7,7 +7,7 @@ package com.wynntils.screens.guides.ingredient;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.components.Managers;
-import com.wynntils.core.components.Models;
+import com.wynntils.core.components.Services;
 import com.wynntils.core.net.UrlId;
 import com.wynntils.models.ingredients.type.IngredientTierFormatting;
 import com.wynntils.screens.base.widgets.WynntilsButton;
@@ -52,7 +52,7 @@ public class GuideIngredientItemStackButton extends WynntilsButton {
         RenderUtils.renderItem(poseStack, itemStack, getX(), getY());
 
         String unformattedName = itemStack.getIngredientInfo().name();
-        if (Models.Favorites.isFavorite(unformattedName)) {
+        if (Services.Favorites.isFavorite(unformattedName)) {
             RenderUtils.drawScalingTexturedRect(
                     poseStack,
                     Texture.FAVORITE.resource(),
@@ -90,7 +90,7 @@ public class GuideIngredientItemStackButton extends WynntilsButton {
             Managers.Net.openLink(UrlId.LINK_WYNNDATA_ITEM_LOOKUP, Map.of("itemname", unformattedName));
             return true;
         } else if (button == GLFW.GLFW_MOUSE_BUTTON_LEFT) {
-            Models.Favorites.toggleFavorite(unformattedName);
+            Services.Favorites.toggleFavorite(unformattedName);
             Managers.Config.saveConfig();
         }
 

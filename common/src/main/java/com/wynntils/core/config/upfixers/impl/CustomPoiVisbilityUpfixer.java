@@ -9,7 +9,7 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.wynntils.core.config.ConfigHolder;
 import com.wynntils.core.config.upfixers.ConfigUpfixer;
-import com.wynntils.models.map.pois.CustomPoi;
+import com.wynntils.services.map.pois.CustomPoi;
 import java.util.Set;
 
 public class CustomPoiVisbilityUpfixer implements ConfigUpfixer {

@@ -4,10 +4,10 @@
  */
 package com.wynntils.features.utilities;
 
-import com.wynntils.core.components.Managers;
+import com.wynntils.core.components.Services;
 import com.wynntils.core.config.Category;
 import com.wynntils.core.config.ConfigCategory;
-import com.wynntils.core.features.Feature;
+import com.wynntils.core.consumers.features.Feature;
 import com.wynntils.mc.event.ResourcePackEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 
@@ -15,17 +15,17 @@ import net.minecraftforge.eventbus.api.SubscribeEvent;
 public class AutoApplyResourcePackFeature extends Feature {
     @Override
     public void onDisable() {
-        Managers.ResourcePack.setRequestedPreloadHash("");
+        Services.ResourcePack.setRequestedPreloadHash("");
     }
 
     @SubscribeEvent
     public void onResourcePackLoad(ResourcePackEvent event) {
-        String packHash = Managers.ResourcePack.calculateHash(event.getUrl());
+        String packHash = Services.ResourcePack.calculateHash(event.getUrl());
 
-        String currentHash = Managers.ResourcePack.getRequestedPreloadHash();
+        String currentHash = Services.ResourcePack.getRequestedPreloadHash();
         if (!packHash.equals(currentHash)) {
             // Use this resource pack as our preloaded pack
-            Managers.ResourcePack.setRequestedPreloadHash(packHash);
+            Services.ResourcePack.setRequestedPreloadHash(packHash);
         }
     }
 }

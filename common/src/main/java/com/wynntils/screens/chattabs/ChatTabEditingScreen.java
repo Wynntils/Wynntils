@@ -5,14 +5,15 @@
 package com.wynntils.screens.chattabs;
 
 import com.mojang.blaze3d.vertex.PoseStack;
-import com.wynntils.core.chat.ChatTab;
 import com.wynntils.core.components.Managers;
+import com.wynntils.core.components.Services;
+import com.wynntils.core.consumers.screens.WynntilsScreen;
 import com.wynntils.core.text.StyledText;
 import com.wynntils.handlers.chat.type.RecipientType;
 import com.wynntils.screens.base.TextboxScreen;
-import com.wynntils.screens.base.WynntilsScreen;
 import com.wynntils.screens.base.widgets.TextInputBoxWidget;
 import com.wynntils.screens.base.widgets.TextWidget;
+import com.wynntils.services.chat.ChatTab;
 import com.wynntils.utils.colors.CommonColors;
 import com.wynntils.utils.mc.McUtils;
 import com.wynntils.utils.render.FontRenderer;
@@ -112,7 +113,7 @@ public final class ChatTabEditingScreen extends WynntilsScreen implements Textbo
                         this,
                         orderInput));
         if (firstSetup && edited != null) {
-            orderInput.setTextBoxInput(Integer.toString(Managers.ChatTab.getTabIndex(edited)));
+            orderInput.setTextBoxInput(Integer.toString(Services.ChatTab.getTabIndex(edited)));
         }
         // endregion
 
@@ -342,12 +343,12 @@ public final class ChatTabEditingScreen extends WynntilsScreen implements Textbo
 
     private void saveChatTab() {
         if (edited != null) {
-            Managers.ChatTab.removeTab(edited);
+            Services.ChatTab.removeTab(edited);
         }
 
         int insertIndex = orderInput.getTextBoxInput().isEmpty()
-                ? Managers.ChatTab.getTabCount()
-                : Math.min(Managers.ChatTab.getTabCount(), Integer.parseInt(orderInput.getTextBoxInput()));
+                ? Services.ChatTab.getTabCount()
+                : Math.min(Services.ChatTab.getTabCount(), Integer.parseInt(orderInput.getTextBoxInput()));
 
         ChatTab chatTab = new ChatTab(
                 nameInput.getTextBoxInput(),
@@ -358,18 +359,18 @@ public final class ChatTabEditingScreen extends WynntilsScreen implements Textbo
                         .map(box -> RecipientType.fromName(box.getMessage().getString()))
                         .collect(Collectors.toSet()),
                 filterRegexInput.getTextBoxInput().isBlank() ? null : filterRegexInput.getTextBoxInput());
-        Managers.ChatTab.addTab(insertIndex, chatTab);
+        Services.ChatTab.addTab(insertIndex, chatTab);
 
         Managers.Config.saveConfig();
     }
 
     private void deleteChatTab() {
-        Managers.ChatTab.removeTab(edited);
-        if (Objects.equals(Managers.ChatTab.getFocusedTab(), edited)) {
-            if (!Managers.ChatTab.isTabListEmpty()) {
-                Managers.ChatTab.setFocusedTab(0);
+        Services.ChatTab.removeTab(edited);
+        if (Objects.equals(Services.ChatTab.getFocusedTab(), edited)) {
+            if (!Services.ChatTab.isTabListEmpty()) {
+                Services.ChatTab.setFocusedTab(0);
             } else {
-                Managers.ChatTab.setFocusedTab(null);
+                Services.ChatTab.setFocusedTab(null);
             }
         }
 

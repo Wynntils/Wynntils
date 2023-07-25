@@ -59,9 +59,8 @@ public final class CharacterModel extends Model {
     private boolean reskinned;
     private int level;
 
-    // This field is basically the slot id of the class,
-    // meaning that if a class changes slots, the ID will not be persistent.
-    // This was implemented the same way by legacy.
+    // A hopefully unique string for each character ("class"). This is part of the
+    // full character uuid, as presented by Wynncraft in the tooltip.
     private String id = "-";
 
     public CharacterModel() {
@@ -84,6 +83,10 @@ public final class CharacterModel extends Model {
      */
     public String getActualName() {
         return getClassType().getActualName(isReskinned());
+    }
+
+    public boolean hasCharacter() {
+        return hasCharacter;
     }
 
     public String getId() {
@@ -113,13 +116,12 @@ public final class CharacterModel extends Model {
         }
 
         if (e.getNewState() == WorldState.WORLD) {
-            WynntilsMod.info("Scheduling character info query");
-
-            // We need to scan character info and profession info as well.
-            scanCharacterInfoPage();
-
             // We need to parse the current character id from our inventory
             updateCharacterId();
+
+            WynntilsMod.info("Scheduling character info query");
+            // We need to scan character info and profession info as well.
+            scanCharacterInfoPage();
         }
     }
 

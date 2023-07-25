@@ -6,10 +6,11 @@ package com.wynntils.features;
 
 import com.wynntils.core.components.Managers;
 import com.wynntils.core.components.Models;
+import com.wynntils.core.components.Services;
 import com.wynntils.core.config.Config;
 import com.wynntils.core.config.ConfigHolder;
 import com.wynntils.core.config.RegisterConfig;
-import com.wynntils.core.features.Feature;
+import com.wynntils.core.consumers.features.Feature;
 import com.wynntils.core.text.PartStyle;
 import com.wynntils.core.text.StyledText;
 import com.wynntils.mc.event.ConnectionEvent;
@@ -62,30 +63,30 @@ public class DiscordRichPresenceFeature extends Feature {
         if (displayWorld.get()) {
             switch (event.getNewState()) {
                 case WORLD -> {
-                    Managers.Discord.setState(Models.WorldState.getCurrentWorldName());
+                    Services.Discord.setState(Models.WorldState.getCurrentWorldName());
                     checkTerritory();
                 }
                 case HUB, CONNECTING -> {
-                    Managers.Discord.setDetails("");
-                    Managers.Discord.setState("In Hub");
-                    Managers.Discord.setWynncraftLogo();
+                    Services.Discord.setDetails("");
+                    Services.Discord.setState("In Hub");
+                    Services.Discord.setWynncraftLogo();
                 }
                 case CHARACTER_SELECTION -> {
                     if (displayLocation.get()) {
-                        Managers.Discord.setDetails("Selecting a character");
+                        Services.Discord.setDetails("Selecting a character");
                     }
-                    Managers.Discord.setState("");
-                    Managers.Discord.setWynncraftLogo();
+                    Services.Discord.setState("");
+                    Services.Discord.setWynncraftLogo();
                 }
             }
         } else {
-            Managers.Discord.setState("");
+            Services.Discord.setState("");
         }
     }
 
     @SubscribeEvent
     public void onDisconnect(ConnectionEvent.DisconnectedEvent e) {
-        Managers.Discord.unload();
+        Services.Discord.unload();
     }
 
     private void displayCharacterDetails() {
@@ -97,8 +98,8 @@ public class DiscordRichPresenceFeature extends Feature {
 
         if (classType == null) return;
         String name = StyledText.fromComponent(McUtils.player().getName()).getString(PartStyle.StyleType.NONE);
-        Managers.Discord.setImageText(name + " - Level " + level + " " + classType.getName());
-        Managers.Discord.setImage(classType.getActualName(false).toLowerCase(Locale.ROOT));
+        Services.Discord.setImageText(name + " - Level " + level + " " + classType.getName());
+        Services.Discord.setImage(classType.getActualName(false).toLowerCase(Locale.ROOT));
     }
 
     private void checkTerritory() {
@@ -115,7 +116,7 @@ public class DiscordRichPresenceFeature extends Feature {
             if (territoryProfile != null && territoryProfile != lastTerritoryProfile) {
                 lastTerritoryProfile = territoryProfile;
                 String location = territoryProfile.getName();
-                Managers.Discord.setDetails(location);
+                Services.Discord.setDetails(location);
             }
         }
 
@@ -126,12 +127,12 @@ public class DiscordRichPresenceFeature extends Feature {
     protected void onConfigUpdate(ConfigHolder configHolder) {
         if (this.isEnabled()) {
             // This isReady() check is required for Linux to not crash on config change.
-            if (!Managers.Discord.isReady()) {
+            if (!Services.Discord.isReady()) {
                 // Even though this is in the onConfigUpdate method, it is how the library is first loaded on launch
-                Managers.Discord.load();
+                Services.Discord.load();
             }
 
-            if (!Models.WorldState.onWorld() && Managers.Discord.isReady()) return;
+            if (!Models.WorldState.onWorld() && Services.Discord.isReady()) return;
 
             if (displayLocation.get()) {
                 if (lastTerritoryProfile == null) {
@@ -140,22 +141,22 @@ public class DiscordRichPresenceFeature extends Feature {
                 }
             } else {
                 stopTerritoryCheck = true;
-                Managers.Discord.setDetails("");
+                Services.Discord.setDetails("");
             }
 
             if (displayCharacterInfo.get()) {
                 displayCharacterDetails();
             } else {
-                Managers.Discord.setWynncraftLogo();
+                Services.Discord.setWynncraftLogo();
             }
 
             if (displayWorld.get()) {
-                Managers.Discord.setState(Models.WorldState.getCurrentWorldName());
+                Services.Discord.setState(Models.WorldState.getCurrentWorldName());
             } else {
-                Managers.Discord.setState("");
+                Services.Discord.setState("");
             }
         } else {
-            Managers.Discord.unload();
+            Services.Discord.unload();
         }
     }
 }

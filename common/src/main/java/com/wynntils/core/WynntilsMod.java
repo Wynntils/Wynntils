@@ -13,6 +13,8 @@ import com.wynntils.core.components.Manager;
 import com.wynntils.core.components.Managers;
 import com.wynntils.core.components.Model;
 import com.wynntils.core.components.Models;
+import com.wynntils.core.components.Service;
+import com.wynntils.core.components.Services;
 import com.wynntils.core.events.EventBusWrapper;
 import com.wynntils.core.mod.event.WynntilsCrashEvent;
 import com.wynntils.core.mod.type.CrashType;
@@ -186,6 +188,7 @@ public final class WynntilsMod {
         registerComponents(Managers.class, Manager.class);
         registerComponents(Handlers.class, Handler.class);
         registerComponents(Models.class, Model.class);
+        registerComponents(Services.class, Service.class);
 
         // Init storage for loaded components immediately
         Managers.Storage.initComponents();

@@ -8,13 +8,14 @@ import com.mojang.brigadier.CommandDispatcher;
 import com.mojang.brigadier.builder.LiteralArgumentBuilder;
 import com.mojang.brigadier.context.CommandContext;
 import com.wynntils.core.WynntilsMod;
-import com.wynntils.core.commands.Command;
 import com.wynntils.core.components.Handlers;
 import com.wynntils.core.components.Managers;
 import com.wynntils.core.components.Models;
+import com.wynntils.core.components.Services;
+import com.wynntils.core.consumers.commands.Command;
 import com.wynntils.core.net.ApiResponse;
 import com.wynntils.core.net.UrlId;
-import com.wynntils.core.net.athena.UpdateManager;
+import com.wynntils.services.athena.UpdateService;
 import com.wynntils.utils.FileUtils;
 import com.wynntils.utils.mc.McUtils;
 import java.io.BufferedReader;
@@ -157,8 +158,8 @@ public class WynntilsCommand extends Command {
                                 .withStyle(ChatFormatting.GREEN),
                         false);
 
-        Models.Hades.tryDisconnect();
-        Managers.WynntilsAccount.reauth();
+        Services.Hades.tryDisconnect();
+        Services.WynntilsAccount.reauth();
         Models.Player.reset();
         Models.Territory.reset();
         // No need to try to re-connect to Hades, we will do that automatically when we get the new token
@@ -194,7 +195,7 @@ public class WynntilsCommand extends Command {
         Managers.TickScheduler.scheduleLater(
                 () -> {
                     FileUtils.deleteFolder(Managers.Net.getCacheDir());
-                    FileUtils.deleteFolder(Managers.Update.getUpdatesFolder());
+                    FileUtils.deleteFolder(Services.Update.getUpdatesFolder());
 
                     System.exit(0);
                 },
@@ -309,7 +310,7 @@ public class WynntilsCommand extends Command {
     }
 
     private int token(CommandContext<CommandSourceStack> context) {
-        if (!Managers.WynntilsAccount.isLoggedIn()) {
+        if (!Services.WynntilsAccount.isLoggedIn()) {
             MutableComponent failed = Component.literal(
                             "Either setting up your Wynntils account or accessing the token failed. To try to set up the Wynntils account again, run ")
                     .withStyle(ChatFormatting.GREEN);
@@ -321,7 +322,7 @@ public class WynntilsCommand extends Command {
             return 1;
         }
 
-        String token = Managers.WynntilsAccount.getToken();
+        String token = Services.WynntilsAccount.getToken();
 
         MutableComponent text = Component.literal("Wynntils Token ").withStyle(ChatFormatting.AQUA);
         MutableComponent response = Component.literal(token)
@@ -351,7 +352,7 @@ public class WynntilsCommand extends Command {
 
         CompletableFuture.runAsync(() -> {
             WynntilsMod.info("Attempting to fetch Wynntils update.");
-            CompletableFuture<UpdateManager.UpdateResult> completableFuture = Managers.Update.tryUpdate();
+            CompletableFuture<UpdateService.UpdateResult> completableFuture = Services.Update.tryUpdate();
 
             completableFuture.whenComplete((result, throwable) -> McUtils.sendMessageToClient(result.getMessage()));
         });

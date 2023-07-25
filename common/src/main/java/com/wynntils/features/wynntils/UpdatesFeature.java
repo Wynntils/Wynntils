@@ -6,13 +6,14 @@ package com.wynntils.features.wynntils;
 
 import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.components.Managers;
+import com.wynntils.core.components.Services;
 import com.wynntils.core.config.Category;
 import com.wynntils.core.config.Config;
 import com.wynntils.core.config.ConfigCategory;
 import com.wynntils.core.config.RegisterConfig;
-import com.wynntils.core.features.Feature;
-import com.wynntils.core.net.athena.UpdateManager;
+import com.wynntils.core.consumers.features.Feature;
 import com.wynntils.models.worlds.event.WorldStateEvent;
+import com.wynntils.services.athena.UpdateService;
 import com.wynntils.utils.mc.McUtils;
 import java.util.Objects;
 import java.util.concurrent.CompletableFuture;
@@ -34,7 +35,7 @@ public class UpdatesFeature extends Feature {
     public void onWorldStateChange(WorldStateEvent event) {
         if (!event.isFirstJoinWorld()) return;
 
-        CompletableFuture.runAsync(() -> Managers.Update.getLatestBuild()
+        CompletableFuture.runAsync(() -> Services.Update.getLatestBuild()
                 .whenCompleteAsync((version, throwable) -> Managers.TickScheduler.scheduleNextTick(() -> {
                     if (version == null) {
                         WynntilsMod.info(
@@ -67,7 +68,7 @@ public class UpdatesFeature extends Feature {
                         McUtils.sendMessageToClient(Component.translatable("feature.wynntils.updates.updating")
                                 .withStyle(ChatFormatting.YELLOW));
 
-                        CompletableFuture<UpdateManager.UpdateResult> completableFuture = Managers.Update.tryUpdate();
+                        CompletableFuture<UpdateService.UpdateResult> completableFuture = Services.Update.tryUpdate();
 
                         completableFuture.whenCompleteAsync(
                                 (result, t) -> McUtils.sendMessageToClient(result.getMessage()));

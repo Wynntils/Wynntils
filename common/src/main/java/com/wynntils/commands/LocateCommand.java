@@ -8,10 +8,10 @@ import com.mojang.brigadier.arguments.StringArgumentType;
 import com.mojang.brigadier.builder.LiteralArgumentBuilder;
 import com.mojang.brigadier.context.CommandContext;
 import com.mojang.brigadier.suggestion.SuggestionProvider;
-import com.wynntils.core.commands.Command;
-import com.wynntils.core.components.Models;
-import com.wynntils.models.map.pois.Poi;
-import com.wynntils.models.map.type.ServiceKind;
+import com.wynntils.core.components.Services;
+import com.wynntils.core.consumers.commands.Command;
+import com.wynntils.services.map.pois.Poi;
+import com.wynntils.services.map.type.ServiceKind;
 import com.wynntils.utils.StringUtils;
 import com.wynntils.utils.mc.McUtils;
 import java.util.ArrayList;
@@ -33,7 +33,7 @@ public class LocateCommand extends Command {
             SharedSuggestionProvider.suggest(Arrays.stream(ServiceKind.values()).map(ServiceKind::getName), builder);
 
     public static final SuggestionProvider<CommandSourceStack> PLACES_SUGGESTION_PROVIDER = (context, builder) ->
-            SharedSuggestionProvider.suggest(Models.Poi.getLabelPois().map(Poi::getName), builder);
+            SharedSuggestionProvider.suggest(Services.Poi.getLabelPois().map(Poi::getName), builder);
 
     @Override
     public String getCommandName() {
@@ -106,7 +106,7 @@ public class LocateCommand extends Command {
         ServiceKind selectedKind = LocateCommand.getServiceKind(context, searchedName);
         if (selectedKind == null) return 0;
 
-        List<Poi> services = new ArrayList<>(Models.Poi.getServicePois()
+        List<Poi> services = new ArrayList<>(Services.Poi.getServicePois()
                 .filter(poi -> poi.getKind() == selectedKind)
                 .toList());
 
@@ -145,7 +145,7 @@ public class LocateCommand extends Command {
     private int locatePlace(CommandContext<CommandSourceStack> context) {
         String searchedName = context.getArgument("name", String.class);
 
-        List<Poi> places = new ArrayList<>(Models.Poi.getLabelPois()
+        List<Poi> places = new ArrayList<>(Services.Poi.getLabelPois()
                 .filter(poi -> StringUtils.partialMatch(poi.getName(), searchedName))
                 .toList());
 
