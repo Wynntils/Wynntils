@@ -2,7 +2,7 @@
  * Copyright © Wynntils 2023.
  * This file is released under AGPLv3. See LICENSE for full license details.
  */
-package com.wynntils.features.overlays;
+package com.wynntils.features.combat;
 
 import com.wynntils.core.components.Models;
 import com.wynntils.core.config.Category;
