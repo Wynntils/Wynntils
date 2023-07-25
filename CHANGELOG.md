@@ -1,4 +1,16 @@
+## [0.0.3-alpha.206](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.205...v0.0.3-alpha.206) (2023-07-25)
+
+
+### New Features
+
+* Right-click text field to clear it ([#1838](https://github.com/Wynntils/Artemis/issues/1838)) ([c088938](https://github.com/Wynntils/Artemis/commit/c0889388b6958274cd288a36093f0e529b40b414))
+
 ## [0.0.3-alpha.205](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.204...v0.0.3-alpha.205) (2023-07-25)
+
+
+### Miscellaneous Chores
+
+* **release:** v0.0.3-alpha.205 [skip ci] ([3532cd2](https://github.com/Wynntils/Artemis/commit/3532cd2b25d9a71ede021c0a1cc7a3f1fa50ca7c))
 
 
 ### Code Refactoring
@@ -36,16 +48,4 @@
 ### Miscellaneous Chores
 
 * **release:** v0.0.3-alpha.202 [skip ci] ([b7a08af](https://github.com/Wynntils/Artemis/commit/b7a08affc1a41ca0e160b481468bc23458877a90))
-
-## [0.0.3-alpha.201](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.200...v0.0.3-alpha.201) (2023-07-25)
-
-
-### New Features
-
-* Introduce statistics system ([#1822](https://github.com/Wynntils/Artemis/issues/1822)) ([1301b55](https://github.com/Wynntils/Artemis/commit/1301b55281f71c997c59bd1a382f77b2dc520b62))
-
-
-### Miscellaneous Chores
-
-* **release:** v0.0.3-alpha.201 [skip ci] ([4115e80](https://github.com/Wynntils/Artemis/commit/4115e80073777de0b60998523c48294a4ec4337f))
 
