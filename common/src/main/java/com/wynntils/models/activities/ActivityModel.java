@@ -274,7 +274,7 @@ public final class ActivityModel extends Model {
         boolean showUpdates = Managers.Feature.getFeatureInstance(WynntilsContentBookFeature.class)
                 .showContentBookLoadingUpdates
                 .get();
-        CONTAINER_QUERIES.queryContentBook(activityType, processResult, showUpdates, true);
+        CONTAINER_QUERIES.queryContentBook(activityType, processResult, showUpdates, false);
     }
 
     public void startTracking(String name, ActivityType activityType) {
@@ -312,7 +312,7 @@ public final class ActivityModel extends Model {
                     }
                 },
                 false,
-                false);
+                true);
     }
 
     void setDialogueHistory(List<List<StyledText>> newDialogueHistory) {

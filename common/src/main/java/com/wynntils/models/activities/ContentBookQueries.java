@@ -58,7 +58,7 @@ public class ContentBookQueries {
             ActivityType activityType,
             BiConsumer<List<ActivityInfo>, List<StyledText>> processResult,
             boolean showUpdates,
-            boolean includeAllPages) {
+            boolean firstPageOnly) {
         List<ActivityInfo> newActivity = new ArrayList<>();
         List<StyledText> progress = new ArrayList<>();
 
@@ -123,7 +123,7 @@ public class ContentBookQueries {
                 // Repeatedly click next page, if available, and process the following page
                 .repeat(
                         c -> {
-                            if (!includeAllPages) {
+                            if (firstPageOnly) {
                                 return false;
                             }
                             return ScriptedContainerQuery.containerHasSlot(
