@@ -1,4 +1,16 @@
+## [0.0.3-alpha.208](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.207...v0.0.3-alpha.208) (2023-07-25)
+
+
+### Bug Fixes
+
+* We overlooked Service the implementation in many ways... ([#1844](https://github.com/Wynntils/Artemis/issues/1844)) ([c0b9806](https://github.com/Wynntils/Artemis/commit/c0b9806e1c6353a6b2bd7868d054a361e19bcd2e))
+
 ## [0.0.3-alpha.207](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.206...v0.0.3-alpha.207) (2023-07-25)
+
+
+### Miscellaneous Chores
+
+* **release:** v0.0.3-alpha.207 [skip ci] ([6241a3d](https://github.com/Wynntils/Artemis/commit/6241a3d1eb597cf1ce69813ed5463c6a62db403c))
 
 
 ### Code Refactoring
@@ -40,12 +52,4 @@
 ### Code Refactoring
 
 * Introduce Services as a new component ([#1837](https://github.com/Wynntils/Artemis/issues/1837)) ([36ae619](https://github.com/Wynntils/Artemis/commit/36ae6191978ecb4e50d97e53a979ce1a6460ad67))
-
-## [0.0.3-alpha.203](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.202...v0.0.3-alpha.203) (2023-07-25)
-
-
-### Miscellaneous Chores
-
-* **release:** v0.0.3-alpha.203 [skip ci] ([250d75a](https://github.com/Wynntils/Artemis/commit/250d75a0bb76f1c4b1768bd699a6f5bd6d430d39))
-* Try to make Crowdin bot keep quiet about non-changes ([#1835](https://github.com/Wynntils/Artemis/issues/1835)) ([b6d719b](https://github.com/Wynntils/Artemis/commit/b6d719b8b364d6b7ba7ee867723f8448e830a59b))
 
