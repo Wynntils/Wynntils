@@ -38,42 +38,8 @@ import net.minecraftforge.eventbus.api.SubscribeEvent;
 
 @ConfigCategory(Category.OVERLAYS)
 public class GameNotificationOverlayFeature extends Feature {
-    private static final List<TimedMessageContainer> messageQueue = new LinkedList<>();
-
     @OverlayInfo(renderType = RenderEvent.ElementType.GUI)
     private final GameNotificationOverlay gameNotificationOverlay = new GameNotificationOverlay();
-
-    @SubscribeEvent
-    public void onWorldStateChange(WorldStateEvent event) {
-        messageQueue.clear();
-    }
-
-    @SubscribeEvent
-    public void onGameNotification(NotificationEvent.Queue event) {
-        messageQueue.add(new TimedMessageContainer(event.getMessageContainer(), getMessageDisplayLength()));
-
-        if (gameNotificationOverlay.overrideNewMessages.get()
-                && messageQueue.size() > gameNotificationOverlay.messageLimit.get()) {
-            messageQueue.remove(0);
-        }
-    }
-
-    @SubscribeEvent
-    public void onGameNotification(NotificationEvent.Edit event) {
-        // On edit, we want to reset the display time of the message, for the overlay
-        MessageContainer newContainer = event.getMessageContainer();
-
-        messageQueue.stream()
-                .filter(timedMessageContainer ->
-                        timedMessageContainer.getMessageContainer().equals(newContainer))
-                .findFirst()
-                .ifPresent(
-                        timedMessageContainer -> timedMessageContainer.resetRemainingTime(getMessageDisplayLength()));
-    }
-
-    private long getMessageDisplayLength() {
-        return (long) (gameNotificationOverlay.messageTimeLimit.get() * 1000);
-    }
 
     public static class GameNotificationOverlay extends Overlay {
         @RegisterConfig
@@ -95,6 +61,7 @@ public class GameNotificationOverlayFeature extends Feature {
         public final Config<Boolean> overrideNewMessages = new Config<>(true);
 
         private TextRenderSetting textRenderSetting;
+        private static final List<TimedMessageContainer> messageQueue = new LinkedList<>();
 
         protected GameNotificationOverlay() {
             super(
@@ -107,6 +74,33 @@ public class GameNotificationOverlayFeature extends Feature {
                     new OverlaySize(250, 110));
 
             updateTextRenderSetting();
+        }
+
+        @SubscribeEvent
+        public void onWorldStateChange(WorldStateEvent event) {
+            messageQueue.clear();
+        }
+
+        @SubscribeEvent
+        public void onGameNotification(NotificationEvent.Queue event) {
+            messageQueue.add(new TimedMessageContainer(event.getMessageContainer(), getMessageDisplayLength()));
+
+            if (overrideNewMessages.get() && messageQueue.size() > messageLimit.get()) {
+                messageQueue.remove(0);
+            }
+        }
+
+        @SubscribeEvent
+        public void onGameNotification(NotificationEvent.Edit event) {
+            // On edit, we want to reset the display time of the message, for the overlay
+            MessageContainer newContainer = event.getMessageContainer();
+
+            messageQueue.stream()
+                    .filter(timedMessageContainer ->
+                            timedMessageContainer.getMessageContainer().equals(newContainer))
+                    .findFirst()
+                    .ifPresent(timedMessageContainer ->
+                            timedMessageContainer.resetRemainingTime(getMessageDisplayLength()));
         }
 
         @Override
@@ -202,6 +196,10 @@ public class GameNotificationOverlayFeature extends Feature {
         @Override
         protected void onConfigUpdate(ConfigHolder configHolder) {
             updateTextRenderSetting();
+        }
+
+        private long getMessageDisplayLength() {
+            return (long) (messageTimeLimit.get() * 1000);
         }
 
         private void updateTextRenderSetting() {
