@@ -119,7 +119,7 @@ public class StatisticsCommand extends Command {
                 .append(Component.literal(statistic.getFormattedValue(value.max()))
                         .withStyle(ChatFormatting.DARK_GREEN))
                 .append(Component.literal("\nAverage: ").withStyle(ChatFormatting.GRAY))
-                .append(Component.literal(statistic.getFormattedValue(value.total() / value.count()))
+                .append(Component.literal(statistic.getFormattedValue(value.average()))
                         .withStyle(ChatFormatting.DARK_GREEN));
 
         context.getSource().sendSuccess(response, false);
