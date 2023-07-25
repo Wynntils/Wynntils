@@ -4,8 +4,8 @@
  */
 package com.wynntils.functions.generic;
 
-import com.wynntils.core.functions.GenericFunction;
-import com.wynntils.core.functions.arguments.FunctionArguments;
+import com.wynntils.core.consumers.functions.GenericFunction;
+import com.wynntils.core.consumers.functions.arguments.FunctionArguments;
 import com.wynntils.utils.type.CappedValue;
 import java.util.List;
 

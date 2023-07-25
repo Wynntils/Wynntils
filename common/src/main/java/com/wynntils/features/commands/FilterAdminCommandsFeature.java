@@ -8,7 +8,7 @@ import com.mojang.brigadier.tree.CommandNode;
 import com.mojang.brigadier.tree.RootCommandNode;
 import com.wynntils.core.config.Category;
 import com.wynntils.core.config.ConfigCategory;
-import com.wynntils.core.features.Feature;
+import com.wynntils.core.consumers.features.Feature;
 import com.wynntils.mc.event.CommandsAddedEvent;
 import java.util.Set;
 import net.minecraft.commands.SharedSuggestionProvider;

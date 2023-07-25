@@ -7,7 +7,7 @@ package com.wynntils.features.ui;
 import com.wynntils.core.components.Models;
 import com.wynntils.core.config.Category;
 import com.wynntils.core.config.ConfigCategory;
-import com.wynntils.core.features.Feature;
+import com.wynntils.core.consumers.features.Feature;
 import com.wynntils.mc.event.ItemTooltipRenderEvent;
 import com.wynntils.models.items.items.gui.SoulPointItem;
 import com.wynntils.utils.mc.LoreUtils;
