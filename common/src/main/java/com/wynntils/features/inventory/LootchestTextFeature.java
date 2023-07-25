@@ -48,15 +48,13 @@ public class LootchestTextFeature extends Feature {
         poseStack.pushPose();
         poseStack.translate(startX, startY, 200);
 
-        renderTotalChestCount(
-                event.getPoseStack(), width - titleLabelX, titleLabelY, Models.LootChest.getOpenedChestCount());
-        renderDryChestCount(
-                event.getPoseStack(), width - inventoryLabelX, inventoryLabelY, Models.LootChest.getDryCount());
+        renderTotalChestCount(event.getPoseStack(), width - titleLabelX, titleLabelY);
+        renderDryChestCount(event.getPoseStack(), width - inventoryLabelX, inventoryLabelY);
 
         poseStack.popPose();
     }
 
-    private void renderTotalChestCount(PoseStack poseStack, int x, int y, int totalChests) {
+    private void renderTotalChestCount(PoseStack poseStack, int x, int y) {
         String titleTemplateResult = Arrays.stream(Managers.Function.doFormatLines(titleTextTemplate.get()))
                 .map(StyledText::getString)
                 .collect(Collectors.joining(" "));
@@ -74,7 +72,7 @@ public class LootchestTextFeature extends Feature {
                         TextShadow.NONE);
     }
 
-    private void renderDryChestCount(PoseStack poseStack, int x, int y, int dryChests) {
+    private void renderDryChestCount(PoseStack poseStack, int x, int y) {
         String inventoryTemplateResult = Arrays.stream(Managers.Function.doFormatLines(inventoryTextTemplate.get()))
                 .map(StyledText::getString)
                 .collect(Collectors.joining(" "));
