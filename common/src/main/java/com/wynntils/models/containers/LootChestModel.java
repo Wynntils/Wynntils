@@ -40,8 +40,8 @@ public final class LootChestModel extends Model {
     private final Storage<Integer> openedChestCount = new Storage<>(0);
     private final Storage<Integer> dryCount = new Storage<>(0);
     private final Storage<Integer> dryBoxes = new Storage<>(0);
-    private Storage<Integer> dryEmeralds = new Storage<>(0);
-    private Storage<Map<GearTier, Integer>> dryItemTiers = new Storage<>(new EnumMap<>(GearTier.class));
+    private final Storage<Integer> dryEmeralds = new Storage<>(0);
+    private final Storage<Map<GearTier, Integer>> dryItemTiers = new Storage<>(new EnumMap<>(GearTier.class));
 
     private BlockPos lastChestPos;
     private int nextExpectedLootContainerId = -2;
