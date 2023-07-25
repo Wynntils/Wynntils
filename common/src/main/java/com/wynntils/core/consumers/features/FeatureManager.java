@@ -95,6 +95,7 @@ import com.wynntils.features.overlays.SpellCastMessageOverlayFeature;
 import com.wynntils.features.overlays.SpellCastRenderFeature;
 import com.wynntils.features.overlays.StatusOverlayFeature;
 import com.wynntils.features.overlays.StopwatchFeature;
+import com.wynntils.features.overlays.TokenBarsOverlayFeature;
 import com.wynntils.features.overlays.TokenTrackerFeature;
 import com.wynntils.features.players.AutoJoinPartyFeature;
 import com.wynntils.features.players.CustomNametagRendererFeature;
@@ -200,6 +201,7 @@ public final class FeatureManager extends Manager {
         registerFeature(new QuickCastFeature());
         registerFeature(new RangeVisualizerFeature());
         registerFeature(new SpellCastRenderFeature());
+        registerFeature(new TokenTrackerFeature());
         // endregion
 
         // region commands
@@ -263,7 +265,7 @@ public final class FeatureManager extends Manager {
         registerFeature(new SpellCastMessageOverlayFeature());
         registerFeature(new StatusOverlayFeature());
         registerFeature(new StopwatchFeature());
-        registerFeature(new TokenTrackerFeature());
+        registerFeature(new TokenBarsOverlayFeature());
         // endregion
 
         // region players
