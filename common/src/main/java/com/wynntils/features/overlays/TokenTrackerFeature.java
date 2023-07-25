@@ -58,19 +58,6 @@ public class TokenTrackerFeature extends Feature {
         McUtils.mc().getSoundManager().play(SimpleSoundInstance.forUI(SoundEvents.BELL_BLOCK, 0.7f, 0.75f));
     }
 
-    @SubscribeEvent
-    public void onGatekeeperAdded(TokenGatekeeperEvent.Added event) {
-        tokenBarsOverlay.addChild(new TokenBarOverlay(tokenBarsOverlay.size() + 1));
-    }
-
-    @SubscribeEvent
-    public void onGatekeeperRemoved(TokenGatekeeperEvent.Removed event) {
-        tokenBarsOverlay.clearChildren();
-        for (int i = 1; i <= Models.Token.getGatekeepers().size(); i++) {
-            tokenBarsOverlay.addChild(new TokenBarOverlay(i));
-        }
-    }
-
     protected static final class TokenBarOverlay extends BarOverlay {
         @RegisterConfig
         public final Config<ColorChatFormatting> color = new Config<>(ColorChatFormatting.GOLD);
@@ -117,6 +104,19 @@ public class TokenTrackerFeature extends Feature {
     protected static class TokenBarsOverlay extends ContainerOverlay<TokenBarOverlay> {
         protected TokenBarsOverlay(OverlayPosition position, OverlaySize size, GrowDirection growDirection) {
             super(position, size, growDirection, HorizontalAlignment.RIGHT, VerticalAlignment.TOP);
+        }
+
+        @SubscribeEvent
+        public void onGatekeeperAdded(TokenGatekeeperEvent.Added event) {
+            this.addChild(new TokenBarOverlay(this.size() + 1));
+        }
+
+        @SubscribeEvent
+        public void onGatekeeperRemoved(TokenGatekeeperEvent.Removed event) {
+            this.clearChildren();
+            for (int i = 1; i <= Models.Token.getGatekeepers().size(); i++) {
+                this.addChild(new TokenBarOverlay(i));
+            }
         }
 
         @Override
