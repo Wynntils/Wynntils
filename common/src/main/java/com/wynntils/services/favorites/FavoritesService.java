@@ -5,8 +5,8 @@
 package com.wynntils.services.favorites;
 
 import com.wynntils.core.components.Managers;
-import com.wynntils.core.components.Model;
 import com.wynntils.core.components.Models;
+import com.wynntils.core.components.Service;
 import com.wynntils.core.text.StyledText;
 import com.wynntils.features.inventory.ItemFavoriteFeature;
 import com.wynntils.models.gear.type.GearInfo;
@@ -21,7 +21,7 @@ import java.util.Set;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.ItemStack;
 
-public final class FavoritesService extends Model {
+public final class FavoritesService extends Service {
     private int revision = 1;
 
     public FavoritesService() {

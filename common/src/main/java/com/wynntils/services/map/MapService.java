@@ -8,7 +8,7 @@ import com.google.common.reflect.TypeToken;
 import com.mojang.blaze3d.platform.NativeImage;
 import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.components.Managers;
-import com.wynntils.core.components.Model;
+import com.wynntils.core.components.Service;
 import com.wynntils.core.net.Download;
 import com.wynntils.core.net.UrlId;
 import com.wynntils.utils.type.BoundingBox;
@@ -18,7 +18,7 @@ import java.net.URI;
 import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
 
-public final class MapService extends Model {
+public final class MapService extends Service {
     private final List<MapTexture> maps = new CopyOnWriteArrayList<>();
 
     public MapService() {
