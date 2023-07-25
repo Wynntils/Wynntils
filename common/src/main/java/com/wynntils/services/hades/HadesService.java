@@ -6,8 +6,8 @@ package com.wynntils.services.hades;
 
 import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.components.Managers;
-import com.wynntils.core.components.Model;
 import com.wynntils.core.components.Models;
+import com.wynntils.core.components.Service;
 import com.wynntils.core.components.Services;
 import com.wynntils.features.players.HadesFeature;
 import com.wynntils.hades.objects.HadesConnection;
@@ -44,7 +44,7 @@ import net.minecraft.network.chat.Style;
 import net.minecraft.world.effect.MobEffects;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 
-public final class HadesService extends Model {
+public final class HadesService extends Service {
     private static final int TICKS_PER_UPDATE = 2;
     private static final int MS_PER_PING = 1000;
 
