@@ -1,9 +1,17 @@
+## [0.0.3-alpha.201](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.200...v0.0.3-alpha.201) (2023-07-25)
+
+
+### New Features
+
+* Introduce statistics system ([#1822](https://github.com/Wynntils/Artemis/issues/1822)) ([1301b55](https://github.com/Wynntils/Artemis/commit/1301b55281f71c997c59bd1a382f77b2dc520b62))
+
 ## [0.0.3-alpha.200](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.199...v0.0.3-alpha.200) (2023-07-24)
 
 
 ### Miscellaneous Chores
 
 * Automatically delete empty language files ([#1828](https://github.com/Wynntils/Artemis/issues/1828)) ([66b0e73](https://github.com/Wynntils/Artemis/commit/66b0e734975018b14d3d2fa486108e67f98aadea))
+* **release:** v0.0.3-alpha.200 [skip ci] ([315739b](https://github.com/Wynntils/Artemis/commit/315739b43422eae8ea662ec575eb3c5b2fb23b8d))
 
 ## [0.0.3-alpha.199](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.198...v0.0.3-alpha.199) (2023-07-24)
 
@@ -36,16 +44,4 @@
 ### Miscellaneous Chores
 
 * **release:** v0.0.3-alpha.197 [skip ci] ([4287a51](https://github.com/Wynntils/Artemis/commit/4287a51eb55d0c851c03a8d32c1503e88f1a8387))
-
-## [0.0.3-alpha.196](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.195...v0.0.3-alpha.196) (2023-07-24)
-
-
-### New Features
-
-* LE stx in inventory has nicer symbol ([#1821](https://github.com/Wynntils/Artemis/issues/1821)) ([06d1162](https://github.com/Wynntils/Artemis/commit/06d11622db9604877d1a50952949f788a08e9b98))
-
-
-### Miscellaneous Chores
-
-* **release:** v0.0.3-alpha.196 [skip ci] ([14ef1da](https://github.com/Wynntils/Artemis/commit/14ef1da88b5c6772ec29a3935431a86ec75dd3c1))
 
