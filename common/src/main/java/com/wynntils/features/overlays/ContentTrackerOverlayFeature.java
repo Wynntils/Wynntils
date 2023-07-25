@@ -42,19 +42,17 @@ public class ContentTrackerOverlayFeature extends Feature {
     @RegisterConfig
     public final Config<Boolean> disableTrackerOnScoreboard = new Config<>(true);
 
-    @SubscribeEvent(priority = EventPriority.HIGHEST)
-    public void onScoreboardSegmentChange(ScoreboardSegmentAdditionEvent event) {
-        if (Managers.Overlay.isEnabled(trackerOverlay)
-                && disableTrackerOnScoreboard.get()
-                && event.getSegment().getScoreboardPart() instanceof ActivityTrackerScoreboardPart) {
-            event.setCanceled(true);
-        }
-    }
-
     @OverlayInfo(renderType = RenderEvent.ElementType.GUI)
     private final Overlay trackerOverlay = new ContentTrackerOverlay();
 
     public static class ContentTrackerOverlay extends Overlay {
+        public static final String PREVIEW_TASK =
+                """
+                Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer \
+                tempus purus in lacus pulvinar dictum. Quisque suscipit erat \
+                pellentesque egestas volutpat. \
+                """;
+
         @RegisterConfig
         public final Config<TextShadow> textShadow = new Config<>(TextShadow.OUTLINE);
 
@@ -84,39 +82,16 @@ public class ContentTrackerOverlayFeature extends Feature {
                     .get(1)
                     .setText(I18n.get("feature.wynntils.contentTrackerOverlay.overlay.contentTracker.testQuestName")
                             + ":");
-            toRenderPreview
-                    .get(2)
-                    .setText(
-                            """
-                            Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer \
-                            tempus purus in lacus pulvinar dictum. Quisque suscipit erat \
-                            pellentesque egestas volutpat. \
-                            """);
+            toRenderPreview.get(2).setText(PREVIEW_TASK);
         }
 
-        private List<TextRenderTask> createRenderTaskList() {
-            List<TextRenderTask> renderTaskList = new ArrayList<>(3);
-            for (int i = 0; i < 3; i++) {
-                renderTaskList.add(new TextRenderTask(
-                        StyledText.EMPTY,
-                        TextRenderSetting.DEFAULT
-                                .withMaxWidth(this.getWidth())
-                                .withCustomColor(TEXT_COLORS.get(i))
-                                .withHorizontalAlignment(this.getRenderHorizontalAlignment())
-                                .withTextShadow(this.textShadow.get())));
-            }
-            return renderTaskList;
-        }
-
-        private void updateTextRenderSettings(List<TextRenderTask> renderTasks) {
-            for (int i = 0; i < 3; i++) {
-                renderTasks
-                        .get(i)
-                        .setSetting(TextRenderSetting.DEFAULT
-                                .withMaxWidth(this.getWidth())
-                                .withCustomColor(TEXT_COLORS.get(i))
-                                .withHorizontalAlignment(this.getRenderHorizontalAlignment())
-                                .withTextShadow(this.textShadow.get()));
+        @SubscribeEvent(priority = EventPriority.HIGHEST)
+        public void onScoreboardSegmentChange(ScoreboardSegmentAdditionEvent event) {
+            if (Managers.Feature.getFeatureInstance(ContentTrackerOverlayFeature.class)
+                            .disableTrackerOnScoreboard
+                            .get()
+                    && event.getSegment().getScoreboardPart() instanceof ActivityTrackerScoreboardPart) {
+                event.setCanceled(true);
             }
         }
 
@@ -166,6 +141,32 @@ public class ContentTrackerOverlayFeature extends Feature {
                             this.getHeight(),
                             this.getRenderHorizontalAlignment(),
                             this.getRenderVerticalAlignment());
+        }
+
+        private List<TextRenderTask> createRenderTaskList() {
+            List<TextRenderTask> renderTaskList = new ArrayList<>(3);
+            for (int i = 0; i < 3; i++) {
+                renderTaskList.add(new TextRenderTask(
+                        StyledText.EMPTY,
+                        TextRenderSetting.DEFAULT
+                                .withMaxWidth(this.getWidth())
+                                .withCustomColor(TEXT_COLORS.get(i))
+                                .withHorizontalAlignment(this.getRenderHorizontalAlignment())
+                                .withTextShadow(this.textShadow.get())));
+            }
+            return renderTaskList;
+        }
+
+        private void updateTextRenderSettings(List<TextRenderTask> renderTasks) {
+            for (int i = 0; i < 3; i++) {
+                renderTasks
+                        .get(i)
+                        .setSetting(TextRenderSetting.DEFAULT
+                                .withMaxWidth(this.getWidth())
+                                .withCustomColor(TEXT_COLORS.get(i))
+                                .withHorizontalAlignment(this.getRenderHorizontalAlignment())
+                                .withTextShadow(this.textShadow.get()));
+            }
         }
     }
 }
