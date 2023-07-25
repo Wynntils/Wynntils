@@ -6,6 +6,7 @@ package com.wynntils.features.overlays;
 
 import com.mojang.blaze3d.platform.Window;
 import com.mojang.blaze3d.vertex.PoseStack;
+import com.wynntils.core.components.Managers;
 import com.wynntils.core.components.Models;
 import com.wynntils.core.config.Category;
 import com.wynntils.core.config.Config;
@@ -33,13 +34,6 @@ public class ShamanMasksOverlayFeature extends Feature {
     @RegisterConfig
     public final Config<Boolean> hideMaskTitles = new Config<>(true);
 
-    @SubscribeEvent
-    public void onShamanMaskTitle(ShamanMaskTitlePacketEvent event) {
-        if (hideMaskTitles.get()) {
-            event.setCanceled(true);
-        }
-    }
-
     public static class ShamanMaskOverlay extends TextOverlay {
         private static final String TEMPLATE = "{shaman_mask} mask";
 
@@ -57,6 +51,14 @@ public class ShamanMasksOverlayFeature extends Feature {
                     new OverlaySize(81, 21),
                     HorizontalAlignment.CENTER,
                     VerticalAlignment.MIDDLE);
+        }
+
+        @SubscribeEvent
+        public void onShamanMaskTitle(ShamanMaskTitlePacketEvent event) {
+            ShamanMasksOverlayFeature feature = Managers.Feature.getFeatureInstance(ShamanMasksOverlayFeature.class);
+            if (feature.hideMaskTitles.get()) {
+                event.setCanceled(true);
+            }
         }
 
         @Override
