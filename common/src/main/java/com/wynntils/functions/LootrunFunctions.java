@@ -67,4 +67,16 @@ public class LootrunFunctions {
             return mythicFinds.get(mythicFinds.size() - 1).itemName();
         }
     }
+
+    public static class ChestOpenedFunction extends Function<Integer> {
+        @Override
+        public Integer getValue(FunctionArguments arguments) {
+            return Models.LootChest.getOpenedChestCount();
+        }
+
+        @Override
+        public List<String> getAliases() {
+            return List.of("chest_count");
+        }
+    }
 }

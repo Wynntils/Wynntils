@@ -456,6 +456,7 @@ public final class FunctionManager extends Manager {
         registerFunction(new HorseFunctions.HorseTierFunction());
         registerFunction(new HorseFunctions.HorseXpFunction());
 
+        registerFunction(new LootrunFunctions.ChestOpenedFunction());
         registerFunction(new LootrunFunctions.DryBoxesFunction());
         registerFunction(new LootrunFunctions.DryStreakFunction());
         registerFunction(new LootrunFunctions.HighestDryStreakFunction());
