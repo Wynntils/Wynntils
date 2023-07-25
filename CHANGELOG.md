@@ -1,8 +1,16 @@
+## [0.0.3-alpha.204](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.203...v0.0.3-alpha.204) (2023-07-25)
+
+
+### Code Refactoring
+
+* Introduce Services as a new component ([#1837](https://github.com/Wynntils/Artemis/issues/1837)) ([36ae619](https://github.com/Wynntils/Artemis/commit/36ae6191978ecb4e50d97e53a979ce1a6460ad67))
+
 ## [0.0.3-alpha.203](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.202...v0.0.3-alpha.203) (2023-07-25)
 
 
 ### Miscellaneous Chores
 
+* **release:** v0.0.3-alpha.203 [skip ci] ([250d75a](https://github.com/Wynntils/Artemis/commit/250d75a0bb76f1c4b1768bd699a6f5bd6d430d39))
 * Try to make Crowdin bot keep quiet about non-changes ([#1835](https://github.com/Wynntils/Artemis/issues/1835)) ([b6d719b](https://github.com/Wynntils/Artemis/commit/b6d719b8b364d6b7ba7ee867723f8448e830a59b))
 
 ## [0.0.3-alpha.202](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.201...v0.0.3-alpha.202) (2023-07-25)
@@ -36,12 +44,4 @@
 
 * Automatically delete empty language files ([#1828](https://github.com/Wynntils/Artemis/issues/1828)) ([66b0e73](https://github.com/Wynntils/Artemis/commit/66b0e734975018b14d3d2fa486108e67f98aadea))
 * **release:** v0.0.3-alpha.200 [skip ci] ([315739b](https://github.com/Wynntils/Artemis/commit/315739b43422eae8ea662ec575eb3c5b2fb23b8d))
-
-## [0.0.3-alpha.199](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.198...v0.0.3-alpha.199) (2023-07-24)
-
-
-### Miscellaneous Chores
-
-* **release:** v0.0.3-alpha.199 [skip ci] ([bc5d88b](https://github.com/Wynntils/Artemis/commit/bc5d88b09bcf2df5e772dbce24ef85595e905a39))
-* Remove unused i18n ([#1832](https://github.com/Wynntils/Artemis/issues/1832)) ([1d00ef2](https://github.com/Wynntils/Artemis/commit/1d00ef2c5a877df76f7f356ad65aad28efcd061a))
 
