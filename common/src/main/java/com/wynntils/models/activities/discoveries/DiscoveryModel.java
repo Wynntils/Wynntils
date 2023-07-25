@@ -21,7 +21,7 @@ import com.wynntils.models.activities.type.ActivitySortOrder;
 import com.wynntils.models.activities.type.ActivityType;
 import com.wynntils.models.activities.type.DiscoveryType;
 import com.wynntils.models.characterstats.CombatXpModel;
-import com.wynntils.models.map.CompassModel;
+import com.wynntils.models.compass.CompassModel;
 import com.wynntils.models.territories.TerritoryModel;
 import com.wynntils.models.territories.profile.TerritoryProfile;
 import com.wynntils.models.worlds.event.WorldStateEvent;

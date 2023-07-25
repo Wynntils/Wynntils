@@ -5,6 +5,7 @@
 package com.wynntils.functions;
 
 import com.wynntils.core.components.Models;
+import com.wynntils.core.components.Services;
 import com.wynntils.core.functions.Function;
 import com.wynntils.core.functions.arguments.FunctionArguments;
 import com.wynntils.models.mobtotem.MobTotem;
@@ -240,7 +241,7 @@ public class WorldFunctions {
     public static class PingFunction extends Function<Integer> {
         @Override
         public Integer getValue(FunctionArguments arguments) {
-            return Models.Ping.getPing();
+            return Services.Ping.getPing();
         }
     }
 
