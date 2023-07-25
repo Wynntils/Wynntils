@@ -42,16 +42,6 @@ public class GuildAttackTimerOverlayFeature extends Feature {
     @RegisterConfig
     public final Config<Boolean> disableAttackTimersOnScoreboard = new Config<>(true);
 
-    @SubscribeEvent(priority = EventPriority.HIGHEST)
-    public void onScoreboardSegmentChange(ScoreboardSegmentAdditionEvent event) {
-        if (disableAttackTimersOnScoreboard.get()) {
-            if (event.getSegment().getScoreboardPart() instanceof GuildAttackScoreboardPart
-                    && Managers.Overlay.isEnabled(territoryAttackTimerOverlay)) {
-                event.setCanceled(true);
-            }
-        }
-    }
-
     public static class TerritoryAttackTimerOverlay extends Overlay {
         @RegisterConfig
         public final Config<TextShadow> textShadow = new Config<>(TextShadow.OUTLINE);
@@ -69,6 +59,16 @@ public class GuildAttackTimerOverlayFeature extends Feature {
                     new OverlaySize(200, 110));
 
             updateTextRenderSetting();
+        }
+
+        @SubscribeEvent(priority = EventPriority.HIGHEST)
+        public void onScoreboardSegmentChange(ScoreboardSegmentAdditionEvent event) {
+            GuildAttackTimerOverlayFeature feature =
+                    Managers.Feature.getFeatureInstance(GuildAttackTimerOverlayFeature.class);
+            if (feature.disableAttackTimersOnScoreboard.get()
+                    && event.getSegment().getScoreboardPart() instanceof GuildAttackScoreboardPart) {
+                event.setCanceled(true);
+            }
         }
 
         @Override
