@@ -57,18 +57,6 @@ import org.lwjgl.glfw.GLFW;
 
 @ConfigCategory(Category.OVERLAYS)
 public class NpcDialogueOverlayFeature extends Feature {
-    // §6§lNew Quest Started: §e§lEnzan's Brother
-    private static final Pattern NEW_QUEST_STARTED = Pattern.compile("^§6§lNew Quest Started: §e§l(.*)$");
-    private static final StyledText PRESS_SNEAK_TO_CONTINUE = StyledText.fromString("§cPress SNEAK to continue");
-
-    private final ScheduledExecutorService autoProgressExecutor = Executors.newSingleThreadScheduledExecutor();
-    private ScheduledFuture<?> scheduledAutoProgressKeyPress = null;
-
-    private final List<ConfirmationlessDialogue> confirmationlessDialogues = new ArrayList<>();
-    private List<StyledText> currentDialogue = new ArrayList<>();
-    private NpcDialogueType dialogueType;
-    private boolean isProtected;
-
     @RegisterConfig
     public final Config<Boolean> autoProgress = new Config<>(false);
 
@@ -78,110 +66,17 @@ public class NpcDialogueOverlayFeature extends Feature {
     @RegisterConfig
     public final Config<Integer> dialogAutoProgressAdditionalTimePerWord = new Config<>(300); // Milliseconds
 
+    @OverlayInfo(renderType = RenderEvent.ElementType.GUI)
+    private final NpcDialogueOverlay npcDialogueOverlay = new NpcDialogueOverlay();
+
     @RegisterKeyBind
     public final KeyBind cancelAutoProgressKeybind =
-            new KeyBind("Cancel Dialog Auto Progress", GLFW.GLFW_KEY_Y, false, this::cancelAutoProgress);
-
-    private void cancelAutoProgress() {
-        if (scheduledAutoProgressKeyPress == null) return;
-
-        scheduledAutoProgressKeyPress.cancel(true);
-    }
-
-    @SubscribeEvent(priority = EventPriority.HIGHEST)
-    public void onNpcDialogue(NpcDialogEvent e) {
-        List<StyledText> msg =
-                e.getChatMessage().stream().map(StyledText::fromComponent).toList();
-
-        // Print dialogue to the system log
-        WynntilsMod.info("[NPC] Type: " + (msg.isEmpty() ? "<empty> " : "") + (e.isProtected() ? "<protected> " : "")
-                + e.getType());
-        msg.forEach(s -> WynntilsMod.info("[NPC] " + (s.isEmpty() ? "<empty>" : s)));
-
-        // The same message can be repeating before we have finished removing the old
-        // Just remove the old and add the new with an updated remove time
-        // It can also happen that a confirmationless dialogue turn into a normal
-        // dialogue after a while (the "Press SHIFT..." text do not appear immediately)
-        confirmationlessDialogues.removeIf(d -> d.text.equals(msg));
-
-        if (e.getType() == NpcDialogueType.CONFIRMATIONLESS) {
-            ConfirmationlessDialogue dialogue =
-                    new ConfirmationlessDialogue(msg, System.currentTimeMillis() + calculateMessageReadTime(msg));
-            confirmationlessDialogues.add(dialogue);
-            return;
-        }
-
-        currentDialogue = msg;
-        dialogueType = e.getType();
-        isProtected = e.isProtected();
-
-        if (!msg.isEmpty() && msg.get(0).getMatcher(NEW_QUEST_STARTED).find()) {
-            // TODO: Show nice banner notification instead
-            // but then we'd also need to confirm it with a sneak
-            Managers.Notification.queueMessage(msg.get(0));
-        }
-
-        if (e.getType() == NpcDialogueType.SELECTION && !e.isProtected()) {
-            // This is a bit of a workaround to be able to select the options
-            MutableComponent clickMsg =
-                    Component.literal("Select an option to continue:").withStyle(ChatFormatting.AQUA);
-            e.getChatMessage()
-                    .forEach(line -> clickMsg.append(Component.literal("\n").append(line)));
-            McUtils.sendMessageToClient(clickMsg);
-        }
-
-        if (scheduledAutoProgressKeyPress != null) {
-            scheduledAutoProgressKeyPress.cancel(true);
-
-            // Release sneak key if currently pressed
-            McUtils.sendPacket(new ServerboundPlayerCommandPacket(
-                    McUtils.player(), ServerboundPlayerCommandPacket.Action.RELEASE_SHIFT_KEY));
-
-            scheduledAutoProgressKeyPress = null;
-        }
-
-        if (autoProgress.get() && dialogueType == NpcDialogueType.NORMAL) {
-            // Schedule a new sneak key press if this is not the end of the dialogue
-            if (!msg.isEmpty()) {
-                scheduledAutoProgressKeyPress = scheduledSneakPress(msg);
-            }
-        }
-    }
-
-    @SubscribeEvent
-    public void onTick(TickEvent event) {
-        long now = System.currentTimeMillis();
-        confirmationlessDialogues.removeIf(dialogue -> now >= dialogue.removeTime);
-    }
-
-    private ScheduledFuture<?> scheduledSneakPress(List<StyledText> msg) {
-        long delay = calculateMessageReadTime(msg);
-
-        return autoProgressExecutor.schedule(
-                () -> McUtils.sendPacket(new ServerboundPlayerCommandPacket(
-                        McUtils.player(), ServerboundPlayerCommandPacket.Action.PRESS_SHIFT_KEY)),
-                delay,
-                TimeUnit.MILLISECONDS);
-    }
-
-    private long calculateMessageReadTime(List<StyledText> msg) {
-        int words = StyledText.join(" ", msg).split(" ").length;
-        long delay =
-                dialogAutoProgressDefaultTime.get() + ((long) words * dialogAutoProgressAdditionalTimePerWord.get());
-        return delay;
-    }
-
-    @SubscribeEvent
-    public void onWorldStateChange(WorldStateEvent e) {
-        currentDialogue = List.of();
-        confirmationlessDialogues.clear();
-        cancelAutoProgress();
-    }
-
-    @OverlayInfo(renderType = RenderEvent.ElementType.GUI)
-    private final Overlay npcDialogueOverlay = new NpcDialogueOverlay();
+            new KeyBind("Cancel Dialog Auto Progress", GLFW.GLFW_KEY_Y, false, npcDialogueOverlay::cancelAutoProgress);
 
     public class NpcDialogueOverlay extends Overlay {
+        private static final Pattern NEW_QUEST_STARTED = Pattern.compile("^§6§lNew Quest Started: §e§l(.*)$");
+        private static final StyledText PRESS_SNEAK_TO_CONTINUE = StyledText.fromString("§cPress SNEAK to continue");
+
         @RegisterConfig
         public final Config<TextShadow> textShadow = new Config<>(TextShadow.NORMAL);
 
@@ -194,6 +89,13 @@ public class NpcDialogueOverlayFeature extends Feature {
         @RegisterConfig
         public final Config<Boolean> showHelperTexts = new Config<>(true);
 
+        private final ScheduledExecutorService autoProgressExecutor = Executors.newSingleThreadScheduledExecutor();
+        private ScheduledFuture<?> scheduledAutoProgressKeyPress = null;
+
+        private final List<ConfirmationlessDialogue> confirmationlessDialogues = new ArrayList<>();
+        private List<StyledText> currentDialogue = new ArrayList<>();
+        private NpcDialogueType dialogueType;
+        private boolean isProtected;
         private TextRenderSetting renderSetting;
 
         protected NpcDialogueOverlay() {
@@ -210,11 +112,52 @@ public class NpcDialogueOverlayFeature extends Feature {
             updateTextRenderSettings();
         }
 
-        private void updateTextRenderSettings() {
-            renderSetting = TextRenderSetting.DEFAULT
-                    .withMaxWidth(this.getWidth() - 5)
-                    .withHorizontalAlignment(this.getRenderHorizontalAlignment())
-                    .withTextShadow(textShadow.get());
+        @SubscribeEvent(priority = EventPriority.HIGHEST)
+        public void onNpcDialogue(NpcDialogEvent e) {
+            handleDialogue(e.getChatMessage(), e.isProtected(), e.getType());
+        }
+
+        @SubscribeEvent
+        public void onWorldStateChange(WorldStateEvent e) {
+            currentDialogue = List.of();
+            confirmationlessDialogues.clear();
+            cancelAutoProgress();
+        }
+
+        @SubscribeEvent
+        public void onTick(TickEvent event) {
+            long now = System.currentTimeMillis();
+            confirmationlessDialogues.removeIf(dialogue -> now >= dialogue.removeTime);
+        }
+
+        @Override
+        public void render(PoseStack poseStack, MultiBufferSource bufferSource, float partialTicks, Window window) {
+            if (currentDialogue.isEmpty() && confirmationlessDialogues.isEmpty()) return;
+
+            LinkedList<StyledText> allDialogues = new LinkedList<>(currentDialogue);
+            confirmationlessDialogues.forEach(d -> {
+                allDialogues.add(StyledText.EMPTY);
+                allDialogues.addAll(d.text());
+            });
+
+            if (currentDialogue.isEmpty()) {
+                // Remove the initial blank line in that case
+                allDialogues.removeFirst();
+            }
+            
+            renderDialogue(poseStack, bufferSource, allDialogues, dialogueType);
+        }
+
+        @Override
+        public void renderPreview(
+                PoseStack poseStack, MultiBufferSource bufferSource, float partialTicks, Window window) {
+            List<StyledText> fakeDialogue = List.of(
+                    StyledText.fromString(
+                            "§7[1/1] §r§2Random Citizen: §r§aDid you know that Wynntils is the best Wynncraft mod you'll probably find?§r"));
+            // we have to force update every time
+            updateTextRenderSettings();
+
+            renderDialogue(poseStack, bufferSource, fakeDialogue, NpcDialogueType.NORMAL);
         }
 
         @Override
@@ -223,14 +166,17 @@ public class NpcDialogueOverlayFeature extends Feature {
             updateTextRenderSettings();
         }
 
-        private void updateDialogExtractionSettings() {
-            if (Managers.Overlay.isEnabled(this)) {
-                Handlers.Chat.addNpcDialogExtractionDependent(NpcDialogueOverlayFeature.this);
-            } else {
-                Handlers.Chat.removeNpcDialogExtractionDependent(NpcDialogueOverlayFeature.this);
-                currentDialogue = List.of();
-                confirmationlessDialogues.clear();
-            }
+        public void cancelAutoProgress() {
+            if (scheduledAutoProgressKeyPress == null) return;
+
+            scheduledAutoProgressKeyPress.cancel(true);
+        }
+
+        private void updateTextRenderSettings() {
+            renderSetting = TextRenderSetting.DEFAULT
+                    .withMaxWidth(this.getWidth() - 5)
+                    .withHorizontalAlignment(this.getRenderHorizontalAlignment())
+                    .withTextShadow(textShadow.get());
         }
 
         private void renderDialogue(
@@ -336,35 +282,92 @@ public class NpcDialogueOverlayFeature extends Feature {
             }
         }
 
-        @Override
-        public void render(PoseStack poseStack, MultiBufferSource bufferSource, float partialTicks, Window window) {
-            if (currentDialogue.isEmpty() && confirmationlessDialogues.isEmpty()) return;
+        private void handleDialogue(List<Component> chatMessage, boolean isProtected, NpcDialogueType type) {
+            List<StyledText> msg =
+                    chatMessage.stream().map(StyledText::fromComponent).toList();
 
-            LinkedList<StyledText> allDialogues = new LinkedList<>(currentDialogue);
-            confirmationlessDialogues.forEach(d -> {
-                allDialogues.add(StyledText.EMPTY);
-                allDialogues.addAll(d.text());
-            });
+            // Print dialogue to the system log
+            WynntilsMod.info(
+                    "[NPC] Type: " + (msg.isEmpty() ? "<empty> " : "") + (isProtected ? "<protected> " : "") + type);
+            msg.forEach(s -> WynntilsMod.info("[NPC] " + (s.isEmpty() ? "<empty>" : s)));
 
-            if (currentDialogue.isEmpty()) {
-                // Remove the initial blank line in that case
-                allDialogues.removeFirst();
+            // The same message can be repeating before we have finished removing the old
+            // Just remove the old and add the new with an updated remove time
+            // It can also happen that a confirmationless dialogue turn into a normal
+            // dialogue after a while (the "Press SHIFT..." text do not appear immediately)
+            confirmationlessDialogues.removeIf(d -> d.text.equals(msg));
+
+            if (type == NpcDialogueType.CONFIRMATIONLESS) {
+                ConfirmationlessDialogue dialogue =
+                        new ConfirmationlessDialogue(msg, System.currentTimeMillis() + calculateMessageReadTime(msg));
+                confirmationlessDialogues.add(dialogue);
+                return;
             }
-            renderDialogue(poseStack, bufferSource, allDialogues, dialogueType);
+
+            currentDialogue = msg;
+            dialogueType = type;
+            this.isProtected = isProtected;
+
+            if (!msg.isEmpty() && msg.get(0).getMatcher(NEW_QUEST_STARTED).find()) {
+                // TODO: Show nice banner notification instead
+                // but then we'd also need to confirm it with a sneak
+                Managers.Notification.queueMessage(msg.get(0));
+            }
+
+            if (type == NpcDialogueType.SELECTION && !isProtected) {
+                // This is a bit of a workaround to be able to select the options
+                MutableComponent clickMsg =
+                        Component.literal("Select an option to continue:").withStyle(ChatFormatting.AQUA);
+                chatMessage.forEach(
+                        line -> clickMsg.append(Component.literal("\n").append(line)));
+                McUtils.sendMessageToClient(clickMsg);
+            }
+
+            if (scheduledAutoProgressKeyPress != null) {
+                scheduledAutoProgressKeyPress.cancel(true);
+
+                // Release sneak key if currently pressed
+                McUtils.sendPacket(new ServerboundPlayerCommandPacket(
+                        McUtils.player(), ServerboundPlayerCommandPacket.Action.RELEASE_SHIFT_KEY));
+
+                scheduledAutoProgressKeyPress = null;
+            }
+
+            if (autoProgress.get() && dialogueType == NpcDialogueType.NORMAL) {
+                // Schedule a new sneak key press if this is not the end of the dialogue
+                if (!msg.isEmpty()) {
+                    scheduledAutoProgressKeyPress = scheduledSneakPress(msg);
+                }
+            }
         }
 
-        @Override
-        public void renderPreview(
-                PoseStack poseStack, MultiBufferSource bufferSource, float partialTicks, Window window) {
-            List<StyledText> fakeDialogue = List.of(
-                    StyledText.fromString(
-                            "§7[1/1] §r§2Random Citizen: §r§aDid you know that Wynntils is the best Wynncraft mod you'll probably find?§r"));
-            // we have to force update every time
-            updateTextRenderSettings();
-
-            renderDialogue(poseStack, bufferSource, fakeDialogue, NpcDialogueType.NORMAL);
+        private long calculateMessageReadTime(List<StyledText> msg) {
+            int words = StyledText.join(" ", msg).split(" ").length;
+            long delay = dialogAutoProgressDefaultTime.get()
+                    + ((long) words * dialogAutoProgressAdditionalTimePerWord.get());
+            return delay;
         }
+
+        private ScheduledFuture<?> scheduledSneakPress(List<StyledText> msg) {
+            long delay = calculateMessageReadTime(msg);
+
+            return autoProgressExecutor.schedule(
+                    () -> McUtils.sendPacket(new ServerboundPlayerCommandPacket(
+                            McUtils.player(), ServerboundPlayerCommandPacket.Action.PRESS_SHIFT_KEY)),
+                    delay,
+                    TimeUnit.MILLISECONDS);
+        }
+
+        private void updateDialogExtractionSettings() {
+            if (Managers.Overlay.isEnabled(this)) {
+                Handlers.Chat.addNpcDialogExtractionDependent(NpcDialogueOverlayFeature.this);
+            } else {
+                Handlers.Chat.removeNpcDialogExtractionDependent(NpcDialogueOverlayFeature.this);
+                currentDialogue = List.of();
+                confirmationlessDialogues.clear();
+            }
+        }
+
+        private record ConfirmationlessDialogue(List<StyledText> text, long removeTime) {}
     }
-
-    protected record ConfirmationlessDialogue(List<StyledText> text, long removeTime) {}
 }
