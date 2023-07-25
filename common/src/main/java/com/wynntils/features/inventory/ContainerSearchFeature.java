@@ -215,7 +215,6 @@ public class ContainerSearchFeature extends Feature {
     private void matchItems(String searchStr, AbstractContainerScreen<?> screen) {
         String search = searchStr.toLowerCase(Locale.ROOT);
 
-        System.out.println(screen.getMenu().slots);
         screen.getMenu().slots.stream()
                 .filter(slot -> slot.x <= 6 * 18 + 8 && slot.y <= 6 * 18)
                 .map(Slot::getItem)
