@@ -1,9 +1,21 @@
+## [0.0.3-alpha.202](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.201...v0.0.3-alpha.202) (2023-07-25)
+
+
+### Bug Fixes
+
+* Division by zero in StatisticEntry ([#1836](https://github.com/Wynntils/Artemis/issues/1836)) ([c400b6c](https://github.com/Wynntils/Artemis/commit/c400b6c8cd844a3cfaf5df26521b0e98738019f9))
+
 ## [0.0.3-alpha.201](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.200...v0.0.3-alpha.201) (2023-07-25)
 
 
 ### New Features
 
 * Introduce statistics system ([#1822](https://github.com/Wynntils/Artemis/issues/1822)) ([1301b55](https://github.com/Wynntils/Artemis/commit/1301b55281f71c997c59bd1a382f77b2dc520b62))
+
+
+### Miscellaneous Chores
+
+* **release:** v0.0.3-alpha.201 [skip ci] ([4115e80](https://github.com/Wynntils/Artemis/commit/4115e80073777de0b60998523c48294a4ec4337f))
 
 ## [0.0.3-alpha.200](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.199...v0.0.3-alpha.200) (2023-07-24)
 
@@ -32,16 +44,4 @@
 ### Miscellaneous Chores
 
 * **release:** v0.0.3-alpha.198 [skip ci] ([b212592](https://github.com/Wynntils/Artemis/commit/b212592e2ccb6a125640428e83d1bc4c0b05aca9))
-
-## [0.0.3-alpha.197](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.196...v0.0.3-alpha.197) (2023-07-24)
-
-
-### Bug Fixes
-
-* Fix weird/uncommon issues with caves/quests not parsing ([#1831](https://github.com/Wynntils/Artemis/issues/1831)) ([f85e1ca](https://github.com/Wynntils/Artemis/commit/f85e1caa977a4fd5ca7f3c8f0e4423c717e5527b))
-
-
-### Miscellaneous Chores
-
-* **release:** v0.0.3-alpha.197 [skip ci] ([4287a51](https://github.com/Wynntils/Artemis/commit/4287a51eb55d0c851c03a8d32c1503e88f1a8387))
 
