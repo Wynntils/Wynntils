@@ -7,6 +7,8 @@
   "commands.wynntils.debug.profile.total": "Total time spent: %d ms; total number of calls: %d",
   "commands.wynntils.reauth.tryReauth": "Disconnecting from Hades, and trying to reauthenticate...",
   "commands.wynntils.reloadCaches.reloading": "Reloading caches...",
+  "commands.wynntils.statistics.clickHere": "Click here to confirm",
+  "commands.wynntils.statistics.warnReset": "This will reset all your collected statistics for this character. Are you sure you want to continue?",
   "core.wynntils.category.chat": "Chat",
   "core.wynntils.category.combat": "Combat",
   "core.wynntils.category.commands": "Commands",
@@ -1768,5 +1770,7 @@
   "screens.wynntils.wynntilsQuestBook.showMiniQuests.name": "Show Mini Quests",
   "screens.wynntils.wynntilsQuestBook.showQuests.name": "Show Quests",
   "screens.wynntils.wynntilsQuestBook.tryReload": "No quests found! Try reloading quests by pressing the button in the top right corner.",
+  "statistics.wynntils.damage_dealt.name": "Damage dealt",
+  "statistics.wynntils.spells_cast.name": "Spells cast",
   "utils.wynntils.component.clickToSetCompass": "Click here to set your compass to this location"
 }
