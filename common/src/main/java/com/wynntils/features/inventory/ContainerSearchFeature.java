@@ -32,7 +32,7 @@ import java.util.Locale;
 import java.util.Optional;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
-import net.minecraft.core.NonNullList;
+import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
@@ -215,22 +215,24 @@ public class ContainerSearchFeature extends Feature {
     private void matchItems(String searchStr, AbstractContainerScreen<?> screen) {
         String search = searchStr.toLowerCase(Locale.ROOT);
 
-        NonNullList<ItemStack> playerItems = McUtils.inventory().items;
-        for (ItemStack itemStack : screen.getMenu().getItems()) {
-            Optional<WynnItem> wynnItemOpt = Models.Item.getWynnItem(itemStack);
-            if (wynnItemOpt.isEmpty()) continue;
-            if (playerItems.contains(itemStack)) continue;
+        System.out.println(screen.getMenu().slots);
+        screen.getMenu().slots.stream()
+                .filter(slot -> slot.x <= 6 * 18 + 8 && slot.y <= 6 * 18)
+                .map(Slot::getItem)
+                .forEach(itemStack -> {
+                    Optional<WynnItem> wynnItemOpt = Models.Item.getWynnItem(itemStack);
+                    if (wynnItemOpt.isEmpty()) return;
 
-            String name = StyledText.fromComponent(itemStack.getHoverName())
-                    .getStringWithoutFormatting()
-                    .toLowerCase(Locale.ROOT);
+                    String name = StyledText.fromComponent(itemStack.getHoverName())
+                            .getStringWithoutFormatting()
+                            .toLowerCase(Locale.ROOT);
 
-            boolean filtered = !search.isEmpty() && name.contains(search) && itemStack.getItem() != Items.AIR;
-            wynnItemOpt.get().getCache().store(WynnItemCache.SEARCHED_KEY, filtered);
-            if (filtered) {
-                autoSearching = false;
-            }
-        }
+                    boolean filtered = !search.isEmpty() && name.contains(search) && itemStack.getItem() != Items.AIR;
+                    wynnItemOpt.get().getCache().store(WynnItemCache.SEARCHED_KEY, filtered);
+                    if (filtered) {
+                        autoSearching = false;
+                    }
+                });
     }
 
     private void forceUpdateSearch() {
