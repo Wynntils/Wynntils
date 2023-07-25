@@ -19,7 +19,6 @@ import com.wynntils.core.consumers.features.overlays.OverlayPosition;
 import com.wynntils.core.consumers.features.overlays.OverlaySize;
 import com.wynntils.core.consumers.features.overlays.annotations.OverlayInfo;
 import com.wynntils.core.text.StyledText;
-import com.wynntils.handlers.scoreboard.ScoreboardSegment;
 import com.wynntils.handlers.scoreboard.event.ScoreboardSegmentAdditionEvent;
 import com.wynntils.mc.event.RenderEvent;
 import com.wynntils.models.objectives.DailyObjectiveScoreboardPart;
@@ -47,23 +46,6 @@ public class ObjectivesOverlayFeature extends Feature {
     @RegisterConfig
     public final Config<Boolean> disableObjectiveTrackingOnScoreboard = new Config<>(true);
 
-    @SubscribeEvent(priority = EventPriority.HIGHEST)
-    public void onScoreboardSegmentChange(ScoreboardSegmentAdditionEvent event) {
-        if (disableObjectiveTrackingOnScoreboard.get()) {
-            ScoreboardSegment segment = event.getSegment();
-            if (segment.getScoreboardPart() instanceof DailyObjectiveScoreboardPart
-                    && Managers.Overlay.isEnabled(dailyObjectiveOverlay)) {
-                event.setCanceled(true);
-                return;
-            }
-            if (segment.getScoreboardPart() instanceof GuildObjectiveScoreboardPart
-                    && Managers.Overlay.isEnabled(guildObjectiveOverlay)) {
-                event.setCanceled(true);
-                return;
-            }
-        }
-    }
-
     @OverlayInfo(renderType = RenderEvent.ElementType.GUI)
     public final Overlay guildObjectiveOverlay = new GuildObjectiveOverlay();
 
@@ -85,6 +67,16 @@ public class ObjectivesOverlayFeature extends Feature {
                     new OverlaySize(150, 30),
                     HorizontalAlignment.LEFT,
                     VerticalAlignment.MIDDLE);
+        }
+
+        @SubscribeEvent(priority = EventPriority.HIGHEST)
+        public void onScoreboardSegmentChange(ScoreboardSegmentAdditionEvent event) {
+            ObjectivesOverlayFeature feature = Managers.Feature.getFeatureInstance(ObjectivesOverlayFeature.class);
+            if (feature.disableObjectiveTrackingOnScoreboard.get()
+                    && event.getSegment().getScoreboardPart() instanceof GuildObjectiveScoreboardPart) {
+                event.setCanceled(true);
+                return;
+            }
         }
 
         @Override
@@ -170,6 +162,16 @@ public class ObjectivesOverlayFeature extends Feature {
                     new OverlaySize(150, 100),
                     HorizontalAlignment.LEFT,
                     VerticalAlignment.BOTTOM);
+        }
+
+        @SubscribeEvent(priority = EventPriority.HIGHEST)
+        public void onScoreboardSegmentChange(ScoreboardSegmentAdditionEvent event) {
+            ObjectivesOverlayFeature feature = Managers.Feature.getFeatureInstance(ObjectivesOverlayFeature.class);
+            if (feature.disableObjectiveTrackingOnScoreboard.get()
+                    && event.getSegment().getScoreboardPart() instanceof DailyObjectiveScoreboardPart) {
+                event.setCanceled(true);
+                return;
+            }
         }
 
         @Override
