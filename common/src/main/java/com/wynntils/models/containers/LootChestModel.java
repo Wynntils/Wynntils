@@ -163,8 +163,8 @@ public final class LootChestModel extends Model {
                         dryBoxes.get(),
                         dryEmeralds.get(),
                         dryItemTiers.get(),
-                        System.currentTimeMillis(),
-                        new Location(lastChestPos)));
+                        new Location(lastChestPos),
+                        System.currentTimeMillis()));
 
         mythicFinds.touched();
     }

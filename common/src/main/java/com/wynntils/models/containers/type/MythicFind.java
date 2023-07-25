@@ -18,5 +18,5 @@ public record MythicFind(
         int dryBoxes,
         int dryEmeralds, // Added in later patch
         Map<GearTier, Integer> dryItemTiers, // Added in later patch
-        long timestamp,
-        Location chestCoordinate) {}
+        Location chestCoordinate,
+        long timestamp) {}
