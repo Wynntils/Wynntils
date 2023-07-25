@@ -8,20 +8,21 @@ import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.wynntils.core.components.Managers;
 import com.wynntils.core.components.Models;
+import com.wynntils.core.components.Services;
 import com.wynntils.features.map.MapFeature;
-import com.wynntils.models.lootruns.LootrunInstance;
-import com.wynntils.models.map.PoiLocation;
-import com.wynntils.models.map.pois.CustomPoi;
-import com.wynntils.models.map.pois.IconPoi;
-import com.wynntils.models.map.pois.PlayerMainMapPoi;
-import com.wynntils.models.map.pois.Poi;
-import com.wynntils.models.map.pois.TerritoryPoi;
-import com.wynntils.models.map.pois.WaypointPoi;
 import com.wynntils.screens.base.widgets.BasicTexturedButton;
+import com.wynntils.services.lootruns.LootrunInstance;
+import com.wynntils.services.map.pois.CustomPoi;
+import com.wynntils.services.map.pois.IconPoi;
+import com.wynntils.services.map.pois.PlayerMainMapPoi;
+import com.wynntils.services.map.pois.Poi;
+import com.wynntils.services.map.pois.TerritoryPoi;
+import com.wynntils.services.map.pois.WaypointPoi;
 import com.wynntils.utils.colors.CommonColors;
 import com.wynntils.utils.mc.KeyboardUtils;
 import com.wynntils.utils.mc.McUtils;
 import com.wynntils.utils.mc.type.Location;
+import com.wynntils.utils.mc.type.PoiLocation;
 import com.wynntils.utils.render.MapRenderer;
 import com.wynntils.utils.render.RenderUtils;
 import com.wynntils.utils.render.Texture;
@@ -233,7 +234,7 @@ public final class MainMapScreen extends AbstractMapScreen {
                         .pointerType
                         .get());
 
-        LootrunInstance currentLootrun = Models.Lootrun.getCurrentLootrun();
+        LootrunInstance currentLootrun = Services.Lootrun.getCurrentLootrun();
 
         if (currentLootrun != null) {
             MapRenderer.renderLootrunLine(
@@ -260,16 +261,16 @@ public final class MainMapScreen extends AbstractMapScreen {
     }
 
     private void renderPois(PoseStack poseStack, int mouseX, int mouseY) {
-        Stream<? extends Poi> pois = Models.Poi.getServicePois();
+        Stream<? extends Poi> pois = Services.Poi.getServicePois();
 
-        pois = Stream.concat(pois, Models.Poi.getCombatPois());
-        pois = Stream.concat(pois, Models.Poi.getLabelPois());
+        pois = Stream.concat(pois, Services.Poi.getCombatPois());
+        pois = Stream.concat(pois, Services.Poi.getLabelPois());
         pois = Stream.concat(pois, Managers.Feature.getFeatureInstance(MapFeature.class).customPois.get().stream());
-        pois = Stream.concat(pois, Models.Poi.getProvidedCustomPois().stream());
+        pois = Stream.concat(pois, Services.Poi.getProvidedCustomPois().stream());
         pois = Stream.concat(pois, Models.Compass.getCompassWaypoint().stream());
         pois = Stream.concat(
                 pois,
-                Models.Hades.getHadesUsers()
+                Services.Hades.getHadesUsers()
                         .filter(
                                 hadesUser -> (hadesUser.isPartyMember()
                                                 && Managers.Feature.getFeatureInstance(MapFeature.class)

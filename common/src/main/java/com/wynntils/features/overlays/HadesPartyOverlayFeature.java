@@ -8,6 +8,7 @@ import com.mojang.blaze3d.platform.Window;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.wynntils.core.components.Managers;
 import com.wynntils.core.components.Models;
+import com.wynntils.core.components.Services;
 import com.wynntils.core.config.Category;
 import com.wynntils.core.config.Config;
 import com.wynntils.core.config.ConfigCategory;
@@ -23,10 +24,10 @@ import com.wynntils.core.text.StyledText;
 import com.wynntils.handlers.scoreboard.event.ScoreboardSegmentAdditionEvent;
 import com.wynntils.mc.event.RenderEvent;
 import com.wynntils.models.players.event.HadesRelationsUpdateEvent;
-import com.wynntils.models.players.event.HadesUserAddedEvent;
 import com.wynntils.models.players.event.PartyEvent;
-import com.wynntils.models.players.hades.objects.HadesUser;
 import com.wynntils.models.players.scoreboard.PartyScoreboardPart;
+import com.wynntils.services.hades.HadesUser;
+import com.wynntils.services.hades.event.HadesUserAddedEvent;
 import com.wynntils.utils.colors.CommonColors;
 import com.wynntils.utils.mc.SkinUtils;
 import com.wynntils.utils.render.Texture;
@@ -222,7 +223,7 @@ public class HadesPartyOverlayFeature extends Feature {
                 return;
             }
 
-            List<HadesUser> hadesUsers = Models.Hades.getHadesUsers().toList();
+            List<HadesUser> hadesUsers = Services.Hades.getHadesUsers().toList();
             List<String> partyMembers = Models.Party.getPartyMembers();
 
             List<HadesUser> hadesUsingPartyMembers = hadesUsers.stream()

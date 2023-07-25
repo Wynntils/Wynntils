@@ -6,6 +6,7 @@ package com.wynntils.screens.guides.ingredient;
 
 import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.components.Models;
+import com.wynntils.core.components.Services;
 import com.wynntils.models.elements.type.Skill;
 import com.wynntils.models.ingredients.type.IngredientInfo;
 import com.wynntils.models.ingredients.type.IngredientPosition;
@@ -47,7 +48,7 @@ public final class GuideIngredientItemStack extends GuideItemStack {
         appendObtainInfo(tooltip, Models.Ingredient.getObtainInfo(ingredientInfo));
 
         tooltip.add(Component.empty());
-        if (Models.Favorites.isFavorite(ingredientInfo.name())) {
+        if (Services.Favorites.isFavorite(ingredientInfo.name())) {
             tooltip.add(Component.translatable("screens.wynntils.wynntilsGuides.itemGuide.unfavorite")
                     .withStyle(ChatFormatting.YELLOW));
         } else {
