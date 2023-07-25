@@ -61,16 +61,7 @@ public class HadesPartyOverlayFeature extends Feature {
             HorizontalAlignment.LEFT,
             VerticalAlignment.TOP);
 
-    @SubscribeEvent(priority = EventPriority.HIGHEST)
-    public void onScoreboardSegmentChange(ScoreboardSegmentAdditionEvent event) {
-        if (Managers.Overlay.isEnabled(partyMembersOverlay)
-                && disablePartyMembersOnScoreboard.get()
-                && event.getSegment().getScoreboardPart() instanceof PartyScoreboardPart) {
-            event.setCanceled(true);
-        }
-    }
-
-    public class PartyMemberOverlay extends Overlay {
+    public static final class PartyMemberOverlay extends Overlay {
         private static final int HEAD_SIZE = 26;
 
         private final HadesUser hadesUser;
@@ -126,9 +117,10 @@ public class HadesPartyOverlayFeature extends Feature {
 
             double healthProgress = hadesUser.getHealth().getProgress();
             double manaProgress = hadesUser.getMana().getProgress();
+            HadesPartyOverlayFeature feature = Managers.Feature.getFeatureInstance(HadesPartyOverlayFeature.class);
 
             // health
-            HealthTexture healthTexture = HadesPartyOverlayFeature.this.partyMembersOverlay.healthTexture.get();
+            HealthTexture healthTexture = feature.partyMembersOverlay.healthTexture.get();
             BufferedRenderUtils.drawProgressBar(
                     poseStack,
                     bufferSource,
@@ -146,7 +138,7 @@ public class HadesPartyOverlayFeature extends Feature {
             poseStack.translate(0, healthTexture.getHeight() * 0.85f, 0);
 
             // mana
-            ManaTexture manaTexture = HadesPartyOverlayFeature.this.partyMembersOverlay.manaTexture.get();
+            ManaTexture manaTexture = feature.partyMembersOverlay.manaTexture.get();
             BufferedRenderUtils.drawProgressBar(
                     poseStack,
                     bufferSource,
@@ -168,7 +160,7 @@ public class HadesPartyOverlayFeature extends Feature {
         protected void onConfigUpdate(ConfigHolder configHolder) {}
     }
 
-    protected class PartyMembersOverlay extends ContainerOverlay<PartyMemberOverlay> {
+    protected static class PartyMembersOverlay extends ContainerOverlay<PartyMemberOverlay> {
         private static final HadesUser DUMMY_USER_1 =
                 new HadesUser("Player 1", new CappedValue(12432, 13120), new CappedValue(65, 123));
         private static final HadesUser DUMMY_USER_2 =
@@ -210,6 +202,15 @@ public class HadesPartyOverlayFeature extends Feature {
         @SubscribeEvent
         public void onPartyChange(PartyEvent event) {
             updateChildren();
+        }
+
+        @SubscribeEvent(priority = EventPriority.HIGHEST)
+        public void onScoreboardSegmentChange(ScoreboardSegmentAdditionEvent event) {
+            HadesPartyOverlayFeature feature = Managers.Feature.getFeatureInstance(HadesPartyOverlayFeature.class);
+            if (feature.disablePartyMembersOnScoreboard.get()
+                    && event.getSegment().getScoreboardPart() instanceof PartyScoreboardPart) {
+                event.setCanceled(true);
+            }
         }
 
         private void updateChildren() {
