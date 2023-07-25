@@ -10,7 +10,6 @@ import com.wynntils.core.config.ConfigHolder;
 import com.wynntils.core.config.upfixers.ConfigUpfixer;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 import java.util.Set;
 
 public class MapToMainMapRenamedConfigsUpfixer implements ConfigUpfixer {
