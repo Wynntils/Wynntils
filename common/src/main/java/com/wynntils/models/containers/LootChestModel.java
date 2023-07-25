@@ -27,6 +27,8 @@ import java.util.EnumMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+
+import com.wynntils.utils.type.RangedValue;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
@@ -112,7 +114,7 @@ public final class LootChestModel extends Model {
             WynntilsMod.postEvent(new MythicFoundEvent(itemStack));
 
             if (gearBox.getGearType() != GearType.MASTERY_TOME) {
-                storeMythicFind(itemStack);
+                storeMythicFind(itemStack, gearBox.getLevelRange());
                 resetDryStatistics();
             }
         }
@@ -150,11 +152,12 @@ public final class LootChestModel extends Model {
         }
     }
 
-    private void storeMythicFind(ItemStack itemStack) {
+    private void storeMythicFind(ItemStack itemStack, RangedValue levelRange) {
         mythicFinds
                 .get()
                 .add(new MythicFind(
                         StyledText.fromComponent(itemStack.getHoverName()).getStringWithoutFormatting(),
+                        levelRange,
                         openedChestCount.get(),
                         dryCount.get(),
                         dryBoxes.get(),

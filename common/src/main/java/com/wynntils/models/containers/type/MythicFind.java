@@ -6,10 +6,13 @@ package com.wynntils.models.containers.type;
 
 import com.wynntils.models.gear.type.GearTier;
 import com.wynntils.utils.mc.type.Location;
+import com.wynntils.utils.type.RangedValue;
+
 import java.util.Map;
 
 public record MythicFind(
         String itemName,
+        RangedValue levelRange, // Added in later patch
         int chestCount,
         int dryCount,
         int dryBoxes,
