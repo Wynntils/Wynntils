@@ -14,7 +14,7 @@ import com.wynntils.core.consumers.features.Feature;
 import com.wynntils.core.text.StyledText;
 import com.wynntils.mc.event.PlayerAttackEvent;
 import com.wynntils.mc.event.PlayerInteractEvent;
-import com.wynntils.utils.wynn.WynnItemMatchers;
+import com.wynntils.utils.wynn.ItemUtils;
 import net.minecraft.ChatFormatting;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.player.Player;
@@ -58,7 +58,7 @@ public class PreventTradesDuelsFeature extends Feature {
 
     private boolean shouldBlockClick(Player player, ItemStack itemStack, Entity target) {
         return player.isShiftKeyDown()
-                && WynnItemMatchers.isWeapon(itemStack)
+                && ItemUtils.isWeapon(itemStack)
                 && target instanceof Player p
                 && Models.Player.isLocalPlayer(p);
     }
