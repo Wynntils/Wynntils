@@ -1,9 +1,21 @@
+## [0.0.3-alpha.207](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.206...v0.0.3-alpha.207) (2023-07-25)
+
+
+### Code Refactoring
+
+* Turn WynnPlayerUtils into PlayerRank enum ([#1839](https://github.com/Wynntils/Artemis/issues/1839)) ([a0c4e2b](https://github.com/Wynntils/Artemis/commit/a0c4e2bf7c1fdf736fd8a69d8f4c599a95642297))
+
 ## [0.0.3-alpha.206](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.205...v0.0.3-alpha.206) (2023-07-25)
 
 
 ### New Features
 
 * Right-click text field to clear it ([#1838](https://github.com/Wynntils/Artemis/issues/1838)) ([c088938](https://github.com/Wynntils/Artemis/commit/c0889388b6958274cd288a36093f0e529b40b414))
+
+
+### Miscellaneous Chores
+
+* **release:** v0.0.3-alpha.206 [skip ci] ([25ff0e5](https://github.com/Wynntils/Artemis/commit/25ff0e57271ea3bbfae09ee2f415f1a12a8d555c))
 
 ## [0.0.3-alpha.205](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.204...v0.0.3-alpha.205) (2023-07-25)
 
@@ -36,16 +48,4 @@
 
 * **release:** v0.0.3-alpha.203 [skip ci] ([250d75a](https://github.com/Wynntils/Artemis/commit/250d75a0bb76f1c4b1768bd699a6f5bd6d430d39))
 * Try to make Crowdin bot keep quiet about non-changes ([#1835](https://github.com/Wynntils/Artemis/issues/1835)) ([b6d719b](https://github.com/Wynntils/Artemis/commit/b6d719b8b364d6b7ba7ee867723f8448e830a59b))
-
-## [0.0.3-alpha.202](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.201...v0.0.3-alpha.202) (2023-07-25)
-
-
-### Bug Fixes
-
-* Division by zero in StatisticEntry ([#1836](https://github.com/Wynntils/Artemis/issues/1836)) ([c400b6c](https://github.com/Wynntils/Artemis/commit/c400b6c8cd844a3cfaf5df26521b0e98738019f9))
-
-
-### Miscellaneous Chores
-
-* **release:** v0.0.3-alpha.202 [skip ci] ([b7a08af](https://github.com/Wynntils/Artemis/commit/b7a08affc1a41ca0e160b481468bc23458877a90))
 
