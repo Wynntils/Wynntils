@@ -5,8 +5,8 @@
 package com.wynntils.services.statistics;
 
 import com.wynntils.core.WynntilsMod;
-import com.wynntils.core.components.Model;
 import com.wynntils.core.components.Models;
+import com.wynntils.core.components.Service;
 import com.wynntils.core.storage.Storage;
 import com.wynntils.models.character.event.CharacterUpdateEvent;
 import com.wynntils.models.worlds.event.WorldStateEvent;
@@ -18,8 +18,7 @@ import java.util.Map;
 import java.util.TreeMap;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 
-// This should really be an "ExternalModel"...
-public final class StatisticsService extends Model {
+public final class StatisticsService extends Service {
     private final StatisticsCollectors collectors = new StatisticsCollectors();
 
     // All statistics, per character

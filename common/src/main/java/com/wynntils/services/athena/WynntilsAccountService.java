@@ -6,8 +6,8 @@ package com.wynntils.services.athena;
 
 import com.google.gson.JsonObject;
 import com.wynntils.core.WynntilsMod;
-import com.wynntils.core.components.Manager;
 import com.wynntils.core.components.Managers;
+import com.wynntils.core.components.Service;
 import com.wynntils.core.net.ApiResponse;
 import com.wynntils.core.net.UrlId;
 import com.wynntils.models.worlds.event.WorldStateEvent;
@@ -29,7 +29,7 @@ import net.minecraft.util.Crypt;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import org.apache.commons.codec.binary.Hex;
 
-public final class WynntilsAccountService extends Manager {
+public final class WynntilsAccountService extends Service {
     private static final String NO_TOKEN = "<no token>";
 
     private String token = NO_TOKEN;

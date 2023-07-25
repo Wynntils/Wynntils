@@ -4,10 +4,10 @@
  */
 package com.wynntils.services.stopwatch;
 
-import com.wynntils.core.components.Model;
+import com.wynntils.core.components.Service;
 import java.util.List;
 
-public class StopwatchService extends Model {
+public class StopwatchService extends Service {
     private long startTimeMillis = 0;
     private long elapsedBeforePause = 0;
     private boolean running = false;

@@ -4,7 +4,7 @@
  */
 package com.wynntils.services.ping;
 
-import com.wynntils.core.components.Model;
+import com.wynntils.core.components.Service;
 import com.wynntils.mc.event.PacketEvent;
 import com.wynntils.models.worlds.event.WorldStateEvent;
 import com.wynntils.models.worlds.type.WorldState;
@@ -17,7 +17,7 @@ import net.minecraft.network.protocol.game.ClientboundCommandSuggestionsPacket;
 import net.minecraft.network.protocol.game.ServerboundCommandSuggestionPacket;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 
-public class PingService extends Model {
+public class PingService extends Service {
     private static final int MS_PER_PING = 1000;
     private ScheduledExecutorService executor = Executors.newSingleThreadScheduledExecutor();
 

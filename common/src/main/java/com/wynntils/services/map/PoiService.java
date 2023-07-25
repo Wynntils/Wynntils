@@ -9,7 +9,7 @@ import com.google.common.reflect.TypeToken;
 import com.google.gson.JsonElement;
 import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.components.Managers;
-import com.wynntils.core.components.Model;
+import com.wynntils.core.components.Service;
 import com.wynntils.core.net.Download;
 import com.wynntils.core.net.UrlId;
 import com.wynntils.core.net.event.NetResultProcessedEvent;
@@ -36,7 +36,7 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 
-public class PoiService extends Model {
+public class PoiService extends Service {
     public static final List<Texture> POI_ICONS = List.of(
             Texture.FLAG,
             Texture.DIAMOND,
