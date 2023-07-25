@@ -1,4 +1,16 @@
+## [0.0.3-alpha.205](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.204...v0.0.3-alpha.205) (2023-07-25)
+
+
+### Code Refactoring
+
+* Introduce Consumers ([#1840](https://github.com/Wynntils/Artemis/issues/1840)) ([10bf362](https://github.com/Wynntils/Artemis/commit/10bf3624895186f4ab1d4a1bac8cc9eba04c024a))
+
 ## [0.0.3-alpha.204](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.203...v0.0.3-alpha.204) (2023-07-25)
+
+
+### Miscellaneous Chores
+
+* **release:** v0.0.3-alpha.204 [skip ci] ([374146b](https://github.com/Wynntils/Artemis/commit/374146b03b6afc8cc414d6ec83ff0184582506ce))
 
 
 ### Code Refactoring
@@ -36,12 +48,4 @@
 ### Miscellaneous Chores
 
 * **release:** v0.0.3-alpha.201 [skip ci] ([4115e80](https://github.com/Wynntils/Artemis/commit/4115e80073777de0b60998523c48294a4ec4337f))
-
-## [0.0.3-alpha.200](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.199...v0.0.3-alpha.200) (2023-07-24)
-
-
-### Miscellaneous Chores
-
-* Automatically delete empty language files ([#1828](https://github.com/Wynntils/Artemis/issues/1828)) ([66b0e73](https://github.com/Wynntils/Artemis/commit/66b0e734975018b14d3d2fa486108e67f98aadea))
-* **release:** v0.0.3-alpha.200 [skip ci] ([315739b](https://github.com/Wynntils/Artemis/commit/315739b43422eae8ea662ec575eb3c5b2fb23b8d))
 
