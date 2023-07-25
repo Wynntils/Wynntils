@@ -259,7 +259,12 @@ public class TextInputBoxWidget extends AbstractWidget {
     public boolean mouseClicked(double mouseX, double mouseY, int button) {
         if (this.isHovered) {
             McUtils.playSoundUI(SoundEvents.UI_BUTTON_CLICK.value());
-            setCursorAndHighlightPositions(getIndexAtPosition(mouseX));
+            if (button == GLFW.GLFW_MOUSE_BUTTON_2) {
+                setTextBoxInput("");
+                setCursorAndHighlightPositions(0);
+            } else {
+                setCursorAndHighlightPositions(getIndexAtPosition(mouseX));
+            }
             isDragging = true;
             textboxScreen.setFocusedTextInput(this);
             this.setFocused(true);
