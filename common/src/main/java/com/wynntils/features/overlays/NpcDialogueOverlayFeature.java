@@ -73,7 +73,7 @@ public class NpcDialogueOverlayFeature extends Feature {
     public final KeyBind cancelAutoProgressKeybind =
             new KeyBind("Cancel Dialog Auto Progress", GLFW.GLFW_KEY_Y, false, npcDialogueOverlay::cancelAutoProgress);
 
-    public class NpcDialogueOverlay extends Overlay {
+    public static class NpcDialogueOverlay extends Overlay {
         private static final Pattern NEW_QUEST_STARTED = Pattern.compile("^§6§lNew Quest Started: §e§l(.*)$");
         private static final StyledText PRESS_SNEAK_TO_CONTINUE = StyledText.fromString("§cPress SNEAK to continue");
 
@@ -255,11 +255,13 @@ public class NpcDialogueOverlayFeature extends Feature {
 
                 if (scheduledAutoProgressKeyPress != null && !scheduledAutoProgressKeyPress.isCancelled()) {
                     long timeUntilProgress = scheduledAutoProgressKeyPress.getDelay(TimeUnit.MILLISECONDS);
+                    NpcDialogueOverlayFeature feature =
+                            Managers.Feature.getFeatureInstance(NpcDialogueOverlayFeature.class);
                     TextRenderTask autoProgressMessage = new TextRenderTask(
                             ChatFormatting.GREEN + "Auto-progress: "
                                     + Math.max(0, Math.round(timeUntilProgress / 1000f))
                                     + " seconds (Press "
-                                    + StyledText.fromComponent(cancelAutoProgressKeybind
+                                    + StyledText.fromComponent(feature.cancelAutoProgressKeybind
                                                     .getKeyMapping()
                                                     .getTranslatedKeyMessage())
                                             .getStringWithoutFormatting()
@@ -333,7 +335,8 @@ public class NpcDialogueOverlayFeature extends Feature {
                 scheduledAutoProgressKeyPress = null;
             }
 
-            if (autoProgress.get() && dialogueType == NpcDialogueType.NORMAL) {
+            NpcDialogueOverlayFeature feature = Managers.Feature.getFeatureInstance(NpcDialogueOverlayFeature.class);
+            if (feature.autoProgress.get() && dialogueType == NpcDialogueType.NORMAL) {
                 // Schedule a new sneak key press if this is not the end of the dialogue
                 if (!msg.isEmpty()) {
                     scheduledAutoProgressKeyPress = scheduledSneakPress(msg);
@@ -342,9 +345,10 @@ public class NpcDialogueOverlayFeature extends Feature {
         }
 
         private long calculateMessageReadTime(List<StyledText> msg) {
+            NpcDialogueOverlayFeature feature = Managers.Feature.getFeatureInstance(NpcDialogueOverlayFeature.class);
             int words = StyledText.join(" ", msg).split(" ").length;
-            long delay = dialogAutoProgressDefaultTime.get()
-                    + ((long) words * dialogAutoProgressAdditionalTimePerWord.get());
+            long delay = feature.dialogAutoProgressDefaultTime.get()
+                    + ((long) words * feature.dialogAutoProgressAdditionalTimePerWord.get());
             return delay;
         }
 
@@ -359,10 +363,11 @@ public class NpcDialogueOverlayFeature extends Feature {
         }
 
         private void updateDialogExtractionSettings() {
+            NpcDialogueOverlayFeature feature = Managers.Feature.getFeatureInstance(NpcDialogueOverlayFeature.class);
             if (Managers.Overlay.isEnabled(this)) {
-                Handlers.Chat.addNpcDialogExtractionDependent(NpcDialogueOverlayFeature.this);
+                Handlers.Chat.addNpcDialogExtractionDependent(feature);
             } else {
-                Handlers.Chat.removeNpcDialogExtractionDependent(NpcDialogueOverlayFeature.this);
+                Handlers.Chat.removeNpcDialogExtractionDependent(feature);
                 currentDialogue = List.of();
                 confirmationlessDialogues.clear();
             }

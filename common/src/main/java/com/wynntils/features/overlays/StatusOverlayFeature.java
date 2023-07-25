@@ -35,7 +35,7 @@ public class StatusOverlayFeature extends Feature {
     @OverlayInfo(renderType = RenderEvent.ElementType.GUI)
     public final StatusOverlay statusOverlay = new StatusOverlay();
 
-    public class StatusOverlay extends Overlay {
+    public static class StatusOverlay extends Overlay {
         @RegisterConfig
         public final Config<TextShadow> textShadow = new Config<>(TextShadow.OUTLINE);
 
@@ -65,8 +65,7 @@ public class StatusOverlayFeature extends Feature {
 
         private void recalculateRenderCache() {
             renderCache = Models.StatusEffect.getStatusEffects().stream()
-                    .map(statusTimer ->
-                            new TextRenderTask(statusTimer.asString(), statusOverlay.getTextRenderSetting()))
+                    .map(statusTimer -> new TextRenderTask(statusTimer.asString(), getTextRenderSetting()))
                     .toList();
         }
 
