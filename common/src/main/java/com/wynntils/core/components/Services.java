@@ -14,6 +14,7 @@ import com.wynntils.services.hades.HadesService;
 import com.wynntils.services.lootrunpaths.LootrunPathsService;
 import com.wynntils.services.map.MapService;
 import com.wynntils.services.map.PoiService;
+import com.wynntils.services.mapdata.MapDataService;
 import com.wynntils.services.ping.PingService;
 import com.wynntils.services.resourcepack.ResourcePackService;
 import com.wynntils.services.splashes.SplashService;
@@ -28,6 +29,7 @@ public final class Services {
     public static final FavoritesService Favorites = new FavoritesService();
     public static final HadesService Hades = new HadesService();
     public static final LootrunPathsService LootrunPaths = new LootrunPathsService();
+    public static final MapDataService MapData = new MapDataService();
     public static final MapService Map = new MapService();
     public static final PingService Ping = new PingService();
     public static final PoiService Poi = new PoiService();

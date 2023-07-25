@@ -301,13 +301,13 @@ public final class MainMapScreen extends AbstractMapScreen {
         if (showTerrs) {
             pois = Stream.concat(pois, Models.Territory.getTerritoryPois().stream());
         }
-        pois = Stream.concat(pois, Models.MapData.getFeaturesAsPois());
+        pois = Stream.concat(pois, Services.MapData.getFeaturesAsPois());
 
         // FIXME
-        pois = Models.MapData.getFeaturesAsPois();
+        pois = Services.MapData.getFeaturesAsPois();
         // pois = Stream.concat(pois, Services.Poi.getServicePois());
         pois = Stream.concat(pois, Services.Poi.getLabelPois());
-//        pois = Stream.concat(pois, Services.Poi.getCombatPois());
+        //        pois = Stream.concat(pois, Services.Poi.getCombatPois());
 
         renderPois(
                 pois.collect(Collectors.toList()),

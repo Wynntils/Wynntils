@@ -30,7 +30,6 @@ import com.wynntils.models.horse.HorseModel;
 import com.wynntils.models.ingredients.IngredientModel;
 import com.wynntils.models.items.ItemModel;
 import com.wynntils.models.lootrun.LootrunModel;
-import com.wynntils.models.mapdata.MapDataModel;
 import com.wynntils.models.marker.MarkerModel;
 import com.wynntils.models.mobtotem.MobTotemModel;
 import com.wynntils.models.objectives.ObjectivesModel;
@@ -96,7 +95,6 @@ public final class Models {
     public static final IngredientModel Ingredient = new IngredientModel(Stat);
     public static final ItemModel Item = new ItemModel(Element, Gear, Rewards, Ingredient);
     public static final LootChestModel LootChest = new LootChestModel(Container);
-    public static final MapDataModel MapData = new MapDataModel();
     public static final LootrunModel Lootrun = new LootrunModel(Beacon, Marker, Particle);
     public static final MobTotemModel MobTotem = new MobTotemModel(WorldState);
     public static final PartyModel Party = new PartyModel(WorldState);
