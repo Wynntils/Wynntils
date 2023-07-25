@@ -10,14 +10,14 @@ import com.wynntils.antiope.core.type.GameSDKException;
 import com.wynntils.antiope.core.type.Result;
 import com.wynntils.antiope.manager.activity.type.Activity;
 import com.wynntils.core.WynntilsMod;
-import com.wynntils.core.components.Manager;
+import com.wynntils.core.components.Service;
 import com.wynntils.mc.event.TickEvent;
 import com.wynntils.utils.mc.McUtils;
 import java.time.Instant;
 import java.util.List;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 
-public class DiscordService extends Manager {
+public class DiscordService extends Service {
     private static final long DISCORD_APPLICATION_ID = 387266678607577088L;
     private static final int TICKS_PER_UPDATE = 5;
 

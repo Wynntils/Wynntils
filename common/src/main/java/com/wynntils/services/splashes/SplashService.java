@@ -6,8 +6,8 @@ package com.wynntils.services.splashes;
 
 import com.google.common.reflect.TypeToken;
 import com.wynntils.core.WynntilsMod;
-import com.wynntils.core.components.Manager;
 import com.wynntils.core.components.Managers;
+import com.wynntils.core.components.Service;
 import com.wynntils.core.net.Download;
 import com.wynntils.core.net.UrlId;
 import java.lang.reflect.Type;
@@ -15,7 +15,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
-public final class SplashService extends Manager {
+public final class SplashService extends Service {
     // Fallback splash in case loading of splashes fails
     private static final String DEFAULT_SPLASH = "The best Wynncraft mod you'll probably find!";
     private static final Random RANDOM = new Random();
