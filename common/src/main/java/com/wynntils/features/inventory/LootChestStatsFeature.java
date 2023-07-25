@@ -1,3 +1,7 @@
+/*
+ * Copyright © Wynntils 2023.
+ * This file is released under AGPLv3. See LICENSE for full license details.
+ */
 package com.wynntils.features.inventory;
 
 import com.mojang.blaze3d.vertex.PoseStack;
@@ -12,16 +16,15 @@ import com.wynntils.utils.render.FontRenderer;
 import com.wynntils.utils.render.type.HorizontalAlignment;
 import com.wynntils.utils.render.type.TextShadow;
 import com.wynntils.utils.render.type.VerticalAlignment;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
-
 import java.text.NumberFormat;
+import net.minecraftforge.eventbus.api.SubscribeEvent;
 
 @ConfigCategory(Category.INVENTORY)
 public class LootChestStatsFeature extends Feature {
-
     @SubscribeEvent
     public void onRenderLootChest(ContainerRenderEvent event) {
-        if (!Models.Container.isLootChest(StyledText.fromComponent(event.getScreen().getTitle()).getStringWithoutFormatting())) {
+        if (!Models.Container.isLootChest(
+                StyledText.fromComponent(event.getScreen().getTitle()).getStringWithoutFormatting())) {
             return;
         }
         PoseStack poseStack = event.getPoseStack();
@@ -34,8 +37,10 @@ public class LootChestStatsFeature extends Feature {
         int titleLabelY = event.getScreen().titleLabelY;
         int inventoryLabelX = event.getScreen().inventoryLabelX;
         int inventoryLabelY = event.getScreen().inventoryLabelY;
-        renderTotalChestCount(event.getPoseStack(), width - titleLabelX, titleLabelY, Models.LootChest.getOpenedChestCount());
-        renderDryChestCount(event.getPoseStack(), width - inventoryLabelX, inventoryLabelY, Models.LootChest.getDryCount());
+        renderTotalChestCount(
+                event.getPoseStack(), width - titleLabelX, titleLabelY, Models.LootChest.getOpenedChestCount());
+        renderDryChestCount(
+                event.getPoseStack(), width - inventoryLabelX, inventoryLabelY, Models.LootChest.getDryCount());
         poseStack.popPose();
     }
 

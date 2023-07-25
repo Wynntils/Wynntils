@@ -21,14 +21,13 @@ import com.wynntils.models.items.items.game.EmeraldItem;
 import com.wynntils.models.items.items.game.GearBoxItem;
 import com.wynntils.models.items.items.game.GearItem;
 import com.wynntils.utils.mc.type.Location;
+import com.wynntils.utils.type.RangedValue;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.EnumMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
-
-import com.wynntils.utils.type.RangedValue;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
