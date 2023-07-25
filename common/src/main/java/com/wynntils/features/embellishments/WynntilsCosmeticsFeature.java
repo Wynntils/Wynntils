@@ -10,7 +10,7 @@ import com.wynntils.core.config.Category;
 import com.wynntils.core.config.Config;
 import com.wynntils.core.config.ConfigCategory;
 import com.wynntils.core.config.RegisterConfig;
-import com.wynntils.core.features.Feature;
+import com.wynntils.core.consumers.features.Feature;
 import com.wynntils.mc.event.PlayerRenderLayerEvent;
 import com.wynntils.utils.mc.McUtils;
 import net.minecraftforge.eventbus.api.SubscribeEvent;

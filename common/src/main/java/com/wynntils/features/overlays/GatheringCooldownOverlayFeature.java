@@ -6,12 +6,12 @@ package com.wynntils.features.overlays;
 
 import com.wynntils.core.config.Category;
 import com.wynntils.core.config.ConfigCategory;
-import com.wynntils.core.features.Feature;
-import com.wynntils.core.features.overlays.OverlayPosition;
-import com.wynntils.core.features.overlays.OverlaySize;
-import com.wynntils.core.features.overlays.RenderState;
-import com.wynntils.core.features.overlays.TextOverlay;
-import com.wynntils.core.features.overlays.annotations.OverlayInfo;
+import com.wynntils.core.consumers.features.Feature;
+import com.wynntils.core.consumers.features.overlays.OverlayPosition;
+import com.wynntils.core.consumers.features.overlays.OverlaySize;
+import com.wynntils.core.consumers.features.overlays.RenderState;
+import com.wynntils.core.consumers.features.overlays.TextOverlay;
+import com.wynntils.core.consumers.features.overlays.annotations.OverlayInfo;
 import com.wynntils.handlers.chat.event.ChatMessageReceivedEvent;
 import com.wynntils.mc.event.RenderEvent;
 import com.wynntils.models.worlds.event.WorldStateEvent;

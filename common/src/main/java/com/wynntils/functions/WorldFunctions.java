@@ -5,8 +5,8 @@
 package com.wynntils.functions;
 
 import com.wynntils.core.components.Models;
-import com.wynntils.core.functions.Function;
-import com.wynntils.core.functions.arguments.FunctionArguments;
+import com.wynntils.core.consumers.functions.Function;
+import com.wynntils.core.consumers.functions.arguments.FunctionArguments;
 import com.wynntils.models.mobtotem.MobTotem;
 import com.wynntils.models.territories.profile.TerritoryProfile;
 import com.wynntils.models.token.type.TokenGatekeeper;

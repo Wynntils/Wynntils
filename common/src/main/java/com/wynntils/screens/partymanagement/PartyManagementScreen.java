@@ -6,9 +6,9 @@ package com.wynntils.screens.partymanagement;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.wynntils.core.components.Models;
+import com.wynntils.core.consumers.screens.WynntilsScreen;
 import com.wynntils.core.text.StyledText;
 import com.wynntils.screens.base.TextboxScreen;
-import com.wynntils.screens.base.WynntilsScreen;
 import com.wynntils.screens.base.widgets.TextInputBoxWidget;
 import com.wynntils.screens.partymanagement.widgets.CreateLeaveButton;
 import com.wynntils.screens.partymanagement.widgets.LegendButton;

@@ -9,7 +9,7 @@ import com.google.gson.JsonObject;
 import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.components.Manager;
 import com.wynntils.core.components.Managers;
-import com.wynntils.core.features.FeatureManager;
+import com.wynntils.core.consumers.features.FeatureManager;
 import com.wynntils.core.json.JsonManager;
 import com.wynntils.core.mod.event.WynncraftConnectionEvent;
 import com.wynntils.utils.mc.McUtils;
