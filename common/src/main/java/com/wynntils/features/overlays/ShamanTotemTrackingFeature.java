@@ -4,6 +4,7 @@
  */
 package com.wynntils.features.overlays;
 
+import com.wynntils.core.components.Managers;
 import com.wynntils.core.components.Models;
 import com.wynntils.core.config.Category;
 import com.wynntils.core.config.Config;
@@ -48,31 +49,9 @@ public class ShamanTotemTrackingFeature extends Feature {
     @RegisterConfig
     public final Config<CustomColor> thirdTotemColor = new Config<>(CommonColors.RED);
 
-    private static final int ENTITY_GLOWING_FLAG = 6;
-
-    @SubscribeEvent
-    public void onTotemSummoned(TotemEvent.Summoned e) {
-        if (!highlightShamanTotems.get()) return;
-
-        int totemNumber = e.getTotemNumber();
-        ArmorStand totemAS = e.getTotemEntity();
-
-        CustomColor color =
-                switch (totemNumber) {
-                    case 1 -> firstTotemColor.get();
-                    case 2 -> secondTotemColor.get();
-                    case 3 -> thirdTotemColor.get();
-                    default -> throw new IllegalArgumentException(
-                            "totemNumber should be 1, 2, or 3! (color switch in #onTotemSummoned in ShamanTotemTrackingFeature");
-                };
-
-        ((EntityExtension) totemAS).setGlowColor(color);
-
-        totemAS.setGlowingTag(true);
-        totemAS.setSharedFlag(ENTITY_GLOWING_FLAG, true);
-    }
-
     public static class ShamanTotemTimerOverlay extends TextOverlay {
+        private static final int ENTITY_GLOWING_FLAG = 6;
+
         @RegisterConfig
         public final Config<TotemTrackingDetail> totemTrackingDetail = new Config<>(TotemTrackingDetail.COORDS);
 
@@ -85,12 +64,6 @@ public class ShamanTotemTrackingFeature extends Feature {
         @RegisterConfig
         public final Config<ColorChatFormatting> thirdTotemTextColor = new Config<>(ColorChatFormatting.RED);
 
-        private final ChatFormatting[] totemColorsArray = {
-            firstTotemTextColor.get().getChatFormatting(),
-            secondTotemTextColor.get().getChatFormatting(),
-            thirdTotemTextColor.get().getChatFormatting()
-        };
-
         protected ShamanTotemTimerOverlay() {
             super(
                     new OverlayPosition(
@@ -100,6 +73,29 @@ public class ShamanTotemTrackingFeature extends Feature {
                             HorizontalAlignment.RIGHT,
                             OverlayPosition.AnchorSection.TOP_RIGHT),
                     new OverlaySize(120, 35));
+        }
+
+        @SubscribeEvent
+        public void onTotemSummoned(TotemEvent.Summoned e) {
+            var feature = Managers.Feature.getFeatureInstance(ShamanTotemTrackingFeature.class);
+            if (!feature.highlightShamanTotems.get()) return;
+
+            int totemNumber = e.getTotemNumber();
+            ArmorStand totemAS = e.getTotemEntity();
+
+            CustomColor color =
+                    switch (totemNumber) {
+                        case 1 -> feature.firstTotemColor.get();
+                        case 2 -> feature.secondTotemColor.get();
+                        case 3 -> feature.thirdTotemColor.get();
+                        default -> throw new IllegalArgumentException(
+                                "totemNumber should be 1, 2, or 3! (color switch in #onTotemSummoned in ShamanTotemTrackingFeature");
+                    };
+
+            ((EntityExtension) totemAS).setGlowColor(color);
+
+            totemAS.setGlowingTag(true);
+            totemAS.setSharedFlag(ENTITY_GLOWING_FLAG, true);
         }
 
         @Override
@@ -135,33 +131,39 @@ public class ShamanTotemTrackingFeature extends Feature {
                     .flatMap(Arrays::stream)
                     .toArray(StyledText[]::new);
         }
-    }
 
-    public enum TotemTrackingDetail {
-        NONE(
-                "{IF_STR(EQ_STR(SHAMAN_TOTEM_STATE(%d); \"ACTIVE\"); CONCAT(\"Totem %d (\"; STRING(SHAMAN_TOTEM_TIME_LEFT(%d));\" s)\"); IF_STR(EQ_STR(SHAMAN_TOTEM_STATE(%d); \"SUMMONED\"); \"Totem %d summoned\"; \"\"))}",
-                "Totem 1 (10 s)"),
-        COORDS(
-                "{IF_STR(EQ_STR(SHAMAN_TOTEM_STATE(%d); \"ACTIVE\"); CONCAT(\"Totem %d (\"; STRING(SHAMAN_TOTEM_TIME_LEFT(%d));\" s)\"; \" \"; SHAMAN_TOTEM_LOCATION(%d)); IF_STR(EQ_STR(SHAMAN_TOTEM_STATE(%d); \"SUMMONED\"); \"Totem %d summoned\"; \"\"))}",
-                "Totem 2 (15 s) [1425, 12, 512]"),
-        DISTANCE(
-                "{IF_STR(EQ_STR(SHAMAN_TOTEM_STATE(%d); \"ACTIVE\"); CONCAT(\"Totem %d (\"; STRING(SHAMAN_TOTEM_TIME_LEFT(%d));\" s, \"; STRING(INT(SHAMAN_TOTEM_DISTANCE(%d))); \" m)\"); IF_STR(EQ_STR(SHAMAN_TOTEM_STATE(%d); \"SUMMONED\"); \"Totem %d summoned\"; \"\"))}",
-                "Totem 3 (7s, 10 m)");
+        private final ChatFormatting[] totemColorsArray = {
+            firstTotemTextColor.get().getChatFormatting(),
+            secondTotemTextColor.get().getChatFormatting(),
+            thirdTotemTextColor.get().getChatFormatting()
+        };
 
-        private final String template;
-        private final String previewTemplate;
+        private enum TotemTrackingDetail {
+            NONE(
+                    "{IF_STR(EQ_STR(SHAMAN_TOTEM_STATE(%d); \"ACTIVE\"); CONCAT(\"Totem %d (\"; STRING(SHAMAN_TOTEM_TIME_LEFT(%d));\" s)\"); IF_STR(EQ_STR(SHAMAN_TOTEM_STATE(%d); \"SUMMONED\"); \"Totem %d summoned\"; \"\"))}",
+                    "Totem 1 (10 s)"),
+            COORDS(
+                    "{IF_STR(EQ_STR(SHAMAN_TOTEM_STATE(%d); \"ACTIVE\"); CONCAT(\"Totem %d (\"; STRING(SHAMAN_TOTEM_TIME_LEFT(%d));\" s)\"; \" \"; SHAMAN_TOTEM_LOCATION(%d)); IF_STR(EQ_STR(SHAMAN_TOTEM_STATE(%d); \"SUMMONED\"); \"Totem %d summoned\"; \"\"))}",
+                    "Totem 2 (15 s) [1425, 12, 512]"),
+            DISTANCE(
+                    "{IF_STR(EQ_STR(SHAMAN_TOTEM_STATE(%d); \"ACTIVE\"); CONCAT(\"Totem %d (\"; STRING(SHAMAN_TOTEM_TIME_LEFT(%d));\" s, \"; STRING(INT(SHAMAN_TOTEM_DISTANCE(%d))); \" m)\"); IF_STR(EQ_STR(SHAMAN_TOTEM_STATE(%d); \"SUMMONED\"); \"Totem %d summoned\"; \"\"))}",
+                    "Totem 3 (7s, 10 m)");
 
-        TotemTrackingDetail(String template, String previewTemplate) {
-            this.template = template;
-            this.previewTemplate = previewTemplate;
-        }
+            private final String template;
+            private final String previewTemplate;
 
-        private String getTemplate() {
-            return template;
-        }
+            TotemTrackingDetail(String template, String previewTemplate) {
+                this.template = template;
+                this.previewTemplate = previewTemplate;
+            }
 
-        private String getPreviewTemplate() {
-            return previewTemplate;
+            private String getTemplate() {
+                return template;
+            }
+
+            private String getPreviewTemplate() {
+                return previewTemplate;
+            }
         }
     }
 }
