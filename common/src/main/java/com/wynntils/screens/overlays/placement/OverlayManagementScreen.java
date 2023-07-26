@@ -65,7 +65,7 @@ public final class OverlayManagementScreen extends WynntilsScreen {
             Component.literal("Resize the overlay by dragging the edges or corners."),
             Component.literal("Move it by dragging the center of the overlay."),
             Component.literal("By holding shift, you can disable alignment lines."),
-            Component.literal("Use your arrows to change vertical"),
+            Component.literal("Use you shift-arrows to change vertical"),
             Component.literal("and horizontal alignment."),
             Component.literal("The overlay name will render respecting"),
             Component.literal("the current overlay alignments."),
