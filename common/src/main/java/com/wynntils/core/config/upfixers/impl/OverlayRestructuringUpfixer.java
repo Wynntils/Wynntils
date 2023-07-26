@@ -10,7 +10,11 @@ import java.util.List;
 
 public class OverlayRestructuringUpfixer extends RenamedPrefixesUpfixer {
     private static final List<Pair<String, String>> RENAMED_PREFIXES = List.of(
+            Pair.of(
+                    "spellCastRenderFeature.spellCastMessageOverlay.",
+                    "spellCastMessageOverlayFeature.spellCastMessageOverlay."),
             Pair.of("spellCastRenderFeature.", "spellCastVignetteFeature."),
+            Pair.of("tokenTrackerFeature.tokenBarsOverlay.", "tokenBarsOverlayFeature.tokenBarsOverlay."),
             Pair.of("tokenTrackerFeature.", "tokenTrackerBellFeature."));
 
     @Override
