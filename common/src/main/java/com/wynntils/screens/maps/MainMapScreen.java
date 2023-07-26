@@ -9,7 +9,7 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import com.wynntils.core.components.Managers;
 import com.wynntils.core.components.Models;
 import com.wynntils.core.components.Services;
-import com.wynntils.features.map.MapFeature;
+import com.wynntils.features.map.MainMapFeature;
 import com.wynntils.screens.base.widgets.BasicTexturedButton;
 import com.wynntils.services.lootruns.LootrunInstance;
 import com.wynntils.services.map.pois.CustomPoi;
@@ -201,7 +201,7 @@ public final class MainMapScreen extends AbstractMapScreen {
     @Override
     public void doRender(PoseStack poseStack, int mouseX, int mouseY, float partialTick) {
         if (holdingMapKey
-                && !Managers.Feature.getFeatureInstance(MapFeature.class)
+                && !Managers.Feature.getFeatureInstance(MainMapFeature.class)
                         .openMapKeybind
                         .getKeyMapping()
                         .isDown()) {
@@ -224,13 +224,13 @@ public final class MainMapScreen extends AbstractMapScreen {
         // Cursor
         renderCursor(
                 poseStack,
-                Managers.Feature.getFeatureInstance(MapFeature.class)
+                Managers.Feature.getFeatureInstance(MainMapFeature.class)
                         .playerPointerScale
                         .get(),
-                Managers.Feature.getFeatureInstance(MapFeature.class)
+                Managers.Feature.getFeatureInstance(MainMapFeature.class)
                         .pointerColor
                         .get(),
-                Managers.Feature.getFeatureInstance(MapFeature.class)
+                Managers.Feature.getFeatureInstance(MainMapFeature.class)
                         .pointerType
                         .get());
 
@@ -265,7 +265,7 @@ public final class MainMapScreen extends AbstractMapScreen {
 
         pois = Stream.concat(pois, Services.Poi.getCombatPois());
         pois = Stream.concat(pois, Services.Poi.getLabelPois());
-        pois = Stream.concat(pois, Managers.Feature.getFeatureInstance(MapFeature.class).customPois.get().stream());
+        pois = Stream.concat(pois, Managers.Feature.getFeatureInstance(MainMapFeature.class).customPois.get().stream());
         pois = Stream.concat(pois, Services.Poi.getProvidedCustomPois().stream());
         pois = Stream.concat(pois, Models.Compass.getCompassWaypoint().stream());
         pois = Stream.concat(
@@ -273,11 +273,11 @@ public final class MainMapScreen extends AbstractMapScreen {
                 Services.Hades.getHadesUsers()
                         .filter(
                                 hadesUser -> (hadesUser.isPartyMember()
-                                                && Managers.Feature.getFeatureInstance(MapFeature.class)
+                                                && Managers.Feature.getFeatureInstance(MainMapFeature.class)
                                                         .renderRemotePartyPlayers
                                                         .get())
                                         || (hadesUser.isMutualFriend()
-                                                && Managers.Feature.getFeatureInstance(MapFeature.class)
+                                                && Managers.Feature.getFeatureInstance(MainMapFeature.class)
                                                         .renderRemoteFriendPlayers
                                                         .get())
                                 /*|| (hadesUser.isGuildMember() && Managers.Feature.getFeatureInstance(MapFeature.class).renderRemoteGuildPlayers)*/ )
@@ -291,7 +291,9 @@ public final class MainMapScreen extends AbstractMapScreen {
                 pois.collect(Collectors.toList()),
                 poseStack,
                 BoundingBox.centered(mapCenterX, mapCenterZ, width / currentZoom, height / currentZoom),
-                Managers.Feature.getFeatureInstance(MapFeature.class).poiScale.get(),
+                Managers.Feature.getFeatureInstance(MainMapFeature.class)
+                        .poiScale
+                        .get(),
                 mouseX,
                 mouseY);
     }
@@ -299,7 +301,7 @@ public final class MainMapScreen extends AbstractMapScreen {
     @Override
     public boolean keyPressed(int keyCode, int scanCode, int modifiers) {
         if (keyCode == GLFW.GLFW_KEY_LEFT_CONTROL) {
-            if (Managers.Feature.getFeatureInstance(MapFeature.class)
+            if (Managers.Feature.getFeatureInstance(MainMapFeature.class)
                     .holdGuildMapOpen
                     .get()) {
                 showTerrs = true;
@@ -314,7 +316,7 @@ public final class MainMapScreen extends AbstractMapScreen {
     @Override
     public boolean keyReleased(int keyCode, int scanCode, int modifiers) {
         if (keyCode == GLFW.GLFW_KEY_LEFT_CONTROL) {
-            if (Managers.Feature.getFeatureInstance(MapFeature.class)
+            if (Managers.Feature.getFeatureInstance(MainMapFeature.class)
                     .holdGuildMapOpen
                     .get()) {
                 showTerrs = false;
@@ -380,7 +382,7 @@ public final class MainMapScreen extends AbstractMapScreen {
                 }
             } else if (KeyboardUtils.isAltDown()) {
                 if (hovered instanceof CustomPoi customPoi) {
-                    Managers.Feature.getFeatureInstance(MapFeature.class)
+                    Managers.Feature.getFeatureInstance(MainMapFeature.class)
                             .customPois
                             .get()
                             .remove(customPoi);
