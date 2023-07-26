@@ -85,7 +85,6 @@ import com.wynntils.features.overlays.CustomPlayerListOverlayFeature;
 import com.wynntils.features.overlays.GameBarsOverlayFeature;
 import com.wynntils.features.overlays.GameNotificationOverlayFeature;
 import com.wynntils.features.overlays.GatheringCooldownOverlayFeature;
-import com.wynntils.features.overlays.GuildAttackTimerOverlayFeature;
 import com.wynntils.features.overlays.HadesPartyOverlayFeature;
 import com.wynntils.features.overlays.InfoBoxFeature;
 import com.wynntils.features.overlays.MobTotemTrackingFeature;
@@ -97,6 +96,7 @@ import com.wynntils.features.overlays.ShamanTotemTrackingFeature;
 import com.wynntils.features.overlays.SpellCastMessageOverlayFeature;
 import com.wynntils.features.overlays.StatusOverlayFeature;
 import com.wynntils.features.overlays.StopwatchFeature;
+import com.wynntils.features.overlays.TerritoryAttackTimerOverlayFeature;
 import com.wynntils.features.overlays.TokenBarsOverlayFeature;
 import com.wynntils.features.players.AutoJoinPartyFeature;
 import com.wynntils.features.players.CustomNametagRendererFeature;
@@ -255,7 +255,6 @@ public final class FeatureManager extends Manager {
         registerFeature(new GameBarsOverlayFeature());
         registerFeature(new GameNotificationOverlayFeature());
         registerFeature(new GatheringCooldownOverlayFeature());
-        registerFeature(new GuildAttackTimerOverlayFeature());
         registerFeature(new HadesPartyOverlayFeature());
         registerFeature(new InfoBoxFeature());
         registerFeature(new MobTotemTrackingFeature());
@@ -267,6 +266,7 @@ public final class FeatureManager extends Manager {
         registerFeature(new SpellCastMessageOverlayFeature());
         registerFeature(new StatusOverlayFeature());
         registerFeature(new StopwatchFeature());
+        registerFeature(new TerritoryAttackTimerOverlayFeature());
         registerFeature(new TokenBarsOverlayFeature());
         // endregion
 

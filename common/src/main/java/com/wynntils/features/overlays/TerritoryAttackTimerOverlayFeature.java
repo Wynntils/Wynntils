@@ -35,7 +35,7 @@ import net.minecraftforge.eventbus.api.EventPriority;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 
 @ConfigCategory(Category.OVERLAYS)
-public class GuildAttackTimerOverlayFeature extends Feature {
+public class TerritoryAttackTimerOverlayFeature extends Feature {
     @OverlayInfo(renderType = RenderEvent.ElementType.GUI)
     private final TerritoryAttackTimerOverlay territoryAttackTimerOverlay = new TerritoryAttackTimerOverlay();
 
@@ -63,8 +63,8 @@ public class GuildAttackTimerOverlayFeature extends Feature {
 
         @SubscribeEvent(priority = EventPriority.HIGHEST)
         public void onScoreboardSegmentChange(ScoreboardSegmentAdditionEvent event) {
-            GuildAttackTimerOverlayFeature feature =
-                    Managers.Feature.getFeatureInstance(GuildAttackTimerOverlayFeature.class);
+            TerritoryAttackTimerOverlayFeature feature =
+                    Managers.Feature.getFeatureInstance(TerritoryAttackTimerOverlayFeature.class);
             if (feature.disableAttackTimersOnScoreboard.get()
                     && event.getSegment().getScoreboardPart() instanceof GuildAttackScoreboardPart) {
                 event.setCanceled(true);
