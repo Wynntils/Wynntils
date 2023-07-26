@@ -1,9 +1,21 @@
+## [0.0.3-alpha.217](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.216...v0.0.3-alpha.217) (2023-07-26)
+
+
+### Bug Fixes
+
+* Fix configs not working with the overlay refactor ([#1856](https://github.com/Wynntils/Artemis/issues/1856)) ([d152d47](https://github.com/Wynntils/Artemis/commit/d152d470d294b9cbd30add8778d2ffb946bcde03))
+
 ## [0.0.3-alpha.216](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.215...v0.0.3-alpha.216) (2023-07-26)
 
 
 ### New Features
 
 * Show overall content activity progress on profile page ([#1833](https://github.com/Wynntils/Artemis/issues/1833)) ([5723b72](https://github.com/Wynntils/Artemis/commit/5723b72c29c392d340831e74b3289bbb389c4457))
+
+
+### Miscellaneous Chores
+
+* **release:** v0.0.3-alpha.216 [skip ci] ([cc94612](https://github.com/Wynntils/Artemis/commit/cc94612e5c29d5503b1ec28153daa570c104dc01))
 
 ## [0.0.3-alpha.215](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.214...v0.0.3-alpha.215) (2023-07-26)
 
@@ -40,16 +52,4 @@
 ### Miscellaneous Chores
 
 * **release:** v0.0.3-alpha.213 [skip ci] ([86e8fcf](https://github.com/Wynntils/Artemis/commit/86e8fcf599b5c4b4733806987f5b307f97dc8920))
-
-## [0.0.3-alpha.212](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.211...v0.0.3-alpha.212) (2023-07-26)
-
-
-### New Features
-
-* Store when we started collecting a statistic entry ([#1849](https://github.com/Wynntils/Artemis/issues/1849)) ([b9410cf](https://github.com/Wynntils/Artemis/commit/b9410cfbd82423f01c647ce37a33c425f94a7295))
-
-
-### Miscellaneous Chores
-
-* **release:** v0.0.3-alpha.212 [skip ci] ([b926299](https://github.com/Wynntils/Artemis/commit/b9262998ed7fc66649665d61e78e54ed0db25b1d))
 
