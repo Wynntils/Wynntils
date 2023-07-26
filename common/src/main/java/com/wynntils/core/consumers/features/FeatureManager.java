@@ -86,7 +86,7 @@ import com.wynntils.features.overlays.GameBarsOverlayFeature;
 import com.wynntils.features.overlays.GameNotificationOverlayFeature;
 import com.wynntils.features.overlays.GatheringCooldownOverlayFeature;
 import com.wynntils.features.overlays.InfoBoxFeature;
-import com.wynntils.features.overlays.MobTotemTrackingFeature;
+import com.wynntils.features.overlays.MobTotemTimerOverlayFeature;
 import com.wynntils.features.overlays.NpcDialogueOverlayFeature;
 import com.wynntils.features.overlays.ObjectivesOverlayFeature;
 import com.wynntils.features.overlays.PartyMembersOverlayFeature;
@@ -256,7 +256,7 @@ public final class FeatureManager extends Manager {
         registerFeature(new GameNotificationOverlayFeature());
         registerFeature(new GatheringCooldownOverlayFeature());
         registerFeature(new InfoBoxFeature());
-        registerFeature(new MobTotemTrackingFeature());
+        registerFeature(new MobTotemTimerOverlayFeature());
         registerFeature(new NpcDialogueOverlayFeature());
         registerFeature(new ObjectivesOverlayFeature());
         registerFeature(new PartyMembersOverlayFeature());

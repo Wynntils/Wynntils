@@ -22,7 +22,7 @@ import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
 @ConfigCategory(Category.OVERLAYS)
-public class MobTotemTrackingFeature extends Feature {
+public class MobTotemTimerOverlayFeature extends Feature {
     @OverlayInfo(renderType = RenderEvent.ElementType.GUI)
     private final MobTotemTimerOverlay mobTotemTimerOverlay = new MobTotemTimerOverlay();
 

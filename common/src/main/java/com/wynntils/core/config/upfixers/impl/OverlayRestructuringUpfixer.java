@@ -19,7 +19,8 @@ public class OverlayRestructuringUpfixer extends RenamedPrefixesUpfixer {
             Pair.of("arrowShieldTrackingFeature.", "arrowShieldTrackerOverlayFeature."),
             Pair.of("dustomPlayerListFeature.", "customPlayerListOverlayFeature."),
             Pair.of("guildAttackTimerOverlayFeature.", "territoryAttackTimerOverlayFeature."),
-            Pair.of("hadesPartyOverlayFeature.", "partyMembersOverlayFeature."));
+            Pair.of("hadesPartyOverlayFeature.", "partyMembersOverlayFeature."),
+            Pair.of("mobTotemTrackingFeature.", "mobTotemTimerOverlayFeature."));
 
     @Override
     protected List<Pair<String, String>> getRenamedPrefixes() {
