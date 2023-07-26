@@ -9,7 +9,7 @@ import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.wynntils.core.components.Managers;
 import com.wynntils.core.text.StyledText;
-import com.wynntils.features.map.MapFeature;
+import com.wynntils.features.map.MainMapFeature;
 import com.wynntils.screens.maps.PoiCreationScreen;
 import com.wynntils.screens.maps.PoiManagementScreen;
 import com.wynntils.services.map.pois.CustomPoi;
@@ -48,7 +48,9 @@ public class PoiManagerWidget extends AbstractWidget {
         this.row = row;
         this.managementScreen = managementScreen;
 
-        pois = Managers.Feature.getFeatureInstance(MapFeature.class).customPois.get();
+        pois = Managers.Feature.getFeatureInstance(MainMapFeature.class)
+                .customPois
+                .get();
 
         color = CommonColors.WHITE;
 
@@ -67,11 +69,11 @@ public class PoiManagerWidget extends AbstractWidget {
                         Component.translatable("screens.wynntils.poiManagementGui.delete"), (button) -> {
                             managementScreen.setLastDeletedPoi(
                                     poi,
-                                    Managers.Feature.getFeatureInstance(MapFeature.class)
+                                    Managers.Feature.getFeatureInstance(MainMapFeature.class)
                                             .customPois
                                             .get()
                                             .indexOf(poi));
-                            Managers.Feature.getFeatureInstance(MapFeature.class)
+                            Managers.Feature.getFeatureInstance(MainMapFeature.class)
                                     .customPois
                                     .get()
                                     .remove(poi);

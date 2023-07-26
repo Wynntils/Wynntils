@@ -24,7 +24,7 @@ import com.wynntils.utils.SystemUtils;
 import com.wynntils.utils.mc.McUtils;
 import com.wynntils.utils.render.FontRenderer;
 import com.wynntils.utils.render.RenderUtils;
-import com.wynntils.utils.wynn.WynnItemMatchers;
+import com.wynntils.utils.wynn.ItemUtils;
 import java.awt.HeadlessException;
 import java.awt.image.BufferedImage;
 import java.io.File;
@@ -32,6 +32,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.regex.Matcher;
 import javax.imageio.ImageIO;
 import net.minecraft.ChatFormatting;
 import net.minecraft.Util;
@@ -211,7 +212,9 @@ public class ItemScreenshotFeature extends Feature {
         int loreStart = -1;
         for (int i = 0; i < tooltip.size(); i++) {
             // only remove text after the item type indicator
-            if (WynnItemMatchers.rarityLineMatcher(tooltip.get(i)).find()) {
+            String tooltipLine = tooltip.get(i).getString();
+            Matcher matcher = ItemUtils.ITEM_RARITY_PATTERN.matcher(tooltipLine);
+            if (matcher.find()) {
                 loreStart = i + 1;
                 break;
             }

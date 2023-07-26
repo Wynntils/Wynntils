@@ -246,7 +246,7 @@ public class MinimapFeature extends Feature {
 
             poisToRender = Stream.concat(poisToRender, Services.Poi.getCombatPois());
             poisToRender = Stream.concat(
-                    poisToRender, Managers.Feature.getFeatureInstance(MapFeature.class).customPois.get().stream());
+                    poisToRender, Managers.Feature.getFeatureInstance(MainMapFeature.class).customPois.get().stream());
             poisToRender = Stream.concat(poisToRender, Services.Poi.getProvidedCustomPois().stream());
 
             MultiBufferSource.BufferSource bufferSource =

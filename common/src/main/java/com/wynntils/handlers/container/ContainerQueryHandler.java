@@ -12,7 +12,7 @@ import com.wynntils.mc.event.LocalSoundEvent;
 import com.wynntils.mc.event.MenuEvent;
 import com.wynntils.mc.event.TickEvent;
 import com.wynntils.utils.mc.McUtils;
-import com.wynntils.utils.wynn.InventoryUtils;
+import com.wynntils.utils.wynn.ItemUtils;
 import java.util.LinkedList;
 import java.util.List;
 import net.minecraft.client.gui.screens.Screen;
@@ -176,7 +176,7 @@ public final class ContainerQueryHandler extends Handler {
             return;
         }
 
-        if (containerId == lastHandledContentId && InventoryUtils.isItemListsEqual(e.getItems(), lastHandledItems)) {
+        if (containerId == lastHandledContentId && ItemUtils.isItemListsEqual(e.getItems(), lastHandledItems)) {
             // After opening a new container, Wynncraft sometimes sends contents twice. Ignore this.
             e.setCanceled(true);
             resetTimer();
