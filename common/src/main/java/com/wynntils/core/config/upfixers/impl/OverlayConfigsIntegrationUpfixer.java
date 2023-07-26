@@ -25,7 +25,7 @@ public class OverlayConfigsIntegrationUpfixer extends RenamedKeysUpfixer {
                     "partyMembersOverlayFeature.partyMembersOverlay.disablePartyMembersOnScoreboard"),
             Pair.of(
                     "shamanMaskOverlayFeature.hideMaskTitles",
-                    "shamanMaskOverlayFeature.shamanMaskOverlay.hideMaskTitles"),
+                    "shamanMaskOverlayFeature.shamanMaskOverlay1.hideMaskTitles"),
             Pair.of(
                     "territoryAttackTimerOverlayFeature.disableAttackTimersOnScoreboard",
                     "territoryAttackTimerOverlayFeature.territoryAttackTimerOverlay.disableAttackTimersOnScoreboard"));
