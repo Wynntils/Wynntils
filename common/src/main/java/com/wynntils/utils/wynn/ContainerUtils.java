@@ -8,12 +8,15 @@ import com.wynntils.utils.mc.McUtils;
 import it.unimi.dsi.fastutil.ints.Int2ObjectMap;
 import it.unimi.dsi.fastutil.ints.Int2ObjectOpenHashMap;
 import java.util.List;
+import java.util.stream.Stream;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
 import net.minecraft.core.NonNullList;
 import net.minecraft.network.protocol.game.ServerboundContainerClickPacket;
 import net.minecraft.network.protocol.game.ServerboundContainerClosePacket;
+import net.minecraft.world.inventory.ChestMenu;
 import net.minecraft.world.inventory.ClickType;
+import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import org.lwjgl.glfw.GLFW;
@@ -68,5 +71,17 @@ public final class ContainerUtils {
 
     public static void closeContainer(int containerId) {
         McUtils.sendPacket(new ServerboundContainerClosePacket(containerId));
+    }
+
+    public static Stream<SlotPos> getSlots(ChestMenu chestMenu) {
+        return chestMenu.slots.stream().map(SlotPos::of);
+    }
+
+    public record SlotPos(ItemStack itemStack, int x, int y) {
+        private static SlotPos of(Slot slot) {
+            int x = slot.index % 9;
+            int y = slot.index / 9;
+            return new SlotPos(slot.getItem(), x, y);
+        }
     }
 }

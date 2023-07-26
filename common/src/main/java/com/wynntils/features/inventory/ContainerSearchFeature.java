@@ -32,6 +32,7 @@ import java.util.Locale;
 import java.util.Optional;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
+import net.minecraft.world.inventory.ChestMenu;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
@@ -74,7 +75,7 @@ public class ContainerSearchFeature extends Feature {
     @SubscribeEvent
     public void onScreenInit(ScreenInitEvent event) {
         if (!(event.getScreen() instanceof AbstractContainerScreen<?> screen)) return;
-
+        if (!(screen.getMenu() instanceof ChestMenu chestMenu)) return;
         StyledText title = StyledText.fromComponent(screen.getTitle());
 
         // This is screen.topPos and screen.leftPos, but they are not calculated yet when this is called
@@ -86,7 +87,7 @@ public class ContainerSearchFeature extends Feature {
 
         currentSearchableContainerType = searchableContainerType;
 
-        addSearchWidget(screen, renderX, renderY);
+        addSearchWidget(((AbstractContainerScreen<ChestMenu>) screen), renderX, renderY);
     }
 
     @SubscribeEvent
@@ -129,10 +130,11 @@ public class ContainerSearchFeature extends Feature {
         if (lastSearchWidget == null
                 || currentSearchableContainerType == null
                 || currentSearchableContainerType.getNextItemSlot() == -1
-                || !(McUtils.mc().screen instanceof AbstractContainerScreen<?> abstractContainerScreen)) return;
+                || !(McUtils.mc().screen instanceof AbstractContainerScreen<?> abstractContainerScreen)
+                || !(abstractContainerScreen.getMenu() instanceof ChestMenu chestMenu)) return;
 
         autoSearching = true;
-        matchItems(lastSearchWidget.getTextBoxInput(), abstractContainerScreen);
+        matchItems(lastSearchWidget.getTextBoxInput(), chestMenu);
 
         tryAutoSearch(abstractContainerScreen);
     }
@@ -197,10 +199,14 @@ public class ContainerSearchFeature extends Feature {
         return null;
     }
 
-    private void addSearchWidget(AbstractContainerScreen<?> screen, int renderX, int renderY) {
+    private void addSearchWidget(AbstractContainerScreen<ChestMenu> screen, int renderX, int renderY) {
         SearchWidget searchWidget = new SearchWidget(
-                renderX + screen.imageWidth - 100, renderY - 20, 100, 20, s -> matchItems(s, screen), (ScreenExtension)
-                        screen);
+                renderX + screen.imageWidth - 100,
+                renderY - 20,
+                100,
+                20,
+                s -> matchItems(s, screen.getMenu()),
+                (ScreenExtension) screen);
 
         if (lastSearchWidget != null) {
             searchWidget.setTextBoxInput(lastSearchWidget.getTextBoxInput());
@@ -211,10 +217,10 @@ public class ContainerSearchFeature extends Feature {
         screen.addRenderableWidget(lastSearchWidget);
     }
 
-    private void matchItems(String searchStr, AbstractContainerScreen<?> screen) {
+    private void matchItems(String searchStr, ChestMenu chestMenu) {
         String search = searchStr.toLowerCase(Locale.ROOT);
 
-        currentSearchableContainerType.getSearchableItems(screen).forEach(itemStack -> {
+        currentSearchableContainerType.getSearchableItems(chestMenu).forEach(itemStack -> {
             Optional<WynnItem> wynnItemOpt = Models.Item.getWynnItem(itemStack);
             if (wynnItemOpt.isEmpty()) return;
 
@@ -232,8 +238,10 @@ public class ContainerSearchFeature extends Feature {
 
     private void forceUpdateSearch() {
         Screen screen = McUtils.mc().screen;
-        if (lastSearchWidget != null && screen instanceof AbstractContainerScreen<?> abstractContainerScreen) {
-            matchItems(lastSearchWidget.getTextBoxInput(), abstractContainerScreen);
+        if (lastSearchWidget != null
+                && screen instanceof AbstractContainerScreen<?> abstractContainerScreen
+                && abstractContainerScreen.getMenu() instanceof ChestMenu chestMenu) {
+            matchItems(lastSearchWidget.getTextBoxInput(), chestMenu);
         }
     }
 }

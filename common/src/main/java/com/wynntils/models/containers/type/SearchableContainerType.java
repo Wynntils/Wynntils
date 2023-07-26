@@ -5,11 +5,11 @@
 package com.wynntils.models.containers.type;
 
 import com.wynntils.core.text.StyledText;
-import java.util.function.BiPredicate;
+import com.wynntils.utils.wynn.ContainerUtils;
+import java.util.function.Predicate;
 import java.util.regex.Pattern;
 import java.util.stream.Stream;
-import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
-import net.minecraft.world.inventory.Slot;
+import net.minecraft.world.inventory.ChestMenu;
 import net.minecraft.world.item.ItemStack;
 
 public enum SearchableContainerType {
@@ -17,35 +17,43 @@ public enum SearchableContainerType {
             java.util.regex.Pattern.compile("§0\\[Pg. (\\d+)\\] §8(.*)'s?§0 Bank"),
             java.util.regex.Pattern.compile("§f§lPage \\d+§a >§2>§a>§2>§a>"),
             8,
-            (x, y) -> x < 7 && y < 6),
+            slotPos -> slotPos.x() < 7 && slotPos.y() < 6),
     BLOCK_BANK(
             java.util.regex.Pattern.compile("§0\\[Pg. (\\d+)\\] §8(.*)'s?§0 Block Bank"),
             java.util.regex.Pattern.compile("§f§lPage \\d+§a >§2>§a>§2>§a>"),
             8,
-            (x, y) -> x < 7 && y < 6),
+            slotPos -> slotPos.x() < 7 && slotPos.y() < 6),
     BOOKSHELF(
             java.util.regex.Pattern.compile("§0\\[Pg. (\\d+)\\] §8(.*)'s?§0 Bookshelf"),
             java.util.regex.Pattern.compile("§f§lPage \\d+§a >§2>§a>§2>§a>"),
             8,
-            (x, y) -> x < 7 && y < 6),
+            slotPos -> slotPos.x() < 7 && slotPos.y() < 6),
     MISC_BUCKET(
             Pattern.compile("§0\\[Pg. (\\d+)\\] §8(.*)'s?§0 Misc. Bucket"),
             Pattern.compile("§f§lPage \\d+§a >§2>§a>§2>§a>"),
             8,
-            (x, y) -> x < 7 && y < 6),
-    GUILD_BANK(Pattern.compile(".+: Bank \\(.+\\)"), Pattern.compile("§a§lNext Page"), 27, (x, y) -> x > 1 && y < 6),
-    MEMBER_LIST(Pattern.compile(".+: Members"), Pattern.compile("§a§lNext Page"), 28, (x, y) -> x > 1 && y < 6);
+            slotPos -> slotPos.x() < 7 && slotPos.y() < 6),
+    GUILD_BANK(
+            Pattern.compile(".+: Bank \\(.+\\)"),
+            Pattern.compile("§a§lNext Page"),
+            27,
+            slotPos -> slotPos.x() > 1 && slotPos.y() < 6),
+    MEMBER_LIST(
+            Pattern.compile(".+: Members"),
+            Pattern.compile("§a§lNext Page"),
+            28,
+            slotPos -> slotPos.x() > 1 && slotPos.y() < 6);
 
     private final Pattern titlePattern;
     private final Pattern nextItemPattern;
     private final int nextItemSlot;
-    private final BiPredicate<Integer, Integer> isSearchableSlot;
+    private final Predicate<ContainerUtils.SlotPos> isSearchableSlot;
 
     SearchableContainerType(
             Pattern titlePattern,
             Pattern nextItemPattern,
             int nextItemSlot,
-            BiPredicate<Integer, Integer> isSearchableSlot) {
+            Predicate<ContainerUtils.SlotPos> isSearchableSlot) {
         this.titlePattern = titlePattern;
         this.nextItemPattern = nextItemPattern;
         this.nextItemSlot = nextItemSlot;
@@ -70,10 +78,7 @@ public enum SearchableContainerType {
         return null;
     }
 
-    public Stream<ItemStack> getSearchableItems(AbstractContainerScreen<?> screen) {
-        return screen.getMenu().slots.stream()
-                // see ChestMenu
-                .filter(slot -> isSearchableSlot.test((slot.x - 8) / 18, (slot.y - 18) / 18))
-                .map(Slot::getItem);
+    public Stream<ItemStack> getSearchableItems(ChestMenu chestMenu) {
+        return ContainerUtils.getSlots(chestMenu).filter(isSearchableSlot).map(ContainerUtils.SlotPos::itemStack);
     }
 }
