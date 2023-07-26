@@ -95,7 +95,7 @@ import com.wynntils.features.overlays.PowderSpecialBarOverlayFeature;
 import com.wynntils.features.overlays.ShamanMaskOverlayFeature;
 import com.wynntils.features.overlays.ShamanTotemTimerOverlayFeature;
 import com.wynntils.features.overlays.SpellCastMessageOverlayFeature;
-import com.wynntils.features.overlays.StatusOverlayFeature;
+import com.wynntils.features.overlays.StatusEffectsOverlayFeature;
 import com.wynntils.features.overlays.StopwatchFeature;
 import com.wynntils.features.overlays.TerritoryAttackTimerOverlayFeature;
 import com.wynntils.features.overlays.TokenBarsOverlayFeature;
@@ -267,7 +267,7 @@ public final class FeatureManager extends Manager {
         registerFeature(new ShamanMaskOverlayFeature());
         registerFeature(new ShamanTotemTimerOverlayFeature());
         registerFeature(new SpellCastMessageOverlayFeature());
-        registerFeature(new StatusOverlayFeature());
+        registerFeature(new StatusEffectsOverlayFeature());
         registerFeature(new StopwatchFeature());
         registerFeature(new TerritoryAttackTimerOverlayFeature());
         registerFeature(new TokenBarsOverlayFeature());
