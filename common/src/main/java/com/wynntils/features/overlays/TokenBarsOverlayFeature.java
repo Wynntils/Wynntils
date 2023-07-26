@@ -28,11 +28,7 @@ import net.minecraftforge.eventbus.api.SubscribeEvent;
 @ConfigCategory(Category.OVERLAYS)
 public class TokenBarsOverlayFeature extends Feature {
     @OverlayInfo(renderType = RenderEvent.ElementType.GUI)
-    private final TokenBarsOverlay tokenBarsOverlay = new TokenBarsOverlay(
-            new OverlayPosition(
-                    70, -5, VerticalAlignment.TOP, HorizontalAlignment.RIGHT, OverlayPosition.AnchorSection.TOP_RIGHT),
-            new OverlaySize(81, 84),
-            ContainerOverlay.GrowDirection.DOWN);
+    private final TokenBarsOverlay tokenBarsOverlay = new TokenBarsOverlay();
 
     protected static final class TokenBarOverlay extends BarOverlay {
         @RegisterConfig
@@ -78,8 +74,18 @@ public class TokenBarsOverlayFeature extends Feature {
     }
 
     protected static class TokenBarsOverlay extends ContainerOverlay<TokenBarOverlay> {
-        protected TokenBarsOverlay(OverlayPosition position, OverlaySize size, GrowDirection growDirection) {
-            super(position, size, growDirection, HorizontalAlignment.RIGHT, VerticalAlignment.TOP);
+        protected TokenBarsOverlay() {
+            super(
+                    new OverlayPosition(
+                            70,
+                            -5,
+                            VerticalAlignment.TOP,
+                            HorizontalAlignment.RIGHT,
+                            OverlayPosition.AnchorSection.TOP_RIGHT),
+                    new OverlaySize(81, 84),
+                    ContainerOverlay.GrowDirection.DOWN,
+                    HorizontalAlignment.RIGHT,
+                    VerticalAlignment.TOP);
         }
 
         @SubscribeEvent

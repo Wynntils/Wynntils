@@ -50,13 +50,7 @@ import net.minecraftforge.eventbus.api.SubscribeEvent;
 @ConfigCategory(Category.OVERLAYS)
 public class PartyMembersOverlayFeature extends Feature {
     @OverlayInfo(renderType = RenderEvent.ElementType.GUI)
-    private final PartyMembersOverlay partyMembersOverlay = new PartyMembersOverlay(
-            new OverlayPosition(
-                    70, 5, VerticalAlignment.TOP, HorizontalAlignment.LEFT, OverlayPosition.AnchorSection.MIDDLE_LEFT),
-            new OverlaySize(162, 50),
-            ContainerOverlay.GrowDirection.DOWN,
-            HorizontalAlignment.LEFT,
-            VerticalAlignment.TOP);
+    private final PartyMembersOverlay partyMembersOverlay = new PartyMembersOverlay();
 
     public static final class PartyMemberOverlay extends Overlay {
         private static final int HEAD_SIZE = 26;
@@ -175,13 +169,18 @@ public class PartyMembersOverlayFeature extends Feature {
         @RegisterConfig
         public final Config<ManaTexture> manaTexture = new Config<>(ManaTexture.A);
 
-        protected PartyMembersOverlay(
-                OverlayPosition position,
-                OverlaySize size,
-                GrowDirection growDirection,
-                HorizontalAlignment horizontalAlignment,
-                VerticalAlignment verticalAlignment) {
-            super(position, size, growDirection, horizontalAlignment, verticalAlignment);
+        protected PartyMembersOverlay() {
+            super(
+                    new OverlayPosition(
+                            70,
+                            5,
+                            VerticalAlignment.TOP,
+                            HorizontalAlignment.LEFT,
+                            OverlayPosition.AnchorSection.MIDDLE_LEFT),
+                    new OverlaySize(162, 50),
+                    ContainerOverlay.GrowDirection.DOWN,
+                    HorizontalAlignment.LEFT,
+                    VerticalAlignment.TOP);
         }
 
         @Override
