@@ -22,6 +22,10 @@ accessible field net/minecraft/client/gui/screens/inventory/AbstractContainerScr
 accessible field net/minecraft/client/gui/screens/inventory/AbstractContainerScreen imageWidth I
 accessible field net/minecraft/client/gui/screens/inventory/AbstractContainerScreen leftPos I
 accessible field net/minecraft/client/gui/screens/inventory/AbstractContainerScreen topPos I
+accessible field net/minecraft/client/gui/screens/inventory/AbstractContainerScreen titleLabelX I
+accessible field net/minecraft/client/gui/screens/inventory/AbstractContainerScreen titleLabelY I
+accessible field net/minecraft/client/gui/screens/inventory/AbstractContainerScreen inventoryLabelX I
+accessible field net/minecraft/client/gui/screens/inventory/AbstractContainerScreen inventoryLabelY I
 accessible field net/minecraft/client/renderer/entity/ItemRenderer textureManager Lnet/minecraft/client/renderer/texture/TextureManager;
 accessible field net/minecraft/client/resources/DownloadedPackSource serverPack Lnet/minecraft/server/packs/repository/Pack;
 accessible field net/minecraft/network/protocol/game/ClientboundBossEventPacket$AddOperation name Lnet/minecraft/network/chat/Component;

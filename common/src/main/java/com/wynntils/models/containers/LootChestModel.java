@@ -21,6 +21,7 @@ import com.wynntils.models.items.items.game.EmeraldItem;
 import com.wynntils.models.items.items.game.GearBoxItem;
 import com.wynntils.models.items.items.game.GearItem;
 import com.wynntils.utils.mc.type.Location;
+import com.wynntils.utils.type.RangedValue;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.EnumMap;
@@ -40,8 +41,8 @@ public final class LootChestModel extends Model {
     private final Storage<Integer> openedChestCount = new Storage<>(0);
     private final Storage<Integer> dryCount = new Storage<>(0);
     private final Storage<Integer> dryBoxes = new Storage<>(0);
-    private Storage<Integer> dryEmeralds = new Storage<>(0);
-    private Storage<Map<GearTier, Integer>> dryItemTiers = new Storage<>(new EnumMap<>(GearTier.class));
+    private final Storage<Integer> dryEmeralds = new Storage<>(0);
+    private final Storage<Map<GearTier, Integer>> dryItemTiers = new Storage<>(new EnumMap<>(GearTier.class));
 
     private BlockPos lastChestPos;
     private int nextExpectedLootContainerId = -2;
@@ -112,7 +113,7 @@ public final class LootChestModel extends Model {
             WynntilsMod.postEvent(new MythicFoundEvent(itemStack));
 
             if (gearBox.getGearType() != GearType.MASTERY_TOME) {
-                storeMythicFind(itemStack);
+                storeMythicFind(itemStack, gearBox.getLevelRange());
                 resetDryStatistics();
             }
         }
@@ -150,18 +151,19 @@ public final class LootChestModel extends Model {
         }
     }
 
-    private void storeMythicFind(ItemStack itemStack) {
+    private void storeMythicFind(ItemStack itemStack, RangedValue levelRange) {
         mythicFinds
                 .get()
                 .add(new MythicFind(
                         StyledText.fromComponent(itemStack.getHoverName()).getStringWithoutFormatting(),
+                        levelRange,
                         openedChestCount.get(),
                         dryCount.get(),
                         dryBoxes.get(),
                         dryEmeralds.get(),
                         dryItemTiers.get(),
-                        System.currentTimeMillis(),
-                        new Location(lastChestPos)));
+                        new Location(lastChestPos),
+                        System.currentTimeMillis()));
 
         mythicFinds.touched();
     }

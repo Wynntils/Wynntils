@@ -65,6 +65,7 @@ import com.wynntils.features.inventory.ItemHighlightFeature;
 import com.wynntils.features.inventory.ItemLockFeature;
 import com.wynntils.features.inventory.ItemScreenshotFeature;
 import com.wynntils.features.inventory.ItemTextOverlayFeature;
+import com.wynntils.features.inventory.LootchestTextFeature;
 import com.wynntils.features.inventory.ReplaceRecipeBookFeature;
 import com.wynntils.features.inventory.UnidentifiedItemIconFeature;
 import com.wynntils.features.map.BeaconBeamFeature;
@@ -226,6 +227,7 @@ public final class FeatureManager extends Manager {
         registerFeature(new ItemLockFeature());
         registerFeature(new ItemScreenshotFeature());
         registerFeature(new ItemTextOverlayFeature());
+        registerFeature(new LootchestTextFeature());
         registerFeature(new ReplaceRecipeBookFeature());
         registerFeature(new UnidentifiedItemIconFeature());
         // endregion
