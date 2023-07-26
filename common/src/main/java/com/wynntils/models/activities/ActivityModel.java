@@ -24,11 +24,13 @@ import com.wynntils.models.activities.type.ActivityRequirements;
 import com.wynntils.models.activities.type.ActivityStatus;
 import com.wynntils.models.activities.type.ActivityTrackingState;
 import com.wynntils.models.activities.type.ActivityType;
+import com.wynntils.models.character.event.CharacterUpdateEvent;
 import com.wynntils.models.profession.type.ProfessionType;
 import com.wynntils.models.worlds.event.WorldStateEvent;
 import com.wynntils.utils.mc.LoreUtils;
 import com.wynntils.utils.mc.StyledTextUtils;
 import com.wynntils.utils.mc.type.Location;
+import com.wynntils.utils.type.CappedValue;
 import com.wynntils.utils.type.Pair;
 import java.util.ArrayList;
 import java.util.LinkedList;
@@ -62,6 +64,7 @@ public final class ActivityModel extends Model {
     private static final Pattern REWARD_HEADER_PATTERN = Pattern.compile("^   §dRewards:$");
     private static final Pattern REWARD_PATTERN = Pattern.compile("^   §d- §7\\+?(.*)$");
     private static final Pattern TRACKING_PATTERN = Pattern.compile("^ *À*§.§lCLICK TO (UN)?TRACK$");
+    private static final Pattern OVERALL_PROGRESS_PATTERN = Pattern.compile("^\\s*À*§7(\\d+) of (\\d+) completed$");
 
     private static final ScoreboardPart TRACKER_SCOREBOARD_PART = new ActivityTrackerScoreboardPart();
     private static final ContentBookQueries CONTAINER_QUERIES = new ContentBookQueries();
@@ -69,6 +72,7 @@ public final class ActivityModel extends Model {
 
     private TrackedActivity trackedActivity;
     private List<List<StyledText>> dialogueHistory = List.of();
+    private CappedValue overallProgress = CappedValue.EMPTY;
 
     public ActivityModel() {
         super(List.of());
@@ -208,6 +212,16 @@ public final class ActivityModel extends Model {
         resetTracker();
     }
 
+    @SubscribeEvent
+    public void onCharacterUpdated(CharacterUpdateEvent event) {
+        // First thing to do when we just loaded a class
+        scanOverallProgress();
+    }
+
+    public CappedValue getOverallProgress() {
+        return overallProgress;
+    }
+
     public String getTrackedName() {
         if (trackedActivity == null) return "";
 
@@ -260,7 +274,7 @@ public final class ActivityModel extends Model {
         boolean showUpdates = Managers.Feature.getFeatureInstance(WynntilsContentBookFeature.class)
                 .showContentBookLoadingUpdates
                 .get();
-        CONTAINER_QUERIES.queryContentBook(activityType, processResult, showUpdates);
+        CONTAINER_QUERIES.queryContentBook(activityType, processResult, showUpdates, false);
     }
 
     public void startTracking(String name, ActivityType activityType) {
@@ -281,6 +295,24 @@ public final class ActivityModel extends Model {
 
     public void rescanDialogueHistory() {
         DIALOGUE_HISTORY_QUERIES.scanDialogueHistory();
+    }
+
+    public void scanOverallProgress() {
+        CONTAINER_QUERIES.queryContentBook(
+                ActivityType.ALL,
+                (ignored, progress) -> {
+                    for (StyledText line : progress) {
+                        Matcher m = line.getMatcher(OVERALL_PROGRESS_PATTERN);
+                        if (m.matches()) {
+                            int completed = Integer.parseInt(m.group(1));
+                            int total = Integer.parseInt(m.group(2));
+                            overallProgress = new CappedValue(completed, total);
+                            return;
+                        }
+                    }
+                },
+                false,
+                true);
     }
 
     void setDialogueHistory(List<List<StyledText>> newDialogueHistory) {
