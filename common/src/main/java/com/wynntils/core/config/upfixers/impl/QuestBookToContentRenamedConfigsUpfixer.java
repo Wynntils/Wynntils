@@ -4,15 +4,11 @@
  */
 package com.wynntils.core.config.upfixers.impl;
 
-import com.google.gson.JsonElement;
-import com.google.gson.JsonObject;
-import com.wynntils.core.config.ConfigHolder;
-import com.wynntils.core.config.upfixers.ConfigUpfixer;
+import com.wynntils.core.config.upfixers.RenamedKeysUpfixer;
 import com.wynntils.utils.type.Pair;
 import java.util.List;
-import java.util.Set;
 
-public class QuestBookToContentRenamedConfigsUpfixer implements ConfigUpfixer {
+public class QuestBookToContentRenamedConfigsUpfixer extends RenamedKeysUpfixer {
     private static final List<Pair<String, String>> RENAMED_KEYS = List.of(
             Pair.of("questInfoOverlayFeature.autoTrackQuestCoordinates", "contentTrackerFeature.autoTrackCoordinates"),
             Pair.of(
@@ -21,18 +17,7 @@ public class QuestBookToContentRenamedConfigsUpfixer implements ConfigUpfixer {
             Pair.of("wynntilsQuestBookFeature.playSoundOnUpdate", "contentTrackerFeature.playSoundOnUpdate"));
 
     @Override
-    public boolean apply(JsonObject configObject, Set<ConfigHolder> configHolders) {
-        for (Pair<String, String> renamePair : RENAMED_KEYS) {
-            String oldName = renamePair.a();
-            String newName = renamePair.b();
-            if (!configObject.has(oldName)) continue;
-
-            JsonElement jsonElement = configObject.get(oldName);
-            configObject.remove(oldName);
-
-            configObject.add(newName, jsonElement);
-        }
-
-        return true;
+    protected List<Pair<String, String>> getRenamedKeys() {
+        return RENAMED_KEYS;
     }
 }

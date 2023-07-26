@@ -1,0 +1,56 @@
+/*
+ * Copyright © Wynntils 2023.
+ * This file is released under AGPLv3. See LICENSE for full license details.
+ */
+package com.wynntils.features.combat;
+
+import com.wynntils.core.config.Category;
+import com.wynntils.core.config.Config;
+import com.wynntils.core.config.ConfigCategory;
+import com.wynntils.core.config.RegisterConfig;
+import com.wynntils.core.consumers.features.Feature;
+import com.wynntils.mc.extension.EntityExtension;
+import com.wynntils.models.abilities.event.TotemEvent;
+import com.wynntils.utils.colors.CommonColors;
+import com.wynntils.utils.colors.CustomColor;
+import net.minecraft.world.entity.decoration.ArmorStand;
+import net.minecraftforge.eventbus.api.SubscribeEvent;
+
+@ConfigCategory(Category.COMBAT)
+public class ShamanTotemTrackingFeature extends Feature {
+    private static final int ENTITY_GLOWING_FLAG = 6;
+
+    @RegisterConfig
+    public final Config<Boolean> highlightShamanTotems = new Config<>(true);
+
+    @RegisterConfig
+    public final Config<CustomColor> firstTotemColor = new Config<>(CommonColors.WHITE);
+
+    @RegisterConfig
+    public final Config<CustomColor> secondTotemColor = new Config<>(CommonColors.BLUE);
+
+    @RegisterConfig
+    public final Config<CustomColor> thirdTotemColor = new Config<>(CommonColors.RED);
+
+    @SubscribeEvent
+    public void onTotemSummoned(TotemEvent.Summoned e) {
+        if (!highlightShamanTotems.get()) return;
+
+        int totemNumber = e.getTotemNumber();
+        ArmorStand totemAS = e.getTotemEntity();
+
+        CustomColor color =
+                switch (totemNumber) {
+                    case 1 -> firstTotemColor.get();
+                    case 2 -> secondTotemColor.get();
+                    case 3 -> thirdTotemColor.get();
+                    default -> throw new IllegalArgumentException(
+                            "totemNumber should be 1, 2, or 3! (color switch in #onTotemSummoned in ShamanTotemTrackingFeature");
+                };
+
+        ((EntityExtension) totemAS).setGlowColor(color);
+
+        totemAS.setGlowingTag(true);
+        totemAS.setSharedFlag(ENTITY_GLOWING_FLAG, true);
+    }
+}

@@ -31,11 +31,11 @@ import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 
 @ConfigCategory(Category.OVERLAYS)
-public class StatusOverlayFeature extends Feature {
+public class StatusEffectsOverlayFeature extends Feature {
     @OverlayInfo(renderType = RenderEvent.ElementType.GUI)
-    public final StatusOverlay statusOverlay = new StatusOverlay();
+    public final StatusEffectsOverlay statusEffectsOverlay = new StatusEffectsOverlay();
 
-    public class StatusOverlay extends Overlay {
+    public static class StatusEffectsOverlay extends Overlay {
         @RegisterConfig
         public final Config<TextShadow> textShadow = new Config<>(TextShadow.OUTLINE);
 
@@ -45,7 +45,7 @@ public class StatusOverlayFeature extends Feature {
         private List<TextRenderTask> renderCache = List.of();
         private TextRenderSetting textRenderSetting;
 
-        protected StatusOverlay() {
+        protected StatusEffectsOverlay() {
             super(
                     new OverlayPosition(
                             55,
@@ -65,8 +65,7 @@ public class StatusOverlayFeature extends Feature {
 
         private void recalculateRenderCache() {
             renderCache = Models.StatusEffect.getStatusEffects().stream()
-                    .map(statusTimer ->
-                            new TextRenderTask(statusTimer.asString(), statusOverlay.getTextRenderSetting()))
+                    .map(statusTimer -> new TextRenderTask(statusTimer.asString(), getTextRenderSetting()))
                     .toList();
         }
 

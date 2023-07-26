@@ -6,7 +6,6 @@ package com.wynntils.features.overlays;
 
 import com.mojang.blaze3d.platform.Window;
 import com.mojang.blaze3d.vertex.PoseStack;
-import com.wynntils.core.components.Managers;
 import com.wynntils.core.components.Models;
 import com.wynntils.core.config.Category;
 import com.wynntils.core.config.Config;
@@ -19,7 +18,6 @@ import com.wynntils.core.consumers.features.overlays.OverlayPosition;
 import com.wynntils.core.consumers.features.overlays.OverlaySize;
 import com.wynntils.core.consumers.features.overlays.annotations.OverlayInfo;
 import com.wynntils.core.text.StyledText;
-import com.wynntils.handlers.scoreboard.ScoreboardSegment;
 import com.wynntils.handlers.scoreboard.event.ScoreboardSegmentAdditionEvent;
 import com.wynntils.mc.event.RenderEvent;
 import com.wynntils.models.objectives.DailyObjectiveScoreboardPart;
@@ -42,28 +40,6 @@ import net.minecraftforge.eventbus.api.SubscribeEvent;
 
 @ConfigCategory(Category.OVERLAYS)
 public class ObjectivesOverlayFeature extends Feature {
-    private static final float SPACE_BETWEEN = 10;
-
-    @RegisterConfig
-    public final Config<Boolean> disableObjectiveTrackingOnScoreboard = new Config<>(true);
-
-    @SubscribeEvent(priority = EventPriority.HIGHEST)
-    public void onScoreboardSegmentChange(ScoreboardSegmentAdditionEvent event) {
-        if (disableObjectiveTrackingOnScoreboard.get()) {
-            ScoreboardSegment segment = event.getSegment();
-            if (segment.getScoreboardPart() instanceof DailyObjectiveScoreboardPart
-                    && Managers.Overlay.isEnabled(dailyObjectiveOverlay)) {
-                event.setCanceled(true);
-                return;
-            }
-            if (segment.getScoreboardPart() instanceof GuildObjectiveScoreboardPart
-                    && Managers.Overlay.isEnabled(guildObjectiveOverlay)) {
-                event.setCanceled(true);
-                return;
-            }
-        }
-    }
-
     @OverlayInfo(renderType = RenderEvent.ElementType.GUI)
     public final Overlay guildObjectiveOverlay = new GuildObjectiveOverlay();
 
@@ -71,6 +47,9 @@ public class ObjectivesOverlayFeature extends Feature {
     public final Overlay dailyObjectiveOverlay = new DailyObjectiveOverlay();
 
     public static class GuildObjectiveOverlay extends ObjectiveOverlayBase {
+        @RegisterConfig
+        public final Config<Boolean> disableObjectiveTrackingOnScoreboard = new Config<>(true);
+
         @RegisterConfig("feature.wynntils.objectivesOverlay.overlay.objectiveOverlayBase.textColor")
         public final Config<CustomColor> textColor = new Config<>(CommonColors.LIGHT_BLUE);
 
@@ -85,6 +64,15 @@ public class ObjectivesOverlayFeature extends Feature {
                     new OverlaySize(150, 30),
                     HorizontalAlignment.LEFT,
                     VerticalAlignment.MIDDLE);
+        }
+
+        @SubscribeEvent(priority = EventPriority.HIGHEST)
+        public void onScoreboardSegmentChange(ScoreboardSegmentAdditionEvent event) {
+            if (disableObjectiveTrackingOnScoreboard.get()
+                    && event.getSegment().getScoreboardPart() instanceof GuildObjectiveScoreboardPart) {
+                event.setCanceled(true);
+                return;
+            }
         }
 
         @Override
@@ -156,6 +144,9 @@ public class ObjectivesOverlayFeature extends Feature {
     }
 
     public static class DailyObjectiveOverlay extends ObjectiveOverlayBase {
+        @RegisterConfig
+        public final Config<Boolean> disableObjectiveTrackingOnScoreboard = new Config<>(true);
+
         @RegisterConfig("feature.wynntils.objectivesOverlay.overlay.objectiveOverlayBase.textColor")
         public final Config<CustomColor> textColor = new Config<>(CommonColors.GREEN);
 
@@ -170,6 +161,15 @@ public class ObjectivesOverlayFeature extends Feature {
                     new OverlaySize(150, 100),
                     HorizontalAlignment.LEFT,
                     VerticalAlignment.BOTTOM);
+        }
+
+        @SubscribeEvent(priority = EventPriority.HIGHEST)
+        public void onScoreboardSegmentChange(ScoreboardSegmentAdditionEvent event) {
+            if (disableObjectiveTrackingOnScoreboard.get()
+                    && event.getSegment().getScoreboardPart() instanceof DailyObjectiveScoreboardPart) {
+                event.setCanceled(true);
+                return;
+            }
         }
 
         @Override
@@ -253,6 +253,8 @@ public class ObjectivesOverlayFeature extends Feature {
     }
 
     protected abstract static class ObjectiveOverlayBase extends Overlay {
+        protected static final float SPACE_BETWEEN = 10;
+
         @RegisterConfig("feature.wynntils.objectivesOverlay.overlay.objectiveOverlayBase.hideOnInactivity")
         public final Config<Boolean> hideOnInactivity = new Config<>(false);
 

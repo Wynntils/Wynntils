@@ -6,7 +6,6 @@ package com.wynntils.features.overlays;
 
 import com.mojang.blaze3d.platform.Window;
 import com.mojang.blaze3d.vertex.PoseStack;
-import com.wynntils.core.components.Managers;
 import com.wynntils.core.components.Models;
 import com.wynntils.core.config.Category;
 import com.wynntils.core.config.Config;
@@ -35,24 +34,14 @@ import net.minecraftforge.eventbus.api.EventPriority;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 
 @ConfigCategory(Category.OVERLAYS)
-public class GuildAttackTimerOverlayFeature extends Feature {
+public class TerritoryAttackTimerOverlayFeature extends Feature {
     @OverlayInfo(renderType = RenderEvent.ElementType.GUI)
     private final TerritoryAttackTimerOverlay territoryAttackTimerOverlay = new TerritoryAttackTimerOverlay();
 
-    @RegisterConfig
-    public final Config<Boolean> disableAttackTimersOnScoreboard = new Config<>(true);
-
-    @SubscribeEvent(priority = EventPriority.HIGHEST)
-    public void onScoreboardSegmentChange(ScoreboardSegmentAdditionEvent event) {
-        if (disableAttackTimersOnScoreboard.get()) {
-            if (event.getSegment().getScoreboardPart() instanceof GuildAttackScoreboardPart
-                    && Managers.Overlay.isEnabled(territoryAttackTimerOverlay)) {
-                event.setCanceled(true);
-            }
-        }
-    }
-
     public static class TerritoryAttackTimerOverlay extends Overlay {
+        @RegisterConfig
+        public final Config<Boolean> disableAttackTimersOnScoreboard = new Config<>(true);
+
         @RegisterConfig
         public final Config<TextShadow> textShadow = new Config<>(TextShadow.OUTLINE);
 
@@ -69,6 +58,14 @@ public class GuildAttackTimerOverlayFeature extends Feature {
                     new OverlaySize(200, 110));
 
             updateTextRenderSetting();
+        }
+
+        @SubscribeEvent(priority = EventPriority.HIGHEST)
+        public void onScoreboardSegmentChange(ScoreboardSegmentAdditionEvent event) {
+            if (disableAttackTimersOnScoreboard.get()
+                    && event.getSegment().getScoreboardPart() instanceof GuildAttackScoreboardPart) {
+                event.setCanceled(true);
+            }
         }
 
         @Override

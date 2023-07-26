@@ -22,25 +22,13 @@ import net.minecraftforge.eventbus.api.SubscribeEvent;
 
 @ConfigCategory(Category.OVERLAYS)
 public class GatheringCooldownOverlayFeature extends Feature {
-    private static final Pattern GATHERING_COOLDOWN_MESSAGE =
-            Pattern.compile("§4You need to wait §c\\d+ seconds§4 after logging in to gather from this resource!");
-
     @OverlayInfo(renderAt = RenderState.PRE, renderType = RenderEvent.ElementType.GUI)
     private final GatheringCooldownOverlay gatheringCooldownOverlay = new GatheringCooldownOverlay();
 
-    @SubscribeEvent
-    public void onChat(ChatMessageReceivedEvent event) {
-        if (event.getStyledText().matches(GATHERING_COOLDOWN_MESSAGE)) {
-            gatheringCooldownOverlay.showGatheringCooldown = true;
-        }
-    }
-
-    @SubscribeEvent
-    public void onWorldStateChange(WorldStateEvent event) {
-        gatheringCooldownOverlay.showGatheringCooldown = false;
-    }
-
     public static class GatheringCooldownOverlay extends TextOverlay {
+        private static final Pattern GATHERING_COOLDOWN_MESSAGE =
+                Pattern.compile("§4You need to wait §c\\d+ seconds§4 after logging in to gather from this resource!");
+
         private static final String TEMPLATE =
                 "{if_str(gt(gathering_cooldown; 0);concat(string(gathering_cooldown); \"s gathering cooldown\");\"\")}";
 
@@ -57,6 +45,18 @@ public class GatheringCooldownOverlayFeature extends Feature {
                     new OverlaySize(130, 20),
                     HorizontalAlignment.RIGHT,
                     VerticalAlignment.MIDDLE);
+        }
+
+        @SubscribeEvent
+        public void onChat(ChatMessageReceivedEvent event) {
+            if (event.getStyledText().matches(GATHERING_COOLDOWN_MESSAGE)) {
+                showGatheringCooldown = true;
+            }
+        }
+
+        @SubscribeEvent
+        public void onWorldStateChange(WorldStateEvent event) {
+            showGatheringCooldown = false;
         }
 
         @Override
