@@ -4,7 +4,7 @@
  */
 package com.wynntils.services.statistics.type;
 
-public record StatisticEntry(int total, int count, int min, int max, long lastModified, long lastReset) {
+public record StatisticEntry(int total, int count, int min, int max, long firstModified, long lastModified) {
     public static final StatisticEntry EMPTY = new StatisticEntry(0, 0, 0, 0, 0, 0);
 
     public StatisticEntry getUpdatedEntry(int amount) {
@@ -14,7 +14,7 @@ public record StatisticEntry(int total, int count, int min, int max, long lastMo
                 Math.min(min, amount),
                 Math.max(max, amount),
                 System.currentTimeMillis(),
-                lastReset);
+                firstModified);
     }
 
     public int average() {
