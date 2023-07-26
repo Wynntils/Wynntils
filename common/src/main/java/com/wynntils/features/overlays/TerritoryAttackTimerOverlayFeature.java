@@ -6,7 +6,6 @@ package com.wynntils.features.overlays;
 
 import com.mojang.blaze3d.platform.Window;
 import com.mojang.blaze3d.vertex.PoseStack;
-import com.wynntils.core.components.Managers;
 import com.wynntils.core.components.Models;
 import com.wynntils.core.config.Category;
 import com.wynntils.core.config.Config;
@@ -39,10 +38,10 @@ public class TerritoryAttackTimerOverlayFeature extends Feature {
     @OverlayInfo(renderType = RenderEvent.ElementType.GUI)
     private final TerritoryAttackTimerOverlay territoryAttackTimerOverlay = new TerritoryAttackTimerOverlay();
 
-    @RegisterConfig
-    public final Config<Boolean> disableAttackTimersOnScoreboard = new Config<>(true);
-
     public static class TerritoryAttackTimerOverlay extends Overlay {
+        @RegisterConfig
+        public final Config<Boolean> disableAttackTimersOnScoreboard = new Config<>(true);
+
         @RegisterConfig
         public final Config<TextShadow> textShadow = new Config<>(TextShadow.OUTLINE);
 
@@ -63,9 +62,7 @@ public class TerritoryAttackTimerOverlayFeature extends Feature {
 
         @SubscribeEvent(priority = EventPriority.HIGHEST)
         public void onScoreboardSegmentChange(ScoreboardSegmentAdditionEvent event) {
-            TerritoryAttackTimerOverlayFeature feature =
-                    Managers.Feature.getFeatureInstance(TerritoryAttackTimerOverlayFeature.class);
-            if (feature.disableAttackTimersOnScoreboard.get()
+            if (disableAttackTimersOnScoreboard.get()
                     && event.getSegment().getScoreboardPart() instanceof GuildAttackScoreboardPart) {
                 event.setCanceled(true);
             }
