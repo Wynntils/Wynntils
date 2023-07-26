@@ -6,7 +6,6 @@ package com.wynntils.features.overlays;
 
 import com.mojang.blaze3d.platform.Window;
 import com.mojang.blaze3d.vertex.PoseStack;
-import com.wynntils.core.components.Managers;
 import com.wynntils.core.components.Models;
 import com.wynntils.core.config.Category;
 import com.wynntils.core.config.Config;
@@ -39,9 +38,6 @@ import net.minecraftforge.eventbus.api.SubscribeEvent;
 
 @ConfigCategory(Category.OVERLAYS)
 public class ContentTrackerOverlayFeature extends Feature {
-    @RegisterConfig
-    public final Config<Boolean> disableTrackerOnScoreboard = new Config<>(true);
-
     @OverlayInfo(renderType = RenderEvent.ElementType.GUI)
     private final Overlay trackerOverlay = new ContentTrackerOverlay();
 
@@ -52,6 +48,9 @@ public class ContentTrackerOverlayFeature extends Feature {
                 tempus purus in lacus pulvinar dictum. Quisque suscipit erat \
                 pellentesque egestas volutpat. \
                 """;
+
+        @RegisterConfig
+        public final Config<Boolean> disableTrackerOnScoreboard = new Config<>(true);
 
         @RegisterConfig
         public final Config<TextShadow> textShadow = new Config<>(TextShadow.OUTLINE);
@@ -87,9 +86,7 @@ public class ContentTrackerOverlayFeature extends Feature {
 
         @SubscribeEvent(priority = EventPriority.HIGHEST)
         public void onScoreboardSegmentChange(ScoreboardSegmentAdditionEvent event) {
-            if (Managers.Feature.getFeatureInstance(ContentTrackerOverlayFeature.class)
-                            .disableTrackerOnScoreboard
-                            .get()
+            if (disableTrackerOnScoreboard.get()
                     && event.getSegment().getScoreboardPart() instanceof ActivityTrackerScoreboardPart) {
                 event.setCanceled(true);
             }

@@ -16,6 +16,7 @@ import com.wynntils.core.config.upfixers.impl.CustomPoiVisbilityUpfixer;
 import com.wynntils.core.config.upfixers.impl.EnumNamingUpfixer;
 import com.wynntils.core.config.upfixers.impl.GameBarOverlayMoveUpfixer;
 import com.wynntils.core.config.upfixers.impl.MapToMainMapRenamedConfigsUpfixer;
+import com.wynntils.core.config.upfixers.impl.OverlayConfigsIntegrationUpfixer;
 import com.wynntils.core.config.upfixers.impl.OverlayRestructuringUpfixer;
 import com.wynntils.core.config.upfixers.impl.QuestBookToContentRenamedConfigsUpfixer;
 import java.util.ArrayList;
@@ -39,6 +40,7 @@ public class ConfigUpfixerManager extends Manager {
         registerUpfixer(new QuestBookToContentRenamedConfigsUpfixer());
         registerUpfixer(new MapToMainMapRenamedConfigsUpfixer());
         registerUpfixer(new OverlayRestructuringUpfixer());
+        registerUpfixer(new OverlayConfigsIntegrationUpfixer());
     }
 
     private void registerUpfixer(ConfigUpfixer upfixer) {
