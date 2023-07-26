@@ -1,4 +1,16 @@
+## [0.0.3-alpha.216](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.215...v0.0.3-alpha.216) (2023-07-26)
+
+
+### New Features
+
+* Show overall content activity progress on profile page ([#1833](https://github.com/Wynntils/Artemis/issues/1833)) ([5723b72](https://github.com/Wynntils/Artemis/commit/5723b72c29c392d340831e74b3289bbb389c4457))
+
 ## [0.0.3-alpha.215](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.214...v0.0.3-alpha.215) (2023-07-26)
+
+
+### Miscellaneous Chores
+
+* **release:** v0.0.3-alpha.215 [skip ci] ([d48f755](https://github.com/Wynntils/Artemis/commit/d48f755d1e860d8d373c16600d717d009315a9c8))
 
 
 ### Code Refactoring
@@ -40,16 +52,4 @@
 ### Miscellaneous Chores
 
 * **release:** v0.0.3-alpha.212 [skip ci] ([b926299](https://github.com/Wynntils/Artemis/commit/b9262998ed7fc66649665d61e78e54ed0db25b1d))
-
-## [0.0.3-alpha.211](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.210...v0.0.3-alpha.211) (2023-07-26)
-
-
-### Miscellaneous Chores
-
-* **release:** v0.0.3-alpha.211 [skip ci] ([cf8be06](https://github.com/Wynntils/Artemis/commit/cf8be060e1cc72522f13d2e06509c0524e9ee021))
-
-
-### Code Refactoring
-
-* Turn WynnItemMatchers into ItemUtils ([#1847](https://github.com/Wynntils/Artemis/issues/1847)) ([dcf12fe](https://github.com/Wynntils/Artemis/commit/dcf12fe1ffbb9e46224161c45d037b40087055ca))
 
