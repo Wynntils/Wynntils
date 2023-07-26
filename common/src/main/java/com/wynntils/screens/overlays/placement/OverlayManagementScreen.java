@@ -7,12 +7,12 @@ package com.wynntils.screens.overlays.placement;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.wynntils.core.components.Managers;
 import com.wynntils.core.config.ConfigHolder;
-import com.wynntils.core.consumers.features.overlays.Corner;
-import com.wynntils.core.consumers.features.overlays.Edge;
-import com.wynntils.core.consumers.features.overlays.Overlay;
-import com.wynntils.core.consumers.features.overlays.OverlayPosition;
-import com.wynntils.core.consumers.features.overlays.OverlaySize;
-import com.wynntils.core.consumers.features.overlays.SectionCoordinates;
+import com.wynntils.core.consumers.overlays.Corner;
+import com.wynntils.core.consumers.overlays.Edge;
+import com.wynntils.core.consumers.overlays.Overlay;
+import com.wynntils.core.consumers.overlays.OverlayPosition;
+import com.wynntils.core.consumers.overlays.OverlaySize;
+import com.wynntils.core.consumers.overlays.SectionCoordinates;
 import com.wynntils.core.consumers.screens.WynntilsScreen;
 import com.wynntils.core.text.StyledText;
 import com.wynntils.screens.overlays.selection.OverlaySelectionScreen;
@@ -65,7 +65,7 @@ public final class OverlayManagementScreen extends WynntilsScreen {
             Component.literal("Resize the overlay by dragging the edges or corners."),
             Component.literal("Move it by dragging the center of the overlay."),
             Component.literal("By holding shift, you can disable alignment lines."),
-            Component.literal("Use your arrows to change vertical"),
+            Component.literal("Use shift-arrows to change vertical"),
             Component.literal("and horizontal alignment."),
             Component.literal("The overlay name will render respecting"),
             Component.literal("the current overlay alignments."),

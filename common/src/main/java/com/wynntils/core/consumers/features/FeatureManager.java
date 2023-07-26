@@ -10,8 +10,8 @@ import com.wynntils.core.components.Managers;
 import com.wynntils.core.config.Category;
 import com.wynntils.core.config.ConfigCategory;
 import com.wynntils.core.consumers.commands.CommandManager;
-import com.wynntils.core.consumers.features.overlays.OverlayManager;
 import com.wynntils.core.consumers.features.properties.StartDisabled;
+import com.wynntils.core.consumers.overlays.OverlayManager;
 import com.wynntils.core.keybinds.KeyBindManager;
 import com.wynntils.core.mod.CrashReportManager;
 import com.wynntils.core.mod.type.CrashType;
@@ -40,6 +40,10 @@ import com.wynntils.features.combat.MythicBoxScalerFeature;
 import com.wynntils.features.combat.PreventTradesDuelsFeature;
 import com.wynntils.features.combat.QuickCastFeature;
 import com.wynntils.features.combat.RangeVisualizerFeature;
+import com.wynntils.features.combat.ShamanTotemTrackingFeature;
+import com.wynntils.features.combat.SpellCastVignetteFeature;
+import com.wynntils.features.combat.TokenTrackerBellFeature;
+import com.wynntils.features.combat.TowerAuraVignetteFeature;
 import com.wynntils.features.commands.AddCommandExpansionFeature;
 import com.wynntils.features.commands.CommandAliasesFeature;
 import com.wynntils.features.commands.CustomCommandKeybindsFeature;
@@ -65,36 +69,37 @@ import com.wynntils.features.inventory.ItemHighlightFeature;
 import com.wynntils.features.inventory.ItemLockFeature;
 import com.wynntils.features.inventory.ItemScreenshotFeature;
 import com.wynntils.features.inventory.ItemTextOverlayFeature;
+import com.wynntils.features.inventory.LootchestTextFeature;
 import com.wynntils.features.inventory.ReplaceRecipeBookFeature;
 import com.wynntils.features.inventory.UnidentifiedItemIconFeature;
 import com.wynntils.features.map.BeaconBeamFeature;
 import com.wynntils.features.map.GatheringNodeCooldownFeature;
 import com.wynntils.features.map.GuildMapFeature;
-import com.wynntils.features.map.MapFeature;
+import com.wynntils.features.map.MainMapFeature;
 import com.wynntils.features.map.MinimapFeature;
 import com.wynntils.features.map.WorldWaypointDistanceFeature;
-import com.wynntils.features.overlays.ArrowShieldTrackingFeature;
-import com.wynntils.features.overlays.AuraTimerOverlayFeature;
+import com.wynntils.features.overlays.ArrowShieldTrackerOverlayFeature;
 import com.wynntils.features.overlays.CombatExperienceOverlayFeature;
 import com.wynntils.features.overlays.ContentTrackerOverlayFeature;
 import com.wynntils.features.overlays.CustomBarsOverlayFeature;
-import com.wynntils.features.overlays.CustomPlayerListFeature;
+import com.wynntils.features.overlays.CustomPlayerListOverlayFeature;
 import com.wynntils.features.overlays.GameBarsOverlayFeature;
 import com.wynntils.features.overlays.GameNotificationOverlayFeature;
 import com.wynntils.features.overlays.GatheringCooldownOverlayFeature;
-import com.wynntils.features.overlays.GuildAttackTimerOverlayFeature;
-import com.wynntils.features.overlays.HadesPartyOverlayFeature;
 import com.wynntils.features.overlays.InfoBoxFeature;
-import com.wynntils.features.overlays.MobTotemTrackingFeature;
+import com.wynntils.features.overlays.MobTotemTimerOverlayFeature;
 import com.wynntils.features.overlays.NpcDialogueOverlayFeature;
 import com.wynntils.features.overlays.ObjectivesOverlayFeature;
+import com.wynntils.features.overlays.PartyMembersOverlayFeature;
 import com.wynntils.features.overlays.PowderSpecialBarOverlayFeature;
-import com.wynntils.features.overlays.ShamanMasksOverlayFeature;
-import com.wynntils.features.overlays.ShamanTotemTrackingFeature;
-import com.wynntils.features.overlays.SpellCastRenderFeature;
-import com.wynntils.features.overlays.StatusOverlayFeature;
+import com.wynntils.features.overlays.ShamanMaskOverlayFeature;
+import com.wynntils.features.overlays.ShamanTotemTimerOverlayFeature;
+import com.wynntils.features.overlays.SpellCastMessageOverlayFeature;
+import com.wynntils.features.overlays.StatusEffectsOverlayFeature;
 import com.wynntils.features.overlays.StopwatchFeature;
-import com.wynntils.features.overlays.TokenTrackerFeature;
+import com.wynntils.features.overlays.TerritoryAttackTimerOverlayFeature;
+import com.wynntils.features.overlays.TokenBarsOverlayFeature;
+import com.wynntils.features.overlays.TowerAuraTimerOverlayFeature;
 import com.wynntils.features.players.AutoJoinPartyFeature;
 import com.wynntils.features.players.CustomNametagRendererFeature;
 import com.wynntils.features.players.GearViewerFeature;
@@ -198,6 +203,10 @@ public final class FeatureManager extends Manager {
         registerFeature(new PreventTradesDuelsFeature());
         registerFeature(new QuickCastFeature());
         registerFeature(new RangeVisualizerFeature());
+        registerFeature(new ShamanTotemTrackingFeature());
+        registerFeature(new SpellCastVignetteFeature());
+        registerFeature(new TokenTrackerBellFeature());
+        registerFeature(new TowerAuraVignetteFeature());
         // endregion
 
         // region commands
@@ -226,6 +235,7 @@ public final class FeatureManager extends Manager {
         registerFeature(new ItemLockFeature());
         registerFeature(new ItemScreenshotFeature());
         registerFeature(new ItemTextOverlayFeature());
+        registerFeature(new LootchestTextFeature());
         registerFeature(new ReplaceRecipeBookFeature());
         registerFeature(new UnidentifiedItemIconFeature());
         // endregion
@@ -234,34 +244,34 @@ public final class FeatureManager extends Manager {
         registerFeature(new BeaconBeamFeature());
         registerFeature(new GatheringNodeCooldownFeature());
         registerFeature(new GuildMapFeature());
-        registerFeature(new MapFeature());
+        registerFeature(new MainMapFeature());
         registerFeature(new MinimapFeature());
         registerFeature(new WorldWaypointDistanceFeature());
         // endregion
 
         // region overlays
-        registerFeature(new ArrowShieldTrackingFeature());
-        registerFeature(new AuraTimerOverlayFeature());
+        registerFeature(new ArrowShieldTrackerOverlayFeature());
         registerFeature(new CombatExperienceOverlayFeature());
         registerFeature(new ContentTrackerOverlayFeature());
         registerFeature(new CustomBarsOverlayFeature());
-        registerFeature(new CustomPlayerListFeature());
+        registerFeature(new CustomPlayerListOverlayFeature());
         registerFeature(new GameBarsOverlayFeature());
         registerFeature(new GameNotificationOverlayFeature());
         registerFeature(new GatheringCooldownOverlayFeature());
-        registerFeature(new GuildAttackTimerOverlayFeature());
-        registerFeature(new HadesPartyOverlayFeature());
         registerFeature(new InfoBoxFeature());
-        registerFeature(new MobTotemTrackingFeature());
+        registerFeature(new MobTotemTimerOverlayFeature());
         registerFeature(new NpcDialogueOverlayFeature());
         registerFeature(new ObjectivesOverlayFeature());
+        registerFeature(new PartyMembersOverlayFeature());
         registerFeature(new PowderSpecialBarOverlayFeature());
-        registerFeature(new ShamanMasksOverlayFeature());
-        registerFeature(new ShamanTotemTrackingFeature());
-        registerFeature(new SpellCastRenderFeature());
-        registerFeature(new StatusOverlayFeature());
+        registerFeature(new ShamanMaskOverlayFeature());
+        registerFeature(new ShamanTotemTimerOverlayFeature());
+        registerFeature(new SpellCastMessageOverlayFeature());
+        registerFeature(new StatusEffectsOverlayFeature());
         registerFeature(new StopwatchFeature());
-        registerFeature(new TokenTrackerFeature());
+        registerFeature(new TerritoryAttackTimerOverlayFeature());
+        registerFeature(new TokenBarsOverlayFeature());
+        registerFeature(new TowerAuraTimerOverlayFeature());
         // endregion
 
         // region players

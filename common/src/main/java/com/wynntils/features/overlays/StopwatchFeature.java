@@ -9,17 +9,13 @@ import com.wynntils.core.components.Services;
 import com.wynntils.core.config.Category;
 import com.wynntils.core.config.ConfigCategory;
 import com.wynntils.core.consumers.features.Feature;
-import com.wynntils.core.consumers.features.overlays.Overlay;
-import com.wynntils.core.consumers.features.overlays.OverlayPosition;
-import com.wynntils.core.consumers.features.overlays.OverlaySize;
-import com.wynntils.core.consumers.features.overlays.TextOverlay;
-import com.wynntils.core.consumers.features.overlays.annotations.OverlayInfo;
 import com.wynntils.core.consumers.features.properties.RegisterCommand;
 import com.wynntils.core.consumers.features.properties.RegisterKeyBind;
+import com.wynntils.core.consumers.overlays.Overlay;
+import com.wynntils.core.consumers.overlays.annotations.OverlayInfo;
 import com.wynntils.core.keybinds.KeyBind;
 import com.wynntils.mc.event.RenderEvent;
-import com.wynntils.utils.render.type.HorizontalAlignment;
-import com.wynntils.utils.render.type.VerticalAlignment;
+import com.wynntils.overlays.stopwatch.StopwatchOverlay;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.commands.Commands;
 import org.lwjgl.glfw.GLFW;
@@ -68,34 +64,6 @@ public class StopwatchFeature extends Feature {
             Services.Stopwatch.pause();
         } else {
             Services.Stopwatch.start();
-        }
-    }
-
-    public static class StopwatchOverlay extends TextOverlay {
-        private static final String TEMPLATE =
-                "{if_str(stopwatch_zero;\"\";concat(if_str(stopwatch_running;\"\";\"&e\");leading_zeros(stopwatch_hours;2);\":\";leading_zeros(stopwatch_minutes;2);\":\";leading_zeros(stopwatch_seconds;2);\".\";leading_zeros(stopwatch_milliseconds;3)))}";
-
-        protected StopwatchOverlay() {
-            super(
-                    new OverlayPosition(
-                            0,
-                            0,
-                            VerticalAlignment.BOTTOM,
-                            HorizontalAlignment.LEFT,
-                            OverlayPosition.AnchorSection.BOTTOM_LEFT),
-                    new OverlaySize(100, 20),
-                    HorizontalAlignment.CENTER,
-                    VerticalAlignment.MIDDLE);
-        }
-
-        @Override
-        public String getTemplate() {
-            return TEMPLATE;
-        }
-
-        @Override
-        public String getPreviewTemplate() {
-            return "01:24:31.877";
         }
     }
 }

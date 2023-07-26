@@ -9,7 +9,7 @@ import com.wynntils.core.components.Managers;
 import com.wynntils.core.components.Models;
 import com.wynntils.core.components.Services;
 import com.wynntils.core.text.StyledText;
-import com.wynntils.features.map.MapFeature;
+import com.wynntils.features.map.MainMapFeature;
 import com.wynntils.screens.activities.WynntilsCaveScreen;
 import com.wynntils.screens.activities.WynntilsDialogueHistoryScreen;
 import com.wynntils.screens.activities.WynntilsDiscoveriesScreen;
@@ -122,7 +122,7 @@ public final class WynntilsMenuScreen extends WynntilsMenuScreenBase {
 
         // region Row 2: Map
 
-        if (Managers.Feature.getFeatureInstance(MapFeature.class).isEnabled()) {
+        if (Managers.Feature.getFeatureInstance(MainMapFeature.class).isEnabled()) {
             buttons.get(1)
                     .add(new WynntilsMenuButton(
                             Texture.MAP_ICON,

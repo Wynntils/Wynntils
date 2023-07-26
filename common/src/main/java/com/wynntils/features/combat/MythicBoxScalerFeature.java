@@ -11,7 +11,8 @@ import com.wynntils.core.config.ConfigCategory;
 import com.wynntils.core.config.RegisterConfig;
 import com.wynntils.core.consumers.features.Feature;
 import com.wynntils.mc.event.GroundItemEntityTransformEvent;
-import com.wynntils.utils.wynn.WynnItemMatchers;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 
 @ConfigCategory(Category.COMBAT)
@@ -21,7 +22,7 @@ public class MythicBoxScalerFeature extends Feature {
 
     @SubscribeEvent
     public void onItemRendering(GroundItemEntityTransformEvent e) {
-        if (!WynnItemMatchers.isMythicBox(e.getItemStack())) return;
+        if (!isMythicBox(e.getItemStack())) return;
 
         PoseStack stack = e.getPoseStack();
 
@@ -35,5 +36,11 @@ public class MythicBoxScalerFeature extends Feature {
         stack.scale(scale.get(), scale.get(), scale.get());
 
         stack.translate(0f, 0.25f, 0f);
+    }
+
+    private boolean isMythicBox(ItemStack itemStack) {
+        // Since this item is not in any container/inventory, it does not
+        // have a WynnItem annotation
+        return itemStack.is(Items.STONE_SHOVEL) && itemStack.getDamageValue() == 6;
     }
 }
