@@ -60,7 +60,7 @@ public final class WynntilsLootrunsScreen extends WynntilsListScreen<LootrunInst
     protected void doInit() {
         super.doInit();
 
-        TaskUtils.runAsync(Services.Lootrun::refreshLootrunCache);
+        TaskUtils.runAsync(Services.LootrunPaths::refreshLootrunCache);
 
         this.addRenderableWidget(new BackButton(
                 (int) ((Texture.QUEST_BOOK_BACKGROUND.width() / 2f - 16) / 2f),
@@ -75,7 +75,7 @@ public final class WynntilsLootrunsScreen extends WynntilsListScreen<LootrunInst
                 (int) (Texture.RELOAD_BUTTON.width() / 2 / 1.7f),
                 (int) (Texture.RELOAD_BUTTON.height() / 1.7f),
                 "lootrun",
-                () -> TaskUtils.runAsync(Services.Lootrun::refreshLootrunCache)));
+                () -> TaskUtils.runAsync(Services.LootrunPaths::refreshLootrunCache)));
 
         this.addRenderableWidget(new PageSelectorButton(
                 Texture.QUEST_BOOK_BACKGROUND.width() / 2 + 50 - Texture.FORWARD_ARROW.width() / 2,
@@ -98,7 +98,7 @@ public final class WynntilsLootrunsScreen extends WynntilsListScreen<LootrunInst
         if (hovered instanceof LootrunButton lootrunButton) {
             List<Component> tooltipLines;
 
-            LootrunInstance currentLootrun = Services.Lootrun.getCurrentLootrun();
+            LootrunInstance currentLootrun = Services.LootrunPaths.getCurrentLootrun();
             if (currentLootrun != null
                     && Objects.equals(lootrunButton.getLootrun().name(), currentLootrun.name())) {
                 tooltipLines = List.of(
@@ -168,7 +168,7 @@ public final class WynntilsLootrunsScreen extends WynntilsListScreen<LootrunInst
     }
 
     private void renderDescription(PoseStack poseStack) {
-        LootrunInstance currentLootrun = Services.Lootrun.getCurrentLootrun();
+        LootrunInstance currentLootrun = Services.LootrunPaths.getCurrentLootrun();
         if (currentLootrun != null) {
             poseStack.pushPose();
             poseStack.translate(20, 80, 0);
@@ -282,7 +282,7 @@ public final class WynntilsLootrunsScreen extends WynntilsListScreen<LootrunInst
 
     @Override
     protected void reloadElementsList(String searchTerm) {
-        elements.addAll(Services.Lootrun.getLootruns().stream()
+        elements.addAll(Services.LootrunPaths.getLootruns().stream()
                 .filter(lootrunInstance -> StringUtils.partialMatch(lootrunInstance.name(), searchTerm))
                 .toList());
     }

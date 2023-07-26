@@ -78,15 +78,15 @@ public class LootrunButton extends WynntilsButton {
     public boolean mouseClicked(double mouseX, double mouseY, int button) {
         if (button == GLFW.GLFW_MOUSE_BUTTON_LEFT) {
             if (isLoaded()) {
-                Services.Lootrun.clearCurrentLootrun();
+                Services.LootrunPaths.clearCurrentLootrun();
             } else {
-                Services.Lootrun.tryLoadLootrun(lootrun.name());
+                Services.LootrunPaths.tryLoadLootrun(lootrun.name());
             }
             return true;
         }
 
         if (button == GLFW.GLFW_MOUSE_BUTTON_MIDDLE) {
-            Util.getPlatform().openFile(Services.Lootrun.LOOTRUNS);
+            Util.getPlatform().openFile(Services.LootrunPaths.LOOTRUNS);
             return true;
         }
 
@@ -113,13 +113,13 @@ public class LootrunButton extends WynntilsButton {
     public void onPress() {}
 
     private void tryDeleteLootrun() {
-        File file = new File(Services.Lootrun.LOOTRUNS, lootrun.name() + ".json");
+        File file = new File(Services.LootrunPaths.LOOTRUNS, lootrun.name() + ".json");
         file.delete();
         screen.reloadElements();
     }
 
     private boolean isLoaded() {
-        LootrunInstance currentLootrun = Services.Lootrun.getCurrentLootrun();
+        LootrunInstance currentLootrun = Services.LootrunPaths.getCurrentLootrun();
         return currentLootrun != null && Objects.equals(currentLootrun.name(), lootrun.name());
     }
 

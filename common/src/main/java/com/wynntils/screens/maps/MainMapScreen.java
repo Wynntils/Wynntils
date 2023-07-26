@@ -234,7 +234,7 @@ public final class MainMapScreen extends AbstractMapScreen {
                         .pointerType
                         .get());
 
-        LootrunInstance currentLootrun = Services.Lootrun.getCurrentLootrun();
+        LootrunInstance currentLootrun = Services.LootrunPaths.getCurrentLootrun();
 
         if (currentLootrun != null) {
             MapRenderer.renderLootrunLine(

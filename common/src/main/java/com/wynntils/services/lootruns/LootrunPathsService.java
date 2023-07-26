@@ -44,7 +44,7 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 
-public final class LootrunService extends Service {
+public final class LootrunPathsService extends Service {
     public static final File LOOTRUNS = WynntilsMod.getModStorageDir("lootruns");
 
     private List<LootrunInstance> lootrunInstanceCache = new ArrayList<>();
@@ -59,10 +59,10 @@ public final class LootrunService extends Service {
 
     private RecordingInformation recordingInformation = null;
 
-    public LootrunService() {
+    public LootrunPathsService() {
         super(List.of());
 
-        FileUtils.mkdir(Services.Lootrun.LOOTRUNS);
+        FileUtils.mkdir(Services.LootrunPaths.LOOTRUNS);
     }
 
     public LootrunState getState() {
@@ -181,7 +181,7 @@ public final class LootrunService extends Service {
 
     public void tryLoadLootrun(String fileName) {
         if (loadFile(fileName)) {
-            Position startingPoint = Services.Lootrun.getStartingPoint();
+            Position startingPoint = Services.LootrunPaths.getStartingPoint();
 
             BlockPos start = PosUtils.newBlockPos(startingPoint);
             McUtils.sendMessageToClient(Component.translatable(
