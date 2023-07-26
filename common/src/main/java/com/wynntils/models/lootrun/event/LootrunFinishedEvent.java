@@ -15,6 +15,14 @@ public abstract class LootrunFinishedEvent extends Event {
         this.timeElapsed = timeElapsed;
     }
 
+    public int getChallengesCompleted() {
+        return challengesCompleted;
+    }
+
+    public int getTimeElapsed() {
+        return timeElapsed;
+    }
+
     public static class Completed extends LootrunFinishedEvent {
         protected final int rewardPulls;
         protected final int rewardRerolls;
@@ -33,6 +41,22 @@ public abstract class LootrunFinishedEvent extends Event {
             this.rewardRerolls = rewardRerolls;
             this.experienceGained = experienceGained;
             this.mobsKilled = mobsKilled;
+        }
+
+        public int getRewardPulls() {
+            return rewardPulls;
+        }
+
+        public int getRewardRerolls() {
+            return rewardRerolls;
+        }
+
+        public int getExperienceGained() {
+            return experienceGained;
+        }
+
+        public int getMobsKilled() {
+            return mobsKilled;
         }
 
         public static class Builder {

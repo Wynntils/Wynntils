@@ -10,7 +10,20 @@ import net.minecraft.stats.StatFormatter;
 
 public enum StatisticKind {
     DAMAGE_DEALT(StatFormatter.DEFAULT),
-    SPELLS_CAST(StatFormatter.DEFAULT);
+    SPELLS_CAST(StatFormatter.DEFAULT),
+
+    // region Lootruns
+
+    LOOTRUNS_COMPLETED(StatFormatter.DEFAULT),
+    LOOTRUNS_FAILED(StatFormatter.DEFAULT),
+    LOOTRUNS_CHALLENGES_COMPLETED(StatFormatter.DEFAULT),
+    LOOTRUNS_TIME_ELAPSED(StatFormatter.TIME),
+    LOOTRUNS_REWARD_PULLS(StatFormatter.DEFAULT),
+    LOOTRUNS_REWARD_REROLLS(StatFormatter.DEFAULT),
+    LOOTRUNS_EXPERIENCE_GAINED(StatFormatter.DEFAULT),
+    LOOTRUNS_MOBS_KILLED(StatFormatter.DEFAULT);
+
+    // endregion
 
     private final StatFormatter formatter;
     private final String id;
