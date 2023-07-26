@@ -9,6 +9,7 @@ import com.wynntils.core.components.Model;
 import com.wynntils.core.text.StyledText;
 import com.wynntils.handlers.chat.event.ChatMessageReceivedEvent;
 import com.wynntils.models.lootrun.event.LootrunFinishedEvent;
+import com.wynntils.models.worlds.event.WorldStateEvent;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -75,6 +76,12 @@ public class LootrunModel extends Model {
         } else if (lootrunFailedBuilder != null) {
             parseFailedMessages(styledText);
         }
+    }
+
+    @SubscribeEvent
+    public void onWorldStateChanged(WorldStateEvent event) {
+        lootrunCompletedBuilder = null;
+        lootrunFailedBuilder = null;
     }
 
     private void parseCompletedMessages(StyledText styledText) {
