@@ -11,7 +11,7 @@ import java.util.List;
 public class OverlayRestructuringUpfixer extends RenamedPrefixesUpfixer {
     private static final List<Pair<String, String>> RENAMED_PREFIXES = List.of(
             Pair.of(
-                    "spellCastRenderFeature.spellCastMessageOverlay.",
+                    "spellCastRenderFeature.spellCastOverlay.",
                     "spellCastMessageOverlayFeature.spellCastMessageOverlay."),
             Pair.of("spellCastRenderFeature.", "spellCastVignetteFeature."),
             Pair.of("tokenTrackerFeature.tokenBarsOverlay.", "tokenBarsOverlayFeature.tokenBarsOverlay."),
@@ -24,7 +24,7 @@ public class OverlayRestructuringUpfixer extends RenamedPrefixesUpfixer {
                     "towerAuraTimerOverlayFeature.towerAuraTimerOverlay1."),
             Pair.of("auraTimerOverlayFeature.", "towerAuraVignetteFeature."),
             Pair.of("arrowShieldTrackingFeature.", "arrowShieldTrackerOverlayFeature."),
-            Pair.of("dustomPlayerListFeature.", "customPlayerListOverlayFeature."),
+            Pair.of("customPlayerListFeature.", "customPlayerListOverlayFeature."),
             Pair.of("guildAttackTimerOverlayFeature.", "territoryAttackTimerOverlayFeature."),
             Pair.of("hadesPartyOverlayFeature.", "partyMembersOverlayFeature."),
             Pair.of("mobTotemTrackingFeature.", "mobTotemTimerOverlayFeature."),
