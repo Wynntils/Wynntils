@@ -19,7 +19,9 @@ public class OverlayRestructuringUpfixer extends RenamedPrefixesUpfixer {
             Pair.of(
                     "shamanTotemTrackingFeature.shamanTotemTimerOverlay1.",
                     "shamanTotemTimerOverlayFeature.shamanTotemTimerOverlay1."),
-            Pair.of("auraTimerOverlayFeature.auraTimerOverlay1.", "towerAuraTimerOverlayFeature.towerAuraTimerOverlay1."),
+            Pair.of(
+                    "auraTimerOverlayFeature.auraTimerOverlay1.",
+                    "towerAuraTimerOverlayFeature.towerAuraTimerOverlay1."),
             Pair.of("auraTimerOverlayFeature.", "towerAuraVignetteFeature."),
             Pair.of("arrowShieldTrackingFeature.", "arrowShieldTrackerOverlayFeature."),
             Pair.of("dustomPlayerListFeature.", "customPlayerListOverlayFeature."),
