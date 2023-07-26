@@ -9,7 +9,6 @@ import com.wynntils.core.components.Models;
 import com.wynntils.core.text.StyledText;
 import com.wynntils.models.activities.discoveries.DiscoveryInfo;
 import com.wynntils.models.activities.type.ActivitySortOrder;
-import com.wynntils.screens.translation.WynnLanguage;
 import com.wynntils.utils.mc.McUtils;
 import java.util.List;
 import java.util.Optional;

@@ -23,7 +23,7 @@ import com.wynntils.mc.event.ChatSentEvent;
 import com.wynntils.mc.event.CommandSentEvent;
 import com.wynntils.mc.event.EditBoxInsertEvent;
 import com.wynntils.mc.event.ScreenInitEvent;
-import com.wynntils.screens.translation.WynnLanguage;
+import com.wynntils.services.wynnlanguage.WynnLanguage;
 import com.wynntils.screens.translation.widgets.WynnLanguageButton;
 import com.wynntils.utils.colors.ColorChatFormatting;
 import com.wynntils.utils.mc.McUtils;
