@@ -133,7 +133,7 @@ public final class ScoreboardHandler extends Handler {
         // We can also check for validness by checking scoreboard parts:
         // 3. A valid scoreboard always starts with a newline (À)
         // 4. A scoreboard is valid if it consists of valid segments:
-        //    - A valid segment is a part that stats with a header, then one or more lines, then a footer which is a
+        //    - A valid segment is a part that starts with a header, then one or more lines, then a footer which is a
         // newline (À+).
         //    - The footer is not present if the segment is the last one displayed.
 
