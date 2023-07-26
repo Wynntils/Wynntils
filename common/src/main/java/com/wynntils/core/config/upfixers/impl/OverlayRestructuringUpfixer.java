@@ -15,7 +15,8 @@ public class OverlayRestructuringUpfixer extends RenamedPrefixesUpfixer {
                     "spellCastMessageOverlayFeature.spellCastMessageOverlay."),
             Pair.of("spellCastRenderFeature.", "spellCastVignetteFeature."),
             Pair.of("tokenTrackerFeature.tokenBarsOverlay.", "tokenBarsOverlayFeature.tokenBarsOverlay."),
-            Pair.of("tokenTrackerFeature.", "tokenTrackerBellFeature."));
+            Pair.of("tokenTrackerFeature.", "tokenTrackerBellFeature."),
+            Pair.of("arrowShieldTrackingFeature.", "arrowShieldTrackerOverlayFeature."));
 
     @Override
     protected List<Pair<String, String>> getRenamedPrefixes() {

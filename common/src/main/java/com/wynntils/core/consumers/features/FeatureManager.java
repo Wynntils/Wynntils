@@ -76,7 +76,7 @@ import com.wynntils.features.map.GuildMapFeature;
 import com.wynntils.features.map.MainMapFeature;
 import com.wynntils.features.map.MinimapFeature;
 import com.wynntils.features.map.WorldWaypointDistanceFeature;
-import com.wynntils.features.overlays.ArrowShieldTrackingFeature;
+import com.wynntils.features.overlays.ArrowShieldTrackerOverlayFeature;
 import com.wynntils.features.overlays.AuraTimerOverlayFeature;
 import com.wynntils.features.overlays.CombatExperienceOverlayFeature;
 import com.wynntils.features.overlays.ContentTrackerOverlayFeature;
@@ -246,7 +246,7 @@ public final class FeatureManager extends Manager {
         // endregion
 
         // region overlays
-        registerFeature(new ArrowShieldTrackingFeature());
+        registerFeature(new ArrowShieldTrackerOverlayFeature());
         registerFeature(new AuraTimerOverlayFeature());
         registerFeature(new CombatExperienceOverlayFeature());
         registerFeature(new ContentTrackerOverlayFeature());
