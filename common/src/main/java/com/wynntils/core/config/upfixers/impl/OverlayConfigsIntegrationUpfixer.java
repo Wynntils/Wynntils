@@ -22,7 +22,10 @@ public class OverlayConfigsIntegrationUpfixer extends RenamedKeysUpfixer {
                     "objectivesOverlayFeature.dailyObjectiveOverlay.disableObjectiveTrackingOnScoreboard"),
             Pair.of(
                     "partyMembersOverlayFeature.disablePartyMembersOnScoreboard",
-                    "partyMembersOverlayFeature.partyMembersOverlay.disablePartyMembersOnScoreboard"));
+                    "partyMembersOverlayFeature.partyMembersOverlay.disablePartyMembersOnScoreboard"),
+            Pair.of(
+                    "shamanMaskOverlayFeature.hideMaskTitles",
+                    "shamanMaskOverlayFeature.shamanMaskOverlay.hideMaskTitles"));
 
     @Override
     protected List<Pair<String, String>> getRenamedKeys() {
