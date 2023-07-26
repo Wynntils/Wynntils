@@ -20,6 +20,7 @@ import com.wynntils.utils.mc.LoreUtils;
 import com.wynntils.utils.mc.McUtils;
 import com.wynntils.utils.wynn.ContainerUtils;
 import com.wynntils.utils.wynn.InventoryUtils;
+import com.wynntils.utils.wynn.ItemUtils;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -115,7 +116,7 @@ public class ContentBookQueries {
                 .reprocess(c -> {
                     processContentBookPage(c, newActivity);
                     ItemStack itemStack = c.items().get(PROGRESS_SLOT);
-                    progress.add(InventoryUtils.getItemName(itemStack));
+                    progress.add(ItemUtils.getItemName(itemStack));
                     progress.addAll(LoreUtils.getLore(itemStack));
                 })
 
@@ -166,7 +167,7 @@ public class ContentBookQueries {
     }
 
     private String getActiveFilter(ItemStack itemStack) {
-        StyledText itemName = InventoryUtils.getItemName(itemStack);
+        StyledText itemName = ItemUtils.getItemName(itemStack);
         if (!itemName.equals(StyledText.fromString(FILTER_ITEM_TITLE))) return null;
 
         List<StyledText> lore = LoreUtils.getLore(itemStack);

@@ -29,7 +29,7 @@ import com.wynntils.utils.render.buffered.BufferedFontRenderer;
 import com.wynntils.utils.render.type.HorizontalAlignment;
 import com.wynntils.utils.render.type.TextShadow;
 import com.wynntils.utils.render.type.VerticalAlignment;
-import com.wynntils.utils.wynn.InventoryUtils;
+import com.wynntils.utils.wynn.ItemUtils;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 
@@ -58,7 +58,7 @@ public class SpellCastRenderFeature extends Feature {
 
     @SubscribeEvent
     public void onItemRename(ItemRenamedEvent event) {
-        if (!InventoryUtils.isWeapon(event.getItemStack())) return;
+        if (!ItemUtils.isWeapon(event.getItemStack())) return;
 
         // Hide vanilla item rename popup
         event.setCanceled(true);

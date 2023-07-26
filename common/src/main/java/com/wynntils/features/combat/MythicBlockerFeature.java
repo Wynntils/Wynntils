@@ -9,9 +9,11 @@ import com.wynntils.core.config.Category;
 import com.wynntils.core.config.ConfigCategory;
 import com.wynntils.core.consumers.features.Feature;
 import com.wynntils.mc.event.ContainerCloseEvent;
+import com.wynntils.models.gear.type.GearTier;
+import com.wynntils.models.items.properties.GearTierItemProperty;
 import com.wynntils.utils.mc.McUtils;
 import com.wynntils.utils.wynn.ContainerUtils;
-import com.wynntils.utils.wynn.WynnItemMatchers;
+import java.util.Optional;
 import net.minecraft.ChatFormatting;
 import net.minecraft.core.NonNullList;
 import net.minecraft.network.chat.Component;
@@ -28,7 +30,9 @@ public class MythicBlockerFeature extends Feature {
         NonNullList<ItemStack> items = ContainerUtils.getItems(McUtils.mc().screen);
         for (int i = 0; i < 27; i++) {
             ItemStack itemStack = items.get(i);
-            if (WynnItemMatchers.isMythic(itemStack)) {
+            Optional<GearTierItemProperty> tieredItem =
+                    Models.Item.asWynnItemPropery(itemStack, GearTierItemProperty.class);
+            if (tieredItem.isPresent() && tieredItem.get().getGearTier() == GearTier.MYTHIC) {
                 McUtils.sendMessageToClient(Component.translatable("feature.wynntils.mythicBlocker.closingBlocked")
                         .withStyle(ChatFormatting.RED));
                 e.setCanceled(true);
