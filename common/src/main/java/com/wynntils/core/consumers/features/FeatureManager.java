@@ -40,8 +40,10 @@ import com.wynntils.features.combat.MythicBoxScalerFeature;
 import com.wynntils.features.combat.PreventTradesDuelsFeature;
 import com.wynntils.features.combat.QuickCastFeature;
 import com.wynntils.features.combat.RangeVisualizerFeature;
+import com.wynntils.features.combat.ShamanTotemTrackingFeature;
 import com.wynntils.features.combat.SpellCastVignetteFeature;
 import com.wynntils.features.combat.TokenTrackerBellFeature;
+import com.wynntils.features.combat.TowerAuraVignetteFeature;
 import com.wynntils.features.commands.AddCommandExpansionFeature;
 import com.wynntils.features.commands.CommandAliasesFeature;
 import com.wynntils.features.commands.CustomCommandKeybindsFeature;
@@ -77,7 +79,6 @@ import com.wynntils.features.map.MainMapFeature;
 import com.wynntils.features.map.MinimapFeature;
 import com.wynntils.features.map.WorldWaypointDistanceFeature;
 import com.wynntils.features.overlays.ArrowShieldTrackerOverlayFeature;
-import com.wynntils.features.overlays.AuraTimerOverlayFeature;
 import com.wynntils.features.overlays.CombatExperienceOverlayFeature;
 import com.wynntils.features.overlays.ContentTrackerOverlayFeature;
 import com.wynntils.features.overlays.CustomBarsOverlayFeature;
@@ -93,12 +94,12 @@ import com.wynntils.features.overlays.PartyMembersOverlayFeature;
 import com.wynntils.features.overlays.PowderSpecialBarOverlayFeature;
 import com.wynntils.features.overlays.ShamanMaskOverlayFeature;
 import com.wynntils.features.overlays.ShamanTotemTimerOverlayFeature;
-import com.wynntils.features.combat.ShamanTotemTrackingFeature;
 import com.wynntils.features.overlays.SpellCastMessageOverlayFeature;
 import com.wynntils.features.overlays.StatusOverlayFeature;
 import com.wynntils.features.overlays.StopwatchFeature;
 import com.wynntils.features.overlays.TerritoryAttackTimerOverlayFeature;
 import com.wynntils.features.overlays.TokenBarsOverlayFeature;
+import com.wynntils.features.overlays.TowerAuraTimerOverlayFeature;
 import com.wynntils.features.players.AutoJoinPartyFeature;
 import com.wynntils.features.players.CustomNametagRendererFeature;
 import com.wynntils.features.players.GearViewerFeature;
@@ -205,6 +206,7 @@ public final class FeatureManager extends Manager {
         registerFeature(new ShamanTotemTrackingFeature());
         registerFeature(new SpellCastVignetteFeature());
         registerFeature(new TokenTrackerBellFeature());
+        registerFeature(new TowerAuraVignetteFeature());
         // endregion
 
         // region commands
@@ -249,7 +251,6 @@ public final class FeatureManager extends Manager {
 
         // region overlays
         registerFeature(new ArrowShieldTrackerOverlayFeature());
-        registerFeature(new AuraTimerOverlayFeature());
         registerFeature(new CombatExperienceOverlayFeature());
         registerFeature(new ContentTrackerOverlayFeature());
         registerFeature(new CustomBarsOverlayFeature());
@@ -270,6 +271,7 @@ public final class FeatureManager extends Manager {
         registerFeature(new StopwatchFeature());
         registerFeature(new TerritoryAttackTimerOverlayFeature());
         registerFeature(new TokenBarsOverlayFeature());
+        registerFeature(new TowerAuraTimerOverlayFeature());
         // endregion
 
         // region players

@@ -15,10 +15,12 @@ public class OverlayRestructuringUpfixer extends RenamedPrefixesUpfixer {
                     "spellCastMessageOverlayFeature.spellCastMessageOverlay."),
             Pair.of("spellCastRenderFeature.", "spellCastVignetteFeature."),
             Pair.of("tokenTrackerFeature.tokenBarsOverlay.", "tokenBarsOverlayFeature.tokenBarsOverlay."),
+            Pair.of("tokenTrackerFeature.", "tokenTrackerBellFeature."),
             Pair.of(
                     "shamanTotemTrackingFeature.shamanTotemTimerOverlay.",
                     "shamanTotemTimerOverlayFeature.shamanTotemTimerOverlay."),
-            Pair.of("tokenTrackerFeature.", "tokenTrackerBellFeature."),
+            Pair.of("auraTimerOverlayFeature.auraTimerOverlay", "towerAuraTimerOverlayFeature.towerAuraTimerOverlay"),
+            Pair.of("auraTimerOverlayFeature.", "towerAuraVignetteFeature."),
             Pair.of("arrowShieldTrackingFeature.", "arrowShieldTrackerOverlayFeature."),
             Pair.of("dustomPlayerListFeature.", "customPlayerListOverlayFeature."),
             Pair.of("guildAttackTimerOverlayFeature.", "territoryAttackTimerOverlayFeature."),
