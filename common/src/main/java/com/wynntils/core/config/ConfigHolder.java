@@ -74,16 +74,16 @@ public class ConfigHolder implements Comparable<ConfigHolder> {
     }
 
     public String getJsonName() {
-        if (parent instanceof Overlay) {
+        if (parent instanceof Overlay overlay) {
             // "featureName.overlayName.settingName"
-            return getDeclaringFeatureNameCamelCase() + "." + parent.getConfigJsonName() + "." + getFieldName();
+            return getDeclaringFeatureNameCamelCase(overlay) + "." + parent.getConfigJsonName() + "." + getFieldName();
         }
         // "featureName.settingName"
         return parent.getConfigJsonName() + "." + getFieldName();
     }
 
-    private String getDeclaringFeatureNameCamelCase() {
-        String name = parent.getClass().getDeclaringClass().getSimpleName();
+    private String getDeclaringFeatureNameCamelCase(Overlay overlay) {
+        String name = overlay.getDeclaringClassName();
         return CaseFormat.UPPER_CAMEL.to(CaseFormat.LOWER_CAMEL, name);
     }
 
