@@ -57,7 +57,7 @@ public final class StatisticsService extends Service {
     public void addToStatistics(StatisticKind kind, int amount) {
         StatisticEntry newValue = currentStatistics.containsKey(kind)
                 ? currentStatistics.get(kind).getUpdatedEntry(amount)
-                : new StatisticEntry(amount, 1, amount, amount);
+                : new StatisticEntry(amount, 1, amount, amount, System.currentTimeMillis(), System.currentTimeMillis());
         currentStatistics.put(kind, newValue);
         statistics.touched();
     }

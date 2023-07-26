@@ -4,11 +4,17 @@
  */
 package com.wynntils.services.statistics.type;
 
-public record StatisticEntry(int total, int count, int min, int max) {
-    public static final StatisticEntry EMPTY = new StatisticEntry(0, 0, 0, 0);
+public record StatisticEntry(int total, int count, int min, int max, long firstModified, long lastModified) {
+    public static final StatisticEntry EMPTY = new StatisticEntry(0, 0, 0, 0, 0, 0);
 
     public StatisticEntry getUpdatedEntry(int amount) {
-        return new StatisticEntry(total + amount, count + 1, Math.min(min, amount), Math.max(max, amount));
+        return new StatisticEntry(
+                total + amount,
+                count + 1,
+                Math.min(min, amount),
+                Math.max(max, amount),
+                firstModified,
+                System.currentTimeMillis());
     }
 
     public int average() {
