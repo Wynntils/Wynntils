@@ -105,10 +105,10 @@ public final class ScoreboardHandler extends Handler {
         // (in a state where we can make sense of it, even if the actual data is still being updated)
         if (!isScoreboardValid(reconstructedScoreboard)) return;
 
-        // 2. Calculate the scoreboard segments, do segment updates
+        // 3. Calculate the scoreboard segments, do segment updates
         calculateScoreboardSegments(reconstructedScoreboard);
 
-        // 3. Create our own scoreboard to hide specific segments
+        // 4. Create our own scoreboard to hide specific segments
         createScoreboardFromSegments(reconstructedScoreboard);
     }
 
