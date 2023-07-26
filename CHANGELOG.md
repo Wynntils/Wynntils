@@ -1,9 +1,21 @@
+## [0.0.3-alpha.215](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.214...v0.0.3-alpha.215) (2023-07-26)
+
+
+### Code Refactoring
+
+* Move all subclasses of Overlay into top-level classes ([#1846](https://github.com/Wynntils/Artemis/issues/1846)) ([dd723e6](https://github.com/Wynntils/Artemis/commit/dd723e6d27cb62072370c8b0a6577382b59c9e1e))
+
 ## [0.0.3-alpha.214](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.213...v0.0.3-alpha.214) (2023-07-26)
 
 
 ### New Features
 
 * Group overlay settings with the actual overlays, and restructure overlays ([#1845](https://github.com/Wynntils/Artemis/issues/1845)) ([8df402c](https://github.com/Wynntils/Artemis/commit/8df402cbda6c7cc6f383a68c201fe59896bcea08))
+
+
+### Miscellaneous Chores
+
+* **release:** v0.0.3-alpha.214 [skip ci] ([09e9df4](https://github.com/Wynntils/Artemis/commit/09e9df44b0c1220f034461131ff0de08174773c8))
 
 ## [0.0.3-alpha.213](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.212...v0.0.3-alpha.213) (2023-07-26)
 
@@ -40,16 +52,4 @@
 ### Code Refactoring
 
 * Turn WynnItemMatchers into ItemUtils ([#1847](https://github.com/Wynntils/Artemis/issues/1847)) ([dcf12fe](https://github.com/Wynntils/Artemis/commit/dcf12fe1ffbb9e46224161c45d037b40087055ca))
-
-## [0.0.3-alpha.210](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.209...v0.0.3-alpha.210) (2023-07-26)
-
-
-### New Features
-
-* Displaying total/dry count in chests and adding level range to mythic find ([#1842](https://github.com/Wynntils/Artemis/issues/1842)) ([91743cb](https://github.com/Wynntils/Artemis/commit/91743cb8464315bdb0d5b7b6597580dee97ed206))
-
-
-### Miscellaneous Chores
-
-* **release:** v0.0.3-alpha.210 [skip ci] ([0d5e337](https://github.com/Wynntils/Artemis/commit/0d5e337b86db3aa52f46ab3899d060567180d335))
 
