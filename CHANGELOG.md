@@ -1,4 +1,16 @@
+## [0.0.3-alpha.212](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.211...v0.0.3-alpha.212) (2023-07-26)
+
+
+### New Features
+
+* Store when we started collecting a statistic entry ([#1849](https://github.com/Wynntils/Artemis/issues/1849)) ([b9410cf](https://github.com/Wynntils/Artemis/commit/b9410cfbd82423f01c647ce37a33c425f94a7295))
+
 ## [0.0.3-alpha.211](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.210...v0.0.3-alpha.211) (2023-07-26)
+
+
+### Miscellaneous Chores
+
+* **release:** v0.0.3-alpha.211 [skip ci] ([cf8be06](https://github.com/Wynntils/Artemis/commit/cf8be060e1cc72522f13d2e06509c0524e9ee021))
 
 
 ### Code Refactoring
@@ -40,16 +52,4 @@
 ### Miscellaneous Chores
 
 * **release:** v0.0.3-alpha.208 [skip ci] ([d62699d](https://github.com/Wynntils/Artemis/commit/d62699d44093ab2092adc879c4c16d6f5f0831c5))
-
-## [0.0.3-alpha.207](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.206...v0.0.3-alpha.207) (2023-07-25)
-
-
-### Miscellaneous Chores
-
-* **release:** v0.0.3-alpha.207 [skip ci] ([6241a3d](https://github.com/Wynntils/Artemis/commit/6241a3d1eb597cf1ce69813ed5463c6a62db403c))
-
-
-### Code Refactoring
-
-* Turn WynnPlayerUtils into PlayerRank enum ([#1839](https://github.com/Wynntils/Artemis/issues/1839)) ([a0c4e2b](https://github.com/Wynntils/Artemis/commit/a0c4e2bf7c1fdf736fd8a69d8f4c599a95642297))
 
