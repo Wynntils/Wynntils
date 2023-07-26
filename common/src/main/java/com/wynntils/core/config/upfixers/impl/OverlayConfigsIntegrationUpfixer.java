@@ -19,7 +19,10 @@ public class OverlayConfigsIntegrationUpfixer extends RenamedKeysUpfixer {
                     "contentTrackerOverlayFeature.contentTrackerOverlay.disableTrackerOnScoreboard"),
             Pair.of(
                     "objectivesOverlayFeature.disableObjectiveTrackingOnScoreboard",
-                    "objectivesOverlayFeature.dailyObjectiveOverlay.disableObjectiveTrackingOnScoreboard"));
+                    "objectivesOverlayFeature.dailyObjectiveOverlay.disableObjectiveTrackingOnScoreboard"),
+            Pair.of(
+                    "partyMembersOverlayFeature.disablePartyMembersOnScoreboard",
+                    "partyMembersOverlayFeature.partyMembersOverlay.disablePartyMembersOnScoreboard"));
 
     @Override
     protected List<Pair<String, String>> getRenamedKeys() {

@@ -49,9 +49,6 @@ import net.minecraftforge.eventbus.api.SubscribeEvent;
 
 @ConfigCategory(Category.OVERLAYS)
 public class PartyMembersOverlayFeature extends Feature {
-    @RegisterConfig
-    public final Config<Boolean> disablePartyMembersOnScoreboard = new Config<>(false);
-
     @OverlayInfo(renderType = RenderEvent.ElementType.GUI)
     private final PartyMembersOverlay partyMembersOverlay = new PartyMembersOverlay(
             new OverlayPosition(
@@ -167,6 +164,9 @@ public class PartyMembersOverlayFeature extends Feature {
                 new HadesUser("Player 2", new CappedValue(4561, 9870), new CappedValue(98, 170));
 
         @RegisterConfig
+        public final Config<Boolean> disablePartyMembersOnScoreboard = new Config<>(false);
+
+        @RegisterConfig
         public final Config<Integer> maxPartyMembers = new Config<>(4);
 
         @RegisterConfig
@@ -206,8 +206,7 @@ public class PartyMembersOverlayFeature extends Feature {
 
         @SubscribeEvent(priority = EventPriority.HIGHEST)
         public void onScoreboardSegmentChange(ScoreboardSegmentAdditionEvent event) {
-            PartyMembersOverlayFeature feature = Managers.Feature.getFeatureInstance(PartyMembersOverlayFeature.class);
-            if (feature.disablePartyMembersOnScoreboard.get()
+            if (disablePartyMembersOnScoreboard.get()
                     && event.getSegment().getScoreboardPart() instanceof PartyScoreboardPart) {
                 event.setCanceled(true);
             }
