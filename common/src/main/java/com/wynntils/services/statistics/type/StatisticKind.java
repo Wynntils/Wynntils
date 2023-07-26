@@ -4,6 +4,7 @@
  */
 package com.wynntils.services.statistics.type;
 
+import com.google.common.base.CaseFormat;
 import java.util.Locale;
 import net.minecraft.client.resources.language.I18n;
 import net.minecraft.stats.StatFormatter;
@@ -30,7 +31,7 @@ public enum StatisticKind {
 
     StatisticKind(StatFormatter formatter) {
         this.formatter = formatter;
-        this.id = name().toLowerCase(Locale.ROOT);
+        this.id = CaseFormat.LOWER_UNDERSCORE.to(CaseFormat.LOWER_CAMEL, name().toLowerCase(Locale.ROOT));
     }
 
     public static StatisticKind from(String statisticId) {
