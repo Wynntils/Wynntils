@@ -40,8 +40,8 @@ import com.wynntils.features.combat.MythicBoxScalerFeature;
 import com.wynntils.features.combat.PreventTradesDuelsFeature;
 import com.wynntils.features.combat.QuickCastFeature;
 import com.wynntils.features.combat.RangeVisualizerFeature;
-import com.wynntils.features.combat.SpellCastRenderFeature;
-import com.wynntils.features.combat.TokenTrackerFeature;
+import com.wynntils.features.combat.SpellCastVignetteFeature;
+import com.wynntils.features.combat.TokenTrackerBellFeature;
 import com.wynntils.features.commands.AddCommandExpansionFeature;
 import com.wynntils.features.commands.CommandAliasesFeature;
 import com.wynntils.features.commands.CustomCommandKeybindsFeature;
@@ -201,8 +201,8 @@ public final class FeatureManager extends Manager {
         registerFeature(new PreventTradesDuelsFeature());
         registerFeature(new QuickCastFeature());
         registerFeature(new RangeVisualizerFeature());
-        registerFeature(new SpellCastRenderFeature());
-        registerFeature(new TokenTrackerFeature());
+        registerFeature(new SpellCastVignetteFeature());
+        registerFeature(new TokenTrackerBellFeature());
         // endregion
 
         // region commands

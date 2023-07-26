@@ -18,7 +18,7 @@ import net.minecraft.sounds.SoundEvents;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 
 @ConfigCategory(Category.COMBAT)
-public class TokenTrackerFeature extends Feature {
+public class TokenTrackerBellFeature extends Feature {
     @RegisterConfig
     public final Config<Boolean> playSound = new Config<>(true);
 

@@ -18,7 +18,7 @@ import com.wynntils.utils.render.RenderUtils;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 
 @ConfigCategory(Category.COMBAT)
-public class SpellCastRenderFeature extends Feature {
+public class SpellCastVignetteFeature extends Feature {
     private static final int SHOW_VIGNETTE_TICKS = 40;
 
     @RegisterConfig
