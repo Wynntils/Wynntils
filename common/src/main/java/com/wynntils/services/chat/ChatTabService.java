@@ -5,8 +5,8 @@
 package com.wynntils.services.chat;
 
 import com.wynntils.core.WynntilsMod;
-import com.wynntils.core.components.Manager;
 import com.wynntils.core.components.Managers;
+import com.wynntils.core.components.Service;
 import com.wynntils.core.text.StyledText;
 import com.wynntils.features.chat.ChatTabsFeature;
 import com.wynntils.handlers.chat.event.ChatMessageReceivedEvent;
@@ -28,7 +28,7 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 
-public final class ChatTabService extends Manager {
+public final class ChatTabService extends Service {
     private final ChatComponent FALLBACK_CHAT = new ChatComponent(McUtils.mc());
 
     private ChatTab focusedTab = null;

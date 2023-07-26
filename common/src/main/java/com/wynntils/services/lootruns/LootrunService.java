@@ -9,8 +9,8 @@ import com.google.gson.JsonParser;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.components.Managers;
-import com.wynntils.core.components.Model;
 import com.wynntils.core.components.Models;
+import com.wynntils.core.components.Service;
 import com.wynntils.core.components.Services;
 import com.wynntils.features.LootrunFeature;
 import com.wynntils.mc.event.PlayerInteractEvent;
@@ -44,7 +44,7 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 
-public final class LootrunService extends Model {
+public final class LootrunService extends Service {
     public static final File LOOTRUNS = WynntilsMod.getModStorageDir("lootruns");
 
     private List<LootrunInstance> lootrunInstanceCache = new ArrayList<>();

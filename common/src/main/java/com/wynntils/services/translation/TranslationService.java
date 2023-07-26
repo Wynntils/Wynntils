@@ -5,7 +5,7 @@
 package com.wynntils.services.translation;
 
 import com.wynntils.core.WynntilsMod;
-import com.wynntils.core.components.Manager;
+import com.wynntils.core.components.Service;
 import com.wynntils.services.translation.type.TranslationProvider;
 import com.wynntils.utils.TaskUtils;
 import java.lang.reflect.Constructor;
@@ -13,7 +13,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Consumer;
 
-public final class TranslationService extends Manager {
+public final class TranslationService extends Service {
     private TranslationProvider translator = null;
 
     public TranslationService() {

@@ -5,8 +5,8 @@
 package com.wynntils.services.athena;
 
 import com.wynntils.core.WynntilsMod;
-import com.wynntils.core.components.Manager;
 import com.wynntils.core.components.Managers;
+import com.wynntils.core.components.Service;
 import com.wynntils.core.net.ApiResponse;
 import com.wynntils.core.net.UrlId;
 import com.wynntils.utils.FileUtils;
@@ -24,7 +24,7 @@ import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
 
-public final class UpdateService extends Manager {
+public final class UpdateService extends Service {
     private static final String WYNTILLS_UPDATE_FOLDER = "updates";
     private static final String WYNNTILS_UPDATE_FILE_NAME = "wynntils-update.jar";
     private static final File UPDATES_FOLDER = WynntilsMod.getModStorageDir(WYNTILLS_UPDATE_FOLDER);

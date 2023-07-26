@@ -29,7 +29,7 @@ import com.wynntils.utils.render.buffered.BufferedRenderUtils;
 import com.wynntils.utils.render.type.HorizontalAlignment;
 import com.wynntils.utils.render.type.TextShadow;
 import com.wynntils.utils.render.type.VerticalAlignment;
-import com.wynntils.utils.wynn.InventoryUtils;
+import com.wynntils.utils.wynn.ItemUtils;
 import net.minecraft.client.renderer.MultiBufferSource;
 
 @ConfigCategory(Category.OVERLAYS)
@@ -66,7 +66,7 @@ public class PowderSpecialBarOverlayFeature extends Feature {
             float powderSpecialCharge = Models.CharacterStats.getPowderSpecialCharge();
             Powder powderSpecialType = Models.CharacterStats.getPowderSpecialType();
             if (this.onlyIfWeaponHeld.get()
-                    && !InventoryUtils.isWeapon(McUtils.inventory().getSelected())) return;
+                    && !ItemUtils.isWeapon(McUtils.inventory().getSelected())) return;
             if (this.hideIfNoCharge.get() && (powderSpecialCharge == 0 || powderSpecialType == null)) return;
 
             renderWithSpecificSpecial(poseStack, bufferSource, powderSpecialCharge, powderSpecialType);

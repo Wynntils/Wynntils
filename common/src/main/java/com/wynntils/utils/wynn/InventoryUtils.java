@@ -4,15 +4,11 @@
  */
 package com.wynntils.utils.wynn;
 
-import com.wynntils.core.components.Models;
-import com.wynntils.core.text.StyledText;
-import com.wynntils.models.items.properties.GearTypeItemProperty;
 import com.wynntils.utils.mc.McUtils;
 import it.unimi.dsi.fastutil.ints.Int2ObjectMap;
 import it.unimi.dsi.fastutil.ints.Int2ObjectOpenHashMap;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 import net.minecraft.network.protocol.game.ServerboundContainerClickPacket;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.ClickType;
@@ -46,39 +42,11 @@ public final class InventoryUtils {
                 changedSlots));
     }
 
-    public static boolean isWeapon(ItemStack itemStack) {
-        Optional<GearTypeItemProperty> gearItemOpt =
-                Models.Item.asWynnItemPropery(itemStack, GearTypeItemProperty.class);
-        if (gearItemOpt.isEmpty()) return false;
-
-        return gearItemOpt.get().getGearType().isWeapon();
-    }
-
     public static List<ItemStack> getAccessories(Player player) {
         List<ItemStack> accessories = new ArrayList<>();
         ACCESSORY_SLOTS.forEach(
                 slot -> accessories.add(player.getInventory().items.get(slot)));
         return accessories;
-    }
-
-    public static boolean isItemListsEqual(List<ItemStack> firstItems, List<ItemStack> secondItems) {
-        if (firstItems.size() != secondItems.size()) return false;
-
-        for (int i = 0; i < firstItems.size(); i++) {
-            ItemStack newItem = firstItems.get(i);
-            ItemStack oldItem = secondItems.get(i);
-            if (!newItem.getItem().equals(oldItem.getItem())
-                    || newItem.getDamageValue() != oldItem.getDamageValue()
-                    || newItem.getCount() != oldItem.getCount()
-                    || !ItemStack.tagMatches(oldItem, newItem)) {
-                return false;
-            }
-        }
-        return true;
-    }
-
-    public static StyledText getItemName(ItemStack itemStack) {
-        return StyledText.fromComponent(itemStack.getHoverName());
     }
 
     public enum MouseClickType {

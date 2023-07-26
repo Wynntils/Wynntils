@@ -6,8 +6,8 @@ package com.wynntils.services.cosmetics;
 
 import com.mojang.blaze3d.platform.NativeImage;
 import com.wynntils.core.WynntilsMod;
-import com.wynntils.core.components.Model;
 import com.wynntils.core.components.Models;
+import com.wynntils.core.components.Service;
 import com.wynntils.models.players.WynntilsUser;
 import com.wynntils.models.players.type.CosmeticInfo;
 import com.wynntils.services.cosmetics.type.WynntilsCapeLayer;
@@ -31,7 +31,7 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.entity.player.PlayerModelPart;
 
-public class CosmeticsService extends Model {
+public class CosmeticsService extends Service {
     private static final BiFunction<
                     RenderLayerParent<AbstractClientPlayer, PlayerModel<AbstractClientPlayer>>,
                     EntityModelSet,

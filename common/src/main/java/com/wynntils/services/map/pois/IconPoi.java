@@ -7,7 +7,7 @@ package com.wynntils.services.map.pois;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.wynntils.core.components.Managers;
 import com.wynntils.core.text.StyledText;
-import com.wynntils.features.map.MapFeature;
+import com.wynntils.features.map.MainMapFeature;
 import com.wynntils.utils.MathUtils;
 import com.wynntils.utils.colors.CommonColors;
 import com.wynntils.utils.colors.CustomColor;
@@ -45,7 +45,7 @@ public abstract class IconPoi implements Poi {
                         zoom,
                         minZoom
                                 * (1
-                                        - Managers.Feature.getFeatureInstance(MapFeature.class)
+                                        - Managers.Feature.getFeatureInstance(MainMapFeature.class)
                                                 .poiFadeAdjustment
                                                 .get()),
                         minZoom,
