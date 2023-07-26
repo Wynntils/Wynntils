@@ -40,7 +40,7 @@ import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 
 @ConfigCategory(Category.OVERLAYS)
-public class CustomPlayerListFeature extends Feature {
+public class CustomPlayerListOverlayFeature extends Feature {
     @OverlayInfo(renderType = RenderEvent.ElementType.GUI)
     public final CustomPlayerListOverlay customPlayerListOverlay = new CustomPlayerListOverlay();
 
