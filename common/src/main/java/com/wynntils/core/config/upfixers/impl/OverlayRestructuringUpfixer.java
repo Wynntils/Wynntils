@@ -20,7 +20,8 @@ public class OverlayRestructuringUpfixer extends RenamedPrefixesUpfixer {
             Pair.of("dustomPlayerListFeature.", "customPlayerListOverlayFeature."),
             Pair.of("guildAttackTimerOverlayFeature.", "territoryAttackTimerOverlayFeature."),
             Pair.of("hadesPartyOverlayFeature.", "partyMembersOverlayFeature."),
-            Pair.of("mobTotemTrackingFeature.", "mobTotemTimerOverlayFeature."));
+            Pair.of("mobTotemTrackingFeature.", "mobTotemTimerOverlayFeature."),
+            Pair.of("shamanMasksOverlayFeature.", "shamanMaskOverlayFeature."));
 
     @Override
     protected List<Pair<String, String>> getRenamedPrefixes() {
