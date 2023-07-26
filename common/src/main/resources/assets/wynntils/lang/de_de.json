@@ -65,7 +65,7 @@
   "feature.wynntils.guildAttackTimerOverlay.overlay.territoryAttackTimer.textShadow.description": "Wie soll der Textschatten aussehen?",
   "feature.wynntils.guildAttackTimerOverlay.overlay.territoryAttackTimer.textShadow.name": "Textschatten",
   "feature.wynntils.lowHealthVignette.color.name": "Vignetten-Farbe",
-  "feature.wynntils.map.name": "Karte",
+  "feature.wynntils.mainMap.name": "Karte",
   "feature.wynntils.mobTotemTracking.overlay.mobTotemTimer.textShadow.description": "Wie soll der Textschatten aussehen?",
   "feature.wynntils.mobTotemTracking.overlay.mobTotemTimer.textShadow.name": "Textschatten",
   "feature.wynntils.npcDialogueOverlay.overlay.npcDialogue.textShadow.description": "Wie soll der Textschatten aussehen?",
