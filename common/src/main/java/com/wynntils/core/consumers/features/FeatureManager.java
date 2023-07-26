@@ -129,6 +129,7 @@ import com.wynntils.features.ui.WynncraftPauseScreenFeature;
 import com.wynntils.features.ui.WynntilsContentBookFeature;
 import com.wynntils.features.utilities.AutoApplyResourcePackFeature;
 import com.wynntils.features.utilities.GammabrightFeature;
+import com.wynntils.features.utilities.GavellianAndWynnicTranslationFeature;
 import com.wynntils.features.utilities.SilencerFeature;
 import com.wynntils.features.utilities.TranslationFeature;
 import com.wynntils.features.wynntils.BetaWarningFeature;
@@ -181,6 +182,7 @@ public final class FeatureManager extends Manager {
         registerFeature(new ChatTimestampFeature());
         registerFeature(new DeathCoordinatesFeature());
         registerFeature(new DialogueOptionOverrideFeature());
+        registerFeature(new GavellianAndWynnicTranslationFeature());
         registerFeature(new GuildRankReplacementFeature());
         registerFeature(new MessageFilterFeature());
         // endregion

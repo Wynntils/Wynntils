@@ -7,6 +7,7 @@ package com.wynntils.core.components;
 import com.wynntils.services.athena.UpdateService;
 import com.wynntils.services.athena.WynntilsAccountService;
 import com.wynntils.services.chat.ChatTabService;
+import com.wynntils.services.wynnlanguage.WynnLanguageService;
 import com.wynntils.services.cosmetics.CosmeticsService;
 import com.wynntils.services.discord.DiscordService;
 import com.wynntils.services.favorites.FavoritesService;
@@ -38,4 +39,5 @@ public final class Services {
     public static final TranslationService Translation = new TranslationService();
     public static final UpdateService Update = new UpdateService();
     public static final WynntilsAccountService WynntilsAccount = new WynntilsAccountService();
+    public static final WynnLanguageService WynnLanguageSerivce = new WynnLanguageService();
 }

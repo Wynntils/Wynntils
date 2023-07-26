@@ -79,7 +79,7 @@ public class TranslationFeature extends Feature {
     }
 
     @SubscribeEvent(priority = EventPriority.HIGHEST)
-    public void onNpcDialgue(NpcDialogEvent e) {
+    public void onNpcDialogue(NpcDialogEvent e) {
         if (!translateNpc.get()) return;
         if (languageName.get().isEmpty()) return;
 
@@ -119,8 +119,8 @@ public class TranslationFeature extends Feature {
         return origCoded.getString().replaceAll("(§[0-9a-fklmnor])", "{$1}");
     }
 
-    private static class TranslatedNpcDialogEvent extends NpcDialogEvent {
-        protected TranslatedNpcDialogEvent(List<Component> chatMsg, NpcDialogueType type, boolean isProtected) {
+    public static class TranslatedNpcDialogEvent extends NpcDialogEvent {
+        public TranslatedNpcDialogEvent(List<Component> chatMsg, NpcDialogueType type, boolean isProtected) {
             super(chatMsg, type, isProtected);
         }
     }
