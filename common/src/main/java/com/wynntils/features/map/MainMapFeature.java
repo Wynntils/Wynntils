@@ -40,7 +40,7 @@ import net.minecraftforge.eventbus.api.SubscribeEvent;
 import org.lwjgl.glfw.GLFW;
 
 @ConfigCategory(Category.MAP)
-public class MapFeature extends Feature {
+public class MainMapFeature extends Feature {
     @RegisterConfig
     public final HiddenConfig<List<CustomPoi>> customPois = new HiddenConfig<>(new ArrayList<>());
 

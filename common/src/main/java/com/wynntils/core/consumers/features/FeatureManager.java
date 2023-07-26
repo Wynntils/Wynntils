@@ -70,7 +70,7 @@ import com.wynntils.features.inventory.UnidentifiedItemIconFeature;
 import com.wynntils.features.map.BeaconBeamFeature;
 import com.wynntils.features.map.GatheringNodeCooldownFeature;
 import com.wynntils.features.map.GuildMapFeature;
-import com.wynntils.features.map.MapFeature;
+import com.wynntils.features.map.MainMapFeature;
 import com.wynntils.features.map.MinimapFeature;
 import com.wynntils.features.map.WorldWaypointDistanceFeature;
 import com.wynntils.features.overlays.ArrowShieldTrackingFeature;
@@ -234,7 +234,7 @@ public final class FeatureManager extends Manager {
         registerFeature(new BeaconBeamFeature());
         registerFeature(new GatheringNodeCooldownFeature());
         registerFeature(new GuildMapFeature());
-        registerFeature(new MapFeature());
+        registerFeature(new MainMapFeature());
         registerFeature(new MinimapFeature());
         registerFeature(new WorldWaypointDistanceFeature());
         // endregion

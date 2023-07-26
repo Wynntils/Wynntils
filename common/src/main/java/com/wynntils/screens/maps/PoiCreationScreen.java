@@ -11,7 +11,7 @@ import com.wynntils.core.components.Managers;
 import com.wynntils.core.components.Services;
 import com.wynntils.core.consumers.screens.WynntilsScreen;
 import com.wynntils.core.text.StyledText;
-import com.wynntils.features.map.MapFeature;
+import com.wynntils.features.map.MainMapFeature;
 import com.wynntils.screens.base.TextboxScreen;
 import com.wynntils.screens.base.widgets.TextInputBoxWidget;
 import com.wynntils.services.map.pois.CustomPoi;
@@ -473,12 +473,12 @@ public final class PoiCreationScreen extends WynntilsScreen implements TextboxSc
                 selectedVisiblity);
 
         if (oldPoi != null) {
-            List<CustomPoi> pois = Managers.Feature.getFeatureInstance(MapFeature.class)
+            List<CustomPoi> pois = Managers.Feature.getFeatureInstance(MainMapFeature.class)
                     .customPois
                     .get();
             pois.set(pois.indexOf(oldPoi), poi);
         } else {
-            Managers.Feature.getFeatureInstance(MapFeature.class)
+            Managers.Feature.getFeatureInstance(MainMapFeature.class)
                     .customPois
                     .get()
                     .add(poi);

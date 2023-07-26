@@ -9,7 +9,7 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import com.wynntils.core.components.Managers;
 import com.wynntils.core.consumers.screens.WynntilsScreen;
 import com.wynntils.core.text.StyledText;
-import com.wynntils.features.map.MapFeature;
+import com.wynntils.features.map.MainMapFeature;
 import com.wynntils.screens.maps.widgets.PoiManagerWidget;
 import com.wynntils.services.map.pois.CustomPoi;
 import com.wynntils.utils.colors.CommonColors;
@@ -114,8 +114,9 @@ public final class PoiManagementScreen extends WynntilsScreen {
             undoDeleteButton.active = false;
         }
 
-        waypoints =
-                Managers.Feature.getFeatureInstance(MapFeature.class).customPois.get();
+        waypoints = Managers.Feature.getFeatureInstance(MainMapFeature.class)
+                .customPois
+                .get();
 
         if (currentPage * pageHeight > waypoints.size() - 1) {
             currentPage = (waypoints.size() - 1) / pageHeight;
@@ -144,7 +145,10 @@ public final class PoiManagementScreen extends WynntilsScreen {
             return;
         }
 
-        Managers.Feature.getFeatureInstance(MapFeature.class).customPois.get().addAll(List.of(customPois));
+        Managers.Feature.getFeatureInstance(MainMapFeature.class)
+                .customPois
+                .get()
+                .addAll(List.of(customPois));
         Managers.Config.saveConfig();
 
         populatePois();
@@ -234,8 +238,9 @@ public final class PoiManagementScreen extends WynntilsScreen {
 
         this.poiManagerWidgets.clear();
 
-        waypoints =
-                Managers.Feature.getFeatureInstance(MapFeature.class).customPois.get();
+        waypoints = Managers.Feature.getFeatureInstance(MainMapFeature.class)
+                .customPois
+                .get();
 
         if (Math.min(pageHeight, waypoints.size() - pageHeight * currentPage) == 0 && currentPage != 0) {
             previousPage();
@@ -279,7 +284,7 @@ public final class PoiManagementScreen extends WynntilsScreen {
     }
 
     private void undoDelete() {
-        Managers.Feature.getFeatureInstance(MapFeature.class)
+        Managers.Feature.getFeatureInstance(MainMapFeature.class)
                 .customPois
                 .get()
                 .add(deletedIndexes.get(deletedIndexes.size() - 1), deletedPois.get(deletedPois.size() - 1));
