@@ -104,7 +104,7 @@ public abstract class Overlay extends AbstractConfigurable implements Translatab
     }
 
     protected String getDeclaringClassName() {
-        return this.getClass().getDeclaringClass().getSimpleName();
+        return Managers.Overlay.getOverlayParent(this).getClass().getSimpleName();
     }
 
     protected String getNameCamelCase() {
