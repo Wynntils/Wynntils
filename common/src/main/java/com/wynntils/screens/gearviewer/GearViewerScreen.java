@@ -18,7 +18,7 @@ import com.wynntils.utils.mc.LoreUtils;
 import com.wynntils.utils.mc.McUtils;
 import com.wynntils.utils.render.RenderUtils;
 import com.wynntils.utils.render.Texture;
-import com.wynntils.utils.wynn.WynnItemMatchers;
+import com.wynntils.utils.wynn.ItemUtils;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -81,7 +81,7 @@ public final class GearViewerScreen extends WynntilsContainerScreen<GearViewerMe
 
         // This must specifically NOT be normalized; the ֎ is significant
         String gearName = StyledText.fromComponent(itemStack.getHoverName()).getStringWithoutFormatting();
-        MutableComponent description = WynnItemMatchers.getNonGearDescription(itemStack, gearName);
+        MutableComponent description = ItemUtils.getNonGearDescription(itemStack, gearName);
         if (description != null) {
             itemStack.setHoverName(description);
             return itemStack;
