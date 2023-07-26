@@ -13,8 +13,8 @@ public record StatisticEntry(int total, int count, int min, int max, long firstM
                 count + 1,
                 Math.min(min, amount),
                 Math.max(max, amount),
-                System.currentTimeMillis(),
-                firstModified);
+                firstModified,
+                System.currentTimeMillis());
     }
 
     public int average() {
