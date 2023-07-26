@@ -14,7 +14,6 @@ import com.wynntils.utils.mc.McUtils;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Stream;
-
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.item.ItemStack;
 
@@ -62,8 +61,9 @@ public class WynnLanguageService extends Manager {
         Stream<DiscoveryInfo> discoveryInfoStream =
                 Models.Discovery.getAllCompletedDiscoveries(ActivitySortOrder.ALPHABETIC);
 
-        String nameToFind =
-                discoveryToCheck == WynnLanguage.WYNNIC ? WYNNIC_TRANSCRIBER_DISCOVERY : GAVELLIAN_TRANSCRIBER_DISCOVERY;
+        String nameToFind = discoveryToCheck == WynnLanguage.WYNNIC
+                ? WYNNIC_TRANSCRIBER_DISCOVERY
+                : GAVELLIAN_TRANSCRIBER_DISCOVERY;
 
         Optional<DiscoveryInfo> foundDiscoveryInfo = discoveryInfoStream
                 .filter(discoveryInfo -> discoveryInfo.getName().equals(nameToFind))

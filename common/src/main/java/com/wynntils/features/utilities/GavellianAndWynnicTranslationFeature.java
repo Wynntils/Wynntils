@@ -502,7 +502,8 @@ public class GavellianAndWynnicTranslationFeature extends Feature {
             }
 
             changes.remove(part);
-            StyledTextPart newPart = new StyledTextPart(partText, part.getPartStyle().getStyle(), null, Style.EMPTY);
+            StyledTextPart newPart =
+                    new StyledTextPart(partText, part.getPartStyle().getStyle(), null, Style.EMPTY);
             changes.add(newPart);
 
             return IterationDecision.CONTINUE;

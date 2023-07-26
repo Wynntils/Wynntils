@@ -5,7 +5,6 @@
 package com.wynntils.screens.translation.widgets;
 
 import com.mojang.blaze3d.vertex.PoseStack;
-import com.wynntils.core.components.Managers;
 import com.wynntils.core.components.Services;
 import com.wynntils.core.text.StyledText;
 import com.wynntils.screens.base.widgets.WynntilsButton;

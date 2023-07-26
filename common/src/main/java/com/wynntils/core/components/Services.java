@@ -7,7 +7,6 @@ package com.wynntils.core.components;
 import com.wynntils.services.athena.UpdateService;
 import com.wynntils.services.athena.WynntilsAccountService;
 import com.wynntils.services.chat.ChatTabService;
-import com.wynntils.services.wynnlanguage.WynnLanguageService;
 import com.wynntils.services.cosmetics.CosmeticsService;
 import com.wynntils.services.discord.DiscordService;
 import com.wynntils.services.favorites.FavoritesService;
@@ -21,6 +20,7 @@ import com.wynntils.services.splashes.SplashService;
 import com.wynntils.services.statistics.StatisticsService;
 import com.wynntils.services.stopwatch.StopwatchService;
 import com.wynntils.services.translation.TranslationService;
+import com.wynntils.services.wynnlanguage.WynnLanguageService;
 
 public final class Services {
     public static final ChatTabService ChatTab = new ChatTabService();
