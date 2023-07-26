@@ -26,22 +26,15 @@ import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 
 @ConfigCategory(Category.OVERLAYS)
-public class ShamanMasksOverlayFeature extends Feature {
+public class ShamanMaskOverlayFeature extends Feature {
     @OverlayInfo(renderType = RenderEvent.ElementType.GUI)
     public final Overlay shamanMaskOverlay = new ShamanMaskOverlay();
 
-    @RegisterConfig
-    public final Config<Boolean> hideMaskTitles = new Config<>(true);
-
-    @SubscribeEvent
-    public void onShamanMaskTitle(ShamanMaskTitlePacketEvent event) {
-        if (hideMaskTitles.get()) {
-            event.setCanceled(true);
-        }
-    }
-
     public static class ShamanMaskOverlay extends TextOverlay {
         private static final String TEMPLATE = "{shaman_mask} mask";
+
+        @RegisterConfig
+        public final Config<Boolean> hideMaskTitles = new Config<>(true);
 
         @RegisterConfig
         public final Config<Boolean> displayNone = new Config<>(false);
@@ -57,6 +50,13 @@ public class ShamanMasksOverlayFeature extends Feature {
                     new OverlaySize(81, 21),
                     HorizontalAlignment.CENTER,
                     VerticalAlignment.MIDDLE);
+        }
+
+        @SubscribeEvent
+        public void onShamanMaskTitle(ShamanMaskTitlePacketEvent event) {
+            if (hideMaskTitles.get()) {
+                event.setCanceled(true);
+            }
         }
 
         @Override

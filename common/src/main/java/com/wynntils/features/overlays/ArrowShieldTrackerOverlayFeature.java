@@ -20,7 +20,7 @@ import com.wynntils.utils.render.type.HorizontalAlignment;
 import com.wynntils.utils.render.type.VerticalAlignment;
 
 @ConfigCategory(Category.OVERLAYS)
-public class ArrowShieldTrackingFeature extends Feature {
+public class ArrowShieldTrackerOverlayFeature extends Feature {
     @OverlayInfo(renderType = RenderEvent.ElementType.GUI)
     private final ArrowShieldTrackerOverlay arrowShieldTrackerOverlay = new ArrowShieldTrackerOverlay();
 

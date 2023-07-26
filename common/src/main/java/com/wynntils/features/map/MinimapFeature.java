@@ -501,6 +501,53 @@ public class MinimapFeature extends Feature {
 
         @Override
         protected void onConfigUpdate(ConfigHolder configHolder) {}
+
+        private enum CompassRenderType {
+            NONE,
+            NORTH,
+            ALL
+        }
+
+        private enum MapMaskType {
+            RECTANGULAR,
+            CIRCLE
+        }
+
+        private enum MapBorderType {
+            GILDED(Texture.GILDED_MAP_TEXTURES, new BorderInfo(0, 262, 262, 524), new BorderInfo(0, 0, 262, 262), 1),
+            PAPER(Texture.PAPER_MAP_TEXTURES, new BorderInfo(0, 0, 217, 217), new BorderInfo(0, 217, 217, 438), 3),
+            WYNN(Texture.WYNN_MAP_TEXTURES, new BorderInfo(0, 0, 112, 112), new BorderInfo(0, 112, 123, 235), 3);
+
+            private final Texture texture;
+            private final BorderInfo square;
+            private final BorderInfo circle;
+            private final int groovesSize;
+
+            MapBorderType(Texture texture, BorderInfo square, BorderInfo circle, int groovesSize) {
+                this.texture = texture;
+                this.square = square;
+                this.circle = circle;
+                this.groovesSize = groovesSize;
+            }
+
+            private Texture texture() {
+                return texture;
+            }
+
+            private int groovesSize() {
+                return groovesSize;
+            }
+
+            private BorderInfo square() {
+                return square;
+            }
+
+            private BorderInfo circle() {
+                return circle;
+            }
+        }
+
+        private record BorderInfo(int tx1, int ty1, int tx2, int ty2) {}
     }
 
     public static class CoordinateOverlay extends TextOverlay {
@@ -568,51 +615,4 @@ public class MinimapFeature extends Feature {
             return TEMPLATE;
         }
     }
-
-    public enum CompassRenderType {
-        NONE,
-        NORTH,
-        ALL
-    }
-
-    public enum MapMaskType {
-        RECTANGULAR,
-        CIRCLE
-    }
-
-    public enum MapBorderType {
-        GILDED(Texture.GILDED_MAP_TEXTURES, new BorderInfo(0, 262, 262, 524), new BorderInfo(0, 0, 262, 262), 1),
-        PAPER(Texture.PAPER_MAP_TEXTURES, new BorderInfo(0, 0, 217, 217), new BorderInfo(0, 217, 217, 438), 3),
-        WYNN(Texture.WYNN_MAP_TEXTURES, new BorderInfo(0, 0, 112, 112), new BorderInfo(0, 112, 123, 235), 3);
-
-        private final Texture texture;
-        private final BorderInfo square;
-        private final BorderInfo circle;
-        private final int groovesSize;
-
-        MapBorderType(Texture texture, BorderInfo square, BorderInfo circle, int groovesSize) {
-            this.texture = texture;
-            this.square = square;
-            this.circle = circle;
-            this.groovesSize = groovesSize;
-        }
-
-        private Texture texture() {
-            return texture;
-        }
-
-        private int groovesSize() {
-            return groovesSize;
-        }
-
-        private BorderInfo square() {
-            return square;
-        }
-
-        private BorderInfo circle() {
-            return circle;
-        }
-    }
-
-    public record BorderInfo(int tx1, int ty1, int tx2, int ty2) {}
 }

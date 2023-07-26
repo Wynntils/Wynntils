@@ -16,11 +16,7 @@ import com.wynntils.core.consumers.features.overlays.TextOverlay;
 import com.wynntils.core.consumers.features.overlays.annotations.OverlayInfo;
 import com.wynntils.core.text.StyledText;
 import com.wynntils.mc.event.RenderEvent;
-import com.wynntils.mc.extension.EntityExtension;
-import com.wynntils.models.abilities.event.TotemEvent;
 import com.wynntils.utils.colors.ColorChatFormatting;
-import com.wynntils.utils.colors.CommonColors;
-import com.wynntils.utils.colors.CustomColor;
 import com.wynntils.utils.mc.RenderedStringUtils;
 import com.wynntils.utils.render.type.HorizontalAlignment;
 import com.wynntils.utils.render.type.VerticalAlignment;
@@ -28,49 +24,11 @@ import java.util.Arrays;
 import java.util.Objects;
 import java.util.stream.Collectors;
 import net.minecraft.ChatFormatting;
-import net.minecraft.world.entity.decoration.ArmorStand;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
 
 @ConfigCategory(Category.OVERLAYS)
-public class ShamanTotemTrackingFeature extends Feature {
+public class ShamanTotemTimerOverlayFeature extends Feature {
     @OverlayInfo(renderType = RenderEvent.ElementType.GUI)
     private final ShamanTotemTimerOverlay shamanTotemTimerOverlay = new ShamanTotemTimerOverlay();
-
-    @RegisterConfig
-    public final Config<Boolean> highlightShamanTotems = new Config<>(true);
-
-    @RegisterConfig
-    public final Config<CustomColor> firstTotemColor = new Config<>(CommonColors.WHITE);
-
-    @RegisterConfig
-    public final Config<CustomColor> secondTotemColor = new Config<>(CommonColors.BLUE);
-
-    @RegisterConfig
-    public final Config<CustomColor> thirdTotemColor = new Config<>(CommonColors.RED);
-
-    private static final int ENTITY_GLOWING_FLAG = 6;
-
-    @SubscribeEvent
-    public void onTotemSummoned(TotemEvent.Summoned e) {
-        if (!highlightShamanTotems.get()) return;
-
-        int totemNumber = e.getTotemNumber();
-        ArmorStand totemAS = e.getTotemEntity();
-
-        CustomColor color =
-                switch (totemNumber) {
-                    case 1 -> firstTotemColor.get();
-                    case 2 -> secondTotemColor.get();
-                    case 3 -> thirdTotemColor.get();
-                    default -> throw new IllegalArgumentException(
-                            "totemNumber should be 1, 2, or 3! (color switch in #onTotemSummoned in ShamanTotemTrackingFeature");
-                };
-
-        ((EntityExtension) totemAS).setGlowColor(color);
-
-        totemAS.setGlowingTag(true);
-        totemAS.setSharedFlag(ENTITY_GLOWING_FLAG, true);
-    }
 
     public static class ShamanTotemTimerOverlay extends TextOverlay {
         @RegisterConfig
@@ -84,12 +42,6 @@ public class ShamanTotemTrackingFeature extends Feature {
 
         @RegisterConfig
         public final Config<ColorChatFormatting> thirdTotemTextColor = new Config<>(ColorChatFormatting.RED);
-
-        private final ChatFormatting[] totemColorsArray = {
-            firstTotemTextColor.get().getChatFormatting(),
-            secondTotemTextColor.get().getChatFormatting(),
-            thirdTotemTextColor.get().getChatFormatting()
-        };
 
         protected ShamanTotemTimerOverlay() {
             super(
@@ -135,33 +87,39 @@ public class ShamanTotemTrackingFeature extends Feature {
                     .flatMap(Arrays::stream)
                     .toArray(StyledText[]::new);
         }
-    }
 
-    public enum TotemTrackingDetail {
-        NONE(
-                "{IF_STR(EQ_STR(SHAMAN_TOTEM_STATE(%d); \"ACTIVE\"); CONCAT(\"Totem %d (\"; STRING(SHAMAN_TOTEM_TIME_LEFT(%d));\" s)\"); IF_STR(EQ_STR(SHAMAN_TOTEM_STATE(%d); \"SUMMONED\"); \"Totem %d summoned\"; \"\"))}",
-                "Totem 1 (10 s)"),
-        COORDS(
-                "{IF_STR(EQ_STR(SHAMAN_TOTEM_STATE(%d); \"ACTIVE\"); CONCAT(\"Totem %d (\"; STRING(SHAMAN_TOTEM_TIME_LEFT(%d));\" s)\"; \" \"; SHAMAN_TOTEM_LOCATION(%d)); IF_STR(EQ_STR(SHAMAN_TOTEM_STATE(%d); \"SUMMONED\"); \"Totem %d summoned\"; \"\"))}",
-                "Totem 2 (15 s) [1425, 12, 512]"),
-        DISTANCE(
-                "{IF_STR(EQ_STR(SHAMAN_TOTEM_STATE(%d); \"ACTIVE\"); CONCAT(\"Totem %d (\"; STRING(SHAMAN_TOTEM_TIME_LEFT(%d));\" s, \"; STRING(INT(SHAMAN_TOTEM_DISTANCE(%d))); \" m)\"); IF_STR(EQ_STR(SHAMAN_TOTEM_STATE(%d); \"SUMMONED\"); \"Totem %d summoned\"; \"\"))}",
-                "Totem 3 (7s, 10 m)");
+        private final ChatFormatting[] totemColorsArray = {
+            firstTotemTextColor.get().getChatFormatting(),
+            secondTotemTextColor.get().getChatFormatting(),
+            thirdTotemTextColor.get().getChatFormatting()
+        };
 
-        private final String template;
-        private final String previewTemplate;
+        private enum TotemTrackingDetail {
+            NONE(
+                    "{IF_STR(EQ_STR(SHAMAN_TOTEM_STATE(%d); \"ACTIVE\"); CONCAT(\"Totem %d (\"; STRING(SHAMAN_TOTEM_TIME_LEFT(%d));\" s)\"); IF_STR(EQ_STR(SHAMAN_TOTEM_STATE(%d); \"SUMMONED\"); \"Totem %d summoned\"; \"\"))}",
+                    "Totem 1 (10 s)"),
+            COORDS(
+                    "{IF_STR(EQ_STR(SHAMAN_TOTEM_STATE(%d); \"ACTIVE\"); CONCAT(\"Totem %d (\"; STRING(SHAMAN_TOTEM_TIME_LEFT(%d));\" s)\"; \" \"; SHAMAN_TOTEM_LOCATION(%d)); IF_STR(EQ_STR(SHAMAN_TOTEM_STATE(%d); \"SUMMONED\"); \"Totem %d summoned\"; \"\"))}",
+                    "Totem 2 (15 s) [1425, 12, 512]"),
+            DISTANCE(
+                    "{IF_STR(EQ_STR(SHAMAN_TOTEM_STATE(%d); \"ACTIVE\"); CONCAT(\"Totem %d (\"; STRING(SHAMAN_TOTEM_TIME_LEFT(%d));\" s, \"; STRING(INT(SHAMAN_TOTEM_DISTANCE(%d))); \" m)\"); IF_STR(EQ_STR(SHAMAN_TOTEM_STATE(%d); \"SUMMONED\"); \"Totem %d summoned\"; \"\"))}",
+                    "Totem 3 (7s, 10 m)");
 
-        TotemTrackingDetail(String template, String previewTemplate) {
-            this.template = template;
-            this.previewTemplate = previewTemplate;
-        }
+            private final String template;
+            private final String previewTemplate;
 
-        private String getTemplate() {
-            return template;
-        }
+            TotemTrackingDetail(String template, String previewTemplate) {
+                this.template = template;
+                this.previewTemplate = previewTemplate;
+            }
 
-        private String getPreviewTemplate() {
-            return previewTemplate;
+            private String getTemplate() {
+                return template;
+            }
+
+            private String getPreviewTemplate() {
+                return previewTemplate;
+            }
         }
     }
 }

@@ -6,7 +6,6 @@ package com.wynntils.features.overlays;
 
 import com.mojang.blaze3d.platform.Window;
 import com.mojang.blaze3d.vertex.PoseStack;
-import com.wynntils.core.components.Managers;
 import com.wynntils.core.components.Models;
 import com.wynntils.core.config.Category;
 import com.wynntils.core.config.Config;
@@ -41,17 +40,9 @@ import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 
 @ConfigCategory(Category.OVERLAYS)
-public class CustomPlayerListFeature extends Feature {
+public class CustomPlayerListOverlayFeature extends Feature {
     @OverlayInfo(renderType = RenderEvent.ElementType.GUI)
     public final CustomPlayerListOverlay customPlayerListOverlay = new CustomPlayerListOverlay();
-
-    @SubscribeEvent
-    public void onRender(RenderEvent.Pre event) {
-        if (event.getType() == RenderEvent.ElementType.PLAYER_TAB_LIST
-                && Managers.Overlay.isEnabled(customPlayerListOverlay)) {
-            event.setCanceled(true);
-        }
-    }
 
     private static class CustomPlayerListOverlay extends Overlay {
         private static final Comparator<PlayerInfo> PLAYER_INFO_COMPARATOR =
@@ -83,6 +74,25 @@ public class CustomPlayerListFeature extends Feature {
                     Texture.PLAYER_INFO_OVERLAY.height());
         }
 
+        @SubscribeEvent
+        public void onRender(RenderEvent.Pre event) {
+            if (event.getType() == RenderEvent.ElementType.PLAYER_TAB_LIST) {
+                event.setCanceled(true);
+            }
+        }
+
+        @Override
+        public void render(PoseStack poseStack, MultiBufferSource bufferSource, float partialTicks, Window window) {
+            if (!McUtils.options().keyPlayerList.isDown() && animationPercentage.finishedClosingAnimation()) return;
+            renderPlayerList(poseStack, animationPercentage.getAnimation());
+        }
+
+        @Override
+        public void renderPreview(
+                PoseStack poseStack, MultiBufferSource bufferSource, float partialTicks, Window window) {
+            renderPlayerList(poseStack, 1);
+        }
+
         private static List<StyledText> getAvailablePlayers() {
             PlayerTabOverlay defaultTabList = McUtils.mc().gui.getTabList();
 
@@ -98,18 +108,6 @@ public class CustomPlayerListFeature extends Feature {
                             styledText.replace(ChatFormatting.GRAY.toString(), ChatFormatting.BLACK.toString()))
                     .map(StyledText::fromString)
                     .toList();
-        }
-
-        @Override
-        public void render(PoseStack poseStack, MultiBufferSource bufferSource, float partialTicks, Window window) {
-            if (!McUtils.options().keyPlayerList.isDown() && animationPercentage.finishedClosingAnimation()) return;
-            renderPlayerList(poseStack, animationPercentage.getAnimation());
-        }
-
-        @Override
-        public void renderPreview(
-                PoseStack poseStack, MultiBufferSource bufferSource, float partialTicks, Window window) {
-            renderPlayerList(poseStack, 1);
         }
 
         private void renderPlayerList(PoseStack poseStack, double animation) {

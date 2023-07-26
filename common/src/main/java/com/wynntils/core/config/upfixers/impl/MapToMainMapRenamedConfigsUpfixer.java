@@ -4,27 +4,16 @@
  */
 package com.wynntils.core.config.upfixers.impl;
 
-import com.google.gson.JsonElement;
-import com.google.gson.JsonObject;
-import com.wynntils.core.config.ConfigHolder;
-import com.wynntils.core.config.upfixers.ConfigUpfixer;
-import java.util.ArrayList;
+import com.wynntils.core.config.upfixers.RenamedPrefixesUpfixer;
+import com.wynntils.utils.type.Pair;
 import java.util.List;
-import java.util.Set;
 
-public class MapToMainMapRenamedConfigsUpfixer implements ConfigUpfixer {
+public class MapToMainMapRenamedConfigsUpfixer extends RenamedPrefixesUpfixer {
+    private static final List<Pair<String, String>> RENAMED_PREFIXES =
+            List.of(Pair.of("mapFeature.", "mainMapFeature."));
+
     @Override
-    public boolean apply(JsonObject configObject, Set<ConfigHolder> configHolders) {
-        List<String> configKeys = new ArrayList<>(configObject.keySet());
-        for (String configName : configKeys) {
-            if (configName.startsWith("mapFeature.")) {
-                String newConfigName = configName.replace("mapFeature.", "mainMapFeature.");
-                JsonElement value = configObject.get(configName);
-                configObject.add(newConfigName, value);
-                configObject.remove(configName);
-            }
-        }
-
-        return true;
+    protected List<Pair<String, String>> getRenamedPrefixes() {
+        return RENAMED_PREFIXES;
     }
 }

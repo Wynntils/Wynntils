@@ -40,7 +40,6 @@ import com.wynntils.utils.render.type.ManaTexture;
 import com.wynntils.utils.render.type.TextShadow;
 import com.wynntils.utils.render.type.VerticalAlignment;
 import com.wynntils.utils.type.CappedValue;
-import java.util.Map;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 
@@ -66,32 +65,6 @@ public class GameBarsOverlayFeature extends Feature {
 
     @OverlayInfo(renderType = RenderEvent.ElementType.GUI)
     private final CorruptedBarOverlay corruptedBarOverlay = new CorruptedBarOverlay();
-
-    private final Map<Class<? extends TrackedBar>, BaseBarOverlay> barToOverlayMap = Map.of(
-            BloodPoolBar.class,
-            bloodPoolBarOverlay,
-            ManaBankBar.class,
-            manaBankBarOverlay,
-            AwakenedBar.class,
-            awakenedProgressBarOverlay,
-            FocusBar.class,
-            focusBarOverlay,
-            CorruptedBar.class,
-            corruptedBarOverlay);
-
-    @SubscribeEvent
-    public void onBossBarAdd(BossBarAddedEvent event) {
-        BaseBarOverlay overlay = getOverlayFromTrackedBar(event.getTrackedBar());
-        if (overlay == null) return;
-
-        if (!overlay.shouldDisplayOriginal.get()) {
-            event.setCanceled(true);
-        }
-    }
-
-    private BaseBarOverlay getOverlayFromTrackedBar(TrackedBar trackedBar) {
-        return barToOverlayMap.get(trackedBar.getClass());
-    }
 
     public abstract static class BaseBarOverlay extends Overlay {
         @RegisterConfig("feature.wynntils.gameBarsOverlay.overlay.baseBar.textShadow")
@@ -123,9 +96,20 @@ public class GameBarsOverlayFeature extends Feature {
 
         protected abstract BossBarProgress progress();
 
+        protected abstract Class<? extends TrackedBar> getTrackedBarClass();
+
         protected abstract String icon();
 
         protected abstract boolean isActive();
+
+        @SubscribeEvent
+        public void onBossBarAdd(BossBarAddedEvent event) {
+            if (!event.getTrackedBar().getClass().equals(getTrackedBarClass())) return;
+
+            if (!shouldDisplayOriginal.get()) {
+                event.setCanceled(true);
+            }
+        }
 
         @SubscribeEvent
         public void onTick(TickEvent event) {
@@ -348,6 +332,11 @@ public class GameBarsOverlayFeature extends Feature {
         }
 
         @Override
+        protected Class<? extends TrackedBar> getTrackedBarClass() {
+            return null;
+        }
+
+        @Override
         protected Texture getTexture() {
             return Texture.HEALTH_BAR;
         }
@@ -391,6 +380,11 @@ public class GameBarsOverlayFeature extends Feature {
         }
 
         @Override
+        protected Class<? extends TrackedBar> getTrackedBarClass() {
+            return BloodPoolBar.class;
+        }
+
+        @Override
         public boolean isActive() {
             return Models.BossBar.bloodPoolBar.isActive();
         }
@@ -429,6 +423,11 @@ public class GameBarsOverlayFeature extends Feature {
         public BossBarProgress progress() {
             CappedValue mana = Models.CharacterStats.getMana();
             return new BossBarProgress(mana, (float) mana.getProgress());
+        }
+
+        @Override
+        protected Class<? extends TrackedBar> getTrackedBarClass() {
+            return null;
         }
 
         @Override
@@ -487,6 +486,11 @@ public class GameBarsOverlayFeature extends Feature {
         @Override
         public BossBarProgress progress() {
             return Models.BossBar.manaBankBar.getBarProgress();
+        }
+
+        @Override
+        protected Class<? extends TrackedBar> getTrackedBarClass() {
+            return ManaBankBar.class;
         }
 
         @Override
@@ -568,6 +572,11 @@ public class GameBarsOverlayFeature extends Feature {
         }
 
         @Override
+        protected Class<? extends TrackedBar> getTrackedBarClass() {
+            return AwakenedBar.class;
+        }
+
+        @Override
         public String icon() {
             return "۞";
         }
@@ -597,6 +606,11 @@ public class GameBarsOverlayFeature extends Feature {
         }
 
         @Override
+        protected Class<? extends TrackedBar> getTrackedBarClass() {
+            return FocusBar.class;
+        }
+
+        @Override
         public String icon() {
             return "➶";
         }
@@ -623,6 +637,11 @@ public class GameBarsOverlayFeature extends Feature {
         @Override
         public BossBarProgress progress() {
             return Models.BossBar.corruptedBar.getBarProgress();
+        }
+
+        @Override
+        protected Class<? extends TrackedBar> getTrackedBarClass() {
+            return CorruptedBar.class;
         }
 
         @Override
