@@ -6,7 +6,7 @@ package com.wynntils.overlays.infobox;
 
 import com.wynntils.core.config.Config;
 import com.wynntils.core.config.RegisterConfig;
-import com.wynntils.core.consumers.features.overlays.TextOverlay;
+import com.wynntils.core.consumers.overlays.TextOverlay;
 
 public class InfoBoxOverlay extends TextOverlay {
     @RegisterConfig

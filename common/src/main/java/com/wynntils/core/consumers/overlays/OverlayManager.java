@@ -2,7 +2,7 @@
  * Copyright © Wynntils 2022.
  * This file is released under AGPLv3. See LICENSE for full license details.
  */
-package com.wynntils.core.consumers.features.overlays;
+package com.wynntils.core.consumers.overlays;
 
 import com.mojang.blaze3d.platform.Window;
 import com.mojang.blaze3d.vertex.BufferBuilder;
@@ -11,8 +11,8 @@ import com.wynntils.core.components.Manager;
 import com.wynntils.core.components.Managers;
 import com.wynntils.core.config.OverlayGroupHolder;
 import com.wynntils.core.consumers.features.Feature;
-import com.wynntils.core.consumers.features.overlays.annotations.OverlayGroup;
-import com.wynntils.core.consumers.features.overlays.annotations.OverlayInfo;
+import com.wynntils.core.consumers.overlays.annotations.OverlayGroup;
+import com.wynntils.core.consumers.overlays.annotations.OverlayInfo;
 import com.wynntils.core.mod.CrashReportManager;
 import com.wynntils.core.mod.type.CrashType;
 import com.wynntils.mc.event.DisplayResizeEvent;

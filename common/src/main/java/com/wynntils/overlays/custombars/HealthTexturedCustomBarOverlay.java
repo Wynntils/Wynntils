@@ -7,7 +7,7 @@ package com.wynntils.overlays.custombars;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.wynntils.core.config.Config;
 import com.wynntils.core.config.RegisterConfig;
-import com.wynntils.core.consumers.features.overlays.OverlaySize;
+import com.wynntils.core.consumers.overlays.OverlaySize;
 import com.wynntils.utils.render.Texture;
 import com.wynntils.utils.render.buffered.BufferedRenderUtils;
 import com.wynntils.utils.render.type.HealthTexture;

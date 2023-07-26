@@ -6,9 +6,9 @@ package com.wynntils.overlays.objectives;
 
 import com.wynntils.core.config.Config;
 import com.wynntils.core.config.RegisterConfig;
-import com.wynntils.core.consumers.features.overlays.Overlay;
-import com.wynntils.core.consumers.features.overlays.OverlayPosition;
-import com.wynntils.core.consumers.features.overlays.OverlaySize;
+import com.wynntils.core.consumers.overlays.Overlay;
+import com.wynntils.core.consumers.overlays.OverlayPosition;
+import com.wynntils.core.consumers.overlays.OverlaySize;
 import com.wynntils.utils.render.type.HorizontalAlignment;
 import com.wynntils.utils.render.type.ObjectivesTextures;
 import com.wynntils.utils.render.type.TextShadow;

@@ -4,9 +4,9 @@
  */
 package com.wynntils.overlays.stopwatch;
 
-import com.wynntils.core.consumers.features.overlays.OverlayPosition;
-import com.wynntils.core.consumers.features.overlays.OverlaySize;
-import com.wynntils.core.consumers.features.overlays.TextOverlay;
+import com.wynntils.core.consumers.overlays.OverlayPosition;
+import com.wynntils.core.consumers.overlays.OverlaySize;
+import com.wynntils.core.consumers.overlays.TextOverlay;
 import com.wynntils.utils.render.type.HorizontalAlignment;
 import com.wynntils.utils.render.type.VerticalAlignment;
 

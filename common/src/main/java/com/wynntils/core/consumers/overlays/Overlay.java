@@ -2,7 +2,7 @@
  * Copyright © Wynntils 2022.
  * This file is released under AGPLv3. See LICENSE for full license details.
  */
-package com.wynntils.core.consumers.features.overlays;
+package com.wynntils.core.consumers.overlays;
 
 import com.google.common.base.CaseFormat;
 import com.google.common.collect.ComparisonChain;

@@ -7,8 +7,8 @@ package com.wynntils.overlays.custombars;
 import com.wynntils.core.components.Managers;
 import com.wynntils.core.config.Config;
 import com.wynntils.core.config.RegisterConfig;
-import com.wynntils.core.consumers.features.overlays.BarOverlay;
-import com.wynntils.core.consumers.features.overlays.OverlaySize;
+import com.wynntils.core.consumers.overlays.BarOverlay;
+import com.wynntils.core.consumers.overlays.OverlaySize;
 import com.wynntils.utils.type.ErrorOr;
 
 public abstract class CustomBarOverlayBase extends BarOverlay {

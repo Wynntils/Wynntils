@@ -9,7 +9,7 @@ import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.components.Managers;
 import com.wynntils.core.consumers.features.Configurable;
 import com.wynntils.core.consumers.features.Translatable;
-import com.wynntils.core.consumers.features.overlays.Overlay;
+import com.wynntils.core.consumers.overlays.Overlay;
 import com.wynntils.utils.EnumUtils;
 import java.lang.reflect.Type;
 import java.util.Objects;

@@ -6,8 +6,8 @@ package com.wynntils.overlays.gamebars;
 
 import com.wynntils.core.components.Models;
 import com.wynntils.core.config.ConfigHolder;
-import com.wynntils.core.consumers.features.overlays.OverlayPosition;
-import com.wynntils.core.consumers.features.overlays.OverlaySize;
+import com.wynntils.core.consumers.overlays.OverlayPosition;
+import com.wynntils.core.consumers.overlays.OverlaySize;
 import com.wynntils.handlers.bossbar.TrackedBar;
 import com.wynntils.handlers.bossbar.type.BossBarProgress;
 import com.wynntils.models.abilities.bossbars.BloodPoolBar;
