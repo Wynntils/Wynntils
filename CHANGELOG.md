@@ -1,4 +1,16 @@
+## [0.0.3-alpha.210](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.209...v0.0.3-alpha.210) (2023-07-26)
+
+
+### New Features
+
+* Displaying total/dry count in chests and adding level range to mythic find ([#1842](https://github.com/Wynntils/Artemis/issues/1842)) ([91743cb](https://github.com/Wynntils/Artemis/commit/91743cb8464315bdb0d5b7b6597580dee97ed206))
+
 ## [0.0.3-alpha.209](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.208...v0.0.3-alpha.209) (2023-07-26)
+
+
+### Miscellaneous Chores
+
+* **release:** v0.0.3-alpha.209 [skip ci] ([7aeed82](https://github.com/Wynntils/Artemis/commit/7aeed82f7f1b73c4f350b4165040e544a42eb53f))
 
 
 ### Code Refactoring
@@ -40,16 +52,4 @@
 ### Miscellaneous Chores
 
 * **release:** v0.0.3-alpha.206 [skip ci] ([25ff0e5](https://github.com/Wynntils/Artemis/commit/25ff0e57271ea3bbfae09ee2f415f1a12a8d555c))
-
-## [0.0.3-alpha.205](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.204...v0.0.3-alpha.205) (2023-07-25)
-
-
-### Miscellaneous Chores
-
-* **release:** v0.0.3-alpha.205 [skip ci] ([3532cd2](https://github.com/Wynntils/Artemis/commit/3532cd2b25d9a71ede021c0a1cc7a3f1fa50ca7c))
-
-
-### Code Refactoring
-
-* Introduce Consumers ([#1840](https://github.com/Wynntils/Artemis/issues/1840)) ([10bf362](https://github.com/Wynntils/Artemis/commit/10bf3624895186f4ab1d4a1bac8cc9eba04c024a))
 
