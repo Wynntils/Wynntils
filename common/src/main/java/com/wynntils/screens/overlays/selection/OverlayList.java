@@ -6,7 +6,7 @@ package com.wynntils.screens.overlays.selection;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.wynntils.core.components.Managers;
-import com.wynntils.core.consumers.features.overlays.Overlay;
+import com.wynntils.core.consumers.overlays.Overlay;
 import com.wynntils.utils.mc.McUtils;
 import com.wynntils.utils.render.FontRenderer;
 import com.wynntils.utils.render.RenderUtils;
