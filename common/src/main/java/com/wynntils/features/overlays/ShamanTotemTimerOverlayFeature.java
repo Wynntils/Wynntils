@@ -4,7 +4,6 @@
  */
 package com.wynntils.features.overlays;
 
-import com.wynntils.core.components.Managers;
 import com.wynntils.core.components.Models;
 import com.wynntils.core.config.Category;
 import com.wynntils.core.config.Config;
@@ -17,11 +16,7 @@ import com.wynntils.core.consumers.features.overlays.TextOverlay;
 import com.wynntils.core.consumers.features.overlays.annotations.OverlayInfo;
 import com.wynntils.core.text.StyledText;
 import com.wynntils.mc.event.RenderEvent;
-import com.wynntils.mc.extension.EntityExtension;
-import com.wynntils.models.abilities.event.TotemEvent;
 import com.wynntils.utils.colors.ColorChatFormatting;
-import com.wynntils.utils.colors.CommonColors;
-import com.wynntils.utils.colors.CustomColor;
 import com.wynntils.utils.mc.RenderedStringUtils;
 import com.wynntils.utils.render.type.HorizontalAlignment;
 import com.wynntils.utils.render.type.VerticalAlignment;
@@ -29,29 +24,13 @@ import java.util.Arrays;
 import java.util.Objects;
 import java.util.stream.Collectors;
 import net.minecraft.ChatFormatting;
-import net.minecraft.world.entity.decoration.ArmorStand;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
 
 @ConfigCategory(Category.OVERLAYS)
-public class ShamanTotemTrackingFeature extends Feature {
+public class ShamanTotemTimerOverlayFeature extends Feature {
     @OverlayInfo(renderType = RenderEvent.ElementType.GUI)
     private final ShamanTotemTimerOverlay shamanTotemTimerOverlay = new ShamanTotemTimerOverlay();
 
-    @RegisterConfig
-    public final Config<Boolean> highlightShamanTotems = new Config<>(true);
-
-    @RegisterConfig
-    public final Config<CustomColor> firstTotemColor = new Config<>(CommonColors.WHITE);
-
-    @RegisterConfig
-    public final Config<CustomColor> secondTotemColor = new Config<>(CommonColors.BLUE);
-
-    @RegisterConfig
-    public final Config<CustomColor> thirdTotemColor = new Config<>(CommonColors.RED);
-
     public static class ShamanTotemTimerOverlay extends TextOverlay {
-        private static final int ENTITY_GLOWING_FLAG = 6;
-
         @RegisterConfig
         public final Config<TotemTrackingDetail> totemTrackingDetail = new Config<>(TotemTrackingDetail.COORDS);
 
@@ -73,29 +52,6 @@ public class ShamanTotemTrackingFeature extends Feature {
                             HorizontalAlignment.RIGHT,
                             OverlayPosition.AnchorSection.TOP_RIGHT),
                     new OverlaySize(120, 35));
-        }
-
-        @SubscribeEvent
-        public void onTotemSummoned(TotemEvent.Summoned e) {
-            var feature = Managers.Feature.getFeatureInstance(ShamanTotemTrackingFeature.class);
-            if (!feature.highlightShamanTotems.get()) return;
-
-            int totemNumber = e.getTotemNumber();
-            ArmorStand totemAS = e.getTotemEntity();
-
-            CustomColor color =
-                    switch (totemNumber) {
-                        case 1 -> feature.firstTotemColor.get();
-                        case 2 -> feature.secondTotemColor.get();
-                        case 3 -> feature.thirdTotemColor.get();
-                        default -> throw new IllegalArgumentException(
-                                "totemNumber should be 1, 2, or 3! (color switch in #onTotemSummoned in ShamanTotemTrackingFeature");
-                    };
-
-            ((EntityExtension) totemAS).setGlowColor(color);
-
-            totemAS.setGlowingTag(true);
-            totemAS.setSharedFlag(ENTITY_GLOWING_FLAG, true);
         }
 
         @Override

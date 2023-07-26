@@ -92,7 +92,8 @@ import com.wynntils.features.overlays.ObjectivesOverlayFeature;
 import com.wynntils.features.overlays.PartyMembersOverlayFeature;
 import com.wynntils.features.overlays.PowderSpecialBarOverlayFeature;
 import com.wynntils.features.overlays.ShamanMaskOverlayFeature;
-import com.wynntils.features.overlays.ShamanTotemTrackingFeature;
+import com.wynntils.features.overlays.ShamanTotemTimerOverlayFeature;
+import com.wynntils.features.combat.ShamanTotemTrackingFeature;
 import com.wynntils.features.overlays.SpellCastMessageOverlayFeature;
 import com.wynntils.features.overlays.StatusOverlayFeature;
 import com.wynntils.features.overlays.StopwatchFeature;
@@ -201,6 +202,7 @@ public final class FeatureManager extends Manager {
         registerFeature(new PreventTradesDuelsFeature());
         registerFeature(new QuickCastFeature());
         registerFeature(new RangeVisualizerFeature());
+        registerFeature(new ShamanTotemTrackingFeature());
         registerFeature(new SpellCastVignetteFeature());
         registerFeature(new TokenTrackerBellFeature());
         // endregion
@@ -262,7 +264,7 @@ public final class FeatureManager extends Manager {
         registerFeature(new PartyMembersOverlayFeature());
         registerFeature(new PowderSpecialBarOverlayFeature());
         registerFeature(new ShamanMaskOverlayFeature());
-        registerFeature(new ShamanTotemTrackingFeature());
+        registerFeature(new ShamanTotemTimerOverlayFeature());
         registerFeature(new SpellCastMessageOverlayFeature());
         registerFeature(new StatusOverlayFeature());
         registerFeature(new StopwatchFeature());
