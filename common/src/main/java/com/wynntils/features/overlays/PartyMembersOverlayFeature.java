@@ -48,7 +48,7 @@ import net.minecraftforge.eventbus.api.EventPriority;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 
 @ConfigCategory(Category.OVERLAYS)
-public class HadesPartyOverlayFeature extends Feature {
+public class PartyMembersOverlayFeature extends Feature {
     @RegisterConfig
     public final Config<Boolean> disablePartyMembersOnScoreboard = new Config<>(false);
 
@@ -117,7 +117,7 @@ public class HadesPartyOverlayFeature extends Feature {
 
             double healthProgress = hadesUser.getHealth().getProgress();
             double manaProgress = hadesUser.getMana().getProgress();
-            HadesPartyOverlayFeature feature = Managers.Feature.getFeatureInstance(HadesPartyOverlayFeature.class);
+            PartyMembersOverlayFeature feature = Managers.Feature.getFeatureInstance(PartyMembersOverlayFeature.class);
 
             // health
             HealthTexture healthTexture = feature.partyMembersOverlay.healthTexture.get();
@@ -206,7 +206,7 @@ public class HadesPartyOverlayFeature extends Feature {
 
         @SubscribeEvent(priority = EventPriority.HIGHEST)
         public void onScoreboardSegmentChange(ScoreboardSegmentAdditionEvent event) {
-            HadesPartyOverlayFeature feature = Managers.Feature.getFeatureInstance(HadesPartyOverlayFeature.class);
+            PartyMembersOverlayFeature feature = Managers.Feature.getFeatureInstance(PartyMembersOverlayFeature.class);
             if (feature.disablePartyMembersOnScoreboard.get()
                     && event.getSegment().getScoreboardPart() instanceof PartyScoreboardPart) {
                 event.setCanceled(true);
