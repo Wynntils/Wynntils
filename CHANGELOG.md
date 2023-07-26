@@ -1,9 +1,21 @@
+## [0.0.3-alpha.214](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.213...v0.0.3-alpha.214) (2023-07-26)
+
+
+### New Features
+
+* Group overlay settings with the actual overlays, and restructure overlays ([#1845](https://github.com/Wynntils/Artemis/issues/1845)) ([8df402c](https://github.com/Wynntils/Artemis/commit/8df402cbda6c7cc6f383a68c201fe59896bcea08))
+
 ## [0.0.3-alpha.213](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.212...v0.0.3-alpha.213) (2023-07-26)
 
 
 ### Bug Fixes
 
 * fix OverlayManagementScreen alignment guide tooltip ([#1851](https://github.com/Wynntils/Artemis/issues/1851)) ([9b7a920](https://github.com/Wynntils/Artemis/commit/9b7a9207482fe653bd8871034a6c54ab88d19ef0))
+
+
+### Miscellaneous Chores
+
+* **release:** v0.0.3-alpha.213 [skip ci] ([86e8fcf](https://github.com/Wynntils/Artemis/commit/86e8fcf599b5c4b4733806987f5b307f97dc8920))
 
 ## [0.0.3-alpha.212](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.211...v0.0.3-alpha.212) (2023-07-26)
 
@@ -40,16 +52,4 @@
 ### Miscellaneous Chores
 
 * **release:** v0.0.3-alpha.210 [skip ci] ([0d5e337](https://github.com/Wynntils/Artemis/commit/0d5e337b86db3aa52f46ab3899d060567180d335))
-
-## [0.0.3-alpha.209](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.208...v0.0.3-alpha.209) (2023-07-26)
-
-
-### Miscellaneous Chores
-
-* **release:** v0.0.3-alpha.209 [skip ci] ([7aeed82](https://github.com/Wynntils/Artemis/commit/7aeed82f7f1b73c4f350b4165040e544a42eb53f))
-
-
-### Code Refactoring
-
-* Rename MapFeature to MainMapFeature ([#1843](https://github.com/Wynntils/Artemis/issues/1843)) ([d9e859d](https://github.com/Wynntils/Artemis/commit/d9e859db0eafe7260a77d26765cc883ff5fa9f3e))
 
