@@ -28,7 +28,16 @@ public class OverlayConfigsIntegrationUpfixer extends RenamedKeysUpfixer {
                     "shamanMaskOverlayFeature.shamanMaskOverlay1.hideMaskTitles"),
             Pair.of(
                     "territoryAttackTimerOverlayFeature.disableAttackTimersOnScoreboard",
-                    "territoryAttackTimerOverlayFeature.territoryAttackTimerOverlay.disableAttackTimersOnScoreboard"));
+                    "territoryAttackTimerOverlayFeature.territoryAttackTimerOverlay.disableAttackTimersOnScoreboard"),
+            Pair.of(
+                    "npcDialogueOverlayFeature.autoProgress",
+                    "npcDialogueOverlayFeature.npcDialogueOverlay.autoProgress"),
+            Pair.of(
+                    "npcDialogueOverlayFeature.dialogAutoProgressDefaultTime",
+                    "npcDialogueOverlayFeature.npcDialogueOverlay.dialogAutoProgressDefaultTime"),
+            Pair.of(
+                    "npcDialogueOverlayFeature.dialogAutoProgressAdditionalTimePerWord",
+                    "npcDialogueOverlayFeature.npcDialogueOverlay.dialogAutoProgressAdditionalTimePerWord"));
 
     @Override
     protected List<Pair<String, String>> getRenamedKeys() {

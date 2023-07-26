@@ -57,15 +57,6 @@ import org.lwjgl.glfw.GLFW;
 
 @ConfigCategory(Category.OVERLAYS)
 public class NpcDialogueOverlayFeature extends Feature {
-    @RegisterConfig
-    public final Config<Boolean> autoProgress = new Config<>(false);
-
-    @RegisterConfig
-    public final Config<Integer> dialogAutoProgressDefaultTime = new Config<>(1600); // Milliseconds
-
-    @RegisterConfig
-    public final Config<Integer> dialogAutoProgressAdditionalTimePerWord = new Config<>(300); // Milliseconds
-
     @OverlayInfo(renderType = RenderEvent.ElementType.GUI)
     private final NpcDialogueOverlay npcDialogueOverlay = new NpcDialogueOverlay();
 
@@ -76,6 +67,15 @@ public class NpcDialogueOverlayFeature extends Feature {
     public static class NpcDialogueOverlay extends Overlay {
         private static final Pattern NEW_QUEST_STARTED = Pattern.compile("^§6§lNew Quest Started: §e§l(.*)$");
         private static final StyledText PRESS_SNEAK_TO_CONTINUE = StyledText.fromString("§cPress SNEAK to continue");
+
+        @RegisterConfig
+        public final Config<Boolean> autoProgress = new Config<>(false);
+
+        @RegisterConfig
+        public final Config<Integer> dialogAutoProgressDefaultTime = new Config<>(1600); // Milliseconds
+
+        @RegisterConfig
+        public final Config<Integer> dialogAutoProgressAdditionalTimePerWord = new Config<>(300); // Milliseconds
 
         @RegisterConfig
         public final Config<TextShadow> textShadow = new Config<>(TextShadow.NORMAL);
@@ -335,8 +335,7 @@ public class NpcDialogueOverlayFeature extends Feature {
                 scheduledAutoProgressKeyPress = null;
             }
 
-            NpcDialogueOverlayFeature feature = Managers.Feature.getFeatureInstance(NpcDialogueOverlayFeature.class);
-            if (feature.autoProgress.get() && dialogueType == NpcDialogueType.NORMAL) {
+            if (autoProgress.get() && dialogueType == NpcDialogueType.NORMAL) {
                 // Schedule a new sneak key press if this is not the end of the dialogue
                 if (!msg.isEmpty()) {
                     scheduledAutoProgressKeyPress = scheduledSneakPress(msg);
@@ -345,10 +344,9 @@ public class NpcDialogueOverlayFeature extends Feature {
         }
 
         private long calculateMessageReadTime(List<StyledText> msg) {
-            NpcDialogueOverlayFeature feature = Managers.Feature.getFeatureInstance(NpcDialogueOverlayFeature.class);
             int words = StyledText.join(" ", msg).split(" ").length;
-            long delay = feature.dialogAutoProgressDefaultTime.get()
-                    + ((long) words * feature.dialogAutoProgressAdditionalTimePerWord.get());
+            long delay = dialogAutoProgressDefaultTime.get()
+                    + ((long) words * dialogAutoProgressAdditionalTimePerWord.get());
             return delay;
         }
 
