@@ -74,7 +74,8 @@ public final class GearTooltipFooter {
         footer.add(tier);
 
         // restrictions (untradable, quest item)
-        if (gearInfo.metaInfo().restrictions() != GearRestrictions.NONE) {
+        // Note: "Zeer ID Test" item has null as restrictions...
+        if (gearInfo.metaInfo().restrictions() != null && gearInfo.metaInfo().restrictions() != GearRestrictions.NONE) {
             footer.add(Component.literal(StringUtils.capitalizeFirst(
                             gearInfo.metaInfo().restrictions().getDescription()))
                     .withStyle(ChatFormatting.RED));
