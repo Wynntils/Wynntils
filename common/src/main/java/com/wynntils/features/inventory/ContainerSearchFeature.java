@@ -12,6 +12,8 @@ import com.wynntils.core.persisted.config.Category;
 import com.wynntils.core.persisted.config.Config;
 import com.wynntils.core.persisted.config.ConfigCategory;
 import com.wynntils.core.text.StyledText;
+import com.wynntils.features.inventory.search.SearchQuery;
+import com.wynntils.features.inventory.search.WynnItemFilterManager;
 import com.wynntils.mc.event.ContainerCloseEvent;
 import com.wynntils.mc.event.ContainerSetContentEvent;
 import com.wynntils.mc.event.ContainerSetSlotEvent;
@@ -22,20 +24,30 @@ import com.wynntils.mc.extension.ScreenExtension;
 import com.wynntils.models.containers.type.SearchableContainerType;
 import com.wynntils.models.items.WynnItem;
 import com.wynntils.models.items.WynnItemCache;
+import com.wynntils.screens.base.widgets.BasicTexturedButton;
+import com.wynntils.screens.base.widgets.ContainerSearchWidget;
 import com.wynntils.screens.base.widgets.SearchWidget;
+import com.wynntils.screens.base.widgets.WynntilsButton;
 import com.wynntils.utils.colors.CommonColors;
 import com.wynntils.utils.colors.CustomColor;
 import com.wynntils.utils.mc.McUtils;
 import com.wynntils.utils.render.RenderUtils;
+import com.wynntils.utils.render.Texture;
 import com.wynntils.utils.wynn.ContainerUtils;
-import java.util.Locale;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
+import net.minecraft.ChatFormatting;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
+<<<<<<< HEAD
 import net.minecraft.world.Container;
 import net.minecraft.world.inventory.ChestMenu;
+=======
+import net.minecraft.core.NonNullList;
+import net.minecraft.network.chat.Component;
+>>>>>>> 888ea6eb (feat: Add advanced search filters to ContainerSearchFeature)
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.Items;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import org.lwjgl.glfw.GLFW;
 
@@ -75,6 +87,13 @@ public class ContainerSearchFeature extends Feature {
     private SearchWidget lastSearchWidget;
     private SearchableContainerType currentSearchableContainerType;
     private boolean autoSearching = false;
+    private SearchQuery lastSearchQuery;
+
+    private final WynnItemFilterManager wynnItemFilterManager;
+
+    public ContainerSearchFeature() {
+        this.wynnItemFilterManager = new WynnItemFilterManager();
+    }
 
     @SubscribeEvent
     public void onScreenInit(ScreenInitEvent event) {
@@ -92,7 +111,11 @@ public class ContainerSearchFeature extends Feature {
 
         currentSearchableContainerType = searchableContainerType;
 
+<<<<<<< HEAD
         addSearchWidget(((AbstractContainerScreen<ChestMenu>) screen), renderX, renderY);
+=======
+        addWidgets(screen, renderX, renderY);
+>>>>>>> 888ea6eb (feat: Add advanced search filters to ContainerSearchFeature)
     }
 
     @SubscribeEvent
@@ -139,7 +162,11 @@ public class ContainerSearchFeature extends Feature {
                 || !(abstractContainerScreen.getMenu() instanceof ChestMenu chestMenu)) return;
 
         autoSearching = true;
+<<<<<<< HEAD
         matchItems(lastSearchWidget.getTextBoxInput(), chestMenu);
+=======
+        matchItems(lastSearchQuery, abstractContainerScreen);
+>>>>>>> 888ea6eb (feat: Add advanced search filters to ContainerSearchFeature)
 
         tryAutoSearch(abstractContainerScreen);
     }
@@ -208,14 +235,18 @@ public class ContainerSearchFeature extends Feature {
         return null;
     }
 
-    private void addSearchWidget(AbstractContainerScreen<ChestMenu> screen, int renderX, int renderY) {
-        SearchWidget searchWidget = new SearchWidget(
-                renderX + screen.imageWidth - 100,
+    private void addWidgets(AbstractContainerScreen<ChestMenu> screen, int renderX, int renderY) {
+        ContainerSearchWidget searchWidget = new ContainerSearchWidget(
+                renderX + screen.imageWidth - 175,
                 renderY - 20,
-                100,
+                175,
                 20,
-                s -> matchItems(s, screen.getMenu()),
-                (ScreenExtension) screen);
+                query -> {
+                    lastSearchQuery = query;
+                    matchItems(lastSearchQuery, screen.getMenu());
+                },
+                (ScreenExtension) screen,
+                wynnItemFilterManager);
 
         if (lastSearchWidget != null) {
             searchWidget.setTextBoxInput(lastSearchWidget.getTextBoxInput());
@@ -224,10 +255,32 @@ public class ContainerSearchFeature extends Feature {
         lastSearchWidget = searchWidget;
 
         screen.addRenderableWidget(lastSearchWidget);
+
+        List<Component> helpTooltip =
+                new ArrayList<>(List.of(Component.translatable("feature.wynntils.containerSearch.tooltip")));
+        wynnItemFilterManager.getFilterUsages().forEach((keyword, usage) -> {
+            helpTooltip.add(Component.empty());
+            helpTooltip.add(Component.literal(keyword + ":")
+                    .withStyle(ChatFormatting.YELLOW)
+                    .append(Component.literal(usage).withStyle(ChatFormatting.GRAY)));
+        });
+
+        WynntilsButton infoButton = new BasicTexturedButton(
+                renderX + screen.imageWidth - 11,
+                renderY - 14,
+                Texture.INFO.width() / 3,
+                Texture.INFO.height() / 3,
+                Texture.INFO,
+                a -> {},
+                helpTooltip,
+                BasicTexturedButton.RENDER_TOOLTIP_BELOW,
+                true);
+
+        screen.addRenderableWidget(infoButton);
     }
 
-    private void matchItems(String searchStr, ChestMenu chestMenu) {
-        String search = searchStr.toLowerCase(Locale.ROOT);
+    private void matchItems(SearchQuery searchQuery, ChestMenu chestMenu) {
+        if (searchQuery == null) return;
 
         Container container = chestMenu.getContainer();
         for (int i = 0; i < container.getContainerSize(); i++) {
@@ -238,11 +291,8 @@ public class ContainerSearchFeature extends Feature {
             Optional<WynnItem> wynnItemOpt = Models.Item.getWynnItem(itemStack);
             if (wynnItemOpt.isEmpty()) return;
 
-            String name = StyledText.fromComponent(itemStack.getHoverName())
-                    .getStringWithoutFormatting()
-                    .toLowerCase(Locale.ROOT);
-
-            boolean filtered = !search.isEmpty() && name.contains(search) && itemStack.getItem() != Items.AIR;
+            boolean filtered = searchQuery.filterMatches(wynnItemOpt.get())
+                    && searchQuery.itemNameMatches(itemStack.getHoverName().getString());
             wynnItemOpt.get().getCache().store(WynnItemCache.SEARCHED_KEY, filtered);
             if (filtered) {
                 autoSearching = false;
@@ -252,10 +302,8 @@ public class ContainerSearchFeature extends Feature {
 
     private void forceUpdateSearch() {
         Screen screen = McUtils.mc().screen;
-        if (lastSearchWidget != null
-                && screen instanceof AbstractContainerScreen<?> abstractContainerScreen
-                && abstractContainerScreen.getMenu() instanceof ChestMenu chestMenu) {
-            matchItems(lastSearchWidget.getTextBoxInput(), chestMenu);
+        if (lastSearchWidget != null && screen instanceof AbstractContainerScreen<?> abstractContainerScreen && abstractContainerScreen.getMenu() instanceof ChestMenu chestMenu) {
+            matchItems(lastSearchQuery, chestMenu);
         }
     }
 }

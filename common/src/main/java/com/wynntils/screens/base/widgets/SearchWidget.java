@@ -14,6 +14,7 @@ import com.wynntils.utils.render.RenderUtils;
 import com.wynntils.utils.render.type.HorizontalAlignment;
 import com.wynntils.utils.render.type.TextShadow;
 import com.wynntils.utils.render.type.VerticalAlignment;
+import com.wynntils.utils.type.Pair;
 import java.util.Objects;
 import java.util.function.Consumer;
 import net.minecraft.client.gui.Font;
@@ -22,9 +23,10 @@ import net.minecraft.sounds.SoundEvents;
 import org.lwjgl.glfw.GLFW;
 
 public class SearchWidget extends TextInputBoxWidget {
-    private static final Component DEFAULT_TEXT =
+    protected static final Component DEFAULT_TEXT =
             Component.translatable("screens.wynntils.searchWidget.defaultSearchText");
-    private static final float VERTICAL_OFFSET = 6.5f;
+
+    protected static final float VERTICAL_OFFSET = 6.5f;
 
     public SearchWidget(
             int x, int y, int width, int height, Consumer<String> onUpdateConsumer, TextboxScreen textboxScreen) {
@@ -35,7 +37,7 @@ public class SearchWidget extends TextInputBoxWidget {
     @Override
     protected void doRenderWidget(
             PoseStack poseStack,
-            String renderedText,
+            Pair<String, Integer> renderedTextDetails,
             String firstPortion,
             String highlightedPortion,
             String lastPortion,
@@ -49,7 +51,7 @@ public class SearchWidget extends TextInputBoxWidget {
 
         renderText(
                 poseStack,
-                renderedText,
+                renderedTextDetails,
                 firstPortion,
                 highlightedPortion,
                 lastPortion,
@@ -62,7 +64,7 @@ public class SearchWidget extends TextInputBoxWidget {
 
     protected void renderText(
             PoseStack poseStack,
-            String renderedText,
+            Pair<String, Integer> renderedTextDetails,
             String firstPortion,
             String highlightedPortion,
             String lastPortion,
@@ -111,6 +113,7 @@ public class SearchWidget extends TextInputBoxWidget {
                         HorizontalAlignment.LEFT,
                         TextShadow.NORMAL);
 
+        String renderedText = renderedTextDetails.a();
         drawCursor(
                 poseStack,
                 this.getX()
