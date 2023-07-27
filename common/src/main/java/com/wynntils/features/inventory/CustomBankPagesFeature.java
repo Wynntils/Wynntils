@@ -126,12 +126,11 @@ public class CustomBankPagesFeature extends Feature {
     }
 
     private List<Integer> getDefaultJumpDestinations() {
-        switch (currentContainer) {
-            case BANK -> return QUICK_JUMP_DESTINATIONS;
-            case BLOCK_BANK -> return BLOCK_BANK_DESTINATIONS;
-            case BOOKSHELF, MISC_BUCKET -> return HOUSING_DEFAULT_DESTINATIONS;
-        }
-        return HOUSING_DEFAULT_DESTINATIONS; // use as default for safety
+        return switch (currentContainer) {
+            case BANK -> QUICK_JUMP_DESTINATIONS;
+            case BLOCK_BANK -> BLOCK_BANK_DESTINATIONS;
+            default -> HOUSING_DEFAULT_DESTINATIONS; // this has the lowest values, so it's the safest default
+        };
     }
 
     @SubscribeEvent
