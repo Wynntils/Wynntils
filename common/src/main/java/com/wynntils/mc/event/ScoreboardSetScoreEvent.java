@@ -6,10 +6,8 @@ package com.wynntils.mc.event;
 
 import com.wynntils.core.text.StyledText;
 import net.minecraft.server.ServerScoreboard;
-import net.minecraftforge.eventbus.api.Cancelable;
 import net.minecraftforge.eventbus.api.Event;
 
-@Cancelable
 public class ScoreboardSetScoreEvent extends Event {
     private final StyledText owner;
     private final String objectiveName;
