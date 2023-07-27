@@ -77,4 +77,11 @@ public final class StatisticsService extends Service {
         currentStatistics = statistics.get().get(id);
         statistics.touched();
     }
+
+    public void init() {
+        for (StatisticKind kind : StatisticKind.values()) {
+            // Assert that the feature name is properly translated
+            assert !kind.getName().startsWith("statistics.wynntils.") : "Fix i18n for " + kind.getName();
+        }
+    }
 }
