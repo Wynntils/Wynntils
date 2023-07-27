@@ -23,8 +23,8 @@ import com.wynntils.mc.event.ChatSentEvent;
 import com.wynntils.mc.event.CommandSentEvent;
 import com.wynntils.mc.event.EditBoxInsertEvent;
 import com.wynntils.mc.event.ScreenInitEvent;
-import com.wynntils.services.wynnlanguage.WynnLanguage;
 import com.wynntils.screens.translation.widgets.WynnLanguageButton;
+import com.wynntils.services.wynnlanguage.WynnLanguage;
 import com.wynntils.utils.colors.ColorChatFormatting;
 import com.wynntils.utils.mc.McUtils;
 import com.wynntils.utils.type.IterationDecision;
@@ -34,9 +34,11 @@ import java.util.Locale;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import net.minecraft.ChatFormatting;
+import net.minecraft.client.gui.components.EditBox;
 import net.minecraft.client.gui.screens.ChatScreen;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.Style;
+import net.minecraftforge.eventbus.api.Event;
 import net.minecraftforge.eventbus.api.EventPriority;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import org.lwjgl.glfw.GLFW;
@@ -62,7 +64,7 @@ public class GavellianAndWynnicTranslationFeature extends Feature {
     public final Config<ColorChatFormatting> gavellianColor = new Config<>(ColorChatFormatting.LIGHT_PURPLE);
 
     @RegisterConfig
-    public final Config<ColorChatFormatting> wynnicColor = new Config<>(ColorChatFormatting.GREEN);
+    public final Config<ColorChatFormatting> wynnicColor = new Config<>(ColorChatFormatting.DARK_GREEN);
 
     private static final int FIFTY_INDEX = 36;
     private static final int ONE_HUNDERED_INDEX = 37;
@@ -92,34 +94,31 @@ public class GavellianAndWynnicTranslationFeature extends Feature {
             chatScreen.width -= 45;
             int xOffset = chatScreen.width + 1;
 
-            chatScreen.addRenderableWidget(
-                    new WynnLanguageButton(xOffset, chatScreen.height - 14, 12, 12, WynnLanguage.DEFAULT));
-
+            addLanguageButton(chatScreen, xOffset, WynnLanguage.DEFAULT);
             xOffset += 15;
 
-            chatScreen.addRenderableWidget(
-                    new WynnLanguageButton(xOffset, chatScreen.height - 14, 12, 12, WynnLanguage.WYNNIC));
-
+            addLanguageButton(chatScreen, xOffset, WynnLanguage.WYNNIC);
             xOffset += 15;
 
-            chatScreen.addRenderableWidget(
-                    new WynnLanguageButton(xOffset, chatScreen.height - 14, 12, 12, WynnLanguage.GAVELLIAN));
+            addLanguageButton(chatScreen, xOffset, WynnLanguage.GAVELLIAN);
         }
     }
 
     @SubscribeEvent
     public void onEditBoxInsert(EditBoxInsertEvent event) {
         if (!(McUtils.mc().screen instanceof ChatScreen chatScreen)) return;
-        if (Services.WynnLanguageSerivce.getSelectedLanguage() == WynnLanguage.DEFAULT) return;
         if (useBrackets.get()) return;
 
-        List<Character> replacementList =
-                Services.WynnLanguageSerivce.getSelectedLanguage() == WynnLanguage.GAVELLIAN ? gavellian : wynnic;
+        WynnLanguage selectedLanguage = Services.WynnLanguageSerivce.getSelectedLanguage();
+
+        if (selectedLanguage == WynnLanguage.DEFAULT) return;
+
+        List<Character> replacementList = selectedLanguage == WynnLanguage.GAVELLIAN ? gavellian : wynnic;
 
         try {
             Integer.parseInt(event.getTextToWrite());
 
-            if (Services.WynnLanguageSerivce.getSelectedLanguage() != WynnLanguage.WYNNIC) return;
+            if (selectedLanguage != WynnLanguage.WYNNIC) return;
 
             handleTypedNumber(event.getTextToWrite(), replacementList, event, chatScreen);
         } catch (NumberFormatException ex) {
@@ -138,19 +137,9 @@ public class GavellianAndWynnicTranslationFeature extends Feature {
 
         if (beforeCursor.isBlank() || !numbers.contains(beforeCursor.charAt(beforeCursor.length() - 1))) return;
 
-        StringBuilder currentNumsStr = new StringBuilder();
+        String currentNumsStr = getWynnicNumBeforeCursor(beforeCursor);
 
-        for (int i = beforeCursor.length() - 1; i >= 0; i--) {
-            if (numbers.contains(beforeCursor.charAt(i))) {
-                currentNumsStr.append(beforeCursor.charAt(i));
-            } else {
-                break;
-            }
-        }
-
-        currentNumsStr.reverse();
-
-        int wynnicNum = wynnicNumToInt(currentNumsStr.toString());
+        int wynnicNum = wynnicNumToInt(currentNumsStr);
 
         String backspacedNum = String.valueOf(wynnicNum);
 
@@ -159,20 +148,154 @@ public class GavellianAndWynnicTranslationFeature extends Feature {
 
             backspacedNum = backspacedNum.substring(0, backspacedNum.length() - 1);
 
-            int index = beforeCursor.lastIndexOf(currentNumsStr.toString());
+            int index = beforeCursor.lastIndexOf(currentNumsStr);
 
             beforeCursor = beforeCursor.substring(0, index);
 
-            String translatedNum = intToWynnicNum(Integer.parseInt(backspacedNum));
-
-            String newInput = beforeCursor + translatedNum + afterCursor;
-
-            int newCursorPos = newInput.indexOf(translatedNum) + translatedNum.length();
-
-            chatScreen.input.setValue(newInput);
-
-            chatScreen.input.moveCursorTo(newCursorPos);
+            updateInput(beforeCursor, afterCursor, Integer.parseInt(backspacedNum), chatScreen.input);
         }
+    }
+
+    @SubscribeEvent
+    public void onChatSend(ChatSentEvent event) {
+        if (event.getMessage().isBlank()) return;
+
+        String message = event.getMessage();
+
+        if (useBrackets.get() && containsBrackets(message)) {
+            String updatedMessage = translateSentMessage(message, event);
+
+            McUtils.mc().getConnection().sendChat(updatedMessage);
+        }
+    }
+
+    @SubscribeEvent
+    public void onCommandSent(CommandSentEvent event) {
+        String message = event.getCommand();
+
+        if (useBrackets.get() && containsBrackets(message)) {
+            String updatedMessage = translateSentMessage(message, event);
+
+            McUtils.sendCommand(updatedMessage);
+        }
+    }
+
+    @SubscribeEvent(priority = EventPriority.HIGHEST)
+    public void onChat(ChatMessageReceivedEvent event) {
+        if (!translateChat.get()) return;
+        if (!hasWynnicOrGavellian(event.getStyledText().getString())) return;
+
+        boolean translateWynnic = shouldTranslate(WynnLanguage.WYNNIC);
+        boolean translateGavellian = shouldTranslate(WynnLanguage.GAVELLIAN);
+
+        if (!translateWynnic && !translateGavellian) return;
+
+        StyledText styledText = event.getStyledText();
+
+        StyledText modified = getStyledTextWithTranslation(styledText, translateWynnic, translateGavellian, false);
+
+        if (styledText.getString().equalsIgnoreCase(modified.getString())) return;
+
+        event.setMessage(modified.getComponent());
+    }
+
+    // Sometimes the non translated dialogue is still displayed
+    @SubscribeEvent(priority = EventPriority.HIGHEST)
+    public void onNpcDialogue(NpcDialogEvent event) {
+        if (!translateNpcs.get()) return;
+        if (!hasWynnicOrGavellian(event.getChatMessage().toString())) return;
+
+        boolean translateWynnic = shouldTranslate(WynnLanguage.WYNNIC);
+        boolean translateGavellian = shouldTranslate(WynnLanguage.GAVELLIAN);
+
+        if (!translateWynnic && !translateGavellian) return;
+
+        if (!event.getChatMessage().isEmpty()) {
+            List<Component> translatedComponents = event.getChatMessage().stream()
+                    .map(component -> wrapCoding(StyledText.fromComponent(component)))
+                    .map(styledText -> getStyledTextWithTranslation(
+                            StyledText.fromString(styledText), translateWynnic, translateGavellian, true))
+                    .map(styledText -> unwrapCoding(styledText.getString()))
+                    .map(s -> ((Component) s.getComponent()))
+                    .toList();
+
+            Managers.TickScheduler.scheduleNextTick(() -> {
+                NpcDialogEvent translatedEvent =
+                        new WynnTranslatedNpcDialogEvent(translatedComponents, event.getType(), event.isProtected());
+                WynntilsMod.postEvent(translatedEvent);
+            });
+        } else {
+            NpcDialogEvent translatedEvent =
+                    new WynnTranslatedNpcDialogEvent(List.of(), event.getType(), event.isProtected());
+            WynntilsMod.postEvent(translatedEvent);
+        }
+
+        event.setCanceled(true);
+    }
+
+    private void addLanguageButton(ChatScreen chatScreen, int xOffset, WynnLanguage language) {
+        chatScreen.addRenderableWidget(new WynnLanguageButton(xOffset, chatScreen.height - 14, 12, 12, language));
+    }
+
+    private boolean containsBrackets(String message) {
+        return (message.contains("{") && message.contains("}")) || (message.contains("<") && message.contains(">"));
+    }
+
+    private String translateSentMessage(String message, Event event) {
+        Pattern bracketPattern = Pattern.compile("\\{([^}]*)\\}|<([^>]*)>");
+
+        List<String> wynnicSubstring = new ArrayList<>();
+        List<String> gavellianSubstring = new ArrayList<>();
+
+        Matcher matcher = bracketPattern.matcher(message);
+
+        while (matcher.find()) {
+            if (matcher.group(1) != null) {
+                wynnicSubstring.add(matcher.group(1));
+            } else if (matcher.group(2) != null) {
+                gavellianSubstring.add(matcher.group(2));
+            }
+        }
+
+        if (wynnicSubstring.isEmpty() && gavellianSubstring.isEmpty()) return message;
+
+        event.setCanceled(true);
+
+        StringBuilder updatedMessage = new StringBuilder(message);
+
+        for (String wynnicText : wynnicSubstring) {
+            String translatedText = getStringWithTranslation(wynnicText, WynnLanguage.WYNNIC);
+            replaceTranslated(updatedMessage, "{" + wynnicText + "}", translatedText);
+        }
+
+        for (String gavellianText : gavellianSubstring) {
+            String translatedText = getStringWithTranslation(gavellianText, WynnLanguage.GAVELLIAN);
+            replaceTranslated(updatedMessage, "<" + gavellianText + ">", translatedText);
+        }
+
+        return updatedMessage.toString();
+    }
+
+    private void replaceTranslated(StringBuilder stringBuilder, String original, String replacement) {
+        int index = stringBuilder.indexOf(original);
+
+        while (index != -1) {
+            stringBuilder.replace(index, index + original.length(), replacement);
+            index = stringBuilder.indexOf(original, index + replacement.length());
+        }
+    }
+
+    private boolean shouldTranslate(WynnLanguage language) {
+        return switch (translateCondition.get()) {
+            case NEVER -> false;
+            case BOOK -> language == WynnLanguage.WYNNIC
+                    ? Services.WynnLanguageSerivce.hasTranscriber(WynnLanguage.WYNNIC)
+                    : Services.WynnLanguageSerivce.hasTranscriber(WynnLanguage.GAVELLIAN);
+            case DISCOVERY -> language == WynnLanguage.WYNNIC
+                    ? Services.WynnLanguageSerivce.completedDiscovery(WynnLanguage.WYNNIC)
+                    : Services.WynnLanguageSerivce.completedDiscovery(WynnLanguage.GAVELLIAN);
+            default -> true;
+        };
     }
 
     private void handleTypedCharacter(
@@ -208,6 +331,18 @@ public class GavellianAndWynnicTranslationFeature extends Feature {
             return;
         }
 
+        String currentNumsStr = getWynnicNumBeforeCursor(beforeCursor);
+
+        int index = beforeCursor.lastIndexOf(currentNumsStr);
+
+        beforeCursor = beforeCursor.substring(0, index);
+
+        int updateNum = calculateWynnicNum(currentNumsStr, typedNumber);
+
+        updateInput(beforeCursor, afterCursor, updateNum, chatScreen.input);
+    }
+
+    private String getWynnicNumBeforeCursor(String beforeCursor) {
         StringBuilder currentNumsStr = new StringBuilder();
 
         for (int i = beforeCursor.length() - 1; i >= 0; i--) {
@@ -218,23 +353,19 @@ public class GavellianAndWynnicTranslationFeature extends Feature {
             }
         }
 
-        currentNumsStr.reverse();
+        return currentNumsStr.reverse().toString();
+    }
 
-        int index = beforeCursor.lastIndexOf(currentNumsStr.toString());
-
-        beforeCursor = beforeCursor.substring(0, index);
-
-        int updateNum = calculateWynnicNum(currentNumsStr.toString(), typedNumber);
-
-        String translatedNum = updateNum > MAX_TRANSLATABLE_NUMBER ? "∞" : intToWynnicNum(updateNum);
+    private void updateInput(String beforeCursor, String afterCursor, int num, EditBox chatInput) {
+        String translatedNum = num > MAX_TRANSLATABLE_NUMBER ? "∞" : intToWynnicNum(num);
 
         String newInput = beforeCursor + translatedNum + afterCursor;
 
         int newCursorPos = newInput.indexOf(translatedNum) + translatedNum.length();
 
-        chatScreen.input.setValue(newInput);
+        chatInput.setValue(newInput);
 
-        chatScreen.input.moveCursorTo(newCursorPos);
+        chatInput.moveCursorTo(newCursorPos);
     }
 
     private int calculateWynnicNum(String wynnicNums, String numToAdd) {
@@ -259,170 +390,6 @@ public class GavellianAndWynnicTranslationFeature extends Feature {
         resultStr += numToAdd;
 
         return Integer.parseInt(resultStr);
-    }
-
-    @SubscribeEvent
-    public void onChatSend(ChatSentEvent event) {
-        if (event.getMessage().isBlank()) return;
-
-        String message = event.getMessage();
-
-        if (useBrackets.get()
-                && ((message.contains("{") && message.contains("}"))
-                        || (message.contains("<") && message.contains(">")))) {
-            Pattern pattern = Pattern.compile("\\{([^}]*)\\}|<([^>]*)>");
-
-            List<String> wynnicSubstring = new ArrayList<>();
-            List<String> gavellianSubstring = new ArrayList<>();
-
-            Matcher matcher = pattern.matcher(message);
-
-            while (matcher.find()) {
-                if (matcher.group(1) != null) {
-                    wynnicSubstring.add(matcher.group(1));
-                } else if (matcher.group(2) != null) {
-                    gavellianSubstring.add(matcher.group(2));
-                }
-            }
-
-            if (wynnicSubstring.isEmpty() && gavellianSubstring.isEmpty()) return;
-
-            event.setCanceled(true);
-
-            for (String wynnicText : wynnicSubstring) {
-                String translatedText = getStringWithTranslation(wynnicText, WynnLanguage.WYNNIC);
-                message = message.replace("{" + wynnicText + "}", translatedText);
-            }
-
-            for (String gavellianText : gavellianSubstring) {
-                String translatedText = getStringWithTranslation(gavellianText, WynnLanguage.GAVELLIAN);
-                message = message.replace("<" + gavellianText + ">", translatedText);
-            }
-
-            McUtils.mc().getConnection().sendChat(message);
-        }
-    }
-
-    @SubscribeEvent
-    public void onCommandSent(CommandSentEvent e) {
-        String message = e.getCommand();
-
-        if (useBrackets.get()
-                && ((message.contains("{") && message.contains("}"))
-                        || (message.contains("<") && message.contains(">")))) {
-            Pattern pattern = Pattern.compile("\\{([^}]*)\\}|<([^>]*)>");
-
-            List<String> wynnicSubstring = new ArrayList<>();
-            List<String> gavellianSubstring = new ArrayList<>();
-
-            Matcher matcher = pattern.matcher(message);
-
-            while (matcher.find()) {
-                if (matcher.group(1) != null) {
-                    wynnicSubstring.add(matcher.group(1));
-                } else if (matcher.group(2) != null) {
-                    gavellianSubstring.add(matcher.group(2));
-                }
-            }
-
-            if (wynnicSubstring.isEmpty() && gavellianSubstring.isEmpty()) return;
-
-            e.setCanceled(true);
-
-            for (String wynnicText : wynnicSubstring) {
-                String translatedText = getStringWithTranslation(wynnicText, WynnLanguage.WYNNIC);
-                message = message.replace("{" + wynnicText + "}", translatedText);
-            }
-
-            for (String gavellianText : gavellianSubstring) {
-                String translatedText = getStringWithTranslation(gavellianText, WynnLanguage.GAVELLIAN);
-                message = message.replace("<" + gavellianText + ">", translatedText);
-            }
-
-            McUtils.sendCommand(message);
-        }
-    }
-
-    @SubscribeEvent(priority = EventPriority.HIGHEST)
-    public void onChat(ChatMessageReceivedEvent e) {
-        if (!translateChat.get()) return;
-        if (!hasWynnicOrGavellian(e.getStyledText().getString())) return;
-
-        boolean translateWynnic = true;
-        boolean translateGavellian = true;
-
-        switch (translateCondition.get()) {
-            case NEVER -> {
-                return;
-            }
-            case BOOK -> {
-                translateWynnic = Services.WynnLanguageSerivce.hasTranscriber(WynnLanguage.WYNNIC);
-                translateGavellian = Services.WynnLanguageSerivce.hasTranscriber(WynnLanguage.GAVELLIAN);
-            }
-            case DISCOVERY -> {
-                translateWynnic = Services.WynnLanguageSerivce.completedDiscovery(WynnLanguage.WYNNIC);
-                translateGavellian = Services.WynnLanguageSerivce.completedDiscovery(WynnLanguage.GAVELLIAN);
-            }
-        }
-
-        if (!translateWynnic && !translateGavellian) return;
-
-        StyledText styledText = e.getStyledText();
-
-        StyledText modified = getStyledTextWithTranslation(styledText, translateWynnic, translateGavellian, false);
-
-        if (styledText.getString().equalsIgnoreCase(modified.getString())) return;
-
-        e.setMessage(modified.getComponent());
-    }
-
-    @SubscribeEvent(priority = EventPriority.HIGHEST)
-    public void onNpcDialogue(NpcDialogEvent e) {
-        if (!translateNpcs.get()) return;
-        if (!hasWynnicOrGavellian(e.getChatMessage().toString())) return;
-
-        boolean translateWynnic = true;
-        boolean translateGavellian = true;
-
-        switch (translateCondition.get()) {
-            case NEVER -> {
-                return;
-            }
-            case BOOK -> {
-                translateWynnic = Services.WynnLanguageSerivce.hasTranscriber(WynnLanguage.WYNNIC);
-                translateGavellian = Services.WynnLanguageSerivce.hasTranscriber(WynnLanguage.GAVELLIAN);
-            }
-            case DISCOVERY -> {
-                translateWynnic = Services.WynnLanguageSerivce.completedDiscovery(WynnLanguage.WYNNIC);
-                translateGavellian = Services.WynnLanguageSerivce.completedDiscovery(WynnLanguage.GAVELLIAN);
-            }
-        }
-
-        if (!translateWynnic && !translateGavellian) return;
-
-        if (!e.getChatMessage().isEmpty()) {
-            boolean finalTranslateWynnic = translateWynnic;
-            boolean finalTranslateGavellian = translateGavellian;
-
-            List<Component> translatedComponents = e.getChatMessage().stream()
-                    .map(component -> wrapCoding(StyledText.fromComponent(component)))
-                    .map(styledText -> getStyledTextWithTranslation(
-                            StyledText.fromString(styledText), finalTranslateWynnic, finalTranslateGavellian, true))
-                    .map(styledText -> unwrapCoding(styledText.getString()))
-                    .map(s -> ((Component) s.getComponent()))
-                    .toList();
-
-            Managers.TickScheduler.scheduleNextTick(() -> {
-                NpcDialogEvent translatedEvent =
-                        new WynnTranslatedNpcDialogEvent(translatedComponents, e.getType(), e.isProtected());
-                WynntilsMod.postEvent(translatedEvent);
-            });
-        } else {
-            NpcDialogEvent translatedEvent = new WynnTranslatedNpcDialogEvent(List.of(), e.getType(), e.isProtected());
-            WynntilsMod.postEvent(translatedEvent);
-        }
-
-        e.setCanceled(true);
     }
 
     private boolean hasWynnicOrGavellian(String message) {
