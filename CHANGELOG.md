@@ -1,9 +1,21 @@
+## [0.0.3-alpha.221](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.220...v0.0.3-alpha.221) (2023-07-27)
+
+
+### Miscellaneous Chores
+
+* Add verification that statistics have i18n ([#1863](https://github.com/Wynntils/Artemis/issues/1863)) ([6292150](https://github.com/Wynntils/Artemis/commit/6292150c3c742725dd1bba18612f529d27f5d811))
+
 ## [0.0.3-alpha.220](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.219...v0.0.3-alpha.220) (2023-07-27)
 
 
 ### New Features
 
 * Add soulbound to gear item api parsing ([#1862](https://github.com/Wynntils/Artemis/issues/1862)) ([80730a6](https://github.com/Wynntils/Artemis/commit/80730a631f273f9dca4e0256e34fd39ce1f41d53))
+
+
+### Miscellaneous Chores
+
+* **release:** v0.0.3-alpha.220 [skip ci] ([76c0367](https://github.com/Wynntils/Artemis/commit/76c03674850682a062f3ed2a1a9881d93ba475b0))
 
 ## [0.0.3-alpha.219](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.218...v0.0.3-alpha.219) (2023-07-27)
 
@@ -40,16 +52,4 @@
 ### Miscellaneous Chores
 
 * **release:** v0.0.3-alpha.217 [skip ci] ([2386031](https://github.com/Wynntils/Artemis/commit/2386031ca849cc6e27f84a7a5b4fb285d87171f9))
-
-## [0.0.3-alpha.216](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.215...v0.0.3-alpha.216) (2023-07-26)
-
-
-### New Features
-
-* Show overall content activity progress on profile page ([#1833](https://github.com/Wynntils/Artemis/issues/1833)) ([5723b72](https://github.com/Wynntils/Artemis/commit/5723b72c29c392d340831e74b3289bbb389c4457))
-
-
-### Miscellaneous Chores
-
-* **release:** v0.0.3-alpha.216 [skip ci] ([cc94612](https://github.com/Wynntils/Artemis/commit/cc94612e5c29d5503b1ec28153daa570c104dc01))
 
