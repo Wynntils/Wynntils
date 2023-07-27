@@ -111,6 +111,9 @@ public class StatisticButton extends WynntilsButton implements TooltipProvider {
         List<Component> lines = new ArrayList<>();
 
         lines.add(Component.literal(statistic.a().getName()).withStyle(ChatFormatting.BOLD));
+        lines.add(Component.translatable(
+                "screens.wynntils.statistics.total",
+                statistic.a().getFormattedValue(statistic.b().total())));
         lines.add(Component.empty());
 
         if (isSelected()) {
