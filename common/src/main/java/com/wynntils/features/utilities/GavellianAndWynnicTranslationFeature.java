@@ -400,11 +400,6 @@ public class GavellianAndWynnicTranslationFeature extends Feature {
 
         if (!translateWynnic && !translateGavellian) return;
 
-        if (e instanceof WynnTranslatedNpcDialogEvent || e instanceof TranslationFeature.TranslatedNpcDialogEvent)
-            return;
-
-        e.setCanceled(true);
-
         if (!e.getChatMessage().isEmpty()) {
             boolean finalTranslateWynnic = translateWynnic;
             boolean finalTranslateGavellian = translateGavellian;
@@ -426,6 +421,8 @@ public class GavellianAndWynnicTranslationFeature extends Feature {
             NpcDialogEvent translatedEvent = new WynnTranslatedNpcDialogEvent(List.of(), e.getType(), e.isProtected());
             WynntilsMod.postEvent(translatedEvent);
         }
+
+        e.setCanceled(true);
     }
 
     private boolean hasWynnicOrGavellian(String message) {

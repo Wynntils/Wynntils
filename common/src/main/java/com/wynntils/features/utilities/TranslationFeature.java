@@ -119,8 +119,8 @@ public class TranslationFeature extends Feature {
         return origCoded.getString().replaceAll("(§[0-9a-fklmnor])", "{$1}");
     }
 
-    public static class TranslatedNpcDialogEvent extends NpcDialogEvent {
-        public TranslatedNpcDialogEvent(List<Component> chatMsg, NpcDialogueType type, boolean isProtected) {
+    private static class TranslatedNpcDialogEvent extends NpcDialogEvent {
+        protected TranslatedNpcDialogEvent(List<Component> chatMsg, NpcDialogueType type, boolean isProtected) {
             super(chatMsg, type, isProtected);
         }
     }
