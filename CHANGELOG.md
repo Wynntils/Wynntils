@@ -1,9 +1,21 @@
+## [0.0.3-alpha.218](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.217...v0.0.3-alpha.218) (2023-07-27)
+
+
+### New Features
+
+* Fix some bugs related to scoreboard parsing correctly by simplifying the handler ([#1850](https://github.com/Wynntils/Artemis/issues/1850)) ([1e1a517](https://github.com/Wynntils/Artemis/commit/1e1a5178c9fffae3802a3d7f3ba9022b135c200f))
+
 ## [0.0.3-alpha.217](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.216...v0.0.3-alpha.217) (2023-07-26)
 
 
 ### Bug Fixes
 
 * Fix configs not working with the overlay refactor ([#1856](https://github.com/Wynntils/Artemis/issues/1856)) ([d152d47](https://github.com/Wynntils/Artemis/commit/d152d470d294b9cbd30add8778d2ffb946bcde03))
+
+
+### Miscellaneous Chores
+
+* **release:** v0.0.3-alpha.217 [skip ci] ([2386031](https://github.com/Wynntils/Artemis/commit/2386031ca849cc6e27f84a7a5b4fb285d87171f9))
 
 ## [0.0.3-alpha.216](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.215...v0.0.3-alpha.216) (2023-07-26)
 
@@ -40,16 +52,4 @@
 ### Miscellaneous Chores
 
 * **release:** v0.0.3-alpha.214 [skip ci] ([09e9df4](https://github.com/Wynntils/Artemis/commit/09e9df44b0c1220f034461131ff0de08174773c8))
-
-## [0.0.3-alpha.213](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.212...v0.0.3-alpha.213) (2023-07-26)
-
-
-### Bug Fixes
-
-* fix OverlayManagementScreen alignment guide tooltip ([#1851](https://github.com/Wynntils/Artemis/issues/1851)) ([9b7a920](https://github.com/Wynntils/Artemis/commit/9b7a9207482fe653bd8871034a6c54ab88d19ef0))
-
-
-### Miscellaneous Chores
-
-* **release:** v0.0.3-alpha.213 [skip ci] ([86e8fcf](https://github.com/Wynntils/Artemis/commit/86e8fcf599b5c4b4733806987f5b307f97dc8920))
 
