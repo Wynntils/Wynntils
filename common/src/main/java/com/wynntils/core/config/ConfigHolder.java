@@ -9,7 +9,7 @@ import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.components.Managers;
 import com.wynntils.core.consumers.features.Configurable;
 import com.wynntils.core.consumers.features.Translatable;
-import com.wynntils.core.consumers.features.overlays.Overlay;
+import com.wynntils.core.consumers.overlays.Overlay;
 import com.wynntils.utils.EnumUtils;
 import java.lang.reflect.Type;
 import java.util.Objects;
@@ -74,16 +74,16 @@ public class ConfigHolder implements Comparable<ConfigHolder> {
     }
 
     public String getJsonName() {
-        if (parent instanceof Overlay) {
+        if (parent instanceof Overlay overlay) {
             // "featureName.overlayName.settingName"
-            return getDeclaringFeatureNameCamelCase() + "." + parent.getConfigJsonName() + "." + getFieldName();
+            return getDeclaringFeatureNameCamelCase(overlay) + "." + parent.getConfigJsonName() + "." + getFieldName();
         }
         // "featureName.settingName"
         return parent.getConfigJsonName() + "." + getFieldName();
     }
 
-    private String getDeclaringFeatureNameCamelCase() {
-        String name = parent.getClass().getDeclaringClass().getSimpleName();
+    private String getDeclaringFeatureNameCamelCase(Overlay overlay) {
+        String name = overlay.getDeclaringClassName();
         return CaseFormat.UPPER_CAMEL.to(CaseFormat.LOWER_CAMEL, name);
     }
 
