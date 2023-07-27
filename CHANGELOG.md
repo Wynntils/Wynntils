@@ -1,9 +1,17 @@
+## [0.0.3-alpha.222](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.221...v0.0.3-alpha.222) (2023-07-27)
+
+
+### Bug Fixes
+
+* Detect horse not allowed message ([#1864](https://github.com/Wynntils/Artemis/issues/1864)) ([8dc4605](https://github.com/Wynntils/Artemis/commit/8dc4605f3bc072cc3eaa698f6705c0855e9343e1))
+
 ## [0.0.3-alpha.221](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.220...v0.0.3-alpha.221) (2023-07-27)
 
 
 ### Miscellaneous Chores
 
 * Add verification that statistics have i18n ([#1863](https://github.com/Wynntils/Artemis/issues/1863)) ([6292150](https://github.com/Wynntils/Artemis/commit/6292150c3c742725dd1bba18612f529d27f5d811))
+* **release:** v0.0.3-alpha.221 [skip ci] ([8b437d3](https://github.com/Wynntils/Artemis/commit/8b437d359234dcc7895aebe3046edf7b5643fa88))
 
 ## [0.0.3-alpha.220](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.219...v0.0.3-alpha.220) (2023-07-27)
 
@@ -40,16 +48,4 @@
 ### Miscellaneous Chores
 
 * **release:** v0.0.3-alpha.218 [skip ci] ([3ebf933](https://github.com/Wynntils/Artemis/commit/3ebf933e82161f544ea29c0cb166174613dc6eb2))
-
-## [0.0.3-alpha.217](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.216...v0.0.3-alpha.217) (2023-07-26)
-
-
-### Bug Fixes
-
-* Fix configs not working with the overlay refactor ([#1856](https://github.com/Wynntils/Artemis/issues/1856)) ([d152d47](https://github.com/Wynntils/Artemis/commit/d152d470d294b9cbd30add8778d2ffb946bcde03))
-
-
-### Miscellaneous Chores
-
-* **release:** v0.0.3-alpha.217 [skip ci] ([2386031](https://github.com/Wynntils/Artemis/commit/2386031ca849cc6e27f84a7a5b4fb285d87171f9))
 
