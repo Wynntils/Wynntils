@@ -12,7 +12,7 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.Tesselator;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.mojang.blaze3d.vertex.VertexFormat;
-import com.wynntils.services.lootruns.LootrunInstance;
+import com.wynntils.services.lootrunpaths.LootrunPathInstance;
 import com.wynntils.services.map.MapTexture;
 import com.wynntils.services.map.pois.Poi;
 import com.wynntils.utils.MathUtils;
@@ -154,7 +154,7 @@ public final class MapRenderer {
     }
 
     public static void renderLootrunLine(
-            LootrunInstance lootrun,
+            LootrunPathInstance lootrun,
             float lootrunWidth,
             float outlineWidth,
             PoseStack poseStack,

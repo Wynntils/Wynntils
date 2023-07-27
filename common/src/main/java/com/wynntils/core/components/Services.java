@@ -11,7 +11,7 @@ import com.wynntils.services.cosmetics.CosmeticsService;
 import com.wynntils.services.discord.DiscordService;
 import com.wynntils.services.favorites.FavoritesService;
 import com.wynntils.services.hades.HadesService;
-import com.wynntils.services.lootruns.LootrunPathsService;
+import com.wynntils.services.lootrunpaths.LootrunPathsService;
 import com.wynntils.services.map.MapService;
 import com.wynntils.services.map.PoiService;
 import com.wynntils.services.ping.PingService;

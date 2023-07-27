@@ -2,7 +2,7 @@
  * Copyright © Wynntils 2023.
  * This file is released under AGPLv3. See LICENSE for full license details.
  */
-package com.wynntils.services.lootruns;
+package com.wynntils.services.lootrunpaths;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.phys.Vec3;
