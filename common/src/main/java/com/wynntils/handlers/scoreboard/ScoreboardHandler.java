@@ -19,18 +19,18 @@ import com.wynntils.models.worlds.event.WorldStateEvent;
 import com.wynntils.models.worlds.type.WorldState;
 import com.wynntils.utils.mc.McUtils;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import java.util.TreeSet;
 import java.util.regex.Pattern;
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
-import net.minecraft.server.ServerScoreboard;
 import net.minecraft.world.scores.Objective;
+import net.minecraft.world.scores.Score;
 import net.minecraft.world.scores.Scoreboard;
 import net.minecraft.world.scores.criteria.ObjectiveCriteria;
 import net.minecraftforge.eventbus.api.EventPriority;
@@ -46,8 +46,7 @@ public final class ScoreboardHandler extends Handler {
     private static final int MAX_SCOREBOARD_LINE = 16;
     private static final ScoreboardPart FALLBACK_SCOREBOARD_PART = new FallbackScoreboardPart();
 
-    private String scoreboardNameCache;
-    private final Set<ScoreboardLine> reconstructedScoreboard = new TreeSet<>();
+    private String currentScoreboardName = "";
     private final Map<ScoreboardPart, ScoreboardSegment> scoreboardSegments = new LinkedHashMap<>();
 
     private final List<ScoreboardPart> scoreboardParts = new ArrayList<>();
@@ -56,41 +55,35 @@ public final class ScoreboardHandler extends Handler {
         scoreboardParts.add(scoreboardPart);
     }
 
-    private String getScoreboardName() {
-        if (scoreboardNameCache != null) {
-            return scoreboardNameCache;
-        }
+    private boolean isValidScoreboardName(String scoreboardName) {
+        // If the name is longer than 14 characters, we need to trim it (16 chars max, 2 reversed for sb/bf)
+        String name = McUtils.player().getScoreboardName();
+        name = name.length() > 14 ? name.substring(0, 14) : name;
 
-        String baseName = "sb" + McUtils.player().getScoreboardName();
-
-        // If the baseName is longer than 16 characters, we need to trim it
-        scoreboardNameCache = baseName.length() > 16 ? baseName.substring(0, 16) : baseName;
-        return scoreboardNameCache;
+        return (scoreboardName.startsWith("sb") || scoreboardName.startsWith("bf")) && scoreboardName.endsWith(name);
     }
 
     @SubscribeEvent(priority = EventPriority.HIGHEST)
     public void onSetScore(ScoreboardSetScoreEvent event) {
-        if (!getScoreboardName().equals(event.getObjectiveName())) return;
+        if (!currentScoreboardName.equals(event.getObjectiveName())) return;
 
-        handleSetScore(event.getOwner(), event.getScore(), event.getMethod());
+        handleUpdate();
     }
 
     @SubscribeEvent(priority = EventPriority.HIGHEST)
     public void onSetObjective(ScoreboardSetObjectiveEvent event) {
-        if (!getScoreboardName().equals(event.getObjectiveName())) return;
+        if (!currentScoreboardName.equals(event.getObjectiveName())) return;
 
-        if (event.getMethod() != ScoreboardSetObjectiveEvent.METHOD_REMOVE) return;
-
-        // Reset the scoreboard
-        reconstructedScoreboard.clear();
-
-        // Reset the scoreboard segments
-        calculateScoreboardSegments();
-        createScoreboardFromSegments();
+        handleUpdate();
     }
 
-    @SubscribeEvent
+    @SubscribeEvent(priority = EventPriority.HIGHEST)
     public void onSetObjectiveDisplay(ScoreboardSetDisplayObjectiveEvent event) {
+        if (!isValidScoreboardName(event.getObjectiveName())) return;
+
+        currentScoreboardName = event.getObjectiveName();
+        handleUpdate();
+
         event.setCanceled(true);
     }
 
@@ -100,89 +93,49 @@ public final class ScoreboardHandler extends Handler {
 
         scoreboardSegments.keySet().forEach(ScoreboardPart::reset);
 
-        reconstructedScoreboard.clear();
         scoreboardSegments.clear();
-
-        // Support mods that allow changing account in-game
-        scoreboardNameCache = null;
+        currentScoreboardName = "";
     }
 
-    private void handleSetScore(StyledText owner, int score, ServerScoreboard.Method method) {
-        // 1. Handle the current change
-        switch (method) {
-            case CHANGE -> handleScoreChange(owner, score);
-            case REMOVE -> handleScoreRemove(owner);
-        }
+    private void handleUpdate() {
+        // 1. Get a reconstructed scoreboard from the current scoreboard state
+        List<ScoreboardLine> reconstructedScoreboard = getCurrentScoreboardState(currentScoreboardName);
 
-        // 2. Verify that the scoreboard is in a valid state (not in a state where we are "waiting" for other packets)
-        if (!isScoreboardValid()) return;
+        // 2. Verify that the scoreboard is in a semi-valid state
+        // (in a state where we can make sense of it, even if the actual data is still being updated)
+        if (!isScoreboardValid(reconstructedScoreboard)) return;
 
         // 3. Calculate the scoreboard segments, do segment updates
-        calculateScoreboardSegments();
+        calculateScoreboardSegments(reconstructedScoreboard);
 
         // 4. Create our own scoreboard to hide specific segments
-        createScoreboardFromSegments();
+        createScoreboardFromSegments(reconstructedScoreboard);
     }
 
-    private void handleScoreChange(StyledText owner, int score) {
-        // A score change can mean two things:
-        // 1. A new line was added to the scoreboard
-        // 2. An existing line with the same score was changed
-        // 3. An existing line's score was changed
+    private List<ScoreboardLine> getCurrentScoreboardState(String currentScoreboardName) {
+        Scoreboard scoreboard = McUtils.mc().level.getScoreboard();
+        Objective objective = scoreboard.getObjective(currentScoreboardName);
+        List<Score> lines = new ArrayList<>(scoreboard.getPlayerScores(objective));
 
-        // First, we check if the line already exists, by using the score as the identifier
-        ScoreboardLine existingScore = reconstructedScoreboard.stream()
-                .filter(line -> line.score() == score)
-                .findFirst()
-                .orElse(null);
+        // Lines are by default in reverse order
+        Collections.reverse(lines);
 
-        if (existingScore != null) {
-            // The line already exists, so we just update the line
-            reconstructedScoreboard.remove(existingScore);
-            reconstructedScoreboard.add(new ScoreboardLine(owner, score));
-            return;
-        }
-
-        // Secondly, we check if the line already exists, by using the owner as the identifier
-        ScoreboardLine existingLine = reconstructedScoreboard.stream()
-                .filter(line -> line.line().equals(owner))
-                .findFirst()
-                .orElse(null);
-
-        if (existingLine != null) {
-            // The line already exists, so we just update the score
-            reconstructedScoreboard.remove(existingLine);
-            reconstructedScoreboard.add(new ScoreboardLine(owner, score));
-            return;
-        }
-
-        // The line doesn't exist, so we add it
-        reconstructedScoreboard.add(new ScoreboardLine(owner, score));
+        return lines.stream()
+                .map(s -> new ScoreboardLine(StyledText.fromString(s.getOwner()), s.getScore()))
+                .toList();
     }
 
-    private void handleScoreRemove(StyledText owner) {
-        // A score remove can mean two things:
-        // 1. An existing line was removed
-        // 2. The line to be removed was changed before, so it doesn't exist anymore
-
-        // First, we check if the line exists, and remove it
-        // If it doesn't, we don't need to do anything
-        reconstructedScoreboard.stream()
-                .filter(line -> line.line().equals(owner))
-                .findFirst()
-                .ifPresent(reconstructedScoreboard::remove);
-    }
-
-    private boolean isScoreboardValid() {
+    private boolean isScoreboardValid(List<ScoreboardLine> reconstructedScoreboard) {
         // The scoreboard is valid if:
         // 1. There are no duplicate lines
         // 2. There are no gaps in the scores, and they are decreasing (there are no duplicate scores)
 
         // We can also check for validness by checking scoreboard parts:
-        // 3. A valid scoreboard always starts with a new line (À)
-        // 4. A valid scoreboard if it consists of valid segments:
-        //    - A valid segment is a part that stats with a header, then one or more lines, then a footer which is (À+).
-        //    - The footer is not present if the segment is the last one.
+        // 3. A valid scoreboard always starts with a newline (À)
+        // 4. A scoreboard is valid if it consists of valid segments:
+        //    - A valid segment is a part that starts with a header, then one or more lines, then a footer which is a
+        // newline (À+).
+        //    - The footer is not present if the segment is the last one displayed.
 
         // 0. An empty scoreboard is valid
         if (reconstructedScoreboard.isEmpty()) {
@@ -269,7 +222,7 @@ public final class ScoreboardHandler extends Handler {
         return true;
     }
 
-    private void calculateScoreboardSegments() {
+    private void calculateScoreboardSegments(List<ScoreboardLine> reconstructedScoreboard) {
         int currentIndex = 1;
         List<ScoreboardLine> scoreboardLines = reconstructedScoreboard.stream().toList();
 
@@ -324,7 +277,7 @@ public final class ScoreboardHandler extends Handler {
         }
     }
 
-    private void createScoreboardFromSegments() {
+    private void createScoreboardFromSegments(List<ScoreboardLine> reconstructedScoreboard) {
         Scoreboard scoreboard = McUtils.player().getScoreboard();
 
         Objective oldObjective = scoreboard.getObjective(SCOREBOARD_KEY);
