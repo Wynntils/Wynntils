@@ -368,12 +368,13 @@ public final class FeatureManager extends Manager {
             // Log and handle gracefully, just disable this feature
             crashFeature(feature);
             WynntilsMod.reportCrash(
-                    feature.getClass().getName() + ":initialize",
-                    feature.getClass().getSimpleName() + " during init",
                     CrashType.FEATURE,
-                    exception,
+                    feature.getClass().getSimpleName(),
+                    feature.getClass().getName(),
+                    "init",
                     false,
-                    true);
+                    true,
+                    exception);
         }
     }
 
@@ -505,7 +506,13 @@ public final class FeatureManager extends Manager {
         boolean shouldSendChat = !(event instanceof ClientsideMessageEvent);
 
         WynntilsMod.reportCrash(
-                feature.getClass().getName(), feature.getTranslatedName(), CrashType.FEATURE, t, shouldSendChat, true);
+                CrashType.FEATURE,
+                feature.getTranslatedName(),
+                feature.getClass().getName(),
+                "event listener",
+                shouldSendChat,
+                true,
+                t);
 
         if (shouldSendChat) {
             MutableComponent enableMessage = Component.literal("Click here to enable it again.")

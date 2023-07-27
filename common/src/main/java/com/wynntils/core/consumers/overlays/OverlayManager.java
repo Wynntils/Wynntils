@@ -259,7 +259,11 @@ public final class OverlayManager extends Manager {
                 crashedOverlays.add(overlay);
 
                 WynntilsMod.reportCrash(
-                        overlay.getClass().getName(), overlay.getTranslatedName(), CrashType.OVERLAY, t);
+                        CrashType.OVERLAY,
+                        overlay.getTranslatedName(),
+                        overlay.getClass().getName(),
+                        "render",
+                        t);
             }
         }
 
