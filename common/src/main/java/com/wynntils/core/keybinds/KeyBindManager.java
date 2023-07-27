@@ -166,7 +166,11 @@ public final class KeyBindManager extends Manager {
                     crashedKeyBinds.add(Pair.of(parent, keyBind.key()));
 
                     WynntilsMod.reportCrash(
-                            parent.getClass().getName() + "." + keyBind.value(), keyBind.value(), CrashType.KEYBIND, t);
+                            CrashType.KEYBIND,
+                            keyBind.value(),
+                            parent.getClass().getName() + "." + keyBind.value(),
+                            "handling",
+                            t);
                 }
             }
         }
