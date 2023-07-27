@@ -233,6 +233,9 @@ public final class WynntilsMod {
         Managers.Config.init();
         Managers.Storage.initFeatures();
 
+        // Init services that depends on I18n
+        Services.Statistics.init();
+
         LOGGER.info(
                 "Wynntils: {} features and {} functions are now loaded and ready",
                 Managers.Feature.getFeatures().size(),
