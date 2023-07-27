@@ -121,12 +121,17 @@ public class CustomBankPagesFeature extends Feature {
         customJumpDestinations = parseStringToDestinations(configDestinations, currentContainer);
 
         if (customJumpDestinations == null) {
-            switch (currentContainer) {
-                case BANK -> customJumpDestinations = QUICK_JUMP_DESTINATIONS;
-                case BLOCK_BANK -> customJumpDestinations = BLOCK_BANK_DESTINATIONS;
-                case BOOKSHELF, MISC_BUCKET -> customJumpDestinations = HOUSING_DEFAULT_DESTINATIONS;
-            }
+            customJumpDestinations = getDefaultJumpDestinations();
         }
+    }
+
+    private List<Integer> getDefaultJumpDestinations() {
+        switch (currentContainer) {
+            case BANK -> return QUICK_JUMP_DESTINATIONS;
+            case BLOCK_BANK -> return BLOCK_BANK_DESTINATIONS;
+            case BOOKSHELF, MISC_BUCKET -> return HOUSING_DEFAULT_DESTINATIONS;
+        }
+        return HOUSING_DEFAULT_DESTINATIONS; // use as default for safety
     }
 
     @SubscribeEvent
@@ -145,8 +150,11 @@ public class CustomBankPagesFeature extends Feature {
         if (BUTTON_SLOTS.contains(slotIndex)) {
             int buttonIndex = BUTTON_SLOTS.indexOf(slotIndex);
             pageDestination = customJumpDestinations.get(buttonIndex);
-            e.setCanceled(true);
-            jumpToDestination();
+            int defaultDestination = getDefaultJumpDestinations().get(buttonIndex);
+            if (pageDestination != defaultDestination) {
+                e.setCanceled(true);
+                jumpToDestination();
+            }
         }
     }
 
