@@ -16,7 +16,7 @@ import java.util.regex.Pattern;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 
 /** A model dedicated to lootruns (the Wynncraft lootrun runs).
- * Don't confuse this with {@link com.wynntils.services.lootruns.LootrunPathsService}.
+ * Don't confuse this with {@link com.wynntils.services.lootrunpaths.LootrunPathsService}.
  */
 public class LootrunModel extends Model {
     //                          À§6§lLootrun Completed!
