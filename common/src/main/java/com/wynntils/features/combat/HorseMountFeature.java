@@ -50,6 +50,7 @@ public class HorseMountFeature extends Feature {
             StyledText.fromString("§dYour horse is scared to come out right now, too many mobs are nearby.");
     private static final StyledText MSG_HORSE_UNAVAILABLE =
             StyledText.fromString("§4You cannot interact with your horse at the moment.");
+    private static final StyledText MSG_HORSE_NOT_ALLOWED = StyledText.fromString("§4You cannot use your horse here!");
 
     private int prevItem = -1;
     private boolean alreadySetPrevItem = false;
@@ -82,7 +83,8 @@ public class HorseMountFeature extends Feature {
 
         if (message.equals(MSG_NO_SPACE)
                 || message.equals(MSG_TOO_MANY_MOBS)
-                || message.equals(MSG_HORSE_UNAVAILABLE)) {
+                || message.equals(MSG_HORSE_UNAVAILABLE)
+                || message.equals(MSG_HORSE_NOT_ALLOWED)) {
             cancelMountingHorse = true;
         }
     }
