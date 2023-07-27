@@ -5,6 +5,7 @@
 package com.wynntils.services.statistics.type;
 
 import com.google.common.base.CaseFormat;
+import com.wynntils.services.statistics.CustomStatFormatters;
 import java.util.Locale;
 import net.minecraft.client.resources.language.I18n;
 import net.minecraft.stats.StatFormatter;
@@ -18,7 +19,7 @@ public enum StatisticKind {
     LOOTRUNS_COMPLETED(StatFormatter.DEFAULT),
     LOOTRUNS_FAILED(StatFormatter.DEFAULT),
     LOOTRUNS_CHALLENGES_COMPLETED(StatFormatter.DEFAULT),
-    LOOTRUNS_TIME_ELAPSED(StatFormatter.TIME),
+    LOOTRUNS_TIME_ELAPSED(CustomStatFormatters.TIME),
     LOOTRUNS_REWARD_PULLS(StatFormatter.DEFAULT),
     LOOTRUNS_REWARD_REROLLS(StatFormatter.DEFAULT),
     LOOTRUNS_EXPERIENCE_GAINED(StatFormatter.DEFAULT),
