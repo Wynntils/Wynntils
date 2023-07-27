@@ -1,9 +1,21 @@
+## [0.0.3-alpha.220](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.219...v0.0.3-alpha.220) (2023-07-27)
+
+
+### New Features
+
+* Add soulbound to gear item api parsing ([#1862](https://github.com/Wynntils/Artemis/issues/1862)) ([80730a6](https://github.com/Wynntils/Artemis/commit/80730a631f273f9dca4e0256e34fd39ce1f41d53))
+
 ## [0.0.3-alpha.219](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.218...v0.0.3-alpha.219) (2023-07-27)
 
 
 ### New Features
 
 * Capture exceptions in key handling ([#1861](https://github.com/Wynntils/Artemis/issues/1861)) ([7eae595](https://github.com/Wynntils/Artemis/commit/7eae595e93036475d1853d7c7810c6e78dcc7344))
+
+
+### Miscellaneous Chores
+
+* **release:** v0.0.3-alpha.219 [skip ci] ([5a2f1c5](https://github.com/Wynntils/Artemis/commit/5a2f1c5e1a5f15c64e3de7d9ca96e0d2e367e6d1))
 
 ## [0.0.3-alpha.218](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.217...v0.0.3-alpha.218) (2023-07-27)
 
@@ -40,16 +52,4 @@
 ### Miscellaneous Chores
 
 * **release:** v0.0.3-alpha.216 [skip ci] ([cc94612](https://github.com/Wynntils/Artemis/commit/cc94612e5c29d5503b1ec28153daa570c104dc01))
-
-## [0.0.3-alpha.215](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.214...v0.0.3-alpha.215) (2023-07-26)
-
-
-### Miscellaneous Chores
-
-* **release:** v0.0.3-alpha.215 [skip ci] ([d48f755](https://github.com/Wynntils/Artemis/commit/d48f755d1e860d8d373c16600d717d009315a9c8))
-
-
-### Code Refactoring
-
-* Move all subclasses of Overlay into top-level classes ([#1846](https://github.com/Wynntils/Artemis/issues/1846)) ([dd723e6](https://github.com/Wynntils/Artemis/commit/dd723e6d27cb62072370c8b0a6577382b59c9e1e))
 
