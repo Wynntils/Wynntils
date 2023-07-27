@@ -1,9 +1,21 @@
+## [0.0.3-alpha.219](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.218...v0.0.3-alpha.219) (2023-07-27)
+
+
+### New Features
+
+* Capture exceptions in key handling ([#1861](https://github.com/Wynntils/Artemis/issues/1861)) ([7eae595](https://github.com/Wynntils/Artemis/commit/7eae595e93036475d1853d7c7810c6e78dcc7344))
+
 ## [0.0.3-alpha.218](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.217...v0.0.3-alpha.218) (2023-07-27)
 
 
 ### New Features
 
 * Fix some bugs related to scoreboard parsing correctly by simplifying the handler ([#1850](https://github.com/Wynntils/Artemis/issues/1850)) ([1e1a517](https://github.com/Wynntils/Artemis/commit/1e1a5178c9fffae3802a3d7f3ba9022b135c200f))
+
+
+### Miscellaneous Chores
+
+* **release:** v0.0.3-alpha.218 [skip ci] ([3ebf933](https://github.com/Wynntils/Artemis/commit/3ebf933e82161f544ea29c0cb166174613dc6eb2))
 
 ## [0.0.3-alpha.217](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.216...v0.0.3-alpha.217) (2023-07-26)
 
@@ -40,16 +52,4 @@
 ### Code Refactoring
 
 * Move all subclasses of Overlay into top-level classes ([#1846](https://github.com/Wynntils/Artemis/issues/1846)) ([dd723e6](https://github.com/Wynntils/Artemis/commit/dd723e6d27cb62072370c8b0a6577382b59c9e1e))
-
-## [0.0.3-alpha.214](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.213...v0.0.3-alpha.214) (2023-07-26)
-
-
-### New Features
-
-* Group overlay settings with the actual overlays, and restructure overlays ([#1845](https://github.com/Wynntils/Artemis/issues/1845)) ([8df402c](https://github.com/Wynntils/Artemis/commit/8df402cbda6c7cc6f383a68c201fe59896bcea08))
-
-
-### Miscellaneous Chores
-
-* **release:** v0.0.3-alpha.214 [skip ci] ([09e9df4](https://github.com/Wynntils/Artemis/commit/09e9df44b0c1220f034461131ff0de08174773c8))
 
