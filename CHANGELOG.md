@@ -1,9 +1,21 @@
+## [0.0.3-alpha.227](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.226...v0.0.3-alpha.227) (2023-07-28)
+
+
+### New Features
+
+* update CHS locale ([#1826](https://github.com/Wynntils/Artemis/issues/1826)) ([e30033b](https://github.com/Wynntils/Artemis/commit/e30033b3c89d42033b3366727e2f78ebc31961fc))
+
 ## [0.0.3-alpha.226](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.225...v0.0.3-alpha.226) (2023-07-28)
 
 
 ### New Features
 
 * Add WynntilsStatisticsScreen ([#1858](https://github.com/Wynntils/Artemis/issues/1858)) ([ade5be7](https://github.com/Wynntils/Artemis/commit/ade5be7c4a620bfd260d69e26f4db65c8a99d87a))
+
+
+### Miscellaneous Chores
+
+* **release:** v0.0.3-alpha.226 [skip ci] ([5514e51](https://github.com/Wynntils/Artemis/commit/5514e516e19eb6a36497d3856571b7c0a78a1270))
 
 ## [0.0.3-alpha.225](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.224...v0.0.3-alpha.225) (2023-07-28)
 
@@ -40,16 +52,4 @@
 ### Miscellaneous Chores
 
 * **release:** v0.0.3-alpha.223 [skip ci] ([ff51b0e](https://github.com/Wynntils/Artemis/commit/ff51b0e26a5e3d3c5b6a948d643126c7a86924fb))
-
-## [0.0.3-alpha.222](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.221...v0.0.3-alpha.222) (2023-07-27)
-
-
-### Bug Fixes
-
-* Detect horse not allowed message ([#1864](https://github.com/Wynntils/Artemis/issues/1864)) ([8dc4605](https://github.com/Wynntils/Artemis/commit/8dc4605f3bc072cc3eaa698f6705c0855e9343e1))
-
-
-### Miscellaneous Chores
-
-* **release:** v0.0.3-alpha.222 [skip ci] ([a84b6a9](https://github.com/Wynntils/Artemis/commit/a84b6a9fc8e5a6bd5e0fb34e75b745ae2e071f66))
 
