@@ -81,7 +81,7 @@ public class StatusEffectsOverlay extends Overlay {
         }
 
         renderCache = effectWithProperties
-                .map(statusTimer -> new TextRenderTask(statusTimer.getTextToRender(), getTextRenderSetting()))
+                .map(statusTimer -> new TextRenderTask(statusTimer.getRenderedText(), getTextRenderSetting()))
                 .toList();
     }
 
@@ -145,7 +145,7 @@ public class StatusEffectsOverlay extends Overlay {
                 entry = new RenderedStatusEffect(effect);
                 effectsToRender.put(effect.asString().getString(), entry);
             }
-            entry.count += 1;
+            entry.setCount( entry.getCount() + 1 );
         }
         return effectsToRender.values().stream();
     }
@@ -154,17 +154,18 @@ public class StatusEffectsOverlay extends Overlay {
         private int count = 0;
         private final StatusEffect effect;
 
-        private RenderedStatusEffect(StyledText name, StyledText modifier, StyledText displayedTime, StyledText prefix) {
-            this.effect = new StatusEffect(name, modifier, displayedTime, prefix);
-        }
 
         private RenderedStatusEffect(StatusEffect effect) {
             this.effect = effect;
         }
 
-        private StyledText getTextToRender() {
+        private StyledText getRenderedText() {
             return this.count > 1
-                    ? StyledText.fromString(this.count + "x ").append(this.effect.asString())
+                    ? this.effect.getPrefix()
+                        .append(StyledText.fromString(" " + this.count + "x "))
+                        .append(this.effect.getModifier())
+                        .append(this.effect.getName())
+                        .append(this.effect.getDisplayedTime())
                     : this.effect.asString();
         }
 
@@ -179,6 +180,5 @@ public class StatusEffectsOverlay extends Overlay {
         public StatusEffect getEffect() {
             return this.effect;
         }
-
     }
 }
