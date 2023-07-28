@@ -22,6 +22,7 @@ import com.wynntils.screens.maps.PoiManagementScreen;
 import com.wynntils.screens.overlays.selection.OverlaySelectionScreen;
 import com.wynntils.screens.settings.WynntilsBookSettingsScreen;
 import com.wynntils.screens.wynntilsmenu.widgets.WynntilsMenuButton;
+import com.wynntils.utils.StringUtils;
 import com.wynntils.utils.colors.CommonColors;
 import com.wynntils.utils.colors.CustomColor;
 import com.wynntils.utils.mc.McUtils;
@@ -31,14 +32,20 @@ import com.wynntils.utils.render.Texture;
 import com.wynntils.utils.render.type.HorizontalAlignment;
 import com.wynntils.utils.render.type.TextShadow;
 import com.wynntils.utils.type.CappedValue;
+
+import java.awt.*;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
+import java.util.concurrent.atomic.AtomicInteger;
+
 import net.minecraft.ChatFormatting;
+import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.gui.screens.inventory.InventoryScreen;
 import net.minecraft.client.resources.language.I18n;
 import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.FormattedText;
 import org.lwjgl.glfw.GLFW;
 
 public final class WynntilsMenuScreen extends WynntilsMenuScreenBase {
@@ -358,17 +365,23 @@ public final class WynntilsMenuScreen extends WynntilsMenuScreenBase {
 
         String currentSplash = Services.Splash.getCurrentSplash();
         currentSplash = currentSplash == null ? "" : currentSplash;
-        FontRenderer.getInstance()
-                .renderAlignedTextInBox(
-                        poseStack,
-                        StyledText.fromString(currentSplash),
-                        Texture.QUEST_BOOK_BACKGROUND.width() / 2f,
-                        Texture.QUEST_BOOK_BACKGROUND.width(),
-                        Texture.QUEST_BOOK_BACKGROUND.height() - 45,
-                        0,
-                        CommonColors.MAGENTA,
-                        HorizontalAlignment.CENTER,
-                        TextShadow.NONE);
+        currentSplash = "very long custom overridden splash text to demonstrate text wrapping";
+        List<String> splashLines = StringUtils.wrap(currentSplash, Texture.QUEST_BOOK_BACKGROUND.width() / 2 - 20);
+        AtomicInteger y = new AtomicInteger(Texture.QUEST_BOOK_BACKGROUND.height() - 45);
+        splashLines.forEach(splash -> {
+            FontRenderer.getInstance()
+                    .renderAlignedTextInBox(
+                            poseStack,
+                            StyledText.fromString(splash),
+                            Texture.QUEST_BOOK_BACKGROUND.width() / 2f,
+                            Texture.QUEST_BOOK_BACKGROUND.width(),
+                            y.get(),
+                            0,
+                            CommonColors.MAGENTA,
+                            HorizontalAlignment.CENTER,
+                            TextShadow.NONE);
+            y.getAndAdd(McUtils.mc().font.lineHeight + 1);
+        });
     }
 
     @Override
