@@ -29,6 +29,7 @@ import com.wynntils.models.gear.GearTooltipModel;
 import com.wynntils.models.horse.HorseModel;
 import com.wynntils.models.ingredients.IngredientModel;
 import com.wynntils.models.items.ItemModel;
+import com.wynntils.models.lootrun.LootrunModel;
 import com.wynntils.models.mobtotem.MobTotemModel;
 import com.wynntils.models.objectives.ObjectivesModel;
 import com.wynntils.models.players.FriendsModel;
@@ -63,6 +64,7 @@ public final class Models {
     public static final DamageModel Damage = new DamageModel();
     public static final ElementModel Element = new ElementModel();
     public static final GuildAttackTimerModel GuildAttackTimer = new GuildAttackTimerModel();
+    public static final LootrunModel Lootrun = new LootrunModel();
     public static final ObjectivesModel Objectives = new ObjectivesModel();
     public static final PlayerInventoryModel PlayerInventory = new PlayerInventoryModel();
     public static final PlayerModel Player = new PlayerModel();
