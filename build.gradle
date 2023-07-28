@@ -16,7 +16,7 @@ def usingHotswapAgent = project.hasProperty("wynntils.hotswap") ? project.getPro
 
 // On the release branches, this string will be automatically updated by the bots
 // Do not change this in the main branch!
-version = "0.0.3-alpha.233"
+version = "0.0.3-alpha.234"
 
 subprojects {
     apply plugin: "dev.architectury.loom"

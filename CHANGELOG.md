@@ -1,4 +1,16 @@
+## [0.0.3-alpha.234](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.233...v0.0.3-alpha.234) (2023-07-28)
+
+
+### New Features
+
+* improve stat screen formatting ([#1882](https://github.com/Wynntils/Artemis/issues/1882)) ([ae1250c](https://github.com/Wynntils/Artemis/commit/ae1250c14f6fa76b737a949efacf3bd9e05cfc78))
+
 ## [0.0.3-alpha.233](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.232...v0.0.3-alpha.233) (2023-07-28)
+
+
+### Miscellaneous Chores
+
+* **release:** v0.0.3-alpha.233 [skip ci] ([dfc4ab9](https://github.com/Wynntils/Artemis/commit/dfc4ab9fcb682a99a5e404c469c14770e25027b1))
 
 
 ### Code Refactoring
@@ -32,12 +44,4 @@
 
 * **release:** v0.0.3-alpha.230 [skip ci] ([586d614](https://github.com/Wynntils/Artemis/commit/586d6148073471c0ec925a4ad53d37b8a7dc74b0))
 * Update copyright year with Spotless ([#1875](https://github.com/Wynntils/Artemis/issues/1875)) ([4f6b122](https://github.com/Wynntils/Artemis/commit/4f6b1228a32aa089c33bf0c29533eec1b634ee49))
-
-## [0.0.3-alpha.229](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.228...v0.0.3-alpha.229) (2023-07-28)
-
-
-### Miscellaneous Chores
-
-* **release:** v0.0.3-alpha.229 [skip ci] ([e3775b9](https://github.com/Wynntils/Artemis/commit/e3775b9a82e2e6d96524838d63923ea092d2a039))
-* Start using spotless on gradle files ([#1871](https://github.com/Wynntils/Artemis/issues/1871)) ([8b54a8c](https://github.com/Wynntils/Artemis/commit/8b54a8cd08bee04a3f0179e2bdeb89603c5d3a80))
 
