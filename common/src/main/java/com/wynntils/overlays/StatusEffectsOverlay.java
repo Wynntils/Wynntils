@@ -22,6 +22,7 @@ import com.wynntils.utils.render.buffered.BufferedFontRenderer;
 import com.wynntils.utils.render.type.HorizontalAlignment;
 import com.wynntils.utils.render.type.TextShadow;
 import com.wynntils.utils.render.type.VerticalAlignment;
+import net.minecraft.ChatFormatting;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 
@@ -162,9 +163,11 @@ public class StatusEffectsOverlay extends Overlay {
         private StyledText getRenderedText() {
             return this.count > 1
                     ? this.effect.getPrefix()
-                        .append(StyledText.fromString(" " + this.count + "x "))
+                        .append(StyledText.fromString(" " + ChatFormatting.GRAY + this.count + "x "))
                         .append(this.effect.getModifier())
+                        .append(StyledText.fromString(" "))
                         .append(this.effect.getName())
+                        .append(StyledText.fromString(" "))
                         .append(this.effect.getDisplayedTime())
                     : this.effect.asString();
         }
