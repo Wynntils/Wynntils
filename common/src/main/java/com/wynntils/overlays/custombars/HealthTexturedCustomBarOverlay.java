@@ -14,7 +14,7 @@ import com.wynntils.utils.render.type.HealthTexture;
 import net.minecraft.client.renderer.MultiBufferSource;
 
 public class HealthTexturedCustomBarOverlay extends CustomBarOverlayBase {
-    @RegisterConfig("overlay.wynntils.healthBar.healthTexture")
+    @RegisterConfig(i18nKey = "overlay.wynntils.healthBar.healthTexture")
     public final Config<HealthTexture> healthTexture = new Config<>(HealthTexture.A);
 
     public HealthTexturedCustomBarOverlay(int id) {

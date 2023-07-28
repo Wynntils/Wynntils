@@ -13,5 +13,5 @@ import java.lang.annotation.Target;
 @Target(ElementType.FIELD)
 public @interface RegisterConfig {
     /** The base part of the translation key to use for this option */
-    String value() default "";
+    String i18nKey() default "";
 }
