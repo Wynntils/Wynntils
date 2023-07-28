@@ -4,6 +4,7 @@
  */
 package com.wynntils.utils;
 
+import com.wynntils.utils.mc.McUtils;
 import java.net.URLEncoder;
 import java.nio.ByteBuffer;
 import java.nio.charset.StandardCharsets;
@@ -13,8 +14,6 @@ import java.util.Base64;
 import java.util.List;
 import java.util.Locale;
 import java.util.regex.Pattern;
-
-import com.wynntils.utils.mc.McUtils;
 import net.minecraft.ChatFormatting;
 
 public final class StringUtils {

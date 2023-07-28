@@ -32,20 +32,15 @@ import com.wynntils.utils.render.Texture;
 import com.wynntils.utils.render.type.HorizontalAlignment;
 import com.wynntils.utils.render.type.TextShadow;
 import com.wynntils.utils.type.CappedValue;
-
-import java.awt.*;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 import java.util.concurrent.atomic.AtomicInteger;
-
 import net.minecraft.ChatFormatting;
-import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.gui.screens.inventory.InventoryScreen;
 import net.minecraft.client.resources.language.I18n;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.FormattedText;
 import org.lwjgl.glfw.GLFW;
 
 public final class WynntilsMenuScreen extends WynntilsMenuScreenBase {
@@ -55,6 +50,9 @@ public final class WynntilsMenuScreen extends WynntilsMenuScreenBase {
 
     private final List<List<WynntilsMenuButton>> buttons = new ArrayList<>();
     private WynntilsMenuButton hovered = null;
+
+    private static String splashText = "";
+    private static List<String> wrappedSplash = new ArrayList<>();
 
     // This makes sure we "save" our status on the settings screen, and we reopen it in the same state
     private static final Screen settingsScreenInstance = WynntilsBookSettingsScreen.create();
@@ -363,12 +361,15 @@ public final class WynntilsMenuScreen extends WynntilsMenuScreenBase {
                         HorizontalAlignment.CENTER,
                         TextShadow.NONE);
 
-        String currentSplash = Services.Splash.getCurrentSplash();
-        currentSplash = currentSplash == null ? "" : currentSplash;
-        currentSplash = "very long custom overridden splash text to demonstrate text wrapping";
-        List<String> splashLines = StringUtils.wrap(currentSplash, Texture.QUEST_BOOK_BACKGROUND.width() / 2 - 20);
+        String currentSplash = Services.Splash.getCurrentSplash() == null ? "" : Services.Splash.getCurrentSplash();
+        if (!splashText.equals(currentSplash)) {
+            // No need to calculate this every frame
+            wrappedSplash = StringUtils.wrap(currentSplash, Texture.QUEST_BOOK_BACKGROUND.width() / 2 - 20);
+            splashText = currentSplash;
+        }
+
         AtomicInteger y = new AtomicInteger(Texture.QUEST_BOOK_BACKGROUND.height() - 45);
-        splashLines.forEach(splash -> {
+        wrappedSplash.forEach(splash -> {
             FontRenderer.getInstance()
                     .renderAlignedTextInBox(
                             poseStack,
