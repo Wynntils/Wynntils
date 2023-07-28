@@ -9,7 +9,7 @@ import com.wynntils.core.text.StyledText;
 public class StatusEffect {
     private final StyledText fullName;
     private final StyledText name; // The name of the consumable (also used to identify it)
-    private final StyledText modifier;
+    private final StyledText modifier; // The modifier of the consumable (+100, 23/3s etc.)
     private StyledText displayedTime; // The displayed time remaining. Allows for xx:xx for infinite time effects.
     private StyledText prefix; // The prefix to display before the name. Not included in identifying name.
 

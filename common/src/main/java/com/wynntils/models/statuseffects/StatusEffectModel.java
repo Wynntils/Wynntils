@@ -99,7 +99,6 @@ public final class StatusEffectModel extends Model {
             } else {
                 modifier = StyledText.EMPTY;
             }
-            WynntilsMod.getLogger().info(Arrays.toString(Arrays.stream(modifierStr).map(StyledText::getString).toArray()));
 
             newStatusEffects.add(new StatusEffect(name, modifier, displayedTime, prefix));
         }
