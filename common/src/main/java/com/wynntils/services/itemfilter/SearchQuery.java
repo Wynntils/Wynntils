@@ -2,8 +2,9 @@
  * Copyright © Wynntils 2023.
  * This file is released under AGPLv3. See LICENSE for full license details.
  */
-package com.wynntils.features.inventory.search;
+package com.wynntils.services.itemfilter;
 
+import com.wynntils.core.components.Services;
 import com.wynntils.models.items.WynnItem;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -14,7 +15,7 @@ import java.util.stream.IntStream;
 public class SearchQuery {
     private final String queryString;
 
-    private final List<WynnItemFilter> wynnItemFilters;
+    private final List<ItemFilter> itemFilters;
 
     private final List<String> plainTextTokens;
 
@@ -26,21 +27,21 @@ public class SearchQuery {
 
     protected SearchQuery(
             String queryString,
-            List<WynnItemFilter> wynnItemFilters,
+            List<ItemFilter> itemFilters,
             List<Integer> ignoredCharIndices,
             List<Integer> validFilterCharIndices,
             List<String> errors,
             List<String> plainTextTokens) {
         this.queryString = queryString;
-        this.wynnItemFilters = wynnItemFilters;
+        this.itemFilters = itemFilters;
         this.ignoredCharIndices = ignoredCharIndices;
         this.validFilterCharIndices = validFilterCharIndices;
         this.errors = errors;
         this.plainTextTokens = plainTextTokens;
     }
 
-    public static SearchQuery fromQueryString(String queryString, WynnItemFilterFactory filterFactory) {
-        List<WynnItemFilter> wynnItemFilters = new ArrayList<>();
+    public static SearchQuery fromQueryString(String queryString) {
+        List<ItemFilter> itemFilters = new ArrayList<>();
         List<Integer> ignoredCharIndices = new ArrayList<>();
         List<Integer> validFilterCharIndices = new ArrayList<>();
         List<String> errors = new ArrayList<>();
@@ -54,7 +55,7 @@ public class SearchQuery {
                 String filterString = token.split(":")[0];
                 String valueString = token.substring(token.indexOf(':') + 1);
                 try {
-                    WynnItemFilter wynnItemFilter = filterFactory.create(filterString, valueString);
+                    ItemFilter itemFilter = Services.ItemFilter.createFilter(filterString, valueString);
                     // We want to throw UnknownFilterException if the filter is invalid, but we dont want to thow
                     // InvalidSyntaxException just because the value is empty
                     if (valueString.isEmpty()) continue;
@@ -64,7 +65,7 @@ public class SearchQuery {
                                     .boxed()
                                     .toList());
 
-                    if (wynnItemFilter.prepare()) wynnItemFilters.add(wynnItemFilter);
+                    if (itemFilter.prepare()) itemFilters.add(itemFilter);
                 } catch (UnknownFilterException e) {
                     ignoredCharIndices.addAll(IntStream.rangeClosed(currentCharIndex, currentCharIndex + token.length())
                             .boxed()
@@ -82,7 +83,7 @@ public class SearchQuery {
         }
 
         return new SearchQuery(
-                queryString, wynnItemFilters, ignoredCharIndices, validFilterCharIndices, errors, plainTextTokens);
+                queryString, itemFilters, ignoredCharIndices, validFilterCharIndices, errors, plainTextTokens);
     }
 
     /**
@@ -91,7 +92,7 @@ public class SearchQuery {
      * @return true if the item matches all filters, false otherwise
      */
     public boolean filterMatches(WynnItem wynnItem) {
-        return !wynnItemFilters.isEmpty() && wynnItemFilters.stream().allMatch(o -> o.matches(wynnItem));
+        return !itemFilters.isEmpty() && itemFilters.stream().allMatch(o -> o.matches(wynnItem));
     }
 
     /**

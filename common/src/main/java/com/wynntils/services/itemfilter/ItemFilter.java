@@ -2,14 +2,14 @@
  * Copyright © Wynntils 2023.
  * This file is released under AGPLv3. See LICENSE for full license details.
  */
-package com.wynntils.features.inventory.search;
+package com.wynntils.services.itemfilter;
 
 import com.wynntils.models.items.WynnItem;
 
-public abstract class WynnItemFilter {
+public abstract class ItemFilter {
     protected String searchString;
 
-    protected WynnItemFilter(String searchString) {
+    protected ItemFilter(String searchString) {
         this.searchString = searchString;
     }
 

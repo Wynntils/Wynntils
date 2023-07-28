@@ -2,7 +2,7 @@
  * Copyright © Wynntils 2023.
  * This file is released under AGPLv3. See LICENSE for full license details.
  */
-package com.wynntils.features.inventory.search;
+package com.wynntils.services.itemfilter;
 
 import static java.lang.Integer.parseInt;
 
@@ -11,7 +11,7 @@ import com.wynntils.models.items.properties.LeveledItemProperty;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-public class LevelSearchFilter extends WynnItemFilter {
+public class LevelSearchFilter extends ItemFilter {
     private static final Pattern LEVEL_RANGE_PATTERN = Pattern.compile("^(\\d+)(-(\\d+))?$");
 
     private int minLevel, maxLevel;

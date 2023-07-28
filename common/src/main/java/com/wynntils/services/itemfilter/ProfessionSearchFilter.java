@@ -2,7 +2,7 @@
  * Copyright © Wynntils 2023.
  * This file is released under AGPLv3. See LICENSE for full license details.
  */
-package com.wynntils.features.inventory.search;
+package com.wynntils.services.itemfilter;
 
 import com.wynntils.models.items.WynnItem;
 import com.wynntils.models.items.items.game.GatheringToolItem;
@@ -10,7 +10,7 @@ import com.wynntils.models.items.items.game.IngredientItem;
 import com.wynntils.models.items.items.game.MaterialItem;
 import com.wynntils.models.profession.type.ProfessionType;
 
-public class ProfessionSearchFilter extends WynnItemFilter {
+public class ProfessionSearchFilter extends ItemFilter {
     private ProfessionType profession;
 
     public ProfessionSearchFilter(String searchString) {

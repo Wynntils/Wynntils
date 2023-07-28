@@ -6,14 +6,13 @@ package com.wynntils.features.inventory;
 
 import com.wynntils.core.components.Managers;
 import com.wynntils.core.components.Models;
+import com.wynntils.core.components.Services;
 import com.wynntils.core.consumers.features.Feature;
 import com.wynntils.core.persisted.Persisted;
 import com.wynntils.core.persisted.config.Category;
 import com.wynntils.core.persisted.config.Config;
 import com.wynntils.core.persisted.config.ConfigCategory;
 import com.wynntils.core.text.StyledText;
-import com.wynntils.features.inventory.search.SearchQuery;
-import com.wynntils.features.inventory.search.WynnItemFilterManager;
 import com.wynntils.mc.event.ContainerCloseEvent;
 import com.wynntils.mc.event.ContainerSetContentEvent;
 import com.wynntils.mc.event.ContainerSetSlotEvent;
@@ -28,6 +27,7 @@ import com.wynntils.screens.base.widgets.BasicTexturedButton;
 import com.wynntils.screens.base.widgets.ContainerSearchWidget;
 import com.wynntils.screens.base.widgets.SearchWidget;
 import com.wynntils.screens.base.widgets.WynntilsButton;
+import com.wynntils.services.itemfilter.SearchQuery;
 import com.wynntils.utils.colors.CommonColors;
 import com.wynntils.utils.colors.CustomColor;
 import com.wynntils.utils.mc.McUtils;
@@ -40,13 +40,9 @@ import java.util.Optional;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
-<<<<<<< HEAD
+import net.minecraft.network.chat.Component;
 import net.minecraft.world.Container;
 import net.minecraft.world.inventory.ChestMenu;
-=======
-import net.minecraft.core.NonNullList;
-import net.minecraft.network.chat.Component;
->>>>>>> 888ea6eb (feat: Add advanced search filters to ContainerSearchFeature)
 import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import org.lwjgl.glfw.GLFW;
@@ -89,12 +85,6 @@ public class ContainerSearchFeature extends Feature {
     private boolean autoSearching = false;
     private SearchQuery lastSearchQuery;
 
-    private final WynnItemFilterManager wynnItemFilterManager;
-
-    public ContainerSearchFeature() {
-        this.wynnItemFilterManager = new WynnItemFilterManager();
-    }
-
     @SubscribeEvent
     public void onScreenInit(ScreenInitEvent event) {
         if (!(event.getScreen() instanceof AbstractContainerScreen<?> screen)) return;
@@ -110,12 +100,7 @@ public class ContainerSearchFeature extends Feature {
         if (searchableContainerType == null) return;
 
         currentSearchableContainerType = searchableContainerType;
-
-<<<<<<< HEAD
-        addSearchWidget(((AbstractContainerScreen<ChestMenu>) screen), renderX, renderY);
-=======
-        addWidgets(screen, renderX, renderY);
->>>>>>> 888ea6eb (feat: Add advanced search filters to ContainerSearchFeature)
+        addWidgets(((AbstractContainerScreen<ChestMenu>) screen), renderX, renderY);
     }
 
     @SubscribeEvent
@@ -162,11 +147,7 @@ public class ContainerSearchFeature extends Feature {
                 || !(abstractContainerScreen.getMenu() instanceof ChestMenu chestMenu)) return;
 
         autoSearching = true;
-<<<<<<< HEAD
-        matchItems(lastSearchWidget.getTextBoxInput(), chestMenu);
-=======
-        matchItems(lastSearchQuery, abstractContainerScreen);
->>>>>>> 888ea6eb (feat: Add advanced search filters to ContainerSearchFeature)
+        matchItems(lastSearchQuery, chestMenu);
 
         tryAutoSearch(abstractContainerScreen);
     }
@@ -245,8 +226,7 @@ public class ContainerSearchFeature extends Feature {
                     lastSearchQuery = query;
                     matchItems(lastSearchQuery, screen.getMenu());
                 },
-                (ScreenExtension) screen,
-                wynnItemFilterManager);
+                (ScreenExtension) screen);
 
         if (lastSearchWidget != null) {
             searchWidget.setTextBoxInput(lastSearchWidget.getTextBoxInput());
@@ -258,7 +238,7 @@ public class ContainerSearchFeature extends Feature {
 
         List<Component> helpTooltip =
                 new ArrayList<>(List.of(Component.translatable("feature.wynntils.containerSearch.tooltip")));
-        wynnItemFilterManager.getFilterUsages().forEach((keyword, usage) -> {
+        Services.ItemFilter.getFilterUsages().forEach((keyword, usage) -> {
             helpTooltip.add(Component.empty());
             helpTooltip.add(Component.literal(keyword + ":")
                     .withStyle(ChatFormatting.YELLOW)

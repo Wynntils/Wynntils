@@ -6,9 +6,8 @@ package com.wynntils.screens.base.widgets;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.wynntils.core.text.StyledText;
-import com.wynntils.features.inventory.search.SearchQuery;
-import com.wynntils.features.inventory.search.WynnItemFilterFactory;
 import com.wynntils.screens.base.TextboxScreen;
+import com.wynntils.services.itemfilter.SearchQuery;
 import com.wynntils.utils.colors.CommonColors;
 import com.wynntils.utils.render.FontRenderer;
 import com.wynntils.utils.render.type.HorizontalAlignment;
@@ -26,20 +25,16 @@ public class ContainerSearchWidget extends SearchWidget {
 
     private Consumer<SearchQuery> onSearchQueryUpdateConsumer;
 
-    private WynnItemFilterFactory filterFactory;
-
     public ContainerSearchWidget(
             int x,
             int y,
             int width,
             int height,
             Consumer<SearchQuery> onSearchQueryUpdateConsumer,
-            TextboxScreen textboxScreen,
-            WynnItemFilterFactory filterFactory) {
+            TextboxScreen textboxScreen) {
         super(x, y, width, height, null, textboxScreen);
         this.onSearchQueryUpdateConsumer = onSearchQueryUpdateConsumer;
-        this.searchQuery = SearchQuery.fromQueryString("", filterFactory);
-        this.filterFactory = filterFactory;
+        this.searchQuery = SearchQuery.fromQueryString("");
     }
 
     @Override
@@ -148,7 +143,7 @@ public class ContainerSearchWidget extends SearchWidget {
 
     @Override
     protected void onUpdate(String text) {
-        searchQuery = SearchQuery.fromQueryString(text, filterFactory);
+        searchQuery = SearchQuery.fromQueryString(text);
         onSearchQueryUpdateConsumer.accept(searchQuery);
 
         if (searchQuery.getErrors().isEmpty()) setTooltip(null);
