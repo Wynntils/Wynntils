@@ -65,6 +65,6 @@ public enum StatisticKind {
 
     public enum StatisticType {
         COUNT, // only the count is relevant
-        ADVANCED // min, max, average are all relevant, BUT count is not
+        ADVANCED // min, max, average are all relevant
     }
 }

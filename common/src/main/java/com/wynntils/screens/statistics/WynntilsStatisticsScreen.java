@@ -171,14 +171,25 @@ public final class WynntilsStatisticsScreen
                         HorizontalAlignment.LEFT,
                         VerticalAlignment.TOP,
                         TextShadow.NONE);
-
+        // Note: Count is not formatted according to the formatter
+        FontRenderer.getInstance()
+                .renderText(
+                        poseStack,
+                        StyledText.fromString(I18n.get("screens.wynntils.statistics.count", entry.count())),
+                        0,
+                        40,
+                        Texture.QUEST_BOOK_BACKGROUND.width() / 2 - 20,
+                        CommonColors.BLACK,
+                        HorizontalAlignment.LEFT,
+                        VerticalAlignment.TOP,
+                        TextShadow.NONE);
         FontRenderer.getInstance()
                 .renderText(
                         poseStack,
                         StyledText.fromString(I18n.get(
                                 "screens.wynntils.statistics.min", statisticKind.getFormattedValue(entry.min()))),
                         0,
-                        40,
+                        50,
                         Texture.QUEST_BOOK_BACKGROUND.width() / 2 - 20,
                         CommonColors.BLACK,
                         HorizontalAlignment.LEFT,
@@ -191,7 +202,7 @@ public final class WynntilsStatisticsScreen
                         StyledText.fromString(I18n.get(
                                 "screens.wynntils.statistics.max", statisticKind.getFormattedValue(entry.max()))),
                         0,
-                        50,
+                        60,
                         Texture.QUEST_BOOK_BACKGROUND.width() / 2 - 20,
                         CommonColors.BLACK,
                         HorizontalAlignment.LEFT,
@@ -205,7 +216,7 @@ public final class WynntilsStatisticsScreen
                                 "screens.wynntils.statistics.average",
                                 statisticKind.getFormattedValue(entry.average()))),
                         0,
-                        60,
+                        70,
                         Texture.QUEST_BOOK_BACKGROUND.width() / 2 - 20,
                         CommonColors.BLACK,
                         HorizontalAlignment.LEFT,
