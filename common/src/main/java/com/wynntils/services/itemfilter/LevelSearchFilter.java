@@ -26,21 +26,18 @@ public class LevelSearchFilter extends ItemFilter {
     public boolean prepare() throws InvalidSyntaxException {
         Matcher matcher = LEVEL_RANGE_PATTERN.matcher(searchString);
         if (!matcher.find()) {
-            throw new InvalidSyntaxException(
-                    "feature.wynntils.containerSearch.filter.level.invalid_range", searchString);
+            throw new InvalidSyntaxException("feature.wynntils.itemFilters.level.invalid_range", searchString);
         }
 
         try {
             minLevel = parseInt(matcher.group(1));
             maxLevel = matcher.group(3) == null ? minLevel : parseInt(matcher.group(3));
         } catch (NumberFormatException ignore) {
-            throw new InvalidSyntaxException(
-                    "feature.wynntils.containerSearch.filter.level.invalid_range", searchString);
+            throw new InvalidSyntaxException("feature.wynntils.itemFilters.level.invalid_range", searchString);
         }
 
         if (minLevel > maxLevel) {
-            throw new InvalidSyntaxException(
-                    "feature.wynntils.containerSearch.filter.level.max_less_than_min", searchString);
+            throw new InvalidSyntaxException("feature.wynntils.itemFilters.level.max_less_than_min", searchString);
         }
 
         prepared = true;

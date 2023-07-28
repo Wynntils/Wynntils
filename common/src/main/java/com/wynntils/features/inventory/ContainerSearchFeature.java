@@ -238,11 +238,11 @@ public class ContainerSearchFeature extends Feature {
 
         List<Component> helpTooltip =
                 new ArrayList<>(List.of(Component.translatable("feature.wynntils.containerSearch.tooltip")));
-        Services.ItemFilter.getFilterUsages().forEach((keyword, usage) -> {
+        Services.ItemFilter.getFilterUsages().forEach((keyword, usageTranslateKey) -> {
             helpTooltip.add(Component.empty());
             helpTooltip.add(Component.literal(keyword + ":")
                     .withStyle(ChatFormatting.YELLOW)
-                    .append(Component.literal(usage).withStyle(ChatFormatting.GRAY)));
+                    .append(Component.translatable(usageTranslateKey).withStyle(ChatFormatting.GRAY)));
         });
 
         WynntilsButton infoButton = new BasicTexturedButton(

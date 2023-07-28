@@ -22,7 +22,7 @@ public class ProfessionSearchFilter extends ItemFilter {
         profession = ProfessionType.fromString(searchString);
         if (profession == null) {
             throw new InvalidSyntaxException(
-                    "feature.wynntils.containerSearch.filter.profession.invalid_profession", searchString);
+                    "feature.wynntils.itemFilters.profession.invalid_profession", searchString);
         }
 
         return true;

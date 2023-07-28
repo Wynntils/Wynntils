@@ -25,7 +25,7 @@ public class ItemFilterService extends Service {
 
     private void registerFilter(String keyword, String translateKey, Function<String, ? extends ItemFilter> supplier) {
         filterSuppliers.put(keyword, supplier);
-        filterUsages.put(keyword, I18n.get("feature.wynntils.containerSearch.filter." + translateKey + ".usage"));
+        filterUsages.put(keyword, "feature.wynntils.itemFilters." + translateKey + ".usage");
     }
 
     /**
@@ -44,6 +44,10 @@ public class ItemFilterService extends Service {
         return filterSuppliers.get(keyword).apply(searchString);
     }
 
+    /**
+     * Returns a mapping of all registered filter keywords to their usage translation keys
+     * @return a mapping of all registered filter keywords to their usage translation keys
+     */
     public Map<String, String> getFilterUsages() {
         return Collections.unmodifiableMap(filterUsages);
     }
