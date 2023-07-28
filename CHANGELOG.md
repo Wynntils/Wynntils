@@ -1,9 +1,21 @@
+## [0.0.3-alpha.229](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.228...v0.0.3-alpha.229) (2023-07-28)
+
+
+### Miscellaneous Chores
+
+* Start using spotless on gradle files ([#1871](https://github.com/Wynntils/Artemis/issues/1871)) ([8b54a8c](https://github.com/Wynntils/Artemis/commit/8b54a8cd08bee04a3f0179e2bdeb89603c5d3a80))
+
 ## [0.0.3-alpha.228](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.227...v0.0.3-alpha.228) (2023-07-28)
 
 
 ### Bug Fixes
 
 * Don't overwrite default bank jump behavior ([#1857](https://github.com/Wynntils/Artemis/issues/1857)) ([f3b2528](https://github.com/Wynntils/Artemis/commit/f3b252864aee458cf136de6d50c51b61cc096169))
+
+
+### Miscellaneous Chores
+
+* **release:** v0.0.3-alpha.228 [skip ci] ([adf3239](https://github.com/Wynntils/Artemis/commit/adf3239062f8483caa8a688b2dc2bd43e1ba5e11))
 
 ## [0.0.3-alpha.227](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.226...v0.0.3-alpha.227) (2023-07-28)
 
@@ -40,16 +52,4 @@
 ### Miscellaneous Chores
 
 * **release:** v0.0.3-alpha.225 [skip ci] ([5228ccd](https://github.com/Wynntils/Artemis/commit/5228ccd2ddab5f87cfd630a4e74fc9d330e22d3d))
-
-## [0.0.3-alpha.224](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.223...v0.0.3-alpha.224) (2023-07-28)
-
-
-### Bug Fixes
-
-* Typing occurs in unfocused input boxes ([#1869](https://github.com/Wynntils/Artemis/issues/1869)) ([ae3619b](https://github.com/Wynntils/Artemis/commit/ae3619b42d94ffe965c29ed20bf74a21070aeca4))
-
-
-### Miscellaneous Chores
-
-* **release:** v0.0.3-alpha.224 [skip ci] ([0ecbece](https://github.com/Wynntils/Artemis/commit/0ecbecec174d34d4243b79e7feed9ac3a375cde3))
 
