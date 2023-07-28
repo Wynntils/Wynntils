@@ -1,9 +1,21 @@
+## [0.0.3-alpha.224](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.223...v0.0.3-alpha.224) (2023-07-28)
+
+
+### Bug Fixes
+
+* Typing occurs in unfocused input boxes ([#1869](https://github.com/Wynntils/Artemis/issues/1869)) ([ae3619b](https://github.com/Wynntils/Artemis/commit/ae3619b42d94ffe965c29ed20bf74a21070aeca4))
+
 ## [0.0.3-alpha.223](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.222...v0.0.3-alpha.223) (2023-07-28)
 
 
 ### Bug Fixes
 
 * Convert À to A in translations, to somewhat preserve meaning ([#1865](https://github.com/Wynntils/Artemis/issues/1865)) ([f72f011](https://github.com/Wynntils/Artemis/commit/f72f011a2b11e01ad53c1a9bdc7f1278eb606733))
+
+
+### Miscellaneous Chores
+
+* **release:** v0.0.3-alpha.223 [skip ci] ([ff51b0e](https://github.com/Wynntils/Artemis/commit/ff51b0e26a5e3d3c5b6a948d643126c7a86924fb))
 
 ## [0.0.3-alpha.222](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.221...v0.0.3-alpha.222) (2023-07-27)
 
@@ -36,16 +48,4 @@
 ### Miscellaneous Chores
 
 * **release:** v0.0.3-alpha.220 [skip ci] ([76c0367](https://github.com/Wynntils/Artemis/commit/76c03674850682a062f3ed2a1a9881d93ba475b0))
-
-## [0.0.3-alpha.219](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.218...v0.0.3-alpha.219) (2023-07-27)
-
-
-### New Features
-
-* Capture exceptions in key handling ([#1861](https://github.com/Wynntils/Artemis/issues/1861)) ([7eae595](https://github.com/Wynntils/Artemis/commit/7eae595e93036475d1853d7c7810c6e78dcc7344))
-
-
-### Miscellaneous Chores
-
-* **release:** v0.0.3-alpha.219 [skip ci] ([5a2f1c5](https://github.com/Wynntils/Artemis/commit/5a2f1c5e1a5f15c64e3de7d9ca96e0d2e367e6d1))
 
