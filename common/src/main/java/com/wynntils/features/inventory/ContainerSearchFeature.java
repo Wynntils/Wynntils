@@ -271,8 +271,10 @@ public class ContainerSearchFeature extends Feature {
             Optional<WynnItem> wynnItemOpt = Models.Item.getWynnItem(itemStack);
             if (wynnItemOpt.isEmpty()) return;
 
-            boolean filtered = searchQuery.filterMatches(wynnItemOpt.get())
+            boolean filtered = !searchQuery.isEmpty()
+                    && searchQuery.filterMatches(wynnItemOpt.get())
                     && searchQuery.itemNameMatches(itemStack.getHoverName().getString());
+
             wynnItemOpt.get().getCache().store(WynnItemCache.SEARCHED_KEY, filtered);
             if (filtered) {
                 autoSearching = false;

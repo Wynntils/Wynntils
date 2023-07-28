@@ -91,17 +91,18 @@ public class SearchQuery {
     }
 
     /**
-     * Checks if the given item matches all filters. Tokens that are not filters in the search query are ignored.
+     * Checks if the given item matches all filters. Tokens that are not filters in the search query are ignored. If no
+     * filters are present, this method always returns true.
      * @param wynnItem the item to check
      * @return true if the item matches all filters, false otherwise
      */
     public boolean filterMatches(WynnItem wynnItem) {
-        return !itemFilters.isEmpty() && itemFilters.stream().allMatch(o -> o.matches(wynnItem));
+        return itemFilters.stream().allMatch(o -> o.matches(wynnItem));
     }
 
     /**
      * Checks if the given item name contains the concatenated plain text tokens of the search query. The filter tokens
-     * in the search query are ignored.
+     * in the search query are ignored. If there are no plain text tokens, this method always returns true.
      * @param itemName the name to check
      * @return true if the name contains the concatenated plain text tokens, false otherwise
      */
@@ -109,6 +110,14 @@ public class SearchQuery {
         return plainTextTokens.isEmpty()
                 || itemName.toLowerCase(Locale.ROOT)
                         .contains(String.join(" ", plainTextTokens).toLowerCase(Locale.ROOT));
+    }
+
+    /**
+     * Checks if the query contains no valid filters or plain text tokens.
+     * @return true if the query contains no valid filters or plain text tokens.
+     */
+    public boolean isEmpty() {
+        return itemFilters.isEmpty() && plainTextTokens.isEmpty();
     }
 
     public String getQueryString() {
