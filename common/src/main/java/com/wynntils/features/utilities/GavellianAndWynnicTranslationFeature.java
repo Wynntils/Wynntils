@@ -212,10 +212,8 @@ public class GavellianAndWynnicTranslationFeature extends Feature {
 
         if (!event.getChatMessage().isEmpty()) {
             List<Component> translatedComponents = event.getChatMessage().stream()
-                    .map(component -> wrapCoding(StyledText.fromComponent(component)))
                     .map(styledText -> getStyledTextWithTranslation(
-                            StyledText.fromString(styledText), translateWynnic, translateGavellian, true))
-                    .map(styledText -> unwrapCoding(styledText.getString()))
+                            StyledText.fromComponent(styledText), translateWynnic, translateGavellian, true))
                     .map(s -> ((Component) s.getComponent()))
                     .toList();
 
@@ -402,14 +400,6 @@ public class GavellianAndWynnicTranslationFeature extends Feature {
         }
 
         return false;
-    }
-
-    private StyledText unwrapCoding(String origCoded) {
-        return StyledText.fromString(origCoded.replaceAll("\\{ ?§ ?([0-9a-fklmnor]) ?\\}", "§$1"));
-    }
-
-    private String wrapCoding(StyledText origCoded) {
-        return origCoded.getString().replaceAll("(§[0-9a-fklmnor])", "{$1}");
     }
 
     private StyledText getStyledTextWithTranslation(
