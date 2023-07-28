@@ -4,7 +4,6 @@
  */
 package com.wynntils.utils;
 
-import com.wynntils.utils.mc.McUtils;
 import java.net.URLEncoder;
 import java.nio.ByteBuffer;
 import java.nio.charset.StandardCharsets;

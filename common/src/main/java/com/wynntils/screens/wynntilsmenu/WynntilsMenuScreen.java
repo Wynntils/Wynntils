@@ -23,7 +23,6 @@ import com.wynntils.screens.overlays.selection.OverlaySelectionScreen;
 import com.wynntils.screens.settings.WynntilsBookSettingsScreen;
 import com.wynntils.screens.statistics.WynntilsStatisticsScreen;
 import com.wynntils.screens.wynntilsmenu.widgets.WynntilsMenuButton;
-import com.wynntils.utils.StringUtils;
 import com.wynntils.utils.colors.CommonColors;
 import com.wynntils.utils.colors.CustomColor;
 import com.wynntils.utils.mc.McUtils;
@@ -37,7 +36,6 @@ import com.wynntils.utils.type.CappedValue;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
-import java.util.concurrent.atomic.AtomicInteger;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.gui.screens.inventory.InventoryScreen;
@@ -54,7 +52,7 @@ public final class WynntilsMenuScreen extends WynntilsMenuScreenBase {
     private WynntilsMenuButton hovered = null;
 
     private static String splashText = "";
-    private static List<StyledText> wrappedSplash = new ArrayList<>();
+    private static StyledText[] wrappedSplash = {};
 
     // This makes sure we "save" our status on the settings screen, and we reopen it in the same state
     private static final Screen settingsScreenInstance = WynntilsBookSettingsScreen.create();
@@ -383,25 +381,24 @@ public final class WynntilsMenuScreen extends WynntilsMenuScreenBase {
         String currentSplash = Services.Splash.getCurrentSplash() == null ? "" : Services.Splash.getCurrentSplash();
         if (!splashText.equals(currentSplash)) {
             // No need to calculate this every frame
-            wrappedSplash = List.of(RenderedStringUtils.wrapTextBySize(StyledText.fromString(currentSplash), Texture.QUEST_BOOK_BACKGROUND.width() / 2 - 20));
+            wrappedSplash = RenderedStringUtils.wrapTextBySize(
+                    StyledText.fromString(currentSplash), Texture.QUEST_BOOK_BACKGROUND.width() / 2 - 20);
             splashText = currentSplash;
         }
 
-        AtomicInteger y = new AtomicInteger(Texture.QUEST_BOOK_BACKGROUND.height() - 45);
-        wrappedSplash.forEach(splash -> {
+        for (int i = 0; i < wrappedSplash.length; i++) {
             FontRenderer.getInstance()
                     .renderAlignedTextInBox(
                             poseStack,
-                            splash,
+                            wrappedSplash[i],
                             Texture.QUEST_BOOK_BACKGROUND.width() / 2f,
                             Texture.QUEST_BOOK_BACKGROUND.width(),
-                            y.get(),
+                            Texture.QUEST_BOOK_BACKGROUND.height() - 45 + i * (McUtils.mc().font.lineHeight + 1),
                             0,
                             CommonColors.MAGENTA,
                             HorizontalAlignment.CENTER,
                             TextShadow.NONE);
-            y.getAndAdd(McUtils.mc().font.lineHeight + 1);
-        });
+        }
     }
 
     @Override
