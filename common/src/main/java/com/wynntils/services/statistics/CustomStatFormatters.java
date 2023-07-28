@@ -4,6 +4,9 @@
  */
 package com.wynntils.services.statistics;
 
+import com.wynntils.utils.StringUtils;
+import java.text.NumberFormat;
+import java.util.Locale;
 import net.minecraft.stats.StatFormatter;
 
 public final class CustomStatFormatters {
@@ -25,4 +28,7 @@ public final class CustomStatFormatters {
             return minutes >= 1 ? StatFormatter.DECIMAL_FORMAT.format(minutes) + " m" : seconds + " s";
         }
     };
+
+    public static StatFormatter FORMATTED_NUMBER = (number) ->
+            NumberFormat.getIntegerInstance(Locale.US).format(number) + " (" + StringUtils.formatAmount(number) + ")";
 }

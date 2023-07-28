@@ -134,6 +134,31 @@ public final class WynntilsStatisticsScreen
         poseStack.popPose();
 
         // Statistics
+        switch (statisticKind.getType()) {
+            case COUNT -> renderCountStatistics(poseStack, statisticKind, entry);
+            case ADVANCED -> renderAdvancedStatistics(poseStack, statisticKind, entry);
+        }
+
+        poseStack.popPose();
+    }
+
+    private static void renderCountStatistics(PoseStack poseStack, StatisticKind statisticKind, StatisticEntry entry) {
+        FontRenderer.getInstance()
+                .renderText(
+                        poseStack,
+                        StyledText.fromString(I18n.get(
+                                "screens.wynntils.statistics.count", statisticKind.getFormattedValue(entry.count()))),
+                        0,
+                        30,
+                        Texture.QUEST_BOOK_BACKGROUND.width() / 2 - 20,
+                        CommonColors.BLACK,
+                        HorizontalAlignment.LEFT,
+                        VerticalAlignment.TOP,
+                        TextShadow.NONE);
+    }
+
+    private static void renderAdvancedStatistics(
+            PoseStack poseStack, StatisticKind statisticKind, StatisticEntry entry) {
         FontRenderer.getInstance()
                 .renderText(
                         poseStack,
@@ -146,7 +171,6 @@ public final class WynntilsStatisticsScreen
                         HorizontalAlignment.LEFT,
                         VerticalAlignment.TOP,
                         TextShadow.NONE);
-
         // Note: Count is not formatted according to the formatter
         FontRenderer.getInstance()
                 .renderText(
@@ -159,7 +183,6 @@ public final class WynntilsStatisticsScreen
                         HorizontalAlignment.LEFT,
                         VerticalAlignment.TOP,
                         TextShadow.NONE);
-
         FontRenderer.getInstance()
                 .renderText(
                         poseStack,
@@ -199,8 +222,6 @@ public final class WynntilsStatisticsScreen
                         HorizontalAlignment.LEFT,
                         VerticalAlignment.TOP,
                         TextShadow.NONE);
-
-        poseStack.popPose();
     }
 
     public void setHighlightedButton(StatisticButton button) {
