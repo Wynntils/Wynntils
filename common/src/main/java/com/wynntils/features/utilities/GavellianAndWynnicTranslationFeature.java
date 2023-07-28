@@ -199,7 +199,6 @@ public class GavellianAndWynnicTranslationFeature extends Feature {
         event.setMessage(modified.getComponent());
     }
 
-    // Sometimes the non translated dialogue is still displayed
     @SubscribeEvent(priority = EventPriority.HIGHEST)
     public void onNpcDialogue(NpcDialogEvent event) {
         if (!translateNpcs.get()) return;
@@ -209,6 +208,8 @@ public class GavellianAndWynnicTranslationFeature extends Feature {
         boolean translateGavellian = shouldTranslate(WynnLanguage.GAVELLIAN);
 
         if (!translateWynnic && !translateGavellian) return;
+
+        event.setCanceled(true);
 
         if (!event.getChatMessage().isEmpty()) {
             List<Component> translatedComponents = event.getChatMessage().stream()
@@ -227,8 +228,6 @@ public class GavellianAndWynnicTranslationFeature extends Feature {
                     new WynnTranslatedNpcDialogEvent(List.of(), event.getType(), event.isProtected());
             WynntilsMod.postEvent(translatedEvent);
         }
-
-        event.setCanceled(true);
     }
 
     private void addLanguageButton(ChatScreen chatScreen, int xOffset, WynnLanguage language) {
