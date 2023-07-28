@@ -328,6 +328,8 @@ public class TextInputBoxWidget extends AbstractWidget {
 
     @Override
     public boolean charTyped(char codePoint, int modifiers) {
+        if (!isFocused()) return false;
+
         if (textBoxInput == null) {
             textBoxInput = "";
         }
