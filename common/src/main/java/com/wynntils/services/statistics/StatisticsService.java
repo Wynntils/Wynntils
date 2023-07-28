@@ -66,6 +66,15 @@ public final class StatisticsService extends Service {
         return currentStatistics.getOrDefault(statistic, StatisticEntry.EMPTY);
     }
 
+    public Map<StatisticKind, StatisticEntry> getStatistics() {
+        return currentStatistics;
+    }
+
+    public void resetStatistic(StatisticKind statistic) {
+        currentStatistics.remove(statistic);
+        statistics.touched();
+    }
+
     public void resetStatistics() {
         currentStatistics.clear();
         statistics.touched();

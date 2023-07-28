@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2022.
+ * Copyright © Wynntils 2022-2023.
  * This file is released under AGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.screens.base.widgets;
@@ -328,6 +328,8 @@ public class TextInputBoxWidget extends AbstractWidget {
 
     @Override
     public boolean charTyped(char codePoint, int modifiers) {
+        if (!isFocused()) return false;
+
         if (textBoxInput == null) {
             textBoxInput = "";
         }

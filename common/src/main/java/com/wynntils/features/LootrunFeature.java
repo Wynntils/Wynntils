@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2022.
+ * Copyright © Wynntils 2022-2023.
  * This file is released under AGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.features;
@@ -33,7 +33,7 @@ public class LootrunFeature extends Feature {
 
     @Override
     protected void onConfigUpdate(ConfigHolder configHolder) {
-        Services.Lootrun.recompileLootrun(false);
+        Services.LootrunPaths.recompileLootrun(false);
     }
 
     public enum PathType {
