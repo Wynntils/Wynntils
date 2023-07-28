@@ -143,11 +143,11 @@ public final class WynntilsStatisticsScreen
     }
 
     private static void renderCountStatistics(PoseStack poseStack, StatisticKind statisticKind, StatisticEntry entry) {
-        // Note: Count is not formatted according to the formatter
         FontRenderer.getInstance()
                 .renderText(
                         poseStack,
-                        StyledText.fromString(I18n.get("screens.wynntils.statistics.count", entry.count())),
+                        StyledText.fromString(I18n.get(
+                                "screens.wynntils.statistics.count", statisticKind.getFormattedValue(entry.count()))),
                         0,
                         30,
                         Texture.QUEST_BOOK_BACKGROUND.width() / 2 - 20,
