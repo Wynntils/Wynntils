@@ -27,10 +27,10 @@ import net.minecraftforge.eventbus.api.SubscribeEvent;
  * An overlay, which main purpose is to display function templates.
  */
 public abstract class TextOverlay extends DynamicOverlay {
-    @RegisterConfig("overlay.wynntils.textOverlay.textShadow")
+    @RegisterConfig(i18nKey = "overlay.wynntils.textOverlay.textShadow")
     public final Config<TextShadow> textShadow = new Config<>(TextShadow.OUTLINE);
 
-    @RegisterConfig("overlay.wynntils.textOverlay.fontScale")
+    @RegisterConfig(i18nKey = "overlay.wynntils.textOverlay.fontScale")
     public final Config<Float> fontScale = new Config<>(1.0f);
 
     private StyledText[] cachedLines = new StyledText[0];

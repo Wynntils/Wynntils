@@ -25,10 +25,10 @@ import net.minecraftforge.eventbus.api.SubscribeEvent;
 public abstract class ContainerOverlay<T extends Overlay> extends Overlay {
     private static final int DEFAULT_SPACING = 3;
 
-    @RegisterConfig("overlay.wynntils.overlay.growDirection")
+    @RegisterConfig(i18nKey = "overlay.wynntils.overlay.growDirection")
     protected final Config<GrowDirection> growDirection = new Config<>(GrowDirection.DOWN);
 
-    @RegisterConfig("overlay.wynntils.overlay.spacing")
+    @RegisterConfig(i18nKey = "overlay.wynntils.overlay.spacing")
     protected final Config<Integer> spacing = new Config<>(DEFAULT_SPACING);
 
     private final List<T> children = new ArrayList<>();
