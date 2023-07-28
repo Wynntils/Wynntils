@@ -6,16 +6,14 @@ buildscript {
     }
 
     /*
-    This implements transformers to apply net.minecraftforge.eventbus.EventSubclassTransformer
-    through the 2 following ways
-
-    Architectury fabric transformer
-    - Transforms relevant classes in dev environment at runtime
-    - class EventBusTransform in com.github.wynntils:EventBusTransformer dependency
-
-    GradleTask applyEventBus
-    - Transforms relevant classes after shadowing jar for use in final jar
-    - class Main in com.github.wynntils:EventBusTransformer dependency
+     This implements transformers to apply net.minecraftforge.eventbus.EventSubclassTransformer
+     through the 2 following ways
+     Architectury fabric transformer
+     - Transforms relevant classes in dev environment at runtime
+     - class EventBusTransform in com.github.wynntils:EventBusTransformer dependency
+     GradleTask applyEventBus
+     - Transforms relevant classes after shadowing jar for use in final jar
+     - class Main in com.github.wynntils:EventBusTransformer dependency
      */
 
     dependencies {
@@ -96,7 +94,10 @@ processResources {
 shadowJar {
     exclude "architectury.common.json"
 
-    configurations = [project.configurations.shadowCommon, project.configurations.shadowImplementation]
+    configurations = [
+        project.configurations.shadowCommon,
+        project.configurations.shadowImplementation
+    ]
 
     archiveClassifier = "dev-shadow"
 }

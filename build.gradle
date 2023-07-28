@@ -130,6 +130,13 @@ allprojects {
                 it.replaceAll(/^\{\}\n$/, '')
             }
         }
+        groovyGradle {
+            target '**/*.gradle'
+            greclipse("${spotless_greclipse_version}").configFile("${rootDir}/greclipse.properties")
+            trimTrailingWhitespace()
+            endWithNewline()
+        }
+
         format "misc", {
             // define the files to apply `misc` to
             target "*.gradle", "*.md", ".gitignore", "*.properties"
