@@ -2,15 +2,15 @@
  * Copyright © Wynntils 2023.
  * This file is released under AGPLv3. See LICENSE for full license details.
  */
-package com.wynntils.services.lootruns;
+package com.wynntils.services.lootrunpaths;
 
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.wynntils.core.WynntilsMod;
-import com.wynntils.services.lootruns.type.LootrunNote;
-import com.wynntils.services.lootruns.type.LootrunPath;
-import com.wynntils.services.lootruns.type.LootrunSaveResult;
+import com.wynntils.services.lootrunpaths.type.LootrunNote;
+import com.wynntils.services.lootrunpaths.type.LootrunPath;
+import com.wynntils.services.lootrunpaths.type.LootrunSaveResult;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
@@ -28,8 +28,8 @@ import net.minecraft.core.PositionImpl;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.phys.Vec3;
 
-public final class LootrunFileParser {
-    public static LootrunUncompiled readJson(File file, JsonObject json) {
+public final class LootrunPathFileParser {
+    public static UncompiledLootrunPath readJson(File file, JsonObject json) {
         JsonArray points = json.getAsJsonArray("points");
         LootrunPath pointsList = new LootrunPath(new ArrayList<>());
         for (JsonElement element : points) {
@@ -74,10 +74,10 @@ public final class LootrunFileParser {
                 notes.add(note);
             }
         }
-        return new LootrunUncompiled(pointsList, chests, notes, file);
+        return new UncompiledLootrunPath(pointsList, chests, notes, file);
     }
 
-    public static LootrunSaveResult writeJson(LootrunUncompiled activeLootrun, File file) {
+    public static LootrunSaveResult writeJson(UncompiledLootrunPath activeLootrun, File file) {
         try {
             boolean result = file.createNewFile();
 
