@@ -22,13 +22,12 @@ import com.wynntils.utils.render.buffered.BufferedFontRenderer;
 import com.wynntils.utils.render.type.HorizontalAlignment;
 import com.wynntils.utils.render.type.TextShadow;
 import com.wynntils.utils.render.type.VerticalAlignment;
-import net.minecraft.client.renderer.MultiBufferSource;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
-
 import java.util.Comparator;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.stream.Stream;
+import net.minecraft.client.renderer.MultiBufferSource;
+import net.minecraftforge.eventbus.api.SubscribeEvent;
 
 public class StatusEffectsOverlay extends Overlay {
     @RegisterConfig
@@ -68,15 +67,16 @@ public class StatusEffectsOverlay extends Overlay {
         List<StatusEffect> effects = Models.StatusEffect.getStatusEffects();
         Stream<StatusEffectWithProperties> effectWithProperties;
 
-        if( doStackEffects.get() ){
+        if (doStackEffects.get()) {
             effectWithProperties = stackEffects(effects);
         } else {
             effectWithProperties = effects.stream().map(StatusEffectWithProperties::new);
         }
 
-        if( doSortEffects.get() ){
+        if (doSortEffects.get()) {
             // Sort effects based on their prefix and their name
-            effectWithProperties = effectWithProperties.sorted(Comparator.comparing(e -> e.getPrefix().getString() + e.getName().getString()));
+            effectWithProperties = effectWithProperties.sorted(Comparator.comparing(
+                    e -> e.getPrefix().getString() + e.getName().getString()));
         }
 
         renderCache = effectWithProperties
@@ -134,13 +134,13 @@ public class StatusEffectsOverlay extends Overlay {
         return textRenderSetting;
     }
 
-
-    private Stream<StatusEffectWithProperties> stackEffects(List<StatusEffect> effects){
+    private Stream<StatusEffectWithProperties> stackEffects(List<StatusEffect> effects) {
         LinkedHashMap<String, StatusEffectWithProperties> effectsToRender = new LinkedHashMap<>();
 
-        for( var effect: effects){
-            StatusEffectWithProperties entry = effectsToRender.get(effect.asString().getString());
-            if( entry == null ) {
+        for (var effect : effects) {
+            StatusEffectWithProperties entry =
+                    effectsToRender.get(effect.asString().getString());
+            if (entry == null) {
                 entry = new StatusEffectWithProperties(effect);
                 effectsToRender.put(effect.asString().getString(), entry);
             }
@@ -150,16 +150,16 @@ public class StatusEffectsOverlay extends Overlay {
     }
 
     private StyledText getTextToRender(StatusEffectWithProperties effect) {
-        return effect.count > 1 ?
-                StyledText.fromString(effect.count + "x ").append(effect.asString()) :
-                effect.asString();
+        return effect.count > 1
+                ? StyledText.fromString(effect.count + "x ").append(effect.asString())
+                : effect.asString();
     }
-
 
     private static final class StatusEffectWithProperties extends StatusEffect {
         public int count = 0;
 
-        private StatusEffectWithProperties(StyledText name, StyledText modifier, StyledText displayedTime, StyledText prefix) {
+        private StatusEffectWithProperties(
+                StyledText name, StyledText modifier, StyledText displayedTime, StyledText prefix) {
             super(name, modifier, displayedTime, prefix);
         }
 
@@ -167,5 +167,4 @@ public class StatusEffectsOverlay extends Overlay {
             this(effect.getName(), effect.getModifier(), effect.getDisplayedTime(), effect.getPrefix());
         }
     }
-
 }
