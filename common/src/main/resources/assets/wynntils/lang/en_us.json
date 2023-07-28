@@ -941,7 +941,7 @@
   "feature.wynntils.statusEffectsOverlay.overlay.statusEffects.fontScale.description": "How large should the status text be?",
   "feature.wynntils.statusEffectsOverlay.overlay.statusEffects.fontScale.name": "Font Scale",
   "feature.wynntils.statusEffectsOverlay.overlay.statusEffects.name": "Status Overlay",
-  "feature.wynntils.statusEffectsOverlay.overlay.statusEffects.sortEffects.description": "Should effects be sorted based on their type?",
+  "feature.wynntils.statusEffectsOverlay.overlay.statusEffects.sortEffects.description": "Should effects be sorted based on their type, name and modifier?",
   "feature.wynntils.statusEffectsOverlay.overlay.statusEffects.sortEffects.name": "Sort Effects",
   "feature.wynntils.statusEffectsOverlay.overlay.statusEffects.stackEffects.description": "Should similar effects be stacked?",
   "feature.wynntils.statusEffectsOverlay.overlay.statusEffects.stackEffects.name": "Stack Effects",
