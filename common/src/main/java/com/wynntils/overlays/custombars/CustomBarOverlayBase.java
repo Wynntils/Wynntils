@@ -12,13 +12,13 @@ import com.wynntils.core.consumers.overlays.OverlaySize;
 import com.wynntils.utils.type.ErrorOr;
 
 public abstract class CustomBarOverlayBase extends BarOverlay {
-    @RegisterConfig("feature.wynntils.customBarsOverlay.overlay.customBarBase.textTemplate")
+    @RegisterConfig(i18nKey = "feature.wynntils.customBarsOverlay.overlay.customBarBase.textTemplate")
     public final Config<String> textTemplate = new Config<>("");
 
-    @RegisterConfig("feature.wynntils.customBarsOverlay.overlay.customBarBase.valueTemplate")
+    @RegisterConfig(i18nKey = "feature.wynntils.customBarsOverlay.overlay.customBarBase.valueTemplate")
     public final Config<String> valueTemplate = new Config<>("");
 
-    @RegisterConfig("feature.wynntils.customBarsOverlay.overlay.customBarBase.enabledTemplate")
+    @RegisterConfig(i18nKey = "feature.wynntils.customBarsOverlay.overlay.customBarBase.enabledTemplate")
     public final Config<String> enabledTemplate = new Config<>("string_equals(world_state;\"WORLD\")");
 
     protected CustomBarOverlayBase(int id, OverlaySize overlaySize) {
