@@ -20,27 +20,30 @@ public class ProfessionSearchFilter extends ItemFilter {
     @Override
     public boolean prepare() throws InvalidSyntaxException {
         profession = ProfessionType.fromString(searchString);
-        if (profession == null)
+        if (profession == null) {
             throw new InvalidSyntaxException(
                     "feature.wynntils.containerSearch.filter.profession.invalid_profession", searchString);
+        }
 
         return true;
     }
 
     @Override
     public boolean matches(WynnItem wynnItem) throws IllegalStateException {
-        if (profession == null) throw new IllegalStateException("ProfessionSearchFilter must be prepared before use");
-        else if (wynnItem instanceof IngredientItem ingredient)
+        if (profession == null) {
+            throw new IllegalStateException("ProfessionSearchFilter must be prepared before use");
+        } else if (wynnItem instanceof IngredientItem ingredient) {
             return ingredient.getIngredientInfo().professions().contains(profession);
-        else if (wynnItem instanceof MaterialItem materialItem)
+        } else if (wynnItem instanceof MaterialItem materialItem) {
             return materialItem
                             .getMaterialProfile()
                             .getResourceType()
                             .getMaterialType()
                             .getProfessionType()
                     == profession;
-        else if (wynnItem instanceof GatheringToolItem gatheringToolItem)
+        } else if (wynnItem instanceof GatheringToolItem gatheringToolItem) {
             return gatheringToolItem.getToolProfile().toolType().getProfessionType() == profession;
+        }
 
         return false;
     }

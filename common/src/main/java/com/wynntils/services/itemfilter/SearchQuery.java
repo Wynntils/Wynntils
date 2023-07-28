@@ -65,7 +65,9 @@ public class SearchQuery {
                                     .boxed()
                                     .toList());
 
-                    if (itemFilter.prepare()) itemFilters.add(itemFilter);
+                    if (itemFilter.prepare()) {
+                        itemFilters.add(itemFilter);
+                    }
                 } catch (UnknownFilterException e) {
                     ignoredCharIndices.addAll(IntStream.rangeClosed(currentCharIndex, currentCharIndex + token.length())
                             .boxed()
@@ -78,7 +80,9 @@ public class SearchQuery {
                             .toList());
                     errors.add(e.getMessage());
                 }
-            } else if (!token.isEmpty()) plainTextTokens.add(token);
+            } else if (!token.isEmpty()) {
+                plainTextTokens.add(token);
+            }
             currentCharIndex += token.length() + 1;
         }
 

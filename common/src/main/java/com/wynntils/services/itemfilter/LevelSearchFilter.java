@@ -25,9 +25,10 @@ public class LevelSearchFilter extends ItemFilter {
     @Override
     public boolean prepare() throws InvalidSyntaxException {
         Matcher matcher = LEVEL_RANGE_PATTERN.matcher(searchString);
-        if (!matcher.find())
+        if (!matcher.find()) {
             throw new InvalidSyntaxException(
                     "feature.wynntils.containerSearch.filter.level.invalid_range", searchString);
+        }
 
         try {
             minLevel = parseInt(matcher.group(1));
@@ -37,9 +38,10 @@ public class LevelSearchFilter extends ItemFilter {
                     "feature.wynntils.containerSearch.filter.level.invalid_range", searchString);
         }
 
-        if (minLevel > maxLevel)
+        if (minLevel > maxLevel) {
             throw new InvalidSyntaxException(
                     "feature.wynntils.containerSearch.filter.level.max_less_than_min", searchString);
+        }
 
         prepared = true;
         return true;
@@ -47,7 +49,9 @@ public class LevelSearchFilter extends ItemFilter {
 
     @Override
     public boolean matches(WynnItem wynnItem) throws IllegalStateException {
-        if (!prepared) throw new IllegalStateException("LevelSearchFilter must be prepared before use");
+        if (!prepared) {
+            throw new IllegalStateException("LevelSearchFilter must be prepared before use");
+        }
 
         return wynnItem instanceof LeveledItemProperty leveledItem
                 && leveledItem.getLevel() >= minLevel

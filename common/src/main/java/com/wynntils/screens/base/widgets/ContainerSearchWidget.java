@@ -67,16 +67,19 @@ public class ContainerSearchWidget extends SearchWidget {
         int charIndex = renderedTextDetails.b();
 
         StyledText firstPortionStyled = StyledText.EMPTY;
-        for (char c : firstPortion.toCharArray())
+        for (char c : firstPortion.toCharArray()) {
             firstPortionStyled = firstPortionStyled.append(getStyledText(charIndex++, c));
+        }
 
         StyledText highlightedPortionStyled = StyledText.EMPTY;
-        for (char c : highlightedPortion.toCharArray())
+        for (char c : highlightedPortion.toCharArray()) {
             highlightedPortionStyled = highlightedPortionStyled.append(getStyledText(charIndex++, c));
+        }
 
         StyledText lastPortionStyled = StyledText.EMPTY;
-        for (char c : lastPortion.toCharArray())
+        for (char c : lastPortion.toCharArray()) {
             lastPortionStyled = lastPortionStyled.append(getStyledText(charIndex++, c));
+        }
 
         FontRenderer.getInstance()
                 .renderAlignedTextInBox(
@@ -129,11 +132,13 @@ public class ContainerSearchWidget extends SearchWidget {
     }
 
     private StyledText getStyledText(int charIndex, char c) {
-        if (searchQuery.getIgnoredCharIndices().contains(charIndex))
+        if (searchQuery.getIgnoredCharIndices().contains(charIndex)) {
             return StyledText.fromComponent(Component.literal(String.valueOf(c)).withStyle(ChatFormatting.RED));
-        else if (searchQuery.getValidFilterCharIndices().contains(charIndex))
+        } else if (searchQuery.getValidFilterCharIndices().contains(charIndex)) {
             return StyledText.fromComponent(Component.literal(String.valueOf(c)).withStyle(ChatFormatting.YELLOW));
-        else return StyledText.fromString(String.valueOf(c));
+        } else {
+            return StyledText.fromString(String.valueOf(c));
+        }
     }
 
     @Override
@@ -146,9 +151,11 @@ public class ContainerSearchWidget extends SearchWidget {
         searchQuery = SearchQuery.fromQueryString(text);
         onSearchQueryUpdateConsumer.accept(searchQuery);
 
-        if (searchQuery.getErrors().isEmpty()) setTooltip(null);
-        else
+        if (searchQuery.getErrors().isEmpty()) {
+            setTooltip(null);
+        } else {
             setTooltip(Tooltip.create(Component.literal(String.join("\n\n", searchQuery.getErrors()))
                     .withStyle(ChatFormatting.RED)));
+        }
     }
 }

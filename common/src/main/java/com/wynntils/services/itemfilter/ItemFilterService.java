@@ -37,7 +37,9 @@ public class ItemFilterService extends Service {
      * @throws UnknownFilterException if the keyword is not associated with a filter
      */
     public ItemFilter createFilter(String keyword, String searchString) throws UnknownFilterException {
-        if (!filterSuppliers.containsKey(keyword)) throw new UnknownFilterException(keyword);
+        if (!filterSuppliers.containsKey(keyword)) {
+            throw new UnknownFilterException(keyword);
+        }
 
         return filterSuppliers.get(keyword).apply(searchString);
     }
