@@ -1,9 +1,21 @@
+## [0.0.3-alpha.225](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.224...v0.0.3-alpha.225) (2023-07-28)
+
+
+### New Features
+
+* Collect lootrun statistics ([#1852](https://github.com/Wynntils/Artemis/issues/1852)) ([f1562b1](https://github.com/Wynntils/Artemis/commit/f1562b14b41203cadb05659c9479f6eb47c4dd60))
+
 ## [0.0.3-alpha.224](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.223...v0.0.3-alpha.224) (2023-07-28)
 
 
 ### Bug Fixes
 
 * Typing occurs in unfocused input boxes ([#1869](https://github.com/Wynntils/Artemis/issues/1869)) ([ae3619b](https://github.com/Wynntils/Artemis/commit/ae3619b42d94ffe965c29ed20bf74a21070aeca4))
+
+
+### Miscellaneous Chores
+
+* **release:** v0.0.3-alpha.224 [skip ci] ([0ecbece](https://github.com/Wynntils/Artemis/commit/0ecbecec174d34d4243b79e7feed9ac3a375cde3))
 
 ## [0.0.3-alpha.223](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.222...v0.0.3-alpha.223) (2023-07-28)
 
@@ -36,16 +48,4 @@
 
 * Add verification that statistics have i18n ([#1863](https://github.com/Wynntils/Artemis/issues/1863)) ([6292150](https://github.com/Wynntils/Artemis/commit/6292150c3c742725dd1bba18612f529d27f5d811))
 * **release:** v0.0.3-alpha.221 [skip ci] ([8b437d3](https://github.com/Wynntils/Artemis/commit/8b437d359234dcc7895aebe3046edf7b5643fa88))
-
-## [0.0.3-alpha.220](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.219...v0.0.3-alpha.220) (2023-07-27)
-
-
-### New Features
-
-* Add soulbound to gear item api parsing ([#1862](https://github.com/Wynntils/Artemis/issues/1862)) ([80730a6](https://github.com/Wynntils/Artemis/commit/80730a631f273f9dca4e0256e34fd39ce1f41d53))
-
-
-### Miscellaneous Chores
-
-* **release:** v0.0.3-alpha.220 [skip ci] ([76c0367](https://github.com/Wynntils/Artemis/commit/76c03674850682a062f3ed2a1a9881d93ba475b0))
 
