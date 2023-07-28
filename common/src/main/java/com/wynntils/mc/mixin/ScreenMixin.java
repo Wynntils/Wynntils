@@ -16,8 +16,6 @@ import com.wynntils.mc.event.ScreenFocusEvent;
 import com.wynntils.mc.event.ScreenInitEvent;
 import com.wynntils.mc.event.ScreenRenderEvent;
 import com.wynntils.mc.event.TitleScreenInitEvent;
-import com.wynntils.mc.extension.ScreenExtension;
-import com.wynntils.screens.base.widgets.TextInputBoxWidget;
 import java.util.List;
 import java.util.Optional;
 import net.minecraft.client.Minecraft;
@@ -30,16 +28,12 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.world.inventory.tooltip.TooltipComponent;
 import net.minecraft.world.item.ItemStack;
 import org.spongepowered.asm.mixin.Mixin;
-import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 @Mixin(Screen.class)
-public abstract class ScreenMixin implements ScreenExtension {
-    @Unique
-    private TextInputBoxWidget wynntilsFocusedTextInput;
-
+public abstract class ScreenMixin {
     @Inject(method = "init(Lnet/minecraft/client/Minecraft;II)V", at = @At("HEAD"))
     private void initPre(Minecraft client, int width, int height, CallbackInfo info) {
         Screen screen = (Screen) (Object) this;
@@ -142,17 +136,5 @@ public abstract class ScreenMixin implements ScreenExtension {
         // This is too involved in error handling to worth risk sending events
         wynntilsScreen.wrapCurrentScreenError(action, errorDesc, screenName);
         ci.cancel();
-    }
-
-    @Override
-    @Unique
-    public TextInputBoxWidget getFocusedTextInput() {
-        return wynntilsFocusedTextInput;
-    }
-
-    @Override
-    @Unique
-    public void setFocusedTextInput(TextInputBoxWidget focusedTextInput) {
-        this.wynntilsFocusedTextInput = focusedTextInput;
     }
 }

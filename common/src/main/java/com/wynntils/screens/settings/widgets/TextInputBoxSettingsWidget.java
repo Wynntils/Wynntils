@@ -5,22 +5,23 @@
 package com.wynntils.screens.settings.widgets;
 
 import com.wynntils.core.config.ConfigHolder;
-import com.wynntils.screens.base.TextboxScreen;
 import com.wynntils.screens.base.widgets.TextInputBoxWidget;
 import com.wynntils.utils.colors.CommonColors;
 import com.wynntils.utils.render.FontRenderer;
+import net.minecraft.client.gui.components.events.ContainerEventHandler;
 
 public class TextInputBoxSettingsWidget extends TextInputBoxWidget {
     protected final ConfigHolder configHolder;
 
-    protected TextInputBoxSettingsWidget(ConfigHolder configHolder, TextboxScreen textboxScreen, int width) {
-        super(0, 6, width, FontRenderer.getInstance().getFont().lineHeight + 8, null, textboxScreen);
+    protected TextInputBoxSettingsWidget(
+            ConfigHolder configHolder, ContainerEventHandler containerStateAccess, int width) {
+        super(0, 6, width, FontRenderer.getInstance().getFont().lineHeight + 8, null, containerStateAccess);
         this.configHolder = configHolder;
         setTextBoxInput(configHolder.getValue().toString());
     }
 
-    public TextInputBoxSettingsWidget(ConfigHolder configHolder, TextboxScreen textboxScreen) {
-        this(configHolder, textboxScreen, 100);
+    public TextInputBoxSettingsWidget(ConfigHolder configHolder, ContainerEventHandler containerStateAccess) {
+        this(configHolder, containerStateAccess, 100);
     }
 
     @Override

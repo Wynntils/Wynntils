@@ -7,7 +7,6 @@ package com.wynntils.screens.settings.widgets;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.wynntils.core.config.ConfigHolder;
 import com.wynntils.core.text.StyledText;
-import com.wynntils.screens.base.widgets.WynntilsButton;
 import com.wynntils.screens.settings.WynntilsBookSettingsScreen;
 import com.wynntils.utils.colors.CommonColors;
 import com.wynntils.utils.colors.CustomColor;
@@ -16,11 +15,17 @@ import com.wynntils.utils.render.RenderUtils;
 import com.wynntils.utils.render.type.HorizontalAlignment;
 import com.wynntils.utils.render.type.TextShadow;
 import com.wynntils.utils.render.type.VerticalAlignment;
+import java.util.List;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.gui.components.AbstractWidget;
-import net.minecraft.network.chat.Component;
+import net.minecraft.client.gui.components.events.AbstractContainerEventHandler;
+import net.minecraft.client.gui.components.events.GuiEventListener;
 
-public class ConfigTile extends WynntilsButton {
+public class ConfigTile extends AbstractContainerEventHandler {
+    private final int x;
+    private final int y;
+    private final int width;
+    private final int height;
     private final WynntilsBookSettingsScreen settingsScreen;
     private final ConfigHolder configHolder;
 
@@ -29,37 +34,35 @@ public class ConfigTile extends WynntilsButton {
 
     public ConfigTile(
             int x, int y, int width, int height, WynntilsBookSettingsScreen settingsScreen, ConfigHolder configHolder) {
-        super(x, y, width, height, Component.literal(configHolder.getJsonName()));
+        this.x = x;
+        this.y = y;
+        this.width = width;
+        this.height = height;
         this.settingsScreen = settingsScreen;
         this.configHolder = configHolder;
         this.configOptionElement = getWidgetFromConfigHolder(configHolder);
         this.resetButton = new ResetButton(
-                configHolder,
-                () -> configOptionElement = getWidgetFromConfigHolder(configHolder),
-                x + width - 40,
-                getRenderY());
+                configHolder, () -> configOptionElement = getWidgetFromConfigHolder(configHolder), width - 37, 0);
     }
 
-    @Override
-    public void renderWidget(PoseStack poseStack, int mouseX, int mouseY, float partialTick) {
-        resetButton.render(poseStack, mouseX, mouseY, partialTick);
-
+    public void renderWidgets(PoseStack poseStack, int mouseX, int mouseY, float partialTick) {
         renderDisplayName(poseStack);
 
         RenderUtils.drawLine(
                 poseStack,
                 CommonColors.GRAY,
-                this.getX(),
-                this.getY() + this.height,
-                this.getX() + this.width,
-                this.getY() + this.height,
+                this.x,
+                this.y + this.height,
+                this.x + this.width,
+                this.y + this.height,
                 0,
                 1);
 
         poseStack.pushPose();
-        final int renderX = getRenderX();
-        final int renderY = getRenderY();
+        final int renderX = getXOffset();
+        final int renderY = getYOffset();
         poseStack.translate(renderX, renderY, 0);
+        resetButton.render(poseStack, mouseX - renderX, mouseY - renderY, partialTick);
         configOptionElement.render(poseStack, mouseX - renderX, mouseY - renderY, partialTick);
         poseStack.popPose();
     }
@@ -74,8 +77,8 @@ public class ConfigTile extends WynntilsButton {
                 .renderText(
                         poseStack,
                         displayName,
-                        getRenderX() / 0.8f,
-                        (this.getY() + 3) / 0.8f,
+                        getXOffset() / 0.8f,
+                        (this.y + 3) / 0.8f,
                         CommonColors.BLACK,
                         HorizontalAlignment.LEFT,
                         VerticalAlignment.TOP,
@@ -83,44 +86,12 @@ public class ConfigTile extends WynntilsButton {
         poseStack.popPose();
     }
 
-    @Override
-    public boolean mouseClicked(double mouseX, double mouseY, int button) {
-        double actualMouseX = mouseX - getRenderX();
-        double actualMouseY = mouseY - getRenderY();
-
-        return resetButton.mouseClicked(mouseX, mouseY, button)
-                || configOptionElement.mouseClicked(actualMouseX, actualMouseY, button);
+    private int getYOffset() {
+        return this.y + 12;
     }
 
-    @Override
-    public boolean mouseDragged(double mouseX, double mouseY, int button, double deltaX, double deltaY) {
-        double actualMouseX = mouseX - getRenderX();
-        double actualMouseY = mouseY - getRenderY();
-
-        return configOptionElement.mouseDragged(actualMouseX, actualMouseY, button, deltaX, deltaY)
-                || super.mouseDragged(actualMouseX, actualMouseY, button, deltaX, deltaY);
-    }
-
-    @Override
-    public boolean mouseReleased(double mouseX, double mouseY, int button) {
-        double actualMouseX = mouseX - getRenderX();
-        double actualMouseY = mouseY - getRenderY();
-
-        return configOptionElement.mouseReleased(actualMouseX, actualMouseY, button)
-                || super.mouseReleased(actualMouseX, actualMouseY, button);
-    }
-
-    @Override
-    public void onPress() {
-        // noop
-    }
-
-    private int getRenderY() {
-        return this.getY() + 12;
-    }
-
-    private int getRenderX() {
-        return this.getX() + 3;
+    private int getXOffset() {
+        return this.x + 3;
     }
 
     private AbstractWidget getWidgetFromConfigHolder(ConfigHolder configOption) {
@@ -133,5 +104,25 @@ public class ConfigTile extends WynntilsButton {
         } else {
             return new TextInputBoxSettingsWidget(configOption, settingsScreen);
         }
+    }
+
+    @Override
+    public List<? extends GuiEventListener> children() {
+        return List.of(resetButton, configOptionElement);
+    }
+
+    @Override
+    public boolean mouseClicked(double mouseX, double mouseY, int button) {
+        return super.mouseClicked(mouseX - getXOffset(), mouseY - getYOffset(), button);
+    }
+
+    @Override
+    public boolean mouseDragged(double mouseX, double mouseY, int button, double dragX, double dragY) {
+        return super.mouseDragged(mouseX - getXOffset(), mouseY - getYOffset(), button, dragX, dragY);
+    }
+
+    @Override
+    public boolean mouseReleased(double mouseX, double mouseY, int button) {
+        return super.mouseReleased(mouseX - getXOffset(), mouseY - getYOffset(), button);
     }
 }

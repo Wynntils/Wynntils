@@ -6,9 +6,7 @@ package com.wynntils.screens.base.widgets;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.wynntils.core.text.StyledText;
-import com.wynntils.screens.base.TextboxScreen;
 import com.wynntils.utils.colors.CommonColors;
-import com.wynntils.utils.mc.McUtils;
 import com.wynntils.utils.render.FontRenderer;
 import com.wynntils.utils.render.RenderUtils;
 import com.wynntils.utils.render.type.HorizontalAlignment;
@@ -17,9 +15,8 @@ import com.wynntils.utils.render.type.VerticalAlignment;
 import java.util.Objects;
 import java.util.function.Consumer;
 import net.minecraft.client.gui.Font;
+import net.minecraft.client.gui.components.events.ContainerEventHandler;
 import net.minecraft.network.chat.Component;
-import net.minecraft.sounds.SoundEvents;
-import org.lwjgl.glfw.GLFW;
 
 public class SearchWidget extends TextInputBoxWidget {
     private static final Component DEFAULT_TEXT =
@@ -27,8 +24,8 @@ public class SearchWidget extends TextInputBoxWidget {
     private static final float VERTICAL_OFFSET = 6.5f;
 
     public SearchWidget(
-            int x, int y, int width, int height, Consumer<String> onUpdateConsumer, TextboxScreen textboxScreen) {
-        super(x, y, width, height, Component.literal("Search Box"), onUpdateConsumer, textboxScreen);
+            int x, int y, int width, int height, Consumer<String> onUpdateConsumer, ContainerEventHandler focusAccess) {
+        super(x, y, width, height, Component.literal("Search Box"), onUpdateConsumer, focusAccess);
         textPadding = 5;
     }
 
@@ -140,37 +137,9 @@ public class SearchWidget extends TextInputBoxWidget {
         return this.width - 18;
     }
 
-    @Override
-    public boolean mouseClicked(double mouseX, double mouseY, int button) {
-        if (mouseX >= this.getX()
-                && mouseX <= this.getX() + this.width
-                && mouseY >= this.getY()
-                && mouseY <= this.getY() + this.height) {
-            McUtils.playSoundUI(SoundEvents.UI_BUTTON_CLICK.value());
-            if (button == GLFW.GLFW_MOUSE_BUTTON_2) {
-                setTextBoxInput("");
-                setCursorAndHighlightPositions(0);
-            } else {
-                setCursorAndHighlightPositions(getIndexAtPosition(mouseX));
-            }
-            isDragging = true;
-            textboxScreen.setFocusedTextInput(this);
-            return true;
-        } else {
-            textboxScreen.setFocusedTextInput(null);
-        }
-
-        return false;
-    }
-
-    @Override
-    protected void removeFocus() {
-        this.setTextBoxInput("");
-        super.removeFocus();
-    }
-
     public void opened() {
         setCursorPosition(textBoxInput.length());
         setHighlightPosition(0);
+        focus();
     }
 }

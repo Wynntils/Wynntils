@@ -8,7 +8,6 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import com.wynntils.core.components.Models;
 import com.wynntils.core.consumers.screens.WynntilsScreen;
 import com.wynntils.core.text.StyledText;
-import com.wynntils.screens.base.TextboxScreen;
 import com.wynntils.screens.base.widgets.TextInputBoxWidget;
 import com.wynntils.screens.partymanagement.widgets.CreateLeaveButton;
 import com.wynntils.screens.partymanagement.widgets.LegendButton;
@@ -34,7 +33,7 @@ import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.resources.language.I18n;
 import net.minecraft.network.chat.Component;
 
-public final class PartyManagementScreen extends WynntilsScreen implements TextboxScreen {
+public final class PartyManagementScreen extends WynntilsScreen {
     private static final Pattern INVITE_REPLACER = Pattern.compile("[^\\w, ]+");
     private static final Pattern COMMA_REPLACER = Pattern.compile("[,; ]+");
 
@@ -47,9 +46,7 @@ public final class PartyManagementScreen extends WynntilsScreen implements Textb
     private float dividedWidth;
     private int mgmtButtonWidth;
 
-    private TextInputBoxWidget focusedTextInput;
     private TextInputBoxWidget inviteInput;
-
     private Button inviteButton;
     private Button kickOfflineButton;
     private CreateLeaveButton createLeaveButton;
@@ -300,28 +297,6 @@ public final class PartyManagementScreen extends WynntilsScreen implements Textb
         }
 
         return super.doMouseClicked(mouseX, mouseY, button);
-    }
-
-    @Override
-    public boolean charTyped(char codePoint, int modifiers) {
-        return (focusedTextInput != null && focusedTextInput.charTyped(codePoint, modifiers))
-                || super.charTyped(codePoint, modifiers);
-    }
-
-    @Override
-    public boolean keyPressed(int keyCode, int scanCode, int modifiers) {
-        return (focusedTextInput != null && focusedTextInput.keyPressed(keyCode, scanCode, modifiers))
-                || super.keyPressed(keyCode, scanCode, modifiers);
-    }
-
-    @Override
-    public TextInputBoxWidget getFocusedTextInput() {
-        return focusedTextInput;
-    }
-
-    @Override
-    public void setFocusedTextInput(TextInputBoxWidget focusedTextInput) {
-        this.focusedTextInput = focusedTextInput;
     }
 
     public void reloadCreateLeaveButton() {

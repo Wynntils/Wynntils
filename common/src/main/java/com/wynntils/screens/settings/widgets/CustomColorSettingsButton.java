@@ -6,13 +6,13 @@ package com.wynntils.screens.settings.widgets;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.wynntils.core.config.ConfigHolder;
-import com.wynntils.screens.base.TextboxScreen;
 import com.wynntils.utils.colors.CustomColor;
 import com.wynntils.utils.render.RenderUtils;
+import net.minecraft.client.gui.components.events.ContainerEventHandler;
 
 public class CustomColorSettingsButton extends TextInputBoxSettingsWidget {
-    public CustomColorSettingsButton(ConfigHolder configHolder, TextboxScreen textboxScreen) {
-        super(configHolder, textboxScreen, 80);
+    public CustomColorSettingsButton(ConfigHolder configHolder, ContainerEventHandler containerStateAccess) {
+        super(configHolder, containerStateAccess, 80);
     }
 
     @Override

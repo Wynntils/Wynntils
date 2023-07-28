@@ -10,7 +10,6 @@ import com.wynntils.core.components.Services;
 import com.wynntils.core.consumers.screens.WynntilsScreen;
 import com.wynntils.core.text.StyledText;
 import com.wynntils.handlers.chat.type.RecipientType;
-import com.wynntils.screens.base.TextboxScreen;
 import com.wynntils.screens.base.widgets.TextInputBoxWidget;
 import com.wynntils.screens.base.widgets.TextWidget;
 import com.wynntils.services.chat.ChatTab;
@@ -34,11 +33,8 @@ import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.resources.language.I18n;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
-import org.lwjgl.glfw.GLFW;
 
-public final class ChatTabEditingScreen extends WynntilsScreen implements TextboxScreen {
-    private TextInputBoxWidget focusedTextInput;
-
+public final class ChatTabEditingScreen extends WynntilsScreen {
     private TextInputBoxWidget nameInput;
     private TextInputBoxWidget autoCommandInput;
     private TextInputBoxWidget orderInput;
@@ -89,7 +85,6 @@ public final class ChatTabEditingScreen extends WynntilsScreen implements Textbo
             if (edited != null) {
                 nameInput.setTextBoxInput(edited.getName());
             }
-            setFocusedTextInput(nameInput);
         }
         // endregion
 
@@ -302,41 +297,6 @@ public final class ChatTabEditingScreen extends WynntilsScreen implements Textbo
     }
 
     @Override
-    public boolean charTyped(char codePoint, int modifiers) {
-        return (focusedTextInput != null && focusedTextInput.charTyped(codePoint, modifiers))
-                || super.charTyped(codePoint, modifiers);
-    }
-
-    @Override
-    public boolean keyPressed(int keyCode, int scanCode, int modifiers) {
-        // When tab is pressed, focus the next text box
-        if (keyCode == GLFW.GLFW_KEY_TAB) {
-            int index = focusedTextInput == null ? 0 : children().indexOf(focusedTextInput);
-            int actualIndex = Math.max(index, 0) + 1;
-
-            // Try to find next text input
-            // From index - end
-            for (int i = actualIndex; i < children().size(); i++) {
-                if (children().get(i) instanceof TextInputBoxWidget textInputBoxWidget) {
-                    setFocusedTextInput(textInputBoxWidget);
-                    return true;
-                }
-            }
-
-            // From 0 - index
-            for (int i = 0; i < Math.min(actualIndex, children().size()); i++) {
-                if (children().get(i) instanceof TextInputBoxWidget textInputBoxWidget) {
-                    setFocusedTextInput(textInputBoxWidget);
-                    return true;
-                }
-            }
-        }
-
-        return (focusedTextInput != null && focusedTextInput.keyPressed(keyCode, scanCode, modifiers))
-                || super.keyPressed(keyCode, scanCode, modifiers);
-    }
-
-    @Override
     public void onClose() {
         McUtils.mc().setScreen(new ChatScreen(""));
     }
@@ -407,15 +367,5 @@ public final class ChatTabEditingScreen extends WynntilsScreen implements Textbo
             return false;
         }
         return true;
-    }
-
-    @Override
-    public TextInputBoxWidget getFocusedTextInput() {
-        return focusedTextInput;
-    }
-
-    @Override
-    public void setFocusedTextInput(TextInputBoxWidget focusedTextInput) {
-        this.focusedTextInput = focusedTextInput;
     }
 }

@@ -5,17 +5,17 @@
 package com.wynntils.screens.activities.widgets;
 
 import com.mojang.blaze3d.vertex.PoseStack;
-import com.wynntils.screens.base.TextboxScreen;
 import com.wynntils.screens.base.widgets.SearchWidget;
 import com.wynntils.utils.render.RenderUtils;
 import com.wynntils.utils.render.Texture;
 import java.util.function.Consumer;
 import net.minecraft.client.gui.Font;
+import net.minecraft.client.gui.components.events.ContainerEventHandler;
 
 public class QuestBookSearchWidget extends SearchWidget {
     public QuestBookSearchWidget(
-            int x, int y, int width, int height, Consumer<String> onUpdateConsumer, TextboxScreen textboxScreen) {
-        super(x, y, width, height, onUpdateConsumer, textboxScreen);
+            int x, int y, int width, int height, Consumer<String> onUpdateConsumer, ContainerEventHandler focusAccess) {
+        super(x, y, width, height, onUpdateConsumer, focusAccess);
     }
 
     @Override

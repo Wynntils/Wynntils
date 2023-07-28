@@ -25,7 +25,6 @@ public class ScrollButton extends WynntilsButton {
     private double currentUnusedScroll = 0;
 
     private double currentUnusedDrag = 0;
-    private boolean dragging = false;
 
     public ScrollButton(
             int x,
@@ -81,34 +80,23 @@ public class ScrollButton extends WynntilsButton {
     public void onPress() {}
 
     @Override
-    public boolean mouseClicked(double mouseX, double mouseY, int button) {
-        dragging = true;
-        return true;
-    }
-
-    @Override
     public boolean mouseReleased(double mouseX, double mouseY, int button) {
-        dragging = false;
         currentUnusedDrag = 0;
         return true;
     }
 
     @Override
     public boolean mouseDragged(double mouseX, double mouseY, int button, double dragX, double dragY) {
-        if (dragY == 0) return true;
+        currentUnusedDrag += dragY;
 
-        if (dragging) {
-            currentUnusedDrag += dragY;
+        while (currentUnusedDrag >= requiredChangePerElement) {
+            scroll(1);
+            currentUnusedDrag -= requiredChangePerElement;
+        }
 
-            while (currentUnusedDrag >= requiredChangePerElement) {
-                scroll(1);
-                currentUnusedDrag -= requiredChangePerElement;
-            }
-
-            while (currentUnusedDrag <= -requiredChangePerElement) {
-                scroll(-1);
-                currentUnusedDrag += requiredChangePerElement;
-            }
+        while (currentUnusedDrag <= -requiredChangePerElement) {
+            scroll(-1);
+            currentUnusedDrag += requiredChangePerElement;
         }
 
         return true;

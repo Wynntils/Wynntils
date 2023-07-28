@@ -11,8 +11,7 @@ import com.wynntils.mc.event.ContainerRenderEvent;
 import com.wynntils.mc.event.InventoryKeyPressEvent;
 import com.wynntils.mc.event.InventoryMouseClickedEvent;
 import com.wynntils.mc.event.SlotRenderEvent;
-import com.wynntils.screens.base.TextboxScreen;
-import com.wynntils.screens.base.widgets.TextInputBoxWidget;
+import net.minecraft.client.gui.components.events.AbstractContainerEventHandler;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
 import net.minecraft.world.inventory.Slot;
@@ -24,7 +23,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 @Mixin(AbstractContainerScreen.class)
-public abstract class AbstractContainerScreenMixin {
+public abstract class AbstractContainerScreenMixin extends AbstractContainerEventHandler {
     @Shadow
     public Slot hoveredSlot;
 
@@ -87,20 +86,12 @@ public abstract class AbstractContainerScreenMixin {
             double deltaX,
             double deltaY,
             CallbackInfoReturnable<Boolean> cir) {
-        TextInputBoxWidget focusedTextInput = ((TextboxScreen) this).getFocusedTextInput();
-
-        if (focusedTextInput != null) {
-            focusedTextInput.mouseDragged(mouseX, mouseY, button, deltaX, deltaY);
-        }
+        super.mouseDragged(mouseX, mouseY, button, deltaX, deltaY);
     }
 
     @Inject(method = "mouseReleased(DDI)Z", at = @At("RETURN"))
     private void mouseReleasedPre(double mouseX, double mouseY, int button, CallbackInfoReturnable<Boolean> cir) {
-        TextInputBoxWidget focusedTextInput = ((TextboxScreen) this).getFocusedTextInput();
-
-        if (focusedTextInput != null) {
-            focusedTextInput.mouseReleased(mouseX, mouseY, button);
-        }
+        super.mouseReleased(mouseX, mouseY, button);
     }
 
     @Inject(method = "onClose()V", at = @At("HEAD"), cancellable = true)

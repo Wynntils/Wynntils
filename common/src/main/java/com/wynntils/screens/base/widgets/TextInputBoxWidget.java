@@ -6,7 +6,6 @@ package com.wynntils.screens.base.widgets;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.wynntils.core.text.StyledText;
-import com.wynntils.screens.base.TextboxScreen;
 import com.wynntils.utils.MathUtils;
 import com.wynntils.utils.colors.CommonColors;
 import com.wynntils.utils.colors.CustomColor;
@@ -22,6 +21,7 @@ import net.minecraft.client.KeyboardHandler;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.components.AbstractWidget;
+import net.minecraft.client.gui.components.events.ContainerEventHandler;
 import net.minecraft.client.gui.narration.NarrationElementOutput;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.network.chat.Component;
@@ -41,9 +41,7 @@ public class TextInputBoxWidget extends AbstractWidget {
     private boolean renderCursor = true;
     private CustomColor renderColor = CommonColors.WHITE;
 
-    protected boolean isDragging = false;
-
-    protected final TextboxScreen textboxScreen;
+    private final ContainerEventHandler containerStateAccess;
     protected int textPadding = 2;
 
     protected TextInputBoxWidget(
@@ -53,10 +51,10 @@ public class TextInputBoxWidget extends AbstractWidget {
             int height,
             Component boxTitle,
             Consumer<String> onUpdateConsumer,
-            TextboxScreen textboxScreen) {
+            ContainerEventHandler containerStateAccess) {
         super(x, y, width, height, boxTitle);
         this.onUpdateConsumer = onUpdateConsumer == null ? this::onUpdate : onUpdateConsumer;
-        this.textboxScreen = textboxScreen;
+        this.containerStateAccess = containerStateAccess;
     }
 
     public TextInputBoxWidget(
@@ -65,9 +63,9 @@ public class TextInputBoxWidget extends AbstractWidget {
             int width,
             int height,
             Consumer<String> onUpdateConsumer,
-            TextboxScreen textboxScreen,
+            ContainerEventHandler containerStateAccess,
             TextInputBoxWidget oldWidget) {
-        this(x, y, width, height, Component.empty(), onUpdateConsumer, textboxScreen);
+        this(x, y, width, height, Component.empty(), onUpdateConsumer, containerStateAccess);
 
         if (oldWidget != null) {
             this.textBoxInput = oldWidget.textBoxInput;
@@ -77,8 +75,13 @@ public class TextInputBoxWidget extends AbstractWidget {
     }
 
     public TextInputBoxWidget(
-            int x, int y, int width, int height, Consumer<String> onUpdateConsumer, TextboxScreen textboxScreen) {
-        this(x, y, width, height, onUpdateConsumer, textboxScreen, null);
+            int x,
+            int y,
+            int width,
+            int height,
+            Consumer<String> onUpdateConsumer,
+            ContainerEventHandler containerStateAccess) {
+        this(x, y, width, height, onUpdateConsumer, containerStateAccess, null);
     }
 
     @Override
@@ -257,7 +260,7 @@ public class TextInputBoxWidget extends AbstractWidget {
 
     @Override
     public boolean mouseClicked(double mouseX, double mouseY, int button) {
-        if (this.isHovered) {
+        if (isHovered()) {
             McUtils.playSoundUI(SoundEvents.UI_BUTTON_CLICK.value());
             if (button == GLFW.GLFW_MOUSE_BUTTON_2) {
                 setTextBoxInput("");
@@ -265,33 +268,20 @@ public class TextInputBoxWidget extends AbstractWidget {
             } else {
                 setCursorAndHighlightPositions(getIndexAtPosition(mouseX));
             }
-            isDragging = true;
-            textboxScreen.setFocusedTextInput(this);
-            this.setFocused(true);
             return true;
         }
         if (isFocused()) {
             McUtils.playSoundUI(SoundEvents.UI_BUTTON_CLICK.value());
             setCursorAndHighlightPositions(cursorPosition); // remove highlights when clicking off
-            this.setFocused(false);
-            textboxScreen.setFocusedTextInput(null);
+            unFocus();
         }
 
         return false;
     }
 
     @Override
-    public boolean mouseReleased(double mouseX, double mouseY, int button) {
-        isDragging = false;
-        return true;
-    }
-
-    @Override
     public boolean mouseDragged(double mouseX, double mouseY, int button, double dragX, double dragY) {
-        if (isDragging) {
-            setCursorPosition(getIndexAtPosition(mouseX));
-        }
-
+        setCursorPosition(getIndexAtPosition(mouseX));
         return true;
     }
 
@@ -328,8 +318,6 @@ public class TextInputBoxWidget extends AbstractWidget {
 
     @Override
     public boolean charTyped(char codePoint, int modifiers) {
-        if (!isFocused()) return false;
-
         if (textBoxInput == null) {
             textBoxInput = "";
         }
@@ -350,8 +338,8 @@ public class TextInputBoxWidget extends AbstractWidget {
 
     @Override
     public boolean keyPressed(int keyCode, int scanCode, int modifiers) {
-        if (keyCode == GLFW.GLFW_KEY_ESCAPE) {
-            removeFocus();
+        if (keyCode == GLFW.GLFW_KEY_ESCAPE || keyCode == GLFW.GLFW_KEY_ENTER) {
+            unFocus();
             return true;
         }
 
@@ -488,12 +476,7 @@ public class TextInputBoxWidget extends AbstractWidget {
             return true;
         }
 
-        return true;
-    }
-
-    @Override
-    public boolean isFocused() {
-        return textboxScreen.getFocusedTextInput() == this;
+        return super.keyPressed(keyCode, scanCode, modifiers);
     }
 
     @Override
@@ -501,7 +484,7 @@ public class TextInputBoxWidget extends AbstractWidget {
 
     protected void drawCursor(
             PoseStack poseStack, float x, float y, VerticalAlignment verticalAlignment, boolean forceUnfocusedCursor) {
-        if (isDragging || hasHighlighted()) return;
+        if (containerStateAccess.isDragging() || hasHighlighted()) return;
 
         if (System.currentTimeMillis() - lastCursorSwitch > CURSOR_TICK) {
             renderCursor = !renderCursor;
@@ -522,10 +505,6 @@ public class TextInputBoxWidget extends AbstractWidget {
 
             RenderUtils.drawRect(poseStack, CommonColors.WHITE, x + 1, cursorRenderY, 0, 1, font.lineHeight + 3);
         }
-    }
-
-    protected void removeFocus() {
-        textboxScreen.setFocusedTextInput(null);
     }
 
     public void setTextBoxInput(String textBoxInput) {
@@ -590,6 +569,23 @@ public class TextInputBoxWidget extends AbstractWidget {
         this.setCursorPosition(startIndex + insertLength);
         this.setHighlightPosition(this.cursorPosition);
         this.onUpdateConsumer.accept(this.textBoxInput);
+    }
+
+    public void unFocus() {
+        containerStateAccess.setFocused(null);
+    }
+
+    public void focus() {
+        containerStateAccess.setFocused(this);
+    }
+
+    /**
+     *  Use {@link #focus} and {@link #unFocus} instead
+     */
+    @Override
+    @Deprecated
+    public void setFocused(boolean focused) {
+        super.setFocused(focused);
     }
 
     /**

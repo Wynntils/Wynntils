@@ -18,7 +18,6 @@ import com.wynntils.mc.event.ContainerSetSlotEvent;
 import com.wynntils.mc.event.InventoryKeyPressEvent;
 import com.wynntils.mc.event.ScreenInitEvent;
 import com.wynntils.mc.event.SlotRenderEvent;
-import com.wynntils.mc.extension.ScreenExtension;
 import com.wynntils.models.containers.type.SearchableContainerType;
 import com.wynntils.models.items.WynnItem;
 import com.wynntils.models.items.WynnItemCache;
@@ -200,8 +199,7 @@ public class ContainerSearchFeature extends Feature {
 
     private void addSearchWidget(AbstractContainerScreen<?> screen, int renderX, int renderY) {
         SearchWidget searchWidget = new SearchWidget(
-                renderX + screen.imageWidth - 100, renderY - 20, 100, 20, s -> matchItems(s, screen), (ScreenExtension)
-                        screen);
+                renderX + screen.imageWidth - 100, renderY - 20, 100, 20, s -> matchItems(s, screen), screen);
 
         if (lastSearchWidget != null) {
             searchWidget.setTextBoxInput(lastSearchWidget.getTextBoxInput());

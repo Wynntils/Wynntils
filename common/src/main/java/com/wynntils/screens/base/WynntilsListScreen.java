@@ -7,7 +7,6 @@ package com.wynntils.screens.base;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.wynntils.core.text.StyledText;
 import com.wynntils.screens.activities.widgets.QuestBookSearchWidget;
-import com.wynntils.screens.base.widgets.TextInputBoxWidget;
 import com.wynntils.screens.base.widgets.WynntilsButton;
 import com.wynntils.utils.MathUtils;
 import com.wynntils.utils.colors.CommonColors;
@@ -26,7 +25,7 @@ import net.minecraft.network.chat.Component;
 import org.lwjgl.glfw.GLFW;
 
 public abstract class WynntilsListScreen<E, B extends WynntilsButton> extends WynntilsMenuScreenBase
-        implements WynntilsPagedScreen, TextboxScreen {
+        implements WynntilsPagedScreen {
     private double currentScroll = 0;
 
     protected int currentPage = 0;
@@ -254,15 +253,6 @@ public abstract class WynntilsListScreen<E, B extends WynntilsButton> extends Wy
         reloadElements(searchWidget.getTextBoxInput());
         setCurrentPage(0);
     }
-
-    @Override
-    public TextInputBoxWidget getFocusedTextInput() {
-        return this.searchWidget;
-    }
-
-    // Dummy impl
-    @Override
-    public void setFocusedTextInput(TextInputBoxWidget focusedTextInput) {}
 
     protected int getElementsPerPage() {
         return 13;
