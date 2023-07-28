@@ -1,8 +1,16 @@
+## [0.0.3-alpha.231](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.230...v0.0.3-alpha.231) (2023-07-28)
+
+
+### Miscellaneous Chores
+
+* Update all copyright years by spotless ([#1879](https://github.com/Wynntils/Artemis/issues/1879)) ([e69e647](https://github.com/Wynntils/Artemis/commit/e69e6474275ad8c40aa2803aee86421bcc05ebd5))
+
 ## [0.0.3-alpha.230](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.229...v0.0.3-alpha.230) (2023-07-28)
 
 
 ### Miscellaneous Chores
 
+* **release:** v0.0.3-alpha.230 [skip ci] ([586d614](https://github.com/Wynntils/Artemis/commit/586d6148073471c0ec925a4ad53d37b8a7dc74b0))
 * Update copyright year with Spotless ([#1875](https://github.com/Wynntils/Artemis/issues/1875)) ([4f6b122](https://github.com/Wynntils/Artemis/commit/4f6b1228a32aa089c33bf0c29533eec1b634ee49))
 
 ## [0.0.3-alpha.229](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.228...v0.0.3-alpha.229) (2023-07-28)
@@ -36,16 +44,4 @@
 ### Miscellaneous Chores
 
 * **release:** v0.0.3-alpha.227 [skip ci] ([7bb9f55](https://github.com/Wynntils/Artemis/commit/7bb9f553fc7b9511616e46c6050e14b921fccbf3))
-
-## [0.0.3-alpha.226](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.225...v0.0.3-alpha.226) (2023-07-28)
-
-
-### New Features
-
-* Add WynntilsStatisticsScreen ([#1858](https://github.com/Wynntils/Artemis/issues/1858)) ([ade5be7](https://github.com/Wynntils/Artemis/commit/ade5be7c4a620bfd260d69e26f4db65c8a99d87a))
-
-
-### Miscellaneous Chores
-
-* **release:** v0.0.3-alpha.226 [skip ci] ([5514e51](https://github.com/Wynntils/Artemis/commit/5514e516e19eb6a36497d3856571b7c0a78a1270))
 
