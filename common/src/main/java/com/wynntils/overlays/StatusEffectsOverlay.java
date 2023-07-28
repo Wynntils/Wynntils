@@ -171,6 +171,7 @@ public class StatusEffectsOverlay extends Overlay {
             int minusIndex = modifierString.indexOf('-');
             int plusIndex = modifierString.indexOf('+');
             int index = max(minusIndex, plusIndex);
+
             // We can simply put the count string at the start
             if( index == -1 ){
                 modifierText = StyledText.fromString(ChatFormatting.GRAY + (this.count + "x"))
@@ -186,6 +187,7 @@ public class StatusEffectsOverlay extends Overlay {
                     .getPrefix()
                     .append(StyledText.fromString(" "))
                     .append(modifierText)
+                    .append(StyledText.fromString(" "))
                     .append(this.effect.getName())
                     .append(StyledText.fromString(" "))
                     .append(this.effect.getDisplayedTime());
