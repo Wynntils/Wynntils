@@ -14,18 +14,18 @@ import net.minecraft.world.item.ItemStack;
 
 public enum SearchableContainerType {
     BANK(
-            java.util.regex.Pattern.compile("§0\\[Pg. (\\d+)\\] §8(.*)'s?§0 Bank"),
-            java.util.regex.Pattern.compile("§f§lPage \\d+§a >§2>§a>§2>§a>"),
+            Pattern.compile("§0\\[Pg. (\\d+)\\] §8(.*)'s?§0 Bank"),
+            Pattern.compile("§f§lPage \\d+§a >§2>§a>§2>§a>"),
             8,
             slotPos -> slotPos.x() < 7 && slotPos.y() < 6),
     BLOCK_BANK(
-            java.util.regex.Pattern.compile("§0\\[Pg. (\\d+)\\] §8(.*)'s?§0 Block Bank"),
-            java.util.regex.Pattern.compile("§f§lPage \\d+§a >§2>§a>§2>§a>"),
+            Pattern.compile("§0\\[Pg. (\\d+)\\] §8(.*)'s?§0 Block Bank"),
+            Pattern.compile("§f§lPage \\d+§a >§2>§a>§2>§a>"),
             8,
             slotPos -> slotPos.x() < 7 && slotPos.y() < 6),
     BOOKSHELF(
-            java.util.regex.Pattern.compile("§0\\[Pg. (\\d+)\\] §8(.*)'s?§0 Bookshelf"),
-            java.util.regex.Pattern.compile("§f§lPage \\d+§a >§2>§a>§2>§a>"),
+            Pattern.compile("§0\\[Pg. (\\d+)\\] §8(.*)'s?§0 Bookshelf"),
+            Pattern.compile("§f§lPage \\d+§a >§2>§a>§2>§a>"),
             8,
             slotPos -> slotPos.x() < 7 && slotPos.y() < 6),
     MISC_BUCKET(
