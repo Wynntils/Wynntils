@@ -155,8 +155,9 @@ public class StatusEffectsOverlay extends Overlay {
     }
 
     private static final class RenderedStatusEffect {
-        private int count = 0;
         private final StatusEffect effect;
+
+        private int count = 0;
 
         private RenderedStatusEffect(StatusEffect effect) {
             this.effect = effect;
