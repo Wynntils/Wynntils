@@ -4,6 +4,7 @@
  */
 package com.wynntils.overlays;
 
+import com.google.common.collect.ComparisonChain;
 import com.mojang.blaze3d.platform.Window;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.wynntils.core.components.Models;
@@ -22,13 +23,14 @@ import com.wynntils.utils.render.buffered.BufferedFontRenderer;
 import com.wynntils.utils.render.type.HorizontalAlignment;
 import com.wynntils.utils.render.type.TextShadow;
 import com.wynntils.utils.render.type.VerticalAlignment;
+import net.minecraft.client.renderer.MultiBufferSource;
+import net.minecraftforge.eventbus.api.SubscribeEvent;
+
 import java.util.Comparator;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Stream;
-import net.minecraft.client.renderer.MultiBufferSource;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
 
 public class StatusEffectsOverlay extends Overlay {
     @RegisterConfig
@@ -66,22 +68,21 @@ public class StatusEffectsOverlay extends Overlay {
 
     private void recalculateRenderCache() {
         List<StatusEffect> effects = Models.StatusEffect.getStatusEffects();
-        Stream<StatusEffectWithProperties> effectWithProperties;
+        Stream<RenderedStatusEffect> effectWithProperties;
 
         if (stackEffects.get()) {
             effectWithProperties = stackEffects(effects);
         } else {
-            effectWithProperties = effects.stream().map(StatusEffectWithProperties::new);
+            effectWithProperties = effects.stream().map(RenderedStatusEffect::new);
         }
 
         if (sortEffects.get()) {
             // Sort effects based on their prefix and their name
-            effectWithProperties = effectWithProperties.sorted(Comparator.comparing(
-                    e -> e.getPrefix().getString() + e.getName().getString()));
+            effectWithProperties = effectWithProperties.sorted(((t1, t2) -> t1.compare(t1.getEffect(), t2.getEffect())));
         }
 
         renderCache = effectWithProperties
-                .map(statusTimer -> new TextRenderTask(getTextToRender(statusTimer), getTextRenderSetting()))
+                .map(statusTimer -> new TextRenderTask(statusTimer.getTextToRender(), getTextRenderSetting()))
                 .toList();
     }
 
@@ -135,14 +136,14 @@ public class StatusEffectsOverlay extends Overlay {
         return textRenderSetting;
     }
 
-    private Stream<StatusEffectWithProperties> stackEffects(List<StatusEffect> effects) {
-        Map<String, StatusEffectWithProperties> effectsToRender = new LinkedHashMap<>();
+    private Stream<RenderedStatusEffect> stackEffects(List<StatusEffect> effects) {
+        Map<String, RenderedStatusEffect> effectsToRender = new LinkedHashMap<>();
 
         for (StatusEffect effect : effects) {
-            StatusEffectWithProperties entry =
+            RenderedStatusEffect entry =
                     effectsToRender.get(effect.asString().getString());
             if (entry == null) {
-                entry = new StatusEffectWithProperties(effect);
+                entry = new RenderedStatusEffect(effect);
                 effectsToRender.put(effect.asString().getString(), entry);
             }
             entry.count += 1;
@@ -150,22 +151,43 @@ public class StatusEffectsOverlay extends Overlay {
         return effectsToRender.values().stream();
     }
 
-    private StyledText getTextToRender(StatusEffectWithProperties effect) {
-        return effect.count > 1
-                ? StyledText.fromString(effect.count + "x ").append(effect.asString())
-                : effect.asString();
-    }
+    private static final class RenderedStatusEffect implements Comparator<StatusEffect> {
+        private int count = 0;
+        private final StatusEffect effect;
 
-    private static final class StatusEffectWithProperties extends StatusEffect {
-        public int count = 0;
-
-        private StatusEffectWithProperties(
-                StyledText name, StyledText modifier, StyledText displayedTime, StyledText prefix) {
-            super(name, modifier, displayedTime, prefix);
+        private RenderedStatusEffect(StyledText name, StyledText modifier, StyledText displayedTime, StyledText prefix) {
+            this.effect = new StatusEffect(name, modifier, displayedTime, prefix);
         }
 
-        private StatusEffectWithProperties(StatusEffect effect) {
-            this(effect.getName(), effect.getModifier(), effect.getDisplayedTime(), effect.getPrefix());
+        private RenderedStatusEffect(StatusEffect effect) {
+            this.effect = effect;
+        }
+
+        private StyledText getTextToRender() {
+            return this.count > 1
+                    ? StyledText.fromString(this.count + "x ").append(this.effect.asString())
+                    : this.effect.asString();
+        }
+
+        public int getCount() {
+            return this.count;
+        }
+
+        public void setCount(int c) {
+            this.count = c;
+        }
+
+        public StatusEffect getEffect() {
+            return this.effect;
+        }
+
+        @Override
+        public int compare(StatusEffect effect, StatusEffect t1) {
+            return ComparisonChain.start()
+                    .compare(effect.getPrefix().getString(), t1.getPrefix().getString())
+                    .compare(effect.getName().getString(), t1.getName().getString())
+                    .compare(effect.getModifier().getString(), t1.getModifier().getString())
+                    .result();
         }
     }
 }
