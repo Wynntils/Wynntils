@@ -1,9 +1,21 @@
+## [0.0.3-alpha.223](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.222...v0.0.3-alpha.223) (2023-07-28)
+
+
+### Bug Fixes
+
+* Convert À to A in translations, to somewhat preserve meaning ([#1865](https://github.com/Wynntils/Artemis/issues/1865)) ([f72f011](https://github.com/Wynntils/Artemis/commit/f72f011a2b11e01ad53c1a9bdc7f1278eb606733))
+
 ## [0.0.3-alpha.222](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.221...v0.0.3-alpha.222) (2023-07-27)
 
 
 ### Bug Fixes
 
 * Detect horse not allowed message ([#1864](https://github.com/Wynntils/Artemis/issues/1864)) ([8dc4605](https://github.com/Wynntils/Artemis/commit/8dc4605f3bc072cc3eaa698f6705c0855e9343e1))
+
+
+### Miscellaneous Chores
+
+* **release:** v0.0.3-alpha.222 [skip ci] ([a84b6a9](https://github.com/Wynntils/Artemis/commit/a84b6a9fc8e5a6bd5e0fb34e75b745ae2e071f66))
 
 ## [0.0.3-alpha.221](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.220...v0.0.3-alpha.221) (2023-07-27)
 
@@ -36,16 +48,4 @@
 ### Miscellaneous Chores
 
 * **release:** v0.0.3-alpha.219 [skip ci] ([5a2f1c5](https://github.com/Wynntils/Artemis/commit/5a2f1c5e1a5f15c64e3de7d9ca96e0d2e367e6d1))
-
-## [0.0.3-alpha.218](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.217...v0.0.3-alpha.218) (2023-07-27)
-
-
-### New Features
-
-* Fix some bugs related to scoreboard parsing correctly by simplifying the handler ([#1850](https://github.com/Wynntils/Artemis/issues/1850)) ([1e1a517](https://github.com/Wynntils/Artemis/commit/1e1a5178c9fffae3802a3d7f3ba9022b135c200f))
-
-
-### Miscellaneous Chores
-
-* **release:** v0.0.3-alpha.218 [skip ci] ([3ebf933](https://github.com/Wynntils/Artemis/commit/3ebf933e82161f544ea29c0cb166174613dc6eb2))
 
