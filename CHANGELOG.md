@@ -1,8 +1,16 @@
+## [0.0.3-alpha.232](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.231...v0.0.3-alpha.232) (2023-07-28)
+
+
+### Bug Fixes
+
+* Change À to Á in translation replacement ([#1881](https://github.com/Wynntils/Artemis/issues/1881)) ([a4bc978](https://github.com/Wynntils/Artemis/commit/a4bc9780308413aa8974e8eca18832441dff53aa))
+
 ## [0.0.3-alpha.231](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.230...v0.0.3-alpha.231) (2023-07-28)
 
 
 ### Miscellaneous Chores
 
+* **release:** v0.0.3-alpha.231 [skip ci] ([d8db601](https://github.com/Wynntils/Artemis/commit/d8db601673733d4a91f6701105eb8aace7b62f74))
 * Update all copyright years by spotless ([#1879](https://github.com/Wynntils/Artemis/issues/1879)) ([e69e647](https://github.com/Wynntils/Artemis/commit/e69e6474275ad8c40aa2803aee86421bcc05ebd5))
 
 ## [0.0.3-alpha.230](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.229...v0.0.3-alpha.230) (2023-07-28)
@@ -32,16 +40,4 @@
 ### Miscellaneous Chores
 
 * **release:** v0.0.3-alpha.228 [skip ci] ([adf3239](https://github.com/Wynntils/Artemis/commit/adf3239062f8483caa8a688b2dc2bd43e1ba5e11))
-
-## [0.0.3-alpha.227](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.226...v0.0.3-alpha.227) (2023-07-28)
-
-
-### New Features
-
-* update CHS locale ([#1826](https://github.com/Wynntils/Artemis/issues/1826)) ([e30033b](https://github.com/Wynntils/Artemis/commit/e30033b3c89d42033b3366727e2f78ebc31961fc))
-
-
-### Miscellaneous Chores
-
-* **release:** v0.0.3-alpha.227 [skip ci] ([7bb9f55](https://github.com/Wynntils/Artemis/commit/7bb9f553fc7b9511616e46c6050e14b921fccbf3))
 
