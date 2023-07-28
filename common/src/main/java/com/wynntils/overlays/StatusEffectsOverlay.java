@@ -25,8 +25,8 @@ import com.wynntils.utils.render.type.TextShadow;
 import com.wynntils.utils.render.type.VerticalAlignment;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
+import org.jetbrains.annotations.NotNull;
 
-import java.util.Comparator;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -78,7 +78,7 @@ public class StatusEffectsOverlay extends Overlay {
 
         if (sortEffects.get()) {
             // Sort effects based on their prefix and their name
-            effectWithProperties = effectWithProperties.sorted(((t1, t2) -> t1.compare(t1.getEffect(), t2.getEffect())));
+            effectWithProperties = effectWithProperties.sorted(RenderedStatusEffect::compareTo);
         }
 
         renderCache = effectWithProperties
@@ -151,7 +151,7 @@ public class StatusEffectsOverlay extends Overlay {
         return effectsToRender.values().stream();
     }
 
-    private static final class RenderedStatusEffect implements Comparator<StatusEffect> {
+    private static final class RenderedStatusEffect implements Comparable<RenderedStatusEffect> {
         private int count = 0;
         private final StatusEffect effect;
 
@@ -182,11 +182,11 @@ public class StatusEffectsOverlay extends Overlay {
         }
 
         @Override
-        public int compare(StatusEffect effect, StatusEffect t1) {
+        public int compareTo(@NotNull RenderedStatusEffect effect) {
             return ComparisonChain.start()
-                    .compare(effect.getPrefix().getString(), t1.getPrefix().getString())
-                    .compare(effect.getName().getString(), t1.getName().getString())
-                    .compare(effect.getModifier().getString(), t1.getModifier().getString())
+                    .compare(this.effect.getPrefix().getString(), effect.effect.getPrefix().getString())
+                    .compare(this.effect.getName().getString(), effect.effect.getName().getString())
+                    .compare(this.effect.getModifier().getString(), effect.effect.getModifier().getString())
                     .result();
         }
     }
