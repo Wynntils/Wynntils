@@ -2,7 +2,7 @@
  * Copyright © Wynntils 2023.
  * This file is released under AGPLv3. See LICENSE for full license details.
  */
-package com.wynntils.services.lootruns;
+package com.wynntils.services.lootrunpaths;
 
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.BufferBuilder;
@@ -10,10 +10,10 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.wynntils.core.components.Managers;
 import com.wynntils.features.LootrunFeature;
-import com.wynntils.services.lootruns.type.BlockValidness;
-import com.wynntils.services.lootruns.type.ColoredPath;
-import com.wynntils.services.lootruns.type.ColoredPosition;
-import com.wynntils.services.lootruns.type.LootrunNote;
+import com.wynntils.services.lootrunpaths.type.BlockValidness;
+import com.wynntils.services.lootrunpaths.type.ColoredPath;
+import com.wynntils.services.lootrunpaths.type.ColoredPosition;
+import com.wynntils.services.lootrunpaths.type.LootrunNote;
 import com.wynntils.utils.mc.McUtils;
 import com.wynntils.utils.mc.PosUtils;
 import com.wynntils.utils.render.buffered.CustomRenderType;
@@ -43,7 +43,7 @@ public final class LootrunRenderer {
     private static final MultiBufferSource.BufferSource BUFFER_SOURCE =
             MultiBufferSource.immediate(new BufferBuilder(256));
 
-    public static void renderLootrun(PoseStack poseStack, LootrunInstance lootrun, int color) {
+    public static void renderLootrun(PoseStack poseStack, LootrunPathInstance lootrun, int color) {
         if (lootrun == null) {
             return;
         }
@@ -96,7 +96,7 @@ public final class LootrunRenderer {
         poseStack.popPose();
     }
 
-    private static void renderNotes(PoseStack poseStack, LootrunInstance lootrun, int color, long chunkLong) {
+    private static void renderNotes(PoseStack poseStack, LootrunPathInstance lootrun, int color, long chunkLong) {
         List<LootrunNote> notes = lootrun.notes().get(chunkLong);
 
         Font font = McUtils.mc().font;
@@ -129,7 +129,7 @@ public final class LootrunRenderer {
         }
     }
 
-    private static void renderChests(PoseStack poseStack, LootrunInstance lootrun, int color, long chunkLong) {
+    private static void renderChests(PoseStack poseStack, LootrunPathInstance lootrun, int color, long chunkLong) {
         VertexConsumer consumer = BUFFER_SOURCE.getBuffer(RenderType.lines());
         Set<BlockPos> chests = lootrun.chests().get(chunkLong);
 
