@@ -4,8 +4,6 @@
  */
 package com.wynntils.overlays;
 
-import static java.lang.Math.max;
-
 import com.mojang.blaze3d.platform.Window;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.wynntils.core.components.Models;
@@ -174,7 +172,7 @@ public class StatusEffectsOverlay extends Overlay {
             // look for either a - or a +
             int minusIndex = modifierString.indexOf('-');
             int plusIndex = modifierString.indexOf('+');
-            int index = max(minusIndex, plusIndex);
+            int index = Math.max(minusIndex, plusIndex);
 
             if (index == -1) {
                  // We can simply put the count string at the start
