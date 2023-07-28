@@ -1,8 +1,16 @@
+## [0.0.3-alpha.230](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.229...v0.0.3-alpha.230) (2023-07-28)
+
+
+### Miscellaneous Chores
+
+* Update copyright year with Spotless ([#1875](https://github.com/Wynntils/Artemis/issues/1875)) ([4f6b122](https://github.com/Wynntils/Artemis/commit/4f6b1228a32aa089c33bf0c29533eec1b634ee49))
+
 ## [0.0.3-alpha.229](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.228...v0.0.3-alpha.229) (2023-07-28)
 
 
 ### Miscellaneous Chores
 
+* **release:** v0.0.3-alpha.229 [skip ci] ([e3775b9](https://github.com/Wynntils/Artemis/commit/e3775b9a82e2e6d96524838d63923ea092d2a039))
 * Start using spotless on gradle files ([#1871](https://github.com/Wynntils/Artemis/issues/1871)) ([8b54a8c](https://github.com/Wynntils/Artemis/commit/8b54a8cd08bee04a3f0179e2bdeb89603c5d3a80))
 
 ## [0.0.3-alpha.228](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.227...v0.0.3-alpha.228) (2023-07-28)
@@ -40,16 +48,4 @@
 ### Miscellaneous Chores
 
 * **release:** v0.0.3-alpha.226 [skip ci] ([5514e51](https://github.com/Wynntils/Artemis/commit/5514e516e19eb6a36497d3856571b7c0a78a1270))
-
-## [0.0.3-alpha.225](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.224...v0.0.3-alpha.225) (2023-07-28)
-
-
-### New Features
-
-* Collect lootrun statistics ([#1852](https://github.com/Wynntils/Artemis/issues/1852)) ([f1562b1](https://github.com/Wynntils/Artemis/commit/f1562b14b41203cadb05659c9479f6eb47c4dd60))
-
-
-### Miscellaneous Chores
-
-* **release:** v0.0.3-alpha.225 [skip ci] ([5228ccd](https://github.com/Wynntils/Artemis/commit/5228ccd2ddab5f87cfd630a4e74fc9d330e22d3d))
 
