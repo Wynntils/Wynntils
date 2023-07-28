@@ -11,14 +11,13 @@ import com.wynntils.mc.event.PlayerInfoFooterChangedEvent;
 import com.wynntils.models.statuseffects.event.StatusEffectsChangedEvent;
 import com.wynntils.models.statuseffects.type.StatusEffect;
 import com.wynntils.models.worlds.event.WorldStateEvent;
-import net.minecraftforge.eventbus.api.EventPriority;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
-
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import net.minecraftforge.eventbus.api.EventPriority;
+import net.minecraftforge.eventbus.api.SubscribeEvent;
 
 public final class StatusEffectModel extends Model {
     /**
@@ -36,7 +35,8 @@ public final class StatusEffectModel extends Model {
      * <p>Originally taken from: <a href="https://github.com/Wynntils/Wynntils/pull/615">Legacy</a>
      */
     private static final Pattern STATUS_EFFECT_PATTERN = //Pattern.compile("(.+?§7 ?(?:\\d+(?:\\.\\d+)?%)?) ?([%\\-+\\/\\da-zA-Z'\\s]+?)§[84a]\\((.+?)\\).*");
-            Pattern.compile("(.+? ?§7 ??(?:\\d+(?:\\.\\d+)?%)?) ?([%\\-+\\.\\/\\d]+s?)? *([a-zA-Z\\s]+?) §[84a]\\((.+?)\\).*");
+//            Pattern.compile("(.+? ?§7 ??(?:\\d+(?:\\.\\d+)?%)?) ?([%\\-+\\.\\/\\d]+s?)? *([a-zA-Z\\s]+?) §[84a]\\((.+?)\\).*");
+    Pattern.compile("(?<prefix>.+?)(?<modifier>§7 ?([%\\-+\\.\\/\\d]+s?)?) *(?<name>[a-zA-Z\\s]+?) (?<timer>§[84a]\\((.+?)\\)).*");
     private static final Pattern MODIFIER_REGEX = Pattern.compile("§7 ??([%\\-+\\.\\/\\d]+s?)");
 
     private static final StyledText STATUS_EFFECTS_TITLE = StyledText.fromString("§d§lStatus Effects");
@@ -80,7 +80,6 @@ public final class StatusEffectModel extends Model {
 
             Matcher m = trimmedEffect.getMatcher(STATUS_EFFECT_PATTERN);
             if (!m.find()) continue;
-
 
             List<StyledText> parts = Arrays.stream(trimmedEffect.getPartsAsTextArray())
                     .map(StyledText::trim)

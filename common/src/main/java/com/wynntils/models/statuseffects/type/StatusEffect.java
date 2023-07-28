@@ -19,9 +19,14 @@ public class StatusEffect {
         this.prefix = prefix;
         this.modifier = modifier;
 
-        final StyledText space = StyledText.fromString(" ");
-        this.fullName =
-                StyledText.concat(prefix, space, modifier, space, name, space, displayedTime);
+        this.fullName = StyledText.concat(
+                prefix,
+                StyledText.fromString(" "),
+                modifier,
+                StyledText.fromString(" "),
+                name,
+                StyledText.fromString(" "),
+                displayedTime);
     }
 
     /**
@@ -31,11 +36,10 @@ public class StatusEffect {
         return name;
     }
 
-
     /**
      * @return The modifier of the consumable
      */
-    public StyledText getModifier(){
+    public StyledText getModifier() {
         return modifier;
     }
 
