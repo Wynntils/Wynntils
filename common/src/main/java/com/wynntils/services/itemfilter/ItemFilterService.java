@@ -10,7 +10,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.function.Function;
-import net.minecraft.client.resources.language.I18n;
 
 public class ItemFilterService extends Service {
     private final Map<String, Function<String, ? extends ItemFilter>> filterSuppliers = new HashMap<>();
