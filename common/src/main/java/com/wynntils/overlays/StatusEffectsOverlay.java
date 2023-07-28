@@ -22,15 +22,15 @@ import com.wynntils.utils.render.buffered.BufferedFontRenderer;
 import com.wynntils.utils.render.type.HorizontalAlignment;
 import com.wynntils.utils.render.type.TextShadow;
 import com.wynntils.utils.render.type.VerticalAlignment;
-import net.minecraft.ChatFormatting;
-import net.minecraft.client.renderer.MultiBufferSource;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
-
+import java.nio.charset.StandardCharsets;
 import java.util.Comparator;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Stream;
+import net.minecraft.ChatFormatting;
+import net.minecraft.client.renderer.MultiBufferSource;
+import net.minecraftforge.eventbus.api.SubscribeEvent;
 
 public class StatusEffectsOverlay extends Overlay {
     @RegisterConfig
@@ -140,13 +140,12 @@ public class StatusEffectsOverlay extends Overlay {
         Map<String, RenderedStatusEffect> effectsToRender = new LinkedHashMap<>();
 
         for (StatusEffect effect : effects) {
-            RenderedStatusEffect entry =
-                    effectsToRender.get(effect.asString().getString());
+            RenderedStatusEffect entry = effectsToRender.get(effect.asString().getString());
             if (entry == null) {
                 entry = new RenderedStatusEffect(effect);
                 effectsToRender.put(effect.asString().getString(), entry);
             }
-            entry.setCount( entry.getCount() + 1 );
+            entry.setCount(entry.getCount() + 1);
         }
         return effectsToRender.values().stream();
     }
@@ -155,20 +154,39 @@ public class StatusEffectsOverlay extends Overlay {
         private int count = 0;
         private final StatusEffect effect;
 
-
         private RenderedStatusEffect(StatusEffect effect) {
             this.effect = effect;
         }
 
         private StyledText getRenderedText() {
+            byte[] modifierBytes = this.effect.getModifier().getString().getBytes(StandardCharsets.UTF_8);
+            StyledText modifierText;
+
+            if( modifierBytes.length > 0 && this.count > 1) { // Modifier and stacks
+                int start;
+                for (start = 0; !Character.isDigit(modifierBytes[start]) && start < modifierBytes.length; start++) {
+                }
+                start -= 1;
+                StyledText modifierStart = this.effect.getModifier().substring(0, start);
+                StyledText modifierEnd = this.effect.getModifier().substring(start);
+                modifierText = modifierStart
+                                .append(StyledText.fromString(ChatFormatting.GRAY + (this.count + "x")))
+                                .append(modifierEnd);
+
+            } else if( this.count > 1 ){ // No modifier, does stack
+                modifierText = StyledText.fromString(ChatFormatting.GRAY + (this.count + "x"));
+            } else { // No stacking
+                modifierText = this.effect.getModifier();
+            }
+
             return this.count > 1
-                    ? this.effect.getPrefix()
-                        .append(StyledText.fromString(" " + ChatFormatting.GRAY + this.count + "x "))
-                        .append(this.effect.getModifier())
-                        .append(StyledText.fromString(" "))
-                        .append(this.effect.getName())
-                        .append(StyledText.fromString(" "))
-                        .append(this.effect.getDisplayedTime())
+                    ? this.effect
+                            .getPrefix()
+                            .append(StyledText.fromString(" "))
+                            .append(modifierText)
+                            .append(this.effect.getName())
+                            .append(StyledText.fromString(" "))
+                            .append(this.effect.getDisplayedTime())
                     : this.effect.asString();
         }
 
