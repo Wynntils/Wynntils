@@ -247,7 +247,7 @@ public final class ConfigManager extends Manager {
             if (configInfo == null) {
                 throw new RuntimeException("A Config is missing @RegisterConfig annotation:" + configField);
             }
-            String i18nKey = configInfo.value();
+            String i18nKey = configInfo.i18nKey();
 
             Config configObj;
             try {

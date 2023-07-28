@@ -14,7 +14,7 @@ import com.wynntils.utils.render.type.ObjectivesTextures;
 import net.minecraft.client.renderer.MultiBufferSource;
 
 public class ExperienceTexturedCustomBarOverlay extends CustomBarOverlayBase {
-    @RegisterConfig("overlay.wynntils.objectivesTexture")
+    @RegisterConfig(i18nKey = "overlay.wynntils.objectivesTexture")
     public final Config<ObjectivesTextures> objectivesTexture = new Config<>(ObjectivesTextures.A);
 
     public ExperienceTexturedCustomBarOverlay(int id) {

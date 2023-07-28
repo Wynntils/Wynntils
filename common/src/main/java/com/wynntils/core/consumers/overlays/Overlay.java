@@ -22,13 +22,13 @@ import net.minecraft.client.resources.language.I18n;
 import net.minecraft.world.phys.Vec2;
 
 public abstract class Overlay extends AbstractConfigurable implements Translatable, Comparable<Overlay> {
-    @RegisterConfig("overlay.wynntils.overlay.position")
+    @RegisterConfig(i18nKey = "overlay.wynntils.overlay.position")
     protected final HiddenConfig<OverlayPosition> position = new HiddenConfig<>(null);
 
-    @RegisterConfig("overlay.wynntils.overlay.size")
+    @RegisterConfig(i18nKey = "overlay.wynntils.overlay.size")
     protected final HiddenConfig<OverlaySize> size = new HiddenConfig<>(null);
 
-    @RegisterConfig("overlay.wynntils.overlay.userEnabled")
+    @RegisterConfig(i18nKey = "overlay.wynntils.overlay.userEnabled")
     protected final Config<Boolean> userEnabled = new Config<>(true);
 
     // This is used in rendering.
@@ -36,10 +36,10 @@ public abstract class Overlay extends AbstractConfigurable implements Translatab
     // but the user can modify this config field to use an override.
     // Example use case: Overlay is aligned to the left in the TopRight section,
     //                   but the user wants to use right text alignment
-    @RegisterConfig("overlay.wynntils.overlay.horizontalAlignmentOverride")
+    @RegisterConfig(i18nKey = "overlay.wynntils.overlay.horizontalAlignmentOverride")
     protected final HiddenConfig<HorizontalAlignment> horizontalAlignmentOverride = new HiddenConfig<>(null);
 
-    @RegisterConfig("overlay.wynntils.overlay.verticalAlignmentOverride")
+    @RegisterConfig(i18nKey = "overlay.wynntils.overlay.verticalAlignmentOverride")
     protected final HiddenConfig<VerticalAlignment> verticalAlignmentOverride = new HiddenConfig<>(null);
 
     protected Overlay(OverlayPosition position, float width, float height) {
