@@ -8,6 +8,7 @@ import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
 import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
 import com.llamalad7.mixinextras.sugar.Local;
 import com.mojang.blaze3d.vertex.PoseStack;
+import com.wynntils.core.consumers.screens.WynntilsScreen;
 import com.wynntils.core.events.MixinHelper;
 import com.wynntils.mc.event.ItemTooltipRenderEvent;
 import com.wynntils.mc.event.PauseMenuInitEvent;
@@ -128,6 +129,19 @@ public abstract class ScreenMixin implements ScreenExtension {
     @Inject(method = "render(Lcom/mojang/blaze3d/vertex/PoseStack;IIF)V", at = @At("RETURN"))
     private void onScreenRenderPost(PoseStack poseStack, int mouseX, int mouseY, float partialTick, CallbackInfo ci) {
         MixinHelper.post(new ScreenRenderEvent((Screen) (Object) this, poseStack, mouseX, mouseY, partialTick));
+    }
+
+    @Inject(
+            method =
+                    "Lnet/minecraft/client/gui/screens/Screen;wrapScreenError(Ljava/lang/Runnable;Ljava/lang/String;Ljava/lang/String;)V",
+            at = @At("HEAD"),
+            cancellable = true)
+    private static void wrapScreenErrorPre(Runnable action, String errorDesc, String screenName, CallbackInfo ci) {
+        if (!(Minecraft.getInstance().screen instanceof WynntilsScreen wynntilsScreen)) return;
+
+        // This is too involved in error handling to worth risk sending events
+        wynntilsScreen.wrapCurrentScreenError(action, errorDesc, screenName);
+        ci.cancel();
     }
 
     @Override

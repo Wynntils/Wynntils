@@ -233,6 +233,9 @@ public final class WynntilsMod {
         Managers.Config.init();
         Managers.Storage.initFeatures();
 
+        // Init services that depends on I18n
+        Services.Statistics.init();
+
         LOGGER.info(
                 "Wynntils: {} features and {} functions are now loaded and ready",
                 Managers.Feature.getFeatures().size(),
@@ -245,23 +248,26 @@ public final class WynntilsMod {
         Managers.CrashReport.registerCrashContext("In Development", () -> isDevelopmentEnvironment() ? "Yes" : "No");
     }
 
-    public static void reportCrash(String fullName, String niceName, CrashType type, Throwable throwable) {
-        reportCrash(fullName, niceName, type, throwable, true, true);
+    public static void reportCrash(
+            CrashType type, String niceName, String fullName, String reason, Throwable throwable) {
+        reportCrash(type, niceName, fullName, reason, true, true, throwable);
     }
 
     public static void reportCrash(
-            String fullName,
-            String niceName,
             CrashType type,
-            Throwable throwable,
+            String niceName,
+            String fullName,
+            String reason,
             boolean shouldSendChat,
-            boolean isDisabled) {
-        WynntilsMod.warn("Disabling " + type.toString().toLowerCase(Locale.ROOT) + " " + niceName);
+            boolean isDisabled,
+            Throwable throwable) {
+        WynntilsMod.warn(
+                "Disabling " + type.toString().toLowerCase(Locale.ROOT) + " " + niceName + " due to " + reason);
         WynntilsMod.error("Exception thrown by " + fullName, throwable);
 
         if (shouldSendChat) {
-            McUtils.sendErrorToClient("Wynntils error: " + type.getName() + " '" + niceName + "' has crashed"
-                    + (isDisabled ? " and has been disabled" : ""));
+            McUtils.sendErrorToClient("Wynntils error: " + type.getName() + " '" + niceName + "' has crashed in "
+                    + reason + (isDisabled ? " and has been disabled" : ""));
         }
 
         postEvent(new WynntilsCrashEvent(fullName, type, throwable));

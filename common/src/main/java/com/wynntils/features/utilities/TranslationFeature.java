@@ -112,7 +112,10 @@ public class TranslationFeature extends Feature {
     }
 
     private StyledText unwrapCoding(String origCoded) {
-        return StyledText.fromString(origCoded.replaceAll("\\{ ?§ ?([0-9a-fklmnor]) ?\\}", "§$1"));
+        // Some translated text (e.g. from pt_br) contains À. This will be stripped later on,
+        // so convert it to A (not ideal but better than nothing).
+        return StyledText.fromString(
+                origCoded.replaceAll("\\{ ?§ ?([0-9a-fklmnor]) ?\\}", "§$1").replace('À', 'A'));
     }
 
     private String wrapCoding(StyledText origCoded) {

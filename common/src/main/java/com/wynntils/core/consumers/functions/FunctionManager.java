@@ -102,7 +102,11 @@ public final class FunctionManager extends Manager {
             crashFunction(function);
 
             WynntilsMod.reportCrash(
-                    function.getClass().getName(), function.getTranslatedName(), CrashType.FUNCTION, throwable);
+                    CrashType.FUNCTION,
+                    function.getTranslatedName(),
+                    function.getClass().getName(),
+                    "calculation",
+                    throwable);
         }
 
         return Optional.empty();

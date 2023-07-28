@@ -58,74 +58,11 @@ public abstract class LootrunFinishedEvent extends Event {
         public int getMobsKilled() {
             return mobsKilled;
         }
-
-        public static class Builder {
-            private int challengesCompleted;
-            private int timeElapsed;
-            private int rewardPulls;
-            private int rewardRerolls;
-            private int experienceGained;
-            private int mobsKilled;
-
-            public Builder setChallengesCompleted(int challengesCompleted) {
-                this.challengesCompleted = challengesCompleted;
-                return this;
-            }
-
-            public Builder setTimeElapsed(int timeElapsed) {
-                this.timeElapsed = timeElapsed;
-                return this;
-            }
-
-            public Builder setRewardPulls(int rewardPulls) {
-                this.rewardPulls = rewardPulls;
-                return this;
-            }
-
-            public Builder setRewardRerolls(int rewardRerolls) {
-                this.rewardRerolls = rewardRerolls;
-                return this;
-            }
-
-            public Builder setExperienceGained(int experienceGained) {
-                this.experienceGained = experienceGained;
-                return this;
-            }
-
-            public Builder setMobsKilled(int mobsKilled) {
-                this.mobsKilled = mobsKilled;
-                return this;
-            }
-
-            public Completed build() {
-                return new Completed(
-                        challengesCompleted, timeElapsed, rewardPulls, rewardRerolls, experienceGained, mobsKilled);
-            }
-        }
     }
 
     public static class Failed extends LootrunFinishedEvent {
         public Failed(int challengesCompleted, int timeElapsed) {
             super(challengesCompleted, timeElapsed);
-        }
-
-        public static class Builder {
-            private int challengesCompleted;
-            private int timeElapsed;
-
-            public Builder setChallengesCompleted(int challengesCompleted) {
-                this.challengesCompleted = challengesCompleted;
-                return this;
-            }
-
-            public Builder setTimeElapsed(int timeElapsed) {
-                this.timeElapsed = timeElapsed;
-                return this;
-            }
-
-            public Failed build() {
-                return new Failed(challengesCompleted, timeElapsed);
-            }
         }
     }
 }

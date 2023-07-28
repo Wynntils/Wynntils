@@ -8,7 +8,7 @@ import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.components.Model;
 import com.wynntils.core.text.StyledText;
 import com.wynntils.handlers.chat.event.ChatMessageReceivedEvent;
-import com.wynntils.models.lootrun.event.LootrunFinishedEvent;
+import com.wynntils.handlers.chat.type.RecipientType;
 import com.wynntils.models.worlds.event.WorldStateEvent;
 import java.util.List;
 import java.util.regex.Matcher;
@@ -49,8 +49,8 @@ public class LootrunModel extends Model {
 
     private static final Pattern LOOTRUN_FAILED_PATTERN = Pattern.compile("[À\\s]*§c§lLootrun Failed!");
 
-    private LootrunFinishedEvent.Completed.Builder lootrunCompletedBuilder;
-    private LootrunFinishedEvent.Failed.Builder lootrunFailedBuilder;
+    private LootrunFinishedEventBuilder.Completed lootrunCompletedBuilder;
+    private LootrunFinishedEventBuilder.Failed lootrunFailedBuilder;
 
     public LootrunModel() {
         super(List.of());
@@ -58,15 +58,16 @@ public class LootrunModel extends Model {
 
     @SubscribeEvent
     public void onChatMessage(ChatMessageReceivedEvent event) {
+        if (event.getRecipientType() != RecipientType.INFO) return;
         StyledText styledText = event.getOriginalStyledText();
 
         if (styledText.matches(LOOTRUN_COMPLETED_PATTERN)) {
-            lootrunCompletedBuilder = new LootrunFinishedEvent.Completed.Builder();
+            lootrunCompletedBuilder = new LootrunFinishedEventBuilder.Completed();
             lootrunFailedBuilder = null;
             return;
         }
         if (styledText.matches(LOOTRUN_FAILED_PATTERN)) {
-            lootrunFailedBuilder = new LootrunFinishedEvent.Failed.Builder();
+            lootrunFailedBuilder = new LootrunFinishedEventBuilder.Failed();
             lootrunCompletedBuilder = null;
             return;
         }
