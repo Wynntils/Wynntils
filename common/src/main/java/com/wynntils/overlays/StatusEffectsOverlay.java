@@ -161,31 +161,34 @@ public class StatusEffectsOverlay extends Overlay {
         }
 
         private StyledText getRenderedText() {
+            if( this.count == 1 ){
+                return this.effect.asString();
+            }
             String modifierString = this.effect.getModifier().getString();
             StyledText modifierText;
 
+            // look for either a - or a +
             int minusIndex = modifierString.indexOf('-');
             int plusIndex = modifierString.indexOf('+');
-            int index = max(minusIndex, plusIndex); // look for either a - or a +
-            if( index < 0 ){// We can simply put the count string at the start
-                modifierText = (this.count > 1 ? StyledText.fromString(ChatFormatting.GRAY + (this.count + "x")) : StyledText.EMPTY)
+            int index = max(minusIndex, plusIndex);
+            // We can simply put the count string at the start
+            if( index == -1 ){
+                modifierText = StyledText.fromString(ChatFormatting.GRAY + (this.count + "x"))
                         .append(this.effect.getModifier());
-            } else { // The count string is inserted between the +/- and the number
+            } else {
+                // The count string is inserted between the +/- and the number
                 index += 1;
-                modifierText = StyledText.fromString(modifierString.substring(0, index))
-                        .append(this.count > 1 ? StyledText.fromString(ChatFormatting.GRAY + (this.count + "x")) : StyledText.EMPTY)
-                        .append(StyledText.fromString(ChatFormatting.GRAY + modifierString.substring(index)));
+                modifierText = StyledText.fromString(ChatFormatting.GRAY + modifierString.substring(0, index) +
+                        (this.count + "x") + modifierString.substring(index));
             }
 
-            return this.count > 1
-                    ? this.effect
-                            .getPrefix()
-                            .append(StyledText.fromString(" "))
-                            .append(modifierText)
-                            .append(this.effect.getName())
-                            .append(StyledText.fromString(" "))
-                            .append(this.effect.getDisplayedTime())
-                    : this.effect.asString();
+            return this.effect
+                    .getPrefix()
+                    .append(StyledText.fromString(" "))
+                    .append(modifierText)
+                    .append(this.effect.getName())
+                    .append(StyledText.fromString(" "))
+                    .append(this.effect.getDisplayedTime());
         }
 
         public int getCount() {
