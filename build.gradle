@@ -96,7 +96,7 @@ allprojects {
             palantirJavaFormat(spotless_palantir_version)
             trimTrailingWhitespace()
             endWithNewline()
-            ratchetFrom('main')
+            ratchetFrom('origin/main')
             // Custom rule from https://github.com/apache/geode
             custom "Refuse wildcard imports", {
                 if (it =~ /\nimport .*\*;/) {
