@@ -1,9 +1,21 @@
+## [0.0.3-alpha.233](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.232...v0.0.3-alpha.233) (2023-07-28)
+
+
+### Code Refactoring
+
+* Clarify what @RegisterConfig argument means ([#1884](https://github.com/Wynntils/Artemis/issues/1884)) ([38a48d4](https://github.com/Wynntils/Artemis/commit/38a48d4126240f586d781a31e280afa35c0ff087))
+
 ## [0.0.3-alpha.232](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.231...v0.0.3-alpha.232) (2023-07-28)
 
 
 ### Bug Fixes
 
 * Change À to Á in translation replacement ([#1881](https://github.com/Wynntils/Artemis/issues/1881)) ([a4bc978](https://github.com/Wynntils/Artemis/commit/a4bc9780308413aa8974e8eca18832441dff53aa))
+
+
+### Miscellaneous Chores
+
+* **release:** v0.0.3-alpha.232 [skip ci] ([b485bf3](https://github.com/Wynntils/Artemis/commit/b485bf3490597c5585073ebe6b9d1df4bddcd63c))
 
 ## [0.0.3-alpha.231](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.230...v0.0.3-alpha.231) (2023-07-28)
 
@@ -28,16 +40,4 @@
 
 * **release:** v0.0.3-alpha.229 [skip ci] ([e3775b9](https://github.com/Wynntils/Artemis/commit/e3775b9a82e2e6d96524838d63923ea092d2a039))
 * Start using spotless on gradle files ([#1871](https://github.com/Wynntils/Artemis/issues/1871)) ([8b54a8c](https://github.com/Wynntils/Artemis/commit/8b54a8cd08bee04a3f0179e2bdeb89603c5d3a80))
-
-## [0.0.3-alpha.228](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.227...v0.0.3-alpha.228) (2023-07-28)
-
-
-### Bug Fixes
-
-* Don't overwrite default bank jump behavior ([#1857](https://github.com/Wynntils/Artemis/issues/1857)) ([f3b2528](https://github.com/Wynntils/Artemis/commit/f3b252864aee458cf136de6d50c51b61cc096169))
-
-
-### Miscellaneous Chores
-
-* **release:** v0.0.3-alpha.228 [skip ci] ([adf3239](https://github.com/Wynntils/Artemis/commit/adf3239062f8483caa8a688b2dc2bd43e1ba5e11))
 
