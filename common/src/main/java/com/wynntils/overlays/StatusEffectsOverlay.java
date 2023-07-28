@@ -142,12 +142,15 @@ public class StatusEffectsOverlay extends Overlay {
 
         for (StatusEffect effect : effects) {
             RenderedStatusEffect entry = effectsToRender.get(effect.asString().getString());
+            
             if (entry == null) {
                 entry = new RenderedStatusEffect(effect);
                 effectsToRender.put(effect.asString().getString(), entry);
             }
+            
             entry.setCount(entry.getCount() + 1);
         }
+        
         return effectsToRender.values().stream();
     }
 
