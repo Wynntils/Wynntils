@@ -145,32 +145,4 @@ public final class StringUtils {
         return Base64.getDecoder()
                 .decode(ByteBuffer.wrap(base64.replaceAll("\n", "").getBytes(StandardCharsets.UTF_8)));
     }
-
-    /**
-     * Wraps a string based on a maximum width.
-     * @param text The text to wrap
-     * @return A list of lines, each of which is no longer than maxWidth
-     */
-    public static List<String> wrap(String text, int maxWidth) {
-        List<String> lines = new ArrayList<>();
-        StringBuilder currentLine = new StringBuilder();
-        int currentLineWidth = 0;
-
-        for (String word : text.split(" ")) {
-            int wordLength = McUtils.mc().font.width(word + " ");
-
-            if (currentLineWidth + wordLength > maxWidth) {
-                lines.add(currentLine.toString());
-                currentLine = new StringBuilder();
-                currentLineWidth = 0;
-            }
-
-            currentLine.append(word).append(" ");
-            currentLineWidth += wordLength + 1;
-        }
-
-        lines.add(currentLine.toString());
-
-        return lines;
-    }
 }
