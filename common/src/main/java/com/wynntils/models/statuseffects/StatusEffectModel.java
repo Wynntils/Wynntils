@@ -93,7 +93,7 @@ public final class StatusEffectModel extends Model {
             StyledText modifier;
 
             // Split the modifier and name, which are separated by a space
-            StyledText[] modifierStr = name.split("\\s{1}");
+            StyledText[] modifierStr = name.split("\\s");
             if (modifierStr[0].matches(MODIFIER_REGEX)) {
                 modifier = modifierStr[0];
                 name = name.substring(modifier.length()).trim(); // Get all but first part of the string
