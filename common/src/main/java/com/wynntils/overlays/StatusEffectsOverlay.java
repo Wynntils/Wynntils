@@ -4,7 +4,6 @@
  */
 package com.wynntils.overlays;
 
-import com.google.common.collect.ComparisonChain;
 import com.mojang.blaze3d.platform.Window;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.wynntils.core.components.Models;
@@ -25,8 +24,8 @@ import com.wynntils.utils.render.type.TextShadow;
 import com.wynntils.utils.render.type.VerticalAlignment;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
-import org.jetbrains.annotations.NotNull;
 
+import java.util.Comparator;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -78,7 +77,7 @@ public class StatusEffectsOverlay extends Overlay {
 
         if (sortEffects.get()) {
             // Sort effects based on their prefix and their name
-            effectWithProperties = effectWithProperties.sorted(RenderedStatusEffect::compareTo);
+            effectWithProperties = effectWithProperties.sorted(Comparator.comparing(e -> e.effect));
         }
 
         renderCache = effectWithProperties
@@ -151,7 +150,7 @@ public class StatusEffectsOverlay extends Overlay {
         return effectsToRender.values().stream();
     }
 
-    private static final class RenderedStatusEffect implements Comparable<RenderedStatusEffect> {
+    private static final class RenderedStatusEffect {
         private int count = 0;
         private final StatusEffect effect;
 
@@ -181,13 +180,5 @@ public class StatusEffectsOverlay extends Overlay {
             return this.effect;
         }
 
-        @Override
-        public int compareTo(@NotNull RenderedStatusEffect effect) {
-            return ComparisonChain.start()
-                    .compare(this.effect.getPrefix().getString(), effect.effect.getPrefix().getString())
-                    .compare(this.effect.getName().getString(), effect.effect.getName().getString())
-                    .compare(this.effect.getModifier().getString(), effect.effect.getModifier().getString())
-                    .result();
-        }
     }
 }

@@ -4,9 +4,10 @@
  */
 package com.wynntils.models.statuseffects.type;
 
+import com.google.common.collect.ComparisonChain;
 import com.wynntils.core.text.StyledText;
 
-public class StatusEffect {
+public class StatusEffect implements Comparable<StatusEffect> {
     private final StyledText fullName;
     private final StyledText name; // The name of the consumable (also used to identify it)
     private final StyledText modifier; // The modifier of the consumable (+100, 23/3s etc.)
@@ -73,5 +74,14 @@ public class StatusEffect {
 
     public StyledText asString() {
         return fullName;
+    }
+
+    @Override
+    public int compareTo(StatusEffect effect) {
+        return ComparisonChain.start()
+                .compare(this.getPrefix().getString(), effect.getPrefix().getString())
+                .compare(this.getName().getString(), effect.getName().getString())
+                .compare(this.getModifier().getString(), effect.getModifier().getString())
+                .result();
     }
 }
