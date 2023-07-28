@@ -1,5 +1,5 @@
 {
-    "commands.wynntils.clearCaches.clickHere": "点击此处以确认。",
+  "commands.wynntils.clearCaches.clickHere": "点击此处以确认。",
   "commands.wynntils.clearCaches.deleting": "正在清理缓存，将在 5 秒后关闭游戏……",
   "commands.wynntils.clearCaches.warn": "这会清理所有API以及更新缓存，清理完成后还会关闭 Minecraft。请确认是否继续此操作。",
   "commands.wynntils.debug.profile.avg": "平均耗时：%0.3f ms/call",
