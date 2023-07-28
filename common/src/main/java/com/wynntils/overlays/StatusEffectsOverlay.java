@@ -22,15 +22,17 @@ import com.wynntils.utils.render.buffered.BufferedFontRenderer;
 import com.wynntils.utils.render.type.HorizontalAlignment;
 import com.wynntils.utils.render.type.TextShadow;
 import com.wynntils.utils.render.type.VerticalAlignment;
-import java.nio.charset.StandardCharsets;
+import net.minecraft.ChatFormatting;
+import net.minecraft.client.renderer.MultiBufferSource;
+import net.minecraftforge.eventbus.api.SubscribeEvent;
+
 import java.util.Comparator;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Stream;
-import net.minecraft.ChatFormatting;
-import net.minecraft.client.renderer.MultiBufferSource;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
+
+import static java.lang.Math.max;
 
 public class StatusEffectsOverlay extends Overlay {
     @RegisterConfig
@@ -159,24 +161,20 @@ public class StatusEffectsOverlay extends Overlay {
         }
 
         private StyledText getRenderedText() {
-            byte[] modifierBytes = this.effect.getModifier().getString().getBytes(StandardCharsets.UTF_8);
+            String modifierString = this.effect.getModifier().getString();
             StyledText modifierText;
 
-            if( modifierBytes.length > 0 && this.count > 1) { // Modifier and stacks
-                int start;
-                for (start = 0; !Character.isDigit(modifierBytes[start]) && start < modifierBytes.length; start++) {
-                }
-                start -= 1;
-                StyledText modifierStart = this.effect.getModifier().substring(0, start);
-                StyledText modifierEnd = this.effect.getModifier().substring(start);
-                modifierText = modifierStart
-                                .append(StyledText.fromString(ChatFormatting.GRAY + (this.count + "x")))
-                                .append(modifierEnd);
-
-            } else if( this.count > 1 ){ // No modifier, does stack
-                modifierText = StyledText.fromString(ChatFormatting.GRAY + (this.count + "x"));
-            } else { // No stacking
-                modifierText = this.effect.getModifier();
+            int minusIndex = modifierString.indexOf('-');
+            int plusIndex = modifierString.indexOf('+');
+            int index = max(minusIndex, plusIndex); // look for either a - or a +
+            if( index < 0 ){// We can simply put the count string at the start
+                modifierText = (this.count > 1 ? StyledText.fromString(ChatFormatting.GRAY + (this.count + "x")) : StyledText.EMPTY)
+                        .append(this.effect.getModifier());
+            } else { // The count string is inserted between the +/- and the number
+                index += 1;
+                modifierText = StyledText.fromString(modifierString.substring(0, index))
+                        .append(this.count > 1 ? StyledText.fromString(ChatFormatting.GRAY + (this.count + "x")) : StyledText.EMPTY)
+                        .append(StyledText.fromString(ChatFormatting.GRAY + modifierString.substring(index)));
             }
 
             return this.count > 1
