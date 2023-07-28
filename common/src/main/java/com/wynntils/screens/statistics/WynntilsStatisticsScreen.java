@@ -134,6 +134,31 @@ public final class WynntilsStatisticsScreen
         poseStack.popPose();
 
         // Statistics
+        switch (statisticKind.getType()) {
+            case COUNT -> renderCountStatistics(poseStack, statisticKind, entry);
+            case ADVANCED -> renderAdvancedStatistics(poseStack, statisticKind, entry);
+        }
+
+        poseStack.popPose();
+    }
+
+    private static void renderCountStatistics(PoseStack poseStack, StatisticKind statisticKind, StatisticEntry entry) {
+        // Note: Count is not formatted according to the formatter
+        FontRenderer.getInstance()
+                .renderText(
+                        poseStack,
+                        StyledText.fromString(I18n.get("screens.wynntils.statistics.count", entry.count())),
+                        0,
+                        30,
+                        Texture.QUEST_BOOK_BACKGROUND.width() / 2 - 20,
+                        CommonColors.BLACK,
+                        HorizontalAlignment.LEFT,
+                        VerticalAlignment.TOP,
+                        TextShadow.NONE);
+    }
+
+    private static void renderAdvancedStatistics(
+            PoseStack poseStack, StatisticKind statisticKind, StatisticEntry entry) {
         FontRenderer.getInstance()
                 .renderText(
                         poseStack,
@@ -147,11 +172,11 @@ public final class WynntilsStatisticsScreen
                         VerticalAlignment.TOP,
                         TextShadow.NONE);
 
-        // Note: Count is not formatted according to the formatter
         FontRenderer.getInstance()
                 .renderText(
                         poseStack,
-                        StyledText.fromString(I18n.get("screens.wynntils.statistics.count", entry.count())),
+                        StyledText.fromString(I18n.get(
+                                "screens.wynntils.statistics.min", statisticKind.getFormattedValue(entry.min()))),
                         0,
                         40,
                         Texture.QUEST_BOOK_BACKGROUND.width() / 2 - 20,
@@ -164,22 +189,9 @@ public final class WynntilsStatisticsScreen
                 .renderText(
                         poseStack,
                         StyledText.fromString(I18n.get(
-                                "screens.wynntils.statistics.min", statisticKind.getFormattedValue(entry.min()))),
-                        0,
-                        50,
-                        Texture.QUEST_BOOK_BACKGROUND.width() / 2 - 20,
-                        CommonColors.BLACK,
-                        HorizontalAlignment.LEFT,
-                        VerticalAlignment.TOP,
-                        TextShadow.NONE);
-
-        FontRenderer.getInstance()
-                .renderText(
-                        poseStack,
-                        StyledText.fromString(I18n.get(
                                 "screens.wynntils.statistics.max", statisticKind.getFormattedValue(entry.max()))),
                         0,
-                        60,
+                        50,
                         Texture.QUEST_BOOK_BACKGROUND.width() / 2 - 20,
                         CommonColors.BLACK,
                         HorizontalAlignment.LEFT,
@@ -193,14 +205,12 @@ public final class WynntilsStatisticsScreen
                                 "screens.wynntils.statistics.average",
                                 statisticKind.getFormattedValue(entry.average()))),
                         0,
-                        70,
+                        60,
                         Texture.QUEST_BOOK_BACKGROUND.width() / 2 - 20,
                         CommonColors.BLACK,
                         HorizontalAlignment.LEFT,
                         VerticalAlignment.TOP,
                         TextShadow.NONE);
-
-        poseStack.popPose();
     }
 
     public void setHighlightedButton(StatisticButton button) {
