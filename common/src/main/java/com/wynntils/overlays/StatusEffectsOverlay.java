@@ -4,6 +4,8 @@
  */
 package com.wynntils.overlays;
 
+import static java.lang.Math.max;
+
 import com.mojang.blaze3d.platform.Window;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.wynntils.core.components.Models;
@@ -22,17 +24,14 @@ import com.wynntils.utils.render.buffered.BufferedFontRenderer;
 import com.wynntils.utils.render.type.HorizontalAlignment;
 import com.wynntils.utils.render.type.TextShadow;
 import com.wynntils.utils.render.type.VerticalAlignment;
-import net.minecraft.ChatFormatting;
-import net.minecraft.client.renderer.MultiBufferSource;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
-
 import java.util.Comparator;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Stream;
-
-import static java.lang.Math.max;
+import net.minecraft.ChatFormatting;
+import net.minecraft.client.renderer.MultiBufferSource;
+import net.minecraftforge.eventbus.api.SubscribeEvent;
 
 public class StatusEffectsOverlay extends Overlay {
     @RegisterConfig
@@ -161,7 +160,7 @@ public class StatusEffectsOverlay extends Overlay {
         }
 
         private StyledText getRenderedText() {
-            if( this.count == 1 ){
+            if (this.count == 1) {
                 return this.effect.asString();
             }
             String modifierString = this.effect.getModifier().getString();
@@ -173,14 +172,16 @@ public class StatusEffectsOverlay extends Overlay {
             int index = max(minusIndex, plusIndex);
 
             // We can simply put the count string at the start
-            if( index == -1 ){
+            if (index == -1) {
                 modifierText = StyledText.fromString(ChatFormatting.GRAY + (this.count + "x"))
                         .append(this.effect.getModifier());
             } else {
                 // The count string is inserted between the +/- and the number
                 index += 1;
-                modifierText = StyledText.fromString(ChatFormatting.GRAY + modifierString.substring(0, index) +
-                        (this.count + "x") + modifierString.substring(index));
+                modifierText = StyledText.fromString(ChatFormatting.GRAY
+                        + modifierString.substring(0, index)
+                        + (this.count + "x")
+                        + modifierString.substring(index));
             }
 
             return this.effect
