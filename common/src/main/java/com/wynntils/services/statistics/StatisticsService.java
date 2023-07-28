@@ -66,6 +66,15 @@ public final class StatisticsService extends Service {
         return currentStatistics.getOrDefault(statistic, StatisticEntry.EMPTY);
     }
 
+    public Map<StatisticKind, StatisticEntry> getStatistics() {
+        return currentStatistics;
+    }
+
+    public void resetStatistic(StatisticKind statistic) {
+        currentStatistics.remove(statistic);
+        statistics.touched();
+    }
+
     public void resetStatistics() {
         currentStatistics.clear();
         statistics.touched();
@@ -76,5 +85,12 @@ public final class StatisticsService extends Service {
         statistics.get().putIfAbsent(id, new EnumMap<>(StatisticKind.class));
         currentStatistics = statistics.get().get(id);
         statistics.touched();
+    }
+
+    public void init() {
+        for (StatisticKind kind : StatisticKind.values()) {
+            // Assert that the feature name is properly translated
+            assert !kind.getName().startsWith("statistics.wynntils.") : "Fix i18n for " + kind.getName();
+        }
     }
 }

@@ -33,7 +33,7 @@ public class LootrunFeature extends Feature {
 
     @Override
     protected void onConfigUpdate(ConfigHolder configHolder) {
-        Services.Lootrun.recompileLootrun(false);
+        Services.LootrunPaths.recompileLootrun(false);
     }
 
     public enum PathType {

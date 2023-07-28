@@ -9,7 +9,8 @@ import java.util.Locale;
 public enum GearRestrictions {
     NONE(""),
     UNTRADABLE("Untradable Item"),
-    QUEST_ITEM("Quest Item");
+    QUEST_ITEM("Quest Item"),
+    SOULBOUND("Soulbound");
 
     private final String description;
 

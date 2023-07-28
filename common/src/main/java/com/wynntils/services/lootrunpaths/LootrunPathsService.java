@@ -2,7 +2,7 @@
  * Copyright © Wynntils 2022.
  * This file is released under AGPLv3. See LICENSE for full license details.
  */
-package com.wynntils.services.lootruns;
+package com.wynntils.services.lootrunpaths;
 
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
@@ -17,12 +17,12 @@ import com.wynntils.mc.event.PlayerInteractEvent;
 import com.wynntils.mc.event.RenderLevelEvent;
 import com.wynntils.mc.event.ScreenOpenedEvent;
 import com.wynntils.mc.event.TickEvent;
-import com.wynntils.services.lootruns.event.LootrunCacheRefreshEvent;
-import com.wynntils.services.lootruns.type.LootrunNote;
-import com.wynntils.services.lootruns.type.LootrunPath;
-import com.wynntils.services.lootruns.type.LootrunSaveResult;
-import com.wynntils.services.lootruns.type.LootrunState;
-import com.wynntils.services.lootruns.type.LootrunUndoResult;
+import com.wynntils.services.lootrunpaths.event.LootrunPathCacheRefreshEvent;
+import com.wynntils.services.lootrunpaths.type.LootrunNote;
+import com.wynntils.services.lootrunpaths.type.LootrunPath;
+import com.wynntils.services.lootrunpaths.type.LootrunSaveResult;
+import com.wynntils.services.lootrunpaths.type.LootrunState;
+import com.wynntils.services.lootrunpaths.type.LootrunUndoResult;
 import com.wynntils.utils.FileUtils;
 import com.wynntils.utils.mc.McUtils;
 import com.wynntils.utils.mc.PosUtils;
@@ -44,25 +44,25 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 
-public final class LootrunService extends Service {
+public final class LootrunPathsService extends Service {
     public static final File LOOTRUNS = WynntilsMod.getModStorageDir("lootruns");
 
-    private List<LootrunInstance> lootrunInstanceCache = new ArrayList<>();
+    private List<LootrunPathInstance> lootrunPathInstanceCache = new ArrayList<>();
 
-    private LootrunUncompiled uncompiled = null;
+    private UncompiledLootrunPath uncompiled = null;
 
     private LootrunState state = LootrunState.DISABLED;
 
-    private LootrunInstance lootrun = null;
-    private LootrunInstance recordingCompiled = null;
-    private LootrunUncompiled recording = null;
+    private LootrunPathInstance lootrun = null;
+    private LootrunPathInstance recordingCompiled = null;
+    private UncompiledLootrunPath recording = null;
 
     private RecordingInformation recordingInformation = null;
 
-    public LootrunService() {
+    public LootrunPathsService() {
         super(List.of());
 
-        FileUtils.mkdir(Services.Lootrun.LOOTRUNS);
+        FileUtils.mkdir(Services.LootrunPaths.LOOTRUNS);
     }
 
     public LootrunState getState() {
@@ -70,7 +70,7 @@ public final class LootrunService extends Service {
     }
 
     public int addNote(Component text) {
-        LootrunUncompiled current = getActiveLootrun();
+        UncompiledLootrunPath current = getActiveLootrun();
         if (current == null) return 0;
 
         Entity root = McUtils.player().getRootVehicle();
@@ -79,7 +79,7 @@ public final class LootrunService extends Service {
         return recompileLootrun(true);
     }
 
-    public LootrunInstance getCurrentLootrun() {
+    public LootrunPathInstance getCurrentLootrun() {
         return lootrun;
     }
 
@@ -130,16 +130,17 @@ public final class LootrunService extends Service {
 
     public void startRecording() {
         state = LootrunState.RECORDING;
-        recording = new LootrunUncompiled(new LootrunPath(new ArrayList<>()), new HashSet<>(), new ArrayList<>(), null);
+        recording =
+                new UncompiledLootrunPath(new LootrunPath(new ArrayList<>()), new HashSet<>(), new ArrayList<>(), null);
         recordingInformation = new RecordingInformation();
     }
 
-    public List<LootrunInstance> getLootruns() {
-        return lootrunInstanceCache;
+    public List<LootrunPathInstance> getLootruns() {
+        return lootrunPathInstanceCache;
     }
 
     public void refreshLootrunCache() {
-        List<LootrunInstance> lootruns = new ArrayList<>();
+        List<LootrunPathInstance> lootruns = new ArrayList<>();
 
         File[] files = LOOTRUNS.listFiles();
         for (File file : files != null ? files : new File[0]) {
@@ -147,7 +148,7 @@ public final class LootrunService extends Service {
                 try {
                     FileReader reader = new FileReader(file, StandardCharsets.UTF_8);
                     JsonObject json = JsonParser.parseReader(reader).getAsJsonObject();
-                    LootrunUncompiled uncompiled = LootrunFileParser.readJson(file, json);
+                    UncompiledLootrunPath uncompiled = LootrunPathFileParser.readJson(file, json);
                     lootruns.add(LootrunCompiler.compile(uncompiled, false));
                 } catch (Exception e) {
                     WynntilsMod.warn("Could not parse lootrun file.", e);
@@ -155,8 +156,8 @@ public final class LootrunService extends Service {
             }
         }
 
-        lootrunInstanceCache = lootruns;
-        WynntilsMod.postEvent(new LootrunCacheRefreshEvent());
+        lootrunPathInstanceCache = lootruns;
+        WynntilsMod.postEvent(new LootrunPathCacheRefreshEvent());
     }
 
     private boolean loadFile(String fileName) {
@@ -166,7 +167,7 @@ public final class LootrunService extends Service {
             try {
                 FileReader file = new FileReader(lootrunFile, StandardCharsets.UTF_8);
                 JsonObject json = JsonParser.parseReader(file).getAsJsonObject();
-                uncompiled = LootrunFileParser.readJson(lootrunFile, json);
+                uncompiled = LootrunPathFileParser.readJson(lootrunFile, json);
                 lootrun = LootrunCompiler.compile(uncompiled, false);
                 state = LootrunState.LOADED;
                 file.close();
@@ -181,7 +182,7 @@ public final class LootrunService extends Service {
 
     public void tryLoadLootrun(String fileName) {
         if (loadFile(fileName)) {
-            Position startingPoint = Services.Lootrun.getStartingPoint();
+            Position startingPoint = Services.LootrunPaths.getStartingPoint();
 
             BlockPos start = PosUtils.newBlockPos(startingPoint);
             McUtils.sendMessageToClient(Component.translatable(
@@ -223,21 +224,21 @@ public final class LootrunService extends Service {
     }
 
     public boolean addChest(BlockPos pos) {
-        LootrunUncompiled current = getActiveLootrun();
+        UncompiledLootrunPath current = getActiveLootrun();
         if (current == null) return false;
 
         return current.chests().add(pos);
     }
 
     public boolean removeChest(BlockPos pos) {
-        LootrunUncompiled current = getActiveLootrun();
+        UncompiledLootrunPath current = getActiveLootrun();
         if (current == null) return false;
 
         return current.chests().remove(pos);
     }
 
     public LootrunNote deleteNoteAt(BlockPos pos) {
-        LootrunUncompiled current = getActiveLootrun();
+        UncompiledLootrunPath current = getActiveLootrun();
         if (current == null) return null;
 
         List<LootrunNote> notes = current.notes();
@@ -251,14 +252,14 @@ public final class LootrunService extends Service {
     }
 
     public List<LootrunNote> getCurrentNotes() {
-        LootrunUncompiled activeLootrun = getActiveLootrun();
+        UncompiledLootrunPath activeLootrun = getActiveLootrun();
         if (activeLootrun == null) return List.of();
 
         return activeLootrun.notes();
     }
 
     public Position getStartingPoint() {
-        LootrunUncompiled activeLootrun = getActiveLootrun();
+        UncompiledLootrunPath activeLootrun = getActiveLootrun();
         if (activeLootrun == null) return null;
 
         if (activeLootrun.path() == null || activeLootrun.path().points().isEmpty()) return null;
@@ -267,13 +268,14 @@ public final class LootrunService extends Service {
     }
 
     public LootrunSaveResult saveCurrentLootrun(String name) {
-        LootrunUncompiled activeLootrun = getActiveLootrun();
+        UncompiledLootrunPath activeLootrun = getActiveLootrun();
         if (activeLootrun == null) return null;
 
         File file = new File(LOOTRUNS, name + ".json");
-        uncompiled = new LootrunUncompiled(activeLootrun.path(), activeLootrun.chests(), activeLootrun.notes(), file);
+        uncompiled =
+                new UncompiledLootrunPath(activeLootrun.path(), activeLootrun.chests(), activeLootrun.notes(), file);
 
-        return LootrunFileParser.writeJson(activeLootrun, file);
+        return LootrunPathFileParser.writeJson(activeLootrun, file);
     }
 
     @SubscribeEvent
@@ -340,8 +342,8 @@ public final class LootrunService extends Service {
         }
     }
 
-    private LootrunUncompiled getActiveLootrun() {
-        LootrunUncompiled instance = null;
+    private UncompiledLootrunPath getActiveLootrun() {
+        UncompiledLootrunPath instance = null;
         if (recording != null) {
             instance = recording;
         } else if (uncompiled != null) {

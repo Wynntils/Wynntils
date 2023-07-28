@@ -11,7 +11,7 @@ import com.wynntils.core.components.Models;
 import com.wynntils.core.components.Services;
 import com.wynntils.features.map.MainMapFeature;
 import com.wynntils.screens.base.widgets.BasicTexturedButton;
-import com.wynntils.services.lootruns.LootrunInstance;
+import com.wynntils.services.lootrunpaths.LootrunPathInstance;
 import com.wynntils.services.map.pois.CustomPoi;
 import com.wynntils.services.map.pois.IconPoi;
 import com.wynntils.services.map.pois.PlayerMainMapPoi;
@@ -234,7 +234,7 @@ public final class MainMapScreen extends AbstractMapScreen {
                         .pointerType
                         .get());
 
-        LootrunInstance currentLootrun = Services.Lootrun.getCurrentLootrun();
+        LootrunPathInstance currentLootrun = Services.LootrunPaths.getCurrentLootrun();
 
         if (currentLootrun != null) {
             MapRenderer.renderLootrunLine(
