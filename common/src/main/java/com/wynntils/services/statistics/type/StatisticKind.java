@@ -11,27 +11,29 @@ import net.minecraft.client.resources.language.I18n;
 import net.minecraft.stats.StatFormatter;
 
 public enum StatisticKind {
-    DAMAGE_DEALT(StatFormatter.DEFAULT),
-    SPELLS_CAST(StatFormatter.DEFAULT),
+    DAMAGE_DEALT(CustomStatFormatters.FORMATTED_NUMBER, StatisticType.ADVANCED),
+    SPELLS_CAST(CustomStatFormatters.FORMATTED_NUMBER, StatisticType.COUNT),
 
     // region Lootruns
 
-    LOOTRUNS_COMPLETED(StatFormatter.DEFAULT),
-    LOOTRUNS_FAILED(StatFormatter.DEFAULT),
-    LOOTRUNS_CHALLENGES_COMPLETED(StatFormatter.DEFAULT),
-    LOOTRUNS_TIME_ELAPSED(CustomStatFormatters.TIME),
-    LOOTRUNS_REWARD_PULLS(StatFormatter.DEFAULT),
-    LOOTRUNS_REWARD_REROLLS(StatFormatter.DEFAULT),
-    LOOTRUNS_EXPERIENCE_GAINED(StatFormatter.DEFAULT),
-    LOOTRUNS_MOBS_KILLED(StatFormatter.DEFAULT);
+    LOOTRUNS_COMPLETED(CustomStatFormatters.FORMATTED_NUMBER, StatisticType.COUNT),
+    LOOTRUNS_FAILED(CustomStatFormatters.FORMATTED_NUMBER, StatisticType.COUNT),
+    LOOTRUNS_CHALLENGES_COMPLETED(CustomStatFormatters.FORMATTED_NUMBER, StatisticType.ADVANCED),
+    LOOTRUNS_TIME_ELAPSED(CustomStatFormatters.TIME, StatisticType.ADVANCED),
+    LOOTRUNS_REWARD_PULLS(CustomStatFormatters.FORMATTED_NUMBER, StatisticType.ADVANCED),
+    LOOTRUNS_REWARD_REROLLS(CustomStatFormatters.FORMATTED_NUMBER, StatisticType.ADVANCED),
+    LOOTRUNS_EXPERIENCE_GAINED(CustomStatFormatters.FORMATTED_NUMBER, StatisticType.ADVANCED),
+    LOOTRUNS_MOBS_KILLED(CustomStatFormatters.FORMATTED_NUMBER, StatisticType.ADVANCED);
 
     // endregion
 
     private final StatFormatter formatter;
+    private final StatisticType type;
     private final String id;
 
-    StatisticKind(StatFormatter formatter) {
+    StatisticKind(StatFormatter formatter, StatisticType type) {
         this.formatter = formatter;
+        this.type = type;
         this.id = CaseFormat.LOWER_UNDERSCORE.to(CaseFormat.LOWER_CAMEL, name().toLowerCase(Locale.ROOT));
     }
 
@@ -49,11 +51,20 @@ public enum StatisticKind {
         return id;
     }
 
+    public StatisticType getType() {
+        return type;
+    }
+
     public String getName() {
         return I18n.get("statistics.wynntils." + id + ".name");
     }
 
     public String getFormattedValue(int value) {
         return formatter.format(value);
+    }
+
+    public enum StatisticType {
+        COUNT, // only the count is relevant
+        ADVANCED // min, max, average are all relevant
     }
 }
