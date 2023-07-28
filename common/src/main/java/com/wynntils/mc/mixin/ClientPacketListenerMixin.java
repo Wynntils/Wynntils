@@ -474,7 +474,7 @@ public abstract class ClientPacketListenerMixin {
 
     @Inject(
             method = "handleAddObjective(Lnet/minecraft/network/protocol/game/ClientboundSetObjectivePacket;)V",
-            at = @At("HEAD"))
+            at = @At("RETURN"))
     private void handleAddObjective(ClientboundSetObjectivePacket packet, CallbackInfo ci) {
         if (!isRenderThread()) return;
 
@@ -485,8 +485,7 @@ public abstract class ClientPacketListenerMixin {
 
     @Inject(
             method = "handleSetScore(Lnet/minecraft/network/protocol/game/ClientboundSetScorePacket;)V",
-            at = @At("HEAD"),
-            cancellable = true)
+            at = @At("RETURN"))
     private void handleSetScore(ClientboundSetScorePacket packet, CallbackInfo ci) {
         if (!isRenderThread()) return;
 
@@ -496,9 +495,6 @@ public abstract class ClientPacketListenerMixin {
                 packet.getScore(),
                 packet.getMethod());
         MixinHelper.post(event);
-        if (event.isCanceled()) {
-            ci.cancel();
-        }
     }
 
     @Inject(

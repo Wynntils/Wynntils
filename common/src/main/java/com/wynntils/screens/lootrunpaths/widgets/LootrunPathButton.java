@@ -2,16 +2,16 @@
  * Copyright © Wynntils 2022.
  * This file is released under AGPLv3. See LICENSE for full license details.
  */
-package com.wynntils.screens.lootrun.widgets;
+package com.wynntils.screens.lootrunpaths.widgets;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.wynntils.core.components.Services;
 import com.wynntils.core.text.StyledText;
 import com.wynntils.screens.base.widgets.WynntilsButton;
-import com.wynntils.screens.lootrun.WynntilsLootrunsScreen;
+import com.wynntils.screens.lootrunpaths.WynntilsLootrunPathsScreen;
 import com.wynntils.screens.maps.MainMapScreen;
-import com.wynntils.services.lootruns.LootrunInstance;
-import com.wynntils.services.lootruns.type.LootrunPath;
+import com.wynntils.services.lootrunpaths.LootrunPathInstance;
+import com.wynntils.services.lootrunpaths.type.LootrunPath;
 import com.wynntils.utils.colors.CommonColors;
 import com.wynntils.utils.colors.CustomColor;
 import com.wynntils.utils.mc.KeyboardUtils;
@@ -29,16 +29,17 @@ import net.minecraft.core.Position;
 import net.minecraft.network.chat.Component;
 import org.lwjgl.glfw.GLFW;
 
-public class LootrunButton extends WynntilsButton {
+public class LootrunPathButton extends WynntilsButton {
     private static final CustomColor BUTTON_COLOR = new CustomColor(181, 174, 151);
     private static final CustomColor BUTTON_COLOR_HOVERED = new CustomColor(121, 116, 101);
     private static final CustomColor TRACKED_BUTTON_COLOR = new CustomColor(176, 197, 148);
     private static final CustomColor TRACKED_BUTTON_COLOR_HOVERED = new CustomColor(126, 211, 106);
 
-    private final LootrunInstance lootrun;
-    private final WynntilsLootrunsScreen screen;
+    private final LootrunPathInstance lootrun;
+    private final WynntilsLootrunPathsScreen screen;
 
-    public LootrunButton(int x, int y, int width, int height, LootrunInstance lootrun, WynntilsLootrunsScreen screen) {
+    public LootrunPathButton(
+            int x, int y, int width, int height, LootrunPathInstance lootrun, WynntilsLootrunPathsScreen screen) {
         super(x, y, width, height, Component.literal("Lootrun Button"));
         this.lootrun = lootrun;
         this.screen = screen;
@@ -78,15 +79,15 @@ public class LootrunButton extends WynntilsButton {
     public boolean mouseClicked(double mouseX, double mouseY, int button) {
         if (button == GLFW.GLFW_MOUSE_BUTTON_LEFT) {
             if (isLoaded()) {
-                Services.Lootrun.clearCurrentLootrun();
+                Services.LootrunPaths.clearCurrentLootrun();
             } else {
-                Services.Lootrun.tryLoadLootrun(lootrun.name());
+                Services.LootrunPaths.tryLoadLootrun(lootrun.name());
             }
             return true;
         }
 
         if (button == GLFW.GLFW_MOUSE_BUTTON_MIDDLE) {
-            Util.getPlatform().openFile(Services.Lootrun.LOOTRUNS);
+            Util.getPlatform().openFile(Services.LootrunPaths.LOOTRUNS);
             return true;
         }
 
@@ -113,17 +114,17 @@ public class LootrunButton extends WynntilsButton {
     public void onPress() {}
 
     private void tryDeleteLootrun() {
-        File file = new File(Services.Lootrun.LOOTRUNS, lootrun.name() + ".json");
+        File file = new File(Services.LootrunPaths.LOOTRUNS, lootrun.name() + ".json");
         file.delete();
         screen.reloadElements();
     }
 
     private boolean isLoaded() {
-        LootrunInstance currentLootrun = Services.Lootrun.getCurrentLootrun();
+        LootrunPathInstance currentLootrun = Services.LootrunPaths.getCurrentLootrun();
         return currentLootrun != null && Objects.equals(currentLootrun.name(), lootrun.name());
     }
 
-    public LootrunInstance getLootrun() {
+    public LootrunPathInstance getLootrun() {
         return lootrun;
     }
 }

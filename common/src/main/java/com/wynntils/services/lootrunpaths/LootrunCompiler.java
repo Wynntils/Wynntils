@@ -2,14 +2,14 @@
  * Copyright © Wynntils 2023.
  * This file is released under AGPLv3. See LICENSE for full license details.
  */
-package com.wynntils.services.lootruns;
+package com.wynntils.services.lootrunpaths;
 
 import com.wynntils.core.components.Managers;
 import com.wynntils.features.LootrunFeature;
-import com.wynntils.services.lootruns.type.ColoredPath;
-import com.wynntils.services.lootruns.type.ColoredPosition;
-import com.wynntils.services.lootruns.type.LootrunNote;
-import com.wynntils.services.lootruns.type.LootrunPath;
+import com.wynntils.services.lootrunpaths.type.ColoredPath;
+import com.wynntils.services.lootrunpaths.type.ColoredPosition;
+import com.wynntils.services.lootrunpaths.type.LootrunNote;
+import com.wynntils.services.lootrunpaths.type.LootrunPath;
 import com.wynntils.utils.MathUtils;
 import com.wynntils.utils.mc.PosUtils;
 import it.unimi.dsi.fastutil.longs.Long2ObjectMap;
@@ -38,13 +38,13 @@ public final class LootrunCompiler {
             0x3f00ff,
             ChatFormatting.DARK_PURPLE.getColor());
 
-    public static LootrunInstance compile(LootrunUncompiled uncompiled, boolean recording) {
+    public static LootrunPathInstance compile(UncompiledLootrunPath uncompiled, boolean recording) {
         Long2ObjectMap<List<ColoredPath>> points = generatePointsByChunk(uncompiled.path(), recording);
         Long2ObjectMap<Set<BlockPos>> chests = getChests(uncompiled.chests());
         Long2ObjectMap<List<LootrunNote>> notes = getNotes(uncompiled.notes());
 
         String lootrunName = getLootrunName(uncompiled, recording);
-        return new LootrunInstance(
+        return new LootrunPathInstance(
                 lootrunName,
                 uncompiled.path(),
                 generateSimplifiedPoints(uncompiled.path(), 0.5),
@@ -53,7 +53,7 @@ public final class LootrunCompiler {
                 notes);
     }
 
-    private static String getLootrunName(LootrunUncompiled uncompiled, boolean recording) {
+    private static String getLootrunName(UncompiledLootrunPath uncompiled, boolean recording) {
         if (recording) return "recorded_lootrun";
         if (uncompiled.file() == null) return "lootrun";
 
