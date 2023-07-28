@@ -167,6 +167,7 @@ public class StatusEffectsOverlay extends Overlay {
             if (this.count == 1) {
                 return this.effect.asString();
             }
+
             String modifierString = this.effect.getModifier().getString();
             StyledText modifierText;
 
