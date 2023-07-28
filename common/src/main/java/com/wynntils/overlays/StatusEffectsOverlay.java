@@ -15,15 +15,20 @@ import com.wynntils.core.consumers.overlays.OverlayPosition;
 import com.wynntils.core.consumers.overlays.OverlaySize;
 import com.wynntils.core.text.StyledText;
 import com.wynntils.models.statuseffects.event.StatusEffectsChangedEvent;
+import com.wynntils.models.statuseffects.type.StatusEffect;
 import com.wynntils.utils.render.TextRenderSetting;
 import com.wynntils.utils.render.TextRenderTask;
 import com.wynntils.utils.render.buffered.BufferedFontRenderer;
 import com.wynntils.utils.render.type.HorizontalAlignment;
 import com.wynntils.utils.render.type.TextShadow;
 import com.wynntils.utils.render.type.VerticalAlignment;
-import java.util.List;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
+
+import java.util.Comparator;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.stream.Stream;
 
 public class StatusEffectsOverlay extends Overlay {
     @RegisterConfig
@@ -31,6 +36,12 @@ public class StatusEffectsOverlay extends Overlay {
 
     @RegisterConfig
     public final Config<Float> fontScale = new Config<>(1.0f);
+
+    @RegisterConfig
+    public final Config<Boolean> doStackEffects = new Config<>(true);
+
+    @RegisterConfig
+    public final Config<Boolean> doSortEffects = new Config<>(true);
 
     private List<TextRenderTask> renderCache = List.of();
     private TextRenderSetting textRenderSetting;
@@ -54,8 +65,22 @@ public class StatusEffectsOverlay extends Overlay {
     }
 
     private void recalculateRenderCache() {
-        renderCache = Models.StatusEffect.getStatusEffects().stream()
-                .map(statusTimer -> new TextRenderTask(statusTimer.asString(), getTextRenderSetting()))
+        List<StatusEffect> effects = Models.StatusEffect.getStatusEffects();
+        Stream<StatusEffectWithProperties> effectWithProperties;
+
+        if( doStackEffects.get() ){
+            effectWithProperties = stackEffects(effects);
+        } else {
+            effectWithProperties = effects.stream().map(StatusEffectWithProperties::new);
+        }
+
+        if( doSortEffects.get() ){
+            // Sort effects based on their prefix and their name
+            effectWithProperties = effectWithProperties.sorted(Comparator.comparing(e -> e.getPrefix().getString() + e.getName().getString()));
+        }
+
+        renderCache = effectWithProperties
+                .map(statusTimer -> new TextRenderTask(getTextToRender(statusTimer), getTextRenderSetting()))
                 .toList();
     }
 
@@ -108,4 +133,39 @@ public class StatusEffectsOverlay extends Overlay {
     protected TextRenderSetting getTextRenderSetting() {
         return textRenderSetting;
     }
+
+
+    private Stream<StatusEffectWithProperties> stackEffects(List<StatusEffect> effects){
+        LinkedHashMap<String, StatusEffectWithProperties> effectsToRender = new LinkedHashMap<>();
+
+        for( var effect: effects){
+            StatusEffectWithProperties entry = effectsToRender.get(effect.asString().getString());
+            if( entry == null ) {
+                entry = new StatusEffectWithProperties(effect);
+                effectsToRender.put(effect.asString().getString(), entry);
+            }
+            entry.count += 1;
+        }
+        return effectsToRender.values().stream();
+    }
+
+    private StyledText getTextToRender(StatusEffectWithProperties effect) {
+        return effect.count > 1 ?
+                StyledText.fromString(effect.count + "x ").append(effect.asString()) :
+                effect.asString();
+    }
+
+
+    private static final class StatusEffectWithProperties extends StatusEffect {
+        public int count = 0;
+
+        private StatusEffectWithProperties(StyledText name, StyledText modifier, StyledText displayedTime, StyledText prefix) {
+            super(name, modifier, displayedTime, prefix);
+        }
+
+        private StatusEffectWithProperties(StatusEffect effect) {
+            this(effect.getName(), effect.getModifier(), effect.getDisplayedTime(), effect.getPrefix());
+        }
+    }
+
 }

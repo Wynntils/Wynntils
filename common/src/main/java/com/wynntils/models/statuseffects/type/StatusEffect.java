@@ -9,15 +9,19 @@ import com.wynntils.core.text.StyledText;
 public class StatusEffect {
     private final StyledText fullName;
     private final StyledText name; // The name of the consumable (also used to identify it)
+    private final StyledText modifier;
     private StyledText displayedTime; // The displayed time remaining. Allows for xx:xx for infinite time effects.
     private StyledText prefix; // The prefix to display before the name. Not included in identifying name.
 
-    public StatusEffect(StyledText name, StyledText displayedTime, StyledText prefix) {
+    public StatusEffect(StyledText name, StyledText modifier, StyledText displayedTime, StyledText prefix) {
         this.name = name;
         this.displayedTime = displayedTime;
         this.prefix = prefix;
+        this.modifier = modifier;
+
+        final StyledText space = StyledText.fromString(" ");
         this.fullName =
-                StyledText.concat(prefix, StyledText.fromString(" "), name, StyledText.fromString(" "), displayedTime);
+                StyledText.concat(prefix, space, modifier, space, name, space, displayedTime);
     }
 
     /**
@@ -25,6 +29,14 @@ public class StatusEffect {
      */
     public StyledText getName() {
         return name;
+    }
+
+
+    /**
+     * @return The modifier of the consumable
+     */
+    public StyledText getModifier(){
+        return modifier;
     }
 
     /**
