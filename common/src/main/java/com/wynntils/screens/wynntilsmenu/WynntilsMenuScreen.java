@@ -413,6 +413,15 @@ public final class WynntilsMenuScreen extends WynntilsMenuScreenBase {
         }
     }
 
+    @Override
+    public boolean keyPressed(int keyCode, int scanCode, int modifiers) {
+        if (McUtils.options().keyInventory.matches(keyCode, scanCode)) {
+            onClose();
+            return true;
+        }
+        return super.keyPressed(keyCode, scanCode, modifiers);
+    }
+
     private void renderWidgets(PoseStack poseStack, int mouseX, int mouseY) {
         int rowCount = buttons.size();
 
