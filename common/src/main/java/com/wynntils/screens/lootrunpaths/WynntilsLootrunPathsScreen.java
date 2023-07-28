@@ -2,7 +2,7 @@
  * Copyright © Wynntils 2022.
  * This file is released under AGPLv3. See LICENSE for full license details.
  */
-package com.wynntils.screens.lootrun;
+package com.wynntils.screens.lootrunpaths;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.wynntils.core.WynntilsMod;
@@ -12,10 +12,10 @@ import com.wynntils.screens.base.WynntilsListScreen;
 import com.wynntils.screens.base.widgets.BackButton;
 import com.wynntils.screens.base.widgets.PageSelectorButton;
 import com.wynntils.screens.base.widgets.ReloadButton;
-import com.wynntils.screens.lootrun.widgets.LootrunButton;
+import com.wynntils.screens.lootrunpaths.widgets.LootrunPathButton;
 import com.wynntils.screens.wynntilsmenu.WynntilsMenuScreen;
-import com.wynntils.services.lootruns.LootrunInstance;
-import com.wynntils.services.lootruns.event.LootrunCacheRefreshEvent;
+import com.wynntils.services.lootrunpaths.LootrunPathInstance;
+import com.wynntils.services.lootrunpaths.event.LootrunPathCacheRefreshEvent;
 import com.wynntils.utils.StringUtils;
 import com.wynntils.utils.TaskUtils;
 import com.wynntils.utils.colors.CommonColors;
@@ -34,15 +34,15 @@ import net.minecraft.core.Position;
 import net.minecraft.network.chat.Component;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 
-public final class WynntilsLootrunsScreen extends WynntilsListScreen<LootrunInstance, LootrunButton> {
-    private WynntilsLootrunsScreen() {
+public final class WynntilsLootrunPathsScreen extends WynntilsListScreen<LootrunPathInstance, LootrunPathButton> {
+    private WynntilsLootrunPathsScreen() {
         super(Component.translatable("screens.wynntils.lootruns.name"));
 
         WynntilsMod.registerEventListener(this);
     }
 
     public static Screen create() {
-        return new WynntilsLootrunsScreen();
+        return new WynntilsLootrunPathsScreen();
     }
 
     @Override
@@ -52,7 +52,7 @@ public final class WynntilsLootrunsScreen extends WynntilsListScreen<LootrunInst
     }
 
     @SubscribeEvent
-    public void onLootrunCacheRefresh(LootrunCacheRefreshEvent event) {
+    public void onLootrunCacheRefresh(LootrunPathCacheRefreshEvent event) {
         reloadElements();
     }
 
@@ -60,7 +60,7 @@ public final class WynntilsLootrunsScreen extends WynntilsListScreen<LootrunInst
     protected void doInit() {
         super.doInit();
 
-        TaskUtils.runAsync(Services.Lootrun::refreshLootrunCache);
+        TaskUtils.runAsync(Services.LootrunPaths::refreshLootrunCache);
 
         this.addRenderableWidget(new BackButton(
                 (int) ((Texture.QUEST_BOOK_BACKGROUND.width() / 2f - 16) / 2f),
@@ -75,7 +75,7 @@ public final class WynntilsLootrunsScreen extends WynntilsListScreen<LootrunInst
                 (int) (Texture.RELOAD_BUTTON.width() / 2 / 1.7f),
                 (int) (Texture.RELOAD_BUTTON.height() / 1.7f),
                 "lootrun",
-                () -> TaskUtils.runAsync(Services.Lootrun::refreshLootrunCache)));
+                () -> TaskUtils.runAsync(Services.LootrunPaths::refreshLootrunCache)));
 
         this.addRenderableWidget(new PageSelectorButton(
                 Texture.QUEST_BOOK_BACKGROUND.width() / 2 + 50 - Texture.FORWARD_ARROW.width() / 2,
@@ -95,14 +95,14 @@ public final class WynntilsLootrunsScreen extends WynntilsListScreen<LootrunInst
 
     @Override
     protected void renderTooltip(PoseStack poseStack, int mouseX, int mouseY) {
-        if (hovered instanceof LootrunButton lootrunButton) {
+        if (hovered instanceof LootrunPathButton lootrunPathButton) {
             List<Component> tooltipLines;
 
-            LootrunInstance currentLootrun = Services.Lootrun.getCurrentLootrun();
+            LootrunPathInstance currentLootrun = Services.LootrunPaths.getCurrentLootrun();
             if (currentLootrun != null
-                    && Objects.equals(lootrunButton.getLootrun().name(), currentLootrun.name())) {
+                    && Objects.equals(lootrunPathButton.getLootrun().name(), currentLootrun.name())) {
                 tooltipLines = List.of(
-                        Component.literal(lootrunButton.getLootrun().name()).withStyle(ChatFormatting.BOLD),
+                        Component.literal(lootrunPathButton.getLootrun().name()).withStyle(ChatFormatting.BOLD),
                         Component.translatable("screens.wynntils.lootruns.lootrunButton.loaded")
                                 .withStyle(ChatFormatting.YELLOW),
                         Component.translatable("screens.wynntils.lootruns.lootrunButton.viewInFolder")
@@ -113,7 +113,7 @@ public final class WynntilsLootrunsScreen extends WynntilsListScreen<LootrunInst
                                 .withStyle(ChatFormatting.GREEN));
             } else {
                 tooltipLines = List.of(
-                        Component.literal(lootrunButton.getLootrun().name()).withStyle(ChatFormatting.BOLD),
+                        Component.literal(lootrunPathButton.getLootrun().name()).withStyle(ChatFormatting.BOLD),
                         Component.translatable("screens.wynntils.lootruns.lootrunButton.load")
                                 .withStyle(ChatFormatting.GREEN),
                         Component.translatable("screens.wynntils.lootruns.lootrunButton.viewInFolder")
@@ -168,7 +168,7 @@ public final class WynntilsLootrunsScreen extends WynntilsListScreen<LootrunInst
     }
 
     private void renderDescription(PoseStack poseStack) {
-        LootrunInstance currentLootrun = Services.Lootrun.getCurrentLootrun();
+        LootrunPathInstance currentLootrun = Services.LootrunPaths.getCurrentLootrun();
         if (currentLootrun != null) {
             poseStack.pushPose();
             poseStack.translate(20, 80, 0);
@@ -269,9 +269,9 @@ public final class WynntilsLootrunsScreen extends WynntilsListScreen<LootrunInst
     }
 
     @Override
-    protected LootrunButton getButtonFromElement(int i) {
+    protected LootrunPathButton getButtonFromElement(int i) {
         int offset = i % getElementsPerPage();
-        return new LootrunButton(
+        return new LootrunPathButton(
                 Texture.QUEST_BOOK_BACKGROUND.width() / 2 + 15,
                 offset * 13 + 25,
                 Texture.QUEST_BOOK_BACKGROUND.width() / 2 - 37,
@@ -282,7 +282,7 @@ public final class WynntilsLootrunsScreen extends WynntilsListScreen<LootrunInst
 
     @Override
     protected void reloadElementsList(String searchTerm) {
-        elements.addAll(Services.Lootrun.getLootruns().stream()
+        elements.addAll(Services.LootrunPaths.getLootruns().stream()
                 .filter(lootrunInstance -> StringUtils.partialMatch(lootrunInstance.name(), searchTerm))
                 .toList());
     }

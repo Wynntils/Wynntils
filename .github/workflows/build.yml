@@ -18,6 +18,7 @@ jobs:
           repository: ${{ github.event.pull_request.head.repo.full_name }}
           token: ${{ secrets.PRIVATE_TOKEN }}
           ref: ${{ github.head_ref }}
+          fetch-depth: 0
 
       - name: Set up JDK
         uses: actions/setup-java@v3
