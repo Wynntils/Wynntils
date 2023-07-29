@@ -7,6 +7,7 @@ package com.wynntils.services.statistics;
 import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.components.Models;
 import com.wynntils.core.components.Service;
+import com.wynntils.core.storage.RegisterStorage;
 import com.wynntils.core.storage.Storage;
 import com.wynntils.models.character.event.CharacterUpdateEvent;
 import com.wynntils.models.worlds.event.WorldStateEvent;
@@ -22,6 +23,7 @@ public final class StatisticsService extends Service {
     private final StatisticsCollectors collectors = new StatisticsCollectors();
 
     // All statistics, per character
+    @RegisterStorage
     private final Storage<Map<String, Map<StatisticKind, StatisticEntry>>> statistics = new Storage<>(new TreeMap<>());
 
     // The currently active statistics
