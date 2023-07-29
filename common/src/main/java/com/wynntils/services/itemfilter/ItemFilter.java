@@ -16,7 +16,7 @@ public abstract class ItemFilter {
     /**
      * Prepares the operator with the given search string. Similar to compiling for a regex
      * @return true if the operator was prepared successfully
-     * @throws InvalidSyntaxException if the search string is not invalid
+     * @throws InvalidSyntaxException if the search string is not valid
      */
     public abstract boolean prepare() throws InvalidSyntaxException;
 

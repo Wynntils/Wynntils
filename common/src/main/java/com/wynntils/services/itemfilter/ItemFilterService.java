@@ -28,7 +28,7 @@ public class ItemFilterService extends Service {
     }
 
     /**
-     * Creates a new ItemFilter based on the given keyword an initates it with the given search string
+     * Creates a new ItemFilter based on the given keyword and initates it with the given search string
      *
      * @param keyword the keyword associated with the filter
      * @param searchString the search string to use
