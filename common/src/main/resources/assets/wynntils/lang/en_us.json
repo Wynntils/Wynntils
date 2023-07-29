@@ -1138,6 +1138,8 @@
   "function.wynntils.cappedSoulPoints.name": "Soul Points",
   "function.wynntils.cappedXp.description": "Your combat XP",
   "function.wynntils.cappedXp.name": "Combat XP",
+  "feature.wynntils.dumpFunctionsToDatabase.name": "Dump Functions to Database",
+    "feature.wynntils.dumpFunctionsToDatabase.description": "Dumps all Wynntils functions to a database",
   "function.wynntils.chestOpened.description": "Get the number of loot chests opened",
   "function.wynntils.chestOpened.name": "Loot Chests Opened",
   "function.wynntils.class.argument.showReskinnedName": "Should the reskinned name be shown instead of the original one?",

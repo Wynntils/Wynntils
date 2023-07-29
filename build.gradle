@@ -61,6 +61,7 @@ subprojects {
             officialMojangMappings()
             parchment("org.parchmentmc.data:parchment-${parchment_version}@zip")
         }
+        implementation 'org.postgresql:postgresql:42.2.23'
     }
 }
 
