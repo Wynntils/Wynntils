@@ -135,11 +135,11 @@ public class DumpFunctionsToDatabaseFeature extends Feature {
 
     private boolean insertArguments() {
         for (Function<?> function : Managers.Function.getFunctions()) {
-            for (FunctionArguments.Argument<?> argument : function.getArgumentsBuilder().getArguments()) {
+            for (FunctionArguments.Argument<?> argument :
+                    function.getArgumentsBuilder().getArguments()) {
                 String name = argument.getName();
                 String description = function.getTranslation("argument." + argument.getName());
-                boolean required =
-                        function.getArgumentsBuilder() instanceof FunctionArguments.RequiredArgumentBuilder;
+                boolean required = function.getArgumentsBuilder() instanceof FunctionArguments.RequiredArgumentBuilder;
                 String type = argument.getType().getSimpleName();
 
                 // get function id from populated function table
