@@ -13,6 +13,7 @@ import com.wynntils.core.components.Service;
 import com.wynntils.core.net.Download;
 import com.wynntils.core.net.UrlId;
 import com.wynntils.core.net.event.NetResultProcessedEvent;
+import com.wynntils.core.storage.RegisterStorage;
 import com.wynntils.core.storage.Storage;
 import com.wynntils.services.map.pois.CombatPoi;
 import com.wynntils.services.map.pois.CustomPoi;
@@ -59,6 +60,7 @@ public class PoiService extends Service {
     private final Set<CombatPoi> cavePois = new HashSet<>();
     private final Map<CustomPoiProvider, List<CustomPoi>> providedCustomPois = new ConcurrentHashMap<>();
 
+    @RegisterStorage
     private final Storage<List<CustomPoiProvider>> customPoiProviders = new Storage<>(new ArrayList<>());
 
     public PoiService() {

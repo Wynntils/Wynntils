@@ -7,6 +7,7 @@ package com.wynntils.models.profession;
 import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.components.Model;
 import com.wynntils.core.components.Models;
+import com.wynntils.core.storage.RegisterStorage;
 import com.wynntils.core.storage.Storage;
 import com.wynntils.core.text.StyledText;
 import com.wynntils.handlers.chat.event.ChatMessageReceivedEvent;
@@ -69,6 +70,7 @@ public class ProfessionModel extends Model {
     private static final int MAX_HARVEST_LABEL_AGE = 1000;
     private static final int TICKS_PER_TIMER_UPDATE = 10;
 
+    @RegisterStorage
     private final Storage<Integer> professionDryStreak = new Storage<>(0);
 
     private long lastHarvestLabel = 0;
