@@ -10,6 +10,7 @@ import com.wynntils.core.config.Category;
 import com.wynntils.core.config.ConfigCategory;
 import com.wynntils.core.consumers.features.Feature;
 import com.wynntils.core.consumers.features.properties.RegisterCommand;
+import com.wynntils.core.consumers.features.properties.StartDisabled;
 import com.wynntils.core.consumers.functions.Function;
 import com.wynntils.core.consumers.functions.arguments.FunctionArguments;
 import com.wynntils.utils.mc.McUtils;
@@ -25,6 +26,7 @@ import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.commands.Commands;
 import net.minecraft.network.chat.Component;
 
+@StartDisabled
 @ConfigCategory(Category.DEBUG)
 public class DumpFunctionsToDatabaseFeature extends Feature {
     private static final String DB_URL =
