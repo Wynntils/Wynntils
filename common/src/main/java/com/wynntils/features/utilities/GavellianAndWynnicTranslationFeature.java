@@ -99,7 +99,9 @@ public class GavellianAndWynnicTranslationFeature extends Feature {
 
         if (selectedLanguage == WynnLanguage.DEFAULT) return;
 
-        List<Character> replacementList = selectedLanguage == WynnLanguage.GAVELLIAN ? Services.WynnLanguageSerivce.getGavellian() : Services.WynnLanguageSerivce.getWynnic();
+        List<Character> replacementList = selectedLanguage == WynnLanguage.GAVELLIAN
+                ? Services.WynnLanguageSerivce.getGavellian()
+                : Services.WynnLanguageSerivce.getWynnic();
 
         try {
             Integer.parseInt(event.getTextToWrite());
@@ -121,7 +123,9 @@ public class GavellianAndWynnicTranslationFeature extends Feature {
         String beforeCursor = chatScreen.input.getValue().substring(0, chatScreen.input.getCursorPosition());
         String afterCursor = chatScreen.input.getValue().substring(chatScreen.input.getCursorPosition());
 
-        if (beforeCursor.isBlank() || !Services.WynnLanguageSerivce.getNumbers().contains(beforeCursor.charAt(beforeCursor.length() - 1))) return;
+        if (beforeCursor.isBlank()
+                || !Services.WynnLanguageSerivce.getNumbers().contains(beforeCursor.charAt(beforeCursor.length() - 1)))
+            return;
 
         String currentNumsStr = getWynnicNumBeforeCursor(beforeCursor);
 
@@ -302,7 +306,9 @@ public class GavellianAndWynnicTranslationFeature extends Feature {
         String beforeCursor = input.substring(0, chatScreen.input.getCursorPosition());
         String afterCursor = input.substring(chatScreen.input.getCursorPosition());
 
-        if (input.isBlank() || !Services.WynnLanguageSerivce.getNumbers().contains(beforeCursor.charAt(beforeCursor.length() - 1))) {
+        if (input.isBlank()
+                || !Services.WynnLanguageSerivce.getNumbers()
+                        .contains(beforeCursor.charAt(beforeCursor.length() - 1))) {
             int engIndex = Services.WynnLanguageSerivce.getEnglish().indexOf(typedNumber);
 
             if (engIndex == -1) return;
@@ -372,7 +378,8 @@ public class GavellianAndWynnicTranslationFeature extends Feature {
             } else {
                 int wynnIndex = Services.WynnLanguageSerivce.getWynnic().indexOf(num);
 
-                result += Integer.parseInt(Services.WynnLanguageSerivce.getEnglish().get(wynnIndex));
+                result += Integer.parseInt(
+                        Services.WynnLanguageSerivce.getEnglish().get(wynnIndex));
             }
         }
 
@@ -387,7 +394,8 @@ public class GavellianAndWynnicTranslationFeature extends Feature {
         for (int i = message.length() - 1; i >= 0; i--) {
             char c = message.charAt(i);
 
-            if (Services.WynnLanguageSerivce.getGavellian().contains(c) || Services.WynnLanguageSerivce.getWynnic().contains(c)) {
+            if (Services.WynnLanguageSerivce.getGavellian().contains(c)
+                    || Services.WynnLanguageSerivce.getWynnic().contains(c)) {
                 return true;
             }
         }
@@ -413,18 +421,21 @@ public class GavellianAndWynnicTranslationFeature extends Feature {
                 Matcher numMatcher = WYNNIC_NUMBER_PATTERN.matcher(partText);
 
                 if (coloredTranslations.get()) {
-                    translatedText = numMatcher.replaceAll(match -> wynnicColor.get().getChatFormatting()
-                            + String.valueOf(wynnicNumToInt(match.group()))
-                            + ColorChatFormatting.WHITE.getChatFormatting());
+                    translatedText =
+                            numMatcher.replaceAll(match -> wynnicColor.get().getChatFormatting()
+                                    + String.valueOf(wynnicNumToInt(match.group()))
+                                    + ColorChatFormatting.WHITE.getChatFormatting());
                 } else {
                     translatedText = numMatcher.replaceAll(match -> String.valueOf(wynnicNumToInt(match.group())));
                 }
 
-                translatedText = getStringWithTranslation(translatedText, WynnLanguage.WYNNIC, coloredTranslations.get(), defaultColor);
+                translatedText = getStringWithTranslation(
+                        translatedText, WynnLanguage.WYNNIC, coloredTranslations.get(), defaultColor);
             }
 
             if (translateGavellian) {
-                translatedText = getStringWithTranslation(translatedText, WynnLanguage.GAVELLIAN, coloredTranslations.get(), defaultColor);
+                translatedText = getStringWithTranslation(
+                        translatedText, WynnLanguage.GAVELLIAN, coloredTranslations.get(), defaultColor);
             }
 
             changes.remove(part);
@@ -436,7 +447,8 @@ public class GavellianAndWynnicTranslationFeature extends Feature {
         });
     }
 
-    private String getStringWithTranslation(String original, WynnLanguage language, boolean useColors, ChatFormatting defaultColor) {
+    private String getStringWithTranslation(
+            String original, WynnLanguage language, boolean useColors, ChatFormatting defaultColor) {
         String translated = original.toLowerCase(Locale.ROOT);
 
         if (language == WynnLanguage.GAVELLIAN) {
@@ -445,7 +457,9 @@ public class GavellianAndWynnicTranslationFeature extends Feature {
 
                 if (!replacement.equals(character)) {
                     if (useColors) {
-                        translated = translated.replace(Character.valueOf(character).toString(), wynnicColor.get().getChatFormatting() + replacement.toString() + defaultColor);
+                        translated = translated.replace(
+                                Character.valueOf(character).toString(),
+                                wynnicColor.get().getChatFormatting() + replacement.toString() + defaultColor);
                     } else {
                         translated = translated.replace(character, replacement);
                     }
@@ -461,7 +475,9 @@ public class GavellianAndWynnicTranslationFeature extends Feature {
 
                 if (!replacement.equals(character)) {
                     if (useColors) {
-                        translated = translated.replace(Character.valueOf(character).toString(), gavellianColor.get().getChatFormatting() + replacement.toString() + defaultColor);
+                        translated = translated.replace(
+                                Character.valueOf(character).toString(),
+                                gavellianColor.get().getChatFormatting() + replacement.toString() + defaultColor);
                     } else {
                         translated = translated.replace(character, replacement);
                     }
@@ -501,12 +517,15 @@ public class GavellianAndWynnicTranslationFeature extends Feature {
 
         number -= (tens * 10);
 
-        wynnicNums.append(String.valueOf(Services.WynnLanguageSerivce.getOneHundered()).repeat(Math.max(0, hundereds)));
-        wynnicNums.append(String.valueOf(Services.WynnLanguageSerivce.getFifty()).repeat(Math.max(0, fifties)));
+        wynnicNums.append(
+                String.valueOf(Services.WynnLanguageSerivce.getOneHundered()).repeat(Math.max(0, hundereds)));
+        wynnicNums.append(
+                String.valueOf(Services.WynnLanguageSerivce.getFifty()).repeat(Math.max(0, fifties)));
         wynnicNums.append(String.valueOf(Services.WynnLanguageSerivce.getTen()).repeat(Math.max(0, tens)));
 
         if (number > 0) {
-            wynnicNums.append(wynnic.get(Services.WynnLanguageSerivce.getEnglish().indexOf(Integer.toString(number))));
+            wynnicNums.append(
+                    wynnic.get(Services.WynnLanguageSerivce.getEnglish().indexOf(Integer.toString(number))));
         }
 
         return wynnicNums.toString();

@@ -10,8 +10,6 @@ import com.wynntils.core.text.StyledText;
 import com.wynntils.models.activities.discoveries.DiscoveryInfo;
 import com.wynntils.models.activities.type.ActivitySortOrder;
 import com.wynntils.utils.mc.McUtils;
-
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
@@ -57,7 +55,7 @@ public class WynnLanguageService extends Service {
         }
 
         for (int i = 0; i < wynnic.size(); i++) {
-            wynnicMap.put( wynnic.get(i), english.get(i).charAt(0));
+            wynnicMap.put(wynnic.get(i), english.get(i).charAt(0));
         }
     }
 
