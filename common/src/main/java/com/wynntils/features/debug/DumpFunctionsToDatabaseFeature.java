@@ -31,8 +31,8 @@ import net.minecraft.network.chat.Component;
 public class DumpFunctionsToDatabaseFeature extends Feature {
     private static final String DB_URL =
             "jdbc:postgresql://ep-morning-frost-16595280.us-west-2.aws.neon.tech/functiondb";
-    private static final String DB_USER = "wynntils";
-    private static final String DB_PASS = "We0NFqXVPo2n";
+    private static final String DB_USER = "";
+    private static final String DB_PASS = "";
 
     private Connection connection = null;
 
