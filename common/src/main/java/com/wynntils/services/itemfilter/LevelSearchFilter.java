@@ -12,7 +12,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class LevelSearchFilter extends ItemFilter {
-    private static final Pattern LEVEL_RANGE_PATTERN = Pattern.compile("^(\\d+)(-(\\d+))?$");
+    private static final Pattern LEVEL_RANGE_PATTERN = Pattern.compile("^(\\d+)(?:-(\\d+))?$");
 
     private int minLevel, maxLevel;
 
@@ -31,7 +31,7 @@ public class LevelSearchFilter extends ItemFilter {
 
         try {
             minLevel = parseInt(matcher.group(1));
-            maxLevel = matcher.group(3) == null ? minLevel : parseInt(matcher.group(3));
+            maxLevel = matcher.group(2) == null ? minLevel : parseInt(matcher.group(2));
         } catch (NumberFormatException ignore) {
             throw new InvalidSyntaxException("feature.wynntils.itemFilter.level.invalidRange", searchString);
         }
