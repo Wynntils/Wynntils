@@ -7,23 +7,22 @@ package com.wynntils.services.itemfilter;
 import com.wynntils.models.items.WynnItem;
 
 public abstract class ItemFilter {
-    protected String searchString;
+    protected String filterValue;
 
-    protected ItemFilter(String searchString) {
-        this.searchString = searchString;
+    protected ItemFilter(String filterValue) {
+        this.filterValue = filterValue;
     }
 
     /**
-     * Prepares the operator with the given search string. Similar to compiling for a regex
-     * @return true if the operator was prepared successfully
-     * @throws InvalidSyntaxException if the search string is not valid
+     * Prepares the filter with the provided value. Similar to compiling for a regex
+     * @throws InvalidSyntaxException if the provided value is not valid
      */
     public abstract void prepare() throws InvalidSyntaxException;
 
     /**
-     * Matches the given item stack against the operator
+     * Matches the given item stack against the filter
      * @param wynnItem the item to match
-     * @return true if the item stack matches the operator
+     * @return true if the item stack matches the filter, false otherwise
      */
     public abstract boolean matches(WynnItem wynnItem);
 }

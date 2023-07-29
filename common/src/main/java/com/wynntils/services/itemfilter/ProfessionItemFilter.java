@@ -10,25 +10,25 @@ import com.wynntils.models.items.items.game.IngredientItem;
 import com.wynntils.models.items.items.game.MaterialItem;
 import com.wynntils.models.profession.type.ProfessionType;
 
-public class ProfessionSearchFilter extends ItemFilter {
+public class ProfessionItemFilter extends ItemFilter {
     private ProfessionType profession;
 
-    public ProfessionSearchFilter(String searchString) {
-        super(searchString);
+    public ProfessionItemFilter(String filterValue) {
+        super(filterValue);
     }
 
     @Override
     public void prepare() throws InvalidSyntaxException {
-        profession = ProfessionType.fromString(searchString);
+        profession = ProfessionType.fromString(filterValue);
         if (profession == null) {
-            throw new InvalidSyntaxException("feature.wynntils.itemFilter.profession.invalidProfession", searchString);
+            throw new InvalidSyntaxException("feature.wynntils.itemFilter.profession.invalidProfession", filterValue);
         }
     }
 
     @Override
     public boolean matches(WynnItem wynnItem) throws IllegalStateException {
         if (profession == null) {
-            throw new IllegalStateException("ProfessionSearchFilter must be prepared before use");
+            throw new IllegalStateException("ProfessionItemFilter must be prepared before use");
         } else if (wynnItem instanceof IngredientItem ingredient) {
             return ingredient.getIngredientInfo().professions().contains(profession);
         } else if (wynnItem instanceof MaterialItem materialItem) {

@@ -18,8 +18,8 @@ public class ItemFilterService extends Service {
 
     public ItemFilterService() {
         super(List.of());
-        registerFilter("lvl", "level", LevelSearchFilter::new);
-        registerFilter("prof", "profession", ProfessionSearchFilter::new);
+        registerFilter("lvl", "level", LevelItemFilter::new);
+        registerFilter("prof", "profession", ProfessionItemFilter::new);
     }
 
     private void registerFilter(String keyword, String translateKey, Function<String, ? extends ItemFilter> supplier) {
@@ -28,19 +28,19 @@ public class ItemFilterService extends Service {
     }
 
     /**
-     * Creates a new ItemFilter based on the given keyword and initates it with the given search string
+     * Creates a new ItemFilter based on the given keyword and initates it with the given value
      *
      * @param keyword the keyword associated with the filter
-     * @param searchString the search string to use
+     * @param filterValue the value to provide to the filter
      * @return the created ItemFilter
      * @throws UnknownFilterException if the keyword is not associated with a filter
      */
-    public ItemFilter createFilter(String keyword, String searchString) throws UnknownFilterException {
+    public ItemFilter createFilter(String keyword, String filterValue) throws UnknownFilterException {
         if (!filterSuppliers.containsKey(keyword)) {
             throw new UnknownFilterException(keyword);
         }
 
-        return filterSuppliers.get(keyword).apply(searchString);
+        return filterSuppliers.get(keyword).apply(filterValue);
     }
 
     /**
