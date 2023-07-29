@@ -13,6 +13,7 @@ import com.wynntils.core.config.RegisterConfig;
 import com.wynntils.core.consumers.features.Feature;
 import com.wynntils.core.net.ApiResponse;
 import com.wynntils.core.net.UrlId;
+import com.wynntils.core.storage.RegisterStorage;
 import com.wynntils.core.storage.Storage;
 import com.wynntils.mc.event.ScreenOpenedEvent;
 import com.wynntils.models.worlds.event.WorldStateEvent;
@@ -25,6 +26,7 @@ import net.minecraftforge.eventbus.api.SubscribeEvent;
 @ConfigCategory(Category.WYNNTILS)
 public class ChangelogFeature extends Feature {
     // If we don't know the last version, assume we just downloaded the mod, so don't show the changelog
+    @RegisterStorage
     public final Storage<String> lastShownVersion = new Storage<>(WynntilsMod.getVersion());
 
     @RegisterConfig
