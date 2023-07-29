@@ -167,7 +167,8 @@ public class DumpFunctionsToDatabaseFeature extends Feature {
                     insertArgumentStatement.setBoolean(3, required);
                     insertArgumentStatement.setInt(4, functionId);
                     insertArgumentStatement.setString(5, type);
-                    insertArgumentStatement.setString(6, argument.getDefaultValue() == null ? null : String.valueOf(argument.getDefaultValue()));
+                    insertArgumentStatement.setString(
+                            6, argument.getDefaultValue() == null ? null : String.valueOf(argument.getDefaultValue()));
                     insertArgumentStatement.execute();
                 } catch (SQLException e) {
                     McUtils.sendErrorToClient("Failed to insert argument " + name);
