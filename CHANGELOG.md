@@ -1,3 +1,10 @@
+## [0.0.3-alpha.236](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.235...v0.0.3-alpha.236) (2023-07-29)
+
+
+### Bug Fixes
+
+* fix storage system duplicating every config ([#1889](https://github.com/Wynntils/Artemis/issues/1889)) ([5c854e8](https://github.com/Wynntils/Artemis/commit/5c854e87d8818e724def684e525c859f6f5a6e20))
+
 ## [0.0.3-alpha.235](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.234...v0.0.3-alpha.235) (2023-07-29)
 
 
@@ -9,6 +16,7 @@
 ### Miscellaneous Chores
 
 * Add @RegisterStorage annotation to all Storage fields ([#1885](https://github.com/Wynntils/Artemis/issues/1885)) ([ade82ad](https://github.com/Wynntils/Artemis/commit/ade82ad89004b82a8fd41a6493e525883558d816))
+* **release:** v0.0.3-alpha.235 [skip ci] ([27bcc98](https://github.com/Wynntils/Artemis/commit/27bcc9808121317f1a57026a56b5e574ff3f73cc))
 
 ## [0.0.3-alpha.234](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.233...v0.0.3-alpha.234) (2023-07-28)
 
@@ -45,12 +53,4 @@
 ### Miscellaneous Chores
 
 * **release:** v0.0.3-alpha.232 [skip ci] ([b485bf3](https://github.com/Wynntils/Artemis/commit/b485bf3490597c5585073ebe6b9d1df4bddcd63c))
-
-## [0.0.3-alpha.231](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.230...v0.0.3-alpha.231) (2023-07-28)
-
-
-### Miscellaneous Chores
-
-* **release:** v0.0.3-alpha.231 [skip ci] ([d8db601](https://github.com/Wynntils/Artemis/commit/d8db601673733d4a91f6701105eb8aace7b62f74))
-* Update all copyright years by spotless ([#1879](https://github.com/Wynntils/Artemis/issues/1879)) ([e69e647](https://github.com/Wynntils/Artemis/commit/e69e6474275ad8c40aa2803aee86421bcc05ebd5))
 
