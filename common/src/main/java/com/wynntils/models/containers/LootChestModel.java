@@ -7,6 +7,7 @@ package com.wynntils.models.containers;
 import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.components.Model;
 import com.wynntils.core.components.Models;
+import com.wynntils.core.storage.RegisterStorage;
 import com.wynntils.core.storage.Storage;
 import com.wynntils.core.text.StyledText;
 import com.wynntils.mc.event.ChestMenuQuickMoveEvent;
@@ -37,11 +38,22 @@ import net.minecraftforge.eventbus.api.SubscribeEvent;
 public final class LootChestModel extends Model {
     private static final int LOOT_CHEST_ITEM_COUNT = 27;
 
+    @RegisterStorage
     private final Storage<List<MythicFind>> mythicFinds = new Storage<>(new ArrayList<>());
+
+    @RegisterStorage
     private final Storage<Integer> openedChestCount = new Storage<>(0);
+
+    @RegisterStorage
     private final Storage<Integer> dryCount = new Storage<>(0);
+
+    @RegisterStorage
     private final Storage<Integer> dryBoxes = new Storage<>(0);
+
+    @RegisterStorage
     private final Storage<Integer> dryEmeralds = new Storage<>(0);
+
+    @RegisterStorage
     private final Storage<Map<GearTier, Integer>> dryItemTiers = new Storage<>(new EnumMap<>(GearTier.class));
 
     private BlockPos lastChestPos;
