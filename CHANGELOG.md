@@ -1,9 +1,21 @@
+## [0.0.3-alpha.237](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.236...v0.0.3-alpha.237) (2023-07-29)
+
+
+### Bug Fixes
+
+* Fix item highlights not always working in reward chest (+fix unidentified item icons rendering above text) ([#1890](https://github.com/Wynntils/Artemis/issues/1890)) ([70c1146](https://github.com/Wynntils/Artemis/commit/70c1146942ad4d5242e59f4ccc8b63bc08b4cde2))
+
 ## [0.0.3-alpha.236](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.235...v0.0.3-alpha.236) (2023-07-29)
 
 
 ### Bug Fixes
 
 * fix storage system duplicating every config ([#1889](https://github.com/Wynntils/Artemis/issues/1889)) ([5c854e8](https://github.com/Wynntils/Artemis/commit/5c854e87d8818e724def684e525c859f6f5a6e20))
+
+
+### Miscellaneous Chores
+
+* **release:** v0.0.3-alpha.236 [skip ci] ([db10c80](https://github.com/Wynntils/Artemis/commit/db10c802eda379f931d4840b560d6eca89356896))
 
 ## [0.0.3-alpha.235](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.234...v0.0.3-alpha.235) (2023-07-29)
 
@@ -41,16 +53,4 @@
 ### Code Refactoring
 
 * Clarify what @RegisterConfig argument means ([#1884](https://github.com/Wynntils/Artemis/issues/1884)) ([38a48d4](https://github.com/Wynntils/Artemis/commit/38a48d4126240f586d781a31e280afa35c0ff087))
-
-## [0.0.3-alpha.232](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.231...v0.0.3-alpha.232) (2023-07-28)
-
-
-### Bug Fixes
-
-* Change À to Á in translation replacement ([#1881](https://github.com/Wynntils/Artemis/issues/1881)) ([a4bc978](https://github.com/Wynntils/Artemis/commit/a4bc9780308413aa8974e8eca18832441dff53aa))
-
-
-### Miscellaneous Chores
-
-* **release:** v0.0.3-alpha.232 [skip ci] ([b485bf3](https://github.com/Wynntils/Artemis/commit/b485bf3490597c5585073ebe6b9d1df4bddcd63c))
 
