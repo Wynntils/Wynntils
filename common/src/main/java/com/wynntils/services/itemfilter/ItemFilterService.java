@@ -24,7 +24,7 @@ public class ItemFilterService extends Service {
 
     private void registerFilter(String keyword, String translateKey, Function<String, ? extends ItemFilter> supplier) {
         filterSuppliers.put(keyword, supplier);
-        filterUsages.put(keyword, "feature.wynntils.itemFilters." + translateKey + ".usage");
+        filterUsages.put(keyword, "feature.wynntils.itemFilter." + translateKey + ".usage");
     }
 
     /**
