@@ -67,6 +67,7 @@ public class GavellianAndWynnicTranslationFeature extends Feature {
     public final Config<ColorChatFormatting> wynnicColor = new Config<>(ColorChatFormatting.DARK_GREEN);
 
     private static final int MAX_CHAT_LENGTH = 256;
+    // Numbers higher than this will be replaced with "∞"
     private static final int MAX_TRANSLATABLE_NUMBER = 5000;
     private static final Pattern END_OF_HEADER_PATTERN = Pattern.compile(".*[\\]:]\\s?");
     private static final Pattern NUMBER_PATTERN = Pattern.compile("^(0|[1-9][0-9]*)$");
@@ -358,7 +359,7 @@ public class GavellianAndWynnicTranslationFeature extends Feature {
 
         if (newInput.length() > MAX_CHAT_LENGTH) return;
 
-        int newCursorPos = newInput.indexOf(translatedNum) + translatedNum.length();
+        int newCursorPos = beforeCursor.length() + translatedNum.length();
 
         chatInput.setValue(newInput);
 
