@@ -12,12 +12,6 @@ import com.wynntils.core.consumers.features.Feature;
 import com.wynntils.core.consumers.features.properties.RegisterCommand;
 import com.wynntils.core.consumers.functions.arguments.FunctionArguments;
 import com.wynntils.utils.mc.McUtils;
-import net.minecraft.ChatFormatting;
-import net.minecraft.client.resources.language.I18n;
-import net.minecraft.commands.CommandSourceStack;
-import net.minecraft.commands.Commands;
-import net.minecraft.network.chat.Component;
-
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
@@ -25,10 +19,15 @@ import java.sql.SQLException;
 import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
+import net.minecraft.ChatFormatting;
+import net.minecraft.commands.CommandSourceStack;
+import net.minecraft.commands.Commands;
+import net.minecraft.network.chat.Component;
 
 @ConfigCategory(Category.DEBUG)
 public class DumpFunctionsToDatabaseFeature extends Feature {
-    private static final String DB_URL = "jdbc:postgresql://ep-morning-frost-16595280.us-west-2.aws.neon.tech/functiondb";
+    private static final String DB_URL =
+            "jdbc:postgresql://ep-morning-frost-16595280.us-west-2.aws.neon.tech/functiondb";
     private static final String DB_USER = "wynntils";
     private static final String DB_PASS = "We0NFqXVPo2n";
 
@@ -62,7 +61,9 @@ public class DumpFunctionsToDatabaseFeature extends Feature {
             return;
         }
 
-        Set<String> typeNames = Managers.Function.getFunctions().stream().map(function -> function.getFunctionType().getSimpleName()).collect(Collectors.toSet());
+        Set<String> typeNames = Managers.Function.getFunctions().stream()
+                .map(function -> function.getFunctionType().getSimpleName())
+                .collect(Collectors.toSet());
         String enumString = typeNames.stream().map(name -> "'" + name + "'").collect(Collectors.joining(","));
 
         String makeTypeEnum = "CREATE TYPE type AS ENUM (" + enumString + ");";
@@ -76,12 +77,11 @@ public class DumpFunctionsToDatabaseFeature extends Feature {
         }
 
         // no more categories because i do not not want to deal with reflection
-        String makeFunctionTable = "CREATE TABLE Functions (" +
-                "id serial PRIMARY KEY," +
-                "name VARCHAR(255) UNIQUE NOT NULL," +
-                "description TEXT NOT NULL," +
-                "aliases VARCHAR(255)[]," +
-                "returnType type NOT NULL);";
+        String makeFunctionTable = "CREATE TABLE Functions (" + "id serial PRIMARY KEY,"
+                + "name VARCHAR(255) UNIQUE NOT NULL,"
+                + "description TEXT NOT NULL,"
+                + "aliases VARCHAR(255)[],"
+                + "returnType type NOT NULL);";
         try (PreparedStatement makeFunctionStatement = connection.prepareStatement(makeFunctionTable)) {
             makeFunctionStatement.execute();
             McUtils.sendMessageToClient(Component.literal(ChatFormatting.GREEN + "Created function table"));
@@ -91,13 +91,12 @@ public class DumpFunctionsToDatabaseFeature extends Feature {
             return;
         }
 
-        String makeArgumentTable = "CREATE TABLE Arguments (" +
-                "id serial PRIMARY KEY," +
-                "name VARCHAR(255) NOT NULL," +
-                "description TEXT NOT NULL," +
-                "required BOOLEAN NOT NULL," +
-                "functionId INTEGER REFERENCES Functions(id)," +
-                "type type NOT NULL);";
+        String makeArgumentTable = "CREATE TABLE Arguments (" + "id serial PRIMARY KEY,"
+                + "name VARCHAR(255) NOT NULL,"
+                + "description TEXT NOT NULL,"
+                + "required BOOLEAN NOT NULL,"
+                + "functionId INTEGER REFERENCES Functions(id),"
+                + "type type NOT NULL);";
         try (PreparedStatement makeArgumentStatement = connection.prepareStatement(makeArgumentTable)) {
             makeArgumentStatement.execute();
             McUtils.sendMessageToClient(Component.literal(ChatFormatting.GREEN + "Created argument table"));
@@ -110,7 +109,8 @@ public class DumpFunctionsToDatabaseFeature extends Feature {
         // stuff is created, time to start dumping
         Managers.Function.getFunctions().forEach(function -> {
             // id is auto generated
-            String insertFunction = "INSERT INTO Functions (name, description, aliases, returnType) VALUES (?, ?, ?, ?::type);";
+            String insertFunction =
+                    "INSERT INTO Functions (name, description, aliases, returnType) VALUES (?, ?, ?, ?::type);";
             String name = function.getName();
             String description = function.getDescription();
             List<String> aliases = function.getAliases();
@@ -129,42 +129,45 @@ public class DumpFunctionsToDatabaseFeature extends Feature {
             }
         });
 
-        Managers.Function.getFunctions().forEach(function -> function.getArgumentsBuilder().getArguments().forEach(argument -> {
-            String insertArgument = "INSERT INTO Arguments (name, description, required, functionId, type) VALUES (?, ?, ?, ?, ?::type);";
-            String name = argument.getName();
-            String description = function.getTranslation("argument." + argument.getName());
-            boolean required = function.getArgumentsBuilder() instanceof FunctionArguments.RequiredArgumentBuilder;
-            String type = argument.getType().getSimpleName();
+        Managers.Function.getFunctions().forEach(function -> function.getArgumentsBuilder()
+                .getArguments()
+                .forEach(argument -> {
+                    String insertArgument =
+                            "INSERT INTO Arguments (name, description, required, functionId, type) VALUES (?, ?, ?, ?, ?::type);";
+                    String name = argument.getName();
+                    String description = function.getTranslation("argument." + argument.getName());
+                    boolean required =
+                            function.getArgumentsBuilder() instanceof FunctionArguments.RequiredArgumentBuilder;
+                    String type = argument.getType().getSimpleName();
 
-            // get function id from populated function table
-            String getFunctionId = "SELECT id FROM Functions WHERE name = ?;";
-            int functionId;
-            try (PreparedStatement getFunctionIdStatement = connection.prepareStatement(getFunctionId)) {
-                getFunctionIdStatement.setString(1, function.getName());
-                getFunctionIdStatement.execute();
-                getFunctionIdStatement.getResultSet().next();
-                functionId = getFunctionIdStatement.getResultSet().getInt("id");
-            } catch (SQLException e) {
-                McUtils.sendErrorToClient("Failed to get function id for " + function.getName());
-                e.printStackTrace();
-                return;
-            }
+                    // get function id from populated function table
+                    String getFunctionId = "SELECT id FROM Functions WHERE name = ?;";
+                    int functionId;
+                    try (PreparedStatement getFunctionIdStatement = connection.prepareStatement(getFunctionId)) {
+                        getFunctionIdStatement.setString(1, function.getName());
+                        getFunctionIdStatement.execute();
+                        getFunctionIdStatement.getResultSet().next();
+                        functionId = getFunctionIdStatement.getResultSet().getInt("id");
+                    } catch (SQLException e) {
+                        McUtils.sendErrorToClient("Failed to get function id for " + function.getName());
+                        e.printStackTrace();
+                        return;
+                    }
 
-            try (PreparedStatement insertArgumentStatement = connection.prepareStatement(insertArgument)) {
-                insertArgumentStatement.setString(1, name);
-                insertArgumentStatement.setString(2, description);
-                insertArgumentStatement.setBoolean(3, required);
-                insertArgumentStatement.setInt(4, functionId);
-                insertArgumentStatement.setString(5, type);
-                insertArgumentStatement.execute();
-            } catch (SQLException e) {
-                McUtils.sendErrorToClient("Failed to insert argument " + name);
-                e.printStackTrace();
-                return;
-            }
-        }));
+                    try (PreparedStatement insertArgumentStatement = connection.prepareStatement(insertArgument)) {
+                        insertArgumentStatement.setString(1, name);
+                        insertArgumentStatement.setString(2, description);
+                        insertArgumentStatement.setBoolean(3, required);
+                        insertArgumentStatement.setInt(4, functionId);
+                        insertArgumentStatement.setString(5, type);
+                        insertArgumentStatement.execute();
+                    } catch (SQLException e) {
+                        McUtils.sendErrorToClient("Failed to insert argument " + name);
+                        e.printStackTrace();
+                        return;
+                    }
+                }));
 
         McUtils.sendMessageToClient(Component.literal(ChatFormatting.GREEN + "Dumped functions to database"));
-
     }
 }
