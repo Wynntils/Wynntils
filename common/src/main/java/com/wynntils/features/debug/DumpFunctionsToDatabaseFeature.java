@@ -98,7 +98,8 @@ public class DumpFunctionsToDatabaseFeature extends Feature {
                 + "description TEXT NOT NULL,"
                 + "required BOOLEAN NOT NULL,"
                 + "functionId INTEGER REFERENCES Functions(id),"
-                + "type type NOT NULL);";
+                + "type type NOT NULL,"
+                + "defaultValue VARCHAR(255));";
         try (PreparedStatement makeArgumentStatement = connection.prepareStatement(makeArgumentTable)) {
             makeArgumentStatement.execute();
             McUtils.sendMessageToClient(Component.literal(ChatFormatting.GREEN + "Created argument table"));
@@ -159,13 +160,14 @@ public class DumpFunctionsToDatabaseFeature extends Feature {
                 }
 
                 String insertArgument =
-                        "INSERT INTO Arguments (name, description, required, functionId, type) VALUES (?, ?, ?, ?, ?::type);";
+                        "INSERT INTO Arguments (name, description, required, functionId, type, defaultValue) VALUES (?, ?, ?, ?, ?::type, ?);";
                 try (PreparedStatement insertArgumentStatement = connection.prepareStatement(insertArgument)) {
                     insertArgumentStatement.setString(1, name);
                     insertArgumentStatement.setString(2, description);
                     insertArgumentStatement.setBoolean(3, required);
                     insertArgumentStatement.setInt(4, functionId);
                     insertArgumentStatement.setString(5, type);
+                    insertArgumentStatement.setString(6, argument.getDefaultValue() == null ? null : String.valueOf(argument.getDefaultValue()));
                     insertArgumentStatement.execute();
                 } catch (SQLException e) {
                     McUtils.sendErrorToClient("Failed to insert argument " + name);
