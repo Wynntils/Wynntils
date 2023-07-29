@@ -4,19 +4,40 @@
  */
 package com.wynntils.services.wynnlanguage;
 
-import com.wynntils.core.components.Manager;
 import com.wynntils.core.components.Models;
+import com.wynntils.core.components.Service;
 import com.wynntils.core.text.StyledText;
 import com.wynntils.models.activities.discoveries.DiscoveryInfo;
 import com.wynntils.models.activities.type.ActivitySortOrder;
 import com.wynntils.utils.mc.McUtils;
+
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Stream;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.item.ItemStack;
 
-public class WynnLanguageService extends Manager {
+public class WynnLanguageService extends Service {
+    private static final int FIFTY_INDEX = 39;
+    private static final int ONE_INDEX = 29;
+    private static final int ONE_HUNDERED_INDEX = 40;
+    private static final int TEN_INDEX = 38;
+    private static final List<String> english = List.of(
+            "a", "b", "c", "d", "e", "f", "g", "h", "i", "j", "k", "l", "m", "n", "o", "p", "q", "r", "s", "t", "u",
+            "v", "w", "x", "y", "z", ".", "!", "?", "1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "50", "100");
+    private static final List<Character> gavellian = List.of(
+            'ⓐ', 'ⓑ', 'ⓒ', 'ⓓ', 'ⓔ', 'ⓕ', 'ⓖ', 'ⓗ', 'ⓘ', 'ⓙ', 'ⓚ', 'ⓛ', 'ⓜ', 'ⓝ', 'ⓞ', 'ⓟ', 'ⓠ', 'ⓡ', 'ⓢ', 'ⓣ', 'ⓤ',
+            'ⓥ', 'ⓦ', 'ⓧ', 'ⓨ', 'ⓩ');
+    private static final List<Character> wynnic = List.of(
+            '⒜', '⒝', '⒞', '⒟', '⒠', '⒡', '⒢', '⒣', '⒤', '⒥', '⒦', '⒧', '⒨', '⒩', '⒪', '⒫', '⒬', '⒭', '⒮', '⒯', '⒰',
+            '⒱', '⒲', '⒳', '⒴', '⒵', '０', '１', '２', '⑴', '⑵', '⑶', '⑷', '⑸', '⑹', '⑺', '⑻', '⑼', '⑽', '⑾', '⑿');
+    private static final List<Character> numbers = wynnic.subList(ONE_INDEX, ONE_HUNDERED_INDEX + 1);
+    private static final Map<Character, Character> gavellianMap = new HashMap<>();
+    private static final Map<Character, Character> wynnicMap = new HashMap<>();
     private static final StyledText GAVELLIAN_TRANSCRIBER = StyledText.fromString("§rHigh Gavellian Transcriber");
     private static final StyledText WYNNIC_TRANSCRIBER = StyledText.fromString("§fAncient Wynnic Transcriber");
     private static final String GAVELLIAN_TRANSCRIBER_DISCOVERY = "Ne du Valeos du Ellach";
@@ -26,6 +47,42 @@ public class WynnLanguageService extends Manager {
 
     public WynnLanguageService() {
         super(List.of());
+
+        createTranslationMaps();
+    }
+
+    private void createTranslationMaps() {
+        for (int i = 0; i < gavellian.size(); i++) {
+            gavellianMap.put(gavellian.get(i), english.get(i).charAt(0));
+        }
+
+        for (int i = 0; i < wynnic.size(); i++) {
+            wynnicMap.put( wynnic.get(i), english.get(i).charAt(0));
+        }
+    }
+
+    public List<Character> getGavellian() {
+        return gavellian;
+    }
+
+    public List<Character> getWynnic() {
+        return wynnic;
+    }
+
+    public List<String> getEnglish() {
+        return english;
+    }
+
+    public List<Character> getNumbers() {
+        return Collections.unmodifiableList(numbers);
+    }
+
+    public Character translateGavellian(Character characterToTranslate) {
+        return gavellianMap.getOrDefault(characterToTranslate, characterToTranslate);
+    }
+
+    public Character translateWynnic(Character characterToTranslate) {
+        return wynnicMap.getOrDefault(characterToTranslate, characterToTranslate);
     }
 
     public void setSelectedLanguage(WynnLanguage selectedLanguage) {
@@ -34,6 +91,18 @@ public class WynnLanguageService extends Manager {
 
     public WynnLanguage getSelectedLanguage() {
         return selectedLanguage;
+    }
+
+    public Character getFifty() {
+        return wynnic.get(FIFTY_INDEX);
+    }
+
+    public Character getOneHundered() {
+        return wynnic.get(ONE_HUNDERED_INDEX);
+    }
+
+    public Character getTen() {
+        return wynnic.get(TEN_INDEX);
     }
 
     public boolean hasTranscriber(WynnLanguage transciberToFind) {
