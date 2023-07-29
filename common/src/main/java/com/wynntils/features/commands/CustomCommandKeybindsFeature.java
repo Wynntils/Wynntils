@@ -4,6 +4,7 @@
  */
 package com.wynntils.features.commands;
 
+import com.wynntils.core.components.Services;
 import com.wynntils.core.config.Category;
 import com.wynntils.core.config.Config;
 import com.wynntils.core.config.ConfigCategory;
@@ -11,6 +12,7 @@ import com.wynntils.core.config.RegisterConfig;
 import com.wynntils.core.consumers.features.Feature;
 import com.wynntils.core.consumers.features.properties.RegisterKeyBind;
 import com.wynntils.core.keybinds.KeyBind;
+import com.wynntils.services.wynnlanguage.WynnLanguage;
 import com.wynntils.utils.mc.McUtils;
 import net.minecraft.client.gui.screens.ChatScreen;
 import org.lwjgl.glfw.GLFW;
@@ -96,6 +98,8 @@ public class CustomCommandKeybindsFeature extends Feature {
             () -> this.executeKeybind(keybindCommand6.get(), commandType6.get()));
 
     private void executeKeybind(String keybindCommand, CommandType commandType) {
+        Services.WynnLanguageSerivce.setSelectedLanguage(WynnLanguage.DEFAULT);
+
         switch (commandType) {
             case EXECUTE -> McUtils.sendCommand(keybindCommand);
             case SUGGEST -> McUtils.mc().setScreen(new ChatScreen(keybindCommand));
