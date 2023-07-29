@@ -350,6 +350,8 @@ public class GavellianAndWynnicTranslationFeature extends Feature {
 
         String newInput = beforeCursor + translatedNum + afterCursor;
 
+        if (newInput.length() > MAX_CHAT_LENGTH) return;
+
         int newCursorPos = newInput.indexOf(translatedNum) + translatedNum.length();
 
         chatInput.setValue(newInput);
