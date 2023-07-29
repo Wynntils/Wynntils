@@ -18,7 +18,7 @@ public abstract class ItemFilter {
      * @return true if the operator was prepared successfully
      * @throws InvalidSyntaxException if the search string is not valid
      */
-    public abstract boolean prepare() throws InvalidSyntaxException;
+    public abstract void prepare() throws InvalidSyntaxException;
 
     /**
      * Matches the given item stack against the operator

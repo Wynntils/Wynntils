@@ -23,7 +23,7 @@ public class LevelSearchFilter extends ItemFilter {
     }
 
     @Override
-    public boolean prepare() throws InvalidSyntaxException {
+    public void prepare() throws InvalidSyntaxException {
         Matcher matcher = LEVEL_RANGE_PATTERN.matcher(searchString);
         if (!matcher.find()) {
             throw new InvalidSyntaxException("feature.wynntils.itemFilter.level.invalidRange", searchString);
@@ -41,7 +41,6 @@ public class LevelSearchFilter extends ItemFilter {
         }
 
         prepared = true;
-        return true;
     }
 
     @Override

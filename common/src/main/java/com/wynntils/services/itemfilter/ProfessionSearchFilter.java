@@ -18,13 +18,11 @@ public class ProfessionSearchFilter extends ItemFilter {
     }
 
     @Override
-    public boolean prepare() throws InvalidSyntaxException {
+    public void prepare() throws InvalidSyntaxException {
         profession = ProfessionType.fromString(searchString);
         if (profession == null) {
             throw new InvalidSyntaxException("feature.wynntils.itemFilter.profession.invalidProfession", searchString);
         }
-
-        return true;
     }
 
     @Override

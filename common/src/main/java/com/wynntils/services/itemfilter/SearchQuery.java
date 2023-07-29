@@ -65,9 +65,8 @@ public class SearchQuery {
                                     .boxed()
                                     .toList());
 
-                    if (itemFilter.prepare()) {
-                        itemFilters.add(itemFilter);
-                    }
+                    itemFilter.prepare();
+                    itemFilters.add(itemFilter);
                 } catch (UnknownFilterException e) {
                     ignoredCharIndices.addAll(IntStream.rangeClosed(currentCharIndex, currentCharIndex + token.length())
                             .boxed()
