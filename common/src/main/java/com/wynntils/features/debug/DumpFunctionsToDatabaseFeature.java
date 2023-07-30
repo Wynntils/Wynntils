@@ -149,7 +149,12 @@ public class DumpFunctionsToDatabaseFeature extends Feature {
                 + ");";
 
         McUtils.mc().keyboardHandler.setClipboard(clearDatabase + makeTypeEnum + makeFunctionTable + makeArgumentTable);
-        McUtils.sendMessageToClient(
-                Component.literal(ChatFormatting.GREEN + "Copied database preparation statement to clipboard"));
+        McUtils.sendMessageToClient(Component.literal("\n")
+                .append(Component.literal(
+                        ChatFormatting.GREEN + "Copied database preparation statement to clipboard.\n"))
+                .append(Component.literal(ChatFormatting.GRAY + "Run this statement before importing new CSVs.\n"))
+                .append(Component.literal(ChatFormatting.GRAY
+                        + "Import CSVs using pgAdmin 4 ensuring Header option is checked and encoding is UTF-8.\n"))
+                .append(Component.literal(ChatFormatting.GRAY + "Import functions before arguments.")));
     }
 }
