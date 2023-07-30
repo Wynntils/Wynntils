@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2022.
+ * Copyright © Wynntils 2022-2023.
  * This file is released under AGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.features.utilities;
@@ -14,6 +14,7 @@ import com.wynntils.core.consumers.features.Feature;
 import com.wynntils.core.consumers.features.properties.RegisterKeyBind;
 import com.wynntils.core.keybinds.KeyBind;
 import com.wynntils.core.mod.event.WynncraftConnectionEvent;
+import com.wynntils.core.storage.RegisterStorage;
 import com.wynntils.core.storage.Storage;
 import com.wynntils.models.worlds.event.WorldStateEvent;
 import com.wynntils.models.worlds.type.WorldState;
@@ -26,6 +27,7 @@ public class GammabrightFeature extends Feature {
     @RegisterConfig
     public final Config<Boolean> gammabrightEnabled = new Config<>(false);
 
+    @RegisterStorage
     private final Storage<Double> lastGamma = new Storage<>(1.0);
 
     @RegisterKeyBind

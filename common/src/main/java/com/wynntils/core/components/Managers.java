@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2022.
+ * Copyright © Wynntils 2022-2023.
  * This file is released under AGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.core.components;
@@ -8,8 +8,8 @@ import com.wynntils.core.config.ConfigManager;
 import com.wynntils.core.config.upfixers.ConfigUpfixerManager;
 import com.wynntils.core.consumers.commands.CommandManager;
 import com.wynntils.core.consumers.features.FeatureManager;
-import com.wynntils.core.consumers.features.overlays.OverlayManager;
 import com.wynntils.core.consumers.functions.FunctionManager;
+import com.wynntils.core.consumers.overlays.OverlayManager;
 import com.wynntils.core.json.JsonManager;
 import com.wynntils.core.keybinds.KeyBindManager;
 import com.wynntils.core.mod.ConnectionManager;

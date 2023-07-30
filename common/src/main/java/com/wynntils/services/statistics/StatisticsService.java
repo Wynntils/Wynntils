@@ -7,6 +7,7 @@ package com.wynntils.services.statistics;
 import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.components.Models;
 import com.wynntils.core.components.Service;
+import com.wynntils.core.storage.RegisterStorage;
 import com.wynntils.core.storage.Storage;
 import com.wynntils.models.character.event.CharacterUpdateEvent;
 import com.wynntils.models.worlds.event.WorldStateEvent;
@@ -22,6 +23,7 @@ public final class StatisticsService extends Service {
     private final StatisticsCollectors collectors = new StatisticsCollectors();
 
     // All statistics, per character
+    @RegisterStorage
     private final Storage<Map<String, Map<StatisticKind, StatisticEntry>>> statistics = new Storage<>(new TreeMap<>());
 
     // The currently active statistics
@@ -66,6 +68,15 @@ public final class StatisticsService extends Service {
         return currentStatistics.getOrDefault(statistic, StatisticEntry.EMPTY);
     }
 
+    public Map<StatisticKind, StatisticEntry> getStatistics() {
+        return currentStatistics;
+    }
+
+    public void resetStatistic(StatisticKind statistic) {
+        currentStatistics.remove(statistic);
+        statistics.touched();
+    }
+
     public void resetStatistics() {
         currentStatistics.clear();
         statistics.touched();
@@ -76,5 +87,12 @@ public final class StatisticsService extends Service {
         statistics.get().putIfAbsent(id, new EnumMap<>(StatisticKind.class));
         currentStatistics = statistics.get().get(id);
         statistics.touched();
+    }
+
+    public void init() {
+        for (StatisticKind kind : StatisticKind.values()) {
+            // Assert that the feature name is properly translated
+            assert !kind.getName().startsWith("statistics.wynntils.") : "Fix i18n for " + kind.getName();
+        }
     }
 }

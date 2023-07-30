@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2022.
+ * Copyright © Wynntils 2022-2023.
  * This file is released under AGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.features.utilities;
@@ -112,7 +112,10 @@ public class TranslationFeature extends Feature {
     }
 
     private StyledText unwrapCoding(String origCoded) {
-        return StyledText.fromString(origCoded.replaceAll("\\{ ?§ ?([0-9a-fklmnor]) ?\\}", "§$1"));
+        // Some translated text (e.g. from pt_br) contains Á. This will be stripped later on,
+        // so convert it to A (not ideal but better than nothing).
+        return StyledText.fromString(
+                origCoded.replaceAll("\\{ ?§ ?([0-9a-fklmnor]) ?\\}", "§$1").replace('Á', 'A'));
     }
 
     private String wrapCoding(StyledText origCoded) {

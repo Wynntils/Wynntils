@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2022.
+ * Copyright © Wynntils 2022-2023.
  * This file is released under AGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.handlers.item;
@@ -188,7 +188,8 @@ public class ItemHandler extends Handler {
                 crashedAnnotators.add(annotator);
 
                 String annotatorName = annotator.getClass().getSimpleName();
-                WynntilsMod.reportCrash(annotator.getClass().getName(), annotatorName, CrashType.ANNOTATOR, t);
+                WynntilsMod.reportCrash(
+                        CrashType.ANNOTATOR, annotatorName, annotator.getClass().getName(), "handling", t);
 
                 WynntilsMod.warn("Problematic item:" + itemStack);
                 WynntilsMod.warn("Problematic item name:" + StyledText.fromComponent(itemStack.getHoverName()));

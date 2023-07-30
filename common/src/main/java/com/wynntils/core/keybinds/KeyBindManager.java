@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2022.
+ * Copyright © Wynntils 2022-2023.
  * This file is released under AGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.core.keybinds;
@@ -166,7 +166,11 @@ public final class KeyBindManager extends Manager {
                     crashedKeyBinds.add(Pair.of(parent, keyBind.key()));
 
                     WynntilsMod.reportCrash(
-                            parent.getClass().getName() + "." + keyBind.value(), keyBind.value(), CrashType.KEYBIND, t);
+                            CrashType.KEYBIND,
+                            keyBind.value(),
+                            parent.getClass().getName() + "." + keyBind.value(),
+                            "handling",
+                            t);
                 }
             }
         }

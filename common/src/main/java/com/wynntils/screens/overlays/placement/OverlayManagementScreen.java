@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2022.
+ * Copyright © Wynntils 2022-2023.
  * This file is released under AGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.screens.overlays.placement;
@@ -7,12 +7,12 @@ package com.wynntils.screens.overlays.placement;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.wynntils.core.components.Managers;
 import com.wynntils.core.config.ConfigHolder;
-import com.wynntils.core.consumers.features.overlays.Corner;
-import com.wynntils.core.consumers.features.overlays.Edge;
-import com.wynntils.core.consumers.features.overlays.Overlay;
-import com.wynntils.core.consumers.features.overlays.OverlayPosition;
-import com.wynntils.core.consumers.features.overlays.OverlaySize;
-import com.wynntils.core.consumers.features.overlays.SectionCoordinates;
+import com.wynntils.core.consumers.overlays.Corner;
+import com.wynntils.core.consumers.overlays.Edge;
+import com.wynntils.core.consumers.overlays.Overlay;
+import com.wynntils.core.consumers.overlays.OverlayPosition;
+import com.wynntils.core.consumers.overlays.OverlaySize;
+import com.wynntils.core.consumers.overlays.SectionCoordinates;
 import com.wynntils.core.consumers.screens.WynntilsScreen;
 import com.wynntils.core.text.StyledText;
 import com.wynntils.screens.overlays.selection.OverlaySelectionScreen;

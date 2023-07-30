@@ -1,15 +1,13 @@
 /*
- * Copyright © Wynntils 2022.
+ * Copyright © Wynntils 2022-2023.
  * This file is released under AGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.mc.event;
 
 import com.wynntils.core.text.StyledText;
 import net.minecraft.server.ServerScoreboard;
-import net.minecraftforge.eventbus.api.Cancelable;
 import net.minecraftforge.eventbus.api.Event;
 
-@Cancelable
 public class ScoreboardSetScoreEvent extends Event {
     private final StyledText owner;
     private final String objectiveName;

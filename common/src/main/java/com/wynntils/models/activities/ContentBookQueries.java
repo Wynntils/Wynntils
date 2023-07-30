@@ -58,7 +58,8 @@ public class ContentBookQueries {
     protected void queryContentBook(
             ActivityType activityType,
             BiConsumer<List<ActivityInfo>, List<StyledText>> processResult,
-            boolean showUpdates) {
+            boolean showUpdates,
+            boolean firstPageOnly) {
         List<ActivityInfo> newActivity = new ArrayList<>();
         List<StyledText> progress = new ArrayList<>();
 
@@ -122,8 +123,13 @@ public class ContentBookQueries {
 
                 // Repeatedly click next page, if available, and process the following page
                 .repeat(
-                        c -> ScriptedContainerQuery.containerHasSlot(
-                                c, NEXT_PAGE_SLOT, Items.GOLDEN_SHOVEL, SCROLL_DOWN_TEXT),
+                        c -> {
+                            if (firstPageOnly) {
+                                return false;
+                            }
+                            return ScriptedContainerQuery.containerHasSlot(
+                                    c, NEXT_PAGE_SLOT, Items.GOLDEN_SHOVEL, SCROLL_DOWN_TEXT);
+                        },
                         QueryStep.clickOnSlot(NEXT_PAGE_SLOT)
                                 .processIncomingContainer(c -> processContentBookPage(c, newActivity)))
 

@@ -4,9 +4,11 @@
  */
 package com.wynntils.screens.activities;
 
+import com.mojang.blaze3d.vertex.BufferBuilder;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.components.Models;
+import com.wynntils.core.components.Services;
 import com.wynntils.core.text.StyledText;
 import com.wynntils.mc.event.MenuEvent;
 import com.wynntils.models.activities.caves.CaveInfo;
@@ -23,14 +25,22 @@ import com.wynntils.screens.base.widgets.ReloadButton;
 import com.wynntils.screens.base.widgets.SortOrderWidget;
 import com.wynntils.screens.base.widgets.SortableActivityScreen;
 import com.wynntils.screens.wynntilsmenu.WynntilsMenuScreen;
+import com.wynntils.services.map.MapTexture;
 import com.wynntils.utils.StringUtils;
 import com.wynntils.utils.colors.CommonColors;
 import com.wynntils.utils.mc.McUtils;
+import com.wynntils.utils.mc.type.Location;
 import com.wynntils.utils.render.FontRenderer;
+import com.wynntils.utils.render.MapRenderer;
+import com.wynntils.utils.render.RenderUtils;
 import com.wynntils.utils.render.Texture;
 import com.wynntils.utils.render.type.HorizontalAlignment;
 import com.wynntils.utils.render.type.TextShadow;
 import com.wynntils.utils.render.type.VerticalAlignment;
+import com.wynntils.utils.type.BoundingBox;
+import java.util.List;
+import java.util.Optional;
+import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.resources.language.I18n;
 import net.minecraft.network.chat.Component;
 import net.minecraftforge.eventbus.api.EventPriority;
@@ -156,6 +166,8 @@ public final class WynntilsCaveScreen extends WynntilsListScreen<CaveInfo, CaveB
 
         poseStack.popPose();
 
+        renderMap(poseStack);
+
         renderTooltip(poseStack, mouseX, mouseY);
     }
 
@@ -173,6 +185,59 @@ public final class WynntilsCaveScreen extends WynntilsListScreen<CaveInfo, CaveB
                         HorizontalAlignment.CENTER,
                         VerticalAlignment.MIDDLE,
                         TextShadow.NONE);
+    }
+
+    private void renderMap(PoseStack poseStack) {
+        CaveInfo trackedCaveInfo = Models.Activity.getTrackedCaveInfo();
+        if (trackedCaveInfo == null) return;
+        Optional<Location> nextLocation = trackedCaveInfo.getNextLocation();
+        if (nextLocation.isEmpty()) return;
+
+        final float renderX = getTranslationX() + 20;
+        final float renderY = getTranslationY() + 100;
+
+        final int mapWidth = Texture.QUEST_BOOK_BACKGROUND.width() / 2 - 30;
+        final int mapHeight = 90;
+        final float currentZoom = 1;
+
+        final float mapCenterX = nextLocation.get().x;
+        final float mapCenterZ = nextLocation.get().z;
+
+        final float centerX = renderX + mapWidth / 2f;
+        final float centerZ = renderY + mapHeight / 2f;
+
+        RenderUtils.enableScissor((int) (renderX), (int) (renderY), mapWidth, mapHeight);
+
+        // Background black void color
+        RenderUtils.drawRect(poseStack, CommonColors.BLACK, renderX, renderX, 0, mapWidth, mapHeight);
+
+        BoundingBox textureBoundingBox =
+                BoundingBox.centered(mapCenterX, mapCenterZ, this.width / currentZoom, this.height / currentZoom);
+
+        List<MapTexture> maps = Services.Map.getMapsForBoundingBox(textureBoundingBox);
+
+        MultiBufferSource.BufferSource bufferSource = MultiBufferSource.immediate(new BufferBuilder(256));
+
+        for (MapTexture map : maps) {
+            float textureX = map.getTextureXPosition(mapCenterX);
+            float textureZ = map.getTextureZPosition(mapCenterZ);
+
+            MapRenderer.renderMapQuad(
+                    map,
+                    poseStack,
+                    bufferSource,
+                    centerX,
+                    centerZ,
+                    textureX,
+                    textureZ,
+                    mapWidth,
+                    mapHeight,
+                    1f / currentZoom);
+        }
+
+        bufferSource.endBatch();
+
+        RenderUtils.disableScissor();
     }
 
     @Override

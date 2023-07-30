@@ -16,6 +16,7 @@ import com.wynntils.utils.mc.McUtils;
 import java.io.File;
 import java.lang.reflect.Field;
 import java.lang.reflect.Type;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -67,12 +68,33 @@ public final class StorageManager extends Manager {
     public void registerStorageable(Storageable storageable) {
         String baseName = storageable.getStorageJsonName();
 
+        Field[] annotatedStorages = FieldUtils.getFieldsWithAnnotation(storageable.getClass(), RegisterStorage.class);
+        for (Field field : annotatedStorages) {
+            try {
+                Object fieldValue = FieldUtils.readField(field, storageable, true);
+                if (!(fieldValue instanceof Storage<?>)) {
+                    throw new RuntimeException(
+                            "A non-Storage class was marked with @RegisterStorage annotation: " + field);
+                }
+            } catch (IllegalAccessException e) {
+                throw new RuntimeException("Failed to read @RegisterStorage annotated field: " + field, e);
+            }
+        }
         List<Field> fields = FieldUtils.getAllFieldsList(storageable.getClass());
         List<Field> storageFields =
                 fields.stream().filter(f -> f.getType().equals(Storage.class)).toList();
 
         for (Field storageField : storageFields) {
             try {
+                RegisterStorage storageInfo = Arrays.stream(annotatedStorages)
+                        .filter(f -> f.equals(storageField))
+                        .findFirst()
+                        .map(f -> f.getAnnotation(RegisterStorage.class))
+                        .orElse(null);
+                if (storageInfo == null) {
+                    throw new RuntimeException("A Storage is missing @RegisterStorage annotation:" + storageField);
+                }
+
                 Storage<?> storage = (Storage<?>) FieldUtils.readField(storageField, storageable, true);
                 String jsonName = baseName + "." + storageField.getName();
                 storages.put(jsonName, storage);

@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2022.
+ * Copyright © Wynntils 2022-2023.
  * This file is released under AGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.screens.settings.widgets;
@@ -8,7 +8,7 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import com.wynntils.core.consumers.features.Configurable;
 import com.wynntils.core.consumers.features.Feature;
 import com.wynntils.core.consumers.features.Translatable;
-import com.wynntils.core.consumers.features.overlays.Overlay;
+import com.wynntils.core.consumers.overlays.Overlay;
 import com.wynntils.core.text.StyledText;
 import com.wynntils.screens.base.widgets.WynntilsButton;
 import com.wynntils.screens.settings.WynntilsBookSettingsScreen;

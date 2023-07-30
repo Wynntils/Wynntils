@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2022.
+ * Copyright © Wynntils 2022-2023.
  * This file is released under AGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.core.consumers.screens;
@@ -20,12 +20,13 @@ public abstract class WynntilsScreen extends Screen {
         McUtils.mc().setScreen(null);
 
         WynntilsMod.reportCrash(
-                this.getClass().getName() + "." + method + "()",
-                this.getClass().getSimpleName() + " during " + method,
                 CrashType.SCREEN,
-                throwable,
+                this.getClass().getSimpleName(),
+                this.getClass().getName(),
+                method,
                 true,
-                false);
+                false,
+                throwable);
         McUtils.sendErrorToClient("Screen was forcefully closed.");
     }
 
@@ -68,5 +69,13 @@ public abstract class WynntilsScreen extends Screen {
 
     public boolean doMouseClicked(double mouseX, double mouseY, int button) {
         return super.mouseClicked(mouseX, mouseY, button);
+    }
+
+    public void wrapCurrentScreenError(Runnable action, String errorDesc, String screenName) {
+        try {
+            action.run();
+        } catch (Throwable t) {
+            failure(errorDesc, t);
+        }
     }
 }

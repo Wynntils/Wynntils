@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2022.
+ * Copyright © Wynntils 2022-2023.
  * This file is released under AGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.core.config;
@@ -13,5 +13,5 @@ import java.lang.annotation.Target;
 @Target(ElementType.FIELD)
 public @interface RegisterConfig {
     /** The base part of the translation key to use for this option */
-    String value() default "";
+    String i18nKey() default "";
 }
