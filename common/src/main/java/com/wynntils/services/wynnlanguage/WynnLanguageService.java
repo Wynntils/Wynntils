@@ -20,22 +20,24 @@ import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.item.ItemStack;
 
 public class WynnLanguageService extends Service {
-    private static final int FIFTY_INDEX = 39;
-    private static final int ONE_INDEX = 29;
-    private static final int ONE_HUNDERED_INDEX = 40;
-    private static final int TEN_INDEX = 38;
-    private static final List<String> englishCharacters = List.of(
-            "a", "b", "c", "d", "e", "f", "g", "h", "i", "j", "k", "l", "m", "n", "o", "p", "q", "r", "s", "t", "u",
-            "v", "w", "x", "y", "z", ".", "!", "?", "1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "50", "100");
+    private static final int FIFTY_INDEX = 10;
+    private static final int ONE_HUNDERED_INDEX = 11;
+    private static final int TEN_INDEX = 9;
+    private static final List<Character> englishCharacters = List.of(
+            'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u',
+            'v', 'w', 'x', 'y', 'z', '.', '!', '?');
+    private static final List<Integer> englishNumbers = List.of(1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 50, 100);
     private static final List<Character> gavellianCharacters = List.of(
             'ⓐ', 'ⓑ', 'ⓒ', 'ⓓ', 'ⓔ', 'ⓕ', 'ⓖ', 'ⓗ', 'ⓘ', 'ⓙ', 'ⓚ', 'ⓛ', 'ⓜ', 'ⓝ', 'ⓞ', 'ⓟ', 'ⓠ', 'ⓡ', 'ⓢ', 'ⓣ', 'ⓤ',
             'ⓥ', 'ⓦ', 'ⓧ', 'ⓨ', 'ⓩ');
     private static final List<Character> wynnicCharacters = List.of(
             '⒜', '⒝', '⒞', '⒟', '⒠', '⒡', '⒢', '⒣', '⒤', '⒥', '⒦', '⒧', '⒨', '⒩', '⒪', '⒫', '⒬', '⒭', '⒮', '⒯', '⒰',
-            '⒱', '⒲', '⒳', '⒴', '⒵', '０', '１', '２', '⑴', '⑵', '⑶', '⑷', '⑸', '⑹', '⑺', '⑻', '⑼', '⑽', '⑾', '⑿');
-    private static final List<Character> wynnicNumbers = wynnicCharacters.subList(ONE_INDEX, ONE_HUNDERED_INDEX + 1);
-    private static final Map<Character, Character> gavellianMap = new HashMap<>();
-    private static final Map<Character, Character> wynnicMap = new HashMap<>();
+            '⒱', '⒲', '⒳', '⒴', '⒵', '０', '１', '２');
+    private static final List<Character> wynnicNumbers = List.of('⑴', '⑵', '⑶', '⑷', '⑸', '⑹', '⑺', '⑻', '⑼', '⑽', '⑾', '⑿');
+    private static final Map<Character, Character> englishToGavellianMap = new HashMap<>();
+    private static final Map<Character, Character> englishToWynnicMap = new HashMap<>();
+    private static final Map<Character, Character> gavellianToEnglishMap = new HashMap<>();
+    private static final Map<Character, Character> wynnicToEnglishMap = new HashMap<>();
     private static final StyledText GAVELLIAN_TRANSCRIBER = StyledText.fromString("§rHigh Gavellian Transcriber");
     private static final StyledText WYNNIC_TRANSCRIBER = StyledText.fromString("§fAncient Wynnic Transcriber");
     private static final String GAVELLIAN_TRANSCRIBER_DISCOVERY = "Ne du Valeos du Ellach";
@@ -51,12 +53,21 @@ public class WynnLanguageService extends Service {
 
     private void createTranslationMaps() {
         for (int i = 0; i < gavellianCharacters.size(); i++) {
-            gavellianMap.put(
-                    gavellianCharacters.get(i), englishCharacters.get(i).charAt(0));
+            gavellianToEnglishMap.put(
+                    gavellianCharacters.get(i), englishCharacters.get(i));
         }
 
         for (int i = 0; i < wynnicCharacters.size(); i++) {
-            wynnicMap.put(wynnicCharacters.get(i), englishCharacters.get(i).charAt(0));
+            wynnicToEnglishMap.put(wynnicCharacters.get(i), englishCharacters.get(i));
+        }
+
+        for (int i = 0; i < gavellianCharacters.size(); i++) {
+            englishToGavellianMap.put(
+                    englishCharacters.get(i), gavellianCharacters.get(i));
+        }
+
+        for (int i = 0; i < wynnicCharacters.size(); i++) {
+            englishToWynnicMap.put(englishCharacters.get(i), wynnicCharacters.get(i));
         }
     }
 
@@ -68,20 +79,32 @@ public class WynnLanguageService extends Service {
         return wynnicCharacters;
     }
 
-    public List<String> getEnglishCharacters() {
+    public List<Character> getEnglishCharacters() {
         return englishCharacters;
     }
 
+    public List<Integer> getEnglishNumbers() {
+        return englishNumbers;
+    }
+
     public List<Character> getWynnicNumbers() {
-        return Collections.unmodifiableList(wynnicNumbers);
+        return wynnicNumbers;
     }
 
-    public Character translateGavellian(Character characterToTranslate) {
-        return gavellianMap.getOrDefault(characterToTranslate, characterToTranslate);
+    public Character translateGavellianToEnglish(Character characterToTranslate) {
+        return gavellianToEnglishMap.getOrDefault(characterToTranslate, characterToTranslate);
     }
 
-    public Character translateWynnic(Character characterToTranslate) {
-        return wynnicMap.getOrDefault(characterToTranslate, characterToTranslate);
+    public Character translateWynnicToEnglish(Character characterToTranslate) {
+        return wynnicToEnglishMap.getOrDefault(characterToTranslate, characterToTranslate);
+    }
+
+    public Character translateEnglishToGavellian(Character characterToTranslate) {
+        return englishToGavellianMap.getOrDefault(characterToTranslate, characterToTranslate);
+    }
+
+    public Character translateEnglishToWynnic(Character characterToTranslate) {
+        return englishToWynnicMap.getOrDefault(characterToTranslate, characterToTranslate);
     }
 
     public void setSelectedLanguage(WynnLanguage selectedLanguage) {
@@ -93,15 +116,15 @@ public class WynnLanguageService extends Service {
     }
 
     public Character getFifty() {
-        return wynnicCharacters.get(FIFTY_INDEX);
+        return wynnicNumbers.get(FIFTY_INDEX);
     }
 
     public Character getOneHundered() {
-        return wynnicCharacters.get(ONE_HUNDERED_INDEX);
+        return wynnicNumbers.get(ONE_HUNDERED_INDEX);
     }
 
     public Character getTen() {
-        return wynnicCharacters.get(TEN_INDEX);
+        return wynnicNumbers.get(TEN_INDEX);
     }
 
     public boolean hasTranscriber(WynnLanguage transciberToFind) {
