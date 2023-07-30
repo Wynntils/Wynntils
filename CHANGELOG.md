@@ -1,9 +1,21 @@
+## [0.0.3-alpha.242](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.241...v0.0.3-alpha.242) (2023-07-30)
+
+
+### New Features
+
+* add a small-map in the caves screen ([#1894](https://github.com/Wynntils/Artemis/issues/1894)) ([6008639](https://github.com/Wynntils/Artemis/commit/6008639722ea03982a21edfa7b6fb07416b921d6))
+
 ## [0.0.3-alpha.241](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.240...v0.0.3-alpha.241) (2023-07-30)
 
 
 ### Bug Fixes
 
 * account for first challenge of the run of day message changes when parsing lootrun stats ([#1893](https://github.com/Wynntils/Artemis/issues/1893)) ([3e60aaf](https://github.com/Wynntils/Artemis/commit/3e60aaf68f1369a6161b239f54843509d253f431))
+
+
+### Miscellaneous Chores
+
+* **release:** v0.0.3-alpha.241 [skip ci] ([3023a28](https://github.com/Wynntils/Artemis/commit/3023a28ef5602b9ac69ed41a6cf165ed88eb18b1))
 
 ## [0.0.3-alpha.240](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.239...v0.0.3-alpha.240) (2023-07-30)
 
@@ -40,16 +52,4 @@
 ### Miscellaneous Chores
 
 * **release:** v0.0.3-alpha.238 [skip ci] ([bc81e11](https://github.com/Wynntils/Artemis/commit/bc81e11fb81783404bd05e57a7645aa732753c04))
-
-## [0.0.3-alpha.237](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.236...v0.0.3-alpha.237) (2023-07-29)
-
-
-### Bug Fixes
-
-* Fix item highlights not always working in reward chest (+fix unidentified item icons rendering above text) ([#1890](https://github.com/Wynntils/Artemis/issues/1890)) ([70c1146](https://github.com/Wynntils/Artemis/commit/70c1146942ad4d5242e59f4ccc8b63bc08b4cde2))
-
-
-### Miscellaneous Chores
-
-* **release:** v0.0.3-alpha.237 [skip ci] ([7145385](https://github.com/Wynntils/Artemis/commit/714538506e6628e82385d545babb6caea4c5153c))
 
