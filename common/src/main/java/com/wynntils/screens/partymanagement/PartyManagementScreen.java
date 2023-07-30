@@ -152,7 +152,7 @@ public final class PartyManagementScreen extends WynntilsScreen implements Textb
         super.doRender(poseStack, mouseX, mouseY, partialTick);
 
         // uncomment when changing gui elements
-        // renderDebugGrid(poseStack);
+        //RenderUtils.renderDebugGrid(poseStack, GRID_DIVISIONS, dividedWidth, dividedHeight);
 
         // region Invite field header
         FontRenderer.getInstance()
