@@ -189,7 +189,6 @@ public final class FeatureManager extends Manager {
         registerFeature(new ChatTimestampFeature());
         registerFeature(new DeathCoordinatesFeature());
         registerFeature(new DialogueOptionOverrideFeature());
-        registerFeature(new GavellianAndWynnicTranslationFeature());
         registerFeature(new GuildRankReplacementFeature());
         registerFeature(new MessageFilterFeature());
         // endregion
@@ -328,6 +327,7 @@ public final class FeatureManager extends Manager {
         // region utilities
         registerFeature(new AutoApplyResourcePackFeature());
         registerFeature(new GammabrightFeature());
+        registerFeature(new GavellianAndWynnicTranslationFeature());
         registerFeature(new SilencerFeature());
         registerFeature(new TranslationFeature());
         // endregion
