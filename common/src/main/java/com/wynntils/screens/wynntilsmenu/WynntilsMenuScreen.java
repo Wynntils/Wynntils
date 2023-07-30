@@ -26,6 +26,7 @@ import com.wynntils.screens.wynntilsmenu.widgets.WynntilsMenuButton;
 import com.wynntils.utils.colors.CommonColors;
 import com.wynntils.utils.colors.CustomColor;
 import com.wynntils.utils.mc.McUtils;
+import com.wynntils.utils.mc.RenderedStringUtils;
 import com.wynntils.utils.render.FontRenderer;
 import com.wynntils.utils.render.RenderUtils;
 import com.wynntils.utils.render.Texture;
@@ -374,19 +375,23 @@ public final class WynntilsMenuScreen extends WynntilsMenuScreenBase {
                         HorizontalAlignment.CENTER,
                         TextShadow.NONE);
 
-        String currentSplash = Services.Splash.getCurrentSplash();
-        currentSplash = currentSplash == null ? "" : currentSplash;
-        FontRenderer.getInstance()
-                .renderAlignedTextInBox(
-                        poseStack,
-                        StyledText.fromString(currentSplash),
-                        Texture.QUEST_BOOK_BACKGROUND.width() / 2f,
-                        Texture.QUEST_BOOK_BACKGROUND.width(),
-                        Texture.QUEST_BOOK_BACKGROUND.height() - 45,
-                        0,
-                        CommonColors.MAGENTA,
-                        HorizontalAlignment.CENTER,
-                        TextShadow.NONE);
+        String currentSplash = Services.Splash.getCurrentSplash() == null ? "" : Services.Splash.getCurrentSplash();
+        StyledText[] wrappedSplash = RenderedStringUtils.wrapTextBySize(
+                StyledText.fromString(currentSplash), Texture.QUEST_BOOK_BACKGROUND.width() / 2 - 20);
+
+        for (int i = 0; i < wrappedSplash.length; i++) {
+            FontRenderer.getInstance()
+                    .renderAlignedTextInBox(
+                            poseStack,
+                            wrappedSplash[i],
+                            Texture.QUEST_BOOK_BACKGROUND.width() / 2f,
+                            Texture.QUEST_BOOK_BACKGROUND.width(),
+                            Texture.QUEST_BOOK_BACKGROUND.height() - 45 + i * (McUtils.mc().font.lineHeight + 1),
+                            0,
+                            CommonColors.MAGENTA,
+                            HorizontalAlignment.CENTER,
+                            TextShadow.NONE);
+        }
     }
 
     @Override
