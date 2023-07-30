@@ -14,13 +14,17 @@ import com.wynntils.core.consumers.features.properties.StartDisabled;
 import com.wynntils.core.consumers.functions.Function;
 import com.wynntils.core.consumers.functions.arguments.FunctionArguments;
 import com.wynntils.utils.mc.McUtils;
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.PreparedStatement;
-import java.sql.SQLException;
+import java.io.File;
+import java.io.IOException;
+import java.io.PrintWriter;
+import java.nio.charset.StandardCharsets;
+import java.util.ArrayList;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 import net.minecraft.ChatFormatting;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.commands.Commands;
@@ -29,174 +33,123 @@ import net.minecraft.network.chat.Component;
 @StartDisabled
 @ConfigCategory(Category.DEBUG)
 public class DumpFunctionsToDatabaseFeature extends Feature {
-    private static final String DB_URL =
-            "jdbc:postgresql://ep-morning-frost-16595280.us-west-2.aws.neon.tech/functiondb";
-    private static final String DB_USER = "";
-    private static final String DB_PASS = "";
-
-    private Connection connection = null;
+    private static final Map<String, String> FUNCTION_MAP = new LinkedHashMap<>();
+    private static final Map<String, String> ARGUMENT_MAP = new LinkedHashMap<>();
 
     @RegisterCommand
     private final LiteralCommandNode<CommandSourceStack> dumpCommand = Commands.literal("dumpFunctionsToDatabase")
             .executes(ctx -> {
-                dumpFunctionstoDatabase();
+                FUNCTION_MAP.put("id", "serial PRIMARY KEY");
+                FUNCTION_MAP.put("name", "VARCHAR(255) UNIQUE NOT NULL");
+                FUNCTION_MAP.put("description", "TEXT NOT NULL");
+                FUNCTION_MAP.put("aliases", "VARCHAR(255)[]");
+                FUNCTION_MAP.put("returntype", "type NOT NULL");
+
+                ARGUMENT_MAP.put("id", "serial PRIMARY KEY");
+                ARGUMENT_MAP.put("name", "VARCHAR(255) NOT NULL");
+                ARGUMENT_MAP.put("description", "TEXT NOT NULL");
+                ARGUMENT_MAP.put("required", "BOOLEAN NOT NULL");
+                ARGUMENT_MAP.put("functionid", "INTEGER REFERENCES functions(id)");
+                ARGUMENT_MAP.put("type", "type NOT NULL");
+                ARGUMENT_MAP.put("defaultvalue", "VARCHAR(255)");
+
+                dumpFunctionsToCSV();
+                dumpArgumentsToCSV();
+                copyPreparationStatement();
                 return 0;
             })
             .build();
 
-    private boolean clearDatabase() {
-        String clearDatabase = "DROP SCHEMA public CASCADE; CREATE SCHEMA public;";
-        try (PreparedStatement clearDatabaseStatement = connection.prepareStatement(clearDatabase)) {
-            clearDatabaseStatement.execute();
-            McUtils.sendMessageToClient(Component.literal(ChatFormatting.GREEN + "Cleared database"));
-        } catch (SQLException e) {
-            McUtils.sendErrorToClient("Failed to clear database");
-            e.printStackTrace();
-            return false;
+    private void dumpFunctionsToCSV() {
+        List<String[]> dataLines = new ArrayList<>();
+        dataLines.add(new String[] {String.join(",", FUNCTION_MAP.keySet())});
+
+        for (Function<?> function : Managers.Function.getFunctions()) {
+            String aliases = "{" + String.join(",", function.getAliases()) + "}";
+            String[] dataLine = {
+                String.valueOf(dataLines.size()),
+                function.getName(),
+                function.getDescription(),
+                aliases,
+                function.getFunctionType().getSimpleName()
+            };
+            dataLines.add(dataLine);
         }
-        return true;
+
+        writeToCSV(dataLines, "functions");
     }
 
-    private boolean createTypeEnum() {
+    private void dumpArgumentsToCSV() {
+        List<String[]> dataLines = new ArrayList<>();
+        dataLines.add(new String[] {String.join(",", ARGUMENT_MAP.keySet())});
+
+        for (int i = 0; i < Managers.Function.getFunctions().size(); i++) {
+            Function<?> function = Managers.Function.getFunctions().get(i);
+            for (FunctionArguments.Argument<?> argument :
+                    function.getArgumentsBuilder().getArguments()) {
+                String[] dataLine = {
+                    String.valueOf(dataLines.size()),
+                    argument.getName(),
+                    function.getTranslation("argument." + argument.getName()),
+                    String.valueOf(function.getArgumentsBuilder() instanceof FunctionArguments.RequiredArgumentBuilder),
+                    String.valueOf(i + 1),
+                    argument.getType().getSimpleName(),
+                    String.valueOf(argument.getDefaultValue())
+                };
+                dataLines.add(dataLine);
+            }
+        }
+
+        writeToCSV(dataLines, "arguments");
+    }
+
+    private void writeToCSV(List<String[]> dataLines, String name) {
+        File csvOutputFile = new File(name + ".csv");
+        try (PrintWriter pw = new PrintWriter(csvOutputFile, StandardCharsets.UTF_8)) {
+            dataLines.stream()
+                    .map(line -> Stream.of(line)
+                            .map(d -> {
+                                String value = String.valueOf(d);
+                                String escapedData = value.replaceAll("\\R", " ");
+                                if (value.contains(",") || value.contains("\"") || value.contains("'")) {
+                                    value = value.replace("\"", "\"\"");
+                                    escapedData = "\"" + value + "\"";
+                                }
+                                return escapedData;
+                            })
+                            .collect(Collectors.joining(",")))
+                    .forEach(pw::println);
+        } catch (IOException e) {
+            McUtils.sendErrorToClient("Failed to write " + name + " to CSV");
+        }
+        McUtils.sendMessageToClient(Component.literal(
+                ChatFormatting.GREEN + "Wrote " + name + " to CSV at " + csvOutputFile.getAbsolutePath()));
+    }
+
+    private void copyPreparationStatement() {
+        String clearDatabase = "DROP SCHEMA public CASCADE; CREATE SCHEMA public;";
+
         Set<String> typeNames = Managers.Function.getFunctions().stream()
                 .map(function -> function.getFunctionType().getSimpleName())
                 .collect(Collectors.toSet());
-        String enumString = typeNames.stream().map(name -> "'" + name + "'").collect(Collectors.joining(","));
+        String makeTypeEnum = "CREATE TYPE type AS ENUM ("
+                + typeNames.stream().map(name -> "'" + name + "'").collect(Collectors.joining(",")) + ");";
 
-        String makeTypeEnum = "CREATE TYPE type AS ENUM (" + enumString + ");";
-        try (PreparedStatement makeTypeEnumStatement = connection.prepareStatement(makeTypeEnum)) {
-            makeTypeEnumStatement.execute();
-            McUtils.sendMessageToClient(Component.literal(ChatFormatting.GREEN + "Created type enum"));
-        } catch (SQLException e) {
-            McUtils.sendErrorToClient("Failed to create type enum");
-            e.printStackTrace();
-            return false;
-        }
-        return true;
-    }
+        // order-preserving
+        String makeFunctionTable = "CREATE TABLE functions ("
+                + FUNCTION_MAP.entrySet().stream()
+                        .map(entry -> entry.getKey() + " " + entry.getValue())
+                        .collect(Collectors.joining(","))
+                + ");";
 
-    private boolean createFunctionTable() {
-        String makeFunctionTable = "CREATE TABLE Functions (" + "id serial PRIMARY KEY,"
-                + "name VARCHAR(255) UNIQUE NOT NULL,"
-                + "description TEXT NOT NULL,"
-                + "aliases VARCHAR(255)[],"
-                + "returnType type NOT NULL);";
-        try (PreparedStatement makeFunctionStatement = connection.prepareStatement(makeFunctionTable)) {
-            makeFunctionStatement.execute();
-            McUtils.sendMessageToClient(Component.literal(ChatFormatting.GREEN + "Created function table"));
-        } catch (SQLException e) {
-            McUtils.sendErrorToClient("Failed to create function table");
-            e.printStackTrace();
-            return false;
-        }
-        return true;
-    }
+        String makeArgumentTable = "CREATE TABLE arguments ("
+                + ARGUMENT_MAP.entrySet().stream()
+                        .map(entry -> entry.getKey() + " " + entry.getValue())
+                        .collect(Collectors.joining(","))
+                + ");";
 
-    private boolean createArgumentTable() {
-        String makeArgumentTable = "CREATE TABLE Arguments (" + "id serial PRIMARY KEY,"
-                + "name VARCHAR(255) NOT NULL,"
-                + "description TEXT NOT NULL,"
-                + "required BOOLEAN NOT NULL,"
-                + "functionId INTEGER REFERENCES Functions(id),"
-                + "type type NOT NULL,"
-                + "defaultValue VARCHAR(255));";
-        try (PreparedStatement makeArgumentStatement = connection.prepareStatement(makeArgumentTable)) {
-            makeArgumentStatement.execute();
-            McUtils.sendMessageToClient(Component.literal(ChatFormatting.GREEN + "Created argument table"));
-        } catch (SQLException e) {
-            McUtils.sendErrorToClient("Failed to create argument table");
-            e.printStackTrace();
-            return false;
-        }
-        return true;
-    }
-
-    private boolean insertFunctions() {
-        for (Function function : Managers.Function.getFunctions()) {
-            // id is auto generated
-            String insertFunction =
-                    "INSERT INTO Functions (name, description, aliases, returnType) VALUES (?, ?, ?, ?::type);";
-            String name = function.getName();
-            String description = function.getDescription();
-            List<String> aliases = function.getAliases();
-            String returnType = function.getFunctionType().getSimpleName();
-
-            try (PreparedStatement insertFunctionStatement = connection.prepareStatement(insertFunction)) {
-                insertFunctionStatement.setString(1, name);
-                insertFunctionStatement.setString(2, description);
-                insertFunctionStatement.setArray(3, connection.createArrayOf("VARCHAR", aliases.toArray()));
-                insertFunctionStatement.setString(4, returnType);
-                insertFunctionStatement.execute();
-            } catch (SQLException e) {
-                McUtils.sendErrorToClient("Failed to insert function " + name);
-                e.printStackTrace();
-                return false;
-            }
-        }
-        return true;
-    }
-
-    private boolean insertArguments() {
-        for (Function<?> function : Managers.Function.getFunctions()) {
-            for (FunctionArguments.Argument<?> argument :
-                    function.getArgumentsBuilder().getArguments()) {
-                String name = argument.getName();
-                String description = function.getTranslation("argument." + argument.getName());
-                boolean required = function.getArgumentsBuilder() instanceof FunctionArguments.RequiredArgumentBuilder;
-                String type = argument.getType().getSimpleName();
-
-                // get function id from populated function table
-                String getFunctionId = "SELECT id FROM Functions WHERE name = ?;";
-                int functionId;
-                try (PreparedStatement getFunctionIdStatement = connection.prepareStatement(getFunctionId)) {
-                    getFunctionIdStatement.setString(1, function.getName());
-                    getFunctionIdStatement.execute();
-                    getFunctionIdStatement.getResultSet().next();
-                    functionId = getFunctionIdStatement.getResultSet().getInt("id");
-                } catch (SQLException e) {
-                    McUtils.sendErrorToClient("Failed to get function id for " + function.getName());
-                    e.printStackTrace();
-                    return false;
-                }
-
-                String insertArgument =
-                        "INSERT INTO Arguments (name, description, required, functionId, type, defaultValue) VALUES (?, ?, ?, ?, ?::type, ?);";
-                try (PreparedStatement insertArgumentStatement = connection.prepareStatement(insertArgument)) {
-                    insertArgumentStatement.setString(1, name);
-                    insertArgumentStatement.setString(2, description);
-                    insertArgumentStatement.setBoolean(3, required);
-                    insertArgumentStatement.setInt(4, functionId);
-                    insertArgumentStatement.setString(5, type);
-                    insertArgumentStatement.setString(
-                            6, argument.getDefaultValue() == null ? null : String.valueOf(argument.getDefaultValue()));
-                    insertArgumentStatement.execute();
-                } catch (SQLException e) {
-                    McUtils.sendErrorToClient("Failed to insert argument " + name);
-                    e.printStackTrace();
-                    return false;
-                }
-            }
-        }
-        return true;
-    }
-
-    private void dumpFunctionstoDatabase() {
-        if (connection == null) {
-            try {
-                connection = DriverManager.getConnection(DB_URL, DB_USER, DB_PASS);
-            } catch (SQLException e) {
-                e.printStackTrace();
-                return;
-            }
-        }
-
-        if (!clearDatabase()) return;
-        if (!createTypeEnum()) return;
-        if (!createFunctionTable()) return;
-        if (!createArgumentTable()) return;
-        if (!insertFunctions()) return;
-        if (!insertArguments()) return;
-
-        McUtils.sendMessageToClient(Component.literal(ChatFormatting.GREEN + "Dumped functions to database"));
+        McUtils.mc().keyboardHandler.setClipboard(clearDatabase + makeTypeEnum + makeFunctionTable + makeArgumentTable);
+        McUtils.sendMessageToClient(
+                Component.literal(ChatFormatting.GREEN + "Copied database preparation statement to clipboard"));
     }
 }

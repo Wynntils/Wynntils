@@ -111,11 +111,6 @@ allprojects {
             custom "No empty line after opening curly brace", {
                 it.replaceAll(/\{\n\n/, '{\n')
             }
-            custom "Ensure credentials are not committed", {
-                if (it =~ /private static final String DB_(?:USER|PASS) = ".+"/) {
-                    throw new AssertionError("Do not commit database credentials. 'spotlessApply' cannot resolve this issue. You must regenerate the credentials if this was run by CI.")
-                }
-            }
             licenseHeader("/*\n" +
                     " * Copyright © Wynntils \$YEAR.\n" +
                     " * This file is released under AGPLv3. See LICENSE for full license details.\n" +
