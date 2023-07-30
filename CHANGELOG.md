@@ -1,9 +1,21 @@
+## [0.0.3-alpha.244](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.243...v0.0.3-alpha.244) (2023-07-30)
+
+
+### Bug Fixes
+
+* Fix bank jump buttons in housing storage items ([#1886](https://github.com/Wynntils/Artemis/issues/1886)) ([2766cae](https://github.com/Wynntils/Artemis/commit/2766cae613ec7168bb1b27dab31979f327cae551))
+
 ## [0.0.3-alpha.243](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.242...v0.0.3-alpha.243) (2023-07-30)
 
 
 ### Bug Fixes
 
 * fix guild map crashing with hybrid mode and api down ([#1895](https://github.com/Wynntils/Artemis/issues/1895)) ([2e7bcd1](https://github.com/Wynntils/Artemis/commit/2e7bcd1b0f064a4d7eb333b8a099ce973bff7c4d))
+
+
+### Miscellaneous Chores
+
+* **release:** v0.0.3-alpha.243 [skip ci] ([89caaf4](https://github.com/Wynntils/Artemis/commit/89caaf463f23935c188a2df41e5dafc7bd25ce48))
 
 ## [0.0.3-alpha.242](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.241...v0.0.3-alpha.242) (2023-07-30)
 
@@ -40,16 +52,4 @@
 ### Miscellaneous Chores
 
 * **release:** v0.0.3-alpha.240 [skip ci] ([c9f6b40](https://github.com/Wynntils/Artemis/commit/c9f6b401d9c48cc60969fe1e9745e49acefc78c4))
-
-## [0.0.3-alpha.239](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.238...v0.0.3-alpha.239) (2023-07-30)
-
-
-### Bug Fixes
-
-* Wrap overflowing splash text ([#1868](https://github.com/Wynntils/Artemis/issues/1868)) ([f3b0358](https://github.com/Wynntils/Artemis/commit/f3b0358b9b512fb0a8ff2970f4defb38899a80d4))
-
-
-### Miscellaneous Chores
-
-* **release:** v0.0.3-alpha.239 [skip ci] ([10b67d9](https://github.com/Wynntils/Artemis/commit/10b67d9ebb6069ed9b62a40b2af5ac193d9c3e85))
 
