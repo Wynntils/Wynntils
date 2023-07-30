@@ -313,7 +313,10 @@ public final class GuildMapScreen extends AbstractMapScreen {
                 TerritoryProfile territoryProfile = Models.Territory.getTerritoryProfile(poi.getName());
 
                 // If the API and advamcement pois don't match, we use the API pois without advancement info
-                if (territoryProfile.getGuild().equals(poi.getTerritoryInfo().getGuildName())) {
+                if (territoryProfile != null
+                        && territoryProfile
+                                .getGuild()
+                                .equals(poi.getTerritoryInfo().getGuildName())) {
                     renderedPois.add(poi);
                 } else {
                     renderedPois.add(new TerritoryPoi(territoryProfile, poi.getTerritoryInfo()));
