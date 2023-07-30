@@ -8,7 +8,7 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.components.Services;
 import com.wynntils.core.text.StyledText;
-import com.wynntils.screens.base.WynntilsListScreen;
+import com.wynntils.screens.base.BasicWynntilsListScreen;
 import com.wynntils.screens.base.widgets.BackButton;
 import com.wynntils.screens.base.widgets.PageSelectorButton;
 import com.wynntils.screens.base.widgets.ReloadButton;
@@ -34,7 +34,7 @@ import net.minecraft.core.Position;
 import net.minecraft.network.chat.Component;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 
-public final class WynntilsLootrunPathsScreen extends WynntilsListScreen<LootrunPathInstance, LootrunPathButton> {
+public final class WynntilsLootrunPathsScreen extends BasicWynntilsListScreen<LootrunPathInstance, LootrunPathButton> {
     private WynntilsLootrunPathsScreen() {
         super(Component.translatable("screens.wynntils.lootruns.name"));
 

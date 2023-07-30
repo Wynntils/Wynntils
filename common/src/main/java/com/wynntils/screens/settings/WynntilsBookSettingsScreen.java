@@ -16,6 +16,7 @@ import com.wynntils.core.persisted.config.Category;
 import com.wynntils.core.persisted.config.Config;
 import com.wynntils.core.text.StyledText;
 import com.wynntils.screens.base.TextboxScreen;
+import com.wynntils.screens.base.widgets.BasicSearchWidget;
 import com.wynntils.screens.base.widgets.SearchWidget;
 import com.wynntils.screens.base.widgets.TextInputBoxWidget;
 import com.wynntils.screens.base.widgets.WynntilsButton;
@@ -68,7 +69,7 @@ public final class WynntilsBookSettingsScreen extends WynntilsScreen implements 
     private WynntilsBookSettingsScreen() {
         super(Component.translatable("screens.wynntils.settingsScreen.name"));
 
-        searchWidget = new SearchWidget(
+        searchWidget = new BasicSearchWidget(
                 95, Texture.CONFIG_BOOK_BACKGROUND.height() - 32, 100, 20, s -> reloadConfigurableButtons(), this);
         setFocusedTextInput(searchWidget);
         reloadConfigurableButtons();

@@ -17,7 +17,7 @@ import com.wynntils.models.activities.type.ActivityStatus;
 import com.wynntils.screens.activities.widgets.DialogueHistoryButton;
 import com.wynntils.screens.activities.widgets.QuestButton;
 import com.wynntils.screens.activities.widgets.QuestInfoButton;
-import com.wynntils.screens.base.WynntilsListScreen;
+import com.wynntils.screens.base.BasicWynntilsListScreen;
 import com.wynntils.screens.base.widgets.BackButton;
 import com.wynntils.screens.base.widgets.FilterButton;
 import com.wynntils.screens.base.widgets.PageSelectorButton;
@@ -45,7 +45,7 @@ import net.minecraft.network.chat.Component;
 import net.minecraftforge.eventbus.api.EventPriority;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 
-public final class WynntilsQuestBookScreen extends WynntilsListScreen<QuestInfo, QuestButton>
+public final class WynntilsQuestBookScreen extends BasicWynntilsListScreen<QuestInfo, QuestButton>
         implements SortableActivityScreen {
     private QuestInfo trackingRequested = null;
     private boolean showQuests = true;

@@ -7,11 +7,12 @@ package com.wynntils.screens.guides.gear;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.wynntils.core.components.Models;
 import com.wynntils.core.text.StyledText;
-import com.wynntils.screens.base.WynntilsListScreen;
+import com.wynntils.models.items.WynnItem;
 import com.wynntils.screens.base.widgets.BackButton;
 import com.wynntils.screens.base.widgets.PageSelectorButton;
+import com.wynntils.screens.guides.WynnItemGuideScreen;
 import com.wynntils.screens.guides.WynntilsGuidesListScreen;
-import com.wynntils.utils.StringUtils;
+import com.wynntils.services.itemfilter.SearchQuery;
 import com.wynntils.utils.colors.CommonColors;
 import com.wynntils.utils.render.FontRenderer;
 import com.wynntils.utils.render.Texture;
@@ -19,11 +20,12 @@ import com.wynntils.utils.render.type.HorizontalAlignment;
 import com.wynntils.utils.render.type.TextShadow;
 import com.wynntils.utils.render.type.VerticalAlignment;
 import java.util.List;
+import java.util.Optional;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.resources.language.I18n;
 import net.minecraft.network.chat.Component;
 
-public final class WynntilsItemGuideScreen extends WynntilsListScreen<GuideGearItemStack, GuideGearItemStackButton> {
+public final class WynntilsItemGuideScreen extends WynnItemGuideScreen<GuideGearItemStack, GuideGearItemStackButton> {
     private static final int ELEMENTS_COLUMNS = 7;
     private static final int ELEMENT_ROWS = 7;
 
@@ -125,12 +127,15 @@ public final class WynntilsItemGuideScreen extends WynntilsListScreen<GuideGearI
                 this);
     }
 
-    @Override
-    protected void reloadElementsList(String searchTerm) {
+    protected void reloadElementsList(SearchQuery searchQuery) {
         elements.addAll(getAllGearItems().stream()
-                .filter(gearItemStack -> StringUtils.partialMatch(
-                        StyledText.fromComponent(gearItemStack.getHoverName()).getStringWithoutFormatting(),
-                        searchTerm))
+                .filter(itemStack -> {
+                    Optional<WynnItem> wynnItem = Models.Item.getWynnItem(itemStack);
+                    return wynnItem.isPresent()
+                            && searchQuery.filterMatches(wynnItem.get())
+                            && searchQuery.itemNameMatches(StyledText.fromComponent(itemStack.getHoverName())
+                                    .getStringWithoutFormatting());
+                })
                 .toList());
     }
 
