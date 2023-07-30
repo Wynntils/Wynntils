@@ -35,7 +35,7 @@ You can find some rules you have to follow to get your pull request in. Don't wo
     * Try to organize your methods in some way. We generally recommend public, protected then private methods as an order, but this can change depending on your class.
 
 ### Commit message conventions.
-We use conventional commit messages. Check out other PR titles, if you are unsure what that means.
+We use [conventional commit](https://www.conventionalcommits.org/en/v1.0.0/) messages. Check out other PR titles, if you are unsure what that means.
 
 # How to report a bug
 
