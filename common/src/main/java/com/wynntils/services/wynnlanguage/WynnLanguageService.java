@@ -51,7 +51,8 @@ public class WynnLanguageService extends Service {
 
     private void createTranslationMaps() {
         for (int i = 0; i < gavellianCharacters.size(); i++) {
-            gavellianMap.put(gavellianCharacters.get(i), englishCharacters.get(i).charAt(0));
+            gavellianMap.put(
+                    gavellianCharacters.get(i), englishCharacters.get(i).charAt(0));
         }
 
         for (int i = 0; i < wynnicCharacters.size(); i++) {

@@ -125,8 +125,8 @@ public class GavellianAndWynnicTranslationFeature extends Feature {
         String afterCursor = chatScreen.input.getValue().substring(chatScreen.input.getCursorPosition());
 
         if (beforeCursor.isBlank()
-                || !Services.WynnLanguageSerivce.getWynnicNumbers().contains(beforeCursor.charAt(beforeCursor.length() - 1)))
-            return;
+                || !Services.WynnLanguageSerivce.getWynnicNumbers()
+                        .contains(beforeCursor.charAt(beforeCursor.length() - 1))) return;
 
         String currentNumsStr = getWynnicNumBeforeCursor(beforeCursor);
 
@@ -377,7 +377,8 @@ public class GavellianAndWynnicTranslationFeature extends Feature {
             } else if (num == Services.WynnLanguageSerivce.getTen()) {
                 result += 10;
             } else {
-                int wynnIndex = Services.WynnLanguageSerivce.getWynnicCharacters().indexOf(num);
+                int wynnIndex =
+                        Services.WynnLanguageSerivce.getWynnicCharacters().indexOf(num);
 
                 result += Integer.parseInt(
                         Services.WynnLanguageSerivce.getEnglishCharacters().get(wynnIndex));
@@ -495,7 +496,8 @@ public class GavellianAndWynnicTranslationFeature extends Feature {
         for (char num : wynnicNum.toCharArray()) {
             int numIndex = Services.WynnLanguageSerivce.getWynnicCharacters().indexOf(num);
 
-            result += Integer.parseInt(Services.WynnLanguageSerivce.getEnglishCharacters().get(numIndex));
+            result += Integer.parseInt(
+                    Services.WynnLanguageSerivce.getEnglishCharacters().get(numIndex));
         }
 
         return result;
@@ -525,8 +527,8 @@ public class GavellianAndWynnicTranslationFeature extends Feature {
         wynnicNums.append(String.valueOf(Services.WynnLanguageSerivce.getTen()).repeat(Math.max(0, tens)));
 
         if (number > 0) {
-            wynnicNums.append(
-                    wynnic.get(Services.WynnLanguageSerivce.getEnglishCharacters().indexOf(Integer.toString(number))));
+            wynnicNums.append(wynnic.get(
+                    Services.WynnLanguageSerivce.getEnglishCharacters().indexOf(Integer.toString(number))));
         }
 
         return wynnicNums.toString();
