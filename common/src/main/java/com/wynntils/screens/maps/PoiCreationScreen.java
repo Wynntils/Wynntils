@@ -15,11 +15,14 @@ import com.wynntils.features.ui.CustomSeaskipperScreenFeature;
 import com.wynntils.screens.base.TextboxScreen;
 import com.wynntils.screens.base.widgets.TextInputBoxWidget;
 import com.wynntils.services.map.pois.CustomPoi;
+import com.wynntils.services.map.pois.Poi;
 import com.wynntils.utils.colors.CommonColors;
 import com.wynntils.utils.colors.CustomColor;
 import com.wynntils.utils.mc.McUtils;
+import com.wynntils.utils.mc.type.Location;
 import com.wynntils.utils.mc.type.PoiLocation;
 import com.wynntils.utils.render.FontRenderer;
+import com.wynntils.utils.render.MapRenderer;
 import com.wynntils.utils.render.RenderUtils;
 import com.wynntils.utils.render.Texture;
 import com.wynntils.utils.render.type.HorizontalAlignment;
@@ -30,6 +33,7 @@ import java.util.Optional;
 import java.util.regex.Pattern;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.screens.Screen;
+import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.resources.language.I18n;
 import net.minecraft.network.chat.Component;
 import org.lwjgl.glfw.GLFW;
@@ -49,6 +53,8 @@ public final class PoiCreationScreen extends AbstractMapScreen implements Textbo
     private TextInputBoxWidget yInput;
     private TextInputBoxWidget zInput;
     private TextInputBoxWidget colorInput;
+    private Integer parsedXInput;
+    private Integer parsedZInput;
 
     private Button saveButton;
 
@@ -111,8 +117,8 @@ public final class PoiCreationScreen extends AbstractMapScreen implements Textbo
         dividedWidth = this.width / GRID_DIVISIONS;
         dividedHeight = this.height / GRID_DIVISIONS;
 
-        renderX = dividedWidth * 35;
-        renderWidth = dividedWidth * 26;
+        renderX = dividedWidth * 32;
+        renderWidth = dividedWidth * 29;
         renderY = dividedHeight * 5;
         renderHeight = dividedHeight * 54;
 
@@ -154,8 +160,13 @@ public final class PoiCreationScreen extends AbstractMapScreen implements Textbo
                         (int) (dividedWidth * 3),
                         20,
                         s -> {
-                            xInput.setRenderColor(
-                                    COORDINATE_PATTERN.matcher(s).matches() ? CommonColors.GREEN : CommonColors.RED);
+                            if (COORDINATE_PATTERN.matcher(s).matches()) {
+                                parsedXInput = Integer.parseInt(s);
+                                xInput.setRenderColor(CommonColors.GREEN);
+                            } else {
+                                parsedXInput = null;
+                                xInput.setRenderColor(CommonColors.RED);
+                            }
                             updateSaveStatus();
                         },
                         this,
@@ -180,8 +191,13 @@ public final class PoiCreationScreen extends AbstractMapScreen implements Textbo
                         (int) (dividedWidth * 3),
                         20,
                         s -> {
-                            zInput.setRenderColor(
-                                    COORDINATE_PATTERN.matcher(s).matches() ? CommonColors.GREEN : CommonColors.RED);
+                            if (COORDINATE_PATTERN.matcher(s).matches()) {
+                                parsedZInput = Integer.parseInt(s);
+                                zInput.setRenderColor(CommonColors.GREEN);
+                            } else {
+                                parsedZInput = null;
+                                zInput.setRenderColor(CommonColors.RED);
+                            }
                             updateSaveStatus();
                         },
                         this,
@@ -316,13 +332,31 @@ public final class PoiCreationScreen extends AbstractMapScreen implements Textbo
                 (int) (renderX + renderedBorderXOffset), (int) (renderY + renderedBorderYOffset), (int) mapWidth, (int)
                         mapHeight);
 
+        if (parsedXInput != null && parsedZInput != null) {
+            Poi poi = new CustomPoi(new PoiLocation(parsedXInput, null, parsedZInput),
+                    nameInput.getTextBoxInput(),
+                    CustomColor.fromHexString(colorInput.getTextBoxInput()) == CustomColor.NONE ? CommonColors.WHITE
+                            : CustomColor.fromHexString(colorInput.getTextBoxInput()),
+                    Services.Poi.POI_ICONS.get(selectedIconIndex),
+                    selectedVisiblity);
+            MultiBufferSource.BufferSource bufferSource = McUtils.mc().renderBuffers().bufferSource();
+            poi.renderAt(poseStack,
+                    bufferSource,
+                    MapRenderer.getRenderX(poi, mapCenterX, centerX, currentZoom),
+                    MapRenderer.getRenderZ(poi, mapCenterZ, centerZ, currentZoom),
+                    hovered == poi,
+                    1,
+                    currentZoom);
+            bufferSource.endBatch();
+        }
+
         renderCursor(
                 poseStack,
                 1.5f,
-                Managers.Feature.getFeatureInstance(CustomSeaskipperScreenFeature.class)
+                Managers.Feature.getFeatureInstance(MainMapFeature.class)
                         .pointerColor
                         .get(),
-                Managers.Feature.getFeatureInstance(CustomSeaskipperScreenFeature.class)
+                Managers.Feature.getFeatureInstance(MainMapFeature.class)
                         .pointerType
                         .get());
 
