@@ -13,6 +13,7 @@ import com.wynntils.models.activities.ActivityModel;
 import com.wynntils.models.activities.caves.CaveModel;
 import com.wynntils.models.activities.discoveries.DiscoveryModel;
 import com.wynntils.models.activities.quests.QuestModel;
+import com.wynntils.models.beacons.BeaconModel;
 import com.wynntils.models.character.CharacterModel;
 import com.wynntils.models.character.CharacterSelectionModel;
 import com.wynntils.models.characterstats.CharacterStatsModel;
@@ -56,6 +57,7 @@ public final class Models {
     public static final AbilityTreeModel AbilityTree = new AbilityTreeModel();
     public static final ActivityModel Activity = new ActivityModel();
     public static final ArrowShieldModel ArrowShield = new ArrowShieldModel();
+    public static final BeaconModel Beacon = new BeaconModel();
     public static final BossBarModel BossBar = new BossBarModel();
     public static final CharacterModel Character = new CharacterModel();
     public static final CharacterSelectionModel CharacterSelection = new CharacterSelectionModel();

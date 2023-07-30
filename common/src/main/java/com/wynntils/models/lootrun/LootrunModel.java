@@ -5,12 +5,22 @@
 package com.wynntils.models.lootrun;
 
 import com.wynntils.core.WynntilsMod;
+import com.wynntils.core.components.Handlers;
 import com.wynntils.core.components.Model;
 import com.wynntils.core.text.StyledText;
 import com.wynntils.handlers.chat.event.ChatMessageReceivedEvent;
 import com.wynntils.handlers.chat.type.RecipientType;
+import com.wynntils.models.beacons.event.BeaconEvent;
+import com.wynntils.models.beacons.type.BeaconColor;
+import com.wynntils.models.beacons.type.VerifiedBeacon;
+import com.wynntils.models.lootrun.scoreboard.LootrunScoreboardPart;
+import com.wynntils.models.lootrun.type.LootrunningState;
 import com.wynntils.models.worlds.event.WorldStateEvent;
+import com.wynntils.utils.VectorUtils;
+import com.wynntils.utils.mc.McUtils;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
@@ -49,11 +59,21 @@ public class LootrunModel extends Model {
 
     private static final Pattern LOOTRUN_FAILED_PATTERN = Pattern.compile("[À\\s]*§c§lLootrun Failed!");
 
+    private static final float BEACON_REMOVAL_RADIUS = 25f;
+
+    private static final LootrunScoreboardPart LOOTRUN_SCOREBOARD_PART = new LootrunScoreboardPart();
+
     private LootrunFinishedEventBuilder.Completed lootrunCompletedBuilder;
     private LootrunFinishedEventBuilder.Failed lootrunFailedBuilder;
 
+    private LootrunningState lootrunningState = LootrunningState.NOT_RUNNING;
+    private Map<BeaconColor, Integer> currentLootrunBeacons = new HashMap<>();
+    private VerifiedBeacon currentBeacon;
+
     public LootrunModel() {
         super(List.of());
+
+        Handlers.Scoreboard.addPart(LOOTRUN_SCOREBOARD_PART);
     }
 
     @SubscribeEvent
@@ -83,6 +103,60 @@ public class LootrunModel extends Model {
     public void onWorldStateChanged(WorldStateEvent event) {
         lootrunCompletedBuilder = null;
         lootrunFailedBuilder = null;
+
+        // FIXME: Persist this in a later PR.
+        lootrunningState = LootrunningState.NOT_RUNNING;
+        currentLootrunBeacons = new HashMap<>();
+        currentBeacon = null;
+    }
+
+    // When we get close to a beacon, it get's removed.
+    // This is our signal to know that this is the current beacon, but we use the scorebaord to confirm it.
+    @SubscribeEvent
+    public void onBeaconRemove(BeaconEvent.Removed event) {
+        VerifiedBeacon beacon = event.getBeacon();
+
+        double distanceToPlayer = VectorUtils.distanceIgnoringY(
+                beacon.getPosition(), McUtils.mc().player.position());
+        if (distanceToPlayer < BEACON_REMOVAL_RADIUS) {
+            currentBeacon = event.getBeacon();
+        }
+    }
+
+    public int getBeaconCount(BeaconColor color) {
+        return currentLootrunBeacons.getOrDefault(color, 0);
+    }
+
+    public LootrunningState getState() {
+        return lootrunningState;
+    }
+
+    public void setState(LootrunningState newState) {
+        // If nothing changes, don't do anything.
+        if (this.lootrunningState == newState) return;
+
+        LootrunningState oldState = this.lootrunningState;
+        this.lootrunningState = newState;
+
+        handleStateChange(newState, oldState);
+    }
+
+    private void handleStateChange(LootrunningState newState, LootrunningState oldState) {
+        if (newState == LootrunningState.NOT_RUNNING) {
+            currentLootrunBeacons = new HashMap<>();
+            currentBeacon = null;
+            return;
+        }
+
+        if (oldState == LootrunningState.CHOOSING_BEACON
+                && newState == LootrunningState.IN_TASK
+                && currentBeacon != null) {
+            WynntilsMod.info("Selected a " + currentBeacon.getColor() + " beacon at " + currentBeacon.getPosition());
+            currentLootrunBeacons.put(
+                    currentBeacon.getColor(), currentLootrunBeacons.getOrDefault(currentBeacon.getColor(), 0) + 1);
+
+            return;
+        }
     }
 
     private void parseCompletedMessages(StyledText styledText) {

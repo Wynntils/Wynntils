@@ -4,6 +4,7 @@
  */
 package com.wynntils.utils;
 
+import net.minecraft.world.phys.Vec3;
 import org.joml.Vector2f;
 
 public final class VectorUtils {
@@ -27,5 +28,9 @@ public final class VectorUtils {
             float y = (a0 * c1 - a1 * c0) / det;
             return new Vector2f(x, y);
         }
+    }
+
+    public static float distanceIgnoringY(Vec3 v1, Vec3 v2) {
+        return (float) Math.sqrt(Math.pow(v1.x() - v2.x(), 2) + Math.pow(v1.z() - v2.z(), 2));
     }
 }
