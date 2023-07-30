@@ -24,16 +24,16 @@ public class WynnLanguageService extends Service {
     private static final int ONE_INDEX = 29;
     private static final int ONE_HUNDERED_INDEX = 40;
     private static final int TEN_INDEX = 38;
-    private static final List<String> english = List.of(
+    private static final List<String> englishCharacters = List.of(
             "a", "b", "c", "d", "e", "f", "g", "h", "i", "j", "k", "l", "m", "n", "o", "p", "q", "r", "s", "t", "u",
             "v", "w", "x", "y", "z", ".", "!", "?", "1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "50", "100");
-    private static final List<Character> gavellian = List.of(
+    private static final List<Character> gavellianCharacters = List.of(
             'ⓐ', 'ⓑ', 'ⓒ', 'ⓓ', 'ⓔ', 'ⓕ', 'ⓖ', 'ⓗ', 'ⓘ', 'ⓙ', 'ⓚ', 'ⓛ', 'ⓜ', 'ⓝ', 'ⓞ', 'ⓟ', 'ⓠ', 'ⓡ', 'ⓢ', 'ⓣ', 'ⓤ',
             'ⓥ', 'ⓦ', 'ⓧ', 'ⓨ', 'ⓩ');
-    private static final List<Character> wynnic = List.of(
+    private static final List<Character> wynnicCharacters = List.of(
             '⒜', '⒝', '⒞', '⒟', '⒠', '⒡', '⒢', '⒣', '⒤', '⒥', '⒦', '⒧', '⒨', '⒩', '⒪', '⒫', '⒬', '⒭', '⒮', '⒯', '⒰',
             '⒱', '⒲', '⒳', '⒴', '⒵', '０', '１', '２', '⑴', '⑵', '⑶', '⑷', '⑸', '⑹', '⑺', '⑻', '⑼', '⑽', '⑾', '⑿');
-    private static final List<Character> numbers = wynnic.subList(ONE_INDEX, ONE_HUNDERED_INDEX + 1);
+    private static final List<Character> wynnicNumbers = wynnicCharacters.subList(ONE_INDEX, ONE_HUNDERED_INDEX + 1);
     private static final Map<Character, Character> gavellianMap = new HashMap<>();
     private static final Map<Character, Character> wynnicMap = new HashMap<>();
     private static final StyledText GAVELLIAN_TRANSCRIBER = StyledText.fromString("§rHigh Gavellian Transcriber");
@@ -50,29 +50,29 @@ public class WynnLanguageService extends Service {
     }
 
     private void createTranslationMaps() {
-        for (int i = 0; i < gavellian.size(); i++) {
-            gavellianMap.put(gavellian.get(i), english.get(i).charAt(0));
+        for (int i = 0; i < gavellianCharacters.size(); i++) {
+            gavellianMap.put(gavellianCharacters.get(i), englishCharacters.get(i).charAt(0));
         }
 
-        for (int i = 0; i < wynnic.size(); i++) {
-            wynnicMap.put(wynnic.get(i), english.get(i).charAt(0));
+        for (int i = 0; i < wynnicCharacters.size(); i++) {
+            wynnicMap.put(wynnicCharacters.get(i), englishCharacters.get(i).charAt(0));
         }
     }
 
-    public List<Character> getGavellian() {
-        return gavellian;
+    public List<Character> getGavellianCharacters() {
+        return gavellianCharacters;
     }
 
-    public List<Character> getWynnic() {
-        return wynnic;
+    public List<Character> getWynnicCharacters() {
+        return wynnicCharacters;
     }
 
-    public List<String> getEnglish() {
-        return english;
+    public List<String> getEnglishCharacters() {
+        return englishCharacters;
     }
 
-    public List<Character> getNumbers() {
-        return Collections.unmodifiableList(numbers);
+    public List<Character> getWynnicNumbers() {
+        return Collections.unmodifiableList(wynnicNumbers);
     }
 
     public Character translateGavellian(Character characterToTranslate) {
@@ -92,15 +92,15 @@ public class WynnLanguageService extends Service {
     }
 
     public Character getFifty() {
-        return wynnic.get(FIFTY_INDEX);
+        return wynnicCharacters.get(FIFTY_INDEX);
     }
 
     public Character getOneHundered() {
-        return wynnic.get(ONE_HUNDERED_INDEX);
+        return wynnicCharacters.get(ONE_HUNDERED_INDEX);
     }
 
     public Character getTen() {
-        return wynnic.get(TEN_INDEX);
+        return wynnicCharacters.get(TEN_INDEX);
     }
 
     public boolean hasTranscriber(WynnLanguage transciberToFind) {

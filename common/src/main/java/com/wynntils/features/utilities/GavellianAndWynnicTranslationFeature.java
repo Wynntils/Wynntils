@@ -101,8 +101,8 @@ public class GavellianAndWynnicTranslationFeature extends Feature {
         if (selectedLanguage == WynnLanguage.DEFAULT) return;
 
         List<Character> replacementList = selectedLanguage == WynnLanguage.GAVELLIAN
-                ? Services.WynnLanguageSerivce.getGavellian()
-                : Services.WynnLanguageSerivce.getWynnic();
+                ? Services.WynnLanguageSerivce.getGavellianCharacters()
+                : Services.WynnLanguageSerivce.getWynnicCharacters();
 
         try {
             Integer.parseInt(event.getTextToWrite());
@@ -125,7 +125,7 @@ public class GavellianAndWynnicTranslationFeature extends Feature {
         String afterCursor = chatScreen.input.getValue().substring(chatScreen.input.getCursorPosition());
 
         if (beforeCursor.isBlank()
-                || !Services.WynnLanguageSerivce.getNumbers().contains(beforeCursor.charAt(beforeCursor.length() - 1)))
+                || !Services.WynnLanguageSerivce.getWynnicNumbers().contains(beforeCursor.charAt(beforeCursor.length() - 1)))
             return;
 
         String currentNumsStr = getWynnicNumBeforeCursor(beforeCursor);
@@ -288,7 +288,7 @@ public class GavellianAndWynnicTranslationFeature extends Feature {
 
     private void handleTypedCharacter(
             String typedChar, List<Character> replacementList, EditBoxInsertEvent event, ChatScreen chatScreen) {
-        int engIndex = Services.WynnLanguageSerivce.getEnglish().indexOf(typedChar.toLowerCase(Locale.ROOT));
+        int engIndex = Services.WynnLanguageSerivce.getEnglishCharacters().indexOf(typedChar.toLowerCase(Locale.ROOT));
 
         if (engIndex == -1) return;
         if (engIndex >= replacementList.size()) return;
@@ -308,9 +308,9 @@ public class GavellianAndWynnicTranslationFeature extends Feature {
         String afterCursor = input.substring(chatScreen.input.getCursorPosition());
 
         if (input.isBlank()
-                || !Services.WynnLanguageSerivce.getNumbers()
+                || !Services.WynnLanguageSerivce.getWynnicNumbers()
                         .contains(beforeCursor.charAt(beforeCursor.length() - 1))) {
-            int engIndex = Services.WynnLanguageSerivce.getEnglish().indexOf(typedNumber);
+            int engIndex = Services.WynnLanguageSerivce.getEnglishCharacters().indexOf(typedNumber);
 
             if (engIndex == -1) return;
 
@@ -339,7 +339,7 @@ public class GavellianAndWynnicTranslationFeature extends Feature {
     private String getWynnicNumBeforeCursor(String beforeCursor) {
         StringBuilder currentNumsStr = new StringBuilder();
 
-        List<Character> numbers = Services.WynnLanguageSerivce.getNumbers();
+        List<Character> numbers = Services.WynnLanguageSerivce.getWynnicNumbers();
 
         for (int i = beforeCursor.length() - 1; i >= 0; i--) {
             if (numbers.contains(beforeCursor.charAt(i))) {
@@ -377,10 +377,10 @@ public class GavellianAndWynnicTranslationFeature extends Feature {
             } else if (num == Services.WynnLanguageSerivce.getTen()) {
                 result += 10;
             } else {
-                int wynnIndex = Services.WynnLanguageSerivce.getWynnic().indexOf(num);
+                int wynnIndex = Services.WynnLanguageSerivce.getWynnicCharacters().indexOf(num);
 
                 result += Integer.parseInt(
-                        Services.WynnLanguageSerivce.getEnglish().get(wynnIndex));
+                        Services.WynnLanguageSerivce.getEnglishCharacters().get(wynnIndex));
             }
         }
 
@@ -395,8 +395,8 @@ public class GavellianAndWynnicTranslationFeature extends Feature {
         for (int i = message.length() - 1; i >= 0; i--) {
             char c = message.charAt(i);
 
-            if (Services.WynnLanguageSerivce.getGavellian().contains(c)
-                    || Services.WynnLanguageSerivce.getWynnic().contains(c)) {
+            if (Services.WynnLanguageSerivce.getGavellianCharacters().contains(c)
+                    || Services.WynnLanguageSerivce.getWynnicCharacters().contains(c)) {
                 return true;
             }
         }
@@ -493,9 +493,9 @@ public class GavellianAndWynnicTranslationFeature extends Feature {
         int result = 0;
 
         for (char num : wynnicNum.toCharArray()) {
-            int numIndex = Services.WynnLanguageSerivce.getWynnic().indexOf(num);
+            int numIndex = Services.WynnLanguageSerivce.getWynnicCharacters().indexOf(num);
 
-            result += Integer.parseInt(Services.WynnLanguageSerivce.getEnglish().get(numIndex));
+            result += Integer.parseInt(Services.WynnLanguageSerivce.getEnglishCharacters().get(numIndex));
         }
 
         return result;
@@ -504,7 +504,7 @@ public class GavellianAndWynnicTranslationFeature extends Feature {
     private String intToWynnicNum(int number) {
         StringBuilder wynnicNums = new StringBuilder();
 
-        List<Character> wynnic = Services.WynnLanguageSerivce.getWynnic();
+        List<Character> wynnic = Services.WynnLanguageSerivce.getWynnicCharacters();
 
         int hundereds = number / 100;
 
@@ -526,7 +526,7 @@ public class GavellianAndWynnicTranslationFeature extends Feature {
 
         if (number > 0) {
             wynnicNums.append(
-                    wynnic.get(Services.WynnLanguageSerivce.getEnglish().indexOf(Integer.toString(number))));
+                    wynnic.get(Services.WynnLanguageSerivce.getEnglishCharacters().indexOf(Integer.toString(number))));
         }
 
         return wynnicNums.toString();
