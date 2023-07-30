@@ -19,7 +19,7 @@ public class LootrunScoreboardPart extends ScoreboardPart {
     private static final Pattern CHOOSE_BEACON_PATTERN = Pattern.compile("^Choose a beacon!$");
 
     private static final Pattern LOOT_PATTERN = Pattern.compile("^Loot (\\d)/(\\d) chests!$");
-    private static final Pattern SLAY_PATTERN = Pattern.compile("^Slay! Wave (\\d) [-—] (\\d) (Target|Mob)s? Left!$");
+    private static final Pattern SLAY_PATTERN = Pattern.compile("^Slay! Wave (\\d) [-—] (\\d) Targets? Left!$");
     private static final Pattern DESTROY_PATTERN = Pattern.compile("^Destroy the objective!$");
     private static final Pattern DEFEND_PATTERN = Pattern.compile("^Defend for (\\d+)s!$");
 

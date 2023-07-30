@@ -111,21 +111,14 @@ public class LootrunModel extends Model {
     }
 
     // When we get close to a beacon, it get's removed.
-    // This is our signal to know that this can be the current beacon,
-    // but we don't know for sure until the scoreboard confirms it.
+    // This is our signal to know that this is the current beacon, but we use the scorebaord to confirm it.
     @SubscribeEvent
     public void onBeaconRemove(BeaconEvent.Removed event) {
         VerifiedBeacon beacon = event.getBeacon();
-        if (!beacon.getColor().getContentType().showsUpInLootruns()) return;
 
-        double newBeaconDistanceToPlayer = VectorUtils.distanceIgnoringY(
+        double distanceToPlayer = VectorUtils.distanceIgnoringY(
                 beacon.getPosition(), McUtils.mc().player.position());
-        double oldBeaconDistanceToPlayer = currentBeacon == null
-                ? Double.MAX_VALUE
-                : VectorUtils.distanceIgnoringY(
-                        currentBeacon.getPosition(), McUtils.mc().player.position());
-        if (newBeaconDistanceToPlayer < BEACON_REMOVAL_RADIUS
-                && newBeaconDistanceToPlayer < oldBeaconDistanceToPlayer) {
+        if (distanceToPlayer < BEACON_REMOVAL_RADIUS) {
             currentBeacon = event.getBeacon();
         }
     }
@@ -145,10 +138,10 @@ public class LootrunModel extends Model {
         LootrunningState oldState = this.lootrunningState;
         this.lootrunningState = newState;
 
-        handleStateChange(oldState, newState);
+        handleStateChange(newState, oldState);
     }
 
-    private void handleStateChange(LootrunningState oldState, LootrunningState newState) {
+    private void handleStateChange(LootrunningState newState, LootrunningState oldState) {
         if (newState == LootrunningState.NOT_RUNNING) {
             currentLootrunBeacons = new HashMap<>();
             currentBeacon = null;

@@ -10,7 +10,6 @@ import com.wynntils.mc.event.AddEntityEvent;
 import com.wynntils.mc.event.RemoveEntitiesEvent;
 import com.wynntils.mc.event.TeleportEntityEvent;
 import com.wynntils.models.beacons.event.BeaconEvent;
-import com.wynntils.models.beacons.type.BeaconColor;
 import com.wynntils.models.beacons.type.UnverifiedBeacon;
 import com.wynntils.models.beacons.type.VerifiedBeacon;
 import com.wynntils.utils.type.TimedSet;
@@ -19,9 +18,9 @@ import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 import java.util.concurrent.TimeUnit;
-import net.minecraft.core.Position;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 
 public class BeaconModel extends Model {
@@ -41,7 +40,7 @@ public class BeaconModel extends Model {
         if (event.getType() != EntityType.ARMOR_STAND) return;
 
         Entity entity = event.getEntity();
-        Position position = entity.position();
+        Vec3 position = entity.position();
 
         if (isDuplicateBeacon(position)) return;
 
@@ -59,16 +58,7 @@ public class BeaconModel extends Model {
         }
 
         if (unverifiedBeacon.getEntities().size() == VERIFICATION_ENTITY_COUNT) {
-            BeaconColor beaconColor = BeaconColor.fromUnverifiedBeacon(unverifiedBeacon);
-
-            if (beaconColor == null) {
-                WynntilsMod.warn("Could not determine beacon color at " + position + " for entities "
-                        + unverifiedBeacon.getEntities());
-                unverifiedBeacons.remove(unverifiedBeacon);
-                return;
-            }
-
-            VerifiedBeacon verifiedBeacon = VerifiedBeacon.fromUnverifiedBeacon(unverifiedBeacon, beaconColor);
+            VerifiedBeacon verifiedBeacon = VerifiedBeacon.fromUnverifiedBeacon(unverifiedBeacon);
             verifiedBeacons.add(verifiedBeacon);
             WynntilsMod.postEvent(new BeaconEvent.Added(verifiedBeacon));
 
@@ -104,17 +94,17 @@ public class BeaconModel extends Model {
         }
     }
 
-    private boolean isDuplicateBeacon(Position position) {
+    private boolean isDuplicateBeacon(Vec3 position) {
         return verifiedBeacons.stream().anyMatch(verifiedBeacon -> {
-            Position beaconPosition = verifiedBeacon.getPosition();
+            Vec3 beaconPosition = verifiedBeacon.getPosition();
             return beaconPosition.x() == position.x() && beaconPosition.z() == position.z();
         });
     }
 
-    private UnverifiedBeacon getUnverifiedBeaconAt(Position position) {
+    private UnverifiedBeacon getUnverifiedBeaconAt(Vec3 position) {
         return unverifiedBeacons.stream()
                 .filter(unverifiedBeacon -> {
-                    Position beaconPosition = unverifiedBeacon.getPosition();
+                    Vec3 beaconPosition = unverifiedBeacon.getPosition();
                     return beaconPosition.x() == position.x() && beaconPosition.z() == position.z();
                 })
                 .findFirst()

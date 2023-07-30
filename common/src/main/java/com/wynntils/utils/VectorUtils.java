@@ -4,7 +4,7 @@
  */
 package com.wynntils.utils;
 
-import net.minecraft.core.Position;
+import net.minecraft.world.phys.Vec3;
 import org.joml.Vector2f;
 
 public final class VectorUtils {
@@ -30,7 +30,7 @@ public final class VectorUtils {
         }
     }
 
-    public static float distanceIgnoringY(Position pos1, Position pos2) {
-        return (float) Math.sqrt(Math.pow(pos1.x() - pos2.x(), 2) + Math.pow(pos1.z() - pos2.z(), 2));
+    public static float distanceIgnoringY(Vec3 v1, Vec3 v2) {
+        return (float) Math.sqrt(Math.pow(v1.x() - v2.x(), 2) + Math.pow(v1.z() - v2.z(), 2));
     }
 }
