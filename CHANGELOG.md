@@ -1,9 +1,21 @@
+## [0.0.3-alpha.240](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.239...v0.0.3-alpha.240) (2023-07-30)
+
+
+### Bug Fixes
+
+* update map hash and fix reloading caches ([#1892](https://github.com/Wynntils/Artemis/issues/1892)) ([610598f](https://github.com/Wynntils/Artemis/commit/610598ff8b6ce299943eea33b3cd618f6c121412))
+
 ## [0.0.3-alpha.239](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.238...v0.0.3-alpha.239) (2023-07-30)
 
 
 ### Bug Fixes
 
 * Wrap overflowing splash text ([#1868](https://github.com/Wynntils/Artemis/issues/1868)) ([f3b0358](https://github.com/Wynntils/Artemis/commit/f3b0358b9b512fb0a8ff2970f4defb38899a80d4))
+
+
+### Miscellaneous Chores
+
+* **release:** v0.0.3-alpha.239 [skip ci] ([10b67d9](https://github.com/Wynntils/Artemis/commit/10b67d9ebb6069ed9b62a40b2af5ac193d9c3e85))
 
 ## [0.0.3-alpha.238](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.237...v0.0.3-alpha.238) (2023-07-30)
 
@@ -40,17 +52,4 @@
 ### Miscellaneous Chores
 
 * **release:** v0.0.3-alpha.236 [skip ci] ([db10c80](https://github.com/Wynntils/Artemis/commit/db10c802eda379f931d4840b560d6eca89356896))
-
-## [0.0.3-alpha.235](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.234...v0.0.3-alpha.235) (2023-07-29)
-
-
-### New Features
-
-* Add option to stack duplicate effects ([#1873](https://github.com/Wynntils/Artemis/issues/1873)) ([0a094fc](https://github.com/Wynntils/Artemis/commit/0a094fc28cdbd4e7528b9dcc684b04ab2cf06c5e))
-
-
-### Miscellaneous Chores
-
-* Add @RegisterStorage annotation to all Storage fields ([#1885](https://github.com/Wynntils/Artemis/issues/1885)) ([ade82ad](https://github.com/Wynntils/Artemis/commit/ade82ad89004b82a8fd41a6493e525883558d816))
-* **release:** v0.0.3-alpha.235 [skip ci] ([27bcc98](https://github.com/Wynntils/Artemis/commit/27bcc9808121317f1a57026a56b5e574ff3f73cc))
 
