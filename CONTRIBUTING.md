@@ -45,7 +45,7 @@ You are free to create issues as long as you check whether you are using the lat
 
 ### What to include?
 
-When filing an issue, make sure to answer these five questions:
+When filing an issue, make sure to answer these seven questions. We should be able to reproduce your issue with this information.
 
 1. What version of the mod are you using? Please include a full version number.
 2. What mod loader did you use?
