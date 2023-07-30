@@ -140,15 +140,15 @@ public class StatusEffectsOverlay extends Overlay {
 
         for (StatusEffect effect : effects) {
             RenderedStatusEffect entry = effectsToRender.get(effect.asString().getString());
-            
+
             if (entry == null) {
                 entry = new RenderedStatusEffect(effect);
                 effectsToRender.put(effect.asString().getString(), entry);
             }
-            
+
             entry.setCount(entry.getCount() + 1);
         }
-        
+
         return effectsToRender.values().stream();
     }
 
@@ -175,7 +175,7 @@ public class StatusEffectsOverlay extends Overlay {
             int index = Math.max(minusIndex, plusIndex);
 
             if (index == -1) {
-                 // We can simply put the count string at the start
+                // We can simply put the count string at the start
                 modifierText = StyledText.fromString(ChatFormatting.GRAY + (this.count + "x"))
                         .append(this.effect.getModifier());
             } else {
