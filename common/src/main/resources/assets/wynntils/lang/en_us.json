@@ -315,6 +315,8 @@
   "feature.wynntils.fixPacketBugs.description": "Fixes packet bugs that spam logs.",
   "feature.wynntils.fixPacketBugs.name": "Fix Packet Bugs",
   "feature.wynntils.fixSpellOverwrite.name": "Fix Spell Overwrite",
+  "feature.wynntils.functionDump.description": "Dumps all Wynntils functions and their arguments to CSV files.",
+  "feature.wynntils.functionDump.name": "Dump Functions to CSV",
   "feature.wynntils.gameBarsOverlay.description": "Adds pre-made bars to the screen as overlays displaying useful game information like mana and health.",
   "feature.wynntils.gameBarsOverlay.name": "Game Bars",
   "feature.wynntils.gameBarsOverlay.overlay.awakenedProgressBar.name": "Awakened Bar",
