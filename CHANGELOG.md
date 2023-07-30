@@ -1,9 +1,21 @@
+## [0.0.3-alpha.239](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.238...v0.0.3-alpha.239) (2023-07-30)
+
+
+### Bug Fixes
+
+* Wrap overflowing splash text ([#1868](https://github.com/Wynntils/Artemis/issues/1868)) ([f3b0358](https://github.com/Wynntils/Artemis/commit/f3b0358b9b512fb0a8ff2970f4defb38899a80d4))
+
 ## [0.0.3-alpha.238](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.237...v0.0.3-alpha.238) (2023-07-30)
 
 
 ### New Features
 
 * Dump functions to CSV files ([#1887](https://github.com/Wynntils/Artemis/issues/1887)) ([2473d46](https://github.com/Wynntils/Artemis/commit/2473d46ad6725b48776ec9aa2c4d63208a67b68c))
+
+
+### Miscellaneous Chores
+
+* **release:** v0.0.3-alpha.238 [skip ci] ([bc81e11](https://github.com/Wynntils/Artemis/commit/bc81e11fb81783404bd05e57a7645aa732753c04))
 
 ## [0.0.3-alpha.237](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.236...v0.0.3-alpha.237) (2023-07-29)
 
@@ -41,16 +53,4 @@
 
 * Add @RegisterStorage annotation to all Storage fields ([#1885](https://github.com/Wynntils/Artemis/issues/1885)) ([ade82ad](https://github.com/Wynntils/Artemis/commit/ade82ad89004b82a8fd41a6493e525883558d816))
 * **release:** v0.0.3-alpha.235 [skip ci] ([27bcc98](https://github.com/Wynntils/Artemis/commit/27bcc9808121317f1a57026a56b5e574ff3f73cc))
-
-## [0.0.3-alpha.234](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.233...v0.0.3-alpha.234) (2023-07-28)
-
-
-### New Features
-
-* improve stat screen formatting ([#1882](https://github.com/Wynntils/Artemis/issues/1882)) ([ae1250c](https://github.com/Wynntils/Artemis/commit/ae1250c14f6fa76b737a949efacf3bd9e05cfc78))
-
-
-### Miscellaneous Chores
-
-* **release:** v0.0.3-alpha.234 [skip ci] ([30e1976](https://github.com/Wynntils/Artemis/commit/30e19763fc41212bc5a36f63c71cb7db84a5803a))
 
