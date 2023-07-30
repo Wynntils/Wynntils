@@ -20,7 +20,7 @@ import com.wynntils.utils.render.type.VerticalAlignment;
 import com.wynntils.utils.type.CappedValue;
 
 public class HealthBarOverlay extends OverflowableBarOverlay {
-    @RegisterConfig("overlay.wynntils.healthBar.healthTexture")
+    @RegisterConfig(i18nKey = "overlay.wynntils.healthBar.healthTexture")
     public final Config<HealthTexture> healthTexture = new Config<>(HealthTexture.A);
 
     public HealthBarOverlay() {

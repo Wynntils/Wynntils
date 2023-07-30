@@ -28,20 +28,20 @@ import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 
 public abstract class BaseBarOverlay extends Overlay {
-    @RegisterConfig("feature.wynntils.gameBarsOverlay.overlay.baseBar.textShadow")
+    @RegisterConfig(i18nKey = "feature.wynntils.gameBarsOverlay.overlay.baseBar.textShadow")
     public final Config<TextShadow> textShadow = new Config<>(TextShadow.OUTLINE);
 
-    @RegisterConfig("feature.wynntils.gameBarsOverlay.overlay.baseBar.flip")
+    @RegisterConfig(i18nKey = "feature.wynntils.gameBarsOverlay.overlay.baseBar.flip")
     public final Config<Boolean> flip = new Config<>(false);
 
-    @RegisterConfig("feature.wynntils.gameBarsOverlay.overlay.baseBar.animationTime")
+    @RegisterConfig(i18nKey = "feature.wynntils.gameBarsOverlay.overlay.baseBar.animationTime")
     public final Config<Float> animationTime = new Config<>(2f);
 
-    @RegisterConfig("feature.wynntils.gameBarsOverlay.overlay.baseBar.shouldDisplayOriginal")
+    @RegisterConfig(i18nKey = "feature.wynntils.gameBarsOverlay.overlay.baseBar.shouldDisplayOriginal")
     public final Config<Boolean> shouldDisplayOriginal = new Config<>(false);
 
     // hacky override of custom color
-    @RegisterConfig("feature.wynntils.gameBarsOverlay.overlay.baseBar.textColor")
+    @RegisterConfig(i18nKey = "feature.wynntils.gameBarsOverlay.overlay.baseBar.textColor")
     public final Config<CustomColor> textColor = new Config<>(CommonColors.WHITE);
 
     protected float currentProgress = 0f;

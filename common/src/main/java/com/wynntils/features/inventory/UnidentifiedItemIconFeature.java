@@ -46,7 +46,7 @@ public class UnidentifiedItemIconFeature extends Feature {
 
     @SubscribeEvent
     public void onSlotRender(SlotRenderEvent.CountPre e) {
-        drawIcon(e.getPoseStack(), e.getSlot().getItem(), e.getSlot().x, e.getSlot().y, 300);
+        drawIcon(e.getPoseStack(), e.getSlot().getItem(), e.getSlot().x, e.getSlot().y, 200);
     }
 
     @SubscribeEvent
