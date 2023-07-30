@@ -51,9 +51,6 @@ public final class WynntilsMenuScreen extends WynntilsMenuScreenBase {
     private final List<List<WynntilsMenuButton>> buttons = new ArrayList<>();
     private WynntilsMenuButton hovered = null;
 
-    private static String splashText = "";
-    private static StyledText[] wrappedSplash = {};
-
     // This makes sure we "save" our status on the settings screen, and we reopen it in the same state
     private static final Screen settingsScreenInstance = WynntilsBookSettingsScreen.create();
 
@@ -379,12 +376,8 @@ public final class WynntilsMenuScreen extends WynntilsMenuScreenBase {
                         TextShadow.NONE);
 
         String currentSplash = Services.Splash.getCurrentSplash() == null ? "" : Services.Splash.getCurrentSplash();
-        if (!splashText.equals(currentSplash)) {
-            // No need to calculate this every frame
-            wrappedSplash = RenderedStringUtils.wrapTextBySize(
-                    StyledText.fromString(currentSplash), Texture.QUEST_BOOK_BACKGROUND.width() / 2 - 20);
-            splashText = currentSplash;
-        }
+        StyledText[] wrappedSplash = RenderedStringUtils.wrapTextBySize(
+                StyledText.fromString(currentSplash), Texture.QUEST_BOOK_BACKGROUND.width() / 2 - 20);
 
         for (int i = 0; i < wrappedSplash.length; i++) {
             FontRenderer.getInstance()
