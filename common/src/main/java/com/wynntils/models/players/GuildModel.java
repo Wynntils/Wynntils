@@ -28,7 +28,7 @@ public class GuildModel extends Model {
     // Recruiter is intentionally first, otherwise Recruit will incorrectly match first
     // This applies to all other patterns in this class involving guild ranks
     private static final Pattern GUILD_RANK_MATCHER =
-            Pattern.compile("§7Rank: §f(Recruiter|Recruit|Captain|Strategist|Chief|Owner)");
+            Pattern.compile("^§7Rank: §f(Recruit|Recruiter|Captain|Strategist|Chief|Owner)$");
 
     // Test suite: https://regexr.com/7hoae
     private static final Pattern MSG_LEFT_GUILD = Pattern.compile("§3You have left §b[a-zA-Z ]*§3!");
@@ -38,7 +38,7 @@ public class GuildModel extends Model {
 
     // Test suite: https://regexr.com/7hra2
     private static final Pattern MSG_RANK_CHANGED = Pattern.compile(
-            "§3\\[INFO]§b [\\w]{1,16} has set ([\\w]{1,16})'s? guild rank from (?:Recruit|Recruiter|Captain|Strategist|Chief|Owner) to (Recruit|Recruiter|Captain|Strategist|Chief|Owner)");
+            "^§3\\[INFO]§b [\\w]{1,16} has set ([\\w]{1,16})'s? guild rank from (?:Recruit|Recruiter|Captain|Strategist|Chief|Owner) to (Recruit|Recruiter|Captain|Strategist|Chief|Owner)$");
 
     private String guildName = "";
     private GuildRank guildRank;
