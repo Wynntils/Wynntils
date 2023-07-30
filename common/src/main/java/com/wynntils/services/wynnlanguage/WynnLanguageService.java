@@ -10,7 +10,6 @@ import com.wynntils.core.text.StyledText;
 import com.wynntils.models.activities.discoveries.DiscoveryInfo;
 import com.wynntils.models.activities.type.ActivitySortOrder;
 import com.wynntils.utils.mc.McUtils;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -33,7 +32,8 @@ public class WynnLanguageService extends Service {
     private static final List<Character> wynnicCharacters = List.of(
             '⒜', '⒝', '⒞', '⒟', '⒠', '⒡', '⒢', '⒣', '⒤', '⒥', '⒦', '⒧', '⒨', '⒩', '⒪', '⒫', '⒬', '⒭', '⒮', '⒯', '⒰',
             '⒱', '⒲', '⒳', '⒴', '⒵', '０', '１', '２');
-    private static final List<Character> wynnicNumbers = List.of('⑴', '⑵', '⑶', '⑷', '⑸', '⑹', '⑺', '⑻', '⑼', '⑽', '⑾', '⑿');
+    private static final List<Character> wynnicNumbers =
+            List.of('⑴', '⑵', '⑶', '⑷', '⑸', '⑹', '⑺', '⑻', '⑼', '⑽', '⑾', '⑿');
     private static final Map<Character, Character> englishToGavellianMap = new HashMap<>();
     private static final Map<Character, Character> englishToWynnicMap = new HashMap<>();
     private static final Map<Character, Character> gavellianToEnglishMap = new HashMap<>();
@@ -53,8 +53,7 @@ public class WynnLanguageService extends Service {
 
     private void createTranslationMaps() {
         for (int i = 0; i < gavellianCharacters.size(); i++) {
-            gavellianToEnglishMap.put(
-                    gavellianCharacters.get(i), englishCharacters.get(i));
+            gavellianToEnglishMap.put(gavellianCharacters.get(i), englishCharacters.get(i));
         }
 
         for (int i = 0; i < wynnicCharacters.size(); i++) {
@@ -62,8 +61,7 @@ public class WynnLanguageService extends Service {
         }
 
         for (int i = 0; i < gavellianCharacters.size(); i++) {
-            englishToGavellianMap.put(
-                    englishCharacters.get(i), gavellianCharacters.get(i));
+            englishToGavellianMap.put(englishCharacters.get(i), gavellianCharacters.get(i));
         }
 
         for (int i = 0; i < wynnicCharacters.size(); i++) {
