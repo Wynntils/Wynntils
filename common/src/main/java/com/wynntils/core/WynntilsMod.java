@@ -79,6 +79,7 @@ public final class WynntilsMod {
     public static void reloadAllComponentData() {
         componentMap.get(Manager.class).forEach(c -> ((Manager) c).reloadData());
         componentMap.get(Model.class).forEach(c -> ((Model) c).reloadData());
+        componentMap.get(Service.class).forEach(c -> ((Service) c).reloadData());
     }
 
     private static void handleExceptionInEventListener(Throwable t, Event event) {
