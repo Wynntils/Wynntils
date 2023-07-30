@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2022.
+ * Copyright © Wynntils 2022-2023.
  * This file is released under AGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.utils.render;
@@ -18,11 +18,10 @@ import com.wynntils.utils.colors.CommonColors;
 import com.wynntils.utils.colors.CustomColor;
 import com.wynntils.utils.mc.McUtils;
 import com.wynntils.utils.mc.TooltipUtils;
-import java.util.List;
-
 import com.wynntils.utils.render.type.HorizontalAlignment;
 import com.wynntils.utils.render.type.TextShadow;
 import com.wynntils.utils.render.type.VerticalAlignment;
+import java.util.List;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.screens.inventory.tooltip.ClientTooltipComponent;
 import net.minecraft.client.renderer.GameRenderer;
@@ -1114,7 +1113,8 @@ public final class RenderUtils {
         RenderSystem.stencilFunc(GL11.GL_ALWAYS, 0, 0xFF);
     }
 
-    public static void renderDebugGrid(PoseStack poseStack, float GRID_DIVISIONS, float dividedWidth, float dividedHeight) {
+    public static void renderDebugGrid(
+            PoseStack poseStack, float GRID_DIVISIONS, float dividedWidth, float dividedHeight) {
         for (int i = 1; i <= GRID_DIVISIONS - 1; i++) {
             double x = dividedWidth * i;
             double y = dividedHeight * i;

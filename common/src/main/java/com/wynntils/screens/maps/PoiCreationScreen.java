@@ -6,27 +6,20 @@ package com.wynntils.screens.maps;
 
 import com.mojang.blaze3d.platform.GlStateManager;
 import com.mojang.blaze3d.systems.RenderSystem;
-import com.mojang.blaze3d.vertex.BufferBuilder;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.wynntils.core.components.Managers;
-import com.wynntils.core.components.Models;
 import com.wynntils.core.components.Services;
-import com.wynntils.core.consumers.screens.WynntilsScreen;
 import com.wynntils.core.text.StyledText;
 import com.wynntils.features.map.MainMapFeature;
 import com.wynntils.features.ui.CustomSeaskipperScreenFeature;
-import com.wynntils.models.activities.caves.CaveInfo;
 import com.wynntils.screens.base.TextboxScreen;
 import com.wynntils.screens.base.widgets.TextInputBoxWidget;
-import com.wynntils.services.map.MapTexture;
 import com.wynntils.services.map.pois.CustomPoi;
 import com.wynntils.utils.colors.CommonColors;
 import com.wynntils.utils.colors.CustomColor;
 import com.wynntils.utils.mc.McUtils;
-import com.wynntils.utils.mc.type.Location;
 import com.wynntils.utils.mc.type.PoiLocation;
 import com.wynntils.utils.render.FontRenderer;
-import com.wynntils.utils.render.MapRenderer;
 import com.wynntils.utils.render.RenderUtils;
 import com.wynntils.utils.render.Texture;
 import com.wynntils.utils.render.type.HorizontalAlignment;
@@ -35,11 +28,8 @@ import com.wynntils.utils.render.type.VerticalAlignment;
 import java.util.List;
 import java.util.Optional;
 import java.util.regex.Pattern;
-
-import com.wynntils.utils.type.BoundingBox;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.screens.Screen;
-import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.resources.language.I18n;
 import net.minecraft.network.chat.Component;
 import org.lwjgl.glfw.GLFW;
@@ -294,7 +284,7 @@ public final class PoiCreationScreen extends AbstractMapScreen implements Textbo
 
         // region Screen Interactions
         this.addRenderableWidget(new Button.Builder(
-                Component.translatable("screens.wynntils.poiCreation.cancel"), (button) -> this.onClose())
+                        Component.translatable("screens.wynntils.poiCreation.cancel"), (button) -> this.onClose())
                 .pos((int) (dividedWidth * 6), (int) (dividedHeight * 54))
                 .size((int) (dividedWidth * 8), 20)
                 .build());
@@ -340,7 +330,7 @@ public final class PoiCreationScreen extends AbstractMapScreen implements Textbo
 
         renderBackground(poseStack);
         super.doRender(poseStack, mouseX, mouseY, partialTick);
-        //RenderUtils.renderDebugGrid(poseStack, GRID_DIVISIONS, dividedWidth, dividedHeight);
+        // RenderUtils.renderDebugGrid(poseStack, GRID_DIVISIONS, dividedWidth, dividedHeight);
 
         FontRenderer.getInstance()
                 .renderText(
@@ -451,7 +441,8 @@ public final class PoiCreationScreen extends AbstractMapScreen implements Textbo
 
         Texture texture = Services.Poi.POI_ICONS.get(selectedIconIndex);
         // left button x + (center between buttons - half of texture width)
-        float x = (dividedWidth * 10 + 20) + (((dividedWidth * 14) - (dividedWidth * 10 + 20)) / 2 - texture.width() / 2);
+        float x =
+                (dividedWidth * 10 + 20) + (((dividedWidth * 14) - (dividedWidth * 10 + 20)) / 2 - texture.width() / 2);
         RenderUtils.drawTexturedRect(poseStack, texture, x, dividedHeight * 34);
 
         RenderSystem.disableBlend();
