@@ -32,9 +32,9 @@ public enum BeaconColor {
         List<ItemStack> armorSlots = Lists.newArrayList(entity.getArmorSlots().iterator());
         if (armorSlots.size() != 4) return null;
 
-        ItemStack bootItem = armorSlots.get(3);
-        if (bootItem.getItem() == Items.GOLDEN_PICKAXE) {
-            return fromDamage(bootItem.getDamageValue());
+        ItemStack bootsItem = armorSlots.get(3);
+        if (bootsItem.getItem() == Items.GOLDEN_PICKAXE) {
+            return fromDamage(bootsItem.getDamageValue());
         }
 
         return null;
