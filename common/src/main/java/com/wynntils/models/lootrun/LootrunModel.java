@@ -111,7 +111,8 @@ public class LootrunModel extends Model {
     }
 
     // When we get close to a beacon, it get's removed.
-    // This is our signal to know that this is the current beacon, but we use the scorebaord to confirm it.
+    // This is our signal to know that this can be the current beacon,
+    // but we don't know for sure until scoreboard to confirms it.
     @SubscribeEvent
     public void onBeaconRemove(BeaconEvent.Removed event) {
         VerifiedBeacon beacon = event.getBeacon();
@@ -138,10 +139,10 @@ public class LootrunModel extends Model {
         LootrunningState oldState = this.lootrunningState;
         this.lootrunningState = newState;
 
-        handleStateChange(newState, oldState);
+        handleStateChange(oldState, newState);
     }
 
-    private void handleStateChange(LootrunningState newState, LootrunningState oldState) {
+    private void handleStateChange(LootrunningState oldState, LootrunningState newState) {
         if (newState == LootrunningState.NOT_RUNNING) {
             currentLootrunBeacons = new HashMap<>();
             currentBeacon = null;
