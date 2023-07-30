@@ -36,9 +36,9 @@ public class GuildModel extends Model {
     // Test suite: https://regexr.com/7hoah
     private static final Pattern MSG_JOINED_GUILD = Pattern.compile("§3You have joined §b([a-zA-Z ]*)§3!");
 
-    // Test suite: https://regexr.com/7hoak
+    // Test suite: https://regexr.com/7hra2
     private static final Pattern MSG_RANK_CHANGED = Pattern.compile(
-            "'s guild rank from (?:Recruiter|Recruit|Captain|Strategist|Chief|Owner) to (Recruiter|Recruit|Captain|Strategist|Chief|Owner)");
+            "§3\\[INFO]§b [\\w]{1,16} has set ([\\w]{1,16})'s? guild rank from (?:Recruit|Recruiter|Captain|Strategist|Chief|Owner) to (Recruit|Recruiter|Captain|Strategist|Chief|Owner)");
 
     private String guildName = "";
     private GuildRank guildRank;
@@ -68,16 +68,11 @@ public class GuildModel extends Model {
             return;
         }
 
-        if (message.startsWith("§3[INFO]§b ") && message.contains(McUtils.playerName() + "'s guild rank from")) {
-            // Username is checked first with simple string comparison
-            // Both versions of the 's string are checked as they will not include the color code
-            // Then determine rank with regex
-            // Username cannot be included in regex as at compile time it is unknown
-            Matcher rankChangedMatcher = message.getMatcher(MSG_RANK_CHANGED);
-            if (rankChangedMatcher.find()) {
-                guildRank = GuildRank.valueOf(rankChangedMatcher.group(1).toUpperCase(Locale.ROOT));
-                WynntilsMod.info("User's guild rank changed to " + guildRank);
-            }
+        Matcher rankChangedMatcher = message.getMatcher(MSG_RANK_CHANGED);
+        if (rankChangedMatcher.matches()) {
+            if (!rankChangedMatcher.group(1).equals(McUtils.playerName())) return;
+            guildRank = GuildRank.valueOf(rankChangedMatcher.group(2).toUpperCase(Locale.ROOT));
+            WynntilsMod.info("User's guild rank changed to " + guildRank);
         }
     }
 
