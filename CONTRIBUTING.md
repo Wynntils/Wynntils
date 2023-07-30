@@ -50,10 +50,10 @@ When filing an issue, make sure to answer these seven questions. We should be ab
 1. What version of the mod are you using? Please include a full version number.
 2. What mod loader did you use?
 3. Did you use any other mods?
-2. What operating system are you using?
-3. What did you do?
-4. What did you expect to see?
-5. What did you see instead?
+4. What operating system are you using?
+5. What did you do?
+6. What did you expect to see?
+7. What did you see instead?
 
 # How to suggest a feature or enhancement
 
