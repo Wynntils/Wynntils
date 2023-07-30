@@ -32,7 +32,7 @@ You can find some rules you have to follow to get your pull request in. Don't wo
     * Always use braces for loops. You can only emit braces after if(-else) statements, if the code fits in a single line, and you only call control flow statements (return, continue, break).
     * Try to keep your final and non-final fields in separate "blocks".
     * You should put every one of your field declarations in a new line (`private final int a, b` is disallowed).
-    * Try to organize your methods in some way. We generally recommend public, protected then private methods as an order, but this can change depending on your class.
+    * Try to organize your methods in some way. We generally recommend public (including @SubscribeEvent), protected then private methods as an order, but this can change depending on your class.
 
 ### Commit message conventions.
 We use [conventional commit](https://www.conventionalcommits.org/en/v1.0.0/) messages. Check out other PR titles, if you are unsure what that means.
