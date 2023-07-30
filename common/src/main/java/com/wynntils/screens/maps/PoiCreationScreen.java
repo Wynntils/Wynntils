@@ -163,6 +163,9 @@ public final class PoiCreationScreen extends AbstractMapScreen implements Textbo
                             if (COORDINATE_PATTERN.matcher(s).matches()) {
                                 parsedXInput = Integer.parseInt(s);
                                 xInput.setRenderColor(CommonColors.GREEN);
+                                if (parsedZInput != null) {
+                                    updateMapCenter(parsedXInput, parsedZInput);
+                                }
                             } else {
                                 parsedXInput = null;
                                 xInput.setRenderColor(CommonColors.RED);
@@ -194,6 +197,9 @@ public final class PoiCreationScreen extends AbstractMapScreen implements Textbo
                             if (COORDINATE_PATTERN.matcher(s).matches()) {
                                 parsedZInput = Integer.parseInt(s);
                                 zInput.setRenderColor(CommonColors.GREEN);
+                                if (parsedXInput != null) {
+                                    updateMapCenter(parsedXInput, parsedZInput);
+                                }
                             } else {
                                 parsedZInput = null;
                                 zInput.setRenderColor(CommonColors.RED);
