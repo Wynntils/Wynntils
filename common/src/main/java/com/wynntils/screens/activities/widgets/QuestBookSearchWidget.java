@@ -7,7 +7,6 @@ package com.wynntils.screens.activities.widgets;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.wynntils.screens.base.TextboxScreen;
 import com.wynntils.screens.base.widgets.BasicSearchWidget;
-import com.wynntils.screens.base.widgets.SearchWidget;
 import com.wynntils.utils.render.RenderUtils;
 import com.wynntils.utils.render.Texture;
 import com.wynntils.utils.type.Pair;
