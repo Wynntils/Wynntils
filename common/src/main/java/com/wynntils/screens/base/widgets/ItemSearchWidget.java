@@ -20,12 +20,12 @@ import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.components.Tooltip;
 import net.minecraft.network.chat.Component;
 
-public class ContainerSearchWidget extends SearchWidget {
+public class ItemSearchWidget extends SearchWidget {
     private SearchQuery searchQuery;
 
     private Consumer<SearchQuery> onSearchQueryUpdateConsumer;
 
-    public ContainerSearchWidget(
+    public ItemSearchWidget(
             int x,
             int y,
             int width,

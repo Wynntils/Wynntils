@@ -24,7 +24,7 @@ import com.wynntils.models.containers.type.SearchableContainerType;
 import com.wynntils.models.items.WynnItem;
 import com.wynntils.models.items.WynnItemCache;
 import com.wynntils.screens.base.widgets.BasicTexturedButton;
-import com.wynntils.screens.base.widgets.ContainerSearchWidget;
+import com.wynntils.screens.base.widgets.ItemSearchWidget;
 import com.wynntils.screens.base.widgets.SearchWidget;
 import com.wynntils.screens.base.widgets.WynntilsButton;
 import com.wynntils.services.itemfilter.SearchQuery;
@@ -217,7 +217,7 @@ public class ContainerSearchFeature extends Feature {
     }
 
     private void addWidgets(AbstractContainerScreen<ChestMenu> screen, int renderX, int renderY) {
-        ContainerSearchWidget searchWidget = new ContainerSearchWidget(
+        ItemSearchWidget searchWidget = new ItemSearchWidget(
                 renderX + screen.imageWidth - 175,
                 renderY - 20,
                 175,
