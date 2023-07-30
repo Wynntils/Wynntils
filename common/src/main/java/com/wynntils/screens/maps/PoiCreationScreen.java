@@ -11,7 +11,6 @@ import com.wynntils.core.components.Managers;
 import com.wynntils.core.components.Services;
 import com.wynntils.core.text.StyledText;
 import com.wynntils.features.map.MainMapFeature;
-import com.wynntils.features.ui.CustomSeaskipperScreenFeature;
 import com.wynntils.screens.base.TextboxScreen;
 import com.wynntils.screens.base.widgets.TextInputBoxWidget;
 import com.wynntils.services.map.pois.CustomPoi;
@@ -19,7 +18,6 @@ import com.wynntils.services.map.pois.Poi;
 import com.wynntils.utils.colors.CommonColors;
 import com.wynntils.utils.colors.CustomColor;
 import com.wynntils.utils.mc.McUtils;
-import com.wynntils.utils.mc.type.Location;
 import com.wynntils.utils.mc.type.PoiLocation;
 import com.wynntils.utils.render.FontRenderer;
 import com.wynntils.utils.render.MapRenderer;
@@ -339,14 +337,18 @@ public final class PoiCreationScreen extends AbstractMapScreen implements Textbo
                         mapHeight);
 
         if (parsedXInput != null && parsedZInput != null) {
-            Poi poi = new CustomPoi(new PoiLocation(parsedXInput, null, parsedZInput),
+            Poi poi = new CustomPoi(
+                    new PoiLocation(parsedXInput, null, parsedZInput),
                     nameInput.getTextBoxInput(),
-                    CustomColor.fromHexString(colorInput.getTextBoxInput()) == CustomColor.NONE ? CommonColors.WHITE
+                    CustomColor.fromHexString(colorInput.getTextBoxInput()) == CustomColor.NONE
+                            ? CommonColors.WHITE
                             : CustomColor.fromHexString(colorInput.getTextBoxInput()),
                     Services.Poi.POI_ICONS.get(selectedIconIndex),
                     selectedVisiblity);
-            MultiBufferSource.BufferSource bufferSource = McUtils.mc().renderBuffers().bufferSource();
-            poi.renderAt(poseStack,
+            MultiBufferSource.BufferSource bufferSource =
+                    McUtils.mc().renderBuffers().bufferSource();
+            poi.renderAt(
+                    poseStack,
                     bufferSource,
                     MapRenderer.getRenderX(poi, mapCenterX, centerX, currentZoom),
                     MapRenderer.getRenderZ(poi, mapCenterZ, centerZ, currentZoom),
