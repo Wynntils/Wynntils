@@ -1,9 +1,21 @@
+## [0.0.3-alpha.241](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.240...v0.0.3-alpha.241) (2023-07-30)
+
+
+### Bug Fixes
+
+* account for first challenge of the run of day message changes when parsing lootrun stats ([#1893](https://github.com/Wynntils/Artemis/issues/1893)) ([3e60aaf](https://github.com/Wynntils/Artemis/commit/3e60aaf68f1369a6161b239f54843509d253f431))
+
 ## [0.0.3-alpha.240](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.239...v0.0.3-alpha.240) (2023-07-30)
 
 
 ### Bug Fixes
 
 * update map hash and fix reloading caches ([#1892](https://github.com/Wynntils/Artemis/issues/1892)) ([610598f](https://github.com/Wynntils/Artemis/commit/610598ff8b6ce299943eea33b3cd618f6c121412))
+
+
+### Miscellaneous Chores
+
+* **release:** v0.0.3-alpha.240 [skip ci] ([c9f6b40](https://github.com/Wynntils/Artemis/commit/c9f6b401d9c48cc60969fe1e9745e49acefc78c4))
 
 ## [0.0.3-alpha.239](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.238...v0.0.3-alpha.239) (2023-07-30)
 
@@ -40,16 +52,4 @@
 ### Miscellaneous Chores
 
 * **release:** v0.0.3-alpha.237 [skip ci] ([7145385](https://github.com/Wynntils/Artemis/commit/714538506e6628e82385d545babb6caea4c5153c))
-
-## [0.0.3-alpha.236](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.235...v0.0.3-alpha.236) (2023-07-29)
-
-
-### Bug Fixes
-
-* fix storage system duplicating every config ([#1889](https://github.com/Wynntils/Artemis/issues/1889)) ([5c854e8](https://github.com/Wynntils/Artemis/commit/5c854e87d8818e724def684e525c859f6f5a6e20))
-
-
-### Miscellaneous Chores
-
-* **release:** v0.0.3-alpha.236 [skip ci] ([db10c80](https://github.com/Wynntils/Artemis/commit/db10c802eda379f931d4840b560d6eca89356896))
 
