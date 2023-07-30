@@ -32,12 +32,12 @@ import net.minecraft.network.chat.Component;
 
 @StartDisabled
 @ConfigCategory(Category.DEBUG)
-public class DumpFunctionsToDatabaseFeature extends Feature {
+public class FunctionDumpFeature extends Feature {
     private static final Map<String, String> FUNCTION_MAP = new LinkedHashMap<>();
     private static final Map<String, String> ARGUMENT_MAP = new LinkedHashMap<>();
 
     @RegisterCommand
-    private final LiteralCommandNode<CommandSourceStack> dumpCommand = Commands.literal("dumpFunctionsToDatabase")
+    private final LiteralCommandNode<CommandSourceStack> dumpCommand = Commands.literal("dumpFunctions")
             .executes(ctx -> {
                 FUNCTION_MAP.put("id", "serial PRIMARY KEY");
                 FUNCTION_MAP.put("name", "VARCHAR(255) UNIQUE NOT NULL");
