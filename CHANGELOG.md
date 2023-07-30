@@ -1,9 +1,21 @@
+## [0.0.3-alpha.243](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.242...v0.0.3-alpha.243) (2023-07-30)
+
+
+### Bug Fixes
+
+* fix guild map crashing with hybrid mode and api down ([#1895](https://github.com/Wynntils/Artemis/issues/1895)) ([2e7bcd1](https://github.com/Wynntils/Artemis/commit/2e7bcd1b0f064a4d7eb333b8a099ce973bff7c4d))
+
 ## [0.0.3-alpha.242](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.241...v0.0.3-alpha.242) (2023-07-30)
 
 
 ### New Features
 
 * add a small-map in the caves screen ([#1894](https://github.com/Wynntils/Artemis/issues/1894)) ([6008639](https://github.com/Wynntils/Artemis/commit/6008639722ea03982a21edfa7b6fb07416b921d6))
+
+
+### Miscellaneous Chores
+
+* **release:** v0.0.3-alpha.242 [skip ci] ([c8453a5](https://github.com/Wynntils/Artemis/commit/c8453a5e3fe62a86a87f78f3d4408a9154f512c9))
 
 ## [0.0.3-alpha.241](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.240...v0.0.3-alpha.241) (2023-07-30)
 
@@ -40,16 +52,4 @@
 ### Miscellaneous Chores
 
 * **release:** v0.0.3-alpha.239 [skip ci] ([10b67d9](https://github.com/Wynntils/Artemis/commit/10b67d9ebb6069ed9b62a40b2af5ac193d9c3e85))
-
-## [0.0.3-alpha.238](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.237...v0.0.3-alpha.238) (2023-07-30)
-
-
-### New Features
-
-* Dump functions to CSV files ([#1887](https://github.com/Wynntils/Artemis/issues/1887)) ([2473d46](https://github.com/Wynntils/Artemis/commit/2473d46ad6725b48776ec9aa2c4d63208a67b68c))
-
-
-### Miscellaneous Chores
-
-* **release:** v0.0.3-alpha.238 [skip ci] ([bc81e11](https://github.com/Wynntils/Artemis/commit/bc81e11fb81783404bd05e57a7645aa732753c04))
 
