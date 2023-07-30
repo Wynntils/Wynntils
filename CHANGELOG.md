@@ -1,9 +1,21 @@
+## [0.0.3-alpha.238](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.237...v0.0.3-alpha.238) (2023-07-30)
+
+
+### New Features
+
+* Dump functions to CSV files ([#1887](https://github.com/Wynntils/Artemis/issues/1887)) ([2473d46](https://github.com/Wynntils/Artemis/commit/2473d46ad6725b48776ec9aa2c4d63208a67b68c))
+
 ## [0.0.3-alpha.237](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.236...v0.0.3-alpha.237) (2023-07-29)
 
 
 ### Bug Fixes
 
 * Fix item highlights not always working in reward chest (+fix unidentified item icons rendering above text) ([#1890](https://github.com/Wynntils/Artemis/issues/1890)) ([70c1146](https://github.com/Wynntils/Artemis/commit/70c1146942ad4d5242e59f4ccc8b63bc08b4cde2))
+
+
+### Miscellaneous Chores
+
+* **release:** v0.0.3-alpha.237 [skip ci] ([7145385](https://github.com/Wynntils/Artemis/commit/714538506e6628e82385d545babb6caea4c5153c))
 
 ## [0.0.3-alpha.236](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.235...v0.0.3-alpha.236) (2023-07-29)
 
@@ -41,16 +53,4 @@
 ### Miscellaneous Chores
 
 * **release:** v0.0.3-alpha.234 [skip ci] ([30e1976](https://github.com/Wynntils/Artemis/commit/30e19763fc41212bc5a36f63c71cb7db84a5803a))
-
-## [0.0.3-alpha.233](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.232...v0.0.3-alpha.233) (2023-07-28)
-
-
-### Miscellaneous Chores
-
-* **release:** v0.0.3-alpha.233 [skip ci] ([dfc4ab9](https://github.com/Wynntils/Artemis/commit/dfc4ab9fcb682a99a5e404c469c14770e25027b1))
-
-
-### Code Refactoring
-
-* Clarify what @RegisterConfig argument means ([#1884](https://github.com/Wynntils/Artemis/issues/1884)) ([38a48d4](https://github.com/Wynntils/Artemis/commit/38a48d4126240f586d781a31e280afa35c0ff087))
 
