@@ -455,13 +455,13 @@ public class GavellianAndWynnicTranslationFeature extends Feature {
 
         if (language == WynnLanguage.GAVELLIAN) {
             for (char character : original.toCharArray()) {
-                Character replacement = Services.WynnLanguageSerivce.translateWynnic(character);
+                Character replacement = Services.WynnLanguageSerivce.translateGavellian(character);
 
                 if (!replacement.equals(character)) {
                     if (useColors) {
                         translated = translated.replace(
                                 Character.valueOf(character).toString(),
-                                wynnicColor.get().getChatFormatting() + replacement.toString() + defaultColor);
+                                gavellianColor.get().getChatFormatting() + replacement.toString() + defaultColor);
                     } else {
                         translated = translated.replace(character, replacement);
                     }
@@ -473,13 +473,13 @@ public class GavellianAndWynnicTranslationFeature extends Feature {
             translated = numMatcher.replaceAll(match -> intToWynnicNum(Integer.parseInt(match.group())));
 
             for (char character : original.toCharArray()) {
-                Character replacement = Services.WynnLanguageSerivce.translateGavellian(character);
+                Character replacement = Services.WynnLanguageSerivce.translateWynnic(character);
 
                 if (!replacement.equals(character)) {
                     if (useColors) {
                         translated = translated.replace(
                                 Character.valueOf(character).toString(),
-                                gavellianColor.get().getChatFormatting() + replacement.toString() + defaultColor);
+                                wynnicColor.get().getChatFormatting() + replacement.toString() + defaultColor);
                     } else {
                         translated = translated.replace(character, replacement);
                     }
