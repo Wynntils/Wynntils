@@ -29,10 +29,11 @@ You can find some rules you have to follow to get your pull request in. Don't wo
 1. Only change what is necessary to achieve your goal. It is hard to review and bug-prone to add commits that change a lot of unrelated code, or do unnecessary changes.
 2. Check if your code passes `spotlessCheck`. You can check this by running the `spotlessCheck` task in gradle. If there are changes to be made, `spotlessApply` can resolve some (but not all) of them.
 3. Other than enforcing code format with `spotless`, we also have some general code style rules:
-    * Always use braces for loops. You can only emit braces after if(-else) statements, if the code fits in a single line, and you only call control flow statements (return, continue, break).
+    * Always use braces for control statements such as loops or conditions. You can only emit braces after if statements, if the code fits in a single line, and you only call control flow statements (return, continue, break), and there is no else clause.
     * Try to keep your final and non-final fields in separate "blocks".
     * You should put every one of your field declarations in a new line (`private final int a, b` is disallowed).
     * Try to organize your methods in some way. We generally recommend public (including @SubscribeEvent), protected then private methods as an order, but this can change depending on your class.
+    * Adapt your code style to the surrounding code. We have sometimes adopted more informal coding style rules than what are written here. Have a look at some different files and try to mimic what you see. This will decrease the amount of churn needed to get your PR accepted.
 
 ### Commit message conventions.
 We use [conventional commit](https://www.conventionalcommits.org/en/v1.0.0/) messages. Check out other PR titles, if you are unsure what that means.
