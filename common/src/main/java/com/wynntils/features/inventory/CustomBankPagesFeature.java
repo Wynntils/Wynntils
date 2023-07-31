@@ -149,8 +149,8 @@ public class CustomBankPagesFeature extends Feature {
         if (BUTTON_SLOTS.contains(slotIndex)) {
             int buttonIndex = BUTTON_SLOTS.indexOf(slotIndex);
             pageDestination = customJumpDestinations.get(buttonIndex);
-            int defaultDestination = getDefaultJumpDestinations().get(buttonIndex);
-            if (pageDestination != defaultDestination) {
+            int wynnDestination = QUICK_JUMP_DESTINATIONS.get(buttonIndex);
+            if (pageDestination != wynnDestination) {
                 e.setCanceled(true);
                 jumpToDestination();
             }

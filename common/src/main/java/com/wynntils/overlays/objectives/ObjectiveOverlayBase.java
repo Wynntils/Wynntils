@@ -17,16 +17,16 @@ import com.wynntils.utils.render.type.VerticalAlignment;
 public abstract class ObjectiveOverlayBase extends Overlay {
     protected static final float SPACE_BETWEEN = 10;
 
-    @RegisterConfig("feature.wynntils.objectivesOverlay.overlay.objectiveOverlayBase.hideOnInactivity")
+    @RegisterConfig(i18nKey = "feature.wynntils.objectivesOverlay.overlay.objectiveOverlayBase.hideOnInactivity")
     public final Config<Boolean> hideOnInactivity = new Config<>(false);
 
-    @RegisterConfig("feature.wynntils.objectivesOverlay.overlay.objectiveOverlayBase.enableProgressBar")
+    @RegisterConfig(i18nKey = "feature.wynntils.objectivesOverlay.overlay.objectiveOverlayBase.enableProgressBar")
     public final Config<Boolean> enableProgressBar = new Config<>(true);
 
-    @RegisterConfig("overlay.wynntils.objectivesTexture")
+    @RegisterConfig(i18nKey = "overlay.wynntils.objectivesTexture")
     public final Config<ObjectivesTextures> objectivesTexture = new Config<>(ObjectivesTextures.A);
 
-    @RegisterConfig("feature.wynntils.objectivesOverlay.overlay.objectiveOverlayBase.textShadow")
+    @RegisterConfig(i18nKey = "feature.wynntils.objectivesOverlay.overlay.objectiveOverlayBase.textShadow")
     public final Config<TextShadow> textShadow = new Config<>(TextShadow.OUTLINE);
 
     protected ObjectiveOverlayBase(

@@ -236,7 +236,11 @@ public abstract class AbstractMapScreen extends WynntilsScreen {
 
     @Override
     public boolean mouseDragged(double mouseX, double mouseY, int button, double dragX, double dragY) {
-        if (button == 0) {
+        if (button == 0
+                && mouseX >= renderX
+                && mouseX <= renderX + renderWidth
+                && mouseY >= renderY
+                && mouseY <= renderY + renderHeight) {
             updateMapCenter((float) (mapCenterX - dragX / currentZoom), (float) (mapCenterZ - dragY / currentZoom));
         }
         return super.mouseDragged(mouseX, mouseY, button, dragX, dragY);

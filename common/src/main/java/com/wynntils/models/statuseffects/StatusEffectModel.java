@@ -34,8 +34,10 @@ public final class StatusEffectModel extends Model {
      *
      * <p>Originally taken from: <a href="https://github.com/Wynntils/Wynntils/pull/615">Legacy</a>
      */
-    private static final Pattern STATUS_EFFECT_PATTERN =
-            Pattern.compile("(.+?§7 ?(?:\\d+(?:\\.\\d+)?%)?) ?([%\\-+\\/\\da-zA-Z'\\s]+?) §[84a]\\((.+?)\\).*");
+    private static final Pattern STATUS_EFFECT_PATTERN = Pattern.compile(
+            "(?<prefix>.+?)(?<modifier>§7 ?([%\\-+\\.\\/\\d]+s?)?) *(?<name>[a-zA-Z\\s]+?) (?<timer>§[84a]\\((.+?)\\)).*");
+
+    private static final Pattern MODIFIER_REGEX = Pattern.compile("§7 ??([%\\-+\\.\\/\\d]+s?)");
 
     private static final StyledText STATUS_EFFECTS_TITLE = StyledText.fromString("§d§lStatus Effects");
 
@@ -64,7 +66,6 @@ public final class StatusEffectModel extends Model {
                 statusEffects = List.of(); // No timers, get rid of them
                 WynntilsMod.postEvent(new StatusEffectsChangedEvent());
             }
-
             return;
         }
 
@@ -87,7 +88,18 @@ public final class StatusEffectModel extends Model {
             StyledText prefix = parts.get(0);
             StyledText name = parts.get(1);
             StyledText displayedTime = parts.get(2);
-            newStatusEffects.add(new StatusEffect(name, displayedTime, prefix));
+            StyledText modifier;
+
+            // Split the modifier and name, which are separated by a space
+            StyledText[] modifierStr = name.split("\\s");
+            if (modifierStr[0].matches(MODIFIER_REGEX)) {
+                modifier = modifierStr[0];
+                name = name.substring(modifier.length()).trim(); // Get all but first part of the string
+            } else {
+                modifier = StyledText.EMPTY;
+            }
+
+            newStatusEffects.add(new StatusEffect(name, modifier, displayedTime, prefix));
         }
 
         statusEffects = newStatusEffects;

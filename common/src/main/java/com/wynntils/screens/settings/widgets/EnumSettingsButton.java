@@ -6,6 +6,7 @@ package com.wynntils.screens.settings.widgets;
 
 import com.wynntils.core.config.ConfigHolder;
 import com.wynntils.utils.EnumUtils;
+import com.wynntils.utils.mc.ComponentUtils;
 import com.wynntils.utils.mc.McUtils;
 import com.wynntils.utils.render.FontRenderer;
 import java.lang.reflect.Type;
@@ -26,7 +27,7 @@ public class EnumSettingsButton<E extends Enum<E>> extends GeneralSettingsButton
                 getWidth(configHolder.getType()),
                 FontRenderer.getInstance().getFont().lineHeight + 8,
                 Component.literal(configHolder.getValueString()),
-                List.of(Component.literal(configHolder.getDescription())));
+                ComponentUtils.wrapTooltips(List.of(Component.literal(configHolder.getDescription())), 150));
         this.configHolder = configHolder;
         enumConstants =
                 EnumSet.allOf((Class<E>) configHolder.getType()).stream().toList();
