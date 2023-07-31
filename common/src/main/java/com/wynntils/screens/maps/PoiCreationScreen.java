@@ -126,7 +126,7 @@ public final class PoiCreationScreen extends AbstractMapScreen implements Textbo
         renderedBorderXOffset = 3 * borderScaleX;
         renderedBorderYOffset = 3 * borderScaleY;
 
-        mapWidth = renderWidth - renderedBorderXOffset * 2f;
+        mapWidth = renderWidth - renderedBorderXOffset * 2f + 1; // +1 to fix rounding causing black line on the right
         centerX = renderX + renderedBorderXOffset + mapWidth / 2f;
         mapHeight = renderHeight - renderedBorderYOffset * 2f;
         centerZ = renderY + renderedBorderYOffset + mapHeight / 2f;
