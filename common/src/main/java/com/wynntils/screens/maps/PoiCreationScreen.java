@@ -496,6 +496,17 @@ public final class PoiCreationScreen extends AbstractMapScreen implements Textbo
     }
 
     @Override
+    public boolean doMouseClicked(double mouseX, double mouseY, int button) {
+        if (button == GLFW.GLFW_MOUSE_BUTTON_MIDDLE) {
+            int gameX = (int) ((mouseX - centerX) / currentZoom + mapCenterX);
+            int gameZ = (int) ((mouseY - centerZ) / currentZoom + mapCenterZ);
+            xInput.setTextBoxInput(String.valueOf(gameX));
+            zInput.setTextBoxInput(String.valueOf(gameZ));
+        }
+        return super.doMouseClicked(mouseX, mouseY, button);
+    }
+
+    @Override
     public boolean charTyped(char codePoint, int modifiers) {
         return (focusedTextInput != null && focusedTextInput.charTyped(codePoint, modifiers))
                 || super.charTyped(codePoint, modifiers);
