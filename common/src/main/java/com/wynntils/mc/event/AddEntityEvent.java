@@ -6,6 +6,7 @@ package com.wynntils.mc.event;
 
 import java.util.UUID;
 import net.minecraft.network.protocol.game.ClientboundAddEntityPacket;
+import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraftforge.eventbus.api.Event;
 
@@ -23,8 +24,9 @@ public class AddEntityEvent extends Event {
     private final float yRot;
     private final float yHeadRot;
     private final int data;
+    private final Entity entity;
 
-    public AddEntityEvent(ClientboundAddEntityPacket packet) {
+    public AddEntityEvent(ClientboundAddEntityPacket packet, Entity entity) {
         this.id = packet.getId();
         this.uuid = packet.getUUID();
         this.type = packet.getType();
@@ -38,6 +40,7 @@ public class AddEntityEvent extends Event {
         this.yRot = packet.getYRot();
         this.yHeadRot = packet.getYHeadRot();
         this.data = packet.getData();
+        this.entity = entity;
     }
 
     public int getId() {
@@ -90,5 +93,9 @@ public class AddEntityEvent extends Event {
 
     public int getData() {
         return data;
+    }
+
+    public Entity getEntity() {
+        return entity;
     }
 }
