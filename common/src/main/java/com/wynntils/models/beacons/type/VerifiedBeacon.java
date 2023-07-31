@@ -6,16 +6,16 @@ package com.wynntils.models.beacons.type;
 
 import com.google.common.collect.ImmutableList;
 import java.util.List;
+import net.minecraft.core.Position;
 import net.minecraft.world.entity.Entity;
-import net.minecraft.world.phys.Vec3;
 
 public final class VerifiedBeacon {
     private final List<Entity> entities;
     private final BeaconColor color;
 
-    private Vec3 position;
+    private Position position;
 
-    private VerifiedBeacon(Vec3 position, BeaconColor beaconColor, List<Entity> entities) {
+    private VerifiedBeacon(Position position, BeaconColor beaconColor, List<Entity> entities) {
         this.position = position;
         this.color = beaconColor;
         this.entities = ImmutableList.copyOf(entities);
@@ -29,7 +29,7 @@ public final class VerifiedBeacon {
         return entities.get(0);
     }
 
-    public Vec3 getPosition() {
+    public Position getPosition() {
         return position;
     }
 
@@ -37,7 +37,7 @@ public final class VerifiedBeacon {
         return color;
     }
 
-    public void updatePosition(Vec3 newPosition) {
+    public void updatePosition(Position newPosition) {
         position = newPosition;
     }
 }
