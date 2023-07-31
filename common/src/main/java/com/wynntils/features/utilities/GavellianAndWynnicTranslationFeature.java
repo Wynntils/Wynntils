@@ -73,6 +73,8 @@ public class GavellianAndWynnicTranslationFeature extends Feature {
     private static final Pattern NUMBER_PATTERN = Pattern.compile("\\d+");
     private static final Pattern WYNNIC_NUMBER_PATTERN = Pattern.compile("[⑴-⑿]+");
 
+    // If possible, having the selected language be set back to default when opening chat screen from the command
+    // keybind would be good, but chatScreen.input is null here
     @SubscribeEvent
     public void onScreenInit(ScreenInitEvent event) {
         if (useBrackets.get()) return;

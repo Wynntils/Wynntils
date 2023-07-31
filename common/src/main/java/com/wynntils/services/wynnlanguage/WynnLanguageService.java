@@ -69,26 +69,6 @@ public class WynnLanguageService extends Service {
         }
     }
 
-    public List<Character> getGavellianCharacters() {
-        return gavellianCharacters;
-    }
-
-    public List<Character> getWynnicCharacters() {
-        return wynnicCharacters;
-    }
-
-    public List<Character> getEnglishCharacters() {
-        return englishCharacters;
-    }
-
-    public List<Integer> getEnglishNumbers() {
-        return englishNumbers;
-    }
-
-    public List<Character> getWynnicNumbers() {
-        return wynnicNumbers;
-    }
-
     public Character translateGavellianToEnglish(Character characterToTranslate) {
         return gavellianToEnglishMap.getOrDefault(characterToTranslate, characterToTranslate);
     }
@@ -103,26 +83,6 @@ public class WynnLanguageService extends Service {
 
     public Character translateEnglishToWynnic(Character characterToTranslate) {
         return englishToWynnicMap.getOrDefault(characterToTranslate, characterToTranslate);
-    }
-
-    public void setSelectedLanguage(WynnLanguage selectedLanguage) {
-        this.selectedLanguage = selectedLanguage;
-    }
-
-    public WynnLanguage getSelectedLanguage() {
-        return selectedLanguage;
-    }
-
-    public Character getFifty() {
-        return wynnicNumbers.get(FIFTY_INDEX);
-    }
-
-    public Character getOneHundered() {
-        return wynnicNumbers.get(ONE_HUNDERED_INDEX);
-    }
-
-    public Character getTen() {
-        return wynnicNumbers.get(TEN_INDEX);
     }
 
     public boolean hasTranscriber(WynnLanguage transciberToFind) {
@@ -158,5 +118,45 @@ public class WynnLanguageService extends Service {
                 .findFirst();
 
         return foundDiscoveryInfo.map(DiscoveryInfo::isDiscovered).orElse(false);
+    }
+
+    public void setSelectedLanguage(WynnLanguage selectedLanguage) {
+        this.selectedLanguage = selectedLanguage;
+    }
+
+    public WynnLanguage getSelectedLanguage() {
+        return selectedLanguage;
+    }
+
+    public List<Character> getGavellianCharacters() {
+        return gavellianCharacters;
+    }
+
+    public List<Character> getWynnicCharacters() {
+        return wynnicCharacters;
+    }
+
+    public List<Character> getEnglishCharacters() {
+        return englishCharacters;
+    }
+
+    public List<Integer> getEnglishNumbers() {
+        return englishNumbers;
+    }
+
+    public List<Character> getWynnicNumbers() {
+        return wynnicNumbers;
+    }
+
+    public Character getFifty() {
+        return wynnicNumbers.get(FIFTY_INDEX);
+    }
+
+    public Character getOneHundered() {
+        return wynnicNumbers.get(ONE_HUNDERED_INDEX);
+    }
+
+    public Character getTen() {
+        return wynnicNumbers.get(TEN_INDEX);
     }
 }
