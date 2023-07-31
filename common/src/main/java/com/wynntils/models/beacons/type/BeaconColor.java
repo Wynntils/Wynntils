@@ -13,10 +13,7 @@ import org.apache.commons.compress.utils.Lists;
 
 public enum BeaconColor {
     GREEN((int) (0.78125 * 32), Items.GOLDEN_SHOVEL, ContentType.BOTH),
-    PINK(
-            (int) (0.75 * 32),
-            Items.GOLDEN_SHOVEL,
-            ContentType.CONTENT), // This is not used in lootruns, just for content tracking
+    PINK((int) (0.75 * 32), Items.GOLDEN_SHOVEL, ContentType.CONTENT), // This is not used in lootruns
     YELLOW((int) (0.09375 * 32), Items.GOLDEN_PICKAXE, ContentType.LOOTRUN),
     BLUE((int) (0.125 * 32), Items.GOLDEN_PICKAXE, ContentType.LOOTRUN),
     PURPLE((int) (0.15625 * 32), Items.GOLDEN_PICKAXE, ContentType.LOOTRUN),
