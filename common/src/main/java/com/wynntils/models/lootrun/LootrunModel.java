@@ -112,7 +112,7 @@ public class LootrunModel extends Model {
 
     // When we get close to a beacon, it get's removed.
     // This is our signal to know that this can be the current beacon,
-    // but we don't know for sure until scoreboard to confirms it.
+    // but we don't know for sure until the scoreboard confirms it.
     @SubscribeEvent
     public void onBeaconRemove(BeaconEvent.Removed event) {
         VerifiedBeacon beacon = event.getBeacon();
