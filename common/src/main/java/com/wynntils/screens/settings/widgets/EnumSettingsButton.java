@@ -5,10 +5,13 @@
 package com.wynntils.screens.settings.widgets;
 
 import com.wynntils.core.config.ConfigHolder;
+import com.wynntils.core.text.StyledText;
 import com.wynntils.utils.EnumUtils;
 import com.wynntils.utils.mc.McUtils;
+import com.wynntils.utils.mc.RenderedStringUtils;
 import com.wynntils.utils.render.FontRenderer;
 import java.lang.reflect.Type;
+import java.util.Arrays;
 import java.util.EnumSet;
 import java.util.List;
 import net.minecraft.client.gui.Font;
@@ -26,7 +29,11 @@ public class EnumSettingsButton<E extends Enum<E>> extends GeneralSettingsButton
                 getWidth(configHolder.getType()),
                 FontRenderer.getInstance().getFont().lineHeight + 8,
                 Component.literal(configHolder.getValueString()),
-                List.of(Component.literal(configHolder.getDescription())));
+                Arrays.stream(RenderedStringUtils.wrapTextBySize(
+                                StyledText.fromString(configHolder.getDescription()), 150))
+                        .map(StyledText::getComponent)
+                        .map(c -> (Component) c)
+                        .toList());
         this.configHolder = configHolder;
         enumConstants =
                 EnumSet.allOf((Class<E>) configHolder.getType()).stream().toList();
