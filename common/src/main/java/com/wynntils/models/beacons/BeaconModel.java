@@ -10,6 +10,7 @@ import com.wynntils.mc.event.AddEntityEvent;
 import com.wynntils.mc.event.RemoveEntitiesEvent;
 import com.wynntils.mc.event.TeleportEntityEvent;
 import com.wynntils.models.beacons.event.BeaconEvent;
+import com.wynntils.models.beacons.type.BeaconColor;
 import com.wynntils.models.beacons.type.UnverifiedBeacon;
 import com.wynntils.models.beacons.type.VerifiedBeacon;
 import com.wynntils.utils.type.TimedSet;
@@ -58,7 +59,16 @@ public class BeaconModel extends Model {
         }
 
         if (unverifiedBeacon.getEntities().size() == VERIFICATION_ENTITY_COUNT) {
-            VerifiedBeacon verifiedBeacon = VerifiedBeacon.fromUnverifiedBeacon(unverifiedBeacon);
+            BeaconColor beaconColor = BeaconColor.fromUnverifiedBeacon(unverifiedBeacon);
+
+            if (beaconColor == null) {
+                WynntilsMod.warn("Could not determine beacon color at " + position + " for entities "
+                        + unverifiedBeacon.getEntities());
+                unverifiedBeacons.remove(unverifiedBeacon);
+                return;
+            }
+
+            VerifiedBeacon verifiedBeacon = VerifiedBeacon.fromUnverifiedBeacon(unverifiedBeacon, beaconColor);
             verifiedBeacons.add(verifiedBeacon);
             WynntilsMod.postEvent(new BeaconEvent.Added(verifiedBeacon));
 

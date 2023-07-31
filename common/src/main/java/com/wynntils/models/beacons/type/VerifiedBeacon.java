@@ -15,14 +15,14 @@ public final class VerifiedBeacon {
 
     private Vec3 position;
 
-    private VerifiedBeacon(Vec3 position, List<Entity> entities) {
+    private VerifiedBeacon(Vec3 position, BeaconColor beaconColor, List<Entity> entities) {
         this.position = position;
-        this.color = BeaconColor.fromEntity(entities.get(0));
+        this.color = beaconColor;
         this.entities = ImmutableList.copyOf(entities);
     }
 
-    public static VerifiedBeacon fromUnverifiedBeacon(UnverifiedBeacon unverifiedBeacon) {
-        return new VerifiedBeacon(unverifiedBeacon.getPosition(), unverifiedBeacon.getEntities());
+    public static VerifiedBeacon fromUnverifiedBeacon(UnverifiedBeacon unverifiedBeacon, BeaconColor beaconColor) {
+        return new VerifiedBeacon(unverifiedBeacon.getPosition(), beaconColor, unverifiedBeacon.getEntities());
     }
 
     public Entity getBaseEntity() {
