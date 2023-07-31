@@ -1114,6 +1114,8 @@
   "feature.wynntils.wynncraftPauseScreen.territoryMap.name": "Territory Map",
   "feature.wynntils.wynncraftPauseScreen.wynntilsMenuButton.name": "Wynntils Menu",
   "feature.wynntils.wynntilsContentBook.description": "Adds a custom content book.",
+  "feature.wynntils.wynntilsContentBook.displayOverallProgress.description": "Disabling this stops the mod from parsing the content book when opening the Wynntils menu.",
+  "feature.wynntils.wynntilsContentBook.displayOverallProgress.name": "Display Overall Progress",
   "feature.wynntils.wynntilsContentBook.initialPage.description": "Choose the default page when opening the custom book",
   "feature.wynntils.wynntilsContentBook.initialPage.name": "Initial Page",
   "feature.wynntils.wynntilsContentBook.name": "Wynntils Content Book",
