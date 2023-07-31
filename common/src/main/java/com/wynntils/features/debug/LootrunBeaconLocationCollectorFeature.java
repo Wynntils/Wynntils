@@ -16,6 +16,7 @@ import com.wynntils.models.beacons.type.VerifiedBeacon;
 import com.wynntils.models.lootrun.event.LootrunBeaconSelectedEvent;
 import com.wynntils.models.lootrun.type.LootrunLocation;
 import com.wynntils.models.lootrun.type.LootrunTaskType;
+import com.wynntils.utils.mc.type.Location;
 import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
@@ -43,13 +44,17 @@ public class LootrunBeaconLocationCollectorFeature extends Feature {
 
         Optional<LootrunLocation> currentLocationOpt = Models.Lootrun.getCurrentLocation();
         if (currentLocationOpt.isEmpty()) return;
+        Position position = beacon.getPosition();
 
         tasks.get().putIfAbsent(currentLocationOpt.get(), new TreeSet<>());
-        tasks.get().get(currentLocationOpt.get()).add(new TaskLocation(beacon.getPosition(), currentTaskTypeOpt.get()));
+        tasks.get()
+                .get(currentLocationOpt.get())
+                .add(new TaskLocation(Location.containing(position), currentTaskTypeOpt.get()));
         tasks.touched();
     }
 
-    private record TaskLocation(Position location, LootrunTaskType taskType) implements Comparable<TaskLocation> {
+    // This location has to be a Location because Position doesn't have proper mapping, so GSON can't serialize it.
+    private record TaskLocation(Location location, LootrunTaskType taskType) implements Comparable<TaskLocation> {
         @Override
         public int compareTo(LootrunBeaconLocationCollectorFeature.TaskLocation taskLocation) {
             return ComparisonChain.start()
