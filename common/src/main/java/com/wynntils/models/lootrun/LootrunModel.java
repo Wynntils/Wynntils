@@ -13,7 +13,10 @@ import com.wynntils.handlers.chat.type.RecipientType;
 import com.wynntils.models.beacons.event.BeaconEvent;
 import com.wynntils.models.beacons.type.BeaconColor;
 import com.wynntils.models.beacons.type.VerifiedBeacon;
+import com.wynntils.models.lootrun.event.LootrunBeaconSelectedEvent;
 import com.wynntils.models.lootrun.scoreboard.LootrunScoreboardPart;
+import com.wynntils.models.lootrun.type.LootrunLocation;
+import com.wynntils.models.lootrun.type.LootrunTaskType;
 import com.wynntils.models.lootrun.type.LootrunningState;
 import com.wynntils.models.worlds.event.WorldStateEvent;
 import com.wynntils.utils.VectorUtils;
@@ -21,6 +24,7 @@ import com.wynntils.utils.mc.McUtils;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
@@ -67,6 +71,8 @@ public class LootrunModel extends Model {
     private LootrunFinishedEventBuilder.Failed lootrunFailedBuilder;
 
     private LootrunningState lootrunningState = LootrunningState.NOT_RUNNING;
+    private LootrunLocation currentLocation;
+    private LootrunTaskType currentTaskType;
     private Map<BeaconColor, Integer> currentLootrunBeacons = new HashMap<>();
     private VerifiedBeacon currentBeacon;
 
@@ -106,6 +112,8 @@ public class LootrunModel extends Model {
 
         // FIXME: Persist this in a later PR.
         lootrunningState = LootrunningState.NOT_RUNNING;
+        currentLocation = null;
+        currentTaskType = null;
         currentLootrunBeacons = new HashMap<>();
         currentBeacon = null;
     }
@@ -138,12 +146,21 @@ public class LootrunModel extends Model {
         return lootrunningState;
     }
 
-    public void setState(LootrunningState newState) {
+    public Optional<LootrunLocation> getCurrentLocation() {
+        return Optional.ofNullable(currentLocation);
+    }
+
+    public Optional<LootrunTaskType> getCurrentTaskType() {
+        return Optional.ofNullable(currentTaskType);
+    }
+
+    public void setState(LootrunningState newState, LootrunTaskType taskType) {
         // If nothing changes, don't do anything.
         if (this.lootrunningState == newState) return;
 
         LootrunningState oldState = this.lootrunningState;
         this.lootrunningState = newState;
+        this.currentTaskType = taskType;
 
         handleStateChange(oldState, newState);
     }
@@ -152,6 +169,14 @@ public class LootrunModel extends Model {
         if (newState == LootrunningState.NOT_RUNNING) {
             currentLootrunBeacons = new HashMap<>();
             currentBeacon = null;
+            currentTaskType = null;
+            return;
+        }
+
+        if (oldState == LootrunningState.NOT_RUNNING) {
+            currentLocation =
+                    LootrunLocation.fromCoordinates(McUtils.mc().player.position());
+            WynntilsMod.info("Started a lootrun at " + currentLocation);
             return;
         }
 
@@ -161,7 +186,7 @@ public class LootrunModel extends Model {
             WynntilsMod.info("Selected a " + currentBeacon.getColor() + " beacon at " + currentBeacon.getPosition());
             currentLootrunBeacons.put(
                     currentBeacon.getColor(), currentLootrunBeacons.getOrDefault(currentBeacon.getColor(), 0) + 1);
-
+            WynntilsMod.postEvent(new LootrunBeaconSelectedEvent(currentBeacon));
             return;
         }
     }
