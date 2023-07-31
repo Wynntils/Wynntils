@@ -21,7 +21,7 @@ import java.util.Optional;
 import java.util.Set;
 import java.util.TreeMap;
 import java.util.TreeSet;
-import net.minecraft.world.phys.Vec3;
+import net.minecraft.core.Position;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 
 @StartDisabled
@@ -49,13 +49,13 @@ public class LootrunBeaconLocationCollectorFeature extends Feature {
         tasks.touched();
     }
 
-    private record TaskLocation(Vec3 location, LootrunTaskType taskType) implements Comparable<TaskLocation> {
+    private record TaskLocation(Position location, LootrunTaskType taskType) implements Comparable<TaskLocation> {
         @Override
         public int compareTo(LootrunBeaconLocationCollectorFeature.TaskLocation taskLocation) {
             return ComparisonChain.start()
-                    .compare(location.x, taskLocation.location.x)
-                    .compare(location.y, taskLocation.location.y)
-                    .compare(location.z, taskLocation.location.z)
+                    .compare(location.x(), taskLocation.location.x())
+                    .compare(location.y(), taskLocation.location.y())
+                    .compare(location.z(), taskLocation.location.z())
                     .compare(taskType, taskLocation.taskType)
                     .result();
         }
