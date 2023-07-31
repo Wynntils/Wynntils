@@ -9,18 +9,20 @@ import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.wynntils.core.components.Managers;
 import com.wynntils.core.components.Services;
-import com.wynntils.core.consumers.screens.WynntilsScreen;
 import com.wynntils.core.text.StyledText;
 import com.wynntils.features.map.MainMapFeature;
 import com.wynntils.screens.base.TextboxScreen;
 import com.wynntils.screens.base.widgets.TextInputBoxWidget;
 import com.wynntils.services.map.pois.CustomPoi;
+import com.wynntils.services.map.pois.Poi;
 import com.wynntils.utils.colors.CommonColors;
 import com.wynntils.utils.colors.CustomColor;
 import com.wynntils.utils.mc.McUtils;
 import com.wynntils.utils.mc.type.PoiLocation;
 import com.wynntils.utils.render.FontRenderer;
+import com.wynntils.utils.render.MapRenderer;
 import com.wynntils.utils.render.RenderUtils;
+import com.wynntils.utils.render.Texture;
 import com.wynntils.utils.render.type.HorizontalAlignment;
 import com.wynntils.utils.render.type.TextShadow;
 import com.wynntils.utils.render.type.VerticalAlignment;
@@ -29,12 +31,18 @@ import java.util.Optional;
 import java.util.regex.Pattern;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.screens.Screen;
+import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.resources.language.I18n;
 import net.minecraft.network.chat.Component;
 import org.lwjgl.glfw.GLFW;
 
-public final class PoiCreationScreen extends WynntilsScreen implements TextboxScreen {
+public final class PoiCreationScreen extends AbstractMapScreen implements TextboxScreen {
     private static final Pattern COORDINATE_PATTERN = Pattern.compile("[-+]?\\d+");
+
+    private static final float GRID_DIVISIONS = 64.0f;
+
+    private float dividedWidth;
+    private float dividedHeight;
 
     private TextInputBoxWidget focusedTextInput;
 
@@ -43,6 +51,8 @@ public final class PoiCreationScreen extends WynntilsScreen implements TextboxSc
     private TextInputBoxWidget yInput;
     private TextInputBoxWidget zInput;
     private TextInputBoxWidget colorInput;
+    private Integer parsedXInput;
+    private Integer parsedZInput;
 
     private Button saveButton;
 
@@ -56,7 +66,7 @@ public final class PoiCreationScreen extends WynntilsScreen implements TextboxSc
     private boolean firstSetup;
 
     private PoiCreationScreen(MainMapScreen oldMapScreen) {
-        super(Component.literal("Poi Creation Screen"));
+        super();
         this.returnScreen = oldMapScreen;
 
         this.firstSetup = true;
@@ -77,7 +87,7 @@ public final class PoiCreationScreen extends WynntilsScreen implements TextboxSc
     }
 
     private PoiCreationScreen(PoiManagementScreen managementScreen, CustomPoi poi) {
-        super(Component.literal("Poi Edit Screen"));
+        super();
         this.returnScreen = managementScreen;
 
         this.oldPoi = poi;
@@ -102,14 +112,31 @@ public final class PoiCreationScreen extends WynntilsScreen implements TextboxSc
 
     @Override
     protected void doInit() {
-        super.doInit();
+        dividedWidth = this.width / GRID_DIVISIONS;
+        dividedHeight = this.height / GRID_DIVISIONS;
+
+        renderX = dividedWidth * 32;
+        renderWidth = dividedWidth * 29;
+        renderY = dividedHeight * 5;
+        renderHeight = dividedHeight * 54;
+
+        float borderScaleX = (float) this.width / Texture.FULLSCREEN_MAP_BORDER.width();
+        float borderScaleY = (float) this.height / Texture.FULLSCREEN_MAP_BORDER.height();
+
+        renderedBorderXOffset = 3 * borderScaleX;
+        renderedBorderYOffset = 3 * borderScaleY;
+
+        mapWidth = renderWidth - renderedBorderXOffset * 2f + 1; // +1 to fix rounding causing black line on the right
+        centerX = renderX + renderedBorderXOffset + mapWidth / 2f;
+        mapHeight = renderHeight - renderedBorderYOffset * 2f;
+        centerZ = renderY + renderedBorderYOffset + mapHeight / 2f;
 
         // region Name
         this.addRenderableWidget(
                 nameInput = new TextInputBoxWidget(
-                        this.width / 2 - 100,
-                        this.height / 2 - 50,
-                        150,
+                        (int) (dividedWidth * 10),
+                        (int) (dividedHeight * 23),
+                        (int) (dividedWidth * 12),
                         20,
                         (s) -> updateSaveStatus(),
                         this,
@@ -126,22 +153,30 @@ public final class PoiCreationScreen extends WynntilsScreen implements TextboxSc
         // region Coordinates
         this.addRenderableWidget(
                 xInput = new TextInputBoxWidget(
-                        this.width / 2 - 85,
-                        this.height / 2 - 5,
-                        35,
+                        (int) (dividedWidth * 11),
+                        (int) (dividedHeight * 28),
+                        (int) (dividedWidth * 3),
                         20,
                         s -> {
-                            xInput.setRenderColor(
-                                    COORDINATE_PATTERN.matcher(s).matches() ? CommonColors.GREEN : CommonColors.RED);
+                            if (COORDINATE_PATTERN.matcher(s).matches()) {
+                                parsedXInput = Integer.parseInt(s);
+                                xInput.setRenderColor(CommonColors.GREEN);
+                                if (parsedZInput != null) {
+                                    updateMapCenter(parsedXInput, parsedZInput);
+                                }
+                            } else {
+                                parsedXInput = null;
+                                xInput.setRenderColor(CommonColors.RED);
+                            }
                             updateSaveStatus();
                         },
                         this,
                         xInput));
         this.addRenderableWidget(
                 yInput = new TextInputBoxWidget(
-                        this.width / 2 - 35,
-                        this.height / 2 - 5,
-                        35,
+                        (int) (dividedWidth * 15),
+                        (int) (dividedHeight * 28),
+                        (int) (dividedWidth * 3),
                         20,
                         s -> {
                             yInput.setRenderColor(
@@ -152,13 +187,21 @@ public final class PoiCreationScreen extends WynntilsScreen implements TextboxSc
                         yInput));
         this.addRenderableWidget(
                 zInput = new TextInputBoxWidget(
-                        this.width / 2 + 15,
-                        this.height / 2 - 5,
-                        35,
+                        (int) (dividedWidth * 19),
+                        (int) (dividedHeight * 28),
+                        (int) (dividedWidth * 3),
                         20,
                         s -> {
-                            zInput.setRenderColor(
-                                    COORDINATE_PATTERN.matcher(s).matches() ? CommonColors.GREEN : CommonColors.RED);
+                            if (COORDINATE_PATTERN.matcher(s).matches()) {
+                                parsedZInput = Integer.parseInt(s);
+                                zInput.setRenderColor(CommonColors.GREEN);
+                                if (parsedXInput != null) {
+                                    updateMapCenter(parsedXInput, parsedZInput);
+                                }
+                            } else {
+                                parsedZInput = null;
+                                zInput.setRenderColor(CommonColors.RED);
+                            }
                             updateSaveStatus();
                         },
                         this,
@@ -187,7 +230,7 @@ public final class PoiCreationScreen extends WynntilsScreen implements TextboxSc
                         selectedIconIndex--;
                     }
                 })
-                .pos(this.width / 2 - 100, this.height / 2 + 40)
+                .pos((int) (dividedWidth * 10), (int) (dividedHeight * 34))
                 .size(20, 20)
                 .build());
         this.addRenderableWidget(new Button.Builder(Component.literal(">"), (button) -> {
@@ -197,7 +240,7 @@ public final class PoiCreationScreen extends WynntilsScreen implements TextboxSc
                         selectedIconIndex++;
                     }
                 })
-                .pos(this.width / 2 - 40, this.height / 2 + 40)
+                .pos((int) (dividedWidth * 14), (int) (dividedHeight * 34))
                 .size(20, 20)
                 .build());
         if (oldPoi != null && firstSetup) {
@@ -209,9 +252,9 @@ public final class PoiCreationScreen extends WynntilsScreen implements TextboxSc
         // region Color
         this.addRenderableWidget(
                 colorInput = new TextInputBoxWidget(
-                        this.width / 2 - 10,
-                        this.height / 2 + 40,
-                        100,
+                        (int) (dividedWidth * 16.5),
+                        (int) (dividedHeight * 34),
+                        (int) (dividedWidth * 5.5),
                         20,
                         (s) -> {
                             CustomColor color = CustomColor.fromHexString(s);
@@ -242,7 +285,7 @@ public final class PoiCreationScreen extends WynntilsScreen implements TextboxSc
                         (button) -> selectedVisiblity = CustomPoi.Visibility.values()[
                                 (selectedVisiblity.ordinal() - 1 + CustomPoi.Visibility.values().length)
                                         % CustomPoi.Visibility.values().length])
-                .pos(this.width / 2 - 100, this.height / 2 + 90)
+                .pos((int) (dividedWidth * 10), (int) (dividedHeight * 40))
                 .size(20, 20)
                 .build());
         this.addRenderableWidget(new Button.Builder(
@@ -250,7 +293,7 @@ public final class PoiCreationScreen extends WynntilsScreen implements TextboxSc
                         (button) -> selectedVisiblity = CustomPoi.Visibility.values()[
                                 (selectedVisiblity.ordinal() + 1 + CustomPoi.Visibility.values().length)
                                         % CustomPoi.Visibility.values().length])
-                .pos(this.width / 2 + 80, this.height / 2 + 90)
+                .pos((int) (dividedWidth * 22) - 19, (int) (dividedHeight * 40))
                 .size(20, 20)
                 .build());
 
@@ -260,20 +303,21 @@ public final class PoiCreationScreen extends WynntilsScreen implements TextboxSc
         // endregion
 
         // region Screen Interactions
+        this.addRenderableWidget(new Button.Builder(
+                        Component.translatable("screens.wynntils.poiCreation.cancel"), (button) -> this.onClose())
+                .pos((int) (dividedWidth * 6), (int) (dividedHeight * 54))
+                .size((int) (dividedWidth * 8), 20)
+                .build());
+
         this.addRenderableWidget(
                 saveButton = new Button.Builder(
                                 Component.translatable("screens.wynntils.poiCreation.save"), (button) -> {
                                     savePoi();
                                     this.onClose();
                                 })
-                        .pos(this.width / 2 + 50, this.height - 40)
-                        .size(100, 20)
+                        .pos((int) (dividedWidth * 18), (int) (dividedHeight * 54))
+                        .size((int) (dividedWidth * 8), 20)
                         .build());
-        this.addRenderableWidget(new Button.Builder(
-                        Component.translatable("screens.wynntils.poiCreation.cancel"), (button) -> this.onClose())
-                .pos(this.width / 2 - 150, this.height - 40)
-                .size(100, 20)
-                .build());
         // endregion
 
         updateSaveStatus();
@@ -282,70 +326,118 @@ public final class PoiCreationScreen extends WynntilsScreen implements TextboxSc
 
     @Override
     public void doRender(PoseStack poseStack, int mouseX, int mouseY, float partialTick) {
+        renderGradientBackground(poseStack);
+
+        RenderSystem.setShaderColor(1f, 1f, 1f, 1f);
+
+        RenderSystem.enableDepthTest();
+        renderMap(poseStack);
+        RenderUtils.enableScissor(
+                (int) (renderX + renderedBorderXOffset), (int) (renderY + renderedBorderYOffset), (int) mapWidth, (int)
+                        mapHeight);
+
+        if (parsedXInput != null && parsedZInput != null) {
+            Poi poi = new CustomPoi(
+                    new PoiLocation(parsedXInput, null, parsedZInput),
+                    nameInput.getTextBoxInput(),
+                    CustomColor.fromHexString(colorInput.getTextBoxInput()) == CustomColor.NONE
+                            ? CommonColors.WHITE
+                            : CustomColor.fromHexString(colorInput.getTextBoxInput()),
+                    Services.Poi.POI_ICONS.get(selectedIconIndex),
+                    selectedVisiblity);
+
+            MultiBufferSource.BufferSource bufferSource =
+                    McUtils.mc().renderBuffers().bufferSource();
+
+            poi.renderAt(
+                    poseStack,
+                    bufferSource,
+                    MapRenderer.getRenderX(poi, mapCenterX, centerX, currentZoom),
+                    MapRenderer.getRenderZ(poi, mapCenterZ, centerZ, currentZoom),
+                    hovered == poi,
+                    1,
+                    currentZoom);
+
+            bufferSource.endBatch();
+        }
+
+        renderCursor(
+                poseStack,
+                1.5f,
+                Managers.Feature.getFeatureInstance(MainMapFeature.class)
+                        .pointerColor
+                        .get(),
+                Managers.Feature.getFeatureInstance(MainMapFeature.class)
+                        .pointerType
+                        .get());
+
+        RenderUtils.disableScissor();
+
         renderBackground(poseStack);
         super.doRender(poseStack, mouseX, mouseY, partialTick);
+        // RenderUtils.renderDebugGrid(poseStack, GRID_DIVISIONS, dividedWidth, dividedHeight);
 
         FontRenderer.getInstance()
                 .renderText(
                         poseStack,
                         StyledText.fromString(I18n.get("screens.wynntils.poiCreation.waypointName") + ":"),
-                        this.width / 2f - 100,
-                        this.height / 2f - 60,
+                        (int) (dividedWidth * 10),
+                        (int) (dividedHeight * 22),
                         CommonColors.WHITE,
                         HorizontalAlignment.LEFT,
-                        VerticalAlignment.TOP,
+                        VerticalAlignment.MIDDLE,
                         TextShadow.NORMAL);
 
         FontRenderer.getInstance()
                 .renderText(
                         poseStack,
                         StyledText.fromString(I18n.get("screens.wynntils.poiCreation.coordinates") + ":"),
-                        this.width / 2f - 100,
-                        this.height / 2f - 15,
+                        (int) (dividedWidth * 10),
+                        (int) (dividedHeight * 27),
                         CommonColors.WHITE,
                         HorizontalAlignment.LEFT,
-                        VerticalAlignment.TOP,
+                        VerticalAlignment.MIDDLE,
                         TextShadow.NORMAL);
         FontRenderer.getInstance()
                 .renderText(
                         poseStack,
                         StyledText.fromString("X"),
-                        this.width / 2f - 95,
-                        this.height / 2f,
+                        dividedWidth * 10.5f,
+                        (int) (dividedHeight * 28) + 10,
                         CommonColors.WHITE,
-                        HorizontalAlignment.LEFT,
-                        VerticalAlignment.TOP,
+                        HorizontalAlignment.CENTER,
+                        VerticalAlignment.MIDDLE,
                         TextShadow.NORMAL);
         FontRenderer.getInstance()
                 .renderText(
                         poseStack,
                         StyledText.fromString("Y"),
-                        this.width / 2f - 45,
-                        this.height / 2f,
+                        dividedWidth * 14.5f,
+                        (int) (dividedHeight * 28) + 10,
                         CommonColors.WHITE,
-                        HorizontalAlignment.LEFT,
-                        VerticalAlignment.TOP,
+                        HorizontalAlignment.CENTER,
+                        VerticalAlignment.MIDDLE,
                         TextShadow.NORMAL);
         FontRenderer.getInstance()
                 .renderText(
                         poseStack,
                         StyledText.fromString("Z"),
-                        this.width / 2f + 5,
-                        this.height / 2f,
+                        dividedWidth * 18.5f,
+                        (int) (dividedHeight * 28) + 10,
                         CommonColors.WHITE,
-                        HorizontalAlignment.LEFT,
-                        VerticalAlignment.TOP,
+                        HorizontalAlignment.CENTER,
+                        VerticalAlignment.MIDDLE,
                         TextShadow.NORMAL);
 
         FontRenderer.getInstance()
                 .renderText(
                         poseStack,
                         StyledText.fromString(I18n.get("screens.wynntils.poiCreation.icon") + ":"),
-                        this.width / 2f - 100,
-                        this.height / 2f + 30,
+                        dividedWidth * 10.0f,
+                        dividedHeight * 33.0f,
                         CommonColors.WHITE,
                         HorizontalAlignment.LEFT,
-                        VerticalAlignment.TOP,
+                        VerticalAlignment.MIDDLE,
                         TextShadow.NORMAL);
 
         renderIcon(poseStack);
@@ -354,31 +446,31 @@ public final class PoiCreationScreen extends WynntilsScreen implements TextboxSc
                 .renderText(
                         poseStack,
                         StyledText.fromString(I18n.get("screens.wynntils.poiCreation.color") + ":"),
-                        this.width / 2f - 10,
-                        this.height / 2f + 30,
+                        dividedWidth * 16.5f,
+                        dividedHeight * 33.0f,
                         CommonColors.WHITE,
                         HorizontalAlignment.LEFT,
-                        VerticalAlignment.TOP,
+                        VerticalAlignment.MIDDLE,
                         TextShadow.NORMAL);
 
         FontRenderer.getInstance()
                 .renderText(
                         poseStack,
                         StyledText.fromString(I18n.get("screens.wynntils.poiCreation.visibility") + ":"),
-                        this.width / 2f - 100,
-                        this.height / 2f + 80,
+                        dividedWidth * 10.0f,
+                        dividedHeight * 39.0f,
                         CommonColors.WHITE,
                         HorizontalAlignment.LEFT,
-                        VerticalAlignment.TOP,
+                        VerticalAlignment.MIDDLE,
                         TextShadow.NORMAL);
         FontRenderer.getInstance()
                 .renderAlignedTextInBox(
                         poseStack,
                         StyledText.fromString(I18n.get(selectedVisiblity.getTranslationKey())),
-                        this.width / 2f - 100,
-                        this.width / 2f + 100,
-                        this.height / 2f + 90,
-                        this.height / 2f + 110,
+                        dividedWidth * 16.0f,
+                        dividedWidth * 16.0f,
+                        dividedHeight * 40.0f,
+                        dividedHeight * 40.0f + 20,
                         0,
                         CommonColors.WHITE,
                         HorizontalAlignment.CENTER,
@@ -392,12 +484,26 @@ public final class PoiCreationScreen extends WynntilsScreen implements TextboxSc
         RenderSystem.blendFunc(GlStateManager.SourceFactor.SRC_ALPHA, GlStateManager.DestFactor.ONE_MINUS_SRC_ALPHA);
         RenderSystem.setShaderColor(color[0], color[1], color[2], 1);
 
-        RenderUtils.drawTexturedRect(
-                poseStack, Services.Poi.POI_ICONS.get(selectedIconIndex), this.width / 2f - 70, this.height / 2f + 40);
+        Texture texture = Services.Poi.POI_ICONS.get(selectedIconIndex);
+        // left button x + (center between buttons - half of texture width)
+        float x =
+                (dividedWidth * 10 + 20) + (((dividedWidth * 14) - (dividedWidth * 10 + 20)) / 2 - texture.width() / 2);
+        RenderUtils.drawTexturedRect(poseStack, texture, x, dividedHeight * 34);
 
         RenderSystem.disableBlend();
         RenderSystem.defaultBlendFunc();
         RenderSystem.setShaderColor(1, 1, 1, 1);
+    }
+
+    @Override
+    public boolean doMouseClicked(double mouseX, double mouseY, int button) {
+        if (button == GLFW.GLFW_MOUSE_BUTTON_MIDDLE) {
+            int gameX = (int) ((mouseX - centerX) / currentZoom + mapCenterX);
+            int gameZ = (int) ((mouseY - centerZ) / currentZoom + mapCenterZ);
+            xInput.setTextBoxInput(String.valueOf(gameX));
+            zInput.setTextBoxInput(String.valueOf(gameZ));
+        }
+        return super.doMouseClicked(mouseX, mouseY, button);
     }
 
     @Override
