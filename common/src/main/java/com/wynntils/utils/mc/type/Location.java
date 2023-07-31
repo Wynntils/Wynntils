@@ -1,10 +1,9 @@
 /*
- * Copyright © Wynntils 2022.
+ * Copyright © Wynntils 2022-2023.
  * This file is released under AGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.utils.mc.type;
 
-import com.wynntils.models.map.PoiLocation;
 import com.wynntils.utils.MathUtils;
 import com.wynntils.utils.mc.PosUtils;
 import java.util.Comparator;

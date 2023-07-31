@@ -8,9 +8,9 @@ import com.mojang.brigadier.arguments.StringArgumentType;
 import com.mojang.brigadier.builder.LiteralArgumentBuilder;
 import com.mojang.brigadier.context.CommandContext;
 import com.mojang.brigadier.suggestion.SuggestionProvider;
-import com.wynntils.core.commands.Command;
-import com.wynntils.core.components.Models;
-import com.wynntils.models.map.type.CustomPoiProvider;
+import com.wynntils.core.components.Services;
+import com.wynntils.core.consumers.commands.Command;
+import com.wynntils.services.map.type.CustomPoiProvider;
 import java.net.URI;
 import java.net.URISyntaxException;
 import java.util.Optional;
@@ -24,7 +24,7 @@ import net.minecraft.network.chat.MutableComponent;
 public class MapCommand extends Command {
     private static final SuggestionProvider<CommandSourceStack> POI_PROVIDER_SUGGESTION_PROVIDER =
             (context, builder) -> SharedSuggestionProvider.suggest(
-                    Models.Poi.getCustomPoiProviders().stream()
+                    Services.Poi.getCustomPoiProviders().stream()
                             .map(CustomPoiProvider::getName)
                             .toArray(String[]::new),
                     builder);
@@ -61,7 +61,7 @@ public class MapCommand extends Command {
     }
 
     private int reloadPoiProviders(CommandContext<CommandSourceStack> context) {
-        Models.Poi.loadCustomPoiProviders();
+        Services.Poi.loadCustomPoiProviders();
 
         context.getSource()
                 .sendSuccess(
@@ -77,7 +77,7 @@ public class MapCommand extends Command {
         String url = context.getArgument("url", String.class);
 
         try {
-            Models.Poi.addCustomPoiProvider(new CustomPoiProvider(name, new URI(url)));
+            Services.Poi.addCustomPoiProvider(new CustomPoiProvider(name, new URI(url)));
         } catch (URISyntaxException e) {
             context.getSource()
                     .sendFailure(
@@ -94,7 +94,7 @@ public class MapCommand extends Command {
     private int removePoiProvider(CommandContext<CommandSourceStack> context) {
         String name = context.getArgument("name", String.class);
 
-        if (!Models.Poi.removeCustomPoiProvider(name)) {
+        if (!Services.Poi.removeCustomPoiProvider(name)) {
             context.getSource()
                     .sendFailure(Component.literal("The provided name does not match any POI provider.")
                             .withStyle(ChatFormatting.RED));
@@ -110,7 +110,7 @@ public class MapCommand extends Command {
     private int listPoiProviders(CommandContext<CommandSourceStack> context) {
         MutableComponent message = Component.literal("POI providers: ").withStyle(ChatFormatting.YELLOW);
 
-        for (CustomPoiProvider poiProvider : Models.Poi.getCustomPoiProviders()) {
+        for (CustomPoiProvider poiProvider : Services.Poi.getCustomPoiProviders()) {
             message.append(Component.literal("\n"));
             message.append(Component.literal(poiProvider.getName()).withStyle(ChatFormatting.GOLD));
             message.append(Component.literal(poiProvider.isEnabled() ? " (enabled)" : " (disabled)")
@@ -128,7 +128,7 @@ public class MapCommand extends Command {
     private int togglePoiProvider(CommandContext<CommandSourceStack> context) {
         String name = context.getArgument("name", String.class);
 
-        Optional<CustomPoiProvider> poiProvider = Models.Poi.getCustomPoiProviders().stream()
+        Optional<CustomPoiProvider> poiProvider = Services.Poi.getCustomPoiProviders().stream()
                 .filter(p -> p.getName().equals(name))
                 .findFirst();
 

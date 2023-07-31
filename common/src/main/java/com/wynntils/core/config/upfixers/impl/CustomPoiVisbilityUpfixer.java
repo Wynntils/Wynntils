@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2022.
+ * Copyright © Wynntils 2022-2023.
  * This file is released under AGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.core.config.upfixers.impl;
@@ -9,7 +9,7 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.wynntils.core.config.ConfigHolder;
 import com.wynntils.core.config.upfixers.ConfigUpfixer;
-import com.wynntils.models.map.pois.CustomPoi;
+import com.wynntils.services.map.pois.CustomPoi;
 import java.util.Set;
 
 public class CustomPoiVisbilityUpfixer implements ConfigUpfixer {

@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2022.
+ * Copyright © Wynntils 2022-2023.
  * This file is released under AGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.features.inventory;
@@ -13,8 +13,8 @@ import com.wynntils.core.config.Category;
 import com.wynntils.core.config.Config;
 import com.wynntils.core.config.ConfigCategory;
 import com.wynntils.core.config.RegisterConfig;
-import com.wynntils.core.features.Feature;
-import com.wynntils.core.features.properties.RegisterKeyBind;
+import com.wynntils.core.consumers.features.Feature;
+import com.wynntils.core.consumers.features.properties.RegisterKeyBind;
 import com.wynntils.core.keybinds.KeyBind;
 import com.wynntils.core.text.PartStyle;
 import com.wynntils.core.text.StyledText;
@@ -24,7 +24,7 @@ import com.wynntils.utils.SystemUtils;
 import com.wynntils.utils.mc.McUtils;
 import com.wynntils.utils.render.FontRenderer;
 import com.wynntils.utils.render.RenderUtils;
-import com.wynntils.utils.wynn.WynnItemMatchers;
+import com.wynntils.utils.wynn.ItemUtils;
 import java.awt.HeadlessException;
 import java.awt.image.BufferedImage;
 import java.io.File;
@@ -32,6 +32,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.regex.Matcher;
 import javax.imageio.ImageIO;
 import net.minecraft.ChatFormatting;
 import net.minecraft.Util;
@@ -211,7 +212,9 @@ public class ItemScreenshotFeature extends Feature {
         int loreStart = -1;
         for (int i = 0; i < tooltip.size(); i++) {
             // only remove text after the item type indicator
-            if (WynnItemMatchers.rarityLineMatcher(tooltip.get(i)).find()) {
+            String tooltipLine = tooltip.get(i).getString();
+            Matcher matcher = ItemUtils.ITEM_RARITY_PATTERN.matcher(tooltipLine);
+            if (matcher.find()) {
                 loreStart = i + 1;
                 break;
             }

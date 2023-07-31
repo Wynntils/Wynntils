@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2021-2022.
+ * Copyright © Wynntils 2021-2023.
  * This file is released under AGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.core;
@@ -13,6 +13,8 @@ import com.wynntils.core.components.Manager;
 import com.wynntils.core.components.Managers;
 import com.wynntils.core.components.Model;
 import com.wynntils.core.components.Models;
+import com.wynntils.core.components.Service;
+import com.wynntils.core.components.Services;
 import com.wynntils.core.events.EventBusWrapper;
 import com.wynntils.core.mod.event.WynntilsCrashEvent;
 import com.wynntils.core.mod.type.CrashType;
@@ -77,6 +79,7 @@ public final class WynntilsMod {
     public static void reloadAllComponentData() {
         componentMap.get(Manager.class).forEach(c -> ((Manager) c).reloadData());
         componentMap.get(Model.class).forEach(c -> ((Model) c).reloadData());
+        componentMap.get(Service.class).forEach(c -> ((Service) c).reloadData());
     }
 
     private static void handleExceptionInEventListener(Throwable t, Event event) {
@@ -186,6 +189,7 @@ public final class WynntilsMod {
         registerComponents(Managers.class, Manager.class);
         registerComponents(Handlers.class, Handler.class);
         registerComponents(Models.class, Model.class);
+        registerComponents(Services.class, Service.class);
 
         // Init storage for loaded components immediately
         Managers.Storage.initComponents();
@@ -230,6 +234,9 @@ public final class WynntilsMod {
         Managers.Config.init();
         Managers.Storage.initFeatures();
 
+        // Init services that depends on I18n
+        Services.Statistics.init();
+
         LOGGER.info(
                 "Wynntils: {} features and {} functions are now loaded and ready",
                 Managers.Feature.getFeatures().size(),
@@ -242,23 +249,26 @@ public final class WynntilsMod {
         Managers.CrashReport.registerCrashContext("In Development", () -> isDevelopmentEnvironment() ? "Yes" : "No");
     }
 
-    public static void reportCrash(String fullName, String niceName, CrashType type, Throwable throwable) {
-        reportCrash(fullName, niceName, type, throwable, true, true);
+    public static void reportCrash(
+            CrashType type, String niceName, String fullName, String reason, Throwable throwable) {
+        reportCrash(type, niceName, fullName, reason, true, true, throwable);
     }
 
     public static void reportCrash(
-            String fullName,
-            String niceName,
             CrashType type,
-            Throwable throwable,
+            String niceName,
+            String fullName,
+            String reason,
             boolean shouldSendChat,
-            boolean isDisabled) {
-        WynntilsMod.warn("Disabling " + type.toString().toLowerCase(Locale.ROOT) + " " + niceName);
+            boolean isDisabled,
+            Throwable throwable) {
+        WynntilsMod.warn(
+                "Disabling " + type.toString().toLowerCase(Locale.ROOT) + " " + niceName + " due to " + reason);
         WynntilsMod.error("Exception thrown by " + fullName, throwable);
 
         if (shouldSendChat) {
-            McUtils.sendErrorToClient("Wynntils error: " + type.getName() + " '" + niceName + "' has crashed"
-                    + (isDisabled ? " and has been disabled" : ""));
+            McUtils.sendErrorToClient("Wynntils error: " + type.getName() + " '" + niceName + "' has crashed in "
+                    + reason + (isDisabled ? " and has been disabled" : ""));
         }
 
         postEvent(new WynntilsCrashEvent(fullName, type, throwable));

@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2022.
+ * Copyright © Wynntils 2022-2023.
  * This file is released under AGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.utils.render;
@@ -12,9 +12,9 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.Tesselator;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.mojang.blaze3d.vertex.VertexFormat;
-import com.wynntils.models.lootruns.LootrunInstance;
-import com.wynntils.models.map.MapTexture;
-import com.wynntils.models.map.pois.Poi;
+import com.wynntils.services.lootrunpaths.LootrunPathInstance;
+import com.wynntils.services.map.MapTexture;
+import com.wynntils.services.map.pois.Poi;
 import com.wynntils.utils.MathUtils;
 import com.wynntils.utils.VectorUtils;
 import com.wynntils.utils.colors.CustomColor;
@@ -154,7 +154,7 @@ public final class MapRenderer {
     }
 
     public static void renderLootrunLine(
-            LootrunInstance lootrun,
+            LootrunPathInstance lootrun,
             float lootrunWidth,
             float outlineWidth,
             PoseStack poseStack,

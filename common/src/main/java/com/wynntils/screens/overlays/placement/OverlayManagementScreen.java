@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2022.
+ * Copyright © Wynntils 2022-2023.
  * This file is released under AGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.screens.overlays.placement;
@@ -7,14 +7,14 @@ package com.wynntils.screens.overlays.placement;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.wynntils.core.components.Managers;
 import com.wynntils.core.config.ConfigHolder;
-import com.wynntils.core.features.overlays.Corner;
-import com.wynntils.core.features.overlays.Edge;
-import com.wynntils.core.features.overlays.Overlay;
-import com.wynntils.core.features.overlays.OverlayPosition;
-import com.wynntils.core.features.overlays.OverlaySize;
-import com.wynntils.core.features.overlays.SectionCoordinates;
+import com.wynntils.core.consumers.overlays.Corner;
+import com.wynntils.core.consumers.overlays.Edge;
+import com.wynntils.core.consumers.overlays.Overlay;
+import com.wynntils.core.consumers.overlays.OverlayPosition;
+import com.wynntils.core.consumers.overlays.OverlaySize;
+import com.wynntils.core.consumers.overlays.SectionCoordinates;
+import com.wynntils.core.consumers.screens.WynntilsScreen;
 import com.wynntils.core.text.StyledText;
-import com.wynntils.screens.base.WynntilsScreen;
 import com.wynntils.screens.overlays.selection.OverlaySelectionScreen;
 import com.wynntils.utils.MathUtils;
 import com.wynntils.utils.colors.CommonColors;
@@ -65,7 +65,7 @@ public final class OverlayManagementScreen extends WynntilsScreen {
             Component.literal("Resize the overlay by dragging the edges or corners."),
             Component.literal("Move it by dragging the center of the overlay."),
             Component.literal("By holding shift, you can disable alignment lines."),
-            Component.literal("Use your arrows to change vertical"),
+            Component.literal("Use shift-arrows to change vertical"),
             Component.literal("and horizontal alignment."),
             Component.literal("The overlay name will render respecting"),
             Component.literal("the current overlay alignments."),

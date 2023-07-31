@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2022.
+ * Copyright © Wynntils 2022-2023.
  * This file is released under AGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.commands;
@@ -7,8 +7,8 @@ package com.wynntils.commands;
 import com.mojang.brigadier.arguments.StringArgumentType;
 import com.mojang.brigadier.builder.LiteralArgumentBuilder;
 import com.mojang.brigadier.context.CommandContext;
-import com.wynntils.core.commands.Command;
 import com.wynntils.core.components.Models;
+import com.wynntils.core.consumers.commands.Command;
 import com.wynntils.models.worlds.profile.ServerProfile;
 import com.wynntils.utils.StringUtils;
 import java.util.List;

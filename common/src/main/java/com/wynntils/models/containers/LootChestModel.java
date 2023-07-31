@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2022.
+ * Copyright © Wynntils 2022-2023.
  * This file is released under AGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.models.containers;
@@ -7,6 +7,7 @@ package com.wynntils.models.containers;
 import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.components.Model;
 import com.wynntils.core.components.Models;
+import com.wynntils.core.storage.RegisterStorage;
 import com.wynntils.core.storage.Storage;
 import com.wynntils.core.text.StyledText;
 import com.wynntils.mc.event.ChestMenuQuickMoveEvent;
@@ -21,6 +22,7 @@ import com.wynntils.models.items.items.game.EmeraldItem;
 import com.wynntils.models.items.items.game.GearBoxItem;
 import com.wynntils.models.items.items.game.GearItem;
 import com.wynntils.utils.mc.type.Location;
+import com.wynntils.utils.type.RangedValue;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.EnumMap;
@@ -36,12 +38,23 @@ import net.minecraftforge.eventbus.api.SubscribeEvent;
 public final class LootChestModel extends Model {
     private static final int LOOT_CHEST_ITEM_COUNT = 27;
 
+    @RegisterStorage
     private final Storage<List<MythicFind>> mythicFinds = new Storage<>(new ArrayList<>());
+
+    @RegisterStorage
     private final Storage<Integer> openedChestCount = new Storage<>(0);
+
+    @RegisterStorage
     private final Storage<Integer> dryCount = new Storage<>(0);
+
+    @RegisterStorage
     private final Storage<Integer> dryBoxes = new Storage<>(0);
-    private Storage<Integer> dryEmeralds = new Storage<>(0);
-    private Storage<Map<GearTier, Integer>> dryItemTiers = new Storage<>(new EnumMap<>(GearTier.class));
+
+    @RegisterStorage
+    private final Storage<Integer> dryEmeralds = new Storage<>(0);
+
+    @RegisterStorage
+    private final Storage<Map<GearTier, Integer>> dryItemTiers = new Storage<>(new EnumMap<>(GearTier.class));
 
     private BlockPos lastChestPos;
     private int nextExpectedLootContainerId = -2;
@@ -112,7 +125,7 @@ public final class LootChestModel extends Model {
             WynntilsMod.postEvent(new MythicFoundEvent(itemStack));
 
             if (gearBox.getGearType() != GearType.MASTERY_TOME) {
-                storeMythicFind(itemStack);
+                storeMythicFind(itemStack, gearBox.getLevelRange());
                 resetDryStatistics();
             }
         }
@@ -150,18 +163,19 @@ public final class LootChestModel extends Model {
         }
     }
 
-    private void storeMythicFind(ItemStack itemStack) {
+    private void storeMythicFind(ItemStack itemStack, RangedValue levelRange) {
         mythicFinds
                 .get()
                 .add(new MythicFind(
                         StyledText.fromComponent(itemStack.getHoverName()).getStringWithoutFormatting(),
+                        levelRange,
                         openedChestCount.get(),
                         dryCount.get(),
                         dryBoxes.get(),
                         dryEmeralds.get(),
                         dryItemTiers.get(),
-                        System.currentTimeMillis(),
-                        new Location(lastChestPos)));
+                        new Location(lastChestPos),
+                        System.currentTimeMillis()));
 
         mythicFinds.touched();
     }

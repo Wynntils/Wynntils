@@ -8,10 +8,10 @@ import com.mojang.brigadier.arguments.StringArgumentType;
 import com.mojang.brigadier.builder.LiteralArgumentBuilder;
 import com.mojang.brigadier.context.CommandContext;
 import com.mojang.brigadier.suggestion.SuggestionProvider;
-import com.wynntils.core.commands.Command;
-import com.wynntils.core.components.Models;
-import com.wynntils.models.statistics.StatisticEntry;
-import com.wynntils.models.statistics.StatisticKind;
+import com.wynntils.core.components.Services;
+import com.wynntils.core.consumers.commands.Command;
+import com.wynntils.services.statistics.type.StatisticEntry;
+import com.wynntils.services.statistics.type.StatisticKind;
 import java.util.Arrays;
 import java.util.Comparator;
 import java.util.List;
@@ -64,7 +64,7 @@ public class StatisticsCommand extends Command {
         for (StatisticKind statistic : Arrays.stream(StatisticKind.values())
                 .sorted(Comparator.comparing(StatisticKind::getName))
                 .toList()) {
-            int value = Models.Statistics.getStatistic(statistic).total();
+            int value = Services.Statistics.getStatistic(statistic).total();
 
             response.append(Component.literal("\n - ").withStyle(ChatFormatting.GRAY))
                     .append(Component.literal(statistic.getName()).withStyle(ChatFormatting.WHITE))
@@ -102,7 +102,7 @@ public class StatisticsCommand extends Command {
             return 0;
         }
 
-        StatisticEntry value = Models.Statistics.getStatistic(statistic);
+        StatisticEntry value = Services.Statistics.getStatistic(statistic);
 
         MutableComponent response = Component.literal(statistic.getName())
                 .withStyle(ChatFormatting.WHITE)
@@ -119,7 +119,7 @@ public class StatisticsCommand extends Command {
                 .append(Component.literal(statistic.getFormattedValue(value.max()))
                         .withStyle(ChatFormatting.DARK_GREEN))
                 .append(Component.literal("\nAverage: ").withStyle(ChatFormatting.GRAY))
-                .append(Component.literal(statistic.getFormattedValue(value.total() / value.count()))
+                .append(Component.literal(statistic.getFormattedValue(value.average()))
                         .withStyle(ChatFormatting.DARK_GREEN));
 
         context.getSource().sendSuccess(response, false);
@@ -145,7 +145,7 @@ public class StatisticsCommand extends Command {
     }
 
     private int doResetStatistics(CommandContext<CommandSourceStack> context) {
-        Models.Statistics.resetStatistics();
+        Services.Statistics.resetStatistics();
 
         MutableComponent response = Component.literal("All statistics for this character has been reset")
                 .withStyle(ChatFormatting.AQUA);

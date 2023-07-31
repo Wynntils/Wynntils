@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2022.
+ * Copyright © Wynntils 2022-2023.
  * This file is released under AGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.features.debug;
@@ -10,10 +10,10 @@ import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.components.Models;
 import com.wynntils.core.config.Category;
 import com.wynntils.core.config.ConfigCategory;
-import com.wynntils.core.features.Feature;
-import com.wynntils.core.features.properties.RegisterCommand;
-import com.wynntils.core.features.properties.RegisterKeyBind;
-import com.wynntils.core.features.properties.StartDisabled;
+import com.wynntils.core.consumers.features.Feature;
+import com.wynntils.core.consumers.features.properties.RegisterCommand;
+import com.wynntils.core.consumers.features.properties.RegisterKeyBind;
+import com.wynntils.core.consumers.features.properties.StartDisabled;
 import com.wynntils.core.keybinds.KeyBind;
 import com.wynntils.core.text.StyledText;
 import com.wynntils.models.items.WynnItem;

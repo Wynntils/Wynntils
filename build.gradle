@@ -96,6 +96,7 @@ allprojects {
             palantirJavaFormat(spotless_palantir_version)
             trimTrailingWhitespace()
             endWithNewline()
+            ratchetFrom('origin/main')
             // Custom rule from https://github.com/apache/geode
             custom "Refuse wildcard imports", {
                 if (it =~ /\nimport .*\*;/) {
@@ -110,10 +111,11 @@ allprojects {
             custom "No empty line after opening curly brace", {
                 it.replaceAll(/\{\n\n/, '{\n')
             }
-            licenseHeader "/*\n" +
+            licenseHeader("/*\n" +
                     " * Copyright © Wynntils \$YEAR.\n" +
                     " * This file is released under AGPLv3. See LICENSE for full license details.\n" +
-                    " */"
+                    " */")
+                    .updateYearWithLatest(true)
         }
         json {
             target "src/**/*.json"
@@ -130,6 +132,13 @@ allprojects {
                 it.replaceAll(/^\{\}\n$/, '')
             }
         }
+        groovyGradle {
+            target '**/*.gradle'
+            greclipse("${spotless_greclipse_version}").configFile("${rootDir}/greclipse.properties")
+            trimTrailingWhitespace()
+            endWithNewline()
+        }
+
         format "misc", {
             // define the files to apply `misc` to
             target "*.gradle", "*.md", ".gitignore", "*.properties"

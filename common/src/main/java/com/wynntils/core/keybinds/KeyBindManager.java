@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2022.
+ * Copyright © Wynntils 2022-2023.
  * This file is released under AGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.core.keybinds;
@@ -9,8 +9,8 @@ import com.mojang.blaze3d.platform.InputConstants;
 import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.components.Manager;
 import com.wynntils.core.components.Managers;
-import com.wynntils.core.features.Feature;
-import com.wynntils.core.features.properties.RegisterKeyBind;
+import com.wynntils.core.consumers.features.Feature;
+import com.wynntils.core.consumers.features.properties.RegisterKeyBind;
 import com.wynntils.core.mod.type.CrashType;
 import com.wynntils.mc.event.InventoryKeyPressEvent;
 import com.wynntils.mc.event.InventoryMouseClickedEvent;
@@ -166,7 +166,11 @@ public final class KeyBindManager extends Manager {
                     crashedKeyBinds.add(Pair.of(parent, keyBind.key()));
 
                     WynntilsMod.reportCrash(
-                            parent.getClass().getName() + "." + keyBind.value(), keyBind.value(), CrashType.KEYBIND, t);
+                            CrashType.KEYBIND,
+                            keyBind.value(),
+                            parent.getClass().getName() + "." + keyBind.value(),
+                            "handling",
+                            t);
                 }
             }
         }

@@ -1,12 +1,13 @@
 /*
- * Copyright © Wynntils 2022.
+ * Copyright © Wynntils 2022-2023.
  * This file is released under AGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.functions;
 
 import com.wynntils.core.components.Models;
-import com.wynntils.core.functions.Function;
-import com.wynntils.core.functions.arguments.FunctionArguments;
+import com.wynntils.core.components.Services;
+import com.wynntils.core.consumers.functions.Function;
+import com.wynntils.core.consumers.functions.arguments.FunctionArguments;
 import com.wynntils.models.mobtotem.MobTotem;
 import com.wynntils.models.territories.profile.TerritoryProfile;
 import com.wynntils.models.token.type.TokenGatekeeper;
@@ -240,7 +241,7 @@ public class WorldFunctions {
     public static class PingFunction extends Function<Integer> {
         @Override
         public Integer getValue(FunctionArguments arguments) {
-            return Models.Ping.getPing();
+            return Services.Ping.getPing();
         }
     }
 

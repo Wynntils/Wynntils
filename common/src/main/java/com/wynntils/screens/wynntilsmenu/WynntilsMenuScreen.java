@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2022.
+ * Copyright © Wynntils 2022-2023.
  * This file is released under AGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.screens.wynntilsmenu;
@@ -7,28 +7,33 @@ package com.wynntils.screens.wynntilsmenu;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.wynntils.core.components.Managers;
 import com.wynntils.core.components.Models;
+import com.wynntils.core.components.Services;
 import com.wynntils.core.text.StyledText;
-import com.wynntils.features.map.MapFeature;
+import com.wynntils.features.map.MainMapFeature;
+import com.wynntils.features.ui.WynntilsContentBookFeature;
 import com.wynntils.screens.activities.WynntilsCaveScreen;
 import com.wynntils.screens.activities.WynntilsDialogueHistoryScreen;
 import com.wynntils.screens.activities.WynntilsDiscoveriesScreen;
 import com.wynntils.screens.activities.WynntilsQuestBookScreen;
 import com.wynntils.screens.base.WynntilsMenuScreenBase;
 import com.wynntils.screens.guides.WynntilsGuidesListScreen;
-import com.wynntils.screens.lootrun.WynntilsLootrunsScreen;
+import com.wynntils.screens.lootrunpaths.WynntilsLootrunPathsScreen;
 import com.wynntils.screens.maps.MainMapScreen;
 import com.wynntils.screens.maps.PoiManagementScreen;
 import com.wynntils.screens.overlays.selection.OverlaySelectionScreen;
 import com.wynntils.screens.settings.WynntilsBookSettingsScreen;
+import com.wynntils.screens.statistics.WynntilsStatisticsScreen;
 import com.wynntils.screens.wynntilsmenu.widgets.WynntilsMenuButton;
 import com.wynntils.utils.colors.CommonColors;
 import com.wynntils.utils.colors.CustomColor;
 import com.wynntils.utils.mc.McUtils;
+import com.wynntils.utils.mc.RenderedStringUtils;
 import com.wynntils.utils.render.FontRenderer;
 import com.wynntils.utils.render.RenderUtils;
 import com.wynntils.utils.render.Texture;
 import com.wynntils.utils.render.type.HorizontalAlignment;
 import com.wynntils.utils.render.type.TextShadow;
+import com.wynntils.utils.type.CappedValue;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
@@ -53,6 +58,11 @@ public final class WynntilsMenuScreen extends WynntilsMenuScreenBase {
     private WynntilsMenuScreen() {
         super(Component.translatable("screens.wynntils.wynntilsMenu.name"));
         setup();
+        if (Managers.Feature.getFeatureInstance(WynntilsContentBookFeature.class)
+                .displayOverallProgress
+                .get()) {
+            Models.Activity.scanOverallProgress();
+        }
     }
 
     public static Screen create() {
@@ -119,7 +129,7 @@ public final class WynntilsMenuScreen extends WynntilsMenuScreenBase {
 
         // region Row 2: Map
 
-        if (Managers.Feature.getFeatureInstance(MapFeature.class).isEnabled()) {
+        if (Managers.Feature.getFeatureInstance(MainMapFeature.class).isEnabled()) {
             buttons.get(1)
                     .add(new WynntilsMenuButton(
                             Texture.MAP_ICON,
@@ -142,7 +152,7 @@ public final class WynntilsMenuScreen extends WynntilsMenuScreenBase {
                 .add(new WynntilsMenuButton(
                         Texture.LOOTRUN_ICON,
                         true,
-                        WynntilsLootrunsScreen.create(),
+                        WynntilsLootrunPathsScreen.create(),
                         List.of(
                                 Component.literal("[>] ")
                                         .withStyle(ChatFormatting.GOLD)
@@ -204,6 +214,23 @@ public final class WynntilsMenuScreen extends WynntilsMenuScreenBase {
                                                 .withStyle(ChatFormatting.BOLD)
                                                 .withStyle(ChatFormatting.GOLD)),
                                 Component.translatable("screens.wynntils.wynntilsQuestBook.dialogueHistory.description")
+                                        .withStyle(ChatFormatting.GRAY),
+                                Component.literal(""),
+                                Component.translatable("screens.wynntils.wynntilsMenu.leftClickToSelect")
+                                        .withStyle(ChatFormatting.GREEN))));
+
+        buttons.get(2)
+                .add(new WynntilsMenuButton(
+                        Texture.FAVORITE,
+                        false,
+                        WynntilsStatisticsScreen.create(),
+                        List.of(
+                                Component.literal("[>] ")
+                                        .withStyle(ChatFormatting.GOLD)
+                                        .append(Component.translatable("screens.wynntils.statistics.name")
+                                                .withStyle(ChatFormatting.BOLD)
+                                                .withStyle(ChatFormatting.GOLD)),
+                                Component.translatable("screens.wynntils.statistics.description")
                                         .withStyle(ChatFormatting.GRAY),
                                 Component.literal(""),
                                 Component.translatable("screens.wynntils.wynntilsMenu.leftClickToSelect")
@@ -338,20 +365,42 @@ public final class WynntilsMenuScreen extends WynntilsMenuScreenBase {
                         CommonColors.PURPLE,
                         HorizontalAlignment.CENTER,
                         TextShadow.NONE);
+        if (Managers.Feature.getFeatureInstance(WynntilsContentBookFeature.class)
+                .displayOverallProgress
+                .get()) {
+            CappedValue progress = Models.Activity.getOverallProgress();
+            FontRenderer.getInstance()
+                    .renderAlignedTextInBox(
+                            poseStack,
+                            StyledText.fromString(ChatFormatting.BLACK + "Progress: " + ChatFormatting.DARK_AQUA
+                                    + progress.getPercentageInt() + "%" + ChatFormatting.BLACK + " ["
+                                    + ChatFormatting.DARK_AQUA + progress + ChatFormatting.BLACK + "]"),
+                            Texture.QUEST_BOOK_BACKGROUND.width() / 2f,
+                            Texture.QUEST_BOOK_BACKGROUND.width(),
+                            160,
+                            0,
+                            CommonColors.BLACK,
+                            HorizontalAlignment.CENTER,
+                            TextShadow.NONE);
+        }
 
-        String currentSplash = Managers.Splash.getCurrentSplash();
-        currentSplash = currentSplash == null ? "" : currentSplash;
-        FontRenderer.getInstance()
-                .renderAlignedTextInBox(
-                        poseStack,
-                        StyledText.fromString(currentSplash),
-                        Texture.QUEST_BOOK_BACKGROUND.width() / 2f,
-                        Texture.QUEST_BOOK_BACKGROUND.width(),
-                        Texture.QUEST_BOOK_BACKGROUND.height() - 45,
-                        0,
-                        CommonColors.MAGENTA,
-                        HorizontalAlignment.CENTER,
-                        TextShadow.NONE);
+        String currentSplash = Services.Splash.getCurrentSplash() == null ? "" : Services.Splash.getCurrentSplash();
+        StyledText[] wrappedSplash = RenderedStringUtils.wrapTextBySize(
+                StyledText.fromString(currentSplash), Texture.QUEST_BOOK_BACKGROUND.width() / 2 - 20);
+
+        for (int i = 0; i < wrappedSplash.length; i++) {
+            FontRenderer.getInstance()
+                    .renderAlignedTextInBox(
+                            poseStack,
+                            wrappedSplash[i],
+                            Texture.QUEST_BOOK_BACKGROUND.width() / 2f,
+                            Texture.QUEST_BOOK_BACKGROUND.width(),
+                            Texture.QUEST_BOOK_BACKGROUND.height() - 45 + i * (McUtils.mc().font.lineHeight + 1),
+                            0,
+                            CommonColors.MAGENTA,
+                            HorizontalAlignment.CENTER,
+                            TextShadow.NONE);
+        }
     }
 
     @Override

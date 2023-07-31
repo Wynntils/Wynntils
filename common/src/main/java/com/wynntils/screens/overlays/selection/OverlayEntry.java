@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2022.
+ * Copyright © Wynntils 2022-2023.
  * This file is released under AGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.screens.overlays.selection;
@@ -7,7 +7,7 @@ package com.wynntils.screens.overlays.selection;
 import com.google.common.collect.ImmutableList;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.wynntils.core.components.Managers;
-import com.wynntils.core.features.overlays.Overlay;
+import com.wynntils.core.consumers.overlays.Overlay;
 import com.wynntils.core.text.StyledText;
 import com.wynntils.screens.overlays.placement.OverlayManagementScreen;
 import com.wynntils.utils.colors.CommonColors;

@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2022.
+ * Copyright © Wynntils 2022-2023.
  * This file is released under AGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.core.net;
@@ -148,7 +148,12 @@ public final class NetManager extends Manager {
 
         try (InputStream is = Files.newInputStream(localFile.toPath())) {
             String fileHash = DigestUtils.md5Hex(is);
-            return fileHash.equalsIgnoreCase(expectedHash);
+            boolean hashMatches = fileHash.equalsIgnoreCase(expectedHash);
+            if (WynntilsMod.isDevelopmentEnvironment() && !hashMatches) {
+                WynntilsMod.warn("Hash mismatch for " + localFile.getPath() + ": " + fileHash + " != " + expectedHash
+                        + ". If you see this often, check urls.json, there might be an outdated hash.");
+            }
+            return hashMatches;
         } catch (IOException e) {
             WynntilsMod.warn("Error when calculating md5 for " + localFile.getPath(), e);
             return false;

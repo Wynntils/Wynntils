@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2022.
+ * Copyright © Wynntils 2022-2023.
  * This file is released under AGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.screens.maps;
@@ -10,16 +10,16 @@ import com.wynntils.core.components.Managers;
 import com.wynntils.core.components.Models;
 import com.wynntils.core.text.StyledText;
 import com.wynntils.features.map.GuildMapFeature;
-import com.wynntils.models.map.pois.Poi;
-import com.wynntils.models.map.pois.TerritoryPoi;
-import com.wynntils.models.map.pois.WaypointPoi;
-import com.wynntils.models.map.type.TerritoryDefenseFilterType;
 import com.wynntils.models.territories.TerritoryInfo;
 import com.wynntils.models.territories.profile.TerritoryProfile;
 import com.wynntils.models.territories.type.GuildResource;
 import com.wynntils.models.territories.type.GuildResourceValues;
 import com.wynntils.models.territories.type.TerritoryStorage;
 import com.wynntils.screens.base.widgets.BasicTexturedButton;
+import com.wynntils.services.map.pois.Poi;
+import com.wynntils.services.map.pois.TerritoryPoi;
+import com.wynntils.services.map.pois.WaypointPoi;
+import com.wynntils.services.map.type.TerritoryDefenseFilterType;
 import com.wynntils.utils.colors.CommonColors;
 import com.wynntils.utils.mc.KeyboardUtils;
 import com.wynntils.utils.mc.McUtils;
@@ -313,7 +313,10 @@ public final class GuildMapScreen extends AbstractMapScreen {
                 TerritoryProfile territoryProfile = Models.Territory.getTerritoryProfile(poi.getName());
 
                 // If the API and advamcement pois don't match, we use the API pois without advancement info
-                if (territoryProfile.getGuild().equals(poi.getTerritoryInfo().getGuildName())) {
+                if (territoryProfile != null
+                        && territoryProfile
+                                .getGuild()
+                                .equals(poi.getTerritoryInfo().getGuildName())) {
                     renderedPois.add(poi);
                 } else {
                     renderedPois.add(new TerritoryPoi(territoryProfile, poi.getTerritoryInfo()));

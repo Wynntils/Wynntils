@@ -1,14 +1,14 @@
 /*
- * Copyright © Wynntils 2022.
+ * Copyright © Wynntils 2022-2023.
  * This file is released under AGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.screens.characterselector;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.wynntils.core.components.Models;
+import com.wynntils.core.consumers.screens.WynntilsScreen;
 import com.wynntils.core.text.StyledText;
 import com.wynntils.models.character.type.ClassInfo;
-import com.wynntils.screens.base.WynntilsScreen;
 import com.wynntils.screens.characterselector.widgets.ChangeWorldButton;
 import com.wynntils.screens.characterselector.widgets.ClassInfoButton;
 import com.wynntils.screens.characterselector.widgets.ClassSelectionAddButton;

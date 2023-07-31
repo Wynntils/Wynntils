@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2022.
+ * Copyright © Wynntils 2022-2023.
  * This file is released under AGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.features.combat;
@@ -8,8 +8,8 @@ import com.wynntils.core.components.Managers;
 import com.wynntils.core.components.Models;
 import com.wynntils.core.config.Category;
 import com.wynntils.core.config.ConfigCategory;
-import com.wynntils.core.features.Feature;
-import com.wynntils.core.features.properties.RegisterKeyBind;
+import com.wynntils.core.consumers.features.Feature;
+import com.wynntils.core.consumers.features.properties.RegisterKeyBind;
 import com.wynntils.core.keybinds.KeyBind;
 import com.wynntils.core.text.StyledText;
 import com.wynntils.mc.event.TickEvent;
@@ -18,7 +18,7 @@ import com.wynntils.models.spells.type.SpellDirection;
 import com.wynntils.models.worlds.event.WorldStateEvent;
 import com.wynntils.utils.mc.LoreUtils;
 import com.wynntils.utils.mc.McUtils;
-import com.wynntils.utils.wynn.WynnItemMatchers;
+import com.wynntils.utils.wynn.ItemUtils;
 import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.List;
@@ -100,7 +100,7 @@ public class QuickCastFeature extends Feature {
 
         ItemStack heldItem = McUtils.player().getItemInHand(InteractionHand.MAIN_HAND);
 
-        if (!WynnItemMatchers.isWeapon(heldItem)) {
+        if (!ItemUtils.isWeapon(heldItem)) {
             sendCancelReason(Component.translatable("feature.wynntils.quickCast.notAWeapon"));
             return;
         }

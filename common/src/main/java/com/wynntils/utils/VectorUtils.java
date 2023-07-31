@@ -1,9 +1,10 @@
 /*
- * Copyright © Wynntils 2022.
+ * Copyright © Wynntils 2022-2023.
  * This file is released under AGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.utils;
 
+import net.minecraft.core.Position;
 import org.joml.Vector2f;
 
 public final class VectorUtils {
@@ -27,5 +28,9 @@ public final class VectorUtils {
             float y = (a0 * c1 - a1 * c0) / det;
             return new Vector2f(x, y);
         }
+    }
+
+    public static float distanceIgnoringY(Position pos1, Position pos2) {
+        return (float) Math.sqrt(Math.pow(pos1.x() - pos2.x(), 2) + Math.pow(pos1.z() - pos2.z(), 2));
     }
 }

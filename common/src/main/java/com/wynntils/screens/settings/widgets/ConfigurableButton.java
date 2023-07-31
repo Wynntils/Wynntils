@@ -1,27 +1,26 @@
 /*
- * Copyright © Wynntils 2022.
+ * Copyright © Wynntils 2022-2023.
  * This file is released under AGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.screens.settings.widgets;
 
 import com.mojang.blaze3d.vertex.PoseStack;
-import com.wynntils.core.features.Configurable;
-import com.wynntils.core.features.Feature;
-import com.wynntils.core.features.Translatable;
-import com.wynntils.core.features.overlays.Overlay;
+import com.wynntils.core.consumers.features.Configurable;
+import com.wynntils.core.consumers.features.Feature;
+import com.wynntils.core.consumers.features.Translatable;
+import com.wynntils.core.consumers.overlays.Overlay;
 import com.wynntils.core.text.StyledText;
 import com.wynntils.screens.base.widgets.WynntilsButton;
 import com.wynntils.screens.settings.WynntilsBookSettingsScreen;
 import com.wynntils.utils.colors.CommonColors;
 import com.wynntils.utils.colors.CustomColor;
+import com.wynntils.utils.mc.ComponentUtils;
 import com.wynntils.utils.mc.McUtils;
-import com.wynntils.utils.mc.RenderedStringUtils;
 import com.wynntils.utils.render.FontRenderer;
 import com.wynntils.utils.render.RenderUtils;
 import com.wynntils.utils.render.type.HorizontalAlignment;
 import com.wynntils.utils.render.type.TextShadow;
 import com.wynntils.utils.render.type.VerticalAlignment;
-import java.util.Arrays;
 import java.util.List;
 import net.minecraft.network.chat.Component;
 
@@ -35,11 +34,8 @@ public class ConfigurableButton extends WynntilsButton {
         this.configurable = configurable;
 
         if (configurable instanceof Feature feature) {
-            descriptionTooltip = Arrays.stream(RenderedStringUtils.wrapTextBySize(
-                            StyledText.fromString(feature.getTranslatedDescription()), 150))
-                    .map(StyledText::getComponent)
-                    .map(c -> (Component) c)
-                    .toList();
+            descriptionTooltip =
+                    ComponentUtils.wrapTooltips(List.of(Component.literal(feature.getTranslatedDescription())), 150);
         } else {
             descriptionTooltip = List.of();
         }

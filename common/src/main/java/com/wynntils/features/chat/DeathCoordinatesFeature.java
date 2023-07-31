@@ -6,7 +6,7 @@ package com.wynntils.features.chat;
 
 import com.wynntils.core.config.Category;
 import com.wynntils.core.config.ConfigCategory;
-import com.wynntils.core.features.Feature;
+import com.wynntils.core.consumers.features.Feature;
 import com.wynntils.core.text.StyledText;
 import com.wynntils.models.character.event.CharacterDeathEvent;
 import com.wynntils.utils.mc.McUtils;

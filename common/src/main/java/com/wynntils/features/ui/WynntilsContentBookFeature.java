@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2022.
+ * Copyright © Wynntils 2022-2023.
  * This file is released under AGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.features.ui;
@@ -8,8 +8,8 @@ import com.wynntils.core.config.Category;
 import com.wynntils.core.config.Config;
 import com.wynntils.core.config.ConfigCategory;
 import com.wynntils.core.config.RegisterConfig;
-import com.wynntils.core.features.Feature;
-import com.wynntils.core.features.properties.RegisterKeyBind;
+import com.wynntils.core.consumers.features.Feature;
+import com.wynntils.core.consumers.features.properties.RegisterKeyBind;
 import com.wynntils.core.keybinds.KeyBind;
 import com.wynntils.core.text.StyledText;
 import com.wynntils.mc.event.PlayerInteractEvent;
@@ -94,6 +94,9 @@ public class WynntilsContentBookFeature extends Feature {
 
     @RegisterConfig
     public final Config<Boolean> showContentBookLoadingUpdates = new Config<>(true);
+
+    @RegisterConfig
+    public final Config<Boolean> displayOverallProgress = new Config<>(true);
 
     @SubscribeEvent
     public void onUseItem(UseItemEvent event) {

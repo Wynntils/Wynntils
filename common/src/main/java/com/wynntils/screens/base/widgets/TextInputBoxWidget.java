@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2022.
+ * Copyright © Wynntils 2022-2023.
  * This file is released under AGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.screens.base.widgets;
@@ -259,7 +259,12 @@ public class TextInputBoxWidget extends AbstractWidget {
     public boolean mouseClicked(double mouseX, double mouseY, int button) {
         if (this.isHovered) {
             McUtils.playSoundUI(SoundEvents.UI_BUTTON_CLICK.value());
-            setCursorAndHighlightPositions(getIndexAtPosition(mouseX));
+            if (button == GLFW.GLFW_MOUSE_BUTTON_2) {
+                setTextBoxInput("");
+                setCursorAndHighlightPositions(0);
+            } else {
+                setCursorAndHighlightPositions(getIndexAtPosition(mouseX));
+            }
             isDragging = true;
             textboxScreen.setFocusedTextInput(this);
             this.setFocused(true);
@@ -323,6 +328,8 @@ public class TextInputBoxWidget extends AbstractWidget {
 
     @Override
     public boolean charTyped(char codePoint, int modifiers) {
+        if (!isFocused()) return false;
+
         if (textBoxInput == null) {
             textBoxInput = "";
         }

@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2022.
+ * Copyright © Wynntils 2022-2023.
  * This file is released under AGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.models.activities.discoveries;
@@ -21,7 +21,7 @@ import com.wynntils.models.activities.type.ActivitySortOrder;
 import com.wynntils.models.activities.type.ActivityType;
 import com.wynntils.models.activities.type.DiscoveryType;
 import com.wynntils.models.characterstats.CombatXpModel;
-import com.wynntils.models.map.CompassModel;
+import com.wynntils.models.compass.CompassModel;
 import com.wynntils.models.territories.TerritoryModel;
 import com.wynntils.models.territories.profile.TerritoryProfile;
 import com.wynntils.models.worlds.event.WorldStateEvent;

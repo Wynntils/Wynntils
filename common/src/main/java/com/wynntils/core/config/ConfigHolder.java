@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2022.
+ * Copyright © Wynntils 2022-2023.
  * This file is released under AGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.core.config;
@@ -7,9 +7,9 @@ package com.wynntils.core.config;
 import com.google.common.base.CaseFormat;
 import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.components.Managers;
-import com.wynntils.core.features.Configurable;
-import com.wynntils.core.features.Translatable;
-import com.wynntils.core.features.overlays.Overlay;
+import com.wynntils.core.consumers.features.Configurable;
+import com.wynntils.core.consumers.features.Translatable;
+import com.wynntils.core.consumers.overlays.Overlay;
 import com.wynntils.utils.EnumUtils;
 import java.lang.reflect.Type;
 import java.util.Objects;
@@ -74,16 +74,16 @@ public class ConfigHolder implements Comparable<ConfigHolder> {
     }
 
     public String getJsonName() {
-        if (parent instanceof Overlay) {
+        if (parent instanceof Overlay overlay) {
             // "featureName.overlayName.settingName"
-            return getDeclaringFeatureNameCamelCase() + "." + parent.getConfigJsonName() + "." + getFieldName();
+            return getDeclaringFeatureNameCamelCase(overlay) + "." + parent.getConfigJsonName() + "." + getFieldName();
         }
         // "featureName.settingName"
         return parent.getConfigJsonName() + "." + getFieldName();
     }
 
-    private String getDeclaringFeatureNameCamelCase() {
-        String name = parent.getClass().getDeclaringClass().getSimpleName();
+    private String getDeclaringFeatureNameCamelCase(Overlay overlay) {
+        String name = overlay.getDeclaringClassName();
         return CaseFormat.UPPER_CAMEL.to(CaseFormat.LOWER_CAMEL, name);
     }
 

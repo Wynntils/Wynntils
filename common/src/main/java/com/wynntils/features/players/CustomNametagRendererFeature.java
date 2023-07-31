@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2022.
+ * Copyright © Wynntils 2022-2023.
  * This file is released under AGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.features.players;
@@ -9,7 +9,7 @@ import com.wynntils.core.config.Category;
 import com.wynntils.core.config.Config;
 import com.wynntils.core.config.ConfigCategory;
 import com.wynntils.core.config.RegisterConfig;
-import com.wynntils.core.features.Feature;
+import com.wynntils.core.consumers.features.Feature;
 import com.wynntils.core.text.PartStyle;
 import com.wynntils.core.text.StyledText;
 import com.wynntils.mc.event.EntityNameTagRenderEvent;
@@ -21,8 +21,8 @@ import com.wynntils.models.players.type.AccountType;
 import com.wynntils.screens.gearviewer.GearViewerScreen;
 import com.wynntils.utils.mc.McUtils;
 import com.wynntils.utils.render.RenderUtils;
+import com.wynntils.utils.wynn.ItemUtils;
 import com.wynntils.utils.wynn.RaycastUtils;
-import com.wynntils.utils.wynn.WynnItemMatchers;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -131,7 +131,7 @@ public class CustomNametagRendererFeature extends Feature {
 
         // This must specifically NOT be normalized; the ֎ is significant
         String gearName = StyledText.fromComponent(itemStack.getHoverName()).getStringWithoutFormatting();
-        MutableComponent description = WynnItemMatchers.getNonGearDescription(itemStack, gearName);
+        MutableComponent description = ItemUtils.getNonGearDescription(itemStack, gearName);
         if (description != null) return description;
 
         GearInfo gearInfo = Models.Gear.getGearInfoFromApiName(gearName);

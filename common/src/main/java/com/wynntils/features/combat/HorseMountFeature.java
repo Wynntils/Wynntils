@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2022.
+ * Copyright © Wynntils 2022-2023.
  * This file is released under AGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.features.combat;
@@ -10,8 +10,8 @@ import com.wynntils.core.config.Category;
 import com.wynntils.core.config.Config;
 import com.wynntils.core.config.ConfigCategory;
 import com.wynntils.core.config.RegisterConfig;
-import com.wynntils.core.features.Feature;
-import com.wynntils.core.features.properties.RegisterKeyBind;
+import com.wynntils.core.consumers.features.Feature;
+import com.wynntils.core.consumers.features.properties.RegisterKeyBind;
 import com.wynntils.core.keybinds.KeyBind;
 import com.wynntils.core.text.StyledText;
 import com.wynntils.handlers.chat.event.ChatMessageReceivedEvent;
@@ -50,6 +50,7 @@ public class HorseMountFeature extends Feature {
             StyledText.fromString("§dYour horse is scared to come out right now, too many mobs are nearby.");
     private static final StyledText MSG_HORSE_UNAVAILABLE =
             StyledText.fromString("§4You cannot interact with your horse at the moment.");
+    private static final StyledText MSG_HORSE_NOT_ALLOWED = StyledText.fromString("§4You cannot use your horse here!");
 
     private int prevItem = -1;
     private boolean alreadySetPrevItem = false;
@@ -82,7 +83,8 @@ public class HorseMountFeature extends Feature {
 
         if (message.equals(MSG_NO_SPACE)
                 || message.equals(MSG_TOO_MANY_MOBS)
-                || message.equals(MSG_HORSE_UNAVAILABLE)) {
+                || message.equals(MSG_HORSE_UNAVAILABLE)
+                || message.equals(MSG_HORSE_NOT_ALLOWED)) {
             cancelMountingHorse = true;
         }
     }

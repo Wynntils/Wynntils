@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2022.
+ * Copyright © Wynntils 2022-2023.
  * This file is released under AGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.core.config;
@@ -11,13 +11,13 @@ import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.components.Manager;
 import com.wynntils.core.components.Managers;
 import com.wynntils.core.config.upfixers.ConfigUpfixerManager;
-import com.wynntils.core.features.Configurable;
-import com.wynntils.core.features.Feature;
-import com.wynntils.core.features.FeatureManager;
-import com.wynntils.core.features.Translatable;
-import com.wynntils.core.features.overlays.DynamicOverlay;
-import com.wynntils.core.features.overlays.Overlay;
-import com.wynntils.core.features.overlays.OverlayManager;
+import com.wynntils.core.consumers.features.Configurable;
+import com.wynntils.core.consumers.features.Feature;
+import com.wynntils.core.consumers.features.FeatureManager;
+import com.wynntils.core.consumers.features.Translatable;
+import com.wynntils.core.consumers.overlays.DynamicOverlay;
+import com.wynntils.core.consumers.overlays.Overlay;
+import com.wynntils.core.consumers.overlays.OverlayManager;
 import com.wynntils.core.json.JsonManager;
 import com.wynntils.utils.JsonUtils;
 import com.wynntils.utils.mc.McUtils;
@@ -247,7 +247,7 @@ public final class ConfigManager extends Manager {
             if (configInfo == null) {
                 throw new RuntimeException("A Config is missing @RegisterConfig annotation:" + configField);
             }
-            String i18nKey = configInfo.value();
+            String i18nKey = configInfo.i18nKey();
 
             Config configObj;
             try {

@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2022.
+ * Copyright © Wynntils 2022-2023.
  * This file is released under AGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.features.combat;
@@ -9,9 +9,10 @@ import com.wynntils.core.config.Category;
 import com.wynntils.core.config.Config;
 import com.wynntils.core.config.ConfigCategory;
 import com.wynntils.core.config.RegisterConfig;
-import com.wynntils.core.features.Feature;
+import com.wynntils.core.consumers.features.Feature;
 import com.wynntils.mc.event.GroundItemEntityTransformEvent;
-import com.wynntils.utils.wynn.WynnItemMatchers;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 
 @ConfigCategory(Category.COMBAT)
@@ -21,7 +22,7 @@ public class MythicBoxScalerFeature extends Feature {
 
     @SubscribeEvent
     public void onItemRendering(GroundItemEntityTransformEvent e) {
-        if (!WynnItemMatchers.isMythicBox(e.getItemStack())) return;
+        if (!isMythicBox(e.getItemStack())) return;
 
         PoseStack stack = e.getPoseStack();
 
@@ -35,5 +36,11 @@ public class MythicBoxScalerFeature extends Feature {
         stack.scale(scale.get(), scale.get(), scale.get());
 
         stack.translate(0f, 0.25f, 0f);
+    }
+
+    private boolean isMythicBox(ItemStack itemStack) {
+        // Since this item is not in any container/inventory, it does not
+        // have a WynnItem annotation
+        return itemStack.is(Items.STONE_SHOVEL) && itemStack.getDamageValue() == 6;
     }
 }

@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2022.
+ * Copyright © Wynntils 2022-2023.
  * This file is released under AGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.screens.base.widgets;
@@ -19,6 +19,7 @@ import java.util.function.Consumer;
 import net.minecraft.client.gui.Font;
 import net.minecraft.network.chat.Component;
 import net.minecraft.sounds.SoundEvents;
+import org.lwjgl.glfw.GLFW;
 
 public class SearchWidget extends TextInputBoxWidget {
     private static final Component DEFAULT_TEXT =
@@ -146,7 +147,12 @@ public class SearchWidget extends TextInputBoxWidget {
                 && mouseY >= this.getY()
                 && mouseY <= this.getY() + this.height) {
             McUtils.playSoundUI(SoundEvents.UI_BUTTON_CLICK.value());
-            setCursorAndHighlightPositions(getIndexAtPosition(mouseX));
+            if (button == GLFW.GLFW_MOUSE_BUTTON_2) {
+                setTextBoxInput("");
+                setCursorAndHighlightPositions(0);
+            } else {
+                setCursorAndHighlightPositions(getIndexAtPosition(mouseX));
+            }
             isDragging = true;
             textboxScreen.setFocusedTextInput(this);
             return true;
