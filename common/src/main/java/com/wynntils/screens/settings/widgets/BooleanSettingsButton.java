@@ -7,6 +7,7 @@ package com.wynntils.screens.settings.widgets;
 import com.wynntils.core.config.ConfigHolder;
 import com.wynntils.utils.colors.CommonColors;
 import com.wynntils.utils.colors.CustomColor;
+import com.wynntils.utils.mc.ComponentUtils;
 import com.wynntils.utils.render.FontRenderer;
 import java.util.List;
 import net.minecraft.network.chat.Component;
@@ -22,7 +23,7 @@ public class BooleanSettingsButton extends GeneralSettingsButton {
                 50,
                 FontRenderer.getInstance().getFont().lineHeight + 8,
                 getTitle(configHolder),
-                List.of(Component.literal(configHolder.getDescription())));
+                ComponentUtils.wrapTooltips(List.of(Component.literal(configHolder.getDescription())), 150));
         this.configHolder = configHolder;
     }
 

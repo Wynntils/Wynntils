@@ -64,7 +64,7 @@ public abstract class GeneralSettingsButton extends WynntilsButton {
                     0,
                     tooltip,
                     FontRenderer.getInstance().getFont(),
-                    true);
+                    false);
         }
     }
 
