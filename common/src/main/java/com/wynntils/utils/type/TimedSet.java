@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2022.
+ * Copyright © Wynntils 2022-2023.
  * This file is released under AGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.utils.type;
@@ -41,6 +41,10 @@ public class TimedSet<T> implements Iterable<T> {
 
     public void put(T entry) {
         entries.add(new TimedEntry(entry, System.currentTimeMillis(), timeJump));
+    }
+
+    public void remove(T entry) {
+        entries.removeIf(e -> e.getEntry().equals(entry));
     }
 
     public long getLastAddedTimestamp() {
