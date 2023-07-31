@@ -96,7 +96,7 @@ public class LootrunFunctions {
             BeaconColor beaconColor = BeaconColor.fromName(color);
             if (beaconColor == null) return -1;
 
-            return Models.Lootrun.getBeaconCount(beaconColor);
+            return Models.Lootrun.getSelectedBeaconCount(beaconColor);
         }
 
         @Override

@@ -4,12 +4,17 @@
  */
 package com.wynntils.models.lootrun;
 
+import com.google.common.reflect.TypeToken;
 import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.components.Handlers;
+import com.wynntils.core.components.Managers;
 import com.wynntils.core.components.Model;
+import com.wynntils.core.net.Download;
+import com.wynntils.core.net.UrlId;
 import com.wynntils.core.text.StyledText;
 import com.wynntils.handlers.chat.event.ChatMessageReceivedEvent;
 import com.wynntils.handlers.chat.type.RecipientType;
+import com.wynntils.models.beacons.BeaconModel;
 import com.wynntils.models.beacons.event.BeaconEvent;
 import com.wynntils.models.beacons.type.BeaconColor;
 import com.wynntils.models.beacons.type.VerifiedBeacon;
@@ -18,16 +23,22 @@ import com.wynntils.models.lootrun.scoreboard.LootrunScoreboardPart;
 import com.wynntils.models.lootrun.type.LootrunLocation;
 import com.wynntils.models.lootrun.type.LootrunTaskType;
 import com.wynntils.models.lootrun.type.LootrunningState;
+import com.wynntils.models.lootrun.type.TaskLocation;
 import com.wynntils.models.worlds.event.WorldStateEvent;
 import com.wynntils.utils.VectorUtils;
 import com.wynntils.utils.mc.McUtils;
+import java.lang.reflect.Type;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Optional;
+import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import net.minecraft.network.chat.Component;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
+import org.joml.Vector2d;
 
 /** A model dedicated to lootruns (the Wynncraft lootrun runs).
  * Don't confuse this with {@link com.wynntils.services.lootrunpaths.LootrunPathsService}.
@@ -67,19 +78,36 @@ public class LootrunModel extends Model {
 
     private static final LootrunScoreboardPart LOOTRUN_SCOREBOARD_PART = new LootrunScoreboardPart();
 
+    private Map<LootrunLocation, Set<TaskLocation>> taskLocations = new HashMap<>();
+
     private LootrunFinishedEventBuilder.Completed lootrunCompletedBuilder;
     private LootrunFinishedEventBuilder.Failed lootrunFailedBuilder;
 
     private LootrunningState lootrunningState = LootrunningState.NOT_RUNNING;
     private LootrunLocation currentLocation;
     private LootrunTaskType currentTaskType;
-    private Map<BeaconColor, Integer> currentLootrunBeacons = new HashMap<>();
-    private VerifiedBeacon currentBeacon;
+    private Map<BeaconColor, Integer> currentLootrunSelectedBeacons = new HashMap<>();
+    private Map<VerifiedBeacon, TaskLocation> currentBeacons = new HashMap<>();
+    private VerifiedBeacon currentClosestBeacon;
 
-    public LootrunModel() {
-        super(List.of());
+    public LootrunModel(BeaconModel beaconModel) {
+        super(List.of(beaconModel));
 
         Handlers.Scoreboard.addPart(LOOTRUN_SCOREBOARD_PART);
+        reloadData();
+    }
+
+    @Override
+    public void reloadData() {
+        loadLootrunTaskLocations();
+    }
+
+    private void loadLootrunTaskLocations() {
+        Download dl = Managers.Net.download(UrlId.DATA_STATIC_LOOTRUN_TASKS);
+        dl.handleReader(reader -> {
+            Type type = new TypeToken<Map<LootrunLocation, Set<TaskLocation>>>() {}.getType();
+            taskLocations = Managers.Json.GSON.fromJson(reader, type);
+        });
     }
 
     @SubscribeEvent
@@ -114,8 +142,24 @@ public class LootrunModel extends Model {
         lootrunningState = LootrunningState.NOT_RUNNING;
         currentLocation = null;
         currentTaskType = null;
-        currentLootrunBeacons = new HashMap<>();
-        currentBeacon = null;
+        currentLootrunSelectedBeacons = new HashMap<>();
+        currentBeacons = new HashMap<>();
+        currentClosestBeacon = null;
+    }
+
+    @SubscribeEvent
+    public void onBeaconMoved(BeaconEvent.Moved event) {
+        if (currentLocation == null) return;
+        VerifiedBeacon beacon = event.getBeacon();
+        if (!beacon.getColor().getContentType().showsUpInLootruns()) return;
+
+        TaskLocation taskPrediction = getBeaconTaskLocationPrediction(beacon);
+        TaskLocation oldPrediction = currentBeacons.put(beacon, taskPrediction);
+
+        if (!Objects.equals(oldPrediction, taskPrediction)) {
+            McUtils.sendMessageToClient(Component.literal(
+                    "Task location prediction for " + beacon.getColor() + " changed to " + taskPrediction));
+        }
     }
 
     // When we get close to a beacon, it get's removed.
@@ -128,18 +172,31 @@ public class LootrunModel extends Model {
 
         double newBeaconDistanceToPlayer = VectorUtils.distanceIgnoringY(
                 beacon.getPosition(), McUtils.mc().player.position());
-        double oldBeaconDistanceToPlayer = currentBeacon == null
+        double oldBeaconDistanceToPlayer = currentClosestBeacon == null
                 ? Double.MAX_VALUE
                 : VectorUtils.distanceIgnoringY(
-                        currentBeacon.getPosition(), McUtils.mc().player.position());
+                        currentClosestBeacon.getPosition(), McUtils.mc().player.position());
         if (newBeaconDistanceToPlayer < BEACON_REMOVAL_RADIUS
                 && newBeaconDistanceToPlayer < oldBeaconDistanceToPlayer) {
-            currentBeacon = event.getBeacon();
+            currentClosestBeacon = event.getBeacon();
+        } else {
+            currentBeacons.remove(beacon);
         }
     }
 
-    public int getBeaconCount(BeaconColor color) {
-        return currentLootrunBeacons.getOrDefault(color, 0);
+    @SubscribeEvent
+    public void onBeaconAdd(BeaconEvent.Added event) {
+        VerifiedBeacon beacon = event.getBeacon();
+        if (!beacon.getColor().getContentType().showsUpInLootruns()) return;
+
+        TaskLocation taskPrediction = getBeaconTaskLocationPrediction(beacon);
+        currentBeacons.put(beacon, taskPrediction);
+        McUtils.sendMessageToClient(
+                Component.literal("Task location prediction for " + beacon.getColor() + " is " + taskPrediction));
+    }
+
+    public int getSelectedBeaconCount(BeaconColor color) {
+        return currentLootrunSelectedBeacons.getOrDefault(color, 0);
     }
 
     public LootrunningState getState() {
@@ -167,8 +224,8 @@ public class LootrunModel extends Model {
 
     private void handleStateChange(LootrunningState oldState, LootrunningState newState) {
         if (newState == LootrunningState.NOT_RUNNING) {
-            currentLootrunBeacons = new HashMap<>();
-            currentBeacon = null;
+            currentLootrunSelectedBeacons = new HashMap<>();
+            currentClosestBeacon = null;
             currentTaskType = null;
             return;
         }
@@ -182,13 +239,56 @@ public class LootrunModel extends Model {
 
         if (oldState == LootrunningState.CHOOSING_BEACON
                 && newState == LootrunningState.IN_TASK
-                && currentBeacon != null) {
-            WynntilsMod.info("Selected a " + currentBeacon.getColor() + " beacon at " + currentBeacon.getPosition());
-            currentLootrunBeacons.put(
-                    currentBeacon.getColor(), currentLootrunBeacons.getOrDefault(currentBeacon.getColor(), 0) + 1);
-            WynntilsMod.postEvent(new LootrunBeaconSelectedEvent(currentBeacon));
+                && currentClosestBeacon != null) {
+            WynntilsMod.info("Selected a " + currentClosestBeacon.getColor() + " beacon at "
+                    + currentClosestBeacon.getPosition());
+            currentLootrunSelectedBeacons.put(
+                    currentClosestBeacon.getColor(),
+                    currentLootrunSelectedBeacons.getOrDefault(currentClosestBeacon.getColor(), 0) + 1);
+            WynntilsMod.postEvent(new LootrunBeaconSelectedEvent(currentClosestBeacon));
             return;
         }
+    }
+
+    private TaskLocation getBeaconTaskLocationPrediction(VerifiedBeacon beacon) {
+        Set<TaskLocation> currentTaskLocations = taskLocations.get(currentLocation);
+        if (currentTaskLocations.isEmpty()) return null;
+
+        // FIXME: too basic math
+        double lowestDistance = Double.MAX_VALUE;
+        TaskLocation closestTaskLocation = null;
+        for (TaskLocation currentTaskLocation : currentTaskLocations) {
+            // 1: player location
+            Vector2d playerPosition = new Vector2d(
+                    McUtils.player().position().x(), McUtils.player().position().z());
+            // 2: wynn beacon
+            Vector2d beaconPosition =
+                    new Vector2d(beacon.getPosition().x(), beacon.getPosition().z());
+            // 3: task location
+            Vector2d taskLocationPosition = new Vector2d(
+                    currentTaskLocation.location().x(),
+                    currentTaskLocation.location().z());
+
+            Vector2d distanceBetweenPlayerTask = new Vector2d(0, 0);
+            taskLocationPosition.sub(playerPosition, distanceBetweenPlayerTask);
+
+            Vector2d distanceBetweenPlayerBeacon = new Vector2d(0, 0);
+            beaconPosition.sub(playerPosition, distanceBetweenPlayerBeacon);
+
+            Vector2d distanceBetweenTaskBeacon = new Vector2d(0, 0);
+            taskLocationPosition.sub(beaconPosition, distanceBetweenTaskBeacon);
+
+            double distance = Math.abs(distanceBetweenPlayerTask.length()
+                    - distanceBetweenPlayerBeacon.length()
+                    - distanceBetweenTaskBeacon.length());
+
+            if (distance < lowestDistance) {
+                lowestDistance = distance;
+                closestTaskLocation = currentTaskLocation;
+            }
+        }
+
+        return closestTaskLocation;
     }
 
     private void parseCompletedMessages(StyledText styledText) {

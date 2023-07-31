@@ -4,7 +4,6 @@
  */
 package com.wynntils.features.debug;
 
-import com.google.common.collect.ComparisonChain;
 import com.wynntils.core.components.Models;
 import com.wynntils.core.config.Category;
 import com.wynntils.core.config.ConfigCategory;
@@ -16,6 +15,7 @@ import com.wynntils.models.beacons.type.VerifiedBeacon;
 import com.wynntils.models.lootrun.event.LootrunBeaconSelectedEvent;
 import com.wynntils.models.lootrun.type.LootrunLocation;
 import com.wynntils.models.lootrun.type.LootrunTaskType;
+import com.wynntils.models.lootrun.type.TaskLocation;
 import com.wynntils.utils.mc.type.Location;
 import java.util.Map;
 import java.util.Optional;
@@ -51,18 +51,5 @@ public class LootrunBeaconLocationCollectorFeature extends Feature {
                 .get(currentLocationOpt.get())
                 .add(new TaskLocation(Location.containing(position), currentTaskTypeOpt.get()));
         tasks.touched();
-    }
-
-    // This location has to be a Location because Position doesn't have proper mapping, so GSON can't serialize it.
-    private record TaskLocation(Location location, LootrunTaskType taskType) implements Comparable<TaskLocation> {
-        @Override
-        public int compareTo(LootrunBeaconLocationCollectorFeature.TaskLocation taskLocation) {
-            return ComparisonChain.start()
-                    .compare(location.x(), taskLocation.location.x())
-                    .compare(location.y(), taskLocation.location.y())
-                    .compare(location.z(), taskLocation.location.z())
-                    .compare(taskType, taskLocation.taskType)
-                    .result();
-        }
     }
 }

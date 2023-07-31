@@ -163,6 +163,11 @@
     "url": "https://raw.githubusercontent.com/Wynntils/WynntilsWebsite-API/master/splashes.json"
   },
   {
+    "id": "dataStaticLootrunTasks",
+    "md5": "3edf5f2bde94d7bef040c1c4d9bc3c84",
+    "url": "https://raw.githubusercontent.com/Wynntils/Reference/lr-data/lootruns/lootrun_tasks.json"
+  },
+  {
     "id": "dataStaticUrls",
     "url": "https://raw.githubusercontent.com/Wynntils/WynntilsWebsite-API/master/urls.json"
   },
