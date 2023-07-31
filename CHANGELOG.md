@@ -1,9 +1,21 @@
+## [0.0.3-alpha.251](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.250...v0.0.3-alpha.251) (2023-07-31)
+
+
+### New Features
+
+* Guild model chat detection ([#1866](https://github.com/Wynntils/Artemis/issues/1866)) ([de699d2](https://github.com/Wynntils/Artemis/commit/de699d29daad30b8a580b8f35aa44a5655bc0076))
+
 ## [0.0.3-alpha.250](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.249...v0.0.3-alpha.250) (2023-07-31)
 
 
 ### New Features
 
 * POI creation screen improvements ([#1896](https://github.com/Wynntils/Artemis/issues/1896)) ([cf34a2a](https://github.com/Wynntils/Artemis/commit/cf34a2a389615afcd4835c6ec863228f5a9642ac))
+
+
+### Miscellaneous Chores
+
+* **release:** v0.0.3-alpha.250 [skip ci] ([ccc1358](https://github.com/Wynntils/Artemis/commit/ccc135844fd7e364ae554dddff0c5f10d44b020c))
 
 ## [0.0.3-alpha.249](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.248...v0.0.3-alpha.249) (2023-07-31)
 
@@ -40,16 +52,4 @@
 ### Miscellaneous Chores
 
 * **release:** v0.0.3-alpha.247 [skip ci] ([80beca1](https://github.com/Wynntils/Artemis/commit/80beca10f0a3f08c5b96d488950ef0fd74a0c338))
-
-## [0.0.3-alpha.246](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.245...v0.0.3-alpha.246) (2023-07-31)
-
-
-### Bug Fixes
-
-* Wrap config button descriptions ([#1900](https://github.com/Wynntils/Artemis/issues/1900)) ([ee6d3ed](https://github.com/Wynntils/Artemis/commit/ee6d3ed3a06af065a50b1aee4d9ad4c59a932bc8))
-
-
-### Miscellaneous Chores
-
-* **release:** v0.0.3-alpha.246 [skip ci] ([9e7f05d](https://github.com/Wynntils/Artemis/commit/9e7f05d4797bd4758705151715307ee472e1d8b8))
 
