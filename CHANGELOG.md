@@ -1,9 +1,21 @@
+## [0.0.3-alpha.248](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.247...v0.0.3-alpha.248) (2023-07-31)
+
+
+### New Features
+
+* Add functions for lootrun beacon counts (and lootrun state) ([#1898](https://github.com/Wynntils/Artemis/issues/1898)) ([22687b0](https://github.com/Wynntils/Artemis/commit/22687b0a742e42385cd7b6ad0647732fa38d8100))
+
 ## [0.0.3-alpha.247](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.246...v0.0.3-alpha.247) (2023-07-31)
 
 
 ### New Features
 
 * Add export waypoints button ([#1903](https://github.com/Wynntils/Artemis/issues/1903)) ([8554883](https://github.com/Wynntils/Artemis/commit/8554883b4fe5a705dac88d67f5e22e9958bc748f))
+
+
+### Miscellaneous Chores
+
+* **release:** v0.0.3-alpha.247 [skip ci] ([80beca1](https://github.com/Wynntils/Artemis/commit/80beca10f0a3f08c5b96d488950ef0fd74a0c338))
 
 ## [0.0.3-alpha.246](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.245...v0.0.3-alpha.246) (2023-07-31)
 
@@ -40,16 +52,4 @@
 ### Miscellaneous Chores
 
 * **release:** v0.0.3-alpha.244 [skip ci] ([b9d0d5a](https://github.com/Wynntils/Artemis/commit/b9d0d5a494563775938cb0ec0550babdf5830461))
-
-## [0.0.3-alpha.243](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.242...v0.0.3-alpha.243) (2023-07-30)
-
-
-### Bug Fixes
-
-* fix guild map crashing with hybrid mode and api down ([#1895](https://github.com/Wynntils/Artemis/issues/1895)) ([2e7bcd1](https://github.com/Wynntils/Artemis/commit/2e7bcd1b0f064a4d7eb333b8a099ce973bff7c4d))
-
-
-### Miscellaneous Chores
-
-* **release:** v0.0.3-alpha.243 [skip ci] ([89caaf4](https://github.com/Wynntils/Artemis/commit/89caaf463f23935c188a2df41e5dafc7bd25ce48))
 
