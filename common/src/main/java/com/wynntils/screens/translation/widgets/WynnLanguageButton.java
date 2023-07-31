@@ -5,10 +5,10 @@
 package com.wynntils.screens.translation.widgets;
 
 import com.mojang.blaze3d.vertex.PoseStack;
-import com.wynntils.core.components.Services;
+import com.wynntils.core.components.Models;
 import com.wynntils.core.text.StyledText;
+import com.wynntils.models.wynnlanguage.WynnLanguage;
 import com.wynntils.screens.base.widgets.WynntilsButton;
-import com.wynntils.services.wynnlanguage.WynnLanguage;
 import com.wynntils.utils.colors.CommonColors;
 import com.wynntils.utils.colors.CustomColor;
 import com.wynntils.utils.render.FontRenderer;
@@ -59,7 +59,7 @@ public class WynnLanguageButton extends WynntilsButton {
     }
 
     private CustomColor getButtonColor() {
-        if (Services.WynnLanguage.getSelectedLanguage() == wynnLanguage) {
+        if (Models.WynnLanguage.getSelectedLanguage() == wynnLanguage) {
             return CommonColors.GREEN;
         } else {
             return CommonColors.WHITE;
@@ -70,7 +70,7 @@ public class WynnLanguageButton extends WynntilsButton {
     public boolean mouseClicked(double mouseX, double mouseY, int button) {
         if (!isMouseOver(mouseX, mouseY)) return false;
 
-        Services.WynnLanguage.setSelectedLanguage(wynnLanguage);
+        Models.WynnLanguage.setSelectedLanguage(wynnLanguage);
 
         return false;
     }

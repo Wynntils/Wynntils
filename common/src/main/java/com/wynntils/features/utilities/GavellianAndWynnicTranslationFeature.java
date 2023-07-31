@@ -6,7 +6,7 @@ package com.wynntils.features.utilities;
 
 import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.components.Managers;
-import com.wynntils.core.components.Services;
+import com.wynntils.core.components.Models;
 import com.wynntils.core.config.Category;
 import com.wynntils.core.config.Config;
 import com.wynntils.core.config.ConfigCategory;
@@ -23,8 +23,8 @@ import com.wynntils.mc.event.ChatSentEvent;
 import com.wynntils.mc.event.CommandSentEvent;
 import com.wynntils.mc.event.EditBoxInsertEvent;
 import com.wynntils.mc.event.ScreenInitEvent;
+import com.wynntils.models.wynnlanguage.WynnLanguage;
 import com.wynntils.screens.translation.widgets.WynnLanguageButton;
-import com.wynntils.services.wynnlanguage.WynnLanguage;
 import com.wynntils.utils.colors.ColorChatFormatting;
 import com.wynntils.utils.mc.McUtils;
 import com.wynntils.utils.type.IterationDecision;
@@ -99,7 +99,7 @@ public class GavellianAndWynnicTranslationFeature extends Feature {
         if (useBrackets.get()) return;
         if (event.getTextToWrite().isBlank()) return;
 
-        WynnLanguage selectedLanguage = Services.WynnLanguage.getSelectedLanguage();
+        WynnLanguage selectedLanguage = Models.WynnLanguage.getSelectedLanguage();
 
         if (selectedLanguage == WynnLanguage.DEFAULT) return;
 
@@ -111,13 +111,13 @@ public class GavellianAndWynnicTranslationFeature extends Feature {
 
             handleTypedNumber(
                     Integer.parseInt(event.getTextToWrite()),
-                    Services.WynnLanguage.getWynnicNumbers(),
+                    Models.WynnLanguage.getWynnicNumbers(),
                     event,
                     chatScreen);
         } else {
             List<Character> replacementList = selectedLanguage == WynnLanguage.GAVELLIAN
-                    ? Services.WynnLanguage.getGavellianCharacters()
-                    : Services.WynnLanguage.getWynnicCharacters();
+                    ? Models.WynnLanguage.getGavellianCharacters()
+                    : Models.WynnLanguage.getWynnicCharacters();
 
             handleTypedCharacter(event.getTextToWrite(), replacementList, event, chatScreen);
         }
@@ -133,7 +133,7 @@ public class GavellianAndWynnicTranslationFeature extends Feature {
         String afterCursor = chatScreen.input.getValue().substring(chatScreen.input.getCursorPosition());
 
         if (beforeCursor.isBlank()
-                || !Services.WynnLanguage.getWynnicNumbers().contains(beforeCursor.charAt(beforeCursor.length() - 1)))
+                || !Models.WynnLanguage.getWynnicNumbers().contains(beforeCursor.charAt(beforeCursor.length() - 1)))
             return;
 
         String currentNumsStr = getWynnicNumBeforeCursor(beforeCursor);
@@ -291,18 +291,18 @@ public class GavellianAndWynnicTranslationFeature extends Feature {
         return switch (translateCondition.get()) {
             case NEVER -> false;
             case TRANSCRIBER -> language == WynnLanguage.WYNNIC
-                    ? Services.WynnLanguage.hasTranscriber(WynnLanguage.WYNNIC)
-                    : Services.WynnLanguage.hasTranscriber(WynnLanguage.GAVELLIAN);
+                    ? Models.WynnLanguage.hasTranscriber(WynnLanguage.WYNNIC)
+                    : Models.WynnLanguage.hasTranscriber(WynnLanguage.GAVELLIAN);
             case DISCOVERY -> language == WynnLanguage.WYNNIC
-                    ? Services.WynnLanguage.completedDiscovery(WynnLanguage.WYNNIC)
-                    : Services.WynnLanguage.completedDiscovery(WynnLanguage.GAVELLIAN);
+                    ? Models.WynnLanguage.completedDiscovery(WynnLanguage.WYNNIC)
+                    : Models.WynnLanguage.completedDiscovery(WynnLanguage.GAVELLIAN);
             default -> true;
         };
     }
 
     private void handleTypedCharacter(
             String typedChar, List<Character> replacementList, EditBoxInsertEvent event, ChatScreen chatScreen) {
-        int engIndex = Services.WynnLanguage.getEnglishCharacters()
+        int engIndex = Models.WynnLanguage.getEnglishCharacters()
                 .indexOf(typedChar.toLowerCase(Locale.ROOT).charAt(0));
 
         if (engIndex == -1) return;
@@ -323,8 +323,8 @@ public class GavellianAndWynnicTranslationFeature extends Feature {
         String afterCursor = input.substring(chatScreen.input.getCursorPosition());
 
         if (input.isBlank()
-                || !Services.WynnLanguage.getWynnicNumbers().contains(beforeCursor.charAt(beforeCursor.length() - 1))) {
-            int numIndex = Services.WynnLanguage.getEnglishNumbers().indexOf(typedNumber);
+                || !Models.WynnLanguage.getWynnicNumbers().contains(beforeCursor.charAt(beforeCursor.length() - 1))) {
+            int numIndex = Models.WynnLanguage.getEnglishNumbers().indexOf(typedNumber);
 
             if (numIndex == -1) return;
 
@@ -353,7 +353,7 @@ public class GavellianAndWynnicTranslationFeature extends Feature {
     private String getWynnicNumBeforeCursor(String beforeCursor) {
         StringBuilder currentNumsStr = new StringBuilder();
 
-        List<Character> numbers = Services.WynnLanguage.getWynnicNumbers();
+        List<Character> numbers = Models.WynnLanguage.getWynnicNumbers();
 
         for (int i = beforeCursor.length() - 1; i >= 0; i--) {
             if (numbers.contains(beforeCursor.charAt(i))) {
@@ -384,16 +384,16 @@ public class GavellianAndWynnicTranslationFeature extends Feature {
         int result = 0;
 
         for (char num : wynnicNums.toCharArray()) {
-            if (num == Services.WynnLanguage.getOneHundered()) {
+            if (num == Models.WynnLanguage.getOneHundered()) {
                 result += 100;
-            } else if (num == Services.WynnLanguage.getFifty()) {
+            } else if (num == Models.WynnLanguage.getFifty()) {
                 result += 50;
-            } else if (num == Services.WynnLanguage.getTen()) {
+            } else if (num == Models.WynnLanguage.getTen()) {
                 result += 10;
             } else {
-                int wynnIndex = Services.WynnLanguage.getWynnicNumbers().indexOf(num);
+                int wynnIndex = Models.WynnLanguage.getWynnicNumbers().indexOf(num);
 
-                result += Services.WynnLanguage.getEnglishNumbers().get(wynnIndex);
+                result += Models.WynnLanguage.getEnglishNumbers().get(wynnIndex);
             }
         }
 
@@ -408,9 +408,9 @@ public class GavellianAndWynnicTranslationFeature extends Feature {
         for (int i = message.length() - 1; i >= 0; i--) {
             char c = message.charAt(i);
 
-            if (Services.WynnLanguage.getGavellianCharacters().contains(c)
-                    || Services.WynnLanguage.getWynnicCharacters().contains(c)
-                    || Services.WynnLanguage.getWynnicNumbers().contains(c)) {
+            if (Models.WynnLanguage.getGavellianCharacters().contains(c)
+                    || Models.WynnLanguage.getWynnicCharacters().contains(c)
+                    || Models.WynnLanguage.getWynnicNumbers().contains(c)) {
                 return true;
             }
         }
@@ -472,8 +472,8 @@ public class GavellianAndWynnicTranslationFeature extends Feature {
 
         for (char character : original.toCharArray()) {
             Character replacement = language == WynnLanguage.GAVELLIAN
-                    ? Services.WynnLanguage.translateGavellianToEnglish(character)
-                    : Services.WynnLanguage.translateWynnicToEnglish(character);
+                    ? Models.WynnLanguage.translateGavellianToEnglish(character)
+                    : Models.WynnLanguage.translateWynnicToEnglish(character);
 
             if (!replacement.equals(character)) {
                 if (useColors) {
@@ -494,7 +494,7 @@ public class GavellianAndWynnicTranslationFeature extends Feature {
 
         if (language == WynnLanguage.GAVELLIAN) {
             for (char character : original.toCharArray()) {
-                Character replacement = Services.WynnLanguage.translateEnglishToGavellian(character);
+                Character replacement = Models.WynnLanguage.translateEnglishToGavellian(character);
 
                 if (!replacement.equals(character)) {
                     translated = translated.replace(character, replacement);
@@ -514,7 +514,7 @@ public class GavellianAndWynnicTranslationFeature extends Feature {
             });
 
             for (char character : original.toCharArray()) {
-                Character replacement = Services.WynnLanguage.translateEnglishToWynnic(character);
+                Character replacement = Models.WynnLanguage.translateEnglishToWynnic(character);
 
                 if (!replacement.equals(character)) {
                     translated = translated.replace(character, replacement);
@@ -529,9 +529,9 @@ public class GavellianAndWynnicTranslationFeature extends Feature {
         int result = 0;
 
         for (char num : wynnicNum.toCharArray()) {
-            int numIndex = Services.WynnLanguage.getWynnicNumbers().indexOf(num);
+            int numIndex = Models.WynnLanguage.getWynnicNumbers().indexOf(num);
 
-            result += Services.WynnLanguage.getEnglishNumbers().get(numIndex);
+            result += Models.WynnLanguage.getEnglishNumbers().get(numIndex);
         }
 
         return result;
@@ -552,13 +552,13 @@ public class GavellianAndWynnicTranslationFeature extends Feature {
 
         number -= (tens * 10);
 
-        wynnicNums.append(String.valueOf(Services.WynnLanguage.getOneHundered()).repeat(Math.max(0, hundereds)));
-        wynnicNums.append(String.valueOf(Services.WynnLanguage.getFifty()).repeat(Math.max(0, fifties)));
-        wynnicNums.append(String.valueOf(Services.WynnLanguage.getTen()).repeat(Math.max(0, tens)));
+        wynnicNums.append(String.valueOf(Models.WynnLanguage.getOneHundered()).repeat(Math.max(0, hundereds)));
+        wynnicNums.append(String.valueOf(Models.WynnLanguage.getFifty()).repeat(Math.max(0, fifties)));
+        wynnicNums.append(String.valueOf(Models.WynnLanguage.getTen()).repeat(Math.max(0, tens)));
 
         if (number > 0) {
-            wynnicNums.append(Services.WynnLanguage.getWynnicNumbers()
-                    .get(Services.WynnLanguage.getEnglishNumbers().indexOf(number)));
+            wynnicNums.append(Models.WynnLanguage.getWynnicNumbers()
+                    .get(Models.WynnLanguage.getEnglishNumbers().indexOf(number)));
         }
 
         return wynnicNums.toString();

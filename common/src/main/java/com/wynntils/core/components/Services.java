@@ -20,7 +20,6 @@ import com.wynntils.services.splashes.SplashService;
 import com.wynntils.services.statistics.StatisticsService;
 import com.wynntils.services.stopwatch.StopwatchService;
 import com.wynntils.services.translation.TranslationService;
-import com.wynntils.services.wynnlanguage.WynnLanguageService;
 
 public final class Services {
     public static final ChatTabService ChatTab = new ChatTabService();
@@ -39,5 +38,4 @@ public final class Services {
     public static final TranslationService Translation = new TranslationService();
     public static final UpdateService Update = new UpdateService();
     public static final WynntilsAccountService WynntilsAccount = new WynntilsAccountService();
-    public static final WynnLanguageService WynnLanguage = new WynnLanguageService();
 }

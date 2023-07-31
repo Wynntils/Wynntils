@@ -2,10 +2,10 @@
  * Copyright © Wynntils 2023.
  * This file is released under AGPLv3. See LICENSE for full license details.
  */
-package com.wynntils.services.wynnlanguage;
+package com.wynntils.models.wynnlanguage;
 
+import com.wynntils.core.components.Model;
 import com.wynntils.core.components.Models;
-import com.wynntils.core.components.Service;
 import com.wynntils.core.text.StyledText;
 import com.wynntils.models.activities.discoveries.DiscoveryInfo;
 import com.wynntils.models.activities.type.ActivitySortOrder;
@@ -18,7 +18,7 @@ import java.util.stream.Stream;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.item.ItemStack;
 
-public class WynnLanguageService extends Service {
+public class WynnLanguageModel extends Model {
     private static final int FIFTY_INDEX = 10;
     private static final int ONE_HUNDERED_INDEX = 11;
     private static final int TEN_INDEX = 9;
@@ -45,7 +45,7 @@ public class WynnLanguageService extends Service {
 
     private WynnLanguage selectedLanguage = WynnLanguage.DEFAULT;
 
-    public WynnLanguageService() {
+    public WynnLanguageModel() {
         super(List.of());
 
         createTranslationMaps();
