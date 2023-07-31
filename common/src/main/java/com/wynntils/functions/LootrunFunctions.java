@@ -7,6 +7,7 @@ package com.wynntils.functions;
 import com.wynntils.core.components.Models;
 import com.wynntils.core.consumers.functions.Function;
 import com.wynntils.core.consumers.functions.arguments.FunctionArguments;
+import com.wynntils.models.beacons.type.BeaconColor;
 import com.wynntils.models.containers.type.MythicFind;
 import java.util.Comparator;
 import java.util.List;
@@ -77,6 +78,31 @@ public class LootrunFunctions {
         @Override
         public List<String> getAliases() {
             return List.of("chest_count");
+        }
+    }
+
+    public static class LootrunStateFunction extends Function<String> {
+        @Override
+        public String getValue(FunctionArguments arguments) {
+            return Models.Lootrun.getState().toString();
+        }
+    }
+
+    public static class LootrunBeaconCountFunction extends Function<Integer> {
+        @Override
+        public Integer getValue(FunctionArguments arguments) {
+            String color = arguments.getArgument("color").getStringValue();
+
+            BeaconColor beaconColor = BeaconColor.fromName(color);
+            if (beaconColor == null) return -1;
+
+            return Models.Lootrun.getBeaconCount(beaconColor);
+        }
+
+        @Override
+        public FunctionArguments.Builder getArgumentsBuilder() {
+            return new FunctionArguments.RequiredArgumentBuilder(
+                    List.of(new FunctionArguments.Argument<>("color", String.class, null)));
         }
     }
 }
