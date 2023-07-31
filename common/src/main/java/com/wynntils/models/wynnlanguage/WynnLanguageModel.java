@@ -117,8 +117,7 @@ public class WynnLanguageModel extends Model {
         wynnicNums.append(String.valueOf(getTen()).repeat(Math.max(0, tens)));
 
         if (number > 0) {
-            wynnicNums.append(getWynnicNumbers()
-                    .get(getEnglishNumbers().indexOf(number)));
+            wynnicNums.append(getWynnicNumbers().get(getEnglishNumbers().indexOf(number)));
         }
 
         return wynnicNums.toString();

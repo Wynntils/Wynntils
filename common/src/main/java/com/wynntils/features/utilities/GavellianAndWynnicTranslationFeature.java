@@ -441,7 +441,8 @@ public class GavellianAndWynnicTranslationFeature extends Feature {
                                     + String.valueOf(Models.WynnLanguage.wynnicNumToInt(match.group()))
                                     + ColorChatFormatting.WHITE.getChatFormatting());
                 } else {
-                    translatedText = numMatcher.replaceAll(match -> String.valueOf(Models.WynnLanguage.wynnicNumToInt(match.group())));
+                    translatedText = numMatcher.replaceAll(
+                            match -> String.valueOf(Models.WynnLanguage.wynnicNumToInt(match.group())));
                 }
 
                 translatedText = getStringWithTranslation(
