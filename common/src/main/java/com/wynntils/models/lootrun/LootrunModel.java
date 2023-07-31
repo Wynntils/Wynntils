@@ -118,9 +118,14 @@ public class LootrunModel extends Model {
         VerifiedBeacon beacon = event.getBeacon();
         if (!beacon.getColor().getContentType().showsUpInLootruns()) return;
 
-        double distanceToPlayer = VectorUtils.distanceIgnoringY(
+        double newBeaconDistanceToPlayer = VectorUtils.distanceIgnoringY(
                 beacon.getPosition(), McUtils.mc().player.position());
-        if (distanceToPlayer < BEACON_REMOVAL_RADIUS) {
+        double oldBeaconDistanceToPlayer = currentBeacon == null
+                ? Double.MAX_VALUE
+                : VectorUtils.distanceIgnoringY(
+                        currentBeacon.getPosition(), McUtils.mc().player.position());
+        if (newBeaconDistanceToPlayer < BEACON_REMOVAL_RADIUS
+                && newBeaconDistanceToPlayer < oldBeaconDistanceToPlayer) {
             currentBeacon = event.getBeacon();
         }
     }
