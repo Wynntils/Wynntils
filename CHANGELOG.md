@@ -1,9 +1,21 @@
+## [0.0.3-alpha.246](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.245...v0.0.3-alpha.246) (2023-07-31)
+
+
+### Bug Fixes
+
+* Wrap config button descriptions ([#1900](https://github.com/Wynntils/Artemis/issues/1900)) ([ee6d3ed](https://github.com/Wynntils/Artemis/commit/ee6d3ed3a06af065a50b1aee4d9ad4c59a932bc8))
+
 ## [0.0.3-alpha.245](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.244...v0.0.3-alpha.245) (2023-07-31)
 
 
 ### New Features
 
 * Config to disable parsing content book immediately ([#1899](https://github.com/Wynntils/Artemis/issues/1899)) ([10a54a5](https://github.com/Wynntils/Artemis/commit/10a54a5a18070d5630fe38bb8fb49be5c1cd0bed))
+
+
+### Miscellaneous Chores
+
+* **release:** v0.0.3-alpha.245 [skip ci] ([8066017](https://github.com/Wynntils/Artemis/commit/8066017ef05531325bd578493c224db78e82f539))
 
 ## [0.0.3-alpha.244](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.243...v0.0.3-alpha.244) (2023-07-30)
 
@@ -40,16 +52,4 @@
 ### Miscellaneous Chores
 
 * **release:** v0.0.3-alpha.242 [skip ci] ([c8453a5](https://github.com/Wynntils/Artemis/commit/c8453a5e3fe62a86a87f78f3d4408a9154f512c9))
-
-## [0.0.3-alpha.241](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.240...v0.0.3-alpha.241) (2023-07-30)
-
-
-### Bug Fixes
-
-* account for first challenge of the run of day message changes when parsing lootrun stats ([#1893](https://github.com/Wynntils/Artemis/issues/1893)) ([3e60aaf](https://github.com/Wynntils/Artemis/commit/3e60aaf68f1369a6161b239f54843509d253f431))
-
-
-### Miscellaneous Chores
-
-* **release:** v0.0.3-alpha.241 [skip ci] ([3023a28](https://github.com/Wynntils/Artemis/commit/3023a28ef5602b9ac69ed41a6cf165ed88eb18b1))
 
