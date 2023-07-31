@@ -345,10 +345,10 @@ public final class PoiCreationScreen extends AbstractMapScreen implements Textbo
                             : CustomColor.fromHexString(colorInput.getTextBoxInput()),
                     Services.Poi.POI_ICONS.get(selectedIconIndex),
                     selectedVisiblity);
-                    
+
             MultiBufferSource.BufferSource bufferSource =
                     McUtils.mc().renderBuffers().bufferSource();
-                   
+
             poi.renderAt(
                     poseStack,
                     bufferSource,
@@ -357,7 +357,7 @@ public final class PoiCreationScreen extends AbstractMapScreen implements Textbo
                     hovered == poi,
                     1,
                     currentZoom);
-                    
+
             bufferSource.endBatch();
         }
 
