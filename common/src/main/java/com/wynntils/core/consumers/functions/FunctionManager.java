@@ -466,6 +466,8 @@ public final class FunctionManager extends Manager {
         registerFunction(new LootrunFunctions.HighestDryStreakFunction());
         registerFunction(new LootrunFunctions.LastDryStreakFunction());
         registerFunction(new LootrunFunctions.LastMythicFunction());
+        registerFunction(new LootrunFunctions.LootrunBeaconCountFunction());
+        registerFunction(new LootrunFunctions.LootrunStateFunction());
 
         registerFunction(new MinecraftFunctions.DirFunction());
         registerFunction(new MinecraftFunctions.FpsFunction());

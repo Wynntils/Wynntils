@@ -36,6 +36,7 @@ import com.wynntils.mc.event.SetPlayerTeamEvent;
 import com.wynntils.mc.event.SetSpawnEvent;
 import com.wynntils.mc.event.SetXpEvent;
 import com.wynntils.mc.event.SubtitleSetTextEvent;
+import com.wynntils.mc.event.TeleportEntityEvent;
 import com.wynntils.mc.event.TitleSetTextEvent;
 import com.wynntils.mc.mixin.accessors.ClientboundSetPlayerTeamPacketAccessor;
 import com.wynntils.utils.mc.McUtils;
@@ -78,9 +79,12 @@ import net.minecraft.network.protocol.game.ClientboundSetTitleTextPacket;
 import net.minecraft.network.protocol.game.ClientboundSoundPacket;
 import net.minecraft.network.protocol.game.ClientboundSystemChatPacket;
 import net.minecraft.network.protocol.game.ClientboundTabListPacket;
+import net.minecraft.network.protocol.game.ClientboundTeleportEntityPacket;
 import net.minecraft.network.protocol.game.ClientboundUpdateAdvancementsPacket;
 import net.minecraft.network.protocol.game.ClientboundUpdateMobEffectPacket;
 import net.minecraft.network.protocol.game.ServerboundResourcePackPacket;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.phys.Vec3;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
@@ -555,11 +559,26 @@ public abstract class ClientPacketListenerMixin {
 
     @Inject(
             method = "handleAddEntity(Lnet/minecraft/network/protocol/game/ClientboundAddEntityPacket;)V",
-            at = @At("RETURN"))
-    private void handleAddEntity(ClientboundAddEntityPacket packet, CallbackInfo ci) {
+            at =
+                    @At(
+                            value = "INVOKE",
+                            target =
+                                    "Lnet/minecraft/client/multiplayer/ClientPacketListener;postAddEntitySoundInstance(Lnet/minecraft/world/entity/Entity;)V",
+                            shift = At.Shift.AFTER))
+    private void handleAddEntity(ClientboundAddEntityPacket packet, CallbackInfo ci, @Local Entity entity) {
         if (!isRenderThread()) return;
 
-        MixinHelper.post(new AddEntityEvent(packet));
+        MixinHelper.post(new AddEntityEvent(packet, entity));
+    }
+
+    @Inject(
+            method = "handleTeleportEntity(Lnet/minecraft/network/protocol/game/ClientboundTeleportEntityPacket;)V",
+            at = @At("RETURN"))
+    private void handleTeleportEntity(ClientboundTeleportEntityPacket packet, CallbackInfo ci) {
+        if (!isRenderThread()) return;
+
+        Vec3 position = new Vec3(packet.getX(), packet.getY(), packet.getZ());
+        MixinHelper.post(new TeleportEntityEvent(McUtils.mc().level.getEntity(packet.getId()), position));
     }
 
     @Inject(

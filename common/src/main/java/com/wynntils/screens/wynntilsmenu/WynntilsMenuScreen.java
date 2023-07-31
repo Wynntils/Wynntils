@@ -10,6 +10,7 @@ import com.wynntils.core.components.Models;
 import com.wynntils.core.components.Services;
 import com.wynntils.core.text.StyledText;
 import com.wynntils.features.map.MainMapFeature;
+import com.wynntils.features.ui.WynntilsContentBookFeature;
 import com.wynntils.screens.activities.WynntilsCaveScreen;
 import com.wynntils.screens.activities.WynntilsDialogueHistoryScreen;
 import com.wynntils.screens.activities.WynntilsDiscoveriesScreen;
@@ -57,7 +58,11 @@ public final class WynntilsMenuScreen extends WynntilsMenuScreenBase {
     private WynntilsMenuScreen() {
         super(Component.translatable("screens.wynntils.wynntilsMenu.name"));
         setup();
-        Models.Activity.scanOverallProgress();
+        if (Managers.Feature.getFeatureInstance(WynntilsContentBookFeature.class)
+                .displayOverallProgress
+                .get()) {
+            Models.Activity.scanOverallProgress();
+        }
     }
 
     public static Screen create() {
@@ -360,20 +365,24 @@ public final class WynntilsMenuScreen extends WynntilsMenuScreenBase {
                         CommonColors.PURPLE,
                         HorizontalAlignment.CENTER,
                         TextShadow.NONE);
-        CappedValue progress = Models.Activity.getOverallProgress();
-        FontRenderer.getInstance()
-                .renderAlignedTextInBox(
-                        poseStack,
-                        StyledText.fromString(ChatFormatting.BLACK + "Progress: " + ChatFormatting.DARK_AQUA
-                                + progress.getPercentageInt() + "%" + ChatFormatting.BLACK + " ["
-                                + ChatFormatting.DARK_AQUA + progress + ChatFormatting.BLACK + "]"),
-                        Texture.QUEST_BOOK_BACKGROUND.width() / 2f,
-                        Texture.QUEST_BOOK_BACKGROUND.width(),
-                        160,
-                        0,
-                        CommonColors.BLACK,
-                        HorizontalAlignment.CENTER,
-                        TextShadow.NONE);
+        if (Managers.Feature.getFeatureInstance(WynntilsContentBookFeature.class)
+                .displayOverallProgress
+                .get()) {
+            CappedValue progress = Models.Activity.getOverallProgress();
+            FontRenderer.getInstance()
+                    .renderAlignedTextInBox(
+                            poseStack,
+                            StyledText.fromString(ChatFormatting.BLACK + "Progress: " + ChatFormatting.DARK_AQUA
+                                    + progress.getPercentageInt() + "%" + ChatFormatting.BLACK + " ["
+                                    + ChatFormatting.DARK_AQUA + progress + ChatFormatting.BLACK + "]"),
+                            Texture.QUEST_BOOK_BACKGROUND.width() / 2f,
+                            Texture.QUEST_BOOK_BACKGROUND.width(),
+                            160,
+                            0,
+                            CommonColors.BLACK,
+                            HorizontalAlignment.CENTER,
+                            TextShadow.NONE);
+        }
 
         String currentSplash = Services.Splash.getCurrentSplash() == null ? "" : Services.Splash.getCurrentSplash();
         StyledText[] wrappedSplash = RenderedStringUtils.wrapTextBySize(

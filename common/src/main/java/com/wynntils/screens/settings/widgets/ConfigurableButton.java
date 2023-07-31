@@ -14,14 +14,13 @@ import com.wynntils.screens.base.widgets.WynntilsButton;
 import com.wynntils.screens.settings.WynntilsBookSettingsScreen;
 import com.wynntils.utils.colors.CommonColors;
 import com.wynntils.utils.colors.CustomColor;
+import com.wynntils.utils.mc.ComponentUtils;
 import com.wynntils.utils.mc.McUtils;
-import com.wynntils.utils.mc.RenderedStringUtils;
 import com.wynntils.utils.render.FontRenderer;
 import com.wynntils.utils.render.RenderUtils;
 import com.wynntils.utils.render.type.HorizontalAlignment;
 import com.wynntils.utils.render.type.TextShadow;
 import com.wynntils.utils.render.type.VerticalAlignment;
-import java.util.Arrays;
 import java.util.List;
 import net.minecraft.network.chat.Component;
 
@@ -35,11 +34,8 @@ public class ConfigurableButton extends WynntilsButton {
         this.configurable = configurable;
 
         if (configurable instanceof Feature feature) {
-            descriptionTooltip = Arrays.stream(RenderedStringUtils.wrapTextBySize(
-                            StyledText.fromString(feature.getTranslatedDescription()), 150))
-                    .map(StyledText::getComponent)
-                    .map(c -> (Component) c)
-                    .toList();
+            descriptionTooltip =
+                    ComponentUtils.wrapTooltips(List.of(Component.literal(feature.getTranslatedDescription())), 150);
         } else {
             descriptionTooltip = List.of();
         }

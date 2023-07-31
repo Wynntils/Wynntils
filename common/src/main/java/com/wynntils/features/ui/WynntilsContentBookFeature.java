@@ -95,6 +95,9 @@ public class WynntilsContentBookFeature extends Feature {
     @RegisterConfig
     public final Config<Boolean> showContentBookLoadingUpdates = new Config<>(true);
 
+    @RegisterConfig
+    public final Config<Boolean> displayOverallProgress = new Config<>(true);
+
     @SubscribeEvent
     public void onUseItem(UseItemEvent event) {
         if (McUtils.player().isShiftKeyDown() || !replaceWynncraftContentBook.get()) return;
