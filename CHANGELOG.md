@@ -1,9 +1,21 @@
+## [0.0.3-alpha.249](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.248...v0.0.3-alpha.249) (2023-07-31)
+
+
+### New Features
+
+* Add an (opt-in) feature to collect lootrun task location data ([#1902](https://github.com/Wynntils/Artemis/issues/1902)) ([6a7fd55](https://github.com/Wynntils/Artemis/commit/6a7fd5578308a328bd49307000e59af6a2d1a5ae))
+
 ## [0.0.3-alpha.248](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.247...v0.0.3-alpha.248) (2023-07-31)
 
 
 ### New Features
 
 * Add functions for lootrun beacon counts (and lootrun state) ([#1898](https://github.com/Wynntils/Artemis/issues/1898)) ([22687b0](https://github.com/Wynntils/Artemis/commit/22687b0a742e42385cd7b6ad0647732fa38d8100))
+
+
+### Miscellaneous Chores
+
+* **release:** v0.0.3-alpha.248 [skip ci] ([369a911](https://github.com/Wynntils/Artemis/commit/369a911a74b22822ae6290de60939a36a35e0ba5))
 
 ## [0.0.3-alpha.247](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.246...v0.0.3-alpha.247) (2023-07-31)
 
@@ -40,16 +52,4 @@
 ### Miscellaneous Chores
 
 * **release:** v0.0.3-alpha.245 [skip ci] ([8066017](https://github.com/Wynntils/Artemis/commit/8066017ef05531325bd578493c224db78e82f539))
-
-## [0.0.3-alpha.244](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.243...v0.0.3-alpha.244) (2023-07-30)
-
-
-### Bug Fixes
-
-* Fix bank jump buttons in housing storage items ([#1886](https://github.com/Wynntils/Artemis/issues/1886)) ([2766cae](https://github.com/Wynntils/Artemis/commit/2766cae613ec7168bb1b27dab31979f327cae551))
-
-
-### Miscellaneous Chores
-
-* **release:** v0.0.3-alpha.244 [skip ci] ([b9d0d5a](https://github.com/Wynntils/Artemis/commit/b9d0d5a494563775938cb0ec0550babdf5830461))
 
