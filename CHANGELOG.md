@@ -1,9 +1,21 @@
+## [0.0.3-alpha.247](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.246...v0.0.3-alpha.247) (2023-07-31)
+
+
+### New Features
+
+* Add export waypoints button ([#1903](https://github.com/Wynntils/Artemis/issues/1903)) ([8554883](https://github.com/Wynntils/Artemis/commit/8554883b4fe5a705dac88d67f5e22e9958bc748f))
+
 ## [0.0.3-alpha.246](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.245...v0.0.3-alpha.246) (2023-07-31)
 
 
 ### Bug Fixes
 
 * Wrap config button descriptions ([#1900](https://github.com/Wynntils/Artemis/issues/1900)) ([ee6d3ed](https://github.com/Wynntils/Artemis/commit/ee6d3ed3a06af065a50b1aee4d9ad4c59a932bc8))
+
+
+### Miscellaneous Chores
+
+* **release:** v0.0.3-alpha.246 [skip ci] ([9e7f05d](https://github.com/Wynntils/Artemis/commit/9e7f05d4797bd4758705151715307ee472e1d8b8))
 
 ## [0.0.3-alpha.245](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.244...v0.0.3-alpha.245) (2023-07-31)
 
@@ -40,16 +52,4 @@
 ### Miscellaneous Chores
 
 * **release:** v0.0.3-alpha.243 [skip ci] ([89caaf4](https://github.com/Wynntils/Artemis/commit/89caaf463f23935c188a2df41e5dafc7bd25ce48))
-
-## [0.0.3-alpha.242](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.241...v0.0.3-alpha.242) (2023-07-30)
-
-
-### New Features
-
-* add a small-map in the caves screen ([#1894](https://github.com/Wynntils/Artemis/issues/1894)) ([6008639](https://github.com/Wynntils/Artemis/commit/6008639722ea03982a21edfa7b6fb07416b921d6))
-
-
-### Miscellaneous Chores
-
-* **release:** v0.0.3-alpha.242 [skip ci] ([c8453a5](https://github.com/Wynntils/Artemis/commit/c8453a5e3fe62a86a87f78f3d4408a9154f512c9))
 
