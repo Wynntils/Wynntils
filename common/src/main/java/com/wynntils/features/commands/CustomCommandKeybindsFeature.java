@@ -98,7 +98,7 @@ public class CustomCommandKeybindsFeature extends Feature {
             () -> this.executeKeybind(keybindCommand6.get(), commandType6.get()));
 
     private void executeKeybind(String keybindCommand, CommandType commandType) {
-        Services.WynnLanguageSerivce.setSelectedLanguage(WynnLanguage.DEFAULT);
+        Services.WynnLanguage.setSelectedLanguage(WynnLanguage.DEFAULT);
 
         switch (commandType) {
             case EXECUTE -> McUtils.sendCommand(keybindCommand);

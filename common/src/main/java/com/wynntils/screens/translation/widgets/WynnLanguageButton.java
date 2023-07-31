@@ -59,7 +59,7 @@ public class WynnLanguageButton extends WynntilsButton {
     }
 
     private CustomColor getButtonColor() {
-        if (Services.WynnLanguageSerivce.getSelectedLanguage() == wynnLanguage) {
+        if (Services.WynnLanguage.getSelectedLanguage() == wynnLanguage) {
             return CommonColors.GREEN;
         } else {
             return CommonColors.WHITE;
@@ -70,7 +70,7 @@ public class WynnLanguageButton extends WynntilsButton {
     public boolean mouseClicked(double mouseX, double mouseY, int button) {
         if (!isMouseOver(mouseX, mouseY)) return false;
 
-        Services.WynnLanguageSerivce.setSelectedLanguage(wynnLanguage);
+        Services.WynnLanguage.setSelectedLanguage(wynnLanguage);
 
         return false;
     }

@@ -41,7 +41,7 @@ public class TradeMarketAutoOpenChatFeature extends Feature {
         if (!openChatWhenContainerClosed) return;
 
         openChatWhenContainerClosed = false;
-        Services.WynnLanguageSerivce.setSelectedLanguage(WynnLanguage.DEFAULT);
+        Services.WynnLanguage.setSelectedLanguage(WynnLanguage.DEFAULT);
         McUtils.mc().setScreen(new ChatScreen(""));
     }
 

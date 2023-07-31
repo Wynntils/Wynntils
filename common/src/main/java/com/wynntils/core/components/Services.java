@@ -39,5 +39,5 @@ public final class Services {
     public static final TranslationService Translation = new TranslationService();
     public static final UpdateService Update = new UpdateService();
     public static final WynntilsAccountService WynntilsAccount = new WynntilsAccountService();
-    public static final WynnLanguageService WynnLanguageSerivce = new WynnLanguageService();
+    public static final WynnLanguageService WynnLanguage = new WynnLanguageService();
 }
