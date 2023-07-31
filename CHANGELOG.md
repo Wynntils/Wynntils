@@ -1,9 +1,21 @@
+## [0.0.3-alpha.245](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.244...v0.0.3-alpha.245) (2023-07-31)
+
+
+### New Features
+
+* Config to disable parsing content book immediately ([#1899](https://github.com/Wynntils/Artemis/issues/1899)) ([10a54a5](https://github.com/Wynntils/Artemis/commit/10a54a5a18070d5630fe38bb8fb49be5c1cd0bed))
+
 ## [0.0.3-alpha.244](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.243...v0.0.3-alpha.244) (2023-07-30)
 
 
 ### Bug Fixes
 
 * Fix bank jump buttons in housing storage items ([#1886](https://github.com/Wynntils/Artemis/issues/1886)) ([2766cae](https://github.com/Wynntils/Artemis/commit/2766cae613ec7168bb1b27dab31979f327cae551))
+
+
+### Miscellaneous Chores
+
+* **release:** v0.0.3-alpha.244 [skip ci] ([b9d0d5a](https://github.com/Wynntils/Artemis/commit/b9d0d5a494563775938cb0ec0550babdf5830461))
 
 ## [0.0.3-alpha.243](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.242...v0.0.3-alpha.243) (2023-07-30)
 
@@ -40,16 +52,4 @@
 ### Miscellaneous Chores
 
 * **release:** v0.0.3-alpha.241 [skip ci] ([3023a28](https://github.com/Wynntils/Artemis/commit/3023a28ef5602b9ac69ed41a6cf165ed88eb18b1))
-
-## [0.0.3-alpha.240](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.239...v0.0.3-alpha.240) (2023-07-30)
-
-
-### Bug Fixes
-
-* update map hash and fix reloading caches ([#1892](https://github.com/Wynntils/Artemis/issues/1892)) ([610598f](https://github.com/Wynntils/Artemis/commit/610598ff8b6ce299943eea33b3cd618f6c121412))
-
-
-### Miscellaneous Chores
-
-* **release:** v0.0.3-alpha.240 [skip ci] ([c9f6b40](https://github.com/Wynntils/Artemis/commit/c9f6b401d9c48cc60969fe1e9745e49acefc78c4))
 
