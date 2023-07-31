@@ -138,7 +138,7 @@ public class GavellianAndWynnicTranslationFeature extends Feature {
 
         String currentNumsStr = getWynnicNumBeforeCursor(beforeCursor);
 
-        int wynnicNum = wynnicNumToInt(currentNumsStr);
+        int wynnicNum = Models.WynnLanguage.wynnicNumToInt(currentNumsStr);
 
         String backspacedNum = String.valueOf(wynnicNum);
 
@@ -367,7 +367,7 @@ public class GavellianAndWynnicTranslationFeature extends Feature {
     }
 
     private void updateInput(String beforeCursor, String afterCursor, int num, EditBox chatInput) {
-        String translatedNum = num > MAX_TRANSLATABLE_NUMBER ? "∞" : intToWynnicNum(num);
+        String translatedNum = num > MAX_TRANSLATABLE_NUMBER ? "∞" : Models.WynnLanguage.intToWynnicNum(num);
 
         String newInput = beforeCursor + translatedNum + afterCursor;
 
@@ -438,10 +438,10 @@ public class GavellianAndWynnicTranslationFeature extends Feature {
                 if (coloredTranslations.get()) {
                     translatedText =
                             numMatcher.replaceAll(match -> wynnicColor.get().getChatFormatting()
-                                    + String.valueOf(wynnicNumToInt(match.group()))
+                                    + String.valueOf(Models.WynnLanguage.wynnicNumToInt(match.group()))
                                     + ColorChatFormatting.WHITE.getChatFormatting());
                 } else {
-                    translatedText = numMatcher.replaceAll(match -> String.valueOf(wynnicNumToInt(match.group())));
+                    translatedText = numMatcher.replaceAll(match -> String.valueOf(Models.WynnLanguage.wynnicNumToInt(match.group())));
                 }
 
                 translatedText = getStringWithTranslation(
@@ -509,7 +509,7 @@ public class GavellianAndWynnicTranslationFeature extends Feature {
                 if (numToTranslate > MAX_TRANSLATABLE_NUMBER) {
                     return "∞";
                 } else {
-                    return intToWynnicNum(numToTranslate);
+                    return Models.WynnLanguage.intToWynnicNum(numToTranslate);
                 }
             });
 
@@ -523,45 +523,6 @@ public class GavellianAndWynnicTranslationFeature extends Feature {
         }
 
         return translated;
-    }
-
-    private int wynnicNumToInt(String wynnicNum) {
-        int result = 0;
-
-        for (char num : wynnicNum.toCharArray()) {
-            int numIndex = Models.WynnLanguage.getWynnicNumbers().indexOf(num);
-
-            result += Models.WynnLanguage.getEnglishNumbers().get(numIndex);
-        }
-
-        return result;
-    }
-
-    private String intToWynnicNum(int number) {
-        StringBuilder wynnicNums = new StringBuilder();
-
-        int hundereds = number / 100;
-
-        number -= (hundereds * 100);
-
-        int fifties = number >= 50 ? 1 : 0;
-
-        number -= (fifties * 50);
-
-        int tens = number / 10;
-
-        number -= (tens * 10);
-
-        wynnicNums.append(String.valueOf(Models.WynnLanguage.getOneHundered()).repeat(Math.max(0, hundereds)));
-        wynnicNums.append(String.valueOf(Models.WynnLanguage.getFifty()).repeat(Math.max(0, fifties)));
-        wynnicNums.append(String.valueOf(Models.WynnLanguage.getTen()).repeat(Math.max(0, tens)));
-
-        if (number > 0) {
-            wynnicNums.append(Models.WynnLanguage.getWynnicNumbers()
-                    .get(Models.WynnLanguage.getEnglishNumbers().indexOf(number)));
-        }
-
-        return wynnicNums.toString();
     }
 
     private static class WynnTranslatedNpcDialogEvent extends NpcDialogEvent {

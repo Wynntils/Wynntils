@@ -85,6 +85,45 @@ public class WynnLanguageModel extends Model {
         return englishToWynnicMap.getOrDefault(characterToTranslate, characterToTranslate);
     }
 
+    public int wynnicNumToInt(String wynnicNum) {
+        int result = 0;
+
+        for (char num : wynnicNum.toCharArray()) {
+            int numIndex = getWynnicNumbers().indexOf(num);
+
+            result += getEnglishNumbers().get(numIndex);
+        }
+
+        return result;
+    }
+
+    public String intToWynnicNum(int number) {
+        StringBuilder wynnicNums = new StringBuilder();
+
+        int hundereds = number / 100;
+
+        number -= (hundereds * 100);
+
+        int fifties = number >= 50 ? 1 : 0;
+
+        number -= (fifties * 50);
+
+        int tens = number / 10;
+
+        number -= (tens * 10);
+
+        wynnicNums.append(String.valueOf(getOneHundered()).repeat(Math.max(0, hundereds)));
+        wynnicNums.append(String.valueOf(getFifty()).repeat(Math.max(0, fifties)));
+        wynnicNums.append(String.valueOf(getTen()).repeat(Math.max(0, tens)));
+
+        if (number > 0) {
+            wynnicNums.append(getWynnicNumbers()
+                    .get(getEnglishNumbers().indexOf(number)));
+        }
+
+        return wynnicNums.toString();
+    }
+
     public boolean hasTranscriber(WynnLanguage transciberToFind) {
         Inventory inventory = McUtils.inventory();
 
