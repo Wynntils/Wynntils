@@ -19,9 +19,9 @@ import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 import java.util.concurrent.TimeUnit;
+import net.minecraft.core.Position;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
-import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 
 public class BeaconModel extends Model {
@@ -41,7 +41,7 @@ public class BeaconModel extends Model {
         if (event.getType() != EntityType.ARMOR_STAND) return;
 
         Entity entity = event.getEntity();
-        Vec3 position = entity.position();
+        Position position = entity.position();
 
         if (isDuplicateBeacon(position)) return;
 
@@ -104,17 +104,17 @@ public class BeaconModel extends Model {
         }
     }
 
-    private boolean isDuplicateBeacon(Vec3 position) {
+    private boolean isDuplicateBeacon(Position position) {
         return verifiedBeacons.stream().anyMatch(verifiedBeacon -> {
-            Vec3 beaconPosition = verifiedBeacon.getPosition();
+            Position beaconPosition = verifiedBeacon.getPosition();
             return beaconPosition.x() == position.x() && beaconPosition.z() == position.z();
         });
     }
 
-    private UnverifiedBeacon getUnverifiedBeaconAt(Vec3 position) {
+    private UnverifiedBeacon getUnverifiedBeaconAt(Position position) {
         return unverifiedBeacons.stream()
                 .filter(unverifiedBeacon -> {
-                    Vec3 beaconPosition = unverifiedBeacon.getPosition();
+                    Position beaconPosition = unverifiedBeacon.getPosition();
                     return beaconPosition.x() == position.x() && beaconPosition.z() == position.z();
                 })
                 .findFirst()

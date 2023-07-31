@@ -6,21 +6,21 @@ package com.wynntils.models.beacons.type;
 
 import java.util.ArrayList;
 import java.util.List;
+import net.minecraft.core.Position;
 import net.minecraft.world.entity.Entity;
-import net.minecraft.world.phys.Vec3;
 
 public class UnverifiedBeacon {
     private static final float POSITION_OFFSET_Y = 7.5f;
 
-    private final Vec3 position;
+    private final Position position;
     private final List<Entity> entities = new ArrayList<>();
 
-    public UnverifiedBeacon(Vec3 position, Entity entity) {
+    public UnverifiedBeacon(Position position, Entity entity) {
         this.position = position;
         entities.add(entity);
     }
 
-    public Vec3 getPosition() {
+    public Position getPosition() {
         return position;
     }
 
@@ -29,8 +29,8 @@ public class UnverifiedBeacon {
     }
 
     public boolean addEntity(Entity entity) {
-        Vec3 entityPosition = entity.position();
-        Vec3 lastEntityPosition = entities.get(entities.size() - 1).position();
+        Position entityPosition = entity.position();
+        Position lastEntityPosition = entities.get(entities.size() - 1).position();
 
         if (entityPosition.y() - lastEntityPosition.y() == POSITION_OFFSET_Y) {
             entities.add(entity);
