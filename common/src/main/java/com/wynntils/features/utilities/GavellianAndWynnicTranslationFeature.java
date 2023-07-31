@@ -288,7 +288,7 @@ public class GavellianAndWynnicTranslationFeature extends Feature {
     private boolean shouldTranslate(WynnLanguage language) {
         return switch (translateCondition.get()) {
             case NEVER -> false;
-            case BOOK -> language == WynnLanguage.WYNNIC
+            case TRANSCRIBER -> language == WynnLanguage.WYNNIC
                     ? Services.WynnLanguageSerivce.hasTranscriber(WynnLanguage.WYNNIC)
                     : Services.WynnLanguageSerivce.hasTranscriber(WynnLanguage.GAVELLIAN);
             case DISCOVERY -> language == WynnLanguage.WYNNIC
@@ -574,7 +574,7 @@ public class GavellianAndWynnicTranslationFeature extends Feature {
     public enum TranslateCondition {
         ALWAYS,
         DISCOVERY,
-        BOOK,
+        TRANSCRIBER,
         NEVER
     }
 }
