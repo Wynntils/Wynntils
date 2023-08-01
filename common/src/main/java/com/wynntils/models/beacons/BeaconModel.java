@@ -11,10 +11,10 @@ import com.wynntils.mc.event.RemoveEntitiesEvent;
 import com.wynntils.mc.event.TeleportEntityEvent;
 import com.wynntils.models.beacons.event.BeaconEvent;
 import com.wynntils.models.beacons.type.BeaconColor;
-import com.wynntils.models.beacons.type.UnverifiedBeacon;
 import com.wynntils.models.beacons.type.VerifiedBeacon;
 import com.wynntils.utils.mc.PosUtils;
 import com.wynntils.utils.type.TimedSet;
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
@@ -23,7 +23,9 @@ import java.util.concurrent.TimeUnit;
 import net.minecraft.core.Position;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
+import org.apache.commons.compress.utils.Lists;
 
 public class BeaconModel extends Model {
     // Amount of armor stands above each other to consider this a beacon
@@ -61,7 +63,7 @@ public class BeaconModel extends Model {
         }
 
         if (unverifiedBeacon.getEntities().size() == VERIFICATION_ENTITY_COUNT) {
-            BeaconColor beaconColor = BeaconColor.fromUnverifiedBeacon(unverifiedBeacon);
+            BeaconColor beaconColor = getBeaconColor(unverifiedBeacon);
 
             if (beaconColor == null) {
                 WynntilsMod.warn("Could not determine beacon color at " + position + " for entities "
@@ -70,7 +72,8 @@ public class BeaconModel extends Model {
                 return;
             }
 
-            VerifiedBeacon verifiedBeacon = VerifiedBeacon.fromUnverifiedBeacon(unverifiedBeacon, beaconColor);
+            VerifiedBeacon verifiedBeacon =
+                    new VerifiedBeacon(unverifiedBeacon.getPosition(), beaconColor, unverifiedBeacon.getEntities());
             verifiedBeacons.add(verifiedBeacon);
             WynntilsMod.postEvent(new BeaconEvent.Added(verifiedBeacon));
 
@@ -121,5 +124,49 @@ public class BeaconModel extends Model {
                 })
                 .findFirst()
                 .orElse(null);
+    }
+
+    private BeaconColor getBeaconColor(UnverifiedBeacon unverifiedBeacon) {
+        List<Entity> entities = unverifiedBeacon.getEntities();
+        if (entities.isEmpty()) return null;
+
+        Entity entity = entities.get(0);
+        List<ItemStack> armorSlots = Lists.newArrayList(entity.getArmorSlots().iterator());
+        if (armorSlots.size() != 4) return null;
+
+        ItemStack bootsItem = armorSlots.get(3);
+        return BeaconColor.fromItemStack(bootsItem);
+    }
+
+    private static final class UnverifiedBeacon {
+        private static final float POSITION_OFFSET_Y = 7.5f;
+
+        private final Position position;
+        private final List<Entity> entities = new ArrayList<>();
+
+        private UnverifiedBeacon(Position position, Entity entity) {
+            this.position = position;
+            entities.add(entity);
+        }
+
+        public Position getPosition() {
+            return position;
+        }
+
+        public List<Entity> getEntities() {
+            return entities;
+        }
+
+        public boolean addEntity(Entity entity) {
+            Position entityPosition = entity.position();
+            Position lastEntityPosition = entities.get(entities.size() - 1).position();
+
+            if (entityPosition.y() - lastEntityPosition.y() == POSITION_OFFSET_Y) {
+                entities.add(entity);
+                return true;
+            }
+
+            return false;
+        }
     }
 }
