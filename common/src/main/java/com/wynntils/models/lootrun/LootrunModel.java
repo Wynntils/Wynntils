@@ -81,7 +81,7 @@ public class LootrunModel extends Model {
 
     // Data to be persisted
     @RegisterStorage
-    private Storage<Map<String, Map<BeaconColor, Integer>>> selectedBeaconStorage = new Storage<>(new TreeMap<>());
+    private Storage<Map<String, Map<BeaconColor, Integer>>> selectedBeaconsStorage = new Storage<>(new TreeMap<>());
 
     @RegisterStorage
     private Storage<Map<String, Beacon>> closestBeaconStorage = new Storage<>(new TreeMap<>());
@@ -99,11 +99,11 @@ public class LootrunModel extends Model {
     public void onCharacterChange(CharacterUpdateEvent event) {
         String id = Models.Character.getId();
 
-        selectedBeaconStorage.get().putIfAbsent(id, new TreeMap<>());
-        selectedBeacons = selectedBeaconStorage.get().get(id);
+        selectedBeaconsStorage.get().putIfAbsent(id, new TreeMap<>());
+        selectedBeacons = selectedBeaconsStorage.get().get(id);
         closestBeacon = closestBeaconStorage.get().get(id); // can be null safely
 
-        selectedBeaconStorage.touched();
+        selectedBeaconsStorage.touched();
     }
 
     @SubscribeEvent
@@ -196,7 +196,7 @@ public class LootrunModel extends Model {
             selectedBeacons = new TreeMap<>();
             closestBeacon = null;
             taskType = null;
-            selectedBeaconStorage.touched();
+            selectedBeaconsStorage.touched();
             closestBeaconStorage.touched();
             return;
         }
@@ -212,7 +212,7 @@ public class LootrunModel extends Model {
                 && closestBeacon != null) {
             WynntilsMod.info("Selected a " + closestBeacon.color() + " beacon at " + closestBeacon.location());
             selectedBeacons.put(closestBeacon.color(), selectedBeacons.getOrDefault(closestBeacon.color(), 0) + 1);
-            selectedBeaconStorage.touched();
+            selectedBeaconsStorage.touched();
             WynntilsMod.postEvent(new LootrunBeaconSelectedEvent(closestBeacon));
             return;
         }
