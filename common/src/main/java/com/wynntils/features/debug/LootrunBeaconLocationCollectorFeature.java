@@ -38,10 +38,10 @@ public class LootrunBeaconLocationCollectorFeature extends Feature {
 
         if (!beacon.color().isUsedInLootruns()) return;
 
-        Optional<LootrunTaskType> currentTaskTypeOpt = Models.Lootrun.getCurrentTaskType();
+        Optional<LootrunTaskType> currentTaskTypeOpt = Models.Lootrun.getTaskType();
         if (currentTaskTypeOpt.isEmpty()) return;
 
-        Optional<LootrunLocation> currentLocationOpt = Models.Lootrun.getCurrentLocation();
+        Optional<LootrunLocation> currentLocationOpt = Models.Lootrun.getLocation();
         if (currentLocationOpt.isEmpty()) return;
 
         tasks.get().putIfAbsent(currentLocationOpt.get(), new TreeSet<>());
