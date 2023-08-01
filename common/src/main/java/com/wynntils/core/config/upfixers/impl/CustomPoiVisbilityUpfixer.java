@@ -18,7 +18,7 @@ public class CustomPoiVisbilityUpfixer implements ConfigUpfixer {
     private static final String CUSTOM_POIS_MINZOOM = "minZoom";
 
     @Override
-    public boolean apply(JsonObject configObject, Set<ConfigHolder> configHolders) {
+    public boolean apply(JsonObject configObject, Set<ConfigHolder<?>> configHolders) {
         JsonArray customPois = configObject.getAsJsonArray(CUSTOM_POIS_ARRAY);
 
         if (customPois == null) return true;

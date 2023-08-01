@@ -29,7 +29,7 @@ public class HadesFeature extends Feature {
     public final Config<Boolean> shareWithGuild = new Config<>(true);
 
     @Override
-    protected void onConfigUpdate(ConfigHolder configHolder) {
+    protected void onConfigUpdate(ConfigHolder<?> configHolder) {
         switch (configHolder.getFieldName()) {
             case "getOtherPlayerInfo" -> {
                 if (getOtherPlayerInfo.get()) {

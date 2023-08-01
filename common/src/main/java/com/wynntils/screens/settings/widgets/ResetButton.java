@@ -12,10 +12,10 @@ import net.minecraft.client.sounds.SoundManager;
 import net.minecraft.network.chat.Component;
 
 public class ResetButton extends GeneralSettingsButton {
-    private final ConfigHolder configHolder;
+    private final ConfigHolder<?> configHolder;
     private final Runnable onClick;
 
-    ResetButton(ConfigHolder configHolder, Runnable onClick, int x, int y) {
+    ResetButton(ConfigHolder<?> configHolder, Runnable onClick, int x, int y) {
         super(
                 x,
                 y,

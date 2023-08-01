@@ -85,7 +85,7 @@ public class GameBarOverlayMoveUpfixer implements ConfigUpfixer {
     private static final String NEW_KEY_PREFIX = "gameBarsOverlayFeature.";
 
     @Override
-    public boolean apply(JsonObject configObject, Set<ConfigHolder> configHolders) {
+    public boolean apply(JsonObject configObject, Set<ConfigHolder<?>> configHolders) {
         for (String key : KEYS_TO_CHANGE) {
             if (!configObject.has(key)) continue;
 

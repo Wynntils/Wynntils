@@ -189,7 +189,7 @@ public abstract class BarOverlay extends DynamicOverlay {
     }
 
     @Override
-    protected void onConfigUpdate(ConfigHolder configHolder) {}
+    protected void onConfigUpdate(ConfigHolder<?> configHolder) {}
 
     protected abstract boolean isRendered();
 

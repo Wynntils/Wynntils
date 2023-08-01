@@ -18,8 +18,8 @@ public class CustomPoiIconEnumBugUpfixer implements ConfigUpfixer {
     private static final Pattern POI_NAME_CHEST_PATTERN = Pattern.compile("Loot Chest T?(\\d)");
 
     @Override
-    public boolean apply(JsonObject configObject, Set<ConfigHolder> configHolders) {
-        for (ConfigHolder configHolder : configHolders) {
+    public boolean apply(JsonObject configObject, Set<ConfigHolder<?>> configHolders) {
+        for (ConfigHolder<?> configHolder : configHolders) {
             if (!configHolder.getJsonName().equals(POI_LIST_KEY)) continue;
 
             JsonElement obj = configObject.get(POI_LIST_KEY);
