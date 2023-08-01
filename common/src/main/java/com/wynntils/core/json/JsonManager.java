@@ -55,7 +55,7 @@ public final class JsonManager extends Manager {
         return JsonTypeWrapper.wrap(genericType.getActualTypeArguments()[0]);
     }
 
-    public Object deepCopy(Object value, Type fieldType) {
+    public <T> T deepCopy(T value, Type fieldType) {
         return GSON.fromJson(GSON.toJson(value), fieldType);
     }
 

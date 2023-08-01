@@ -53,7 +53,7 @@ public class ConfigUpfixerManager extends Manager {
      * @param configObject  The config object to run upfixers on.
      * @param configHolders All registered configHolders
      */
-    public boolean runUpfixers(JsonObject configObject, Set<ConfigHolder> configHolders) {
+    public boolean runUpfixers(JsonObject configObject, Set<ConfigHolder<?>> configHolders) {
         List<ConfigUpfixer> missingUpfixers = getMissingUpfixers(configObject);
 
         boolean anyChange = false;

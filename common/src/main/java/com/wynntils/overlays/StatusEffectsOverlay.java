@@ -119,7 +119,7 @@ public class StatusEffectsOverlay extends Overlay {
     }
 
     @Override
-    protected void onConfigUpdate(ConfigHolder configHolder) {
+    protected void onConfigUpdate(ConfigHolder<?> configHolder) {
         updateTextRenderSetting();
         recalculateRenderCache();
     }

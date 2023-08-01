@@ -37,7 +37,7 @@ public final class ConfigManager extends Manager {
     private static final String FILE_SUFFIX = ".conf.json";
     private static final File DEFAULT_CONFIG = new File(CONFIGS, "default" + FILE_SUFFIX);
     private static final String OVERLAY_GROUPS_JSON_KEY = "overlayGroups";
-    private static final Set<ConfigHolder> CONFIG_HOLDERS = new TreeSet<>();
+    private static final Set<ConfigHolder<?>> CONFIG_HOLDERS = new TreeSet<>();
 
     private final File userConfig;
     private JsonObject configObject;
@@ -88,8 +88,8 @@ public final class ConfigManager extends Manager {
         }
     }
 
-    private <T extends Configurable & Translatable> void registerConfigOptions(T configurable) {
-        List<ConfigHolder> configOptions = getConfigOptions(configurable);
+    private <P extends Configurable & Translatable> void registerConfigOptions(P configurable) {
+        List<ConfigHolder<?>> configOptions = getConfigOptions(configurable);
 
         configurable.addConfigOptions(configOptions);
         CONFIG_HOLDERS.addAll(configOptions);
@@ -135,7 +135,7 @@ public final class ConfigManager extends Manager {
             holder.getOverlays().forEach(overlay -> overlay.addConfigOptions(this.getConfigOptions(overlay)));
         }
 
-        for (ConfigHolder holder : getConfigHolderList()) {
+        for (ConfigHolder<?> holder : getConfigHolderList()) {
             // option hasn't been saved to config
             if (!configObject.has(holder.getJsonName())) {
                 if (resetIfNotFound) {
@@ -147,7 +147,7 @@ public final class ConfigManager extends Manager {
             // read value and update option
             JsonElement holderJson = configObject.get(holder.getJsonName());
             Object value = Managers.Json.GSON.fromJson(holderJson, holder.getType());
-            holder.setValue(value);
+            holder.restoreValue(value);
         }
 
         // Newly created group overlays need to be enabled
@@ -156,7 +156,7 @@ public final class ConfigManager extends Manager {
         }
     }
 
-    private static List<ConfigHolder> getConfigHolderList() {
+    private static List<ConfigHolder<?>> getConfigHolderList() {
         // This breaks the concept of "manager holds all config holders at all times". Instead we get the group
         // overlays' configs from the overlay instance itself, to save us some trouble.
 
@@ -173,7 +173,7 @@ public final class ConfigManager extends Manager {
     public void saveConfig() {
         // create json object, with entry for each option of each container
         JsonObject holderJson = new JsonObject();
-        for (ConfigHolder holder : getConfigHolderList()) {
+        for (ConfigHolder<?> holder : getConfigHolderList()) {
             if (!holder.valueChanged()) continue; // only save options that have been set by the user
             Object value = holder.getValue();
 
@@ -206,7 +206,7 @@ public final class ConfigManager extends Manager {
     private void saveDefaultConfig() {
         // create json object, with entry for each option of each container
         JsonObject holderJson = new JsonObject();
-        for (ConfigHolder holder : getConfigHolderList()) {
+        for (ConfigHolder<?> holder : getConfigHolderList()) {
             Object value = holder.getDefaultValue();
 
             JsonElement holderElement = Managers.Json.GSON.toJsonTree(value);
@@ -217,8 +217,8 @@ public final class ConfigManager extends Manager {
         Managers.Json.savePreciousJson(DEFAULT_CONFIG, holderJson);
     }
 
-    private <T extends Configurable & Translatable> List<ConfigHolder> getConfigOptions(T parent) {
-        List<ConfigHolder> options = new ArrayList<>();
+    private <P extends Configurable & Translatable> List<ConfigHolder<?>> getConfigOptions(P parent) {
+        List<ConfigHolder<?>> options = new ArrayList<>();
 
         Field[] annotatedConfigs = FieldUtils.getFieldsWithAnnotation(parent.getClass(), RegisterConfig.class);
         for (Field field : annotatedConfigs) {
@@ -249,9 +249,9 @@ public final class ConfigManager extends Manager {
             }
             String i18nKey = configInfo.i18nKey();
 
-            Config configObj;
+            Config<?> configObj;
             try {
-                configObj = (Config) FieldUtils.readField(configField, parent, true);
+                configObj = (Config<?>) FieldUtils.readField(configField, parent, true);
             } catch (IllegalAccessException e) {
                 throw new RuntimeException("Cannot read Config field: " + configField, e);
             }
@@ -259,8 +259,8 @@ public final class ConfigManager extends Manager {
 
             Type valueType = Managers.Json.getJsonValueType(configField);
 
-            ConfigHolder configHolder =
-                    new ConfigHolder(parent, configObj, configField.getName(), i18nKey, visible, valueType);
+            ConfigHolder<?> configHolder =
+                    new ConfigHolder<>(parent, configObj, configField.getName(), i18nKey, visible, valueType);
             if (WynntilsMod.isDevelopmentEnvironment()) {
                 if (visible) {
                     if (configHolder.getDisplayName().startsWith("feature.wynntils.")) {
@@ -282,7 +282,7 @@ public final class ConfigManager extends Manager {
         return options;
     }
 
-    public Stream<ConfigHolder> getConfigHolders() {
+    public Stream<ConfigHolder<?>> getConfigHolders() {
         return getConfigHolderList().stream();
     }
 }

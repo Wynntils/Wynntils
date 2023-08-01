@@ -144,7 +144,7 @@ public class NpcDialogueOverlay extends Overlay {
     }
 
     @Override
-    protected void onConfigUpdate(ConfigHolder configHolder) {
+    protected void onConfigUpdate(ConfigHolder<?> configHolder) {
         updateDialogExtractionSettings();
         updateTextRenderSettings();
     }

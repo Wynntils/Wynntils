@@ -11,15 +11,15 @@ import com.wynntils.utils.colors.CommonColors;
 import com.wynntils.utils.render.FontRenderer;
 
 public class TextInputBoxSettingsWidget extends TextInputBoxWidget {
-    protected final ConfigHolder configHolder;
+    protected final ConfigHolder<?> configHolder;
 
-    protected TextInputBoxSettingsWidget(ConfigHolder configHolder, TextboxScreen textboxScreen, int width) {
+    protected TextInputBoxSettingsWidget(ConfigHolder<?> configHolder, TextboxScreen textboxScreen, int width) {
         super(0, 6, width, FontRenderer.getInstance().getFont().lineHeight + 8, null, textboxScreen);
         this.configHolder = configHolder;
         setTextBoxInput(configHolder.getValue().toString());
     }
 
-    public TextInputBoxSettingsWidget(ConfigHolder configHolder, TextboxScreen textboxScreen) {
+    public TextInputBoxSettingsWidget(ConfigHolder<?> configHolder, TextboxScreen textboxScreen) {
         this(configHolder, textboxScreen, 100);
     }
 
@@ -28,7 +28,7 @@ public class TextInputBoxSettingsWidget extends TextInputBoxWidget {
         Object parsedValue = configHolder.tryParseStringValue(text);
         if (parsedValue != null) {
             if (!parsedValue.equals(configHolder.getValue())) {
-                configHolder.setValue(parsedValue);
+                ((ConfigHolder<Object>) configHolder).setValue(parsedValue);
             }
 
             setRenderColor(CommonColors.GREEN);

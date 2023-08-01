@@ -268,8 +268,10 @@ public class CustomBankPagesFeature extends Feature {
     }
 
     @Override
-    protected void onConfigUpdate(ConfigHolder configHolder) {
-        String valueString = (String) configHolder.getValue();
+    protected void onConfigUpdate(ConfigHolder<?> unknownConfigHolder) {
+        // All our configs are strings
+        ConfigHolder<String> configHolder = (ConfigHolder<String>) unknownConfigHolder;
+        String valueString = configHolder.getValue();
         String fieldName = configHolder.getFieldName();
 
         SearchableContainerType containerType;

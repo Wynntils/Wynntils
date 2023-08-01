@@ -11,7 +11,7 @@ import com.wynntils.utils.colors.CustomColor;
 import com.wynntils.utils.render.RenderUtils;
 
 public class CustomColorSettingsButton extends TextInputBoxSettingsWidget {
-    public CustomColorSettingsButton(ConfigHolder configHolder, TextboxScreen textboxScreen) {
+    public CustomColorSettingsButton(ConfigHolder<CustomColor> configHolder, TextboxScreen textboxScreen) {
         super(configHolder, textboxScreen, 80);
     }
 
