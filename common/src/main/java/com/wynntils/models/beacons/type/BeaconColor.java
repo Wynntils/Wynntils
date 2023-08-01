@@ -4,6 +4,7 @@
  */
 package com.wynntils.models.beacons.type;
 
+import com.wynntils.models.activities.type.ActivityType;
 import java.util.List;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.item.Item;
@@ -12,31 +13,33 @@ import net.minecraft.world.item.Items;
 import org.apache.commons.compress.utils.Lists;
 
 public enum BeaconColor {
-    GREEN(25, Items.GOLDEN_SHOVEL, ContentType.BOTH),
-    PINK(24, Items.GOLDEN_SHOVEL, ContentType.CONTENT), // This is not used in lootruns
-    YELLOW(3, Items.GOLDEN_PICKAXE, ContentType.LOOTRUN),
-    BLUE(4, Items.GOLDEN_PICKAXE, ContentType.LOOTRUN),
-    PURPLE(5, Items.GOLDEN_PICKAXE, ContentType.LOOTRUN),
-    GRAY(6, Items.GOLDEN_PICKAXE, ContentType.LOOTRUN),
-    ORANGE(7, Items.GOLDEN_PICKAXE, ContentType.LOOTRUN),
-    RED(8, Items.GOLDEN_PICKAXE, ContentType.LOOTRUN),
-    DARK_GRAY(9, Items.GOLDEN_PICKAXE, ContentType.LOOTRUN),
-    WHITE(10, Items.GOLDEN_PICKAXE, ContentType.LOOTRUN),
-    AQUA(11, Items.GOLDEN_PICKAXE, ContentType.LOOTRUN), // This is CYAN in the resource pack
-    RAINBOW(12, Items.GOLDEN_PICKAXE, ContentType.LOOTRUN);
+    GREEN(25, Items.GOLDEN_SHOVEL, true, ActivityType.STORYLINE_QUEST),
+    PINK(24, Items.GOLDEN_SHOVEL, false, ActivityType.BOSS_ALTAR),
+    YELLOW(3, Items.GOLDEN_PICKAXE, true, ActivityType.RAID),
+    BLUE(4, Items.GOLDEN_PICKAXE, true, ActivityType.LOOTRUN_CAMP),
+    PURPLE(5, Items.GOLDEN_PICKAXE, true, ActivityType.MINI_QUEST),
+    GRAY(6, Items.GOLDEN_PICKAXE, true, null),
+    ORANGE(7, Items.GOLDEN_PICKAXE, true, ActivityType.CAVE),
+    RED(8, Items.GOLDEN_PICKAXE, true, ActivityType.DUNGEON),
+    DARK_GRAY(9, Items.GOLDEN_PICKAXE, true, null),
+    WHITE(
+            10,
+            Items.GOLDEN_PICKAXE,
+            true,
+            ActivityType.WORLD_DISCOVERY), // can also be ActivityType.TERRITORIAL_DISCOVERY
+    AQUA(11, Items.GOLDEN_PICKAXE, true, ActivityType.QUEST), // This is CYAN in the resource pack
+    RAINBOW(12, Items.GOLDEN_PICKAXE, true, null);
 
-    private final int damage;
+    private final int damageValue;
     private final Item item;
-    private final ContentType contentType;
+    private final boolean usedInLootruns;
+    private final ActivityType activityType;
 
-    BeaconColor(int damage, Item item, ContentType contentType) {
-        this.damage = damage;
+    BeaconColor(int damageValue, Item item, boolean usedInLootruns, ActivityType activityType) {
+        this.damageValue = damageValue;
         this.item = item;
-        this.contentType = contentType;
-    }
-
-    public ContentType getContentType() {
-        return contentType;
+        this.usedInLootruns = usedInLootruns;
+        this.activityType = activityType;
     }
 
     public static BeaconColor fromUnverifiedBeacon(UnverifiedBeacon unverifiedBeacon) {
@@ -53,7 +56,7 @@ public enum BeaconColor {
 
     public static BeaconColor fromItemStack(ItemStack itemStack) {
         for (BeaconColor color : values()) {
-            if (color.damage == itemStack.getDamageValue() && color.item == itemStack.getItem()) {
+            if (color.damageValue == itemStack.getDamageValue() && color.item == itemStack.getItem()) {
                 return color;
             }
         }
@@ -71,13 +74,11 @@ public enum BeaconColor {
         return null;
     }
 
-    public enum ContentType {
-        LOOTRUN,
-        CONTENT,
-        BOTH;
+    public boolean isUsedInLootruns() {
+        return usedInLootruns;
+    }
 
-        public boolean showsUpInLootruns() {
-            return this == LOOTRUN || this == BOTH;
-        }
+    public ActivityType getActivityType() {
+        return activityType;
     }
 }

@@ -124,7 +124,7 @@ public class LootrunModel extends Model {
     @SubscribeEvent
     public void onBeaconRemove(BeaconEvent.Removed event) {
         VerifiedBeacon beacon = event.getBeacon();
-        if (!beacon.getColor().getContentType().showsUpInLootruns()) return;
+        if (!beacon.getColor().isUsedInLootruns()) return;
 
         double newBeaconDistanceToPlayer = VectorUtils.distanceIgnoringY(
                 beacon.getPosition(), McUtils.mc().player.position());
