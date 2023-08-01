@@ -76,19 +76,18 @@ public class LootrunModel extends Model {
 
     // Data that can live in memory, when joining a class we will parse these
     private LootrunningState lootrunningState = LootrunningState.NOT_RUNNING;
-    private LootrunLocation currentLocation;
-    private LootrunTaskType currentTaskType;
+    private LootrunLocation location;
+    private LootrunTaskType taskType;
 
     // Data to be persisted
     @RegisterStorage
-    private Storage<Map<String, Map<BeaconColor, Integer>>> currentLootrunSelectedBeaconStorage =
-            new Storage<>(new TreeMap<>());
+    private Storage<Map<String, Map<BeaconColor, Integer>>> selectedBeaconStorage = new Storage<>(new TreeMap<>());
 
     @RegisterStorage
-    private Storage<Map<String, Beacon>> currentClosestBeaconStorage = new Storage<>(new TreeMap<>());
+    private Storage<Map<String, Beacon>> closestBeaconStorage = new Storage<>(new TreeMap<>());
 
-    private Map<BeaconColor, Integer> currentLootrunSelectedBeacons = new TreeMap<>();
-    private Beacon currentClosestBeacon;
+    private Map<BeaconColor, Integer> selectedBeacons = new TreeMap<>();
+    private Beacon closestBeacon;
 
     public LootrunModel() {
         super(List.of());
@@ -100,12 +99,11 @@ public class LootrunModel extends Model {
     public void onCharacterChange(CharacterUpdateEvent event) {
         String id = Models.Character.getId();
 
-        currentLootrunSelectedBeaconStorage.get().putIfAbsent(id, new TreeMap<>());
-        currentLootrunSelectedBeacons =
-                currentLootrunSelectedBeaconStorage.get().get(id);
-        currentClosestBeacon = currentClosestBeaconStorage.get().get(id); // can be null safely
+        selectedBeaconStorage.get().putIfAbsent(id, new TreeMap<>());
+        selectedBeacons = selectedBeaconStorage.get().get(id);
+        closestBeacon = closestBeaconStorage.get().get(id); // can be null safely
 
-        currentLootrunSelectedBeaconStorage.touched();
+        selectedBeaconStorage.touched();
     }
 
     @SubscribeEvent
@@ -137,11 +135,11 @@ public class LootrunModel extends Model {
         lootrunFailedBuilder = null;
 
         lootrunningState = LootrunningState.NOT_RUNNING;
-        currentLocation = null;
-        currentTaskType = null;
+        location = null;
+        taskType = null;
 
-        currentLootrunSelectedBeacons = new TreeMap<>();
-        currentClosestBeacon = null;
+        selectedBeacons = new TreeMap<>();
+        closestBeacon = null;
     }
 
     // When we get close to a beacon, it get's removed.
@@ -154,32 +152,32 @@ public class LootrunModel extends Model {
 
         double newBeaconDistanceToPlayer = VectorUtils.distanceIgnoringY(
                 beacon.location().toPosition(), McUtils.mc().player.position());
-        double oldBeaconDistanceToPlayer = currentClosestBeacon == null
+        double oldBeaconDistanceToPlayer = closestBeacon == null
                 ? Double.MAX_VALUE
                 : VectorUtils.distanceIgnoringY(
-                        currentClosestBeacon.location().toPosition(),
+                        closestBeacon.location().toPosition(),
                         McUtils.mc().player.position());
         if (newBeaconDistanceToPlayer < BEACON_REMOVAL_RADIUS
                 && newBeaconDistanceToPlayer < oldBeaconDistanceToPlayer) {
-            currentClosestBeacon = event.getBeacon();
-            currentClosestBeaconStorage.touched();
+            closestBeacon = event.getBeacon();
+            closestBeaconStorage.touched();
         }
     }
 
     public int getBeaconCount(BeaconColor color) {
-        return currentLootrunSelectedBeacons.getOrDefault(color, 0);
+        return selectedBeacons.getOrDefault(color, 0);
     }
 
     public LootrunningState getState() {
         return lootrunningState;
     }
 
-    public Optional<LootrunLocation> getCurrentLocation() {
-        return Optional.ofNullable(currentLocation);
+    public Optional<LootrunLocation> getLocation() {
+        return Optional.ofNullable(location);
     }
 
-    public Optional<LootrunTaskType> getCurrentTaskType() {
-        return Optional.ofNullable(currentTaskType);
+    public Optional<LootrunTaskType> getTaskType() {
+        return Optional.ofNullable(taskType);
     }
 
     public void setState(LootrunningState newState, LootrunTaskType taskType) {
@@ -188,38 +186,34 @@ public class LootrunModel extends Model {
 
         LootrunningState oldState = this.lootrunningState;
         this.lootrunningState = newState;
-        this.currentTaskType = taskType;
+        this.taskType = taskType;
 
         handleStateChange(oldState, newState);
     }
 
     private void handleStateChange(LootrunningState oldState, LootrunningState newState) {
         if (newState == LootrunningState.NOT_RUNNING) {
-            currentLootrunSelectedBeacons = new TreeMap<>();
-            currentClosestBeacon = null;
-            currentTaskType = null;
-            currentLootrunSelectedBeaconStorage.touched();
-            currentClosestBeaconStorage.touched();
+            selectedBeacons = new TreeMap<>();
+            closestBeacon = null;
+            taskType = null;
+            selectedBeaconStorage.touched();
+            closestBeaconStorage.touched();
             return;
         }
 
         if (oldState == LootrunningState.NOT_RUNNING) {
-            currentLocation =
-                    LootrunLocation.fromCoordinates(McUtils.mc().player.position());
-            WynntilsMod.info("Started a lootrun at " + currentLocation);
+            location = LootrunLocation.fromCoordinates(McUtils.mc().player.position());
+            WynntilsMod.info("Started a lootrun at " + location);
             return;
         }
 
         if (oldState == LootrunningState.CHOOSING_BEACON
                 && newState == LootrunningState.IN_TASK
-                && currentClosestBeacon != null) {
-            WynntilsMod.info(
-                    "Selected a " + currentClosestBeacon.color() + " beacon at " + currentClosestBeacon.location());
-            currentLootrunSelectedBeacons.put(
-                    currentClosestBeacon.color(),
-                    currentLootrunSelectedBeacons.getOrDefault(currentClosestBeacon.color(), 0) + 1);
-            currentLootrunSelectedBeaconStorage.touched();
-            WynntilsMod.postEvent(new LootrunBeaconSelectedEvent(currentClosestBeacon));
+                && closestBeacon != null) {
+            WynntilsMod.info("Selected a " + closestBeacon.color() + " beacon at " + closestBeacon.location());
+            selectedBeacons.put(closestBeacon.color(), selectedBeacons.getOrDefault(closestBeacon.color(), 0) + 1);
+            selectedBeaconStorage.touched();
+            WynntilsMod.postEvent(new LootrunBeaconSelectedEvent(closestBeacon));
             return;
         }
     }
