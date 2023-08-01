@@ -19,11 +19,7 @@ public enum BeaconColor {
     ORANGE(7, Items.GOLDEN_PICKAXE, true, ActivityType.CAVE),
     RED(8, Items.GOLDEN_PICKAXE, true, ActivityType.DUNGEON),
     DARK_GRAY(9, Items.GOLDEN_PICKAXE, true, null),
-    WHITE(
-            10,
-            Items.GOLDEN_PICKAXE,
-            true,
-            ActivityType.WORLD_DISCOVERY), // can also be ActivityType.TERRITORIAL_DISCOVERY
+    WHITE(10, Items.GOLDEN_PICKAXE, true, ActivityType.WORLD_DISCOVERY), // or ActivityType.TERRITORIAL_DISCOVERY
     AQUA(11, Items.GOLDEN_PICKAXE, true, ActivityType.QUEST), // This is CYAN in the resource pack
     RAINBOW(12, Items.GOLDEN_PICKAXE, true, null);
 
