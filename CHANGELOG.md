@@ -1,9 +1,17 @@
+## [0.0.3-alpha.255](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.254...v0.0.3-alpha.255) (2023-08-01)
+
+
+### Miscellaneous Chores
+
+* Restore proper zh_cn translation ([#1913](https://github.com/Wynntils/Artemis/issues/1913)) ([899a67d](https://github.com/Wynntils/Artemis/commit/899a67de0c2c51a2ea48f1cac7dd434cd60fb9b7))
+
 ## [0.0.3-alpha.254](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.253...v0.0.3-alpha.254) (2023-08-01)
 
 
 ### Miscellaneous Chores
 
 * New Crowdin updates ([#1888](https://github.com/Wynntils/Artemis/issues/1888)) ([71526f0](https://github.com/Wynntils/Artemis/commit/71526f0d2e77f1c35d8558ac3cba761c66d1c5ff))
+* **release:** v0.0.3-alpha.254 [skip ci] ([b09b5d5](https://github.com/Wynntils/Artemis/commit/b09b5d552bf9425de42362504de6acfad992dbc8))
 
 ## [0.0.3-alpha.253](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.252...v0.0.3-alpha.253) (2023-08-01)
 
@@ -40,16 +48,4 @@
 ### Miscellaneous Chores
 
 * **release:** v0.0.3-alpha.251 [skip ci] ([b8abde7](https://github.com/Wynntils/Artemis/commit/b8abde7af8d252d536fc89f49d118bbd6e9d9c79))
-
-## [0.0.3-alpha.250](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.249...v0.0.3-alpha.250) (2023-07-31)
-
-
-### New Features
-
-* POI creation screen improvements ([#1896](https://github.com/Wynntils/Artemis/issues/1896)) ([cf34a2a](https://github.com/Wynntils/Artemis/commit/cf34a2a389615afcd4835c6ec863228f5a9642ac))
-
-
-### Miscellaneous Chores
-
-* **release:** v0.0.3-alpha.250 [skip ci] ([ccc1358](https://github.com/Wynntils/Artemis/commit/ccc135844fd7e364ae554dddff0c5f10d44b020c))
 
