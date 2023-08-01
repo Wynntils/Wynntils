@@ -33,4 +33,8 @@ public final class PosUtils {
     public static boolean isSame(Position first, Position second) {
         return second.x() == first.x() && second.z() == first.z() && Math.abs(second.y() - first.y()) < 1.5;
     }
+
+    public static boolean equalsIgnoringY(Position pos1, Position pos2) {
+        return pos2.x() == pos1.x() && pos2.z() == pos1.z();
+    }
 }
