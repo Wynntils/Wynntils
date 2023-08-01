@@ -7,12 +7,16 @@ package com.wynntils.models.lootrun;
 import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.components.Handlers;
 import com.wynntils.core.components.Model;
+import com.wynntils.core.components.Models;
+import com.wynntils.core.storage.RegisterStorage;
+import com.wynntils.core.storage.Storage;
 import com.wynntils.core.text.StyledText;
 import com.wynntils.handlers.chat.event.ChatMessageReceivedEvent;
 import com.wynntils.handlers.chat.type.RecipientType;
 import com.wynntils.models.beacons.event.BeaconEvent;
 import com.wynntils.models.beacons.type.Beacon;
 import com.wynntils.models.beacons.type.BeaconColor;
+import com.wynntils.models.character.event.CharacterUpdateEvent;
 import com.wynntils.models.lootrun.event.LootrunBeaconSelectedEvent;
 import com.wynntils.models.lootrun.scoreboard.LootrunScoreboardPart;
 import com.wynntils.models.lootrun.type.LootrunLocation;
@@ -21,10 +25,10 @@ import com.wynntils.models.lootrun.type.LootrunningState;
 import com.wynntils.models.worlds.event.WorldStateEvent;
 import com.wynntils.utils.VectorUtils;
 import com.wynntils.utils.mc.McUtils;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.TreeMap;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
@@ -70,16 +74,37 @@ public class LootrunModel extends Model {
     private LootrunFinishedEventBuilder.Completed lootrunCompletedBuilder;
     private LootrunFinishedEventBuilder.Failed lootrunFailedBuilder;
 
+    // Data that can live in memory, when joining a class we will parse these
     private LootrunningState lootrunningState = LootrunningState.NOT_RUNNING;
     private LootrunLocation currentLocation;
     private LootrunTaskType currentTaskType;
-    private Map<BeaconColor, Integer> currentLootrunBeacons = new HashMap<>();
+
+    // Data to be persisted
+    @RegisterStorage
+    private Storage<Map<String, Map<BeaconColor, Integer>>> currentLootrunBeaconStorage =
+            new Storage<>(new TreeMap<>());
+
+    @RegisterStorage
+    private Storage<Map<String, Beacon>> currentBeaconStorage = new Storage<>(new TreeMap<>());
+
+    private Map<BeaconColor, Integer> currentLootrunBeacons = new TreeMap<>();
     private Beacon currentBeacon;
 
     public LootrunModel() {
         super(List.of());
 
         Handlers.Scoreboard.addPart(LOOTRUN_SCOREBOARD_PART);
+    }
+
+    @SubscribeEvent
+    public void onCharacterChange(CharacterUpdateEvent event) {
+        String id = Models.Character.getId();
+
+        currentLootrunBeaconStorage.get().putIfAbsent(id, new TreeMap<>());
+        currentLootrunBeacons = currentLootrunBeaconStorage.get().get(id);
+        currentBeacon = currentBeaconStorage.get().get(id); // can be null safely
+
+        currentLootrunBeaconStorage.touched();
     }
 
     @SubscribeEvent
@@ -110,11 +135,11 @@ public class LootrunModel extends Model {
         lootrunCompletedBuilder = null;
         lootrunFailedBuilder = null;
 
-        // FIXME: Persist this in a later PR.
         lootrunningState = LootrunningState.NOT_RUNNING;
         currentLocation = null;
         currentTaskType = null;
-        currentLootrunBeacons = new HashMap<>();
+
+        currentLootrunBeacons = new TreeMap<>();
         currentBeacon = null;
     }
 
@@ -136,6 +161,7 @@ public class LootrunModel extends Model {
         if (newBeaconDistanceToPlayer < BEACON_REMOVAL_RADIUS
                 && newBeaconDistanceToPlayer < oldBeaconDistanceToPlayer) {
             currentBeacon = event.getBeacon();
+            currentBeaconStorage.touched();
         }
     }
 
@@ -168,9 +194,11 @@ public class LootrunModel extends Model {
 
     private void handleStateChange(LootrunningState oldState, LootrunningState newState) {
         if (newState == LootrunningState.NOT_RUNNING) {
-            currentLootrunBeacons = new HashMap<>();
+            currentLootrunBeacons = new TreeMap<>();
             currentBeacon = null;
             currentTaskType = null;
+            currentLootrunBeaconStorage.touched();
+            currentBeaconStorage.touched();
             return;
         }
 
@@ -187,6 +215,7 @@ public class LootrunModel extends Model {
             WynntilsMod.info("Selected a " + currentBeacon.color() + " beacon at " + currentBeacon.location());
             currentLootrunBeacons.put(
                     currentBeacon.color(), currentLootrunBeacons.getOrDefault(currentBeacon.color(), 0) + 1);
+            currentLootrunBeaconStorage.touched();
             WynntilsMod.postEvent(new LootrunBeaconSelectedEvent(currentBeacon));
             return;
         }
