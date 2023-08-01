@@ -10,15 +10,15 @@ import com.wynntils.screens.base.TextboxScreen;
 import com.wynntils.utils.colors.CustomColor;
 import com.wynntils.utils.render.RenderUtils;
 
-public class CustomColorSettingsButton extends TextInputBoxSettingsWidget {
-    public CustomColorSettingsButton(ConfigHolder configHolder, TextboxScreen textboxScreen) {
+public class CustomColorSettingsButton extends TextInputBoxSettingsWidget<CustomColor> {
+    public CustomColorSettingsButton(ConfigHolder<CustomColor> configHolder, TextboxScreen textboxScreen) {
         super(configHolder, textboxScreen, 80);
     }
 
     @Override
     public void renderWidget(PoseStack poseStack, int mouseX, int mouseY, float partialTick) {
         super.renderWidget(poseStack, mouseX, mouseY, partialTick);
-        CustomColor value = (CustomColor) configHolder.getValue();
+        CustomColor value = configHolder.getValue();
         RenderUtils.drawRect(poseStack, value, width + 5, 6, 0, height, height);
     }
 }

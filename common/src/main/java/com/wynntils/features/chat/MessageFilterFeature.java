@@ -46,9 +46,10 @@ public class MessageFilterFeature extends Feature {
                     Pattern.compile("^§8\\[§7!§8\\] §7Congratulations to (§r)?.* for reaching (combat )?§flevel .*!$"),
                     Pattern.compile("^(§8)?\\[!\\] Congratulations to (§r)?.* for reaching (combat )?§7level .*!$")));
 
+    // Test suite: https://regexr.com/7hvcu
     private static final List<Pair<Pattern, Pattern>> PARTY_FINDER = List.of(Pair.of(
             Pattern.compile(
-                    "^§5Party Finder:§d Hey [a-zA-Z0-9_]{2,16}, over here! Join the (?:[a-zA-Z'§ ]+) queue and match up with §e\\d+ other players§d!$"),
+                    "^§5Party Finder:§d Hey \\w{1,16}, over here! Join the [a-zA-Z'§ ]+ queue and match up with §e\\d+ other players?§d!$"),
             null));
 
     @RegisterConfig

@@ -7,6 +7,7 @@ package com.wynntils.screens.overlays.selection;
 import com.google.common.collect.ImmutableList;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.wynntils.core.components.Managers;
+import com.wynntils.core.config.ConfigHolder;
 import com.wynntils.core.consumers.overlays.Overlay;
 import com.wynntils.core.text.StyledText;
 import com.wynntils.screens.overlays.placement.OverlayManagementScreen;
@@ -116,7 +117,8 @@ public class OverlayEntry extends ContainerObjectSelectionList.Entry<OverlayEntr
                     .filter(configHolder -> configHolder.getParent() == overlay
                             && configHolder.getFieldName().equals("userEnabled"))
                     .findFirst()
-                    .ifPresent(configHolder -> configHolder.setValue(!Managers.Overlay.isEnabled(overlay)));
+                    .ifPresent(configHolder ->
+                            ((ConfigHolder<Boolean>) configHolder).setValue(!Managers.Overlay.isEnabled(overlay)));
             Managers.Config.saveConfig();
             return true;
         }

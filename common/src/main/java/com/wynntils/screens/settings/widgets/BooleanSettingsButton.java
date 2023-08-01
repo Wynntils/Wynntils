@@ -14,9 +14,9 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
 
 public class BooleanSettingsButton extends GeneralSettingsButton {
-    private final ConfigHolder configHolder;
+    private final ConfigHolder<Boolean> configHolder;
 
-    public BooleanSettingsButton(ConfigHolder configHolder) {
+    public BooleanSettingsButton(ConfigHolder<Boolean> configHolder) {
         super(
                 0,
                 7,
@@ -33,7 +33,7 @@ public class BooleanSettingsButton extends GeneralSettingsButton {
         setMessage(getTitle(configHolder));
     }
 
-    private static MutableComponent getTitle(ConfigHolder configHolder) {
+    private static MutableComponent getTitle(ConfigHolder<Boolean> configHolder) {
         return isEnabled(configHolder)
                 ? Component.translatable("screens.wynntils.settingsScreen.booleanConfig.enabled")
                 : Component.translatable("screens.wynntils.settingsScreen.booleanConfig.disabled");
@@ -44,7 +44,7 @@ public class BooleanSettingsButton extends GeneralSettingsButton {
         return isEnabled(configHolder) ? CommonColors.GREEN : CommonColors.RED;
     }
 
-    private static boolean isEnabled(ConfigHolder configHolder) {
-        return configHolder.getValue() == Boolean.TRUE;
+    private static boolean isEnabled(ConfigHolder<Boolean> configHolder) {
+        return configHolder.getValue();
     }
 }

@@ -38,7 +38,7 @@ public class CoordinateOverlay extends TextOverlay {
     }
 
     @Override
-    protected void onConfigUpdate(ConfigHolder configHolder) {
+    protected void onConfigUpdate(ConfigHolder<?> configHolder) {
         Models.CharacterStats.hideCoordinates(!this.shouldDisplayOriginal.get());
     }
 

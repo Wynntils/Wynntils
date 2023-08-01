@@ -9,22 +9,22 @@ import java.util.List;
 import java.util.Optional;
 
 public interface Configurable {
-    void updateConfigOption(ConfigHolder configHolder);
+    void updateConfigOption(ConfigHolder<?> configHolder);
 
     /** Registers the configurable's config options. Called by ConfigManager when loaded */
-    void addConfigOptions(List<ConfigHolder> options);
+    void addConfigOptions(List<ConfigHolder<?>> options);
 
     /** Removes a configurable's config options. Used by ConfigManager with Overlay groups */
-    void removeConfigOptions(List<ConfigHolder> options);
+    void removeConfigOptions(List<ConfigHolder<?>> options);
 
     /** Returns all configurable options registered that should be visible to the user */
-    List<ConfigHolder> getVisibleConfigOptions();
+    List<ConfigHolder<?>> getVisibleConfigOptions();
 
     /** Returns all configurable options  that should be visible to the user */
-    List<ConfigHolder> getConfigOptions();
+    List<ConfigHolder<?>> getConfigOptions();
 
     /** Returns the config option matching the given name, if it exists */
-    Optional<ConfigHolder> getConfigOptionFromString(String name);
+    Optional<ConfigHolder<?>> getConfigOptionFromString(String name);
 
     String getConfigJsonName();
 }

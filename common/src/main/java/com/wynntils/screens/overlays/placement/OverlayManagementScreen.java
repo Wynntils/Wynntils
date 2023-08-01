@@ -416,7 +416,8 @@ public final class OverlayManagementScreen extends WynntilsScreen {
                 int finalIndex = index;
                 selectedOverlay
                         .getConfigOptionFromString("verticalAlignmentOverride")
-                        .ifPresent(configHolder -> configHolder.setValue(values[finalIndex]));
+                        .ifPresent(configHolder ->
+                                ((ConfigHolder<VerticalAlignment>) configHolder).setValue(values[finalIndex]));
             } else if (keyCode == GLFW.GLFW_KEY_RIGHT || keyCode == GLFW.GLFW_KEY_LEFT) {
                 int index = selectedOverlay.getRenderHorizontalAlignment().ordinal();
 
@@ -432,7 +433,8 @@ public final class OverlayManagementScreen extends WynntilsScreen {
                 int finalIndex = index;
                 selectedOverlay
                         .getConfigOptionFromString("horizontalAlignmentOverride")
-                        .ifPresent(configHolder -> configHolder.setValue(values[finalIndex]));
+                        .ifPresent(configHolder ->
+                                ((ConfigHolder<HorizontalAlignment>) configHolder).setValue(values[finalIndex]));
             }
         } else {
             // Arrow keys change overlay position
@@ -449,12 +451,13 @@ public final class OverlayManagementScreen extends WynntilsScreen {
 
             selectedOverlay
                     .getConfigOptionFromString("position")
-                    .ifPresent(configHolder -> configHolder.setValue(OverlayPosition.getBestPositionFor(
-                            selectedOverlay,
-                            selectedOverlay.getRenderX(),
-                            selectedOverlay.getRenderY(),
-                            finalOffsetX,
-                            finalOffsetY)));
+                    .ifPresent(configHolder -> ((ConfigHolder<OverlayPosition>) configHolder)
+                            .setValue(OverlayPosition.getBestPositionFor(
+                                    selectedOverlay,
+                                    selectedOverlay.getRenderX(),
+                                    selectedOverlay.getRenderY(),
+                                    finalOffsetX,
+                                    finalOffsetY)));
         }
 
         if (keyCode == GLFW.GLFW_KEY_LEFT_SHIFT || keyCode == GLFW.GLFW_KEY_RIGHT_SHIFT) {
