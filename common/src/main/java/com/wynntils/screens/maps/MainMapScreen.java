@@ -178,6 +178,7 @@ public final class MainMapScreen extends AbstractMapScreen {
                             .getMarkerInfos()
                             .toList();
                     if (!markers.isEmpty()) {
+                        // -1 is fine as the index since we always increment it by 1
                         int index = markers.indexOf(focusedMarker);
                         MarkerInfo markerInfo = markers.get((index + 1) % markers.size());
                         focusedMarker = markerInfo;
@@ -355,6 +356,7 @@ public final class MainMapScreen extends AbstractMapScreen {
             List<MarkerInfo> markers =
                     Models.Marker.USER_WAYPOINTS_PROVIDER.getMarkerInfos().toList();
             if (McUtils.player().isShiftKeyDown() && !markers.isEmpty()) {
+                // -1 is fine as the index since we always increment it by 1
                 int index = markers.indexOf(focusedMarker);
                 MarkerInfo markerInfo = markers.get((index + 1) % markers.size());
                 focusedMarker = markerInfo;
