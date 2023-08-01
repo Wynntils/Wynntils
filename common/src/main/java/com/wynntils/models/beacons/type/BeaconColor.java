@@ -5,12 +5,9 @@
 package com.wynntils.models.beacons.type;
 
 import com.wynntils.models.activities.type.ActivityType;
-import java.util.List;
-import net.minecraft.world.entity.Entity;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
-import org.apache.commons.compress.utils.Lists;
 
 public enum BeaconColor {
     GREEN(25, Items.GOLDEN_SHOVEL, true, ActivityType.STORYLINE_QUEST),
@@ -36,18 +33,6 @@ public enum BeaconColor {
         this.item = item;
         this.usedInLootruns = usedInLootruns;
         this.activityType = activityType;
-    }
-
-    public static BeaconColor fromUnverifiedBeacon(UnverifiedBeacon unverifiedBeacon) {
-        List<Entity> entities = unverifiedBeacon.getEntities();
-        if (entities.isEmpty()) return null;
-
-        Entity entity = entities.get(0);
-        List<ItemStack> armorSlots = Lists.newArrayList(entity.getArmorSlots().iterator());
-        if (armorSlots.size() != 4) return null;
-
-        ItemStack bootsItem = armorSlots.get(3);
-        return BeaconColor.fromItemStack(bootsItem);
     }
 
     public static BeaconColor fromItemStack(ItemStack itemStack) {

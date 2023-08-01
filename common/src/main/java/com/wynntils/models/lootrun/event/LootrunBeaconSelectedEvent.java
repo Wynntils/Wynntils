@@ -4,17 +4,17 @@
  */
 package com.wynntils.models.lootrun.event;
 
-import com.wynntils.models.beacons.type.VerifiedBeacon;
+import com.wynntils.models.beacons.type.Beacon;
 import net.minecraftforge.eventbus.api.Event;
 
 public class LootrunBeaconSelectedEvent extends Event {
-    private final VerifiedBeacon beacon;
+    private final Beacon beacon;
 
-    public LootrunBeaconSelectedEvent(VerifiedBeacon beacon) {
+    public LootrunBeaconSelectedEvent(Beacon beacon) {
         this.beacon = beacon;
     }
 
-    public VerifiedBeacon getBeacon() {
+    public Beacon getBeacon() {
         return beacon;
     }
 }
