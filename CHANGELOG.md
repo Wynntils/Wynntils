@@ -1,4 +1,16 @@
+## [0.0.3-alpha.257](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.256...v0.0.3-alpha.257) (2023-08-01)
+
+
+### Bug Fixes
+
+* Party finder filter does not match "1 other player" ([#1919](https://github.com/Wynntils/Artemis/issues/1919)) ([892fb4f](https://github.com/Wynntils/Artemis/commit/892fb4f26e7e20df993a6ed02a37b99384ff444b))
+
 ## [0.0.3-alpha.256](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.255...v0.0.3-alpha.256) (2023-08-01)
+
+
+### Miscellaneous Chores
+
+* **release:** v0.0.3-alpha.256 [skip ci] ([810492f](https://github.com/Wynntils/Artemis/commit/810492fe896aa4aea460a578ac3fbdb63997272e))
 
 
 ### Code Refactoring
@@ -32,16 +44,4 @@
 ### Code Refactoring
 
 * Beacon model refinements ([#1909](https://github.com/Wynntils/Artemis/issues/1909)) ([7a41ba4](https://github.com/Wynntils/Artemis/commit/7a41ba40d50e83d31fd058bb178893602ad527d2))
-
-## [0.0.3-alpha.252](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.251...v0.0.3-alpha.252) (2023-08-01)
-
-
-### Bug Fixes
-
-* fix content tracker scoreboard adding spaces (and setting wrong waypoints) ([#1910](https://github.com/Wynntils/Artemis/issues/1910)) ([6a054a8](https://github.com/Wynntils/Artemis/commit/6a054a811d0454858e3c9c295ef9e37f9f195f14))
-
-
-### Miscellaneous Chores
-
-* **release:** v0.0.3-alpha.252 [skip ci] ([63eeeb4](https://github.com/Wynntils/Artemis/commit/63eeeb4383b4dff11dc99cde8d6712ac8cf6227c))
 
