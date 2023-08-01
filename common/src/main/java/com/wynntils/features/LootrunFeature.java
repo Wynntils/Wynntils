@@ -32,7 +32,7 @@ public class LootrunFeature extends Feature {
     public final Config<Boolean> showNotes = new Config<>(true);
 
     @Override
-    protected void onConfigUpdate(ConfigHolder configHolder) {
+    protected void onConfigUpdate(ConfigHolder<?> configHolder) {
         Services.LootrunPaths.recompileLootrun(false);
     }
 

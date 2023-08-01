@@ -54,7 +54,7 @@ public class HealthBarOverlay extends OverflowableBarOverlay {
     }
 
     @Override
-    protected void onConfigUpdate(ConfigHolder configHolder) {
+    protected void onConfigUpdate(ConfigHolder<?> configHolder) {
         Models.CharacterStats.hideHealth(!this.shouldDisplayOriginal.get());
     }
 

@@ -122,5 +122,5 @@ public class GuildObjectiveOverlay extends ObjectiveOverlayBase {
     }
 
     @Override
-    protected void onConfigUpdate(ConfigHolder configHolder) {}
+    protected void onConfigUpdate(ConfigHolder<?> configHolder) {}
 }

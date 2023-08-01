@@ -428,7 +428,7 @@ public final class WynntilsBookSettingsScreen extends WynntilsScreen implements 
         }
     }
 
-    public boolean configOptionContains(ConfigHolder configHolder) {
+    public boolean configOptionContains(ConfigHolder<?> configHolder) {
         return !searchWidget.getTextBoxInput().isEmpty()
                 && StringUtils.containsIgnoreCase(configHolder.getDisplayName(), searchWidget.getTextBoxInput());
     }
@@ -446,13 +446,13 @@ public final class WynntilsBookSettingsScreen extends WynntilsScreen implements 
             return;
         }
 
-        List<ConfigHolder> configsOptions = selected.getVisibleConfigOptions().stream()
+        List<ConfigHolder<?>> configsOptions = selected.getVisibleConfigOptions().stream()
                 .sorted(Comparator.comparing(
                         configHolder -> !Objects.equals(configHolder.getFieldName(), "userEnabled")))
                 .toList();
 
         for (int i = 0; i < configsOptions.size(); i++) {
-            ConfigHolder config = configsOptions.get(i);
+            ConfigHolder<?> config = configsOptions.get(i);
 
             int renderIndex = i % CONFIGS_PER_PAGE;
 

@@ -17,10 +17,10 @@ import net.minecraft.network.chat.Component;
 import org.lwjgl.glfw.GLFW;
 
 public class EnumSettingsButton<E extends Enum<E>> extends GeneralSettingsButton {
-    private final ConfigHolder configHolder;
+    private final ConfigHolder<E> configHolder;
     private final List<E> enumConstants;
 
-    public EnumSettingsButton(ConfigHolder configHolder) {
+    public EnumSettingsButton(ConfigHolder<E> configHolder) {
         super(
                 0,
                 7,
@@ -47,7 +47,7 @@ public class EnumSettingsButton<E extends Enum<E>> extends GeneralSettingsButton
             return false;
         }
 
-        E value = (E) configHolder.getValue();
+        E value = configHolder.getValue();
         int nextIndex = (enumConstants.indexOf(value) + addToIndex + enumConstants.size()) % enumConstants.size();
         E nextValue = enumConstants.get(nextIndex);
         configHolder.setValue(nextValue);

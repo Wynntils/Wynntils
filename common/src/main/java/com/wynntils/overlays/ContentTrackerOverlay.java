@@ -81,7 +81,7 @@ public class ContentTrackerOverlay extends Overlay {
     }
 
     @Override
-    protected void onConfigUpdate(ConfigHolder configHolder) {
+    protected void onConfigUpdate(ConfigHolder<?> configHolder) {
         updateTextRenderSettings(toRender);
     }
 
