@@ -37,8 +37,4 @@ public final class PosUtils {
     public static boolean equalsIgnoringY(Position pos1, Position pos2) {
         return pos1.x() == pos2.x() && pos1.z() == pos2.z();
     }
-
-    public static boolean equalsIgnoringY(Position pos1, Position pos2) {
-        return pos2.x() == pos1.x() && pos2.z() == pos1.z();
-    }
 }
