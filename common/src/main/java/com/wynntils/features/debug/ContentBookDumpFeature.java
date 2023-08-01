@@ -78,7 +78,7 @@ public class ContentBookDumpFeature extends Feature {
     public void onSetSpawn(SetSpawnEvent event) {
         if (currentlyTracking == null) return;
 
-        Location currentTracker = Models.Activity.ACTIVITY_MARKER_PROVIDER.getSpawnInfo();
+        Location currentTracker = Models.Activity.ACTIVITY_MARKER_PROVIDER.getSpawnLocation();
         if (lastTrackedLocation != currentTracker && currentTracker != null) {
             currentDump.remove(currentlyTracking);
 
@@ -146,7 +146,7 @@ public class ContentBookDumpFeature extends Feature {
 
         // Track the activity
         currentlyTracking = info;
-        lastTrackedLocation = Models.Activity.ACTIVITY_MARKER_PROVIDER.getSpawnInfo();
+        lastTrackedLocation = Models.Activity.ACTIVITY_MARKER_PROVIDER.getSpawnLocation();
         WynntilsMod.info("Tracking " + info.name());
         Models.Activity.startTracking(info.name(), info.type());
     }

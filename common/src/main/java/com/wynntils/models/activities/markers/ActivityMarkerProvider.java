@@ -32,7 +32,7 @@ public class ActivityMarkerProvider implements MarkerProvider {
                                 CommonColors.WHITE));
     }
 
-    public Location getSpawnInfo() {
+    public Location getSpawnLocation() {
         return spawnInfo.a();
     }
 
