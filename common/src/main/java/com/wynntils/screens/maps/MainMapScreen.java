@@ -110,10 +110,7 @@ public final class MainMapScreen extends AbstractMapScreen {
                                 .append(Component.translatable("screens.wynntils.map.help.description9")),
                         Component.literal("- ")
                                 .withStyle(ChatFormatting.GRAY)
-                                .append(Component.translatable("screens.wynntils.map.help.description10")),
-                        Component.literal("- ")
-                                .withStyle(ChatFormatting.GRAY)
-                                .append(Component.translatable("screens.wynntils.map.help.description11")))));
+                                .append(Component.translatable("screens.wynntils.map.help.description10")))));
 
         this.addRenderableWidget(new BasicTexturedButton(
                 width / 2 - Texture.MAP_BUTTONS_BACKGROUND.width() / 2 + 6 + 20 * 3,
@@ -433,11 +430,6 @@ public final class MainMapScreen extends AbstractMapScreen {
         double gameX = (mouseX - centerX) / currentZoom + mapCenterX;
         double gameZ = (mouseY - centerZ) / currentZoom + mapCenterZ;
         Location compassLocation = Location.containing(gameX, 0, gameZ);
-
-        // If shift is not held down, clear all waypoints to only add have the new one
-        if (!KeyboardUtils.isShiftDown()) {
-            Models.Marker.USER_WAYPOINTS_PROVIDER.removeAllLocations();
-        }
         Models.Marker.USER_WAYPOINTS_PROVIDER.addLocation(compassLocation);
 
         McUtils.playSoundUI(SoundEvents.EXPERIENCE_ORB_PICKUP);
