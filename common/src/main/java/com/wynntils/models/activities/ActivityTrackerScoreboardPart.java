@@ -43,9 +43,8 @@ public class ActivityTrackerScoreboardPart extends ScoreboardPart {
 
         for (StyledText line : taskLines) {
             nextTask.append(line.getString()
-                            .replaceAll(ChatFormatting.WHITE.toString(), ChatFormatting.AQUA.toString())
-                            .replaceAll(ChatFormatting.GRAY.toString(), ChatFormatting.RESET.toString()))
-                    .append(" ");
+                    .replaceAll(ChatFormatting.WHITE.toString(), ChatFormatting.AQUA.toString())
+                    .replaceAll(ChatFormatting.GRAY.toString(), ChatFormatting.RESET.toString()));
         }
 
         String type = matcher.group(1);
