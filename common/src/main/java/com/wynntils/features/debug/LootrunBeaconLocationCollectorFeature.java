@@ -22,7 +22,6 @@ import java.util.Optional;
 import java.util.Set;
 import java.util.TreeMap;
 import java.util.TreeSet;
-import net.minecraft.core.Position;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 
 @StartDisabled
@@ -44,16 +43,13 @@ public class LootrunBeaconLocationCollectorFeature extends Feature {
 
         Optional<LootrunLocation> currentLocationOpt = Models.Lootrun.getCurrentLocation();
         if (currentLocationOpt.isEmpty()) return;
-        Position position = beacon.getPosition();
+        Location location = beacon.getLocation();
 
         tasks.get().putIfAbsent(currentLocationOpt.get(), new TreeSet<>());
-        tasks.get()
-                .get(currentLocationOpt.get())
-                .add(new TaskLocation(Location.containing(position), currentTaskTypeOpt.get()));
+        tasks.get().get(currentLocationOpt.get()).add(new TaskLocation(location, currentTaskTypeOpt.get()));
         tasks.touched();
     }
 
-    // This location has to be a Location because Position doesn't have proper mapping, so GSON can't serialize it.
     private record TaskLocation(Location location, LootrunTaskType taskType) implements Comparable<TaskLocation> {
         @Override
         public int compareTo(LootrunBeaconLocationCollectorFeature.TaskLocation taskLocation) {

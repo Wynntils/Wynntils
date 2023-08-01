@@ -11,8 +11,8 @@ import com.wynntils.core.text.StyledText;
 import com.wynntils.handlers.chat.event.ChatMessageReceivedEvent;
 import com.wynntils.handlers.chat.type.RecipientType;
 import com.wynntils.models.beacons.event.BeaconEvent;
-import com.wynntils.models.beacons.type.BeaconColor;
 import com.wynntils.models.beacons.type.Beacon;
+import com.wynntils.models.beacons.type.BeaconColor;
 import com.wynntils.models.lootrun.event.LootrunBeaconSelectedEvent;
 import com.wynntils.models.lootrun.scoreboard.LootrunScoreboardPart;
 import com.wynntils.models.lootrun.type.LootrunLocation;
@@ -127,11 +127,12 @@ public class LootrunModel extends Model {
         if (!beacon.getColor().isUsedInLootruns()) return;
 
         double newBeaconDistanceToPlayer = VectorUtils.distanceIgnoringY(
-                beacon.getPosition(), McUtils.mc().player.position());
+                beacon.getLocation().toPosition(), McUtils.mc().player.position());
         double oldBeaconDistanceToPlayer = currentBeacon == null
                 ? Double.MAX_VALUE
                 : VectorUtils.distanceIgnoringY(
-                        currentBeacon.getPosition(), McUtils.mc().player.position());
+                        currentBeacon.getLocation().toPosition(),
+                        McUtils.mc().player.position());
         if (newBeaconDistanceToPlayer < BEACON_REMOVAL_RADIUS
                 && newBeaconDistanceToPlayer < oldBeaconDistanceToPlayer) {
             currentBeacon = event.getBeacon();
@@ -183,7 +184,7 @@ public class LootrunModel extends Model {
         if (oldState == LootrunningState.CHOOSING_BEACON
                 && newState == LootrunningState.IN_TASK
                 && currentBeacon != null) {
-            WynntilsMod.info("Selected a " + currentBeacon.getColor() + " beacon at " + currentBeacon.getPosition());
+            WynntilsMod.info("Selected a " + currentBeacon.getColor() + " beacon at " + currentBeacon.getLocation());
             currentLootrunBeacons.put(
                     currentBeacon.getColor(), currentLootrunBeacons.getOrDefault(currentBeacon.getColor(), 0) + 1);
             WynntilsMod.postEvent(new LootrunBeaconSelectedEvent(currentBeacon));

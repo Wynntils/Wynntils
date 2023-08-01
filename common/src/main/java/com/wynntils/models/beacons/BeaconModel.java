@@ -10,9 +10,9 @@ import com.wynntils.mc.event.AddEntityEvent;
 import com.wynntils.mc.event.RemoveEntitiesEvent;
 import com.wynntils.mc.event.TeleportEntityEvent;
 import com.wynntils.models.beacons.event.BeaconEvent;
-import com.wynntils.models.beacons.type.BeaconColor;
 import com.wynntils.models.beacons.type.Beacon;
-import com.wynntils.utils.mc.PosUtils;
+import com.wynntils.models.beacons.type.BeaconColor;
+import com.wynntils.utils.mc.type.Location;
 import com.wynntils.utils.type.TimedSet;
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -45,19 +45,19 @@ public class BeaconModel extends Model {
         if (event.getType() != EntityType.ARMOR_STAND) return;
 
         Entity entity = event.getEntity();
-        Position position = entity.position();
+        Location location = Location.containing(entity.position());
 
-        if (isDuplicateBeacon(position)) return;
+        if (isDuplicateBeacon(location)) return;
 
-        UnverifiedBeacon unverifiedBeacon = getUnverifiedBeaconAt(position);
+        UnverifiedBeacon unverifiedBeacon = getUnverifiedBeaconAt(location);
         if (unverifiedBeacon == null) {
-            unverifiedBeacons.put(new UnverifiedBeacon(position, entity));
+            unverifiedBeacons.put(new UnverifiedBeacon(location, entity));
             return;
         }
 
-        boolean correctPosition = unverifiedBeacon.addEntity(entity);
+        boolean correctLocation = unverifiedBeacon.addEntity(entity);
 
-        if (!correctPosition) {
+        if (!correctLocation) {
             unverifiedBeacons.remove(unverifiedBeacon);
             return;
         }
@@ -66,14 +66,14 @@ public class BeaconModel extends Model {
             BeaconColor beaconColor = getBeaconColor(unverifiedBeacon);
 
             if (beaconColor == null) {
-                WynntilsMod.warn("Could not determine beacon color at " + position + " for entities "
+                WynntilsMod.warn("Could not determine beacon color at " + location + " for entities "
                         + unverifiedBeacon.getEntities());
                 unverifiedBeacons.remove(unverifiedBeacon);
                 return;
             }
 
             Beacon verifiedBeacon =
-                    new Beacon(unverifiedBeacon.getPosition(), beaconColor, unverifiedBeacon.getEntities());
+                    new Beacon(unverifiedBeacon.getLocation(), beaconColor, unverifiedBeacon.getEntities());
             verifiedBeacons.add(verifiedBeacon);
             WynntilsMod.postEvent(new BeaconEvent.Added(verifiedBeacon));
 
@@ -90,7 +90,7 @@ public class BeaconModel extends Model {
         if (verifiedBeaconOpt.isEmpty()) return;
 
         Beacon verifiedBeacon = verifiedBeaconOpt.get();
-        verifiedBeacon.updatePosition(event.getNewPosition());
+        verifiedBeacon.updateLocation(Location.containing(event.getNewPosition()));
         WynntilsMod.postEvent(new BeaconEvent.Moved(verifiedBeacon));
     }
 
@@ -109,19 +109,14 @@ public class BeaconModel extends Model {
         }
     }
 
-    private boolean isDuplicateBeacon(Position position) {
-        return verifiedBeacons.stream().anyMatch(verifiedBeacon -> {
-            Position beaconPosition = verifiedBeacon.getPosition();
-            return PosUtils.equalsIgnoringY(position, beaconPosition);
-        });
+    private boolean isDuplicateBeacon(Location location) {
+        return verifiedBeacons.stream()
+                .anyMatch(verifiedBeacon -> location.equalsIgnoringY(verifiedBeacon.getLocation()));
     }
 
-    private UnverifiedBeacon getUnverifiedBeaconAt(Position position) {
+    private UnverifiedBeacon getUnverifiedBeaconAt(Location location) {
         return unverifiedBeacons.stream()
-                .filter(unverifiedBeacon -> {
-                    Position beaconPosition = unverifiedBeacon.getPosition();
-                    return PosUtils.equalsIgnoringY(position, beaconPosition);
-                })
+                .filter(unverifiedBeacon -> location.equalsIgnoringY(unverifiedBeacon.getLocation()))
                 .findFirst()
                 .orElse(null);
     }
@@ -141,16 +136,16 @@ public class BeaconModel extends Model {
     private static final class UnverifiedBeacon {
         private static final float POSITION_OFFSET_Y = 7.5f;
 
-        private final Position position;
+        private final Location location;
         private final List<Entity> entities = new ArrayList<>();
 
-        private UnverifiedBeacon(Position position, Entity entity) {
-            this.position = position;
+        private UnverifiedBeacon(Location location, Entity entity) {
+            this.location = location;
             entities.add(entity);
         }
 
-        public Position getPosition() {
-            return position;
+        public Location getLocation() {
+            return location;
         }
 
         public List<Entity> getEntities() {
