@@ -1,9 +1,21 @@
+## [0.0.3-alpha.258](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.257...v0.0.3-alpha.258) (2023-08-01)
+
+
+### New Features
+
+* Persist lootruns between restarts and class switches (and keep track of every class separately) ([#1920](https://github.com/Wynntils/Artemis/issues/1920)) ([3d44711](https://github.com/Wynntils/Artemis/commit/3d447118e03d66f8c2db62a47a170380c01039f3))
+
 ## [0.0.3-alpha.257](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.256...v0.0.3-alpha.257) (2023-08-01)
 
 
 ### Bug Fixes
 
 * Party finder filter does not match "1 other player" ([#1919](https://github.com/Wynntils/Artemis/issues/1919)) ([892fb4f](https://github.com/Wynntils/Artemis/commit/892fb4f26e7e20df993a6ed02a37b99384ff444b))
+
+
+### Miscellaneous Chores
+
+* **release:** v0.0.3-alpha.257 [skip ci] ([252f628](https://github.com/Wynntils/Artemis/commit/252f6284a2b87b615d5f2fe143643ec43988c151))
 
 ## [0.0.3-alpha.256](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.255...v0.0.3-alpha.256) (2023-08-01)
 
@@ -32,16 +44,4 @@
 
 * New Crowdin updates ([#1888](https://github.com/Wynntils/Artemis/issues/1888)) ([71526f0](https://github.com/Wynntils/Artemis/commit/71526f0d2e77f1c35d8558ac3cba761c66d1c5ff))
 * **release:** v0.0.3-alpha.254 [skip ci] ([b09b5d5](https://github.com/Wynntils/Artemis/commit/b09b5d552bf9425de42362504de6acfad992dbc8))
-
-## [0.0.3-alpha.253](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.252...v0.0.3-alpha.253) (2023-08-01)
-
-
-### Miscellaneous Chores
-
-* **release:** v0.0.3-alpha.253 [skip ci] ([f691eb1](https://github.com/Wynntils/Artemis/commit/f691eb1f27d7ebe3ca49e29be8be6888362c79f0))
-
-
-### Code Refactoring
-
-* Beacon model refinements ([#1909](https://github.com/Wynntils/Artemis/issues/1909)) ([7a41ba4](https://github.com/Wynntils/Artemis/commit/7a41ba40d50e83d31fd058bb178893602ad527d2))
 
