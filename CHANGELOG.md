@@ -1,9 +1,21 @@
+## [0.0.3-alpha.253](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.252...v0.0.3-alpha.253) (2023-08-01)
+
+
+### Code Refactoring
+
+* Beacon model refinements ([#1909](https://github.com/Wynntils/Artemis/issues/1909)) ([7a41ba4](https://github.com/Wynntils/Artemis/commit/7a41ba40d50e83d31fd058bb178893602ad527d2))
+
 ## [0.0.3-alpha.252](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.251...v0.0.3-alpha.252) (2023-08-01)
 
 
 ### Bug Fixes
 
 * fix content tracker scoreboard adding spaces (and setting wrong waypoints) ([#1910](https://github.com/Wynntils/Artemis/issues/1910)) ([6a054a8](https://github.com/Wynntils/Artemis/commit/6a054a811d0454858e3c9c295ef9e37f9f195f14))
+
+
+### Miscellaneous Chores
+
+* **release:** v0.0.3-alpha.252 [skip ci] ([63eeeb4](https://github.com/Wynntils/Artemis/commit/63eeeb4383b4dff11dc99cde8d6712ac8cf6227c))
 
 ## [0.0.3-alpha.251](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.250...v0.0.3-alpha.251) (2023-07-31)
 
@@ -40,16 +52,4 @@
 ### Miscellaneous Chores
 
 * **release:** v0.0.3-alpha.249 [skip ci] ([73cd090](https://github.com/Wynntils/Artemis/commit/73cd09089735fd45a3731860105e7987e7eb4e50))
-
-## [0.0.3-alpha.248](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.247...v0.0.3-alpha.248) (2023-07-31)
-
-
-### New Features
-
-* Add functions for lootrun beacon counts (and lootrun state) ([#1898](https://github.com/Wynntils/Artemis/issues/1898)) ([22687b0](https://github.com/Wynntils/Artemis/commit/22687b0a742e42385cd7b6ad0647732fa38d8100))
-
-
-### Miscellaneous Chores
-
-* **release:** v0.0.3-alpha.248 [skip ci] ([369a911](https://github.com/Wynntils/Artemis/commit/369a911a74b22822ae6290de60939a36a35e0ba5))
 
