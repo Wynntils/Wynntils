@@ -1,9 +1,21 @@
+## [0.0.3-alpha.252](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.251...v0.0.3-alpha.252) (2023-08-01)
+
+
+### Bug Fixes
+
+* fix content tracker scoreboard adding spaces (and setting wrong waypoints) ([#1910](https://github.com/Wynntils/Artemis/issues/1910)) ([6a054a8](https://github.com/Wynntils/Artemis/commit/6a054a811d0454858e3c9c295ef9e37f9f195f14))
+
 ## [0.0.3-alpha.251](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.250...v0.0.3-alpha.251) (2023-07-31)
 
 
 ### New Features
 
 * Guild model chat detection ([#1866](https://github.com/Wynntils/Artemis/issues/1866)) ([de699d2](https://github.com/Wynntils/Artemis/commit/de699d29daad30b8a580b8f35aa44a5655bc0076))
+
+
+### Miscellaneous Chores
+
+* **release:** v0.0.3-alpha.251 [skip ci] ([b8abde7](https://github.com/Wynntils/Artemis/commit/b8abde7af8d252d536fc89f49d118bbd6e9d9c79))
 
 ## [0.0.3-alpha.250](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.249...v0.0.3-alpha.250) (2023-07-31)
 
@@ -40,16 +52,4 @@
 ### Miscellaneous Chores
 
 * **release:** v0.0.3-alpha.248 [skip ci] ([369a911](https://github.com/Wynntils/Artemis/commit/369a911a74b22822ae6290de60939a36a35e0ba5))
-
-## [0.0.3-alpha.247](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.246...v0.0.3-alpha.247) (2023-07-31)
-
-
-### New Features
-
-* Add export waypoints button ([#1903](https://github.com/Wynntils/Artemis/issues/1903)) ([8554883](https://github.com/Wynntils/Artemis/commit/8554883b4fe5a705dac88d67f5e22e9958bc748f))
-
-
-### Miscellaneous Chores
-
-* **release:** v0.0.3-alpha.247 [skip ci] ([80beca1](https://github.com/Wynntils/Artemis/commit/80beca10f0a3f08c5b96d488950ef0fd74a0c338))
 
