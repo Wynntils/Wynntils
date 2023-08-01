@@ -136,7 +136,7 @@ public class ConfigTile extends WynntilsButton {
         } else if (configOption.getType().equals(CustomColor.class)) {
             return new CustomColorSettingsButton((ConfigHolder<CustomColor>) configOption, settingsScreen);
         } else {
-            return new TextInputBoxSettingsWidget(configOption, settingsScreen);
+            return new TextInputBoxSettingsWidget<>(configOption, settingsScreen);
         }
     }
 }
