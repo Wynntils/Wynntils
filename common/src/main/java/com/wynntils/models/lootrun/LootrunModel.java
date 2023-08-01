@@ -27,6 +27,7 @@ import com.wynntils.models.lootrun.type.TaskLocation;
 import com.wynntils.models.worlds.event.WorldStateEvent;
 import com.wynntils.utils.VectorUtils;
 import com.wynntils.utils.mc.McUtils;
+import com.wynntils.utils.type.Pair;
 import java.lang.reflect.Type;
 import java.util.HashMap;
 import java.util.List;
@@ -76,6 +77,11 @@ public class LootrunModel extends Model {
 
     private static final float BEACON_REMOVAL_RADIUS = 25f;
 
+    // This value represents how many times a beacon update
+    // needs to point to the same (different) task before it is updated.
+    // Lower values update faster, higher values update slower, but are much more consistent.
+    private static final int BEACON_UPDATE_CHANGE_THRESHOLD = 6;
+
     private static final LootrunScoreboardPart LOOTRUN_SCOREBOARD_PART = new LootrunScoreboardPart();
 
     private Map<LootrunLocation, Set<TaskLocation>> taskLocations = new HashMap<>();
@@ -88,6 +94,7 @@ public class LootrunModel extends Model {
     private LootrunTaskType currentTaskType;
     private Map<BeaconColor, Integer> currentLootrunSelectedBeacons = new HashMap<>();
     private Map<VerifiedBeacon, TaskLocation> currentBeacons = new HashMap<>();
+    private Map<VerifiedBeacon, Pair<Integer, TaskLocation>> beaconUpdates = new HashMap<>();
     private VerifiedBeacon currentClosestBeacon;
 
     public LootrunModel(BeaconModel beaconModel) {
@@ -144,6 +151,7 @@ public class LootrunModel extends Model {
         currentTaskType = null;
         currentLootrunSelectedBeacons = new HashMap<>();
         currentBeacons = new HashMap<>();
+        beaconUpdates = new HashMap<>();
         currentClosestBeacon = null;
     }
 
@@ -154,11 +162,34 @@ public class LootrunModel extends Model {
         if (!beacon.getColor().getContentType().showsUpInLootruns()) return;
 
         TaskLocation taskPrediction = getBeaconTaskLocationPrediction(beacon);
-        TaskLocation oldPrediction = currentBeacons.put(beacon, taskPrediction);
+        TaskLocation oldPrediction = currentBeacons.get(beacon);
 
-        if (!Objects.equals(oldPrediction, taskPrediction)) {
-            McUtils.sendMessageToClient(Component.literal(
-                    "Task location prediction for " + beacon.getColor() + " changed to " + taskPrediction));
+        if (Objects.equals(oldPrediction, taskPrediction)) return;
+
+        if (beaconUpdates.containsKey(beacon)) {
+            Pair<Integer, TaskLocation> pair = beaconUpdates.get(beacon);
+
+            // New prediction is different from the old one. Reset the counter.
+            if (!pair.b().equals(taskPrediction)) {
+                beaconUpdates.put(beacon, Pair.of(1, taskPrediction));
+                return;
+            }
+
+            // New prediction is the same as the old one. We got the same prediction multiple times in a row.
+            if (pair.a() + 1 >= BEACON_UPDATE_CHANGE_THRESHOLD) {
+                currentBeacons.put(beacon, taskPrediction);
+                beaconUpdates.remove(beacon);
+
+                McUtils.sendMessageToClient(Component.literal(
+                        "Task location prediction for " + beacon.getColor() + " changed to " + taskPrediction));
+
+                return;
+            }
+
+            // New prediction is the same as the old one, but we haven't reached the threshold yet.
+            beaconUpdates.put(beacon, Pair.of(pair.a() + 1, taskPrediction));
+        } else {
+            beaconUpdates.put(beacon, Pair.of(1, taskPrediction));
         }
     }
 
@@ -181,6 +212,7 @@ public class LootrunModel extends Model {
             currentClosestBeacon = event.getBeacon();
         } else {
             currentBeacons.remove(beacon);
+            beaconUpdates.remove(beacon);
         }
     }
 
@@ -254,33 +286,27 @@ public class LootrunModel extends Model {
         Set<TaskLocation> currentTaskLocations = taskLocations.get(currentLocation);
         if (currentTaskLocations.isEmpty()) return null;
 
-        // FIXME: too basic math
         double lowestDistance = Double.MAX_VALUE;
         TaskLocation closestTaskLocation = null;
         for (TaskLocation currentTaskLocation : currentTaskLocations) {
             // 1: player location
             Vector2d playerPosition = new Vector2d(
                     McUtils.player().position().x(), McUtils.player().position().z());
-            // 2: wynn beacon
-            Vector2d beaconPosition =
-                    new Vector2d(beacon.getPosition().x(), beacon.getPosition().z());
-            // 3: task location
+            // 2: task location
             Vector2d taskLocationPosition = new Vector2d(
                     currentTaskLocation.location().x(),
                     currentTaskLocation.location().z());
+            // 3: wynn beacon
+            Vector2d beaconPosition =
+                    new Vector2d(beacon.getPosition().x(), beacon.getPosition().z());
 
-            Vector2d distanceBetweenPlayerTask = new Vector2d(0, 0);
-            taskLocationPosition.sub(playerPosition, distanceBetweenPlayerTask);
-
-            Vector2d distanceBetweenPlayerBeacon = new Vector2d(0, 0);
-            beaconPosition.sub(playerPosition, distanceBetweenPlayerBeacon);
-
-            Vector2d distanceBetweenTaskBeacon = new Vector2d(0, 0);
-            taskLocationPosition.sub(beaconPosition, distanceBetweenTaskBeacon);
-
-            double distance = Math.abs(distanceBetweenPlayerTask.length()
-                    - distanceBetweenPlayerBeacon.length()
-                    - distanceBetweenTaskBeacon.length());
+            // d = ((x2 - x1)(y1 - y3) - (x1 - x3)(y2 - y1)) / sqrt((x2 - x1)^2 + (y2 - y1)^2)
+            double distance = Math.abs(
+                    ((taskLocationPosition.x() - playerPosition.x()) * (playerPosition.y() - beaconPosition.y())
+                                    - (playerPosition.x() - beaconPosition.x())
+                                            * (taskLocationPosition.y() - playerPosition.y()))
+                            / Math.sqrt(Math.pow(taskLocationPosition.x() - playerPosition.x(), 2)
+                                    + Math.pow(taskLocationPosition.y() - playerPosition.y(), 2)));
 
             if (distance < lowestDistance) {
                 lowestDistance = distance;
