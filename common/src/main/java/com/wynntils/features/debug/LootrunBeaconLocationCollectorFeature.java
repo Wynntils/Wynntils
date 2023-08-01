@@ -12,7 +12,7 @@ import com.wynntils.core.consumers.features.Feature;
 import com.wynntils.core.consumers.features.properties.StartDisabled;
 import com.wynntils.core.storage.RegisterStorage;
 import com.wynntils.core.storage.Storage;
-import com.wynntils.models.beacons.type.VerifiedBeacon;
+import com.wynntils.models.beacons.type.Beacon;
 import com.wynntils.models.lootrun.event.LootrunBeaconSelectedEvent;
 import com.wynntils.models.lootrun.type.LootrunLocation;
 import com.wynntils.models.lootrun.type.LootrunTaskType;
@@ -22,7 +22,6 @@ import java.util.Optional;
 import java.util.Set;
 import java.util.TreeMap;
 import java.util.TreeSet;
-import net.minecraft.core.Position;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 
 @StartDisabled
@@ -35,25 +34,21 @@ public class LootrunBeaconLocationCollectorFeature extends Feature {
 
     @SubscribeEvent
     public void onLootrunBeaconSelected(LootrunBeaconSelectedEvent event) {
-        VerifiedBeacon beacon = event.getBeacon();
+        Beacon beacon = event.getBeacon();
 
-        if (!beacon.getColor().getContentType().showsUpInLootruns()) return;
+        if (!beacon.color().isUsedInLootruns()) return;
 
         Optional<LootrunTaskType> currentTaskTypeOpt = Models.Lootrun.getCurrentTaskType();
         if (currentTaskTypeOpt.isEmpty()) return;
 
         Optional<LootrunLocation> currentLocationOpt = Models.Lootrun.getCurrentLocation();
         if (currentLocationOpt.isEmpty()) return;
-        Position position = beacon.getPosition();
 
         tasks.get().putIfAbsent(currentLocationOpt.get(), new TreeSet<>());
-        tasks.get()
-                .get(currentLocationOpt.get())
-                .add(new TaskLocation(Location.containing(position), currentTaskTypeOpt.get()));
+        tasks.get().get(currentLocationOpt.get()).add(new TaskLocation(beacon.location(), currentTaskTypeOpt.get()));
         tasks.touched();
     }
 
-    // This location has to be a Location because Position doesn't have proper mapping, so GSON can't serialize it.
     private record TaskLocation(Location location, LootrunTaskType taskType) implements Comparable<TaskLocation> {
         @Override
         public int compareTo(LootrunBeaconLocationCollectorFeature.TaskLocation taskLocation) {

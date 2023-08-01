@@ -568,6 +568,9 @@ public abstract class ClientPacketListenerMixin {
     private void handleAddEntity(ClientboundAddEntityPacket packet, CallbackInfo ci, @Local Entity entity) {
         if (!isRenderThread()) return;
 
+        // This mixin is added after the last actual instruction, where the local variable entity
+        // still exists.
+
         MixinHelper.post(new AddEntityEvent(packet, entity));
     }
 
@@ -577,8 +580,11 @@ public abstract class ClientPacketListenerMixin {
     private void handleTeleportEntity(ClientboundTeleportEntityPacket packet, CallbackInfo ci) {
         if (!isRenderThread()) return;
 
+        Entity entity = McUtils.mc().level.getEntity(packet.getId());
+        if (entity == null) return;
+
         Vec3 position = new Vec3(packet.getX(), packet.getY(), packet.getZ());
-        MixinHelper.post(new TeleportEntityEvent(McUtils.mc().level.getEntity(packet.getId()), position));
+        MixinHelper.post(new TeleportEntityEvent(entity, position));
     }
 
     @Inject(
