@@ -14,12 +14,13 @@ import com.wynntils.handlers.chat.type.RecipientType;
 import com.wynntils.models.beacons.event.BeaconEvent;
 import com.wynntils.models.beacons.type.Beacon;
 import com.wynntils.models.beacons.type.BeaconColor;
-import com.wynntils.models.compass.CompassModel;
 import com.wynntils.models.lootrun.event.LootrunBeaconSelectedEvent;
+import com.wynntils.models.lootrun.markers.LootrunBeaconMarkerProvider;
 import com.wynntils.models.lootrun.scoreboard.LootrunScoreboardPart;
 import com.wynntils.models.lootrun.type.LootrunLocation;
 import com.wynntils.models.lootrun.type.LootrunTaskType;
 import com.wynntils.models.lootrun.type.LootrunningState;
+import com.wynntils.models.marker.MarkerModel;
 import com.wynntils.models.worlds.event.WorldStateEvent;
 import com.wynntils.utils.VectorUtils;
 import com.wynntils.utils.mc.McUtils;
@@ -69,8 +70,8 @@ public class LootrunModel extends Model {
 
     private static final LootrunScoreboardPart LOOTRUN_SCOREBOARD_PART = new LootrunScoreboardPart();
 
-    private static final LootrunBeaconCompassProvider LOOTRUN_BEACON_COMPASS_PROVIDER =
-            new LootrunBeaconCompassProvider();
+    private static final LootrunBeaconMarkerProvider LOOTRUN_BEACON_COMPASS_PROVIDER =
+            new LootrunBeaconMarkerProvider();
 
     private LootrunFinishedEventBuilder.Completed lootrunCompletedBuilder;
     private LootrunFinishedEventBuilder.Failed lootrunFailedBuilder;
@@ -81,11 +82,11 @@ public class LootrunModel extends Model {
     private Map<BeaconColor, Integer> currentLootrunBeacons = new HashMap<>();
     private Beacon currentBeacon;
 
-    public LootrunModel(CompassModel compassModel) {
-        super(List.of(compassModel));
+    public LootrunModel(MarkerModel markerModel) {
+        super(List.of(markerModel));
 
         Handlers.Scoreboard.addPart(LOOTRUN_SCOREBOARD_PART);
-        Models.Compass.registerCompassProvider(LOOTRUN_BEACON_COMPASS_PROVIDER);
+        Models.Marker.registerMarkerProvider(LOOTRUN_BEACON_COMPASS_PROVIDER);
     }
 
     @SubscribeEvent
