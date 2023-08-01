@@ -9,13 +9,13 @@ import java.util.List;
 import net.minecraft.core.Position;
 import net.minecraft.world.entity.Entity;
 
-public final class VerifiedBeacon {
+public final class Beacon {
     private final List<Entity> entities;
     private final BeaconColor color;
 
     private Position position;
 
-    public VerifiedBeacon(Position position, BeaconColor beaconColor, List<Entity> entities) {
+    public Beacon(Position position, BeaconColor beaconColor, List<Entity> entities) {
         this.position = position;
         this.color = beaconColor;
         this.entities = ImmutableList.copyOf(entities);

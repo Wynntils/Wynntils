@@ -12,7 +12,7 @@ import com.wynntils.handlers.chat.event.ChatMessageReceivedEvent;
 import com.wynntils.handlers.chat.type.RecipientType;
 import com.wynntils.models.beacons.event.BeaconEvent;
 import com.wynntils.models.beacons.type.BeaconColor;
-import com.wynntils.models.beacons.type.VerifiedBeacon;
+import com.wynntils.models.beacons.type.Beacon;
 import com.wynntils.models.lootrun.event.LootrunBeaconSelectedEvent;
 import com.wynntils.models.lootrun.scoreboard.LootrunScoreboardPart;
 import com.wynntils.models.lootrun.type.LootrunLocation;
@@ -74,7 +74,7 @@ public class LootrunModel extends Model {
     private LootrunLocation currentLocation;
     private LootrunTaskType currentTaskType;
     private Map<BeaconColor, Integer> currentLootrunBeacons = new HashMap<>();
-    private VerifiedBeacon currentBeacon;
+    private Beacon currentBeacon;
 
     public LootrunModel() {
         super(List.of());
@@ -123,7 +123,7 @@ public class LootrunModel extends Model {
     // but we don't know for sure until the scoreboard confirms it.
     @SubscribeEvent
     public void onBeaconRemove(BeaconEvent.Removed event) {
-        VerifiedBeacon beacon = event.getBeacon();
+        Beacon beacon = event.getBeacon();
         if (!beacon.getColor().isUsedInLootruns()) return;
 
         double newBeaconDistanceToPlayer = VectorUtils.distanceIgnoringY(

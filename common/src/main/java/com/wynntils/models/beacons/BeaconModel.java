@@ -11,7 +11,7 @@ import com.wynntils.mc.event.RemoveEntitiesEvent;
 import com.wynntils.mc.event.TeleportEntityEvent;
 import com.wynntils.models.beacons.event.BeaconEvent;
 import com.wynntils.models.beacons.type.BeaconColor;
-import com.wynntils.models.beacons.type.VerifiedBeacon;
+import com.wynntils.models.beacons.type.Beacon;
 import com.wynntils.utils.mc.PosUtils;
 import com.wynntils.utils.type.TimedSet;
 import java.util.ArrayList;
@@ -34,7 +34,7 @@ public class BeaconModel extends Model {
 
     private final TimedSet<UnverifiedBeacon> unverifiedBeacons = new TimedSet<>(1000, TimeUnit.MILLISECONDS, true);
 
-    private final Set<VerifiedBeacon> verifiedBeacons = new HashSet<>();
+    private final Set<Beacon> verifiedBeacons = new HashSet<>();
 
     public BeaconModel() {
         super(List.of());
@@ -72,8 +72,8 @@ public class BeaconModel extends Model {
                 return;
             }
 
-            VerifiedBeacon verifiedBeacon =
-                    new VerifiedBeacon(unverifiedBeacon.getPosition(), beaconColor, unverifiedBeacon.getEntities());
+            Beacon verifiedBeacon =
+                    new Beacon(unverifiedBeacon.getPosition(), beaconColor, unverifiedBeacon.getEntities());
             verifiedBeacons.add(verifiedBeacon);
             WynntilsMod.postEvent(new BeaconEvent.Added(verifiedBeacon));
 
@@ -83,13 +83,13 @@ public class BeaconModel extends Model {
 
     @SubscribeEvent
     public void onEntityTeleport(TeleportEntityEvent event) {
-        Optional<VerifiedBeacon> verifiedBeaconOpt = verifiedBeacons.stream()
+        Optional<Beacon> verifiedBeaconOpt = verifiedBeacons.stream()
                 .filter(verifiedBeacon -> verifiedBeacon.getBaseEntity().equals(event.getEntity()))
                 .findFirst();
 
         if (verifiedBeaconOpt.isEmpty()) return;
 
-        VerifiedBeacon verifiedBeacon = verifiedBeaconOpt.get();
+        Beacon verifiedBeacon = verifiedBeaconOpt.get();
         verifiedBeacon.updatePosition(event.getNewPosition());
         WynntilsMod.postEvent(new BeaconEvent.Moved(verifiedBeacon));
     }
@@ -98,12 +98,12 @@ public class BeaconModel extends Model {
     public void onEntityRemoved(RemoveEntitiesEvent event) {
         List<Integer> entityIds = event.getEntityIds();
 
-        List<VerifiedBeacon> removedBeacons = verifiedBeacons.stream()
+        List<Beacon> removedBeacons = verifiedBeacons.stream()
                 .filter(verifiedBeacon ->
                         entityIds.contains(verifiedBeacon.getBaseEntity().getId()))
                 .toList();
 
-        for (VerifiedBeacon removedBeacon : removedBeacons) {
+        for (Beacon removedBeacon : removedBeacons) {
             verifiedBeacons.remove(removedBeacon);
             WynntilsMod.postEvent(new BeaconEvent.Removed(removedBeacon));
         }

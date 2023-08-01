@@ -12,7 +12,7 @@ import com.wynntils.core.consumers.features.Feature;
 import com.wynntils.core.consumers.features.properties.StartDisabled;
 import com.wynntils.core.storage.RegisterStorage;
 import com.wynntils.core.storage.Storage;
-import com.wynntils.models.beacons.type.VerifiedBeacon;
+import com.wynntils.models.beacons.type.Beacon;
 import com.wynntils.models.lootrun.event.LootrunBeaconSelectedEvent;
 import com.wynntils.models.lootrun.type.LootrunLocation;
 import com.wynntils.models.lootrun.type.LootrunTaskType;
@@ -35,7 +35,7 @@ public class LootrunBeaconLocationCollectorFeature extends Feature {
 
     @SubscribeEvent
     public void onLootrunBeaconSelected(LootrunBeaconSelectedEvent event) {
-        VerifiedBeacon beacon = event.getBeacon();
+        Beacon beacon = event.getBeacon();
 
         if (!beacon.getColor().isUsedInLootruns()) return;
 
