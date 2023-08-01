@@ -32,6 +32,7 @@ public class BeaconModel extends Model {
     private static final int VERIFICATION_ENTITY_COUNT = 6;
 
     private final TimedSet<UnverifiedBeacon> unverifiedBeacons = new TimedSet<>(1000, TimeUnit.MILLISECONDS, true);
+    // Maps base entity id to corresponding beacon
     private final Map<Integer, Beacon> verifiedBeacons = new HashMap<>();
 
     public BeaconModel() {
