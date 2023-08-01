@@ -37,7 +37,7 @@ public class LootrunBeaconLocationCollectorFeature extends Feature {
     public void onLootrunBeaconSelected(LootrunBeaconSelectedEvent event) {
         VerifiedBeacon beacon = event.getBeacon();
 
-        if (!beacon.getColor().getContentType().showsUpInLootruns()) return;
+        if (!beacon.getColor().isUsedInLootruns()) return;
 
         Optional<LootrunTaskType> currentTaskTypeOpt = Models.Lootrun.getCurrentTaskType();
         if (currentTaskTypeOpt.isEmpty()) return;
