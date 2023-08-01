@@ -95,7 +95,7 @@ public class CompassCommand extends Command {
     }
 
     private int shareCompass(CommandContext<CommandSourceStack> context) {
-        Optional<Location> compassLocation = Models.Compass.getCompassLocation();
+        Optional<Location> compassLocation = Models.OldCompass.getCompassLocation();
 
         if (compassLocation.isEmpty()) {
             context.getSource()
@@ -122,7 +122,7 @@ public class CompassCommand extends Command {
     private int compassAtVec3(CommandContext<CommandSourceStack> context) {
         Coordinates coordinates = Vec3Argument.getCoordinates(context, "location");
         Location location = new Location(coordinates.getBlockPos(context.getSource()));
-        Models.Compass.setCompassLocation(location);
+        Models.OldCompass.setCompassLocation(location);
 
         MutableComponent response = Component.literal("Compass set to ").withStyle(ChatFormatting.AQUA);
         response.append(Component.literal(location.toString()).withStyle(ChatFormatting.WHITE));
@@ -138,7 +138,7 @@ public class CompassCommand extends Command {
             return 0;
         }
 
-        Models.Compass.setCompassLocation(location.get());
+        Models.OldCompass.setCompassLocation(location.get());
 
         MutableComponent response = Component.literal("Compass set to ").withStyle(ChatFormatting.AQUA);
         response.append(Component.literal(location.get().toString()).withStyle(ChatFormatting.WHITE));
@@ -167,7 +167,7 @@ public class CompassCommand extends Command {
             return 0;
         }
         Poi closestService = closestServiceOptional.get();
-        Models.Compass.setCompassLocation(
+        Models.OldCompass.setCompassLocation(
                 closestService.getLocation().asLocation(),
                 closestServiceOptional.get().getIcon());
 
@@ -214,7 +214,7 @@ public class CompassCommand extends Command {
             place = places.get(0);
         }
 
-        Models.Compass.setCompassLocation(place.getLocation().asLocation());
+        Models.OldCompass.setCompassLocation(place.getLocation().asLocation());
 
         MutableComponent response =
                 Component.literal("Compass set to " + place.getName() + " at ").withStyle(ChatFormatting.AQUA);
@@ -238,7 +238,7 @@ public class CompassCommand extends Command {
 
         PoiLocation location = territoryProfile.getCenterLocation();
 
-        Models.Compass.setCompassLocation(location.asLocation());
+        Models.OldCompass.setCompassLocation(location.asLocation());
 
         MutableComponent response = Component.literal(
                         "Compass set to middle of " + territoryProfile.getFriendlyName() + " at ")
@@ -249,7 +249,7 @@ public class CompassCommand extends Command {
     }
 
     private int compassClear(CommandContext<CommandSourceStack> context) {
-        Models.Compass.reset();
+        Models.OldCompass.reset();
 
         MutableComponent response = Component.literal("Compass cleared").withStyle(ChatFormatting.AQUA);
         context.getSource().sendSuccess(response, false);

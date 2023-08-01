@@ -264,7 +264,7 @@ public class MinimapOverlay extends Overlay {
         bufferSource.endBatch();
 
         // Compass icon
-        Optional<WaypointPoi> compassOpt = Models.Compass.getCompassWaypoint();
+        Optional<WaypointPoi> compassOpt = Models.OldCompass.getCompassWaypoint();
 
         if (compassOpt.isEmpty()) return;
 

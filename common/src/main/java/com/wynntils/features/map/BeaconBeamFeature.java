@@ -31,14 +31,14 @@ public class BeaconBeamFeature extends Feature {
 
     @SubscribeEvent
     public void onRenderLevelLast(RenderTileLevelLastEvent event) {
-        if (Models.Compass.getCompassLocation().isEmpty()) return;
+        if (Models.OldCompass.getCompassLocation().isEmpty()) return;
 
         PoseStack poseStack = event.getPoseStack();
         MultiBufferSource.BufferSource bufferSource =
                 MultiBufferSource.immediate(Tesselator.getInstance().getBuilder());
 
         Position camera = event.getCamera().getPosition();
-        Location location = Models.Compass.getCompassLocation().get();
+        Location location = Models.OldCompass.getCompassLocation().get();
 
         double dx = location.x - camera.x();
         double dy = location.y - camera.y();

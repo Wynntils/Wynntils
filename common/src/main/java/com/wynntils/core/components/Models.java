@@ -19,6 +19,7 @@ import com.wynntils.models.character.CharacterSelectionModel;
 import com.wynntils.models.characterstats.CharacterStatsModel;
 import com.wynntils.models.characterstats.CombatXpModel;
 import com.wynntils.models.compass.CompassModel;
+import com.wynntils.models.compass.OldCompassModel;
 import com.wynntils.models.containers.ContainerModel;
 import com.wynntils.models.containers.LootChestModel;
 import com.wynntils.models.containers.PlayerInventoryModel;
@@ -62,11 +63,11 @@ public final class Models {
     public static final CharacterModel Character = new CharacterModel();
     public static final CharacterSelectionModel CharacterSelection = new CharacterSelectionModel();
     public static final CompassModel Compass = new CompassModel();
+    public static final OldCompassModel OldCompass = new OldCompassModel();
     public static final ContainerModel Container = new ContainerModel();
     public static final DamageModel Damage = new DamageModel();
     public static final ElementModel Element = new ElementModel();
     public static final GuildAttackTimerModel GuildAttackTimer = new GuildAttackTimerModel();
-    public static final LootrunModel Lootrun = new LootrunModel();
     public static final ObjectivesModel Objectives = new ObjectivesModel();
     public static final PlayerInventoryModel PlayerInventory = new PlayerInventoryModel();
     public static final PlayerModel Player = new PlayerModel();
@@ -92,6 +93,7 @@ public final class Models {
     public static final IngredientModel Ingredient = new IngredientModel(Stat);
     public static final ItemModel Item = new ItemModel(Element, Gear, Rewards, Ingredient);
     public static final LootChestModel LootChest = new LootChestModel(Container);
+    public static final LootrunModel Lootrun = new LootrunModel(Compass);
     public static final MobTotemModel MobTotem = new MobTotemModel(WorldState);
     public static final PartyModel Party = new PartyModel(WorldState);
     public static final ProfessionModel Profession = new ProfessionModel(Character, WorldState, Bomb);
@@ -100,7 +102,7 @@ public final class Models {
     public static final ShamanMaskModel ShamanMask = new ShamanMaskModel(WorldState);
     public static final ShamanTotemModel ShamanTotem = new ShamanTotemModel(WorldState);
     public static final SpellModel Spell = new SpellModel(Character);
-    public static final DiscoveryModel Discovery = new DiscoveryModel(CombatXp, Compass, Quest, Territory);
+    public static final DiscoveryModel Discovery = new DiscoveryModel(CombatXp, OldCompass, Quest, Territory);
     public static final EmeraldModel Emerald = new EmeraldModel(Item);
     public static final GearTooltipModel GearTooltip = new GearTooltipModel(Character, Quest);
     public static final HorseModel Horse = new HorseModel(Item);

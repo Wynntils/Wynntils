@@ -72,9 +72,9 @@ public class WorldWaypointDistanceFeature extends Feature {
 
     @SubscribeEvent
     public void onRenderLevelPost(RenderLevelEvent.Post event) {
-        if (Models.Compass.getCompassLocation().isEmpty()) return;
+        if (Models.OldCompass.getCompassLocation().isEmpty()) return;
 
-        Location location = Models.Compass.getCompassLocation().get();
+        Location location = Models.OldCompass.getCompassLocation().get();
         Matrix4f projection = new Matrix4f(event.getProjectionMatrix());
         Camera camera = event.getCamera();
         Position cameraPos = camera.getPosition();
@@ -114,8 +114,8 @@ public class WorldWaypointDistanceFeature extends Feature {
 
     @SubscribeEvent
     public void onRenderGuiPost(RenderEvent.Post event) {
-        Optional<Location> compassLocationOpt = Models.Compass.getCompassLocation();
-        Optional<WaypointPoi> compassWaypointOpt = Models.Compass.getCompassWaypoint();
+        Optional<Location> compassLocationOpt = Models.OldCompass.getCompassLocation();
+        Optional<WaypointPoi> compassWaypointOpt = Models.OldCompass.getCompassWaypoint();
         if (compassLocationOpt.isEmpty()
                 || compassWaypointOpt.isEmpty()
                 || screenCoord == null
@@ -130,8 +130,8 @@ public class WorldWaypointDistanceFeature extends Feature {
         float displayPositionY;
 
         Vec2 intersectPoint = getBoundingIntersectPoint(screenCoord, event.getWindow());
-        Texture icon = Models.Compass.getTargetIcon();
-        float[] color = Models.Compass.getTargetColor().asFloatArray();
+        Texture icon = Models.OldCompass.getTargetIcon();
+        float[] color = Models.OldCompass.getTargetColor().asFloatArray();
         RenderSystem.setShaderColor(color[0], color[1], color[2], 1f);
 
         // The set waypoint is visible on the screen, so we render the icon + distance

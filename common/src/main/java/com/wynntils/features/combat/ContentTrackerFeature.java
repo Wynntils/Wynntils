@@ -40,7 +40,7 @@ public class ContentTrackerFeature extends Feature {
             // trackedLocation == null might also just indicate that we
             // failed to parse, not that the quest is missing a location.
             if (trackedLocation != null) {
-                Models.Compass.setCompassLocation(trackedLocation);
+                Models.OldCompass.setCompassLocation(trackedLocation);
             }
         }
 
@@ -53,6 +53,6 @@ public class ContentTrackerFeature extends Feature {
     public void onSetSpawn(SetSpawnEvent e) {
         if (!autoTrackCoordinates.get()) return;
 
-        Models.Compass.setCompassToSpawnTracker();
+        Models.OldCompass.setCompassToSpawnTracker();
     }
 }
