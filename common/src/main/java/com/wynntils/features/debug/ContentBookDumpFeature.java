@@ -56,7 +56,7 @@ public class ContentBookDumpFeature extends Feature {
     // Temporary hack...
     private static final Gson GSON = new GsonBuilder()
             .registerTypeAdapter(CustomColor.class, new CustomColor.CustomColorSerializer())
-            .registerTypeAdapterFactory(new JsonManager.EnumTypeAdapterFactory())
+            .registerTypeAdapterFactory(new JsonManager.EnumTypeAdapterFactory<>())
             .enableComplexMapKeySerialization()
             .setPrettyPrinting()
             .serializeNulls()
