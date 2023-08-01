@@ -15,7 +15,7 @@ public abstract class RenamedKeysUpfixer implements ConfigUpfixer {
     protected abstract List<Pair<String, String>> getRenamedKeys();
 
     @Override
-    public boolean apply(JsonObject configObject, Set<ConfigHolder> configHolders) {
+    public boolean apply(JsonObject configObject, Set<ConfigHolder<?>> configHolders) {
         for (Pair<String, String> renamePair : getRenamedKeys()) {
             String oldName = renamePair.a();
             String newName = renamePair.b();

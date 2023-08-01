@@ -62,7 +62,7 @@ public abstract class Feature extends AbstractConfigurable implements Storageabl
     }
 
     /** Used to react to config option updates */
-    protected void onConfigUpdate(ConfigHolder configHolder) {}
+    protected void onConfigUpdate(ConfigHolder<?> configHolder) {}
 
     public void onEnable() {}
 
@@ -79,7 +79,7 @@ public abstract class Feature extends AbstractConfigurable implements Storageabl
     }
 
     @Override
-    public final void updateConfigOption(ConfigHolder configHolder) {
+    public final void updateConfigOption(ConfigHolder<?> configHolder) {
         // if user toggle was changed, enable/disable feature accordingly
         if (configHolder.getFieldName().equals("userEnabled")) {
             // Toggling before init does not do anything, so we don't worry about it for now

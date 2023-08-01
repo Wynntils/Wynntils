@@ -22,13 +22,18 @@ import net.minecraft.network.chat.Component;
 
 public class ConfigTile extends WynntilsButton {
     private final WynntilsBookSettingsScreen settingsScreen;
-    private final ConfigHolder configHolder;
+    private final ConfigHolder<?> configHolder;
 
     private final GeneralSettingsButton resetButton;
     private AbstractWidget configOptionElement;
 
     public ConfigTile(
-            int x, int y, int width, int height, WynntilsBookSettingsScreen settingsScreen, ConfigHolder configHolder) {
+            int x,
+            int y,
+            int width,
+            int height,
+            WynntilsBookSettingsScreen settingsScreen,
+            ConfigHolder<?> configHolder) {
         super(x, y, width, height, Component.literal(configHolder.getJsonName()));
         this.settingsScreen = settingsScreen;
         this.configHolder = configHolder;
@@ -123,15 +128,15 @@ public class ConfigTile extends WynntilsButton {
         return this.getX() + 3;
     }
 
-    private AbstractWidget getWidgetFromConfigHolder(ConfigHolder configOption) {
+    private <E extends Enum<E>> AbstractWidget getWidgetFromConfigHolder(ConfigHolder<?> configOption) {
         if (configOption.getType().equals(Boolean.class)) {
-            return new BooleanSettingsButton(configOption);
+            return new BooleanSettingsButton((ConfigHolder<Boolean>) configOption);
         } else if (configOption.isEnum()) {
-            return new EnumSettingsButton<>(configOption);
+            return new EnumSettingsButton<>((ConfigHolder<E>) configOption);
         } else if (configOption.getType().equals(CustomColor.class)) {
-            return new CustomColorSettingsButton(configOption, settingsScreen);
+            return new CustomColorSettingsButton((ConfigHolder<CustomColor>) configOption, settingsScreen);
         } else {
-            return new TextInputBoxSettingsWidget(configOption, settingsScreen);
+            return new TextInputBoxSettingsWidget<>(configOption, settingsScreen);
         }
     }
 }

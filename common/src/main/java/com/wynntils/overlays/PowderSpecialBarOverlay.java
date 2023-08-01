@@ -68,7 +68,7 @@ public class PowderSpecialBarOverlay extends Overlay {
     }
 
     @Override
-    protected void onConfigUpdate(ConfigHolder configHolder) {}
+    protected void onConfigUpdate(ConfigHolder<?> configHolder) {}
 
     private void renderWithSpecificSpecial(
             PoseStack poseStack, MultiBufferSource bufferSource, float powderSpecialCharge, Powder powderSpecialType) {

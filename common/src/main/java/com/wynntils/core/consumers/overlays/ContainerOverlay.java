@@ -93,7 +93,7 @@ public abstract class ContainerOverlay<T extends Overlay> extends Overlay {
     }
 
     @Override
-    protected void onConfigUpdate(ConfigHolder configHolder) {
+    protected void onConfigUpdate(ConfigHolder<?> configHolder) {
         updateAllChildren();
     }
 

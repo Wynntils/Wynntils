@@ -32,7 +32,7 @@ public class ChatTimestampFeature extends Feature {
     private DateTimeFormatter formatter = DateTimeFormatter.ofPattern(formatPattern.get(), Locale.ROOT);
 
     @Override
-    protected void onConfigUpdate(ConfigHolder configHolder) {
+    protected void onConfigUpdate(ConfigHolder<?> configHolder) {
         // Try to set the new format string and if it fails revert to the default
         try {
             formatter = DateTimeFormatter.ofPattern(formatPattern.get(), Locale.ROOT);
