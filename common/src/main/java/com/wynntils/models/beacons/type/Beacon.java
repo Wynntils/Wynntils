@@ -4,29 +4,6 @@
  */
 package com.wynntils.models.beacons.type;
 
-import com.google.common.collect.ImmutableList;
 import com.wynntils.utils.mc.type.Location;
-import java.util.List;
-import net.minecraft.world.entity.Entity;
 
-public final class Beacon {
-    private Location location;
-    private final BeaconColor color;
-
-    public Beacon(Location location, BeaconColor beaconColor) {
-        this.location = location;
-        this.color = beaconColor;
-    }
-
-    public Location getLocation() {
-        return location;
-    }
-
-    public BeaconColor getColor() {
-        return color;
-    }
-
-    public void updateLocation(Location newLocation) {
-        location = newLocation;
-    }
-}
+public record Beacon(Location location, BeaconColor color) {}

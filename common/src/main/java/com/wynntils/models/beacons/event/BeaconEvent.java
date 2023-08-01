@@ -25,8 +25,8 @@ public abstract class BeaconEvent extends Event {
     }
 
     public static class Moved extends BeaconEvent {
-        public Moved(Beacon beacon) {
-            super(beacon);
+        public Moved(Beacon oldBeacon, Beacon newBeacon) {
+            super(oldBeacon);
         }
     }
 

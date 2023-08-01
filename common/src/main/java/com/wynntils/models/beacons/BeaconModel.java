@@ -81,11 +81,11 @@ public class BeaconModel extends Model {
 
     @SubscribeEvent
     public void onEntityTeleport(TeleportEntityEvent event) {
-        Beacon verifiedBeacon = verifiedBeacons.get(event.getEntity().getId());
-        if (verifiedBeacon == null) return;
+        Beacon movedBeacon = verifiedBeacons.get(event.getEntity().getId());
+        if (movedBeacon == null) return;
 
-        verifiedBeacon.updateLocation(Location.containing(event.getNewPosition()));
-        WynntilsMod.postEvent(new BeaconEvent.Moved(verifiedBeacon));
+        Beacon newBeacon = new Beacon(Location.containing(event.getNewPosition()), movedBeacon.color());
+        WynntilsMod.postEvent(new BeaconEvent.Moved(movedBeacon, newBeacon));
     }
 
     @SubscribeEvent
@@ -99,7 +99,7 @@ public class BeaconModel extends Model {
 
     private boolean isDuplicateBeacon(Location location) {
         return verifiedBeacons.values().stream()
-                .anyMatch(verifiedBeacon -> location.equalsIgnoringY(verifiedBeacon.getLocation()));
+                .anyMatch(verifiedBeacon -> location.equalsIgnoringY(verifiedBeacon.location()));
     }
 
     private UnverifiedBeacon getUnverifiedBeaconAt(Location location) {

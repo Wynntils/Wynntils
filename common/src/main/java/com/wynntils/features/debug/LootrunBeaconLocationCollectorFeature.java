@@ -36,17 +36,16 @@ public class LootrunBeaconLocationCollectorFeature extends Feature {
     public void onLootrunBeaconSelected(LootrunBeaconSelectedEvent event) {
         Beacon beacon = event.getBeacon();
 
-        if (!beacon.getColor().isUsedInLootruns()) return;
+        if (!beacon.color().isUsedInLootruns()) return;
 
         Optional<LootrunTaskType> currentTaskTypeOpt = Models.Lootrun.getCurrentTaskType();
         if (currentTaskTypeOpt.isEmpty()) return;
 
         Optional<LootrunLocation> currentLocationOpt = Models.Lootrun.getCurrentLocation();
         if (currentLocationOpt.isEmpty()) return;
-        Location location = beacon.getLocation();
 
         tasks.get().putIfAbsent(currentLocationOpt.get(), new TreeSet<>());
-        tasks.get().get(currentLocationOpt.get()).add(new TaskLocation(location, currentTaskTypeOpt.get()));
+        tasks.get().get(currentLocationOpt.get()).add(new TaskLocation(beacon.location(), currentTaskTypeOpt.get()));
         tasks.touched();
     }
 

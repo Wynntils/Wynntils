@@ -124,14 +124,14 @@ public class LootrunModel extends Model {
     @SubscribeEvent
     public void onBeaconRemove(BeaconEvent.Removed event) {
         Beacon beacon = event.getBeacon();
-        if (!beacon.getColor().isUsedInLootruns()) return;
+        if (!beacon.color().isUsedInLootruns()) return;
 
         double newBeaconDistanceToPlayer = VectorUtils.distanceIgnoringY(
-                beacon.getLocation().toPosition(), McUtils.mc().player.position());
+                beacon.location().toPosition(), McUtils.mc().player.position());
         double oldBeaconDistanceToPlayer = currentBeacon == null
                 ? Double.MAX_VALUE
                 : VectorUtils.distanceIgnoringY(
-                        currentBeacon.getLocation().toPosition(),
+                        currentBeacon.location().toPosition(),
                         McUtils.mc().player.position());
         if (newBeaconDistanceToPlayer < BEACON_REMOVAL_RADIUS
                 && newBeaconDistanceToPlayer < oldBeaconDistanceToPlayer) {
@@ -184,9 +184,9 @@ public class LootrunModel extends Model {
         if (oldState == LootrunningState.CHOOSING_BEACON
                 && newState == LootrunningState.IN_TASK
                 && currentBeacon != null) {
-            WynntilsMod.info("Selected a " + currentBeacon.getColor() + " beacon at " + currentBeacon.getLocation());
+            WynntilsMod.info("Selected a " + currentBeacon.color() + " beacon at " + currentBeacon.location());
             currentLootrunBeacons.put(
-                    currentBeacon.getColor(), currentLootrunBeacons.getOrDefault(currentBeacon.getColor(), 0) + 1);
+                    currentBeacon.color(), currentLootrunBeacons.getOrDefault(currentBeacon.color(), 0) + 1);
             WynntilsMod.postEvent(new LootrunBeaconSelectedEvent(currentBeacon));
             return;
         }
