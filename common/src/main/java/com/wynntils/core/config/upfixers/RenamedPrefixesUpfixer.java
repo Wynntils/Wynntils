@@ -6,7 +6,7 @@ package com.wynntils.core.config.upfixers;
 
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
-import com.wynntils.core.config.ConfigHolder;
+import com.wynntils.core.config.Config;
 import com.wynntils.utils.type.Pair;
 import java.util.ArrayList;
 import java.util.List;
@@ -16,7 +16,7 @@ public abstract class RenamedPrefixesUpfixer implements ConfigUpfixer {
     protected abstract List<Pair<String, String>> getRenamedPrefixes();
 
     @Override
-    public boolean apply(JsonObject configObject, Set<ConfigHolder<?>> configHolders) {
+    public boolean apply(JsonObject configObject, Set<Config<?>> configs) {
         List<String> configKeys = new ArrayList<>(configObject.keySet());
         for (String configName : configKeys) {
             for (Pair<String, String> prefix : getRenamedPrefixes()) {

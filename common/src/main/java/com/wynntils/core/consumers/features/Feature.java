@@ -9,7 +9,6 @@ import com.google.common.collect.ComparisonChain;
 import com.wynntils.core.components.Managers;
 import com.wynntils.core.config.Category;
 import com.wynntils.core.config.Config;
-import com.wynntils.core.config.ConfigHolder;
 import com.wynntils.core.config.RegisterConfig;
 import com.wynntils.core.storage.Storageable;
 import net.minecraft.client.resources.language.I18n;
@@ -62,7 +61,7 @@ public abstract class Feature extends AbstractConfigurable implements Storageabl
     }
 
     /** Used to react to config option updates */
-    protected void onConfigUpdate(ConfigHolder<?> configHolder) {}
+    protected void onConfigUpdate(Config<?> config) {}
 
     public void onEnable() {}
 
@@ -79,16 +78,16 @@ public abstract class Feature extends AbstractConfigurable implements Storageabl
     }
 
     @Override
-    public final void updateConfigOption(ConfigHolder<?> configHolder) {
+    public final void updateConfigOption(Config<?> config) {
         // if user toggle was changed, enable/disable feature accordingly
-        if (configHolder.getFieldName().equals("userEnabled")) {
+        if (config.getFieldName().equals("userEnabled")) {
             // Toggling before init does not do anything, so we don't worry about it for now
             tryUserToggle();
             return;
         }
 
         // otherwise, trigger regular config update
-        onConfigUpdate(configHolder);
+        onConfigUpdate(config);
     }
 
     /** Updates the feature's enabled/disabled state to match the user's setting, if necessary */

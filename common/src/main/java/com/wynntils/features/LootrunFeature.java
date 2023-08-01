@@ -6,7 +6,6 @@ package com.wynntils.features;
 
 import com.wynntils.core.components.Services;
 import com.wynntils.core.config.Config;
-import com.wynntils.core.config.ConfigHolder;
 import com.wynntils.core.config.RegisterConfig;
 import com.wynntils.core.consumers.features.Feature;
 import com.wynntils.utils.colors.CommonColors;
@@ -32,7 +31,7 @@ public class LootrunFeature extends Feature {
     public final Config<Boolean> showNotes = new Config<>(true);
 
     @Override
-    protected void onConfigUpdate(ConfigHolder<?> configHolder) {
+    protected void onConfigUpdate(Config<?> config) {
         Services.LootrunPaths.recompileLootrun(false);
     }
 

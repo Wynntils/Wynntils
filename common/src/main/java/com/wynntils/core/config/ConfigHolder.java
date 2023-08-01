@@ -139,7 +139,7 @@ public class ConfigHolder<T> implements Comparable<ConfigHolder<T>> {
         }
 
         configObj.updateConfig(value);
-        parent.updateConfigOption(this);
+        parent.updateConfigOption(configObj);
         userEdited = true;
     }
 

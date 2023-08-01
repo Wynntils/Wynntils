@@ -9,7 +9,6 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import com.wynntils.core.components.Models;
 import com.wynntils.core.components.Services;
 import com.wynntils.core.config.Config;
-import com.wynntils.core.config.ConfigHolder;
 import com.wynntils.core.config.RegisterConfig;
 import com.wynntils.core.consumers.overlays.ContainerOverlay;
 import com.wynntils.core.consumers.overlays.Overlay;
@@ -222,6 +221,6 @@ public class PartyMembersOverlay extends ContainerOverlay<PartyMembersOverlay.Pa
         }
 
         @Override
-        protected void onConfigUpdate(ConfigHolder<?> configHolder) {}
+        protected void onConfigUpdate(Config<?> config) {}
     }
 }

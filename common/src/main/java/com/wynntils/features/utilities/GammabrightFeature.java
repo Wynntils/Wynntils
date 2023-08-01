@@ -8,7 +8,6 @@ import com.wynntils.core.components.Managers;
 import com.wynntils.core.config.Category;
 import com.wynntils.core.config.Config;
 import com.wynntils.core.config.ConfigCategory;
-import com.wynntils.core.config.ConfigHolder;
 import com.wynntils.core.config.RegisterConfig;
 import com.wynntils.core.consumers.features.Feature;
 import com.wynntils.core.consumers.features.properties.RegisterKeyBind;
@@ -49,8 +48,8 @@ public class GammabrightFeature extends Feature {
     }
 
     @Override
-    protected void onConfigUpdate(ConfigHolder<?> configHolder) {
-        if (configHolder.getFieldName().equals("gammabrightEnabled")) {
+    protected void onConfigUpdate(Config<?> config) {
+        if (config.getFieldName().equals("gammabrightEnabled")) {
             applyGammabright();
         }
     }

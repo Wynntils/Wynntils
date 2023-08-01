@@ -10,7 +10,6 @@ import com.mojang.blaze3d.platform.Window;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.wynntils.core.components.Managers;
 import com.wynntils.core.config.Config;
-import com.wynntils.core.config.ConfigHolder;
 import com.wynntils.core.config.HiddenConfig;
 import com.wynntils.core.config.RegisterConfig;
 import com.wynntils.core.consumers.features.AbstractConfigurable;
@@ -70,10 +69,10 @@ public abstract class Overlay extends AbstractConfigurable implements Translatab
     }
 
     @Override
-    public final void updateConfigOption(ConfigHolder<?> configHolder) {
+    public final void updateConfigOption(Config<?> config) {
         // if user toggle was changed, enable/disable overlay accordingly
-        if (configHolder.getFieldName().equals("userEnabled")) {
-            if (configHolder.getValue() == Boolean.FALSE) {
+        if (config.getFieldName().equals("userEnabled")) {
+            if (config.getValue() == Boolean.FALSE) {
                 Managers.Overlay.disableOverlay(this);
             } else {
                 // If new state is TRUE or null, try to enable overlay
@@ -82,10 +81,10 @@ public abstract class Overlay extends AbstractConfigurable implements Translatab
             }
         }
 
-        onConfigUpdate(configHolder);
+        onConfigUpdate(config);
     }
 
-    protected abstract void onConfigUpdate(ConfigHolder<?> configHolder);
+    protected abstract void onConfigUpdate(Config<?> config);
 
     /** Gets the name of a feature */
     @Override
