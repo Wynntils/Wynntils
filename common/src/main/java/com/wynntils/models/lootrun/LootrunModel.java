@@ -283,6 +283,7 @@ public class LootrunModel extends Model {
         }
     }
 
+    // FIXME: Handle the same task location being used for multiple beacons.
     private TaskLocation getBeaconTaskLocationPrediction(Beacon beacon) {
         Set<TaskLocation> currentTaskLocations = taskLocations.get(currentLocation);
         if (currentTaskLocations.isEmpty()) return null;
