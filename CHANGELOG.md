@@ -1,4 +1,16 @@
+## [0.0.3-alpha.254](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.253...v0.0.3-alpha.254) (2023-08-01)
+
+
+### Miscellaneous Chores
+
+* New Crowdin updates ([#1888](https://github.com/Wynntils/Artemis/issues/1888)) ([71526f0](https://github.com/Wynntils/Artemis/commit/71526f0d2e77f1c35d8558ac3cba761c66d1c5ff))
+
 ## [0.0.3-alpha.253](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.252...v0.0.3-alpha.253) (2023-08-01)
+
+
+### Miscellaneous Chores
+
+* **release:** v0.0.3-alpha.253 [skip ci] ([f691eb1](https://github.com/Wynntils/Artemis/commit/f691eb1f27d7ebe3ca49e29be8be6888362c79f0))
 
 
 ### Code Refactoring
@@ -40,16 +52,4 @@
 ### Miscellaneous Chores
 
 * **release:** v0.0.3-alpha.250 [skip ci] ([ccc1358](https://github.com/Wynntils/Artemis/commit/ccc135844fd7e364ae554dddff0c5f10d44b020c))
-
-## [0.0.3-alpha.249](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.248...v0.0.3-alpha.249) (2023-07-31)
-
-
-### New Features
-
-* Add an (opt-in) feature to collect lootrun task location data ([#1902](https://github.com/Wynntils/Artemis/issues/1902)) ([6a7fd55](https://github.com/Wynntils/Artemis/commit/6a7fd5578308a328bd49307000e59af6a2d1a5ae))
-
-
-### Miscellaneous Chores
-
-* **release:** v0.0.3-alpha.249 [skip ci] ([73cd090](https://github.com/Wynntils/Artemis/commit/73cd09089735fd45a3731860105e7987e7eb4e50))
 
