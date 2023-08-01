@@ -12,18 +12,18 @@ import net.minecraft.world.item.Items;
 import org.apache.commons.compress.utils.Lists;
 
 public enum BeaconColor {
-    GREEN((int) (0.78125 * 32), Items.GOLDEN_SHOVEL, ContentType.BOTH),
-    PINK((int) (0.75 * 32), Items.GOLDEN_SHOVEL, ContentType.CONTENT), // This is not used in lootruns
-    YELLOW((int) (0.09375 * 32), Items.GOLDEN_PICKAXE, ContentType.LOOTRUN),
-    BLUE((int) (0.125 * 32), Items.GOLDEN_PICKAXE, ContentType.LOOTRUN),
-    PURPLE((int) (0.15625 * 32), Items.GOLDEN_PICKAXE, ContentType.LOOTRUN),
-    GRAY((int) (0.1875 * 32), Items.GOLDEN_PICKAXE, ContentType.LOOTRUN),
-    ORANGE((int) (0.21875 * 32), Items.GOLDEN_PICKAXE, ContentType.LOOTRUN),
-    RED((int) (0.25 * 32), Items.GOLDEN_PICKAXE, ContentType.LOOTRUN),
-    DARK_GRAY((int) (0.28125 * 32), Items.GOLDEN_PICKAXE, ContentType.LOOTRUN),
-    WHITE((int) (0.3125 * 32), Items.GOLDEN_PICKAXE, ContentType.LOOTRUN),
-    AQUA((int) (0.34375 * 32), Items.GOLDEN_PICKAXE, ContentType.LOOTRUN), // This is CYAN in the resource pack
-    RAINBOW((int) (0.375 * 32), Items.GOLDEN_PICKAXE, ContentType.LOOTRUN);
+    GREEN(25, Items.GOLDEN_SHOVEL, ContentType.BOTH),
+    PINK(24, Items.GOLDEN_SHOVEL, ContentType.CONTENT), // This is not used in lootruns
+    YELLOW(3, Items.GOLDEN_PICKAXE, ContentType.LOOTRUN),
+    BLUE(4, Items.GOLDEN_PICKAXE, ContentType.LOOTRUN),
+    PURPLE(5, Items.GOLDEN_PICKAXE, ContentType.LOOTRUN),
+    GRAY(6, Items.GOLDEN_PICKAXE, ContentType.LOOTRUN),
+    ORANGE(7, Items.GOLDEN_PICKAXE, ContentType.LOOTRUN),
+    RED(8, Items.GOLDEN_PICKAXE, ContentType.LOOTRUN),
+    DARK_GRAY(9, Items.GOLDEN_PICKAXE, ContentType.LOOTRUN),
+    WHITE(10, Items.GOLDEN_PICKAXE, ContentType.LOOTRUN),
+    AQUA(11, Items.GOLDEN_PICKAXE, ContentType.LOOTRUN), // This is CYAN in the resource pack
+    RAINBOW(12, Items.GOLDEN_PICKAXE, ContentType.LOOTRUN);
 
     private final int damage;
     private final Item item;
