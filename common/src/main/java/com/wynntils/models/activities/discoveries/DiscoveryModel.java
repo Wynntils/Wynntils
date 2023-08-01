@@ -21,7 +21,7 @@ import com.wynntils.models.activities.type.ActivitySortOrder;
 import com.wynntils.models.activities.type.ActivityType;
 import com.wynntils.models.activities.type.DiscoveryType;
 import com.wynntils.models.characterstats.CombatXpModel;
-import com.wynntils.models.compass.CompassModel;
+import com.wynntils.models.marker.MarkerModel;
 import com.wynntils.models.territories.TerritoryModel;
 import com.wynntils.models.territories.profile.TerritoryProfile;
 import com.wynntils.models.worlds.event.WorldStateEvent;
@@ -53,10 +53,10 @@ public final class DiscoveryModel extends Model {
 
     public DiscoveryModel(
             CombatXpModel combatXpModel,
-            CompassModel compassModel,
+            MarkerModel markerModel,
             QuestModel questModel,
             TerritoryModel territoryModel) {
-        super(List.of(combatXpModel, compassModel, questModel, territoryModel));
+        super(List.of(combatXpModel, markerModel, questModel, territoryModel));
     }
 
     @Override
@@ -97,7 +97,7 @@ public final class DiscoveryModel extends Model {
             int centerX = (guildTerritory.getEndX() + guildTerritory.getStartX()) / 2;
             int centerZ = (guildTerritory.getEndZ() + guildTerritory.getStartZ()) / 2;
 
-            Models.Compass.setCompassLocation(new Location(centerX, 0, centerZ));
+            Models.Marker.USER_WAYPOINTS_PROVIDER.addLocation(new Location(centerX, 0, centerZ));
         }
     }
 
@@ -250,7 +250,7 @@ public final class DiscoveryModel extends Model {
                     // We can't run this is on request thread
                 case MAP -> Managers.TickScheduler.scheduleNextTick(
                         () -> McUtils.mc().setScreen(MainMapScreen.create(x, z)));
-                case COMPASS -> Models.Compass.setCompassLocation(new Location(x, 0, z));
+                case COMPASS -> Models.Marker.USER_WAYPOINTS_PROVIDER.addLocation(new Location(x, 0, z));
             }
         });
     }
