@@ -86,6 +86,8 @@ public class BeaconModel extends Model {
         if (movedBeacon == null) return;
 
         Beacon newBeacon = new Beacon(Location.containing(event.getNewPosition()), movedBeacon.color());
+        // Replace the old map entry
+        verifiedBeacons.put(event.getEntity().getId(), newBeacon);
         WynntilsMod.postEvent(new BeaconEvent.Moved(movedBeacon, newBeacon));
     }
 
