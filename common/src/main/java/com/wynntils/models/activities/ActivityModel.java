@@ -12,9 +12,11 @@ import com.wynntils.core.components.Models;
 import com.wynntils.core.text.StyledText;
 import com.wynntils.features.ui.WynntilsContentBookFeature;
 import com.wynntils.handlers.scoreboard.ScoreboardPart;
+import com.wynntils.mc.event.SetSpawnEvent;
 import com.wynntils.models.activities.caves.CaveInfo;
 import com.wynntils.models.activities.event.ActivityTrackerUpdatedEvent;
 import com.wynntils.models.activities.event.DialogueHistoryReloadedEvent;
+import com.wynntils.models.activities.markers.ActivityMarkerProvider;
 import com.wynntils.models.activities.quests.QuestInfo;
 import com.wynntils.models.activities.type.ActivityDifficulty;
 import com.wynntils.models.activities.type.ActivityDistance;
@@ -24,10 +26,13 @@ import com.wynntils.models.activities.type.ActivityRequirements;
 import com.wynntils.models.activities.type.ActivityStatus;
 import com.wynntils.models.activities.type.ActivityTrackingState;
 import com.wynntils.models.activities.type.ActivityType;
+import com.wynntils.models.beacons.type.BeaconColor;
 import com.wynntils.models.character.event.CharacterUpdateEvent;
+import com.wynntils.models.marker.MarkerModel;
 import com.wynntils.models.profession.type.ProfessionType;
 import com.wynntils.models.worlds.event.WorldStateEvent;
 import com.wynntils.utils.mc.LoreUtils;
+import com.wynntils.utils.mc.McUtils;
 import com.wynntils.utils.mc.StyledTextUtils;
 import com.wynntils.utils.mc.type.Location;
 import com.wynntils.utils.type.CappedValue;
@@ -54,6 +59,9 @@ import net.minecraftforge.eventbus.api.SubscribeEvent;
 public final class ActivityModel extends Model {
     public static final String CONTENT_BOOK_TITLE = "§f\uE000\uE072";
 
+    private static final Location WORLD_SPAWN = new Location(-1572, 41, -1668);
+    private static final Location HUB_SPAWN = new Location(295, 34, 321);
+
     private static final Pattern LEVEL_REQ_PATTERN =
             Pattern.compile("^§(.).À?§7(?: Recommended)? Combat Lv(?:\\. Min)?: (\\d+)$");
     private static final Pattern PROFESSION_REQ_PATTERN = Pattern.compile("^§(.).À?§7 (\\w+)? Lv\\. Min: (\\d+)$");
@@ -69,15 +77,37 @@ public final class ActivityModel extends Model {
     private static final ScoreboardPart TRACKER_SCOREBOARD_PART = new ActivityTrackerScoreboardPart();
     private static final ContentBookQueries CONTAINER_QUERIES = new ContentBookQueries();
     private static final DialogueHistoryQueries DIALOGUE_HISTORY_QUERIES = new DialogueHistoryQueries();
+    public static final ActivityMarkerProvider ACTIVITY_MARKER_PROVIDER = new ActivityMarkerProvider();
 
     private TrackedActivity trackedActivity;
     private List<List<StyledText>> dialogueHistory = List.of();
     private CappedValue overallProgress = CappedValue.EMPTY;
 
-    public ActivityModel() {
-        super(List.of());
+    public ActivityModel(MarkerModel markerModel) {
+        super(List.of(markerModel));
 
         Handlers.Scoreboard.addPart(TRACKER_SCOREBOARD_PART);
+        Models.Marker.registerMarkerProvider(ACTIVITY_MARKER_PROVIDER);
+    }
+
+    @SubscribeEvent
+    public void onSetSpawn(SetSpawnEvent e) {
+        Location spawn = new Location(e.getSpawnPos());
+        if (spawn.equals(WORLD_SPAWN) || spawn.equals(HUB_SPAWN)) {
+            ACTIVITY_MARKER_PROVIDER.setSpawnLocation(null);
+            return;
+        }
+
+        var player = Location.containing(McUtils.player().position());
+        if (spawn.equals(player)) {
+            // Wynncraft "resets" tracking by setting the compass to your current
+            // location. In theory, this can fail if you happen to be standing on
+            // the spot that is the target of the activity you start tracking...
+            ACTIVITY_MARKER_PROVIDER.setSpawnLocation(null);
+            return;
+        }
+
+        ACTIVITY_MARKER_PROVIDER.setSpawnLocation(spawn);
     }
 
     public ActivityInfo parseItem(String name, ActivityType type, ItemStack itemStack) {
@@ -239,12 +269,6 @@ public final class ActivityModel extends Model {
         return trackedActivity.trackedTask();
     }
 
-    public Location getTrackedLocation() {
-        if (trackedActivity == null) return null;
-
-        return StyledTextUtils.extractLocation(trackedActivity.trackedTask()).orElse(null);
-    }
-
     public QuestInfo getTrackedQuestInfo() {
         if (trackedActivity == null) return null;
 
@@ -258,7 +282,10 @@ public final class ActivityModel extends Model {
     }
 
     void updateTracker(String name, String type, StyledText nextTask) {
-        trackedActivity = new TrackedActivity(name, ActivityType.from(type), nextTask);
+        ActivityType trackedType = ActivityType.from(type);
+        trackedActivity = new TrackedActivity(name, trackedType, nextTask);
+        ACTIVITY_MARKER_PROVIDER.setTrackedActivityLocation(
+                getTrackedLocation(), BeaconColor.fromActivityType(trackedType));
 
         WynntilsMod.postEvent(new ActivityTrackerUpdatedEvent(
                 trackedActivity.trackedType(), trackedActivity.trackedName(), trackedActivity.trackedTask()));
@@ -266,6 +293,7 @@ public final class ActivityModel extends Model {
 
     void resetTracker() {
         trackedActivity = null;
+        ACTIVITY_MARKER_PROVIDER.setTrackedActivityLocation(null, null);
     }
 
     public void scanContentBook(
@@ -318,6 +346,10 @@ public final class ActivityModel extends Model {
     void setDialogueHistory(List<List<StyledText>> newDialogueHistory) {
         dialogueHistory = newDialogueHistory;
         WynntilsMod.postEvent(new DialogueHistoryReloadedEvent());
+    }
+
+    private Location getTrackedLocation() {
+        return StyledTextUtils.extractLocation(trackedActivity.trackedTask()).orElse(null);
     }
 
     private record TrackedActivity(String trackedName, ActivityType trackedType, StyledText trackedTask) {}

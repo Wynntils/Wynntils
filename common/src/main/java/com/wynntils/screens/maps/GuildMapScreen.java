@@ -268,15 +268,17 @@ public final class GuildMapScreen extends AbstractMapScreen {
                 && hovered instanceof TerritoryPoi territoryPoi) {
             McUtils.sendCommand("gu territory " + territoryPoi.getName());
         } else if (button == GLFW.GLFW_MOUSE_BUTTON_MIDDLE) {
+            int gameX = (int) ((mouseX - centerX) / currentZoom + mapCenterX);
+            int gameZ = (int) ((mouseY - centerZ) / currentZoom + mapCenterZ);
+            Location location = new Location(gameX, 0, gameZ);
+
             if (hovered instanceof WaypointPoi) {
-                Models.Compass.reset();
+                Models.Marker.USER_WAYPOINTS_PROVIDER.removeLocation(location);
                 return true;
             }
 
-            int gameX = (int) ((mouseX - centerX) / currentZoom + mapCenterX);
-            int gameZ = (int) ((mouseY - centerZ) / currentZoom + mapCenterZ);
             McUtils.playSoundUI(SoundEvents.EXPERIENCE_ORB_PICKUP);
-            Models.Compass.setCompassLocation(new Location(gameX, 0, gameZ));
+            Models.Marker.USER_WAYPOINTS_PROVIDER.addLocation(location);
             return true;
         }
 
@@ -326,7 +328,7 @@ public final class GuildMapScreen extends AbstractMapScreen {
             renderedPois.addAll(advancementPois);
         }
 
-        Models.Compass.getCompassWaypoint().ifPresent(renderedPois::add);
+        Models.Marker.USER_WAYPOINTS_PROVIDER.getWaypointPois().forEach(renderedPois::add);
 
         renderPois(
                 renderedPois,

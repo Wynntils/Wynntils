@@ -56,7 +56,7 @@ public class ContentBookDumpFeature extends Feature {
     // Temporary hack...
     private static final Gson GSON = new GsonBuilder()
             .registerTypeAdapter(CustomColor.class, new CustomColor.CustomColorSerializer())
-            .registerTypeAdapterFactory(new JsonManager.EnumTypeAdapterFactory())
+            .registerTypeAdapterFactory(new JsonManager.EnumTypeAdapterFactory<>())
             .enableComplexMapKeySerialization()
             .setPrettyPrinting()
             .serializeNulls()
@@ -78,7 +78,7 @@ public class ContentBookDumpFeature extends Feature {
     public void onSetSpawn(SetSpawnEvent event) {
         if (currentlyTracking == null) return;
 
-        Location currentTracker = Models.Compass.getSpawnTracker();
+        Location currentTracker = Models.Activity.ACTIVITY_MARKER_PROVIDER.getSpawnLocation();
         if (lastTrackedLocation != currentTracker && currentTracker != null) {
             currentDump.remove(currentlyTracking);
 
@@ -146,7 +146,7 @@ public class ContentBookDumpFeature extends Feature {
 
         // Track the activity
         currentlyTracking = info;
-        lastTrackedLocation = Models.Compass.getSpawnTracker();
+        lastTrackedLocation = Models.Activity.ACTIVITY_MARKER_PROVIDER.getSpawnLocation();
         WynntilsMod.info("Tracking " + info.name());
         Models.Activity.startTracking(info.name(), info.type());
     }
