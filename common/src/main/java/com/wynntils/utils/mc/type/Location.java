@@ -10,6 +10,7 @@ import java.util.Comparator;
 import java.util.Objects;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Position;
+import net.minecraft.core.PositionImpl;
 import net.minecraft.world.phys.Vec3;
 
 public class Location implements Comparable<Location> {
@@ -46,6 +47,18 @@ public class Location implements Comparable<Location> {
         return new Location(MathUtils.floor(x), MathUtils.floor(y), MathUtils.floor(z));
     }
 
+    public int x() {
+        return x;
+    }
+
+    public int y() {
+        return y;
+    }
+
+    public int z() {
+        return z;
+    }
+
     public Location offset(int dx, int dy, int dz) {
         return new Location(this.x() + dx, this.y() + dy, this.z() + dz);
     }
@@ -56,6 +69,14 @@ public class Location implements Comparable<Location> {
 
     public Vec3 toVec3() {
         return new Vec3(x, y, z);
+    }
+
+    public Position toPosition() {
+        return new PositionImpl(x, y, z);
+    }
+
+    public boolean equalsIgnoringY(Location other) {
+        return this.x() == other.x() && this.z() == other.z();
     }
 
     @Override
@@ -74,18 +95,6 @@ public class Location implements Comparable<Location> {
     @Override
     public String toString() {
         return "[" + this.x + ", " + this.y + ", " + this.z + "]";
-    }
-
-    public int x() {
-        return x;
-    }
-
-    public int y() {
-        return y;
-    }
-
-    public int z() {
-        return z;
     }
 
     @Override
