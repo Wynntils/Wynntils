@@ -53,7 +53,7 @@ public class ActivityMarkerProvider implements MarkerProvider {
     }
 
     @Override
-    public Stream<MarkerInfo> getCompassInfos() {
+    public Stream<MarkerInfo> getMarkerInfos() {
         Stream<MarkerInfo> stream = Stream.empty();
 
         if (spawnInfo != null) {

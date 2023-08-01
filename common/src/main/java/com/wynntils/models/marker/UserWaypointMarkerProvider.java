@@ -64,7 +64,7 @@ public class UserWaypointMarkerProvider implements MarkerProvider {
     }
 
     @Override
-    public Stream<MarkerInfo> getCompassInfos() {
+    public Stream<MarkerInfo> getMarkerInfos() {
         return markerInfoSet.stream().map(Pair::a);
     }
 

@@ -100,7 +100,7 @@ public class CompassCommand extends Command {
 
     private int shareCompassIndex(CommandContext<CommandSourceStack> context) {
         List<MarkerInfo> markers =
-                Models.Marker.USER_WAYPOINTS_PROVIDER.getCompassInfos().toList();
+                Models.Marker.USER_WAYPOINTS_PROVIDER.getMarkerInfos().toList();
 
         if (markers.isEmpty()) {
             context.getSource()
@@ -119,7 +119,7 @@ public class CompassCommand extends Command {
 
     private int shareCompass(CommandContext<CommandSourceStack> context) {
         List<MarkerInfo> markers =
-                Models.Marker.USER_WAYPOINTS_PROVIDER.getCompassInfos().toList();
+                Models.Marker.USER_WAYPOINTS_PROVIDER.getMarkerInfos().toList();
 
         if (markers.isEmpty()) {
             context.getSource()

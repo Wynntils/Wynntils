@@ -169,7 +169,7 @@ public final class MainMapScreen extends AbstractMapScreen {
                     }
 
                     List<MarkerInfo> markers = Models.Marker.USER_WAYPOINTS_PROVIDER
-                            .getCompassInfos()
+                            .getMarkerInfos()
                             .toList();
                     if (!markers.isEmpty()) {
                         int index = markers.indexOf(focusedMarker);
@@ -347,7 +347,7 @@ public final class MainMapScreen extends AbstractMapScreen {
 
         if (button == GLFW.GLFW_MOUSE_BUTTON_RIGHT) {
             List<MarkerInfo> markers =
-                    Models.Marker.USER_WAYPOINTS_PROVIDER.getCompassInfos().toList();
+                    Models.Marker.USER_WAYPOINTS_PROVIDER.getMarkerInfos().toList();
             if (McUtils.player().isShiftKeyDown() && !markers.isEmpty()) {
                 int index = markers.indexOf(focusedMarker);
                 MarkerInfo markerInfo = markers.get((index + 1) % markers.size());
@@ -426,7 +426,7 @@ public final class MainMapScreen extends AbstractMapScreen {
 
     private void shareLocationOrCompass(int button) {
         List<MarkerInfo> markers =
-                Models.Marker.USER_WAYPOINTS_PROVIDER.getCompassInfos().toList();
+                Models.Marker.USER_WAYPOINTS_PROVIDER.getMarkerInfos().toList();
 
         boolean shareCompass = KeyboardUtils.isShiftDown() && !markers.isEmpty();
 

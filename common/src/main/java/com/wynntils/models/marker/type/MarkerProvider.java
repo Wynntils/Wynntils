@@ -7,7 +7,7 @@ package com.wynntils.models.marker.type;
 import java.util.stream.Stream;
 
 public interface MarkerProvider {
-    Stream<MarkerInfo> getCompassInfos();
+    Stream<MarkerInfo> getMarkerInfos();
 
     boolean isEnabled();
 }

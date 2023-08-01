@@ -27,6 +27,6 @@ public class MarkerModel extends Model {
     }
 
     public Stream<MarkerInfo> getAllMarkers() {
-        return markerProviders.stream().filter(MarkerProvider::isEnabled).flatMap(MarkerProvider::getCompassInfos);
+        return markerProviders.stream().filter(MarkerProvider::isEnabled).flatMap(MarkerProvider::getMarkerInfos);
     }
 }

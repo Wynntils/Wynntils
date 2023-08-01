@@ -11,7 +11,7 @@ import java.util.stream.Stream;
 
 public class LootrunBeaconMarkerProvider implements MarkerProvider {
     @Override
-    public Stream<MarkerInfo> getCompassInfos() {
+    public Stream<MarkerInfo> getMarkerInfos() {
         // TODO: Implement this
         return Stream.of();
     }
