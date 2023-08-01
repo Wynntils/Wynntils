@@ -2,7 +2,7 @@
  * Copyright © Wynntils 2022-2023.
  * This file is released under AGPLv3. See LICENSE for full license details.
  */
-package com.wynntils.screens.translation.widgets;
+package com.wynntils.screens.transliteration.widgets;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.wynntils.core.components.Models;
