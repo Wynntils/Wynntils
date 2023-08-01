@@ -5,15 +5,36 @@
 package com.wynntils.models.lootrun.markers;
 
 import com.wynntils.core.components.Models;
+import com.wynntils.models.beacons.type.Beacon;
+import com.wynntils.models.lootrun.type.TaskLocation;
 import com.wynntils.models.marker.type.MarkerInfo;
 import com.wynntils.models.marker.type.MarkerProvider;
+import com.wynntils.models.marker.type.StaticLocationSupplier;
+import com.wynntils.utils.colors.CommonColors;
+import com.wynntils.utils.render.Texture;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
 import java.util.stream.Stream;
 
 public class LootrunBeaconMarkerProvider implements MarkerProvider {
+    private List<MarkerInfo> taskMarkers = new ArrayList<>();
+
+    public void reloadTaskMarkers() {
+        taskMarkers.clear();
+
+        for (Map.Entry<Beacon, TaskLocation> entry : Models.Lootrun.getBeacons().entrySet()) {
+            taskMarkers.add(new MarkerInfo(
+                    new StaticLocationSupplier(entry.getValue().location()),
+                    Texture.WAYPOINT,
+                    entry.getKey().color().getColor(),
+                    CommonColors.WHITE));
+        }
+    }
+
     @Override
     public Stream<MarkerInfo> getMarkerInfos() {
-        // TODO: Implement this
-        return Stream.of();
+        return taskMarkers.stream();
     }
 
     @Override

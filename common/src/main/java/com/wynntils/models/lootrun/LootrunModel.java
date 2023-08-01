@@ -181,9 +181,13 @@ public class LootrunModel extends Model {
         taskType = null;
         beaconUpdates = new HashMap<>();
         beacons = new HashMap<>();
+        LOOTRUN_BEACON_COMPASS_PROVIDER.reloadTaskMarkers();
 
         selectedBeacons = new TreeMap<>();
         closestBeacon = null;
+
+        // We set this here too because this might be used by beacons before the scoreboard is updated.
+        location = LootrunLocation.fromCoordinates(McUtils.mc().player.position());
     }
 
     @SubscribeEvent
@@ -209,6 +213,7 @@ public class LootrunModel extends Model {
             // New prediction is the same as the old one. We got the same prediction multiple times in a row.
             if (pair.a() + 1 >= BEACON_UPDATE_CHANGE_THRESHOLD) {
                 beacons.put(beacon, taskPrediction);
+                LOOTRUN_BEACON_COMPASS_PROVIDER.reloadTaskMarkers();
                 beaconUpdates.remove(beacon);
 
                 McUtils.sendMessageToClient(Component.literal(
@@ -245,6 +250,7 @@ public class LootrunModel extends Model {
             closestBeaconStorage.touched();
         } else {
             beacons.remove(beacon);
+            LOOTRUN_BEACON_COMPASS_PROVIDER.reloadTaskMarkers();
             beaconUpdates.remove(beacon);
         }
     }
@@ -256,6 +262,7 @@ public class LootrunModel extends Model {
 
         TaskLocation taskPrediction = getBeaconTaskLocationPrediction(beacon);
         beacons.put(beacon, taskPrediction);
+        LOOTRUN_BEACON_COMPASS_PROVIDER.reloadTaskMarkers();
         McUtils.sendMessageToClient(
                 Component.literal("Task location prediction for " + beacon.color() + " is " + taskPrediction));
     }
@@ -274,6 +281,10 @@ public class LootrunModel extends Model {
 
     public Optional<LootrunTaskType> getTaskType() {
         return Optional.ofNullable(taskType);
+    }
+
+    public Map<Beacon, TaskLocation> getBeacons() {
+        return beacons;
     }
 
     public void setState(LootrunningState newState, LootrunTaskType taskType) {
