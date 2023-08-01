@@ -568,6 +568,9 @@ public abstract class ClientPacketListenerMixin {
     private void handleAddEntity(ClientboundAddEntityPacket packet, CallbackInfo ci, @Local Entity entity) {
         if (!isRenderThread()) return;
 
+        // This mixin is added after the last actual instruction, where the local variable entity
+        // still exists.
+
         MixinHelper.post(new AddEntityEvent(packet, entity));
     }
 

@@ -13,6 +13,7 @@ import com.wynntils.models.beacons.event.BeaconEvent;
 import com.wynntils.models.beacons.type.BeaconColor;
 import com.wynntils.models.beacons.type.UnverifiedBeacon;
 import com.wynntils.models.beacons.type.VerifiedBeacon;
+import com.wynntils.utils.mc.PosUtils;
 import com.wynntils.utils.type.TimedSet;
 import java.util.HashSet;
 import java.util.List;
@@ -26,6 +27,7 @@ import net.minecraftforge.eventbus.api.SubscribeEvent;
 
 public class BeaconModel extends Model {
     // Amount of armor stands above each other to consider this a beacon
+    // (A beacon typically has around 17 in total)
     private static final int VERIFICATION_ENTITY_COUNT = 6;
 
     private final TimedSet<UnverifiedBeacon> unverifiedBeacons = new TimedSet<>(1000, TimeUnit.MILLISECONDS, true);
@@ -107,7 +109,7 @@ public class BeaconModel extends Model {
     private boolean isDuplicateBeacon(Position position) {
         return verifiedBeacons.stream().anyMatch(verifiedBeacon -> {
             Position beaconPosition = verifiedBeacon.getPosition();
-            return beaconPosition.x() == position.x() && beaconPosition.z() == position.z();
+            return PosUtils.equalsIgnoringY(position, beaconPosition);
         });
     }
 
@@ -115,7 +117,7 @@ public class BeaconModel extends Model {
         return unverifiedBeacons.stream()
                 .filter(unverifiedBeacon -> {
                     Position beaconPosition = unverifiedBeacon.getPosition();
-                    return beaconPosition.x() == position.x() && beaconPosition.z() == position.z();
+                    return PosUtils.equalsIgnoringY(position, beaconPosition);
                 })
                 .findFirst()
                 .orElse(null);
