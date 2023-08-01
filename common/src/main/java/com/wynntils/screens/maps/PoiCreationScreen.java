@@ -30,6 +30,7 @@ import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.resources.language.I18n;
 import net.minecraft.network.chat.Component;
+import org.lwjgl.glfw.GLFW;
 
 public final class PoiCreationScreen extends WynntilsScreen {
     private static final Pattern COORDINATE_PATTERN = Pattern.compile("[-+]?\\d+");
@@ -394,6 +395,34 @@ public final class PoiCreationScreen extends WynntilsScreen {
         RenderSystem.disableBlend();
         RenderSystem.defaultBlendFunc();
         RenderSystem.setShaderColor(1, 1, 1, 1);
+    }
+
+    @Override
+    public boolean keyPressed(int keyCode, int scanCode, int modifiers) {
+        // When tab is pressed, focus the next text box
+        if (keyCode == GLFW.GLFW_KEY_TAB) {
+            int index = getFocused() == null ? 0 : children().indexOf(getFocused());
+            int actualIndex = Math.max(index, 0) + 1;
+
+            // Try to find next text input
+            // From index - end
+            for (int i = actualIndex; i < children().size(); i++) {
+                if (children().get(i) instanceof TextInputBoxWidget textInputBoxWidget) {
+                    setFocused(textInputBoxWidget);
+                    return true;
+                }
+            }
+
+            // From 0 - index
+            for (int i = 0; i < Math.min(actualIndex, children().size()); i++) {
+                if (children().get(i) instanceof TextInputBoxWidget textInputBoxWidget) {
+                    setFocused(textInputBoxWidget);
+                    return true;
+                }
+            }
+        }
+
+        return super.keyPressed(keyCode, scanCode, modifiers);
     }
 
     @Override

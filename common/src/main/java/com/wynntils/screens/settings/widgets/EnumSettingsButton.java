@@ -19,10 +19,10 @@ public class EnumSettingsButton<E extends Enum<E>> extends GeneralSettingsButton
     private final ConfigHolder configHolder;
     private final List<E> enumConstants;
 
-    public EnumSettingsButton(ConfigHolder configHolder) {
+    public EnumSettingsButton(int x, int y, ConfigHolder configHolder) {
         super(
-                0,
-                7,
+                x,
+                y,
                 getWidth(configHolder.getType()),
                 FontRenderer.getInstance().getFont().lineHeight + 8,
                 Component.literal(configHolder.getValueString()),

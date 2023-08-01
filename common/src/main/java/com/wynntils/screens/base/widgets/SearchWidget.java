@@ -137,9 +137,14 @@ public class SearchWidget extends TextInputBoxWidget {
         return this.width - 18;
     }
 
+    @Override
+    protected void removeFocus() {
+        this.setTextBoxInput("");
+        super.removeFocus();
+    }
+
     public void opened() {
         setCursorPosition(textBoxInput.length());
         setHighlightPosition(0);
-        focus();
     }
 }

@@ -82,11 +82,11 @@ public class ScrollButton extends WynntilsButton {
     @Override
     public boolean mouseReleased(double mouseX, double mouseY, int button) {
         currentUnusedDrag = 0;
-        return true;
+        return super.mouseReleased(mouseX, mouseY, button);
     }
 
     @Override
-    public boolean mouseDragged(double mouseX, double mouseY, int button, double dragX, double dragY) {
+    public void onDrag(double mouseX, double mouseY, double dragX, double dragY) {
         currentUnusedDrag += dragY;
 
         while (currentUnusedDrag >= requiredChangePerElement) {
@@ -98,8 +98,6 @@ public class ScrollButton extends WynntilsButton {
             scroll(-1);
             currentUnusedDrag += requiredChangePerElement;
         }
-
-        return true;
     }
 
     @Override

@@ -18,10 +18,9 @@ import com.wynntils.utils.render.type.VerticalAlignment;
 import java.util.List;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.gui.components.AbstractWidget;
-import net.minecraft.client.gui.components.events.AbstractContainerEventHandler;
 import net.minecraft.client.gui.components.events.GuiEventListener;
 
-public class ConfigTile extends AbstractContainerEventHandler {
+public class ConfigTile {
     private final int x;
     private final int y;
     private final int width;
@@ -40,9 +39,12 @@ public class ConfigTile extends AbstractContainerEventHandler {
         this.height = height;
         this.settingsScreen = settingsScreen;
         this.configHolder = configHolder;
-        this.configOptionElement = getWidgetFromConfigHolder(configHolder);
+        this.configOptionElement = getWidgetFromConfigHolder(x + 3, y + 19, configHolder);
         this.resetButton = new ResetButton(
-                configHolder, () -> configOptionElement = getWidgetFromConfigHolder(configHolder), width - 37, 0);
+                configHolder,
+                () -> configOptionElement = getWidgetFromConfigHolder(x + 3, y + 19, configHolder),
+                x + width - 40,
+                y + 12);
     }
 
     public void renderWidgets(PoseStack poseStack, int mouseX, int mouseY, float partialTick) {
@@ -58,13 +60,8 @@ public class ConfigTile extends AbstractContainerEventHandler {
                 0,
                 1);
 
-        poseStack.pushPose();
-        final int renderX = getXOffset();
-        final int renderY = getYOffset();
-        poseStack.translate(renderX, renderY, 0);
-        resetButton.render(poseStack, mouseX - renderX, mouseY - renderY, partialTick);
-        configOptionElement.render(poseStack, mouseX - renderX, mouseY - renderY, partialTick);
-        poseStack.popPose();
+        resetButton.render(poseStack, mouseX, mouseY, partialTick);
+        configOptionElement.render(poseStack, mouseX, mouseY, partialTick);
     }
 
     private void renderDisplayName(PoseStack poseStack) {
@@ -77,7 +74,7 @@ public class ConfigTile extends AbstractContainerEventHandler {
                 .renderText(
                         poseStack,
                         displayName,
-                        getXOffset() / 0.8f,
+                        (this.x + 3) / 0.8f,
                         (this.y + 3) / 0.8f,
                         CommonColors.BLACK,
                         HorizontalAlignment.LEFT,
@@ -86,43 +83,19 @@ public class ConfigTile extends AbstractContainerEventHandler {
         poseStack.popPose();
     }
 
-    private int getYOffset() {
-        return this.y + 12;
-    }
-
-    private int getXOffset() {
-        return this.x + 3;
-    }
-
-    private AbstractWidget getWidgetFromConfigHolder(ConfigHolder configOption) {
+    private AbstractWidget getWidgetFromConfigHolder(int x, int y, ConfigHolder configOption) {
         if (configOption.getType().equals(Boolean.class)) {
-            return new BooleanSettingsButton(configOption);
+            return new BooleanSettingsButton(x, y, configOption);
         } else if (configOption.isEnum()) {
-            return new EnumSettingsButton<>(configOption);
+            return new EnumSettingsButton<>(x, y, configOption);
         } else if (configOption.getType().equals(CustomColor.class)) {
-            return new CustomColorSettingsButton(configOption, settingsScreen);
+            return new CustomColorSettingsButton(x, y, configOption, settingsScreen);
         } else {
-            return new TextInputBoxSettingsWidget(configOption, settingsScreen);
+            return new TextInputBoxSettingsWidget(x, y, configOption, settingsScreen);
         }
     }
 
-    @Override
     public List<? extends GuiEventListener> children() {
         return List.of(resetButton, configOptionElement);
-    }
-
-    @Override
-    public boolean mouseClicked(double mouseX, double mouseY, int button) {
-        return super.mouseClicked(mouseX - getXOffset(), mouseY - getYOffset(), button);
-    }
-
-    @Override
-    public boolean mouseDragged(double mouseX, double mouseY, int button, double dragX, double dragY) {
-        return super.mouseDragged(mouseX - getXOffset(), mouseY - getYOffset(), button, dragX, dragY);
-    }
-
-    @Override
-    public boolean mouseReleased(double mouseX, double mouseY, int button) {
-        return super.mouseReleased(mouseX - getXOffset(), mouseY - getYOffset(), button);
     }
 }

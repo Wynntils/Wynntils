@@ -41,6 +41,7 @@ import java.util.Objects;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 import net.minecraft.ChatFormatting;
+import net.minecraft.client.gui.components.Renderable;
 import net.minecraft.client.gui.components.events.GuiEventListener;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.network.chat.Component;
@@ -53,7 +54,7 @@ public final class WynntilsBookSettingsScreen extends WynntilsScreen {
 
     private final SearchWidget searchWidget;
     private ScrollButton configurableListScrollButton;
-    private ScrollButton configListScrollButton;
+    private ScrollButton configListScrollButton = null;
 
     private Configurable selected = null;
 
@@ -142,7 +143,15 @@ public final class WynntilsBookSettingsScreen extends WynntilsScreen {
         int adjustedMouseX = mouseX - (int) getTranslationX();
         int adjustedMouseY = mouseY - (int) getTranslationY();
 
-        super.doRender(poseStack, adjustedMouseX, adjustedMouseY, partialTick);
+        for (Renderable renderable : renderables) {
+            renderable.render(poseStack, adjustedMouseX, adjustedMouseY, partialTick);
+        }
+
+        configurableListScrollButton.renderWidget(poseStack, adjustedMouseX, adjustedMouseY, partialTick);
+
+        if (configListScrollButton != null) {
+            configListScrollButton.renderWidget(poseStack, adjustedMouseX, adjustedMouseY, partialTick);
+        }
 
         // Reverse iteration for so tooltip Z levels are correct when rendering
         for (int i = Math.min(configs.size(), configScrollOffset + CONFIGS_PER_PAGE) - 1;
@@ -204,7 +213,7 @@ public final class WynntilsBookSettingsScreen extends WynntilsScreen {
             configurableListScrollButton.mouseScrolled(adjustedMouseX, adjustedMouseY, delta);
         } else if (configListScrollButton != null) {
             configListScrollButton.mouseScrolled(adjustedMouseX, adjustedMouseY, delta);
-        } else return false;
+        }
 
         return true;
     }
@@ -214,8 +223,9 @@ public final class WynntilsBookSettingsScreen extends WynntilsScreen {
         List<GuiEventListener> listeners = new ArrayList<>(configurables.subList(
                 configurableScrollOffset * CONFIGURABLES_PER_PAGE,
                 Math.min(configurables.size(), (configurableScrollOffset + 1) * CONFIGURABLES_PER_PAGE)));
-        listeners.addAll(
-                configs.subList(configScrollOffset, Math.min(configs.size(), configScrollOffset + CONFIGS_PER_PAGE)));
+        configs.subList(configScrollOffset, Math.min(configs.size(), configScrollOffset + CONFIGS_PER_PAGE)).stream()
+                .map(ConfigTile::children)
+                .forEach(listeners::addAll);
         listeners.addAll(super.children());
         return listeners;
     }
@@ -359,6 +369,10 @@ public final class WynntilsBookSettingsScreen extends WynntilsScreen {
     private void reloadConfigButtons() {
         configs.clear();
         configScrollOffset = 0;
+
+        if (configListScrollButton != null) {
+            removeWidget(configListScrollButton);
+        }
 
         if (selected == null) {
             configListScrollButton = null;

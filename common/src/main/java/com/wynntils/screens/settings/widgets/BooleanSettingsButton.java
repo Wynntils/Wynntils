@@ -15,10 +15,10 @@ import net.minecraft.network.chat.MutableComponent;
 public class BooleanSettingsButton extends GeneralSettingsButton {
     private final ConfigHolder configHolder;
 
-    public BooleanSettingsButton(ConfigHolder configHolder) {
+    public BooleanSettingsButton(int x, int y, ConfigHolder configHolder) {
         super(
-                0,
-                7,
+                x,
+                y,
                 50,
                 FontRenderer.getInstance().getFont().lineHeight + 8,
                 getTitle(configHolder),

@@ -14,14 +14,15 @@ public class TextInputBoxSettingsWidget extends TextInputBoxWidget {
     protected final ConfigHolder configHolder;
 
     protected TextInputBoxSettingsWidget(
-            ConfigHolder configHolder, ContainerEventHandler containerStateAccess, int width) {
-        super(0, 6, width, FontRenderer.getInstance().getFont().lineHeight + 8, null, containerStateAccess);
+            int x, int y, ConfigHolder configHolder, ContainerEventHandler containerStateAccess, int width) {
+        super(x, y - 1, width, FontRenderer.getInstance().getFont().lineHeight + 8, null, containerStateAccess);
         this.configHolder = configHolder;
         setTextBoxInput(configHolder.getValue().toString());
     }
 
-    public TextInputBoxSettingsWidget(ConfigHolder configHolder, ContainerEventHandler containerStateAccess) {
-        this(configHolder, containerStateAccess, 100);
+    public TextInputBoxSettingsWidget(
+            int x, int y, ConfigHolder configHolder, ContainerEventHandler containerStateAccess) {
+        this(x, y, configHolder, containerStateAccess, 100);
     }
 
     @Override

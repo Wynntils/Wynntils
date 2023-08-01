@@ -41,7 +41,9 @@ public class TextInputBoxWidget extends AbstractWidget {
     private boolean renderCursor = true;
     private CustomColor renderColor = CommonColors.WHITE;
 
-    private final ContainerEventHandler containerStateAccess;
+    protected boolean isDragging = false;
+
+    protected final ContainerEventHandler containerStateAccess;
     protected int textPadding = 2;
 
     protected TextInputBoxWidget(
@@ -260,7 +262,7 @@ public class TextInputBoxWidget extends AbstractWidget {
 
     @Override
     public boolean mouseClicked(double mouseX, double mouseY, int button) {
-        if (isHovered()) {
+        if (this.isHovered) {
             McUtils.playSoundUI(SoundEvents.UI_BUTTON_CLICK.value());
             if (button == GLFW.GLFW_MOUSE_BUTTON_2) {
                 setTextBoxInput("");
@@ -268,20 +270,30 @@ public class TextInputBoxWidget extends AbstractWidget {
             } else {
                 setCursorAndHighlightPositions(getIndexAtPosition(mouseX));
             }
+            isDragging = true;
             return true;
         }
         if (isFocused()) {
             McUtils.playSoundUI(SoundEvents.UI_BUTTON_CLICK.value());
             setCursorAndHighlightPositions(cursorPosition); // remove highlights when clicking off
-            unFocus();
+            removeFocus();
         }
 
         return false;
     }
 
     @Override
+    public boolean mouseReleased(double mouseX, double mouseY, int button) {
+        isDragging = false;
+        return true;
+    }
+
+    @Override
     public boolean mouseDragged(double mouseX, double mouseY, int button, double dragX, double dragY) {
-        setCursorPosition(getIndexAtPosition(mouseX));
+        if (isDragging) {
+            setCursorPosition(getIndexAtPosition(mouseX));
+        }
+
         return true;
     }
 
@@ -338,8 +350,8 @@ public class TextInputBoxWidget extends AbstractWidget {
 
     @Override
     public boolean keyPressed(int keyCode, int scanCode, int modifiers) {
-        if (keyCode == GLFW.GLFW_KEY_ESCAPE || keyCode == GLFW.GLFW_KEY_ENTER) {
-            unFocus();
+        if (keyCode == GLFW.GLFW_KEY_ESCAPE) {
+            removeFocus();
             return true;
         }
 
@@ -484,7 +496,7 @@ public class TextInputBoxWidget extends AbstractWidget {
 
     protected void drawCursor(
             PoseStack poseStack, float x, float y, VerticalAlignment verticalAlignment, boolean forceUnfocusedCursor) {
-        if (containerStateAccess.isDragging() || hasHighlighted()) return;
+        if (isDragging || hasHighlighted()) return;
 
         if (System.currentTimeMillis() - lastCursorSwitch > CURSOR_TICK) {
             renderCursor = !renderCursor;
@@ -505,6 +517,10 @@ public class TextInputBoxWidget extends AbstractWidget {
 
             RenderUtils.drawRect(poseStack, CommonColors.WHITE, x + 1, cursorRenderY, 0, 1, font.lineHeight + 3);
         }
+    }
+
+    protected void removeFocus() {
+        containerStateAccess.setFocused(null);
     }
 
     public void setTextBoxInput(String textBoxInput) {
@@ -571,16 +587,8 @@ public class TextInputBoxWidget extends AbstractWidget {
         this.onUpdateConsumer.accept(this.textBoxInput);
     }
 
-    public void unFocus() {
-        containerStateAccess.setFocused(null);
-    }
-
-    public void focus() {
-        containerStateAccess.setFocused(this);
-    }
-
     /**
-     *  Use {@link #focus} and {@link #unFocus} instead
+     *  Use {@link #unFocus} instead
      */
     @Override
     @Deprecated
