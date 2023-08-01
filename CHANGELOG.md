@@ -1,8 +1,16 @@
+## [0.0.3-alpha.256](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.255...v0.0.3-alpha.256) (2023-08-01)
+
+
+### Code Refactoring
+
+* Generify ConfigHolder ([#1911](https://github.com/Wynntils/Artemis/issues/1911)) ([3052ca7](https://github.com/Wynntils/Artemis/commit/3052ca7ab7c9a7c9833f98f53fa11fe5f0e53b06))
+
 ## [0.0.3-alpha.255](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.254...v0.0.3-alpha.255) (2023-08-01)
 
 
 ### Miscellaneous Chores
 
+* **release:** v0.0.3-alpha.255 [skip ci] ([2ac750c](https://github.com/Wynntils/Artemis/commit/2ac750c112a590ad3a0475a3692dcc596d93d507))
 * Restore proper zh_cn translation ([#1913](https://github.com/Wynntils/Artemis/issues/1913)) ([899a67d](https://github.com/Wynntils/Artemis/commit/899a67de0c2c51a2ea48f1cac7dd434cd60fb9b7))
 
 ## [0.0.3-alpha.254](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.253...v0.0.3-alpha.254) (2023-08-01)
@@ -36,16 +44,4 @@
 ### Miscellaneous Chores
 
 * **release:** v0.0.3-alpha.252 [skip ci] ([63eeeb4](https://github.com/Wynntils/Artemis/commit/63eeeb4383b4dff11dc99cde8d6712ac8cf6227c))
-
-## [0.0.3-alpha.251](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.250...v0.0.3-alpha.251) (2023-07-31)
-
-
-### New Features
-
-* Guild model chat detection ([#1866](https://github.com/Wynntils/Artemis/issues/1866)) ([de699d2](https://github.com/Wynntils/Artemis/commit/de699d29daad30b8a580b8f35aa44a5655bc0076))
-
-
-### Miscellaneous Chores
-
-* **release:** v0.0.3-alpha.251 [skip ci] ([b8abde7](https://github.com/Wynntils/Artemis/commit/b8abde7af8d252d536fc89f49d118bbd6e9d9c79))
 
