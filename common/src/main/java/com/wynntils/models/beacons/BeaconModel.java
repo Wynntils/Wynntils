@@ -82,8 +82,6 @@ public class BeaconModel extends Model {
 
     @SubscribeEvent
     public void onEntityTeleport(TeleportEntityEvent event) {
-        if (event.getEntity() == null) return;
-
         Beacon movedBeacon = verifiedBeacons.get(event.getEntity().getId());
         if (movedBeacon == null) return;
 
