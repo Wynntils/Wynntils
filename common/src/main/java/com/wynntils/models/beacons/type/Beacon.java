@@ -10,18 +10,12 @@ import java.util.List;
 import net.minecraft.world.entity.Entity;
 
 public final class Beacon {
-    private final List<Entity> entities;
     private Location location;
     private final BeaconColor color;
 
-    public Beacon(Location location, BeaconColor beaconColor, List<Entity> entities) {
+    public Beacon(Location location, BeaconColor beaconColor) {
         this.location = location;
         this.color = beaconColor;
-        this.entities = ImmutableList.copyOf(entities);
-    }
-
-    public Entity getBaseEntity() {
-        return entities.get(0);
     }
 
     public Location getLocation() {

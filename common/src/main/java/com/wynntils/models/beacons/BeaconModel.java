@@ -15,10 +15,9 @@ import com.wynntils.models.beacons.type.BeaconColor;
 import com.wynntils.utils.mc.type.Location;
 import com.wynntils.utils.type.TimedSet;
 import java.util.ArrayList;
-import java.util.HashSet;
+import java.util.HashMap;
 import java.util.List;
-import java.util.Optional;
-import java.util.Set;
+import java.util.Map;
 import java.util.concurrent.TimeUnit;
 import net.minecraft.core.Position;
 import net.minecraft.world.entity.Entity;
@@ -33,8 +32,7 @@ public class BeaconModel extends Model {
     private static final int VERIFICATION_ENTITY_COUNT = 6;
 
     private final TimedSet<UnverifiedBeacon> unverifiedBeacons = new TimedSet<>(1000, TimeUnit.MILLISECONDS, true);
-
-    private final Set<Beacon> verifiedBeacons = new HashSet<>();
+    private final Map<Integer, Beacon> verifiedBeacons = new HashMap<>();
 
     public BeaconModel() {
         super(List.of());
@@ -72,9 +70,9 @@ public class BeaconModel extends Model {
                 return;
             }
 
-            Beacon verifiedBeacon =
-                    new Beacon(unverifiedBeacon.getLocation(), beaconColor, unverifiedBeacon.getEntities());
-            verifiedBeacons.add(verifiedBeacon);
+            Beacon verifiedBeacon = new Beacon(unverifiedBeacon.getLocation(), beaconColor);
+            int baseEntityId = unverifiedBeacon.getEntities().get(0).getId();
+            verifiedBeacons.put(baseEntityId, verifiedBeacon);
             WynntilsMod.postEvent(new BeaconEvent.Added(verifiedBeacon));
 
             unverifiedBeacons.remove(unverifiedBeacon);
@@ -83,34 +81,24 @@ public class BeaconModel extends Model {
 
     @SubscribeEvent
     public void onEntityTeleport(TeleportEntityEvent event) {
-        Optional<Beacon> verifiedBeaconOpt = verifiedBeacons.stream()
-                .filter(verifiedBeacon -> verifiedBeacon.getBaseEntity().equals(event.getEntity()))
-                .findFirst();
+        Beacon verifiedBeacon = verifiedBeacons.get(event.getEntity().getId());
+        if (verifiedBeacon == null) return;
 
-        if (verifiedBeaconOpt.isEmpty()) return;
-
-        Beacon verifiedBeacon = verifiedBeaconOpt.get();
         verifiedBeacon.updateLocation(Location.containing(event.getNewPosition()));
         WynntilsMod.postEvent(new BeaconEvent.Moved(verifiedBeacon));
     }
 
     @SubscribeEvent
     public void onEntityRemoved(RemoveEntitiesEvent event) {
-        List<Integer> entityIds = event.getEntityIds();
-
-        List<Beacon> removedBeacons = verifiedBeacons.stream()
-                .filter(verifiedBeacon ->
-                        entityIds.contains(verifiedBeacon.getBaseEntity().getId()))
-                .toList();
-
-        for (Beacon removedBeacon : removedBeacons) {
-            verifiedBeacons.remove(removedBeacon);
+        event.getEntityIds().stream().filter(verifiedBeacons::containsKey).forEach(entityId -> {
+            Beacon removedBeacon = verifiedBeacons.get(entityId);
+            verifiedBeacons.remove(entityId);
             WynntilsMod.postEvent(new BeaconEvent.Removed(removedBeacon));
-        }
+        });
     }
 
     private boolean isDuplicateBeacon(Location location) {
-        return verifiedBeacons.stream()
+        return verifiedBeacons.values().stream()
                 .anyMatch(verifiedBeacon -> location.equalsIgnoringY(verifiedBeacon.getLocation()));
     }
 
