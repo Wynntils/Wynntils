@@ -8,6 +8,7 @@ import com.wynntils.core.consumers.commands.CommandManager;
 import com.wynntils.core.consumers.features.FeatureManager;
 import com.wynntils.core.consumers.functions.FunctionManager;
 import com.wynntils.core.consumers.overlays.OverlayManager;
+import com.wynntils.core.json.JsonManager;
 import com.wynntils.core.keybinds.KeyBindManager;
 import com.wynntils.core.mod.ConnectionManager;
 import com.wynntils.core.mod.CrashReportManager;
@@ -17,7 +18,6 @@ import com.wynntils.core.net.UrlManager;
 import com.wynntils.core.notifications.NotificationManager;
 import com.wynntils.core.persisted.PersistedManager;
 import com.wynntils.core.persisted.config.ConfigManager;
-import com.wynntils.core.persisted.json.JsonManager;
 import com.wynntils.core.persisted.storage.StorageManager;
 import com.wynntils.core.persisted.upfixers.ConfigUpfixerManager;
 
