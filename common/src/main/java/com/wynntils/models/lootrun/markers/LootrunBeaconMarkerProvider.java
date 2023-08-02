@@ -11,7 +11,6 @@ import com.wynntils.models.marker.type.MarkerInfo;
 import com.wynntils.models.marker.type.MarkerProvider;
 import com.wynntils.models.marker.type.StaticLocationSupplier;
 import com.wynntils.utils.colors.CommonColors;
-import com.wynntils.utils.render.Texture;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -26,7 +25,7 @@ public class LootrunBeaconMarkerProvider implements MarkerProvider {
         for (Map.Entry<Beacon, TaskLocation> entry : Models.Lootrun.getBeacons().entrySet()) {
             taskMarkers.add(new MarkerInfo(
                     new StaticLocationSupplier(entry.getValue().location()),
-                    Texture.WAYPOINT,
+                    entry.getValue().taskType().getTexture(),
                     entry.getKey().color().getColor(),
                     CommonColors.WHITE));
         }
@@ -39,6 +38,6 @@ public class LootrunBeaconMarkerProvider implements MarkerProvider {
 
     @Override
     public boolean isEnabled() {
-        return Models.Lootrun.getState().isRunning();
+        return Models.Lootrun.getState().isRunning(); // fixme disable this via config
     }
 }

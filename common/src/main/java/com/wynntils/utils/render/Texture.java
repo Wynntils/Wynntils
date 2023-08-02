@@ -173,7 +173,13 @@ public enum Texture {
     BOAT_BUTTON("boat_button.png", 39, 76),
     DESTINATION_BUTTON("destination_button.png", 66, 40),
     DESTINATION_LIST("destination_list.png", 143, 205),
-    TRAVEL_BUTTON("travel_button.png", 100, 76);
+    TRAVEL_BUTTON("travel_button.png", 100, 76),
+
+    // Lootrun
+    SPELUNK("lootrun/spelunk.png", 18, 16),
+    DEFEND("lootrun/defend.png", 28, 32),
+    SLAY("lootrun/slay.png", 42, 38),
+    DESTROY("map/map_icons/grind_spot.png", 12, 12); // fixme temp
 
     private final ResourceLocation resource;
     private final int width;

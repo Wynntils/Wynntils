@@ -89,6 +89,9 @@ public class LootrunModel extends Model {
     // Lower values update faster, higher values update slower, but are much more consistent.
     private static final int BEACON_UPDATE_CHANGE_THRESHOLD = 6;
 
+    // Beacon positions are sometimes off by a few blocks
+    private static final int BEACON_POSITION_ERROR = 3;
+
     private static final LootrunScoreboardPart LOOTRUN_SCOREBOARD_PART = new LootrunScoreboardPart();
 
     private static final LootrunBeaconMarkerProvider LOOTRUN_BEACON_COMPASS_PROVIDER =
@@ -246,11 +249,12 @@ public class LootrunModel extends Model {
         if (newBeaconDistanceToPlayer < BEACON_REMOVAL_RADIUS
                 && newBeaconDistanceToPlayer < oldBeaconDistanceToPlayer) {
             setClosestBeacon(event.getBeacon());
-        } else {
-            beacons.remove(beacon);
-            LOOTRUN_BEACON_COMPASS_PROVIDER.reloadTaskMarkers();
-            beaconUpdates.remove(beacon);
         }
+
+        // Note: If we get more accurate predictions, we don't need to remove if we are close.
+        beacons.remove(beacon);
+        LOOTRUN_BEACON_COMPASS_PROVIDER.reloadTaskMarkers();
+        beaconUpdates.remove(beacon);
     }
 
     @SubscribeEvent
@@ -369,6 +373,10 @@ public class LootrunModel extends Model {
             // 3: wynn beacon
             Vector2i beaconPosition =
                     new Vector2i(beacon.location().x(), beacon.location().z());
+
+            if (taskLocationPosition.distance(beaconPosition) < BEACON_POSITION_ERROR) {
+                return currentTaskLocation;
+            }
 
             // d = ((x2 - x1)(y1 - y3) - (x1 - x3)(y2 - y1)) / sqrt((x2 - x1)^2 + (y2 - y1)^2)
             double distance = Math.abs(
