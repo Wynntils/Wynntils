@@ -93,11 +93,6 @@ public class LootrunModel extends Model {
     // Beacon positions are sometimes off by a few blocks
     private static final int BEACON_POSITION_ERROR = 3;
 
-    // We use an exponential factor to calculate the task prediction accuracy
-    // The closer we are, we want distance to have less effect on the accuracy
-    // The further we are, we want distance to have more effect on the accuracy
-    private static final double BEACON_LOCATION_EXPONENTIAL_FACTOR = 2.5d;
-
     private static final LootrunScoreboardPart LOOTRUN_SCOREBOARD_PART = new LootrunScoreboardPart();
 
     private static final LootrunBeaconMarkerProvider LOOTRUN_BEACON_COMPASS_PROVIDER =
@@ -205,6 +200,12 @@ public class LootrunModel extends Model {
         if (!beaconColor.isUsedInLootruns()) return;
 
         Pair<Double, TaskLocation> taskPrediction = getBeaconTaskLocationPrediction(beacon);
+
+        if (taskPrediction == null) {
+            WynntilsMod.warn("Could not predict updated task location for beacon " + beaconColor);
+            return;
+        }
+
         Pair<Double, TaskLocation> oldPrediction = beacons.get(beaconColor);
 
         // No prediction yet, or prediction is worse than the old one
@@ -276,6 +277,11 @@ public class LootrunModel extends Model {
         if (!beacon.color().isUsedInLootruns()) return;
 
         Pair<Double, TaskLocation> taskPrediction = getBeaconTaskLocationPrediction(beacon);
+        if (taskPrediction == null) {
+            WynntilsMod.warn("Failed to get task prediction for beacon " + beacon.color() + " at " + beacon.location());
+            return;
+        }
+
         beacons.put(beacon.color(), taskPrediction);
         LOOTRUN_BEACON_COMPASS_PROVIDER.reloadTaskMarkers();
         McUtils.sendMessageToClient(
@@ -436,15 +442,10 @@ public class LootrunModel extends Model {
             double area = Math.sqrt(
                     s * (s - taskLocationDistanceToPlayer) * (s - playerDistanceToBeacon) * (s - beaconPositionToTask));
 
+            // The prediction score is the distance from the line
             // Calculate the height of the triangle formed by the player, beacon, and task location with the base being
             // the line between the player and the task location.
-            double wynnBeaconDistanceFromLine = 2 * area / taskLocationDistanceToPlayer;
-
-            // The prediction score is the distance from the line times the distance from the player to the task
-            // This is done so because getting further from the beacon gives us worse reliability,
-            // so we want to preserve the closest prediction.
-            double predictionScore = wynnBeaconDistanceFromLine
-                    * Math.pow(taskLocationDistanceToPlayer, BEACON_LOCATION_EXPONENTIAL_FACTOR);
+            double predictionScore = 2 * area / taskLocationDistanceToPlayer;
 
             if (predictionScore < lowestPredictionScore) {
                 lowestPredictionScore = predictionScore;
