@@ -406,7 +406,7 @@
   "feature.wynntils.infoBox.overlay.infoBox.name": "Info Box %d",
   "feature.wynntils.ingredientPouchHotkey.description": "Adds the ability to open the ingredient pouch with a keybind.",
   "feature.wynntils.ingredientPouchHotkey.name": "Ingredient Pouch Keybind",
-  "feature.wynntils.inputTranscription.description": "Adds the ability to transcribe sent messages into Gavellian and Wynnic.",
+  "feature.wynntils.inputTranscription.description": "Adds the ability to transcribe sent messages into Gavellian and Wynnic by surrounding text in <<>> for Gavellian and [[]] for Wynnic.",
   "feature.wynntils.inputTranscription.name": "Transcribe Sent Messages",
   "feature.wynntils.inputTranscription.transcriptionButtons.description": "Do you want to add buttons to the end of your chat input to choose which alphabet you want to type in?",
   "feature.wynntils.inputTranscription.transcriptionButtons.name": "Transcription Buttons",
