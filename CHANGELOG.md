@@ -1,4 +1,16 @@
+## [0.0.3-alpha.262](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.261...v0.0.3-alpha.262) (2023-08-02)
+
+
+### Bug Fixes
+
+* Fix beacon counter incrementing by two rarely and persisting issues ([#1925](https://github.com/Wynntils/Artemis/issues/1925)) ([664c373](https://github.com/Wynntils/Artemis/commit/664c3733fd1b2ca59a905704398302ad91b5dc25))
+
 ## [0.0.3-alpha.261](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.260...v0.0.3-alpha.261) (2023-08-02)
+
+
+### Miscellaneous Chores
+
+* **release:** v0.0.3-alpha.261 [skip ci] ([ace4e59](https://github.com/Wynntils/Artemis/commit/ace4e596a6370a29dd9a70a24317e13b0da04177))
 
 
 ### Code Refactoring
@@ -45,16 +57,4 @@
 ### Miscellaneous Chores
 
 * **release:** v0.0.3-alpha.258 [skip ci] ([2a01302](https://github.com/Wynntils/Artemis/commit/2a01302637ea4d992fcbe71a242d0c869e02be17))
-
-## [0.0.3-alpha.257](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.256...v0.0.3-alpha.257) (2023-08-01)
-
-
-### Bug Fixes
-
-* Party finder filter does not match "1 other player" ([#1919](https://github.com/Wynntils/Artemis/issues/1919)) ([892fb4f](https://github.com/Wynntils/Artemis/commit/892fb4f26e7e20df993a6ed02a37b99384ff444b))
-
-
-### Miscellaneous Chores
-
-* **release:** v0.0.3-alpha.257 [skip ci] ([252f628](https://github.com/Wynntils/Artemis/commit/252f6284a2b87b615d5f2fe143643ec43988c151))
 
