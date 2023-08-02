@@ -23,8 +23,8 @@ import com.wynntils.mc.event.ChatSentEvent;
 import com.wynntils.mc.event.CommandSentEvent;
 import com.wynntils.mc.event.EditBoxInsertEvent;
 import com.wynntils.mc.event.ScreenInitEvent;
-import com.wynntils.models.wynnlanguage.WynnLanguage;
-import com.wynntils.screens.transliteration.widgets.WynnLanguageButton;
+import com.wynntils.models.wynnlanguage.WynnAlphabet;
+import com.wynntils.screens.transcription.widgets.WynnAlphabetButton;
 import com.wynntils.utils.colors.ColorChatFormatting;
 import com.wynntils.utils.mc.McUtils;
 import com.wynntils.utils.type.IterationDecision;
@@ -44,22 +44,22 @@ import net.minecraftforge.eventbus.api.SubscribeEvent;
 import org.lwjgl.glfw.GLFW;
 
 @ConfigCategory(Category.UTILITIES)
-public class GavellianAndWynnicTransliterationFeature extends Feature {
+public class GavellianAndWynnicTranscriptionFeature extends Feature {
     @RegisterConfig
-    public final Config<Boolean> transliterateChat = new Config<>(true);
+    public final Config<Boolean> transcriptChat = new Config<>(true);
 
     @RegisterConfig
-    public final Config<Boolean> transliterateNpcs = new Config<>(true);
+    public final Config<Boolean> transcriptNpcs = new Config<>(true);
 
     @RegisterConfig
-    public final Config<TransliterationCondition> transliterateCondition =
-            new Config<>(TransliterationCondition.ALWAYS);
+    public final Config<TranscriptCondition> transcriptCondition =
+            new Config<>(TranscriptCondition.ALWAYS);
 
     @RegisterConfig
     public final Config<Boolean> useBrackets = new Config<>(false);
 
     @RegisterConfig
-    public final Config<Boolean> coloredTransliterations = new Config<>(true);
+    public final Config<Boolean> coloredTranscriptions = new Config<>(true);
 
     @RegisterConfig
     public final Config<ColorChatFormatting> gavellianColor = new Config<>(ColorChatFormatting.LIGHT_PURPLE);
@@ -69,7 +69,7 @@ public class GavellianAndWynnicTransliterationFeature extends Feature {
 
     private static final int MAX_CHAT_LENGTH = 256;
     // Numbers higher than this will be replaced with "∞"
-    private static final int MAX_TRANSLITERABLE_NUMBER = 5000;
+    private static final int MAX_TRANSCRIPTABLE_NUMBER = 5000;
     private static final Pattern END_OF_HEADER_PATTERN = Pattern.compile(".*[\\]:]\\s?");
     private static final Pattern NUMBER_PATTERN = Pattern.compile("\\d+");
     private static final Pattern WYNNIC_NUMBER_PATTERN = Pattern.compile("[⑴-⑿]+");
@@ -84,13 +84,13 @@ public class GavellianAndWynnicTransliterationFeature extends Feature {
             chatScreen.width -= 45;
             int xOffset = chatScreen.width + 1;
 
-            addLanguageButton(chatScreen, xOffset, WynnLanguage.DEFAULT);
+            addLanguageButton(chatScreen, xOffset, WynnAlphabet.DEFAULT);
             xOffset += 15;
 
-            addLanguageButton(chatScreen, xOffset, WynnLanguage.WYNNIC);
+            addLanguageButton(chatScreen, xOffset, WynnAlphabet.WYNNIC);
             xOffset += 15;
 
-            addLanguageButton(chatScreen, xOffset, WynnLanguage.GAVELLIAN);
+            addLanguageButton(chatScreen, xOffset, WynnAlphabet.GAVELLIAN);
         }
     }
 
@@ -100,15 +100,15 @@ public class GavellianAndWynnicTransliterationFeature extends Feature {
         if (useBrackets.get()) return;
         if (event.getTextToWrite().isBlank()) return;
 
-        WynnLanguage selectedLanguage = Models.WynnLanguage.getSelectedLanguage();
+        WynnAlphabet selectedLanguage = Models.WynnLanguage.getSelectedLanguage();
 
-        if (selectedLanguage == WynnLanguage.DEFAULT) return;
+        if (selectedLanguage == WynnAlphabet.DEFAULT) return;
 
         // Can't use parseInt here as '０', '１', '２' are used for '.', '!', '?' in Wynnic
         Matcher numMatcher = NUMBER_PATTERN.matcher(event.getTextToWrite());
 
         if (numMatcher.matches()) {
-            if (selectedLanguage != WynnLanguage.WYNNIC) return;
+            if (selectedLanguage != WynnAlphabet.WYNNIC) return;
 
             handleTypedNumber(
                     Integer.parseInt(event.getTextToWrite()),
@@ -116,7 +116,7 @@ public class GavellianAndWynnicTransliterationFeature extends Feature {
                     event,
                     chatScreen);
         } else {
-            List<Character> replacementList = selectedLanguage == WynnLanguage.GAVELLIAN
+            List<Character> replacementList = selectedLanguage == WynnAlphabet.GAVELLIAN
                     ? Models.WynnLanguage.getGavellianCharacters()
                     : Models.WynnLanguage.getWynnicCharacters();
 
@@ -163,7 +163,7 @@ public class GavellianAndWynnicTransliterationFeature extends Feature {
         String message = event.getMessage();
 
         if (useBrackets.get() && containsBrackets(message)) {
-            String updatedMessage = transliterateSentMessage(message, event);
+            String updatedMessage = transcriptSentMessage(message, event);
 
             updatedMessage = updatedMessage.substring(0, Math.min(updatedMessage.length(), MAX_CHAT_LENGTH));
 
@@ -176,7 +176,7 @@ public class GavellianAndWynnicTransliterationFeature extends Feature {
         String command = event.getCommand();
 
         if (useBrackets.get() && containsBrackets(command)) {
-            String updatedCommand = transliterateSentMessage(command, event);
+            String updatedCommand = transcriptSentMessage(command, event);
 
             updatedCommand = updatedCommand.substring(0, Math.min(updatedCommand.length(), MAX_CHAT_LENGTH));
 
@@ -186,20 +186,20 @@ public class GavellianAndWynnicTransliterationFeature extends Feature {
 
     @SubscribeEvent(priority = EventPriority.HIGHEST)
     public void onChat(ChatMessageReceivedEvent event) {
-        if (!transliterateChat.get()) return;
+        if (!transcriptChat.get()) return;
         if (!Models.WynnLanguage.hasWynnicOrGavellian(event.getStyledText().getString())) return;
 
-        boolean transliterateWynnic =
-                Models.WynnLanguage.shouldTransliterate(transliterateCondition.get(), WynnLanguage.WYNNIC);
-        boolean transliterateGavellian =
-                Models.WynnLanguage.shouldTransliterate(transliterateCondition.get(), WynnLanguage.GAVELLIAN);
+        boolean transcriptWynnic =
+                Models.WynnLanguage.shouldTranscript(transcriptCondition.get(), WynnAlphabet.WYNNIC);
+        boolean transcriptGavellian =
+                Models.WynnLanguage.shouldTranscript(transcriptCondition.get(), WynnAlphabet.GAVELLIAN);
 
-        if (!transliterateWynnic && !transliterateGavellian) return;
+        if (!transcriptWynnic && !transcriptGavellian) return;
 
         StyledText styledText = event.getStyledText();
 
         StyledText modified =
-                getStyledTextWithTransliteration(styledText, transliterateWynnic, transliterateGavellian, false);
+                getStyledTextWithTranscription(styledText, transcriptWynnic, transcriptGavellian, false);
 
         if (styledText.getString().equalsIgnoreCase(modified.getString())) return;
 
@@ -208,46 +208,46 @@ public class GavellianAndWynnicTransliterationFeature extends Feature {
 
     @SubscribeEvent(priority = EventPriority.HIGHEST)
     public void onNpcDialogue(NpcDialogEvent event) {
-        if (!transliterateNpcs.get()) return;
+        if (!transcriptNpcs.get()) return;
         if (!Models.WynnLanguage.hasWynnicOrGavellian(event.getChatMessage().toString())) return;
 
-        boolean transliterateWynnic =
-                Models.WynnLanguage.shouldTransliterate(transliterateCondition.get(), WynnLanguage.WYNNIC);
-        boolean transliterateGavellian =
-                Models.WynnLanguage.shouldTransliterate(transliterateCondition.get(), WynnLanguage.GAVELLIAN);
+        boolean transcriptWynnic =
+                Models.WynnLanguage.shouldTranscript(transcriptCondition.get(), WynnAlphabet.WYNNIC);
+        boolean transcriptGavellian =
+                Models.WynnLanguage.shouldTranscript(transcriptCondition.get(), WynnAlphabet.GAVELLIAN);
 
-        if (!transliterateWynnic && !transliterateGavellian) return;
+        if (!transcriptWynnic && !transcriptGavellian) return;
 
         event.setCanceled(true);
 
         if (!event.getChatMessage().isEmpty()) {
-            List<Component> transliteratedComponents = event.getChatMessage().stream()
-                    .map(styledText -> getStyledTextWithTransliteration(
-                            StyledText.fromComponent(styledText), transliterateWynnic, transliterateGavellian, true))
+            List<Component> transcriptedComponents = event.getChatMessage().stream()
+                    .map(styledText -> getStyledTextWithTranscription(
+                            StyledText.fromComponent(styledText), transcriptWynnic, transcriptGavellian, true))
                     .map(s -> ((Component) s.getComponent()))
                     .toList();
 
             Managers.TickScheduler.scheduleNextTick(() -> {
-                NpcDialogEvent transliteratedEvent = new WynnTransliteratedNpcDialogEvent(
-                        transliteratedComponents, event.getType(), event.isProtected());
-                WynntilsMod.postEvent(transliteratedEvent);
+                NpcDialogEvent transcriptedEvent = new WynnTranscriptedNpcDialogEvent(
+                        transcriptedComponents, event.getType(), event.isProtected());
+                WynntilsMod.postEvent(transcriptedEvent);
             });
         } else {
-            NpcDialogEvent transliteratedEvent =
-                    new WynnTransliteratedNpcDialogEvent(List.of(), event.getType(), event.isProtected());
-            WynntilsMod.postEvent(transliteratedEvent);
+            NpcDialogEvent transcriptedEvent =
+                    new WynnTranscriptedNpcDialogEvent(List.of(), event.getType(), event.isProtected());
+            WynntilsMod.postEvent(transcriptedEvent);
         }
     }
 
-    private void addLanguageButton(ChatScreen chatScreen, int xOffset, WynnLanguage language) {
-        chatScreen.addRenderableWidget(new WynnLanguageButton(xOffset, chatScreen.height - 14, 12, 12, language));
+    private void addLanguageButton(ChatScreen chatScreen, int xOffset, WynnAlphabet language) {
+        chatScreen.addRenderableWidget(new WynnAlphabetButton(xOffset, chatScreen.height - 14, 12, 12, language));
     }
 
     private boolean containsBrackets(String message) {
         return (message.contains("{") && message.contains("}")) || (message.contains("<") && message.contains(">"));
     }
 
-    private String transliterateSentMessage(String message, Event event) {
+    private String transcriptSentMessage(String message, Event event) {
         Pattern bracketPattern = Pattern.compile("\\{([^}]*)\\}|<([^>]*)>");
 
         List<String> wynnicSubstring = new ArrayList<>();
@@ -270,21 +270,21 @@ public class GavellianAndWynnicTransliterationFeature extends Feature {
         StringBuilder updatedMessage = new StringBuilder(message);
 
         for (String wynnicText : wynnicSubstring) {
-            String transliteratedText = Models.WynnLanguage.getSentMessageWithTransliteration(
-                    wynnicText.toLowerCase(Locale.ROOT), WynnLanguage.WYNNIC);
-            replaceTransliterated(updatedMessage, "{" + wynnicText + "}", transliteratedText);
+            String transcriptedText = Models.WynnLanguage.getSentMessageWithTranscription(
+                    wynnicText.toLowerCase(Locale.ROOT), WynnAlphabet.WYNNIC);
+            replaceTranscripted(updatedMessage, "{" + wynnicText + "}", transcriptedText);
         }
 
         for (String gavellianText : gavellianSubstring) {
-            String transliteratedText = Models.WynnLanguage.getSentMessageWithTransliteration(
-                    gavellianText.toLowerCase(Locale.ROOT), WynnLanguage.GAVELLIAN);
-            replaceTransliterated(updatedMessage, "<" + gavellianText + ">", transliteratedText);
+            String transcriptedText = Models.WynnLanguage.getSentMessageWithTranscription(
+                    gavellianText.toLowerCase(Locale.ROOT), WynnAlphabet.GAVELLIAN);
+            replaceTranscripted(updatedMessage, "<" + gavellianText + ">", transcriptedText);
         }
 
         return updatedMessage.toString();
     }
 
-    private void replaceTransliterated(StringBuilder stringBuilder, String original, String replacement) {
+    private void replaceTranscripted(StringBuilder stringBuilder, String original, String replacement) {
         int index = stringBuilder.indexOf(original);
 
         while (index != -1) {
@@ -360,79 +360,79 @@ public class GavellianAndWynnicTransliterationFeature extends Feature {
     }
 
     private void updateInput(String beforeCursor, String afterCursor, int num, EditBox chatInput) {
-        String transliteratedNum = num > MAX_TRANSLITERABLE_NUMBER ? "∞" : Models.WynnLanguage.intToWynnicNum(num);
+        String transcriptedNum = num > MAX_TRANSCRIPTABLE_NUMBER ? "∞" : Models.WynnLanguage.intToWynnicNum(num);
 
-        String newInput = beforeCursor + transliteratedNum + afterCursor;
+        String newInput = beforeCursor + transcriptedNum + afterCursor;
 
         if (newInput.length() > MAX_CHAT_LENGTH) return;
 
-        int newCursorPos = beforeCursor.length() + transliteratedNum.length();
+        int newCursorPos = beforeCursor.length() + transcriptedNum.length();
 
         chatInput.setValue(newInput);
 
         chatInput.moveCursorTo(newCursorPos);
     }
 
-    private StyledText getStyledTextWithTransliteration(
-            StyledText original, boolean transliterateWynnic, boolean transliterateGavellian, boolean npcDialogue) {
+    private StyledText getStyledTextWithTranscription(
+            StyledText original, boolean transcriptWynnic, boolean transcriptGavellian, boolean npcDialogue) {
         ChatFormatting defaultColor = npcDialogue
                 ? ColorChatFormatting.GREEN.getChatFormatting()
                 : ColorChatFormatting.WHITE.getChatFormatting();
 
         return original.iterateBackwards((part, changes) -> {
             String partText = part.getString(null, PartStyle.StyleType.NONE);
-            String transliteratedText = partText;
+            String transcriptedText = partText;
 
             if (END_OF_HEADER_PATTERN.matcher(partText).matches()) {
                 return IterationDecision.BREAK;
             }
 
-            if (transliterateWynnic) {
+            if (transcriptWynnic) {
                 Matcher numMatcher = WYNNIC_NUMBER_PATTERN.matcher(partText);
 
-                if (coloredTransliterations.get()) {
-                    transliteratedText =
+                if (coloredTranscriptions.get()) {
+                    transcriptedText =
                             numMatcher.replaceAll(match -> wynnicColor.get().getChatFormatting()
                                     + String.valueOf(Models.WynnLanguage.wynnicNumToInt(match.group()))
                                     + ColorChatFormatting.WHITE.getChatFormatting());
                 } else {
-                    transliteratedText = numMatcher.replaceAll(
+                    transcriptedText = numMatcher.replaceAll(
                             match -> String.valueOf(Models.WynnLanguage.wynnicNumToInt(match.group())));
                 }
 
-                transliteratedText = Models.WynnLanguage.getStringWithTransliteration(
-                        transliteratedText,
-                        WynnLanguage.WYNNIC,
-                        coloredTransliterations.get(),
+                transcriptedText = Models.WynnLanguage.getStringWithTranscription(
+                        transcriptedText,
+                        WynnAlphabet.WYNNIC,
+                        coloredTranscriptions.get(),
                         wynnicColor.get().getChatFormatting(),
                         defaultColor);
             }
 
-            if (transliterateGavellian) {
-                transliteratedText = Models.WynnLanguage.getStringWithTransliteration(
-                        transliteratedText,
-                        WynnLanguage.GAVELLIAN,
-                        coloredTransliterations.get(),
+            if (transcriptGavellian) {
+                transcriptedText = Models.WynnLanguage.getStringWithTranscription(
+                        transcriptedText,
+                        WynnAlphabet.GAVELLIAN,
+                        coloredTranscriptions.get(),
                         gavellianColor.get().getChatFormatting(),
                         defaultColor);
             }
 
             changes.remove(part);
             StyledTextPart newPart =
-                    new StyledTextPart(transliteratedText, part.getPartStyle().getStyle(), null, Style.EMPTY);
+                    new StyledTextPart(transcriptedText, part.getPartStyle().getStyle(), null, Style.EMPTY);
             changes.add(newPart);
 
             return IterationDecision.CONTINUE;
         });
     }
 
-    private static class WynnTransliteratedNpcDialogEvent extends NpcDialogEvent {
-        protected WynnTransliteratedNpcDialogEvent(List<Component> chatMsg, NpcDialogueType type, boolean isProtected) {
+    private static class WynnTranscriptedNpcDialogEvent extends NpcDialogEvent {
+        protected WynnTranscriptedNpcDialogEvent(List<Component> chatMsg, NpcDialogueType type, boolean isProtected) {
             super(chatMsg, type, isProtected);
         }
     }
 
-    public enum TransliterationCondition {
+    public enum TranscriptCondition {
         ALWAYS,
         DISCOVERY,
         TRANSCRIBER,

@@ -12,7 +12,7 @@ import com.wynntils.core.config.RegisterConfig;
 import com.wynntils.core.consumers.features.Feature;
 import com.wynntils.core.consumers.features.properties.RegisterKeyBind;
 import com.wynntils.core.keybinds.KeyBind;
-import com.wynntils.models.wynnlanguage.WynnLanguage;
+import com.wynntils.models.wynnlanguage.WynnAlphabet;
 import com.wynntils.utils.mc.McUtils;
 import net.minecraft.client.gui.screens.ChatScreen;
 import org.lwjgl.glfw.GLFW;
@@ -98,7 +98,7 @@ public class CustomCommandKeybindsFeature extends Feature {
             () -> this.executeKeybind(keybindCommand6.get(), commandType6.get()));
 
     private void executeKeybind(String keybindCommand, CommandType commandType) {
-        Models.WynnLanguage.setSelectedLanguage(WynnLanguage.DEFAULT);
+        Models.WynnLanguage.setSelectedLanguage(WynnAlphabet.DEFAULT);
 
         switch (commandType) {
             case EXECUTE -> McUtils.sendCommand(keybindCommand);

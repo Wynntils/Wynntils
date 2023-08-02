@@ -2,12 +2,12 @@
  * Copyright © Wynntils 2022-2023.
  * This file is released under AGPLv3. See LICENSE for full license details.
  */
-package com.wynntils.screens.transliteration.widgets;
+package com.wynntils.screens.transcription.widgets;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.wynntils.core.components.Models;
 import com.wynntils.core.text.StyledText;
-import com.wynntils.models.wynnlanguage.WynnLanguage;
+import com.wynntils.models.wynnlanguage.WynnAlphabet;
 import com.wynntils.screens.base.widgets.WynntilsButton;
 import com.wynntils.utils.colors.CommonColors;
 import com.wynntils.utils.colors.CustomColor;
@@ -18,17 +18,17 @@ import com.wynntils.utils.render.type.TextShadow;
 import com.wynntils.utils.render.type.VerticalAlignment;
 import net.minecraft.network.chat.Component;
 
-public class WynnLanguageButton extends WynntilsButton {
-    private final WynnLanguage wynnLanguage;
+public class WynnAlphabetButton extends WynntilsButton {
+    private final WynnAlphabet wynnAlphabet;
 
-    public WynnLanguageButton(int x, int y, int width, int height, WynnLanguage wynnLanguage) {
-        super(x, y, width, height, Component.literal("Wynn Language Button"));
-        this.wynnLanguage = wynnLanguage;
+    public WynnAlphabetButton(int x, int y, int width, int height, WynnAlphabet wynnAlphabet) {
+        super(x, y, width, height, Component.literal("Wynn Alphabet Button"));
+        this.wynnAlphabet = wynnAlphabet;
     }
 
     @Override
     public void renderWidget(PoseStack poseStack, int mouseX, int mouseY, float partialTick) {
-        if (wynnLanguage == null) return;
+        if (wynnAlphabet == null) return;
 
         RenderUtils.drawRect(
                 poseStack, CommonColors.BLACK.withAlpha(isHovered ? 0.7f : 0.5f), getX(), getY(), 0, width, height);
@@ -37,7 +37,7 @@ public class WynnLanguageButton extends WynntilsButton {
 
         StyledText buttonText;
 
-        switch (wynnLanguage) {
+        switch (wynnAlphabet) {
             case WYNNIC -> buttonText = StyledText.fromString("W");
             case GAVELLIAN -> buttonText = StyledText.fromString("G");
             default -> buttonText = StyledText.fromString("N");
@@ -59,7 +59,7 @@ public class WynnLanguageButton extends WynntilsButton {
     }
 
     private CustomColor getButtonColor() {
-        if (Models.WynnLanguage.getSelectedLanguage() == wynnLanguage) {
+        if (Models.WynnLanguage.getSelectedLanguage() == wynnAlphabet) {
             return CommonColors.GREEN;
         } else {
             return CommonColors.WHITE;
@@ -70,7 +70,7 @@ public class WynnLanguageButton extends WynntilsButton {
     public boolean mouseClicked(double mouseX, double mouseY, int button) {
         if (!isMouseOver(mouseX, mouseY)) return false;
 
-        Models.WynnLanguage.setSelectedLanguage(wynnLanguage);
+        Models.WynnLanguage.setSelectedLanguage(wynnAlphabet);
 
         return false;
     }

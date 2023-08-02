@@ -7,7 +7,7 @@ package com.wynntils.models.wynnlanguage;
 import com.wynntils.core.components.Model;
 import com.wynntils.core.components.Models;
 import com.wynntils.core.text.StyledText;
-import com.wynntils.features.utilities.GavellianAndWynnicTransliterationFeature;
+import com.wynntils.features.utilities.GavellianAndWynnicTranscriptionFeature;
 import com.wynntils.models.activities.discoveries.DiscoveryInfo;
 import com.wynntils.models.activities.type.ActivitySortOrder;
 import com.wynntils.utils.mc.McUtils;
@@ -23,9 +23,9 @@ import net.minecraft.ChatFormatting;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.item.ItemStack;
 
-public class WynnLanguageModel extends Model {
+public class WynnAlphabetModel extends Model {
     private static final int FIFTY_INDEX = 10;
-    private static final int MAX_TRANSLITERABLE_NUMBER = 5000;
+    private static final int MAX_TRANSCRIBABLE_NUMBER = 5000;
     private static final int ONE_HUNDERED_INDEX = 11;
     private static final int TEN_INDEX = 9;
     private static final List<Character> englishCharacters = List.of(
@@ -50,15 +50,15 @@ public class WynnLanguageModel extends Model {
     private static final StyledText GAVELLIAN_TRANSCRIBER = StyledText.fromString("§rHigh Gavellian Transcriber");
     private static final StyledText WYNNIC_TRANSCRIBER = StyledText.fromString("§fAncient Wynnic Transcriber");
 
-    private WynnLanguage selectedLanguage = WynnLanguage.DEFAULT;
+    private WynnAlphabet selectedLanguage = WynnAlphabet.DEFAULT;
 
-    public WynnLanguageModel() {
+    public WynnAlphabetModel() {
         super(List.of());
 
-        createTransliterationMaps();
+        createTranscribableMaps();
     }
 
-    private void createTransliterationMaps() {
+    private void createTranscribableMaps() {
         for (int i = 0; i < gavellianCharacters.size(); i++) {
             gavellianToEnglishMap.put(gavellianCharacters.get(i), englishCharacters.get(i));
         }
@@ -76,83 +76,67 @@ public class WynnLanguageModel extends Model {
         }
     }
 
-    public Character transliterateGavellianToEnglish(Character characterToTransliterate) {
-        return gavellianToEnglishMap.getOrDefault(characterToTransliterate, characterToTransliterate);
-    }
-
-    public Character transliterateWynnicToEnglish(Character characterToTransliterate) {
-        return wynnicToEnglishMap.getOrDefault(characterToTransliterate, characterToTransliterate);
-    }
-
-    public Character transliterateEnglishToGavellian(Character characterToTransliterate) {
-        return englishToGavellianMap.getOrDefault(characterToTransliterate, characterToTransliterate);
-    }
-
-    public Character transliterateEnglishToWynnic(Character characterToTransliterate) {
-        return englishToWynnicMap.getOrDefault(characterToTransliterate, characterToTransliterate);
-    }
-
-    public String getStringWithTransliteration(
+    public String getStringWithTranscription(
             String original,
-            WynnLanguage language,
+            WynnAlphabet language,
             boolean useColors,
             ChatFormatting colorToUse,
             ChatFormatting defaultColor) {
-        String transliterated = original.toLowerCase(Locale.ROOT);
+        String transcripted = original.toLowerCase(Locale.ROOT);
 
         for (char character : original.toCharArray()) {
-            Character replacement = language == WynnLanguage.GAVELLIAN
-                    ? Models.WynnLanguage.transliterateGavellianToEnglish(character)
-                    : Models.WynnLanguage.transliterateWynnicToEnglish(character);
+            Character replacement = language == WynnAlphabet.GAVELLIAN
+                    ? Models.WynnLanguage.transcribeGavellianToEnglish(character)
+                    : Models.WynnLanguage.transcribeWynnicToEnglish(character);
 
             if (!replacement.equals(character)) {
                 if (useColors) {
-                    transliterated = transliterated.replace(
+                    transcripted = transcripted.replace(
                             Character.valueOf(character).toString(),
                             colorToUse + replacement.toString() + defaultColor);
                 } else {
-                    transliterated = transliterated.replace(character, replacement);
+                    transcripted = transcripted.replace(character, replacement);
                 }
             }
         }
 
-        return transliterated;
+        return transcripted;
     }
 
-    public String getSentMessageWithTransliteration(String original, WynnLanguage language) {
-        String transliterated = original.toLowerCase(Locale.ROOT);
+    public String getSentMessageWithTranscription(String original, WynnAlphabet language) {
+        String transcripted = original.toLowerCase(Locale.ROOT);
 
-        if (language == WynnLanguage.GAVELLIAN) {
+        if (language == WynnAlphabet.GAVELLIAN) {
             for (char character : original.toCharArray()) {
-                Character replacement = Models.WynnLanguage.transliterateEnglishToGavellian(character);
+                Character replacement = Models.WynnLanguage.transcribeEnglishToGavellian(character);
 
                 if (!replacement.equals(character)) {
-                    transliterated = transliterated.replace(character, replacement);
+                    transcripted = transcripted.replace(character, replacement);
                 }
             }
         } else {
-            Matcher numMatcher = NUMBER_PATTERN.matcher(transliterated);
+            Matcher numMatcher = NUMBER_PATTERN.matcher(transcripted);
 
-            transliterated = numMatcher.replaceAll(match -> {
-                int numToTransliterate = Integer.parseInt(match.group());
+            transcripted = numMatcher.replaceAll(match -> {
+                int numToTranscript = Integer.parseInt(match.group());
 
-                if (numToTransliterate > MAX_TRANSLITERABLE_NUMBER) {
+                if (numToTranscript > MAX_TRANSCRIBABLE_NUMBER) {
                     return "∞";
                 } else {
-                    return Models.WynnLanguage.intToWynnicNum(numToTransliterate);
+                    return Models.WynnLanguage.intToWynnicNum(numToTranscript);
                 }
             });
 
             for (char character : original.toCharArray()) {
-                Character replacement = Models.WynnLanguage.transliterateEnglishToWynnic(character);
+                Character replacement = Models.WynnLanguage.transcribeEnglishToWynnic(character);
 
                 if (!replacement.equals(character)) {
-                    transliterated = transliterated.replace(character, replacement);
+                    transcripted = transcripted.replace(character, replacement);
                 }
             }
         }
 
-        return transliterated;
+        return transcripted;
     }
 
     public int calculateWynnicNum(String wynnicNums, int numToAdd) {
@@ -217,16 +201,16 @@ public class WynnLanguageModel extends Model {
         return wynnicNums.toString();
     }
 
-    public boolean shouldTransliterate(
-            GavellianAndWynnicTransliterationFeature.TransliterationCondition condition, WynnLanguage language) {
+    public boolean shouldTranscript(
+            GavellianAndWynnicTranscriptionFeature.TranscriptCondition condition, WynnAlphabet language) {
         return switch (condition) {
             case NEVER -> false;
-            case TRANSCRIBER -> language == WynnLanguage.WYNNIC
-                    ? hasTranscriber(WynnLanguage.WYNNIC)
-                    : hasTranscriber(WynnLanguage.GAVELLIAN);
-            case DISCOVERY -> language == WynnLanguage.WYNNIC
-                    ? hasCompletedDiscovery(WynnLanguage.WYNNIC)
-                    : hasCompletedDiscovery(WynnLanguage.GAVELLIAN);
+            case TRANSCRIBER -> language == WynnAlphabet.WYNNIC
+                    ? hasTranscriber(WynnAlphabet.WYNNIC)
+                    : hasTranscriber(WynnAlphabet.GAVELLIAN);
+            case DISCOVERY -> language == WynnAlphabet.WYNNIC
+                    ? hasCompletedDiscovery(WynnAlphabet.WYNNIC)
+                    : hasCompletedDiscovery(WynnAlphabet.GAVELLIAN);
             default -> true;
         };
     }
@@ -243,13 +227,29 @@ public class WynnLanguageModel extends Model {
         return false;
     }
 
-    private boolean hasTranscriber(WynnLanguage transciberToFind) {
+    private Character transcribeGavellianToEnglish(Character characterToTranscribe) {
+        return gavellianToEnglishMap.getOrDefault(characterToTranscribe, characterToTranscribe);
+    }
+
+    private Character transcribeWynnicToEnglish(Character characterToTranscribe) {
+        return wynnicToEnglishMap.getOrDefault(characterToTranscribe, characterToTranscribe);
+    }
+
+    private Character transcribeEnglishToGavellian(Character characterToTranscribe) {
+        return englishToGavellianMap.getOrDefault(characterToTranscribe, characterToTranscribe);
+    }
+
+    private Character transcribeEnglishToWynnic(Character characterToTranscribe) {
+        return englishToWynnicMap.getOrDefault(characterToTranscribe, characterToTranscribe);
+    }
+
+    private boolean hasTranscriber(WynnAlphabet transciberToFind) {
         Inventory inventory = McUtils.inventory();
 
         for (int slotNum = 0; slotNum < Inventory.INVENTORY_SIZE; slotNum++) {
             ItemStack itemStack = inventory.getItem(slotNum);
 
-            if (transciberToFind == WynnLanguage.WYNNIC) {
+            if (transciberToFind == WynnAlphabet.WYNNIC) {
                 if (StyledText.fromComponent(itemStack.getHoverName()).equals(WYNNIC_TRANSCRIBER)) {
                     return true;
                 }
@@ -263,11 +263,11 @@ public class WynnLanguageModel extends Model {
         return false;
     }
 
-    private boolean hasCompletedDiscovery(WynnLanguage discoveryToCheck) {
+    private boolean hasCompletedDiscovery(WynnAlphabet discoveryToCheck) {
         Stream<DiscoveryInfo> discoveryInfoStream =
                 Models.Discovery.getAllCompletedDiscoveries(ActivitySortOrder.ALPHABETIC);
 
-        String nameToFind = discoveryToCheck == WynnLanguage.WYNNIC
+        String nameToFind = discoveryToCheck == WynnAlphabet.WYNNIC
                 ? WYNNIC_TRANSCRIBER_DISCOVERY
                 : GAVELLIAN_TRANSCRIBER_DISCOVERY;
 
@@ -278,11 +278,11 @@ public class WynnLanguageModel extends Model {
         return foundDiscoveryInfo.map(DiscoveryInfo::isDiscovered).orElse(false);
     }
 
-    public void setSelectedLanguage(WynnLanguage selectedLanguage) {
+    public void setSelectedLanguage(WynnAlphabet selectedLanguage) {
         this.selectedLanguage = selectedLanguage;
     }
 
-    public WynnLanguage getSelectedLanguage() {
+    public WynnAlphabet getSelectedLanguage() {
         return selectedLanguage;
     }
 

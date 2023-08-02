@@ -4,7 +4,7 @@
  */
 package com.wynntils.models.wynnlanguage;
 
-public enum WynnLanguage {
+public enum WynnAlphabet {
     DEFAULT,
     GAVELLIAN,
     WYNNIC
