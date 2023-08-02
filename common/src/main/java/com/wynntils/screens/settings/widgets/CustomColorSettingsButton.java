@@ -5,7 +5,7 @@
 package com.wynntils.screens.settings.widgets;
 
 import com.mojang.blaze3d.vertex.PoseStack;
-import com.wynntils.core.config.Config;
+import com.wynntils.core.persisted.config.Config;
 import com.wynntils.screens.base.TextboxScreen;
 import com.wynntils.utils.colors.CustomColor;
 import com.wynntils.utils.render.RenderUtils;

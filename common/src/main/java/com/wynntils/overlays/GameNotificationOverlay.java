@@ -6,7 +6,6 @@ package com.wynntils.overlays;
 
 import com.mojang.blaze3d.platform.Window;
 import com.mojang.blaze3d.vertex.PoseStack;
-import com.wynntils.core.config.Config;
 import com.wynntils.core.consumers.overlays.Overlay;
 import com.wynntils.core.consumers.overlays.OverlayPosition;
 import com.wynntils.core.consumers.overlays.OverlaySize;
@@ -14,6 +13,7 @@ import com.wynntils.core.notifications.MessageContainer;
 import com.wynntils.core.notifications.TimedMessageContainer;
 import com.wynntils.core.notifications.event.NotificationEvent;
 import com.wynntils.core.persisted.Persisted;
+import com.wynntils.core.persisted.config.Config;
 import com.wynntils.core.text.StyledText;
 import com.wynntils.models.worlds.event.WorldStateEvent;
 import com.wynntils.utils.render.TextRenderSetting;

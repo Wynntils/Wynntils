@@ -2,7 +2,7 @@
  * Copyright © Wynntils 2022-2023.
  * This file is released under AGPLv3. See LICENSE for full license details.
  */
-package com.wynntils.core.config;
+package com.wynntils.core.persisted.config;
 
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
@@ -10,7 +10,6 @@ import com.google.gson.JsonObject;
 import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.components.Manager;
 import com.wynntils.core.components.Managers;
-import com.wynntils.core.config.upfixers.ConfigUpfixerManager;
 import com.wynntils.core.consumers.features.Configurable;
 import com.wynntils.core.consumers.features.Feature;
 import com.wynntils.core.consumers.features.FeatureManager;
@@ -20,6 +19,7 @@ import com.wynntils.core.consumers.overlays.Overlay;
 import com.wynntils.core.consumers.overlays.OverlayManager;
 import com.wynntils.core.json.JsonManager;
 import com.wynntils.core.persisted.Persisted;
+import com.wynntils.core.persisted.upfixers.ConfigUpfixerManager;
 import com.wynntils.utils.JsonUtils;
 import com.wynntils.utils.mc.McUtils;
 import java.io.File;

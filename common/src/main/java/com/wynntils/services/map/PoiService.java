@@ -14,7 +14,7 @@ import com.wynntils.core.net.Download;
 import com.wynntils.core.net.UrlId;
 import com.wynntils.core.net.event.NetResultProcessedEvent;
 import com.wynntils.core.persisted.Persisted;
-import com.wynntils.core.storage.Storage;
+import com.wynntils.core.persisted.storage.Storage;
 import com.wynntils.services.map.pois.CombatPoi;
 import com.wynntils.services.map.pois.CustomPoi;
 import com.wynntils.services.map.pois.LabelPoi;

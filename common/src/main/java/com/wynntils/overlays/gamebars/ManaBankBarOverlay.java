@@ -6,9 +6,9 @@ package com.wynntils.overlays.gamebars;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.wynntils.core.components.Models;
-import com.wynntils.core.config.Config;
 import com.wynntils.core.consumers.overlays.OverlayPosition;
 import com.wynntils.core.consumers.overlays.OverlaySize;
+import com.wynntils.core.persisted.config.Config;
 import com.wynntils.handlers.bossbar.TrackedBar;
 import com.wynntils.handlers.bossbar.type.BossBarProgress;
 import com.wynntils.models.abilities.bossbars.ManaBankBar;

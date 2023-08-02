@@ -4,8 +4,6 @@
  */
 package com.wynntils.core.components;
 
-import com.wynntils.core.config.ConfigManager;
-import com.wynntils.core.config.upfixers.ConfigUpfixerManager;
 import com.wynntils.core.consumers.commands.CommandManager;
 import com.wynntils.core.consumers.features.FeatureManager;
 import com.wynntils.core.consumers.functions.FunctionManager;
@@ -19,7 +17,9 @@ import com.wynntils.core.net.NetManager;
 import com.wynntils.core.net.UrlManager;
 import com.wynntils.core.notifications.NotificationManager;
 import com.wynntils.core.persisted.PersistedManager;
-import com.wynntils.core.storage.StorageManager;
+import com.wynntils.core.persisted.config.ConfigManager;
+import com.wynntils.core.persisted.storage.StorageManager;
+import com.wynntils.core.persisted.upfixers.ConfigUpfixerManager;
 
 public final class Managers {
     // Start with UrlManager to give it chance to update URLs in background
