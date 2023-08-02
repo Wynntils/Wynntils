@@ -17,6 +17,7 @@ public class Storage<T> extends PersistedValue<T> {
         touched();
     }
 
+    @Override
     public void touched() {
         Managers.Storage.persist();
     }

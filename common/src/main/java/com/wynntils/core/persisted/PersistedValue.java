@@ -4,7 +4,7 @@
  */
 package com.wynntils.core.persisted;
 
-public class PersistedValue<T> {
+public abstract class PersistedValue<T> {
     protected T value;
 
     protected PersistedValue(T value) {
@@ -14,4 +14,6 @@ public class PersistedValue<T> {
     public T get() {
         return value;
     }
+
+    public abstract void touched();
 }

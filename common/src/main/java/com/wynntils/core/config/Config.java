@@ -12,6 +12,7 @@ public class Config<T> extends PersistedValue<T> {
         super(value);
     }
 
+    @Override
     public void touched() {
         Managers.Config.saveConfig();
     }
