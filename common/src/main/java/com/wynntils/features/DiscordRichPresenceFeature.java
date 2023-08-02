@@ -129,7 +129,9 @@ public class DiscordRichPresenceFeature extends Feature {
             // This isReady() check is required for Linux to not crash on config change.
             if (!Services.Discord.isReady()) {
                 // Even though this is in the onConfigUpdate method, it is how the library is first loaded on launch
-                Services.Discord.load();
+                if (!Services.Discord.load()) {
+                    Managers.Feature.disableFeature(this);
+                }
             }
 
             if (!Models.WorldState.onWorld() && Services.Discord.isReady()) return;
