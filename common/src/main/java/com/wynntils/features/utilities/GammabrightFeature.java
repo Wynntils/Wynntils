@@ -14,7 +14,6 @@ import com.wynntils.core.consumers.features.properties.RegisterKeyBind;
 import com.wynntils.core.keybinds.KeyBind;
 import com.wynntils.core.mod.event.WynncraftConnectionEvent;
 import com.wynntils.core.persisted.Persisted;
-import com.wynntils.core.storage.RegisterStorage;
 import com.wynntils.core.storage.Storage;
 import com.wynntils.models.worlds.event.WorldStateEvent;
 import com.wynntils.models.worlds.type.WorldState;
@@ -27,7 +26,7 @@ public class GammabrightFeature extends Feature {
     @Persisted
     public final Config<Boolean> gammabrightEnabled = new Config<>(false);
 
-    @RegisterStorage
+    @Persisted
     private final Storage<Double> lastGamma = new Storage<>(1.0);
 
     @RegisterKeyBind

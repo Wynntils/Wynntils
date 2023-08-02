@@ -6,7 +6,7 @@ package com.wynntils.services.resourcepack;
 
 import com.google.common.hash.Hashing;
 import com.wynntils.core.components.Service;
-import com.wynntils.core.storage.RegisterStorage;
+import com.wynntils.core.persisted.Persisted;
 import com.wynntils.core.storage.Storage;
 import com.wynntils.mc.event.ResourcePackClearEvent;
 import com.wynntils.mc.event.ResourcePackEvent;
@@ -25,7 +25,7 @@ import net.minecraftforge.eventbus.api.EventPriority;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 
 public final class ResourcePackService extends Service {
-    @RegisterStorage
+    @Persisted
     private final Storage<String> requestedPreloadHash = new Storage<>("");
 
     public ResourcePackService() {
