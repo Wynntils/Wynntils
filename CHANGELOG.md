@@ -1,4 +1,16 @@
+## [0.0.3-alpha.264](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.263...v0.0.3-alpha.264) (2023-08-02)
+
+
+### Bug Fixes
+
+* Fix parsing for VERY NEAR content ([#1927](https://github.com/Wynntils/Artemis/issues/1927)) ([be00f3a](https://github.com/Wynntils/Artemis/commit/be00f3ad25f48b26b82833adaaa52b043485544f))
+
 ## [0.0.3-alpha.263](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.262...v0.0.3-alpha.263) (2023-08-02)
+
+
+### Miscellaneous Chores
+
+* **release:** v0.0.3-alpha.263 [skip ci] ([dd51380](https://github.com/Wynntils/Artemis/commit/dd5138046e00c0de65b31c2254be3dda948ece2d))
 
 
 ### Code Refactoring
@@ -40,21 +52,4 @@
 ### Miscellaneous Chores
 
 * **release:** v0.0.3-alpha.260 [skip ci] ([0ad9a70](https://github.com/Wynntils/Artemis/commit/0ad9a70ab233734c94e5acf58f3d54f3c831ab5a))
-
-## [0.0.3-alpha.259](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.258...v0.0.3-alpha.259) (2023-08-01)
-
-
-### New Features
-
-* Allow an infinite amount of waypoints; content waypoints are different from user waypoints; colored POI waypoints keep their color ([#1912](https://github.com/Wynntils/Artemis/issues/1912)) ([739bd4b](https://github.com/Wynntils/Artemis/commit/739bd4b9c60166ff0490f06729a88ac112e8022f))
-
-
-### Miscellaneous Chores
-
-* **release:** v0.0.3-alpha.259 [skip ci] ([7fe3ddc](https://github.com/Wynntils/Artemis/commit/7fe3ddc00c68d6820521f0e27a0cfc8dbc7653ac))
-
-
-### Code Refactoring
-
-* Fix remaining raw use of generic classes ([#1916](https://github.com/Wynntils/Artemis/issues/1916)) ([08e1832](https://github.com/Wynntils/Artemis/commit/08e183228235599f0df8b053242ac22429a0ce50))
 
