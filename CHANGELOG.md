@@ -1,9 +1,21 @@
+## [0.0.3-alpha.263](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.262...v0.0.3-alpha.263) (2023-08-02)
+
+
+### Code Refactoring
+
+* Incorporate and hide ConfigHolder inside Config ([#1922](https://github.com/Wynntils/Artemis/issues/1922)) ([a5422ac](https://github.com/Wynntils/Artemis/commit/a5422acbc187e56558028b46c43a3d40865ee3af))
+
 ## [0.0.3-alpha.262](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.261...v0.0.3-alpha.262) (2023-08-02)
 
 
 ### Bug Fixes
 
 * Fix beacon counter incrementing by two rarely and persisting issues ([#1925](https://github.com/Wynntils/Artemis/issues/1925)) ([664c373](https://github.com/Wynntils/Artemis/commit/664c3733fd1b2ca59a905704398302ad91b5dc25))
+
+
+### Miscellaneous Chores
+
+* **release:** v0.0.3-alpha.262 [skip ci] ([d830604](https://github.com/Wynntils/Artemis/commit/d830604a1d1cffbaedd8fa1d17ad67e64347174c))
 
 ## [0.0.3-alpha.261](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.260...v0.0.3-alpha.261) (2023-08-02)
 
@@ -45,16 +57,4 @@
 ### Code Refactoring
 
 * Fix remaining raw use of generic classes ([#1916](https://github.com/Wynntils/Artemis/issues/1916)) ([08e1832](https://github.com/Wynntils/Artemis/commit/08e183228235599f0df8b053242ac22429a0ce50))
-
-## [0.0.3-alpha.258](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.257...v0.0.3-alpha.258) (2023-08-01)
-
-
-### New Features
-
-* Persist lootruns between restarts and class switches (and keep track of every class separately) ([#1920](https://github.com/Wynntils/Artemis/issues/1920)) ([3d44711](https://github.com/Wynntils/Artemis/commit/3d447118e03d66f8c2db62a47a170380c01039f3))
-
-
-### Miscellaneous Chores
-
-* **release:** v0.0.3-alpha.258 [skip ci] ([2a01302](https://github.com/Wynntils/Artemis/commit/2a01302637ea4d992fcbe71a242d0c869e02be17))
 
