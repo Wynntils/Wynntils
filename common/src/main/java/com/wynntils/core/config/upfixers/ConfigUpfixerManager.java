@@ -9,7 +9,7 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.components.Manager;
-import com.wynntils.core.config.ConfigHolder;
+import com.wynntils.core.config.Config;
 import com.wynntils.core.config.upfixers.impl.CustomCommandKeybindSlashStartUpfixer;
 import com.wynntils.core.config.upfixers.impl.CustomPoiIconEnumBugUpfixer;
 import com.wynntils.core.config.upfixers.impl.CustomPoiVisbilityUpfixer;
@@ -51,16 +51,16 @@ public class ConfigUpfixerManager extends Manager {
      * Runs all registered upfixers on the given config object.
      *
      * @param configObject  The config object to run upfixers on.
-     * @param configHolders All registered configHolders
+     * @param configs All registered configs
      */
-    public boolean runUpfixers(JsonObject configObject, Set<ConfigHolder<?>> configHolders) {
+    public boolean runUpfixers(JsonObject configObject, Set<Config<?>> configs) {
         List<ConfigUpfixer> missingUpfixers = getMissingUpfixers(configObject);
 
         boolean anyChange = false;
 
         for (ConfigUpfixer upfixer : missingUpfixers) {
             try {
-                if (upfixer.apply(configObject, configHolders)) {
+                if (upfixer.apply(configObject, configs)) {
                     anyChange = true;
                     addUpfixerToConfig(configObject, upfixer);
                     WynntilsMod.info("Applied upfixer \"" + upfixer.getUpfixerName() + "\" to config.");

@@ -9,7 +9,6 @@ import com.wynntils.core.components.Services;
 import com.wynntils.core.config.Category;
 import com.wynntils.core.config.Config;
 import com.wynntils.core.config.ConfigCategory;
-import com.wynntils.core.config.ConfigHolder;
 import com.wynntils.core.config.RegisterConfig;
 import com.wynntils.core.consumers.features.Feature;
 import com.wynntils.hades.protocol.enums.SocialType;
@@ -29,8 +28,8 @@ public class HadesFeature extends Feature {
     public final Config<Boolean> shareWithGuild = new Config<>(true);
 
     @Override
-    protected void onConfigUpdate(ConfigHolder<?> configHolder) {
-        switch (configHolder.getFieldName()) {
+    protected void onConfigUpdate(Config<?> config) {
+        switch (config.getFieldName()) {
             case "getOtherPlayerInfo" -> {
                 if (getOtherPlayerInfo.get()) {
                     Services.Hades.tryResendWorldData();

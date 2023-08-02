@@ -7,7 +7,7 @@ package com.wynntils.core.config.upfixers.impl;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
-import com.wynntils.core.config.ConfigHolder;
+import com.wynntils.core.config.Config;
 import com.wynntils.core.config.upfixers.ConfigUpfixer;
 import com.wynntils.services.map.pois.CustomPoi;
 import java.util.Set;
@@ -18,7 +18,7 @@ public class CustomPoiVisbilityUpfixer implements ConfigUpfixer {
     private static final String CUSTOM_POIS_MINZOOM = "minZoom";
 
     @Override
-    public boolean apply(JsonObject configObject, Set<ConfigHolder<?>> configHolders) {
+    public boolean apply(JsonObject configObject, Set<Config<?>> configs) {
         JsonArray customPois = configObject.getAsJsonArray(CUSTOM_POIS_ARRAY);
 
         if (customPois == null) return true;
