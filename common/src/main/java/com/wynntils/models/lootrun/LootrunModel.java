@@ -202,7 +202,7 @@ public class LootrunModel extends Model {
         Pair<Double, TaskLocation> taskPrediction = getBeaconTaskLocationPrediction(beacon);
 
         if (taskPrediction == null) {
-            WynntilsMod.warn("Could not predict updated task location for beacon " + beaconColor);
+            WynntilsMod.warn("Could not predict updated task location for beacon " + beacon.location());
             return;
         }
 
@@ -378,7 +378,6 @@ public class LootrunModel extends Model {
         }
     }
 
-    // FIXME: Handle the same task location being used for multiple beacons.
     private Pair<Double, TaskLocation> getBeaconTaskLocationPrediction(Beacon beacon) {
         Optional<LootrunLocation> location = getLocation();
         if (location.isEmpty()) {
