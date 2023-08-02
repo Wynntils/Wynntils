@@ -10,11 +10,11 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import com.wynntils.core.components.Managers;
 import com.wynntils.core.components.Models;
 import com.wynntils.core.components.Services;
-import com.wynntils.core.config.Config;
-import com.wynntils.core.config.RegisterConfig;
 import com.wynntils.core.consumers.overlays.Overlay;
 import com.wynntils.core.consumers.overlays.OverlayPosition;
 import com.wynntils.core.consumers.overlays.OverlaySize;
+import com.wynntils.core.persisted.Persisted;
+import com.wynntils.core.persisted.config.Config;
 import com.wynntils.core.text.StyledText;
 import com.wynntils.features.map.MainMapFeature;
 import com.wynntils.services.map.MapTexture;
@@ -46,40 +46,40 @@ import net.minecraft.client.renderer.MultiBufferSource;
 public class MinimapOverlay extends Overlay {
     private static final int DEFAULT_SIZE = 130;
 
-    @RegisterConfig
+    @Persisted
     public final Config<Float> scale = new Config<>(1f);
 
-    @RegisterConfig
+    @Persisted
     public final Config<Float> poiScale = new Config<>(0.6f);
 
-    @RegisterConfig
+    @Persisted
     public final Config<Float> pointerScale = new Config<>(0.8f);
 
-    @RegisterConfig
+    @Persisted
     public final Config<Boolean> followPlayerRotation = new Config<>(true);
 
-    @RegisterConfig
+    @Persisted
     public final Config<CustomColor> pointerColor = new Config<>(new CustomColor(1f, 1f, 1f, 1f));
 
-    @RegisterConfig
+    @Persisted
     public final Config<MapMaskType> maskType = new Config<>(MapMaskType.RECTANGULAR);
 
-    @RegisterConfig
+    @Persisted
     public final Config<MapBorderType> borderType = new Config<>(MapBorderType.WYNN);
 
-    @RegisterConfig
+    @Persisted
     public final Config<PointerType> pointerType = new Config<>(PointerType.ARROW);
 
-    @RegisterConfig
+    @Persisted
     public final Config<CompassRenderType> showCompass = new Config<>(CompassRenderType.ALL);
 
-    @RegisterConfig
+    @Persisted
     public final Config<Boolean> renderRemoteFriendPlayers = new Config<>(true);
 
-    @RegisterConfig
+    @Persisted
     public final Config<Boolean> renderRemotePartyPlayers = new Config<>(true);
 
-    @RegisterConfig
+    @Persisted
     public final Config<Float> remotePlayersHeadScale = new Config<>(0.4f);
 
     public MinimapOverlay() {

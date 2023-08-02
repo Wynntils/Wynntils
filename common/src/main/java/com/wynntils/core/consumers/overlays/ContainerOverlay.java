@@ -7,8 +7,8 @@ package com.wynntils.core.consumers.overlays;
 import com.mojang.blaze3d.platform.Window;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.wynntils.core.WynntilsMod;
-import com.wynntils.core.config.Config;
-import com.wynntils.core.config.RegisterConfig;
+import com.wynntils.core.persisted.Persisted;
+import com.wynntils.core.persisted.config.Config;
 import com.wynntils.mc.event.DisplayResizeEvent;
 import com.wynntils.utils.render.type.HorizontalAlignment;
 import com.wynntils.utils.render.type.VerticalAlignment;
@@ -24,10 +24,10 @@ import net.minecraftforge.eventbus.api.SubscribeEvent;
 public abstract class ContainerOverlay<T extends Overlay> extends Overlay {
     private static final int DEFAULT_SPACING = 3;
 
-    @RegisterConfig(i18nKey = "overlay.wynntils.overlay.growDirection")
+    @Persisted(i18nKey = "overlay.wynntils.overlay.growDirection")
     protected final Config<GrowDirection> growDirection = new Config<>(GrowDirection.DOWN);
 
-    @RegisterConfig(i18nKey = "overlay.wynntils.overlay.spacing")
+    @Persisted(i18nKey = "overlay.wynntils.overlay.spacing")
     protected final Config<Integer> spacing = new Config<>(DEFAULT_SPACING);
 
     private final List<T> children = new ArrayList<>();

@@ -5,9 +5,9 @@
 package com.wynntils.features.utilities;
 
 import com.wynntils.core.components.Services;
-import com.wynntils.core.config.Category;
-import com.wynntils.core.config.ConfigCategory;
 import com.wynntils.core.consumers.features.Feature;
+import com.wynntils.core.persisted.config.Category;
+import com.wynntils.core.persisted.config.ConfigCategory;
 import com.wynntils.mc.event.ResourcePackEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 

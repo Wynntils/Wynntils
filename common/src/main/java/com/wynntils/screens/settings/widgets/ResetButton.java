@@ -4,7 +4,7 @@
  */
 package com.wynntils.screens.settings.widgets;
 
-import com.wynntils.core.config.Config;
+import com.wynntils.core.persisted.config.Config;
 import com.wynntils.utils.colors.CommonColors;
 import com.wynntils.utils.colors.CustomColor;
 import java.util.List;
