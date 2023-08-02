@@ -264,7 +264,9 @@ public class WynnAlphabetModel extends Model {
     }
 
     public boolean containsBrackets(String message) {
-        return (message.contains("[[") && message.contains("]]")) || (message.contains("<<") && message.contains(">>"));
+        Pattern bracketPattern = Pattern.compile("(\\[\\[.*\\]\\])|(<<.*>>)");
+
+        return bracketPattern.matcher(message).matches();
     }
 
     private void replaceTranscribed(StringBuilder stringBuilder, String original, String replacement) {
