@@ -8,7 +8,6 @@ import com.mojang.blaze3d.platform.Window;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.config.Config;
-import com.wynntils.core.config.ConfigHolder;
 import com.wynntils.core.config.RegisterConfig;
 import com.wynntils.mc.event.DisplayResizeEvent;
 import com.wynntils.utils.render.type.HorizontalAlignment;
@@ -93,7 +92,7 @@ public abstract class ContainerOverlay<T extends Overlay> extends Overlay {
     }
 
     @Override
-    protected void onConfigUpdate(ConfigHolder<?> configHolder) {
+    protected void onConfigUpdate(Config<?> config) {
         updateAllChildren();
     }
 

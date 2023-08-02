@@ -9,7 +9,7 @@ import com.mojang.blaze3d.vertex.BufferBuilder;
 import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.components.Manager;
 import com.wynntils.core.components.Managers;
-import com.wynntils.core.config.ConfigHolder;
+import com.wynntils.core.config.Config;
 import com.wynntils.core.config.OverlayGroupHolder;
 import com.wynntils.core.consumers.features.Feature;
 import com.wynntils.core.consumers.overlays.annotations.OverlayGroup;
@@ -90,7 +90,7 @@ public final class OverlayManager extends Manager {
         WynntilsMod.unregisterEventListener(disabledOverlay);
 
         enabledOverlays.forEach(
-                overlay -> overlay.getConfigOptionFromString("userEnabled").ifPresent(overlay::onConfigUpdate));
+                overlay -> overlay.getConfigOptionFromString("userEnabled").ifPresent(overlay::callOnConfigUpdate));
     }
 
     public void enableOverlays(Feature parent) {
@@ -104,7 +104,7 @@ public final class OverlayManager extends Manager {
         WynntilsMod.registerEventListener(enableOverlay);
 
         enabledOverlays.forEach(
-                overlay -> overlay.getConfigOptionFromString("userEnabled").ifPresent(overlay::onConfigUpdate));
+                overlay -> overlay.getConfigOptionFromString("userEnabled").ifPresent(overlay::callOnConfigUpdate));
     }
 
     public void discoverOverlays(Feature feature) {
@@ -273,7 +273,7 @@ public final class OverlayManager extends Manager {
         // Hopefully we have none :)
         for (Overlay overlay : crashedOverlays) {
             overlay.getConfigOptionFromString("userEnabled")
-                    .ifPresent(configHolder -> ((ConfigHolder<Boolean>) configHolder).setValue(false));
+                    .ifPresent(config -> ((Config<Boolean>) config).setValue(false));
         }
     }
 

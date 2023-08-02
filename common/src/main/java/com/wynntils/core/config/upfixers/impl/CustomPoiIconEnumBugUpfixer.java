@@ -7,7 +7,7 @@ package com.wynntils.core.config.upfixers.impl;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
-import com.wynntils.core.config.ConfigHolder;
+import com.wynntils.core.config.Config;
 import com.wynntils.core.config.upfixers.ConfigUpfixer;
 import java.util.Set;
 import java.util.regex.Matcher;
@@ -18,9 +18,9 @@ public class CustomPoiIconEnumBugUpfixer implements ConfigUpfixer {
     private static final Pattern POI_NAME_CHEST_PATTERN = Pattern.compile("Loot Chest T?(\\d)");
 
     @Override
-    public boolean apply(JsonObject configObject, Set<ConfigHolder<?>> configHolders) {
-        for (ConfigHolder<?> configHolder : configHolders) {
-            if (!configHolder.getJsonName().equals(POI_LIST_KEY)) continue;
+    public boolean apply(JsonObject configObject, Set<Config<?>> configs) {
+        for (Config<?> config : configs) {
+            if (!config.getJsonName().equals(POI_LIST_KEY)) continue;
 
             JsonElement obj = configObject.get(POI_LIST_KEY);
             if (obj == null) return true;

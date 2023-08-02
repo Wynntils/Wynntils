@@ -8,6 +8,7 @@ import com.mojang.blaze3d.platform.GlStateManager;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.wynntils.core.components.Managers;
+import com.wynntils.core.config.HiddenConfig;
 import com.wynntils.core.text.StyledText;
 import com.wynntils.features.map.MainMapFeature;
 import com.wynntils.screens.maps.PoiCreationScreen;
@@ -67,17 +68,12 @@ public class PoiManagerWidget extends AbstractWidget {
 
         this.deleteButton = new Button.Builder(
                         Component.translatable("screens.wynntils.poiManagementGui.delete"), (button) -> {
+                            HiddenConfig<List<CustomPoi>> customPois =
+                                    Managers.Feature.getFeatureInstance(MainMapFeature.class).customPois;
                             managementScreen.setLastDeletedPoi(
-                                    poi,
-                                    Managers.Feature.getFeatureInstance(MainMapFeature.class)
-                                            .customPois
-                                            .get()
-                                            .indexOf(poi));
-                            Managers.Feature.getFeatureInstance(MainMapFeature.class)
-                                    .customPois
-                                    .get()
-                                    .remove(poi);
-                            Managers.Config.saveConfig();
+                                    poi, customPois.get().indexOf(poi));
+                            customPois.get().remove(poi);
+                            customPois.touched();
                             managementScreen.populatePois();
                         })
                 .pos(this.width / 2 + 130 + 20, 54 + 20 * row)

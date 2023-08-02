@@ -91,7 +91,6 @@ public class GuideIngredientItemStackButton extends WynntilsButton {
             return true;
         } else if (button == GLFW.GLFW_MOUSE_BUTTON_LEFT) {
             Services.Favorites.toggleFavorite(unformattedName);
-            Managers.Config.saveConfig();
         }
 
         return true;

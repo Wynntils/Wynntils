@@ -114,7 +114,6 @@ public class LootrunModel extends Model {
     private Storage<Map<String, Beacon>> closestBeaconStorage = new Storage<>(new TreeMap<>());
 
     private Map<BeaconColor, Integer> selectedBeacons = new TreeMap<>();
-    private Beacon closestBeacon;
 
     public LootrunModel(BeaconModel beaconModel, MarkerModel markerModel) {
         super(List.of(beaconModel, markerModel));
@@ -143,7 +142,6 @@ public class LootrunModel extends Model {
 
         selectedBeaconsStorage.get().putIfAbsent(id, new TreeMap<>());
         selectedBeacons = selectedBeaconsStorage.get().get(id);
-        closestBeacon = closestBeaconStorage.get().get(id); // can be null safely
 
         selectedBeaconsStorage.touched();
     }
@@ -184,7 +182,6 @@ public class LootrunModel extends Model {
         LOOTRUN_BEACON_COMPASS_PROVIDER.reloadTaskMarkers();
 
         selectedBeacons = new TreeMap<>();
-        closestBeacon = null;
 
         // We set this here too because this might be used by beacons before the scoreboard is updated.
         location = LootrunLocation.fromCoordinates(McUtils.mc().player.position());
@@ -237,6 +234,8 @@ public class LootrunModel extends Model {
         Beacon beacon = event.getBeacon();
         if (!beacon.color().isUsedInLootruns()) return;
 
+        Beacon closestBeacon = getClosestBeacon();
+
         double newBeaconDistanceToPlayer = VectorUtils.distanceIgnoringY(
                 beacon.location().toPosition(), McUtils.mc().player.position());
         double oldBeaconDistanceToPlayer = closestBeacon == null
@@ -246,8 +245,7 @@ public class LootrunModel extends Model {
                         McUtils.mc().player.position());
         if (newBeaconDistanceToPlayer < BEACON_REMOVAL_RADIUS
                 && newBeaconDistanceToPlayer < oldBeaconDistanceToPlayer) {
-            closestBeacon = event.getBeacon();
-            closestBeaconStorage.touched();
+            setClosestBeacon(event.getBeacon());
         } else {
             beacons.remove(beacon);
             LOOTRUN_BEACON_COMPASS_PROVIDER.reloadTaskMarkers();
@@ -298,11 +296,33 @@ public class LootrunModel extends Model {
         handleStateChange(oldState, newState);
     }
 
+    public Beacon getClosestBeacon() {
+        return closestBeaconStorage.get().get(Models.Character.getId());
+    }
+
+    public void setClosestBeacon(Beacon beacon) {
+        if (beacon == null) {
+            closestBeaconStorage.get().remove(Models.Character.getId());
+        } else {
+            closestBeaconStorage.get().put(Models.Character.getId(), beacon); // can be null safely
+        }
+
+        closestBeaconStorage.touched();
+    }
+
+    public void resetBeaconStorage() {
+        selectedBeacons = new TreeMap<>();
+
+        selectedBeaconsStorage.get().put(Models.Character.getId(), selectedBeacons);
+        selectedBeaconsStorage.touched();
+    }
+
     private void handleStateChange(LootrunningState oldState, LootrunningState newState) {
         if (newState == LootrunningState.NOT_RUNNING) {
-            selectedBeacons = new HashMap<>();
-            closestBeacon = null;
+            resetBeaconStorage();
+
             taskType = null;
+            setClosestBeacon(null);
             return;
         }
 
@@ -312,6 +332,7 @@ public class LootrunModel extends Model {
             return;
         }
 
+        Beacon closestBeacon = getClosestBeacon();
         if (oldState == LootrunningState.CHOOSING_BEACON
                 && newState == LootrunningState.IN_TASK
                 && closestBeacon != null) {
@@ -321,6 +342,7 @@ public class LootrunModel extends Model {
 
             // We selected a beacon, so other beacons are no longer relevant.
             beacons.clear();
+            setClosestBeacon(null);
             LOOTRUN_BEACON_COMPASS_PROVIDER.reloadTaskMarkers();
 
             return;
