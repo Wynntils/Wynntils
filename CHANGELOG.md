@@ -1,9 +1,21 @@
+## [0.0.3-alpha.261](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.260...v0.0.3-alpha.261) (2023-08-02)
+
+
+### Code Refactoring
+
+* Introduce Config.touched() ([#1921](https://github.com/Wynntils/Artemis/issues/1921)) ([34a8234](https://github.com/Wynntils/Artemis/commit/34a8234f1e9a77f0ff3d1eda07f37126f9348a70))
+
 ## [0.0.3-alpha.260](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.259...v0.0.3-alpha.260) (2023-08-02)
 
 
 ### New Features
 
 * Add crash protection to config updates in features and overlays ([#1924](https://github.com/Wynntils/Artemis/issues/1924)) ([9498f45](https://github.com/Wynntils/Artemis/commit/9498f450aecfc20d25fea67f76a98770f53fcdf4))
+
+
+### Miscellaneous Chores
+
+* **release:** v0.0.3-alpha.260 [skip ci] ([0ad9a70](https://github.com/Wynntils/Artemis/commit/0ad9a70ab233734c94e5acf58f3d54f3c831ab5a))
 
 ## [0.0.3-alpha.259](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.258...v0.0.3-alpha.259) (2023-08-01)
 
@@ -45,16 +57,4 @@
 ### Miscellaneous Chores
 
 * **release:** v0.0.3-alpha.257 [skip ci] ([252f628](https://github.com/Wynntils/Artemis/commit/252f6284a2b87b615d5f2fe143643ec43988c151))
-
-## [0.0.3-alpha.256](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.255...v0.0.3-alpha.256) (2023-08-01)
-
-
-### Miscellaneous Chores
-
-* **release:** v0.0.3-alpha.256 [skip ci] ([810492f](https://github.com/Wynntils/Artemis/commit/810492fe896aa4aea460a578ac3fbdb63997272e))
-
-
-### Code Refactoring
-
-* Generify ConfigHolder ([#1911](https://github.com/Wynntils/Artemis/issues/1911)) ([3052ca7](https://github.com/Wynntils/Artemis/commit/3052ca7ab7c9a7c9833f98f53fa11fe5f0e53b06))
 
