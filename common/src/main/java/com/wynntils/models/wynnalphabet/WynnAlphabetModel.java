@@ -10,6 +10,7 @@ import com.wynntils.core.text.StyledText;
 import com.wynntils.features.utilities.TranscribeMessagesFeature;
 import com.wynntils.models.activities.discoveries.DiscoveryInfo;
 import com.wynntils.models.activities.type.ActivitySortOrder;
+import com.wynntils.models.wynnalphabet.type.TranscribeCondition;
 import com.wynntils.utils.mc.McUtils;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -237,7 +238,7 @@ public class WynnAlphabetModel extends Model {
         return wynnicNums.toString();
     }
 
-    public boolean shouldTranscribe(TranscribeMessagesFeature.TranscribeCondition condition, WynnAlphabet alphabet) {
+    public boolean shouldTranscribe(TranscribeCondition condition, WynnAlphabet alphabet) {
         return switch (condition) {
             case NEVER -> false;
             case TRANSCRIBER -> alphabet == WynnAlphabet.WYNNIC

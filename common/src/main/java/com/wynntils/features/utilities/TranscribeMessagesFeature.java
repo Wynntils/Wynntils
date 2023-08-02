@@ -19,6 +19,7 @@ import com.wynntils.handlers.chat.event.ChatMessageReceivedEvent;
 import com.wynntils.handlers.chat.event.NpcDialogEvent;
 import com.wynntils.handlers.chat.type.NpcDialogueType;
 import com.wynntils.models.wynnalphabet.WynnAlphabet;
+import com.wynntils.models.wynnalphabet.type.TranscribeCondition;
 import com.wynntils.utils.colors.ColorChatFormatting;
 import com.wynntils.utils.type.IterationDecision;
 import java.util.List;
@@ -156,12 +157,5 @@ public class TranscribeMessagesFeature extends Feature {
         protected WynnTranscriptedNpcDialogEvent(List<Component> chatMsg, NpcDialogueType type, boolean isProtected) {
             super(chatMsg, type, isProtected);
         }
-    }
-
-    public enum TranscribeCondition {
-        ALWAYS,
-        DISCOVERY,
-        TRANSCRIBER,
-        NEVER
     }
 }
