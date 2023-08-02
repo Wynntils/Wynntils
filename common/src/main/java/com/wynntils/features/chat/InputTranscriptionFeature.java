@@ -131,7 +131,7 @@ public class InputTranscriptionFeature extends Feature {
 
             if (!updatedMessage.equals(message)) {
                 event.setCanceled(true);
-                McUtils.mc().getConnection().sendChat(updatedMessage);
+                McUtils.sendChat(updatedMessage);
             }
         }
 
