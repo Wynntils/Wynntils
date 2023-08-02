@@ -22,7 +22,7 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.sounds.SoundEvents;
 import org.lwjgl.glfw.GLFW;
 
-public abstract class SearchWidget<S> extends TextInputBoxWidget {
+public class SearchWidget extends TextInputBoxWidget {
     protected static final Component DEFAULT_TEXT =
             Component.translatable("screens.wynntils.searchWidget.defaultSearchText");
 
@@ -176,6 +176,4 @@ public abstract class SearchWidget<S> extends TextInputBoxWidget {
         setCursorPosition(textBoxInput.length());
         setHighlightPosition(0);
     }
-
-    public abstract S getSearchQuery();
 }

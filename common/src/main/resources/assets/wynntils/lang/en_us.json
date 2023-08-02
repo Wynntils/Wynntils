@@ -1861,7 +1861,6 @@
   "screens.wynntils.wynntilsGuides.importedFavorites": "Imported %s favorites!",
   "screens.wynntils.wynntilsGuides.ingredientGuide.name": "Ingredient Guide",
   "screens.wynntils.wynntilsGuides.invalidClipboard": "Failed to import favorites! Clipboard does not contain exported list of favorite items.",
-  "screens.wynntils.wynntilsGuides.itemGuide.advancedSearch.help": "Available filters :",
   "screens.wynntils.wynntilsGuides.itemGuide.available": "Available Items",
   "screens.wynntils.wynntilsGuides.itemGuide.favorite": "Shift + Left click to favorite",
   "screens.wynntils.wynntilsGuides.itemGuide.name": "Item Guide",

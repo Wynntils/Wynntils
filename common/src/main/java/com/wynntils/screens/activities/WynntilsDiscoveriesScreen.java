@@ -13,7 +13,7 @@ import com.wynntils.models.activities.event.ActivityUpdatedEvent;
 import com.wynntils.models.activities.type.ActivitySortOrder;
 import com.wynntils.screens.activities.widgets.DiscoveryButton;
 import com.wynntils.screens.activities.widgets.DiscoveryProgressButton;
-import com.wynntils.screens.base.BasicWynntilsListScreen;
+import com.wynntils.screens.base.WynntilsListScreen;
 import com.wynntils.screens.base.widgets.BackButton;
 import com.wynntils.screens.base.widgets.FilterButton;
 import com.wynntils.screens.base.widgets.PageSelectorButton;
@@ -38,7 +38,7 @@ import net.minecraft.client.resources.language.I18n;
 import net.minecraft.network.chat.Component;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 
-public final class WynntilsDiscoveriesScreen extends BasicWynntilsListScreen<DiscoveryInfo, DiscoveryButton>
+public final class WynntilsDiscoveriesScreen extends WynntilsListScreen<DiscoveryInfo, DiscoveryButton>
         implements SortableActivityScreen {
     private final List<FilterButton> filterButtons = new ArrayList<>();
 

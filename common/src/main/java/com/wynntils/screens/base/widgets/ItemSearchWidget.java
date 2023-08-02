@@ -20,7 +20,7 @@ import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.components.Tooltip;
 import net.minecraft.network.chat.Component;
 
-public class ItemSearchWidget extends SearchWidget<SearchQuery> {
+public class ItemSearchWidget extends SearchWidget {
     private SearchQuery searchQuery;
 
     private Consumer<SearchQuery> onSearchQueryUpdateConsumer;
@@ -157,9 +157,5 @@ public class ItemSearchWidget extends SearchWidget<SearchQuery> {
             setTooltip(Tooltip.create(Component.literal(String.join("\n\n", searchQuery.getErrors()))
                     .withStyle(ChatFormatting.RED)));
         }
-    }
-
-    public SearchQuery getSearchQuery() {
-        return searchQuery;
     }
 }

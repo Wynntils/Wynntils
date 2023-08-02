@@ -6,14 +6,14 @@ package com.wynntils.screens.activities.widgets;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.wynntils.screens.base.TextboxScreen;
-import com.wynntils.screens.base.widgets.BasicSearchWidget;
+import com.wynntils.screens.base.widgets.SearchWidget;
 import com.wynntils.utils.render.RenderUtils;
 import com.wynntils.utils.render.Texture;
 import com.wynntils.utils.type.Pair;
 import java.util.function.Consumer;
 import net.minecraft.client.gui.Font;
 
-public class QuestBookSearchWidget extends BasicSearchWidget {
+public class QuestBookSearchWidget extends SearchWidget {
     public QuestBookSearchWidget(
             int x, int y, int width, int height, Consumer<String> onUpdateConsumer, TextboxScreen textboxScreen) {
         super(x, y, width, height, onUpdateConsumer, textboxScreen);

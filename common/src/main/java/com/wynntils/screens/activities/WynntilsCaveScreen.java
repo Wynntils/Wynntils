@@ -18,7 +18,7 @@ import com.wynntils.models.activities.type.ActivitySortOrder;
 import com.wynntils.models.activities.type.ActivityType;
 import com.wynntils.screens.activities.widgets.CaveButton;
 import com.wynntils.screens.activities.widgets.CaveProgressButton;
-import com.wynntils.screens.base.BasicWynntilsListScreen;
+import com.wynntils.screens.base.WynntilsListScreen;
 import com.wynntils.screens.base.widgets.BackButton;
 import com.wynntils.screens.base.widgets.PageSelectorButton;
 import com.wynntils.screens.base.widgets.ReloadButton;
@@ -46,7 +46,7 @@ import net.minecraft.network.chat.Component;
 import net.minecraftforge.eventbus.api.EventPriority;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 
-public final class WynntilsCaveScreen extends BasicWynntilsListScreen<CaveInfo, CaveButton>
+public final class WynntilsCaveScreen extends WynntilsListScreen<CaveInfo, CaveButton>
         implements SortableActivityScreen {
     private ActivitySortOrder activitySortOrder = ActivitySortOrder.LEVEL;
     private CaveInfo trackingRequested = null;

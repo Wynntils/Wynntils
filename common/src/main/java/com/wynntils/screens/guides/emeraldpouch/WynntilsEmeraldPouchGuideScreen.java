@@ -6,7 +6,7 @@ package com.wynntils.screens.guides.emeraldpouch;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.wynntils.core.text.StyledText;
-import com.wynntils.screens.base.BasicWynntilsListScreen;
+import com.wynntils.screens.base.WynntilsListScreen;
 import com.wynntils.screens.base.widgets.BackButton;
 import com.wynntils.screens.base.widgets.PageSelectorButton;
 import com.wynntils.screens.guides.WynntilsGuidesListScreen;
@@ -25,7 +25,7 @@ import net.minecraft.client.resources.language.I18n;
 import net.minecraft.network.chat.Component;
 
 public final class WynntilsEmeraldPouchGuideScreen
-        extends BasicWynntilsListScreen<GuideEmeraldPouchItemStack, GuideEmeraldPouchItemStackButton> {
+        extends WynntilsListScreen<GuideEmeraldPouchItemStack, GuideEmeraldPouchItemStackButton> {
     private static final int ELEMENTS_COLUMNS = 7;
     private static final int ELEMENT_ROWS = 7;
 

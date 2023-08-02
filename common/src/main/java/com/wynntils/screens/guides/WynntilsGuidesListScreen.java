@@ -7,8 +7,8 @@ package com.wynntils.screens.guides;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.wynntils.core.components.Services;
 import com.wynntils.core.text.StyledText;
-import com.wynntils.screens.base.BasicWynntilsListScreen;
 import com.wynntils.screens.base.TooltipProvider;
+import com.wynntils.screens.base.WynntilsListScreen;
 import com.wynntils.screens.base.widgets.BackButton;
 import com.wynntils.screens.base.widgets.PageSelectorButton;
 import com.wynntils.screens.guides.emeraldpouch.WynntilsEmeraldPouchGuideScreen;
@@ -32,7 +32,7 @@ import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.resources.language.I18n;
 import net.minecraft.network.chat.Component;
 
-public final class WynntilsGuidesListScreen extends BasicWynntilsListScreen<Screen, GuidesButton> {
+public final class WynntilsGuidesListScreen extends WynntilsListScreen<Screen, GuidesButton> {
     private static final List<Screen> GUIDES = List.of(
             WynntilsItemGuideScreen.create(),
             WynntilsIngredientGuideScreen.create(),

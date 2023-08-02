@@ -7,7 +7,6 @@ package com.wynntils.screens.base;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.wynntils.core.text.StyledText;
 import com.wynntils.screens.activities.widgets.QuestBookSearchWidget;
-import com.wynntils.screens.base.widgets.SearchWidget;
 import com.wynntils.screens.base.widgets.TextInputBoxWidget;
 import com.wynntils.screens.base.widgets.WynntilsButton;
 import com.wynntils.utils.MathUtils;
@@ -26,7 +25,7 @@ import net.minecraft.client.gui.components.events.GuiEventListener;
 import net.minecraft.network.chat.Component;
 import org.lwjgl.glfw.GLFW;
 
-public abstract class WynntilsListScreen<E, B extends WynntilsButton, S> extends WynntilsMenuScreenBase
+public abstract class WynntilsListScreen<E, B extends WynntilsButton> extends WynntilsMenuScreenBase
         implements WynntilsPagedScreen, TextboxScreen {
     private double currentScroll = 0;
 
@@ -35,12 +34,12 @@ public abstract class WynntilsListScreen<E, B extends WynntilsButton, S> extends
     protected List<E> elements = new ArrayList<>();
 
     private final List<B> elementButtons = new ArrayList<>();
-    protected SearchWidget<S> searchWidget;
+    protected final QuestBookSearchWidget searchWidget;
     protected Renderable hovered = null;
 
     @Override
     protected void doInit() {
-        reloadElements(searchWidget.getSearchQuery());
+        reloadElements(searchWidget.getTextBoxInput());
 
         this.addRenderableWidget(searchWidget);
     }
@@ -217,7 +216,7 @@ public abstract class WynntilsListScreen<E, B extends WynntilsButton, S> extends
     @Override
     public void setCurrentPage(int currentPage) {
         this.currentPage = MathUtils.clamp(currentPage, 0, maxPage);
-        reloadElements(searchWidget.getSearchQuery());
+        reloadElements(searchWidget.getTextBoxInput());
     }
 
     @Override
@@ -225,9 +224,9 @@ public abstract class WynntilsListScreen<E, B extends WynntilsButton, S> extends
         return maxPage;
     }
 
-    private void reloadElements(S searchQuery) {
+    private void reloadElements(String searchTerm) {
         elements.clear();
-        reloadElementsList(searchQuery);
+        reloadElementsList(searchTerm);
 
         this.maxPage = Math.max(
                 0,
@@ -249,10 +248,10 @@ public abstract class WynntilsListScreen<E, B extends WynntilsButton, S> extends
 
     protected abstract B getButtonFromElement(int i);
 
-    protected abstract void reloadElementsList(S searchQuery);
+    protected abstract void reloadElementsList(String searchTerm);
 
     public void reloadElements() {
-        reloadElements(searchWidget.getSearchQuery());
+        reloadElements(searchWidget.getTextBoxInput());
         setCurrentPage(0);
     }
 
