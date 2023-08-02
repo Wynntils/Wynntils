@@ -7,8 +7,8 @@ package com.wynntils.features.embellishments;
 import com.wynntils.core.config.Category;
 import com.wynntils.core.config.Config;
 import com.wynntils.core.config.ConfigCategory;
-import com.wynntils.core.config.RegisterConfig;
 import com.wynntils.core.consumers.features.Feature;
+import com.wynntils.core.persisted.Persisted;
 import com.wynntils.core.text.StyledText;
 import com.wynntils.handlers.chat.event.ChatMessageReceivedEvent;
 import com.wynntils.handlers.chat.type.RecipientType;
@@ -25,7 +25,7 @@ public class WybelSoundFeature extends Feature {
     private static final ResourceLocation WYBEL_PURR_ID = new ResourceLocation("wynntils:wybel.purr");
     private static final SoundEvent WYBEL_PURR_SOUND = SoundEvent.createVariableRangeEvent(WYBEL_PURR_ID);
 
-    @RegisterConfig
+    @Persisted
     public final Config<Boolean> hideText = new Config<>(false);
 
     @SubscribeEvent

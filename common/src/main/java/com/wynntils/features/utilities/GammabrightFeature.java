@@ -4,17 +4,14 @@
  */
 package com.wynntils.features.utilities;
 
-import com.wynntils.core.components.Managers;
 import com.wynntils.core.config.Category;
 import com.wynntils.core.config.Config;
 import com.wynntils.core.config.ConfigCategory;
-import com.wynntils.core.config.ConfigHolder;
-import com.wynntils.core.config.RegisterConfig;
 import com.wynntils.core.consumers.features.Feature;
 import com.wynntils.core.consumers.features.properties.RegisterKeyBind;
 import com.wynntils.core.keybinds.KeyBind;
 import com.wynntils.core.mod.event.WynncraftConnectionEvent;
-import com.wynntils.core.storage.RegisterStorage;
+import com.wynntils.core.persisted.Persisted;
 import com.wynntils.core.storage.Storage;
 import com.wynntils.models.worlds.event.WorldStateEvent;
 import com.wynntils.models.worlds.type.WorldState;
@@ -24,10 +21,10 @@ import org.lwjgl.glfw.GLFW;
 
 @ConfigCategory(Category.UTILITIES)
 public class GammabrightFeature extends Feature {
-    @RegisterConfig
+    @Persisted
     public final Config<Boolean> gammabrightEnabled = new Config<>(false);
 
-    @RegisterStorage
+    @Persisted
     private final Storage<Double> lastGamma = new Storage<>(1.0);
 
     @RegisterKeyBind
@@ -49,8 +46,8 @@ public class GammabrightFeature extends Feature {
     }
 
     @Override
-    protected void onConfigUpdate(ConfigHolder<?> configHolder) {
-        if (configHolder.getFieldName().equals("gammabrightEnabled")) {
+    protected void onConfigUpdate(Config<?> config) {
+        if (config.getFieldName().equals("gammabrightEnabled")) {
             applyGammabright();
         }
     }
@@ -82,7 +79,7 @@ public class GammabrightFeature extends Feature {
         gammabrightEnabled.updateConfig(!gammabrightEnabled.get());
         applyGammabright();
 
-        Managers.Config.saveConfig();
+        gammabrightEnabled.touched();
     }
 
     private void resetGamma() {

@@ -8,9 +8,8 @@ import com.wynntils.core.components.Managers;
 import com.wynntils.core.components.Models;
 import com.wynntils.core.components.Services;
 import com.wynntils.core.config.Config;
-import com.wynntils.core.config.ConfigHolder;
-import com.wynntils.core.config.RegisterConfig;
 import com.wynntils.core.consumers.features.Feature;
+import com.wynntils.core.persisted.Persisted;
 import com.wynntils.core.text.PartStyle;
 import com.wynntils.core.text.StyledText;
 import com.wynntils.mc.event.ConnectionEvent;
@@ -26,13 +25,13 @@ import net.minecraft.core.Position;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 
 public class DiscordRichPresenceFeature extends Feature {
-    @RegisterConfig
+    @Persisted
     public final Config<Boolean> displayLocation = new Config<>(true);
 
-    @RegisterConfig
+    @Persisted
     public final Config<Boolean> displayCharacterInfo = new Config<>(true);
 
-    @RegisterConfig
+    @Persisted
     public final Config<Boolean> displayWorld = new Config<>(true);
 
     private static final int TERRITORY_TICKS_DELAY = 10;
@@ -124,7 +123,7 @@ public class DiscordRichPresenceFeature extends Feature {
     }
 
     @Override
-    protected void onConfigUpdate(ConfigHolder<?> configHolder) {
+    protected void onConfigUpdate(Config<?> config) {
         if (this.isEnabled()) {
             // This isReady() check is required for Linux to not crash on config change.
             if (!Services.Discord.isReady()) {

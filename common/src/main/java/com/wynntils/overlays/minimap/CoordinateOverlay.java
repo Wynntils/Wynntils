@@ -6,11 +6,10 @@ package com.wynntils.overlays.minimap;
 
 import com.wynntils.core.components.Models;
 import com.wynntils.core.config.Config;
-import com.wynntils.core.config.ConfigHolder;
-import com.wynntils.core.config.RegisterConfig;
 import com.wynntils.core.consumers.overlays.OverlayPosition;
 import com.wynntils.core.consumers.overlays.OverlaySize;
 import com.wynntils.core.consumers.overlays.TextOverlay;
+import com.wynntils.core.persisted.Persisted;
 import com.wynntils.utils.render.type.HorizontalAlignment;
 import com.wynntils.utils.render.type.VerticalAlignment;
 
@@ -18,10 +17,10 @@ public class CoordinateOverlay extends TextOverlay {
     private static final String TEMPLATE = "{x(my_loc):0} {y(my_loc):0} {z(my_loc):0}";
     private static final String TEMPLATE_COLORED = "&c{x(my_loc):0} &a{y(my_loc):0} &9{z(my_loc):0}";
 
-    @RegisterConfig
+    @Persisted
     public final Config<Boolean> shouldBeColored = new Config<>(false);
 
-    @RegisterConfig
+    @Persisted
     public final Config<Boolean> shouldDisplayOriginal = new Config<>(false);
 
     public CoordinateOverlay() {
@@ -38,7 +37,7 @@ public class CoordinateOverlay extends TextOverlay {
     }
 
     @Override
-    protected void onConfigUpdate(ConfigHolder<?> configHolder) {
+    protected void onConfigUpdate(Config<?> config) {
         Models.CharacterStats.hideCoordinates(!this.shouldDisplayOriginal.get());
     }
 

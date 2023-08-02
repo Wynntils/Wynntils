@@ -9,12 +9,11 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import com.wynntils.core.components.Models;
 import com.wynntils.core.components.Services;
 import com.wynntils.core.config.Config;
-import com.wynntils.core.config.ConfigHolder;
-import com.wynntils.core.config.RegisterConfig;
 import com.wynntils.core.consumers.overlays.ContainerOverlay;
 import com.wynntils.core.consumers.overlays.Overlay;
 import com.wynntils.core.consumers.overlays.OverlayPosition;
 import com.wynntils.core.consumers.overlays.OverlaySize;
+import com.wynntils.core.persisted.Persisted;
 import com.wynntils.core.text.StyledText;
 import com.wynntils.handlers.scoreboard.event.ScoreboardSegmentAdditionEvent;
 import com.wynntils.models.players.event.HadesRelationsUpdateEvent;
@@ -47,16 +46,16 @@ public class PartyMembersOverlay extends ContainerOverlay<PartyMembersOverlay.Pa
     private static final HadesUser DUMMY_USER_2 =
             new HadesUser("Player 2", new CappedValue(4561, 9870), new CappedValue(98, 170));
 
-    @RegisterConfig
+    @Persisted
     public final Config<Boolean> disablePartyMembersOnScoreboard = new Config<>(false);
 
-    @RegisterConfig
+    @Persisted
     public final Config<Integer> maxPartyMembers = new Config<>(4);
 
-    @RegisterConfig
+    @Persisted
     public final Config<HealthTexture> healthTexture = new Config<>(HealthTexture.A);
 
-    @RegisterConfig
+    @Persisted
     public final Config<ManaTexture> manaTexture = new Config<>(ManaTexture.A);
 
     public PartyMembersOverlay() {
@@ -222,6 +221,6 @@ public class PartyMembersOverlay extends ContainerOverlay<PartyMembersOverlay.Pa
         }
 
         @Override
-        protected void onConfigUpdate(ConfigHolder<?> configHolder) {}
+        protected void onConfigUpdate(Config<?> config) {}
     }
 }

@@ -9,8 +9,8 @@ import com.wynntils.core.components.Models;
 import com.wynntils.core.config.Category;
 import com.wynntils.core.config.Config;
 import com.wynntils.core.config.ConfigCategory;
-import com.wynntils.core.config.RegisterConfig;
 import com.wynntils.core.consumers.features.Feature;
+import com.wynntils.core.persisted.Persisted;
 import com.wynntils.core.text.StyledText;
 import com.wynntils.mc.event.ContainerCloseEvent;
 import com.wynntils.mc.event.ContainerSetContentEvent;
@@ -40,25 +40,25 @@ import org.lwjgl.glfw.GLFW;
 
 @ConfigCategory(Category.INVENTORY)
 public class ContainerSearchFeature extends Feature {
-    @RegisterConfig
+    @Persisted
     public final Config<Boolean> filterInBank = new Config<>(true);
 
-    @RegisterConfig
+    @Persisted
     public final Config<Boolean> filterInBlockBank = new Config<>(true);
 
-    @RegisterConfig
+    @Persisted
     public final Config<Boolean> filterInBookshelf = new Config<>(true);
 
-    @RegisterConfig
+    @Persisted
     public final Config<Boolean> filterInMiscBucket = new Config<>(true);
 
-    @RegisterConfig
+    @Persisted
     public final Config<Boolean> filterInGuildBank = new Config<>(true);
 
-    @RegisterConfig
+    @Persisted
     public final Config<Boolean> filterInGuildMemberList = new Config<>(true);
 
-    @RegisterConfig
+    @Persisted
     public final Config<CustomColor> highlightColor = new Config<>(CommonColors.MAGENTA);
 
     // If the guild bank has lots of custom (crafted) items, it can take multiple packets and a decent amount of time

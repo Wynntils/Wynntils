@@ -11,11 +11,10 @@ import com.wynntils.core.components.Managers;
 import com.wynntils.core.components.Models;
 import com.wynntils.core.components.Services;
 import com.wynntils.core.config.Config;
-import com.wynntils.core.config.ConfigHolder;
-import com.wynntils.core.config.RegisterConfig;
 import com.wynntils.core.consumers.overlays.Overlay;
 import com.wynntils.core.consumers.overlays.OverlayPosition;
 import com.wynntils.core.consumers.overlays.OverlaySize;
+import com.wynntils.core.persisted.Persisted;
 import com.wynntils.core.text.StyledText;
 import com.wynntils.features.map.MainMapFeature;
 import com.wynntils.services.map.MapTexture;
@@ -40,7 +39,6 @@ import com.wynntils.utils.render.type.TextShadow;
 import com.wynntils.utils.render.type.VerticalAlignment;
 import com.wynntils.utils.type.BoundingBox;
 import java.util.List;
-import java.util.Optional;
 import java.util.stream.Stream;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.renderer.MultiBufferSource;
@@ -48,40 +46,40 @@ import net.minecraft.client.renderer.MultiBufferSource;
 public class MinimapOverlay extends Overlay {
     private static final int DEFAULT_SIZE = 130;
 
-    @RegisterConfig
+    @Persisted
     public final Config<Float> scale = new Config<>(1f);
 
-    @RegisterConfig
+    @Persisted
     public final Config<Float> poiScale = new Config<>(0.6f);
 
-    @RegisterConfig
+    @Persisted
     public final Config<Float> pointerScale = new Config<>(0.8f);
 
-    @RegisterConfig
+    @Persisted
     public final Config<Boolean> followPlayerRotation = new Config<>(true);
 
-    @RegisterConfig
+    @Persisted
     public final Config<CustomColor> pointerColor = new Config<>(new CustomColor(1f, 1f, 1f, 1f));
 
-    @RegisterConfig
+    @Persisted
     public final Config<MapMaskType> maskType = new Config<>(MapMaskType.RECTANGULAR);
 
-    @RegisterConfig
+    @Persisted
     public final Config<MapBorderType> borderType = new Config<>(MapBorderType.WYNN);
 
-    @RegisterConfig
+    @Persisted
     public final Config<PointerType> pointerType = new Config<>(PointerType.ARROW);
 
-    @RegisterConfig
+    @Persisted
     public final Config<CompassRenderType> showCompass = new Config<>(CompassRenderType.ALL);
 
-    @RegisterConfig
+    @Persisted
     public final Config<Boolean> renderRemoteFriendPlayers = new Config<>(true);
 
-    @RegisterConfig
+    @Persisted
     public final Config<Boolean> renderRemotePartyPlayers = new Config<>(true);
 
-    @RegisterConfig
+    @Persisted
     public final Config<Float> remotePlayersHeadScale = new Config<>(0.4f);
 
     public MinimapOverlay() {
@@ -264,110 +262,110 @@ public class MinimapOverlay extends Overlay {
         bufferSource.endBatch();
 
         // Compass icon
-        Optional<WaypointPoi> compassOpt = Models.Compass.getCompassWaypoint();
+        List<WaypointPoi> waypointPois =
+                Models.Marker.USER_WAYPOINTS_PROVIDER.getWaypointPois().toList();
+        for (WaypointPoi waypointPoi : waypointPois) {
+            PoiLocation compassLocation = waypointPoi.getLocation();
+            if (compassLocation == null) return;
 
-        if (compassOpt.isEmpty()) return;
+            float compassOffsetX = (compassLocation.getX() - (float) playerX) / scale.get();
+            float compassOffsetZ = (compassLocation.getZ() - (float) playerZ) / scale.get();
 
-        WaypointPoi compass = compassOpt.get();
+            if (followPlayerRotation.get()) {
+                float tempCompassOffsetX = compassOffsetX * cosRotationRadians - compassOffsetZ * sinRotationRadians;
 
-        PoiLocation compassLocation = compass.getLocation();
-        if (compassLocation == null) return;
+                compassOffsetZ = compassOffsetX * sinRotationRadians + compassOffsetZ * cosRotationRadians;
+                compassOffsetX = tempCompassOffsetX;
+            }
 
-        float compassOffsetX = (compassLocation.getX() - (float) playerX) / scale.get();
-        float compassOffsetZ = (compassLocation.getZ() - (float) playerZ) / scale.get();
+            final float compassSize = Math.max(
+                            waypointPoi.getWidth(currentZoom, poiScale.get()),
+                            waypointPoi.getHeight(currentZoom, poiScale.get()))
+                    * 0.8f;
 
-        if (followPlayerRotation.get()) {
-            float tempCompassOffsetX = compassOffsetX * cosRotationRadians - compassOffsetZ * sinRotationRadians;
+            float compassRenderX = compassOffsetX + centerX;
+            float compassRenderZ = compassOffsetZ + centerZ;
 
-            compassOffsetZ = compassOffsetX * sinRotationRadians + compassOffsetZ * cosRotationRadians;
-            compassOffsetX = tempCompassOffsetX;
-        }
+            // Normalize offset for later
+            float distance = MathUtils.magnitude(compassOffsetX, compassOffsetZ);
+            compassOffsetX /= distance;
+            compassOffsetZ /= distance;
 
-        final float compassSize =
-                Math.max(compass.getWidth(currentZoom, poiScale.get()), compass.getHeight(currentZoom, poiScale.get()))
-                        * 0.8f;
+            // Subtract compassSize so scaled remains within boundary
+            float scaledWidth = width - 2 * compassSize;
+            float scaledHeight = height - 2 * compassSize;
 
-        float compassRenderX = compassOffsetX + centerX;
-        float compassRenderZ = compassOffsetZ + centerZ;
+            float toBorderScale = 1f;
 
-        // Normalize offset for later
-        float distance = MathUtils.magnitude(compassOffsetX, compassOffsetZ);
-        compassOffsetX /= distance;
-        compassOffsetZ /= distance;
+            if (maskType.get() == MapMaskType.RECTANGULAR) {
+                // Scale as necessary
+                toBorderScale =
+                        Math.min(scaledWidth / Math.abs(compassOffsetX), scaledHeight / Math.abs(compassOffsetZ)) / 2;
+            } else if (maskType.get() == MapMaskType.CIRCLE) {
+                toBorderScale = scaledWidth
+                        / (MathUtils.magnitude(compassOffsetX, compassOffsetZ * scaledWidth / scaledHeight))
+                        / 2;
+            }
 
-        // Subtract compassSize so scaled remains within boundary
-        float scaledWidth = width - 2 * compassSize;
-        float scaledHeight = height - 2 * compassSize;
+            if (toBorderScale < distance) {
+                // Scale to border
+                compassRenderX = centerX + compassOffsetX * toBorderScale;
+                compassRenderZ = centerZ + compassOffsetZ * toBorderScale;
 
-        float toBorderScale = 1f;
+                // Replace with pointer
+                float angle = (float) Math.toDegrees(StrictMath.atan2(compassOffsetZ, compassOffsetX)) + 90f;
 
-        if (maskType.get() == MapMaskType.RECTANGULAR) {
-            // Scale as necessary
-            toBorderScale =
-                    Math.min(scaledWidth / Math.abs(compassOffsetX), scaledHeight / Math.abs(compassOffsetZ)) / 2;
-        } else if (maskType.get() == MapMaskType.CIRCLE) {
-            toBorderScale = scaledWidth
-                    / (MathUtils.magnitude(compassOffsetX, compassOffsetZ * scaledWidth / scaledHeight))
-                    / 2;
-        }
+                poseStack.pushPose();
+                RenderUtils.rotatePose(poseStack, compassRenderX, compassRenderZ, angle);
+                waypointPoi
+                        .getPointerPoi()
+                        .renderAt(
+                                poseStack,
+                                bufferSource,
+                                compassRenderX,
+                                compassRenderZ,
+                                false,
+                                poiScale.get(),
+                                1f / scale.get());
+                poseStack.popPose();
+            } else {
+                waypointPoi.renderAt(
+                        poseStack, bufferSource, compassRenderX, compassRenderZ, false, poiScale.get(), currentZoom);
+            }
 
-        if (toBorderScale < distance) {
-            // Scale to border
-            compassRenderX = centerX + compassOffsetX * toBorderScale;
-            compassRenderZ = centerZ + compassOffsetZ * toBorderScale;
-
-            // Replace with pointer
-            float angle = (float) Math.toDegrees(StrictMath.atan2(compassOffsetZ, compassOffsetX)) + 90f;
+            bufferSource.endBatch();
 
             poseStack.pushPose();
-            RenderUtils.rotatePose(poseStack, compassRenderX, compassRenderZ, angle);
-            compass.getPointerPoi()
-                    .renderAt(
-                            poseStack,
-                            bufferSource,
-                            compassRenderX,
-                            compassRenderZ,
-                            false,
-                            poiScale.get(),
-                            1f / scale.get());
+            poseStack.translate(centerX, centerZ, 0);
+            poseStack.scale(0.8f, 0.8f, 1);
+            poseStack.translate(-centerX, -centerZ, 0);
+
+            FontRenderer fontRenderer = FontRenderer.getInstance();
+            Font font = fontRenderer.getFont();
+
+            String text = StringUtils.integerToShortString(Math.round(distance * scale.get())) + "m";
+            float w = font.width(text) / 2f, h = font.lineHeight / 2f;
+
+            RenderUtils.drawRect(
+                    poseStack,
+                    new CustomColor(0f, 0f, 0f, 0.7f),
+                    compassRenderX - w - 3f,
+                    compassRenderZ - h - 1f,
+                    0,
+                    2 * w + 6,
+                    2 * h + 1);
+            fontRenderer.renderText(
+                    poseStack,
+                    StyledText.fromString(text),
+                    compassRenderX,
+                    compassRenderZ - 3f,
+                    CommonColors.WHITE,
+                    HorizontalAlignment.CENTER,
+                    VerticalAlignment.TOP,
+                    TextShadow.NORMAL);
+
             poseStack.popPose();
-        } else {
-            compass.renderAt(
-                    poseStack, bufferSource, compassRenderX, compassRenderZ, false, poiScale.get(), currentZoom);
         }
-
-        bufferSource.endBatch();
-
-        poseStack.pushPose();
-        poseStack.translate(centerX, centerZ, 0);
-        poseStack.scale(0.8f, 0.8f, 1);
-        poseStack.translate(-centerX, -centerZ, 0);
-
-        FontRenderer fontRenderer = FontRenderer.getInstance();
-        Font font = fontRenderer.getFont();
-
-        String text = StringUtils.integerToShortString(Math.round(distance * scale.get())) + "m";
-        float w = font.width(text) / 2f, h = font.lineHeight / 2f;
-
-        RenderUtils.drawRect(
-                poseStack,
-                new CustomColor(0f, 0f, 0f, 0.7f),
-                compassRenderX - w - 3f,
-                compassRenderZ - h - 1f,
-                0,
-                2 * w + 6,
-                2 * h + 1);
-        fontRenderer.renderText(
-                poseStack,
-                StyledText.fromString(text),
-                compassRenderX,
-                compassRenderZ - 3f,
-                CommonColors.WHITE,
-                HorizontalAlignment.CENTER,
-                VerticalAlignment.TOP,
-                TextShadow.NORMAL);
-
-        poseStack.popPose();
     }
 
     private void renderCardinalDirections(
@@ -482,7 +480,7 @@ public class MinimapOverlay extends Overlay {
     }
 
     @Override
-    protected void onConfigUpdate(ConfigHolder<?> configHolder) {}
+    protected void onConfigUpdate(Config<?> config) {}
 
     private enum CompassRenderType {
         NONE,

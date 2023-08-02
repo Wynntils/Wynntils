@@ -8,10 +8,9 @@ import com.mojang.blaze3d.platform.Window;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.wynntils.core.components.Models;
 import com.wynntils.core.config.Config;
-import com.wynntils.core.config.ConfigHolder;
-import com.wynntils.core.config.RegisterConfig;
 import com.wynntils.core.consumers.overlays.Overlay;
 import com.wynntils.core.consumers.overlays.OverlayPosition;
+import com.wynntils.core.persisted.Persisted;
 import com.wynntils.core.text.StyledText;
 import com.wynntils.mc.event.RenderEvent;
 import com.wynntils.utils.colors.CustomColor;
@@ -45,7 +44,7 @@ public class CustomPlayerListOverlay extends Overlay {
     private static final int TOTAL_WIDTH = WIDTH + ROLL_WIDTH * 2;
     private static final int MAX_WIDTH = 73;
 
-    @RegisterConfig
+    @Persisted
     public final Config<Integer> openingDuration = new Config<>(125);
 
     private final AnimationPercentage animationPercentage = new AnimationPercentage(
@@ -199,7 +198,7 @@ public class CustomPlayerListOverlay extends Overlay {
     }
 
     @Override
-    protected void onConfigUpdate(ConfigHolder<?> configHolder) {
+    protected void onConfigUpdate(Config<?> config) {
         animationPercentage.setOpeningDuration(Duration.of(openingDuration.get(), ChronoUnit.MILLIS));
     }
 }

@@ -6,7 +6,7 @@ package com.wynntils.core.config.upfixers.impl;
 
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
-import com.wynntils.core.config.ConfigHolder;
+import com.wynntils.core.config.Config;
 import com.wynntils.core.config.upfixers.ConfigUpfixer;
 import java.util.List;
 import java.util.Set;
@@ -85,7 +85,7 @@ public class GameBarOverlayMoveUpfixer implements ConfigUpfixer {
     private static final String NEW_KEY_PREFIX = "gameBarsOverlayFeature.";
 
     @Override
-    public boolean apply(JsonObject configObject, Set<ConfigHolder<?>> configHolders) {
+    public boolean apply(JsonObject configObject, Set<Config<?>> configs) {
         for (String key : KEYS_TO_CHANGE) {
             if (!configObject.has(key)) continue;
 

@@ -6,10 +6,10 @@ package com.wynntils.overlays;
 
 import com.wynntils.core.components.Models;
 import com.wynntils.core.config.Config;
-import com.wynntils.core.config.RegisterConfig;
 import com.wynntils.core.consumers.overlays.OverlayPosition;
 import com.wynntils.core.consumers.overlays.OverlaySize;
 import com.wynntils.core.consumers.overlays.TextOverlay;
+import com.wynntils.core.persisted.Persisted;
 import com.wynntils.core.text.StyledText;
 import com.wynntils.utils.colors.ColorChatFormatting;
 import com.wynntils.utils.mc.RenderedStringUtils;
@@ -21,16 +21,16 @@ import java.util.stream.Collectors;
 import net.minecraft.ChatFormatting;
 
 public class ShamanTotemTimerOverlay extends TextOverlay {
-    @RegisterConfig
+    @Persisted
     public final Config<TotemTrackingDetail> totemTrackingDetail = new Config<>(TotemTrackingDetail.COORDS);
 
-    @RegisterConfig
+    @Persisted
     public final Config<ColorChatFormatting> firstTotemTextColor = new Config<>(ColorChatFormatting.WHITE);
 
-    @RegisterConfig
+    @Persisted
     public final Config<ColorChatFormatting> secondTotemTextColor = new Config<>(ColorChatFormatting.BLUE);
 
-    @RegisterConfig
+    @Persisted
     public final Config<ColorChatFormatting> thirdTotemTextColor = new Config<>(ColorChatFormatting.RED);
 
     public ShamanTotemTimerOverlay() {

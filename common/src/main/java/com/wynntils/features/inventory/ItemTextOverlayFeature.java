@@ -10,8 +10,8 @@ import com.wynntils.core.components.Models;
 import com.wynntils.core.config.Category;
 import com.wynntils.core.config.Config;
 import com.wynntils.core.config.ConfigCategory;
-import com.wynntils.core.config.RegisterConfig;
 import com.wynntils.core.consumers.features.Feature;
+import com.wynntils.core.persisted.Persisted;
 import com.wynntils.mc.event.HotbarSlotRenderEvent;
 import com.wynntils.mc.event.SlotRenderEvent;
 import com.wynntils.models.elements.type.Skill;
@@ -40,73 +40,73 @@ import net.minecraftforge.eventbus.api.SubscribeEvent;
 
 @ConfigCategory(Category.INVENTORY)
 public class ItemTextOverlayFeature extends Feature {
-    @RegisterConfig
+    @Persisted
     public final Config<Boolean> amplifierTierEnabled = new Config<>(true);
 
-    @RegisterConfig
+    @Persisted
     public final Config<Boolean> amplifierTierRomanNumerals = new Config<>(true);
 
-    @RegisterConfig
+    @Persisted
     public final Config<TextShadow> amplifierTierShadow = new Config<>(TextShadow.OUTLINE);
 
-    @RegisterConfig
+    @Persisted
     public final Config<Boolean> dungeonKeyEnabled = new Config<>(true);
 
-    @RegisterConfig
+    @Persisted
     public final Config<TextShadow> dungeonKeyShadow = new Config<>(TextShadow.OUTLINE);
 
-    @RegisterConfig
+    @Persisted
     public final Config<Boolean> emeraldPouchTierEnabled = new Config<>(true);
 
-    @RegisterConfig
+    @Persisted
     public final Config<Boolean> emeraldPouchTierRomanNumerals = new Config<>(true);
 
-    @RegisterConfig
+    @Persisted
     public final Config<TextShadow> emeraldPouchTierShadow = new Config<>(TextShadow.OUTLINE);
 
-    @RegisterConfig
+    @Persisted
     public final Config<Boolean> gatheringToolTierEnabled = new Config<>(true);
 
-    @RegisterConfig
+    @Persisted
     public final Config<Boolean> gatheringToolTierRomanNumerals = new Config<>(true);
 
-    @RegisterConfig
+    @Persisted
     public final Config<TextShadow> gatheringToolTierShadow = new Config<>(TextShadow.OUTLINE);
 
-    @RegisterConfig
+    @Persisted
     public final Config<Boolean> horseTierEnabled = new Config<>(true);
 
-    @RegisterConfig
+    @Persisted
     public final Config<Boolean> horseTierRomanNumerals = new Config<>(true);
 
-    @RegisterConfig
+    @Persisted
     public final Config<TextShadow> horseTierShadow = new Config<>(TextShadow.OUTLINE);
 
-    @RegisterConfig
+    @Persisted
     public final Config<Boolean> hotbarTextOverlayEnabled = new Config<>(true);
 
-    @RegisterConfig
+    @Persisted
     public final Config<Boolean> inventoryTextOverlayEnabled = new Config<>(true);
 
-    @RegisterConfig
+    @Persisted
     public final Config<Boolean> powderTierEnabled = new Config<>(true);
 
-    @RegisterConfig
+    @Persisted
     public final Config<Boolean> powderTierRomanNumerals = new Config<>(true);
 
-    @RegisterConfig
+    @Persisted
     public final Config<TextShadow> powderTierShadow = new Config<>(TextShadow.OUTLINE);
 
-    @RegisterConfig
+    @Persisted
     public final Config<Boolean> skillIconEnabled = new Config<>(true);
 
-    @RegisterConfig
+    @Persisted
     public final Config<TextShadow> skillIconShadow = new Config<>(TextShadow.OUTLINE);
 
-    @RegisterConfig
+    @Persisted
     public final Config<Boolean> teleportScrollEnabled = new Config<>(true);
 
-    @RegisterConfig
+    @Persisted
     public final Config<TextShadow> teleportScrollShadow = new Config<>(TextShadow.OUTLINE);
 
     @SubscribeEvent

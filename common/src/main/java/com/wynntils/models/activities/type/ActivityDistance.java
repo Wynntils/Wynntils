@@ -5,6 +5,7 @@
 package com.wynntils.models.activities.type;
 
 public enum ActivityDistance {
+    VERY_NEAR("Very Near"), // This is a special case for the "Nearby" activity, getting this to show is not consistent
     NEAR("Near"),
     MEDIUM("Medium"),
     FAR("Far");

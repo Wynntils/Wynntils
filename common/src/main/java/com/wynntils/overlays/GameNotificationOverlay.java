@@ -7,14 +7,13 @@ package com.wynntils.overlays;
 import com.mojang.blaze3d.platform.Window;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.wynntils.core.config.Config;
-import com.wynntils.core.config.ConfigHolder;
-import com.wynntils.core.config.RegisterConfig;
 import com.wynntils.core.consumers.overlays.Overlay;
 import com.wynntils.core.consumers.overlays.OverlayPosition;
 import com.wynntils.core.consumers.overlays.OverlaySize;
 import com.wynntils.core.notifications.MessageContainer;
 import com.wynntils.core.notifications.TimedMessageContainer;
 import com.wynntils.core.notifications.event.NotificationEvent;
+import com.wynntils.core.persisted.Persisted;
 import com.wynntils.core.text.StyledText;
 import com.wynntils.models.worlds.event.WorldStateEvent;
 import com.wynntils.utils.render.TextRenderSetting;
@@ -32,22 +31,22 @@ import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 
 public class GameNotificationOverlay extends Overlay {
-    @RegisterConfig
+    @Persisted
     public final Config<Float> messageTimeLimit = new Config<>(12f);
 
-    @RegisterConfig
+    @Persisted
     public final Config<Integer> messageLimit = new Config<>(8);
 
-    @RegisterConfig
+    @Persisted
     public final Config<Boolean> invertGrowth = new Config<>(true);
 
-    @RegisterConfig
+    @Persisted
     public final Config<Integer> messageMaxLength = new Config<>(0);
 
-    @RegisterConfig
+    @Persisted
     public final Config<TextShadow> textShadow = new Config<>(TextShadow.OUTLINE);
 
-    @RegisterConfig
+    @Persisted
     public final Config<Boolean> overrideNewMessages = new Config<>(true);
 
     private TextRenderSetting textRenderSetting;
@@ -180,7 +179,7 @@ public class GameNotificationOverlay extends Overlay {
     }
 
     @Override
-    protected void onConfigUpdate(ConfigHolder<?> configHolder) {
+    protected void onConfigUpdate(Config<?> config) {
         updateTextRenderSetting();
     }
 

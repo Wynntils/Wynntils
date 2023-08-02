@@ -8,11 +8,10 @@ import com.mojang.blaze3d.platform.Window;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.wynntils.core.components.Models;
 import com.wynntils.core.config.Config;
-import com.wynntils.core.config.ConfigHolder;
-import com.wynntils.core.config.RegisterConfig;
 import com.wynntils.core.consumers.overlays.Overlay;
 import com.wynntils.core.consumers.overlays.OverlayPosition;
 import com.wynntils.core.consumers.overlays.OverlaySize;
+import com.wynntils.core.persisted.Persisted;
 import com.wynntils.handlers.scoreboard.event.ScoreboardSegmentAdditionEvent;
 import com.wynntils.models.territories.GuildAttackScoreboardPart;
 import com.wynntils.models.territories.TerritoryAttackTimer;
@@ -29,10 +28,10 @@ import net.minecraftforge.eventbus.api.EventPriority;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 
 public class TerritoryAttackTimerOverlay extends Overlay {
-    @RegisterConfig
+    @Persisted
     public final Config<Boolean> disableAttackTimersOnScoreboard = new Config<>(true);
 
-    @RegisterConfig
+    @Persisted
     public final Config<TextShadow> textShadow = new Config<>(TextShadow.OUTLINE);
 
     private TextRenderSetting textRenderSetting;
@@ -96,7 +95,7 @@ public class TerritoryAttackTimerOverlay extends Overlay {
     }
 
     @Override
-    protected void onConfigUpdate(ConfigHolder<?> configHolder) {
+    protected void onConfigUpdate(Config<?> config) {
         updateTextRenderSetting();
     }
 

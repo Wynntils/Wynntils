@@ -10,11 +10,10 @@ import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.components.Handlers;
 import com.wynntils.core.components.Managers;
 import com.wynntils.core.config.Config;
-import com.wynntils.core.config.ConfigHolder;
-import com.wynntils.core.config.RegisterConfig;
 import com.wynntils.core.consumers.overlays.Overlay;
 import com.wynntils.core.consumers.overlays.OverlayPosition;
 import com.wynntils.core.consumers.overlays.OverlaySize;
+import com.wynntils.core.persisted.Persisted;
 import com.wynntils.core.text.StyledText;
 import com.wynntils.features.overlays.NpcDialogueOverlayFeature;
 import com.wynntils.handlers.chat.event.NpcDialogEvent;
@@ -52,25 +51,25 @@ public class NpcDialogueOverlay extends Overlay {
     private static final Pattern NEW_QUEST_STARTED = Pattern.compile("^§6§lNew Quest Started: §e§l(.*)$");
     private static final StyledText PRESS_SNEAK_TO_CONTINUE = StyledText.fromString("§cPress SNEAK to continue");
 
-    @RegisterConfig
+    @Persisted
     public final Config<Boolean> autoProgress = new Config<>(false);
 
-    @RegisterConfig
+    @Persisted
     public final Config<Integer> dialogAutoProgressDefaultTime = new Config<>(1600); // Milliseconds
 
-    @RegisterConfig
+    @Persisted
     public final Config<Integer> dialogAutoProgressAdditionalTimePerWord = new Config<>(300); // Milliseconds
 
-    @RegisterConfig
+    @Persisted
     public final Config<TextShadow> textShadow = new Config<>(TextShadow.NORMAL);
 
-    @RegisterConfig
+    @Persisted
     public final Config<Float> backgroundOpacity = new Config<>(0.2f);
 
-    @RegisterConfig
+    @Persisted
     public final Config<Boolean> stripColors = new Config<>(false);
 
-    @RegisterConfig
+    @Persisted
     public final Config<Boolean> showHelperTexts = new Config<>(true);
 
     private final ScheduledExecutorService autoProgressExecutor = Executors.newSingleThreadScheduledExecutor();
@@ -144,7 +143,7 @@ public class NpcDialogueOverlay extends Overlay {
     }
 
     @Override
-    protected void onConfigUpdate(ConfigHolder<?> configHolder) {
+    protected void onConfigUpdate(Config<?> config) {
         updateDialogExtractionSettings();
         updateTextRenderSettings();
     }

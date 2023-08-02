@@ -7,10 +7,9 @@ package com.wynntils.features.chat;
 import com.wynntils.core.config.Category;
 import com.wynntils.core.config.Config;
 import com.wynntils.core.config.ConfigCategory;
-import com.wynntils.core.config.ConfigHolder;
-import com.wynntils.core.config.RegisterConfig;
 import com.wynntils.core.consumers.features.Feature;
 import com.wynntils.core.consumers.features.properties.StartDisabled;
+import com.wynntils.core.persisted.Persisted;
 import com.wynntils.handlers.chat.event.ChatMessageReceivedEvent;
 import com.wynntils.utils.mc.McUtils;
 import java.time.LocalDateTime;
@@ -26,13 +25,13 @@ import net.minecraftforge.eventbus.api.SubscribeEvent;
 @StartDisabled
 @ConfigCategory(Category.CHAT)
 public class ChatTimestampFeature extends Feature {
-    @RegisterConfig
+    @Persisted
     public final Config<String> formatPattern = new Config<>("HH:mm:ss");
 
     private DateTimeFormatter formatter = DateTimeFormatter.ofPattern(formatPattern.get(), Locale.ROOT);
 
     @Override
-    protected void onConfigUpdate(ConfigHolder<?> configHolder) {
+    protected void onConfigUpdate(Config<?> config) {
         // Try to set the new format string and if it fails revert to the default
         try {
             formatter = DateTimeFormatter.ofPattern(formatPattern.get(), Locale.ROOT);

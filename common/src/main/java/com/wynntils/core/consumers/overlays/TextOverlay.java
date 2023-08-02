@@ -9,8 +9,7 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import com.wynntils.core.components.Managers;
 import com.wynntils.core.components.Models;
 import com.wynntils.core.config.Config;
-import com.wynntils.core.config.ConfigHolder;
-import com.wynntils.core.config.RegisterConfig;
+import com.wynntils.core.persisted.Persisted;
 import com.wynntils.core.text.StyledText;
 import com.wynntils.mc.event.TickEvent;
 import com.wynntils.utils.colors.CommonColors;
@@ -27,10 +26,10 @@ import net.minecraftforge.eventbus.api.SubscribeEvent;
  * An overlay, which main purpose is to display function templates.
  */
 public abstract class TextOverlay extends DynamicOverlay {
-    @RegisterConfig(i18nKey = "overlay.wynntils.textOverlay.textShadow")
+    @Persisted(i18nKey = "overlay.wynntils.textOverlay.textShadow")
     public final Config<TextShadow> textShadow = new Config<>(TextShadow.OUTLINE);
 
-    @RegisterConfig(i18nKey = "overlay.wynntils.textOverlay.fontScale")
+    @Persisted(i18nKey = "overlay.wynntils.textOverlay.fontScale")
     public final Config<Float> fontScale = new Config<>(1.0f);
 
     private StyledText[] cachedLines = new StyledText[0];
@@ -127,5 +126,5 @@ public abstract class TextOverlay extends DynamicOverlay {
     protected abstract String getPreviewTemplate();
 
     @Override
-    protected void onConfigUpdate(ConfigHolder<?> configHolder) {}
+    protected void onConfigUpdate(Config<?> config) {}
 }

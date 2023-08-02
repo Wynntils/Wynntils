@@ -9,12 +9,11 @@ import com.wynntils.core.components.Models;
 import com.wynntils.core.config.Category;
 import com.wynntils.core.config.Config;
 import com.wynntils.core.config.ConfigCategory;
-import com.wynntils.core.config.RegisterConfig;
 import com.wynntils.core.consumers.features.Feature;
 import com.wynntils.core.consumers.features.properties.RegisterKeyBind;
 import com.wynntils.core.keybinds.KeyBind;
 import com.wynntils.core.mod.event.WynncraftConnectionEvent;
-import com.wynntils.core.storage.RegisterStorage;
+import com.wynntils.core.persisted.Persisted;
 import com.wynntils.core.storage.Storage;
 import com.wynntils.mc.event.TitleScreenInitEvent;
 import com.wynntils.utils.mc.McUtils;
@@ -35,14 +34,14 @@ import org.lwjgl.glfw.GLFW;
  */
 @ConfigCategory(Category.UTILITIES)
 public class SilencerFeature extends Feature {
-    @RegisterConfig
+    @Persisted
     public final Config<Double> silencerVolume = new Config<>(0.01);
 
     @RegisterKeyBind
     private final KeyBind silencerKeyBind =
             new KeyBind("Toggle Silencer", GLFW.GLFW_KEY_UNKNOWN, true, this::toggleSilencer);
 
-    @RegisterStorage
+    @Persisted
     private final Storage<Double> originalVolume = new Storage<>(1.0);
 
     private boolean isSilencerEnabled = false;

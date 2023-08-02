@@ -8,11 +8,10 @@ import com.mojang.blaze3d.platform.Window;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.wynntils.core.components.Models;
 import com.wynntils.core.config.Config;
-import com.wynntils.core.config.ConfigHolder;
-import com.wynntils.core.config.RegisterConfig;
 import com.wynntils.core.consumers.overlays.Overlay;
 import com.wynntils.core.consumers.overlays.OverlayPosition;
 import com.wynntils.core.consumers.overlays.OverlaySize;
+import com.wynntils.core.persisted.Persisted;
 import com.wynntils.core.text.StyledText;
 import com.wynntils.models.elements.type.Powder;
 import com.wynntils.utils.colors.CommonColors;
@@ -28,16 +27,16 @@ import com.wynntils.utils.wynn.ItemUtils;
 import net.minecraft.client.renderer.MultiBufferSource;
 
 public class PowderSpecialBarOverlay extends Overlay {
-    @RegisterConfig
+    @Persisted
     public final Config<TextShadow> textShadow = new Config<>(TextShadow.OUTLINE);
 
-    @RegisterConfig
+    @Persisted
     public final Config<Boolean> flip = new Config<>(false);
 
-    @RegisterConfig
+    @Persisted
     public final Config<Boolean> onlyIfWeaponHeld = new Config<>(true);
 
-    @RegisterConfig
+    @Persisted
     public final Config<Boolean> hideIfNoCharge = new Config<>(true);
 
     public PowderSpecialBarOverlay() {
@@ -68,7 +67,7 @@ public class PowderSpecialBarOverlay extends Overlay {
     }
 
     @Override
-    protected void onConfigUpdate(ConfigHolder<?> configHolder) {}
+    protected void onConfigUpdate(Config<?> config) {}
 
     private void renderWithSpecificSpecial(
             PoseStack poseStack, MultiBufferSource bufferSource, float powderSpecialCharge, Powder powderSpecialType) {

@@ -10,10 +10,10 @@ import com.wynntils.core.config.Category;
 import com.wynntils.core.config.Config;
 import com.wynntils.core.config.ConfigCategory;
 import com.wynntils.core.config.HiddenConfig;
-import com.wynntils.core.config.RegisterConfig;
 import com.wynntils.core.consumers.features.Feature;
 import com.wynntils.core.consumers.features.properties.RegisterKeyBind;
 import com.wynntils.core.keybinds.KeyBind;
+import com.wynntils.core.persisted.Persisted;
 import com.wynntils.mc.event.PlayerInteractEvent;
 import com.wynntils.mc.event.ScreenOpenedEvent;
 import com.wynntils.screens.maps.MainMapScreen;
@@ -41,70 +41,70 @@ import org.lwjgl.glfw.GLFW;
 
 @ConfigCategory(Category.MAP)
 public class MainMapFeature extends Feature {
-    @RegisterConfig
+    @Persisted
     public final HiddenConfig<List<CustomPoi>> customPois = new HiddenConfig<>(new ArrayList<>());
 
-    @RegisterConfig
+    @Persisted
     public final Config<Float> poiFadeAdjustment = new Config<>(0.4f);
 
-    @RegisterConfig
+    @Persisted
     public final Config<Float> combatPoiMinZoom = new Config<>(0.166f);
 
-    @RegisterConfig
+    @Persisted
     public final Config<Float> cavePoiMinZoom = new Config<>(0.28f);
 
-    @RegisterConfig
+    @Persisted
     public final Config<Float> servicePoiMinZoom = new Config<>(0.8f);
 
-    @RegisterConfig
+    @Persisted
     public final Config<Float> fastTravelPoiMinZoom = new Config<>(0.166f);
 
-    @RegisterConfig
+    @Persisted
     public final Config<Float> customPoiMinZoom = new Config<>(0.28f);
 
-    @RegisterConfig
+    @Persisted
     public final Config<Float> lootChestTier1PoiMinZoom = new Config<>(0.8f);
 
-    @RegisterConfig
+    @Persisted
     public final Config<Float> lootChestTier2PoiMinZoom = new Config<>(0.8f);
 
-    @RegisterConfig
+    @Persisted
     public final Config<Float> lootChestTier3PoiMinZoom = new Config<>(0.28f);
 
-    @RegisterConfig
+    @Persisted
     public final Config<Float> lootChestTier4PoiMinZoom = new Config<>(0.28f);
 
-    @RegisterConfig
+    @Persisted
     public final Config<PointerType> pointerType = new Config<>(PointerType.ARROW);
 
-    @RegisterConfig
+    @Persisted
     public final Config<CustomColor> pointerColor = new Config<>(new CustomColor(1f, 1f, 1f, 1f));
 
-    @RegisterConfig
+    @Persisted
     public final Config<Float> playerPointerScale = new Config<>(1.5f);
 
-    @RegisterConfig
+    @Persisted
     public final Config<Float> poiScale = new Config<>(1f);
 
-    @RegisterConfig
+    @Persisted
     public final Config<Boolean> autoWaypointChests = new Config<>(true);
 
-    @RegisterConfig
+    @Persisted
     public final Config<ChestTier> minTierForAutoWaypoint = new Config<>(ChestTier.TIER_3);
 
-    @RegisterConfig
+    @Persisted
     public final Config<Boolean> renderRemoteFriendPlayers = new Config<>(true);
 
-    @RegisterConfig
+    @Persisted
     public final Config<Boolean> renderRemotePartyPlayers = new Config<>(true);
 
-    @RegisterConfig
+    @Persisted
     public final Config<HealthTexture> remotePlayerHealthTexture = new Config<>(HealthTexture.A);
 
-    @RegisterConfig
+    @Persisted
     public final Config<TextShadow> remotePlayerNameShadow = new Config<>(TextShadow.OUTLINE);
 
-    @RegisterConfig
+    @Persisted
     public final Config<Boolean> holdGuildMapOpen = new Config<>(true);
 
     private BlockPos lastChestPos;
@@ -180,7 +180,7 @@ public class MainMapFeature extends Feature {
             Managers.Notification.queueMessage(Component.literal("Added new waypoint for " + tier.getWaypointName())
                     .withStyle(ChatFormatting.AQUA));
 
-            Managers.Config.saveConfig();
+            customPois.touched();
         }
     }
 

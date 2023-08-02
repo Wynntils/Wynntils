@@ -9,8 +9,7 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import com.wynntils.core.components.Managers;
 import com.wynntils.core.components.Models;
 import com.wynntils.core.config.Config;
-import com.wynntils.core.config.ConfigHolder;
-import com.wynntils.core.config.RegisterConfig;
+import com.wynntils.core.persisted.Persisted;
 import com.wynntils.core.text.StyledText;
 import com.wynntils.mc.event.TickEvent;
 import com.wynntils.utils.colors.CommonColors;
@@ -26,16 +25,16 @@ import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 
 public abstract class BarOverlay extends DynamicOverlay {
-    @RegisterConfig(i18nKey = "overlay.wynntils.barOverlay.textShadow")
+    @Persisted(i18nKey = "overlay.wynntils.barOverlay.textShadow")
     public final Config<TextShadow> textShadow = new Config<>(TextShadow.OUTLINE);
 
-    @RegisterConfig(i18nKey = "overlay.wynntils.barOverlay.flip")
+    @Persisted(i18nKey = "overlay.wynntils.barOverlay.flip")
     public final Config<Boolean> flip = new Config<>(false);
 
-    @RegisterConfig(i18nKey = "overlay.wynntils.barOverlay.animationTime")
+    @Persisted(i18nKey = "overlay.wynntils.barOverlay.animationTime")
     public final Config<Float> animationTime = new Config<>(2f);
 
-    @RegisterConfig(i18nKey = "overlay.wynntils.barOverlay.heightModifier")
+    @Persisted(i18nKey = "overlay.wynntils.barOverlay.heightModifier")
     public final Config<Float> heightModifier = new Config<>(1f);
 
     private Pair<StyledText, ErrorOr<CappedValue>> templateCache;
@@ -189,7 +188,7 @@ public abstract class BarOverlay extends DynamicOverlay {
     }
 
     @Override
-    protected void onConfigUpdate(ConfigHolder<?> configHolder) {}
+    protected void onConfigUpdate(Config<?> config) {}
 
     protected abstract boolean isRendered();
 

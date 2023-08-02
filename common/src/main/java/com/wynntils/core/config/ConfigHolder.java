@@ -52,7 +52,7 @@ public class ConfigHolder<T> implements Comparable<ConfigHolder<T>> {
     }
 
     public Stream<String> getValidLiterals() {
-        if (valueType instanceof Class clazz && clazz.isEnum()) {
+        if (valueType instanceof Class<?> clazz && clazz.isEnum()) {
             return EnumUtils.getEnumConstants(clazz).stream().map(EnumUtils::toJsonFormat);
         }
         if (valueType.equals(Boolean.class)) {
@@ -117,14 +117,14 @@ public class ConfigHolder<T> implements Comparable<ConfigHolder<T>> {
         if (configObj.get() == null) return "(null)";
 
         if (isEnum()) {
-            return EnumUtils.toNiceString((Enum) this.getValue());
+            return EnumUtils.toNiceString((Enum<?>) this.getValue());
         }
 
         return configObj.get().toString();
     }
 
     public boolean isEnum() {
-        return valueType instanceof Class clazz && clazz.isEnum();
+        return valueType instanceof Class<?> clazz && clazz.isEnum();
     }
 
     public T getDefaultValue() {
@@ -139,7 +139,7 @@ public class ConfigHolder<T> implements Comparable<ConfigHolder<T>> {
         }
 
         configObj.updateConfig(value);
-        parent.updateConfigOption(this);
+        parent.updateConfigOption(configObj);
         userEdited = true;
     }
 
@@ -175,9 +175,9 @@ public class ConfigHolder<T> implements Comparable<ConfigHolder<T>> {
         userEdited = false;
     }
 
-    public T tryParseStringValue(String value) {
+    public <E extends Enum<E>> T tryParseStringValue(String value) {
         if (isEnum()) {
-            return (T) EnumUtils.fromJsonFormat((Class<? extends Enum<?>>) getType(), value);
+            return (T) EnumUtils.fromJsonFormat((Class<E>) getType(), value);
         }
 
         try {

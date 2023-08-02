@@ -6,19 +6,19 @@ package com.wynntils.overlays.custombars;
 
 import com.wynntils.core.components.Managers;
 import com.wynntils.core.config.Config;
-import com.wynntils.core.config.RegisterConfig;
 import com.wynntils.core.consumers.overlays.BarOverlay;
 import com.wynntils.core.consumers.overlays.OverlaySize;
+import com.wynntils.core.persisted.Persisted;
 import com.wynntils.utils.type.ErrorOr;
 
 public abstract class CustomBarOverlayBase extends BarOverlay {
-    @RegisterConfig(i18nKey = "feature.wynntils.customBarsOverlay.overlay.customBarBase.textTemplate")
+    @Persisted(i18nKey = "feature.wynntils.customBarsOverlay.overlay.customBarBase.textTemplate")
     public final Config<String> textTemplate = new Config<>("");
 
-    @RegisterConfig(i18nKey = "feature.wynntils.customBarsOverlay.overlay.customBarBase.valueTemplate")
+    @Persisted(i18nKey = "feature.wynntils.customBarsOverlay.overlay.customBarBase.valueTemplate")
     public final Config<String> valueTemplate = new Config<>("");
 
-    @RegisterConfig(i18nKey = "feature.wynntils.customBarsOverlay.overlay.customBarBase.enabledTemplate")
+    @Persisted(i18nKey = "feature.wynntils.customBarsOverlay.overlay.customBarBase.enabledTemplate")
     public final Config<String> enabledTemplate = new Config<>("string_equals(world_state;\"WORLD\")");
 
     protected CustomBarOverlayBase(int id, OverlaySize overlaySize) {

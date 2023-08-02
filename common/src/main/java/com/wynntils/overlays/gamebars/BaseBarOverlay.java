@@ -8,11 +8,10 @@ import com.mojang.blaze3d.platform.Window;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.wynntils.core.components.Models;
 import com.wynntils.core.config.Config;
-import com.wynntils.core.config.ConfigHolder;
-import com.wynntils.core.config.RegisterConfig;
 import com.wynntils.core.consumers.overlays.Overlay;
 import com.wynntils.core.consumers.overlays.OverlayPosition;
 import com.wynntils.core.consumers.overlays.OverlaySize;
+import com.wynntils.core.persisted.Persisted;
 import com.wynntils.core.text.StyledText;
 import com.wynntils.handlers.bossbar.TrackedBar;
 import com.wynntils.handlers.bossbar.event.BossBarAddedEvent;
@@ -28,20 +27,20 @@ import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 
 public abstract class BaseBarOverlay extends Overlay {
-    @RegisterConfig(i18nKey = "feature.wynntils.gameBarsOverlay.overlay.baseBar.textShadow")
+    @Persisted(i18nKey = "feature.wynntils.gameBarsOverlay.overlay.baseBar.textShadow")
     public final Config<TextShadow> textShadow = new Config<>(TextShadow.OUTLINE);
 
-    @RegisterConfig(i18nKey = "feature.wynntils.gameBarsOverlay.overlay.baseBar.flip")
+    @Persisted(i18nKey = "feature.wynntils.gameBarsOverlay.overlay.baseBar.flip")
     public final Config<Boolean> flip = new Config<>(false);
 
-    @RegisterConfig(i18nKey = "feature.wynntils.gameBarsOverlay.overlay.baseBar.animationTime")
+    @Persisted(i18nKey = "feature.wynntils.gameBarsOverlay.overlay.baseBar.animationTime")
     public final Config<Float> animationTime = new Config<>(2f);
 
-    @RegisterConfig(i18nKey = "feature.wynntils.gameBarsOverlay.overlay.baseBar.shouldDisplayOriginal")
+    @Persisted(i18nKey = "feature.wynntils.gameBarsOverlay.overlay.baseBar.shouldDisplayOriginal")
     public final Config<Boolean> shouldDisplayOriginal = new Config<>(false);
 
     // hacky override of custom color
-    @RegisterConfig(i18nKey = "feature.wynntils.gameBarsOverlay.overlay.baseBar.textColor")
+    @Persisted(i18nKey = "feature.wynntils.gameBarsOverlay.overlay.baseBar.textColor")
     public final Config<CustomColor> textColor = new Config<>(CommonColors.WHITE);
 
     protected float currentProgress = 0f;
@@ -112,7 +111,7 @@ public abstract class BaseBarOverlay extends Overlay {
     }
 
     @Override
-    protected void onConfigUpdate(ConfigHolder<?> configHolder) {}
+    protected void onConfigUpdate(Config<?> config) {}
 
     protected void renderBar(
             PoseStack poseStack, MultiBufferSource bufferSource, float renderY, float renderHeight, float progress) {

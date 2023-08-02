@@ -7,9 +7,8 @@ package com.wynntils.features.chat;
 import com.wynntils.core.config.Category;
 import com.wynntils.core.config.Config;
 import com.wynntils.core.config.ConfigCategory;
-import com.wynntils.core.config.ConfigHolder;
-import com.wynntils.core.config.RegisterConfig;
 import com.wynntils.core.consumers.features.Feature;
+import com.wynntils.core.persisted.Persisted;
 import com.wynntils.core.text.PartStyle;
 import com.wynntils.core.text.StyledText;
 import com.wynntils.core.text.StyledTextPart;
@@ -29,19 +28,19 @@ import net.minecraftforge.eventbus.api.SubscribeEvent;
 public class ChatMentionFeature extends Feature {
     private static final Pattern END_OF_HEADER_PATTERN = Pattern.compile(".*[\\]:]\\s?");
 
-    @RegisterConfig
+    @Persisted
     public final Config<Boolean> markMention = new Config<>(true);
 
-    @RegisterConfig
+    @Persisted
     public final Config<Boolean> dingMention = new Config<>(true);
 
-    @RegisterConfig
+    @Persisted
     public final Config<ColorChatFormatting> mentionColor = new Config<>(ColorChatFormatting.YELLOW);
 
-    @RegisterConfig
+    @Persisted
     public final Config<String> aliases = new Config<>("");
 
-    @RegisterConfig
+    @Persisted
     public final Config<Boolean> suppressMentionsInInfo = new Config<>(false);
 
     private Pattern mentionPattern;
@@ -51,7 +50,7 @@ public class ChatMentionFeature extends Feature {
     }
 
     @Override
-    protected void onConfigUpdate(ConfigHolder<?> configHolder) {
+    protected void onConfigUpdate(Config<?> config) {
         // rebuild pattern in case it has changed
         mentionPattern = buildPattern();
     }

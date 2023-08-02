@@ -16,25 +16,24 @@ import com.google.gson.stream.JsonToken;
 import com.google.gson.stream.JsonWriter;
 import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.components.Managers;
-import com.wynntils.core.config.ConfigHolder;
+import com.wynntils.core.config.Config;
 import com.wynntils.core.config.upfixers.ConfigUpfixer;
 import com.wynntils.utils.EnumUtils;
 import com.wynntils.utils.colors.CustomColor;
 import java.io.IOException;
-import java.lang.reflect.Type;
 import java.util.Set;
 
 public class EnumNamingUpfixer implements ConfigUpfixer {
     private static final Gson GSON = new GsonBuilder()
             .registerTypeAdapter(CustomColor.class, new CustomColor.CustomColorSerializer())
-            .registerTypeAdapterFactory(new EnumConverterFactory())
+            .registerTypeAdapterFactory(new EnumConverterFactory<>())
             .setPrettyPrinting()
             .serializeNulls()
             .create();
 
     @Override
-    public boolean apply(JsonObject configObject, Set<ConfigHolder<?>> configHolders) {
-        for (ConfigHolder<?> config : configHolders) {
+    public boolean apply(JsonObject configObject, Set<Config<?>> configs) {
+        for (Config<?> config : configs) {
             String jsonName = config.getJsonName();
             if (!configObject.has(jsonName)) continue;
 
@@ -50,20 +49,20 @@ public class EnumNamingUpfixer implements ConfigUpfixer {
         return true;
     }
 
-    private static final class EnumConverterFactory implements TypeAdapterFactory {
+    private static final class EnumConverterFactory<E extends Enum<E>> implements TypeAdapterFactory {
         @Override
         public <T> TypeAdapter<T> create(Gson gson, TypeToken<T> type) {
             if (!type.getRawType().isEnum()) return null;
 
-            Class<? extends Enum<?>> enumClazz = (Class<? extends Enum<?>>) type.getRawType();
-            return new EnumConverter<>(enumClazz);
+            Class<E> enumClazz = (Class<E>) type.getRawType();
+            return (TypeAdapter<T>) new EnumConverter<>(enumClazz);
         }
     }
 
-    private static final class EnumConverter<T> extends TypeAdapter<T> {
-        private final Class<? extends Enum<?>> enumClazz;
+    private static final class EnumConverter<T extends Enum<T>> extends TypeAdapter<T> {
+        private final Class<T> enumClazz;
 
-        private EnumConverter(Class<? extends Enum<?>> enumClazz) {
+        private EnumConverter(Class<T> enumClazz) {
             this.enumClazz = enumClazz;
         }
 
@@ -81,10 +80,9 @@ public class EnumNamingUpfixer implements ConfigUpfixer {
 
             String jsonString = in.nextString();
 
-            Enum<?> value;
+            T value;
             try {
-                // The double casting is needed, or javac will complain...
-                value = Enum.valueOf((Class<Enum>) (Type) enumClazz, jsonString);
+                value = Enum.valueOf(enumClazz, jsonString);
             } catch (IllegalArgumentException e) {
                 // Maybe it is already converted?
                 value = EnumUtils.fromJsonFormat(enumClazz, jsonString);
@@ -94,7 +92,7 @@ public class EnumNamingUpfixer implements ConfigUpfixer {
                 return replacement();
             }
 
-            return (T) value;
+            return value;
         }
 
         private T replacement() {

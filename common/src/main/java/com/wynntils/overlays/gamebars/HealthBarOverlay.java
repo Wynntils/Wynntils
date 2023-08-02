@@ -6,10 +6,9 @@ package com.wynntils.overlays.gamebars;
 
 import com.wynntils.core.components.Models;
 import com.wynntils.core.config.Config;
-import com.wynntils.core.config.ConfigHolder;
-import com.wynntils.core.config.RegisterConfig;
 import com.wynntils.core.consumers.overlays.OverlayPosition;
 import com.wynntils.core.consumers.overlays.OverlaySize;
+import com.wynntils.core.persisted.Persisted;
 import com.wynntils.handlers.bossbar.TrackedBar;
 import com.wynntils.handlers.bossbar.type.BossBarProgress;
 import com.wynntils.utils.colors.CommonColors;
@@ -20,7 +19,7 @@ import com.wynntils.utils.render.type.VerticalAlignment;
 import com.wynntils.utils.type.CappedValue;
 
 public class HealthBarOverlay extends OverflowableBarOverlay {
-    @RegisterConfig(i18nKey = "overlay.wynntils.healthBar.healthTexture")
+    @Persisted(i18nKey = "overlay.wynntils.healthBar.healthTexture")
     public final Config<HealthTexture> healthTexture = new Config<>(HealthTexture.A);
 
     public HealthBarOverlay() {
@@ -54,7 +53,7 @@ public class HealthBarOverlay extends OverflowableBarOverlay {
     }
 
     @Override
-    protected void onConfigUpdate(ConfigHolder<?> configHolder) {
+    protected void onConfigUpdate(Config<?> config) {
         Models.CharacterStats.hideHealth(!this.shouldDisplayOriginal.get());
     }
 

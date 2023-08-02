@@ -8,8 +8,8 @@ import com.wynntils.core.components.Models;
 import com.wynntils.core.config.Category;
 import com.wynntils.core.config.Config;
 import com.wynntils.core.config.ConfigCategory;
-import com.wynntils.core.config.RegisterConfig;
 import com.wynntils.core.consumers.features.Feature;
+import com.wynntils.core.persisted.Persisted;
 import com.wynntils.mc.event.LivingEntityRenderTranslucentCheckEvent;
 import com.wynntils.mc.event.PlayerRenderLayerEvent;
 import net.minecraft.world.entity.player.Player;
@@ -17,10 +17,10 @@ import net.minecraftforge.eventbus.api.SubscribeEvent;
 
 @ConfigCategory(Category.PLAYERS)
 public class PlayerGhostTransparencyFeature extends Feature {
-    @RegisterConfig
+    @Persisted
     public final Config<Float> playerGhostTranslucenceLevel = new Config<>(0.75f);
 
-    @RegisterConfig
+    @Persisted
     public final Config<Boolean> transparentPlayerGhostArmor = new Config<>(true);
 
     @SubscribeEvent
