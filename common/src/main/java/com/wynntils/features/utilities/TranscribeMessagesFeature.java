@@ -86,23 +86,17 @@ public class TranscribeMessagesFeature extends Feature {
 
         event.setCanceled(true);
 
-        if (!event.getChatMessage().isEmpty()) {
-            List<Component> transcriptedComponents = event.getChatMessage().stream()
-                    .map(styledText -> getStyledTextWithTranscription(
-                            StyledText.fromComponent(styledText), transcribeWynnic, transcribeGavellian, true))
-                    .map(s -> ((Component) s.getComponent()))
-                    .toList();
+        List<Component> transcriptedComponents = event.getChatMessage().stream()
+                .map(styledText -> getStyledTextWithTranscription(
+                        StyledText.fromComponent(styledText), transcribeWynnic, transcribeGavellian, true))
+                .map(s -> ((Component) s.getComponent()))
+                .toList();
 
-            Managers.TickScheduler.scheduleNextTick(() -> {
-                NpcDialogEvent transcriptedEvent = new WynnTranscriptedNpcDialogEvent(
-                        transcriptedComponents, event.getType(), event.isProtected());
-                WynntilsMod.postEvent(transcriptedEvent);
-            });
-        } else {
-            NpcDialogEvent transcriptedEvent =
-                    new WynnTranscriptedNpcDialogEvent(List.of(), event.getType(), event.isProtected());
+        Managers.TickScheduler.scheduleNextTick(() -> {
+            NpcDialogEvent transcriptedEvent = new WynnTranscriptedNpcDialogEvent(
+                    transcriptedComponents, event.getType(), event.isProtected());
             WynntilsMod.postEvent(transcriptedEvent);
-        }
+        });
     }
 
     private StyledText getStyledTextWithTranscription(
