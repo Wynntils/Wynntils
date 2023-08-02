@@ -8,7 +8,7 @@ import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.wynntils.core.components.Managers;
 import com.wynntils.core.config.Category;
-import com.wynntils.core.config.ConfigHolder;
+import com.wynntils.core.config.Config;
 import com.wynntils.core.consumers.features.Configurable;
 import com.wynntils.core.consumers.features.Feature;
 import com.wynntils.core.consumers.features.Translatable;
@@ -428,9 +428,9 @@ public final class WynntilsBookSettingsScreen extends WynntilsScreen implements 
         }
     }
 
-    public boolean configOptionContains(ConfigHolder<?> configHolder) {
+    public boolean configOptionContains(Config<?> config) {
         return !searchWidget.getTextBoxInput().isEmpty()
-                && StringUtils.containsIgnoreCase(configHolder.getDisplayName(), searchWidget.getTextBoxInput());
+                && StringUtils.containsIgnoreCase(config.getDisplayName(), searchWidget.getTextBoxInput());
     }
 
     private boolean searchMatches(Translatable translatable) {
@@ -446,13 +446,12 @@ public final class WynntilsBookSettingsScreen extends WynntilsScreen implements 
             return;
         }
 
-        List<ConfigHolder<?>> configsOptions = selected.getVisibleConfigOptions().stream()
-                .sorted(Comparator.comparing(
-                        configHolder -> !Objects.equals(configHolder.getFieldName(), "userEnabled")))
+        List<Config<?>> configsOptions = selected.getVisibleConfigOptions().stream()
+                .sorted(Comparator.comparing(config -> !Objects.equals(config.getFieldName(), "userEnabled")))
                 .toList();
 
         for (int i = 0; i < configsOptions.size(); i++) {
-            ConfigHolder<?> config = configsOptions.get(i);
+            Config<?> config = configsOptions.get(i);
 
             int renderIndex = i % CONFIGS_PER_PAGE;
 

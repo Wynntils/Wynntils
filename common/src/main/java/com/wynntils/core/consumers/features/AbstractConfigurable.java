@@ -5,37 +5,37 @@
 package com.wynntils.core.consumers.features;
 
 import com.google.common.base.CaseFormat;
-import com.wynntils.core.config.ConfigHolder;
+import com.wynntils.core.config.Config;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
 public abstract class AbstractConfigurable implements Configurable {
-    private final List<ConfigHolder<?>> configOptions = new ArrayList<>();
+    private final List<Config<?>> configOptions = new ArrayList<>();
 
     @Override
-    public void addConfigOptions(List<ConfigHolder<?>> options) {
+    public void addConfigOptions(List<Config<?>> options) {
         configOptions.addAll(options);
     }
 
     @Override
-    public void removeConfigOptions(List<ConfigHolder<?>> options) {
+    public void removeConfigOptions(List<Config<?>> options) {
         configOptions.removeAll(options);
     }
 
     @Override
-    public final List<ConfigHolder<?>> getVisibleConfigOptions() {
-        return configOptions.stream().filter(ConfigHolder::isVisible).collect(Collectors.toList());
+    public final List<Config<?>> getVisibleConfigOptions() {
+        return configOptions.stream().filter(Config::isVisible).collect(Collectors.toList());
     }
 
     @Override
-    public final List<ConfigHolder<?>> getConfigOptions() {
+    public final List<Config<?>> getConfigOptions() {
         return configOptions;
     }
 
     @Override
-    public final Optional<ConfigHolder<?>> getConfigOptionFromString(String name) {
+    public final Optional<Config<?>> getConfigOptionFromString(String name) {
         return getConfigOptions().stream()
                 .filter(c -> c.getFieldName().equals(name))
                 .findFirst();

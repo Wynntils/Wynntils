@@ -10,7 +10,6 @@ import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.components.Managers;
 import com.wynntils.core.config.Category;
 import com.wynntils.core.config.Config;
-import com.wynntils.core.config.ConfigHolder;
 import com.wynntils.core.config.RegisterConfig;
 import com.wynntils.core.mod.type.CrashType;
 import com.wynntils.core.storage.Storageable;
@@ -64,11 +63,11 @@ public abstract class Feature extends AbstractConfigurable implements Storageabl
     }
 
     /** Used to react to config option updates */
-    protected void onConfigUpdate(ConfigHolder<?> configHolder) {}
+    protected void onConfigUpdate(Config<?> config) {}
 
-    private void callOnConfigUpdate(ConfigHolder<?> configHolder) {
+    private void callOnConfigUpdate(Config<?> config) {
         try {
-            onConfigUpdate(configHolder);
+            onConfigUpdate(config);
         } catch (Throwable t) {
             // We can't stop disabled features from getting config updates, so if it crashes again,
             // just ignore it
@@ -95,16 +94,16 @@ public abstract class Feature extends AbstractConfigurable implements Storageabl
     }
 
     @Override
-    public final void updateConfigOption(ConfigHolder<?> configHolder) {
+    public final void updateConfigOption(Config<?> config) {
         // if user toggle was changed, enable/disable feature accordingly
-        if (configHolder.getFieldName().equals("userEnabled")) {
+        if (config.getFieldName().equals("userEnabled")) {
             // Toggling before init does not do anything, so we don't worry about it for now
             tryUserToggle();
             return;
         }
 
         // otherwise, trigger regular config update
-        callOnConfigUpdate(configHolder);
+        callOnConfigUpdate(config);
     }
 
     /** Updates the feature's enabled/disabled state to match the user's setting, if necessary */
