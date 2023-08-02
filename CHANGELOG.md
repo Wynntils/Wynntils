@@ -1,4 +1,16 @@
+## [0.0.3-alpha.267](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.266...v0.0.3-alpha.267) (2023-08-02)
+
+
+### Code Refactoring
+
+* Add McUtils.sendChat ([#1929](https://github.com/Wynntils/Artemis/issues/1929)) ([54ca001](https://github.com/Wynntils/Artemis/commit/54ca001f28b7e5aef8250da24173d00bb4daa9ab))
+
 ## [0.0.3-alpha.266](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.265...v0.0.3-alpha.266) (2023-08-02)
+
+
+### Miscellaneous Chores
+
+* **release:** v0.0.3-alpha.266 [skip ci] ([b33813e](https://github.com/Wynntils/Artemis/commit/b33813e53fc69b7f6a95f8e78d4faa552de8c564))
 
 
 ### Code Refactoring
@@ -40,16 +52,4 @@
 ### Code Refactoring
 
 * Incorporate and hide ConfigHolder inside Config ([#1922](https://github.com/Wynntils/Artemis/issues/1922)) ([a5422ac](https://github.com/Wynntils/Artemis/commit/a5422acbc187e56558028b46c43a3d40865ee3af))
-
-## [0.0.3-alpha.262](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.261...v0.0.3-alpha.262) (2023-08-02)
-
-
-### Bug Fixes
-
-* Fix beacon counter incrementing by two rarely and persisting issues ([#1925](https://github.com/Wynntils/Artemis/issues/1925)) ([664c373](https://github.com/Wynntils/Artemis/commit/664c3733fd1b2ca59a905704398302ad91b5dc25))
-
-
-### Miscellaneous Chores
-
-* **release:** v0.0.3-alpha.262 [skip ci] ([d830604](https://github.com/Wynntils/Artemis/commit/d830604a1d1cffbaedd8fa1d17ad67e64347174c))
 
