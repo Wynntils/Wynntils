@@ -6,14 +6,14 @@ package com.wynntils.features.inventory;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.wynntils.core.components.Models;
-import com.wynntils.core.config.Category;
-import com.wynntils.core.config.Config;
-import com.wynntils.core.config.ConfigCategory;
-import com.wynntils.core.config.HiddenConfig;
 import com.wynntils.core.consumers.features.Feature;
 import com.wynntils.core.consumers.features.properties.RegisterKeyBind;
 import com.wynntils.core.keybinds.KeyBind;
 import com.wynntils.core.persisted.Persisted;
+import com.wynntils.core.persisted.config.Category;
+import com.wynntils.core.persisted.config.Config;
+import com.wynntils.core.persisted.config.ConfigCategory;
+import com.wynntils.core.persisted.config.HiddenConfig;
 import com.wynntils.mc.event.ContainerClickEvent;
 import com.wynntils.mc.event.ContainerRenderEvent;
 import com.wynntils.mc.event.DropHeldItemEvent;

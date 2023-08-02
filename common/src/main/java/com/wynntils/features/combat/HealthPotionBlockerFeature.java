@@ -6,11 +6,11 @@ package com.wynntils.features.combat;
 
 import com.wynntils.core.components.Managers;
 import com.wynntils.core.components.Models;
-import com.wynntils.core.config.Category;
-import com.wynntils.core.config.Config;
-import com.wynntils.core.config.ConfigCategory;
 import com.wynntils.core.consumers.features.Feature;
 import com.wynntils.core.persisted.Persisted;
+import com.wynntils.core.persisted.config.Category;
+import com.wynntils.core.persisted.config.Config;
+import com.wynntils.core.persisted.config.ConfigCategory;
 import com.wynntils.mc.event.PlayerInteractEvent;
 import com.wynntils.mc.event.UseItemEvent;
 import com.wynntils.models.elements.type.PotionType;

@@ -4,8 +4,8 @@
  */
 package com.wynntils.core.consumers.features;
 
-import com.wynntils.core.config.Config;
 import com.wynntils.core.persisted.PersistedOwner;
+import com.wynntils.core.persisted.config.Config;
 import java.util.List;
 import java.util.Optional;
 

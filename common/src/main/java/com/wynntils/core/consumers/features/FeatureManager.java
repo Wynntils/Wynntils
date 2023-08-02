@@ -7,14 +7,14 @@ package com.wynntils.core.consumers.features;
 import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.components.Manager;
 import com.wynntils.core.components.Managers;
-import com.wynntils.core.config.Category;
-import com.wynntils.core.config.ConfigCategory;
 import com.wynntils.core.consumers.commands.CommandManager;
 import com.wynntils.core.consumers.features.properties.StartDisabled;
 import com.wynntils.core.consumers.overlays.OverlayManager;
 import com.wynntils.core.keybinds.KeyBindManager;
 import com.wynntils.core.mod.CrashReportManager;
 import com.wynntils.core.mod.type.CrashType;
+import com.wynntils.core.persisted.config.Category;
+import com.wynntils.core.persisted.config.ConfigCategory;
 import com.wynntils.features.DiscordRichPresenceFeature;
 import com.wynntils.features.LootrunFeature;
 import com.wynntils.features.MythicFoundFeature;
@@ -27,6 +27,7 @@ import com.wynntils.features.chat.ChatTimestampFeature;
 import com.wynntils.features.chat.DeathCoordinatesFeature;
 import com.wynntils.features.chat.DialogueOptionOverrideFeature;
 import com.wynntils.features.chat.GuildRankReplacementFeature;
+import com.wynntils.features.chat.InputTranscriptionFeature;
 import com.wynntils.features.chat.MessageFilterFeature;
 import com.wynntils.features.combat.AbbreviateMobHealthFeature;
 import com.wynntils.features.combat.CombatXpGainMessageFeature;
@@ -137,6 +138,7 @@ import com.wynntils.features.ui.WynntilsContentBookFeature;
 import com.wynntils.features.utilities.AutoApplyResourcePackFeature;
 import com.wynntils.features.utilities.GammabrightFeature;
 import com.wynntils.features.utilities.SilencerFeature;
+import com.wynntils.features.utilities.TranscribeMessagesFeature;
 import com.wynntils.features.utilities.TranslationFeature;
 import com.wynntils.features.wynntils.BetaWarningFeature;
 import com.wynntils.features.wynntils.ChangelogFeature;
@@ -191,6 +193,7 @@ public final class FeatureManager extends Manager {
         registerFeature(new DeathCoordinatesFeature());
         registerFeature(new DialogueOptionOverrideFeature());
         registerFeature(new GuildRankReplacementFeature());
+        registerFeature(new InputTranscriptionFeature());
         registerFeature(new MessageFilterFeature());
         // endregion
 
@@ -329,6 +332,7 @@ public final class FeatureManager extends Manager {
         registerFeature(new AutoApplyResourcePackFeature());
         registerFeature(new GammabrightFeature());
         registerFeature(new SilencerFeature());
+        registerFeature(new TranscribeMessagesFeature());
         registerFeature(new TranslationFeature());
         // endregion
 

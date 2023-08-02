@@ -1,11 +1,11 @@
 /*
- * Copyright © Wynntils 2022.
+ * Copyright © Wynntils 2022-2023.
  * This file is released under AGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.screens.settings.widgets;
 
 import com.mojang.blaze3d.vertex.PoseStack;
-import com.wynntils.core.config.Category;
+import com.wynntils.core.persisted.config.Category;
 import com.wynntils.core.text.StyledText;
 import com.wynntils.screens.base.widgets.WynntilsButton;
 import com.wynntils.utils.colors.CommonColors;

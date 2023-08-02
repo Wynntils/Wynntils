@@ -4,9 +4,9 @@
  */
 package com.wynntils.features.ui;
 
-import com.wynntils.core.config.Category;
-import com.wynntils.core.config.ConfigCategory;
 import com.wynntils.core.consumers.features.Feature;
+import com.wynntils.core.persisted.config.Category;
+import com.wynntils.core.persisted.config.ConfigCategory;
 import com.wynntils.mc.event.LoadingProgressEvent;
 import com.wynntils.mc.event.LocalSoundEvent;
 import com.wynntils.mc.event.ResourcePackEvent;

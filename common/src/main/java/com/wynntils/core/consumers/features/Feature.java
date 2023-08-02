@@ -8,11 +8,11 @@ import com.google.common.base.CaseFormat;
 import com.google.common.collect.ComparisonChain;
 import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.components.Managers;
-import com.wynntils.core.config.Category;
-import com.wynntils.core.config.Config;
 import com.wynntils.core.mod.type.CrashType;
 import com.wynntils.core.persisted.Persisted;
-import com.wynntils.core.storage.Storageable;
+import com.wynntils.core.persisted.config.Category;
+import com.wynntils.core.persisted.config.Config;
+import com.wynntils.core.persisted.storage.Storageable;
 import net.minecraft.client.resources.language.I18n;
 
 /**
