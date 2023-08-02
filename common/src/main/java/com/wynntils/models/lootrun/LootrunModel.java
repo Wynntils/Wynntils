@@ -338,6 +338,7 @@ public class LootrunModel extends Model {
                 && closestBeacon != null) {
             WynntilsMod.info("Selected a " + closestBeacon.color() + " beacon at " + closestBeacon.location());
             selectedBeacons.put(closestBeacon.color(), selectedBeacons.getOrDefault(closestBeacon.color(), 0) + 1);
+            selectedBeaconsStorage.touched();
             WynntilsMod.postEvent(new LootrunBeaconSelectedEvent(closestBeacon));
 
             // We selected a beacon, so other beacons are no longer relevant.
