@@ -6,7 +6,6 @@ package com.wynntils.overlays.gamebars;
 
 import com.wynntils.core.components.Models;
 import com.wynntils.core.config.Config;
-import com.wynntils.core.config.ConfigHolder;
 import com.wynntils.core.consumers.overlays.OverlayPosition;
 import com.wynntils.core.consumers.overlays.OverlaySize;
 import com.wynntils.core.persisted.Persisted;
@@ -65,7 +64,7 @@ public class ManaBarOverlay extends OverflowableBarOverlay {
     }
 
     @Override
-    protected void onConfigUpdate(ConfigHolder<?> configHolder) {
+    protected void onConfigUpdate(Config<?> config) {
         Models.CharacterStats.hideMana(!this.shouldDisplayOriginal.get());
     }
 

@@ -11,7 +11,6 @@ import com.wynntils.core.components.Managers;
 import com.wynntils.core.components.Models;
 import com.wynntils.core.components.Services;
 import com.wynntils.core.config.Config;
-import com.wynntils.core.config.ConfigHolder;
 import com.wynntils.core.consumers.overlays.Overlay;
 import com.wynntils.core.consumers.overlays.OverlayPosition;
 import com.wynntils.core.consumers.overlays.OverlaySize;
@@ -481,7 +480,7 @@ public class MinimapOverlay extends Overlay {
     }
 
     @Override
-    protected void onConfigUpdate(ConfigHolder<?> configHolder) {}
+    protected void onConfigUpdate(Config<?> config) {}
 
     private enum CompassRenderType {
         NONE,

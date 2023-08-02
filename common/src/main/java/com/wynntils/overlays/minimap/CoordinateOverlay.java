@@ -6,7 +6,6 @@ package com.wynntils.overlays.minimap;
 
 import com.wynntils.core.components.Models;
 import com.wynntils.core.config.Config;
-import com.wynntils.core.config.ConfigHolder;
 import com.wynntils.core.consumers.overlays.OverlayPosition;
 import com.wynntils.core.consumers.overlays.OverlaySize;
 import com.wynntils.core.consumers.overlays.TextOverlay;
@@ -38,7 +37,7 @@ public class CoordinateOverlay extends TextOverlay {
     }
 
     @Override
-    protected void onConfigUpdate(ConfigHolder<?> configHolder) {
+    protected void onConfigUpdate(Config<?> config) {
         Models.CharacterStats.hideCoordinates(!this.shouldDisplayOriginal.get());
     }
 

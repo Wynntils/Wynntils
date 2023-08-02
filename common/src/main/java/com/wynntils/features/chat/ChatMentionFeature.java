@@ -7,7 +7,6 @@ package com.wynntils.features.chat;
 import com.wynntils.core.config.Category;
 import com.wynntils.core.config.Config;
 import com.wynntils.core.config.ConfigCategory;
-import com.wynntils.core.config.ConfigHolder;
 import com.wynntils.core.consumers.features.Feature;
 import com.wynntils.core.persisted.Persisted;
 import com.wynntils.core.text.PartStyle;
@@ -51,7 +50,7 @@ public class ChatMentionFeature extends Feature {
     }
 
     @Override
-    protected void onConfigUpdate(ConfigHolder<?> configHolder) {
+    protected void onConfigUpdate(Config<?> config) {
         // rebuild pattern in case it has changed
         mentionPattern = buildPattern();
     }

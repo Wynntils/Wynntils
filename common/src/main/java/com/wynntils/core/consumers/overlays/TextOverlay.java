@@ -9,7 +9,6 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import com.wynntils.core.components.Managers;
 import com.wynntils.core.components.Models;
 import com.wynntils.core.config.Config;
-import com.wynntils.core.config.ConfigHolder;
 import com.wynntils.core.persisted.Persisted;
 import com.wynntils.core.text.StyledText;
 import com.wynntils.mc.event.TickEvent;
@@ -127,5 +126,5 @@ public abstract class TextOverlay extends DynamicOverlay {
     protected abstract String getPreviewTemplate();
 
     @Override
-    protected void onConfigUpdate(ConfigHolder<?> configHolder) {}
+    protected void onConfigUpdate(Config<?> config) {}
 }

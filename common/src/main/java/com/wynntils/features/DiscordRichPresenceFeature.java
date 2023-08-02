@@ -8,7 +8,6 @@ import com.wynntils.core.components.Managers;
 import com.wynntils.core.components.Models;
 import com.wynntils.core.components.Services;
 import com.wynntils.core.config.Config;
-import com.wynntils.core.config.ConfigHolder;
 import com.wynntils.core.consumers.features.Feature;
 import com.wynntils.core.persisted.Persisted;
 import com.wynntils.core.text.PartStyle;
@@ -124,7 +123,7 @@ public class DiscordRichPresenceFeature extends Feature {
     }
 
     @Override
-    protected void onConfigUpdate(ConfigHolder<?> configHolder) {
+    protected void onConfigUpdate(Config<?> config) {
         if (this.isEnabled()) {
             // This isReady() check is required for Linux to not crash on config change.
             if (!Services.Discord.isReady()) {

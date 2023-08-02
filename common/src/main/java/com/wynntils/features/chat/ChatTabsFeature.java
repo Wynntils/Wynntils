@@ -8,8 +8,8 @@ import com.google.common.collect.Sets;
 import com.wynntils.core.components.Managers;
 import com.wynntils.core.components.Services;
 import com.wynntils.core.config.Category;
+import com.wynntils.core.config.Config;
 import com.wynntils.core.config.ConfigCategory;
-import com.wynntils.core.config.ConfigHolder;
 import com.wynntils.core.config.HiddenConfig;
 import com.wynntils.core.consumers.features.Feature;
 import com.wynntils.core.persisted.Persisted;
@@ -176,7 +176,7 @@ public class ChatTabsFeature extends Feature {
     }
 
     @Override
-    protected void onConfigUpdate(ConfigHolder<?> configHolder) {
+    protected void onConfigUpdate(Config<?> config) {
         Services.ChatTab.refocusFirstTab();
 
         if ((McUtils.mc().screen instanceof ChatScreen chatScreen)) {

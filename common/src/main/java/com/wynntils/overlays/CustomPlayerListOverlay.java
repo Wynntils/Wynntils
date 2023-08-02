@@ -8,7 +8,6 @@ import com.mojang.blaze3d.platform.Window;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.wynntils.core.components.Models;
 import com.wynntils.core.config.Config;
-import com.wynntils.core.config.ConfigHolder;
 import com.wynntils.core.consumers.overlays.Overlay;
 import com.wynntils.core.consumers.overlays.OverlayPosition;
 import com.wynntils.core.persisted.Persisted;
@@ -199,7 +198,7 @@ public class CustomPlayerListOverlay extends Overlay {
     }
 
     @Override
-    protected void onConfigUpdate(ConfigHolder<?> configHolder) {
+    protected void onConfigUpdate(Config<?> config) {
         animationPercentage.setOpeningDuration(Duration.of(openingDuration.get(), ChronoUnit.MILLIS));
     }
 }
