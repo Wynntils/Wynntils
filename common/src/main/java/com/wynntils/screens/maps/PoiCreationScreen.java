@@ -9,6 +9,7 @@ import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.wynntils.core.components.Managers;
 import com.wynntils.core.components.Services;
+import com.wynntils.core.config.HiddenConfig;
 import com.wynntils.core.text.StyledText;
 import com.wynntils.features.map.MainMapFeature;
 import com.wynntils.screens.base.TextboxScreen;
@@ -578,18 +579,15 @@ public final class PoiCreationScreen extends AbstractMapScreen implements Textbo
                 Services.Poi.POI_ICONS.get(selectedIconIndex),
                 selectedVisiblity);
 
+        HiddenConfig<List<CustomPoi>> customPoiConfig =
+                Managers.Feature.getFeatureInstance(MainMapFeature.class).customPois;
+        List<CustomPoi> customPois = customPoiConfig.get();
         if (oldPoi != null) {
-            List<CustomPoi> pois = Managers.Feature.getFeatureInstance(MainMapFeature.class)
-                    .customPois
-                    .get();
-            pois.set(pois.indexOf(oldPoi), poi);
+            customPois.set(customPois.indexOf(oldPoi), poi);
         } else {
-            Managers.Feature.getFeatureInstance(MainMapFeature.class)
-                    .customPois
-                    .get()
-                    .add(poi);
+            customPois.add(poi);
         }
 
-        Managers.Config.saveConfig();
+        customPoiConfig.touched();
     }
 }

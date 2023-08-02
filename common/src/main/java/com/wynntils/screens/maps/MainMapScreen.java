@@ -9,6 +9,7 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import com.wynntils.core.components.Managers;
 import com.wynntils.core.components.Models;
 import com.wynntils.core.components.Services;
+import com.wynntils.core.config.HiddenConfig;
 import com.wynntils.features.map.MainMapFeature;
 import com.wynntils.models.marker.type.DynamicLocationSupplier;
 import com.wynntils.models.marker.type.MarkerInfo;
@@ -412,11 +413,10 @@ public final class MainMapScreen extends AbstractMapScreen {
                 }
             } else if (KeyboardUtils.isAltDown()) {
                 if (hovered instanceof CustomPoi customPoi) {
-                    Managers.Feature.getFeatureInstance(MainMapFeature.class)
-                            .customPois
-                            .get()
-                            .remove(customPoi);
-                    Managers.Config.saveConfig();
+                    HiddenConfig<List<CustomPoi>> customPois =
+                            Managers.Feature.getFeatureInstance(MainMapFeature.class).customPois;
+                    customPois.get().remove(customPoi);
+                    customPois.touched();
                 }
             } else {
                 setCompassToMouseCoords(mouseX, mouseY);

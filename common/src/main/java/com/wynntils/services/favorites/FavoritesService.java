@@ -75,11 +75,17 @@ public final class FavoritesService extends Service {
 
     public void addFavorite(String unformattedName) {
         getFavoriteItems().add(unformattedName);
+        Managers.Feature.getFeatureInstance(ItemFavoriteFeature.class)
+                .favoriteItems
+                .touched();
         revision++;
     }
 
     public void removeFavorite(String unformattedName) {
         getFavoriteItems().remove(unformattedName);
+        Managers.Feature.getFeatureInstance(ItemFavoriteFeature.class)
+                .favoriteItems
+                .touched();
         revision++;
     }
 

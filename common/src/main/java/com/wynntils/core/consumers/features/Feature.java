@@ -6,10 +6,12 @@ package com.wynntils.core.consumers.features;
 
 import com.google.common.base.CaseFormat;
 import com.google.common.collect.ComparisonChain;
+import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.components.Managers;
 import com.wynntils.core.config.Category;
 import com.wynntils.core.config.Config;
 import com.wynntils.core.config.RegisterConfig;
+import com.wynntils.core.mod.type.CrashType;
 import com.wynntils.core.storage.Storageable;
 import net.minecraft.client.resources.language.I18n;
 
@@ -63,6 +65,20 @@ public abstract class Feature extends AbstractConfigurable implements Storageabl
     /** Used to react to config option updates */
     protected void onConfigUpdate(Config<?> config) {}
 
+    private void callOnConfigUpdate(Config<?> config) {
+        try {
+            onConfigUpdate(config);
+        } catch (Throwable t) {
+            // We can't stop disabled features from getting config updates, so if it crashes again,
+            // just ignore it
+            if (!Managers.Feature.isEnabled(this)) return;
+
+            Managers.Feature.crashFeature(this);
+            WynntilsMod.reportCrash(
+                    CrashType.FEATURE, getTranslatedName(), getClass().getName(), "config update", t);
+        }
+    }
+
     public void onEnable() {}
 
     public void onDisable() {}
@@ -87,7 +103,7 @@ public abstract class Feature extends AbstractConfigurable implements Storageabl
         }
 
         // otherwise, trigger regular config update
-        onConfigUpdate(config);
+        callOnConfigUpdate(config);
     }
 
     /** Updates the feature's enabled/disabled state to match the user's setting, if necessary */

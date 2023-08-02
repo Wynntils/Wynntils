@@ -4,7 +4,6 @@
  */
 package com.wynntils.features.utilities;
 
-import com.wynntils.core.components.Managers;
 import com.wynntils.core.config.Category;
 import com.wynntils.core.config.Config;
 import com.wynntils.core.config.ConfigCategory;
@@ -81,7 +80,7 @@ public class GammabrightFeature extends Feature {
         gammabrightEnabled.updateConfig(!gammabrightEnabled.get());
         applyGammabright();
 
-        Managers.Config.saveConfig();
+        gammabrightEnabled.touched();
     }
 
     private void resetGamma() {

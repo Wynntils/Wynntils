@@ -23,6 +23,10 @@ public class Config<T> implements Comparable<Config<T>> {
         return value;
     }
 
+    public void touched() {
+        Managers.Config.saveConfig();
+    }
+
     public void updateConfig(T value) {
         this.value = value;
     }
