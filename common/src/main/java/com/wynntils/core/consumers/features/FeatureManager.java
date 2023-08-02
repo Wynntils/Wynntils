@@ -454,7 +454,7 @@ public final class FeatureManager extends Manager {
         Managers.KeyBind.disableFeatureKeyBinds(feature);
     }
 
-    private void crashFeature(Feature feature) {
+    public void crashFeature(Feature feature) {
         if (!FEATURES.containsKey(feature)) {
             throw new IllegalArgumentException("Tried to crash an unregistered feature: " + feature);
         }

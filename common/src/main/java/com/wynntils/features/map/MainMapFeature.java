@@ -180,7 +180,7 @@ public class MainMapFeature extends Feature {
             Managers.Notification.queueMessage(Component.literal("Added new waypoint for " + tier.getWaypointName())
                     .withStyle(ChatFormatting.AQUA));
 
-            Managers.Config.saveConfig();
+            customPois.touched();
         }
     }
 

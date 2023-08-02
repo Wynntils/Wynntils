@@ -4,11 +4,16 @@
  */
 package com.wynntils.core.config;
 
+import com.wynntils.core.components.Managers;
 import com.wynntils.core.persisted.PersistedValue;
 
 public class Config<T> extends PersistedValue<T> {
     public Config(T value) {
         super(value);
+    }
+
+    public void touched() {
+        Managers.Config.saveConfig();
     }
 
     public void updateConfig(T value) {

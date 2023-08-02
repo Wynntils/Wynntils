@@ -5,7 +5,6 @@
 package com.wynntils.features.inventory;
 
 import com.mojang.blaze3d.vertex.PoseStack;
-import com.wynntils.core.components.Managers;
 import com.wynntils.core.components.Models;
 import com.wynntils.core.config.Category;
 import com.wynntils.core.config.Config;
@@ -145,6 +144,6 @@ public class ItemLockFeature extends Feature {
             classSet.add(hoveredSlot.getContainerSlot());
         }
 
-        Managers.Config.saveConfig();
+        classSlotLockMap.touched();
     }
 }
