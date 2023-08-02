@@ -386,9 +386,22 @@ public class LootrunModel extends Model {
             return null;
         }
 
-        double lowestDistance = Double.MAX_VALUE;
+        List<TaskLocation> usedTaskLocations = beacons.entrySet().stream()
+                .filter(entry -> entry.getKey() != beacon.color())
+                .map(Map.Entry::getValue)
+                .map(Pair::b)
+                .toList();
+
+        double lowestPredictionScore = Double.MAX_VALUE;
         TaskLocation closestTaskLocation = null;
         for (TaskLocation currentTaskLocation : currentTaskLocations) {
+            // Possible optimization:
+            // Calculate the prediction score for tasks that are used by other beacons, and if our prediction score
+            // is lower than the other beacons, we can override it and calculate a new prediction for the other beacon.
+            if (usedTaskLocations.contains(currentTaskLocation)) {
+                continue;
+            }
+
             // Player Location
             Vector2i playerPosition =
                     new Vector2i((int) McUtils.player().position().x(), (int)
@@ -403,7 +416,7 @@ public class LootrunModel extends Model {
 
             // Short circuit if the beacon matches a task location.
             if (taskLocationPosition.distance(beaconPosition) < BEACON_POSITION_ERROR) {
-                lowestDistance = 0d;
+                lowestPredictionScore = 0d;
                 closestTaskLocation = currentTaskLocation;
                 break;
             }
@@ -433,13 +446,13 @@ public class LootrunModel extends Model {
             double predictionScore = wynnBeaconDistanceFromLine
                     * Math.pow(taskLocationDistanceToPlayer, BEACON_LOCATION_EXPONENTIAL_FACTOR);
 
-            if (wynnBeaconDistanceFromLine < lowestDistance) {
-                lowestDistance = wynnBeaconDistanceFromLine;
+            if (predictionScore < lowestPredictionScore) {
+                lowestPredictionScore = predictionScore;
                 closestTaskLocation = currentTaskLocation;
             }
         }
 
-        return Pair.of(lowestDistance, closestTaskLocation);
+        return Pair.of(lowestPredictionScore, closestTaskLocation);
     }
 
     private void parseCompletedMessages(StyledText styledText) {
