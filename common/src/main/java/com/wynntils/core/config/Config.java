@@ -4,6 +4,8 @@
  */
 package com.wynntils.core.config;
 
+import com.wynntils.core.components.Managers;
+
 public class Config<T> {
     private T value;
 
@@ -13,6 +15,10 @@ public class Config<T> {
 
     public T get() {
         return value;
+    }
+
+    public void touched() {
+        Managers.Config.saveConfig();
     }
 
     public void updateConfig(T value) {
