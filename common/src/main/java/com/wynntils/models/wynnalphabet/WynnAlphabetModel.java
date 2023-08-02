@@ -83,7 +83,7 @@ public class WynnAlphabetModel extends Model {
             boolean useColors,
             ChatFormatting colorToUse,
             ChatFormatting defaultColor) {
-        String transcripted = original.toLowerCase(Locale.ROOT);
+        String transcripted = original;
 
         for (char character : original.toCharArray()) {
             Character replacement = alphabet == WynnAlphabet.GAVELLIAN
