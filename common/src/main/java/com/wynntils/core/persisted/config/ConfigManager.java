@@ -20,7 +20,7 @@ import com.wynntils.core.consumers.overlays.OverlayManager;
 import com.wynntils.core.json.JsonManager;
 import com.wynntils.core.persisted.Persisted;
 import com.wynntils.core.persisted.PersistedValue;
-import com.wynntils.core.persisted.upfixers.ConfigUpfixerManager;
+import com.wynntils.core.persisted.upfixers.UpfixerManager;
 import com.wynntils.utils.JsonUtils;
 import com.wynntils.utils.mc.McUtils;
 import java.io.File;
@@ -44,11 +44,8 @@ public final class ConfigManager extends Manager {
     private JsonObject configObject;
 
     public ConfigManager(
-            ConfigUpfixerManager configUpfixerManager,
-            JsonManager jsonManager,
-            FeatureManager feature,
-            OverlayManager overlay) {
-        super(List.of(configUpfixerManager, jsonManager, feature, overlay));
+            UpfixerManager upfixerManager, JsonManager jsonManager, FeatureManager feature, OverlayManager overlay) {
+        super(List.of(upfixerManager, jsonManager, feature, overlay));
 
         userConfig = new File(CONFIG_DIR, McUtils.mc().getUser().getUuid() + FILE_SUFFIX);
     }
@@ -63,7 +60,7 @@ public final class ConfigManager extends Manager {
         // Now, we have to apply upfixers, before any config loading happens
         // FIXME: Solve generics type issue
         Set<PersistedValue<?>> workaround = new HashSet<>(CONFIGS);
-        if (Managers.ConfigUpfixer.runUpfixers(configObject, workaround)) {
+        if (Managers.Upfixer.runUpfixers(configObject, workaround)) {
             Managers.Json.savePreciousJson(userConfig, configObject);
         }
 
@@ -185,9 +182,8 @@ public final class ConfigManager extends Manager {
         }
 
         // Also save upfixer data
-        configJson.add(
-                Managers.ConfigUpfixer.UPFIXER_JSON_MEMBER_NAME,
-                configObject.get(Managers.ConfigUpfixer.UPFIXER_JSON_MEMBER_NAME));
+        String upfixerJsonMemberName = Managers.Upfixer.UPFIXER_JSON_MEMBER_NAME;
+        configJson.add(upfixerJsonMemberName, configObject.get(upfixerJsonMemberName));
 
         // Save overlay groups
         JsonObject overlayGroups = new JsonObject();

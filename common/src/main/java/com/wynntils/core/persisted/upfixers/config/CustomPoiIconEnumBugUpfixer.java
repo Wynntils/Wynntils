@@ -8,12 +8,12 @@ import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.wynntils.core.persisted.PersistedValue;
-import com.wynntils.core.persisted.upfixers.ConfigUpfixer;
+import com.wynntils.core.persisted.upfixers.Upfixer;
 import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-public class CustomPoiIconEnumBugUpfixer implements ConfigUpfixer {
+public class CustomPoiIconEnumBugUpfixer implements Upfixer {
     private static final String POI_LIST_KEY = "mapFeature.customPois";
     private static final Pattern POI_NAME_CHEST_PATTERN = Pattern.compile("Loot Chest T?(\\d)");
 

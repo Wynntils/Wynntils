@@ -7,11 +7,11 @@ package com.wynntils.core.persisted.upfixers.config;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.wynntils.core.persisted.PersistedValue;
-import com.wynntils.core.persisted.upfixers.ConfigUpfixer;
+import com.wynntils.core.persisted.upfixers.Upfixer;
 import java.util.List;
 import java.util.Set;
 
-public class GameBarOverlayMoveUpfixer implements ConfigUpfixer {
+public class GameBarOverlayMoveUpfixer implements Upfixer {
     private static final List<String> KEYS_TO_CHANGE = List.of(
             "customBarsOverlayFeature.awakenedProgressBarOverlay.flip",
             "customBarsOverlayFeature.awakenedProgressBarOverlay.horizontalAlignmentOverride",

@@ -7,10 +7,10 @@ package com.wynntils.core.persisted.upfixers.config;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonPrimitive;
 import com.wynntils.core.persisted.PersistedValue;
-import com.wynntils.core.persisted.upfixers.ConfigUpfixer;
+import com.wynntils.core.persisted.upfixers.Upfixer;
 import java.util.Set;
 
-public class CustomCommandKeybindSlashStartUpfixer implements ConfigUpfixer {
+public class CustomCommandKeybindSlashStartUpfixer implements Upfixer {
     private static final String CUSTOM_COMMAND_OBJECT_NAME = "customCommandKeybindsFeature.keybindCommand";
 
     @Override

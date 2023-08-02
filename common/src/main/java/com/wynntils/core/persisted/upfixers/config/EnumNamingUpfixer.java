@@ -17,13 +17,13 @@ import com.google.gson.stream.JsonWriter;
 import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.components.Managers;
 import com.wynntils.core.persisted.PersistedValue;
-import com.wynntils.core.persisted.upfixers.ConfigUpfixer;
+import com.wynntils.core.persisted.upfixers.Upfixer;
 import com.wynntils.utils.EnumUtils;
 import com.wynntils.utils.colors.CustomColor;
 import java.io.IOException;
 import java.util.Set;
 
-public class EnumNamingUpfixer implements ConfigUpfixer {
+public class EnumNamingUpfixer implements Upfixer {
     private static final Gson GSON = new GsonBuilder()
             .registerTypeAdapter(CustomColor.class, new CustomColor.CustomColorSerializer())
             .registerTypeAdapterFactory(new EnumConverterFactory<>())

@@ -10,7 +10,7 @@ import com.wynntils.core.persisted.PersistedValue;
 import java.util.Set;
 
 @FunctionalInterface
-public interface ConfigUpfixer {
+public interface Upfixer {
     boolean apply(JsonObject configObject, Set<PersistedValue<?>> persisteds);
 
     default String getUpfixerName() {

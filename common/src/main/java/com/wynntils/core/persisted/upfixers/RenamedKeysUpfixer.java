@@ -11,7 +11,7 @@ import com.wynntils.utils.type.Pair;
 import java.util.List;
 import java.util.Set;
 
-public abstract class RenamedKeysUpfixer implements ConfigUpfixer {
+public abstract class RenamedKeysUpfixer implements Upfixer {
     protected abstract List<Pair<String, String>> getRenamedKeys();
 
     @Override

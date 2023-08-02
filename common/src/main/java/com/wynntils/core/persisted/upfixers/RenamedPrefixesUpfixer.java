@@ -12,7 +12,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
-public abstract class RenamedPrefixesUpfixer implements ConfigUpfixer {
+public abstract class RenamedPrefixesUpfixer implements Upfixer {
     protected abstract List<Pair<String, String>> getRenamedPrefixes();
 
     @Override
