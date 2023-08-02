@@ -5,10 +5,10 @@
 package com.wynntils.features.wynntils;
 
 import com.wynntils.core.WynntilsMod;
-import com.wynntils.core.config.Category;
-import com.wynntils.core.config.ConfigCategory;
 import com.wynntils.core.consumers.features.Feature;
 import com.wynntils.core.mod.event.WynncraftConnectionEvent;
+import com.wynntils.core.persisted.config.Category;
+import com.wynntils.core.persisted.config.ConfigCategory;
 import com.wynntils.mc.event.PlayerInfoEvent;
 import com.wynntils.utils.mc.McUtils;
 import net.minecraft.network.chat.Component;

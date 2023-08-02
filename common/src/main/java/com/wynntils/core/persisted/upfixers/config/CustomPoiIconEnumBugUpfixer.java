@@ -2,13 +2,13 @@
  * Copyright © Wynntils 2023.
  * This file is released under AGPLv3. See LICENSE for full license details.
  */
-package com.wynntils.core.config.upfixers.impl;
+package com.wynntils.core.persisted.upfixers.config;
 
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
-import com.wynntils.core.config.Config;
-import com.wynntils.core.config.upfixers.ConfigUpfixer;
+import com.wynntils.core.persisted.config.Config;
+import com.wynntils.core.persisted.upfixers.ConfigUpfixer;
 import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;

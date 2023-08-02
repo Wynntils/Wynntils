@@ -4,11 +4,11 @@
  */
 package com.wynntils.features.overlays;
 
-import com.wynntils.core.config.Category;
-import com.wynntils.core.config.ConfigCategory;
 import com.wynntils.core.consumers.features.Feature;
 import com.wynntils.core.consumers.overlays.RenderState;
 import com.wynntils.core.consumers.overlays.annotations.OverlayGroup;
+import com.wynntils.core.persisted.config.Category;
+import com.wynntils.core.persisted.config.ConfigCategory;
 import com.wynntils.mc.event.RenderEvent;
 import com.wynntils.overlays.infobox.InfoBoxOverlay;
 import java.util.ArrayList;

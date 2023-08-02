@@ -4,7 +4,7 @@
  */
 package com.wynntils.screens.settings.widgets;
 
-import com.wynntils.core.config.Config;
+import com.wynntils.core.persisted.config.Config;
 import com.wynntils.screens.base.TextboxScreen;
 import com.wynntils.screens.base.widgets.TextInputBoxWidget;
 import com.wynntils.utils.colors.CommonColors;

@@ -4,11 +4,11 @@
  */
 package com.wynntils.overlays.objectives;
 
-import com.wynntils.core.config.Config;
 import com.wynntils.core.consumers.overlays.Overlay;
 import com.wynntils.core.consumers.overlays.OverlayPosition;
 import com.wynntils.core.consumers.overlays.OverlaySize;
 import com.wynntils.core.persisted.Persisted;
+import com.wynntils.core.persisted.config.Config;
 import com.wynntils.utils.render.type.HorizontalAlignment;
 import com.wynntils.utils.render.type.ObjectivesTextures;
 import com.wynntils.utils.render.type.TextShadow;

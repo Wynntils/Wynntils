@@ -5,12 +5,12 @@
 package com.wynntils.overlays;
 
 import com.wynntils.core.components.Models;
-import com.wynntils.core.config.Config;
 import com.wynntils.core.consumers.overlays.BarOverlay;
 import com.wynntils.core.consumers.overlays.ContainerOverlay;
 import com.wynntils.core.consumers.overlays.OverlayPosition;
 import com.wynntils.core.consumers.overlays.OverlaySize;
 import com.wynntils.core.persisted.Persisted;
+import com.wynntils.core.persisted.config.Config;
 import com.wynntils.models.token.event.TokenGatekeeperEvent;
 import com.wynntils.utils.colors.ColorChatFormatting;
 import com.wynntils.utils.colors.CustomColor;
