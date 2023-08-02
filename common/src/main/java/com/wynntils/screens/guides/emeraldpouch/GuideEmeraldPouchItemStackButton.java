@@ -5,7 +5,6 @@
 package com.wynntils.screens.guides.emeraldpouch;
 
 import com.mojang.blaze3d.vertex.PoseStack;
-import com.wynntils.core.components.Managers;
 import com.wynntils.core.components.Services;
 import com.wynntils.core.text.StyledText;
 import com.wynntils.screens.base.widgets.WynntilsButton;
@@ -92,7 +91,6 @@ public class GuideEmeraldPouchItemStackButton extends WynntilsButton {
                 StyledText.fromComponent(itemStack.getHoverName()).getStringWithoutFormatting();
         if (button == GLFW.GLFW_MOUSE_BUTTON_LEFT) {
             Services.Favorites.toggleFavorite(unformattedName);
-            Managers.Config.saveConfig();
         }
 
         return true;
