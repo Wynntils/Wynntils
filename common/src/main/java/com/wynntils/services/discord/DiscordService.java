@@ -15,6 +15,7 @@ import com.wynntils.mc.event.TickEvent;
 import com.wynntils.utils.mc.McUtils;
 import java.time.Instant;
 import java.util.List;
+import net.minecraft.client.resources.language.I18n;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 
 public class DiscordService extends Service {
@@ -31,11 +32,18 @@ public class DiscordService extends Service {
         super(List.of());
     }
 
-    public void load() {
-        DiscordGameSDKCore.loadLibrary();
+    public boolean load() {
+        try {
+            DiscordGameSDKCore.loadLibrary();
+        } catch (UnsatisfiedLinkError e) {
+            McUtils.sendErrorToClient(I18n.get("service.wynntils.discord.failedToLoadSDK"));
+            WynntilsMod.error("Failed to load Discord Rich Presence library", e);
+            return false;
+        }
         if (!isReady()) {
             createCore();
         }
+        return true;
     }
 
     public boolean isReady() {
