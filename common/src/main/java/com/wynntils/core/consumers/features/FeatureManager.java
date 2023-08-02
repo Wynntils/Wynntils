@@ -191,6 +191,7 @@ public final class FeatureManager extends Manager {
         registerFeature(new DeathCoordinatesFeature());
         registerFeature(new DialogueOptionOverrideFeature());
         registerFeature(new GuildRankReplacementFeature());
+        registerFeature(new InputTranscriptionFeature());
         registerFeature(new MessageFilterFeature());
         // endregion
 
@@ -328,7 +329,6 @@ public final class FeatureManager extends Manager {
         // region utilities
         registerFeature(new AutoApplyResourcePackFeature());
         registerFeature(new GammabrightFeature());
-        registerFeature(new InputTranscriptionFeature());
         registerFeature(new SilencerFeature());
         registerFeature(new TranscribeMessagesFeature());
         registerFeature(new TranslationFeature());
