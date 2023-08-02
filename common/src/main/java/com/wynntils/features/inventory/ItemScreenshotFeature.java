@@ -12,10 +12,10 @@ import com.wynntils.core.components.Models;
 import com.wynntils.core.config.Category;
 import com.wynntils.core.config.Config;
 import com.wynntils.core.config.ConfigCategory;
-import com.wynntils.core.config.RegisterConfig;
 import com.wynntils.core.consumers.features.Feature;
 import com.wynntils.core.consumers.features.properties.RegisterKeyBind;
 import com.wynntils.core.keybinds.KeyBind;
+import com.wynntils.core.persisted.Persisted;
 import com.wynntils.core.text.PartStyle;
 import com.wynntils.core.text.StyledText;
 import com.wynntils.mc.event.ItemTooltipRenderEvent;
@@ -55,7 +55,7 @@ public class ItemScreenshotFeature extends Feature {
     private final KeyBind itemScreenshotKeyBind =
             new KeyBind("Screenshot Item", GLFW.GLFW_KEY_F4, true, null, this::onInventoryPress);
 
-    @RegisterConfig
+    @Persisted
     public final Config<Boolean> saveToDisk = new Config<>(false);
 
     private Slot screenshotSlot = null;

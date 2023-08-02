@@ -8,8 +8,8 @@ import com.wynntils.core.components.Models;
 import com.wynntils.core.config.Category;
 import com.wynntils.core.config.Config;
 import com.wynntils.core.config.ConfigCategory;
-import com.wynntils.core.config.RegisterConfig;
 import com.wynntils.core.consumers.features.Feature;
+import com.wynntils.core.persisted.Persisted;
 import com.wynntils.core.text.PartStyle;
 import com.wynntils.core.text.StyledText;
 import com.wynntils.mc.event.EntityNameTagRenderEvent;
@@ -41,22 +41,22 @@ public class CustomNametagRendererFeature extends Feature {
     private static final float NAMETAG_HEIGHT = 0.25875f;
     private static final String WYNNTILS_LOGO = "⛨"; // Well, at least it's a shield...
 
-    @RegisterConfig
+    @Persisted
     public final Config<Boolean> hideAllNametags = new Config<>(false);
 
-    @RegisterConfig
+    @Persisted
     public final Config<Boolean> hidePlayerNametags = new Config<>(false);
 
-    @RegisterConfig
+    @Persisted
     public final Config<Boolean> hideNametagBackground = new Config<>(false);
 
-    @RegisterConfig
+    @Persisted
     public final Config<Boolean> showGearOnHover = new Config<>(true);
 
-    @RegisterConfig
+    @Persisted
     public final Config<Boolean> showWynntilsMarker = new Config<>(true);
 
-    @RegisterConfig
+    @Persisted
     public final Config<Float> customNametagScale = new Config<>(0.5f);
 
     private Player hitPlayerCache = null;

@@ -7,8 +7,8 @@ package com.wynntils.features.combat;
 import com.wynntils.core.config.Category;
 import com.wynntils.core.config.Config;
 import com.wynntils.core.config.ConfigCategory;
-import com.wynntils.core.config.RegisterConfig;
 import com.wynntils.core.consumers.features.Feature;
+import com.wynntils.core.persisted.Persisted;
 import com.wynntils.mc.extension.EntityExtension;
 import com.wynntils.models.abilities.event.TotemEvent;
 import com.wynntils.utils.colors.CommonColors;
@@ -20,16 +20,16 @@ import net.minecraftforge.eventbus.api.SubscribeEvent;
 public class ShamanTotemTrackingFeature extends Feature {
     private static final int ENTITY_GLOWING_FLAG = 6;
 
-    @RegisterConfig
+    @Persisted
     public final Config<Boolean> highlightShamanTotems = new Config<>(true);
 
-    @RegisterConfig
+    @Persisted
     public final Config<CustomColor> firstTotemColor = new Config<>(CommonColors.WHITE);
 
-    @RegisterConfig
+    @Persisted
     public final Config<CustomColor> secondTotemColor = new Config<>(CommonColors.BLUE);
 
-    @RegisterConfig
+    @Persisted
     public final Config<CustomColor> thirdTotemColor = new Config<>(CommonColors.RED);
 
     @SubscribeEvent

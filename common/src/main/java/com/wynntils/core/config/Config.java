@@ -7,22 +7,20 @@ package com.wynntils.core.config;
 import com.wynntils.core.components.Managers;
 import com.wynntils.core.consumers.features.Configurable;
 import com.wynntils.core.consumers.features.Translatable;
+import com.wynntils.core.persisted.Persisted;
+import com.wynntils.core.persisted.PersistedValue;
 import java.lang.reflect.Field;
 import java.lang.reflect.Type;
 import java.util.stream.Stream;
 
-public class Config<T> implements Comparable<Config<T>> {
-    private T value;
+public class Config<T> extends PersistedValue<T> implements Comparable<Config<T>> {
     private ConfigHolder<T> configHolder;
 
     public Config(T value) {
-        this.value = value;
+        super(value);
     }
 
-    public T get() {
-        return value;
-    }
-
+    @Override
     public void touched() {
         Managers.Config.saveConfig();
     }
@@ -31,8 +29,7 @@ public class Config<T> implements Comparable<Config<T>> {
         this.value = value;
     }
 
-    <P extends Configurable & Translatable> void createConfigHolder(
-            P parent, Field configField, RegisterConfig configInfo) {
+    <P extends Configurable & Translatable> void createConfigHolder(P parent, Field configField, Persisted configInfo) {
         Type valueType = Managers.Json.getJsonValueType(configField);
         String fieldName = configField.getName();
 

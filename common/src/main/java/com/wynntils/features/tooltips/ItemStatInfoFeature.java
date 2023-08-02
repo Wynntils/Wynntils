@@ -9,8 +9,8 @@ import com.wynntils.core.components.Models;
 import com.wynntils.core.config.Category;
 import com.wynntils.core.config.Config;
 import com.wynntils.core.config.ConfigCategory;
-import com.wynntils.core.config.RegisterConfig;
 import com.wynntils.core.consumers.features.Feature;
+import com.wynntils.core.persisted.Persisted;
 import com.wynntils.mc.event.ItemTooltipRenderEvent;
 import com.wynntils.models.gear.tooltip.GearTooltipBuilder;
 import com.wynntils.models.gear.tooltip.GearTooltipStyle;
@@ -43,40 +43,40 @@ import org.lwjgl.glfw.GLFW;
 public class ItemStatInfoFeature extends Feature {
     private final Set<GearItem> brokenItems = new HashSet<>();
 
-    @RegisterConfig
+    @Persisted
     public final Config<Boolean> showStars = new Config<>(true);
 
-    @RegisterConfig
+    @Persisted
     public final Config<Boolean> colorLerp = new Config<>(true);
 
-    @RegisterConfig
+    @Persisted
     public final Config<Integer> decimalPlaces = new Config<>(1);
 
-    @RegisterConfig
+    @Persisted
     public final Config<Boolean> perfect = new Config<>(true);
 
-    @RegisterConfig
+    @Persisted
     public final Config<Boolean> defective = new Config<>(true);
 
-    @RegisterConfig
+    @Persisted
     public final Config<Float> obfuscationChanceStart = new Config<>(0.08f);
 
-    @RegisterConfig
+    @Persisted
     public final Config<Float> obfuscationChanceEnd = new Config<>(0.04f);
 
-    @RegisterConfig
+    @Persisted
     public final Config<StatListOrdering> identificationsOrdering = new Config<>(StatListOrdering.DEFAULT);
 
-    @RegisterConfig
+    @Persisted
     public final Config<Boolean> groupIdentifications = new Config<>(true);
 
-    @RegisterConfig
+    @Persisted
     public final Config<Boolean> identificationDecorations = new Config<>(true);
 
-    @RegisterConfig
+    @Persisted
     public final Config<Boolean> overallPercentageInName = new Config<>(true);
 
-    @RegisterConfig
+    @Persisted
     public final Config<Boolean> showBestValueLastAlways = new Config<>(true);
 
     @SubscribeEvent

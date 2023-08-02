@@ -10,9 +10,9 @@ import com.wynntils.core.components.Services;
 import com.wynntils.core.config.Category;
 import com.wynntils.core.config.Config;
 import com.wynntils.core.config.ConfigCategory;
-import com.wynntils.core.config.RegisterConfig;
 import com.wynntils.core.consumers.features.Feature;
 import com.wynntils.core.consumers.features.properties.StartDisabled;
+import com.wynntils.core.persisted.Persisted;
 import com.wynntils.core.text.StyledText;
 import com.wynntils.handlers.chat.event.ChatMessageReceivedEvent;
 import com.wynntils.handlers.chat.event.NpcDialogEvent;
@@ -28,25 +28,25 @@ import net.minecraftforge.eventbus.api.SubscribeEvent;
 @StartDisabled
 @ConfigCategory(Category.UTILITIES)
 public class TranslationFeature extends Feature {
-    @RegisterConfig
+    @Persisted
     public final Config<String> languageName = new Config<>("");
 
-    @RegisterConfig
+    @Persisted
     public final Config<Boolean> translateTrackedQuest = new Config<>(true);
 
-    @RegisterConfig
+    @Persisted
     public final Config<Boolean> translateNpc = new Config<>(true);
 
-    @RegisterConfig
+    @Persisted
     public final Config<Boolean> translateInfo = new Config<>(true);
 
-    @RegisterConfig
+    @Persisted
     public final Config<Boolean> translatePlayerChat = new Config<>(false);
 
-    @RegisterConfig
+    @Persisted
     public final Config<Boolean> keepOriginal = new Config<>(true);
 
-    @RegisterConfig
+    @Persisted
     public final Config<TranslationService.TranslationServices> translationService =
             new Config<>(TranslationService.TranslationServices.GOOGLEAPI);
 

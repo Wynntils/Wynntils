@@ -7,10 +7,10 @@ package com.wynntils.features.ui;
 import com.wynntils.core.config.Category;
 import com.wynntils.core.config.Config;
 import com.wynntils.core.config.ConfigCategory;
-import com.wynntils.core.config.RegisterConfig;
 import com.wynntils.core.consumers.features.Feature;
 import com.wynntils.core.consumers.features.properties.RegisterKeyBind;
 import com.wynntils.core.keybinds.KeyBind;
+import com.wynntils.core.persisted.Persisted;
 import com.wynntils.core.text.StyledText;
 import com.wynntils.mc.event.PlayerInteractEvent;
 import com.wynntils.mc.event.UseItemEvent;
@@ -86,16 +86,16 @@ public class WynntilsContentBookFeature extends Feature {
             true,
             () -> WynntilsMenuScreenBase.openBook(WynntilsGuidesListScreen.create()));
 
-    @RegisterConfig
+    @Persisted
     public final Config<Boolean> replaceWynncraftContentBook = new Config<>(true);
 
-    @RegisterConfig
+    @Persisted
     public final Config<InitialPage> initialPage = new Config<>(InitialPage.USER_PROFILE);
 
-    @RegisterConfig
+    @Persisted
     public final Config<Boolean> showContentBookLoadingUpdates = new Config<>(true);
 
-    @RegisterConfig
+    @Persisted
     public final Config<Boolean> displayOverallProgress = new Config<>(true);
 
     @SubscribeEvent

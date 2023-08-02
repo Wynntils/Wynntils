@@ -8,8 +8,8 @@ import com.wynntils.core.components.Models;
 import com.wynntils.core.config.Category;
 import com.wynntils.core.config.Config;
 import com.wynntils.core.config.ConfigCategory;
-import com.wynntils.core.config.RegisterConfig;
 import com.wynntils.core.consumers.features.Feature;
+import com.wynntils.core.persisted.Persisted;
 import com.wynntils.mc.event.ScreenOpenedEvent;
 import com.wynntils.screens.maps.SeaskipperDepartureBoardScreen;
 import com.wynntils.screens.maps.SeaskipperMapScreen;
@@ -21,13 +21,13 @@ import net.minecraftforge.eventbus.api.SubscribeEvent;
 
 @ConfigCategory(Category.UI)
 public class CustomSeaskipperScreenFeature extends Feature {
-    @RegisterConfig
+    @Persisted
     public final Config<SeaskipperScreenType> screenType = new Config<>(SeaskipperScreenType.DEPARTURE_BOARD);
 
-    @RegisterConfig
+    @Persisted
     public final Config<PointerType> pointerType = new Config<>(PointerType.ARROW);
 
-    @RegisterConfig
+    @Persisted
     public final Config<CustomColor> pointerColor = new Config<>(new CustomColor(1f, 1f, 1f, 1f));
 
     @SubscribeEvent

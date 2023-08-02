@@ -8,8 +8,8 @@ import com.wynntils.core.components.Models;
 import com.wynntils.core.config.Category;
 import com.wynntils.core.config.Config;
 import com.wynntils.core.config.ConfigCategory;
-import com.wynntils.core.config.RegisterConfig;
 import com.wynntils.core.consumers.features.Feature;
+import com.wynntils.core.persisted.Persisted;
 import com.wynntils.mc.event.HotbarSlotRenderEvent;
 import com.wynntils.mc.event.ItemCountOverlayRenderEvent;
 import com.wynntils.mc.event.SlotRenderEvent;
@@ -24,10 +24,10 @@ import org.lwjgl.glfw.GLFW;
 
 @ConfigCategory(Category.INVENTORY)
 public class ExtendedItemCountFeature extends Feature {
-    @RegisterConfig
+    @Persisted
     public final Config<Boolean> inventoryTextOverlayEnabled = new Config<>(true);
 
-    @RegisterConfig
+    @Persisted
     public final Config<Boolean> hotbarTextOverlayEnabled = new Config<>(true);
 
     private boolean isInventory;

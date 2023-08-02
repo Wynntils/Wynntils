@@ -5,10 +5,10 @@
 package com.wynntils.overlays;
 
 import com.wynntils.core.config.Config;
-import com.wynntils.core.config.RegisterConfig;
 import com.wynntils.core.consumers.overlays.OverlayPosition;
 import com.wynntils.core.consumers.overlays.OverlaySize;
 import com.wynntils.core.consumers.overlays.TextOverlay;
+import com.wynntils.core.persisted.Persisted;
 import com.wynntils.utils.colors.CommonColors;
 import com.wynntils.utils.colors.CustomColor;
 import com.wynntils.utils.render.type.HorizontalAlignment;
@@ -21,7 +21,7 @@ public class ArrowShieldTrackerOverlay extends TextOverlay {
             "{IF_STRING(GT(ARROW_SHIELD_COUNT; 0); CONCAT(\"Arrow Shield: \"; REPEAT(\"%s\"; ARROW_SHIELD_COUNT)); \"\")}"
                     .formatted(ARROW_SYMBOL);
 
-    @RegisterConfig
+    @Persisted
     public final Config<CustomColor> textColor = new Config<>(CommonColors.LIGHT_BLUE);
 
     public ArrowShieldTrackerOverlay() {

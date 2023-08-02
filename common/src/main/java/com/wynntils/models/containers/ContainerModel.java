@@ -6,7 +6,7 @@ package com.wynntils.models.containers;
 
 import com.wynntils.core.components.Model;
 import com.wynntils.core.components.Models;
-import com.wynntils.core.storage.RegisterStorage;
+import com.wynntils.core.persisted.Persisted;
 import com.wynntils.core.storage.Storage;
 import com.wynntils.core.text.StyledText;
 import com.wynntils.utils.type.Pair;
@@ -57,16 +57,16 @@ public final class ContainerModel extends Model {
     private static final StyledText CONTENT_BOOK_TITLE = StyledText.fromString("§f\uE000\uE072");
     private static final StyledText LOBBY_TITLE = StyledText.fromString("Wynncraft Servers");
 
-    @RegisterStorage
+    @Persisted
     private final Storage<Integer> finalBankPage = new Storage<>(21);
 
-    @RegisterStorage
+    @Persisted
     private final Storage<Integer> finalBlockBankPage = new Storage<>(12);
 
-    @RegisterStorage
+    @Persisted
     private final Storage<Integer> finalBookshelfPage = new Storage<>(10);
 
-    @RegisterStorage
+    @Persisted
     private final Storage<Integer> finalMiscBucketPage = new Storage<>(10);
 
     public static final int LAST_BANK_PAGE_SLOT = 8;

@@ -9,10 +9,10 @@ import com.wynntils.core.components.Models;
 import com.wynntils.core.config.Category;
 import com.wynntils.core.config.Config;
 import com.wynntils.core.config.ConfigCategory;
-import com.wynntils.core.config.RegisterConfig;
 import com.wynntils.core.consumers.features.Feature;
 import com.wynntils.core.consumers.features.properties.RegisterKeyBind;
 import com.wynntils.core.keybinds.KeyBind;
+import com.wynntils.core.persisted.Persisted;
 import com.wynntils.core.text.StyledText;
 import com.wynntils.handlers.chat.event.ChatMessageReceivedEvent;
 import com.wynntils.mc.event.UseItemEvent;
@@ -59,10 +59,10 @@ public class HorseMountFeature extends Feature {
     @RegisterKeyBind
     private final KeyBind mountHorseKeyBind = new KeyBind("Mount Horse", GLFW.GLFW_KEY_R, true, this::mountHorse);
 
-    @RegisterConfig
+    @Persisted
     public final Config<Boolean> guaranteedMount = new Config<>(true);
 
-    @RegisterConfig
+    @Persisted
     public final Config<Boolean> playWhistle = new Config<>(true);
 
     @SubscribeEvent

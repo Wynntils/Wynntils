@@ -7,8 +7,8 @@ package com.wynntils.features.combat;
 import com.wynntils.core.config.Category;
 import com.wynntils.core.config.Config;
 import com.wynntils.core.config.ConfigCategory;
-import com.wynntils.core.config.RegisterConfig;
 import com.wynntils.core.consumers.features.Feature;
+import com.wynntils.core.persisted.Persisted;
 import com.wynntils.models.activities.event.ActivityTrackerUpdatedEvent;
 import com.wynntils.utils.mc.McUtils;
 import net.minecraft.resources.ResourceLocation;
@@ -20,10 +20,10 @@ public class ContentTrackerFeature extends Feature {
     private static final ResourceLocation TRACKER_UPDATE_ID = new ResourceLocation("wynntils:ui.tracker.update");
     private static final SoundEvent TRACKER_UPDATE_SOUND = SoundEvent.createVariableRangeEvent(TRACKER_UPDATE_ID);
 
-    @RegisterConfig
+    @Persisted
     public final Config<Boolean> autoTrackCoordinates = new Config<>(true);
 
-    @RegisterConfig
+    @Persisted
     public final Config<Boolean> playSoundOnUpdate = new Config<>(true);
 
     @SubscribeEvent

@@ -10,7 +10,7 @@ import com.wynntils.core.config.Category;
 import com.wynntils.core.config.ConfigCategory;
 import com.wynntils.core.consumers.features.Feature;
 import com.wynntils.core.consumers.features.properties.StartDisabled;
-import com.wynntils.core.storage.RegisterStorage;
+import com.wynntils.core.persisted.Persisted;
 import com.wynntils.core.storage.Storage;
 import com.wynntils.models.beacons.type.Beacon;
 import com.wynntils.models.lootrun.event.LootrunBeaconSelectedEvent;
@@ -29,7 +29,7 @@ import net.minecraftforge.eventbus.api.SubscribeEvent;
 public class LootrunBeaconLocationCollectorFeature extends Feature {
     // Dumping to a storage is a bit weird,
     // but it's the easiest way to get the data out of the game for people to share.
-    @RegisterStorage
+    @Persisted
     private final Storage<Map<LootrunLocation, Set<TaskLocation>>> tasks = new Storage<>(new TreeMap<>());
 
     @SubscribeEvent

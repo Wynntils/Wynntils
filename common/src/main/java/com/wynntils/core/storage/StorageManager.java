@@ -12,11 +12,11 @@ import com.wynntils.core.components.Managers;
 import com.wynntils.core.consumers.features.FeatureManager;
 import com.wynntils.core.json.JsonManager;
 import com.wynntils.core.mod.event.WynncraftConnectionEvent;
+import com.wynntils.core.persisted.Persisted;
 import com.wynntils.utils.mc.McUtils;
 import java.io.File;
 import java.lang.reflect.Field;
 import java.lang.reflect.Type;
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -65,46 +65,25 @@ public final class StorageManager extends Manager {
         persist();
     }
 
-    public void registerStorageable(Storageable storageable) {
-        String baseName = storageable.getStorageJsonName();
+    public void registerStorageable(Storageable owner) {
+        Managers.Persisted.verifyAnnotations(owner);
 
-        Field[] annotatedStorages = FieldUtils.getFieldsWithAnnotation(storageable.getClass(), RegisterStorage.class);
-        for (Field field : annotatedStorages) {
-            try {
-                Object fieldValue = FieldUtils.readField(field, storageable, true);
-                if (!(fieldValue instanceof Storage<?>)) {
-                    throw new RuntimeException(
-                            "A non-Storage class was marked with @RegisterStorage annotation: " + field);
-                }
-            } catch (IllegalAccessException e) {
-                throw new RuntimeException("Failed to read @RegisterStorage annotated field: " + field, e);
-            }
-        }
-        List<Field> fields = FieldUtils.getAllFieldsList(storageable.getClass());
-        List<Field> storageFields =
-                fields.stream().filter(f -> f.getType().equals(Storage.class)).toList();
+        Managers.Persisted.getPersisted(owner, Storage.class).stream()
+                .forEach(p -> processStorage(owner, p.a(), p.b()));
+    }
 
-        for (Field storageField : storageFields) {
-            try {
-                RegisterStorage storageInfo = Arrays.stream(annotatedStorages)
-                        .filter(f -> f.equals(storageField))
-                        .findFirst()
-                        .map(f -> f.getAnnotation(RegisterStorage.class))
-                        .orElse(null);
-                if (storageInfo == null) {
-                    throw new RuntimeException("A Storage is missing @RegisterStorage annotation:" + storageField);
-                }
+    private void processStorage(Storageable owner, Field field, Persisted annotation) {
+        try {
+            String baseName = owner.getStorageJsonName();
+            Storage<?> storage = (Storage<?>) FieldUtils.readField(field, owner, true);
+            String jsonName = baseName + "." + field.getName();
+            storages.put(jsonName, storage);
 
-                Storage<?> storage = (Storage<?>) FieldUtils.readField(storageField, storageable, true);
-                String jsonName = baseName + "." + storageField.getName();
-                storages.put(jsonName, storage);
-
-                Type valueType = Managers.Json.getJsonValueType(storageField);
-                storageTypes.put(storage, valueType);
-                storageOwner.put(storage, storageable);
-            } catch (IllegalAccessException e) {
-                throw new RuntimeException(e);
-            }
+            Type valueType = Managers.Json.getJsonValueType(field);
+            storageTypes.put(storage, valueType);
+            storageOwner.put(storage, owner);
+        } catch (IllegalAccessException e) {
+            throw new RuntimeException(e);
         }
     }
 
