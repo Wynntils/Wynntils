@@ -256,7 +256,7 @@ public class LootrunModel extends Model {
     }
 
     @SubscribeEvent
-    public void onBeaconAdd(BeaconEvent.Added event) {
+    public void onBeaconAdded(BeaconEvent.Added event) {
         Beacon beacon = event.getBeacon();
         if (!beacon.color().isUsedInLootruns()) return;
 
@@ -318,6 +318,11 @@ public class LootrunModel extends Model {
             WynntilsMod.info("Selected a " + closestBeacon.color() + " beacon at " + closestBeacon.location());
             selectedBeacons.put(closestBeacon.color(), selectedBeacons.getOrDefault(closestBeacon.color(), 0) + 1);
             WynntilsMod.postEvent(new LootrunBeaconSelectedEvent(closestBeacon));
+
+            // We selected a beacon, so other beacons are no longer relevant.
+            beacons.clear();
+            LOOTRUN_BEACON_COMPASS_PROVIDER.reloadTaskMarkers();
+
             return;
         }
     }
