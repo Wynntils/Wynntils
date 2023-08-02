@@ -77,7 +77,7 @@ public class WynnAlphabetModel extends Model {
         }
     }
 
-    public String getStringWithTranscription(
+    public String transcribeMessageFromWynnAlphabet(
             String original,
             WynnAlphabet alphabet,
             boolean useColors,
@@ -125,13 +125,13 @@ public class WynnAlphabetModel extends Model {
         StringBuilder updatedMessage = new StringBuilder(message);
 
         for (String wynnicText : wynnicSubstring) {
-            String transcriptedText = Models.WynnAlphabet.getSentMessageWithTranscription(
+            String transcriptedText = Models.WynnAlphabet.transcribeMessageToWynnAlphabet(
                     wynnicText.toLowerCase(Locale.ROOT), WynnAlphabet.WYNNIC);
             replaceTranscribed(updatedMessage, "[[" + wynnicText + "]]", transcriptedText);
         }
 
         for (String gavellianText : gavellianSubstring) {
-            String transcriptedText = Models.WynnAlphabet.getSentMessageWithTranscription(
+            String transcriptedText = Models.WynnAlphabet.transcribeMessageToWynnAlphabet(
                     gavellianText.toLowerCase(Locale.ROOT), WynnAlphabet.GAVELLIAN);
             replaceTranscribed(updatedMessage, "<<" + gavellianText + ">>", transcriptedText);
         }
@@ -161,6 +161,42 @@ public class WynnAlphabetModel extends Model {
         resultStr += String.valueOf(numToAdd);
 
         return Integer.parseInt(resultStr);
+    }
+
+    public String transcribeMessageToWynnAlphabet(String original, WynnAlphabet alphabet) {
+        String transcripted = original;
+
+        if (alphabet == WynnAlphabet.GAVELLIAN) {
+            for (char character : original.toCharArray()) {
+                Character replacement = Models.WynnAlphabet.transcribeEnglishToGavellian(character);
+
+                if (!replacement.equals(character)) {
+                    transcripted = transcripted.replace(character, replacement);
+                }
+            }
+        } else {
+            Matcher numMatcher = NUMBER_PATTERN.matcher(transcripted);
+
+            transcripted = numMatcher.replaceAll(match -> {
+                int numToTranscript = Integer.parseInt(match.group());
+
+                if (numToTranscript > MAX_TRANSCRIBABLE_NUMBER) {
+                    return "∞";
+                } else {
+                    return Models.WynnAlphabet.intToWynnicNum(numToTranscript);
+                }
+            });
+
+            for (char character : original.toCharArray()) {
+                Character replacement = Models.WynnAlphabet.transcribeEnglishToWynnic(character);
+
+                if (!replacement.equals(character)) {
+                    transcripted = transcripted.replace(character, replacement);
+                }
+            }
+        }
+
+        return transcripted;
     }
 
     public int wynnicNumToInt(String wynnicNum) {
@@ -226,40 +262,8 @@ public class WynnAlphabetModel extends Model {
         return false;
     }
 
-    private String getSentMessageWithTranscription(String original, WynnAlphabet alphabet) {
-        String transcripted = original.toLowerCase(Locale.ROOT);
-
-        if (alphabet == WynnAlphabet.GAVELLIAN) {
-            for (char character : original.toCharArray()) {
-                Character replacement = Models.WynnAlphabet.transcribeEnglishToGavellian(character);
-
-                if (!replacement.equals(character)) {
-                    transcripted = transcripted.replace(character, replacement);
-                }
-            }
-        } else {
-            Matcher numMatcher = NUMBER_PATTERN.matcher(transcripted);
-
-            transcripted = numMatcher.replaceAll(match -> {
-                int numToTranscript = Integer.parseInt(match.group());
-
-                if (numToTranscript > MAX_TRANSCRIBABLE_NUMBER) {
-                    return "∞";
-                } else {
-                    return Models.WynnAlphabet.intToWynnicNum(numToTranscript);
-                }
-            });
-
-            for (char character : original.toCharArray()) {
-                Character replacement = Models.WynnAlphabet.transcribeEnglishToWynnic(character);
-
-                if (!replacement.equals(character)) {
-                    transcripted = transcripted.replace(character, replacement);
-                }
-            }
-        }
-
-        return transcripted;
+    public boolean containsBrackets(String message) {
+        return (message.contains("[[") && message.contains("]]")) || (message.contains("<<") && message.contains(">>"));
     }
 
     private void replaceTranscribed(StringBuilder stringBuilder, String original, String replacement) {

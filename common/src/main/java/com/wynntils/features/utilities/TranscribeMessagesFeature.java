@@ -132,7 +132,7 @@ public class TranscribeMessagesFeature extends Feature {
                             match -> String.valueOf(Models.WynnAlphabet.wynnicNumToInt(match.group())));
                 }
 
-                transcriptedText = Models.WynnAlphabet.getStringWithTranscription(
+                transcriptedText = Models.WynnAlphabet.transcribeMessageFromWynnAlphabet(
                         transcriptedText,
                         WynnAlphabet.WYNNIC,
                         coloredTranscriptions.get(),
@@ -141,7 +141,7 @@ public class TranscribeMessagesFeature extends Feature {
             }
 
             if (transcribeGavellian) {
-                transcriptedText = Models.WynnAlphabet.getStringWithTranscription(
+                transcriptedText = Models.WynnAlphabet.transcribeMessageFromWynnAlphabet(
                         transcriptedText,
                         WynnAlphabet.GAVELLIAN,
                         coloredTranscriptions.get(),

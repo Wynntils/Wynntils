@@ -124,7 +124,7 @@ public class InputTranscriptionFeature extends Feature {
 
         String message = event.getMessage();
 
-        if (containsBrackets(message)) {
+        if (Models.WynnAlphabet.containsBrackets(message)) {
             String updatedMessage = Models.WynnAlphabet.transcribeBracketedText(message);
 
             updatedMessage = updatedMessage.substring(0, Math.min(updatedMessage.length(), MAX_CHAT_LENGTH));
@@ -133,16 +133,16 @@ public class InputTranscriptionFeature extends Feature {
                 event.setCanceled(true);
                 McUtils.mc().getConnection().sendChat(updatedMessage);
             }
-        } else {
-            Models.WynnAlphabet.setSelectedAlphabet(WynnAlphabet.DEFAULT);
         }
+
+        Models.WynnAlphabet.setSelectedAlphabet(WynnAlphabet.DEFAULT);
     }
 
     @SubscribeEvent
     public void onCommandSent(CommandSentEvent event) {
         String command = event.getCommand();
 
-        if (containsBrackets(command)) {
+        if (Models.WynnAlphabet.containsBrackets(command)) {
             String updatedCommand = Models.WynnAlphabet.transcribeBracketedText(command);
 
             updatedCommand = updatedCommand.substring(0, Math.min(updatedCommand.length(), MAX_CHAT_LENGTH));
@@ -151,17 +151,13 @@ public class InputTranscriptionFeature extends Feature {
                 event.setCanceled(true);
                 McUtils.sendCommand(updatedCommand);
             }
-        } else {
-            Models.WynnAlphabet.setSelectedAlphabet(WynnAlphabet.DEFAULT);
         }
+
+        Models.WynnAlphabet.setSelectedAlphabet(WynnAlphabet.DEFAULT);
     }
 
     private void addAlphabetButton(ChatScreen chatScreen, int xOffset, WynnAlphabet alphabet) {
         chatScreen.addRenderableWidget(new WynnAlphabetButton(xOffset, chatScreen.height - 14, 12, 12, alphabet));
-    }
-
-    private boolean containsBrackets(String message) {
-        return (message.contains("[[") && message.contains("]]")) || (message.contains("<<") && message.contains(">>"));
     }
 
     private void handleTypedCharacter(
