@@ -36,9 +36,7 @@ public class DiscordService extends Service {
         try {
             DiscordGameSDKCore.loadLibrary();
         } catch (UnsatisfiedLinkError e) {
-            if (McUtils.player() != null) {
-                McUtils.sendErrorToClient(I18n.get("service.wynntils.discord.failedToLoadSDK"));
-            }
+            McUtils.sendErrorToClient(I18n.get("service.wynntils.discord.failedToLoadSDK"));
             WynntilsMod.error("Failed to load Discord Rich Presence library", e);
             return false;
         }
