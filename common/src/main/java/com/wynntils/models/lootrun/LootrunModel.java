@@ -14,10 +14,11 @@ import com.wynntils.core.net.Download;
 import com.wynntils.core.net.UrlId;
 import com.wynntils.core.persisted.Persisted;
 import com.wynntils.core.persisted.storage.Storage;
-import com.wynntils.core.storage.Storage;
 import com.wynntils.core.text.StyledText;
+import com.wynntils.features.combat.CustomLootrunBeaconsFeature;
 import com.wynntils.handlers.chat.event.ChatMessageReceivedEvent;
 import com.wynntils.handlers.chat.type.RecipientType;
+import com.wynntils.mc.extension.EntityExtension;
 import com.wynntils.models.beacons.BeaconModel;
 import com.wynntils.models.beacons.event.BeaconEvent;
 import com.wynntils.models.beacons.type.Beacon;
@@ -47,6 +48,7 @@ import java.util.TreeMap;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import net.minecraft.network.chat.Component;
+import net.minecraft.world.entity.Entity;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import org.joml.Vector2i;
 
@@ -276,6 +278,17 @@ public class LootrunModel extends Model {
     public void onBeaconAdded(BeaconEvent.Added event) {
         Beacon beacon = event.getBeacon();
         if (!beacon.color().isUsedInLootruns()) return;
+
+        // FIXME: Feature-model dependency
+        CustomLootrunBeaconsFeature feature = Managers.Feature.getFeatureInstance(CustomLootrunBeaconsFeature.class);
+        if (feature.removeOriginalBeacons.get() && feature.isEnabled()) {
+            for (Entity entity : event.getEntities()) {
+                // Only set this once they are added.
+                // This is cleaner than posting an event on render,
+                // but the config works only after they are placed again.
+                ((EntityExtension) entity).setRendered(false);
+            }
+        }
 
         Pair<Double, TaskLocation> taskPrediction = getBeaconTaskLocationPrediction(beacon);
         if (taskPrediction == null) {

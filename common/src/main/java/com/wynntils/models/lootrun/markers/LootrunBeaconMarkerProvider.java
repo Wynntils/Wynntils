@@ -4,7 +4,9 @@
  */
 package com.wynntils.models.lootrun.markers;
 
+import com.wynntils.core.components.Managers;
 import com.wynntils.core.components.Models;
+import com.wynntils.features.combat.CustomLootrunBeaconsFeature;
 import com.wynntils.models.beacons.type.BeaconColor;
 import com.wynntils.models.lootrun.type.TaskLocation;
 import com.wynntils.models.marker.type.MarkerInfo;
@@ -40,6 +42,9 @@ public class LootrunBeaconMarkerProvider implements MarkerProvider {
 
     @Override
     public boolean isEnabled() {
-        return Models.Lootrun.getState().isRunning(); // fixme disable this via config
+        // FIXME: Feature-Model dependency
+        return Models.Lootrun.getState().isRunning()
+                && Managers.Feature.getFeatureInstance(CustomLootrunBeaconsFeature.class)
+                        .isEnabled();
     }
 }

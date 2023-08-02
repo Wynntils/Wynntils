@@ -14,4 +14,8 @@ public interface EntityExtension {
     default int getGlowColorInt() {
         return getGlowColor().asInt();
     }
+
+    boolean isRendered();
+
+    void setRendered(boolean rendered);
 }

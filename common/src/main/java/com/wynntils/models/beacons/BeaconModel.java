@@ -15,6 +15,7 @@ import com.wynntils.models.beacons.type.BeaconColor;
 import com.wynntils.utils.mc.type.Location;
 import com.wynntils.utils.type.TimedSet;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -28,8 +29,8 @@ import org.apache.commons.compress.utils.Lists;
 
 public class BeaconModel extends Model {
     // Amount of armor stands above each other to consider this a beacon
-    // (A beacon typically has around 17 in total)
-    private static final int VERIFICATION_ENTITY_COUNT = 6;
+    // (A beacon always has 34, we wait for all of them)
+    private static final int VERIFICATION_ENTITY_COUNT = 34;
 
     private final TimedSet<UnverifiedBeacon> unverifiedBeacons = new TimedSet<>(1000, TimeUnit.MILLISECONDS, true);
     // Maps base entity id to corresponding beacon
@@ -74,7 +75,8 @@ public class BeaconModel extends Model {
             Beacon verifiedBeacon = new Beacon(unverifiedBeacon.getLocation(), beaconColor);
             int baseEntityId = unverifiedBeacon.getEntities().get(0).getId();
             verifiedBeacons.put(baseEntityId, verifiedBeacon);
-            WynntilsMod.postEvent(new BeaconEvent.Added(verifiedBeacon));
+            WynntilsMod.postEvent(new BeaconEvent.Added(
+                    verifiedBeacon, Collections.unmodifiableList(unverifiedBeacon.getEntities())));
 
             unverifiedBeacons.remove(unverifiedBeacon);
         }
