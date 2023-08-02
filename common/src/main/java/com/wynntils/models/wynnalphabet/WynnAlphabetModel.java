@@ -46,6 +46,7 @@ public class WynnAlphabetModel extends Model {
     private static final Map<Character, Character> englishToWynnicMap = new HashMap<>();
     private static final Map<Character, Character> gavellianToEnglishMap = new HashMap<>();
     private static final Map<Character, Character> wynnicToEnglishMap = new HashMap<>();
+    private static final Pattern BRACKET_PATTERN = Pattern.compile("(\\[\\[.*\\]\\])|(<<.*>>)");
     private static final Pattern NUMBER_PATTERN = Pattern.compile("\\d+");
     private static final String GAVELLIAN_TRANSCRIBER_DISCOVERY = "Ne du Valeos du Ellach";
     private static final String WYNNIC_TRANSCRIBER_DISCOVERY = "Wynn Plains Monument";
@@ -264,9 +265,7 @@ public class WynnAlphabetModel extends Model {
     }
 
     public boolean containsBrackets(String message) {
-        Pattern bracketPattern = Pattern.compile("(\\[\\[.*\\]\\])|(<<.*>>)");
-
-        return bracketPattern.matcher(message).matches();
+        return BRACKET_PATTERN.matcher(message).find();
     }
 
     private void replaceTranscribed(StringBuilder stringBuilder, String original, String replacement) {
