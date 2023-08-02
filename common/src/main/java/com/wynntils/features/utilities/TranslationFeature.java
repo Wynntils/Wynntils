@@ -79,7 +79,7 @@ public class TranslationFeature extends Feature {
     }
 
     @SubscribeEvent(priority = EventPriority.HIGHEST)
-    public void onNpcDialgue(NpcDialogEvent e) {
+    public void onNpcDialogue(NpcDialogEvent e) {
         if (!translateNpc.get()) return;
         if (languageName.get().isEmpty()) return;
 
