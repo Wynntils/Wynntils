@@ -13,8 +13,8 @@ import com.wynntils.core.config.Category;
 import com.wynntils.core.config.Config;
 import com.wynntils.core.config.ConfigCategory;
 import com.wynntils.core.config.ConfigHolder;
-import com.wynntils.core.config.RegisterConfig;
 import com.wynntils.core.consumers.features.Feature;
+import com.wynntils.core.persisted.Persisted;
 import com.wynntils.core.text.StyledText;
 import com.wynntils.mc.event.RenderEvent;
 import com.wynntils.mc.event.RenderLevelEvent;
@@ -48,25 +48,25 @@ import org.joml.Vector4f;
 public class WorldWaypointDistanceFeature extends Feature {
     private static final WaypointPoi DUMMY_WAYPOINT = new WaypointPoi(() -> null);
 
-    @RegisterConfig
+    @Persisted
     public final Config<CustomColor> textColor = new Config<>(CommonColors.WHITE);
 
-    @RegisterConfig
+    @Persisted
     public final Config<Float> backgroundOpacity = new Config<>(0.2f);
 
-    @RegisterConfig
+    @Persisted
     public final Config<TextShadow> textShadow = new Config<>(TextShadow.NONE);
 
-    @RegisterConfig
+    @Persisted
     public final Config<Float> bottomBoundingDistance = new Config<>(100f);
 
-    @RegisterConfig
+    @Persisted
     public final Config<Float> topBoundingDistance = new Config<>(40f);
 
-    @RegisterConfig
+    @Persisted
     public final Config<Float> horizontalBoundingDistance = new Config<>(30f);
 
-    @RegisterConfig
+    @Persisted
     public final Config<Integer> maxWaypointTextDistance = new Config<>(5000);
 
     private List<RenderedMarkerInfo> renderedMarkers = new ArrayList<>();

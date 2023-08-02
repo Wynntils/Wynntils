@@ -6,15 +6,15 @@ package com.wynntils.overlays.custombars;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.wynntils.core.config.Config;
-import com.wynntils.core.config.RegisterConfig;
 import com.wynntils.core.consumers.overlays.OverlaySize;
+import com.wynntils.core.persisted.Persisted;
 import com.wynntils.utils.render.Texture;
 import com.wynntils.utils.render.buffered.BufferedRenderUtils;
 import com.wynntils.utils.render.type.ObjectivesTextures;
 import net.minecraft.client.renderer.MultiBufferSource;
 
 public class ExperienceTexturedCustomBarOverlay extends CustomBarOverlayBase {
-    @RegisterConfig(i18nKey = "overlay.wynntils.objectivesTexture")
+    @Persisted(i18nKey = "overlay.wynntils.objectivesTexture")
     public final Config<ObjectivesTextures> objectivesTexture = new Config<>(ObjectivesTextures.A);
 
     public ExperienceTexturedCustomBarOverlay(int id) {

@@ -19,6 +19,7 @@ import com.wynntils.core.consumers.overlays.DynamicOverlay;
 import com.wynntils.core.consumers.overlays.Overlay;
 import com.wynntils.core.consumers.overlays.OverlayManager;
 import com.wynntils.core.json.JsonManager;
+import com.wynntils.core.persisted.Persisted;
 import com.wynntils.utils.JsonUtils;
 import com.wynntils.utils.mc.McUtils;
 import java.io.File;
@@ -220,7 +221,7 @@ public final class ConfigManager extends Manager {
     private <P extends Configurable & Translatable> List<ConfigHolder<?>> getConfigOptions(P parent) {
         List<ConfigHolder<?>> options = new ArrayList<>();
 
-        Field[] annotatedConfigs = FieldUtils.getFieldsWithAnnotation(parent.getClass(), RegisterConfig.class);
+        Field[] annotatedConfigs = FieldUtils.getFieldsWithAnnotation(parent.getClass(), Persisted.class);
         for (Field field : annotatedConfigs) {
             try {
                 Object fieldValue = FieldUtils.readField(field, parent, true);
@@ -239,10 +240,10 @@ public final class ConfigManager extends Manager {
                 .toList();
 
         for (Field configField : configFields) {
-            RegisterConfig configInfo = Arrays.stream(annotatedConfigs)
+            Persisted configInfo = Arrays.stream(annotatedConfigs)
                     .filter(f -> f.equals(configField))
                     .findFirst()
-                    .map(f -> f.getAnnotation(RegisterConfig.class))
+                    .map(f -> f.getAnnotation(Persisted.class))
                     .orElse(null);
             if (configInfo == null) {
                 throw new RuntimeException("A Config is missing @RegisterConfig annotation:" + configField);

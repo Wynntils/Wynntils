@@ -8,8 +8,8 @@ import com.wynntils.core.components.Models;
 import com.wynntils.core.config.Category;
 import com.wynntils.core.config.Config;
 import com.wynntils.core.config.ConfigCategory;
-import com.wynntils.core.config.RegisterConfig;
 import com.wynntils.core.consumers.features.Feature;
+import com.wynntils.core.persisted.Persisted;
 import com.wynntils.mc.event.RenderEvent;
 import com.wynntils.mc.event.TickEvent;
 import com.wynntils.utils.MathUtils;
@@ -22,16 +22,16 @@ import net.minecraftforge.eventbus.api.SubscribeEvent;
 public class LowHealthVignetteFeature extends Feature {
     private static final float INTENSITY = 0.3f;
 
-    @RegisterConfig
+    @Persisted
     public final Config<Integer> lowHealthPercentage = new Config<>(25);
 
-    @RegisterConfig
+    @Persisted
     public final Config<Float> animationSpeed = new Config<>(0.6f);
 
-    @RegisterConfig
+    @Persisted
     public final Config<HealthVignetteEffect> healthVignetteEffect = new Config<>(HealthVignetteEffect.PULSE);
 
-    @RegisterConfig
+    @Persisted
     public final Config<CustomColor> color = new Config<>(new CustomColor(255, 0, 0));
 
     private float animation = 10f;

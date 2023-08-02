@@ -9,11 +9,11 @@ import com.wynntils.core.config.Category;
 import com.wynntils.core.config.Config;
 import com.wynntils.core.config.ConfigCategory;
 import com.wynntils.core.config.ConfigHolder;
-import com.wynntils.core.config.RegisterConfig;
 import com.wynntils.core.consumers.features.Feature;
 import com.wynntils.core.consumers.features.properties.RegisterKeyBind;
 import com.wynntils.core.keybinds.KeyBind;
 import com.wynntils.core.mod.event.WynncraftConnectionEvent;
+import com.wynntils.core.persisted.Persisted;
 import com.wynntils.core.storage.RegisterStorage;
 import com.wynntils.core.storage.Storage;
 import com.wynntils.models.worlds.event.WorldStateEvent;
@@ -24,7 +24,7 @@ import org.lwjgl.glfw.GLFW;
 
 @ConfigCategory(Category.UTILITIES)
 public class GammabrightFeature extends Feature {
-    @RegisterConfig
+    @Persisted
     public final Config<Boolean> gammabrightEnabled = new Config<>(false);
 
     @RegisterStorage

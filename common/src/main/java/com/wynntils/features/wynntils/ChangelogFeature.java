@@ -9,10 +9,10 @@ import com.wynntils.core.components.Managers;
 import com.wynntils.core.config.Category;
 import com.wynntils.core.config.Config;
 import com.wynntils.core.config.ConfigCategory;
-import com.wynntils.core.config.RegisterConfig;
 import com.wynntils.core.consumers.features.Feature;
 import com.wynntils.core.net.ApiResponse;
 import com.wynntils.core.net.UrlId;
+import com.wynntils.core.persisted.Persisted;
 import com.wynntils.core.storage.RegisterStorage;
 import com.wynntils.core.storage.Storage;
 import com.wynntils.mc.event.ScreenOpenedEvent;
@@ -29,7 +29,7 @@ public class ChangelogFeature extends Feature {
     @RegisterStorage
     public final Storage<String> lastShownVersion = new Storage<>(WynntilsMod.getVersion());
 
-    @RegisterConfig
+    @Persisted
     public final Config<Boolean> autoClassMenu = new Config<>(false);
 
     private boolean waitForScreen = false;

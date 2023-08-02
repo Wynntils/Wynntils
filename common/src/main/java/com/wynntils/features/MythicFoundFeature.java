@@ -6,8 +6,8 @@ package com.wynntils.features;
 
 import com.wynntils.core.components.Models;
 import com.wynntils.core.config.Config;
-import com.wynntils.core.config.RegisterConfig;
 import com.wynntils.core.consumers.features.Feature;
+import com.wynntils.core.persisted.Persisted;
 import com.wynntils.models.containers.event.MythicFoundEvent;
 import com.wynntils.models.gear.type.GearType;
 import com.wynntils.models.items.items.game.GearBoxItem;
@@ -24,10 +24,10 @@ public class MythicFoundFeature extends Feature {
     private static final ResourceLocation MYTHIC_FOUND_ID = new ResourceLocation("wynntils:misc.mythic-found");
     private static final SoundEvent MYTHIC_FOUND_SOUND = SoundEvent.createVariableRangeEvent(MYTHIC_FOUND_ID);
 
-    @RegisterConfig
+    @Persisted
     public final Config<Boolean> playSound = new Config<>(true);
 
-    @RegisterConfig
+    @Persisted
     public final Config<Boolean> showDryStreakMessage = new Config<>(true);
 
     @SubscribeEvent

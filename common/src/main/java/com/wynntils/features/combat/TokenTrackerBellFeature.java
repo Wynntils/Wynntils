@@ -8,8 +8,8 @@ import com.wynntils.core.components.Models;
 import com.wynntils.core.config.Category;
 import com.wynntils.core.config.Config;
 import com.wynntils.core.config.ConfigCategory;
-import com.wynntils.core.config.RegisterConfig;
 import com.wynntils.core.consumers.features.Feature;
+import com.wynntils.core.persisted.Persisted;
 import com.wynntils.models.token.event.TokenGatekeeperEvent;
 import com.wynntils.utils.mc.McUtils;
 import com.wynntils.utils.type.CappedValue;
@@ -19,7 +19,7 @@ import net.minecraftforge.eventbus.api.SubscribeEvent;
 
 @ConfigCategory(Category.COMBAT)
 public class TokenTrackerBellFeature extends Feature {
-    @RegisterConfig
+    @Persisted
     public final Config<Boolean> playSound = new Config<>(true);
 
     @SubscribeEvent

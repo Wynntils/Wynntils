@@ -8,8 +8,8 @@ import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.config.Category;
 import com.wynntils.core.config.Config;
 import com.wynntils.core.config.ConfigCategory;
-import com.wynntils.core.config.RegisterConfig;
 import com.wynntils.core.consumers.features.Feature;
+import com.wynntils.core.persisted.Persisted;
 import com.wynntils.core.text.PartStyle;
 import com.wynntils.core.text.StyledText;
 import com.wynntils.handlers.chat.event.ChatMessageReceivedEvent;
@@ -39,13 +39,13 @@ public class TradeMarketBulkSellFeature extends Feature {
     private static final int SELLABLE_ITEM_SLOT = 10;
     private static final int AMOUNT_ITEM_SLOT = 11;
 
-    @RegisterConfig
+    @Persisted
     public final Config<Integer> bulkSell1Amount = new Config<>(64);
 
-    @RegisterConfig
+    @Persisted
     public final Config<Integer> bulkSell2Amount = new Config<>(0);
 
-    @RegisterConfig
+    @Persisted
     public final Config<Integer> bulkSell3Amount = new Config<>(0);
 
     private boolean sendAmountMessage = false;

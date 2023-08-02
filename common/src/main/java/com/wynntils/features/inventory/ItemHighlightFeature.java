@@ -9,8 +9,8 @@ import com.wynntils.core.components.Models;
 import com.wynntils.core.config.Category;
 import com.wynntils.core.config.Config;
 import com.wynntils.core.config.ConfigCategory;
-import com.wynntils.core.config.RegisterConfig;
 import com.wynntils.core.consumers.features.Feature;
+import com.wynntils.core.persisted.Persisted;
 import com.wynntils.mc.event.HotbarSlotRenderEvent;
 import com.wynntils.mc.event.SlotRenderEvent;
 import com.wynntils.models.items.WynnItem;
@@ -32,115 +32,115 @@ import net.minecraftforge.eventbus.api.SubscribeEvent;
 
 @ConfigCategory(Category.INVENTORY)
 public class ItemHighlightFeature extends Feature {
-    @RegisterConfig
+    @Persisted
     public final Config<Boolean> normalHighlightEnabled = new Config<>(true);
 
-    @RegisterConfig
+    @Persisted
     public final Config<CustomColor> normalHighlightColor = new Config<>(new CustomColor(255, 255, 255));
 
-    @RegisterConfig
+    @Persisted
     public final Config<Boolean> uniqueHighlightEnabled = new Config<>(true);
 
-    @RegisterConfig
+    @Persisted
     public final Config<CustomColor> uniqueHighlightColor = new Config<>(new CustomColor(255, 255, 0));
 
-    @RegisterConfig
+    @Persisted
     public final Config<Boolean> rareHighlightEnabled = new Config<>(true);
 
-    @RegisterConfig
+    @Persisted
     public final Config<CustomColor> rareHighlightColor = new Config<>(new CustomColor(255, 0, 255));
 
-    @RegisterConfig
+    @Persisted
     public final Config<Boolean> setHighlightEnabled = new Config<>(true);
 
-    @RegisterConfig
+    @Persisted
     public final Config<CustomColor> setHighlightColor = new Config<>(new CustomColor(0, 255, 0));
 
-    @RegisterConfig
+    @Persisted
     public final Config<Boolean> legendaryHighlightEnabled = new Config<>(true);
 
-    @RegisterConfig
+    @Persisted
     public final Config<CustomColor> legendaryHighlightColor = new Config<>(new CustomColor(0, 255, 255));
 
-    @RegisterConfig
+    @Persisted
     public final Config<Boolean> fabledHighlightEnabled = new Config<>(true);
 
-    @RegisterConfig
+    @Persisted
     public final Config<CustomColor> fabledHighlightColor = new Config<>(new CustomColor(255, 85, 85));
 
-    @RegisterConfig
+    @Persisted
     public final Config<Boolean> mythicHighlightEnabled = new Config<>(true);
 
-    @RegisterConfig
+    @Persisted
     public final Config<CustomColor> mythicHighlightColor = new Config<>(new CustomColor(76, 0, 76));
 
-    @RegisterConfig
+    @Persisted
     public final Config<Boolean> craftedHighlightEnabled = new Config<>(true);
 
-    @RegisterConfig
+    @Persisted
     public final Config<CustomColor> craftedHighlightColor = new Config<>(new CustomColor(0, 138, 138));
 
-    @RegisterConfig
+    @Persisted
     public final Config<Boolean> zeroStarIngredientHighlightEnabled = new Config<>(true);
 
-    @RegisterConfig
+    @Persisted
     public final Config<CustomColor> zeroStarIngredientHighlightColor = new Config<>(new CustomColor(102, 102, 102));
 
-    @RegisterConfig
+    @Persisted
     public final Config<Boolean> oneStarIngredientHighlightEnabled = new Config<>(true);
 
-    @RegisterConfig
+    @Persisted
     public final Config<CustomColor> oneStarIngredientHighlightColor = new Config<>(new CustomColor(255, 247, 153));
 
-    @RegisterConfig
+    @Persisted
     public final Config<Boolean> twoStarIngredientHighlightEnabled = new Config<>(true);
 
-    @RegisterConfig
+    @Persisted
     public final Config<CustomColor> twoStarIngredientHighlightColor = new Config<>(new CustomColor(255, 255, 0));
 
-    @RegisterConfig
+    @Persisted
     public final Config<Boolean> threeStarIngredientHighlightEnabled = new Config<>(true);
 
-    @RegisterConfig
+    @Persisted
     public final Config<CustomColor> threeStarIngredientHighlightColor = new Config<>(new CustomColor(230, 77, 0));
 
-    @RegisterConfig
+    @Persisted
     public final Config<Boolean> oneStarMaterialHighlightEnabled = new Config<>(true);
 
-    @RegisterConfig
+    @Persisted
     public final Config<CustomColor> oneStarMaterialHighlightColor = new Config<>(new CustomColor(255, 247, 153));
 
-    @RegisterConfig
+    @Persisted
     public final Config<Boolean> twoStarMaterialHighlightEnabled = new Config<>(true);
 
-    @RegisterConfig
+    @Persisted
     public final Config<CustomColor> twoStarMaterialHighlightColor = new Config<>(new CustomColor(255, 255, 0));
 
-    @RegisterConfig
+    @Persisted
     public final Config<Boolean> threeStarMaterialHighlightEnabled = new Config<>(true);
 
-    @RegisterConfig
+    @Persisted
     public final Config<CustomColor> threeStarMaterialHighlightColor = new Config<>(new CustomColor(230, 77, 0));
 
-    @RegisterConfig
+    @Persisted
     public final Config<Boolean> cosmeticHighlightEnabled = new Config<>(true);
 
-    @RegisterConfig
+    @Persisted
     public final Config<Boolean> powderHighlightEnabled = new Config<>(true);
 
-    @RegisterConfig
+    @Persisted
     public final Config<Boolean> emeraldPouchHighlightEnabled = new Config<>(true);
 
-    @RegisterConfig
+    @Persisted
     public final Config<Boolean> inventoryHighlightEnabled = new Config<>(true);
 
-    @RegisterConfig
+    @Persisted
     public final Config<Float> inventoryOpacity = new Config<>(1f);
 
-    @RegisterConfig
+    @Persisted
     public final Config<Boolean> hotbarHighlightEnabled = new Config<>(true);
 
-    @RegisterConfig
+    @Persisted
     public final Config<Float> hotbarOpacity = new Config<>(.5f);
 
     @SubscribeEvent(priority = EventPriority.HIGHEST)
