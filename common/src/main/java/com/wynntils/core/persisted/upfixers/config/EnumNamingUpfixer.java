@@ -2,7 +2,7 @@
  * Copyright © Wynntils 2023.
  * This file is released under AGPLv3. See LICENSE for full license details.
  */
-package com.wynntils.core.config.upfixers.impl;
+package com.wynntils.core.persisted.upfixers.config;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -16,8 +16,8 @@ import com.google.gson.stream.JsonToken;
 import com.google.gson.stream.JsonWriter;
 import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.components.Managers;
-import com.wynntils.core.config.Config;
-import com.wynntils.core.config.upfixers.ConfigUpfixer;
+import com.wynntils.core.persisted.config.Config;
+import com.wynntils.core.persisted.upfixers.ConfigUpfixer;
 import com.wynntils.utils.EnumUtils;
 import com.wynntils.utils.colors.CustomColor;
 import java.io.IOException;

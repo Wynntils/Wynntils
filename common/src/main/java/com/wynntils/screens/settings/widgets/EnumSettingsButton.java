@@ -4,7 +4,7 @@
  */
 package com.wynntils.screens.settings.widgets;
 
-import com.wynntils.core.config.Config;
+import com.wynntils.core.persisted.config.Config;
 import com.wynntils.utils.EnumUtils;
 import com.wynntils.utils.mc.ComponentUtils;
 import com.wynntils.utils.mc.McUtils;

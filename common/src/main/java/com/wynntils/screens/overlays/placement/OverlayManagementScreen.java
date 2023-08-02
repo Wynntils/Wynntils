@@ -6,7 +6,6 @@ package com.wynntils.screens.overlays.placement;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.wynntils.core.components.Managers;
-import com.wynntils.core.config.Config;
 import com.wynntils.core.consumers.overlays.Corner;
 import com.wynntils.core.consumers.overlays.Edge;
 import com.wynntils.core.consumers.overlays.Overlay;
@@ -14,6 +13,7 @@ import com.wynntils.core.consumers.overlays.OverlayPosition;
 import com.wynntils.core.consumers.overlays.OverlaySize;
 import com.wynntils.core.consumers.overlays.SectionCoordinates;
 import com.wynntils.core.consumers.screens.WynntilsScreen;
+import com.wynntils.core.persisted.config.Config;
 import com.wynntils.core.text.StyledText;
 import com.wynntils.screens.overlays.selection.OverlaySelectionScreen;
 import com.wynntils.utils.MathUtils;

@@ -2,23 +2,23 @@
  * Copyright © Wynntils 2022-2023.
  * This file is released under AGPLv3. See LICENSE for full license details.
  */
-package com.wynntils.core.config.upfixers;
+package com.wynntils.core.persisted.upfixers;
 
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.components.Manager;
-import com.wynntils.core.config.Config;
-import com.wynntils.core.config.upfixers.impl.CustomCommandKeybindSlashStartUpfixer;
-import com.wynntils.core.config.upfixers.impl.CustomPoiIconEnumBugUpfixer;
-import com.wynntils.core.config.upfixers.impl.CustomPoiVisbilityUpfixer;
-import com.wynntils.core.config.upfixers.impl.EnumNamingUpfixer;
-import com.wynntils.core.config.upfixers.impl.GameBarOverlayMoveUpfixer;
-import com.wynntils.core.config.upfixers.impl.MapToMainMapRenamedConfigsUpfixer;
-import com.wynntils.core.config.upfixers.impl.OverlayConfigsIntegrationUpfixer;
-import com.wynntils.core.config.upfixers.impl.OverlayRestructuringUpfixer;
-import com.wynntils.core.config.upfixers.impl.QuestBookToContentRenamedConfigsUpfixer;
+import com.wynntils.core.persisted.config.Config;
+import com.wynntils.core.persisted.upfixers.config.CustomCommandKeybindSlashStartUpfixer;
+import com.wynntils.core.persisted.upfixers.config.CustomPoiIconEnumBugUpfixer;
+import com.wynntils.core.persisted.upfixers.config.CustomPoiVisbilityUpfixer;
+import com.wynntils.core.persisted.upfixers.config.EnumNamingUpfixer;
+import com.wynntils.core.persisted.upfixers.config.GameBarOverlayMoveUpfixer;
+import com.wynntils.core.persisted.upfixers.config.MapToMainMapRenamedConfigsUpfixer;
+import com.wynntils.core.persisted.upfixers.config.OverlayConfigsIntegrationUpfixer;
+import com.wynntils.core.persisted.upfixers.config.OverlayRestructuringUpfixer;
+import com.wynntils.core.persisted.upfixers.config.QuestBookToContentRenamedConfigsUpfixer;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;

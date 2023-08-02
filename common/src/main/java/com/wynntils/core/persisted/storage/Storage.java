@@ -2,7 +2,7 @@
  * Copyright © Wynntils 2023.
  * This file is released under AGPLv3. See LICENSE for full license details.
  */
-package com.wynntils.core.storage;
+package com.wynntils.core.persisted.storage;
 
 import com.wynntils.core.components.Managers;
 import com.wynntils.core.persisted.PersistedValue;

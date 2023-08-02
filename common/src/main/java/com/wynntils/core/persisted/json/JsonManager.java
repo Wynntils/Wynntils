@@ -2,7 +2,7 @@
  * Copyright © Wynntils 2023.
  * This file is released under AGPLv3. See LICENSE for full license details.
  */
-package com.wynntils.core.json;
+package com.wynntils.core.persisted.json;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
@@ -18,7 +18,7 @@ import com.google.gson.stream.JsonToken;
 import com.google.gson.stream.JsonWriter;
 import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.components.Manager;
-import com.wynntils.core.config.NullableConfig;
+import com.wynntils.core.persisted.config.NullableConfig;
 import com.wynntils.utils.EnumUtils;
 import com.wynntils.utils.FileUtils;
 import com.wynntils.utils.colors.CustomColor;
