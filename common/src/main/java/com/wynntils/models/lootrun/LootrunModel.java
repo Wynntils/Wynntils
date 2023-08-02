@@ -214,6 +214,14 @@ public class LootrunModel extends Model {
         // No prediction yet, or prediction is worse than the old one
         if (Objects.equals(oldPrediction.b(), taskPrediction.b()) || taskPrediction.a() > oldPrediction.a()) return;
 
+        if (taskPrediction.a() == 0) {
+            // This means we are sure about the new prediction, so we can update it
+            beacons.put(beaconColor, taskPrediction);
+            LOOTRUN_BEACON_COMPASS_PROVIDER.reloadTaskMarkers();
+            beaconUpdates.remove(beaconColor);
+            return;
+        }
+
         if (beaconUpdates.containsKey(beaconColor)) {
             Pair<Integer, TaskLocation> pair = beaconUpdates.get(beaconColor);
 
