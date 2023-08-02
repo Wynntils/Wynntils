@@ -1,4 +1,16 @@
+## [0.0.3-alpha.266](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.265...v0.0.3-alpha.266) (2023-08-02)
+
+
+### Code Refactoring
+
+* Move config and storage packages to persisted ([#1928](https://github.com/Wynntils/Artemis/issues/1928)) ([be60a30](https://github.com/Wynntils/Artemis/commit/be60a305e16c70a22522661b0b3a514892e54b08))
+
 ## [0.0.3-alpha.265](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.264...v0.0.3-alpha.265) (2023-08-02)
+
+
+### Miscellaneous Chores
+
+* **release:** v0.0.3-alpha.265 [skip ci] ([10081cf](https://github.com/Wynntils/Artemis/commit/10081cf6c60cf8fac9bdbffc216ca85fcb527520))
 
 
 ### Code Refactoring
@@ -40,16 +52,4 @@
 ### Miscellaneous Chores
 
 * **release:** v0.0.3-alpha.262 [skip ci] ([d830604](https://github.com/Wynntils/Artemis/commit/d830604a1d1cffbaedd8fa1d17ad67e64347174c))
-
-## [0.0.3-alpha.261](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.260...v0.0.3-alpha.261) (2023-08-02)
-
-
-### Miscellaneous Chores
-
-* **release:** v0.0.3-alpha.261 [skip ci] ([ace4e59](https://github.com/Wynntils/Artemis/commit/ace4e596a6370a29dd9a70a24317e13b0da04177))
-
-
-### Code Refactoring
-
-* Introduce Config.touched() ([#1921](https://github.com/Wynntils/Artemis/issues/1921)) ([34a8234](https://github.com/Wynntils/Artemis/commit/34a8234f1e9a77f0ff3d1eda07f37126f9348a70))
 
