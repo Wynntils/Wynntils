@@ -7,14 +7,14 @@ package com.wynntils.core.consumers.features;
 import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.components.Manager;
 import com.wynntils.core.components.Managers;
-import com.wynntils.core.config.Category;
-import com.wynntils.core.config.ConfigCategory;
 import com.wynntils.core.consumers.commands.CommandManager;
 import com.wynntils.core.consumers.features.properties.StartDisabled;
 import com.wynntils.core.consumers.overlays.OverlayManager;
 import com.wynntils.core.keybinds.KeyBindManager;
 import com.wynntils.core.mod.CrashReportManager;
 import com.wynntils.core.mod.type.CrashType;
+import com.wynntils.core.persisted.config.Category;
+import com.wynntils.core.persisted.config.ConfigCategory;
 import com.wynntils.features.DiscordRichPresenceFeature;
 import com.wynntils.features.LootrunFeature;
 import com.wynntils.features.MythicFoundFeature;
@@ -55,6 +55,7 @@ import com.wynntils.features.debug.ContentBookDumpFeature;
 import com.wynntils.features.debug.FunctionDumpFeature;
 import com.wynntils.features.debug.ItemDebugTooltipsFeature;
 import com.wynntils.features.debug.LogItemInfoFeature;
+import com.wynntils.features.debug.LootrunBeaconLocationCollectorFeature;
 import com.wynntils.features.debug.PacketDebuggerFeature;
 import com.wynntils.features.embellishments.WybelSoundFeature;
 import com.wynntils.features.embellishments.WynntilsCosmeticsFeature;
@@ -177,6 +178,7 @@ public final class FeatureManager extends Manager {
         registerFeature(new FunctionDumpFeature());
         registerFeature(new ItemDebugTooltipsFeature());
         registerFeature(new LogItemInfoFeature());
+        registerFeature(new LootrunBeaconLocationCollectorFeature());
         registerFeature(new PacketDebuggerFeature());
 
         // always on
@@ -456,7 +458,7 @@ public final class FeatureManager extends Manager {
         Managers.KeyBind.disableFeatureKeyBinds(feature);
     }
 
-    private void crashFeature(Feature feature) {
+    public void crashFeature(Feature feature) {
         if (!FEATURES.containsKey(feature)) {
             throw new IllegalArgumentException("Tried to crash an unregistered feature: " + feature);
         }

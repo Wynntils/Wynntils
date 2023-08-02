@@ -1,0 +1,32 @@
+/*
+ * Copyright © Wynntils 2023.
+ * This file is released under AGPLv3. See LICENSE for full license details.
+ */
+package com.wynntils.models.marker;
+
+import com.wynntils.core.components.Model;
+import com.wynntils.models.marker.type.MarkerInfo;
+import com.wynntils.models.marker.type.MarkerProvider;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.stream.Stream;
+
+public class MarkerModel extends Model {
+    public static final UserWaypointMarkerProvider USER_WAYPOINTS_PROVIDER = new UserWaypointMarkerProvider();
+
+    private final List<MarkerProvider> markerProviders = new ArrayList<>();
+
+    public MarkerModel() {
+        super(List.of());
+
+        registerMarkerProvider(USER_WAYPOINTS_PROVIDER);
+    }
+
+    public void registerMarkerProvider(MarkerProvider provider) {
+        markerProviders.add(provider);
+    }
+
+    public Stream<MarkerInfo> getAllMarkers() {
+        return markerProviders.stream().filter(MarkerProvider::isEnabled).flatMap(MarkerProvider::getMarkerInfos);
+    }
+}

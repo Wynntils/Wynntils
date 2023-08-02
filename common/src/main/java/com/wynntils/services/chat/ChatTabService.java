@@ -64,10 +64,12 @@ public final class ChatTabService extends Service {
 
     public void addTab(int insertIndex, ChatTab chatTab) {
         getChatTabs().add(insertIndex, chatTab);
+        Managers.Feature.getFeatureInstance(ChatTabsFeature.class).chatTabs.touched();
     }
 
     public void removeTab(ChatTab chatTab) {
         getChatTabs().remove(chatTab);
+        Managers.Feature.getFeatureInstance(ChatTabsFeature.class).chatTabs.touched();
     }
 
     public int getTabIndex(ChatTab edited) {

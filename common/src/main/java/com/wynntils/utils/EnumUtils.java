@@ -5,7 +5,6 @@
 package com.wynntils.utils;
 
 import com.google.common.base.CaseFormat;
-import java.lang.reflect.Type;
 import java.util.Arrays;
 import java.util.List;
 import org.apache.commons.lang3.text.WordUtils;
@@ -24,7 +23,7 @@ public final class EnumUtils {
         return CaseFormat.UPPER_UNDERSCORE.to(CaseFormat.LOWER_CAMEL, enumValue.name());
     }
 
-    public static Enum<?> fromJsonFormat(Class<? extends Enum<?>> enumClazz, String jsonFormattedName) {
+    public static <E extends Enum<E>> E fromJsonFormat(Class<E> enumClazz, String jsonFormattedName) {
         // CaseFormat cannot do round-trip conversion of e.g. TIER_3, hence the
         // replaceAll
         // We have to account for CHEST_T1, which works fine with CaseFormat, hence the [a-z] regex
@@ -32,8 +31,7 @@ public final class EnumUtils {
                 CaseFormat.UPPER_UNDERSCORE, jsonFormattedName.replaceAll("([a-z])(\\d)", "$1_$2"));
 
         try {
-            // The double casting is needed, or javac will complain...
-            return Enum.valueOf((Class<Enum>) (Type) enumClazz, enumName);
+            return Enum.valueOf(enumClazz, enumName);
         } catch (IllegalArgumentException e) {
             return null;
         }

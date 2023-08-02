@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2022.
+ * Copyright © Wynntils 2022-2023.
  * This file is released under AGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.utils.render;
@@ -13,9 +13,14 @@ import com.mojang.blaze3d.vertex.DefaultVertexFormat;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.Tesselator;
 import com.mojang.blaze3d.vertex.VertexFormat;
+import com.wynntils.core.text.StyledText;
+import com.wynntils.utils.colors.CommonColors;
 import com.wynntils.utils.colors.CustomColor;
 import com.wynntils.utils.mc.McUtils;
 import com.wynntils.utils.mc.TooltipUtils;
+import com.wynntils.utils.render.type.HorizontalAlignment;
+import com.wynntils.utils.render.type.TextShadow;
+import com.wynntils.utils.render.type.VerticalAlignment;
 import java.util.List;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.screens.inventory.tooltip.ClientTooltipComponent;
@@ -1106,5 +1111,36 @@ public final class RenderUtils {
 
         // Always succeed in the stencil test, no matter what.
         RenderSystem.stencilFunc(GL11.GL_ALWAYS, 0, 0xFF);
+    }
+
+    public static void renderDebugGrid(
+            PoseStack poseStack, float GRID_DIVISIONS, float dividedWidth, float dividedHeight) {
+        for (int i = 1; i <= GRID_DIVISIONS - 1; i++) {
+            double x = dividedWidth * i;
+            double y = dividedHeight * i;
+            RenderUtils.drawRect(poseStack, CommonColors.GRAY, (float) x, 0, 0, 1, dividedHeight * GRID_DIVISIONS);
+            RenderUtils.drawRect(poseStack, CommonColors.GRAY, 0, (float) y, 0, dividedWidth * GRID_DIVISIONS, 1);
+            if (i % 2 == 0) continue; // reduce clutter
+            FontRenderer.getInstance()
+                    .renderText(
+                            poseStack,
+                            StyledText.fromString(String.valueOf(i)),
+                            (float) x,
+                            dividedHeight * (GRID_DIVISIONS / 2),
+                            CommonColors.RED,
+                            HorizontalAlignment.CENTER,
+                            VerticalAlignment.MIDDLE,
+                            TextShadow.NORMAL);
+            FontRenderer.getInstance()
+                    .renderText(
+                            poseStack,
+                            StyledText.fromString(String.valueOf(i)),
+                            dividedWidth * (GRID_DIVISIONS / 2),
+                            (float) y,
+                            CommonColors.CYAN,
+                            HorizontalAlignment.CENTER,
+                            VerticalAlignment.MIDDLE,
+                            TextShadow.NORMAL);
+        }
     }
 }

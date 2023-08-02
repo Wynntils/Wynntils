@@ -4,8 +4,6 @@
  */
 package com.wynntils.core.components;
 
-import com.wynntils.core.config.ConfigManager;
-import com.wynntils.core.config.upfixers.ConfigUpfixerManager;
 import com.wynntils.core.consumers.commands.CommandManager;
 import com.wynntils.core.consumers.features.FeatureManager;
 import com.wynntils.core.consumers.functions.FunctionManager;
@@ -18,7 +16,10 @@ import com.wynntils.core.mod.TickSchedulerManager;
 import com.wynntils.core.net.NetManager;
 import com.wynntils.core.net.UrlManager;
 import com.wynntils.core.notifications.NotificationManager;
-import com.wynntils.core.storage.StorageManager;
+import com.wynntils.core.persisted.PersistedManager;
+import com.wynntils.core.persisted.config.ConfigManager;
+import com.wynntils.core.persisted.storage.StorageManager;
+import com.wynntils.core.persisted.upfixers.ConfigUpfixerManager;
 
 public final class Managers {
     // Start with UrlManager to give it chance to update URLs in background
@@ -34,6 +35,7 @@ public final class Managers {
     public static final JsonManager Json = new JsonManager();
     public static final KeyBindManager KeyBind = new KeyBindManager();
     public static final NotificationManager Notification = new NotificationManager();
+    public static final PersistedManager Persisted = new PersistedManager();
 
     // Managers with dependencies, ordered alphabetically as far as possible
     public static final OverlayManager Overlay = new OverlayManager(CrashReport);

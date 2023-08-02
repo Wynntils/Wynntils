@@ -5,7 +5,6 @@
 package com.wynntils.screens.chattabs;
 
 import com.mojang.blaze3d.vertex.PoseStack;
-import com.wynntils.core.components.Managers;
 import com.wynntils.core.components.Services;
 import com.wynntils.core.consumers.screens.WynntilsScreen;
 import com.wynntils.core.text.StyledText;
@@ -360,8 +359,6 @@ public final class ChatTabEditingScreen extends WynntilsScreen implements Textbo
                         .collect(Collectors.toSet()),
                 filterRegexInput.getTextBoxInput().isBlank() ? null : filterRegexInput.getTextBoxInput());
         Services.ChatTab.addTab(insertIndex, chatTab);
-
-        Managers.Config.saveConfig();
     }
 
     private void deleteChatTab() {
@@ -373,8 +370,6 @@ public final class ChatTabEditingScreen extends WynntilsScreen implements Textbo
                 Services.ChatTab.setFocusedTab(null);
             }
         }
-
-        Managers.Config.saveConfig();
     }
 
     private void updateSaveStatus() {

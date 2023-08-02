@@ -152,7 +152,7 @@ public final class PartyManagementScreen extends WynntilsScreen implements Textb
         super.doRender(poseStack, mouseX, mouseY, partialTick);
 
         // uncomment when changing gui elements
-        // renderDebugGrid(poseStack);
+        // RenderUtils.renderDebugGrid(poseStack, GRID_DIVISIONS, dividedWidth, dividedHeight);
 
         // region Invite field header
         FontRenderer.getInstance()
@@ -406,39 +406,5 @@ public final class PartyManagementScreen extends WynntilsScreen implements Textb
         reloadCreateLeaveButton();
         reloadMembersWidgets();
         reloadSuggestedPlayersWidgets();
-    }
-
-    /**
-     * To make positioning easier, we will split the screen into GRID_DIVISIONS parts horizontally and vertically
-     * This renders the screen split properly and also renders the division numbers
-     */
-    private void renderDebugGrid(PoseStack poseStack) {
-        for (int i = 1; i <= GRID_DIVISIONS - 1; i++) {
-            double x = dividedWidth * i;
-            double y = dividedHeight * i;
-            RenderUtils.drawRect(poseStack, CommonColors.GRAY, (float) x, 0, 0, 1, this.height);
-            RenderUtils.drawRect(poseStack, CommonColors.GRAY, 0, (float) y, 0, this.width, 1);
-            if (i % 2 == 0) continue; // reduce clutter
-            FontRenderer.getInstance()
-                    .renderText(
-                            poseStack,
-                            StyledText.fromString(String.valueOf(i)),
-                            (float) x,
-                            this.height / 2,
-                            CommonColors.RED,
-                            HorizontalAlignment.CENTER,
-                            VerticalAlignment.MIDDLE,
-                            TextShadow.NORMAL);
-            FontRenderer.getInstance()
-                    .renderText(
-                            poseStack,
-                            StyledText.fromString(String.valueOf(i)),
-                            this.width / 2,
-                            (float) y,
-                            CommonColors.CYAN,
-                            HorizontalAlignment.CENTER,
-                            VerticalAlignment.MIDDLE,
-                            TextShadow.NORMAL);
-        }
     }
 }

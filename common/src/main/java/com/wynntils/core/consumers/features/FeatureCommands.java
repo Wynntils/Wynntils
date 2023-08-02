@@ -29,7 +29,8 @@ public class FeatureCommands {
             }
 
             try {
-                LiteralCommandNode node = (LiteralCommandNode) FieldUtils.readField(f, feature, true);
+                LiteralCommandNode<CommandSourceStack> node =
+                        (LiteralCommandNode<CommandSourceStack>) FieldUtils.readField(f, feature, true);
 
                 LiteralCommandNode<CommandSourceStack> featureNode =
                         Commands.literal(feature.getShortName()).build();

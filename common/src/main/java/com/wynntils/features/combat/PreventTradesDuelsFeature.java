@@ -6,11 +6,11 @@ package com.wynntils.features.combat;
 
 import com.wynntils.core.components.Managers;
 import com.wynntils.core.components.Models;
-import com.wynntils.core.config.Category;
-import com.wynntils.core.config.Config;
-import com.wynntils.core.config.ConfigCategory;
-import com.wynntils.core.config.RegisterConfig;
 import com.wynntils.core.consumers.features.Feature;
+import com.wynntils.core.persisted.Persisted;
+import com.wynntils.core.persisted.config.Category;
+import com.wynntils.core.persisted.config.Config;
+import com.wynntils.core.persisted.config.ConfigCategory;
 import com.wynntils.core.text.StyledText;
 import com.wynntils.mc.event.PlayerAttackEvent;
 import com.wynntils.mc.event.PlayerInteractEvent;
@@ -24,10 +24,10 @@ import net.minecraftforge.eventbus.api.SubscribeEvent;
 
 @ConfigCategory(Category.COMBAT)
 public class PreventTradesDuelsFeature extends Feature {
-    @RegisterConfig
+    @Persisted
     public final Config<Boolean> onlyWhileFighting = new Config<>(true);
 
-    @RegisterConfig
+    @Persisted
     public final Config<Integer> fightingTimeCutoff = new Config<>(10); // seconds
 
     @SubscribeEvent

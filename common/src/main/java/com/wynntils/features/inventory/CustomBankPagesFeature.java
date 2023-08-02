@@ -5,12 +5,11 @@
 package com.wynntils.features.inventory;
 
 import com.wynntils.core.components.Models;
-import com.wynntils.core.config.Category;
-import com.wynntils.core.config.Config;
-import com.wynntils.core.config.ConfigCategory;
-import com.wynntils.core.config.ConfigHolder;
-import com.wynntils.core.config.RegisterConfig;
 import com.wynntils.core.consumers.features.Feature;
+import com.wynntils.core.persisted.Persisted;
+import com.wynntils.core.persisted.config.Category;
+import com.wynntils.core.persisted.config.Config;
+import com.wynntils.core.persisted.config.ConfigCategory;
 import com.wynntils.mc.event.ContainerClickEvent;
 import com.wynntils.mc.event.ContainerSetContentEvent;
 import com.wynntils.mc.event.ScreenClosedEvent;
@@ -36,16 +35,16 @@ import org.lwjgl.glfw.GLFW;
 @ConfigCategory(Category.INVENTORY)
 public class CustomBankPagesFeature extends Feature {
     // Change to ranged integer/integer list when implemented
-    @RegisterConfig
+    @Persisted
     public final Config<String> bankDestinations = new Config<>("1,5,9,13,17,21");
 
-    @RegisterConfig
+    @Persisted
     public final Config<String> blockBankDestinations = new Config<>("1,3,5,8,10,12");
 
-    @RegisterConfig
+    @Persisted
     public final Config<String> bookshelfDestinations = new Config<>("1,3,4,6,8,10");
 
-    @RegisterConfig
+    @Persisted
     public final Config<String> miscBucketDestinations = new Config<>("1,3,4,6,8,10");
 
     private static final int MAX_BANK_PAGES = 21;
@@ -268,9 +267,8 @@ public class CustomBankPagesFeature extends Feature {
     }
 
     @Override
-    protected void onConfigUpdate(ConfigHolder configHolder) {
-        String valueString = (String) configHolder.getValue();
-        String fieldName = configHolder.getFieldName();
+    protected void onConfigUpdate(Config<?> unknownConfig) {
+        String fieldName = unknownConfig.getFieldName();
 
         SearchableContainerType containerType;
         int maxValue;
@@ -293,10 +291,14 @@ public class CustomBankPagesFeature extends Feature {
             }
         }
 
+        // If we're still here, we have a string config
+        Config<String> config = (Config<String>) unknownConfig;
+        String valueString = config.getValue();
+
         List<Integer> originalValues = parseStringToDestinations(valueString, containerType);
 
         if (originalValues == null) {
-            configHolder.setValue(configHolder.getDefaultValue());
+            config.setValue(config.getDefaultValue());
             return;
         }
 
@@ -306,7 +308,7 @@ public class CustomBankPagesFeature extends Feature {
                 newValues.stream().limit(MAX_DESTINATIONS).map(Object::toString).collect(Collectors.joining(","));
 
         if (!formattedConfig.equals(valueString)) {
-            configHolder.setValue(formattedConfig);
+            config.setValue(formattedConfig);
         }
     }
 

@@ -1,10 +1,13 @@
 /*
- * Copyright © Wynntils 2022.
+ * Copyright © Wynntils 2022-2023.
  * This file is released under AGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.utils.colors;
 
 public final class CommonColors {
+    // Note: Rendering this is not supported, except in BeaconBeamFeature
+    public static final CustomColor RAINBOW = CustomColor.fromInt(0xf0f0f0).withAlpha(0);
+
     public static final CustomColor BLACK = CustomColor.fromInt(0x000000).withAlpha(255);
     public static final CustomColor RED = CustomColor.fromInt(0xff0000).withAlpha(255);
     public static final CustomColor GREEN = CustomColor.fromInt(0x00ff00).withAlpha(255);

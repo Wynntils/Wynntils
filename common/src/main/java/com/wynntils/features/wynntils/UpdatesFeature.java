@@ -7,11 +7,11 @@ package com.wynntils.features.wynntils;
 import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.components.Managers;
 import com.wynntils.core.components.Services;
-import com.wynntils.core.config.Category;
-import com.wynntils.core.config.Config;
-import com.wynntils.core.config.ConfigCategory;
-import com.wynntils.core.config.RegisterConfig;
 import com.wynntils.core.consumers.features.Feature;
+import com.wynntils.core.persisted.Persisted;
+import com.wynntils.core.persisted.config.Category;
+import com.wynntils.core.persisted.config.Config;
+import com.wynntils.core.persisted.config.ConfigCategory;
 import com.wynntils.models.worlds.event.WorldStateEvent;
 import com.wynntils.services.athena.UpdateService;
 import com.wynntils.utils.mc.McUtils;
@@ -25,10 +25,10 @@ import net.minecraftforge.eventbus.api.SubscribeEvent;
 
 @ConfigCategory(Category.WYNNTILS)
 public class UpdatesFeature extends Feature {
-    @RegisterConfig
+    @Persisted
     public final Config<Boolean> updateReminder = new Config<>(true);
 
-    @RegisterConfig
+    @Persisted
     public final Config<Boolean> autoUpdate = new Config<>(false);
 
     @SubscribeEvent
