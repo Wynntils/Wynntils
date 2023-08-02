@@ -177,8 +177,8 @@ public enum Texture {
 
     // Lootrun
     SPELUNK("lootrun/spelunk.png", 18, 16),
-    DEFEND("lootrun/defend.png", 28, 32),
-    SLAY("lootrun/slay.png", 42, 38),
+    DEFEND("lootrun/defend.png", 18, 21),
+    SLAY("lootrun/slay.png", 37, 33),
     DESTROY("map/map_icons/grind_spot.png", 12, 12); // fixme temp
 
     private final ResourceLocation resource;

@@ -5,7 +5,7 @@
 package com.wynntils.models.lootrun.markers;
 
 import com.wynntils.core.components.Models;
-import com.wynntils.models.beacons.type.Beacon;
+import com.wynntils.models.beacons.type.BeaconColor;
 import com.wynntils.models.lootrun.type.TaskLocation;
 import com.wynntils.models.marker.type.MarkerInfo;
 import com.wynntils.models.marker.type.MarkerProvider;
@@ -22,11 +22,12 @@ public class LootrunBeaconMarkerProvider implements MarkerProvider {
     public void reloadTaskMarkers() {
         taskMarkers.clear();
 
-        for (Map.Entry<Beacon, TaskLocation> entry : Models.Lootrun.getBeacons().entrySet()) {
+        for (Map.Entry<BeaconColor, TaskLocation> entry :
+                Models.Lootrun.getBeacons().entrySet()) {
             taskMarkers.add(new MarkerInfo(
                     new StaticLocationSupplier(entry.getValue().location()),
                     entry.getValue().taskType().getTexture(),
-                    entry.getKey().color().getColor(),
+                    entry.getKey().getColor(),
                     CommonColors.WHITE));
         }
     }
