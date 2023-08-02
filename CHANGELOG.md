@@ -1,9 +1,21 @@
+## [0.0.3-alpha.265](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.264...v0.0.3-alpha.265) (2023-08-02)
+
+
+### Code Refactoring
+
+* Bring Config and Storage under a single Persisted roof ([#1926](https://github.com/Wynntils/Artemis/issues/1926)) ([fcb3428](https://github.com/Wynntils/Artemis/commit/fcb3428defb547c025da704fa1925b1b99c98809))
+
 ## [0.0.3-alpha.264](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.263...v0.0.3-alpha.264) (2023-08-02)
 
 
 ### Bug Fixes
 
 * Fix parsing for VERY NEAR content ([#1927](https://github.com/Wynntils/Artemis/issues/1927)) ([be00f3a](https://github.com/Wynntils/Artemis/commit/be00f3ad25f48b26b82833adaaa52b043485544f))
+
+
+### Miscellaneous Chores
+
+* **release:** v0.0.3-alpha.264 [skip ci] ([5093db3](https://github.com/Wynntils/Artemis/commit/5093db3228daf5e378124e6bec012cea851a98c6))
 
 ## [0.0.3-alpha.263](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.262...v0.0.3-alpha.263) (2023-08-02)
 
@@ -40,16 +52,4 @@
 ### Code Refactoring
 
 * Introduce Config.touched() ([#1921](https://github.com/Wynntils/Artemis/issues/1921)) ([34a8234](https://github.com/Wynntils/Artemis/commit/34a8234f1e9a77f0ff3d1eda07f37126f9348a70))
-
-## [0.0.3-alpha.260](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.259...v0.0.3-alpha.260) (2023-08-02)
-
-
-### New Features
-
-* Add crash protection to config updates in features and overlays ([#1924](https://github.com/Wynntils/Artemis/issues/1924)) ([9498f45](https://github.com/Wynntils/Artemis/commit/9498f450aecfc20d25fea67f76a98770f53fcdf4))
-
-
-### Miscellaneous Chores
-
-* **release:** v0.0.3-alpha.260 [skip ci] ([0ad9a70](https://github.com/Wynntils/Artemis/commit/0ad9a70ab233734c94e5acf58f3d54f3c831ab5a))
 
