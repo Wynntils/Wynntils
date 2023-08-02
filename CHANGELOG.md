@@ -1,9 +1,21 @@
+## [0.0.3-alpha.260](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.259...v0.0.3-alpha.260) (2023-08-02)
+
+
+### New Features
+
+* Add crash protection to config updates in features and overlays ([#1924](https://github.com/Wynntils/Artemis/issues/1924)) ([9498f45](https://github.com/Wynntils/Artemis/commit/9498f450aecfc20d25fea67f76a98770f53fcdf4))
+
 ## [0.0.3-alpha.259](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.258...v0.0.3-alpha.259) (2023-08-01)
 
 
 ### New Features
 
 * Allow an infinite amount of waypoints; content waypoints are different from user waypoints; colored POI waypoints keep their color ([#1912](https://github.com/Wynntils/Artemis/issues/1912)) ([739bd4b](https://github.com/Wynntils/Artemis/commit/739bd4b9c60166ff0490f06729a88ac112e8022f))
+
+
+### Miscellaneous Chores
+
+* **release:** v0.0.3-alpha.259 [skip ci] ([7fe3ddc](https://github.com/Wynntils/Artemis/commit/7fe3ddc00c68d6820521f0e27a0cfc8dbc7653ac))
 
 
 ### Code Refactoring
@@ -45,12 +57,4 @@
 ### Code Refactoring
 
 * Generify ConfigHolder ([#1911](https://github.com/Wynntils/Artemis/issues/1911)) ([3052ca7](https://github.com/Wynntils/Artemis/commit/3052ca7ab7c9a7c9833f98f53fa11fe5f0e53b06))
-
-## [0.0.3-alpha.255](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.254...v0.0.3-alpha.255) (2023-08-01)
-
-
-### Miscellaneous Chores
-
-* **release:** v0.0.3-alpha.255 [skip ci] ([2ac750c](https://github.com/Wynntils/Artemis/commit/2ac750c112a590ad3a0475a3692dcc596d93d507))
-* Restore proper zh_cn translation ([#1913](https://github.com/Wynntils/Artemis/issues/1913)) ([899a67d](https://github.com/Wynntils/Artemis/commit/899a67de0c2c51a2ea48f1cac7dd434cd60fb9b7))
 
