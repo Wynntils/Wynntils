@@ -4,15 +4,11 @@
  */
 package com.wynntils.core.config;
 
-public class Config<T> {
-    private T value;
+import com.wynntils.core.persisted.PersistedValue;
 
+public class Config<T> extends PersistedValue<T> {
     public Config(T value) {
-        this.value = value;
-    }
-
-    public T get() {
-        return value;
+        super(value);
     }
 
     public void updateConfig(T value) {
