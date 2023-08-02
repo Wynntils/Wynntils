@@ -1843,6 +1843,7 @@
   "screens.wynntils.wynntilsQuestBook.showMiniQuests.name": "Show Mini Quests",
   "screens.wynntils.wynntilsQuestBook.showQuests.name": "Show Quests",
   "screens.wynntils.wynntilsQuestBook.tryReload": "No quests found! Try reloading quests by pressing the button in the top right corner.",
+  "service.wynntils.discord.failedToLoadSDK": "Failed to load Discord SDK",
   "statistics.wynntils.damageDealt.name": "Damage dealt",
   "statistics.wynntils.lootrunsChallengesCompleted.name": "Lootruns challenges completed",
   "statistics.wynntils.lootrunsCompleted.name": "Lootruns completed",
