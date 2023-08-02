@@ -18,14 +18,12 @@ import com.wynntils.mc.event.ScreenInitEvent;
 import com.wynntils.models.wynnalphabet.WynnAlphabet;
 import com.wynntils.screens.transcription.widgets.WynnAlphabetButton;
 import com.wynntils.utils.mc.McUtils;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import net.minecraft.client.gui.components.EditBox;
 import net.minecraft.client.gui.screens.ChatScreen;
-import net.minecraftforge.eventbus.api.Event;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import org.lwjgl.glfw.GLFW;
 
@@ -127,11 +125,14 @@ public class InputTranscriptionFeature extends Feature {
         String message = event.getMessage();
 
         if (containsBrackets(message)) {
-            String updatedMessage = transcribeSentMessage(message, event);
+            String updatedMessage = Models.WynnAlphabet.transcribeBracketedText(message);
 
             updatedMessage = updatedMessage.substring(0, Math.min(updatedMessage.length(), MAX_CHAT_LENGTH));
 
-            McUtils.mc().getConnection().sendChat(updatedMessage);
+            if (!updatedMessage.equals(message)) {
+                event.setCanceled(true);
+                McUtils.mc().getConnection().sendChat(updatedMessage);
+            }
         } else {
             Models.WynnAlphabet.setSelectedAlphabet(WynnAlphabet.DEFAULT);
         }
@@ -142,11 +143,14 @@ public class InputTranscriptionFeature extends Feature {
         String command = event.getCommand();
 
         if (containsBrackets(command)) {
-            String updatedCommand = transcribeSentMessage(command, event);
+            String updatedCommand = Models.WynnAlphabet.transcribeBracketedText(command);
 
             updatedCommand = updatedCommand.substring(0, Math.min(updatedCommand.length(), MAX_CHAT_LENGTH));
 
-            McUtils.sendCommand(updatedCommand);
+            if (!updatedCommand.equals(command)) {
+                event.setCanceled(true);
+                McUtils.sendCommand(updatedCommand);
+            }
         } else {
             Models.WynnAlphabet.setSelectedAlphabet(WynnAlphabet.DEFAULT);
         }
@@ -158,52 +162,6 @@ public class InputTranscriptionFeature extends Feature {
 
     private boolean containsBrackets(String message) {
         return (message.contains("[[") && message.contains("]]")) || (message.contains("<<") && message.contains(">>"));
-    }
-
-    private String transcribeSentMessage(String message, Event event) {
-        Pattern bracketPattern = Pattern.compile("\\[\\[([^\\]]*)\\]\\]|<<([^>]*)>>");
-
-        List<String> wynnicSubstring = new ArrayList<>();
-        List<String> gavellianSubstring = new ArrayList<>();
-
-        Matcher matcher = bracketPattern.matcher(message);
-
-        while (matcher.find()) {
-            if (matcher.group(1) != null) {
-                wynnicSubstring.add(matcher.group(1));
-            } else if (matcher.group(2) != null) {
-                gavellianSubstring.add(matcher.group(2));
-            }
-        }
-
-        if (wynnicSubstring.isEmpty() && gavellianSubstring.isEmpty()) return message;
-
-        event.setCanceled(true);
-
-        StringBuilder updatedMessage = new StringBuilder(message);
-
-        for (String wynnicText : wynnicSubstring) {
-            String transcriptedText = Models.WynnAlphabet.getSentMessageWithTranscription(
-                    wynnicText.toLowerCase(Locale.ROOT), WynnAlphabet.WYNNIC);
-            replaceTranscribed(updatedMessage, "[[" + wynnicText + "]]", transcriptedText);
-        }
-
-        for (String gavellianText : gavellianSubstring) {
-            String transcriptedText = Models.WynnAlphabet.getSentMessageWithTranscription(
-                    gavellianText.toLowerCase(Locale.ROOT), WynnAlphabet.GAVELLIAN);
-            replaceTranscribed(updatedMessage, "<<" + gavellianText + ">>", transcriptedText);
-        }
-
-        return updatedMessage.toString();
-    }
-
-    private void replaceTranscribed(StringBuilder stringBuilder, String original, String replacement) {
-        int index = stringBuilder.indexOf(original);
-
-        while (index != -1) {
-            stringBuilder.replace(index, index + original.length(), replacement);
-            index = stringBuilder.indexOf(original, index + replacement.length());
-        }
     }
 
     private void handleTypedCharacter(
