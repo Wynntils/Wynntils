@@ -94,8 +94,8 @@ public class TranscribeMessagesFeature extends Feature {
                 .toList();
 
         Managers.TickScheduler.scheduleNextTick(() -> {
-            NpcDialogEvent transcriptedEvent = new WynnTranscriptedNpcDialogEvent(
-                    transcriptedComponents, event.getType(), event.isProtected());
+            NpcDialogEvent transcriptedEvent =
+                    new WynnTranscriptedNpcDialogEvent(transcriptedComponents, event.getType(), event.isProtected());
             WynntilsMod.postEvent(transcriptedEvent);
         });
     }

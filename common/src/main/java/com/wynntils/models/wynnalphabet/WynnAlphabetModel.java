@@ -7,7 +7,6 @@ package com.wynntils.models.wynnalphabet;
 import com.wynntils.core.components.Model;
 import com.wynntils.core.components.Models;
 import com.wynntils.core.text.StyledText;
-import com.wynntils.features.utilities.TranscribeMessagesFeature;
 import com.wynntils.models.activities.discoveries.DiscoveryInfo;
 import com.wynntils.models.activities.type.ActivitySortOrder;
 import com.wynntils.models.wynnalphabet.type.TranscribeCondition;
