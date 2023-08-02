@@ -1,4 +1,16 @@
+## [0.0.3-alpha.268](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.267...v0.0.3-alpha.268) (2023-08-02)
+
+
+### Bug Fixes
+
+* Rich presence without library crashes config system ([#1923](https://github.com/Wynntils/Artemis/issues/1923)) ([790d6dd](https://github.com/Wynntils/Artemis/commit/790d6dd19d07627e3761bcec94630dbe12d92462))
+
 ## [0.0.3-alpha.267](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.266...v0.0.3-alpha.267) (2023-08-02)
+
+
+### Miscellaneous Chores
+
+* **release:** v0.0.3-alpha.267 [skip ci] ([69e1a4a](https://github.com/Wynntils/Artemis/commit/69e1a4adab187c8f8340bf1954ef458b08711967))
 
 
 ### Code Refactoring
@@ -40,16 +52,4 @@
 ### Miscellaneous Chores
 
 * **release:** v0.0.3-alpha.264 [skip ci] ([5093db3](https://github.com/Wynntils/Artemis/commit/5093db3228daf5e378124e6bec012cea851a98c6))
-
-## [0.0.3-alpha.263](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.262...v0.0.3-alpha.263) (2023-08-02)
-
-
-### Miscellaneous Chores
-
-* **release:** v0.0.3-alpha.263 [skip ci] ([dd51380](https://github.com/Wynntils/Artemis/commit/dd5138046e00c0de65b31c2254be3dda948ece2d))
-
-
-### Code Refactoring
-
-* Incorporate and hide ConfigHolder inside Config ([#1922](https://github.com/Wynntils/Artemis/issues/1922)) ([a5422ac](https://github.com/Wynntils/Artemis/commit/a5422acbc187e56558028b46c43a3d40865ee3af))
 
