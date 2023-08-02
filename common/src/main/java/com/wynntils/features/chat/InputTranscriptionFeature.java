@@ -2,7 +2,7 @@
  * Copyright © Wynntils 2023.
  * This file is released under AGPLv3. See LICENSE for full license details.
  */
-package com.wynntils.features.utilities;
+package com.wynntils.features.chat;
 
 import com.wynntils.core.components.Models;
 import com.wynntils.core.config.Category;
@@ -32,7 +32,7 @@ import org.lwjgl.glfw.GLFW;
 @ConfigCategory(Category.CHAT)
 public class InputTranscriptionFeature extends Feature {
     @RegisterConfig
-    public final Config<Boolean> useBrackets = new Config<>(false);
+    public final Config<Boolean> transcriptionButtons = new Config<>(true);
 
     private static final int MAX_CHAT_LENGTH = 256;
     // Numbers higher than this will be replaced with "∞"
@@ -41,7 +41,7 @@ public class InputTranscriptionFeature extends Feature {
 
     @SubscribeEvent
     public void onScreenInit(ScreenInitEvent event) {
-        if (useBrackets.get()) return;
+        if (!transcriptionButtons.get()) return;
 
         if (event.getScreen() instanceof ChatScreen chatScreen) {
             chatScreen.width -= 45;
@@ -60,7 +60,7 @@ public class InputTranscriptionFeature extends Feature {
     @SubscribeEvent
     public void onEditBoxInsert(EditBoxInsertEvent event) {
         if (!(McUtils.mc().screen instanceof ChatScreen chatScreen)) return;
-        if (useBrackets.get()) return;
+        if (!transcriptionButtons.get()) return;
         if (event.getTextToWrite().isBlank()) return;
 
         WynnAlphabet selectedAlphabet = Models.WynnAlphabet.getSelectedAlphabet();
@@ -91,6 +91,7 @@ public class InputTranscriptionFeature extends Feature {
     public void onChatScreenKeyTyped(ChatScreenKeyTypedEvent event) {
         if (event.getKeyCode() != GLFW.GLFW_KEY_BACKSPACE) return;
         if (!(McUtils.mc().screen instanceof ChatScreen chatScreen)) return;
+        if (!transcriptionButtons.get()) return;
         if (!chatScreen.input.getHighlighted().isBlank()) return;
 
         String beforeCursor = chatScreen.input.getValue().substring(0, chatScreen.input.getCursorPosition());
@@ -125,8 +126,8 @@ public class InputTranscriptionFeature extends Feature {
 
         String message = event.getMessage();
 
-        if (useBrackets.get() && containsBrackets(message)) {
-            String updatedMessage = transcriptSentMessage(message, event);
+        if (containsBrackets(message)) {
+            String updatedMessage = transcribeSentMessage(message, event);
 
             updatedMessage = updatedMessage.substring(0, Math.min(updatedMessage.length(), MAX_CHAT_LENGTH));
 
@@ -140,8 +141,8 @@ public class InputTranscriptionFeature extends Feature {
     public void onCommandSent(CommandSentEvent event) {
         String command = event.getCommand();
 
-        if (useBrackets.get() && containsBrackets(command)) {
-            String updatedCommand = transcriptSentMessage(command, event);
+        if (containsBrackets(command)) {
+            String updatedCommand = transcribeSentMessage(command, event);
 
             updatedCommand = updatedCommand.substring(0, Math.min(updatedCommand.length(), MAX_CHAT_LENGTH));
 
@@ -156,11 +157,11 @@ public class InputTranscriptionFeature extends Feature {
     }
 
     private boolean containsBrackets(String message) {
-        return (message.contains("{") && message.contains("}")) || (message.contains("<") && message.contains(">"));
+        return (message.contains("[[") && message.contains("]]")) || (message.contains("<<") && message.contains(">>"));
     }
 
-    private String transcriptSentMessage(String message, Event event) {
-        Pattern bracketPattern = Pattern.compile("\\{([^}]*)\\}|<([^>]*)>");
+    private String transcribeSentMessage(String message, Event event) {
+        Pattern bracketPattern = Pattern.compile("\\[\\[([^\\]]*)\\]\\]|<<([^>]*)>>");
 
         List<String> wynnicSubstring = new ArrayList<>();
         List<String> gavellianSubstring = new ArrayList<>();
@@ -184,19 +185,19 @@ public class InputTranscriptionFeature extends Feature {
         for (String wynnicText : wynnicSubstring) {
             String transcriptedText = Models.WynnAlphabet.getSentMessageWithTranscription(
                     wynnicText.toLowerCase(Locale.ROOT), WynnAlphabet.WYNNIC);
-            replaceTranscripted(updatedMessage, "{" + wynnicText + "}", transcriptedText);
+            replaceTranscribed(updatedMessage, "[[" + wynnicText + "]]", transcriptedText);
         }
 
         for (String gavellianText : gavellianSubstring) {
             String transcriptedText = Models.WynnAlphabet.getSentMessageWithTranscription(
                     gavellianText.toLowerCase(Locale.ROOT), WynnAlphabet.GAVELLIAN);
-            replaceTranscripted(updatedMessage, "<" + gavellianText + ">", transcriptedText);
+            replaceTranscribed(updatedMessage, "<<" + gavellianText + ">>", transcriptedText);
         }
 
         return updatedMessage.toString();
     }
 
-    private void replaceTranscripted(StringBuilder stringBuilder, String original, String replacement) {
+    private void replaceTranscribed(StringBuilder stringBuilder, String original, String replacement) {
         int index = stringBuilder.indexOf(original);
 
         while (index != -1) {
