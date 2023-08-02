@@ -5,9 +5,9 @@
 package com.wynntils.features;
 
 import com.wynntils.core.components.Services;
-import com.wynntils.core.config.Config;
 import com.wynntils.core.consumers.features.Feature;
 import com.wynntils.core.persisted.Persisted;
+import com.wynntils.core.persisted.config.Config;
 import com.wynntils.utils.colors.CommonColors;
 import com.wynntils.utils.colors.CustomColor;
 

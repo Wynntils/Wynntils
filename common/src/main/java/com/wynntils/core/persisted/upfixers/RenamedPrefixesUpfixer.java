@@ -2,11 +2,11 @@
  * Copyright © Wynntils 2023.
  * This file is released under AGPLv3. See LICENSE for full license details.
  */
-package com.wynntils.core.config.upfixers;
+package com.wynntils.core.persisted.upfixers;
 
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
-import com.wynntils.core.config.Config;
+import com.wynntils.core.persisted.config.Config;
 import com.wynntils.utils.type.Pair;
 import java.util.ArrayList;
 import java.util.List;

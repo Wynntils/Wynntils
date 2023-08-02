@@ -8,7 +8,7 @@ import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.components.Models;
 import com.wynntils.core.components.Service;
 import com.wynntils.core.persisted.Persisted;
-import com.wynntils.core.storage.Storage;
+import com.wynntils.core.persisted.storage.Storage;
 import com.wynntils.models.character.event.CharacterUpdateEvent;
 import com.wynntils.models.worlds.event.WorldStateEvent;
 import com.wynntils.services.statistics.type.StatisticEntry;

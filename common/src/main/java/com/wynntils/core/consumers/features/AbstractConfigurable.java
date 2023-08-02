@@ -5,7 +5,7 @@
 package com.wynntils.core.consumers.features;
 
 import com.google.common.base.CaseFormat;
-import com.wynntils.core.config.Config;
+import com.wynntils.core.persisted.config.Config;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;

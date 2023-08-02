@@ -2,7 +2,7 @@
  * Copyright © Wynntils 2023.
  * This file is released under AGPLv3. See LICENSE for full license details.
  */
-package com.wynntils.core.storage;
+package com.wynntils.core.persisted.storage;
 
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
