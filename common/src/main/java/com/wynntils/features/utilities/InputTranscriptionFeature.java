@@ -25,7 +25,15 @@ import java.util.List;
 import java.util.Locale;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-
+import net.minecraft.ChatFormatting;
+import net.minecraft.client.gui.components.EditBox;
+import net.minecraft.client.gui.screens.ChatScreen;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.Style;
+import net.minecraftforge.eventbus.api.Event;
+import net.minecraftforge.eventbus.api.EventPriority;
+import net.minecraftforge.eventbus.api.SubscribeEvent;
+import org.lwjgl.glfw.GLFW;
 @ConfigCategory(Category.CHAT)
 public class InputTranscriptionFeature extends Feature {
     @RegisterConfig
@@ -143,8 +151,6 @@ public class InputTranscriptionFeature extends Feature {
             updatedCommand = updatedCommand.substring(0, Math.min(updatedCommand.length(), MAX_CHAT_LENGTH));
 
             McUtils.sendCommand(updatedCommand);
-        } else {
-            Models.WynnAlphabet.setSelectedAlphabet(WynnAlphabet.DEFAULT);
         }
     }
 
