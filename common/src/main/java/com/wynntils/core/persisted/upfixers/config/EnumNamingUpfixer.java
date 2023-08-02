@@ -16,7 +16,7 @@ import com.google.gson.stream.JsonToken;
 import com.google.gson.stream.JsonWriter;
 import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.components.Managers;
-import com.wynntils.core.persisted.config.Config;
+import com.wynntils.core.persisted.PersistedValue;
 import com.wynntils.core.persisted.upfixers.ConfigUpfixer;
 import com.wynntils.utils.EnumUtils;
 import com.wynntils.utils.colors.CustomColor;
@@ -32,14 +32,14 @@ public class EnumNamingUpfixer implements ConfigUpfixer {
             .create();
 
     @Override
-    public boolean apply(JsonObject configObject, Set<Config<?>> configs) {
-        for (Config<?> config : configs) {
-            String jsonName = config.getJsonName();
+    public boolean apply(JsonObject configObject, Set<PersistedValue<?>> persisteds) {
+        for (PersistedValue<?> persisted : persisteds) {
+            String jsonName = persisted.getJsonName();
             if (!configObject.has(jsonName)) continue;
 
             JsonElement origJson = configObject.get(jsonName);
-            Object value = GSON.fromJson(origJson, config.getType());
-            JsonElement newJson = Managers.Json.GSON.toJsonTree(value, config.getType());
+            Object value = GSON.fromJson(origJson, persisted.getType());
+            JsonElement newJson = Managers.Json.GSON.toJsonTree(value, persisted.getType());
 
             if (!(newJson.toString().equals(origJson.toString()))) {
                 configObject.add(jsonName, newJson);

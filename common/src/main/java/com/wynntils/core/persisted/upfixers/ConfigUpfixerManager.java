@@ -9,7 +9,7 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.components.Manager;
-import com.wynntils.core.persisted.config.Config;
+import com.wynntils.core.persisted.PersistedValue;
 import com.wynntils.core.persisted.upfixers.config.CustomCommandKeybindSlashStartUpfixer;
 import com.wynntils.core.persisted.upfixers.config.CustomPoiIconEnumBugUpfixer;
 import com.wynntils.core.persisted.upfixers.config.CustomPoiVisbilityUpfixer;
@@ -53,7 +53,7 @@ public class ConfigUpfixerManager extends Manager {
      * @param configObject  The config object to run upfixers on.
      * @param configs All registered configs
      */
-    public boolean runUpfixers(JsonObject configObject, Set<Config<?>> configs) {
+    public boolean runUpfixers(JsonObject configObject, Set<PersistedValue<?>> configs) {
         List<ConfigUpfixer> missingUpfixers = getMissingUpfixers(configObject);
 
         boolean anyChange = false;

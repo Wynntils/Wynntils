@@ -6,7 +6,7 @@ package com.wynntils.core.persisted.upfixers;
 
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
-import com.wynntils.core.persisted.config.Config;
+import com.wynntils.core.persisted.PersistedValue;
 import com.wynntils.utils.type.Pair;
 import java.util.List;
 import java.util.Set;
@@ -15,7 +15,7 @@ public abstract class RenamedKeysUpfixer implements ConfigUpfixer {
     protected abstract List<Pair<String, String>> getRenamedKeys();
 
     @Override
-    public boolean apply(JsonObject configObject, Set<Config<?>> configs) {
+    public boolean apply(JsonObject configObject, Set<PersistedValue<?>> persisteds) {
         for (Pair<String, String> renamePair : getRenamedKeys()) {
             String oldName = renamePair.a();
             String newName = renamePair.b();

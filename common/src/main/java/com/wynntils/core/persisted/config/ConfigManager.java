@@ -19,12 +19,14 @@ import com.wynntils.core.consumers.overlays.Overlay;
 import com.wynntils.core.consumers.overlays.OverlayManager;
 import com.wynntils.core.json.JsonManager;
 import com.wynntils.core.persisted.Persisted;
+import com.wynntils.core.persisted.PersistedValue;
 import com.wynntils.core.persisted.upfixers.ConfigUpfixerManager;
 import com.wynntils.utils.JsonUtils;
 import com.wynntils.utils.mc.McUtils;
 import java.io.File;
 import java.lang.reflect.Field;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 import java.util.TreeSet;
@@ -59,7 +61,9 @@ public final class ConfigManager extends Manager {
         Managers.Feature.getFeatures().forEach(this::registerFeature);
 
         // Now, we have to apply upfixers, before any config loading happens
-        if (Managers.ConfigUpfixer.runUpfixers(configObject, CONFIGS)) {
+        // FIXME: Solve generics type issue
+        Set<PersistedValue<?>> workaround = new HashSet<>(CONFIGS);
+        if (Managers.ConfigUpfixer.runUpfixers(configObject, workaround)) {
             Managers.Json.savePreciousJson(userConfig, configObject);
         }
 
