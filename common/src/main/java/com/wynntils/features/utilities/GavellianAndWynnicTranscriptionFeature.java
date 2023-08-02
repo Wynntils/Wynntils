@@ -52,8 +52,7 @@ public class GavellianAndWynnicTranscriptionFeature extends Feature {
     public final Config<Boolean> transcriptNpcs = new Config<>(true);
 
     @RegisterConfig
-    public final Config<TranscriptCondition> transcriptCondition =
-            new Config<>(TranscriptCondition.ALWAYS);
+    public final Config<TranscriptCondition> transcriptCondition = new Config<>(TranscriptCondition.ALWAYS);
 
     @RegisterConfig
     public final Config<Boolean> useBrackets = new Config<>(false);
@@ -189,8 +188,7 @@ public class GavellianAndWynnicTranscriptionFeature extends Feature {
         if (!transcriptChat.get()) return;
         if (!Models.WynnLanguage.hasWynnicOrGavellian(event.getStyledText().getString())) return;
 
-        boolean transcriptWynnic =
-                Models.WynnLanguage.shouldTranscript(transcriptCondition.get(), WynnAlphabet.WYNNIC);
+        boolean transcriptWynnic = Models.WynnLanguage.shouldTranscript(transcriptCondition.get(), WynnAlphabet.WYNNIC);
         boolean transcriptGavellian =
                 Models.WynnLanguage.shouldTranscript(transcriptCondition.get(), WynnAlphabet.GAVELLIAN);
 
@@ -198,8 +196,7 @@ public class GavellianAndWynnicTranscriptionFeature extends Feature {
 
         StyledText styledText = event.getStyledText();
 
-        StyledText modified =
-                getStyledTextWithTranscription(styledText, transcriptWynnic, transcriptGavellian, false);
+        StyledText modified = getStyledTextWithTranscription(styledText, transcriptWynnic, transcriptGavellian, false);
 
         if (styledText.getString().equalsIgnoreCase(modified.getString())) return;
 
@@ -211,8 +208,7 @@ public class GavellianAndWynnicTranscriptionFeature extends Feature {
         if (!transcriptNpcs.get()) return;
         if (!Models.WynnLanguage.hasWynnicOrGavellian(event.getChatMessage().toString())) return;
 
-        boolean transcriptWynnic =
-                Models.WynnLanguage.shouldTranscript(transcriptCondition.get(), WynnAlphabet.WYNNIC);
+        boolean transcriptWynnic = Models.WynnLanguage.shouldTranscript(transcriptCondition.get(), WynnAlphabet.WYNNIC);
         boolean transcriptGavellian =
                 Models.WynnLanguage.shouldTranscript(transcriptCondition.get(), WynnAlphabet.GAVELLIAN);
 
