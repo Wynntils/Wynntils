@@ -7,9 +7,9 @@ package com.wynntils.features.chat;
 import com.wynntils.core.config.Category;
 import com.wynntils.core.config.Config;
 import com.wynntils.core.config.ConfigCategory;
-import com.wynntils.core.config.RegisterConfig;
 import com.wynntils.core.consumers.features.Feature;
 import com.wynntils.core.consumers.features.properties.StartDisabled;
+import com.wynntils.core.persisted.Persisted;
 import com.wynntils.core.text.PartStyle;
 import com.wynntils.core.text.StyledText;
 import com.wynntils.core.text.StyledTextPart;
@@ -30,7 +30,7 @@ public class GuildRankReplacementFeature extends Feature {
     private static final char STAR = '★';
     private static final char REPLACEMENT_STAR = '*';
 
-    @RegisterConfig
+    @Persisted
     public final Config<RankType> rankType = new Config<>(RankType.NAME);
 
     // Test suite: https://regexr.com/7f8kh

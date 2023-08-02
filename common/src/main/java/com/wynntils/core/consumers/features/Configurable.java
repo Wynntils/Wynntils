@@ -5,10 +5,11 @@
 package com.wynntils.core.consumers.features;
 
 import com.wynntils.core.config.Config;
+import com.wynntils.core.persisted.PersistedOwner;
 import java.util.List;
 import java.util.Optional;
 
-public interface Configurable {
+public interface Configurable extends PersistedOwner {
     void updateConfigOption(Config<?> config);
 
     /** Registers the configurable's config options. Called by ConfigManager when loaded */

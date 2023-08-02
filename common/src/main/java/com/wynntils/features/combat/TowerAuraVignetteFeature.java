@@ -8,8 +8,8 @@ import com.wynntils.core.components.Models;
 import com.wynntils.core.config.Category;
 import com.wynntils.core.config.Config;
 import com.wynntils.core.config.ConfigCategory;
-import com.wynntils.core.config.RegisterConfig;
 import com.wynntils.core.consumers.features.Feature;
+import com.wynntils.core.persisted.Persisted;
 import com.wynntils.mc.event.RenderEvent;
 import com.wynntils.utils.MathUtils;
 import com.wynntils.utils.colors.CommonColors;
@@ -22,10 +22,10 @@ import net.minecraftforge.eventbus.api.SubscribeEvent;
 public class TowerAuraVignetteFeature extends Feature {
     private static final float MAX_INTENSITY = 0.4f;
 
-    @RegisterConfig
+    @Persisted
     public final Config<Boolean> vignetteOnAura = new Config<>(true);
 
-    @RegisterConfig
+    @Persisted
     public final Config<CustomColor> vignetteColor = new Config<>(CommonColors.ORANGE);
 
     @SubscribeEvent(priority = EventPriority.LOWEST)

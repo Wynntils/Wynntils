@@ -12,8 +12,8 @@ import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.config.Category;
 import com.wynntils.core.config.Config;
 import com.wynntils.core.config.ConfigCategory;
-import com.wynntils.core.config.RegisterConfig;
 import com.wynntils.core.consumers.features.Feature;
+import com.wynntils.core.persisted.Persisted;
 import com.wynntils.mc.event.ScreenInitEvent;
 import com.wynntils.mc.event.TitleScreenInitEvent;
 import com.wynntils.utils.mc.McUtils;
@@ -39,13 +39,13 @@ public class WynncraftButtonFeature extends Feature {
     private static final String WYNNCRAFT_DOMAIN = ".wynncraft.com";
     private boolean firstTitleScreenInit = true;
 
-    @RegisterConfig
+    @Persisted
     public final Config<ServerType> serverType = new Config<>(ServerType.GAME);
 
-    @RegisterConfig
+    @Persisted
     public final Config<Boolean> autoConnect = new Config<>(false);
 
-    @RegisterConfig
+    @Persisted
     public final Config<Boolean> loadResourcePack = new Config<>(true);
 
     @SubscribeEvent

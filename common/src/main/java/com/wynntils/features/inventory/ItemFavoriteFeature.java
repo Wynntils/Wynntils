@@ -10,8 +10,8 @@ import com.wynntils.core.config.Category;
 import com.wynntils.core.config.Config;
 import com.wynntils.core.config.ConfigCategory;
 import com.wynntils.core.config.HiddenConfig;
-import com.wynntils.core.config.RegisterConfig;
 import com.wynntils.core.consumers.features.Feature;
+import com.wynntils.core.persisted.Persisted;
 import com.wynntils.mc.event.ContainerCloseEvent;
 import com.wynntils.mc.event.ScreenOpenedEvent;
 import com.wynntils.mc.event.SlotRenderEvent;
@@ -32,10 +32,10 @@ import net.minecraftforge.eventbus.api.SubscribeEvent;
 @ConfigCategory(Category.INVENTORY)
 public class ItemFavoriteFeature extends Feature {
     // This should really move to FavoritesModel, but for now, models cannot have configs
-    @RegisterConfig
+    @Persisted
     public final HiddenConfig<Set<String>> favoriteItems = new HiddenConfig<>(new TreeSet<>());
 
-    @RegisterConfig
+    @Persisted
     public final Config<Integer> lootChestCloseOverride = new Config<>(3);
 
     private int lootChestCloseOverrideCounter = 0;

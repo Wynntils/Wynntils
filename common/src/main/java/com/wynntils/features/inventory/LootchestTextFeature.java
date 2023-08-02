@@ -10,8 +10,8 @@ import com.wynntils.core.components.Models;
 import com.wynntils.core.config.Category;
 import com.wynntils.core.config.Config;
 import com.wynntils.core.config.ConfigCategory;
-import com.wynntils.core.config.RegisterConfig;
 import com.wynntils.core.consumers.features.Feature;
+import com.wynntils.core.persisted.Persisted;
 import com.wynntils.core.text.StyledText;
 import com.wynntils.mc.event.ContainerRenderEvent;
 import com.wynntils.utils.colors.CommonColors;
@@ -25,10 +25,10 @@ import net.minecraftforge.eventbus.api.SubscribeEvent;
 
 @ConfigCategory(Category.INVENTORY)
 public class LootchestTextFeature extends Feature {
-    @RegisterConfig
+    @Persisted
     private final Config<String> titleTextTemplate = new Config<>("§8Total: {chest_opened}");
 
-    @RegisterConfig
+    @Persisted
     private final Config<String> inventoryTextTemplate = new Config<>("§8Dry: {dry_streak}");
 
     @SubscribeEvent

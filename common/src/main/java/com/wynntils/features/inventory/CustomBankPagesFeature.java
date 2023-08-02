@@ -8,8 +8,8 @@ import com.wynntils.core.components.Models;
 import com.wynntils.core.config.Category;
 import com.wynntils.core.config.Config;
 import com.wynntils.core.config.ConfigCategory;
-import com.wynntils.core.config.RegisterConfig;
 import com.wynntils.core.consumers.features.Feature;
+import com.wynntils.core.persisted.Persisted;
 import com.wynntils.mc.event.ContainerClickEvent;
 import com.wynntils.mc.event.ContainerSetContentEvent;
 import com.wynntils.mc.event.ScreenClosedEvent;
@@ -35,16 +35,16 @@ import org.lwjgl.glfw.GLFW;
 @ConfigCategory(Category.INVENTORY)
 public class CustomBankPagesFeature extends Feature {
     // Change to ranged integer/integer list when implemented
-    @RegisterConfig
+    @Persisted
     public final Config<String> bankDestinations = new Config<>("1,5,9,13,17,21");
 
-    @RegisterConfig
+    @Persisted
     public final Config<String> blockBankDestinations = new Config<>("1,3,5,8,10,12");
 
-    @RegisterConfig
+    @Persisted
     public final Config<String> bookshelfDestinations = new Config<>("1,3,4,6,8,10");
 
-    @RegisterConfig
+    @Persisted
     public final Config<String> miscBucketDestinations = new Config<>("1,3,4,6,8,10");
 
     private static final int MAX_BANK_PAGES = 21;

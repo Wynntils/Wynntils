@@ -8,10 +8,10 @@ import com.mojang.blaze3d.platform.Window;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.wynntils.core.components.Models;
 import com.wynntils.core.config.Config;
-import com.wynntils.core.config.RegisterConfig;
 import com.wynntils.core.consumers.overlays.OverlayPosition;
 import com.wynntils.core.consumers.overlays.OverlaySize;
 import com.wynntils.core.consumers.overlays.TextOverlay;
+import com.wynntils.core.persisted.Persisted;
 import com.wynntils.models.abilities.event.ShamanMaskTitlePacketEvent;
 import com.wynntils.models.abilities.type.ShamanMaskType;
 import com.wynntils.utils.render.type.HorizontalAlignment;
@@ -22,10 +22,10 @@ import net.minecraftforge.eventbus.api.SubscribeEvent;
 public class ShamanMaskOverlay extends TextOverlay {
     private static final String TEMPLATE = "{shaman_mask} mask";
 
-    @RegisterConfig
+    @Persisted
     public final Config<Boolean> hideMaskTitles = new Config<>(true);
 
-    @RegisterConfig
+    @Persisted
     public final Config<Boolean> displayNone = new Config<>(false);
 
     public ShamanMaskOverlay() {

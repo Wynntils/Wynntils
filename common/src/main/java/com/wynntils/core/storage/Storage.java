@@ -5,16 +5,11 @@
 package com.wynntils.core.storage;
 
 import com.wynntils.core.components.Managers;
+import com.wynntils.core.persisted.PersistedValue;
 
-public class Storage<T> {
-    private T value;
-
+public class Storage<T> extends PersistedValue<T> {
     public Storage(T value) {
-        this.value = value;
-    }
-
-    public T get() {
-        return value;
+        super(value);
     }
 
     public void store(T value) {
@@ -22,6 +17,7 @@ public class Storage<T> {
         touched();
     }
 
+    @Override
     public void touched() {
         Managers.Storage.persist();
     }

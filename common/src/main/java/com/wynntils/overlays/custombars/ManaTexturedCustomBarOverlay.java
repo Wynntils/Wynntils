@@ -6,15 +6,15 @@ package com.wynntils.overlays.custombars;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.wynntils.core.config.Config;
-import com.wynntils.core.config.RegisterConfig;
 import com.wynntils.core.consumers.overlays.OverlaySize;
+import com.wynntils.core.persisted.Persisted;
 import com.wynntils.utils.render.Texture;
 import com.wynntils.utils.render.buffered.BufferedRenderUtils;
 import com.wynntils.utils.render.type.ManaTexture;
 import net.minecraft.client.renderer.MultiBufferSource;
 
 public class ManaTexturedCustomBarOverlay extends CustomBarOverlayBase {
-    @RegisterConfig(i18nKey = "overlay.wynntils.manaBar.manaTexture")
+    @Persisted(i18nKey = "overlay.wynntils.manaBar.manaTexture")
     public final Config<ManaTexture> manaTexture = new Config<>(ManaTexture.A);
 
     public ManaTexturedCustomBarOverlay(int id) {

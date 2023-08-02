@@ -19,12 +19,12 @@ import com.wynntils.core.consumers.overlays.DynamicOverlay;
 import com.wynntils.core.consumers.overlays.Overlay;
 import com.wynntils.core.consumers.overlays.OverlayManager;
 import com.wynntils.core.json.JsonManager;
+import com.wynntils.core.persisted.Persisted;
 import com.wynntils.utils.JsonUtils;
 import com.wynntils.utils.mc.McUtils;
 import java.io.File;
 import java.lang.reflect.Field;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Set;
 import java.util.TreeSet;
@@ -216,64 +216,44 @@ public final class ConfigManager extends Manager {
         Managers.Json.savePreciousJson(DEFAULT_CONFIG, configJson);
     }
 
-    private <P extends Configurable & Translatable> List<Config<?>> getConfigOptions(P parent) {
+    private <P extends Configurable & Translatable> List<Config<?>> getConfigOptions(P owner) {
+        Managers.Persisted.verifyAnnotations(owner);
+
         List<Config<?>> options = new ArrayList<>();
-
-        Field[] annotatedConfigs = FieldUtils.getFieldsWithAnnotation(parent.getClass(), RegisterConfig.class);
-        for (Field field : annotatedConfigs) {
-            try {
-                Object fieldValue = FieldUtils.readField(field, parent, true);
-                if (!(fieldValue instanceof Config)) {
-                    throw new RuntimeException(
-                            "A non-Config class was marked with @RegisterConfig annotation: " + field);
-                }
-            } catch (IllegalAccessException e) {
-                throw new RuntimeException("Failed to read @RegisterConfig annotated field: " + field, e);
-            }
-        }
-
-        List<Field> fields = FieldUtils.getAllFieldsList(parent.getClass());
-        List<Field> configFields = fields.stream()
-                .filter(f -> f.getType().equals(Config.class) || f.getType().equals(HiddenConfig.class))
-                .toList();
-
-        for (Field configField : configFields) {
-            RegisterConfig configInfo = Arrays.stream(annotatedConfigs)
-                    .filter(f -> f.equals(configField))
-                    .findFirst()
-                    .map(f -> f.getAnnotation(RegisterConfig.class))
-                    .orElse(null);
-            if (configInfo == null) {
-                throw new RuntimeException("A Config is missing @RegisterConfig annotation:" + configField);
-            }
-            Config<?> configObj;
-            try {
-                configObj = (Config<?>) FieldUtils.readField(configField, parent, true);
-            } catch (IllegalAccessException e) {
-                throw new RuntimeException("Cannot read Config field: " + configField, e);
-            }
-
-            configObj.createConfigHolder(parent, configField, configInfo);
-
-            if (WynntilsMod.isDevelopmentEnvironment()) {
-                if (configObj.isVisible()) {
-                    if (configObj.getDisplayName().startsWith("feature.wynntils.")) {
-                        WynntilsMod.error("Config displayName i18n is missing for " + configObj.getDisplayName());
-                        throw new AssertionError("Missing i18n for " + configObj.getDisplayName());
-                    }
-                    if (configObj.getDescription().startsWith("feature.wynntils.")) {
-                        WynntilsMod.error("Config description i18n is missing for " + configObj.getDescription());
-                        throw new AssertionError("Missing i18n for " + configObj.getDescription());
-                    }
-                    if (configObj.getDescription().isEmpty()) {
-                        WynntilsMod.error("Config description is empty for " + configObj.getDisplayName());
-                        throw new AssertionError("Missing i18n for " + configObj.getDisplayName());
-                    }
-                }
-            }
-            options.add(configObj);
-        }
+        options.addAll(Managers.Persisted.getPersisted(owner, Config.class).stream()
+                .map(p -> processConfig(owner, p.a(), p.b()))
+                .toList());
         return options;
+    }
+
+    private static <P extends Configurable & Translatable> Config<?> processConfig(
+            P owner, Field configField, Persisted configInfo) {
+        Config<?> configObj;
+        try {
+            configObj = (Config<?>) FieldUtils.readField(configField, owner, true);
+        } catch (IllegalAccessException e) {
+            throw new RuntimeException("Cannot read Config field: " + configField, e);
+        }
+
+        configObj.createConfigHolder(owner, configField, configInfo);
+
+        if (WynntilsMod.isDevelopmentEnvironment()) {
+            if (configObj.isVisible()) {
+                if (configObj.getDisplayName().startsWith("feature.wynntils.")) {
+                    WynntilsMod.error("Config displayName i18n is missing for " + configObj.getDisplayName());
+                    throw new AssertionError("Missing i18n for " + configObj.getDisplayName());
+                }
+                if (configObj.getDescription().startsWith("feature.wynntils.")) {
+                    WynntilsMod.error("Config description i18n is missing for " + configObj.getDescription());
+                    throw new AssertionError("Missing i18n for " + configObj.getDescription());
+                }
+                if (configObj.getDescription().isEmpty()) {
+                    WynntilsMod.error("Config description is empty for " + configObj.getDisplayName());
+                    throw new AssertionError("Missing i18n for " + configObj.getDisplayName());
+                }
+            }
+        }
+        return configObj;
     }
 
     public Stream<Config<?>> getConfigs() {

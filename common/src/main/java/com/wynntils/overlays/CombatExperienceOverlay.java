@@ -6,15 +6,15 @@ package com.wynntils.overlays;
 
 import com.wynntils.core.components.Models;
 import com.wynntils.core.config.Config;
-import com.wynntils.core.config.RegisterConfig;
 import com.wynntils.core.consumers.overlays.OverlayPosition;
 import com.wynntils.core.consumers.overlays.OverlaySize;
 import com.wynntils.core.consumers.overlays.TextOverlay;
+import com.wynntils.core.persisted.Persisted;
 import com.wynntils.utils.render.type.HorizontalAlignment;
 import com.wynntils.utils.render.type.VerticalAlignment;
 
 public class CombatExperienceOverlay extends TextOverlay {
-    @RegisterConfig
+    @Persisted
     private final Config<Boolean> useShortFormat = new Config<>(true);
 
     public CombatExperienceOverlay() {

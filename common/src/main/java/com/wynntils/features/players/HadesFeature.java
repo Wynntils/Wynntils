@@ -9,22 +9,22 @@ import com.wynntils.core.components.Services;
 import com.wynntils.core.config.Category;
 import com.wynntils.core.config.Config;
 import com.wynntils.core.config.ConfigCategory;
-import com.wynntils.core.config.RegisterConfig;
 import com.wynntils.core.consumers.features.Feature;
+import com.wynntils.core.persisted.Persisted;
 import com.wynntils.hades.protocol.enums.SocialType;
 
 @ConfigCategory(Category.PLAYERS)
 public class HadesFeature extends Feature {
-    @RegisterConfig
+    @Persisted
     public final Config<Boolean> getOtherPlayerInfo = new Config<>(true);
 
-    @RegisterConfig
+    @Persisted
     public final Config<Boolean> shareWithParty = new Config<>(true);
 
-    @RegisterConfig
+    @Persisted
     public final Config<Boolean> shareWithFriends = new Config<>(true);
 
-    @RegisterConfig
+    @Persisted
     public final Config<Boolean> shareWithGuild = new Config<>(true);
 
     @Override

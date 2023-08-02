@@ -8,8 +8,8 @@ import com.wynntils.core.components.Models;
 import com.wynntils.core.config.Category;
 import com.wynntils.core.config.Config;
 import com.wynntils.core.config.ConfigCategory;
-import com.wynntils.core.config.RegisterConfig;
 import com.wynntils.core.consumers.features.Feature;
+import com.wynntils.core.persisted.Persisted;
 import com.wynntils.mc.event.RenderEvent;
 import com.wynntils.mc.event.TickEvent;
 import com.wynntils.models.spells.event.SpellEvent;
@@ -21,16 +21,16 @@ import net.minecraftforge.eventbus.api.SubscribeEvent;
 public class SpellCastVignetteFeature extends Feature {
     private static final int SHOW_VIGNETTE_TICKS = 40;
 
-    @RegisterConfig
+    @Persisted
     public final Config<Boolean> renderVignette = new Config<>(true);
 
-    @RegisterConfig
+    @Persisted
     public final Config<Integer> vignetteFadeTime = new Config<>(12);
 
-    @RegisterConfig
+    @Persisted
     public final Config<Float> vignetteIntensity = new Config<>(0.75f);
 
-    @RegisterConfig
+    @Persisted
     public final Config<CustomColor> vignetteColor = new Config<>(new CustomColor(0, 71, 201));
 
     private int vignetteTimer;

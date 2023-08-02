@@ -9,8 +9,8 @@ import com.wynntils.core.components.Models;
 import com.wynntils.core.config.Category;
 import com.wynntils.core.config.Config;
 import com.wynntils.core.config.ConfigCategory;
-import com.wynntils.core.config.RegisterConfig;
 import com.wynntils.core.consumers.features.Feature;
+import com.wynntils.core.persisted.Persisted;
 import com.wynntils.mc.event.HotbarSlotRenderEvent;
 import com.wynntils.mc.event.SlotRenderEvent;
 import com.wynntils.models.items.properties.DurableItemProperty;
@@ -24,10 +24,10 @@ import net.minecraftforge.eventbus.api.SubscribeEvent;
 
 @ConfigCategory(Category.INVENTORY)
 public class DurabilityArcFeature extends Feature {
-    @RegisterConfig
+    @Persisted
     public final Config<Boolean> renderDurabilityArcInventories = new Config<>(true);
 
-    @RegisterConfig
+    @Persisted
     public final Config<Boolean> renderDurabilityArcHotbar = new Config<>(true);
 
     @SubscribeEvent
