@@ -93,6 +93,11 @@ public class LootrunModel extends Model {
     // Beacon positions are sometimes off by a few blocks
     private static final int BEACON_POSITION_ERROR = 3;
 
+    // We use an exponential factor to calculate the task prediction accuracy
+    // The closer we are, we want distance to have less effect on the accuracy
+    // The further we are, we want distance to have more effect on the accuracy
+    private static final double BEACON_LOCATION_EXPONENTIAL_FACTOR = 2.5d;
+
     private static final LootrunScoreboardPart LOOTRUN_SCOREBOARD_PART = new LootrunScoreboardPart();
 
     private static final LootrunBeaconMarkerProvider LOOTRUN_BEACON_COMPASS_PROVIDER =
@@ -108,7 +113,7 @@ public class LootrunModel extends Model {
     private LootrunTaskType taskType;
 
     // rely on color, beacon positions change
-    private Map<BeaconColor, TaskLocation> beacons = new HashMap<>();
+    private Map<BeaconColor, Pair<Double, TaskLocation>> beacons = new HashMap<>();
     private Map<BeaconColor, Pair<Integer, TaskLocation>> beaconUpdates = new HashMap<>();
 
     // Data to be persisted
@@ -199,22 +204,26 @@ public class LootrunModel extends Model {
         BeaconColor beaconColor = beacon.color();
         if (!beaconColor.isUsedInLootruns()) return;
 
-        TaskLocation taskPrediction = getBeaconTaskLocationPrediction(beacon);
-        TaskLocation oldPrediction = beacons.get(beaconColor);
+        Pair<Double, TaskLocation> taskPrediction = getBeaconTaskLocationPrediction(beacon);
+        Pair<Double, TaskLocation> oldPrediction = beacons.get(beaconColor);
 
-        if (Objects.equals(oldPrediction, taskPrediction)) return;
+        // No prediction yet, or prediction is worse than the old one
+        if (Objects.equals(oldPrediction.b(), taskPrediction.b()) || taskPrediction.a() > oldPrediction.a()) return;
 
         if (beaconUpdates.containsKey(beaconColor)) {
             Pair<Integer, TaskLocation> pair = beaconUpdates.get(beaconColor);
 
             // New prediction is different from the old one. Reset the counter.
-            if (!pair.b().equals(taskPrediction)) {
-                beaconUpdates.put(beaconColor, Pair.of(1, taskPrediction));
+            if (!pair.b().equals(taskPrediction.b())) {
+                beaconUpdates.put(beaconColor, Pair.of(1, taskPrediction.b()));
                 return;
             }
 
             // New prediction is the same as the old one. We got the same prediction multiple times in a row.
             if (pair.a() + 1 >= BEACON_UPDATE_CHANGE_THRESHOLD) {
+                // We could go with the average, or highest prediction score,
+                // but we jsut go with the last one for now.
+                // This could be a really edge-case optimization.
                 beacons.put(beaconColor, taskPrediction);
                 LOOTRUN_BEACON_COMPASS_PROVIDER.reloadTaskMarkers();
                 beaconUpdates.remove(beaconColor);
@@ -226,9 +235,9 @@ public class LootrunModel extends Model {
             }
 
             // New prediction is the same as the old one, but we haven't reached the threshold yet.
-            beaconUpdates.put(beaconColor, Pair.of(pair.a() + 1, taskPrediction));
+            beaconUpdates.put(beaconColor, Pair.of(pair.a() + 1, taskPrediction.b()));
         } else {
-            beaconUpdates.put(beaconColor, Pair.of(1, taskPrediction));
+            beaconUpdates.put(beaconColor, Pair.of(1, taskPrediction.b()));
         }
     }
 
@@ -266,7 +275,7 @@ public class LootrunModel extends Model {
         Beacon beacon = event.getBeacon();
         if (!beacon.color().isUsedInLootruns()) return;
 
-        TaskLocation taskPrediction = getBeaconTaskLocationPrediction(beacon);
+        Pair<Double, TaskLocation> taskPrediction = getBeaconTaskLocationPrediction(beacon);
         beacons.put(beacon.color(), taskPrediction);
         LOOTRUN_BEACON_COMPASS_PROVIDER.reloadTaskMarkers();
         McUtils.sendMessageToClient(
@@ -292,7 +301,7 @@ public class LootrunModel extends Model {
         return Optional.ofNullable(taskType);
     }
 
-    public Map<BeaconColor, TaskLocation> getBeacons() {
+    public Map<BeaconColor, Pair<Double, TaskLocation>> getBeacons() {
         return beacons;
     }
 
@@ -364,7 +373,7 @@ public class LootrunModel extends Model {
     }
 
     // FIXME: Handle the same task location being used for multiple beacons.
-    private TaskLocation getBeaconTaskLocationPrediction(Beacon beacon) {
+    private Pair<Double, TaskLocation> getBeaconTaskLocationPrediction(Beacon beacon) {
         Optional<LootrunLocation> location = getLocation();
         if (location.isEmpty()) {
             WynntilsMod.warn("Location was when trying to predict for: " + beacon);
@@ -380,21 +389,23 @@ public class LootrunModel extends Model {
         double lowestDistance = Double.MAX_VALUE;
         TaskLocation closestTaskLocation = null;
         for (TaskLocation currentTaskLocation : currentTaskLocations) {
-            // 1: player location
+            // Player Location
             Vector2i playerPosition =
                     new Vector2i((int) McUtils.player().position().x(), (int)
                             McUtils.player().position().z());
-            // 2: task location
+            // Task Location
             Vector2i taskLocationPosition = new Vector2i(
                     currentTaskLocation.location().x(),
                     currentTaskLocation.location().z());
-            // 3: wynn beacon
+            // Wynn Beacon
             Vector2i beaconPosition =
                     new Vector2i(beacon.location().x(), beacon.location().z());
 
             // Short circuit if the beacon matches a task location.
             if (taskLocationPosition.distance(beaconPosition) < BEACON_POSITION_ERROR) {
-                return currentTaskLocation;
+                lowestDistance = 0d;
+                closestTaskLocation = currentTaskLocation;
+                break;
             }
 
             double taskLocationDistanceToPlayer = taskLocationPosition.distance(playerPosition);
@@ -416,13 +427,19 @@ public class LootrunModel extends Model {
             // the line between the player and the task location.
             double wynnBeaconDistanceFromLine = 2 * area / taskLocationDistanceToPlayer;
 
+            // The prediction score is the distance from the line times the distance from the player to the task
+            // This is done so because getting further from the beacon gives us worse reliability,
+            // so we want to preserve the closest prediction.
+            double predictionScore = wynnBeaconDistanceFromLine
+                    * Math.pow(taskLocationDistanceToPlayer, BEACON_LOCATION_EXPONENTIAL_FACTOR);
+
             if (wynnBeaconDistanceFromLine < lowestDistance) {
                 lowestDistance = wynnBeaconDistanceFromLine;
                 closestTaskLocation = currentTaskLocation;
             }
         }
 
-        return closestTaskLocation;
+        return Pair.of(lowestDistance, closestTaskLocation);
     }
 
     private void parseCompletedMessages(StyledText styledText) {
