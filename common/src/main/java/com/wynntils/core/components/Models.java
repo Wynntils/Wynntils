@@ -50,8 +50,8 @@ import com.wynntils.models.war.WarModel;
 import com.wynntils.models.worlds.BombModel;
 import com.wynntils.models.worlds.ServerListModel;
 import com.wynntils.models.worlds.WorldStateModel;
-import com.wynntils.models.wynnitem.WynnItemModel;
 import com.wynntils.models.wynnalphabet.WynnAlphabetModel;
+import com.wynntils.models.wynnitem.WynnItemModel;
 
 public final class Models {
     public static final AbilityTreeModel AbilityTree = new AbilityTreeModel();

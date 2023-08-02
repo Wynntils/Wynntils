@@ -21,7 +21,6 @@ import com.wynntils.handlers.chat.type.NpcDialogueType;
 import com.wynntils.models.wynnalphabet.WynnAlphabet;
 import com.wynntils.utils.colors.ColorChatFormatting;
 import com.wynntils.utils.type.IterationDecision;
-
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -40,8 +39,7 @@ public class TranscribeMessagesFeature extends Feature {
     public final Config<Boolean> transcribeNpcs = new Config<>(true);
 
     @RegisterConfig
-    public final Config<TranscribeCondition> transcribeCondition =
-            new Config<>(TranscribeCondition.ALWAYS);
+    public final Config<TranscribeCondition> transcribeCondition = new Config<>(TranscribeCondition.ALWAYS);
 
     @RegisterConfig
     public final Config<Boolean> coloredTranscriptions = new Config<>(true);
@@ -60,17 +58,15 @@ public class TranscribeMessagesFeature extends Feature {
         if (!transcribeChat.get()) return;
         if (!Models.WynnAlphabet.hasWynnicOrGavellian(event.getStyledText().getString())) return;
 
-        boolean transcribeWynnic =
-                Models.WynnAlphabet.shouldTranscript(transcribeCondition.get(), WynnAlphabet.WYNNIC);
+        boolean transcribeWynnic = Models.WynnAlphabet.shouldTranscribe(transcribeCondition.get(), WynnAlphabet.WYNNIC);
         boolean transcribeGavellian =
-                Models.WynnAlphabet.shouldTranscript(transcribeCondition.get(), WynnAlphabet.GAVELLIAN);
+                Models.WynnAlphabet.shouldTranscribe(transcribeCondition.get(), WynnAlphabet.GAVELLIAN);
 
         if (!transcribeWynnic && !transcribeGavellian) return;
 
         StyledText styledText = event.getStyledText();
 
-        StyledText modified =
-                getStyledTextWithTranscription(styledText, transcribeWynnic, transcribeGavellian, false);
+        StyledText modified = getStyledTextWithTranscription(styledText, transcribeWynnic, transcribeGavellian, false);
 
         if (styledText.getString().equalsIgnoreCase(modified.getString())) return;
 
@@ -82,10 +78,9 @@ public class TranscribeMessagesFeature extends Feature {
         if (!transcribeNpcs.get()) return;
         if (!Models.WynnAlphabet.hasWynnicOrGavellian(event.getChatMessage().toString())) return;
 
-        boolean transcribeWynnic =
-                Models.WynnAlphabet.shouldTranscript(transcribeCondition.get(), WynnAlphabet.WYNNIC);
+        boolean transcribeWynnic = Models.WynnAlphabet.shouldTranscribe(transcribeCondition.get(), WynnAlphabet.WYNNIC);
         boolean transcribeGavellian =
-                Models.WynnAlphabet.shouldTranscript(transcribeCondition.get(), WynnAlphabet.GAVELLIAN);
+                Models.WynnAlphabet.shouldTranscribe(transcribeCondition.get(), WynnAlphabet.GAVELLIAN);
 
         if (!transcribeWynnic && !transcribeGavellian) return;
 

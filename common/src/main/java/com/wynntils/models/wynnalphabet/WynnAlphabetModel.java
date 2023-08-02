@@ -201,8 +201,7 @@ public class WynnAlphabetModel extends Model {
         return wynnicNums.toString();
     }
 
-    public boolean shouldTranscript(
-            TranscribeMessagesFeature.TranscribeCondition condition, WynnAlphabet alphabet) {
+    public boolean shouldTranscribe(TranscribeMessagesFeature.TranscribeCondition condition, WynnAlphabet alphabet) {
         return switch (condition) {
             case NEVER -> false;
             case TRANSCRIBER -> alphabet == WynnAlphabet.WYNNIC
