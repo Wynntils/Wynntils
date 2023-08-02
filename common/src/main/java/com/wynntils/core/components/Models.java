@@ -51,7 +51,7 @@ import com.wynntils.models.worlds.BombModel;
 import com.wynntils.models.worlds.ServerListModel;
 import com.wynntils.models.worlds.WorldStateModel;
 import com.wynntils.models.wynnitem.WynnItemModel;
-import com.wynntils.models.wynnlanguage.WynnAlphabetModel;
+import com.wynntils.models.wynnalphabet.WynnAlphabetModel;
 
 public final class Models {
     public static final AbilityTreeModel AbilityTree = new AbilityTreeModel();
@@ -78,8 +78,8 @@ public final class Models {
     public static final TowerAuraTimerModel TowerAuraTimer = new TowerAuraTimerModel();
     public static final WarModel War = new WarModel();
     public static final WorldStateModel WorldState = new WorldStateModel();
+    public static final WynnAlphabetModel WynnAlphabet = new WynnAlphabetModel();
     public static final WynnItemModel WynnItem = new WynnItemModel();
-    public static final WynnAlphabetModel WynnLanguage = new WynnAlphabetModel();
 
     // Models with dependencies, ordered alphabetically as far as possible
     public static final BombModel Bomb = new BombModel(WorldState);

@@ -7,7 +7,7 @@ package com.wynntils.screens.transcription.widgets;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.wynntils.core.components.Models;
 import com.wynntils.core.text.StyledText;
-import com.wynntils.models.wynnlanguage.WynnAlphabet;
+import com.wynntils.models.wynnalphabet.WynnAlphabet;
 import com.wynntils.screens.base.widgets.WynntilsButton;
 import com.wynntils.utils.colors.CommonColors;
 import com.wynntils.utils.colors.CustomColor;
@@ -59,7 +59,7 @@ public class WynnAlphabetButton extends WynntilsButton {
     }
 
     private CustomColor getButtonColor() {
-        if (Models.WynnLanguage.getSelectedLanguage() == wynnAlphabet) {
+        if (Models.WynnAlphabet.getSelectedAlphabet() == wynnAlphabet) {
             return CommonColors.GREEN;
         } else {
             return CommonColors.WHITE;
@@ -70,7 +70,7 @@ public class WynnAlphabetButton extends WynntilsButton {
     public boolean mouseClicked(double mouseX, double mouseY, int button) {
         if (!isMouseOver(mouseX, mouseY)) return false;
 
-        Models.WynnLanguage.setSelectedLanguage(wynnAlphabet);
+        Models.WynnAlphabet.setSelectedAlphabet(wynnAlphabet);
 
         return false;
     }

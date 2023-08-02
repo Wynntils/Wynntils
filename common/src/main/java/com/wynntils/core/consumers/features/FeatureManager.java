@@ -135,7 +135,8 @@ import com.wynntils.features.ui.WynncraftPauseScreenFeature;
 import com.wynntils.features.ui.WynntilsContentBookFeature;
 import com.wynntils.features.utilities.AutoApplyResourcePackFeature;
 import com.wynntils.features.utilities.GammabrightFeature;
-import com.wynntils.features.utilities.GavellianAndWynnicTranscriptionFeature;
+import com.wynntils.features.utilities.InputTranscriptionFeature;
+import com.wynntils.features.utilities.TranscribeMessagesFeature;
 import com.wynntils.features.utilities.SilencerFeature;
 import com.wynntils.features.utilities.TranslationFeature;
 import com.wynntils.features.wynntils.BetaWarningFeature;
@@ -327,8 +328,9 @@ public final class FeatureManager extends Manager {
         // region utilities
         registerFeature(new AutoApplyResourcePackFeature());
         registerFeature(new GammabrightFeature());
-        registerFeature(new GavellianAndWynnicTranscriptionFeature());
+        registerFeature(new InputTranscriptionFeature());
         registerFeature(new SilencerFeature());
+        registerFeature(new TranscribeMessagesFeature());
         registerFeature(new TranslationFeature());
         // endregion
 

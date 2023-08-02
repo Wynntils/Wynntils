@@ -11,7 +11,6 @@ import com.wynntils.core.consumers.features.Feature;
 import com.wynntils.handlers.chat.event.ChatMessageReceivedEvent;
 import com.wynntils.mc.event.ScreenClosedEvent;
 import com.wynntils.mc.event.ScreenOpenedEvent;
-import com.wynntils.models.wynnlanguage.WynnAlphabet;
 import com.wynntils.utils.mc.McUtils;
 import java.util.regex.Pattern;
 import net.minecraft.client.gui.screens.ChatScreen;
@@ -40,7 +39,6 @@ public class TradeMarketAutoOpenChatFeature extends Feature {
         if (!openChatWhenContainerClosed) return;
 
         openChatWhenContainerClosed = false;
-        Models.WynnLanguage.setSelectedLanguage(WynnAlphabet.DEFAULT);
         McUtils.mc().setScreen(new ChatScreen(""));
     }
 
