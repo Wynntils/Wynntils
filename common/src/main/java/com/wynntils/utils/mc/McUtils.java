@@ -97,4 +97,8 @@ public final class McUtils {
     public static void sendCommand(String command) {
         mc().getConnection().sendCommand(command);
     }
+
+    public static void sendChat(String command) {
+        mc().getConnection().sendChat(command);
+    }
 }

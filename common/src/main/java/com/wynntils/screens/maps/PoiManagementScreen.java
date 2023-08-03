@@ -8,6 +8,7 @@ import com.google.gson.JsonSyntaxException;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.wynntils.core.components.Managers;
 import com.wynntils.core.consumers.screens.WynntilsScreen;
+import com.wynntils.core.persisted.config.HiddenConfig;
 import com.wynntils.core.text.StyledText;
 import com.wynntils.features.map.MainMapFeature;
 import com.wynntils.screens.maps.widgets.PoiManagerWidget;
@@ -154,16 +155,16 @@ public final class PoiManagementScreen extends WynntilsScreen {
             return;
         }
 
-        List<CustomPoi> existingPois = Managers.Feature.getFeatureInstance(MainMapFeature.class)
-                .customPois
-                .get();
+        HiddenConfig<List<CustomPoi>> customPoiConfig =
+                Managers.Feature.getFeatureInstance(MainMapFeature.class).customPois;
+        List<CustomPoi> existingPois = customPoiConfig.get();
 
         List<CustomPoi> poisToAdd = Stream.of(customPois)
                 .filter(newPoi -> !existingPois.contains(newPoi))
                 .toList();
 
         existingPois.addAll(poisToAdd);
-        Managers.Config.saveConfig();
+        customPoiConfig.touched();
 
         populatePois();
 

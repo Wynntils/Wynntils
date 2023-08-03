@@ -26,6 +26,7 @@ import com.wynntils.functions.SocialFunctions;
 import com.wynntils.functions.SpellFunctions;
 import com.wynntils.functions.WarFunctions;
 import com.wynntils.functions.WorldFunctions;
+import com.wynntils.functions.WynnAlphabetFunctions;
 import com.wynntils.functions.generic.CappedFunctions;
 import com.wynntils.functions.generic.ConditionalFunctions;
 import com.wynntils.functions.generic.LocationFunctions;
@@ -496,5 +497,8 @@ public final class FunctionManager extends Manager {
         registerFunction(new SocialFunctions.PartyLeaderFunction());
 
         registerFunction(new WarFunctions.AuraTimerFunction());
+
+        registerFunction(new WynnAlphabetFunctions.TranscribeGavellianFunction());
+        registerFunction(new WynnAlphabetFunctions.TranscribeWynnicFunction());
     }
 }

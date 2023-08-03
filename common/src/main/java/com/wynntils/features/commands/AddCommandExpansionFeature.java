@@ -14,11 +14,11 @@ import com.mojang.brigadier.tree.CommandNode;
 import com.mojang.brigadier.tree.RootCommandNode;
 import com.wynntils.core.components.Managers;
 import com.wynntils.core.components.Models;
-import com.wynntils.core.config.Category;
-import com.wynntils.core.config.Config;
-import com.wynntils.core.config.ConfigCategory;
-import com.wynntils.core.config.RegisterConfig;
 import com.wynntils.core.consumers.features.Feature;
+import com.wynntils.core.persisted.Persisted;
+import com.wynntils.core.persisted.config.Category;
+import com.wynntils.core.persisted.config.Config;
+import com.wynntils.core.persisted.config.ConfigCategory;
 import com.wynntils.mc.event.CommandsAddedEvent;
 import com.wynntils.utils.mc.McUtils;
 import net.minecraft.commands.CommandSourceStack;
@@ -45,10 +45,10 @@ public class AddCommandExpansionFeature extends Feature {
             (context, builder) -> SharedSuggestionProvider.suggest(
                     Models.Party.getPartyMembers().stream().filter(p -> !p.equals(McUtils.playerName())), builder);
 
-    @RegisterConfig
+    @Persisted
     public final Config<Boolean> includeDeprecatedCommands = new Config<>(false);
 
-    @RegisterConfig
+    @Persisted
     public final Config<AliasCommandLevel> includeAliases = new Config<>(AliasCommandLevel.SHORT_FORMS);
 
     @SubscribeEvent

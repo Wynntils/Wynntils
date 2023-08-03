@@ -18,7 +18,7 @@ import com.google.gson.stream.JsonToken;
 import com.google.gson.stream.JsonWriter;
 import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.components.Manager;
-import com.wynntils.core.config.NullableConfig;
+import com.wynntils.core.persisted.config.NullableConfig;
 import com.wynntils.utils.EnumUtils;
 import com.wynntils.utils.FileUtils;
 import com.wynntils.utils.colors.CustomColor;
@@ -40,7 +40,7 @@ import org.apache.commons.lang3.RandomStringUtils;
 public final class JsonManager extends Manager {
     public static final Gson GSON = new GsonBuilder()
             .registerTypeAdapter(CustomColor.class, new CustomColor.CustomColorSerializer())
-            .registerTypeAdapterFactory(new EnumTypeAdapterFactory())
+            .registerTypeAdapterFactory(new EnumTypeAdapterFactory<>())
             .enableComplexMapKeySerialization()
             .setPrettyPrinting()
             .serializeNulls()
@@ -55,7 +55,7 @@ public final class JsonManager extends Manager {
         return JsonTypeWrapper.wrap(genericType.getActualTypeArguments()[0]);
     }
 
-    public Object deepCopy(Object value, Type fieldType) {
+    public <T> T deepCopy(T value, Type fieldType) {
         return GSON.fromJson(GSON.toJson(value), fieldType);
     }
 
@@ -130,21 +130,21 @@ public final class JsonManager extends Manager {
         FileUtils.deleteFile(jsonFile);
     }
 
-    public static final class EnumTypeAdapterFactory implements TypeAdapterFactory {
+    public static final class EnumTypeAdapterFactory<E extends Enum<E>> implements TypeAdapterFactory {
         @Override
         public <T> TypeAdapter<T> create(Gson gson, TypeToken<T> type) {
             if (!type.getRawType().isEnum()) return null;
 
-            Class<? extends Enum<?>> enumClazz = (Class<? extends Enum<?>>) type.getRawType();
-            return new EnumTypeAdapter<>(enumClazz);
+            Class<E> enumClazz = (Class<E>) type.getRawType();
+            return (TypeAdapter<T>) new EnumTypeAdapter<>(enumClazz);
         }
     }
 
-    private static final class EnumTypeAdapter<T> extends TypeAdapter<T> {
-        private final Class<? extends Enum<?>> enumClazz;
+    private static final class EnumTypeAdapter<T extends Enum<T>> extends TypeAdapter<T> {
+        private final Class<T> enumClazz;
         private final boolean nullAllowed;
 
-        private EnumTypeAdapter(Class<? extends Enum<?>> enumClazz) {
+        private EnumTypeAdapter(Class<T> enumClazz) {
             this.enumClazz = enumClazz;
             nullAllowed = NullableConfig.class.isAssignableFrom(enumClazz);
         }
@@ -166,13 +166,13 @@ public final class JsonManager extends Manager {
             if (in.peek() == JsonToken.STRING) {
                 String jsonString = in.nextString();
 
-                Enum<?> value = EnumUtils.fromJsonFormat(enumClazz, jsonString);
+                T value = EnumUtils.fromJsonFormat(enumClazz, jsonString);
                 if (value == null) {
                     WynntilsMod.warn("Illegal enum value: " + jsonString + " for type " + enumClazz.getName());
                     return replacement();
                 }
 
-                return (T) value;
+                return value;
             } else if (in.peek() == JsonToken.NULL) {
                 in.nextNull();
 
