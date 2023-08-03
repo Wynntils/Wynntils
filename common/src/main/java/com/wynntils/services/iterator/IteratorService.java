@@ -7,6 +7,7 @@ package com.wynntils.services.iterator;
 import com.wynntils.core.components.Service;
 import com.wynntils.mc.event.TickEvent;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -24,7 +25,7 @@ public class IteratorService extends Service {
         List<Integer> toRemove = new ArrayList<>();
         iteratorMap.forEach((id, iterator) -> {
             if (iterator.getCurrentTicks() >= iterator.getTicksPerIncrement()) {
-                if (iterator.getCurrentIndex() >= iterator.getCharacters().length - 1) {
+                if (iterator.getCurrentIndex() >= iterator.getStringGroups().size() - 1) {
                     toRemove.add(id);
                 } else {
                     iterator.setCurrentIndex(iterator.getCurrentIndex() + 1);
@@ -47,7 +48,7 @@ public class IteratorService extends Service {
         if (!iteratorMap.containsKey(hashCode)) {
             createCounter(characters, ticksPerIncrement);
         }
-        return iteratorMap.get(hashCode).getCurrentCharacter();
+        return iteratorMap.get(hashCode).getCurrentString();
     }
 
     private void createCounter(String characters, Integer ticksPerIncrement) {
@@ -55,24 +56,41 @@ public class IteratorService extends Service {
     }
 
     private final class Iterator {
-        private final char[] characters;
+        private final List<String> stringGroups = new ArrayList<>();
         private Integer currentIndex;
         private final Integer ticksPerIncrement;
         private Integer currentTicks;
 
         private Iterator(String characters, Integer ticksPerIncrement) {
-            this.characters = characters.toCharArray();
+            int initIndex = 0;
+            char[] chars = characters.toCharArray();
+            while (initIndex < characters.length()) {
+                if (chars[initIndex] == '[') {
+                    int groupIndex = initIndex + 1;
+                    StringBuilder sb = new StringBuilder();
+                    while (chars[groupIndex] != ']' && groupIndex < characters.length()) {
+                        sb.append(chars[groupIndex]);
+                        groupIndex++;
+                    }
+                    initIndex = groupIndex;
+                    this.stringGroups.add(sb.toString());
+                } else {
+                    this.stringGroups.add(String.valueOf(chars[initIndex]));
+                }
+                initIndex++;
+            }
+
             this.currentIndex = 0;
             this.ticksPerIncrement = ticksPerIncrement;
             this.currentTicks = 0;
         }
 
-        public String getCurrentCharacter() {
-            return characters.length == 0 ? "" : String.valueOf(characters[currentIndex]);
+        public String getCurrentString() {
+            return stringGroups.isEmpty() ? "" : stringGroups.get(currentIndex);
         }
 
-        public char[] getCharacters() {
-            return characters.clone();
+        public List<String> getStringGroups() {
+            return Collections.unmodifiableList(stringGroups);
         }
 
         public Integer getCurrentIndex() {
