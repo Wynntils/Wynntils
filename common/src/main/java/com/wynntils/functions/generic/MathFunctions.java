@@ -240,21 +240,16 @@ public final class MathFunctions {
     public static class CounterFunction extends GenericFunction<Integer> {
         @Override
         public Integer getValue(FunctionArguments arguments) {
-            int max = arguments.getArgument("max").getIntegerValue();
-            int ticks = arguments.getArgument("ticks").getIntegerValue();
-            String id = arguments.getArgument("id").getStringValue();
-            if (!Services.Counter.counterExists(id)) {
-                Services.Counter.createCounter(max, ticks, id);
-            }
-            return Services.Counter.getCounterValue(id);
+            int max = arguments.getArgument("resetAfter").getIntegerValue();
+            int ticks = arguments.getArgument("ticksPerIncrement").getIntegerValue();
+            return Services.Counter.getCounterValue(max, ticks);
         }
 
         @Override
         protected FunctionArguments.RequiredArgumentBuilder getRequiredArgumentsBuilder() {
             return new FunctionArguments.RequiredArgumentBuilder(List.of(
-                    new FunctionArguments.Argument<>("max", Integer.class, null),
-                    new FunctionArguments.Argument<>("ticks", Integer.class, null),
-                    new FunctionArguments.Argument<>("id", String.class, null)));
+                    new FunctionArguments.Argument<>("resetAfter", Integer.class, null),
+                    new FunctionArguments.Argument<>("ticksPerIncrement", Integer.class, null)));
         }
     }
 }

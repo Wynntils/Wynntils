@@ -4,12 +4,14 @@ import com.wynntils.core.components.Service;
 import com.wynntils.mc.event.TickEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 public class CounterService extends Service {
-    private final Map<String, Counter> counterMap = new HashMap<>();
+    private final Map<Integer, Counter> counterMap = new HashMap<>();
 
     public CounterService() {
         super(List.of());
@@ -17,63 +19,70 @@ public class CounterService extends Service {
 
     @SubscribeEvent
     public void onTick(TickEvent e) {
+        List<Integer> toRemove = new ArrayList<>();
         counterMap.forEach((id, counter) -> {
-            if (counter.getCurrentTicks() >= counter.getMaxTicks()) {
-                if (counter.getCurrent() >= counter.getMax()) {
-                    counter.setCurrent(0);
+            if (counter.getCurrentTicks() >= counter.getTicksPerIncrement()) {
+                if (counter.getCurrentValue() >= counter.getResetAfter()) {
+                    toRemove.add(getHashCode(counter.getResetAfter(), counter.getTicksPerIncrement()));
                 } else {
-                    counter.setCurrent(counter.getCurrent() + 1);
+                    counter.setCurrentValue(counter.getCurrentValue() + 1);
                 }
                 counter.setCurrentTicks(0);
             } else {
                 counter.setCurrentTicks(counter.getCurrentTicks() + 1);
             }
         });
+        toRemove.forEach(counterMap::remove);
+        toRemove.clear();
     }
 
-    public Integer getCounterValue(String id) {
-        return counterMap.get(id).getCurrent();
+    private int getHashCode(Integer resetAfter, Integer ticksPerIncrement) {
+        return (resetAfter + "" + ticksPerIncrement).hashCode();
     }
 
-    public boolean counterExists(String id) {
-        return counterMap.containsKey(id);
+    public Integer getCounterValue(Integer resetAfter, Integer ticksPerIncrement) {
+        int hashCode = getHashCode(resetAfter, ticksPerIncrement);
+        if (!counterMap.containsKey(hashCode)) {
+            createCounter(resetAfter, ticksPerIncrement);
+        }
+        return counterMap.get(hashCode).getCurrentValue();
     }
 
-    public void createCounter(Integer max, Integer maxTicks, String id) {
-        counterMap.put(id, new Counter(max, maxTicks));
+    private void createCounter(Integer resetAfter, Integer ticksPerIncrement) {
+        counterMap.put(getHashCode(resetAfter, ticksPerIncrement), new Counter(resetAfter, ticksPerIncrement));
     }
 
     private final class Counter {
-        private final Integer max;
-        private Integer current;
-        private final Integer maxTicks;
+        private final Integer resetAfter;
+        private Integer currentValue;
+        private final Integer ticksPerIncrement;
         private Integer currentTicks;
 
-        private Counter(Integer max, Integer maxTicks) {
-            this.max = max;
-            this.current = 0;
-            this.maxTicks = maxTicks;
+        private Counter(Integer resetAfter, Integer ticksPerIncrement) {
+            this.resetAfter = resetAfter;
+            this.currentValue = 0;
+            this.ticksPerIncrement = ticksPerIncrement;
             this.currentTicks = 0;
         }
 
-        public Integer getMax() {
-            return max;
+        public Integer getResetAfter() {
+            return resetAfter;
         }
 
-        public Integer getCurrent() {
-            return current;
+        public Integer getCurrentValue() {
+            return currentValue;
         }
 
-        public Integer getMaxTicks() {
-            return maxTicks;
+        public Integer getTicksPerIncrement() {
+            return ticksPerIncrement;
         }
 
         public Integer getCurrentTicks() {
             return currentTicks;
         }
 
-        public void setCurrent(Integer current) {
-            this.current = current;
+        public void setCurrentValue(Integer currentValue) {
+            this.currentValue = currentValue;
         }
 
         public void setCurrentTicks(Integer currentTicks) {
