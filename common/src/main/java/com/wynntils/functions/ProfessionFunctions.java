@@ -36,12 +36,12 @@ public class ProfessionFunctions {
         }
     }
 
-    public static class ProfessionPercentageFunction extends Function<Double> {
+    public static class ProfessionPercentageFunction extends Function<Float> {
         @Override
-        public Double getValue(FunctionArguments arguments) {
+        public Float getValue(FunctionArguments arguments) {
             ProfessionType professionType = ProfessionType.fromString(
                     arguments.getArgument("profession").getStringValue());
-            if (professionType == null) return -1.0;
+            if (professionType == null) return -1.0f;
 
             return Models.Profession.getProgress(professionType);
         }
