@@ -1274,7 +1274,7 @@
   "function.wynntils.generic.integer.argument.value": "Value",
   "function.wynntils.generic.integer.description": "Converts any number type to an integer",
   "function.wynntils.generic.integer.name": "Integer",
-  "function.wynntils.generic.iterator.argument.characters": "A string with the characters to iterate over",
+  "function.wynntils.generic.iterator.argument.characters": "A string with the characters to iterate over. Use [ ] to group characters together",
   "function.wynntils.generic.iterator.argument.ticksPerIncrement": "The number of ticks to count before moving to the next character",
   "function.wynntils.generic.iterator.description": "An iterator that returns the next character every time the specified number of ticks passes",
   "function.wynntils.generic.iterator.name": "Iterator",
