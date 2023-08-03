@@ -88,11 +88,6 @@ public class LootrunModel extends Model {
 
     private static final float BEACON_REMOVAL_RADIUS = 25f;
 
-    // This value represents how many times a beacon update
-    // needs to point to the same (different) task before it is updated.
-    // Lower values update faster, higher values update slower, but are much more consistent.
-    private static final int BEACON_UPDATE_CHANGE_THRESHOLD = 6;
-
     // Beacon positions are sometimes off by a few blocks
     private static final int BEACON_POSITION_ERROR = 3;
 
@@ -212,45 +207,15 @@ public class LootrunModel extends Model {
         Pair<Double, TaskLocation> oldPrediction = beacons.get(beaconColor);
 
         // No prediction yet, or prediction is worse than the old one
-        if (Objects.equals(oldPrediction.b(), taskPrediction.b()) || taskPrediction.a() > oldPrediction.a()) return;
+        if (Objects.equals(oldPrediction.b(), taskPrediction.b())) return;
 
-        if (taskPrediction.a() == 0) {
-            // This means we are sure about the new prediction, so we can update it
-            beacons.put(beaconColor, taskPrediction);
-            LOOTRUN_BEACON_COMPASS_PROVIDER.reloadTaskMarkers();
-            beaconUpdates.remove(beaconColor);
-            return;
-        }
+        // This means we are sure about the new prediction, so we can update it
+        beacons.put(beaconColor, taskPrediction);
+        LOOTRUN_BEACON_COMPASS_PROVIDER.reloadTaskMarkers();
+        beaconUpdates.remove(beaconColor);
 
-        if (beaconUpdates.containsKey(beaconColor)) {
-            Pair<Integer, TaskLocation> pair = beaconUpdates.get(beaconColor);
-
-            // New prediction is different from the old one. Reset the counter.
-            if (!pair.b().equals(taskPrediction.b())) {
-                beaconUpdates.put(beaconColor, Pair.of(1, taskPrediction.b()));
-                return;
-            }
-
-            // New prediction is the same as the old one. We got the same prediction multiple times in a row.
-            if (pair.a() + 1 >= BEACON_UPDATE_CHANGE_THRESHOLD) {
-                // We could go with the average, or highest prediction score,
-                // but we jsut go with the last one for now.
-                // This could be a really edge-case optimization.
-                beacons.put(beaconColor, taskPrediction);
-                LOOTRUN_BEACON_COMPASS_PROVIDER.reloadTaskMarkers();
-                beaconUpdates.remove(beaconColor);
-
-                McUtils.sendMessageToClient(Component.literal(
-                        "Task location prediction for " + beaconColor + " changed to " + taskPrediction));
-
-                return;
-            }
-
-            // New prediction is the same as the old one, but we haven't reached the threshold yet.
-            beaconUpdates.put(beaconColor, Pair.of(pair.a() + 1, taskPrediction.b()));
-        } else {
-            beaconUpdates.put(beaconColor, Pair.of(1, taskPrediction.b()));
-        }
+        McUtils.sendMessageToClient(
+                Component.literal("Task location prediction for " + beaconColor + " changed to " + taskPrediction));
     }
 
     // When we get close to a beacon, it get's removed.
@@ -422,6 +387,7 @@ public class LootrunModel extends Model {
         double lowestPredictionScore = Double.MAX_VALUE;
         TaskLocation closestTaskLocation = null;
         for (TaskLocation currentTaskLocation : currentTaskLocations) {
+            // FIXME: This needs to be done...
             // Possible optimization:
             // Calculate the prediction score for tasks that are used by other beacons, and if our prediction score
             // is lower than the other beacons, we can override it and calculate a new prediction for the other beacon.
