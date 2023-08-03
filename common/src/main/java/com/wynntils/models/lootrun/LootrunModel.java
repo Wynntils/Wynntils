@@ -372,6 +372,7 @@ public class LootrunModel extends Model {
             TaskPrediction newTaskPrediction = new TaskPrediction(beacon, closestTaskLocation, predictionValue);
 
             // If the prediction is the same, don't update.
+            // FIXME: Prediction might be the same, but the score could be better.
             if (oldPrediction != null
                     && Objects.equals(oldPrediction.taskLocation(), newTaskPrediction.taskLocation())) {
                 return;
