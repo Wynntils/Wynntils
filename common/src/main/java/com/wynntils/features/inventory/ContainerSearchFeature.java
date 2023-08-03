@@ -32,6 +32,7 @@ import java.util.Locale;
 import java.util.Optional;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
+import net.minecraft.world.Container;
 import net.minecraft.world.inventory.ChestMenu;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
@@ -220,7 +221,16 @@ public class ContainerSearchFeature extends Feature {
     private void matchItems(String searchStr, ChestMenu chestMenu) {
         String search = searchStr.toLowerCase(Locale.ROOT);
 
-        currentSearchableContainerType.getSearchableItems(chestMenu).forEach(itemStack -> {
+        Container container = chestMenu.getContainer();
+        for (int i = 0; i < container.getContainerSize(); i++) {
+            if ((currentSearchableContainerType == SearchableContainerType.GUILD_BANK
+                            || currentSearchableContainerType == SearchableContainerType.MEMBER_LIST)
+                    ? i % 9 < 2
+                    : i % 9 > 6) {
+                continue;
+            }
+            ItemStack itemStack = container.getItem(i);
+
             Optional<WynnItem> wynnItemOpt = Models.Item.getWynnItem(itemStack);
             if (wynnItemOpt.isEmpty()) return;
 
@@ -233,7 +243,7 @@ public class ContainerSearchFeature extends Feature {
             if (filtered) {
                 autoSearching = false;
             }
-        });
+        }
     }
 
     private void forceUpdateSearch() {
