@@ -218,7 +218,7 @@ public class LootrunModel extends Model {
                 : VectorUtils.distanceIgnoringY(
                         closestBeacon.position(), McUtils.mc().player.position());
         if (newBeaconDistanceToPlayer < BEACON_REMOVAL_RADIUS
-                && newBeaconDistanceToPlayer < oldBeaconDistanceToPlayer) {
+                && newBeaconDistanceToPlayer <= oldBeaconDistanceToPlayer) {
             setClosestBeacon(event.getBeacon());
         } else {
             // Note: If we get more accurate predictions, we don't need to remove if we are close.
