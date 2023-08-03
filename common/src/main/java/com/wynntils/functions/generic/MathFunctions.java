@@ -4,13 +4,8 @@
  */
 package com.wynntils.functions.generic;
 
-import com.wynntils.core.components.Services;
 import com.wynntils.core.consumers.functions.GenericFunction;
 import com.wynntils.core.consumers.functions.arguments.FunctionArguments;
-import com.wynntils.mc.event.TickEvent;
-import com.wynntils.services.counter.CounterService;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
-
 import java.util.List;
 
 public final class MathFunctions {
@@ -234,22 +229,6 @@ public final class MathFunctions {
         @Override
         public List<String> getAliases() {
             return List.of("rand");
-        }
-    }
-
-    public static class CounterFunction extends GenericFunction<Integer> {
-        @Override
-        public Integer getValue(FunctionArguments arguments) {
-            int max = arguments.getArgument("resetAfter").getIntegerValue();
-            int ticks = arguments.getArgument("ticksPerIncrement").getIntegerValue();
-            return Services.Counter.getCounterValue(max, ticks);
-        }
-
-        @Override
-        protected FunctionArguments.RequiredArgumentBuilder getRequiredArgumentsBuilder() {
-            return new FunctionArguments.RequiredArgumentBuilder(List.of(
-                    new FunctionArguments.Argument<>("resetAfter", Integer.class, null),
-                    new FunctionArguments.Argument<>("ticksPerIncrement", Integer.class, null)));
         }
     }
 }

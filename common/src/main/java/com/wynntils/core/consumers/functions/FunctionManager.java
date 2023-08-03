@@ -236,10 +236,10 @@ public final class FunctionManager extends Manager {
             resultBuilder.append(c);
         }
 
-        // Parse color codes before calculating the templates
-        String escapedTemplate = parseColorCodes(resultBuilder.toString());
+        // Calculate templates first to allow for color codes in templates
+        String calculatedString = doFormat(resultBuilder.toString());
 
-        String calculatedString = doFormat(escapedTemplate);
+        calculatedString = parseColorCodes(calculatedString);
 
         // Turn escaped {} (`\[\` and `\]\`) back into real {}
         calculatedString = calculatedString.replace("\\[\\", "{");
@@ -343,7 +343,6 @@ public final class FunctionManager extends Manager {
         registerFunction(new LogicFunctions.OrFunction());
 
         registerFunction(new MathFunctions.AddFunction());
-        registerFunction(new MathFunctions.CounterFunction());
         registerFunction(new MathFunctions.DivideFunction());
         registerFunction(new MathFunctions.IntegerFunction());
         registerFunction(new MathFunctions.MaxFunction());
@@ -360,6 +359,7 @@ public final class FunctionManager extends Manager {
         registerFunction(new StringFunctions.ConcatFunction());
         registerFunction(new StringFunctions.FormatCappedFunction());
         registerFunction(new StringFunctions.FormatFunction());
+        registerFunction(new StringFunctions.IteratorFunction());
         registerFunction(new StringFunctions.LeadingZerosFunction());
         registerFunction(new StringFunctions.ParseDoubleFunction());
         registerFunction(new StringFunctions.ParseIntegerFunction());

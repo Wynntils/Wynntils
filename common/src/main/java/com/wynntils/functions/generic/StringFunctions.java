@@ -4,6 +4,7 @@
  */
 package com.wynntils.functions.generic;
 
+import com.wynntils.core.components.Services;
 import com.wynntils.core.consumers.functions.GenericFunction;
 import com.wynntils.core.consumers.functions.arguments.FunctionArguments;
 import com.wynntils.utils.StringUtils;
@@ -280,6 +281,22 @@ public class StringFunctions {
                     new FunctionArguments.Argument<>("source", String.class, null),
                     new FunctionArguments.Argument<>("regex", String.class, null),
                     new FunctionArguments.Argument<>("replacement", String.class, null)));
+        }
+    }
+
+    public static class IteratorFunction extends GenericFunction<String> {
+        @Override
+        public String getValue(FunctionArguments arguments) {
+            String characters = arguments.getArgument("characters").getStringValue();
+            int ticks = arguments.getArgument("ticksPerIncrement").getIntegerValue();
+            return Services.Iterator.getIteratorValue(characters, ticks);
+        }
+
+        @Override
+        protected FunctionArguments.RequiredArgumentBuilder getRequiredArgumentsBuilder() {
+            return new FunctionArguments.RequiredArgumentBuilder(List.of(
+                    new FunctionArguments.Argument<>("characters", String.class, null),
+                    new FunctionArguments.Argument<>("ticksPerIncrement", Integer.class, null)));
         }
     }
 }
