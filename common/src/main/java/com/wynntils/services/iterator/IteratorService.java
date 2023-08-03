@@ -26,7 +26,7 @@ public class IteratorService extends Service {
         iteratorMap.forEach((id, iterator) -> {
             if (iterator.getCurrentTicks() >= iterator.getTicksPerIncrement()) {
                 if (iterator.getCurrentIndex() >= iterator.getStringGroups().size() - 1) {
-                    toRemove.add(id);
+                    toRemove.add(id); // This ensures stale iterators are removed and do not cause memory leaks
                 } else {
                     iterator.setCurrentIndex(iterator.getCurrentIndex() + 1);
                 }
