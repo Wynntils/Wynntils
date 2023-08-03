@@ -11,9 +11,7 @@ public record TaskLocation(Location location, LootrunTaskType taskType) implemen
     @Override
     public int compareTo(TaskLocation taskLocation) {
         return ComparisonChain.start()
-                .compare(location.x(), taskLocation.location.x())
-                .compare(location.y(), taskLocation.location.y())
-                .compare(location.z(), taskLocation.location.z())
+                .compare(location, taskLocation.location)
                 .compare(taskType, taskLocation.taskType)
                 .result();
     }
