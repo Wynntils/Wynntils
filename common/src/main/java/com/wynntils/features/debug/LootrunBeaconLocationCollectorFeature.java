@@ -16,6 +16,7 @@ import com.wynntils.models.lootrun.event.LootrunBeaconSelectedEvent;
 import com.wynntils.models.lootrun.type.LootrunLocation;
 import com.wynntils.models.lootrun.type.LootrunTaskType;
 import com.wynntils.models.lootrun.type.TaskLocation;
+import com.wynntils.utils.mc.type.Location;
 import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
@@ -44,7 +45,9 @@ public class LootrunBeaconLocationCollectorFeature extends Feature {
         if (currentLocationOpt.isEmpty()) return;
 
         tasks.get().putIfAbsent(currentLocationOpt.get(), new TreeSet<>());
-        tasks.get().get(currentLocationOpt.get()).add(new TaskLocation(beacon.location(), currentTaskTypeOpt.get()));
+        tasks.get()
+                .get(currentLocationOpt.get())
+                .add(new TaskLocation(Location.containing(beacon.position()), currentTaskTypeOpt.get()));
         tasks.touched();
     }
 }

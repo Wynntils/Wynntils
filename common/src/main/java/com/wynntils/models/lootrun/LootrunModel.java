@@ -51,7 +51,7 @@ import java.util.regex.Pattern;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.Entity;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
-import org.joml.Vector2i;
+import org.joml.Vector2d;
 
 /** A model dedicated to lootruns (the Wynncraft lootrun runs).
  * Don't confuse this with {@link com.wynntils.services.lootrunpaths.LootrunPathsService}.
@@ -212,12 +212,11 @@ public class LootrunModel extends Model {
         Beacon closestBeacon = getClosestBeacon();
 
         double newBeaconDistanceToPlayer = VectorUtils.distanceIgnoringY(
-                beacon.location().toPosition(), McUtils.mc().player.position());
+                beacon.position(), McUtils.mc().player.position());
         double oldBeaconDistanceToPlayer = closestBeacon == null
                 ? Double.MAX_VALUE
                 : VectorUtils.distanceIgnoringY(
-                        closestBeacon.location().toPosition(),
-                        McUtils.mc().player.position());
+                        closestBeacon.position(), McUtils.mc().player.position());
         if (newBeaconDistanceToPlayer < BEACON_REMOVAL_RADIUS
                 && newBeaconDistanceToPlayer < oldBeaconDistanceToPlayer) {
             setClosestBeacon(event.getBeacon());
@@ -324,7 +323,7 @@ public class LootrunModel extends Model {
         if (oldState == LootrunningState.CHOOSING_BEACON
                 && newState == LootrunningState.IN_TASK
                 && closestBeacon != null) {
-            WynntilsMod.info("Selected a " + closestBeacon.color() + " beacon at " + closestBeacon.location());
+            WynntilsMod.info("Selected a " + closestBeacon.color() + " beacon at " + closestBeacon.position());
             selectedBeacons.put(closestBeacon.color(), selectedBeacons.getOrDefault(closestBeacon.color(), 0) + 1);
             selectedBeaconsStorage.touched();
             WynntilsMod.postEvent(new LootrunBeaconSelectedEvent(closestBeacon));
@@ -390,7 +389,7 @@ public class LootrunModel extends Model {
                 if (usedTaskPrediction.predictionScore() < newTaskPrediction.predictionScore()) {
                     beacons.put(beacon.color(), newTaskPrediction);
                     McUtils.sendMessageToClient(Component.literal("Predicted " + beacon.color() + " beacon at "
-                            + beacon.location() + " to be closer to " + closestTaskLocation + " than "
+                            + beacon.position() + " to be closer to " + closestTaskLocation + " than "
                             + usedTaskPrediction.beacon() + " (" + usedTaskPrediction.predictionScore() + " < "
                             + newTaskPrediction.predictionScore() + ")"));
 
@@ -415,18 +414,21 @@ public class LootrunModel extends Model {
 
     private Pair<Double, TaskLocation> calculatePredictionScore(Beacon beacon, TaskLocation currentTaskLocation) {
         // Player Location
-        Vector2i playerPosition = new Vector2i((int) McUtils.player().position().x(), (int)
-                McUtils.player().position().z());
+        Vector2d playerPosition = new Vector2d(
+                McUtils.player().position().x(), McUtils.player().position().z());
         // Task Location
-        Vector2i taskLocationPosition = new Vector2i(
+        Vector2d taskLocationPosition = new Vector2d(
                 currentTaskLocation.location().x(),
                 currentTaskLocation.location().z());
         // Wynn Beacon
-        Vector2i beaconPosition =
-                new Vector2i(beacon.location().x(), beacon.location().z());
+        Vector2d beaconPosition =
+                new Vector2d(beacon.position().x(), beacon.position().z());
 
         // Short circuit if the beacon matches a task location.
-        if (taskLocationPosition.distance(beaconPosition) < BEACON_POSITION_ERROR) {
+        // Wynn beacons are always at the center of a block, if they are in their "final" position.
+        if (beaconPosition.x() % 1 == 0.5d
+                && beaconPosition.y() % 1 == 0.5d
+                && taskLocationPosition.distance(beaconPosition) < BEACON_POSITION_ERROR) {
             return Pair.of(0d, currentTaskLocation);
         }
 

@@ -12,7 +12,7 @@ import com.wynntils.mc.event.TeleportEntityEvent;
 import com.wynntils.models.beacons.event.BeaconEvent;
 import com.wynntils.models.beacons.type.Beacon;
 import com.wynntils.models.beacons.type.BeaconColor;
-import com.wynntils.utils.mc.type.Location;
+import com.wynntils.utils.mc.PosUtils;
 import com.wynntils.utils.type.TimedSet;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -45,13 +45,13 @@ public class BeaconModel extends Model {
         if (event.getType() != EntityType.ARMOR_STAND) return;
 
         Entity entity = event.getEntity();
-        Location location = Location.containing(entity.position());
+        Position position = entity.position();
 
-        if (isDuplicateBeacon(location)) return;
+        if (isDuplicateBeacon(position)) return;
 
-        UnverifiedBeacon unverifiedBeacon = getUnverifiedBeaconAt(location);
+        UnverifiedBeacon unverifiedBeacon = getUnverifiedBeaconAt(position);
         if (unverifiedBeacon == null) {
-            unverifiedBeacons.put(new UnverifiedBeacon(location, entity));
+            unverifiedBeacons.put(new UnverifiedBeacon(position, entity));
             return;
         }
 
@@ -66,13 +66,13 @@ public class BeaconModel extends Model {
             BeaconColor beaconColor = getBeaconColor(unverifiedBeacon);
 
             if (beaconColor == null) {
-                WynntilsMod.warn("Could not determine beacon color at " + location + " for entities "
+                WynntilsMod.warn("Could not determine beacon color at " + position + " for entities "
                         + unverifiedBeacon.getEntities());
                 unverifiedBeacons.remove(unverifiedBeacon);
                 return;
             }
 
-            Beacon verifiedBeacon = new Beacon(unverifiedBeacon.getLocation(), beaconColor);
+            Beacon verifiedBeacon = new Beacon(unverifiedBeacon.getPosition(), beaconColor);
             int baseEntityId = unverifiedBeacon.getEntities().get(0).getId();
             verifiedBeacons.put(baseEntityId, verifiedBeacon);
             WynntilsMod.postEvent(new BeaconEvent.Added(
@@ -87,7 +87,7 @@ public class BeaconModel extends Model {
         Beacon movedBeacon = verifiedBeacons.get(event.getEntity().getId());
         if (movedBeacon == null) return;
 
-        Beacon newBeacon = new Beacon(Location.containing(event.getNewPosition()), movedBeacon.color());
+        Beacon newBeacon = new Beacon(event.getNewPosition(), movedBeacon.color());
         // Replace the old map entry
         verifiedBeacons.put(event.getEntity().getId(), newBeacon);
         WynntilsMod.postEvent(new BeaconEvent.Moved(movedBeacon, newBeacon));
@@ -102,14 +102,14 @@ public class BeaconModel extends Model {
         });
     }
 
-    private boolean isDuplicateBeacon(Location location) {
+    private boolean isDuplicateBeacon(Position position) {
         return verifiedBeacons.values().stream()
-                .anyMatch(verifiedBeacon -> location.equalsIgnoringY(verifiedBeacon.location()));
+                .anyMatch(verifiedBeacon -> PosUtils.equalsIgnoringY(position, verifiedBeacon.position()));
     }
 
-    private UnverifiedBeacon getUnverifiedBeaconAt(Location location) {
+    private UnverifiedBeacon getUnverifiedBeaconAt(Position position) {
         return unverifiedBeacons.stream()
-                .filter(unverifiedBeacon -> location.equalsIgnoringY(unverifiedBeacon.getLocation()))
+                .filter(unverifiedBeacon -> PosUtils.equalsIgnoringY(position, unverifiedBeacon.getPosition()))
                 .findFirst()
                 .orElse(null);
     }
@@ -129,16 +129,16 @@ public class BeaconModel extends Model {
     private static final class UnverifiedBeacon {
         private static final float POSITION_OFFSET_Y = 7.5f;
 
-        private final Location location;
+        private final Position position;
         private final List<Entity> entities = new ArrayList<>();
 
-        private UnverifiedBeacon(Location location, Entity entity) {
-            this.location = location;
+        private UnverifiedBeacon(Position position, Entity entity) {
+            this.position = position;
             entities.add(entity);
         }
 
-        public Location getLocation() {
-            return location;
+        public Position getPosition() {
+            return position;
         }
 
         public List<Entity> getEntities() {
