@@ -1,9 +1,21 @@
+## [0.0.3-alpha.270](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.269...v0.0.3-alpha.270) (2023-08-03)
+
+
+### Bug Fixes
+
+* Deprecation warning for archivesBaseName in Gradle 9.0 ([#1930](https://github.com/Wynntils/Artemis/issues/1930)) ([b3505a0](https://github.com/Wynntils/Artemis/commit/b3505a0efd681bc27301440087e5d4e4f6737d31))
+
 ## [0.0.3-alpha.269](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.268...v0.0.3-alpha.269) (2023-08-02)
 
 
 ### New Features
 
 * Transcribe into and from Gavellian and Wynnic ([#1901](https://github.com/Wynntils/Artemis/issues/1901)) ([457654f](https://github.com/Wynntils/Artemis/commit/457654f53c72f2edb944662828860b11ed0f9d5c))
+
+
+### Miscellaneous Chores
+
+* **release:** v0.0.3-alpha.269 [skip ci] ([6afc16e](https://github.com/Wynntils/Artemis/commit/6afc16e983167e02e4bff56eea6ec07403f323cd))
 
 ## [0.0.3-alpha.268](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.267...v0.0.3-alpha.268) (2023-08-02)
 
@@ -40,16 +52,4 @@
 ### Code Refactoring
 
 * Move config and storage packages to persisted ([#1928](https://github.com/Wynntils/Artemis/issues/1928)) ([be60a30](https://github.com/Wynntils/Artemis/commit/be60a305e16c70a22522661b0b3a514892e54b08))
-
-## [0.0.3-alpha.265](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.264...v0.0.3-alpha.265) (2023-08-02)
-
-
-### Miscellaneous Chores
-
-* **release:** v0.0.3-alpha.265 [skip ci] ([10081cf](https://github.com/Wynntils/Artemis/commit/10081cf6c60cf8fac9bdbffc216ca85fcb527520))
-
-
-### Code Refactoring
-
-* Bring Config and Storage under a single Persisted roof ([#1926](https://github.com/Wynntils/Artemis/issues/1926)) ([fcb3428](https://github.com/Wynntils/Artemis/commit/fcb3428defb547c025da704fa1925b1b99c98809))
 
