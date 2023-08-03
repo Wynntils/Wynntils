@@ -8,12 +8,11 @@ import com.wynntils.core.components.Managers;
 import com.wynntils.core.components.Models;
 import com.wynntils.features.combat.CustomLootrunBeaconsFeature;
 import com.wynntils.models.beacons.type.BeaconColor;
-import com.wynntils.models.lootrun.type.TaskLocation;
+import com.wynntils.models.lootrun.type.TaskPrediction;
 import com.wynntils.models.marker.type.MarkerInfo;
 import com.wynntils.models.marker.type.MarkerProvider;
 import com.wynntils.models.marker.type.StaticLocationSupplier;
 import com.wynntils.utils.colors.CommonColors;
-import com.wynntils.utils.type.Pair;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -25,11 +24,11 @@ public class LootrunBeaconMarkerProvider implements MarkerProvider {
     public void reloadTaskMarkers() {
         taskMarkers.clear();
 
-        for (Map.Entry<BeaconColor, Pair<Double, TaskLocation>> entry :
+        for (Map.Entry<BeaconColor, TaskPrediction> entry :
                 Models.Lootrun.getBeacons().entrySet()) {
             taskMarkers.add(new MarkerInfo(
-                    new StaticLocationSupplier(entry.getValue().b().location()),
-                    entry.getValue().b().taskType().getTexture(),
+                    new StaticLocationSupplier(entry.getValue().taskLocation().location()),
+                    entry.getValue().taskLocation().taskType().getTexture(),
                     entry.getKey().getColor(),
                     CommonColors.WHITE));
         }
