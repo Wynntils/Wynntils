@@ -39,7 +39,7 @@ public class StatusEffectsOverlay extends Overlay {
     public final Config<Float> fontScale = new Config<>(1.0f);
 
     @Persisted
-    public final Config<StackingBehaviour> effectsStackBehaviour = new Config<>(StackingBehaviour.MULTIPLIER);
+    public final Config<StackingBehaviour> effectsStackBehaviour = new Config<>(StackingBehaviour.GROUP);
 
     @Persisted
     public final Config<Boolean> sortEffects = new Config<>(true);
@@ -193,8 +193,7 @@ public class StatusEffectsOverlay extends Overlay {
                         }
 
                         // Eliminate .0 when the modifier needs trailing decimals. This is the case for powder specials
-                        // on
-                        // armor.
+                        // on armor.
                         String numberString = (Math.round(modifierValue) == modifierValue)
                                 ? String.format("%+d", (long) modifierValue)
                                 : String.format("%+.1f", modifierValue);
@@ -203,7 +202,7 @@ public class StatusEffectsOverlay extends Overlay {
                                 + baseModifier.substring(indexAfterDigits(baseModifier)));
                     }
                 }
-                case MULTIPLIER -> {
+                case GROUP -> {
                     String modifierString = this.effect.getModifier().getString();
 
                     // look for either a - or a +
@@ -286,7 +285,7 @@ public class StatusEffectsOverlay extends Overlay {
 
     private enum StackingBehaviour {
         NONE,
-        MULTIPLIER,
+        GROUP,
         SUM
     }
 }
