@@ -138,16 +138,6 @@ public class StatusEffectsOverlay extends Overlay {
         return textRenderSetting;
     }
 
-    private String getEffectsKey(StatusEffect effect) {
-        if (sumModifiers.get()) {
-            // Stack effects if the name is the same and if the modifier is of the same type (% or raw)
-            return effect.getPrefix().getString()
-                    + effect.getName().getString()
-                    + effect.getModifier().getString().indexOf('%');
-        }
-        return effect.asString().getString();
-    }
-
     private Stream<RenderedStatusEffect> stackEffects(List<StatusEffect> effects) {
         Map<String, RenderedStatusEffect> effectsToRender = new LinkedHashMap<>();
 
@@ -167,6 +157,17 @@ public class StatusEffectsOverlay extends Overlay {
         return effectsToRender.values().stream();
     }
 
+    private String getEffectsKey(StatusEffect effect) {
+        if (sumModifiers.get()) {
+            // Stack effects if the name is the same and if the modifier is of the same type (% or raw)
+            return effect.getPrefix().getString()
+                    + effect.getName().getString()
+                    + effect.getModifier().getString().indexOf('%')
+                    + effect.getDisplayedTime().getString();
+        }
+        return effect.asString().getString();
+    }
+
     private final class RenderedStatusEffect {
         private final StatusEffect effect;
 
@@ -179,20 +180,25 @@ public class StatusEffectsOverlay extends Overlay {
 
         private StyledText getRenderedText() {
             if (this.count == 1) {
+                // Terminate early if there's nothing to do
                 return this.effect.asString();
             }
 
             StyledText modifierText;
 
             if (this.modifierList.size() > 0 && sumModifiers.get()) {
+                // Sum modifiers
                 double modifierValue = 0.0;
                 String baseModifier = this.modifierList.get(0);
                 for (String modifier : modifierList) {
                     modifierValue += extractDoubleFromString(modifier);
                 }
-                String numberString = ((long) modifierValue == modifierValue)
+
+                // Eliminate .0 when the modifier needs trailing decimals. This is the case for powder specials on
+                // armor.
+                String numberString = (Math.round(modifierValue) == modifierValue)
                         ? String.format("%+d", (long) modifierValue)
-                        : String.format("%+f", modifierValue);
+                        : String.format("%+.1f", modifierValue);
                 modifierText = StyledText.fromString(
                         ChatFormatting.GRAY + numberString + baseModifier.substring(indexAfterDigits(baseModifier)));
             } else {
