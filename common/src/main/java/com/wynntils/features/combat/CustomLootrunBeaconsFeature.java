@@ -13,5 +13,5 @@ import com.wynntils.core.persisted.config.ConfigCategory;
 @ConfigCategory(Category.COMBAT)
 public class CustomLootrunBeaconsFeature extends Feature {
     @Persisted
-    public final Config<Boolean> removeOriginalBeacons = new Config<>(false);
+    public final Config<Boolean> removeOriginalBeacons = new Config<>(true);
 }
