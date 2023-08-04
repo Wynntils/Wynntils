@@ -372,9 +372,12 @@ public class LootrunModel extends Model {
             TaskPrediction newTaskPrediction = new TaskPrediction(beacon, closestTaskLocation, predictionValue);
 
             // If the prediction is the same, don't update.
-            // FIXME: Prediction might be the same, but the score could be better.
             if (oldPrediction != null
                     && Objects.equals(oldPrediction.taskLocation(), newTaskPrediction.taskLocation())) {
+                if (newTaskPrediction.predictionScore() < oldPrediction.predictionScore()) {
+                    // The prediction is the same, but the score is better, so update.
+                    beacons.put(beacon.color(), newTaskPrediction);
+                }
                 return;
             }
 
@@ -387,11 +390,11 @@ public class LootrunModel extends Model {
 
                 // We predict that we are closer to the task location than the other beacon.
                 // Overwrite the other beacon's prediction.
-                if (usedTaskPrediction.predictionScore() < newTaskPrediction.predictionScore()) {
+                if (newTaskPrediction.predictionScore() < usedTaskPrediction.predictionScore()) {
                     beacons.put(beacon.color(), newTaskPrediction);
                     McUtils.sendMessageToClient(Component.literal("Predicted " + beacon.color() + " beacon at "
                             + beacon.position() + " to be closer to " + closestTaskLocation + " than "
-                            + usedTaskPrediction.beacon() + " (" + usedTaskPrediction.predictionScore() + " < "
+                            + usedTaskPrediction.beacon() + " (" + usedTaskPrediction.predictionScore() + " > "
                             + newTaskPrediction.predictionScore() + ")"));
 
                     // Update the other beacon's prediction.
