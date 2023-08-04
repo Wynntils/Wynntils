@@ -256,6 +256,7 @@ public class StatusEffectsOverlay extends Overlay {
 
         private double extractDoubleFromString(String string) {
             byte[] s = string.getBytes();
+            int len = string.length();
 
             int start = 0;
             while (!Character.isDigit(s[start]) && s[start] != '-') {
@@ -263,7 +264,7 @@ public class StatusEffectsOverlay extends Overlay {
             }
 
             int end = start;
-            while (Character.isDigit(s[end]) || s[end] == '.') {
+            while (end < len && (Character.isDigit(s[end]) || s[end] == '.')) {
                 end += 1;
             }
             return Double.parseDouble(string.substring(start, end));
@@ -271,14 +272,14 @@ public class StatusEffectsOverlay extends Overlay {
 
         private int indexAfterDigits(String string) {
             byte[] s = string.getBytes();
+            int len = string.length();
             int i = 0;
             while (!Character.isDigit(s[i])) {
                 i += 1;
             }
-            while (Character.isDigit(s[i]) || s[i] == '.') {
+            while ( i < len && (Character.isDigit(s[i]) || s[i] == '.')) {
                 i += 1;
             }
-
             return i;
         }
     }
