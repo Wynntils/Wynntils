@@ -425,6 +425,7 @@ public class LootrunModel extends Model {
                 // Overwrite the other beacon's prediction.
                 if (newTaskPrediction.predictionScore() < usedTaskPrediction.predictionScore()) {
                     beacons.put(beacon.color(), newTaskPrediction);
+                    beacons.remove(usedTaskPrediction.beacon().color());
 
                     // Update the other beacon's prediction.
                     updateTaskLocationPrediction(usedTaskPrediction.beacon());
