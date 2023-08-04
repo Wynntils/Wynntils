@@ -158,4 +158,8 @@ public class ItemSearchWidget extends SearchWidget {
                     .withStyle(ChatFormatting.RED)));
         }
     }
+
+    public SearchQuery getSearchQuery() {
+        return searchQuery;
+    }
 }

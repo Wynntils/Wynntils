@@ -7,6 +7,7 @@ package com.wynntils.screens.base;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.wynntils.core.text.StyledText;
 import com.wynntils.screens.activities.widgets.QuestBookSearchWidget;
+import com.wynntils.screens.base.widgets.SearchWidget;
 import com.wynntils.screens.base.widgets.TextInputBoxWidget;
 import com.wynntils.screens.base.widgets.WynntilsButton;
 import com.wynntils.utils.MathUtils;
@@ -34,7 +35,7 @@ public abstract class WynntilsListScreen<E, B extends WynntilsButton> extends Wy
     protected List<E> elements = new ArrayList<>();
 
     private final List<B> elementButtons = new ArrayList<>();
-    protected final QuestBookSearchWidget searchWidget;
+    protected SearchWidget searchWidget;
     protected Renderable hovered = null;
 
     @Override
