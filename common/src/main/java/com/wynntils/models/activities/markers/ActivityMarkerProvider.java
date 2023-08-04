@@ -29,6 +29,7 @@ public class ActivityMarkerProvider implements MarkerProvider {
                                 new StaticLocationSupplier(spawnLocation),
                                 Texture.QUESTS_BUTTON,
                                 CommonColors.WHITE,
+                                CommonColors.WHITE,
                                 CommonColors.WHITE));
     }
 
@@ -45,6 +46,7 @@ public class ActivityMarkerProvider implements MarkerProvider {
                                 new StaticLocationSupplier(trackedActivityLocation),
                                 Texture.QUESTS_BUTTON,
                                 beaconColor.getColor(),
+                                CommonColors.WHITE,
                                 CommonColors.WHITE));
     }
 
