@@ -24,6 +24,7 @@ import net.minecraft.core.Position;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import org.apache.commons.compress.utils.Lists;
 
@@ -72,7 +73,10 @@ public class BeaconModel extends Model {
                 return;
             }
 
-            Beacon verifiedBeacon = new Beacon(unverifiedBeacon.getPosition(), beaconColor);
+            Position unverifiedBeaconPosition = unverifiedBeacon.getPosition();
+            Beacon verifiedBeacon = new Beacon(
+                    new Vec3(unverifiedBeaconPosition.x(), unverifiedBeaconPosition.y(), unverifiedBeaconPosition.z()),
+                    beaconColor);
             int baseEntityId = unverifiedBeacon.getEntities().get(0).getId();
             verifiedBeacons.put(baseEntityId, verifiedBeacon);
             WynntilsMod.postEvent(new BeaconEvent.Added(
