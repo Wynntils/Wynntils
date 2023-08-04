@@ -1,9 +1,21 @@
+## [0.0.3-alpha.271](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.270...v0.0.3-alpha.271) (2023-08-04)
+
+
+### New Features
+
+* accurately estimate lootrun beacon position ([#1939](https://github.com/Wynntils/Artemis/issues/1939)) ([b2cf985](https://github.com/Wynntils/Artemis/commit/b2cf985663e6a344539c8e6e56ed15d73621262c))
+
 ## [0.0.3-alpha.270](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.269...v0.0.3-alpha.270) (2023-08-03)
 
 
 ### Bug Fixes
 
 * Deprecation warning for archivesBaseName in Gradle 9.0 ([#1930](https://github.com/Wynntils/Artemis/issues/1930)) ([b3505a0](https://github.com/Wynntils/Artemis/commit/b3505a0efd681bc27301440087e5d4e4f6737d31))
+
+
+### Miscellaneous Chores
+
+* **release:** v0.0.3-alpha.270 [skip ci] ([a35eafc](https://github.com/Wynntils/Artemis/commit/a35eafc0bde9250f0409cf3a29a67fc1c89116cb))
 
 ## [0.0.3-alpha.269](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.268...v0.0.3-alpha.269) (2023-08-02)
 
@@ -40,16 +52,4 @@
 ### Code Refactoring
 
 * Add McUtils.sendChat ([#1929](https://github.com/Wynntils/Artemis/issues/1929)) ([54ca001](https://github.com/Wynntils/Artemis/commit/54ca001f28b7e5aef8250da24173d00bb4daa9ab))
-
-## [0.0.3-alpha.266](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.265...v0.0.3-alpha.266) (2023-08-02)
-
-
-### Miscellaneous Chores
-
-* **release:** v0.0.3-alpha.266 [skip ci] ([b33813e](https://github.com/Wynntils/Artemis/commit/b33813e53fc69b7f6a95f8e78d4faa552de8c564))
-
-
-### Code Refactoring
-
-* Move config and storage packages to persisted ([#1928](https://github.com/Wynntils/Artemis/issues/1928)) ([be60a30](https://github.com/Wynntils/Artemis/commit/be60a305e16c70a22522661b0b3a514892e54b08))
 
