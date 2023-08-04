@@ -37,4 +37,10 @@ public final class PosUtils {
     public static boolean equalsIgnoringY(Position pos1, Position pos2) {
         return pos1.x() == pos2.x() && pos1.z() == pos2.z();
     }
+
+    public static boolean closerThanIgnoringY(Position pos1, Position pos2, double distance) {
+        double xD = pos1.x() - pos2.x();
+        double zD = pos1.z() - pos2.z();
+        return xD * xD + zD * zD < distance * distance;
+    }
 }

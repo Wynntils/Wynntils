@@ -5,6 +5,8 @@
 package com.wynntils.models.beacons.event;
 
 import com.wynntils.models.beacons.type.Beacon;
+import java.util.List;
+import net.minecraft.world.entity.Entity;
 import net.minecraftforge.eventbus.api.Event;
 
 public abstract class BeaconEvent extends Event {
@@ -19,14 +21,37 @@ public abstract class BeaconEvent extends Event {
     }
 
     public static class Added extends BeaconEvent {
-        public Added(Beacon beacon) {
-            super(beacon);
+        private final List<Entity> entities;
+
+        public Added(Beacon verifiedBeacon, List<Entity> entities) {
+            super(verifiedBeacon);
+            this.entities = entities;
+        }
+
+        public List<Entity> getEntities() {
+            return entities;
         }
     }
 
     public static class Moved extends BeaconEvent {
+        private final Beacon newBeacon;
+
         public Moved(Beacon oldBeacon, Beacon newBeacon) {
             super(oldBeacon);
+            this.newBeacon = newBeacon;
+        }
+
+        @Override
+        public Beacon getBeacon() {
+            throw new UnsupportedOperationException("Use getOldBeacon() or getNewBeacon() instead");
+        }
+
+        public Beacon getOldBeacon() {
+            return beacon;
+        }
+
+        public Beacon getNewBeacon() {
+            return newBeacon;
         }
     }
 

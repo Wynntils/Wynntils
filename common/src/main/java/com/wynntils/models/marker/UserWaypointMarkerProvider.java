@@ -23,25 +23,36 @@ public class UserWaypointMarkerProvider implements MarkerProvider {
     private final Set<Pair<MarkerInfo, WaypointPoi>> markerInfoSet = new LinkedHashSet<>();
 
     public void addLocation(Location location, Texture texture, CustomColor beaconColor, CustomColor textColor) {
-        addLocation(new MarkerInfo(new StaticLocationSupplier(location), texture, beaconColor, textColor));
+        addLocation(new MarkerInfo(
+                new StaticLocationSupplier(location), texture, beaconColor, textColor, CommonColors.WHITE));
     }
 
     public void addLocation(Location location, Texture texture, CustomColor beaconColor) {
-        addLocation(new MarkerInfo(new StaticLocationSupplier(location), texture, beaconColor, CommonColors.WHITE));
+        addLocation(new MarkerInfo(
+                new StaticLocationSupplier(location), texture, beaconColor, CommonColors.WHITE, CommonColors.WHITE));
     }
 
     public void addLocation(Location location, Texture texture) {
-        addLocation(
-                new MarkerInfo(new StaticLocationSupplier(location), texture, CustomColor.NONE, CommonColors.WHITE));
+        addLocation(new MarkerInfo(
+                new StaticLocationSupplier(location),
+                texture,
+                CustomColor.NONE,
+                CommonColors.WHITE,
+                CommonColors.WHITE));
     }
 
     public void addLocation(Location location) {
         addLocation(new MarkerInfo(
-                new StaticLocationSupplier(location), Texture.WAYPOINT, CustomColor.NONE, CommonColors.WHITE));
+                new StaticLocationSupplier(location),
+                Texture.WAYPOINT,
+                CustomColor.NONE,
+                CommonColors.WHITE,
+                CommonColors.WHITE));
     }
 
     public void addLocation(LocationSupplier locationSupplier) {
-        addLocation(new MarkerInfo(locationSupplier, Texture.WAYPOINT, CustomColor.NONE, CommonColors.WHITE));
+        addLocation(new MarkerInfo(
+                locationSupplier, Texture.WAYPOINT, CustomColor.NONE, CommonColors.WHITE, CommonColors.WHITE));
     }
 
     public void addLocation(MarkerInfo markerInfo) {

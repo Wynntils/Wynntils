@@ -4,7 +4,6 @@
  */
 package com.wynntils.features.debug;
 
-import com.google.common.collect.ComparisonChain;
 import com.wynntils.core.components.Models;
 import com.wynntils.core.consumers.features.Feature;
 import com.wynntils.core.consumers.features.properties.StartDisabled;
@@ -16,6 +15,7 @@ import com.wynntils.models.beacons.type.Beacon;
 import com.wynntils.models.lootrun.event.LootrunBeaconSelectedEvent;
 import com.wynntils.models.lootrun.type.LootrunLocation;
 import com.wynntils.models.lootrun.type.LootrunTaskType;
+import com.wynntils.models.lootrun.type.TaskLocation;
 import com.wynntils.utils.mc.type.Location;
 import java.util.Map;
 import java.util.Optional;
@@ -45,19 +45,9 @@ public class LootrunBeaconLocationCollectorFeature extends Feature {
         if (currentLocationOpt.isEmpty()) return;
 
         tasks.get().putIfAbsent(currentLocationOpt.get(), new TreeSet<>());
-        tasks.get().get(currentLocationOpt.get()).add(new TaskLocation(beacon.location(), currentTaskTypeOpt.get()));
+        tasks.get()
+                .get(currentLocationOpt.get())
+                .add(new TaskLocation(Location.containing(beacon.position()), currentTaskTypeOpt.get()));
         tasks.touched();
-    }
-
-    private record TaskLocation(Location location, LootrunTaskType taskType) implements Comparable<TaskLocation> {
-        @Override
-        public int compareTo(LootrunBeaconLocationCollectorFeature.TaskLocation taskLocation) {
-            return ComparisonChain.start()
-                    .compare(location.x(), taskLocation.location.x())
-                    .compare(location.y(), taskLocation.location.y())
-                    .compare(location.z(), taskLocation.location.z())
-                    .compare(taskType, taskLocation.taskType)
-                    .result();
-        }
     }
 }

@@ -33,6 +33,7 @@ import com.wynntils.models.lootrun.LootrunModel;
 import com.wynntils.models.marker.MarkerModel;
 import com.wynntils.models.mobtotem.MobTotemModel;
 import com.wynntils.models.objectives.ObjectivesModel;
+import com.wynntils.models.particle.ParticleModel;
 import com.wynntils.models.players.FriendsModel;
 import com.wynntils.models.players.GuildModel;
 import com.wynntils.models.players.PartyModel;
@@ -67,6 +68,7 @@ public final class Models {
     public static final GuildAttackTimerModel GuildAttackTimer = new GuildAttackTimerModel();
     public static final MarkerModel Marker = new MarkerModel();
     public static final ObjectivesModel Objectives = new ObjectivesModel();
+    public static final ParticleModel Particle = new ParticleModel();
     public static final PlayerInventoryModel PlayerInventory = new PlayerInventoryModel();
     public static final PlayerModel Player = new PlayerModel();
     public static final RewardsModel Rewards = new RewardsModel();
@@ -93,7 +95,7 @@ public final class Models {
     public static final IngredientModel Ingredient = new IngredientModel(Stat);
     public static final ItemModel Item = new ItemModel(Element, Gear, Rewards, Ingredient);
     public static final LootChestModel LootChest = new LootChestModel(Container);
-    public static final LootrunModel Lootrun = new LootrunModel(Marker);
+    public static final LootrunModel Lootrun = new LootrunModel(Beacon, Marker, Particle);
     public static final MobTotemModel MobTotem = new MobTotemModel(WorldState);
     public static final PartyModel Party = new PartyModel(WorldState);
     public static final ProfessionModel Profession = new ProfessionModel(Character, WorldState, Bomb);
