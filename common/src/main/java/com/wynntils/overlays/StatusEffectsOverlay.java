@@ -39,10 +39,7 @@ public class StatusEffectsOverlay extends Overlay {
     public final Config<Float> fontScale = new Config<>(1.0f);
 
     @Persisted
-    public final Config<Boolean> stackEffects = new Config<>(true);
-
-    @Persisted
-    public final Config<Boolean> sumModifiers = new Config<>(false);
+    public final Config<StackingBehaviour> effectsStackBehaviour = new Config<>(StackingBehaviour.MULTIPLIER);
 
     @Persisted
     public final Config<Boolean> sortEffects = new Config<>(true);
@@ -72,7 +69,7 @@ public class StatusEffectsOverlay extends Overlay {
         List<StatusEffect> effects = Models.StatusEffect.getStatusEffects();
         Stream<RenderedStatusEffect> effectWithProperties;
 
-        if (stackEffects.get()) {
+        if (effectsStackBehaviour.get() != StackingBehaviour.NONE) {
             effectWithProperties = stackEffects(effects);
         } else {
             effectWithProperties = effects.stream().map(RenderedStatusEffect::new);
@@ -158,14 +155,13 @@ public class StatusEffectsOverlay extends Overlay {
     }
 
     private String getEffectsKey(StatusEffect effect) {
-        if (sumModifiers.get()) {
-            // Stack effects if the name is the same and if the modifier is of the same type (% or raw)
-            return effect.getPrefix().getString()
+        return switch (effectsStackBehaviour.get()) {
+            default -> effect.asString().getString();
+            case SUM -> effect.getPrefix().getString()
                     + effect.getName().getString()
                     + effect.getModifier().getString().indexOf('%')
                     + effect.getDisplayedTime().getString();
-        }
-        return effect.asString().getString();
+        };
     }
 
     private final class RenderedStatusEffect {
@@ -179,48 +175,57 @@ public class StatusEffectsOverlay extends Overlay {
         }
 
         private StyledText getRenderedText() {
-            if (this.count == 1) {
+            if (this.count <= 1) {
                 // Terminate early if there's nothing to do
                 return this.effect.asString();
             }
 
-            StyledText modifierText;
+            StyledText modifierText = StyledText.EMPTY;
 
-            if (this.modifierList.size() > 0 && sumModifiers.get()) {
-                // Sum modifiers
-                double modifierValue = 0.0;
-                String baseModifier = this.modifierList.get(0);
-                for (String modifier : modifierList) {
-                    modifierValue += extractDoubleFromString(modifier);
+            switch (effectsStackBehaviour.get()) {
+                case SUM -> {
+                    if (this.modifierList.size() > 0) {
+                        // SUM modifiers
+                        double modifierValue = 0.0;
+                        String baseModifier = this.modifierList.get(0);
+                        for (String modifier : modifierList) {
+                            modifierValue += extractDoubleFromString(modifier);
+                        }
+
+                        // Eliminate .0 when the modifier needs trailing decimals. This is the case for powder specials
+                        // on
+                        // armor.
+                        String numberString = (Math.round(modifierValue) == modifierValue)
+                                ? String.format("%+d", (long) modifierValue)
+                                : String.format("%+.1f", modifierValue);
+                        modifierText = StyledText.fromString(ChatFormatting.GRAY
+                                + numberString
+                                + baseModifier.substring(indexAfterDigits(baseModifier)));
+                    }
                 }
+                case MULTIPLIER -> {
+                    String modifierString = this.effect.getModifier().getString();
 
-                // Eliminate .0 when the modifier needs trailing decimals. This is the case for powder specials on
-                // armor.
-                String numberString = (Math.round(modifierValue) == modifierValue)
-                        ? String.format("%+d", (long) modifierValue)
-                        : String.format("%+.1f", modifierValue);
-                modifierText = StyledText.fromString(
-                        ChatFormatting.GRAY + numberString + baseModifier.substring(indexAfterDigits(baseModifier)));
-            } else {
-                String modifierString = this.effect.getModifier().getString();
+                    // look for either a - or a +
+                    int minusIndex = modifierString.indexOf('-');
+                    int plusIndex = modifierString.indexOf('+');
+                    int index = Math.max(minusIndex, plusIndex);
 
-                // look for either a - or a +
-                int minusIndex = modifierString.indexOf('-');
-                int plusIndex = modifierString.indexOf('+');
-                int index = Math.max(minusIndex, plusIndex);
-
-                if (index == -1) {
-                    // We can simply put the count string at the start
-                    modifierText = StyledText.fromString(ChatFormatting.GRAY + (this.count + "x"))
-                            .append(this.effect.getModifier());
-                } else {
-                    // The count string is inserted between the +/- and the number
-                    index += 1;
-                    modifierText = StyledText.fromString(ChatFormatting.GRAY
-                            + modifierString.substring(0, index)
-                            + (this.count + "x")
-                            + modifierString.substring(index));
+                    if (index == -1) {
+                        // We can simply put the count string at the start
+                        modifierText = StyledText.fromString(ChatFormatting.GRAY + (this.count + "x"))
+                                .append(this.effect.getModifier());
+                    } else {
+                        // The count string is inserted between the +/- and the number
+                        index += 1;
+                        modifierText = StyledText.fromString(ChatFormatting.GRAY
+                                + modifierString.substring(0, index)
+                                + (this.count + "x")
+                                + modifierString.substring(index));
+                    }
                 }
+                    // This shouldn't be reached
+                default -> {}
             }
 
             return this.effect
@@ -276,5 +281,11 @@ public class StatusEffectsOverlay extends Overlay {
 
             return i;
         }
+    }
+
+    private enum StackingBehaviour {
+        NONE,
+        MULTIPLIER,
+        SUM
     }
 }
