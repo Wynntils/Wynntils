@@ -36,7 +36,6 @@ public class IteratorService extends Service {
             }
         });
         toRemove.forEach(iteratorMap::remove);
-        toRemove.clear();
     }
 
     private int getHashCode(String characters, Integer ticksPerIncrement) {
@@ -46,12 +45,12 @@ public class IteratorService extends Service {
     public String getIteratorValue(String characters, Integer ticksPerIncrement) {
         int hashCode = getHashCode(characters, ticksPerIncrement);
         if (!iteratorMap.containsKey(hashCode)) {
-            createCounter(characters, ticksPerIncrement);
+            createIterator(characters, ticksPerIncrement);
         }
         return iteratorMap.get(hashCode).getCurrentString();
     }
 
-    private void createCounter(String characters, Integer ticksPerIncrement) {
+    private void createIterator(String characters, Integer ticksPerIncrement) {
         iteratorMap.put(getHashCode(characters, ticksPerIncrement), new Iterator(characters, ticksPerIncrement));
     }
 
