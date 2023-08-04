@@ -253,7 +253,7 @@ public class ContainerSearchFeature extends Feature {
                 Texture.INFO,
                 a -> {},
                 helpTooltip,
-                BasicTexturedButton.RENDER_TOOLTIP_BELOW,
+                false,
                 true);
 
         screen.addRenderableWidget(infoButton);

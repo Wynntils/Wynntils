@@ -103,7 +103,8 @@ public class TextInputBoxWidget extends AbstractWidget {
 
         doRenderWidget(
                 poseStack,
-                renderedTextDetails,
+                renderedTextDetails.a(),
+                renderedTextDetails.b(),
                 firstPortion,
                 highlightedPortion,
                 lastPortion,
@@ -115,7 +116,8 @@ public class TextInputBoxWidget extends AbstractWidget {
 
     protected void doRenderWidget(
             PoseStack poseStack,
-            Pair<String, Integer> renderedTextDetails,
+            String renderedText,
+            int renderedTextStart,
             String firstPortion,
             String highlightedPortion,
             String lastPortion,
@@ -172,7 +174,6 @@ public class TextInputBoxWidget extends AbstractWidget {
                         VerticalAlignment.MIDDLE,
                         TextShadow.NORMAL);
 
-        String renderedText = renderedTextDetails.a();
         drawCursor(
                 poseStack,
                 font.width(renderedText.substring(0, Math.min(cursorPosition, renderedText.length()))),

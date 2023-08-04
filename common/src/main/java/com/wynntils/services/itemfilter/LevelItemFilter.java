@@ -14,7 +14,8 @@ import java.util.regex.Pattern;
 public class LevelItemFilter extends ItemFilter {
     private static final Pattern LEVEL_RANGE_PATTERN = Pattern.compile("^(\\d+)(?:-(\\d+))?$");
 
-    private int minLevel, maxLevel;
+    private int minLevel;
+    private int maxLevel;
 
     private boolean prepared = false;
 

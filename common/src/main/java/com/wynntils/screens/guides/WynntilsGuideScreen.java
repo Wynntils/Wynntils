@@ -56,9 +56,11 @@ public abstract class WynntilsGuideScreen<E, B extends WynntilsButton> extends W
         argument. Therefore it makes sense to use this hack to migrate from simple text based search to advanced filters
         search.
         This hack is preferable to adding even more complexity in the superclass.
+        See https://github.com/Wynntils/Artemis/pull/1860#discussion_r1279180536 for more details.
         */
-        if (searchWidget instanceof ItemSearchWidget) // Should always be true
-        reloadElementsList(((ItemSearchWidget) searchWidget).getSearchQuery());
+        if (searchWidget instanceof ItemSearchWidget) { // Should always be true
+            reloadElementsList(((ItemSearchWidget) searchWidget).getSearchQuery());
+        }
     }
 
     protected abstract void reloadElementsList(SearchQuery searchQuery);

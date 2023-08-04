@@ -9,7 +9,6 @@ import com.wynntils.screens.base.TextboxScreen;
 import com.wynntils.screens.base.widgets.SearchWidget;
 import com.wynntils.utils.render.RenderUtils;
 import com.wynntils.utils.render.Texture;
-import com.wynntils.utils.type.Pair;
 import java.util.function.Consumer;
 import net.minecraft.client.gui.Font;
 
@@ -36,7 +35,8 @@ public class QuestBookSearchWidget extends SearchWidget {
     @Override
     protected void renderText(
             PoseStack poseStack,
-            Pair<String, Integer> renderedTextDetails,
+            String renderedText,
+            int renderedTextStart,
             String firstPortion,
             String highlightedPortion,
             String lastPortion,
@@ -51,7 +51,8 @@ public class QuestBookSearchWidget extends SearchWidget {
 
         super.renderText(
                 poseStack,
-                renderedTextDetails,
+                renderedText,
+                renderedTextStart,
                 firstPortion,
                 highlightedPortion,
                 lastPortion,

@@ -14,7 +14,6 @@ import com.wynntils.utils.render.RenderUtils;
 import com.wynntils.utils.render.type.HorizontalAlignment;
 import com.wynntils.utils.render.type.TextShadow;
 import com.wynntils.utils.render.type.VerticalAlignment;
-import com.wynntils.utils.type.Pair;
 import java.util.Objects;
 import java.util.function.Consumer;
 import net.minecraft.client.gui.Font;
@@ -37,7 +36,8 @@ public class SearchWidget extends TextInputBoxWidget {
     @Override
     protected void doRenderWidget(
             PoseStack poseStack,
-            Pair<String, Integer> renderedTextDetails,
+            String renderedText,
+            int renderedTextStart,
             String firstPortion,
             String highlightedPortion,
             String lastPortion,
@@ -51,7 +51,8 @@ public class SearchWidget extends TextInputBoxWidget {
 
         renderText(
                 poseStack,
-                renderedTextDetails,
+                renderedText,
+                renderedTextStart,
                 firstPortion,
                 highlightedPortion,
                 lastPortion,
@@ -64,7 +65,8 @@ public class SearchWidget extends TextInputBoxWidget {
 
     protected void renderText(
             PoseStack poseStack,
-            Pair<String, Integer> renderedTextDetails,
+            String renderedText,
+            int renderedTextStart,
             String firstPortion,
             String highlightedPortion,
             String lastPortion,
@@ -113,7 +115,6 @@ public class SearchWidget extends TextInputBoxWidget {
                         HorizontalAlignment.LEFT,
                         TextShadow.NORMAL);
 
-        String renderedText = renderedTextDetails.a();
         drawCursor(
                 poseStack,
                 this.getX()

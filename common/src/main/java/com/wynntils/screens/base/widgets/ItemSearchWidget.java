@@ -13,7 +13,6 @@ import com.wynntils.utils.render.FontRenderer;
 import com.wynntils.utils.render.type.HorizontalAlignment;
 import com.wynntils.utils.render.type.TextShadow;
 import com.wynntils.utils.render.type.VerticalAlignment;
-import com.wynntils.utils.type.Pair;
 import java.util.function.Consumer;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.gui.Font;
@@ -40,7 +39,8 @@ public class ItemSearchWidget extends SearchWidget {
     @Override
     protected void renderText(
             PoseStack poseStack,
-            Pair<String, Integer> renderedTextDetails,
+            String renderedText,
+            int renderedTextStart,
             String firstPortion,
             String highlightedPortion,
             String lastPortion,
@@ -52,7 +52,8 @@ public class ItemSearchWidget extends SearchWidget {
         if (defaultText || !getTextBoxInput().equals(searchQuery.getQueryString())) {
             super.renderText(
                     poseStack,
-                    renderedTextDetails,
+                    renderedText,
+                    renderedTextStart,
                     firstPortion,
                     highlightedPortion,
                     lastPortion,
@@ -64,7 +65,7 @@ public class ItemSearchWidget extends SearchWidget {
             return;
         }
 
-        int charIndex = renderedTextDetails.b();
+        int charIndex = renderedTextStart;
 
         StyledText firstPortionStyled = StyledText.EMPTY;
         for (char c : firstPortion.toCharArray()) {
@@ -119,7 +120,6 @@ public class ItemSearchWidget extends SearchWidget {
                         HorizontalAlignment.LEFT,
                         TextShadow.NORMAL);
 
-        String renderedText = renderedTextDetails.a();
         drawCursor(
                 poseStack,
                 this.getX()

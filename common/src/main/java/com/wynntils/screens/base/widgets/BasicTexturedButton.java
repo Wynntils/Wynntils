@@ -20,15 +20,12 @@ public class BasicTexturedButton extends WynntilsButton {
     private final Consumer<Integer> onClick;
     private List<Component> tooltip;
 
-    private int renderTooltip;
+    private boolean renderTooltipAbove;
     private boolean scaleTexture;
-
-    public static final int RENDER_TOOLTIP_ABOVE = 0;
-    public static final int RENDER_TOOLTIP_BELOW = 1;
 
     public BasicTexturedButton(
             int x, int y, int width, int height, Texture texture, Consumer<Integer> onClick, List<Component> tooltip) {
-        this(x, y, width, height, texture, onClick, tooltip, RENDER_TOOLTIP_ABOVE, false);
+        this(x, y, width, height, texture, onClick, tooltip, true, false);
     }
 
     public BasicTexturedButton(
@@ -39,19 +36,19 @@ public class BasicTexturedButton extends WynntilsButton {
             Texture texture,
             Consumer<Integer> onClick,
             List<Component> tooltip,
-            int renderTooltip,
+            boolean renderTooltipAbove,
             boolean scaleTexture) {
         super(x, y, width, height, Component.literal("Basic Button"));
         this.texture = texture;
         this.onClick = onClick;
-        this.renderTooltip = renderTooltip;
+        this.renderTooltipAbove = renderTooltipAbove;
         this.scaleTexture = scaleTexture;
         this.setTooltip(tooltip);
     }
 
     @Override
     public void renderWidget(PoseStack poseStack, int mouseX, int mouseY, float partialTick) {
-        if (scaleTexture)
+        if (scaleTexture) {
             RenderUtils.drawScalingTexturedRect(
                     poseStack,
                     texture.resource(),
@@ -62,10 +59,12 @@ public class BasicTexturedButton extends WynntilsButton {
                     getHeight(),
                     texture.width(),
                     texture.height());
-        else RenderUtils.drawTexturedRect(poseStack, texture, this.getX(), this.getY());
+        } else {
+            RenderUtils.drawTexturedRect(poseStack, texture, this.getX(), this.getY());
+        }
 
         if (this.isHovered) {
-            int renderY = renderTooltip == RENDER_TOOLTIP_ABOVE
+            int renderY = renderTooltipAbove
                     ? mouseY - TooltipUtils.getToolTipHeight(TooltipUtils.componentToClientTooltipComponent(tooltip))
                     : mouseY;
 
