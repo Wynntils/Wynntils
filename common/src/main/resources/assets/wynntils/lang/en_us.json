@@ -954,6 +954,8 @@
   "feature.wynntils.statusEffectsOverlay.overlay.statusEffects.stackEffects.description": "Should similar effects be stacked?",
   "feature.wynntils.statusEffectsOverlay.overlay.statusEffects.stackEffects.name": "Stack Effects",
   "feature.wynntils.statusEffectsOverlay.overlay.statusEffects.textShadow.description": "What should the text shadow look like?",
+  "feature.wynntils.statusEffectsOverlay.overlay.statusEffects.sumModifiers.description": "Should modifiers from the same effects be summed up?",
+  "feature.wynntils.statusEffectsOverlay.overlay.statusEffects.sumModifiers.name": "Sum Modifiers",
   "feature.wynntils.statusEffectsOverlay.overlay.statusEffects.textShadow.name": "Text Shadow",
   "feature.wynntils.stopwatch.description": "Adds the ability to add stopwatches to the screen as overlays.",
   "feature.wynntils.stopwatch.name": "Stopwatch",

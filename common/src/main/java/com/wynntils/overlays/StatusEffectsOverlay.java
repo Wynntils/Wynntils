@@ -21,6 +21,7 @@ import com.wynntils.utils.render.buffered.BufferedFontRenderer;
 import com.wynntils.utils.render.type.HorizontalAlignment;
 import com.wynntils.utils.render.type.TextShadow;
 import com.wynntils.utils.render.type.VerticalAlignment;
+import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -39,6 +40,9 @@ public class StatusEffectsOverlay extends Overlay {
 
     @Persisted
     public final Config<Boolean> stackEffects = new Config<>(true);
+
+    @Persisted
+    public final Config<Boolean> sumModifiers = new Config<>(false);
 
     @Persisted
     public final Config<Boolean> sortEffects = new Config<>(true);
@@ -134,27 +138,40 @@ public class StatusEffectsOverlay extends Overlay {
         return textRenderSetting;
     }
 
+
+    private String getEffectsKey(StatusEffect effect) {
+        if (sumModifiers.get()) {
+            // Stack effects if the name is the same and if the modifier is of the same type (% or raw)
+            return effect.getPrefix().getString()
+                    + effect.getName().getString()
+                    + effect.getModifier().getString().indexOf('%');
+        }
+        return effect.asString().getString();
+    }
+
     private Stream<RenderedStatusEffect> stackEffects(List<StatusEffect> effects) {
         Map<String, RenderedStatusEffect> effectsToRender = new LinkedHashMap<>();
 
         for (StatusEffect effect : effects) {
-            RenderedStatusEffect entry = effectsToRender.get(effect.asString().getString());
+            String key = getEffectsKey(effect);
+            RenderedStatusEffect entry = effectsToRender.get(key);
 
             if (entry == null) {
                 entry = new RenderedStatusEffect(effect);
-                effectsToRender.put(effect.asString().getString(), entry);
+                effectsToRender.put(key, entry);
             }
 
             entry.setCount(entry.getCount() + 1);
+            entry.addModifier(effect.getModifier());
         }
 
         return effectsToRender.values().stream();
     }
-
-    private static final class RenderedStatusEffect {
+    private final class RenderedStatusEffect {
         private final StatusEffect effect;
 
         private int count = 0;
+        private List<String> modifierList = new ArrayList<>();
 
         private RenderedStatusEffect(StatusEffect effect) {
             this.effect = effect;
@@ -165,25 +182,39 @@ public class StatusEffectsOverlay extends Overlay {
                 return this.effect.asString();
             }
 
-            String modifierString = this.effect.getModifier().getString();
             StyledText modifierText;
 
-            // look for either a - or a +
-            int minusIndex = modifierString.indexOf('-');
-            int plusIndex = modifierString.indexOf('+');
-            int index = Math.max(minusIndex, plusIndex);
-
-            if (index == -1) {
-                // We can simply put the count string at the start
-                modifierText = StyledText.fromString(ChatFormatting.GRAY + (this.count + "x"))
-                        .append(this.effect.getModifier());
+            if (this.modifierList.size() > 0 && sumModifiers.get()) {
+                double modifierValue = 0.0;
+                String baseModifier = this.modifierList.get(0);
+                for (String modifier : modifierList) {
+                    modifierValue += extractDoubleFromString(modifier);
+                }
+                String numberString = ((long) modifierValue == modifierValue)
+                        ? String.format("%+d", (long) modifierValue)
+                        : String.format("%+f", modifierValue);
+                modifierText = StyledText.fromString(
+                        ChatFormatting.GRAY + numberString + baseModifier.substring(indexAfterDigits(baseModifier)));
             } else {
-                // The count string is inserted between the +/- and the number
-                index += 1;
-                modifierText = StyledText.fromString(ChatFormatting.GRAY
-                        + modifierString.substring(0, index)
-                        + (this.count + "x")
-                        + modifierString.substring(index));
+                String modifierString = this.effect.getModifier().getString();
+
+                // look for either a - or a +
+                int minusIndex = modifierString.indexOf('-');
+                int plusIndex = modifierString.indexOf('+');
+                int index = Math.max(minusIndex, plusIndex);
+
+                if (index == -1) {
+                    // We can simply put the count string at the start
+                    modifierText = StyledText.fromString(ChatFormatting.GRAY + (this.count + "x"))
+                            .append(this.effect.getModifier());
+                } else {
+                    // The count string is inserted between the +/- and the number
+                    index += 1;
+                    modifierText = StyledText.fromString(ChatFormatting.GRAY
+                            + modifierString.substring(0, index)
+                            + (this.count + "x")
+                            + modifierString.substring(index));
+                }
             }
 
             return this.effect
@@ -206,6 +237,38 @@ public class StatusEffectsOverlay extends Overlay {
 
         public StatusEffect getEffect() {
             return this.effect;
+        }
+
+        public void addModifier(StyledText modifier) {
+            this.modifierList.add(modifier.getStringWithoutFormatting());
+        }
+
+        private double extractDoubleFromString(String string) {
+            byte[] s = string.getBytes();
+
+            int start = 0;
+            while (!Character.isDigit(s[start]) && s[start] != '-') {
+                start += 1;
+            }
+
+            int end = start;
+            while (Character.isDigit(s[end]) || s[end] == '.') {
+                end += 1;
+            }
+            return Double.parseDouble(string.substring(start, end));
+        }
+
+        private int indexAfterDigits(String string) {
+            byte[] s = string.getBytes();
+            int i = 0;
+            while (!Character.isDigit(s[i])) {
+                i += 1;
+            }
+            while (Character.isDigit(s[i]) || s[i] == '.') {
+                i += 1;
+            }
+
+            return i;
         }
     }
 }
