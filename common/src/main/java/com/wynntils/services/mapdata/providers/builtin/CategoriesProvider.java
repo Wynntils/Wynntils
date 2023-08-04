@@ -185,7 +185,7 @@ public class CategoriesProvider extends BuiltInProvider {
                 @Override
                 public CustomColor getLabelColor() {
                     return switch (layer) {
-                        case PROVINCE -> CommonColors.AQUA;
+                        case PROVINCE -> CommonColors.DARK_AQUA;
                         case CITY -> CommonColors.YELLOW;
                         case TOWN_OR_PLACE -> CommonColors.WHITE;
                     };
