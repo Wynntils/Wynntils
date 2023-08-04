@@ -138,7 +138,6 @@ public class StatusEffectsOverlay extends Overlay {
         return textRenderSetting;
     }
 
-
     private String getEffectsKey(StatusEffect effect) {
         if (sumModifiers.get()) {
             // Stack effects if the name is the same and if the modifier is of the same type (% or raw)
@@ -167,6 +166,7 @@ public class StatusEffectsOverlay extends Overlay {
 
         return effectsToRender.values().stream();
     }
+
     private final class RenderedStatusEffect {
         private final StatusEffect effect;
 
