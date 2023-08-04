@@ -218,7 +218,7 @@ public class LootrunModel extends Model {
 
     @SubscribeEvent
     public void onBeaconMoved(BeaconEvent.Moved event) {
-        Beacon beacon = event.getBeacon();
+        Beacon beacon = event.getNewBeacon();
         BeaconColor beaconColor = beacon.color();
         if (!beaconColor.isUsedInLootruns()) return;
 
@@ -264,7 +264,7 @@ public class LootrunModel extends Model {
             for (Entity entity : event.getEntities()) {
                 // Only set this once they are added.
                 // This is cleaner than posting an event on render,
-                // but the config works only after they are placed again.
+                // but a change in the config will only have effect on newly placed beacons.
                 ((EntityExtension) entity).setRendered(false);
             }
         }
@@ -414,7 +414,7 @@ public class LootrunModel extends Model {
                 return;
             }
 
-            // The prediction is a location that an other color beacon is already at
+            // The prediction is a location where another colored beacon is already at
             Optional<TaskPrediction> usedTaskPredictionOpt = usedTaskLocations.stream()
                     .filter(pair -> Objects.equals(pair.taskLocation(), closestTaskLocation))
                     .findFirst();

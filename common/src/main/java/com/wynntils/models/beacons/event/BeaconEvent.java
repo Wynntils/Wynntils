@@ -34,8 +34,24 @@ public abstract class BeaconEvent extends Event {
     }
 
     public static class Moved extends BeaconEvent {
+        private final Beacon newBeacon;
+
         public Moved(Beacon oldBeacon, Beacon newBeacon) {
             super(oldBeacon);
+            this.newBeacon = newBeacon;
+        }
+
+        @Override
+        public Beacon getBeacon() {
+            throw new UnsupportedOperationException("Use getOldBeacon() or getNewBeacon() instead");
+        }
+
+        public Beacon getOldBeacon() {
+            return beacon;
+        }
+
+        public Beacon getNewBeacon() {
+            return newBeacon;
         }
     }
 
