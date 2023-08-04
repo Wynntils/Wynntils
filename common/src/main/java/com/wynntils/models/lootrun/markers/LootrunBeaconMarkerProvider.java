@@ -30,7 +30,8 @@ public class LootrunBeaconMarkerProvider implements MarkerProvider {
                     new StaticLocationSupplier(entry.getValue().taskLocation().location()),
                     entry.getValue().taskLocation().taskType().getTexture(),
                     entry.getKey().getColor(),
-                    CommonColors.WHITE));
+                    CommonColors.WHITE,
+                    entry.getKey().getColor()));
         }
     }
 
