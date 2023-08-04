@@ -33,13 +33,18 @@ import com.wynntils.models.lootrun.type.LootrunningState;
 import com.wynntils.models.lootrun.type.TaskLocation;
 import com.wynntils.models.lootrun.type.TaskPrediction;
 import com.wynntils.models.marker.MarkerModel;
+import com.wynntils.models.particle.ParticleModel;
+import com.wynntils.models.particle.event.ParticleVerifiedEvent;
+import com.wynntils.models.particle.type.ParticleType;
 import com.wynntils.models.worlds.event.WorldStateEvent;
 import com.wynntils.models.worlds.type.WorldState;
 import com.wynntils.utils.VectorUtils;
 import com.wynntils.utils.mc.McUtils;
+import com.wynntils.utils.mc.PosUtils;
 import com.wynntils.utils.type.Pair;
 import java.lang.reflect.Type;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
@@ -48,7 +53,6 @@ import java.util.Set;
 import java.util.TreeMap;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.Entity;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import org.joml.Vector2d;
@@ -90,7 +94,7 @@ public class LootrunModel extends Model {
     private static final float BEACON_REMOVAL_RADIUS = 25f;
 
     // Beacon positions are sometimes off by a few blocks
-    private static final int BEACON_POSITION_ERROR = 3;
+    private static final int TASK_POSITION_ERROR = 3;
 
     private static final LootrunScoreboardPart LOOTRUN_SCOREBOARD_PART = new LootrunScoreboardPart();
 
@@ -110,6 +114,9 @@ public class LootrunModel extends Model {
     private Map<BeaconColor, TaskPrediction> beacons = new HashMap<>();
     private Map<BeaconColor, Pair<Integer, TaskLocation>> beaconUpdates = new HashMap<>();
 
+    // particles can accurately show task locations
+    private Set<TaskLocation> possibleTaskLocations = new HashSet<>();
+
     // Data to be persisted
     @Persisted
     private Storage<Map<String, Map<BeaconColor, Integer>>> selectedBeaconsStorage = new Storage<>(new TreeMap<>());
@@ -119,8 +126,8 @@ public class LootrunModel extends Model {
 
     private Map<BeaconColor, Integer> selectedBeacons = new TreeMap<>();
 
-    public LootrunModel(BeaconModel beaconModel, MarkerModel markerModel) {
-        super(List.of(beaconModel, markerModel));
+    public LootrunModel(BeaconModel beaconModel, MarkerModel markerModel, ParticleModel particleModel) {
+        super(List.of(beaconModel, markerModel, particleModel));
 
         Handlers.Scoreboard.addPart(LOOTRUN_SCOREBOARD_PART);
         Models.Marker.registerMarkerProvider(LOOTRUN_BEACON_COMPASS_PROVIDER);
@@ -138,6 +145,22 @@ public class LootrunModel extends Model {
             Type type = new TypeToken<Map<LootrunLocation, Set<TaskLocation>>>() {}.getType();
             taskLocations = Managers.Json.GSON.fromJson(reader, type);
         });
+    }
+
+    @SubscribeEvent
+    public void onLootrunParticle(ParticleVerifiedEvent event) {
+        if (event.getParticle().particleType() != ParticleType.LOOTRUN_TASK) return;
+
+        Optional<LootrunLocation> currentLocation = getLocation();
+        if (currentLocation.isEmpty()) return;
+
+        for (TaskLocation taskLocation : taskLocations.getOrDefault(currentLocation.get(), Set.of())) {
+            if (PosUtils.closerThanIgnoringY(
+                    taskLocation.location().toPosition(), event.getParticle().position(), TASK_POSITION_ERROR)) {
+                possibleTaskLocations.add(taskLocation);
+                return;
+            }
+        }
     }
 
     @SubscribeEvent
@@ -181,6 +204,8 @@ public class LootrunModel extends Model {
 
         lootrunCompletedBuilder = null;
         lootrunFailedBuilder = null;
+
+        possibleTaskLocations = new HashSet<>();
 
         lootrunningState = LootrunningState.NOT_RUNNING;
         taskType = null;
@@ -309,6 +334,8 @@ public class LootrunModel extends Model {
             taskType = null;
             setClosestBeacon(null);
 
+            possibleTaskLocations = new HashSet<>();
+
             beacons = new HashMap<>();
             beaconUpdates = new HashMap<>();
             return;
@@ -328,6 +355,8 @@ public class LootrunModel extends Model {
             selectedBeaconsStorage.touched();
             WynntilsMod.postEvent(new LootrunBeaconSelectedEvent(closestBeacon));
 
+            possibleTaskLocations = new HashSet<>();
+
             // We selected a beacon, so other beacons are no longer relevant.
             beacons.clear();
             setClosestBeacon(null);
@@ -344,9 +373,13 @@ public class LootrunModel extends Model {
             return;
         }
 
-        Set<TaskLocation> currentTaskLocations = taskLocations.get(location.get());
+        Set<TaskLocation> currentTaskLocations = possibleTaskLocations;
         if (currentTaskLocations == null || currentTaskLocations.isEmpty()) {
-            WynntilsMod.warn("No task locations found for " + location.get());
+            WynntilsMod.warn("No task locations found for " + location.get() + ". Using fallback, all locations.");
+            currentTaskLocations = taskLocations.get(location.get());
+        }
+        if (currentTaskLocations == null || currentTaskLocations.isEmpty()) {
+            WynntilsMod.warn("Fallback failed, no task locations found for " + location.get());
             return;
         }
 
@@ -392,10 +425,6 @@ public class LootrunModel extends Model {
                 // Overwrite the other beacon's prediction.
                 if (newTaskPrediction.predictionScore() < usedTaskPrediction.predictionScore()) {
                     beacons.put(beacon.color(), newTaskPrediction);
-                    McUtils.sendMessageToClient(Component.literal("Predicted " + beacon.color() + " beacon at "
-                            + beacon.position() + " to be closer to " + closestTaskLocation + " than "
-                            + usedTaskPrediction.beacon() + " (" + usedTaskPrediction.predictionScore() + " > "
-                            + newTaskPrediction.predictionScore() + ")"));
 
                     // Update the other beacon's prediction.
                     updateTaskLocationPrediction(usedTaskPrediction.beacon());
@@ -430,9 +459,9 @@ public class LootrunModel extends Model {
 
         // Short circuit if the beacon matches a task location.
         // Wynn beacons are always at the center of a block, if they are in their "final" position.
-        if (beaconPosition.x() % 1 == 0.5d
-                && beaconPosition.y() % 1 == 0.5d
-                && taskLocationPosition.distance(beaconPosition) < BEACON_POSITION_ERROR) {
+        if (Math.abs(beaconPosition.x() % 1) == 0.5d
+                && Math.abs(beaconPosition.y() % 1) == 0.5d
+                && taskLocationPosition.distance(beaconPosition) < TASK_POSITION_ERROR) {
             return Pair.of(0d, currentTaskLocation);
         }
 
