@@ -13,8 +13,8 @@ public class StatusEffect implements Comparable<StatusEffect> {
     private final StyledText fullName;
     private final StyledText name; // The name of the consumable (also used to identify it)
     private final StyledText modifier; // The modifier of the consumable (+100, 23/3s etc.)
-    private final StyledText modifierSuffix; // The suffix of the modifier (/3s, %)
-    private final Optional<Double> modifierValue;
+    private StyledText modifierSuffix; // The suffix of the modifier (/3s, %)
+    private Optional<Double> modifierValue;
     private StyledText displayedTime; // The displayed time remaining. Allows for xx:xx for infinite time effects.
     private StyledText prefix; // The prefix to display before the name. Not included in identifying name.
 
@@ -25,14 +25,6 @@ public class StatusEffect implements Comparable<StatusEffect> {
         this.prefix = prefix;
         this.modifier = modifier;
         
-        if( modifier == StyledText.EMPTY ){
-            this.modifierSuffix = StyledText.EMPTY;
-            this.modifierValue = Optional.empty();
-        } else {
-            this.modifierSuffix = readModifierSuffix(this.modifier);
-            this.modifierValue = readModifierValue(this.modifier, this.modifierSuffix);
-        }
-
         this.fullName = StyledText.concat(
                 prefix,
                 StyledText.fromString(" "),
@@ -41,6 +33,14 @@ public class StatusEffect implements Comparable<StatusEffect> {
                 name,
                 StyledText.fromString(" "),
                 displayedTime);
+
+        if( modifier == StyledText.EMPTY ){
+            this.modifierSuffix = StyledText.EMPTY;
+            this.modifierValue = Optional.empty();
+        } else {
+            this.modifierSuffix = readModifierSuffix(this.modifier);
+            this.modifierValue = readModifierValue(this.modifier, this.modifierSuffix);
+        }
     }
 
     private StyledText readModifierSuffix(StyledText modifier){
@@ -62,11 +62,16 @@ public class StatusEffect implements Comparable<StatusEffect> {
         if( modifierStr.isEmpty() ){
             return Optional.empty();
         }
+        int start = Math.max(modifierStr.indexOf('+') + 1, 0);
 
         int end = Math.max(modifierStr.indexOf('%'), modifierStr.indexOf('/'));
-        if( end == -1 ) end = modifierStr.length();
+        if( end == -1 ) end = modifierStr.length(); // no suffix present
+        
+        if( end == start || end == 0 ){
+            return Optional.empty();
+        }
 
-        double val = Double.parseDouble(modifierStr.substring(0, end));
+        double val = Double.parseDouble(modifierStr.substring(start, end));
         return Optional.of(val);
     }
 
