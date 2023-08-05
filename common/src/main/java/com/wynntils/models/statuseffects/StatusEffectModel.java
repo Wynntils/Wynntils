@@ -18,6 +18,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import net.minecraftforge.eventbus.api.EventPriority;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
+import net.minecraft.ChatFormatting;
 
 public final class StatusEffectModel extends Model {
     /**
@@ -35,9 +36,10 @@ public final class StatusEffectModel extends Model {
      * <p>Originally taken from: <a href="https://github.com/Wynntils/Wynntils/pull/615">Legacy</a>
      */
     private static final Pattern STATUS_EFFECT_PATTERN = Pattern.compile(
-            "(?<prefix>.+?)(?<modifier>§7 ?([%\\-+\\.\\/\\d]+s?)?) *(?<name>[a-zA-Z\\s]+?) (?<timer>§[84a]\\((.+?)\\)).*");
+//            "(?<prefix>.+?)(?<modifier>§7 ?([%\\-+\\.\\/\\d]+s?)?) *(?<name>[a-zA-Z\\s]+?) (?<timer>§[84a]\\((.+?)\\)).*");
+"(?<prefix>.+?)§7(?<modifier>\\s?([%\\-+\\.\\/\\d]+s?)?)\\s*(?<name>[a-zA-Z\\s]+?)\\s(?<timer>§[84a]\\((.+?)\\))");
 
-    private static final Pattern MODIFIER_REGEX = Pattern.compile("§7 ??([%\\-+\\.\\/\\d]+s?)");
+    //private static final Pattern MODIFIER_REGEX = Pattern.compile("§7 ??([%\\-+\\.\\/\\d]+s?)");
 
     private static final StyledText STATUS_EFFECTS_TITLE = StyledText.fromString("§d§lStatus Effects");
 
@@ -81,23 +83,12 @@ public final class StatusEffectModel extends Model {
             Matcher m = trimmedEffect.getMatcher(STATUS_EFFECT_PATTERN);
             if (!m.find()) continue;
 
-            List<StyledText> parts = Arrays.stream(trimmedEffect.getPartsAsTextArray())
-                    .map(StyledText::trim)
-                    .toList();
-
-            StyledText prefix = parts.get(0);
-            StyledText name = parts.get(1);
-            StyledText displayedTime = parts.get(2);
-            StyledText modifier;
-
-            // Split the modifier and name, which are separated by a space
-            StyledText[] modifierStr = name.split("\\s");
-            if (modifierStr[0].matches(MODIFIER_REGEX)) {
-                modifier = modifierStr[0];
-                name = name.substring(modifier.length()).trim(); // Get all but first part of the string
-            } else {
-                modifier = StyledText.EMPTY;
-            }
+            String color = ChatFormatting.GRAY.toString();
+            StyledText prefix = StyledText.fromString(m.group("prefix").trim());
+            StyledText name = StyledText.fromString(color + m.group("name").trim());
+            StyledText displayedTime = StyledText.fromString(m.group("timer").trim());
+            String modifierGroup = m.group("modifier");
+            StyledText modifier = modifierGroup == null ? StyledText.EMPTY : StyledText.fromString(color + modifierGroup.trim());
 
             newStatusEffects.add(new StatusEffect(name, modifier, displayedTime, prefix));
         }

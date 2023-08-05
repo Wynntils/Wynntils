@@ -31,6 +31,7 @@ import net.minecraft.ChatFormatting;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 
+
 public class StatusEffectsOverlay extends Overlay {
     @Persisted
     public final Config<TextShadow> textShadow = new Config<>(TextShadow.OUTLINE);
@@ -148,7 +149,10 @@ public class StatusEffectsOverlay extends Overlay {
             }
 
             entry.setCount(entry.getCount() + 1);
-            entry.addModifier(effect.getModifier());
+
+            if( effect.hasModifierValue() ){
+                entry.addModifier(effect.getModifierValue());
+            }
         }
 
         return effectsToRender.values().stream();
@@ -168,7 +172,7 @@ public class StatusEffectsOverlay extends Overlay {
         private final StatusEffect effect;
 
         private int count = 0;
-        private List<String> modifierList = new ArrayList<>();
+        private List<Double> modifierList = new ArrayList<>();
 
         private RenderedStatusEffect(StatusEffect effect) {
             this.effect = effect;
@@ -187,19 +191,17 @@ public class StatusEffectsOverlay extends Overlay {
                     if (this.modifierList.size() > 0) {
                         // SUM modifiers
                         double modifierValue = 0.0;
-                        String baseModifier = this.modifierList.get(0);
-                        for (String modifier : modifierList) {
-                            modifierValue += extractDoubleFromString(modifier);
+                        for( double modifier: modifierList ){
+                            modifierValue += modifier;
                         }
-
                         // Eliminate .0 when the modifier needs trailing decimals. This is the case for powder specials
                         // on armor.
                         String numberString = (Math.round(modifierValue) == modifierValue)
                                 ? String.format("%+d", (long) modifierValue)
                                 : String.format("%+.1f", modifierValue);
                         modifierText = StyledText.fromString(ChatFormatting.GRAY
-                                + numberString
-                                + baseModifier.substring(indexAfterDigits(baseModifier)));
+                                + numberString) 
+                                .append(this.effect.getModifierSuffix());
                     }
                 }
                 case GROUP -> {
@@ -249,38 +251,10 @@ public class StatusEffectsOverlay extends Overlay {
             return this.effect;
         }
 
-        public void addModifier(StyledText modifier) {
-            this.modifierList.add(modifier.getStringWithoutFormatting());
+        public void addModifier(double modifier) {
+            this.modifierList.add(modifier);
         }
 
-        private double extractDoubleFromString(String string) {
-            byte[] s = string.getBytes();
-            int len = string.length();
-
-            int start = 0;
-            while (!Character.isDigit(s[start]) && s[start] != '-') {
-                start += 1;
-            }
-
-            int end = start;
-            while (end < len && (Character.isDigit(s[end]) || s[end] == '.')) {
-                end += 1;
-            }
-            return Double.parseDouble(string.substring(start, end));
-        }
-
-        private int indexAfterDigits(String string) {
-            byte[] s = string.getBytes();
-            int len = string.length();
-            int i = 0;
-            while (!Character.isDigit(s[i])) {
-                i += 1;
-            }
-            while ( i < len && (Character.isDigit(s[i]) || s[i] == '.')) {
-                i += 1;
-            }
-            return i;
-        }
     }
 
     private enum StackingBehaviour {
