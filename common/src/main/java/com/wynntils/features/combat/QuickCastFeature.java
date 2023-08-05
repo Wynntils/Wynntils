@@ -186,7 +186,8 @@ public class QuickCastFeature extends Feature {
             McUtils.sendPacket(new ServerboundSetCarriedItemPacket(currSelectedSlot));
         }
 
-        // Waiting a few ticks is useful for avoiding lag related input-overlaps
+        // Right clicks need a tick delay between them (2-3 ticks), left clicks don't
+        // So, we add a delay between right clicks, and new casts
         if (!SPELL_PACKET_QUEUE.isEmpty()) {
             packetCountdown = rightClickTickDelay.get();
         }
