@@ -36,8 +36,7 @@ public final class StatusEffectModel extends Model {
      * <p>Originally taken from: <a href="https://github.com/Wynntils/Wynntils/pull/615">Legacy</a>
      */
     private static final Pattern STATUS_EFFECT_PATTERN = Pattern.compile(
-//            "(?<prefix>.+?)(?<modifier>§7 ?([%\\-+\\.\\/\\d]+s?)?) *(?<name>[a-zA-Z\\s]+?) (?<timer>§[84a]\\((.+?)\\)).*");
-"(?<prefix>.+?)§7(?<modifier>\\s?([%\\-+\\.\\/\\d]+s?)?)\\s*(?<name>[a-zA-Z\\s]+?)\\s(?<timer>§[84a]\\((.+?)\\))");
+"(?<prefix>.+?)§7(?<modifier>\\s?([%\\-+\\.\\/\\d]+s?)?)\\s*(?<name>[a-zA-Z\\/\\s]+?)\\s(?<timer>§[84a]\\((.+?)\\))");
 
     //private static final Pattern MODIFIER_REGEX = Pattern.compile("§7 ??([%\\-+\\.\\/\\d]+s?)");
 
@@ -79,6 +78,7 @@ public final class StatusEffectModel extends Model {
         for (StyledText effect : effects) {
             StyledText trimmedEffect = effect.trim();
             if (trimmedEffect.isEmpty()) continue;
+
 
             Matcher m = trimmedEffect.getMatcher(STATUS_EFFECT_PATTERN);
             if (!m.find()) continue;
