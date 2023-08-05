@@ -1,9 +1,21 @@
+## [0.0.3-alpha.274](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.273...v0.0.3-alpha.274) (2023-08-05)
+
+
+### New Features
+
+* Make spell casts faster, add an option to disable safety checks ([#1942](https://github.com/Wynntils/Artemis/issues/1942)) ([6d0fd52](https://github.com/Wynntils/Artemis/commit/6d0fd52caec0592bac986b1ab15e43ce3410e4f9))
+
 ## [0.0.3-alpha.273](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.272...v0.0.3-alpha.273) (2023-08-05)
 
 
 ### New Features
 
 * render markers on map ([#1940](https://github.com/Wynntils/Artemis/issues/1940)) ([9665c2a](https://github.com/Wynntils/Artemis/commit/9665c2a17fed62bd949a57bc0bf90366d9f5b665))
+
+
+### Miscellaneous Chores
+
+* **release:** v0.0.3-alpha.273 [skip ci] ([370d902](https://github.com/Wynntils/Artemis/commit/370d902a4d4afe02f2267014609383e307b6c52a))
 
 ## [0.0.3-alpha.272](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.271...v0.0.3-alpha.272) (2023-08-05)
 
@@ -40,16 +52,4 @@
 ### Miscellaneous Chores
 
 * **release:** v0.0.3-alpha.270 [skip ci] ([a35eafc](https://github.com/Wynntils/Artemis/commit/a35eafc0bde9250f0409cf3a29a67fc1c89116cb))
-
-## [0.0.3-alpha.269](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.268...v0.0.3-alpha.269) (2023-08-02)
-
-
-### New Features
-
-* Transcribe into and from Gavellian and Wynnic ([#1901](https://github.com/Wynntils/Artemis/issues/1901)) ([457654f](https://github.com/Wynntils/Artemis/commit/457654f53c72f2edb944662828860b11ed0f9d5c))
-
-
-### Miscellaneous Chores
-
-* **release:** v0.0.3-alpha.269 [skip ci] ([6afc16e](https://github.com/Wynntils/Artemis/commit/6afc16e983167e02e4bff56eea6ec07403f323cd))
 
