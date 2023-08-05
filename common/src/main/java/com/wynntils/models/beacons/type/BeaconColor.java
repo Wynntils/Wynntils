@@ -18,17 +18,17 @@ public enum BeaconColor {
     YELLOW(3, Items.GOLDEN_PICKAXE, true, ActivityType.RAID, CommonColors.YELLOW),
     BLUE(4, Items.GOLDEN_PICKAXE, true, ActivityType.LOOTRUN_CAMP, CommonColors.BLUE),
     PURPLE(5, Items.GOLDEN_PICKAXE, true, ActivityType.MINI_QUEST, CommonColors.PURPLE),
-    GRAY(6, Items.GOLDEN_PICKAXE, true, Set.of(), CommonColors.GRAY),
+    GRAY(6, Items.GOLDEN_PICKAXE, true, Set.of(), CommonColors.LIGHT_GRAY),
     ORANGE(7, Items.GOLDEN_PICKAXE, true, ActivityType.CAVE, CommonColors.ORANGE),
     RED(8, Items.GOLDEN_PICKAXE, true, ActivityType.DUNGEON, CommonColors.RED),
-    DARK_GRAY(9, Items.GOLDEN_PICKAXE, true, Set.of(), CommonColors.DARK_GRAY),
+    DARK_GRAY(9, Items.GOLDEN_PICKAXE, true, Set.of(), CommonColors.GRAY),
     WHITE(
             10,
             Items.GOLDEN_PICKAXE,
             true,
             Set.of(ActivityType.WORLD_DISCOVERY, ActivityType.TERRITORIAL_DISCOVERY),
             CommonColors.WHITE),
-    AQUA(11, Items.GOLDEN_PICKAXE, true, ActivityType.QUEST, CommonColors.CYAN), // This is CYAN in the resource pack
+    AQUA(11, Items.GOLDEN_PICKAXE, true, ActivityType.QUEST, CommonColors.AQUA), // This is CYAN in the resource pack
     RAINBOW(12, Items.GOLDEN_PICKAXE, true, Set.of(), CommonColors.RAINBOW);
 
     private final int damageValue;

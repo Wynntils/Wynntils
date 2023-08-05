@@ -328,7 +328,7 @@ public final class GuildMapScreen extends AbstractMapScreen {
             renderedPois.addAll(advancementPois);
         }
 
-        Models.Marker.USER_WAYPOINTS_PROVIDER.getWaypointPois().forEach(renderedPois::add);
+        Models.Marker.USER_WAYPOINTS_PROVIDER.getPois().forEach(renderedPois::add);
 
         renderPois(
                 renderedPois,

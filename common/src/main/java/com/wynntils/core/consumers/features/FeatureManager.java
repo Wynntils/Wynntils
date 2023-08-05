@@ -32,6 +32,7 @@ import com.wynntils.features.chat.MessageFilterFeature;
 import com.wynntils.features.combat.AbbreviateMobHealthFeature;
 import com.wynntils.features.combat.CombatXpGainMessageFeature;
 import com.wynntils.features.combat.ContentTrackerFeature;
+import com.wynntils.features.combat.CustomLootrunBeaconsFeature;
 import com.wynntils.features.combat.FixCastingSpellsFromInventoryFeature;
 import com.wynntils.features.combat.HealthPotionBlockerFeature;
 import com.wynntils.features.combat.HorseMountFeature;
@@ -201,6 +202,7 @@ public final class FeatureManager extends Manager {
         registerFeature(new AbbreviateMobHealthFeature());
         registerFeature(new CombatXpGainMessageFeature());
         registerFeature(new ContentTrackerFeature());
+        registerFeature(new CustomLootrunBeaconsFeature());
         registerFeature(new FixCastingSpellsFromInventoryFeature());
         registerFeature(new HealthPotionBlockerFeature());
         registerFeature(new HorseMountFeature());

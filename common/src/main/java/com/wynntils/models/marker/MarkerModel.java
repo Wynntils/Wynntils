@@ -7,6 +7,7 @@ package com.wynntils.models.marker;
 import com.wynntils.core.components.Model;
 import com.wynntils.models.marker.type.MarkerInfo;
 import com.wynntils.models.marker.type.MarkerProvider;
+import com.wynntils.services.map.pois.Poi;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Stream;
@@ -28,5 +29,9 @@ public class MarkerModel extends Model {
 
     public Stream<MarkerInfo> getAllMarkers() {
         return markerProviders.stream().filter(MarkerProvider::isEnabled).flatMap(MarkerProvider::getMarkerInfos);
+    }
+
+    public Stream<Poi> getAllPois() {
+        return markerProviders.stream().filter(MarkerProvider::isEnabled).flatMap(MarkerProvider::getPois);
     }
 }

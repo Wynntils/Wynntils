@@ -20,7 +20,6 @@ import com.wynntils.mc.event.RenderLevelEvent;
 import com.wynntils.models.marker.type.MarkerInfo;
 import com.wynntils.services.map.pois.WaypointPoi;
 import com.wynntils.utils.colors.CommonColors;
-import com.wynntils.utils.colors.CustomColor;
 import com.wynntils.utils.mc.McUtils;
 import com.wynntils.utils.mc.type.Location;
 import com.wynntils.utils.render.FontRenderer;
@@ -45,10 +44,7 @@ import org.joml.Vector4f;
 
 @ConfigCategory(Category.MAP)
 public class WorldWaypointDistanceFeature extends Feature {
-    private static final WaypointPoi DUMMY_WAYPOINT = new WaypointPoi(() -> null);
-
-    @Persisted
-    public final Config<CustomColor> textColor = new Config<>(CommonColors.WHITE);
+    private static final WaypointPoi DUMMY_WAYPOINT = new WaypointPoi(() -> null, "");
 
     @Persisted
     public final Config<Float> backgroundOpacity = new Config<>(0.2f);
@@ -168,7 +164,7 @@ public class WorldWaypointDistanceFeature extends Feature {
                                 displayPositionY - backgroundHeight,
                                 displayPositionY + backgroundHeight,
                                 0,
-                                textColor.get(),
+                                renderedMarker.markerInfo.beaconColor(),
                                 HorizontalAlignment.CENTER,
                                 VerticalAlignment.MIDDLE,
                                 textShadow.get());

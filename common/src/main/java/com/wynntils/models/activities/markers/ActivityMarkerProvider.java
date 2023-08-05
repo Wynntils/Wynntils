@@ -10,46 +10,61 @@ import com.wynntils.models.beacons.type.BeaconColor;
 import com.wynntils.models.marker.type.MarkerInfo;
 import com.wynntils.models.marker.type.MarkerProvider;
 import com.wynntils.models.marker.type.StaticLocationSupplier;
+import com.wynntils.services.map.pois.MarkerPoi;
 import com.wynntils.utils.colors.CommonColors;
 import com.wynntils.utils.mc.type.Location;
+import com.wynntils.utils.mc.type.PoiLocation;
 import com.wynntils.utils.render.Texture;
-import com.wynntils.utils.type.Pair;
 import java.util.stream.Stream;
 
-public class ActivityMarkerProvider implements MarkerProvider {
-    private Pair<Location, MarkerInfo> spawnInfo;
-    private Pair<Location, MarkerInfo> trackedActivityInfo;
+public class ActivityMarkerProvider implements MarkerProvider<MarkerPoi> {
+    private static final String ACTIVITY_LOCATION_NAME = "Activity Location";
+
+    private ActivityMarkerInfo spawnInfo;
+    private ActivityMarkerInfo trackedActivityInfo;
 
     public void setSpawnLocation(Location spawnLocation) {
         this.spawnInfo = spawnLocation == null
                 ? null
-                : Pair.of(
+                : new ActivityMarkerInfo(
                         spawnLocation,
                         new MarkerInfo(
+                                ACTIVITY_LOCATION_NAME,
                                 new StaticLocationSupplier(spawnLocation),
                                 Texture.QUESTS_BUTTON,
                                 CommonColors.WHITE,
-                                CommonColors.WHITE));
+                                CommonColors.WHITE,
+                                CommonColors.WHITE),
+                        new MarkerPoi(
+                                PoiLocation.fromLocation(spawnLocation),
+                                ACTIVITY_LOCATION_NAME,
+                                Texture.QUESTS_BUTTON));
     }
 
     public Location getSpawnLocation() {
-        return spawnInfo.a();
+        return spawnInfo.location();
     }
 
     public void setTrackedActivityLocation(Location trackedActivityLocation, BeaconColor beaconColor) {
         this.trackedActivityInfo = trackedActivityLocation == null
                 ? null
-                : Pair.of(
+                : new ActivityMarkerInfo(
                         trackedActivityLocation,
                         new MarkerInfo(
+                                ACTIVITY_LOCATION_NAME,
                                 new StaticLocationSupplier(trackedActivityLocation),
                                 Texture.QUESTS_BUTTON,
                                 beaconColor.getColor(),
-                                CommonColors.WHITE));
+                                CommonColors.WHITE,
+                                CommonColors.WHITE),
+                        new MarkerPoi(
+                                PoiLocation.fromLocation(trackedActivityLocation),
+                                ACTIVITY_LOCATION_NAME,
+                                Texture.QUESTS_BUTTON));
     }
 
     public Location getTrackedActivityLocation() {
-        return trackedActivityInfo.a();
+        return trackedActivityInfo.location();
     }
 
     @Override
@@ -57,10 +72,24 @@ public class ActivityMarkerProvider implements MarkerProvider {
         Stream<MarkerInfo> stream = Stream.empty();
 
         if (spawnInfo != null) {
-            stream = Stream.concat(stream, Stream.of(spawnInfo.b()));
+            stream = Stream.concat(stream, Stream.of(spawnInfo.markerInfo()));
         }
         if (trackedActivityInfo != null) {
-            stream = Stream.concat(stream, Stream.of(trackedActivityInfo.b()));
+            stream = Stream.concat(stream, Stream.of(trackedActivityInfo.markerInfo()));
+        }
+
+        return stream;
+    }
+
+    @Override
+    public Stream<MarkerPoi> getPois() {
+        Stream<MarkerPoi> stream = Stream.empty();
+
+        if (spawnInfo != null) {
+            stream = Stream.concat(stream, Stream.of(spawnInfo.markerPoi()));
+        }
+        if (trackedActivityInfo != null) {
+            stream = Stream.concat(stream, Stream.of(trackedActivityInfo.markerPoi()));
         }
 
         return stream;
@@ -74,4 +103,6 @@ public class ActivityMarkerProvider implements MarkerProvider {
                         .get()
                 && (spawnInfo != null || trackedActivityInfo != null);
     }
+
+    private record ActivityMarkerInfo(Location location, MarkerInfo markerInfo, MarkerPoi markerPoi) {}
 }

@@ -217,6 +217,14 @@ public abstract class AbstractMapScreen extends WynntilsScreen {
             this.onClose();
             return true;
         }
+        if (keyCode == GLFW.GLFW_KEY_EQUAL || keyCode == GLFW.GLFW_KEY_KP_ADD) {
+            setZoom(currentZoom + 0.02f);
+            return true;
+        }
+        if (keyCode == GLFW.GLFW_KEY_MINUS || keyCode == GLFW.GLFW_KEY_KP_SUBTRACT) {
+            setZoom(currentZoom - 0.02f);
+            return true;
+        }
 
         // Pass along key press to move
         InputConstants.Key key = InputConstants.getKey(keyCode, scanCode);
