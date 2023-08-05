@@ -1,9 +1,21 @@
+## [0.0.3-alpha.275](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.274...v0.0.3-alpha.275) (2023-08-05)
+
+
+### New Features
+
+* add named lootrun tasks, overlays for lootrun functions ([#1944](https://github.com/Wynntils/Artemis/issues/1944)) ([b22ac63](https://github.com/Wynntils/Artemis/commit/b22ac6347045f89a50cde4c85e8428434876bac7))
+
 ## [0.0.3-alpha.274](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.273...v0.0.3-alpha.274) (2023-08-05)
 
 
 ### New Features
 
 * Make spell casts faster, add an option to disable safety checks ([#1942](https://github.com/Wynntils/Artemis/issues/1942)) ([6d0fd52](https://github.com/Wynntils/Artemis/commit/6d0fd52caec0592bac986b1ab15e43ce3410e4f9))
+
+
+### Miscellaneous Chores
+
+* **release:** v0.0.3-alpha.274 [skip ci] ([6696676](https://github.com/Wynntils/Artemis/commit/6696676611c696fb5cdd1fae0dfd81b019da6f82))
 
 ## [0.0.3-alpha.273](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.272...v0.0.3-alpha.273) (2023-08-05)
 
@@ -40,16 +52,4 @@
 ### Miscellaneous Chores
 
 * **release:** v0.0.3-alpha.271 [skip ci] ([090ad08](https://github.com/Wynntils/Artemis/commit/090ad08ded2fa6f064ba8d057ae55a90f2a6dc3e))
-
-## [0.0.3-alpha.270](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.269...v0.0.3-alpha.270) (2023-08-03)
-
-
-### Bug Fixes
-
-* Deprecation warning for archivesBaseName in Gradle 9.0 ([#1930](https://github.com/Wynntils/Artemis/issues/1930)) ([b3505a0](https://github.com/Wynntils/Artemis/commit/b3505a0efd681bc27301440087e5d4e4f6737d31))
-
-
-### Miscellaneous Chores
-
-* **release:** v0.0.3-alpha.270 [skip ci] ([a35eafc](https://github.com/Wynntils/Artemis/commit/a35eafc0bde9250f0409cf3a29a67fc1c89116cb))
 
