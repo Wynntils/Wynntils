@@ -4,7 +4,6 @@
  */
 package com.wynntils.functions.generic;
 
-import com.wynntils.core.components.Services;
 import com.wynntils.core.consumers.functions.GenericFunction;
 import com.wynntils.core.consumers.functions.arguments.FunctionArguments;
 import com.wynntils.utils.StringUtils;

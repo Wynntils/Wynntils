@@ -1,17 +1,16 @@
 /*
- * Copyright © Wynntils 2022.
+ * Copyright © Wynntils 2022-2023.
  * This file is released under AGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.core.mod;
 
 import com.wynntils.core.components.Manager;
 import com.wynntils.mc.event.TickAlwaysEvent;
+import com.wynntils.mc.event.TickEvent;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
-
-import com.wynntils.mc.event.TickEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 
 public final class TickSchedulerManager extends Manager {
