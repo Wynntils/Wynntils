@@ -10,10 +10,13 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
+
+import com.wynntils.mc.event.TickEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 
 public final class TickSchedulerManager extends Manager {
     private final Map<Runnable, Integer> tasks = new ConcurrentHashMap<>();
+    private int ticks = 0;
 
     public TickSchedulerManager() {
         super(List.of());
@@ -42,5 +45,18 @@ public final class TickSchedulerManager extends Manager {
                 entry.setValue(ticksLeft - 1);
             }
         }
+    }
+
+    @SubscribeEvent
+    public void onTick(TickEvent e) {
+        if (ticks == Integer.MAX_VALUE) {
+            ticks = 0;
+        } else {
+            ticks++;
+        }
+    }
+
+    public int getTicks() {
+        return ticks;
     }
 }

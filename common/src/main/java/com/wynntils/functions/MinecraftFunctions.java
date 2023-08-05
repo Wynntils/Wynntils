@@ -4,6 +4,7 @@
  */
 package com.wynntils.functions;
 
+import com.wynntils.core.components.Managers;
 import com.wynntils.core.consumers.functions.Function;
 import com.wynntils.core.consumers.functions.arguments.FunctionArguments;
 import com.wynntils.mc.mixin.accessors.MinecraftAccessor;
@@ -35,6 +36,13 @@ public class MinecraftFunctions {
         @Override
         public Integer getValue(FunctionArguments arguments) {
             return MinecraftAccessor.getFps();
+        }
+    }
+
+    public static class TicksFunction extends Function<Integer> {
+        @Override
+        public Integer getValue(FunctionArguments arguments) {
+            return Managers.TickScheduler.getTicks();
         }
     }
 }

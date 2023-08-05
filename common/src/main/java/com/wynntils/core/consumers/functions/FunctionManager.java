@@ -236,10 +236,10 @@ public final class FunctionManager extends Manager {
             resultBuilder.append(c);
         }
 
-        // Calculate templates first to allow for color codes in templates
-        String calculatedString = doFormat(resultBuilder.toString());
+        // Parse color codes before calculating the templates
+        String escapedTemplate = parseColorCodes(resultBuilder.toString());
 
-        calculatedString = parseColorCodes(calculatedString);
+        String calculatedString = doFormat(escapedTemplate);
 
         // Turn escaped {} (`\[\` and `\]\`) back into real {}
         calculatedString = calculatedString.replace("\\[\\", "{");
@@ -359,7 +359,6 @@ public final class FunctionManager extends Manager {
         registerFunction(new StringFunctions.ConcatFunction());
         registerFunction(new StringFunctions.FormatCappedFunction());
         registerFunction(new StringFunctions.FormatFunction());
-        registerFunction(new StringFunctions.IteratorFunction());
         registerFunction(new StringFunctions.LeadingZerosFunction());
         registerFunction(new StringFunctions.ParseDoubleFunction());
         registerFunction(new StringFunctions.ParseIntegerFunction());
@@ -474,6 +473,7 @@ public final class FunctionManager extends Manager {
         registerFunction(new MinecraftFunctions.DirFunction());
         registerFunction(new MinecraftFunctions.FpsFunction());
         registerFunction(new MinecraftFunctions.MyLocationFunction());
+        registerFunction(new MinecraftFunctions.TicksFunction());
 
         registerFunction(new ProfessionFunctions.LastHarvestMaterialLevelFunction());
         registerFunction(new ProfessionFunctions.LastHarvestMaterialNameFunction());
