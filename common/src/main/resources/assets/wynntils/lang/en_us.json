@@ -890,7 +890,7 @@
   "feature.wynntils.quickCast.levelRequirementNotReached": "You need to reach %s %s before using this weapon.",
   "feature.wynntils.quickCast.name": "Quick Spell Cast",
   "feature.wynntils.quickCast.notAWeapon": "You can only quick-cast with a weapon!",
-  "feature.wynntils.quickCast.rightClickTickDelay.description": "How many ticks delay should there be before a new right-click is sent?",
+  "feature.wynntils.quickCast.rightClickTickDelay.description": "How many ticks delay should there be before a new right-click is sent? Setting this too low will cause your clicks to be ignored.",
   "feature.wynntils.quickCast.rightClickTickDelay.name": "Right-Click Tick Delay",
   "feature.wynntils.quickCast.safeCasting.description": "Should the quick-cast be cancelled if you are in the middle of an incompatible spell-cast?",
   "feature.wynntils.quickCast.safeCasting.name": "Safe Casting",
