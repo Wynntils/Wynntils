@@ -229,6 +229,7 @@ public class MinimapOverlay extends Overlay {
         poisToRender = Stream.concat(
                 poisToRender, Managers.Feature.getFeatureInstance(MainMapFeature.class).customPois.get().stream());
         poisToRender = Stream.concat(poisToRender, Services.Poi.getProvidedCustomPois().stream());
+        poisToRender = Stream.concat(poisToRender, Models.Marker.getAllPois());
 
         MultiBufferSource.BufferSource bufferSource =
                 McUtils.mc().renderBuffers().bufferSource();
@@ -263,7 +264,7 @@ public class MinimapOverlay extends Overlay {
 
         // Compass icon
         List<WaypointPoi> waypointPois =
-                Models.Marker.USER_WAYPOINTS_PROVIDER.getWaypointPois().toList();
+                Models.Marker.USER_WAYPOINTS_PROVIDER.getPois().toList();
         for (WaypointPoi waypointPoi : waypointPois) {
             PoiLocation compassLocation = waypointPoi.getLocation();
             if (compassLocation == null) return;

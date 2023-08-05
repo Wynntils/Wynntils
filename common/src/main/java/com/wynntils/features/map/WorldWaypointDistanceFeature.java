@@ -44,7 +44,7 @@ import org.joml.Vector4f;
 
 @ConfigCategory(Category.MAP)
 public class WorldWaypointDistanceFeature extends Feature {
-    private static final WaypointPoi DUMMY_WAYPOINT = new WaypointPoi(() -> null);
+    private static final WaypointPoi DUMMY_WAYPOINT = new WaypointPoi(() -> null, "");
 
     @Persisted
     public final Config<Float> backgroundOpacity = new Config<>(0.2f);
