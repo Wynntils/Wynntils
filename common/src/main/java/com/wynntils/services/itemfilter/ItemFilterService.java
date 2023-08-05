@@ -5,49 +5,44 @@
 package com.wynntils.services.itemfilter;
 
 import com.wynntils.core.components.Service;
+import com.wynntils.utils.type.ErrorOr;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.function.Function;
+import net.minecraft.client.resources.language.I18n;
 
 public class ItemFilterService extends Service {
-    private final Map<String, Function<String, ? extends ItemFilter>> filterSuppliers = new HashMap<>();
-
-    private final Map<String, String> filterUsages = new HashMap<>();
+    private final Map<String, ItemFilterFactory> filterFactories = new HashMap<>();
 
     public ItemFilterService() {
         super(List.of());
-        registerFilter("lvl", "level", LevelItemFilter::new);
-        registerFilter("prof", "profession", ProfessionItemFilter::new);
+        registerFilter(new LevelItemFilterFactory());
+        registerFilter(new ProfessionItemFilterFactory());
     }
 
-    private void registerFilter(String keyword, String translateKey, Function<String, ? extends ItemFilter> supplier) {
-        filterSuppliers.put(keyword, supplier);
-        filterUsages.put(keyword, "feature.wynntils.itemFilter." + translateKey + ".usage");
+    private void registerFilter(ItemFilterFactory factory) {
+        filterFactories.put(factory.getKeyword(), factory);
     }
 
     /**
-     * Creates a new ItemFilter based on the given keyword and initates it with the given value
-     *
-     * @param keyword the keyword associated with the filter
-     * @param filterValue the value to provide to the filter
-     * @return the created ItemFilter
-     * @throws UnknownFilterException if the keyword is not associated with a filter
+     * Returns a filter factory for the given keyword, or an error string if the keyword does not match any filter.
+     * @param keyword the keyword to get the filter factory for
+     * @return the filter factory, or an error string if the keyword does not match any filter
      */
-    public ItemFilter createFilter(String keyword, String filterValue) throws UnknownFilterException {
-        if (!filterSuppliers.containsKey(keyword)) {
-            throw new UnknownFilterException(keyword);
+    public ErrorOr<? extends ItemFilterFactory> getFilterFactory(String keyword) {
+        if (!filterFactories.containsKey(keyword)) {
+            return ErrorOr.error(I18n.get("feature.wynntils.itemFilter.unknownFilter", keyword));
         }
 
-        return filterSuppliers.get(keyword).apply(filterValue);
+        return ErrorOr.of(filterFactories.get(keyword));
     }
 
     /**
-     * Returns a mapping of all registered filter keywords to their usage translation keys
-     * @return a mapping of all registered filter keywords to their usage translation keys
+     * @return an unmodifiable collection of all registered filter factories
      */
-    public Map<String, String> getFilterUsages() {
-        return Collections.unmodifiableMap(filterUsages);
+    public Collection<ItemFilterFactory> getFilterFactories() {
+        return Collections.unmodifiableCollection(filterFactories.values());
     }
 }
