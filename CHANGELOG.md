@@ -1,9 +1,21 @@
+## [0.0.3-alpha.272](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.271...v0.0.3-alpha.272) (2023-08-05)
+
+
+### New Features
+
+* add keyboard zooming to maps ([#1943](https://github.com/Wynntils/Artemis/issues/1943)) ([d42acc5](https://github.com/Wynntils/Artemis/commit/d42acc5147f9d8f8ed685a7a9cf2d436839b88cd))
+
 ## [0.0.3-alpha.271](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.270...v0.0.3-alpha.271) (2023-08-04)
 
 
 ### New Features
 
 * accurately estimate lootrun beacon position ([#1939](https://github.com/Wynntils/Artemis/issues/1939)) ([b2cf985](https://github.com/Wynntils/Artemis/commit/b2cf985663e6a344539c8e6e56ed15d73621262c))
+
+
+### Miscellaneous Chores
+
+* **release:** v0.0.3-alpha.271 [skip ci] ([090ad08](https://github.com/Wynntils/Artemis/commit/090ad08ded2fa6f064ba8d057ae55a90f2a6dc3e))
 
 ## [0.0.3-alpha.270](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.269...v0.0.3-alpha.270) (2023-08-03)
 
@@ -40,16 +52,4 @@
 ### Miscellaneous Chores
 
 * **release:** v0.0.3-alpha.268 [skip ci] ([0bffa2c](https://github.com/Wynntils/Artemis/commit/0bffa2c33d87d9b950e66f3b58c12d4452f833c9))
-
-## [0.0.3-alpha.267](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.266...v0.0.3-alpha.267) (2023-08-02)
-
-
-### Miscellaneous Chores
-
-* **release:** v0.0.3-alpha.267 [skip ci] ([69e1a4a](https://github.com/Wynntils/Artemis/commit/69e1a4adab187c8f8340bf1954ef458b08711967))
-
-
-### Code Refactoring
-
-* Add McUtils.sendChat ([#1929](https://github.com/Wynntils/Artemis/issues/1929)) ([54ca001](https://github.com/Wynntils/Artemis/commit/54ca001f28b7e5aef8250da24173d00bb4daa9ab))
 
