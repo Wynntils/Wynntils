@@ -140,7 +140,7 @@ public class LootrunModel extends Model {
     }
 
     private void loadLootrunTaskLocations() {
-        Download dl = Managers.Net.download(UrlId.DATA_STATIC_LOOTRUN_TASKS);
+        Download dl = Managers.Net.download(UrlId.DATA_STATIC_LOOTRUN_TASKS_NAMED);
         dl.handleReader(reader -> {
             Type type = new TypeToken<Map<LootrunLocation, Set<TaskLocation>>>() {}.getType();
             taskLocations = Managers.Json.GSON.fromJson(reader, type);
@@ -293,6 +293,13 @@ public class LootrunModel extends Model {
 
     public Map<BeaconColor, TaskPrediction> getBeacons() {
         return beacons;
+    }
+
+    public TaskLocation getTaskForColor(BeaconColor beaconColor) {
+        TaskPrediction taskPrediction = beacons.get(beaconColor);
+        if (taskPrediction == null) return null;
+
+        return taskPrediction.taskLocation();
     }
 
     public void setState(LootrunningState newState, LootrunTaskType taskType) {

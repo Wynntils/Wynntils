@@ -9,6 +9,8 @@ import com.wynntils.core.consumers.functions.Function;
 import com.wynntils.core.consumers.functions.arguments.FunctionArguments;
 import com.wynntils.models.beacons.type.BeaconColor;
 import com.wynntils.models.containers.type.MythicFind;
+import com.wynntils.models.lootrun.type.TaskLocation;
+import com.wynntils.utils.EnumUtils;
 import java.util.Comparator;
 import java.util.List;
 
@@ -97,6 +99,48 @@ public class LootrunFunctions {
             if (beaconColor == null) return -1;
 
             return Models.Lootrun.getBeaconCount(beaconColor);
+        }
+
+        @Override
+        public FunctionArguments.Builder getArgumentsBuilder() {
+            return new FunctionArguments.RequiredArgumentBuilder(
+                    List.of(new FunctionArguments.Argument<>("color", String.class, null)));
+        }
+    }
+
+    public static class LootrunTaskNameFunction extends Function<String> {
+        @Override
+        public String getValue(FunctionArguments arguments) {
+            String color = arguments.getArgument("color").getStringValue();
+
+            BeaconColor beaconColor = BeaconColor.fromName(color);
+            if (beaconColor == null) return "";
+
+            TaskLocation taskLocation = Models.Lootrun.getTaskForColor(beaconColor);
+            if (taskLocation == null) return "";
+
+            return taskLocation.name();
+        }
+
+        @Override
+        public FunctionArguments.Builder getArgumentsBuilder() {
+            return new FunctionArguments.RequiredArgumentBuilder(
+                    List.of(new FunctionArguments.Argument<>("color", String.class, null)));
+        }
+    }
+
+    public static class LootrunTaskTypeFunction extends Function<String> {
+        @Override
+        public String getValue(FunctionArguments arguments) {
+            String color = arguments.getArgument("color").getStringValue();
+
+            BeaconColor beaconColor = BeaconColor.fromName(color);
+            if (beaconColor == null) return "";
+
+            TaskLocation taskLocation = Models.Lootrun.getTaskForColor(beaconColor);
+            if (taskLocation == null) return "";
+
+            return EnumUtils.toNiceString(taskLocation.taskType());
         }
 
         @Override
