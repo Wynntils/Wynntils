@@ -4,6 +4,6 @@
  */
 package com.wynntils.models.beacons.type;
 
-import com.wynntils.utils.mc.type.Location;
+import net.minecraft.world.phys.Vec3;
 
-public record Beacon(Location location, BeaconColor color) {}
+public record Beacon(Vec3 position, BeaconColor color) {}

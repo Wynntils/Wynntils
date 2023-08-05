@@ -4,15 +4,15 @@
  */
 package com.wynntils.mc.event;
 
-import net.minecraft.core.Position;
 import net.minecraft.world.entity.Entity;
+import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.eventbus.api.Event;
 
 public class TeleportEntityEvent extends Event {
     private final Entity entity;
-    private final Position newPosition;
+    private final Vec3 newPosition;
 
-    public TeleportEntityEvent(Entity entity, Position newPosition) {
+    public TeleportEntityEvent(Entity entity, Vec3 newPosition) {
         this.entity = entity;
         this.newPosition = newPosition;
     }
@@ -21,7 +21,7 @@ public class TeleportEntityEvent extends Event {
         return entity;
     }
 
-    public Position getNewPosition() {
+    public Vec3 getNewPosition() {
         return newPosition;
     }
 }

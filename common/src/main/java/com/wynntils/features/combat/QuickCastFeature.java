@@ -9,7 +9,9 @@ import com.wynntils.core.components.Models;
 import com.wynntils.core.consumers.features.Feature;
 import com.wynntils.core.consumers.features.properties.RegisterKeyBind;
 import com.wynntils.core.keybinds.KeyBind;
+import com.wynntils.core.persisted.Persisted;
 import com.wynntils.core.persisted.config.Category;
+import com.wynntils.core.persisted.config.Config;
 import com.wynntils.core.persisted.config.ConfigCategory;
 import com.wynntils.core.text.StyledText;
 import com.wynntils.mc.event.TickEvent;
@@ -49,12 +51,18 @@ public class QuickCastFeature extends Feature {
     @RegisterKeyBind
     private final KeyBind castFourthSpell = new KeyBind("Cast 4th Spell", GLFW.GLFW_KEY_V, true, this::castFourthSpell);
 
+    @Persisted
+    private final Config<Integer> rightClickTickDelay = new Config<>(3);
+
+    @Persisted
+    private final Config<Boolean> safeCasting = new Config<>(true);
+
     private static final Pattern INCORRECT_CLASS_PATTERN = compileCCRegex("§✖§ Class Req: (.+)");
     private static final Pattern LVL_MIN_NOT_REACHED_PATTERN = compileCCRegex("§✖§ (.+) Min: ([0-9]+)");
 
     private SpellDirection[] spellInProgress = SpellDirection.NO_SPELL;
 
-    private static final Queue<Runnable> SPELL_PACKET_QUEUE = new LinkedList<>();
+    private static final Queue<SpellDirection> SPELL_PACKET_QUEUE = new LinkedList<>();
 
     private int packetCountdown = 0;
     private int spellCountdown = 0;
@@ -128,16 +136,19 @@ public class QuickCastFeature extends Feature {
         List<SpellDirection> spell = Stream.of(a, b, c)
                 .map(x -> (x == SpellUnit.PRIMARY) != isSpellInverted ? SpellDirection.RIGHT : SpellDirection.LEFT)
                 .toList();
-        for (int i = 0; i < spellInProgress.length; ++i) {
-            if (spellInProgress[i] != spell.get(i)) {
-                sendCancelReason(Component.translatable("feature.wynntils.quickCast.incompatibleInProgress"));
-                return;
+
+        if (safeCasting.get()) {
+            for (int i = 0; i < spellInProgress.length; ++i) {
+                if (spellInProgress[i] != spell.get(i)) {
+                    sendCancelReason(Component.translatable("feature.wynntils.quickCast.incompatibleInProgress"));
+                    return;
+                }
             }
         }
 
         lastSelectedSlot = McUtils.inventory().selected;
         List<SpellDirection> remainder = spell.subList(spellInProgress.length, spell.size());
-        remainder.stream().map(SpellDirection::getSendPacketRunnable).forEach(SPELL_PACKET_QUEUE::add);
+        SPELL_PACKET_QUEUE.addAll(remainder);
     }
 
     @SubscribeEvent
@@ -145,7 +156,9 @@ public class QuickCastFeature extends Feature {
         if (!Models.WorldState.onWorld()) return;
 
         // Clear spell after the 40 tick timeout period
-        if (spellCountdown > 0 && --spellCountdown <= 0) spellInProgress = SpellDirection.NO_SPELL;
+        if (spellCountdown > 0 && --spellCountdown <= 0) {
+            spellInProgress = SpellDirection.NO_SPELL;
+        }
 
         if (SPELL_PACKET_QUEUE.isEmpty()) return;
         if (--packetCountdown > 0) return;
@@ -153,12 +166,31 @@ public class QuickCastFeature extends Feature {
         int currSelectedSlot = McUtils.inventory().selected;
         boolean slotChanged = currSelectedSlot != lastSelectedSlot;
 
-        if (slotChanged) McUtils.sendPacket(new ServerboundSetCarriedItemPacket(lastSelectedSlot));
-        SPELL_PACKET_QUEUE.poll().run();
-        if (slotChanged) McUtils.sendPacket(new ServerboundSetCarriedItemPacket(currSelectedSlot));
+        if (slotChanged) {
+            McUtils.sendPacket(new ServerboundSetCarriedItemPacket(lastSelectedSlot));
+        }
 
-        // Waiting a few ticks is useful for avoiding lag related input-overlaps
-        if (!SPELL_PACKET_QUEUE.isEmpty()) packetCountdown = 3;
+        // Right clicks need a tick delay between them (2-3 ticks), left clicks don't
+        boolean didRightClick = false;
+        do {
+            SpellDirection spellDirection = SPELL_PACKET_QUEUE.poll();
+            spellDirection.getSendPacketRunnable().run();
+
+            if (spellDirection == SpellDirection.RIGHT) {
+                didRightClick = true;
+            }
+        } while (!SPELL_PACKET_QUEUE.isEmpty()
+                && (!didRightClick || SPELL_PACKET_QUEUE.peek() != SpellDirection.RIGHT));
+
+        if (slotChanged) {
+            McUtils.sendPacket(new ServerboundSetCarriedItemPacket(currSelectedSlot));
+        }
+
+        // Right clicks need a tick delay between them (2-3 ticks), left clicks don't
+        // So, we add a delay between right clicks, and new casts
+        if (!SPELL_PACKET_QUEUE.isEmpty()) {
+            packetCountdown = rightClickTickDelay.get();
+        }
     }
 
     @SubscribeEvent

@@ -22,6 +22,7 @@ import com.wynntils.mc.event.ContainerSetSlotEvent;
 import com.wynntils.mc.event.LocalSoundEvent;
 import com.wynntils.mc.event.MenuEvent;
 import com.wynntils.mc.event.MobEffectEvent;
+import com.wynntils.mc.event.ParticleAddedEvent;
 import com.wynntils.mc.event.PlayerInfoEvent;
 import com.wynntils.mc.event.PlayerInfoFooterChangedEvent;
 import com.wynntils.mc.event.PlayerTeleportEvent;
@@ -58,6 +59,7 @@ import net.minecraft.network.protocol.game.ClientboundCommandsPacket;
 import net.minecraft.network.protocol.game.ClientboundContainerClosePacket;
 import net.minecraft.network.protocol.game.ClientboundContainerSetContentPacket;
 import net.minecraft.network.protocol.game.ClientboundContainerSetSlotPacket;
+import net.minecraft.network.protocol.game.ClientboundLevelParticlesPacket;
 import net.minecraft.network.protocol.game.ClientboundOpenScreenPacket;
 import net.minecraft.network.protocol.game.ClientboundPlayerChatPacket;
 import net.minecraft.network.protocol.game.ClientboundPlayerInfoRemovePacket;
@@ -619,5 +621,14 @@ public abstract class ClientPacketListenerMixin {
         if (event.isCanceled()) {
             ci.cancel();
         }
+    }
+
+    @Inject(
+            method = "handleParticleEvent(Lnet/minecraft/network/protocol/game/ClientboundLevelParticlesPacket;)V",
+            at = @At("HEAD"))
+    private void handleParticles(ClientboundLevelParticlesPacket packet, CallbackInfo ci) {
+        if (!isRenderThread()) return;
+
+        MixinHelper.post(new ParticleAddedEvent(packet));
     }
 }
