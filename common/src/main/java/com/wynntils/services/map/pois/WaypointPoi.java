@@ -11,10 +11,12 @@ import java.util.function.Supplier;
 
 public class WaypointPoi extends DynamicIconPoi {
     private final PointerPoi pointer;
+    private final String name;
 
-    public WaypointPoi(Supplier<PoiLocation> locationSupplier) {
+    public WaypointPoi(Supplier<PoiLocation> locationSupplier, String name) {
         super(locationSupplier);
-        pointer = new PointerPoi(locationSupplier);
+        this.pointer = new PointerPoi(locationSupplier);
+        this.name = name;
     }
 
     public PointerPoi getPointerPoi() {
@@ -33,7 +35,7 @@ public class WaypointPoi extends DynamicIconPoi {
 
     @Override
     public String getName() {
-        return "Waypoint";
+        return name;
     }
 
     @Override
