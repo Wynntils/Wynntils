@@ -7,10 +7,14 @@ package com.wynntils.models.spells;
 import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.components.Handlers;
 import com.wynntils.core.components.Model;
+import com.wynntils.core.components.Models;
 import com.wynntils.core.text.StyledText;
 import com.wynntils.handlers.item.event.ItemRenamedEvent;
+import com.wynntils.mc.event.ArmSwingEvent;
 import com.wynntils.mc.event.SubtitleSetTextEvent;
+import com.wynntils.mc.event.UseItemEvent;
 import com.wynntils.models.character.CharacterModel;
+import com.wynntils.models.character.type.ClassType;
 import com.wynntils.models.spells.actionbar.SpellSegment;
 import com.wynntils.models.spells.event.SpellEvent;
 import com.wynntils.models.spells.event.SpellSegmentUpdateEvent;
@@ -18,11 +22,14 @@ import com.wynntils.models.spells.type.PartialSpellSource;
 import com.wynntils.models.spells.type.SpellDirection;
 import com.wynntils.models.spells.type.SpellFailureReason;
 import com.wynntils.models.spells.type.SpellType;
+import java.time.Duration;
+import java.time.Instant;
 import java.util.Arrays;
 import java.util.List;
 import java.util.regex.MatchResult;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import net.minecraftforge.eventbus.api.EventPriority;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 
 public class SpellModel extends Model {
@@ -36,6 +43,8 @@ public class SpellModel extends Model {
     private final SpellSegment spellSegment = new SpellSegment();
 
     private SpellDirection[] lastSpell = SpellDirection.NO_SPELL;
+    private SpellDirection[] spellPrediction = SpellDirection.NO_SPELL;
+    private Instant lastSpellPrediction = Instant.EPOCH;
 
     public SpellModel(CharacterModel characterModel) {
         super(List.of(characterModel));
@@ -98,6 +107,16 @@ public class SpellModel extends Model {
         }
     }
 
+    @SubscribeEvent(priority = EventPriority.LOW)
+    public void onSwing(ArmSwingEvent event) {
+        addSpellPrediction(SpellDirection.LEFT);
+    }
+
+    @SubscribeEvent(priority = EventPriority.LOW)
+    public void onUse(UseItemEvent event) {
+        addSpellPrediction(SpellDirection.RIGHT);
+    }
+
     private static SpellDirection[] getSpellFromMatcher(MatchResult spellMatcher) {
         int size = 1;
         for (; size < 3; ++size) {
@@ -110,5 +129,45 @@ public class SpellModel extends Model {
         }
 
         return spell;
+    }
+
+    public void setSpellPrediction(SpellDirection[] spellPrediction) {
+        this.spellPrediction = spellPrediction;
+        lastSpellPrediction = Instant.now();
+    }
+
+    public SpellDirection[] getSpellPrediction() {
+        // We should only ever have one empty SpellDirection array
+        if (spellPrediction == SpellDirection.NO_SPELL) return spellPrediction;
+        if (Duration.between(lastSpellPrediction, Instant.now()).toSeconds() > 4)
+            return spellPrediction = SpellDirection.NO_SPELL;
+        return spellPrediction;
+    }
+
+    public void addSpellPrediction(SpellDirection spellDirection) {
+        // We should only ever have one empty SpellDirection array
+        SpellDirection[] spellPrediction = getSpellPrediction();
+        if (spellPrediction == SpellDirection.NO_SPELL) {
+            if (spellDirection
+                    != (Models.Character.getClassType() == ClassType.ARCHER
+                            ? SpellDirection.LEFT
+                            : SpellDirection.RIGHT)) return;
+            setSpellPrediction(new SpellDirection[] {spellDirection, null, null});
+            return;
+        }
+
+        if (spellPrediction[2] != null) {
+            setSpellPrediction(SpellDirection.NO_SPELL);
+            return;
+        }
+
+        if (spellPrediction[1] != null) {
+            spellPrediction[2] = spellDirection;
+            setSpellPrediction(spellPrediction);
+            return;
+        }
+
+        spellPrediction[1] = spellDirection;
+        setSpellPrediction(spellPrediction);
     }
 }

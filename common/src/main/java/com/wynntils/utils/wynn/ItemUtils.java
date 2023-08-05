@@ -5,9 +5,11 @@
 package com.wynntils.utils.wynn;
 
 import com.wynntils.core.components.Models;
+import com.wynntils.core.text.PartStyle;
 import com.wynntils.core.text.StyledText;
 import com.wynntils.models.gear.type.GearTier;
 import com.wynntils.models.items.properties.GearTypeItemProperty;
+import com.wynntils.utils.mc.LoreUtils;
 import java.util.List;
 import java.util.Optional;
 import java.util.regex.Pattern;
@@ -20,6 +22,8 @@ import net.minecraft.world.item.Items;
 public final class ItemUtils {
     public static final Pattern ITEM_RARITY_PATTERN =
             Pattern.compile("(Normal|Set|Unique|Rare|Legendary|Fabled|Mythic)( Raid)? (Item|Reward).*");
+    public static final Pattern REQUIRED_CLASS_PATTERN = Pattern.compile("^✔ Class Req: (.+)$");
+    private static final Pattern REQUIRED_LEVEL_PATTERN = Pattern.compile("^✔ Combat Lv. Min: ([0-9]+)$");
 
     public static boolean isWeapon(ItemStack itemStack) {
         Optional<GearTypeItemProperty> gearItemOpt =
@@ -64,5 +68,14 @@ public final class ItemUtils {
                             GearTier.fromBoxDamage(itemStack.getDamageValue()).getChatFormatting());
         }
         return null;
+    }
+
+    public static boolean canBeWielded(ItemStack itemStack) {
+        List<StyledText> lore = LoreUtils.getLore(itemStack);
+        return isWeapon(itemStack)
+                && lore.stream()
+                        .anyMatch(styledText -> styledText.matches(REQUIRED_CLASS_PATTERN, PartStyle.StyleType.NONE))
+                && lore.stream()
+                        .anyMatch(styledText -> styledText.matches(REQUIRED_LEVEL_PATTERN, PartStyle.StyleType.NONE));
     }
 }

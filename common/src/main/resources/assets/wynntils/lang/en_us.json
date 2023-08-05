@@ -179,6 +179,8 @@
   "feature.wynntils.contentTrackerOverlay.overlay.contentTracker.textShadow.description": "What should the text shadow look like?",
   "feature.wynntils.contentTrackerOverlay.overlay.contentTracker.textShadow.name": "Text Shadow",
   "feature.wynntils.contentTrackerOverlay.overlay.contentTracker.title": "Tracked",
+  "feature.wynntils.continuesAttacking.description": "Should your weapon keep attacking while holding the attack button?",
+  "feature.wynntils.continuesAttacking.name": "Continues Attacking",
   "feature.wynntils.cosmeticsPreview.description": "Renders your player in the cosmetics screen.",
   "feature.wynntils.cosmeticsPreview.name": "Cosmetics Player Preview",
   "feature.wynntils.customBankPages.bankDestinations.description": "Which pages would you like your bank quick jump buttons to jump to? Enter a list of six numbers separated with a comma.",
