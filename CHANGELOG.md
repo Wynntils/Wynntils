@@ -1,9 +1,21 @@
+## [0.0.3-alpha.273](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.272...v0.0.3-alpha.273) (2023-08-05)
+
+
+### New Features
+
+* render markers on map ([#1940](https://github.com/Wynntils/Artemis/issues/1940)) ([9665c2a](https://github.com/Wynntils/Artemis/commit/9665c2a17fed62bd949a57bc0bf90366d9f5b665))
+
 ## [0.0.3-alpha.272](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.271...v0.0.3-alpha.272) (2023-08-05)
 
 
 ### New Features
 
 * add keyboard zooming to maps ([#1943](https://github.com/Wynntils/Artemis/issues/1943)) ([d42acc5](https://github.com/Wynntils/Artemis/commit/d42acc5147f9d8f8ed685a7a9cf2d436839b88cd))
+
+
+### Miscellaneous Chores
+
+* **release:** v0.0.3-alpha.272 [skip ci] ([779a1cf](https://github.com/Wynntils/Artemis/commit/779a1cfa5ccba79bc1b47dee042861190c9f19cc))
 
 ## [0.0.3-alpha.271](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.270...v0.0.3-alpha.271) (2023-08-04)
 
@@ -40,16 +52,4 @@
 ### Miscellaneous Chores
 
 * **release:** v0.0.3-alpha.269 [skip ci] ([6afc16e](https://github.com/Wynntils/Artemis/commit/6afc16e983167e02e4bff56eea6ec07403f323cd))
-
-## [0.0.3-alpha.268](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.267...v0.0.3-alpha.268) (2023-08-02)
-
-
-### Bug Fixes
-
-* Rich presence without library crashes config system ([#1923](https://github.com/Wynntils/Artemis/issues/1923)) ([790d6dd](https://github.com/Wynntils/Artemis/commit/790d6dd19d07627e3761bcec94630dbe12d92462))
-
-
-### Miscellaneous Chores
-
-* **release:** v0.0.3-alpha.268 [skip ci] ([0bffa2c](https://github.com/Wynntils/Artemis/commit/0bffa2c33d87d9b950e66f3b58c12d4452f833c9))
 
