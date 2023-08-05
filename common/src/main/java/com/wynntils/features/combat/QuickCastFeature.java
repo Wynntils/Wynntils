@@ -52,7 +52,7 @@ public class QuickCastFeature extends Feature {
     private final KeyBind castFourthSpell = new KeyBind("Cast 4th Spell", GLFW.GLFW_KEY_V, true, this::castFourthSpell);
 
     @Persisted
-    private final Config<Integer> rightClickTickDelay = new Config<>(2);
+    private final Config<Integer> rightClickTickDelay = new Config<>(3);
 
     @Persisted
     private final Config<Boolean> safeCasting = new Config<>(true);
@@ -170,7 +170,7 @@ public class QuickCastFeature extends Feature {
             McUtils.sendPacket(new ServerboundSetCarriedItemPacket(lastSelectedSlot));
         }
 
-        // Right clicks need a 1 tick delay between them, left clicks don't
+        // Right clicks need a tick delay between them (2-3 ticks), left clicks don't
         boolean didRightClick = false;
         do {
             SpellDirection spellDirection = SPELL_PACKET_QUEUE.poll();
@@ -187,7 +187,9 @@ public class QuickCastFeature extends Feature {
         }
 
         // Waiting a few ticks is useful for avoiding lag related input-overlaps
-        if (!SPELL_PACKET_QUEUE.isEmpty()) packetCountdown = rightClickTickDelay.get();
+        if (!SPELL_PACKET_QUEUE.isEmpty()) {
+            packetCountdown = rightClickTickDelay.get();
+        }
     }
 
     @SubscribeEvent
