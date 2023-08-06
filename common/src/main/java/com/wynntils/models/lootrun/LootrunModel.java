@@ -126,6 +126,9 @@ public class LootrunModel extends Model {
 
     private Map<BeaconColor, Integer> selectedBeacons = new TreeMap<>();
 
+    public int timerOverall = 100;
+    public int timerChallenge = 0;
+
     public LootrunModel(BeaconModel beaconModel, MarkerModel markerModel, ParticleModel particleModel) {
         super(List.of(beaconModel, markerModel, particleModel));
 
@@ -302,6 +305,14 @@ public class LootrunModel extends Model {
         return taskPrediction.taskLocation();
     }
 
+    public int getTimerOverall() {
+        return timerOverall;
+    }
+
+    public int getTimerChallenge() {
+        return timerChallenge;
+    }
+
     public void setState(LootrunningState newState, LootrunTaskType taskType) {
         // If nothing changes, don't do anything.
         if (this.lootrunningState == newState) return;
@@ -334,6 +345,10 @@ public class LootrunModel extends Model {
         selectedBeaconsStorage.touched();
     }
 
+    public void setTimerOverall(int seconds) {
+        timerOverall = seconds;
+    }
+
     private void handleStateChange(LootrunningState oldState, LootrunningState newState) {
         if (newState == LootrunningState.NOT_RUNNING) {
             resetBeaconStorage();
@@ -345,6 +360,9 @@ public class LootrunModel extends Model {
 
             beacons = new HashMap<>();
             beaconUpdates = new HashMap<>();
+
+            timerOverall = 0;
+            timerChallenge = 0;
             return;
         }
 
@@ -368,6 +386,8 @@ public class LootrunModel extends Model {
             beacons.clear();
             setClosestBeacon(null);
             LOOTRUN_BEACON_COMPASS_PROVIDER.reloadTaskMarkers();
+
+            timerChallenge = timerOverall;
 
             return;
         }

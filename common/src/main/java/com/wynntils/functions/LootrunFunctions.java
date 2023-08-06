@@ -149,4 +149,19 @@ public class LootrunFunctions {
                     List.of(new FunctionArguments.Argument<>("color", String.class, null)));
         }
     }
+
+    public static class LootrunTimeFunction extends Function<Integer> {
+        @Override
+        public Integer getValue(FunctionArguments arguments) {
+            return arguments.getArgument("challengeTime").getBooleanValue()
+                    ? Models.Lootrun.getTimerChallenge()
+                    : Models.Lootrun.getTimerOverall();
+        }
+
+        @Override
+        public FunctionArguments.Builder getArgumentsBuilder() {
+            return new FunctionArguments.OptionalArgumentBuilder(
+                    List.of(new FunctionArguments.Argument<>("challengeTime", Boolean.class, false)));
+        }
+    }
 }

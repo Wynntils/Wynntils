@@ -27,6 +27,8 @@ public class LootrunScoreboardPart extends ScoreboardPart {
     private static final Pattern DESTROY_PATTERN = Pattern.compile("^Destroy the objective!$");
     private static final Pattern DEFEND_PATTERN = Pattern.compile("^Defend for (\\d+)s!$");
 
+    private static final Pattern TIMER_PATTERN = Pattern.compile("^[-—] Time Left: (\\d+):(\\d+)$");
+
     @Override
     public SegmentMatcher getSegmentMatcher() {
         return SegmentMatcher.fromPattern("Lootrun:");
@@ -55,6 +57,11 @@ public class LootrunScoreboardPart extends ScoreboardPart {
             Models.Lootrun.setState(LootrunningState.IN_TASK, LootrunTaskType.DESTROY);
         } else if (currentStateLine.matches(DEFEND_PATTERN, PartStyle.StyleType.NONE)) {
             Models.Lootrun.setState(LootrunningState.IN_TASK, LootrunTaskType.DEFEND);
+        }
+
+        currentStateLine = content.get(1);
+        if (currentStateLine.matches(TIMER_PATTERN, PartStyle.StyleType.NONE)) {
+            Models.Lootrun.setTimerOverall(12);
         }
     }
 
