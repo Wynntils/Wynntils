@@ -4,6 +4,7 @@
  */
 package com.wynntils.overlays.minimap;
 
+import com.mojang.blaze3d.platform.InputConstants;
 import com.mojang.blaze3d.platform.Window;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
@@ -17,6 +18,7 @@ import com.wynntils.core.persisted.Persisted;
 import com.wynntils.core.persisted.config.Config;
 import com.wynntils.core.text.StyledText;
 import com.wynntils.features.map.MainMapFeature;
+import com.wynntils.mc.event.TickEvent;
 import com.wynntils.services.map.MapTexture;
 import com.wynntils.services.map.pois.PlayerMiniMapPoi;
 import com.wynntils.services.map.pois.Poi;
@@ -42,6 +44,9 @@ import java.util.List;
 import java.util.stream.Stream;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.renderer.MultiBufferSource;
+import net.minecraftforge.eventbus.api.SubscribeEvent;
+import org.joml.Math;
+import org.lwjgl.glfw.GLFW;
 
 public class MinimapOverlay extends Overlay {
     private static final int DEFAULT_SIZE = 130;
@@ -91,6 +96,21 @@ public class MinimapOverlay extends Overlay {
                         HorizontalAlignment.LEFT,
                         OverlayPosition.AnchorSection.TOP_LEFT),
                 new OverlaySize(DEFAULT_SIZE, DEFAULT_SIZE));
+    }
+
+    @SubscribeEvent
+    // Using TickEvent for smooth zooming
+    public void onTick(TickEvent event) {
+        long window = McUtils.window().getWindow();
+        boolean zoomOut = InputConstants.isKeyDown(window, InputConstants.KEY_EQUALS)
+                || InputConstants.isKeyDown(window, InputConstants.KEY_ADD);
+        boolean zoomIn = InputConstants.isKeyDown(window, InputConstants.KEY_MINUS)
+                || InputConstants.isKeyDown(window, GLFW.GLFW_KEY_KP_SUBTRACT);
+        if (zoomIn && zoomOut) return;
+        if (zoomOut || zoomIn) {
+            scale.setValue(
+                    (float) Math.clamp(0.1, 3, scale.get() + (zoomIn ? scale.get() * 0.05 : -scale.get() * 0.05)));
+        }
     }
 
     // FIXME: This is the only overlay not to use buffer sources for rendering. This is due to `createMask`

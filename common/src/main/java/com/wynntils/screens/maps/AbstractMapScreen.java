@@ -218,11 +218,11 @@ public abstract class AbstractMapScreen extends WynntilsScreen {
             return true;
         }
         if (keyCode == GLFW.GLFW_KEY_EQUAL || keyCode == GLFW.GLFW_KEY_KP_ADD) {
-            setZoom(currentZoom + 0.02f);
+            setZoom(currentZoom + currentZoom * 0.05f);
             return true;
         }
         if (keyCode == GLFW.GLFW_KEY_MINUS || keyCode == GLFW.GLFW_KEY_KP_SUBTRACT) {
-            setZoom(currentZoom - 0.02f);
+            setZoom(currentZoom - currentZoom * 0.05f);
             return true;
         }
 
