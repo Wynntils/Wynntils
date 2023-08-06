@@ -21,7 +21,6 @@ import com.wynntils.models.stats.type.StatType;
 import com.wynntils.models.wynnitem.type.ItemEffect;
 import com.wynntils.utils.mc.ComponentUtils;
 import com.wynntils.utils.mc.LoreUtils;
-import com.wynntils.utils.mc.McUtils;
 import com.wynntils.utils.type.Pair;
 import com.wynntils.utils.type.RangedValue;
 import java.util.ArrayList;
@@ -60,7 +59,6 @@ public final class WynnItemParser {
 
     // Test suite: https://regexr.com/7i5h5
     public static final Pattern SHINY_STAT_PATTERN = Pattern.compile("^§f⬡ §7([a-zA-Z ]*?): §f(\\d+)$");
-    public static final Pattern SHINY_STAT_NO_CAPTURE_PATTERN = Pattern.compile("^§f⬡ §7[a-zA-Z ]*?: §f\\d+$");
 
     public static WynnItemParseResult parseItemStack(ItemStack itemStack, GearInfo gearInfo) {
         List<StatActualValue> identifications = new ArrayList<>();
@@ -210,8 +208,6 @@ public final class WynnItemParser {
                 shinyStat = Optional.of(Pair.of(statName, stat));
             }
         }
-
-        McUtils.sendMessageToClient(Component.literal("parsed: ").append(itemStack.getDisplayName()));
 
         return new WynnItemParseResult(
                 tier,

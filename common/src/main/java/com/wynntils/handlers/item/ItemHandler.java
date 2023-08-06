@@ -4,14 +4,11 @@
  */
 package com.wynntils.handlers.item;
 
-import static com.wynntils.models.wynnitem.parsing.WynnItemParser.SHINY_STAT_PATTERN;
-
 import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.components.Handler;
 import com.wynntils.core.mod.type.CrashType;
 import com.wynntils.core.text.StyledText;
 import com.wynntils.handlers.item.event.ItemRenamedEvent;
-import com.wynntils.handlers.item.event.ShinyStatisticUpdateEvent;
 import com.wynntils.mc.event.ContainerSetContentEvent;
 import com.wynntils.mc.event.SetSlotEvent;
 import com.wynntils.mc.extension.ItemStackExtension;
@@ -22,7 +19,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
-import java.util.regex.Matcher;
 import net.minecraft.core.NonNullList;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
@@ -108,33 +104,11 @@ public class ItemHandler extends Handler {
             return;
         }
 
-        // I don't actually know a clean way to get 2 returns from one method when one is a boolean for an if condition
-        // or somehow not repeat a lot of code and seperate it to 2 methods.
-        int[] shinyStatLineIndex = {-1};
-
         // This might be just a name update. Check if lore matches:
-        if (!LoreUtils.loreSoftMatches(existingItem, newItem, 3, shinyStatLineIndex)) {
+        if (!LoreUtils.loreSoftMatches(existingItem, newItem, 3)) {
             // This could be a new item, or a crafted item losing in durability
             annotate(newItem);
             return;
-        }
-
-        if (shinyStatLineIndex[0] != -1) {
-            int index = shinyStatLineIndex[0];
-            List<StyledText> existingItemLore = LoreUtils.getLore(existingItem);
-            List<StyledText> newItemLore = LoreUtils.getLore(newItem);
-
-            StyledText existingLine = existingItemLore.get(index).getNormalized();
-            StyledText newLine = newItemLore.get(index).getNormalized();
-
-            Matcher existingLineMatcher = existingLine.getMatcher(SHINY_STAT_PATTERN);
-            String statisticName = existingLineMatcher.group(1);
-            int existingStatistic = Integer.parseInt(existingLineMatcher.group(2));
-
-            Matcher newLineMatcher = newLine.getMatcher(SHINY_STAT_PATTERN);
-            int newStatistic = Integer.parseInt(newLineMatcher.group(2));
-            WynntilsMod.postEvent(
-                    new ShinyStatisticUpdateEvent(newItem, statisticName, existingStatistic, newStatistic));
         }
 
         StyledText originalName = ((ItemStackExtension) existingItem).getOriginalName();

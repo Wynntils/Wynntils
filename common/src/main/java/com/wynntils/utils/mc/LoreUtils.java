@@ -4,14 +4,13 @@
  */
 package com.wynntils.utils.mc;
 
-import static com.wynntils.models.wynnitem.parsing.WynnItemParser.SHINY_STAT_NO_CAPTURE_PATTERN;
-
 import com.google.gson.JsonDeserializationContext;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import com.google.gson.JsonSyntaxException;
 import com.wynntils.core.text.StyledText;
+import com.wynntils.models.wynnitem.parsing.WynnItemParser;
 import com.wynntils.utils.StringUtils;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
@@ -240,8 +239,7 @@ public final class LoreUtils {
      * This checks if the lore of the second item contains the entirety of the first item's lore, or vice versa.
      * It might have additional lines added, but these are not checked.
      */
-    public static boolean loreSoftMatches(
-            ItemStack firstItem, ItemStack secondItem, int tolerance, int[] shinyStatLine) {
+    public static boolean loreSoftMatches(ItemStack firstItem, ItemStack secondItem, int tolerance) {
         List<StyledText> firstLines = getLore(firstItem);
         List<StyledText> secondLines = getLore(secondItem);
         int firstLinesLen = firstLines.size();
@@ -261,12 +259,7 @@ public final class LoreUtils {
             boolean firstLineShiny = isLineShinyStat(firstItemCurrentLine);
             boolean secondLineShiny = isLineShinyStat(secondItemCurrentLine);
             // Return value through length 1 array if present
-            if (firstLineShiny && secondLineShiny) {
-                if (shinyStatLine != null) {
-                    shinyStatLine[0] = i;
-                }
-                continue;
-            }
+            if (firstLineShiny && secondLineShiny) continue;
             if (firstLineShiny || secondLineShiny) return false;
             if (!firstItemCurrentLine.equals(secondItemCurrentLine)) return false;
         }
@@ -277,7 +270,7 @@ public final class LoreUtils {
 
     private static boolean isLineShinyStat(StyledText line) {
         StyledText normalizedLine = line.getNormalized();
-        return normalizedLine.getMatcher(SHINY_STAT_NO_CAPTURE_PATTERN).matches();
+        return normalizedLine.getMatcher(WynnItemParser.SHINY_STAT_PATTERN).matches();
     }
 
     /**
