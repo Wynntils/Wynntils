@@ -316,7 +316,11 @@ public class LootrunModel extends Model {
     }
 
     public int getTimer(boolean max) {
-        return max ? timerChallenge.get().get(Models.Character.getId()) : timerOverall;
+        return max
+                ? (timerChallenge.get().get(Models.Character.getId()) != null
+                        ? timerChallenge.get().get(Models.Character.getId())
+                        : 0)
+                : timerOverall;
     }
 
     public int getChallenges(boolean max) {
