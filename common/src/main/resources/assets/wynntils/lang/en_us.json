@@ -900,6 +900,8 @@
   "feature.wynntils.quickCast.rightClickTickDelay.name": "Right-Click Tick Delay",
   "feature.wynntils.quickCast.safeCasting.description": "Should the quick-cast be cancelled if you are in the middle of an incompatible spell-cast?",
   "feature.wynntils.quickCast.safeCasting.name": "Safe Casting",
+  "feature.wynntils.quickCast.spellCooldown.description": "Cooldown before casting another spell in ticks",
+  "feature.wynntils.quickCast.spellCooldown.name": "Spell Cooldown",
   "feature.wynntils.rangeVisualizer.description": "Adds a visualizer for spell ranges.",
   "feature.wynntils.rangeVisualizer.name": "Major ID Range Visualizer",
   "feature.wynntils.replaceRecipeBook.description": "Replaces the recipe book to open the Item Guide.",
