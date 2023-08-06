@@ -61,7 +61,6 @@ public class LootrunScoreboardPart extends ScoreboardPart {
         }
 
         for (StyledText line : content) {
-            WynntilsMod.info(line.getString());
             if (line.matches(TIMER_PATTERN, PartStyle.StyleType.NONE)) {
                 Matcher timeMatcher = line.getMatcher(TIMER_PATTERN, PartStyle.StyleType.NONE);
                 if (timeMatcher.find()) {
