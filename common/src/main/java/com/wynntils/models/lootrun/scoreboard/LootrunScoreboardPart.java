@@ -14,6 +14,7 @@ import com.wynntils.handlers.scoreboard.type.SegmentMatcher;
 import com.wynntils.models.lootrun.type.LootrunTaskType;
 import com.wynntils.models.lootrun.type.LootrunningState;
 import java.util.List;
+import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class LootrunScoreboardPart extends ScoreboardPart {
@@ -59,9 +60,15 @@ public class LootrunScoreboardPart extends ScoreboardPart {
             Models.Lootrun.setState(LootrunningState.IN_TASK, LootrunTaskType.DEFEND);
         }
 
-        currentStateLine = content.get(1);
-        if (currentStateLine.matches(TIMER_PATTERN, PartStyle.StyleType.NONE)) {
-            Models.Lootrun.setTimerOverall(12);
+        for (StyledText line : content) {
+            WynntilsMod.info(line.getString());
+            if (line.matches(TIMER_PATTERN, PartStyle.StyleType.NONE)) {
+                Matcher timeMatcher = line.getMatcher(TIMER_PATTERN, PartStyle.StyleType.NONE);
+                if (timeMatcher.find()) {
+                    Models.Lootrun.setTimerOverall(
+                            Integer.parseInt(timeMatcher.group(1)) * 60 + Integer.parseInt(timeMatcher.group(2)));
+                }
+            }
         }
     }
 
