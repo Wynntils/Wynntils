@@ -12,13 +12,12 @@ import com.wynntils.models.statuseffects.event.StatusEffectsChangedEvent;
 import com.wynntils.models.statuseffects.type.StatusEffect;
 import com.wynntils.models.worlds.event.WorldStateEvent;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import net.minecraft.ChatFormatting;
 import net.minecraftforge.eventbus.api.EventPriority;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
-import net.minecraft.ChatFormatting;
 
 public final class StatusEffectModel extends Model {
     /**
@@ -36,9 +35,7 @@ public final class StatusEffectModel extends Model {
      * <p>Originally taken from: <a href="https://github.com/Wynntils/Wynntils/pull/615">Legacy</a>
      */
     private static final Pattern STATUS_EFFECT_PATTERN = Pattern.compile(
-"(?<prefix>.+?)§7(?<modifier>\\s?([%\\-+\\.\\/\\d]+s?)?)\\s*(?<name>[a-zA-Z\\/\\s]+?)\\s(?<timer>§[84a]\\((.+?)\\))");
-
-    //private static final Pattern MODIFIER_REGEX = Pattern.compile("§7 ??([%\\-+\\.\\/\\d]+s?)");
+            "(?<prefix>.+?)§7(?<modifier>\\s?([%\\-+\\.\\/\\d]+s?)?)\\s*(?<name>[a-zA-Z\\/\\s]+?)\\s(?<timer>§[84a]\\((.+?)\\))");
 
     private static final StyledText STATUS_EFFECTS_TITLE = StyledText.fromString("§d§lStatus Effects");
 
@@ -79,18 +76,18 @@ public final class StatusEffectModel extends Model {
             StyledText trimmedEffect = effect.trim();
             if (trimmedEffect.isEmpty()) continue;
 
-
             Matcher m = trimmedEffect.getMatcher(STATUS_EFFECT_PATTERN);
             if (!m.find()) continue;
 
             String color = ChatFormatting.GRAY.toString();
-            
+
             StyledText prefix = StyledText.fromString(m.group("prefix").trim());
             StyledText name = StyledText.fromString(color + m.group("name").trim());
             StyledText displayedTime = StyledText.fromString(m.group("timer").trim());
-            
+
             String modifierGroup = m.group("modifier");
-            StyledText modifier = modifierGroup == null ? StyledText.EMPTY : StyledText.fromString(color + modifierGroup.trim());
+            StyledText modifier =
+                    modifierGroup == null ? StyledText.EMPTY : StyledText.fromString(color + modifierGroup.trim());
 
             newStatusEffects.add(new StatusEffect(name, modifier, displayedTime, prefix));
         }

@@ -6,6 +6,7 @@ package com.wynntils.models.statuseffects.type;
 
 import com.google.common.collect.ComparisonChain;
 import com.wynntils.core.text.StyledText;
+import com.wynntils.utils.type.Pair;
 import java.util.Optional;
 import net.minecraft.ChatFormatting;
 
@@ -18,13 +19,12 @@ public class StatusEffect implements Comparable<StatusEffect> {
     private StyledText displayedTime; // The displayed time remaining. Allows for xx:xx for infinite time effects.
     private StyledText prefix; // The prefix to display before the name. Not included in identifying name.
 
-
     public StatusEffect(StyledText name, StyledText modifier, StyledText displayedTime, StyledText prefix) {
         this.name = name;
         this.displayedTime = displayedTime;
         this.prefix = prefix;
         this.modifier = modifier;
-        
+
         this.fullName = StyledText.concat(
                 prefix,
                 StyledText.fromString(" "),
@@ -34,47 +34,10 @@ public class StatusEffect implements Comparable<StatusEffect> {
                 StyledText.fromString(" "),
                 displayedTime);
 
-        if( modifier == StyledText.EMPTY ){
-            this.modifierSuffix = StyledText.EMPTY;
-            this.modifierValue = Optional.empty();
-        } else {
-            this.modifierSuffix = readModifierSuffix(this.modifier);
-            this.modifierValue = readModifierValue(this.modifier, this.modifierSuffix);
-        }
+        Pair<StyledText, Optional<Double>> valueSuffixPair = readModifierValueAndSuffix(modifier);
+        this.modifierSuffix = valueSuffixPair.key();
+        this.modifierValue = valueSuffixPair.value();
     }
-
-    private StyledText readModifierSuffix(StyledText modifier){
-        if( modifier == StyledText.EMPTY) return StyledText.EMPTY;
-
-        String modifierString = modifier.getString();
-        int dashIndex = modifierString.indexOf('/');
-        int percentIndex = modifierString.indexOf('%');
-        int prefixIndex = Math.max(dashIndex, percentIndex);
-        
-        if( prefixIndex == -1 ){
-            return StyledText.EMPTY;
-        }
-        return StyledText.fromString(ChatFormatting.GRAY + modifierString.substring(prefixIndex));
-    }
-
-    private Optional<Double> readModifierValue(StyledText modifier, StyledText modifierSuffix){
-        String modifierStr = modifier.getStringWithoutFormatting();
-        if( modifierStr.isEmpty() ){
-            return Optional.empty();
-        }
-        int start = Math.max(modifierStr.indexOf('+') + 1, 0);
-
-        int end = Math.max(modifierStr.indexOf('%'), modifierStr.indexOf('/'));
-        if( end == -1 ) end = modifierStr.length(); // no suffix present
-        
-        if( end == start || end == 0 ){
-            return Optional.empty();
-        }
-
-        double val = Double.parseDouble(modifierStr.substring(start, end));
-        return Optional.of(val);
-    }
-
 
     /**
      * @return The name of the consumable
@@ -122,18 +85,17 @@ public class StatusEffect implements Comparable<StatusEffect> {
         return fullName;
     }
 
-    public StyledText getModifierSuffix(){
+    public StyledText getModifierSuffix() {
         return this.modifierSuffix;
     }
 
-    public boolean hasModifierValue(){
+    public boolean hasModifierValue() {
         return this.modifierValue.isPresent();
     }
 
-    public double getModifierValue(){
+    public double getModifierValue() {
         return this.modifierValue.get();
     }
-
 
     @Override
     public int compareTo(StatusEffect effect) {
@@ -142,5 +104,24 @@ public class StatusEffect implements Comparable<StatusEffect> {
                 .compare(this.getName().getString(), effect.getName().getString())
                 .compare(this.getModifier().getString(), effect.getModifier().getString())
                 .result();
+    }
+
+    private Pair<StyledText, Optional<Double>> readModifierValueAndSuffix(StyledText modifier) {
+        String modifierStr = modifier.getStringWithoutFormatting();
+        if (modifierStr.isEmpty()) {
+            return new Pair<>(StyledText.EMPTY, Optional.empty());
+        }
+        int start = Math.max(modifierStr.indexOf('+') + 1, 0);
+
+        int end = Math.max(modifierStr.indexOf('%'), modifierStr.indexOf('/'));
+        if (end == -1) end = modifierStr.length(); // no suffix present
+        StyledText modifierSuffix = StyledText.fromString(ChatFormatting.GRAY + modifierStr.substring(end));
+
+        if (end == start || end == 0) {
+            return new Pair<>(modifierSuffix, Optional.empty());
+        }
+
+        double val = Double.parseDouble(modifierStr.substring(start, end));
+        return new Pair<>(modifierSuffix, Optional.of(val));
     }
 }
