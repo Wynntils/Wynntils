@@ -4,10 +4,13 @@
  */
 package com.wynntils.models.marker.type;
 
+import com.wynntils.services.map.pois.Poi;
 import java.util.stream.Stream;
 
-public interface MarkerProvider {
+public interface MarkerProvider<T extends Poi> {
     Stream<MarkerInfo> getMarkerInfos();
+
+    Stream<T> getPois();
 
     boolean isEnabled();
 }

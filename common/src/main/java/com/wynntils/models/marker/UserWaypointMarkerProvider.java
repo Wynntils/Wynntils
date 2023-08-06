@@ -19,21 +19,27 @@ import java.util.LinkedHashSet;
 import java.util.Set;
 import java.util.stream.Stream;
 
-public class UserWaypointMarkerProvider implements MarkerProvider {
+public class UserWaypointMarkerProvider implements MarkerProvider<WaypointPoi> {
     private final Set<Pair<MarkerInfo, WaypointPoi>> markerInfoSet = new LinkedHashSet<>();
 
     public void addLocation(Location location, Texture texture, CustomColor beaconColor, CustomColor textColor) {
         addLocation(new MarkerInfo(
-                new StaticLocationSupplier(location), texture, beaconColor, textColor, CommonColors.WHITE));
+                "Waypoint", new StaticLocationSupplier(location), texture, beaconColor, textColor, CommonColors.WHITE));
     }
 
     public void addLocation(Location location, Texture texture, CustomColor beaconColor) {
         addLocation(new MarkerInfo(
-                new StaticLocationSupplier(location), texture, beaconColor, CommonColors.WHITE, CommonColors.WHITE));
+                "Waypoint",
+                new StaticLocationSupplier(location),
+                texture,
+                beaconColor,
+                CommonColors.WHITE,
+                CommonColors.WHITE));
     }
 
     public void addLocation(Location location, Texture texture) {
         addLocation(new MarkerInfo(
+                "Waypoint",
                 new StaticLocationSupplier(location),
                 texture,
                 CustomColor.NONE,
@@ -43,6 +49,7 @@ public class UserWaypointMarkerProvider implements MarkerProvider {
 
     public void addLocation(Location location) {
         addLocation(new MarkerInfo(
+                "Waypoint",
                 new StaticLocationSupplier(location),
                 Texture.WAYPOINT,
                 CustomColor.NONE,
@@ -52,14 +59,21 @@ public class UserWaypointMarkerProvider implements MarkerProvider {
 
     public void addLocation(LocationSupplier locationSupplier) {
         addLocation(new MarkerInfo(
-                locationSupplier, Texture.WAYPOINT, CustomColor.NONE, CommonColors.WHITE, CommonColors.WHITE));
+                "Waypoint",
+                locationSupplier,
+                Texture.WAYPOINT,
+                CustomColor.NONE,
+                CommonColors.WHITE,
+                CommonColors.WHITE));
     }
 
     public void addLocation(MarkerInfo markerInfo) {
         markerInfoSet.add(Pair.of(
                 markerInfo,
-                new WaypointPoi(() ->
-                        PoiLocation.fromLocation(markerInfo.locationSupplier().getLocation()))));
+                new WaypointPoi(
+                        () -> PoiLocation.fromLocation(
+                                markerInfo.locationSupplier().getLocation()),
+                        markerInfo.name())));
     }
 
     public void removeLocation(Location location) {
@@ -70,7 +84,8 @@ public class UserWaypointMarkerProvider implements MarkerProvider {
         markerInfoSet.clear();
     }
 
-    public Stream<WaypointPoi> getWaypointPois() {
+    @Override
+    public Stream<WaypointPoi> getPois() {
         return markerInfoSet.stream().map(Pair::b);
     }
 

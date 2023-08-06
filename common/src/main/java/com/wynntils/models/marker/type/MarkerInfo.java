@@ -9,6 +9,7 @@ import com.wynntils.utils.mc.type.Location;
 import com.wynntils.utils.render.Texture;
 
 public record MarkerInfo(
+        String name,
         LocationSupplier locationSupplier,
         Texture texture,
         CustomColor beaconColor,
