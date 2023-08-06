@@ -163,7 +163,7 @@ public class QuickCastFeature extends Feature {
             spellInProgress = SpellDirection.NO_SPELL;
         }
 
-        if (--packetCountdown > 0) return;
+        if (packetCountdown > 0 && --packetCountdown > 0) return;
         if (SPELL_PACKET_QUEUE.isEmpty()) return;
 
         int currSelectedSlot = McUtils.inventory().selected;
