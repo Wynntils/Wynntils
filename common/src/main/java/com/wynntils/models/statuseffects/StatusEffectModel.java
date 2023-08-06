@@ -84,9 +84,11 @@ public final class StatusEffectModel extends Model {
             if (!m.find()) continue;
 
             String color = ChatFormatting.GRAY.toString();
+            
             StyledText prefix = StyledText.fromString(m.group("prefix").trim());
             StyledText name = StyledText.fromString(color + m.group("name").trim());
             StyledText displayedTime = StyledText.fromString(m.group("timer").trim());
+            
             String modifierGroup = m.group("modifier");
             StyledText modifier = modifierGroup == null ? StyledText.EMPTY : StyledText.fromString(color + modifierGroup.trim());
 
