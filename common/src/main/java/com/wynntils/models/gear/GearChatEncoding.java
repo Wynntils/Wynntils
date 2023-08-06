@@ -202,7 +202,8 @@ public class GearChatEncoding {
 
         // create chat gear stack
         // TODO: 8/7/2023 replace Optional.empty() with actual shiny mythic stat when it exists
-        GearInstance gearInstance = GearInstance.create(gearInfo, identifications, powderList, rerolls, Optional.empty());
+        GearInstance gearInstance =
+                GearInstance.create(gearInfo, identifications, powderList, rerolls, Optional.empty());
         return new GearItem(gearInfo, gearInstance);
     }
 

@@ -4,6 +4,8 @@
  */
 package com.wynntils.handlers.item;
 
+import static com.wynntils.models.wynnitem.parsing.WynnItemParser.SHINY_STAT_PATTERN;
+
 import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.components.Handler;
 import com.wynntils.core.mod.type.CrashType;
@@ -15,20 +17,18 @@ import com.wynntils.mc.event.SetSlotEvent;
 import com.wynntils.mc.extension.ItemStackExtension;
 import com.wynntils.utils.mc.LoreUtils;
 import com.wynntils.utils.mc.McUtils;
-import java.util.regex.Matcher;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.regex.Matcher;
 import net.minecraft.core.NonNullList;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraftforge.eventbus.api.EventPriority;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
-
-import static com.wynntils.models.wynnitem.parsing.WynnItemParser.SHINY_STAT_PATTERN;
 
 public class ItemHandler extends Handler {
     private static final List<Item> WILDCARD_ITEMS = List.of(Items.DIAMOND_SHOVEL, Items.DIAMOND_PICKAXE);
@@ -119,7 +119,7 @@ public class ItemHandler extends Handler {
             return;
         }
 
-        if(shinyStatLineIndex[0] != -1){
+        if (shinyStatLineIndex[0] != -1) {
             int index = shinyStatLineIndex[0];
             List<StyledText> existingItemLore = LoreUtils.getLore(existingItem);
             List<StyledText> newItemLore = LoreUtils.getLore(newItem);
@@ -133,7 +133,8 @@ public class ItemHandler extends Handler {
 
             Matcher newLineMatcher = newLine.getMatcher(SHINY_STAT_PATTERN);
             int newStatistic = Integer.parseInt(newLineMatcher.group(2));
-            WynntilsMod.postEvent(new ShinyStatisticUpdateEvent(newItem,statisticName,existingStatistic,newStatistic));
+            WynntilsMod.postEvent(
+                    new ShinyStatisticUpdateEvent(newItem, statisticName, existingStatistic, newStatistic));
         }
 
         StyledText originalName = ((ItemStackExtension) existingItem).getOriginalName();
