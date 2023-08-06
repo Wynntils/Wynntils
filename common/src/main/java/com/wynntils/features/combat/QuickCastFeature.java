@@ -57,6 +57,9 @@ public class QuickCastFeature extends Feature {
     @Persisted
     private final Config<Boolean> safeCasting = new Config<>(true);
 
+    @Persisted
+    private final Config<Integer> spellCooldown = new Config<>(0);
+
     private static final Pattern INCORRECT_CLASS_PATTERN = compileCCRegex("§✖§ Class Req: (.+)");
     private static final Pattern LVL_MIN_NOT_REACHED_PATTERN = compileCCRegex("§✖§ (.+) Min: ([0-9]+)");
 
@@ -160,8 +163,8 @@ public class QuickCastFeature extends Feature {
             spellInProgress = SpellDirection.NO_SPELL;
         }
 
+        if (packetCountdown > 0 && --packetCountdown > 0) return;
         if (SPELL_PACKET_QUEUE.isEmpty()) return;
-        if (--packetCountdown > 0) return;
 
         int currSelectedSlot = McUtils.inventory().selected;
         boolean slotChanged = currSelectedSlot != lastSelectedSlot;
@@ -188,8 +191,9 @@ public class QuickCastFeature extends Feature {
 
         // Right clicks need a tick delay between them (2-3 ticks), left clicks don't
         // So, we add a delay between right clicks, and new casts
-        if (!SPELL_PACKET_QUEUE.isEmpty()) {
-            packetCountdown = rightClickTickDelay.get();
+        packetCountdown = didRightClick ? rightClickTickDelay.get() : 0;
+        if (SPELL_PACKET_QUEUE.isEmpty()) {
+            packetCountdown = Math.max(packetCountdown, spellCooldown.get());
         }
     }
 

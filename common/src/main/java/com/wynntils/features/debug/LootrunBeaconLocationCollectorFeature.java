@@ -47,7 +47,7 @@ public class LootrunBeaconLocationCollectorFeature extends Feature {
         tasks.get().putIfAbsent(currentLocationOpt.get(), new TreeSet<>());
         tasks.get()
                 .get(currentLocationOpt.get())
-                .add(new TaskLocation(Location.containing(beacon.position()), currentTaskTypeOpt.get()));
+                .add(new TaskLocation("", Location.containing(beacon.position()), currentTaskTypeOpt.get()));
         tasks.touched();
     }
 }

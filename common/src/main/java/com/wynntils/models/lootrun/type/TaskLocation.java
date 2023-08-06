@@ -7,7 +7,8 @@ package com.wynntils.models.lootrun.type;
 import com.google.common.collect.ComparisonChain;
 import com.wynntils.utils.mc.type.Location;
 
-public record TaskLocation(Location location, LootrunTaskType taskType) implements Comparable<TaskLocation> {
+public record TaskLocation(String name, Location location, LootrunTaskType taskType)
+        implements Comparable<TaskLocation> {
     @Override
     public int compareTo(TaskLocation taskLocation) {
         return ComparisonChain.start()
