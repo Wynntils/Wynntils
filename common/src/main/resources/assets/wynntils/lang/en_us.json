@@ -145,6 +145,8 @@
   "feature.wynntils.containerScroll.invertScroll.description": "Should the scrolling direction be inverted?",
   "feature.wynntils.containerScroll.invertScroll.name": "Invert scroll",
   "feature.wynntils.containerScroll.name": "Container Scroll",
+  "feature.wynntils.containerSearch.betterBankSearch.description": "Should there be a better search widget in the bank?",
+  "feature.wynntils.containerSearch.betterBankSearch.name":"Better Bank Search",
   "feature.wynntils.containerSearch.description": "Adds the ability to search containers.",
   "feature.wynntils.containerSearch.filterInBank.description": "Should there be a search widget in the bank?",
   "feature.wynntils.containerSearch.filterInBank.name": "Search Bar in Bank",

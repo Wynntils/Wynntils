@@ -10,6 +10,8 @@ import com.wynntils.core.persisted.Persisted;
 import com.wynntils.core.persisted.storage.Storage;
 import com.wynntils.core.text.StyledText;
 import com.wynntils.utils.type.Pair;
+
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.regex.Matcher;
@@ -68,6 +70,9 @@ public final class ContainerModel extends Model {
 
     @Persisted
     private final Storage<Integer> finalMiscBucketPage = new Storage<>(10);
+
+    @Persisted
+    private final Storage<List<List<ItemStack>>> bank = new Storage<>(new ArrayList<>());
 
     public static final int LAST_BANK_PAGE_SLOT = 8;
 
@@ -294,5 +299,9 @@ public final class ContainerModel extends Model {
         }
 
         return null;
+    }
+
+    public List<List<ItemStack>> getBank() {
+        return bank.get();
     }
 }

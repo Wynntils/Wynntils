@@ -22,12 +22,15 @@ import com.wynntils.mc.extension.ScreenExtension;
 import com.wynntils.models.containers.type.SearchableContainerType;
 import com.wynntils.models.items.WynnItem;
 import com.wynntils.models.items.WynnItemCache;
+import com.wynntils.screens.base.ItemList;
 import com.wynntils.screens.base.widgets.SearchWidget;
 import com.wynntils.utils.colors.CommonColors;
 import com.wynntils.utils.colors.CustomColor;
 import com.wynntils.utils.mc.McUtils;
 import com.wynntils.utils.render.RenderUtils;
 import com.wynntils.utils.wynn.ContainerUtils;
+
+import java.util.List;
 import java.util.Locale;
 import java.util.Optional;
 import net.minecraft.client.gui.screens.Screen;
@@ -61,11 +64,17 @@ public class ContainerSearchFeature extends Feature {
     @Persisted
     public final Config<CustomColor> highlightColor = new Config<>(CommonColors.MAGENTA);
 
+    @Persisted
+    public final Config<Boolean> betterBankFilter = new Config<>(true);
+
     // If the guild bank has lots of custom (crafted) items, it can take multiple packets and a decent amount of time
     // for Wynn to send us the entire updated inventory. During this, the inventory will be in a weird state where
     // some items are updated and some are not. We will assume that after SEARCH_DELAY_MS milliseconds, the inventory
     // is fully updated.
     private static final int GUILD_BANK_SEARCH_DELAY = 500;
+
+    private ItemList itemList;
+
     private long guildBankLastSearch = 0;
 
     private SearchWidget lastSearchWidget;
@@ -88,6 +97,14 @@ public class ContainerSearchFeature extends Feature {
         currentSearchableContainerType = searchableContainerType;
 
         addSearchWidget(screen, renderX, renderY);
+
+        if (betterBankFilter.get() && searchableContainerType == SearchableContainerType.BANK) {
+            addBankSearchWidget(screen);
+        }
+    }
+
+    private void addBankSearchWidget(AbstractContainerScreen<?> screen) {
+        itemList = new ItemList((screen.width + screen.imageWidth) / 2, 0, (screen.width - screen.imageWidth) / 2, screen.height, screen, Models.Container.getBank().stream().flatMap(List::stream).toList());
     }
 
     @SubscribeEvent
