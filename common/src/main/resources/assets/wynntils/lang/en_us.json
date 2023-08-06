@@ -1544,7 +1544,7 @@
   "function.wynntils.stopwatchSeconds.name": "Stopwatch Seconds",
   "function.wynntils.stopwatchZero.description": "Whether the stopwatch is currently at zero",
   "function.wynntils.stopwatchZero.name": "Stopwatch Zero",
-  "function.wynntils.ticks.description": "The number of ticks since joining a world. Resets to 0 at 32-bit int limit.",
+  "function.wynntils.ticks.description": "The number of ticks since world start",
   "function.wynntils.ticks.name": "Ticks",
   "function.wynntils.tokenGatekeeper.argument.gatekeeperNumber": "The Gatekeeper Number",
   "function.wynntils.tokenGatekeeper.description": "The number of tokens collected to get past a gatekeeper",

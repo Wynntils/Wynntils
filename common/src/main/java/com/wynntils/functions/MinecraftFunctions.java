@@ -4,7 +4,6 @@
  */
 package com.wynntils.functions;
 
-import com.wynntils.core.components.Managers;
 import com.wynntils.core.consumers.functions.Function;
 import com.wynntils.core.consumers.functions.arguments.FunctionArguments;
 import com.wynntils.mc.mixin.accessors.MinecraftAccessor;
@@ -42,7 +41,7 @@ public class MinecraftFunctions {
     public static class TicksFunction extends Function<Integer> {
         @Override
         public Integer getValue(FunctionArguments arguments) {
-            return Managers.TickScheduler.getTicks();
+            return (int) McUtils.mc().level.getGameTime();
         }
     }
 }
