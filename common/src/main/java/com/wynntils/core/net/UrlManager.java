@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2022.
+ * Copyright © Wynntils 2022-2023.
  * This file is released under AGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.core.net;
@@ -130,6 +130,7 @@ public final class UrlManager extends Manager {
         });
     }
 
+    @SuppressWarnings("OverlyBroadThrowsClause")
     private void readInputStreamForUrl(InputStream tryStream) throws JsonSyntaxException, IOException {
         try (InputStream inputStream = tryStream) {
             Pair<Integer, Map<UrlId, UrlInfo>> tryMap = readUrls(inputStream);

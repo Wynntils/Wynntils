@@ -6,15 +6,4 @@ package com.wynntils.models.marker.type;
 
 import com.wynntils.utils.mc.type.Location;
 
-public class StaticLocationSupplier implements LocationSupplier {
-    private final Location location;
-
-    public StaticLocationSupplier(Location location) {
-        this.location = location;
-    }
-
-    @Override
-    public Location getLocation() {
-        return location;
-    }
-}
+public record StaticLocationSupplier(Location location) implements LocationSupplier {}

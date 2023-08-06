@@ -12,7 +12,7 @@ import net.minecraftforge.eventbus.api.Event;
 public abstract class SetSlotEvent extends Event {
     private final Container container;
     private final int slot;
-    ItemStack itemStack;
+    protected ItemStack itemStack;
 
     protected SetSlotEvent(Container container, int slot, ItemStack itemStack) {
         this.container = container;

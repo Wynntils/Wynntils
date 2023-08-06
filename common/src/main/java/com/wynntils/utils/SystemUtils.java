@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2021.
+ * Copyright © Wynntils 2021-2023.
  * This file is released under AGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.utils;
@@ -47,13 +47,7 @@ public final class SystemUtils {
         return (int) (Runtime.getRuntime().maxMemory() / (1024 * 1024));
     }
 
-    private static final class ClipboardImage implements Transferable {
-        private final Image image;
-
-        private ClipboardImage(Image image) {
-            this.image = image;
-        }
-
+    private record ClipboardImage(Image image) implements Transferable {
         @Override
         public DataFlavor[] getTransferDataFlavors() {
             return new DataFlavor[] {DataFlavor.imageFlavor};

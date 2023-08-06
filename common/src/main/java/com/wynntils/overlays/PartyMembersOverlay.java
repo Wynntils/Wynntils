@@ -131,7 +131,7 @@ public class PartyMembersOverlay extends ContainerOverlay<PartyMembersOverlay.Pa
 
         private final HadesUser hadesUser;
 
-        protected PartyMemberOverlay(HadesUser hadesUser) {
+        private PartyMemberOverlay(HadesUser hadesUser) {
             super(
                     new OverlayPosition(
                             0,

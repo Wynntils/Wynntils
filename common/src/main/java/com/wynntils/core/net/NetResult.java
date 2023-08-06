@@ -9,7 +9,6 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.net.event.NetResultProcessedEvent;
-import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.Reader;
@@ -103,7 +102,7 @@ public abstract class NetResult {
 
     private Consumer<InputStream> wrappingHandler(Consumer<InputStream> handler, Consumer<Throwable> onError) {
         return (inputStream) -> {
-            try {
+            try (inputStream) {
                 // FIXME: This is needed for patching class loading issue with Forge EventBus:
                 //        https://github.com/MinecraftForge/EventBus/issues/44
                 Thread.currentThread().setContextClassLoader(WynntilsMod.class.getClassLoader());
@@ -118,12 +117,6 @@ public abstract class NetResult {
                 WynntilsMod.warn("Failure in net manager [wrappingHandler], processing " + desc, t);
                 onError.accept(t);
                 onHandlingFailed();
-            } finally {
-                try {
-                    // We must always close the input stream
-                    inputStream.close();
-                } catch (IOException ignored) {
-                }
             }
         };
     }

@@ -261,8 +261,8 @@ public class ProfessionModel extends Model {
         private final Entity entity;
         private final int length;
 
-        private long startTime;
-        private long endTime;
+        private final long startTime;
+        private final long endTime;
 
         private ProfessionTimerArmorStand(Entity positionBaseEntity, int length) {
             this.entity = createArmorStandAt(positionBaseEntity);

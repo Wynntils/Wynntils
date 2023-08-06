@@ -13,14 +13,14 @@ import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
 
 public class ReloadButton extends WynntilsButton implements TooltipProvider {
-    private final List<Component> RELOAD_TOOLTIP;
+    private final List<Component> reloadTooltip;
     private final Runnable onClickRunnable;
 
     public ReloadButton(int x, int y, int width, int height, String activityType, Runnable onClickRunnable) {
         super(x, y, width, height, Component.literal("Reload Button"));
         this.onClickRunnable = onClickRunnable;
 
-        RELOAD_TOOLTIP = List.of(
+        reloadTooltip = List.of(
                 Component.translatable("screens.wynntils.wynntilsActivities.reload.name")
                         .withStyle(ChatFormatting.WHITE),
                 Component.translatable("screens.wynntils.wynntilsActivities.reload.description", activityType)
@@ -70,6 +70,6 @@ public class ReloadButton extends WynntilsButton implements TooltipProvider {
 
     @Override
     public List<Component> getTooltipLines() {
-        return RELOAD_TOOLTIP;
+        return reloadTooltip;
     }
 }

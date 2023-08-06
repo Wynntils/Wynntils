@@ -22,8 +22,8 @@ import java.util.Map;
 import java.util.stream.Stream;
 
 public class LootrunBeaconMarkerProvider implements MarkerProvider<MarkerPoi> {
-    private List<MarkerInfo> taskMarkers = new ArrayList<>();
-    private List<MarkerPoi> pois = new ArrayList<>();
+    private final List<MarkerInfo> taskMarkers = new ArrayList<>();
+    private final List<MarkerPoi> pois = new ArrayList<>();
 
     public void reloadTaskMarkers() {
         taskMarkers.clear();

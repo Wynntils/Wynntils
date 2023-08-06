@@ -15,7 +15,7 @@ import java.util.stream.Stream;
 public class MarkerModel extends Model {
     public static final UserWaypointMarkerProvider USER_WAYPOINTS_PROVIDER = new UserWaypointMarkerProvider();
 
-    private final List<MarkerProvider> markerProviders = new ArrayList<>();
+    private final List<MarkerProvider<?>> markerProviders = new ArrayList<>();
 
     public MarkerModel() {
         super(List.of());
@@ -23,7 +23,7 @@ public class MarkerModel extends Model {
         registerMarkerProvider(USER_WAYPOINTS_PROVIDER);
     }
 
-    public void registerMarkerProvider(MarkerProvider provider) {
+    public void registerMarkerProvider(MarkerProvider<?> provider) {
         markerProviders.add(provider);
     }
 

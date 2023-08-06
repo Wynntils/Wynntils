@@ -10,7 +10,7 @@ import net.minecraftforge.eventbus.api.Event;
  * These events are sent when Wynncraft sets up a boss bar for the mob which
  * is the target of the player's attacks. MobFocused is sent when a new mob
  * is tracked by the boss bar, and MobDamaged when the same mob just loses health.
- *
+ * <p>
  * Note that other players or environmental damage can also cause the mob to lose
  * health, so the difference in health for MobDamaged might not be due to the current
  * player.

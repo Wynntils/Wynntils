@@ -29,7 +29,7 @@ import net.minecraft.network.chat.MutableComponent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 
 public final class ChatTabService extends Service {
-    private final ChatComponent FALLBACK_CHAT = new ChatComponent(McUtils.mc());
+    private final ChatComponent fallbackChat = new ChatComponent(McUtils.mc());
 
     private ChatTab focusedTab = null;
 
@@ -111,7 +111,7 @@ public final class ChatTabService extends Service {
         focusedTab = focused;
 
         if (focusedTab == null) {
-            McUtils.mc().gui.chat = FALLBACK_CHAT;
+            McUtils.mc().gui.chat = fallbackChat;
         } else {
             chatTabData.putIfAbsent(focusedTab, new ChatComponent(McUtils.mc()));
             unreadMessages.put(focusedTab, false);

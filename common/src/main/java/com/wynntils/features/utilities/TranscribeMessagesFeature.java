@@ -154,8 +154,9 @@ public class TranscribeMessagesFeature extends Feature {
     }
 
     private static class WynnTranscriptedNpcDialogEvent extends NpcDialogEvent {
-        protected WynnTranscriptedNpcDialogEvent(List<Component> chatMsg, NpcDialogueType type, boolean isProtected) {
-            super(chatMsg, type, isProtected);
+        protected WynnTranscriptedNpcDialogEvent(
+                List<Component> chatMessage, NpcDialogueType type, boolean isProtected) {
+            super(chatMessage, type, isProtected);
         }
     }
 }

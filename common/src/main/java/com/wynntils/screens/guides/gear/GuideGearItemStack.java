@@ -39,7 +39,7 @@ public final class GuideGearItemStack extends GuideItemStack {
     }
 
     @Override
-    public List<Component> getTooltipLines(Player player, TooltipFlag flag) {
+    public List<Component> getTooltipLines(Player player, TooltipFlag isAdvanced) {
         List<Component> tooltipLines = new ArrayList<>(generatedTooltip);
 
         appendObtainInfo(tooltipLines, gearInfo.metaInfo().obtainInfo());

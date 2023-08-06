@@ -28,6 +28,7 @@ import com.wynntils.utils.mc.KeyboardUtils;
 import com.wynntils.utils.mc.McUtils;
 import com.wynntils.utils.type.Pair;
 import com.wynntils.utils.wynn.ColorScaleUtils;
+import java.util.Deque;
 import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.Locale;
@@ -132,7 +133,7 @@ public class ItemStatInfoFeature extends Feature {
         }
     }
 
-    private void updateItemName(GearInfo gearInfo, GearInstance gearInstance, LinkedList<Component> tooltips) {
+    private void updateItemName(GearInfo gearInfo, GearInstance gearInstance, Deque<Component> tooltips) {
         MutableComponent name;
         if (perfect.get() && gearInstance.isPerfect()) {
             name = ComponentUtils.makeRainbowStyle("Perfect " + gearInfo.name());

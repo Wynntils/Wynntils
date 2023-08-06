@@ -123,8 +123,8 @@ public class TranslationFeature extends Feature {
     }
 
     private static class TranslatedNpcDialogEvent extends NpcDialogEvent {
-        protected TranslatedNpcDialogEvent(List<Component> chatMsg, NpcDialogueType type, boolean isProtected) {
-            super(chatMsg, type, isProtected);
+        protected TranslatedNpcDialogEvent(List<Component> chatMessage, NpcDialogueType type, boolean isProtected) {
+            super(chatMessage, type, isProtected);
         }
     }
 }

@@ -36,7 +36,7 @@ import net.minecraftforge.eventbus.api.SubscribeEvent;
  * CHAT, SYSTEM and GAME_INFO. The latter is the "action bar", and is handled
  * elsewhere. However, starting with Minecraft 1.19, Wynncraft will send all chat
  * messages as SYSTEM, so we will ignore the CHAT type.
- *
+ * <p>
  * Using the regexp patterns in RecipientType, we classify the incoming messages
  * according to if they are sent to the guild, party, global chat, etc. Messages
  * that do not match any of these categories are called "info" messages, and are

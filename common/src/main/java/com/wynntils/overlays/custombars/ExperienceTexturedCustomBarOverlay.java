@@ -33,7 +33,7 @@ public class ExperienceTexturedCustomBarOverlay extends CustomBarOverlayBase {
 
     @Override
     protected void renderBar(
-            PoseStack poseStack, MultiBufferSource bufferSource, float renderY, float barHeight, float progress) {
+            PoseStack poseStack, MultiBufferSource bufferSource, float renderY, float renderHeight, float progress) {
         BufferedRenderUtils.drawProgressBar(
                 poseStack,
                 bufferSource,
@@ -41,7 +41,7 @@ public class ExperienceTexturedCustomBarOverlay extends CustomBarOverlayBase {
                 getRenderX(),
                 renderY,
                 getRenderX() + getWidth(),
-                renderY + barHeight,
+                renderY + renderHeight,
                 0,
                 objectivesTexture.get().getTextureYOffset(),
                 182,

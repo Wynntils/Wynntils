@@ -55,10 +55,10 @@ public class TerritoryPoi implements Poi {
         this.territoryProfileSupplier = territoryProfileSupplier;
 
         TerritoryProfile territoryProfile = getTerritoryProfile();
-        this.width = territoryProfile.getEndX() - territoryProfile.getStartX();
-        this.height = territoryProfile.getEndZ() - territoryProfile.getStartZ();
-        this.territoryCenter = new PoiLocation(
-                territoryProfile.getStartX() + width / 2, null, territoryProfile.getStartZ() + height / 2);
+        this.width = territoryProfile.endX() - territoryProfile.startX();
+        this.height = territoryProfile.endZ() - territoryProfile.startZ();
+        this.territoryCenter =
+                new PoiLocation(territoryProfile.startX() + width / 2, null, territoryProfile.startZ() + height / 2);
 
         this.territoryInfo = territoryInfo;
         this.fakeTerritoryInfo = fakeTerritoryInfo;
@@ -88,9 +88,9 @@ public class TerritoryPoi implements Poi {
                 && McUtils.mc().screen instanceof GuildMapScreen guildMapScreen
                 && guildMapScreen.isResourceMode()) {
             color = territoryInfo.getResourceColor();
-        } else if (!isTerritoryInfoUsable() || territoryInfo.getGuildName().equals(territoryProfile.getGuild())) {
+        } else if (!isTerritoryInfoUsable() || territoryInfo.getGuildName().equals(territoryProfile.guild())) {
             // We know the guild name with it's color
-            color = territoryProfile.getGuildColor();
+            color = territoryProfile.guildColor();
         } else {
             // We don't know the holding guild's color
             // FIXME: Will be fixed when Athena API is added
@@ -126,7 +126,7 @@ public class TerritoryPoi implements Poi {
                     actualRenderZ + renderHeight / 2f - Texture.GUILD_HEADQUARTERS_ICON.height() / 2f);
         } else {
             String guildPrefix =
-                    isTerritoryInfoUsable() ? territoryInfo.getGuildPrefix() : territoryProfile.getGuildPrefix();
+                    isTerritoryInfoUsable() ? territoryInfo.getGuildPrefix() : territoryProfile.guildPrefix();
             BufferedFontRenderer.getInstance()
                     .renderAlignedTextInBox(
                             poseStack,
@@ -143,7 +143,7 @@ public class TerritoryPoi implements Poi {
                             TextShadow.OUTLINE);
         }
 
-        String guildName = isTerritoryInfoUsable() ? territoryInfo.getGuildName() : territoryProfile.getFriendlyName();
+        String guildName = isTerritoryInfoUsable() ? territoryInfo.getGuildName() : territoryProfile.friendlyName();
         Models.GuildAttackTimer.getAttackTimerForTerritory(guildName).ifPresent(attackTimer -> {
             final String timeLeft = attackTimer.timerString();
 
@@ -209,7 +209,7 @@ public class TerritoryPoi implements Poi {
 
     @Override
     public String getName() {
-        return getTerritoryProfile().getName();
+        return getTerritoryProfile().name();
     }
 
     @Override

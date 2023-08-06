@@ -25,7 +25,7 @@ import org.apache.commons.lang3.ArrayUtils;
 
 /**
  * Encodes and decodes an item, as long as it is a standard gear item, into the following format
- *
+ * <p>
  * START character (U+F5FF0)
  * Item name (optionally encoded)
  * SEPARATOR character (U+F5FF2)
@@ -34,21 +34,21 @@ import org.apache.commons.lang3.ArrayUtils;
  * Powders (encoded) (only if powdered)
  * Rerolls (encoded)
  * END character (U+F5FF1)
- *
+ * <p>
  * Any encoded "value" is added to the OFFSET character value U+F5000 and then converted into the corresponding Unicode character:
- *
+ * <p>
  * The name is encoded based on the ASCII value of each character minus 32
- *
+ * <p>
  * Identifications are encoded either as the raw value minus the minimum value of that ID, or if the range is larger than 100,
  * the percent value 0 to 100 of the given roll.
  * Regardless of either case, this number is multiplied by 4, and the number of stars present on that ID is added.
  * This ensures that the value and star count can be encoded into a single character and be decoded later.
- *
+ * <p>
  * Powders are encoded as numerical values 1-5. Up to 4 powders are encoded into a single character - for each new powder,
  * the running total is multiplied by 6 before the new powder value is added. Thus, each individual powder can be decoded.
- *
+ * <p>
  * Rerolls are simply encoded as a raw number.
- *
+ * <p>
  * This format is identical to that used in Wynntils 1.12, for compatibility across versions. It should not be
  * modified without also changing the encoding in legacy.
  */

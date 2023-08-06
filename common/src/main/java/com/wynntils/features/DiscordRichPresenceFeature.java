@@ -114,7 +114,7 @@ public class DiscordRichPresenceFeature extends Feature {
                     McUtils.player().position());
             if (territoryProfile != null && territoryProfile != lastTerritoryProfile) {
                 lastTerritoryProfile = territoryProfile;
-                String location = territoryProfile.getName();
+                String location = territoryProfile.name();
                 Services.Discord.setDetails(location);
             }
         }

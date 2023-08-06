@@ -152,7 +152,7 @@ public class TradeMarketBulkSellFeature extends Feature {
         private static final int BUTTON_WIDTH = 60;
         private static final int BUTTON_HEIGHT = 20;
 
-        private Supplier<Integer> amountSupplier;
+        private final Supplier<Integer> amountSupplier;
 
         private SellButton(int x, int y, Supplier<Integer> amountSupplier, boolean isAll) {
             super(

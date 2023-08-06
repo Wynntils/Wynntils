@@ -21,7 +21,7 @@ import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 
 public class ParticleModel extends Model {
-    private Set<UnverifiedParticle> unverifiedParticles = new HashSet<>();
+    private final Set<UnverifiedParticle> unverifiedParticles = new HashSet<>();
 
     public ParticleModel() {
         super(List.of());
@@ -68,9 +68,7 @@ public class ParticleModel extends Model {
                         case UNVERIFIED -> {
                             // Do nothing, we will wait for more particles
                         }
-                        case INVALID -> {
-                            invalidParticles.add(unverifiedParticle);
-                        }
+                        case INVALID -> invalidParticles.add(unverifiedParticle);
                     }
                 } else {
                     // This must mean that either this particle is invalid or this particle type is not what we are

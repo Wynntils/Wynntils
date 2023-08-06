@@ -90,12 +90,12 @@ public class ConfigTile extends WynntilsButton {
     }
 
     @Override
-    public boolean mouseDragged(double mouseX, double mouseY, int button, double deltaX, double deltaY) {
+    public boolean mouseDragged(double mouseX, double mouseY, int button, double dragX, double dragY) {
         double actualMouseX = mouseX - getRenderX();
         double actualMouseY = mouseY - getRenderY();
 
-        return configOptionElement.mouseDragged(actualMouseX, actualMouseY, button, deltaX, deltaY)
-                || super.mouseDragged(actualMouseX, actualMouseY, button, deltaX, deltaY);
+        return configOptionElement.mouseDragged(actualMouseX, actualMouseY, button, dragX, dragY)
+                || super.mouseDragged(actualMouseX, actualMouseY, button, dragX, dragY);
     }
 
     @Override

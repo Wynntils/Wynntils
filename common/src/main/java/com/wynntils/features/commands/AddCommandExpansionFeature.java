@@ -28,7 +28,7 @@ import net.minecraftforge.eventbus.api.SubscribeEvent;
 
 /**
  * Set up Brigadier command structure of known Wynncraft commands.
- *
+ * <p>
  * The commands in this file were extracted from https://wynncraft.fandom.com/wiki/Commands,
  * https://wynncraft.com/help?guide=commands, from running the commands in-game, and from a
  * list of server commands provided by HeyZeer0.

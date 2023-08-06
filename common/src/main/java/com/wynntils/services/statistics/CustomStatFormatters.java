@@ -13,7 +13,7 @@ public final class CustomStatFormatters {
     /**
      * A time formatter that expects seconds. {@link StatFormatter.TIME} expects ticks.
      */
-    public static StatFormatter TIME = (seconds) -> {
+    public static final StatFormatter TIME = (seconds) -> {
         double minutes = seconds / 60.0;
         double hours = minutes / 60.0;
         double days = hours / 24.0;
@@ -29,6 +29,6 @@ public final class CustomStatFormatters {
         }
     };
 
-    public static StatFormatter FORMATTED_NUMBER = (number) ->
+    public static final StatFormatter FORMATTED_NUMBER = (number) ->
             NumberFormat.getIntegerInstance(Locale.US).format(number) + " (" + StringUtils.formatAmount(number) + ")";
 }

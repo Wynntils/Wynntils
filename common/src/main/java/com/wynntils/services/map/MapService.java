@@ -72,23 +72,5 @@ public final class MapService extends Service {
                 onError -> WynntilsMod.warn("Error occurred while download map image of " + mapPart.name, onError));
     }
 
-    private static final class MapPartProfile {
-        final String name;
-        final String url;
-        final int x1;
-        final int z1;
-        final int x2;
-        final int z2;
-        final String md5;
-
-        private MapPartProfile(String name, String url, int x1, int z1, int x2, int z2, String md5) {
-            this.name = name;
-            this.url = url;
-            this.x1 = x1;
-            this.z1 = z1;
-            this.x2 = x2;
-            this.z2 = z2;
-            this.md5 = md5;
-        }
-    }
+    private record MapPartProfile(String name, String url, int x1, int z1, int x2, int z2, String md5) {}
 }

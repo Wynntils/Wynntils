@@ -123,7 +123,7 @@ public class ContentBookDumpFeature extends Feature {
 
         for (DumpableActivityInfo info : currentDump) {
             // Tracking is bugged for this at the time of writing
-            if (Objects.equals(info.name(), "Galleon\u0027s Graveyard")) continue;
+            if (Objects.equals(info.name(), "Galleon's Graveyard")) continue;
 
             switch (info.type()) {
                 case BOSS_ALTAR, LOOTRUN_CAMP, DUNGEON, RAID -> trackingNeeded.add(info);

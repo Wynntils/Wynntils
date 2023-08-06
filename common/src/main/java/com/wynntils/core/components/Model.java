@@ -11,7 +11,7 @@ import java.util.List;
  * metadata. In general, any non-trivial interesting aspect of Wynncraft that is
  * provided through vanilla Minecraft elements, should be parsed and provided by
  * a Model.
- *
+ * <p>
  * Models are created as singletons in the {@link Models} holding class.
  */
 public abstract class Model extends CoreComponent {

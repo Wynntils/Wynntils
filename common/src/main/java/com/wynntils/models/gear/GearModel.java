@@ -31,15 +31,15 @@ import net.minecraft.world.item.ItemStack;
 /**
  * Gear and stats are complex, have lots of corner cases and suffer from a general
  * lack of comprehensible, exhaustive, correct and authoritive documentation. :-(
- *
+ * <p>
  * Here is a collection of generally helpful links:
- *
+ * <p>
  * 2016 Guide: https://forums.wynncraft.com/threads/how-identifications-are-calculated.128923/
  * 2019 Guide: https://forums.wynncraft.com/threads/stats-and-identifications-guide.246308/
  * The Damage Bible: https://docs.google.com/document/d/1BXdLrMWj-BakPcAWnuqvSFbwiz7oGTOMcEEdC5vCWs4
  * WynnBuilder "Wynnfo": https://hppeng-wynn.github.io/wynnfo/, especially
  * Damage Calculations: https://hppeng-wynn.github.io/wynnfo/pdfs/Damage_calculation.pdf
- *
+ * <p>
  * A note on percent vs raw numbers and how they combine, from HeyZeer0:
  * base = base + (base * percentage1) + (base * percentage2) + rawValue
  */

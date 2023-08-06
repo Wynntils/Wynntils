@@ -41,7 +41,7 @@ public class CosmeticsService extends Service {
                     RenderLayerParent<AbstractClientPlayer, PlayerModel<AbstractClientPlayer>>,
                     EntityModelSet,
                     WynntilsLayer>
-            ELYTRA_LAYER = (playerRenderer, playerModel) -> new WynntilsElytraLayer(playerRenderer, playerModel);
+            ELYTRA_LAYER = WynntilsElytraLayer::new;
 
     private static final List<
                     BiFunction<

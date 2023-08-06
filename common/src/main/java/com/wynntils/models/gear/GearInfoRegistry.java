@@ -160,13 +160,7 @@ public class GearInfoRegistry {
         }
     }
 
-    private static final class GearInfoDeserializer implements JsonDeserializer<GearInfo> {
-        private final List<GearMajorId> allMajorIds;
-
-        private GearInfoDeserializer(List<GearMajorId> allMajorIds) {
-            this.allMajorIds = allMajorIds;
-        }
-
+    private record GearInfoDeserializer(List<GearMajorId> allMajorIds) implements JsonDeserializer<GearInfo> {
         @Override
         public GearInfo deserialize(JsonElement jsonElement, Type jsonType, JsonDeserializationContext context)
                 throws JsonParseException {

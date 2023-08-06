@@ -79,8 +79,8 @@ public final class DiscoveryModel extends Model {
 
         TerritoryProfile guildTerritory = Models.Territory.getTerritoryProfile(discoveryInfo.getName());
         if (guildTerritory != null) {
-            int centerX = (guildTerritory.getEndX() + guildTerritory.getStartX()) / 2;
-            int centerZ = (guildTerritory.getEndZ() + guildTerritory.getStartZ()) / 2;
+            int centerX = (guildTerritory.endX() + guildTerritory.startX()) / 2;
+            int centerZ = (guildTerritory.endZ() + guildTerritory.startZ()) / 2;
 
             McUtils.mc().setScreen(MainMapScreen.create(centerX, centerZ));
         }
@@ -94,8 +94,8 @@ public final class DiscoveryModel extends Model {
 
         TerritoryProfile guildTerritory = Models.Territory.getTerritoryProfile(discoveryInfo.getName());
         if (guildTerritory != null) {
-            int centerX = (guildTerritory.getEndX() + guildTerritory.getStartX()) / 2;
-            int centerZ = (guildTerritory.getEndZ() + guildTerritory.getStartZ()) / 2;
+            int centerX = (guildTerritory.endX() + guildTerritory.startX()) / 2;
+            int centerZ = (guildTerritory.endZ() + guildTerritory.startZ()) / 2;
 
             Models.Marker.USER_WAYPOINTS_PROVIDER.addLocation(new Location(centerX, 0, centerZ));
         }

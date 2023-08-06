@@ -118,13 +118,8 @@ public class IngredientInfoRegistry {
         });
     }
 
-    private static final class IngredientInfoDeserializer implements JsonDeserializer<IngredientInfo> {
-        private final Map<String, String> ingredientSkins;
-
-        private IngredientInfoDeserializer(Map<String, String> ingredientSkins) {
-            this.ingredientSkins = ingredientSkins;
-        }
-
+    private record IngredientInfoDeserializer(Map<String, String> ingredientSkins)
+            implements JsonDeserializer<IngredientInfo> {
         @Override
         public IngredientInfo deserialize(JsonElement jsonElement, Type jsonType, JsonDeserializationContext context)
                 throws JsonParseException {

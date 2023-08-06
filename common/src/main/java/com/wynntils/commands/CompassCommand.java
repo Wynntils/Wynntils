@@ -271,7 +271,7 @@ public class CompassCommand extends Command {
         Models.Marker.USER_WAYPOINTS_PROVIDER.addLocation(location.asLocation());
 
         MutableComponent response = Component.literal(
-                        "Compass set to middle of " + territoryProfile.getFriendlyName() + " at ")
+                        "Compass set to middle of " + territoryProfile.friendlyName() + " at ")
                 .withStyle(ChatFormatting.AQUA);
         response.append(Component.literal(location.toString()).withStyle(ChatFormatting.WHITE));
         context.getSource().sendSuccess(response, false);

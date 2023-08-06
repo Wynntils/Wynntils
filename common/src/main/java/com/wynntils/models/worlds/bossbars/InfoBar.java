@@ -33,17 +33,17 @@ public class InfoBar extends TrackedBar {
     }
 
     @Override
-    public void onUpdateName(Matcher matcher) {
-        if (matcher.pattern().equals(BOMB_INFO_PATTERN)) {
-            BombType bombType = BombType.fromString(matcher.group("bomb"));
+    public void onUpdateName(Matcher match) {
+        if (match.pattern().equals(BOMB_INFO_PATTERN)) {
+            BombType bombType = BombType.fromString(match.group("bomb"));
 
             if (bombType == null) return;
 
-            float length = Integer.parseInt(matcher.group("length")) + BOMB_TIMER_OFFSET;
+            float length = Integer.parseInt(match.group("length")) + BOMB_TIMER_OFFSET;
             Models.Bomb.addBombInfo(
                     bombType,
                     new BombInfo(
-                            matcher.group("user"),
+                            match.group("user"),
                             bombType,
                             Models.WorldState.getCurrentWorldName(),
                             System.currentTimeMillis(),

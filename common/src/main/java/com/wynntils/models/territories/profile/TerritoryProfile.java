@@ -21,24 +21,21 @@ import java.util.Locale;
 import net.minecraft.ChatFormatting;
 import net.minecraft.core.Position;
 
-public class TerritoryProfile {
+public record TerritoryProfile(
+        String name,
+        String friendlyName,
+        String guildPrefix,
+        CustomColor guildColor,
+        int level,
+        int startX,
+        int startZ,
+        int endX,
+        int endZ,
+        String guild,
+        String attacker,
+        Date acquired) {
     private static final SimpleDateFormatter DATE_FORMATTER = new SimpleDateFormatter();
     private static final SimpleDateFormat DATE_FORMAT = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.ROOT);
-
-    private final String name;
-    private final String friendlyName;
-    private final int startX;
-    private final int startZ;
-    private final int endX;
-    private final int endZ;
-
-    private final String guild;
-    private final String guildPrefix;
-    private final CustomColor guildColor;
-    private final String attacker;
-    private final Date acquired;
-
-    private final int level;
 
     public TerritoryProfile(
             String name,
@@ -82,69 +79,21 @@ public class TerritoryProfile {
         }
     }
 
-    public String getName() {
-        return name;
-    }
-
-    public String getFriendlyName() {
-        return friendlyName;
-    }
-
-    public CustomColor getGuildColor() {
-        return guildColor;
-    }
-
-    public int getStartX() {
-        return startX;
-    }
-
-    public int getStartZ() {
-        return startZ;
-    }
-
-    public int getEndX() {
-        return endX;
-    }
-
-    public int getEndZ() {
-        return endZ;
-    }
-
-    public String getGuild() {
-        return guild;
-    }
-
-    public String getGuildPrefix() {
-        return guildPrefix;
-    }
-
-    public int getLevel() {
-        return level;
-    }
-
-    public String getAttacker() {
-        return attacker;
-    }
-
-    public Date getAcquired() {
-        return acquired;
-    }
-
     public PoiLocation getCenterLocation() {
-        int xMiddle = (this.getStartX() + this.getEndX()) / 2;
-        int zMiddle = (this.getStartZ() + this.getEndZ()) / 2;
+        int xMiddle = (this.startX() + this.endX()) / 2;
+        int zMiddle = (this.startZ() + this.endZ()) / 2;
         return new PoiLocation(xMiddle, 0, zMiddle);
     }
 
     public boolean insideArea(Position position) {
-        return position.x() >= this.getStartX()
-                && position.x() <= this.getEndX()
-                && position.z() >= this.getStartZ()
-                && position.z() <= this.getEndZ();
+        return position.x() >= this.startX()
+                && position.x() <= this.endX()
+                && position.z() >= this.startZ()
+                && position.z() <= this.endZ();
     }
 
     private long getTimeHeldInMillis() {
-        return new Date().getTime() - this.getAcquired().getTime() + getTimezoneOffset();
+        return new Date().getTime() - this.acquired().getTime() + getTimezoneOffset();
     }
 
     private long getTimezoneOffset() {

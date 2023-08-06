@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2022.
+ * Copyright © Wynntils 2022-2023.
  * This file is released under AGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.mc.event;
@@ -84,9 +84,9 @@ public class PlayerInteractEvent extends PlayerEvent {
         }
 
         @Override
-        public void setCanceled(boolean canceled) {
-            super.setCanceled(canceled);
-            if (canceled) {
+        public void setCanceled(boolean cancel) {
+            super.setCanceled(cancel);
+            if (cancel) {
                 this.useBlock = Event.Result.DENY;
                 this.useItem = Event.Result.DENY;
             }

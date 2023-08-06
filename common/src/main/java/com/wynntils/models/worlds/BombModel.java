@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2022.
+ * Copyright © Wynntils 2022-2023.
  * This file is released under AGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.models.worlds;
@@ -104,7 +104,7 @@ public final class BombModel extends Model {
     }
 
     private static final class ActiveBombContainer {
-        private Map<BombKey, BombInfo> bombs = new ConcurrentHashMap<>();
+        private final Map<BombKey, BombInfo> bombs = new ConcurrentHashMap<>();
 
         public void add(BombInfo bombInfo) {
             BombKey key = new BombKey(bombInfo.server(), bombInfo.bomb());

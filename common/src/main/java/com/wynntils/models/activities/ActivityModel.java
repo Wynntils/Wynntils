@@ -38,7 +38,7 @@ import com.wynntils.utils.mc.type.Location;
 import com.wynntils.utils.type.CappedValue;
 import com.wynntils.utils.type.Pair;
 import java.util.ArrayList;
-import java.util.LinkedList;
+import java.util.Deque;
 import java.util.List;
 import java.util.Optional;
 import java.util.function.BiConsumer;
@@ -111,7 +111,7 @@ public final class ActivityModel extends Model {
     }
 
     public ActivityInfo parseItem(String name, ActivityType type, ItemStack itemStack) {
-        LinkedList<StyledText> lore = LoreUtils.getLore(itemStack);
+        Deque<StyledText> lore = LoreUtils.getLore(itemStack);
 
         String statusLine = lore.pop().getString();
         if (statusLine.charAt(0) != '§') return null;
