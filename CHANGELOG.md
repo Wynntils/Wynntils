@@ -1,9 +1,21 @@
+## [0.0.3-alpha.276](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.275...v0.0.3-alpha.276) (2023-08-06)
+
+
+### New Features
+
+* Add spell cooldown and fix right-click delay between spells ([#1946](https://github.com/Wynntils/Artemis/issues/1946)) ([001acf6](https://github.com/Wynntils/Artemis/commit/001acf6932aec570a5e8f42a045f5aef9c4b5f1d))
+
 ## [0.0.3-alpha.275](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.274...v0.0.3-alpha.275) (2023-08-05)
 
 
 ### New Features
 
 * add named lootrun tasks, overlays for lootrun functions ([#1944](https://github.com/Wynntils/Artemis/issues/1944)) ([b22ac63](https://github.com/Wynntils/Artemis/commit/b22ac6347045f89a50cde4c85e8428434876bac7))
+
+
+### Miscellaneous Chores
+
+* **release:** v0.0.3-alpha.275 [skip ci] ([1b738b5](https://github.com/Wynntils/Artemis/commit/1b738b53b59b6a9b2f0e00f9260bee47392dc629))
 
 ## [0.0.3-alpha.274](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.273...v0.0.3-alpha.274) (2023-08-05)
 
@@ -40,16 +52,4 @@
 ### Miscellaneous Chores
 
 * **release:** v0.0.3-alpha.272 [skip ci] ([779a1cf](https://github.com/Wynntils/Artemis/commit/779a1cfa5ccba79bc1b47dee042861190c9f19cc))
-
-## [0.0.3-alpha.271](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.270...v0.0.3-alpha.271) (2023-08-04)
-
-
-### New Features
-
-* accurately estimate lootrun beacon position ([#1939](https://github.com/Wynntils/Artemis/issues/1939)) ([b2cf985](https://github.com/Wynntils/Artemis/commit/b2cf985663e6a344539c8e6e56ed15d73621262c))
-
-
-### Miscellaneous Chores
-
-* **release:** v0.0.3-alpha.271 [skip ci] ([090ad08](https://github.com/Wynntils/Artemis/commit/090ad08ded2fa6f064ba8d057ae55a90f2a6dc3e))
 
