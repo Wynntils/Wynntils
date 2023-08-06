@@ -13,8 +13,8 @@ public class StatusEffect implements Comparable<StatusEffect> {
     private final StyledText fullName;
     private final StyledText name; // The name of the consumable (also used to identify it)
     private final StyledText modifier; // The modifier of the consumable (+100, 23/3s etc.)
-    private StyledText modifierSuffix; // The suffix of the modifier (/3s, %)
-    private Optional<Double> modifierValue;
+    private final StyledText modifierSuffix; // The suffix of the modifier (/3s, %)
+    private final Optional<Double> modifierValue;
     private StyledText displayedTime; // The displayed time remaining. Allows for xx:xx for infinite time effects.
     private StyledText prefix; // The prefix to display before the name. Not included in identifying name.
 

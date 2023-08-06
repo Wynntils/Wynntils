@@ -163,7 +163,7 @@ public class StatusEffectsOverlay extends Overlay {
             default -> effect.asString().getString();
             case SUM -> effect.getPrefix().getString()
                     + effect.getName().getString()
-                    + effect.getModifier().getString().indexOf('%')
+                    + (effect.getModifier().getString().indexOf('%') == -1)
                     + effect.getDisplayedTime().getString();
         };
     }
