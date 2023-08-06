@@ -17,6 +17,7 @@ import com.wynntils.core.persisted.Persisted;
 import com.wynntils.core.persisted.config.Config;
 import com.wynntils.core.text.StyledText;
 import com.wynntils.features.map.MainMapFeature;
+import com.wynntils.screens.maps.AbstractMapScreen;
 import com.wynntils.services.map.MapTexture;
 import com.wynntils.services.map.pois.PlayerMiniMapPoi;
 import com.wynntils.services.map.pois.Poi;
@@ -94,9 +95,9 @@ public class MinimapOverlay extends Overlay {
                 new OverlaySize(DEFAULT_SIZE, DEFAULT_SIZE));
     }
 
-    public void scale(double scaler) {
-        scale.setValue((float) Math.clamp(0.1, 3, scale.get() * scaler));
-        System.out.println(scale.get());
+    public void scale(double multiplier) {
+        scale.setValue((float) Math.clamp(AbstractMapScreen.MIN_ZOOM, AbstractMapScreen.MAX_ZOOM, scale.get() * multiplier));
+        scale.touched();
     }
 
     // FIXME: This is the only overlay not to use buffer sources for rendering. This is due to `createMask`
