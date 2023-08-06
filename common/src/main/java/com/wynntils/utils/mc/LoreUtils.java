@@ -29,6 +29,9 @@ import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
 
+import static com.wynntils.models.wynnitem.parsing.WynnItemParser.SHINY_STAT_NO_CAPTURE_PATTERN;
+import static com.wynntils.models.wynnitem.parsing.WynnItemParser.SHINY_STAT_PATTERN;
+
 public final class LoreUtils {
     /**
      * Get the lore from an item, note that it may not be fully parsed. To do so, check out {@link
@@ -252,11 +255,23 @@ public final class LoreUtils {
         if (linesToCheck < 3 && firstLinesLen != secondLinesLen) return false;
 
         for (int i = 0; i < linesToCheck; i++) {
-            if (!firstLines.get(i).equals(secondLines.get(i))) return false;
+            StyledText firstItemCurrentLine = firstLines.get(i);
+            StyledText secondItemCurrentLine = secondLines.get(i);
+            // Make special case to ignore shiny stat changes
+            boolean firstLineShiny = isLineShinyStat(firstItemCurrentLine);
+            boolean secondLineShiny = isLineShinyStat(secondItemCurrentLine);
+            if(firstLineShiny && secondLineShiny) continue;
+            if(firstLineShiny || secondLineShiny) return false;
+            if (!firstItemCurrentLine.equals(secondItemCurrentLine)) return false;
         }
 
         // Every lore line matches from the first to the second (or second to the first), so we have a match
         return true;
+    }
+
+    private static boolean isLineShinyStat(StyledText line){
+        StyledText normalizedLine = line.getNormalized();
+        return normalizedLine.getMatcher(SHINY_STAT_NO_CAPTURE_PATTERN).matches();
     }
 
     /**
