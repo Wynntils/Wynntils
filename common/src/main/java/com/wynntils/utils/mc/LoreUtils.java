@@ -1,8 +1,10 @@
 /*
- * Copyright © Wynntils 2021.
+ * Copyright © Wynntils 2021-2023.
  * This file is released under AGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.utils.mc;
+
+import static com.wynntils.models.wynnitem.parsing.WynnItemParser.SHINY_STAT_NO_CAPTURE_PATTERN;
 
 import com.google.gson.JsonDeserializationContext;
 import com.google.gson.JsonElement;
@@ -28,9 +30,6 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
-
-import static com.wynntils.models.wynnitem.parsing.WynnItemParser.SHINY_STAT_NO_CAPTURE_PATTERN;
-import static com.wynntils.models.wynnitem.parsing.WynnItemParser.SHINY_STAT_PATTERN;
 
 public final class LoreUtils {
     /**
@@ -260,8 +259,8 @@ public final class LoreUtils {
             // Make special case to ignore shiny stat changes
             boolean firstLineShiny = isLineShinyStat(firstItemCurrentLine);
             boolean secondLineShiny = isLineShinyStat(secondItemCurrentLine);
-            if(firstLineShiny && secondLineShiny) continue;
-            if(firstLineShiny || secondLineShiny) return false;
+            if (firstLineShiny && secondLineShiny) continue;
+            if (firstLineShiny || secondLineShiny) return false;
             if (!firstItemCurrentLine.equals(secondItemCurrentLine)) return false;
         }
 
@@ -269,7 +268,7 @@ public final class LoreUtils {
         return true;
     }
 
-    private static boolean isLineShinyStat(StyledText line){
+    private static boolean isLineShinyStat(StyledText line) {
         StyledText normalizedLine = line.getNormalized();
         return normalizedLine.getMatcher(SHINY_STAT_NO_CAPTURE_PATTERN).matches();
     }
