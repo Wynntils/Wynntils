@@ -21,6 +21,7 @@ import com.wynntils.models.stats.type.StatType;
 import com.wynntils.models.wynnitem.type.ItemEffect;
 import com.wynntils.utils.mc.ComponentUtils;
 import com.wynntils.utils.mc.LoreUtils;
+import com.wynntils.utils.mc.McUtils;
 import com.wynntils.utils.type.Pair;
 import com.wynntils.utils.type.RangedValue;
 import java.util.ArrayList;
@@ -209,6 +210,8 @@ public final class WynnItemParser {
                 shinyStat = Optional.of(Pair.of(statName, stat));
             }
         }
+
+        McUtils.sendMessageToClient(Component.literal("parsed: ").append(itemStack.getDisplayName()));
 
         return new WynnItemParseResult(
                 tier,

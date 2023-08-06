@@ -30,6 +30,7 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
+import org.jetbrains.annotations.Nullable;
 
 public final class LoreUtils {
     /**
@@ -240,7 +241,7 @@ public final class LoreUtils {
      * This checks if the lore of the second item contains the entirety of the first item's lore, or vice versa.
      * It might have additional lines added, but these are not checked.
      */
-    public static boolean loreSoftMatches(ItemStack firstItem, ItemStack secondItem, int tolerance) {
+    public static boolean loreSoftMatches(ItemStack firstItem, ItemStack secondItem, int tolerance, @Nullable int[] shinyStatLine) {
         List<StyledText> firstLines = getLore(firstItem);
         List<StyledText> secondLines = getLore(secondItem);
         int firstLinesLen = firstLines.size();
@@ -259,7 +260,13 @@ public final class LoreUtils {
             // Make special case to ignore shiny stat changes
             boolean firstLineShiny = isLineShinyStat(firstItemCurrentLine);
             boolean secondLineShiny = isLineShinyStat(secondItemCurrentLine);
-            if (firstLineShiny && secondLineShiny) continue;
+            // Return value through length 1 array if present
+            if (firstLineShiny && secondLineShiny) {
+                if(shinyStatLine != null){
+                    shinyStatLine[0] = i;
+                }
+                continue;
+            }
             if (firstLineShiny || secondLineShiny) return false;
             if (!firstItemCurrentLine.equals(secondItemCurrentLine)) return false;
         }
