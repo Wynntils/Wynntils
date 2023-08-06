@@ -127,7 +127,11 @@ public class LootrunModel extends Model {
     private Map<BeaconColor, Integer> selectedBeacons = new TreeMap<>();
 
     private int timerOverall = 0;
-    private int timerChallenge = 0;
+
+    @Persisted
+    private Storage<Map<String, Integer>> timerChallenge = new Storage<>(new TreeMap<>());
+
+    ;
     private int challengesMax = 0;
     private int challengesCurrent = 0;
 
@@ -176,6 +180,10 @@ public class LootrunModel extends Model {
         selectedBeacons = selectedBeaconsStorage.get().get(id);
 
         selectedBeaconsStorage.touched();
+
+        timerChallenge.get().putIfAbsent(id, 0);
+
+        timerChallenge.touched();
     }
 
     @SubscribeEvent
@@ -308,7 +316,7 @@ public class LootrunModel extends Model {
     }
 
     public int getTimer(boolean max) {
-        return max ? timerChallenge : timerOverall;
+        return max ? timerChallenge.get().get(Models.Character.getId()) : timerOverall;
     }
 
     public int getChallenges(boolean max) {
@@ -372,7 +380,8 @@ public class LootrunModel extends Model {
             beaconUpdates = new HashMap<>();
 
             timerOverall = 0;
-            timerChallenge = 0;
+            timerChallenge.get().put(Models.Character.getId(), 0);
+            timerChallenge.touched();
             challengesCurrent = 0;
             challengesMax = 0;
             return;
@@ -401,7 +410,8 @@ public class LootrunModel extends Model {
             return;
         }
         if (oldState != newState) {
-            timerChallenge = timerOverall;
+            timerChallenge.get().put(Models.Character.getId(), timerOverall);
+            timerChallenge.touched();
         }
     }
 
