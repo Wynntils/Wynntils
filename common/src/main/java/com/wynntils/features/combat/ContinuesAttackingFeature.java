@@ -24,7 +24,6 @@ public class ContinuesAttackingFeature extends Feature {
         boolean isArcher = Models.Character.getClassType() == ClassType.ARCHER;
         if (isArcher ? !options.keyUse.isDown() : !options.keyAttack.isDown()) return;
 
-        System.out.println("keyDown");
         LocalPlayer player = McUtils.player();
         ItemStack itemInHand = player.getItemInHand(InteractionHand.MAIN_HAND);
         if (player.getCooldowns().isOnCooldown(itemInHand.getItem())) return;

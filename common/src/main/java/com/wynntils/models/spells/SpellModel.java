@@ -10,7 +10,7 @@ import com.wynntils.core.components.Model;
 import com.wynntils.core.components.Models;
 import com.wynntils.core.text.StyledText;
 import com.wynntils.handlers.item.event.ItemRenamedEvent;
-import com.wynntils.mc.event.ArmSwingEvent;
+import com.wynntils.mc.event.PacketEvent;
 import com.wynntils.mc.event.SubtitleSetTextEvent;
 import com.wynntils.mc.event.UseItemEvent;
 import com.wynntils.models.character.CharacterModel;
@@ -29,6 +29,7 @@ import java.util.List;
 import java.util.regex.MatchResult;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import net.minecraft.network.protocol.game.ServerboundSwingPacket;
 import net.minecraftforge.eventbus.api.EventPriority;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 
@@ -107,8 +108,8 @@ public class SpellModel extends Model {
         }
     }
 
-    @SubscribeEvent(priority = EventPriority.LOW)
-    public void onSwing(ArmSwingEvent event) {
+    @SubscribeEvent(priority = EventPriority.HIGHEST)
+    public void onSwing(PacketEvent.PacketSentEvent<ServerboundSwingPacket> event) {
         addSpellPrediction(SpellDirection.LEFT);
     }
 
@@ -156,14 +157,8 @@ public class SpellModel extends Model {
             return;
         }
 
-        if (spellPrediction[2] != null) {
-            setSpellPrediction(SpellDirection.NO_SPELL);
-            return;
-        }
-
         if (spellPrediction[1] != null) {
-            spellPrediction[2] = spellDirection;
-            setSpellPrediction(spellPrediction);
+            setSpellPrediction(SpellDirection.NO_SPELL);
             return;
         }
 
