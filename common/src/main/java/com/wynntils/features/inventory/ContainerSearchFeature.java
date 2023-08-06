@@ -77,6 +77,7 @@ public class ContainerSearchFeature extends Feature {
     public void onScreenInit(ScreenInitEvent event) {
         if (!(event.getScreen() instanceof AbstractContainerScreen<?> screen)) return;
         if (!(screen.getMenu() instanceof ChestMenu chestMenu)) return;
+
         StyledText title = StyledText.fromComponent(screen.getTitle());
 
         // This is screen.topPos and screen.leftPos, but they are not calculated yet when this is called
