@@ -126,8 +126,10 @@ public class LootrunModel extends Model {
 
     private Map<BeaconColor, Integer> selectedBeacons = new TreeMap<>();
 
-    public int timerOverall = 100;
-    public int timerChallenge = 0;
+    private int timerOverall = 0;
+    private int timerChallenge = 0;
+    private int challengesMax = 0;
+    private int challengesCurrent = 0;
 
     public LootrunModel(BeaconModel beaconModel, MarkerModel markerModel, ParticleModel particleModel) {
         super(List.of(beaconModel, markerModel, particleModel));
@@ -305,12 +307,12 @@ public class LootrunModel extends Model {
         return taskPrediction.taskLocation();
     }
 
-    public int getTimerOverall() {
-        return timerOverall;
+    public int getTimer(boolean max) {
+        return max ? timerChallenge : timerOverall;
     }
 
-    public int getTimerChallenge() {
-        return timerChallenge;
+    public int getChallenges(boolean max) {
+        return max ? challengesMax : challengesCurrent;
     }
 
     public void setState(LootrunningState newState, LootrunTaskType taskType) {
@@ -349,6 +351,14 @@ public class LootrunModel extends Model {
         timerOverall = seconds;
     }
 
+    public void setChallengesCurrent(int amount) {
+        challengesCurrent = amount;
+    }
+
+    public void setChallengesMax(int amount) {
+        challengesMax = amount;
+    }
+
     private void handleStateChange(LootrunningState oldState, LootrunningState newState) {
         if (newState == LootrunningState.NOT_RUNNING) {
             resetBeaconStorage();
@@ -363,6 +373,8 @@ public class LootrunModel extends Model {
 
             timerOverall = 0;
             timerChallenge = 0;
+            challengesCurrent = 0;
+            challengesMax = 0;
             return;
         }
 
@@ -386,10 +398,10 @@ public class LootrunModel extends Model {
             beacons.clear();
             setClosestBeacon(null);
             LOOTRUN_BEACON_COMPASS_PROVIDER.reloadTaskMarkers();
-
-            timerChallenge = timerOverall;
-
             return;
+        }
+        if (oldState != newState) {
+            timerChallenge = timerOverall;
         }
     }
 

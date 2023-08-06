@@ -29,6 +29,7 @@ public class LootrunScoreboardPart extends ScoreboardPart {
     private static final Pattern DEFEND_PATTERN = Pattern.compile("^Defend for (\\d+)s!$");
 
     private static final Pattern TIMER_PATTERN = Pattern.compile("^[-—] Time Left: (\\d+):(\\d+)$");
+    private static final Pattern CHALLENGES_PATTERN = Pattern.compile("^[-—] Challenges: (\\d+)/(\\d+)$");
 
     @Override
     public SegmentMatcher getSegmentMatcher() {
@@ -61,11 +62,17 @@ public class LootrunScoreboardPart extends ScoreboardPart {
         }
 
         for (StyledText line : content) {
-            if (line.matches(TIMER_PATTERN, PartStyle.StyleType.NONE)) {
+            if (line.matches(TIMER_PATTERN, PartStyle.StyleType.NONE)
+                    || line.matches(CHALLENGES_PATTERN, PartStyle.StyleType.NONE)) {
                 Matcher timeMatcher = line.getMatcher(TIMER_PATTERN, PartStyle.StyleType.NONE);
+                Matcher challengeMatcher = line.getMatcher(CHALLENGES_PATTERN, PartStyle.StyleType.NONE);
                 if (timeMatcher.find()) {
                     Models.Lootrun.setTimerOverall(
                             Integer.parseInt(timeMatcher.group(1)) * 60 + Integer.parseInt(timeMatcher.group(2)));
+                }
+                if (challengeMatcher.find()) {
+                    Models.Lootrun.setChallengesCurrent(Integer.parseInt(challengeMatcher.group(1)));
+                    Models.Lootrun.setChallengesMax(Integer.parseInt(challengeMatcher.group(2)));
                 }
             }
         }

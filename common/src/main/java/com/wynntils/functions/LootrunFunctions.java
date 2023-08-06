@@ -153,15 +153,26 @@ public class LootrunFunctions {
     public static class LootrunTimeFunction extends Function<Integer> {
         @Override
         public Integer getValue(FunctionArguments arguments) {
-            return arguments.getArgument("challengeTime").getBooleanValue()
-                    ? Models.Lootrun.getTimerChallenge()
-                    : Models.Lootrun.getTimerOverall();
+            return Models.Lootrun.getTimer(arguments.getArgument("requiredTime").getBooleanValue());
         }
 
         @Override
         public FunctionArguments.Builder getArgumentsBuilder() {
             return new FunctionArguments.OptionalArgumentBuilder(
-                    List.of(new FunctionArguments.Argument<>("challengeTime", Boolean.class, false)));
+                    List.of(new FunctionArguments.Argument<>("requiredTime", Boolean.class, false)));
+        }
+    }
+
+    public static class LootrunChallengesFunction extends Function<Integer> {
+        @Override
+        public Integer getValue(FunctionArguments arguments) {
+            return Models.Lootrun.getChallenges(arguments.getArgument("max").getBooleanValue());
+        }
+
+        @Override
+        public FunctionArguments.Builder getArgumentsBuilder() {
+            return new FunctionArguments.OptionalArgumentBuilder(
+                    List.of(new FunctionArguments.Argument<>("max", Boolean.class, false)));
         }
     }
 }
