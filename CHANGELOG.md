@@ -1,4 +1,16 @@
+## [0.0.3-alpha.281](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.280...v0.0.3-alpha.281) (2023-08-07)
+
+
+### Bug Fixes
+
+* Fix ContainerSearchFeature searching in the sidebar ([#1841](https://github.com/Wynntils/Artemis/issues/1841)) ([88ed015](https://github.com/Wynntils/Artemis/commit/88ed0157de4199a73376f62c31b69809a656a5fc))
+
 ## [0.0.3-alpha.280](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.279...v0.0.3-alpha.280) (2023-08-07)
+
+
+### Miscellaneous Chores
+
+* **release:** v0.0.3-alpha.280 [skip ci] ([b3b4f6f](https://github.com/Wynntils/Artemis/commit/b3b4f6f6b5e2010a326d9b2b7fbe373a05a026bd))
 
 
 ### Code Refactoring
@@ -40,16 +52,4 @@
 ### Miscellaneous Chores
 
 * **release:** v0.0.3-alpha.277 [skip ci] ([e157efe](https://github.com/Wynntils/Artemis/commit/e157efe3b8eb78182df964c04989131804058569))
-
-## [0.0.3-alpha.276](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.275...v0.0.3-alpha.276) (2023-08-06)
-
-
-### New Features
-
-* Add spell cooldown and fix right-click delay between spells ([#1946](https://github.com/Wynntils/Artemis/issues/1946)) ([001acf6](https://github.com/Wynntils/Artemis/commit/001acf6932aec570a5e8f42a045f5aef9c4b5f1d))
-
-
-### Miscellaneous Chores
-
-* **release:** v0.0.3-alpha.276 [skip ci] ([a3f87c3](https://github.com/Wynntils/Artemis/commit/a3f87c319ca0e7d13cfceb9477f3a11b8605a442))
 
