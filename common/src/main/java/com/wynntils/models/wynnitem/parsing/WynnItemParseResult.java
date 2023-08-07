@@ -24,4 +24,4 @@ public record WynnItemParseResult(
         int rerolls,
         int durabilityCurrent,
         int durabilityMax,
-        Optional<Pair<String, Integer>> shinyStat) {}
+        Optional<Pair<String, Long>> shinyStat) {}

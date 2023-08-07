@@ -9,17 +9,22 @@ import com.wynntils.core.components.Handler;
 import com.wynntils.core.mod.type.CrashType;
 import com.wynntils.core.text.StyledText;
 import com.wynntils.handlers.item.event.ItemRenamedEvent;
+import com.wynntils.handlers.item.event.ShinyMythicStatChangeEvent;
 import com.wynntils.mc.event.ContainerSetContentEvent;
 import com.wynntils.mc.event.SetSlotEvent;
 import com.wynntils.mc.extension.ItemStackExtension;
+import com.wynntils.models.gear.type.GearInstance;
+import com.wynntils.models.items.items.game.GearItem;
 import com.wynntils.utils.mc.LoreUtils;
 import com.wynntils.utils.mc.McUtils;
+import com.wynntils.utils.type.Pair;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import net.minecraft.core.NonNullList;
+import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
@@ -87,6 +92,20 @@ public class ItemHandler extends Handler {
         }
     }
 
+    @SubscribeEvent
+    public void onShinyStatisticChange(ShinyMythicStatChangeEvent event) {
+        ItemStackExtension itemStackExtension = (ItemStackExtension) event.getItemStack();
+        ItemAnnotation annotation = itemStackExtension.getAnnotation();
+        if (!(annotation instanceof GearItem gearItem)) {
+            WynntilsMod.warn("Shiny statistic probably shouldn't be changing for non-gear items "
+                    + itemStackExtension.getOriginalName());
+            return;
+        }
+        Optional<GearInstance> gearInstance = gearItem.getGearInstance();
+        gearInstance.ifPresent(
+                instance -> instance.updateShinyStat(event.getShinyStatName(), event.getNewStat(), false));
+    }
+
     private void onItemStackUpdate(ItemStack existingItem, ItemStack newItem) {
         // For e.g. FakeItemStacks we will already have an annotation
         if (((ItemStackExtension) newItem).getAnnotation() != null) return;
@@ -105,11 +124,18 @@ public class ItemHandler extends Handler {
         }
 
         // This might be just a name update. Check if lore matches:
-        if (!LoreUtils.loreSoftMatches(existingItem, newItem, 3)) {
+        Pair<Boolean, Optional<ShinyMythicStatChangeEvent>> loreCompareResult =
+                LoreUtils.compareLore(existingItem, newItem, 3);
+        boolean loreSoftMatches = loreCompareResult.a();
+        if (!loreSoftMatches) {
             // This could be a new item, or a crafted item losing in durability
             annotate(newItem);
             return;
         }
+
+        // is the shiny statistic different?
+        Optional<ShinyMythicStatChangeEvent> shinyMythicStatChange = loreCompareResult.b();
+        shinyMythicStatChange.ifPresent(WynntilsMod::postEvent);
 
         StyledText originalName = ((ItemStackExtension) existingItem).getOriginalName();
         StyledText existingName =

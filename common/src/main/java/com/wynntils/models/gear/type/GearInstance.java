@@ -21,15 +21,16 @@ public record GearInstance(
         List<Powder> powders,
         int rerolls,
         Optional<Float> overallQuality,
-        Optional<Pair<String, Integer>> shinyStat) {
+        ShinyStatistic shinyStat) {
     public static GearInstance create(
             GearInfo gearInfo,
             List<StatActualValue> identifications,
             List<Powder> powders,
             int rerolls,
-            Optional<Pair<String, Integer>> shinyStat) {
+            Optional<Pair<String, Long>> shinyStat) {
+        ShinyStatistic shinyStatistic = new ShinyStatistic(shinyStat);
         return new GearInstance(
-                identifications, powders, rerolls, calculateOverallQuality(gearInfo, identifications), shinyStat);
+                identifications, powders, rerolls, calculateOverallQuality(gearInfo, identifications), shinyStatistic);
     }
 
     private static Optional<Float> calculateOverallQuality(GearInfo gearInfo, List<StatActualValue> identifications) {
@@ -71,8 +72,23 @@ public record GearInstance(
         return overallQuality.orElse(0.0f) <= 0.0f;
     }
 
+    public void updateShinyStat(String name, long value, boolean force) {
+        if (this.shinyStat.isStatPresent()) {
+            String shinyStatName = this.shinyStat.getName();
+            if (!shinyStatName.equals(name)) {
+                WynntilsMod.warn("name mismatch between shiny statistics on previous data for item and updated item");
+                return;
+            }
+            this.shinyStat.update(name, value);
+        } else if (force) {
+            this.shinyStat.update(name, value);
+        } else {
+            WynntilsMod.warn("can't modify shiny statistic on item because value doesn't exist");
+        }
+    }
+
     public boolean hashShinyStat() {
-        return this.shinyStat.isPresent();
+        return this.shinyStat.isStatPresent();
     }
 
     public StatActualValue getActualValue(StatType statType) {

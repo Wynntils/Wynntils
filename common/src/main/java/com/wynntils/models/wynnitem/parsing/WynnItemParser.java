@@ -71,7 +71,7 @@ public final class WynnItemParser {
         String itemType = "";
         boolean setBonusStats = false;
         boolean parsingEffects = false;
-        Optional<Pair<String, Integer>> shinyStat = Optional.empty();
+        Optional<Pair<String, Long>> shinyStat = Optional.empty();
         String effectsColorCode = "";
 
         // Parse lore for identifications, powders and rerolls
@@ -204,7 +204,7 @@ public final class WynnItemParser {
             Matcher shinyStatMatcher = normalizedCoded.getMatcher(SHINY_STAT_PATTERN);
             if (shinyStatMatcher.matches() && shinyStat.isEmpty()) {
                 String statName = shinyStatMatcher.group(1);
-                int stat = Integer.parseInt(shinyStatMatcher.group(2));
+                long stat = Long.parseLong(shinyStatMatcher.group(2));
                 shinyStat = Optional.of(Pair.of(statName, stat));
             }
         }

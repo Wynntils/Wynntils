@@ -10,12 +10,15 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import com.google.gson.JsonSyntaxException;
 import com.wynntils.core.text.StyledText;
+import com.wynntils.handlers.item.event.ShinyMythicStatChangeEvent;
 import com.wynntils.models.wynnitem.parsing.WynnItemParser;
 import com.wynntils.utils.StringUtils;
+import com.wynntils.utils.type.Pair;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Optional;
 import java.util.function.Supplier;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -239,38 +242,53 @@ public final class LoreUtils {
      * This checks if the lore of the second item contains the entirety of the first item's lore, or vice versa.
      * It might have additional lines added, but these are not checked.
      */
-    public static boolean loreSoftMatches(ItemStack firstItem, ItemStack secondItem, int tolerance) {
+    public static Pair<Boolean, Optional<ShinyMythicStatChangeEvent>> compareLore(
+            ItemStack firstItem, ItemStack secondItem, int tolerance) {
         List<StyledText> firstLines = getLore(firstItem);
         List<StyledText> secondLines = getLore(secondItem);
+        Optional<ShinyMythicStatChangeEvent> optionalShinyMythicStatChangeEvent = Optional.empty();
         int firstLinesLen = firstLines.size();
         int secondLinesLen = secondLines.size();
 
         // Only allow a maximum number of additional lines in the longer tooltip
-        if (Math.abs(firstLinesLen - secondLinesLen) > tolerance) return false;
+        if (Math.abs(firstLinesLen - secondLinesLen) > tolerance)
+            return Pair.of(false, optionalShinyMythicStatChangeEvent);
 
         int linesToCheck = Math.min(firstLinesLen, secondLinesLen);
         // Prevent soft matching on tooltips that are very small
-        if (linesToCheck < 3 && firstLinesLen != secondLinesLen) return false;
+        if (linesToCheck < 3 && firstLinesLen != secondLinesLen)
+            return Pair.of(false, optionalShinyMythicStatChangeEvent);
 
         for (int i = 0; i < linesToCheck; i++) {
             StyledText firstItemCurrentLine = firstLines.get(i);
             StyledText secondItemCurrentLine = secondLines.get(i);
             // Make special case to ignore shiny stat changes
-            boolean firstLineShiny = isLineShinyStat(firstItemCurrentLine);
-            boolean secondLineShiny = isLineShinyStat(secondItemCurrentLine);
-            // Return value through length 1 array if present
-            if (firstLineShiny && secondLineShiny) continue;
-            if (firstLineShiny || secondLineShiny) return false;
-            if (!firstItemCurrentLine.equals(secondItemCurrentLine)) return false;
+            Matcher firstLineShinyStatMatcher = getShinyStatMatcher(firstItemCurrentLine);
+            Matcher secondLineShinyStatMatcher = getShinyStatMatcher(secondItemCurrentLine);
+            boolean firstLineShiny = firstLineShinyStatMatcher.matches();
+            boolean secondLineShiny = secondLineShinyStatMatcher.matches();
+            if (firstLineShiny && secondLineShiny) {
+                if (!firstItemCurrentLine.equals(secondItemCurrentLine)) {
+                    optionalShinyMythicStatChangeEvent = Optional.of(new ShinyMythicStatChangeEvent(
+                            firstItem,
+                            secondLineShinyStatMatcher.group(1),
+                            Long.parseLong(firstLineShinyStatMatcher.group(2)),
+                            Long.parseLong(secondLineShinyStatMatcher.group(2))));
+                }
+                continue;
+            }
+            if (firstLineShiny || secondLineShiny) return Pair.of(false, optionalShinyMythicStatChangeEvent);
+            if (!firstItemCurrentLine.equals(secondItemCurrentLine))
+                return Pair.of(false, optionalShinyMythicStatChangeEvent);
         }
 
         // Every lore line matches from the first to the second (or second to the first), so we have a match
-        return true;
+        return Pair.of(true, optionalShinyMythicStatChangeEvent);
     }
 
-    private static boolean isLineShinyStat(StyledText line) {
+    private static Matcher getShinyStatMatcher(StyledText line) {
         StyledText normalizedLine = line.getNormalized();
-        return normalizedLine.getMatcher(WynnItemParser.SHINY_STAT_PATTERN).matches();
+        return normalizedLine.getMatcher(WynnItemParser.SHINY_STAT_PATTERN);
     }
 
     /**
