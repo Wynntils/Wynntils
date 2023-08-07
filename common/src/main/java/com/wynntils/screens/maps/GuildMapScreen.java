@@ -317,7 +317,7 @@ public final class GuildMapScreen extends AbstractMapScreen {
                 // If the API and advamcement pois don't match, we use the API pois without advancement info
                 if (territoryProfile != null
                         && territoryProfile
-                                .guild()
+                                .getGuild()
                                 .equals(poi.getTerritoryInfo().getGuildName())) {
                     renderedPois.add(poi);
                 } else {
@@ -471,7 +471,7 @@ public final class GuildMapScreen extends AbstractMapScreen {
 
         renderYOffset += 20;
 
-        String timeHeldString = territoryProfile.guild().equals(territoryInfo.getGuildName())
+        String timeHeldString = territoryProfile.getGuild().equals(territoryInfo.getGuildName())
                 ? territoryProfile.getTimeAcquiredColor() + territoryProfile.getReadableRelativeTimeAcquired()
                 : "-";
         FontRenderer.getInstance()
@@ -527,7 +527,7 @@ public final class GuildMapScreen extends AbstractMapScreen {
                 .renderText(
                         poseStack,
                         StyledText.fromString(
-                                "%s [%s]".formatted(territoryProfile.guild(), territoryProfile.guildPrefix())),
+                                "%s [%s]".formatted(territoryProfile.getGuild(), territoryProfile.getGuildPrefix())),
                         10,
                         10,
                         CommonColors.MAGENTA,

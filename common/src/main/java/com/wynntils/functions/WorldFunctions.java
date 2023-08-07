@@ -255,7 +255,7 @@ public class WorldFunctions {
                 return "";
             }
 
-            return territoryProfile.name();
+            return territoryProfile.getName();
         }
 
         @Override
@@ -275,8 +275,8 @@ public class WorldFunctions {
             }
 
             return arguments.getArgument("prefixOnly").getBooleanValue()
-                    ? territoryProfile.guildPrefix()
-                    : territoryProfile.guild();
+                    ? territoryProfile.getGuildPrefix()
+                    : territoryProfile.getGuild();
         }
 
         @Override

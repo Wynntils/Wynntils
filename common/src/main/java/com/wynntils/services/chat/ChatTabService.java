@@ -30,11 +30,10 @@ import net.minecraftforge.eventbus.api.SubscribeEvent;
 
 public final class ChatTabService extends Service {
     private final ChatComponent fallbackChat = new ChatComponent(McUtils.mc());
-
-    private ChatTab focusedTab = null;
-
     private final Map<ChatTab, ChatComponent> chatTabData = new ConcurrentHashMap<>();
     private final Map<ChatTab, Boolean> unreadMessages = new ConcurrentHashMap<>();
+
+    private ChatTab focusedTab = null;
 
     public ChatTabService() {
         super(List.of());

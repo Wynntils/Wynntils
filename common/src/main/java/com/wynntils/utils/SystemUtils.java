@@ -47,7 +47,13 @@ public final class SystemUtils {
         return (int) (Runtime.getRuntime().maxMemory() / (1024 * 1024));
     }
 
-    private record ClipboardImage(Image image) implements Transferable {
+    private static final class ClipboardImage implements Transferable {
+        private final Image image;
+
+        private ClipboardImage(Image image) {
+            this.image = image;
+        }
+
         @Override
         public DataFlavor[] getTransferDataFlavors() {
             return new DataFlavor[] {DataFlavor.imageFlavor};
