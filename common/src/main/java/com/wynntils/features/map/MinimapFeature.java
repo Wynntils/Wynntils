@@ -31,9 +31,9 @@ public class MinimapFeature extends Feature {
 
     @RegisterKeyBind
     public final KeyBind zoomIn =
-            new KeyBind("Zoom in Minimap", GLFW.GLFW_KEY_EQUAL, false, () -> minimapOverlay.scale(0.95));
+            new KeyBind("Zoom in Minimap", GLFW.GLFW_KEY_EQUAL, false, () -> minimapOverlay.scale(0.95f));
 
     @RegisterKeyBind
     public final KeyBind zoomOut =
-            new KeyBind("Zoom out of Minimap", GLFW.GLFW_KEY_MINUS, false, () -> minimapOverlay.scale(1.05));
+            new KeyBind("Zoom out of Minimap", GLFW.GLFW_KEY_MINUS, false, () -> minimapOverlay.scale(1.05f));
 }

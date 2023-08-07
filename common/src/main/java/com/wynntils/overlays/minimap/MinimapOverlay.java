@@ -95,9 +95,9 @@ public class MinimapOverlay extends Overlay {
                 new OverlaySize(DEFAULT_SIZE, DEFAULT_SIZE));
     }
 
-    public void scale(double multiplier) {
+    public void scale(float multiplier) {
         scale.setValue(
-                (float) Math.clamp(AbstractMapScreen.MIN_ZOOM, AbstractMapScreen.MAX_ZOOM, scale.get() * multiplier));
+                MathUtils.clamp(scale.get() * multiplier, AbstractMapScreen.MIN_ZOOM, AbstractMapScreen.MAX_ZOOM));
         scale.touched();
     }
 
