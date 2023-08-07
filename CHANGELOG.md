@@ -1,9 +1,21 @@
+## [0.0.3-alpha.278](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.277...v0.0.3-alpha.278) (2023-08-07)
+
+
+### New Features
+
+* Add selected beacon color function ([#1947](https://github.com/Wynntils/Artemis/issues/1947)) ([b2b0987](https://github.com/Wynntils/Artemis/commit/b2b09873126142f81eb5afff3dd76d14d6e8489c))
+
 ## [0.0.3-alpha.277](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.276...v0.0.3-alpha.277) (2023-08-07)
 
 
 ### New Features
 
 * Ticks function ([#1932](https://github.com/Wynntils/Artemis/issues/1932)) ([d7f463c](https://github.com/Wynntils/Artemis/commit/d7f463cd8e90cdaa94bd9d338cd9ca093aa38497))
+
+
+### Miscellaneous Chores
+
+* **release:** v0.0.3-alpha.277 [skip ci] ([e157efe](https://github.com/Wynntils/Artemis/commit/e157efe3b8eb78182df964c04989131804058569))
 
 ## [0.0.3-alpha.276](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.275...v0.0.3-alpha.276) (2023-08-06)
 
@@ -40,16 +52,4 @@
 ### Miscellaneous Chores
 
 * **release:** v0.0.3-alpha.274 [skip ci] ([6696676](https://github.com/Wynntils/Artemis/commit/6696676611c696fb5cdd1fae0dfd81b019da6f82))
-
-## [0.0.3-alpha.273](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.272...v0.0.3-alpha.273) (2023-08-05)
-
-
-### New Features
-
-* render markers on map ([#1940](https://github.com/Wynntils/Artemis/issues/1940)) ([9665c2a](https://github.com/Wynntils/Artemis/commit/9665c2a17fed62bd949a57bc0bf90366d9f5b665))
-
-
-### Miscellaneous Chores
-
-* **release:** v0.0.3-alpha.273 [skip ci] ([370d902](https://github.com/Wynntils/Artemis/commit/370d902a4d4afe02f2267014609383e307b6c52a))
 
