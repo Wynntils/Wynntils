@@ -38,8 +38,10 @@ public final class EmeraldModel extends Model {
     private static final Pattern M_PATTERN = Pattern.compile("(\\.?\\d+\\.?\\d*)\\s*(m|million)");
     private static final Pattern E_PATTERN = Pattern.compile("(\\d+)($|\\s|\\s*e|\\s*em)(?![^\\d\\s-])");
     private static final Pattern RAW_PRICE_PATTERN = Pattern.compile("\\d+");
-    public static final double TAX_AMOUNT = 1.05;
+    private static final double NORMAL_TAX = 1.05;
+    private static final double SILVERBULL_TAX = 1.03;
 
+    private double taxAmount = 1.05;
     private int inventoryEmeralds = 0;
     private int containerEmeralds = 0;
     private int pouchContainerId = -1;
@@ -131,13 +133,21 @@ public final class EmeraldModel extends Model {
 
             // account for tax if flagged
             if (input.contains("-t")) {
-                emeralds = Math.round(emeralds / TAX_AMOUNT);
+                emeralds = Math.round(emeralds / taxAmount);
             }
         } catch (NumberFormatException e) {
             return "";
         }
 
         return (emeralds > 0) ? String.valueOf(emeralds) : "";
+    }
+
+    public void setTaxAmount(boolean isSilverbull) {
+        this.taxAmount = (isSilverbull ? SILVERBULL_TAX : NORMAL_TAX);
+    }
+
+    public double getTaxAmount() {
+        return taxAmount;
     }
 
     @SubscribeEvent

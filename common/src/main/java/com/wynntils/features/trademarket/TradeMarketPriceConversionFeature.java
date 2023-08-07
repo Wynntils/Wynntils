@@ -4,9 +4,12 @@
  */
 package com.wynntils.features.trademarket;
 
+import com.wynntils.core.components.Managers;
 import com.wynntils.core.components.Models;
 import com.wynntils.core.consumers.features.Feature;
+import com.wynntils.core.persisted.Persisted;
 import com.wynntils.core.persisted.config.Category;
+import com.wynntils.core.persisted.config.Config;
 import com.wynntils.core.persisted.config.ConfigCategory;
 import com.wynntils.handlers.chat.event.ChatMessageReceivedEvent;
 import com.wynntils.mc.event.ChatSentEvent;
@@ -20,7 +23,11 @@ public class TradeMarketPriceConversionFeature extends Feature {
     private static final Pattern PRICE_PATTERN =
             Pattern.compile("^§6Type the price in emeralds or type 'cancel' to cancel:$");
     private static final Pattern TRADE_MARKET_PATTERN = Pattern.compile("^What would you like to sell\\?$");
-    private static final Pattern CANCELLED_PATTERN = Pattern.compile("^You moved and your chat input was canceled.$");
+    private static final Pattern CANCELLED_PATTERN = Pattern.compile("^You moved and your chat input was canceled\\.$");
+
+    @Persisted
+    public final Config<Boolean> silverbullTax = new Config<>(false);
+    // Synced with TradeMarketPriceMatchFeature
 
     private boolean shouldConvert = false;
 
@@ -52,6 +59,18 @@ public class TradeMarketPriceConversionFeature extends Feature {
                 .matcher(event.getScreen().getTitle().getString())
                 .matches()) {
             shouldConvert = false;
+        }
+    }
+
+    @Override
+    public void onConfigUpdate(Config<?> config) {
+        if (config == silverbullTax) {
+            TradeMarketPriceMatchFeature feature =
+                    Managers.Feature.getFeatureInstance(TradeMarketPriceMatchFeature.class);
+            if (feature.silverbullTax.get() != silverbullTax.get()) {
+                feature.silverbullTax.setValue(silverbullTax.get());
+            }
+            Models.Emerald.setTaxAmount(silverbullTax.get());
         }
     }
 }
