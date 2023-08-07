@@ -112,7 +112,7 @@ public class BeaconBeamFeature extends Feature {
                     BeaconRenderer.BEAM_LOCATION,
                     event.getPartialTick(),
                     1f,
-                    McUtils.player().level.getGameTime(),
+                    McUtils.player().level().getGameTime(),
                     0,
                     1024,
                     colorArray,

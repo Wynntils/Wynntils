@@ -120,7 +120,7 @@ public class ChatTabsFeature extends Feature {
 
         // We render this twice for chat screen, but it is not heavy and this is a simple and least conflicting way of
         // rendering command suggestions on top of chat tab buttons.
-        chatScreen.commandSuggestions.render(event.getPoseStack(), event.getMouseX(), event.getMouseY());
+        chatScreen.commandSuggestions.render(event.getGuiGraphics(), event.getMouseX(), event.getMouseY());
     }
 
     @SubscribeEvent

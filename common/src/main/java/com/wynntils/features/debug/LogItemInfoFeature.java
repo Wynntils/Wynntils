@@ -60,7 +60,7 @@ public class LogItemInfoFeature extends Feature {
         String description = getDescription(McUtils.player().getItemBySlot(EquipmentSlot.MAINHAND));
 
         WynntilsMod.info(description);
-        context.getSource().sendSuccess(Component.literal(description).withStyle(ChatFormatting.AQUA), false);
+        context.getSource().sendSuccess(() -> Component.literal(description).withStyle(ChatFormatting.AQUA), false);
         return 1;
     }
 
