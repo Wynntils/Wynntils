@@ -181,7 +181,7 @@ public class LootrunModel extends Model {
 
         selectedBeaconsStorage.touched();
 
-        timerChallenge.get().putIfAbsent(id, 0);
+        timerChallenge.get().putIfAbsent(id, 180);
 
         timerChallenge.touched();
     }

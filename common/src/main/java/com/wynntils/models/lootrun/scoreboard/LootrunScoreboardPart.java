@@ -64,18 +64,19 @@ public class LootrunScoreboardPart extends ScoreboardPart {
         }
 
         for (StyledText line : content) {
-            if (line.matches(TIMER_PATTERN, PartStyle.StyleType.NONE)
-                    || line.matches(TIMER_ADDED_PATTERN, PartStyle.StyleType.NONE)) {
+            if (line.matches(TIMER_PATTERN, PartStyle.StyleType.NONE)) {
                 Matcher timeMatcher = line.getMatcher(TIMER_PATTERN, PartStyle.StyleType.NONE);
-                Matcher timeAddedMatcher = line.getMatcher(TIMER_ADDED_PATTERN, PartStyle.StyleType.NONE);
-                if (timeAddedMatcher.find()) {
-                    Models.Lootrun.setTimerOverall(Integer.parseInt(timeAddedMatcher.group(1)) * 60
-                            + Integer.parseInt(timeAddedMatcher.group(2)));
-                    Models.Lootrun.setTimerChallenge(Integer.parseInt(timeAddedMatcher.group(1)) * 60
-                            + Integer.parseInt(timeAddedMatcher.group(2)));
-                } else if (timeMatcher.find()) {
+                if (timeMatcher.find()) {
                     Models.Lootrun.setTimerOverall(
                             Integer.parseInt(timeMatcher.group(1)) * 60 + Integer.parseInt(timeMatcher.group(2)));
+                }
+            } else if (line.matches(TIMER_ADDED_PATTERN, PartStyle.StyleType.NONE)) {
+                Matcher timeAddedMatcher = line.getMatcher(TIMER_ADDED_PATTERN, PartStyle.StyleType.NONE);
+                if (timeAddedMatcher.find()) {
+                    int seconds = Integer.parseInt(timeAddedMatcher.group(1)) * 60
+                            + Integer.parseInt(timeAddedMatcher.group(2));
+                    Models.Lootrun.setTimerOverall(seconds);
+                    Models.Lootrun.setTimerChallenge(seconds);
                 }
             } else if (line.matches(CHALLENGES_PATTERN, PartStyle.StyleType.NONE)) {
                 Matcher challengeMatcher = line.getMatcher(CHALLENGES_PATTERN, PartStyle.StyleType.NONE);
