@@ -11,6 +11,7 @@ import com.wynntils.models.beacons.type.BeaconColor;
 import com.wynntils.models.containers.type.MythicFind;
 import com.wynntils.models.lootrun.type.TaskLocation;
 import com.wynntils.utils.EnumUtils;
+import com.wynntils.utils.type.CappedValue;
 import java.util.Comparator;
 import java.util.List;
 
@@ -153,26 +154,14 @@ public class LootrunFunctions {
     public static class LootrunTimeFunction extends Function<Integer> {
         @Override
         public Integer getValue(FunctionArguments arguments) {
-            return Models.Lootrun.getTimer(arguments.getArgument("requiredTime").getBooleanValue());
-        }
-
-        @Override
-        public FunctionArguments.Builder getArgumentsBuilder() {
-            return new FunctionArguments.OptionalArgumentBuilder(
-                    List.of(new FunctionArguments.Argument<>("requiredTime", Boolean.class, false)));
+            return Models.Lootrun.getCurrentTime();
         }
     }
 
-    public static class LootrunChallengesFunction extends Function<Integer> {
+    public static class LootrunChallengesFunction extends Function<CappedValue> {
         @Override
-        public Integer getValue(FunctionArguments arguments) {
-            return Models.Lootrun.getChallenges(arguments.getArgument("max").getBooleanValue());
-        }
-
-        @Override
-        public FunctionArguments.Builder getArgumentsBuilder() {
-            return new FunctionArguments.OptionalArgumentBuilder(
-                    List.of(new FunctionArguments.Argument<>("max", Boolean.class, false)));
+        public CappedValue getValue(FunctionArguments arguments) {
+            return Models.Lootrun.getChallenges();
         }
     }
 

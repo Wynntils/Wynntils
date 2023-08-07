@@ -41,6 +41,7 @@ import com.wynntils.models.worlds.type.WorldState;
 import com.wynntils.utils.VectorUtils;
 import com.wynntils.utils.mc.McUtils;
 import com.wynntils.utils.mc.PosUtils;
+import com.wynntils.utils.type.CappedValue;
 import com.wynntils.utils.type.Pair;
 import java.lang.reflect.Type;
 import java.util.HashMap;
@@ -127,14 +128,11 @@ public class LootrunModel extends Model {
     @Persisted
     private Storage<Map<String, Beacon>> closestBeaconStorage = new Storage<>(new TreeMap<>());
 
-    @Persisted
-    private Storage<Map<String, Integer>> timerChallenge = new Storage<>(new TreeMap<>());
-
     private Map<BeaconColor, Integer> selectedBeacons = new TreeMap<>();
 
-    private int timerOverall = 0;
-    private int challengesMax = 0;
-    private int challengesCurrent = 0;
+    private int timeLeft = 0;
+
+    private CappedValue challenges = CappedValue.EMPTY;
 
     public LootrunModel(BeaconModel beaconModel, MarkerModel markerModel, ParticleModel particleModel) {
         super(List.of(beaconModel, markerModel, particleModel));
@@ -181,10 +179,6 @@ public class LootrunModel extends Model {
         selectedBeacons = selectedBeaconsStorage.get().get(id);
 
         selectedBeaconsStorage.touched();
-
-        timerChallenge.get().putIfAbsent(id, 180);
-
-        timerChallenge.touched();
     }
 
     @SubscribeEvent
@@ -316,18 +310,6 @@ public class LootrunModel extends Model {
         return taskPrediction.taskLocation();
     }
 
-    public int getTimer(boolean max) {
-        return max
-                ? (timerChallenge.get().get(Models.Character.getId()) != null
-                        ? timerChallenge.get().get(Models.Character.getId())
-                        : 0)
-                : timerOverall;
-    }
-
-    public int getChallenges(boolean max) {
-        return max ? challengesMax : challengesCurrent;
-    }
-
     public void setState(LootrunningState newState, LootrunTaskType taskType) {
         // If nothing changes, don't do anything.
         if (this.lootrunningState == newState) return;
@@ -337,6 +319,14 @@ public class LootrunModel extends Model {
         this.taskType = taskType;
 
         handleStateChange(oldState, newState);
+    }
+
+    public int getCurrentTime() {
+        return timeLeft;
+    }
+
+    public CappedValue getChallenges() {
+        return challenges;
     }
 
     public BeaconColor getLastTaskBeaconColor() {
@@ -374,21 +364,12 @@ public class LootrunModel extends Model {
         selectedBeaconsStorage.touched();
     }
 
-    public void setTimerOverall(int seconds) {
-        timerOverall = seconds;
+    public void setTimeLeft(int seconds) {
+        timeLeft = seconds;
     }
 
-    public void setTimerChallenge(int seconds) {
-        timerChallenge.get().put(Models.Character.getId(), seconds);
-        timerChallenge.touched();
-    }
-
-    public void setChallengesCurrent(int amount) {
-        challengesCurrent = amount;
-    }
-
-    public void setChallengesMax(int amount) {
-        challengesMax = amount;
+    public void setChallenges(CappedValue amount) {
+        challenges = amount;
     }
 
     private void handleStateChange(LootrunningState oldState, LootrunningState newState) {
@@ -404,10 +385,8 @@ public class LootrunModel extends Model {
             beacons = new HashMap<>();
             beaconUpdates = new HashMap<>();
 
-            timerOverall = 0;
-            setTimerChallenge(180);
-            challengesCurrent = 0;
-            challengesMax = 0;
+            timeLeft = 0;
+            challenges = CappedValue.EMPTY;
             return;
         }
 
