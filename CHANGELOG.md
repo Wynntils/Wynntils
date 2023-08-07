@@ -1,9 +1,21 @@
+## [0.0.3-alpha.279](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.278...v0.0.3-alpha.279) (2023-08-07)
+
+
+### Bug Fixes
+
+* Crash rich presence instead of disabling ([#1952](https://github.com/Wynntils/Artemis/issues/1952)) ([100d1ca](https://github.com/Wynntils/Artemis/commit/100d1ca34613ebaf8e8c5a885ed1c210e39deb95))
+
 ## [0.0.3-alpha.278](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.277...v0.0.3-alpha.278) (2023-08-07)
 
 
 ### New Features
 
 * Add selected beacon color function ([#1947](https://github.com/Wynntils/Artemis/issues/1947)) ([b2b0987](https://github.com/Wynntils/Artemis/commit/b2b09873126142f81eb5afff3dd76d14d6e8489c))
+
+
+### Miscellaneous Chores
+
+* **release:** v0.0.3-alpha.278 [skip ci] ([e6da418](https://github.com/Wynntils/Artemis/commit/e6da418775ff4faaf8bb482853fcdfc12d99cf5d))
 
 ## [0.0.3-alpha.277](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.276...v0.0.3-alpha.277) (2023-08-07)
 
@@ -40,16 +52,4 @@
 ### Miscellaneous Chores
 
 * **release:** v0.0.3-alpha.275 [skip ci] ([1b738b5](https://github.com/Wynntils/Artemis/commit/1b738b53b59b6a9b2f0e00f9260bee47392dc629))
-
-## [0.0.3-alpha.274](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.273...v0.0.3-alpha.274) (2023-08-05)
-
-
-### New Features
-
-* Make spell casts faster, add an option to disable safety checks ([#1942](https://github.com/Wynntils/Artemis/issues/1942)) ([6d0fd52](https://github.com/Wynntils/Artemis/commit/6d0fd52caec0592bac986b1ab15e43ce3410e4f9))
-
-
-### Miscellaneous Chores
-
-* **release:** v0.0.3-alpha.274 [skip ci] ([6696676](https://github.com/Wynntils/Artemis/commit/6696676611c696fb5cdd1fae0dfd81b019da6f82))
 
