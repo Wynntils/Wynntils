@@ -124,12 +124,12 @@ public class LootrunModel extends Model {
     @Persisted
     private Storage<Map<String, Beacon>> closestBeaconStorage = new Storage<>(new TreeMap<>());
 
+    @Persisted
+    private Storage<Map<String, Integer>> timerChallenge = new Storage<>(new TreeMap<>());
+
     private Map<BeaconColor, Integer> selectedBeacons = new TreeMap<>();
 
     private int timerOverall = 0;
-
-    @Persisted
-    private Storage<Map<String, Integer>> timerChallenge = new Storage<>(new TreeMap<>());
 
     private int challengesMax = 0;
 
