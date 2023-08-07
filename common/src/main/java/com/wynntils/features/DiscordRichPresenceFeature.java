@@ -129,6 +129,7 @@ public class DiscordRichPresenceFeature extends Feature {
             if (!Services.Discord.isReady()) {
                 // Even though this is in the onConfigUpdate method, it is how the library is first loaded on launch
                 if (!Services.Discord.load()) {
+                    // happens when wrong version of GLIBC is installed and Discord SDK fails to load
                     Managers.Feature.crashFeature(this);
                 }
             }
