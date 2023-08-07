@@ -1,9 +1,21 @@
+## [0.0.3-alpha.277](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.276...v0.0.3-alpha.277) (2023-08-07)
+
+
+### New Features
+
+* Ticks function ([#1932](https://github.com/Wynntils/Artemis/issues/1932)) ([d7f463c](https://github.com/Wynntils/Artemis/commit/d7f463cd8e90cdaa94bd9d338cd9ca093aa38497))
+
 ## [0.0.3-alpha.276](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.275...v0.0.3-alpha.276) (2023-08-06)
 
 
 ### New Features
 
 * Add spell cooldown and fix right-click delay between spells ([#1946](https://github.com/Wynntils/Artemis/issues/1946)) ([001acf6](https://github.com/Wynntils/Artemis/commit/001acf6932aec570a5e8f42a045f5aef9c4b5f1d))
+
+
+### Miscellaneous Chores
+
+* **release:** v0.0.3-alpha.276 [skip ci] ([a3f87c3](https://github.com/Wynntils/Artemis/commit/a3f87c319ca0e7d13cfceb9477f3a11b8605a442))
 
 ## [0.0.3-alpha.275](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.274...v0.0.3-alpha.275) (2023-08-05)
 
@@ -40,16 +52,4 @@
 ### Miscellaneous Chores
 
 * **release:** v0.0.3-alpha.273 [skip ci] ([370d902](https://github.com/Wynntils/Artemis/commit/370d902a4d4afe02f2267014609383e307b6c52a))
-
-## [0.0.3-alpha.272](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.271...v0.0.3-alpha.272) (2023-08-05)
-
-
-### New Features
-
-* add keyboard zooming to maps ([#1943](https://github.com/Wynntils/Artemis/issues/1943)) ([d42acc5](https://github.com/Wynntils/Artemis/commit/d42acc5147f9d8f8ed685a7a9cf2d436839b88cd))
-
-
-### Miscellaneous Chores
-
-* **release:** v0.0.3-alpha.272 [skip ci] ([779a1cf](https://github.com/Wynntils/Artemis/commit/779a1cfa5ccba79bc1b47dee042861190c9f19cc))
 
