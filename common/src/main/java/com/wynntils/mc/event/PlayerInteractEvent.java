@@ -84,9 +84,9 @@ public class PlayerInteractEvent extends PlayerEvent {
         }
 
         @Override
-        public void setCanceled(boolean cancel) {
-            super.setCanceled(cancel);
-            if (cancel) {
+        public void setCanceled(boolean canceled) {
+            super.setCanceled(canceled);
+            if (canceled) {
                 this.useBlock = Event.Result.DENY;
                 this.useItem = Event.Result.DENY;
             }
