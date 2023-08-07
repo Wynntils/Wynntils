@@ -1,9 +1,21 @@
+## [0.0.3-alpha.280](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.279...v0.0.3-alpha.280) (2023-08-07)
+
+
+### Code Refactoring
+
+* avoid side effects in if statement ([#1953](https://github.com/Wynntils/Artemis/issues/1953)) ([75b3804](https://github.com/Wynntils/Artemis/commit/75b380463d84f5ef1677d4f7feb171f54980eec2))
+
 ## [0.0.3-alpha.279](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.278...v0.0.3-alpha.279) (2023-08-07)
 
 
 ### Bug Fixes
 
 * Crash rich presence instead of disabling ([#1952](https://github.com/Wynntils/Artemis/issues/1952)) ([100d1ca](https://github.com/Wynntils/Artemis/commit/100d1ca34613ebaf8e8c5a885ed1c210e39deb95))
+
+
+### Miscellaneous Chores
+
+* **release:** v0.0.3-alpha.279 [skip ci] ([c2bc983](https://github.com/Wynntils/Artemis/commit/c2bc9838f1cef8d543873c84501b1be37c6b4eb1))
 
 ## [0.0.3-alpha.278](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.277...v0.0.3-alpha.278) (2023-08-07)
 
@@ -40,16 +52,4 @@
 ### Miscellaneous Chores
 
 * **release:** v0.0.3-alpha.276 [skip ci] ([a3f87c3](https://github.com/Wynntils/Artemis/commit/a3f87c319ca0e7d13cfceb9477f3a11b8605a442))
-
-## [0.0.3-alpha.275](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.274...v0.0.3-alpha.275) (2023-08-05)
-
-
-### New Features
-
-* add named lootrun tasks, overlays for lootrun functions ([#1944](https://github.com/Wynntils/Artemis/issues/1944)) ([b22ac63](https://github.com/Wynntils/Artemis/commit/b22ac6347045f89a50cde4c85e8428434876bac7))
-
-
-### Miscellaneous Chores
-
-* **release:** v0.0.3-alpha.275 [skip ci] ([1b738b5](https://github.com/Wynntils/Artemis/commit/1b738b53b59b6a9b2f0e00f9260bee47392dc629))
 
