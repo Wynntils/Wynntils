@@ -8,5 +8,5 @@ import com.wynntils.utils.mc.type.Location;
 
 @FunctionalInterface
 public interface LocationSupplier {
-    Location location();
+    Location getLocation();
 }

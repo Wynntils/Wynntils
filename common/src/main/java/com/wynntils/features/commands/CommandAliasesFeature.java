@@ -63,14 +63,5 @@ public class CommandAliasesFeature extends Feature {
         }
     }
 
-    private record CommandAlias(String originalCommand, List<String> aliases) {
-        @Override
-        public boolean equals(Object other) {
-            if (this == other) return true;
-            if (other == null || getClass() != other.getClass()) return false;
-
-            CommandAlias that = (CommandAlias) other;
-            return originalCommand.equals(that.originalCommand) && aliases.equals(that.aliases);
-        }
-    }
+    private record CommandAlias(String originalCommand, List<String> aliases) {}
 }

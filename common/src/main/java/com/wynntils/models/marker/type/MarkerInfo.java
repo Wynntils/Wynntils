@@ -16,6 +16,6 @@ public record MarkerInfo(
         CustomColor textureColor,
         CustomColor textColor) {
     public Location location() {
-        return locationSupplier.location();
+        return locationSupplier.getLocation();
     }
 }

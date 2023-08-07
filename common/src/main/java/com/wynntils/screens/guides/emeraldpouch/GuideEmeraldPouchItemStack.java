@@ -106,7 +106,7 @@ public final class GuideEmeraldPouchItemStack extends GuideItemStack {
     }
 
     @Override
-    public List<Component> getTooltipLines(Player player, TooltipFlag isAdvanced) {
+    public List<Component> getTooltipLines(Player player, TooltipFlag flag) {
         List<Component> tooltip = new ArrayList<>();
         tooltip.add(getHoverName());
         tooltip.addAll(generatedTooltip);

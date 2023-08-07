@@ -72,7 +72,7 @@ public class UserWaypointMarkerProvider implements MarkerProvider<WaypointPoi> {
                 markerInfo,
                 new WaypointPoi(
                         () -> PoiLocation.fromLocation(
-                                markerInfo.locationSupplier().location()),
+                                markerInfo.locationSupplier().getLocation()),
                         markerInfo.name())));
     }
 

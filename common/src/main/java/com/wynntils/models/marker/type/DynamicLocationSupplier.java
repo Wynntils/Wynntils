@@ -15,7 +15,7 @@ public class DynamicLocationSupplier implements LocationSupplier {
     }
 
     @Override
-    public Location location() {
+    public Location getLocation() {
         return supplier.get();
     }
 }

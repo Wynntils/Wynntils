@@ -68,7 +68,9 @@ public class ParticleModel extends Model {
                         case UNVERIFIED -> {
                             // Do nothing, we will wait for more particles
                         }
-                        case INVALID -> invalidParticles.add(unverifiedParticle);
+                        case INVALID -> {
+                            invalidParticles.add(unverifiedParticle);
+                        }
                     }
                 } else {
                     // This must mean that either this particle is invalid or this particle type is not what we are

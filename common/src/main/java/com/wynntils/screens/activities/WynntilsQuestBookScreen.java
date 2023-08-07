@@ -340,10 +340,10 @@ public final class WynntilsQuestBookScreen extends WynntilsListScreen<QuestInfo,
     }
 
     @Override
-    protected void reloadElementsList(String searchTerm) {
+    protected void reloadElementsList(String searchText) {
         List<QuestInfo> newQuests = getSortedQuests();
         elements = newQuests.stream()
-                .filter(questInfo -> StringUtils.partialMatch(questInfo.getName(), searchTerm))
+                .filter(questInfo -> StringUtils.partialMatch(questInfo.getName(), searchText))
                 .collect(Collectors.toList());
 
         this.maxPage = Math.max(
