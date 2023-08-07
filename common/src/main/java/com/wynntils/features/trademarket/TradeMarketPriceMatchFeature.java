@@ -5,16 +5,14 @@
 package com.wynntils.features.trademarket;
 
 import com.wynntils.core.WynntilsMod;
-import com.wynntils.core.components.Managers;
 import com.wynntils.core.components.Models;
 import com.wynntils.core.consumers.features.Feature;
-import com.wynntils.core.persisted.Persisted;
 import com.wynntils.core.persisted.config.Category;
-import com.wynntils.core.persisted.config.Config;
 import com.wynntils.core.persisted.config.ConfigCategory;
 import com.wynntils.core.text.StyledText;
 import com.wynntils.handlers.chat.event.ChatMessageReceivedEvent;
 import com.wynntils.mc.event.ContainerSetContentEvent;
+import com.wynntils.models.emeralds.EmeraldModel;
 import com.wynntils.screens.base.widgets.WynntilsButton;
 import com.wynntils.utils.mc.LoreUtils;
 import com.wynntils.utils.mc.McUtils;
@@ -45,10 +43,6 @@ public class TradeMarketPriceMatchFeature extends Feature {
 
     private static final int PRICE_SET_ITEM_SLOT = 12;
     private static final int PRICE_INFO_ITEM_SLOT = 17;
-
-    @Persisted
-    public final Config<Boolean> silverbullTax = new Config<>(false);
-    // Synced with TradeMarketPriceConversionFeature
 
     private boolean sendPriceMessage = false;
     private long priceToSend = 0;
@@ -81,18 +75,6 @@ public class TradeMarketPriceMatchFeature extends Feature {
         sendPriceMessage = false;
     }
 
-    @Override
-    public void onConfigUpdate(Config<?> config) {
-        if (config == silverbullTax) {
-            TradeMarketPriceConversionFeature feature =
-                    Managers.Feature.getFeatureInstance(TradeMarketPriceConversionFeature.class);
-            if (feature.silverbullTax.get() != silverbullTax.get()) {
-                feature.silverbullTax.setValue(silverbullTax.get());
-            }
-            Models.Emerald.setTaxAmount(silverbullTax.get());
-        }
-    }
-
     private Pair<Integer, Integer> getBuySellOffers(MenuAccess<ChestMenu> containerScreen) {
         ItemStack priceInfoItem =
                 containerScreen.getMenu().getSlot(PRICE_INFO_ITEM_SLOT).getItem();
@@ -112,7 +94,7 @@ public class TradeMarketPriceMatchFeature extends Feature {
         int rightPos = containerScreen.leftPos + containerScreen.imageWidth;
 
         if (buySellOffers.a() != null) {
-            int untaxedA = (int) Math.round(buySellOffers.a() / Models.Emerald.getTaxAmount());
+            int untaxedA = (int) Math.round(buySellOffers.a() / EmeraldModel.TAX_AMOUNT);
             containerScreen.addRenderableWidget(new PriceButton(
                     rightPos,
                     containerScreen.topPos,
@@ -132,7 +114,7 @@ public class TradeMarketPriceMatchFeature extends Feature {
         }
 
         if (buySellOffers.b() != null) {
-            int untaxedB = (int) Math.round(buySellOffers.b() / Models.Emerald.getTaxAmount());
+            int untaxedB = (int) Math.round(buySellOffers.b() / EmeraldModel.TAX_AMOUNT);
             containerScreen.addRenderableWidget(new PriceButton(
                     rightPos,
                     containerScreen.topPos + PriceButton.BUTTON_HEIGHT + 2,

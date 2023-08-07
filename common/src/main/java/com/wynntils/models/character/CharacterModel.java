@@ -40,7 +40,10 @@ public final class CharacterModel extends Model {
     private static final Pattern CLASS_MENU_LEVEL_PATTERN = Pattern.compile("§e- §7Level: §f(\\d+)");
     private static final Pattern INFO_MENU_CLASS_PATTERN = Pattern.compile("§7Class: §f(.+)");
     private static final Pattern INFO_MENU_LEVEL_PATTERN = Pattern.compile("§7Combat Lv: §f(\\d+)");
+    // Test suite: https://regexr.com/7i87d
+    private static final Pattern SILVERBULL_PATTERN = Pattern.compile("§7Subscription: §[ac][✖✔] ((?:Ina|A)ctive)");
 
+    private static final int RANK_SUBSCRIPTION_INFO_SLOT = 0;
     private static final int CHARACTER_INFO_SLOT = 7;
     private static final int SOUL_POINT_SLOT = 8;
     private static final int PROFESSION_INFO_SLOT = 17;
@@ -55,6 +58,7 @@ public final class CharacterModel extends Model {
     private boolean inCharacterSelection;
     private boolean hasCharacter;
 
+    private Boolean silverbullSubscriber = null;
     private ClassType classType;
     private boolean reskinned;
     private int level;
@@ -65,6 +69,10 @@ public final class CharacterModel extends Model {
 
     public CharacterModel() {
         super(List.of());
+    }
+
+    public boolean isSilverbullSubscriber() {
+        return silverbullSubscriber;
     }
 
     public ClassType getClassType() {
@@ -122,6 +130,9 @@ public final class CharacterModel extends Model {
             WynntilsMod.info("Scheduling character info query");
             // We need to scan character info and profession info as well.
             scanCharacterInfoPage();
+            if (silverbullSubscriber == null) {
+                scanCratesBombsCosmeticsPage();
+            }
         }
     }
 
@@ -133,6 +144,19 @@ public final class CharacterModel extends Model {
                 .then(QueryStep.useItemInHotbar(InventoryUtils.COMPASS_SLOT_NUM)
                         .expectContainerTitle("Character Info")
                         .processIncomingContainer(this::parseCharacterContainer))
+                .build();
+
+        query.executeQuery();
+    }
+
+    private void scanCratesBombsCosmeticsPage() {
+        ScriptedContainerQuery query = ScriptedContainerQuery.builder("Crates, Bombs & Cosmetics Query")
+                .onError(msg -> WynntilsMod.warn("Error querying Crates, Bombs & Cosmetics: " + msg))
+
+                // Open /use menu
+                .then(QueryStep.sendCommand("use")
+                        .expectContainerTitle("Crates, Bombs & Cosmetics")
+                        .processIncomingContainer(this::parseCratesBombsCosmeticsContainer))
                 .build();
 
         query.executeQuery();
@@ -150,6 +174,21 @@ public final class CharacterModel extends Model {
         hasCharacter = true;
         WynntilsMod.postEvent(new CharacterUpdateEvent());
         WynntilsMod.info("Deducing character " + getCharacterString());
+    }
+
+    private void parseCratesBombsCosmeticsContainer(ContainerContent container) {
+        ItemStack rankSubscriptionItem = container.items().get(RANK_SUBSCRIPTION_INFO_SLOT);
+
+        Matcher m = LoreUtils.matchLoreLine(rankSubscriptionItem, 0, SILVERBULL_PATTERN);
+        if (!m.matches()) {
+            WynntilsMod.warn("Could not parse Silverbull subscription status from item: "
+                    + LoreUtils.getLore(rankSubscriptionItem));
+            silverbullSubscriber = false;
+            return;
+        }
+
+        silverbullSubscriber = m.group(1).equals("Active");
+        WynntilsMod.info("Parsed Silverbull subscription status: " + silverbullSubscriber);
     }
 
     private void updateCharacterId() {
@@ -171,7 +210,8 @@ public final class CharacterModel extends Model {
     }
 
     private String getCharacterString() {
-        return "CharacterInfo{" + "classType="
+        return "CharacterInfo{" + "silverbullSubscriber="
+                + silverbullSubscriber + ", classType="
                 + classType + ", reskinned="
                 + reskinned + ", level="
                 + level + ", id="
