@@ -42,12 +42,9 @@ import java.util.List;
 import java.util.stream.Stream;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.renderer.MultiBufferSource;
-import org.joml.Math;
 
 public class MinimapOverlay extends Overlay {
     private static final int DEFAULT_SIZE = 130;
-    private static final float MIN_ZOOM = 0.1f;
-    private static final float MAX_ZOOM = 3;
 
     @Persisted
     public final Config<Float> scale = new Config<>(1f);
@@ -97,7 +94,7 @@ public class MinimapOverlay extends Overlay {
     }
 
     public void scale(float multiplier) {
-        scale.setValue(MathUtils.clamp(scale.get() * multiplier, MIN_ZOOM, MAX_ZOOM));
+        scale.setValue(MathUtils.clamp(scale.get() * multiplier, MapRenderer.MIN_ZOOM, MapRenderer.MAX_ZOOM));
         scale.touched();
     }
 
