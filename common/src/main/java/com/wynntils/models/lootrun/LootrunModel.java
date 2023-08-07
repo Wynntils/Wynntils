@@ -131,7 +131,6 @@ public class LootrunModel extends Model {
     private Map<BeaconColor, Integer> selectedBeacons = new TreeMap<>();
 
     private int timeLeft = 0;
-
     private CappedValue challenges = CappedValue.EMPTY;
 
     public LootrunModel(BeaconModel beaconModel, MarkerModel markerModel, ParticleModel particleModel) {
@@ -222,6 +221,9 @@ public class LootrunModel extends Model {
         LOOTRUN_BEACON_COMPASS_PROVIDER.reloadTaskMarkers();
 
         selectedBeacons = new TreeMap<>();
+
+        challenges = CappedValue.EMPTY;
+        timeLeft = 0;
     }
 
     @SubscribeEvent
