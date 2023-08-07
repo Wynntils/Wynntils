@@ -107,7 +107,7 @@ public final class CharacterStatsModel extends Model {
 
     /**
      * Return the time in game ticks (1/20th of a second, 50ms) until the next soul point is given
-     * <p>
+     *
      * Also check that {@code {@link #getMaxSoulPoints()} >= {@link #getSoulPoints()}},
      * in which case soul points are already full
      */
