@@ -11,12 +11,14 @@ import java.util.List;
 import java.util.stream.Stream;
 
 public class StatusEffect implements Comparable<StatusEffect> {
-    private final List<String> modifierSuffixes =
-            Stream.of(StatUnit.values()).map(StatUnit::getDisplayName).toList();
+    private final List<String> modifierSuffixes = Stream.of(StatUnit.values())
+            .filter(u -> !u.equals(StatUnit.RAW))
+            .map(StatUnit::getDisplayName)
+            .toList();
 
     private final StyledText fullName;
     private final StyledText name; // The name of the consumable (also used to identify it)
-    private final StyledText modifier; // The modifier of the consumable (+100, 23/3s etc.)
+    private final StyledText modifier; // The modifier of the consumable (+100, 23 etc.)
     private final StyledText modifierSuffix; // The suffix of the modifier (/3s, %)
     private final Double modifierValue;
     private StyledText displayedTime; // The displayed time remaining. Allows for xx:xx for infinite time effects.
