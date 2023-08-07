@@ -115,8 +115,7 @@ public final class StatListOrderer {
             "healingEfficiency",
             "knockback",
             "slowEnemy",
-            "weakenEnemy"
-            );
+            "weakenEnemy");
 
     private static final List<MiscStatKind> WYNNCRAFT_MISC_ORDER_1 = List.of(
             MiscStatKind.KNOCKBACK,
