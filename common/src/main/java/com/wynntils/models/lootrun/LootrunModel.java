@@ -131,8 +131,8 @@ public class LootrunModel extends Model {
     @Persisted
     private Storage<Map<String, Integer>> timerChallenge = new Storage<>(new TreeMap<>());
 
-    ;
     private int challengesMax = 0;
+
     private int challengesCurrent = 0;
 
     public LootrunModel(BeaconModel beaconModel, MarkerModel markerModel, ParticleModel particleModel) {
