@@ -34,8 +34,18 @@ public final class StatusEffectModel extends Model {
      *
      * <p>Originally taken from: <a href="https://github.com/Wynntils/Wynntils/pull/615">Legacy</a>
      */
+    /*
+     * current regex:
+     * <prefix>         captures any characters before the §7 colour-indicator.
+     * <modifier>       optionally captures effects' modifiers' values (+100, -20, 5)
+     * <modifierSuffix> optionally captures the suffixes of the modifiers (/5s, /3s, %)
+     * <name>           captures the effects name (Strength, and even +Lightweight)
+     * <timer>          captures the effects duration ( (xx:xx) or (**:**) ).
+     *
+     * */
+
     private static final Pattern STATUS_EFFECT_PATTERN = Pattern.compile(
-            "(?<prefix>.+?)§7(?<modifier>\\s?([%\\-+\\.\\/\\d]+s?)?)\\s*(?<name>[a-zA-Z\\/\\s]+?)\\s(?<timer>§[84a]\\((.+?)\\))");
+            "(?<prefix>.+?)§7\\s?(?<modifier>(\\-|\\+)?([\\-\\.\\d]+))?(?<modifierSuffix>((\\/\\d+s)|%)?)?\\s?(?<name>\\+?[a-zA-Z\\/\\s]+?)\\s(?<timer>§[84a]\\((.+?)\\))");
 
     private static final StyledText STATUS_EFFECTS_TITLE = StyledText.fromString("§d§lStatus Effects");
 
@@ -88,8 +98,13 @@ public final class StatusEffectModel extends Model {
             String modifierGroup = m.group("modifier");
             StyledText modifier =
                     modifierGroup == null ? StyledText.EMPTY : StyledText.fromString(color + modifierGroup.trim());
+            String modifierSuffixGroup = m.group("modifierSuffix");
 
-            newStatusEffects.add(new StatusEffect(name, modifier, displayedTime, prefix));
+            StyledText modifierSuffix = modifierSuffixGroup == null
+                    ? StyledText.EMPTY
+                    : StyledText.fromString(color + modifierSuffixGroup.trim());
+
+            newStatusEffects.add(new StatusEffect(name, modifier, modifierSuffix, displayedTime, prefix));
         }
 
         statusEffects = newStatusEffects;

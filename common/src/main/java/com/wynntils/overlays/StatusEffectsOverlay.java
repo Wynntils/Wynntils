@@ -31,7 +31,6 @@ import net.minecraft.ChatFormatting;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 
-
 public class StatusEffectsOverlay extends Overlay {
     @Persisted
     public final Config<TextShadow> textShadow = new Config<>(TextShadow.OUTLINE);
@@ -40,7 +39,7 @@ public class StatusEffectsOverlay extends Overlay {
     public final Config<Float> fontScale = new Config<>(1.0f);
 
     @Persisted
-    public final Config<StackingBehaviour> effectsStackBehaviour = new Config<>(StackingBehaviour.GROUP);
+    public final Config<StackingBehaviour> stackingBehaviour = new Config<>(StackingBehaviour.GROUP);
 
     @Persisted
     public final Config<Boolean> sortEffects = new Config<>(true);
@@ -70,7 +69,7 @@ public class StatusEffectsOverlay extends Overlay {
         List<StatusEffect> effects = Models.StatusEffect.getStatusEffects();
         Stream<RenderedStatusEffect> effectWithProperties;
 
-        if (effectsStackBehaviour.get() != StackingBehaviour.NONE) {
+        if (stackingBehaviour.get() != StackingBehaviour.NONE) {
             effectWithProperties = stackEffects(effects);
         } else {
             effectWithProperties = effects.stream().map(RenderedStatusEffect::new);
@@ -150,7 +149,7 @@ public class StatusEffectsOverlay extends Overlay {
 
             entry.setCount(entry.getCount() + 1);
 
-            if( effect.hasModifierValue() ){
+            if (effect.hasModifierValue()) {
                 entry.addModifier(effect.getModifierValue());
             }
         }
@@ -159,11 +158,11 @@ public class StatusEffectsOverlay extends Overlay {
     }
 
     private String getEffectsKey(StatusEffect effect) {
-        return switch (effectsStackBehaviour.get()) {
+        return switch (stackingBehaviour.get()) {
             default -> effect.asString().getString();
             case SUM -> effect.getPrefix().getString()
                     + effect.getName().getString()
-                    + (effect.getModifier().getString().indexOf('%') == -1)
+                    + effect.getModifierSuffix().getString()
                     + effect.getDisplayedTime().getString();
         };
     }
@@ -186,12 +185,12 @@ public class StatusEffectsOverlay extends Overlay {
 
             StyledText modifierText = StyledText.EMPTY;
 
-            switch (effectsStackBehaviour.get()) {
+            switch (stackingBehaviour.get()) {
                 case SUM -> {
                     if (this.modifierList.size() > 0) {
                         // SUM modifiers
                         double modifierValue = 0.0;
-                        for( double modifier: modifierList ){
+                        for (double modifier : modifierList) {
                             modifierValue += modifier;
                         }
                         // Eliminate .0 when the modifier needs trailing decimals. This is the case for powder specials
@@ -199,9 +198,7 @@ public class StatusEffectsOverlay extends Overlay {
                         String numberString = (Math.round(modifierValue) == modifierValue)
                                 ? String.format("%+d", (long) modifierValue)
                                 : String.format("%+.1f", modifierValue);
-                        modifierText = StyledText.fromString(ChatFormatting.GRAY
-                                + numberString) 
-                                .append(this.effect.getModifierSuffix());
+                        modifierText = StyledText.fromString(ChatFormatting.GRAY + numberString);
                     }
                 }
                 case GROUP -> {
@@ -233,6 +230,7 @@ public class StatusEffectsOverlay extends Overlay {
                     .getPrefix()
                     .append(StyledText.fromString(" "))
                     .append(modifierText)
+                    .append(this.effect.getModifierSuffix())
                     .append(StyledText.fromString(" "))
                     .append(this.effect.getName())
                     .append(StyledText.fromString(" "))
@@ -254,7 +252,6 @@ public class StatusEffectsOverlay extends Overlay {
         public void addModifier(double modifier) {
             this.modifierList.add(modifier);
         }
-
     }
 
     private enum StackingBehaviour {
