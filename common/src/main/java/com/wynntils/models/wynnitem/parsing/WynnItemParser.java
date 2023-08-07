@@ -58,7 +58,7 @@ public final class WynnItemParser {
     public static final Pattern SET_BONUS_PATTEN = Pattern.compile("^§aSet Bonus:$");
 
     // Test suite: https://regexr.com/7i5h5
-    public static final Pattern SHINY_STAT_PATTERN = Pattern.compile("^§f⬡ §7([a-zA-Z ]*?): §f(\\d+)$");
+    public static final Pattern SHINY_STAT_PATTERN = Pattern.compile("^§f⬡ §7([a-zA-Z ]+): §f(\\d+)$");
 
     public static WynnItemParseResult parseItemStack(ItemStack itemStack, GearInfo gearInfo) {
         List<StatActualValue> identifications = new ArrayList<>();
