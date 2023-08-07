@@ -21,6 +21,9 @@ public abstract class EntityMixin implements EntityExtension {
     @Unique
     private CustomColor wynntilsGlowColor = CustomColor.NONE;
 
+    @Unique
+    private boolean wynntilsRendered = true;
+
     @Override
     public CustomColor getGlowColor() {
         return wynntilsGlowColor;
@@ -29,6 +32,16 @@ public abstract class EntityMixin implements EntityExtension {
     @Override
     public void setGlowColor(CustomColor color) {
         wynntilsGlowColor = color;
+    }
+
+    @Override
+    public boolean isRendered() {
+        return wynntilsRendered;
+    }
+
+    @Override
+    public void setRendered(boolean rendered) {
+        wynntilsRendered = rendered;
     }
 
     @Inject(method = "playSound(Lnet/minecraft/sounds/SoundEvent;FF)V", at = @At("HEAD"), cancellable = true)

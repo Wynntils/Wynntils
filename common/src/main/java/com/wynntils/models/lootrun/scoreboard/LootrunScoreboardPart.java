@@ -19,6 +19,9 @@ import java.util.regex.Pattern;
 public class LootrunScoreboardPart extends ScoreboardPart {
     private static final Pattern CHOOSE_BEACON_PATTERN = Pattern.compile("^Choose a beacon!$");
 
+    // This pattern indirectly indicates that we're done with the lootrun
+    private static final Pattern WARPING_BACK_PATTERN = Pattern.compile("^Warping back to camp!$");
+
     private static final Pattern LOOT_PATTERN = Pattern.compile("^Loot (\\d)/(\\d) chests!$");
     private static final Pattern SLAY_PATTERN = Pattern.compile("^Slay! Wave (\\d) [-—] (\\d) (Target|Mob)s? Left!$");
     private static final Pattern DESTROY_PATTERN = Pattern.compile("^Destroy the objective!$");
@@ -42,6 +45,8 @@ public class LootrunScoreboardPart extends ScoreboardPart {
 
         if (currentStateLine.matches(CHOOSE_BEACON_PATTERN, PartStyle.StyleType.NONE)) {
             Models.Lootrun.setState(LootrunningState.CHOOSING_BEACON, null);
+        } else if (currentStateLine.matches(WARPING_BACK_PATTERN, PartStyle.StyleType.NONE)) {
+            Models.Lootrun.setState(LootrunningState.NOT_RUNNING, null);
         } else if (currentStateLine.matches(LOOT_PATTERN, PartStyle.StyleType.NONE)) {
             Models.Lootrun.setState(LootrunningState.IN_TASK, LootrunTaskType.LOOT);
         } else if (currentStateLine.matches(SLAY_PATTERN, PartStyle.StyleType.NONE)) {
@@ -55,12 +60,12 @@ public class LootrunScoreboardPart extends ScoreboardPart {
 
     @Override
     public void onSegmentRemove(ScoreboardSegment segment) {
-        Models.Lootrun.setState(LootrunningState.NOT_RUNNING, null);
+        // Do nothing here, we will know when the lootrun is over from patterns
     }
 
     @Override
     public void reset() {
-        Models.Lootrun.setState(LootrunningState.NOT_RUNNING, null);
+        // Do nothing here, we will know when the lootrun is over from patterns
     }
 
     @Override

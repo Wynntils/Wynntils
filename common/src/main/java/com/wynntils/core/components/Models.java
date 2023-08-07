@@ -18,7 +18,6 @@ import com.wynntils.models.character.CharacterModel;
 import com.wynntils.models.character.CharacterSelectionModel;
 import com.wynntils.models.characterstats.CharacterStatsModel;
 import com.wynntils.models.characterstats.CombatXpModel;
-import com.wynntils.models.compass.CompassModel;
 import com.wynntils.models.containers.ContainerModel;
 import com.wynntils.models.containers.LootChestModel;
 import com.wynntils.models.containers.PlayerInventoryModel;
@@ -31,8 +30,10 @@ import com.wynntils.models.horse.HorseModel;
 import com.wynntils.models.ingredients.IngredientModel;
 import com.wynntils.models.items.ItemModel;
 import com.wynntils.models.lootrun.LootrunModel;
+import com.wynntils.models.marker.MarkerModel;
 import com.wynntils.models.mobtotem.MobTotemModel;
 import com.wynntils.models.objectives.ObjectivesModel;
+import com.wynntils.models.particle.ParticleModel;
 import com.wynntils.models.players.FriendsModel;
 import com.wynntils.models.players.GuildModel;
 import com.wynntils.models.players.PartyModel;
@@ -51,23 +52,23 @@ import com.wynntils.models.war.WarModel;
 import com.wynntils.models.worlds.BombModel;
 import com.wynntils.models.worlds.ServerListModel;
 import com.wynntils.models.worlds.WorldStateModel;
+import com.wynntils.models.wynnalphabet.WynnAlphabetModel;
 import com.wynntils.models.wynnitem.WynnItemModel;
 
 public final class Models {
     public static final AbilityTreeModel AbilityTree = new AbilityTreeModel();
-    public static final ActivityModel Activity = new ActivityModel();
     public static final ArrowShieldModel ArrowShield = new ArrowShieldModel();
     public static final BeaconModel Beacon = new BeaconModel();
     public static final BossBarModel BossBar = new BossBarModel();
     public static final CharacterModel Character = new CharacterModel();
     public static final CharacterSelectionModel CharacterSelection = new CharacterSelectionModel();
-    public static final CompassModel Compass = new CompassModel();
     public static final ContainerModel Container = new ContainerModel();
     public static final DamageModel Damage = new DamageModel();
     public static final ElementModel Element = new ElementModel();
     public static final GuildAttackTimerModel GuildAttackTimer = new GuildAttackTimerModel();
-    public static final LootrunModel Lootrun = new LootrunModel();
+    public static final MarkerModel Marker = new MarkerModel();
     public static final ObjectivesModel Objectives = new ObjectivesModel();
+    public static final ParticleModel Particle = new ParticleModel();
     public static final PlayerInventoryModel PlayerInventory = new PlayerInventoryModel();
     public static final PlayerModel Player = new PlayerModel();
     public static final RewardsModel Rewards = new RewardsModel();
@@ -79,9 +80,11 @@ public final class Models {
     public static final TowerAuraTimerModel TowerAuraTimer = new TowerAuraTimerModel();
     public static final WarModel War = new WarModel();
     public static final WorldStateModel WorldState = new WorldStateModel();
+    public static final WynnAlphabetModel WynnAlphabet = new WynnAlphabetModel();
     public static final WynnItemModel WynnItem = new WynnItemModel();
 
     // Models with dependencies, ordered alphabetically as far as possible
+    public static final ActivityModel Activity = new ActivityModel(Marker);
     public static final BombModel Bomb = new BombModel(WorldState);
     public static final CaveModel Cave = new CaveModel(Activity);
     public static final CombatXpModel CombatXp = new CombatXpModel(WorldState);
@@ -92,6 +95,7 @@ public final class Models {
     public static final IngredientModel Ingredient = new IngredientModel(Stat);
     public static final ItemModel Item = new ItemModel(Element, Gear, Rewards, Ingredient);
     public static final LootChestModel LootChest = new LootChestModel(Container);
+    public static final LootrunModel Lootrun = new LootrunModel(Beacon, Marker, Particle);
     public static final MobTotemModel MobTotem = new MobTotemModel(WorldState);
     public static final PartyModel Party = new PartyModel(WorldState);
     public static final ProfessionModel Profession = new ProfessionModel(Character, WorldState, Bomb);
@@ -100,7 +104,7 @@ public final class Models {
     public static final ShamanMaskModel ShamanMask = new ShamanMaskModel(WorldState);
     public static final ShamanTotemModel ShamanTotem = new ShamanTotemModel(WorldState);
     public static final SpellModel Spell = new SpellModel(Character);
-    public static final DiscoveryModel Discovery = new DiscoveryModel(CombatXp, Compass, Quest, Territory);
+    public static final DiscoveryModel Discovery = new DiscoveryModel(CombatXp, Marker, Quest, Territory);
     public static final EmeraldModel Emerald = new EmeraldModel(Item);
     public static final GearTooltipModel GearTooltip = new GearTooltipModel(Character, Quest);
     public static final HorseModel Horse = new HorseModel(Item);

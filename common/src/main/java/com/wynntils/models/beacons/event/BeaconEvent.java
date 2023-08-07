@@ -4,34 +4,59 @@
  */
 package com.wynntils.models.beacons.event;
 
-import com.wynntils.models.beacons.type.VerifiedBeacon;
+import com.wynntils.models.beacons.type.Beacon;
+import java.util.List;
+import net.minecraft.world.entity.Entity;
 import net.minecraftforge.eventbus.api.Event;
 
 public abstract class BeaconEvent extends Event {
-    protected final VerifiedBeacon beacon;
+    protected final Beacon beacon;
 
-    protected BeaconEvent(VerifiedBeacon beacon) {
+    protected BeaconEvent(Beacon beacon) {
         this.beacon = beacon;
     }
 
-    public VerifiedBeacon getBeacon() {
+    public Beacon getBeacon() {
         return beacon;
     }
 
     public static class Added extends BeaconEvent {
-        public Added(VerifiedBeacon beacon) {
-            super(beacon);
+        private final List<Entity> entities;
+
+        public Added(Beacon verifiedBeacon, List<Entity> entities) {
+            super(verifiedBeacon);
+            this.entities = entities;
+        }
+
+        public List<Entity> getEntities() {
+            return entities;
         }
     }
 
     public static class Moved extends BeaconEvent {
-        public Moved(VerifiedBeacon beacon) {
-            super(beacon);
+        private final Beacon newBeacon;
+
+        public Moved(Beacon oldBeacon, Beacon newBeacon) {
+            super(oldBeacon);
+            this.newBeacon = newBeacon;
+        }
+
+        @Override
+        public Beacon getBeacon() {
+            throw new UnsupportedOperationException("Use getOldBeacon() or getNewBeacon() instead");
+        }
+
+        public Beacon getOldBeacon() {
+            return beacon;
+        }
+
+        public Beacon getNewBeacon() {
+            return newBeacon;
         }
     }
 
     public static class Removed extends BeaconEvent {
-        public Removed(VerifiedBeacon beacon) {
+        public Removed(Beacon beacon) {
             super(beacon);
         }
     }

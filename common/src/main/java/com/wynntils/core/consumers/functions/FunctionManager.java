@@ -26,6 +26,7 @@ import com.wynntils.functions.SocialFunctions;
 import com.wynntils.functions.SpellFunctions;
 import com.wynntils.functions.WarFunctions;
 import com.wynntils.functions.WorldFunctions;
+import com.wynntils.functions.WynnAlphabetFunctions;
 import com.wynntils.functions.generic.CappedFunctions;
 import com.wynntils.functions.generic.ConditionalFunctions;
 import com.wynntils.functions.generic.LocationFunctions;
@@ -467,11 +468,15 @@ public final class FunctionManager extends Manager {
         registerFunction(new LootrunFunctions.LastDryStreakFunction());
         registerFunction(new LootrunFunctions.LastMythicFunction());
         registerFunction(new LootrunFunctions.LootrunBeaconCountFunction());
+        registerFunction(new LootrunFunctions.LootrunLastSelectedBeaconColorFunction());
         registerFunction(new LootrunFunctions.LootrunStateFunction());
+        registerFunction(new LootrunFunctions.LootrunTaskNameFunction());
+        registerFunction(new LootrunFunctions.LootrunTaskTypeFunction());
 
         registerFunction(new MinecraftFunctions.DirFunction());
         registerFunction(new MinecraftFunctions.FpsFunction());
         registerFunction(new MinecraftFunctions.MyLocationFunction());
+        registerFunction(new MinecraftFunctions.TicksFunction());
 
         registerFunction(new ProfessionFunctions.LastHarvestMaterialLevelFunction());
         registerFunction(new ProfessionFunctions.LastHarvestMaterialNameFunction());
@@ -496,5 +501,8 @@ public final class FunctionManager extends Manager {
         registerFunction(new SocialFunctions.PartyLeaderFunction());
 
         registerFunction(new WarFunctions.AuraTimerFunction());
+
+        registerFunction(new WynnAlphabetFunctions.TranscribeGavellianFunction());
+        registerFunction(new WynnAlphabetFunctions.TranscribeWynnicFunction());
     }
 }

@@ -4,15 +4,15 @@
  */
 package com.wynntils.overlays.custombars;
 
-import com.wynntils.core.config.Config;
-import com.wynntils.core.config.RegisterConfig;
 import com.wynntils.core.consumers.overlays.OverlaySize;
+import com.wynntils.core.persisted.Persisted;
+import com.wynntils.core.persisted.config.Config;
 import com.wynntils.utils.colors.CommonColors;
 import com.wynntils.utils.colors.CustomColor;
 import com.wynntils.utils.render.Texture;
 
 public class UniversalTexturedCustomBarOverlay extends CustomBarOverlayBase {
-    @RegisterConfig
+    @Persisted
     public final Config<CustomColor> color = new Config<>(CommonColors.WHITE);
 
     public UniversalTexturedCustomBarOverlay(int id) {

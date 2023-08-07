@@ -4,12 +4,12 @@
  */
 package com.wynntils.overlays.infobox;
 
-import com.wynntils.core.config.Config;
-import com.wynntils.core.config.RegisterConfig;
 import com.wynntils.core.consumers.overlays.TextOverlay;
+import com.wynntils.core.persisted.Persisted;
+import com.wynntils.core.persisted.config.Config;
 
 public class InfoBoxOverlay extends TextOverlay {
-    @RegisterConfig
+    @Persisted
     public final Config<String> content = new Config<>("");
 
     public InfoBoxOverlay(int id) {

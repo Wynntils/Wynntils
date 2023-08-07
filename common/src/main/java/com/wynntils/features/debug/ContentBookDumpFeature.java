@@ -9,13 +9,13 @@ import com.google.gson.GsonBuilder;
 import com.google.gson.JsonElement;
 import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.components.Models;
-import com.wynntils.core.config.Category;
-import com.wynntils.core.config.ConfigCategory;
 import com.wynntils.core.consumers.features.Feature;
 import com.wynntils.core.consumers.features.properties.RegisterKeyBind;
 import com.wynntils.core.consumers.features.properties.StartDisabled;
 import com.wynntils.core.json.JsonManager;
 import com.wynntils.core.keybinds.KeyBind;
+import com.wynntils.core.persisted.config.Category;
+import com.wynntils.core.persisted.config.ConfigCategory;
 import com.wynntils.core.text.StyledText;
 import com.wynntils.mc.event.SetSpawnEvent;
 import com.wynntils.models.activities.type.ActivityDifficulty;
@@ -56,7 +56,7 @@ public class ContentBookDumpFeature extends Feature {
     // Temporary hack...
     private static final Gson GSON = new GsonBuilder()
             .registerTypeAdapter(CustomColor.class, new CustomColor.CustomColorSerializer())
-            .registerTypeAdapterFactory(new JsonManager.EnumTypeAdapterFactory())
+            .registerTypeAdapterFactory(new JsonManager.EnumTypeAdapterFactory<>())
             .enableComplexMapKeySerialization()
             .setPrettyPrinting()
             .serializeNulls()
@@ -78,7 +78,7 @@ public class ContentBookDumpFeature extends Feature {
     public void onSetSpawn(SetSpawnEvent event) {
         if (currentlyTracking == null) return;
 
-        Location currentTracker = Models.Compass.getSpawnTracker();
+        Location currentTracker = Models.Activity.ACTIVITY_MARKER_PROVIDER.getSpawnLocation();
         if (lastTrackedLocation != currentTracker && currentTracker != null) {
             currentDump.remove(currentlyTracking);
 
@@ -146,7 +146,7 @@ public class ContentBookDumpFeature extends Feature {
 
         // Track the activity
         currentlyTracking = info;
-        lastTrackedLocation = Models.Compass.getSpawnTracker();
+        lastTrackedLocation = Models.Activity.ACTIVITY_MARKER_PROVIDER.getSpawnLocation();
         WynntilsMod.info("Tracking " + info.name());
         Models.Activity.startTracking(info.name(), info.type());
     }

@@ -9,18 +9,17 @@ import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.Tesselator;
 import com.wynntils.core.components.Models;
-import com.wynntils.core.config.Category;
-import com.wynntils.core.config.Config;
-import com.wynntils.core.config.ConfigCategory;
-import com.wynntils.core.config.ConfigHolder;
-import com.wynntils.core.config.RegisterConfig;
 import com.wynntils.core.consumers.features.Feature;
+import com.wynntils.core.persisted.Persisted;
+import com.wynntils.core.persisted.config.Category;
+import com.wynntils.core.persisted.config.Config;
+import com.wynntils.core.persisted.config.ConfigCategory;
 import com.wynntils.core.text.StyledText;
 import com.wynntils.mc.event.RenderEvent;
 import com.wynntils.mc.event.RenderLevelEvent;
+import com.wynntils.models.marker.type.MarkerInfo;
 import com.wynntils.services.map.pois.WaypointPoi;
 import com.wynntils.utils.colors.CommonColors;
-import com.wynntils.utils.colors.CustomColor;
 import com.wynntils.utils.mc.McUtils;
 import com.wynntils.utils.mc.type.Location;
 import com.wynntils.utils.render.FontRenderer;
@@ -29,7 +28,8 @@ import com.wynntils.utils.render.Texture;
 import com.wynntils.utils.render.type.HorizontalAlignment;
 import com.wynntils.utils.render.type.TextShadow;
 import com.wynntils.utils.render.type.VerticalAlignment;
-import java.util.Optional;
+import java.util.ArrayList;
+import java.util.List;
 import net.minecraft.client.Camera;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.core.Position;
@@ -44,174 +44,173 @@ import org.joml.Vector4f;
 
 @ConfigCategory(Category.MAP)
 public class WorldWaypointDistanceFeature extends Feature {
-    @RegisterConfig
-    public final Config<CustomColor> textColor = new Config<>(CommonColors.WHITE);
+    private static final WaypointPoi DUMMY_WAYPOINT = new WaypointPoi(() -> null, "");
 
-    @RegisterConfig
+    @Persisted
     public final Config<Float> backgroundOpacity = new Config<>(0.2f);
 
-    @RegisterConfig
+    @Persisted
     public final Config<TextShadow> textShadow = new Config<>(TextShadow.NONE);
 
-    @RegisterConfig
+    @Persisted
     public final Config<Float> bottomBoundingDistance = new Config<>(100f);
 
-    @RegisterConfig
+    @Persisted
     public final Config<Float> topBoundingDistance = new Config<>(40f);
 
-    @RegisterConfig
+    @Persisted
     public final Config<Float> horizontalBoundingDistance = new Config<>(30f);
 
-    @RegisterConfig
+    @Persisted
     public final Config<Integer> maxWaypointTextDistance = new Config<>(5000);
 
-    private double distance;
-
-    private String distanceText;
-    private Vec3 screenCoord;
+    private List<RenderedMarkerInfo> renderedMarkers = new ArrayList<>();
 
     @SubscribeEvent
     public void onRenderLevelPost(RenderLevelEvent.Post event) {
-        if (Models.Compass.getCompassLocation().isEmpty()) return;
+        this.renderedMarkers.clear();
 
-        Location location = Models.Compass.getCompassLocation().get();
-        Matrix4f projection = new Matrix4f(event.getProjectionMatrix());
-        Camera camera = event.getCamera();
-        Position cameraPos = camera.getPosition();
+        List<MarkerInfo> markers = Models.Marker.getAllMarkers().toList();
+        if (markers.isEmpty()) return;
 
-        // apply camera rotation
-        Vector3f xp = new Vector3f(1, 0, 0);
-        Vector3f yp = new Vector3f(0, 1, 0);
-        Quaternionf xRotation = new Quaternionf().rotationAxis((float) Math.toRadians(camera.getXRot()), xp);
-        Quaternionf yRotation = new Quaternionf().rotationAxis((float) Math.toRadians(camera.getYRot() + 180f), yp);
-        projection.mul(new Matrix4f().rotation(xRotation));
-        projection.mul(new Matrix4f().rotation(yRotation));
+        for (MarkerInfo marker : markers) {
+            Location location = marker.location();
+            Matrix4f projection = new Matrix4f(event.getProjectionMatrix());
+            Camera camera = event.getCamera();
+            Position cameraPos = camera.getPosition();
 
-        // offset to put text to the center of the block
-        float dx = (float) (location.x + 0.5 - cameraPos.x());
-        float dy = (float) (location.y + 0.5 - cameraPos.y());
-        float dz = (float) (location.z + 0.5 - cameraPos.z());
+            // apply camera rotation
+            Vector3f xp = new Vector3f(1, 0, 0);
+            Vector3f yp = new Vector3f(0, 1, 0);
+            Quaternionf xRotation = new Quaternionf().rotationAxis((float) Math.toRadians(camera.getXRot()), xp);
+            Quaternionf yRotation = new Quaternionf().rotationAxis((float) Math.toRadians(camera.getYRot() + 180f), yp);
+            projection.mul(new Matrix4f().rotation(xRotation));
+            projection.mul(new Matrix4f().rotation(yRotation));
 
-        if (location.y <= 0 || location.y > 255) {
-            dy = 0;
+            // offset to put text to the center of the block
+            float dx = (float) (location.x + 0.5 - cameraPos.x());
+            float dy = (float) (location.y + 0.5 - cameraPos.y());
+            float dz = (float) (location.z + 0.5 - cameraPos.z());
+
+            if (location.y <= 0 || location.y > 255) {
+                dy = 0;
+            }
+
+            double squaredDistance = dx * dx + dy * dy + dz * dz;
+
+            double distance = Math.sqrt(squaredDistance);
+            int maxDistance = McUtils.options().renderDistance().get() * 16;
+
+            String distanceText = Math.round((float) distance) + "m";
+
+            // move the position to avoid ndc z leak past 1
+            if (distance > maxDistance) {
+                double posScale = maxDistance / distance;
+                dx *= posScale;
+                dz *= posScale;
+            }
+
+            this.renderedMarkers.add(new RenderedMarkerInfo(
+                    distance, distanceText, marker, worldToScreen(new Vector3f(dx, dy, dz), projection)));
         }
-
-        double squaredDistance = dx * dx + dy * dy + dz * dz;
-
-        distance = Math.sqrt(squaredDistance);
-        int maxDistance = McUtils.options().renderDistance().get() * 16;
-
-        this.distanceText = Math.round((float) distance) + "m";
-
-        // move the position to avoid ndc z leak past 1
-        if (distance > maxDistance) {
-            double posScale = maxDistance / distance;
-            dx *= posScale;
-            dz *= posScale;
-        }
-        this.screenCoord = worldToScreen(new Vector3f(dx, dy, dz), projection);
     }
 
     @SubscribeEvent
     public void onRenderGuiPost(RenderEvent.Post event) {
-        Optional<Location> compassLocationOpt = Models.Compass.getCompassLocation();
-        Optional<WaypointPoi> compassWaypointOpt = Models.Compass.getCompassWaypoint();
-        if (compassLocationOpt.isEmpty()
-                || compassWaypointOpt.isEmpty()
-                || screenCoord == null
-                || (maxWaypointTextDistance.get() != 0 && maxWaypointTextDistance.get() < distance)) return;
+        for (RenderedMarkerInfo renderedMarker : renderedMarkers) {
+            if (maxWaypointTextDistance.get() != 0 && maxWaypointTextDistance.get() < renderedMarker.distance) return;
 
-        WaypointPoi waypointPoi = compassWaypointOpt.get();
+            float backgroundWidth = FontRenderer.getInstance().getFont().width(renderedMarker.distanceText);
+            float backgroundHeight = FontRenderer.getInstance().getFont().lineHeight;
 
-        float backgroundWidth = FontRenderer.getInstance().getFont().width(distanceText);
-        float backgroundHeight = FontRenderer.getInstance().getFont().lineHeight;
+            float displayPositionX;
+            float displayPositionY;
 
-        float displayPositionX;
-        float displayPositionY;
+            Vec2 intersectPoint = getBoundingIntersectPoint(renderedMarker.screenCoordinates, event.getWindow());
+            Texture icon = renderedMarker.markerInfo.texture();
+            float[] color = renderedMarker.markerInfo.textureColor().asFloatArray();
+            RenderSystem.setShaderColor(color[0], color[1], color[2], 1f);
 
-        Vec2 intersectPoint = getBoundingIntersectPoint(screenCoord, event.getWindow());
-        Texture icon = Models.Compass.getTargetIcon();
-        float[] color = Models.Compass.getTargetColor().asFloatArray();
-        RenderSystem.setShaderColor(color[0], color[1], color[2], 1f);
+            // The set waypoint is visible on the screen, so we render the icon + distance
+            if (intersectPoint == null) {
+                displayPositionX = (float) renderedMarker.screenCoordinates.x;
+                displayPositionY = (float) renderedMarker.screenCoordinates.y;
 
-        // The set waypoint is visible on the screen, so we render the icon + distance
-        if (intersectPoint == null) {
-            displayPositionX = (float) screenCoord.x;
-            displayPositionY = (float) screenCoord.y;
+                RenderUtils.drawScalingTexturedRect(
+                        event.getPoseStack(),
+                        icon.resource(),
+                        displayPositionX - icon.width() / 2,
+                        displayPositionY - icon.height() - backgroundHeight / 2 - 3f,
+                        0,
+                        icon.width(),
+                        icon.height(),
+                        icon.width(),
+                        icon.height());
+                RenderSystem.setShaderColor(1, 1, 1, 1);
+                RenderUtils.drawRect(
+                        event.getPoseStack(),
+                        CommonColors.BLACK.withAlpha(backgroundOpacity.get()),
+                        displayPositionX - (backgroundWidth / 2) - 2,
+                        displayPositionY - (backgroundHeight / 2) - 2,
+                        0,
+                        backgroundWidth + 3,
+                        backgroundHeight + 2);
+                FontRenderer.getInstance()
+                        .renderAlignedTextInBox(
+                                event.getPoseStack(),
+                                StyledText.fromString(renderedMarker.distanceText),
+                                displayPositionX - backgroundWidth,
+                                displayPositionX + backgroundWidth,
+                                displayPositionY - backgroundHeight,
+                                displayPositionY + backgroundHeight,
+                                0,
+                                renderedMarker.markerInfo.beaconColor(),
+                                HorizontalAlignment.CENTER,
+                                VerticalAlignment.MIDDLE,
+                                textShadow.get());
+            } else {
+                displayPositionX = intersectPoint.x;
+                displayPositionY = intersectPoint.y;
 
-            RenderUtils.drawScalingTexturedRect(
-                    event.getPoseStack(),
-                    icon.resource(),
-                    displayPositionX - icon.width() / 2,
-                    displayPositionY - icon.height() - backgroundHeight / 2 - 3f,
-                    0,
-                    icon.width(),
-                    icon.height(),
-                    icon.width(),
-                    icon.height());
-            RenderSystem.setShaderColor(1, 1, 1, 1);
-            RenderUtils.drawRect(
-                    event.getPoseStack(),
-                    CommonColors.BLACK.withAlpha(backgroundOpacity.get()),
-                    displayPositionX - (backgroundWidth / 2) - 2,
-                    displayPositionY - (backgroundHeight / 2) - 2,
-                    0,
-                    backgroundWidth + 3,
-                    backgroundHeight + 2);
-            FontRenderer.getInstance()
-                    .renderAlignedTextInBox(
-                            event.getPoseStack(),
-                            StyledText.fromString(distanceText),
-                            displayPositionX - backgroundWidth,
-                            displayPositionX + backgroundWidth,
-                            displayPositionY - backgroundHeight,
-                            displayPositionY + backgroundHeight,
-                            0,
-                            textColor.get(),
-                            HorizontalAlignment.CENTER,
-                            VerticalAlignment.MIDDLE,
-                            textShadow.get());
-        } else {
-            displayPositionX = intersectPoint.x;
-            displayPositionY = intersectPoint.y;
+                RenderUtils.drawScalingTexturedRect(
+                        event.getPoseStack(),
+                        icon.resource(),
+                        displayPositionX - icon.width() / 2,
+                        displayPositionY - icon.height() / 2,
+                        0,
+                        icon.width(),
+                        icon.height(),
+                        icon.width(),
+                        icon.height());
+                RenderSystem.setShaderColor(1, 1, 1, 1);
 
-            RenderUtils.drawScalingTexturedRect(
-                    event.getPoseStack(),
-                    icon.resource(),
-                    displayPositionX - icon.width() / 2,
-                    displayPositionY - icon.height() / 2,
-                    0,
-                    icon.width(),
-                    icon.height(),
-                    icon.width(),
-                    icon.height());
-            RenderSystem.setShaderColor(1, 1, 1, 1);
+                // pointer position is determined by finding the point on circle centered around displayPosition
+                double angle = Math.toDegrees(StrictMath.atan2(
+                                displayPositionY - event.getWindow().getGuiScaledHeight() / 2,
+                                displayPositionX - event.getWindow().getGuiScaledWidth() / 2))
+                        + 90f;
+                float radius = icon.width() / 2 + 8f;
+                float pointerDisplayPositionX =
+                        (float) (displayPositionX + radius * StrictMath.cos((angle - 90) * 3 / 180));
+                float pointerDisplayPositionY =
+                        (float) (displayPositionY + radius * StrictMath.sin((angle - 90) * 3 / 180));
 
-            // pointer position is determined by finding the point on circle centered around displayPosition
-            double angle = Math.toDegrees(StrictMath.atan2(
-                            displayPositionY - event.getWindow().getGuiScaledHeight() / 2,
-                            displayPositionX - event.getWindow().getGuiScaledWidth() / 2))
-                    + 90f;
-            float radius = icon.width() / 2 + 8f;
-            float pointerDisplayPositionX =
-                    (float) (displayPositionX + radius * StrictMath.cos((angle - 90) * 3 / 180));
-            float pointerDisplayPositionY =
-                    (float) (displayPositionY + radius * StrictMath.sin((angle - 90) * 3 / 180));
+                // apply rotation
+                PoseStack poseStack = event.getPoseStack();
+                poseStack.pushPose();
+                poseStack.translate(pointerDisplayPositionX, pointerDisplayPositionY, 0);
+                poseStack.mulPose(new Quaternionf().rotationXYZ(0, 0, (float) Math.toRadians(angle)));
+                poseStack.translate(-pointerDisplayPositionX, -pointerDisplayPositionY, 0);
 
-            // apply rotation
-            PoseStack poseStack = event.getPoseStack();
-            poseStack.pushPose();
-            poseStack.translate(pointerDisplayPositionX, pointerDisplayPositionY, 0);
-            poseStack.mulPose(new Quaternionf().rotationXYZ(0, 0, (float) Math.toRadians(angle)));
-            poseStack.translate(-pointerDisplayPositionX, -pointerDisplayPositionY, 0);
-
-            MultiBufferSource.BufferSource bufferSource =
-                    MultiBufferSource.immediate(Tesselator.getInstance().getBuilder());
-            waypointPoi
-                    .getPointerPoi()
-                    .renderAt(poseStack, bufferSource, pointerDisplayPositionX, pointerDisplayPositionY, false, 1, 1);
-            bufferSource.endBatch();
-            poseStack.popPose();
+                MultiBufferSource.BufferSource bufferSource =
+                        MultiBufferSource.immediate(Tesselator.getInstance().getBuilder());
+                DUMMY_WAYPOINT
+                        .getPointerPoi()
+                        .renderAt(
+                                poseStack, bufferSource, pointerDisplayPositionX, pointerDisplayPositionY, false, 1, 1);
+                bufferSource.endBatch();
+                poseStack.popPose();
+            }
         }
     }
 
@@ -245,7 +244,7 @@ public class WorldWaypointDistanceFeature extends Feature {
         float maxY = (float) centerPoint.y - bottomBoundingDistance.get();
 
         // drag the origin point to center since indicator's screenspace position / rotation is in relation to it
-        Vec3 centerRelativePosition = screenCoord.subtract(centerPoint);
+        Vec3 centerRelativePosition = position.subtract(centerPoint);
 
         // invert xy axis if target is behind camera
         if (centerRelativePosition.z > 1) {
@@ -291,20 +290,25 @@ public class WorldWaypointDistanceFeature extends Feature {
 
     // limit the bounding distance to prevent divided by zero in getBoundingIntersectPoint
     @Override
-    protected void onConfigUpdate(ConfigHolder configHolder) {
+    protected void onConfigUpdate(Config<?> unknownConfig) {
         Window window = McUtils.window();
 
-        switch (configHolder.getFieldName()) {
+        switch (unknownConfig.getFieldName()) {
             case "topBoundingDistance", "bottomBoundingDistance" -> {
-                if ((float) configHolder.getValue() > window.getGuiScaledHeight() * 0.4f) {
-                    configHolder.setValue(window.getGuiScaledHeight() * 0.4f);
+                Config<Float> config = (Config<Float>) unknownConfig;
+                if (config.getValue() > window.getGuiScaledHeight() * 0.4f) {
+                    config.setValue(window.getGuiScaledHeight() * 0.4f);
                 }
             }
             case "horizontalBoundingDistance" -> {
-                if ((float) configHolder.getValue() > window.getGuiScaledWidth() * 0.4f) {
-                    configHolder.setValue(window.getGuiScaledWidth() * 0.4f);
+                Config<Float> config = (Config<Float>) unknownConfig;
+                if (config.getValue() > window.getGuiScaledWidth() * 0.4f) {
+                    config.setValue(window.getGuiScaledWidth() * 0.4f);
                 }
             }
         }
     }
+
+    private record RenderedMarkerInfo(
+            double distance, String distanceText, MarkerInfo markerInfo, Vec3 screenCoordinates) {}
 }

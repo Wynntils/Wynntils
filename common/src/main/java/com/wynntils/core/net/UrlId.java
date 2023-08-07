@@ -43,6 +43,7 @@ public enum UrlId {
     DATA_STATIC_SEASKIPPER_DESTINATIONS("dataStaticSeaskipperDestinations"),
     DATA_STATIC_SERVICES("dataStaticServices"),
     DATA_STATIC_SPLASHES("dataStaticSplashes"),
+    DATA_STATIC_LOOTRUN_TASKS_NAMED("dataStaticLootrunTasksNamed"),
     DATA_STATIC_URLS("dataStaticUrls"),
     LINK_WIKI_LOOKUP("linkWikiLookup"),
     LINK_WYNNCRAFT_PLAYER_STATS("linkWynncraftPlayerStats"),
