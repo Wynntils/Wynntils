@@ -138,7 +138,7 @@ public class LocateCommand extends Command {
                                     "/compass at " + service.getLocation().asChatCoordinates()))));
         }
 
-        context.getSource().sendSuccess(response, false);
+        context.getSource().sendSuccess(() -> response, false);
         return 1;
     }
 
@@ -178,7 +178,7 @@ public class LocateCommand extends Command {
                                     ClickEvent.Action.RUN_COMMAND, "/compass place " + place.getName()))));
         }
 
-        context.getSource().sendSuccess(response, false);
+        context.getSource().sendSuccess(() -> response, false);
         return 1;
     }
 
