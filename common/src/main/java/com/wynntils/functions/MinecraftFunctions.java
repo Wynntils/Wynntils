@@ -37,4 +37,11 @@ public class MinecraftFunctions {
             return MinecraftAccessor.getFps();
         }
     }
+
+    public static class TicksFunction extends Function<Integer> {
+        @Override
+        public Integer getValue(FunctionArguments arguments) {
+            return (int) McUtils.mc().level.getGameTime();
+        }
+    }
 }

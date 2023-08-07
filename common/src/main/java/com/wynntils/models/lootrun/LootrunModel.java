@@ -122,6 +122,9 @@ public class LootrunModel extends Model {
     private Storage<Map<String, Map<BeaconColor, Integer>>> selectedBeaconsStorage = new Storage<>(new TreeMap<>());
 
     @Persisted
+    private Storage<Map<String, BeaconColor>> lastTaskBeaconColorStorage = new Storage<>(new TreeMap<>());
+
+    @Persisted
     private Storage<Map<String, Beacon>> closestBeaconStorage = new Storage<>(new TreeMap<>());
 
     private Map<BeaconColor, Integer> selectedBeacons = new TreeMap<>();
@@ -313,11 +316,25 @@ public class LootrunModel extends Model {
         handleStateChange(oldState, newState);
     }
 
+    public BeaconColor getLastTaskBeaconColor() {
+        return lastTaskBeaconColorStorage.get().get(Models.Character.getId());
+    }
+
     public Beacon getClosestBeacon() {
         return closestBeaconStorage.get().get(Models.Character.getId());
     }
 
-    public void setClosestBeacon(Beacon beacon) {
+    private void setLastTaskBeaconColor(BeaconColor beaconColor) {
+        if (beaconColor == null) {
+            lastTaskBeaconColorStorage.get().remove(Models.Character.getId());
+        } else {
+            lastTaskBeaconColorStorage.get().put(Models.Character.getId(), beaconColor);
+        }
+
+        lastTaskBeaconColorStorage.touched();
+    }
+
+    private void setClosestBeacon(Beacon beacon) {
         if (beacon == null) {
             closestBeaconStorage.get().remove(Models.Character.getId());
         } else {
@@ -327,7 +344,7 @@ public class LootrunModel extends Model {
         closestBeaconStorage.touched();
     }
 
-    public void resetBeaconStorage() {
+    private void resetBeaconStorage() {
         selectedBeacons = new TreeMap<>();
 
         selectedBeaconsStorage.get().put(Models.Character.getId(), selectedBeacons);
@@ -340,6 +357,7 @@ public class LootrunModel extends Model {
 
             taskType = null;
             setClosestBeacon(null);
+            setLastTaskBeaconColor(null);
 
             possibleTaskLocations = new HashSet<>();
 
@@ -360,6 +378,7 @@ public class LootrunModel extends Model {
             WynntilsMod.info("Selected a " + closestBeacon.color() + " beacon at " + closestBeacon.position());
             selectedBeacons.put(closestBeacon.color(), selectedBeacons.getOrDefault(closestBeacon.color(), 0) + 1);
             selectedBeaconsStorage.touched();
+            setLastTaskBeaconColor(closestBeacon.color());
             WynntilsMod.postEvent(new LootrunBeaconSelectedEvent(closestBeacon));
 
             possibleTaskLocations = new HashSet<>();
