@@ -159,11 +159,18 @@ public class QuickCastFeature extends Feature {
         if (!Models.WorldState.onWorld()) return;
 
         // Clear spell after the 40 tick timeout period
-        if (spellCountdown > 0 && --spellCountdown <= 0) {
-            spellInProgress = SpellDirection.NO_SPELL;
+        if (spellCountdown > 0) {
+            spellCountdown--;
+            if (spellCountdown <= 0) {
+                spellInProgress = SpellDirection.NO_SPELL;
+            }
         }
 
-        if (packetCountdown > 0 && --packetCountdown > 0) return;
+        if (packetCountdown > 0) {
+            packetCountdown--;
+        }
+
+        if (packetCountdown > 0) return;
         if (SPELL_PACKET_QUEUE.isEmpty()) return;
 
         int currSelectedSlot = McUtils.inventory().selected;
