@@ -150,10 +150,10 @@ public class LootrunFunctions {
         }
     }
 
-    public static class LootrunSelectedBeaconColorFunction extends Function<String> {
+    public static class LootrunLastSelectedBeaconColorFunction extends Function<String> {
         @Override
         public String getValue(FunctionArguments arguments) {
-            BeaconColor beaconColor = Models.Lootrun.getCurrentTaskBeaconColor();
+            BeaconColor beaconColor = Models.Lootrun.getLastTaskBeaconColor();
             if (beaconColor == null) return "";
 
             return EnumUtils.toNiceString(beaconColor);
