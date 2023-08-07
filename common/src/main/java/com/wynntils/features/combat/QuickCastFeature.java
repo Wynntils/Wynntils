@@ -161,7 +161,7 @@ public class QuickCastFeature extends Feature {
         // Clear spell after the 40 tick timeout period
         if (spellCountdown > 0) {
             spellCountdown--;
-            if (spellCountdown == 0) {
+            if (spellCountdown <= 0) {
                 spellInProgress = SpellDirection.NO_SPELL;
             }
         }
