@@ -130,9 +130,7 @@ public class LootrunModel extends Model {
     private Map<BeaconColor, Integer> selectedBeacons = new TreeMap<>();
 
     private int timerOverall = 0;
-
     private int challengesMax = 0;
-
     private int challengesCurrent = 0;
 
     public LootrunModel(BeaconModel beaconModel, MarkerModel markerModel, ParticleModel particleModel) {
