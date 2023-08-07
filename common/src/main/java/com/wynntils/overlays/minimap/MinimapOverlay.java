@@ -17,7 +17,6 @@ import com.wynntils.core.persisted.Persisted;
 import com.wynntils.core.persisted.config.Config;
 import com.wynntils.core.text.StyledText;
 import com.wynntils.features.map.MainMapFeature;
-import com.wynntils.screens.maps.AbstractMapScreen;
 import com.wynntils.services.map.MapTexture;
 import com.wynntils.services.map.pois.PlayerMiniMapPoi;
 import com.wynntils.services.map.pois.Poi;
@@ -47,6 +46,8 @@ import org.joml.Math;
 
 public class MinimapOverlay extends Overlay {
     private static final int DEFAULT_SIZE = 130;
+    private static final float MIN_ZOOM = 0.1f;
+    private static final float MAX_ZOOM = 3;
 
     @Persisted
     public final Config<Float> scale = new Config<>(1f);
@@ -96,8 +97,7 @@ public class MinimapOverlay extends Overlay {
     }
 
     public void scale(float multiplier) {
-        scale.setValue(
-                MathUtils.clamp(scale.get() * multiplier, AbstractMapScreen.MIN_ZOOM, AbstractMapScreen.MAX_ZOOM));
+        scale.setValue(MathUtils.clamp(scale.get() * multiplier, MIN_ZOOM, MAX_ZOOM));
         scale.touched();
     }
 
