@@ -1399,7 +1399,7 @@
       <option name="useParameterizedTypeForCollectionMethods" value="true" />
       <option name="doNotWeakenToJavaLangObject" value="true" />
       <option name="onlyWeakentoInterface" value="true" />
-      <stopClasses>java.lang.String,java.util.List,java.util.Set,java.util.TreeMap,net.minecraft.network.chat.Component,java.util.Random,java.util.regex.Matcher</stopClasses>
+      <stopClasses>java.lang.String,java.util.List,java.util.Set,java.util.TreeMap,net.minecraft.network.chat.Component,java.util.Random,java.util.regex.Matcher,com.wynntils.utils.SystemUtils.ClipboardImage</stopClasses>
     </inspection_tool>
     <inspection_tool class="TypeParameterExtendsFinalClass" enabled="true" level="WARNING" enabled_by_default="true" />
     <inspection_tool class="TypeParameterFindViewById" enabled="false" level="WEAK WARNING" enabled_by_default="false" />
