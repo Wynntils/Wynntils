@@ -29,6 +29,7 @@ import com.wynntils.utils.wynn.ContainerUtils;
 import java.util.ArrayList;
 import java.util.List;
 import net.minecraft.client.KeyMapping;
+import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.Renderable;
 import net.minecraft.client.gui.components.events.GuiEventListener;
 import net.minecraft.client.gui.screens.Screen;
@@ -137,7 +138,7 @@ public final class CharacterSelectorScreen extends WynntilsScreen {
     }
 
     @Override
-    public void doRender(PoseStack poseStack, int mouseX, int mouseY, float partialTick) {
+    public void doRender(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
         if (draggingScroll) {
             mouseDrag += mouseY - lastMouseY;
             lastMouseY = mouseY;
@@ -150,8 +151,9 @@ public final class CharacterSelectorScreen extends WynntilsScreen {
             }
         }
 
-        this.renderBackground(poseStack);
+        this.renderBackground(guiGraphics);
 
+        PoseStack poseStack = guiGraphics.pose();
         RenderUtils.drawScalingTexturedRect(
                 poseStack,
                 Texture.LIST_BACKGROUND.resource(),
@@ -163,11 +165,11 @@ public final class CharacterSelectorScreen extends WynntilsScreen {
                 Texture.LIST_BACKGROUND.width(),
                 Texture.LIST_BACKGROUND.height());
 
-        renderWidgets(poseStack, mouseX, mouseY, partialTick);
+        renderWidgets(guiGraphics, mouseX, mouseY, partialTick);
 
         renderScrollButton(poseStack);
 
-        renderPlayer(poseStack);
+        renderPlayer(guiGraphics);
 
         if (selected == null) return;
 
@@ -175,7 +177,9 @@ public final class CharacterSelectorScreen extends WynntilsScreen {
     }
 
     @Override
-    public void renderBackground(PoseStack poseStack) {
+    public void renderBackground(GuiGraphics guiGraphics) {
+        PoseStack poseStack = guiGraphics.pose();
+
         RenderUtils.drawScalingTexturedRect(
                 poseStack,
                 Texture.BACKGROUND_SPLASH.resource(),
@@ -389,17 +393,17 @@ public final class CharacterSelectorScreen extends WynntilsScreen {
                 Texture.CHARACTER_SELECTION_SCROLL_BUTTON.height());
     }
 
-    private void renderWidgets(PoseStack poseStack, int mouseX, int mouseY, float partialTick) {
+    private void renderWidgets(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
         for (Renderable renderable : this.renderables) {
-            renderable.render(poseStack, mouseX, mouseY, partialTick);
+            renderable.render(guiGraphics, mouseX, mouseY, partialTick);
         }
 
         for (ClassInfoButton classInfoButton : classInfoButtons) {
-            classInfoButton.render(poseStack, mouseX, mouseY, partialTick);
+            classInfoButton.render(guiGraphics, mouseX, mouseY, partialTick);
         }
     }
 
-    private void renderPlayer(PoseStack poseStack) {
+    private void renderPlayer(GuiGraphics guiGraphics) {
         McUtils.player().setInvisible(false);
         // This is actually needed...
         McUtils.player().resetFallDistance();
@@ -407,7 +411,7 @@ public final class CharacterSelectorScreen extends WynntilsScreen {
 
         int scale = this.height / 4;
         InventoryScreen.renderEntityInInventoryFollowsMouse(
-                poseStack, (int) (this.width * 0.6f), (int) (this.height * 0.85f), scale, 0, 0, McUtils.player());
+                guiGraphics, (int) (this.width * 0.6f), (int) (this.height * 0.85f), scale, 0, 0, McUtils.player());
     }
 
     private void setScrollOffset(int delta) {

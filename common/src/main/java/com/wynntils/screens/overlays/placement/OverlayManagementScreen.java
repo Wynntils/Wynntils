@@ -38,6 +38,7 @@ import java.util.Map;
 import java.util.Set;
 import java.util.stream.Collectors;
 import net.minecraft.ChatFormatting;
+import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.components.Tooltip;
 import net.minecraft.client.gui.screens.Screen;
@@ -142,7 +143,9 @@ public final class OverlayManagementScreen extends WynntilsScreen {
     }
 
     @Override
-    public void doRender(PoseStack poseStack, int mouseX, int mouseY, float partialTick) {
+    public void doRender(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
+        PoseStack poseStack = guiGraphics.pose();
+
         if (testMode) {
             TextRenderTask renderTask = new TextRenderTask(
                     I18n.get("screens.wynntils.overlayManagement.testModeOn"),
@@ -239,12 +242,7 @@ public final class OverlayManagementScreen extends WynntilsScreen {
             }
         }
 
-        super.doRender(poseStack, mouseX, mouseY, partialTick); // This renders widgets
-        // This renders button tooltips
-        if (this.deferredTooltipRendering != null) {
-            this.renderTooltip(poseStack, this.deferredTooltipRendering, mouseX, mouseY);
-            this.deferredTooltipRendering = null;
-        }
+        super.doRender(guiGraphics, mouseX, mouseY, partialTick); // This renders widgets
     }
 
     private CustomColor getOverlayColor(Overlay overlay) {

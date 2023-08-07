@@ -13,12 +13,15 @@ import com.wynntils.screens.base.widgets.PageSelectorButton;
 import com.wynntils.screens.guides.WynntilsGuidesListScreen;
 import com.wynntils.utils.StringUtils;
 import com.wynntils.utils.colors.CommonColors;
+import com.wynntils.utils.mc.McUtils;
 import com.wynntils.utils.render.FontRenderer;
+import com.wynntils.utils.render.RenderUtils;
 import com.wynntils.utils.render.Texture;
 import com.wynntils.utils.render.type.HorizontalAlignment;
 import com.wynntils.utils.render.type.TextShadow;
 import com.wynntils.utils.render.type.VerticalAlignment;
 import java.util.List;
+import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.resources.language.I18n;
 import net.minecraft.network.chat.Component;
@@ -65,7 +68,9 @@ public final class WynntilsItemGuideScreen extends WynntilsListScreen<GuideGearI
     }
 
     @Override
-    public void doRender(PoseStack poseStack, int mouseX, int mouseY, float partialTick) {
+    public void doRender(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
+        PoseStack poseStack = guiGraphics.pose();
+
         renderBackgroundTexture(poseStack);
 
         // Make 0, 0 the top left corner of the rendered quest book background
@@ -80,7 +85,7 @@ public final class WynntilsItemGuideScreen extends WynntilsListScreen<GuideGearI
 
         renderItemsHeader(poseStack);
 
-        renderWidgets(poseStack, mouseX, mouseY, partialTick);
+        renderWidgets(guiGraphics, mouseX, mouseY, partialTick);
 
         renderPageInfo(poseStack, currentPage + 1, maxPage + 1);
 
@@ -92,7 +97,14 @@ public final class WynntilsItemGuideScreen extends WynntilsListScreen<GuideGearI
     @Override
     protected void renderTooltip(PoseStack poseStack, int mouseX, int mouseY) {
         if (hovered instanceof GuideGearItemStackButton guideGearItemStackButton) {
-            this.renderTooltip(poseStack, guideGearItemStackButton.getItemStack(), mouseX, mouseY);
+            RenderUtils.drawTooltipAt(
+                    poseStack,
+                    mouseX,
+                    mouseY,
+                    0,
+                    Screen.getTooltipFromItem(McUtils.mc(), guideGearItemStackButton.getItemStack()),
+                    FontRenderer.getInstance().getFont(),
+                    true);
         }
 
         super.renderTooltip(poseStack, mouseX, mouseY);

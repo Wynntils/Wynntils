@@ -4,9 +4,9 @@
  */
 package com.wynntils.screens.base;
 
-import com.mojang.blaze3d.vertex.PoseStack;
 import com.wynntils.core.WynntilsMod;
 import com.wynntils.utils.mc.McUtils;
+import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.player.Inventory;
@@ -38,15 +38,15 @@ public abstract class WynntilsContainerScreen<T extends AbstractContainerMenu> e
     }
 
     @Override
-    public final void render(PoseStack poseStack, int mouseX, int mouseY, float partialTick) {
+    public final void render(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
         try {
-            doRender(poseStack, mouseX, mouseY, partialTick);
+            doRender(guiGraphics, mouseX, mouseY, partialTick);
         } catch (Throwable t) {
             failure("render", t);
         }
     }
 
-    public void doRender(PoseStack poseStack, int mouseX, int mouseY, float partialTick) {
-        super.render(poseStack, mouseX, mouseY, partialTick);
+    public void doRender(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
+        super.render(guiGraphics, mouseX, mouseY, partialTick);
     }
 }

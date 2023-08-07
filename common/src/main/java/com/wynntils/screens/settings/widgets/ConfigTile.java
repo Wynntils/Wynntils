@@ -17,6 +17,7 @@ import com.wynntils.utils.render.type.HorizontalAlignment;
 import com.wynntils.utils.render.type.TextShadow;
 import com.wynntils.utils.render.type.VerticalAlignment;
 import net.minecraft.ChatFormatting;
+import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.AbstractWidget;
 import net.minecraft.network.chat.Component;
 
@@ -38,8 +39,10 @@ public class ConfigTile extends WynntilsButton {
     }
 
     @Override
-    public void renderWidget(PoseStack poseStack, int mouseX, int mouseY, float partialTick) {
-        resetButton.render(poseStack, mouseX, mouseY, partialTick);
+    public void renderWidget(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
+        PoseStack poseStack = guiGraphics.pose();
+
+        resetButton.render(guiGraphics, mouseX, mouseY, partialTick);
 
         renderDisplayName(poseStack);
 
@@ -57,7 +60,7 @@ public class ConfigTile extends WynntilsButton {
         final int renderX = getRenderX();
         final int renderY = getRenderY();
         poseStack.translate(renderX, renderY, 0);
-        configOptionElement.render(poseStack, mouseX - renderX, mouseY - renderY, partialTick);
+        configOptionElement.render(guiGraphics, mouseX - renderX, mouseY - renderY, partialTick);
         poseStack.popPose();
     }
 

@@ -35,6 +35,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 import net.minecraft.ChatFormatting;
+import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.events.GuiEventListener;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.network.chat.Component;
@@ -214,7 +215,9 @@ public final class MainMapScreen extends AbstractMapScreen {
     }
 
     @Override
-    public void doRender(PoseStack poseStack, int mouseX, int mouseY, float partialTick) {
+    public void doRender(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
+        PoseStack poseStack = guiGraphics.pose();
+
         if (holdingMapKey
                 && !Managers.Feature.getFeatureInstance(MainMapFeature.class)
                         .openMapKeybind
@@ -268,11 +271,11 @@ public final class MainMapScreen extends AbstractMapScreen {
 
         RenderUtils.disableScissor();
 
-        renderBackground(poseStack);
+        renderBackground(guiGraphics);
 
         renderCoordinates(poseStack, mouseX, mouseY);
 
-        renderMapButtons(poseStack, mouseX, mouseY, partialTick);
+        renderMapButtons(guiGraphics, mouseX, mouseY, partialTick);
     }
 
     private void renderPois(PoseStack poseStack, int mouseX, int mouseY) {
