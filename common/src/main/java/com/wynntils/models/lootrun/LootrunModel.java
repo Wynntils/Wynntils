@@ -363,6 +363,11 @@ public class LootrunModel extends Model {
         timerOverall = seconds;
     }
 
+    public void setTimerChallenge(int seconds) {
+        timerChallenge.get().put(Models.Character.getId(), seconds);
+        timerChallenge.touched();
+    }
+
     public void setChallengesCurrent(int amount) {
         challengesCurrent = amount;
     }
@@ -384,8 +389,7 @@ public class LootrunModel extends Model {
             beaconUpdates = new HashMap<>();
 
             timerOverall = 0;
-            timerChallenge.get().put(Models.Character.getId(), 0);
-            timerChallenge.touched();
+            setTimerChallenge(180);
             challengesCurrent = 0;
             challengesMax = 0;
             return;
@@ -412,10 +416,6 @@ public class LootrunModel extends Model {
             setClosestBeacon(null);
             LOOTRUN_BEACON_COMPASS_PROVIDER.reloadTaskMarkers();
             return;
-        }
-        if (oldState != newState) {
-            timerChallenge.get().put(Models.Character.getId(), timerOverall);
-            timerChallenge.touched();
         }
     }
 
