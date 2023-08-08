@@ -42,6 +42,7 @@ public class TradeMarketPriceMatchFeature extends Feature {
 
     private static final int PRICE_SET_ITEM_SLOT = 12;
     private static final int PRICE_INFO_ITEM_SLOT = 17;
+    private static final Component SILVERBULL_STAR = Component.literal(" ✮").withStyle(ChatFormatting.AQUA);
 
     private boolean sendPriceMessage = false;
     private long priceToSend = 0;
@@ -104,7 +105,11 @@ public class TradeMarketPriceMatchFeature extends Feature {
                             .append(Component.translatable("feature.wynntils.tradeMarketPriceMatch.youReceive")
                                     .withStyle(ChatFormatting.GREEN))
                             .append(Component.literal(Models.Emerald.getFormattedString(untaxedA, false))
-                                    .withStyle(ChatFormatting.GRAY))
+                                    .withStyle(ChatFormatting.GRAY)
+                                    .append(
+                                            Models.Character.isSilverbullSubscriber()
+                                                    ? SILVERBULL_STAR
+                                                    : Component.empty()))
                             .append(Component.literal("\n"))
                             .append(Component.translatable("feature.wynntils.tradeMarketPriceMatch.totalPrice")
                                     .withStyle(ChatFormatting.GOLD))
@@ -124,7 +129,11 @@ public class TradeMarketPriceMatchFeature extends Feature {
                             .append(Component.translatable("feature.wynntils.tradeMarketPriceMatch.youReceive")
                                     .withStyle(ChatFormatting.GREEN))
                             .append(Component.literal(Models.Emerald.getFormattedString(untaxedB, false))
-                                    .withStyle(ChatFormatting.GRAY))
+                                    .withStyle(ChatFormatting.GRAY)
+                                    .append(
+                                            Models.Character.isSilverbullSubscriber()
+                                                    ? SILVERBULL_STAR
+                                                    : Component.empty()))
                             .append(Component.literal("\n"))
                             .append(Component.translatable("feature.wynntils.tradeMarketPriceMatch.totalPrice")
                                     .withStyle(ChatFormatting.GOLD))
