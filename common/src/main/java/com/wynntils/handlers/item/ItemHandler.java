@@ -6,6 +6,7 @@ package com.wynntils.handlers.item;
 
 import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.components.Handler;
+import com.wynntils.core.components.Models;
 import com.wynntils.core.mod.type.CrashType;
 import com.wynntils.core.text.StyledText;
 import com.wynntils.handlers.item.event.ItemRenamedEvent;
@@ -104,17 +105,31 @@ public class ItemHandler extends Handler {
             return;
         }
 
+        StyledText originalName = ((ItemStackExtension) existingItem).getOriginalName();
+        StyledText existingName =
+                StyledText.fromComponent(existingItem.getHoverName()).getNormalized();
+        StyledText newName = StyledText.fromComponent(newItem.getHoverName()).getNormalized();
+
+        // Spell cast updates require extra handling. Check if it is one:
+        if (Models.Spell.isSpellIndicator(newName)) {
+            // This is the same item, and its name is just being updated because of a spell cast
+            // We need to send the rename event, as well as update the annotation data, in case
+            // the item's properties changed alongside the spell cast
+
+            // Use the original name to calculate, since the new name is just the spell indicator
+            annotation = calculateAnnotation(newItem, originalName);
+            updateItem(newItem, annotation, originalName);
+
+            handleRename(existingItem, newItem, existingName, newName);
+            return;
+        }
+
         // This might be just a name update. Check if lore matches:
         if (!LoreUtils.loreSoftMatches(existingItem, newItem, 3)) {
             // This could be a new item, or a crafted item losing in durability
             annotate(newItem);
             return;
         }
-
-        StyledText originalName = ((ItemStackExtension) existingItem).getOriginalName();
-        StyledText existingName =
-                StyledText.fromComponent(existingItem.getHoverName()).getNormalized();
-        StyledText newName = StyledText.fromComponent(newItem.getHoverName()).getNormalized();
 
         if (newName.equals(existingName)) {
             // This is exactly the same item, so copy existing annotation
@@ -143,12 +158,9 @@ public class ItemHandler extends Handler {
         // trigger just for a consumable or crafted gear that changes the [...] text, so
         // check only on base name, not the full name.
         if (!newBaseName.equals(existingBaseName)) {
-            // This is the same item, but it is renamed to signal e.g. a spell.
-            ItemRenamedEvent event = new ItemRenamedEvent(newItem, existingName, newName);
-            WynntilsMod.postEvent(event);
-            if (event.isCanceled()) {
-                newItem.setHoverName(existingItem.getHoverName());
-            }
+            // This is the same item, but it is renamed to signal something
+            // Spell cast renames are handled above, so this is for other types of potential renames.
+            handleRename(existingItem, newItem, existingName, newName);
         }
     }
 
@@ -219,6 +231,14 @@ public class ItemHandler extends Handler {
         if (annotation == null) return;
 
         updateItem(itemStack, annotation, name);
+    }
+
+    private void handleRename(ItemStack existingItem, ItemStack newItem, StyledText existingName, StyledText newName) {
+        ItemRenamedEvent event = new ItemRenamedEvent(newItem, existingName, newName);
+        WynntilsMod.postEvent(event);
+        if (event.isCanceled()) {
+            newItem.setHoverName(existingItem.getHoverName());
+        }
     }
 
     private void logProfilingData(long startTime, ItemAnnotation annotation) {

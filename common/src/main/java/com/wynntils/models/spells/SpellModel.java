@@ -98,6 +98,16 @@ public class SpellModel extends Model {
         }
     }
 
+    public boolean isSpellIndicator(StyledText msg) {
+        SpellFailureReason failureReason = SpellFailureReason.fromMsg(msg);
+        if (failureReason != null) {
+            return true;
+        }
+
+        Matcher spellMatcher = msg.getMatcher(SPELL_CAST);
+        return spellMatcher.matches();
+    }
+
     private static SpellDirection[] getSpellFromMatcher(MatchResult spellMatcher) {
         int size = 1;
         for (; size < 3; ++size) {
