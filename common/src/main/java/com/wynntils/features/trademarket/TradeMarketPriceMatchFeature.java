@@ -94,7 +94,7 @@ public class TradeMarketPriceMatchFeature extends Feature {
         int rightPos = containerScreen.leftPos + containerScreen.imageWidth;
 
         if (buySellOffers.a() != null) {
-            int untaxedA = (int) Math.round(buySellOffers.a() / EmeraldModel.TAX_AMOUNT);
+            int untaxedA = (int) Math.round(buySellOffers.a() / Models.Emerald.getTaxAmount());
             containerScreen.addRenderableWidget(new PriceButton(
                     rightPos,
                     containerScreen.topPos,
@@ -114,7 +114,7 @@ public class TradeMarketPriceMatchFeature extends Feature {
         }
 
         if (buySellOffers.b() != null) {
-            int untaxedB = (int) Math.round(buySellOffers.b() / EmeraldModel.TAX_AMOUNT);
+            int untaxedB = (int) Math.round(buySellOffers.b() / Models.Emerald.getTaxAmount());
             containerScreen.addRenderableWidget(new PriceButton(
                     rightPos,
                     containerScreen.topPos + PriceButton.BUTTON_HEIGHT + 2,
