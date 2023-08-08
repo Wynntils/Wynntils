@@ -1,8 +1,16 @@
+## [0.0.3-alpha.284](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.283...v0.0.3-alpha.284) (2023-08-08)
+
+
+### Miscellaneous Chores
+
+* Properly update all missing copyright years ([#1962](https://github.com/Wynntils/Artemis/issues/1962)) ([e85083e](https://github.com/Wynntils/Artemis/commit/e85083e6fababf6f5dd1459477742bed7832fe81))
+
 ## [0.0.3-alpha.283](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.282...v0.0.3-alpha.283) (2023-08-08)
 
 
 ### Miscellaneous Chores
 
+* **release:** v0.0.3-alpha.283 [skip ci] ([5352777](https://github.com/Wynntils/Artemis/commit/5352777d5d13b8fbe76f182f918ee25426d8a459))
 * update major id url hash ([#1958](https://github.com/Wynntils/Artemis/issues/1958)) ([908723a](https://github.com/Wynntils/Artemis/commit/908723a5e49ddda49750d6dd892bb3020b38dbc6))
 
 ## [0.0.3-alpha.282](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.281...v0.0.3-alpha.282) (2023-08-08)
@@ -40,16 +48,4 @@
 ### Code Refactoring
 
 * avoid side effects in if statement ([#1953](https://github.com/Wynntils/Artemis/issues/1953)) ([75b3804](https://github.com/Wynntils/Artemis/commit/75b380463d84f5ef1677d4f7feb171f54980eec2))
-
-## [0.0.3-alpha.279](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.278...v0.0.3-alpha.279) (2023-08-07)
-
-
-### Bug Fixes
-
-* Crash rich presence instead of disabling ([#1952](https://github.com/Wynntils/Artemis/issues/1952)) ([100d1ca](https://github.com/Wynntils/Artemis/commit/100d1ca34613ebaf8e8c5a885ed1c210e39deb95))
-
-
-### Miscellaneous Chores
-
-* **release:** v0.0.3-alpha.279 [skip ci] ([c2bc983](https://github.com/Wynntils/Artemis/commit/c2bc9838f1cef8d543873c84501b1be37c6b4eb1))
 
