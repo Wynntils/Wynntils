@@ -72,7 +72,7 @@ public final class CharacterModel extends Model {
     }
 
     public boolean isSilverbullSubscriber() {
-        return silverbullSubscriber;
+        return silverbullSubscriber != null && silverbullSubscriber;
     }
 
     public ClassType getClassType() {
@@ -150,8 +150,8 @@ public final class CharacterModel extends Model {
     }
 
     private void scanCratesBombsCosmeticsPage() {
-        ScriptedContainerQuery query = ScriptedContainerQuery.builder("Crates, Bombs & Cosmetics Query")
-                .onError(msg -> WynntilsMod.warn("Error querying Crates, Bombs & Cosmetics: " + msg))
+        ScriptedContainerQuery query = ScriptedContainerQuery.builder("Silverbull Subscription Query")
+                .onError(msg -> WynntilsMod.warn("Error querying Silverbull subscription: " + msg))
 
                 // Open /use menu
                 .then(QueryStep.sendCommand("use")
