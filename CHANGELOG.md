@@ -1,4 +1,16 @@
+## [0.0.3-alpha.286](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.285...v0.0.3-alpha.286) (2023-08-08)
+
+
+### New Features
+
+* Lootrun Time and Challenges functions ([#1949](https://github.com/Wynntils/Artemis/issues/1949)) ([45ddb28](https://github.com/Wynntils/Artemis/commit/45ddb28fd711986c0d0e2060f08dd406e90f4e41))
+
 ## [0.0.3-alpha.285](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.284...v0.0.3-alpha.285) (2023-08-08)
+
+
+### Miscellaneous Chores
+
+* **release:** v0.0.3-alpha.285 [skip ci] ([31ba662](https://github.com/Wynntils/Artemis/commit/31ba662116fec40ffb784ad4d718210a1dd4a629))
 
 
 ### Code Refactoring
@@ -32,16 +44,4 @@
 ### Miscellaneous Chores
 
 * **release:** v0.0.3-alpha.282 [skip ci] ([0864d78](https://github.com/Wynntils/Artemis/commit/0864d788c35ffa7bfbda83acff0c232138cadd8f))
-
-## [0.0.3-alpha.281](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.280...v0.0.3-alpha.281) (2023-08-07)
-
-
-### Bug Fixes
-
-* Fix ContainerSearchFeature searching in the sidebar ([#1841](https://github.com/Wynntils/Artemis/issues/1841)) ([88ed015](https://github.com/Wynntils/Artemis/commit/88ed0157de4199a73376f62c31b69809a656a5fc))
-
-
-### Miscellaneous Chores
-
-* **release:** v0.0.3-alpha.281 [skip ci] ([e2d6549](https://github.com/Wynntils/Artemis/commit/e2d6549460cea893897c7309e083ccb85b4a8fb9))
 
