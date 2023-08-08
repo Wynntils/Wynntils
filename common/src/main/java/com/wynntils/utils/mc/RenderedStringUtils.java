@@ -20,19 +20,17 @@ public final class RenderedStringUtils {
         StringBuilder result = new StringBuilder();
         int length = 0;
 
-        // FIXME: codes should not count toward the word length
-
         for (StyledText string : stringArray) {
             StyledText[] lines = string.split("\\\\n");
             for (int i = 0; i < lines.length; i++) {
                 StyledText line = lines[i];
-                if (i > 0 || length + font.width(line.getString()) >= maxPixels) {
+                if (i > 0 || length + font.width(line.getStringWithoutFormatting()) >= maxPixels) {
                     result.append('\n');
                     length = 0;
                 }
                 if (!line.isEmpty()) {
                     result.append(line.getString()).append(' ');
-                    length += font.width(line.getString()) + spaceSize;
+                    length += font.width(line.getStringWithoutFormatting()) + spaceSize;
                 }
             }
         }
