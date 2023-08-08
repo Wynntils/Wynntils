@@ -67,7 +67,7 @@ public final class LocationFunctions {
         }
 
         @Override
-        public List<String> getAliases() {
+        protected List<String> getAliasList() {
             return List.of("loc");
         }
     }
