@@ -968,7 +968,7 @@
   "feature.wynntils.statusEffectsOverlay.overlay.statusEffects.sortEffects.description": "Should effects be sorted based on their type, name and modifier?",
   "feature.wynntils.statusEffectsOverlay.overlay.statusEffects.sortEffects.name": "Sort Effects",
   "feature.wynntils.statusEffectsOverlay.overlay.statusEffects.stackingBehaviour.description": "How should effects be stacked?",
-  "feature.wynntils.statusEffectsOverlay.overlay.statusEffects.stackingBehaviour.name": "Stack Effects",
+  "feature.wynntils.statusEffectsOverlay.overlay.statusEffects.stackingBehaviour.name": "Stacking Behaviour",
   "feature.wynntils.statusEffectsOverlay.overlay.statusEffects.textShadow.description": "What should the text shadow look like?",
   "feature.wynntils.statusEffectsOverlay.overlay.statusEffects.textShadow.name": "Text Shadow",
   "feature.wynntils.stopwatch.description": "Adds the ability to add stopwatches to the screen as overlays.",
