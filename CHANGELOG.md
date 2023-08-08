@@ -1,9 +1,21 @@
+## [0.0.3-alpha.283](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.282...v0.0.3-alpha.283) (2023-08-08)
+
+
+### Miscellaneous Chores
+
+* update major id url hash ([#1958](https://github.com/Wynntils/Artemis/issues/1958)) ([908723a](https://github.com/Wynntils/Artemis/commit/908723a5e49ddda49750d6dd892bb3020b38dbc6))
+
 ## [0.0.3-alpha.282](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.281...v0.0.3-alpha.282) (2023-08-08)
 
 
 ### New Features
 
 * Add new 2.0.3 minor IDs ([#1956](https://github.com/Wynntils/Artemis/issues/1956)) ([e8b4977](https://github.com/Wynntils/Artemis/commit/e8b49776afca412511cb03ac1e8d9f00a870184b))
+
+
+### Miscellaneous Chores
+
+* **release:** v0.0.3-alpha.282 [skip ci] ([0864d78](https://github.com/Wynntils/Artemis/commit/0864d788c35ffa7bfbda83acff0c232138cadd8f))
 
 ## [0.0.3-alpha.281](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.280...v0.0.3-alpha.281) (2023-08-07)
 
@@ -40,16 +52,4 @@
 ### Miscellaneous Chores
 
 * **release:** v0.0.3-alpha.279 [skip ci] ([c2bc983](https://github.com/Wynntils/Artemis/commit/c2bc9838f1cef8d543873c84501b1be37c6b4eb1))
-
-## [0.0.3-alpha.278](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.277...v0.0.3-alpha.278) (2023-08-07)
-
-
-### New Features
-
-* Add selected beacon color function ([#1947](https://github.com/Wynntils/Artemis/issues/1947)) ([b2b0987](https://github.com/Wynntils/Artemis/commit/b2b09873126142f81eb5afff3dd76d14d6e8489c))
-
-
-### Miscellaneous Chores
-
-* **release:** v0.0.3-alpha.278 [skip ci] ([e6da418](https://github.com/Wynntils/Artemis/commit/e6da418775ff4faaf8bb482853fcdfc12d99cf5d))
 
