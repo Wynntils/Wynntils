@@ -41,6 +41,7 @@ import com.wynntils.models.worlds.type.WorldState;
 import com.wynntils.utils.VectorUtils;
 import com.wynntils.utils.mc.McUtils;
 import com.wynntils.utils.mc.PosUtils;
+import com.wynntils.utils.type.CappedValue;
 import com.wynntils.utils.type.Pair;
 import java.lang.reflect.Type;
 import java.util.HashMap;
@@ -128,6 +129,9 @@ public class LootrunModel extends Model {
     private Storage<Map<String, Beacon>> closestBeaconStorage = new Storage<>(new TreeMap<>());
 
     private Map<BeaconColor, Integer> selectedBeacons = new TreeMap<>();
+
+    private int timeLeft = 0;
+    private CappedValue challenges = CappedValue.EMPTY;
 
     public LootrunModel(BeaconModel beaconModel, MarkerModel markerModel, ParticleModel particleModel) {
         super(List.of(beaconModel, markerModel, particleModel));
@@ -217,6 +221,9 @@ public class LootrunModel extends Model {
         LOOTRUN_BEACON_COMPASS_PROVIDER.reloadTaskMarkers();
 
         selectedBeacons = new TreeMap<>();
+
+        challenges = CappedValue.EMPTY;
+        timeLeft = 0;
     }
 
     @SubscribeEvent
@@ -316,6 +323,14 @@ public class LootrunModel extends Model {
         handleStateChange(oldState, newState);
     }
 
+    public int getCurrentTime() {
+        return timeLeft;
+    }
+
+    public CappedValue getChallenges() {
+        return challenges;
+    }
+
     public BeaconColor getLastTaskBeaconColor() {
         return lastTaskBeaconColorStorage.get().get(Models.Character.getId());
     }
@@ -351,6 +366,14 @@ public class LootrunModel extends Model {
         selectedBeaconsStorage.touched();
     }
 
+    public void setTimeLeft(int seconds) {
+        timeLeft = seconds;
+    }
+
+    public void setChallenges(CappedValue amount) {
+        challenges = amount;
+    }
+
     private void handleStateChange(LootrunningState oldState, LootrunningState newState) {
         if (newState == LootrunningState.NOT_RUNNING) {
             resetBeaconStorage();
@@ -363,6 +386,9 @@ public class LootrunModel extends Model {
 
             beacons = new HashMap<>();
             beaconUpdates = new HashMap<>();
+
+            timeLeft = 0;
+            challenges = CappedValue.EMPTY;
             return;
         }
 
@@ -387,7 +413,6 @@ public class LootrunModel extends Model {
             beacons.clear();
             setClosestBeacon(null);
             LOOTRUN_BEACON_COMPASS_PROVIDER.reloadTaskMarkers();
-
             return;
         }
     }
