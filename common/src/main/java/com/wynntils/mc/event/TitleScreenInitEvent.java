@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2021.
+ * Copyright © Wynntils 2021-2023.
  * This file is released under AGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.mc.event;
