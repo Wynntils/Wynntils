@@ -610,13 +610,14 @@ public final class OverlayManagementScreen extends WynntilsScreen {
 
     // Pair<dragX, dragY>
     private Pair<Double, Double> calculateDragAfterSnapping(double dragX, double dragY) {
+        if (!snappingEnabled) {
+            return new Pair<>(dragX, dragY);
+        }
+
         dragX += snapOffsetX;
         dragY += snapOffsetY;
         snapOffsetX = dragX;
         snapOffsetY = dragY;
-        if (!snappingEnabled) {
-            return new Pair<>(dragX, dragY);
-        }
 
         List<Edge> edgesToSnapTo =
                 switch (this.selectionMode) {
