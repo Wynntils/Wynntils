@@ -1,9 +1,17 @@
+## [0.0.3-alpha.285](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.284...v0.0.3-alpha.285) (2023-08-08)
+
+
+### Code Refactoring
+
+* Extract side effects from if statements ([#1959](https://github.com/Wynntils/Artemis/issues/1959)) ([f093687](https://github.com/Wynntils/Artemis/commit/f09368754d7aed10d5e880376e906c687a763046))
+
 ## [0.0.3-alpha.284](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.283...v0.0.3-alpha.284) (2023-08-08)
 
 
 ### Miscellaneous Chores
 
 * Properly update all missing copyright years ([#1962](https://github.com/Wynntils/Artemis/issues/1962)) ([e85083e](https://github.com/Wynntils/Artemis/commit/e85083e6fababf6f5dd1459477742bed7832fe81))
+* **release:** v0.0.3-alpha.284 [skip ci] ([6cac6ba](https://github.com/Wynntils/Artemis/commit/6cac6ba93fc8e4c0e9ec377417b59c554c79f872))
 
 ## [0.0.3-alpha.283](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.282...v0.0.3-alpha.283) (2023-08-08)
 
@@ -36,16 +44,4 @@
 ### Miscellaneous Chores
 
 * **release:** v0.0.3-alpha.281 [skip ci] ([e2d6549](https://github.com/Wynntils/Artemis/commit/e2d6549460cea893897c7309e083ccb85b4a8fb9))
-
-## [0.0.3-alpha.280](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.279...v0.0.3-alpha.280) (2023-08-07)
-
-
-### Miscellaneous Chores
-
-* **release:** v0.0.3-alpha.280 [skip ci] ([b3b4f6f](https://github.com/Wynntils/Artemis/commit/b3b4f6f6b5e2010a326d9b2b7fbe373a05a026bd))
-
-
-### Code Refactoring
-
-* avoid side effects in if statement ([#1953](https://github.com/Wynntils/Artemis/issues/1953)) ([75b3804](https://github.com/Wynntils/Artemis/commit/75b380463d84f5ef1677d4f7feb171f54980eec2))
 
