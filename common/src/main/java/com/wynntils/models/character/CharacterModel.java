@@ -241,12 +241,12 @@ public final class CharacterModel extends Model {
     }
 
     private String getCharacterString() {
-        return "CharacterInfo{" + "silverbullSubscriber="
-                + silverbullSubscriber + ", classType="
+        return "CharacterInfo{" + "classType="
                 + classType + ", reskinned="
                 + reskinned + ", level="
                 + level + ", id="
-                + id + '}';
+                + id + ", silverbullSubscriber="
+                + silverbullSubscriber.get() + '}';
     }
 
     private void parseCharacterFromCharacterMenu(ItemStack characterInfoItem) {
