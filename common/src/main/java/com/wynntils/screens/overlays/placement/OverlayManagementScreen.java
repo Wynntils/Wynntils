@@ -96,6 +96,8 @@ public final class OverlayManagementScreen extends WynntilsScreen {
 
     private boolean userInteracted = false;
     private int animationLengthRemaining;
+    private double totalDragX;
+    private double totalDragY;
 
     private OverlayManagementScreen(Overlay overlay) {
         super(Component.translatable("screens.wynntils.overlayManagement.name"));
@@ -608,6 +610,10 @@ public final class OverlayManagementScreen extends WynntilsScreen {
 
     // Pair<dragX, dragY>
     private Pair<Double, Double> calculateDragAfterSnapping(double dragX, double dragY) {
+        dragX += totalDragX;
+        dragY += totalDragY;
+        totalDragX = dragX;
+        totalDragY = dragY;
         if (!snappingEnabled) {
             return new Pair<>(dragX, dragY);
         }
@@ -675,7 +681,8 @@ public final class OverlayManagementScreen extends WynntilsScreen {
             edgeAlignmentSnapMap.remove(edge);
             alignmentLinesToRender.remove(edge);
         }
-
+        totalDragX -= dragX;
+        totalDragY -= dragY;
         return new Pair<>(dragX, dragY);
     }
 
