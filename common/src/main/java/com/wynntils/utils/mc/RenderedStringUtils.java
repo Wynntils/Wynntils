@@ -24,13 +24,13 @@ public final class RenderedStringUtils {
             StyledText[] lines = string.split("\\\\n");
             for (int i = 0; i < lines.length; i++) {
                 StyledText line = lines[i];
-                if (i > 0 || length + font.width(line.getStringWithoutFormatting()) >= maxPixels) {
+                if (i > 0 || length + font.width(line.getString()) >= maxPixels) {
                     result.append('\n');
                     length = 0;
                 }
                 if (!line.isEmpty()) {
                     result.append(line.getString()).append(' ');
-                    length += font.width(line.getStringWithoutFormatting()) + spaceSize;
+                    length += font.width(line.getString()) + spaceSize;
                 }
             }
         }
