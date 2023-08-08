@@ -20,8 +20,6 @@ public final class RenderedStringUtils {
         StringBuilder result = new StringBuilder();
         int length = 0;
 
-        // FIXME: codes should not count toward the word length
-
         for (StyledText string : stringArray) {
             StyledText[] lines = string.split("\\\\n");
             for (int i = 0; i < lines.length; i++) {
