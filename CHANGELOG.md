@@ -1,9 +1,21 @@
+## [0.0.3-alpha.287](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.286...v0.0.3-alpha.287) (2023-08-08)
+
+
+### Bug Fixes
+
+* Properly format major IDs in item guide ([#1960](https://github.com/Wynntils/Artemis/issues/1960)) ([c3d3c2c](https://github.com/Wynntils/Artemis/commit/c3d3c2c903cd7090509ac0841ce49fb38a307a91))
+
 ## [0.0.3-alpha.286](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.285...v0.0.3-alpha.286) (2023-08-08)
 
 
 ### New Features
 
 * Lootrun Time and Challenges functions ([#1949](https://github.com/Wynntils/Artemis/issues/1949)) ([45ddb28](https://github.com/Wynntils/Artemis/commit/45ddb28fd711986c0d0e2060f08dd406e90f4e41))
+
+
+### Miscellaneous Chores
+
+* **release:** v0.0.3-alpha.286 [skip ci] ([59965e4](https://github.com/Wynntils/Artemis/commit/59965e4ef09119a12330e26a45a71589d4375886))
 
 ## [0.0.3-alpha.285](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.284...v0.0.3-alpha.285) (2023-08-08)
 
@@ -32,16 +44,4 @@
 
 * **release:** v0.0.3-alpha.283 [skip ci] ([5352777](https://github.com/Wynntils/Artemis/commit/5352777d5d13b8fbe76f182f918ee25426d8a459))
 * update major id url hash ([#1958](https://github.com/Wynntils/Artemis/issues/1958)) ([908723a](https://github.com/Wynntils/Artemis/commit/908723a5e49ddda49750d6dd892bb3020b38dbc6))
-
-## [0.0.3-alpha.282](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.281...v0.0.3-alpha.282) (2023-08-08)
-
-
-### New Features
-
-* Add new 2.0.3 minor IDs ([#1956](https://github.com/Wynntils/Artemis/issues/1956)) ([e8b4977](https://github.com/Wynntils/Artemis/commit/e8b49776afca412511cb03ac1e8d9f00a870184b))
-
-
-### Miscellaneous Chores
-
-* **release:** v0.0.3-alpha.282 [skip ci] ([0864d78](https://github.com/Wynntils/Artemis/commit/0864d788c35ffa7bfbda83acff0c232138cadd8f))
 
