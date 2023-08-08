@@ -12,6 +12,7 @@ public enum MiscStatKind {
     HEALTH("Health", StatUnit.RAW, "healthBonus"),
     HEALTH_REGEN_PERCENT("Health Regen", StatUnit.PERCENT, "healthRegen"),
     HEALTH_REGEN_RAW("Health Regen", StatUnit.RAW, "healthRegenRaw"),
+    HEALING_EFFICIENCY("Healing Efficiency", StatUnit.PERCENT, "healingEfficiency"),
     LIFE_STEAL("Life Steal", StatUnit.PER_3_S, "lifeSteal"),
     MANA_REGEN("Mana Regen", StatUnit.PER_5_S, "manaRegen"),
     MANA_STEAL("Mana Steal", StatUnit.PER_3_S, "manaSteal"),
@@ -28,6 +29,9 @@ public enum MiscStatKind {
     THORNS("Thorns", StatUnit.PERCENT, "thorns"),
     EXPLODING("Exploding", StatUnit.PERCENT, "exploding"),
     POISON("Poison", StatUnit.PER_3_S, "poison"),
+    KNOCKBACK("Knockback", StatUnit.PERCENT, "knockback"),
+    SLOW_ENEMY("Slow Enemy", StatUnit.PERCENT, "slowEnemy"),
+    WEAKEN_ENEMY("Weaken Enemy", StatUnit.PERCENT, "weakenEnemy"),
 
     // Bonuses for soul points, emeralds, XP, loot and gathering
     SOUL_POINT_REGEN("Soul Point Regen", StatUnit.PERCENT, "soulPoints"),
