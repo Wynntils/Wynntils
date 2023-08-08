@@ -21,6 +21,7 @@ import com.wynntils.mc.event.PlayerTeleportEvent;
 import com.wynntils.models.character.event.CharacterDeathEvent;
 import com.wynntils.models.character.event.CharacterUpdateEvent;
 import com.wynntils.models.character.type.ClassType;
+import com.wynntils.models.containers.ContainerModel;
 import com.wynntils.models.worlds.event.WorldStateEvent;
 import com.wynntils.models.worlds.type.WorldState;
 import com.wynntils.utils.mc.LoreUtils;
@@ -46,7 +47,8 @@ public final class CharacterModel extends Model {
     // Test suite: https://regexr.com/7i87d
     private static final Pattern SILVERBULL_PATTERN = Pattern.compile("§7Subscription: §[ac][✖✔] ((?:Ina|A)ctive)");
     // Test suite: https://regexr.com/7ia89
-    private static final Pattern SILVERBULL_DURATION_PATTERN = Pattern.compile("§7Expiration: §f(?:(?<weeks>\\d+) weeks?)? ?(?:(?<days>\\d+) days?)?");
+    private static final Pattern SILVERBULL_DURATION_PATTERN =
+            Pattern.compile("§7Expiration: §f(?:(?<weeks>\\d+) weeks?)? ?(?:(?<days>\\d+) days?)?");
 
     private static final int RANK_SUBSCRIPTION_INFO_SLOT = 0;
     private static final int CHARACTER_INFO_SLOT = 7;
@@ -143,7 +145,8 @@ public final class CharacterModel extends Model {
             if (System.currentTimeMillis() > silverbullExpiresAt.get()) {
                 scanSilverbullSubscriptionItem();
             } else {
-                WynntilsMod.info("Skipping silverbull subscription query (" + (silverbullExpiresAt.get() - System.currentTimeMillis()) + " ms left)");
+                WynntilsMod.info("Skipping silverbull subscription query ("
+                        + (silverbullExpiresAt.get() - System.currentTimeMillis()) + " ms left)");
             }
         }
     }
@@ -154,7 +157,7 @@ public final class CharacterModel extends Model {
 
                 // Open compass/character menu
                 .then(QueryStep.useItemInHotbar(InventoryUtils.COMPASS_SLOT_NUM)
-                        .expectContainerTitle("Character Info")
+                        .expectContainerTitle(ContainerModel.CHARACTER_INFO_NAME)
                         .processIncomingContainer(this::parseCharacterContainer))
                 .build();
 
@@ -167,7 +170,7 @@ public final class CharacterModel extends Model {
 
                 // Open /use menu
                 .then(QueryStep.sendCommand("use")
-                        .expectContainerTitle("Crates, Bombs & Cosmetics")
+                        .expectContainerTitle(ContainerModel.COSMETICS_MENU_NAME)
                         .processIncomingContainer(this::parseCratesBombsCosmeticsContainer))
                 .build();
 
@@ -215,7 +218,8 @@ public final class CharacterModel extends Model {
         long expiryTime = System.currentTimeMillis() + TimeUnit.DAYS.toMillis(weeks * 7L + days);
         silverbullExpiresAt.store(expiryTime);
 
-        WynntilsMod.info("Parsed Silverbull subscription status: " + silverbullSubscriber.get() + ", expires at: " + expiryTime);
+        WynntilsMod.info(
+                "Parsed Silverbull subscription status: " + silverbullSubscriber.get() + ", expires at: " + expiryTime);
     }
 
     private void updateCharacterId() {
