@@ -1,9 +1,21 @@
+## [0.0.3-alpha.282](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.281...v0.0.3-alpha.282) (2023-08-08)
+
+
+### New Features
+
+* Add new 2.0.3 minor IDs ([#1956](https://github.com/Wynntils/Artemis/issues/1956)) ([e8b4977](https://github.com/Wynntils/Artemis/commit/e8b49776afca412511cb03ac1e8d9f00a870184b))
+
 ## [0.0.3-alpha.281](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.280...v0.0.3-alpha.281) (2023-08-07)
 
 
 ### Bug Fixes
 
 * Fix ContainerSearchFeature searching in the sidebar ([#1841](https://github.com/Wynntils/Artemis/issues/1841)) ([88ed015](https://github.com/Wynntils/Artemis/commit/88ed0157de4199a73376f62c31b69809a656a5fc))
+
+
+### Miscellaneous Chores
+
+* **release:** v0.0.3-alpha.281 [skip ci] ([e2d6549](https://github.com/Wynntils/Artemis/commit/e2d6549460cea893897c7309e083ccb85b4a8fb9))
 
 ## [0.0.3-alpha.280](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.279...v0.0.3-alpha.280) (2023-08-07)
 
@@ -40,16 +52,4 @@
 ### Miscellaneous Chores
 
 * **release:** v0.0.3-alpha.278 [skip ci] ([e6da418](https://github.com/Wynntils/Artemis/commit/e6da418775ff4faaf8bb482853fcdfc12d99cf5d))
-
-## [0.0.3-alpha.277](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.276...v0.0.3-alpha.277) (2023-08-07)
-
-
-### New Features
-
-* Ticks function ([#1932](https://github.com/Wynntils/Artemis/issues/1932)) ([d7f463c](https://github.com/Wynntils/Artemis/commit/d7f463cd8e90cdaa94bd9d338cd9ca093aa38497))
-
-
-### Miscellaneous Chores
-
-* **release:** v0.0.3-alpha.277 [skip ci] ([e157efe](https://github.com/Wynntils/Artemis/commit/e157efe3b8eb78182df964c04989131804058569))
 
