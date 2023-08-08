@@ -6,16 +6,8 @@ package com.wynntils.models.statuseffects.type;
 
 import com.google.common.collect.ComparisonChain;
 import com.wynntils.core.text.StyledText;
-import com.wynntils.models.stats.type.StatUnit;
-import java.util.List;
-import java.util.stream.Stream;
 
 public class StatusEffect implements Comparable<StatusEffect> {
-    private final List<String> modifierSuffixes = Stream.of(StatUnit.values())
-            .filter(u -> !u.equals(StatUnit.RAW))
-            .map(StatUnit::getDisplayName)
-            .toList();
-
     private final StyledText fullName;
     private final StyledText name; // The name of the consumable (also used to identify it)
     private final StyledText modifier; // The modifier of the consumable (+100, 23 etc.)
