@@ -110,9 +110,15 @@ public final class StatListOrderer {
             "spellCostRaw3",
             "spellCostPct3",
             "spellCostRaw4",
-            "spellCostPct4");
+            "spellCostPct4",
+            // These were added in 2.0.3 and is not present in Legacy
+            "healingEfficiency",
+            "knockback",
+            "slowEnemy",
+            "weakenEnemy");
 
     private static final List<MiscStatKind> WYNNCRAFT_MISC_ORDER_1 = List.of(
+            MiscStatKind.KNOCKBACK,
             MiscStatKind.HEALTH_REGEN_PERCENT,
             MiscStatKind.MANA_REGEN,
             MiscStatKind.LIFE_STEAL,
@@ -128,7 +134,10 @@ public final class StatListOrderer {
             MiscStatKind.HEALTH,
             MiscStatKind.SOUL_POINT_REGEN,
             MiscStatKind.STEALING,
-            MiscStatKind.HEALTH_REGEN_RAW);
+            MiscStatKind.HEALTH_REGEN_RAW,
+            MiscStatKind.HEALING_EFFICIENCY,
+            MiscStatKind.SLOW_ENEMY,
+            MiscStatKind.WEAKEN_ENEMY);
     private static final List<MiscStatKind> WYNNCRAFT_MISC_ORDER_2 =
             List.of(MiscStatKind.SPRINT, MiscStatKind.SPRINT_REGEN);
     private static final List<MiscStatKind> WYNNCRAFT_MISC_ORDER_3 = List.of(
