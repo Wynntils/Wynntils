@@ -123,7 +123,7 @@ public final class PartyModel extends Model {
     public void onChatReceived(ChatMessageReceivedEvent event) {
         if (event.getMessageType() != MessageType.FOREGROUND) return;
 
-        StyledText chatMessage = event.getStyledText();
+        StyledText chatMessage = event.getOriginalStyledText();
 
         if (tryParsePartyMessages(chatMessage)) return;
 
