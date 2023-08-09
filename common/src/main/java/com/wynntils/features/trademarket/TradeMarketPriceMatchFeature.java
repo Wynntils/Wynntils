@@ -12,7 +12,6 @@ import com.wynntils.core.persisted.config.ConfigCategory;
 import com.wynntils.core.text.StyledText;
 import com.wynntils.handlers.chat.event.ChatMessageReceivedEvent;
 import com.wynntils.mc.event.ContainerSetContentEvent;
-import com.wynntils.models.emeralds.EmeraldModel;
 import com.wynntils.screens.base.widgets.WynntilsButton;
 import com.wynntils.utils.mc.LoreUtils;
 import com.wynntils.utils.mc.McUtils;
@@ -43,6 +42,7 @@ public class TradeMarketPriceMatchFeature extends Feature {
 
     private static final int PRICE_SET_ITEM_SLOT = 12;
     private static final int PRICE_INFO_ITEM_SLOT = 17;
+    private static final Component SILVERBULL_STAR = Component.literal(" ✮").withStyle(ChatFormatting.AQUA);
 
     private boolean sendPriceMessage = false;
     private long priceToSend = 0;
@@ -94,7 +94,7 @@ public class TradeMarketPriceMatchFeature extends Feature {
         int rightPos = containerScreen.leftPos + containerScreen.imageWidth;
 
         if (buySellOffers.a() != null) {
-            int untaxedA = (int) Math.round(buySellOffers.a() / EmeraldModel.TAX_AMOUNT);
+            int untaxedA = (int) Math.round(buySellOffers.a() / Models.Emerald.getTaxAmount());
             containerScreen.addRenderableWidget(new PriceButton(
                     rightPos,
                     containerScreen.topPos,
@@ -105,7 +105,11 @@ public class TradeMarketPriceMatchFeature extends Feature {
                             .append(Component.translatable("feature.wynntils.tradeMarketPriceMatch.youReceive")
                                     .withStyle(ChatFormatting.GREEN))
                             .append(Component.literal(Models.Emerald.getFormattedString(untaxedA, false))
-                                    .withStyle(ChatFormatting.GRAY))
+                                    .withStyle(ChatFormatting.GRAY)
+                                    .append(
+                                            Models.Character.isSilverbullSubscriber()
+                                                    ? SILVERBULL_STAR
+                                                    : Component.empty()))
                             .append(Component.literal("\n"))
                             .append(Component.translatable("feature.wynntils.tradeMarketPriceMatch.totalPrice")
                                     .withStyle(ChatFormatting.GOLD))
@@ -114,7 +118,7 @@ public class TradeMarketPriceMatchFeature extends Feature {
         }
 
         if (buySellOffers.b() != null) {
-            int untaxedB = (int) Math.round(buySellOffers.b() / EmeraldModel.TAX_AMOUNT);
+            int untaxedB = (int) Math.round(buySellOffers.b() / Models.Emerald.getTaxAmount());
             containerScreen.addRenderableWidget(new PriceButton(
                     rightPos,
                     containerScreen.topPos + PriceButton.BUTTON_HEIGHT + 2,
@@ -125,7 +129,11 @@ public class TradeMarketPriceMatchFeature extends Feature {
                             .append(Component.translatable("feature.wynntils.tradeMarketPriceMatch.youReceive")
                                     .withStyle(ChatFormatting.GREEN))
                             .append(Component.literal(Models.Emerald.getFormattedString(untaxedB, false))
-                                    .withStyle(ChatFormatting.GRAY))
+                                    .withStyle(ChatFormatting.GRAY)
+                                    .append(
+                                            Models.Character.isSilverbullSubscriber()
+                                                    ? SILVERBULL_STAR
+                                                    : Component.empty()))
                             .append(Component.literal("\n"))
                             .append(Component.translatable("feature.wynntils.tradeMarketPriceMatch.totalPrice")
                                     .withStyle(ChatFormatting.GOLD))

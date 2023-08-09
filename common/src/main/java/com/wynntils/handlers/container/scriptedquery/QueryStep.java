@@ -11,6 +11,7 @@ import com.wynntils.handlers.container.type.ContainerAction;
 import com.wynntils.handlers.container.type.ContainerContent;
 import com.wynntils.handlers.container.type.ContainerPredicate;
 import com.wynntils.handlers.container.type.ContainerVerification;
+import com.wynntils.utils.mc.McUtils;
 import com.wynntils.utils.wynn.ContainerUtils;
 import net.minecraft.world.item.Item;
 import org.lwjgl.glfw.GLFW;
@@ -55,6 +56,13 @@ public class QueryStep {
 
             ContainerUtils.clickOnSlot(
                     slotNum, container.containerId(), GLFW.GLFW_MOUSE_BUTTON_LEFT, container.items());
+            return true;
+        });
+    }
+
+    public static QueryStep sendCommand(String command) {
+        return new QueryStep(container -> {
+            McUtils.sendCommand(command);
             return true;
         });
     }
