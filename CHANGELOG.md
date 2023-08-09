@@ -1,9 +1,21 @@
+## [0.0.3-alpha.291](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.290...v0.0.3-alpha.291) (2023-08-09)
+
+
+### New Features
+
+* option to sum effect modifiers ([#1938](https://github.com/Wynntils/Artemis/issues/1938)) ([3d9ec23](https://github.com/Wynntils/Artemis/commit/3d9ec231db5b467d833129bdefee2b2758c58dd0))
+
 ## [0.0.3-alpha.290](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.289...v0.0.3-alpha.290) (2023-08-09)
 
 
 ### Bug Fixes
 
 * Dialogue screen reload button has broken tooltip ([#1967](https://github.com/Wynntils/Artemis/issues/1967)) ([0bd78df](https://github.com/Wynntils/Artemis/commit/0bd78df8240e763ae13404ff3b755538bf594a6c))
+
+
+### Miscellaneous Chores
+
+* **release:** v0.0.3-alpha.290 [skip ci] ([8bffc37](https://github.com/Wynntils/Artemis/commit/8bffc37e65e03c29b22029787f1b7092117b42fa))
 
 ## [0.0.3-alpha.289](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.288...v0.0.3-alpha.289) (2023-08-09)
 
@@ -40,16 +52,4 @@
 ### Miscellaneous Chores
 
 * **release:** v0.0.3-alpha.287 [skip ci] ([1b1706c](https://github.com/Wynntils/Artemis/commit/1b1706c14e19e826872170e1bd722c9378b86935))
-
-## [0.0.3-alpha.286](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.285...v0.0.3-alpha.286) (2023-08-08)
-
-
-### New Features
-
-* Lootrun Time and Challenges functions ([#1949](https://github.com/Wynntils/Artemis/issues/1949)) ([45ddb28](https://github.com/Wynntils/Artemis/commit/45ddb28fd711986c0d0e2060f08dd406e90f4e41))
-
-
-### Miscellaneous Chores
-
-* **release:** v0.0.3-alpha.286 [skip ci] ([59965e4](https://github.com/Wynntils/Artemis/commit/59965e4ef09119a12330e26a45a71589d4375886))
 
