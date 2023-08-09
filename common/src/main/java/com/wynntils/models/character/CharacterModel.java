@@ -7,6 +7,8 @@ package com.wynntils.models.character;
 import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.components.Model;
 import com.wynntils.core.components.Models;
+import com.wynntils.core.persisted.Persisted;
+import com.wynntils.core.persisted.storage.Storage;
 import com.wynntils.core.text.PartStyle;
 import com.wynntils.core.text.StyledText;
 import com.wynntils.handlers.chat.event.ChatMessageReceivedEvent;
@@ -19,6 +21,7 @@ import com.wynntils.mc.event.PlayerTeleportEvent;
 import com.wynntils.models.character.event.CharacterDeathEvent;
 import com.wynntils.models.character.event.CharacterUpdateEvent;
 import com.wynntils.models.character.type.ClassType;
+import com.wynntils.models.containers.ContainerModel;
 import com.wynntils.models.worlds.event.WorldStateEvent;
 import com.wynntils.models.worlds.type.WorldState;
 import com.wynntils.utils.mc.LoreUtils;
@@ -26,6 +29,7 @@ import com.wynntils.utils.mc.McUtils;
 import com.wynntils.utils.mc.type.Location;
 import com.wynntils.utils.wynn.InventoryUtils;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import net.minecraft.ChatFormatting;
@@ -40,7 +44,13 @@ public final class CharacterModel extends Model {
     private static final Pattern CLASS_MENU_LEVEL_PATTERN = Pattern.compile("§e- §7Level: §f(\\d+)");
     private static final Pattern INFO_MENU_CLASS_PATTERN = Pattern.compile("§7Class: §f(.+)");
     private static final Pattern INFO_MENU_LEVEL_PATTERN = Pattern.compile("§7Combat Lv: §f(\\d+)");
+    // Test suite: https://regexr.com/7i87d
+    private static final Pattern SILVERBULL_PATTERN = Pattern.compile("§7Subscription: §[ac][✖✔] ((?:Ina|A)ctive)");
+    // Test suite: https://regexr.com/7ia89
+    private static final Pattern SILVERBULL_DURATION_PATTERN =
+            Pattern.compile("§7Expiration: §f(?:(?<weeks>\\d+) weeks?)? ?(?:(?<days>\\d+) days?)?");
 
+    private static final int RANK_SUBSCRIPTION_INFO_SLOT = 0;
     private static final int CHARACTER_INFO_SLOT = 7;
     private static final int SOUL_POINT_SLOT = 8;
     private static final int PROFESSION_INFO_SLOT = 17;
@@ -59,12 +69,22 @@ public final class CharacterModel extends Model {
     private boolean reskinned;
     private int level;
 
+    @Persisted
+    public final Storage<Long> silverbullExpiresAt = new Storage<>(0L);
+
+    @Persisted
+    public final Storage<Boolean> silverbullSubscriber = new Storage<>(false);
+
     // A hopefully unique string for each character ("class"). This is part of the
     // full character uuid, as presented by Wynncraft in the tooltip.
     private String id = "-";
 
     public CharacterModel() {
         super(List.of());
+    }
+
+    public boolean isSilverbullSubscriber() {
+        return silverbullSubscriber.get();
     }
 
     public ClassType getClassType() {
@@ -122,6 +142,12 @@ public final class CharacterModel extends Model {
             WynntilsMod.info("Scheduling character info query");
             // We need to scan character info and profession info as well.
             scanCharacterInfoPage();
+            if (System.currentTimeMillis() > silverbullExpiresAt.get()) {
+                scanSilverbullSubscriptionItem();
+            } else {
+                WynntilsMod.info("Skipping silverbull subscription query ("
+                        + (silverbullExpiresAt.get() - System.currentTimeMillis()) + " ms left)");
+            }
         }
     }
 
@@ -131,8 +157,21 @@ public final class CharacterModel extends Model {
 
                 // Open compass/character menu
                 .then(QueryStep.useItemInHotbar(InventoryUtils.COMPASS_SLOT_NUM)
-                        .expectContainerTitle("Character Info")
+                        .expectContainerTitle(ContainerModel.CHARACTER_INFO_NAME)
                         .processIncomingContainer(this::parseCharacterContainer))
+                .build();
+
+        query.executeQuery();
+    }
+
+    private void scanSilverbullSubscriptionItem() {
+        ScriptedContainerQuery query = ScriptedContainerQuery.builder("Silverbull Subscription Query")
+                .onError(msg -> WynntilsMod.warn("Error querying Silverbull subscription: " + msg))
+
+                // Open /use menu
+                .then(QueryStep.sendCommand("use")
+                        .expectContainerTitle(ContainerModel.COSMETICS_MENU_NAME)
+                        .processIncomingContainer(this::parseCratesBombsCosmeticsContainer))
                 .build();
 
         query.executeQuery();
@@ -150,6 +189,37 @@ public final class CharacterModel extends Model {
         hasCharacter = true;
         WynntilsMod.postEvent(new CharacterUpdateEvent());
         WynntilsMod.info("Deducing character " + getCharacterString());
+    }
+
+    private void parseCratesBombsCosmeticsContainer(ContainerContent container) {
+        ItemStack rankSubscriptionItem = container.items().get(RANK_SUBSCRIPTION_INFO_SLOT);
+
+        Matcher status = LoreUtils.matchLoreLine(rankSubscriptionItem, 0, SILVERBULL_PATTERN);
+        if (!status.matches()) {
+            WynntilsMod.warn("Could not parse Silverbull subscription status from item: "
+                    + LoreUtils.getLore(rankSubscriptionItem));
+            silverbullSubscriber.store(false);
+            return;
+        }
+
+        silverbullSubscriber.store(status.group(1).equals("Active"));
+        if (!silverbullSubscriber.get()) return;
+
+        Matcher expiry = LoreUtils.matchLoreLine(rankSubscriptionItem, 1, SILVERBULL_DURATION_PATTERN);
+        if (!expiry.matches()) {
+            WynntilsMod.warn("Could not parse Silverbull subscription expiry from item: "
+                    + LoreUtils.getLore(rankSubscriptionItem));
+            silverbullExpiresAt.store(0L);
+            return;
+        }
+        int weeks = Integer.parseInt(expiry.group("weeks"));
+        int days = Integer.parseInt(expiry.group("days"));
+
+        long expiryTime = System.currentTimeMillis() + TimeUnit.DAYS.toMillis(weeks * 7L + days);
+        silverbullExpiresAt.store(expiryTime);
+
+        WynntilsMod.info(
+                "Parsed Silverbull subscription status: " + silverbullSubscriber.get() + ", expires at: " + expiryTime);
     }
 
     private void updateCharacterId() {
@@ -175,7 +245,8 @@ public final class CharacterModel extends Model {
                 + classType + ", reskinned="
                 + reskinned + ", level="
                 + level + ", id="
-                + id + '}';
+                + id + ", silverbullSubscriber="
+                + silverbullSubscriber.get() + '}';
     }
 
     private void parseCharacterFromCharacterMenu(ItemStack characterInfoItem) {

@@ -9,6 +9,7 @@ import com.wynntils.core.components.Models;
 import com.wynntils.mc.event.ContainerCloseEvent;
 import com.wynntils.mc.event.MenuEvent;
 import com.wynntils.mc.event.SetSlotEvent;
+import com.wynntils.models.character.CharacterModel;
 import com.wynntils.models.emeralds.type.EmeraldUnits;
 import com.wynntils.models.items.ItemModel;
 import com.wynntils.models.items.items.game.EmeraldPouchItem;
@@ -38,14 +39,15 @@ public final class EmeraldModel extends Model {
     private static final Pattern M_PATTERN = Pattern.compile("(\\.?\\d+\\.?\\d*)\\s*(m|million)");
     private static final Pattern E_PATTERN = Pattern.compile("(\\d+)($|\\s|\\s*e|\\s*em)(?![^\\d\\s-])");
     private static final Pattern RAW_PRICE_PATTERN = Pattern.compile("\\d+");
-    public static final double TAX_AMOUNT = 1.05;
+    private static final double SILVERBULL_TAX_AMOUNT = 1.03;
+    private static final double NORMAL_TAX_AMOUNT = 1.05;
 
     private int inventoryEmeralds = 0;
     private int containerEmeralds = 0;
     private int pouchContainerId = -1;
 
-    public EmeraldModel(ItemModel itemModel) {
-        super(List.of(itemModel));
+    public EmeraldModel(CharacterModel characterModel, ItemModel itemModel) {
+        super(List.of(characterModel, itemModel));
     }
 
     public String getFormattedString(int emeralds, boolean appendZeros) {
@@ -131,13 +133,17 @@ public final class EmeraldModel extends Model {
 
             // account for tax if flagged
             if (input.contains("-t")) {
-                emeralds = Math.round(emeralds / TAX_AMOUNT);
+                emeralds = Math.round(emeralds / getTaxAmount());
             }
         } catch (NumberFormatException e) {
             return "";
         }
 
         return (emeralds > 0) ? String.valueOf(emeralds) : "";
+    }
+
+    public double getTaxAmount() {
+        return Models.Character.isSilverbullSubscriber() ? SILVERBULL_TAX_AMOUNT : NORMAL_TAX_AMOUNT;
     }
 
     @SubscribeEvent
