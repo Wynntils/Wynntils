@@ -1,9 +1,21 @@
+## [0.0.3-alpha.290](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.289...v0.0.3-alpha.290) (2023-08-09)
+
+
+### Bug Fixes
+
+* Dialogue screen reload button has broken tooltip ([#1967](https://github.com/Wynntils/Artemis/issues/1967)) ([0bd78df](https://github.com/Wynntils/Artemis/commit/0bd78df8240e763ae13404ff3b755538bf594a6c))
+
 ## [0.0.3-alpha.289](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.288...v0.0.3-alpha.289) (2023-08-09)
 
 
 ### Bug Fixes
 
 * Use new xp req values ([#1968](https://github.com/Wynntils/Artemis/issues/1968)) ([4bbfd38](https://github.com/Wynntils/Artemis/commit/4bbfd38437d4a623032c7a754b956833c69f7965))
+
+
+### Miscellaneous Chores
+
+* **release:** v0.0.3-alpha.289 [skip ci] ([e50ff69](https://github.com/Wynntils/Artemis/commit/e50ff6934c68485a0050dd40bbcb8c26115babf4))
 
 ## [0.0.3-alpha.288](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.287...v0.0.3-alpha.288) (2023-08-09)
 
@@ -40,16 +52,4 @@
 ### Miscellaneous Chores
 
 * **release:** v0.0.3-alpha.286 [skip ci] ([59965e4](https://github.com/Wynntils/Artemis/commit/59965e4ef09119a12330e26a45a71589d4375886))
-
-## [0.0.3-alpha.285](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.284...v0.0.3-alpha.285) (2023-08-08)
-
-
-### Miscellaneous Chores
-
-* **release:** v0.0.3-alpha.285 [skip ci] ([31ba662](https://github.com/Wynntils/Artemis/commit/31ba662116fec40ffb784ad4d718210a1dd4a629))
-
-
-### Code Refactoring
-
-* Extract side effects from if statements ([#1959](https://github.com/Wynntils/Artemis/issues/1959)) ([f093687](https://github.com/Wynntils/Artemis/commit/f09368754d7aed10d5e880376e906c687a763046))
 
