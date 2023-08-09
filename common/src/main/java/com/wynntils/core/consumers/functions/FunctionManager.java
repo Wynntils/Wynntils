@@ -10,6 +10,7 @@ import com.wynntils.core.consumers.functions.arguments.FunctionArguments;
 import com.wynntils.core.consumers.functions.arguments.parser.ArgumentParser;
 import com.wynntils.core.consumers.functions.expressions.Expression;
 import com.wynntils.core.consumers.functions.expressions.parser.ExpressionParser;
+import com.wynntils.core.consumers.functions.templates.Template;
 import com.wynntils.core.consumers.functions.templates.parser.TemplateParser;
 import com.wynntils.core.mod.type.CrashType;
 import com.wynntils.core.text.StyledText;
@@ -39,8 +40,10 @@ import java.text.DecimalFormat;
 import java.text.NumberFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
 import net.minecraft.ChatFormatting;
@@ -51,6 +54,9 @@ import net.minecraft.network.chat.MutableComponent;
 public final class FunctionManager extends Manager {
     private final List<Function<?>> functions = new ArrayList<>();
     private final Set<Function<?>> crashedFunctions = new HashSet<>();
+
+    // We do not clear this cache, as it is not expected to grow too large
+    private final Map<String, Template> calculatedTemplateCache = new HashMap<>();
 
     public FunctionManager() {
         super(List.of());
@@ -85,7 +91,7 @@ public final class FunctionManager extends Manager {
 
     private boolean hasName(Function<?> function, String name) {
         if (function.getName().equalsIgnoreCase(name)) return true;
-        for (String alias : function.getAliases()) {
+        for (String alias : function.getAliasList()) {
             if (alias.equalsIgnoreCase(name)) return true;
         }
         return false;
@@ -121,14 +127,33 @@ public final class FunctionManager extends Manager {
                 ? Component.literal(function.getTranslatedName() + ": ").withStyle(ChatFormatting.WHITE)
                 : Component.literal("");
 
-        ErrorOr<FunctionArguments> errorOrArguments =
+        ErrorOr<List<Expression>> errorOrArgumentExpressions =
                 ArgumentParser.parseArguments(function.getArgumentsBuilder(), rawArguments);
 
-        if (errorOrArguments.hasError()) {
-            return header.append(Component.literal(errorOrArguments.getError()).withStyle(ChatFormatting.RED));
+        if (errorOrArgumentExpressions.hasError()) {
+            return header.append(
+                    Component.literal(errorOrArgumentExpressions.getError()).withStyle(ChatFormatting.RED));
         }
 
-        Optional<Object> value = getFunctionValueSafely(function, errorOrArguments.getValue());
+        List<ErrorOr<Object>> errorsOrargumentObjects = errorOrArgumentExpressions.getValue().stream()
+                .map(Expression::calculate)
+                .toList();
+
+        Optional<ErrorOr<Object>> argumentError =
+                errorsOrargumentObjects.stream().filter(ErrorOr::hasError).findFirst();
+        if (argumentError.isPresent()) {
+            return header.append(
+                    Component.literal(argumentError.get().getError()).withStyle(ChatFormatting.RED));
+        }
+
+        ErrorOr<FunctionArguments> errorOrArgument = function.getArgumentsBuilder()
+                .buildWithValues(
+                        errorsOrargumentObjects.stream().map(ErrorOr::getValue).toList());
+        if (errorOrArgument.hasError()) {
+            return header.append(Component.literal(errorOrArgument.getError()).withStyle(ChatFormatting.RED));
+        }
+
+        Optional<Object> value = getFunctionValueSafely(function, errorOrArgument.getValue());
         if (value.isEmpty()) {
             return header.append(Component.literal("??"));
         }
@@ -211,7 +236,8 @@ public final class FunctionManager extends Manager {
     // region Template formatting
 
     private String doFormat(String templateString) {
-        return TemplateParser.doFormat(templateString);
+        calculatedTemplateCache.computeIfAbsent(templateString, TemplateParser::getTemplateFromString);
+        return calculatedTemplateCache.get(templateString).getString();
     }
 
     public StyledText[] doFormatLines(String templateString) {

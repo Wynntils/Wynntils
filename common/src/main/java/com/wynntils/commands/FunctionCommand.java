@@ -36,7 +36,7 @@ public class FunctionCommand extends Command {
                     Stream.concat(
                             Managers.Function.getFunctions().stream().map(Function::getName),
                             Managers.Function.getFunctions().stream()
-                                    .map(Function::getAliases)
+                                    .map(Function::getAliasList)
                                     .flatMap(Collection::stream)),
                     builder);
 
@@ -146,8 +146,8 @@ public class FunctionCommand extends Command {
                                             : ChatFormatting.YELLOW))
                     .withStyle(style -> style.withClickEvent(
                             new ClickEvent(ClickEvent.Action.SUGGEST_COMMAND, "/function help " + function.getName())));
-            if (!function.getAliases().isEmpty()) {
-                String aliasList = String.join(", ", function.getAliases());
+            if (!function.getAliasList().isEmpty()) {
+                String aliasList = String.join(", ", function.getAliasList());
 
                 functionComponent
                         .append(Component.literal(" [alias: ").withStyle(ChatFormatting.GRAY))
@@ -242,7 +242,7 @@ public class FunctionCommand extends Command {
         helpComponent.append(
                 ChatFormatting.GRAY + "Description: " + ChatFormatting.WHITE + function.getDescription() + "\n");
         helpComponent.append(ChatFormatting.GRAY + "Aliases:" + ChatFormatting.WHITE + " ["
-                + String.join(", ", function.getAliases()) + "]\n");
+                + String.join(", ", function.getAliasList()) + "]\n");
         helpComponent.append(ChatFormatting.GRAY + "Returns: " + ChatFormatting.WHITE
                 + function.getFunctionType().getSimpleName() + "\n");
         helpComponent.append(ChatFormatting.GRAY + "Arguments:" + ChatFormatting.WHITE + " ("

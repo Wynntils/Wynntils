@@ -65,7 +65,7 @@ public class FunctionDumpFeature extends Feature {
         dataLines.add(new String[] {String.join(",", FUNCTION_MAP.keySet())});
 
         for (Function<?> function : Managers.Function.getFunctions()) {
-            String aliases = "{" + String.join(",", function.getAliases()) + "}";
+            String aliases = "{" + String.join(",", function.getAliasList()) + "}";
             String[] dataLine = {
                 String.valueOf(dataLines.size()),
                 function.getName(),

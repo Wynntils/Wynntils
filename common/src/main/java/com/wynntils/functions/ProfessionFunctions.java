@@ -31,7 +31,7 @@ public class ProfessionFunctions {
         }
 
         @Override
-        public List<String> getAliases() {
+        protected List<String> getAliases() {
             return List.of("prof_lvl");
         }
     }
@@ -53,7 +53,7 @@ public class ProfessionFunctions {
         }
 
         @Override
-        public List<String> getAliases() {
+        protected List<String> getAliases() {
             return List.of("prof_pct");
         }
     }
@@ -77,7 +77,7 @@ public class ProfessionFunctions {
         }
 
         @Override
-        public List<String> getAliases() {
+        protected List<String> getAliases() {
             return List.of("prof_xpm_raw");
         }
     }
@@ -102,7 +102,7 @@ public class ProfessionFunctions {
         }
 
         @Override
-        public List<String> getAliases() {
+        protected List<String> getAliases() {
             return List.of("prof_xpm");
         }
     }
@@ -174,7 +174,7 @@ public class ProfessionFunctions {
         }
 
         @Override
-        public List<String> getAliases() {
+        protected List<String> getAliases() {
             return List.of("mat_dry");
         }
     }

@@ -9,6 +9,7 @@ import com.wynntils.core.consumers.functions.Function;
 import com.wynntils.core.consumers.functions.arguments.FunctionArguments;
 import com.wynntils.core.consumers.functions.arguments.parser.ArgumentParser;
 import com.wynntils.utils.type.ErrorOr;
+import java.util.List;
 import java.util.Optional;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -27,15 +28,19 @@ public final class FunctionExpression extends Expression {
             Pattern.DOTALL);
 
     private final Function<?> function;
-    private final FunctionArguments arguments;
+    private final List<Expression> argumentExpressions;
     private final boolean formatted;
     private final int decimals;
 
     private FunctionExpression(
-            String rawExpression, Function<?> function, FunctionArguments arguments, boolean formatted, int decimals) {
+            String rawExpression,
+            Function<?> function,
+            List<Expression> argumentExpressions,
+            boolean formatted,
+            int decimals) {
         super(rawExpression);
         this.function = function;
-        this.arguments = arguments;
+        this.argumentExpressions = argumentExpressions;
 
         this.formatted = formatted;
         this.decimals = decimals;
@@ -43,12 +48,39 @@ public final class FunctionExpression extends Expression {
 
     @Override
     public ErrorOr<Object> calculate() {
-        return Managers.Function.getRawFunctionValue(function, arguments);
+        ErrorOr<FunctionArguments> arguments = getArguments();
+        if (arguments.hasError()) {
+            return ErrorOr.error(arguments.getError());
+        }
+
+        return Managers.Function.getRawFunctionValue(function, arguments.getValue());
     }
 
     @Override
     public ErrorOr<String> calculateFormattedString() {
-        return ErrorOr.of(Managers.Function.getStringFunctionValue(function, arguments, formatted, decimals));
+        ErrorOr<FunctionArguments> arguments = getArguments();
+        if (arguments.hasError()) {
+            return ErrorOr.error(arguments.getError());
+        }
+
+        return ErrorOr.of(
+                Managers.Function.getStringFunctionValue(function, arguments.getValue(), formatted, decimals));
+    }
+
+    private ErrorOr<FunctionArguments> getArguments() {
+        List<ErrorOr<Object>> calculatedExpressions =
+                argumentExpressions.stream().map(Expression::calculate).toList();
+
+        Optional<ErrorOr<Object>> firstError =
+                calculatedExpressions.stream().filter(ErrorOr::hasError).findFirst();
+        if (firstError.isPresent()) {
+            return ErrorOr.error(firstError.get().getError());
+        }
+
+        ErrorOr<FunctionArguments> arguments = function.getArgumentsBuilder()
+                .buildWithValues(
+                        calculatedExpressions.stream().map(ErrorOr::getValue).toList());
+        return arguments;
     }
 
     // This method attempts to parse a function expression in the following ways:
@@ -100,15 +132,14 @@ public final class FunctionExpression extends Expression {
 
         // Handle argument parsing
 
-        FunctionArguments.Builder argumentsBuilder = function.getArgumentsBuilder();
-
         String rawArguments = matcher.group("argument");
 
-        ErrorOr<FunctionArguments> value = ArgumentParser.parseArguments(argumentsBuilder, rawArguments);
+        ErrorOr<List<Expression>> argumentExpressions =
+                ArgumentParser.parseArguments(function.getArgumentsBuilder(), rawArguments);
 
-        return value.hasError()
-                ? ErrorOr.error(value.getError())
-                : ErrorOr.of(Optional.of(
-                        new FunctionExpression(rawExpression, function, value.getValue(), isFormatted, decimals)));
+        return argumentExpressions.hasError()
+                ? ErrorOr.error(argumentExpressions.getError())
+                : ErrorOr.of(Optional.of(new FunctionExpression(
+                        rawExpression, function, argumentExpressions.getValue(), isFormatted, decimals)));
     }
 }

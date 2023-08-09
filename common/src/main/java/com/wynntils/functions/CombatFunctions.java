@@ -17,7 +17,7 @@ public class CombatFunctions {
         }
 
         @Override
-        public List<String> getAliases() {
+        protected List<String> getAliases() {
             return List.of("adps");
         }
     }
@@ -36,7 +36,7 @@ public class CombatFunctions {
         }
 
         @Override
-        public List<String> getAliases() {
+        protected List<String> getAliases() {
             return List.of("adavg");
         }
     }

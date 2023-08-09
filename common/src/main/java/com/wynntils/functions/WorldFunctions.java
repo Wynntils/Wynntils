@@ -34,7 +34,7 @@ public class WorldFunctions {
         }
 
         @Override
-        public List<String> getAliases() {
+        protected List<String> getAliases() {
             return List.of("world");
         }
     }
@@ -61,7 +61,7 @@ public class WorldFunctions {
         }
 
         @Override
-        public List<String> getAliases() {
+        protected List<String> getAliases() {
             return List.of("world_uptime", "uptime");
         }
     }
@@ -80,7 +80,7 @@ public class WorldFunctions {
         }
 
         @Override
-        public List<String> getAliases() {
+        protected List<String> getAliases() {
             return List.of("token_count");
         }
     }
@@ -102,7 +102,7 @@ public class WorldFunctions {
         }
 
         @Override
-        public List<String> getAliases() {
+        protected List<String> getAliases() {
             return List.of("token_dep");
         }
     }
@@ -124,7 +124,7 @@ public class WorldFunctions {
         }
 
         @Override
-        public List<String> getAliases() {
+        protected List<String> getAliases() {
             return List.of("token");
         }
     }
@@ -146,7 +146,7 @@ public class WorldFunctions {
         }
 
         @Override
-        public List<String> getAliases() {
+        protected List<String> getAliases() {
             return List.of("token_type");
         }
     }
@@ -259,7 +259,7 @@ public class WorldFunctions {
         }
 
         @Override
-        public List<String> getAliases() {
+        protected List<String> getAliases() {
             return List.of("territory");
         }
     }
@@ -280,7 +280,7 @@ public class WorldFunctions {
         }
 
         @Override
-        public List<String> getAliases() {
+        protected List<String> getAliases() {
             return List.of("territory_owner");
         }
 
