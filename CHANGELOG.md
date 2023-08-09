@@ -1,9 +1,21 @@
+## [0.0.3-alpha.293](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.292...v0.0.3-alpha.293) (2023-08-09)
+
+
+### Performance Improvements
+
+* Make functions templates compiled and cached ([#1965](https://github.com/Wynntils/Artemis/issues/1965)) ([536592f](https://github.com/Wynntils/Artemis/commit/536592f6fcd7c621b4a4b5e423a96fca62a33929))
+
 ## [0.0.3-alpha.292](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.291...v0.0.3-alpha.292) (2023-08-09)
 
 
 ### Bug Fixes
 
 * Fix overlays not sticking to cursor when moving them ([#1963](https://github.com/Wynntils/Artemis/issues/1963)) ([262b08c](https://github.com/Wynntils/Artemis/commit/262b08c7feae096f0fd044c6470f7cd054f7b536))
+
+
+### Miscellaneous Chores
+
+* **release:** v0.0.3-alpha.292 [skip ci] ([2d7e2fd](https://github.com/Wynntils/Artemis/commit/2d7e2fd51e8c0aa16c97dc4efcde937b19485def))
 
 ## [0.0.3-alpha.291](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.290...v0.0.3-alpha.291) (2023-08-09)
 
@@ -40,16 +52,4 @@
 ### Miscellaneous Chores
 
 * **release:** v0.0.3-alpha.289 [skip ci] ([e50ff69](https://github.com/Wynntils/Artemis/commit/e50ff6934c68485a0050dd40bbcb8c26115babf4))
-
-## [0.0.3-alpha.288](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.287...v0.0.3-alpha.288) (2023-08-09)
-
-
-### Bug Fixes
-
-* Missing Lootrun task for Rainbow beacon ([#1966](https://github.com/Wynntils/Artemis/issues/1966)) ([96af3f0](https://github.com/Wynntils/Artemis/commit/96af3f07195cd6e84c76edfe3e34a98850904b7f))
-
-
-### Miscellaneous Chores
-
-* **release:** v0.0.3-alpha.288 [skip ci] ([83bb58c](https://github.com/Wynntils/Artemis/commit/83bb58c76451bb86f072c3943775d6cf5a6434f9))
 
