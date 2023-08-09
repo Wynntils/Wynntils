@@ -1,9 +1,21 @@
+## [0.0.3-alpha.296](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.295...v0.0.3-alpha.296) (2023-08-09)
+
+
+### Bug Fixes
+
+* Update party model regexes for 2.0.3 hotfix 3 ([#1971](https://github.com/Wynntils/Artemis/issues/1971)) ([d983376](https://github.com/Wynntils/Artemis/commit/d983376ed573def8969d309e67a8d6a7760eeba7))
+
 ## [0.0.3-alpha.295](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.294...v0.0.3-alpha.295) (2023-08-09)
 
 
 ### New Features
 
 * Transcription tooltips ([#1961](https://github.com/Wynntils/Artemis/issues/1961)) ([aff1f27](https://github.com/Wynntils/Artemis/commit/aff1f27437d7a2b34f34dcc48fd2fdfd193c85a9))
+
+
+### Miscellaneous Chores
+
+* **release:** v0.0.3-alpha.295 [skip ci] ([6ddb087](https://github.com/Wynntils/Artemis/commit/6ddb08733dd7b1987a7c9dce9a367d340545c734))
 
 ## [0.0.3-alpha.294](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.293...v0.0.3-alpha.294) (2023-08-09)
 
@@ -40,16 +52,4 @@
 ### Miscellaneous Chores
 
 * **release:** v0.0.3-alpha.292 [skip ci] ([2d7e2fd](https://github.com/Wynntils/Artemis/commit/2d7e2fd51e8c0aa16c97dc4efcde937b19485def))
-
-## [0.0.3-alpha.291](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.290...v0.0.3-alpha.291) (2023-08-09)
-
-
-### New Features
-
-* option to sum effect modifiers ([#1938](https://github.com/Wynntils/Artemis/issues/1938)) ([3d9ec23](https://github.com/Wynntils/Artemis/commit/3d9ec231db5b467d833129bdefee2b2758c58dd0))
-
-
-### Miscellaneous Chores
-
-* **release:** v0.0.3-alpha.291 [skip ci] ([9bc7406](https://github.com/Wynntils/Artemis/commit/9bc74066479213b2e818a140da1cc1f478c7f1f3))
 
