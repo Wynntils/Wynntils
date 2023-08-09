@@ -1,9 +1,21 @@
+## [0.0.3-alpha.295](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.294...v0.0.3-alpha.295) (2023-08-09)
+
+
+### New Features
+
+* Transcription tooltips ([#1961](https://github.com/Wynntils/Artemis/issues/1961)) ([aff1f27](https://github.com/Wynntils/Artemis/commit/aff1f27437d7a2b34f34dcc48fd2fdfd193c85a9))
+
 ## [0.0.3-alpha.294](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.293...v0.0.3-alpha.294) (2023-08-09)
 
 
 ### New Features
 
 * Trade market Silverbull tax detection ([#1954](https://github.com/Wynntils/Artemis/issues/1954)) ([0c13f3c](https://github.com/Wynntils/Artemis/commit/0c13f3cc07da97db7402259d9db50a24ff0a0d57))
+
+
+### Miscellaneous Chores
+
+* **release:** v0.0.3-alpha.294 [skip ci] ([fe4c79f](https://github.com/Wynntils/Artemis/commit/fe4c79f405e98cbc6948b03114440f82731a263f))
 
 ## [0.0.3-alpha.293](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.292...v0.0.3-alpha.293) (2023-08-09)
 
@@ -40,16 +52,4 @@
 ### Miscellaneous Chores
 
 * **release:** v0.0.3-alpha.291 [skip ci] ([9bc7406](https://github.com/Wynntils/Artemis/commit/9bc74066479213b2e818a140da1cc1f478c7f1f3))
-
-## [0.0.3-alpha.290](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.289...v0.0.3-alpha.290) (2023-08-09)
-
-
-### Bug Fixes
-
-* Dialogue screen reload button has broken tooltip ([#1967](https://github.com/Wynntils/Artemis/issues/1967)) ([0bd78df](https://github.com/Wynntils/Artemis/commit/0bd78df8240e763ae13404ff3b755538bf594a6c))
-
-
-### Miscellaneous Chores
-
-* **release:** v0.0.3-alpha.290 [skip ci] ([8bffc37](https://github.com/Wynntils/Artemis/commit/8bffc37e65e03c29b22029787f1b7092117b42fa))
 
