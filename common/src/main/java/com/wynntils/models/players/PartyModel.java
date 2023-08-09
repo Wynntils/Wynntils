@@ -54,18 +54,18 @@ public final class PartyModel extends Model {
     DETAIL (optional) should be a descriptor if necessary
     */
     private static final Pattern PARTY_LIST_ALL = Pattern.compile("§eParty members: (.*)");
-    private static final Pattern PARTY_LIST_LEADER = Pattern.compile("§r§b(.+)");
+    private static final Pattern PARTY_LIST_LEADER = Pattern.compile("§b(\\w{1,16})");
     private static final Pattern PARTY_LIST_SELF_FAILED = Pattern.compile("§eYou must be in a party to list\\.");
 
-    private static final Pattern PARTY_LEAVE_OTHER = Pattern.compile("§e(.+) has left the party\\.");
+    private static final Pattern PARTY_LEAVE_OTHER = Pattern.compile("§e(\\w{1,16}) has left the party\\.");
     private static final Pattern PARTY_LEAVE_SELF_ALREADYLEFT = Pattern.compile("§eYou must be in a party to leave\\.");
 
     // This is a special case; Wynn sends the same message for when we leave a party or get kicked from a party
     private static final Pattern PARTY_LEAVE_SELF_KICK = Pattern.compile("§eYou have been removed from the party\\.");
 
-    private static final Pattern PARTY_JOIN_OTHER = Pattern.compile("§e(.+) has joined the party\\.");
+    private static final Pattern PARTY_JOIN_OTHER = Pattern.compile("§e(\\w{1,16}) has joined your party, say hello!");
     private static final Pattern PARTY_JOIN_OTHER_SWITCH =
-            Pattern.compile("§eSay hello to (.+) which just joined your party!");
+            Pattern.compile("§eSay hello to (\\w{1,16}) which just joined your party!");
     private static final Pattern PARTY_JOIN_SELF = Pattern.compile("§eYou have successfully joined the party\\.");
 
     private static final Pattern PARTY_PROMOTE_OTHER = Pattern.compile("§eSuccessfully promoted (.+) to party leader!");
@@ -78,7 +78,8 @@ public final class PartyModel extends Model {
 
     private static final Pattern PARTY_CREATE_SELF = Pattern.compile("§eYou have successfully created a party\\.");
 
-    private static final Pattern PARTY_INVITED = Pattern.compile("§eYou have been invited to join (.*)'s? party\\.");
+    private static final Pattern PARTY_INVITED =
+            Pattern.compile("\\s+§eYou have been invited to join (\\w{1,16})'s? party!");
 
     private static final Pattern PARTY_KICK_OTHER = Pattern.compile("§eYou have kicked the player from the party\\.");
     // endregion
@@ -122,14 +123,12 @@ public final class PartyModel extends Model {
     public void onChatReceived(ChatMessageReceivedEvent event) {
         if (event.getMessageType() != MessageType.FOREGROUND) return;
 
-        StyledText coded = event.getOriginalStyledText();
+        StyledText chatMessage = event.getOriginalStyledText();
 
-        if (tryParsePartyMessages(coded)) {
-            return;
-        }
+        if (tryParsePartyMessages(chatMessage)) return;
 
         if (expectingPartyMessage) {
-            if (tryParseNoPartyMessage(coded) || tryParsePartyList(coded)) {
+            if (tryParseNoPartyMessage(chatMessage) || tryParsePartyList(chatMessage)) {
                 event.setCanceled(true);
                 expectingPartyMessage = false;
                 return;
@@ -137,8 +136,8 @@ public final class PartyModel extends Model {
         }
     }
 
-    private boolean tryParsePartyMessages(StyledText coded) {
-        if (coded.matches(PARTY_CREATE_SELF)) {
+    private boolean tryParsePartyMessages(StyledText chatMessage) {
+        if (chatMessage.matches(PARTY_CREATE_SELF)) {
             WynntilsMod.info("Player created a new party.");
 
             inParty = true;
@@ -150,23 +149,23 @@ public final class PartyModel extends Model {
             return true;
         }
 
-        if (coded.matches(PARTY_DISBAND_ALL)
-                || coded.matches(PARTY_LEAVE_SELF_KICK)
-                || coded.matches(PARTY_LEAVE_SELF_ALREADYLEFT)
-                || coded.matches(PARTY_DISBAND_SELF)) {
+        if (chatMessage.matches(PARTY_DISBAND_ALL)
+                || chatMessage.matches(PARTY_LEAVE_SELF_KICK)
+                || chatMessage.matches(PARTY_LEAVE_SELF_ALREADYLEFT)
+                || chatMessage.matches(PARTY_DISBAND_SELF)) {
             WynntilsMod.info("Player left the party.");
 
             resetData(); // (!) resetData() already posts events for both HadesRelationsUpdateEvent and PartyEvent
             return true;
         }
 
-        if (coded.matches(PARTY_JOIN_SELF)) {
+        if (chatMessage.matches(PARTY_JOIN_SELF)) {
             WynntilsMod.info("Player joined a party.");
             requestData();
             return true;
         }
 
-        Matcher matcher = coded.getMatcher(PARTY_JOIN_OTHER);
+        Matcher matcher = chatMessage.getMatcher(PARTY_JOIN_OTHER);
         if (matcher.matches()) {
             String player = matcher.group(1);
 
@@ -179,7 +178,7 @@ public final class PartyModel extends Model {
             return true;
         }
 
-        matcher = coded.getMatcher(PARTY_JOIN_OTHER_SWITCH);
+        matcher = chatMessage.getMatcher(PARTY_JOIN_OTHER_SWITCH);
         if (matcher.matches()) {
             String player = matcher.group(1);
 
@@ -192,7 +191,7 @@ public final class PartyModel extends Model {
             return true;
         }
 
-        matcher = coded.getMatcher(PARTY_LEAVE_OTHER);
+        matcher = chatMessage.getMatcher(PARTY_LEAVE_OTHER);
         if (matcher.matches()) {
             String player = matcher.group(1);
 
@@ -205,7 +204,7 @@ public final class PartyModel extends Model {
             return true;
         }
 
-        matcher = coded.getMatcher(PARTY_PROMOTE_OTHER);
+        matcher = chatMessage.getMatcher(PARTY_PROMOTE_OTHER);
         if (matcher.matches()) {
             String player = matcher.group(1);
 
@@ -215,7 +214,7 @@ public final class PartyModel extends Model {
             return true;
         }
 
-        matcher = coded.getMatcher(PARTY_PROMOTE_SELF);
+        matcher = chatMessage.getMatcher(PARTY_PROMOTE_SELF);
         if (matcher.matches()) {
             WynntilsMod.info("Player has been promoted to party leader.");
 
@@ -223,7 +222,7 @@ public final class PartyModel extends Model {
             return true;
         }
 
-        matcher = coded.getMatcher(PARTY_INVITED);
+        matcher = chatMessage.getMatcher(PARTY_INVITED);
         if (matcher.matches()) {
             String inviter = matcher.group(1);
             WynntilsMod.info("Player has been invited to party by " + inviter);
@@ -232,7 +231,7 @@ public final class PartyModel extends Model {
             return true;
         }
 
-        matcher = coded.getMatcher(PARTY_KICK_OTHER);
+        matcher = chatMessage.getMatcher(PARTY_KICK_OTHER);
         if (matcher.matches()) {
             WynntilsMod.info("Other player was kicked from player's party");
 
