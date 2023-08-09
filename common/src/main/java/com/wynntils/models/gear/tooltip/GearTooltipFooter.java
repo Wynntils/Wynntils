@@ -28,15 +28,17 @@ public final class GearTooltipFooter {
         List<Component> footer = new ArrayList<>();
 
         // major ids
-        // FIXME: This is not the format Wynncraft uses. The major ID name should be followed
-        // by the lore directly on the same line.
-        // To fix this, we need a version af wrapTextBySize() that can take in a Component.
-        // For now, print the name of the major ID on a separate line.
         if (!gearInfo.fixedStats().majorIds().isEmpty()) {
             for (GearMajorId majorId : gearInfo.fixedStats().majorIds()) {
-                footer.add(Component.literal("+" + majorId.name() + ": ").withStyle(ChatFormatting.AQUA));
-                Stream.of(RenderedStringUtils.wrapTextBySize(majorId.lore(), PIXEL_WIDTH))
-                        .forEach(c -> footer.add(c.getComponent().withStyle(ChatFormatting.DARK_AQUA)));
+                StyledText name = StyledText.fromString(ChatFormatting.AQUA + "+" + majorId.name() + ": ");
+                // This dance to and from component is needed to properly recolor all neutral text
+                StyledText lore = StyledText.fromComponent(Component.empty()
+                        .withStyle(ChatFormatting.DARK_AQUA)
+                        .append(majorId.lore().getComponent()));
+                StyledText majorIdText = name.append(lore);
+
+                Stream.of(RenderedStringUtils.wrapTextBySize(majorIdText, PIXEL_WIDTH))
+                        .forEach(c -> footer.add(c.getComponent()));
             }
         }
 
