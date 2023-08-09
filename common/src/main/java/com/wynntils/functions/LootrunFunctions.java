@@ -23,7 +23,7 @@ public class LootrunFunctions {
         }
 
         @Override
-        public List<String> getAliases() {
+        protected List<String> getAliases() {
             return List.of("dry_s");
         }
     }
@@ -35,7 +35,7 @@ public class LootrunFunctions {
         }
 
         @Override
-        public List<String> getAliases() {
+        protected List<String> getAliases() {
             return List.of("dry_b", "dry_boxes_count");
         }
     }
@@ -79,7 +79,7 @@ public class LootrunFunctions {
         }
 
         @Override
-        public List<String> getAliases() {
+        protected List<String> getAliases() {
             return List.of("chest_count");
         }
     }

@@ -40,7 +40,7 @@ public final class MathFunctions {
         }
 
         @Override
-        public List<String> getAliases() {
+        protected List<String> getAliases() {
             return List.of("sub");
         }
     }
@@ -61,7 +61,7 @@ public final class MathFunctions {
         }
 
         @Override
-        public List<String> getAliases() {
+        protected List<String> getAliases() {
             return List.of("mul");
         }
     }
@@ -81,7 +81,7 @@ public final class MathFunctions {
         }
 
         @Override
-        public List<String> getAliases() {
+        protected List<String> getAliases() {
             return List.of("div");
         }
     }
@@ -101,7 +101,7 @@ public final class MathFunctions {
         }
 
         @Override
-        public List<String> getAliases() {
+        protected List<String> getAliases() {
             return List.of("mod");
         }
     }
@@ -122,7 +122,7 @@ public final class MathFunctions {
         }
 
         @Override
-        public List<String> getAliases() {
+        protected List<String> getAliases() {
             return List.of("pow");
         }
     }
@@ -140,7 +140,7 @@ public final class MathFunctions {
         }
 
         @Override
-        public List<String> getAliases() {
+        protected List<String> getAliases() {
             return List.of("sqrt");
         }
     }
@@ -206,7 +206,7 @@ public final class MathFunctions {
         }
 
         @Override
-        public List<String> getAliases() {
+        protected List<String> getAliases() {
             return List.of("int");
         }
     }
@@ -227,7 +227,7 @@ public final class MathFunctions {
         }
 
         @Override
-        public List<String> getAliases() {
+        protected List<String> getAliases() {
             return List.of("rand");
         }
     }

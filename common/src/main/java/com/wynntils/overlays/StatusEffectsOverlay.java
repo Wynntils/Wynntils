@@ -21,6 +21,7 @@ import com.wynntils.utils.render.buffered.BufferedFontRenderer;
 import com.wynntils.utils.render.type.HorizontalAlignment;
 import com.wynntils.utils.render.type.TextShadow;
 import com.wynntils.utils.render.type.VerticalAlignment;
+import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -38,7 +39,7 @@ public class StatusEffectsOverlay extends Overlay {
     public final Config<Float> fontScale = new Config<>(1.0f);
 
     @Persisted
-    public final Config<Boolean> stackEffects = new Config<>(true);
+    public final Config<StackingBehaviour> stackingBehaviour = new Config<>(StackingBehaviour.GROUP);
 
     @Persisted
     public final Config<Boolean> sortEffects = new Config<>(true);
@@ -68,7 +69,7 @@ public class StatusEffectsOverlay extends Overlay {
         List<StatusEffect> effects = Models.StatusEffect.getStatusEffects();
         Stream<RenderedStatusEffect> effectWithProperties;
 
-        if (stackEffects.get()) {
+        if (stackingBehaviour.get() != StackingBehaviour.NONE) {
             effectWithProperties = stackEffects(effects);
         } else {
             effectWithProperties = effects.stream().map(RenderedStatusEffect::new);
@@ -138,58 +139,98 @@ public class StatusEffectsOverlay extends Overlay {
         Map<String, RenderedStatusEffect> effectsToRender = new LinkedHashMap<>();
 
         for (StatusEffect effect : effects) {
-            RenderedStatusEffect entry = effectsToRender.get(effect.asString().getString());
+            String key = getEffectsKey(effect);
+            RenderedStatusEffect entry = effectsToRender.get(key);
 
             if (entry == null) {
                 entry = new RenderedStatusEffect(effect);
-                effectsToRender.put(effect.asString().getString(), entry);
+                effectsToRender.put(key, entry);
             }
 
             entry.setCount(entry.getCount() + 1);
+
+            if (effect.hasModifierValue()) {
+                entry.addModifier(effect.getModifierValue());
+            }
         }
 
         return effectsToRender.values().stream();
     }
 
-    private static final class RenderedStatusEffect {
+    private String getEffectsKey(StatusEffect effect) {
+        return switch (stackingBehaviour.get()) {
+            default -> effect.asString().getString();
+            case SUM -> effect.getPrefix().getString()
+                    + effect.getName().getString()
+                    + effect.getModifierSuffix().getString()
+                    + effect.getDisplayedTime().getString();
+        };
+    }
+
+    private final class RenderedStatusEffect {
         private final StatusEffect effect;
 
         private int count = 0;
+        private List<Double> modifierList = new ArrayList<>();
 
         private RenderedStatusEffect(StatusEffect effect) {
             this.effect = effect;
         }
 
         private StyledText getRenderedText() {
-            if (this.count == 1) {
+            if (this.count <= 1) {
+                // Terminate early if there's nothing to do
                 return this.effect.asString();
             }
 
-            String modifierString = this.effect.getModifier().getString();
-            StyledText modifierText;
+            StyledText modifierText = StyledText.EMPTY;
 
-            // look for either a - or a +
-            int minusIndex = modifierString.indexOf('-');
-            int plusIndex = modifierString.indexOf('+');
-            int index = Math.max(minusIndex, plusIndex);
+            switch (stackingBehaviour.get()) {
+                case SUM -> {
+                    if (this.modifierList.size() > 0) {
+                        // SUM modifiers
+                        double modifierValue = 0.0;
+                        for (double modifier : modifierList) {
+                            modifierValue += modifier;
+                        }
+                        // Eliminate .0 when the modifier needs trailing decimals. This is the case for powder specials
+                        // on armor.
+                        String numberString = (Math.round(modifierValue) == modifierValue)
+                                ? String.format("%+d", (long) modifierValue)
+                                : String.format("%+.1f", modifierValue);
+                        modifierText = StyledText.fromString(ChatFormatting.GRAY + numberString);
+                    }
+                }
+                case GROUP -> {
+                    String modifierString = this.effect.getModifier().getString();
 
-            if (index == -1) {
-                // We can simply put the count string at the start
-                modifierText = StyledText.fromString(ChatFormatting.GRAY + (this.count + "x"))
-                        .append(this.effect.getModifier());
-            } else {
-                // The count string is inserted between the +/- and the number
-                index += 1;
-                modifierText = StyledText.fromString(ChatFormatting.GRAY
-                        + modifierString.substring(0, index)
-                        + (this.count + "x")
-                        + modifierString.substring(index));
+                    // look for either a - or a +
+                    int minusIndex = modifierString.indexOf('-');
+                    int plusIndex = modifierString.indexOf('+');
+                    int index = Math.max(minusIndex, plusIndex);
+
+                    if (index == -1) {
+                        // We can simply put the count string at the start
+                        modifierText = StyledText.fromString(ChatFormatting.GRAY + (this.count + "x"))
+                                .append(this.effect.getModifier());
+                    } else {
+                        // The count string is inserted between the +/- and the number
+                        index += 1;
+                        modifierText = StyledText.fromString(ChatFormatting.GRAY
+                                + modifierString.substring(0, index)
+                                + (this.count + "x")
+                                + modifierString.substring(index));
+                    }
+                }
+                    // This shouldn't be reached
+                default -> {}
             }
 
             return this.effect
                     .getPrefix()
                     .append(StyledText.fromString(" "))
                     .append(modifierText)
+                    .append(this.effect.getModifierSuffix())
                     .append(StyledText.fromString(" "))
                     .append(this.effect.getName())
                     .append(StyledText.fromString(" "))
@@ -207,5 +248,15 @@ public class StatusEffectsOverlay extends Overlay {
         public StatusEffect getEffect() {
             return this.effect;
         }
+
+        public void addModifier(double modifier) {
+            this.modifierList.add(modifier);
+        }
+    }
+
+    private enum StackingBehaviour {
+        NONE,
+        GROUP,
+        SUM
     }
 }

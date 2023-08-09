@@ -35,7 +35,7 @@ public class CombatXpFunctions {
         }
 
         @Override
-        public List<String> getAliases() {
+        protected List<String> getAliases() {
             return List.of("xpm_raw");
         }
     }
@@ -49,7 +49,7 @@ public class CombatXpFunctions {
         }
 
         @Override
-        public List<String> getAliases() {
+        protected List<String> getAliases() {
             return List.of("xpm");
         }
     }
@@ -63,7 +63,7 @@ public class CombatXpFunctions {
         }
 
         @Override
-        public List<String> getAliases() {
+        protected List<String> getAliases() {
             return List.of("xppm");
         }
     }
@@ -75,7 +75,7 @@ public class CombatXpFunctions {
         }
 
         @Override
-        public List<String> getAliases() {
+        protected List<String> getAliases() {
             return List.of("lvl");
         }
     }

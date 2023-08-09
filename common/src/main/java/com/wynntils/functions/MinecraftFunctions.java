@@ -19,7 +19,7 @@ public class MinecraftFunctions {
         }
 
         @Override
-        public List<String> getAliases() {
+        protected List<String> getAliases() {
             return List.of("my_loc");
         }
     }
