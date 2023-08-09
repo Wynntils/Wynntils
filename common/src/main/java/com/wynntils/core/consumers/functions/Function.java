@@ -37,7 +37,7 @@ public abstract class Function<T> implements Translatable {
         return List.of();
     }
 
-    public List<String> getAliasList() {
+    public final List<String> getAliasList() {
         // Optimization: we use lazy loading here,
         // because returning a new list every time does a lot of allocations,
         // and the JVM is not interested in optimizing that.
