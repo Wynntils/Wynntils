@@ -1,9 +1,21 @@
+## [0.0.3-alpha.288](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.287...v0.0.3-alpha.288) (2023-08-09)
+
+
+### Bug Fixes
+
+* Missing Lootrun task for Rainbow beacon ([#1966](https://github.com/Wynntils/Artemis/issues/1966)) ([96af3f0](https://github.com/Wynntils/Artemis/commit/96af3f07195cd6e84c76edfe3e34a98850904b7f))
+
 ## [0.0.3-alpha.287](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.286...v0.0.3-alpha.287) (2023-08-08)
 
 
 ### Bug Fixes
 
 * Properly format major IDs in item guide ([#1960](https://github.com/Wynntils/Artemis/issues/1960)) ([c3d3c2c](https://github.com/Wynntils/Artemis/commit/c3d3c2c903cd7090509ac0841ce49fb38a307a91))
+
+
+### Miscellaneous Chores
+
+* **release:** v0.0.3-alpha.287 [skip ci] ([1b1706c](https://github.com/Wynntils/Artemis/commit/1b1706c14e19e826872170e1bd722c9378b86935))
 
 ## [0.0.3-alpha.286](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.285...v0.0.3-alpha.286) (2023-08-08)
 
@@ -36,12 +48,4 @@
 
 * Properly update all missing copyright years ([#1962](https://github.com/Wynntils/Artemis/issues/1962)) ([e85083e](https://github.com/Wynntils/Artemis/commit/e85083e6fababf6f5dd1459477742bed7832fe81))
 * **release:** v0.0.3-alpha.284 [skip ci] ([6cac6ba](https://github.com/Wynntils/Artemis/commit/6cac6ba93fc8e4c0e9ec377417b59c554c79f872))
-
-## [0.0.3-alpha.283](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.282...v0.0.3-alpha.283) (2023-08-08)
-
-
-### Miscellaneous Chores
-
-* **release:** v0.0.3-alpha.283 [skip ci] ([5352777](https://github.com/Wynntils/Artemis/commit/5352777d5d13b8fbe76f182f918ee25426d8a459))
-* update major id url hash ([#1958](https://github.com/Wynntils/Artemis/issues/1958)) ([908723a](https://github.com/Wynntils/Artemis/commit/908723a5e49ddda49750d6dd892bb3020b38dbc6))
 
