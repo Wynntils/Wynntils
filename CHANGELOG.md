@@ -1,9 +1,21 @@
+## [0.0.3-alpha.294](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.293...v0.0.3-alpha.294) (2023-08-09)
+
+
+### New Features
+
+* Trade market Silverbull tax detection ([#1954](https://github.com/Wynntils/Artemis/issues/1954)) ([0c13f3c](https://github.com/Wynntils/Artemis/commit/0c13f3cc07da97db7402259d9db50a24ff0a0d57))
+
 ## [0.0.3-alpha.293](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.292...v0.0.3-alpha.293) (2023-08-09)
 
 
 ### Performance Improvements
 
 * Make functions templates compiled and cached ([#1965](https://github.com/Wynntils/Artemis/issues/1965)) ([536592f](https://github.com/Wynntils/Artemis/commit/536592f6fcd7c621b4a4b5e423a96fca62a33929))
+
+
+### Miscellaneous Chores
+
+* **release:** v0.0.3-alpha.293 [skip ci] ([a246bb1](https://github.com/Wynntils/Artemis/commit/a246bb177a5713dab2b464da01b444acee40d658))
 
 ## [0.0.3-alpha.292](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.291...v0.0.3-alpha.292) (2023-08-09)
 
@@ -40,16 +52,4 @@
 ### Miscellaneous Chores
 
 * **release:** v0.0.3-alpha.290 [skip ci] ([8bffc37](https://github.com/Wynntils/Artemis/commit/8bffc37e65e03c29b22029787f1b7092117b42fa))
-
-## [0.0.3-alpha.289](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.288...v0.0.3-alpha.289) (2023-08-09)
-
-
-### Bug Fixes
-
-* Use new xp req values ([#1968](https://github.com/Wynntils/Artemis/issues/1968)) ([4bbfd38](https://github.com/Wynntils/Artemis/commit/4bbfd38437d4a623032c7a754b956833c69f7965))
-
-
-### Miscellaneous Chores
-
-* **release:** v0.0.3-alpha.289 [skip ci] ([e50ff69](https://github.com/Wynntils/Artemis/commit/e50ff6934c68485a0050dd40bbcb8c26115babf4))
 
