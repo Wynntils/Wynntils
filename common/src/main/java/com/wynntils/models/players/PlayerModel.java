@@ -51,6 +51,12 @@ public final class PlayerModel extends Model {
         return !isNpc(player) && !(isPlayerGhost(player));
     }
 
+    public boolean isLocalPlayer(String name) {
+        // Wynn uses TeamNames for player names that are online
+        return !isNpc(StyledText.fromString(name))
+                && McUtils.mc().level.getScoreboard().getTeamNames().contains(name);
+    }
+
     public boolean isNpc(Player player) {
         StyledText scoreboardName = StyledText.fromString(player.getScoreboardName());
         return isNpc(scoreboardName);
