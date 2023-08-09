@@ -79,7 +79,7 @@ public final class PartyModel extends Model {
     private static final Pattern PARTY_CREATE_SELF = Pattern.compile("§eYou have successfully created a party\\.");
 
     private static final Pattern PARTY_INVITED =
-            Pattern.compile("\\s+§eYou have been invited to join (\\w{1,16})'s party!");
+            Pattern.compile("\\s+§eYou have been invited to join (\\w{1,16})'s? party!");
 
     private static final Pattern PARTY_KICK_OTHER = Pattern.compile("§eYou have kicked the player from the party\\.");
     // endregion
