@@ -50,6 +50,8 @@
   "feature.wynntils.autoJoinParty.name": "Auto Join Parties",
   "feature.wynntils.autoJoinParty.onlyFriends.description": "Should we only auto join party invites from friends?",
   "feature.wynntils.autoJoinParty.onlyFriends.name": "Only auto join friends' parties",
+  "feature.wynntils.autoJoinParty.onlySameWorld.description": "Should we only auto join parties in the same world?",
+  "feature.wynntils.autoJoinParty.onlySameWorld.name": "Only auto join parties in the same world",
   "feature.wynntils.beaconBeam.description": "Adds a custom beacon beam to show your current waypoint in world.",
   "feature.wynntils.beaconBeam.name": "Beacon Beam",
   "feature.wynntils.beaconBeam.waypointBeamColor.description": "What color should the beacon beam have?",
