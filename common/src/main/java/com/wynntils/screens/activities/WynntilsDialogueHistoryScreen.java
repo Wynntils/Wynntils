@@ -40,12 +40,7 @@ import net.minecraftforge.eventbus.api.SubscribeEvent;
 
 public final class WynntilsDialogueHistoryScreen extends WynntilsMenuScreenBase implements WynntilsPagedScreen {
     private static final int LINES_PER_PAGE = 16;
-
-    private static final List<Component> RELOAD_TOOLTIP = List.of(
-            Component.translatable("screens.wynntils.wynntilsDialogueHistory.reload.name")
-                    .withStyle(ChatFormatting.WHITE),
-            Component.translatable("screens.wynntils.wynntilsDialogueHistory.reload.description")
-                    .withStyle(ChatFormatting.GRAY));
+    
     private Renderable hovered = null;
 
     private int currentPage = 0;
