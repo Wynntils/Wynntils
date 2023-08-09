@@ -8,23 +8,29 @@ import com.wynntils.utils.render.Texture;
 import java.util.Arrays;
 
 public enum CombatKind {
-    BOSS_ALTARS("Boss Altars", Texture.BOSS_ALTAR),
-    CAVES("Caves", Texture.CAVE),
-    DUNGEONS("Dungeons", Texture.DUNGEON_ENTRANCE),
-    GRIND_SPOTS("Grind Spots", Texture.GRIND_SPOT),
-    RAIDS("Raids", Texture.RAID_ENTRANCE),
-    RUNE_SHRINES("Rune Shrines", Texture.SHRINE);
+    BOSS_ALTARS("Boss Altars", Texture.BOSS_ALTAR, "boss-altar"),
+    CAVES("Caves", Texture.CAVE, "cave"),
+    DUNGEONS("Dungeons", Texture.DUNGEON_ENTRANCE, "dungeon"),
+    GRIND_SPOTS("Grind Spots", Texture.GRIND_SPOT, "grind-spot"),
+    RAIDS("Raids", Texture.RAID_ENTRANCE, "raid"),
+    RUNE_SHRINES("Rune Shrines", Texture.SHRINE, "shrine");
 
     private final String name;
     private final Texture texture;
+    private final String serviceId;
 
-    CombatKind(String name, Texture texture) {
+    CombatKind(String name, Texture texture, String serviceId) {
         this.name = name;
         this.texture = texture;
+        this.serviceId = serviceId;
     }
 
     public String getName() {
         return name;
+    }
+
+    public String getServiceId() {
+        return serviceId;
     }
 
     public Texture getIcon() {
