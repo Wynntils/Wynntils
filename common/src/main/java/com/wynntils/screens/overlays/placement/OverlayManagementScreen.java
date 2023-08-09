@@ -616,8 +616,8 @@ public final class OverlayManagementScreen extends WynntilsScreen {
 
         dragX += snapOffsetX;
         dragY += snapOffsetY;
-        snapOffsetX = dragX;
-        snapOffsetY = dragY;
+        double originalDragX = dragX;
+        double originalDragY = dragY;
 
         List<Edge> edgesToSnapTo =
                 switch (this.selectionMode) {
@@ -683,8 +683,8 @@ public final class OverlayManagementScreen extends WynntilsScreen {
             alignmentLinesToRender.remove(edge);
         }
 
-        snapOffsetX -= dragX;
-        snapOffsetY -= dragY;
+        snapOffsetX = originalDragX - dragX;
+        snapOffsetY = originalDragY - dragY;
         return new Pair<>(dragX, dragY);
     }
 
