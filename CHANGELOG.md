@@ -1,9 +1,21 @@
+## [0.0.3-alpha.297](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.296...v0.0.3-alpha.297) (2023-08-09)
+
+
+### New Features
+
+* Config to only auto-join parties in same world ([#1972](https://github.com/Wynntils/Artemis/issues/1972)) ([7681e1c](https://github.com/Wynntils/Artemis/commit/7681e1c0a3d4bf6760d23a49b9877f82868d647e))
+
 ## [0.0.3-alpha.296](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.295...v0.0.3-alpha.296) (2023-08-09)
 
 
 ### Bug Fixes
 
 * Update party model regexes for 2.0.3 hotfix 3 ([#1971](https://github.com/Wynntils/Artemis/issues/1971)) ([d983376](https://github.com/Wynntils/Artemis/commit/d983376ed573def8969d309e67a8d6a7760eeba7))
+
+
+### Miscellaneous Chores
+
+* **release:** v0.0.3-alpha.296 [skip ci] ([1142a8d](https://github.com/Wynntils/Artemis/commit/1142a8d16032195066700d7b85f59d6473d8d28e))
 
 ## [0.0.3-alpha.295](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.294...v0.0.3-alpha.295) (2023-08-09)
 
@@ -40,16 +52,4 @@
 ### Miscellaneous Chores
 
 * **release:** v0.0.3-alpha.293 [skip ci] ([a246bb1](https://github.com/Wynntils/Artemis/commit/a246bb177a5713dab2b464da01b444acee40d658))
-
-## [0.0.3-alpha.292](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.291...v0.0.3-alpha.292) (2023-08-09)
-
-
-### Bug Fixes
-
-* Fix overlays not sticking to cursor when moving them ([#1963](https://github.com/Wynntils/Artemis/issues/1963)) ([262b08c](https://github.com/Wynntils/Artemis/commit/262b08c7feae096f0fd044c6470f7cd054f7b536))
-
-
-### Miscellaneous Chores
-
-* **release:** v0.0.3-alpha.292 [skip ci] ([2d7e2fd](https://github.com/Wynntils/Artemis/commit/2d7e2fd51e8c0aa16c97dc4efcde937b19485def))
 
