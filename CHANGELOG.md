@@ -1,9 +1,21 @@
+## [0.0.3-alpha.298](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.297...v0.0.3-alpha.298) (2023-08-09)
+
+
+### Miscellaneous Chores
+
+* Update md5 for major ID lore update json ([#1974](https://github.com/Wynntils/Artemis/issues/1974)) ([51eb69f](https://github.com/Wynntils/Artemis/commit/51eb69f003307aabab454b99d7e9240ed52dd30e))
+
 ## [0.0.3-alpha.297](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.296...v0.0.3-alpha.297) (2023-08-09)
 
 
 ### New Features
 
 * Config to only auto-join parties in same world ([#1972](https://github.com/Wynntils/Artemis/issues/1972)) ([7681e1c](https://github.com/Wynntils/Artemis/commit/7681e1c0a3d4bf6760d23a49b9877f82868d647e))
+
+
+### Miscellaneous Chores
+
+* **release:** v0.0.3-alpha.297 [skip ci] ([e232394](https://github.com/Wynntils/Artemis/commit/e232394cef3ef770066a8e1f1e1e1361a9685dd3))
 
 ## [0.0.3-alpha.296](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.295...v0.0.3-alpha.296) (2023-08-09)
 
@@ -40,16 +52,4 @@
 ### Miscellaneous Chores
 
 * **release:** v0.0.3-alpha.294 [skip ci] ([fe4c79f](https://github.com/Wynntils/Artemis/commit/fe4c79f405e98cbc6948b03114440f82731a263f))
-
-## [0.0.3-alpha.293](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.292...v0.0.3-alpha.293) (2023-08-09)
-
-
-### Performance Improvements
-
-* Make functions templates compiled and cached ([#1965](https://github.com/Wynntils/Artemis/issues/1965)) ([536592f](https://github.com/Wynntils/Artemis/commit/536592f6fcd7c621b4a4b5e423a96fca62a33929))
-
-
-### Miscellaneous Chores
-
-* **release:** v0.0.3-alpha.293 [skip ci] ([a246bb1](https://github.com/Wynntils/Artemis/commit/a246bb177a5713dab2b464da01b444acee40d658))
 
