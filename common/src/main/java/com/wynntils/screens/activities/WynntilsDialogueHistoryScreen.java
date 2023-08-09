@@ -40,7 +40,7 @@ import net.minecraftforge.eventbus.api.SubscribeEvent;
 
 public final class WynntilsDialogueHistoryScreen extends WynntilsMenuScreenBase implements WynntilsPagedScreen {
     private static final int LINES_PER_PAGE = 16;
-    
+
     private Renderable hovered = null;
 
     private int currentPage = 0;
