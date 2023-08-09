@@ -23,7 +23,7 @@ public final class CappedFunctions {
         }
 
         @Override
-        protected List<String> getAliasList() {
+        protected List<String> getAliases() {
             return List.of("curr");
         }
     }
@@ -54,7 +54,7 @@ public final class CappedFunctions {
         }
 
         @Override
-        protected List<String> getAliasList() {
+        protected List<String> getAliases() {
             return List.of("rem");
         }
     }
@@ -72,7 +72,7 @@ public final class CappedFunctions {
         }
 
         @Override
-        protected List<String> getAliasList() {
+        protected List<String> getAliases() {
             return List.of("pct");
         }
     }

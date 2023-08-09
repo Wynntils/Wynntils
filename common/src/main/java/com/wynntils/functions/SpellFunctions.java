@@ -23,7 +23,7 @@ public class SpellFunctions {
         }
 
         @Override
-        protected List<String> getAliasList() {
+        protected List<String> getAliases() {
             return List.of("arrow_shield");
         }
     }

@@ -33,16 +33,16 @@ public abstract class Function<T> implements Translatable {
         return name;
     }
 
-    protected List<String> getAliasList() {
+    protected List<String> getAliases() {
         return List.of();
     }
 
-    public List<String> getAliases() {
+    public List<String> getAliasList() {
         // Optimization: we use lazy loading here,
         // because returning a new list every time does a lot of allocations,
         // and the JVM is not interested in optimizing that.
         if (aliases == null) {
-            aliases = getAliasList();
+            aliases = getAliases();
         }
 
         return aliases;
