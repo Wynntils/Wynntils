@@ -49,7 +49,7 @@ public class CharacterFunctions {
         }
 
         @Override
-        public List<String> getAliases() {
+        protected List<String> getAliases() {
             return List.of("sp");
         }
     }
@@ -61,7 +61,7 @@ public class CharacterFunctions {
         }
 
         @Override
-        public List<String> getAliases() {
+        protected List<String> getAliases() {
             return List.of("sp_max");
         }
     }
@@ -98,7 +98,7 @@ public class CharacterFunctions {
         }
 
         @Override
-        public List<String> getAliases() {
+        protected List<String> getAliases() {
             return List.of("sp_timer");
         }
     }
@@ -112,7 +112,7 @@ public class CharacterFunctions {
         }
 
         @Override
-        public List<String> getAliases() {
+        protected List<String> getAliases() {
             return List.of("sp_timer_m");
         }
     }
@@ -126,7 +126,7 @@ public class CharacterFunctions {
         }
 
         @Override
-        public List<String> getAliases() {
+        protected List<String> getAliases() {
             return List.of("sp_timer_s");
         }
     }

@@ -29,7 +29,7 @@ public class WynnAlphabetFunctions {
         }
 
         @Override
-        public List<String> getAliases() {
+        protected List<String> getAliases() {
             return List.of("gavellian");
         }
     }
@@ -51,7 +51,7 @@ public class WynnAlphabetFunctions {
         }
 
         @Override
-        public List<String> getAliases() {
+        protected List<String> getAliases() {
             return List.of("wynnic");
         }
     }

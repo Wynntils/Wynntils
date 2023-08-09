@@ -119,8 +119,8 @@ public final class FunctionArguments {
             }
         }
 
-        public FunctionArguments buildWithDefaults() {
-            return new FunctionArguments(this.arguments);
+        public List<Object> getDefaults() {
+            return this.arguments.stream().map(Argument::getDefaultValue).collect(Collectors.toList());
         }
     }
 
@@ -152,10 +152,6 @@ public final class FunctionArguments {
 
         @SuppressWarnings("unchecked")
         protected void setValue(Object value) {
-            if (this.value != null) {
-                throw new IllegalStateException("Tried setting argument value twice.");
-            }
-
             this.value = (T) value;
         }
 

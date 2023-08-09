@@ -5,6 +5,7 @@
 package com.wynntils.core.consumers.functions.arguments.parser;
 
 import com.wynntils.core.consumers.functions.arguments.FunctionArguments;
+import com.wynntils.core.consumers.functions.expressions.ConstantExpression;
 import com.wynntils.core.consumers.functions.expressions.Expression;
 import com.wynntils.core.consumers.functions.expressions.parser.ExpressionParser;
 import com.wynntils.utils.type.ErrorOr;
@@ -13,17 +14,19 @@ import java.util.List;
 import java.util.Optional;
 
 public final class ArgumentParser {
-    public static ErrorOr<FunctionArguments> parseArguments(
-            FunctionArguments.Builder argumentsBuilder, String rawArgs) {
+    public static ErrorOr<List<Expression>> parseArguments(FunctionArguments.Builder argumentsBuilder, String rawArgs) {
         if (rawArgs == null || rawArgs.isEmpty()) {
             // 1, If there are no arguments, return early.
             if (argumentsBuilder.getArgumentCount() == 0) {
-                return argumentsBuilder.buildWithValues(List.of());
+                return ErrorOr.of(List.of());
             }
 
-            // 2, If there are required arguments, return an error, otherwise return the default arguments.
+            // 2, If there are required arguments, return an error, otherwise return the default arguments as constant
+            // expressions.
             if (argumentsBuilder instanceof FunctionArguments.OptionalArgumentBuilder optionalArgumentBuilder) {
-                return ErrorOr.of(optionalArgumentBuilder.buildWithDefaults());
+                return ErrorOr.of(optionalArgumentBuilder.getDefaults().stream()
+                        .map(ConstantExpression::fromObject)
+                        .toList());
             } else {
                 return ErrorOr.error(
                         "Missing required arguments: (%s)".formatted(argumentsBuilder.getArgumentNamesString()));
@@ -44,21 +47,8 @@ public final class ArgumentParser {
             return ErrorOr.error(optionalError.get().getError());
         }
 
-        // 3, Calculate the expressions
-        List<ErrorOr<Object>> calculatedExpressions =
-                parts.stream().map(ErrorOr::getValue).map(Expression::calculate).toList();
-
-        Optional<ErrorOr<Object>> optionalCalculationError =
-                calculatedExpressions.stream().filter(ErrorOr::hasError).findFirst();
-
-        // 4, If any of the expressions failed to calculate, return the error
-        if (optionalCalculationError.isPresent()) {
-            return ErrorOr.error(optionalCalculationError.get().getError());
-        }
-
-        // 5, Return the arguments as calculated expression values
-        return argumentsBuilder.buildWithValues(
-                calculatedExpressions.stream().map(ErrorOr::getValue).toList());
+        // 3, Return the arguments as expressions
+        return ErrorOr.of(parts.stream().map(ErrorOr::getValue).toList());
     }
 
     // This method handles splitting arguments in a "context-aware" way:

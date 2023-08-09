@@ -26,7 +26,7 @@ public class LogicFunctions {
         }
 
         @Override
-        public List<String> getAliases() {
+        protected List<String> getAliases() {
             return List.of("eq");
         }
     }
@@ -47,7 +47,7 @@ public class LogicFunctions {
         }
 
         @Override
-        public List<String> getAliases() {
+        protected List<String> getAliases() {
             return List.of("neq");
         }
     }
@@ -112,7 +112,7 @@ public class LogicFunctions {
         }
 
         @Override
-        public List<String> getAliases() {
+        protected List<String> getAliases() {
             return List.of("lt");
         }
     }
@@ -132,7 +132,7 @@ public class LogicFunctions {
         }
 
         @Override
-        public List<String> getAliases() {
+        protected List<String> getAliases() {
             return List.of("lte");
         }
     }
@@ -152,7 +152,7 @@ public class LogicFunctions {
         }
 
         @Override
-        public List<String> getAliases() {
+        protected List<String> getAliases() {
             return List.of("mt", "more_than", "gt");
         }
     }
@@ -172,7 +172,7 @@ public class LogicFunctions {
         }
 
         @Override
-        public List<String> getAliases() {
+        protected List<String> getAliases() {
             return List.of("mte", "more_than_equals", "gte");
         }
     }
