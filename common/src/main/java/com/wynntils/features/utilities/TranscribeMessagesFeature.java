@@ -159,15 +159,17 @@ public class TranscribeMessagesFeature extends Feature {
 
             Style style;
 
-            if ((transcribeGavellian || transcribeWynnic) && !showTooltip.get()) {
-                style = Style.EMPTY.withHoverEvent(new HoverEvent(
-                        HoverEvent.Action.SHOW_TEXT,
-                        Component.translatable("feature.wynntils.transcribeMessages.transcribedFrom")));
-            } else if ((transcribeGavellian || transcribeWynnic) && showTooltip.get()) {
-                style = Style.EMPTY.withHoverEvent(
-                        new HoverEvent(HoverEvent.Action.SHOW_TEXT, Component.literal(transcriptedText)));
+            if (transcribeGavellian || transcribeWynnic) {
+                if (showTooltip.get()) {
+                    style = Style.EMPTY.withHoverEvent(
+                            new HoverEvent(HoverEvent.Action.SHOW_TEXT, Component.literal(transcriptedText)));
 
-                transcriptedText = partText;
+                    transcriptedText = partText;
+                } else {
+                    style = Style.EMPTY.withHoverEvent(new HoverEvent(
+                            HoverEvent.Action.SHOW_TEXT,
+                            Component.translatable("feature.wynntils.transcribeMessages.transcribedFrom", partText)));
+                }
             } else {
                 style = part.getPartStyle().getStyle();
             }

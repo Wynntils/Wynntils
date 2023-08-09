@@ -1061,7 +1061,7 @@
   "feature.wynntils.transcribeMessages.transcribeCondition.name": "Transcribe Condition",
   "feature.wynntils.transcribeMessages.transcribeNpcs.description": "Transcribe NPC dialogue containing Gavellian and Wynnic?",
   "feature.wynntils.transcribeMessages.transcribeNpcs.name": "Transcribe NPC dialogue",
-  "feature.wynntils.transcribeMessages.transcribedFrom": "Transcribed from Gavellian/Wynnic.",
+  "feature.wynntils.transcribeMessages.transcribedFrom": "Transcribed from Gavellian/Wynnic, %s",
   "feature.wynntils.transcribeMessages.wynnicColor.description": "What color should Wynnic transcriptions be?",
   "feature.wynntils.transcribeMessages.wynnicColor.name": "Wynnic Color",
   "feature.wynntils.translation.description": "Adds the ability to translate Wynntils to your language.",
