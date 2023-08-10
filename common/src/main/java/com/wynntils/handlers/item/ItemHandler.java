@@ -105,7 +105,7 @@ public class ItemHandler extends Handler {
         }
 
         // This might be just a name update. Check if lore matches:
-        if (!LoreUtils.loreSoftMatches(existingItem, newItem, 3)) {
+        if (!loreSoftMatches(existingItem, newItem, 3)) {
             // This could be a new item, or a crafted item losing in durability
             annotate(newItem);
             return;
@@ -170,6 +170,31 @@ public class ItemHandler extends Handler {
     private boolean isWildcardItem(ItemStack itemStack) {
         // This checks for gear skin items, which are a special exception for item comparisons
         return WILDCARD_ITEMS.contains(itemStack.getItem());
+    }
+
+    /**
+     * This checks if the lore of the second item contains the entirety of the first item's lore, or vice versa.
+     * It might have additional lines added, but these are not checked.
+     */
+    private boolean loreSoftMatches(ItemStack firstItem, ItemStack secondItem, int tolerance) {
+        List<StyledText> firstLines = LoreUtils.getLore(firstItem);
+        List<StyledText> secondLines = LoreUtils.getLore(secondItem);
+        int firstLinesLen = firstLines.size();
+        int secondLinesLen = secondLines.size();
+
+        // Only allow a maximum number of additional lines in the longer tooltip
+        if (Math.abs(firstLinesLen - secondLinesLen) > tolerance) return false;
+
+        int linesToCheck = Math.min(firstLinesLen, secondLinesLen);
+        // Prevent soft matching on tooltips that are very small
+        if (linesToCheck < 3 && firstLinesLen != secondLinesLen) return false;
+
+        for (int i = 0; i < linesToCheck; i++) {
+            if (!firstLines.get(i).equals(secondLines.get(i))) return false;
+        }
+
+        // Every lore line matches from the first to the second (or second to the first), so we have a match
+        return true;
     }
 
     private ItemAnnotation calculateAnnotation(ItemStack itemStack, StyledText name) {
