@@ -14,6 +14,7 @@ import com.wynntils.utils.render.RenderUtils;
 import com.wynntils.utils.render.Texture;
 import java.util.List;
 import net.minecraft.ChatFormatting;
+import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.screens.inventory.tooltip.ClientTooltipComponent;
 import net.minecraft.network.chat.Component;
 
@@ -36,7 +37,9 @@ public class ChangeWorldButton extends WynntilsButton {
     }
 
     @Override
-    public void renderWidget(PoseStack poseStack, int mouseX, int mouseY, float partialTick) {
+    public void renderWidget(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
+        PoseStack poseStack = guiGraphics.pose();
+
         RenderUtils.drawTexturedRect(
                 poseStack,
                 Texture.CHANGE_WORLD_BUTTON.resource(),

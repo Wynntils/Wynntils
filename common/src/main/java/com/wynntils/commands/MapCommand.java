@@ -65,7 +65,7 @@ public class MapCommand extends Command {
 
         context.getSource()
                 .sendSuccess(
-                        Component.literal("Successfully reloaded POI providers.")
+                        () -> Component.literal("Successfully reloaded POI providers.")
                                 .withStyle(ChatFormatting.GREEN),
                         false);
 
@@ -87,7 +87,9 @@ public class MapCommand extends Command {
 
         context.getSource()
                 .sendSuccess(
-                        Component.literal("Successfully added POI provider.").withStyle(ChatFormatting.GREEN), false);
+                        () -> Component.literal("Successfully added POI provider.")
+                                .withStyle(ChatFormatting.GREEN),
+                        false);
         return 1;
     }
 
@@ -103,7 +105,9 @@ public class MapCommand extends Command {
 
         context.getSource()
                 .sendSuccess(
-                        Component.literal("Successfully removed POI provider.").withStyle(ChatFormatting.GREEN), false);
+                        () -> Component.literal("Successfully removed POI provider.")
+                                .withStyle(ChatFormatting.GREEN),
+                        false);
         return 1;
     }
 
@@ -121,7 +125,7 @@ public class MapCommand extends Command {
             message.append(Component.literal(")").withStyle(ChatFormatting.GRAY));
         }
 
-        context.getSource().sendSuccess(message, false);
+        context.getSource().sendSuccess(() -> message, false);
         return 1;
     }
 
@@ -143,7 +147,7 @@ public class MapCommand extends Command {
 
         context.getSource()
                 .sendSuccess(
-                        Component.literal("Successfully toggled POI provider ")
+                        () -> Component.literal("Successfully toggled POI provider ")
                                 .append(Component.literal(name).withStyle(ChatFormatting.GREEN))
                                 .append(Component.literal(" to "))
                                 .append(Component.literal(poiProvider.get().isEnabled() ? "enabled" : "disabled")

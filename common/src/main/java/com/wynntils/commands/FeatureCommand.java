@@ -80,7 +80,7 @@ public class FeatureCommand extends Command {
                     .append(Component.literal(translatedName).withStyle(color));
         }
 
-        context.getSource().sendSuccess(response, false);
+        context.getSource().sendSuccess(() -> response, false);
 
         return 1;
     }
@@ -117,7 +117,7 @@ public class FeatureCommand extends Command {
 
         context.getSource()
                 .sendSuccess(
-                        Component.literal(feature.getTranslatedName() + " was enabled successfully.")
+                        () -> Component.literal(feature.getTranslatedName() + " was enabled successfully.")
                                 .withStyle(ChatFormatting.GREEN),
                         false);
 
@@ -157,7 +157,7 @@ public class FeatureCommand extends Command {
 
         context.getSource()
                 .sendSuccess(
-                        Component.literal(feature.getTranslatedName() + " was disabled successfully.")
+                        () -> Component.literal(feature.getTranslatedName() + " was disabled successfully.")
                                 .withStyle(ChatFormatting.GREEN),
                         false);
 
@@ -205,7 +205,7 @@ public class FeatureCommand extends Command {
 
         context.getSource()
                 .sendSuccess(
-                        Component.literal(feature.getTranslatedName() + " was reloaded successfully.")
+                        () -> Component.literal(feature.getTranslatedName() + " was reloaded successfully.")
                                 .withStyle(ChatFormatting.GREEN),
                         false);
 

@@ -16,6 +16,7 @@ import com.wynntils.utils.render.RenderUtils;
 import com.wynntils.utils.render.type.HorizontalAlignment;
 import com.wynntils.utils.render.type.TextShadow;
 import com.wynntils.utils.render.type.VerticalAlignment;
+import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.network.chat.Component;
 
 public class WynnAlphabetButton extends WynntilsButton {
@@ -27,8 +28,10 @@ public class WynnAlphabetButton extends WynntilsButton {
     }
 
     @Override
-    public void renderWidget(PoseStack poseStack, int mouseX, int mouseY, float partialTick) {
+    public void renderWidget(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
         if (wynnAlphabet == null) return;
+
+        PoseStack poseStack = guiGraphics.pose();
 
         RenderUtils.drawRect(
                 poseStack, CommonColors.BLACK.withAlpha(isHovered ? 0.7f : 0.5f), getX(), getY(), 0, width, height);

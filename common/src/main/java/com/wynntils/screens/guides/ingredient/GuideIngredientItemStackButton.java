@@ -16,6 +16,7 @@ import com.wynntils.utils.mc.KeyboardUtils;
 import com.wynntils.utils.render.RenderUtils;
 import com.wynntils.utils.render.Texture;
 import java.util.Map;
+import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.network.chat.Component;
 import org.lwjgl.glfw.GLFW;
 
@@ -34,7 +35,9 @@ public class GuideIngredientItemStackButton extends WynntilsButton {
     }
 
     @Override
-    public void renderWidget(PoseStack poseStack, int mouseX, int mouseY, float partialTick) {
+    public void renderWidget(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
+        PoseStack poseStack = guiGraphics.pose();
+
         CustomColor color = getHighlightColor(itemStack.getIngredientInfo().tier());
 
         RenderUtils.drawTexturedRectWithColor(
@@ -49,7 +52,7 @@ public class GuideIngredientItemStackButton extends WynntilsButton {
                 Texture.HIGHLIGHT.width(),
                 Texture.HIGHLIGHT.height());
 
-        RenderUtils.renderItem(poseStack, itemStack, getX(), getY());
+        RenderUtils.renderItem(guiGraphics, itemStack, getX(), getY());
 
         String unformattedName = itemStack.getIngredientInfo().name();
         if (Services.Favorites.isFavorite(unformattedName)) {

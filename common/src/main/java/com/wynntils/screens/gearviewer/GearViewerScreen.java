@@ -22,6 +22,7 @@ import com.wynntils.utils.wynn.ItemUtils;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.gui.screens.inventory.InventoryScreen;
 import net.minecraft.network.chat.Component;
@@ -48,7 +49,7 @@ public final class GearViewerScreen extends WynntilsContainerScreen<GearViewerMe
         super(menu, player.getInventory(), Component.empty());
 
         this.player = player;
-        this.scoreboard = player.level.getScoreboard();
+        this.scoreboard = player.level().getScoreboard();
 
         if (scoreboard.getTeamNames().contains(TEAM_NAME)) {
             gearViewerTeam = scoreboard.getPlayerTeam(TEAM_NAME);
@@ -111,30 +112,32 @@ public final class GearViewerScreen extends WynntilsContainerScreen<GearViewerMe
     }
 
     @Override
-    public void doRender(PoseStack poseStack, int mouseX, int mouseY, float partialTick) {
-        super.doRender(poseStack, mouseX, mouseY, partialTick);
-        this.renderTooltip(poseStack, mouseX, mouseY);
+    public void doRender(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
+        super.doRender(guiGraphics, mouseX, mouseY, partialTick);
+        this.renderTooltip(guiGraphics, mouseX, mouseY);
 
-        renderPlayerModel(poseStack, mouseX, mouseY);
+        renderPlayerModel(guiGraphics, mouseX, mouseY);
 
-        viewPlayerStatsButton.render(poseStack, mouseX, mouseY, partialTick);
+        viewPlayerStatsButton.render(guiGraphics, mouseX, mouseY, partialTick);
     }
 
-    private void renderPlayerModel(PoseStack poseStack, int mouseX, int mouseY) {
+    private void renderPlayerModel(GuiGraphics guiGraphics, int mouseX, int mouseY) {
         int posX = (int) (this.width / 2f);
         int posY = (int) (this.height / 2f) + 32;
 
         InventoryScreen.renderEntityInInventoryFollowsMouse(
-                poseStack, posX, posY, 30, posX - mouseX, posY - 50 - mouseY, player);
+                guiGraphics, posX, posY, 30, posX - mouseX, posY - 50 - mouseY, player);
     }
 
     @Override
-    protected void renderBg(PoseStack poseStack, float partialTick, int mouseX, int mouseY) {
+    protected void renderBg(GuiGraphics guiGraphics, float partialTick, int mouseX, int mouseY) {
+        PoseStack poseStack = guiGraphics.pose();
+
         RenderUtils.drawTexturedRect(poseStack, Texture.GEAR_VIEWER_BACKGROUND, this.leftPos, this.topPos);
     }
 
     @Override
-    protected void renderLabels(PoseStack poseStack, int mouseX, int mouseY) {
+    protected void renderLabels(GuiGraphics guiGraphics, int mouseX, int mouseY) {
         // we don't want to draw any labels
     }
 

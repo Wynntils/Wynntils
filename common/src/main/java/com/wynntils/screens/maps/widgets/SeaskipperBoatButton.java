@@ -13,6 +13,7 @@ import com.wynntils.utils.render.RenderUtils;
 import com.wynntils.utils.render.Texture;
 import java.util.List;
 import net.minecraft.ChatFormatting;
+import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.network.chat.Component;
 
 public class SeaskipperBoatButton extends WynntilsButton {
@@ -33,7 +34,9 @@ public class SeaskipperBoatButton extends WynntilsButton {
     }
 
     @Override
-    public void renderWidget(PoseStack poseStack, int mouseX, int mouseY, float partialTick) {
+    public void renderWidget(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
+        PoseStack poseStack = guiGraphics.pose();
+
         RenderUtils.drawTexturedRect(
                 poseStack,
                 Texture.BOAT_BUTTON.resource(),

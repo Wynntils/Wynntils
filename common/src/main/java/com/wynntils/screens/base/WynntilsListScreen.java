@@ -20,6 +20,7 @@ import com.wynntils.utils.render.type.TextShadow;
 import com.wynntils.utils.render.type.VerticalAlignment;
 import java.util.ArrayList;
 import java.util.List;
+import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.Renderable;
 import net.minecraft.client.gui.components.events.GuiEventListener;
 import net.minecraft.network.chat.Component;
@@ -57,14 +58,14 @@ public abstract class WynntilsListScreen<E, B extends WynntilsButton> extends Wy
                 this);
     }
 
-    protected void renderWidgets(PoseStack poseStack, int mouseX, int mouseY, float partialTick) {
+    protected void renderWidgets(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
         this.hovered = null;
 
         final float translationX = getTranslationX();
         final float translationY = getTranslationY();
 
         for (Renderable renderable : new ArrayList<>(this.renderables)) {
-            renderable.render(poseStack, (int) (mouseX - translationX), (int) (mouseY - translationY), partialTick);
+            renderable.render(guiGraphics, (int) (mouseX - translationX), (int) (mouseY - translationY), partialTick);
 
             if (renderable instanceof WynntilsButton button) {
                 if (button.isMouseOver(mouseX - translationX, mouseY - translationY)) {

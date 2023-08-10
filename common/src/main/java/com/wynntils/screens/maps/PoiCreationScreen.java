@@ -30,6 +30,7 @@ import com.wynntils.utils.render.type.VerticalAlignment;
 import java.util.List;
 import java.util.Optional;
 import java.util.regex.Pattern;
+import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.renderer.MultiBufferSource;
@@ -326,8 +327,10 @@ public final class PoiCreationScreen extends AbstractMapScreen implements Textbo
     }
 
     @Override
-    public void doRender(PoseStack poseStack, int mouseX, int mouseY, float partialTick) {
-        renderGradientBackground(poseStack);
+    public void doRender(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
+        PoseStack poseStack = guiGraphics.pose();
+
+        renderGradientBackground(guiGraphics);
 
         RenderSystem.setShaderColor(1f, 1f, 1f, 1f);
 
@@ -374,9 +377,8 @@ public final class PoiCreationScreen extends AbstractMapScreen implements Textbo
 
         RenderUtils.disableScissor();
 
-        renderBackground(poseStack);
-        super.doRender(poseStack, mouseX, mouseY, partialTick);
-        // RenderUtils.renderDebugGrid(poseStack, GRID_DIVISIONS, dividedWidth, dividedHeight);
+        renderBackground(guiGraphics);
+        super.doRender(guiGraphics, mouseX, mouseY, partialTick);
 
         FontRenderer.getInstance()
                 .renderText(

@@ -103,7 +103,7 @@ public class FunctionCommand extends Command {
 
         context.getSource()
                 .sendSuccess(
-                        Component.literal(
+                        () -> Component.literal(
                                 "Template calculated: \"%s\" -> [%s]".formatted(template, resultString.getString())),
                         false);
 
@@ -161,7 +161,7 @@ public class FunctionCommand extends Command {
             response.append(functionComponent);
         }
 
-        context.getSource().sendSuccess(response, false);
+        context.getSource().sendSuccess(() -> response, false);
 
         return 1;
     }
@@ -190,7 +190,7 @@ public class FunctionCommand extends Command {
         Component response = Component.literal(function.getName())
                 .withStyle(ChatFormatting.AQUA)
                 .append(Component.literal(" is now enabled").withStyle(ChatFormatting.WHITE));
-        context.getSource().sendSuccess(response, false);
+        context.getSource().sendSuccess(() -> response, false);
         return 1;
     }
 
@@ -215,7 +215,7 @@ public class FunctionCommand extends Command {
         MutableComponent result = Component.literal("");
         result.append(
                 Managers.Function.getSimpleValueString(function, argument.getString(), ChatFormatting.YELLOW, true));
-        context.getSource().sendSuccess(result, false);
+        context.getSource().sendSuccess(() -> result, false);
         return 1;
     }
 
@@ -275,7 +275,7 @@ public class FunctionCommand extends Command {
                 .append(Component.literal(function.getName() + "\n").withStyle(ChatFormatting.BOLD))
                 .append(helpComponent.withStyle(ChatFormatting.WHITE));
 
-        context.getSource().sendSuccess(response, false);
+        context.getSource().sendSuccess(() -> response, false);
         return 1;
     }
 

@@ -30,6 +30,7 @@ import com.wynntils.utils.render.type.VerticalAlignment;
 import java.util.ArrayList;
 import java.util.List;
 import net.minecraft.ChatFormatting;
+import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.Renderable;
 import net.minecraft.client.gui.components.events.GuiEventListener;
 import net.minecraft.client.gui.screens.Screen;
@@ -120,7 +121,9 @@ public final class WynntilsDialogueHistoryScreen extends WynntilsMenuScreenBase 
     }
 
     @Override
-    public void doRender(PoseStack poseStack, int mouseX, int mouseY, float partialTick) {
+    public void doRender(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
+        PoseStack poseStack = guiGraphics.pose();
+
         renderBackgroundTexture(poseStack);
 
         // Make 0, 0 the top left corner of the rendered quest book background
@@ -133,7 +136,7 @@ public final class WynntilsDialogueHistoryScreen extends WynntilsMenuScreenBase 
 
         renderVersion(poseStack);
 
-        renderWidgets(poseStack, mouseX, mouseY, partialTick);
+        renderWidgets(guiGraphics, mouseX, mouseY, partialTick);
 
         if (dialogues.isEmpty()) {
             renderNoDialoguesHelper(poseStack);
@@ -241,14 +244,14 @@ public final class WynntilsDialogueHistoryScreen extends WynntilsMenuScreenBase 
         }
     }
 
-    private void renderWidgets(PoseStack poseStack, int mouseX, int mouseY, float partialTick) {
+    private void renderWidgets(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
         this.hovered = null;
 
         final float translationX = getTranslationX();
         final float translationY = getTranslationY();
 
         for (Renderable renderable : new ArrayList<>(this.renderables)) {
-            renderable.render(poseStack, (int) (mouseX - translationX), (int) (mouseY - translationY), partialTick);
+            renderable.render(guiGraphics, (int) (mouseX - translationX), (int) (mouseY - translationY), partialTick);
 
             if (renderable instanceof WynntilsButton button) {
                 if (button.isMouseOver(mouseX - translationX, mouseY - translationY)) {

@@ -19,6 +19,7 @@
     "EntityMixin",
     "EntityRendererMixin",
     "GuiMixin",
+    "GuiGraphicsMixin",
     "HumanoidArmorLayerMixin",
     "InventoryScreenMixin",
     "ItemRendererMixin",
