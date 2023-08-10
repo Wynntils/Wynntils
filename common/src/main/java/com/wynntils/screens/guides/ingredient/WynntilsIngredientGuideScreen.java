@@ -6,10 +6,10 @@ package com.wynntils.screens.guides.ingredient;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.wynntils.core.components.Models;
+import com.wynntils.core.components.Services;
 import com.wynntils.core.text.StyledText;
-import com.wynntils.models.items.WynnItem;
 import com.wynntils.screens.guides.WynntilsGuideScreen;
-import com.wynntils.services.itemfilter.ItemSearchQuery;
+import com.wynntils.services.itemfilter.type.ItemSearchQuery;
 import com.wynntils.utils.colors.CommonColors;
 import com.wynntils.utils.render.FontRenderer;
 import com.wynntils.utils.render.RenderUtils;
@@ -18,7 +18,6 @@ import com.wynntils.utils.render.type.HorizontalAlignment;
 import com.wynntils.utils.render.type.TextShadow;
 import com.wynntils.utils.render.type.VerticalAlignment;
 import java.util.List;
-import java.util.Optional;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.resources.language.I18n;
 import net.minecraft.network.chat.Component;
@@ -124,13 +123,7 @@ public final class WynntilsIngredientGuideScreen
 
     protected void reloadElementsList(ItemSearchQuery searchQuery) {
         elements.addAll(getAllIngredientItems().stream()
-                .filter(itemStack -> {
-                    Optional<WynnItem> wynnItem = Models.Item.getWynnItem(itemStack);
-                    return wynnItem.isPresent()
-                            && searchQuery.filterMatches(wynnItem.get())
-                            && searchQuery.itemNameMatches(StyledText.fromComponent(itemStack.getHoverName())
-                                    .getStringWithoutFormatting());
-                })
+                .filter(itemStack -> Services.ItemFilter.matches(searchQuery, itemStack))
                 .toList());
     }
 

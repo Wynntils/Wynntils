@@ -5,9 +5,10 @@
 package com.wynntils.screens.base.widgets;
 
 import com.mojang.blaze3d.vertex.PoseStack;
+import com.wynntils.core.components.Services;
 import com.wynntils.core.text.StyledText;
 import com.wynntils.screens.base.TextboxScreen;
-import com.wynntils.services.itemfilter.ItemSearchQuery;
+import com.wynntils.services.itemfilter.type.ItemSearchQuery;
 import com.wynntils.utils.colors.CommonColors;
 import com.wynntils.utils.render.FontRenderer;
 import com.wynntils.utils.render.type.HorizontalAlignment;
@@ -33,7 +34,7 @@ public class ItemSearchWidget extends SearchWidget {
             TextboxScreen textboxScreen) {
         super(x, y, width, height, null, textboxScreen);
         this.onSearchQueryUpdateConsumer = onSearchQueryUpdateConsumer;
-        this.searchQuery = ItemSearchQuery.fromQueryString("");
+        this.searchQuery = Services.ItemFilter.createSearchQuery("");
     }
 
     @Override
@@ -49,7 +50,7 @@ public class ItemSearchWidget extends SearchWidget {
             int highlightedWidth,
             int lastWidth,
             boolean defaultText) {
-        if (defaultText || !getTextBoxInput().equals(searchQuery.getQueryString())) {
+        if (defaultText || !getTextBoxInput().equals(searchQuery.queryString())) {
             super.renderText(
                     poseStack,
                     renderedText,
@@ -132,9 +133,9 @@ public class ItemSearchWidget extends SearchWidget {
     }
 
     private StyledText getStyledText(int charIndex, char c) {
-        if (searchQuery.getIgnoredCharIndices().contains(charIndex)) {
+        if (searchQuery.ignoredCharIndices().contains(charIndex)) {
             return StyledText.fromComponent(Component.literal(String.valueOf(c)).withStyle(ChatFormatting.RED));
-        } else if (searchQuery.getValidFilterCharIndices().contains(charIndex)) {
+        } else if (searchQuery.validFilterCharIndices().contains(charIndex)) {
             return StyledText.fromComponent(Component.literal(String.valueOf(c)).withStyle(ChatFormatting.YELLOW));
         } else {
             return StyledText.fromString(String.valueOf(c));
@@ -148,14 +149,14 @@ public class ItemSearchWidget extends SearchWidget {
 
     @Override
     protected void onUpdate(String text) {
-        searchQuery = ItemSearchQuery.fromQueryString(text);
+        searchQuery = Services.ItemFilter.createSearchQuery(text);
         onSearchQueryUpdateConsumer.accept(searchQuery);
 
-        if (searchQuery.getErrors().isEmpty()) {
+        if (searchQuery.errors().isEmpty()) {
             setTooltip(null);
         } else {
-            setTooltip(Tooltip.create(Component.literal(String.join("\n\n", searchQuery.getErrors()))
-                    .withStyle(ChatFormatting.RED)));
+            setTooltip(Tooltip.create(
+                    Component.literal(String.join("\n\n", searchQuery.errors())).withStyle(ChatFormatting.RED)));
         }
     }
 

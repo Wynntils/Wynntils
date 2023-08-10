@@ -27,7 +27,7 @@ import com.wynntils.screens.base.widgets.BasicTexturedButton;
 import com.wynntils.screens.base.widgets.ItemSearchWidget;
 import com.wynntils.screens.base.widgets.SearchWidget;
 import com.wynntils.screens.base.widgets.WynntilsButton;
-import com.wynntils.services.itemfilter.ItemSearchQuery;
+import com.wynntils.services.itemfilter.type.ItemSearchQuery;
 import com.wynntils.utils.colors.CommonColors;
 import com.wynntils.utils.colors.CustomColor;
 import com.wynntils.utils.mc.McUtils;
@@ -272,9 +272,7 @@ public class ContainerSearchFeature extends Feature {
             Optional<WynnItem> wynnItemOpt = Models.Item.getWynnItem(itemStack);
             if (wynnItemOpt.isEmpty()) return;
 
-            boolean filtered = !searchQuery.isEmpty()
-                    && searchQuery.filterMatches(wynnItemOpt.get())
-                    && searchQuery.itemNameMatches(itemStack.getHoverName().getString());
+            boolean filtered = !searchQuery.isEmpty() && Services.ItemFilter.matches(searchQuery, itemStack);
 
             wynnItemOpt.get().getCache().store(WynnItemCache.SEARCHED_KEY, filtered);
             if (filtered) {

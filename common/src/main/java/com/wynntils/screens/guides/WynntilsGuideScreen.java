@@ -10,7 +10,7 @@ import com.wynntils.screens.base.widgets.BackButton;
 import com.wynntils.screens.base.widgets.ItemSearchWidget;
 import com.wynntils.screens.base.widgets.PageSelectorButton;
 import com.wynntils.screens.base.widgets.WynntilsButton;
-import com.wynntils.services.itemfilter.ItemSearchQuery;
+import com.wynntils.services.itemfilter.type.ItemSearchQuery;
 import com.wynntils.utils.render.Texture;
 import net.minecraft.network.chat.Component;
 
