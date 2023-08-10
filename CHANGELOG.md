@@ -1,8 +1,21 @@
+## [0.0.3-alpha.299](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.298...v0.0.3-alpha.299) (2023-08-10)
+
+
+### New Features
+
+* Add minimap zoom and make the map zoom better ([#1948](https://github.com/Wynntils/Artemis/issues/1948)) ([62a5259](https://github.com/Wynntils/Artemis/commit/62a5259efa7f7a1687a1826229624c5da468b636))
+
+
+### Code Refactoring
+
+* Incoroprate general fixes from mapdata rewrite ([#1973](https://github.com/Wynntils/Artemis/issues/1973)) ([af10b0c](https://github.com/Wynntils/Artemis/commit/af10b0c0a1683c5fb9a4f75f3cea3ae0fdbaadc6))
+
 ## [0.0.3-alpha.298](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.297...v0.0.3-alpha.298) (2023-08-09)
 
 
 ### Miscellaneous Chores
 
+* **release:** v0.0.3-alpha.298 [skip ci] ([8cc0ba3](https://github.com/Wynntils/Artemis/commit/8cc0ba358bf8758ec0942acc089543f065b3b801))
 * Update md5 for major ID lore update json ([#1974](https://github.com/Wynntils/Artemis/issues/1974)) ([51eb69f](https://github.com/Wynntils/Artemis/commit/51eb69f003307aabab454b99d7e9240ed52dd30e))
 
 ## [0.0.3-alpha.297](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.296...v0.0.3-alpha.297) (2023-08-09)
@@ -40,16 +53,4 @@
 ### Miscellaneous Chores
 
 * **release:** v0.0.3-alpha.295 [skip ci] ([6ddb087](https://github.com/Wynntils/Artemis/commit/6ddb08733dd7b1987a7c9dce9a367d340545c734))
-
-## [0.0.3-alpha.294](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.293...v0.0.3-alpha.294) (2023-08-09)
-
-
-### New Features
-
-* Trade market Silverbull tax detection ([#1954](https://github.com/Wynntils/Artemis/issues/1954)) ([0c13f3c](https://github.com/Wynntils/Artemis/commit/0c13f3cc07da97db7402259d9db50a24ff0a0d57))
-
-
-### Miscellaneous Chores
-
-* **release:** v0.0.3-alpha.294 [skip ci] ([fe4c79f](https://github.com/Wynntils/Artemis/commit/fe4c79f405e98cbc6948b03114440f82731a263f))
 
