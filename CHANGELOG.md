@@ -1,9 +1,21 @@
+## [0.0.3-alpha.300](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.299...v0.0.3-alpha.300) (2023-08-10)
+
+
+### Bug Fixes
+
+* Transcribed NPC dialogue repeating ([#1975](https://github.com/Wynntils/Artemis/issues/1975)) ([b63245f](https://github.com/Wynntils/Artemis/commit/b63245fb3417b296f51d87766a1190ad1b08c4f6))
+
 ## [0.0.3-alpha.299](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.298...v0.0.3-alpha.299) (2023-08-10)
 
 
 ### New Features
 
 * Add minimap zoom and make the map zoom better ([#1948](https://github.com/Wynntils/Artemis/issues/1948)) ([62a5259](https://github.com/Wynntils/Artemis/commit/62a5259efa7f7a1687a1826229624c5da468b636))
+
+
+### Miscellaneous Chores
+
+* **release:** v0.0.3-alpha.299 [skip ci] ([581052f](https://github.com/Wynntils/Artemis/commit/581052fb79c76692c3edf85e51291d0fcd0923a3))
 
 
 ### Code Refactoring
@@ -41,16 +53,4 @@
 ### Miscellaneous Chores
 
 * **release:** v0.0.3-alpha.296 [skip ci] ([1142a8d](https://github.com/Wynntils/Artemis/commit/1142a8d16032195066700d7b85f59d6473d8d28e))
-
-## [0.0.3-alpha.295](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.294...v0.0.3-alpha.295) (2023-08-09)
-
-
-### New Features
-
-* Transcription tooltips ([#1961](https://github.com/Wynntils/Artemis/issues/1961)) ([aff1f27](https://github.com/Wynntils/Artemis/commit/aff1f27437d7a2b34f34dcc48fd2fdfd193c85a9))
-
-
-### Miscellaneous Chores
-
-* **release:** v0.0.3-alpha.295 [skip ci] ([6ddb087](https://github.com/Wynntils/Artemis/commit/6ddb08733dd7b1987a7c9dce9a367d340545c734))
 
