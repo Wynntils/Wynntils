@@ -19,6 +19,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import net.minecraft.core.NonNullList;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
@@ -27,6 +29,10 @@ import net.minecraftforge.eventbus.api.EventPriority;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 
 public class ItemHandler extends Handler {
+    // Test suite: https://regexr.com/7i5h5
+    private static final Pattern SHINY_STAT_PATTERN = Pattern.compile("^§f⬡ §7([a-zA-Z ]+): §f(\\d+)$");
+    private static final Pattern DURABILITY_PATTERN = Pattern.compile("^§3.*§8 \\[\\d+/\\d+ Durability\\]$");
+
     private static final List<Item> WILDCARD_ITEMS = List.of(Items.DIAMOND_SHOVEL, Items.DIAMOND_PICKAXE);
 
     private final List<ItemAnnotator> annotators = new ArrayList<>();
@@ -104,25 +110,40 @@ public class ItemHandler extends Handler {
             return;
         }
 
-        // This might be just a name update. Check if lore matches:
-        if (!loreSoftMatches(existingItem, newItem, 3)) {
-            // This could be a new item, or a crafted item losing in durability
-            annotate(newItem);
-            return;
-        }
-
+        // We need to check if the name has changed, and/or the lore has changed
         StyledText originalName = ((ItemStackExtension) existingItem).getOriginalName();
         StyledText existingName =
                 StyledText.fromComponent(existingItem.getHoverName()).getNormalized();
         StyledText newName = StyledText.fromComponent(newItem.getHoverName()).getNormalized();
 
+        LoreMatch loreMatch = analyzeLoreMatch(existingItem, newItem);
+
         if (newName.equals(existingName)) {
-            // This is exactly the same item, so copy existing annotation
-            updateItem(newItem, annotation, originalName);
+            switch (loreMatch) {
+                case SAME ->
+                // This is exactly the same item, so copy existing annotation
+                updateItem(newItem, annotation, originalName);
+                case SAME_BUT_UNSTABLE ->
+                // This is essentially the same item, but with slight changes
+                // e.g. in shiny stats or durability.
+                // We need to reparse the lore since it has changed
+                annotate(newItem);
+                case MISMATCH ->
+                // This is a bit unexpected, but reparse the item
+                annotate(newItem);
+            }
             return;
         }
 
-        // The lore is the same, but the name is different. Determine the reason for the name change
+        // Ok, so we got a different name. What should we do with the item?
+
+        if (loreMatch == LoreMatch.MISMATCH) {
+            // Different name and different lore -- this is clearly a new item
+            annotate(newItem);
+            return;
+        }
+
+        // The lore is (almost) the same, but the name is different. Determine the reason for the name change
         StyledText originalBaseName = getBaseName(originalName);
         StyledText existingBaseName = getBaseName(existingName);
         StyledText newBaseName = getBaseName(newName);
@@ -130,7 +151,9 @@ public class ItemHandler extends Handler {
         // When a crafted item loses durability (or a consumable loses a charge), we need to detect
         // this and update the item. But note that this might happen exactly after a spell!
         // So check against originalName, not existingName.
-        if (!newName.equals(originalName) && newBaseName.equals(originalBaseName)) {
+        // Furthermore, if the lore was slightly changed on unstable lines, we also need to reparse it
+        if (!newName.equals(originalName) && newBaseName.equals(originalBaseName)
+                || loreMatch == LoreMatch.SAME_BUT_UNSTABLE) {
             // The base name is the same but the full name differs. This means we have an updated
             // title, and the existing item has changed some property.
             annotation = calculateAnnotation(newItem, newName);
@@ -176,25 +199,52 @@ public class ItemHandler extends Handler {
      * This checks if the lore of the second item contains the entirety of the first item's lore, or vice versa.
      * It might have additional lines added, but these are not checked.
      */
-    private boolean loreSoftMatches(ItemStack firstItem, ItemStack secondItem, int tolerance) {
+    private LoreMatch analyzeLoreMatch(ItemStack firstItem, ItemStack secondItem) {
         List<StyledText> firstLines = LoreUtils.getLore(firstItem);
         List<StyledText> secondLines = LoreUtils.getLore(secondItem);
         int firstLinesLen = firstLines.size();
         int secondLinesLen = secondLines.size();
+        boolean containsUnstableLines = false;
 
         // Only allow a maximum number of additional lines in the longer tooltip
-        if (Math.abs(firstLinesLen - secondLinesLen) > tolerance) return false;
+        if (Math.abs(firstLinesLen - secondLinesLen) > 3) return LoreMatch.MISMATCH;
 
         int linesToCheck = Math.min(firstLinesLen, secondLinesLen);
         // Prevent soft matching on tooltips that are very small
-        if (linesToCheck < 3 && firstLinesLen != secondLinesLen) return false;
+        if (linesToCheck < 3 && firstLinesLen != secondLinesLen) return LoreMatch.MISMATCH;
 
         for (int i = 0; i < linesToCheck; i++) {
-            if (!firstLines.get(i).equals(secondLines.get(i))) return false;
+            StyledText firstLine = firstLines.get(i);
+            StyledText secondLine = secondLines.get(i);
+
+            // Is it an "unstable" line, i.e. can it change even if the item itself stays
+            // the same?
+            if (isUnstableLoreLine(firstLine, secondLine)) {
+                containsUnstableLines = true;
+                continue;
+            }
+
+            if (!firstLine.equals(secondLine)) return LoreMatch.MISMATCH;
         }
 
         // Every lore line matches from the first to the second (or second to the first), so we have a match
-        return true;
+        return containsUnstableLines ? LoreMatch.SAME_BUT_UNSTABLE : LoreMatch.SAME;
+    }
+
+    private boolean isUnstableLoreLine(StyledText firstLine, StyledText secondLine) {
+        // Check if it is a shiny stat line
+        Matcher firstLineShinyMatcher = firstLine.getMatcher(SHINY_STAT_PATTERN);
+        Matcher secondLineShinyMatcher = secondLine.getMatcher(SHINY_STAT_PATTERN);
+
+        if (firstLineShinyMatcher.matches() && secondLineShinyMatcher.matches()) return true;
+
+        // Check if it is a durability line
+        Matcher firstLineDurabilityMatcher = firstLine.getMatcher(DURABILITY_PATTERN);
+        Matcher secondLineDurabilityMatcher = secondLine.getMatcher(DURABILITY_PATTERN);
+
+        if (firstLineDurabilityMatcher.matches() && secondLineDurabilityMatcher.matches()) return true;
+
+        return false;
     }
 
     private ItemAnnotation calculateAnnotation(ItemStack itemStack, StyledText name) {
@@ -267,5 +317,11 @@ public class ItemHandler extends Handler {
     public void resetProfiling() {
         profilingTimes.clear();
         profilingCounts.clear();
+    }
+
+    private enum LoreMatch {
+        MISMATCH,
+        SAME_BUT_UNSTABLE,
+        SAME
     }
 }
