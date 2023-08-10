@@ -44,7 +44,7 @@ public abstract class BarOverlay extends DynamicOverlay {
     protected BarOverlay(int id, OverlaySize overlaySize) {
         super(id);
 
-        this.size.updateConfig(overlaySize);
+        this.size.store(overlaySize);
     }
 
     protected BarOverlay(OverlayPosition position, OverlaySize size) {

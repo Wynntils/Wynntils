@@ -59,8 +59,8 @@ public class TokenBarsOverlay extends ContainerOverlay<TokenBarsOverlay.TokenBar
 
         private TokenBarOverlay(int id) {
             super(id, new OverlaySize(81, 21));
-            horizontalAlignmentOverride.updateConfig(HorizontalAlignment.RIGHT);
-            verticalAlignmentOverride.updateConfig(VerticalAlignment.TOP);
+            horizontalAlignmentOverride.store(HorizontalAlignment.RIGHT);
+            verticalAlignmentOverride.store(VerticalAlignment.TOP);
         }
 
         @Override
