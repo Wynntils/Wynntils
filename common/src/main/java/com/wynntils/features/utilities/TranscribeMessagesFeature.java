@@ -161,9 +161,11 @@ public class TranscribeMessagesFeature extends Feature {
 
             if (transcribeGavellian || transcribeWynnic) {
                 String text = showTooltip.get() ? partText : transcriptedText;
-                Component hoverComponent = (npcDialogue || showTooltip.get()) ? Component.literal(transcriptedText) : Component.translatable("feature.wynntils.transcribeMessages.transcribedFrom", partText);
+                Component hoverComponent = (npcDialogue || showTooltip.get())
+                        ? Component.literal(transcriptedText)
+                        : Component.translatable("feature.wynntils.transcribeMessages.transcribedFrom", partText);
                 Style style = Style.EMPTY.withHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, hoverComponent));
-                
+
                 newPart = new StyledTextPart(text, style, null, Style.EMPTY);
             } else {
                 newPart = part;
