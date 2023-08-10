@@ -4,6 +4,7 @@
  */
 package com.wynntils.screens.guides;
 
+import com.wynntils.core.WynntilsMod;
 import com.wynntils.screens.base.WynntilsListScreen;
 import com.wynntils.screens.base.widgets.BackButton;
 import com.wynntils.screens.base.widgets.ItemSearchWidget;
@@ -58,9 +59,16 @@ public abstract class WynntilsGuideScreen<E, B extends WynntilsButton> extends W
         This hack is preferable to adding even more complexity in the superclass.
         See https://github.com/Wynntils/Artemis/pull/1860#discussion_r1279180536 for more details.
         */
-        if (searchWidget instanceof ItemSearchWidget) { // Should always be true
-            reloadElementsList(((ItemSearchWidget) searchWidget).getSearchQuery());
+
+        if (!(searchWidget instanceof ItemSearchWidget)) {
+            WynntilsMod.error(
+                    "WynntilsGuideScreen#reloadElementsList was called with a search widget that is not an ItemSearchWidget");
+            if (WynntilsMod.isDevelopmentEnvironment()) {
+                System.exit(1);
+            }
         }
+
+        reloadElementsList(((ItemSearchWidget) searchWidget).getSearchQuery());
     }
 
     protected abstract void reloadElementsList(SearchQuery searchQuery);
