@@ -86,6 +86,7 @@ public class SearchQuery {
                 // value is pointless and we don't want to show the error the factory might return because of that.
                 // We still want to highlight the filter keyword though, that's why we handle the empty value here.
                 if (valueString.isEmpty()) continue;
+
                 ErrorOr<? extends ItemFilter> filterOrError =
                         factoryOrError.getValue().create(valueString);
 
