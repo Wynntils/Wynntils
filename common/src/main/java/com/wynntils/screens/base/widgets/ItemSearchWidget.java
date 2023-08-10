@@ -143,7 +143,7 @@ public class ItemSearchWidget extends SearchWidget {
 
     @Override
     protected int getMaxTextWidth() {
-        return super.getMaxTextWidth() - 4;
+        return this.width - 22;
     }
 
     @Override

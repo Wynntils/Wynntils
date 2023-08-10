@@ -5,6 +5,9 @@
 package com.wynntils.services.itemfilter;
 
 import com.wynntils.core.components.Service;
+import com.wynntils.services.itemfilter.filters.LevelItemFilterFactory;
+import com.wynntils.services.itemfilter.filters.ProfessionItemFilterFactory;
+import com.wynntils.services.itemfilter.type.ItemFilterFactory;
 import com.wynntils.utils.type.ErrorOr;
 import java.util.Collection;
 import java.util.Collections;
@@ -18,12 +21,7 @@ public class ItemFilterService extends Service {
 
     public ItemFilterService() {
         super(List.of());
-        registerFilter(new LevelItemFilterFactory());
-        registerFilter(new ProfessionItemFilterFactory());
-    }
-
-    private void registerFilter(ItemFilterFactory factory) {
-        filterFactories.put(factory.getKeyword(), factory);
+        registerAllFilters();
     }
 
     /**
@@ -44,5 +42,14 @@ public class ItemFilterService extends Service {
      */
     public Collection<ItemFilterFactory> getFilterFactories() {
         return Collections.unmodifiableCollection(filterFactories.values());
+    }
+
+    private void registerAllFilters() {
+        registerFilter(new LevelItemFilterFactory());
+        registerFilter(new ProfessionItemFilterFactory());
+    }
+
+    private void registerFilter(ItemFilterFactory factory) {
+        filterFactories.put(factory.getKeyword(), factory);
     }
 }

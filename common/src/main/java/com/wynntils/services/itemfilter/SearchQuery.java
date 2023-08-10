@@ -6,6 +6,8 @@ package com.wynntils.services.itemfilter;
 
 import com.wynntils.core.components.Services;
 import com.wynntils.models.items.WynnItem;
+import com.wynntils.services.itemfilter.type.ItemFilter;
+import com.wynntils.services.itemfilter.type.ItemFilterFactory;
 import com.wynntils.utils.type.ErrorOr;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -15,15 +17,10 @@ import java.util.stream.IntStream;
 
 public class SearchQuery {
     private final String queryString;
-
     private final List<ItemFilter> itemFilters;
-
     private final List<String> plainTextTokens;
-
     private final List<Integer> ignoredCharIndices;
-
     private final List<Integer> validFilterCharIndices;
-
     private final List<String> errors;
 
     protected SearchQuery(

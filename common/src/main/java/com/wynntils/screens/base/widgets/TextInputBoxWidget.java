@@ -85,6 +85,7 @@ public class TextInputBoxWidget extends AbstractWidget {
     public void renderWidget(PoseStack poseStack, int mouseX, int mouseY, float partialTick) {
         Pair<String, Integer> renderedTextDetails = getRenderedText(getMaxTextWidth());
         String renderedText = renderedTextDetails.a();
+        int renderedTextStart = renderedTextDetails.b();
 
         Pair<Integer, Integer> highlightedVisibleInterval = getRenderedHighlighedInterval(renderedText);
 
@@ -103,8 +104,8 @@ public class TextInputBoxWidget extends AbstractWidget {
 
         doRenderWidget(
                 poseStack,
-                renderedTextDetails.a(),
-                renderedTextDetails.b(),
+                renderedText,
+                renderedTextStart,
                 firstPortion,
                 highlightedPortion,
                 lastPortion,

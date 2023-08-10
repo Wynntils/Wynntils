@@ -2,10 +2,11 @@
  * Copyright © Wynntils 2023.
  * This file is released under AGPLv3. See LICENSE for full license details.
  */
-package com.wynntils.services.itemfilter;
+package com.wynntils.services.itemfilter.filters;
 
 import static java.lang.Integer.parseInt;
 
+import com.wynntils.services.itemfilter.type.ItemFilterFactory;
 import com.wynntils.utils.type.ErrorOr;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;

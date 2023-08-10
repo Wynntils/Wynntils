@@ -2,9 +2,10 @@
  * Copyright © Wynntils 2023.
  * This file is released under AGPLv3. See LICENSE for full license details.
  */
-package com.wynntils.services.itemfilter;
+package com.wynntils.services.itemfilter.filters;
 
 import com.wynntils.models.profession.type.ProfessionType;
+import com.wynntils.services.itemfilter.type.ItemFilterFactory;
 import com.wynntils.utils.type.ErrorOr;
 import net.minecraft.client.resources.language.I18n;
 

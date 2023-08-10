@@ -20,7 +20,7 @@ public class BasicTexturedButton extends WynntilsButton {
     private final Consumer<Integer> onClick;
     private List<Component> tooltip;
 
-    private boolean renderTooltipAbove;
+    private boolean renderTooltipAboveMouse;
     private boolean scaleTexture;
 
     public BasicTexturedButton(
@@ -36,12 +36,12 @@ public class BasicTexturedButton extends WynntilsButton {
             Texture texture,
             Consumer<Integer> onClick,
             List<Component> tooltip,
-            boolean renderTooltipAbove,
+            boolean renderTooltipAboveMouse,
             boolean scaleTexture) {
         super(x, y, width, height, Component.literal("Basic Button"));
         this.texture = texture;
         this.onClick = onClick;
-        this.renderTooltipAbove = renderTooltipAbove;
+        this.renderTooltipAboveMouse = renderTooltipAboveMouse;
         this.scaleTexture = scaleTexture;
         this.setTooltip(tooltip);
     }
@@ -64,7 +64,7 @@ public class BasicTexturedButton extends WynntilsButton {
         }
 
         if (this.isHovered) {
-            int renderY = renderTooltipAbove
+            int renderY = renderTooltipAboveMouse
                     ? mouseY - TooltipUtils.getToolTipHeight(TooltipUtils.componentToClientTooltipComponent(tooltip))
                     : mouseY;
 
