@@ -7,7 +7,7 @@ package com.wynntils.screens.base.widgets;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.wynntils.core.text.StyledText;
 import com.wynntils.screens.base.TextboxScreen;
-import com.wynntils.services.itemfilter.SearchQuery;
+import com.wynntils.services.itemfilter.ItemSearchQuery;
 import com.wynntils.utils.colors.CommonColors;
 import com.wynntils.utils.render.FontRenderer;
 import com.wynntils.utils.render.type.HorizontalAlignment;
@@ -20,20 +20,20 @@ import net.minecraft.client.gui.components.Tooltip;
 import net.minecraft.network.chat.Component;
 
 public class ItemSearchWidget extends SearchWidget {
-    private SearchQuery searchQuery;
+    private ItemSearchQuery searchQuery;
 
-    private Consumer<SearchQuery> onSearchQueryUpdateConsumer;
+    private Consumer<ItemSearchQuery> onSearchQueryUpdateConsumer;
 
     public ItemSearchWidget(
             int x,
             int y,
             int width,
             int height,
-            Consumer<SearchQuery> onSearchQueryUpdateConsumer,
+            Consumer<ItemSearchQuery> onSearchQueryUpdateConsumer,
             TextboxScreen textboxScreen) {
         super(x, y, width, height, null, textboxScreen);
         this.onSearchQueryUpdateConsumer = onSearchQueryUpdateConsumer;
-        this.searchQuery = SearchQuery.fromQueryString("");
+        this.searchQuery = ItemSearchQuery.fromQueryString("");
     }
 
     @Override
@@ -148,7 +148,7 @@ public class ItemSearchWidget extends SearchWidget {
 
     @Override
     protected void onUpdate(String text) {
-        searchQuery = SearchQuery.fromQueryString(text);
+        searchQuery = ItemSearchQuery.fromQueryString(text);
         onSearchQueryUpdateConsumer.accept(searchQuery);
 
         if (searchQuery.getErrors().isEmpty()) {
@@ -159,7 +159,7 @@ public class ItemSearchWidget extends SearchWidget {
         }
     }
 
-    public SearchQuery getSearchQuery() {
+    public ItemSearchQuery getSearchQuery() {
         return searchQuery;
     }
 }

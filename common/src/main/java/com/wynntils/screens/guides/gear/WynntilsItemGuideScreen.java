@@ -9,7 +9,7 @@ import com.wynntils.core.components.Models;
 import com.wynntils.core.text.StyledText;
 import com.wynntils.models.items.WynnItem;
 import com.wynntils.screens.guides.WynntilsGuideScreen;
-import com.wynntils.services.itemfilter.SearchQuery;
+import com.wynntils.services.itemfilter.ItemSearchQuery;
 import com.wynntils.utils.colors.CommonColors;
 import com.wynntils.utils.render.FontRenderer;
 import com.wynntils.utils.render.Texture;
@@ -97,7 +97,7 @@ public final class WynntilsItemGuideScreen extends WynntilsGuideScreen<GuideGear
                 this);
     }
 
-    protected void reloadElementsList(SearchQuery searchQuery) {
+    protected void reloadElementsList(ItemSearchQuery searchQuery) {
         elements.addAll(getAllGearItems().stream()
                 .filter(itemStack -> {
                     Optional<WynnItem> wynnItem = Models.Item.getWynnItem(itemStack);

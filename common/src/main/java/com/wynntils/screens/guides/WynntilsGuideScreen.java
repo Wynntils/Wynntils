@@ -10,7 +10,7 @@ import com.wynntils.screens.base.widgets.BackButton;
 import com.wynntils.screens.base.widgets.ItemSearchWidget;
 import com.wynntils.screens.base.widgets.PageSelectorButton;
 import com.wynntils.screens.base.widgets.WynntilsButton;
-import com.wynntils.services.itemfilter.SearchQuery;
+import com.wynntils.services.itemfilter.ItemSearchQuery;
 import com.wynntils.utils.render.Texture;
 import net.minecraft.network.chat.Component;
 
@@ -71,5 +71,5 @@ public abstract class WynntilsGuideScreen<E, B extends WynntilsButton> extends W
         reloadElementsList(((ItemSearchWidget) searchWidget).getSearchQuery());
     }
 
-    protected abstract void reloadElementsList(SearchQuery searchQuery);
+    protected abstract void reloadElementsList(ItemSearchQuery searchQuery);
 }

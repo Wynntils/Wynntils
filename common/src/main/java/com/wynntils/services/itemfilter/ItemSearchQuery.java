@@ -15,7 +15,7 @@ import java.util.List;
 import java.util.Locale;
 import java.util.stream.IntStream;
 
-public class SearchQuery {
+public class ItemSearchQuery {
     private final String queryString;
     private final List<ItemFilter> itemFilters;
     private final List<String> plainTextTokens;
@@ -23,7 +23,7 @@ public class SearchQuery {
     private final List<Integer> validFilterCharIndices;
     private final List<String> errors;
 
-    protected SearchQuery(
+    protected ItemSearchQuery(
             String queryString,
             List<ItemFilter> itemFilters,
             List<Integer> ignoredCharIndices,
@@ -38,7 +38,7 @@ public class SearchQuery {
         this.plainTextTokens = plainTextTokens;
     }
 
-    public static SearchQuery fromQueryString(String queryString) {
+    public static ItemSearchQuery fromQueryString(String queryString) {
         List<ItemFilter> itemFilters = new ArrayList<>();
         List<Integer> ignoredCharIndices = new ArrayList<>();
         List<Integer> validFilterCharIndices = new ArrayList<>();
@@ -105,7 +105,7 @@ public class SearchQuery {
             }
         }
 
-        return new SearchQuery(
+        return new ItemSearchQuery(
                 queryString, itemFilters, ignoredCharIndices, validFilterCharIndices, errors, plainTextTokens);
     }
 

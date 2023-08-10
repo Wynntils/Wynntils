@@ -27,7 +27,7 @@ import com.wynntils.screens.base.widgets.BasicTexturedButton;
 import com.wynntils.screens.base.widgets.ItemSearchWidget;
 import com.wynntils.screens.base.widgets.SearchWidget;
 import com.wynntils.screens.base.widgets.WynntilsButton;
-import com.wynntils.services.itemfilter.SearchQuery;
+import com.wynntils.services.itemfilter.ItemSearchQuery;
 import com.wynntils.utils.colors.CommonColors;
 import com.wynntils.utils.colors.CustomColor;
 import com.wynntils.utils.mc.McUtils;
@@ -83,7 +83,7 @@ public class ContainerSearchFeature extends Feature {
     private SearchWidget lastSearchWidget;
     private SearchableContainerType currentSearchableContainerType;
     private boolean autoSearching = false;
-    private SearchQuery lastSearchQuery;
+    private ItemSearchQuery lastSearchQuery;
 
     @SubscribeEvent
     public void onScreenInit(ScreenInitEvent event) {
@@ -260,7 +260,7 @@ public class ContainerSearchFeature extends Feature {
         screen.addRenderableWidget(infoButton);
     }
 
-    private void matchItems(SearchQuery searchQuery, ChestMenu chestMenu) {
+    private void matchItems(ItemSearchQuery searchQuery, ChestMenu chestMenu) {
         if (searchQuery == null) return;
 
         Container container = chestMenu.getContainer();
