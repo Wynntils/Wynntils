@@ -157,25 +157,21 @@ public class TranscribeMessagesFeature extends Feature {
                         defaultColor);
             }
 
-            Style style;
+            StyledTextPart newPart;
 
             if (transcribeGavellian || transcribeWynnic) {
-                if (showTooltip.get()) {
-                    style = Style.EMPTY.withHoverEvent(
-                            new HoverEvent(HoverEvent.Action.SHOW_TEXT, Component.literal(transcriptedText)));
+                String text = showTooltip.get() ? partText : transcriptedText;
+                Component hoverComponent = (npcDialogue || showTooltip.get())
+                        ? Component.literal(transcriptedText)
+                        : Component.translatable("feature.wynntils.transcribeMessages.transcribedFrom", partText);
+                Style style = Style.EMPTY.withHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, hoverComponent));
 
-                    transcriptedText = partText;
-                } else {
-                    style = Style.EMPTY.withHoverEvent(new HoverEvent(
-                            HoverEvent.Action.SHOW_TEXT,
-                            Component.translatable("feature.wynntils.transcribeMessages.transcribedFrom", partText)));
-                }
+                newPart = new StyledTextPart(text, style, null, Style.EMPTY);
             } else {
-                style = part.getPartStyle().getStyle();
+                newPart = part;
             }
 
             changes.remove(part);
-            StyledTextPart newPart = new StyledTextPart(transcriptedText, style, null, Style.EMPTY);
             changes.add(newPart);
 
             return IterationDecision.CONTINUE;
