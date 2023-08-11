@@ -6,12 +6,12 @@ package com.wynntils.core.persisted.upfixers.config;
 
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
-import com.wynntils.core.persisted.config.Config;
-import com.wynntils.core.persisted.upfixers.ConfigUpfixer;
+import com.wynntils.core.persisted.PersistedValue;
+import com.wynntils.core.persisted.upfixers.Upfixer;
 import java.util.List;
 import java.util.Set;
 
-public class GameBarOverlayMoveUpfixer implements ConfigUpfixer {
+public class GameBarOverlayMoveUpfixer implements Upfixer {
     private static final List<String> KEYS_TO_CHANGE = List.of(
             "customBarsOverlayFeature.awakenedProgressBarOverlay.flip",
             "customBarsOverlayFeature.awakenedProgressBarOverlay.horizontalAlignmentOverride",
@@ -85,7 +85,7 @@ public class GameBarOverlayMoveUpfixer implements ConfigUpfixer {
     private static final String NEW_KEY_PREFIX = "gameBarsOverlayFeature.";
 
     @Override
-    public boolean apply(JsonObject configObject, Set<Config<?>> configs) {
+    public boolean apply(JsonObject configObject, Set<PersistedValue<?>> persisteds) {
         for (String key : KEYS_TO_CHANGE) {
             if (!configObject.has(key)) continue;
 
