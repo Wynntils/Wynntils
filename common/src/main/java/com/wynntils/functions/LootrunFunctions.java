@@ -174,4 +174,11 @@ public class LootrunFunctions {
             return EnumUtils.toNiceString(beaconColor);
         }
     }
+
+    public static class LootrunRedBeaconChallengeCountFunction extends Function<Integer> {
+        @Override
+        public Integer getValue(FunctionArguments arguments) {
+            return Models.Lootrun.getRedBeaconTaskCount();
+        }
+    }
 }
