@@ -8,13 +8,14 @@ import com.wynntils.core.components.Managers;
 import com.wynntils.core.consumers.features.Configurable;
 import com.wynntils.core.consumers.features.Translatable;
 import com.wynntils.core.persisted.Persisted;
+import com.wynntils.core.persisted.PersistedMetadata;
 import com.wynntils.core.persisted.PersistedValue;
 import java.lang.reflect.Field;
 import java.lang.reflect.Type;
 import java.util.stream.Stream;
 
 public class Config<T> extends PersistedValue<T> implements Comparable<Config<T>> {
-    private ConfigHolder<T> configHolder;
+    private PersistedMetadata<T> persistedMetadata;
 
     public Config(T value) {
         super(value);
@@ -37,79 +38,83 @@ public class Config<T> extends PersistedValue<T> implements Comparable<Config<T>
 
         String i18nKey = configInfo.i18nKey();
 
-        configHolder = new ConfigHolder<>(parent, this, fieldName, i18nKey, visible, valueType);
+        persistedMetadata = new PersistedMetadata<>(parent, this, fieldName, i18nKey, visible, valueType);
     }
 
     @Override
     public int compareTo(Config<T> other) {
-        return configHolder.getJsonName().compareTo(other.getJsonName());
+        return getPersistedMetadata().getJsonName().compareTo(other.getJsonName());
     }
 
     public Stream<String> getValidLiterals() {
-        return configHolder.getValidLiterals();
+        return getPersistedMetadata().getValidLiterals();
     }
 
     public Type getType() {
-        return configHolder.getType();
+        return getPersistedMetadata().getType();
     }
 
     public String getFieldName() {
-        return configHolder.getFieldName();
+        return getPersistedMetadata().getFieldName();
     }
 
     public Configurable getParent() {
-        return configHolder.getParent();
+        return getPersistedMetadata().getParent();
     }
 
     public String getJsonName() {
-        return configHolder.getJsonName();
+        return getPersistedMetadata().getJsonName();
     }
 
     public boolean isVisible() {
-        return configHolder.isVisible();
+        return getPersistedMetadata().isVisible();
     }
 
     public String getDisplayName() {
-        return configHolder.getDisplayName();
+        return getPersistedMetadata().getDisplayName();
     }
 
     public String getDescription() {
-        return configHolder.getDescription();
+        return getPersistedMetadata().getDescription();
     }
 
     public T getValue() {
-        return configHolder.getValue();
+        return getPersistedMetadata().getValue();
     }
 
     public String getValueString() {
-        return configHolder.getValueString();
+        return getPersistedMetadata().getValueString();
     }
 
     public boolean isEnum() {
-        return configHolder.isEnum();
+        return getPersistedMetadata().isEnum();
     }
 
     public T getDefaultValue() {
-        return configHolder.getDefaultValue();
+        return getPersistedMetadata().getDefaultValue();
     }
 
     public void setValue(T value) {
-        configHolder.setValue(value);
+        getPersistedMetadata().setValue(value);
     }
 
     void restoreValue(Object value) {
-        configHolder.restoreValue(value);
+        getPersistedMetadata().restoreValue(value);
     }
 
     public boolean valueChanged() {
-        return configHolder.valueChanged();
+        return getPersistedMetadata().valueChanged();
     }
 
     public void reset() {
-        configHolder.reset();
+        getPersistedMetadata().reset();
     }
 
     public T tryParseStringValue(String value) {
-        return configHolder.tryParseStringValue(value);
+        return getPersistedMetadata().tryParseStringValue(value);
+    }
+
+    private PersistedMetadata<T> getPersistedMetadata() {
+        return persistedMetadata;
     }
 }
