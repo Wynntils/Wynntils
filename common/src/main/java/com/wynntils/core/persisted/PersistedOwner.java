@@ -5,8 +5,9 @@
 package com.wynntils.core.persisted;
 
 import com.google.common.base.CaseFormat;
+import com.wynntils.core.consumers.features.Translatable;
 
-public interface PersistedOwner {
+public interface PersistedOwner extends Translatable {
     default String getJsonName() {
         String name = this.getClass().getSimpleName();
         return CaseFormat.UPPER_CAMEL.to(CaseFormat.LOWER_CAMEL, name);

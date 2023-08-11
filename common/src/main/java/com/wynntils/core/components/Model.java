@@ -24,7 +24,7 @@ public abstract class Model extends CoreComponent {
     }
 
     @Override
-    protected String getComponentType() {
+    public String getTypeName() {
         return "Model";
     }
 

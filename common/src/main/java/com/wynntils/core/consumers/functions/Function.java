@@ -9,18 +9,20 @@ import com.wynntils.core.consumers.features.Translatable;
 import com.wynntils.core.consumers.functions.arguments.FunctionArguments;
 import java.lang.reflect.ParameterizedType;
 import java.util.List;
-import net.minecraft.client.resources.language.I18n;
 
 public abstract class Function<T> implements Translatable {
     private final String name;
-    private final String translationName;
 
     private List<String> aliases;
 
     protected Function() {
         String name = this.getClass().getSimpleName().replace("Function", "");
         this.name = CaseFormat.UPPER_CAMEL.to(CaseFormat.LOWER_UNDERSCORE, name);
-        this.translationName = CaseFormat.UPPER_CAMEL.to(CaseFormat.LOWER_CAMEL, name);
+    }
+
+    @Override
+    public String getTypeName() {
+        return "Function";
     }
 
     public abstract T getValue(FunctionArguments arguments);
@@ -48,22 +50,8 @@ public abstract class Function<T> implements Translatable {
         return aliases;
     }
 
-    @Override
-    public String getTranslatedName() {
-        return getTranslation("name");
-    }
-
     public String getDescription() {
         return getTranslation("description");
-    }
-
-    protected String getTranslationKeyName() {
-        return translationName;
-    }
-
-    @Override
-    public String getTranslation(String keySuffix) {
-        return I18n.get("function.wynntils." + getTranslationKeyName() + "." + keySuffix);
     }
 
     public String getArgumentDescription(String argumentName) {

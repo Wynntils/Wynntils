@@ -7,7 +7,6 @@ package com.wynntils.core.persisted.config;
 import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.components.Managers;
 import com.wynntils.core.consumers.features.Configurable;
-import com.wynntils.core.consumers.features.Translatable;
 import com.wynntils.core.persisted.PersistedValue;
 import com.wynntils.core.persisted.type.PersistedMetadata;
 import com.wynntils.utils.EnumUtils;
@@ -155,7 +154,7 @@ public class Config<T> extends PersistedValue<T> {
         if (!getMetadata().i18nKeyOverride().isEmpty()) {
             return I18n.get(getMetadata().i18nKeyOverride() + suffix);
         }
-        return ((Translatable) getMetadata().owner()).getTranslation(getFieldName() + suffix);
+        return getMetadata().owner().getTranslation(getFieldName() + suffix);
     }
 
     private PersistedMetadata<T> getMetadata() {

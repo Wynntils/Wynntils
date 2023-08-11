@@ -118,7 +118,7 @@ public final class PersistedManager extends Manager {
         // "featureName.overlayName.settingName" vs "featureName.settingName"
         if (!(owner instanceof Overlay overlay)) return "";
 
-        String name = overlay.getDeclaringClassName();
+        String name = overlay.getDeclaringFeatureClassName();
         return CaseFormat.UPPER_CAMEL.to(CaseFormat.LOWER_CAMEL, name) + ".";
     }
 }

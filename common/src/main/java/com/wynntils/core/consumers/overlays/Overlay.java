@@ -11,7 +11,6 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.components.Managers;
 import com.wynntils.core.consumers.features.AbstractConfigurable;
-import com.wynntils.core.consumers.features.Translatable;
 import com.wynntils.core.mod.type.CrashType;
 import com.wynntils.core.persisted.Persisted;
 import com.wynntils.core.persisted.config.Config;
@@ -22,7 +21,7 @@ import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.resources.language.I18n;
 import net.minecraft.world.phys.Vec2;
 
-public abstract class Overlay extends AbstractConfigurable implements Translatable, Comparable<Overlay> {
+public abstract class Overlay extends AbstractConfigurable implements Comparable<Overlay> {
     @Persisted(i18nKey = "overlay.wynntils.overlay.position")
     protected final HiddenConfig<OverlayPosition> position = new HiddenConfig<>(null);
 
@@ -64,6 +63,11 @@ public abstract class Overlay extends AbstractConfigurable implements Translatab
         this.verticalAlignmentOverride.store(verticalAlignmentOverride);
     }
 
+    @Override
+    public String getTypeName() {
+        return "Overlay";
+    }
+
     public abstract void render(PoseStack poseStack, MultiBufferSource bufferSource, float partialTicks, Window window);
 
     public void renderPreview(PoseStack poseStack, MultiBufferSource bufferSource, float partialTicks, Window window) {
@@ -102,33 +106,25 @@ public abstract class Overlay extends AbstractConfigurable implements Translatab
         }
     }
 
-    /** Gets the name of a feature */
     @Override
-    public String getTranslatedName() {
-        return getTranslation("name");
-    }
-
-    @Override
-    public String getTranslation(String keySuffix) {
-        return I18n.get("feature.wynntils." + getDeclaringFeatureNameCamelCase() + ".overlay." + getNameCamelCase()
-                + "." + keySuffix);
+    public String getTranslation(String keySuffix, Object... parameters) {
+        // Overlay translations have a non-standard name
+        return I18n.get(
+                "feature.wynntils." + getTranslationFeatureKeyName() + ".overlay." + getTranslationKeyName() + "."
+                        + keySuffix,
+                parameters);
     }
 
     public String getShortName() {
         return this.getClass().getSimpleName();
     }
 
-    public String getDeclaringClassName() {
+    public String getDeclaringFeatureClassName() {
         return Managers.Overlay.getOverlayParent(this).getClass().getSimpleName();
     }
 
-    protected String getNameCamelCase() {
-        return CaseFormat.UPPER_CAMEL.to(
-                CaseFormat.LOWER_CAMEL, this.getClass().getSimpleName().replace("Overlay", ""));
-    }
-
-    protected String getDeclaringFeatureNameCamelCase() {
-        String name = getDeclaringClassName().replace("Feature", "");
+    private String getTranslationFeatureKeyName() {
+        String name = getDeclaringFeatureClassName().replace("Feature", "");
         return CaseFormat.UPPER_CAMEL.to(CaseFormat.LOWER_CAMEL, name);
     }
 
@@ -225,7 +221,7 @@ public abstract class Overlay extends AbstractConfigurable implements Translatab
     public int compareTo(Overlay other) {
         return ComparisonChain.start()
                 .compareTrueFirst(this.isParentEnabled(), other.isParentEnabled())
-                .compare(this.getDeclaringClassName(), other.getDeclaringClassName())
+                .compare(this.getDeclaringFeatureClassName(), other.getDeclaringFeatureClassName())
                 .compare(
                         (this instanceof DynamicOverlay dynamicThis ? dynamicThis.getId() : 0),
                         (other instanceof DynamicOverlay dynamicOther ? dynamicOther.getId() : 0))
