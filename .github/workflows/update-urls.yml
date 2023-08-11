@@ -1,0 +1,35 @@
+# Github actions runner will run this script on a schedule
+
+name: Update urls.json
+on:
+  schedule:
+    - cron: '0 * * * *' # Runs every hour
+
+jobs:
+  update-urls:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out source code
+        uses: actions/checkout@v3
+        with:
+          repository: ${{ github.event.pull_request.head.repo.full_name }}
+          token: ${{ secrets.PRIVATE_TOKEN }}
+          ref: ${{ github.head_ref }}
+
+      - name: Update Urls
+        run: |
+          wget -O common/src/main/resources/assets/wynntils/urls.json "https://raw.githubusercontent.com/Wynntils/WynntilsWebsite-API/master/urls.json"
+
+      - name: Create Pull Request
+        uses: peter-evans/create-pull-request@v4
+        with:
+          labels: auto-generated
+          committer: 'WynntilsBot <admin@wynntils.com>'
+          commit-message: "chore: [auto-generated] Update urls.json [ci skip]"
+          title: "chore: [auto-generated] Update urls.json [ci skip]"
+          body: |
+            The URL list on [Wynntils API site](https://github.com/Wynntils/WynntilsWebsite-API) has changed.
+            This should be incorporated into the next release of Artemis.
+            
+            This PR has been automatically generated.
+          branch: auto-update-urls
