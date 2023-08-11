@@ -3,7 +3,7 @@
 name: Update urls.json
 on:
   schedule:
-    - cron: '0 0 * * *' # Runs at midnight
+    - cron: '0 * * * *' # Runs every hour
 
 jobs:
   update-urls:
