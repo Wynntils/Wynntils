@@ -21,12 +21,14 @@ import com.wynntils.handlers.chat.type.NpcDialogueType;
 import com.wynntils.models.wynnalphabet.WynnAlphabet;
 import com.wynntils.models.wynnalphabet.type.TranscribeCondition;
 import com.wynntils.utils.colors.ColorChatFormatting;
+import com.wynntils.utils.mc.McUtils;
 import com.wynntils.utils.type.IterationDecision;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.HoverEvent;
 import net.minecraft.network.chat.Style;
 import net.minecraftforge.eventbus.api.EventPriority;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
@@ -41,6 +43,9 @@ public class TranscribeMessagesFeature extends Feature {
 
     @Persisted
     public final Config<TranscribeCondition> transcribeCondition = new Config<>(TranscribeCondition.ALWAYS);
+
+    @Persisted
+    public final Config<Boolean> showTooltip = new Config<>(false);
 
     @Persisted
     public final Config<Boolean> coloredTranscriptions = new Config<>(true);
@@ -85,7 +90,9 @@ public class TranscribeMessagesFeature extends Feature {
 
         if (!transcribeWynnic && !transcribeGavellian) return;
 
-        event.setCanceled(true);
+        if (!showTooltip.get()) {
+            event.setCanceled(true);
+        }
 
         List<Component> transcriptedComponents = event.getChatMessage().stream()
                 .map(styledText -> getStyledTextWithTranscription(
@@ -93,11 +100,17 @@ public class TranscribeMessagesFeature extends Feature {
                 .map(s -> ((Component) s.getComponent()))
                 .toList();
 
-        Managers.TickScheduler.scheduleNextTick(() -> {
-            NpcDialogEvent transcriptedEvent =
-                    new WynnTranscriptedNpcDialogEvent(transcriptedComponents, event.getType(), event.isProtected());
-            WynntilsMod.postEvent(transcriptedEvent);
-        });
+        if (showTooltip.get()) {
+            for (Component transcriptedComponent : transcriptedComponents) {
+                McUtils.sendMessageToClient(transcriptedComponent);
+            }
+        } else {
+            Managers.TickScheduler.scheduleNextTick(() -> {
+                NpcDialogEvent transcriptedEvent = new WynnTranscriptedNpcDialogEvent(
+                        transcriptedComponents, event.getType(), event.isProtected());
+                WynntilsMod.postEvent(transcriptedEvent);
+            });
+        }
     }
 
     private StyledText getStyledTextWithTranscription(
@@ -144,9 +157,21 @@ public class TranscribeMessagesFeature extends Feature {
                         defaultColor);
             }
 
+            StyledTextPart newPart;
+
+            if (transcribeGavellian || transcribeWynnic) {
+                String text = showTooltip.get() ? partText : transcriptedText;
+                Component hoverComponent = (npcDialogue || showTooltip.get())
+                        ? Component.literal(transcriptedText)
+                        : Component.translatable("feature.wynntils.transcribeMessages.transcribedFrom", partText);
+                Style style = Style.EMPTY.withHoverEvent(new HoverEvent(HoverEvent.Action.SHOW_TEXT, hoverComponent));
+
+                newPart = new StyledTextPart(text, style, null, Style.EMPTY);
+            } else {
+                newPart = part;
+            }
+
             changes.remove(part);
-            StyledTextPart newPart =
-                    new StyledTextPart(transcriptedText, part.getPartStyle().getStyle(), null, Style.EMPTY);
             changes.add(newPart);
 
             return IterationDecision.CONTINUE;

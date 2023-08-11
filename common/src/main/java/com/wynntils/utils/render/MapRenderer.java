@@ -32,6 +32,10 @@ import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL13;
 
 public final class MapRenderer {
+    // Zoom is the scaling of the map. The bigger the zoom, the more detailed the map becomes.
+    public static final float MIN_ZOOM = 0.1f;
+    public static final float MAX_ZOOM = 3;
+
     public static Poi hovered = null;
 
     public static void renderMapQuad(

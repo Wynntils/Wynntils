@@ -8,6 +8,7 @@ import java.net.URLEncoder;
 import java.nio.ByteBuffer;
 import java.nio.charset.StandardCharsets;
 import java.text.DecimalFormat;
+import java.text.Normalizer;
 import java.util.ArrayList;
 import java.util.Base64;
 import java.util.List;
@@ -18,6 +19,8 @@ import net.minecraft.ChatFormatting;
 public final class StringUtils {
     private static final String[] SUFFIXES = {"", "k", "m", "b", "t"}; // kilo, million, billion, trillion (short scale)
     private static final DecimalFormat FRACTIONAL_FORMAT = new DecimalFormat("#.#");
+    private static final Pattern NONLATIN = Pattern.compile("[^\\w-]");
+    private static final Pattern WHITESPACE = Pattern.compile("[\\s]");
 
     /**
      * Converts a delimited list into a {@link java.util.List} of strings
@@ -66,6 +69,14 @@ public final class StringUtils {
 
     public static String encodeUrl(String url) {
         return URLEncoder.encode(url, StandardCharsets.UTF_8);
+    }
+
+    public static String createSlug(String input) {
+        // based on https://stackoverflow.com/a/1657250
+        String nowhitespace = WHITESPACE.matcher(input).replaceAll("-");
+        String normalized = Normalizer.normalize(nowhitespace, Normalizer.Form.NFD);
+        String slug = NONLATIN.matcher(normalized).replaceAll("");
+        return slug.toLowerCase(Locale.ENGLISH);
     }
 
     public static String formatAmount(double value) {

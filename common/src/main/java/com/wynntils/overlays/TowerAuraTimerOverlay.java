@@ -28,7 +28,7 @@ public class TowerAuraTimerOverlay extends TextOverlay {
                 new OverlaySize(150, 30),
                 HorizontalAlignment.CENTER,
                 VerticalAlignment.MIDDLE);
-        fontScale.updateConfig(2f);
+        fontScale.store(2f);
     }
 
     @Override

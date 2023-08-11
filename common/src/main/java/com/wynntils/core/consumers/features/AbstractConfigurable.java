@@ -20,11 +20,6 @@ public abstract class AbstractConfigurable implements Configurable {
     }
 
     @Override
-    public void removeConfigOptions(List<Config<?>> options) {
-        configOptions.removeAll(options);
-    }
-
-    @Override
     public final List<Config<?>> getVisibleConfigOptions() {
         return configOptions.stream().filter(Config::isVisible).collect(Collectors.toList());
     }

@@ -4,7 +4,9 @@
  */
 package com.wynntils.core.persisted;
 
-public abstract class PersistedValue<T> {
+import java.lang.reflect.Type;
+
+public abstract class PersistedValue<T> implements Comparable<PersistedValue<T>> {
     protected T value;
 
     protected PersistedValue(T value) {
@@ -16,4 +18,18 @@ public abstract class PersistedValue<T> {
     }
 
     public abstract void touched();
+
+    public void store(T value) {
+        this.value = value;
+        touched();
+    }
+
+    public abstract String getJsonName();
+
+    public abstract Type getType();
+
+    @Override
+    public int compareTo(PersistedValue<T> other) {
+        return getJsonName().compareTo(other.getJsonName());
+    }
 }

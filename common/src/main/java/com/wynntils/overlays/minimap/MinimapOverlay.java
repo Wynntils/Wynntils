@@ -93,6 +93,11 @@ public class MinimapOverlay extends Overlay {
                 new OverlaySize(DEFAULT_SIZE, DEFAULT_SIZE));
     }
 
+    public void scale(float multiplier) {
+        scale.setValue(MathUtils.clamp(scale.get() * multiplier, MapRenderer.MIN_ZOOM, MapRenderer.MAX_ZOOM));
+        scale.touched();
+    }
+
     // FIXME: This is the only overlay not to use buffer sources for rendering. This is due to `createMask`
     // currently not working with buffer sources.
     @Override
