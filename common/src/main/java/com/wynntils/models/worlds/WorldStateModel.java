@@ -149,13 +149,14 @@ public final class WorldStateModel extends Model {
         StyledText name = StyledText.fromComponent(displayName);
         Matcher m = name.getMatcher(WORLD_NAME);
         if (setWorldIfMatched(m)) return;
-        //must check in this order as housing name regex matches anything that WORLD_NAME would match, housing names need to exclude world names.
+        // must check in this order as housing name regex matches anything that WORLD_NAME would match, housing names
+        // need to exclude world names.
         Matcher housingNameMatcher = name.getMatcher(HOUSING_NAME);
         setWorldIfMatched(housingNameMatcher);
     }
 
     private boolean setWorldIfMatched(Matcher m) {
-        if(m.find()) {
+        if (m.find()) {
             String worldName = m.group(1);
             setState(WorldState.WORLD, worldName, !hasJoinedAnyWorld);
             hasJoinedAnyWorld = true;
