@@ -1,8 +1,16 @@
+## [0.0.3-alpha.302](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.301...v0.0.3-alpha.302) (2023-08-11)
+
+
+### Code Refactoring
+
+* Rename ConfigHolder to PersistedMetadata ([#1980](https://github.com/Wynntils/Artemis/issues/1980)) ([48c5cb7](https://github.com/Wynntils/Artemis/commit/48c5cb7712d0406fb12b195f5d824818f55a112e))
+
 ## [0.0.3-alpha.301](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.300...v0.0.3-alpha.301) (2023-08-11)
 
 
 ### Miscellaneous Chores
 
+* **release:** v0.0.3-alpha.301 [skip ci] ([2eee24b](https://github.com/Wynntils/Artemis/commit/2eee24b889ee7b813cf1ada817eac3f4bd2d9bd1))
 * Update url md5 for major ID file ([#1981](https://github.com/Wynntils/Artemis/issues/1981)) ([ebf6db2](https://github.com/Wynntils/Artemis/commit/ebf6db234309e5d37c23a7bf4d79e9d49c9f3378))
 
 ## [0.0.3-alpha.300](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.299...v0.0.3-alpha.300) (2023-08-10)
@@ -41,16 +49,4 @@
 
 * **release:** v0.0.3-alpha.298 [skip ci] ([8cc0ba3](https://github.com/Wynntils/Artemis/commit/8cc0ba358bf8758ec0942acc089543f065b3b801))
 * Update md5 for major ID lore update json ([#1974](https://github.com/Wynntils/Artemis/issues/1974)) ([51eb69f](https://github.com/Wynntils/Artemis/commit/51eb69f003307aabab454b99d7e9240ed52dd30e))
-
-## [0.0.3-alpha.297](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.296...v0.0.3-alpha.297) (2023-08-09)
-
-
-### New Features
-
-* Config to only auto-join parties in same world ([#1972](https://github.com/Wynntils/Artemis/issues/1972)) ([7681e1c](https://github.com/Wynntils/Artemis/commit/7681e1c0a3d4bf6760d23a49b9877f82868d647e))
-
-
-### Miscellaneous Chores
-
-* **release:** v0.0.3-alpha.297 [skip ci] ([e232394](https://github.com/Wynntils/Artemis/commit/e232394cef3ef770066a8e1f1e1e1361a9685dd3))
 
