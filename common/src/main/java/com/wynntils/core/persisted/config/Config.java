@@ -14,7 +14,7 @@ import java.lang.reflect.Field;
 import java.lang.reflect.Type;
 import java.util.stream.Stream;
 
-public class Config<T> extends PersistedValue<T> implements Comparable<Config<T>> {
+public class Config<T> extends PersistedValue<T> {
     private PersistedMetadata<T> persistedMetadata;
 
     public Config(T value) {
@@ -41,11 +41,6 @@ public class Config<T> extends PersistedValue<T> implements Comparable<Config<T>
         String i18nKey = configInfo.i18nKey();
 
         persistedMetadata = new PersistedMetadata<>(parent, this, fieldName, i18nKey, visible, valueType);
-    }
-
-    @Override
-    public int compareTo(Config<T> other) {
-        return getPersistedMetadata().getJsonName().compareTo(other.getJsonName());
     }
 
     public Stream<String> getValidLiterals() {

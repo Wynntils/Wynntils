@@ -6,12 +6,12 @@ package com.wynntils.core.persisted.upfixers;
 
 import com.google.common.base.CaseFormat;
 import com.google.gson.JsonObject;
-import com.wynntils.core.persisted.config.Config;
+import com.wynntils.core.persisted.PersistedValue;
 import java.util.Set;
 
 @FunctionalInterface
-public interface ConfigUpfixer {
-    boolean apply(JsonObject configObject, Set<Config<?>> configs);
+public interface Upfixer {
+    boolean apply(JsonObject configObject, Set<PersistedValue<?>> persisteds);
 
     default String getUpfixerName() {
         return CaseFormat.UPPER_CAMEL
