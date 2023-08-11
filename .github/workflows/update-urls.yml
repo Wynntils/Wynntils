@@ -16,7 +16,7 @@ jobs:
           token: ${{ secrets.PRIVATE_TOKEN }}
           ref: ${{ github.head_ref }}
 
-      - name: Update Gear Data
+      - name: Update Urls
         run: |
           wget -O common/src/main/resources/assets/wynntils/urls.json "https://raw.githubusercontent.com/Wynntils/WynntilsWebsite-API/master/urls.json"
 
