@@ -2,7 +2,7 @@
  * Copyright © Wynntils 2022-2023.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
-package com.wynntils.core.consumers.features;
+package com.wynntils.core.persisted;
 
 import com.google.common.base.CaseFormat;
 import java.util.Locale;
