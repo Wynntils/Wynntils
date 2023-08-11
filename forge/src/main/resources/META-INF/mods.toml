@@ -1,7 +1,7 @@
 modLoader = "javafml"
 loaderVersion = "[44,)"
 issueTrackerURL = "https://github.com/Wynntils/Artemis/issues"
-license = "GNU AGPL 3"
+license = "LGPL-3.0-only"
 
 [[mods]]
     modId = "wynntils"
