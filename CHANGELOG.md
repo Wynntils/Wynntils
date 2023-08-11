@@ -1,4 +1,16 @@
+## [0.0.3-alpha.303](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.302...v0.0.3-alpha.303) (2023-08-11)
+
+
+### Code Refactoring
+
+* Rename Config.updateConfig() to store() to align with superclass ([#1979](https://github.com/Wynntils/Artemis/issues/1979)) ([9f32607](https://github.com/Wynntils/Artemis/commit/9f32607e826c0e1073d8dca40c754df782989dc4))
+
 ## [0.0.3-alpha.302](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.301...v0.0.3-alpha.302) (2023-08-11)
+
+
+### Miscellaneous Chores
+
+* **release:** v0.0.3-alpha.302 [skip ci] ([76ac0fe](https://github.com/Wynntils/Artemis/commit/76ac0fe119efc30ebe3b26305c6ba0477755169b))
 
 
 ### Code Refactoring
@@ -41,12 +53,4 @@
 ### Code Refactoring
 
 * Incoroprate general fixes from mapdata rewrite ([#1973](https://github.com/Wynntils/Artemis/issues/1973)) ([af10b0c](https://github.com/Wynntils/Artemis/commit/af10b0c0a1683c5fb9a4f75f3cea3ae0fdbaadc6))
-
-## [0.0.3-alpha.298](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.297...v0.0.3-alpha.298) (2023-08-09)
-
-
-### Miscellaneous Chores
-
-* **release:** v0.0.3-alpha.298 [skip ci] ([8cc0ba3](https://github.com/Wynntils/Artemis/commit/8cc0ba358bf8758ec0942acc089543f065b3b801))
-* Update md5 for major ID lore update json ([#1974](https://github.com/Wynntils/Artemis/issues/1974)) ([51eb69f](https://github.com/Wynntils/Artemis/commit/51eb69f003307aabab454b99d7e9240ed52dd30e))
 
