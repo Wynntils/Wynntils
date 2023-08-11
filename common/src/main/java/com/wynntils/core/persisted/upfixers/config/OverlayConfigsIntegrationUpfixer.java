@@ -6,7 +6,7 @@ package com.wynntils.core.persisted.upfixers.config;
 
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
-import com.wynntils.core.persisted.config.Config;
+import com.wynntils.core.persisted.PersistedValue;
 import com.wynntils.core.persisted.upfixers.RenamedKeysUpfixer;
 import com.wynntils.utils.type.Pair;
 import java.util.List;
@@ -45,7 +45,7 @@ public class OverlayConfigsIntegrationUpfixer extends RenamedKeysUpfixer {
     }
 
     @Override
-    public boolean apply(JsonObject configObject, Set<Config<?>> configs) {
+    public boolean apply(JsonObject configObject, Set<PersistedValue<?>> persisteds) {
         // Special handling of config that split in two
         String oldName = "objectivesOverlayFeature.disableObjectiveTrackingOnScoreboard";
         if (configObject.has(oldName)) {
@@ -54,6 +54,6 @@ public class OverlayConfigsIntegrationUpfixer extends RenamedKeysUpfixer {
             configObject.add(newName, jsonElement);
         }
 
-        return super.apply(configObject, configs);
+        return super.apply(configObject, persisteds);
     }
 }

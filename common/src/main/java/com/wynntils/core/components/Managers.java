@@ -19,7 +19,7 @@ import com.wynntils.core.notifications.NotificationManager;
 import com.wynntils.core.persisted.PersistedManager;
 import com.wynntils.core.persisted.config.ConfigManager;
 import com.wynntils.core.persisted.storage.StorageManager;
-import com.wynntils.core.persisted.upfixers.ConfigUpfixerManager;
+import com.wynntils.core.persisted.upfixers.UpfixerManager;
 
 public final class Managers {
     // Start with UrlManager to give it chance to update URLs in background
@@ -28,19 +28,19 @@ public final class Managers {
     public static final UrlManager Url = new UrlManager(TickScheduler);
 
     public static final CommandManager Command = new CommandManager();
-    public static final ConfigUpfixerManager ConfigUpfixer = new ConfigUpfixerManager();
     public static final ConnectionManager Connection = new ConnectionManager();
     public static final CrashReportManager CrashReport = new CrashReportManager();
     public static final FunctionManager Function = new FunctionManager();
     public static final JsonManager Json = new JsonManager();
     public static final KeyBindManager KeyBind = new KeyBindManager();
     public static final NotificationManager Notification = new NotificationManager();
+    public static final UpfixerManager Upfixer = new UpfixerManager();
 
     // Managers with dependencies, ordered alphabetically as far as possible
     public static final PersistedManager Persisted = new PersistedManager(Json);
     public static final OverlayManager Overlay = new OverlayManager(CrashReport);
     public static final FeatureManager Feature = new FeatureManager(Command, CrashReport, KeyBind, Overlay);
-    public static final ConfigManager Config = new ConfigManager(ConfigUpfixer, Json, Feature, Overlay);
+    public static final ConfigManager Config = new ConfigManager(Upfixer, Json, Feature, Overlay);
     public static final NetManager Net = new NetManager(Url);
     public static final StorageManager Storage = new StorageManager(Json, Feature);
 }

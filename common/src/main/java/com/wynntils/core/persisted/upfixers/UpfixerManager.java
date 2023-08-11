@@ -9,7 +9,7 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.components.Manager;
-import com.wynntils.core.persisted.config.Config;
+import com.wynntils.core.persisted.PersistedValue;
 import com.wynntils.core.persisted.upfixers.config.CustomCommandKeybindSlashStartUpfixer;
 import com.wynntils.core.persisted.upfixers.config.CustomPoiIconEnumBugUpfixer;
 import com.wynntils.core.persisted.upfixers.config.CustomPoiVisbilityUpfixer;
@@ -23,12 +23,12 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
-public class ConfigUpfixerManager extends Manager {
+public class UpfixerManager extends Manager {
     public static final String UPFIXER_JSON_MEMBER_NAME = "wynntils.upfixers";
 
-    private final List<ConfigUpfixer> configUpfixers = new ArrayList<>();
+    private final List<Upfixer> upfixers = new ArrayList<>();
 
-    public ConfigUpfixerManager() {
+    public UpfixerManager() {
         super(List.of());
 
         // Register upfixers here, in order of run priority
@@ -43,8 +43,8 @@ public class ConfigUpfixerManager extends Manager {
         registerUpfixer(new OverlayConfigsIntegrationUpfixer());
     }
 
-    private void registerUpfixer(ConfigUpfixer upfixer) {
-        configUpfixers.add(upfixer);
+    private void registerUpfixer(Upfixer upfixer) {
+        upfixers.add(upfixer);
     }
 
     /**
@@ -53,12 +53,12 @@ public class ConfigUpfixerManager extends Manager {
      * @param configObject  The config object to run upfixers on.
      * @param configs All registered configs
      */
-    public boolean runUpfixers(JsonObject configObject, Set<Config<?>> configs) {
-        List<ConfigUpfixer> missingUpfixers = getMissingUpfixers(configObject);
+    public boolean runUpfixers(JsonObject configObject, Set<PersistedValue<?>> configs) {
+        List<Upfixer> missingUpfixers = getMissingUpfixers(configObject);
 
         boolean anyChange = false;
 
-        for (ConfigUpfixer upfixer : missingUpfixers) {
+        for (Upfixer upfixer : missingUpfixers) {
             try {
                 if (upfixer.apply(configObject, configs)) {
                     anyChange = true;
@@ -73,7 +73,7 @@ public class ConfigUpfixerManager extends Manager {
         return anyChange;
     }
 
-    private void addUpfixerToConfig(JsonObject configObject, ConfigUpfixer upfixer) {
+    private void addUpfixerToConfig(JsonObject configObject, Upfixer upfixer) {
         JsonArray upfixers = configObject.getAsJsonArray(UPFIXER_JSON_MEMBER_NAME);
 
         if (upfixers == null) {
@@ -84,18 +84,18 @@ public class ConfigUpfixerManager extends Manager {
         upfixers.add(upfixer.getUpfixerName());
     }
 
-    private List<ConfigUpfixer> getMissingUpfixers(JsonObject configObject) {
-        if (!configObject.has(UPFIXER_JSON_MEMBER_NAME)) return configUpfixers;
+    private List<Upfixer> getMissingUpfixers(JsonObject configObject) {
+        if (!configObject.has(UPFIXER_JSON_MEMBER_NAME)) return upfixers;
 
         JsonArray upfixers = configObject.getAsJsonArray(UPFIXER_JSON_MEMBER_NAME);
-        if (upfixers == null) return configUpfixers;
+        if (upfixers == null) return this.upfixers;
 
         List<String> appliedUpfixers = new ArrayList<>();
         for (JsonElement upfixer : upfixers) {
             appliedUpfixers.add(upfixer.getAsString());
         }
 
-        return configUpfixers.stream()
+        return this.upfixers.stream()
                 .filter(upfixer -> !appliedUpfixers.contains(upfixer.getUpfixerName()))
                 .toList();
     }
