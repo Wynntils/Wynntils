@@ -1,9 +1,21 @@
+## [0.0.3-alpha.301](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.300...v0.0.3-alpha.301) (2023-08-11)
+
+
+### Miscellaneous Chores
+
+* Update url md5 for major ID file ([#1981](https://github.com/Wynntils/Artemis/issues/1981)) ([ebf6db2](https://github.com/Wynntils/Artemis/commit/ebf6db234309e5d37c23a7bf4d79e9d49c9f3378))
+
 ## [0.0.3-alpha.300](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.299...v0.0.3-alpha.300) (2023-08-10)
 
 
 ### Bug Fixes
 
 * Transcribed NPC dialogue repeating ([#1975](https://github.com/Wynntils/Artemis/issues/1975)) ([b63245f](https://github.com/Wynntils/Artemis/commit/b63245fb3417b296f51d87766a1190ad1b08c4f6))
+
+
+### Miscellaneous Chores
+
+* **release:** v0.0.3-alpha.300 [skip ci] ([60d125d](https://github.com/Wynntils/Artemis/commit/60d125dfef436e05b2d6bdd13c501a83cafa326a))
 
 ## [0.0.3-alpha.299](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.298...v0.0.3-alpha.299) (2023-08-10)
 
@@ -41,16 +53,4 @@
 ### Miscellaneous Chores
 
 * **release:** v0.0.3-alpha.297 [skip ci] ([e232394](https://github.com/Wynntils/Artemis/commit/e232394cef3ef770066a8e1f1e1e1361a9685dd3))
-
-## [0.0.3-alpha.296](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.295...v0.0.3-alpha.296) (2023-08-09)
-
-
-### Bug Fixes
-
-* Update party model regexes for 2.0.3 hotfix 3 ([#1971](https://github.com/Wynntils/Artemis/issues/1971)) ([d983376](https://github.com/Wynntils/Artemis/commit/d983376ed573def8969d309e67a8d6a7760eeba7))
-
-
-### Miscellaneous Chores
-
-* **release:** v0.0.3-alpha.296 [skip ci] ([1142a8d](https://github.com/Wynntils/Artemis/commit/1142a8d16032195066700d7b85f59d6473d8d28e))
 
