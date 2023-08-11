@@ -11,6 +11,7 @@ import com.wynntils.core.consumers.overlays.Overlay;
 import com.wynntils.core.json.JsonManager;
 import com.wynntils.core.persisted.config.Config;
 import com.wynntils.core.persisted.config.NullableConfig;
+import com.wynntils.core.persisted.type.PersistedMetadata;
 import com.wynntils.utils.type.Pair;
 import java.lang.reflect.Field;
 import java.lang.reflect.Type;
