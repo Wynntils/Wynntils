@@ -4,8 +4,11 @@
  */
 package com.wynntils.core.persisted;
 
-public abstract class PersistedValue<T> {
-    protected T value;
+import com.wynntils.core.components.Managers;
+import java.lang.reflect.Type;
+
+public abstract class PersistedValue<T> implements Comparable<PersistedValue<T>> {
+    private T value;
 
     protected PersistedValue(T value) {
         this.value = value;
@@ -20,5 +23,27 @@ public abstract class PersistedValue<T> {
     public void store(T value) {
         this.value = value;
         touched();
+    }
+
+    public String getJsonName() {
+        // Available after owner is registered in registerOwner()
+        return Managers.Persisted.getMetadata(this).getJsonName();
+    }
+
+    public Type getType() {
+        // Available after owner is registered in registerOwner()
+        return Managers.Persisted.getMetadata(this).getValueType();
+    }
+
+    // This can only be called from Managers.Persisted, since all writes to the
+    // value need to be handled properly
+    @SuppressWarnings("unchecked")
+    void setRaw(Object value) {
+        this.value = (T) value;
+    }
+
+    @Override
+    public int compareTo(PersistedValue<T> other) {
+        return getJsonName().compareTo(other.getJsonName());
     }
 }

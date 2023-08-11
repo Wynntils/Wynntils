@@ -54,8 +54,8 @@ public abstract class DynamicOverlay extends Overlay {
     }
 
     @Override
-    public String getConfigJsonName() {
-        return super.getConfigJsonName() + id;
+    public String getJsonName() {
+        return super.getJsonName() + id;
     }
 
     @Override

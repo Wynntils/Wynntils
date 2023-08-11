@@ -23,6 +23,4 @@ public interface Configurable extends PersistedOwner {
 
     /** Returns the config option matching the given name, if it exists */
     Optional<Config<?>> getConfigOptionFromString(String name);
-
-    String getConfigJsonName();
 }

@@ -119,7 +119,7 @@ public final class StorageManager extends Manager {
             // read value and update option
             JsonElement jsonElem = storageJson.get(jsonName);
             Object value = Managers.Json.GSON.fromJson(jsonElem, storageTypes.get(storage));
-            storage.set(value);
+            Managers.Persisted.setRaw(storage, value);
 
             Storageable owner = storageOwner.get(storage);
             owner.onStorageLoad();

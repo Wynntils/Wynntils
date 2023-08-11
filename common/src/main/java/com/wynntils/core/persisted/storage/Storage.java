@@ -16,10 +16,4 @@ public class Storage<T> extends PersistedValue<T> {
     public void touched() {
         Managers.Storage.persist();
     }
-
-    // This must only be called by StorageManager when restoring value from disk
-    @SuppressWarnings("unchecked")
-    void set(Object value) {
-        this.value = (T) value;
-    }
 }

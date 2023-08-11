@@ -4,7 +4,6 @@
  */
 package com.wynntils.core.consumers.features;
 
-import com.google.common.base.CaseFormat;
 import com.wynntils.core.persisted.config.Config;
 import java.util.ArrayList;
 import java.util.List;
@@ -34,11 +33,5 @@ public abstract class AbstractConfigurable implements Configurable {
         return getConfigOptions().stream()
                 .filter(c -> c.getFieldName().equals(name))
                 .findFirst();
-    }
-
-    @Override
-    public String getConfigJsonName() {
-        String name = this.getClass().getSimpleName();
-        return CaseFormat.UPPER_CAMEL.to(CaseFormat.LOWER_CAMEL, name);
     }
 }

@@ -49,7 +49,7 @@ public class OverlayGroupHolder {
     }
 
     public String getConfigKey() {
-        return parent.getConfigJsonName() + ".groupedOverlay." + field.getName() + ".ids";
+        return parent.getJsonName() + ".groupedOverlay." + field.getName() + ".ids";
     }
 
     public int getOverlayCount() {
