@@ -41,7 +41,7 @@ public final class PersistedManager extends Manager {
 
         Map<PersistedValue<?>, PersistedMetadata<?>> newMetadatas = new HashMap<>();
 
-        getPersisted(owner, Config.class).stream().forEach(p -> {
+        getPersisted(owner, Config.class).forEach(p -> {
             Field configField = p.a();
             Config<?> configObj;
             try {
