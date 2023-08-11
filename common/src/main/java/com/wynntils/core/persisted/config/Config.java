@@ -100,10 +100,6 @@ public class Config<T> extends PersistedValue<T> {
         return getMetadata().fieldName();
     }
 
-    public Configurable getParent() {
-        return (Configurable) getMetadata().owner();
-    }
-
     public boolean isEnum() {
         return getMetadata().valueType() instanceof Class<?> clazz && clazz.isEnum();
     }
@@ -159,7 +155,7 @@ public class Config<T> extends PersistedValue<T> {
         if (!getMetadata().i18nKeyOverride().isEmpty()) {
             return I18n.get(getMetadata().i18nKeyOverride() + suffix);
         }
-        return ((Translatable) getParent()).getTranslation(getFieldName() + suffix);
+        return ((Translatable) getMetadata().owner()).getTranslation(getFieldName() + suffix);
     }
 
     private PersistedMetadata<T> getMetadata() {

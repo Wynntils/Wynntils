@@ -262,4 +262,9 @@ public final class ConfigManager extends Manager {
     public Stream<Config<?>> getConfigs() {
         return getConfigList().stream();
     }
+
+    public Stream<Config<?>> getConfigsForOwner(PersistedOwner owner) {
+        return getConfigs()
+                .filter(config -> Managers.Persisted.getMetadata(config).owner() == owner);
+    }
 }
