@@ -140,7 +140,7 @@ public class PersistedMetadata<T> implements Comparable<PersistedMetadata<T>> {
             return;
         }
 
-        configObj.updateConfig(value);
+        configObj.store(value);
         parent.updateConfigOption(configObj);
         userEdited = true;
     }

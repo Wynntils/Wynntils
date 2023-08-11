@@ -89,7 +89,7 @@ public abstract class Feature extends AbstractConfigurable implements Storageabl
     }
 
     public void setUserEnabled(boolean newState) {
-        this.userEnabled.updateConfig(newState);
+        this.userEnabled.store(newState);
         tryUserToggle();
     }
 

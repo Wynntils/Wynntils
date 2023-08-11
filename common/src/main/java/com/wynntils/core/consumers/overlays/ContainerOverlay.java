@@ -41,10 +41,10 @@ public abstract class ContainerOverlay<T extends Overlay> extends Overlay {
             HorizontalAlignment horizontalAlignment,
             VerticalAlignment verticalAlignment) {
         super(position, size);
-        this.growDirection.updateConfig(growDirection);
-        this.spacing.updateConfig(spacing);
-        this.horizontalAlignmentOverride.updateConfig(horizontalAlignment);
-        this.verticalAlignmentOverride.updateConfig(verticalAlignment);
+        this.growDirection.store(growDirection);
+        this.spacing.store(spacing);
+        this.horizontalAlignmentOverride.store(horizontalAlignment);
+        this.verticalAlignmentOverride.store(verticalAlignment);
     }
 
     protected ContainerOverlay(
@@ -136,8 +136,8 @@ public abstract class ContainerOverlay<T extends Overlay> extends Overlay {
             overlay.setPosition(direction.getChildPosition(
                     getRenderX(), getRenderY(), getSize(), overlay.getSize(), currentWidth, currentHeight));
             direction.updateSize(overlay, this.getSize(), inherentSize.get(overlay));
-            overlay.horizontalAlignmentOverride.updateConfig(horizontalAlignmentOverride.get());
-            overlay.verticalAlignmentOverride.updateConfig(verticalAlignmentOverride.get());
+            overlay.horizontalAlignmentOverride.store(horizontalAlignmentOverride.get());
+            overlay.verticalAlignmentOverride.store(verticalAlignmentOverride.get());
 
             currentHeight += overlay.getSize().getHeight() + spacing.get();
             currentWidth += overlay.getSize().getWidth() + spacing.get();
