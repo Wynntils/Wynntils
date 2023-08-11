@@ -1,4 +1,16 @@
+## [0.0.3-alpha.304](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.303...v0.0.3-alpha.304) (2023-08-11)
+
+
+### Code Refactoring
+
+* Generalize upfixers ([#1983](https://github.com/Wynntils/Artemis/issues/1983)) ([af32b8c](https://github.com/Wynntils/Artemis/commit/af32b8ccbe8edc393deebce985291ec29cddc7b6))
+
 ## [0.0.3-alpha.303](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.302...v0.0.3-alpha.303) (2023-08-11)
+
+
+### Miscellaneous Chores
+
+* **release:** v0.0.3-alpha.303 [skip ci] ([c688b34](https://github.com/Wynntils/Artemis/commit/c688b34f66d194938561792f9233182f6029534c))
 
 
 ### Code Refactoring
@@ -36,21 +48,4 @@
 ### Miscellaneous Chores
 
 * **release:** v0.0.3-alpha.300 [skip ci] ([60d125d](https://github.com/Wynntils/Artemis/commit/60d125dfef436e05b2d6bdd13c501a83cafa326a))
-
-## [0.0.3-alpha.299](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.298...v0.0.3-alpha.299) (2023-08-10)
-
-
-### New Features
-
-* Add minimap zoom and make the map zoom better ([#1948](https://github.com/Wynntils/Artemis/issues/1948)) ([62a5259](https://github.com/Wynntils/Artemis/commit/62a5259efa7f7a1687a1826229624c5da468b636))
-
-
-### Miscellaneous Chores
-
-* **release:** v0.0.3-alpha.299 [skip ci] ([581052f](https://github.com/Wynntils/Artemis/commit/581052fb79c76692c3edf85e51291d0fcd0923a3))
-
-
-### Code Refactoring
-
-* Incoroprate general fixes from mapdata rewrite ([#1973](https://github.com/Wynntils/Artemis/issues/1973)) ([af10b0c](https://github.com/Wynntils/Artemis/commit/af10b0c0a1683c5fb9a4f75f3cea3ae0fdbaadc6))
 
