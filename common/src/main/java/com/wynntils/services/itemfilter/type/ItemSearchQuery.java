@@ -8,7 +8,7 @@ import java.util.List;
 
 public record ItemSearchQuery(
         String queryString,
-        List<ItemFilter> itemFilters,
+        List<ItemFilterMatcher> itemFilters,
         List<Integer> ignoredCharIndices,
         List<Integer> validFilterCharIndices,
         List<String> errors,

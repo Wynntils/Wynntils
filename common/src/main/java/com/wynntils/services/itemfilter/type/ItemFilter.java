@@ -4,14 +4,59 @@
  */
 package com.wynntils.services.itemfilter.type;
 
-import com.wynntils.models.items.WynnItem;
+import com.google.common.base.CaseFormat;
+import com.wynntils.utils.type.ErrorOr;
+import java.util.Collections;
+import java.util.List;
+import net.minecraft.client.resources.language.I18n;
 
-public interface ItemFilter {
+/**
+ * An {@link ItemFilter} is both : <br>
+ * - A model to represent a filter, holding its name, aliases, and translation keys. <br>
+ * - A factory that will check the validity of an input string for this filter and create an
+ *   {@link ItemFilterMatcher} from it.<br>
+ * <br>
+ * The actual logic of the filter (i.e. the code that will check if an item matches the filter) is
+ * implemented in the {@link ItemFilterMatcher} returned by {@link #createMatcher(String)}.
+ */
+public abstract class ItemFilter {
+    protected final String name;
+    protected final List<String> aliases;
+    protected final String translationName;
+
+    protected ItemFilter(List<String> aliases) {
+        this.aliases = aliases;
+
+        String name = this.getClass().getSimpleName().replace("ItemFilter", "");
+        this.name = CaseFormat.UPPER_CAMEL.to(CaseFormat.LOWER_UNDERSCORE, name);
+        this.translationName = CaseFormat.UPPER_CAMEL.to(CaseFormat.LOWER_CAMEL, name);
+    }
+
     /**
-     * Matches the given item stack against the filter
+     * Creates a new item filter matcher from the given input string.
      *
-     * @param wynnItem the item to match
-     * @return true if the item stack matches the filter, false otherwise
+     * @param inputString the input string
+     * @return the created item filter, or a translated error string if the input string is invalid
      */
-    boolean matches(WynnItem wynnItem);
+    public abstract ErrorOr<? extends ItemFilterMatcher> createMatcher(String inputString);
+
+    public String getName() {
+        return name;
+    }
+
+    public List<String> getAliases() {
+        return Collections.unmodifiableList(aliases);
+    }
+
+    protected String getTranslationName() {
+        return translationName;
+    }
+
+    protected String getTranslation(String keySuffix, Object... formatValues) {
+        return I18n.get("feature.wynntils.itemFilter." + getTranslationName() + "." + keySuffix, formatValues);
+    }
+
+    public String getUsage() {
+        return getTranslation("usage");
+    }
 }

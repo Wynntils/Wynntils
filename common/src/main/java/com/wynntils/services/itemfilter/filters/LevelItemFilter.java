@@ -4,23 +4,45 @@
  */
 package com.wynntils.services.itemfilter.filters;
 
-import com.wynntils.models.items.WynnItem;
+import static java.lang.Integer.parseInt;
+
 import com.wynntils.models.items.properties.LeveledItemProperty;
 import com.wynntils.services.itemfilter.type.ItemFilter;
+import com.wynntils.services.itemfilter.type.ItemFilterMatcher;
+import com.wynntils.utils.type.ErrorOr;
+import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
-public class LevelItemFilter implements ItemFilter {
-    private final int minLevel;
-    private final int maxLevel;
+public class LevelItemFilter extends ItemFilter {
+    private static final Pattern LEVEL_RANGE_PATTERN = Pattern.compile("^(\\d+)(?:-(\\d+))?$");
 
-    public LevelItemFilter(int minLevel, int maxLevel) {
-        this.minLevel = minLevel;
-        this.maxLevel = maxLevel;
+    public LevelItemFilter() {
+        super(List.of("lvl"));
     }
 
     @Override
-    public boolean matches(WynnItem wynnItem) {
-        return wynnItem instanceof LeveledItemProperty leveledItem
+    public ErrorOr<ItemFilterMatcher> createMatcher(String inputString) {
+        int minLevel;
+        int maxLevel;
+        Matcher matcher = LEVEL_RANGE_PATTERN.matcher(inputString);
+        if (!matcher.find()) {
+            return ErrorOr.error(getTranslation("invalidRange", inputString));
+        }
+
+        try {
+            minLevel = parseInt(matcher.group(1));
+            maxLevel = matcher.group(2) == null ? minLevel : parseInt(matcher.group(2));
+        } catch (NumberFormatException ignore) {
+            return ErrorOr.error(getTranslation("invalidRange", inputString));
+        }
+
+        if (minLevel > maxLevel) {
+            return ErrorOr.error(getTranslation("maxLessThanMin", inputString));
+        }
+
+        return ErrorOr.of(wynnItem -> wynnItem instanceof LeveledItemProperty leveledItem
                 && leveledItem.getLevel() >= minLevel
-                && maxLevel >= leveledItem.getLevel();
+                && maxLevel >= leveledItem.getLevel());
     }
 }

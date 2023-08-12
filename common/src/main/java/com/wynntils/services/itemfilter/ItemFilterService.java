@@ -9,26 +9,23 @@ import com.wynntils.core.components.Service;
 import com.wynntils.core.components.Services;
 import com.wynntils.core.text.StyledText;
 import com.wynntils.models.items.WynnItem;
-import com.wynntils.services.itemfilter.filters.LevelItemFilterFactory;
-import com.wynntils.services.itemfilter.filters.ProfessionItemFilterFactory;
+import com.wynntils.services.itemfilter.filters.LevelItemFilter;
+import com.wynntils.services.itemfilter.filters.ProfessionItemFilter;
 import com.wynntils.services.itemfilter.type.ItemFilter;
-import com.wynntils.services.itemfilter.type.ItemFilterFactory;
+import com.wynntils.services.itemfilter.type.ItemFilterMatcher;
 import com.wynntils.services.itemfilter.type.ItemSearchQuery;
 import com.wynntils.utils.type.ErrorOr;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Collections;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
-import java.util.Map;
 import java.util.Optional;
 import java.util.stream.IntStream;
 import net.minecraft.client.resources.language.I18n;
 import net.minecraft.world.item.ItemStack;
 
 public class ItemFilterService extends Service {
-    private final Map<String, ItemFilterFactory> filterFactories = new HashMap<>();
+    private final List<ItemFilter> filters = new ArrayList<>();
 
     public ItemFilterService() {
         super(List.of());
@@ -36,27 +33,32 @@ public class ItemFilterService extends Service {
     }
 
     /**
-     * Returns a filter factory for the given keyword, or an error string if the keyword does not match any filter.
-     * @param keyword the keyword to get the filter factory for
-     * @return the filter factory, or an error string if the keyword does not match any filter
+     * Returns a filter for the given alias, or an error string if the alias does not match any filter.
+     * @param alias an alias of the filter
+     * @return the filter, or an error string if the alias does not match any filter
      */
-    public ErrorOr<? extends ItemFilterFactory> getFilterFactory(String keyword) {
-        if (!filterFactories.containsKey(keyword)) {
-            return ErrorOr.error(I18n.get("feature.wynntils.itemFilter.unknownFilter", keyword));
-        }
+    public ErrorOr<? extends ItemFilter> getFilter(String alias) {
+        Optional<ItemFilter> filterOpt = filters.stream()
+                .filter(filter ->
+                        filter.getAliases().contains(alias) || filter.getName().equals(alias))
+                .findFirst();
 
-        return ErrorOr.of(filterFactories.get(keyword));
+        if (filterOpt.isPresent()) {
+            return ErrorOr.of(filterOpt.get());
+        } else {
+            return ErrorOr.error(I18n.get("feature.wynntils.itemFilter.unknownFilter", alias));
+        }
     }
 
     /**
-     * @return an unmodifiable collection of all registered filter factories
+     * @return an unmodifiable list of all registered filters
      */
-    public Collection<ItemFilterFactory> getFilterFactories() {
-        return Collections.unmodifiableCollection(filterFactories.values());
+    public List<ItemFilter> getFilters() {
+        return Collections.unmodifiableList(filters);
     }
 
     public ItemSearchQuery createSearchQuery(String queryString) {
-        List<ItemFilter> itemFilters = new ArrayList<>();
+        List<ItemFilterMatcher> itemFilters = new ArrayList<>();
         List<Integer> ignoredCharIndices = new ArrayList<>();
         List<Integer> validFilterCharIndices = new ArrayList<>();
         List<String> errors = new ArrayList<>();
@@ -77,16 +79,15 @@ public class ItemFilterService extends Service {
 
             if (token.contains(":")) {
                 String filterString = token.split(":")[0];
-                String valueString = token.substring(token.indexOf(':') + 1);
-                ErrorOr<? extends ItemFilterFactory> factoryOrError =
-                        Services.ItemFilter.getFilterFactory(filterString);
+                String inputString = token.substring(token.indexOf(':') + 1);
+                ErrorOr<? extends ItemFilter> filterOrError = Services.ItemFilter.getFilter(filterString);
 
                 // If the filter does not exist, mark the token as ignored and continue to the next token
-                if (factoryOrError.hasError()) {
+                if (filterOrError.hasError()) {
                     ignoredCharIndices.addAll(IntStream.rangeClosed(tokenStartIndex, tokenStartIndex + token.length())
                             .boxed()
                             .toList());
-                    errors.add(factoryOrError.getError());
+                    errors.add(filterOrError.getError());
                     continue;
                 }
 
@@ -96,26 +97,28 @@ public class ItemFilterService extends Service {
                                 .boxed()
                                 .toList());
 
-                // ...and try to create the filter only if the filter value is not empty, because a filter without a
-                // value is pointless and we don't want to show the error the factory might return because of that.
-                // We still want to highlight the filter keyword though, that's why we handle the empty value here.
-                if (valueString.isEmpty()) continue;
+                // ...and try to create the matcher only if the inputString is not empty, because a filtering with an
+                // empty
+                // value is pointless and we don't want to show the error the matcher factory might return because of
+                // that.
+                // We still want to highlight the filter keyword though, that's why we handle the empty input here.
+                if (inputString.isEmpty()) continue;
 
-                ErrorOr<? extends ItemFilter> filterOrError =
-                        factoryOrError.getValue().create(valueString);
+                ErrorOr<? extends ItemFilterMatcher> matcherOrError =
+                        filterOrError.getValue().createMatcher(inputString);
 
-                // If the filter value is invalid, mark the value as ignored and continue to the next token
-                if (filterOrError.hasError()) {
+                // If the inputString is invalid, mark the value as ignored and continue to the next token
+                if (matcherOrError.hasError()) {
                     ignoredCharIndices.addAll(IntStream.rangeClosed(
                                     tokenStartIndex + filterString.length() + 1, tokenStartIndex + token.length())
                             .boxed()
                             .toList());
-                    errors.add(filterOrError.getError());
+                    errors.add(matcherOrError.getError());
                     continue;
                 }
 
-                // The filter value is valid, add the filter to the list
-                itemFilters.add(filterOrError.getValue());
+                // The inputString is valid, add the filter to the list
+                itemFilters.add(matcherOrError.getValue());
             } else if (!token.isEmpty()) {
                 // The token is not a filter, add it to the list of plain text tokens
                 plainTextTokens.add(token);
@@ -174,11 +177,11 @@ public class ItemFilterService extends Service {
     }
 
     private void registerAllFilters() {
-        registerFilter(new LevelItemFilterFactory());
-        registerFilter(new ProfessionItemFilterFactory());
+        registerFilter(new LevelItemFilter());
+        registerFilter(new ProfessionItemFilter());
     }
 
-    private void registerFilter(ItemFilterFactory factory) {
-        filterFactories.put(factory.getKeyword(), factory);
+    private void registerFilter(ItemFilter itemFilter) {
+        filters.add(itemFilter);
     }
 }
