@@ -117,7 +117,7 @@ public class ItemHandler extends Handler {
         StyledText newName = StyledText.fromComponent(newItem.getHoverName()).getNormalized();
 
         if (newName.equals(existingName)) {
-            // Tthe name is identical to the existing stack; now check the lore
+            // The name is identical to the existing stack; now check the lore
             if (isLoreSoftMatching(existingItem, newItem)) {
                 // This is exactly the same item, so copy existing annotation
                 updateItem(newItem, annotation, originalName);
