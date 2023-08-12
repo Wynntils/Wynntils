@@ -63,30 +63,30 @@ public final class WynntilsLootrunPathsScreen extends WynntilsListScreen<Lootrun
         TaskUtils.runAsync(Services.LootrunPaths::refreshLootrunCache);
 
         this.addRenderableWidget(new BackButton(
-                (int) ((Texture.QUEST_BOOK_BACKGROUND.width() / 2f - 16) / 2f),
+                (int) ((Texture.ACTIVITY_BOOK_BACKGROUND.width() / 2f - 16) / 2f),
                 65,
                 Texture.BACK_ARROW.width() / 2,
                 Texture.BACK_ARROW.height(),
                 WynntilsMenuScreen.create()));
 
         this.addRenderableWidget(new ReloadButton(
-                Texture.QUEST_BOOK_BACKGROUND.width() - 21,
+                Texture.ACTIVITY_BOOK_BACKGROUND.width() - 21,
                 11,
-                (int) (Texture.RELOAD_BUTTON.width() / 2 / 1.7f),
-                (int) (Texture.RELOAD_BUTTON.height() / 1.7f),
+                (int) (Texture.RELOAD_ICON_OFFSET.width() / 2 / 1.7f),
+                (int) (Texture.RELOAD_ICON_OFFSET.height() / 1.7f),
                 "lootrun",
                 () -> TaskUtils.runAsync(Services.LootrunPaths::refreshLootrunCache)));
 
         this.addRenderableWidget(new PageSelectorButton(
-                Texture.QUEST_BOOK_BACKGROUND.width() / 2 + 50 - Texture.FORWARD_ARROW.width() / 2,
-                Texture.QUEST_BOOK_BACKGROUND.height() - 25,
+                Texture.ACTIVITY_BOOK_BACKGROUND.width() / 2 + 50 - Texture.FORWARD_ARROW.width() / 2,
+                Texture.ACTIVITY_BOOK_BACKGROUND.height() - 25,
                 Texture.FORWARD_ARROW.width() / 2,
                 Texture.FORWARD_ARROW.height(),
                 false,
                 this));
         this.addRenderableWidget(new PageSelectorButton(
-                Texture.QUEST_BOOK_BACKGROUND.width() - 50,
-                Texture.QUEST_BOOK_BACKGROUND.height() - 25,
+                Texture.ACTIVITY_BOOK_BACKGROUND.width() - 50,
+                Texture.ACTIVITY_BOOK_BACKGROUND.height() - 25,
                 Texture.FORWARD_ARROW.width() / 2,
                 Texture.FORWARD_ARROW.height(),
                 true,
@@ -247,9 +247,9 @@ public final class WynntilsLootrunPathsScreen extends WynntilsListScreen<Lootrun
                             poseStack,
                             StyledText.fromString(I18n.get("screens.wynntils.lootruns.description1")),
                             20,
-                            Texture.QUEST_BOOK_BACKGROUND.width() / 2f - 10,
+                            Texture.ACTIVITY_BOOK_BACKGROUND.width() / 2f - 10,
                             80,
-                            Texture.QUEST_BOOK_BACKGROUND.width() / 2f - 30,
+                            Texture.ACTIVITY_BOOK_BACKGROUND.width() / 2f - 30,
                             CommonColors.BLACK,
                             HorizontalAlignment.LEFT,
                             TextShadow.NONE);
@@ -259,9 +259,9 @@ public final class WynntilsLootrunPathsScreen extends WynntilsListScreen<Lootrun
                             poseStack,
                             StyledText.fromString(I18n.get("screens.wynntils.lootruns.description2")),
                             20,
-                            Texture.QUEST_BOOK_BACKGROUND.width() / 2f - 10,
+                            Texture.ACTIVITY_BOOK_BACKGROUND.width() / 2f - 10,
                             155,
-                            Texture.QUEST_BOOK_BACKGROUND.width() / 2f - 30,
+                            Texture.ACTIVITY_BOOK_BACKGROUND.width() / 2f - 30,
                             CommonColors.BLACK,
                             HorizontalAlignment.LEFT,
                             TextShadow.NONE);
@@ -272,9 +272,9 @@ public final class WynntilsLootrunPathsScreen extends WynntilsListScreen<Lootrun
     protected LootrunPathButton getButtonFromElement(int i) {
         int offset = i % getElementsPerPage();
         return new LootrunPathButton(
-                Texture.QUEST_BOOK_BACKGROUND.width() / 2 + 15,
+                Texture.ACTIVITY_BOOK_BACKGROUND.width() / 2 + 15,
                 offset * 13 + 25,
-                Texture.QUEST_BOOK_BACKGROUND.width() / 2 - 37,
+                Texture.ACTIVITY_BOOK_BACKGROUND.width() / 2 - 37,
                 9,
                 elements.get(i),
                 this);

@@ -76,7 +76,7 @@ public final class MainMapScreen extends AbstractMapScreen {
                         - 6),
                 16,
                 16,
-                Texture.MAP_HELP_BUTTON,
+                Texture.HELP_ICON,
                 (b) -> {},
                 List.of(
                         Component.literal("[>] ")
@@ -121,7 +121,7 @@ public final class MainMapScreen extends AbstractMapScreen {
                         - 6),
                 16,
                 16,
-                Texture.MAP_MANAGER_BUTTON,
+                Texture.WAYPOINT_MANAGER_ICON,
                 (b) -> McUtils.mc().setScreen(PoiManagementScreen.create(this)),
                 List.of(
                         Component.literal("[>] ")
@@ -138,7 +138,7 @@ public final class MainMapScreen extends AbstractMapScreen {
                         - 6),
                 16,
                 16,
-                Texture.MAP_SHARE_BUTTON,
+                Texture.SHARE_ICON,
                 this::shareLocationOrCompass,
                 List.of(
                         Component.literal("[>] ")
@@ -165,7 +165,7 @@ public final class MainMapScreen extends AbstractMapScreen {
                         - 6),
                 16,
                 16,
-                Texture.MAP_WAYPOINT_FOCUS_BUTTON,
+                Texture.WAYPOINT_FOCUS_ICON,
                 (b) -> {
                     if (KeyboardUtils.isShiftDown()) {
                         centerMapAroundPlayer();
@@ -203,7 +203,7 @@ public final class MainMapScreen extends AbstractMapScreen {
                         - 6),
                 16,
                 16,
-                Texture.MAP_ADD_BUTTON,
+                Texture.ADD_ICON,
                 (b) -> McUtils.mc().setScreen(PoiCreationScreen.create(this)),
                 List.of(
                         Component.literal("[>] ")

@@ -29,7 +29,7 @@ public class ImportButton extends WynntilsButton implements TooltipProvider {
 
     @Override
     public void renderWidget(PoseStack poseStack, int mouseX, int mouseY, float partialTick) {
-        Texture addButton = Texture.ADD_BUTTON;
+        Texture addButton = Texture.ADD_ICON;
         RenderUtils.drawTexturedRect(
                 poseStack,
                 addButton.resource(),
@@ -41,7 +41,7 @@ public class ImportButton extends WynntilsButton implements TooltipProvider {
                 0,
                 0,
                 addButton.width(),
-                addButton.height() / 2,
+                addButton.height(),
                 addButton.width(),
                 addButton.height());
     }

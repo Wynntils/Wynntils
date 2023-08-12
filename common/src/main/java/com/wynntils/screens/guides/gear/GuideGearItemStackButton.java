@@ -52,14 +52,14 @@ public class GuideGearItemStackButton extends WynntilsButton {
         if (Services.Favorites.isFavorite(itemStack)) {
             RenderUtils.drawScalingTexturedRect(
                     poseStack,
-                    Texture.FAVORITE.resource(),
+                    Texture.FAVORITE_ICON.resource(),
                     getX() + 12,
                     getY() - 4,
                     200,
                     9,
                     9,
-                    Texture.FAVORITE.width(),
-                    Texture.FAVORITE.height());
+                    Texture.FAVORITE_ICON.width(),
+                    Texture.FAVORITE_ICON.height());
         }
     }
 

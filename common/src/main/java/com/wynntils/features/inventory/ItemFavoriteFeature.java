@@ -108,13 +108,13 @@ public class ItemFavoriteFeature extends Feature {
     private static void renderFavoriteItem(SlotRenderEvent.Post event) {
         RenderUtils.drawScalingTexturedRect(
                 event.getPoseStack(),
-                Texture.FAVORITE.resource(),
+                Texture.FAVORITE_ICON.resource(),
                 event.getSlot().x + 10,
                 event.getSlot().y,
                 400,
                 9,
                 9,
-                Texture.FAVORITE.width(),
-                Texture.FAVORITE.height());
+                Texture.FAVORITE_ICON.width(),
+                Texture.FAVORITE_ICON.height());
     }
 }

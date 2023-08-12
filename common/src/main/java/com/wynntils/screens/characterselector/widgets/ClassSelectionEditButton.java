@@ -42,14 +42,14 @@ public class ClassSelectionEditButton extends WynntilsButton {
     public void renderWidget(PoseStack poseStack, int mouseX, int mouseY, float partialTick) {
         RenderUtils.drawScalingTexturedRect(
                 poseStack,
-                Texture.EDIT_BUTTON.resource(),
+                Texture.EDIT_ICON.resource(),
                 this.getX(),
                 this.getY(),
                 0,
                 this.width,
                 this.height,
-                Texture.EDIT_BUTTON.width(),
-                Texture.EDIT_BUTTON.height());
+                Texture.EDIT_ICON.width(),
+                Texture.EDIT_ICON.height());
 
         if (isHovered) {
             RenderUtils.drawTooltipAt(

@@ -121,9 +121,9 @@ public class TerritoryPoi implements Poi {
             BufferedRenderUtils.drawTexturedRect(
                     poseStack,
                     bufferSource,
-                    Texture.GUILD_HEADQUARTERS_ICON,
-                    actualRenderX + renderWidth / 2f - Texture.GUILD_HEADQUARTERS_ICON.width() / 2f,
-                    actualRenderZ + renderHeight / 2f - Texture.GUILD_HEADQUARTERS_ICON.height() / 2f);
+                    Texture.GUILD_HEADQUARTERS,
+                    actualRenderX + renderWidth / 2f - Texture.GUILD_HEADQUARTERS.width() / 2f,
+                    actualRenderZ + renderHeight / 2f - Texture.GUILD_HEADQUARTERS.height() / 2f);
         } else {
             String guildPrefix =
                     isTerritoryInfoUsable() ? territoryInfo.getGuildPrefix() : territoryProfile.getGuildPrefix();

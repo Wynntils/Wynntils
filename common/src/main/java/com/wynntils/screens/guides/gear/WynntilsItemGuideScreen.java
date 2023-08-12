@@ -42,22 +42,22 @@ public final class WynntilsItemGuideScreen extends WynntilsListScreen<GuideGearI
         super.doInit();
 
         this.addRenderableWidget(new BackButton(
-                (int) ((Texture.QUEST_BOOK_BACKGROUND.width() / 2f - 16) / 2f),
+                (int) ((Texture.ACTIVITY_BOOK_BACKGROUND.width() / 2f - 16) / 2f),
                 65,
                 Texture.BACK_ARROW.width() / 2,
                 Texture.BACK_ARROW.height(),
                 WynntilsGuidesListScreen.create()));
 
         this.addRenderableWidget(new PageSelectorButton(
-                Texture.QUEST_BOOK_BACKGROUND.width() / 2 + 50 - Texture.FORWARD_ARROW.width() / 2,
-                Texture.QUEST_BOOK_BACKGROUND.height() - 25,
+                Texture.ACTIVITY_BOOK_BACKGROUND.width() / 2 + 50 - Texture.FORWARD_ARROW.width() / 2,
+                Texture.ACTIVITY_BOOK_BACKGROUND.height() - 25,
                 Texture.FORWARD_ARROW.width() / 2,
                 Texture.FORWARD_ARROW.height(),
                 false,
                 this));
         this.addRenderableWidget(new PageSelectorButton(
-                Texture.QUEST_BOOK_BACKGROUND.width() - 50,
-                Texture.QUEST_BOOK_BACKGROUND.height() - 25,
+                Texture.ACTIVITY_BOOK_BACKGROUND.width() - 50,
+                Texture.ACTIVITY_BOOK_BACKGROUND.height() - 25,
                 Texture.FORWARD_ARROW.width() / 2,
                 Texture.FORWARD_ARROW.height(),
                 true,
@@ -103,7 +103,7 @@ public final class WynntilsItemGuideScreen extends WynntilsListScreen<GuideGearI
                 .renderText(
                         poseStack,
                         StyledText.fromString(I18n.get("screens.wynntils.wynntilsGuides.itemGuide.available")),
-                        Texture.QUEST_BOOK_BACKGROUND.width() * 0.75f,
+                        Texture.ACTIVITY_BOOK_BACKGROUND.width() * 0.75f,
                         30,
                         CommonColors.BLACK,
                         HorizontalAlignment.CENTER,
@@ -117,7 +117,7 @@ public final class WynntilsItemGuideScreen extends WynntilsListScreen<GuideGearI
         int yOffset = ((i % getElementsPerPage()) / ELEMENTS_COLUMNS) * 20;
 
         return new GuideGearItemStackButton(
-                xOffset + Texture.QUEST_BOOK_BACKGROUND.width() / 2 + 13, yOffset + 43, 18, 18, elements.get(i), this);
+                xOffset + Texture.ACTIVITY_BOOK_BACKGROUND.width() / 2 + 13, yOffset + 43, 18, 18, elements.get(i), this);
     }
 
     @Override

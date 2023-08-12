@@ -49,10 +49,10 @@ public abstract class WynntilsListScreen<E, B extends WynntilsButton> extends Wy
 
         // Do not lose search info on re-init
         this.searchWidget = new QuestBookSearchWidget(
-                (int) (Texture.QUEST_BOOK_BACKGROUND.width() / 2f + 15),
+                (int) (Texture.ACTIVITY_BOOK_BACKGROUND.width() / 2f + 15),
                 0,
-                Texture.QUEST_BOOK_SEARCH.width(),
-                Texture.QUEST_BOOK_SEARCH.height(),
+                Texture.ACTIVITY_BOOK_SEARCH.width(),
+                Texture.ACTIVITY_BOOK_SEARCH.height(),
                 s -> reloadElements(),
                 this);
     }
@@ -79,9 +79,9 @@ public abstract class WynntilsListScreen<E, B extends WynntilsButton> extends Wy
                 .renderAlignedTextInBox(
                         poseStack,
                         StyledText.fromString((currentPage) + " / " + (maxPage)),
-                        Texture.QUEST_BOOK_BACKGROUND.width() / 2f,
-                        Texture.QUEST_BOOK_BACKGROUND.width(),
-                        Texture.QUEST_BOOK_BACKGROUND.height() - 25,
+                        Texture.ACTIVITY_BOOK_BACKGROUND.width() / 2f,
+                        Texture.ACTIVITY_BOOK_BACKGROUND.width(),
+                        Texture.ACTIVITY_BOOK_BACKGROUND.height() - 25,
                         0,
                         CommonColors.BLACK,
                         HorizontalAlignment.CENTER,
@@ -93,11 +93,11 @@ public abstract class WynntilsListScreen<E, B extends WynntilsButton> extends Wy
                 .renderAlignedTextInBox(
                         poseStack,
                         StyledText.fromString(key),
-                        Texture.QUEST_BOOK_BACKGROUND.width() / 2f + 15f,
-                        Texture.QUEST_BOOK_BACKGROUND.width() - 15f,
+                        Texture.ACTIVITY_BOOK_BACKGROUND.width() / 2f + 15f,
+                        Texture.ACTIVITY_BOOK_BACKGROUND.width() - 15f,
                         0,
-                        Texture.QUEST_BOOK_BACKGROUND.height(),
-                        Texture.QUEST_BOOK_BACKGROUND.width() / 2f - 30f,
+                        Texture.ACTIVITY_BOOK_BACKGROUND.height(),
+                        Texture.ACTIVITY_BOOK_BACKGROUND.width() / 2f - 30f,
                         CommonColors.BLACK,
                         HorizontalAlignment.CENTER,
                         VerticalAlignment.MIDDLE,

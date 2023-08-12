@@ -129,11 +129,11 @@ public final class LoadingScreen extends WynntilsScreen {
     }
 
     private void drawSpinner(PoseStack poseStack, float x, float y, boolean state) {
-        ResourceLocation resource = Texture.RELOAD_BUTTON.resource();
+        ResourceLocation resource = Texture.RELOAD_ICON_OFFSET.resource();
 
-        int fullWidth = Texture.RELOAD_BUTTON.width();
+        int fullWidth = Texture.RELOAD_ICON_OFFSET.width();
         int width = fullWidth / 2;
-        int height = Texture.RELOAD_BUTTON.height();
+        int height = Texture.RELOAD_ICON_OFFSET.height();
         int uOffset = state ? width : 0;
 
         RenderUtils.drawTexturedRect(

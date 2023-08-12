@@ -21,13 +21,13 @@ public class DialogueHistoryButton extends WynntilsButton {
     public void renderWidget(PoseStack poseStack, int mouseX, int mouseY, float partialTick) {
         RenderUtils.drawTexturedRect(
                 poseStack,
-                Texture.DIALOGUE_BUTTON.resource(),
+                Texture.DIALOGUE_ICON.resource(),
                 this.getX(),
                 this.getY(),
                 this.width,
                 this.height,
-                Texture.DIALOGUE_BUTTON.width(),
-                Texture.DIALOGUE_BUTTON.height());
+                Texture.DIALOGUE_ICON.width(),
+                Texture.DIALOGUE_ICON.height());
     }
 
     @Override
