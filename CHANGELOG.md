@@ -1,8 +1,16 @@
+## [0.0.3-alpha.309](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.308...v0.0.3-alpha.309) (2023-08-12)
+
+
+### Bug Fixes
+
+* SetSlotEvent.Post has wrong newItemStack ([#1996](https://github.com/Wynntils/Artemis/issues/1996)) ([f714314](https://github.com/Wynntils/Artemis/commit/f71431480ab58c79ba9bd1389d263ab5bf79c620))
+
 ## [0.0.3-alpha.308](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.307...v0.0.3-alpha.308) (2023-08-12)
 
 
 ### Miscellaneous Chores
 
+* **release:** v0.0.3-alpha.308 [skip ci] ([da597b4](https://github.com/Wynntils/Artemis/commit/da597b48cbffdb4cd2fe62ff4a3ac7ee9a77e61c))
 * Revert "fix: Fixed reload_button texture alignment ([#1429](https://github.com/Wynntils/Artemis/issues/1429))" ([#1992](https://github.com/Wynntils/Artemis/issues/1992)) ([c3d4106](https://github.com/Wynntils/Artemis/commit/c3d4106a6297c5730b542b4af8879bf4c995325c))
 
 ## [0.0.3-alpha.307](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.306...v0.0.3-alpha.307) (2023-08-12)
@@ -40,16 +48,4 @@
 ### Miscellaneous Chores
 
 * **release:** v0.0.3-alpha.305 [skip ci] ([ebfa3f9](https://github.com/Wynntils/Artemis/commit/ebfa3f925a2138faa8704e5a3db79ee683bcf388))
-
-## [0.0.3-alpha.304](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.303...v0.0.3-alpha.304) (2023-08-11)
-
-
-### Miscellaneous Chores
-
-* **release:** v0.0.3-alpha.304 [skip ci] ([a20dda6](https://github.com/Wynntils/Artemis/commit/a20dda68ca73c2dcb5142a9b91cf0e4fa480eb5f))
-
-
-### Code Refactoring
-
-* Generalize upfixers ([#1983](https://github.com/Wynntils/Artemis/issues/1983)) ([af32b8c](https://github.com/Wynntils/Artemis/commit/af32b8ccbe8edc393deebce985291ec29cddc7b6))
 
