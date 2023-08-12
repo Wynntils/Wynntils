@@ -219,7 +219,7 @@ public class ChatRedirectFeature extends Feature {
 
         @Override
         public RedirectAction getAction() {
-            return friendJoin.get();
+            return emptyManaBank.get();
         }
 
         @Override
