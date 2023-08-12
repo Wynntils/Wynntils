@@ -45,7 +45,7 @@ public final class StatusEffectModel extends Model {
      * */
 
     private static final Pattern STATUS_EFFECT_PATTERN = Pattern.compile(
-            "(?<prefix>.+?)§7\\s?(?<modifier>(\\-|\\+)?([\\-\\.\\d]+))?(?<modifierSuffix>((\\/\\d+s)|%)?)?\\s?(?<name>\\+?[a-zA-Z\\/\\s]+?)\\s(?<timer>§[84a]\\((.+?)\\))");
+            "(?<prefix>.+?)§7\\s?(?<modifier>(\\-|\\+)?([\\-\\.\\d]+))?(?<modifierSuffix>((\\/\\d+s)|%)?)?\\s?(?<name>\\+?['a-zA-Z\\/\\s]+?)\\s(?<timer>§[84a]\\((.+?)\\))");
 
     private static final StyledText STATUS_EFFECTS_TITLE = StyledText.fromString("§d§lStatus Effects");
 
