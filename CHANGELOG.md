@@ -1,4 +1,16 @@
+## [0.0.3-alpha.305](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.304...v0.0.3-alpha.305) (2023-08-12)
+
+
+### Bug Fixes
+
+* Fixed STATUS_EFFECT_PATTERN regex ([#1989](https://github.com/Wynntils/Artemis/issues/1989)) ([74ce4b7](https://github.com/Wynntils/Artemis/commit/74ce4b7cd5509fc1a68981f14e274d35af89eb37))
+
 ## [0.0.3-alpha.304](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.303...v0.0.3-alpha.304) (2023-08-11)
+
+
+### Miscellaneous Chores
+
+* **release:** v0.0.3-alpha.304 [skip ci] ([a20dda6](https://github.com/Wynntils/Artemis/commit/a20dda68ca73c2dcb5142a9b91cf0e4fa480eb5f))
 
 
 ### Code Refactoring
@@ -36,16 +48,4 @@
 
 * **release:** v0.0.3-alpha.301 [skip ci] ([2eee24b](https://github.com/Wynntils/Artemis/commit/2eee24b889ee7b813cf1ada817eac3f4bd2d9bd1))
 * Update url md5 for major ID file ([#1981](https://github.com/Wynntils/Artemis/issues/1981)) ([ebf6db2](https://github.com/Wynntils/Artemis/commit/ebf6db234309e5d37c23a7bf4d79e9d49c9f3378))
-
-## [0.0.3-alpha.300](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.299...v0.0.3-alpha.300) (2023-08-10)
-
-
-### Bug Fixes
-
-* Transcribed NPC dialogue repeating ([#1975](https://github.com/Wynntils/Artemis/issues/1975)) ([b63245f](https://github.com/Wynntils/Artemis/commit/b63245fb3417b296f51d87766a1190ad1b08c4f6))
-
-
-### Miscellaneous Chores
-
-* **release:** v0.0.3-alpha.300 [skip ci] ([60d125d](https://github.com/Wynntils/Artemis/commit/60d125dfef436e05b2d6bdd13c501a83cafa326a))
 
