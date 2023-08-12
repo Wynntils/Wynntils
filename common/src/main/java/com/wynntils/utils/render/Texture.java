@@ -20,26 +20,26 @@ public enum Texture {
     XP_BAR("character_selection/xp_bar.png", 100, 12),
 
     // Content Book
-    ACTIVITY_BOOK_BACKGROUND("content_book/activity_book.png", 339, 220),
-    ACTIVITY_BOOK_SEARCH("content_book/activity_book_search.png", 133, 23),
-    ACTIVITY_BOOK_TITLE("content_book/activity_book_title.png", 168, 33),
     CONFIG_BACKGROUND("content_book/config_book.png", 400, 220),
     CONFIG_SCROLL_AREA("content_book/config_book_scroll_area.png", 168, 175),
     CONFIG_SCROLL_BUTTON("content_book/config_book_scroll_button.png", 5, 18),
+    CONTENT_BOOK_BACKGROUND("content_book/content_book.png", 339, 220),
+    CONTENT_BOOK_SEARCH("content_book/content_book_search.png", 133, 23),
+    CONTENT_BOOK_TITLE("content_book/content_book_title.png", 168, 33),
 
     // Icons
     WYNNCRAFT_ICON("icons/wynncraft_icon.png", 64, 64),
     // Activities
+    ACTIVITY_CAN_START("icons/activities/activity_can_start_icon.png", 11, 7),
+    ACTIVITY_CANNOT_START("icons/activities/activity_cannot_start_icon.png", 7, 7),
+    ACTIVITY_FINISHED("icons/activities/activity_finished_icon.png", 11, 7),
+    ACTIVITY_STARTED("icons/activities/activity_started_icon.png", 7, 7),
     CAVE_AVALIABLE("icons/activities/cave_avaliable_icon.png", 7, 7),
     DIALOGUE_ICON("icons/activities/dialogue_icon.png", 14, 11),
     DISCOVERIES_ICON("icons/activities/discoveries_icon.png", 16, 32),
-    GUIDES_ICON("icons/activities/guides_icon.png", 18, 34),
-    QUEST_CANNOT_START("icons/activities/quest_cannot_start_icon.png", 7, 7),
-    QUEST_CAN_START("icons/activities/quest_can_start_icon.png", 11, 7),
-    QUEST_FINISHED("icons/activities/quest_finished_icon.png", 11, 7),
     QUESTS_ICON("icons/activities/quests_icon.png", 16, 16),
-    QUEST_STARTED("icons/activities/quest_started_icon.png", 7, 7),
     // Content Book
+    GUIDES_ICON("icons/content_book/guides_icon.png", 18, 34),
     LOOTRUN_ICON("icons/content_book/lootrun_icon.png", 16, 28),
     MAP_ICON("icons/content_book/map_icon.png", 21, 38),
     OVERLAYS_ICON("icons/content_book/overlays_icon.png", 19, 38),

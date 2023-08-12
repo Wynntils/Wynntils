@@ -43,22 +43,22 @@ public final class WynntilsStatisticsScreen
         super.doInit();
 
         this.addRenderableWidget(new BackButton(
-                (int) ((Texture.ACTIVITY_BOOK_BACKGROUND.width() / 2f - 16) / 2f),
+                (int) ((Texture.CONTENT_BOOK_BACKGROUND.width() / 2f - 16) / 2f),
                 65,
                 Texture.BACK_ARROW.width() / 2,
                 Texture.BACK_ARROW.height(),
                 WynntilsMenuScreen.create()));
 
         this.addRenderableWidget(new PageSelectorButton(
-                Texture.ACTIVITY_BOOK_BACKGROUND.width() / 2 + 50 - Texture.FORWARD_ARROW.width() / 2,
-                Texture.ACTIVITY_BOOK_BACKGROUND.height() - 25,
+                Texture.CONTENT_BOOK_BACKGROUND.width() / 2 + 50 - Texture.FORWARD_ARROW.width() / 2,
+                Texture.CONTENT_BOOK_BACKGROUND.height() - 25,
                 Texture.FORWARD_ARROW.width() / 2,
                 Texture.FORWARD_ARROW.height(),
                 false,
                 this));
         this.addRenderableWidget(new PageSelectorButton(
-                Texture.ACTIVITY_BOOK_BACKGROUND.width() - 50,
-                Texture.ACTIVITY_BOOK_BACKGROUND.height() - 25,
+                Texture.CONTENT_BOOK_BACKGROUND.width() - 50,
+                Texture.CONTENT_BOOK_BACKGROUND.height() - 25,
                 Texture.FORWARD_ARROW.width() / 2,
                 Texture.FORWARD_ARROW.height(),
                 true,
@@ -102,7 +102,7 @@ public final class WynntilsStatisticsScreen
                             StyledText.fromString(I18n.get("screens.wynntils.statistics.noItemSelected")),
                             20,
                             100,
-                            Texture.ACTIVITY_BOOK_BACKGROUND.width() / 2 - 20,
+                            Texture.CONTENT_BOOK_BACKGROUND.width() / 2 - 20,
                             CommonColors.BLACK,
                             HorizontalAlignment.LEFT,
                             VerticalAlignment.TOP,
@@ -126,7 +126,7 @@ public final class WynntilsStatisticsScreen
                         StyledText.fromString(statisticKind.getName()),
                         0,
                         0,
-                        (Texture.ACTIVITY_BOOK_BACKGROUND.width() / 2 - 20) / 1.2f,
+                        (Texture.CONTENT_BOOK_BACKGROUND.width() / 2 - 20) / 1.2f,
                         CommonColors.BLACK,
                         HorizontalAlignment.LEFT,
                         VerticalAlignment.TOP,
@@ -150,7 +150,7 @@ public final class WynntilsStatisticsScreen
                                 "screens.wynntils.statistics.count", statisticKind.getFormattedValue(entry.count()))),
                         0,
                         30,
-                        Texture.ACTIVITY_BOOK_BACKGROUND.width() / 2 - 20,
+                        Texture.CONTENT_BOOK_BACKGROUND.width() / 2 - 20,
                         CommonColors.BLACK,
                         HorizontalAlignment.LEFT,
                         VerticalAlignment.TOP,
@@ -166,7 +166,7 @@ public final class WynntilsStatisticsScreen
                                 "screens.wynntils.statistics.total", statisticKind.getFormattedValue(entry.total()))),
                         0,
                         30,
-                        Texture.ACTIVITY_BOOK_BACKGROUND.width() / 2 - 20,
+                        Texture.CONTENT_BOOK_BACKGROUND.width() / 2 - 20,
                         CommonColors.BLACK,
                         HorizontalAlignment.LEFT,
                         VerticalAlignment.TOP,
@@ -178,7 +178,7 @@ public final class WynntilsStatisticsScreen
                         StyledText.fromString(I18n.get("screens.wynntils.statistics.count", entry.count())),
                         0,
                         40,
-                        Texture.ACTIVITY_BOOK_BACKGROUND.width() / 2 - 20,
+                        Texture.CONTENT_BOOK_BACKGROUND.width() / 2 - 20,
                         CommonColors.BLACK,
                         HorizontalAlignment.LEFT,
                         VerticalAlignment.TOP,
@@ -190,7 +190,7 @@ public final class WynntilsStatisticsScreen
                                 "screens.wynntils.statistics.min", statisticKind.getFormattedValue(entry.min()))),
                         0,
                         50,
-                        Texture.ACTIVITY_BOOK_BACKGROUND.width() / 2 - 20,
+                        Texture.CONTENT_BOOK_BACKGROUND.width() / 2 - 20,
                         CommonColors.BLACK,
                         HorizontalAlignment.LEFT,
                         VerticalAlignment.TOP,
@@ -203,7 +203,7 @@ public final class WynntilsStatisticsScreen
                                 "screens.wynntils.statistics.max", statisticKind.getFormattedValue(entry.max()))),
                         0,
                         60,
-                        Texture.ACTIVITY_BOOK_BACKGROUND.width() / 2 - 20,
+                        Texture.CONTENT_BOOK_BACKGROUND.width() / 2 - 20,
                         CommonColors.BLACK,
                         HorizontalAlignment.LEFT,
                         VerticalAlignment.TOP,
@@ -217,7 +217,7 @@ public final class WynntilsStatisticsScreen
                                 statisticKind.getFormattedValue(entry.average()))),
                         0,
                         70,
-                        Texture.ACTIVITY_BOOK_BACKGROUND.width() / 2 - 20,
+                        Texture.CONTENT_BOOK_BACKGROUND.width() / 2 - 20,
                         CommonColors.BLACK,
                         HorizontalAlignment.LEFT,
                         VerticalAlignment.TOP,
@@ -236,9 +236,9 @@ public final class WynntilsStatisticsScreen
     protected StatisticButton getButtonFromElement(int i) {
         int offset = i % getElementsPerPage();
         return new StatisticButton(
-                Texture.ACTIVITY_BOOK_BACKGROUND.width() / 2 + 15,
+                Texture.CONTENT_BOOK_BACKGROUND.width() / 2 + 15,
                 offset * 13 + 25,
-                Texture.ACTIVITY_BOOK_BACKGROUND.width() / 2 - 37,
+                Texture.CONTENT_BOOK_BACKGROUND.width() / 2 - 37,
                 9,
                 elements.get(i),
                 this);

@@ -52,35 +52,35 @@ public final class WynntilsGuidesListScreen extends WynntilsListScreen<Screen, G
         super.doInit();
 
         this.addRenderableWidget(new BackButton(
-                (int) ((Texture.ACTIVITY_BOOK_BACKGROUND.width() / 2f - 16) / 2f),
+                (int) ((Texture.CONTENT_BOOK_BACKGROUND.width() / 2f - 16) / 2f),
                 65,
                 Texture.BACK_ARROW.width() / 2,
                 Texture.BACK_ARROW.height(),
                 WynntilsMenuScreen.create()));
 
         this.addRenderableWidget(new ImportButton(
-                Texture.ACTIVITY_BOOK_BACKGROUND.width() - 21,
+                Texture.CONTENT_BOOK_BACKGROUND.width() - 21,
                 11,
                 (int) (Texture.ADD_ICON.width() / 1.5f),
                 (int) (Texture.ADD_ICON.height() / 1.5f),
                 this::importFavorites));
         this.addRenderableWidget(new ExportButton(
-                Texture.ACTIVITY_BOOK_BACKGROUND.width() - 21,
+                Texture.CONTENT_BOOK_BACKGROUND.width() - 21,
                 11 + (int) (Texture.ADD_ICON.height() / 1.5f),
                 (int) (Texture.SHARE_ICON.width() / 1.5f),
                 (int) (Texture.SHARE_ICON.height() / 1.5f),
                 this::exportFavorites));
 
         this.addRenderableWidget(new PageSelectorButton(
-                Texture.ACTIVITY_BOOK_BACKGROUND.width() / 2 + 50 - Texture.FORWARD_ARROW.width() / 2,
-                Texture.ACTIVITY_BOOK_BACKGROUND.height() - 25,
+                Texture.CONTENT_BOOK_BACKGROUND.width() / 2 + 50 - Texture.FORWARD_ARROW.width() / 2,
+                Texture.CONTENT_BOOK_BACKGROUND.height() - 25,
                 Texture.FORWARD_ARROW.width() / 2,
                 Texture.FORWARD_ARROW.height(),
                 false,
                 this));
         this.addRenderableWidget(new PageSelectorButton(
-                Texture.ACTIVITY_BOOK_BACKGROUND.width() - 50,
-                Texture.ACTIVITY_BOOK_BACKGROUND.height() - 25,
+                Texture.CONTENT_BOOK_BACKGROUND.width() - 50,
+                Texture.CONTENT_BOOK_BACKGROUND.height() - 25,
                 Texture.FORWARD_ARROW.width() / 2,
                 Texture.FORWARD_ARROW.height(),
                 true,
@@ -160,9 +160,9 @@ public final class WynntilsGuidesListScreen extends WynntilsListScreen<Screen, G
     protected GuidesButton getButtonFromElement(int i) {
         int offset = i % getElementsPerPage();
         return new GuidesButton(
-                Texture.ACTIVITY_BOOK_BACKGROUND.width() / 2 + 15,
+                Texture.CONTENT_BOOK_BACKGROUND.width() / 2 + 15,
                 offset * 13 + 25,
-                Texture.ACTIVITY_BOOK_BACKGROUND.width() / 2 - 37,
+                Texture.CONTENT_BOOK_BACKGROUND.width() / 2 - 37,
                 9,
                 elements.get(i));
     }

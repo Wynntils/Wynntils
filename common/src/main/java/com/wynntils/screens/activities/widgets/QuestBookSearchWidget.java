@@ -22,14 +22,14 @@ public class QuestBookSearchWidget extends SearchWidget {
     protected void renderBackground(PoseStack poseStack) {
         RenderUtils.drawScalingTexturedRect(
                 poseStack,
-                Texture.ACTIVITY_BOOK_SEARCH.resource(),
+                Texture.CONTENT_BOOK_SEARCH.resource(),
                 this.getX(),
                 this.getY(),
                 0,
                 this.width,
                 this.height,
-                Texture.ACTIVITY_BOOK_SEARCH.width(),
-                Texture.ACTIVITY_BOOK_SEARCH.height());
+                Texture.CONTENT_BOOK_SEARCH.width(),
+                Texture.CONTENT_BOOK_SEARCH.height());
     }
 
     @Override

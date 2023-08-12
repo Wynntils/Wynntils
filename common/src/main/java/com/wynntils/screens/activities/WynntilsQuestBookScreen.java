@@ -82,7 +82,7 @@ public final class WynntilsQuestBookScreen extends WynntilsListScreen<QuestInfo,
         super.doInit();
 
         this.addRenderableWidget(new BackButton(
-                (int) ((Texture.ACTIVITY_BOOK_BACKGROUND.width() / 2f - 16) / 2f),
+                (int) ((Texture.CONTENT_BOOK_BACKGROUND.width() / 2f - 16) / 2f),
                 65,
                 Texture.BACK_ARROW.width() / 2,
                 Texture.BACK_ARROW.height(),
@@ -128,39 +128,39 @@ public final class WynntilsQuestBookScreen extends WynntilsListScreen<QuestInfo,
         }
 
         this.addRenderableWidget(new ReloadButton(
-                Texture.ACTIVITY_BOOK_BACKGROUND.width() - 21,
+                Texture.CONTENT_BOOK_BACKGROUND.width() - 21,
                 11,
                 (int) (Texture.RELOAD_ICON_OFFSET.width() / 2 / 1.7f),
                 (int) (Texture.RELOAD_ICON_OFFSET.height() / 1.7f),
                 "quest",
                 () -> Models.Quest.rescanQuestBook(showQuests, showMiniQuests)));
         this.addRenderableWidget(new PageSelectorButton(
-                Texture.ACTIVITY_BOOK_BACKGROUND.width() / 2 + 50 - Texture.FORWARD_ARROW.width() / 2,
-                Texture.ACTIVITY_BOOK_BACKGROUND.height() - 25,
+                Texture.CONTENT_BOOK_BACKGROUND.width() / 2 + 50 - Texture.FORWARD_ARROW.width() / 2,
+                Texture.CONTENT_BOOK_BACKGROUND.height() - 25,
                 Texture.FORWARD_ARROW.width() / 2,
                 Texture.FORWARD_ARROW.height(),
                 false,
                 this));
         this.addRenderableWidget(new PageSelectorButton(
-                Texture.ACTIVITY_BOOK_BACKGROUND.width() - 50,
-                Texture.ACTIVITY_BOOK_BACKGROUND.height() - 25,
+                Texture.CONTENT_BOOK_BACKGROUND.width() - 50,
+                Texture.CONTENT_BOOK_BACKGROUND.height() - 25,
                 Texture.FORWARD_ARROW.width() / 2,
                 Texture.FORWARD_ARROW.height(),
                 true,
                 this));
         this.addRenderableWidget(new DialogueHistoryButton(
-                (int) (Texture.ACTIVITY_BOOK_BACKGROUND.width() / 2f - 30),
+                (int) (Texture.CONTENT_BOOK_BACKGROUND.width() / 2f - 30),
                 15,
                 Texture.DIALOGUE_ICON.width(),
                 Texture.DIALOGUE_ICON.height()));
         this.addRenderableWidget(new QuestInfoButton(
-                (int) (Texture.ACTIVITY_BOOK_BACKGROUND.width() / 4f),
+                (int) (Texture.CONTENT_BOOK_BACKGROUND.width() / 4f),
                 12,
                 Texture.QUESTS_ICON.width(),
                 Texture.QUESTS_ICON.height()));
 
         this.addRenderableWidget(new SortOrderWidget(
-                Texture.ACTIVITY_BOOK_BACKGROUND.width() / 2 + 1,
+                Texture.CONTENT_BOOK_BACKGROUND.width() / 2 + 1,
                 11,
                 (int) (Texture.SORT_DISTANCE.width() / 1.7f),
                 (int) (Texture.SORT_DISTANCE.height() / 2 / 1.7f),
@@ -229,11 +229,11 @@ public final class WynntilsQuestBookScreen extends WynntilsListScreen<QuestInfo,
                 .renderAlignedTextInBox(
                         poseStack,
                         StyledText.fromString(I18n.get("screens.wynntils.wynntilsQuestBook.tryReload")),
-                        Texture.ACTIVITY_BOOK_BACKGROUND.width() / 2f + 15f,
-                        Texture.ACTIVITY_BOOK_BACKGROUND.width() - 15f,
+                        Texture.CONTENT_BOOK_BACKGROUND.width() / 2f + 15f,
+                        Texture.CONTENT_BOOK_BACKGROUND.width() - 15f,
                         0,
-                        Texture.ACTIVITY_BOOK_BACKGROUND.height(),
-                        Texture.ACTIVITY_BOOK_BACKGROUND.width() / 2f - 30f,
+                        Texture.CONTENT_BOOK_BACKGROUND.height(),
+                        Texture.CONTENT_BOOK_BACKGROUND.width() / 2f - 30f,
                         CommonColors.BLACK,
                         HorizontalAlignment.CENTER,
                         VerticalAlignment.MIDDLE,
@@ -319,9 +319,9 @@ public final class WynntilsQuestBookScreen extends WynntilsListScreen<QuestInfo,
                         poseStack,
                         StyledText.fromString(I18n.get("screens.wynntils.wynntilsQuestBook.description1")),
                         20,
-                        Texture.ACTIVITY_BOOK_BACKGROUND.width() / 2f - 10,
+                        Texture.CONTENT_BOOK_BACKGROUND.width() / 2f - 10,
                         80,
-                        Texture.ACTIVITY_BOOK_BACKGROUND.width() / 2f - 30,
+                        Texture.CONTENT_BOOK_BACKGROUND.width() / 2f - 30,
                         CommonColors.BLACK,
                         HorizontalAlignment.LEFT,
                         TextShadow.NONE);
@@ -331,9 +331,9 @@ public final class WynntilsQuestBookScreen extends WynntilsListScreen<QuestInfo,
                         poseStack,
                         StyledText.fromString(I18n.get("screens.wynntils.wynntilsQuestBook.description2")),
                         20,
-                        Texture.ACTIVITY_BOOK_BACKGROUND.width() / 2f - 10,
+                        Texture.CONTENT_BOOK_BACKGROUND.width() / 2f - 10,
                         105,
-                        Texture.ACTIVITY_BOOK_BACKGROUND.width() / 2f - 30,
+                        Texture.CONTENT_BOOK_BACKGROUND.width() / 2f - 30,
                         CommonColors.BLACK,
                         HorizontalAlignment.LEFT,
                         TextShadow.NONE);
@@ -374,9 +374,9 @@ public final class WynntilsQuestBookScreen extends WynntilsListScreen<QuestInfo,
     protected QuestButton getButtonFromElement(int i) {
         int offset = i % getElementsPerPage();
         return new QuestButton(
-                Texture.ACTIVITY_BOOK_BACKGROUND.width() / 2 + 15,
+                Texture.CONTENT_BOOK_BACKGROUND.width() / 2 + 15,
                 offset * 13 + 25,
-                Texture.ACTIVITY_BOOK_BACKGROUND.width() / 2 - 37,
+                Texture.CONTENT_BOOK_BACKGROUND.width() / 2 - 37,
                 9,
                 elements.get(i),
                 this);
