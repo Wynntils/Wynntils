@@ -9,10 +9,14 @@ import com.wynntils.core.components.Models;
 import com.wynntils.core.persisted.Persisted;
 import com.wynntils.core.persisted.storage.Storage;
 import com.wynntils.core.text.StyledText;
+import com.wynntils.mc.event.ContainerSetContentEvent;
+import com.wynntils.mc.event.ContainerSetSlotEvent;
+import com.wynntils.utils.mc.McUtils;
 import com.wynntils.utils.type.Pair;
-
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -20,7 +24,10 @@ import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
 import net.minecraft.client.gui.screens.inventory.ContainerScreen;
 import net.minecraft.network.chat.Component;
+import net.minecraft.world.Container;
+import net.minecraft.world.inventory.ChestMenu;
 import net.minecraft.world.item.ItemStack;
+import net.minecraftforge.eventbus.api.SubscribeEvent;
 
 public final class ContainerModel extends Model {
     public static final Pattern ABILITY_TREE_PATTERN =
@@ -72,7 +79,7 @@ public final class ContainerModel extends Model {
     private final Storage<Integer> finalMiscBucketPage = new Storage<>(10);
 
     @Persisted
-    private final Storage<List<List<ItemStack>>> bank = new Storage<>(new ArrayList<>());
+    private final Storage<Map<Integer, List<ItemStack>>> bank = new Storage<>(new HashMap<>(21));
 
     public static final int LAST_BANK_PAGE_SLOT = 8;
 
@@ -301,7 +308,51 @@ public final class ContainerModel extends Model {
         return null;
     }
 
-    public List<List<ItemStack>> getBank() {
+    @SubscribeEvent
+    public void onOpenBankPage(ContainerSetContentEvent.Post event) {
+        if (!(McUtils.containerMenu() instanceof ChestMenu chestMenu)) return;
+        if (event.getContainerId() != chestMenu.containerId) return;
+        Matcher matcher =
+                StyledText.fromComponent(McUtils.mc().screen.getTitle()).getMatcher(PERSONAL_STORAGE_PATTERN);
+        if (!matcher.matches()) return;
+
+        String type = matcher.group(2);
+        if (!type.equals(BANK_NAME)) return;
+        int page = Integer.parseInt(matcher.group(1));
+        List<ItemStack> items = new ArrayList<>();
+
+        Container container = chestMenu.getContainer();
+        for (int i = 0; i < container.getContainerSize(); i++) {
+            if (i % 9 > 6) continue;
+            items.add(container.getItem(i));
+        }
+        bank.get().put(page, items);
+        bank.touched();
+    }
+
+    @SubscribeEvent
+    public void onContainerSetSlot(ContainerSetSlotEvent.Post event) {
+        if (!(McUtils.containerMenu() instanceof ChestMenu chestMenu)) return;
+        if (event.getContainerId() != chestMenu.containerId) return;
+        Matcher matcher =
+                StyledText.fromComponent(McUtils.mc().screen.getTitle()).getMatcher(PERSONAL_STORAGE_PATTERN);
+        if (!matcher.matches()) return;
+
+        String type = matcher.group(2);
+        if (!type.equals(BANK_NAME)) return;
+        int page = Integer.parseInt(matcher.group(1));
+        List<ItemStack> items = new ArrayList<>();
+
+        Container container = chestMenu.getContainer();
+        for (int i = 0; i < container.getContainerSize(); i++) {
+            if (i % 9 > 6) continue;
+            items.add(container.getItem(i));
+        }
+        bank.get().put(page, items);
+        bank.touched();
+    }
+
+    public Map<Integer, List<ItemStack>> getBank() {
         return bank.get();
     }
 }

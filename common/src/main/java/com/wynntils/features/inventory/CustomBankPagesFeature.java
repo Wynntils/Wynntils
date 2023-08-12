@@ -61,7 +61,7 @@ public class CustomBankPagesFeature extends Feature {
     private boolean quickJumping = false;
     private int currentPage = 1;
     private int lastPage = MAX_BANK_PAGES;
-    private int pageDestination = 1;
+    public int pageDestination = 1;
     private List<Integer> customJumpDestinations;
     private SearchableContainerType currentContainer;
 
@@ -197,7 +197,7 @@ public class CustomBankPagesFeature extends Feature {
         }
     }
 
-    private void jumpToDestination() {
+    public void jumpToDestination() {
         quickJumping = true;
 
         if (currentPage == pageDestination || pageDestination > lastPage) return;

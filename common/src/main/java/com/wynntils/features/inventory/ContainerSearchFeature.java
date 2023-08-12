@@ -23,19 +23,22 @@ import com.wynntils.models.containers.type.SearchableContainerType;
 import com.wynntils.models.items.WynnItem;
 import com.wynntils.models.items.WynnItemCache;
 import com.wynntils.screens.base.ItemList;
+import com.wynntils.screens.base.widgets.ItemListWidget;
 import com.wynntils.screens.base.widgets.SearchWidget;
 import com.wynntils.utils.colors.CommonColors;
 import com.wynntils.utils.colors.CustomColor;
+import com.wynntils.utils.mc.KeyboardUtils;
 import com.wynntils.utils.mc.McUtils;
 import com.wynntils.utils.render.RenderUtils;
 import com.wynntils.utils.wynn.ContainerUtils;
-
 import java.util.List;
 import java.util.Locale;
 import java.util.Optional;
+import net.minecraft.ChatFormatting;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
 import net.minecraft.core.NonNullList;
+import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
@@ -65,7 +68,7 @@ public class ContainerSearchFeature extends Feature {
     public final Config<CustomColor> highlightColor = new Config<>(CommonColors.MAGENTA);
 
     @Persisted
-    public final Config<Boolean> betterBankFilter = new Config<>(true);
+    public final Config<Boolean> betterBankSearch = new Config<>(true);
 
     // If the guild bank has lots of custom (crafted) items, it can take multiple packets and a decent amount of time
     // for Wynn to send us the entire updated inventory. During this, the inventory will be in a weird state where
@@ -98,13 +101,23 @@ public class ContainerSearchFeature extends Feature {
 
         addSearchWidget(screen, renderX, renderY);
 
-        if (betterBankFilter.get() && searchableContainerType == SearchableContainerType.BANK) {
+        if (betterBankSearch.get() && searchableContainerType == SearchableContainerType.BANK) {
             addBankSearchWidget(screen);
         }
     }
 
     private void addBankSearchWidget(AbstractContainerScreen<?> screen) {
-        itemList = new ItemList((screen.width + screen.imageWidth) / 2, 0, (screen.width - screen.imageWidth) / 2, screen.height, screen, Models.Container.getBank().stream().flatMap(List::stream).toList());
+        itemList = new ItemList(
+                (screen.width + screen.imageWidth) / 2,
+                0,
+                (screen.width - screen.imageWidth) / 2,
+                screen.height,
+                screen,
+                Models.Container.getBank().entrySet().stream()
+                        .flatMap(entry -> entry.getValue().stream()
+                                .filter(itemStack -> !itemStack.isEmpty())
+                                .map(itemStack -> new BankListItem(itemStack, entry.getKey())))
+                        .toList());
     }
 
     @SubscribeEvent
@@ -254,6 +267,32 @@ public class ContainerSearchFeature extends Feature {
         Screen screen = McUtils.mc().screen;
         if (lastSearchWidget != null && screen instanceof AbstractContainerScreen<?> abstractContainerScreen) {
             matchItems(lastSearchWidget.getTextBoxInput(), abstractContainerScreen);
+        }
+    }
+
+    private static class BankListItem extends ItemListWidget.ListItem {
+        private final int pageIndex;
+
+        protected BankListItem(ItemStack itemStack, int pageIndex) {
+            super(itemStack);
+            this.pageIndex = pageIndex;
+        }
+
+        @Override
+        public List<Component> getTooltip() {
+            List<Component> tooltip = super.getTooltip();
+            if (KeyboardUtils.isControlDown()) {
+                tooltip.add(Component.literal("Page: " + pageIndex).withStyle(ChatFormatting.GRAY));
+            }
+            return tooltip;
+        }
+
+        @Override
+        public void onClick() {
+            CustomBankPagesFeature customBankPagesFeature =
+                    Managers.Feature.getFeatureInstance(CustomBankPagesFeature.class);
+            customBankPagesFeature.pageDestination = pageIndex;
+            customBankPagesFeature.jumpToDestination();
         }
     }
 }
