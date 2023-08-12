@@ -29,6 +29,9 @@ public class ChatRedirectFeature extends Feature {
     public final Config<RedirectAction> craftedDurability = new Config<>(RedirectAction.REDIRECT);
 
     @Persisted
+    public final Config<RedirectAction> emptyManaBank = new Config<>(RedirectAction.REDIRECT);
+
+    @Persisted
     public final Config<RedirectAction> friendJoin = new Config<>(RedirectAction.REDIRECT);
 
     @Persisted
@@ -77,6 +80,7 @@ public class ChatRedirectFeature extends Feature {
 
     public ChatRedirectFeature() {
         register(new CraftedDurabilityRedirector());
+        register(new EmptyManaBankRedirector());
         register(new FriendJoinRedirector());
         register(new FriendLeaveRedirector());
         register(new HealRedirector());
@@ -196,6 +200,31 @@ public class ChatRedirectFeature extends Feature {
         @Override
         protected StyledText getNotification(Matcher matcher) {
             return StyledText.fromString(ChatFormatting.DARK_RED + "Your items are damaged.");
+        }
+    }
+
+    private class EmptyManaBankRedirector extends SimpleRedirector {
+        private static final Pattern FOREGROUND_PATTERN = Pattern.compile("§4Your mana bank is empty!");
+        private static final Pattern BACKGROUND_PATTERN = Pattern.compile("§7Your mana bank is empty!");
+
+        @Override
+        protected Pattern getForegroundPattern() {
+            return FOREGROUND_PATTERN;
+        }
+
+        @Override
+        protected Pattern getBackgroundPattern() {
+            return BACKGROUND_PATTERN;
+        }
+
+        @Override
+        public RedirectAction getAction() {
+            return friendJoin.get();
+        }
+
+        @Override
+        protected StyledText getNotification(Matcher matcher) {
+            return StyledText.fromString(ChatFormatting.RED + "Your mana bank is empty!");
         }
     }
 
@@ -540,7 +569,7 @@ public class ChatRedirectFeature extends Feature {
 
         @Override
         protected StyledText getNotification(Matcher matcher) {
-            return StyledText.fromString(ChatFormatting.DARK_RED + "Not enough mana to do that spell!");
+            return StyledText.fromString(ChatFormatting.DARK_RED + "Not enough mana to cast that spell!");
         }
     }
 

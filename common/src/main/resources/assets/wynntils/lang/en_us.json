@@ -90,6 +90,8 @@
   "feature.wynntils.chatRedirect.craftedDurability.description": "How should crafted item durability messages appear?",
   "feature.wynntils.chatRedirect.craftedDurability.name": "Crafted Durability Filtering",
   "feature.wynntils.chatRedirect.description": "Adds the ability to redirect certain chat messages to the game update overlay.",
+  "feature.wynntils.chatRedirect.emptyManaBank.description": "How should empty mana bank messages appear?",
+  "feature.wynntils.chatRedirect.emptyManaBank.name": "Empy Mana Bank Filtering",
   "feature.wynntils.chatRedirect.friendJoin.description": "How should friend join messages appear?",
   "feature.wynntils.chatRedirect.friendJoin.name": "Friend Join Message Filtering",
   "feature.wynntils.chatRedirect.heal.description": "How should messages about healing appear?",
