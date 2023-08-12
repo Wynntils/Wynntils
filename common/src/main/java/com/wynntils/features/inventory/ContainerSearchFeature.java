@@ -60,6 +60,9 @@ public class ContainerSearchFeature extends Feature {
     public final Config<Boolean> filterInGuildMemberList = new Config<>(true);
 
     @Persisted
+    public final Config<Boolean> filterInScrapMenu = new Config<>(true);
+
+    @Persisted
     public final Config<CustomColor> highlightColor = new Config<>(CommonColors.MAGENTA);
 
     // If the guild bank has lots of custom (crafted) items, it can take multiple packets and a decent amount of time
@@ -76,7 +79,7 @@ public class ContainerSearchFeature extends Feature {
     @SubscribeEvent
     public void onScreenInit(ScreenInitEvent event) {
         if (!(event.getScreen() instanceof AbstractContainerScreen<?> screen)) return;
-        if (!(screen.getMenu() instanceof ChestMenu chestMenu)) return;
+        if (!(screen.getMenu() instanceof ChestMenu)) return;
 
         StyledText title = StyledText.fromComponent(screen.getTitle());
 
@@ -196,6 +199,10 @@ public class ContainerSearchFeature extends Feature {
 
         if (containerType == SearchableContainerType.MEMBER_LIST && filterInGuildMemberList.get()) {
             return SearchableContainerType.MEMBER_LIST;
+        }
+
+        if (containerType == SearchableContainerType.SCRAP_MENU && filterInScrapMenu.get()) {
+            return SearchableContainerType.SCRAP_MENU;
         }
 
         return null;

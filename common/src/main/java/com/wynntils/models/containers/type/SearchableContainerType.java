@@ -22,7 +22,8 @@ public enum SearchableContainerType {
             Pattern.compile("§f§lPage \\d+§a >§2>§a>§2>§a>"),
             8),
     GUILD_BANK(Pattern.compile(".+: Bank \\(.+\\)"), Pattern.compile("§a§lNext Page"), 27),
-    MEMBER_LIST(Pattern.compile(".+: Members"), Pattern.compile("§a§lNext Page"), 28);
+    MEMBER_LIST(Pattern.compile(".+: Members"), Pattern.compile("§a§lNext Page"), 28),
+    SCRAP_MENU(Pattern.compile("Scrap Rewards"), Pattern.compile("§7Next Page"), 8);
 
     private final Pattern titlePattern;
     private final Pattern nextItemPattern;
