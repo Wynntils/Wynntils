@@ -48,7 +48,9 @@ public class SpellModel extends Model {
     private List<Pattern> getKnownMarkerNames() {
         List<Pattern> knownMarkerNames = new ArrayList<>();
         knownMarkerNames.add(SPELL_CAST);
-        knownMarkerNames.addAll(Arrays.stream(SpellFailureReason.values()).map(s -> Pattern.compile(s.getMessage().getString())).toList());
+        knownMarkerNames.addAll(Arrays.stream(SpellFailureReason.values())
+                .map(s -> Pattern.compile(s.getMessage().getString()))
+                .toList());
         return knownMarkerNames;
     }
 
