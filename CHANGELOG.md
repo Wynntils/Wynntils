@@ -1,9 +1,21 @@
+## [0.0.3-alpha.308](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.307...v0.0.3-alpha.308) (2023-08-12)
+
+
+### Miscellaneous Chores
+
+* Revert "fix: Fixed reload_button texture alignment ([#1429](https://github.com/Wynntils/Artemis/issues/1429))" ([#1992](https://github.com/Wynntils/Artemis/issues/1992)) ([c3d4106](https://github.com/Wynntils/Artemis/commit/c3d4106a6297c5730b542b4af8879bf4c995325c))
+
 ## [0.0.3-alpha.307](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.306...v0.0.3-alpha.307) (2023-08-12)
 
 
 ### New Features
 
 * Add LootrunRedBeaconChallengeCountFunction ([#1986](https://github.com/Wynntils/Artemis/issues/1986)) ([1fb4884](https://github.com/Wynntils/Artemis/commit/1fb488434d11aedd73daee50b235d37be23476aa))
+
+
+### Miscellaneous Chores
+
+* **release:** v0.0.3-alpha.307 [skip ci] ([cef12dc](https://github.com/Wynntils/Artemis/commit/cef12dcf865ee3593a612ccf0e985c903a9ecb09))
 
 ## [0.0.3-alpha.306](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.305...v0.0.3-alpha.306) (2023-08-12)
 
@@ -40,16 +52,4 @@
 ### Code Refactoring
 
 * Generalize upfixers ([#1983](https://github.com/Wynntils/Artemis/issues/1983)) ([af32b8c](https://github.com/Wynntils/Artemis/commit/af32b8ccbe8edc393deebce985291ec29cddc7b6))
-
-## [0.0.3-alpha.303](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.302...v0.0.3-alpha.303) (2023-08-11)
-
-
-### Miscellaneous Chores
-
-* **release:** v0.0.3-alpha.303 [skip ci] ([c688b34](https://github.com/Wynntils/Artemis/commit/c688b34f66d194938561792f9233182f6029534c))
-
-
-### Code Refactoring
-
-* Rename Config.updateConfig() to store() to align with superclass ([#1979](https://github.com/Wynntils/Artemis/issues/1979)) ([9f32607](https://github.com/Wynntils/Artemis/commit/9f32607e826c0e1073d8dca40c754df782989dc4))
 
