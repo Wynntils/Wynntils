@@ -16,7 +16,7 @@ public class CloseButton extends GeneralSettingsButton {
     public CloseButton(WynntilsBookSettingsScreen screen) {
         super(
                 15,
-                Texture.CONFIG_BACKGROUND.height() - 30,
+                Texture.CONFIG_BOOK_BACKGROUND.height() - 30,
                 35,
                 14,
                 Component.translatable("screens.wynntils.settingsScreen.close"),

@@ -79,7 +79,7 @@ public class CaveButton extends WynntilsButton implements TooltipProvider {
                 switch (caveInfo.getStatus()) {
                     case STARTED -> Texture.ACTIVITY_STARTED;
                     case COMPLETED -> Texture.ACTIVITY_FINISHED;
-                    case AVAILABLE -> Texture.CAVE_AVALIABLE;
+                    case AVAILABLE -> Texture.CAVE_AVALIABLE_ICON;
                     case UNAVAILABLE -> Texture.ACTIVITY_CANNOT_START;
                 };
 

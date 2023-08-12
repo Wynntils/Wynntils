@@ -17,7 +17,7 @@ public class ApplyButton extends GeneralSettingsButton {
     public ApplyButton(WynntilsBookSettingsScreen screen) {
         super(
                 55,
-                Texture.CONFIG_BACKGROUND.height() - 30,
+                Texture.CONFIG_BOOK_BACKGROUND.height() - 30,
                 35,
                 14,
                 Component.translatable("screens.wynntils.settingsScreen.apply"),

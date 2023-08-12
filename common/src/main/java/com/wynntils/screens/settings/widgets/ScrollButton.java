@@ -63,7 +63,8 @@ public class ScrollButton extends WynntilsButton {
 
         float renderY = MathUtils.map(currentScroll, 0, maxScroll, getY(), y2);
 
-        RenderUtils.drawHoverableTexturedRect(poseStack, Texture.CONFIG_SCROLL_BUTTON, this.getX(), renderY, isHovered);
+        RenderUtils.drawHoverableTexturedRect(
+                poseStack, Texture.CONFIG_BOOK_SCROLL_BUTTON, this.getX(), renderY, isHovered);
     }
 
     @Override
