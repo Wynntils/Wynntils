@@ -128,6 +128,9 @@ public class LootrunModel extends Model {
     @Persisted
     private Storage<Map<String, Beacon>> closestBeaconStorage = new Storage<>(new TreeMap<>());
 
+    @Persisted
+    private Storage<Map<String, Integer>> redBeaconTaskCountStorage = new Storage<>(new TreeMap<>());
+
     private Map<BeaconColor, Integer> selectedBeacons = new TreeMap<>();
 
     private int timeLeft = 0;
@@ -339,6 +342,10 @@ public class LootrunModel extends Model {
         return closestBeaconStorage.get().get(Models.Character.getId());
     }
 
+    public int getRedBeaconTaskCount() {
+        return redBeaconTaskCountStorage.get().getOrDefault(Models.Character.getId(), 0);
+    }
+
     private void setLastTaskBeaconColor(BeaconColor beaconColor) {
         if (beaconColor == null) {
             lastTaskBeaconColorStorage.get().remove(Models.Character.getId());
@@ -366,12 +373,31 @@ public class LootrunModel extends Model {
         selectedBeaconsStorage.touched();
     }
 
+    public void addToRedBeaconTaskCount(int changeAmount) {
+        Integer oldCount = redBeaconTaskCountStorage.get().getOrDefault(Models.Character.getId(), 0);
+
+        redBeaconTaskCountStorage.get().put(Models.Character.getId(), oldCount + changeAmount);
+        redBeaconTaskCountStorage.touched();
+    }
+
     public void setTimeLeft(int seconds) {
         timeLeft = seconds;
     }
 
     public void setChallenges(CappedValue amount) {
+        CappedValue oldChallenges = challenges;
         challenges = amount;
+
+        if (oldChallenges == CappedValue.EMPTY) return;
+
+        if (getLastTaskBeaconColor() == BeaconColor.RED) {
+            addToRedBeaconTaskCount(amount.max() - oldChallenges.max());
+            return;
+        }
+
+        if (getRedBeaconTaskCount() > 0) {
+            addToRedBeaconTaskCount(-1);
+        }
     }
 
     private void handleStateChange(LootrunningState oldState, LootrunningState newState) {
