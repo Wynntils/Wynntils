@@ -18,7 +18,7 @@ public class CustomColorSettingsButton extends TextInputBoxSettingsWidget<Custom
     @Override
     public void renderWidget(PoseStack poseStack, int mouseX, int mouseY, float partialTick) {
         super.renderWidget(poseStack, mouseX, mouseY, partialTick);
-        CustomColor value = config.getValue();
+        CustomColor value = config.get();
         RenderUtils.drawRect(poseStack, value, width + 5, 6, 0, height, height);
     }
 }

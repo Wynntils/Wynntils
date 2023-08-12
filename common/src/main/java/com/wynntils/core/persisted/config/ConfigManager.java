@@ -183,7 +183,7 @@ public final class ConfigManager extends Manager {
         JsonObject configJson = new JsonObject();
         for (Config<?> config : getConfigList()) {
             if (!config.valueChanged()) continue; // only save options that have been set by the user
-            Object value = config.getValue();
+            Object value = config.get();
 
             JsonElement configElement = Managers.Json.GSON.toJsonTree(value);
             configJson.add(config.getJsonName(), configElement);

@@ -34,11 +34,6 @@ public class Config<T> extends PersistedValue<T> {
         // For now, do not call touch() on configs
     }
 
-    public T getValue() {
-        // FIXME: This is just an alias now, should be changed to get() everywhere
-        return get();
-    }
-
     // FIXME: Old ways of setting the value. These should be unified, but since
     // they have slightly different semantics, let's do it carfeully step by step.
 
@@ -80,14 +75,14 @@ public class Config<T> extends PersistedValue<T> {
         // FIXME: I guess at this point the userEdited change would suffice,
         // but check this carefully before removing the old logic below.
         T defaultValue = getMetadata().defaultValue();
-        boolean deepEquals = Objects.deepEquals(getValue(), defaultValue);
+        boolean deepEquals = Objects.deepEquals(get(), defaultValue);
 
         if (deepEquals) {
             return false;
         }
 
         try {
-            return !EqualsBuilder.reflectionEquals(getValue(), defaultValue);
+            return !EqualsBuilder.reflectionEquals(get(), defaultValue);
         } catch (RuntimeException ignored) {
             // Reflection equals does not always work, use deepEquals instead of assuming no change
             // Since deepEquals is already false when we reach this, we can assume change

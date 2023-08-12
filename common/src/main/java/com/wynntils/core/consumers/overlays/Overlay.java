@@ -78,7 +78,7 @@ public abstract class Overlay extends AbstractConfigurable implements Comparable
     public final void updateConfigOption(Config<?> config) {
         // if user toggle was changed, enable/disable overlay accordingly
         if (config.getFieldName().equals("userEnabled")) {
-            if (config.getValue() == Boolean.FALSE) {
+            if (config.get() == Boolean.FALSE) {
                 Managers.Overlay.disableOverlay(this);
             } else {
                 // If new state is TRUE or null, try to enable overlay
