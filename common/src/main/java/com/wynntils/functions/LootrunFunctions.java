@@ -11,6 +11,7 @@ import com.wynntils.models.beacons.type.BeaconColor;
 import com.wynntils.models.containers.type.MythicFind;
 import com.wynntils.models.lootrun.type.TaskLocation;
 import com.wynntils.utils.EnumUtils;
+import com.wynntils.utils.type.CappedValue;
 import java.util.Comparator;
 import java.util.List;
 
@@ -22,7 +23,7 @@ public class LootrunFunctions {
         }
 
         @Override
-        public List<String> getAliases() {
+        protected List<String> getAliases() {
             return List.of("dry_s");
         }
     }
@@ -34,7 +35,7 @@ public class LootrunFunctions {
         }
 
         @Override
-        public List<String> getAliases() {
+        protected List<String> getAliases() {
             return List.of("dry_b", "dry_boxes_count");
         }
     }
@@ -78,7 +79,7 @@ public class LootrunFunctions {
         }
 
         @Override
-        public List<String> getAliases() {
+        protected List<String> getAliases() {
             return List.of("chest_count");
         }
     }
@@ -150,6 +151,20 @@ public class LootrunFunctions {
         }
     }
 
+    public static class LootrunTimeFunction extends Function<Integer> {
+        @Override
+        public Integer getValue(FunctionArguments arguments) {
+            return Models.Lootrun.getCurrentTime();
+        }
+    }
+
+    public static class LootrunChallengesFunction extends Function<CappedValue> {
+        @Override
+        public CappedValue getValue(FunctionArguments arguments) {
+            return Models.Lootrun.getChallenges();
+        }
+    }
+
     public static class LootrunLastSelectedBeaconColorFunction extends Function<String> {
         @Override
         public String getValue(FunctionArguments arguments) {
@@ -157,6 +172,13 @@ public class LootrunFunctions {
             if (beaconColor == null) return "";
 
             return EnumUtils.toNiceString(beaconColor);
+        }
+    }
+
+    public static class LootrunRedBeaconChallengeCountFunction extends Function<Integer> {
+        @Override
+        public Integer getValue(FunctionArguments arguments) {
+            return Models.Lootrun.getRedBeaconTaskCount();
         }
     }
 }

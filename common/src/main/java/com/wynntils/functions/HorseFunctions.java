@@ -43,7 +43,7 @@ public class HorseFunctions {
         }
 
         @Override
-        public List<String> getAliases() {
+        protected List<String> getAliases() {
             return List.of("h_lvl");
         }
     }
@@ -58,7 +58,7 @@ public class HorseFunctions {
         }
 
         @Override
-        public List<String> getAliases() {
+        protected List<String> getAliases() {
             return List.of("h_mlvl");
         }
     }
@@ -73,7 +73,7 @@ public class HorseFunctions {
         }
 
         @Override
-        public List<String> getAliases() {
+        protected List<String> getAliases() {
             return List.of("h_xp");
         }
     }
@@ -88,7 +88,7 @@ public class HorseFunctions {
         }
 
         @Override
-        public List<String> getAliases() {
+        protected List<String> getAliases() {
             return List.of("h_tier");
         }
     }
@@ -104,7 +104,7 @@ public class HorseFunctions {
         }
 
         @Override
-        public List<String> getAliases() {
+        protected List<String> getAliases() {
             return List.of("h_name");
         }
     }

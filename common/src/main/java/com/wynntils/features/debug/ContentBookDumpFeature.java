@@ -12,7 +12,6 @@ import com.wynntils.core.components.Models;
 import com.wynntils.core.consumers.features.Feature;
 import com.wynntils.core.consumers.features.properties.RegisterKeyBind;
 import com.wynntils.core.consumers.features.properties.StartDisabled;
-import com.wynntils.core.json.JsonManager;
 import com.wynntils.core.keybinds.KeyBind;
 import com.wynntils.core.persisted.config.Category;
 import com.wynntils.core.persisted.config.ConfigCategory;
@@ -24,6 +23,7 @@ import com.wynntils.models.activities.type.ActivityLength;
 import com.wynntils.models.activities.type.ActivityRequirements;
 import com.wynntils.models.activities.type.ActivityType;
 import com.wynntils.models.profession.type.ProfessionType;
+import com.wynntils.utils.EnumUtils;
 import com.wynntils.utils.FileUtils;
 import com.wynntils.utils.colors.CustomColor;
 import com.wynntils.utils.mc.McUtils;
@@ -56,7 +56,7 @@ public class ContentBookDumpFeature extends Feature {
     // Temporary hack...
     private static final Gson GSON = new GsonBuilder()
             .registerTypeAdapter(CustomColor.class, new CustomColor.CustomColorSerializer())
-            .registerTypeAdapterFactory(new JsonManager.EnumTypeAdapterFactory<>())
+            .registerTypeAdapterFactory(new EnumUtils.EnumTypeAdapterFactory<>())
             .enableComplexMapKeySerialization()
             .setPrettyPrinting()
             .serializeNulls()

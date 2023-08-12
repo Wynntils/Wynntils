@@ -41,10 +41,6 @@ import org.lwjgl.glfw.GLFW;
 public abstract class AbstractMapScreen extends WynntilsScreen {
     protected static final float SCREEN_SIDE_OFFSET = 10;
     private static final float BORDER_OFFSET = 6;
-
-    // Zoom is the scaling of the map. The bigger the zoom, the more detailed the map becomes.
-    private static final float MIN_ZOOM = 0.1f;
-    private static final float MAX_ZOOM = 3f;
     private static final float MOUSE_SCROLL_ZOOM_FACTOR = 0.08f;
 
     protected boolean holdingMapKey = false;
@@ -218,11 +214,11 @@ public abstract class AbstractMapScreen extends WynntilsScreen {
             return true;
         }
         if (keyCode == GLFW.GLFW_KEY_EQUAL || keyCode == GLFW.GLFW_KEY_KP_ADD) {
-            setZoom(currentZoom + 0.02f);
+            setZoom(currentZoom + currentZoom * 0.05f);
             return true;
         }
         if (keyCode == GLFW.GLFW_KEY_MINUS || keyCode == GLFW.GLFW_KEY_KP_SUBTRACT) {
-            setZoom(currentZoom - 0.02f);
+            setZoom(currentZoom - currentZoom * 0.05f);
             return true;
         }
 
@@ -346,7 +342,7 @@ public abstract class AbstractMapScreen extends WynntilsScreen {
     }
 
     protected void setZoom(float zoomTargetDelta) {
-        this.currentZoom = MathUtils.clamp(zoomTargetDelta, MIN_ZOOM, MAX_ZOOM);
+        this.currentZoom = MathUtils.clamp(zoomTargetDelta, MapRenderer.MIN_ZOOM, MapRenderer.MAX_ZOOM);
     }
 
     protected void updateMapCenter(float newX, float newZ) {

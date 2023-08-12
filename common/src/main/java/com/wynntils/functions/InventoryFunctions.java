@@ -60,7 +60,7 @@ public class InventoryFunctions {
         }
 
         @Override
-        public List<String> getAliases() {
+        protected List<String> getAliases() {
             return List.of("estr");
         }
     }
@@ -73,7 +73,7 @@ public class InventoryFunctions {
         }
 
         @Override
-        public List<String> getAliases() {
+        protected List<String> getAliases() {
             return List.of("le");
         }
     }
@@ -86,7 +86,7 @@ public class InventoryFunctions {
         }
 
         @Override
-        public List<String> getAliases() {
+        protected List<String> getAliases() {
             return List.of("eb");
         }
     }
@@ -98,7 +98,7 @@ public class InventoryFunctions {
         }
 
         @Override
-        public List<String> getAliases() {
+        protected List<String> getAliases() {
             return List.of("em");
         }
     }
@@ -117,7 +117,7 @@ public class InventoryFunctions {
         }
 
         @Override
-        public List<String> getAliases() {
+        protected List<String> getAliases() {
             return List.of("inv_free");
         }
     }
@@ -129,7 +129,7 @@ public class InventoryFunctions {
         }
 
         @Override
-        public List<String> getAliases() {
+        protected List<String> getAliases() {
             return List.of("inv_used");
         }
     }
@@ -141,7 +141,7 @@ public class InventoryFunctions {
         }
 
         @Override
-        public List<String> getAliases() {
+        protected List<String> getAliases() {
             return List.of("pouch_open", "pouch_free");
         }
     }
@@ -153,7 +153,7 @@ public class InventoryFunctions {
         }
 
         @Override
-        public List<String> getAliases() {
+        protected List<String> getAliases() {
             return List.of("pouch_used");
         }
     }
@@ -170,7 +170,7 @@ public class InventoryFunctions {
         }
 
         @Override
-        public List<String> getAliases() {
+        protected List<String> getAliases() {
             return List.of("current_held_durability");
         }
     }
@@ -187,7 +187,7 @@ public class InventoryFunctions {
         }
 
         @Override
-        public List<String> getAliases() {
+        protected List<String> getAliases() {
             return List.of("max_held_durability");
         }
     }
@@ -211,7 +211,7 @@ public class InventoryFunctions {
         }
 
         @Override
-        public List<String> getAliases() {
+        protected List<String> getAliases() {
             return List.of("held_type");
         }
     }
@@ -234,7 +234,7 @@ public class InventoryFunctions {
         }
 
         @Override
-        public List<String> getAliases() {
+        protected List<String> getAliases() {
             return List.of("held_item", "held_name");
         }
     }

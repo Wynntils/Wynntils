@@ -44,13 +44,13 @@ public abstract class Overlay extends AbstractConfigurable implements Translatab
     protected final HiddenConfig<VerticalAlignment> verticalAlignmentOverride = new HiddenConfig<>(null);
 
     protected Overlay(OverlayPosition position, float width, float height) {
-        this.position.updateConfig(position);
-        this.size.updateConfig(new OverlaySize(width, height));
+        this.position.store(position);
+        this.size.store(new OverlaySize(width, height));
     }
 
     protected Overlay(OverlayPosition position, OverlaySize size) {
-        this.position.updateConfig(position);
-        this.size.updateConfig(size);
+        this.position.store(position);
+        this.size.store(size);
     }
 
     protected Overlay(
@@ -58,10 +58,10 @@ public abstract class Overlay extends AbstractConfigurable implements Translatab
             OverlaySize size,
             HorizontalAlignment horizontalAlignmentOverride,
             VerticalAlignment verticalAlignmentOverride) {
-        this.position.updateConfig(position);
-        this.size.updateConfig(size);
-        this.horizontalAlignmentOverride.updateConfig(horizontalAlignmentOverride);
-        this.verticalAlignmentOverride.updateConfig(verticalAlignmentOverride);
+        this.position.store(position);
+        this.size.store(size);
+        this.horizontalAlignmentOverride.store(horizontalAlignmentOverride);
+        this.verticalAlignmentOverride.store(verticalAlignmentOverride);
     }
 
     public abstract void render(PoseStack poseStack, MultiBufferSource bufferSource, float partialTicks, Window window);
@@ -169,7 +169,7 @@ public abstract class Overlay extends AbstractConfigurable implements Translatab
     }
 
     public void setPosition(OverlayPosition position) {
-        this.position.updateConfig(position);
+        this.position.store(position);
     }
 
     // Return the X where the overlay should be rendered

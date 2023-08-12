@@ -15,6 +15,8 @@ public abstract class Function<T> implements Translatable {
     private final String name;
     private final String translationName;
 
+    private List<String> aliases;
+
     protected Function() {
         String name = this.getClass().getSimpleName().replace("Function", "");
         this.name = CaseFormat.UPPER_CAMEL.to(CaseFormat.LOWER_UNDERSCORE, name);
@@ -31,8 +33,19 @@ public abstract class Function<T> implements Translatable {
         return name;
     }
 
-    public List<String> getAliases() {
+    protected List<String> getAliases() {
         return List.of();
+    }
+
+    public final List<String> getAliasList() {
+        // Optimization: we use lazy loading here,
+        // because returning a new list every time does a lot of allocations,
+        // and the JVM is not interested in optimizing that.
+        if (aliases == null) {
+            aliases = getAliases();
+        }
+
+        return aliases;
     }
 
     @Override

@@ -40,4 +40,9 @@ public final class ErrorOr<T> {
     public boolean hasError() {
         return error != null;
     }
+
+    @Override
+    public String toString() {
+        return "ErrorOr{" + "value=" + value + ", error='" + error + '\'' + '}';
+    }
 }

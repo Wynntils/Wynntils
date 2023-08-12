@@ -32,7 +32,7 @@ public class ConditionalFunctions {
         }
 
         @Override
-        public List<String> getAliases() {
+        protected List<String> getAliases() {
             return List.of("if_str");
         }
     }
@@ -47,7 +47,7 @@ public class ConditionalFunctions {
         }
 
         @Override
-        public List<String> getAliases() {
+        protected List<String> getAliases() {
             return List.of("if_num");
         }
     }
@@ -62,7 +62,7 @@ public class ConditionalFunctions {
         }
 
         @Override
-        public List<String> getAliases() {
+        protected List<String> getAliases() {
             return List.of("if_capped", "if_cap");
         }
     }

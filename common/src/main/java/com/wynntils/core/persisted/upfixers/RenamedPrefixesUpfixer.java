@@ -6,17 +6,17 @@ package com.wynntils.core.persisted.upfixers;
 
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
-import com.wynntils.core.persisted.config.Config;
+import com.wynntils.core.persisted.PersistedValue;
 import com.wynntils.utils.type.Pair;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
-public abstract class RenamedPrefixesUpfixer implements ConfigUpfixer {
+public abstract class RenamedPrefixesUpfixer implements Upfixer {
     protected abstract List<Pair<String, String>> getRenamedPrefixes();
 
     @Override
-    public boolean apply(JsonObject configObject, Set<Config<?>> configs) {
+    public boolean apply(JsonObject configObject, Set<PersistedValue<?>> persisteds) {
         List<String> configKeys = new ArrayList<>(configObject.keySet());
         for (String configName : configKeys) {
             for (Pair<String, String> prefix : getRenamedPrefixes()) {

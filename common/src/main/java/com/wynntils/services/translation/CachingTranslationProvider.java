@@ -32,7 +32,8 @@ public abstract class CachingTranslationProvider implements TranslationProvider 
     protected void saveTranslation(String toLanguage, List<String> message, List<String> translatedMessage) {
         Map<String, List<String>> translationCache = translationCaches.get(toLanguage);
         translationCache.put(createKey(message), translatedMessage);
-        if (++counter % 16 == 0) {
+        counter++;
+        if (counter % 16 == 0) {
             // Persist translation cache in background
             TaskUtils.runAsync(CachingTranslationProvider::saveTranslationCache);
         }

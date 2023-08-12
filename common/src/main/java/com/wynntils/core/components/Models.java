@@ -105,7 +105,7 @@ public final class Models {
     public static final ShamanTotemModel ShamanTotem = new ShamanTotemModel(WorldState);
     public static final SpellModel Spell = new SpellModel(Character);
     public static final DiscoveryModel Discovery = new DiscoveryModel(CombatXp, Marker, Quest, Territory);
-    public static final EmeraldModel Emerald = new EmeraldModel(Item);
+    public static final EmeraldModel Emerald = new EmeraldModel(Character, Item);
     public static final GearTooltipModel GearTooltip = new GearTooltipModel(Character, Quest);
     public static final HorseModel Horse = new HorseModel(Item);
 }

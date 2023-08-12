@@ -10,6 +10,7 @@ import com.wynntils.core.components.Models;
 import com.wynntils.core.text.StyledText;
 import com.wynntils.models.activities.event.DialogueHistoryReloadedEvent;
 import com.wynntils.screens.activities.widgets.QuestsPageButton;
+import com.wynntils.screens.base.TooltipProvider;
 import com.wynntils.screens.base.WynntilsMenuScreenBase;
 import com.wynntils.screens.base.WynntilsPagedScreen;
 import com.wynntils.screens.base.widgets.BackButton;
@@ -40,11 +41,6 @@ import net.minecraftforge.eventbus.api.SubscribeEvent;
 public final class WynntilsDialogueHistoryScreen extends WynntilsMenuScreenBase implements WynntilsPagedScreen {
     private static final int LINES_PER_PAGE = 16;
 
-    private static final List<Component> RELOAD_TOOLTIP = List.of(
-            Component.translatable("screens.wynntils.wynntilsDialogueHistory.reload.name")
-                    .withStyle(ChatFormatting.WHITE),
-            Component.translatable("screens.wynntils.wynntilsDialogueHistory.reload.description")
-                    .withStyle(ChatFormatting.GRAY));
     private Renderable hovered = null;
 
     private int currentPage = 0;
@@ -204,20 +200,14 @@ public final class WynntilsDialogueHistoryScreen extends WynntilsMenuScreenBase 
     }
 
     private void renderTooltip(PoseStack poseStack, int mouseX, int mouseY) {
-        if (this.hovered instanceof ReloadButton) {
-            RenderUtils.drawTooltipAt(
-                    poseStack,
-                    mouseX,
-                    mouseY,
-                    100,
-                    RELOAD_TOOLTIP,
-                    FontRenderer.getInstance().getFont(),
-                    true);
-            return;
+        List<Component> tooltipLines = List.of();
+
+        if (this.hovered instanceof TooltipProvider tooltipWidget) {
+            tooltipLines = tooltipWidget.getTooltipLines();
         }
 
         if (this.hovered instanceof QuestsPageButton) {
-            List<Component> tooltipLines = List.of(
+            tooltipLines = List.of(
                     Component.literal("[>] ")
                             .withStyle(ChatFormatting.GOLD)
                             .append(Component.translatable(
@@ -229,16 +219,18 @@ public final class WynntilsDialogueHistoryScreen extends WynntilsMenuScreenBase 
                     Component.literal(""),
                     Component.translatable("screens.wynntils.wynntilsMenu.leftClickToSelect")
                             .withStyle(ChatFormatting.GREEN));
-
-            RenderUtils.drawTooltipAt(
-                    poseStack,
-                    mouseX,
-                    mouseY,
-                    100,
-                    tooltipLines,
-                    FontRenderer.getInstance().getFont(),
-                    true);
         }
+
+        if (tooltipLines.isEmpty()) return;
+
+        RenderUtils.drawTooltipAt(
+                poseStack,
+                mouseX,
+                mouseY,
+                100,
+                tooltipLines,
+                FontRenderer.getInstance().getFont(),
+                true);
     }
 
     private void renderWidgets(PoseStack poseStack, int mouseX, int mouseY, float partialTick) {

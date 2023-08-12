@@ -6,15 +6,15 @@ package com.wynntils.core.persisted.upfixers.config;
 
 import com.google.gson.JsonObject;
 import com.google.gson.JsonPrimitive;
-import com.wynntils.core.persisted.config.Config;
-import com.wynntils.core.persisted.upfixers.ConfigUpfixer;
+import com.wynntils.core.persisted.PersistedValue;
+import com.wynntils.core.persisted.upfixers.Upfixer;
 import java.util.Set;
 
-public class CustomCommandKeybindSlashStartUpfixer implements ConfigUpfixer {
+public class CustomCommandKeybindSlashStartUpfixer implements Upfixer {
     private static final String CUSTOM_COMMAND_OBJECT_NAME = "customCommandKeybindsFeature.keybindCommand";
 
     @Override
-    public boolean apply(JsonObject configObject, Set<Config<?>> configs) {
+    public boolean apply(JsonObject configObject, Set<PersistedValue<?>> persisteds) {
         // There are 6 custom commands in the config, and they all start the same way.
         for (int i = 1; i <= 6; i++) {
             String name = CUSTOM_COMMAND_OBJECT_NAME + i;

@@ -47,7 +47,7 @@ public abstract class BaseBarOverlay extends Overlay {
 
     protected BaseBarOverlay(OverlayPosition position, OverlaySize size, CustomColor textColor) {
         super(position, size);
-        this.textColor.updateConfig(textColor);
+        this.textColor.store(textColor);
     }
 
     protected float textureHeight() {

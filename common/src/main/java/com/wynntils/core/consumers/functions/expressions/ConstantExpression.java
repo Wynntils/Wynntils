@@ -47,6 +47,10 @@ public final class ConstantExpression extends Expression {
         return ErrorOr.of(Optional.empty());
     }
 
+    public static Expression fromObject(Object value) {
+        return new ConstantExpression(value.toString(), value);
+    }
+
     // region Parsers
 
     private static Optional<Object> markedStringParser(String rawString) {

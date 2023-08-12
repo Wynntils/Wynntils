@@ -15,9 +15,6 @@ public interface Configurable extends PersistedOwner {
     /** Registers the configurable's config options. Called by ConfigManager when loaded */
     void addConfigOptions(List<Config<?>> options);
 
-    /** Removes a configurable's config options. Used by ConfigManager with Overlay groups */
-    void removeConfigOptions(List<Config<?>> options);
-
     /** Returns all configurable options registered that should be visible to the user */
     List<Config<?>> getVisibleConfigOptions();
 

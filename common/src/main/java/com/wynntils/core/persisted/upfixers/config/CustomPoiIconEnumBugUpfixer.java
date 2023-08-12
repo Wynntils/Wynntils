@@ -7,20 +7,20 @@ package com.wynntils.core.persisted.upfixers.config;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
-import com.wynntils.core.persisted.config.Config;
-import com.wynntils.core.persisted.upfixers.ConfigUpfixer;
+import com.wynntils.core.persisted.PersistedValue;
+import com.wynntils.core.persisted.upfixers.Upfixer;
 import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-public class CustomPoiIconEnumBugUpfixer implements ConfigUpfixer {
+public class CustomPoiIconEnumBugUpfixer implements Upfixer {
     private static final String POI_LIST_KEY = "mapFeature.customPois";
     private static final Pattern POI_NAME_CHEST_PATTERN = Pattern.compile("Loot Chest T?(\\d)");
 
     @Override
-    public boolean apply(JsonObject configObject, Set<Config<?>> configs) {
-        for (Config<?> config : configs) {
-            if (!config.getJsonName().equals(POI_LIST_KEY)) continue;
+    public boolean apply(JsonObject configObject, Set<PersistedValue<?>> persisteds) {
+        for (PersistedValue<?> persisted : persisteds) {
+            if (!persisted.getJsonName().equals(POI_LIST_KEY)) continue;
 
             JsonElement obj = configObject.get(POI_LIST_KEY);
             if (obj == null) return true;

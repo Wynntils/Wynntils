@@ -2,7 +2,7 @@
  * Copyright © Wynntils 2022-2023.
  * This file is released under AGPLv3. See LICENSE for full license details.
  */
-package com.wynntils.core.persisted.config;
+package com.wynntils.core.persisted;
 
 import com.google.common.base.CaseFormat;
 import com.wynntils.core.WynntilsMod;
@@ -10,6 +10,8 @@ import com.wynntils.core.components.Managers;
 import com.wynntils.core.consumers.features.Configurable;
 import com.wynntils.core.consumers.features.Translatable;
 import com.wynntils.core.consumers.overlays.Overlay;
+import com.wynntils.core.persisted.config.Config;
+import com.wynntils.core.persisted.config.NullableConfig;
 import com.wynntils.utils.EnumUtils;
 import java.lang.reflect.Type;
 import java.util.Objects;
@@ -18,7 +20,7 @@ import net.minecraft.client.resources.language.I18n;
 import org.apache.commons.lang3.ClassUtils;
 import org.apache.commons.lang3.builder.EqualsBuilder;
 
-public class ConfigHolder<T> implements Comparable<ConfigHolder<T>> {
+public class PersistedMetadata<T> implements Comparable<PersistedMetadata<T>> {
     private final Configurable parent;
     private final Config<T> configObj;
     private final String fieldName;
@@ -31,7 +33,7 @@ public class ConfigHolder<T> implements Comparable<ConfigHolder<T>> {
 
     private boolean userEdited = false;
 
-    public <P extends Configurable & Translatable> ConfigHolder(
+    public <P extends Configurable & Translatable> PersistedMetadata(
             P parent, Config<T> configObj, String fieldName, String i18nKey, boolean visible, Type valueType) {
         this.parent = parent;
         this.configObj = configObj;
@@ -138,12 +140,12 @@ public class ConfigHolder<T> implements Comparable<ConfigHolder<T>> {
             return;
         }
 
-        configObj.updateConfig(value);
+        configObj.store(value);
         parent.updateConfigOption(configObj);
         userEdited = true;
     }
 
-    void restoreValue(Object value) {
+    public void restoreValue(Object value) {
         setValue((T) value);
     }
 
@@ -191,7 +193,7 @@ public class ConfigHolder<T> implements Comparable<ConfigHolder<T>> {
     }
 
     @Override
-    public int compareTo(ConfigHolder other) {
+    public int compareTo(PersistedMetadata other) {
         return getJsonName().compareTo(other.getJsonName());
     }
 }
