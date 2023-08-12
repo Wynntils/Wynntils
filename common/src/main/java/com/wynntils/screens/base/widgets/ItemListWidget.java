@@ -48,8 +48,9 @@ public class ItemListWidget extends AbstractWidget {
                         TextShadow.NONE);
 
         hovered = null;
-        for (int i = 0; i < getRows() * getColumns() && i < items.size(); i++) {
-            ListItem listItem = items.get(i);
+        int pageOffset = getPageOffset();
+        for (int i = 0; i < getRows() * getColumns() && i < items.size() - pageOffset; i++) {
+            ListItem listItem = items.get(i + pageOffset);
             int x = i % getColumns() * ITEM_SPACING + getX();
             int y = i / getColumns() * ITEM_SPACING + getListStartY();
 
@@ -69,6 +70,10 @@ public class ItemListWidget extends AbstractWidget {
                     .renderTooltip(
                             poseStack, hovered.getTooltip(), hovered.itemStack.getTooltipImage(), mouseX, mouseY);
         }
+    }
+
+    private int getPageOffset() {
+        return getRows() * getColumns() * page;
     }
 
     @Override
@@ -104,13 +109,12 @@ public class ItemListWidget extends AbstractWidget {
     }
 
     public void setPage(int page) {
-        page %= getPages() + 1;
-        setMessage(Component.literal("Page: " + (page + 1) + "/" + (getPages() + 1) + ", Items: " + items.size()));
-        this.page = page;
+        this.page = (page + getPages()) % getPages();
+        setMessage(Component.literal("Page: " + (this.page + 1) + "/" + getPages() + ", Items: " + items.size()));
     }
 
     private int getPages() {
-        return items.size() / (getRows() * getColumns());
+        return (items.isEmpty() ? 0 : items.size() - 1) / (getRows() * getColumns()) + 1;
     }
 
     public int getPage() {
@@ -119,7 +123,7 @@ public class ItemListWidget extends AbstractWidget {
 
     @Override
     public boolean mouseScrolled(double mouseX, double mouseY, double delta) {
-        setPage(getPages() + delta > 0 ? 1 : -1);
+        setPage(getPage() + (delta > 0 ? 1 : -1));
         return true;
     }
 
