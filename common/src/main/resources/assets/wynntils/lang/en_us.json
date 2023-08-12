@@ -1468,6 +1468,8 @@
   "function.wynntils.lootrunChallenges.name": "Lootrun Challenges",
   "function.wynntils.lootrunLastSelectedBeaconColor.description": "The color of the beacon you have last selected in your lootrun",
   "function.wynntils.lootrunLastSelectedBeaconColor.name": "Lootrun Last Selected Beacon Color",
+  "function.wynntils.lootrunRedBeaconChallengeCount.description": "The number of red beacon challenges you have remaining in your lootrun",
+  "function.wynntils.lootrunRedBeaconChallengeCount.name": "Lootrun Red Beacon Challenges",
   "function.wynntils.lootrunState.description": "The current state of the lootrun you are in",
   "function.wynntils.lootrunState.name": "Lootrun State",
   "function.wynntils.lootrunTaskName.argument.color": "The color of the beacon",

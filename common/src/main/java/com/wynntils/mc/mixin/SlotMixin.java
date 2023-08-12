@@ -29,6 +29,6 @@ public abstract class SlotMixin {
         ItemStack oldItemStack = container.getItem(slot);
         original.call(container, slot, event.getItemStack());
 
-        MixinHelper.post(new SetSlotEvent.Post(container, slot, itemStack, oldItemStack));
+        MixinHelper.post(new SetSlotEvent.Post(container, slot, event.getItemStack(), oldItemStack));
     }
 }
