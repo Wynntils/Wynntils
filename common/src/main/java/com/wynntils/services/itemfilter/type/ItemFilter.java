@@ -12,7 +12,7 @@ import net.minecraft.client.resources.language.I18n;
 
 /**
  * An {@link ItemFilter} is both : <br>
- * - A model to represent a filter, holding its name, aliases, and translation keys. <br>
+ * - A model to represent a filter, holding its metadata (name, aliases, etc.)<br>
  * - A factory that will check the validity of an input string for this filter and create an
  *   {@link ItemFilterMatcher} from it.<br>
  * <br>
