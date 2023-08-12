@@ -117,7 +117,12 @@ public final class WynntilsItemGuideScreen extends WynntilsListScreen<GuideGearI
         int yOffset = ((i % getElementsPerPage()) / ELEMENTS_COLUMNS) * 20;
 
         return new GuideGearItemStackButton(
-                xOffset + Texture.ACTIVITY_BOOK_BACKGROUND.width() / 2 + 13, yOffset + 43, 18, 18, elements.get(i), this);
+                xOffset + Texture.ACTIVITY_BOOK_BACKGROUND.width() / 2 + 13,
+                yOffset + 43,
+                18,
+                18,
+                elements.get(i),
+                this);
     }
 
     @Override

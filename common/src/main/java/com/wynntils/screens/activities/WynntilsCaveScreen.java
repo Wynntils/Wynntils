@@ -135,7 +135,10 @@ public final class WynntilsCaveScreen extends WynntilsListScreen<CaveInfo, CaveB
                 (int) (Texture.SORT_DISTANCE.height() / 2 / 1.7f),
                 this));
         this.addRenderableWidget(new CaveProgressButton(
-                (int) (Texture.ACTIVITY_BOOK_BACKGROUND.width() / 4f), 10, Texture.CAVE.width(), Texture.CAVE.height()));
+                (int) (Texture.ACTIVITY_BOOK_BACKGROUND.width() / 4f),
+                10,
+                Texture.CAVE.width(),
+                Texture.CAVE.height()));
 
         reloadElements();
     }

@@ -136,7 +136,7 @@ public enum Texture {
 
     // Lootrun
     LOOTRUN_LINE("lootrun/path_arrow.png", 16, 16),
-    //Challenge Icons
+    // Challenge Icons
     DEFEND("lootrun/challenge_icons/defend.png", 20, 23),
     DESTROY("lootrun/challenge_icons/destroy.png", 12, 12),
     SLAY("lootrun/challenge_icons/slay.png", 20, 20),

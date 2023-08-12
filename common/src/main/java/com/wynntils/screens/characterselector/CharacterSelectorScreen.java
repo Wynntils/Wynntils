@@ -211,13 +211,9 @@ public final class CharacterSelectorScreen extends WynntilsScreen {
                     Texture.CHARACTER_LIST_BACKGROUND.height() * currentTextureScale * 0.92f);
 
             if (mouseX >= scrollButtonRenderX
-                    && mouseX
-                            <= scrollButtonRenderX
-                                    + Texture.SCROLL_BUTTON.width() * currentTextureScale
+                    && mouseX <= scrollButtonRenderX + Texture.SCROLL_BUTTON.width() * currentTextureScale
                     && mouseY >= scrollButtonRenderY
-                    && mouseY
-                            <= scrollButtonRenderY
-                                    + Texture.SCROLL_BUTTON.height() * currentTextureScale) {
+                    && mouseY <= scrollButtonRenderY + Texture.SCROLL_BUTTON.height() * currentTextureScale) {
                 draggingScroll = true;
                 lastMouseY = mouseY;
             }

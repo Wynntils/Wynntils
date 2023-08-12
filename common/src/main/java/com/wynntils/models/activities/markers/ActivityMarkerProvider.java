@@ -36,9 +36,7 @@ public class ActivityMarkerProvider implements MarkerProvider<MarkerPoi> {
                                 CommonColors.WHITE,
                                 CommonColors.WHITE),
                         new MarkerPoi(
-                                PoiLocation.fromLocation(spawnLocation),
-                                ACTIVITY_LOCATION_NAME,
-                                Texture.QUESTS_ICON));
+                                PoiLocation.fromLocation(spawnLocation), ACTIVITY_LOCATION_NAME, Texture.QUESTS_ICON));
     }
 
     public Location getSpawnLocation() {

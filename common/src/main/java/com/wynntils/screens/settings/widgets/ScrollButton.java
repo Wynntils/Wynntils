@@ -1,5 +1,5 @@
 /*
- * Copyright © Wynntils 2022.
+ * Copyright © Wynntils 2022-2023.
  * This file is released under AGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.screens.settings.widgets;
@@ -63,8 +63,7 @@ public class ScrollButton extends WynntilsButton {
 
         float renderY = MathUtils.map(currentScroll, 0, maxScroll, getY(), y2);
 
-        RenderUtils.drawHoverableTexturedRect(
-                poseStack, Texture.CONFIG_SCROLL_BUTTON, this.getX(), renderY, isHovered);
+        RenderUtils.drawHoverableTexturedRect(poseStack, Texture.CONFIG_SCROLL_BUTTON, this.getX(), renderY, isHovered);
     }
 
     @Override
