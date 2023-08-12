@@ -175,13 +175,13 @@ public enum Texture {
 
     // UI Components
     BACKGROUND_SPLASH("ui_components/background_splash.png", 1920, 1027),
-    CHANGELOG_BACKGROUND("ui_components/changelog.png", 294, 198),
     COSMETIC_VIEWER_BACKGROUND("ui_components/cosmetics_viewer_background.png", 72, 92),
     EMERALD_COUNT_BACKGROUND("ui_components/emerald_count_background.png", 24, 24),
     GEAR_ICONS("ui_components/gear_icons.png", 64, 128),
     GEAR_VIEWER_BACKGROUND("ui_components/gear_viewer_background.png", 103, 92),
     HIGHLIGHT("ui_components/highlight.png", 256, 256),
     OVERLAY_SELECTION_GUI("ui_components/overlay_selection_gui.png", 195, 256),
+    SCROLL_BACKGROUND("ui_components/scroll_background.png", 294, 198),
     VIGNETTE("ui_components/vignette.png", 512, 512);
 
     private final ResourceLocation resource;
