@@ -102,11 +102,11 @@ public class ContainerSearchFeature extends Feature {
         addSearchWidget(screen, renderX, renderY);
 
         if (betterBankSearch.get() && searchableContainerType == SearchableContainerType.BANK) {
-            addBankSearchWidget(screen);
+            addBankSearchWidget(screen, event.isFirstInit());
         }
     }
 
-    private void addBankSearchWidget(AbstractContainerScreen<?> screen) {
+    private void addBankSearchWidget(AbstractContainerScreen<?> screen, boolean firstInit) {
         itemList = new ItemList(
                 (screen.width + screen.imageWidth) / 2,
                 0,
@@ -117,7 +117,8 @@ public class ContainerSearchFeature extends Feature {
                         .flatMap(entry -> entry.getValue().stream()
                                 .filter(itemStack -> !itemStack.isEmpty())
                                 .map(itemStack -> new BankListItem(itemStack, entry.getKey())))
-                        .toList());
+                        .toList(),
+                itemList);
     }
 
     @SubscribeEvent

@@ -22,7 +22,14 @@ public class ItemList {
     private final SearchWidget searchWidget;
     private final ItemListWidget itemListWidget;
 
-    public ItemList(int x, int y, int width, int height, Screen screen, List<? extends ItemListWidget.ListItem> items) {
+    public ItemList(
+            int x,
+            int y,
+            int width,
+            int height,
+            Screen screen,
+            List<? extends ItemListWidget.ListItem> items,
+            ItemList previous) {
         this.x = x;
         this.y = y;
         this.width = width;
@@ -35,6 +42,10 @@ public class ItemList {
         screen.addRenderableWidget(searchWidget);
         itemListWidget = new ItemListWidget(x + 5, y + 5, width - 10, height - 10 - 17 - 5 - 5, items);
         screen.addRenderableWidget(itemListWidget);
+        if (previous != null) {
+            searchWidget.setTextBoxInput(previous.searchWidget.getTextBoxInput());
+            itemListWidget.setPage(previous.itemListWidget.getPage());
+        }
     }
 
     public void update(List<? extends ItemListWidget.ListItem> items) {
