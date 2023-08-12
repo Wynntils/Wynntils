@@ -123,6 +123,13 @@ public class ItemListWidget extends AbstractWidget {
         return true;
     }
 
+    @Override
+    public void onClick(double mouseX, double mouseY) {
+        if (hovered != null) {
+            hovered.onClick();
+        }
+    }
+
     public abstract static class ListItem {
         private final ItemStack itemStack;
 
