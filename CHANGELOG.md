@@ -1,9 +1,21 @@
+## [0.0.3-alpha.307](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.306...v0.0.3-alpha.307) (2023-08-12)
+
+
+### New Features
+
+* Add LootrunRedBeaconChallengeCountFunction ([#1986](https://github.com/Wynntils/Artemis/issues/1986)) ([1fb4884](https://github.com/Wynntils/Artemis/commit/1fb488434d11aedd73daee50b235d37be23476aa))
+
 ## [0.0.3-alpha.306](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.305...v0.0.3-alpha.306) (2023-08-12)
 
 
 ### Bug Fixes
 
 * custom loading screen no longer loads indefinitely when joining housing ([#1985](https://github.com/Wynntils/Artemis/issues/1985)) ([273a325](https://github.com/Wynntils/Artemis/commit/273a3259d1fadd7995378f84ddfd125711878446)), closes [#1802](https://github.com/Wynntils/Artemis/issues/1802)
+
+
+### Miscellaneous Chores
+
+* **release:** v0.0.3-alpha.306 [skip ci] ([9d68218](https://github.com/Wynntils/Artemis/commit/9d68218dd8a5eddc50497e17b60811af74e1aec4))
 
 ## [0.0.3-alpha.305](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.304...v0.0.3-alpha.305) (2023-08-12)
 
@@ -40,16 +52,4 @@
 ### Code Refactoring
 
 * Rename Config.updateConfig() to store() to align with superclass ([#1979](https://github.com/Wynntils/Artemis/issues/1979)) ([9f32607](https://github.com/Wynntils/Artemis/commit/9f32607e826c0e1073d8dca40c754df782989dc4))
-
-## [0.0.3-alpha.302](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.301...v0.0.3-alpha.302) (2023-08-11)
-
-
-### Miscellaneous Chores
-
-* **release:** v0.0.3-alpha.302 [skip ci] ([76ac0fe](https://github.com/Wynntils/Artemis/commit/76ac0fe119efc30ebe3b26305c6ba0477755169b))
-
-
-### Code Refactoring
-
-* Rename ConfigHolder to PersistedMetadata ([#1980](https://github.com/Wynntils/Artemis/issues/1980)) ([48c5cb7](https://github.com/Wynntils/Artemis/commit/48c5cb7712d0406fb12b195f5d824818f55a112e))
 
