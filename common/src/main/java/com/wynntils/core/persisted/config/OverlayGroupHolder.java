@@ -1,6 +1,6 @@
 /*
  * Copyright © Wynntils 2023.
- * This file is released under AGPLv3. See LICENSE for full license details.
+ * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.core.persisted.config;
 
@@ -49,7 +49,7 @@ public class OverlayGroupHolder {
     }
 
     public String getConfigKey() {
-        return parent.getConfigJsonName() + ".groupedOverlay." + field.getName() + ".ids";
+        return parent.getJsonName() + ".groupedOverlay." + field.getName() + ".ids";
     }
 
     public int getOverlayCount() {
