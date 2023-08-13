@@ -240,6 +240,8 @@
   "feature.wynntils.customCommandKeybinds.name": "Custom Command Keybinds",
   "feature.wynntils.customLoadingScreen.description": "Adds a custom loading screen.",
   "feature.wynntils.customLoadingScreen.name": "Custom Loading Screen",
+  "feature.wynntils.customLoadingScreen.timeout.description": "After how many seconds should the loading screen fallback to the vanilla one?",
+  "feature.wynntils.customLoadingScreen.timeout.name": "Loading Screen Timeout",
   "feature.wynntils.customLootrunBeacons.description": "Adds waypoints to predicted lootrun beacon locations.",
   "feature.wynntils.customLootrunBeacons.name": "Custom Lootrun Beacons",
   "feature.wynntils.customLootrunBeacons.removeOriginalBeacons.description": "Should the original Wynncraft lootrun beacons be removed?",

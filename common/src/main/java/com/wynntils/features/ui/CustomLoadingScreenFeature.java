@@ -4,8 +4,11 @@
  */
 package com.wynntils.features.ui;
 
+import com.wynntils.core.components.Managers;
 import com.wynntils.core.consumers.features.Feature;
+import com.wynntils.core.persisted.Persisted;
 import com.wynntils.core.persisted.config.Category;
+import com.wynntils.core.persisted.config.Config;
 import com.wynntils.core.persisted.config.ConfigCategory;
 import com.wynntils.mc.event.LoadingProgressEvent;
 import com.wynntils.mc.event.LocalSoundEvent;
@@ -18,15 +21,25 @@ import com.wynntils.screens.characterselector.LoadingScreen;
 import com.wynntils.utils.mc.McUtils;
 import net.minecraft.client.gui.screens.ProgressScreen;
 import net.minecraft.client.gui.screens.ReceivingLevelScreen;
+import net.minecraft.client.gui.screens.Screen;
+import net.minecraft.client.gui.screens.TitleScreen;
 import net.minecraftforge.eventbus.api.EventPriority;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 
 @ConfigCategory(Category.UI)
 public class CustomLoadingScreenFeature extends Feature {
+    @Persisted
+    public final Config<Integer> timeout = new Config<>(10);
+
     private LoadingScreen loadingScreen;
+    private Screen fallbackScreen;
 
     @SubscribeEvent(priority = EventPriority.HIGH)
     public void onScreenOpenPre(ScreenOpenedEvent.Pre event) {
+        if (!(event.getScreen() instanceof LoadingScreen) && !(event.getScreen() instanceof TitleScreen)) {
+            fallbackScreen = event.getScreen();
+        }
+
         if (loadingScreen == null) return;
 
         if (event.getScreen() instanceof ProgressScreen) {
@@ -44,6 +57,13 @@ public class CustomLoadingScreenFeature extends Feature {
             loadingScreen = LoadingScreen.create();
             loadingScreen.setMessage(event.getMessage());
             McUtils.mc().setScreen(loadingScreen);
+            Managers.TickScheduler.scheduleLater(
+                    () -> {
+                        if (McUtils.mc().screen == loadingScreen) {
+                            McUtils.mc().setScreen(fallbackScreen);
+                        }
+                    },
+                    timeout.get() * 20);
         }
 
         loadingScreen.setMessage(event.getMessage());
@@ -85,6 +105,13 @@ public class CustomLoadingScreenFeature extends Feature {
                 loadingScreen = LoadingScreen.create();
                 loadingScreen.setMessage("Connecting...");
                 McUtils.mc().setScreen(loadingScreen);
+                Managers.TickScheduler.scheduleLater(
+                        () -> {
+                            if (McUtils.mc().screen == loadingScreen) {
+                                McUtils.mc().setScreen(fallbackScreen);
+                            }
+                        },
+                        timeout.get() * 20);
             }
             case INTERIM -> {
                 if (loadingScreen == null) return;
@@ -95,6 +122,7 @@ public class CustomLoadingScreenFeature extends Feature {
                 if (loadingScreen == null) return;
 
                 loadingScreen = null;
+                fallbackScreen = null;
                 McUtils.mc().setScreen(null);
             }
         }
