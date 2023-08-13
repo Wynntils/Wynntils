@@ -115,29 +115,31 @@ public class ContainerSearchFeature extends Feature {
                 (screen.width - screen.imageWidth) / 2,
                 screen.height,
                 screen,
-                Models.Container.getBank().entrySet().stream()
-                        .flatMap(entry -> entry.getValue().stream()
-                                .filter(itemStack -> !itemStack.isEmpty())
-                                .collect(Collectors.groupingBy(itemStack -> Map.entry(
-                                        itemStack.getItem(),
-                                        itemStack.getOrCreateTag().copy())))
-                                .entrySet()
-                                .stream()
-                                .map(entry1 -> {
-                                    List<ItemStack> items = entry1.getValue();
-                                    if (items.size() == 1) return items.get(0);
-                                    ItemStack itemStack = items.get(0).copy();
-                                    itemStack.setTag(entry1.getKey().getValue());
-                                    int count = items.stream()
-                                            .mapToInt(ItemStack::getCount)
-                                            .sum();
-                                    itemStack.setCount(count);
-
-                                    return itemStack;
-                                })
-                                .map(itemStack -> new BankListItem(itemStack, entry.getKey())))
-                        .toList(),
+                getBankItems(),
                 itemList);
+    }
+
+    private static List<BankListItem> getBankItems() {
+        return Models.Container.getBank().entrySet().stream()
+                .flatMap(entry -> entry.getValue().stream()
+                        .filter(itemStack -> !itemStack.isEmpty())
+                        .collect(Collectors.groupingBy(itemStack -> Map.entry(
+                                itemStack.getItem(), itemStack.getOrCreateTag().copy())))
+                        .entrySet()
+                        .stream()
+                        .map(entry1 -> {
+                            List<ItemStack> items = entry1.getValue();
+                            if (items.size() == 1) return items.get(0);
+                            ItemStack itemStack = items.get(0).copy();
+                            itemStack.setTag(entry1.getKey().getValue());
+                            int count =
+                                    items.stream().mapToInt(ItemStack::getCount).sum();
+                            itemStack.setCount(count);
+
+                            return itemStack;
+                        })
+                        .map(itemStack -> new BankListItem(itemStack, entry.getKey())))
+                .toList();
     }
 
     @SubscribeEvent
@@ -164,6 +166,9 @@ public class ContainerSearchFeature extends Feature {
     @SubscribeEvent
     public void onContainerSetSlot(ContainerSetSlotEvent.Pre event) {
         forceUpdateSearch();
+        if (itemList != null) {
+            itemList.update(getBankItems());
+        }
     }
 
     @SubscribeEvent
