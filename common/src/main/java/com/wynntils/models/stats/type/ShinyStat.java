@@ -7,10 +7,11 @@ package com.wynntils.models.stats.type;
 import com.wynntils.utils.type.Pair;
 import java.util.Optional;
 
-public class ShinyStatistic {
+public class ShinyStat {
+
     private Pair<String, Long> valuePair;
 
-    public ShinyStatistic(Optional<Pair<String, Long>> shinyStat) {
+    public ShinyStat(Optional<Pair<String, Long>> shinyStat) {
         this.valuePair = shinyStat.orElse(null);
     }
 
