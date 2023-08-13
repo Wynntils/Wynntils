@@ -1,4 +1,16 @@
+## [0.0.3-alpha.314](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.313...v0.0.3-alpha.314) (2023-08-13)
+
+
+### New Features
+
+* Redirect empty mana bank notification ([#1993](https://github.com/Wynntils/Artemis/issues/1993)) ([5f16cdf](https://github.com/Wynntils/Artemis/commit/5f16cdffe7f73dcd9c147b4f39af23c6e0fe5511))
+
 ## [0.0.3-alpha.313](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.312...v0.0.3-alpha.313) (2023-08-13)
+
+
+### Miscellaneous Chores
+
+* **release:** v0.0.3-alpha.313 [skip ci] ([17f33ac](https://github.com/Wynntils/Artemis/commit/17f33ac1423fba0ed7e95ee5a396789e51b131fe))
 
 
 ### Code Refactoring
@@ -32,16 +44,4 @@
 
 * Reinstantiate "fix: Fixed reload_button texture alignment ([#1429](https://github.com/Wynntils/Artemis/issues/1429))" ([#1992](https://github.com/Wynntils/Artemis/issues/1992))" ([#1998](https://github.com/Wynntils/Artemis/issues/1998)) ([23cee00](https://github.com/Wynntils/Artemis/commit/23cee00c6287793ba55f44517fb16f92499af49d))
 * **release:** v0.0.3-alpha.310 [skip ci] ([2fa7f3b](https://github.com/Wynntils/Artemis/commit/2fa7f3bf8d6763470775ae0d05308a054efeb48d))
-
-## [0.0.3-alpha.309](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.308...v0.0.3-alpha.309) (2023-08-12)
-
-
-### Bug Fixes
-
-* SetSlotEvent.Post has wrong newItemStack ([#1996](https://github.com/Wynntils/Artemis/issues/1996)) ([f714314](https://github.com/Wynntils/Artemis/commit/f71431480ab58c79ba9bd1389d263ab5bf79c620))
-
-
-### Miscellaneous Chores
-
-* **release:** v0.0.3-alpha.309 [skip ci] ([2d2c290](https://github.com/Wynntils/Artemis/commit/2d2c290350ae1667b24d0206f463ae21039882b0))
 
