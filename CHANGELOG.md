@@ -1,9 +1,17 @@
+## [0.0.3-alpha.313](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.312...v0.0.3-alpha.313) (2023-08-13)
+
+
+### Code Refactoring
+
+* Move the PersistedMetadata into a map in the PersistedManager ([#1984](https://github.com/Wynntils/Artemis/issues/1984)) ([8d9fea2](https://github.com/Wynntils/Artemis/commit/8d9fea20da410d42315c201527cd49b9ed831d75))
+
 ## [0.0.3-alpha.312](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.311...v0.0.3-alpha.312) (2023-08-13)
 
 
 ### Miscellaneous Chores
 
 * Change license to LGPL3 ([#1988](https://github.com/Wynntils/Artemis/issues/1988)) ([7a68730](https://github.com/Wynntils/Artemis/commit/7a68730b359642009d2b81ceb2b6f44f1371b568))
+* **release:** v0.0.3-alpha.312 [skip ci] ([4475b5c](https://github.com/Wynntils/Artemis/commit/4475b5c7c5c45a1490c60100e9a2a262175cfbd5))
 
 ## [0.0.3-alpha.311](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.310...v0.0.3-alpha.311) (2023-08-13)
 
@@ -36,12 +44,4 @@
 ### Miscellaneous Chores
 
 * **release:** v0.0.3-alpha.309 [skip ci] ([2d2c290](https://github.com/Wynntils/Artemis/commit/2d2c290350ae1667b24d0206f463ae21039882b0))
-
-## [0.0.3-alpha.308](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.307...v0.0.3-alpha.308) (2023-08-12)
-
-
-### Miscellaneous Chores
-
-* **release:** v0.0.3-alpha.308 [skip ci] ([da597b4](https://github.com/Wynntils/Artemis/commit/da597b48cbffdb4cd2fe62ff4a3ac7ee9a77e61c))
-* Revert "fix: Fixed reload_button texture alignment ([#1429](https://github.com/Wynntils/Artemis/issues/1429))" ([#1992](https://github.com/Wynntils/Artemis/issues/1992)) ([c3d4106](https://github.com/Wynntils/Artemis/commit/c3d4106a6297c5730b542b4af8879bf4c995325c))
 
