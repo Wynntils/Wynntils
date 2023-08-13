@@ -7,6 +7,7 @@ package com.wynntils.models.gear.type;
 import com.wynntils.core.WynntilsMod;
 import com.wynntils.models.elements.type.Powder;
 import com.wynntils.models.stats.StatCalculator;
+import com.wynntils.models.stats.type.ShinyStatistic;
 import com.wynntils.models.stats.type.StatActualValue;
 import com.wynntils.models.stats.type.StatPossibleValues;
 import com.wynntils.models.stats.type.StatType;

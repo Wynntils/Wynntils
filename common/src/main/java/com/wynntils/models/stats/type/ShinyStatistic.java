@@ -2,15 +2,15 @@
  * Copyright © Wynntils 2023.
  * This file is released under LGPLv3. See LICENSE for full license details.
  */
-package com.wynntils.models.gear.type;
+package com.wynntils.models.stats.type;
 
 import com.wynntils.utils.type.Pair;
 import java.util.Optional;
 
-class ShinyStatistic {
+public class ShinyStatistic {
     private Pair<String, Long> valuePair;
 
-    ShinyStatistic(Optional<Pair<String, Long>> shinyStat) {
+    public ShinyStatistic(Optional<Pair<String, Long>> shinyStat) {
         this.valuePair = shinyStat.orElse(null);
     }
 
