@@ -1,9 +1,21 @@
+## [0.0.3-alpha.315](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.314...v0.0.3-alpha.315) (2023-08-13)
+
+
+### Miscellaneous Chores
+
+* Add Modrinth link to README ([#2004](https://github.com/Wynntils/Artemis/issues/2004)) ([f617a5a](https://github.com/Wynntils/Artemis/commit/f617a5a43c819b4c13e0d83cafa7264e647eec0d))
+
 ## [0.0.3-alpha.314](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.313...v0.0.3-alpha.314) (2023-08-13)
 
 
 ### New Features
 
 * Redirect empty mana bank notification ([#1993](https://github.com/Wynntils/Artemis/issues/1993)) ([5f16cdf](https://github.com/Wynntils/Artemis/commit/5f16cdffe7f73dcd9c147b4f39af23c6e0fe5511))
+
+
+### Miscellaneous Chores
+
+* **release:** v0.0.3-alpha.314 [skip ci] ([1f7413c](https://github.com/Wynntils/Artemis/commit/1f7413c883c94232c8b8529204c0f4a05032e1ae))
 
 ## [0.0.3-alpha.313](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.312...v0.0.3-alpha.313) (2023-08-13)
 
@@ -36,12 +48,4 @@
 ### Miscellaneous Chores
 
 * **release:** v0.0.3-alpha.311 [skip ci] ([12725d1](https://github.com/Wynntils/Artemis/commit/12725d168cc7149127da820ff0b184fc873cd69b))
-
-## [0.0.3-alpha.310](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.309...v0.0.3-alpha.310) (2023-08-12)
-
-
-### Miscellaneous Chores
-
-* Reinstantiate "fix: Fixed reload_button texture alignment ([#1429](https://github.com/Wynntils/Artemis/issues/1429))" ([#1992](https://github.com/Wynntils/Artemis/issues/1992))" ([#1998](https://github.com/Wynntils/Artemis/issues/1998)) ([23cee00](https://github.com/Wynntils/Artemis/commit/23cee00c6287793ba55f44517fb16f92499af49d))
-* **release:** v0.0.3-alpha.310 [skip ci] ([2fa7f3b](https://github.com/Wynntils/Artemis/commit/2fa7f3bf8d6763470775ae0d05308a054efeb48d))
 
