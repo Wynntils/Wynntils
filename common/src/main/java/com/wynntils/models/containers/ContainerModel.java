@@ -9,6 +9,11 @@ import com.wynntils.core.components.Models;
 import com.wynntils.core.persisted.Persisted;
 import com.wynntils.core.persisted.storage.Storage;
 import com.wynntils.core.text.StyledText;
+import com.wynntils.mc.event.ContainerSetContentEvent;
+import com.wynntils.mc.event.ScreenClosedEvent;
+import com.wynntils.mc.event.ScreenInitEvent;
+import com.wynntils.models.containers.type.SearchableContainerType;
+import com.wynntils.utils.mc.McUtils;
 import com.wynntils.utils.type.Pair;
 import java.util.List;
 import java.util.Optional;
@@ -19,6 +24,7 @@ import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
 import net.minecraft.client.gui.screens.inventory.ContainerScreen;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.ItemStack;
+import net.minecraftforge.eventbus.api.SubscribeEvent;
 
 public final class ContainerModel extends Model {
     public static final Pattern ABILITY_TREE_PATTERN =
@@ -72,6 +78,8 @@ public final class ContainerModel extends Model {
     private final Storage<Integer> finalMiscBucketPage = new Storage<>(10);
 
     public static final int LAST_BANK_PAGE_SLOT = 8;
+
+    private SearchableContainerType containerType;
 
     public ContainerModel() {
         super(List.of());
@@ -139,6 +147,16 @@ public final class ContainerModel extends Model {
 
     public int getFinalBookshelfPage() {
         return finalBookshelfPage.get();
+    }
+
+    public int getFinalPage(SearchableContainerType type) {
+        return switch (containerType) {
+            case BANK -> Models.Container.getFinalBankPage();
+            case BLOCK_BANK -> Models.Container.getFinalBlockBankPage();
+            case BOOKSHELF -> Models.Container.getFinalBookshelfPage();
+            case MISC_BUCKET -> Models.Container.getFinalMiscBucketPage();
+            case GUILD_BANK, MEMBER_LIST -> -1;
+        };
     }
 
     public void updateFinalMiscBucketPage(int newFinalPage) {
@@ -296,5 +314,44 @@ public final class ContainerModel extends Model {
         }
 
         return null;
+    }
+
+    @SubscribeEvent
+    public void onContainerSetEvent(ContainerSetContentEvent.Post e) {
+        if (containerType == null) return;
+        if (isItemIndicatingLastBankPage(e.getItems().get(LAST_BANK_PAGE_SLOT))) {
+            switch (containerType) {
+                case BANK -> updateFinalBankPage(getCurrentBankPage(McUtils.mc().screen));
+                case BLOCK_BANK -> updateFinalBlockBankPage(getCurrentBankPage(McUtils.mc().screen));
+                case BOOKSHELF -> updateFinalBookshelfPage(getCurrentBankPage(McUtils.mc().screen));
+                case MISC_BUCKET -> updateFinalMiscBucketPage(getCurrentBankPage(McUtils.mc().screen));
+            }
+        }
+    }
+
+    @SubscribeEvent
+    public void onScreenClose(ScreenClosedEvent e) {
+        containerType = null;
+    }
+
+    @SubscribeEvent
+    public void onScreenInit(ScreenInitEvent e) {
+        if (!(e.getScreen() instanceof AbstractContainerScreen<?> screen)) return;
+
+        if (Models.Container.isBankScreen(screen)) {
+            containerType = SearchableContainerType.BANK;
+        } else if (Models.Container.isBlockBankScreen(screen)) {
+            containerType = SearchableContainerType.BLOCK_BANK;
+        } else if (Models.Container.isBookshelfScreen(screen)) {
+            containerType = SearchableContainerType.BOOKSHELF;
+        } else if (Models.Container.isMiscBucketScreen(screen)) {
+            containerType = SearchableContainerType.MISC_BUCKET;
+        } else {
+            containerType = null;
+        }
+    }
+
+    public SearchableContainerType getContainerType() {
+        return containerType;
     }
 }
