@@ -266,7 +266,7 @@ public final class WynnItemParser {
                 ? itemData.get("identification_rolls").getAsInt()
                 : 0;
 
-        // FIXME: Can we get shiny stats?
+        // Shiny stats are not available from internal roll lore (on other players)
         return new WynnItemParseResult(
                 gearInfo.tier(), "", 0, identifications, List.of(), powders, rerolls, 0, 0, Optional.empty());
     }
