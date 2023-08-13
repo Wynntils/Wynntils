@@ -33,7 +33,9 @@ import com.wynntils.utils.render.RenderUtils;
 import com.wynntils.utils.wynn.ContainerUtils;
 import java.util.List;
 import java.util.Locale;
+import java.util.Map;
 import java.util.Optional;
+import java.util.stream.Collectors;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
@@ -102,11 +104,11 @@ public class ContainerSearchFeature extends Feature {
         addSearchWidget(screen, renderX, renderY);
 
         if (betterBankSearch.get() && searchableContainerType == SearchableContainerType.BANK) {
-            addBankSearchWidget(screen, event.isFirstInit());
+            addBankSearchWidget(screen);
         }
     }
 
-    private void addBankSearchWidget(AbstractContainerScreen<?> screen, boolean firstInit) {
+    private void addBankSearchWidget(AbstractContainerScreen<?> screen) {
         itemList = new ItemList(
                 (screen.width + screen.imageWidth) / 2,
                 0,
@@ -116,6 +118,21 @@ public class ContainerSearchFeature extends Feature {
                 Models.Container.getBank().entrySet().stream()
                         .flatMap(entry -> entry.getValue().stream()
                                 .filter(itemStack -> !itemStack.isEmpty())
+                                .collect(Collectors.groupingBy(itemStack -> Map.entry(
+                                        itemStack.getItem(),
+                                        itemStack.getOrCreateTag().copy())))
+                                .entrySet()
+                                .stream()
+                                .map(entry1 -> {
+                                    ItemStack itemStack =
+                                            new ItemStack(entry1.getKey().getKey());
+                                    itemStack.setTag(entry1.getKey().getValue());
+                                    int count = entry1.getValue().stream()
+                                            .mapToInt(ItemStack::getCount)
+                                            .sum();
+                                    itemStack.setCount(count);
+                                    return itemStack;
+                                })
                                 .map(itemStack -> new BankListItem(itemStack, entry.getKey())))
                         .toList(),
                 itemList);

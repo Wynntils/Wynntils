@@ -9,10 +9,12 @@ import com.wynntils.core.text.StyledText;
 import com.wynntils.utils.colors.CommonColors;
 import com.wynntils.utils.mc.McUtils;
 import com.wynntils.utils.render.FontRenderer;
+import com.wynntils.utils.render.RenderUtils;
 import com.wynntils.utils.render.type.HorizontalAlignment;
 import com.wynntils.utils.render.type.TextShadow;
 import com.wynntils.utils.render.type.VerticalAlignment;
 import java.util.List;
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiComponent;
 import net.minecraft.client.gui.components.AbstractWidget;
 import net.minecraft.client.gui.narration.NarrationElementOutput;
@@ -49,6 +51,7 @@ public class ItemListWidget extends AbstractWidget {
 
         hovered = null;
         int pageOffset = getPageOffset();
+        Minecraft mc = McUtils.mc();
         for (int i = 0; i < getRows() * getColumns() && i < items.size() - pageOffset; i++) {
             ListItem listItem = items.get(i + pageOffset);
             int x = i % getColumns() * ITEM_SPACING + getX();
@@ -59,16 +62,30 @@ public class ItemListWidget extends AbstractWidget {
                 GuiComponent.fill(poseStack, x, y, x + ITEM_SIZE, y + ITEM_SIZE, 0, 0x80ffffff);
             }
 
-            McUtils.mc().getItemRenderer().renderAndDecorateItem(poseStack, listItem.getItemStack(), x, y);
-            McUtils.mc()
-                    .getItemRenderer()
-                    .renderGuiItemDecorations(poseStack, McUtils.mc().font, listItem.getItemStack(), x, y);
+            RenderUtils.renderItem(poseStack, listItem.getItemStack(), x, y);
+            boolean scaleCount = listItem.getItemStack().getCount() >= 100;
+            if (scaleCount) {
+                poseStack.pushPose();
+                poseStack.scale(0.7f, 0.7f, 0.7f);
+                int countWidth =
+                        mc.font.width(String.valueOf(listItem.getItemStack().getCount()));
+                int xOffset = (int) (19 - 2 - countWidth * 0.7);
+                int yOffset = 6 + 3;
+                x += xOffset;
+                y += yOffset;
+                x /= 0.7d;
+                y /= 0.7d;
+                x -= xOffset * 0.7;
+                y -= yOffset * 0.7;
+            }
+            mc.getItemRenderer().renderGuiItemDecorations(poseStack, mc.font, listItem.getItemStack(), x, y);
+            if (scaleCount) {
+                poseStack.popPose();
+            }
         }
         if (hovered != null) {
-            McUtils.mc()
-                    .screen
-                    .renderTooltip(
-                            poseStack, hovered.getTooltip(), hovered.itemStack.getTooltipImage(), mouseX, mouseY);
+            mc.screen.renderTooltip(
+                    poseStack, hovered.getTooltip(), hovered.itemStack.getTooltipImage(), mouseX, mouseY);
         }
     }
 
