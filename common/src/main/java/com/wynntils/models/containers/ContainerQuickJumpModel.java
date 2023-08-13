@@ -6,6 +6,7 @@ package com.wynntils.models.containers;
 
 import com.wynntils.core.components.Model;
 import com.wynntils.core.components.Models;
+import com.wynntils.mc.event.ScreenClosedEvent;
 import com.wynntils.mc.event.ScreenInitEvent;
 import com.wynntils.models.containers.type.SearchableContainerType;
 import com.wynntils.utils.mc.McUtils;
@@ -40,6 +41,11 @@ public final class ContainerQuickJumpModel extends Model {
     @SubscribeEvent
     public void onContainerInit(ScreenInitEvent event) {
         navigateCloser();
+    }
+
+    @SubscribeEvent
+    public void onContainerClose(ScreenClosedEvent event) {
+        pageDestination = -1;
     }
 
     private void navigateCloser() {

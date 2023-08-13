@@ -170,8 +170,7 @@ public class CustomBankPagesFeature extends Feature {
 
             if (destinations.size() < MAX_DESTINATIONS) {
                 int startIndex = destinations.size();
-                List<Integer> defaultValues =
-                        Models.ContainerQuickJump.getJumpDestinations(Models.Container.getContainerType());
+                List<Integer> defaultValues = Models.ContainerQuickJump.getJumpDestinations(containerType);
 
                 for (int i = startIndex; i < MAX_DESTINATIONS; i++) {
                     destinations.add(defaultValues.get(i));
