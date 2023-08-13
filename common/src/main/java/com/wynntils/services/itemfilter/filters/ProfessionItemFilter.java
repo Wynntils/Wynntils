@@ -7,7 +7,6 @@ package com.wynntils.services.itemfilter.filters;
 import com.wynntils.models.items.WynnItem;
 import com.wynntils.models.items.items.game.GatheringToolItem;
 import com.wynntils.models.items.items.game.IngredientItem;
-import com.wynntils.models.items.items.game.MaterialItem;
 import com.wynntils.models.profession.type.ProfessionType;
 import com.wynntils.services.itemfilter.type.ItemFilter;
 import com.wynntils.services.itemfilter.type.ItemFilterInstance;
@@ -38,17 +37,12 @@ public class ProfessionItemFilter extends ItemFilter {
 
         @Override
         public boolean matches(WynnItem wynnItem) {
+            // TODO add support for MaterialItem type
+            // (https://github.com/Wynntils/Artemis/pull/1860#discussion_r1289811062)
             if (profession == null) {
                 return false;
             } else if (wynnItem instanceof IngredientItem ingredient) {
                 return ingredient.getIngredientInfo().professions().contains(profession);
-            } else if (wynnItem instanceof MaterialItem materialItem) {
-                return materialItem
-                                .getMaterialProfile()
-                                .getResourceType()
-                                .getMaterialType()
-                                .getProfessionType()
-                        == profession;
             } else if (wynnItem instanceof GatheringToolItem gatheringToolItem) {
                 return gatheringToolItem.getToolProfile().toolType().getProfessionType() == profession;
             }
