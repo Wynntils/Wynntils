@@ -22,7 +22,7 @@
   "environment": "*",
   "icon": "assets/wynntils/logo.png",
   "id": "wynntils",
-  "license": "GNU AGPL 3",
+  "license": "LGPL-3.0-only",
   "mixins": [
     "wynntils.mixins.json",
     "wynntils.mixins.fabric.json"
