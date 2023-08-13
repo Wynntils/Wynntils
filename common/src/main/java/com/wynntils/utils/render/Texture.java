@@ -43,7 +43,6 @@ public enum Texture {
     MAP_ICON("icons/content_book/map_icon.png", 21, 38),
     OVERLAYS_ICON("icons/content_book/overlays_icon.png", 19, 38),
     QUEST_BOOK_ICON("icons/content_book/quests_icon.png", 24, 34),
-    QUESTS_SCROLL_ICON("icons/content_book/quests_scroll_icon.png", 16, 16),
     SECRET_DISCOVERIES_ICON("icons/content_book/secret_discoveries_icon.png", 16, 26),
     SETTINGS_ICON("icons/content_book/settings_icon.png", 17, 34),
     // Discoveries
@@ -69,6 +68,7 @@ public enum Texture {
     HELP_ICON("icons/generic/help_icon.png", 10, 16),
     ITEM_LOCK("icons/generic/item_lock_icon.png", 16, 16),
     OVERLAY_EXTRA_ICON("icons/generic/overlay_extra_icon.png", 16, 16),
+    QUESTS_SCROLL_ICON("icons/generic/quests_scroll_icon.png", 16, 16),
     SHARE_ICON("icons/generic/share_icon.png", 16, 14),
     SIGN_ICON("icons/generic/sign_icon.png", 17, 18),
     SOUL_POINT_ICON("icons/generic/soul_point_icon.png", 10, 16),
