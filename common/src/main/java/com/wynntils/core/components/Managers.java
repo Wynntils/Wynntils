@@ -34,10 +34,10 @@ public final class Managers {
     public static final JsonManager Json = new JsonManager();
     public static final KeyBindManager KeyBind = new KeyBindManager();
     public static final NotificationManager Notification = new NotificationManager();
-    public static final PersistedManager Persisted = new PersistedManager();
     public static final UpfixerManager Upfixer = new UpfixerManager();
 
     // Managers with dependencies, ordered alphabetically as far as possible
+    public static final PersistedManager Persisted = new PersistedManager(Json);
     public static final OverlayManager Overlay = new OverlayManager(CrashReport);
     public static final FeatureManager Feature = new FeatureManager(Command, CrashReport, KeyBind, Overlay);
     public static final ConfigManager Config = new ConfigManager(Upfixer, Json, Feature, Overlay);

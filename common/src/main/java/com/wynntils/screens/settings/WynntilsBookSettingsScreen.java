@@ -420,7 +420,7 @@ public final class WynntilsBookSettingsScreen extends WynntilsScreen implements 
                             .map(overlay -> (Configurable) overlay));
 
             Configurable newSelected = configurablesList
-                    .filter(configurable -> configurable.getConfigJsonName().equals(selected.getConfigJsonName()))
+                    .filter(configurable -> configurable.getJsonName().equals(selected.getJsonName()))
                     .findFirst()
                     .orElse(null);
 

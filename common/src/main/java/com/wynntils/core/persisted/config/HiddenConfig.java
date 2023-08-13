@@ -8,4 +8,9 @@ public class HiddenConfig<T> extends Config<T> {
     public HiddenConfig(T value) {
         super(value);
     }
+
+    @Override
+    public boolean isVisible() {
+        return false;
+    }
 }
