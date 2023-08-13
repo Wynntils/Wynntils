@@ -266,6 +266,7 @@ public final class WynnItemParser {
                 ? itemData.get("identification_rolls").getAsInt()
                 : 0;
 
+        // FIXME: Can we get shiny stats?
         return new WynnItemParseResult(
                 gearInfo.tier(), "", 0, identifications, List.of(), powders, rerolls, 0, 0, Optional.empty());
     }
