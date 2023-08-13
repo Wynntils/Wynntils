@@ -133,7 +133,7 @@ public class LogicFunctions {
 
         @Override
         protected List<String> getAliases() {
-            return List.of("lte");
+            return List.of("lte", "less_than_equals", "leq");
         }
     }
 
@@ -173,7 +173,7 @@ public class LogicFunctions {
 
         @Override
         protected List<String> getAliases() {
-            return List.of("mte", "more_than_equals", "gte");
+            return List.of("mte", "more_than_equals", "gte", "geq");
         }
     }
 }
