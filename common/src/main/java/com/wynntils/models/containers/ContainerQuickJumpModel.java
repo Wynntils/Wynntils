@@ -54,6 +54,8 @@ public final class ContainerQuickJumpModel extends Model {
 
         if (Math.abs(pageDifference) > 1 && jumpCloser(pageDifference)) return;
 
+        if (pageDifference > 0 && Models.Container.isLastBankPage(McUtils.mc().screen)) return;
+
         ContainerUtils.clickOnSlot(
                 pageDifference > 0 ? NEXT_PAGE_SLOT : PREVIOUS_PAGE_SLOT,
                 McUtils.containerMenu().containerId,
