@@ -92,7 +92,6 @@ public final class ContainerQuickJumpModel extends Model {
     }
 
     public void jumpToPage(int page) {
-        if (!validPage(page)) return;
         pageDestination = page;
         navigateCloser();
     }
