@@ -11,7 +11,6 @@ import com.wynntils.models.stats.type.ShinyStat;
 import com.wynntils.models.stats.type.StatActualValue;
 import com.wynntils.models.stats.type.StatPossibleValues;
 import com.wynntils.models.stats.type.StatType;
-import com.wynntils.utils.type.Pair;
 import java.util.DoubleSummaryStatistics;
 import java.util.List;
 import java.util.Optional;

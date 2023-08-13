@@ -9,7 +9,6 @@ import com.wynntils.models.gear.type.GearTier;
 import com.wynntils.models.stats.type.ShinyStat;
 import com.wynntils.models.stats.type.StatActualValue;
 import com.wynntils.models.wynnitem.type.ItemEffect;
-import com.wynntils.utils.type.Pair;
 import java.util.List;
 import java.util.Optional;
 
