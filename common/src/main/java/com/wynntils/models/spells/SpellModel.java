@@ -18,6 +18,7 @@ import com.wynntils.models.spells.type.PartialSpellSource;
 import com.wynntils.models.spells.type.SpellDirection;
 import com.wynntils.models.spells.type.SpellFailureReason;
 import com.wynntils.models.spells.type.SpellType;
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.regex.MatchResult;
@@ -41,6 +42,16 @@ public class SpellModel extends Model {
         super(List.of(characterModel));
 
         Handlers.ActionBar.registerSegment(spellSegment);
+        Handlers.Item.registerKnownMarkerNames(getKnownMarkerNames());
+    }
+
+    private List<Pattern> getKnownMarkerNames() {
+        List<Pattern> knownMarkerNames = new ArrayList<>();
+        knownMarkerNames.add(SPELL_CAST);
+        knownMarkerNames.addAll(Arrays.stream(SpellFailureReason.values())
+                .map(s -> Pattern.compile(s.getMessage().getString()))
+                .toList());
+        return knownMarkerNames;
     }
 
     @SubscribeEvent(receiveCanceled = true)
