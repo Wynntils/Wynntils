@@ -242,7 +242,8 @@ public class ContainerSearchFeature extends Feature {
             helpTooltip.add(Component.empty());
             helpTooltip.add(Component.literal(itemFilter.getName() + ":")
                     .withStyle(ChatFormatting.YELLOW)
-                    .append(Component.translatable(itemFilter.getUsage()).withStyle(ChatFormatting.GRAY)));
+                    .append(Component.translatable(itemFilter.getUsage()).withStyle(ChatFormatting.WHITE)));
+            helpTooltip.add(Component.translatable(itemFilter.getDescription()).withStyle(ChatFormatting.GRAY));
         });
 
         WynntilsButton infoButton = new BasicTexturedButton(
