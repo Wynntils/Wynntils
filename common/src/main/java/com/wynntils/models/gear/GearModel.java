@@ -87,13 +87,15 @@ public final class GearModel extends Model {
             WynntilsMod.warn("Tier for " + gearInfo.name() + " is reported as " + result.tier());
         }
 
-        return GearInstance.create(gearInfo, result.identifications(), result.powders(), result.rerolls());
+        return GearInstance.create(
+                gearInfo, result.identifications(), result.powders(), result.rerolls(), result.shinyStat());
     }
 
     public GearInstance parseInstance(GearInfo gearInfo, JsonObject itemData) {
         WynnItemParseResult result = WynnItemParser.parseInternalRolls(gearInfo, itemData);
 
-        return GearInstance.create(gearInfo, result.identifications(), result.powders(), result.rerolls());
+        return GearInstance.create(
+                gearInfo, result.identifications(), result.powders(), result.rerolls(), result.shinyStat());
     }
 
     public CraftedGearItem parseCraftedGearItem(ItemStack itemStack) {

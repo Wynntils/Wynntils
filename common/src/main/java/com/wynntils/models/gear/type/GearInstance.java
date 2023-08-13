@@ -10,16 +10,27 @@ import com.wynntils.models.stats.StatCalculator;
 import com.wynntils.models.stats.type.StatActualValue;
 import com.wynntils.models.stats.type.StatPossibleValues;
 import com.wynntils.models.stats.type.StatType;
+import com.wynntils.utils.type.Pair;
 import java.util.DoubleSummaryStatistics;
 import java.util.List;
 import java.util.Optional;
 
 // FIXME: GearInstance is missing Powder Specials...
 public record GearInstance(
-        List<StatActualValue> identifications, List<Powder> powders, int rerolls, Optional<Float> overallQuality) {
+        List<StatActualValue> identifications,
+        List<Powder> powders,
+        int rerolls,
+        Optional<Float> overallQuality,
+        ShinyStatistic shinyStat) {
     public static GearInstance create(
-            GearInfo gearInfo, List<StatActualValue> identifications, List<Powder> powders, int rerolls) {
-        return new GearInstance(identifications, powders, rerolls, calculateOverallQuality(gearInfo, identifications));
+            GearInfo gearInfo,
+            List<StatActualValue> identifications,
+            List<Powder> powders,
+            int rerolls,
+            Optional<Pair<String, Long>> shinyStat) {
+        ShinyStatistic shinyStatistic = new ShinyStatistic(shinyStat);
+        return new GearInstance(
+                identifications, powders, rerolls, calculateOverallQuality(gearInfo, identifications), shinyStatistic);
     }
 
     private static Optional<Float> calculateOverallQuality(GearInfo gearInfo, List<StatActualValue> identifications) {
@@ -59,6 +70,10 @@ public record GearInstance(
 
     public boolean isDefective() {
         return overallQuality.orElse(0.0f) <= 0.0f;
+    }
+
+    public boolean hashShinyStat() {
+        return this.shinyStat.isStatPresent();
     }
 
     public StatActualValue getActualValue(StatType statType) {
