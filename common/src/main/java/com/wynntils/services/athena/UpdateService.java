@@ -188,7 +188,7 @@ public final class UpdateService extends Service {
                 .withStyle(ChatFormatting.DARK_GREEN)),
         ALREADY_ON_LATEST(
                 Component.translatable("service.wynntils.updates.result.latest").withStyle(ChatFormatting.YELLOW)),
-        UPDATE_PENDING(Component.translatable("feature.wynntils.updates.result.pending")
+        UPDATE_PENDING(Component.translatable("service.wynntils.updates.result.pending")
                 .withStyle(ChatFormatting.YELLOW)),
         ERROR(Component.translatable("service.wynntils.updates.result.error").withStyle(ChatFormatting.DARK_RED));
 
