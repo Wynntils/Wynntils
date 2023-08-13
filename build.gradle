@@ -115,7 +115,7 @@ allprojects {
             }
             licenseHeader("/*\n" +
                     " * Copyright © Wynntils \$YEAR.\n" +
-                    " * This file is released under AGPLv3. See LICENSE for full license details.\n" +
+                    " * This file is released under LGPLv3. See LICENSE for full license details.\n" +
                     " */")
                     .updateYearWithLatest(true)
         }
