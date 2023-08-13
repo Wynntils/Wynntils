@@ -2,9 +2,9 @@ Artemis
 ========
 [![Discord](https://discordapp.com/api/guilds/394189072635133952/widget.png)](https://discord.gg/ve49m9J)
 [![CurseForge](https://cf.way2muchnoise.eu/short_wynntils.svg)](https://www.curseforge.com/minecraft/mc-mods/wynntils)
-![Modrinth Downloads](https://img.shields.io/modrinth/dt/Wynntils?label=modrinth)
+[![Modrinth](https://img.shields.io/modrinth/dt/Wynntils?label=modrinth)](https://modrinth.com/mod/wynntils)
 [![GitHub](https://img.shields.io/github/downloads/Wynntils/Artemis/total?logo=github)](https://github.com/Wynntils/Artemis/releases)
-[![License](https://img.shields.io/badge/license-AGPL%203.0-green.svg)](https://github.com/Wynntils/Artemis/blob/main/LICENSE)
+[![License](https://img.shields.io/badge/license-LGPL%203.0-green.svg)](https://github.com/Wynntils/Artemis/blob/main/LICENSE)
 
 <div align="center">
 <img src="https://upload.wikimedia.org/wikipedia/commons/d/d2/Artemis.png" width=20%>
@@ -70,6 +70,6 @@ The project has [Vineflower for Loom](https://github.com/Juuxel/loom-vineflower)
 License
 ========
 
-Artemis is licensed over the license [GNU Affero General Public License v3.0](https://github.com/Wynntils/Artemis/blob/alpha/LICENSE)
+Artemis is licensed under the license [GNU Lesser General Public License v3.0](https://github.com/Wynntils/Artemis/blob/main/LICENSE)
 
 Unless specified otherwise, All the assets **are over Wynntils domain © Wynntils**.

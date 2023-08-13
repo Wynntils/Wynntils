@@ -1,6 +1,6 @@
 /*
  * Copyright © Wynntils 2023.
- * This file is released under AGPLv3. See LICENSE for full license details.
+ * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.core.persisted.storage;
 
@@ -119,7 +119,7 @@ public final class StorageManager extends Manager {
             // read value and update option
             JsonElement jsonElem = storageJson.get(jsonName);
             Object value = Managers.Json.GSON.fromJson(jsonElem, storageTypes.get(storage));
-            storage.set(value);
+            Managers.Persisted.setRaw(storage, value);
 
             Storageable owner = storageOwner.get(storage);
             owner.onStorageLoad();
