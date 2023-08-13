@@ -59,4 +59,12 @@ public abstract class ItemFilter {
     public String getUsage() {
         return getTranslation("usage");
     }
+
+    public String getTranslatedName() {
+        return getTranslation("name");
+    }
+
+    public String getDescription() {
+        return getTranslation("description");
+    }
 }
