@@ -12,7 +12,7 @@ import com.wynntils.models.items.WynnItem;
 import com.wynntils.services.itemfilter.filters.LevelItemFilter;
 import com.wynntils.services.itemfilter.filters.ProfessionItemFilter;
 import com.wynntils.services.itemfilter.type.ItemFilter;
-import com.wynntils.services.itemfilter.type.ItemFilterMatcher;
+import com.wynntils.services.itemfilter.type.ItemFilterInstance;
 import com.wynntils.services.itemfilter.type.ItemSearchQuery;
 import com.wynntils.utils.type.ErrorOr;
 import java.util.ArrayList;
@@ -58,7 +58,7 @@ public class ItemFilterService extends Service {
     }
 
     public ItemSearchQuery createSearchQuery(String queryString) {
-        List<ItemFilterMatcher> itemFilters = new ArrayList<>();
+        List<ItemFilterInstance> itemFilters = new ArrayList<>();
         List<Integer> ignoredCharIndices = new ArrayList<>();
         List<Integer> validFilterCharIndices = new ArrayList<>();
         List<String> errors = new ArrayList<>();
@@ -97,28 +97,27 @@ public class ItemFilterService extends Service {
                                 .boxed()
                                 .toList());
 
-                // ...and try to create the matcher only if the inputString is not empty, because a filtering with an
-                // empty
-                // value is pointless and we don't want to show the error the matcher factory might return because of
-                // that.
+                // ...and try to create an instance for this filter only if the inputString is not empty,
+                // because filtering with an empty value is pointless and we don't want to show the error
+                // the ItemFilter might return because of that.
                 // We still want to highlight the filter keyword though, that's why we handle the empty input here.
                 if (inputString.isEmpty()) continue;
 
-                ErrorOr<? extends ItemFilterMatcher> matcherOrError =
-                        filterOrError.getValue().createMatcher(inputString);
+                ErrorOr<? extends ItemFilterInstance> filterInstanceOrError =
+                        filterOrError.getValue().createInstance(inputString);
 
                 // If the inputString is invalid, mark the value as ignored and continue to the next token
-                if (matcherOrError.hasError()) {
+                if (filterInstanceOrError.hasError()) {
                     ignoredCharIndices.addAll(IntStream.rangeClosed(
                                     tokenStartIndex + filterString.length() + 1, tokenStartIndex + token.length())
                             .boxed()
                             .toList());
-                    errors.add(matcherOrError.getError());
+                    errors.add(filterInstanceOrError.getError());
                     continue;
                 }
 
                 // The inputString is valid, add the filter to the list
-                itemFilters.add(matcherOrError.getValue());
+                itemFilters.add(filterInstanceOrError.getValue());
             } else if (!token.isEmpty()) {
                 // The token is not a filter, add it to the list of plain text tokens
                 plainTextTokens.add(token);

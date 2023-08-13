@@ -7,11 +7,11 @@ package com.wynntils.services.itemfilter.type;
 import com.wynntils.models.items.WynnItem;
 
 /**
- * An {@link ItemFilterMatcher} is created by an {@link ItemFilter} and is used to hold the logic
- * of a filter, instantiated with a specific input string.
+ * An {@link ItemFilterInstance} is created by an {@link ItemFilter} and represents a filter instanciated with a
+ * specific input string. It holds the logic that will check if an item matches the filter with the given input string.
  */
 @FunctionalInterface
-public interface ItemFilterMatcher {
+public interface ItemFilterInstance {
     /**
      * Returns true if the item stack matches the filter, false otherwise.
      *

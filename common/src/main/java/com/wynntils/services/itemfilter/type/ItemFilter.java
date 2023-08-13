@@ -14,10 +14,10 @@ import net.minecraft.client.resources.language.I18n;
  * An {@link ItemFilter} is both : <br>
  * - A model to represent a filter, holding its metadata (name, aliases, etc.)<br>
  * - A factory that will check the validity of an input string for this filter and create an
- *   {@link ItemFilterMatcher} from it.<br>
+ *   {@link ItemFilterInstance} from it.<br>
  * <br>
  * The actual logic of the filter (i.e. the code that will check if an item matches the filter) is
- * implemented in the {@link ItemFilterMatcher} returned by {@link #createMatcher(String)}.
+ * implemented in the {@link ItemFilterInstance} returned by {@link #createInstance(String)}.
  */
 public abstract class ItemFilter {
     protected final String name;
@@ -38,7 +38,7 @@ public abstract class ItemFilter {
      * @param inputString the input string
      * @return the created item filter, or a translated error string if the input string is invalid
      */
-    public abstract ErrorOr<? extends ItemFilterMatcher> createMatcher(String inputString);
+    public abstract ErrorOr<? extends ItemFilterInstance> createInstance(String inputString);
 
     public String getName() {
         return name;

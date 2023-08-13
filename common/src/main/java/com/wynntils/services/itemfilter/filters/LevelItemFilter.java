@@ -8,7 +8,7 @@ import static java.lang.Integer.parseInt;
 
 import com.wynntils.models.items.properties.LeveledItemProperty;
 import com.wynntils.services.itemfilter.type.ItemFilter;
-import com.wynntils.services.itemfilter.type.ItemFilterMatcher;
+import com.wynntils.services.itemfilter.type.ItemFilterInstance;
 import com.wynntils.utils.type.ErrorOr;
 import java.util.List;
 import java.util.regex.Matcher;
@@ -22,7 +22,7 @@ public class LevelItemFilter extends ItemFilter {
     }
 
     @Override
-    public ErrorOr<ItemFilterMatcher> createMatcher(String inputString) {
+    public ErrorOr<ItemFilterInstance> createInstance(String inputString) {
         int minLevel;
         int maxLevel;
         Matcher matcher = LEVEL_RANGE_PATTERN.matcher(inputString);
