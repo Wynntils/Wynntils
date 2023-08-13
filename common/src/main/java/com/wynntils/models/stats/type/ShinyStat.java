@@ -4,26 +4,12 @@
  */
 package com.wynntils.models.stats.type;
 
-import com.wynntils.utils.type.Pair;
-import java.util.Optional;
-
 public class ShinyStat {
+    private final String name;
+    private final int value;
 
-    private Pair<String, Long> valuePair;
-
-    public ShinyStat(Optional<Pair<String, Long>> shinyStat) {
-        this.valuePair = shinyStat.orElse(null);
-    }
-
-    public void update(String name, long value) {
-        this.valuePair = Pair.of(name, value);
-    }
-
-    public boolean isStatPresent() {
-        return valuePair != null;
-    }
-
-    public String getName() {
-        return this.valuePair.key();
+    public ShinyStat(String name, int value) {
+        this.name = name;
+        this.value = value;
     }
 }

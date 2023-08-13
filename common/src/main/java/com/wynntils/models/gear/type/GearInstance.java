@@ -22,16 +22,15 @@ public record GearInstance(
         List<Powder> powders,
         int rerolls,
         Optional<Float> overallQuality,
-        ShinyStat shinyStat) {
+        Optional<ShinyStat> shinyStat) {
     public static GearInstance create(
             GearInfo gearInfo,
             List<StatActualValue> identifications,
             List<Powder> powders,
             int rerolls,
-            Optional<Pair<String, Long>> shinyStat) {
-        ShinyStat shinyStatistic = new ShinyStat(shinyStat);
+            Optional<ShinyStat> shinyStat) {
         return new GearInstance(
-                identifications, powders, rerolls, calculateOverallQuality(gearInfo, identifications), shinyStatistic);
+                identifications, powders, rerolls, calculateOverallQuality(gearInfo, identifications), shinyStat);
     }
 
     private static Optional<Float> calculateOverallQuality(GearInfo gearInfo, List<StatActualValue> identifications) {
@@ -71,10 +70,6 @@ public record GearInstance(
 
     public boolean isDefective() {
         return overallQuality.orElse(0.0f) <= 0.0f;
-    }
-
-    public boolean hashShinyStat() {
-        return this.shinyStat.isStatPresent();
     }
 
     public StatActualValue getActualValue(StatType statType) {

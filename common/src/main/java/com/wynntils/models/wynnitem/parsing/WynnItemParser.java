@@ -14,6 +14,7 @@ import com.wynntils.models.elements.type.Skill;
 import com.wynntils.models.gear.type.GearInfo;
 import com.wynntils.models.gear.type.GearTier;
 import com.wynntils.models.stats.StatCalculator;
+import com.wynntils.models.stats.type.ShinyStat;
 import com.wynntils.models.stats.type.SkillStatType;
 import com.wynntils.models.stats.type.StatActualValue;
 import com.wynntils.models.stats.type.StatPossibleValues;
@@ -21,7 +22,6 @@ import com.wynntils.models.stats.type.StatType;
 import com.wynntils.models.wynnitem.type.ItemEffect;
 import com.wynntils.utils.mc.ComponentUtils;
 import com.wynntils.utils.mc.LoreUtils;
-import com.wynntils.utils.type.Pair;
 import com.wynntils.utils.type.RangedValue;
 import java.util.ArrayList;
 import java.util.List;
@@ -71,7 +71,7 @@ public final class WynnItemParser {
         String itemType = "";
         boolean setBonusStats = false;
         boolean parsingEffects = false;
-        Optional<Pair<String, Long>> shinyStat = Optional.empty();
+        Optional<ShinyStat> shinyStat = Optional.empty();
         String effectsColorCode = "";
 
         // Parse lore for identifications, powders and rerolls
@@ -203,9 +203,9 @@ public final class WynnItemParser {
             // Look for shiny stat
             Matcher shinyStatMatcher = normalizedCoded.getMatcher(SHINY_STAT_PATTERN);
             if (shinyStatMatcher.matches() && shinyStat.isEmpty()) {
-                String statName = shinyStatMatcher.group(1);
-                long stat = Long.parseLong(shinyStatMatcher.group(2));
-                shinyStat = Optional.of(Pair.of(statName, stat));
+                String shinyName = shinyStatMatcher.group(1);
+                int shinyValue = Integer.parseInt(shinyStatMatcher.group(2));
+                shinyStat = Optional.of(new ShinyStat(shinyName, shinyValue));
             }
         }
 
