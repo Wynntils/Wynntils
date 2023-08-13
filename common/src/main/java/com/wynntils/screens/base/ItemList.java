@@ -18,7 +18,7 @@ public class ItemList {
     private final int width;
     private final int height;
     private final Screen screen;
-    private final List<? extends ItemListWidget.ListItem> items;
+    private List<? extends ItemListWidget.ListItem> items;
     private final SearchWidget searchWidget;
     private final ItemListWidget itemListWidget;
 
@@ -38,9 +38,9 @@ public class ItemList {
         this.items = items;
 
         searchWidget = new SearchWidget(
-                x + (width / 2) - 50, y + height - 10 - 17, 100, 17, this::update, ((TextboxScreen) screen));
+                x + (width / 2) - 50, y + height - 10 - 20, 100, 20, this::update, ((TextboxScreen) screen));
         screen.addRenderableWidget(searchWidget);
-        itemListWidget = new ItemListWidget(x + 5, y + 5, width - 10, height - 10 - 17 - 5 - 5, items);
+        itemListWidget = new ItemListWidget(x + 5, y + 5, width - 10, height - 10 - 20 - 5 - 5, items);
         screen.addRenderableWidget(itemListWidget);
         if (previous != null) {
             searchWidget.setTextBoxInput(previous.searchWidget.getTextBoxInput());
@@ -49,7 +49,8 @@ public class ItemList {
     }
 
     public void update(List<? extends ItemListWidget.ListItem> items) {
-        itemListWidget.setItems(items);
+        this.items = items;
+        update(searchWidget.getTextBoxInput());
     }
 
     public void update(String s) {
