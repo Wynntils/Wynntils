@@ -48,7 +48,6 @@ public class CustomBankPagesFeature extends Feature {
 
     private List<Integer> customJumpDestinations;
 
-
     @SubscribeEvent
     public void onScreenInit(ScreenInitEvent event) {
         initCustomJumpDestinations();
