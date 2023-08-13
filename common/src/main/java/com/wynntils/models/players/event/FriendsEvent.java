@@ -17,6 +17,11 @@ public abstract class FriendsEvent extends Event {
     public static class Listed extends FriendsEvent {}
 
     /**
+     * Fired upon obtaining new online friend list.
+     */
+    public static class OnlineListed extends FriendsEvent {}
+
+    /**
      * Fired upon the user adding someone to their friends list
      * @field playerName the name of the player who was added
      */
