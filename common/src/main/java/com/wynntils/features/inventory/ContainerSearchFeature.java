@@ -124,13 +124,15 @@ public class ContainerSearchFeature extends Feature {
                                 .entrySet()
                                 .stream()
                                 .map(entry1 -> {
-                                    ItemStack itemStack =
-                                            new ItemStack(entry1.getKey().getKey());
+                                    List<ItemStack> items = entry1.getValue();
+                                    if (items.size() == 1) return items.get(0);
+                                    ItemStack itemStack = items.get(0).copy();
                                     itemStack.setTag(entry1.getKey().getValue());
-                                    int count = entry1.getValue().stream()
+                                    int count = items.stream()
                                             .mapToInt(ItemStack::getCount)
                                             .sum();
                                     itemStack.setCount(count);
+
                                     return itemStack;
                                 })
                                 .map(itemStack -> new BankListItem(itemStack, entry.getKey())))

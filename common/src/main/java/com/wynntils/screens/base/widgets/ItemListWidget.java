@@ -52,7 +52,7 @@ public class ItemListWidget extends AbstractWidget {
         hovered = null;
         int pageOffset = getPageOffset();
         Minecraft mc = McUtils.mc();
-        for (int i = 0; i < getRows() * getColumns() && i < items.size() - pageOffset; i++) {
+        for (int i = 0; i < itemsPerPage() && i < items.size() - pageOffset; i++) {
             ListItem listItem = items.get(i + pageOffset);
             int x = i % getColumns() * ITEM_SPACING + getX();
             int y = i / getColumns() * ITEM_SPACING + getListStartY();
@@ -62,31 +62,20 @@ public class ItemListWidget extends AbstractWidget {
                 GuiComponent.fill(poseStack, x, y, x + ITEM_SIZE, y + ITEM_SIZE, 0, 0x80ffffff);
             }
 
+            //            WynntilsMod.postEvent(new SlotRenderEvent.Pre(poseStack, mc.screen, new Slot(new
+            // SimpleContainer(listItem.getItemStack()), 0, x, y))); TODO: not working because itemHandler doesn't
+            // annotate copied items
             RenderUtils.renderItem(poseStack, listItem.getItemStack(), x, y);
-            boolean scaleCount = listItem.getItemStack().getCount() >= 100;
-            if (scaleCount) {
-                poseStack.pushPose();
-                poseStack.scale(0.7f, 0.7f, 0.7f);
-                int countWidth =
-                        mc.font.width(String.valueOf(listItem.getItemStack().getCount()));
-                int xOffset = (int) (19 - 2 - countWidth * 0.7);
-                int yOffset = 6 + 3;
-                x += xOffset;
-                y += yOffset;
-                x /= 0.7d;
-                y /= 0.7d;
-                x -= xOffset * 0.7;
-                y -= yOffset * 0.7;
-            }
             mc.getItemRenderer().renderGuiItemDecorations(poseStack, mc.font, listItem.getItemStack(), x, y);
-            if (scaleCount) {
-                poseStack.popPose();
-            }
         }
         if (hovered != null) {
             mc.screen.renderTooltip(
                     poseStack, hovered.getTooltip(), hovered.itemStack.getTooltipImage(), mouseX, mouseY);
         }
+    }
+
+    private int itemsPerPage() {
+        return getRows() * getColumns();
     }
 
     private int getPageOffset() {
