@@ -71,7 +71,8 @@ public final class ContainerQuickJumpModel extends Model {
         if (closestDist < Math.abs(pageDifference)) {
             int index = QUICK_JUMP_DESTINATIONS.indexOf(closestDist + pageDestination);
             ContainerUtils.clickOnSlot(
-                    BUTTON_SLOTS.get(index == -1 ? QUICK_JUMP_DESTINATIONS.indexOf(-closestDist + pageDestination) : index),
+                    BUTTON_SLOTS.get(
+                            index == -1 ? QUICK_JUMP_DESTINATIONS.indexOf(-closestDist + pageDestination) : index),
                     McUtils.containerMenu().containerId,
                     GLFW.GLFW_MOUSE_BUTTON_LEFT,
                     McUtils.containerMenu().getItems());
