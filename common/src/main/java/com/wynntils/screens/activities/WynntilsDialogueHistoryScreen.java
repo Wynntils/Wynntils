@@ -97,8 +97,8 @@ public final class WynntilsDialogueHistoryScreen extends WynntilsMenuScreenBase 
         this.addRenderableWidget(new QuestsPageButton(
                 (int) (Texture.CONTENT_BOOK_BACKGROUND.width() / 2f - 30),
                 12,
-                Texture.QUESTS_ICON.width(),
-                Texture.QUESTS_ICON.height()));
+                Texture.QUESTS_SCROLL_ICON.width(),
+                Texture.QUESTS_SCROLL_ICON.height()));
     }
 
     @Override

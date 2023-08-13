@@ -35,15 +35,15 @@ public enum Texture {
     ACTIVITY_FINISHED("icons/activities/activity_finished_icon.png", 11, 7),
     ACTIVITY_STARTED("icons/activities/activity_started_icon.png", 7, 7),
     CAVE_AVALIABLE_ICON("icons/activities/cave_avaliable_icon.png", 7, 7),
-    DIALOGUE_ICON("icons/activities/dialogue_icon.png", 14, 11),
-    DISCOVERIES_ICON("icons/activities/discoveries_icon.png", 16, 32),
-    QUESTS_ICON("icons/activities/quests_icon.png", 16, 16),
     // Content Book
+    DIALOGUE_ICON("icons/content_book/dialogue_icon.png", 14, 11),
+    DISCOVERIES_ICON("icons/content_book/discoveries_icon.png", 16, 32),
     GUIDES_ICON("icons/content_book/guides_icon.png", 18, 34),
     LOOTRUN_ICON("icons/content_book/lootrun_icon.png", 16, 28),
     MAP_ICON("icons/content_book/map_icon.png", 21, 38),
     OVERLAYS_ICON("icons/content_book/overlays_icon.png", 19, 38),
     QUEST_BOOK_ICON("icons/content_book/quests_icon.png", 24, 34),
+    QUESTS_SCROLL_ICON("icons/content_book/quests_scroll_icon.png", 16, 16),
     SECRET_DISCOVERIES_ICON("icons/content_book/secret_discoveries_icon.png", 16, 26),
     SETTINGS_ICON("icons/content_book/settings_icon.png", 17, 34),
     // Discoveries

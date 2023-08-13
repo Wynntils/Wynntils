@@ -325,14 +325,14 @@ public final class CharacterSelectorScreen extends WynntilsScreen {
         poseStack.translate(renderWidth * 0.27f, 0, 0);
         RenderUtils.drawScalingTexturedRect(
                 poseStack,
-                Texture.QUESTS_ICON.resource(),
+                Texture.QUESTS_SCROLL_ICON.resource(),
                 0,
                 0,
                 0,
-                Texture.QUESTS_ICON.width() * currentTextureScale,
-                Texture.QUESTS_ICON.height() * currentTextureScale,
-                Texture.QUESTS_ICON.width(),
-                Texture.QUESTS_ICON.height());
+                Texture.QUESTS_SCROLL_ICON.width() * currentTextureScale,
+                Texture.QUESTS_SCROLL_ICON.height() * currentTextureScale,
+                Texture.QUESTS_SCROLL_ICON.width(),
+                Texture.QUESTS_SCROLL_ICON.height());
 
         poseStack.pushPose();
         poseStack.scale(scale, scale, 0f);

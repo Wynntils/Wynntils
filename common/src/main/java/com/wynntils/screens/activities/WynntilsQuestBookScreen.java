@@ -93,7 +93,7 @@ public final class WynntilsQuestBookScreen extends WynntilsListScreen<QuestInfo,
                 142,
                 30,
                 30,
-                Texture.QUESTS_ICON,
+                Texture.QUESTS_SCROLL_ICON,
                 false,
                 List.of(Component.literal("[>] ")
                         .withStyle(ChatFormatting.GREEN)
@@ -156,8 +156,8 @@ public final class WynntilsQuestBookScreen extends WynntilsListScreen<QuestInfo,
         this.addRenderableWidget(new QuestInfoButton(
                 (int) (Texture.CONTENT_BOOK_BACKGROUND.width() / 4f),
                 12,
-                Texture.QUESTS_ICON.width(),
-                Texture.QUESTS_ICON.height()));
+                Texture.QUESTS_SCROLL_ICON.width(),
+                Texture.QUESTS_SCROLL_ICON.height()));
 
         this.addRenderableWidget(new SortOrderWidget(
                 Texture.CONTENT_BOOK_BACKGROUND.width() / 2 + 1,
