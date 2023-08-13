@@ -46,6 +46,9 @@ public class CustomBankPagesFeature extends Feature {
     private static final int MAX_HOUSING_CONTAINER_PAGES = 10;
     private static final int MAX_DESTINATIONS = 6;
 
+    public static final List<Integer> BLOCK_BANK_DESTINATIONS = List.of(1, 3, 5, 8, 10, 12);
+    public static final List<Integer> HOUSING_DEFAULT_DESTINATIONS = List.of(1, 3, 4, 6, 8, 10);
+
     private List<Integer> customJumpDestinations;
 
     @SubscribeEvent
@@ -72,7 +75,7 @@ public class CustomBankPagesFeature extends Feature {
         customJumpDestinations = parseStringToDestinations(configDestinations, containerType);
 
         if (customJumpDestinations == null) {
-            customJumpDestinations = Models.ContainerQuickJump.getJumpDestinations(containerType);
+            customJumpDestinations = getJumpDestinations(containerType);
         }
     }
 
@@ -170,7 +173,7 @@ public class CustomBankPagesFeature extends Feature {
 
             if (destinations.size() < MAX_DESTINATIONS) {
                 int startIndex = destinations.size();
-                List<Integer> defaultValues = Models.ContainerQuickJump.getJumpDestinations(containerType);
+                List<Integer> defaultValues = getJumpDestinations(containerType);
 
                 for (int i = startIndex; i < MAX_DESTINATIONS; i++) {
                     destinations.add(defaultValues.get(i));
@@ -181,6 +184,14 @@ public class CustomBankPagesFeature extends Feature {
         } catch (NumberFormatException ex) {
             return null;
         }
+    }
+
+    private List<Integer> getJumpDestinations(SearchableContainerType containerType) {
+        return switch (containerType) {
+            case BANK -> Models.ContainerQuickJump.QUICK_JUMP_DESTINATIONS;
+            case BLOCK_BANK -> BLOCK_BANK_DESTINATIONS;
+            default -> HOUSING_DEFAULT_DESTINATIONS;
+        };
     }
 
     private List<Integer> modifyJumpValues(List<Integer> originalValues, int maxValue) {

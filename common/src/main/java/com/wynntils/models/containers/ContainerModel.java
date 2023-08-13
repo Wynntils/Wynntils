@@ -66,16 +66,16 @@ public final class ContainerModel extends Model {
     private static final StyledText LOBBY_TITLE = StyledText.fromString("Wynncraft Servers");
 
     @Persisted
-    private final Storage<Integer> finalBankPage = new Storage<>(21);
+    private final Storage<Integer> finalBankPage = new Storage<>(1);
 
     @Persisted
-    private final Storage<Integer> finalBlockBankPage = new Storage<>(12);
+    private final Storage<Integer> finalBlockBankPage = new Storage<>(1);
 
     @Persisted
-    private final Storage<Integer> finalBookshelfPage = new Storage<>(10);
+    private final Storage<Integer> finalBookshelfPage = new Storage<>(1);
 
     @Persisted
-    private final Storage<Integer> finalMiscBucketPage = new Storage<>(10);
+    private final Storage<Integer> finalMiscBucketPage = new Storage<>(1);
 
     public static final int LAST_BANK_PAGE_SLOT = 8;
 
