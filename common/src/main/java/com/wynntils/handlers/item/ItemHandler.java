@@ -1,6 +1,6 @@
 /*
  * Copyright © Wynntils 2022-2023.
- * This file is released under AGPLv3. See LICENSE for full license details.
+ * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.handlers.item;
 
@@ -19,6 +19,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
+import java.util.regex.Pattern;
 import net.minecraft.core.NonNullList;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
@@ -34,6 +35,11 @@ public class ItemHandler extends Handler {
     private final Map<Class<?>, Integer> profilingCounts = new HashMap<>();
     // Keep this as a field just of performance reasons to skip a new allocation in annotate()
     private final List<ItemAnnotator> crashedAnnotators = new ArrayList<>();
+    private final List<Pattern> knownMarkerNames = new ArrayList<>();
+
+    public void registerKnownMarkerNames(List<Pattern> markerPatterns) {
+        knownMarkerNames.addAll(markerPatterns);
+    }
 
     public static Optional<ItemAnnotation> getItemStackAnnotation(ItemStack itemStack) {
         if (itemStack == null) return Optional.empty();
@@ -97,63 +103,64 @@ public class ItemHandler extends Handler {
             return;
         }
 
-        // Check if item type, damage and count matches, if not, it's definitely a new item
+        // Check if item type, damage and count matches; if not, it's definitely a new item
         // Wildcard items are exempt from this check due to the possibility of gear skins
         if (!similarStack(existingItem, newItem) && !isWildcardItem(existingItem) && !isWildcardItem(newItem)) {
             annotate(newItem);
             return;
         }
 
-        // This might be just a name update. Check if lore matches:
-        if (!LoreUtils.loreSoftMatches(existingItem, newItem, 3)) {
-            // This could be a new item, or a crafted item losing in durability
-            annotate(newItem);
-            return;
-        }
-
+        // We need to check if the name has changed, and/or the lore has changed
         StyledText originalName = ((ItemStackExtension) existingItem).getOriginalName();
         StyledText existingName =
                 StyledText.fromComponent(existingItem.getHoverName()).getNormalized();
         StyledText newName = StyledText.fromComponent(newItem.getHoverName()).getNormalized();
 
         if (newName.equals(existingName)) {
-            // This is exactly the same item, so copy existing annotation
+            // The name is identical to the existing stack; now check the lore
+            if (isLoreSoftMatching(existingItem, newItem)) {
+                // This is exactly the same item, so copy existing annotation
+                updateItem(newItem, annotation, originalName);
+            } else {
+                // This could be essentially the same item, but with slight changes
+                // e.g. in shiny stats or durability.
+                // We need to reparse the lore since it has changed
+                annotate(newItem);
+            }
+        } else if (isKnownMarkerName(newName)) {
+            // This object has gotten a known marker name, but it could also be
+            // that the lore has changed (e.g. durability/shiny stats)
+            boolean loreMatch = isLoreSoftMatching(existingItem, newItem);
+            if (!loreMatch) {
+                // We need to reparse the lore since it has changed
+                // Make sure to use the original name instead of the marker name
+                annotation = calculateAnnotation(newItem, originalName);
+            }
+            // Make sure to use the original name instead of the marker name
             updateItem(newItem, annotation, originalName);
-            return;
-        }
 
-        // The lore is the same, but the name is different. Determine the reason for the name change
-        StyledText originalBaseName = getBaseName(originalName);
-        StyledText existingBaseName = getBaseName(existingName);
-        StyledText newBaseName = getBaseName(newName);
-
-        // When a crafted item loses durability (or a consumable loses a charge), we need to detect
-        // this and update the item. But note that this might happen exactly after a spell!
-        // So check against originalName, not existingName.
-        if (!newName.equals(originalName) && newBaseName.equals(originalBaseName)) {
-            // The base name is the same but the full name differs. This means we have an updated
-            // title, and the existing item has changed some property.
-            annotation = calculateAnnotation(newItem, newName);
-        }
-
-        // Set the new item with the old (or updated) annotation, and keep the original name
-        updateItem(newItem, annotation, originalName);
-
-        // If an item is "really" renamed, we need to send out an event. But this should not
-        // trigger just for a consumable or crafted gear that changes the [...] text, so
-        // check only on base name, not the full name.
-        if (!newBaseName.equals(existingBaseName)) {
-            // This is the same item, but it is renamed to signal e.g. a spell.
+            // Notify about the new name
             ItemRenamedEvent event = new ItemRenamedEvent(newItem, existingName, newName);
             WynntilsMod.postEvent(event);
             if (event.isCanceled()) {
                 newItem.setHoverName(existingItem.getHoverName());
             }
+        } else {
+            // The name is different, and it is not a know special name. This means it could be a
+            // completely new item, or it could be the same item slightly changed (e.g. durability
+            // has decreased). In any case, we need to reparse the complete item.
+            annotate(newItem);
         }
     }
 
-    private StyledText getBaseName(StyledText name) {
-        return StyledText.fromPart(name.getFirstPart());
+    private boolean isKnownMarkerName(StyledText newName) {
+        String name = newName.getString();
+        for (Pattern markerPattern : knownMarkerNames) {
+            if (markerPattern.matcher(name).matches()) {
+                return true;
+            }
+        }
+        return false;
     }
 
     private boolean similarStack(ItemStack firstItem, ItemStack secondItem) {
@@ -170,6 +177,34 @@ public class ItemHandler extends Handler {
     private boolean isWildcardItem(ItemStack itemStack) {
         // This checks for gear skin items, which are a special exception for item comparisons
         return WILDCARD_ITEMS.contains(itemStack.getItem());
+    }
+
+    /**
+     * This checks if the lore of the second item contains the entirety of the first item's lore, or vice versa.
+     * It might have additional lines added, but these are not checked.
+     */
+    private boolean isLoreSoftMatching(ItemStack firstItem, ItemStack secondItem) {
+        List<StyledText> firstLines = LoreUtils.getLore(firstItem);
+        List<StyledText> secondLines = LoreUtils.getLore(secondItem);
+        int firstLinesLen = firstLines.size();
+        int secondLinesLen = secondLines.size();
+
+        // Only allow a maximum number of additional lines in the longer tooltip
+        if (Math.abs(firstLinesLen - secondLinesLen) > 3) return false;
+
+        int linesToCheck = Math.min(firstLinesLen, secondLinesLen);
+        // Prevent soft matching on tooltips that are very small
+        if (linesToCheck < 3 && firstLinesLen != secondLinesLen) return false;
+
+        for (int i = 0; i < linesToCheck; i++) {
+            StyledText firstLine = firstLines.get(i);
+            StyledText secondLine = secondLines.get(i);
+
+            if (!firstLine.equals(secondLine)) return false;
+        }
+
+        // Every lore line matches from the first to the second (or second to the first), so we have a match
+        return true;
     }
 
     private ItemAnnotation calculateAnnotation(ItemStack itemStack, StyledText name) {

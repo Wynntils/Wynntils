@@ -1,6 +1,6 @@
 /*
  * Copyright © Wynntils 2022-2023.
- * This file is released under AGPLv3. See LICENSE for full license details.
+ * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.screens.settings;
 
@@ -420,7 +420,7 @@ public final class WynntilsBookSettingsScreen extends WynntilsScreen implements 
                             .map(overlay -> (Configurable) overlay));
 
             Configurable newSelected = configurablesList
-                    .filter(configurable -> configurable.getConfigJsonName().equals(selected.getConfigJsonName()))
+                    .filter(configurable -> configurable.getJsonName().equals(selected.getJsonName()))
                     .findFirst()
                     .orElse(null);
 
