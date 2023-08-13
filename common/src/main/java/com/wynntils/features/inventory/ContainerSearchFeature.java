@@ -231,12 +231,8 @@ public class ContainerSearchFeature extends Feature {
 
         Container container = chestMenu.getContainer();
         for (int i = 0; i < container.getContainerSize(); i++) {
-            if ((currentSearchableContainerType == SearchableContainerType.GUILD_BANK
-                            || currentSearchableContainerType == SearchableContainerType.MEMBER_LIST)
-                    ? i % 9 < 2
-                    : i % 9 > 6) {
-                continue;
-            }
+            if (!currentSearchableContainerType.getBounds().getSlots().contains(i)) continue;
+
             ItemStack itemStack = container.getItem(i);
 
             Optional<WynnItem> wynnItemOpt = Models.Item.getWynnItem(itemStack);
