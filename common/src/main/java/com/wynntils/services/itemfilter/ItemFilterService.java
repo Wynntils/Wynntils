@@ -46,7 +46,7 @@ public class ItemFilterService extends Service {
         if (filterOpt.isPresent()) {
             return ErrorOr.of(filterOpt.get());
         } else {
-            return ErrorOr.error(I18n.get("feature.wynntils.itemFilter.unknownFilter", alias));
+            return ErrorOr.error(I18n.get("service.wynntils.itemFilter.unknownFilter", alias));
         }
     }
 

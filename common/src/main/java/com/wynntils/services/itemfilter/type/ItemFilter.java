@@ -53,7 +53,7 @@ public abstract class ItemFilter {
     }
 
     protected String getTranslation(String keySuffix, Object... formatValues) {
-        return I18n.get("feature.wynntils.itemFilter." + getTranslationName() + "." + keySuffix, formatValues);
+        return I18n.get("service.wynntils.itemFilter." + getTranslationName() + "." + keySuffix, formatValues);
     }
 
     public String getUsage() {
