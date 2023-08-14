@@ -115,6 +115,10 @@ public final class MaterialProfile {
         MaterialType(ProfessionType professionType) {
             this.professionType = professionType;
         }
+
+        public ProfessionType getProfessionType() {
+            return professionType;
+        }
     }
 
     public enum ResourceType {

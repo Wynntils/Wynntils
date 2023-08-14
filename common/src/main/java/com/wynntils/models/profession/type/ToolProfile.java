@@ -42,5 +42,9 @@ public record ToolProfile(ToolProfile.ToolType toolType, int tier) {
                 return null;
             }
         }
+
+        public ProfessionType getProfessionType() {
+            return professionType;
+        }
     }
 }
