@@ -61,11 +61,10 @@ public final class FriendsModel extends Model {
 
     private static final int REQUEST_RATELIMIT = 250;
 
-    private boolean expectingFriendMessage = false;
+    private ListStatus friendMessageStatus = ListStatus.IDLE;
     private long lastFriendRequest = 0;
 
-    private boolean expectingOnlineList = false;
-    private boolean processingOnlineList = false;
+    private ListStatus onlineMessageStatus = ListStatus.IDLE;
     private long lastOnlineRequest = 0;
 
     private Set<String> friends;
@@ -120,10 +119,10 @@ public final class FriendsModel extends Model {
 
         if (tryParseFriendMessages(styledText)) return;
 
-        if (expectingFriendMessage) {
+        if (friendMessageStatus == ListStatus.EXPECTING) {
             if (tryParseFriendList(unformatted) || tryParseNoFriendList(styledText)) {
                 event.setCanceled(true);
-                expectingFriendMessage = false;
+                friendMessageStatus = ListStatus.IDLE;
                 return;
             }
 
@@ -134,16 +133,16 @@ public final class FriendsModel extends Model {
             }
         }
 
-        if (expectingOnlineList && styledText.getMatcher(ONLINE_FRIENDS_HEADER).matches()) {
+        if (onlineMessageStatus == ListStatus.EXPECTING
+                && styledText.getMatcher(ONLINE_FRIENDS_HEADER).matches()) {
             // List of online friends is sent in multiple messages
             // When we detect the first message indicating the start of the friends list, we set a flag
-            processingOnlineList = true;
-            expectingOnlineList = false;
+            onlineMessageStatus = ListStatus.PROCESSING;
             onlineFriends.clear();
             event.setCanceled(true);
             return;
         }
-        if (processingOnlineList) {
+        if (onlineMessageStatus == ListStatus.PROCESSING) {
             // If this flag is set, the next messages should be the list of online friends
             // But as soon as the matcher fails, we know we've reached the end of the list
             Matcher onlineFriendMatcher = styledText.getMatcher(ONLINE_FRIEND);
@@ -157,7 +156,7 @@ public final class FriendsModel extends Model {
                 return;
             } else {
                 WynntilsMod.postEvent(new FriendsEvent.OnlineListed());
-                processingOnlineList = false;
+                onlineMessageStatus = ListStatus.IDLE;
             }
         }
     }
@@ -233,7 +232,7 @@ public final class FriendsModel extends Model {
         if (McUtils.player() == null) return;
 
         if (System.currentTimeMillis() - lastFriendRequest > REQUEST_RATELIMIT) {
-            expectingFriendMessage = true;
+            friendMessageStatus = ListStatus.EXPECTING;
             lastFriendRequest = System.currentTimeMillis();
             McUtils.sendCommand("friend list");
             WynntilsMod.info("Requested friend list from Wynncraft.");
@@ -242,7 +241,7 @@ public final class FriendsModel extends Model {
         }
 
         if (System.currentTimeMillis() - lastOnlineRequest > REQUEST_RATELIMIT) {
-            expectingOnlineList = true;
+            onlineMessageStatus = ListStatus.EXPECTING;
             lastOnlineRequest = System.currentTimeMillis();
             McUtils.sendCommand("friend online");
             WynntilsMod.info("Requested online friend list from Wynncraft.");
@@ -261,5 +260,11 @@ public final class FriendsModel extends Model {
 
     public Map<String, Integer> getOnlineFriends() {
         return Collections.unmodifiableMap(onlineFriends);
+    }
+
+    private enum ListStatus {
+        IDLE,
+        EXPECTING,
+        PROCESSING;
     }
 }
