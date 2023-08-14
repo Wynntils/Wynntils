@@ -12,7 +12,6 @@ import com.wynntils.core.persisted.config.Config;
 import com.wynntils.core.persisted.config.ConfigCategory;
 import com.wynntils.mc.event.ContainerClickEvent;
 import com.wynntils.mc.event.ContainerSetContentEvent;
-import com.wynntils.mc.event.ScreenClosedEvent;
 import com.wynntils.mc.event.ScreenInitEvent;
 import com.wynntils.mc.event.SetSlotEvent;
 import com.wynntils.models.containers.type.SearchableContainerType;
@@ -53,54 +52,30 @@ public class CustomBankPagesFeature extends Feature {
     private static final List<Integer> HOUSING_DEFAULT_DESTINATIONS = List.of(1, 3, 4, 6, 8, 10);
     private static final List<Integer> QUICK_JUMP_DESTINATIONS = List.of(1, 5, 9, 13, 17, 21);
 
-    private boolean quickJumping = false;
-    private int currentPage = 1;
-    private int lastPage = MAX_BANK_PAGES;
-    private int pageDestination = 1;
     private List<Integer> customJumpDestinations;
-    private SearchableContainerType currentContainer;
 
     @SubscribeEvent
     public void onScreenInit(ScreenInitEvent e) {
         if (!(e.getScreen() instanceof AbstractContainerScreen<?> screen)) return;
 
+        SearchableContainerType currentContainer;
+
         if (Models.Container.isBankScreen(screen)) {
             currentContainer = SearchableContainerType.BANK;
-            lastPage = Models.Container.getFinalBankPage();
         } else if (Models.Container.isBlockBankScreen(screen)) {
             currentContainer = SearchableContainerType.BLOCK_BANK;
-            lastPage = Models.Container.getFinalBlockBankPage();
         } else if (Models.Container.isBookshelfScreen(screen)) {
             currentContainer = SearchableContainerType.BOOKSHELF;
-            lastPage = Models.Container.getFinalBookshelfPage();
         } else if (Models.Container.isMiscBucketScreen(screen)) {
             currentContainer = SearchableContainerType.MISC_BUCKET;
-            lastPage = Models.Container.getFinalMiscBucketPage();
         } else {
-            currentContainer = null;
-            currentPage = 1;
-            pageDestination = 1;
             return;
         }
 
-        getCustomJumpDestinations();
-
-        currentPage = Models.Container.getCurrentBankPage(screen);
-
-        if (!quickJumping) return;
-
-        if (pageDestination > lastPage) {
-            quickJumping = false;
-            pageDestination = currentPage;
-        } else if (pageDestination != currentPage) {
-            quickJumping = true;
-            Models.ContainerQuickJump.jumpToDestination(currentPage, pageDestination, lastPage);
-        } else {
-            quickJumping = false;
-        }
+        getCustomJumpDestinations(currentContainer);
     }
 
-    private void getCustomJumpDestinations() {
+    private void getCustomJumpDestinations(SearchableContainerType currentContainer) {
         String configDestinations;
 
         switch (currentContainer) {
@@ -121,7 +96,7 @@ public class CustomBankPagesFeature extends Feature {
     }
 
     private List<Integer> getDefaultJumpDestinations() {
-        return switch (currentContainer) {
+        return switch (Models.ContainerQuickJump.getCurrentContainer()) {
             case BANK -> QUICK_JUMP_DESTINATIONS;
             case BLOCK_BANK -> BLOCK_BANK_DESTINATIONS;
             default -> HOUSING_DEFAULT_DESTINATIONS; // this has the lowest values, so it's the safest default
@@ -129,33 +104,27 @@ public class CustomBankPagesFeature extends Feature {
     }
 
     @SubscribeEvent
-    public void onScreenClose(ScreenClosedEvent e) {
-        currentContainer = null;
-        currentPage = 1;
-        pageDestination = 1;
-    }
-
-    @SubscribeEvent
     public void onSlotClicked(ContainerClickEvent e) {
-        if (currentContainer == null) return;
+        if (Models.ContainerQuickJump.getCurrentContainer() == null) return;
 
         int slotIndex = e.getSlotNum();
 
         if (BUTTON_SLOTS.contains(slotIndex)) {
             int buttonIndex = BUTTON_SLOTS.indexOf(slotIndex);
-            pageDestination = customJumpDestinations.get(buttonIndex);
+            int pageDestination = customJumpDestinations.get(buttonIndex);
             int wynnDestination = QUICK_JUMP_DESTINATIONS.get(buttonIndex);
+
             if (pageDestination != wynnDestination) {
                 e.setCanceled(true);
-                quickJumping = true;
-                Models.ContainerQuickJump.jumpToDestination(currentPage, pageDestination, lastPage);
+                Models.ContainerQuickJump.setPageDestination(pageDestination);
+                Models.ContainerQuickJump.jumpToDestination();
             }
         }
     }
 
     @SubscribeEvent
     public void onSetSlot(SetSlotEvent.Pre e) {
-        if (currentContainer == null) return;
+        if (Models.ContainerQuickJump.getCurrentContainer() == null) return;
         if (e.getContainer() instanceof Inventory) return;
 
         if (BUTTON_SLOTS.contains(e.getSlot())) {
@@ -180,7 +149,10 @@ public class CustomBankPagesFeature extends Feature {
 
     @SubscribeEvent
     public void onContainerSetEvent(ContainerSetContentEvent.Post e) {
+        SearchableContainerType currentContainer = Models.ContainerQuickJump.getCurrentContainer();
         if (currentContainer == null) return;
+
+        int currentPage = Models.ContainerQuickJump.getCurrentPage();
 
         if (Models.Container.isItemIndicatingLastBankPage(e.getItems().get(Models.Container.LAST_BANK_PAGE_SLOT))) {
             switch (currentContainer) {
@@ -190,7 +162,7 @@ public class CustomBankPagesFeature extends Feature {
                 case MISC_BUCKET -> Models.Container.updateFinalMiscBucketPage(currentPage);
             }
 
-            lastPage = currentPage;
+            Models.ContainerQuickJump.setLastPage(currentPage);
         }
     }
 
