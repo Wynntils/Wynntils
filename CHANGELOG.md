@@ -1,9 +1,17 @@
+## [0.0.3-alpha.316](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.315...v0.0.3-alpha.316) (2023-08-14)
+
+
+### New Features
+
+* leq and geq aliases for lte gte functions ([#2009](https://github.com/Wynntils/Artemis/issues/2009)) ([9580f80](https://github.com/Wynntils/Artemis/commit/9580f808ee8eedbb48f7412c0c57132c594940db))
+
 ## [0.0.3-alpha.315](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.314...v0.0.3-alpha.315) (2023-08-13)
 
 
 ### Miscellaneous Chores
 
 * Add Modrinth link to README ([#2004](https://github.com/Wynntils/Artemis/issues/2004)) ([f617a5a](https://github.com/Wynntils/Artemis/commit/f617a5a43c819b4c13e0d83cafa7264e647eec0d))
+* **release:** v0.0.3-alpha.315 [skip ci] ([f937a60](https://github.com/Wynntils/Artemis/commit/f937a60e2ea128196f6154477d4cb8293820b47b))
 
 ## [0.0.3-alpha.314](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.313...v0.0.3-alpha.314) (2023-08-13)
 
@@ -36,16 +44,4 @@
 
 * Change license to LGPL3 ([#1988](https://github.com/Wynntils/Artemis/issues/1988)) ([7a68730](https://github.com/Wynntils/Artemis/commit/7a68730b359642009d2b81ceb2b6f44f1371b568))
 * **release:** v0.0.3-alpha.312 [skip ci] ([4475b5c](https://github.com/Wynntils/Artemis/commit/4475b5c7c5c45a1490c60100e9a2a262175cfbd5))
-
-## [0.0.3-alpha.311](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.310...v0.0.3-alpha.311) (2023-08-13)
-
-
-### Bug Fixes
-
-* ItemHandler should handle spell cast renames properly ([#2000](https://github.com/Wynntils/Artemis/issues/2000)) ([f1c39f9](https://github.com/Wynntils/Artemis/commit/f1c39f982ba55edfb1384c629891757581693069))
-
-
-### Miscellaneous Chores
-
-* **release:** v0.0.3-alpha.311 [skip ci] ([12725d1](https://github.com/Wynntils/Artemis/commit/12725d168cc7149127da820ff0b184fc873cd69b))
 
