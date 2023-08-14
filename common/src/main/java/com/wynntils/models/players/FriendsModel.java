@@ -101,14 +101,20 @@ public final class FriendsModel extends Model {
 
         Matcher joinMatcher = styledText.getMatcher(JOIN_PATTERN);
         if (joinMatcher.matches()) {
-            onlineFriends.put(joinMatcher.group("username"), Integer.parseInt(joinMatcher.group("server")));
-            WynntilsMod.postEvent(new FriendsEvent.Joined(joinMatcher.group("username")));
+            String username = joinMatcher.group("username");
+            int server = Integer.parseInt(joinMatcher.group("server"));
+
+            onlineFriends.put(username, server);
+            WynntilsMod.postEvent(new FriendsEvent.Joined(username, server));
             return;
         }
+
         Matcher leaveMatcher = styledText.getMatcher(LEAVE_PATTERN);
         if (leaveMatcher.matches()) {
-            onlineFriends.remove(leaveMatcher.group("username"));
-            WynntilsMod.postEvent(new FriendsEvent.Left(leaveMatcher.group("username")));
+            String username = leaveMatcher.group("username");
+
+            onlineFriends.remove(username);
+            WynntilsMod.postEvent(new FriendsEvent.Left(username));
             return;
         }
 
@@ -142,9 +148,11 @@ public final class FriendsModel extends Model {
             // But as soon as the matcher fails, we know we've reached the end of the list
             Matcher onlineFriendMatcher = styledText.getMatcher(ONLINE_FRIEND);
             if (onlineFriendMatcher.matches()) {
-                onlineFriends.put(onlineFriendMatcher.group(1), Integer.parseInt(onlineFriendMatcher.group(2)));
-                WynntilsMod.info(
-                        "Friend " + onlineFriendMatcher.group(1) + " is online on WC" + onlineFriendMatcher.group(2));
+                String username = onlineFriendMatcher.group(1);
+                int server = Integer.parseInt(onlineFriendMatcher.group(2));
+
+                onlineFriends.put(username, server);
+                WynntilsMod.info("Friend " + username + " is online on WC" + server);
                 event.setCanceled(true);
                 return;
             } else {
