@@ -24,12 +24,12 @@ public class InventoryFunctions {
     public static class AccessoryCurrentDurabilityFunction extends Function<Integer> {
         @Override
         public Integer getValue(FunctionArguments arguments) {
-            InventoryAccessory equipmentType = InventoryAccessory.fromString(
+            InventoryAccessory inventoryAccessory = InventoryAccessory.fromString(
                     arguments.getArgument("accessory").getStringValue());
-            if (equipmentType == null) return -1;
+            if (inventoryAccessory == null) return -1;
 
             Optional<DurableItemProperty> durableItemOpt = Models.Item.asWynnItemPropery(
-                    McUtils.inventory().items.get(equipmentType.getSlot()), DurableItemProperty.class);
+                    McUtils.inventory().items.get(inventoryAccessory.getSlot()), DurableItemProperty.class);
 
             return durableItemOpt
                     .map(durableItemProperty ->
@@ -52,12 +52,12 @@ public class InventoryFunctions {
     public static class AccessoryMaxDurabilityFunction extends Function<Integer> {
         @Override
         public Integer getValue(FunctionArguments arguments) {
-            InventoryAccessory equipmentType = InventoryAccessory.fromString(
+            InventoryAccessory inventoryAccessory = InventoryAccessory.fromString(
                     arguments.getArgument("accessory").getStringValue());
-            if (equipmentType == null) return -1;
+            if (inventoryAccessory == null) return -1;
 
             Optional<DurableItemProperty> durableItemOpt = Models.Item.asWynnItemPropery(
-                    McUtils.inventory().items.get(equipmentType.getSlot()), DurableItemProperty.class);
+                    McUtils.inventory().items.get(inventoryAccessory.getSlot()), DurableItemProperty.class);
 
             return durableItemOpt
                     .map(durableItemProperty ->
