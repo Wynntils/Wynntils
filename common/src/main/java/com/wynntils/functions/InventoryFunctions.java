@@ -21,7 +21,7 @@ import net.minecraft.world.InteractionHand;
 import net.minecraft.world.item.ItemStack;
 
 public class InventoryFunctions {
-    public static class CappedAccessoryDurabilityFunction extends Function<CappedValue> {
+    public static class AccessoryDurabilityFunction extends Function<CappedValue> {
         @Override
         public CappedValue getValue(FunctionArguments arguments) {
             InventoryAccessory inventoryAccessory = InventoryAccessory.fromString(
@@ -43,7 +43,7 @@ public class InventoryFunctions {
         }
     }
 
-    public static class CappedArmorDurabilityFunction extends Function<CappedValue> {
+    public static class ArmorDurabilityFunction extends Function<CappedValue> {
         @Override
         public CappedValue getValue(FunctionArguments arguments) {
             InventoryArmor inventoryArmor =
