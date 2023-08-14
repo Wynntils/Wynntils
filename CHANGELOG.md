@@ -1,9 +1,17 @@
+## [0.0.3-alpha.318](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.317...v0.0.3-alpha.318) (2023-08-14)
+
+
+### Code Refactoring
+
+* Follow-up work after PersistedMetadata changes ([#1987](https://github.com/Wynntils/Artemis/issues/1987)) ([4ae4855](https://github.com/Wynntils/Artemis/commit/4ae485592079f9bcb0c7fda2a2fdcbbf1c09743e))
+
 ## [0.0.3-alpha.317](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.316...v0.0.3-alpha.317) (2023-08-14)
 
 
 ### Miscellaneous Chores
 
 * Move Service i18n keys to "service" prefix ([#2005](https://github.com/Wynntils/Artemis/issues/2005)) ([e1d7233](https://github.com/Wynntils/Artemis/commit/e1d72336db3ea0856fe64972356540e33fde23df))
+* **release:** v0.0.3-alpha.317 [skip ci] ([a25056a](https://github.com/Wynntils/Artemis/commit/a25056a3299b2c0ac9dda4ac1337cd8844d9afd8))
 
 ## [0.0.3-alpha.316](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.315...v0.0.3-alpha.316) (2023-08-14)
 
@@ -36,16 +44,4 @@
 ### Miscellaneous Chores
 
 * **release:** v0.0.3-alpha.314 [skip ci] ([1f7413c](https://github.com/Wynntils/Artemis/commit/1f7413c883c94232c8b8529204c0f4a05032e1ae))
-
-## [0.0.3-alpha.313](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.312...v0.0.3-alpha.313) (2023-08-13)
-
-
-### Miscellaneous Chores
-
-* **release:** v0.0.3-alpha.313 [skip ci] ([17f33ac](https://github.com/Wynntils/Artemis/commit/17f33ac1423fba0ed7e95ee5a396789e51b131fe))
-
-
-### Code Refactoring
-
-* Move the PersistedMetadata into a map in the PersistedManager ([#1984](https://github.com/Wynntils/Artemis/issues/1984)) ([8d9fea2](https://github.com/Wynntils/Artemis/commit/8d9fea20da410d42315c201527cd49b9ed831d75))
 
