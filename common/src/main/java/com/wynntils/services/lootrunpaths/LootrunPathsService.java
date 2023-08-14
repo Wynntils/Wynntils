@@ -186,10 +186,10 @@ public final class LootrunPathsService extends Service {
 
             BlockPos start = PosUtils.newBlockPos(startingPoint);
             McUtils.sendMessageToClient(Component.translatable(
-                            "service.wynntils.lootrunpaths.lootrunStart", start.getX(), start.getY(), start.getZ())
+                            "service.wynntils.lootrunPaths.lootrunStart", start.getX(), start.getY(), start.getZ())
                     .withStyle(ChatFormatting.GREEN));
         } else {
-            McUtils.sendErrorToClient(I18n.get("service.wynntils.lootrunpaths.lootrunCouldNotBeLoaded", fileName));
+            McUtils.sendErrorToClient(I18n.get("service.wynntils.lootrunPaths.lootrunCouldNotBeLoaded", fileName));
         }
     }
 
