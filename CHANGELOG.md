@@ -1,9 +1,21 @@
+## [0.0.3-alpha.317](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.316...v0.0.3-alpha.317) (2023-08-14)
+
+
+### Miscellaneous Chores
+
+* Move Service i18n keys to "service" prefix ([#2005](https://github.com/Wynntils/Artemis/issues/2005)) ([e1d7233](https://github.com/Wynntils/Artemis/commit/e1d72336db3ea0856fe64972356540e33fde23df))
+
 ## [0.0.3-alpha.316](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.315...v0.0.3-alpha.316) (2023-08-14)
 
 
 ### New Features
 
 * leq and geq aliases for lte gte functions ([#2009](https://github.com/Wynntils/Artemis/issues/2009)) ([9580f80](https://github.com/Wynntils/Artemis/commit/9580f808ee8eedbb48f7412c0c57132c594940db))
+
+
+### Miscellaneous Chores
+
+* **release:** v0.0.3-alpha.316 [skip ci] ([00d104d](https://github.com/Wynntils/Artemis/commit/00d104d593b641830b676912ff60d2b8b19f10b0))
 
 ## [0.0.3-alpha.315](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.314...v0.0.3-alpha.315) (2023-08-13)
 
@@ -36,12 +48,4 @@
 ### Code Refactoring
 
 * Move the PersistedMetadata into a map in the PersistedManager ([#1984](https://github.com/Wynntils/Artemis/issues/1984)) ([8d9fea2](https://github.com/Wynntils/Artemis/commit/8d9fea20da410d42315c201527cd49b9ed831d75))
-
-## [0.0.3-alpha.312](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.311...v0.0.3-alpha.312) (2023-08-13)
-
-
-### Miscellaneous Chores
-
-* Change license to LGPL3 ([#1988](https://github.com/Wynntils/Artemis/issues/1988)) ([7a68730](https://github.com/Wynntils/Artemis/commit/7a68730b359642009d2b81ceb2b6f44f1371b568))
-* **release:** v0.0.3-alpha.312 [skip ci] ([4475b5c](https://github.com/Wynntils/Artemis/commit/4475b5c7c5c45a1490c60100e9a2a262175cfbd5))
 
