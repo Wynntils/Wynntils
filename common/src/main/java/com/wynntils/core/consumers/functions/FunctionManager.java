@@ -462,6 +462,12 @@ public final class FunctionManager extends Manager {
         registerFunction(new EnvironmentFunctions.MemPctFunction());
         registerFunction(new EnvironmentFunctions.MemUsedFunction());
 
+        registerFunction(new InventoryFunctions.AccessoryCurrentDurabilityFunction());
+        registerFunction(new InventoryFunctions.AccessoryMaxDurabilityFunction());
+        registerFunction(new InventoryFunctions.ArmorCurrentDurabilityFunction());
+        registerFunction(new InventoryFunctions.ArmorMaxDurabilityFunction());
+        registerFunction(new InventoryFunctions.CappedAccessoryDurabilityFunction());
+        registerFunction(new InventoryFunctions.CappedArmorDurabilityFunction());
         registerFunction(new InventoryFunctions.CappedHeldItemDurabilityFunction());
         registerFunction(new InventoryFunctions.CappedIngredientPouchSlotsFunction());
         registerFunction(new InventoryFunctions.CappedInventorySlotsFunction());
