@@ -183,7 +183,7 @@ public final class ConfigManager extends Manager {
         JsonObject configJson = new JsonObject();
         for (Config<?> config : getConfigList()) {
             if (!config.valueChanged()) continue; // only save options that have been set by the user
-            Object value = config.getValue();
+            Object value = config.get();
 
             JsonElement configElement = Managers.Json.GSON.toJsonTree(value);
             configJson.add(config.getJsonName(), configElement);
@@ -261,5 +261,10 @@ public final class ConfigManager extends Manager {
 
     public Stream<Config<?>> getConfigs() {
         return getConfigList().stream();
+    }
+
+    public Stream<Config<?>> getConfigsForOwner(PersistedOwner owner) {
+        return getConfigs()
+                .filter(config -> Managers.Persisted.getMetadata(config).owner() == owner);
     }
 }

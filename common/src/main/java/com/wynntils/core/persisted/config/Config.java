@@ -7,9 +7,8 @@ package com.wynntils.core.persisted.config;
 import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.components.Managers;
 import com.wynntils.core.consumers.features.Configurable;
-import com.wynntils.core.consumers.features.Translatable;
-import com.wynntils.core.persisted.PersistedMetadata;
 import com.wynntils.core.persisted.PersistedValue;
+import com.wynntils.core.persisted.type.PersistedMetadata;
 import com.wynntils.utils.EnumUtils;
 import java.util.Objects;
 import java.util.stream.Stream;
@@ -35,23 +34,18 @@ public class Config<T> extends PersistedValue<T> {
         // For now, do not call touch() on configs
     }
 
-    public T getValue() {
-        // FIXME: This is just an alias now, should be changed to get() everywhere
-        return get();
-    }
-
     // FIXME: Old ways of setting the value. These should be unified, but since
     // they have slightly different semantics, let's do it carfeully step by step.
 
     public void setValue(T value) {
-        if (value == null && !getMetadata().isAllowNull()) {
+        if (value == null && !getMetadata().allowNull()) {
             WynntilsMod.warn("Trying to set null to config " + getJsonName() + ". Will be replaced by default.");
             reset();
             return;
         }
 
         Managers.Persisted.setRaw(this, value);
-        ((Configurable) getMetadata().getOwner()).updateConfigOption(this);
+        ((Configurable) getMetadata().owner()).updateConfigOption(this);
         this.userEdited = true;
     }
 
@@ -60,11 +54,11 @@ public class Config<T> extends PersistedValue<T> {
     }
 
     public void reset() {
-        T defaultValue = getMetadata().getDefaultValue();
+        T defaultValue = getMetadata().defaultValue();
 
         // deep copy because writeField set's the field to be our default value instance when resetting, making default
         // value change with the field's actual value
-        setValue(Managers.Json.deepCopy(defaultValue, getMetadata().getValueType()));
+        setValue(Managers.Json.deepCopy(defaultValue, getMetadata().valueType()));
         // reset this flag so option is no longer saved to file
         this.userEdited = false;
     }
@@ -80,15 +74,15 @@ public class Config<T> extends PersistedValue<T> {
 
         // FIXME: I guess at this point the userEdited change would suffice,
         // but check this carefully before removing the old logic below.
-        T defaultValue = getMetadata().getDefaultValue();
-        boolean deepEquals = Objects.deepEquals(getValue(), defaultValue);
+        T defaultValue = getMetadata().defaultValue();
+        boolean deepEquals = Objects.deepEquals(get(), defaultValue);
 
         if (deepEquals) {
             return false;
         }
 
         try {
-            return !EqualsBuilder.reflectionEquals(getValue(), defaultValue);
+            return !EqualsBuilder.reflectionEquals(get(), defaultValue);
         } catch (RuntimeException ignored) {
             // Reflection equals does not always work, use deepEquals instead of assuming no change
             // Since deepEquals is already false when we reach this, we can assume change
@@ -97,19 +91,15 @@ public class Config<T> extends PersistedValue<T> {
     }
 
     public String getFieldName() {
-        return getMetadata().getFieldName();
-    }
-
-    public Configurable getParent() {
-        return (Configurable) getMetadata().getOwner();
+        return getMetadata().fieldName();
     }
 
     public boolean isEnum() {
-        return getMetadata().getValueType() instanceof Class<?> clazz && clazz.isEnum();
+        return getMetadata().valueType() instanceof Class<?> clazz && clazz.isEnum();
     }
 
     public T getDefaultValue() {
-        return getMetadata().getDefaultValue();
+        return getMetadata().defaultValue();
     }
 
     public String getDisplayName() {
@@ -156,10 +146,10 @@ public class Config<T> extends PersistedValue<T> {
     }
 
     private String getI18n(String suffix) {
-        if (!getMetadata().getI18nKeyOverride().isEmpty()) {
-            return I18n.get(getMetadata().getI18nKeyOverride() + suffix);
+        if (!getMetadata().i18nKeyOverride().isEmpty()) {
+            return I18n.get(getMetadata().i18nKeyOverride() + suffix);
         }
-        return ((Translatable) getParent()).getTranslation(getFieldName() + suffix);
+        return getMetadata().owner().getTranslation(getFieldName() + suffix);
     }
 
     private PersistedMetadata<T> getMetadata() {

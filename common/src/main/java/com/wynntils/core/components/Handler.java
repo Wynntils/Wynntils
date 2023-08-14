@@ -16,7 +16,7 @@ public abstract class Handler extends CoreComponent {
     protected Handler() {}
 
     @Override
-    protected String getComponentType() {
+    public String getTypeName() {
         return "Handler";
     }
 }

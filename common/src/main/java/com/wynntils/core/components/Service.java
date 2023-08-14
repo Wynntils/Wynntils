@@ -26,7 +26,7 @@ public abstract class Service extends CoreComponent {
     }
 
     @Override
-    protected String getComponentType() {
+    public String getTypeName() {
         return "Service";
     }
 

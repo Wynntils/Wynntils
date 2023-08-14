@@ -296,13 +296,13 @@ public class WorldWaypointDistanceFeature extends Feature {
         switch (unknownConfig.getFieldName()) {
             case "topBoundingDistance", "bottomBoundingDistance" -> {
                 Config<Float> config = (Config<Float>) unknownConfig;
-                if (config.getValue() > window.getGuiScaledHeight() * 0.4f) {
+                if (config.get() > window.getGuiScaledHeight() * 0.4f) {
                     config.setValue(window.getGuiScaledHeight() * 0.4f);
                 }
             }
             case "horizontalBoundingDistance" -> {
                 Config<Float> config = (Config<Float>) unknownConfig;
-                if (config.getValue() > window.getGuiScaledWidth() * 0.4f) {
+                if (config.get() > window.getGuiScaledWidth() * 0.4f) {
                     config.setValue(window.getGuiScaledWidth() * 0.4f);
                 }
             }
