@@ -1,4 +1,16 @@
+## [0.0.3-alpha.319](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.318...v0.0.3-alpha.319) (2023-08-14)
+
+
+### New Features
+
+* Undercut setting for price match buttons ([#2010](https://github.com/Wynntils/Artemis/issues/2010)) ([f5896e2](https://github.com/Wynntils/Artemis/commit/f5896e23f33d51c7d0a47e4445f0a4a83a92419b))
+
 ## [0.0.3-alpha.318](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.317...v0.0.3-alpha.318) (2023-08-14)
+
+
+### Miscellaneous Chores
+
+* **release:** v0.0.3-alpha.318 [skip ci] ([a7891ff](https://github.com/Wynntils/Artemis/commit/a7891ffe5bbe708dec5171414a544cd34af99faa))
 
 
 ### Code Refactoring
@@ -32,16 +44,4 @@
 
 * Add Modrinth link to README ([#2004](https://github.com/Wynntils/Artemis/issues/2004)) ([f617a5a](https://github.com/Wynntils/Artemis/commit/f617a5a43c819b4c13e0d83cafa7264e647eec0d))
 * **release:** v0.0.3-alpha.315 [skip ci] ([f937a60](https://github.com/Wynntils/Artemis/commit/f937a60e2ea128196f6154477d4cb8293820b47b))
-
-## [0.0.3-alpha.314](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.313...v0.0.3-alpha.314) (2023-08-13)
-
-
-### New Features
-
-* Redirect empty mana bank notification ([#1993](https://github.com/Wynntils/Artemis/issues/1993)) ([5f16cdf](https://github.com/Wynntils/Artemis/commit/5f16cdffe7f73dcd9c147b4f39af23c6e0fe5511))
-
-
-### Miscellaneous Chores
-
-* **release:** v0.0.3-alpha.314 [skip ci] ([1f7413c](https://github.com/Wynntils/Artemis/commit/1f7413c883c94232c8b8529204c0f4a05032e1ae))
 
