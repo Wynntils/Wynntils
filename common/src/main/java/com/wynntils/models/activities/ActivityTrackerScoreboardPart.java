@@ -42,6 +42,7 @@ public class ActivityTrackerScoreboardPart extends ScoreboardPart {
         List<StyledText> taskLines = content.subList(1, content.size());
 
         for (StyledText line : taskLines) {
+            nextTask.append(" "); // No need to check if it's the first line because we .trim() later
             nextTask.append(line.getString()
                     .replaceAll(ChatFormatting.WHITE.toString(), ChatFormatting.AQUA.toString())
                     .replaceAll(ChatFormatting.GRAY.toString(), ChatFormatting.RESET.toString()));
