@@ -16,8 +16,6 @@ import com.wynntils.mc.event.ScreenClosedEvent;
 import com.wynntils.mc.event.ScreenInitEvent;
 import com.wynntils.mc.event.SetSlotEvent;
 import com.wynntils.models.containers.type.SearchableContainerType;
-import com.wynntils.utils.mc.McUtils;
-import com.wynntils.utils.wynn.ContainerUtils;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -30,7 +28,6 @@ import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
-import org.lwjgl.glfw.GLFW;
 
 @ConfigCategory(Category.INVENTORY)
 public class CustomBankPagesFeature extends Feature {
@@ -51,8 +48,6 @@ public class CustomBankPagesFeature extends Feature {
     private static final int MAX_BLOCK_BANK_PAGES = 12;
     private static final int MAX_HOUSING_CONTAINER_PAGES = 10;
     private static final int MAX_DESTINATIONS = 6;
-    private static final int NEXT_PAGE_SLOT = 8;
-    private static final int PREVIOUS_PAGE_SLOT = 17;
     private static final List<Integer> BUTTON_SLOTS = List.of(7, 16, 25, 34, 43, 52);
     private static final List<Integer> BLOCK_BANK_DESTINATIONS = List.of(1, 3, 5, 8, 10, 12);
     private static final List<Integer> HOUSING_DEFAULT_DESTINATIONS = List.of(1, 3, 4, 6, 8, 10);
@@ -98,7 +93,8 @@ public class CustomBankPagesFeature extends Feature {
             quickJumping = false;
             pageDestination = currentPage;
         } else if (pageDestination != currentPage) {
-            jumpToDestination();
+            quickJumping = true;
+            Models.ContainerQuickJump.jumpToDestination(currentPage, pageDestination, lastPage);
         } else {
             quickJumping = false;
         }
@@ -151,7 +147,8 @@ public class CustomBankPagesFeature extends Feature {
             int wynnDestination = QUICK_JUMP_DESTINATIONS.get(buttonIndex);
             if (pageDestination != wynnDestination) {
                 e.setCanceled(true);
-                jumpToDestination();
+                quickJumping = true;
+                Models.ContainerQuickJump.jumpToDestination(currentPage, pageDestination, lastPage);
             }
         }
     }
@@ -195,75 +192,6 @@ public class CustomBankPagesFeature extends Feature {
 
             lastPage = currentPage;
         }
-    }
-
-    private void jumpToDestination() {
-        quickJumping = true;
-
-        if (currentPage == pageDestination || pageDestination > lastPage) return;
-
-        int pageDifference = pageDestination - currentPage;
-
-        switch (pageDifference) {
-            case 1 -> {
-                if (currentPage != lastPage) {
-                    clickNextPage();
-                }
-            }
-            case -1 -> clickPreviousPage();
-            default -> {
-                if (!tryUsingJumpButtons()) {
-                    if (currentPage > pageDestination) {
-                        clickPreviousPage();
-                    } else if (currentPage != lastPage) {
-                        clickNextPage();
-                    }
-                }
-            }
-        }
-    }
-
-    private boolean tryUsingJumpButtons() {
-        int closest = QUICK_JUMP_DESTINATIONS.get(0);
-        int closestDistance = Math.abs(closest - pageDestination);
-        int currentDistance = Math.abs(currentPage - pageDestination);
-
-        for (int jumpDestination : QUICK_JUMP_DESTINATIONS) {
-            int jumpDistance = Math.abs(jumpDestination - pageDestination);
-
-            if (jumpDistance < closestDistance && jumpDestination <= lastPage) {
-                closest = jumpDestination;
-                closestDistance = jumpDistance;
-            }
-        }
-
-        if (closestDistance < currentDistance) {
-            ContainerUtils.clickOnSlot(
-                    BUTTON_SLOTS.get(QUICK_JUMP_DESTINATIONS.indexOf(closest)),
-                    McUtils.containerMenu().containerId,
-                    GLFW.GLFW_MOUSE_BUTTON_LEFT,
-                    McUtils.containerMenu().getItems());
-
-            return true;
-        }
-
-        return false;
-    }
-
-    private void clickNextPage() {
-        ContainerUtils.clickOnSlot(
-                NEXT_PAGE_SLOT,
-                McUtils.containerMenu().containerId,
-                GLFW.GLFW_MOUSE_BUTTON_LEFT,
-                McUtils.containerMenu().getItems());
-    }
-
-    private void clickPreviousPage() {
-        ContainerUtils.clickOnSlot(
-                PREVIOUS_PAGE_SLOT,
-                McUtils.containerMenu().containerId,
-                GLFW.GLFW_MOUSE_BUTTON_LEFT,
-                McUtils.containerMenu().getItems());
     }
 
     @Override

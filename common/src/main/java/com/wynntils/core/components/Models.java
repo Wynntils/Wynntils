@@ -21,6 +21,7 @@ import com.wynntils.models.characterstats.CombatXpModel;
 import com.wynntils.models.containers.ContainerModel;
 import com.wynntils.models.containers.LootChestModel;
 import com.wynntils.models.containers.PlayerInventoryModel;
+import com.wynntils.models.containers.type.ContainerQuickJumpModel;
 import com.wynntils.models.damage.DamageModel;
 import com.wynntils.models.elements.ElementModel;
 import com.wynntils.models.emeralds.EmeraldModel;
@@ -89,6 +90,7 @@ public final class Models {
     public static final CaveModel Cave = new CaveModel(Activity);
     public static final CombatXpModel CombatXp = new CombatXpModel(WorldState);
     public static final CharacterStatsModel CharacterStats = new CharacterStatsModel(CombatXp);
+    public static final ContainerQuickJumpModel ContainerQuickJump = new ContainerQuickJumpModel(Container);
     public static final FriendsModel Friends = new FriendsModel(WorldState);
     public static final GearModel Gear = new GearModel(Element, Stat, WynnItem);
     public static final GuildModel Guild = new GuildModel(Character);
