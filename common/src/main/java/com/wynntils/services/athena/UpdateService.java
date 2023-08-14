@@ -184,13 +184,13 @@ public final class UpdateService extends Service {
     }
 
     public enum UpdateResult {
-        SUCCESSFUL(Component.translatable("feature.wynntils.updates.result.successful")
+        SUCCESSFUL(Component.translatable("service.wynntils.updates.result.successful")
                 .withStyle(ChatFormatting.DARK_GREEN)),
         ALREADY_ON_LATEST(
-                Component.translatable("feature.wynntils.updates.result.latest").withStyle(ChatFormatting.YELLOW)),
-        UPDATE_PENDING(Component.translatable("feature.wynntils.updates.result.pending")
+                Component.translatable("service.wynntils.updates.result.latest").withStyle(ChatFormatting.YELLOW)),
+        UPDATE_PENDING(Component.translatable("service.wynntils.updates.result.pending")
                 .withStyle(ChatFormatting.YELLOW)),
-        ERROR(Component.translatable("feature.wynntils.updates.result.error").withStyle(ChatFormatting.DARK_RED));
+        ERROR(Component.translatable("service.wynntils.updates.result.error").withStyle(ChatFormatting.DARK_RED));
 
         private final MutableComponent message;
 
