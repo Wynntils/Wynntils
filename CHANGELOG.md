@@ -1,9 +1,21 @@
+## [0.0.3-alpha.320](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.319...v0.0.3-alpha.320) (2023-08-14)
+
+
+### Miscellaneous Chores
+
+* Add ProfessionItemProperty ([#2015](https://github.com/Wynntils/Artemis/issues/2015)) ([d053695](https://github.com/Wynntils/Artemis/commit/d053695d9978d1c3ad8c7b4440296c5e5e6e05b2))
+
 ## [0.0.3-alpha.319](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.318...v0.0.3-alpha.319) (2023-08-14)
 
 
 ### New Features
 
 * Undercut setting for price match buttons ([#2010](https://github.com/Wynntils/Artemis/issues/2010)) ([f5896e2](https://github.com/Wynntils/Artemis/commit/f5896e23f33d51c7d0a47e4445f0a4a83a92419b))
+
+
+### Miscellaneous Chores
+
+* **release:** v0.0.3-alpha.319 [skip ci] ([95ad39e](https://github.com/Wynntils/Artemis/commit/95ad39efa1c9a1390bab316ab21340d579d8d5aa))
 
 ## [0.0.3-alpha.318](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.317...v0.0.3-alpha.318) (2023-08-14)
 
@@ -36,12 +48,4 @@
 ### Miscellaneous Chores
 
 * **release:** v0.0.3-alpha.316 [skip ci] ([00d104d](https://github.com/Wynntils/Artemis/commit/00d104d593b641830b676912ff60d2b8b19f10b0))
-
-## [0.0.3-alpha.315](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.314...v0.0.3-alpha.315) (2023-08-13)
-
-
-### Miscellaneous Chores
-
-* Add Modrinth link to README ([#2004](https://github.com/Wynntils/Artemis/issues/2004)) ([f617a5a](https://github.com/Wynntils/Artemis/commit/f617a5a43c819b4c13e0d83cafa7264e647eec0d))
-* **release:** v0.0.3-alpha.315 [skip ci] ([f937a60](https://github.com/Wynntils/Artemis/commit/f937a60e2ea128196f6154477d4cb8293820b47b))
 
