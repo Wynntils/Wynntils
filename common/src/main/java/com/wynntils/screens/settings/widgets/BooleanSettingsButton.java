@@ -45,6 +45,6 @@ public class BooleanSettingsButton extends GeneralSettingsButton {
     }
 
     private static boolean isEnabled(Config<Boolean> config) {
-        return config.getValue();
+        return config.get();
     }
 }

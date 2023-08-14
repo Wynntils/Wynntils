@@ -23,7 +23,7 @@ public abstract class Manager extends CoreComponent {
     }
 
     @Override
-    protected String getComponentType() {
+    public String getTypeName() {
         return "Manager";
     }
 

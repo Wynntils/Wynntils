@@ -6,7 +6,6 @@ package com.wynntils.core.consumers.overlays;
 
 import com.wynntils.utils.render.type.HorizontalAlignment;
 import com.wynntils.utils.render.type.VerticalAlignment;
-import net.minecraft.client.resources.language.I18n;
 
 public abstract class DynamicOverlay extends Overlay {
     private final int id;
@@ -48,9 +47,7 @@ public abstract class DynamicOverlay extends Overlay {
 
     @Override
     public String getTranslatedName() {
-        return I18n.get(
-                "feature.wynntils." + getDeclaringFeatureNameCamelCase() + ".overlay." + getNameCamelCase() + ".name",
-                id);
+        return getTranslation("name", id);
     }
 
     @Override

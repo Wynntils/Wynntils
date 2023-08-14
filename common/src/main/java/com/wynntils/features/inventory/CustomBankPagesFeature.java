@@ -293,7 +293,7 @@ public class CustomBankPagesFeature extends Feature {
 
         // If we're still here, we have a string config
         Config<String> config = (Config<String>) unknownConfig;
-        String valueString = config.getValue();
+        String valueString = config.get();
 
         List<Integer> originalValues = parseStringToDestinations(valueString, containerType);
 
