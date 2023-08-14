@@ -147,25 +147,6 @@ public class CustomBankPagesFeature extends Feature {
         }
     }
 
-    @SubscribeEvent
-    public void onContainerSetEvent(ContainerSetContentEvent.Post e) {
-        SearchableContainerType currentContainer = Models.ContainerQuickJump.getCurrentContainer();
-        if (currentContainer == null) return;
-
-        int currentPage = Models.ContainerQuickJump.getCurrentPage();
-
-        if (Models.Container.isItemIndicatingLastBankPage(e.getItems().get(Models.Container.LAST_BANK_PAGE_SLOT))) {
-            switch (currentContainer) {
-                case BANK -> Models.Container.updateFinalBankPage(currentPage);
-                case BLOCK_BANK -> Models.Container.updateFinalBlockBankPage(currentPage);
-                case BOOKSHELF -> Models.Container.updateFinalBookshelfPage(currentPage);
-                case MISC_BUCKET -> Models.Container.updateFinalMiscBucketPage(currentPage);
-            }
-
-            Models.ContainerQuickJump.setLastPage(currentPage);
-        }
-    }
-
     @Override
     protected void onConfigUpdate(Config<?> unknownConfig) {
         String fieldName = unknownConfig.getFieldName();

@@ -6,6 +6,7 @@ package com.wynntils.models.containers;
 
 import com.wynntils.core.components.Model;
 import com.wynntils.core.components.Models;
+import com.wynntils.mc.event.ContainerSetContentEvent;
 import com.wynntils.mc.event.ScreenClosedEvent;
 import com.wynntils.mc.event.ScreenInitEvent;
 import com.wynntils.models.containers.type.SearchableContainerType;
@@ -78,20 +79,32 @@ public class ContainerQuickJumpModel extends Model {
         pageDestination = 1;
     }
 
-    public int getCurrentPage() {
-        return currentPage;
-    }
+    @SubscribeEvent
+    public void onContainerSetEvent(ContainerSetContentEvent.Post e) {
+        if (currentContainer == null) return;
 
-    public void setLastPage(int lastPage) {
-        this.lastPage = lastPage;
-    }
+        if (Models.Container.isItemIndicatingLastBankPage(e.getItems().get(Models.Container.LAST_BANK_PAGE_SLOT))) {
+            switch (currentContainer) {
+                case BANK -> Models.Container.updateFinalBankPage(currentPage);
+                case BLOCK_BANK -> Models.Container.updateFinalBlockBankPage(currentPage);
+                case BOOKSHELF -> Models.Container.updateFinalBookshelfPage(currentPage);
+                case MISC_BUCKET -> Models.Container.updateFinalMiscBucketPage(currentPage);
+            }
 
-    public void setPageDestination(int destination) {
-        this.pageDestination = destination;
+            lastPage = currentPage;
+        }
     }
 
     public SearchableContainerType getCurrentContainer() {
         return currentContainer;
+    }
+
+    public int getCurrentPage() {
+        return currentPage;
+    }
+
+    public void setPageDestination(int destination) {
+        this.pageDestination = destination;
     }
 
     public void jumpToDestination() {
