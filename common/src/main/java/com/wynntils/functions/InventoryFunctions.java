@@ -15,9 +15,9 @@ import com.wynntils.models.items.WynnItem;
 import com.wynntils.models.items.properties.DurableItemProperty;
 import com.wynntils.utils.mc.McUtils;
 import com.wynntils.utils.type.CappedValue;
+import com.wynntils.utils.wynn.InventoryUtils;
 import java.util.List;
 import java.util.Optional;
-import net.minecraft.world.InteractionHand;
 import net.minecraft.world.item.ItemStack;
 
 public class InventoryFunctions {
@@ -82,7 +82,7 @@ public class InventoryFunctions {
     public static class CappedHeldItemDurabilityFunction extends Function<CappedValue> {
         @Override
         public CappedValue getValue(FunctionArguments arguments) {
-            ItemStack itemStack = McUtils.player().getItemInHand(InteractionHand.MAIN_HAND);
+            ItemStack itemStack = InventoryUtils.getItemInHand();
             Optional<DurableItemProperty> durableItemOpt =
                     Models.Item.asWynnItemPropery(itemStack, DurableItemProperty.class);
             if (durableItemOpt.isEmpty()) return CappedValue.EMPTY;
@@ -207,7 +207,7 @@ public class InventoryFunctions {
     public static class HeldItemCurrentDurabilityFunction extends Function<Integer> {
         @Override
         public Integer getValue(FunctionArguments arguments) {
-            ItemStack itemStack = McUtils.player().getItemInHand(InteractionHand.MAIN_HAND);
+            ItemStack itemStack = InventoryUtils.getItemInHand();
             Optional<DurableItemProperty> durableItemOpt =
                     Models.Item.asWynnItemPropery(itemStack, DurableItemProperty.class);
             if (durableItemOpt.isEmpty()) return -1;
@@ -224,7 +224,7 @@ public class InventoryFunctions {
     public static class HeldItemMaxDurabilityFunction extends Function<Integer> {
         @Override
         public Integer getValue(FunctionArguments arguments) {
-            ItemStack itemStack = McUtils.player().getItemInHand(InteractionHand.MAIN_HAND);
+            ItemStack itemStack = InventoryUtils.getItemInHand();
             Optional<DurableItemProperty> durableItemOpt =
                     Models.Item.asWynnItemPropery(itemStack, DurableItemProperty.class);
             if (durableItemOpt.isEmpty()) return -1;
@@ -241,7 +241,7 @@ public class InventoryFunctions {
     public static class HeldItemTypeFunction extends Function<String> {
         @Override
         public String getValue(FunctionArguments arguments) {
-            ItemStack itemInHand = McUtils.player().getItemInHand(InteractionHand.MAIN_HAND);
+            ItemStack itemInHand = InventoryUtils.getItemInHand();
 
             if (itemInHand == null) {
                 return "NONE";
@@ -265,7 +265,7 @@ public class InventoryFunctions {
     public static class HeldItemNameFunction extends Function<String> {
         @Override
         public String getValue(FunctionArguments arguments) {
-            ItemStack itemStack = McUtils.player().getItemInHand(InteractionHand.MAIN_HAND);
+            ItemStack itemStack = InventoryUtils.getItemInHand();
             StyledText hoverName = StyledText.fromComponent(itemStack.getHoverName());
             if (!arguments.getArgument("formatted").getBooleanValue()) {
                 return hoverName.getString(PartStyle.StyleType.NONE);
