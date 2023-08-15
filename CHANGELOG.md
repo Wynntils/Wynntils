@@ -1,9 +1,21 @@
+## [0.0.3-alpha.322](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.321...v0.0.3-alpha.322) (2023-08-15)
+
+
+### New Features
+
+* Armor and accessory durability functions ([#2013](https://github.com/Wynntils/Artemis/issues/2013)) ([607914d](https://github.com/Wynntils/Artemis/commit/607914dfad79617cb076fae56a03092c11a1237e))
+
 ## [0.0.3-alpha.321](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.320...v0.0.3-alpha.321) (2023-08-15)
 
 
 ### New Features
 
 * Search in scrap menu ([#1991](https://github.com/Wynntils/Artemis/issues/1991)) ([41b54dc](https://github.com/Wynntils/Artemis/commit/41b54dc20c6d01540f56422b427a00e71f3eaa31))
+
+
+### Miscellaneous Chores
+
+* **release:** v0.0.3-alpha.321 [skip ci] ([4794933](https://github.com/Wynntils/Artemis/commit/47949333894321f14a1353dc70726076a413040a))
 
 ## [0.0.3-alpha.320](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.319...v0.0.3-alpha.320) (2023-08-14)
 
@@ -36,12 +48,4 @@
 ### Code Refactoring
 
 * Follow-up work after PersistedMetadata changes ([#1987](https://github.com/Wynntils/Artemis/issues/1987)) ([4ae4855](https://github.com/Wynntils/Artemis/commit/4ae485592079f9bcb0c7fda2a2fdcbbf1c09743e))
-
-## [0.0.3-alpha.317](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.316...v0.0.3-alpha.317) (2023-08-14)
-
-
-### Miscellaneous Chores
-
-* Move Service i18n keys to "service" prefix ([#2005](https://github.com/Wynntils/Artemis/issues/2005)) ([e1d7233](https://github.com/Wynntils/Artemis/commit/e1d72336db3ea0856fe64972356540e33fde23df))
-* **release:** v0.0.3-alpha.317 [skip ci] ([a25056a](https://github.com/Wynntils/Artemis/commit/a25056a3299b2c0ac9dda4ac1337cd8844d9afd8))
 
