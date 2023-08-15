@@ -22,14 +22,14 @@ public class ContainerBounds {
      * @param endRow 0-indexed row of the last row containing items
      * @param endCol 0-indexed column of the last column containing items
      */
-    public ContainerBounds(int totalRows, int startRow, int startCol, int endRow, int endCol) {
+    public ContainerBounds(int startRow, int startCol, int endRow, int endCol) {
         this.startRow = startRow;
         this.startCol = startCol;
         this.endRow = endRow;
         this.endCol = endCol;
 
         // All container slots are numbered from 0 to (totalRows * 9) - 1
-        for (int slot = 0; slot < totalRows * 9; slot++) {
+        for (int slot = 0; slot < endRow * 9; slot++) {
             if (isInBounds(slot)) {
                 slots.add(slot);
             }

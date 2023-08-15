@@ -12,30 +12,29 @@ public enum SearchableContainerType {
             Pattern.compile("§0\\[Pg. (\\d+)\\] §8(.*)'s?§0 Bank"),
             Pattern.compile("§f§lPage \\d+§a >§2>§a>§2>§a>"),
             8,
-            new ContainerBounds(6, 0, 0, 5, 6)),
+            new ContainerBounds(0, 0, 5, 6)),
     BLOCK_BANK(
             Pattern.compile("§0\\[Pg. (\\d+)\\] §8(.*)'s?§0 Block Bank"),
             Pattern.compile("§f§lPage \\d+§a >§2>§a>§2>§a>"),
             8,
-            new ContainerBounds(6, 0, 0, 5, 6)),
+            new ContainerBounds(0, 0, 5, 6)),
     BOOKSHELF(
             Pattern.compile("§0\\[Pg. (\\d+)\\] §8(.*)'s?§0 Bookshelf"),
             Pattern.compile("§f§lPage \\d+§a >§2>§a>§2>§a>"),
             8,
-            new ContainerBounds(6, 0, 0, 5, 6)),
+            new ContainerBounds(0, 0, 5, 6)),
     MISC_BUCKET(
             Pattern.compile("§0\\[Pg. (\\d+)\\] §8(.*)'s?§0 Misc. Bucket"),
             Pattern.compile("§f§lPage \\d+§a >§2>§a>§2>§a>"),
             8,
-            new ContainerBounds(6, 0, 0, 5, 6)),
+            new ContainerBounds(0, 0, 5, 6)),
     GUILD_BANK(
             Pattern.compile(".+: Bank \\(.+\\)"),
             Pattern.compile("§a§lNext Page"),
             27,
-            new ContainerBounds(5, 0, 2, 4, 8)),
-    MEMBER_LIST(
-            Pattern.compile(".+: Members"), Pattern.compile("§a§lNext Page"), 28, new ContainerBounds(5, 0, 2, 4, 8)),
-    SCRAP_MENU(Pattern.compile("Scrap Rewards"), Pattern.compile("§7Next Page"), 8, new ContainerBounds(6, 1, 0, 5, 8));
+            new ContainerBounds(0, 2, 4, 8)),
+    MEMBER_LIST(Pattern.compile(".+: Members"), Pattern.compile("§a§lNext Page"), 28, new ContainerBounds(0, 2, 4, 8)),
+    SCRAP_MENU(Pattern.compile("Scrap Rewards"), Pattern.compile("§7Next Page"), 8, new ContainerBounds(1, 0, 5, 8));
 
     private final Pattern titlePattern;
     private final Pattern nextItemPattern;
