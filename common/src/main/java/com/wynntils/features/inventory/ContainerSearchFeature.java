@@ -60,6 +60,9 @@ public class ContainerSearchFeature extends Feature {
     public final Config<Boolean> filterInGuildMemberList = new Config<>(true);
 
     @Persisted
+    public final Config<Boolean> filterInScrapMenu = new Config<>(true);
+
+    @Persisted
     public final Config<CustomColor> highlightColor = new Config<>(CommonColors.MAGENTA);
 
     // If the guild bank has lots of custom (crafted) items, it can take multiple packets and a decent amount of time
@@ -76,7 +79,7 @@ public class ContainerSearchFeature extends Feature {
     @SubscribeEvent
     public void onScreenInit(ScreenInitEvent event) {
         if (!(event.getScreen() instanceof AbstractContainerScreen<?> screen)) return;
-        if (!(screen.getMenu() instanceof ChestMenu chestMenu)) return;
+        if (!(screen.getMenu() instanceof ChestMenu)) return;
 
         StyledText title = StyledText.fromComponent(screen.getTitle());
 
@@ -198,6 +201,10 @@ public class ContainerSearchFeature extends Feature {
             return SearchableContainerType.MEMBER_LIST;
         }
 
+        if (containerType == SearchableContainerType.SCRAP_MENU && filterInScrapMenu.get()) {
+            return SearchableContainerType.SCRAP_MENU;
+        }
+
         return null;
     }
 
@@ -224,12 +231,8 @@ public class ContainerSearchFeature extends Feature {
 
         Container container = chestMenu.getContainer();
         for (int i = 0; i < container.getContainerSize(); i++) {
-            if ((currentSearchableContainerType == SearchableContainerType.GUILD_BANK
-                            || currentSearchableContainerType == SearchableContainerType.MEMBER_LIST)
-                    ? i % 9 < 2
-                    : i % 9 > 6) {
-                continue;
-            }
+            if (!currentSearchableContainerType.getBounds().getSlots().contains(i)) continue;
+
             ItemStack itemStack = container.getItem(i);
 
             Optional<WynnItem> wynnItemOpt = Models.Item.getWynnItem(itemStack);
