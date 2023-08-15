@@ -1,9 +1,17 @@
+## [0.0.3-alpha.321](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.320...v0.0.3-alpha.321) (2023-08-15)
+
+
+### New Features
+
+* Search in scrap menu ([#1991](https://github.com/Wynntils/Artemis/issues/1991)) ([41b54dc](https://github.com/Wynntils/Artemis/commit/41b54dc20c6d01540f56422b427a00e71f3eaa31))
+
 ## [0.0.3-alpha.320](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.319...v0.0.3-alpha.320) (2023-08-14)
 
 
 ### Miscellaneous Chores
 
 * Add ProfessionItemProperty ([#2015](https://github.com/Wynntils/Artemis/issues/2015)) ([d053695](https://github.com/Wynntils/Artemis/commit/d053695d9978d1c3ad8c7b4440296c5e5e6e05b2))
+* **release:** v0.0.3-alpha.320 [skip ci] ([9a04e56](https://github.com/Wynntils/Artemis/commit/9a04e56ea7109179b722ac6110b2ae425613266c))
 
 ## [0.0.3-alpha.319](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.318...v0.0.3-alpha.319) (2023-08-14)
 
@@ -36,16 +44,4 @@
 
 * Move Service i18n keys to "service" prefix ([#2005](https://github.com/Wynntils/Artemis/issues/2005)) ([e1d7233](https://github.com/Wynntils/Artemis/commit/e1d72336db3ea0856fe64972356540e33fde23df))
 * **release:** v0.0.3-alpha.317 [skip ci] ([a25056a](https://github.com/Wynntils/Artemis/commit/a25056a3299b2c0ac9dda4ac1337cd8844d9afd8))
-
-## [0.0.3-alpha.316](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.315...v0.0.3-alpha.316) (2023-08-14)
-
-
-### New Features
-
-* leq and geq aliases for lte gte functions ([#2009](https://github.com/Wynntils/Artemis/issues/2009)) ([9580f80](https://github.com/Wynntils/Artemis/commit/9580f808ee8eedbb48f7412c0c57132c594940db))
-
-
-### Miscellaneous Chores
-
-* **release:** v0.0.3-alpha.316 [skip ci] ([00d104d](https://github.com/Wynntils/Artemis/commit/00d104d593b641830b676912ff60d2b8b19f10b0))
 
