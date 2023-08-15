@@ -9,6 +9,8 @@ import com.wynntils.core.consumers.functions.Function;
 import com.wynntils.core.consumers.functions.arguments.FunctionArguments;
 import com.wynntils.core.text.PartStyle;
 import com.wynntils.core.text.StyledText;
+import com.wynntils.models.containers.type.InventoryAccessory;
+import com.wynntils.models.containers.type.InventoryArmor;
 import com.wynntils.models.items.WynnItem;
 import com.wynntils.models.items.properties.DurableItemProperty;
 import com.wynntils.utils.mc.McUtils;
@@ -19,6 +21,50 @@ import net.minecraft.world.InteractionHand;
 import net.minecraft.world.item.ItemStack;
 
 public class InventoryFunctions {
+    public static class AccessoryDurabilityFunction extends Function<CappedValue> {
+        @Override
+        public CappedValue getValue(FunctionArguments arguments) {
+            InventoryAccessory inventoryAccessory = InventoryAccessory.fromString(
+                    arguments.getArgument("accessory").getStringValue());
+            if (inventoryAccessory == null) return CappedValue.EMPTY;
+
+            Optional<DurableItemProperty> durableItemOpt = Models.Item.asWynnItemPropery(
+                    McUtils.inventory().items.get(inventoryAccessory.getSlot()), DurableItemProperty.class);
+
+            if (durableItemOpt.isEmpty()) return CappedValue.EMPTY;
+
+            return durableItemOpt.get().getDurability();
+        }
+
+        @Override
+        public FunctionArguments.Builder getArgumentsBuilder() {
+            return new FunctionArguments.RequiredArgumentBuilder(
+                    List.of(new FunctionArguments.Argument<>("accessory", String.class, null)));
+        }
+    }
+
+    public static class ArmorDurabilityFunction extends Function<CappedValue> {
+        @Override
+        public CappedValue getValue(FunctionArguments arguments) {
+            InventoryArmor inventoryArmor =
+                    InventoryArmor.fromString(arguments.getArgument("armor").getStringValue());
+            if (inventoryArmor == null) return CappedValue.EMPTY;
+
+            Optional<DurableItemProperty> durableItemOpt = Models.Item.asWynnItemPropery(
+                    McUtils.inventory().armor.get(inventoryArmor.getSlot()), DurableItemProperty.class);
+
+            if (durableItemOpt.isEmpty()) return CappedValue.EMPTY;
+
+            return durableItemOpt.get().getDurability();
+        }
+
+        @Override
+        public FunctionArguments.Builder getArgumentsBuilder() {
+            return new FunctionArguments.RequiredArgumentBuilder(
+                    List.of(new FunctionArguments.Argument<>("armor", String.class, null)));
+        }
+    }
+
     public static class CappedInventorySlotsFunction extends Function<CappedValue> {
         @Override
         public CappedValue getValue(FunctionArguments arguments) {
