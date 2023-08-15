@@ -27,12 +27,12 @@ public abstract class PersistedValue<T> implements Comparable<PersistedValue<T>>
 
     public String getJsonName() {
         // Available after owner is registered in registerOwner()
-        return Managers.Persisted.getMetadata(this).getJsonName();
+        return Managers.Persisted.getMetadata(this).jsonName();
     }
 
     public Type getType() {
         // Available after owner is registered in registerOwner()
-        return Managers.Persisted.getMetadata(this).getValueType();
+        return Managers.Persisted.getMetadata(this).valueType();
     }
 
     // This can only be called from Managers.Persisted, since all writes to the

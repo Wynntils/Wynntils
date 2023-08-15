@@ -558,7 +558,7 @@ public class ConfigCommand extends Command {
             return 0;
         }
 
-        T oldValue = config.getValue();
+        T oldValue = config.get();
         String oldValueString = config.getValueString();
 
         if (Objects.equals(oldValue, parsedValue)) {
