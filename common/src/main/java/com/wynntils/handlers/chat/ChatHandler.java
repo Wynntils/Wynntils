@@ -118,6 +118,18 @@ public final class ChatHandler extends Handler {
             }
             // If we are not separating NPCs, just pass the chat screen right on. We can do
             // nothing about it.
+            // FIXME: This is a temporary solution. We don't classify NPC messages correctly, they are marked as INFO.
+            //        Even if we don't separate NPC messages, we should still classify them correctly.
+            //        However, this hack allows us to disable the NPC dialog extraction feature (/overlay), and still
+            // get
+            //        the dialog in the chat window.
+            Component updatedMessage = postChatLine(message, styledText, MessageType.FOREGROUND);
+
+            if (updatedMessage == null) {
+                e.setCanceled(true);
+            } else if (!updatedMessage.equals(message)) {
+                e.setMessage(updatedMessage);
+            }
         } else {
             // No, it's a normal one line chat
             Component updatedMessage = postChatLine(message, styledText, MessageType.FOREGROUND);
