@@ -1,9 +1,21 @@
+## [0.0.3-alpha.323](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.322...v0.0.3-alpha.323) (2023-08-16)
+
+
+### Bug Fixes
+
+* Temporarily disable NpcDialogueOverlayFeature ([#2017](https://github.com/Wynntils/Artemis/issues/2017)) ([45b4aec](https://github.com/Wynntils/Artemis/commit/45b4aece9fb8a9bff53452cb0c53a8791fdc8ec9))
+
 ## [0.0.3-alpha.322](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.321...v0.0.3-alpha.322) (2023-08-15)
 
 
 ### New Features
 
 * Armor and accessory durability functions ([#2013](https://github.com/Wynntils/Artemis/issues/2013)) ([607914d](https://github.com/Wynntils/Artemis/commit/607914dfad79617cb076fae56a03092c11a1237e))
+
+
+### Miscellaneous Chores
+
+* **release:** v0.0.3-alpha.322 [skip ci] ([0f5d7dd](https://github.com/Wynntils/Artemis/commit/0f5d7dde0cef4f4acc37cbd1930a85dbf23b783f))
 
 ## [0.0.3-alpha.321](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.320...v0.0.3-alpha.321) (2023-08-15)
 
@@ -36,16 +48,4 @@
 ### Miscellaneous Chores
 
 * **release:** v0.0.3-alpha.319 [skip ci] ([95ad39e](https://github.com/Wynntils/Artemis/commit/95ad39efa1c9a1390bab316ab21340d579d8d5aa))
-
-## [0.0.3-alpha.318](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.317...v0.0.3-alpha.318) (2023-08-14)
-
-
-### Miscellaneous Chores
-
-* **release:** v0.0.3-alpha.318 [skip ci] ([a7891ff](https://github.com/Wynntils/Artemis/commit/a7891ffe5bbe708dec5171414a544cd34af99faa))
-
-
-### Code Refactoring
-
-* Follow-up work after PersistedMetadata changes ([#1987](https://github.com/Wynntils/Artemis/issues/1987)) ([4ae4855](https://github.com/Wynntils/Artemis/commit/4ae485592079f9bcb0c7fda2a2fdcbbf1c09743e))
 
