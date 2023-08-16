@@ -20,8 +20,8 @@ public class ShinyModel extends Model {
         super(List.of());
     }
 
-    public Optional<ShinyStat> getShinyStat(ItemStack item) {
-        Optional<GearItem> gearItemOpt = Models.Item.asWynnItem(item, GearItem.class);
+    public Optional<ShinyStat> getShinyStat(ItemStack itemStack) {
+        Optional<GearItem> gearItemOpt = Models.Item.asWynnItem(itemStack, GearItem.class);
 
         if (gearItemOpt.isEmpty()) return Optional.empty();
 
@@ -35,8 +35,8 @@ public class ShinyModel extends Model {
         List<ShinyStat> allShinies = new ArrayList<>();
         int size = McUtils.inventory().getContainerSize();
         for (int i = 0; i < size; i++) {
-            ItemStack item = McUtils.inventory().getItem(i);
-            Optional<ShinyStat> shinyOpt = getShinyStat(item);
+            ItemStack itemStack = McUtils.inventory().getItem(i);
+            Optional<ShinyStat> shinyOpt = getShinyStat(itemStack);
             if (shinyOpt.isPresent()) {
                 allShinies.add(shinyOpt.get());
             }
