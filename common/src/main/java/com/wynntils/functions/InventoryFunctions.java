@@ -13,11 +13,13 @@ import com.wynntils.models.containers.type.InventoryAccessory;
 import com.wynntils.models.containers.type.InventoryArmor;
 import com.wynntils.models.items.WynnItem;
 import com.wynntils.models.items.properties.DurableItemProperty;
+import com.wynntils.models.stats.type.ShinyStat;
 import com.wynntils.utils.mc.McUtils;
 import com.wynntils.utils.type.CappedValue;
 import com.wynntils.utils.wynn.InventoryUtils;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 import net.minecraft.world.item.ItemStack;
 
 public class InventoryFunctions {
@@ -40,6 +42,14 @@ public class InventoryFunctions {
         public FunctionArguments.Builder getArgumentsBuilder() {
             return new FunctionArguments.RequiredArgumentBuilder(
                     List.of(new FunctionArguments.Argument<>("accessory", String.class, null)));
+        }
+    }
+
+    public static class AllShinyStatsFunction extends Function<String> {
+        @Override
+        public String getValue(FunctionArguments arguments) {
+            List<ShinyStat> allShinyStats = Models.Shiny.getAllShinyStats();
+            return allShinyStats.stream().map(s -> s.name() + ": " + s.value()).collect(Collectors.joining("\n"));
         }
     }
 
@@ -235,6 +245,17 @@ public class InventoryFunctions {
         @Override
         protected List<String> getAliases() {
             return List.of("max_held_durability");
+        }
+    }
+
+    public static class HeldItemShinyStatFunction extends Function<String> {
+        @Override
+        public String getValue(FunctionArguments arguments) {
+            ItemStack itemStack = InventoryUtils.getItemInHand();
+            Optional<ShinyStat> shinyStatOpt = Models.Shiny.getShinyStat(itemStack);
+            if (shinyStatOpt.isEmpty()) return "";
+
+            return shinyStatOpt.get().name() + ": " + shinyStatOpt.get().value();
         }
     }
 
