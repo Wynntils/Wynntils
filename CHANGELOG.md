@@ -1,9 +1,21 @@
+## [0.0.3-alpha.324](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.323...v0.0.3-alpha.324) (2023-08-16)
+
+
+### Bug Fixes
+
+* Add a fix to show npc dialogue in chat with chat tabs enabled (classified as INFO) ([#2018](https://github.com/Wynntils/Artemis/issues/2018)) ([1d301b8](https://github.com/Wynntils/Artemis/commit/1d301b81d8bee5c7cf91e15fdd48f81e09aa2447))
+
 ## [0.0.3-alpha.323](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.322...v0.0.3-alpha.323) (2023-08-16)
 
 
 ### Bug Fixes
 
 * Temporarily disable NpcDialogueOverlayFeature ([#2017](https://github.com/Wynntils/Artemis/issues/2017)) ([45b4aec](https://github.com/Wynntils/Artemis/commit/45b4aece9fb8a9bff53452cb0c53a8791fdc8ec9))
+
+
+### Miscellaneous Chores
+
+* **release:** v0.0.3-alpha.323 [skip ci] ([0dbe37f](https://github.com/Wynntils/Artemis/commit/0dbe37f02fbc2cab4dc6f702e85e1b97fdee72f5))
 
 ## [0.0.3-alpha.322](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.321...v0.0.3-alpha.322) (2023-08-15)
 
@@ -36,16 +48,4 @@
 
 * Add ProfessionItemProperty ([#2015](https://github.com/Wynntils/Artemis/issues/2015)) ([d053695](https://github.com/Wynntils/Artemis/commit/d053695d9978d1c3ad8c7b4440296c5e5e6e05b2))
 * **release:** v0.0.3-alpha.320 [skip ci] ([9a04e56](https://github.com/Wynntils/Artemis/commit/9a04e56ea7109179b722ac6110b2ae425613266c))
-
-## [0.0.3-alpha.319](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.318...v0.0.3-alpha.319) (2023-08-14)
-
-
-### New Features
-
-* Undercut setting for price match buttons ([#2010](https://github.com/Wynntils/Artemis/issues/2010)) ([f5896e2](https://github.com/Wynntils/Artemis/commit/f5896e23f33d51c7d0a47e4445f0a4a83a92419b))
-
-
-### Miscellaneous Chores
-
-* **release:** v0.0.3-alpha.319 [skip ci] ([95ad39e](https://github.com/Wynntils/Artemis/commit/95ad39efa1c9a1390bab316ab21340d579d8d5aa))
 
