@@ -1,9 +1,21 @@
+## [0.0.3-alpha.325](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.324...v0.0.3-alpha.325) (2023-08-16)
+
+
+### Bug Fixes
+
+* Fix middle click adding multiple waypoints on main map ([#2020](https://github.com/Wynntils/Artemis/issues/2020)) ([77d963d](https://github.com/Wynntils/Artemis/commit/77d963de72a3d339c72abb690312aa6647b50db7))
+
 ## [0.0.3-alpha.324](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.323...v0.0.3-alpha.324) (2023-08-16)
 
 
 ### Bug Fixes
 
 * Add a fix to show npc dialogue in chat with chat tabs enabled (classified as INFO) ([#2018](https://github.com/Wynntils/Artemis/issues/2018)) ([1d301b8](https://github.com/Wynntils/Artemis/commit/1d301b81d8bee5c7cf91e15fdd48f81e09aa2447))
+
+
+### Miscellaneous Chores
+
+* **release:** v0.0.3-alpha.324 [skip ci] ([f6675da](https://github.com/Wynntils/Artemis/commit/f6675da100403b9951648c82e4b4e4969515add0))
 
 ## [0.0.3-alpha.323](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.322...v0.0.3-alpha.323) (2023-08-16)
 
@@ -40,12 +52,4 @@
 ### Miscellaneous Chores
 
 * **release:** v0.0.3-alpha.321 [skip ci] ([4794933](https://github.com/Wynntils/Artemis/commit/47949333894321f14a1353dc70726076a413040a))
-
-## [0.0.3-alpha.320](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.319...v0.0.3-alpha.320) (2023-08-14)
-
-
-### Miscellaneous Chores
-
-* Add ProfessionItemProperty ([#2015](https://github.com/Wynntils/Artemis/issues/2015)) ([d053695](https://github.com/Wynntils/Artemis/commit/d053695d9978d1c3ad8c7b4440296c5e5e6e05b2))
-* **release:** v0.0.3-alpha.320 [skip ci] ([9a04e56](https://github.com/Wynntils/Artemis/commit/9a04e56ea7109179b722ac6110b2ae425613266c))
 
