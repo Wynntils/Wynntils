@@ -1,9 +1,21 @@
+## [0.0.3-alpha.326](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.325...v0.0.3-alpha.326) (2023-08-17)
+
+
+### Code Refactoring
+
+* Organise textures directory ([#2007](https://github.com/Wynntils/Artemis/issues/2007)) ([3211eed](https://github.com/Wynntils/Artemis/commit/3211eede5edbfe284e41bccf43030a9083cb652c))
+
 ## [0.0.3-alpha.325](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.324...v0.0.3-alpha.325) (2023-08-16)
 
 
 ### Bug Fixes
 
 * Fix middle click adding multiple waypoints on main map ([#2020](https://github.com/Wynntils/Artemis/issues/2020)) ([77d963d](https://github.com/Wynntils/Artemis/commit/77d963de72a3d339c72abb690312aa6647b50db7))
+
+
+### Miscellaneous Chores
+
+* **release:** v0.0.3-alpha.325 [skip ci] ([094b7a6](https://github.com/Wynntils/Artemis/commit/094b7a640bf54ec4e0cf91a6ba2f0681e7c4660c))
 
 ## [0.0.3-alpha.324](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.323...v0.0.3-alpha.324) (2023-08-16)
 
@@ -40,16 +52,4 @@
 ### Miscellaneous Chores
 
 * **release:** v0.0.3-alpha.322 [skip ci] ([0f5d7dd](https://github.com/Wynntils/Artemis/commit/0f5d7dde0cef4f4acc37cbd1930a85dbf23b783f))
-
-## [0.0.3-alpha.321](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.320...v0.0.3-alpha.321) (2023-08-15)
-
-
-### New Features
-
-* Search in scrap menu ([#1991](https://github.com/Wynntils/Artemis/issues/1991)) ([41b54dc](https://github.com/Wynntils/Artemis/commit/41b54dc20c6d01540f56422b427a00e71f3eaa31))
-
-
-### Miscellaneous Chores
-
-* **release:** v0.0.3-alpha.321 [skip ci] ([4794933](https://github.com/Wynntils/Artemis/commit/47949333894321f14a1353dc70726076a413040a))
 
