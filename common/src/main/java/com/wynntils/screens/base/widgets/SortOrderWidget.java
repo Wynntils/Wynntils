@@ -36,9 +36,9 @@ public class SortOrderWidget extends WynntilsButton implements TooltipProvider {
     public void renderWidget(PoseStack poseStack, int mouseX, int mouseY, float partialTick) {
         Texture sortTexture =
                 switch (sortableActivityScreen.getActivitySortOrder()) {
-                    case LEVEL -> Texture.SORT_LEVEL;
-                    case DISTANCE -> Texture.SORT_DISTANCE;
-                    case ALPHABETIC -> Texture.SORT_ALPHABETICALLY;
+                    case LEVEL -> Texture.SORT_LEVEL_OFFSET;
+                    case DISTANCE -> Texture.SORT_DISTANCE_OFFSET;
+                    case ALPHABETIC -> Texture.SORT_ALPHABETICALLY_OFFSET;
                 };
 
         float renderX = this.getX();

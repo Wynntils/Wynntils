@@ -51,7 +51,7 @@ public class DisconnectButton extends WynntilsButton {
                 this.width,
                 this.height,
                 0,
-                0,
+                isHovered ? 0 : Texture.DISCONNECT_BUTTON.height() / 2,
                 Texture.DISCONNECT_BUTTON.width(),
                 Texture.DISCONNECT_BUTTON.height() / 2,
                 Texture.DISCONNECT_BUTTON.width(),
