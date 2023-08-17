@@ -29,14 +29,14 @@ public class ContainerBounds {
         this.endCol = endCol;
 
         // All container slots are numbered from 0 to (totalRows * 9) - 1
-        for (int slot = 0; slot < endRow * 9; slot++) {
+        for (int slot = 0; slot < (endRow + 1) * 9; slot++) {
             if (isInBounds(slot)) {
                 slots.add(slot);
             }
         }
     }
 
-    public boolean isInBounds(int slot) {
+    private boolean isInBounds(int slot) {
         int row = slot / 9;
         int col = slot % 9;
         return row >= startRow && row <= endRow && col >= startCol && col <= endCol;
