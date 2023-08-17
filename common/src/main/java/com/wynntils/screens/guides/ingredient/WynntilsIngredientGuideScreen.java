@@ -44,24 +44,24 @@ public final class WynntilsIngredientGuideScreen
         super.doInit();
 
         this.addRenderableWidget(new BackButton(
-                (int) ((Texture.QUEST_BOOK_BACKGROUND.width() / 2f - 16) / 2f),
+                (int) ((Texture.CONTENT_BOOK_BACKGROUND.width() / 2f - 16) / 2f),
                 65,
-                Texture.BACK_ARROW.width() / 2,
-                Texture.BACK_ARROW.height(),
+                Texture.BACK_ARROW_OFFSET.width() / 2,
+                Texture.BACK_ARROW_OFFSET.height(),
                 WynntilsGuidesListScreen.create()));
 
         this.addRenderableWidget(new PageSelectorButton(
-                Texture.QUEST_BOOK_BACKGROUND.width() / 2 + 50 - Texture.FORWARD_ARROW.width() / 2,
-                Texture.QUEST_BOOK_BACKGROUND.height() - 25,
-                Texture.FORWARD_ARROW.width() / 2,
-                Texture.FORWARD_ARROW.height(),
+                Texture.CONTENT_BOOK_BACKGROUND.width() / 2 + 50 - Texture.FORWARD_ARROW_OFFSET.width() / 2,
+                Texture.CONTENT_BOOK_BACKGROUND.height() - 25,
+                Texture.FORWARD_ARROW_OFFSET.width() / 2,
+                Texture.FORWARD_ARROW_OFFSET.height(),
                 false,
                 this));
         this.addRenderableWidget(new PageSelectorButton(
-                Texture.QUEST_BOOK_BACKGROUND.width() - 50,
-                Texture.QUEST_BOOK_BACKGROUND.height() - 25,
-                Texture.FORWARD_ARROW.width() / 2,
-                Texture.FORWARD_ARROW.height(),
+                Texture.CONTENT_BOOK_BACKGROUND.width() - 50,
+                Texture.CONTENT_BOOK_BACKGROUND.height() - 25,
+                Texture.FORWARD_ARROW_OFFSET.width() / 2,
+                Texture.FORWARD_ARROW_OFFSET.height(),
                 true,
                 this));
     }
@@ -93,10 +93,10 @@ public final class WynntilsIngredientGuideScreen
 
     @Override
     protected void renderTitle(PoseStack poseStack, String titleString) {
-        int txWidth = Texture.QUEST_BOOK_TITLE.width();
-        int txHeight = Texture.QUEST_BOOK_TITLE.height();
+        int txWidth = Texture.CONTENT_BOOK_TITLE.width();
+        int txHeight = Texture.CONTENT_BOOK_TITLE.height();
         RenderUtils.drawScalingTexturedRect(
-                poseStack, Texture.QUEST_BOOK_TITLE.resource(), 0, 30, 0, txWidth, txHeight, txWidth, txHeight);
+                poseStack, Texture.CONTENT_BOOK_TITLE.resource(), 0, 30, 0, txWidth, txHeight, txWidth, txHeight);
 
         poseStack.pushPose();
         poseStack.translate(10, 36, 0);
@@ -128,7 +128,7 @@ public final class WynntilsIngredientGuideScreen
                 .renderText(
                         poseStack,
                         StyledText.fromString(I18n.get("screens.wynntils.wynntilsGuides.itemGuide.available")),
-                        Texture.QUEST_BOOK_BACKGROUND.width() * 0.75f,
+                        Texture.CONTENT_BOOK_BACKGROUND.width() * 0.75f,
                         30,
                         CommonColors.BLACK,
                         HorizontalAlignment.CENTER,
@@ -142,7 +142,12 @@ public final class WynntilsIngredientGuideScreen
         int yOffset = ((i % getElementsPerPage()) / ELEMENTS_COLUMNS) * 20;
 
         return new GuideIngredientItemStackButton(
-                xOffset + Texture.QUEST_BOOK_BACKGROUND.width() / 2 + 13, yOffset + 43, 18, 18, elements.get(i), this);
+                xOffset + Texture.CONTENT_BOOK_BACKGROUND.width() / 2 + 13,
+                yOffset + 43,
+                18,
+                18,
+                elements.get(i),
+                this);
     }
 
     @Override

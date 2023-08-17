@@ -31,14 +31,14 @@ public class ActivityMarkerProvider implements MarkerProvider<MarkerPoi> {
                         new MarkerInfo(
                                 ACTIVITY_LOCATION_NAME,
                                 new StaticLocationSupplier(spawnLocation),
-                                Texture.QUESTS_BUTTON,
+                                Texture.QUESTS_SCROLL_ICON,
                                 CommonColors.WHITE,
                                 CommonColors.WHITE,
                                 CommonColors.WHITE),
                         new MarkerPoi(
                                 PoiLocation.fromLocation(spawnLocation),
                                 ACTIVITY_LOCATION_NAME,
-                                Texture.QUESTS_BUTTON));
+                                Texture.QUESTS_SCROLL_ICON));
     }
 
     public Location getSpawnLocation() {
@@ -53,14 +53,14 @@ public class ActivityMarkerProvider implements MarkerProvider<MarkerPoi> {
                         new MarkerInfo(
                                 ACTIVITY_LOCATION_NAME,
                                 new StaticLocationSupplier(trackedActivityLocation),
-                                Texture.QUESTS_BUTTON,
+                                Texture.QUESTS_SCROLL_ICON,
                                 beaconColor.getColor(),
                                 CommonColors.WHITE,
                                 CommonColors.WHITE),
                         new MarkerPoi(
                                 PoiLocation.fromLocation(trackedActivityLocation),
                                 ACTIVITY_LOCATION_NAME,
-                                Texture.QUESTS_BUTTON));
+                                Texture.QUESTS_SCROLL_ICON));
     }
 
     public Location getTrackedActivityLocation() {

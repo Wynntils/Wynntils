@@ -72,7 +72,7 @@ public final class SeaskipperMapScreen extends AbstractMapScreen {
                         - 6),
                 16,
                 16,
-                Texture.MAP_MANAGER_BUTTON,
+                Texture.WAYPOINT_MANAGER_ICON,
                 (b) -> toggleRoutes(),
                 List.of(
                         Component.literal("[>] ")
@@ -89,7 +89,7 @@ public final class SeaskipperMapScreen extends AbstractMapScreen {
                         - 6),
                 16,
                 16,
-                Texture.MAP_ADD_BUTTON,
+                Texture.ADD_ICON,
                 (b) -> toggleDestinations(),
                 List.of(
                         Component.literal("[>] ")
@@ -108,7 +108,7 @@ public final class SeaskipperMapScreen extends AbstractMapScreen {
                         - 6),
                 16,
                 16,
-                Texture.MAP_OVERLAY_BUTTON,
+                Texture.OVERLAY_EXTRA_ICON,
                 (b) -> toggleBorders(),
                 List.of(
                         Component.literal("[>] ")
@@ -125,7 +125,7 @@ public final class SeaskipperMapScreen extends AbstractMapScreen {
                         - 6),
                 16,
                 16,
-                Texture.MAP_BOAT_BUTTON,
+                Texture.BOAT_ICON,
                 (b) -> Models.Seaskipper.purchaseBoat(),
                 List.of(
                         Component.literal("[>] ")
@@ -280,20 +280,20 @@ public final class SeaskipperMapScreen extends AbstractMapScreen {
         boolean isAccessible = hoveredPoi.isAvailable();
 
         final float centerHeight = isAccessible ? 50 : 30;
-        final int textureWidth = Texture.TERRITORY_TOOLTIP_CENTER.width();
+        final int textureWidth = Texture.MAP_INFO_TOOLTIP_CENTER.width();
 
-        RenderUtils.drawTexturedRect(poseStack, Texture.TERRITORY_TOOLTIP_TOP, 0, 0);
+        RenderUtils.drawTexturedRect(poseStack, Texture.MAP_INFO_TOOLTIP_TOP, 0, 0);
         RenderUtils.drawTexturedRect(
                 poseStack,
-                Texture.TERRITORY_TOOLTIP_CENTER.resource(),
+                Texture.MAP_INFO_TOOLTIP_CENTER.resource(),
                 0,
-                Texture.TERRITORY_TOOLTIP_TOP.height(),
+                Texture.MAP_INFO_TOOLTIP_TOP.height(),
                 textureWidth,
                 centerHeight,
                 textureWidth,
-                Texture.TERRITORY_TOOLTIP_CENTER.height());
+                Texture.MAP_INFO_TOOLTIP_CENTER.height());
         RenderUtils.drawTexturedRect(
-                poseStack, Texture.TERRITORY_NAME_BOX, 0, Texture.TERRITORY_TOOLTIP_TOP.height() + centerHeight);
+                poseStack, Texture.MAP_INFO_NAME_BOX, 0, Texture.MAP_INFO_TOOLTIP_TOP.height() + centerHeight);
 
         FontRenderer.getInstance()
                 .renderText(
@@ -372,8 +372,8 @@ public final class SeaskipperMapScreen extends AbstractMapScreen {
                         StyledText.fromString(hoveredPoi.getName()),
                         7,
                         textureWidth,
-                        Texture.TERRITORY_TOOLTIP_TOP.height() + centerHeight,
-                        Texture.TERRITORY_TOOLTIP_TOP.height() + centerHeight + Texture.TERRITORY_NAME_BOX.height(),
+                        Texture.MAP_INFO_TOOLTIP_TOP.height() + centerHeight,
+                        Texture.MAP_INFO_TOOLTIP_TOP.height() + centerHeight + Texture.MAP_INFO_NAME_BOX.height(),
                         0,
                         CommonColors.WHITE,
                         HorizontalAlignment.LEFT,
