@@ -7,21 +7,29 @@ package com.wynntils.screens.maps;
 import com.google.gson.JsonSyntaxException;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.wynntils.core.components.Managers;
+import com.wynntils.core.components.Services;
 import com.wynntils.core.consumers.screens.WynntilsScreen;
 import com.wynntils.core.persisted.config.HiddenConfig;
 import com.wynntils.core.text.StyledText;
 import com.wynntils.features.map.MainMapFeature;
+import com.wynntils.screens.base.TextboxScreen;
+import com.wynntils.screens.base.widgets.BasicTexturedButton;
+import com.wynntils.screens.base.widgets.TextInputBoxWidget;
 import com.wynntils.screens.maps.widgets.PoiManagerWidget;
 import com.wynntils.services.map.pois.CustomPoi;
+import com.wynntils.utils.MathUtils;
+import com.wynntils.utils.StringUtils;
 import com.wynntils.utils.colors.CommonColors;
 import com.wynntils.utils.mc.McUtils;
 import com.wynntils.utils.render.FontRenderer;
 import com.wynntils.utils.render.RenderUtils;
+import com.wynntils.utils.render.Texture;
 import com.wynntils.utils.render.type.HorizontalAlignment;
 import com.wynntils.utils.render.type.TextShadow;
 import com.wynntils.utils.render.type.VerticalAlignment;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 import java.util.stream.Stream;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.gui.components.AbstractWidget;
@@ -31,19 +39,39 @@ import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.resources.language.I18n;
 import net.minecraft.network.chat.Component;
 
-public final class PoiManagementScreen extends WynntilsScreen {
-    private final MainMapScreen oldMapScreen;
+public final class PoiManagementScreen extends WynntilsScreen implements TextboxScreen {
+    private static final float GRID_DIVISIONS = 64.0f;
+    private static final int GRID_ROWS_PER_PAGE = 44;
+    private static final int HEADER_HEIGHT = 12;
+    private static final int STARTING_WIDGET_ROW = 13;
 
-    private Button nextButton;
-    private Button previousButton;
-    private Button undoDeleteButton;
-
-    private List<CustomPoi> waypoints;
-    private int pageHeight;
-    private int currentPage;
+    private final List<AbstractWidget> poiManagerWidgets = new ArrayList<>();
     private final List<CustomPoi> deletedPois = new ArrayList<>();
     private final List<Integer> deletedIndexes = new ArrayList<>();
-    private final List<AbstractWidget> poiManagerWidgets = new ArrayList<>();
+    private final List<Texture> iconFilters = new ArrayList<>();
+    private final MainMapScreen oldMapScreen;
+
+    private Button filterAllButton;
+    private Button undoDeleteButton;
+    private float backgroundHeight;
+    private float backgroundWidth;
+    private float backgroundX;
+    private float backgroundY;
+    private float dividedHeight;
+    private float dividedWidth;
+    private float scrollButtonheight;
+    private int bottomDisplayedIndex;
+    private int maxPoisToDisplay;
+    private int topDisplayedIndex = 0;
+    private List<CustomPoi> waypoints;
+    private List<Texture> usedIcons = new ArrayList<>();
+    private TextInputBoxWidget focusedTextInput;
+    private TextInputBoxWidget searchInput;
+    private boolean renderGrid = false;
+
+    private void toggleGrid() {
+        renderGrid = !renderGrid;
+    }
 
     private PoiManagementScreen(MainMapScreen oldMapScreen) {
         super(Component.literal("Poi Management Screen"));
@@ -66,61 +94,76 @@ public final class PoiManagementScreen extends WynntilsScreen {
 
     @Override
     protected void doInit() {
-        pageHeight = (this.height - 100) / 20;
+        dividedWidth = this.width / GRID_DIVISIONS;
+        dividedHeight = this.height / GRID_DIVISIONS;
+        maxPoisToDisplay = (int) (dividedHeight * GRID_ROWS_PER_PAGE) / 20;
+        backgroundX = dividedWidth * 12;
+        backgroundWidth = dividedWidth * 43;
+        backgroundY = dividedHeight * 7;
+        backgroundHeight = dividedHeight * 50;
+
+        // If keeping this texture, move to ui_components
+        scrollButtonheight = (dividedWidth / Texture.SCROLL_BUTTON.width()) * Texture.SCROLL_BUTTON.height();
+
+        int importExportButtonWidth = (int) (dividedWidth * 6);
 
         this.addRenderableWidget(
                 new Button.Builder(Component.literal("X").withStyle(ChatFormatting.RED), (button) -> this.onClose())
-                        .pos(this.width - 40, 20)
+                        .pos((int) (dividedWidth * 60), (int) (dividedHeight * 4))
                         .size(20, 20)
                         .build());
 
         this.addRenderableWidget(
-                nextButton = new Button.Builder(Component.literal(">"), (button) -> nextPage())
-                        .pos(this.width / 2, this.height - 45)
-                        .size(20, 20)
-                        .build());
-
-        this.addRenderableWidget(
-                previousButton = new Button.Builder(Component.literal("<"), (button) -> previousPage())
-                        .pos(this.width / 2 - 20, this.height - 45)
-                        .size(20, 20)
-                        .build());
-
-        this.addRenderableWidget(
-                undoDeleteButton = new Button.Builder(
-                                Component.translatable("screens.wynntils.poiManagementGui.undo"),
-                                (button) -> undoDelete())
-                        .pos(
-                                this.width
-                                        - 25
-                                        - font.width(Component.translatable("screens.wynntils.poiManagementGui.undo")),
-                                this.height - 45)
-                        .size(font.width(Component.translatable("screens.wynntils.poiManagementGui.undo")) + 15, 20)
+                new Button.Builder(Component.literal("Grid").withStyle(ChatFormatting.BLUE), (button) -> toggleGrid())
+                        .pos((int) (dividedWidth * 2), (int) (dividedHeight * 4))
+                        .size(40, 20)
                         .build());
 
         this.addRenderableWidget(new Button.Builder(
                         Component.translatable("screens.wynntils.poiManagementGui.import"),
                         (button) -> importFromClipboard())
-                .pos(
-                        this.width / 2
-                                + 75
-                                - font.width(Component.translatable("screens.wynntils.poiManagementGui.import")),
-                        this.height - 45)
-                .size(font.width(Component.translatable("screens.wynntils.poiManagementGui.import")) + 15, 20)
+                .pos((int) (dividedWidth * 22), (int) (dividedHeight * 58))
+                .size(importExportButtonWidth, 20)
                 .tooltip(Tooltip.create(Component.translatable("screens.wynntils.poiManagementGui.import.tooltip")))
                 .build());
 
         this.addRenderableWidget(new Button.Builder(
                         Component.translatable("screens.wynntils.poiManagementGui.export"),
                         (button) -> exportToClipboard())
-                .pos(
-                        this.width / 2
-                                - 75
-                                - font.width(Component.translatable("screens.wynntils.poiManagementGui.export")),
-                        this.height - 45)
-                .size(font.width(Component.translatable("screens.wynntils.poiManagementGui.export")) + 15, 20)
+                .pos((int) (dividedWidth * 36), (int) (dividedHeight * 58))
+                .size(importExportButtonWidth, 20)
                 .tooltip(Tooltip.create(Component.translatable("screens.wynntils.poiManagementGui.export.tooltip")))
                 .build());
+
+        undoDeleteButton = new Button.Builder(
+                        Component.translatable("screens.wynntils.poiManagementGui.undo"), (button) -> undoDelete())
+                .pos((int) (dividedWidth * 53), (int) (dividedHeight * 58))
+                .size((int) (dividedWidth * 8), 20)
+                .build();
+
+        this.addRenderableWidget(undoDeleteButton);
+
+        searchInput = new TextInputBoxWidget(
+                (int) (dividedWidth * 14) - 5,
+                (int) (dividedHeight * 3),
+                (int) (dividedWidth * 18),
+                20,
+                (s) -> {
+                    topDisplayedIndex = 0;
+                    populatePois();
+                },
+                this,
+                searchInput);
+
+        this.addRenderableWidget(searchInput);
+
+        filterAllButton = this.addRenderableWidget(
+                new Button.Builder(Component.literal("*").withStyle(ChatFormatting.GREEN), (button) -> iconFilters.clear())
+                        .pos((int) (dividedWidth * 32) + 5, (int) (dividedHeight * 3))
+                        .size(20, 20)
+                        .build());
+
+        this.addRenderableWidget(filterAllButton);
 
         if (deletedIndexes.isEmpty()) {
             undoDeleteButton.active = false;
@@ -130,13 +173,247 @@ public final class PoiManagementScreen extends WynntilsScreen {
                 .customPois
                 .get();
 
-        if (currentPage * pageHeight > waypoints.size() - 1) {
-            currentPage = (waypoints.size() - 1) / pageHeight;
-        }
-
-        checkAvailablePages();
+        bottomDisplayedIndex = Math.min(maxPoisToDisplay, waypoints.size() - 1);
 
         populatePois();
+    }
+
+    @Override
+    public void doRender(PoseStack poseStack, int mouseX, int mouseY, float partialTick) {
+        renderBackground(poseStack);
+        renderScrollButton(poseStack);
+        super.doRender(poseStack, mouseX, mouseY, partialTick);
+
+        if (renderGrid) {
+            RenderUtils.renderDebugGrid(poseStack, GRID_DIVISIONS, dividedWidth, dividedHeight);
+        }
+
+        FontRenderer.getInstance()
+                .renderText(
+                        poseStack,
+                        StyledText.fromComponent(Component.translatable("screens.wynntils.poiManagementGui.search")),
+                        (int) (dividedWidth * 14) - 5,
+                        (int) dividedHeight,
+                        CommonColors.WHITE,
+                        HorizontalAlignment.LEFT,
+                        VerticalAlignment.TOP,
+                        TextShadow.NORMAL);
+
+        if (usedIcons.size() > 1) {
+            FontRenderer.getInstance()
+                    .renderText(
+                            poseStack,
+                            StyledText.fromComponent(Component.translatable("screens.wynntils.poiManagementGui.filter")),
+                            (int) (dividedWidth * 32) + 5,
+                            (int) dividedHeight,
+                            CommonColors.WHITE,
+                            HorizontalAlignment.LEFT,
+                            VerticalAlignment.TOP,
+                            TextShadow.NORMAL);
+        }
+
+        FontRenderer.getInstance()
+                .renderText(
+                        poseStack,
+                        StyledText.fromComponent(Component.translatable("screens.wynntils.poiManagementGui.icon")),
+                        (int) (dividedWidth * 15),
+                        (int) (dividedHeight * HEADER_HEIGHT),
+                        CommonColors.WHITE,
+                        HorizontalAlignment.CENTER,
+                        VerticalAlignment.BOTTOM,
+                        TextShadow.NORMAL);
+
+        FontRenderer.getInstance()
+                .renderText(
+                        poseStack,
+                        StyledText.fromComponent(Component.translatable("screens.wynntils.poiManagementGui.name")),
+                        (int) (dividedWidth * 24),
+                        (int) (dividedHeight * HEADER_HEIGHT),
+                        CommonColors.WHITE,
+                        HorizontalAlignment.CENTER,
+                        VerticalAlignment.BOTTOM,
+                        TextShadow.NORMAL);
+
+        FontRenderer.getInstance()
+                .renderText(
+                        poseStack,
+                        StyledText.fromComponent(Component.literal("X")),
+                        (int) (dividedWidth * 34),
+                        (int) (dividedHeight * HEADER_HEIGHT),
+                        CommonColors.WHITE,
+                        HorizontalAlignment.CENTER,
+                        VerticalAlignment.BOTTOM,
+                        TextShadow.NORMAL);
+
+        FontRenderer.getInstance()
+                .renderText(
+                        poseStack,
+                        StyledText.fromComponent(Component.literal("Y")),
+                        (int) (dividedWidth * 37),
+                        (int) (dividedHeight * HEADER_HEIGHT),
+                        CommonColors.WHITE,
+                        HorizontalAlignment.CENTER,
+                        VerticalAlignment.BOTTOM,
+                        TextShadow.NORMAL);
+
+        FontRenderer.getInstance()
+                .renderText(
+                        poseStack,
+                        StyledText.fromComponent(Component.literal("Z")),
+                        (int) (dividedWidth * 40),
+                        (int) (dividedHeight * HEADER_HEIGHT),
+                        CommonColors.WHITE,
+                        HorizontalAlignment.CENTER,
+                        VerticalAlignment.BOTTOM,
+                        TextShadow.NORMAL);
+
+        RenderUtils.drawRect(
+                poseStack,
+                CommonColors.WHITE,
+                (int) (dividedWidth * 14),
+                (int) (dividedHeight * HEADER_HEIGHT),
+                0,
+                (int) (dividedWidth * 36),
+                1);
+    }
+
+    @Override
+    public void renderBackground(PoseStack poseStack) {
+        super.renderBackground(poseStack);
+
+        RenderUtils.drawScalingTexturedRect(
+                poseStack,
+                Texture.WAYPOINT_MANAGER_BACKGROUND.resource(),
+                backgroundX,
+                backgroundY,
+                0,
+                backgroundWidth,
+                backgroundHeight,
+                Texture.WAYPOINT_MANAGER_BACKGROUND.width(),
+                Texture.WAYPOINT_MANAGER_BACKGROUND.height());
+    }
+
+    private void renderScrollButton(PoseStack poseStack) {
+        RenderUtils.drawScalingTexturedRect(
+                poseStack,
+                Texture.SCROLL_BUTTON.resource(),
+                (int) (dividedWidth * 53),
+                (int) (dividedHeight * 10),
+                0,
+                dividedWidth,
+                scrollButtonheight,
+                Texture.SCROLL_BUTTON.width(),
+                Texture.SCROLL_BUTTON.height());
+
+//        RenderUtils.drawScalingTexturedRect(
+//                poseStack,
+//                Texture.SCROLL_BUTTON.resource(),
+//                (int) (dividedWidth * 53),
+//                MathUtils.map(
+//                        scrollOffset,
+//                        0,
+//                        classInfoList.size() - CHARACTER_INFO_PER_PAGE,
+//                        Texture.CHARACTER_LIST_BACKGROUND.height() * currentTextureScale * 0.01f,
+//                        Texture.CHARACTER_LIST_BACKGROUND.height() * currentTextureScale * 0.92f),
+//                0,
+//                Texture.SCROLL_BUTTON.width(),
+//                Texture.SCROLL_BUTTON.height(),
+//                Texture.SCROLL_BUTTON.width(),
+//                Texture.SCROLL_BUTTON.height());
+    }
+
+    @Override
+    public boolean mouseScrolled(double mouseX, double mouseY, double delta) {
+        if (delta < 0.0 && bottomDisplayedIndex < waypoints.size() - 1) {
+            nextPage();
+        } else if (delta > 0.0 && topDisplayedIndex > 0) {
+            previousPage();
+        }
+
+        return true;
+    }
+
+    public void populatePois() {
+        for (AbstractWidget widget : poiManagerWidgets) {
+            this.removeWidget(widget);
+        }
+
+        this.poiManagerWidgets.clear();
+
+        waypoints = Managers.Feature.getFeatureInstance(MainMapFeature.class).customPois.get().stream()
+                .filter(poi -> searchMatches(poi.getName()))
+                .collect(Collectors.toList());
+
+        if (!iconFilters.isEmpty()) {
+            waypoints = Managers.Feature.getFeatureInstance(MainMapFeature.class).customPois.get().stream()
+                    .filter(poi -> iconFilters.contains(poi.getIcon()))
+                    .collect(Collectors.toList());
+        }
+
+        int row = (int) ((int) (dividedHeight * (STARTING_WIDGET_ROW - 1)) + (dividedHeight / 2f));
+
+        for (int i = 0; i < maxPoisToDisplay; i++) {
+            if ((topDisplayedIndex + i) > waypoints.size() - 1) {
+                break;
+            }
+
+            bottomDisplayedIndex = (topDisplayedIndex + i);
+
+            CustomPoi poi = waypoints.get(bottomDisplayedIndex);
+
+            PoiManagerWidget poiWidget =
+                    new PoiManagerWidget((int) (dividedWidth * 14), row, this.width, 20, poi, this, GRID_DIVISIONS);
+
+            row += 20;
+
+            poiManagerWidgets.add(poiWidget);
+
+            this.addRenderableWidget(poiWidget);
+        }
+
+        createIconFilterButtons();
+    }
+
+    private void createIconFilterButtons() {
+        usedIcons = Services.Poi.POI_ICONS.stream()
+                .filter(texture -> waypoints.stream()
+                        .map(CustomPoi::getIcon)
+                        .anyMatch(customPoiTexture -> texture == customPoiTexture))
+                .toList();
+
+        filterAllButton.active = true;
+
+        int xOffset = 22;
+
+        for (Texture icon : usedIcons) {
+            this.addRenderableWidget(new BasicTexturedButton(
+                    (int) (dividedWidth * 32) + xOffset + 5,
+                    (int) (dividedHeight * 3 + 10 - icon.height() / 2f),
+                    20,
+                    20,
+                    icon,
+                    (b) -> {
+                        topDisplayedIndex = 0;
+                        toggleIcon(icon);
+                        populatePois();
+                    },
+                    List.of(Component.literal("Filter your waypoints to include this icon."))
+            ));
+
+            xOffset += 22;
+        }
+    }
+
+    private boolean searchMatches(String poiName) {
+        return StringUtils.partialMatch(poiName, searchInput.getTextBoxInput());
+    }
+
+    private void toggleIcon(Texture icon) {
+        if (iconFilters.contains(icon)) {
+            iconFilters.remove(icon);
+        } else {
+            iconFilters.add(icon);
+        }
     }
 
     private void importFromClipboard() {
@@ -190,123 +467,16 @@ public final class PoiManagementScreen extends WynntilsScreen {
                 .withStyle(ChatFormatting.GREEN));
     }
 
-    @Override
-    public void doRender(PoseStack poseStack, int mouseX, int mouseY, float partialTick) {
-        renderBackground(poseStack);
-        super.doRender(poseStack, mouseX, mouseY, partialTick);
-
-        FontRenderer.getInstance()
-                .renderText(
-                        poseStack,
-                        StyledText.fromString(I18n.get("screens.wynntils.poiManagementGui.icon")),
-                        this.width / 2f - 165,
-                        43,
-                        CommonColors.WHITE,
-                        HorizontalAlignment.LEFT,
-                        VerticalAlignment.TOP,
-                        TextShadow.NORMAL);
-
-        FontRenderer.getInstance()
-                .renderText(
-                        poseStack,
-                        StyledText.fromString(I18n.get("screens.wynntils.poiManagementGui.name")),
-                        this.width / 2f - 130,
-                        43,
-                        CommonColors.WHITE,
-                        HorizontalAlignment.LEFT,
-                        VerticalAlignment.TOP,
-                        TextShadow.NORMAL);
-
-        FontRenderer.getInstance()
-                .renderText(
-                        poseStack,
-                        StyledText.fromString("X"),
-                        this.width / 2f - 15,
-                        43,
-                        CommonColors.WHITE,
-                        HorizontalAlignment.LEFT,
-                        VerticalAlignment.TOP,
-                        TextShadow.NORMAL);
-
-        FontRenderer.getInstance()
-                .renderText(
-                        poseStack,
-                        StyledText.fromString("Y"),
-                        this.width / 2f + 40,
-                        43,
-                        CommonColors.WHITE,
-                        HorizontalAlignment.LEFT,
-                        VerticalAlignment.TOP,
-                        TextShadow.NORMAL);
-
-        FontRenderer.getInstance()
-                .renderText(
-                        poseStack,
-                        StyledText.fromString("Z"),
-                        this.width / 2f + 80,
-                        43,
-                        CommonColors.WHITE,
-                        HorizontalAlignment.LEFT,
-                        VerticalAlignment.TOP,
-                        TextShadow.NORMAL);
-
-        RenderUtils.drawRect(poseStack, CommonColors.WHITE, this.width / 2 - 165, 52, 0, 355, 1);
-    }
-
-    @Override
-    public boolean mouseScrolled(double mouseX, double mouseY, double delta) {
-        if (delta < 0.0 && nextButton.active) {
-            nextPage();
-        } else if (delta > 0.0 && previousButton.active) {
-            previousPage();
-        }
-
-        return true;
-    }
-
-    public void populatePois() {
-        for (AbstractWidget widget : poiManagerWidgets) {
-            this.removeWidget(widget);
-        }
-
-        this.poiManagerWidgets.clear();
-
-        waypoints = Managers.Feature.getFeatureInstance(MainMapFeature.class)
-                .customPois
-                .get();
-
-        if (Math.min(pageHeight, waypoints.size() - pageHeight * currentPage) == 0 && currentPage != 0) {
-            previousPage();
-        }
-
-        for (int i = 0; i < Math.min(pageHeight, waypoints.size() - pageHeight * currentPage); i++) {
-            CustomPoi poi = waypoints.get(currentPage * pageHeight + i);
-
-            PoiManagerWidget newWidget = new PoiManagerWidget(0, 0, this.width, this.height, poi, i, this);
-
-            poiManagerWidgets.add(newWidget);
-
-            this.addRenderableWidget(newWidget);
-        }
-
-        checkAvailablePages();
-    }
-
     private void nextPage() {
-        currentPage++;
-        checkAvailablePages();
+        topDisplayedIndex++;
+        bottomDisplayedIndex++;
         populatePois();
     }
 
     private void previousPage() {
-        currentPage--;
-        checkAvailablePages();
+        topDisplayedIndex--;
+        bottomDisplayedIndex--;
         populatePois();
-    }
-
-    private void checkAvailablePages() {
-        nextButton.active = waypoints.size() - currentPage * pageHeight > pageHeight;
-        previousButton.active = currentPage > 0;
     }
 
     public void setLastDeletedPoi(CustomPoi deletedPoi, int deletedPoiIndex) {
@@ -330,5 +500,15 @@ public final class PoiManagementScreen extends WynntilsScreen {
         }
 
         populatePois();
+    }
+
+    @Override
+    public TextInputBoxWidget getFocusedTextInput() {
+        return focusedTextInput;
+    }
+
+    @Override
+    public void setFocusedTextInput(TextInputBoxWidget focusedTextInput) {
+        this.focusedTextInput = focusedTextInput;
     }
 }

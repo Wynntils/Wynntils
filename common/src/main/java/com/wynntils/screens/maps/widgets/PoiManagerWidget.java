@@ -36,18 +36,31 @@ public class PoiManagerWidget extends AbstractWidget {
     private final Button deleteButton;
     private final Button upButton;
     private final Button downButton;
-    private final int row;
-    private final PoiManagementScreen managementScreen;
+    private final float dividedWidth;
+    private final int x;
+    private final int y;
     private final List<CustomPoi> pois;
+    private final PoiManagementScreen managementScreen;
 
     private CustomColor color;
 
     public PoiManagerWidget(
-            float x, float y, int width, int height, CustomPoi poi, int row, PoiManagementScreen managementScreen) {
-        super((int) x, (int) y, width, height, Component.literal(poi.getName()));
+            int x,
+            int y,
+            int width,
+            int height,
+            CustomPoi poi,
+            PoiManagementScreen managementScreen,
+            float gridDivisions) {
+        super(x, y, width, height, Component.literal(poi.getName()));
+        this.x = x;
+        this.y = y;
         this.poi = poi;
-        this.row = row;
         this.managementScreen = managementScreen;
+
+        dividedWidth = width / gridDivisions;
+
+        int manageButtonsWidth = (int) (dividedWidth * 4);
 
         pois = Managers.Feature.getFeatureInstance(MainMapFeature.class)
                 .customPois
@@ -62,8 +75,8 @@ public class PoiManagerWidget extends AbstractWidget {
         this.editButton = new Button.Builder(
                         Component.translatable("screens.wynntils.poiManagementGui.edit"),
                         (button) -> McUtils.mc().setScreen(PoiCreationScreen.create(managementScreen, poi)))
-                .pos(this.width / 2 + 85 + 20, 54 + 20 * row)
-                .size(40, 20)
+                .pos(x + (int) (dividedWidth * 28), y)
+                .size(manageButtonsWidth, 20)
                 .build();
 
         this.deleteButton = new Button.Builder(
@@ -76,18 +89,18 @@ public class PoiManagerWidget extends AbstractWidget {
                             customPois.touched();
                             managementScreen.populatePois();
                         })
-                .pos(this.width / 2 + 130 + 20, 54 + 20 * row)
-                .size(40, 20)
+                .pos(x + (int) (dividedWidth * 32), y)
+                .size(manageButtonsWidth, 20)
                 .build();
 
-        this.upButton = new Button.Builder(Component.literal("\u2303"), (button) -> updateIndex(-1))
-                .pos(this.width / 2 + 172 + 20, 54 + 20 * row)
-                .size(9, 9)
+        this.upButton = new Button.Builder(Component.literal("ʌ"), (button) -> updateIndex(-1))
+                .pos(x + (int) (dividedWidth * 32) + manageButtonsWidth, y)
+                .size(10, 20)
                 .build();
 
-        this.downButton = new Button.Builder(Component.literal("\u2304"), (button) -> updateIndex(1))
-                .pos(this.width / 2 + 172 + 20, 54 + 20 * row + 9)
-                .size(9, 9)
+        this.downButton = new Button.Builder(Component.literal("v"), (button) -> updateIndex(1))
+                .pos(x + (int) (dividedWidth * 32) + manageButtonsWidth + 10, y)
+                .size(10, 20)
                 .build();
 
         if (pois.indexOf(poi) == 0) {
@@ -103,53 +116,54 @@ public class PoiManagerWidget extends AbstractWidget {
     public void renderWidget(PoseStack poseStack, int mouseX, int mouseY, float partialTick) {
         renderIcon(poseStack);
 
-        int maxTextWidth = 90;
-        String poiName = RenderedStringUtils.getMaxFittingText(poi.getName(), maxTextWidth, McUtils.mc().font);
+        String poiName =
+                RenderedStringUtils.getMaxFittingText(poi.getName(), (int) (dividedWidth * 15), McUtils.mc().font);
 
         FontRenderer.getInstance()
                 .renderText(
                         poseStack,
                         StyledText.fromString(poiName),
-                        this.width / 2f - 130,
-                        60 + 20 * row,
+                        x + (int) (dividedWidth * 3),
+                        y + 10,
                         color,
                         HorizontalAlignment.LEFT,
-                        VerticalAlignment.TOP,
+                        VerticalAlignment.MIDDLE,
                         TextShadow.NORMAL);
 
         FontRenderer.getInstance()
                 .renderText(
                         poseStack,
                         StyledText.fromString(String.valueOf(poi.getLocation().getX())),
-                        this.width / 2f - 15,
-                        60 + 20 * row,
+                        x + (int) (dividedWidth * 20),
+                        y + 10,
                         color,
                         HorizontalAlignment.CENTER,
-                        VerticalAlignment.TOP,
+                        VerticalAlignment.MIDDLE,
                         TextShadow.NORMAL);
 
-        Optional<Integer> y = poi.getLocation().getY();
+        Optional<Integer> poiY = poi.getLocation().getY();
 
         FontRenderer.getInstance()
                 .renderText(
                         poseStack,
-                        y.isPresent() ? StyledText.fromString(String.valueOf(y.get())) : StyledText.EMPTY,
-                        this.width / 2f + 40,
-                        60 + 20 * row,
+                        poiY.map(integer -> StyledText.fromString(String.valueOf(integer)))
+                                .orElse(StyledText.EMPTY),
+                        x + (int) (dividedWidth * 23),
+                        y + 10,
                         color,
                         HorizontalAlignment.CENTER,
-                        VerticalAlignment.TOP,
+                        VerticalAlignment.MIDDLE,
                         TextShadow.NORMAL);
 
         FontRenderer.getInstance()
                 .renderText(
                         poseStack,
                         StyledText.fromString(String.valueOf(poi.getLocation().getZ())),
-                        this.width / 2f + 80,
-                        60 + 20 * row,
+                        x + (int) (dividedWidth * 26),
+                        y + 10,
                         color,
                         HorizontalAlignment.CENTER,
-                        VerticalAlignment.TOP,
+                        VerticalAlignment.MIDDLE,
                         TextShadow.NORMAL);
 
         editButton.render(poseStack, mouseX, mouseY, partialTick);
@@ -164,13 +178,11 @@ public class PoiManagerWidget extends AbstractWidget {
         RenderSystem.blendFunc(GlStateManager.SourceFactor.SRC_ALPHA, GlStateManager.DestFactor.ONE_MINUS_SRC_ALPHA);
         RenderSystem.setShaderColor(poiColor[0], poiColor[1], poiColor[2], 1);
 
-        float centreZ = 64 + 20 * row;
-
         RenderUtils.drawTexturedRect(
                 poseStack,
                 poi.getIcon(),
-                this.width / 2f - 151 - (poi.getIcon().width() / 2f),
-                centreZ - (poi.getIcon().height() / 2f));
+                x + dividedWidth - (poi.getIcon().width() / 2f),
+                y + 10 - (poi.getIcon().height() / 2f));
 
         RenderSystem.disableBlend();
         RenderSystem.defaultBlendFunc();
