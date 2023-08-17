@@ -1,4 +1,16 @@
+## [0.0.3-alpha.327](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.326...v0.0.3-alpha.327) (2023-08-17)
+
+
+### Bug Fixes
+
+* Container search skipping final row ([#2019](https://github.com/Wynntils/Artemis/issues/2019)) ([80b1dbd](https://github.com/Wynntils/Artemis/commit/80b1dbdb0339ab547b2d27aa023fa1aea693fab8))
+
 ## [0.0.3-alpha.326](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.325...v0.0.3-alpha.326) (2023-08-17)
+
+
+### Miscellaneous Chores
+
+* **release:** v0.0.3-alpha.326 [skip ci] ([b2bc5a9](https://github.com/Wynntils/Artemis/commit/b2bc5a9677a897e8527dbfb81a6859d71fbc5b1a))
 
 
 ### Code Refactoring
@@ -40,16 +52,4 @@
 ### Miscellaneous Chores
 
 * **release:** v0.0.3-alpha.323 [skip ci] ([0dbe37f](https://github.com/Wynntils/Artemis/commit/0dbe37f02fbc2cab4dc6f702e85e1b97fdee72f5))
-
-## [0.0.3-alpha.322](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.321...v0.0.3-alpha.322) (2023-08-15)
-
-
-### New Features
-
-* Armor and accessory durability functions ([#2013](https://github.com/Wynntils/Artemis/issues/2013)) ([607914d](https://github.com/Wynntils/Artemis/commit/607914dfad79617cb076fae56a03092c11a1237e))
-
-
-### Miscellaneous Chores
-
-* **release:** v0.0.3-alpha.322 [skip ci] ([0f5d7dd](https://github.com/Wynntils/Artemis/commit/0f5d7dde0cef4f4acc37cbd1930a85dbf23b783f))
 
