@@ -132,6 +132,7 @@ public class ContainerSearchFeature extends Feature {
     @SubscribeEvent
     public void onInventoryKeyPress(InventoryKeyPressEvent event) {
         if (event.getKeyCode() != GLFW.GLFW_KEY_ENTER) return;
+        if (Models.Bank.isEditingName()) return;
         if (lastSearchWidget == null
                 || currentSearchableContainerType == null
                 || currentSearchableContainerType.getNextItemSlot() == -1

@@ -8,6 +8,7 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import com.wynntils.core.events.MixinHelper;
 import com.wynntils.mc.event.ContainerCloseEvent;
 import com.wynntils.mc.event.ContainerRenderEvent;
+import com.wynntils.mc.event.ContainerRenderLabelEvent;
 import com.wynntils.mc.event.InventoryKeyPressEvent;
 import com.wynntils.mc.event.InventoryMouseClickedEvent;
 import com.wynntils.mc.event.SlotRenderEvent;
@@ -32,6 +33,17 @@ public abstract class AbstractContainerScreenMixin {
     private void renderPost(PoseStack client, int mouseX, int mouseY, float partialTicks, CallbackInfo info) {
         MixinHelper.post(new ContainerRenderEvent(
                 (AbstractContainerScreen<?>) (Object) this, client, mouseX, mouseY, partialTicks, this.hoveredSlot));
+    }
+
+    @Inject(method = "renderLabels(Lcom/mojang/blaze3d/vertex/PoseStack;II)V", at = @At("HEAD"), cancellable = true)
+    private void renderLabels(PoseStack poseStack, int mouseX, int mouseY, CallbackInfo ci) {
+        ContainerRenderLabelEvent event =
+                new ContainerRenderLabelEvent((AbstractContainerScreen<?>) (Object) this, poseStack, mouseX, mouseY);
+        MixinHelper.post(event);
+
+        if (event.isCanceled()) {
+            ci.cancel();
+        }
     }
 
     @Inject(
