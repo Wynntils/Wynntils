@@ -4,12 +4,12 @@
  */
 package com.wynntils.core.persisted.upfixers.config;
 
-import com.wynntils.core.persisted.upfixers.RenamedKeysUpfixer;
+import com.wynntils.core.persisted.upfixers.RenamedPrefixesUpfixer;
 import com.wynntils.utils.type.Pair;
 import java.util.List;
 
-public class CustomBankQuickJumpsUpfixer extends RenamedKeysUpfixer {
-    private static final List<Pair<String, String>> RENAMED_KEYS = List.of(
+public class CustomBankQuickJumpsUpfixer extends RenamedPrefixesUpfixer {
+    private static final List<Pair<String, String>> RENAMED_PREFIXES = List.of(
             Pair.of("customBankPagesFeature.bankDestinations", "customBankQuickJumpsFeature.bankDestinations"),
             Pair.of(
                     "customBankPagesFeature.blockBankDestinations",
@@ -22,7 +22,7 @@ public class CustomBankQuickJumpsUpfixer extends RenamedKeysUpfixer {
                     "customBankQuickJumpsFeature.miscBucketDestinations"));
 
     @Override
-    protected List<Pair<String, String>> getRenamedKeys() {
-        return RENAMED_KEYS;
+    protected List<Pair<String, String>> getRenamedPrefixes() {
+        return RENAMED_PREFIXES;
     }
 }
