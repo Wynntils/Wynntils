@@ -132,12 +132,14 @@ public class ContainerSearchFeature extends Feature {
     @SubscribeEvent
     public void onInventoryKeyPress(InventoryKeyPressEvent event) {
         if (event.getKeyCode() != GLFW.GLFW_KEY_ENTER) return;
-        if (Models.Bank.isEditingName()) return;
         if (lastSearchWidget == null
                 || currentSearchableContainerType == null
                 || currentSearchableContainerType.getNextItemSlot() == -1
                 || !(McUtils.mc().screen instanceof AbstractContainerScreen<?> abstractContainerScreen)
                 || !(abstractContainerScreen.getMenu() instanceof ChestMenu chestMenu)) return;
+
+        ScreenExtension screen = (ScreenExtension) abstractContainerScreen;
+        if (screen.getFocusedTextInput() != lastSearchWidget) return;
 
         autoSearching = true;
         matchItems(lastSearchWidget.getTextBoxInput(), chestMenu);
