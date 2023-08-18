@@ -1,9 +1,21 @@
+## [0.0.3-alpha.328](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.327...v0.0.3-alpha.328) (2023-08-18)
+
+
+### Bug Fixes
+
+* fix red beacon counting function ([#2021](https://github.com/Wynntils/Artemis/issues/2021)) ([f4177b4](https://github.com/Wynntils/Artemis/commit/f4177b4892cb7bf97a2690e1234ac50142de14f3))
+
 ## [0.0.3-alpha.327](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.326...v0.0.3-alpha.327) (2023-08-17)
 
 
 ### Bug Fixes
 
 * Container search skipping final row ([#2019](https://github.com/Wynntils/Artemis/issues/2019)) ([80b1dbd](https://github.com/Wynntils/Artemis/commit/80b1dbdb0339ab547b2d27aa023fa1aea693fab8))
+
+
+### Miscellaneous Chores
+
+* **release:** v0.0.3-alpha.327 [skip ci] ([4e472d8](https://github.com/Wynntils/Artemis/commit/4e472d82920839e0895211afd74574f100891e79))
 
 ## [0.0.3-alpha.326](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.325...v0.0.3-alpha.326) (2023-08-17)
 
@@ -40,16 +52,4 @@
 ### Miscellaneous Chores
 
 * **release:** v0.0.3-alpha.324 [skip ci] ([f6675da](https://github.com/Wynntils/Artemis/commit/f6675da100403b9951648c82e4b4e4969515add0))
-
-## [0.0.3-alpha.323](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.322...v0.0.3-alpha.323) (2023-08-16)
-
-
-### Bug Fixes
-
-* Temporarily disable NpcDialogueOverlayFeature ([#2017](https://github.com/Wynntils/Artemis/issues/2017)) ([45b4aec](https://github.com/Wynntils/Artemis/commit/45b4aece9fb8a9bff53452cb0c53a8791fdc8ec9))
-
-
-### Miscellaneous Chores
-
-* **release:** v0.0.3-alpha.323 [skip ci] ([0dbe37f](https://github.com/Wynntils/Artemis/commit/0dbe37f02fbc2cab4dc6f702e85e1b97fdee72f5))
 
