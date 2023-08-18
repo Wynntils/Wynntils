@@ -381,6 +381,11 @@ public class LootrunModel extends Model {
         redBeaconTaskCountStorage.touched();
     }
 
+    public void resetRedBeaconTaskCount() {
+        redBeaconTaskCountStorage.get().remove(Models.Character.getId());
+        redBeaconTaskCountStorage.touched();
+    }
+
     public void setTimeLeft(int seconds) {
         timeLeft = seconds;
     }
@@ -408,6 +413,7 @@ public class LootrunModel extends Model {
             taskType = null;
             setClosestBeacon(null);
             setLastTaskBeaconColor(null);
+            resetRedBeaconTaskCount();
 
             possibleTaskLocations = new HashSet<>();
 
