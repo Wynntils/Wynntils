@@ -93,18 +93,10 @@ public class BankModel extends Model {
 
     public void saveCurrentPageName(String nameToSet) {
         switch (currentContainer) {
-            case BANK -> {
-                customBankPageNames.get().put(currentPage, nameToSet);
-            }
-            case BLOCK_BANK -> {
-                customBlockBankPageNames.get().put(currentPage, nameToSet);
-            }
-            case BOOKSHELF -> {
-                customBookshelfPageNames.get().put(currentPage, nameToSet);
-            }
-            case MISC_BUCKET -> {
-                customMiscBucketPageNames.get().put(currentPage, nameToSet);
-            }
+            case BANK -> customBankPageNames.get().put(currentPage, nameToSet);
+            case BLOCK_BANK -> customBlockBankPageNames.get().put(currentPage, nameToSet);
+            case BOOKSHELF -> customBookshelfPageNames.get().put(currentPage, nameToSet);
+            case MISC_BUCKET -> customMiscBucketPageNames.get().put(currentPage, nameToSet);
         }
 
         editingName = false;
