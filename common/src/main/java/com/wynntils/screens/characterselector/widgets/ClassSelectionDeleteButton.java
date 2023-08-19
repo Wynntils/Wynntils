@@ -41,18 +41,18 @@ public class ClassSelectionDeleteButton extends WynntilsButton {
     public void renderWidget(PoseStack poseStack, int mouseX, int mouseY, float partialTick) {
         RenderUtils.drawTexturedRect(
                 poseStack,
-                Texture.REMOVE_BUTTON.resource(),
+                Texture.REMOVE_ICON_OFFSET.resource(),
                 this.getX(),
                 this.getY(),
                 0,
                 this.width,
                 this.height,
                 0,
-                characterSelectorScreen.getSelected() == null ? Texture.REMOVE_BUTTON.height() / 2 : 0,
-                Texture.REMOVE_BUTTON.width(),
-                Texture.REMOVE_BUTTON.height() / 2,
-                Texture.REMOVE_BUTTON.width(),
-                Texture.REMOVE_BUTTON.height());
+                characterSelectorScreen.getSelected() == null ? Texture.REMOVE_ICON_OFFSET.height() / 2 : 0,
+                Texture.REMOVE_ICON_OFFSET.width(),
+                Texture.REMOVE_ICON_OFFSET.height() / 2,
+                Texture.REMOVE_ICON_OFFSET.width(),
+                Texture.REMOVE_ICON_OFFSET.height());
 
         if (isHovered && characterSelectorScreen.getSelected() != null) {
             RenderUtils.drawTooltipAt(

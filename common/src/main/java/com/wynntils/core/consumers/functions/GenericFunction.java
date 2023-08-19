@@ -5,7 +5,6 @@
 package com.wynntils.core.consumers.functions;
 
 import com.wynntils.core.consumers.functions.arguments.FunctionArguments;
-import net.minecraft.client.resources.language.I18n;
 
 /**
  * Generic functions are functions that calculate a value, based on their arguments.
@@ -22,7 +21,7 @@ public abstract class GenericFunction<T> extends Function<T> {
     }
 
     @Override
-    public String getTranslation(String keySuffix) {
-        return I18n.get("function.wynntils.generic." + getTranslationKeyName() + "." + keySuffix);
+    public String getTranslationKeyName() {
+        return "generic." + super.getTranslationKeyName();
     }
 }

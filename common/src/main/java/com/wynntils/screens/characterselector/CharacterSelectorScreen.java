@@ -75,9 +75,9 @@ public final class CharacterSelectorScreen extends WynntilsScreen {
 
     @Override
     protected void doInit() {
-        currentTextureScale = (float) this.height / Texture.LIST_BACKGROUND.height();
+        currentTextureScale = (float) this.height / Texture.CHARACTER_LIST_BACKGROUND.height();
 
-        float listWidth = Texture.LIST_BACKGROUND.width() * currentTextureScale;
+        float listWidth = Texture.CHARACTER_LIST_BACKGROUND.width() * currentTextureScale;
 
         float playButtonWidth = Texture.PLAY_BUTTON.width() * currentTextureScale;
         float playButtonHeight = Texture.PLAY_BUTTON.height() / 2f * currentTextureScale;
@@ -88,8 +88,8 @@ public final class CharacterSelectorScreen extends WynntilsScreen {
                 (int) playButtonHeight,
                 this));
 
-        float deleteButtonWidth = Texture.REMOVE_BUTTON.width() * currentTextureScale;
-        float deleteButtonHeight = Texture.REMOVE_BUTTON.height() / 2f * currentTextureScale;
+        float deleteButtonWidth = Texture.REMOVE_ICON_OFFSET.width() * currentTextureScale;
+        float deleteButtonHeight = Texture.REMOVE_ICON_OFFSET.height() / 2f * currentTextureScale;
         this.addRenderableWidget(new ClassSelectionDeleteButton(
                 (int) (listWidth * 0.6f),
                 (int) (this.height * 0.915f),
@@ -97,8 +97,8 @@ public final class CharacterSelectorScreen extends WynntilsScreen {
                 (int) deleteButtonHeight,
                 this));
 
-        float editButtonWidth = Texture.EDIT_BUTTON.width() * currentTextureScale;
-        float editButtonHeight = Texture.EDIT_BUTTON.height() * currentTextureScale;
+        float editButtonWidth = Texture.EDIT_ICON.width() * currentTextureScale;
+        float editButtonHeight = Texture.EDIT_ICON.height() * currentTextureScale;
         this.addRenderableWidget(new ClassSelectionEditButton(
                 (int) (listWidth * 0.44f),
                 (int) (this.height * 0.915f),
@@ -106,8 +106,8 @@ public final class CharacterSelectorScreen extends WynntilsScreen {
                 (int) editButtonHeight,
                 this));
 
-        float addButtonWidth = Texture.ADD_BUTTON.width() * currentTextureScale;
-        float addButtonHeight = Texture.ADD_BUTTON.height() / 2f * currentTextureScale;
+        float addButtonWidth = Texture.ADD_ICON_OFFSET.width() * currentTextureScale;
+        float addButtonHeight = Texture.ADD_ICON_OFFSET.height() / 2f * currentTextureScale;
         this.addRenderableWidget(new ClassSelectionAddButton(
                 (int) (listWidth * 0.22f),
                 (int) (this.height * 0.915f),
@@ -154,14 +154,14 @@ public final class CharacterSelectorScreen extends WynntilsScreen {
 
         RenderUtils.drawScalingTexturedRect(
                 poseStack,
-                Texture.LIST_BACKGROUND.resource(),
+                Texture.CHARACTER_LIST_BACKGROUND.resource(),
                 0,
                 0,
                 0,
-                Texture.LIST_BACKGROUND.width() * currentTextureScale,
-                Texture.LIST_BACKGROUND.height() * currentTextureScale,
-                Texture.LIST_BACKGROUND.width(),
-                Texture.LIST_BACKGROUND.height());
+                Texture.CHARACTER_LIST_BACKGROUND.width() * currentTextureScale,
+                Texture.CHARACTER_LIST_BACKGROUND.height() * currentTextureScale,
+                Texture.CHARACTER_LIST_BACKGROUND.width(),
+                Texture.CHARACTER_LIST_BACKGROUND.height());
 
         renderWidgets(poseStack, mouseX, mouseY, partialTick);
 
@@ -202,22 +202,18 @@ public final class CharacterSelectorScreen extends WynntilsScreen {
         }
 
         if (!draggingScroll) {
-            float scrollButtonRenderX = Texture.LIST_BACKGROUND.width() * currentTextureScale * 0.916f;
+            float scrollButtonRenderX = Texture.CHARACTER_LIST_BACKGROUND.width() * currentTextureScale * 0.916f;
             float scrollButtonRenderY = MathUtils.map(
                     scrollOffset,
                     0,
                     classInfoList.size() - CHARACTER_INFO_PER_PAGE,
-                    Texture.LIST_BACKGROUND.height() * currentTextureScale * 0.01f,
-                    Texture.LIST_BACKGROUND.height() * currentTextureScale * 0.92f);
+                    Texture.CHARACTER_LIST_BACKGROUND.height() * currentTextureScale * 0.01f,
+                    Texture.CHARACTER_LIST_BACKGROUND.height() * currentTextureScale * 0.92f);
 
             if (mouseX >= scrollButtonRenderX
-                    && mouseX
-                            <= scrollButtonRenderX
-                                    + Texture.CHARACTER_SELECTION_SCROLL_BUTTON.width() * currentTextureScale
+                    && mouseX <= scrollButtonRenderX + Texture.SCROLL_BUTTON.width() * currentTextureScale
                     && mouseY >= scrollButtonRenderY
-                    && mouseY
-                            <= scrollButtonRenderY
-                                    + Texture.CHARACTER_SELECTION_SCROLL_BUTTON.height() * currentTextureScale) {
+                    && mouseY <= scrollButtonRenderY + Texture.SCROLL_BUTTON.height() * currentTextureScale) {
                 draggingScroll = true;
                 lastMouseY = mouseY;
             }
@@ -329,14 +325,14 @@ public final class CharacterSelectorScreen extends WynntilsScreen {
         poseStack.translate(renderWidth * 0.27f, 0, 0);
         RenderUtils.drawScalingTexturedRect(
                 poseStack,
-                Texture.QUESTS_ICON.resource(),
+                Texture.QUESTS_SCROLL_ICON.resource(),
                 0,
                 0,
                 0,
-                Texture.QUESTS_ICON.width() * currentTextureScale,
-                Texture.QUESTS_ICON.height() * currentTextureScale,
-                Texture.QUESTS_ICON.width(),
-                Texture.QUESTS_ICON.height());
+                Texture.QUESTS_SCROLL_ICON.width() * currentTextureScale,
+                Texture.QUESTS_SCROLL_ICON.height() * currentTextureScale,
+                Texture.QUESTS_SCROLL_ICON.width(),
+                Texture.QUESTS_SCROLL_ICON.height());
 
         poseStack.pushPose();
         poseStack.scale(scale, scale, 0f);
@@ -374,19 +370,19 @@ public final class CharacterSelectorScreen extends WynntilsScreen {
     private void renderScrollButton(PoseStack poseStack) {
         RenderUtils.drawScalingTexturedRect(
                 poseStack,
-                Texture.CHARACTER_SELECTION_SCROLL_BUTTON.resource(),
-                Texture.LIST_BACKGROUND.width() * currentTextureScale * 0.916f,
+                Texture.SCROLL_BUTTON.resource(),
+                Texture.CHARACTER_LIST_BACKGROUND.width() * currentTextureScale * 0.916f,
                 MathUtils.map(
                         scrollOffset,
                         0,
                         classInfoList.size() - CHARACTER_INFO_PER_PAGE,
-                        Texture.LIST_BACKGROUND.height() * currentTextureScale * 0.01f,
-                        Texture.LIST_BACKGROUND.height() * currentTextureScale * 0.92f),
+                        Texture.CHARACTER_LIST_BACKGROUND.height() * currentTextureScale * 0.01f,
+                        Texture.CHARACTER_LIST_BACKGROUND.height() * currentTextureScale * 0.92f),
                 0,
-                Texture.CHARACTER_SELECTION_SCROLL_BUTTON.width() * currentTextureScale,
-                Texture.CHARACTER_SELECTION_SCROLL_BUTTON.height() * currentTextureScale,
-                Texture.CHARACTER_SELECTION_SCROLL_BUTTON.width(),
-                Texture.CHARACTER_SELECTION_SCROLL_BUTTON.height());
+                Texture.SCROLL_BUTTON.width() * currentTextureScale,
+                Texture.SCROLL_BUTTON.height() * currentTextureScale,
+                Texture.SCROLL_BUTTON.width(),
+                Texture.SCROLL_BUTTON.height());
     }
 
     private void renderWidgets(PoseStack poseStack, int mouseX, int mouseY, float partialTick) {
@@ -420,8 +416,8 @@ public final class CharacterSelectorScreen extends WynntilsScreen {
     private void reloadButtons() {
         classInfoButtons.clear();
 
-        final float width = Texture.LIST_BACKGROUND.width() * currentTextureScale * 0.9f - 3;
-        final int height = Math.round(Texture.LIST_BACKGROUND.height() * currentTextureScale / 8f);
+        final float width = Texture.CHARACTER_LIST_BACKGROUND.width() * currentTextureScale * 0.9f - 3;
+        final int height = Math.round(Texture.CHARACTER_LIST_BACKGROUND.height() * currentTextureScale / 8f);
         for (int i = scrollOffset; i < Math.min(classInfoList.size(), scrollOffset + CHARACTER_INFO_PER_PAGE); i++) {
             ClassInfo classInfo = classInfoList.get(i);
             ClassInfoButton newButton = new ClassInfoButton(

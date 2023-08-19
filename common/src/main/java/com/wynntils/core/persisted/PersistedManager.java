@@ -11,6 +11,7 @@ import com.wynntils.core.consumers.overlays.Overlay;
 import com.wynntils.core.json.JsonManager;
 import com.wynntils.core.persisted.config.Config;
 import com.wynntils.core.persisted.config.NullableConfig;
+import com.wynntils.core.persisted.type.PersistedMetadata;
 import com.wynntils.utils.type.Pair;
 import java.lang.reflect.Field;
 import java.lang.reflect.Type;
@@ -117,7 +118,7 @@ public final class PersistedManager extends Manager {
         // "featureName.overlayName.settingName" vs "featureName.settingName"
         if (!(owner instanceof Overlay overlay)) return "";
 
-        String name = overlay.getDeclaringClassName();
+        String name = overlay.getDeclaringFeatureClassName();
         return CaseFormat.UPPER_CAMEL.to(CaseFormat.LOWER_CAMEL, name) + ".";
     }
 }

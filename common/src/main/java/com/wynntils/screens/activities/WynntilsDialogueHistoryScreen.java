@@ -68,37 +68,37 @@ public final class WynntilsDialogueHistoryScreen extends WynntilsMenuScreenBase 
         Models.Activity.rescanDialogueHistory();
 
         this.addRenderableWidget(new BackButton(
-                (int) ((Texture.QUEST_BOOK_BACKGROUND.width() / 2f - 16) / 2f),
+                (int) ((Texture.CONTENT_BOOK_BACKGROUND.width() / 2f - 16) / 2f),
                 65,
-                Texture.BACK_ARROW.width() / 2,
-                Texture.BACK_ARROW.height(),
+                Texture.BACK_ARROW_OFFSET.width() / 2,
+                Texture.BACK_ARROW_OFFSET.height(),
                 WynntilsMenuScreen.create()));
         this.addRenderableWidget(new ReloadButton(
-                Texture.QUEST_BOOK_BACKGROUND.width() - 21,
+                Texture.CONTENT_BOOK_BACKGROUND.width() - 21,
                 11,
-                (int) (Texture.RELOAD_BUTTON.width() / 2 / 1.7f),
-                (int) (Texture.RELOAD_BUTTON.height() / 1.7f),
+                (int) (Texture.RELOAD_ICON_OFFSET.width() / 2 / 1.7f),
+                (int) (Texture.RELOAD_ICON_OFFSET.height() / 1.7f),
                 "dialogue",
                 Models.Activity::rescanDialogueHistory));
         this.addRenderableWidget(new PageSelectorButton(
-                Texture.QUEST_BOOK_BACKGROUND.width() / 2 + 50 - Texture.FORWARD_ARROW.width() / 2,
-                Texture.QUEST_BOOK_BACKGROUND.height() - 25,
-                Texture.FORWARD_ARROW.width() / 2,
-                Texture.FORWARD_ARROW.height(),
+                Texture.CONTENT_BOOK_BACKGROUND.width() / 2 + 50 - Texture.FORWARD_ARROW_OFFSET.width() / 2,
+                Texture.CONTENT_BOOK_BACKGROUND.height() - 25,
+                Texture.FORWARD_ARROW_OFFSET.width() / 2,
+                Texture.FORWARD_ARROW_OFFSET.height(),
                 false,
                 this));
         this.addRenderableWidget(new PageSelectorButton(
-                Texture.QUEST_BOOK_BACKGROUND.width() - 50,
-                Texture.QUEST_BOOK_BACKGROUND.height() - 25,
-                Texture.FORWARD_ARROW.width() / 2,
-                Texture.FORWARD_ARROW.height(),
+                Texture.CONTENT_BOOK_BACKGROUND.width() - 50,
+                Texture.CONTENT_BOOK_BACKGROUND.height() - 25,
+                Texture.FORWARD_ARROW_OFFSET.width() / 2,
+                Texture.FORWARD_ARROW_OFFSET.height(),
                 true,
                 this));
         this.addRenderableWidget(new QuestsPageButton(
-                (int) (Texture.QUEST_BOOK_BACKGROUND.width() / 2f - 30),
+                (int) (Texture.CONTENT_BOOK_BACKGROUND.width() / 2f - 30),
                 12,
-                Texture.QUESTS_BUTTON.width(),
-                Texture.QUESTS_BUTTON.height()));
+                Texture.QUESTS_SCROLL_ICON.width(),
+                Texture.QUESTS_SCROLL_ICON.height()));
     }
 
     @Override
@@ -148,7 +148,7 @@ public final class WynntilsDialogueHistoryScreen extends WynntilsMenuScreenBase 
 
     private void renderCurrentPage(PoseStack poseStack) {
         List<TextRenderTask> textRenderTaskList = new ArrayList<>();
-        float maxWidth = Texture.QUEST_BOOK_BACKGROUND.width() / 2f - 20;
+        float maxWidth = Texture.CONTENT_BOOK_BACKGROUND.width() / 2f - 20;
 
         for (StyledText line : dialogues.get(currentPage)) {
             textRenderTaskList.add(new TextRenderTask(
@@ -164,11 +164,11 @@ public final class WynntilsDialogueHistoryScreen extends WynntilsMenuScreenBase 
         FontRenderer.getInstance()
                 .renderTextsWithAlignment(
                         poseStack,
-                        Texture.QUEST_BOOK_BACKGROUND.width() / 2f + 5,
+                        Texture.CONTENT_BOOK_BACKGROUND.width() / 2f + 5,
                         30,
                         textRenderTaskList,
                         maxWidth,
-                        Texture.QUEST_BOOK_BACKGROUND.height() - 50,
+                        Texture.CONTENT_BOOK_BACKGROUND.height() - 50,
                         HorizontalAlignment.LEFT,
                         VerticalAlignment.MIDDLE);
     }
@@ -178,9 +178,9 @@ public final class WynntilsDialogueHistoryScreen extends WynntilsMenuScreenBase 
                 .renderAlignedTextInBox(
                         poseStack,
                         StyledText.fromString((currentPage) + " / " + (maxPage)),
-                        Texture.QUEST_BOOK_BACKGROUND.width() / 2f,
-                        Texture.QUEST_BOOK_BACKGROUND.width(),
-                        Texture.QUEST_BOOK_BACKGROUND.height() - 25,
+                        Texture.CONTENT_BOOK_BACKGROUND.width() / 2f,
+                        Texture.CONTENT_BOOK_BACKGROUND.width(),
+                        Texture.CONTENT_BOOK_BACKGROUND.height() - 25,
                         0,
                         CommonColors.BLACK,
                         HorizontalAlignment.CENTER,
@@ -255,11 +255,11 @@ public final class WynntilsDialogueHistoryScreen extends WynntilsMenuScreenBase 
                 .renderAlignedTextInBox(
                         poseStack,
                         StyledText.fromString(I18n.get("screens.wynntils.wynntilsDialogueHistory.tryReload")),
-                        Texture.QUEST_BOOK_BACKGROUND.width() / 2f + 15f,
-                        Texture.QUEST_BOOK_BACKGROUND.width() - 15f,
+                        Texture.CONTENT_BOOK_BACKGROUND.width() / 2f + 15f,
+                        Texture.CONTENT_BOOK_BACKGROUND.width() - 15f,
                         0,
-                        Texture.QUEST_BOOK_BACKGROUND.height(),
-                        Texture.QUEST_BOOK_BACKGROUND.width() / 2f - 30f,
+                        Texture.CONTENT_BOOK_BACKGROUND.height(),
+                        Texture.CONTENT_BOOK_BACKGROUND.width() / 2f - 30f,
                         CommonColors.BLACK,
                         HorizontalAlignment.CENTER,
                         VerticalAlignment.MIDDLE,
@@ -272,7 +272,7 @@ public final class WynntilsDialogueHistoryScreen extends WynntilsMenuScreenBase 
         List<StyledText> currentPage = new ArrayList<>();
         float currentHeight = 0;
 
-        float maxWidth = Texture.QUEST_BOOK_BACKGROUND.width() / 2f - 20;
+        float maxWidth = Texture.CONTENT_BOOK_BACKGROUND.width() / 2f - 20;
         final float maxPageHeight = LINES_PER_PAGE * 9f;
 
         for (List<StyledText> dialogueList : dialogues) {

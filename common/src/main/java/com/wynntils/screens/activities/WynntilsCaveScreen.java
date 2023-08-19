@@ -100,42 +100,42 @@ public final class WynntilsCaveScreen extends WynntilsListScreen<CaveInfo, CaveB
         super.doInit();
 
         this.addRenderableWidget(new BackButton(
-                (int) ((Texture.QUEST_BOOK_BACKGROUND.width() / 2f - 16) / 2f),
+                (int) ((Texture.CONTENT_BOOK_BACKGROUND.width() / 2f - 16) / 2f),
                 65,
-                Texture.BACK_ARROW.width() / 2,
-                Texture.BACK_ARROW.height(),
+                Texture.BACK_ARROW_OFFSET.width() / 2,
+                Texture.BACK_ARROW_OFFSET.height(),
                 WynntilsMenuScreen.create()));
 
         this.addRenderableWidget(new ReloadButton(
-                Texture.QUEST_BOOK_BACKGROUND.width() - 21,
+                Texture.CONTENT_BOOK_BACKGROUND.width() - 21,
                 11,
-                (int) (Texture.RELOAD_BUTTON.width() / 2 / 1.7f),
-                (int) (Texture.RELOAD_BUTTON.height() / 1.7f),
+                (int) (Texture.RELOAD_ICON_OFFSET.width() / 2 / 1.7f),
+                (int) (Texture.RELOAD_ICON_OFFSET.height() / 1.7f),
                 "cave",
                 Models.Cave::reloadCaves));
         this.addRenderableWidget(new PageSelectorButton(
-                Texture.QUEST_BOOK_BACKGROUND.width() / 2 + 50 - Texture.FORWARD_ARROW.width() / 2,
-                Texture.QUEST_BOOK_BACKGROUND.height() - 25,
-                Texture.FORWARD_ARROW.width() / 2,
-                Texture.FORWARD_ARROW.height(),
+                Texture.CONTENT_BOOK_BACKGROUND.width() / 2 + 50 - Texture.FORWARD_ARROW_OFFSET.width() / 2,
+                Texture.CONTENT_BOOK_BACKGROUND.height() - 25,
+                Texture.FORWARD_ARROW_OFFSET.width() / 2,
+                Texture.FORWARD_ARROW_OFFSET.height(),
                 false,
                 this));
         this.addRenderableWidget(new PageSelectorButton(
-                Texture.QUEST_BOOK_BACKGROUND.width() - 50,
-                Texture.QUEST_BOOK_BACKGROUND.height() - 25,
-                Texture.FORWARD_ARROW.width() / 2,
-                Texture.FORWARD_ARROW.height(),
+                Texture.CONTENT_BOOK_BACKGROUND.width() - 50,
+                Texture.CONTENT_BOOK_BACKGROUND.height() - 25,
+                Texture.FORWARD_ARROW_OFFSET.width() / 2,
+                Texture.FORWARD_ARROW_OFFSET.height(),
                 true,
                 this));
 
         this.addRenderableWidget(new SortOrderWidget(
-                Texture.QUEST_BOOK_BACKGROUND.width() / 2 + 1,
+                Texture.CONTENT_BOOK_BACKGROUND.width() / 2 + 1,
                 11,
-                (int) (Texture.SORT_DISTANCE.width() / 1.7f),
-                (int) (Texture.SORT_DISTANCE.height() / 2 / 1.7f),
+                (int) (Texture.SORT_DISTANCE_OFFSET.width() / 1.7f),
+                (int) (Texture.SORT_DISTANCE_OFFSET.height() / 2 / 1.7f),
                 this));
         this.addRenderableWidget(new CaveProgressButton(
-                (int) (Texture.QUEST_BOOK_BACKGROUND.width() / 4f), 10, Texture.CAVE.width(), Texture.CAVE.height()));
+                (int) (Texture.CONTENT_BOOK_BACKGROUND.width() / 4f), 10, Texture.CAVE.width(), Texture.CAVE.height()));
 
         reloadElements();
     }
@@ -176,11 +176,11 @@ public final class WynntilsCaveScreen extends WynntilsListScreen<CaveInfo, CaveB
                 .renderAlignedTextInBox(
                         poseStack,
                         StyledText.fromString(I18n.get("screens.wynntils.wynntilsCaves.tryReload")),
-                        Texture.QUEST_BOOK_BACKGROUND.width() / 2f + 15f,
-                        Texture.QUEST_BOOK_BACKGROUND.width() - 15f,
+                        Texture.CONTENT_BOOK_BACKGROUND.width() / 2f + 15f,
+                        Texture.CONTENT_BOOK_BACKGROUND.width() - 15f,
                         0,
-                        Texture.QUEST_BOOK_BACKGROUND.height(),
-                        Texture.QUEST_BOOK_BACKGROUND.width() / 2f - 30f,
+                        Texture.CONTENT_BOOK_BACKGROUND.height(),
+                        Texture.CONTENT_BOOK_BACKGROUND.width() / 2f - 30f,
                         CommonColors.BLACK,
                         HorizontalAlignment.CENTER,
                         VerticalAlignment.MIDDLE,
@@ -196,7 +196,7 @@ public final class WynntilsCaveScreen extends WynntilsListScreen<CaveInfo, CaveB
         final float renderX = getTranslationX() + 20;
         final float renderY = getTranslationY() + 100;
 
-        final int mapWidth = Texture.QUEST_BOOK_BACKGROUND.width() / 2 - 30;
+        final int mapWidth = Texture.CONTENT_BOOK_BACKGROUND.width() / 2 - 30;
         final int mapHeight = 90;
         final float currentZoom = 1;
 
@@ -244,9 +244,9 @@ public final class WynntilsCaveScreen extends WynntilsListScreen<CaveInfo, CaveB
     protected CaveButton getButtonFromElement(int i) {
         int offset = i % getElementsPerPage();
         return new CaveButton(
-                Texture.QUEST_BOOK_BACKGROUND.width() / 2 + 15,
+                Texture.CONTENT_BOOK_BACKGROUND.width() / 2 + 15,
                 offset * 13 + 25,
-                Texture.QUEST_BOOK_BACKGROUND.width() / 2 - 37,
+                Texture.CONTENT_BOOK_BACKGROUND.width() / 2 - 37,
                 9,
                 elements.get(i),
                 this);
