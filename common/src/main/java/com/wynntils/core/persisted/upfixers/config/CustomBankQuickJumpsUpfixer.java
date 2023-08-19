@@ -9,17 +9,8 @@ import com.wynntils.utils.type.Pair;
 import java.util.List;
 
 public class CustomBankQuickJumpsUpfixer extends RenamedPrefixesUpfixer {
-    private static final List<Pair<String, String>> RENAMED_PREFIXES = List.of(
-            Pair.of("customBankPagesFeature.bankDestinations", "customBankQuickJumpsFeature.bankDestinations"),
-            Pair.of(
-                    "customBankPagesFeature.blockBankDestinations",
-                    "customBankQuickJumpsFeature.blockBankDestinations"),
-            Pair.of(
-                    "customBankPagesFeature.bookshelfDestinations",
-                    "customBankQuickJumpsFeature.bookshelfDestinations"),
-            Pair.of(
-                    "customBankPagesFeature.miscBucketDestinations",
-                    "customBankQuickJumpsFeature.miscBucketDestinations"));
+    private static final List<Pair<String, String>> RENAMED_PREFIXES =
+            List.of(Pair.of("customBankPagesFeature.", "customBankQuickJumpsFeature."));
 
     @Override
     protected List<Pair<String, String>> getRenamedPrefixes() {
