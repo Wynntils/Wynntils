@@ -155,8 +155,8 @@ public final class FriendsModel extends Model {
                 event.setCanceled(true);
                 return;
             } else {
-                WynntilsMod.postEvent(new FriendsEvent.OnlineListed());
                 onlineMessageStatus = ListStatus.IDLE;
+                WynntilsMod.postEvent(new FriendsEvent.OnlineListed());
             }
         }
     }
