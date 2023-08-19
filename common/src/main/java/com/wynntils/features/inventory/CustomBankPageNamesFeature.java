@@ -74,7 +74,7 @@ public class CustomBankPageNamesFeature extends Feature {
     @SubscribeEvent
     public void onSlotClicked(ContainerClickEvent e) {
         if (Models.Bank.getCurrentContainer() == null) return;
-        Models.Bank.setIsEditingName(false);
+        Models.Bank.toggleEditingName(false);
     }
 
     private void renderEditInput(AbstractContainerScreen<?> screen) {

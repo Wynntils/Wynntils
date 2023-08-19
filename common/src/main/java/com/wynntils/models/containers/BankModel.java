@@ -143,7 +143,7 @@ public class BankModel extends Model {
         return editingName;
     }
 
-    public void setIsEditingName(boolean editingName) {
+    public void toggleEditingName(boolean editingName) {
         this.editingName = editingName;
     }
 }
