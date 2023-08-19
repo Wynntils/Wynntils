@@ -214,7 +214,7 @@
   "feature.wynntils.contentTrackerOverlay.overlay.contentTracker.title": "Tracked",
   "feature.wynntils.cosmeticsPreview.description": "Renders your player in the cosmetics screen.",
   "feature.wynntils.cosmeticsPreview.name": "Cosmetics Player Preview",
-  "feature.wynntils.customBankPageNames.description": "Enable custom page names in bank containers?",
+  "feature.wynntils.customBankPageNames.description": "Adds an option to set custom page names in bank containers",
   "feature.wynntils.customBankPageNames.name": "Custom Bank Page Names",
   "feature.wynntils.customBankQuickJumps.bankDestinations.description": "Which pages would you like your bank quick jump buttons to jump to? Enter a list of six numbers separated with a comma.",
   "feature.wynntils.customBankQuickJumps.bankDestinations.name": "Bank Jump Destinations",
