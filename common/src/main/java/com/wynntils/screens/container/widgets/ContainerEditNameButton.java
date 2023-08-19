@@ -68,7 +68,7 @@ public class ContainerEditNameButton extends WynntilsButton {
         if (button == GLFW.GLFW_MOUSE_BUTTON_LEFT) {
             Models.Bank.toggleEditingName(!Models.Bank.isEditingName());
         } else if (button == GLFW.GLFW_MOUSE_BUTTON_RIGHT && !Models.Bank.isEditingName()) {
-            Models.Bank.saveCurrentPageName("");
+            Models.Bank.resetCurrentPageName();
         }
 
         return true;

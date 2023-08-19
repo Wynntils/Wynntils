@@ -156,9 +156,9 @@ public class CustomBankQuickJumpsFeature extends Feature {
 
             String hoverName;
 
-            if (!Models.Bank.getPageName(buttonDestination).isEmpty()) {
+            if (Models.Bank.getPageName(buttonDestination).isPresent()) {
                 hoverName = ChatFormatting.GRAY + "Jump to Page " + buttonDestination + "\n - "
-                        + Models.Bank.getPageName(buttonDestination);
+                        + Models.Bank.getPageName(buttonDestination).get();
             } else {
                 hoverName = ChatFormatting.GRAY + "Jump to Page " + buttonDestination;
             }

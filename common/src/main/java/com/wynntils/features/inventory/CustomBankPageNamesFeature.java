@@ -52,9 +52,9 @@ public class CustomBankPageNamesFeature extends Feature {
                 editInput = null;
             }
 
-            if (!Models.Bank.getPageName(Models.Bank.getCurrentPage()).isEmpty()) {
+            if (Models.Bank.getPageName(Models.Bank.getCurrentPage()).isPresent()) {
                 String nameToRender = ChatFormatting.BLACK + "[Pg. " + Models.Bank.getCurrentPage() + "] "
-                        + Models.Bank.getPageName(Models.Bank.getCurrentPage());
+                        + Models.Bank.getPageName(Models.Bank.getCurrentPage()).get();
                 event.setContainerLabel(Component.literal(nameToRender));
             }
         }
@@ -85,7 +85,7 @@ public class CustomBankPageNamesFeature extends Feature {
                 null,
                 (ScreenExtension) screen);
 
-        editInput.setTextBoxInput(Models.Bank.getPageName(Models.Bank.getCurrentPage()));
+        Models.Bank.getPageName(Models.Bank.getCurrentPage()).ifPresent(s -> editInput.setTextBoxInput(s));
 
         screen.addRenderableWidget(editInput);
     }

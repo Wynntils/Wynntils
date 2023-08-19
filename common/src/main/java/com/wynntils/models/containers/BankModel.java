@@ -13,6 +13,7 @@ import com.wynntils.mc.event.ScreenInitEvent;
 import com.wynntils.models.containers.type.SearchableContainerType;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.TreeMap;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
 import net.minecraftforge.eventbus.api.EventPriority;
@@ -81,14 +82,17 @@ public class BankModel extends Model {
         editingName = false;
     }
 
-    public String getPageName(int page) {
-        return switch (currentContainer) {
-            case BANK -> customBankPageNames.get().getOrDefault(page, "");
-            case BLOCK_BANK -> customBlockBankPageNames.get().getOrDefault(page, "");
-            case BOOKSHELF -> customBookshelfPageNames.get().getOrDefault(page, "");
-            case MISC_BUCKET -> customMiscBucketPageNames.get().getOrDefault(page, "");
-            default -> "";
-        };
+    public Optional<String> getPageName(int page) {
+        String customPageName =
+                switch (currentContainer) {
+                    case BANK -> customBankPageNames.get().get(page);
+                    case BLOCK_BANK -> customBlockBankPageNames.get().get(page);
+                    case BOOKSHELF -> customBookshelfPageNames.get().get(page);
+                    case MISC_BUCKET -> customMiscBucketPageNames.get().get(page);
+                    default -> null;
+                };
+
+        return Optional.ofNullable(customPageName);
     }
 
     public void saveCurrentPageName(String nameToSet) {
@@ -97,6 +101,17 @@ public class BankModel extends Model {
             case BLOCK_BANK -> customBlockBankPageNames.get().put(currentPage, nameToSet);
             case BOOKSHELF -> customBookshelfPageNames.get().put(currentPage, nameToSet);
             case MISC_BUCKET -> customMiscBucketPageNames.get().put(currentPage, nameToSet);
+        }
+
+        editingName = false;
+    }
+
+    public void resetCurrentPageName() {
+        switch (currentContainer) {
+            case BANK -> customBankPageNames.get().remove(currentPage);
+            case BLOCK_BANK -> customBlockBankPageNames.get().remove(currentPage);
+            case BOOKSHELF -> customBookshelfPageNames.get().remove(currentPage);
+            case MISC_BUCKET -> customMiscBucketPageNames.get().remove(currentPage);
         }
 
         editingName = false;
