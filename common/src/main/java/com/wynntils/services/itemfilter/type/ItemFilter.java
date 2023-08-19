@@ -45,7 +45,7 @@ public abstract class ItemFilter {
     }
 
     public List<String> getAliases() {
-        return Collections.unmodifiableList(aliases);
+        return aliases;
     }
 
     protected String getTranslationName() {

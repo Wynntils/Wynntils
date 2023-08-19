@@ -50,11 +50,8 @@ public class ItemFilterService extends Service {
         }
     }
 
-    /**
-     * @return an unmodifiable list of all registered filters
-     */
     public List<ItemFilter> getFilters() {
-        return Collections.unmodifiableList(filters);
+        return filters;
     }
 
     public ItemSearchQuery createSearchQuery(String queryString) {
