@@ -4,12 +4,10 @@
  */
 package com.wynntils.features.inventory;
 
-import com.mojang.blaze3d.vertex.PoseStack;
 import com.wynntils.core.components.Models;
 import com.wynntils.core.consumers.features.Feature;
 import com.wynntils.core.persisted.config.Category;
 import com.wynntils.core.persisted.config.ConfigCategory;
-import com.wynntils.core.text.StyledText;
 import com.wynntils.mc.event.ContainerClickEvent;
 import com.wynntils.mc.event.ContainerLabelRenderEvent;
 import com.wynntils.mc.event.InventoryKeyPressEvent;
@@ -17,11 +15,7 @@ import com.wynntils.mc.event.ScreenInitEvent;
 import com.wynntils.mc.extension.ScreenExtension;
 import com.wynntils.screens.base.widgets.TextInputBoxWidget;
 import com.wynntils.screens.container.widgets.ContainerEditNameButton;
-import com.wynntils.utils.colors.CommonColors;
 import com.wynntils.utils.render.FontRenderer;
-import com.wynntils.utils.render.type.HorizontalAlignment;
-import com.wynntils.utils.render.type.TextShadow;
-import com.wynntils.utils.render.type.VerticalAlignment;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
 import net.minecraft.network.chat.Component;
@@ -59,8 +53,8 @@ public class CustomBankPageNamesFeature extends Feature {
             }
 
             if (!Models.Bank.getPageName(Models.Bank.getCurrentPage()).isEmpty()) {
-                String nameToRender = ChatFormatting.BLACK +
-                        "[Pg. " + Models.Bank.getCurrentPage() + "] " + Models.Bank.getPageName(Models.Bank.getCurrentPage());
+                String nameToRender = ChatFormatting.BLACK + "[Pg. " + Models.Bank.getCurrentPage() + "] "
+                        + Models.Bank.getPageName(Models.Bank.getCurrentPage());
                 event.setContainerLabel(Component.literal(nameToRender));
             }
         }
