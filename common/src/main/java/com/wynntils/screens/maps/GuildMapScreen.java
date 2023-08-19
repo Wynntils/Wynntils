@@ -74,7 +74,7 @@ public final class GuildMapScreen extends AbstractMapScreen {
                         - 6),
                 16,
                 16,
-                Texture.MAP_HELP_BUTTON,
+                Texture.HELP_ICON,
                 (b) -> {},
                 List.of(
                         Component.literal("[>] ")
@@ -93,7 +93,7 @@ public final class GuildMapScreen extends AbstractMapScreen {
                                 - 6),
                         16,
                         16,
-                        Texture.MAP_OVERLAY_BUTTON,
+                        Texture.OVERLAY_EXTRA_ICON,
                         (b) -> {
                             hybridMode = !hybridMode;
                             hybridModeButton.setTooltip(getHybridModeTooltip());
@@ -108,7 +108,7 @@ public final class GuildMapScreen extends AbstractMapScreen {
                         - 6),
                 16,
                 16,
-                Texture.MAP_DEFENSE_FILTER_BUTTON,
+                Texture.DEFENSE_FILTER_ICON,
                 (b) -> {
                     // Left and right clicks cycle through the defense levels, middle click resets to OFF
                     if (b == GLFW.GLFW_MOUSE_BUTTON_MIDDLE) {
@@ -148,7 +148,7 @@ public final class GuildMapScreen extends AbstractMapScreen {
                         - 6),
                 16,
                 16,
-                Texture.MAP_ADD_BUTTON,
+                Texture.ADD_ICON,
                 (b) -> resourceMode = !resourceMode,
                 List.of(
                         Component.literal("[>] ")
@@ -347,7 +347,7 @@ public final class GuildMapScreen extends AbstractMapScreen {
         final TerritoryInfo territoryInfo = territoryPoi.getTerritoryInfo();
         final TerritoryProfile territoryProfile = territoryPoi.getTerritoryProfile();
 
-        final int textureWidth = Texture.TERRITORY_TOOLTIP_CENTER.width();
+        final int textureWidth = Texture.MAP_INFO_TOOLTIP_CENTER.width();
 
         final float centerHeight = 75
                 + (territoryInfo.getStorage().values().size()
@@ -355,18 +355,18 @@ public final class GuildMapScreen extends AbstractMapScreen {
                         * 10
                 + (territoryInfo.isHeadquarters() ? 20 : 0);
 
-        RenderUtils.drawTexturedRect(poseStack, Texture.TERRITORY_TOOLTIP_TOP, 0, 0);
+        RenderUtils.drawTexturedRect(poseStack, Texture.MAP_INFO_TOOLTIP_TOP, 0, 0);
         RenderUtils.drawTexturedRect(
                 poseStack,
-                Texture.TERRITORY_TOOLTIP_CENTER.resource(),
+                Texture.MAP_INFO_TOOLTIP_CENTER.resource(),
                 0,
-                Texture.TERRITORY_TOOLTIP_TOP.height(),
+                Texture.MAP_INFO_TOOLTIP_TOP.height(),
                 textureWidth,
                 centerHeight,
                 textureWidth,
-                Texture.TERRITORY_TOOLTIP_CENTER.height());
+                Texture.MAP_INFO_TOOLTIP_CENTER.height());
         RenderUtils.drawTexturedRect(
-                poseStack, Texture.TERRITORY_NAME_BOX, 0, Texture.TERRITORY_TOOLTIP_TOP.height() + centerHeight);
+                poseStack, Texture.MAP_INFO_NAME_BOX, 0, Texture.MAP_INFO_TOOLTIP_TOP.height() + centerHeight);
 
         // guild
         FontRenderer.getInstance()
@@ -492,8 +492,8 @@ public final class GuildMapScreen extends AbstractMapScreen {
                         StyledText.fromString(territoryPoi.getName()),
                         7,
                         textureWidth,
-                        Texture.TERRITORY_TOOLTIP_TOP.height() + centerHeight,
-                        Texture.TERRITORY_TOOLTIP_TOP.height() + centerHeight + Texture.TERRITORY_NAME_BOX.height(),
+                        Texture.MAP_INFO_TOOLTIP_TOP.height() + centerHeight,
+                        Texture.MAP_INFO_TOOLTIP_TOP.height() + centerHeight + Texture.MAP_INFO_NAME_BOX.height(),
                         0,
                         CommonColors.WHITE,
                         HorizontalAlignment.LEFT,
@@ -505,22 +505,22 @@ public final class GuildMapScreen extends AbstractMapScreen {
         final TerritoryInfo territoryInfo = territoryPoi.getTerritoryInfo();
         final TerritoryProfile territoryProfile = territoryPoi.getTerritoryProfile();
 
-        final int textureWidth = Texture.TERRITORY_TOOLTIP_CENTER.width();
+        final int textureWidth = Texture.MAP_INFO_TOOLTIP_CENTER.width();
 
         final float centerHeight = 35;
 
-        RenderUtils.drawTexturedRect(poseStack, Texture.TERRITORY_TOOLTIP_TOP, 0, 0);
+        RenderUtils.drawTexturedRect(poseStack, Texture.MAP_INFO_TOOLTIP_TOP, 0, 0);
         RenderUtils.drawTexturedRect(
                 poseStack,
-                Texture.TERRITORY_TOOLTIP_CENTER.resource(),
+                Texture.MAP_INFO_TOOLTIP_CENTER.resource(),
                 0,
-                Texture.TERRITORY_TOOLTIP_TOP.height(),
+                Texture.MAP_INFO_TOOLTIP_TOP.height(),
                 textureWidth,
                 centerHeight,
                 textureWidth,
-                Texture.TERRITORY_TOOLTIP_CENTER.height());
+                Texture.MAP_INFO_TOOLTIP_CENTER.height());
         RenderUtils.drawTexturedRect(
-                poseStack, Texture.TERRITORY_NAME_BOX, 0, Texture.TERRITORY_TOOLTIP_TOP.height() + centerHeight);
+                poseStack, Texture.MAP_INFO_NAME_BOX, 0, Texture.MAP_INFO_TOOLTIP_TOP.height() + centerHeight);
 
         // guild
         FontRenderer.getInstance()
@@ -554,8 +554,8 @@ public final class GuildMapScreen extends AbstractMapScreen {
                         StyledText.fromString(territoryPoi.getName()),
                         7,
                         textureWidth,
-                        Texture.TERRITORY_TOOLTIP_TOP.height() + centerHeight,
-                        Texture.TERRITORY_TOOLTIP_TOP.height() + centerHeight + Texture.TERRITORY_NAME_BOX.height(),
+                        Texture.MAP_INFO_TOOLTIP_TOP.height() + centerHeight,
+                        Texture.MAP_INFO_TOOLTIP_TOP.height() + centerHeight + Texture.MAP_INFO_NAME_BOX.height(),
                         0,
                         CommonColors.WHITE,
                         HorizontalAlignment.LEFT,

@@ -46,7 +46,7 @@ public class ChangeWorldButton extends WynntilsButton {
                 this.width,
                 this.height,
                 0,
-                0,
+                isHovered ? 0 : Texture.CHANGE_WORLD_BUTTON.height() / 2,
                 Texture.CHANGE_WORLD_BUTTON.width(),
                 Texture.CHANGE_WORLD_BUTTON.height() / 2,
                 Texture.CHANGE_WORLD_BUTTON.width(),
