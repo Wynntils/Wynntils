@@ -16,7 +16,7 @@ import com.wynntils.mc.event.InventoryKeyPressEvent;
 import com.wynntils.mc.event.ScreenInitEvent;
 import com.wynntils.mc.extension.ScreenExtension;
 import com.wynntils.screens.base.widgets.TextInputBoxWidget;
-import com.wynntils.screens.container.widgets.ContainerEditButton;
+import com.wynntils.screens.container.widgets.ContainerEditNameButton;
 import com.wynntils.utils.colors.CommonColors;
 import com.wynntils.utils.render.FontRenderer;
 import com.wynntils.utils.render.type.HorizontalAlignment;
@@ -39,7 +39,7 @@ public class CustomBankPageNamesFeature extends Feature {
         int renderX = (screen.width - screen.imageWidth) / 2;
         int renderY = (screen.height - screen.imageHeight) / 2;
 
-        screen.addRenderableWidget(screen.addRenderableWidget(new ContainerEditButton(
+        screen.addRenderableWidget(screen.addRenderableWidget(new ContainerEditNameButton(
                 renderX + (screen.imageWidth - screen.titleLabelX) - 10, renderY + (screen.titleLabelY) - 4, 6, 16)));
     }
 

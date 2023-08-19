@@ -15,7 +15,7 @@ import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
 import org.lwjgl.glfw.GLFW;
 
-public class ContainerEditButton extends WynntilsButton {
+public class ContainerEditNameButton extends WynntilsButton {
     private static final List<Component> CANCEL_TOOLTIP = List.of(
             Component.translatable("screens.wynntils.containers.cancel.name").withStyle(ChatFormatting.RED),
             Component.translatable("screens.wynntils.containers.cancel.description")
@@ -26,7 +26,7 @@ public class ContainerEditButton extends WynntilsButton {
             Component.translatable("screens.wynntils.containers.edit.description")
                     .withStyle(ChatFormatting.GRAY));
 
-    public ContainerEditButton(int x, int y, int width, int height) {
+    public ContainerEditNameButton(int x, int y, int width, int height) {
         super(x, y, width, height, Component.literal("Container Edit Button"));
     }
 
