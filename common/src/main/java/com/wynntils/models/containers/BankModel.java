@@ -74,7 +74,7 @@ public class BankModel extends Model {
         editingName = false;
     }
 
-    @SubscribeEvent
+    @SubscribeEvent(priority = EventPriority.HIGHEST)
     public void onScreenClose(ScreenClosedEvent e) {
         currentContainer = null;
         currentPage = 1;
