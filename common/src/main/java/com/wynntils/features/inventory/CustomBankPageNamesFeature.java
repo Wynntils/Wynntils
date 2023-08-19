@@ -11,7 +11,7 @@ import com.wynntils.core.persisted.config.Category;
 import com.wynntils.core.persisted.config.ConfigCategory;
 import com.wynntils.core.text.StyledText;
 import com.wynntils.mc.event.ContainerClickEvent;
-import com.wynntils.mc.event.ContainerRenderLabelEvent;
+import com.wynntils.mc.event.ContainerLabelRenderEvent;
 import com.wynntils.mc.event.InventoryKeyPressEvent;
 import com.wynntils.mc.event.ScreenInitEvent;
 import com.wynntils.mc.extension.ScreenExtension;
@@ -44,7 +44,7 @@ public class CustomBankPageNamesFeature extends Feature {
     }
 
     @SubscribeEvent
-    public void onRenderLabels(ContainerRenderLabelEvent event) {
+    public void onRenderLabels(ContainerLabelRenderEvent event) {
         if (Models.Bank.getCurrentContainer() == null) return;
 
         if (Models.Bank.isEditingName()) {
