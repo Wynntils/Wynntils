@@ -681,8 +681,6 @@
   "feature.wynntils.lootrun.recordingPathColor.name": "Recording Path Color",
   "feature.wynntils.lootrun.showNotes.description": "Should notes from the active loot run be rendered?",
   "feature.wynntils.lootrun.showNotes.name": "Show Loot Run Notes",
-  "feature.wynntils.lootrunBeaconLocationCollector.description": "Adds the ability to collect the locations of lootrun beacons.",
-  "feature.wynntils.lootrunBeaconLocationCollector.name": "Lootrun Beacon Location Collector",
   "feature.wynntils.lootrunOverlays.description": "Adds the ability to track your lootrun progress with overlays.",
   "feature.wynntils.lootrunOverlays.name": "Lootrun Overlays",
   "feature.wynntils.lootrunOverlays.overlay.lootrunBeaconCount.description": "Shows the number of beacons you have selected in your current lootrun.",

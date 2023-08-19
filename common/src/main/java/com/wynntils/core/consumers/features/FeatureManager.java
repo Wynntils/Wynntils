@@ -56,7 +56,6 @@ import com.wynntils.features.debug.ContentBookDumpFeature;
 import com.wynntils.features.debug.FunctionDumpFeature;
 import com.wynntils.features.debug.ItemDebugTooltipsFeature;
 import com.wynntils.features.debug.LogItemInfoFeature;
-import com.wynntils.features.debug.LootrunBeaconLocationCollectorFeature;
 import com.wynntils.features.debug.PacketDebuggerFeature;
 import com.wynntils.features.embellishments.WybelSoundFeature;
 import com.wynntils.features.embellishments.WynntilsCosmeticsFeature;
@@ -180,7 +179,6 @@ public final class FeatureManager extends Manager {
         registerFeature(new FunctionDumpFeature());
         registerFeature(new ItemDebugTooltipsFeature());
         registerFeature(new LogItemInfoFeature());
-        registerFeature(new LootrunBeaconLocationCollectorFeature());
         registerFeature(new PacketDebuggerFeature());
 
         // always on
