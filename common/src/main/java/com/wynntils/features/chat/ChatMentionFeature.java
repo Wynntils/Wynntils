@@ -67,14 +67,6 @@ public class ChatMentionFeature extends Feature {
     }
 
     private Pattern buildPattern() {
-        String normalizedAliases = aliases.get();
-        if (aliases.get().startsWith(",")) {
-            normalizedAliases = normalizedAliases.substring(1);
-        }
-        if (aliases.get().endsWith(",")) {
-            normalizedAliases = normalizedAliases.substring(0, aliases.get().length() - 1);
-        }
-
         return Pattern.compile(
                 "(?<!\\[)\\b(" + McUtils.mc().getUser().getName()
                         + (!aliases.get().isEmpty() ? "|" + aliases.get().replace(",", "|") : "") + ")\\b(?!:|])",
