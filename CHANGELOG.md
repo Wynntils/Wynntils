@@ -1,9 +1,21 @@
+## [0.0.3-alpha.330](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.329...v0.0.3-alpha.330) (2023-08-19)
+
+
+### Bug Fixes
+
+* Parse Silverbull hours correctly ([#2027](https://github.com/Wynntils/Artemis/issues/2027)) ([c1b4422](https://github.com/Wynntils/Artemis/commit/c1b4422bb67b70408797d0fff879f652f19f96ce))
+
 ## [0.0.3-alpha.329](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.328...v0.0.3-alpha.329) (2023-08-18)
 
 
 ### Bug Fixes
 
 * fix red beacon counter not reseting between runs ([#2022](https://github.com/Wynntils/Artemis/issues/2022)) ([6ced8b5](https://github.com/Wynntils/Artemis/commit/6ced8b53e251c88da1bcc34b8a27d519c870d035))
+
+
+### Miscellaneous Chores
+
+* **release:** v0.0.3-alpha.329 [skip ci] ([74038c1](https://github.com/Wynntils/Artemis/commit/74038c1fb91f7c28e712b45d6bc099a84476fb73))
 
 ## [0.0.3-alpha.328](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.327...v0.0.3-alpha.328) (2023-08-18)
 
@@ -40,16 +52,4 @@
 ### Code Refactoring
 
 * Organise textures directory ([#2007](https://github.com/Wynntils/Artemis/issues/2007)) ([3211eed](https://github.com/Wynntils/Artemis/commit/3211eede5edbfe284e41bccf43030a9083cb652c))
-
-## [0.0.3-alpha.325](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.324...v0.0.3-alpha.325) (2023-08-16)
-
-
-### Bug Fixes
-
-* Fix middle click adding multiple waypoints on main map ([#2020](https://github.com/Wynntils/Artemis/issues/2020)) ([77d963d](https://github.com/Wynntils/Artemis/commit/77d963de72a3d339c72abb690312aa6647b50db7))
-
-
-### Miscellaneous Chores
-
-* **release:** v0.0.3-alpha.325 [skip ci] ([094b7a6](https://github.com/Wynntils/Artemis/commit/094b7a640bf54ec4e0cf91a6ba2f0681e7c4660c))
 
