@@ -40,7 +40,7 @@ public class ItemFilterService extends Service {
     public ErrorOr<? extends ItemFilter> getFilter(String alias) {
         Optional<ItemFilter> filterOpt = filters.stream()
                 .filter(filter ->
-                        filter.getAliases().contains(alias) || filter.getName().equals(alias))
+                        filter.getName().equals(alias) || filter.getAliases().contains(alias))
                 .findFirst();
 
         if (filterOpt.isPresent()) {
