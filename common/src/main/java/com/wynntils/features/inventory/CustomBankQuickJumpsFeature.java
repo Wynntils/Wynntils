@@ -102,12 +102,12 @@ public class CustomBankQuickJumpsFeature extends Feature {
         customJumpDestinations = parseStringToDestinations(configDestinations, currentContainer);
 
         if (customJumpDestinations == null) {
-            customJumpDestinations = getDefaultJumpDestinations();
+            customJumpDestinations = getDefaultJumpDestinations(currentContainer);
         }
     }
 
-    private List<Integer> getDefaultJumpDestinations() {
-        return switch (Models.Bank.getCurrentContainer()) {
+    private List<Integer> getDefaultJumpDestinations(SearchableContainerType currentContainer) {
+        return switch (currentContainer) {
             case BANK -> QUICK_JUMP_DESTINATIONS;
             case BLOCK_BANK -> BLOCK_BANK_DESTINATIONS;
             default -> HOUSING_DEFAULT_DESTINATIONS; // this has the lowest values, so it's the safest default
