@@ -18,6 +18,7 @@ import com.wynntils.core.text.StyledText;
 import com.wynntils.features.combat.CustomLootrunBeaconsFeature;
 import com.wynntils.handlers.chat.event.ChatMessageReceivedEvent;
 import com.wynntils.handlers.chat.type.RecipientType;
+import com.wynntils.mc.event.CommandSentEvent;
 import com.wynntils.mc.extension.EntityExtension;
 import com.wynntils.models.beacons.BeaconModel;
 import com.wynntils.models.beacons.event.BeaconEvent;
@@ -91,6 +92,8 @@ public class LootrunModel extends Model {
     //                        ÀÀÀ§7Challenges Completed: §f7
 
     private static final Pattern LOOTRUN_FAILED_PATTERN = Pattern.compile("[À\\s]*§c§lLootrun Failed!");
+
+    private static final String LOOTRUN_BEACON_REROLL_COMMAND = "rerollbeacon";
 
     private static final float BEACON_REMOVAL_RADIUS = 25f;
 
@@ -227,6 +230,14 @@ public class LootrunModel extends Model {
 
         challenges = CappedValue.EMPTY;
         timeLeft = 0;
+    }
+
+    @SubscribeEvent
+    public void onCommandSent(CommandSentEvent event) {
+        if (event.getCommand().equals(LOOTRUN_BEACON_REROLL_COMMAND)) {
+            // Delay the clear to make sure the beacon locations are updated
+            Managers.TickScheduler.scheduleLater(() -> possibleTaskLocations = new HashSet<>(), 10);
+        }
     }
 
     @SubscribeEvent
