@@ -47,8 +47,8 @@ public final class CharacterModel extends Model {
     // Test suite: https://regexr.com/7i87d
     private static final Pattern SILVERBULL_PATTERN = Pattern.compile("§7Subscription: §[ac][✖✔] ((?:Ina|A)ctive)");
     // Test suite: https://regexr.com/7irg0
-    private static final Pattern SILVERBULL_DURATION_PATTERN =
-            Pattern.compile("§7Expiration: §f(?:(?<weeks>\\d+) weeks?)? ?(?:(?<days>\\d+) days?)? ?(?:(?<hours>\\d+) hours?)?");
+    private static final Pattern SILVERBULL_DURATION_PATTERN = Pattern.compile(
+            "§7Expiration: §f(?:(?<weeks>\\d+) weeks?)? ?(?:(?<days>\\d+) days?)? ?(?:(?<hours>\\d+) hours?)?");
 
     private static final int RANK_SUBSCRIPTION_INFO_SLOT = 0;
     private static final int CHARACTER_INFO_SLOT = 7;
@@ -216,7 +216,8 @@ public final class CharacterModel extends Model {
         int days = expiry.group("days") == null ? 0 : Integer.parseInt(expiry.group("days"));
         int hours = expiry.group("hours") == null ? 0 : Integer.parseInt(expiry.group("hours"));
 
-        long expiryTime = System.currentTimeMillis() + TimeUnit.DAYS.toMillis(weeks * 7L + days) + TimeUnit.HOURS.toMillis(hours);
+        long expiryTime =
+                System.currentTimeMillis() + TimeUnit.DAYS.toMillis(weeks * 7L + days) + TimeUnit.HOURS.toMillis(hours);
         silverbullExpiresAt.store(expiryTime);
 
         WynntilsMod.info(
