@@ -1,9 +1,21 @@
+## [0.0.3-alpha.331](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.330...v0.0.3-alpha.331) (2023-08-19)
+
+
+### New Features
+
+* Party Management Screen suggests friends in other servers ([#2001](https://github.com/Wynntils/Artemis/issues/2001)) ([4f10639](https://github.com/Wynntils/Artemis/commit/4f106393198ef69eb85f953e3ec93af64853f0e2))
+
 ## [0.0.3-alpha.330](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.329...v0.0.3-alpha.330) (2023-08-19)
 
 
 ### Bug Fixes
 
 * Parse Silverbull hours correctly ([#2027](https://github.com/Wynntils/Artemis/issues/2027)) ([c1b4422](https://github.com/Wynntils/Artemis/commit/c1b4422bb67b70408797d0fff879f652f19f96ce))
+
+
+### Miscellaneous Chores
+
+* **release:** v0.0.3-alpha.330 [skip ci] ([66142c3](https://github.com/Wynntils/Artemis/commit/66142c3a1921f9a2e533fcb865c546e9c8d1d2c5))
 
 ## [0.0.3-alpha.329](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.328...v0.0.3-alpha.329) (2023-08-18)
 
@@ -40,16 +52,4 @@
 ### Miscellaneous Chores
 
 * **release:** v0.0.3-alpha.327 [skip ci] ([4e472d8](https://github.com/Wynntils/Artemis/commit/4e472d82920839e0895211afd74574f100891e79))
-
-## [0.0.3-alpha.326](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.325...v0.0.3-alpha.326) (2023-08-17)
-
-
-### Miscellaneous Chores
-
-* **release:** v0.0.3-alpha.326 [skip ci] ([b2bc5a9](https://github.com/Wynntils/Artemis/commit/b2bc5a9677a897e8527dbfb81a6859d71fbc5b1a))
-
-
-### Code Refactoring
-
-* Organise textures directory ([#2007](https://github.com/Wynntils/Artemis/issues/2007)) ([3211eed](https://github.com/Wynntils/Artemis/commit/3211eede5edbfe284e41bccf43030a9083cb652c))
 
