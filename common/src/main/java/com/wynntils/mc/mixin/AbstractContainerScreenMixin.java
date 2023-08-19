@@ -61,7 +61,7 @@ public abstract class AbstractContainerScreenMixin {
 
         if (event.isCanceled()) return 0;
 
-        return original.call(poseStack, event.getContainerLabel(), x, y, event.getColor());
+        return original.call(instance, poseStack, event.getContainerLabel(), x, y, event.getColor());
     }
 
     @WrapOperation(
@@ -86,7 +86,7 @@ public abstract class AbstractContainerScreenMixin {
 
         if (event.isCanceled()) return 0;
 
-        return original.call(poseStack, event.getInventoryLabel(), x, y, event.getColor());
+        return original.call(instance, poseStack, event.getInventoryLabel(), x, y, event.getColor());
     }
 
     @Inject(

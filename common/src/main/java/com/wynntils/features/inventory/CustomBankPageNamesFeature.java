@@ -22,7 +22,9 @@ import com.wynntils.utils.render.FontRenderer;
 import com.wynntils.utils.render.type.HorizontalAlignment;
 import com.wynntils.utils.render.type.TextShadow;
 import com.wynntils.utils.render.type.VerticalAlignment;
+import net.minecraft.ChatFormatting;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
+import net.minecraft.network.chat.Component;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import org.lwjgl.glfw.GLFW;
 
@@ -44,12 +46,12 @@ public class CustomBankPageNamesFeature extends Feature {
     }
 
     @SubscribeEvent
-    public void onRenderLabels(ContainerLabelRenderEvent event) {
+    public void onRenderLabels(ContainerLabelRenderEvent.ContainerLabel event) {
         if (Models.Bank.getCurrentContainer() == null) return;
 
         if (Models.Bank.isEditingName()) {
             event.setCanceled(true);
-            renderEditInput(event.getScreen());
+            addEditInput(event.getScreen());
         } else {
             if (editInput != null) {
                 event.getScreen().removeWidget(editInput);
@@ -57,8 +59,9 @@ public class CustomBankPageNamesFeature extends Feature {
             }
 
             if (!Models.Bank.getPageName(Models.Bank.getCurrentPage()).isEmpty()) {
-                event.setCanceled(true);
-                renderPageName(event.getPoseStack(), event.getScreen());
+                String nameToRender = ChatFormatting.BLACK +
+                        "[Pg. " + Models.Bank.getCurrentPage() + "] " + Models.Bank.getPageName(Models.Bank.getCurrentPage());
+                event.setContainerLabel(Component.literal(nameToRender));
             }
         }
     }
@@ -77,7 +80,7 @@ public class CustomBankPageNamesFeature extends Feature {
         Models.Bank.toggleEditingName(false);
     }
 
-    private void renderEditInput(AbstractContainerScreen<?> screen) {
+    private void addEditInput(AbstractContainerScreen<?> screen) {
         if (editInput != null) return;
 
         editInput = new TextInputBoxWidget(
@@ -91,22 +94,5 @@ public class CustomBankPageNamesFeature extends Feature {
         editInput.setTextBoxInput(Models.Bank.getPageName(Models.Bank.getCurrentPage()));
 
         screen.addRenderableWidget(editInput);
-    }
-
-    private void renderPageName(PoseStack poseStack, AbstractContainerScreen<?> screen) {
-        String nameToRender =
-                "[Pg. " + Models.Bank.getCurrentPage() + "] " + Models.Bank.getPageName(Models.Bank.getCurrentPage());
-
-        FontRenderer.getInstance()
-                .renderText(
-                        poseStack,
-                        StyledText.fromString(nameToRender),
-                        screen.titleLabelX,
-                        screen.titleLabelY,
-                        0,
-                        CommonColors.BLACK,
-                        HorizontalAlignment.LEFT,
-                        VerticalAlignment.TOP,
-                        TextShadow.NONE);
     }
 }
