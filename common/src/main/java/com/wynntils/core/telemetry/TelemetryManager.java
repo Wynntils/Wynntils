@@ -6,11 +6,13 @@ package com.wynntils.core.telemetry;
 
 import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.components.Manager;
+import com.wynntils.core.components.Managers;
 import com.wynntils.core.persisted.Persisted;
 import com.wynntils.core.persisted.storage.Storage;
 import com.wynntils.core.persisted.storage.StorageManager;
 import com.wynntils.core.telemetry.type.TelemetryGameVersion;
 import com.wynntils.core.telemetry.type.TelemetryType;
+import com.wynntils.features.wynntils.TelemetryFeature;
 import com.wynntils.telemetry.LootrunLocationTelemetryCollector;
 import java.lang.reflect.ParameterizedType;
 import java.util.HashMap;
@@ -34,6 +36,13 @@ public class TelemetryManager extends Manager {
     }
 
     public <T> void putData(TelemetryType telemetryType, T telemetryData) {
+        TelemetryFeature.ConfirmedBoolean telemetryEnabledForType = Managers.Feature.getFeatureInstance(
+                        TelemetryFeature.class)
+                .telemetryTypeEnabledMap
+                .get()
+                .getOrDefault(telemetryType, TelemetryFeature.ConfirmedBoolean.FALSE);
+        if (telemetryEnabledForType != TelemetryFeature.ConfirmedBoolean.TRUE) return;
+
         collectedData.get().putData(CURRENT_GAME_VERSION, telemetryType, telemetryData);
         collectedData.touched();
     }
