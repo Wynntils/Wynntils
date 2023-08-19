@@ -124,13 +124,15 @@ public final class ChatHandler extends Handler {
         Component message = e.getMessage();
         StyledText styledText = StyledText.fromComponent(message);
 
-        long currentTicks = McUtils.mc().level.getGameTime();
-        // It is a multi-line screen if it contains a newline, or if it is empty and sent in the same tick (with some
-        // fuzziness) as the current screen
-        if (styledText.contains("\n")
-                || (styledText.isEmpty() && (currentTicks <= chatScreenTicks + CHAT_SCREEN_TICK_DELAY))) {
-            // This is a "chat screen"
-            if (shouldSeparateNPC()) {
+        if (shouldSeparateNPC()) {
+            long currentTicks = McUtils.mc().level.getGameTime();
+
+            // It is a multi-line screen if it contains a newline, or if it is empty and sent in the same tick (with
+            // some
+            // fuzziness) as the current screen
+            if (styledText.contains("\n")
+                    || (styledText.isEmpty() && (currentTicks <= chatScreenTicks + CHAT_SCREEN_TICK_DELAY))) {
+                // This is a "chat screen"
                 List<Component> lines = ComponentUtils.splitComponentInLines(message);
                 if (chatScreenTicks == 0) {
                     // Start collecting lines to a new screen
@@ -149,8 +151,14 @@ public final class ChatHandler extends Handler {
                 }
                 e.setCanceled(true);
                 return;
+            } else if (chatScreenTicks != 0) {
+                // We got a normal line while collecting chat screen lines. Say we're done with the screen
+                handleIncomingChatScreen(collectedLines);
+
+                collectedLines = new ArrayList<>();
+                chatScreenTicks = 0;
+                // and then fall through to the normal handling
             }
-            // If we are not separating NPCs, just pass the chat screen right on.
         }
 
         // This is a normal one line chat, or we pass a chat screen through
