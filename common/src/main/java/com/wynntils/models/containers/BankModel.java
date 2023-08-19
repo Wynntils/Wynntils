@@ -15,6 +15,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
+import net.minecraftforge.eventbus.api.EventPriority;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 
 public class BankModel extends Model {
@@ -50,7 +51,7 @@ public class BankModel extends Model {
         super(List.of(containerModel));
     }
 
-    @SubscribeEvent
+    @SubscribeEvent(priority = EventPriority.HIGHEST)
     public void onScreenInit(ScreenInitEvent e) {
         if (!(e.getScreen() instanceof AbstractContainerScreen<?> screen)) return;
 
