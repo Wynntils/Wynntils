@@ -17,8 +17,19 @@ import com.wynntils.handlers.chat.type.RecipientType;
 import com.wynntils.utils.colors.ColorChatFormatting;
 import com.wynntils.utils.mc.McUtils;
 import com.wynntils.utils.type.IterationDecision;
+import java.util.concurrent.Callable;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.Future;
+import java.util.concurrent.TimeUnit;
+import java.util.concurrent.TimeoutException;
+import java.util.concurrent.atomic.AtomicReference;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import java.util.regex.PatternSyntaxException;
+import net.minecraft.ChatFormatting;
+import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.Style;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraftforge.eventbus.api.EventPriority;
@@ -56,6 +67,14 @@ public class ChatMentionFeature extends Feature {
     }
 
     private Pattern buildPattern() {
+        String normalizedAliases = aliases.get();
+        if (aliases.get().startsWith(",")) {
+            normalizedAliases = normalizedAliases.substring(1);
+        }
+        if (aliases.get().endsWith(",")) {
+            normalizedAliases = normalizedAliases.substring(0, aliases.get().length() - 1);
+        }
+
         return Pattern.compile(
                 "(?<!\\[)\\b(" + McUtils.mc().getUser().getName()
                         + (!aliases.get().isEmpty() ? "|" + aliases.get().replace(",", "|") : "") + ")\\b(?!:|])",
@@ -76,36 +95,49 @@ public class ChatMentionFeature extends Feature {
                 return IterationDecision.BREAK;
             }
 
-            StyledTextPart partToReplace = part;
-            Matcher matcher = mentionPattern.matcher(partToReplace.getString(null, PartStyle.StyleType.NONE));
+            AtomicReference<StyledTextPart> partToReplace = new AtomicReference<>(part);
 
-            while (matcher.find()) {
-                String match = partToReplace.getString(null, PartStyle.StyleType.NONE);
+            ExecutorService regexExecutor = Executors.newSingleThreadExecutor();
+            Callable<Boolean> regexTask = () -> {
+                Matcher matcher = mentionPattern.matcher(partToReplace.get().getString(null, PartStyle.StyleType.NONE));
 
-                String firstPart = match.substring(0, matcher.start());
-                String mentionPart = match.substring(matcher.start(), matcher.end());
-                String lastPart = match.substring(matcher.end());
+                while (matcher.find()) {
+                    String match = partToReplace.get().getString(null, PartStyle.StyleType.NONE);
 
-                PartStyle partStyle = partToReplace.getPartStyle();
+                    String firstPart = match.substring(0, matcher.start());
+                    String mentionPart = match.substring(matcher.start(), matcher.end());
+                    String lastPart = match.substring(matcher.end());
 
-                StyledTextPart first = new StyledTextPart(firstPart, partStyle.getStyle(), null, Style.EMPTY);
-                StyledTextPart mention = new StyledTextPart(
-                        mentionPart,
-                        partStyle.getStyle().withColor(mentionColor.get().getChatFormatting()),
-                        null,
-                        first.getPartStyle().getStyle());
-                StyledTextPart last = new StyledTextPart(lastPart, partStyle.getStyle(), null, Style.EMPTY);
+                    PartStyle partStyle = partToReplace.get().getPartStyle();
 
-                changes.remove(partToReplace);
-                changes.add(first);
-                changes.add(mention);
-                changes.add(last);
+                    StyledTextPart first = new StyledTextPart(firstPart, partStyle.getStyle(), null, Style.EMPTY);
+                    StyledTextPart mention = new StyledTextPart(
+                            mentionPart,
+                            partStyle.getStyle().withColor(mentionColor.get().getChatFormatting()),
+                            null,
+                            first.getPartStyle().getStyle());
+                    StyledTextPart last = new StyledTextPart(lastPart, partStyle.getStyle(), null, Style.EMPTY);
 
-                partToReplace = last;
-                matcher = mentionPattern.matcher(lastPart);
+                    changes.remove(partToReplace.get());
+                    changes.add(first);
+                    changes.add(mention);
+                    changes.add(last);
+
+                    partToReplace.set(last);
+                    matcher = mentionPattern.matcher(lastPart);
+                }
+                return true;
+            };
+
+            Future<Boolean> future = regexExecutor.submit(regexTask);
+            try {
+                future.get(1, TimeUnit.SECONDS);
+                return IterationDecision.CONTINUE;
+            } catch (InterruptedException | ExecutionException | TimeoutException ex) {
+                McUtils.sendMessageToClient(Component.translatable("feature.wynntils.chatMention.regexFailed")
+                        .withStyle(ChatFormatting.RED));
+                throw new PatternSyntaxException("Regex failed", mentionPattern.pattern(), -1);
             }
-
-            return IterationDecision.CONTINUE;
         });
 
         // No changes were made, there was no mention.
