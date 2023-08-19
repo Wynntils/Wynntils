@@ -1,9 +1,21 @@
+## [0.0.3-alpha.332](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.331...v0.0.3-alpha.332) (2023-08-19)
+
+
+### New Features
+
+* Add NamedValue ([#2025](https://github.com/Wynntils/Artemis/issues/2025)) ([499d5b2](https://github.com/Wynntils/Artemis/commit/499d5b2b73b4e4dab4b475a00c2a19c6b851602d))
+
 ## [0.0.3-alpha.331](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.330...v0.0.3-alpha.331) (2023-08-19)
 
 
 ### New Features
 
 * Party Management Screen suggests friends in other servers ([#2001](https://github.com/Wynntils/Artemis/issues/2001)) ([4f10639](https://github.com/Wynntils/Artemis/commit/4f106393198ef69eb85f953e3ec93af64853f0e2))
+
+
+### Miscellaneous Chores
+
+* **release:** v0.0.3-alpha.331 [skip ci] ([f342c56](https://github.com/Wynntils/Artemis/commit/f342c5671432904f430a26973f2f11d0b89566f5))
 
 ## [0.0.3-alpha.330](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.329...v0.0.3-alpha.330) (2023-08-19)
 
@@ -40,16 +52,4 @@
 ### Miscellaneous Chores
 
 * **release:** v0.0.3-alpha.328 [skip ci] ([28ee378](https://github.com/Wynntils/Artemis/commit/28ee378fc7298c229868af6ccc6fae136d23e3ab))
-
-## [0.0.3-alpha.327](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.326...v0.0.3-alpha.327) (2023-08-17)
-
-
-### Bug Fixes
-
-* Container search skipping final row ([#2019](https://github.com/Wynntils/Artemis/issues/2019)) ([80b1dbd](https://github.com/Wynntils/Artemis/commit/80b1dbdb0339ab547b2d27aa023fa1aea693fab8))
-
-
-### Miscellaneous Chores
-
-* **release:** v0.0.3-alpha.327 [skip ci] ([4e472d8](https://github.com/Wynntils/Artemis/commit/4e472d82920839e0895211afd74574f100891e79))
 
