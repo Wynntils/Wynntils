@@ -1,9 +1,21 @@
+## [0.0.3-alpha.333](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.332...v0.0.3-alpha.333) (2023-08-20)
+
+
+### Bug Fixes
+
+* Match Wynn's gathering cooldown correctly ([#2034](https://github.com/Wynntils/Artemis/issues/2034)) ([64f110a](https://github.com/Wynntils/Artemis/commit/64f110adc90071c5d1623edd1e94be1ddebe0954))
+
 ## [0.0.3-alpha.332](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.331...v0.0.3-alpha.332) (2023-08-19)
 
 
 ### New Features
 
 * Add NamedValue ([#2025](https://github.com/Wynntils/Artemis/issues/2025)) ([499d5b2](https://github.com/Wynntils/Artemis/commit/499d5b2b73b4e4dab4b475a00c2a19c6b851602d))
+
+
+### Miscellaneous Chores
+
+* **release:** v0.0.3-alpha.332 [skip ci] ([5540166](https://github.com/Wynntils/Artemis/commit/55401663d4415af8b239e3f379efd16b23dfa1c8))
 
 ## [0.0.3-alpha.331](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.330...v0.0.3-alpha.331) (2023-08-19)
 
@@ -40,16 +52,4 @@
 ### Miscellaneous Chores
 
 * **release:** v0.0.3-alpha.329 [skip ci] ([74038c1](https://github.com/Wynntils/Artemis/commit/74038c1fb91f7c28e712b45d6bc099a84476fb73))
-
-## [0.0.3-alpha.328](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.327...v0.0.3-alpha.328) (2023-08-18)
-
-
-### Bug Fixes
-
-* fix red beacon counting function ([#2021](https://github.com/Wynntils/Artemis/issues/2021)) ([f4177b4](https://github.com/Wynntils/Artemis/commit/f4177b4892cb7bf97a2690e1234ac50142de14f3))
-
-
-### Miscellaneous Chores
-
-* **release:** v0.0.3-alpha.328 [skip ci] ([28ee378](https://github.com/Wynntils/Artemis/commit/28ee378fc7298c229868af6ccc6fae136d23e3ab))
 
