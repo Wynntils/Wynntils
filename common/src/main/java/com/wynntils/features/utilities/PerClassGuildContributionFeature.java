@@ -10,18 +10,21 @@ import com.wynntils.core.persisted.Persisted;
 import com.wynntils.core.persisted.config.Category;
 import com.wynntils.core.persisted.config.ConfigCategory;
 import com.wynntils.core.persisted.config.HiddenConfig;
-import com.wynntils.mc.event.CommandSentEvent;
+import com.wynntils.core.text.StyledText;
+import com.wynntils.handlers.chat.event.ChatMessageReceivedEvent;
 import com.wynntils.models.character.event.CharacterUpdateEvent;
 import com.wynntils.utils.mc.McUtils;
 import java.util.Map;
 import java.util.TreeMap;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import net.minecraftforge.eventbus.api.EventPriority;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 
 @ConfigCategory(Category.UTILITIES)
 public class PerClassGuildContributionFeature extends Feature {
-    private static final Pattern CONTRIBUTION_PATTERN = Pattern.compile("guild xp (\\d+).*");
+    private static final Pattern CONTRIBUTION_PATTERN =
+            Pattern.compile("§3You will now contribute §b(\\d+)%§3 of your XP to §b.*§3.");
 
     @Persisted
     private final HiddenConfig<Map<String, Integer>> classContributions = new HiddenConfig<>(new TreeMap<>());
@@ -37,25 +40,21 @@ public class PerClassGuildContributionFeature extends Feature {
         }
     }
 
-    @SubscribeEvent
-    public void onCommandSent(CommandSentEvent event) {
+    @SubscribeEvent(priority = EventPriority.HIGHEST)
+    public void onChatReceived(ChatMessageReceivedEvent event) {
         if (Models.Guild.getGuildName().isEmpty()) return;
+        if (!Models.Character.hasCharacter()) return;
 
-        String characterId = Models.Character.getId();
+        StyledText message = event.getOriginalStyledText();
 
-        if (characterId.equals("-")) return;
-
-        String command = event.getCommand();
-
-        Matcher contributionMatcher = CONTRIBUTION_PATTERN.matcher(command);
+        Matcher contributionMatcher = message.getMatcher(CONTRIBUTION_PATTERN);
 
         if (contributionMatcher.matches()) {
             int contributionAmount = Integer.parseInt(contributionMatcher.group(1));
 
             if (contributionAmount < 0 || contributionAmount > 100) return;
 
-            classContributions.get().put(characterId, contributionAmount);
-
+            classContributions.get().put(Models.Character.getId(), contributionAmount);
             classContributions.touched();
         }
     }
