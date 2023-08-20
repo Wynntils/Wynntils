@@ -96,13 +96,14 @@ public class BankModel extends Model {
     }
 
     public void saveCurrentPageName(String nameToSet) {
-        Storage<Map<Integer, String>> pageNamesMap = switch (currentContainer) {
-            case BANK -> customBankPageNames;
-            case BLOCK_BANK -> customBlockBankPageNames;
-            case BOOKSHELF -> customBookshelfPageNames;
-            case MISC_BUCKET -> customMiscBucketPageNames;
-            default -> null;
-        };
+        Storage<Map<Integer, String>> pageNamesMap =
+                switch (currentContainer) {
+                    case BANK -> customBankPageNames;
+                    case BLOCK_BANK -> customBlockBankPageNames;
+                    case BOOKSHELF -> customBookshelfPageNames;
+                    case MISC_BUCKET -> customMiscBucketPageNames;
+                    default -> null;
+                };
 
         if (pageNamesMap == null) return;
 
