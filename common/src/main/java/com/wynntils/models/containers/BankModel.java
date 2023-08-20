@@ -97,10 +97,22 @@ public class BankModel extends Model {
 
     public void saveCurrentPageName(String nameToSet) {
         switch (currentContainer) {
-            case BANK -> customBankPageNames.get().put(currentPage, nameToSet);
-            case BLOCK_BANK -> customBlockBankPageNames.get().put(currentPage, nameToSet);
-            case BOOKSHELF -> customBookshelfPageNames.get().put(currentPage, nameToSet);
-            case MISC_BUCKET -> customMiscBucketPageNames.get().put(currentPage, nameToSet);
+            case BANK -> {
+                customBankPageNames.get().put(currentPage, nameToSet);
+                customBankPageNames.touched();
+            }
+            case BLOCK_BANK -> {
+                customBlockBankPageNames.get().put(currentPage, nameToSet);
+                customBlockBankPageNames.touched();
+            }
+            case BOOKSHELF -> {
+                customBookshelfPageNames.get().put(currentPage, nameToSet);
+                customBookshelfPageNames.touched();
+            }
+            case MISC_BUCKET -> {
+                customMiscBucketPageNames.get().put(currentPage, nameToSet);
+                customMiscBucketPageNames.touched();
+            }
         }
 
         editingName = false;
@@ -108,10 +120,22 @@ public class BankModel extends Model {
 
     public void resetCurrentPageName() {
         switch (currentContainer) {
-            case BANK -> customBankPageNames.get().remove(currentPage);
-            case BLOCK_BANK -> customBlockBankPageNames.get().remove(currentPage);
-            case BOOKSHELF -> customBookshelfPageNames.get().remove(currentPage);
-            case MISC_BUCKET -> customMiscBucketPageNames.get().remove(currentPage);
+            case BANK -> {
+                customBankPageNames.get().remove(currentPage);
+                customBankPageNames.touched();
+            }
+            case BLOCK_BANK -> {
+                customBlockBankPageNames.get().remove(currentPage);
+                customBlockBankPageNames.touched();
+            }
+            case BOOKSHELF -> {
+                customBookshelfPageNames.get().remove(currentPage);
+                customBookshelfPageNames.touched();
+            }
+            case MISC_BUCKET -> {
+                customMiscBucketPageNames.get().remove(currentPage);
+                customMiscBucketPageNames.touched();
+            }
         }
 
         editingName = false;
