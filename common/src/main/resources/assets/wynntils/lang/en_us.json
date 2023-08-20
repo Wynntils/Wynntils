@@ -859,7 +859,7 @@
   "feature.wynntils.partyMembersOverlay.overlay.partyMembers.maxPartyMembers.description": "How many party members should be shown?",
   "feature.wynntils.partyMembersOverlay.overlay.partyMembers.maxPartyMembers.name": "Max Party Members",
   "feature.wynntils.partyMembersOverlay.overlay.partyMembers.name": "Party Members",
-  "feature.wynntils.perCharacterGuildContribution.description": "Remembers what contribution XP%% you set per class and applies when you select that character.",
+  "feature.wynntils.perCharacterGuildContribution.description": "Remembers what contribution XP%% you set per character and applies when you select that character.",
   "feature.wynntils.perCharacterGuildContribution.hideContributionMessage.description": "Hides the contribution message sent after automatically applying your contribution amount.",
   "feature.wynntils.perCharacterGuildContribution.hideContributionMessage.name": "Hide Auto Contribution Message",
   "feature.wynntils.perCharacterGuildContribution.name": "Per Character Guild Contribution",
