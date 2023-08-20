@@ -24,15 +24,15 @@ public class PerClassGuildContributionFeature extends Feature {
     private static final Pattern CONTRIBUTION_PATTERN = Pattern.compile("guild xp (\\d+).*");
 
     @Persisted
-    private final HiddenConfig<Map<String, String>> classContributions = new HiddenConfig<>(new TreeMap<>());
+    private final HiddenConfig<Map<String, Integer>> classContributions = new HiddenConfig<>(new TreeMap<>());
 
     @SubscribeEvent
     public void onCharacterChange(CharacterUpdateEvent e) {
         if (Models.Guild.getGuildName().isEmpty()) return;
 
-        String amountToContribute = classContributions.get().getOrDefault(Models.Character.getId(), null);
+        int amountToContribute = classContributions.get().getOrDefault(Models.Character.getId(), -1);
 
-        if (amountToContribute != null) {
+        if (amountToContribute != -1) {
             McUtils.sendCommand("guild xp " + amountToContribute);
         }
     }
@@ -50,10 +50,11 @@ public class PerClassGuildContributionFeature extends Feature {
         Matcher contributionMatcher = CONTRIBUTION_PATTERN.matcher(command);
 
         if (contributionMatcher.matches()) {
-            if (Integer.parseInt(contributionMatcher.group(1)) < 0
-                    || Integer.parseInt(contributionMatcher.group(1)) > 100) return;
+            int contributionAmount = Integer.parseInt(contributionMatcher.group(1));
 
-            classContributions.get().put(Models.Character.getId(), contributionMatcher.group(1));
+            if (contributionAmount < 0 || contributionAmount > 100) return;
+
+            classContributions.get().put(Models.Character.getId(), contributionAmount);
 
             classContributions.touched();
         }
