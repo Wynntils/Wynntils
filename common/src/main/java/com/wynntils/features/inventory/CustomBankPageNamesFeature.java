@@ -29,6 +29,7 @@ public class CustomBankPageNamesFeature extends Feature {
     @SubscribeEvent
     public void onScreenInit(ScreenInitEvent event) {
         if (Models.Bank.getCurrentContainer() == null) return;
+
         AbstractContainerScreen<?> screen = (AbstractContainerScreen<?>) event.getScreen();
 
         // This is screen.topPos and screen.leftPos, but they are not calculated yet when this is called
@@ -52,9 +53,11 @@ public class CustomBankPageNamesFeature extends Feature {
                 editInput = null;
             }
 
-            if (Models.Bank.getPageName(Models.Bank.getCurrentPage()).isPresent()) {
-                String nameToRender = ChatFormatting.BLACK + "[Pg. " + Models.Bank.getCurrentPage() + "] "
-                        + Models.Bank.getPageName(Models.Bank.getCurrentPage()).get();
+            int currentPage = Models.Bank.getCurrentPage();
+
+            if (Models.Bank.getPageName(currentPage).isPresent()) {
+                String nameToRender = ChatFormatting.BLACK + "[Pg. " + currentPage + "] "
+                        + Models.Bank.getPageName(currentPage).get();
                 event.setContainerLabel(Component.literal(nameToRender));
             }
         }
