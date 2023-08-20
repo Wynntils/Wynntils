@@ -55,8 +55,6 @@ public class PerClassGuildContributionFeature extends Feature {
             if (contributionAmount < 0 || contributionAmount > 100) return;
 
             classContributions.get().put(characterId, contributionAmount);
-
-            classContributions.touched();
         }
     }
 }
