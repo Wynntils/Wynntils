@@ -22,7 +22,8 @@ import net.minecraftforge.eventbus.api.SubscribeEvent;
 
 @ConfigCategory(Category.COMBAT)
 public class AbbreviateMobHealthFeature extends Feature {
-    private static final Pattern MOB_HEALTH_PATTERN = Pattern.compile("(.*§c)(\\d+)(§4❤.*)");
+    private static final Pattern MOB_HEALTH_PATTERN =
+            Pattern.compile("(.*§[cb])(?<current>\\d+)(§.\\/(?<max>\\d+))?(§[cb4]\\s?❤.*)");
 
     @SubscribeEvent
     public void onHealthBarEvent(BossHealthUpdateEvent event) {
@@ -45,10 +46,21 @@ public class AbbreviateMobHealthFeature extends Feature {
         Matcher healthMatcher = MOB_HEALTH_PATTERN.matcher(name);
         if (!healthMatcher.matches()) return component;
 
-        int rawHealth = Integer.parseInt(healthMatcher.group(2));
+        int rawHealth = Integer.parseInt(healthMatcher.group("current"));
         String formattedHealth = StringUtils.integerToShortString(rawHealth).toUpperCase(Locale.ROOT);
 
-        String formattedName = healthMatcher.replaceAll("$1" + formattedHealth + "$3");
+        String maxHealthString = healthMatcher.group("max");
+        if (maxHealthString != null) {
+            int rawMaxHealth = Integer.parseInt(maxHealthString);
+            String formattedMaxHealth = healthMatcher
+                    .group(3)
+                    .replace(
+                            maxHealthString,
+                            StringUtils.integerToShortString(rawMaxHealth).toUpperCase(Locale.ROOT));
+            formattedHealth += formattedMaxHealth;
+        }
+
+        String formattedName = healthMatcher.replaceAll("$1" + formattedHealth + "$5");
         return Component.literal(formattedName);
     }
 }
