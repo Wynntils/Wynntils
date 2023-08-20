@@ -83,27 +83,15 @@ public class BankModel extends Model {
     }
 
     public Optional<String> getPageName(int page) {
-        String customPageName =
-                switch (currentContainer) {
-                    case BANK -> customBankPageNames.get().get(page);
-                    case BLOCK_BANK -> customBlockBankPageNames.get().get(page);
-                    case BOOKSHELF -> customBookshelfPageNames.get().get(page);
-                    case MISC_BUCKET -> customMiscBucketPageNames.get().get(page);
-                    default -> null;
-                };
+        Storage<Map<Integer, String>> pageNamesMap = getCurrentNameMap();
 
-        return Optional.ofNullable(customPageName);
+        if (pageNamesMap == null) return Optional.empty();
+
+        return Optional.ofNullable(pageNamesMap.get().get(page));
     }
 
     public void saveCurrentPageName(String nameToSet) {
-        Storage<Map<Integer, String>> pageNamesMap =
-                switch (currentContainer) {
-                    case BANK -> customBankPageNames;
-                    case BLOCK_BANK -> customBlockBankPageNames;
-                    case BOOKSHELF -> customBookshelfPageNames;
-                    case MISC_BUCKET -> customMiscBucketPageNames;
-                    default -> null;
-                };
+        Storage<Map<Integer, String>> pageNamesMap = getCurrentNameMap();
 
         if (pageNamesMap == null) return;
 
@@ -114,24 +102,12 @@ public class BankModel extends Model {
     }
 
     public void resetCurrentPageName() {
-        switch (currentContainer) {
-            case BANK -> {
-                customBankPageNames.get().remove(currentPage);
-                customBankPageNames.touched();
-            }
-            case BLOCK_BANK -> {
-                customBlockBankPageNames.get().remove(currentPage);
-                customBlockBankPageNames.touched();
-            }
-            case BOOKSHELF -> {
-                customBookshelfPageNames.get().remove(currentPage);
-                customBookshelfPageNames.touched();
-            }
-            case MISC_BUCKET -> {
-                customMiscBucketPageNames.get().remove(currentPage);
-                customMiscBucketPageNames.touched();
-            }
-        }
+        Storage<Map<Integer, String>> pageNamesMap = getCurrentNameMap();
+
+        if (pageNamesMap == null) return;
+
+        pageNamesMap.get().remove(currentPage);
+        pageNamesMap.touched();
 
         editingName = false;
     }
@@ -179,5 +155,15 @@ public class BankModel extends Model {
 
     public void toggleEditingName(boolean editingName) {
         this.editingName = editingName;
+    }
+
+    private Storage<Map<Integer, String>> getCurrentNameMap() {
+        return switch (currentContainer) {
+            case BANK -> customBankPageNames;
+            case BLOCK_BANK -> customBlockBankPageNames;
+            case BOOKSHELF -> customBookshelfPageNames;
+            case MISC_BUCKET -> customMiscBucketPageNames;
+            default -> null;
+        };
     }
 }
