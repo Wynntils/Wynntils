@@ -85,6 +85,7 @@ public class TextInputBoxWidget extends AbstractWidget {
     public void renderWidget(PoseStack poseStack, int mouseX, int mouseY, float partialTick) {
         Pair<String, Integer> renderedTextDetails = getRenderedText(getMaxTextWidth());
         String renderedText = renderedTextDetails.a();
+        int renderedTextStart = renderedTextDetails.b();
 
         Pair<Integer, Integer> highlightedVisibleInterval = getRenderedHighlighedInterval(renderedText);
 
@@ -104,6 +105,7 @@ public class TextInputBoxWidget extends AbstractWidget {
         doRenderWidget(
                 poseStack,
                 renderedText,
+                renderedTextStart,
                 firstPortion,
                 highlightedPortion,
                 lastPortion,
@@ -116,6 +118,7 @@ public class TextInputBoxWidget extends AbstractWidget {
     protected void doRenderWidget(
             PoseStack poseStack,
             String renderedText,
+            int renderedTextStart,
             String firstPortion,
             String highlightedPortion,
             String lastPortion,
@@ -199,15 +202,13 @@ public class TextInputBoxWidget extends AbstractWidget {
 
         StringBuilder builder = new StringBuilder();
 
-        // First append to the left of the cursor
-        int stringPosition = cursorPosition - 1;
-        while (font.width(builder.toString()) < maxTextWidth && stringPosition >= 0) {
-            builder.append(textBoxInput.charAt(stringPosition));
-
+        int stringPosition = cursorPosition;
+        while (font.width(builder.toString()) < maxTextWidth && stringPosition > 0) {
             stringPosition--;
+            builder.append(textBoxInput.charAt(stringPosition));
         }
 
-        final int startingAt = Math.max(stringPosition, 0); // If we went too far, start at the beginning
+        final int startingAt = stringPosition;
 
         // Now reverse so it's actually to the left
         builder.reverse();
