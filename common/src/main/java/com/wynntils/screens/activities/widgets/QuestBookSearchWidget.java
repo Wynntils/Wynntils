@@ -36,6 +36,7 @@ public class QuestBookSearchWidget extends SearchWidget {
     protected void renderText(
             PoseStack poseStack,
             String renderedText,
+            int renderedTextStart,
             String firstPortion,
             String highlightedPortion,
             String lastPortion,
@@ -51,6 +52,7 @@ public class QuestBookSearchWidget extends SearchWidget {
         super.renderText(
                 poseStack,
                 renderedText,
+                renderedTextStart,
                 firstPortion,
                 highlightedPortion,
                 lastPortion,
