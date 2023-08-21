@@ -1,12 +1,13 @@
 /*
  * Copyright © Wynntils 2023.
- * This file is released under AGPLv3. See LICENSE for full license details.
+ * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.screens.guides;
 
 import com.wynntils.core.WynntilsMod;
 import com.wynntils.screens.base.WynntilsListScreen;
 import com.wynntils.screens.base.widgets.BackButton;
+import com.wynntils.screens.base.widgets.ItemSearchHelperWidget;
 import com.wynntils.screens.base.widgets.ItemSearchWidget;
 import com.wynntils.screens.base.widgets.PageSelectorButton;
 import com.wynntils.screens.base.widgets.WynntilsButton;
@@ -17,6 +18,8 @@ import net.minecraft.network.chat.Component;
 public abstract class WynntilsGuideScreen<E, B extends WynntilsButton> extends WynntilsListScreen<E, B> {
     protected WynntilsGuideScreen(Component component) {
         super(component);
+
+        // Override the search widget with our own
         this.searchWidget =
                 new ItemSearchWidget(0, -22, Texture.CONTENT_BOOK_BACKGROUND.width(), 20, q -> reloadElements(), this);
     }
@@ -25,7 +28,16 @@ public abstract class WynntilsGuideScreen<E, B extends WynntilsButton> extends W
     protected void doInit() {
         super.doInit();
 
-        // TODO Add the explanation text
+        WynntilsButton helperButton = new ItemSearchHelperWidget(
+                Texture.CONTENT_BOOK_BACKGROUND.width() - 17,
+                -19,
+                (int) (Texture.INFO.width() / 1.7f),
+                (int) (Texture.INFO.height() / 1.7f),
+                Texture.INFO,
+                a -> {},
+                false,
+                true);
+        this.addRenderableWidget(helperButton);
 
         this.addRenderableWidget(new BackButton(
                 (int) ((Texture.CONTENT_BOOK_BACKGROUND.width() / 2f - 16) / 2f),

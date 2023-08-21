@@ -18,15 +18,15 @@ import com.wynntils.mc.event.ContainerSetContentEvent;
 import com.wynntils.mc.event.ContainerSetSlotEvent;
 import com.wynntils.mc.event.InventoryKeyPressEvent;
 import com.wynntils.mc.event.ScreenInitEvent;
+import com.wynntils.mc.event.ScreenRenderEvent;
 import com.wynntils.mc.event.SlotRenderEvent;
 import com.wynntils.mc.extension.ScreenExtension;
 import com.wynntils.models.containers.type.SearchableContainerType;
 import com.wynntils.models.items.WynnItem;
 import com.wynntils.models.items.WynnItemCache;
-import com.wynntils.screens.base.widgets.BasicTexturedButton;
+import com.wynntils.screens.base.widgets.ItemSearchHelperWidget;
 import com.wynntils.screens.base.widgets.ItemSearchWidget;
 import com.wynntils.screens.base.widgets.SearchWidget;
-import com.wynntils.screens.base.widgets.WynntilsButton;
 import com.wynntils.services.itemfilter.type.ItemSearchQuery;
 import com.wynntils.utils.colors.CommonColors;
 import com.wynntils.utils.colors.CustomColor;
@@ -34,13 +34,9 @@ import com.wynntils.utils.mc.McUtils;
 import com.wynntils.utils.render.RenderUtils;
 import com.wynntils.utils.render.Texture;
 import com.wynntils.utils.wynn.ContainerUtils;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Optional;
-import net.minecraft.ChatFormatting;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
-import net.minecraft.network.chat.Component;
 import net.minecraft.world.Container;
 import net.minecraft.world.inventory.ChestMenu;
 import net.minecraft.world.item.ItemStack;
@@ -81,6 +77,7 @@ public class ContainerSearchFeature extends Feature {
     private long guildBankLastSearch = 0;
 
     private SearchWidget lastSearchWidget;
+    private ItemSearchHelperWidget lastItemSearchHelperWidget;
     private SearchableContainerType currentSearchableContainerType;
     private boolean autoSearching = false;
     private ItemSearchQuery lastSearchQuery;
@@ -101,6 +98,22 @@ public class ContainerSearchFeature extends Feature {
 
         currentSearchableContainerType = searchableContainerType;
         addWidgets(((AbstractContainerScreen<ChestMenu>) screen), renderX, renderY);
+    }
+
+    // This might not be needed in 1.20
+    @SubscribeEvent
+    public void onScreenRender(ScreenRenderEvent event) {
+        if (!(event.getScreen() instanceof AbstractContainerScreen<?> screen)) return;
+        if (lastItemSearchHelperWidget == null) return;
+
+        if (lastItemSearchHelperWidget.isHovered()) {
+            screen.renderTooltip(
+                    event.getPoseStack(),
+                    lastItemSearchHelperWidget.getTooltipLines(),
+                    Optional.empty(),
+                    event.getMouseX(),
+                    event.getMouseY());
+        }
     }
 
     @SubscribeEvent
@@ -132,6 +145,7 @@ public class ContainerSearchFeature extends Feature {
     @SubscribeEvent
     public void onContainerClose(ContainerCloseEvent.Post event) {
         lastSearchWidget = null;
+        lastItemSearchHelperWidget = null;
         currentSearchableContainerType = null;
         autoSearching = false;
         guildBankLastSearch = 0;
@@ -236,28 +250,17 @@ public class ContainerSearchFeature extends Feature {
 
         screen.addRenderableWidget(lastSearchWidget);
 
-        List<Component> helpTooltip =
-                new ArrayList<>(List.of(Component.translatable("feature.wynntils.containerSearch.tooltip")));
-        Services.ItemFilter.getFilters().forEach(itemFilter -> {
-            helpTooltip.add(Component.empty());
-            helpTooltip.add(Component.literal(itemFilter.getName() + ":")
-                    .withStyle(ChatFormatting.YELLOW)
-                    .append(Component.translatable(itemFilter.getUsage()).withStyle(ChatFormatting.WHITE)));
-            helpTooltip.add(Component.translatable(itemFilter.getDescription()).withStyle(ChatFormatting.GRAY));
-        });
-
-        WynntilsButton infoButton = new BasicTexturedButton(
+        lastItemSearchHelperWidget = new ItemSearchHelperWidget(
                 renderX + screen.imageWidth - 11,
                 renderY - 14,
                 Texture.INFO.width() / 3,
                 Texture.INFO.height() / 3,
                 Texture.INFO,
                 a -> {},
-                helpTooltip,
                 false,
                 true);
 
-        screen.addRenderableWidget(infoButton);
+        screen.addRenderableWidget(lastItemSearchHelperWidget);
     }
 
     private void matchItems(ItemSearchQuery searchQuery, ChestMenu chestMenu) {
@@ -283,7 +286,9 @@ public class ContainerSearchFeature extends Feature {
 
     private void forceUpdateSearch() {
         Screen screen = McUtils.mc().screen;
-        if (lastSearchWidget != null && screen instanceof AbstractContainerScreen<?> abstractContainerScreen && abstractContainerScreen.getMenu() instanceof ChestMenu chestMenu) {
+        if (lastSearchWidget != null
+                && screen instanceof AbstractContainerScreen<?> abstractContainerScreen
+                && abstractContainerScreen.getMenu() instanceof ChestMenu chestMenu) {
             matchItems(lastSearchQuery, chestMenu);
         }
     }

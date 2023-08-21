@@ -1,6 +1,6 @@
 /*
  * Copyright © Wynntils 2023.
- * This file is released under AGPLv3. See LICENSE for full license details.
+ * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.services.itemfilter;
 
@@ -16,7 +16,6 @@ import com.wynntils.services.itemfilter.type.ItemFilterInstance;
 import com.wynntils.services.itemfilter.type.ItemSearchQuery;
 import com.wynntils.utils.type.ErrorOr;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 import java.util.Locale;
 import java.util.Optional;
