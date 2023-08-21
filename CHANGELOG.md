@@ -1,9 +1,21 @@
+## [0.0.3-alpha.334](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.333...v0.0.3-alpha.334) (2023-08-21)
+
+
+### New Features
+
+* Add advanced search filters to container search and item guides (fix-up) ([#2035](https://github.com/Wynntils/Artemis/issues/2035)) ([15cc48f](https://github.com/Wynntils/Artemis/commit/15cc48f21b02a2b157ddd4394695081587d6d264))
+
 ## [0.0.3-alpha.333](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.332...v0.0.3-alpha.333) (2023-08-20)
 
 
 ### Bug Fixes
 
 * Match Wynn's gathering cooldown correctly ([#2034](https://github.com/Wynntils/Artemis/issues/2034)) ([64f110a](https://github.com/Wynntils/Artemis/commit/64f110adc90071c5d1623edd1e94be1ddebe0954))
+
+
+### Miscellaneous Chores
+
+* **release:** v0.0.3-alpha.333 [skip ci] ([fb62ce4](https://github.com/Wynntils/Artemis/commit/fb62ce4c3ef621873be1192217f8b88e684c1ca0))
 
 ## [0.0.3-alpha.332](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.331...v0.0.3-alpha.332) (2023-08-19)
 
@@ -40,16 +52,4 @@
 ### Miscellaneous Chores
 
 * **release:** v0.0.3-alpha.330 [skip ci] ([66142c3](https://github.com/Wynntils/Artemis/commit/66142c3a1921f9a2e533fcb865c546e9c8d1d2c5))
-
-## [0.0.3-alpha.329](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.328...v0.0.3-alpha.329) (2023-08-18)
-
-
-### Bug Fixes
-
-* fix red beacon counter not reseting between runs ([#2022](https://github.com/Wynntils/Artemis/issues/2022)) ([6ced8b5](https://github.com/Wynntils/Artemis/commit/6ced8b53e251c88da1bcc34b8a27d519c870d035))
-
-
-### Miscellaneous Chores
-
-* **release:** v0.0.3-alpha.329 [skip ci] ([74038c1](https://github.com/Wynntils/Artemis/commit/74038c1fb91f7c28e712b45d6bc099a84476fb73))
 
