@@ -61,6 +61,8 @@ public class PerCharacterGuildContributionFeature extends Feature {
                 event.setCanceled(true);
                 commandSentFromHere = false;
                 return;
+            } else if (commandSentFromHere) {
+                commandSentFromHere = false;
             }
 
             int contributionAmount = Integer.parseInt(contributionMatcher.group(1));
