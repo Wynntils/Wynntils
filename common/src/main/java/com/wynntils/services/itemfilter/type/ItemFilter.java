@@ -20,12 +20,9 @@ import net.minecraft.client.resources.language.I18n;
  */
 public abstract class ItemFilter {
     protected final String name;
-    protected final List<String> aliases;
     protected final String translationName;
 
-    protected ItemFilter(List<String> aliases) {
-        this.aliases = aliases;
-
+    protected ItemFilter() {
         String name = this.getClass().getSimpleName().replace("ItemFilter", "");
         this.name = CaseFormat.UPPER_CAMEL.to(CaseFormat.LOWER_UNDERSCORE, name);
         this.translationName = CaseFormat.UPPER_CAMEL.to(CaseFormat.LOWER_CAMEL, name);
@@ -39,12 +36,10 @@ public abstract class ItemFilter {
      */
     public abstract ErrorOr<? extends ItemFilterInstance> createInstance(String inputString);
 
+    public abstract List<String> getAliases();
+
     public String getName() {
         return name;
-    }
-
-    public List<String> getAliases() {
-        return aliases;
     }
 
     protected String getTranslationName() {

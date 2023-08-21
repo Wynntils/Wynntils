@@ -6,6 +6,7 @@ package com.wynntils.services.itemfilter.filters;
 
 import static java.lang.Integer.parseInt;
 
+import com.wynntils.models.items.WynnItem;
 import com.wynntils.models.items.properties.LeveledItemProperty;
 import com.wynntils.services.itemfilter.type.ItemFilter;
 import com.wynntils.services.itemfilter.type.ItemFilterInstance;
@@ -16,10 +17,6 @@ import java.util.regex.Pattern;
 
 public class LevelItemFilter extends ItemFilter {
     private static final Pattern LEVEL_RANGE_PATTERN = Pattern.compile("^(\\d+)(?:-(\\d+))?$");
-
-    public LevelItemFilter() {
-        super(List.of("lvl"));
-    }
 
     @Override
     public ErrorOr<ItemFilterInstance> createInstance(String inputString) {
@@ -41,8 +38,28 @@ public class LevelItemFilter extends ItemFilter {
             return ErrorOr.error(getTranslation("maxLessThanMin", inputString));
         }
 
-        return ErrorOr.of(wynnItem -> wynnItem instanceof LeveledItemProperty leveledItem
-                && leveledItem.getLevel() >= minLevel
-                && maxLevel >= leveledItem.getLevel());
+        return ErrorOr.of(new LevelItemFilterInstance(minLevel, maxLevel));
+    }
+
+    @Override
+    public List<String> getAliases() {
+        return List.of("lvl");
+    }
+
+    private static final class LevelItemFilterInstance implements ItemFilterInstance {
+        private final int minLevel;
+        private final int maxLevel;
+
+        private LevelItemFilterInstance(int minLevel, int maxLevel) {
+            this.minLevel = minLevel;
+            this.maxLevel = maxLevel;
+        }
+
+        @Override
+        public boolean matches(WynnItem wynnItem) {
+            return wynnItem instanceof LeveledItemProperty leveledItem
+                    && leveledItem.getLevel() >= minLevel
+                    && maxLevel >= leveledItem.getLevel();
+        }
     }
 }
