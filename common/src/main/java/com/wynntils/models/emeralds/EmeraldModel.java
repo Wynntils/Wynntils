@@ -189,7 +189,7 @@ public final class EmeraldModel extends Model {
     }
 
     @SubscribeEvent
-    public void onMenuOpened(MenuEvent.MenuOpenedEvent e) {
+    public void onMenuOpened(MenuEvent.MenuOpenedEvent.Pre e) {
         String title = WynnUtils.normalizeBadString(e.getTitle().getString());
         if (title.equals("Emerald Pouch")) {
             pouchContainerId = e.getContainerId();

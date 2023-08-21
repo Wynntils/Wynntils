@@ -60,7 +60,7 @@ public final class CharacterSelectionModel extends Model {
     }
 
     @SubscribeEvent
-    public void onMenuOpened(MenuEvent.MenuOpenedEvent event) {
+    public void onMenuOpened(MenuEvent.MenuOpenedEvent.Pre event) {
         if (!StyledText.fromComponent(event.getTitle()).equals(CHARACTER_SELECTION_TITLE)) {
             return;
         }

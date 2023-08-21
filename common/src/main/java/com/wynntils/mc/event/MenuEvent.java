@@ -12,13 +12,12 @@ import net.minecraftforge.eventbus.api.Event;
 /** Fired for Menu events */
 public abstract class MenuEvent extends Event {
     /** Fired for Menu opened events */
-    @Cancelable
-    public static class MenuOpenedEvent extends MenuEvent {
+    public abstract static class MenuOpenedEvent extends MenuEvent {
         private final MenuType<?> menuType;
         private final Component title;
         private final int containerId;
 
-        public MenuOpenedEvent(MenuType<?> menuType, Component title, int containerId) {
+        protected MenuOpenedEvent(MenuType<?> menuType, Component title, int containerId) {
             this.menuType = menuType;
             this.title = title;
             this.containerId = containerId;
@@ -34,6 +33,19 @@ public abstract class MenuEvent extends Event {
 
         public int getContainerId() {
             return containerId;
+        }
+
+        @Cancelable
+        public static final class Pre extends MenuOpenedEvent {
+            public Pre(MenuType<?> menuType, Component title, int containerId) {
+                super(menuType, title, containerId);
+            }
+        }
+
+        public static final class Post extends MenuOpenedEvent {
+            public Post(MenuType<?> menuType, Component title, int containerId) {
+                super(menuType, title, containerId);
+            }
         }
     }
 
