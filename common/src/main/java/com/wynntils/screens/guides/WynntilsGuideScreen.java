@@ -64,23 +64,15 @@ public abstract class WynntilsGuideScreen<E, B extends WynntilsButton> extends W
 
     @Override
     protected final void reloadElementsList(String ignored) {
-        /*
-        At the time this code is written, this method will always be called with this.searchWidget().getTextInput() as
-        argument. Therefore it makes sense to use this hack to migrate from simple text based search to advanced filters
-        search.
-        This hack is preferable to adding even more complexity in the superclass.
-        See https://github.com/Wynntils/Artemis/pull/1860#discussion_r1279180536 for more details.
-        */
+        // We override this method to so we can use our special ItemSearchWidget
 
-        if (!(searchWidget instanceof ItemSearchWidget)) {
+        if (!(searchWidget instanceof ItemSearchWidget itemSearchWidget)) {
             WynntilsMod.error(
                     "WynntilsGuideScreen#reloadElementsList was called with a search widget that is not an ItemSearchWidget");
-            if (WynntilsMod.isDevelopmentEnvironment()) {
-                System.exit(1);
-            }
+            return;
         }
 
-        reloadElementsList(((ItemSearchWidget) searchWidget).getSearchQuery());
+        reloadElementsList(itemSearchWidget.getSearchQuery());
     }
 
     protected abstract void reloadElementsList(ItemSearchQuery searchQuery);
