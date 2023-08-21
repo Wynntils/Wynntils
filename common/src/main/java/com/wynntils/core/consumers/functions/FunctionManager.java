@@ -33,6 +33,7 @@ import com.wynntils.functions.generic.ConditionalFunctions;
 import com.wynntils.functions.generic.LocationFunctions;
 import com.wynntils.functions.generic.LogicFunctions;
 import com.wynntils.functions.generic.MathFunctions;
+import com.wynntils.functions.generic.NamedFunctions;
 import com.wynntils.functions.generic.StringFunctions;
 import com.wynntils.models.emeralds.type.EmeraldUnits;
 import com.wynntils.utils.type.ErrorOr;
@@ -380,6 +381,10 @@ public final class FunctionManager extends Manager {
         registerFunction(new MathFunctions.RoundFunction());
         registerFunction(new MathFunctions.SquareRootFunction());
         registerFunction(new MathFunctions.SubtractFunction());
+
+        registerFunction(new NamedFunctions.NameFunction());
+        registerFunction(new NamedFunctions.NamedValueFunction());
+        registerFunction(new NamedFunctions.ValueFunction());
 
         registerFunction(new StringFunctions.CappedStringFunction());
         registerFunction(new StringFunctions.ConcatFunction());

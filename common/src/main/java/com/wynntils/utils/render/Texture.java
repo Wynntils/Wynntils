@@ -72,6 +72,7 @@ public enum Texture {
     EDIT_ICON("icons/generic/edit_icon.png", 6, 16),
     FAVORITE_ICON("icons/generic/favorite_icon.png", 18, 18),
     HELP_ICON("icons/generic/help_icon.png", 10, 16),
+    INFO("info.png", 25, 25),
     ITEM_LOCK("icons/generic/item_lock_icon.png", 16, 16),
     OVERLAY_EXTRA_ICON("icons/generic/overlay_extra_icon.png", 16, 16),
     QUESTS_SCROLL_ICON("icons/generic/quests_scroll_icon.png", 16, 16),
