@@ -135,6 +135,10 @@ public class ItemFilterService extends Service {
      * @return true if the item matches the search query, false otherwise
      */
     public boolean matches(ItemSearchQuery searchQuery, ItemStack itemStack) {
+        if (searchQuery.isEmpty()) {
+            return true;
+        }
+
         Optional<WynnItem> wynnItemOpt = Models.Item.getWynnItem(itemStack);
         if (wynnItemOpt.isEmpty()) {
             return false;
