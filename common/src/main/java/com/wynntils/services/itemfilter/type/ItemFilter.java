@@ -1,12 +1,11 @@
 /*
  * Copyright © Wynntils 2023.
- * This file is released under AGPLv3. See LICENSE for full license details.
+ * This file is released under LGPLv3. See LICENSE for full license details.
  */
 package com.wynntils.services.itemfilter.type;
 
 import com.google.common.base.CaseFormat;
 import com.wynntils.utils.type.ErrorOr;
-import java.util.Collections;
 import java.util.List;
 import net.minecraft.client.resources.language.I18n;
 

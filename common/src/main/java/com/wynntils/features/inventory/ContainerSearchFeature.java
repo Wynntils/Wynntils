@@ -283,7 +283,9 @@ public class ContainerSearchFeature extends Feature {
 
     private void forceUpdateSearch() {
         Screen screen = McUtils.mc().screen;
-        if (lastSearchWidget != null && screen instanceof AbstractContainerScreen<?> abstractContainerScreen && abstractContainerScreen.getMenu() instanceof ChestMenu chestMenu) {
+        if (lastSearchWidget != null
+                && screen instanceof AbstractContainerScreen<?> abstractContainerScreen
+                && abstractContainerScreen.getMenu() instanceof ChestMenu chestMenu) {
             matchItems(lastSearchQuery, chestMenu);
         }
     }
