@@ -1,9 +1,21 @@
+## [0.0.3-alpha.341](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.340...v0.0.3-alpha.341) (2023-08-23)
+
+
+### Miscellaneous Chores
+
+* add translations for shiny functions ([#2040](https://github.com/Wynntils/Artemis/issues/2040)) ([1321f4e](https://github.com/Wynntils/Artemis/commit/1321f4e4b652403770771e04d6fff61c9a6e37ac))
+
 ## [0.0.3-alpha.340](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.339...v0.0.3-alpha.340) (2023-08-23)
 
 
 ### New Features
 
 * Handle Shiny stats properly ([#2006](https://github.com/Wynntils/Artemis/issues/2006)) ([8f134a4](https://github.com/Wynntils/Artemis/commit/8f134a41a7d3ac79d22d9c2291d70a0e6129ec44)), closes [#1941](https://github.com/Wynntils/Artemis/issues/1941)
+
+
+### Miscellaneous Chores
+
+* **release:** v0.0.3-alpha.340 [skip ci] ([d162ce4](https://github.com/Wynntils/Artemis/commit/d162ce43bb299975932e5c0f8a8fc4ddb592123c))
 
 ## [0.0.3-alpha.339](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.338...v0.0.3-alpha.339) (2023-08-23)
 
@@ -45,12 +57,4 @@
 ### Miscellaneous Chores
 
 * **release:** v0.0.3-alpha.337 [skip ci] ([421c231](https://github.com/Wynntils/Artemis/commit/421c2315d34a18bb71f8b30af0395bef0089761f))
-
-## [0.0.3-alpha.336](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.335...v0.0.3-alpha.336) (2023-08-23)
-
-
-### Miscellaneous Chores
-
-* Move Wynntils dependencies to Jitpack ([#2038](https://github.com/Wynntils/Artemis/issues/2038)) ([5bc02c8](https://github.com/Wynntils/Artemis/commit/5bc02c83b40493aa933d9fca178b4197cb4f2b50))
-* **release:** v0.0.3-alpha.336 [skip ci] ([6c6c5d4](https://github.com/Wynntils/Artemis/commit/6c6c5d4ca65690c99ecc9fd2e91fdead2c3072c5))
 
