@@ -8,17 +8,22 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import com.wynntils.core.consumers.screens.WynntilsScreen;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.network.chat.Component;
+import net.minecraft.world.inventory.AbstractContainerMenu;
 
-public class WrappedScreen extends WynntilsScreen {
-    private final Screen originalScreen;
-    private final int containerId;
+public abstract class WrappedScreen extends WynntilsScreen {
+    protected final Screen originalScreen;
+    protected final AbstractContainerMenu containerMenu;
+    protected final int containerId;
 
-    public WrappedScreen(Screen originalScreen, int containerId) {
+    protected WrappedScreen(Screen originalScreen, AbstractContainerMenu containerMenu, int containerId) {
         super(Component.literal("Wrapped ").append(originalScreen.getTitle()));
 
         this.originalScreen = originalScreen;
+        this.containerMenu = containerMenu;
         this.containerId = containerId;
     }
+
+    protected abstract void setParent(WrappedScreenParent<?> parent);
 
     @Override
     protected void doInit() {
@@ -30,9 +35,8 @@ public class WrappedScreen extends WynntilsScreen {
         originalScreen.render(poseStack, mouseX, mouseY, partialTick);
     }
 
-    @Override
-    public boolean doMouseClicked(double mouseX, double mouseY, int button) {
-        return originalScreen.mouseClicked(mouseX, mouseY, button);
+    public AbstractContainerMenu getContainerMenu() {
+        return containerMenu;
     }
 
     public final int getContainerId() {
