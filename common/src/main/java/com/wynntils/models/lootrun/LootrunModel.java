@@ -396,13 +396,14 @@ public class LootrunModel extends Model {
 
         if (oldChallenges == CappedValue.EMPTY) return;
 
-        if (getLastTaskBeaconColor() == BeaconColor.RED && amount.max() > oldChallenges.max()) {
-            addToRedBeaconTaskCount(amount.max() - oldChallenges.max());
-            return;
-        }
-
+        // First, check if we completed a challenge.
         if (amount.current() > oldChallenges.current()) {
             addToRedBeaconTaskCount(-1);
+        }
+
+        // Then, check if we completed have new challenges from a red beacon.
+        if (getLastTaskBeaconColor() == BeaconColor.RED && amount.max() > oldChallenges.max()) {
+            addToRedBeaconTaskCount(amount.max() - oldChallenges.max());
         }
     }
 
