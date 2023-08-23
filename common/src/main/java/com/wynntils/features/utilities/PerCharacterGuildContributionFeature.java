@@ -57,12 +57,14 @@ public class PerCharacterGuildContributionFeature extends Feature {
         Matcher contributionMatcher = message.getMatcher(CONTRIBUTION_PATTERN);
 
         if (contributionMatcher.matches()) {
-            if (commandSentFromHere && hideContributionMessage.get()) {
-                event.setCanceled(true);
-                commandSentFromHere = false;
+            if (commandSentFromHere) {
+                 commandSentFromHere = false;
+                
+                if (hideContributionMessage.get()) {
+                        event.setCanceled(true);
+                }
+                
                 return;
-            } else if (commandSentFromHere) {
-                commandSentFromHere = false;
             }
 
             int contributionAmount = Integer.parseInt(contributionMatcher.group(1));
