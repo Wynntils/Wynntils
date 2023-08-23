@@ -1,9 +1,21 @@
+## [0.0.3-alpha.336](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.335...v0.0.3-alpha.336) (2023-08-23)
+
+
+### Miscellaneous Chores
+
+* Move Wynntils dependencies to Jitpack ([#2038](https://github.com/Wynntils/Artemis/issues/2038)) ([5bc02c8](https://github.com/Wynntils/Artemis/commit/5bc02c83b40493aa933d9fca178b4197cb4f2b50))
+
 ## [0.0.3-alpha.335](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.334...v0.0.3-alpha.335) (2023-08-23)
 
 
 ### Bug Fixes
 
 * Tentative fix for NPC dialogue changes in latest Wynncraft hotfix ([#2026](https://github.com/Wynntils/Artemis/issues/2026)) ([e247118](https://github.com/Wynntils/Artemis/commit/e2471187c95c09c3bdf1cbdcdc5d9376bcb683b9))
+
+
+### Miscellaneous Chores
+
+* **release:** v0.0.3-alpha.335 [skip ci] ([93acf94](https://github.com/Wynntils/Artemis/commit/93acf946214f942982448100966f5170c4eefa24))
 
 ## [0.0.3-alpha.334](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.333...v0.0.3-alpha.334) (2023-08-21)
 
@@ -40,16 +52,4 @@
 ### Miscellaneous Chores
 
 * **release:** v0.0.3-alpha.332 [skip ci] ([5540166](https://github.com/Wynntils/Artemis/commit/55401663d4415af8b239e3f379efd16b23dfa1c8))
-
-## [0.0.3-alpha.331](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.330...v0.0.3-alpha.331) (2023-08-19)
-
-
-### New Features
-
-* Party Management Screen suggests friends in other servers ([#2001](https://github.com/Wynntils/Artemis/issues/2001)) ([4f10639](https://github.com/Wynntils/Artemis/commit/4f106393198ef69eb85f953e3ec93af64853f0e2))
-
-
-### Miscellaneous Chores
-
-* **release:** v0.0.3-alpha.331 [skip ci] ([f342c56](https://github.com/Wynntils/Artemis/commit/f342c5671432904f430a26973f2f11d0b89566f5))
 
