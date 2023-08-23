@@ -1,9 +1,22 @@
+## [0.0.3-alpha.337](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.336...v0.0.3-alpha.337) (2023-08-23)
+
+
+### New Features
+
+* Add support in AbbreviateMobHealthFeature for lootrun DEFEND/DESTROY bars ([#2032](https://github.com/Wynntils/Artemis/issues/2032)) ([e803719](https://github.com/Wynntils/Artemis/commit/e80371910cfe852269d0655f595e0f14d5420a1d))
+
+
+### Bug Fixes
+
+* lootrun red beacon counter not always being accurate ([#2039](https://github.com/Wynntils/Artemis/issues/2039)) ([54bf17e](https://github.com/Wynntils/Artemis/commit/54bf17e4a67d2ae92fd6dda9e105e2cb2e06cc76))
+
 ## [0.0.3-alpha.336](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.335...v0.0.3-alpha.336) (2023-08-23)
 
 
 ### Miscellaneous Chores
 
 * Move Wynntils dependencies to Jitpack ([#2038](https://github.com/Wynntils/Artemis/issues/2038)) ([5bc02c8](https://github.com/Wynntils/Artemis/commit/5bc02c83b40493aa933d9fca178b4197cb4f2b50))
+* **release:** v0.0.3-alpha.336 [skip ci] ([6c6c5d4](https://github.com/Wynntils/Artemis/commit/6c6c5d4ca65690c99ecc9fd2e91fdead2c3072c5))
 
 ## [0.0.3-alpha.335](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.334...v0.0.3-alpha.335) (2023-08-23)
 
@@ -40,16 +53,4 @@
 ### Miscellaneous Chores
 
 * **release:** v0.0.3-alpha.333 [skip ci] ([fb62ce4](https://github.com/Wynntils/Artemis/commit/fb62ce4c3ef621873be1192217f8b88e684c1ca0))
-
-## [0.0.3-alpha.332](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.331...v0.0.3-alpha.332) (2023-08-19)
-
-
-### New Features
-
-* Add NamedValue ([#2025](https://github.com/Wynntils/Artemis/issues/2025)) ([499d5b2](https://github.com/Wynntils/Artemis/commit/499d5b2b73b4e4dab4b475a00c2a19c6b851602d))
-
-
-### Miscellaneous Chores
-
-* **release:** v0.0.3-alpha.332 [skip ci] ([5540166](https://github.com/Wynntils/Artemis/commit/55401663d4415af8b239e3f379efd16b23dfa1c8))
 
