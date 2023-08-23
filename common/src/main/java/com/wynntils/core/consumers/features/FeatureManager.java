@@ -61,7 +61,8 @@ import com.wynntils.features.debug.PacketDebuggerFeature;
 import com.wynntils.features.embellishments.WybelSoundFeature;
 import com.wynntils.features.embellishments.WynntilsCosmeticsFeature;
 import com.wynntils.features.inventory.ContainerSearchFeature;
-import com.wynntils.features.inventory.CustomBankPagesFeature;
+import com.wynntils.features.inventory.CustomBankPageNamesFeature;
+import com.wynntils.features.inventory.CustomBankQuickJumpsFeature;
 import com.wynntils.features.inventory.DurabilityArcFeature;
 import com.wynntils.features.inventory.EmeraldPouchFillArcFeature;
 import com.wynntils.features.inventory.EmeraldPouchHotkeyFeature;
@@ -233,7 +234,8 @@ public final class FeatureManager extends Manager {
 
         // region inventory
         registerFeature(new ContainerSearchFeature());
-        registerFeature(new CustomBankPagesFeature());
+        registerFeature(new CustomBankPageNamesFeature());
+        registerFeature(new CustomBankQuickJumpsFeature());
         registerFeature(new DurabilityArcFeature());
         registerFeature(new EmeraldPouchFillArcFeature());
         registerFeature(new EmeraldPouchHotkeyFeature());
