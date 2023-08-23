@@ -106,7 +106,7 @@ public final class Models {
     public static final SeaskipperModel Seaskipper = new SeaskipperModel(Item);
     public static final ShamanMaskModel ShamanMask = new ShamanMaskModel(WorldState);
     public static final ShamanTotemModel ShamanTotem = new ShamanTotemModel(WorldState);
-    public static final ShinyModel Shiny = new ShinyModel();
+    public static final ShinyModel Shiny = new ShinyModel(Item);
     public static final SpellModel Spell = new SpellModel(Character);
     public static final DiscoveryModel Discovery = new DiscoveryModel(CombatXp, Marker, Quest, Territory);
     public static final EmeraldModel Emerald = new EmeraldModel(Character, Item);
