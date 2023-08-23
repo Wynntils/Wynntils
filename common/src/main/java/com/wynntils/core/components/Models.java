@@ -18,6 +18,8 @@ import com.wynntils.models.character.CharacterModel;
 import com.wynntils.models.character.CharacterSelectionModel;
 import com.wynntils.models.characterstats.CharacterStatsModel;
 import com.wynntils.models.characterstats.CombatXpModel;
+import com.wynntils.models.characterstats.ShinyModel;
+import com.wynntils.models.containers.BankModel;
 import com.wynntils.models.containers.ContainerModel;
 import com.wynntils.models.containers.LootChestModel;
 import com.wynntils.models.containers.PlayerInventoryModel;
@@ -85,6 +87,7 @@ public final class Models {
 
     // Models with dependencies, ordered alphabetically as far as possible
     public static final ActivityModel Activity = new ActivityModel(Marker);
+    public static final BankModel Bank = new BankModel(Container);
     public static final BombModel Bomb = new BombModel(WorldState);
     public static final CaveModel Cave = new CaveModel(Activity);
     public static final CombatXpModel CombatXp = new CombatXpModel(WorldState);
@@ -103,6 +106,7 @@ public final class Models {
     public static final SeaskipperModel Seaskipper = new SeaskipperModel(Item);
     public static final ShamanMaskModel ShamanMask = new ShamanMaskModel(WorldState);
     public static final ShamanTotemModel ShamanTotem = new ShamanTotemModel(WorldState);
+    public static final ShinyModel Shiny = new ShinyModel(Item);
     public static final SpellModel Spell = new SpellModel(Character);
     public static final DiscoveryModel Discovery = new DiscoveryModel(CombatXp, Marker, Quest, Territory);
     public static final EmeraldModel Emerald = new EmeraldModel(Character, Item);
