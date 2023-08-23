@@ -58,12 +58,12 @@ public class PerCharacterGuildContributionFeature extends Feature {
 
         if (contributionMatcher.matches()) {
             if (commandSentFromHere) {
-                 commandSentFromHere = false;
-                
+                commandSentFromHere = false;
+
                 if (hideContributionMessage.get()) {
-                        event.setCanceled(true);
+                    event.setCanceled(true);
                 }
-                
+
                 return;
             }
 
