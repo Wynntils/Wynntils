@@ -42,7 +42,7 @@ public class PerCharacterGuildContributionFeature extends Feature {
         int amountToContribute = characterContributions.get().getOrDefault(Models.Character.getId(), -1);
 
         if (amountToContribute != -1) {
-            commandSentFromHere = true;
+            waitingForCommandResponse = true;
             McUtils.sendCommand("guild xp " + amountToContribute);
         }
     }
@@ -57,8 +57,8 @@ public class PerCharacterGuildContributionFeature extends Feature {
         Matcher contributionMatcher = message.getMatcher(CONTRIBUTION_PATTERN);
 
         if (contributionMatcher.matches()) {
-            if (commandSentFromHere) {
-                commandSentFromHere = false;
+            if (waitingForCommandResponse) {
+                waitingForCommandResponse = false;
 
                 if (hideContributionMessage.get()) {
                     event.setCanceled(true);
