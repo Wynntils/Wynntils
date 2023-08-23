@@ -1,9 +1,21 @@
+## [0.0.3-alpha.340](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.339...v0.0.3-alpha.340) (2023-08-23)
+
+
+### New Features
+
+* Handle Shiny stats properly ([#2006](https://github.com/Wynntils/Artemis/issues/2006)) ([8f134a4](https://github.com/Wynntils/Artemis/commit/8f134a41a7d3ac79d22d9c2291d70a0e6129ec44)), closes [#1941](https://github.com/Wynntils/Artemis/issues/1941)
+
 ## [0.0.3-alpha.339](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.338...v0.0.3-alpha.339) (2023-08-23)
 
 
 ### New Features
 
 * Per character guild contribution ([#2031](https://github.com/Wynntils/Artemis/issues/2031)) ([ace9cbb](https://github.com/Wynntils/Artemis/commit/ace9cbb5a80b109ffca290bc400f8699208e300d))
+
+
+### Miscellaneous Chores
+
+* **release:** v0.0.3-alpha.339 [skip ci] ([632af5e](https://github.com/Wynntils/Artemis/commit/632af5eb1e2e65863b7f69fb0cbc8e73aff42d53))
 
 ## [0.0.3-alpha.338](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.337...v0.0.3-alpha.338) (2023-08-23)
 
@@ -41,16 +53,4 @@
 
 * Move Wynntils dependencies to Jitpack ([#2038](https://github.com/Wynntils/Artemis/issues/2038)) ([5bc02c8](https://github.com/Wynntils/Artemis/commit/5bc02c83b40493aa933d9fca178b4197cb4f2b50))
 * **release:** v0.0.3-alpha.336 [skip ci] ([6c6c5d4](https://github.com/Wynntils/Artemis/commit/6c6c5d4ca65690c99ecc9fd2e91fdead2c3072c5))
-
-## [0.0.3-alpha.335](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.334...v0.0.3-alpha.335) (2023-08-23)
-
-
-### Bug Fixes
-
-* Tentative fix for NPC dialogue changes in latest Wynncraft hotfix ([#2026](https://github.com/Wynntils/Artemis/issues/2026)) ([e247118](https://github.com/Wynntils/Artemis/commit/e2471187c95c09c3bdf1cbdcdc5d9376bcb683b9))
-
-
-### Miscellaneous Chores
-
-* **release:** v0.0.3-alpha.335 [skip ci] ([93acf94](https://github.com/Wynntils/Artemis/commit/93acf946214f942982448100966f5170c4eefa24))
 
