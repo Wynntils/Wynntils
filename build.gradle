@@ -32,7 +32,7 @@ subprojects {
                 // Use this if the repo requires auth
                 // see https://docs.gradle.org/6.4/userguide/declaring_repositories.html#sec:supported_transport_protocols
                 username = new String(Base64.getDecoder().decode("V3lubnRpbHNCb3Q="))
-                password = new String(Base64.getDecoder().decode("Z2hwX09rY0lXaUEwUEhvTXk2Nk1odkRuZ08wbWZBNFp3SzNJTkQ3dw=="))
+                password = new String(Base64.getDecoder().decode("Z2hwX1VjRzJxNEtPOG5oUGZBakU1NVFGRVFxM2tKMGZkbDE4eFZpdw=="))
             }
         }
     }
