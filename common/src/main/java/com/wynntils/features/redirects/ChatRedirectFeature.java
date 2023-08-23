@@ -35,6 +35,9 @@ public class ChatRedirectFeature extends Feature {
     public final Config<RedirectAction> friendJoin = new Config<>(RedirectAction.REDIRECT);
 
     @Persisted
+    public final Config<RedirectAction> guildContribution = new Config<>(RedirectAction.REDIRECT);
+
+    @Persisted
     public final Config<RedirectAction> heal = new Config<>(RedirectAction.REDIRECT);
 
     @Persisted
@@ -83,6 +86,7 @@ public class ChatRedirectFeature extends Feature {
         register(new EmptyManaBankRedirector());
         register(new FriendJoinRedirector());
         register(new FriendLeaveRedirector());
+        register(new GuildContributionRedirector());
         register(new HealRedirector());
         register(new HealedByOtherRedirector());
         register(new HorseDespawnedRedirector());
@@ -286,6 +290,29 @@ public class ChatRedirectFeature extends Feature {
             String playerName = matcher.group("name");
 
             return StyledText.fromString(ChatFormatting.RED + "← " + ChatFormatting.DARK_GREEN + playerName);
+        }
+    }
+
+    private class GuildContributionRedirector extends SimpleRedirector {
+        private static final Pattern FOREGROUND_PATTERN =
+                Pattern.compile("§3You will now contribute §b(\\d+)%§3 of your XP to §b.*§3.");
+
+        @Override
+        protected Pattern getForegroundPattern() {
+            return FOREGROUND_PATTERN;
+        }
+
+        @Override
+        public RedirectAction getAction() {
+            return guildContribution.get();
+        }
+
+        @Override
+        protected StyledText getNotification(Matcher matcher) {
+            String contributionAmount = matcher.group(1);
+
+            return StyledText.fromString(
+                    ChatFormatting.AQUA + "Contributing " + contributionAmount + "% of your XP to your guild");
         }
     }
 
