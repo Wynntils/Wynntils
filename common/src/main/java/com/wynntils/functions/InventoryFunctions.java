@@ -16,6 +16,7 @@ import com.wynntils.models.items.properties.DurableItemProperty;
 import com.wynntils.models.stats.type.ShinyStat;
 import com.wynntils.utils.mc.McUtils;
 import com.wynntils.utils.type.CappedValue;
+import com.wynntils.utils.type.NamedValue;
 import com.wynntils.utils.wynn.InventoryUtils;
 import java.util.List;
 import java.util.Optional;
@@ -248,14 +249,14 @@ public class InventoryFunctions {
         }
     }
 
-    public static class HeldItemShinyStatFunction extends Function<String> {
+    public static class HeldItemShinyStatFunction extends Function<NamedValue> {
         @Override
-        public String getValue(FunctionArguments arguments) {
+        public NamedValue getValue(FunctionArguments arguments) {
             ItemStack itemStack = InventoryUtils.getItemInHand();
             Optional<ShinyStat> shinyStatOpt = Models.Shiny.getShinyStat(itemStack);
-            if (shinyStatOpt.isEmpty()) return "";
+            if (shinyStatOpt.isEmpty()) return NamedValue.EMPTY;
 
-            return shinyStatOpt.get().name() + ": " + shinyStatOpt.get().value();
+            return new NamedValue(shinyStatOpt.get().name(), shinyStatOpt.get().value());
         }
     }
 
