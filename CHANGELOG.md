@@ -1,3 +1,10 @@
+## [0.0.3-alpha.338](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.337...v0.0.3-alpha.338) (2023-08-23)
+
+
+### New Features
+
+* Custom Bank Page Names ([#2023](https://github.com/Wynntils/Artemis/issues/2023)) ([e4043c6](https://github.com/Wynntils/Artemis/commit/e4043c62de4e2336f36ccb1788b5cfda9106ce55))
+
 ## [0.0.3-alpha.337](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.336...v0.0.3-alpha.337) (2023-08-23)
 
 
@@ -9,6 +16,11 @@
 ### Bug Fixes
 
 * lootrun red beacon counter not always being accurate ([#2039](https://github.com/Wynntils/Artemis/issues/2039)) ([54bf17e](https://github.com/Wynntils/Artemis/commit/54bf17e4a67d2ae92fd6dda9e105e2cb2e06cc76))
+
+
+### Miscellaneous Chores
+
+* **release:** v0.0.3-alpha.337 [skip ci] ([421c231](https://github.com/Wynntils/Artemis/commit/421c2315d34a18bb71f8b30af0395bef0089761f))
 
 ## [0.0.3-alpha.336](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.335...v0.0.3-alpha.336) (2023-08-23)
 
@@ -41,16 +53,4 @@
 ### Miscellaneous Chores
 
 * **release:** v0.0.3-alpha.334 [skip ci] ([92454d3](https://github.com/Wynntils/Artemis/commit/92454d30b104b128cd9a47c7584c66f794888ba0))
-
-## [0.0.3-alpha.333](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.332...v0.0.3-alpha.333) (2023-08-20)
-
-
-### Bug Fixes
-
-* Match Wynn's gathering cooldown correctly ([#2034](https://github.com/Wynntils/Artemis/issues/2034)) ([64f110a](https://github.com/Wynntils/Artemis/commit/64f110adc90071c5d1623edd1e94be1ddebe0954))
-
-
-### Miscellaneous Chores
-
-* **release:** v0.0.3-alpha.333 [skip ci] ([fb62ce4](https://github.com/Wynntils/Artemis/commit/fb62ce4c3ef621873be1192217f8b88e684c1ca0))
 
