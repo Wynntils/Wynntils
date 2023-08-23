@@ -33,7 +33,7 @@ public class PerCharacterGuildContributionFeature extends Feature {
     @Persisted
     public final Config<Boolean> hideContributionMessage = new Config<>(true);
 
-    private boolean commandSentFromHere = false;
+    private boolean waitingForCommandResponse = false;
 
     @SubscribeEvent
     public void onCharacterChange(CharacterUpdateEvent e) {
