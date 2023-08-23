@@ -160,6 +160,9 @@ public class ContainerSearchFeature extends Feature {
                 || !(McUtils.mc().screen instanceof AbstractContainerScreen<?> abstractContainerScreen)
                 || !(abstractContainerScreen.getMenu() instanceof ChestMenu chestMenu)) return;
 
+        ScreenExtension screen = (ScreenExtension) abstractContainerScreen;
+        if (screen.getFocusedTextInput() != lastSearchWidget) return;
+
         autoSearching = true;
         matchItems(lastSearchQuery, chestMenu);
 
