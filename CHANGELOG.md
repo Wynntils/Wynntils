@@ -1,9 +1,21 @@
+## [0.0.3-alpha.335](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.334...v0.0.3-alpha.335) (2023-08-23)
+
+
+### Bug Fixes
+
+* Tentative fix for NPC dialogue changes in latest Wynncraft hotfix ([#2026](https://github.com/Wynntils/Artemis/issues/2026)) ([e247118](https://github.com/Wynntils/Artemis/commit/e2471187c95c09c3bdf1cbdcdc5d9376bcb683b9))
+
 ## [0.0.3-alpha.334](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.333...v0.0.3-alpha.334) (2023-08-21)
 
 
 ### New Features
 
 * Add advanced search filters to container search and item guides (fix-up) ([#2035](https://github.com/Wynntils/Artemis/issues/2035)) ([15cc48f](https://github.com/Wynntils/Artemis/commit/15cc48f21b02a2b157ddd4394695081587d6d264))
+
+
+### Miscellaneous Chores
+
+* **release:** v0.0.3-alpha.334 [skip ci] ([92454d3](https://github.com/Wynntils/Artemis/commit/92454d30b104b128cd9a47c7584c66f794888ba0))
 
 ## [0.0.3-alpha.333](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.332...v0.0.3-alpha.333) (2023-08-20)
 
@@ -40,16 +52,4 @@
 ### Miscellaneous Chores
 
 * **release:** v0.0.3-alpha.331 [skip ci] ([f342c56](https://github.com/Wynntils/Artemis/commit/f342c5671432904f430a26973f2f11d0b89566f5))
-
-## [0.0.3-alpha.330](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.329...v0.0.3-alpha.330) (2023-08-19)
-
-
-### Bug Fixes
-
-* Parse Silverbull hours correctly ([#2027](https://github.com/Wynntils/Artemis/issues/2027)) ([c1b4422](https://github.com/Wynntils/Artemis/commit/c1b4422bb67b70408797d0fff879f652f19f96ce))
-
-
-### Miscellaneous Chores
-
-* **release:** v0.0.3-alpha.330 [skip ci] ([66142c3](https://github.com/Wynntils/Artemis/commit/66142c3a1921f9a2e533fcb865c546e9c8d1d2c5))
 
