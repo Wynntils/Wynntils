@@ -29,7 +29,7 @@ public class ExportButton extends WynntilsButton implements TooltipProvider {
 
     @Override
     public void renderWidget(PoseStack poseStack, int mouseX, int mouseY, float partialTick) {
-        Texture mapShareButton = Texture.MAP_SHARE_BUTTON;
+        Texture mapShareButton = Texture.SHARE_ICON;
         RenderUtils.drawTexturedRect(
                 poseStack,
                 mapShareButton.resource(),

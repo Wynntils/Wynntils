@@ -10,6 +10,7 @@ import com.google.gson.JsonObject;
 import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.components.Manager;
 import com.wynntils.core.persisted.PersistedValue;
+import com.wynntils.core.persisted.upfixers.config.CustomBankQuickJumpsUpfixer;
 import com.wynntils.core.persisted.upfixers.config.CustomCommandKeybindSlashStartUpfixer;
 import com.wynntils.core.persisted.upfixers.config.CustomPoiIconEnumBugUpfixer;
 import com.wynntils.core.persisted.upfixers.config.CustomPoiVisbilityUpfixer;
@@ -41,6 +42,7 @@ public class UpfixerManager extends Manager {
         registerUpfixer(new MapToMainMapRenamedConfigsUpfixer());
         registerUpfixer(new OverlayRestructuringUpfixer());
         registerUpfixer(new OverlayConfigsIntegrationUpfixer());
+        registerUpfixer(new CustomBankQuickJumpsUpfixer());
     }
 
     private void registerUpfixer(Upfixer upfixer) {

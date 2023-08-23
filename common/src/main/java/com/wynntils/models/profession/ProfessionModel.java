@@ -64,8 +64,7 @@ public class ProfessionModel extends Model {
     private static final Pattern INFO_MENU_PROFESSION_LORE_PATTERN =
             Pattern.compile("§6- §7[ⓀⒸⒷⒿⒺⒹⓁⒶⒼⒻⒾⒽ] Lv. (\\d+) (.+)§8 \\[([\\d.]+)%\\]");
 
-    // This should be 60, but Wynn is buggy and it is 70 (35 with profession speed)
-    public static final int GATHER_COOLDOWN_TIME = 70;
+    private static final int GATHER_COOLDOWN_TIME = 60;
     private static final int PROFESSION_NODE_RESPAWN_TIME = 60;
     private static final int MAX_HARVEST_LABEL_AGE = 1000;
     private static final int TICKS_PER_TIMER_UPDATE = 10;

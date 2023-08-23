@@ -19,13 +19,13 @@ public class QuestInfoButton extends WynntilsButton {
     public void renderWidget(PoseStack poseStack, int mouseX, int mouseY, float partialTick) {
         RenderUtils.drawTexturedRect(
                 poseStack,
-                Texture.QUESTS_BUTTON.resource(),
+                Texture.QUESTS_SCROLL_ICON.resource(),
                 this.getX(),
                 this.getY(),
                 this.width,
                 this.height,
-                Texture.QUESTS_BUTTON.width(),
-                Texture.QUESTS_BUTTON.height());
+                Texture.QUESTS_SCROLL_ICON.width(),
+                Texture.QUESTS_SCROLL_ICON.height());
     }
 
     @Override

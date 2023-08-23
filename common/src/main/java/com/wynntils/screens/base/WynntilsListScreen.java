@@ -7,6 +7,7 @@ package com.wynntils.screens.base;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.wynntils.core.text.StyledText;
 import com.wynntils.screens.activities.widgets.QuestBookSearchWidget;
+import com.wynntils.screens.base.widgets.SearchWidget;
 import com.wynntils.screens.base.widgets.TextInputBoxWidget;
 import com.wynntils.screens.base.widgets.WynntilsButton;
 import com.wynntils.utils.MathUtils;
@@ -34,7 +35,7 @@ public abstract class WynntilsListScreen<E, B extends WynntilsButton> extends Wy
     protected List<E> elements = new ArrayList<>();
 
     private final List<B> elementButtons = new ArrayList<>();
-    protected final QuestBookSearchWidget searchWidget;
+    protected SearchWidget searchWidget;
     protected Renderable hovered = null;
 
     @Override
@@ -49,10 +50,10 @@ public abstract class WynntilsListScreen<E, B extends WynntilsButton> extends Wy
 
         // Do not lose search info on re-init
         this.searchWidget = new QuestBookSearchWidget(
-                (int) (Texture.QUEST_BOOK_BACKGROUND.width() / 2f + 15),
+                (int) (Texture.CONTENT_BOOK_BACKGROUND.width() / 2f + 15),
                 0,
-                Texture.QUEST_BOOK_SEARCH.width(),
-                Texture.QUEST_BOOK_SEARCH.height(),
+                Texture.CONTENT_BOOK_SEARCH.width(),
+                Texture.CONTENT_BOOK_SEARCH.height(),
                 s -> reloadElements(),
                 this);
     }
@@ -79,9 +80,9 @@ public abstract class WynntilsListScreen<E, B extends WynntilsButton> extends Wy
                 .renderAlignedTextInBox(
                         poseStack,
                         StyledText.fromString((currentPage) + " / " + (maxPage)),
-                        Texture.QUEST_BOOK_BACKGROUND.width() / 2f,
-                        Texture.QUEST_BOOK_BACKGROUND.width(),
-                        Texture.QUEST_BOOK_BACKGROUND.height() - 25,
+                        Texture.CONTENT_BOOK_BACKGROUND.width() / 2f,
+                        Texture.CONTENT_BOOK_BACKGROUND.width(),
+                        Texture.CONTENT_BOOK_BACKGROUND.height() - 25,
                         0,
                         CommonColors.BLACK,
                         HorizontalAlignment.CENTER,
@@ -93,11 +94,11 @@ public abstract class WynntilsListScreen<E, B extends WynntilsButton> extends Wy
                 .renderAlignedTextInBox(
                         poseStack,
                         StyledText.fromString(key),
-                        Texture.QUEST_BOOK_BACKGROUND.width() / 2f + 15f,
-                        Texture.QUEST_BOOK_BACKGROUND.width() - 15f,
+                        Texture.CONTENT_BOOK_BACKGROUND.width() / 2f + 15f,
+                        Texture.CONTENT_BOOK_BACKGROUND.width() - 15f,
                         0,
-                        Texture.QUEST_BOOK_BACKGROUND.height(),
-                        Texture.QUEST_BOOK_BACKGROUND.width() / 2f - 30f,
+                        Texture.CONTENT_BOOK_BACKGROUND.height(),
+                        Texture.CONTENT_BOOK_BACKGROUND.width() / 2f - 30f,
                         CommonColors.BLACK,
                         HorizontalAlignment.CENTER,
                         VerticalAlignment.MIDDLE,

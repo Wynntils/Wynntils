@@ -6,12 +6,10 @@ package com.wynntils.screens.guides.gear;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.wynntils.core.components.Models;
+import com.wynntils.core.components.Services;
 import com.wynntils.core.text.StyledText;
-import com.wynntils.screens.base.WynntilsListScreen;
-import com.wynntils.screens.base.widgets.BackButton;
-import com.wynntils.screens.base.widgets.PageSelectorButton;
-import com.wynntils.screens.guides.WynntilsGuidesListScreen;
-import com.wynntils.utils.StringUtils;
+import com.wynntils.screens.guides.WynntilsGuideScreen;
+import com.wynntils.services.itemfilter.type.ItemSearchQuery;
 import com.wynntils.utils.colors.CommonColors;
 import com.wynntils.utils.render.FontRenderer;
 import com.wynntils.utils.render.Texture;
@@ -23,7 +21,7 @@ import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.resources.language.I18n;
 import net.minecraft.network.chat.Component;
 
-public final class WynntilsItemGuideScreen extends WynntilsListScreen<GuideGearItemStack, GuideGearItemStackButton> {
+public final class WynntilsItemGuideScreen extends WynntilsGuideScreen<GuideGearItemStack, GuideGearItemStackButton> {
     private static final int ELEMENTS_COLUMNS = 7;
     private static final int ELEMENT_ROWS = 7;
 
@@ -35,33 +33,6 @@ public final class WynntilsItemGuideScreen extends WynntilsListScreen<GuideGearI
 
     public static Screen create() {
         return new WynntilsItemGuideScreen();
-    }
-
-    @Override
-    protected void doInit() {
-        super.doInit();
-
-        this.addRenderableWidget(new BackButton(
-                (int) ((Texture.QUEST_BOOK_BACKGROUND.width() / 2f - 16) / 2f),
-                65,
-                Texture.BACK_ARROW.width() / 2,
-                Texture.BACK_ARROW.height(),
-                WynntilsGuidesListScreen.create()));
-
-        this.addRenderableWidget(new PageSelectorButton(
-                Texture.QUEST_BOOK_BACKGROUND.width() / 2 + 50 - Texture.FORWARD_ARROW.width() / 2,
-                Texture.QUEST_BOOK_BACKGROUND.height() - 25,
-                Texture.FORWARD_ARROW.width() / 2,
-                Texture.FORWARD_ARROW.height(),
-                false,
-                this));
-        this.addRenderableWidget(new PageSelectorButton(
-                Texture.QUEST_BOOK_BACKGROUND.width() - 50,
-                Texture.QUEST_BOOK_BACKGROUND.height() - 25,
-                Texture.FORWARD_ARROW.width() / 2,
-                Texture.FORWARD_ARROW.height(),
-                true,
-                this));
     }
 
     @Override
@@ -103,7 +74,7 @@ public final class WynntilsItemGuideScreen extends WynntilsListScreen<GuideGearI
                 .renderText(
                         poseStack,
                         StyledText.fromString(I18n.get("screens.wynntils.wynntilsGuides.itemGuide.available")),
-                        Texture.QUEST_BOOK_BACKGROUND.width() * 0.75f,
+                        Texture.CONTENT_BOOK_BACKGROUND.width() * 0.75f,
                         30,
                         CommonColors.BLACK,
                         HorizontalAlignment.CENTER,
@@ -117,15 +88,17 @@ public final class WynntilsItemGuideScreen extends WynntilsListScreen<GuideGearI
         int yOffset = ((i % getElementsPerPage()) / ELEMENTS_COLUMNS) * 20;
 
         return new GuideGearItemStackButton(
-                xOffset + Texture.QUEST_BOOK_BACKGROUND.width() / 2 + 13, yOffset + 43, 18, 18, elements.get(i), this);
+                xOffset + Texture.CONTENT_BOOK_BACKGROUND.width() / 2 + 13,
+                yOffset + 43,
+                18,
+                18,
+                elements.get(i),
+                this);
     }
 
-    @Override
-    protected void reloadElementsList(String searchTerm) {
+    protected void reloadElementsList(ItemSearchQuery searchQuery) {
         elements.addAll(getAllGearItems().stream()
-                .filter(gearItemStack -> StringUtils.partialMatch(
-                        StyledText.fromComponent(gearItemStack.getHoverName()).getStringWithoutFormatting(),
-                        searchTerm))
+                .filter(itemStack -> Services.ItemFilter.matches(searchQuery, itemStack))
                 .toList());
     }
 

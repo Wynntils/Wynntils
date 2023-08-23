@@ -376,7 +376,13 @@ public class LootrunModel extends Model {
     public void addToRedBeaconTaskCount(int changeAmount) {
         Integer oldCount = redBeaconTaskCountStorage.get().getOrDefault(Models.Character.getId(), 0);
 
-        redBeaconTaskCountStorage.get().put(Models.Character.getId(), oldCount + changeAmount);
+        int newCount = Math.max(oldCount + changeAmount, 0);
+        redBeaconTaskCountStorage.get().put(Models.Character.getId(), newCount);
+        redBeaconTaskCountStorage.touched();
+    }
+
+    public void resetRedBeaconTaskCount() {
+        redBeaconTaskCountStorage.get().remove(Models.Character.getId());
         redBeaconTaskCountStorage.touched();
     }
 
@@ -390,13 +396,14 @@ public class LootrunModel extends Model {
 
         if (oldChallenges == CappedValue.EMPTY) return;
 
-        if (getLastTaskBeaconColor() == BeaconColor.RED) {
-            addToRedBeaconTaskCount(amount.max() - oldChallenges.max());
-            return;
+        // First, check if we completed a challenge.
+        if (amount.current() > oldChallenges.current()) {
+            addToRedBeaconTaskCount(-1);
         }
 
-        if (getRedBeaconTaskCount() > 0) {
-            addToRedBeaconTaskCount(-1);
+        // Then, check if we completed have new challenges from a red beacon.
+        if (getLastTaskBeaconColor() == BeaconColor.RED && amount.max() > oldChallenges.max()) {
+            addToRedBeaconTaskCount(amount.max() - oldChallenges.max());
         }
     }
 
@@ -407,6 +414,7 @@ public class LootrunModel extends Model {
             taskType = null;
             setClosestBeacon(null);
             setLastTaskBeaconColor(null);
+            resetRedBeaconTaskCount();
 
             possibleTaskLocations = new HashSet<>();
 
