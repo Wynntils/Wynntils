@@ -1,9 +1,21 @@
+## [0.0.3-alpha.339](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.338...v0.0.3-alpha.339) (2023-08-23)
+
+
+### New Features
+
+* Per character guild contribution ([#2031](https://github.com/Wynntils/Artemis/issues/2031)) ([ace9cbb](https://github.com/Wynntils/Artemis/commit/ace9cbb5a80b109ffca290bc400f8699208e300d))
+
 ## [0.0.3-alpha.338](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.337...v0.0.3-alpha.338) (2023-08-23)
 
 
 ### New Features
 
 * Custom Bank Page Names ([#2023](https://github.com/Wynntils/Artemis/issues/2023)) ([e4043c6](https://github.com/Wynntils/Artemis/commit/e4043c62de4e2336f36ccb1788b5cfda9106ce55))
+
+
+### Miscellaneous Chores
+
+* **release:** v0.0.3-alpha.338 [skip ci] ([e759bca](https://github.com/Wynntils/Artemis/commit/e759bca94abddcf13f5eb12ba803790c97074dba))
 
 ## [0.0.3-alpha.337](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.336...v0.0.3-alpha.337) (2023-08-23)
 
@@ -41,16 +53,4 @@
 ### Miscellaneous Chores
 
 * **release:** v0.0.3-alpha.335 [skip ci] ([93acf94](https://github.com/Wynntils/Artemis/commit/93acf946214f942982448100966f5170c4eefa24))
-
-## [0.0.3-alpha.334](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.333...v0.0.3-alpha.334) (2023-08-21)
-
-
-### New Features
-
-* Add advanced search filters to container search and item guides (fix-up) ([#2035](https://github.com/Wynntils/Artemis/issues/2035)) ([15cc48f](https://github.com/Wynntils/Artemis/commit/15cc48f21b02a2b157ddd4394695081587d6d264))
-
-
-### Miscellaneous Chores
-
-* **release:** v0.0.3-alpha.334 [skip ci] ([92454d3](https://github.com/Wynntils/Artemis/commit/92454d30b104b128cd9a47c7584c66f794888ba0))
 
