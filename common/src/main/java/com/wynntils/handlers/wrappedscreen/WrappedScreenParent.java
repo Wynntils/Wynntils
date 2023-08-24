@@ -13,11 +13,8 @@ import net.minecraft.world.inventory.AbstractContainerMenu;
  * This class is only registered to the event bus when active. Every logic that needs to be done on a wrapped screen should be done here.
  * This class may depend on {@link com.wynntils.core.components.Model}s, {@link com.wynntils.core.components.Handler}s and {@link com.wynntils.core.components.Services}s.
  */
-public interface WrappedScreenParent<T extends WrappedScreen> {
-    /**
-     * @return The pattern that matches the title of the screen that should be replaced.
-     */
-    Pattern getReplacedScreenTitlePattern();
+public abstract class WrappedScreenParent<T extends WrappedScreen> {
+    protected abstract Pattern getReplacedScreenTitlePattern();
 
     /**
      * @param originalScreen        The original screen that should be wrapped.
@@ -25,16 +22,17 @@ public interface WrappedScreenParent<T extends WrappedScreen> {
      * @param containerId           The container id of the original screen.
      * @return The wrapped screen.
      */
-    T createWrappedScreen(Screen originalScreen, AbstractContainerMenu abstractContainerMenu, int containerId);
+    protected abstract T createWrappedScreen(
+            Screen originalScreen, AbstractContainerMenu abstractContainerMenu, int containerId);
 
     /**
      * Called when a wrapped screen is opened. This method should initialize the state of this class.
      * @param wrappedScreen The wrapped screen that was opened.
      */
-    void setWrappedScreen(T wrappedScreen);
+    protected abstract void setWrappedScreen(T wrappedScreen);
 
     /**
      * Called when a wrapped screen is closed. This method should reset the state of this class.
      */
-    void reset();
+    protected abstract void reset();
 }

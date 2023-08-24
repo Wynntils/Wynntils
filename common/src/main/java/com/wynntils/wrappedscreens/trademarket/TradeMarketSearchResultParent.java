@@ -23,7 +23,7 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import org.lwjgl.glfw.GLFW;
 
-public class TradeMarketSearchResultParent implements WrappedScreenParent<TradeMarketSearchResultScreen> {
+public class TradeMarketSearchResultParent extends WrappedScreenParent<TradeMarketSearchResultScreen> {
     // Patterns
     private static final Pattern TITLE_PATTERN = Pattern.compile("Search Results");
 
@@ -84,25 +84,27 @@ public class TradeMarketSearchResultParent implements WrappedScreenParent<TradeM
     }
 
     @Override
-    public Pattern getReplacedScreenTitlePattern() {
+    protected Pattern getReplacedScreenTitlePattern() {
         return TITLE_PATTERN;
     }
 
     @Override
-    public TradeMarketSearchResultScreen createWrappedScreen(
+    protected TradeMarketSearchResultScreen createWrappedScreen(
             Screen originalScreen, AbstractContainerMenu containerMenu, int containerId) {
         return new TradeMarketSearchResultScreen(originalScreen, containerMenu, containerId);
     }
 
     @Override
-    public void setWrappedScreen(TradeMarketSearchResultScreen wrappedScreen) {
+    protected void setWrappedScreen(TradeMarketSearchResultScreen wrappedScreen) {
         this.wrappedScreen = wrappedScreen;
     }
 
     @Override
-    public void reset() {
+    protected void reset() {
         currentPage = 0;
         itemMap.clear();
+
+        this.wrappedScreen = null;
     }
 
     public void updateItems(ItemSearchQuery searchQuery) {

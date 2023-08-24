@@ -5,8 +5,8 @@
 package com.wynntils.wrappedscreens.trademarket;
 
 import com.mojang.blaze3d.vertex.PoseStack;
+import com.wynntils.core.components.Handlers;
 import com.wynntils.handlers.wrappedscreen.WrappedScreen;
-import com.wynntils.handlers.wrappedscreen.WrappedScreenParent;
 import com.wynntils.screens.base.TextboxScreen;
 import com.wynntils.screens.base.widgets.ItemSearchWidget;
 import net.minecraft.client.gui.screens.Screen;
@@ -31,11 +31,9 @@ public class TradeMarketSearchResultScreen extends WrappedScreen {
         int renderY = (originalContainerScreen.height - originalContainerScreen.imageHeight) / 2 - 20;
 
         itemSearchWidget = new ItemSearchWidget(renderX, renderY, 175, 20, q -> reloadElements(), (TextboxScreen) this);
-    }
 
-    @Override
-    protected void setParent(WrappedScreenParent<?> parent) {
-        this.parent = (TradeMarketSearchResultParent) parent;
+        parent = (TradeMarketSearchResultParent)
+                Handlers.WrappedScreen.getParent(this.getClass(), TradeMarketSearchResultParent.class);
     }
 
     @Override

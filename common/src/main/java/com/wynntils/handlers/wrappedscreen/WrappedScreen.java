@@ -23,8 +23,6 @@ public abstract class WrappedScreen extends WynntilsScreen {
         this.containerId = containerId;
     }
 
-    protected abstract void setParent(WrappedScreenParent<?> parent);
-
     @Override
     protected void doInit() {
         originalScreen.init();
