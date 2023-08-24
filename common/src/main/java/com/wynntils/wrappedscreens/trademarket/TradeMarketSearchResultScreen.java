@@ -18,13 +18,19 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.inventory.ChestMenu;
 
 public class TradeMarketSearchResultScreen extends WynntilsContainerScreen<ChestMenu> implements WrappedScreen {
+    // Constants
     private static final ResourceLocation CONTAINER_BACKGROUND =
             new ResourceLocation("textures/gui/container/generic_54.png");
 
+    // Info
     private final TradeMarketSearchResultParent parent;
     private final WrappedScreenInfo wrappedScreenInfo;
 
+    // Widgets
     private final ItemSearchWidget itemSearchWidget;
+
+    // This gets used as a title for the screen
+    private Component currentState = Component.empty();
 
     protected TradeMarketSearchResultScreen(WrappedScreenInfo wrappedScreenInfo, TradeMarketSearchResultParent parent) {
         super(ChestMenu.sixRows(999, McUtils.inventory()), McUtils.inventory(), Component.literal("Wrapped Screen"));
@@ -60,6 +66,18 @@ public class TradeMarketSearchResultScreen extends WynntilsContainerScreen<Chest
     }
 
     @Override
+    protected void renderLabels(PoseStack poseStack, int mouseX, int mouseY) {
+        // MC code to render the title and inventory label, but with our own title
+        this.font.draw(poseStack, this.currentState, (float) this.titleLabelX, (float) this.titleLabelY, 4210752);
+        this.font.draw(
+                poseStack,
+                this.playerInventoryTitle,
+                (float) this.inventoryLabelX,
+                (float) this.inventoryLabelY,
+                4210752);
+    }
+
+    @Override
     protected void renderBg(PoseStack poseStack, float partialTick, int mouseX, int mouseY) {
         // MC code to render the background
         RenderSystem.setShaderTexture(0, CONTAINER_BACKGROUND);
@@ -69,6 +87,10 @@ public class TradeMarketSearchResultScreen extends WynntilsContainerScreen<Chest
 
         blit(poseStack, x, y, 0, 0, this.imageWidth, this.menu.getRowCount() * 18 + 17);
         blit(poseStack, x, y + this.menu.getRowCount() * 18 + 17, 0, 126, this.imageWidth, 96);
+    }
+
+    protected void setCurrentState(Component currentState) {
+        this.currentState = currentState;
     }
 
     private void reloadElements() {

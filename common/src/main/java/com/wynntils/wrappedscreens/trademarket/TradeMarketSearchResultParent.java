@@ -4,13 +4,13 @@
  */
 package com.wynntils.wrappedscreens.trademarket;
 
-import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.components.Services;
 import com.wynntils.handlers.wrappedscreen.WrappedScreenParent;
 import com.wynntils.handlers.wrappedscreen.type.WrappedScreenInfo;
 import com.wynntils.mc.event.ContainerSetContentEvent;
 import com.wynntils.mc.event.ContainerSetSlotEvent;
 import com.wynntils.services.itemfilter.type.ItemSearchQuery;
+import com.wynntils.utils.mc.LoreUtils;
 import com.wynntils.utils.wynn.ContainerUtils;
 import it.unimi.dsi.fastutil.ints.Int2ObjectOpenHashMap;
 import java.util.HashMap;
@@ -18,7 +18,10 @@ import java.util.List;
 import java.util.Map;
 import java.util.regex.Pattern;
 import java.util.stream.Stream;
+import net.minecraft.nbt.ListTag;
+import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import org.lwjgl.glfw.GLFW;
 
@@ -28,60 +31,68 @@ public class TradeMarketSearchResultParent extends WrappedScreenParent<TradeMark
 
     // Constants
     private static final int EXPECTED_ITEMS_PER_PAGE = 42;
+    private static final int LAST_ITEM_SLOT = 54;
     private static final int PAGE_BATCH_SIZE = 10;
 
     // Slots
+    private static final int PREVIOUS_PAGE_SLOT = 26;
     private static final int NEXT_PAGE_SLOT = 35;
 
     private TradeMarketSearchResultScreen wrappedScreen;
 
+    private int requestedPage = -1;
     private int currentPage = 0;
+
+    private boolean expectingItems = false;
+    private int lastPageNumber = -1;
+
     private Map<Integer, Int2ObjectOpenHashMap<ItemStack>> itemMap = new HashMap<>();
+    private int emptyItemCount = 0;
 
     private Map<Integer, ItemStack> displayedItems = new HashMap<>();
 
     @SubscribeEvent
     public void onContainerSetContent(ContainerSetContentEvent.Pre event) {
+        if (!expectingItems || requestedPage == -1) return;
+
         WrappedScreenInfo wrappedScreenInfo = wrappedScreen.getWrappedScreenInfo();
         if (event.getContainerId() != wrappedScreenInfo.containerId()) return;
 
         // We only use set slot events to get the items,
         // but we don't want the items to be set on our custom screen
         event.setCanceled(true);
+
+        // Reset the empty item count,
+        // set content packets mean we are on a new page
+        emptyItemCount = 0;
     }
 
     @SubscribeEvent
     public void onContainerSetSlot(ContainerSetSlotEvent.Pre event) {
+        if (!expectingItems || requestedPage == -1) return;
+
         WrappedScreenInfo wrappedScreenInfo = wrappedScreen.getWrappedScreenInfo();
         if (event.getContainerId() != wrappedScreenInfo.containerId()) return;
 
         int slot = event.getSlot();
 
         // We only care about the slots that are in the "search results" area
-        if (slot % 9 >= 7) return;
+        if (slot % 9 >= 7 || slot >= LAST_ITEM_SLOT) return;
 
         // We don't want the items to be set on our custom screen
         event.setCanceled(true);
 
-        itemMap.computeIfAbsent(currentPage, k -> new Int2ObjectOpenHashMap<>()).put(slot, event.getItemStack());
+        ItemStack itemStack = event.getItemStack();
 
-        if (itemMap.get(currentPage).size() == EXPECTED_ITEMS_PER_PAGE) {
-            WynntilsMod.info("Page " + currentPage + " is full, moving to page " + (currentPage + 1) + "...");
-
-            if (currentPage == 0) {
-                displayedItems = itemMap.get(currentPage);
-            }
-
-            currentPage++;
-
-            if (currentPage >= PAGE_BATCH_SIZE) return;
-
-            ContainerUtils.clickOnSlot(
-                    NEXT_PAGE_SLOT,
-                    wrappedScreenInfo.containerId(),
-                    GLFW.GLFW_MOUSE_BUTTON_LEFT,
-                    wrappedScreenInfo.containerMenu().getItems());
+        boolean emptyItem = isEmptyItem(itemStack);
+        if (!emptyItem) {
+            itemMap.computeIfAbsent(currentPage, k -> new Int2ObjectOpenHashMap<>())
+                    .put(slot, itemStack);
+        } else {
+            emptyItemCount++;
         }
+
+        checkStateAfterItemSet();
     }
 
     @Override
@@ -97,6 +108,9 @@ public class TradeMarketSearchResultParent extends WrappedScreenParent<TradeMark
     @Override
     protected void setWrappedScreen(TradeMarketSearchResultScreen wrappedScreen) {
         this.wrappedScreen = wrappedScreen;
+
+        // Preload the first batch of pages
+        loadPage(PAGE_BATCH_SIZE);
     }
 
     @Override
@@ -105,6 +119,53 @@ public class TradeMarketSearchResultParent extends WrappedScreenParent<TradeMark
         itemMap.clear();
 
         this.wrappedScreen = null;
+    }
+
+    private void checkStateAfterItemSet() {
+        wrappedScreen.setCurrentState(Component.literal("Loading page " + (currentPage + 1) + "..."));
+
+        // If we have the item count we expect on the page, we can load the next page
+        // If we have found an empty item, we count them and check if we have the expected amount
+        Int2ObjectOpenHashMap<ItemStack> currentPage =
+                itemMap.computeIfAbsent(this.currentPage, k -> new Int2ObjectOpenHashMap<>());
+        if (currentPage.size() + emptyItemCount == EXPECTED_ITEMS_PER_PAGE) {
+            if (this.currentPage == 0) {
+                displayedItems = currentPage;
+            }
+
+            // If we have air items on the page, we reached the end
+            if (emptyItemCount != 0) {
+                expectingItems = false;
+                requestedPage = -1;
+                lastPageNumber = this.currentPage;
+                wrappedScreen.setCurrentState(Component.literal("All pages loaded"));
+                return;
+            }
+
+            if (this.currentPage == requestedPage) {
+                expectingItems = false;
+                requestedPage = -1;
+                wrappedScreen.setCurrentState(Component.literal((itemMap.size()) + " pages loaded"));
+                return;
+            }
+
+            this.currentPage++;
+            emptyItemCount = 0;
+
+            int clickSlot;
+            if (this.currentPage < requestedPage) {
+                clickSlot = NEXT_PAGE_SLOT;
+            } else {
+                clickSlot = PREVIOUS_PAGE_SLOT;
+            }
+
+            WrappedScreenInfo wrappedScreenInfo = wrappedScreen.getWrappedScreenInfo();
+            ContainerUtils.clickOnSlot(
+                    clickSlot,
+                    wrappedScreenInfo.containerId(),
+                    GLFW.GLFW_MOUSE_BUTTON_LEFT,
+                    wrappedScreenInfo.containerMenu().getItems());
+        }
     }
 
     public void updateItems(ItemSearchQuery searchQuery) {
@@ -129,5 +190,17 @@ public class TradeMarketSearchResultParent extends WrappedScreenParent<TradeMark
 
             displayedItems.put(slot, ItemStack.EMPTY);
         }
+    }
+
+    private void loadPage(int page) {
+        expectingItems = true;
+
+        // 0 based indexing
+        requestedPage = page - 1;
+    }
+
+    private boolean isEmptyItem(ItemStack itemStack) {
+        ListTag loreTag = LoreUtils.getLoreTag(itemStack);
+        return itemStack.getItem() == Items.SNOW && (loreTag == null || loreTag.isEmpty());
     }
 }
