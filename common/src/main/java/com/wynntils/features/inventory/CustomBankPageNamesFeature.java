@@ -29,8 +29,7 @@ public class CustomBankPageNamesFeature extends Feature {
     @SubscribeEvent
     public void onScreenInit(ScreenInitEvent event) {
         if (Models.Bank.getCurrentContainer() == null) return;
-
-        AbstractContainerScreen<?> screen = (AbstractContainerScreen<?>) event.getScreen();
+        if (!(event.getScreen() instanceof AbstractContainerScreen<?> screen)) return;
 
         // This is screen.topPos and screen.leftPos, but they are not calculated yet when this is called
         int renderX = (screen.width - screen.imageWidth) / 2;
