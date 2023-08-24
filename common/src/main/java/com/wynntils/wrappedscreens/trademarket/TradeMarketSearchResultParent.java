@@ -7,8 +7,9 @@ package com.wynntils.wrappedscreens.trademarket;
 import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.components.Services;
 import com.wynntils.handlers.wrappedscreen.WrappedScreenParent;
+import com.wynntils.handlers.wrappedscreen.type.WrappedScreenInfo;
+import com.wynntils.mc.event.ContainerSetContentEvent;
 import com.wynntils.mc.event.ContainerSetSlotEvent;
-import com.wynntils.mc.event.SlotRenderEvent;
 import com.wynntils.services.itemfilter.type.ItemSearchQuery;
 import com.wynntils.utils.wynn.ContainerUtils;
 import it.unimi.dsi.fastutil.ints.Int2ObjectOpenHashMap;
@@ -17,8 +18,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.regex.Pattern;
 import java.util.stream.Stream;
-import net.minecraft.client.gui.screens.Screen;
-import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import org.lwjgl.glfw.GLFW;
@@ -42,13 +41,27 @@ public class TradeMarketSearchResultParent extends WrappedScreenParent<TradeMark
     private Map<Integer, ItemStack> displayedItems = new HashMap<>();
 
     @SubscribeEvent
-    public void onContainerSetSlot(ContainerSetSlotEvent.Post event) {
-        if (event.getContainerId() != wrappedScreen.getContainerId()) return;
+    public void onContainerSetContent(ContainerSetContentEvent.Pre event) {
+        WrappedScreenInfo wrappedScreenInfo = wrappedScreen.getWrappedScreenInfo();
+        if (event.getContainerId() != wrappedScreenInfo.containerId()) return;
+
+        // We only use set slot events to get the items,
+        // but we don't want the items to be set on our custom screen
+        event.setCanceled(true);
+    }
+
+    @SubscribeEvent
+    public void onContainerSetSlot(ContainerSetSlotEvent.Pre event) {
+        WrappedScreenInfo wrappedScreenInfo = wrappedScreen.getWrappedScreenInfo();
+        if (event.getContainerId() != wrappedScreenInfo.containerId()) return;
 
         int slot = event.getSlot();
 
         // We only care about the slots that are in the "search results" area
         if (slot % 9 >= 7) return;
+
+        // We don't want the items to be set on our custom screen
+        event.setCanceled(true);
 
         itemMap.computeIfAbsent(currentPage, k -> new Int2ObjectOpenHashMap<>()).put(slot, event.getItemStack());
 
@@ -65,22 +78,10 @@ public class TradeMarketSearchResultParent extends WrappedScreenParent<TradeMark
 
             ContainerUtils.clickOnSlot(
                     NEXT_PAGE_SLOT,
-                    wrappedScreen.getContainerId(),
+                    wrappedScreenInfo.containerId(),
                     GLFW.GLFW_MOUSE_BUTTON_LEFT,
-                    wrappedScreen.getContainerMenu().getItems());
+                    wrappedScreenInfo.containerMenu().getItems());
         }
-    }
-
-    // FIXME: Visual hack
-    @SubscribeEvent
-    public void onSlotRender(SlotRenderEvent.Pre event) {
-        ItemStack itemStack = displayedItems.getOrDefault(event.getSlot().index, ItemStack.EMPTY);
-
-        if (event.getSlot().index % 9 >= 7 || event.getSlot().index >= 52) {
-            itemStack = event.getSlot().getItem();
-        }
-
-        event.getSlot().set(itemStack);
     }
 
     @Override
@@ -89,9 +90,8 @@ public class TradeMarketSearchResultParent extends WrappedScreenParent<TradeMark
     }
 
     @Override
-    protected TradeMarketSearchResultScreen createWrappedScreen(
-            Screen originalScreen, AbstractContainerMenu containerMenu, int containerId) {
-        return new TradeMarketSearchResultScreen(originalScreen, containerMenu, containerId);
+    protected TradeMarketSearchResultScreen createWrappedScreen(WrappedScreenInfo wrappedScreenInfo) {
+        return new TradeMarketSearchResultScreen(wrappedScreenInfo, this);
     }
 
     @Override

@@ -4,36 +4,45 @@
  */
 package com.wynntils.wrappedscreens.trademarket;
 
+import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
-import com.wynntils.core.components.Handlers;
 import com.wynntils.handlers.wrappedscreen.WrappedScreen;
+import com.wynntils.handlers.wrappedscreen.type.WrappedScreenInfo;
 import com.wynntils.screens.base.TextboxScreen;
+import com.wynntils.screens.base.WynntilsContainerScreen;
 import com.wynntils.screens.base.widgets.ItemSearchWidget;
-import net.minecraft.client.gui.screens.Screen;
+import com.wynntils.utils.mc.McUtils;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
-import net.minecraft.world.inventory.AbstractContainerMenu;
+import net.minecraft.network.chat.Component;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.inventory.ChestMenu;
 
-public class TradeMarketSearchResultScreen extends WrappedScreen {
-    private TradeMarketSearchResultParent parent;
+public class TradeMarketSearchResultScreen extends WynntilsContainerScreen<ChestMenu> implements WrappedScreen {
+    private static final ResourceLocation CONTAINER_BACKGROUND =
+            new ResourceLocation("textures/gui/container/generic_54.png");
+
+    private final TradeMarketSearchResultParent parent;
+    private final WrappedScreenInfo wrappedScreenInfo;
 
     private final ItemSearchWidget itemSearchWidget;
 
-    protected TradeMarketSearchResultScreen(
-            Screen originalScreen, AbstractContainerMenu containerMenu, int containerId) {
-        super(originalScreen, containerMenu, containerId);
+    protected TradeMarketSearchResultScreen(WrappedScreenInfo wrappedScreenInfo, TradeMarketSearchResultParent parent) {
+        super(ChestMenu.sixRows(999, McUtils.inventory()), McUtils.inventory(), Component.literal("Wrapped Screen"));
 
-        if (!(originalScreen instanceof AbstractContainerScreen<?> originalContainerScreen)) {
-            throw new IllegalArgumentException("originalScreen must be an AbstractContainerScreen");
-        }
-
+        AbstractContainerScreen<?> screen = wrappedScreenInfo.screen();
         // This is screen.topPos and screen.leftPos, but they are not calculated yet when this is called
-        int renderX = (originalContainerScreen.width - originalContainerScreen.imageWidth) / 2;
-        int renderY = (originalContainerScreen.height - originalContainerScreen.imageHeight) / 2 - 20;
+        int renderX = (screen.width - screen.imageWidth) / 2;
+        int renderY = (screen.height - screen.imageHeight) / 2 - 20;
 
         itemSearchWidget = new ItemSearchWidget(renderX, renderY, 175, 20, q -> reloadElements(), (TextboxScreen) this);
 
-        parent = (TradeMarketSearchResultParent)
-                Handlers.WrappedScreen.getParent(this.getClass(), TradeMarketSearchResultParent.class);
+        this.parent = parent;
+        this.wrappedScreenInfo = wrappedScreenInfo;
+    }
+
+    @Override
+    public WrappedScreenInfo getWrappedScreenInfo() {
+        return wrappedScreenInfo;
     }
 
     @Override
@@ -51,19 +60,15 @@ public class TradeMarketSearchResultScreen extends WrappedScreen {
     }
 
     @Override
-    public boolean doMouseClicked(double mouseX, double mouseY, int button) {
-        return super.doMouseClicked(mouseX, mouseY, button) || originalScreen.mouseClicked(mouseX, mouseY, button);
-    }
+    protected void renderBg(PoseStack poseStack, float partialTick, int mouseX, int mouseY) {
+        // MC code to render the background
+        RenderSystem.setShaderTexture(0, CONTAINER_BACKGROUND);
 
-    @Override
-    public boolean keyPressed(int keyCode, int scanCode, int modifiers) {
-        return super.keyPressed(keyCode, scanCode, modifiers)
-                || originalScreen.keyPressed(keyCode, scanCode, modifiers);
-    }
+        int x = (this.width - this.imageWidth) / 2;
+        int y = (this.height - this.imageHeight) / 2;
 
-    @Override
-    public boolean charTyped(char codePoint, int modifiers) {
-        return super.charTyped(codePoint, modifiers) || originalScreen.charTyped(codePoint, modifiers);
+        blit(poseStack, x, y, 0, 0, this.imageWidth, this.menu.getRowCount() * 18 + 17);
+        blit(poseStack, x, y + this.menu.getRowCount() * 18 + 17, 0, 126, this.imageWidth, 96);
     }
 
     private void reloadElements() {
