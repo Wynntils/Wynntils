@@ -11,16 +11,21 @@ import com.wynntils.handlers.wrappedscreen.type.WrappedScreenInfo;
 import com.wynntils.screens.base.TextboxScreen;
 import com.wynntils.screens.base.WynntilsContainerScreen;
 import com.wynntils.screens.base.widgets.ItemSearchWidget;
+import com.wynntils.services.itemfilter.type.ItemSearchQuery;
+import com.wynntils.utils.MathUtils;
 import com.wynntils.utils.mc.McUtils;
+import java.util.List;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.inventory.ChestMenu;
+import net.minecraft.world.item.ItemStack;
 
 public class TradeMarketSearchResultScreen extends WynntilsContainerScreen<ChestMenu> implements WrappedScreen {
     // Constants
     private static final ResourceLocation CONTAINER_BACKGROUND =
             new ResourceLocation("textures/gui/container/generic_54.png");
+    private static final int ITEMS_PER_PAGE = 54;
 
     // Info
     private final TradeMarketSearchResultParent parent;
@@ -29,8 +34,11 @@ public class TradeMarketSearchResultScreen extends WynntilsContainerScreen<Chest
     // Widgets
     private final ItemSearchWidget itemSearchWidget;
 
-    // This gets used as a title for the screen
+    // State
     private Component currentState = Component.empty();
+
+    // Scrolling
+    private int scrollOffset = 0;
 
     protected TradeMarketSearchResultScreen(WrappedScreenInfo wrappedScreenInfo, TradeMarketSearchResultParent parent) {
         super(ChestMenu.sixRows(999, McUtils.inventory()), McUtils.inventory(), Component.literal("Wrapped Screen"));
@@ -60,9 +68,12 @@ public class TradeMarketSearchResultScreen extends WynntilsContainerScreen<Chest
 
     @Override
     public void doRender(PoseStack poseStack, int mouseX, int mouseY, float partialTick) {
-        super.doRender(poseStack, mouseX, mouseY, partialTick);
+        updateItems();
 
         renderables.forEach(c -> c.render(poseStack, mouseX, mouseY, partialTick));
+
+        super.doRender(poseStack, mouseX, mouseY, partialTick);
+        super.renderTooltip(poseStack, mouseX, mouseY);
     }
 
     @Override
@@ -89,11 +100,46 @@ public class TradeMarketSearchResultScreen extends WynntilsContainerScreen<Chest
         blit(poseStack, x, y + this.menu.getRowCount() * 18 + 17, 0, 126, this.imageWidth, 96);
     }
 
+    @Override
+    public boolean mouseScrolled(double mouseX, double mouseY, double delta) {
+        int maxItemOffset = Math.max(0, parent.getFilteredItems().size() - 54);
+        int maxValue = maxItemOffset / 9 + (maxItemOffset % 9 > 0 ? 1 : 0);
+
+        scrollOffset = MathUtils.clamp(scrollOffset - (int) delta, 0, maxValue);
+
+        return true;
+    }
+
+    private void updateItems() {
+        List<ItemStack> filteredItems = parent.getFilteredItems();
+
+        // Reset all items
+        for (int i = 0; i < 54; i++) {
+            this.menu.setItem(i, 0, ItemStack.EMPTY);
+        }
+
+        // Set items with filters and sorting, with scroll offset
+        int itemIndex = scrollOffset * 9;
+        int currentSlot = 0;
+        while (itemIndex < filteredItems.size() && currentSlot < ITEMS_PER_PAGE) {
+            ItemStack itemStack = filteredItems.get(itemIndex);
+            this.menu.setItem(currentSlot, 0, itemStack);
+
+            itemIndex++;
+            currentSlot++;
+        }
+    }
+
     protected void setCurrentState(Component currentState) {
         this.currentState = currentState;
     }
 
+    protected ItemSearchQuery getSearchQuery() {
+        return itemSearchWidget.getSearchQuery();
+    }
+
     private void reloadElements() {
-        parent.updateItems(itemSearchWidget.getSearchQuery());
+        parent.updateDisplayItems(itemSearchWidget.getSearchQuery());
+        scrollOffset = 0;
     }
 }

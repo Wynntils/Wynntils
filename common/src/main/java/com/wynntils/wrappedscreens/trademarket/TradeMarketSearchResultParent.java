@@ -13,6 +13,7 @@ import com.wynntils.services.itemfilter.type.ItemSearchQuery;
 import com.wynntils.utils.mc.LoreUtils;
 import com.wynntils.utils.wynn.ContainerUtils;
 import it.unimi.dsi.fastutil.ints.Int2ObjectOpenHashMap;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -49,7 +50,7 @@ public class TradeMarketSearchResultParent extends WrappedScreenParent<TradeMark
     private Map<Integer, Int2ObjectOpenHashMap<ItemStack>> itemMap = new HashMap<>();
     private int emptyItemCount = 0;
 
-    private Map<Integer, ItemStack> displayedItems = new HashMap<>();
+    private List<ItemStack> filteredItems = new ArrayList<>();
 
     @SubscribeEvent
     public void onContainerSetContent(ContainerSetContentEvent.Pre event) {
@@ -93,6 +94,7 @@ public class TradeMarketSearchResultParent extends WrappedScreenParent<TradeMark
         }
 
         checkStateAfterItemSet();
+        updateDisplayItems(wrappedScreen.getSearchQuery());
     }
 
     @Override
@@ -129,10 +131,6 @@ public class TradeMarketSearchResultParent extends WrappedScreenParent<TradeMark
         Int2ObjectOpenHashMap<ItemStack> currentPage =
                 itemMap.computeIfAbsent(this.currentPage, k -> new Int2ObjectOpenHashMap<>());
         if (currentPage.size() + emptyItemCount == EXPECTED_ITEMS_PER_PAGE) {
-            if (this.currentPage == 0) {
-                displayedItems = currentPage;
-            }
-
             // If we have air items on the page, we reached the end
             if (emptyItemCount != 0) {
                 expectingItems = false;
@@ -168,8 +166,8 @@ public class TradeMarketSearchResultParent extends WrappedScreenParent<TradeMark
         }
     }
 
-    public void updateItems(ItemSearchQuery searchQuery) {
-        displayedItems.clear();
+    public void updateDisplayItems(ItemSearchQuery searchQuery) {
+        filteredItems.clear();
 
         List<ItemStack> items = itemMap.values().stream()
                 .map(map -> map.values().toArray(new ItemStack[0]))
@@ -179,17 +177,12 @@ public class TradeMarketSearchResultParent extends WrappedScreenParent<TradeMark
         List<ItemStack> matchingItems = items.stream()
                 .filter(itemStack -> Services.ItemFilter.matches(searchQuery, itemStack))
                 .toList();
-        for (int i = 0; i < matchingItems.size(); i++) {
-            int slot = i / 7 * 9 + i % 7;
 
-            displayedItems.put(slot, matchingItems.get(i));
-        }
+        filteredItems.addAll(matchingItems);
+    }
 
-        for (int i = matchingItems.size(); i < EXPECTED_ITEMS_PER_PAGE; i++) {
-            int slot = i / 7 * 9 + i % 7;
-
-            displayedItems.put(slot, ItemStack.EMPTY);
-        }
+    public List<ItemStack> getFilteredItems() {
+        return filteredItems;
     }
 
     private void loadPage(int page) {
