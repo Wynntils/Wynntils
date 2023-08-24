@@ -1,9 +1,17 @@
+## [0.0.3-alpha.342](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.341...v0.0.3-alpha.342) (2023-08-24)
+
+
+### Bug Fixes
+
+* Custom Bank Pages Names crash ([#2042](https://github.com/Wynntils/Artemis/issues/2042)) ([45f8b67](https://github.com/Wynntils/Artemis/commit/45f8b6744d435dbb040a68b152116d17d8d297b7))
+
 ## [0.0.3-alpha.341](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.340...v0.0.3-alpha.341) (2023-08-23)
 
 
 ### Miscellaneous Chores
 
 * add translations for shiny functions ([#2040](https://github.com/Wynntils/Artemis/issues/2040)) ([1321f4e](https://github.com/Wynntils/Artemis/commit/1321f4e4b652403770771e04d6fff61c9a6e37ac))
+* **release:** v0.0.3-alpha.341 [skip ci] ([659473f](https://github.com/Wynntils/Artemis/commit/659473f826b9453fbab890f73f685fc7f7763968))
 
 ## [0.0.3-alpha.340](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.339...v0.0.3-alpha.340) (2023-08-23)
 
@@ -40,21 +48,4 @@
 ### Miscellaneous Chores
 
 * **release:** v0.0.3-alpha.338 [skip ci] ([e759bca](https://github.com/Wynntils/Artemis/commit/e759bca94abddcf13f5eb12ba803790c97074dba))
-
-## [0.0.3-alpha.337](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.336...v0.0.3-alpha.337) (2023-08-23)
-
-
-### New Features
-
-* Add support in AbbreviateMobHealthFeature for lootrun DEFEND/DESTROY bars ([#2032](https://github.com/Wynntils/Artemis/issues/2032)) ([e803719](https://github.com/Wynntils/Artemis/commit/e80371910cfe852269d0655f595e0f14d5420a1d))
-
-
-### Bug Fixes
-
-* lootrun red beacon counter not always being accurate ([#2039](https://github.com/Wynntils/Artemis/issues/2039)) ([54bf17e](https://github.com/Wynntils/Artemis/commit/54bf17e4a67d2ae92fd6dda9e105e2cb2e06cc76))
-
-
-### Miscellaneous Chores
-
-* **release:** v0.0.3-alpha.337 [skip ci] ([421c231](https://github.com/Wynntils/Artemis/commit/421c2315d34a18bb71f8b30af0395bef0089761f))
 
