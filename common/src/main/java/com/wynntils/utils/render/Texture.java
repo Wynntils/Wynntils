@@ -199,6 +199,8 @@ public enum Texture {
     HIGHLIGHT("ui_components/highlight.png", 256, 256),
     OVERLAY_SELECTION_GUI("ui_components/overlay_selection_gui.png", 195, 256),
     SCROLL_BACKGROUND("ui_components/scroll_background.png", 294, 198),
+    SCROLLBAR_BACKGROUND("ui_components/generic_container_scrollbar.png", 25, 136),
+    SCROLLBAR_BUTTON("ui_components/scroll_button_container.png", 12, 15),
     VIGNETTE("ui_components/vignette.png", 512, 512);
     // endregion
 
