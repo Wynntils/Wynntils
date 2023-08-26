@@ -12,6 +12,7 @@ import com.wynntils.mc.event.ContainerSetSlotEvent;
 import com.wynntils.services.itemfilter.type.ItemSearchQuery;
 import com.wynntils.utils.mc.LoreUtils;
 import com.wynntils.utils.wynn.ContainerUtils;
+import it.unimi.dsi.fastutil.ints.Int2ObjectMap;
 import it.unimi.dsi.fastutil.ints.Int2ObjectOpenHashMap;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -42,10 +43,11 @@ public class TradeMarketSearchResultParent extends WrappedScreenParent<TradeMark
     private TradeMarketSearchResultScreen wrappedScreen;
 
     private int requestedPage = -1;
+    private int requestedItemSlot = -1;
+
     private int currentPage = 0;
 
-    private boolean expectingItems = false;
-    private int lastPageNumber = -1;
+    private PageLoadingMode pageLoadingMode = PageLoadingMode.NONE;
 
     private Map<Integer, Int2ObjectOpenHashMap<ItemStack>> itemMap = new HashMap<>();
     private int emptyItemCount = 0;
@@ -54,7 +56,7 @@ public class TradeMarketSearchResultParent extends WrappedScreenParent<TradeMark
 
     @SubscribeEvent
     public void onContainerSetContent(ContainerSetContentEvent.Pre event) {
-        if (!expectingItems || requestedPage == -1) return;
+        if (pageLoadingMode == PageLoadingMode.NONE || requestedPage == -1) return;
 
         WrappedScreenInfo wrappedScreenInfo = wrappedScreen.getWrappedScreenInfo();
         if (event.getContainerId() != wrappedScreenInfo.containerId()) return;
@@ -70,30 +72,19 @@ public class TradeMarketSearchResultParent extends WrappedScreenParent<TradeMark
 
     @SubscribeEvent
     public void onContainerSetSlot(ContainerSetSlotEvent.Pre event) {
-        if (!expectingItems || requestedPage == -1) return;
+        if (pageLoadingMode == PageLoadingMode.NONE || requestedPage == -1) return;
 
         WrappedScreenInfo wrappedScreenInfo = wrappedScreen.getWrappedScreenInfo();
         if (event.getContainerId() != wrappedScreenInfo.containerId()) return;
 
         int slot = event.getSlot();
 
-        // We only care about the slots that are in the "search results" area
-        if (slot % 9 >= 7 || slot >= LAST_ITEM_SLOT) return;
-
         // We don't want the items to be set on our custom screen
         event.setCanceled(true);
 
         ItemStack itemStack = event.getItemStack();
 
-        boolean emptyItem = isEmptyItem(itemStack);
-        if (!emptyItem) {
-            itemMap.computeIfAbsent(currentPage, k -> new Int2ObjectOpenHashMap<>())
-                    .put(slot, itemStack);
-        } else {
-            emptyItemCount++;
-        }
-
-        checkStateAfterItemSet();
+        handleSetItem(slot, itemStack);
         updateDisplayItems(wrappedScreen.getSearchQuery());
     }
 
@@ -112,7 +103,7 @@ public class TradeMarketSearchResultParent extends WrappedScreenParent<TradeMark
         this.wrappedScreen = wrappedScreen;
 
         // Preload the first batch of pages
-        loadPage(PAGE_BATCH_SIZE);
+        loadItemsUntilPage(PAGE_BATCH_SIZE);
     }
 
     @Override
@@ -123,47 +114,26 @@ public class TradeMarketSearchResultParent extends WrappedScreenParent<TradeMark
         this.wrappedScreen = null;
     }
 
-    private void checkStateAfterItemSet() {
-        wrappedScreen.setCurrentState(Component.literal("Loading page " + (currentPage + 1) + "..."));
+    public void clickOnItem(ItemStack itemStack) {
+        int page = 0;
+        int slot = 0;
 
-        // If we have the item count we expect on the page, we can load the next page
-        // If we have found an empty item, we count them and check if we have the expected amount
-        Int2ObjectOpenHashMap<ItemStack> currentPage =
-                itemMap.computeIfAbsent(this.currentPage, k -> new Int2ObjectOpenHashMap<>());
-        if (currentPage.size() + emptyItemCount == EXPECTED_ITEMS_PER_PAGE) {
-            // If we have air items on the page, we reached the end
-            if (emptyItemCount != 0) {
-                expectingItems = false;
-                requestedPage = -1;
-                lastPageNumber = this.currentPage;
-                wrappedScreen.setCurrentState(Component.literal("All pages loaded"));
-                return;
+        for (Map.Entry<Integer, Int2ObjectOpenHashMap<ItemStack>> pageEntry : itemMap.entrySet()) {
+            for (Int2ObjectMap.Entry<ItemStack> itemOnPage :
+                    pageEntry.getValue().int2ObjectEntrySet()) {
+                if (itemOnPage.getValue().equals(itemStack)) {
+                    page = pageEntry.getKey();
+                    slot = itemOnPage.getIntKey();
+                    break;
+                }
             }
-
-            if (this.currentPage == requestedPage) {
-                expectingItems = false;
-                requestedPage = -1;
-                wrappedScreen.setCurrentState(Component.literal((itemMap.size()) + " pages loaded"));
-                return;
-            }
-
-            this.currentPage++;
-            emptyItemCount = 0;
-
-            int clickSlot;
-            if (this.currentPage < requestedPage) {
-                clickSlot = NEXT_PAGE_SLOT;
-            } else {
-                clickSlot = PREVIOUS_PAGE_SLOT;
-            }
-
-            WrappedScreenInfo wrappedScreenInfo = wrappedScreen.getWrappedScreenInfo();
-            ContainerUtils.clickOnSlot(
-                    clickSlot,
-                    wrappedScreenInfo.containerId(),
-                    GLFW.GLFW_MOUSE_BUTTON_LEFT,
-                    wrappedScreenInfo.containerMenu().getItems());
         }
+
+        requestedPage = page;
+        requestedItemSlot = slot;
+        pageLoadingMode = PageLoadingMode.SINGLE_ITEM;
+
+        goToNextPage();
     }
 
     public void updateDisplayItems(ItemSearchQuery searchQuery) {
@@ -185,8 +155,95 @@ public class TradeMarketSearchResultParent extends WrappedScreenParent<TradeMark
         return filteredItems;
     }
 
-    private void loadPage(int page) {
-        expectingItems = true;
+    private void handleSetItem(int slot, ItemStack itemStack) {
+        wrappedScreen.setCurrentState(Component.literal("Loading page " + (currentPage + 1) + "..."));
+
+        if (pageLoadingMode == PageLoadingMode.ALL_ITEMS) {
+            // Note: This mode can only load pages in order, we can't go back to a previous page
+            // FIXME: Speedup for requeried pages
+
+            // We only care about the slots that are in the "search results" area
+            if (slot % 9 >= 7 || slot >= LAST_ITEM_SLOT) return;
+
+            // If we have the item count we expect on the page, we can load the next page
+            // If we have found an empty item, we count them and check if we have the expected amount
+            Int2ObjectOpenHashMap<ItemStack> currentPage =
+                    itemMap.computeIfAbsent(this.currentPage, k -> new Int2ObjectOpenHashMap<>());
+
+            boolean emptyItem = isEmptyItem(itemStack);
+            if (!emptyItem) {
+                currentPage.put(slot, itemStack);
+            } else {
+                emptyItemCount++;
+            }
+
+            if (currentPage.size() + emptyItemCount == EXPECTED_ITEMS_PER_PAGE) {
+                // If we have air items on the page, we reached the end
+                if (emptyItemCount != 0) {
+                    pageLoadingMode = PageLoadingMode.NONE;
+                    requestedPage = -1;
+                    wrappedScreen.setCurrentState(Component.literal("All pages loaded"));
+                    return;
+                }
+
+                if (this.currentPage == requestedPage) {
+                    pageLoadingMode = PageLoadingMode.NONE;
+                    requestedPage = -1;
+                    wrappedScreen.setCurrentState(Component.literal((itemMap.size()) + " pages loaded"));
+                    return;
+                }
+
+                goToNextPage();
+            }
+        } else if (pageLoadingMode == PageLoadingMode.SINGLE_ITEM) {
+            if (currentPage == requestedPage && emptyItemCount == EXPECTED_ITEMS_PER_PAGE) {
+                // Loaded the item, click on it
+                WrappedScreenInfo wrappedScreenInfo = wrappedScreen.getWrappedScreenInfo();
+                ContainerUtils.clickOnSlot(
+                        requestedItemSlot,
+                        wrappedScreenInfo.containerId(),
+                        GLFW.GLFW_MOUSE_BUTTON_LEFT,
+                        wrappedScreenInfo.containerMenu().getItems());
+
+                return;
+            }
+
+            if (currentPage == requestedPage) {
+                emptyItemCount++;
+                return;
+            }
+
+            // Next page slot loads after the previous page slot, we use this to check if can advance to the next page
+            if (currentPage != requestedPage && slot == NEXT_PAGE_SLOT) {
+                // We are on the requested page, but not on the requested item
+                // We can't go back to a previous page, so we just load the next page
+                goToNextPage();
+            }
+        }
+    }
+
+    private void goToNextPage() {
+        emptyItemCount = 0;
+
+        int clickSlot;
+        if (this.currentPage < requestedPage) {
+            clickSlot = NEXT_PAGE_SLOT;
+            this.currentPage++;
+        } else {
+            clickSlot = PREVIOUS_PAGE_SLOT;
+            this.currentPage--;
+        }
+
+        WrappedScreenInfo wrappedScreenInfo = wrappedScreen.getWrappedScreenInfo();
+        ContainerUtils.clickOnSlot(
+                clickSlot,
+                wrappedScreenInfo.containerId(),
+                GLFW.GLFW_MOUSE_BUTTON_LEFT,
+                wrappedScreenInfo.containerMenu().getItems());
+    }
+
+    private void loadItemsUntilPage(int page) {
+        pageLoadingMode = PageLoadingMode.ALL_ITEMS;
 
         // 0 based indexing
         requestedPage = page - 1;
@@ -195,5 +252,11 @@ public class TradeMarketSearchResultParent extends WrappedScreenParent<TradeMark
     private boolean isEmptyItem(ItemStack itemStack) {
         ListTag loreTag = LoreUtils.getLoreTag(itemStack);
         return itemStack.getItem() == Items.SNOW && (loreTag == null || loreTag.isEmpty());
+    }
+
+    public enum PageLoadingMode {
+        ALL_ITEMS,
+        SINGLE_ITEM,
+        NONE
     }
 }

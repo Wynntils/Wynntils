@@ -148,6 +148,11 @@ public class TradeMarketSearchResultScreen extends WynntilsContainerScreen<Chest
             return true;
         }
 
+        if (hoveredSlot != null) {
+            parent.clickOnItem(hoveredSlot.getItem());
+            return true;
+        }
+
         return false;
     }
 
