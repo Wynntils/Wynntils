@@ -33,6 +33,7 @@ import com.wynntils.functions.generic.ConditionalFunctions;
 import com.wynntils.functions.generic.LocationFunctions;
 import com.wynntils.functions.generic.LogicFunctions;
 import com.wynntils.functions.generic.MathFunctions;
+import com.wynntils.functions.generic.NamedFunctions;
 import com.wynntils.functions.generic.StringFunctions;
 import com.wynntils.models.emeralds.type.EmeraldUnits;
 import com.wynntils.utils.type.ErrorOr;
@@ -381,6 +382,10 @@ public final class FunctionManager extends Manager {
         registerFunction(new MathFunctions.SquareRootFunction());
         registerFunction(new MathFunctions.SubtractFunction());
 
+        registerFunction(new NamedFunctions.NameFunction());
+        registerFunction(new NamedFunctions.NamedValueFunction());
+        registerFunction(new NamedFunctions.ValueFunction());
+
         registerFunction(new StringFunctions.CappedStringFunction());
         registerFunction(new StringFunctions.ConcatFunction());
         registerFunction(new StringFunctions.FormatCappedFunction());
@@ -463,6 +468,7 @@ public final class FunctionManager extends Manager {
         registerFunction(new EnvironmentFunctions.MemUsedFunction());
 
         registerFunction(new InventoryFunctions.AccessoryDurabilityFunction());
+        registerFunction(new InventoryFunctions.AllShinyStatsFunction());
         registerFunction(new InventoryFunctions.ArmorDurabilityFunction());
         registerFunction(new InventoryFunctions.CappedHeldItemDurabilityFunction());
         registerFunction(new InventoryFunctions.CappedIngredientPouchSlotsFunction());
@@ -473,6 +479,7 @@ public final class FunctionManager extends Manager {
         registerFunction(new InventoryFunctions.HeldItemCurrentDurabilityFunction());
         registerFunction(new InventoryFunctions.HeldItemMaxDurabilityFunction());
         registerFunction(new InventoryFunctions.HeldItemNameFunction());
+        registerFunction(new InventoryFunctions.HeldItemShinyStatFunction());
         registerFunction(new InventoryFunctions.HeldItemTypeFunction());
         registerFunction(new InventoryFunctions.IngredientPouchOpenSlotsFunction());
         registerFunction(new InventoryFunctions.IngredientPouchUsedSlotsFunction());

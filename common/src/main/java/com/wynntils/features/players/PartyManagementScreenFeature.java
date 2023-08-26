@@ -66,7 +66,7 @@ public class PartyManagementScreenFeature extends Feature {
     // endregion
 
     // region Friend events
-    // SubscribeEvents for Friends being Added, Removed, and Listed are not required because it is impossible to do any
+    // SubscribeEvents for Friends being Added and Removed are not required because it is impossible to do any
     // of those actions when the Party Management Screen is open.
 
     @SubscribeEvent
@@ -77,6 +77,18 @@ public class PartyManagementScreenFeature extends Feature {
     @SubscribeEvent
     public void onFriendLeave(FriendsEvent.Left e) {
         Managers.TickScheduler.scheduleLater(this::reloadScreenWidgets, 3);
+    }
+
+    // The events for the lists are required as it is possible that there is a delay from Wynn which causes the screen
+    // to init before the new lists are received.
+    @SubscribeEvent
+    public void onFriendsList(FriendsEvent.Listed e) {
+        Managers.TickScheduler.scheduleLater(this::reloadScreenWidgets, 2);
+    }
+
+    @SubscribeEvent
+    public void onOnlineFriendsList(FriendsEvent.OnlineListed e) {
+        Managers.TickScheduler.scheduleLater(this::reloadScreenWidgets, 2);
     }
     // endregion
 

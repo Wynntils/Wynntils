@@ -24,17 +24,7 @@ subprojects {
 
     repositories {
         maven { url = "https://pkgs.dev.azure.com/djtheredstoner/DevAuth/_packaging/public/maven/v1" }
-        maven {
-            name = "remote"
-            // Adapt the URL for your remote repository
-            url = uri("https://maven.pkg.github.com/Wynntils/Hades")
-            credentials {
-                // Use this if the repo requires auth
-                // see https://docs.gradle.org/6.4/userguide/declaring_repositories.html#sec:supported_transport_protocols
-                username = new String(Base64.getDecoder().decode("V3lubnRpbHNCb3Q="))
-                password = new String(Base64.getDecoder().decode("Z2hwX09rY0lXaUEwUEhvTXk2Nk1odkRuZ08wbWZBNFp3SzNJTkQ3dw=="))
-            }
-        }
+        maven { url = "https://jitpack.io" }
     }
 
     loom {

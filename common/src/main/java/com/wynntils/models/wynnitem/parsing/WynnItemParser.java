@@ -14,6 +14,7 @@ import com.wynntils.models.elements.type.Skill;
 import com.wynntils.models.gear.type.GearInfo;
 import com.wynntils.models.gear.type.GearTier;
 import com.wynntils.models.stats.StatCalculator;
+import com.wynntils.models.stats.type.ShinyStat;
 import com.wynntils.models.stats.type.SkillStatType;
 import com.wynntils.models.stats.type.StatActualValue;
 import com.wynntils.models.stats.type.StatPossibleValues;
@@ -25,6 +26,7 @@ import com.wynntils.utils.type.RangedValue;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
+import java.util.Optional;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 import net.minecraft.network.chat.Component;
@@ -55,6 +57,9 @@ public final class WynnItemParser {
 
     public static final Pattern SET_BONUS_PATTEN = Pattern.compile("^§aSet Bonus:$");
 
+    // Test suite: https://regexr.com/7i5h5
+    public static final Pattern SHINY_STAT_PATTERN = Pattern.compile("^§f⬡ §7([a-zA-Z ]+): §f(\\d+)$");
+
     public static WynnItemParseResult parseItemStack(ItemStack itemStack, GearInfo gearInfo) {
         List<StatActualValue> identifications = new ArrayList<>();
         List<ItemEffect> effects = new ArrayList<>();
@@ -66,6 +71,7 @@ public final class WynnItemParser {
         String itemType = "";
         boolean setBonusStats = false;
         boolean parsingEffects = false;
+        Optional<ShinyStat> shinyStat = Optional.empty();
         String effectsColorCode = "";
 
         // Parse lore for identifications, powders and rerolls
@@ -193,10 +199,27 @@ public final class WynnItemParser {
                 StatActualValue actualValue = Models.Stat.buildActualValue(statType, value, stars, possibleValues);
                 identifications.add(actualValue);
             }
+
+            // Look for shiny stat
+            Matcher shinyStatMatcher = normalizedCoded.getMatcher(SHINY_STAT_PATTERN);
+            if (shinyStatMatcher.matches() && shinyStat.isEmpty()) {
+                String shinyName = shinyStatMatcher.group(1);
+                int shinyValue = Integer.parseInt(shinyStatMatcher.group(2));
+                shinyStat = Optional.of(new ShinyStat(shinyName, shinyValue));
+            }
         }
 
         return new WynnItemParseResult(
-                tier, itemType, level, identifications, effects, powders, tierCount, tierCount, durabilityMax);
+                tier,
+                itemType,
+                level,
+                identifications,
+                effects,
+                powders,
+                tierCount,
+                tierCount,
+                durabilityMax,
+                shinyStat);
     }
 
     public static WynnItemParseResult parseInternalRolls(GearInfo gearInfo, JsonObject itemData) {
@@ -243,7 +266,9 @@ public final class WynnItemParser {
                 ? itemData.get("identification_rolls").getAsInt()
                 : 0;
 
-        return new WynnItemParseResult(gearInfo.tier(), "", 0, identifications, List.of(), powders, rerolls, 0, 0);
+        // Shiny stats are not available from internal roll lore (on other players)
+        return new WynnItemParseResult(
+                gearInfo.tier(), "", 0, identifications, List.of(), powders, rerolls, 0, 0, Optional.empty());
     }
 
     private static StatActualValue getStatActualValue(GearInfo gearInfo, StatType statType, int internalRoll) {
