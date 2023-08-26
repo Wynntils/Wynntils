@@ -1,9 +1,21 @@
+## [0.0.3-alpha.344](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.343...v0.0.3-alpha.344) (2023-08-26)
+
+
+### Bug Fixes
+
+* War message getting recruit prefix ([#2046](https://github.com/Wynntils/Artemis/issues/2046)) ([fa023be](https://github.com/Wynntils/Artemis/commit/fa023bec303e9720dec2bea41e3064f0266589af))
+
 ## [0.0.3-alpha.343](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.342...v0.0.3-alpha.343) (2023-08-26)
 
 
 ### Bug Fixes
 
 * Reset search query on container close ([#2043](https://github.com/Wynntils/Artemis/issues/2043)) ([de622ba](https://github.com/Wynntils/Artemis/commit/de622badecf9a894024f8cbc7a9660c23ab46556))
+
+
+### Miscellaneous Chores
+
+* **release:** v0.0.3-alpha.343 [skip ci] ([9ef7b6e](https://github.com/Wynntils/Artemis/commit/9ef7b6ed2eb444dde5f08fd556c8c93b8d6df1e2))
 
 ## [0.0.3-alpha.342](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.341...v0.0.3-alpha.342) (2023-08-24)
 
@@ -36,16 +48,4 @@
 ### Miscellaneous Chores
 
 * **release:** v0.0.3-alpha.340 [skip ci] ([d162ce4](https://github.com/Wynntils/Artemis/commit/d162ce43bb299975932e5c0f8a8fc4ddb592123c))
-
-## [0.0.3-alpha.339](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.338...v0.0.3-alpha.339) (2023-08-23)
-
-
-### New Features
-
-* Per character guild contribution ([#2031](https://github.com/Wynntils/Artemis/issues/2031)) ([ace9cbb](https://github.com/Wynntils/Artemis/commit/ace9cbb5a80b109ffca290bc400f8699208e300d))
-
-
-### Miscellaneous Chores
-
-* **release:** v0.0.3-alpha.339 [skip ci] ([632af5e](https://github.com/Wynntils/Artemis/commit/632af5eb1e2e65863b7f69fb0cbc8e73aff42d53))
 
