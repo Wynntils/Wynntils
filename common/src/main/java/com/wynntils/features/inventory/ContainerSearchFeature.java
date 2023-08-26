@@ -145,6 +145,7 @@ public class ContainerSearchFeature extends Feature {
     @SubscribeEvent
     public void onContainerClose(ContainerCloseEvent.Post event) {
         lastSearchWidget = null;
+        lastSearchQuery = null;
         lastItemSearchHelperWidget = null;
         currentSearchableContainerType = null;
         autoSearching = false;
