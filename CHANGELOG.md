@@ -1,9 +1,21 @@
+## [0.0.3-alpha.343](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.342...v0.0.3-alpha.343) (2023-08-26)
+
+
+### Bug Fixes
+
+* Reset search query on container close ([#2043](https://github.com/Wynntils/Artemis/issues/2043)) ([de622ba](https://github.com/Wynntils/Artemis/commit/de622badecf9a894024f8cbc7a9660c23ab46556))
+
 ## [0.0.3-alpha.342](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.341...v0.0.3-alpha.342) (2023-08-24)
 
 
 ### Bug Fixes
 
 * Custom Bank Pages Names crash ([#2042](https://github.com/Wynntils/Artemis/issues/2042)) ([45f8b67](https://github.com/Wynntils/Artemis/commit/45f8b6744d435dbb040a68b152116d17d8d297b7))
+
+
+### Miscellaneous Chores
+
+* **release:** v0.0.3-alpha.342 [skip ci] ([87b5d71](https://github.com/Wynntils/Artemis/commit/87b5d71d06fa8d9259f7219d3198a5267ede3301))
 
 ## [0.0.3-alpha.341](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.340...v0.0.3-alpha.341) (2023-08-23)
 
@@ -36,16 +48,4 @@
 ### Miscellaneous Chores
 
 * **release:** v0.0.3-alpha.339 [skip ci] ([632af5e](https://github.com/Wynntils/Artemis/commit/632af5eb1e2e65863b7f69fb0cbc8e73aff42d53))
-
-## [0.0.3-alpha.338](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.337...v0.0.3-alpha.338) (2023-08-23)
-
-
-### New Features
-
-* Custom Bank Page Names ([#2023](https://github.com/Wynntils/Artemis/issues/2023)) ([e4043c6](https://github.com/Wynntils/Artemis/commit/e4043c62de4e2336f36ccb1788b5cfda9106ce55))
-
-
-### Miscellaneous Chores
-
-* **release:** v0.0.3-alpha.338 [skip ci] ([e759bca](https://github.com/Wynntils/Artemis/commit/e759bca94abddcf13f5eb12ba803790c97074dba))
 
