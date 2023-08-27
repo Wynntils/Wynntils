@@ -19,7 +19,10 @@ import java.util.Map;
 import java.util.TreeMap;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-import net.minecraftforge.eventbus.api.EventPriority;
+import net.minecraft.ChatFormatting;
+import net.minecraft.network.chat.ClickEvent;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.MutableComponent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 
 @ConfigCategory(Category.UTILITIES)
@@ -47,7 +50,7 @@ public class PerCharacterGuildContributionFeature extends Feature {
         }
     }
 
-    @SubscribeEvent(priority = EventPriority.HIGHEST)
+    @SubscribeEvent
     public void onChatReceived(ChatMessageReceivedEvent event) {
         if (Models.Guild.getGuildName().isEmpty()) return;
         if (!Models.Character.hasCharacter()) return;
@@ -57,11 +60,13 @@ public class PerCharacterGuildContributionFeature extends Feature {
         Matcher contributionMatcher = message.getMatcher(CONTRIBUTION_PATTERN);
 
         if (contributionMatcher.matches()) {
+            event.setCanceled(true);
+
             if (waitingForCommandResponse) {
                 waitingForCommandResponse = false;
 
-                if (hideContributionMessage.get()) {
-                    event.setCanceled(true);
+                if (!hideContributionMessage.get()) {
+                    sendContributionMessage(characterContributions.get().get(Models.Character.getId()));
                 }
 
                 return;
@@ -73,6 +78,31 @@ public class PerCharacterGuildContributionFeature extends Feature {
 
             characterContributions.get().put(Models.Character.getId(), contributionAmount);
             characterContributions.touched();
+
+            sendContributionMessage(contributionAmount);
         }
+    }
+
+    private void sendContributionMessage(int contributionAmount) {
+        MutableComponent contributionMessage = Component.literal(ChatFormatting.DARK_AQUA + "You will now contribute "
+                + ChatFormatting.AQUA
+                + contributionAmount + "%" + ChatFormatting.DARK_AQUA
+                + " of your XP to " + ChatFormatting.AQUA + Models.Guild.getGuildName() + ChatFormatting.DARK_AQUA
+                + ".\n");
+
+        contributionMessage.append(Component.literal("This will only apply to your current character.\n")
+                .withStyle(ChatFormatting.DARK_AQUA));
+
+        contributionMessage.append(Component.literal("Click here")
+                .withStyle(ChatFormatting.AQUA)
+                .withStyle(ChatFormatting.UNDERLINE)
+                .withStyle(style -> style.withClickEvent(new ClickEvent(
+                        ClickEvent.Action.RUN_COMMAND,
+                        "/wynntils feature disable PerCharacterGuildContributionFeature"))));
+
+        contributionMessage.append(
+                Component.literal(" to disable this functionality.").withStyle(ChatFormatting.DARK_AQUA));
+
+        McUtils.sendMessageToClient(contributionMessage);
     }
 }
