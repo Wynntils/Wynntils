@@ -4,6 +4,7 @@
  */
 package com.wynntils.wrappedscreens.trademarket;
 
+import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.components.Services;
 import com.wynntils.handlers.wrappedscreen.WrappedScreenParent;
 import com.wynntils.handlers.wrappedscreen.type.WrappedScreenInfo;
@@ -50,7 +51,7 @@ public class TradeMarketSearchResultParent extends WrappedScreenParent<TradeMark
     private PageLoadingMode pageLoadingMode = PageLoadingMode.NONE;
 
     private Map<Integer, Int2ObjectOpenHashMap<ItemStack>> itemMap = new HashMap<>();
-    private int emptyItemCount = 0;
+    private int pageItemCount = 0;
 
     private List<ItemStack> filteredItems = new ArrayList<>();
 
@@ -67,7 +68,7 @@ public class TradeMarketSearchResultParent extends WrappedScreenParent<TradeMark
 
         // Reset the empty item count,
         // set content packets mean we are on a new page
-        emptyItemCount = 0;
+        pageItemCount = 0;
     }
 
     @SubscribeEvent
@@ -158,72 +159,77 @@ public class TradeMarketSearchResultParent extends WrappedScreenParent<TradeMark
     private void handleSetItem(int slot, ItemStack itemStack) {
         wrappedScreen.setCurrentState(Component.literal("Loading page " + (currentPage + 1) + "..."));
 
-        if (pageLoadingMode == PageLoadingMode.ALL_ITEMS) {
-            // Note: This mode can only load pages in order, we can't go back to a previous page
-            // FIXME: Speedup for requeried pages
+        // We only care about the slots that are in the "search results" area
+        if (slot % 9 >= 7 || slot >= LAST_ITEM_SLOT) return;
 
-            // We only care about the slots that are in the "search results" area
-            if (slot % 9 >= 7 || slot >= LAST_ITEM_SLOT) return;
+        // If we have the item count we expect on the page, we can load the next page
+        // If we have found an empty item, we count them and check if we have the expected amount
+        Int2ObjectOpenHashMap<ItemStack> currentPage =
+                itemMap.computeIfAbsent(this.currentPage, k -> new Int2ObjectOpenHashMap<>());
 
-            // If we have the item count we expect on the page, we can load the next page
-            // If we have found an empty item, we count them and check if we have the expected amount
-            Int2ObjectOpenHashMap<ItemStack> currentPage =
-                    itemMap.computeIfAbsent(this.currentPage, k -> new Int2ObjectOpenHashMap<>());
+        boolean emptyItem = isEmptyItem(itemStack);
+        if (!emptyItem) {
+            ItemStack oldItem = currentPage.put(slot, itemStack);
 
-            boolean emptyItem = isEmptyItem(itemStack);
-            if (!emptyItem) {
-                currentPage.put(slot, itemStack);
-            } else {
-                emptyItemCount++;
+            if (oldItem != null && !oldItem.equals(itemStack)) {
+                WynntilsMod.warn("Item mismatch at slot " + slot + " on page " + this.currentPage + ". Expected: "
+                        + oldItem + ", got: " + itemStack);
             }
+        }
 
-            if (currentPage.size() + emptyItemCount == EXPECTED_ITEMS_PER_PAGE) {
-                // If we have air items on the page, we reached the end
-                if (emptyItemCount != 0) {
-                    pageLoadingMode = PageLoadingMode.NONE;
-                    requestedPage = -1;
-                    wrappedScreen.setCurrentState(Component.literal("All pages loaded"));
-                    return;
+        pageItemCount++;
+
+        if (pageItemCount == EXPECTED_ITEMS_PER_PAGE) {
+            switch (pageLoadingMode) {
+                case ALL_ITEMS -> {
+                    pageLoadedWhileLoadingItems(currentPage);
                 }
-
-                if (this.currentPage == requestedPage) {
-                    pageLoadingMode = PageLoadingMode.NONE;
-                    requestedPage = -1;
-                    wrappedScreen.setCurrentState(Component.literal((itemMap.size()) + " pages loaded"));
-                    return;
+                case SINGLE_ITEM -> {
+                    pageLoadedWhileSelectingItem(currentPage);
                 }
-
-                goToNextPage();
-            }
-        } else if (pageLoadingMode == PageLoadingMode.SINGLE_ITEM) {
-            if (currentPage == requestedPage && emptyItemCount == EXPECTED_ITEMS_PER_PAGE) {
-                // Loaded the item, click on it
-                WrappedScreenInfo wrappedScreenInfo = wrappedScreen.getWrappedScreenInfo();
-                ContainerUtils.clickOnSlot(
-                        requestedItemSlot,
-                        wrappedScreenInfo.containerId(),
-                        GLFW.GLFW_MOUSE_BUTTON_LEFT,
-                        wrappedScreenInfo.containerMenu().getItems());
-
-                return;
-            }
-
-            if (currentPage == requestedPage) {
-                emptyItemCount++;
-                return;
-            }
-
-            // Next page slot loads after the previous page slot, we use this to check if can advance to the next page
-            if (currentPage != requestedPage && slot == NEXT_PAGE_SLOT) {
-                // We are on the requested page, but not on the requested item
-                // We can't go back to a previous page, so we just load the next page
-                goToNextPage();
             }
         }
     }
 
+    private void pageLoadedWhileLoadingItems(Int2ObjectOpenHashMap<ItemStack> currentItems) {
+        // If we have air items on the page, we reached the end
+        if (currentItems.size() < EXPECTED_ITEMS_PER_PAGE) {
+            pageLoadingMode = PageLoadingMode.NONE;
+            requestedPage = -1;
+            wrappedScreen.setCurrentState(Component.literal("All pages loaded"));
+        }
+
+        if (this.currentPage == requestedPage) {
+            pageLoadingMode = PageLoadingMode.NONE;
+            requestedPage = -1;
+            wrappedScreen.setCurrentState(Component.literal((itemMap.size()) + " pages loaded"));
+        }
+
+        goToNextPage();
+    }
+
+    private void pageLoadedWhileSelectingItem(Int2ObjectOpenHashMap<ItemStack> currentItems) {
+        if (pageItemCount != EXPECTED_ITEMS_PER_PAGE) return;
+
+        // We are on the requested page, click on the item
+        if (currentPage == requestedPage) {
+            // Loaded the item, click on it
+            WrappedScreenInfo wrappedScreenInfo = wrappedScreen.getWrappedScreenInfo();
+            ContainerUtils.clickOnSlot(
+                    requestedItemSlot,
+                    wrappedScreenInfo.containerId(),
+                    GLFW.GLFW_MOUSE_BUTTON_LEFT,
+                    wrappedScreenInfo.containerMenu().getItems());
+
+            return;
+        } else {
+            // We are not on the requested page, load the next page
+            goToNextPage();
+        }
+    }
+
     private void goToNextPage() {
-        emptyItemCount = 0;
+        pageItemCount = 0;
 
         int clickSlot;
         if (this.currentPage < requestedPage) {
