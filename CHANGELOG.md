@@ -1,9 +1,21 @@
+## [0.0.3-alpha.346](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.345...v0.0.3-alpha.346) (2023-08-27)
+
+
+### Bug Fixes
+
+* Add proper handling of Elemental Defence in gear stats ([#2048](https://github.com/Wynntils/Artemis/issues/2048)) ([0f8411f](https://github.com/Wynntils/Artemis/commit/0f8411f05e879f5523f91a1fc39a6cd3d60bb06b))
+
 ## [0.0.3-alpha.345](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.344...v0.0.3-alpha.345) (2023-08-27)
 
 
 ### New Features
 
 * New guild contribution message ([#2044](https://github.com/Wynntils/Artemis/issues/2044)) ([a6e528b](https://github.com/Wynntils/Artemis/commit/a6e528b584c45f3f142609068eeed7ad17ea86df))
+
+
+### Miscellaneous Chores
+
+* **release:** v0.0.3-alpha.345 [skip ci] ([c63e154](https://github.com/Wynntils/Artemis/commit/c63e154163b95454602eaf7541982b28f69ef46e))
 
 ## [0.0.3-alpha.344](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.343...v0.0.3-alpha.344) (2023-08-26)
 
@@ -40,12 +52,4 @@
 ### Miscellaneous Chores
 
 * **release:** v0.0.3-alpha.342 [skip ci] ([87b5d71](https://github.com/Wynntils/Artemis/commit/87b5d71d06fa8d9259f7219d3198a5267ede3301))
-
-## [0.0.3-alpha.341](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.340...v0.0.3-alpha.341) (2023-08-23)
-
-
-### Miscellaneous Chores
-
-* add translations for shiny functions ([#2040](https://github.com/Wynntils/Artemis/issues/2040)) ([1321f4e](https://github.com/Wynntils/Artemis/commit/1321f4e4b652403770771e04d6fff61c9a6e37ac))
-* **release:** v0.0.3-alpha.341 [skip ci] ([659473f](https://github.com/Wynntils/Artemis/commit/659473f826b9453fbab890f73f685fc7f7763968))
 
