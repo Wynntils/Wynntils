@@ -13,6 +13,7 @@ import com.wynntils.mc.event.ContainerSetSlotEvent;
 import com.wynntils.services.itemfilter.type.ItemSearchQuery;
 import com.wynntils.utils.mc.LoreUtils;
 import com.wynntils.utils.wynn.ContainerUtils;
+import com.wynntils.utils.wynn.ItemUtils;
 import it.unimi.dsi.fastutil.ints.Int2ObjectMap;
 import it.unimi.dsi.fastutil.ints.Int2ObjectOpenHashMap;
 import java.util.ArrayList;
@@ -44,7 +45,7 @@ public class TradeMarketSearchResultParent extends WrappedScreenParent<TradeMark
     private TradeMarketSearchResultScreen wrappedScreen;
 
     private int requestedPage = -1;
-    private int requestedItemSlot = -1;
+    private ItemStack requestedItem;
 
     private int currentPage = 0;
 
@@ -109,29 +110,38 @@ public class TradeMarketSearchResultParent extends WrappedScreenParent<TradeMark
 
     @Override
     protected void reset() {
+        requestedPage = -1;
+        requestedItem = null;
         currentPage = 0;
-        itemMap.clear();
+        pageLoadingMode = PageLoadingMode.NONE;
+        itemMap = new HashMap<>();
+        pageItemCount = 0;
+        filteredItems = new ArrayList<>();
 
         this.wrappedScreen = null;
     }
 
     public void clickOnItem(ItemStack itemStack) {
-        int page = 0;
-        int slot = 0;
+        // FIXME: confirm items cant update on current page
+        Int2ObjectMap.FastEntrySet<ItemStack> currentPageEntries =
+                itemMap.getOrDefault(currentPage, new Int2ObjectOpenHashMap<>()).int2ObjectEntrySet();
+        for (Int2ObjectMap.Entry<ItemStack> entry : currentPageEntries) {
+            if (ItemUtils.isItemEqual(entry.getValue(), itemStack)) {
+                // Item found on the current page, click on it
+                WrappedScreenInfo wrappedScreenInfo = wrappedScreen.getWrappedScreenInfo();
+                ContainerUtils.clickOnSlot(
+                        entry.getIntKey(),
+                        wrappedScreenInfo.containerId(),
+                        GLFW.GLFW_MOUSE_BUTTON_LEFT,
+                        wrappedScreenInfo.containerMenu().getItems());
 
-        for (Map.Entry<Integer, Int2ObjectOpenHashMap<ItemStack>> pageEntry : itemMap.entrySet()) {
-            for (Int2ObjectMap.Entry<ItemStack> itemOnPage :
-                    pageEntry.getValue().int2ObjectEntrySet()) {
-                if (itemOnPage.getValue().equals(itemStack)) {
-                    page = pageEntry.getKey();
-                    slot = itemOnPage.getIntKey();
-                    break;
-                }
+                return;
             }
         }
 
-        requestedPage = page;
-        requestedItemSlot = slot;
+        // Go backwards until we find the item, items on other pages could have changed
+        requestedPage = 0;
+        requestedItem = itemStack;
         pageLoadingMode = PageLoadingMode.SINGLE_ITEM;
 
         goToNextPage();
@@ -181,12 +191,8 @@ public class TradeMarketSearchResultParent extends WrappedScreenParent<TradeMark
 
         if (pageItemCount == EXPECTED_ITEMS_PER_PAGE) {
             switch (pageLoadingMode) {
-                case ALL_ITEMS -> {
-                    pageLoadedWhileLoadingItems(currentPage);
-                }
-                case SINGLE_ITEM -> {
-                    pageLoadedWhileSelectingItem(currentPage);
-                }
+                case ALL_ITEMS -> pageLoadedWhileLoadingItems(currentPage);
+                case SINGLE_ITEM -> pageLoadedWhileSelectingItem(currentPage, slot, itemStack);
             }
         }
     }
@@ -197,38 +203,41 @@ public class TradeMarketSearchResultParent extends WrappedScreenParent<TradeMark
             pageLoadingMode = PageLoadingMode.NONE;
             requestedPage = -1;
             wrappedScreen.setCurrentState(Component.literal("All pages loaded"));
+            return;
         }
 
         if (this.currentPage == requestedPage) {
             pageLoadingMode = PageLoadingMode.NONE;
             requestedPage = -1;
             wrappedScreen.setCurrentState(Component.literal((itemMap.size()) + " pages loaded"));
+            return;
         }
 
         goToNextPage();
     }
 
-    private void pageLoadedWhileSelectingItem(Int2ObjectOpenHashMap<ItemStack> currentItems) {
-        if (pageItemCount != EXPECTED_ITEMS_PER_PAGE) return;
-
-        // We are on the requested page, click on the item
-        if (currentPage == requestedPage) {
+    private void pageLoadedWhileSelectingItem(
+            Int2ObjectOpenHashMap<ItemStack> currentItems, int slot, ItemStack itemStack) {
+        // If we found the item, click on it
+        if (ItemUtils.isItemEqual(itemStack, requestedItem)) {
             // Loaded the item, click on it
             WrappedScreenInfo wrappedScreenInfo = wrappedScreen.getWrappedScreenInfo();
             ContainerUtils.clickOnSlot(
-                    requestedItemSlot,
+                    slot,
                     wrappedScreenInfo.containerId(),
                     GLFW.GLFW_MOUSE_BUTTON_LEFT,
                     wrappedScreenInfo.containerMenu().getItems());
 
             return;
-        } else {
-            // We are not on the requested page, load the next page
+        } else if (pageItemCount == EXPECTED_ITEMS_PER_PAGE) {
+            // We couldn't find the item on the page, go to the next one
             goToNextPage();
         }
     }
 
     private void goToNextPage() {
+        if (requestedPage == -1 || currentPage == requestedPage) return;
+
         pageItemCount = 0;
 
         int clickSlot;
