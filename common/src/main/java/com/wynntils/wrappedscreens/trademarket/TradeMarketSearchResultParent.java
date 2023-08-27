@@ -150,13 +150,11 @@ public class TradeMarketSearchResultParent extends WrappedScreenParent<TradeMark
     public void updateDisplayItems(ItemSearchQuery searchQuery) {
         filteredItems.clear();
 
-        List<ItemStack> items = itemMap.values().stream()
+        Stream<ItemStack> items = itemMap.values().stream()
                 .map(map -> map.values().toArray(new ItemStack[0]))
-                .flatMap(Stream::of)
-                .toList();
+                .flatMap(Stream::of);
 
-        List<ItemStack> matchingItems = items.stream()
-                .filter(itemStack -> Services.ItemFilter.matches(searchQuery, itemStack))
+        List<ItemStack> matchingItems = items.filter(itemStack -> Services.ItemFilter.matches(searchQuery, itemStack))
                 .toList();
 
         filteredItems.addAll(matchingItems);
