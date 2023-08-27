@@ -1,9 +1,21 @@
+## [0.0.3-alpha.345](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.344...v0.0.3-alpha.345) (2023-08-27)
+
+
+### New Features
+
+* New guild contribution message ([#2044](https://github.com/Wynntils/Artemis/issues/2044)) ([a6e528b](https://github.com/Wynntils/Artemis/commit/a6e528b584c45f3f142609068eeed7ad17ea86df))
+
 ## [0.0.3-alpha.344](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.343...v0.0.3-alpha.344) (2023-08-26)
 
 
 ### Bug Fixes
 
 * War message getting recruit prefix ([#2046](https://github.com/Wynntils/Artemis/issues/2046)) ([fa023be](https://github.com/Wynntils/Artemis/commit/fa023bec303e9720dec2bea41e3064f0266589af))
+
+
+### Miscellaneous Chores
+
+* **release:** v0.0.3-alpha.344 [skip ci] ([447d427](https://github.com/Wynntils/Artemis/commit/447d427f939203a22fa713aaed6391af7996d7db))
 
 ## [0.0.3-alpha.343](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.342...v0.0.3-alpha.343) (2023-08-26)
 
@@ -36,16 +48,4 @@
 
 * add translations for shiny functions ([#2040](https://github.com/Wynntils/Artemis/issues/2040)) ([1321f4e](https://github.com/Wynntils/Artemis/commit/1321f4e4b652403770771e04d6fff61c9a6e37ac))
 * **release:** v0.0.3-alpha.341 [skip ci] ([659473f](https://github.com/Wynntils/Artemis/commit/659473f826b9453fbab890f73f685fc7f7763968))
-
-## [0.0.3-alpha.340](https://github.com/Wynntils/Artemis/compare/v0.0.3-alpha.339...v0.0.3-alpha.340) (2023-08-23)
-
-
-### New Features
-
-* Handle Shiny stats properly ([#2006](https://github.com/Wynntils/Artemis/issues/2006)) ([8f134a4](https://github.com/Wynntils/Artemis/commit/8f134a41a7d3ac79d22d9c2291d70a0e6129ec44)), closes [#1941](https://github.com/Wynntils/Artemis/issues/1941)
-
-
-### Miscellaneous Chores
-
-* **release:** v0.0.3-alpha.340 [skip ci] ([d162ce4](https://github.com/Wynntils/Artemis/commit/d162ce43bb299975932e5c0f8a8fc4ddb592123c))
 
