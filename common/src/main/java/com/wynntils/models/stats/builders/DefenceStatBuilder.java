@@ -22,5 +22,12 @@ public final class DefenceStatBuilder extends StatBuilder<DefenceStatType> {
                     StatUnit.PERCENT);
             callback.accept(statType);
         }
+
+        callback.accept(new DefenceStatType(
+                "DEFENCE_ELEMENTAL",
+                "Elemental Defence",
+                "bonusElementalDefense",
+                "ELEMENTALDEFENSE",
+                StatUnit.PERCENT));
     }
 }
