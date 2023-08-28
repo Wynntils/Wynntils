@@ -6,8 +6,6 @@ package com.wynntils.models.containers;
 
 import com.wynntils.core.components.Model;
 import com.wynntils.core.components.Models;
-import com.wynntils.core.persisted.Persisted;
-import com.wynntils.core.persisted.storage.Storage;
 import com.wynntils.core.text.StyledText;
 import com.wynntils.utils.type.Pair;
 import java.util.List;
@@ -59,18 +57,6 @@ public final class ContainerModel extends Model {
     private static final StyledText CONTENT_BOOK_TITLE = StyledText.fromString("§f\uE000\uE072");
     private static final StyledText LOBBY_TITLE = StyledText.fromString("Wynncraft Servers");
 
-    @Persisted
-    private final Storage<Integer> finalBankPage = new Storage<>(21);
-
-    @Persisted
-    private final Storage<Integer> finalBlockBankPage = new Storage<>(12);
-
-    @Persisted
-    private final Storage<Integer> finalBookshelfPage = new Storage<>(10);
-
-    @Persisted
-    private final Storage<Integer> finalMiscBucketPage = new Storage<>(10);
-
     public static final int LAST_BANK_PAGE_SLOT = 8;
 
     public ContainerModel() {
@@ -113,40 +99,6 @@ public final class ContainerModel extends Model {
     public boolean isItemIndicatingLastBankPage(ItemStack item) {
         return StyledText.fromComponent(item.getHoverName()).endsWith(LAST_BANK_PAGE_STRING)
                 || item.getHoverName().getString().equals(" ");
-    }
-
-    public void updateFinalBankPage(int newFinalPage) {
-        finalBankPage.store(newFinalPage);
-    }
-
-    public int getFinalBankPage() {
-        return finalBankPage.get();
-    }
-
-    public void updateFinalBlockBankPage(int newFinalPage) {
-        if (newFinalPage > finalBlockBankPage.get()) {
-            finalBlockBankPage.store(newFinalPage);
-        }
-    }
-
-    public int getFinalBlockBankPage() {
-        return finalBlockBankPage.get();
-    }
-
-    public void updateFinalBookshelfPage(int newFinalPage) {
-        finalBookshelfPage.store(newFinalPage);
-    }
-
-    public int getFinalBookshelfPage() {
-        return finalBookshelfPage.get();
-    }
-
-    public void updateFinalMiscBucketPage(int newFinalPage) {
-        finalMiscBucketPage.store(newFinalPage);
-    }
-
-    public int getFinalMiscBucketPage() {
-        return finalMiscBucketPage.get();
     }
 
     public boolean isGuildBankScreen(Screen screen) {
