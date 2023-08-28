@@ -27,6 +27,7 @@ import com.wynntils.models.worlds.type.BombType;
 import com.wynntils.utils.mc.LoreUtils;
 import com.wynntils.utils.mc.McUtils;
 import com.wynntils.utils.mc.RenderedStringUtils;
+import com.wynntils.utils.type.Pair;
 import com.wynntils.utils.type.TimedSet;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -45,10 +46,9 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 
 public class ProfessionModel extends Model {
-    // §7[+36§f Ⓙ§7 Farming XP] §6[9%]
-    // §dx2.0 §7[+§d93§f Ⓙ§7 Farming XP] §6[9%]
+    // §7x1 [+3952§f Ⓒ§7 Woodcutting XP] §6[14.64%]
     private static final Pattern PROFESSION_NODE_EXPERIENCE_PATTERN = Pattern.compile(
-            "(§dx[\\d\\.]+ )?§7\\[\\+(§d)?(?<gain>\\d+)§f [ⓀⒸⒷⒿⒺⒹⓁⒶⒼⒻⒾⒽ]§7 (?<name>.+) XP\\] §6\\[(?<current>\\d+)%\\]");
+            "(§.x[\\d\\.]+ )?(§.)?\\[\\+(§d)?(?<gain>\\d+)§f [ⓀⒸⒷⒿⒺⒹⓁⒶⒼⒻⒾⒽ]§7 (?<name>.+) XP\\] §6\\[(?<current>[\\d.]+)%\\]");
 
     // §2[§a+1§2 Oak Wood]
     private static final Pattern PROFESSION_NODE_HARVEST_PATTERN =
@@ -56,7 +56,7 @@ public class ProfessionModel extends Model {
 
     // §dx2.0 §7[+§d28 §fⒺ §7Scribing XP] §6[56%]
     private static final Pattern PROFESSION_CRAFT_PATTERN = Pattern.compile(
-            "(§dx[\\d\\.]+ )?§7\\[\\+(§d)?(?<gain>\\d+) §f[ⓀⒸⒷⒿⒺⒹⓁⒶⒼⒻⒾⒽ] §7(?<name>.+) XP\\] §6\\[(?<current>\\d+)%\\]");
+            "(§dx[\\d\\.]+ )?§7\\[\\+(§d)?(?<gain>\\d+) §f[ⓀⒸⒷⒿⒺⒹⓁⒶⒼⒻⒾⒽ] §7(?<name>.+) XP\\] §6\\[(?<current>[\\d.]+)%\\]");
 
     private static final Pattern PROFESSION_LEVELUP_PATTERN =
             Pattern.compile("§e\\s+You are now level (?<level>\\d+) in §f[ⓀⒸⒷⒿⒺⒹⓁⒶⒼⒻⒾⒽ]§e (?<name>.+)");
@@ -66,13 +66,13 @@ public class ProfessionModel extends Model {
 
     private static final int GATHER_COOLDOWN_TIME = 60;
     private static final int PROFESSION_NODE_RESPAWN_TIME = 60;
-    private static final int MAX_HARVEST_LABEL_AGE = 1000;
+    private static final int MAX_HARVEST_LABEL_AGE = 4000;
     private static final int TICKS_PER_TIMER_UPDATE = 10;
 
     @Persisted
     private final Storage<Integer> professionDryStreak = new Storage<>(0);
 
-    private long lastHarvestLabel = 0;
+    private Pair<Long, MaterialItem> lastHarvestItemGain = Pair.of(0L, null);
     private HarvestInfo lastHarvest;
 
     private Map<ProfessionType, ProfessionProgress> professionProgressMap = new ConcurrentHashMap<>();
@@ -94,16 +94,7 @@ public class ProfessionModel extends Model {
 
         if (materialItem.isEmpty()) return;
 
-        if (lastHarvestLabel + MAX_HARVEST_LABEL_AGE >= System.currentTimeMillis()) {
-            lastHarvest = new HarvestInfo(lastHarvestLabel, materialItem.get().getMaterialProfile());
-            lastHarvestLabel = 0;
-
-            if (lastHarvest.materialProfile().getTier() == 3) {
-                professionDryStreak.store(0);
-            } else {
-                professionDryStreak.store(professionDryStreak.get() + 1);
-            }
-        }
+        lastHarvestItemGain = Pair.of(System.currentTimeMillis(), materialItem.get());
     }
 
     @SubscribeEvent
@@ -130,7 +121,18 @@ public class ProfessionModel extends Model {
 
         matcher = event.getName().getMatcher(PROFESSION_NODE_HARVEST_PATTERN);
         if (matcher.matches()) {
-            lastHarvestLabel = System.currentTimeMillis();
+            if (lastHarvestItemGain.a() + MAX_HARVEST_LABEL_AGE >= System.currentTimeMillis()
+                    && lastHarvestItemGain.b() != null) {
+                MaterialItem materialItem = lastHarvestItemGain.b();
+                lastHarvest = new HarvestInfo(lastHarvestItemGain.a(), materialItem.getMaterialProfile());
+                lastHarvestItemGain = Pair.of(0L, null);
+
+                if (lastHarvest.materialProfile().getTier() == 3) {
+                    professionDryStreak.store(0);
+                } else {
+                    professionDryStreak.store(professionDryStreak.get() + 1);
+                }
+            }
         }
     }
 
