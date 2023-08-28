@@ -29,14 +29,13 @@ public class ItemSearchHelperWidget extends BasicTexturedButton implements Toolt
     @Override
     public List<Component> getTooltipLines() {
         List<Component> helpTooltip =
-                new ArrayList<>(List.of(Component.translatable("feature.wynntils.containerSearch.tooltip")));
+                new ArrayList<>(List.of(Component.translatable("screens.wynntils.itemSearchHelperWidget.name")));
 
-        Services.ItemFilter.getFilters().forEach(itemFilter -> {
+        Services.ItemFilter.getItemStatProviders().forEach(itemStatProvider -> {
             helpTooltip.add(Component.empty());
-            helpTooltip.add(Component.literal(itemFilter.getName() + ": ")
-                    .withStyle(ChatFormatting.YELLOW)
-                    .append(Component.translatable(itemFilter.getUsage()).withStyle(ChatFormatting.WHITE)));
-            helpTooltip.add(Component.translatable(itemFilter.getDescription()).withStyle(ChatFormatting.GRAY));
+            helpTooltip.add(Component.literal(itemStatProvider.getName() + ": ").withStyle(ChatFormatting.YELLOW));
+            helpTooltip.add(
+                    Component.translatable(itemStatProvider.getDescription()).withStyle(ChatFormatting.GRAY));
         });
 
         return helpTooltip;

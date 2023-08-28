@@ -8,7 +8,7 @@ import java.util.List;
 
 public record ItemSearchQuery(
         String queryString,
-        List<ItemFilterInstance> itemFilters,
+        List<StatProviderAndFilterPair<?>> filters,
         List<Integer> ignoredCharIndices,
         List<Integer> validFilterCharIndices,
         List<String> errors,
@@ -19,6 +19,6 @@ public record ItemSearchQuery(
      * @return true if the query contains no valid filters or plain text tokens.
      */
     public boolean isEmpty() {
-        return itemFilters.isEmpty() && plainTextTokens.isEmpty();
+        return filters.isEmpty() && plainTextTokens.isEmpty();
     }
 }
