@@ -66,6 +66,7 @@ public enum Texture {
 
     // Generic
     ADD_ICON("icons/generic/add_icon.png", 14, 14),
+    ARROW_LEFT_ICON("icons/generic/arrow_left_icon.png", 16, 16),
     BOAT_ICON("icons/generic/boat_icon.png", 15, 14),
     CHALLENGES_ICON("icons/generic/challenges_icon.png", 9, 14),
     DEFENSE_FILTER_ICON("icons/generic/defense_filter_icon.png", 16, 16),
@@ -78,6 +79,7 @@ public enum Texture {
     QUESTS_SCROLL_ICON("icons/generic/quests_scroll_icon.png", 16, 16),
     SHARE_ICON("icons/generic/share_icon.png", 16, 14),
     SIGN_ICON("icons/generic/sign_icon.png", 17, 18),
+    SMALL_ADD_ICON("icons/generic/small_add_icon.png", 16, 16),
     SOUL_POINT_ICON("icons/generic/soul_point_icon.png", 10, 16),
     WAYPOINT_FOCUS_ICON("icons/generic/waypoint_focus_icon.png", 12, 16),
     WAYPOINT_MANAGER_ICON("icons/generic/waypoint_manager_icon.png", 12, 16),
@@ -193,6 +195,7 @@ public enum Texture {
     // region UI Components
     BACKGROUND_SPLASH("ui_components/background_splash.png", 1920, 1027),
     COSMETIC_VIEWER_BACKGROUND("ui_components/cosmetics_viewer_background.png", 72, 92),
+    CONTAINER_SIDEBAR("ui_components/container_sidebar.png", 25, 136),
     EMERALD_COUNT_BACKGROUND("ui_components/emerald_count_background.png", 24, 24),
     GEAR_ICONS("ui_components/gear_icons.png", 64, 128),
     GEAR_VIEWER_BACKGROUND("ui_components/gear_viewer_background.png", 103, 92),

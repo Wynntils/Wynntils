@@ -10,6 +10,7 @@ import com.wynntils.handlers.wrappedscreen.type.WrappedScreenInfo;
 import com.wynntils.screens.base.TextboxScreen;
 import com.wynntils.screens.base.TooltipProvider;
 import com.wynntils.screens.base.WynntilsContainerScreen;
+import com.wynntils.screens.base.widgets.BasicTexturedButton;
 import com.wynntils.screens.base.widgets.ItemSearchHelperWidget;
 import com.wynntils.screens.base.widgets.ItemSearchWidget;
 import com.wynntils.screens.base.widgets.WynntilsButton;
@@ -90,9 +91,29 @@ public class TradeMarketSearchResultScreen extends WynntilsContainerScreen<Chest
                 (int) (Texture.INFO.height() / 2f),
                 Texture.INFO,
                 a -> {},
-                false,
                 true);
         this.addRenderableWidget(helperButton);
+
+        WynntilsButton backButton = new BasicTexturedButton(
+                renderX - Texture.CONTAINER_SIDEBAR.width() / 2 - 2,
+                renderY + Texture.CONTAINER_SIDEBAR.height(),
+                Texture.ARROW_LEFT_ICON.width(),
+                Texture.ARROW_LEFT_ICON.height(),
+                Texture.ARROW_LEFT_ICON,
+                (button) -> parent.goBackToSearch(),
+                List.of(Component.translatable("screens.wynntils.tradeMarketSearchResult.backToSearch")));
+        this.addRenderableWidget(backButton);
+
+        WynntilsButton loadMoreButton = new BasicTexturedButton(
+                renderX - Texture.CONTAINER_SIDEBAR.width() / 2 - 2,
+                renderY + Texture.CONTAINER_SIDEBAR.height() - 20,
+                Texture.SMALL_ADD_ICON.width(),
+                Texture.SMALL_ADD_ICON.height(),
+                Texture.SMALL_ADD_ICON,
+                (button) -> parent.loadNextPageBatch(),
+                List.of(Component.translatable(
+                        "screens.wynntils.tradeMarketSearchResult.loadNextBatch", parent.getPageLoadBatchSize())));
+        this.addRenderableWidget(loadMoreButton);
     }
 
     @Override
@@ -149,6 +170,10 @@ public class TradeMarketSearchResultScreen extends WynntilsContainerScreen<Chest
 
         // Scrollbar
         RenderUtils.drawTexturedRect(poseStack, Texture.SCROLLBAR_BACKGROUND, x + this.imageWidth - 7, y);
+
+        // Sidebar
+        RenderUtils.drawTexturedRect(
+                poseStack, Texture.CONTAINER_SIDEBAR, x - Texture.CONTAINER_SIDEBAR.width() + 7, y);
     }
 
     private void renderScrollButton(PoseStack poseStack) {

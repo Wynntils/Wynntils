@@ -35,7 +35,6 @@ public abstract class WynntilsGuideScreen<E, B extends WynntilsButton> extends W
                 (int) (Texture.INFO.height() / 1.7f),
                 Texture.INFO,
                 a -> {},
-                false,
                 true);
         this.addRenderableWidget(helperButton);
 

@@ -1828,6 +1828,8 @@
   "screens.wynntils.statistics.noStatistics": "No statistics found! Try changing your search term.",
   "screens.wynntils.statistics.shiftMiddleClickToReset": "Shift + middle click to reset for current character",
   "screens.wynntils.statistics.total": "Total: %s",
+  "screens.wynntils.tradeMarketSearchResult.backToSearch": "Back to Search",
+  "screens.wynntils.tradeMarketSearchResult.loadNextBatch": "Load Next %d Pages",
   "screens.wynntils.wynntilsActivities.filterHelper": "You can use the filters below.",
   "screens.wynntils.wynntilsActivities.reload.description": "Reloads all %s data.",
   "screens.wynntils.wynntilsActivities.reload.name": "Reload Button",

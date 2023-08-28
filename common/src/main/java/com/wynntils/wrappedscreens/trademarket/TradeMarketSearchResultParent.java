@@ -28,6 +28,7 @@ import net.minecraft.world.item.Items;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import org.lwjgl.glfw.GLFW;
 
+// FIXME: Add a queue system for loading pages
 public class TradeMarketSearchResultParent extends WrappedScreenParent<TradeMarketSearchResultScreen> {
     // Patterns
     private static final Pattern TITLE_PATTERN = Pattern.compile("Search Results");
@@ -40,6 +41,7 @@ public class TradeMarketSearchResultParent extends WrappedScreenParent<TradeMark
     // Slots
     private static final int PREVIOUS_PAGE_SLOT = 26;
     private static final int NEXT_PAGE_SLOT = 35;
+    private static final int BACK_TO_SEARCH_SLOT = 8;
 
     private TradeMarketSearchResultScreen wrappedScreen;
 
@@ -104,7 +106,7 @@ public class TradeMarketSearchResultParent extends WrappedScreenParent<TradeMark
         this.wrappedScreen = wrappedScreen;
 
         // Preload the first batch of pages
-        loadItemsUntilPage(PAGE_BATCH_SIZE);
+        loadItemsUntilPage(PAGE_BATCH_SIZE, false);
     }
 
     @Override
@@ -171,6 +173,19 @@ public class TradeMarketSearchResultParent extends WrappedScreenParent<TradeMark
         goToNextPage();
     }
 
+    public void goBackToSearch() {
+        WrappedScreenInfo wrappedScreenInfo = wrappedScreen.getWrappedScreenInfo();
+        ContainerUtils.clickOnSlot(
+                BACK_TO_SEARCH_SLOT,
+                wrappedScreenInfo.containerId(),
+                GLFW.GLFW_MOUSE_BUTTON_LEFT,
+                wrappedScreenInfo.containerMenu().getItems());
+    }
+
+    public void loadNextPageBatch() {
+        loadItemsUntilPage(itemMap.size() + PAGE_BATCH_SIZE, true);
+    }
+
     public void updateDisplayItems(ItemSearchQuery searchQuery) {
         filteredItems.clear();
 
@@ -186,6 +201,10 @@ public class TradeMarketSearchResultParent extends WrappedScreenParent<TradeMark
 
     public List<ItemStack> getFilteredItems() {
         return filteredItems;
+    }
+
+    public int getPageLoadBatchSize() {
+        return PAGE_BATCH_SIZE;
     }
 
     private void handleSetItem(int slot, ItemStack itemStack) {
@@ -291,11 +310,15 @@ public class TradeMarketSearchResultParent extends WrappedScreenParent<TradeMark
                 wrappedScreenInfo.containerMenu().getItems());
     }
 
-    private void loadItemsUntilPage(int page) {
+    private void loadItemsUntilPage(int page, boolean forcePageLoad) {
         pageLoadingMode = PageLoadingMode.ALL_ITEMS;
 
         // 0 based indexing
         requestedPage = page - 1;
+
+        if (forcePageLoad) {
+            goToNextPage();
+        }
     }
 
     private boolean isEmptyItem(ItemStack itemStack) {
