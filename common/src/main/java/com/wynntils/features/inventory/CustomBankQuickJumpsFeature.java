@@ -23,7 +23,6 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 import net.minecraft.ChatFormatting;
-import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.player.Inventory;
@@ -33,7 +32,7 @@ import net.minecraftforge.eventbus.api.SubscribeEvent;
 import org.lwjgl.glfw.GLFW;
 
 @ConfigCategory(Category.INVENTORY)
-public class CustomBankPagesFeature extends Feature {
+public class CustomBankQuickJumpsFeature extends Feature {
     // Change to ranged integer/integer list when implemented
     @Persisted
     public final Config<String> bankDestinations = new Config<>("1,5,9,13,17,21");
@@ -63,34 +62,16 @@ public class CustomBankPagesFeature extends Feature {
     private int lastPage = MAX_BANK_PAGES;
     private int pageDestination = 1;
     private List<Integer> customJumpDestinations;
-    private SearchableContainerType currentContainer;
 
     @SubscribeEvent
     public void onScreenInit(ScreenInitEvent e) {
-        if (!(e.getScreen() instanceof AbstractContainerScreen<?> screen)) return;
+        if (Models.Bank.getCurrentContainer() == null) return;
 
-        if (Models.Container.isBankScreen(screen)) {
-            currentContainer = SearchableContainerType.BANK;
-            lastPage = Models.Container.getFinalBankPage();
-        } else if (Models.Container.isBlockBankScreen(screen)) {
-            currentContainer = SearchableContainerType.BLOCK_BANK;
-            lastPage = Models.Container.getFinalBlockBankPage();
-        } else if (Models.Container.isBookshelfScreen(screen)) {
-            currentContainer = SearchableContainerType.BOOKSHELF;
-            lastPage = Models.Container.getFinalBookshelfPage();
-        } else if (Models.Container.isMiscBucketScreen(screen)) {
-            currentContainer = SearchableContainerType.MISC_BUCKET;
-            lastPage = Models.Container.getFinalMiscBucketPage();
-        } else {
-            currentContainer = null;
-            currentPage = 1;
-            pageDestination = 1;
-            return;
-        }
+        lastPage = Models.Bank.getFinalPage();
 
         getCustomJumpDestinations();
 
-        currentPage = Models.Container.getCurrentBankPage(screen);
+        currentPage = Models.Bank.getCurrentPage();
 
         if (!quickJumping) return;
 
@@ -107,7 +88,7 @@ public class CustomBankPagesFeature extends Feature {
     private void getCustomJumpDestinations() {
         String configDestinations;
 
-        switch (currentContainer) {
+        switch (Models.Bank.getCurrentContainer()) {
             case BANK -> configDestinations = bankDestinations.get();
             case BLOCK_BANK -> configDestinations = blockBankDestinations.get();
             case BOOKSHELF -> configDestinations = bookshelfDestinations.get();
@@ -117,7 +98,7 @@ public class CustomBankPagesFeature extends Feature {
             }
         }
 
-        customJumpDestinations = parseStringToDestinations(configDestinations, currentContainer);
+        customJumpDestinations = parseStringToDestinations(configDestinations, Models.Bank.getCurrentContainer());
 
         if (customJumpDestinations == null) {
             customJumpDestinations = getDefaultJumpDestinations();
@@ -125,7 +106,7 @@ public class CustomBankPagesFeature extends Feature {
     }
 
     private List<Integer> getDefaultJumpDestinations() {
-        return switch (currentContainer) {
+        return switch (Models.Bank.getCurrentContainer()) {
             case BANK -> QUICK_JUMP_DESTINATIONS;
             case BLOCK_BANK -> BLOCK_BANK_DESTINATIONS;
             default -> HOUSING_DEFAULT_DESTINATIONS; // this has the lowest values, so it's the safest default
@@ -134,14 +115,12 @@ public class CustomBankPagesFeature extends Feature {
 
     @SubscribeEvent
     public void onScreenClose(ScreenClosedEvent e) {
-        currentContainer = null;
-        currentPage = 1;
         pageDestination = 1;
     }
 
     @SubscribeEvent
     public void onSlotClicked(ContainerClickEvent e) {
-        if (currentContainer == null) return;
+        if (Models.Bank.getCurrentContainer() == null) return;
 
         int slotIndex = e.getSlotNum();
 
@@ -158,7 +137,7 @@ public class CustomBankPagesFeature extends Feature {
 
     @SubscribeEvent
     public void onSetSlot(SetSlotEvent.Pre e) {
-        if (currentContainer == null) return;
+        if (Models.Bank.getCurrentContainer() == null) return;
         if (e.getContainer() instanceof Inventory) return;
 
         if (BUTTON_SLOTS.contains(e.getSlot())) {
@@ -175,7 +154,16 @@ public class CustomBankPagesFeature extends Feature {
 
             jumpButton.setCount(buttonDestination);
 
-            jumpButton.setHoverName(Component.literal(ChatFormatting.GRAY + "Jump to Page " + buttonDestination));
+            String hoverName;
+
+            if (Models.Bank.getPageName(buttonDestination).isPresent()) {
+                hoverName = ChatFormatting.GRAY + "Jump to Page " + buttonDestination + "\n - "
+                        + Models.Bank.getPageName(buttonDestination).get();
+            } else {
+                hoverName = ChatFormatting.GRAY + "Jump to Page " + buttonDestination;
+            }
+
+            jumpButton.setHoverName(Component.literal(hoverName));
 
             e.setItemStack(jumpButton);
         }
@@ -183,15 +171,11 @@ public class CustomBankPagesFeature extends Feature {
 
     @SubscribeEvent
     public void onContainerSetEvent(ContainerSetContentEvent.Post e) {
+        SearchableContainerType currentContainer = Models.Bank.getCurrentContainer();
         if (currentContainer == null) return;
 
         if (Models.Container.isItemIndicatingLastBankPage(e.getItems().get(Models.Container.LAST_BANK_PAGE_SLOT))) {
-            switch (currentContainer) {
-                case BANK -> Models.Container.updateFinalBankPage(currentPage);
-                case BLOCK_BANK -> Models.Container.updateFinalBlockBankPage(currentPage);
-                case BOOKSHELF -> Models.Container.updateFinalBookshelfPage(currentPage);
-                case MISC_BUCKET -> Models.Container.updateFinalMiscBucketPage(currentPage);
-            }
+            Models.Bank.updateFinalPage();
 
             lastPage = currentPage;
         }

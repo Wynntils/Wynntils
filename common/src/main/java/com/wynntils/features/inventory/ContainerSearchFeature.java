@@ -145,6 +145,7 @@ public class ContainerSearchFeature extends Feature {
     @SubscribeEvent
     public void onContainerClose(ContainerCloseEvent.Post event) {
         lastSearchWidget = null;
+        lastSearchQuery = null;
         lastItemSearchHelperWidget = null;
         currentSearchableContainerType = null;
         autoSearching = false;
@@ -159,6 +160,9 @@ public class ContainerSearchFeature extends Feature {
                 || currentSearchableContainerType.getNextItemSlot() == -1
                 || !(McUtils.mc().screen instanceof AbstractContainerScreen<?> abstractContainerScreen)
                 || !(abstractContainerScreen.getMenu() instanceof ChestMenu chestMenu)) return;
+
+        ScreenExtension screen = (ScreenExtension) abstractContainerScreen;
+        if (screen.getFocusedTextInput() != lastSearchWidget) return;
 
         autoSearching = true;
         matchItems(lastSearchQuery, chestMenu);
