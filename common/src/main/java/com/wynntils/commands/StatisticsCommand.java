@@ -129,12 +129,12 @@ public class StatisticsCommand extends Command {
     private int resetStatistics(CommandContext<CommandSourceStack> context) {
         context.getSource()
                 .sendSuccess(
-                        Component.translatable("commands.wynntils.statistics.warnReset")
+                        Component.translatable("command.wynntils.statistics.warnReset")
                                 .withStyle(ChatFormatting.AQUA),
                         false);
         context.getSource()
                 .sendSuccess(
-                        Component.translatable("commands.wynntils.statistics.clickHere")
+                        Component.translatable("command.wynntils.statistics.clickHere")
                                 .withStyle(ChatFormatting.RED)
                                 .withStyle(ChatFormatting.UNDERLINE)
                                 .withStyle(style -> style.withClickEvent(
