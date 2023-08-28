@@ -210,6 +210,8 @@ public class ItemHandler extends Handler {
     private ItemAnnotation calculateAnnotation(ItemStack itemStack, StyledText name) {
         long startTime = System.currentTimeMillis();
 
+        name.replaceAll("ÀÀÀ", " ");
+
         ItemAnnotation annotation = null;
 
         for (ItemAnnotator annotator : annotators) {
