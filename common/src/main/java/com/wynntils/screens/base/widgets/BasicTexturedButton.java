@@ -63,7 +63,7 @@ public class BasicTexturedButton extends WynntilsButton {
             RenderUtils.drawTexturedRect(poseStack, texture, this.getX(), this.getY());
         }
 
-        if (this.isHovered) {
+        if (this.isHovered && !tooltip.isEmpty()) {
             int renderY = renderTooltipAboveMouse
                     ? mouseY - TooltipUtils.getToolTipHeight(TooltipUtils.componentToClientTooltipComponent(tooltip))
                     : mouseY;

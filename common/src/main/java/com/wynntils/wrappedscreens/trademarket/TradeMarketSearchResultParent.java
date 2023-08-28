@@ -120,13 +120,13 @@ public class TradeMarketSearchResultParent extends WrappedScreenParent<TradeMark
         this.wrappedScreen = null;
     }
 
-    public void clickOnItem(ItemStack itemStack) {
+    public void clickOnItem(ItemStack clickedItem) {
         // When writing this, items only update on page change,
         // so if we don't switch pages, we can just click on the item
         Int2ObjectMap.FastEntrySet<ItemStack> currentPageEntries =
                 itemMap.getOrDefault(currentPage, new Int2ObjectOpenHashMap<>()).int2ObjectEntrySet();
         for (Int2ObjectMap.Entry<ItemStack> entry : currentPageEntries) {
-            if (ItemUtils.isItemEqual(entry.getValue(), itemStack)) {
+            if (ItemUtils.isItemEqual(entry.getValue(), clickedItem)) {
                 // Item found on the current page, click on it
                 WrappedScreenInfo wrappedScreenInfo = wrappedScreen.getWrappedScreenInfo();
                 ContainerUtils.clickOnSlot(
@@ -139,11 +139,34 @@ public class TradeMarketSearchResultParent extends WrappedScreenParent<TradeMark
             }
         }
 
-        // Go backwards until we find the item, items on other pages could have changed
-        // FIXME: Go forwards as well
+        // Assume the item is before the current page
         requestedPage = 0;
-        requestedItem = itemStack;
+
+        // Check if the item is on a later page
+        for (int i = currentPage + 1; i < itemMap.size(); i++) {
+            boolean foundItem = false;
+
+            Int2ObjectOpenHashMap<ItemStack> itemsOnPage = itemMap.get(i);
+
+            for (ItemStack itemStack : itemsOnPage.values()) {
+                if (ItemUtils.isItemEqual(itemStack, clickedItem)) {
+                    // Item found on a later page, load the pages until the last one and click on it
+                    foundItem = true;
+                    requestedPage = itemMap.size() - 1;
+                    break;
+                }
+            }
+
+            if (foundItem) break;
+        }
+
+        requestedItem = clickedItem;
         pageLoadingMode = PageLoadingMode.SINGLE_ITEM;
+
+        wrappedScreen.setCurrentState(Component.empty()
+                .append(Component.literal("Clicking on "))
+                .append(clickedItem.getHoverName())
+                .append(Component.literal("...")));
 
         goToNextPage();
     }
@@ -166,8 +189,6 @@ public class TradeMarketSearchResultParent extends WrappedScreenParent<TradeMark
     }
 
     private void handleSetItem(int slot, ItemStack itemStack) {
-        wrappedScreen.setCurrentState(Component.literal("Loading page " + (currentPage + 1) + "..."));
-
         // We only care about the slots that are in the "search results" area
         if (slot % 9 >= 7 || slot >= LAST_ITEM_SLOT) return;
 
@@ -196,6 +217,9 @@ public class TradeMarketSearchResultParent extends WrappedScreenParent<TradeMark
     }
 
     private void pageLoadedWhileLoadingItems(Int2ObjectOpenHashMap<ItemStack> currentItems) {
+        wrappedScreen.setCurrentState(Component.literal("Loading page " + (currentPage + 1) + "..."));
+
+        // We only go to the next page if we have the expected amount of items
         if (pageItemCount != EXPECTED_ITEMS_PER_PAGE) return;
 
         // If we have air items on the page, we reached the end

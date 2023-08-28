@@ -36,7 +36,7 @@ public class WrappedScreenHandler extends Handler {
         StyledText titleStyledText = StyledText.fromComponent(abstractContainerScreen.getTitle());
 
         // If we opened a new screen, reset the current wrapped screen
-        resetWrappedScreen();
+        resetWrappedScreen(false);
 
         for (WrappedScreenParent parent : wrappedScreenParents) {
             if (!titleStyledText.matches(parent.getReplacedScreenTitlePattern())) continue;
@@ -56,14 +56,19 @@ public class WrappedScreenHandler extends Handler {
 
     @SubscribeEvent
     public void onScreenClose(ScreenClosedEvent event) {
-        resetWrappedScreen();
+        resetWrappedScreen(true);
     }
 
-    private void resetWrappedScreen() {
+    private void resetWrappedScreen(boolean closeContainer) {
         if (currentWrappedScreen == null) return;
 
-        ContainerUtils.closeContainer(
-                ((WrappedScreen) currentWrappedScreen).getWrappedScreenInfo().containerId());
+        // If the container was overridden, we don't need to close it
+        if (closeContainer) {
+            ContainerUtils.closeContainer(((WrappedScreen) currentWrappedScreen)
+                    .getWrappedScreenInfo()
+                    .containerId());
+        }
+
         currentWrappedScreen = null;
 
         currentWrappedScreenParent.reset();

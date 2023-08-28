@@ -8,8 +8,11 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import com.wynntils.handlers.wrappedscreen.WrappedScreen;
 import com.wynntils.handlers.wrappedscreen.type.WrappedScreenInfo;
 import com.wynntils.screens.base.TextboxScreen;
+import com.wynntils.screens.base.TooltipProvider;
 import com.wynntils.screens.base.WynntilsContainerScreen;
+import com.wynntils.screens.base.widgets.ItemSearchHelperWidget;
 import com.wynntils.screens.base.widgets.ItemSearchWidget;
+import com.wynntils.screens.base.widgets.WynntilsButton;
 import com.wynntils.services.itemfilter.type.ItemSearchQuery;
 import com.wynntils.utils.MathUtils;
 import com.wynntils.utils.colors.CustomColor;
@@ -17,7 +20,8 @@ import com.wynntils.utils.mc.McUtils;
 import com.wynntils.utils.render.RenderUtils;
 import com.wynntils.utils.render.Texture;
 import java.util.List;
-import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
+import java.util.Optional;
+import net.minecraft.client.gui.components.events.GuiEventListener;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.inventory.ChestMenu;
@@ -36,7 +40,7 @@ public class TradeMarketSearchResultScreen extends WynntilsContainerScreen<Chest
     private final WrappedScreenInfo wrappedScreenInfo;
 
     // Widgets
-    private final ItemSearchWidget itemSearchWidget;
+    private ItemSearchWidget itemSearchWidget;
 
     // State
     private Component currentState = Component.empty();
@@ -52,13 +56,6 @@ public class TradeMarketSearchResultScreen extends WynntilsContainerScreen<Chest
         this.imageHeight = 114 + this.getMenu().getRowCount() * 18;
         this.inventoryLabelY = this.imageHeight - 94;
 
-        AbstractContainerScreen<?> screen = wrappedScreenInfo.screen();
-        // This is screen.topPos and screen.leftPos, but they are not calculated yet when this is called
-        int renderX = (screen.width - screen.imageWidth) / 2;
-        int renderY = (screen.height - screen.imageHeight) / 2 - 22;
-
-        itemSearchWidget = new ItemSearchWidget(renderX, renderY, 175, 20, q -> reloadElements(), (TextboxScreen) this);
-
         this.parent = parent;
         this.wrappedScreenInfo = wrappedScreenInfo;
     }
@@ -72,7 +69,30 @@ public class TradeMarketSearchResultScreen extends WynntilsContainerScreen<Chest
     protected void doInit() {
         super.doInit();
 
+        ItemSearchWidget oldWidget = itemSearchWidget;
+
+        // This is screen.topPos and screen.leftPos, but they are not calculated yet when this is called
+        int renderX = (width - imageWidth) / 2;
+        int renderY = (height - imageHeight) / 2 - 22;
+
+        itemSearchWidget = new ItemSearchWidget(renderX, renderY, 175, 20, q -> reloadElements(), (TextboxScreen) this);
         this.addRenderableWidget(itemSearchWidget);
+
+        // Copy over the old widget's text
+        if (oldWidget != null) {
+            itemSearchWidget.setTextBoxInput(oldWidget.getTextBoxInput());
+        }
+
+        WynntilsButton helperButton = new ItemSearchHelperWidget(
+                renderX + 160,
+                renderY + 4,
+                (int) (Texture.INFO.width() / 2f),
+                (int) (Texture.INFO.height() / 2f),
+                Texture.INFO,
+                a -> {},
+                false,
+                true);
+        this.addRenderableWidget(helperButton);
     }
 
     @Override
@@ -84,7 +104,16 @@ public class TradeMarketSearchResultScreen extends WynntilsContainerScreen<Chest
         super.doRender(poseStack, mouseX, mouseY, partialTick);
         renderScrollButton(poseStack);
 
+        // Render item tooltip
         super.renderTooltip(poseStack, mouseX, mouseY);
+
+        // Render tooltip for hovered widget
+        for (GuiEventListener child : children()) {
+            if (child instanceof TooltipProvider tooltipProvider && child.isMouseOver(mouseX, mouseY)) {
+                this.renderTooltip(poseStack, tooltipProvider.getTooltipLines(), Optional.empty(), mouseX, mouseY);
+                break;
+            }
+        }
     }
 
     @Override
@@ -168,21 +197,23 @@ public class TradeMarketSearchResultScreen extends WynntilsContainerScreen<Chest
 
         scroll(newValue - scrollOffset);
 
-        return true;
+        return super.mouseDragged(mouseX, mouseY, button, dragX, dragY);
     }
 
     @Override
     public boolean mouseReleased(double mouseX, double mouseY, int button) {
         holdingScrollbar = false;
 
-        return true;
+        return super.mouseReleased(mouseX, mouseY, button);
     }
 
     @Override
     public boolean mouseScrolled(double mouseX, double mouseY, double delta) {
-        scroll((int) -delta);
+        // Signum so we only scroll 1 item at a time
+        double scrollValue = -Math.signum(delta);
+        scroll((int) scrollValue);
 
-        return true;
+        return super.mouseScrolled(mouseX, mouseY, delta);
     }
 
     private void scroll(int delta) {
