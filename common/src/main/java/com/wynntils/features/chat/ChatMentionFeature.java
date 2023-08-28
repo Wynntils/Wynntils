@@ -30,6 +30,7 @@ import net.minecraftforge.eventbus.api.SubscribeEvent;
 @ConfigCategory(Category.CHAT)
 public class ChatMentionFeature extends Feature {
     private static final Pattern END_OF_HEADER_PATTERN = Pattern.compile(".*[\\]:]\\s?");
+    private static final Pattern FILTERED_CHARACTERS = Pattern.compile("[^\\w -]");
 
     @Persisted
     public final Config<Boolean> markMention = new Config<>(true);
@@ -59,36 +60,26 @@ public class ChatMentionFeature extends Feature {
     }
 
     private Pattern buildPattern() {
-        // mentions should be starting and ending with some valid character, in this case
-        // we can force usernames and spacebars (for nicknames)
-        // so //w or //s (regex)
-        Pattern p = Pattern.compile("[\\w\\s]");
-        // we can filter the provided aliases and remove the invalid ones, then tell the user
-        String[] splitAliases = aliases.get().split(",");
-        List<String> filteredAliases = Arrays.stream(splitAliases)
-                .filter(alias -> {
-                    if (alias.isEmpty()) {
-                        return false;
-                    }
+        if (aliases.get().isEmpty()) {
+            return Pattern.compile(
+                    "(?<!\\[)\\b" + McUtils.mc().getUser().getName() + "\\b(?!:|])", Pattern.CASE_INSENSITIVE);
+        } else {
+            // we can filter the provided aliases and remove the invalid parts, then tell the user
+            String[] splitAliases = aliases.get().split(",");
+            List<String> filteredAliases = Arrays.stream(splitAliases)
+                    .filter(alias -> !alias.isEmpty())
+                    .map(alias -> FILTERED_CHARACTERS.matcher(alias).replaceAll(""))
+                    .toList();
 
-                    String start = alias.substring(0, 1);
-                    String end = alias.substring(alias.length() - 1);
-                    return (start != null
-                                    && !start.isEmpty()
-                                    && p.matcher(start).matches())
-                            && (end != null && !end.isEmpty() && p.matcher(end).matches());
-                })
-                .toList();
+            if (splitAliases.length != filteredAliases.size()) {
+                McUtils.sendErrorToClient(I18n.get("feature.wynntils.chatMention.aliasesParseFailed"));
+            }
 
-        if (splitAliases.length != filteredAliases.size()) {
-            McUtils.sendErrorToClient(I18n.get("feature.wynntils.chatmention.aliasesParseFailed"));
+            String nicknames = filteredAliases.isEmpty() ? "" : "|" + String.join("|", filteredAliases);
+            return Pattern.compile(
+                    "(?<!\\[)\\b(" + McUtils.mc().getUser().getName() + nicknames + ")\\b(?!:|])",
+                    Pattern.CASE_INSENSITIVE);
         }
-
-        String nicknames = filteredAliases.isEmpty() ? "" : "|" + String.join("|", filteredAliases);
-
-        return Pattern.compile(
-                "(?<!\\[)\\b(" + McUtils.mc().getUser().getName() + nicknames + ")\\b(?!:|])",
-                Pattern.CASE_INSENSITIVE);
     }
 
     @SubscribeEvent(priority = EventPriority.HIGH)
