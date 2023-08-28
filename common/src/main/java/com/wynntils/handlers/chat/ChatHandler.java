@@ -8,7 +8,6 @@ import com.wynntils.core.WynntilsMod;
 import com.wynntils.core.components.Handler;
 import com.wynntils.core.components.Managers;
 import com.wynntils.core.consumers.features.Feature;
-import com.wynntils.core.text.PartStyle;
 import com.wynntils.core.text.StyledText;
 import com.wynntils.handlers.chat.event.ChatMessageReceivedEvent;
 import com.wynntils.handlers.chat.event.NpcDialogEvent;
@@ -17,8 +16,10 @@ import com.wynntils.handlers.chat.type.NpcDialogueType;
 import com.wynntils.handlers.chat.type.RecipientType;
 import com.wynntils.mc.event.ChatPacketReceivedEvent;
 import com.wynntils.mc.event.MobEffectEvent;
+import com.wynntils.mc.event.TickEvent;
 import com.wynntils.utils.mc.ComponentUtils;
 import com.wynntils.utils.mc.McUtils;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.LinkedList;
@@ -84,6 +85,7 @@ public final class ChatHandler extends Handler {
 
     private static final Pattern EMPTY_LINE_PATTERN = Pattern.compile("^\\s*(§r|À+)?\\s*$");
     private static final long SLOWDOWN_PACKET_DIFF_MS = 500;
+    private static final int CHAT_SCREEN_TICK_DELAY = 1;
 
     private final Set<Feature> dialogExtractionDependents = new HashSet<>();
     private String lastRealChat = null;
@@ -91,6 +93,8 @@ public final class ChatHandler extends Handler {
     private List<Component> lastScreenNpcDialog = List.of();
     private List<Component> delayedDialogue;
     private NpcDialogueType delayedType;
+    private long chatScreenTicks = 0;
+    private List<Component> collectedLines = new ArrayList<>();
 
     public void addNpcDialogExtractionDependent(Feature feature) {
         dialogExtractionDependents.add(feature);
@@ -100,45 +104,25 @@ public final class ChatHandler extends Handler {
         dialogExtractionDependents.remove(feature);
     }
 
+    @SubscribeEvent
+    public void onTick(TickEvent event) {
+        if (collectedLines.isEmpty()) return;
+
+        long ticks = McUtils.mc().level.getGameTime();
+        if (ticks > chatScreenTicks + CHAT_SCREEN_TICK_DELAY) {
+            // Send the collected screen lines
+            processCollectedChatScreen();
+        }
+    }
+
     @SubscribeEvent(priority = EventPriority.HIGHEST)
-    public void onChatReceived(ChatPacketReceivedEvent e) {
-        if (e instanceof ChatPacketReceivedEvent.GameInfo) return;
+    public void onChatReceived(ChatPacketReceivedEvent event) {
+        if (event instanceof ChatPacketReceivedEvent.GameInfo) return;
 
-        Component message = e.getMessage();
-        StyledText styledText = StyledText.fromComponent(message);
-        String plainMessage = styledText.getString(PartStyle.StyleType.NONE);
-
-        // Sometimes there is just a trailing newline; that does not
-        // make it a multiline message
-        if (styledText.contains("\n") && plainMessage.indexOf('\n') != plainMessage.length() - 1) {
-            // This is a "chat screen"
-            if (shouldSeparateNPC()) {
-                handleIncomingChatScreen(message);
-                e.setCanceled(true);
-            }
-            // If we are not separating NPCs, just pass the chat screen right on. We can do
-            // nothing about it.
-            // FIXME: This is a temporary solution. We don't classify NPC messages correctly, they are marked as INFO.
-            //        Even if we don't separate NPC messages, we should still classify them correctly.
-            //        However, this hack allows us to disable the NPC dialog extraction feature (/overlay), and still
-            // get
-            //        the dialog in the chat window.
-            Component updatedMessage = postChatLine(message, styledText, MessageType.FOREGROUND);
-
-            if (updatedMessage == null) {
-                e.setCanceled(true);
-            } else if (!updatedMessage.equals(message)) {
-                e.setMessage(updatedMessage);
-            }
+        if (shouldSeparateNPC()) {
+            handleWithSeparation(event);
         } else {
-            // No, it's a normal one line chat
-            Component updatedMessage = postChatLine(message, styledText, MessageType.FOREGROUND);
-
-            if (updatedMessage == null) {
-                e.setCanceled(true);
-            } else if (!updatedMessage.equals(message)) {
-                e.setMessage(updatedMessage);
-            }
+            handleIncomingChatLine(event);
         }
     }
 
@@ -169,8 +153,68 @@ public final class ChatHandler extends Handler {
         }
     }
 
-    private void handleIncomingChatScreen(Component message) {
-        List<Component> lines = ComponentUtils.splitComponentInLines(message);
+    private void handleIncomingChatLine(ChatPacketReceivedEvent event) {
+        Component message = event.getMessage();
+        StyledText styledText = StyledText.fromComponent(message);
+
+        // This is a normal one line chat, or we pass a chat screen through
+        Component updatedMessage = postChatLine(message, styledText, MessageType.FOREGROUND);
+
+        if (updatedMessage == null) {
+            event.setCanceled(true);
+        } else if (!updatedMessage.equals(message)) {
+            event.setMessage(updatedMessage);
+        }
+    }
+
+    private void handleWithSeparation(ChatPacketReceivedEvent event) {
+        Component message = event.getMessage();
+        StyledText styledText = StyledText.fromComponent(message);
+
+        long currentTicks = McUtils.mc().level.getGameTime();
+
+        // It is a multi-line screen if it contains a newline, or if it is empty and sent in the same tick (with
+        // some fuzziness) as the current screen
+        if (styledText.contains("\n")
+                || (styledText.isEmpty() && (currentTicks <= chatScreenTicks + CHAT_SCREEN_TICK_DELAY))) {
+            // This is a "chat screen"
+            List<Component> lines = ComponentUtils.splitComponentInLines(message);
+            if (currentTicks < chatScreenTicks + CHAT_SCREEN_TICK_DELAY) {
+                // We are collecting lines, so add to the current collection
+                collectedLines.addAll(lines);
+            } else {
+                // Start a new collection
+                if (chatScreenTicks != 0) {
+                    // Send the old before starting a new. We should not really end up here since this should
+                    // be done in the tick handler.
+                    processCollectedChatScreen();
+                }
+
+                collectedLines = new ArrayList<>(lines);
+                chatScreenTicks = currentTicks;
+            }
+
+            // For all those cases, we will collect the lines and thus need to cancel the event
+            event.setCanceled(true);
+        } else {
+            if (chatScreenTicks != 0) {
+                // We got a normal line while collecting chat screen lines. This means the screen is
+                // done and we should process it first.
+                processCollectedChatScreen();
+            }
+
+            // Process this as a normal line
+            handleIncomingChatLine(event);
+        }
+    }
+
+    private void processCollectedChatScreen() {
+        List<Component> lines = collectedLines;
+
+        // Reset screen line collection
+        collectedLines = new ArrayList<>();
+        chatScreenTicks = 0;
+
         // From now on, we'll work on reversed lists, so the message that should
         // have been closest to the bottom is now on top.
         Collections.reverse(lines);
@@ -182,7 +226,7 @@ public final class ChatHandler extends Handler {
         } else {
             // Figure out what's new since last chat message
             for (Component line : lines) {
-                String plainText = line.getString();
+                String plainText = StyledText.fromComponent(line).getStringWithoutFormatting();
                 if (plainText.equals(lastRealChat)) break;
                 newLines.addLast(line);
             }
